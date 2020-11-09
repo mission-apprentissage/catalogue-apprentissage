@@ -1,8 +1,8 @@
 {
-  "name": "mna-template-app-server",
+  "name": "mna-catalogue-apprentissage-server",
   "version": "0.0.1",
-  "description": "[MNA] App Template",
-  "repository": "https://github.com/mission-apprentissage/template-apprentissage.git",
+  "description": "[MNA] App catalogue apprentissage",
+  "repository": "https://github.com/mission-apprentissage/catalogue-apprentissage.git",
   "private": false,
   "author": "MNA",
   "license": "MIT",
