@@ -1,8 +1,8 @@
 version: "2.4"
 services:
   reverse_proxy:
-    image: template_app_reverse_proxy
-    container_name: template_app_reverse_proxy
+    image: catalogue_apprentissage_reverse_proxy
+    container_name: catalogue_apprentissage_reverse_proxy
     build:
       context: reverse_proxy
     mem_limit: 256m
@@ -10,64 +10,64 @@ services:
     ports:
       - 80:80
     networks:
-      - template_app_network
+      - catalogue_apprentissage_network
     depends_on:
       - server
       - ui
 
   ui:
-    image: template_app_ui
-    container_name: template_app_ui
+    image: catalogue_apprentissage_ui
+    container_name: catalogue_apprentissage_ui
     build:
       context: ui
     mem_limit: 256m
     networks:
-      - template_app_network
+      - catalogue_apprentissage_network
     depends_on:
       - server
 
   server:
-    image: template_app_server
-    container_name: template_app_server
+    image: catalogue_apprentissage_server
+    container_name: catalogue_apprentissage_server
     build:
       context: server
     mem_limit: 1g
     restart: unless-stopped
     networks:
-      - template_app_network
+      - catalogue_apprentissage_network
     depends_on:
       - mongodb
     environment:
-      - TEMPLATE_APP_MONGODB_URI=mongodb://mongodb:27017/template-app?retryWrites=true&w=majority
+      - CATALOGUE_APPRENTISSAGE_MONGODB_URI=mongodb://mongodb:27017/catalogue-apprentissage?retryWrites=true&w=majority
 
   mongodb:
     image: mongo:4.2.6-bionic
-    container_name: template_app_mongodb
+    container_name: catalogue_apprentissage_mongodb
     mem_limit: 1g
     restart: unless-stopped
     networks:
-      - template_app_network
+      - catalogue_apprentissage_network
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.1.1
-    container_name: template_app_elasticsearch
+    container_name: catalogue_apprentissage_elasticsearch
     environment:
       - ES_JAVA_OPTS=-Xmx512m -Xms512m
       - discovery.type=single-node
     mem_limit: 1g
     networks:
-      - template_app_network
+      - catalogue_apprentissage_network
 
   kibana:
     image: docker.elastic.co/kibana/kibana-oss:7.1.1
-    container_name: template_app_kibana
+    container_name: catalogue_apprentissage_kibana
     depends_on:
       - elasticsearch
     networks:
-      - template_app_network
+      - catalogue_apprentissage_network
     environment:
       - SERVER_BASEPATH=/kibana
 
 networks:
-  template_app_network:
-    name: template_app_network
+  catalogue_apprentissage_network:
+    name: catalogue_apprentissage_network

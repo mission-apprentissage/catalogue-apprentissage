@@ -1,27 +1,27 @@
 {
-  "appName": "TEMPLATE_APP_NAME",
-  "env": "TEMPLATE_APP_ENV",
-  "publicUrl": "TEMPLATE_APP_PUBLIC_URL",
+  "appName": "CATALOGUE_APPRENTISSAGE_NAME",
+  "env": "CATALOGUE_APPRENTISSAGE_ENV",
+  "publicUrl": "CATALOGUE_APPRENTISSAGE_PUBLIC_URL",
   "mongodb": {
-    "uri": "TEMPLATE_APP_MONGODB_URI"
+    "uri": "CATALOGUE_APPRENTISSAGE_MONGODB_URI"
   },
-  "apiKey": "TEMPLATE_APP_API_KEY",
+  "apiKey": "CATALOGUE_APPRENTISSAGE_API_KEY",
   "auth": {
-    "passwordHashRounds": "TEMPLATE_APP_AUTH_PASSWORD_HASH_ROUNDS",
+    "passwordHashRounds": "CATALOGUE_APPRENTISSAGE_AUTH_PASSWORD_HASH_ROUNDS",
     "user": {
-      "jwtSecret": "TEMPLATE_APP_AUTH_USER_JWT_SECRET"
+      "jwtSecret": "CATALOGUE_APPRENTISSAGE_AUTH_USER_JWT_SECRET"
     },
     "activation": {
-      "jwtSecret": "TEMPLATE_APP_AUTH_ACTIVATION_JWT_SECRET"
+      "jwtSecret": "CATALOGUE_APPRENTISSAGE_AUTH_ACTIVATION_JWT_SECRET"
     },
     "password": {
-      "jwtSecret": "TEMPLATE_APP_AUTH_PASSWORD_JWT_SECRET"
+      "jwtSecret": "v_AUTH_PASSWORD_JWT_SECRET"
     }
   },
   "log": {
-    "type": "TEMPLATE_APP_LOG_TYPE",
-    "level": "TEMPLATE_APP_LOG_LEVEL"
+    "type": "CATALOGUE_APPRENTISSAGE_LOG_TYPE",
+    "level": "CATALOGUE_APPRENTISSAGE_LOG_LEVEL"
   },
-  "slackWebhookUrl": "TEMPLATE_APP_SLACK_WEBHOOK_URL",
-  "outputDir": "TEMPLATE_APP_OUTPUT_DIR"
+  "slackWebhookUrl": "CATALOGUE_APPRENTISSAGE_SLACK_WEBHOOK_URL",
+  "outputDir": "CATALOGUE_APPRENTISSAGE_OUTPUT_DIR"
 }

@@ -1,9 +1,9 @@
 {
-  "appName": "Template App",
+  "appName": "Catalogue apprentissage App",
   "env": "local",
   "publicUrl": "http://localhost",
   "mongodb": {
-    "uri": "mongodb://127.0.0.1:27017/template-app?retryWrites=true&w=majority"
+    "uri": "mongodb://127.0.0.1:27017/catalogue-apprentissage?retryWrites=true&w=majority"
   },
   "apiKey": "12345",
   "auth": {
