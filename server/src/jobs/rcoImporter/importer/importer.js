@@ -15,10 +15,10 @@ class Importer {
   async run() {
     const formationsJ1 = await wsRCO.getRCOcatalogue("-j-1");
     const formations = await wsRCO.getRCOcatalogue();
-    console.log(formationsJ1.length);
-    console.log(formations.length);
+    console.log("Nb formations J-1 : ", formationsJ1.length);
+    console.log("Nb formations J : ", formations.length);
 
-    // await this.start(formations, []); // formationsJ1
+    await this.start(formations, formationsJ1);
   }
 
   async start(formations, formationsJ1) {
@@ -26,6 +26,7 @@ class Importer {
       const collection = this.lookupDiff(formations, formationsJ1);
 
       if (!collection) {
+        await this.report();
         return null;
       }
 
@@ -48,25 +49,22 @@ class Importer {
   }
 
   async report(collection = null) {
-    if (this.updated.length > 0) {
-      for (let ite = 0; ite < this.updated.length; ite++) {
-        const element = this.updated[ite];
-        const { updates, updateInfo } = this.formationsToUpdateToDb.find((u) => u.rcoFormation._id === element.mnaId);
+    this.updated.forEach((element) => {
+      const { updates, updateInfo } = this.formationsToUpdateToDb.find((u) => u.rcoFormation._id === element.mnaId);
 
-        element.updates = JSON.stringify(updates);
+      element.updates = JSON.stringify(updates);
 
-        if (updateInfo.published === true) {
-          element.published = "Re-ouverte";
-        } else if (updateInfo.published === false) {
-          element.published = "Supprimée";
-        }
-
-        // const rcoFormation = await RcoFormations.findById(element.mnaId);
-        // const updates_history = rcoFormation.updates_history[rcoFormation.updates_history.length - 1];
-        // element.from = JSON.stringify(updates_history.from);
-        // element.to = JSON.stringify(updates_history.to);
+      if (updateInfo.published === true) {
+        element.published = "Re-ouverte";
+      } else if (updateInfo.published === false) {
+        element.published = "Supprimée";
       }
-    }
+
+      // const rcoFormation = await RcoFormations.findById(element.mnaId);
+      // const updates_history = rcoFormation.updates_history[rcoFormation.updates_history.length - 1];
+      // element.from = JSON.stringify(updates_history.from);
+      // element.to = JSON.stringify(updates_history.to);
+    });
 
     await report.generate(collection, this.added, this.updated);
   }
@@ -138,7 +136,7 @@ class Importer {
         toUpdateToDb.push({ rcoFormation, updateInfo, updates });
       } else {
         console.error(
-          `addedFormationsHandler >> Formation ${this._buildId(rcoFormationAdded)} existe et est plublié ${
+          `addedFormationsHandler >> Formation ${this._buildId(rcoFormationAdded)} existe et est publiée ${
             rcoFormation._id
           }`
         );
@@ -292,12 +290,8 @@ class Importer {
   /*
    * get RCO Formation
    */
-  async getRcoFormation(formation) {
-    const rcoFormation = await RcoFormation.findOne({
-      id_formation: formation.id_formation,
-      id_action: formation.id_action,
-      id_certifinfo: formation.id_certifinfo,
-    });
+  async getRcoFormation({ id_formation, id_action, id_certifinfo }) {
+    const rcoFormation = await RcoFormation.findOne({ id_formation, id_action, id_certifinfo });
     if (!rcoFormation) {
       return null;
     }
@@ -341,32 +335,24 @@ class Importer {
    * Build updates history
    */
   buildUpdatesHistory(rcoFormation, updateInfo) {
-    let from = {};
-    const keys = Object.keys(updateInfo);
-    for (let ite = 0; ite < keys.length; ite++) {
-      const key = keys[ite];
-      from[key] = rcoFormation[key];
-    }
-    const updates_history = [...rcoFormation.updates_history, { from, to: { ...updateInfo }, updated_at: Date.now() }];
-    return updates_history;
+    const from = Object.keys(updateInfo).reduce((acc, key) => {
+      acc[key] = rcoFormation[key];
+      return acc;
+    }, {});
+    return [...rcoFormation.updates_history, { from, to: { ...updateInfo }, updated_at: Date.now() }];
   }
 
   /*
    * diff RCO Formation
    */
   diffRcoFormation(rcoFormationP, formation) {
-    const rcoFormation = { ...rcoFormationP };
-    delete rcoFormation._id;
-    delete rcoFormation.__v;
-    delete rcoFormation.updates_history;
-    delete rcoFormation.published;
-    delete rcoFormation.created_at;
-    delete rcoFormation.last_update_at;
+    // eslint-disable-next-line no-unused-vars
+    const { _id, __v, updates_history, published, created_at, last_update_at, ...rcoFormation } = rcoFormationP;
     const compare = diff(rcoFormation, formation);
     const keys = Object.keys(compare);
 
     if (keys.length === 0) {
-      return { updates: null, keys: 0 };
+      return { updates: null, keys: [] };
     }
 
     return { updates: compare, keys };

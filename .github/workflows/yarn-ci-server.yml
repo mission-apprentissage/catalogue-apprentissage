@@ -35,3 +35,4 @@ jobs:
         run: |
           cd server
           yarn test
+          yarn jobs:test

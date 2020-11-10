@@ -17,6 +17,7 @@
     "docker:clean": "docker-compose kill && docker system prune --force --volumes",
     "seed": "node src/jobs/seed/index.js",
     "jobs": "node src/jobs/index.js",
+    "jobs:test": "mocha --recursive --exit --timeout 60000 src/jobs/**/tests/",
     "clear": "node src/jobs/clear/index.js",
     "stats": "node src/jobs/stats/index.js",
     "rco:importer": "standalone=true node src/jobs/rcoImporter/index.js",

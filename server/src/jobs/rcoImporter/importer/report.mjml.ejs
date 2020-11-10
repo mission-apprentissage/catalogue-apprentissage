@@ -61,6 +61,14 @@
             </mj-table>
             </mj-column>
         </mj-section>
+        <% } else { %>
+            <mj-section padding-bottom="20px" padding-top="10px" background-color="#5222d0">
+                <mj-column>
+                    <mj-text align="left" padding-top="50px" color="#ffffff">
+                        Aucune formation ajoutée
+                    </mj-text>
+                </mj-column>
+            </mj-section>
         <% } %>
         <% if(data.updated.length > 0) { %>
        <mj-section padding-bottom="20px" padding-top="10px" background-color="#5222d0">
@@ -90,6 +98,14 @@
                 </mj-table>
             </mj-column>
         </mj-section>
+        <% } else { %>
+            <mj-section padding-bottom="20px" padding-top="10px" background-color="#5222d0">
+                <mj-column>
+                    <mj-text align="left" padding-top="50px" color="#ffffff">
+                        Aucune formation mise à jour
+                    </mj-text>
+                </mj-column>
+            </mj-section>
         <% } %>
 
         <mj-section background-color="#5222d0">

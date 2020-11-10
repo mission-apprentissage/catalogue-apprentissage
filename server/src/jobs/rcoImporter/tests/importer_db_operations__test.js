@@ -1,13 +1,14 @@
 const assert = require("assert");
 const importer = require("../importer/importer");
 const { formationsJ, formationsJMinus1, formationsJPlus1, formationsJPlus2, adding } = require("./fixtures");
-const { connectToMongo, closeMongoConnection } = require("../../../common/mongodb");
+const { closeMongoConnection } = require("../../../common/mongodb");
 const { RcoFormation } = require("../../../common/model/index");
+const { connectToMongoForTests, cleanAll } = require("../../../../tests/utils/testUtils.js");
 
 describe(__filename, () => {
   before(async () => {
     // Connection to test collection
-    await connectToMongo(null, "test");
+    await connectToMongoForTests();
     await RcoFormation.deleteMany({});
     const collection = importer.lookupDiff(formationsJMinus1, []);
     const result = await importer.addedFormationsHandler(collection.added);
@@ -15,8 +16,14 @@ describe(__filename, () => {
     await importer.dbOperationsHandler();
     importer.resetReport();
   });
+
   after(async () => {
+    await cleanAll();
     await closeMongoConnection();
+  });
+
+  afterEach(() => {
+    importer.resetReport();
   });
 
   it("checkAddedFormations >> Si aucunes modifications entre 2 jours ne doit retourner aucunes modifications de db", async () => {
@@ -58,9 +65,6 @@ describe(__filename, () => {
     assert.deepStrictEqual(updatedFormation.periode, ["2021-11", "2021-12"]);
     assert.deepStrictEqual(updatedFormation.updates_history[0].from, { periode: ["2021-11"] });
     assert.deepStrictEqual(updatedFormation.updates_history[0].to, { periode: ["2021-11", "2021-12"] });
-
-    // await importer.report();
-    importer.resetReport();
   });
 
   it("lookupDiff >> Si Supression entre 2 jours doit dépublier la formation en db", async () => {
@@ -85,9 +89,6 @@ describe(__filename, () => {
     assert.equal(deletedFormation.published, false);
     assert.deepStrictEqual(deletedFormation.updates_history[0].from, { published: true });
     assert.deepStrictEqual(deletedFormation.updates_history[0].to, { published: false });
-
-    //await importer.report();
-    importer.resetReport();
   });
 
   it("lookupDiff >> Si Ajout d'une formation deja presente doit retourner la(es) formation(s) reactivée et mise à jour", async () => {
@@ -150,8 +151,5 @@ describe(__filename, () => {
         "2022-07",
       ],
     });
-
-    await importer.report();
-    importer.resetReport();
   });
 });
