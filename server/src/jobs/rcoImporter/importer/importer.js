@@ -17,6 +17,7 @@ class Importer {
     const formations = await wsRCO.getRCOcatalogue();
     console.log(formationsJ1.length);
     console.log(formations.length);
+
     // await this.start(formations, []); // formationsJ1
   }
 

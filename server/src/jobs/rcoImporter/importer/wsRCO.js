@@ -1,9 +1,10 @@
 const axios = require("axios");
+const config = require("config");
 
 const endpoint = "https://extranet.intercariforef.org/formations_apprentissage";
 const params = {
   login: "mna",
-  pwd: process.env.RCO_WS_PWD,
+  pwd: config.rco.pwd,
 };
 
 class WsRCO {

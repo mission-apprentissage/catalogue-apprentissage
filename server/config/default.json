@@ -26,5 +26,17 @@
     "level": "info"
   },
   "slackWebhookUrl": null,
-  "outputDir": ".local/output"
+  "outputDir": ".local/output",
+  "rco": {
+    "pwd": "CATALOGUE_APPRENTISSAGE_RCO_WS_PWD"
+  },
+  "smtp": {
+    "host": "CATALOGUE_APPRENTISSAGE_SMTP_HOST",
+    "port": "CATALOGUE_APPRENTISSAGE_SMTP_PORT",
+    "secure": false,
+    "auth": {
+      "user": "CATALOGUE_APPRENTISSAGE_SMTP_AUTH_USER",
+      "pass": "CATALOGUE_APPRENTISSAGE_SMTP_AUTH_PASS"
+    }
+  }
 }
