@@ -30,7 +30,6 @@
   "smtp": {
     "host": "CATALOGUE_APPRENTISSAGE_SMTP_HOST",
     "port": "CATALOGUE_APPRENTISSAGE_SMTP_PORT",
-    "secure": false,
     "auth": {
       "user": "CATALOGUE_APPRENTISSAGE_SMTP_AUTH_USER",
       "pass": "CATALOGUE_APPRENTISSAGE_SMTP_AUTH_PASS"

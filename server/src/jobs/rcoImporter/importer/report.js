@@ -5,7 +5,7 @@ const config = require("config");
 
 class Report {
   constructor() {
-    this.mailer = createMailer(config.smtp);
+    this.mailer = createMailer({ smtp: { ...config.smtp, secure: false } });
   }
 
   getEmailTemplate(type = "report") {

@@ -19,7 +19,8 @@
     "jobs": "node src/jobs/index.js",
     "clear": "node src/jobs/clear/index.js",
     "stats": "node src/jobs/stats/index.js",
-    "rco:importer": "standalone=true node src/jobs/rcoImporter/index.js"
+    "rco:importer": "standalone=true node src/jobs/rcoImporter/index.js",
+    "rco:importer:local": "standalone=true dotenv node src/jobs/rcoImporter/index.js"
   },
   "dependencies": {
     "axios": "0.20.0",
@@ -33,6 +34,7 @@
     "convert-csv-to-json": "0.0.15",
     "compose-middleware": "5.0.1",
     "deep-object-diff": "^1.1.0",
+    "dotenv": "^8.2.0",
     "ejs": "^3.1.5",
     "iconv-lite": "0.5.1",
     "env-var": "6.1.1",
