@@ -15,21 +15,12 @@ class Report {
   async generate(collection, added, updated) {
     const date = DateTime.local().setLocale("fr").toFormat("dd MMMM yyyy");
     const titre = `[Webservice RCO] Rapport d'importation ${date}`;
-    await this.mailer.sendEmail(
-      [
-        "antoine.bigard@beta.gouv.fr",
-        // "anne.becquet@beta.gouv.fr",
-        // "samir.benfares@beta.gouv.fr",
-        // "christ.bonraisin@pole-emploi.fr",
-      ],
-      titre,
-      this.getEmailTemplate("report"),
-      {
-        added,
-        updated,
-        date,
-      }
-    );
+    const to = config.rco.reportMailingList.split(",");
+    await this.mailer.sendEmail(to, titre, this.getEmailTemplate("report"), {
+      added,
+      updated,
+      date,
+    });
   }
 }
 
