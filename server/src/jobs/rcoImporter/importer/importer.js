@@ -26,7 +26,7 @@ class Importer {
       const collection = this.lookupDiff(formations, formationsJ1);
 
       if (!collection) {
-        await this.report();
+        await this.report(null, formations.length, formationsJ1.length);
         return null;
       }
 
@@ -42,13 +42,13 @@ class Importer {
 
       await this.dbOperationsHandler();
 
-      await this.report(collection);
+      await this.report(collection, formations.length, formationsJ1.length);
     } catch (error) {
       console.log(error);
     }
   }
 
-  async report(collection = null) {
+  async report(collection = null, formationsJCount, formationsJ1Count) {
     this.updated.forEach((element) => {
       const { updates, updateInfo } = this.formationsToUpdateToDb.find((u) => u.rcoFormation._id === element.mnaId);
 
@@ -66,7 +66,20 @@ class Importer {
       // element.to = JSON.stringify(updates_history.to);
     });
 
-    await report.generate(collection, this.added, this.updated);
+    const deletedCount = this.updated.filter(({ published }) => published === "Supprimée").length;
+    const publishedCount = await RcoFormation.countDocuments({ published: true });
+    const deactivatedCount = await RcoFormation.countDocuments({ published: false });
+
+    const summary = {
+      formationsJCount,
+      formationsJ1Count,
+      addedCount: this.added.length,
+      updatedCount: this.updated.length - deletedCount,
+      deletedCount,
+      publishedCount,
+      deactivatedCount,
+    };
+    await report.generate(collection, this.added, this.updated, summary);
   }
 
   /*

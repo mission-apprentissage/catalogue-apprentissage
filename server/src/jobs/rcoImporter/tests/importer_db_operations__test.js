@@ -1,7 +1,6 @@
 const assert = require("assert");
 const importer = require("../importer/importer");
 const { formationsJ, formationsJMinus1, formationsJPlus1, formationsJPlus2, adding } = require("./fixtures");
-const { closeMongoConnection } = require("../../../common/mongodb");
 const { RcoFormation } = require("../../../common/model/index");
 const { connectToMongoForTests, cleanAll } = require("../../../../tests/utils/testUtils.js");
 
@@ -19,7 +18,6 @@ describe(__filename, () => {
 
   after(async () => {
     await cleanAll();
-    await closeMongoConnection();
   });
 
   afterEach(() => {

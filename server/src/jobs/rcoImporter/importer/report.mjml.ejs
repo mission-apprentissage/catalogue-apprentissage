@@ -37,6 +37,27 @@
             </mj-column>
         </mj-section>
 
+        <mj-section padding-bottom="20px" padding-top="10px" background-color="#5222d0">
+            <mj-column>
+                <mj-text align="left" padding-top="50px" color="#ffffff">
+                    Résumé de l'importation :<br>
+                    <br>
+                    Données reçues du webservice RCO :<br>
+                    <%= data.summary.formationsJ1Count %> Formation(s) J-1<br>
+                    <%= data.summary.formationsJCount %> Formation(s) J<br>
+                    <br>
+                    Résultat de l'import :<br>
+                    <%= data.summary.addedCount %> Formation(s) ajoutée(s)<br>
+                    <%= data.summary.updatedCount %> Formation(s) mise(s) à jour<br>
+                    <%= data.summary.deletedCount %> Formation(s) supprimée(s)<br>
+                    <br>
+                    État de la base de données de formations RCO :
+                    <%= data.summary.publishedCount %> Formation(s) publiée(s)<br>
+                    <%= data.summary.deactivatedCount %> Formation(s) désactivée(s)
+                </mj-text>
+            </mj-column>
+        </mj-section>
+
         <% if(data.added.length > 0) { %>
         <mj-section padding-bottom="20px" padding-top="10px" background-color="#5222d0">
             <mj-column>
@@ -61,15 +82,8 @@
             </mj-table>
             </mj-column>
         </mj-section>
-        <% } else { %>
-            <mj-section padding-bottom="20px" padding-top="10px" background-color="#5222d0">
-                <mj-column>
-                    <mj-text align="left" padding-top="50px" color="#ffffff">
-                        Aucune formation ajoutée
-                    </mj-text>
-                </mj-column>
-            </mj-section>
         <% } %>
+
         <% if(data.updated.length > 0) { %>
        <mj-section padding-bottom="20px" padding-top="10px" background-color="#5222d0">
             <mj-column>
@@ -98,14 +112,6 @@
                 </mj-table>
             </mj-column>
         </mj-section>
-        <% } else { %>
-            <mj-section padding-bottom="20px" padding-top="10px" background-color="#5222d0">
-                <mj-column>
-                    <mj-text align="left" padding-top="50px" color="#ffffff">
-                        Aucune formation mise à jour
-                    </mj-text>
-                </mj-column>
-            </mj-section>
         <% } %>
 
         <mj-section background-color="#5222d0">

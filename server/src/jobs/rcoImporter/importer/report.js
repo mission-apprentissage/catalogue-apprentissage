@@ -12,11 +12,12 @@ class Report {
     return path.join(__dirname, `${type}.mjml.ejs`);
   }
 
-  async generate(collection, added, updated) {
+  async generate(collection, added, updated, summary) {
     const date = DateTime.local().setLocale("fr").toFormat("dd MMMM yyyy");
     const titre = `[Webservice RCO] Rapport d'importation ${date}`;
     const to = config.rco.reportMailingList.split(",");
     await this.mailer.sendEmail(to, titre, this.getEmailTemplate("report"), {
+      summary,
       added,
       updated,
       date,
