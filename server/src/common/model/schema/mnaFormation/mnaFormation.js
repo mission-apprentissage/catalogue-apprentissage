@@ -55,11 +55,6 @@ const mnaFormationsSchema = {
     default: null,
     description: "Numéro de departement",
   },
-  ds_id_dossier: {
-    type: String,
-    default: null,
-    description: "Numéro de dossier Démarche Simplifiée",
-  },
   uai_formation: {
     type: String,
     default: null,

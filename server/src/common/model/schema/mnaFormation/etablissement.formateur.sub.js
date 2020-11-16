@@ -1,7 +1,7 @@
 const etablissementFormateurInfo = {
   etablissement_formateur_id: {
-    type: Object,
-    default: {},
+    type: String,
+    default: null,
     description: "Identifiant établissement formateur",
   },
   etablissement_formateur_siret: {

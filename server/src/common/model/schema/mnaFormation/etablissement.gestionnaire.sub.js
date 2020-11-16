@@ -1,7 +1,7 @@
 const etablissementGestionnaireInfo = {
   etablissement_gestionnaire_id: {
-    type: Object,
-    default: {},
+    type: String,
+    default: null,
     description: "Identifiant établissement gestionnaire",
   },
   etablissement_gestionnaire_siret: {
