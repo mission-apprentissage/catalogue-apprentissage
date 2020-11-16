@@ -89,7 +89,6 @@ const etablissementFormateurInfo = {
     default: false,
     description: "Etablissement formateur est habilité RNCP ou pas",
   },
-
   etablissement_formateur_nom_academie: {
     type: String,
     default: null,
@@ -100,7 +99,6 @@ const etablissementFormateurInfo = {
     default: 0,
     description: "Numéro de l'académie formateur",
   },
-
   etablissement_formateur_siren: {
     type: String,
     default: null,

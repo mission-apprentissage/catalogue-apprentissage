@@ -11,7 +11,7 @@ const getOldFormations = async (page = 1, allFormations = []) => {
     const { formations, pagination } = response.data;
 
     allFormations = allFormations.concat(formations); // Should be properly exploded, function should be pure
-    console.log(allFormations.length);
+    console.log(`Got ${allFormations.length} old formation`);
 
     if (page < pagination.nombre_de_page) {
       return getOldFormations(page + 1, allFormations);
@@ -31,8 +31,8 @@ const getOldFormations = async (page = 1, allFormations = []) => {
 
 const run = async () => {
   const oldFormations = await getOldFormations();
-  console.log(oldFormations.length);
 
+  console.log("Hydrate new catalogue");
   await asyncForEach(oldFormations, async (oldFormation) => {
     const mappedMnaFormation = mapping(oldFormation);
     const mnaFormation = new MnaFormation(mappedMnaFormation);

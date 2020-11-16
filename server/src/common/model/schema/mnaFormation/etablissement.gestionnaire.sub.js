@@ -100,7 +100,6 @@ const etablissementGestionnaireInfo = {
     default: 0,
     description: "Numéro de l'académie formateur",
   },
-
   etablissement_gestionnaire_siren: {
     type: String,
     default: null,

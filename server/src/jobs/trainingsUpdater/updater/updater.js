@@ -20,8 +20,6 @@ const run = async (filter = {}) => {
 
     updatedTraining = {
       ...updatedTraining,
-      nom: result.intitule_long,
-      intitule: result.intitule_long,
       intitule_long: result.intitule_long,
       intitule_court: result.intitule_court,
       diplome: result.diplome,
