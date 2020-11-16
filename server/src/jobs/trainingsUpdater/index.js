@@ -5,11 +5,11 @@ const { runScript } = require("../scriptWrapper");
 
 const trainingsUpdater = async () => {
   try {
-    logger.info(" -- Start of Trainings updater -- ");
+    logger.info(" -- Start of Mna formations updater -- ");
 
     await updater.run();
 
-    logger.info(" -- End of Trainings updater -- ");
+    logger.info(" -- End of Mna formations updater -- ");
   } catch (err) {
     logger.error(err);
   }

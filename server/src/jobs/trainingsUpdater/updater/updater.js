@@ -1,9 +1,9 @@
 const axios = require("axios");
-const { Formation } = require("../../../common/model/index");
+const { MnaFormation } = require("../../../common/model/index");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 
 const run = async (filter = {}) => {
-  const trainings = await Formation.find(filter);
+  const trainings = await MnaFormation.find(filter);
 
   await asyncForEach(trainings, async (trainingItem) => {
     let updatedTraining = {

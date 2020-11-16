@@ -2,12 +2,12 @@ const logSchema = require("./log");
 const sampleSchema = require("./sample");
 const userSchema = require("./user");
 const rcoFormationSchema = require("./rcoFormation");
-const trainingSchema = require("./training");
+const mnaFormationsSchema = require("./mnaFormation/mnaFormation");
 
 module.exports = {
   sampleSchema,
   logSchema,
   userSchema,
   rcoFormationSchema,
-  trainingSchema,
+  mnaFormationsSchema,
 };
