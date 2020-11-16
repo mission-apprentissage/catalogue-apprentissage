@@ -12,6 +12,7 @@ const permissionsMiddleware = require("./middlewares/permissionsMiddleware");
 const packageJson = require("../../package.json");
 const hello = require("./routes/hello");
 const entity = require("./routes/entity");
+const rcoFormation = require("./routes/rcoFormation");
 const secured = require("./routes/secured");
 const login = require("./routes/login");
 const authentified = require("./routes/authentified");
@@ -31,6 +32,7 @@ module.exports = async (components) => {
 
   app.use("/api/helloRoute", hello());
   app.use("/api/entity", entity());
+  app.use("/api/rcoformation", rcoFormation());
   app.use("/api/secured", apiKeyAuthMiddleware, secured());
   app.use("/api/login", login(components));
   app.use("/api/authentified", checkJwtToken, authentified());
