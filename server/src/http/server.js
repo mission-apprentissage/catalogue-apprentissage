@@ -10,7 +10,6 @@ const corsMiddleware = require("./middlewares/corsMiddleware");
 const authMiddleware = require("./middlewares/authMiddleware");
 const permissionsMiddleware = require("./middlewares/permissionsMiddleware");
 const packageJson = require("../../package.json");
-const hello = require("./routes/hello");
 const entity = require("./routes/entity");
 const rcoFormation = require("./routes/rcoFormation");
 const secured = require("./routes/secured");
@@ -19,6 +18,8 @@ const authentified = require("./routes/authentified");
 const admin = require("./routes/admin");
 const password = require("./routes/password");
 const stats = require("./routes/stats");
+const esSearch = require("./routes/esSearch");
+const esMultiSearchNoIndex = require("./routes/esMultiSearchNoIndex");
 
 module.exports = async (components) => {
   const { db } = components;
@@ -30,7 +31,8 @@ module.exports = async (components) => {
   app.use(corsMiddleware());
   app.use(logMiddleware());
 
-  app.use("/api/helloRoute", hello());
+  app.use("/api/es/search", esSearch());
+  app.use("/api/search", esMultiSearchNoIndex());
   app.use("/api/entity", entity());
   app.use("/api/rcoformation", rcoFormation());
   app.use("/api/secured", apiKeyAuthMiddleware, secured());
