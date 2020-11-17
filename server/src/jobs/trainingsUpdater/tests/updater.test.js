@@ -19,7 +19,7 @@ describe(__filename, () => {
   });
 
   after(async () => {
-    // await cleanAll();
+    await cleanAll();
   });
 
   it("should have inserted sample data", async () => {
