@@ -105,7 +105,6 @@ const mnaFormationSchema = {
     default: false,
     description: "Le titre RNCP est éligible en apprentissage",
   },
-
   rome_codes: {
     type: [String],
     default: [],
