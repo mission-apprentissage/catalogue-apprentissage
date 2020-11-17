@@ -12,6 +12,17 @@ const formationSchema = Joi.object({
   // Add cp ?
 }).unknown();
 
+/*
+ * Build updates history
+ */
+const buildUpdatesHistory = (formation, updates, keys) => {
+  const from = keys.reduce((acc, key) => {
+    acc[key] = formation[key];
+    return acc;
+  }, {});
+  return [...formation.updates_history, { from, to: { ...updates }, updated_at: Date.now() }];
+};
+
 const mnaFormationUpdater = async (formation) => {
   try {
     await formationSchema.validateAsync(formation, { abortEarly: false });
@@ -36,11 +47,12 @@ const mnaFormationUpdater = async (formation) => {
       ...etablissementsMapping,
       published,
     };
-    // console.log(updatedFormation);
 
-    // TODO 'updates_history':  Run a diff
-    const diffResult = diffFormation(formation, updatedFormation);
-    console.log(diffResult);
+    const { updates, keys } = diffFormation(formation, updatedFormation);
+    if (updates) {
+      updatedFormation.updates_history = buildUpdatesHistory(formation, updates, keys);
+    }
+    return updatedFormation;
   } catch (error) {
     logger.error(error);
     return formation;
@@ -69,17 +81,6 @@ module.exports.mnaFormationUpdater = mnaFormationUpdater;
 //     this.updated.push(updated);
 //     return updated;
 //   }
-
-/*
- * Build updates history
- */
-// const buildUpdatesHistory = (nextFormation, updateInfo) => {
-//   const from = Object.keys(updateInfo).reduce((acc, key) => {
-//     acc[key] = nextFormation[key];
-//     return acc;
-//   }, {});
-//   return [...nextFormation.updates_history, { from, to: { ...updateInfo }, updated_at: Date.now() }];
-// };
 
 // for (let ite = 0; ite < keys.length; ite++) {
 //     const key = keys[ite];
