@@ -1,12 +1,11 @@
 const { MnaFormation } = require("../../../common/model/index");
 // const { asyncForEach } = require("../../../common/utils/asyncUtils");
-const { updateFormationFromCfd } = require("../../../logic/updaters/fromCfdUpdater");
+const { mnaFormationUpdater } = require("../../../logic/updaters/mnaFormationUpdater");
 
 const run = async (filter = {}) => {
   const trainings = await MnaFormation.find(filter);
 
-  const result = await updateFormationFromCfd(trainings[0]._doc);
-  console.log(result);
+  await mnaFormationUpdater(trainings[0]._doc);
 
   // await asyncForEach(trainings, async (trainingItem) => {
   //   let updatedTraining = {

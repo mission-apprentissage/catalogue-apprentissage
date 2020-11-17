@@ -45,6 +45,21 @@ const mnaFormationSchema = {
     default: null,
     description: "Numéro de departement",
   },
+  nom_departement: {
+    type: String,
+    default: null,
+    description: "Numéro de departement",
+  },
+  region: {
+    type: String,
+    default: null,
+    description: "Numéro de departement",
+  },
+  localite: {
+    type: String,
+    default: null,
+    description: "Localité",
+  },
   uai_formation: {
     type: String,
     default: null,
