@@ -15,8 +15,6 @@ const cfdMapper = async (cfd = null) => {
     // TODO Handle MEF
     // TODO handle message
 
-    const rome_codes = result.rncp.romes.map((r) => r.rome);
-
     const {
       date_fin_validite_enregistrement,
       active_inactive,
@@ -30,10 +28,12 @@ const cfdMapper = async (cfd = null) => {
       certificateurs,
       nsf_code,
       nsf_libelle,
-      romes,
+      romes = [],
       blocs_competences,
       voix_acces,
     } = result.rncp;
+
+    const rome_codes = romes.map(({ rome }) => rome);
 
     return {
       result: {

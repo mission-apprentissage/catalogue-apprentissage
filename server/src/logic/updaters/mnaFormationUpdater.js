@@ -51,38 +51,14 @@ const mnaFormationUpdater = async (formation) => {
     const { updates, keys } = diffFormation(formation, updatedFormation);
     if (updates) {
       updatedFormation.updates_history = buildUpdatesHistory(formation, updates, keys);
+      return { isUpdated: true, formation: updatedFormation };
     }
-    return updatedFormation;
+
+    return { isUpdated: false, formation };
   } catch (error) {
     logger.error(error);
-    return formation;
+    return { isUpdated: false, formation };
   }
 };
 
 module.exports.mnaFormationUpdater = mnaFormationUpdater;
-
-/*
- * Update to db RCO Formation
- */
-//   async updateRCOFormation(rcoFormation, updateInfo) {
-//     const updates_history = this.buildUpdatesHistory(rcoFormation, updateInfo);
-//     await RcoFormation.findOneAndUpdate(
-//       { _id: rcoFormation._id },
-//       {
-//         ...rcoFormation,
-//         ...updateInfo,
-//         updates_history,
-//         last_update_at: Date.now(),
-//       },
-//       { new: true }
-//     );
-//     const id = this._buildId(rcoFormation);
-//     const updated = { mnaId: rcoFormation._id, rcoId: id };
-//     this.updated.push(updated);
-//     return updated;
-//   }
-
-// for (let ite = 0; ite < keys.length; ite++) {
-//     const key = keys[ite];
-//     updateInfo[key] = rcoFormationAdded[key];
-//   }
