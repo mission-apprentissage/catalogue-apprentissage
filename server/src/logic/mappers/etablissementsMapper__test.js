@@ -3,9 +3,6 @@ const { mnaFormationEtablissementsMapper } = require("./etablissementsMapper");
 
 describe(__filename, () => {
   it("Doit ajouter les informations relative à un cfd à un objet formation", async () => {
-    assert.deepStrictEqual(await mnaFormationEtablissementsMapper(), {
-      data: null,
-      messages: null,
-    });
+    assert.deepStrictEqual(await mnaFormationEtablissementsMapper(), null);
   });
 });

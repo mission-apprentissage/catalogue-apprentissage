@@ -1,5 +1,6 @@
 const logger = require("../../common/logger");
 const { getEtablissement } = require("../common/apiOldCatalogue");
+const { mnaFormationFromCodePostalMapper } = require("../mappers/fromCodePostalMapper");
 
 const getAttachedEstablishments = async (etablissement_gestionnaire_siret, etablissement_formateur_siret) => {
   // Get establishment Gestionnaire
@@ -18,6 +19,48 @@ const getAttachedEstablishments = async (etablissement_gestionnaire_siret, etabl
   };
 };
 
+const getEstablishmentAddress = (establishment) => {
+  return establishment
+    ? `${establishment.numero_voie ? establishment.numero_voie : ""} ${
+        establishment.type_voie ? establishment.type_voie : ""
+      } ${establishment.nom_voie ? establishment.nom_voie : ""}`
+    : null;
+};
+
+const mapEtablissementKeys = async (
+  etablissement,
+  prefix = "etablissement_gestionnaire" || "etablissement_formateur"
+) => {
+  const { result: cpMapping } = await mnaFormationFromCodePostalMapper(etablissement.code_postal);
+
+  // TODO check validity
+
+  return {
+    [`${prefix}_siren`]: etablissement.siren || null,
+    [`${prefix}_published`]: etablissement.published || false,
+    [`${prefix}_id`]: etablissement._id || null,
+    [`${prefix}_uai`]: etablissement.uai || null,
+    [`${prefix}_enseigne`]: etablissement.enseigne || null,
+    [`${prefix}_type`]: etablissement.computed_type || null,
+    [`${prefix}_conventionne`]: etablissement.computed_conventionne || null,
+    [`${prefix}_declare_prefecture`]: etablissement.computed_declare_prefecture || null,
+    [`${prefix}_declare_datadock`]: etablissement.computed_info_datadock || null,
+    [`${prefix}_adresse`]: getEstablishmentAddress(etablissement),
+    [`${prefix}_complement_adresse`]: etablissement.complement_adresse || null,
+    [`${prefix}_cedex`]: etablissement.cedex || null,
+    [`${prefix}_entreprise_raison_sociale`]: etablissement.entreprise_raison_sociale || null,
+
+    [`${prefix}_code_postal`]: cpMapping.code_postal || null,
+    [`${prefix}_code_commune_insee`]: cpMapping.code_commune_insee || null,
+    [`${prefix}_num_departement`]: cpMapping.num_departement || null,
+    [`${prefix}_nom_departement`]: cpMapping.nom_departement || null,
+    [`${prefix}_region`]: cpMapping.region || null,
+    [`${prefix}_nom_academie`]: cpMapping.nom_academie || null,
+    [`${prefix}_num_academie`]: cpMapping.num_academie || null,
+    [`${prefix}_localite`]: cpMapping.localite || null,
+  };
+};
+
 const mnaFormationEtablissementsMapper = async (etablissement_gestionnaire_siret, etablissement_formateur_siret) => {
   try {
     if (!etablissement_gestionnaire_siret && !etablissement_formateur_siret) {
@@ -30,20 +73,54 @@ const mnaFormationEtablissementsMapper = async (etablissement_gestionnaire_siret
       etablissement_gestionnaire_siret,
       etablissement_formateur_siret
     );
-    console.log(attachedEstablishments);
+    // console.log(attachedEstablishments.gestionnaire);
+
+    console.log(await mapEtablissementKeys(attachedEstablishments.gestionnaire, "etablissement_gestionnaire"));
+    console.log(await mapEtablissementKeys(attachedEstablishments.formateur, "etablissement_formateur"));
 
     // check when empty or errored
 
+    // let referenceEstablishment = attachedEstablishments.responsable || attachedEstablishments.formateur;
+
+    // // Check etablissement responsable found
+    // if (!referenceEstablishment) {
+    //   logger.info(
+    //     `No etablissements found for training ${training._id} - siret responsable : ${training.etablissement_gestionnaire_siret}`
+    //   );
+    //   return null;
+    // }
+
+    // let etablissement_reference =
+    //   attachedEstablishments.responsable && referenceEstablishment._id === attachedEstablishments.responsable._id
+    //     ? "responsable"
+    //     : "formateur";
+
+    // Check if etablissement responsable is conventionne if not take etablissement formateur
+    // if (
+    //   attachedEstablishments.formateur &&
+    //   attachedEstablishments.responsable &&
+    //   attachedEstablishments.responsable.computed_conventionne !== "OUI" &&
+    //   attachedEstablishments.formateur.computed_conventionne === "OUI"
+    // ) {
+    //   referenceEstablishment = attachedEstablishments.formateur;
+    //   etablissement_reference = "formateur";
+    // }
+
     return {
-      result: {},
-      //messages,
+      //////////////////////
+      // etablissement_reference,
+      // etablissement_reference_catalogue_published: referenceEstablishment.catalogue_published,
+      // etablissement_reference_published: referenceEstablishment.published,
+      // etablissement_reference_declare_prefecture: referenceEstablishment.computed_declare_prefecture,
+      // etablissement_reference_type: referenceEstablishment.computed_type,
+      // etablissement_reference_conventionne: referenceEstablishment.computed_conventionne,
+      // etablissement_reference_datadock: referenceEstablishment.computed_info_datadock,
+      //
+      // geo_coordonnees_etablissement_reference: referenceEstablishment.geo_coordonnees,
     };
   } catch (error) {
     logger.error(error);
-    return {
-      data: null,
-      messages: null,
-    };
+    return null;
   }
 };
 

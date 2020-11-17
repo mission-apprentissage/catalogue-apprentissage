@@ -59,6 +59,11 @@ const etablissementFormateurInfo = {
     default: null,
     description: "Code postal établissement formateur",
   },
+  etablissement_formateur_code_commune_insee: {
+    type: String,
+    default: null,
+    description: "Code commune insee établissement formateur",
+  },
   etablissement_formateur_localite: {
     type: String,
     default: null,
@@ -88,6 +93,23 @@ const etablissementFormateurInfo = {
     type: Boolean,
     default: false,
     description: "Etablissement formateur est habilité RNCP ou pas",
+  },
+
+  etablissement_formateur_region: {
+    type: String,
+    default: null,
+    description: "région formateur",
+  },
+
+  etablissement_formateur_num_departement: {
+    type: String,
+    default: null,
+    description: "Numéro de departement formateur",
+  },
+  etablissement_formateur_nom_departement: {
+    type: String,
+    default: null,
+    description: "Numéro de departement formateur",
   },
   etablissement_formateur_nom_academie: {
     type: String,

@@ -6,6 +6,7 @@ const { mnaFormationEtablissementsMapper } = require("../mappers/etablissementsM
 
 const formationSchema = Joi.object({
   cfd: Joi.string().required(),
+  // Add cp and sirets
 }).unknown();
 
 const mnaFormationUpdater = async (formation) => {
@@ -21,8 +22,8 @@ const mnaFormationUpdater = async (formation) => {
     const etablissementsMapping = await mnaFormationEtablissementsMapper(
       formation.etablissement_gestionnaire_siret,
       formation.etablissement_formateur_siret
-    ); // { result, messages }
-    console.log(etablissementsMapping);
+    );
+    //console.log(etablissementsMapping);
 
     // 'updates_history':
   } catch (error) {

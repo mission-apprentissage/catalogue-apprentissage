@@ -140,7 +140,6 @@ const mnaFormationSchema = {
     default: null,
     description: "Année de la formation (cursus)",
   },
-
   email: {
     type: String,
     default: null,
