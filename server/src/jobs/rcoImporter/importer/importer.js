@@ -52,7 +52,7 @@ class Importer {
     this.updated.forEach((element) => {
       const { updates, updateInfo } = this.formationsToUpdateToDb.find((u) => u.rcoFormation._id === element.mnaId);
 
-      if (updates.periode) {
+      if (updates && updates.periode) {
         updates.periode = Object.values(updates.periode).map((dateStr) =>
           new Date(dateStr).toLocaleString("fr-FR", { month: "long", year: "numeric" })
         );
