@@ -50,7 +50,7 @@ const mnaFormationSchema = {
   nom_departement: {
     type: String,
     default: null,
-    description: "Numéro de departement",
+    description: "Nom du departement",
   },
   region: {
     type: String,

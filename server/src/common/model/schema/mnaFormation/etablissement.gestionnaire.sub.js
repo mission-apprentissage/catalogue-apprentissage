@@ -109,7 +109,7 @@ const etablissementGestionnaireInfo = {
   etablissement_gestionnaire_nom_departement: {
     type: String,
     default: null,
-    description: "Numéro de departement gestionnaire",
+    description: "Nom du departement gestionnaire",
   },
   etablissement_gestionnaire_nom_academie: {
     type: String,
