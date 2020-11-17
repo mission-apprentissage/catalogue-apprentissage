@@ -1,9 +1,11 @@
 const etablissementFormateurInfo = require("./etablissement.formateur.sub");
 const etablissementGestionnaireInfo = require("./etablissement.gestionnaire.sub");
+const etablissementReferenceInfo = require("./etablissement.reference.sub");
 
 const mnaFormationSchema = {
   ...etablissementGestionnaireInfo,
   ...etablissementFormateurInfo,
+  ...etablissementReferenceInfo,
 
   cfd: {
     type: String,

@@ -1,10 +1,10 @@
 const logger = require("../../common/logger");
 const { getCpInfo } = require("../common/apiTablesCorrespondances");
 
-const mnaFormationFromCodePostalMapper = async (codePostal = null) => {
+const codePostalMapper = async (codePostal = null) => {
   try {
     if (!codePostal) {
-      throw new Error("mnaFormationFromCodePostalMapper codePostal must be provided");
+      throw new Error("codePostalMapper codePostal must be provided");
     }
 
     const { result, messages } = await getCpInfo(codePostal);
@@ -30,4 +30,4 @@ const mnaFormationFromCodePostalMapper = async (codePostal = null) => {
   }
 };
 
-module.exports.mnaFormationFromCodePostalMapper = mnaFormationFromCodePostalMapper;
+module.exports.codePostalMapper = codePostalMapper;

@@ -1,10 +1,10 @@
 const logger = require("../../common/logger");
 const { getCfdInfo } = require("../common/apiTablesCorrespondances");
 
-const mnaFormationFromCfdMapper = async (cfd = null) => {
+const cfdMapper = async (cfd = null) => {
   try {
     if (!cfd) {
-      throw new Error("mnaFormationFromCfdMapper cfd must be provided");
+      throw new Error("cfdMapper cfd must be provided");
     }
 
     const { result, messages } = await getCfdInfo(cfd);
@@ -82,4 +82,4 @@ const mnaFormationFromCfdMapper = async (cfd = null) => {
   }
 };
 
-module.exports.mnaFormationFromCfdMapper = mnaFormationFromCfdMapper;
+module.exports.cfdMapper = cfdMapper;

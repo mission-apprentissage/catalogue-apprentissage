@@ -1,9 +1,9 @@
 const assert = require("assert");
-const { mnaFormationFromCfdMapper } = require("./fromCfdMapper");
+const { cfdMapper } = require("./cfdMapper");
 
 describe(__filename, () => {
   it("Doit retourner vide", async () => {
-    assert.deepStrictEqual(await mnaFormationFromCfdMapper(), {
+    assert.deepStrictEqual(await cfdMapper(), {
       data: null,
       messages: null,
     });

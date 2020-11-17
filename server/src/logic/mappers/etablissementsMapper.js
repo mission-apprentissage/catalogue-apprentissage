@@ -1,6 +1,6 @@
 const logger = require("../../common/logger");
 const { getEtablissement } = require("../common/apiOldCatalogue");
-const { mnaFormationFromCodePostalMapper } = require("../mappers/fromCodePostalMapper");
+const { codePostalMapper } = require("./codePostalMapper");
 
 const getAttachedEstablishments = async (etablissement_gestionnaire_siret, etablissement_formateur_siret) => {
   // Get establishment Gestionnaire
@@ -27,17 +27,55 @@ const getEstablishmentAddress = (establishment) => {
     : null;
 };
 
+const getEtablissementReference = ({ gestionnaire, formateur }) => {
+  // Check etablissement reference found
+  if (!gestionnaire && !formateur) {
+    logger.error(`getEtablissementReference: both responsable and formateur null`);
+    return null;
+  }
+
+  let referenceEstablishment = gestionnaire || formateur;
+
+  let etablissement_reference =
+    gestionnaire && referenceEstablishment._id === gestionnaire._id ? "gestionnaire" : "formateur";
+
+  // Check if etablissement responsable is conventionne if not take etablissement formateur
+  if (
+    formateur &&
+    gestionnaire &&
+    gestionnaire.computed_conventionne !== "OUI" &&
+    formateur.computed_conventionne === "OUI"
+  ) {
+    referenceEstablishment = formateur;
+    etablissement_reference = "formateur";
+  }
+
+  return {
+    referenceEstablishment,
+    etablissement_reference,
+  };
+};
+
+const getGeoloc = ({ gestionnaire, formateur }) => {
+  return {
+    geo_coordonnees_etablissement_formateur: formateur ? formateur.geo_coordonnees : null,
+    geo_coordonnees_etablissement_gestionnaire: gestionnaire ? gestionnaire.geo_coordonnees : null,
+    idea_geo_coordonnees_etablissement: formateur ? formateur.geo_coordonnees : gestionnaire.geo_coordonnees,
+  };
+};
+
 const mapEtablissementKeys = async (
   etablissement,
   prefix = "etablissement_gestionnaire" || "etablissement_formateur"
 ) => {
-  const { result: cpMapping } = await mnaFormationFromCodePostalMapper(etablissement.code_postal);
+  const { result: cpMapping } = await codePostalMapper(etablissement.code_postal);
 
   // TODO check validity
 
   return {
     [`${prefix}_siren`]: etablissement.siren || null,
     [`${prefix}_published`]: etablissement.published || false,
+    [`${prefix}_catalogue_published`]: etablissement.catalogue_published || false,
     [`${prefix}_id`]: etablissement._id || null,
     [`${prefix}_uai`]: etablissement.uai || null,
     [`${prefix}_enseigne`]: etablissement.enseigne || null,
@@ -61,62 +99,44 @@ const mapEtablissementKeys = async (
   };
 };
 
-const mnaFormationEtablissementsMapper = async (etablissement_gestionnaire_siret, etablissement_formateur_siret) => {
+const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissement_formateur_siret) => {
   try {
     if (!etablissement_gestionnaire_siret && !etablissement_formateur_siret) {
-      throw new Error(
-        "mnaFormationEtablissementsMapper etablissement_gestionnaire_siret, etablissement_formateur_siret  must be provided"
-      );
+      throw new Error("etablissementsMapper gestionnaire_siret, formateur_siret  must be provided");
     }
 
     const attachedEstablishments = await getAttachedEstablishments(
       etablissement_gestionnaire_siret,
       etablissement_formateur_siret
     );
-    // console.log(attachedEstablishments.gestionnaire);
 
-    console.log(await mapEtablissementKeys(attachedEstablishments.gestionnaire, "etablissement_gestionnaire"));
-    console.log(await mapEtablissementKeys(attachedEstablishments.formateur, "etablissement_formateur"));
+    const etablissementGestionnaire = await mapEtablissementKeys(
+      attachedEstablishments.gestionnaire,
+      "etablissement_gestionnaire"
+    );
+    const etablissementFormateur = await mapEtablissementKeys(
+      attachedEstablishments.formateur,
+      "etablissement_formateur"
+    );
 
-    // check when empty or errored
+    const { referenceEstablishment, etablissement_reference } = getEtablissementReference(attachedEstablishments);
 
-    // let referenceEstablishment = attachedEstablishments.responsable || attachedEstablishments.formateur;
+    const geolocInfo = getGeoloc(attachedEstablishments);
 
-    // // Check etablissement responsable found
-    // if (!referenceEstablishment) {
-    //   logger.info(
-    //     `No etablissements found for training ${training._id} - siret responsable : ${training.etablissement_gestionnaire_siret}`
-    //   );
-    //   return null;
-    // }
-
-    // let etablissement_reference =
-    //   attachedEstablishments.responsable && referenceEstablishment._id === attachedEstablishments.responsable._id
-    //     ? "responsable"
-    //     : "formateur";
-
-    // Check if etablissement responsable is conventionne if not take etablissement formateur
-    // if (
-    //   attachedEstablishments.formateur &&
-    //   attachedEstablishments.responsable &&
-    //   attachedEstablishments.responsable.computed_conventionne !== "OUI" &&
-    //   attachedEstablishments.formateur.computed_conventionne === "OUI"
-    // ) {
-    //   referenceEstablishment = attachedEstablishments.formateur;
-    //   etablissement_reference = "formateur";
-    // }
-
+    // TODO check when empty or errored
     return {
-      //////////////////////
-      // etablissement_reference,
-      // etablissement_reference_catalogue_published: referenceEstablishment.catalogue_published,
-      // etablissement_reference_published: referenceEstablishment.published,
-      // etablissement_reference_declare_prefecture: referenceEstablishment.computed_declare_prefecture,
-      // etablissement_reference_type: referenceEstablishment.computed_type,
-      // etablissement_reference_conventionne: referenceEstablishment.computed_conventionne,
-      // etablissement_reference_datadock: referenceEstablishment.computed_info_datadock,
-      //
-      // geo_coordonnees_etablissement_reference: referenceEstablishment.geo_coordonnees,
+      ...etablissementGestionnaire,
+      ...etablissementFormateur,
+
+      etablissement_reference,
+      etablissement_reference_catalogue_published: referenceEstablishment.catalogue_published,
+      etablissement_reference_published: referenceEstablishment.published,
+      etablissement_reference_declare_prefecture: referenceEstablishment.computed_declare_prefecture,
+      etablissement_reference_type: referenceEstablishment.computed_type,
+      etablissement_reference_conventionne: referenceEstablishment.computed_conventionne,
+      etablissement_reference_datadock: referenceEstablishment.computed_info_datadock,
+
+      ...geolocInfo,
     };
   } catch (error) {
     logger.error(error);
@@ -124,4 +144,4 @@ const mnaFormationEtablissementsMapper = async (etablissement_gestionnaire_siret
   }
 };
 
-module.exports.mnaFormationEtablissementsMapper = mnaFormationEtablissementsMapper;
+module.exports.etablissementsMapper = etablissementsMapper;

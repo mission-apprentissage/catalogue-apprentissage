@@ -1,9 +1,9 @@
 const assert = require("assert");
-const { mnaFormationFromCodePostalMapper } = require("./fromCodePostalMapper");
+const { codePostalMapper } = require("./codePostalMapper");
 
 describe(__filename, () => {
   it("Doit retourner vide", async () => {
-    assert.deepStrictEqual(await mnaFormationFromCodePostalMapper(), {
+    assert.deepStrictEqual(await codePostalMapper(), {
       data: null,
       messages: null,
     });
