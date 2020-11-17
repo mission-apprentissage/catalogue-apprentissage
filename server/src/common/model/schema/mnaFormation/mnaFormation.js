@@ -10,20 +10,10 @@ const mnaFormationSchema = {
     default: null,
     description: "Code formation diplome (education nationale)",
   },
-  cfd_specialite_lettre: {
-    type: String,
+  cfd_specialite: {
+    type: Object,
     default: null,
     description: "Lettre spécialité du code cfd",
-  },
-  cfd_specialite_libelle: {
-    type: String,
-    default: null,
-    description: "Libellé spécialité du code cfd",
-  },
-  cfd_specialite_libelle_court: {
-    type: String,
-    default: null,
-    description: "Libellé court spécialité du code cfd",
   },
   mef_10_code: {
     type: String,
@@ -104,6 +94,11 @@ const mnaFormationSchema = {
     type: Boolean,
     default: false,
     description: "Le titre RNCP est éligible en apprentissage",
+  },
+  rncp_details: {
+    type: Object,
+    default: null,
+    description: "Détails RNCP (bloc de compétences etc..)",
   },
   rome_codes: {
     type: [String],
