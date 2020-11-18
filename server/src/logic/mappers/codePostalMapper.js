@@ -7,18 +7,21 @@ const codePostalMapper = async (codePostal = null) => {
       throw new Error("codePostalMapper codePostal must be provided");
     }
 
-    const { result, messages } = await getCpInfo(codePostal);
-    // TODO check result (can be null)
+    const cpInfo = await getCpInfo(codePostal);
+    if (!cpInfo) {
+      return {
+        result: null,
+        messages: null,
+      };
+    }
 
-    // eslint-disable-next-line no-unused-vars
+    const { result, messages } = cpInfo;
     const { commune, ...rest } = result;
-
-    // check when empty or errored
 
     return {
       result: {
         ...rest,
-        localite: result.commune,
+        localite: commune,
       },
       messages,
     };

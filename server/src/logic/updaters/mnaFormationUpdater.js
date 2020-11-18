@@ -56,8 +56,6 @@ const mnaFormationUpdater = async (formation) => {
 
     const { result: cpMapping, messages: cpMessages } = await codePostalMapper(formation.code_postal);
 
-    // TODO handle result null !
-
     const error = parseErrorMessages({
       cfdMessages,
       cpMessages,
