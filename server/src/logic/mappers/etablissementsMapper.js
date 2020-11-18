@@ -20,17 +20,18 @@ const getAttachedEstablishments = async (etablissement_gestionnaire_siret, etabl
 };
 
 const getEstablishmentAddress = (establishment) => {
-  return establishment
-    ? `${establishment.numero_voie ? establishment.numero_voie : ""} ${
-        establishment.type_voie ? establishment.type_voie : ""
-      } ${establishment.nom_voie ? establishment.nom_voie : ""}`
-    : null;
+  if (!establishment) {
+    return null;
+  }
+
+  const { numero_voie, type_voie, nom_voie } = establishment;
+  return [numero_voie, type_voie, nom_voie].filter((val) => val).join(" ");
 };
 
 const getEtablissementReference = ({ gestionnaire, formateur }) => {
   // Check etablissement reference found
   if (!gestionnaire && !formateur) {
-    logger.error(`getEtablissementReference: both responsable and formateur null`);
+    logger.error(`getEtablissementReference: both gestionnaire and formateur null`);
     return null;
   }
 
@@ -57,10 +58,14 @@ const getEtablissementReference = ({ gestionnaire, formateur }) => {
 };
 
 const getGeoloc = ({ gestionnaire, formateur }) => {
+  const geo_coordonnees_etablissement_formateur = formateur ? formateur.geo_coordonnees : null;
+  const geo_coordonnees_etablissement_gestionnaire = gestionnaire ? gestionnaire.geo_coordonnees : null;
+
   return {
-    geo_coordonnees_etablissement_formateur: formateur ? formateur.geo_coordonnees : null,
-    geo_coordonnees_etablissement_gestionnaire: gestionnaire ? gestionnaire.geo_coordonnees : null,
-    idea_geo_coordonnees_etablissement: formateur ? formateur.geo_coordonnees : gestionnaire.geo_coordonnees,
+    geo_coordonnees_etablissement_formateur,
+    geo_coordonnees_etablissement_gestionnaire,
+    idea_geo_coordonnees_etablissement:
+      geo_coordonnees_etablissement_formateur || geo_coordonnees_etablissement_gestionnaire,
   };
 };
 
@@ -69,6 +74,17 @@ const mapEtablissementKeys = async (
   prefix = "etablissement_gestionnaire" || "etablissement_formateur"
 ) => {
   const { result: cpMapping } = await codePostalMapper(etablissement.code_postal);
+
+  const {
+    code_postal = null,
+    code_commune_insee = null,
+    num_departement = null,
+    nom_departement = null,
+    region = null,
+    nom_academie = null,
+    num_academie = null,
+    localite = null,
+  } = cpMapping || {};
 
   // TODO check validity
 
@@ -88,14 +104,14 @@ const mapEtablissementKeys = async (
     [`${prefix}_cedex`]: etablissement.cedex || null,
     [`${prefix}_entreprise_raison_sociale`]: etablissement.entreprise_raison_sociale || null,
 
-    [`${prefix}_code_postal`]: cpMapping.code_postal || null,
-    [`${prefix}_code_commune_insee`]: cpMapping.code_commune_insee || null,
-    [`${prefix}_num_departement`]: cpMapping.num_departement || null,
-    [`${prefix}_nom_departement`]: cpMapping.nom_departement || null,
-    [`${prefix}_region`]: cpMapping.region || null,
-    [`${prefix}_nom_academie`]: cpMapping.nom_academie || null,
-    [`${prefix}_num_academie`]: cpMapping.num_academie || null,
-    [`${prefix}_localite`]: cpMapping.localite || null,
+    [`${prefix}_code_postal`]: code_postal,
+    [`${prefix}_code_commune_insee`]: code_commune_insee,
+    [`${prefix}_num_departement`]: num_departement,
+    [`${prefix}_nom_departement`]: nom_departement,
+    [`${prefix}_region`]: region,
+    [`${prefix}_nom_academie`]: nom_academie,
+    [`${prefix}_num_academie`]: num_academie,
+    [`${prefix}_localite`]: localite,
   };
 };
 
@@ -110,6 +126,13 @@ const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissem
       etablissement_formateur_siret
     );
 
+    const etablissementReference = getEtablissementReference(attachedEstablishments);
+    if (!etablissementReference) {
+      return null;
+    }
+
+    const { referenceEstablishment, etablissement_reference } = etablissementReference;
+
     const etablissementGestionnaire = await mapEtablissementKeys(
       attachedEstablishments.gestionnaire,
       "etablissement_gestionnaire"
@@ -119,11 +142,8 @@ const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissem
       "etablissement_formateur"
     );
 
-    const { referenceEstablishment, etablissement_reference } = getEtablissementReference(attachedEstablishments);
-
     const geolocInfo = getGeoloc(attachedEstablishments);
 
-    // TODO check when empty or errored
     return {
       ...etablissementGestionnaire,
       ...etablissementFormateur,

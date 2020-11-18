@@ -66,7 +66,9 @@ const mnaFormationUpdater = async (formation) => {
       formation.etablissement_formateur_siret
     );
 
-    let published = etablissementsMapping.etablissement_reference_published;
+    const published = etablissementsMapping
+      ? etablissementsMapping.etablissement_reference_published
+      : formation.published;
 
     const updatedFormation = {
       ...formation,
