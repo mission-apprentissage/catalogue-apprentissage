@@ -117,7 +117,7 @@ const etablissementFormateurInfo = {
     description: "Nom de l'académie formateur",
   },
   etablissement_formateur_num_academie: {
-    type: Number,
+    type: String,
     default: 0,
     description: "Numéro de l'académie formateur",
   },
