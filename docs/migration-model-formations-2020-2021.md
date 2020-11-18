@@ -49,9 +49,14 @@ en rouge les clés définitivement supprimées
   etablissement_formateur_entreprise_raison_sociale: 'CHAMBRE COMMERCE ET INDUSTRIE LA MAYENNE',
   rncp_etablissement_formateur_habilite: false,
   geo_coordonnees_etablissement_formateur: '48.070416,-0.771807',
-+  etablissement_formateur_nom_academie: 
-+  etablissement_formateur_num_academie:
-+  etablissement_formateur_siren:
+  
++  etablissement_formateur_region: String
++  etablissement_formateur_num_departement: String
++  etablissement_formateur_nom_departement: String
++  etablissement_formateur_nom_academie: String
++  etablissement_formateur_num_academie: String
++  etablissement_formateur_siren: String
+
 
 ! etablissement_responsable_id: '5e8df90e20ff3b2161268550',
 + etablissement_gestionnaire_id: '5e8df90e20ff3b2161268550',
@@ -90,9 +95,13 @@ en rouge les clés définitivement supprimées
 ! geo_coordonnees_etablissement_responsable: '48.070416,-0.771807',
 + geo_coordonnees_gestionnaire_responsable: '48.070416,-0.771807',
 
-+ etablissement_gestionnaire_nom_academie:
-+ etablissement_gestionnaire_num_academie:
-+ etablissement_gestionnaire_siren:
++ etablissement_gestionnaire_region: String
++ etablissement_gestionnaire_num_departement: String
++ etablissement_gestionnaire_nom_departement: String
++ etablissement_gestionnaire_nom_academie: String
++ etablissement_gestionnaire_num_academie: String
++ etablissement_gestionnaire_siren: String
+
 
   etablissement_reference: 'responsable',
   etablissement_reference_type: 'CFA',
@@ -125,9 +134,9 @@ idea_geo_coordonnees_etablissement: '48.070416,-0.771807'
   code_postal: '53000',
   code_commune_insee: '53130',
   num_departement: '53',
-+ nom_departement: 
-+ region:
-+ localite:
++ nom_departement: String
++ region: String
++ localite: : String
 
 -  ds_id_dossier: '1351112',
   uai_formation: '0531054H',
@@ -204,8 +213,9 @@ idea_geo_coordonnees_etablissement: '48.070416,-0.771807'
 
   published: true,
   draft: false,
-! last_modification: null,
-+ last_update_who
+! last_modification: null, // String
++ last_update_who: null, // String
+
   to_verified: false,
 
 -  published_old: true,
