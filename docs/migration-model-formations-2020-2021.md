@@ -1,3 +1,34 @@
+# Migration de modèle mna Formation 2020->2021
+
+## Légende 
+
+### Modifiée
+en orange soit le nom de la clé à changée soit le type de valeur à changé
+```diff
+{
+! oldKey: value,
++ newKey: value,
+}
+```
+
+### Ajoutée
+en vert les nouvelles clés
+```diff
+{
++ newKey: value,
+}
+```
+
+### Supprimée
+en rouge les clés définitivement supprimées
+```diff
+{
+- oldKey: value,
+}
+```
+
+## Schéma 
+
 ```diff
 {
   etablissement_formateur_id: '5e8df90e20ff3b2161268550',
@@ -58,6 +89,7 @@
 + rncp_etablissement_gestionnaire_habilite: false,
 ! geo_coordonnees_etablissement_responsable: '48.070416,-0.771807',
 + geo_coordonnees_gestionnaire_responsable: '48.070416,-0.771807',
+
 + etablissement_gestionnaire_nom_academie:
 + etablissement_gestionnaire_num_academie:
 + etablissement_gestionnaire_siren:
