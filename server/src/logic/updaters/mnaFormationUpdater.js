@@ -23,6 +23,31 @@ const buildUpdatesHistory = (formation, updates, keys) => {
   return [...formation.updates_history, { from, to: { ...updates }, updated_at: Date.now() }];
 };
 
+const parseCfdErrors = (cfdMessages) => {
+  if (!cfdMessages) {
+    return "";
+  }
+  return Object.entries(cfdMessages)
+    .filter(([key, value]) => key === "error" || value === "Erreur")
+    .reduce((acc, [key, value]) => `${acc}${acc ? " " : ""}${key}: ${value}.`, "");
+};
+
+const parseCpErrors = (cpMessages) => {
+  if (!cpMessages || !cpMessages.error) {
+    return "";
+  }
+  return `${cpMessages.error}.`;
+};
+
+/**
+ * Parse messages to check if there are errors
+ */
+const parseErrorMessages = ({ cfdMessages, cpMessages }) => {
+  const cfdError = parseCfdErrors(cfdMessages);
+  const cpError = parseCpErrors(cpMessages.error);
+  return `${cfdError}${cfdError ? " " : ""}${cpError}`;
+};
+
 const mnaFormationUpdater = async (formation) => {
   try {
     await formationSchema.validateAsync(formation, { abortEarly: false });
@@ -31,7 +56,12 @@ const mnaFormationUpdater = async (formation) => {
 
     const { result: cpMapping, messages: cpMessages } = await codePostalMapper(formation.code_postal);
 
-    // TODO handle cfdMessages, cpMessages
+    // TODO handle result null !
+
+    const error = parseErrorMessages({
+      cfdMessages,
+      cpMessages,
+    });
 
     const etablissementsMapping = await etablissementsMapper(
       formation.etablissement_gestionnaire_siret,
@@ -51,13 +81,13 @@ const mnaFormationUpdater = async (formation) => {
     const { updates, keys } = diffFormation(formation, updatedFormation);
     if (updates) {
       updatedFormation.updates_history = buildUpdatesHistory(formation, updates, keys);
-      return { isUpdated: true, formation: updatedFormation };
+      return { isUpdated: true, formation: updatedFormation, error };
     }
 
-    return { isUpdated: false, formation };
-  } catch (error) {
-    logger.error(error);
-    return { isUpdated: false, formation };
+    return { isUpdated: false, formation, error };
+  } catch (e) {
+    logger.error(e);
+    return { isUpdated: false, formation, error: e.toString() };
   }
 };
 

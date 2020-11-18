@@ -76,7 +76,7 @@ const cfdMapper = async (cfd = null) => {
   } catch (error) {
     logger.error(error);
     return {
-      data: null,
+      result: null,
       messages: null,
     };
   }

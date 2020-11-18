@@ -8,6 +8,7 @@ const codePostalMapper = async (codePostal = null) => {
     }
 
     const { result, messages } = await getCpInfo(codePostal);
+    // TODO check result (can be null)
 
     // eslint-disable-next-line no-unused-vars
     const { commune, ...rest } = result;
@@ -24,7 +25,7 @@ const codePostalMapper = async (codePostal = null) => {
   } catch (error) {
     logger.error(error);
     return {
-      data: null,
+      result: null,
       messages: null,
     };
   }
