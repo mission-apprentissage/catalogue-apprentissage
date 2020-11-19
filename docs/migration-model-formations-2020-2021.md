@@ -93,7 +93,7 @@ en rouge les clés définitivement supprimées
 ! rncp_etablissement_responsable_habilite: false,
 + rncp_etablissement_gestionnaire_habilite: false,
 ! geo_coordonnees_etablissement_responsable: '48.070416,-0.771807',
-+ geo_coordonnees_gestionnaire_responsable: '48.070416,-0.771807',
++ geo_coordonnees_etablissement_gestionnaire: '48.070416,-0.771807',
 
 + etablissement_gestionnaire_region: String
 + etablissement_gestionnaire_num_departement: String
