@@ -44,6 +44,16 @@ const mapping = (old) => {
     // 'etablissement_formateur_num_academie': // TO CREATE,
     // 'etablissement_formateur_siren': // TO CREATE,
 
+    etablissement_reference: old.etablissement_reference,
+    etablissement_reference_type: old.etablissement_reference_type,
+    etablissement_reference_conventionne: old.etablissement_reference_conventionne,
+    etablissement_reference_declare_prefecture: old.etablissement_reference_declare_prefecture,
+    etablissement_reference_datadock: old.etablissement_reference_datadock,
+    etablissement_reference_published: old.etablissement_reference_published,
+    etablissement_reference_catalogue_published: old.etablissement_reference_catalogue_published,
+
+    idea_geo_coordonnees_etablissement: old.idea_geo_coordonnees_etablissement,
+
     cfd: old.educ_nat_code,
     cfd_specialite_lettre: old.educ_nat_specialite_lettre,
     cfd_specialite_libelle: old.educ_nat_specialite_libelle,
@@ -84,7 +94,7 @@ const mapping = (old) => {
     // 'updates_history': // TO CREATE,
     last_update_who: old.last_modification,
     to_verified: old.to_verified,
-    idea_geo_coordonnees_etablissement: old.idea_geo_coordonnees_etablissement,
+
     _id: old._id,
     created_at: old.created_at,
     last_update_at: old.last_update_at,
