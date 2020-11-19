@@ -35,10 +35,12 @@ const parseErrors = (messages) => {
 /**
  * Parse messages to check if there are errors
  */
-const parseErrorMessages = ({ cfdMessages, cpMessages }) => {
-  const cfdError = parseErrors(cfdMessages);
+const parseErrorMessages = ({ cfdMessages, cpMessages, etablissementsMessages }) => {
+  let error = parseErrors(cfdMessages);
   const cpError = parseErrors(cpMessages);
-  return `${cfdError}${cfdError ? " " : ""}${cpError}`;
+  error = `${error}${error ? " " : ""}${cpError}`;
+  const etablissementsError = parseErrors(etablissementsMessages);
+  return `${error}${error ? " " : ""}${etablissementsError}`;
 };
 
 const mnaFormationUpdater = async (formation) => {
@@ -49,15 +51,16 @@ const mnaFormationUpdater = async (formation) => {
 
     const { result: cpMapping, messages: cpMessages } = await codePostalMapper(formation.code_postal);
 
-    const error = parseErrorMessages({
-      cfdMessages,
-      cpMessages,
-    });
-
-    const etablissementsMapping = await etablissementsMapper(
+    const { result: etablissementsMapping, messages: etablissementsMessages } = await etablissementsMapper(
       formation.etablissement_gestionnaire_siret,
       formation.etablissement_formateur_siret
     );
+
+    const error = parseErrorMessages({
+      cfdMessages,
+      cpMessages,
+      etablissementsMessages,
+    });
 
     const published = etablissementsMapping
       ? etablissementsMapping.etablissement_reference_published
