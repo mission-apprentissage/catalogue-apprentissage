@@ -195,8 +195,8 @@ class Importer {
             const key = keys[ite];
             updateInfo[key] = rcoFormationUpdated[key];
           }
+          toUpdateToDb.push({ rcoFormation, updateInfo, updates });
         }
-        toUpdateToDb.push({ rcoFormation, updateInfo, updates });
       } else {
         console.error(
           `updatedFormationsHandler >> Formation ${this._buildId(rcoFormationUpdated)} n'existe pas en base`
