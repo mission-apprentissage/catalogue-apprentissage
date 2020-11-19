@@ -4,7 +4,7 @@ const path = require("path");
 const { MnaFormation } = require("../../../common/model/index");
 const { connectToMongoForTests, cleanAll } = require("../../../../tests/utils/testUtils.js");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
-const { run } = require("../updater/updater.js");
+const { performUpdates } = require("../updater/updater.js");
 
 const trainingsTest = fs.readJsonSync(path.resolve(__dirname, "../assets/sample.json"));
 
@@ -28,7 +28,8 @@ describe(__filename, () => {
   });
 
   it("should have updated data with tables-correspondance api call", async () => {
-    await run();
+    const mnaFormations = await MnaFormation.find({});
+    await performUpdates(mnaFormations);
 
     const count = await MnaFormation.countDocuments({});
     assert.strictEqual(count, 10);
