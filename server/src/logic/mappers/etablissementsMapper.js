@@ -86,8 +86,6 @@ const mapEtablissementKeys = async (
     localite = null,
   } = cpMapping || {};
 
-  // TODO check validity
-
   return {
     [`${prefix}_siren`]: etablissement.siren || null,
     [`${prefix}_published`]: etablissement.published || false,

@@ -11,17 +11,14 @@ const cfdMapper = async (cfd = null) => {
     if (!cfdInfo) {
       return {
         result: null,
-        messages: null,
+        messages: {
+          error: `Unable to retrieve data from cfd ${cfd}`,
+        },
       };
     }
 
     const { result, messages } = cfdInfo;
     const { rncp = {}, mefs = {} } = result;
-
-    // TODO check result obj
-    // TODO check if cfd valid
-    // TODO check if rncp valid
-    // TODO Handle MEF
 
     const {
       date_fin_validite_enregistrement = null,
@@ -63,7 +60,7 @@ const cfdMapper = async (cfd = null) => {
 
         rncp_code: code_rncp,
         rncp_intitule: intitule_diplome,
-        // rncp_eligible_apprentissage // TODO
+        // rncp_eligible_apprentissage // TODO  tables de correspondances
         rome_codes,
         rncp_details: {
           date_fin_validite_enregistrement,
@@ -85,11 +82,13 @@ const cfdMapper = async (cfd = null) => {
       },
       messages,
     };
-  } catch (error) {
-    logger.error(error);
+  } catch (e) {
+    logger.error(e);
     return {
       result: null,
-      messages: null,
+      messages: {
+        error: e.toString(),
+      },
     };
   }
 };

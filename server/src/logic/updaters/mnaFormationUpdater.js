@@ -9,7 +9,7 @@ const formationSchema = Joi.object({
   cfd: Joi.string().required(),
   etablissement_gestionnaire_siret: Joi.string().required(),
   etablissement_formateur_siret: Joi.string().required(),
-  // Add cp ?
+  code_postal: Joi.string().required(),
 }).unknown();
 
 /*
@@ -23,28 +23,21 @@ const buildUpdatesHistory = (formation, updates, keys) => {
   return [...formation.updates_history, { from, to: { ...updates }, updated_at: Date.now() }];
 };
 
-const parseCfdErrors = (cfdMessages) => {
-  if (!cfdMessages) {
+const parseErrors = (messages) => {
+  if (!messages) {
     return "";
   }
-  return Object.entries(cfdMessages)
-    .filter(([key, value]) => key === "error" || value === "Erreur")
+  return Object.entries(messages)
+    .filter(([key, value]) => key === "error" || `${value}`.toLowerCase().includes("erreur"))
     .reduce((acc, [key, value]) => `${acc}${acc ? " " : ""}${key}: ${value}.`, "");
-};
-
-const parseCpErrors = (cpMessages) => {
-  if (!cpMessages || !cpMessages.error) {
-    return "";
-  }
-  return `${cpMessages.error}.`;
 };
 
 /**
  * Parse messages to check if there are errors
  */
 const parseErrorMessages = ({ cfdMessages, cpMessages }) => {
-  const cfdError = parseCfdErrors(cfdMessages);
-  const cpError = parseCpErrors(cpMessages.error);
+  const cfdError = parseErrors(cfdMessages);
+  const cpError = parseErrors(cpMessages);
   return `${cfdError}${cfdError ? " " : ""}${cpError}`;
 };
 
@@ -81,13 +74,13 @@ const mnaFormationUpdater = async (formation) => {
     const { updates, keys } = diffFormation(formation, updatedFormation);
     if (updates) {
       updatedFormation.updates_history = buildUpdatesHistory(formation, updates, keys);
-      return { isUpdated: true, formation: updatedFormation, error };
+      return { updates, formation: updatedFormation, error };
     }
 
-    return { isUpdated: false, formation, error };
+    return { updates: null, formation, error };
   } catch (e) {
     logger.error(e);
-    return { isUpdated: false, formation, error: e.toString() };
+    return { updates: null, formation, error: e.toString() };
   }
 };
 

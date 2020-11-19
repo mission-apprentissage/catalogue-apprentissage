@@ -11,7 +11,9 @@ const codePostalMapper = async (codePostal = null) => {
     if (!cpInfo) {
       return {
         result: null,
-        messages: null,
+        messages: {
+          error: `Unable to retrieve data from codePostal ${codePostal}`,
+        },
       };
     }
 
@@ -25,11 +27,13 @@ const codePostalMapper = async (codePostal = null) => {
       },
       messages,
     };
-  } catch (error) {
-    logger.error(error);
+  } catch (e) {
+    logger.error(e);
     return {
       result: null,
-      messages: null,
+      messages: {
+        error: e.toString(),
+      },
     };
   }
 };
