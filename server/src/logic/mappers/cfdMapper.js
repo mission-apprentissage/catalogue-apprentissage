@@ -18,7 +18,7 @@ const cfdMapper = async (cfd = null) => {
     }
 
     const { result, messages } = cfdInfo;
-    const { rncp = {}, mefs = {} } = result;
+    const { rncp = {}, mefs = {}, onisep = {} } = result;
 
     const {
       date_fin_validite_enregistrement = null,
@@ -40,9 +40,11 @@ const cfdMapper = async (cfd = null) => {
       intitule_diplome = null,
     } = rncp;
 
-    const rome_codes = romes.map(({ rome }) => rome);
+    const rome_codes = (romes || []).map(({ rome }) => rome);
 
     const { mef10 = null, modalite = { duree: null, annee: null } } = mefs;
+
+    const { url: onisep_url = null } = onisep;
 
     return {
       result: {
@@ -56,7 +58,7 @@ const cfdMapper = async (cfd = null) => {
         mef_10_code: mef10, // TODO fix tables de correspondances
         duree: modalite.duree,
         annee: modalite.annee,
-        // onisep_url // TODO tables de correspondances
+        onisep_url,
 
         rncp_code: code_rncp,
         rncp_intitule: intitule_diplome,
