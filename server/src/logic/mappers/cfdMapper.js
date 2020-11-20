@@ -38,6 +38,7 @@ const cfdMapper = async (cfd = null) => {
       voix_acces = null,
       code_rncp = null,
       intitule_diplome = null,
+      eligible_apprentissage = false,
     } = rncp;
 
     const rome_codes = (romes || []).map(({ rome }) => rome);
@@ -62,7 +63,7 @@ const cfdMapper = async (cfd = null) => {
 
         rncp_code: code_rncp,
         rncp_intitule: intitule_diplome,
-        // rncp_eligible_apprentissage // TODO  tables de correspondances
+        rncp_eligible_apprentissage: eligible_apprentissage,
         rome_codes,
         rncp_details: {
           date_fin_validite_enregistrement,
