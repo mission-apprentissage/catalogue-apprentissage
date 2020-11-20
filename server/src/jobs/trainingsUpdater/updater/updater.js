@@ -16,17 +16,19 @@ const performUpdates = async (mnaFormations) => {
   const notUpdatedFormations = [];
   const updatedFormations = [];
 
-  await asyncForEach(mnaFormations, async (mnaFormation) => {
+  const total = mnaFormations.length;
+
+  await asyncForEach(mnaFormations, async (mnaFormation, index) => {
     const { updates, formation: updatedFormation, error } = await mnaFormationUpdater(mnaFormation._doc);
 
     if (error) {
-      logger.error(`MnaFormation ${mnaFormation._id}/${mnaFormation.cfd} has error`, error);
+      logger.error(`${index}/${total}: MnaFormation ${mnaFormation._id}/${mnaFormation.cfd} has error`, error);
       invalidFormations.push({ id: mnaFormation._id, cfd: mnaFormation.cfd, error });
       return;
     }
 
     if (!updates) {
-      logger.info(`MnaFormation ${mnaFormation._id} nothing to do`);
+      logger.info(`${index}/${total}: MnaFormation ${mnaFormation._id} nothing to do`);
       notUpdatedFormations.push({ id: mnaFormation._id, cfd: mnaFormation.cfd });
       return;
     }
@@ -34,7 +36,7 @@ const performUpdates = async (mnaFormations) => {
     try {
       updatedFormation.last_update_at = Date.now();
       await MnaFormation.findOneAndUpdate({ _id: mnaFormation._id }, updatedFormation, { new: true });
-      logger.info(`MnaFormation ${mnaFormation._id} has been updated`);
+      logger.info(`${index}/  ${total}: MnaFormation ${mnaFormation._id} has been updated`);
       updatedFormations.push({ id: mnaFormation._id, cfd: mnaFormation.cfd, updates: JSON.stringify(updates) });
     } catch (error) {
       logger.error(error);

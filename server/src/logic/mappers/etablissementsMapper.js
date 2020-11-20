@@ -9,9 +9,14 @@ const getAttachedEstablishments = async (etablissement_gestionnaire_siret, etabl
   });
 
   // Get establishment Formateur
-  const formateur = await getEtablissement({
-    siret: etablissement_formateur_siret,
-  });
+  let formateur;
+  if (etablissement_gestionnaire_siret === etablissement_formateur_siret) {
+    formateur = gestionnaire;
+  } else {
+    formateur = await getEtablissement({
+      siret: etablissement_formateur_siret,
+    });
+  }
 
   return {
     gestionnaire,
@@ -71,9 +76,15 @@ const getGeoloc = ({ gestionnaire, formateur }) => {
 
 const mapEtablissementKeys = async (
   etablissement,
-  prefix = "etablissement_gestionnaire" || "etablissement_formateur"
+  prefix = "etablissement_gestionnaire" || "etablissement_formateur",
+  cpMap = {}
 ) => {
-  const { result: cpMapping, messages } = await codePostalMapper(etablissement.code_postal);
+  const { result: cpMapping, messages } =
+    cpMap[etablissement.code_postal] || (await codePostalMapper(etablissement.code_postal));
+
+  if (!cpMap[etablissement.code_postal]) {
+    cpMap[etablissement.code_postal] = { result: cpMapping, messages };
+  }
 
   const {
     code_postal = null,
@@ -116,7 +127,7 @@ const mapEtablissementKeys = async (
   };
 };
 
-const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissement_formateur_siret) => {
+const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissement_formateur_siret, cpMap = {}) => {
   try {
     if (!etablissement_gestionnaire_siret && !etablissement_formateur_siret) {
       throw new Error("etablissementsMapper gestionnaire_siret, formateur_siret  must be provided");
@@ -137,11 +148,12 @@ const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissem
     const {
       result: etablissementGestionnaire,
       messages: etablissementGestionnaireMessages,
-    } = await mapEtablissementKeys(attachedEstablishments.gestionnaire, "etablissement_gestionnaire");
+    } = await mapEtablissementKeys(attachedEstablishments.gestionnaire, "etablissement_gestionnaire", cpMap);
 
     const { result: etablissementFormateur, messages: etablissementFormateurMessages } = await mapEtablissementKeys(
       attachedEstablishments.formateur,
-      "etablissement_formateur"
+      "etablissement_formateur",
+      cpMap
     );
 
     const geolocInfo = getGeoloc(attachedEstablishments);

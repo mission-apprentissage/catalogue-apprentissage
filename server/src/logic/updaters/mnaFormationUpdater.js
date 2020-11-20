@@ -32,35 +32,34 @@ const parseErrors = (messages) => {
     .reduce((acc, [key, value]) => `${acc}${acc ? " " : ""}${key}: ${value}.`, "");
 };
 
-/**
- * Parse messages to check if there are errors
- */
-const parseErrorMessages = ({ cfdMessages, cpMessages, etablissementsMessages }) => {
-  let error = parseErrors(cfdMessages);
-  const cpError = parseErrors(cpMessages);
-  error = `${error}${error ? " " : ""}${cpError}`;
-  const etablissementsError = parseErrors(etablissementsMessages);
-  return `${error}${error ? " " : ""}${etablissementsError}`;
-};
-
 const mnaFormationUpdater = async (formation) => {
   try {
     await formationSchema.validateAsync(formation, { abortEarly: false });
 
     const { result: cfdMapping, messages: cfdMessages } = await cfdMapper(formation.cfd);
 
-    const { result: cpMapping, messages: cpMessages } = await codePostalMapper(formation.code_postal);
+    let error = parseErrors(cfdMessages);
+    if (error) {
+      return { updates: null, formation, error };
+    }
 
+    const { result: cpMapping, messages: cpMessages } = await codePostalMapper(formation.code_postal);
+    error = parseErrors(cpMessages);
+    if (error) {
+      return { updates: null, formation, error };
+    }
+
+    const cachedCpResult = { [formation.code_postal]: { result: cpMapping, messages: cpMessages } };
     const { result: etablissementsMapping, messages: etablissementsMessages } = await etablissementsMapper(
       formation.etablissement_gestionnaire_siret,
-      formation.etablissement_formateur_siret
+      formation.etablissement_formateur_siret,
+      cachedCpResult
     );
 
-    const error = parseErrorMessages({
-      cfdMessages,
-      cpMessages,
-      etablissementsMessages,
-    });
+    error = parseErrors(etablissementsMessages);
+    if (error) {
+      return { updates: null, formation, error };
+    }
 
     const published = etablissementsMapping
       ? etablissementsMapping.etablissement_reference_published
@@ -77,10 +76,10 @@ const mnaFormationUpdater = async (formation) => {
     const { updates, keys } = diffFormation(formation, updatedFormation);
     if (updates) {
       updatedFormation.updates_history = buildUpdatesHistory(formation, updates, keys);
-      return { updates, formation: updatedFormation, error };
+      return { updates, formation: updatedFormation };
     }
 
-    return { updates: null, formation, error };
+    return { updates: null, formation };
   } catch (e) {
     logger.error(e);
     return { updates: null, formation, error: e.toString() };
