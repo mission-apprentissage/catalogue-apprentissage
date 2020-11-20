@@ -2,7 +2,8 @@ const wsRCO = require("./wsRCO");
 const { RcoFormation } = require("../../../common/model/index");
 const { diff } = require("deep-object-diff");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
-const report = require("./report");
+const report = require("../../../logic/reporter/report");
+const config = require("config");
 
 class Importer {
   constructor() {
@@ -26,7 +27,7 @@ class Importer {
       const collection = this.lookupDiff(formations, formationsJ1);
 
       if (!collection) {
-        await this.report(null, formations.length, formationsJ1.length);
+        await this.report(formations.length, formationsJ1.length);
         return null;
       }
 
@@ -42,13 +43,13 @@ class Importer {
 
       await this.dbOperationsHandler();
 
-      await this.report(collection, formations.length, formationsJ1.length);
+      await this.report(formations.length, formationsJ1.length);
     } catch (error) {
       console.log(error);
     }
   }
 
-  async report(collection = null, formationsJCount, formationsJ1Count) {
+  async report(formationsJCount, formationsJ1Count) {
     this.updated.forEach((element) => {
       const { updates, updateInfo } = this.formationsToUpdateToDb.find((u) => u.rcoFormation._id === element.mnaId);
 
@@ -85,7 +86,11 @@ class Importer {
       publishedCount,
       deactivatedCount,
     };
-    await report.generate(collection, this.added, this.updated, summary);
+
+    const data = { added: this.added, updated: this.updated, summary };
+    const title = "[Webservice RCO] Rapport d'importation";
+    const to = config.rco.reportMailingList.split(",");
+    await report.generate(data, title, to, "rcoReport");
   }
 
   /*

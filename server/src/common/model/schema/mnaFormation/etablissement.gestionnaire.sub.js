@@ -59,6 +59,11 @@ const etablissementGestionnaireInfo = {
     default: null,
     description: "Code postal établissement gestionnaire",
   },
+  etablissement_gestionnaire_code_commune_insee: {
+    type: String,
+    default: null,
+    description: "Code commune insee établissement gestionnaire",
+  },
   etablissement_gestionnaire_localite: {
     type: String,
     default: null,
@@ -90,20 +95,36 @@ const etablissementGestionnaireInfo = {
     description: "Etablissement gestionnaire est habilité RNCP ou pas",
   },
 
+  etablissement_gestionnaire_region: {
+    type: String,
+    default: null,
+    description: "région gestionnaire",
+  },
+
+  etablissement_gestionnaire_num_departement: {
+    type: String,
+    default: null,
+    description: "Numéro de departement gestionnaire",
+  },
+  etablissement_gestionnaire_nom_departement: {
+    type: String,
+    default: null,
+    description: "Nom du departement gestionnaire",
+  },
   etablissement_gestionnaire_nom_academie: {
     type: String,
     default: null,
-    description: "Nom de l'académie formateur",
+    description: "Nom de l'académie gestionnaire",
   },
   etablissement_gestionnaire_num_academie: {
-    type: Number,
+    type: String,
     default: 0,
-    description: "Numéro de l'académie formateur",
+    description: "Numéro de l'académie gestionnaire",
   },
   etablissement_gestionnaire_siren: {
     type: String,
     default: null,
-    description: "Numéro siren formateur",
+    description: "Numéro siren gestionnaire",
   },
 };
 

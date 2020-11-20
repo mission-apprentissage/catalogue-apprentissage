@@ -1,9 +1,11 @@
 const etablissementFormateurInfo = require("./etablissement.formateur.sub");
 const etablissementGestionnaireInfo = require("./etablissement.gestionnaire.sub");
+const etablissementReferenceInfo = require("./etablissement.reference.sub");
 
 const mnaFormationSchema = {
   ...etablissementGestionnaireInfo,
   ...etablissementFormateurInfo,
+  ...etablissementReferenceInfo,
 
   cfd: {
     type: String,
@@ -26,7 +28,7 @@ const mnaFormationSchema = {
     description: "Nom de l'académie",
   },
   num_academie: {
-    type: Number,
+    type: String,
     default: 0,
     description: "Numéro de l'académie",
   },
@@ -44,6 +46,21 @@ const mnaFormationSchema = {
     type: String,
     default: null,
     description: "Numéro de departement",
+  },
+  nom_departement: {
+    type: String,
+    default: null,
+    description: "Nom du departement",
+  },
+  region: {
+    type: String,
+    default: null,
+    description: "Numéro de departement",
+  },
+  localite: {
+    type: String,
+    default: null,
+    description: "Localité",
   },
   uai_formation: {
     type: String,
@@ -125,7 +142,6 @@ const mnaFormationSchema = {
     default: null,
     description: "Année de la formation (cursus)",
   },
-
   email: {
     type: String,
     default: null,

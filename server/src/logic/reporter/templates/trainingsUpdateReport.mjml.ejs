@@ -6,10 +6,9 @@
         <mj-style inline="inline">
             a:link,a:visited, a:hover, a:active  {color: #ffffff;}
             .link-nostyle { color: inherit;}
-            .table th, .table td { border: 1px solid white; }
-            .green { background-color:#8BC34A; }
-            .red { background-color:#F44336; }
-            .orange { background-color:#FF9800; }
+            .green { background-color:#8BC34A; border: 1px solid white; }
+            .red { background-color:#F44336; border: 1px solid white; }
+            .orange { background-color:#FF9800; border: 1px solid white; }
         </mj-style>
         <mj-attributes>
             <mj-text
@@ -25,13 +24,13 @@
 
         <mj-section background-color="#F3F6F7">
             <mj-column padding-right="0" width="20%">
-                <mj-image align="left" alt="Logo de Sirius"
+                <mj-image align="left" alt="Logo de la République Française"
                   src="https://upload.wikimedia.org/wikipedia/fr/thumb/3/38/Logo_de_la_R%C3%A9publique_fran%C3%A7aise_%281999%29.svg/800px-Logo_de_la_R%C3%A9publique_fran%C3%A7aise_%281999%29.svg.png"/>
             </mj-column>
                <mj-column padding-right="0">
                 <mj-text align="left" padding="10px 0 25px 25px" font-size="22px" font-weight="900" line-height="26px"
                          color="#5222D0">
-                         Rapport d'importation catalogue RCO <br>
+                         Rapport de mise à jour des formations du catalogue<br>
                          <%= data.date %>
                 </mj-text>
             </mj-column>
@@ -40,42 +39,34 @@
         <mj-section padding-bottom="20px" padding-top="10px" background-color="#5222d0">
             <mj-column>
                 <mj-text align="left" padding-top="50px" color="#ffffff">
-                    Résumé de l'importation :<br>
+                    Résumé des mises à jour :<br>
                     <br>
-                    Données reçues du webservice RCO :<br>
-                    <%= data.summary.formationsJ1Count %> Formation(s) J-1<br>
-                    <%= data.summary.formationsJCount %> Formation(s) J<br>
-                    <br>
-                    Résultat de l'import :<br>
-                    <%= data.summary.addedCount %> Formation(s) ajoutée(s)<br>
                     <%= data.summary.updatedCount %> Formation(s) mise(s) à jour<br>
-                    <%= data.summary.deletedCount %> Formation(s) supprimée(s)<br>
+                    <%= data.summary.notUpdatedCount %> Formation(s) déjà à jour<br>
+                    <%= data.summary.invalidCount %> Formation(s) en échec de mise à jour<br>
                     <br>
-                    État de la base de données de formations RCO :<br>
-                    <%= data.summary.publishedCount %> Formation(s) publiée(s)<br>
-                    <%= data.summary.deactivatedCount %> Formation(s) désactivée(s)
                 </mj-text>
             </mj-column>
         </mj-section>
 
-        <% if(data.added.length > 0) { %>
+        <% if(data.updated.length > 0) { %>
         <mj-section padding-bottom="20px" padding-top="10px" background-color="#5222d0">
             <mj-column>
                 <mj-text align="left" padding-top="50px" color="#ffffff">
-                    <%= data.added.length %> Formation(s) ajoutée(s)
+                    <%= data.updated.length %> Formation(s) mise(s) à jour
                 </mj-text>
                 <mj-table color="#ffffff" align="left">
                 <tr align="left">
                     <th>Index</th>
-                    <% Object.keys(data.added[0]).forEach(function(col) { %>
+                    <% Object.keys(data.updated[0]).forEach(function(col) { %>
                         <th><%= col %></th>
                     <% }); %>
                 </tr>
-                <% data.added.forEach(function(row, idx) { %>
+                <% data.updated.forEach(function(row, idx) { %>
                 <tr align="left" class="green">
                     <td><%= idx %></td>
                     <% Object.values(row).forEach(function(datum) { %>
-                        <td><%= datum %></td>
+                        <td style="max-width: 500px"><%= datum %></td>
                     <% }); %>
                 </tr>
                 <% }); %>
@@ -84,30 +75,26 @@
         </mj-section>
         <% } %>
 
-        <% if(data.updated.length > 0) { %>
+        <% if(data.invalid.length > 0) { %>
        <mj-section padding-bottom="20px" padding-top="10px" background-color="#5222d0">
             <mj-column>
                 <mj-text align="left" padding-top="50px" color="#ffffff">
-                    <%= data.updated.length %> Formation(s) mise(s) à jour
+                    <%= data.invalid.length %> Formation(s) en échec de mise à jour
                 </mj-text>
                 <mj-table color="#ffffff" align="left">
                     <tr align="left">
                         <th>Index</th>
-                        <% Object.keys(data.updated[0]).forEach(function(col) { %>
+                        <% Object.keys(data.invalid[0]).forEach(function(col) { %>
                             <th><%= col %></th>
                         <% }); %>
                     </tr>
-                    <% data.updated.forEach(function(row, idx) { %>
-                        <% if(row.published ==="Supprimée") { %>
-                            <tr align="left" class="red">
-                        <% } else { %>
-                            <tr align="left" class="orange">
-                        <% } %>
-                        <td ><%= idx %></td>
-                        <% Object.values(row).forEach(function(datum) { %>
-                            <td><%= datum %></td>
-                        <% }); %>
-                    </tr>
+                    <% data.invalid.forEach(function(row, idx) { %>
+                        <tr align="left" class="red">
+                            <td><%= idx %></td>
+                            <% Object.values(row).forEach(function(datum) { %>
+                                <td style="max-width: 500px"><%= datum %></td>
+                            <% }); %>
+                        </tr>
                     <% }); %>
                 </mj-table>
             </mj-column>
