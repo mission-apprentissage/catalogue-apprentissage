@@ -71,6 +71,7 @@ const mnaFormationUpdater = async (formation) => {
       ...cpMapping,
       ...etablissementsMapping,
       published,
+      update_error: null,
     };
 
     const { updates, keys } = diffFormation(formation, updatedFormation);

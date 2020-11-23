@@ -19,8 +19,9 @@ const performUpdates = async (mnaFormations) => {
 
   const total = mnaFormations.length;
 
-  // split in chunks to parallelize
-  const chunks = chunk(mnaFormations, 10);
+  // split in chunks to parallelize (5 to match mongodb pool size)
+  const chunkSize = 5;
+  const chunks = chunk(mnaFormations, chunkSize);
 
   await asyncForEach(chunks, async (chunk, index) => {
     await Promise.all(
@@ -28,6 +29,8 @@ const performUpdates = async (mnaFormations) => {
         const { updates, formation: updatedFormation, error } = await mnaFormationUpdater(mnaFormation._doc);
 
         if (error) {
+          mnaFormation.update_error = error;
+          await MnaFormation.findOneAndUpdate({ _id: mnaFormation._id }, mnaFormation, { new: true });
           logger.error(`MnaFormation ${mnaFormation._id}/${mnaFormation.cfd} has error`, error);
           invalidFormations.push({ id: mnaFormation._id, cfd: mnaFormation.cfd, error });
           return;
@@ -50,7 +53,7 @@ const performUpdates = async (mnaFormations) => {
       })
     );
 
-    logger.info(`Progress : ${index * chunk.length}/${total}`);
+    logger.info(`Progress : ${(index + 1) * chunkSize}/${total}`);
   });
 
   return { invalidFormations, updatedFormations, notUpdatedFormations };

@@ -236,6 +236,12 @@ const mnaFormationSchema = {
     implicit_type: "geo_point",
     description: "Latitude et longitude de l'établissement recherchable dans Idea",
   },
+
+  update_error: {
+    type: String,
+    default: null,
+    description: "Erreur lors de la mise à jour de la formation",
+  },
 };
 
 module.exports = mnaFormationSchema;

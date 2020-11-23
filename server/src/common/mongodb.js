@@ -12,6 +12,7 @@ module.exports.connectToMongo = (mongoUri = config.mongodb.uri, mongooseInst = n
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useFindAndModify: false,
+      keepAlive: true,
     });
 
     // Get Mongoose to use the global promise library
