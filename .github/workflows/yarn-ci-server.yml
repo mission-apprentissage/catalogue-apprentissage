@@ -24,14 +24,15 @@ jobs:
           cd server
           yarn lint
 
-      # Start dockers containers
-      - name: Start Docker
-        run: |
-          cd server
-          yarn docker:start
+      # # Start dockers containers
+      # - name: Start Docker
+      #   run: |
+      #     cd server
+      #     yarn docker:start
 
-      # Run mocha tests
-      - name: Run Tests
-        run: |
-          cd server
-          yarn test
+      # # Run mocha tests
+      # - name: Run Tests
+      #   run: |
+      #     cd server
+      #     yarn test
+      #     yarn jobs:test
