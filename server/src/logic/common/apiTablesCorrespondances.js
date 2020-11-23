@@ -16,4 +16,16 @@ const getCfdInfo = async (cfd) => {
   }
 };
 
-module.exports = { getCfdInfo };
+const getCpInfo = async (codePostal) => {
+  try {
+    const { data } = await axios.post(`${apiEndpoint}/code-postal`, {
+      codePostal,
+    });
+    return data;
+  } catch (error) {
+    logger.error(`getCpInfo: something went wrong`);
+    return null;
+  }
+};
+
+module.exports = { getCfdInfo, getCpInfo };
