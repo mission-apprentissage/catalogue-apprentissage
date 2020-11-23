@@ -149,6 +149,11 @@ const rcoFormationsSchema = {
     default: Date.now,
     description: "Date de dernières mise à jour",
   },
+  converted_to_mna: {
+    type: Boolean,
+    default: false,
+    description: "A été convertie en mna formation",
+  },
 };
 
 module.exports = rcoFormationsSchema;

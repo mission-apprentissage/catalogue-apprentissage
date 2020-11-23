@@ -242,6 +242,27 @@ const mnaFormationSchema = {
     default: null,
     description: "Erreur lors de la mise à jour de la formation",
   },
+
+  lieu_formation_geo_coordonnees: {
+    type: String,
+    implicit_type: "geo_point",
+    description: "Latitude et longitude du lieu de formation",
+  },
+  lieu_formation_adresse: {
+    type: String,
+    default: null,
+    description: "Adresse du lieu de formation",
+  },
+  lieu_formation_siret: {
+    type: String,
+    default: null,
+    description: "Siret du lieu de formation",
+  },
+  id_rco_formation: {
+    type: String,
+    default: null,
+    description: "Id de formation RCO (id_formation + id_action + id_certifinfo)",
+  },
 };
 
 module.exports = mnaFormationSchema;

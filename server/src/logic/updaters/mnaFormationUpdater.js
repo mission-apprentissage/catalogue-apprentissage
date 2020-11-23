@@ -32,7 +32,7 @@ const parseErrors = (messages) => {
     .reduce((acc, [key, value]) => `${acc}${acc ? " " : ""}${key}: ${value}.`, "");
 };
 
-const mnaFormationUpdater = async (formation) => {
+const mnaFormationUpdater = async (formation, { withHistoryUpdate = true } = {}) => {
   try {
     await formationSchema.validateAsync(formation, { abortEarly: false });
 
@@ -76,7 +76,9 @@ const mnaFormationUpdater = async (formation) => {
 
     const { updates, keys } = diffFormation(formation, updatedFormation);
     if (updates) {
-      updatedFormation.updates_history = buildUpdatesHistory(formation, updates, keys);
+      if (withHistoryUpdate) {
+        updatedFormation.updates_history = buildUpdatesHistory(formation, updates, keys);
+      }
       return { updates, formation: updatedFormation };
     }
 

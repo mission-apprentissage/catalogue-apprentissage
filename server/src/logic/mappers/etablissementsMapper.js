@@ -148,10 +148,10 @@ const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissem
     const {
       result: etablissementGestionnaire,
       messages: etablissementGestionnaireMessages,
-    } = await mapEtablissementKeys(attachedEstablishments.gestionnaire, "etablissement_gestionnaire", cpMap);
+    } = await mapEtablissementKeys(attachedEstablishments.gestionnaire || {}, "etablissement_gestionnaire", cpMap);
 
     const { result: etablissementFormateur, messages: etablissementFormateurMessages } = await mapEtablissementKeys(
-      attachedEstablishments.formateur,
+      attachedEstablishments.formateur || {},
       "etablissement_formateur",
       cpMap
     );

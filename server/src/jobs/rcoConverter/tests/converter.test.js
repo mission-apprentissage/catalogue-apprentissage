@@ -4,7 +4,7 @@ const path = require("path");
 const { RcoFormation } = require("../../../common/model/index");
 const { connectToMongoForTests, cleanAll } = require("../../../../tests/utils/testUtils.js");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
-const { run } = require("../converter/converter.js");
+const { performConversion } = require("../converter/converter.js");
 
 const rcoSampleData = fs.readJsonSync(path.resolve(__dirname, "../assets/sample.json"));
 
@@ -19,7 +19,7 @@ describe(__filename, () => {
   });
 
   after(async () => {
-    // await cleanAll();
+    await cleanAll();
   });
 
   it("should have inserted sample data", async () => {
@@ -28,7 +28,7 @@ describe(__filename, () => {
   });
 
   it("should have converted data into Mna Formations", async () => {
-    await run();
+    await performConversion();
 
     const count = await RcoFormation.countDocuments({});
     assert.strictEqual(count, 10);
