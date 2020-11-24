@@ -10,7 +10,7 @@ const Boom = require("boom");
  */
 const formationSchema = Joi.object({
   num_academie: Joi.string().required(),
-});
+}).unknown();
 
 /**
  * Sample entity route module for POST / PUT / DELETE entity
