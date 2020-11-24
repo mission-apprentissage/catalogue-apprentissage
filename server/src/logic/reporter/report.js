@@ -11,7 +11,7 @@ const getEmailTemplate = (type = "report") => {
 
 const generate = async (data, title, to, templateName = "report") => {
   const date = DateTime.local().setLocale("fr").toFormat("dd MMMM yyyy");
-  await mailer.sendEmail(to, `${title} ${date}`, getEmailTemplate(templateName), {
+  await mailer.sendEmail(to, `[${config.env}] ${title} ${date}`, getEmailTemplate(templateName), {
     ...data,
     date,
   });
