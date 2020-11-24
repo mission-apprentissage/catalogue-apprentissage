@@ -28,7 +28,10 @@ module.exports = async (components) => {
   const checkJwtToken = authMiddleware(components);
   const adminOnly = permissionsMiddleware({ isAdmin: true });
 
-  app.use(bodyParser.json());
+  app.use(bodyParser.json({ limit: "50mb" }));
+  // Parse the ndjson as text for ES proxy
+  app.use(bodyParser.text({ type: "application/x-ndjson" }));
+
   app.use(corsMiddleware());
   app.use(logMiddleware());
 
