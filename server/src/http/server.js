@@ -10,7 +10,8 @@ const corsMiddleware = require("./middlewares/corsMiddleware");
 const authMiddleware = require("./middlewares/authMiddleware");
 const permissionsMiddleware = require("./middlewares/permissionsMiddleware");
 const packageJson = require("../../package.json");
-const entity = require("./routes/entity");
+const formation = require("./routes/formation");
+const formationSecure = require("./routes/formationSecure");
 const rcoFormation = require("./routes/rcoFormation");
 const secured = require("./routes/secured");
 const login = require("./routes/login");
@@ -33,7 +34,10 @@ module.exports = async (components) => {
 
   app.use("/api/es/search", esSearch());
   app.use("/api/search", esMultiSearchNoIndex());
-  app.use("/api/entity", entity());
+
+  app.use("/api/entity", formation());
+  app.use("/api/entity", checkJwtToken, formationSecure());
+
   app.use("/api/rcoformation", rcoFormation());
   app.use("/api/secured", apiKeyAuthMiddleware, secured());
   app.use("/api/login", login(components));
