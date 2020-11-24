@@ -25,6 +25,7 @@
     "rco:importer:local": "standalone=true dotenv node src/jobs/rcoImporter/index.js",
     "trainings:updater": "standalone=true node src/jobs/trainingsUpdater/index.js",
     "trainings:updater:local": "standalone=true dotenv node src/jobs/trainingsUpdater/index.js",
+    "oneshot:hydrate": "standalone=true node src/jobs/oneshot/hydrateFromOldCatalogue/index.js",
     "oneshot:hydrate:local": "standalone=true dotenv node src/jobs/oneshot/hydrateFromOldCatalogue/index.js"
   },
   "dependencies": {
