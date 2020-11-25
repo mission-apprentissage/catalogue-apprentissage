@@ -139,8 +139,7 @@ const createConversionReport = async ({ invalidRcoFormations, convertedRcoFormat
 
 // TODO @EPT
 //  4 : Make a diff report between these & Mna formation db criteria to match MNA /RCO === siret + cfd + code postal + code insee + rncp_code + uai
-//  5 : upsert the successful ones in DB --> flag 2021 (others should be flagged 2020)
+//  5 : upsert the successful ones in Mna DB --> flag 2021 (others should be flagged 2020)
 //  6 : then create a report of import (update of a 2020 formation or creation of a new one)
-//  7 : in RCO collection flag successfully imported formation & reset this flag on new import
 
 module.exports = { run, performConversion };

@@ -346,6 +346,8 @@ class Importer {
         ...updateInfo,
         updates_history,
         last_update_at: Date.now(),
+        converted_to_mna: false,
+        conversion_error: null,
       },
       { new: true }
     );
