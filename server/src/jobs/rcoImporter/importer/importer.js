@@ -346,6 +346,8 @@ class Importer {
         ...updateInfo,
         updates_history,
         last_update_at: Date.now(),
+        converted_to_mna: false,
+        conversion_error: null,
       },
       { new: true }
     );
@@ -370,8 +372,18 @@ class Importer {
    * diff RCO Formation
    */
   diffRcoFormation(rcoFormationP, formation) {
-    // eslint-disable-next-line no-unused-vars
-    const { _id, __v, updates_history, published, created_at, last_update_at, ...rcoFormation } = rcoFormationP;
+    /* eslint-disable no-unused-vars */
+    const {
+      _id,
+      __v,
+      updates_history,
+      published,
+      created_at,
+      last_update_at,
+      converted_to_mna,
+      conversion_error,
+      ...rcoFormation
+    } = rcoFormationP;
     const compare = diff(rcoFormation, formation);
     const keys = Object.keys(compare);
 
