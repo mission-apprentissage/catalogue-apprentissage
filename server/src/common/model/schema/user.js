@@ -25,5 +25,10 @@ const usersSchema = {
     default: null,
     description: "Academie coma separated",
   },
+  account_status: {
+    type: String,
+    default: "FORCE_RESET_PASSWORD",
+    description: "Account status",
+  },
 };
 module.exports = usersSchema;
