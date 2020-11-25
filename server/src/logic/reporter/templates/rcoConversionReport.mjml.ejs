@@ -48,58 +48,6 @@
             </mj-column>
         </mj-section>
 
-        <% if(data.converted.length > 0) { %>
-        <mj-section padding-bottom="20px" padding-top="10px" background-color="#5222d0">
-            <mj-column>
-                <mj-text align="left" padding-top="50px" color="#ffffff">
-                    <%= data.converted.length %> Formation(s) convertie(s)
-                </mj-text>
-                <mj-table color="#ffffff" align="left">
-                <tr align="left">
-                    <th>Index</th>
-                    <% Object.keys(data.converted[0]).forEach(function(col) { %>
-                        <th><%= col %></th>
-                    <% }); %>
-                </tr>
-                <% data.converted.forEach(function(row, idx) { %>
-                <tr align="left" class="green">
-                    <td><%= idx %></td>
-                    <% Object.values(row).forEach(function(datum) { %>
-                        <td style="max-width: 500px"><%= datum %></td>
-                    <% }); %>
-                </tr>
-                <% }); %>
-            </mj-table>
-            </mj-column>
-        </mj-section>
-        <% } %>
-
-        <% if(data.invalid.length > 0) { %>
-       <mj-section padding-bottom="20px" padding-top="10px" background-color="#5222d0">
-            <mj-column>
-                <mj-text align="left" padding-top="50px" color="#ffffff">
-                    <%= data.invalid.length %> Formation(s) en échec de conversion
-                </mj-text>
-                <mj-table color="#ffffff" align="left">
-                    <tr align="left">
-                        <th>Index</th>
-                        <% Object.keys(data.invalid[0]).forEach(function(col) { %>
-                            <th><%= col %></th>
-                        <% }); %>
-                    </tr>
-                    <% data.invalid.forEach(function(row, idx) { %>
-                        <tr align="left" class="red">
-                            <td><%= idx %></td>
-                            <% Object.values(row).forEach(function(datum) { %>
-                                <td style="max-width: 500px"><%= datum %></td>
-                            <% }); %>
-                        </tr>
-                    <% }); %>
-                </mj-table>
-            </mj-column>
-        </mj-section>
-        <% } %>
-
         <mj-section background-color="#5222d0">
             <mj-column>
                 <mj-divider border-width="2px" border-color="lightgrey"/>
