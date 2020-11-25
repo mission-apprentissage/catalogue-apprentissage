@@ -23,8 +23,11 @@
     "stats": "node src/jobs/stats/index.js",
     "rco:importer": "standalone=true node src/jobs/rcoImporter/index.js",
     "rco:importer:local": "standalone=true dotenv node src/jobs/rcoImporter/index.js",
+    "rco:converter": "standalone=true node src/jobs/rcoConverter/index.js",
+    "rco:converter:local": "standalone=true dotenv node src/jobs/rcoConverter/index.js",
     "trainings:updater": "standalone=true node src/jobs/trainingsUpdater/index.js",
     "trainings:updater:local": "standalone=true dotenv node src/jobs/trainingsUpdater/index.js",
+    "oneshot:hydrate": "standalone=true node src/jobs/oneshot/hydrateFromOldCatalogue/index.js",
     "oneshot:hydrate:local": "standalone=true dotenv node src/jobs/oneshot/hydrateFromOldCatalogue/index.js"
   },
   "dependencies": {
