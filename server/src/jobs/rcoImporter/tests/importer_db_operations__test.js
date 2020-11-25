@@ -61,8 +61,11 @@ describe(__filename, () => {
     });
 
     assert.deepStrictEqual(updatedFormation.periode, ["2021-11", "2021-12"]);
-    assert.deepStrictEqual(updatedFormation.updates_history[0].from, { periode: ["2021-11"] });
-    assert.deepStrictEqual(updatedFormation.updates_history[0].to, { periode: ["2021-11", "2021-12"] });
+    assert.deepStrictEqual(updatedFormation.updates_history[0].from, { converted_to_mna: false, periode: ["2021-11"] });
+    assert.deepStrictEqual(updatedFormation.updates_history[0].to, {
+      converted_to_mna: null,
+      periode: ["2021-11", "2021-12"],
+    });
   });
 
   it("lookupDiff >> Si Supression entre 2 jours doit dépublier la formation en db", async () => {
@@ -73,7 +76,7 @@ describe(__filename, () => {
 
     await importer.dbOperationsHandler();
 
-    assert.deepStrictEqual(resultDeleted.toUpdateToDb[0].updateInfo, { published: false });
+    assert.deepStrictEqual(resultDeleted.toUpdateToDb[0].updateInfo, { converted_to_mna: undefined, published: false });
 
     const count = await RcoFormation.countDocuments({});
     assert.equal(count, 231);
@@ -85,8 +88,8 @@ describe(__filename, () => {
     });
 
     assert.equal(deletedFormation.published, false);
-    assert.deepStrictEqual(deletedFormation.updates_history[0].from, { published: true });
-    assert.deepStrictEqual(deletedFormation.updates_history[0].to, { published: false });
+    assert.deepStrictEqual(deletedFormation.updates_history[0].from, { converted_to_mna: false, published: true });
+    assert.deepStrictEqual(deletedFormation.updates_history[0].to, { converted_to_mna: null, published: false });
   });
 
   it("lookupDiff >> Si Ajout d'une formation deja presente doit retourner la(es) formation(s) reactivée et mise à jour", async () => {
@@ -108,6 +111,7 @@ describe(__filename, () => {
 
     assert.equal(updatedFormation.published, true);
     assert.deepStrictEqual(updatedFormation.updates_history[1].from, {
+      converted_to_mna: null,
       published: false,
       periode: [
         "2021-01",
@@ -129,6 +133,7 @@ describe(__filename, () => {
       ],
     });
     assert.deepStrictEqual(updatedFormation.updates_history[1].to, {
+      converted_to_mna: null,
       published: true,
       periode: [
         "2021-01",
