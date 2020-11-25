@@ -45,7 +45,7 @@ module.exports = async (components) => {
   app.use("/api/secured", apiKeyAuthMiddleware, secured());
   app.use("/api/login", login(components));
   app.use("/api/authentified", checkJwtToken, authentified());
-  app.use("/api/admin", checkJwtToken, adminOnly, admin());
+  app.use("/api/admin", checkJwtToken, adminOnly, admin(components));
   app.use("/api/password", password(components));
   app.use("/api/stats", checkJwtToken, adminOnly, stats(components));
 

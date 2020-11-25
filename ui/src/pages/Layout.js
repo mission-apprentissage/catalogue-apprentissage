@@ -30,6 +30,11 @@ export default (props) => {
         Catalogue Apprentissage App
         <div className="d-flex order-lg-2 ml-auto">
           <Nav.Item hasSubNav value={auth.sub} icon="user">
+            {auth && auth.permissions.isAdmin && (
+              <a href="/admin/users" className="dropdown-item">
+                Utilisateurs
+              </a>
+            )}
             <a href="/" className="dropdown-item" onClick={logout}>
               Déconnexion
             </a>
