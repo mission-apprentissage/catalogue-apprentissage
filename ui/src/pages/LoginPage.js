@@ -1,6 +1,6 @@
 import React from "react";
 import * as Yup from "yup";
-import { Form as TablerForm, Card, Page, Alert, Header, Button, Grid } from "tabler-react";
+import { Form as TablerForm, Card, Page, Button, Grid } from "tabler-react";
 import { Formik, Field, Form } from "formik";
 import { NavLink, useHistory } from "react-router-dom";
 import useAuth from "../common/hooks/useAuth";
