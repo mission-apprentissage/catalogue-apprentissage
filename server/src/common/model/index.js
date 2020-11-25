@@ -41,6 +41,11 @@ if (!f) {
   f = getModel("mnaformation", mnaFormationSchema);
 }
 
+let cf = null;
+if (!cf) {
+  cf = getModel("convertedformation", mnaFormationSchema);
+}
+
 let l = null;
 if (!l) {
   l = getMongooseModel("log");
@@ -51,5 +56,6 @@ module.exports = {
   User: u,
   RcoFormation: rf,
   MnaFormation: f,
+  ConvertedFormation: cf,
   Log: l,
 };
