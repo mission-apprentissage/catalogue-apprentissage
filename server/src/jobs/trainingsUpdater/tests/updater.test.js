@@ -28,8 +28,7 @@ describe(__filename, () => {
   });
 
   it("should have updated data with tables-correspondance api call", async () => {
-    const mnaFormations = await MnaFormation.find({});
-    await performUpdates(mnaFormations);
+    await performUpdates({});
 
     const count = await MnaFormation.countDocuments({});
     assert.strictEqual(count, 10);

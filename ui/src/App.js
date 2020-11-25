@@ -8,6 +8,7 @@ import useAuth from "./common/hooks/useAuth";
 import HomePage from "./pages/HomePage";
 import ResetPasswordPage from "./pages/password/ResetPasswordPage";
 import ForgottenPasswordPage from "./pages/password/ForgottenPasswordPage";
+import Users from "./pages/admin/Users";
 
 function PrivateRoute({ children, ...rest }) {
   let [auth] = useAuth();
@@ -32,6 +33,13 @@ export default () => {
           <PrivateRoute exact path="/">
             <Layout>{auth && auth.permissions.isAdmin ? <DashboardPage /> : <HomePage />}</Layout>
           </PrivateRoute>
+          {auth && auth.permissions.isAdmin && (
+            <PrivateRoute exact path="/admin/users">
+              <Layout>
+                <Users />
+              </Layout>
+            </PrivateRoute>
+          )}
           <Route exact path="/login" component={LoginPage} />
           <Route exact path="/reset-password" component={ResetPasswordPage} />
           <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
