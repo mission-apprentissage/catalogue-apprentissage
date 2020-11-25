@@ -26,8 +26,16 @@ module.exports = ({ users }) => {
     })
   );
 
+  router.get(
+    "/users",
+    tryCatch(async (req, res) => {
+      const usersList = await users.getUsers();
+      return res.json(usersList);
+    })
+  );
+
   router.post(
-    "/create-user",
+    "/user",
     tryCatch(async ({ body }, res) => {
       await userSchema.validateAsync(body, { abortEarly: false });
 
@@ -35,6 +43,33 @@ module.exports = ({ users }) => {
       const user = await users.createUser(username, password, options);
 
       return res.json(user);
+    })
+  );
+
+  router.put(
+    "/user/:username",
+    tryCatch(async ({ body, params }, res) => {
+      const username = params.username;
+
+      await users.updateUser(username, {
+        isAdmin: body.options.permissions.isAdmin,
+        email: body.options.email,
+        academie: body.options.academie,
+        username: body.username,
+      });
+
+      res.json({ message: `User ${username} updated !` });
+    })
+  );
+
+  router.delete(
+    "/user/:username",
+    tryCatch(async ({ params }, res) => {
+      const username = params.username;
+
+      await users.removeUser(username);
+
+      res.json({ message: `User ${username} deleted !` });
     })
   );
 
