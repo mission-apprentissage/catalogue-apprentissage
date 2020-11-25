@@ -117,21 +117,22 @@ export default () => {
                       />
                       <p className="mdp-rules">
                         <li className={!conditions.lowerCase ? "error" : "success"}>
-                          {!conditions.min ? "✗" : "✓"}&nbsp;Le mot de passe doit contenir au moins une lettre minuscule
+                          {!conditions.lowerCase ? "✗" : "✓"}&nbsp;Le mot de passe doit contenir au moins une lettre
+                          minuscule
                         </li>
                         <li className={!conditions.upperCase ? "error" : "success"}>
-                          {!conditions.lowerCase ? "✗" : "✓"}&nbsp;Le mot de passe doit contenir au moins une lettre
+                          {!conditions.upperCase ? "✗" : "✓"}&nbsp;Le mot de passe doit contenir au moins une lettre
                           majuscule
                         </li>
                         <li className={!conditions.special ? "error" : "success"}>
-                          {!conditions.upperCase ? "✗" : "✓"}&nbsp;Le mot de passe doit contenir au moins un caractère
+                          {!conditions.special ? "✗" : "✓"}&nbsp;Le mot de passe doit contenir au moins un caractère
                           spécial
                         </li>
                         <li className={!conditions.number ? "error" : "success"}>
                           {!conditions.number ? "✗" : "✓"}&nbsp;Le mot de passe doit contenir au moins un nombre
                         </li>
                         <li className={!conditions.min ? "error" : "success"}>
-                          {!conditions.special ? "✗" : "✓"}&nbsp;Le mot de passe doit contenir au moins 8 caractères
+                          {!conditions.min ? "✗" : "✓"}&nbsp;Le mot de passe doit contenir au moins 8 caractères
                         </li>
                       </p>
                     </TablerForm.Group>

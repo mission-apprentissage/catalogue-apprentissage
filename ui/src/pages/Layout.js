@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Site, Nav } from "tabler-react";
 import useAuth from "../common/hooks/useAuth";
 import { useHistory } from "react-router-dom";
+import { _post } from "../common/httpClient";
 
 export default (props) => {
   let [auth, setAuth] = useAuth();
@@ -10,6 +11,18 @@ export default (props) => {
     setAuth(null);
     history.push("/login");
   };
+
+  useEffect(() => {
+    async function run() {
+      if (auth.sub !== "anonymous") {
+        if (auth.account_status === "FORCE_RESET_PASSWORD") {
+          let { token } = await _post("/api/password/forgotten-password?noEmail=true", { username: auth.sub });
+          history.push(`/reset-password?passwordToken=${token}`);
+        }
+      }
+    }
+    run();
+  }, [auth, history]);
 
   return (
     <Site>

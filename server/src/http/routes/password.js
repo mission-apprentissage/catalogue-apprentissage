@@ -53,19 +53,25 @@ module.exports = ({ users, mailer }) => {
       if (!user) {
         throw Boom.badRequest();
       }
+      let noEmail = req.query.noEmail;
 
-      const url = `${config.publicUrl}/reset-password?passwordToken=${createPasswordToken(username)}`;
+      const token = createPasswordToken(username);
+      const url = `${config.publicUrl}/reset-password?passwordToken=${token}`;
 
-      await mailer.sendEmail(
-        user.email,
-        `[${config.env} Catalogue apprentissage] Réinitialiser votre mot de passe`,
-        getEmailTemplate("forgotten-password"),
-        {
-          url,
-        }
-      );
+      if (noEmail) {
+        return res.json({ token });
+      } else {
+        await mailer.sendEmail(
+          user.email,
+          `[${config.env} Catalogue apprentissage] Réinitialiser votre mot de passe`,
+          getEmailTemplate("forgotten-password"),
+          {
+            url,
+          }
+        );
 
-      return res.json({ url: url });
+        return res.json({ url: url });
+      }
     })
   );
 
@@ -79,8 +85,9 @@ module.exports = ({ users, mailer }) => {
         newPassword: validators.password().required(),
       }).validateAsync(req.body, { abortEarly: false });
 
-      await users.changePassword(user.username, newPassword);
-      return res.json({ token: createUserToken(user) });
+      const nUser = await users.changePassword(user.username, newPassword);
+
+      return res.json({ token: createUserToken(nUser) });
     })
   );
 

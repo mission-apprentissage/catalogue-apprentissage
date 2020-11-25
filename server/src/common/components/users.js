@@ -53,6 +53,10 @@ module.exports = async () => {
         throw new Error(`Unable to find user ${username}`);
       }
 
+      if (user.account_status === "FORCE_RESET_PASSWORD") {
+        user.account_status = "CONFIRMED";
+      }
+
       user.password = sha512Utils.hash(newPassword);
       await user.save();
 
