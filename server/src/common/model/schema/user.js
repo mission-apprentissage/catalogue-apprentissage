@@ -15,5 +15,15 @@ const usersSchema = {
     default: false,
     description: "true si l'utilisateur est administrateur",
   },
+  email: {
+    type: String,
+    default: null,
+    description: "Email",
+  },
+  academie: {
+    type: String,
+    default: null,
+    description: "Academie coma separated",
+  },
 };
 module.exports = usersSchema;

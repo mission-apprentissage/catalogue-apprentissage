@@ -32,6 +32,8 @@ module.exports = async () => {
         username,
         password: hash,
         isAdmin: !!permissions.isAdmin,
+        email: options.email || "",
+        academie: options.academie || "0",
       });
 
       await user.save();
