@@ -55,7 +55,7 @@ const performConversion = async () => {
   const convertedRcoFormations = [];
 
   let offset = 0;
-  let limit = 5;
+  let limit = 100;
   let computed = 0;
   let nbFormations = 10;
 

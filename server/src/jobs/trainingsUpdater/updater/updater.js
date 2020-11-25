@@ -1,31 +1,31 @@
 const logger = require("../../../common/logger");
 const { MnaFormation } = require("../../../common/model/index");
-const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { mnaFormationUpdater } = require("../../../logic/updaters/mnaFormationUpdater");
 const report = require("../../../logic/reporter/report");
 const config = require("config");
-const { chunk } = require("lodash");
 
 const run = async (filter = {}) => {
-  const mnaFormations = await MnaFormation.find(filter);
-  const result = await performUpdates(mnaFormations);
+  const result = await performUpdates(filter);
   await createReport(result);
 };
 
-const performUpdates = async (mnaFormations) => {
+const performUpdates = async (filter = {}) => {
   const invalidFormations = [];
   const notUpdatedFormations = [];
   const updatedFormations = [];
 
-  const total = mnaFormations.length;
+  let offset = 0;
+  let limit = 100;
+  let computed = 0;
+  let nbFormations = 10;
 
-  // split in chunks to parallelize (5 to match mongodb pool size)
-  const chunkSize = 5;
-  const chunks = chunk(mnaFormations, chunkSize);
+  while (computed < nbFormations) {
+    let { docs, total } = await MnaFormation.paginate(filter, { offset, limit });
+    nbFormations = total;
 
-  await asyncForEach(chunks, async (chunk, index) => {
     await Promise.all(
-      chunk.map(async (mnaFormation) => {
+      docs.map(async (mnaFormation) => {
+        computed += 1;
         const { updates, formation: updatedFormation, error } = await mnaFormationUpdater(mnaFormation._doc);
 
         if (error) {
@@ -53,8 +53,10 @@ const performUpdates = async (mnaFormations) => {
       })
     );
 
-    logger.info(`Progress : ${(index + 1) * chunkSize}/${total}`);
-  });
+    offset += limit;
+
+    logger.info(`progress ${computed}/${total}`);
+  }
 
   return { invalidFormations, updatedFormations, notUpdatedFormations };
 };
