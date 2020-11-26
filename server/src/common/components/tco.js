@@ -6,7 +6,7 @@ const axios = require("axios");
 
 const apiEndpoint = "https://tables-correspondances.apprentissage.beta.gouv.fr/api";
 
-module.exports = async () => {
+module.exports = () => {
   return {
     getMefInfo: async (mef) => {
       try {
