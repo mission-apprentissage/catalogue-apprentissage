@@ -1,4 +1,4 @@
-const psCoverageSchema = {
+const psFormationSchema = {
   uai_gestionnaire: {
     type: String,
     default: null,
@@ -115,4 +115,4 @@ const psCoverageSchema = {
     description: "Formations du catalogue matchant la formation parcoursup",
   },
 };
-module.exports = psCoverageSchema;
+module.exports = psFormationSchema;

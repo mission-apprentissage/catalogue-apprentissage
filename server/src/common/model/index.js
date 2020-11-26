@@ -47,9 +47,9 @@ if (!f) {
   f = getModel("mnaformation", mnaFormationSchema);
 }
 
-let p = null;
-if (!f) {
-  p = getModel("psformation", psFormationSchema);
+let pf = null;
+if (!pf) {
+  pf = getModel("psformation", psFormationSchema);
 }
 
 let l = null;
@@ -63,5 +63,5 @@ module.exports = {
   RcoFormation: rf,
   MnaFormation: f,
   Log: l,
-  PsFormation: p,
+  PsFormation: pf,
 };
