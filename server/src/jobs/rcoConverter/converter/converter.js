@@ -96,7 +96,14 @@ const performConversion = async () => {
         rcoFormation.conversion_error = "success";
         await rcoFormation.save();
 
-        await new ConvertedFormation(convertedFormation).save();
+        // replace or insert new one
+        await ConvertedFormation.replaceOne(
+          { id_rco_formation: convertedFormation.id_rco_formation },
+          convertedFormation,
+          {
+            upsert: true,
+          }
+        );
 
         convertedRcoFormations.push({
           id_rco_formation: convertedFormation.id_rco_formation,
