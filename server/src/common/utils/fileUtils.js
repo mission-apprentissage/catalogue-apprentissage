@@ -11,7 +11,6 @@ const getJsonFromXlsxFile = (filePath) => {
   try {
     const { sheet_name_list, workbook } = readXLSXFile(filePath);
     const worksheet = workbook.Sheets[sheet_name_list[0]];
-
     const json = XLSX.utils.sheet_to_json(worksheet, { raw: false });
 
     return json;
@@ -21,9 +20,14 @@ const getJsonFromXlsxFile = (filePath) => {
 };
 module.exports.getJsonFromXlsxFile = getJsonFromXlsxFile;
 
-const readXLSXFile = (localPath) => {
-  const workbook = XLSX.readFile(localPath, { codepage: 65001 });
-  return { sheet_name_list: workbook.SheetNames, workbook };
+const readXLSXFile = (filePath) => {
+  try {
+    const workbook = XLSX.readFile(filePath, { codepage: 65001 });
+
+    return { sheet_name_list: workbook.SheetNames, workbook };
+  } catch (error) {
+    return null;
+  }
 };
 module.exports.readXLSXFile = readXLSXFile;
 
