@@ -4,11 +4,11 @@ const { runScript } = require("../scriptWrapper");
 
 const psCoverage = async () => {
   try {
-    logger.info(" -- Start of RCO importer -- ");
+    logger.info(" -- Start of coverage job -- ");
 
     await coverage();
 
-    logger.info(" -- End of RCO importer -- ");
+    logger.info(" -- End of coverage job -- ");
   } catch (err) {
     logger.error(err);
   }
