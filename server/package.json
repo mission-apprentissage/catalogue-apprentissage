@@ -25,6 +25,8 @@
     "rco:importer:local": "standalone=true dotenv node src/jobs/rcoImporter/index.js",
     "rco:converter": "standalone=true node src/jobs/rcoConverter/index.js",
     "rco:converter:local": "standalone=true dotenv node src/jobs/rcoConverter/index.js",
+    "rco:diff": "standalone=true node src/jobs/rcoDiff/index.js",
+    "rco:diff:local": "standalone=true dotenv node src/jobs/rcoDiff/index.js",
     "trainings:updater": "standalone=true node src/jobs/trainingsUpdater/index.js",
     "trainings:updater:local": "standalone=true dotenv node src/jobs/trainingsUpdater/index.js",
     "oneshot:hydrate": "standalone=true node src/jobs/oneshot/hydrateFromOldCatalogue/index.js",
