@@ -40,8 +40,8 @@ module.exports = async (components) => {
   app.use("/api/search", esMultiSearchNoIndex());
 
   app.use("/api/entity", formation());
-  app.use("/api/entity", checkJwtToken, formationSecure());
   app.use("/api/entity", convertedFormation());
+  app.use("/api/entity", checkJwtToken, formationSecure());
 
   app.use("/api/rcoformation", rcoFormation());
   app.use("/api/secured", apiKeyAuthMiddleware, secured());
