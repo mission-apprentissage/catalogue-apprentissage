@@ -1,5 +1,5 @@
 const logger = require("../../../common/logger");
-const { ConvertedFormation, MnaFormation } = require("../../../common/model/index");
+const { ConvertedFormation, MnaFormation, Report } = require("../../../common/model/index");
 const report = require("../../../logic/reporter/report");
 const config = require("config");
 
@@ -66,6 +66,13 @@ const createDiffReport = async ({ matchingFormations, total }) => {
     matchingCount: matchingFormations.length,
   };
   const data = { matchingFormations, summary };
+
+  // save report in db
+  const date = Date.now();
+  await new Report({ type: "rcoDiff", date, data }).save();
+
+  // TODO EPT add link to UI
+
   const title = "[RCO Formations] Rapport différentiel avec la base MNA";
   const to = config.rco.reportMailingList.split(",");
   await report.generate(data, title, to, "rcoDiffReport");
