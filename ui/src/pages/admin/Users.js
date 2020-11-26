@@ -220,7 +220,7 @@ export default () => {
                   );
                 })}
 
-                <Card title="CREER UN UTILISATEUR" isCollapsible isCollapsed>
+                <Card title="Créer un utilisateur" isCollapsible isCollapsed>
                   <Card.Body>
                     <UserLine user={null} />
                   </Card.Body>
