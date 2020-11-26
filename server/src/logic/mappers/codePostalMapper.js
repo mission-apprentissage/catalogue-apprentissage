@@ -18,12 +18,14 @@ const codePostalMapper = async (codePostal = null) => {
     }
 
     const { result, messages } = cpInfo;
-    const { commune, ...rest } = result;
+    // eslint-disable-next-line no-unused-vars
+    const { num_region, commune, num_academie, ...rest } = result;
 
     return {
       result: {
         ...rest,
         localite: commune,
+        num_academie: `${num_academie}`,
       },
       messages,
     };

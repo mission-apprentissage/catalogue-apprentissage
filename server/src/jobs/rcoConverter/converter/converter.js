@@ -1,10 +1,15 @@
 const logger = require("../../../common/logger");
-const { RcoFormation } = require("../../../common/model/index");
+const { RcoFormation, ConvertedFormation } = require("../../../common/model/index");
 const { mnaFormationUpdater } = require("../../../logic/updaters/mnaFormationUpdater");
 const report = require("../../../logic/reporter/report");
 const config = require("config");
 
 const formatToMnaFormation = (rcoFormation) => {
+  const periode =
+    rcoFormation.periode && rcoFormation.periode.length > 0
+      ? `[${rcoFormation.periode.reduce((acc, e) => `${acc}${acc ? ", " : ""}"${e}"`, "")}]`
+      : null;
+
   return {
     id_rco_formation: `${rcoFormation.id_formation}|${rcoFormation.id_action}|${rcoFormation.id_certifinfo}`,
     cfd: rcoFormation.cfd,
@@ -18,7 +23,7 @@ const formatToMnaFormation = (rcoFormation) => {
     lieu_formation_siret: rcoFormation.etablissement_lieu_formation_siret,
 
     rncp_code: rcoFormation.rncp_code,
-    periode: rcoFormation.periode,
+    periode,
     capacite: rcoFormation.capacite,
 
     email: rcoFormation.email,
@@ -45,8 +50,8 @@ const run = async () => {
   //  1 : filter rco formations which are not converted yet
   //  2 : convert them to mna format & launch updater on them
   const result = await performConversion();
-  //
-  // //  3 : Then create a report of conversion
+
+  //  3 : Then create a report of conversion
   await createConversionReport(result);
 };
 
@@ -77,6 +82,8 @@ const performConversion = async () => {
             `RcoFormation ${mnaFormattedRcoFormation.id_rco_formation}/${mnaFormattedRcoFormation.cfd} has error`,
             error
           );
+          rcoFormation.conversion_error = error;
+          await rcoFormation.save();
           invalidRcoFormations.push({
             id_rco_formation: mnaFormattedRcoFormation.id_rco_formation,
             cfd: mnaFormattedRcoFormation.cfd,
@@ -86,6 +93,11 @@ const performConversion = async () => {
         }
 
         logger.info(`RcoFormation ${convertedFormation.id_rco_formation} has been converted`);
+        rcoFormation.conversion_error = "success";
+        await rcoFormation.save();
+
+        await new ConvertedFormation(convertedFormation).save();
+
         convertedRcoFormations.push({
           id_rco_formation: convertedFormation.id_rco_formation,
           cfd: convertedFormation.cfd,
@@ -99,10 +111,22 @@ const performConversion = async () => {
     logger.info(`progress ${computed}/${total}`);
   }
 
+  // update converted_to_mna outside loop to not mess up with paginate
+  await RcoFormation.updateMany(
+    { conversion_error: "success" },
+    { $set: { conversion_error: null, converted_to_mna: true } }
+  );
+
   return { invalidRcoFormations, convertedRcoFormations };
 };
 
 const createConversionReport = async ({ invalidRcoFormations, convertedRcoFormations }) => {
+  logger.info(
+    "create report :",
+    `${invalidRcoFormations.length} invalid formations,`,
+    `${convertedRcoFormations.length} converted formations`
+  );
+
   const summary = {
     invalidCount: invalidRcoFormations.length,
     convertedCount: convertedRcoFormations.length,
@@ -114,9 +138,7 @@ const createConversionReport = async ({ invalidRcoFormations, convertedRcoFormat
 };
 
 // TODO @EPT
-//  4 : Make a diff report between these & Mna formation db criteria to match MNA /RCO === siret + cfd + code postal + code insee + rncp_code [+ uai ?]
-//  5 : upsert the successful ones in DB --> flag 2021 (others should be flagged 2020)
+//  5 : upsert the successful ones in Mna DB --> flag 2021 (others should be flagged 2020)
 //  6 : then create a report of import (update of a 2020 formation or creation of a new one)
-//  7 : in RCO collection flag successfully imported formation & reset this flag on new import
 
 module.exports = { run, performConversion };
