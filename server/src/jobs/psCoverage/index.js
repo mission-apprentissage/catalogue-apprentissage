@@ -2,8 +2,9 @@ const logger = require("../../common/logger");
 const coverage = require("./coverage");
 const coverageEtablissements = require("./coverageEtablissement");
 const { runScript } = require("../scriptWrapper");
+const { psFormationUpdater } = require("../../logic/updaters/psFormationUpdater");
 
-const psCoverage = async () => {
+const psCoverageFormation = async () => {
   try {
     logger.info(" -- Start of coverage job -- ");
 
@@ -14,6 +15,7 @@ const psCoverage = async () => {
     logger.error(err);
   }
 };
+module.exports = psCoverageFormation;
 
 const psCoverageEtablissement = async (catalogue) => {
   try {
@@ -26,12 +28,11 @@ const psCoverageEtablissement = async (catalogue) => {
     logger.error(err);
   }
 };
-
-module.exports = psCoverage;
+module.exports = psCoverageEtablissement;
 
 if (process.env.standalone) {
   runScript(async ({ catalogue }) => {
-    // await psCoverage();
+    await psCoverage();
     await psCoverageEtablissement(catalogue);
   });
 }
