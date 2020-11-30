@@ -30,7 +30,7 @@
                <mj-column padding-right="0">
                 <mj-text align="left" padding="10px 0 25px 25px" font-size="22px" font-weight="900" line-height="26px"
                          color="#5222D0">
-                         Rapport de mise à jour des formations du catalogue<br>
+                         Rapport de différentiel des formations RCO avec la base MNA<br>
                          <%= data.date %>
                 </mj-text>
             </mj-column>
@@ -39,15 +39,40 @@
         <mj-section padding-bottom="20px" padding-top="10px" background-color="#5222d0">
             <mj-column>
                 <mj-text align="left" padding-top="50px" color="#ffffff">
-                    Résumé des mises à jour :<br>
+                    Résumé du différentiel entre les formations RCO converties et la base MNA :<br>
                     <br>
-                    <%= data.summary.updatedCount %> Formation(s) mise(s) à jour<br>
-                    <%= data.summary.notUpdatedCount %> Formation(s) déjà à jour<br>
-                    <%= data.summary.invalidCount %> Formation(s) en échec de mise à jour<br>
+                    <%= data.summary.matchingCount %> Formation(s) qui matchent avec la base MNA<br>
+                    sur un total de <%= data.summary.total %> Formation(s) dans la base de formations RCO converties<br>
                     <br>
                 </mj-text>
             </mj-column>
         </mj-section>
+
+        <% if(data.matchingFormations.length > 0) { %>
+            <mj-section padding-bottom="20px" padding-top="10px" background-color="#5222d0">
+                <mj-column>
+                    <mj-text align="left" padding-top="50px" color="#ffffff">
+                        <%= data.matchingFormations.length %> Formation(s) qui matchent
+                    </mj-text>
+                    <mj-table color="#ffffff" align="left">
+                        <tr align="left">
+                            <th>Index</th>
+                            <% Object.keys(data.matchingFormations[0]).forEach(function(col) { %>
+                                <th><%= col %></th>
+                            <% }); %>
+                        </tr>
+                        <% data.matchingFormations.forEach(function(row, idx) { %>
+                            <tr align="left" class="green">
+                                <td><%= idx %></td>
+                                <% Object.values(row).forEach(function(datum) { %>
+                                    <td><%= datum %></td>
+                                <% }); %>
+                            </tr>
+                        <% }); %>
+                    </mj-table>
+                </mj-column>
+            </mj-section>
+        <% } %>
 
         <mj-section background-color="#5222d0">
             <mj-column>

@@ -8,7 +8,7 @@ module.exports = () => {
     const withoutSensibleFields = (obj) => {
       return omitBy(obj, (value, key) => {
         const lower = key.toLowerCase();
-        return lower.indexOf("token") !== -1 || ["authorization", "password"].includes(lower);
+        return lower.indexOf("token") !== -1 || ["authorization", "password", "newpassword"].includes(lower);
       });
     };
 

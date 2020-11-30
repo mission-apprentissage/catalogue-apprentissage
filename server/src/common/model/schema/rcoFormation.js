@@ -154,6 +154,11 @@ const rcoFormationsSchema = {
     default: false,
     description: "A été convertie en mna formation",
   },
+  conversion_error: {
+    type: String,
+    default: null,
+    description: "Erreur lors de la conversion de la formation",
+  },
 };
 
 module.exports = rcoFormationsSchema;

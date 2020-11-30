@@ -23,7 +23,8 @@ module.exports = async () => {
       }
       return null;
     },
-    getUser: (username) => User.findOne({ username }),
+    getUser: async (username) => await User.findOne({ username }),
+    getUsers: async () => await User.find({}).lean(),
     createUser: async (username, password, options = {}) => {
       const hash = options.hash || sha512Utils.hash(password);
       const permissions = options.permissions || {};
@@ -47,10 +48,24 @@ module.exports = async () => {
 
       return await user.deleteOne({ username });
     },
+    updateUser: async (username, data) => {
+      let user = await User.findOne({ username });
+      if (!user) {
+        throw new Error(`Unable to find user ${username}`);
+      }
+
+      const result = await User.findOneAndUpdate({ _id: user._id }, data, { new: true });
+
+      return result.toObject();
+    },
     changePassword: async (username, newPassword) => {
       const user = await User.findOne({ username });
       if (!user) {
         throw new Error(`Unable to find user ${username}`);
+      }
+
+      if (user.account_status === "FORCE_RESET_PASSWORD") {
+        user.account_status = "CONFIRMED";
       }
 
       user.password = sha512Utils.hash(newPassword);

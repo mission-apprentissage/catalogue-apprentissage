@@ -12,6 +12,7 @@ const permissionsMiddleware = require("./middlewares/permissionsMiddleware");
 const packageJson = require("../../package.json");
 const formation = require("./routes/formation");
 const formationSecure = require("./routes/formationSecure");
+const convertedFormation = require("./routes/convertedFormation");
 const rcoFormation = require("./routes/rcoFormation");
 const secured = require("./routes/secured");
 const login = require("./routes/login");
@@ -39,13 +40,14 @@ module.exports = async (components) => {
   app.use("/api/search", esMultiSearchNoIndex());
 
   app.use("/api/entity", formation());
+  app.use("/api/entity", convertedFormation());
   app.use("/api/entity", checkJwtToken, formationSecure());
 
   app.use("/api/rcoformation", rcoFormation());
   app.use("/api/secured", apiKeyAuthMiddleware, secured());
   app.use("/api/login", login(components));
   app.use("/api/authentified", checkJwtToken, authentified());
-  app.use("/api/admin", checkJwtToken, adminOnly, admin());
+  app.use("/api/admin", checkJwtToken, adminOnly, admin(components));
   app.use("/api/password", password(components));
   app.use("/api/stats", checkJwtToken, adminOnly, stats(components));
 
