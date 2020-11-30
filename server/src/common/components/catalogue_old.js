@@ -47,8 +47,8 @@ const getEtablissementById = async (idEtablissement) => {
 
 module.exports = () => {
   return {
-    getEtablissements: () => getEtablissements(),
-    getEtablissement: () => getEtablissement(),
-    getEtablissementById: () => getEtablissementById(),
+    getEtablissements: (opt) => getEtablissements(opt),
+    getEtablissement: (opt) => getEtablissement(opt),
+    getEtablissementById: (opt) => getEtablissementById(otp),
   };
 };
