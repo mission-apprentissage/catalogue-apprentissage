@@ -114,5 +114,10 @@ const psFormationSchema = {
     default: null,
     description: "Formations du catalogue matchant la formation parcoursup",
   },
+  matching_mna_etablissement: {
+    type: Array,
+    default: null,
+    description: "Etablissement du catalogue matchant les formation présente dans matching_mna_formation",
+  },
 };
 module.exports = psFormationSchema;
