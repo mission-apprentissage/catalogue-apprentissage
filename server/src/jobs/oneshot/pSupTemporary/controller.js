@@ -1,4 +1,4 @@
-const { MnaFormation } = require("../../../common/model/index");
+const { ConvertedFormation } = require("../../../common/model/index");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const logger = require("../../../common/logger");
 
@@ -12,13 +12,13 @@ const logger = require("../../../common/logger");
 const run = async () => {
   const filter = {}; // TODO
 
-  const formations = await MnaFormation.find({
-    // parcoursup_reference: "NON",
-    parcoursup_a_charger: false,
+  const formations = await ConvertedFormation.find({
     ...filter,
+    parcoursup_a_charger: false,
+    published: true,
   }).and([
-    { educ_nat_code: { $ne: null } },
-    { educ_nat_code: { $ne: "" } },
+    { cfd: { $ne: null } },
+    { cfd: { $ne: "" } },
     { intitule_long: { $ne: null } },
     { intitule_long: { $ne: "" } },
     { intitule_court: { $ne: null } },
@@ -67,7 +67,7 @@ const run = async () => {
     };
     updatedTraining.parcoursup_a_charger = true;
     updatedTraining.last_update_at = Date.now();
-    await MnaFormation.findOneAndUpdate({ _id: item._id }, updatedTraining, { new: true });
+    await ConvertedFormation.findOneAndUpdate({ _id: item._id }, updatedTraining, { new: true });
     logger.info(`Formation ${item._id} has been updated`);
   });
 };

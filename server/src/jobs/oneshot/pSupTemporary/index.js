@@ -1,5 +1,5 @@
 const logger = require("../../../common/logger");
-const controlller = require("./controlller");
+const controller = require("./controller");
 
 const { runScript } = require("../../scriptWrapper");
 
@@ -7,7 +7,7 @@ const run = async () => {
   try {
     logger.info(" -- Start psup temporary -- ");
 
-    await controlller.run();
+    await controller.run();
 
     logger.info(" -- End of psup temporary -- ");
   } catch (err) {
