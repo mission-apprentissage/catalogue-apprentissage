@@ -1,5 +1,6 @@
 const logger = require("../../common/logger");
-const coverage = require("./coverage/coverage");
+const coverage = require("./coverage");
+const coverageEtablissements = require("./coverageEtablissement");
 const { runScript } = require("../scriptWrapper");
 
 const psCoverage = async () => {
@@ -14,10 +15,23 @@ const psCoverage = async () => {
   }
 };
 
+const psCoverageEtablissement = async (catalogue) => {
+  try {
+    logger.info(" -- Start of coverage job -- ");
+
+    await coverageEtablissements(catalogue);
+
+    logger.info(" -- End of coverage job -- ");
+  } catch (err) {
+    logger.error(err);
+  }
+};
+
 module.exports = psCoverage;
 
 if (process.env.standalone) {
-  runScript(async () => {
-    await psCoverage();
+  runScript(async ({ catalogue }) => {
+    // await psCoverage();
+    await psCoverageEtablissement(catalogue);
   });
 }
