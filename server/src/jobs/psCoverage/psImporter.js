@@ -10,7 +10,7 @@ const { runScript } = require("../scriptWrapper");
 
 const run = async (tco) => {
   try {
-    const filePath = path.resolve(__dirname, "../assets/Liste_Formation_Apprentissage_Psup.xlsx");
+    const filePath = path.resolve(__dirname, "./assets/Liste_Formation_Apprentissage_Psup.xlsx");
     const data = getJsonFromXlsxFile(filePath);
 
     await asyncForEach(data, async (formation) => {
