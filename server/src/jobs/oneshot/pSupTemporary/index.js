@@ -3,7 +3,7 @@ const controller = require("./controller");
 
 const { runScript } = require("../../scriptWrapper");
 
-const run = async () => {
+const pSupLoader = async () => {
   try {
     logger.info(" -- Start psup temporary -- ");
 
@@ -15,6 +15,10 @@ const run = async () => {
   }
 };
 
-runScript(async () => {
-  await run();
-});
+module.exports = pSupLoader;
+
+if (process.env.standalone) {
+  runScript(async () => {
+    await pSupLoader();
+  });
+}
