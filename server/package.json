@@ -30,7 +30,9 @@
     "trainings:updater": "standalone=true node src/jobs/trainingsUpdater/index.js",
     "trainings:updater:local": "standalone=true dotenv node src/jobs/trainingsUpdater/index.js",
     "oneshot:hydrate": "standalone=true node src/jobs/oneshot/hydrateFromOldCatalogue/index.js",
-    "oneshot:hydrate:local": "standalone=true dotenv node src/jobs/oneshot/hydrateFromOldCatalogue/index.js"
+    "oneshot:hydrate:local": "standalone=true dotenv node src/jobs/oneshot/hydrateFromOldCatalogue/index.js",
+    "oneshot:psup": "standalone=true node src/jobs/oneshot/pSupTemporary/index.js",
+    "oneshot:psup:local": "standalone=true dotenv node src/jobs/oneshot/pSupTemporary/index.js"
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.6.1",
