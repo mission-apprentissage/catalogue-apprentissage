@@ -2,7 +2,6 @@ const logger = require("../../common/logger");
 const coverage = require("./coverage");
 const coverageEtablissements = require("./coverageEtablissement");
 const { runScript } = require("../scriptWrapper");
-const { psFormationUpdater } = require("../../logic/updaters/psFormationUpdater");
 
 const psCoverageFormation = async () => {
   try {
@@ -32,7 +31,7 @@ module.exports = psCoverageEtablissement;
 
 if (process.env.standalone) {
   runScript(async ({ catalogue }) => {
-    await psCoverage();
+    await psCoverageFormation();
     await psCoverageEtablissement(catalogue);
   });
 }

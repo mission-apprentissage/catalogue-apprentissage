@@ -11,7 +11,7 @@ module.exports = async (catalogue) => {
     let etablissements = [];
 
     // TODO ? filter matching_mna_formation to avoid duplicate calls/entries
-    const filter = formation.matching_mna_formation.reduce((acc, formation) => {});
+    // const filter = formation.matching_mna_formation.reduce((acc, formation) => {});
 
     await asyncForEach(formation.matching_mna_formation, async (matches, index) => {
       logger.info(`Processing ${index + 1} of ${formation.matching_mna_formation.length} - cfd : ${matches.cfd}`);

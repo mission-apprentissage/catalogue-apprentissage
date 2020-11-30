@@ -49,6 +49,6 @@ module.exports = () => {
   return {
     getEtablissements: (opt) => getEtablissements(opt),
     getEtablissement: (opt) => getEtablissement(opt),
-    getEtablissementById: (opt) => getEtablissementById(otp),
+    getEtablissementById: (opt) => getEtablissementById(opt),
   };
 };
