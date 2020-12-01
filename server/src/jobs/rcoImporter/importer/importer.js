@@ -1,5 +1,5 @@
 const wsRCO = require("./wsRCO");
-const { RcoFormation } = require("../../../common/model/index");
+const { RcoFormation, Report } = require("../../../common/model/index");
 const { diff } = require("deep-object-diff");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const report = require("../../../logic/reporter/report");
@@ -88,6 +88,13 @@ class Importer {
     };
 
     const data = { added: this.added, updated: this.updated, summary };
+
+    // save report in db
+    const date = Date.now();
+    await new Report({ type: "rcoImport", date, data }).save();
+
+    // TODO EPT add link to UI
+
     const title = "[Webservice RCO] Rapport d'importation";
     const to = config.rco.reportMailingList.split(",");
     await report.generate(data, title, to, "rcoReport");
@@ -346,6 +353,8 @@ class Importer {
         ...updateInfo,
         updates_history,
         last_update_at: Date.now(),
+        converted_to_mna: false,
+        conversion_error: null,
       },
       { new: true }
     );
@@ -370,8 +379,18 @@ class Importer {
    * diff RCO Formation
    */
   diffRcoFormation(rcoFormationP, formation) {
-    // eslint-disable-next-line no-unused-vars
-    const { _id, __v, updates_history, published, created_at, last_update_at, ...rcoFormation } = rcoFormationP;
+    /* eslint-disable no-unused-vars */
+    const {
+      _id,
+      __v,
+      updates_history,
+      published,
+      created_at,
+      last_update_at,
+      converted_to_mna,
+      conversion_error,
+      ...rcoFormation
+    } = rcoFormationP;
     const compare = diff(rcoFormation, formation);
     const keys = Object.keys(compare);
 

@@ -108,7 +108,7 @@ const mapEtablissementKeys = async (
       [`${prefix}_type`]: etablissement.computed_type || null,
       [`${prefix}_conventionne`]: etablissement.computed_conventionne || null,
       [`${prefix}_declare_prefecture`]: etablissement.computed_declare_prefecture || null,
-      [`${prefix}_declare_datadock`]: etablissement.computed_info_datadock || null,
+      [`${prefix}_datadock`]: etablissement.computed_info_datadock || null,
       [`${prefix}_adresse`]: getEstablishmentAddress(etablissement),
       [`${prefix}_complement_adresse`]: etablissement.complement_adresse || null,
       [`${prefix}_cedex`]: etablissement.cedex || null,
