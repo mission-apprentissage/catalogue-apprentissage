@@ -25,7 +25,6 @@ const getEtablissements = async (options) => {
     }
   } catch (error) {
     logger.error(error);
-    return null;
   }
 };
 
@@ -52,9 +51,7 @@ const postEtablissement = async (payload) => {
     const response = await axios.post(`${apiEndpoint}/etablissement`, payload, {
       headers: { Authorization: `${config.oldCatalogue.apiKey}` },
     });
-    if (response.status === 200) {
-      return { message: "success" };
-    }
+    return response.data;
   } catch (error) {
     logger.error(error);
   }
@@ -62,14 +59,21 @@ const postEtablissement = async (payload) => {
 
 const deleteEtablissement = async (id) => {
   try {
-    const response = await axios.delete(`${apiEndpoint}/etablissement/${id}`, {
+    await axios.delete(`${apiEndpoint}/etablissement/${id}`, {
       headers: { Authorization: `${config.oldCatalogue.apiKey}` },
     });
-    if (response.status === 200) {
-      return { message: "success" };
-    }
+    return true;
   } catch (error) {
-    logger.info(error);
+    logger.error(error);
+  }
+};
+
+const updateInformation = async (id) => {
+  try {
+    await axios.post(`${apiEndpoint}/service?job=etablissement&id=${id}`);
+    return true;
+  } catch (error) {
+    logger.error(error);
   }
 };
 
@@ -80,5 +84,6 @@ module.exports = () => {
     getEtablissementById: (opt) => getEtablissementById(opt),
     postEtablissement: (opt) => postEtablissement(opt),
     deleteEtablissement: (opt) => deleteEtablissement(opt),
+    updateInformation: (opt) => updateInformation(opt),
   };
 };
