@@ -13,6 +13,7 @@ const packageJson = require("../../package.json");
 const formation = require("./routes/formation");
 const formationSecure = require("./routes/formationSecure");
 const convertedFormation = require("./routes/convertedFormation");
+const report = require("./routes/report");
 const rcoFormation = require("./routes/rcoFormation");
 const secured = require("./routes/secured");
 const login = require("./routes/login");
@@ -41,6 +42,7 @@ module.exports = async (components) => {
 
   app.use("/api/entity", formation());
   app.use("/api/entity", convertedFormation());
+  app.use("/api/entity", report());
   app.use("/api/entity", checkJwtToken, formationSecure());
 
   app.use("/api/rcoformation", rcoFormation());

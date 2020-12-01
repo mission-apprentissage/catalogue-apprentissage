@@ -68,6 +68,13 @@ const createReport = async ({ invalidFormations, updatedFormations, notUpdatedFo
     notUpdatedCount: notUpdatedFormations.length,
   };
   const data = { invalid: invalidFormations, updated: updatedFormations, notUpdated: notUpdatedFormations, summary };
+
+  // save report in db
+  // const date = Date.now();
+  // await new Report({ type: "trainingsUpdate", date, data }).save();
+
+  // TODO EPT add link to UI
+
   const title = "[Mna Formations] Rapport de mise à jour";
   const to = config.reportMailingList.split(",");
   await report.generate(data, title, to, "trainingsUpdateReport");

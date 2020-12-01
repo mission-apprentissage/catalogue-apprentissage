@@ -4,6 +4,7 @@ const userSchema = require("./user");
 const rcoFormationSchema = require("./rcoFormation");
 const mnaFormationSchema = require("./mnaFormation/mnaFormation");
 const psFormationSchema = require("./psFormation");
+const reportSchema = require("./report");
 
 module.exports = {
   sampleSchema,
@@ -12,4 +13,5 @@ module.exports = {
   rcoFormationSchema,
   mnaFormationSchema,
   psFormationSchema,
+  reportSchema,
 };

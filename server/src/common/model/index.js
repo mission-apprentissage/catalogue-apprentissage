@@ -7,6 +7,7 @@ const {
   rcoFormationSchema,
   mnaFormationSchema,
   psFormationSchema,
+  reportSchema,
 } = require("../model/schema");
 
 const getMongoostaticModel = (modelName, schema, instanceMongoose = mongooseInstance) => {
@@ -57,6 +58,11 @@ if (!cf) {
   cf = getModel("convertedformation", mnaFormationSchema);
 }
 
+let r = null;
+if (!r) {
+  r = getModel("report", reportSchema);
+}
+
 let l = null;
 if (!l) {
   l = getMongooseModel("log");
@@ -68,6 +74,7 @@ module.exports = {
   RcoFormation: rf,
   MnaFormation: f,
   ConvertedFormation: cf,
+  Report: r,
   Log: l,
   PsFormation: pf,
 };
