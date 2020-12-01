@@ -61,7 +61,7 @@ module.exports = () => {
    * Update an item validated by schema updateTraining formation/{id} PUT
    */
   router.put(
-    "/formation:id",
+    "/formation/:id",
     tryCatch(async ({ body, user, params }, res) => {
       // await formationSchema.validateAsync(body, { abortEarly: false });
 
