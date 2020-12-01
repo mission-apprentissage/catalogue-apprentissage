@@ -8,7 +8,8 @@ const esIndex = async () => {
     logger.info(" -- Start esIndex -- ");
 
     const args = process.argv.slice(2);
-    await rebuildEsIndex(args?.[0]);
+    const skipNotFound = args?.[1] === "--skipNotFound";
+    await rebuildEsIndex(args?.[0], skipNotFound);
 
     logger.info(" -- End of esIndex -- ");
   } catch (err) {
