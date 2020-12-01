@@ -1,7 +1,14 @@
 const mongoose = require("mongoose");
 const { mongooseInstance } = require("../mongodb");
 const { mongoosastic, getElasticInstance } = require("../esClient");
-const { sampleSchema, userSchema, rcoFormationSchema, mnaFormationSchema, reportSchema } = require("../model/schema");
+const {
+  sampleSchema,
+  userSchema,
+  rcoFormationSchema,
+  mnaFormationSchema,
+  psFormationSchema,
+  reportSchema,
+} = require("../model/schema");
 
 const getMongoostaticModel = (modelName, schema, instanceMongoose = mongooseInstance) => {
   const Schema = new instanceMongoose.Schema(schema);
@@ -41,6 +48,11 @@ if (!f) {
   f = getModel("mnaformation", mnaFormationSchema);
 }
 
+let pf = null;
+if (!pf) {
+  pf = getModel("psformation", psFormationSchema);
+}
+
 let cf = null;
 if (!cf) {
   cf = getModel("convertedformation", mnaFormationSchema);
@@ -64,4 +76,5 @@ module.exports = {
   ConvertedFormation: cf,
   Report: r,
   Log: l,
+  PsFormation: pf,
 };

@@ -31,6 +31,8 @@
     "trainings:updater:local": "standalone=true dotenv node src/jobs/trainingsUpdater/index.js",
     "oneshot:hydrate": "standalone=true node src/jobs/oneshot/hydrateFromOldCatalogue/index.js",
     "oneshot:hydrate:local": "standalone=true dotenv node src/jobs/oneshot/hydrateFromOldCatalogue/index.js",
+    "coverage": "standalone=true node src/jobs/psCoverage/index.js",
+    "coverage:import": "standalone=true node src/jobs/psCoverage/coverage/psimporter.js",
     "oneshot:psup": "standalone=true node src/jobs/oneshot/pSupTemporary/index.js",
     "oneshot:psup:local": "standalone=true dotenv node src/jobs/oneshot/pSupTemporary/index.js"
   },
@@ -72,7 +74,7 @@
     "passport-jwt": "4.0.0",
     "passport-local": "1.0.0",
     "sha512crypt-node": "0.1.0",
-    "xlsx": "0.16.1"
+    "xlsx": "0.16.9"
   },
   "engines": {
     "node": ">=14.15.0"
