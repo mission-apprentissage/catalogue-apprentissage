@@ -8,14 +8,14 @@ const { getJsonFromXlsxFile } = require("../../common/utils/fileUtils");
 
 const { runScript } = require("../scriptWrapper");
 
-const run = async (tco) => {
+const run = async (tableCorrespondance) => {
   try {
     const filePath = path.resolve(__dirname, "./assets/Liste_Formation_Apprentissage_Psup.xlsx");
     const data = getJsonFromXlsxFile(filePath);
 
     await asyncForEach(data, async (formation) => {
       if (!formation.CODECFD && formation.CODEMEF) {
-        const responseMEF = await tco.getMefInfo(formation.code_mef_10);
+        const responseMEF = await tableCorrespondance.getMefInfo(formation.code_mef_10);
 
         if (responseMEF) {
           if (!responseMEF.messages.cfdUpdated === "Non trouvé") {
@@ -56,10 +56,10 @@ const run = async (tco) => {
 };
 
 if (process.env.standalone) {
-  runScript(async ({ tco }) => {
+  runScript(async ({ tableCorrespondance }) => {
     logger.info(" -- Start database import -- ");
 
-    await run(tco);
+    await run(tableCorrespondance);
 
     logger.info(" -- End database import -- ");
   });
