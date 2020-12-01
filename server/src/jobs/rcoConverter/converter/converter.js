@@ -1,5 +1,5 @@
 const logger = require("../../../common/logger");
-const { RcoFormation, ConvertedFormation, Report } = require("../../../common/model/index");
+const { RcoFormation, ConvertedFormation } = require("../../../common/model/index");
 const { mnaFormationUpdater } = require("../../../logic/updaters/mnaFormationUpdater");
 const report = require("../../../logic/reporter/report");
 const config = require("config");
@@ -141,8 +141,8 @@ const createConversionReport = async ({ invalidRcoFormations, convertedRcoFormat
   const data = { invalid: invalidRcoFormations, converted: convertedRcoFormations, summary };
 
   // save report in db
-  const date = Date.now();
-  await new Report({ type: "rcoConversion", date, data }).save();
+  // const date = Date.now();
+  // await new Report({ type: "rcoConversion", date, data }).save();
 
   // TODO EPT add link to UI
 

@@ -1,5 +1,5 @@
 const wsRCO = require("./wsRCO");
-const { RcoFormation, Report } = require("../../../common/model/index");
+const { RcoFormation } = require("../../../common/model/index");
 const { diff } = require("deep-object-diff");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const report = require("../../../logic/reporter/report");
@@ -90,8 +90,8 @@ class Importer {
     const data = { added: this.added, updated: this.updated, summary };
 
     // save report in db
-    const date = Date.now();
-    await new Report({ type: "rcoImport", date, data }).save();
+    // const date = Date.now();
+    // await new Report({ type: "rcoImport", date, data }).save();
 
     // TODO EPT add link to UI
 
