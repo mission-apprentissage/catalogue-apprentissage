@@ -1,11 +1,13 @@
 const logger = require("../logger");
 const { getElasticInstance } = require("../esClient");
 
-const rebuildIndex = async (index, schema) => {
+const rebuildIndex = async (index, schema, { skipNotFound } = { skipNotFound: false }) => {
   let client = getElasticInstance();
 
-  logger.info(`Removing '${index}' index...`);
-  await client.indices.delete({ index });
+  if (!skipNotFound) {
+    logger.info(`Removing '${index}' index...`);
+    await client.indices.delete({ index });
+  }
 
   logger.info(`Re-creating '${index}' index with mapping...`);
   let requireAsciiFolding = true;
