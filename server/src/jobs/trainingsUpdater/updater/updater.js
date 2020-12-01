@@ -1,5 +1,5 @@
 const logger = require("../../../common/logger");
-const { MnaFormation } = require("../../../common/model/index");
+const { MnaFormation, Report } = require("../../../common/model/index");
 const { mnaFormationUpdater } = require("../../../logic/updaters/mnaFormationUpdater");
 const report = require("../../../logic/reporter/report");
 const config = require("config");
@@ -68,6 +68,13 @@ const createReport = async ({ invalidFormations, updatedFormations, notUpdatedFo
     notUpdatedCount: notUpdatedFormations.length,
   };
   const data = { invalid: invalidFormations, updated: updatedFormations, notUpdated: notUpdatedFormations, summary };
+
+  // save report in db
+  const date = Date.now();
+  await new Report({ type: "trainingsUpdate", date, data }).save();
+
+  // TODO EPT add link to UI
+
   const title = "[Mna Formations] Rapport de mise à jour";
   const to = config.reportMailingList.split(",");
   await report.generate(data, title, to, "trainingsUpdateReport");
