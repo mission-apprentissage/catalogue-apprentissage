@@ -1,10 +1,10 @@
 const logger = require("../../common/logger");
-const { getEtablissement } = require("../common/apiOldCatalogue");
+const catalogue = require("../../common/components/catalogue_old");
 const { codePostalMapper } = require("./codePostalMapper");
 
 const getAttachedEstablishments = async (etablissement_gestionnaire_siret, etablissement_formateur_siret) => {
   // Get establishment Gestionnaire
-  const gestionnaire = await getEtablissement({
+  const gestionnaire = await catalogue().getEtablissement({
     siret: etablissement_gestionnaire_siret,
   });
 
@@ -13,7 +13,7 @@ const getAttachedEstablishments = async (etablissement_gestionnaire_siret, etabl
   if (etablissement_gestionnaire_siret === etablissement_formateur_siret) {
     formateur = gestionnaire;
   } else {
-    formateur = await getEtablissement({
+    formateur = await catalogue().getEtablissement({
       siret: etablissement_formateur_siret,
     });
   }
