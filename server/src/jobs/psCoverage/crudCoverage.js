@@ -29,11 +29,11 @@ module.exports = async () => {
       const payload = {
         uai: etab.uai_gestionnaire,
         siret: etab.etablissement_siret,
+        draft: true,
       };
 
-      await postEtablissement(payload)
-        .then(() => logger.info(`Etablissement ${payload.uai} successfully added`))
-        .catch((error) => logger.error(error));
+      const response = await postEtablissement(payload);
+      await updateInformation(response._id);
     })
   );
 
