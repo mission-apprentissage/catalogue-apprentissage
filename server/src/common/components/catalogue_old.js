@@ -3,6 +3,7 @@
  */
 const axios = require("axios");
 const logger = require("../logger");
+const config = require("config");
 
 const apiEndpoint = "https://c7a5ujgw35.execute-api.eu-west-3.amazonaws.com/prod";
 
@@ -36,6 +37,7 @@ const getEtablissement = async (query) => {
     logger.error(error);
   }
 };
+
 const getEtablissementById = async (idEtablissement) => {
   try {
     const response = await axios.get(`${apiEndpoint}/etablissement/${idEtablissement}`);
@@ -45,10 +47,38 @@ const getEtablissementById = async (idEtablissement) => {
   }
 };
 
+const postEtablissement = async (payload) => {
+  try {
+    const response = await axios.post(`${apiEndpoint}/etablissement`, payload, {
+      headers: { Authorization: `${config.oldCatalogue.apiKey}` },
+    });
+    if (response.status === 200) {
+      return { message: "success" };
+    }
+  } catch (error) {
+    logger.error(error);
+  }
+};
+
+const deleteEtablissement = async (id) => {
+  try {
+    const response = await axios.delete(`${apiEndpoint}/etablissement/${id}`, {
+      headers: { Authorization: `${config.oldCatalogue.apiKey}` },
+    });
+    if (response.status === 200) {
+      return { message: "success" };
+    }
+  } catch (error) {
+    logger.info(error);
+  }
+};
+
 module.exports = () => {
   return {
     getEtablissements: (opt) => getEtablissements(opt),
     getEtablissement: (opt) => getEtablissement(opt),
     getEtablissementById: (opt) => getEtablissementById(opt),
+    postEtablissement: (opt) => postEtablissement(opt),
+    deleteEtablissement: (opt) => deleteEtablissement(opt),
   };
 };
