@@ -11,17 +11,10 @@ module.exports = () => {
   router.get(
     "/report",
     tryCatch(async (req, res) => {
-      const qs = req.query;
-      let query;
-      try {
-        query = qs && qs.query ? JSON.parse(qs.query) : {};
-      } catch (e) {
-        return res.status(400).send({ error: "invalid query params" });
-      }
-
-      const retrievedData = await Report.findOne(query);
-      if (retrievedData) {
-        res.json(retrievedData);
+      const { type, date } = req.query;
+      const report = await Report.findOne({ type, date });
+      if (report) {
+        res.json(report);
       } else {
         res.json({ message: `Item doesn't exist` });
       }
