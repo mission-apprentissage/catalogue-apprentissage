@@ -67,27 +67,32 @@ const createReport = async ({ invalidFormations, updatedFormations, notUpdatedFo
     updatedCount: updatedFormations.length,
     notUpdatedCount: notUpdatedFormations.length,
   };
-  const data = { invalid: invalidFormations, updated: updatedFormations, notUpdated: notUpdatedFormations, summary };
 
   // save report in db
   const date = Date.now();
-
+  const type = "trainingsUpdate";
   await new Report({
-    type: "trainingsUpdate",
+    type,
     date,
     data: { summary, updated: updatedFormations, notUpdated: notUpdatedFormations },
   }).save();
 
   await new Report({
-    type: "trainingsUpdate.error",
+    type: `${type}.error`,
     date,
     data: {
       errors: invalidFormations,
     },
   }).save();
 
-  // TODO EPT add link to UI
-
+  const link = `${config.publicUrl}/report?type=${type}&date=${date}`;
+  const data = {
+    invalid: invalidFormations,
+    updated: updatedFormations,
+    notUpdated: notUpdatedFormations,
+    summary,
+    link,
+  };
   const title = "[Mna Formations] Rapport de mise à jour";
   const to = config.reportMailingList.split(",");
   await report.generate(data, title, to, "trainingsUpdateReport");

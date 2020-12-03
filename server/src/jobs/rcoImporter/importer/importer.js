@@ -92,8 +92,9 @@ class Importer {
 
     // save report in db
     const date = Date.now();
+    const type = "rcoImport";
     await new Report({
-      type: "rcoImport",
+      type,
       date,
       data: {
         summary,
@@ -103,9 +104,8 @@ class Importer {
       },
     }).save();
 
-    // TODO EPT add link to UI
-
-    const data = { added: this.added, updated: this.updated, summary };
+    const link = `${config.publicUrl}/report?type=${type}&date=${date}`;
+    const data = { added: this.added, updated: this.updated, summary, link };
     const title = "[Webservice RCO] Rapport d'importation";
     const to = config.rco.reportMailingList.split(",");
     await report.generate(data, title, to, "rcoReport");
