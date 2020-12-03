@@ -1,5 +1,5 @@
 const logger = require("../../../common/logger");
-const { MnaFormation } = require("../../../common/model/index");
+const { MnaFormation, Report } = require("../../../common/model/index");
 const { mnaFormationUpdater } = require("../../../logic/updaters/mnaFormationUpdater");
 const report = require("../../../logic/reporter/report");
 const config = require("config");
@@ -70,8 +70,21 @@ const createReport = async ({ invalidFormations, updatedFormations, notUpdatedFo
   const data = { invalid: invalidFormations, updated: updatedFormations, notUpdated: notUpdatedFormations, summary };
 
   // save report in db
-  // const date = Date.now();
-  // await new Report({ type: "trainingsUpdate", date, data }).save();
+  const date = Date.now();
+
+  await new Report({
+    type: "trainingsUpdate",
+    date,
+    data: { summary, updated: updatedFormations, notUpdated: notUpdatedFormations },
+  }).save();
+
+  await new Report({
+    type: "trainingsUpdate.error",
+    date,
+    data: {
+      errors: invalidFormations,
+    },
+  }).save();
 
   // TODO EPT add link to UI
 
