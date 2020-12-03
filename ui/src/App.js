@@ -47,7 +47,13 @@ export default () => {
             <Route exact path="/reset-password" component={ResetPasswordPage} />
             <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
 
-            <Route exact path="/report" component={ReportPage} />
+            {auth && (
+              <PrivateRoute exact path="/report">
+                <Layout>
+                  <ReportPage />
+                </Layout>
+              </PrivateRoute>
+            )}
           </Switch>
         </Router>
       </div>
