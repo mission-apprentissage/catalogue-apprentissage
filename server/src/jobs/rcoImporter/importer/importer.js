@@ -73,7 +73,10 @@ class Importer {
       // element.to = JSON.stringify(updates_history.to);
     });
 
-    const deletedCount = this.updated.filter(({ published }) => published === "Supprimée").length;
+    const deleted = this.updated.filter(({ published }) => published === "Supprimée");
+    const justUpdated = this.updated.filter(({ published }) => published !== "Supprimée");
+
+    const deletedCount = deleted.length;
     const publishedCount = await RcoFormation.countDocuments({ published: true });
     const deactivatedCount = await RcoFormation.countDocuments({ published: false });
 
@@ -87,14 +90,22 @@ class Importer {
       deactivatedCount,
     };
 
-    const data = { added: this.added, updated: this.updated, summary };
-
     // save report in db
     const date = Date.now();
-    await new Report({ type: "rcoImport", date, data }).save();
+    await new Report({
+      type: "rcoImport",
+      date,
+      data: {
+        summary,
+        added: this.added,
+        updated: justUpdated,
+        deleted,
+      },
+    }).save();
 
     // TODO EPT add link to UI
 
+    const data = { added: this.added, updated: this.updated, summary };
     const title = "[Webservice RCO] Rapport d'importation";
     const to = config.rco.reportMailingList.split(",");
     await report.generate(data, title, to, "rcoReport");
