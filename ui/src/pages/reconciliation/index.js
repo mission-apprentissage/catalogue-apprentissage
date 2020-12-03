@@ -1,20 +1,29 @@
 import React from "react";
 import { ReactiveBase, ReactiveList } from "@appbaseio/reactivesearch";
-import { Layout, Accordion } from "./components";
-import Box from "@material-ui/core/Box";
+import { Layout, Accordion, Loading, Modal } from "./components";
+import { Box } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import ContextProvider, { Context } from "./context";
 
 const useStyle = makeStyles({
   root: {
     width: "100%",
   },
+  loader: {
+    root: {
+      height: "100vh",
+    },
+  },
 });
+
+const elasticEndpoint = "http://localhost/api/es/";
+const serverEndpoint = "http://localhost/api";
 
 function PageReconciliation() {
   const classes = useStyle();
-  const elasticEndpoint = "http://localhost/api/es/";
-  const serverEndpoint = "http://localhost/api";
   const [coverage, setCoverage] = React.useState();
+  const { popup } = React.useContext(Context);
+  console.log("popup", popup);
 
   React.useEffect(() => {
     (async function getCoverage() {
@@ -26,10 +35,23 @@ function PageReconciliation() {
   }, []);
 
   if (!coverage) {
-    return <div>Chargement des données...</div>;
+    return (
+      <Layout>
+        <Loading />
+      </Layout>
+    );
   }
 
-  console.log(coverage.filter((x) => x.matching_mna_etablissement.length > 0).length, coverage.length);
+  return (
+    <ContextProvider>
+      <Layout>
+        <Box className={classes.root} p={2}>
+          <Accordion data={coverage[0]} />
+        </Box>
+        {popup && <Modal />}
+      </Layout>
+    </ContextProvider>
+  );
 
   return (
     <Layout>

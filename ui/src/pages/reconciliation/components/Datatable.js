@@ -20,7 +20,6 @@ const useStyles = makeStyles({
 
 const Datatable = (props) => {
   const { headers, data, title } = props;
-  console.log(data.data);
 
   const classes = useStyles();
   const [page, setPage] = React.useState(0);

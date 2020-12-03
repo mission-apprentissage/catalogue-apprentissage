@@ -16,6 +16,7 @@ import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
 import Datatable from "./Datatable";
 import AddIcon from "@material-ui/icons/Add";
+import { Context } from "../context";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -58,21 +59,21 @@ const useStyles = makeStyles((theme) => ({
 export default (props) => {
   const classes = useStyles();
   const { data } = props;
+  const { handlePopup } = React.useContext(Context);
 
   const sameUai = new Set([data.uai_affilie, data.uai_composante, data.uai_gestionnaire]).size === 1 ? true : false;
   const sameEtab = new Set([data.libelle_uai_affilie, data.libelle_uai_composante]).size === 1 ? true : false;
 
   return (
-    <Accordion className={classes.root}>
+    <Accordion className={classes.root} defaultExpanded>
       <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-        {/* <FormControlLabel
+        <FormControlLabel
           aria-label="Acknowledge"
           onClick={(event) => event.stopPropagation()}
           onFocus={(event) => event.stopPropagation()}
           control={<Checkbox />}
           label=""
-          expandIcon={<ExpandMoreIcon />}
-        /> */}
+        />
         <div className={classes.column}>
           <Typography className={classes.heading}>{data.libelle_uai_affilie}</Typography>
           {sameUai ? (
@@ -103,10 +104,10 @@ export default (props) => {
       {/* </AccordionDetails> */}
       <Divider />
       <AccordionActions>
-        <Button color="primary" variant="outlined" startIcon={<AddIcon />} size="small">
+        <Button color="primary" variant="outlined" startIcon={<AddIcon />} onClick={() => handlePopup()}>
           Nouvel établissement
         </Button>
-        <Button variant="contained" size="small" color="primary">
+        <Button variant="contained" color="primary">
           Valider
         </Button>
       </AccordionActions>
