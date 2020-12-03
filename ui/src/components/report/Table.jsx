@@ -1,15 +1,17 @@
 import React, { useMemo } from "react";
-import { useTable } from "react-table";
+import { useTable, useFlexLayout } from "react-table";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList } from "react-window";
+import { Box, Flex, Text } from "@chakra-ui/react";
 
 const Table = ({ data }) => {
   const tableData = useMemo(() => data, []);
 
-  const columns = Object.keys(data[0]).map((key) => {
+  const columns = Object.keys(data[0]).map((key, i, arr) => {
     return {
       Header: key,
       accessor: key,
+      width: i === arr.length - 1 ? 300 : 150,
     };
   });
 
@@ -18,12 +20,22 @@ const Table = ({ data }) => {
       {
         Header: "index",
         accessor: (row, i) => i,
+        width: 50,
       },
       ...columns,
     ],
     []
   );
-  const tableInstance = useTable({ columns: tableColumns, data: tableData });
+
+  const defaultColumn = React.useMemo(
+    () => ({
+      // When using the useFlexLayout:
+      width: 150, // width is used for both the flex-basis and flex-grow
+    }),
+    []
+  );
+
+  const tableInstance = useTable({ columns: tableColumns, data: tableData, defaultColumn }, useFlexLayout);
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = tableInstance;
 
   const Row = React.useCallback(
@@ -31,58 +43,54 @@ const Table = ({ data }) => {
       const row = rows[index];
       prepareRow(row);
       return (
-        <tr {...row.getRowProps()} style={{ ...style, display: "flex" }}>
+        <Box
+          {...row.getRowProps()}
+          display="flex"
+          key={row.id}
+          data-rowindex={row.index}
+          // onClick={onRowClick}
+          // cursor={onRowClick ? "pointer" : undefined}
+          _hover={{ bg: "gray.700" }}
+          lineHeight="50px"
+          borderBottom="1px solid #6A6A6A"
+          style={style}
+        >
           {row.cells.map((cell) => {
             return (
-              <div
-                {...cell.getCellProps()}
-                style={{
-                  display: "flex",
-                  padding: "10px",
-                  border: "solid 1px gray",
-                  overflow: "hidden",
-                  minWidth: 200,
-                }}
-              >
+              <Box {...cell.getCellProps()} display="flex" px={2} overflow="hidden">
                 {cell.render("Cell")}
-              </div>
+              </Box>
             );
           })}
-        </tr>
+        </Box>
       );
     },
     [prepareRow, rows]
   );
 
   return (
-    <table {...getTableProps()} style={{ border: "solid 1px gray", width: "100%" }}>
-      <div>
+    <Box {...getTableProps()} w="100%" flex={1} fontSize={19}>
+      <Box>
         {headerGroups.map((headerGroup) => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
+          <Flex flex={1} {...headerGroup.getHeaderGroupProps({})} pb={4}>
             {headerGroup.headers.map((column) => (
-              <th
-                {...column.getHeaderProps()}
-                style={{
-                  borderBottom: "solid 3px gray",
-                  fontWeight: "bold",
-                }}
-              >
+              <Text as="div" {...column.getHeaderProps()} display="flex" textTransform="uppercase">
                 {column.render("Header")}
-              </th>
+              </Text>
             ))}
-          </tr>
+          </Flex>
         ))}
-      </div>
-      <tbody {...getTableBodyProps()}>
+      </Box>
+      <Box {...getTableBodyProps()}>
         <AutoSizer disableHeight>
           {({ width }) => (
-            <FixedSizeList height={900} itemCount={rows.length} itemSize={35} width={width} overscanCount={50}>
+            <FixedSizeList height={900} itemCount={rows.length} itemSize={50} width={width} overscanCount={50}>
               {Row}
             </FixedSizeList>
           )}
         </AutoSizer>
-      </tbody>
-    </table>
+      </Box>
+    </Box>
   );
 };
 
