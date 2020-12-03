@@ -12,16 +12,18 @@ const RcoConversionTabs = ({ data, reportType, errors }) => {
     <Ctabs isLazy>
       <TabList>
         <Tab>Résumé</Tab>
-        <Tab>{summary.convertedCount} Formation(s) convertie(s)</Tab>
+        {summary.convertedCount > 0 && <Tab>{summary.convertedCount} Formation(s) convertie(s)</Tab>}
         {showErrors && <Tab>{summary.invalidCount} Formation(s) en échec de conversion</Tab>}
       </TabList>
       <TabPanels>
         <TabPanel>
           <Summary data={data} reportType={reportType} />
         </TabPanel>
-        <TabPanel>
-          <Table data={data.converted} />
-        </TabPanel>
+        {data?.converted?.length > 0 && (
+          <TabPanel>
+            <Table data={data.converted} />
+          </TabPanel>
+        )}
         {showErrors && (
           <TabPanel>
             <Table data={errors} />
@@ -40,20 +42,24 @@ const TrainingsUpdateTabs = ({ data, reportType, errors }) => {
     <Ctabs isLazy>
       <TabList>
         <Tab>Résumé</Tab>
-        <Tab>{summary.updatedCount} Formation(s) mise(s) à jour</Tab>
-        <Tab>{summary.notUpdatedCount} Formation(s) déjà à jour</Tab>
+        {summary.updatedCount > 0 && <Tab>{summary.updatedCount} Formation(s) mise(s) à jour</Tab>}
+        {summary.notUpdatedCount > 0 && <Tab>{summary.notUpdatedCount} Formation(s) déjà à jour</Tab>}
         {showErrors && <Tab>{summary.invalidCount} Formation(s) en échec de mise à jour</Tab>}
       </TabList>
       <TabPanels>
         <TabPanel>
           <Summary data={data} reportType={reportType} />
         </TabPanel>
-        <TabPanel>
-          <Table data={data.updated} />
-        </TabPanel>
-        <TabPanel>
-          <Table data={data.notUpdated} />
-        </TabPanel>
+        {data.updated?.length > 0 && (
+          <TabPanel>
+            <Table data={data.updated} />
+          </TabPanel>
+        )}
+        {data.notUpdated?.length > 0 && (
+          <TabPanel>
+            <Table data={data.notUpdated} />
+          </TabPanel>
+        )}
         {showErrors && (
           <TabPanel>
             <Table data={errors} />
@@ -72,16 +78,18 @@ const RcoDiffTabs = ({ data, reportType, errors }) => {
     <Ctabs isLazy>
       <TabList>
         <Tab>Résumé</Tab>
-        <Tab>{summary.matchingCount} Formation(s) qui matchent avec la base MNA</Tab>
+        {summary.matchingCount > 0 && <Tab>{summary.matchingCount} Formation(s) qui matchent avec la base MNA</Tab>}
         {showErrors && <Tab>Erreurs</Tab>}
       </TabList>
       <TabPanels>
         <TabPanel>
           <Summary data={data} reportType={reportType} />
         </TabPanel>
-        <TabPanel>
-          <Table data={data.matchingFormations} />
-        </TabPanel>
+        {data.matchingFormations.length > 0 && (
+          <TabPanel>
+            <Table data={data.matchingFormations} />
+          </TabPanel>
+        )}
         {showErrors && (
           <TabPanel>
             <Table data={errors} />
@@ -100,24 +108,30 @@ const RcoImportTabs = ({ data, reportType, errors }) => {
     <Ctabs isLazy>
       <TabList>
         <Tab>Résumé</Tab>
-        <Tab>{summary.addedCount} Formation(s) ajoutée(s)</Tab>
-        <Tab>{summary.updatedCount} Formation(s) mise(s) à jour</Tab>
-        <Tab>{summary.deletedCount} Formation(s) supprimée(s)</Tab>
+        {summary.addedCount > 0 && <Tab>{summary.addedCount} Formation(s) ajoutée(s)</Tab>}
+        {summary.updatedCount > 0 && <Tab>{summary.updatedCount} Formation(s) mise(s) à jour</Tab>}
+        {summary.deletedCount > 0 && <Tab>{summary.deletedCount} Formation(s) supprimée(s)</Tab>}
         {showErrors && <Tab>Erreurs</Tab>}
       </TabList>
       <TabPanels>
         <TabPanel>
           <Summary data={data} reportType={reportType} />
         </TabPanel>
-        <TabPanel>
-          <Table data={data.added} />
-        </TabPanel>
-        <TabPanel>
-          <Table data={data.updated} />
-        </TabPanel>
-        <TabPanel>
-          <Table data={data.deleted} />
-        </TabPanel>
+        {data.added?.length > 0 && (
+          <TabPanel>
+            <Table data={data.added} />
+          </TabPanel>
+        )}
+        {data.updated?.length > 0 && (
+          <TabPanel>
+            <Table data={data.updated} />
+          </TabPanel>
+        )}
+        {data.deleted?.length > 0 && (
+          <TabPanel>
+            <Table data={data.deleted} />
+          </TabPanel>
+        )}
         {showErrors && (
           <TabPanel>
             <Table data={errors} />
