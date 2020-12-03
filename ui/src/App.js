@@ -9,6 +9,7 @@ import HomePage from "./pages/HomePage";
 import ResetPasswordPage from "./pages/password/ResetPasswordPage";
 import ForgottenPasswordPage from "./pages/password/ForgottenPasswordPage";
 import Users from "./pages/admin/Users";
+import PageReconciliation from "./pages/reconciliation";
 
 function PrivateRoute({ children, ...rest }) {
   let [auth] = useAuth();
@@ -30,7 +31,7 @@ export default () => {
     <div className="App">
       <Router>
         <Switch>
-          <PrivateRoute exact path="/">
+          {/* <PrivateRoute exact path="/">
             <Layout>{auth && auth.permissions.isAdmin ? <DashboardPage /> : <HomePage />}</Layout>
           </PrivateRoute>
           {auth && auth.permissions.isAdmin && (
@@ -39,10 +40,11 @@ export default () => {
                 <Users />
               </Layout>
             </PrivateRoute>
-          )}
+          )} */}
           <Route exact path="/login" component={LoginPage} />
           <Route exact path="/reset-password" component={ResetPasswordPage} />
           <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
+          <Route exact path="/" component={PageReconciliation} />
         </Switch>
       </Router>
     </div>
