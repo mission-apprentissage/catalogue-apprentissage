@@ -30,7 +30,7 @@ module.exports = () => {
       if (report) {
         res.json(report);
       } else {
-        res.json({ message: `Item doesn't exist` });
+        res.status(404).send({ message: "Item doesn't exist" });
       }
     })
   );

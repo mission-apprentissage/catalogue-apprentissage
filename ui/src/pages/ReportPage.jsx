@@ -18,15 +18,12 @@ const ReportPage = () => {
   // TODO check reportTypes.includes(type)
 
   const [responseData, loadingData, errorFetchData] = useFetch(`${REPORT_URL}?type=${reportType}&date=${date}`);
-  console.log(reportType, date, responseData);
-
-  const [responseErrors, loadingErrors, errorFetchErrors] = useFetch(
-    `${REPORT_URL}?type=${reportType}.error&date=${date}`
-  );
+  const [responseErrors] = useFetch(`${REPORT_URL}?type=${reportType}.error&date=${date}`);
 
   return (
     <div>
-      {loadingData && "Chargement des données..."}
+      {errorFetchData && "Erreur lors du chargement des données"}
+      {!errorFetchData && loadingData && "Chargement des données..."}
       {responseData?.data && (
         <Tabs data={responseData.data} reportType={reportType} errors={responseErrors?.data?.errors} />
       )}
