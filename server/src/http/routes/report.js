@@ -12,7 +12,21 @@ module.exports = () => {
     "/report",
     tryCatch(async (req, res) => {
       const { type, date } = req.query;
-      const report = await Report.findOne({ type, date });
+
+      let report;
+      if (type === "rcoConversion") {
+        const reports = await Report.find({ type, date });
+        if (reports.length > 0) {
+          const initialValue = { ...reports[0], data: { ...reports[0].data, converted: [] } };
+          report = reports.reduce((acc, curr) => {
+            acc.data.converted = [...acc.data.converted, ...curr.data.converted];
+            return acc;
+          }, initialValue);
+        }
+      } else {
+        report = await Report.findOne({ type, date });
+      }
+
       if (report) {
         res.json(report);
       } else {
