@@ -1,4 +1,5 @@
 import React from "react";
+import { Text } from "@chakra-ui/react";
 import { REPORT_TYPE } from "../../constants/report";
 
 const Summary = ({ data, reportType }) => {
@@ -7,18 +8,18 @@ const Summary = ({ data, reportType }) => {
   switch (reportType) {
     case REPORT_TYPE.RCO_CONVERSION:
       return (
-        <p>
+        <Text fontSize={20}>
           Résumé des conversions de la base RCO vers la base MNA :<br />
           <br />
           {summary.convertedCount} Formation(s) convertie(s)
           <br />
           {summary.invalidCount} Formation(s) en échec de conversion
-        </p>
+        </Text>
       );
 
     case REPORT_TYPE.TRAININGS_UPDATE:
       return (
-        <p>
+        <Text fontSize={20}>
           Résumé des mises à jour :<br />
           <br />
           {summary.updatedCount} Formation(s) mise(s) à jour
@@ -26,23 +27,23 @@ const Summary = ({ data, reportType }) => {
           {summary.notUpdatedCount} Formation(s) déjà à jour
           <br />
           {summary.invalidCount} Formation(s) en échec de mise à jour
-        </p>
+        </Text>
       );
 
     case REPORT_TYPE.RCO_DIFF:
       return (
-        <p>
+        <Text fontSize={20}>
           Résumé du différentiel entre les formations RCO converties et la base MNA :<br />
           <br />
           {summary.matchingCount} Formation(s) qui matchent avec la base MNA
           <br />
           sur un total de {summary.total} Formation(s) dans la base de formations RCO converties
-        </p>
+        </Text>
       );
 
     case REPORT_TYPE.RCO_IMPORT:
       return (
-        <p>
+        <Text fontSize={20}>
           Résumé de l'importation :<br />
           <br />
           Données reçues du webservice RCO :<br />
@@ -63,7 +64,7 @@ const Summary = ({ data, reportType }) => {
           <br />
           {summary.deactivatedCount} Formation(s) désactivée(s)
           <br />
-        </p>
+        </Text>
       );
 
     default:

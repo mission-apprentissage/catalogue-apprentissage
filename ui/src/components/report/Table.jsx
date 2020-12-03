@@ -2,7 +2,6 @@ import React, { useMemo } from "react";
 import { useTable } from "react-table";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList } from "react-window";
-import { Box, Flex, PseudoBox, Text } from "@chakra-ui/react";
 
 const Table = ({ data }) => {
   const tableData = useMemo(() => data, []);
@@ -77,7 +76,7 @@ const Table = ({ data }) => {
       <tbody {...getTableBodyProps()}>
         <AutoSizer disableHeight>
           {({ width }) => (
-            <FixedSizeList height={700} itemCount={rows.length} itemSize={35} width={width} overscanCount={50}>
+            <FixedSizeList height={900} itemCount={rows.length} itemSize={35} width={width} overscanCount={50}>
               {Row}
             </FixedSizeList>
           )}

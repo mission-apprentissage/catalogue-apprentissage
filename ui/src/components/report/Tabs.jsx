@@ -1,5 +1,5 @@
 import React from "react";
-import { Tabs as Ctabs, Tab, TabList, TabPanel, TabPanels } from "@chakra-ui/react";
+import { Tabs as Ctabs, Tab, TabList, TabPanel, TabPanels, Box } from "@chakra-ui/react";
 import { Summary } from "./Summary";
 import { Table } from "./Table";
 import { REPORT_TYPE } from "../../constants/report";
@@ -10,12 +10,12 @@ const RcoConversionTabs = ({ data, reportType, errors }) => {
 
   return (
     <Ctabs isLazy>
-      <TabList>
-        <Tab>Résumé</Tab>
-        {summary.convertedCount > 0 && <Tab>{summary.convertedCount} Formation(s) convertie(s)</Tab>}
-        {showErrors && <Tab>{summary.invalidCount} Formation(s) en échec de conversion</Tab>}
+      <TabList px={24} border="none" bg="#E5EDEF" color="#2B2B2B" pb="2px">
+        <Tab fontSize={20}>Résumé</Tab>
+        {summary.convertedCount > 0 && <Tab fontSize={20}>{summary.convertedCount} Formation(s) convertie(s)</Tab>}
+        {showErrors && <Tab fontSize={20}>{summary.invalidCount} Formation(s) en échec de conversion</Tab>}
       </TabList>
-      <TabPanels>
+      <TabPanels px={24} color="#F8F8F8" h={1000}>
         <TabPanel>
           <Summary data={data} reportType={reportType} />
         </TabPanel>
@@ -40,13 +40,13 @@ const TrainingsUpdateTabs = ({ data, reportType, errors }) => {
 
   return (
     <Ctabs isLazy>
-      <TabList>
-        <Tab>Résumé</Tab>
-        {summary.updatedCount > 0 && <Tab>{summary.updatedCount} Formation(s) mise(s) à jour</Tab>}
-        {summary.notUpdatedCount > 0 && <Tab>{summary.notUpdatedCount} Formation(s) déjà à jour</Tab>}
-        {showErrors && <Tab>{summary.invalidCount} Formation(s) en échec de mise à jour</Tab>}
+      <TabList px={24} border="none" bg="#E5EDEF" color="#2B2B2B" pb="2px">
+        <Tab fontSize={20}>Résumé</Tab>
+        {summary.updatedCount > 0 && <Tab fontSize={20}>{summary.updatedCount} Formation(s) mise(s) à jour</Tab>}
+        {summary.notUpdatedCount > 0 && <Tab fontSize={20}>{summary.notUpdatedCount} Formation(s) déjà à jour</Tab>}
+        {showErrors && <Tab fontSize={20}>{summary.invalidCount} Formation(s) en échec de mise à jour</Tab>}
       </TabList>
-      <TabPanels>
+      <TabPanels px={24} color="#F8F8F8" h={1000}>
         <TabPanel>
           <Summary data={data} reportType={reportType} />
         </TabPanel>
@@ -76,12 +76,14 @@ const RcoDiffTabs = ({ data, reportType, errors }) => {
 
   return (
     <Ctabs isLazy>
-      <TabList>
-        <Tab>Résumé</Tab>
-        {summary.matchingCount > 0 && <Tab>{summary.matchingCount} Formation(s) qui matchent avec la base MNA</Tab>}
-        {showErrors && <Tab>Erreurs</Tab>}
+      <TabList px={24} border="none" bg="#E5EDEF" color="#2B2B2B" pb="2px">
+        <Tab fontSize={20}>Résumé</Tab>
+        {summary.matchingCount > 0 && (
+          <Tab fontSize={20}>{summary.matchingCount} Formation(s) qui matchent avec la base MNA</Tab>
+        )}
+        {showErrors && <Tab fontSize={20}>Erreurs</Tab>}
       </TabList>
-      <TabPanels>
+      <TabPanels px={24} color="#F8F8F8" h={1000}>
         <TabPanel>
           <Summary data={data} reportType={reportType} />
         </TabPanel>
@@ -106,14 +108,14 @@ const RcoImportTabs = ({ data, reportType, errors }) => {
 
   return (
     <Ctabs isLazy>
-      <TabList>
-        <Tab>Résumé</Tab>
-        {summary.addedCount > 0 && <Tab>{summary.addedCount} Formation(s) ajoutée(s)</Tab>}
-        {summary.updatedCount > 0 && <Tab>{summary.updatedCount} Formation(s) mise(s) à jour</Tab>}
-        {summary.deletedCount > 0 && <Tab>{summary.deletedCount} Formation(s) supprimée(s)</Tab>}
-        {showErrors && <Tab>Erreurs</Tab>}
+      <TabList px={24} border="none" bg="#E5EDEF" color="#2B2B2B" pb="2px">
+        <Tab fontSize={20}>Résumé</Tab>
+        {summary.addedCount > 0 && <Tab fontSize={20}>{summary.addedCount} Formation(s) ajoutée(s)</Tab>}
+        {summary.updatedCount > 0 && <Tab fontSize={20}>{summary.updatedCount} Formation(s) mise(s) à jour</Tab>}
+        {summary.deletedCount > 0 && <Tab fontSize={20}>{summary.deletedCount} Formation(s) supprimée(s)</Tab>}
+        {showErrors && <Tab fontSize={20}>Erreurs</Tab>}
       </TabList>
-      <TabPanels>
+      <TabPanels px={24} color="#F8F8F8" h={1000}>
         <TabPanel>
           <Summary data={data} reportType={reportType} />
         </TabPanel>
