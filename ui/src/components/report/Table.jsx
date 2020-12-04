@@ -4,14 +4,14 @@ import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList } from "react-window";
 import { Box, Flex, Text } from "@chakra-ui/react";
 
-const Table = ({ data }) => {
+const Table = ({ data, onRowClick }) => {
   const tableData = useMemo(() => data, []);
 
-  const columns = Object.keys(data[0]).map((key, i, arr) => {
+  const columns = Object.keys(data[0]).map((key) => {
     return {
       Header: key,
       accessor: key,
-      width: i === arr.length - 1 ? 300 : 150,
+      width: key === "updates" ? 300 : 150,
     };
   });
 
@@ -48,8 +48,8 @@ const Table = ({ data }) => {
           display="flex"
           key={row.id}
           data-rowindex={row.index}
-          // onClick={onRowClick}
-          // cursor={onRowClick ? "pointer" : undefined}
+          onClick={() => onRowClick?.(index)}
+          cursor={onRowClick ? "pointer" : undefined}
           _hover={{ bg: "gray.700" }}
           lineHeight="50px"
           borderBottom="1px solid #6A6A6A"

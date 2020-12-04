@@ -84,7 +84,7 @@ const ReportPage = () => {
     };
 
     fetchReport();
-  }, []);
+  }, [reportType, date]);
 
   const [responseErrors] = useFetch(`${REPORT_URL}?type=${reportType}.error&date=${date}`);
 

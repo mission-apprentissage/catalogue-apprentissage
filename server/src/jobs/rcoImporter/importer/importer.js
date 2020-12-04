@@ -54,9 +54,10 @@ class Importer {
       const { updates, updateInfo } = this.formationsToUpdateToDb.find((u) => u.rcoFormation._id === element.mnaId);
 
       if (updates && updates.periode) {
-        updates.periode = Object.values(updates.periode).map((dateStr) =>
-          new Date(dateStr).toLocaleString("fr-FR", { month: "long", year: "numeric" })
-        );
+        updates.periode = Object.values(updates.periode).map((dateStr) => {
+          const formattedDate = new Date(dateStr).toLocaleString("fr-FR", { month: "long", year: "numeric" });
+          return formattedDate === "Invalid Date" ? dateStr : formattedDate;
+        });
       }
 
       element.updates = JSON.stringify(updates);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   chakra,
   Tab as Ctab,
@@ -6,9 +6,11 @@ import {
   TabPanel,
   TabPanels as CtabPanels,
   Tabs as Ctabs,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { Summary } from "./Summary";
 import { Table } from "./Table";
+import { CodeModal } from "./CodeModal";
 import { REPORT_TYPE } from "../../constants/report";
 
 const Tab = chakra(Ctab, {
@@ -41,66 +43,86 @@ const TabPanels = chakra(CtabPanels, {
 const RcoConversionTabs = ({ data, reportType, errors }) => {
   const { summary } = data;
   const showErrors = errors?.length > 0;
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedData, setSelectedData] = useState();
+
+  const onRowClick = (index) => {
+    setSelectedData(data.converted?.[index]?.updates);
+    onOpen();
+  };
 
   return (
-    <Ctabs isLazy>
-      <TabList>
-        <Tab>Résumé</Tab>
-        {summary.convertedCount > 0 && <Tab>{summary.convertedCount} Formation(s) convertie(s)</Tab>}
-        {showErrors && <Tab>{summary.invalidCount} Formation(s) en échec de conversion</Tab>}
-      </TabList>
-      <TabPanels>
-        <TabPanel>
-          <Summary data={data} reportType={reportType} />
-        </TabPanel>
-        {data?.converted?.length > 0 && (
+    <>
+      <Ctabs isLazy>
+        <TabList>
+          <Tab>Résumé</Tab>
+          {summary.convertedCount > 0 && <Tab>{summary.convertedCount} Formation(s) convertie(s)</Tab>}
+          {showErrors && <Tab>{summary.invalidCount} Formation(s) en échec de conversion</Tab>}
+        </TabList>
+        <TabPanels>
           <TabPanel>
-            <Table data={data.converted} />
+            <Summary data={data} reportType={reportType} />
           </TabPanel>
-        )}
-        {showErrors && (
-          <TabPanel>
-            <Table data={errors} />
-          </TabPanel>
-        )}
-      </TabPanels>
-    </Ctabs>
+          {data?.converted?.length > 0 && (
+            <TabPanel>
+              <Table data={data.converted} onRowClick={onRowClick} />
+            </TabPanel>
+          )}
+          {showErrors && (
+            <TabPanel>
+              <Table data={errors} />
+            </TabPanel>
+          )}
+        </TabPanels>
+      </Ctabs>
+      <CodeModal isOpen={isOpen} onClose={onClose} title="Updates" code={selectedData} />
+    </>
   );
 };
 
 const TrainingsUpdateTabs = ({ data, reportType, errors }) => {
   const { summary } = data;
   const showErrors = errors?.length > 0;
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedData, setSelectedData] = useState();
+
+  const onRowClick = (index) => {
+    setSelectedData(data.updated?.[index]?.updates);
+    onOpen();
+  };
 
   return (
-    <Ctabs isLazy>
-      <TabList>
-        <Tab>Résumé</Tab>
-        {summary.updatedCount > 0 && <Tab>{summary.updatedCount} Formation(s) mise(s) à jour</Tab>}
-        {summary.notUpdatedCount > 0 && <Tab>{summary.notUpdatedCount} Formation(s) déjà à jour</Tab>}
-        {showErrors && <Tab>{summary.invalidCount} Formation(s) en échec de mise à jour</Tab>}
-      </TabList>
-      <TabPanels>
-        <TabPanel>
-          <Summary data={data} reportType={reportType} />
-        </TabPanel>
-        {data.updated?.length > 0 && (
+    <>
+      <Ctabs isLazy>
+        <TabList>
+          <Tab>Résumé</Tab>
+          {summary.updatedCount > 0 && <Tab>{summary.updatedCount} Formation(s) mise(s) à jour</Tab>}
+          {summary.notUpdatedCount > 0 && <Tab>{summary.notUpdatedCount} Formation(s) déjà à jour</Tab>}
+          {showErrors && <Tab>{summary.invalidCount} Formation(s) en échec de mise à jour</Tab>}
+        </TabList>
+        <TabPanels>
           <TabPanel>
-            <Table data={data.updated} />
+            <Summary data={data} reportType={reportType} />
           </TabPanel>
-        )}
-        {data.notUpdated?.length > 0 && (
-          <TabPanel>
-            <Table data={data.notUpdated} />
-          </TabPanel>
-        )}
-        {showErrors && (
-          <TabPanel>
-            <Table data={errors} />
-          </TabPanel>
-        )}
-      </TabPanels>
-    </Ctabs>
+          {data.updated?.length > 0 && (
+            <TabPanel>
+              <Table data={data.updated} onRowClick={onRowClick} />
+            </TabPanel>
+          )}
+          {data.notUpdated?.length > 0 && (
+            <TabPanel>
+              <Table data={data.notUpdated} />
+            </TabPanel>
+          )}
+          {showErrors && (
+            <TabPanel>
+              <Table data={errors} />
+            </TabPanel>
+          )}
+        </TabPanels>
+      </Ctabs>
+      <CodeModal isOpen={isOpen} onClose={onClose} title="Updates" code={selectedData} />
+    </>
   );
 };
 
@@ -137,42 +159,52 @@ const RcoDiffTabs = ({ data, reportType, errors }) => {
 const RcoImportTabs = ({ data, reportType, errors }) => {
   const { summary } = data;
   const showErrors = errors?.length > 0;
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedData, setSelectedData] = useState();
+
+  const onRowClick = (index) => {
+    setSelectedData(data.updated?.[index]?.updates);
+    onOpen();
+  };
 
   return (
-    <Ctabs isLazy>
-      <TabList>
-        <Tab>Résumé</Tab>
-        {summary.addedCount > 0 && <Tab>{summary.addedCount} Formation(s) ajoutée(s)</Tab>}
-        {summary.updatedCount > 0 && <Tab>{summary.updatedCount} Formation(s) mise(s) à jour</Tab>}
-        {summary.deletedCount > 0 && <Tab>{summary.deletedCount} Formation(s) supprimée(s)</Tab>}
-        {showErrors && <Tab>Erreurs</Tab>}
-      </TabList>
-      <TabPanels>
-        <TabPanel>
-          <Summary data={data} reportType={reportType} />
-        </TabPanel>
-        {data.added?.length > 0 && (
+    <>
+      <Ctabs isLazy>
+        <TabList>
+          <Tab>Résumé</Tab>
+          {summary.addedCount > 0 && <Tab>{summary.addedCount} Formation(s) ajoutée(s)</Tab>}
+          {summary.updatedCount > 0 && <Tab>{summary.updatedCount} Formation(s) mise(s) à jour</Tab>}
+          {summary.deletedCount > 0 && <Tab>{summary.deletedCount} Formation(s) supprimée(s)</Tab>}
+          {showErrors && <Tab>Erreurs</Tab>}
+        </TabList>
+        <TabPanels>
           <TabPanel>
-            <Table data={data.added} />
+            <Summary data={data} reportType={reportType} />
           </TabPanel>
-        )}
-        {data.updated?.length > 0 && (
-          <TabPanel>
-            <Table data={data.updated} />
-          </TabPanel>
-        )}
-        {data.deleted?.length > 0 && (
-          <TabPanel>
-            <Table data={data.deleted} />
-          </TabPanel>
-        )}
-        {showErrors && (
-          <TabPanel>
-            <Table data={errors} />
-          </TabPanel>
-        )}
-      </TabPanels>
-    </Ctabs>
+          {data.added?.length > 0 && (
+            <TabPanel>
+              <Table data={data.added} />
+            </TabPanel>
+          )}
+          {data.updated?.length > 0 && (
+            <TabPanel>
+              <Table data={data.updated} onRowClick={onRowClick} />
+            </TabPanel>
+          )}
+          {data.deleted?.length > 0 && (
+            <TabPanel>
+              <Table data={data.deleted} />
+            </TabPanel>
+          )}
+          {showErrors && (
+            <TabPanel>
+              <Table data={errors} />
+            </TabPanel>
+          )}
+        </TabPanels>
+      </Ctabs>
+      <CodeModal isOpen={isOpen} onClose={onClose} title="Updates" code={selectedData} />
+    </>
   );
 };
 
