@@ -20,6 +20,7 @@ services:
       - ./server/src:/app/src # Allows source folders to be watched
       - ./server/config:/app/config
       - catalogue_apprentissage_server_data:/data
+    env_file: ./server/.env
     environment:
       - CATALOGUE_APPRENTISSAGE_ENV=dev
       - CATALOGUE_APPRENTISSAGE_LOG_LEVEL=debug
