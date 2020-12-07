@@ -3,6 +3,8 @@ const { RcoFormation, ConvertedFormation, Report } = require("../../../common/mo
 const { mnaFormationUpdater } = require("../../../logic/updaters/mnaFormationUpdater");
 const report = require("../../../logic/reporter/report");
 const config = require("config");
+const { asyncForEach } = require("../../../common/utils/asyncUtils");
+const { chunk } = require("lodash");
 
 const formatToMnaFormation = (rcoFormation) => {
   const periode =
@@ -140,23 +142,28 @@ const createConversionReport = async ({ invalidRcoFormations, convertedRcoFormat
   };
   // save report in db
   const date = Date.now();
+  const type = "rcoConversion";
+
+  // Store by chunks to stay below the Mongo document max size (16Mb)
+  const chunks = chunk(convertedRcoFormations, 2000);
+  await asyncForEach(chunks, async (chunk) => {
+    await new Report({
+      type,
+      date,
+      data: { summary, converted: chunk },
+    }).save();
+  });
 
   await new Report({
-    type: "rcoConversion",
-    date,
-    data: { summary, converted: convertedRcoFormations },
-  }).save();
-
-  await new Report({
-    type: "rcoConversion.error",
+    type: `${type}.error`,
     date,
     data: {
       errors: invalidRcoFormations,
     },
   }).save();
 
-  // TODO EPT add link to UI
-  const data = { invalid: invalidRcoFormations, converted: convertedRcoFormations, summary };
+  const link = `${config.publicUrl}/report?type=${type}&date=${date}`;
+  const data = { invalid: invalidRcoFormations, converted: convertedRcoFormations, summary, link };
 
   // Send mail
   const title = "[RCO Formations] Rapport de conversion";

@@ -69,9 +69,11 @@ const createDiffReport = async ({ matchingFormations, total }) => {
 
   // save report in db
   const date = Date.now();
-  await new Report({ type: "rcoDiff", date, data }).save();
+  const type = "rcoDiff";
+  await new Report({ type, date, data }).save();
 
-  // TODO EPT add link to UI
+  const link = `${config.publicUrl}/report?type=${type}&date=${date}`;
+  data.link = link;
 
   const title = "[RCO Formations] Rapport différentiel avec la base MNA";
   const to = config.rco.reportMailingList.split(",");
