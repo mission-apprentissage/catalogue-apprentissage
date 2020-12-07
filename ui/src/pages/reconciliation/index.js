@@ -1,21 +1,19 @@
 import React from "react";
+// eslint-disable-next-line
 import { ReactiveBase, ReactiveList } from "@appbaseio/reactivesearch";
 import { Layout, Accordion, Loading, Modal } from "./components";
 import { Box } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import ContextProvider, { Context } from "./context";
+import { _get } from "../../common/httpClient";
 
 const useStyle = makeStyles({
   root: {
     width: "100%",
   },
-  loader: {
-    root: {
-      height: "100vh",
-    },
-  },
 });
 
+// eslint-disable-next-line
 const elasticEndpoint = "http://localhost/api/es/";
 const serverEndpoint = "http://localhost/api";
 
@@ -23,14 +21,12 @@ function PageReconciliation() {
   const classes = useStyle();
   const [coverage, setCoverage] = React.useState();
   const { popup } = React.useContext(Context);
-  console.log("popup", popup);
 
   React.useEffect(() => {
     (async function getCoverage() {
       const type = "3";
-      const response = await fetch(`${serverEndpoint}/coverage?type=${type}`);
-      const data = await response.json();
-      setCoverage(data);
+      const response = await _get(`${serverEndpoint}/coverage?type=${type}`);
+      setCoverage(response);
     })();
   }, []);
 
@@ -53,17 +49,20 @@ function PageReconciliation() {
     </ContextProvider>
   );
 
-  return (
-    <Layout>
-      {coverage.map((item) => {
-        return (
-          <Box className={classes.root} p={2}>
-            <Accordion data={item} />
-          </Box>
-        );
-      })}
-    </Layout>
-  );
+  // return (
+  //   <ContextProvider>
+  //     <Layout>
+  //       {coverage.map((item, index) => {
+  //         return (
+  //           <Box key={index} className={classes.root} p={2}>
+  //             <Accordion data={item} />
+  //           </Box>
+  //         );
+  //       })}
+  //       {popup && <Modal />}
+  //     </Layout>
+  //   </ContextProvider>
+  // );
 
   // return (
   //   <ReactiveBase url={elasticEndpoint} app="psformations">

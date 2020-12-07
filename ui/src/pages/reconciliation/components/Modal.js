@@ -16,7 +16,6 @@ import {
   Radio,
   FormLabel,
   RadioGroup,
-  Paper,
 } from "@material-ui/core";
 import { Context } from "../context";
 
@@ -53,8 +52,6 @@ export default function TransitionsModal() {
     setValues({ ...values, [name]: value });
   };
 
-  console.log(values);
-
   return (
     <Modal
       aria-labelledby="Ajouter un établissement"
@@ -75,9 +72,11 @@ export default function TransitionsModal() {
               Ajouter un établissement
             </Typography>
             <form className={classes.root} noValidate autoComplete="off">
-              <Grid container direction="column" justify="center" alignItems="center" spacing={2}>
-                <Grid item>
+              <Grid container justify="center" alignItems="center" spacing={1}>
+                <Grid item xs>
                   <TextField variant="outlined" name="uai" label="Uai" value={values.uai} onChange={handleChange} />
+                </Grid>
+                <Grid item xs>
                   <TextField
                     variant="outlined"
                     name="siret"
@@ -87,15 +86,31 @@ export default function TransitionsModal() {
                   />
                 </Grid>
                 <Grid item>
-                  <FormControl>
-                    <FormLabel>Type d'établissement :</FormLabel>
-                    <RadioGroup name="type" value={values.type} onChange={handleChange}>
-                      <FormControlLabel value="gestionnaire" control={<Radio />} label="Gestionnaire" />
-                      <FormControlLabel value="formateur" control={<Radio />} label="Formateur" />
-                    </RadioGroup>
-                  </FormControl>
+                  <Button variant="contained" color="primary">
+                    Rechercher
+                  </Button>
                 </Grid>
               </Grid>
+              <FormControl>
+                <FormLabel>Sélectionner le type d'établissement :</FormLabel>
+                <RadioGroup name="type" value={values.type} onChange={handleChange}>
+                  <Grid container alignContent="space-around">
+                    <Grid item xs>
+                      <FormControlLabel value="gestionnaire" control={<Radio />} label="Gestionnaire" />
+                    </Grid>
+                    <Grid item xs>
+                      <FormControlLabel value="formateur" control={<Radio />} label="Formateur" />
+                    </Grid>
+                    <Grid item xs>
+                      <FormControlLabel
+                        value="formateur-gestionnaire"
+                        control={<Radio />}
+                        label="Formateur et gestionnaire"
+                      />
+                    </Grid>
+                  </Grid>
+                </RadioGroup>
+              </FormControl>
             </form>
           </CardContent>
           <CardActions>
@@ -103,7 +118,7 @@ export default function TransitionsModal() {
               Annuler
             </Button>
             <Button size="small" color="primary" variant="contained">
-              Valider
+              Créer l'établissement
             </Button>
           </CardActions>
         </Card>
