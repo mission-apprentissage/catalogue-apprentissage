@@ -130,7 +130,7 @@ const psFormationSchema = {
     description:
       "Code formation diplome de la formation catalogue rapproché. Valeur récupéré de la formation parcousup ou du catalogue des formations pour les matching 1*",
   },
-  cmapping_code_postal_formation: {
+  mapping_code_postal_formation: {
     type: String,
     default: null,
     description:
@@ -153,8 +153,8 @@ const psFormationSchema = {
   },
   mapping_etat_reconciliation: {
     type: String,
-    enum: ["DONE", "OPEN"],
-    default: "OPEN",
+    enum: ["OK", "OUVERTE"],
+    default: "OUVERTE",
     description: "Etat de la réconciliation de la formation parcoursup avec le catalogue",
   },
 };
