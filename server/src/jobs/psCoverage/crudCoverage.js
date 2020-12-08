@@ -1,12 +1,9 @@
 const logger = require("../../common/logger");
 const path = require("path");
-const diff = require("deep-object-diff").diff;
 
-const { PsFormation } = require("../../common/model/index");
-const { asyncForEach } = require("../../common/utils/asyncUtils");
 const { getJsonFromXlsxFile } = require("../../common/utils/fileUtils");
 
-module.exports = async () => {
+module.exports = async (catalogue) => {
   const filePath = path.resolve(__dirname, "./assets/Etablissements_6_20201130.xlsx");
   let rawFormations = getJsonFromXlsxFile(filePath);
 
@@ -25,28 +22,25 @@ module.exports = async () => {
 
   Promise.all(
     toCreate.map(async (etab) => {
-      return;
       const payload = {
         uai: etab.uai_gestionnaire,
         siret: etab.etablissement_siret,
         draft: true,
       };
 
-      const response = await postEtablissement(payload);
-      await updateInformation(response._id);
+      const response = await catalogue.postEtablissement(payload);
+      await catalogue.updateInformation(response._id);
     })
   );
 
   Promise.all(
     toDelete.map(async (etab) => {
-      return;
       const id = etab.etablissement_id;
 
-      await deleteEtablissement(id)
+      await catalogue
+        .deleteEtablissement(id)
         .then(() => logger.info(`Etablissement ${id} has been deleted`))
         .catch((error) => logger.error(error));
     })
   );
-
-  return;
 };
