@@ -53,7 +53,7 @@ module.exports = async (components) => {
   app.use("/api/admin", checkJwtToken, adminOnly, admin(components));
   app.use("/api/password", password(components));
   app.use("/api/stats", checkJwtToken, adminOnly, stats(components));
-  app.use("/api", coverage());
+  app.use("/api", coverage(components));
 
   app.get(
     "/api",
