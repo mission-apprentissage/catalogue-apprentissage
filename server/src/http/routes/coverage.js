@@ -3,7 +3,7 @@ const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { PsFormation } = require("../../common/model");
 const logger = require("../../common/logger");
 
-module.exports = () => {
+module.exports = ({ catalogue }) => {
   const router = express.Router();
 
   /**
@@ -20,6 +20,18 @@ module.exports = () => {
       } else {
         res.json({ message: `Item doesn't exist` });
       }
+    })
+  );
+
+  /**
+   * Create establishment from UAI & SIRET, update its information and refetch.
+   */
+  router.post(
+    "/coverage/etablissement",
+    tryCatch(async (req, res) => {
+      const { uai, siret } = req.body;
+      const newEtablissement = await catalogue.createEtablissement({ uai, siret });
+      res.json(newEtablissement);
     })
   );
 
