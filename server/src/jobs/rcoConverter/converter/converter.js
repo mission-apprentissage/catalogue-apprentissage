@@ -1,5 +1,5 @@
 const logger = require("../../../common/logger");
-const { RcoFormation, ConvertedFormation, Report, RcoEtablissement } = require("../../../common/model/index");
+const { RcoFormation, ConvertedFormation, Report } = require("../../../common/model/index");
 const { mnaFormationUpdater } = require("../../../logic/updaters/mnaFormationUpdater");
 const report = require("../../../logic/reporter/report");
 const config = require("config");
@@ -59,24 +59,6 @@ const getEtablissementData = (rcoFormation, prefix) => {
 };
 
 /**
- * store created etablissement to be able to run a diff on them later
- */
-const storeRcoEtablissement = async (mnaId, rcoFormation, prefix) => {
-  const data = {
-    id_mna_etablissement: mnaId,
-    id_rco_formation: `${rcoFormation.id_formation}|${rcoFormation.id_action}|${rcoFormation.id_certifinfo}`,
-    type: prefix,
-    rco_siret: rcoFormation[`${prefix}_siret`],
-    rco_uai: rcoFormation[`${prefix}_uai`],
-    rco_geo_coordonnees: rcoFormation[`${prefix}_geo_coordonnees`],
-    rco_adresse: rcoFormation[`${prefix}_adresse`],
-    rco_code_postal: rcoFormation[`${prefix}_code_postal`],
-    rco_code_commune_insee: rcoFormation[`${prefix}_code_insee`],
-  };
-  await new RcoEtablissement(data).save();
-};
-
-/**
  * Create etablissements if not found in  db
  */
 const createEtablissementsIfNeeded = async (rcoFormation) => {
@@ -91,10 +73,7 @@ const createEtablissementsIfNeeded = async (rcoFormation) => {
 
     let etablissement = await catalogue().getEtablissement({ siret: data.siret });
     if (!etablissement) {
-      etablissement = await catalogue().createEtablissement(data);
-      if (etablissement?._id) {
-        await storeRcoEtablissement(etablissement._id, rcoFormation, type);
-      }
+      await catalogue().createEtablissement(data);
     }
 
     handledSirets.push(data.siret);

@@ -8,7 +8,6 @@ const {
   mnaFormationSchema,
   psFormationSchema,
   reportSchema,
-  rcoEtablissementSchema,
 } = require("../model/schema");
 
 const getMongoostaticModel = (modelName, schema, instanceMongoose = mongooseInstance) => {
@@ -64,11 +63,6 @@ if (!r) {
   r = getModel("report", reportSchema);
 }
 
-let re = null;
-if (!re) {
-  re = getModel("rcoetablissement", rcoEtablissementSchema);
-}
-
 let l = null;
 if (!l) {
   l = getMongooseModel("log");
@@ -83,5 +77,4 @@ module.exports = {
   Report: r,
   Log: l,
   PsFormation: pf,
-  RcoEtablissement: re,
 };
