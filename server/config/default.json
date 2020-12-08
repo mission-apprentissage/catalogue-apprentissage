@@ -5,7 +5,6 @@
   "mongodb": {
     "uri": "mongodb://127.0.0.1:27017/catalogue-apprentissage?retryWrites=true&w=majority"
   },
-  "apiKey": "12345",
   "auth": {
     "passwordHashRounds": 1001,
     "user": {
@@ -39,5 +38,8 @@
       "user": "CATALOGUE_APPRENTISSAGE_SMTP_AUTH_USER",
       "pass": "CATALOGUE_APPRENTISSAGE_SMTP_AUTH_PASS"
     }
+  },
+  "oldCatalogue": {
+    "apiKey": "CATALOGUE_APPRENTISSAGE_CATALOGUE_API_KEY"
   }
 }
