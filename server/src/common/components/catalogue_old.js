@@ -5,7 +5,8 @@ const axios = require("axios");
 const logger = require("../logger");
 const config = require("config");
 
-const apiEndpoint = "https://c7a5ujgw35.execute-api.eu-west-3.amazonaws.com/prod";
+const apiEndpoint = config.oldCatalogue.endpoint;
+const apiKey = config.oldCatalogue.apiKey;
 
 const getEtablissements = async (options) => {
   let { page, allEtablissements, limit, query } = { page: 1, allEtablissements: [], limit: 1050, ...options };
@@ -49,7 +50,7 @@ const getEtablissementById = async (idEtablissement) => {
 const postEtablissement = async (payload) => {
   try {
     const response = await axios.post(`${apiEndpoint}/etablissement`, payload, {
-      headers: { Authorization: `${config.oldCatalogue.apiKey}` },
+      headers: { Authorization: `${apiKey}` },
     });
     return response.data;
   } catch (error) {
@@ -60,7 +61,7 @@ const postEtablissement = async (payload) => {
 const deleteEtablissement = async (id) => {
   try {
     await axios.delete(`${apiEndpoint}/etablissement/${id}`, {
-      headers: { Authorization: `${config.oldCatalogue.apiKey}` },
+      headers: { Authorization: `${apiKey}` },
     });
     return true;
   } catch (error) {
@@ -77,6 +78,21 @@ const updateInformation = async (id) => {
   }
 };
 
+const createEtablissement = async (data) => {
+  let etablissement = await postEtablissement(data);
+
+  if (etablissement._id) {
+    await updateInformation(etablissement._id);
+    etablissement = await getEtablissementById(etablissement._id);
+  } else {
+    // errors may be sent on http success
+    logger.error("unable to create etablissement", etablissement);
+    etablissement = null;
+  }
+
+  return etablissement;
+};
+
 module.exports = () => {
   return {
     getEtablissements: (opt) => getEtablissements(opt),
@@ -85,5 +101,6 @@ module.exports = () => {
     postEtablissement: (opt) => postEtablissement(opt),
     deleteEtablissement: (opt) => deleteEtablissement(opt),
     updateInformation: (opt) => updateInformation(opt),
+    createEtablissement: (opt) => createEtablissement(opt),
   };
 };
