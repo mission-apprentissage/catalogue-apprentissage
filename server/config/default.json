@@ -40,6 +40,7 @@
     }
   },
   "oldCatalogue": {
+    "endpoint": "CATALOGUE_APPRENTISSAGE_CATALOGUE_API_ENDPOINT",
     "apiKey": "CATALOGUE_APPRENTISSAGE_CATALOGUE_API_KEY"
   }
 }
