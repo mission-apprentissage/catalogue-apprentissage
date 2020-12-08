@@ -3,8 +3,10 @@
  */
 const axios = require("axios");
 const logger = require("../logger");
+const config = require("config");
 
-const apiEndpoint = "https://c7a5ujgw35.execute-api.eu-west-3.amazonaws.com/prod";
+const apiEndpoint = config.oldCatalogue.endpoint;
+const apiKey = config.oldCatalogue.apiKey;
 
 const getEtablissements = async (options) => {
   let { page, allEtablissements, limit, query } = { page: 1, allEtablissements: [], limit: 1050, ...options };
@@ -24,7 +26,6 @@ const getEtablissements = async (options) => {
     }
   } catch (error) {
     logger.error(error);
-    return null;
   }
 };
 
@@ -36,6 +37,7 @@ const getEtablissement = async (query) => {
     logger.error(error);
   }
 };
+
 const getEtablissementById = async (idEtablissement) => {
   try {
     const response = await axios.get(`${apiEndpoint}/etablissement/${idEtablissement}`);
@@ -45,10 +47,60 @@ const getEtablissementById = async (idEtablissement) => {
   }
 };
 
+const postEtablissement = async (payload) => {
+  try {
+    const response = await axios.post(`${apiEndpoint}/etablissement`, payload, {
+      headers: { Authorization: `${apiKey}` },
+    });
+    return response.data;
+  } catch (error) {
+    logger.error(error);
+  }
+};
+
+const deleteEtablissement = async (id) => {
+  try {
+    await axios.delete(`${apiEndpoint}/etablissement/${id}`, {
+      headers: { Authorization: `${apiKey}` },
+    });
+    return true;
+  } catch (error) {
+    logger.error(error);
+  }
+};
+
+const updateInformation = async (id) => {
+  try {
+    await axios.post(`${apiEndpoint}/service?job=etablissement&id=${id}`);
+    return true;
+  } catch (error) {
+    logger.error(error);
+  }
+};
+
+const createEtablissement = async (data) => {
+  let etablissement = await postEtablissement(data);
+
+  if (etablissement._id) {
+    await updateInformation(etablissement._id);
+    etablissement = await getEtablissementById(etablissement._id);
+  } else {
+    // errors may be sent on http success
+    logger.error("unable to create etablissement", etablissement);
+    etablissement = null;
+  }
+
+  return etablissement;
+};
+
 module.exports = () => {
   return {
     getEtablissements: (opt) => getEtablissements(opt),
     getEtablissement: (opt) => getEtablissement(opt),
     getEtablissementById: (opt) => getEtablissementById(opt),
+    postEtablissement: (opt) => postEtablissement(opt),
+    deleteEtablissement: (opt) => deleteEtablissement(opt),
+    updateInformation: (opt) => updateInformation(opt),
+    createEtablissement: (opt) => createEtablissement(opt),
   };
 };

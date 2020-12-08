@@ -5,7 +5,6 @@
   "mongodb": {
     "uri": "CATALOGUE_APPRENTISSAGE_MONGODB_URI"
   },
-  "apiKey": "CATALOGUE_APPRENTISSAGE_API_KEY",
   "auth": {
     "passwordHashRounds": "CATALOGUE_APPRENTISSAGE_AUTH_PASSWORD_HASH_ROUNDS",
     "user": {
@@ -36,5 +35,9 @@
       "user": "CATALOGUE_APPRENTISSAGE_SMTP_AUTH_USER",
       "pass": "CATALOGUE_APPRENTISSAGE_SMTP_AUTH_PASS"
     }
+  },
+  "oldCatalogue": {
+    "endpoint": "CATALOGUE_APPRENTISSAGE_CATALOGUE_API_ENDPOINT",
+    "apiKey": "CATALOGUE_APPRENTISSAGE_CATALOGUE_API_KEY"
   }
 }

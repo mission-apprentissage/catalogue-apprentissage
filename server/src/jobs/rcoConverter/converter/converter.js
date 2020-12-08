@@ -1,8 +1,11 @@
 const logger = require("../../../common/logger");
-const { RcoFormation, ConvertedFormation, Report } = require("../../../common/model/index");
+const { RcoFormation, ConvertedFormation, Report, RcoEtablissement } = require("../../../common/model/index");
 const { mnaFormationUpdater } = require("../../../logic/updaters/mnaFormationUpdater");
 const report = require("../../../logic/reporter/report");
 const config = require("config");
+const { asyncForEach } = require("../../../common/utils/asyncUtils");
+const { chunk } = require("lodash");
+const catalogue = require("../../../common/components/catalogue_old");
 
 const formatToMnaFormation = (rcoFormation) => {
   const periode =
@@ -46,6 +49,58 @@ const formatToMnaFormation = (rcoFormation) => {
   };
 };
 
+const getEtablissementData = (rcoFormation, prefix) => {
+  return {
+    siret: rcoFormation[`${prefix}_siret`] || null,
+    uai: rcoFormation[`${prefix}_uai`] || null,
+    geo_coordonnees: rcoFormation[`${prefix}_geo_coordonnees`] || null,
+    tags: ["2021"],
+  };
+};
+
+/**
+ * store created etablissement to be able to run a diff on them later
+ */
+const storeRcoEtablissement = async (mnaId, rcoFormation, prefix) => {
+  const data = {
+    id_mna_etablissement: mnaId,
+    id_rco_formation: `${rcoFormation.id_formation}|${rcoFormation.id_action}|${rcoFormation.id_certifinfo}`,
+    type: prefix,
+    rco_siret: rcoFormation[`${prefix}_siret`],
+    rco_uai: rcoFormation[`${prefix}_uai`],
+    rco_geo_coordonnees: rcoFormation[`${prefix}_geo_coordonnees`],
+    rco_adresse: rcoFormation[`${prefix}_adresse`],
+    rco_code_postal: rcoFormation[`${prefix}_code_postal`],
+    rco_code_commune_insee: rcoFormation[`${prefix}_code_insee`],
+  };
+  await new RcoEtablissement(data).save();
+};
+
+/**
+ * Create etablissements if not found in  db
+ */
+const createEtablissementsIfNeeded = async (rcoFormation) => {
+  const etablissementTypes = ["etablissement_gestionnaire", "etablissement_formateur", "etablissement_lieu_formation"];
+  const handledSirets = [];
+
+  await asyncForEach(etablissementTypes, async (type) => {
+    const data = getEtablissementData(rcoFormation, type);
+    if (!data.siret || handledSirets.includes(data.siret)) {
+      return;
+    }
+
+    let etablissement = await catalogue().getEtablissement({ siret: data.siret });
+    if (!etablissement) {
+      etablissement = await catalogue().createEtablissement(data);
+      if (etablissement?._id) {
+        await storeRcoEtablissement(etablissement._id, rcoFormation, type);
+      }
+    }
+
+    handledSirets.push(data.siret);
+  });
+};
+
 const run = async () => {
   //  1 : filter rco formations which are not converted yet
   //  2 : convert them to mna format & launch updater on them
@@ -71,6 +126,9 @@ const performConversion = async () => {
     await Promise.all(
       docs.map(async (rcoFormation) => {
         computed += 1;
+
+        await createEtablissementsIfNeeded(rcoFormation._doc);
+
         const mnaFormattedRcoFormation = formatToMnaFormation(rcoFormation._doc);
 
         const { updates, formation: convertedFormation, error } = await mnaFormationUpdater(mnaFormattedRcoFormation, {
@@ -140,23 +198,28 @@ const createConversionReport = async ({ invalidRcoFormations, convertedRcoFormat
   };
   // save report in db
   const date = Date.now();
+  const type = "rcoConversion";
+
+  // Store by chunks to stay below the Mongo document max size (16Mb)
+  const chunks = chunk(convertedRcoFormations, 2000);
+  await asyncForEach(chunks, async (chunk) => {
+    await new Report({
+      type,
+      date,
+      data: { summary, converted: chunk },
+    }).save();
+  });
 
   await new Report({
-    type: "rcoConversion",
-    date,
-    data: { summary, converted: convertedRcoFormations },
-  }).save();
-
-  await new Report({
-    type: "rcoConversion.error",
+    type: `${type}.error`,
     date,
     data: {
       errors: invalidRcoFormations,
     },
   }).save();
 
-  // TODO EPT add link to UI
-  const data = { invalid: invalidRcoFormations, converted: convertedRcoFormations, summary };
+  const link = `${config.publicUrl}/report?type=${type}&date=${date}`;
+  const data = { invalid: invalidRcoFormations, converted: convertedRcoFormations, summary, link };
 
   // Send mail
   const title = "[RCO Formations] Rapport de conversion";

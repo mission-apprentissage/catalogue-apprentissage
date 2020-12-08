@@ -54,9 +54,10 @@ class Importer {
       const { updates, updateInfo } = this.formationsToUpdateToDb.find((u) => u.rcoFormation._id === element.mnaId);
 
       if (updates && updates.periode) {
-        updates.periode = Object.values(updates.periode).map((dateStr) =>
-          new Date(dateStr).toLocaleString("fr-FR", { month: "long", year: "numeric" })
-        );
+        updates.periode = Object.values(updates.periode).map((dateStr) => {
+          const formattedDate = new Date(dateStr).toLocaleString("fr-FR", { month: "long", year: "numeric" });
+          return formattedDate === "Invalid Date" ? dateStr : formattedDate;
+        });
       }
 
       element.updates = JSON.stringify(updates);
@@ -73,7 +74,10 @@ class Importer {
       // element.to = JSON.stringify(updates_history.to);
     });
 
-    const deletedCount = this.updated.filter(({ published }) => published === "Supprimée").length;
+    const deleted = this.updated.filter(({ published }) => published === "Supprimée");
+    const justUpdated = this.updated.filter(({ published }) => published !== "Supprimée");
+
+    const deletedCount = deleted.length;
     const publishedCount = await RcoFormation.countDocuments({ published: true });
     const deactivatedCount = await RcoFormation.countDocuments({ published: false });
 
@@ -87,14 +91,22 @@ class Importer {
       deactivatedCount,
     };
 
-    const data = { added: this.added, updated: this.updated, summary };
-
     // save report in db
     const date = Date.now();
-    await new Report({ type: "rcoImport", date, data }).save();
+    const type = "rcoImport";
+    await new Report({
+      type,
+      date,
+      data: {
+        summary,
+        added: this.added,
+        updated: justUpdated,
+        deleted,
+      },
+    }).save();
 
-    // TODO EPT add link to UI
-
+    const link = `${config.publicUrl}/report?type=${type}&date=${date}`;
+    const data = { added: this.added, updated: this.updated, summary, link };
     const title = "[Webservice RCO] Rapport d'importation";
     const to = config.rco.reportMailingList.split(",");
     await report.generate(data, title, to, "rcoReport");
