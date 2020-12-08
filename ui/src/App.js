@@ -10,6 +10,8 @@ import ResetPasswordPage from "./pages/password/ResetPasswordPage";
 import ForgottenPasswordPage from "./pages/password/ForgottenPasswordPage";
 import Users from "./pages/admin/Users";
 import PageReconciliation from "./pages/reconciliation";
+import ReportPage from "./pages/ReportPage";
+import { ChakraProvider } from "@chakra-ui/react";
 
 function PrivateRoute({ children, ...rest }) {
   let [auth] = useAuth();
@@ -28,25 +30,28 @@ export default () => {
   let [auth] = useAuth();
 
   return (
-    <div className="App">
-      <Router>
-        <Switch>
-          {/* <PrivateRoute exact path="/">
-            <Layout>{auth && auth.permissions.isAdmin ? <DashboardPage /> : <HomePage />}</Layout>
-          </PrivateRoute>
-          {auth && auth.permissions.isAdmin && (
-            <PrivateRoute exact path="/admin/users">
-              <Layout>
-                <Users />
-              </Layout>
+    <ChakraProvider>
+      <div className="App">
+        <Router>
+          <Switch>
+            <PrivateRoute exact path="/">
+              <Layout>{auth && auth.permissions.isAdmin ? <DashboardPage /> : <HomePage />}</Layout>
             </PrivateRoute>
-          )} */}
-          <Route exact path="/login" component={LoginPage} />
-          <Route exact path="/reset-password" component={ResetPasswordPage} />
-          <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
-          <Route exact path="/" component={PageReconciliation} />
-        </Switch>
-      </Router>
-    </div>
+            {auth && auth.permissions.isAdmin && (
+              <PrivateRoute exact path="/admin/users">
+                <Layout>
+                  <Users />
+                </Layout>
+              </PrivateRoute>
+            )}
+            <Route exact path="/login" component={LoginPage} />
+            <Route exact path="/reset-password" component={ResetPasswordPage} />
+            <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
+            <Route exact path="/report" component={ReportPage} />
+            <Route exact path="/" component={PageReconciliation} />
+          </Switch>
+        </Router>
+      </div>
+    </ChakraProvider>
   );
 };
