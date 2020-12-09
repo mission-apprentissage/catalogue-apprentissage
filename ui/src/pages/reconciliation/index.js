@@ -25,7 +25,7 @@ function PageReconciliation() {
   React.useEffect(() => {
     (async function getCoverage() {
       const type = "3";
-      const response = await _get(`${serverEndpoint}/coverage?type=${type}`);
+      const response = await _get(`/api/coverage?type=${type}`);
       setCoverage(response);
     })();
   }, []);
