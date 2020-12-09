@@ -71,8 +71,7 @@ const deleteEtablissement = async (id) => {
 
 const updateInformation = async (id) => {
   try {
-    await axios.post(`${apiEndpoint}/service?job=etablissement&id=${id}`);
-    return true;
+    await axios.get(`${apiEndpoint}/services?job=etablissement&id=${id}`);
   } catch (error) {
     logger.error(error);
   }
