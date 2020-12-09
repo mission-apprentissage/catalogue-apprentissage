@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TransitionsModal() {
   const classes = useStyles();
-  const { handlePopup, popup, serverEndpoint } = React.useContext(Context);
+  const { handlePopup, popup } = React.useContext(Context);
   const [etablissement, setEtablissement] = React.useState();
   const [loading, setLoading] = React.useState(false);
   const [errors, setErrors] = React.useState(false);
