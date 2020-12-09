@@ -10,7 +10,7 @@ module.exports = ({ catalogue }) => {
    * Get Report /report GET
    */
   router.get(
-    "/coverage",
+    "/",
     tryCatch(async (req, res) => {
       const { type } = req.query;
       const data = await PsFormation.find({ matching_type: type });
@@ -27,7 +27,7 @@ module.exports = ({ catalogue }) => {
    * Create establishment from UAI & SIRET, update its information and refetch.
    */
   router.post(
-    "/coverage/etablissement",
+    "/etablissement",
     tryCatch(async (req, res) => {
       const { uai, siret } = req.body;
       const newEtablissement = await catalogue.createEtablissement({ uai, siret });
@@ -40,7 +40,7 @@ module.exports = ({ catalogue }) => {
    */
 
   router.put(
-    "/coverage",
+    "/",
     tryCatch(async (req, res) => {
       const data = req.body;
       await PsFormation.findByIdAndUpdate(data._id, { data })
