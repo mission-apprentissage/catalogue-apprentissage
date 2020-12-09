@@ -81,7 +81,7 @@ const updateInformation = async (id) => {
 const createEtablissement = async (data) => {
   let etablissement = await postEtablissement(data);
 
-  if (etablissement._id) {
+  if (etablissement?._id) {
     await updateInformation(etablissement._id);
     etablissement = await getEtablissementById(etablissement._id);
   } else {
