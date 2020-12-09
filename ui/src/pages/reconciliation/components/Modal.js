@@ -16,8 +16,11 @@ import {
   Radio,
   FormLabel,
   RadioGroup,
+  Paper,
 } from "@material-ui/core";
 import { Context } from "../context";
+import { _post } from "../../../common/httpClient";
+import { Loading } from ".";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,18 +38,42 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "center",
   },
+  etablissement: {
+    margin: theme.spacing(3),
+  },
 }));
 
 export default function TransitionsModal() {
   const classes = useStyles();
-  const { handlePopup, popup } = React.useContext(Context);
+  const { handlePopup, popup, serverEndpoint } = React.useContext(Context);
+  const [etablissement, setEtablissement] = React.useState();
+  const [loading, setLoading] = React.useState(false);
+  const [errors, setErrors] = React.useState(false);
   const [values, setValues] = React.useState({
     uai: "",
     siret: "",
     type: "gestionnaire",
   });
 
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    if (values.siret === "" || values.siret.length !== 14) {
+      setErrors(true);
+      return;
+    }
+    setLoading(true);
+    const response = await _post("/api/coverage/etablissement", values);
+    console.log(response);
+    if (response) {
+      setEtablissement(response);
+      setLoading(false);
+    }
+  };
+
+  console.log(values);
+
   const handleChange = (e) => {
+    setErrors(false);
     e.preventDefault();
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
@@ -71,7 +98,7 @@ export default function TransitionsModal() {
             <Typography gutterBottom variant="h5" component="h2">
               Ajouter un établissement
             </Typography>
-            <form className={classes.root} noValidate autoComplete="off">
+            <form className={classes.root} noValidate autoComplete="off" onSubmit={handleSearch}>
               <Grid container justify="center" alignItems="center" spacing={1}>
                 <Grid item xs>
                   <TextField variant="outlined" name="uai" label="Uai" value={values.uai} onChange={handleChange} />
@@ -83,14 +110,34 @@ export default function TransitionsModal() {
                     label="Siret"
                     value={values.siret}
                     onChange={handleChange}
+                    error={errors}
+                    helperText={errors && "Siret obligatoire (14 chiffres)"}
                   />
                 </Grid>
                 <Grid item>
-                  <Button variant="contained" color="primary">
+                  <Button type="submit" variant="contained" color="primary">
                     Rechercher
                   </Button>
                 </Grid>
               </Grid>
+              {loading && (
+                <Grid className={classes.etablissement}>
+                  <Loading height="10%" size="1em" />
+                </Grid>
+              )}
+              {etablissement && (
+                <Paper>
+                  <Grid container className={classes.etablissement}>
+                    <Grid item xs={12}>
+                      <Typography variant="h6">Etablissement :</Typography>
+                    </Grid>
+                    <Grid item xs>
+                      <Typography variant="body2">{etablissement.entreprise_raison_sociale}</Typography>
+                      <Typography variant="body2">{etablissement.adresse}</Typography>
+                    </Grid>
+                  </Grid>
+                </Paper>
+              )}
               <FormControl>
                 <FormLabel>Sélectionner le type d'établissement :</FormLabel>
                 <RadioGroup name="type" value={values.type} onChange={handleChange}>
