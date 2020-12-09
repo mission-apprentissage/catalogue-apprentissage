@@ -58,6 +58,17 @@ const postEtablissement = async (payload) => {
   }
 };
 
+const updateEtablissement = async (id, payload) => {
+  try {
+    const response = await axios.put(`${apiEndpoint}/etablissement/${id}`, payload, {
+      headers: { Authorization: `${apiKey}` },
+    });
+    return response.data;
+  } catch (error) {
+    logger.error(error);
+  }
+};
+
 const deleteEtablissement = async (id) => {
   try {
     await axios.delete(`${apiEndpoint}/etablissement/${id}`, {
@@ -101,5 +112,6 @@ module.exports = () => {
     deleteEtablissement: (opt) => deleteEtablissement(opt),
     updateInformation: (opt) => updateInformation(opt),
     createEtablissement: (opt) => createEtablissement(opt),
+    updateEtablissement: (id, payload) => updateEtablissement(id, payload),
   };
 };
