@@ -3,8 +3,12 @@ import React from "react";
 const Context = React.createContext({
   popup: Boolean,
   mapping: Array,
+  coverageData: Array,
+  currentFormation: String,
   handlePopup: () => {},
+  handlePopupSubmit: () => {},
   updateMapping: () => {},
+  setCoverageData: () => {},
 });
 
 class ContextProvider extends React.Component {
@@ -12,19 +16,31 @@ class ContextProvider extends React.Component {
     super(props);
     this.state = {
       popup: true,
+      coverageData: [],
       mapping: [],
+      currentFormation: "",
       handlePopup: this.handlePopup,
+      handlePopupSubmit: this.handlePopupSubmit,
       updateMapping: this.updateMapping,
+      setCoverageData: this.setCoverageData,
     };
   }
 
-  handlePopup = () => this.setState({ popup: !this.state.popup });
+  setCoverageData = (values) => this.setState({ coverageData: values });
+
+  handlePopup = (id) => this.setState({ popup: !this.state.popup, currentFormation: id });
+
+  handlePopupSubmit = (values) => {
+    console.log("values context", values);
+    const { etablissement, type } = values;
+    const formation = this.coverageData.find((x) => (x._id = this.currentFormation));
+    formation.matching_mna_etablissement.push(etablissement);
+    this.updateMapping({ id: etablissement._id, type: type });
+  };
 
   updateMapping = (values) => {
     const copy = [...this.state.mapping];
-
     copy.push(values);
-
     this.setState({ mapping: copy });
   };
 

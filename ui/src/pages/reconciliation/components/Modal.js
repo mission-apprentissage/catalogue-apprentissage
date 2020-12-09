@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TransitionsModal() {
   const classes = useStyles();
-  const { handlePopup, popup } = React.useContext(Context);
+  const { handlePopup, popup, handlePopupSubmit } = React.useContext(Context);
   const [etablissement, setEtablissement] = React.useState();
   const [loading, setLoading] = React.useState(false);
   const [errors, setErrors] = React.useState(false);
@@ -71,6 +71,8 @@ export default function TransitionsModal() {
   };
 
   console.log(values);
+
+  const handleSubmit = () => handlePopupSubmit({ etablissement, type: values.type });
 
   const handleChange = (e) => {
     setErrors(false);
@@ -164,7 +166,7 @@ export default function TransitionsModal() {
             <Button onClick={() => handlePopup()} size="small" color="primary">
               Annuler
             </Button>
-            <Button size="small" color="primary" variant="contained">
+            <Button onClick={handlePopupSubmit} size="small" color="primary" variant="contained">
               Créer l'établissement
             </Button>
           </CardActions>

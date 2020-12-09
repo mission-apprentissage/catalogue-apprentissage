@@ -102,7 +102,7 @@ export default (props) => {
       </Box>
       <Divider />
       <AccordionActions>
-        <Button color="primary" variant="outlined" startIcon={<Add />} onClick={() => handlePopup()}>
+        <Button color="primary" variant="outlined" startIcon={<Add />} onClick={() => handlePopup(data._id)}>
           Nouvel établissement
         </Button>
         <Button variant="contained" color="primary">
@@ -223,7 +223,6 @@ const Option = (props) => {
     <FormControl className={classes.formControl}>
       <Select
         variant="outlined"
-        // value={age}
         onChange={handleChange}
         displayEmpty
         className={classes.selectEmpty}
