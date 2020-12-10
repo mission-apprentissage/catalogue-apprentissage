@@ -84,6 +84,8 @@ const areRCOFieldsEqual = (rcoFields, etablissement) => {
   return Object.entries(rcoFields).every(([key, value]) => etablissement[key] === value);
 };
 
+const handledSirets = [];
+
 /**
  * Create or update etablissements
  */
@@ -92,7 +94,6 @@ const createOrUpdateEtablissements = async (rcoFormation) => {
     "etablissement_gestionnaire",
     "etablissement_formateur" /*, "etablissement_lieu_formation"*/,
   ];
-  const handledSirets = [];
 
   await asyncForEach(etablissementTypes, async (type) => {
     const data = getEtablissementData(rcoFormation, type);
@@ -100,6 +101,7 @@ const createOrUpdateEtablissements = async (rcoFormation) => {
       return;
     }
 
+    handledSirets.push(data.siret);
     let etablissement = await catalogue().getEtablissement({ siret: data.siret });
     if (!etablissement?._id) {
       await catalogue().createEtablissement(data);
@@ -122,8 +124,6 @@ const createOrUpdateEtablissements = async (rcoFormation) => {
         await catalogue().updateEtablissement(etablissement._id, updates);
       }
     }
-
-    handledSirets.push(data.siret);
   });
 };
 
