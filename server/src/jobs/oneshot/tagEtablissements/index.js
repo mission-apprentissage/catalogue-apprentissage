@@ -73,20 +73,7 @@ const addTagsIfNeeded = async (rcoFormation, i, arr) => {
 };
 
 const run = async () => {
-  // 1 loop on all etablissements, add 2020 tag
-  const allEtablissements = await catalogue().getEtablissements();
-
-  await asyncForEach(allEtablissements, async (item, i, arr) => {
-    logger.info(`update tags of all etablissements ${i}/${arr.length}`);
-
-    if (item?._id && !item?.tags?.includes("2020")) {
-      await catalogue().updateEtablissement(item._id, {
-        tags: [...item.tags, "2020"],
-      });
-    }
-  });
-
-  // 2 loop on converted: true RCO formations, get Etablissements for each --> tag 2021 etablissement
+  // 1 loop on converted: true RCO formations, get Etablissements for each --> tag 2021 etablissement
   const convertedRCOFormations = await RcoFormation.find({ converted_to_mna: true });
   await asyncForEach(convertedRCOFormations, addTagsIfNeeded);
 };
