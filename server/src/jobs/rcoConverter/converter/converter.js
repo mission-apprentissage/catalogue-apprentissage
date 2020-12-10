@@ -88,7 +88,10 @@ const areRCOFieldsEqual = (rcoFields, etablissement) => {
  * Create or update etablissements
  */
 const createOrUpdateEtablissements = async (rcoFormation) => {
-  const etablissementTypes = ["etablissement_gestionnaire", "etablissement_formateur", "etablissement_lieu_formation"];
+  const etablissementTypes = [
+    "etablissement_gestionnaire",
+    "etablissement_formateur" /*, "etablissement_lieu_formation"*/,
+  ];
   const handledSirets = [];
 
   await asyncForEach(etablissementTypes, async (type) => {

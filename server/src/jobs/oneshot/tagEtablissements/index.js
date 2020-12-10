@@ -32,7 +32,7 @@ const areRCOFieldsEqual = (rcoFields, etablissement) => {
 const addTagsIfNeeded = async (rcoFormation, i, arr) => {
   logger.info(`update tags of etablissements from converted rco formation ${i}/${arr.length}`);
 
-  const types = ["etablissement_gestionnaire", "etablissement_formateur", "etablissement_lieu_formation"];
+  const types = ["etablissement_gestionnaire", "etablissement_formateur" /*, "etablissement_lieu_formation"*/];
   const handledSirets = [];
 
   await asyncForEach(types, async (type) => {
