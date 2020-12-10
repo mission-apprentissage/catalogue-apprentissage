@@ -54,7 +54,6 @@ const getEtablissementData = (rcoFormation, prefix) => {
     siret: rcoFormation[`${prefix}_siret`] || null,
     uai: rcoFormation[`${prefix}_uai`] || null,
     geo_coordonnees: rcoFormation[`${prefix}_geo_coordonnees`] || null,
-    tags: ["2021"],
     ...getRCOEtablissementFields(rcoFormation, prefix),
   };
 };
@@ -101,10 +100,16 @@ const createOrUpdateEtablissements = async (rcoFormation) => {
       return;
     }
 
+    const years = ["2020", "2021"];
+    const tags = years.filter((year) => rcoFormation.periode?.some((p) => p.includes(year)));
+    if (tags.length === 0) {
+      return;
+    }
+
     handledSirets.push(data.siret);
     let etablissement = await catalogue().getEtablissement({ siret: data.siret });
     if (!etablissement?._id) {
-      await catalogue().createEtablissement(data);
+      await catalogue().createEtablissement({ ...data, tags });
     } else {
       let updates = {};
       const rcoFields = getRCOEtablissementFields(rcoFormation, type);
@@ -116,8 +121,9 @@ const createOrUpdateEtablissements = async (rcoFormation) => {
         };
       }
 
-      if (!etablissement?.tags?.includes("2021")) {
-        updates.tags = [...etablissement.tags, "2021"];
+      const tagsToAdd = tags.filter((tag) => !etablissement?.tags?.includes(tag));
+      if (tagsToAdd.length > 0) {
+        updates.tags = [...etablissement.tags, ...tagsToAdd];
       }
 
       if (Object.keys(updates).length > 0) {
