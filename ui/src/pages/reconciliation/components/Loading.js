@@ -1,21 +1,10 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import { CircularProgress, Center } from "@chakra-ui/react";
 
-export default function CircularIndeterminate(props) {
-  const useStyles = makeStyles((theme) => ({
-    root: {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      height: props.height ? props.height : "100vh",
-    },
-  }));
-  const classes = useStyles();
-
+export default (props) => {
   return (
-    <div className={classes.root}>
-      <CircularProgress size={props.size ? props.size : "4em"} />
-    </div>
+    <Center h={props.height ? props.height : "100vh"}>
+      <CircularProgress isIndeterminate size={props.size ? props.size : "3em"} />
+    </Center>
   );
-}
+};

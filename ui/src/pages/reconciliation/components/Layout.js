@@ -1,8 +1,4 @@
 import React from "react";
-import { Grid } from "@material-ui/core";
+import { Flex } from "@chakra-ui/react";
 
-export default ({ children }) => (
-  <Grid container direction="column" justify="center" alignItems="center">
-    {children}
-  </Grid>
-);
+export default ({ children }) => <Flex direction="column">{children}</Flex>;

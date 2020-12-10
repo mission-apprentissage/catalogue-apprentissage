@@ -1,50 +1,34 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import {
   Modal,
-  Backdrop,
-  Fade,
-  Card,
-  CardContent,
-  Typography,
-  CardActions,
-  Button,
-  TextField,
-  Grid,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  FormErrorMessage,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
   FormControl,
-  FormControlLabel,
-  Radio,
   FormLabel,
+  Select,
+  Input,
+  Flex,
+  Box,
+  Stack,
+  Button,
+  Text,
+  HStack,
+  Radio,
   RadioGroup,
-  Paper,
-} from "@material-ui/core";
+} from "@chakra-ui/react";
 import { Context } from "../context";
 import { _post } from "../../../common/httpClient";
-import { Loading } from ".";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    "& .MuiFormControl-root": {
-      margin: theme.spacing(1),
-    },
-    "& .MuiCardActions-root": {
-      justifyContent: "flex-end",
-    },
-    margin: theme.spacing(1),
-    padding: theme.spacing(1),
-  },
-  modal: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  etablissement: {
-    margin: theme.spacing(3),
-  },
-}));
 
 export default function TransitionsModal() {
-  const classes = useStyles();
   const { handlePopup, popup, handlePopupSubmit } = React.useContext(Context);
   const [etablissement, setEtablissement] = React.useState();
   const [loading, setLoading] = React.useState(false);
@@ -62,7 +46,7 @@ export default function TransitionsModal() {
       return;
     }
     setLoading(true);
-    const response = await _post("/api/coverage/etablissement", values);
+    const response = await _post("http://localhost/api/coverage/etablissement", values);
     console.log(response);
     if (response) {
       setEtablissement(response);
@@ -70,108 +54,77 @@ export default function TransitionsModal() {
     }
   };
 
-  console.log(values);
-
   const handleSubmit = () => handlePopupSubmit({ etablissement, type: values.type });
 
   const handleChange = (e) => {
     setErrors(false);
-    e.preventDefault();
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
   };
 
   return (
-    <Modal
-      aria-labelledby="Ajouter un établissement"
-      aria-describedby="Permet d'ajouter un établissement"
-      className={classes.modal}
-      open={popup}
-      onClose={handlePopup}
-      closeAfterTransition
-      BackdropComponent={Backdrop}
-      BackdropProps={{
-        timeout: 500,
-      }}
-    >
-      <Fade in={popup}>
-        <Card className={classes.root}>
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="h2">
-              Ajouter un établissement
-            </Typography>
-            <form className={classes.root} noValidate autoComplete="off" onSubmit={handleSearch}>
-              <Grid container justify="center" alignItems="center" spacing={1}>
-                <Grid item xs>
-                  <TextField variant="outlined" name="uai" label="Uai" value={values.uai} onChange={handleChange} />
-                </Grid>
-                <Grid item xs>
-                  <TextField
-                    variant="outlined"
-                    name="siret"
-                    label="Siret"
-                    value={values.siret}
-                    onChange={handleChange}
-                    error={errors}
-                    helperText={errors && "Siret obligatoire (14 chiffres)"}
-                  />
-                </Grid>
-                <Grid item>
-                  <Button type="submit" variant="contained" color="primary">
+    <>
+      <Modal isOpen={popup} onClose={handlePopup} size="xl">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Ajouter un établissement :</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <form onSubmit={handleSearch}>
+              <Stack direction="row" spacing={4}>
+                <FormControl>
+                  <FormLabel>UAI</FormLabel>
+                  <Input type="text" name="uai" onChange={handleChange} autoComplete="off" />
+                </FormControl>
+
+                <FormControl isInvalid={errors}>
+                  <FormLabel>SIRET</FormLabel>
+                  <Input type="text" name="siret" onChange={handleChange} autoComplete="off" />
+                  <FormErrorMessage>Siret obligatoire (14 chiffres)</FormErrorMessage>
+                </FormControl>
+                <Flex align="flex-end">
+                  <Button type="submit" isLoading={loading} disabled={etablissement ? true : false} variant="solid">
                     Rechercher
                   </Button>
-                </Grid>
-              </Grid>
-              {loading && (
-                <Grid className={classes.etablissement}>
-                  <Loading height="10%" size="1em" />
-                </Grid>
-              )}
-              {etablissement && (
-                <Paper>
-                  <Grid container className={classes.etablissement}>
-                    <Grid item xs={12}>
-                      <Typography variant="h6">Etablissement :</Typography>
-                    </Grid>
-                    <Grid item xs>
-                      <Typography variant="body2">{etablissement.entreprise_raison_sociale}</Typography>
-                      <Typography variant="body2">{etablissement.adresse}</Typography>
-                    </Grid>
-                  </Grid>
-                </Paper>
-              )}
-              <FormControl>
-                <FormLabel>Sélectionner le type d'établissement :</FormLabel>
-                <RadioGroup name="type" value={values.type} onChange={handleChange}>
-                  <Grid container alignContent="space-around">
-                    <Grid item xs>
-                      <FormControlLabel value="gestionnaire" control={<Radio />} label="Gestionnaire" />
-                    </Grid>
-                    <Grid item xs>
-                      <FormControlLabel value="formateur" control={<Radio />} label="Formateur" />
-                    </Grid>
-                    <Grid item xs>
-                      <FormControlLabel
-                        value="formateur-gestionnaire"
-                        control={<Radio />}
-                        label="Formateur et gestionnaire"
-                      />
-                    </Grid>
-                  </Grid>
-                </RadioGroup>
-              </FormControl>
+                </Flex>
+              </Stack>
             </form>
-          </CardContent>
-          <CardActions>
-            <Button onClick={() => handlePopup()} size="small" color="primary">
+            {etablissement && (
+              <>
+                <Box py="6">
+                  <Alert status="success">
+                    <AlertIcon />
+                    <Box flex="1">
+                      <AlertTitle>{etablissement.entreprise_raison_sociale}</AlertTitle>
+                      <AlertDescription display="block">
+                        <Text>{etablissement.adresse}</Text>
+                      </AlertDescription>
+                    </Box>
+                  </Alert>
+                </Box>
+                <Box py="6">
+                  <FormControl as="fieldset">
+                    <FormLabel as="legend">Type d'établissement :</FormLabel>
+                    <RadioGroup defaultValue="gestionnaire" onChange={(value) => setValues({ ...values, type: value })}>
+                      <HStack spacing="24px">
+                        <Radio value="formateur">Formateur</Radio>
+                        <Radio value="gestionnaire">Gestionnaire</Radio>
+                        <Radio value="formateur-gestionnaire">Formateur & gestionnaire</Radio>
+                      </HStack>
+                    </RadioGroup>
+                  </FormControl>
+                </Box>
+              </>
+            )}
+          </ModalBody>
+          <ModalFooter>
+            <Button variant="ghost" mr={3} onClick={handlePopup}>
               Annuler
             </Button>
-            <Button onClick={handlePopupSubmit} size="small" color="primary" variant="contained">
-              Créer l'établissement
-            </Button>
-          </CardActions>
-        </Card>
-      </Fade>
-    </Modal>
+            <Button colorScheme="blue">Enregistrer</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 }

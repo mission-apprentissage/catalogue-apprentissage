@@ -1,87 +1,49 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import Typography from "@material-ui/core/Typography";
+import { useTable } from "react-table";
+import { Box } from "@chakra-ui/react";
 
-const useStyles = makeStyles({
-  root: {
-    width: "100%",
-    flexShrink: 0,
-    paddingBottom: ".5em",
-  },
-});
+const style = {};
 
-const Datatable = (props) => {
-  const { headers, data, title } = props;
+export default ({ headers, data }) => {
+  const headersData = React.useMemo(() => headers, []);
+  const tableData = React.useMemo(() => data, []);
 
-  const classes = useStyles();
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(20);
-  const handleChangePage = (event, newPage) => setPage(newPage);
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
+  const table = useTable({ columns: headersData, data: tableData });
+
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = table;
 
   return (
-    <>
-      <Typography variant="h6" className={classes.root}>
-        {title}
-      </Typography>
-      <TableContainer className={classes.container}>
-        <Table stickyHeader aria-label="sticky table" size="small">
-          <TableHead>
-            <TableRow>
-              {headers.map((header, index) => (
-                <TableCell
-                  key={index}
-                  align={header.align}
-                  style={{ minWidth: header.minWidth, width: header.maxWidth }}
-                >
-                  {header.label}
-                </TableCell>
+    <Box as="table" {...getTableProps()}>
+      <Box as="thead">
+        {headerGroups.map((headerGroup) => {
+          return (
+            <Box as="tr" {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column) => (
+                <Box as="th" {...column.getHeaderProps()}>
+                  {column.render("Header")}
+                </Box>
               ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, index) => {
-              return (
-                <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                  {headers.map((header, index) => {
-                    const value = item[header.id];
+            </Box>
+          );
+        })}
+      </Box>
 
-                    return (
-                      <TableCell key={index} align={header.align}>
-                        {header.format && (typeof value === "string" || typeof value === "boolean")
-                          ? header.format(value)
-                          : value}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 20]}
-        component="div"
-        count={data.length}
-        rowsPerPage={rowsPerPage}
-        labelRowsPerPage="Résultat par page :"
-        page={page}
-        onChangePage={handleChangePage}
-        onChangeRowsPerPage={handleChangeRowsPerPage}
-      />
-    </>
+      <Box as="tbody" {...getTableBodyProps()}>
+        {rows.map((row) => {
+          prepareRow(row);
+          return (
+            <Box as="tr" {...row.getRowProps()}>
+              {row.cells.map((cell) => {
+                return (
+                  <Box as="td" {...cell.getCellProps()}>
+                    {cell.render("Cell")}
+                  </Box>
+                );
+              })}
+            </Box>
+          );
+        })}
+      </Box>
+    </Box>
   );
 };
-
-export default Datatable;

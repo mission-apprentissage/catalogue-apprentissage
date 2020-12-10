@@ -32,6 +32,7 @@ import {
 import { ExpandMore, Add } from "@material-ui/icons";
 
 import Datatable from "./Datatable";
+
 import { Context } from "../context";
 import { blueGrey } from "@material-ui/core/colors";
 
@@ -84,10 +85,12 @@ const useStyles = makeStyles((theme) => ({
 export default (props) => {
   const classes = useStyles();
   const { data } = props;
-  const { handlePopup, mapping } = React.useContext(Context);
+  const { handlePopup, mapping, currentFormation } = React.useContext(Context);
 
   const sameUai = new Set([data.uai_affilie, data.uai_composante, data.uai_gestionnaire]).size === 1 ? true : false;
   const sameEtab = new Set([data.libelle_uai_affilie, data.libelle_uai_composante]).size === 1 ? true : false;
+
+  console.log("idformation", currentFormation);
 
   return (
     <Accordion className={classes.root}>
@@ -243,7 +246,62 @@ const Option = (props) => {
   );
 };
 
-const Etablissement = React.memo(({ data }) => {
+const Etablissement = ({ data }) => {
+  console.log("data", data[0]);
+
+  const columns = [
+    {
+      accessor: "_id",
+      Header: "Action",
+      maxWidth: 40,
+    },
+    {
+      accessor: "matched_uai",
+      Header: "Matching",
+      maxWidth: 40,
+    },
+    {
+      accessor: "uai",
+      Header: "Uai",
+      maxWidth: 40,
+    },
+    {
+      accessor: "siret",
+      Header: "Siret",
+      maxWidth: 40,
+    },
+    {
+      accessor: "raison_sociale",
+      Header: "Raison Social",
+      maxWidth: 40,
+    },
+    {
+      accessor: "enseigne",
+      Header: "Enseigne",
+      maxWidth: 40,
+    },
+    {
+      accessor: "adresse",
+      Header: "Adresse",
+      maxWidth: 40,
+    },
+    {
+      accessor: "naf_libelle",
+      Header: "Nature",
+      maxWidth: 40,
+    },
+    {
+      accessor: (value) => (value === true ? "Oui" : "Non"),
+      id: "siege_social",
+      Header: "Siège social",
+      maxWidth: 40,
+    },
+  ];
+
+  return <Datatable headers={columns} data={data} />;
+};
+
+const Etablissement_old = React.memo(({ data }) => {
   const columns = [
     {
       id: "id_mna_etablissement",
