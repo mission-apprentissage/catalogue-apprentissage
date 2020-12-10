@@ -4,7 +4,10 @@ import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
-if (window.location.hostname.includes("catalogue.apprentissage.beta.gouv.fr")) {
+if (
+  window.location.hostname.includes("catalogue.apprentissage.beta.gouv.fr") &&
+  window.location.pathname !== "/report"
+) {
   window.location.replace("https://mna-admin-prod.netlify.app");
 }
 
