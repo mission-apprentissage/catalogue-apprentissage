@@ -1,12 +1,12 @@
 import React from "react";
-import { Layout, Accordion, Loading, Modal } from "./components";
-import ContextProvider, { Context } from "./context";
-import { _get } from "../../common/httpClient";
 import { Container } from "@chakra-ui/react";
+import { Layout, Accordion, Loading } from "./components";
+
+import { _get } from "../../common/httpClient";
+import ContextProvider from "./context";
 
 function PageReconciliation() {
   const [coverage, setCoverage] = React.useState();
-  const { popup } = React.useContext(Context);
 
   async function getCoverage(type) {
     const response = await _get(`http://localhost/api/coverage?type=${type}`);
@@ -25,28 +25,26 @@ function PageReconciliation() {
     );
   }
 
-  console.log(coverage);
-
   return (
     <ContextProvider>
       <Layout>
         <Container maxW="full">
           <Accordion data={coverage[0]} />
         </Container>
-        {popup && <Modal />}
       </Layout>
     </ContextProvider>
   );
 
   return (
-    <ContextProvider>
-      <Layout>
+    <Layout>
+      <Container maxW="full">
         {coverage.map((item, index) => (
-          <Accordion data={item} key={index} />
+          <ContextProvider>
+            <Accordion data={item} key={index} />
+          </ContextProvider>
         ))}
-        {popup && <Modal />}
-      </Layout>
-    </ContextProvider>
+      </Container>
+    </Layout>
   );
 }
 

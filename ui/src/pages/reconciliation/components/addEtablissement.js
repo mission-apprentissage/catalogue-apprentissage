@@ -14,7 +14,6 @@ import {
   AlertDescription,
   FormControl,
   FormLabel,
-  Select,
   Input,
   Flex,
   Box,
@@ -25,11 +24,10 @@ import {
   Radio,
   RadioGroup,
 } from "@chakra-ui/react";
-import { Context } from "../context";
+
 import { _post } from "../../../common/httpClient";
 
-export default function TransitionsModal() {
-  const { handlePopup, popup, handlePopupSubmit } = React.useContext(Context);
+export default function TransitionsModal({ isOpen, onClose, onSuccess }) {
   const [etablissement, setEtablissement] = React.useState();
   const [loading, setLoading] = React.useState(false);
   const [errors, setErrors] = React.useState(false);
@@ -46,15 +44,13 @@ export default function TransitionsModal() {
       return;
     }
     setLoading(true);
-    const response = await _post("http://localhost/api/coverage/etablissement", values);
+    const response = await _post("http://localhost/api/coverage", values);
     console.log(response);
     if (response) {
       setEtablissement(response);
       setLoading(false);
     }
   };
-
-  const handleSubmit = () => handlePopupSubmit({ etablissement, type: values.type });
 
   const handleChange = (e) => {
     setErrors(false);
@@ -64,7 +60,7 @@ export default function TransitionsModal() {
 
   return (
     <>
-      <Modal isOpen={popup} onClose={handlePopup} size="xl">
+      <Modal isOpen={isOpen} onClose={onClose} size="xl">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Ajouter un établissement :</ModalHeader>
@@ -83,7 +79,12 @@ export default function TransitionsModal() {
                   <FormErrorMessage>Siret obligatoire (14 chiffres)</FormErrorMessage>
                 </FormControl>
                 <Flex align="flex-end">
-                  <Button type="submit" isLoading={loading} disabled={etablissement ? true : false} variant="solid">
+                  <Button
+                    type="submit"
+                    isLoading={loading}
+                    disabled={etablissement || loading ? true : false}
+                    variant="solid"
+                  >
                     Rechercher
                   </Button>
                 </Flex>
@@ -118,10 +119,16 @@ export default function TransitionsModal() {
             )}
           </ModalBody>
           <ModalFooter>
-            <Button variant="ghost" mr={3} onClick={handlePopup}>
+            <Button variant="ghost" mr={3} onClick={onClose}>
               Annuler
             </Button>
-            <Button colorScheme="blue">Enregistrer</Button>
+            <Button
+              disabled={loading || !etablissement}
+              colorScheme="blue"
+              onClick={() => onSuccess({ ...etablissement, type: values.type })}
+            >
+              Enregistrer
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

@@ -1,264 +1,226 @@
-/**
- * TODO :
- * Ajouter information manquante
- * CRUD backoffice mise à jour de la psformation
- * Récupérer le libelle CFD BCN
- * Mettre la dropdown d'action sur les établissements
- * Mettre le flag de la formation à vérifier (save state)
- */
-
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import {
   Accordion,
-  AccordionSummary,
-  AccordionActions,
-  AccordionDetails,
-  FormControlLabel,
-  Checkbox,
-  Box,
+  AccordionButton,
+  AccordionItem,
+  GridItem,
   Grid,
-  Card,
-  CardContent,
-  Typography,
-  Button,
-  Divider,
-  Chip,
+  Box,
+  AccordionPanel,
+  AccordionIcon,
+  SimpleGrid,
+  VStack,
+  StackDivider,
+  Flex,
+  Spacer,
   FormControl,
   Select,
-  MenuItem,
-} from "@material-ui/core";
-
-import { ExpandMore, Add } from "@material-ui/icons";
+  Tag,
+  Text,
+  Button,
+  Divider,
+} from "@chakra-ui/react";
 
 import Datatable from "./Datatable";
+import ModalAddEtablissement from "./addEtablissement";
 
+import { _put } from "../../../common/httpClient";
 import { Context } from "../context";
-import { blueGrey } from "@material-ui/core/colors";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: "100%",
-  },
-  card: {
-    height: "100%",
-    backgroundColor: blueGrey["200"],
-  },
-  heading: {
-    fontSize: theme.typography.pxToRem(15),
-  },
-  secondaryHeading: {
-    fontSize: theme.typography.pxToRem(15),
-    color: theme.palette.text.secondary,
-  },
-  icon: {
-    verticalAlign: "bottom",
-    height: 20,
-    width: 20,
-  },
-  details: {
-    alignItems: "center",
-  },
-  column: {
-    flexBasis: "33.33%",
-  },
-  helper: {
-    borderLeft: `2px solid ${theme.palette.divider}`,
-    padding: theme.spacing(1, 2),
-  },
-  link: {
-    color: theme.palette.primary.main,
-    textDecoration: "none",
-    "&:hover": {
-      textDecoration: "underline",
-    },
-  },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-}));
+export default ({ data }) => {
+  const { mapping } = React.useContext(Context);
 
-export default (props) => {
-  const classes = useStyles();
-  const { data } = props;
-  const { handlePopup, mapping, currentFormation } = React.useContext(Context);
+  const [modalIsOpen, setModalIsOpen] = React.useState(false);
+  const [matchingMnaEtablissement, setMatchingMnaEtablissement] = React.useState(data.matching_mna_etablissement);
 
   const sameUai = new Set([data.uai_affilie, data.uai_composante, data.uai_gestionnaire]).size === 1 ? true : false;
   const sameEtab = new Set([data.libelle_uai_affilie, data.libelle_uai_composante]).size === 1 ? true : false;
 
-  console.log("idformation", currentFormation);
+  const toggle = () => setModalIsOpen(!modalIsOpen);
+
+  const onSuccessModal = (newEtablissement) => {
+    const response = _put("/api/coverage", {
+      matching_mna_etablissement: [
+        ...matchingMnaEtablissement,
+        { ...newEtablissement, dangerously_added_by_user: true },
+      ],
+    });
+    setMatchingMnaEtablissement(response.matching_mna_etablissement);
+  };
+
+  const onValidate = () => {};
 
   return (
-    <Accordion className={classes.root}>
-      <EnteteFormation data={data} sameUai={sameUai} />
-      <AccordionDetails>
-        <Grid container spacing={2} alignItems="stretch">
-          <DetailFormation data={data} sameEtab={sameEtab} sameUai={sameUai} />
-        </Grid>
-      </AccordionDetails>
-      <Box m={2}>
-        {data && data.matching_mna_etablissement.length > 0 && <Etablissement data={data.matching_mna_etablissement} />}
-      </Box>
-      <Divider />
-      <AccordionActions>
-        <Button color="primary" variant="outlined" startIcon={<Add />} onClick={() => handlePopup(data._id)}>
-          Nouvel établissement
-        </Button>
-        <Button variant="contained" color="primary">
-          Valider
-        </Button>
-      </AccordionActions>
-    </Accordion>
+    <>
+      <Accordion allowToggle>
+        <AccordionItem>
+          <AccordionButton>
+            <EnteteFormation data={data} sameUai={sameUai} />
+            <AccordionIcon />
+          </AccordionButton>
+          <AccordionPanel pb={4}>
+            <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
+              <Box>
+                <DetailFormation data={data} sameEtab={sameEtab} sameUai={sameUai} />
+              </Box>
+              <Box>
+                {data && matchingMnaEtablissement.length > 0 && (
+                  <Etablissement formationId={data._id} data={matchingMnaEtablissement} />
+                )}
+              </Box>
+              <Flex justify="center">
+                <Box>Formation à vérifier</Box>
+                <Spacer />
+                <Box>
+                  <Button onClick={toggle}>Ajouter un établissement</Button>
+                  <Button>Valider</Button>
+                </Box>
+              </Flex>
+            </VStack>
+          </AccordionPanel>
+        </AccordionItem>
+      </Accordion>
+      <ModalAddEtablissement isOpen={modalIsOpen} onClose={toggle} onSuccess={onSuccessModal} />
+    </>
   );
 };
 
-const EnteteFormation = React.memo(({ data, sameUai }) => {
-  const classes = useStyles();
+const EnteteFormation = ({ data, sameUai }) => {
   return (
-    <AccordionSummary expandIcon={<ExpandMore />} aria-controls="panel1a-content" id="panel1a-header">
-      <FormControlLabel
-        aria-label="Acknowledge"
-        onClick={(event) => event.stopPropagation()}
-        onFocus={(event) => event.stopPropagation()}
-        control={<Checkbox />}
-        label=""
-      />
-      <div className={classes.column}>
-        <Typography className={classes.heading}>{data.libelle_uai_affilie}</Typography>
-        {sameUai ? (
-          <Typography>UAI : {data.uai_affilie}</Typography>
-        ) : (
-          <Typography>
-            <Typography>Affilié : {data.uai_affilie}</Typography>
-            <Typography>Composante : {data.uai_composante}</Typography>
-            <Typography>Gestionnaire : {data.uai_gestionnaire}</Typography>
-          </Typography>
-        )}
-        <Typography className={classes.heading}>Code formation : {data.code_cfd}</Typography>
-      </div>
-      <div>
-        <Typography className={classes.secondaryHeading}>{data.libelle_formation}</Typography>
-        <Typography className={classes.secondaryHeading}>{data.libelle_specialite}</Typography>
-        <Typography className={classes.secondaryHeading}>
-          {data.libelle_commune} - {data.code_postal}
-        </Typography>
-      </div>
-    </AccordionSummary>
+    <Box flex="1" textAlign="left">
+      <Grid templateColumns=".5fr 2fr" gap={2}>
+        <GridItem>
+          <Text>{data.libelle_uai_affilie}</Text>
+          {sameUai ? (
+            <Text>UAI : {data.uai_affilie}</Text>
+          ) : (
+            <Text>
+              <Text>Affilié : {data.uai_affilie}</Text>
+              <Text>Composante : {data.uai_composante}</Text>
+              <Text>Gestionnaire : {data.uai_gestionnaire}</Text>
+            </Text>
+          )}
+          <Text>Code formation : {data.code_cfd}</Text>
+        </GridItem>
+        <GridItem>
+          <Text>{data.libelle_formation}</Text>
+          <Text>{data.libelle_specialite}</Text>
+          <Text>
+            {data.libelle_commune} - {data.code_postal}
+          </Text>
+        </GridItem>
+      </Grid>
+    </Box>
   );
-});
+};
 
-const DetailFormation = React.memo(({ data, sameEtab, sameUai }) => {
-  const classes = useStyles();
+const DetailFormation = ({ data, sameEtab, sameUai }) => {
+  const color = "lightgray";
   return (
-    <>
-      <Grid item xs={3}>
-        <Card className={classes.card}>
-          <CardContent>
-            <Typography className={classes.details} color="textSecondary" gutterBottom>
-              Unité administrative immatriculée
-            </Typography>
-            {sameUai ? (
-              <Typography>{data.uai_affilie}</Typography>
-            ) : (
-              <>
-                <Typography>Affilié : {data.uai_affilie}</Typography>
-                <Typography>Composante : {data.uai_composante}</Typography>
-                <Typography>Gestionnaire : {data.uai_gestionnaire}</Typography>
-              </>
-            )}
-          </CardContent>
-        </Card>
-      </Grid>
-      <Grid item xs={3}>
-        <Card className={classes.card}>
-          <CardContent>
-            <Typography className={classes.details} color="textSecondary" gutterBottom>
-              Code formation diplôme
-            </Typography>
-            <Typography>CFD : {data.code_cfd}</Typography>
-            <Typography>Libellé long BCN</Typography>
-          </CardContent>
-        </Card>
-      </Grid>
-      <Grid item xs={3}>
-        <Card className={classes.card}>
-          <CardContent>
-            <Typography className={classes.details} color="textSecondary" gutterBottom>
-              Etablissements
-            </Typography>
-            {sameEtab ? (
-              <Typography>{data.libelle_uai_affilie}</Typography>
-            ) : (
-              <>
-                <Typography>Affilié : {data.libelle_uai_affilie}</Typography>
-                <Typography>Composante : {data.libelle_uai_composante}</Typography>
-              </>
-            )}
-          </CardContent>
-        </Card>
-      </Grid>
-      <Grid item xs={3}>
-        <Card className={classes.card}>
-          <CardContent>
-            <Typography className={classes.details} color="textSecondary" gutterBottom>
-              Lieu de formation
-            </Typography>
-            <Typography>{data.libelle_commune}</Typography>
-            <Typography>{data.code_postal}</Typography>
-          </CardContent>
-        </Card>
-      </Grid>
-    </>
+    <SimpleGrid columns={4} spacing={10}>
+      <Box bg={color} p={2} borderRadius={2} shadow="2px 2px 2px 0px rgba(0,0,0,0.1)">
+        <Box>
+          <Text>Unité administrative immatriculée</Text>
+        </Box>
+        <Box>
+          {sameUai ? (
+            <Text>{data.uai_affilie}</Text>
+          ) : (
+            <>
+              <Text>Affilié : {data.uai_affilie}</Text>
+              <Text>Composante : {data.uai_composante}</Text>
+              <Text>Gestionnaire : {data.uai_gestionnaire}</Text>
+            </>
+          )}
+        </Box>
+      </Box>
+      <Box bg={color} p={2} borderRadius={2} shadow="2px 2px 2px 0px rgba(0,0,0,0.1)">
+        <Box>
+          <Text>Code formation diplôme</Text>
+        </Box>
+        <Box>
+          <Text>CFD : {data.code_cfd}</Text>
+          <Text>Libellé long BCN</Text>
+        </Box>
+      </Box>
+      <Box bg={color} p={2} borderRadius={2} shadow="2px 2px 2px 0px rgba(0,0,0,0.1)">
+        <Box>
+          <Text>Etablissements</Text>
+        </Box>
+        <Box>
+          {sameEtab ? (
+            <Text>{data.libelle_uai_affilie}</Text>
+          ) : (
+            <>
+              <Text>Affilié : {data.libelle_uai_affilie}</Text>
+              <Text>Composante : {data.libelle_uai_composante}</Text>
+            </>
+          )}
+        </Box>
+      </Box>
+      <Box bg={color} p={2} borderRadius={2} shadow="2px 2px 2px 0px rgba(0,0,0,0.1)">
+        <Box>
+          <Text>Lieu de formation</Text>
+        </Box>
+        <Box>
+          <Text>{data.libelle_commune}</Text>
+          <Text>{data.code_postal}</Text>
+        </Box>
+      </Box>
+    </SimpleGrid>
   );
-});
+};
 
-const Option = (props) => {
-  const classes = useStyles();
+const Option = ({ id, formationId, type }) => {
   const { updateMapping } = React.useContext(Context);
-
-  const handleChange = (e) => updateMapping({ type: e.target.value, id: props.id });
+  const handleChange = (e) => updateMapping({ formationId: formationId, type: e.target.value, etablissementId: id });
 
   return (
-    <FormControl className={classes.formControl}>
-      <Select
-        variant="outlined"
-        onChange={handleChange}
-        displayEmpty
-        className={classes.selectEmpty}
-        inputProps={{ "aria-label": "Without label" }}
-      >
-        <MenuItem value="" disabled>
-          <em>Options :</em>
-        </MenuItem>
-        <MenuItem value="gestionnaire">Gestionnaire</MenuItem>
-        <MenuItem value="formateur">Formateur</MenuItem>
-        <MenuItem value="formateur-gestionnaire">Formateur & Gestionnaire</MenuItem>
-        <MenuItem disabled>
-          <Divider />
-        </MenuItem>
-        <MenuItem value="supprimer">Supprimer</MenuItem>
+    <FormControl>
+      <Select variant="outlined" onChange={handleChange} defaultValue={type ? type : ""}>
+        <option value="" disabled>
+          Options :
+        </option>
+        <option value="gestionnaire">Gestionnaire</option>
+        <option value="formateur">Formateur</option>
+        <option value="formateur-gestionnaire">Formateur & Gestionnaire</option>
+        <Divider />
+        <option value="supprimer">Supprimer</option>
       </Select>
     </FormControl>
   );
 };
 
-const Etablissement = ({ data }) => {
-  console.log("data", data[0]);
-
+const Etablissement = ({ data, formationId }) => {
   const columns = [
     {
-      accessor: "_id",
+      Cell: ({ value }) => <Option id={value.id} type={value.type} formationId={formationId} />,
+      accessor: ({ _id, type }) => {
+        return { id: _id, type: type };
+      },
+      id: "_id",
       Header: "Action",
-      maxWidth: 40,
+      // maxWidth: 100,
     },
     {
+      Cell: ({ value }) => {
+        switch (value) {
+          case "UAI_FORMATION":
+            return <Tag colorScheme="teal">{value}</Tag>;
+
+          case "UAI_FORMATEUR":
+            return <Tag colorScheme="red">{value}</Tag>;
+
+          case "UAI_GESTIONNAIRE":
+            return <Tag colorScheme="yellow">{value}</Tag>;
+
+          default:
+            break;
+        }
+      },
       accessor: "matched_uai",
       Header: "Matching",
-      maxWidth: 40,
+      maxWidth: 100,
     },
     {
       accessor: "uai",
@@ -283,7 +245,7 @@ const Etablissement = ({ data }) => {
     {
       accessor: "adresse",
       Header: "Adresse",
-      maxWidth: 40,
+      maxWidth: 400,
     },
     {
       accessor: "naf_libelle",
@@ -300,82 +262,3 @@ const Etablissement = ({ data }) => {
 
   return <Datatable headers={columns} data={data} />;
 };
-
-const Etablissement_old = React.memo(({ data }) => {
-  const columns = [
-    {
-      id: "id_mna_etablissement",
-      label: "Action",
-      maxWidth: 40,
-      align: "left",
-      format: (value) => <Option id={value} />,
-    },
-    {
-      id: "matched_uai",
-      label: "Matching",
-      maxWidth: 40,
-      align: "left",
-      format: (value) => {
-        switch (value) {
-          case "UAI_FORMATION":
-            return <Chip label={value} color="primary" />;
-
-          case "UAI_FORMATEUR":
-            return <Chip label={value} />;
-
-          case "UAI_GESTIONNAIRE":
-            return <Chip label={value} color="secondary" />;
-
-          default:
-            break;
-        }
-      },
-    },
-    {
-      id: "uai",
-      label: "Uai",
-      maxWidth: 40,
-      align: "left",
-    },
-    {
-      id: "siret",
-      label: "Siret",
-      maxWidth: 70,
-      align: "left",
-    },
-    {
-      id: "raison_sociale",
-      label: "Raison Social",
-      maxWidth: 500,
-      align: "left",
-      // format: (value) => (value ? <CheckCircle color="primary" /> : <Cancel color="secondary" />),
-    },
-    {
-      id: "enseigne",
-      label: "Enseigne",
-      maxWidth: 100,
-      align: "left",
-    },
-    {
-      id: "adresse",
-      label: "Adresse",
-      maxWidth: 500,
-      align: "left",
-    },
-    {
-      id: "naf_libelle",
-      label: "Nature",
-      maxWidth: 100,
-      align: "left",
-    },
-    {
-      id: "siege_social",
-      label: "Siège social",
-      maxWidth: 10,
-      align: "center",
-      format: (value) => (value === true ? "Oui" : "Non"),
-    },
-  ];
-
-  return <Datatable headers={columns} data={data} title="Liste des établissements :" />;
-});
