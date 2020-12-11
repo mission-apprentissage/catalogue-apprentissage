@@ -20,7 +20,7 @@ export default ({ headers, data }) => {
             <Box as="tr" {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => {
                 return (
-                  <Box as="th" {...column.getHeaderProps()}>
+                  <Box p={2} minWidth="100px" fontSize="sm" as="th" {...column.getHeaderProps()}>
                     {column.render("Header")}
                   </Box>
                 );
@@ -33,14 +33,16 @@ export default ({ headers, data }) => {
       <Box as="tbody" {...getTableBodyProps()}>
         {rows.map((row) => {
           const {
-            values: { dangerously_added_by_user },
+            values: {
+              _id: { dangerously_added_by_user },
+            },
           } = row;
           prepareRow(row);
           return (
             <Box bg={dangerously_added_by_user ? "lightblue" : ""} as="tr" {...row.getRowProps()}>
               {row.cells.map((cell) => {
                 return (
-                  <Box as="td" {...cell.getCellProps()}>
+                  <Box p={2} minWidth="100px" as="td" {...cell.getCellProps()}>
                     {cell.render("Cell")}
                   </Box>
                 );

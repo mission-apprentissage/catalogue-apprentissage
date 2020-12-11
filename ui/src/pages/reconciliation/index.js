@@ -3,7 +3,6 @@ import { Container } from "@chakra-ui/react";
 import { Layout, Accordion, Loading } from "./components";
 
 import { _get } from "../../common/httpClient";
-import ContextProvider from "./context";
 
 function PageReconciliation() {
   const [coverage, setCoverage] = React.useState();
@@ -26,22 +25,10 @@ function PageReconciliation() {
   }
 
   return (
-    <ContextProvider>
-      <Layout>
-        <Container maxW="full">
-          <Accordion data={coverage[0]} />
-        </Container>
-      </Layout>
-    </ContextProvider>
-  );
-
-  return (
     <Layout>
       <Container maxW="full">
         {coverage.map((item, index) => (
-          <ContextProvider>
-            <Accordion data={item} key={index} />
-          </ContextProvider>
+          <Accordion data={item} key={index} />
         ))}
       </Container>
     </Layout>

@@ -19,25 +19,54 @@ import {
   Text,
   Button,
   Divider,
+  Heading,
 } from "@chakra-ui/react";
 
 import Datatable from "./Datatable";
 import ModalAddEtablissement from "./addEtablissement";
 
-import { _put } from "../../../common/httpClient";
-import { Context } from "../context";
+import { _post, _put } from "../../../common/httpClient";
+
+function reducer(state, values) {
+  console.log(values);
+  const { type, id } = values;
+  const currentState = [...state];
+  let index = currentState.findIndex((x) => x.id === id);
+
+  if (index !== -1) {
+    currentState[index].type = type;
+    return currentState;
+  } else {
+    return [...state, values];
+  }
+}
 
 export default ({ data }) => {
-  const { mapping } = React.useContext(Context);
-
+  const [mapping, setMapping] = React.useReducer(reducer, data.mapping_liaison_etablissement || []);
   const [modalIsOpen, setModalIsOpen] = React.useState(false);
-
+  const [mnaLiaisonEtablissement, setMnaLiaisonEtablissement] = React.useState(
+    data.mapping_liaison_etablissement || []
+  );
   const [matchingMnaEtablissement, setMatchingMnaEtablissement] = React.useState(data.matching_mna_etablissement);
 
   const sameUai = new Set([data.uai_affilie, data.uai_composante, data.uai_gestionnaire]).size === 1 ? true : false;
   const sameEtab = new Set([data.libelle_uai_affilie, data.libelle_uai_composante]).size === 1 ? true : false;
 
   const toggle = () => setModalIsOpen(!modalIsOpen);
+  const onSelectChange = async ({ _id, type, etablissement }) => {
+    /**
+     * FILTER TO BE REMOVE ONCE THE MATCHIN SCRIPT REMOVES DUPLICATE MATCHED ETABLISSEMENT FOR A SINGLE PSFORMATION
+     * ADD TAGS (UAI_FORMATION / UAI_FORMATEUR/ UAI_GESTIONNAIRE) UN A SEPARATE OBJECT IF MULTIPLE MATCH ON THE SAME ESTABLISHMENT
+     */
+    const listEtablissementFiltre = matchingMnaEtablissement.filter((x) => x._id !== etablissement._id);
+    const response = await _put("/api/coverage", {
+      _id: data._id,
+      matching_mna_etablissement: [...listEtablissementFiltre, { ...etablissement, type }],
+    });
+
+    setMatchingMnaEtablissement(response.matching_mna_etablissement);
+    setMapping({ _id, type });
+  };
 
   const onSuccessModal = async (newEtablissement) => {
     const response = await _put("/api/coverage", {
@@ -48,10 +77,24 @@ export default ({ data }) => {
       ],
     });
     setMatchingMnaEtablissement(response.matching_mna_etablissement);
+    setMapping({ type: newEtablissement.type, id: newEtablissement._id });
     toggle();
   };
 
-  const onValidate = () => {};
+  const validate = async (e) => {
+    const payload = {
+      id: data._id,
+      mapping_liaison_etablissement: mapping,
+      mapping_code_cfd_formation: data.code_cfd,
+      mapping_code_postal_formation: data.code_postal,
+      mapping_id_formation_mna: "ID_MNA_FORMATION",
+      mapping_id_formation_ps: data._id,
+      mapping_annee_formation: "ANNEE_FORMATION",
+      mapping_etat_reconciliation: "OK",
+    };
+    const response = await _post("/api/coverage", payload);
+    setMnaLiaisonEtablissement(response.mapping_liaison_etablissement);
+  };
 
   return (
     <>
@@ -67,16 +110,25 @@ export default ({ data }) => {
                 <DetailFormation data={data} sameEtab={sameEtab} sameUai={sameUai} />
               </Box>
               <Box>
+                {mnaLiaisonEtablissement && mnaLiaisonEtablissement.length > 0 && (
+                  <Liaison data={mnaLiaisonEtablissement} />
+                )}
+              </Box>
+              <Box>
                 {data && matchingMnaEtablissement.length > 0 && (
-                  <Etablissement formationId={data._id} data={matchingMnaEtablissement} />
+                  <Etablissement data={matchingMnaEtablissement} onSelectChange={onSelectChange} />
                 )}
               </Box>
               <Flex justify="center">
                 <Box>Formation à vérifier</Box>
                 <Spacer />
                 <Box>
-                  <Button onClick={toggle}>Ajouter un établissement</Button>
-                  <Button>Valider</Button>
+                  <Button colorScheme="teal" variant="outline" pl={4} marginRight={4} onClick={toggle}>
+                    Ajouter un établissement
+                  </Button>
+                  <Button colorScheme="teal" variant="solid" onClick={validate}>
+                    Valider
+                  </Button>
                 </Box>
               </Flex>
             </VStack>
@@ -88,10 +140,33 @@ export default ({ data }) => {
   );
 };
 
+const Liaison = ({ data }) => {
+  return (
+    <Box p={4} bg="aliceblue">
+      <Box>
+        <Heading>Etablissements liés au catalogue :</Heading>
+        <Divider mb={4} />
+      </Box>
+      <SimpleGrid columns={4} spacing={10}>
+        {data.map((item) => {
+          return (
+            <Box>
+              <Text> Type: {item.type}</Text>
+              <Text fontSize="sm">
+                Identifiant catalogue : <Text as="i">{item._id}</Text>
+              </Text>
+            </Box>
+          );
+        })}
+      </SimpleGrid>
+    </Box>
+  );
+};
+
 const EnteteFormation = ({ data, sameUai }) => {
   return (
     <Box flex="1" textAlign="left">
-      <Grid templateColumns=".5fr 2fr" gap={2}>
+      <Grid templateColumns=".5fr 2fr .5fr" gap={2}>
         <GridItem>
           <Text>{data.libelle_uai_affilie}</Text>
           {sameUai ? (
@@ -112,6 +187,13 @@ const EnteteFormation = ({ data, sameUai }) => {
             {data.libelle_commune} - {data.code_postal}
           </Text>
         </GridItem>
+        {data.mapping_liaison_etablissement.length > 0 && (
+          <GridItem>
+            <Tag variant="solid" colorScheme="teal">
+              FORMATION TRAITÉ
+            </Tag>
+          </GridItem>
+        )}
       </Grid>
     </Box>
   );
@@ -174,9 +256,8 @@ const DetailFormation = ({ data, sameEtab, sameUai }) => {
   );
 };
 
-const Option = ({ id, formationId, type }) => {
-  const { updateMapping } = React.useContext(Context);
-  const handleChange = (e) => updateMapping({ formationId: formationId, type: e.target.value, etablissementId: id });
+const Option = ({ _id, type, onSelectChange, etablissement }) => {
+  const handleChange = (e) => onSelectChange({ type: e.target.value, _id: _id, etablissement: etablissement });
 
   return (
     <FormControl>
@@ -194,12 +275,14 @@ const Option = ({ id, formationId, type }) => {
   );
 };
 
-const Etablissement = ({ data, formationId }) => {
+const Etablissement = ({ data, onSelectChange }) => {
   const columns = [
     {
-      Cell: ({ value }) => <Option id={value.id} type={value.type} formationId={formationId} />,
-      accessor: ({ _id, type }) => {
-        return { id: _id, type: type };
+      Cell: ({ value }) => {
+        return <Option _id={value._id} type={value.type} onSelectChange={onSelectChange} etablissement={value} />;
+      },
+      accessor: ({ ...props }) => {
+        return { ...props };
       },
       id: "_id",
       Header: "Action",
@@ -219,7 +302,6 @@ const Etablissement = ({ data, formationId }) => {
 
           default:
             return "";
-            break;
         }
       },
       accessor: ({ matched_uai }) => (matched_uai ? matched_uai : ""),
@@ -266,11 +348,15 @@ const Etablissement = ({ data, formationId }) => {
       Header: "Siège social",
       maxWidth: 40,
     },
-    {
-      accessor: ({ dangerously_added_by_user }) => (dangerously_added_by_user ? dangerously_added_by_user : false),
-      id: "dangerously_added_by_user",
-    },
   ];
 
-  return <Datatable headers={columns} data={data} />;
+  return (
+    <>
+      <Box>
+        <Heading>Liste des établissement matché automatiquement ({data.length}) : </Heading>
+        <Divider mb={4} />
+      </Box>
+      <Datatable headers={columns} data={data} />
+    </>
+  );
 };

@@ -45,7 +45,7 @@ export default function TransitionsModal({ isOpen, onClose, onSuccess }) {
       return;
     }
     setLoading(true);
-    const response = await _post("http://localhost/api/coverage", values);
+    const response = await _post("http://localhost/api/coverage/etablissement", values);
     console.log(response);
     if (response) {
       setEtablissement(response);
