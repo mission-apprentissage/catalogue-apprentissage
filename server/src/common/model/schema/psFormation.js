@@ -104,6 +104,7 @@ const psFormationSchema = {
     default: null,
     description: "Code formation diplome extra de la formation",
   },
+  // SCRIPT COVERAGE
   matching_type: {
     type: String,
     default: null,
@@ -119,6 +120,7 @@ const psFormationSchema = {
     default: null,
     description: "Etablissement du catalogue matchant les formation présente dans matching_mna_formation",
   },
+  // PAGE DE RECONCILIATION
   mapping_liaison_etablissement: {
     type: Array,
     default: null,
@@ -146,7 +148,7 @@ const psFormationSchema = {
     default: null,
     description: "Id de la formation parcoursup",
   },
-  mapping_annee_formartion: {
+  mapping_annee_formation: {
     type: String,
     default: null,
     description: "Année de la formation parcousup",
