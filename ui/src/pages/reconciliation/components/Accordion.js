@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Accordion,
   AccordionButton,
   AccordionItem,
   GridItem,
@@ -42,11 +41,8 @@ function reducer(state, values) {
 }
 
 export default ({ data }) => {
-  const [mapping, setMapping] = React.useReducer(reducer, data.mapping_liaison_etablissement || []);
   const [modalIsOpen, setModalIsOpen] = React.useState(false);
-  const [mnaLiaisonEtablissement, setMnaLiaisonEtablissement] = React.useState(
-    data.mapping_liaison_etablissement || []
-  );
+  const [mapping, setMapping] = React.useReducer(reducer, data.mapping_liaison_etablissement || []);
   const [matchingMnaEtablissement, setMatchingMnaEtablissement] = React.useState(data.matching_mna_etablissement);
 
   const sameUai = new Set([data.uai_affilie, data.uai_composante, data.uai_gestionnaire]).size === 1 ? true : false;
@@ -57,6 +53,8 @@ export default ({ data }) => {
     /**
      * FILTER TO BE REMOVE ONCE THE MATCHIN SCRIPT REMOVES DUPLICATE MATCHED ETABLISSEMENT FOR A SINGLE PSFORMATION
      * ADD TAGS (UAI_FORMATION / UAI_FORMATEUR/ UAI_GESTIONNAIRE) UN A SEPARATE OBJECT IF MULTIPLE MATCH ON THE SAME ESTABLISHMENT
+     *
+     * Upside —> will reduce the data size transfert, to heavy on matching 1 and 2.
      */
     const listEtablissementFiltre = matchingMnaEtablissement.filter((x) => x._id !== etablissement._id);
     const response = await _put("/api/coverage", {
@@ -93,50 +91,44 @@ export default ({ data }) => {
       mapping_etat_reconciliation: "OK",
     };
     const response = await _post("/api/coverage", payload);
-    setMnaLiaisonEtablissement(response.mapping_liaison_etablissement);
+    setMapping(response.mapping_liaison_etablissement);
   };
 
   return (
-    <>
-      <Accordion allowToggle>
-        <AccordionItem>
-          <AccordionButton>
-            <EnteteFormation data={data} sameUai={sameUai} />
-            <AccordionIcon />
-          </AccordionButton>
-          <AccordionPanel pb={4}>
-            <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
+    <Box bg="white" m={3}>
+      <AccordionItem>
+        <AccordionButton>
+          <EnteteFormation data={data} sameUai={sameUai} />
+          <AccordionIcon />
+        </AccordionButton>
+        <AccordionPanel pb={4}>
+          <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
+            <Box>
+              <DetailFormation data={data} sameEtab={sameEtab} sameUai={sameUai} />
+            </Box>
+            <Box>{mapping && mapping.length > 0 && <Liaison data={mapping} />}</Box>
+            <Box>
+              {data && matchingMnaEtablissement.length > 0 && (
+                <Etablissement data={matchingMnaEtablissement} onSelectChange={onSelectChange} />
+              )}
+            </Box>
+            <Flex justify="center">
+              <Box>Formation à vérifier</Box>
+              <Spacer />
               <Box>
-                <DetailFormation data={data} sameEtab={sameEtab} sameUai={sameUai} />
+                <Button colorScheme="teal" variant="outline" pl={4} marginRight={4} onClick={toggle}>
+                  Ajouter un établissement
+                </Button>
+                <Button colorScheme="teal" variant="solid" onClick={validate}>
+                  Valider
+                </Button>
               </Box>
-              <Box>
-                {mnaLiaisonEtablissement && mnaLiaisonEtablissement.length > 0 && (
-                  <Liaison data={mnaLiaisonEtablissement} />
-                )}
-              </Box>
-              <Box>
-                {data && matchingMnaEtablissement.length > 0 && (
-                  <Etablissement data={matchingMnaEtablissement} onSelectChange={onSelectChange} />
-                )}
-              </Box>
-              <Flex justify="center">
-                <Box>Formation à vérifier</Box>
-                <Spacer />
-                <Box>
-                  <Button colorScheme="teal" variant="outline" pl={4} marginRight={4} onClick={toggle}>
-                    Ajouter un établissement
-                  </Button>
-                  <Button colorScheme="teal" variant="solid" onClick={validate}>
-                    Valider
-                  </Button>
-                </Box>
-              </Flex>
-            </VStack>
-          </AccordionPanel>
-        </AccordionItem>
-      </Accordion>
+            </Flex>
+          </VStack>
+        </AccordionPanel>
+      </AccordionItem>
       <ModalAddEtablissement isOpen={modalIsOpen} onClose={toggle} onSuccess={onSuccessModal} />
-    </>
+    </Box>
   );
 };
 
@@ -148,9 +140,9 @@ const Liaison = ({ data }) => {
         <Divider mb={4} />
       </Box>
       <SimpleGrid columns={4} spacing={10}>
-        {data.map((item) => {
+        {data.map((item, index) => {
           return (
-            <Box>
+            <Box key={index}>
               <Text> Type: {item.type}</Text>
               <Text fontSize="sm">
                 Identifiant catalogue : <Text as="i">{item._id}</Text>
@@ -190,7 +182,7 @@ const EnteteFormation = ({ data, sameUai }) => {
         {data.mapping_liaison_etablissement.length > 0 && (
           <GridItem>
             <Tag variant="solid" colorScheme="teal">
-              FORMATION TRAITÉ
+              FORMATION RAPPROCHÉ
             </Tag>
           </GridItem>
         )}
