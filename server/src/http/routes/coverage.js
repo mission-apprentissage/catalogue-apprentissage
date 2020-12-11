@@ -1,7 +1,6 @@
 const express = require("express");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { PsFormation } = require("../../common/model");
-const logger = require("../../common/logger");
 
 module.exports = ({ catalogue }) => {
   const router = express.Router();
@@ -20,6 +19,15 @@ module.exports = ({ catalogue }) => {
       } else {
         res.json({ message: `Item doesn't exist` });
       }
+    })
+  );
+
+  router.post(
+    "/",
+    tryCatch(async (req, res) => {
+      const data = req.body;
+      const response = await PsFormation.findByIdAndUpdate(data.id, { ...data }, { new: true });
+      res.json(response);
     })
   );
 
@@ -43,9 +51,8 @@ module.exports = ({ catalogue }) => {
     "/",
     tryCatch(async (req, res) => {
       const data = req.body;
-      await PsFormation.findByIdAndUpdate(data._id, { data })
-        .then(() => res.status(200))
-        .catch((error) => logger.error(error));
+      const response = await PsFormation.findByIdAndUpdate(data._id, { ...data }, { new: true });
+      res.json(response);
     })
   );
 
