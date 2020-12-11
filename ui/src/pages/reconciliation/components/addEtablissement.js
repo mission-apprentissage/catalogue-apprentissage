@@ -35,6 +35,7 @@ export default function TransitionsModal({ isOpen, onClose, onSuccess }) {
     uai: "",
     siret: "",
     type: "gestionnaire",
+    matching: "utilisateur",
   });
 
   const handleSearch = async (e) => {
@@ -125,7 +126,9 @@ export default function TransitionsModal({ isOpen, onClose, onSuccess }) {
             <Button
               disabled={loading || !etablissement}
               colorScheme="blue"
-              onClick={() => onSuccess({ ...etablissement, type: values.type })}
+              onClick={() =>
+                onSuccess({ ...etablissement, type: values.type, matched_uai: values.matching, uai: values.uai })
+              }
             >
               Enregistrer
             </Button>

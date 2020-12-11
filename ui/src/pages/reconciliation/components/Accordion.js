@@ -31,6 +31,7 @@ export default ({ data }) => {
   const { mapping } = React.useContext(Context);
 
   const [modalIsOpen, setModalIsOpen] = React.useState(false);
+
   const [matchingMnaEtablissement, setMatchingMnaEtablissement] = React.useState(data.matching_mna_etablissement);
 
   const sameUai = new Set([data.uai_affilie, data.uai_composante, data.uai_gestionnaire]).size === 1 ? true : false;
@@ -38,14 +39,16 @@ export default ({ data }) => {
 
   const toggle = () => setModalIsOpen(!modalIsOpen);
 
-  const onSuccessModal = (newEtablissement) => {
-    const response = _put("/api/coverage", {
+  const onSuccessModal = async (newEtablissement) => {
+    const response = await _put("/api/coverage", {
+      _id: data._id,
       matching_mna_etablissement: [
         ...matchingMnaEtablissement,
         { ...newEtablissement, dangerously_added_by_user: true },
       ],
     });
     setMatchingMnaEtablissement(response.matching_mna_etablissement);
+    toggle();
   };
 
   const onValidate = () => {};
@@ -215,15 +218,18 @@ const Etablissement = ({ data, formationId }) => {
             return <Tag colorScheme="yellow">{value}</Tag>;
 
           default:
+            return "";
             break;
         }
       },
-      accessor: "matched_uai",
+      accessor: ({ matched_uai }) => (matched_uai ? matched_uai : ""),
+      id: "matched_uai",
       Header: "Matching",
       maxWidth: 100,
     },
     {
-      accessor: "uai",
+      accessor: ({ uai }) => (uai ? uai : ""),
+      id: "uai",
       Header: "Uai",
       maxWidth: 40,
     },
@@ -233,12 +239,14 @@ const Etablissement = ({ data, formationId }) => {
       maxWidth: 40,
     },
     {
-      accessor: "raison_sociale",
+      accessor: ({ raison_sociale }) => (raison_sociale ? raison_sociale : ""),
+      id: "raison_sociale",
       Header: "Raison Social",
       maxWidth: 40,
     },
     {
-      accessor: "enseigne",
+      accessor: ({ enseigne }) => (enseigne ? enseigne : ""),
+      id: "enseigne",
       Header: "Enseigne",
       maxWidth: 40,
     },
@@ -257,6 +265,10 @@ const Etablissement = ({ data, formationId }) => {
       id: "siege_social",
       Header: "Siège social",
       maxWidth: 40,
+    },
+    {
+      accessor: ({ dangerously_added_by_user }) => (dangerously_added_by_user ? dangerously_added_by_user : false),
+      id: "dangerously_added_by_user",
     },
   ];
 

@@ -6,7 +6,7 @@ const style = {};
 
 export default ({ headers, data }) => {
   const headersData = React.useMemo(() => headers, []);
-  const tableData = React.useMemo(() => data, []);
+  const tableData = React.useMemo(() => data);
 
   const table = useTable({ columns: headersData, data: tableData });
 
@@ -18,11 +18,13 @@ export default ({ headers, data }) => {
         {headerGroups.map((headerGroup) => {
           return (
             <Box as="tr" {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <Box as="th" {...column.getHeaderProps()}>
-                  {column.render("Header")}
-                </Box>
-              ))}
+              {headerGroup.headers.map((column) => {
+                return (
+                  <Box as="th" {...column.getHeaderProps()}>
+                    {column.render("Header")}
+                  </Box>
+                );
+              })}
             </Box>
           );
         })}
@@ -30,9 +32,12 @@ export default ({ headers, data }) => {
 
       <Box as="tbody" {...getTableBodyProps()}>
         {rows.map((row) => {
+          const {
+            values: { dangerously_added_by_user },
+          } = row;
           prepareRow(row);
           return (
-            <Box as="tr" {...row.getRowProps()}>
+            <Box bg={dangerously_added_by_user ? "lightblue" : ""} as="tr" {...row.getRowProps()}>
               {row.cells.map((cell) => {
                 return (
                   <Box as="td" {...cell.getCellProps()}>
