@@ -11,8 +11,8 @@ module.exports = ({ catalogue }) => {
   router.get(
     "/",
     tryCatch(async (req, res) => {
-      const { type } = req.query;
-      const data = await PsFormation.find({ matching_type: type });
+      const { type, page } = req.query;
+      const data = await PsFormation.paginate({ matching_type: type }, { page });
 
       if (data) {
         res.json(data);

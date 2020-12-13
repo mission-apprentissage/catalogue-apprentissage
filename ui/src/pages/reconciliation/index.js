@@ -1,35 +1,55 @@
 import React from "react";
-import { Box, Container, Accordion, SimpleGrid, Button, Heading, Text, Flex } from "@chakra-ui/react";
+import {
+  Box,
+  Container,
+  Accordion,
+  SimpleGrid,
+  Button,
+  Heading,
+  Text,
+  Flex,
+  Spacer,
+  Select,
+  Tag,
+} from "@chakra-ui/react";
 import { Layout, Accordion as Item, Loading } from "./components";
 
 import { _get } from "../../common/httpClient";
 
-const StyledButton = ({ type, matching, setMatching }) => {
+const StyledButton = ({ type, matching, size, toggleMatching }) => {
   return (
     <Button
-      bg="#0c5076"
-      variant={type === matching ? "solid" : "outline"}
       color="white"
-      onClick={() => setMatching(type)}
+      variant="solid"
+      colorScheme="purple"
+      size={size ? size : "sm"}
+      onClick={() => toggleMatching({ type })}
+      isActive={type === matching ? true : false}
     >
       {type}
     </Button>
   );
 };
 
-function PageReconciliation() {
+export default () => {
   const [coverage, setCoverage] = React.useState();
-  const [matching, setMatching] = React.useState(3);
   const [loading, setLoading] = React.useState(false);
+  const [matching, setMatching] = React.useState({
+    type: 3,
+    page: 1,
+  });
 
-  async function getCoverage(type) {
+  console.log(matching);
+
+  async function getCoverage({ type, page }) {
     setLoading(true);
-    const response = await _get(`http://localhost/api/coverage?type=${type}`);
+    const response = await _get(`/api/coverage?type=${type}&page=${page}`);
     setCoverage(response);
     setLoading(false);
   }
 
-  const toggleMatching = (value) => setMatching(value);
+  const toggleMatching = (values) =>
+    setMatching({ type: values.type ? values.type : matching.type, page: values.page ? values.page : matching.page });
 
   React.useEffect(() => {
     getCoverage(matching);
@@ -56,16 +76,18 @@ function PageReconciliation() {
       </Box>
       <Container maxW="full" bg="lightgrey">
         <Box m={5}>
-          <SimpleGrid columns={1} spacing={15}>
-            <Flex justify="center">
-              <Button disabled variant="ghost">
-                Filtre Matching :
-              </Button>
-              <SimpleGrid columns={6} spacing={6}>
-                <StyledButton type="3" matching={matching} setMatching={toggleMatching} />
-                <StyledButton type="4" matching={matching} setMatching={toggleMatching} />
-                <StyledButton type="5" matching={matching} setMatching={toggleMatching} />
-                <StyledButton type="6" matching={matching} setMatching={toggleMatching} />
+          <SimpleGrid columns={1}>
+            <Flex align="center" justify="center">
+              <Heading size="md" mr="3">
+                Filtre matching :
+              </Heading>
+              <SimpleGrid columns={6} spacing={4}>
+                <StyledButton type={1} matching={matching.type} toggleMatching={toggleMatching} />
+                <StyledButton type={2} matching={matching.type} toggleMatching={toggleMatching} />
+                <StyledButton type={3} matching={matching.type} toggleMatching={toggleMatching} />
+                <StyledButton type={4} matching={matching.type} toggleMatching={toggleMatching} />
+                <StyledButton type={5} matching={matching.type} toggleMatching={toggleMatching} />
+                <StyledButton type={6} matching={matching.type} toggleMatching={toggleMatching} />
               </SimpleGrid>
             </Flex>
           </SimpleGrid>
@@ -78,21 +100,39 @@ function PageReconciliation() {
         {coverage && (
           <>
             <Container maxW="full">
-              <Text as="u" fontSize="lg">
-                Formation parcoursup : matching {matching}* ({coverage.length} formations)
-              </Text>
+              <Flex align="center">
+                <Heading size="md">
+                  Formation parcoursup : matching <Tag colorScheme="purple">{matching.type}</Tag> — {coverage.total}{" "}
+                  formations disponibles
+                </Heading>
+                <Spacer />
+                {[...Array(coverage.pages).keys()].length === 1 ? (
+                  ""
+                ) : (
+                  <Flex align="center">
+                    <Text mr="6">Page:</Text>
+                    <Select
+                      variant="filled"
+                      value={matching.page}
+                      onChange={(e) => toggleMatching({ page: e.target.value })}
+                    >
+                      {[...Array(coverage.pages).keys()].map((key, index) => {
+                        const currentPage = key + 1;
+                        return <option value={currentPage}>{currentPage}</option>;
+                      })}
+                    </Select>
+                  </Flex>
+                )}
+              </Flex>
             </Container>
-
             <Accordion allowToggle>
-              {coverage.map((item, index) => (
-                <Item data={item} key={index} />
-              ))}
+              {coverage.docs.map((item, index) => {
+                return <Item data={item} key={index} />;
+              })}
             </Accordion>
           </>
         )}
       </Container>
     </Layout>
   );
-}
-
-export default PageReconciliation;
+};
