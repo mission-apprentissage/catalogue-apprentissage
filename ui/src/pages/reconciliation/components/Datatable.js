@@ -2,11 +2,9 @@ import React from "react";
 import { useTable } from "react-table";
 import { Box } from "@chakra-ui/react";
 
-const style = {};
-
 export default ({ headers, data }) => {
-  const headersData = React.useMemo(() => headers, []);
-  const tableData = React.useMemo(() => data);
+  const headersData = React.useMemo(() => headers, [headers]);
+  const tableData = React.useMemo(() => data, [data]);
 
   const table = useTable({ columns: headersData, data: tableData });
 
@@ -14,7 +12,7 @@ export default ({ headers, data }) => {
 
   return (
     <Box as="table" {...getTableProps()}>
-      <Box as="thead">
+      <Box bg="lightgray" as="thead">
         {headerGroups.map((headerGroup) => {
           return (
             <Box as="tr" {...headerGroup.getHeaderGroupProps()}>
