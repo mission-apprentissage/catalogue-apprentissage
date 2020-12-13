@@ -19,6 +19,7 @@ import {
   Button,
   Divider,
   Heading,
+  useToast,
 } from "@chakra-ui/react";
 
 import Datatable from "./Datatable";
@@ -27,10 +28,13 @@ import ModalAddEtablissement from "./addEtablissement";
 import { _post, _put } from "../../../common/httpClient";
 
 function reducer(state, values) {
-  console.log(values);
-  const { type, id } = values;
+  const { type, _id } = values;
+  if (type === "supprimer") {
+    return [...state];
+  }
+
   const currentState = [...state];
-  let index = currentState.findIndex((x) => x.id === id);
+  let index = currentState.findIndex((x) => x._id === _id);
 
   if (index !== -1) {
     currentState[index].type = type;
@@ -44,6 +48,8 @@ export default ({ data }) => {
   const [modalIsOpen, setModalIsOpen] = React.useState(false);
   const [mapping, setMapping] = React.useReducer(reducer, data.mapping_liaison_etablissement || []);
   const [matchingMnaEtablissement, setMatchingMnaEtablissement] = React.useState(data.matching_mna_etablissement);
+  const [updated, setUpdated] = React.useState(false);
+  const toast = useToast();
 
   const sameUai = new Set([data.uai_affilie, data.uai_composante, data.uai_gestionnaire]).size === 1 ? true : false;
   const sameEtab = new Set([data.libelle_uai_affilie, data.libelle_uai_composante]).size === 1 ? true : false;
@@ -61,7 +67,6 @@ export default ({ data }) => {
       _id: data._id,
       matching_mna_etablissement: [...listEtablissementFiltre, { ...etablissement, type }],
     });
-
     setMatchingMnaEtablissement(response.matching_mna_etablissement);
     setMapping({ _id, type });
   };
@@ -75,7 +80,7 @@ export default ({ data }) => {
       ],
     });
     setMatchingMnaEtablissement(response.matching_mna_etablissement);
-    setMapping({ type: newEtablissement.type, id: newEtablissement._id });
+    setMapping({ type: newEtablissement.type, _id: newEtablissement._id });
     toggle();
   };
 
@@ -91,7 +96,9 @@ export default ({ data }) => {
       mapping_etat_reconciliation: "OK",
     };
     const response = await _post("/api/coverage", payload);
-    setMapping(response.mapping_liaison_etablissement);
+    if (response) {
+      setUpdated(true);
+    }
   };
 
   return (
@@ -106,7 +113,7 @@ export default ({ data }) => {
             <Box>
               <DetailFormation data={data} sameEtab={sameEtab} sameUai={sameUai} />
             </Box>
-            <Box>{mapping && mapping.length > 0 && <Liaison data={mapping} />}</Box>
+            <Box>{data && mapping.length > 0 && <Liaison data={mapping} />}</Box>
             <Box>
               {data && matchingMnaEtablissement.length > 0 && (
                 <Etablissement data={matchingMnaEtablissement} onSelectChange={onSelectChange} />
@@ -128,6 +135,16 @@ export default ({ data }) => {
         </AccordionPanel>
       </AccordionItem>
       <ModalAddEtablissement isOpen={modalIsOpen} onClose={toggle} onSuccess={onSuccessModal} />
+      {updated && (
+        <Box
+          toast={toast({
+            description: "Enregistré avec succès !",
+            status: "success",
+            duration: 2000,
+            isClosable: true,
+          })}
+        />
+      )}
     </Box>
   );
 };
@@ -143,7 +160,7 @@ const Liaison = ({ data }) => {
         {data.map((item, index) => {
           return (
             <Box key={index}>
-              <Text> Type: {item.type}</Text>
+              <Heading size="md"> Type: {item.type}</Heading>
               <Text fontSize="sm">
                 Identifiant catalogue : <Text as="i">{item._id}</Text>
               </Text>
