@@ -63,7 +63,7 @@ export default ({ data }) => {
      * Upside —> will reduce the data size transfert, to heavy on matching 1 and 2.
      */
     const listEtablissementFiltre = matchingMnaEtablissement.filter((x) => x._id !== etablissement._id);
-    const response = await _put("/api/coverage", {
+    const response = await _put("/api/psformation", {
       _id: data._id,
       matching_mna_etablissement: [...listEtablissementFiltre, { ...etablissement, type }],
     });
@@ -72,7 +72,7 @@ export default ({ data }) => {
   };
 
   const onSuccessModal = async (newEtablissement) => {
-    const response = await _put("/api/coverage", {
+    const response = await _put("/api/psformation", {
       _id: data._id,
       matching_mna_etablissement: [
         ...matchingMnaEtablissement,
@@ -95,7 +95,7 @@ export default ({ data }) => {
       mapping_annee_formation: "ANNEE_FORMATION",
       mapping_etat_reconciliation: "OK",
     };
-    const response = await _post("/api/coverage", payload);
+    const response = await _post("/api/psformation", payload);
     if (response) {
       setUpdated(true);
     }
@@ -234,7 +234,7 @@ const DetailFormation = ({ data, sameEtab, sameUai }) => {
         </Box>
         <Box>
           <Text>CFD : {data.code_cfd}</Text>
-          <Text>Libellé long BCN</Text>
+          <Text>Libellé BCN : {data.infobcn}</Text>
         </Box>
       </Box>
       <Box bg={color} p={2} borderRadius={2} shadow="2px 2px 2px 0px rgba(0,0,0,0.1)">
