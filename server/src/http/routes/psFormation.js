@@ -2,7 +2,7 @@ const express = require("express");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { PsFormation } = require("../../common/model");
 
-module.exports = ({ catalogue }) => {
+module.exports = ({ catalogue, tableCorrespondance }) => {
   const router = express.Router();
 
   /**
@@ -12,9 +12,25 @@ module.exports = ({ catalogue }) => {
     "/",
     tryCatch(async (req, res) => {
       const { type, page } = req.query;
-      const data = await PsFormation.paginate({ matching_type: type }, { page });
+      let data = await PsFormation.paginate({ matching_type: type }, { page });
 
-      if (data) {
+      if (data.docs.length > 0) {
+        const result = await Promise.all(
+          data.docs.map(async (formation) => {
+            if (formation._doc.code_cfd) {
+              const infoCfd = await tableCorrespondance.getCfdInfo(formation.code_cfd);
+              let infobcn = infoCfd.result.intitule_long;
+
+              return {
+                ...formation._doc,
+                infobcn,
+              };
+            }
+            return formation;
+          })
+        );
+
+        data.docs = await result;
         res.json(data);
       } else {
         res.json({ message: `Item doesn't exist` });
