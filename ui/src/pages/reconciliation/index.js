@@ -41,7 +41,7 @@ export default () => {
 
   async function getCoverage({ type, page }) {
     setLoading(true);
-    const response = await _get(`/api/coverage?type=${type}&page=${page}`);
+    const response = await _get(`/api/psformation?type=${type}&page=${page}`);
     setCoverage(response);
     setLoading(false);
   }
@@ -95,7 +95,7 @@ export default () => {
             <Loading />
           </Layout>
         )}
-        {coverage && (
+        {coverage?.docs?.length > 0 ? (
           <>
             <Container maxW="full">
               <Flex align="center">
@@ -133,6 +133,10 @@ export default () => {
               })}
             </Accordion>
           </>
+        ) : (
+          <Flex justify="center">
+            <Text>Aucune données disponibles</Text>
+          </Flex>
         )}
       </Container>
     </Layout>
