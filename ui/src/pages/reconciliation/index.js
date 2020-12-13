@@ -39,8 +39,6 @@ export default () => {
     page: 1,
   });
 
-  console.log(matching);
-
   async function getCoverage({ type, page }) {
     setLoading(true);
     const response = await _get(`/api/coverage?type=${type}&page=${page}`);
@@ -69,7 +67,7 @@ export default () => {
         <Heading color="white">Page de réconciliation</Heading>
         <Text color="white" fontSize="sm">
           Interface de rapprochement des formations Parcoursup avec les établissements du{" "}
-          <a href="https://mna-admin-prod.netlify.app/" target="_blank">
+          <a href="https://mna-admin-prod.netlify.app/" rel="noopener noreferrer" target="_blank">
             catalogue
           </a>
         </Text>
@@ -118,7 +116,11 @@ export default () => {
                     >
                       {[...Array(coverage.pages).keys()].map((key, index) => {
                         const currentPage = key + 1;
-                        return <option value={currentPage}>{currentPage}</option>;
+                        return (
+                          <option key={index} value={currentPage}>
+                            {currentPage}
+                          </option>
+                        );
                       })}
                     </Select>
                   </Flex>
