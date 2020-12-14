@@ -51,8 +51,8 @@ export default ({ data }) => {
   const [updated, setUpdated] = React.useState(false);
   const toast = useToast();
 
-  const sameUai = new Set([data.uai_affilie, data.uai_composante, data.uai_gestionnaire]).size === 1 ? true : false;
-  const sameEtab = new Set([data.libelle_uai_affilie, data.libelle_uai_composante]).size === 1 ? true : false;
+  const sameUai = new Set([data.uai_affilie, data.uai_composante, data.uai_gestionnaire]).size === 1;
+  const sameEtab = new Set([data.libelle_uai_affilie, data.libelle_uai_composante]).size === 1;
 
   const toggle = () => setModalIsOpen(!modalIsOpen);
   const onSelectChange = async ({ _id, type, etablissement }) => {
@@ -199,7 +199,7 @@ const EnteteFormation = ({ data, sameUai }) => {
         {data.mapping_liaison_etablissement.length > 0 && (
           <GridItem>
             <Tag variant="solid" colorScheme="teal">
-              FORMATION RAPPROCHÉ
+              FORMATION RAPPROCHÉE
             </Tag>
           </GridItem>
         )}
