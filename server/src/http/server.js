@@ -23,6 +23,7 @@ const password = require("./routes/password");
 const stats = require("./routes/stats");
 const esSearch = require("./routes/esSearch");
 const esMultiSearchNoIndex = require("./routes/esMultiSearchNoIndex");
+const psFormation = require("./routes/psFormation");
 
 module.exports = async (components) => {
   const { db } = components;
@@ -52,6 +53,7 @@ module.exports = async (components) => {
   app.use("/api/admin", checkJwtToken, adminOnly, admin(components));
   app.use("/api/password", password(components));
   app.use("/api/stats", checkJwtToken, adminOnly, stats(components));
+  app.use("/api/psformation", psFormation(components));
 
   app.get(
     "/api",
