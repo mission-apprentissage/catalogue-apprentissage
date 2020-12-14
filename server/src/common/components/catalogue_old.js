@@ -58,6 +58,17 @@ const postEtablissement = async (payload) => {
   }
 };
 
+const updateEtablissement = async (id, payload) => {
+  try {
+    const response = await axios.put(`${apiEndpoint}/etablissement/${id}`, payload, {
+      headers: { Authorization: `${apiKey}` },
+    });
+    return response.data;
+  } catch (error) {
+    logger.error(error);
+  }
+};
+
 const deleteEtablissement = async (id) => {
   try {
     await axios.delete(`${apiEndpoint}/etablissement/${id}`, {
@@ -80,7 +91,7 @@ const updateInformation = async (id) => {
 const createEtablissement = async (data) => {
   let etablissement = await postEtablissement(data);
 
-  if (etablissement._id) {
+  if (etablissement?._id) {
     await updateInformation(etablissement._id);
     etablissement = await getEtablissementById(etablissement._id);
   } else {
@@ -101,5 +112,6 @@ module.exports = () => {
     deleteEtablissement: (opt) => deleteEtablissement(opt),
     updateInformation: (opt) => updateInformation(opt),
     createEtablissement: (opt) => createEtablissement(opt),
+    updateEtablissement: (id, payload) => updateEtablissement(id, payload),
   };
 };

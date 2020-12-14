@@ -1,5 +1,5 @@
 const logger = require("../../../common/logger");
-const { RcoFormation, ConvertedFormation, Report, RcoEtablissement } = require("../../../common/model/index");
+const { RcoFormation, ConvertedFormation, Report } = require("../../../common/model/index");
 const { mnaFormationUpdater } = require("../../../logic/updaters/mnaFormationUpdater");
 const report = require("../../../logic/reporter/report");
 const config = require("config");
@@ -54,34 +54,45 @@ const getEtablissementData = (rcoFormation, prefix) => {
     siret: rcoFormation[`${prefix}_siret`] || null,
     uai: rcoFormation[`${prefix}_uai`] || null,
     geo_coordonnees: rcoFormation[`${prefix}_geo_coordonnees`] || null,
-    tags: ["2021"],
+    ...getRCOEtablissementFields(rcoFormation, prefix),
   };
 };
 
-/**
- * store created etablissement to be able to run a diff on them later
- */
-const storeRcoEtablissement = async (mnaId, rcoFormation, prefix) => {
-  const data = {
-    id_mna_etablissement: mnaId,
-    id_rco_formation: `${rcoFormation.id_formation}|${rcoFormation.id_action}|${rcoFormation.id_certifinfo}`,
-    type: prefix,
-    rco_siret: rcoFormation[`${prefix}_siret`],
-    rco_uai: rcoFormation[`${prefix}_uai`],
-    rco_geo_coordonnees: rcoFormation[`${prefix}_geo_coordonnees`],
-    rco_adresse: rcoFormation[`${prefix}_adresse`],
-    rco_code_postal: rcoFormation[`${prefix}_code_postal`],
-    rco_code_commune_insee: rcoFormation[`${prefix}_code_insee`],
+const getRCOEtablissementFields = (rcoFormation, prefix) => {
+  return {
+    rco_uai: rcoFormation[`${prefix}_uai`] || null,
+    rco_geo_coordonnees: rcoFormation[`${prefix}_geo_coordonnees`] || null,
+    rco_code_postal: rcoFormation[`${prefix}_code_postal`] || null,
+    rco_adresse: rcoFormation[`${prefix}_adresse`] || null,
+    rco_code_insee_localite: rcoFormation[`${prefix}_code_insee`] || null,
   };
-  await new RcoEtablissement(data).save();
 };
 
+const areEtablissementFieldsEqual = (rcoFields, etablissement) => {
+  const keyMap = {
+    rco_uai: "uai",
+    rco_geo_coordonnees: "geo_coordonnees",
+    rco_code_postal: "code_postal",
+    rco_adresse: "adresse",
+    rco_code_insee_localite: "code_insee_localite",
+  };
+  return Object.entries(rcoFields).every(([key, value]) => etablissement[keyMap[key]] === value);
+};
+
+const areRCOFieldsEqual = (rcoFields, etablissement) => {
+  return Object.entries(rcoFields).every(([key, value]) => etablissement[key] === value);
+};
+
+const handledSirets = [];
+
 /**
- * Create etablissements if not found in  db
+ * Create or update etablissements
  */
-const createEtablissementsIfNeeded = async (rcoFormation) => {
-  const etablissementTypes = ["etablissement_gestionnaire", "etablissement_formateur", "etablissement_lieu_formation"];
-  const handledSirets = [];
+const createOrUpdateEtablissements = async (rcoFormation) => {
+  const etablissementTypes = [
+    "etablissement_gestionnaire",
+    "etablissement_formateur" /*, "etablissement_lieu_formation"*/,
+  ];
 
   await asyncForEach(etablissementTypes, async (type) => {
     const data = getEtablissementData(rcoFormation, type);
@@ -89,15 +100,36 @@ const createEtablissementsIfNeeded = async (rcoFormation) => {
       return;
     }
 
-    let etablissement = await catalogue().getEtablissement({ siret: data.siret });
-    if (!etablissement) {
-      etablissement = await catalogue().createEtablissement(data);
-      if (etablissement?._id) {
-        await storeRcoEtablissement(etablissement._id, rcoFormation, type);
-      }
+    const years = ["2020", "2021"];
+    const tags = years.filter((year) => rcoFormation.periode?.some((p) => p.includes(year)));
+    if (tags.length === 0) {
+      return;
     }
 
     handledSirets.push(data.siret);
+    let etablissement = await catalogue().getEtablissement({ siret: data.siret });
+    if (!etablissement?._id) {
+      await catalogue().createEtablissement({ ...data, tags });
+    } else {
+      let updates = {};
+      const rcoFields = getRCOEtablissementFields(rcoFormation, type);
+
+      if (!areEtablissementFieldsEqual(rcoFields, etablissement) && !areRCOFieldsEqual(rcoFields, etablissement)) {
+        updates = {
+          ...updates,
+          ...rcoFields,
+        };
+      }
+
+      const tagsToAdd = tags.filter((tag) => !etablissement?.tags?.includes(tag));
+      if (tagsToAdd.length > 0) {
+        updates.tags = [...etablissement.tags, ...tagsToAdd];
+      }
+
+      if (Object.keys(updates).length > 0) {
+        await catalogue().updateEtablissement(etablissement._id, updates);
+      }
+    }
   });
 };
 
@@ -127,7 +159,7 @@ const performConversion = async () => {
       docs.map(async (rcoFormation) => {
         computed += 1;
 
-        await createEtablissementsIfNeeded(rcoFormation._doc);
+        await createOrUpdateEtablissements(rcoFormation._doc);
 
         const mnaFormattedRcoFormation = formatToMnaFormation(rcoFormation._doc);
 
