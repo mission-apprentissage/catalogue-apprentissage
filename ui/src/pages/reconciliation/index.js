@@ -135,7 +135,7 @@ export default () => {
           </>
         ) : (
           <Flex justify="center">
-            <Text>Aucune données disponibles</Text>
+            <Text>Aucune donnée disponible</Text>
           </Flex>
         )}
       </Container>
