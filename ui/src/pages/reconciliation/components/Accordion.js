@@ -19,13 +19,14 @@ import {
   Button,
   Divider,
   Heading,
-  useToast,
 } from "@chakra-ui/react";
 
 import Datatable from "./Datatable";
 import ModalAddEtablissement from "./addEtablissement";
 
 import { _post, _put } from "../../../common/httpClient";
+
+import { useMutation } from "react-query";
 
 function reducer(state, values) {
   const { type, _id } = values;
@@ -44,62 +45,68 @@ function reducer(state, values) {
   }
 }
 
-export default ({ data }) => {
+export default ({ data, setToaster }) => {
   const [modalIsOpen, setModalIsOpen] = React.useState(false);
   const [mapping, setMapping] = React.useReducer(reducer, data.mapping_liaison_etablissement || []);
   const [matchingMnaEtablissement, setMatchingMnaEtablissement] = React.useState(data.matching_mna_etablissement);
-  const [updated, setUpdated] = React.useState(false);
-  const toast = useToast();
 
   const sameUai = new Set([data.uai_affilie, data.uai_composante, data.uai_gestionnaire]).size === 1;
   const sameEtab = new Set([data.libelle_uai_affilie, data.libelle_uai_composante]).size === 1;
 
   const toggle = () => setModalIsOpen(!modalIsOpen);
-  const onSelectChange = async ({ _id, type, etablissement }) => {
-    /**
-     * FILTER TO BE REMOVE ONCE THE MATCHIN SCRIPT REMOVES DUPLICATE MATCHED ETABLISSEMENT FOR A SINGLE PSFORMATION
-     * ADD TAGS (UAI_FORMATION / UAI_FORMATEUR/ UAI_GESTIONNAIRE) UN A SEPARATE OBJECT IF MULTIPLE MATCH ON THE SAME ESTABLISHMENT
-     *
-     * Upside —> will reduce the data size transfert, to heavy on matching 1 and 2.
-     */
-    const listEtablissementFiltre = matchingMnaEtablissement.filter((x) => x._id !== etablissement._id);
-    const response = await _put("/api/psformation", {
-      _id: data._id,
-      matching_mna_etablissement: [...listEtablissementFiltre, { ...etablissement, type }],
-    });
-    setMatchingMnaEtablissement(response.matching_mna_etablissement);
-    setMapping({ _id, type });
-  };
 
-  const onSuccessModal = async (newEtablissement) => {
-    const response = await _put("/api/psformation", {
-      _id: data._id,
-      matching_mna_etablissement: [
-        ...matchingMnaEtablissement,
-        { ...newEtablissement, dangerously_added_by_user: true },
-      ],
-    });
-    setMatchingMnaEtablissement(response.matching_mna_etablissement);
-    setMapping({ type: newEtablissement.type, _id: newEtablissement._id });
-    toggle();
-  };
-
-  const validate = async (e) => {
-    const payload = {
-      id: data._id,
-      mapping_liaison_etablissement: mapping,
-      mapping_code_cfd_formation: data.code_cfd,
-      mapping_code_postal_formation: data.code_postal,
-      mapping_id_formation_mna: "ID_MNA_FORMATION",
-      mapping_id_formation_ps: data._id,
-      mapping_annee_formation: "ANNEE_FORMATION",
-      mapping_etat_reconciliation: "OK",
-    };
-    const response = await _post("/api/psformation", payload);
-    if (response) {
-      setUpdated(true);
+  const onSelectChange = useMutation(
+    (payload) =>
+      _put("/api/psformation/etablissement", {
+        formation_id: data._id,
+        etablissement_id: payload.etablissement._id,
+        type: payload.type,
+      }),
+    {
+      onSuccess: (data, payload) => {
+        console.log("data", data);
+        setMatchingMnaEtablissement(data.matching_mna_etablissement);
+        setMapping({ _id: payload._id, type: payload.type });
+      },
+      onError: (error) => {
+        console.log(error);
+      },
     }
-  };
+  );
+
+  const onValidate = useMutation(
+    (payload) =>
+      _post("/api/psformation", {
+        id: data._id,
+        mapping_liaison_etablissement: mapping,
+        mapping_code_cfd_formation: data.code_cfd,
+        mapping_code_postal_formation: data.code_postal,
+        mapping_id_formation_mna: "ID_MNA_FORMATION",
+        mapping_id_formation_ps: data._id,
+        mapping_annee_formation: "ANNEE_FORMATION",
+        mapping_etat_reconciliation: "OK",
+      }),
+    {
+      onSuccess: () => {
+        setToaster(true);
+      },
+    }
+  );
+
+  const onSuccessModal = useMutation(
+    (payload) =>
+      _put("/api/psformation", {
+        _id: data._id,
+        matching_mna_etablissement: [...matchingMnaEtablissement, { ...payload, dangerously_added_by_user: true }],
+      }),
+    {
+      onSuccess: (data, payload) => {
+        setMatchingMnaEtablissement(data.matching_mna_etablissement);
+        setMapping({ type: payload.type, _id: payload._id });
+        toggle();
+      },
+    }
+  );
 
   return (
     <Box bg="white" m={3}>
@@ -126,7 +133,7 @@ export default ({ data }) => {
                 <Button colorScheme="teal" variant="outline" pl={4} marginRight={4} onClick={toggle}>
                   Ajouter un établissement
                 </Button>
-                <Button colorScheme="teal" variant="solid" onClick={validate}>
+                <Button colorScheme="teal" variant="solid" onClick={() => onValidate.mutate()}>
                   Valider
                 </Button>
               </Box>
@@ -135,16 +142,6 @@ export default ({ data }) => {
         </AccordionPanel>
       </AccordionItem>
       <ModalAddEtablissement isOpen={modalIsOpen} onClose={toggle} onSuccess={onSuccessModal} />
-      {updated && (
-        <Box
-          toast={toast({
-            description: "Enregistré avec succès !",
-            status: "success",
-            duration: 2000,
-            isClosable: true,
-          })}
-        />
-      )}
     </Box>
   );
 };
@@ -270,7 +267,7 @@ const DetailFormation = ({ data, sameEtab, sameUai }) => {
 };
 
 const Option = ({ _id, type, onSelectChange, etablissement }) => {
-  const handleChange = (e) => onSelectChange({ type: e.target.value, _id: _id, etablissement: etablissement });
+  const handleChange = (e) => onSelectChange.mutate({ type: e.target.value, _id: _id, etablissement: etablissement });
 
   return (
     <FormControl>
@@ -302,16 +299,28 @@ const Etablissement = ({ data, onSelectChange }) => {
     },
     {
       Cell: ({ value }) => {
-        return value.map((val) => {
+        return value.map((val, index) => {
           switch (val) {
             case "UAI_FORMATION":
-              return <Tag colorScheme="teal">{val}</Tag>;
+              return (
+                <Tag key={index} colorScheme="teal">
+                  {val}
+                </Tag>
+              );
 
             case "UAI_FORMATEUR":
-              return <Tag colorScheme="yellow">{val}</Tag>;
+              return (
+                <Tag key={index} colorScheme="yellow">
+                  {val}
+                </Tag>
+              );
 
             case "UAI_GESTIONNAIRE":
-              return <Tag colorScheme="red">{val}</Tag>;
+              return (
+                <Tag key={index} colorScheme="red">
+                  {val}
+                </Tag>
+              );
 
             default:
               return "";
