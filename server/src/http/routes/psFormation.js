@@ -1,6 +1,7 @@
 const express = require("express");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { PsFormation } = require("../../common/model");
+const mongoose = require("mongoose");
 
 module.exports = ({ catalogue, tableCorrespondance }) => {
   const router = express.Router();
@@ -48,6 +49,18 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
   );
 
   /**
+   * Update psFormation with reconciliated data
+   */
+  router.put(
+    "/",
+    tryCatch(async (req, res) => {
+      const data = req.body;
+      const response = await PsFormation.findByIdAndUpdate(data._id, { ...data }, { new: true });
+      res.json(response);
+    })
+  );
+
+  /**
    * Create establishment from UAI & SIRET, update its information and refetch.
    */
   router.post(
@@ -60,15 +73,27 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
   );
 
   /**
-   * Update psFormation with reconciliated data
+   * Update matching_mna_etablissement specific object
    */
-
   router.put(
-    "/",
+    "/etablissement",
     tryCatch(async (req, res) => {
-      const data = req.body;
-      const response = await PsFormation.findByIdAndUpdate(data._id, { ...data }, { new: true });
-      res.json(response);
+      const { formation_id, etablissement_id, type } = req.body;
+      const update = await PsFormation.updateOne(
+        { _id: formation_id },
+        { $set: { "matching_mna_etablissement.$[elem].type": type } },
+        { arrayFilters: [{ "elem._id": new mongoose.Types.ObjectId(etablissement_id) }] }
+      );
+      if (update) {
+        if (update.nModified === 1) {
+          const response = await PsFormation.findById({ _id: formation_id });
+          res.json(response);
+        } else {
+          res.json(update);
+        }
+      } else {
+        res.status(400).json(update);
+      }
     })
   );
 

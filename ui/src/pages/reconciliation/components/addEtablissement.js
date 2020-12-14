@@ -26,6 +26,7 @@ import {
 } from "@chakra-ui/react";
 
 import { _post } from "../../../common/httpClient";
+import { ObjectId } from "../../../common/utils/generateId";
 
 export default function TransitionsModal({ isOpen, onClose, onSuccess }) {
   const [etablissement, setEtablissement] = React.useState();
@@ -35,7 +36,7 @@ export default function TransitionsModal({ isOpen, onClose, onSuccess }) {
     uai: "",
     siret: "",
     type: "gestionnaire",
-    matching: "utilisateur",
+    matching: ["utilisateur"],
   });
 
   const handleSearch = async (e) => {
@@ -47,9 +48,10 @@ export default function TransitionsModal({ isOpen, onClose, onSuccess }) {
     setLoading(true);
 
     const response = await _post("/api/psformation/etablissement", values);
+    const objectId = ObjectId();
 
     if (response) {
-      setEtablissement(response);
+      setEtablissement({ ...response, objectId });
       setLoading(false);
     }
   };
@@ -128,7 +130,7 @@ export default function TransitionsModal({ isOpen, onClose, onSuccess }) {
               disabled={loading || !etablissement}
               colorScheme="blue"
               onClick={() =>
-                onSuccess({ ...etablissement, type: values.type, matched_uai: values.matching, uai: values.uai })
+                onSuccess.mutate({ ...etablissement, type: values.type, matched_uai: values.matching, uai: values.uai })
               }
             >
               Enregistrer
