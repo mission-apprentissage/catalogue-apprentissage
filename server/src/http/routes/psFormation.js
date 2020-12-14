@@ -33,7 +33,7 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
         data.docs = await result;
         res.json(data);
       } else {
-        res.json({ message: `Item doesn't exist` });
+        res.status(404).json({ message: `Item doesn't exist` });
       }
     })
   );
