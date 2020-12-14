@@ -209,56 +209,60 @@ const EnteteFormation = ({ data, sameUai }) => {
 };
 
 const DetailFormation = ({ data, sameEtab, sameUai }) => {
-  const color = "lightgray";
+  const style = {
+    color: "rgb(12 80 118 / 0.8)",
+    shadow: "2px 2px 2px 0px rgba(0,0,0,0.3)",
+    textColor: "white",
+  };
   return (
     <SimpleGrid columns={4} spacing={10}>
-      <Box bg={color} p={2} borderRadius={2} shadow="2px 2px 2px 0px rgba(0,0,0,0.1)">
+      <Box bg={style.color} p={2} borderRadius={2} shadow={style.shadow}>
         <Box>
-          <Text>Unité administrative immatriculée</Text>
+          <Text color={style.textColor}>Unité administrative immatriculée</Text>
         </Box>
         <Box>
           {sameUai ? (
-            <Text>{data.uai_affilie}</Text>
+            <Text color={style.textColor}>{data.uai_affilie}</Text>
           ) : (
             <>
-              <Text>Affilié : {data.uai_affilie}</Text>
-              <Text>Composante : {data.uai_composante}</Text>
-              <Text>Gestionnaire : {data.uai_gestionnaire}</Text>
+              <Text color={style.textColor}>Affilié : {data.uai_affilie}</Text>
+              <Text color={style.textColor}>Composante : {data.uai_composante}</Text>
+              <Text color={style.textColor}>Gestionnaire : {data.uai_gestionnaire}</Text>
             </>
           )}
         </Box>
       </Box>
-      <Box bg={color} p={2} borderRadius={2} shadow="2px 2px 2px 0px rgba(0,0,0,0.1)">
+      <Box bg={style.color} p={2} borderRadius={2} shadow={style.shadow}>
         <Box>
-          <Text>Code formation diplôme</Text>
+          <Text color={style.textColor}>Code formation diplôme</Text>
         </Box>
         <Box>
-          <Text>CFD : {data.code_cfd}</Text>
-          <Text>Libellé BCN : {data.infobcn}</Text>
+          <Text color={style.textColor}>CFD : {data.code_cfd}</Text>
+          <Text color={style.textColor}>Libellé BCN : {data.infobcn}</Text>
         </Box>
       </Box>
-      <Box bg={color} p={2} borderRadius={2} shadow="2px 2px 2px 0px rgba(0,0,0,0.1)">
+      <Box bg={style.color} p={2} borderRadius={2} shadow={style.shadow}>
         <Box>
-          <Text>Etablissements</Text>
+          <Text color={style.textColor}>Etablissements</Text>
         </Box>
         <Box>
           {sameEtab ? (
-            <Text>{data.libelle_uai_affilie}</Text>
+            <Text color={style.textColor}>{data.libelle_uai_affilie}</Text>
           ) : (
             <>
-              <Text>Affilié : {data.libelle_uai_affilie}</Text>
-              <Text>Composante : {data.libelle_uai_composante}</Text>
+              <Text color={style.textColor}>Affilié : {data.libelle_uai_affilie}</Text>
+              <Text color={style.textColor}>Composante : {data.libelle_uai_composante}</Text>
             </>
           )}
         </Box>
       </Box>
-      <Box bg={color} p={2} borderRadius={2} shadow="2px 2px 2px 0px rgba(0,0,0,0.1)">
+      <Box bg={style.color} p={2} borderRadius={2} shadow={style.shadow}>
         <Box>
-          <Text>Lieu de formation</Text>
+          <Text color={style.textColor}>Lieu de formation</Text>
         </Box>
         <Box>
-          <Text>{data.libelle_commune}</Text>
-          <Text>{data.code_postal}</Text>
+          <Text color={style.textColor}>{data.libelle_commune}</Text>
+          <Text color={style.textColor}>{data.code_postal}</Text>
         </Box>
       </Box>
     </SimpleGrid>
@@ -295,67 +299,59 @@ const Etablissement = ({ data, onSelectChange }) => {
       },
       id: "_id",
       Header: "Action",
-      // maxWidth: 100,
     },
     {
       Cell: ({ value }) => {
-        switch (value) {
-          case "UAI_FORMATION":
-            return <Tag colorScheme="teal">{value}</Tag>;
+        return value.map((val) => {
+          switch (val) {
+            case "UAI_FORMATION":
+              return <Tag colorScheme="teal">{val}</Tag>;
 
-          case "UAI_FORMATEUR":
-            return <Tag colorScheme="red">{value}</Tag>;
+            case "UAI_FORMATEUR":
+              return <Tag colorScheme="yellow">{val}</Tag>;
 
-          case "UAI_GESTIONNAIRE":
-            return <Tag colorScheme="yellow">{value}</Tag>;
+            case "UAI_GESTIONNAIRE":
+              return <Tag colorScheme="red">{val}</Tag>;
 
-          default:
-            return "";
-        }
+            default:
+              return "";
+          }
+        });
       },
-      accessor: ({ matched_uai }) => (matched_uai ? matched_uai : ""),
-      id: "matched_uai",
+      accessor: "matched_uai",
       Header: "Matching",
-      maxWidth: 100,
     },
     {
       accessor: ({ uai }) => (uai ? uai : ""),
       id: "uai",
       Header: "Uai",
-      maxWidth: 40,
     },
     {
       accessor: "siret",
       Header: "Siret",
-      maxWidth: 40,
     },
     {
       accessor: ({ raison_sociale }) => (raison_sociale ? raison_sociale : ""),
       id: "raison_sociale",
       Header: "Raison Social",
-      maxWidth: 40,
     },
     {
       accessor: ({ enseigne }) => (enseigne ? enseigne : ""),
       id: "enseigne",
       Header: "Enseigne",
-      maxWidth: 40,
     },
     {
       accessor: "adresse",
       Header: "Adresse",
-      maxWidth: 400,
     },
     {
       accessor: "naf_libelle",
       Header: "Nature",
-      maxWidth: 40,
     },
     {
       accessor: (value) => (value === true ? "Oui" : "Non"),
       id: "siege_social",
       Header: "Siège social",
-      maxWidth: 40,
     },
   ];
 
