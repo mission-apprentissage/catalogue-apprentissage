@@ -9,9 +9,9 @@ if (window.location.hostname.includes("catalogue.apprentissage.beta.gouv.fr")) {
 }
 
 ReactDOM.render(
-  // <React.StrictMode>
-  <App />,
-  // </React.StrictMode>,
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
   document.getElementById("root")
 );
 
