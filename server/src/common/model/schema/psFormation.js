@@ -104,6 +104,7 @@ const psFormationSchema = {
     default: null,
     description: "Code formation diplome extra de la formation",
   },
+  // SCRIPT COVERAGE
   matching_type: {
     type: String,
     default: null,
@@ -118,6 +119,45 @@ const psFormationSchema = {
     type: Array,
     default: null,
     description: "Etablissement du catalogue matchant les formation présente dans matching_mna_formation",
+  },
+  // PAGE DE RECONCILIATION
+  mapping_liaison_etablissement: {
+    type: Array,
+    default: null,
+    description: "Listes des établissements catalogue lié à la formation parcoursup",
+  },
+  mapping_code_cfd_formation: {
+    type: String,
+    default: null,
+    description:
+      "Code formation diplome de la formation catalogue rapproché. Valeur récupéré de la formation parcousup ou du catalogue des formations pour les matching 1*",
+  },
+  mapping_code_postal_formation: {
+    type: String,
+    default: null,
+    description:
+      "Code postal de la formation catalogue rapproché. Valeur récupéré de la formation parcousup ou du catalogue des formations pour les matching 1* ",
+  },
+  mapping_id_formation_mna: {
+    type: String,
+    default: null,
+    description: "Id de la formation catalogue",
+  },
+  mapping_id_formation_ps: {
+    type: String,
+    default: null,
+    description: "Id de la formation parcoursup",
+  },
+  mapping_annee_formation: {
+    type: String,
+    default: null,
+    description: "Année de la formation parcousup",
+  },
+  mapping_etat_reconciliation: {
+    type: String,
+    enum: ["OK", "OUVERTE"],
+    default: "OUVERTE",
+    description: "Etat de la réconciliation de la formation parcoursup avec le catalogue",
   },
 };
 module.exports = psFormationSchema;
