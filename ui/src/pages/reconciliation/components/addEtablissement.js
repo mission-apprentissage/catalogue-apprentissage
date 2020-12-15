@@ -35,7 +35,7 @@ export default function TransitionsModal({ isOpen, onClose, onSuccess }) {
     uai: "",
     siret: "",
     type: "gestionnaire",
-    matching: "utilisateur",
+    matching: ["utilisateur"],
   });
 
   const handleSearch = async (e) => {
@@ -51,6 +51,7 @@ export default function TransitionsModal({ isOpen, onClose, onSuccess }) {
     if (response) {
       setEtablissement(response);
       setLoading(false);
+      setValues({ ...values, siret: "", uai: "" });
     }
   };
 
@@ -128,7 +129,7 @@ export default function TransitionsModal({ isOpen, onClose, onSuccess }) {
               disabled={loading || !etablissement}
               colorScheme="blue"
               onClick={() =>
-                onSuccess({ ...etablissement, type: values.type, matched_uai: values.matching, uai: values.uai })
+                onSuccess.mutate({ ...etablissement, type: values.type, matched_uai: values.matching, uai: values.uai })
               }
             >
               Enregistrer

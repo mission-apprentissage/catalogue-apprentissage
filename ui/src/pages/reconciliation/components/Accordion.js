@@ -19,13 +19,14 @@ import {
   Button,
   Divider,
   Heading,
-  useToast,
 } from "@chakra-ui/react";
 
 import Datatable from "./Datatable";
 import ModalAddEtablissement from "./addEtablissement";
 
 import { _post, _put } from "../../../common/httpClient";
+
+import { useMutation } from "react-query";
 
 function reducer(state, values) {
   const { type, _id } = values;
@@ -44,62 +45,68 @@ function reducer(state, values) {
   }
 }
 
-export default ({ data }) => {
+export default ({ data, setToaster }) => {
   const [modalIsOpen, setModalIsOpen] = React.useState(false);
   const [mapping, setMapping] = React.useReducer(reducer, data.mapping_liaison_etablissement || []);
   const [matchingMnaEtablissement, setMatchingMnaEtablissement] = React.useState(data.matching_mna_etablissement);
-  const [updated, setUpdated] = React.useState(false);
-  const toast = useToast();
 
   const sameUai = new Set([data.uai_affilie, data.uai_composante, data.uai_gestionnaire]).size === 1;
   const sameEtab = new Set([data.libelle_uai_affilie, data.libelle_uai_composante]).size === 1;
 
   const toggle = () => setModalIsOpen(!modalIsOpen);
-  const onSelectChange = async ({ _id, type, etablissement }) => {
-    /**
-     * FILTER TO BE REMOVE ONCE THE MATCHIN SCRIPT REMOVES DUPLICATE MATCHED ETABLISSEMENT FOR A SINGLE PSFORMATION
-     * ADD TAGS (UAI_FORMATION / UAI_FORMATEUR/ UAI_GESTIONNAIRE) UN A SEPARATE OBJECT IF MULTIPLE MATCH ON THE SAME ESTABLISHMENT
-     *
-     * Upside —> will reduce the data size transfert, to heavy on matching 1 and 2.
-     */
-    const listEtablissementFiltre = matchingMnaEtablissement.filter((x) => x._id !== etablissement._id);
-    const response = await _put("/api/psformation", {
-      _id: data._id,
-      matching_mna_etablissement: [...listEtablissementFiltre, { ...etablissement, type }],
-    });
-    setMatchingMnaEtablissement(response.matching_mna_etablissement);
-    setMapping({ _id, type });
-  };
 
-  const onSuccessModal = async (newEtablissement) => {
-    const response = await _put("/api/psformation", {
-      _id: data._id,
-      matching_mna_etablissement: [
-        ...matchingMnaEtablissement,
-        { ...newEtablissement, dangerously_added_by_user: true },
-      ],
-    });
-    setMatchingMnaEtablissement(response.matching_mna_etablissement);
-    setMapping({ type: newEtablissement.type, _id: newEtablissement._id });
-    toggle();
-  };
-
-  const validate = async (e) => {
-    const payload = {
-      id: data._id,
-      mapping_liaison_etablissement: mapping,
-      mapping_code_cfd_formation: data.code_cfd,
-      mapping_code_postal_formation: data.code_postal,
-      mapping_id_formation_mna: "ID_MNA_FORMATION",
-      mapping_id_formation_ps: data._id,
-      mapping_annee_formation: "ANNEE_FORMATION",
-      mapping_etat_reconciliation: "OK",
-    };
-    const response = await _post("/api/psformation", payload);
-    if (response) {
-      setUpdated(true);
+  const onSelectChange = useMutation(
+    (payload) =>
+      _put("/api/psformation/etablissement", {
+        formation_id: data._id,
+        etablissement_id: payload.etablissement._id,
+        type: payload.type,
+      }),
+    {
+      onSuccess: (data, payload) => {
+        console.log("data", data);
+        setMatchingMnaEtablissement(data.matching_mna_etablissement);
+        setMapping({ _id: payload._id, type: payload.type });
+      },
+      onError: (error) => {
+        console.log(error);
+      },
     }
-  };
+  );
+
+  const onValidate = useMutation(
+    (payload) =>
+      _post("/api/psformation", {
+        id: data._id,
+        mapping_liaison_etablissement: mapping,
+        mapping_code_cfd_formation: data.code_cfd,
+        mapping_code_postal_formation: data.code_postal,
+        mapping_id_formation_mna: "ID_MNA_FORMATION",
+        mapping_id_formation_ps: data._id,
+        mapping_annee_formation: "ANNEE_FORMATION",
+        mapping_etat_reconciliation: "OK",
+      }),
+    {
+      onSuccess: () => {
+        setToaster(true);
+      },
+    }
+  );
+
+  const onSuccessModal = useMutation(
+    (payload) =>
+      _put("/api/psformation", {
+        formation_id: data._id,
+        etablissement: { ...payload, dangerously_added_by_user: true },
+      }),
+    {
+      onSuccess: (data, payload) => {
+        setMatchingMnaEtablissement(data.matching_mna_etablissement);
+        setMapping({ type: payload.type, _id: payload._id });
+        toggle();
+      },
+    }
+  );
 
   return (
     <Box bg="white" m={3}>
@@ -126,7 +133,7 @@ export default ({ data }) => {
                 <Button colorScheme="teal" variant="outline" pl={4} marginRight={4} onClick={toggle}>
                   Ajouter un établissement
                 </Button>
-                <Button colorScheme="teal" variant="solid" onClick={validate}>
+                <Button colorScheme="teal" variant="solid" onClick={() => onValidate.mutate()}>
                   Valider
                 </Button>
               </Box>
@@ -135,16 +142,6 @@ export default ({ data }) => {
         </AccordionPanel>
       </AccordionItem>
       <ModalAddEtablissement isOpen={modalIsOpen} onClose={toggle} onSuccess={onSuccessModal} />
-      {updated && (
-        <Box
-          toast={toast({
-            description: "Enregistré avec succès !",
-            status: "success",
-            duration: 2000,
-            isClosable: true,
-          })}
-        />
-      )}
     </Box>
   );
 };
@@ -209,56 +206,60 @@ const EnteteFormation = ({ data, sameUai }) => {
 };
 
 const DetailFormation = ({ data, sameEtab, sameUai }) => {
-  const color = "lightgray";
+  const style = {
+    color: "rgb(12 80 118 / 0.8)",
+    shadow: "2px 2px 2px 0px rgba(0,0,0,0.3)",
+    textColor: "white",
+  };
   return (
     <SimpleGrid columns={4} spacing={10}>
-      <Box bg={color} p={2} borderRadius={2} shadow="2px 2px 2px 0px rgba(0,0,0,0.1)">
+      <Box bg={style.color} p={2} borderRadius={2} shadow={style.shadow}>
         <Box>
-          <Text>Unité administrative immatriculée</Text>
+          <Text color={style.textColor}>Unité administrative immatriculée</Text>
         </Box>
         <Box>
           {sameUai ? (
-            <Text>{data.uai_affilie}</Text>
+            <Text color={style.textColor}>{data.uai_affilie}</Text>
           ) : (
             <>
-              <Text>Affilié : {data.uai_affilie}</Text>
-              <Text>Composante : {data.uai_composante}</Text>
-              <Text>Gestionnaire : {data.uai_gestionnaire}</Text>
+              <Text color={style.textColor}>Affilié : {data.uai_affilie}</Text>
+              <Text color={style.textColor}>Composante : {data.uai_composante}</Text>
+              <Text color={style.textColor}>Gestionnaire : {data.uai_gestionnaire}</Text>
             </>
           )}
         </Box>
       </Box>
-      <Box bg={color} p={2} borderRadius={2} shadow="2px 2px 2px 0px rgba(0,0,0,0.1)">
+      <Box bg={style.color} p={2} borderRadius={2} shadow={style.shadow}>
         <Box>
-          <Text>Code formation diplôme</Text>
+          <Text color={style.textColor}>Code formation diplôme</Text>
         </Box>
         <Box>
-          <Text>CFD : {data.code_cfd}</Text>
-          <Text>Libellé BCN : {data.infobcn}</Text>
+          <Text color={style.textColor}>CFD : {data.code_cfd}</Text>
+          <Text color={style.textColor}>Libellé BCN : {data.infobcn}</Text>
         </Box>
       </Box>
-      <Box bg={color} p={2} borderRadius={2} shadow="2px 2px 2px 0px rgba(0,0,0,0.1)">
+      <Box bg={style.color} p={2} borderRadius={2} shadow={style.shadow}>
         <Box>
-          <Text>Etablissements</Text>
+          <Text color={style.textColor}>Etablissements</Text>
         </Box>
         <Box>
           {sameEtab ? (
-            <Text>{data.libelle_uai_affilie}</Text>
+            <Text color={style.textColor}>{data.libelle_uai_affilie}</Text>
           ) : (
             <>
-              <Text>Affilié : {data.libelle_uai_affilie}</Text>
-              <Text>Composante : {data.libelle_uai_composante}</Text>
+              <Text color={style.textColor}>Affilié : {data.libelle_uai_affilie}</Text>
+              <Text color={style.textColor}>Composante : {data.libelle_uai_composante}</Text>
             </>
           )}
         </Box>
       </Box>
-      <Box bg={color} p={2} borderRadius={2} shadow="2px 2px 2px 0px rgba(0,0,0,0.1)">
+      <Box bg={style.color} p={2} borderRadius={2} shadow={style.shadow}>
         <Box>
-          <Text>Lieu de formation</Text>
+          <Text color={style.textColor}>Lieu de formation</Text>
         </Box>
         <Box>
-          <Text>{data.libelle_commune}</Text>
-          <Text>{data.code_postal}</Text>
+          <Text color={style.textColor}>{data.libelle_commune}</Text>
+          <Text color={style.textColor}>{data.code_postal}</Text>
         </Box>
       </Box>
     </SimpleGrid>
@@ -266,7 +267,7 @@ const DetailFormation = ({ data, sameEtab, sameUai }) => {
 };
 
 const Option = ({ _id, type, onSelectChange, etablissement }) => {
-  const handleChange = (e) => onSelectChange({ type: e.target.value, _id: _id, etablissement: etablissement });
+  const handleChange = (e) => onSelectChange.mutate({ type: e.target.value, _id: _id, etablissement: etablissement });
 
   return (
     <FormControl>
@@ -295,67 +296,71 @@ const Etablissement = ({ data, onSelectChange }) => {
       },
       id: "_id",
       Header: "Action",
-      // maxWidth: 100,
     },
     {
       Cell: ({ value }) => {
-        switch (value) {
-          case "UAI_FORMATION":
-            return <Tag colorScheme="teal">{value}</Tag>;
+        return value.map((val, index) => {
+          switch (val) {
+            case "UAI_FORMATION":
+              return (
+                <Tag key={index} colorScheme="teal">
+                  {val}
+                </Tag>
+              );
 
-          case "UAI_FORMATEUR":
-            return <Tag colorScheme="red">{value}</Tag>;
+            case "UAI_FORMATEUR":
+              return (
+                <Tag key={index} colorScheme="yellow">
+                  {val}
+                </Tag>
+              );
 
-          case "UAI_GESTIONNAIRE":
-            return <Tag colorScheme="yellow">{value}</Tag>;
+            case "UAI_GESTIONNAIRE":
+              return (
+                <Tag key={index} colorScheme="red">
+                  {val}
+                </Tag>
+              );
 
-          default:
-            return "";
-        }
+            default:
+              return "";
+          }
+        });
       },
-      accessor: ({ matched_uai }) => (matched_uai ? matched_uai : ""),
-      id: "matched_uai",
+      accessor: "matched_uai",
       Header: "Matching",
-      maxWidth: 100,
     },
     {
       accessor: ({ uai }) => (uai ? uai : ""),
       id: "uai",
       Header: "Uai",
-      maxWidth: 40,
     },
     {
       accessor: "siret",
       Header: "Siret",
-      maxWidth: 40,
     },
     {
       accessor: ({ raison_sociale }) => (raison_sociale ? raison_sociale : ""),
       id: "raison_sociale",
       Header: "Raison Social",
-      maxWidth: 40,
     },
     {
       accessor: ({ enseigne }) => (enseigne ? enseigne : ""),
       id: "enseigne",
       Header: "Enseigne",
-      maxWidth: 40,
     },
     {
       accessor: "adresse",
       Header: "Adresse",
-      maxWidth: 400,
     },
     {
       accessor: "naf_libelle",
       Header: "Nature",
-      maxWidth: 40,
     },
     {
       accessor: (value) => (value === true ? "Oui" : "Non"),
       id: "siege_social",
       Header: "Siège social",
-      maxWidth: 40,
     },
   ];
 
