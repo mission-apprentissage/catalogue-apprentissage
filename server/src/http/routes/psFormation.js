@@ -60,7 +60,6 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
         { $push: { matching_mna_etablissement: { ...etablissement, _id: new mongoose.Types.ObjectId() } } },
         { new: true }
       );
-      console.log(response);
       res.json(response);
     })
   );
@@ -97,7 +96,7 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
           res.json(update);
         }
       } else {
-        res.status(400).json(update);
+        res.status(400).json([]);
       }
     })
   );
