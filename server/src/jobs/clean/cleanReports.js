@@ -1,9 +1,10 @@
 const logger = require("../../common/logger");
 const { Report } = require("../../common/model");
+const config = require("config");
 
 const cleanReports = async () => {
   try {
-    const NB_DAYS_REPORTS_ARE_KEPT = 30;
+    const NB_DAYS_REPORTS_ARE_KEPT = Number(config?.retentionDays?.reports || 30);
 
     const date = new Date();
     date.setDate(date.getDate() - NB_DAYS_REPORTS_ARE_KEPT);
