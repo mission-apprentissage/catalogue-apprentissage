@@ -1,6 +1,7 @@
 const express = require("express");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { PsFormation } = require("../../common/model");
+const mongoose = require("mongoose");
 
 module.exports = ({ catalogue, tableCorrespondance }) => {
   const router = express.Router();
@@ -33,7 +34,7 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
         data.docs = await result;
         res.json(data);
       } else {
-        res.status(404).json({ message: `Item doesn't exist` });
+        res.status(404).json([]);
       }
     })
   );
@@ -48,7 +49,23 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
   );
 
   /**
-   * Create establishment from UAI & SIRET, update its information and refetch.
+   * Add one establishement to a psformation
+   */
+  router.put(
+    "/",
+    tryCatch(async (req, res) => {
+      const { formation_id, etablissement } = req.body;
+      const response = await PsFormation.findByIdAndUpdate(
+        formation_id,
+        { $push: { matching_mna_etablissement: { ...etablissement, _id: new mongoose.Types.ObjectId() } } },
+        { new: true }
+      );
+      res.json(response);
+    })
+  );
+
+  /**
+   * Create establishment
    */
   router.post(
     "/etablissement",
@@ -60,15 +77,27 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
   );
 
   /**
-   * Update psFormation with reconciliated data
+   * Update one establishment type in matching_mna_etablissement array
    */
-
   router.put(
-    "/",
+    "/etablissement",
     tryCatch(async (req, res) => {
-      const data = req.body;
-      const response = await PsFormation.findByIdAndUpdate(data._id, { ...data }, { new: true });
-      res.json(response);
+      const { formation_id, etablissement_id, type } = req.body;
+      const update = await PsFormation.updateOne(
+        { _id: formation_id },
+        { $set: { "matching_mna_etablissement.$[elem].type": type } },
+        { arrayFilters: [{ "elem._id": new mongoose.Types.ObjectId(etablissement_id) }] }
+      );
+      if (update) {
+        if (update.nModified === 1) {
+          const response = await PsFormation.findById({ _id: formation_id });
+          res.json(response);
+        } else {
+          res.json(update);
+        }
+      } else {
+        res.status(400).json([]);
+      }
     })
   );
 

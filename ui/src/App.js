@@ -12,6 +12,7 @@ import Users from "./pages/admin/Users";
 import PageReconciliation from "./pages/reconciliation";
 import ReportPage from "./pages/ReportPage";
 import { ChakraProvider } from "@chakra-ui/react";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 function PrivateRoute({ children, ...rest }) {
   let [auth] = useAuth();
@@ -26,32 +27,36 @@ function PrivateRoute({ children, ...rest }) {
   );
 }
 
+const queryClient = new QueryClient();
+
 export default () => {
   let [auth] = useAuth();
 
   return (
-    <ChakraProvider>
-      <div className="App">
-        <Router>
-          <Switch>
-            <PrivateRoute exact path="/">
-              <Layout>{auth && auth.permissions.isAdmin ? <DashboardPage /> : <HomePage />}</Layout>
-            </PrivateRoute>
-            {auth && auth.permissions.isAdmin && (
-              <PrivateRoute exact path="/admin/users">
-                <Layout>
-                  <Users />
-                </Layout>
+    <QueryClientProvider client={queryClient}>
+      <ChakraProvider>
+        <div className="App">
+          <Router>
+            <Switch>
+              <PrivateRoute exact path="/">
+                <Layout>{auth && auth.permissions.isAdmin ? <DashboardPage /> : <HomePage />}</Layout>
               </PrivateRoute>
-            )}
-            <Route exact path="/login" component={LoginPage} />
-            <Route exact path="/reset-password" component={ResetPasswordPage} />
-            <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
-            <Route exact path="/report" component={ReportPage} />
-            <Route exact path="/coverage" component={PageReconciliation} />
-          </Switch>
-        </Router>
-      </div>
-    </ChakraProvider>
+              {auth && auth.permissions.isAdmin && (
+                <PrivateRoute exact path="/admin/users">
+                  <Layout>
+                    <Users />
+                  </Layout>
+                </PrivateRoute>
+              )}
+              <Route exact path="/login" component={LoginPage} />
+              <Route exact path="/reset-password" component={ResetPasswordPage} />
+              <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
+              <Route exact path="/report" component={ReportPage} />
+              <Route exact path="/coverage" component={PageReconciliation} />
+            </Switch>
+          </Router>
+        </div>
+      </ChakraProvider>
+    </QueryClientProvider>
   );
 };
