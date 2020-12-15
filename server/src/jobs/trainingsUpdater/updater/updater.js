@@ -1,15 +1,15 @@
 const logger = require("../../../common/logger");
-const { MnaFormation, Report } = require("../../../common/model/index");
+const { Report } = require("../../../common/model/index");
 const { mnaFormationUpdater } = require("../../../logic/updaters/mnaFormationUpdater");
 const report = require("../../../logic/reporter/report");
 const config = require("config");
 
-const run = async (filter = {}) => {
-  const result = await performUpdates(filter);
-  await createReport(result);
+const run = async (model, filter = {}) => {
+  const result = await performUpdates(model, filter);
+  await createReport(model, result);
 };
 
-const performUpdates = async (filter = {}) => {
+const performUpdates = async (model, filter = {}) => {
   const invalidFormations = [];
   const notUpdatedFormations = [];
   const updatedFormations = [];
@@ -20,33 +20,33 @@ const performUpdates = async (filter = {}) => {
   let nbFormations = 10;
 
   while (computed < nbFormations) {
-    let { docs, total } = await MnaFormation.paginate(filter, { offset, limit });
+    let { docs, total } = await model.paginate(filter, { offset, limit });
     nbFormations = total;
 
     await Promise.all(
-      docs.map(async (mnaFormation) => {
+      docs.map(async (formation) => {
         computed += 1;
-        const { updates, formation: updatedFormation, error } = await mnaFormationUpdater(mnaFormation._doc);
+        const { updates, formation: updatedFormation, error } = await mnaFormationUpdater(formation._doc);
 
         if (error) {
-          mnaFormation.update_error = error;
-          await MnaFormation.findOneAndUpdate({ _id: mnaFormation._id }, mnaFormation, { new: true });
-          logger.error(`MnaFormation ${mnaFormation._id}/${mnaFormation.cfd} has error`, error);
-          invalidFormations.push({ id: mnaFormation._id, cfd: mnaFormation.cfd, error });
+          formation.update_error = error;
+          await model.findOneAndUpdate({ _id: formation._id }, formation, { new: true });
+          logger.error(`${model.modelName} ${formation._id}/${formation.cfd} has error`, error);
+          invalidFormations.push({ id: formation._id, cfd: formation.cfd, error });
           return;
         }
 
         if (!updates) {
-          logger.info(`MnaFormation ${mnaFormation._id} nothing to do`);
-          notUpdatedFormations.push({ id: mnaFormation._id, cfd: mnaFormation.cfd });
+          logger.info(`${model.modelName} ${formation._id} nothing to do`);
+          notUpdatedFormations.push({ id: formation._id, cfd: formation.cfd });
           return;
         }
 
         try {
           updatedFormation.last_update_at = Date.now();
-          await MnaFormation.findOneAndUpdate({ _id: mnaFormation._id }, updatedFormation, { new: true });
-          logger.info(`MnaFormation ${mnaFormation._id} has been updated`);
-          updatedFormations.push({ id: mnaFormation._id, cfd: mnaFormation.cfd, updates: JSON.stringify(updates) });
+          await model.findOneAndUpdate({ _id: formation._id }, updatedFormation, { new: true });
+          logger.info(`${model.modelName} ${formation._id} has been updated`);
+          updatedFormations.push({ id: formation._id, cfd: formation.cfd, updates: JSON.stringify(updates) });
         } catch (error) {
           logger.error(error);
         }
@@ -61,7 +61,7 @@ const performUpdates = async (filter = {}) => {
   return { invalidFormations, updatedFormations, notUpdatedFormations };
 };
 
-const createReport = async ({ invalidFormations, updatedFormations, notUpdatedFormations }) => {
+const createReport = async (model, { invalidFormations, updatedFormations, notUpdatedFormations }) => {
   const summary = {
     invalidCount: invalidFormations.length,
     updatedCount: updatedFormations.length,
@@ -93,7 +93,7 @@ const createReport = async ({ invalidFormations, updatedFormations, notUpdatedFo
     summary,
     link,
   };
-  const title = "[Mna Formations] Rapport de mise à jour";
+  const title = `[${model.modelName}] Rapport de mise à jour`;
   const to = config.reportMailingList.split(",");
   await report.generate(data, title, to, "trainingsUpdateReport");
 };

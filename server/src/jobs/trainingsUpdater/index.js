@@ -1,15 +1,18 @@
 const logger = require("../../common/logger");
 const updater = require("./updater/updater");
+const { MnaFormation, ConvertedFormation } = require("../../common/model/index");
 
 const { runScript } = require("../scriptWrapper");
 
 const trainingsUpdater = async () => {
   try {
-    logger.info(" -- Start of Mna formations updater -- ");
+    logger.info(" -- Start of training updater -- ");
 
-    await updater.run();
+    await updater.run(ConvertedFormation);
 
-    logger.info(" -- End of Mna formations updater -- ");
+    await updater.run(MnaFormation);
+
+    logger.info(" -- End of training updater -- ");
   } catch (err) {
     logger.error(err);
   }
