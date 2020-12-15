@@ -52,7 +52,6 @@ export default () => {
               <Route exact path="/reset-password" component={ResetPasswordPage} />
               <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
               <Route exact path="/report" component={ReportPage} />
-
               <Route exact path="/coverage" component={PageReconciliation} />
             </Switch>
           </Router>

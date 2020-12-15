@@ -29,9 +29,12 @@
     "coverage": "standalone=true node src/jobs/psCoverage/index.js",
     "coverage:import": "standalone=true node src/jobs/psCoverage/coverage/psimporter.js",
     "oneshot:psup": "standalone=true node src/jobs/oneshot/pSupTemporary/index.js",
+    "opco:importer": "standalone=true node src/jobs/opcoImporter/index.js",
+    "opco:importer:stats": "standalone=true node src/jobs/opcoImporter/stats.js",
     "es:index": "standalone=true node src/jobs/esIndex/index.js"
   },
   "dependencies": {
+    "@azure/storage-blob": "12.3.0",
     "@elastic/elasticsearch": "7.6.1",
     "axios": "0.20.0",
     "body-parser": "1.19.0",
