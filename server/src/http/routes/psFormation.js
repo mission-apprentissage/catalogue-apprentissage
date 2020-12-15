@@ -34,7 +34,7 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
         data.docs = await result;
         res.json(data);
       } else {
-        res.status(404).json({ message: `Item doesn't exist` });
+        res.status(404).json([]);
       }
     })
   );
@@ -49,19 +49,24 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
   );
 
   /**
-   * Update psFormation with reconciliated data
+   * Add one establishement to a psformation
    */
   router.put(
     "/",
     tryCatch(async (req, res) => {
-      const data = req.body;
-      const response = await PsFormation.findByIdAndUpdate(data._id, { ...data }, { new: true });
+      const { formation_id, etablissement } = req.body;
+      const response = await PsFormation.findByIdAndUpdate(
+        formation_id,
+        { $push: { matching_mna_etablissement: { ...etablissement, _id: new mongoose.Types.ObjectId() } } },
+        { new: true }
+      );
+      console.log(response);
       res.json(response);
     })
   );
 
   /**
-   * Create establishment from UAI & SIRET, update its information and refetch.
+   * Create establishment
    */
   router.post(
     "/etablissement",
@@ -73,7 +78,7 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
   );
 
   /**
-   * Update matching_mna_etablissement specific object
+   * Update one establishment type in matching_mna_etablissement array
    */
   router.put(
     "/etablissement",

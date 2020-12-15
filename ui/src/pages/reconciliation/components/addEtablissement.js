@@ -26,7 +26,6 @@ import {
 } from "@chakra-ui/react";
 
 import { _post } from "../../../common/httpClient";
-import { ObjectId } from "../../../common/utils/generateId";
 
 export default function TransitionsModal({ isOpen, onClose, onSuccess }) {
   const [etablissement, setEtablissement] = React.useState();
@@ -48,11 +47,11 @@ export default function TransitionsModal({ isOpen, onClose, onSuccess }) {
     setLoading(true);
 
     const response = await _post("/api/psformation/etablissement", values);
-    const objectId = ObjectId();
 
     if (response) {
-      setEtablissement({ ...response, objectId });
+      setEtablissement(response);
       setLoading(false);
+      setValues({ ...values, siret: "", uai: "" });
     }
   };
 

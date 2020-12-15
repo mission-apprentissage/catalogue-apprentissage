@@ -96,8 +96,8 @@ export default ({ data, setToaster }) => {
   const onSuccessModal = useMutation(
     (payload) =>
       _put("/api/psformation", {
-        _id: data._id,
-        matching_mna_etablissement: [...matchingMnaEtablissement, { ...payload, dangerously_added_by_user: true }],
+        formation_id: data._id,
+        etablissement: { ...payload, dangerously_added_by_user: true },
       }),
     {
       onSuccess: (data, payload) => {

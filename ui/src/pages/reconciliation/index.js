@@ -19,7 +19,7 @@ import { _get } from "../../common/httpClient";
 
 import { useQuery } from "react-query";
 
-const StyledButton = ({ type, matching, size, toggleMatching }) => {
+const StyledButton = ({ type, matching, size, toggleMatching, ...rest }) => {
   return (
     <Button
       color="white"
@@ -28,6 +28,7 @@ const StyledButton = ({ type, matching, size, toggleMatching }) => {
       size={size ? size : "sm"}
       onClick={() => toggleMatching({ type })}
       isActive={type === matching ? true : false}
+      {...rest}
     >
       {type}
     </Button>
@@ -42,9 +43,12 @@ export default () => {
     page: 1,
   });
 
-  const { data, isLoading } = useQuery(["coverage", { type: matching.type, page: matching.page }], ({ queryKey }) => {
-    return _get(`/api/psformation?type=${queryKey[1].type}&page=${queryKey[1].page}`);
-  });
+  const { data, isLoading, isError } = useQuery(
+    ["coverage", { type: matching.type, page: matching.page }],
+    ({ queryKey }) => {
+      return _get(`/api/psformation?type=${queryKey[1].type}&page=${queryKey[1].page}`);
+    }
+  );
 
   const toggleMatching = (values) =>
     setMatching({ type: values.type ? values.type : matching.type, page: values.page ? values.page : matching.page });
@@ -89,12 +93,17 @@ export default () => {
             </Flex>
           </SimpleGrid>
         </Box>
+        {isError && (
+          <Flex justify="center">
+            <Text>Aucune donnée disponible</Text>
+          </Flex>
+        )}
         {isLoading && (
           <Layout>
             <Loading />
           </Layout>
         )}
-        {data?.docs?.length > 0 ? (
+        {data?.docs?.length > 0 && (
           <>
             <Container maxW="full">
               <Flex align="center">
@@ -132,10 +141,6 @@ export default () => {
               })}
             </Accordion>
           </>
-        ) : (
-          <Flex justify="center">
-            <Text>Aucune donnée disponible</Text>
-          </Flex>
         )}
       </Container>
     </Layout>
