@@ -44,7 +44,7 @@ services:
   mongodb:
     image: mongo:4.2.6-bionic
     container_name: catalogue_apprentissage_mongodb
-    mem_limit: 8g
+    mem_limit: 1g
     restart: unless-stopped
     networks:
       - catalogue_apprentissage_network
