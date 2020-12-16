@@ -66,7 +66,7 @@ export default ({ data, setToaster }) => {
       onSuccess: (data, payload) => {
         console.log("data", data);
         setMatchingMnaEtablissement(data.matching_mna_etablissement);
-        setMapping({ _id: payload._id, type: payload.type });
+        setMapping({ id: payload._id, type: payload.type });
       },
       onError: (error) => {
         console.log(error);
