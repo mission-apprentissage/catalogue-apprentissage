@@ -1,8 +1,32 @@
 import React, { useMemo } from "react";
-import { useTable, useFlexLayout } from "react-table";
+import { useTable, useFlexLayout, useGlobalFilter, useAsyncDebounce } from "react-table";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList } from "react-window";
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Text, Input } from "@chakra-ui/react";
+
+// Define a default UI for filtering
+function GlobalFilter({ preGlobalFilteredRows, globalFilter, setGlobalFilter }) {
+  const count = preGlobalFilteredRows.length;
+  const [value, setValue] = React.useState(globalFilter);
+  const onChange = useAsyncDebounce((value) => {
+    setGlobalFilter(value || undefined);
+  }, 200);
+
+  return (
+    <Input
+      maxWidth="500px"
+      mb="8"
+      size="md"
+      variant="flushed"
+      value={value || ""}
+      onChange={(e) => {
+        setValue(e.target.value);
+        onChange(e.target.value);
+      }}
+      placeholder={`Recherche parmi ${count} résultats`}
+    />
+  );
+}
 
 const Table = ({ data, onRowClick }) => {
   const tableData = useMemo(() => data, []);
@@ -35,8 +59,21 @@ const Table = ({ data, onRowClick }) => {
     []
   );
 
-  const tableInstance = useTable({ columns: tableColumns, data: tableData, defaultColumn }, useFlexLayout);
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = tableInstance;
+  const tableInstance = useTable(
+    { columns: tableColumns, data: tableData, defaultColumn },
+    useFlexLayout,
+    useGlobalFilter
+  );
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    state,
+    preGlobalFilteredRows,
+    setGlobalFilter,
+  } = tableInstance;
 
   const Row = React.useCallback(
     ({ index, style }) => {
@@ -48,7 +85,7 @@ const Table = ({ data, onRowClick }) => {
           display="flex"
           key={row.id}
           data-rowindex={row.index}
-          onClick={() => onRowClick?.(index)}
+          onClick={() => onRowClick?.(row.index)}
           cursor={onRowClick ? "pointer" : undefined}
           _hover={{ bg: "gray.700" }}
           lineHeight="50px"
@@ -69,28 +106,35 @@ const Table = ({ data, onRowClick }) => {
   );
 
   return (
-    <Box {...getTableProps()} w="100%" flex={1} fontSize={19}>
-      <Box>
-        {headerGroups.map((headerGroup) => (
-          <Flex flex={1} {...headerGroup.getHeaderGroupProps({})} pb={4}>
-            {headerGroup.headers.map((column) => (
-              <Text as="div" {...column.getHeaderProps()} display="flex" textTransform="uppercase">
-                {column.render("Header")}
-              </Text>
-            ))}
-          </Flex>
-        ))}
+    <>
+      <GlobalFilter
+        preGlobalFilteredRows={preGlobalFilteredRows}
+        globalFilter={state.globalFilter}
+        setGlobalFilter={setGlobalFilter}
+      />
+      <Box {...getTableProps()} w="100%" flex={1} fontSize={19}>
+        <Box>
+          {headerGroups.map((headerGroup) => (
+            <Flex flex={1} {...headerGroup.getHeaderGroupProps({})} pb={4}>
+              {headerGroup.headers.map((column) => (
+                <Text as="div" {...column.getHeaderProps()} display="flex" textTransform="uppercase">
+                  {column.render("Header")}
+                </Text>
+              ))}
+            </Flex>
+          ))}
+        </Box>
+        <Box {...getTableBodyProps()}>
+          <AutoSizer disableHeight>
+            {({ width }) => (
+              <FixedSizeList height={850} itemCount={rows.length} itemSize={50} width={width} overscanCount={50}>
+                {Row}
+              </FixedSizeList>
+            )}
+          </AutoSizer>
+        </Box>
       </Box>
-      <Box {...getTableBodyProps()}>
-        <AutoSizer disableHeight>
-          {({ width }) => (
-            <FixedSizeList height={900} itemCount={rows.length} itemSize={50} width={width} overscanCount={50}>
-              {Row}
-            </FixedSizeList>
-          )}
-        </AutoSizer>
-      </Box>
-    </Box>
+    </>
   );
 };
 

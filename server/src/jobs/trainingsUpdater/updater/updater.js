@@ -31,13 +31,11 @@ const performUpdates = async (model, filter = {}) => {
         if (error) {
           formation.update_error = error;
           await model.findOneAndUpdate({ _id: formation._id }, formation, { new: true });
-          logger.error(`${model.modelName} ${formation._id}/${formation.cfd} has error`, error);
           invalidFormations.push({ id: formation._id, cfd: formation.cfd, error });
           return;
         }
 
         if (!updates) {
-          logger.info(`${model.modelName} ${formation._id} nothing to do`);
           notUpdatedFormations.push({ id: formation._id, cfd: formation.cfd });
           return;
         }
@@ -45,7 +43,6 @@ const performUpdates = async (model, filter = {}) => {
         try {
           updatedFormation.last_update_at = Date.now();
           await model.findOneAndUpdate({ _id: formation._id }, updatedFormation, { new: true });
-          logger.info(`${model.modelName} ${formation._id} has been updated`);
           updatedFormations.push({ id: formation._id, cfd: formation.cfd, updates: JSON.stringify(updates) });
         } catch (error) {
           logger.error(error);
