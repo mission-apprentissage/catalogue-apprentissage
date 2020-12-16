@@ -45,9 +45,19 @@ const RcoConversionTabs = ({ data, reportType, errors }) => {
   const showErrors = errors?.length > 0;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedData, setSelectedData] = useState();
+  const [title, setTitle] = useState();
 
   const onRowClick = (index) => {
+    setTitle("Updates");
     setSelectedData(data.converted?.[index]?.updates);
+    onOpen();
+  };
+
+  const onErrorClick = (index) => {
+    setTitle("Détail de l'erreur");
+    const error = { ...errors?.[index] } ?? {};
+    error.sirets = error.sirets && JSON.parse(error.sirets);
+    setSelectedData(JSON.stringify(error));
     onOpen();
   };
 
@@ -70,12 +80,12 @@ const RcoConversionTabs = ({ data, reportType, errors }) => {
           )}
           {showErrors && (
             <TabPanel>
-              <Table data={errors} />
+              <Table data={errors} onRowClick={onErrorClick} />
             </TabPanel>
           )}
         </TabPanels>
       </Ctabs>
-      <CodeModal isOpen={isOpen} onClose={onClose} title="Updates" code={selectedData} />
+      <CodeModal isOpen={isOpen} onClose={onClose} title={title} code={selectedData} />
     </>
   );
 };

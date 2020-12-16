@@ -6,7 +6,7 @@ import { monokai } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 const CodeModal = ({ isOpen, onClose, title, code, language = "json" }) => {
   let formattedCode = "";
   try {
-    formattedCode = code && JSON.stringify(JSON.parse(code), null, "\t");
+    formattedCode = code && JSON.stringify(JSON.parse(code), null, "  ");
   } catch (e) {
     console.error(e);
   }

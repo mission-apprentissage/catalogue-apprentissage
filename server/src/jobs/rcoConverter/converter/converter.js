@@ -177,6 +177,12 @@ const performConversion = async () => {
           invalidRcoFormations.push({
             id_rco_formation: mnaFormattedRcoFormation.id_rco_formation,
             cfd: mnaFormattedRcoFormation.cfd,
+            rncp: mnaFormattedRcoFormation.rncp_code,
+            sirets: JSON.stringify({
+              gestionnaire: mnaFormattedRcoFormation.etablissement_gestionnaire_siret,
+              formateur: mnaFormattedRcoFormation.etablissement_formateur_siret,
+              lieu_formation: mnaFormattedRcoFormation.lieu_formation_siret,
+            }),
             error,
           });
           return;

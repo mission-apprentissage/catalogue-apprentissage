@@ -85,7 +85,7 @@ const Table = ({ data, onRowClick }) => {
           display="flex"
           key={row.id}
           data-rowindex={row.index}
-          onClick={() => onRowClick?.(index)}
+          onClick={() => onRowClick?.(row.index)}
           cursor={onRowClick ? "pointer" : undefined}
           _hover={{ bg: "gray.700" }}
           lineHeight="50px"
