@@ -168,10 +168,6 @@ const performConversion = async () => {
         });
 
         if (error) {
-          logger.error(
-            `RcoFormation ${mnaFormattedRcoFormation.id_rco_formation}/${mnaFormattedRcoFormation.cfd} has error`,
-            error
-          );
           rcoFormation.conversion_error = error;
           await rcoFormation.save();
           invalidRcoFormations.push({
@@ -188,7 +184,6 @@ const performConversion = async () => {
           return;
         }
 
-        logger.info(`RcoFormation ${convertedFormation.id_rco_formation} has been converted`);
         rcoFormation.conversion_error = "success";
         await rcoFormation.save();
 
