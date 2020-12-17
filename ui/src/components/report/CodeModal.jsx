@@ -13,9 +13,9 @@ const CodeModal = ({ isOpen, onClose, title, code, language = "json" }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="full" scrollBehavior="inside">
       <ModalOverlay />
-      <ModalContent>
-        <ModalHeader color="grey.750">{title}</ModalHeader>
-        <ModalCloseButton color="grey.750" _focus={{ boxShadow: "none", outlineWidth: 0 }} />
+      <ModalContent bg="#272822">
+        <ModalHeader color="grey.100">{title}</ModalHeader>
+        <ModalCloseButton color="grey.100" _focus={{ boxShadow: "none", outlineWidth: 0 }} />
         <ModalBody>
           <SyntaxHighlighter language={language} style={monokai} showLineNumbers customStyle={{ textShadow: "none" }}>
             {formattedCode}
