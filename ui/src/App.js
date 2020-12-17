@@ -11,6 +11,8 @@ import ForgottenPasswordPage from "./pages/password/ForgottenPasswordPage";
 import Users from "./pages/admin/Users";
 import PageReconciliation from "./pages/reconciliation";
 import ReportPage from "./pages/ReportPage";
+import NotFoundPage from "./pages/404";
+
 import { QueryClient, QueryClientProvider } from "react-query";
 
 function PrivateRoute({ children, ...rest }) {
@@ -51,6 +53,8 @@ export default () => {
             <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
             <Route exact path="/report" component={ReportPage} />
             <Route exact path="/coverage" component={PageReconciliation} />
+
+            <Route component={NotFoundPage} />
           </Switch>
         </Router>
       </div>
