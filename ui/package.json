@@ -1,7 +1,10 @@
 {
-  "name": "ui",
+  "name": "mna-catalogue-apprentissage-ui",
+  "description": "[MNA] App catalogue apprentissage",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "author": "MNA",
+  "license": "MIT",
   "dependencies": {
     "@appbaseio/reactivesearch": "3.13.1",
     "@chakra-ui/react": "1.0.1",
