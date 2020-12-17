@@ -1,5 +1,3 @@
-import { extendTheme } from "@chakra-ui/react";
-
 const rootFontSizePx = 16;
 
 const colors = {
@@ -160,17 +158,6 @@ const fontSizes = {
   legal: "0.625rem",
 };
 
-const textStyles = {
-  h1: {
-    fontSize: "delta",
-    color: "brown.400",
-  },
-  h2: {
-    fontSize: "epsilon",
-    color: "purple.400",
-  },
-};
-
 const fonts = {
   body: "Inter",
 };
@@ -203,6 +190,4 @@ const space = {
   "15w": `${120 / rootFontSizePx}rem`,
 };
 
-const theme = extendTheme({ fonts, colors, styles, fontSizes, textStyles, space });
-
-export default theme;
+export { fonts, colors, styles, fontSizes, space };

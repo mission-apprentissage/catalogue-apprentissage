@@ -8,7 +8,7 @@ const Summary = ({ data, reportType }) => {
   switch (reportType) {
     case REPORT_TYPE.RCO_CONVERSION:
       return (
-        <Text fontSize={20}>
+        <Text fontSize={["epsilon", "gamma"]}>
           Résumé des conversions de la base RCO vers la base MNA :<br />
           <br />
           {summary.convertedCount} Formation(s) convertie(s)
@@ -19,7 +19,7 @@ const Summary = ({ data, reportType }) => {
 
     case REPORT_TYPE.TRAININGS_UPDATE:
       return (
-        <Text fontSize={20}>
+        <Text fontSize={["epsilon", "gamma"]}>
           Résumé des mises à jour :<br />
           <br />
           {summary.updatedCount} Formation(s) mise(s) à jour
@@ -32,7 +32,7 @@ const Summary = ({ data, reportType }) => {
 
     case REPORT_TYPE.RCO_DIFF:
       return (
-        <Text fontSize={20}>
+        <Text fontSize={["epsilon", "gamma"]}>
           Résumé du différentiel entre les formations RCO converties et la base MNA :<br />
           <br />
           {summary.matchingCount} Formation(s) qui matchent avec la base MNA
@@ -43,7 +43,7 @@ const Summary = ({ data, reportType }) => {
 
     case REPORT_TYPE.RCO_IMPORT:
       return (
-        <Text fontSize={20}>
+        <Text fontSize={["epsilon", "gamma"]}>
           Résumé de l'importation :<br />
           <br />
           Données reçues du webservice RCO :<br />

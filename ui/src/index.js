@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { ChakraProvider } from "@chakra-ui/react";
-import theme from "./theme";
+import theme from "./theme/index";
 
 if (
   window.location.hostname.includes("catalogue.apprentissage.beta.gouv.fr") &&
