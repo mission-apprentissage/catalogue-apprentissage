@@ -99,9 +99,18 @@ const ReportPage = () => {
   return (
     <Box bg="grey.750">
       {errorFetchData && (
-        <Text color="grey.100" px={[8, 24]} py={3}>
-          Erreur lors du chargement des données
-        </Text>
+        <>
+          <Text color="grey.100" px={[8, 24]} py={3}>
+            Erreur lors du chargement des données
+          </Text>
+          {errorFetchData?.statusCode === 404 && (
+            <Box bg="white">
+              <Text color="grey.750" px={[8, 24]} py={3}>
+                Ce rapport est introuvable
+              </Text>
+            </Box>
+          )}
+        </>
       )}
       {!errorFetchData && !report && (
         <Text color="grey.100" px={[8, 24]} py={3}>

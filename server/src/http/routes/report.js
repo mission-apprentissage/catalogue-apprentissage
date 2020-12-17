@@ -31,7 +31,7 @@ module.exports = () => {
       const { type, date, page = 1 } = req.query;
 
       const data = await Report.paginate({ type, date }, { page, limit: 1 });
-      if (data) {
+      if (data?.docs?.[0]) {
         return res.json({
           report: data.docs[0],
           pagination: {
