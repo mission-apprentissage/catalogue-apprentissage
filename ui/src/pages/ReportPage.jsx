@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import queryString from "query-string";
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Text, Heading } from "@chakra-ui/react";
 import { useFetch } from "../common/hooks/useFetch";
 import { Tabs } from "../components/report/Tabs";
 import { REPORT_TYPE, reportTypes } from "../constants/report";
@@ -97,25 +97,27 @@ const ReportPage = () => {
   const reportTitle = getReportTitle(reportType);
 
   return (
-    <Box bg="#2b2b2b">
+    <Box bg="grey.750">
       {errorFetchData && (
-        <Text color="#F8F8F8" px={24} py={3}>
+        <Text color="grey.100" px={[8, 24]} py={3}>
           Erreur lors du chargement des données
         </Text>
       )}
       {!errorFetchData && !report && (
-        <Text color="#F8F8F8" px={24} py={3}>
+        <Text color="grey.100" px={[8, 24]} py={3}>
           Chargement des données...
         </Text>
       )}
 
       {report?.data && (
         <>
-          <Box bg="#E5EDEF" w="100%" py={8} px={24} color="#19414C">
-            <Text fontSize={36}>{reportTitle}</Text>
-            <Text fontSize={28} pt={2}>
+          <Box bg="#E5EDEF" w="100%" py={[4, 8]} px={[8, 24]} color="#19414C">
+            <Heading fontFamily="Marianne" fontWeight="400" fontSize={["beta", "alpha"]} as="h1">
+              {reportTitle}
+            </Heading>
+            <Heading fontFamily="Marianne" fontWeight="400" fontSize={["gamma", "beta"]} pt={2} lineHeight="1.5">
               {dateLabel}
-            </Text>
+            </Heading>
           </Box>
           <Box>
             <Tabs data={report.data} reportType={reportType} errors={responseErrors?.data?.errors} />

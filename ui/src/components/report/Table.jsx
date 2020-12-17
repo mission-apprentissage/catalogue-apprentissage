@@ -87,9 +87,10 @@ const Table = ({ data, onRowClick }) => {
           data-rowindex={row.index}
           onClick={() => onRowClick?.(row.index)}
           cursor={onRowClick ? "pointer" : undefined}
-          _hover={{ bg: "gray.700" }}
+          _hover={{ bg: "grey.700" }}
           lineHeight="50px"
-          borderBottom="1px solid #6A6A6A"
+          borderBottom="1px solid"
+          borderColor="grey.600"
           style={style}
         >
           {row.cells.map((cell) => {
@@ -112,7 +113,7 @@ const Table = ({ data, onRowClick }) => {
         globalFilter={state.globalFilter}
         setGlobalFilter={setGlobalFilter}
       />
-      <Box {...getTableProps()} w="100%" flex={1} fontSize={19}>
+      <Box {...getTableProps()} w="100%" flex={1} fontSize="delta">
         <Box>
           {headerGroups.map((headerGroup) => (
             <Flex flex={1} {...headerGroup.getHeaderGroupProps({})} pb={4}>

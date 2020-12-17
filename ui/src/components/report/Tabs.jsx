@@ -1,44 +1,9 @@
 import React, { useState } from "react";
-import {
-  chakra,
-  Tab as Ctab,
-  TabList as CtabList,
-  TabPanel,
-  TabPanels as CtabPanels,
-  Tabs as Ctabs,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { Tab, TabList, TabPanel, TabPanels, Tabs as Ctabs, useDisclosure } from "@chakra-ui/react";
 import { Summary } from "./Summary";
 import { Table } from "./Table";
 import { CodeModal } from "./CodeModal";
 import { REPORT_TYPE } from "../../constants/report";
-
-const Tab = chakra(Ctab, {
-  baseStyle: {
-    fontSize: 20,
-    _focus: { boxShadow: "none", outlineWidth: 0 },
-    color: "#9C9C9C",
-    _selected: { color: "#1E1E1E", borderBottom: "4px solid #2B2B2B" },
-  },
-});
-
-const TabList = chakra(CtabList, {
-  baseStyle: {
-    px: 24,
-    border: "none",
-    bg: "#E5EDEF",
-    color: "#2B2B2B",
-    pb: "2px",
-  },
-});
-
-const TabPanels = chakra(CtabPanels, {
-  baseStyle: {
-    px: 24,
-    color: "#F8F8F8",
-    h: 1000,
-  },
-});
 
 const RcoConversionTabs = ({ data, reportType, errors }) => {
   const { summary } = data;
