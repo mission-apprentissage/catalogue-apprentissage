@@ -10,7 +10,7 @@
   */
 
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
-const _ = require("lodash");
+const uniqBy = require("lodash/uniqBy");
 
 const { PsFormation } = require("../../../common/model");
 
@@ -48,7 +48,7 @@ module.exports = async () => {
 
         if (etablissement.length === 0) return;
 
-        let unique = _.uniqBy(etablissement, (x) => x.etablissement_id);
+        let unique = uniqBy(etablissement, (x) => x.etablissement_id);
 
         // replace matching with new filtered establishment
         await PsFormation.findByIdAndUpdate(_id, { matching_mna_etablissement: unique });
