@@ -16,53 +16,50 @@ const { PsFormation } = require("../../../common/model");
 
 module.exports = async () => {
   const data = await PsFormation.find({
-    libelle_uai_affilie: { $regex: ".*agricole*." },
+    $and: [
+      { libelle_uai_composante: { $regex: "agricole|agriculture" } },
+      { libelle_uai_affilie: { $regex: "agricole|agriculture" } },
+    ],
     matching_type: { $ne: "6" },
   }).lean();
 
   console.log("A TRAITER", data.length);
 
-  const agricole = RegExp("agricole|agriculture", "g");
   const formateur = RegExp("CFAA|CFA AGRICOLE", "g");
   const gestionnaire = RegExp(
     "LEGTA|ETABLISSEMENT PUBLIC LOCAL D'ENSEIGNEMENT ET DE FORMATION PROFESSIONNELLE AGRICOLE",
     "g"
   );
 
-  await asyncForEach(
-    data,
-    async ({ _id, libelle_uai_composante, libelle_uai_affilie, matching_mna_etablissement, ...rest }) => {
-      if (agricole.test(libelle_uai_composante) || agricole.test(libelle_uai_affilie)) {
-        let etablissement = [];
+  await asyncForEach(data, async (formation) => {
+    let etablissement = [];
 
-        await asyncForEach(matching_mna_etablissement, async (etab) => {
-          if (gestionnaire.test(etab.raison_social) || formateur.test(etab.enseigne)) {
-            console.log("gestionnaire", rest._id, rest.id_mna_etablissement);
-            etablissement.push({ ...etab, type: "gestionnaire" });
-          }
-          if (formateur.test(etab.raison_social) || formateur.test(etab.enseigne)) {
-            console.log("formateur", rest._id, rest.id_mna_etablissement);
-            etablissement.push({ ...etab, type: "formateur" });
-          }
-        });
-
-        if (etablissement.length === 0) return;
-
-        let unique = uniqBy(etablissement, (x) => x.etablissement_id);
-
-        // replace matching with new filtered establishment
-        await PsFormation.findByIdAndUpdate(_id, { matching_mna_etablissement: unique });
-
-        // update mapping_liaison_etablissement for each unique etablissement
-        // following Anne approval on slack (16/12/2020 20h14), if an establishment is both, add both
-        Promise.all(
-          unique.map(async (item) => {
-            await PsFormation.findByIdAndUpdate(_id, {
-              mapping_liaison_etablissement: { id: item.id_mna_etablissement, type: item.type },
-            });
-          })
-        );
+    await asyncForEach(formation.matching_mna_etablissement, async (etab) => {
+      if (gestionnaire.test(etab.raison_social) || formateur.test(etab.enseigne)) {
+        console.log("gestionnaire", formation._id, etab.id_mna_etablissement);
+        etablissement.push({ ...etab, type: "gestionnaire" });
       }
-    }
-  );
+      if (formateur.test(etab.raison_social) || formateur.test(etab.enseigne)) {
+        console.log("formateur", formation._id, etab.id_mna_etablissement);
+        etablissement.push({ ...etab, type: "formateur" });
+      }
+    });
+
+    if (etablissement.length === 0) return;
+
+    let unique = uniqBy(etablissement, (x) => x.id_mna_etablissement);
+
+    // replace matching with new filtered establishment
+    await PsFormation.findByIdAndUpdate(formation._id, { matching_mna_etablissement: unique });
+
+    // update mapping_liaison_etablissement for each unique etablissement
+    // following Anne approval on slack (16/12/2020 20h14), if an establishment is both, add both
+    Promise.all(
+      unique.map(async (item) => {
+        await PsFormation.findByIdAndUpdate(formation._id, {
+          mapping_liaison_etablissement: { id: item.id_mna_etablissement, type: item.type },
+        });
+      })
+    );
+  });
 };
