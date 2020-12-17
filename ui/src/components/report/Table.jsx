@@ -5,7 +5,7 @@ import { FixedSizeList } from "react-window";
 import { Box, Flex, Text, Input } from "@chakra-ui/react";
 
 // Define a default UI for filtering
-function GlobalFilter({ preGlobalFilteredRows, globalFilter, setGlobalFilter }) {
+function GlobalFilter({ preGlobalFilteredRows, globalFilter, setGlobalFilter, filteredCount }) {
   const count = preGlobalFilteredRows.length;
   const [value, setValue] = React.useState(globalFilter);
   const onChange = useAsyncDebounce((value) => {
@@ -13,18 +13,24 @@ function GlobalFilter({ preGlobalFilteredRows, globalFilter, setGlobalFilter }) 
   }, 200);
 
   return (
-    <Input
-      maxWidth="500px"
-      mb="8"
-      size="md"
-      variant="flushed"
-      value={value || ""}
-      onChange={(e) => {
-        setValue(e.target.value);
-        onChange(e.target.value);
-      }}
-      placeholder={`Recherche parmi ${count} résultats`}
-    />
+    <Flex mb="8">
+      <Input
+        flex={1}
+        maxWidth="500px"
+        variant="flushed"
+        value={value || ""}
+        onChange={(e) => {
+          setValue(e.target.value);
+          onChange(e.target.value);
+        }}
+        placeholder={`Rechercher parmi les ${count} résultats`}
+      />
+      {filteredCount !== count && (
+        <Text flex={1} px={8} alignSelf="center">
+          {filteredCount} résultat(s) trouvé(s)
+        </Text>
+      )}
+    </Flex>
   );
 }
 
@@ -87,9 +93,10 @@ const Table = ({ data, onRowClick }) => {
           data-rowindex={row.index}
           onClick={() => onRowClick?.(row.index)}
           cursor={onRowClick ? "pointer" : undefined}
-          _hover={{ bg: "gray.700" }}
+          _hover={{ bg: "grey.700" }}
           lineHeight="50px"
-          borderBottom="1px solid #6A6A6A"
+          borderBottom="1px solid"
+          borderColor="grey.600"
           style={style}
         >
           {row.cells.map((cell) => {
@@ -111,8 +118,9 @@ const Table = ({ data, onRowClick }) => {
         preGlobalFilteredRows={preGlobalFilteredRows}
         globalFilter={state.globalFilter}
         setGlobalFilter={setGlobalFilter}
+        filteredCount={rows.length}
       />
-      <Box {...getTableProps()} w="100%" flex={1} fontSize={19}>
+      <Box {...getTableProps()} w="100%" flex={1} fontSize="delta">
         <Box>
           {headerGroups.map((headerGroup) => (
             <Flex flex={1} {...headerGroup.getHeaderGroupProps({})} pb={4}>

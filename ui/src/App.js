@@ -11,7 +11,8 @@ import ForgottenPasswordPage from "./pages/password/ForgottenPasswordPage";
 import Users from "./pages/admin/Users";
 import PageReconciliation from "./pages/reconciliation";
 import ReportPage from "./pages/ReportPage";
-import { ChakraProvider } from "@chakra-ui/react";
+import NotFoundPage from "./pages/404";
+
 import { QueryClient, QueryClientProvider } from "react-query";
 
 function PrivateRoute({ children, ...rest }) {
@@ -34,29 +35,29 @@ export default () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ChakraProvider>
-        <div className="App">
-          <Router>
-            <Switch>
-              <PrivateRoute exact path="/">
-                <Layout>{auth && auth.permissions.isAdmin ? <DashboardPage /> : <HomePage />}</Layout>
+      <div className="App">
+        <Router>
+          <Switch>
+            <PrivateRoute exact path="/">
+              <Layout>{auth && auth.permissions.isAdmin ? <DashboardPage /> : <HomePage />}</Layout>
+            </PrivateRoute>
+            {auth && auth.permissions.isAdmin && (
+              <PrivateRoute exact path="/admin/users">
+                <Layout>
+                  <Users />
+                </Layout>
               </PrivateRoute>
-              {auth && auth.permissions.isAdmin && (
-                <PrivateRoute exact path="/admin/users">
-                  <Layout>
-                    <Users />
-                  </Layout>
-                </PrivateRoute>
-              )}
-              <Route exact path="/login" component={LoginPage} />
-              <Route exact path="/reset-password" component={ResetPasswordPage} />
-              <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
-              <Route exact path="/report" component={ReportPage} />
-              <Route exact path="/coverage" component={PageReconciliation} />
-            </Switch>
-          </Router>
-        </div>
-      </ChakraProvider>
+            )}
+            <Route exact path="/login" component={LoginPage} />
+            <Route exact path="/reset-password" component={ResetPasswordPage} />
+            <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
+            <Route exact path="/report" component={ReportPage} />
+            <Route exact path="/coverage" component={PageReconciliation} />
+
+            <Route component={NotFoundPage} />
+          </Switch>
+        </Router>
+      </div>
     </QueryClientProvider>
   );
 };
