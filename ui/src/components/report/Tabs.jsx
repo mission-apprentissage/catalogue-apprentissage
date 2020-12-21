@@ -1,53 +1,28 @@
 import React, { useState } from "react";
-import {
-  chakra,
-  Tab as Ctab,
-  TabList as CtabList,
-  TabPanel,
-  TabPanels as CtabPanels,
-  Tabs as Ctabs,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { Tab, TabList, TabPanel, TabPanels, Tabs as Ctabs, useDisclosure } from "@chakra-ui/react";
 import { Summary } from "./Summary";
 import { Table } from "./Table";
 import { CodeModal } from "./CodeModal";
 import { REPORT_TYPE } from "../../constants/report";
-
-const Tab = chakra(Ctab, {
-  baseStyle: {
-    fontSize: 20,
-    _focus: { boxShadow: "none", outlineWidth: 0 },
-    color: "#9C9C9C",
-    _selected: { color: "#1E1E1E", borderBottom: "4px solid #2B2B2B" },
-  },
-});
-
-const TabList = chakra(CtabList, {
-  baseStyle: {
-    px: 24,
-    border: "none",
-    bg: "#E5EDEF",
-    color: "#2B2B2B",
-    pb: "2px",
-  },
-});
-
-const TabPanels = chakra(CtabPanels, {
-  baseStyle: {
-    px: 24,
-    color: "#F8F8F8",
-    h: 1000,
-  },
-});
 
 const RcoConversionTabs = ({ data, reportType, errors }) => {
   const { summary } = data;
   const showErrors = errors?.length > 0;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedData, setSelectedData] = useState();
+  const [title, setTitle] = useState();
 
   const onRowClick = (index) => {
+    setTitle("Updates");
     setSelectedData(data.converted?.[index]?.updates);
+    onOpen();
+  };
+
+  const onErrorClick = (index) => {
+    setTitle("Détail de l'erreur");
+    const error = { ...errors?.[index] } ?? {};
+    error.sirets = error.sirets && JSON.parse(error.sirets);
+    setSelectedData(JSON.stringify(error));
     onOpen();
   };
 
@@ -70,12 +45,12 @@ const RcoConversionTabs = ({ data, reportType, errors }) => {
           )}
           {showErrors && (
             <TabPanel>
-              <Table data={errors} />
+              <Table data={errors} onRowClick={onErrorClick} />
             </TabPanel>
           )}
         </TabPanels>
       </Ctabs>
-      <CodeModal isOpen={isOpen} onClose={onClose} title="Updates" code={selectedData} />
+      <CodeModal isOpen={isOpen} onClose={onClose} title={title} code={selectedData} />
     </>
   );
 };

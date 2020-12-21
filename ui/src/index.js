@@ -3,6 +3,8 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
+import { ChakraProvider } from "@chakra-ui/react";
+import theme from "./theme/index";
 
 if (
   window.location.hostname.includes("catalogue.apprentissage.beta.gouv.fr") &&
@@ -14,7 +16,9 @@ if (
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ChakraProvider theme={theme} resetCSS>
+      <App />
+    </ChakraProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );
