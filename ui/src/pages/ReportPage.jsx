@@ -69,8 +69,7 @@ const ReportPage = () => {
         error = response.error;
       } else if (reportTypes.includes(reportType)) {
         try {
-          const response = await _get(`${REPORT_URL}?type=${reportType}&date=${date}`);
-          report = response;
+          report = await _get(`${REPORT_URL}?type=${reportType}&date=${date}`);
         } catch (e) {
           error = e;
         }
@@ -98,7 +97,7 @@ const ReportPage = () => {
 
   return (
     <Box bg="grey.750">
-      {errorFetchData && (
+      {errorFetchData && !responseErrors?.data?.errors && (
         <>
           <Text color="grey.100" px={[8, 24]} py={3}>
             Erreur lors du chargement des données
@@ -118,21 +117,22 @@ const ReportPage = () => {
         </Text>
       )}
 
-      {report?.data && (
-        <>
-          <Box bg="#E5EDEF" w="100%" py={[4, 8]} px={[8, 24]} color="#19414C">
-            <Heading fontFamily="Marianne" fontWeight="400" fontSize={["beta", "alpha"]} as="h1">
-              {reportTitle}
-            </Heading>
-            <Heading fontFamily="Marianne" fontWeight="400" fontSize={["gamma", "beta"]} pt={2} lineHeight="1.5">
-              {dateLabel}
-            </Heading>
-          </Box>
-          <Box>
-            <Tabs data={report.data} reportType={reportType} errors={responseErrors?.data?.errors} />
-          </Box>
-        </>
-      )}
+      {report?.data ||
+        (responseErrors?.data?.errors && (
+          <>
+            <Box bg="#E5EDEF" w="100%" py={[4, 8]} px={[8, 24]} color="#19414C">
+              <Heading fontFamily="Marianne" fontWeight="400" fontSize={["beta", "alpha"]} as="h1">
+                {reportTitle}
+              </Heading>
+              <Heading fontFamily="Marianne" fontWeight="400" fontSize={["gamma", "beta"]} pt={2} lineHeight="1.5">
+                {dateLabel}
+              </Heading>
+            </Box>
+            <Box>
+              <Tabs data={report?.data} reportType={reportType} errors={responseErrors?.data?.errors} />
+            </Box>
+          </>
+        ))}
     </Box>
   );
 };

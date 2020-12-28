@@ -32,11 +32,11 @@ const RcoConversionTabs = ({ data, reportType, errors }) => {
         <TabList>
           <Tab>Résumé</Tab>
           {summary.convertedCount > 0 && <Tab>{summary.convertedCount} Formation(s) convertie(s)</Tab>}
-          {showErrors && <Tab>{summary.invalidCount} Formation(s) en échec de conversion</Tab>}
+          {showErrors && <Tab>{summary.invalidCount ?? errors?.length} Formation(s) en échec de conversion</Tab>}
         </TabList>
         <TabPanels>
           <TabPanel>
-            <Summary data={data} reportType={reportType} />
+            <Summary data={data} reportType={reportType} errors={errors} />
           </TabPanel>
           {data?.converted?.length > 0 && (
             <TabPanel>
@@ -73,11 +73,11 @@ const TrainingsUpdateTabs = ({ data, reportType, errors }) => {
           <Tab>Résumé</Tab>
           {summary.updatedCount > 0 && <Tab>{summary.updatedCount} Formation(s) mise(s) à jour</Tab>}
           {summary.notUpdatedCount > 0 && <Tab>{summary.notUpdatedCount} Formation(s) déjà à jour</Tab>}
-          {showErrors && <Tab>{summary.invalidCount} Formation(s) en échec de mise à jour</Tab>}
+          {showErrors && <Tab>{summary.invalidCount ?? errors?.length} Formation(s) en échec de mise à jour</Tab>}
         </TabList>
         <TabPanels>
           <TabPanel>
-            <Summary data={data} reportType={reportType} />
+            <Summary data={data} reportType={reportType} errors={errors} />
           </TabPanel>
           {data.updated?.length > 0 && (
             <TabPanel>
@@ -183,7 +183,7 @@ const RcoImportTabs = ({ data, reportType, errors }) => {
   );
 };
 
-const Tabs = ({ data, reportType, errors }) => {
+const Tabs = ({ data = { summary: {} }, reportType, errors }) => {
   switch (reportType) {
     case REPORT_TYPE.RCO_CONVERSION:
       return <RcoConversionTabs data={data} reportType={reportType} errors={errors} />;
