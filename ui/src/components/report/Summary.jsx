@@ -2,7 +2,7 @@ import React from "react";
 import { Text } from "@chakra-ui/react";
 import { REPORT_TYPE } from "../../constants/report";
 
-const Summary = ({ data, reportType }) => {
+const Summary = ({ data, reportType, errors }) => {
   const { summary } = data;
 
   switch (reportType) {
@@ -11,9 +11,9 @@ const Summary = ({ data, reportType }) => {
         <Text fontSize={["epsilon", "gamma"]}>
           Résumé des conversions de la base RCO vers la base MNA :<br />
           <br />
-          {summary.convertedCount} Formation(s) convertie(s)
+          {summary.convertedCount ?? 0} Formation(s) convertie(s)
           <br />
-          {summary.invalidCount} Formation(s) en échec de conversion
+          {summary.invalidCount ?? errors?.length} Formation(s) en échec de conversion
         </Text>
       );
 
@@ -22,11 +22,11 @@ const Summary = ({ data, reportType }) => {
         <Text fontSize={["epsilon", "gamma"]}>
           Résumé des mises à jour :<br />
           <br />
-          {summary.updatedCount} Formation(s) mise(s) à jour
+          {summary.updatedCount ?? 0} Formation(s) mise(s) à jour
           <br />
-          {summary.notUpdatedCount} Formation(s) déjà à jour
+          {summary.notUpdatedCount ?? 0} Formation(s) déjà à jour
           <br />
-          {summary.invalidCount} Formation(s) en échec de mise à jour
+          {summary.invalidCount ?? errors?.length} Formation(s) en échec de mise à jour
         </Text>
       );
 

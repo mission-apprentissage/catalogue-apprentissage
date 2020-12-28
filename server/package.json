@@ -28,7 +28,6 @@
     "oneshot:hydrate": "standalone=true node src/jobs/oneshot/hydrateFromOldCatalogue/index.js",
     "coverage": "standalone=true node src/jobs/psCoverage/index.js",
     "coverage:import": "standalone=true node src/jobs/psCoverage/coverage/psimporter.js",
-    "coverage:load": "standalone=true node src/jobs/oneshot/psFormation/loadPsFormation.js",
     "coverage:oneshot": "standalone=true node src/jobs/oneshot/psFormation/index.js",
     "oneshot:psup": "standalone=true node src/jobs/oneshot/pSupTemporary/index.js",
     "opco:importer": "standalone=true node src/jobs/opcoImporter/index.js",
