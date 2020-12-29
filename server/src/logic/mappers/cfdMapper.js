@@ -1,7 +1,6 @@
 const logger = require("../../common/logger");
-const { getCfdInfo } = require("../common/apiTablesCorrespondances");
-// const createReferentiel = require("../../jobs/opcoImporter/importer/referentiel");
-// const { infosCodes, computeCodes } = require("../../jobs/opcoImporter/importer/constants");
+const { getCfdInfo, findOpcosFromCfd } = require("../common/apiTablesCorrespondances");
+const { infosCodes, computeCodes } = require("../../constants/opco");
 
 const cfdMapper = async (cfd = null) => {
   try {
@@ -49,20 +48,19 @@ const cfdMapper = async (cfd = null) => {
 
     const { url: onisep_url = null } = onisep;
 
-    // let opcos = null;
-    // let info_opcos = infosCodes.NotFound;
-    // let info_opcos_intitule = computeCodes[infosCodes.NotFound];
-    // try {
-    //   const referentiel = await createReferentiel();
-    //   const opcosForFormations = await referentiel.findOpcosFromCodeEn(cfd);
-    //   if (opcosForFormations.length > 0) {
-    //     opcos = opcosForFormations.map(({ Opérateurdecompétences }) => Opérateurdecompétences);
-    //     info_opcos = infosCodes.Found;
-    //     info_opcos_intitule = computeCodes[infosCodes.Found];
-    //   }
-    // } catch (err) {
-    //   logger.error(err);
-    // }
+    let opcos = null;
+    let info_opcos = infosCodes.NotFound;
+    let info_opcos_intitule = computeCodes[infosCodes.NotFound];
+    try {
+      const opcosForFormations = await findOpcosFromCfd(cfd);
+      if (opcosForFormations?.length > 0) {
+        opcos = opcosForFormations.map(({ operateur_de_competences }) => operateur_de_competences);
+        info_opcos = infosCodes.Found;
+        info_opcos_intitule = computeCodes[infosCodes.Found];
+      }
+    } catch (err) {
+      logger.error(err);
+    }
 
     return {
       result: {
@@ -99,9 +97,9 @@ const cfdMapper = async (cfd = null) => {
           blocs_competences,
           voix_acces,
         },
-        // opcos,
-        // info_opcos,
-        // info_opcos_intitule,
+        opcos,
+        info_opcos,
+        info_opcos_intitule,
       },
       messages,
     };
