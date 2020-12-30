@@ -28,4 +28,14 @@ const getCpInfo = async (codePostal) => {
   }
 };
 
-module.exports = { getCfdInfo, getCpInfo };
+const findOpcosFromCfd = async (cfd) => {
+  try {
+    const { data } = await axios.get(`${apiEndpoint}/opcos/opco?cfd=${cfd}`);
+    return data;
+  } catch (error) {
+    logger.error(`findOpcosFromCfd: something went wrong`);
+    return null;
+  }
+};
+
+module.exports = { getCfdInfo, getCpInfo, findOpcosFromCfd };
