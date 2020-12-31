@@ -1,7 +1,8 @@
 const logger = require("../../../common/logger");
-const { ConvertedFormation, MnaFormation, Report } = require("../../../common/model/index");
+const { ConvertedFormation, MnaFormation } = require("../../../common/model/index");
 const report = require("../../../logic/reporter/report");
 const config = require("config");
+const { storeByChunks } = require("../../common/utils/reportUtils");
 
 const run = async () => {
   //  Make a diff report between Converted formation & Mna formation dbs
@@ -70,11 +71,10 @@ const createDiffReport = async ({ matchingFormations, total }) => {
   // save report in db
   const date = Date.now();
   const type = "rcoDiff";
-  await new Report({ type, date, data }).save();
 
-  const link = `${config.publicUrl}/report?type=${type}&date=${date}`;
-  data.link = link;
+  await storeByChunks(type, date, summary, "matchingFormations", matchingFormations);
 
+  data.link = `${config.publicUrl}/report?type=${type}&date=${date}`;
   const title = "[RCO Formations] Rapport différentiel avec la base MNA";
   const to = config.rco.reportMailingList.split(",");
   await report.generate(data, title, to, "rcoDiffReport");
