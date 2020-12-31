@@ -87,6 +87,7 @@ const Table = ({ data, onRowClick }) => {
       prepareRow(row);
       return (
         <Box
+          as="tr"
           {...row.getRowProps()}
           display="flex"
           key={row.id}
@@ -99,9 +100,15 @@ const Table = ({ data, onRowClick }) => {
           borderColor="grey.600"
           style={style}
         >
-          {row.cells.map((cell) => {
+          {row.cells.map((cell, i) => {
             return (
-              <Box {...cell.getCellProps()} display="flex" px={2} overflow="hidden">
+              <Box
+                as="td"
+                {...cell.getCellProps()}
+                display={[i === 0 || i > 2 ? "none" : "flex", "flex"]}
+                px={2}
+                overflow="hidden"
+              >
                 {cell.render("Cell")}
               </Box>
             );
@@ -120,19 +127,27 @@ const Table = ({ data, onRowClick }) => {
         setGlobalFilter={setGlobalFilter}
         filteredCount={rows.length}
       />
-      <Box {...getTableProps()} w="100%" flex={1} fontSize="delta">
-        <Box>
+      <Box as="table" {...getTableProps()} w="100%" flex={1} fontSize="delta">
+        <Box as="thead">
           {headerGroups.map((headerGroup) => (
-            <Flex flex={1} {...headerGroup.getHeaderGroupProps({})} pb={4}>
-              {headerGroup.headers.map((column) => (
-                <Text as="div" {...column.getHeaderProps()} display="flex" textTransform="uppercase">
+            <Flex as="tr" flex={1} {...headerGroup.getHeaderGroupProps({})} pb={4}>
+              {headerGroup.headers.map((column, i) => (
+                <Text
+                  as="th"
+                  {...column.getHeaderProps()}
+                  display={[i === 0 || i > 2 ? "none" : "flex", "flex"]}
+                  textTransform="uppercase"
+                  fontWeight="normal"
+                  overflow="hidden"
+                  px={2}
+                >
                   {column.render("Header")}
                 </Text>
               ))}
             </Flex>
           ))}
         </Box>
-        <Box {...getTableBodyProps()}>
+        <Box as="tbody" {...getTableBodyProps()}>
           <AutoSizer disableHeight>
             {({ width }) => (
               <FixedSizeList height={850} itemCount={rows.length} itemSize={50} width={width} overscanCount={50}>
