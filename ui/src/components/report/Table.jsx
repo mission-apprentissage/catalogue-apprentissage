@@ -99,9 +99,14 @@ const Table = ({ data, onRowClick }) => {
           borderColor="grey.600"
           style={style}
         >
-          {row.cells.map((cell) => {
+          {row.cells.map((cell, i) => {
             return (
-              <Box {...cell.getCellProps()} display="flex" px={2} overflow="hidden">
+              <Box
+                {...cell.getCellProps()}
+                display={[i === 0 || i > 2 ? "none" : "flex", "flex"]}
+                px={2}
+                overflow="hidden"
+              >
                 {cell.render("Cell")}
               </Box>
             );
@@ -124,8 +129,15 @@ const Table = ({ data, onRowClick }) => {
         <Box>
           {headerGroups.map((headerGroup) => (
             <Flex flex={1} {...headerGroup.getHeaderGroupProps({})} pb={4}>
-              {headerGroup.headers.map((column) => (
-                <Text as="div" {...column.getHeaderProps()} display="flex" textTransform="uppercase">
+              {headerGroup.headers.map((column, i) => (
+                <Text
+                  as="div"
+                  {...column.getHeaderProps()}
+                  display={[i === 0 || i > 2 ? "none" : "flex", "flex"]}
+                  textTransform="uppercase"
+                  overflow="hidden"
+                  px={2}
+                >
                   {column.render("Header")}
                 </Text>
               ))}
