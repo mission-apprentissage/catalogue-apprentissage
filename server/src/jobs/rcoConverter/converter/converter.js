@@ -1,11 +1,11 @@
 const logger = require("../../../common/logger");
-const { RcoFormation, ConvertedFormation, Report } = require("../../../common/model/index");
+const { RcoFormation, ConvertedFormation } = require("../../../common/model/index");
 const { mnaFormationUpdater } = require("../../../logic/updaters/mnaFormationUpdater");
 const report = require("../../../logic/reporter/report");
 const config = require("config");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
-const { chunk } = require("lodash");
 const catalogue = require("../../../common/components/catalogue_old");
+const { storeByChunks } = require("../../common/utils/reportUtils");
 
 const formatToMnaFormation = (rcoFormation) => {
   const periode =
@@ -233,23 +233,8 @@ const createConversionReport = async ({ invalidRcoFormations, convertedRcoFormat
   const date = Date.now();
   const type = "rcoConversion";
 
-  // Store by chunks to stay below the Mongo document max size (16Mb)
-  const chunks = chunk(convertedRcoFormations, 2000);
-  await asyncForEach(chunks, async (chunk) => {
-    await new Report({
-      type,
-      date,
-      data: { summary, converted: chunk },
-    }).save();
-  });
-
-  await new Report({
-    type: `${type}.error`,
-    date,
-    data: {
-      errors: invalidRcoFormations,
-    },
-  }).save();
+  await storeByChunks(type, date, summary, "converted", convertedRcoFormations);
+  await storeByChunks(`${type}.error`, date, summary, "errors", invalidRcoFormations);
 
   const link = `${config.publicUrl}/report?type=${type}&date=${date}`;
   const data = { invalid: invalidRcoFormations, converted: convertedRcoFormations, summary, link };
@@ -259,9 +244,5 @@ const createConversionReport = async ({ invalidRcoFormations, convertedRcoFormat
   const to = config.rco.reportMailingList.split(",");
   await report.generate(data, title, to, "rcoConversionReport");
 };
-
-// TODO @EPT
-//  5 : upsert the successful ones in Mna DB --> flag 2021 (others should be flagged 2020)
-//  6 : then create a report of import (update of a 2020 formation or creation of a new one)
 
 module.exports = { run, performConversion };

@@ -1,9 +1,10 @@
 const wsRCO = require("./wsRCO");
-const { RcoFormation, Report } = require("../../../common/model/index");
+const { RcoFormation } = require("../../../common/model/index");
 const { diff } = require("deep-object-diff");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const report = require("../../../logic/reporter/report");
 const config = require("config");
+const { storeByChunks } = require("../../common/utils/reportUtils");
 
 class Importer {
   constructor() {
@@ -94,16 +95,10 @@ class Importer {
     // save report in db
     const date = Date.now();
     const type = "rcoImport";
-    await new Report({
-      type,
-      date,
-      data: {
-        summary,
-        added: this.added,
-        updated: justUpdated,
-        deleted,
-      },
-    }).save();
+
+    await storeByChunks(type, date, summary, "added", this.added);
+    await storeByChunks(type, date, summary, "updated", justUpdated);
+    await storeByChunks(type, date, summary, "deleted", deleted);
 
     const link = `${config.publicUrl}/report?type=${type}&date=${date}`;
     const data = { added: this.added, updated: this.updated, summary, link };

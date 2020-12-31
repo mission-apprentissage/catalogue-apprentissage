@@ -1,8 +1,8 @@
 const logger = require("../../../common/logger");
-const { Report } = require("../../../common/model/index");
 const { mnaFormationUpdater } = require("../../../logic/updaters/mnaFormationUpdater");
 const report = require("../../../logic/reporter/report");
 const config = require("config");
+const { storeByChunks } = require("../../common/utils/reportUtils");
 
 const run = async (model, filter = {}) => {
   const result = await performUpdates(model, filter);
@@ -68,19 +68,10 @@ const createReport = async (model, { invalidFormations, updatedFormations, notUp
   // save report in db
   const date = Date.now();
   const type = "trainingsUpdate";
-  await new Report({
-    type,
-    date,
-    data: { summary, updated: updatedFormations, notUpdated: notUpdatedFormations },
-  }).save();
 
-  await new Report({
-    type: `${type}.error`,
-    date,
-    data: {
-      errors: invalidFormations,
-    },
-  }).save();
+  await storeByChunks(type, date, summary, "updated", updatedFormations);
+  await storeByChunks(type, date, summary, "notUpdated", notUpdatedFormations);
+  await storeByChunks(`${type}.error`, date, summary, "errors", invalidFormations);
 
   const link = `${config.publicUrl}/report?type=${type}&date=${date}`;
   const data = {
