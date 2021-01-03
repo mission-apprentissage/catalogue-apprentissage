@@ -38,43 +38,46 @@ const handleResponse = (path, response) => {
   return response.json();
 };
 
-const getHeaders = () => {
+const getHeaders = (authorization = true) => {
   let auth = getAuth();
-
-  return {
+  let result = {
     Accept: "application/json",
-    //...(auth.sub !== "anonymous" ? { Authorization: `Bearer ${auth.token}` } : {}),
+    ...(auth.sub !== "anonymous" ? { Authorization: `Bearer ${auth.token}` } : {}),
     "Content-Type": "application/json",
   };
+  if (!authorization) {
+    delete result.Authorization;
+  }
+  return result;
 };
 
-export const _get = (path) => {
+export const _get = (path, auth = true) => {
   return fetch(`${path}`, {
     method: "GET",
-    headers: getHeaders(),
+    headers: getHeaders(auth),
   }).then((res) => handleResponse(path, res));
 };
 
-export const _post = (path, body) => {
+export const _post = (path, body, auth = true) => {
   return fetch(`${path}`, {
     method: "POST",
-    headers: getHeaders(),
+    headers: getHeaders(auth),
     body: JSON.stringify(body),
   }).then((res) => handleResponse(path, res));
 };
 
-export const _put = (path, body = {}) => {
+export const _put = (path, body = {}, auth = true) => {
   return fetch(`${path}`, {
     method: "PUT",
-    headers: getHeaders(),
+    headers: getHeaders(auth),
     body: JSON.stringify(body),
   }).then((res) => handleResponse(path, res));
 };
 
-export const _delete = (path) => {
+export const _delete = (path, auth = true) => {
   return fetch(`${path}`, {
     method: "DELETE",
-    headers: getHeaders(),
+    headers: getHeaders(auth),
   }).then((res) => handleResponse(path, res));
 };
 

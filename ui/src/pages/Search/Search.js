@@ -54,14 +54,14 @@ export default ({ match }) => {
     async function run() {
       try {
         let tmpBase = "mnaformation";
-        switch (match.params.base) {
-          case "formations":
+        switch (match.path) {
+          case "/recherche/formations-2020":
             tmpBase = "mnaformation";
             break;
-          case "etablissements":
+          case "/recherche/etablissements":
             tmpBase = "etablissements";
             break;
-          case "formations2021":
+          case "/recherche/formations-2021":
             tmpBase = "convertedformation";
             break;
           default:
@@ -70,7 +70,10 @@ export default ({ match }) => {
         }
 
         setEndpoint(
-          tmpBase === "mnaformation" || tmpBase === "convertedformation" ? endpointNewFront : "" // config.aws.apiGateway.endpoint
+          tmpBase === "mnaformation" || tmpBase === "convertedformation"
+            ? endpointNewFront
+            : // : "https://r7mayzn08d.execute-api.eu-west-3.amazonaws.com/dev" // config.aws.apiGateway.endpoint
+              "https://c7a5ujgw35.execute-api.eu-west-3.amazonaws.com/prod" // PROD
         );
         setBase(tmpBase);
 
@@ -79,12 +82,12 @@ export default ({ match }) => {
           const params = new window.URLSearchParams({
             query: JSON.stringify({ published: true }),
           });
-          countFormations = await _get(`${endpointNewFront}/entity/formations/count?${params}`);
+          countFormations = await _get(`${endpointNewFront}/entity/formations/count?${params}`, false);
         } else if (tmpBase === "convertedformation") {
           const params = new window.URLSearchParams({
             query: JSON.stringify({ published: true }),
           });
-          countFormations = await _get(`${endpointNewFront}/entity/formations2021/count?${params}`);
+          countFormations = await _get(`${endpointNewFront}/entity/formations2021/count?${params}`, false);
         } else {
           // const resp = await API.get("api", `/${tmpBase}/count`, {
           //   queryStringParameters: {

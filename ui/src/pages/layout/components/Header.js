@@ -28,7 +28,7 @@ const Header = () => {
           trigger={
             <Dropdown.Trigger arrow toggle={false}>
               <span href="#" className="nav-link pr-0 leading-none" data-toggle="dropdown">
-                <span className="avatar" style={{ backgroundImage: "url(./faces/default.png)" }}></span>
+                <span className="avatar" style={{ backgroundImage: "url(/faces/default.png)" }}></span>
                 <span className="ml-2 d-none d-lg-block">
                   <span className="text-default">{auth.sub}</span>
                   <small className="text-muted d-block mt-1">Administrateur</small>

@@ -50,11 +50,12 @@ const CardList = ({ data }) => {
             <p>Localité: {data.localite}</p>
           </div>
           <div className="field pills">
-            {data.tags.map((tag, i) => (
-              <Badge color="success" key={i}>
-                {tag}
-              </Badge>
-            ))}
+            {data.tags &&
+              data.tags.map((tag, i) => (
+                <Badge color="success" key={i}>
+                  {tag}
+                </Badge>
+              ))}
           </div>
         </div>
         <div className="content">

@@ -12,6 +12,8 @@ import PageReconciliation from "./pages/reconciliation";
 import ReportPage from "./pages/ReportPage";
 import NotFoundPage from "./pages/404";
 import Search from "./pages/Search/Search";
+import Formation from "./pages/Formation";
+import Etablissement from "./pages/Etablissement";
 import Journal from "./pages/Journal/Journal";
 import { _post } from "./common/httpClient";
 import WebFont from "webfontloader";
@@ -71,8 +73,11 @@ export default () => {
               </PrivateRoute>
             )}
             <Route exact path="/" component={HomePage} />
+            <Route exact path="/recherche/formations-2020" component={Search} />
             <Route exact path="/recherche/formations-2021" component={Search} />
             <Route exact path="/recherche/etablissements" component={Search} />
+            <Route exact path={`/formation/:id`} component={Formation} />
+            <Route exact path={`/etablissement/:id`} component={Etablissement} />
             <Route exact path="/login" component={LoginPage} />
             <Route exact path="/reset-password" component={ResetPasswordPage} />
             <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />

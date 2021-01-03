@@ -42,7 +42,7 @@ const CardList = ({ data, f2021 }) => {
 
   return (
     <Link
-      to={f2021 ? `/formation2021/${data._id}` : `/formation/${data._id}`}
+      to={f2021 ? `/formation/${data._id}` : `/formation/${data._id}`}
       className="list-card"
       style={{ textDecoration: "none" }}
       target="_blank"
