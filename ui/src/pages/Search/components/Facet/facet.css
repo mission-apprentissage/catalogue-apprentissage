@@ -1,0 +1,19 @@
+.facet .card-header, .facet .facet-filters {
+  font-size: 1em;
+  display: flex;
+  flex-grow: 1;
+  cursor: pointer;
+}
+
+.card-body > div:first-child {
+  display: block !important;
+}
+
+.facet .card-header .card-header-title {
+  flex: 1;
+}
+.facet .card-header .card-header-icon {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: -5px;
+}
