@@ -1,37 +1,41 @@
 const express = require("express");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
-const { PsFormation } = require("../../common/model");
+const { PsFormation, PsReconciliation } = require("../../common/model");
 const mongoose = require("mongoose");
 
 module.exports = ({ catalogue, tableCorrespondance }) => {
   const router = express.Router();
 
   /**
-   * Get Report /report GET
+   * Get all parcoursup formations
    */
   router.get(
     "/",
     tryCatch(async (req, res) => {
       const { type, page } = req.query;
-      let data = await PsFormation.paginate({ matching_type: type }, { page });
+      const data = await PsFormation.paginate({ matching_type: type }, { page });
 
       if (data.docs.length > 0) {
-        const result = await Promise.all(
+        const mapping = await Promise.all(
           data.docs.map(async (formation) => {
+            const matchedEtablissement = await PsReconciliation.find({ if_formation_psup: formation._id }).lean();
+            console.log("matchedEtablissement.length", matchedEtablissement.length);
+
             if (formation._doc.code_cfd) {
               const infoCfd = await tableCorrespondance.getCfdInfo(formation.code_cfd);
               let infobcn = infoCfd.result.intitule_long;
 
               return {
-                ...formation._doc,
                 infobcn,
+                ...formation._doc,
+                ...matchedEtablissement,
               };
             }
-            return formation;
+            return { formation, ...matchedEtablissement };
           })
         );
 
-        data.docs = await result;
+        data.docs = await mapping;
         res.json(data);
       } else {
         res.status(404).json([]);
@@ -49,7 +53,7 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
   );
 
   /**
-   * Add one establishement to a psformation
+   * Add created establishment to the matched list of establishments
    */
   router.put(
     "/",
@@ -73,6 +77,30 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
       const { uai, siret } = req.body;
       const newEtablissement = await catalogue.createEtablissement({ uai, siret });
       res.json(newEtablissement);
+    })
+  );
+
+  /**
+   * Create new line in PsReconciliation collection
+   */
+  router.post(
+    "/nouveau-lien",
+    tryCatch(async (req, res) => {
+      const payload = req.body;
+      const result = await PsReconciliation.create(payload);
+      res.json(result);
+    })
+  );
+
+  /**
+   * Update line in PsReconciliation collection
+   */
+  router.put(
+    "update-lien",
+    tryCatch(async (req, res) => {
+      const { id, ...rest } = req.body;
+      const result = await PsReconciliation.findByIdAndUpdate(id, { ...rest });
+      res.json(result);
     })
   );
 
