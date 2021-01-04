@@ -2,9 +2,12 @@ import React from "react";
 import { Page, Grid, Alert, Header } from "tabler-react";
 import Layout from "./layout/Layout";
 import { Box, Button } from "@chakra-ui/react";
+import { NavLink } from "react-router-dom";
 
 import Changelog from "../common/components/Changelog/Changelog";
 import changelog from "../CHANGELOG";
+
+import "./homePage.css";
 
 export default () => {
   return (
@@ -15,7 +18,7 @@ export default () => {
             <Page.Content>
               <Grid.Row>
                 <Grid.Col width={12}>
-                  <Header.H1>Offres de formations en apprentissage en France.</Header.H1>
+                  <Header.H2>Catalogue des offres de formations en apprentissage.</Header.H2>
                   {/* <Alert type="warning">
                     <Header.H2>Accueil</Header.H2>
                     <p>Page d'accueil utilisateur.</p>
@@ -23,7 +26,7 @@ export default () => {
                 </Grid.Col>
               </Grid.Row>
               <Grid.Row>
-                <Grid.Col width={12}>
+                <Grid.Col width={12} className="intro">
                   Le catalogue des offres de formation en apprentissage recense aujourd’hui près de
                   <br />
                   <br />
@@ -74,21 +77,32 @@ export default () => {
                   <br />
                 </Grid.Col>
               </Grid.Row>
-              <Grid.Row>
-                <Grid.Col width={6}>
+              <Grid.Row className="mt-5">
+                <Grid.Col width={4}>
                   <Button bg="#007bff" color="#fff">
-                    Consulter la liste des formations 2021
+                    <NavLink className="nav-link" to="/recherche/formations-2021">
+                      Consulter la liste des formations 2021
+                    </NavLink>
                   </Button>
                 </Grid.Col>
-                <Grid.Col width={6}>
+                <Grid.Col width={4}>
                   <Button bg="#007bff" color="#fff">
-                    Consulter la liste des établissements
+                    <NavLink className="nav-link" to="/recherche/formations-2020">
+                      Consulter la liste des formations 2020
+                    </NavLink>
+                  </Button>
+                </Grid.Col>
+                <Grid.Col width={4}>
+                  <Button bg="#007bff" color="#fff">
+                    <NavLink className="nav-link" to="/recherche/etablissements">
+                      Consulter la liste des établissements
+                    </NavLink>
                   </Button>
                 </Grid.Col>
               </Grid.Row>
-              <Grid.Row>
+              <Grid.Row className="mt-5 mb-3">
                 <Grid.Col width={12}>
-                  <Header.H4>Dernières modifications</Header.H4>
+                  <Header.H3>Dernières modifications</Header.H3>
                 </Grid.Col>
               </Grid.Row>
               <Grid.Row>
@@ -96,10 +110,12 @@ export default () => {
                   <Changelog content={changelog} order="desc" showVersion="last2" hideFilter={true} />
                 </Grid.Col>
               </Grid.Row>
-              <Grid.Row>
+              <Grid.Row className="mt-1 mb-4">
                 <Grid.Col width={12}>
                   <Button bg="#007bff" color="#fff">
-                    Voir les précédentes versions
+                    <NavLink className="nav-link" to="/changelog">
+                      Voir les précédentes versions
+                    </NavLink>
                   </Button>
                 </Grid.Col>
               </Grid.Row>

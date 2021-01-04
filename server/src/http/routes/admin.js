@@ -8,6 +8,7 @@ const userSchema = Joi.object({
   options: Joi.object({
     email: Joi.string().required(),
     academie: Joi.string().required(),
+    roles: Joi.array().required(),
     permissions: Joi.object({
       isAdmin: Joi.boolean().required(),
     }).unknown(),

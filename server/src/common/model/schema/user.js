@@ -30,5 +30,10 @@ const usersSchema = {
     default: "FORCE_RESET_PASSWORD",
     description: "Account status",
   },
+  roles: {
+    type: [String],
+    default: [],
+    description: "Roles de l'utilisateur",
+  },
 };
 module.exports = usersSchema;

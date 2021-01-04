@@ -17,6 +17,8 @@ import Etablissement from "./pages/Etablissement";
 import Journal from "./pages/Journal/Journal";
 import { _post } from "./common/httpClient";
 import WebFont from "webfontloader";
+import ScrollToTop from "./common/components/ScrollToTop";
+import Layout from "./pages/layout/Layout";
 
 import { QueryClient, QueryClientProvider } from "react-query";
 
@@ -63,13 +65,16 @@ export default () => {
     <QueryClientProvider client={queryClient}>
       <div className="App">
         <Router>
+          <ScrollToTop />
           <Switch>
             <PrivateRoute exact path="/admin">
               {auth && auth.permissions.isAdmin ? <DashboardPage /> : <HomePage />}
             </PrivateRoute>
             {auth && auth.permissions.isAdmin && (
               <PrivateRoute exact path="/admin/users">
-                <Users />
+                <Layout>
+                  <Users />
+                </Layout>
               </PrivateRoute>
             )}
             <Route exact path="/" component={HomePage} />
