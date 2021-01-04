@@ -1,0 +1,17 @@
+.howToReglement {
+  min-height: 100vh;
+  background-color: #e5edef;
+  color: #19414c;
+}
+.howToReglement .mission-summary {
+  font-size: 16px;
+}
+.howToReglement .purple {
+  color: #80017f;
+}
+.howToReglement .underline {
+  text-decoration: underline;
+}
+.howToReglement .card-header {
+  cursor: pointer;
+}

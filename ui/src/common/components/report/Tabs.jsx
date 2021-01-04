@@ -3,7 +3,7 @@ import { Tab, TabList, TabPanel, TabPanels, Tabs as Ctabs, useDisclosure } from 
 import { Summary } from "./Summary";
 import { Table } from "./Table";
 import { CodeModal } from "./CodeModal";
-import { REPORT_TYPE } from "../../constants/report";
+import { REPORT_TYPE } from "../../../constants/report";
 
 const RcoConversionTabs = ({ data, reportType, errors }) => {
   const { summary } = data;
