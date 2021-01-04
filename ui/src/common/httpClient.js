@@ -1,5 +1,5 @@
-import EventEmitter from "events";
 import { getAuth } from "./auth";
+import { emitter } from "./emitter";
 
 class AuthError extends Error {
   constructor(json, statusCode) {
@@ -19,7 +19,6 @@ class HTTPError extends Error {
   }
 }
 
-const emitter = new EventEmitter();
 const handleResponse = (path, response) => {
   let statusCode = response.status;
   if (statusCode >= 400 && statusCode < 600) {
@@ -89,5 +88,3 @@ export const buildLink = (path) => {
   }
   return path;
 };
-
-export const subscribeToHttpEvent = (eventName, callback) => emitter.on(eventName, callback);
