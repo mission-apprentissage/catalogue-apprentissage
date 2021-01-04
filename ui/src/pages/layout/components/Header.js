@@ -45,36 +45,34 @@ const Header = () => {
 
       {/* User Menu */}
       <div className="d-flex order-lg-2 ml-auto">
-        <Dropdown
-          arrow
-          arrowPosition="right"
-          trigger={
-            <Dropdown.Trigger arrow toggle={false}>
-              <span href="#" className="nav-link pr-0 leading-none" data-toggle="dropdown">
-                <span className="avatar" style={{ backgroundImage: "url(/faces/default.png)" }}></span>
-                <span className="ml-2 d-none d-lg-block">
-                  {auth?.sub === "anonymous" && (
-                    <>
-                      <span className="text-default">
-                        <NavLink className="nav-link" to="/login">
-                          Connexion
-                        </NavLink>
-                      </span>
-                    </>
-                  )}
-                  {auth?.sub !== "anonymous" && (
-                    <>
-                      <span className="text-default">{auth.sub}</span>
-                      <small className="text-muted d-block mt-1">Administrateur</small>
-                    </>
-                  )}
+        {auth?.sub === "anonymous" && (
+          <>
+            <span className="text-default">
+              <NavLink className="nav-link" to="/login">
+                Connexion
+              </NavLink>
+            </span>
+          </>
+        )}
+        {auth?.sub !== "anonymous" && (
+          <Dropdown
+            arrow
+            arrowPosition="right"
+            trigger={
+              <Dropdown.Trigger arrow toggle={false}>
+                <span className="nav-link pr-0 leading-none" data-toggle="dropdown">
+                  <span className="avatar" style={{ backgroundImage: "url(/faces/default.png)" }}></span>
+                  <span className="ml-2 d-none d-lg-block">
+                    <span className="text-default">{auth.sub}</span>
+                    <small className="text-muted d-block mt-1">Administrateur</small>
+                  </span>
                 </span>
-              </span>
-            </Dropdown.Trigger>
-          }
-          position="bottom"
-          items={dropdownItems}
-        />
+              </Dropdown.Trigger>
+            }
+            position="bottom"
+            items={dropdownItems}
+          />
+        )}
       </div>
     </Site.Header>
   );
