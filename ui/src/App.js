@@ -15,6 +15,8 @@ import Search from "./pages/Search/Search";
 import Formation from "./pages/Formation";
 import Etablissement from "./pages/Etablissement";
 import Journal from "./pages/Journal/Journal";
+import HowToReglement from "./pages/HowToReglement";
+import HowToModif from "./pages/HowToModif";
 import { _post } from "./common/httpClient";
 import WebFont from "webfontloader";
 import ScrollToTop from "./common/components/ScrollToTop";
@@ -83,6 +85,10 @@ export default () => {
             <Route exact path="/recherche/etablissements" component={Search} />
             <Route exact path={`/formation/:id`} component={Formation} />
             <Route exact path={`/etablissement/:id`} component={Etablissement} />
+
+            <Route exact path="/guide-reglementaire" component={HowToReglement} />
+            <Route exact path="/guide-modification" component={HowToModif} />
+
             <Route exact path="/login" component={LoginPage} />
             <Route exact path="/reset-password" component={ResetPasswordPage} />
             <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />

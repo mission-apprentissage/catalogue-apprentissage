@@ -6,6 +6,8 @@ import { NavLink } from "react-router-dom";
 import useAuth from "../../../common/hooks/useAuth";
 import { isUserAdmin } from "../../../common/utils/rolesUtils";
 
+import "./header.css";
+
 const Header = () => {
   let [auth, setAuth] = useAuth();
   let history = useHistory();
@@ -40,14 +42,14 @@ const Header = () => {
     <Site.Header>
       {/* Logo */}
       <a className="header-brand" href="/">
-        <img src="/brand/catalogue.png" className="header-brand-img" alt="tabler logo" />
+        <img src="/brand/marianne.png" className="header-brand-img" alt="tabler logo" />
       </a>
 
       {/* User Menu */}
       <div className="d-flex order-lg-2 ml-auto">
         {auth?.sub === "anonymous" && (
           <>
-            <span className="text-default">
+            <span className="text-default header-right-text">
               <NavLink className="nav-link" to="/login">
                 Connexion
               </NavLink>

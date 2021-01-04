@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { Site } from "tabler-react";
+import { Dropdown, Site } from "tabler-react";
 
 const NavigationMenu = () => {
   return (
@@ -30,6 +30,24 @@ const NavigationMenu = () => {
                   <NavLink className="nav-link" to="/recherche/etablissements" activeClassName="active">
                     <i className="fe fe-box"></i> Établissements
                   </NavLink>
+                </li>
+                <li className="nav-item">
+                  <Dropdown
+                    arrow
+                    arrowPosition="right"
+                    trigger={
+                      <Dropdown.Trigger arrow toggle={false}>
+                        Guides
+                      </Dropdown.Trigger>
+                    }
+                    position="bottom"
+                    items={
+                      <>
+                        <Dropdown.Item to="/guide-modification">Guide d'utilisation</Dropdown.Item>
+                        <Dropdown.Item to="/guide-reglementaire">Guide réglementaire</Dropdown.Item>
+                      </>
+                    }
+                  />
                 </li>
               </ul>
             </div>
