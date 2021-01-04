@@ -34,6 +34,11 @@ const endpointNewFront =
     ? "https://catalogue-recette.apprentissage.beta.gouv.fr/api"
     : "https://catalogue.apprentissage.beta.gouv.fr/api";
 
+const endpointOldFront =
+  ENV_NAME === "local" || ENV_NAME === "dev"
+    ? "https://r7mayzn08d.execute-api.eu-west-3.amazonaws.com/dev"
+    : "https://c7a5ujgw35.execute-api.eu-west-3.amazonaws.com/prod";
+
 export default ({ match }) => {
   const [countItems, setCountItems] = useState(0);
   const [mode, setMode] = useState("simple");
@@ -70,31 +75,22 @@ export default ({ match }) => {
         }
 
         setEndpoint(
-          tmpBase === "mnaformation" || tmpBase === "convertedformation"
-            ? endpointNewFront
-            : // : "https://r7mayzn08d.execute-api.eu-west-3.amazonaws.com/dev" // config.aws.apiGateway.endpoint
-              "https://c7a5ujgw35.execute-api.eu-west-3.amazonaws.com/prod" // PROD
+          tmpBase === "mnaformation" || tmpBase === "convertedformation" ? endpointNewFront : endpointOldFront
         );
         setBase(tmpBase);
 
         let countFormations = 0;
+
+        const params = new window.URLSearchParams({
+          query: JSON.stringify({ published: true }),
+        });
         if (tmpBase === "mnaformation") {
-          const params = new window.URLSearchParams({
-            query: JSON.stringify({ published: true }),
-          });
           countFormations = await _get(`${endpointNewFront}/entity/formations/count?${params}`, false);
         } else if (tmpBase === "convertedformation") {
-          const params = new window.URLSearchParams({
-            query: JSON.stringify({ published: true }),
-          });
           countFormations = await _get(`${endpointNewFront}/entity/formations2021/count?${params}`, false);
         } else {
-          // const resp = await API.get("api", `/${tmpBase}/count`, {
-          //   queryStringParameters: {
-          //     query: JSON.stringify({ published: true }),
-          //   },
-          // });
-          // countFormations = resp.count;
+          const countEtablissement = await _get(`${endpointOldFront}/etablissements/count?${params}`, false);
+          countFormations = countEtablissement.count;
         }
 
         setCountItems(countFormations);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Page, Grid, Alert, Header } from "tabler-react";
 import Layout from "./layout/Layout";
 import { Box, Button } from "@chakra-ui/react";
@@ -7,9 +7,51 @@ import { NavLink } from "react-router-dom";
 import Changelog from "../common/components/Changelog/Changelog";
 import changelog from "../CHANGELOG";
 
+import { _get } from "../common/httpClient";
+
 import "./homePage.css";
 
+const ENV_NAME = "dev";
+const endpointNewFront =
+  ENV_NAME === "local" || ENV_NAME === "dev"
+    ? "https://catalogue-recette.apprentissage.beta.gouv.fr/api"
+    : "https://catalogue.apprentissage.beta.gouv.fr/api";
+
+const endpointOldFront =
+  ENV_NAME === "local" || ENV_NAME === "dev"
+    ? "https://r7mayzn08d.execute-api.eu-west-3.amazonaws.com/dev"
+    : "https://c7a5ujgw35.execute-api.eu-west-3.amazonaws.com/prod";
+
 export default () => {
+  const [loading, setLoading] = useState(true);
+  const [countEstablishments, setCountEstablishments] = useState(0);
+  const [countFormations, setCountFormations] = useState(0);
+  const [countFormations2021, setCountFormations2021] = useState(0);
+
+  useEffect(() => {
+    async function run() {
+      try {
+        const params = new window.URLSearchParams({
+          query: JSON.stringify({ published: true }),
+        });
+
+        const countEtablissement = await _get(`${endpointOldFront}/etablissements/count?${params}`, false);
+        setCountEstablishments(countEtablissement.count);
+
+        const countFormations = await _get(`${endpointNewFront}/entity/formations/count?${params}`, false);
+        setCountFormations(countFormations);
+
+        const countFormations2021 = await _get(`${endpointNewFront}/entity/formations2021/count?${params}`, false);
+        setCountFormations2021(countFormations2021);
+
+        setLoading(false);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    run();
+  }, []);
+
   return (
     <Layout>
       <Box bg="#E5EDEF" w="100%" py={[4, 8]} px={[8, 24]} color="#19414C">
@@ -28,6 +70,14 @@ export default () => {
               <Grid.Row>
                 <Grid.Col width={12} className="intro">
                   Le catalogue des offres de formation en apprentissage recense aujourd’hui près de
+                  <br /> &nbsp;
+                  {loading && <div>chargement...</div>}
+                  {!loading && (
+                    <strong>
+                      {countFormations} formations 2020, {countFormations2021} formations 2021 et plus de{" "}
+                      {countEstablishments} établissements !
+                    </strong>
+                  )}
                   <br />
                   <br />
                   <ol>
