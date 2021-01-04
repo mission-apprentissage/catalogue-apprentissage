@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { MultiList } from "@appbaseio/reactivesearch";
 // import { Card } from "tabler-react";
 // import { useSelector } from "react-redux";
@@ -8,12 +8,12 @@ import "./facet.css";
 
 const Layout = (props) => {
   const { componentId, dataField, filterLabel, filters, title, selectAllLabel, sortBy } = props;
-  const [isOpen, setIsOpen] = useState(false);
+  //const [isOpen, setIsOpen] = useState(false);
   // const { acm: userAcm } = useSelector((state) => state.user);
 
-  const toggle = () => {
-    setIsOpen(!isOpen);
-  };
+  // const toggle = () => {
+  //   setIsOpen(!isOpen);
+  // };
 
   return (
     <Accordion allowMultiple className="card">

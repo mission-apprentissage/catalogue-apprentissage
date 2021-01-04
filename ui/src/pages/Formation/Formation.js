@@ -22,13 +22,13 @@ const endpointNewFront =
     ? "https://catalogue-recette.apprentissage.beta.gouv.fr/api"
     : "https://catalogue.apprentissage.beta.gouv.fr/api";
 
-const checkIfHasRightToEdit = (item, userAcm) => {
-  let hasRightToEdit = userAcm.all;
-  if (!hasRightToEdit) {
-    hasRightToEdit = userAcm.academie.includes(`${item.num_academie}`);
-  }
-  return hasRightToEdit;
-};
+// const checkIfHasRightToEdit = (item, userAcm) => {
+//   let hasRightToEdit = userAcm.all;
+//   if (!hasRightToEdit) {
+//     hasRightToEdit = userAcm.academie.includes(`${item.num_academie}`);
+//   }
+//   return hasRightToEdit;
+// };
 
 const EditSection = ({ edition, onEdit, handleSubmit, onDeleteClicked }) => {
   return (
@@ -381,7 +381,7 @@ export default ({ match, presetFormation = null }) => {
     },
     onSubmit: ({ uai_formation, code_postal, capacite, periode, cfd, num_academie, rncp_code }, { setSubmitting }) => {
       return new Promise(async (resolve, reject) => {
-        const body = { uai_formation, code_postal, capacite, periode, cfd, num_academie, rncp_code };
+        // const body = { uai_formation, code_postal, capacite, periode, cfd, num_academie, rncp_code };
         let prevStateFormation = formation;
         if (presetFormation) {
           // prevStateFormation = await API.post("api", `/formation`, {

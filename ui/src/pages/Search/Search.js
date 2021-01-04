@@ -4,7 +4,7 @@ import { Container, Row } from "reactstrap";
 import Switch from "react-switch";
 // import { API } from "aws-amplify";
 // import { useSelector } from "react-redux";
-import useAuth from "../../common/hooks/useAuth";
+// import useAuth from "../../common/hooks/useAuth";
 import Layout from "../layout/Layout";
 
 // import config from "../../config";
@@ -45,15 +45,15 @@ export default ({ match }) => {
   const [base, setBase] = useState("mnaformation");
   const [endPoint, setEndpoint] = useState(endpointNewFront);
 
-  const { FILTERS, columnsDefinition, facetDefinition, queryBuilderField, dataSearch } =
+  const { FILTERS, facetDefinition, queryBuilderField, dataSearch } =
     base === "mnaformation"
       ? constantsFormations
       : base === "convertedformation"
       ? constantsRcoFormations
-      : constantsEtablissements;
+      : constantsEtablissements; // columnsDefinition
 
   // const { user } = useSelector((state) => state.user);
-  let [auth] = useAuth();
+  // let [auth] = useAuth();
 
   useEffect(() => {
     async function run() {

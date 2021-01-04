@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Page, Grid, Alert, Header } from "tabler-react";
+import { Page, Grid, Header } from "tabler-react";
 import Layout from "./layout/Layout";
 import { Box, Button } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";

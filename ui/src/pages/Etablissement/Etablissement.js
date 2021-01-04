@@ -22,13 +22,13 @@ const endpointNewFront =
     ? "https://r7mayzn08d.execute-api.eu-west-3.amazonaws.com/dev"
     : "https://c7a5ujgw35.execute-api.eu-west-3.amazonaws.com/prod";
 
-const checkIfHasRightToEdit = (item, userAcm) => {
-  let hasRightToEdit = userAcm.all;
-  if (!hasRightToEdit) {
-    hasRightToEdit = userAcm.academie.includes(`${item.num_academie}`);
-  }
-  return hasRightToEdit;
-};
+// const checkIfHasRightToEdit = (item, userAcm) => {
+//   let hasRightToEdit = userAcm.all;
+//   if (!hasRightToEdit) {
+//     hasRightToEdit = userAcm.academie.includes(`${item.num_academie}`);
+//   }
+//   return hasRightToEdit;
+// };
 
 const EditSection = ({ edition, onEdit, handleSubmit }) => {
   return (
@@ -215,7 +215,7 @@ export default ({ match }) => {
     },
     onSubmit: ({ uai, num_academie }, { setSubmitting }) => {
       return new Promise(async (resolve, reject) => {
-        const body = { uai, num_academie };
+        // const body = { uai, num_academie };
 
         let result = null;
         //if (uai !== etablissement.uai) {
