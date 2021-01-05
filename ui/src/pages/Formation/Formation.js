@@ -1,35 +1,35 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Button, Spinner, Input, Alert } from "reactstrap";
+import { Container, Row, Col, Button, Input } from "reactstrap";
+import { Spinner, Alert, Box } from "@chakra-ui/react";
 import { useHistory, useLocation } from "react-router-dom";
 import { useFormik } from "formik";
 import queryString from "query-string";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { _get, _post } from "../../common/httpClient";
-
 import Layout from "../layout/Layout";
-
 import Section from "./components/Section";
-import "./formation.css";
 import useAuth from "../../common/hooks/useAuth";
+import "./formation.css";
 
 const checkIfHasRightToEdit = (item, academie) => {
   return academie.split(",").includes(`${item.num_academie}`);
 };
 
-const EditSection = ({ edition, onEdit, handleSubmit, onDeleteClicked }) => {
+const EditSection = ({ edition, onEdit, handleSubmit, onDeleteClicked, isSubmitting }) => {
   return (
     <div className="sidebar-section info sidebar-section-edit">
       {edition && (
         <>
-          <Button className="mb-3" color="success" onClick={handleSubmit}>
-            Valider
+          <Button className="mb-3" color="success" onClick={handleSubmit} disabled={isSubmitting}>
+            Valider {isSubmitting && <Spinner size="xs" />}
           </Button>
           <Button
             color="danger"
             onClick={() => {
               onEdit();
             }}
+            disabled={isSubmitting}
           >
             Annuler
           </Button>
@@ -55,7 +55,7 @@ const EditSection = ({ edition, onEdit, handleSubmit, onDeleteClicked }) => {
   );
 };
 
-const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, values, isMna }) => {
+const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, values, isMna, isSubmitting }) => {
   let history = useHistory();
   const [auth] = useAuth();
 
@@ -208,6 +208,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
             onEdit={onEdit}
             handleSubmit={handleSubmit}
             onDeleteClicked={onDeleteClicked}
+            isSubmitting={isSubmitting}
           />
         )}
         <div className="sidebar-section info">
@@ -347,14 +348,18 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
   );
 };
 
-export default ({ match, presetFormation = null }) => {
-  const [formation, setFormation] = useState(presetFormation);
-  const [edition, setEdition] = useState(presetFormation ? true : false);
+export default ({ match }) => {
+  const [formation, setFormation] = useState();
+  const [pendingFormation, setPendingFormation] = useState();
+  const displayedFormation = pendingFormation || formation;
+
+  const [edition, setEdition] = useState(false);
+  let history = useHistory();
   const { search } = useLocation();
   const { source } = queryString.parse(search);
   const isMna = source === "mna";
 
-  const { values, handleSubmit, handleChange, setFieldValue } = useFormik({
+  const { values, handleSubmit, handleChange, setFieldValue, isSubmitting } = useFormik({
     initialValues: {
       uai_formation: "",
       code_postal: "",
@@ -364,22 +369,14 @@ export default ({ match, presetFormation = null }) => {
       rncp_code: "",
       num_academie: 0,
     },
-    onSubmit: ({ uai_formation, code_postal, capacite, periode, cfd, num_academie, rncp_code }, { setSubmitting }) => {
-      return new Promise(async (resolve, reject) => {
-        const body = { uai_formation, code_postal, capacite, periode, cfd, num_academie, rncp_code };
-        let prevStateFormation = formation;
-        if (presetFormation) {
-          // prevStateFormation = await API.post("api", `/formation`, {
-          //   body: {
-          //     ...formation,
-          //   },
-          // });
-        }
+    onSubmit: (values) => {
+      return new Promise(async (resolve) => {
+        const updatedFormation = await _post("/api/entity/formation2021/update", { ...formation, ...values });
 
-        let result = await _post(`/api/entity/pendingRcoFormation`, { ...prevStateFormation, ...body });
+        let result = await _post(`/api/entity/pendingRcoFormation`, updatedFormation);
 
         if (result) {
-          setFormation(result);
+          setPendingFormation(result);
           setFieldValue("uai_formation", result.uai_formation);
           setFieldValue("code_postal", result.code_postal);
           setFieldValue("periode", result.periode);
@@ -389,9 +386,6 @@ export default ({ match, presetFormation = null }) => {
           setFieldValue("rncp_code", result.rncp_code);
         }
 
-        if (presetFormation) {
-          // dispatch(push(`/formation/${prevStateFormation._id}`));
-        }
         setEdition(false);
         resolve("onSubmitHandler complete");
       });
@@ -401,60 +395,70 @@ export default ({ match, presetFormation = null }) => {
   useEffect(() => {
     async function run() {
       try {
-        let form = presetFormation;
-        if (!presetFormation) {
-          const apiURL = isMna ? "/api/entity/formation/" : "/api/entity/formation2021/";
-          form = await _get(`${apiURL}${match.params.id}`, false);
-        }
+        let pendingRCOFormation;
+
+        const apiURL = isMna ? "/api/entity/formation/" : "/api/entity/formation2021/";
+        const form = await _get(`${apiURL}${match.params.id}`, false);
         setFormation(form);
 
-        setFieldValue("uai_formation", form.uai_formation || "");
-        setFieldValue("code_postal", form.code_postal || "");
-        setFieldValue("periode", form.periode || "");
-        setFieldValue("capacite", form.capacite || "");
-        setFieldValue("cfd", form.cfd || "");
-        setFieldValue("num_academie", form.num_academie || "");
-        setFieldValue("rncp_code", form.rncp_code || "");
+        try {
+          pendingRCOFormation = await _get(`/api/entity/pendingRcoFormation/${form.id_rco_formation}`, false);
+          setPendingFormation(pendingRCOFormation);
+        } catch (err) {
+          // no pending formation, do nothing
+        }
+
+        const displayedFormation = pendingRCOFormation || form;
+
+        setFieldValue("uai_formation", displayedFormation.uai_formation || "");
+        setFieldValue("code_postal", displayedFormation.code_postal || "");
+        setFieldValue("periode", displayedFormation.periode || "");
+        setFieldValue("capacite", displayedFormation.capacite || "");
+        setFieldValue("cfd", displayedFormation.cfd || "");
+        setFieldValue("num_academie", displayedFormation.num_academie || "");
+        setFieldValue("rncp_code", displayedFormation.rncp_code || "");
       } catch (e) {
-        // dispatch(push(routes.NOTFOUND));
+        history.push("/404");
       }
     }
     run();
-  }, [match, setFieldValue, presetFormation, isMna]);
+  }, [match, setFieldValue, isMna, history]);
 
   const onEdit = () => {
     setEdition(!edition);
   };
-
-  if (!formation) {
-    return (
-      <div className="page formation">
-        <Spinner color="secondary" />
-      </div>
-    );
-  }
 
   return (
     <Layout>
       <div className="page formation">
         <div className="notice">
           <Container>
-            {presetFormation && (
-              <Alert color="info" style={{ fontSize: "1rem", fontWeight: "bolder" }}>
-                Cette formation est à l'état de brouillon. <br />
-                Pour confirmer vos modifications, veuillez cliquer sur le bouton "Valider".
+            {pendingFormation && (
+              <Alert status="info" fontWeight={"bold"}>
+                Cette formation a été éditée et est en attente de traitement
+                <br />
               </Alert>
             )}
-            <h1 className="heading">{formation.intitule_long}</h1>
-            <Formation
-              formation={formation}
-              edition={edition}
-              onEdit={onEdit}
-              values={values}
-              handleSubmit={handleSubmit}
-              handleChange={handleChange}
-              isMna={isMna}
-            />
+            {!displayedFormation && (
+              <Box align="center" p={2}>
+                <Spinner />
+              </Box>
+            )}
+            {displayedFormation && (
+              <>
+                <h1 className="heading">{displayedFormation.intitule_long}</h1>
+                <Formation
+                  formation={displayedFormation}
+                  edition={edition}
+                  onEdit={onEdit}
+                  values={values}
+                  handleSubmit={handleSubmit}
+                  handleChange={handleChange}
+                  isMna={isMna}
+                  isSubmitting={isSubmitting}
+                />
+              </>
+            )}
           </Container>
         </div>
       </div>
