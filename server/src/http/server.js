@@ -24,6 +24,7 @@ const stats = require("./routes/stats");
 const esSearch = require("./routes/esSearch");
 const esMultiSearchNoIndex = require("./routes/esMultiSearchNoIndex");
 const psFormation = require("./routes/psFormation");
+const pendingRcoFormation = require("./routes/pendingRcoFormation");
 
 module.exports = async (components) => {
   const { db } = components;
@@ -43,6 +44,7 @@ module.exports = async (components) => {
 
   app.use("/api/entity", formation());
   app.use("/api/entity", convertedFormation());
+  app.use("/api/entity", pendingRcoFormation());
   app.use("/api/entity", report());
   app.use("/api/entity", checkJwtToken, formationSecure());
 
