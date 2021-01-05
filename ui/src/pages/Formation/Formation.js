@@ -11,15 +11,10 @@ import Layout from "../layout/Layout";
 
 import Section from "./components/Section";
 import "./formation.css";
+import useAuth from "../../common/hooks/useAuth";
 
-const checkIfHasRightToEdit = (item, userAcm) => {
-  return true;
-
-  // let hasRightToEdit = userAcm.all;
-  // if (!hasRightToEdit) {
-  //   hasRightToEdit = userAcm.academie.includes(`${item.num_academie}`);
-  // }
-  // return hasRightToEdit;
+const checkIfHasRightToEdit = (item, academie) => {
+  return academie.split(",").includes(`${item.num_academie}`);
 };
 
 const EditSection = ({ edition, onEdit, handleSubmit, onDeleteClicked }) => {
@@ -62,10 +57,10 @@ const EditSection = ({ edition, onEdit, handleSubmit, onDeleteClicked }) => {
 
 const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, values, isMna }) => {
   let history = useHistory();
+  const [auth] = useAuth();
 
-  // const { acm: userAcm } = useSelector((state) => state.user);
   const oneEstablishment = formation.etablissement_gestionnaire_siret === formation.etablissement_formateur_siret;
-  const hasRightToEdit = !isMna && checkIfHasRightToEdit(/*formation, userAcm*/);
+  const hasRightToEdit = !isMna && checkIfHasRightToEdit(formation, auth.academie);
 
   const onDeleteClicked = async (e) => {
     // eslint-disable-next-line no-restricted-globals

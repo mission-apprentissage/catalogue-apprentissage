@@ -36,6 +36,7 @@ function PrivateRoute({ children, ...rest }) {
     />
   );
 }
+
 WebFont.load({
   google: { families: ["Josefin Sans: 200, 300, 400, 600, 700", "Nexa", "Raleway"] },
   custom: {
@@ -43,9 +44,8 @@ WebFont.load({
     urls: ["//use.fontawesome.com/releases/v5.0.8/css/all.css"],
   },
 });
-const queryClient = new QueryClient();
 
-export default () => {
+const ResetPasswordWrapper = ({ children }) => {
   let [auth] = useAuth();
   let history = useHistory();
 
@@ -61,41 +61,51 @@ export default () => {
     run();
   }, [auth, history]);
 
+  return <>{children}</>;
+};
+
+const queryClient = new QueryClient();
+
+export default () => {
+  let [auth] = useAuth();
+
   return (
     <QueryClientProvider client={queryClient}>
       <div className="App">
         <Router>
-          <ScrollToTop />
-          <Switch>
-            <PrivateRoute exact path="/admin">
-              {auth && auth.permissions.isAdmin ? <DashboardPage /> : <HomePage />}
-            </PrivateRoute>
-            {auth && auth.permissions.isAdmin && (
-              <PrivateRoute exact path="/admin/users">
-                <Layout>
-                  <Users />
-                </Layout>
+          <ResetPasswordWrapper>
+            <ScrollToTop />
+            <Switch>
+              <PrivateRoute exact path="/admin">
+                {auth && auth.permissions.isAdmin ? <DashboardPage /> : <HomePage />}
               </PrivateRoute>
-            )}
-            <Route exact path="/" component={HomePage} />
-            <Route exact path="/recherche/formations-2020" component={Search} />
-            <Route exact path="/recherche/formations-2021" component={Search} />
-            <Route exact path="/recherche/etablissements" component={Search} />
-            <Route exact path={`/formation/:id`} component={Formation} />
-            <Route exact path={`/etablissement/:id`} component={Etablissement} />
+              {auth && auth.permissions.isAdmin && (
+                <PrivateRoute exact path="/admin/users">
+                  <Layout>
+                    <Users />
+                  </Layout>
+                </PrivateRoute>
+              )}
+              <Route exact path="/" component={HomePage} />
+              <Route exact path="/recherche/formations-2020" component={Search} />
+              <Route exact path="/recherche/formations-2021" component={Search} />
+              <Route exact path="/recherche/etablissements" component={Search} />
+              <Route exact path={`/formation/:id`} component={Formation} />
+              <Route exact path={`/etablissement/:id`} component={Etablissement} />
 
-            <Route exact path="/guide-reglementaire" component={HowToReglement} />
-            <Route exact path="/guide-modification" component={HowToModif} />
+              <Route exact path="/guide-reglementaire" component={HowToReglement} />
+              <Route exact path="/guide-modification" component={HowToModif} />
 
-            <Route exact path="/login" component={LoginPage} />
-            <Route exact path="/reset-password" component={ResetPasswordPage} />
-            <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
-            <Route exact path="/report" component={ReportPage} />
-            <Route exact path="/coverage" component={PageReconciliation} />
-            <Route exact path="/changelog" component={Journal} />
+              <Route exact path="/login" component={LoginPage} />
+              <Route exact path="/reset-password" component={ResetPasswordPage} />
+              <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
+              <Route exact path="/report" component={ReportPage} />
+              <Route exact path="/coverage" component={PageReconciliation} />
+              <Route exact path="/changelog" component={Journal} />
 
-            <Route component={NotFoundPage} />
-          </Switch>
+              <Route component={NotFoundPage} />
+            </Switch>
+          </ResetPasswordWrapper>
         </Router>
       </div>
     </QueryClientProvider>
