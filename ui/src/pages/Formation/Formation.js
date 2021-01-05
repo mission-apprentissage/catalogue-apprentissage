@@ -1,23 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Button, Spinner, Input, Alert } from "reactstrap";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { useFormik } from "formik";
+import queryString from "query-string";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { _get, _post } from "../../common/httpClient";
+
 import Layout from "../layout/Layout";
 
 import Section from "./components/Section";
-
 import "./formation.css";
 
-// const checkIfHasRightToEdit = (item, userAcm) => {
-//   let hasRightToEdit = userAcm.all;
-//   if (!hasRightToEdit) {
-//     hasRightToEdit = userAcm.academie.includes(`${item.num_academie}`);
-//   }
-//   return hasRightToEdit;
-// };
+const checkIfHasRightToEdit = (item, userAcm) => {
+  return true;
+
+  // let hasRightToEdit = userAcm.all;
+  // if (!hasRightToEdit) {
+  //   hasRightToEdit = userAcm.academie.includes(`${item.num_academie}`);
+  // }
+  // return hasRightToEdit;
+};
 
 const EditSection = ({ edition, onEdit, handleSubmit, onDeleteClicked }) => {
   return (
@@ -57,12 +60,12 @@ const EditSection = ({ edition, onEdit, handleSubmit, onDeleteClicked }) => {
   );
 };
 
-const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, values }) => {
+const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, values, isMna }) => {
   let history = useHistory();
 
   // const { acm: userAcm } = useSelector((state) => state.user);
   const oneEstablishment = formation.etablissement_gestionnaire_siret === formation.etablissement_formateur_siret;
-  const hasRightToEdit = true; // checkIfHasRightToEdit(formation, userAcm);
+  const hasRightToEdit = !isMna && checkIfHasRightToEdit(/*formation, userAcm*/);
 
   const onDeleteClicked = async (e) => {
     // eslint-disable-next-line no-restricted-globals
@@ -352,6 +355,9 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
 export default ({ match, presetFormation = null }) => {
   const [formation, setFormation] = useState(presetFormation);
   const [edition, setEdition] = useState(presetFormation ? true : false);
+  const { search } = useLocation();
+  const { source } = queryString.parse(search);
+  const isMna = source === "mna";
 
   const { values, handleSubmit, handleChange, setFieldValue } = useFormik({
     initialValues: {
@@ -402,7 +408,8 @@ export default ({ match, presetFormation = null }) => {
       try {
         let form = presetFormation;
         if (!presetFormation) {
-          form = await _get(`/api/entity/formation2021/${match.params.id}`, false);
+          const apiURL = isMna ? "/api/entity/formation/" : "/api/entity/formation2021/";
+          form = await _get(`${apiURL}${match.params.id}`, false);
         }
         setFormation(form);
 
@@ -418,7 +425,7 @@ export default ({ match, presetFormation = null }) => {
       }
     }
     run();
-  }, [match, setFieldValue, presetFormation]);
+  }, [match, setFieldValue, presetFormation, isMna]);
 
   const onEdit = () => {
     setEdition(!edition);
@@ -451,6 +458,7 @@ export default ({ match, presetFormation = null }) => {
               values={values}
               handleSubmit={handleSubmit}
               handleChange={handleChange}
+              isMna={isMna}
             />
           </Container>
         </div>
