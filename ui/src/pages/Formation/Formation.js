@@ -10,13 +10,10 @@ import { _get, _post } from "../../common/httpClient";
 import Layout from "../layout/Layout";
 import Section from "./components/Section";
 import useAuth from "../../common/hooks/useAuth";
+import { hasRightToEditFormation } from "../../common/utils/rolesUtils";
 import "./formation.css";
 
-const checkIfHasRightToEdit = (item, academie) => {
-  return academie.split(",").includes(`${item.num_academie}`);
-};
-
-const EditSection = ({ edition, onEdit, handleSubmit, onDeleteClicked, isSubmitting }) => {
+const EditSection = ({ edition, onEdit, handleSubmit, onDeleteClicked, isSubmitting, isDeleteDisabled }) => {
   return (
     <div className="sidebar-section info sidebar-section-edit">
       {edition && (
@@ -46,7 +43,7 @@ const EditSection = ({ edition, onEdit, handleSubmit, onDeleteClicked, isSubmitt
           >
             Modifier
           </Button>
-          <Button color="danger" onClick={onDeleteClicked}>
+          <Button color="danger" onClick={onDeleteClicked} disabled={isDeleteDisabled}>
             Supprimer
           </Button>
         </>
@@ -55,22 +52,21 @@ const EditSection = ({ edition, onEdit, handleSubmit, onDeleteClicked, isSubmitt
   );
 };
 
-const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, values, isMna, isSubmitting }) => {
-  let history = useHistory();
+const Formation = ({
+  formation,
+  edition,
+  onEdit,
+  handleChange,
+  handleSubmit,
+  values,
+  isMna,
+  isSubmitting,
+  onDelete,
+}) => {
   const [auth] = useAuth();
 
   const oneEstablishment = formation.etablissement_gestionnaire_siret === formation.etablissement_formateur_siret;
-  const hasRightToEdit = !isMna && checkIfHasRightToEdit(formation, auth.academie);
-
-  const onDeleteClicked = async (e) => {
-    // eslint-disable-next-line no-restricted-globals
-    const areYousure = confirm("Souhaitez-vous vraiment supprimer cette formation ?");
-    if (areYousure) {
-      // Update as not published
-      await _post(`/api/entity/pendingRcoFormation`, { ...formation, published: false });
-      history.push("/recherche/formations-2021");
-    }
-  };
+  const hasRightToEdit = !isMna && hasRightToEditFormation(formation, auth);
 
   return (
     <Row>
@@ -207,8 +203,9 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
             edition={edition}
             onEdit={onEdit}
             handleSubmit={handleSubmit}
-            onDeleteClicked={onDeleteClicked}
+            onDeleteClicked={onDelete}
             isSubmitting={isSubmitting}
+            isDeleteDisabled={!formation.published}
           />
         )}
         <div className="sidebar-section info">
@@ -371,10 +368,9 @@ export default ({ match }) => {
     },
     onSubmit: (values) => {
       return new Promise(async (resolve) => {
-        const updatedFormation = await _post("/api/entity/formation2021/update", { ...formation, ...values });
+        const updatedFormation = await _post("/api/entity/formation2021/update", { ...displayedFormation, ...values });
 
         let result = await _post(`/api/entity/pendingRcoFormation`, updatedFormation);
-
         if (result) {
           setPendingFormation(result);
           setFieldValue("uai_formation", result.uai_formation);
@@ -428,6 +424,18 @@ export default ({ match }) => {
     setEdition(!edition);
   };
 
+  const onDelete = async () => {
+    // eslint-disable-next-line no-restricted-globals
+    const areYousure = confirm("Souhaitez-vous vraiment supprimer cette formation ?");
+    if (areYousure) {
+      // Update as not published
+      let result = await _post(`/api/entity/pendingRcoFormation`, { ...displayedFormation, published: false });
+      if (result) {
+        setPendingFormation(result);
+      }
+    }
+  };
+
   return (
     <Layout>
       <div className="page formation">
@@ -435,7 +443,8 @@ export default ({ match }) => {
           <Container>
             {pendingFormation && (
               <Alert status="info" fontWeight={"bold"}>
-                Cette formation a été éditée et est en attente de traitement
+                Cette formation a été {pendingFormation.published ? "éditée" : "supprimée"} et est en attente de
+                traitement
                 <br />
               </Alert>
             )}
@@ -456,6 +465,7 @@ export default ({ match }) => {
                   handleChange={handleChange}
                   isMna={isMna}
                   isSubmitting={isSubmitting}
+                  onDelete={onDelete}
                 />
               </>
             )}
