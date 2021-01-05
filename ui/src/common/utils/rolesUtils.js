@@ -10,3 +10,7 @@ export const roles = {
   role2: "role2",
   administrator: "administrator",
 };
+
+export const hasRightToEditFormation = (formation, auth) => {
+  return auth.academie.split(",").includes(`${formation.num_academie}`);
+};
