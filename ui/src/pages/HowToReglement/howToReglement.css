@@ -3,6 +3,15 @@
   background-color: #e5edef;
   color: #19414c;
 }
+.howToReglement h1, .howToReglement h2, .howToReglement h3, .howToReglement h4, .howToReglement h5, .howToReglement h6 {
+  font-size: revert;
+  font-weight: revert;
+}
+.howToReglement ol, .howToReglement ul {
+  margin: initial;
+  padding: revert;
+}
+
 .howToReglement .mission-summary {
   font-size: 16px;
 }
