@@ -1,8 +1,18 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { Dropdown, Site } from "tabler-react";
+import useAuth from "../../../common/hooks/useAuth";
 
 const NavigationMenu = () => {
+  let [auth] = useAuth();
+
+  let dropDownItems = (
+    <>
+      <Dropdown.Item to="/guide-reglementaire">Guide réglementaire</Dropdown.Item>
+      {auth?.sub !== "anonymous" && <Dropdown.Item to="/guide-modification">Guide d'utilisation</Dropdown.Item>}
+    </>
+  );
+
   return (
     <Site.Nav>
       <div className="header collapse d-lg-flex p-0" id="headerMenuCollapse">
@@ -41,12 +51,7 @@ const NavigationMenu = () => {
                       </Dropdown.Trigger>
                     }
                     position="bottom"
-                    items={
-                      <>
-                        <Dropdown.Item to="/guide-modification">Guide d'utilisation</Dropdown.Item>
-                        <Dropdown.Item to="/guide-reglementaire">Guide réglementaire</Dropdown.Item>
-                      </>
-                    }
+                    items={dropDownItems}
                   />
                 </li>
               </ul>

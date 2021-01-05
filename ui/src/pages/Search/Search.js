@@ -4,7 +4,7 @@ import { Container, Row } from "reactstrap";
 import Switch from "react-switch";
 // import { API } from "aws-amplify";
 // import { useSelector } from "react-redux";
-// import useAuth from "../../common/hooks/useAuth";
+import useAuth from "../../common/hooks/useAuth";
 import Layout from "../layout/Layout";
 
 // import config from "../../config";
@@ -16,7 +16,7 @@ import {
   Facet,
   Pagination,
   ToggleCatalogue,
-  // ExportButton,
+  ExportButton,
 } from "./components";
 
 import constantsFormations from "./constantsFormations";
@@ -44,16 +44,14 @@ export default ({ match }) => {
   const [mode, setMode] = useState("simple");
   const [base, setBase] = useState("mnaformation");
   const [endPoint, setEndpoint] = useState(endpointNewFront);
+  let [auth] = useAuth();
 
-  const { FILTERS, facetDefinition, queryBuilderField, dataSearch } =
+  const { FILTERS, facetDefinition, queryBuilderField, dataSearch, columnsDefinition } =
     base === "mnaformation"
       ? constantsFormations
       : base === "convertedformation"
       ? constantsRcoFormations
-      : constantsEtablissements; // columnsDefinition
-
-  // const { user } = useSelector((state) => state.user);
-  // let [auth] = useAuth();
+      : constantsEtablissements;
 
   useEffect(() => {
     async function run() {
@@ -207,20 +205,20 @@ export default ({ match }) => {
                                     countItems !== 0 ? countItems : ""
                                   } établissements`}
                             </span>
-                            {/* {(base !== "convertedformation" || (user && base === "convertedformation")) && (
-                            <ExportButton
-                              index={base}
-                              filters={FILTERS}
-                              columns={columnsDefinition
-                                .filter((def) => !def.debug || (user && def.exportOnly && def.debug))
-                                .map((def) => ({ header: def.Header, fieldName: def.accessor }))}
-                              defaultQuery={{
-                                match: {
-                                  published: true,
-                                },
-                              }}
-                            />
-                          )} */}
+                            {auth?.sub !== "anonymous" && (
+                              <ExportButton
+                                index={base}
+                                filters={FILTERS}
+                                columns={columnsDefinition
+                                  .filter((def) => !def.debug)
+                                  .map((def) => ({ header: def.Header, fieldName: def.accessor }))}
+                                defaultQuery={{
+                                  match: {
+                                    published: true,
+                                  },
+                                }}
+                              />
+                            )}
                           </div>
                         );
                       }}
