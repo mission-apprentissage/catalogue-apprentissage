@@ -58,5 +58,18 @@ module.exports = () => {
     })
   );
 
+  router.get(
+    "/pendingRcoFormation/:id",
+    tryCatch(async (req, res) => {
+      const id = req.params.id;
+
+      const formation = await PendingRcoFormation.findOne({ id_rco_formation: id });
+      if (formation) {
+        return res.json(formation);
+      }
+      return res.status(404).send({ message: "Item doesn't exist" });
+    })
+  );
+
   return router;
 };
