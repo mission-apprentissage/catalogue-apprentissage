@@ -13,6 +13,11 @@ const endpointNewFront =
     ? "https://catalogue-recette.apprentissage.beta.gouv.fr/api"
     : "https://catalogue.apprentissage.beta.gouv.fr/api";
 
+const endpointOldFront =
+  ENV_NAME === "local" || ENV_NAME === "dev"
+    ? "https://r7mayzn08d.execute-api.eu-west-3.amazonaws.com/dev"
+    : "https://c7a5ujgw35.execute-api.eu-west-3.amazonaws.com/prod";
+
 const CSV_SEPARATOR = ";";
 
 const serializeObject = (columns, obj) => {
@@ -57,43 +62,55 @@ const downloadCSV = (fileName, csv) => {
 };
 
 let search = (index, query) => {
-  if (index === "convertedformation") {
-    return _post(`${endpointNewFront}/es/search/${index}/_search?scroll=5m`, {
-      size: 1000,
-      query: query.query,
-    });
+  if (index === "etablissements") {
+    return _post(
+      `${endpointOldFront}/es/search/${index}/_search?scroll=5m`,
+      {
+        size: 1000,
+        query: query.query,
+      },
+      false
+    );
   }
 
-  // return API.post("api", `/es/search/${index}/_search?scroll=5m`, {
-  //   body: {
-  //     size: 1000,
-  //     query: query.query,
-  //   },
-  // });
+  return _post(
+    `${endpointNewFront}/es/search/${index}/_search?scroll=5m`,
+    {
+      size: 1000,
+      query: query.query,
+    },
+    false
+  );
 };
 
 let scroll = (index, scrollId) => {
-  if (index === "convertedformation") {
-    return _post(`${endpointNewFront}/es/search/${index}/scroll?scroll=5m&scroll_id=${scrollId}`, {
+  if (index === "etablissements") {
+    return _post(
+      `${endpointOldFront}/es/search/${index}/scroll?scroll=5m&scroll_id=${scrollId}`,
+      {
+        scroll: true,
+        scroll_id: scrollId,
+        activeQuery: {
+          scroll: "1m",
+          scroll_id: scrollId,
+        },
+      },
+      false
+    );
+  }
+
+  return _post(
+    `${endpointNewFront}/es/search/${index}/scroll?scroll=5m&scroll_id=${scrollId}`,
+    {
       scroll: true,
       scroll_id: scrollId,
       activeQuery: {
         scroll: "1m",
         scroll_id: scrollId,
       },
-    });
-  }
-
-  // return API.post("api", `/es/search/${index}/scroll?scroll=5m&scroll_id=${scrollId}`, {
-  //   body: {
-  //     scroll: true,
-  //     scroll_id: scrollId,
-  //     activeQuery: {
-  //       scroll: "1m",
-  //       scroll_id: scrollId,
-  //     },
-  //   },
-  // });
+    },
+    false
+  );
 };
 
 let getDataAsCSV = async (searchUrl, query, columns, setProgress) => {
