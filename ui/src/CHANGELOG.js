@@ -1,11 +1,48 @@
 const changelog = {
   list: [
     {
-      version: "2.0.2",
+      version: "2.0.3",
       date: "Prochainement",
       about: `<h5>A venir</h5>
       <ul>
-        <li></li>
+      </ul>`,
+      fixes: [],
+      features: [],
+      improvements: [],
+    },
+    {
+      version: "2.0.2",
+      date: "15 Décembre 2020",
+      about: `<h5>À propos de cette version :</h5>
+      <ul>
+        <li>
+          La mise à jour du 15/12 peut contenir des doublons au niveau des formations. Des travaux de
+          dédoublonnage sont en cours avec le réseau des Carif-Oref. Un message vous informera de la
+          correction des doublons.
+        </li>
+        <li>
+          Les établissements affichés sur le catalogue sont soit des établissements répertoriés en 2020 soit
+          des établissements répertoriés en 2021. Certains établissements sont présents sur les 2 années. A
+          titre d'information : - 1943 établissements uniquement 2020 - 1628 établissements 2020 & 2021 -
+          602 établissements uniquement 2021
+        </li>
+        <li>
+          Courant janvier 2021 le catalogue des formations 2020 ne sera plus affiché dans cette interface.
+        </li>
+        <li>
+          A l’attention des services académiques : L’indication « A charger dans Parcoursup » sera
+          développée de façon plus précise en fonction de chaque type de formation dans la prochaine version
+          du catalogue 2021. Pour analyser les demandes d’intégration, il faut tenir compte de
+          <a
+            href="https://drive.google.com/file/d/1xL3urYVOJBNkm4HO-iZcTPhieRWpQ7Sk/view?usp=sharing"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            la note de cadrage MESRI des conditions de référencement
+          </a>
+          . L’indication « à charger dans parcoursup » de la version 2020 ne correspond pas à une validation
+          automatique, elle doit être entendue comme « sous réserve des conditions de référencement ».
+        </li>
       </ul>`,
       fixes: [],
       features: [],
