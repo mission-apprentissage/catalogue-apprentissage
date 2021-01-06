@@ -13,6 +13,8 @@ import useAuth from "../../common/hooks/useAuth";
 import { hasRightToEditFormation } from "../../common/utils/rolesUtils";
 import "./formation.css";
 
+const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
+
 const EditSection = ({ edition, onEdit, handleSubmit, onDeleteClicked, isSubmitting, isDeleteDisabled }) => {
   return (
     <div className="sidebar-section info sidebar-section-edit">
@@ -368,9 +370,12 @@ export default ({ match }) => {
     },
     onSubmit: (values) => {
       return new Promise(async (resolve) => {
-        const updatedFormation = await _post("/api/entity/formation2021/update", { ...displayedFormation, ...values });
+        const updatedFormation = await _post(`${endpointNewFront}/entity/formation2021/update`, {
+          ...displayedFormation,
+          ...values,
+        });
 
-        let result = await _post(`/api/entity/pendingRcoFormation`, updatedFormation);
+        let result = await _post(`${endpointNewFront}/entity/pendingRcoFormation`, updatedFormation);
         if (result) {
           setPendingFormation(result);
           setFieldValue("uai_formation", result.uai_formation);
@@ -393,12 +398,15 @@ export default ({ match }) => {
       try {
         let pendingRCOFormation;
 
-        const apiURL = isMna ? "/api/entity/formation/" : "/api/entity/formation2021/";
+        const apiURL = isMna ? `${endpointNewFront}/entity/formation/` : `${endpointNewFront}/entity/formation2021/`;
         const form = await _get(`${apiURL}${match.params.id}`, false);
         setFormation(form);
 
         try {
-          pendingRCOFormation = await _get(`/api/entity/pendingRcoFormation/${form.id_rco_formation}`, false);
+          pendingRCOFormation = await _get(
+            `${endpointNewFront}/entity/pendingRcoFormation/${form.id_rco_formation}`,
+            false
+          );
           setPendingFormation(pendingRCOFormation);
         } catch (err) {
           // no pending formation, do nothing
@@ -429,7 +437,10 @@ export default ({ match }) => {
     const areYousure = confirm("Souhaitez-vous vraiment supprimer cette formation ?");
     if (areYousure) {
       // Update as not published
-      let result = await _post(`/api/entity/pendingRcoFormation`, { ...displayedFormation, published: false });
+      let result = await _post(`${endpointNewFront}/entity/pendingRcoFormation`, {
+        ...displayedFormation,
+        published: false,
+      });
       if (result) {
         setPendingFormation(result);
       }
