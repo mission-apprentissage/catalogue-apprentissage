@@ -40,16 +40,16 @@
             <mj-column>
                 <mj-text align="left" padding-top="50px" color="#ffffff">
                    Pour vous connecter :<br>
-                    <a href="https://catalogue.apprentissage.beta.gouv.fr/login"
-                        class="link-nostyle">https://catalogue.apprentissage.beta.gouv.fr/</a>
+                    <a href="<%= data.publicUrl %>/login"
+                        class="link-nostyle"><%= data.publicUrl %></a>
                 </mj-text>
                 <mj-text align="left" padding-top="50px" color="#ffffff">
                     Votre identifiant :<br>
-                    <%= username %>
+                    <%= data.username %>
                   </mj-text>
                 <mj-text align="left" padding-top="50px" color="#ffffff">
                   Votre mot de passe temporaire :<br>
-                  <%= tmpPwd %>
+                  <%= data.tmpPwd %>
                 </mj-text>
             </mj-column>
         </mj-section>
@@ -63,7 +63,7 @@
         <mj-section background-color="#5222d0" padding-bottom="0">
             <mj-column padding-top="0">
                 <mj-text align="left" font-size="14px" line-height="20px" color="#ffffff">
-                    Vous avez reçu cet email car un compte utilisateur a été créé sur https://catalogue.apprentissage.beta.gouv.fr/.
+                    Vous avez reçu cet email car un compte utilisateur a été créé sur  <%= data.publicUrl %>.
                 </mj-text>
             </mj-column>
         </mj-section>

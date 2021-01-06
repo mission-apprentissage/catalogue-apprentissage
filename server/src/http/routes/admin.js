@@ -56,6 +56,7 @@ module.exports = ({ users, mailer }) => {
         {
           username,
           tmpPwd: password,
+          publicUrl: config.publicUrl,
         }
       );
 
