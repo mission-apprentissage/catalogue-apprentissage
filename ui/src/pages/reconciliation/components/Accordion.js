@@ -29,13 +29,13 @@ import { _post, _put } from "../../../common/httpClient";
 import { useMutation } from "react-query";
 
 function reducer(state, values) {
-  const { type, _id } = values;
+  const { type, id } = values;
   if (type === "supprimer") {
     return [...state];
   }
 
   const currentState = [...state];
-  let index = currentState.findIndex((x) => x._id === _id);
+  let index = currentState.findIndex((x) => x.id === id);
 
   if (index !== -1) {
     currentState[index].type = type;
@@ -54,6 +54,7 @@ export default ({ data, setToaster }) => {
   const sameEtab = new Set([data.libelle_uai_affilie, data.libelle_uai_composante]).size === 1;
 
   const toggle = () => setModalIsOpen(!modalIsOpen);
+  console.log("mapping", mapping);
 
   const onSelectChange = useMutation(
     (payload) =>
@@ -64,9 +65,9 @@ export default ({ data, setToaster }) => {
       }),
     {
       onSuccess: (data, payload) => {
-        console.log("data", data);
+        // console.log("data", data);
         setMatchingMnaEtablissement(data.matching_mna_etablissement);
-        setMapping({ id: payload._id, type: payload.type });
+        setMapping({ id: payload._id, type: payload.type, siret: payload.siret });
       },
       onError: (error) => {
         console.log(error);
@@ -74,23 +75,35 @@ export default ({ data, setToaster }) => {
     }
   );
 
-  const onValidate = useMutation(
-    (payload) =>
-      _post("/api/psformation", {
-        id: data._id,
-        mapping_liaison_etablissement: mapping,
-        mapping_code_cfd_formation: data.code_cfd,
-        mapping_code_postal_formation: data.code_postal,
-        mapping_id_formation_mna: "ID_MNA_FORMATION",
-        mapping_id_formation_ps: data._id,
-        mapping_annee_formation: "ANNEE_FORMATION",
-        mapping_etat_reconciliation: "OK",
+  const onValidatePsReconciliation = useMutation(
+    () =>
+      _post("/api/psformation/psreconciliation", {
+        uai_affilie: data.uai_affilie,
+        uai_gestionnaire: data.uai_gestionnaire,
+        uai_composante: data.uai_composante,
+        code_cfd: data.code_cfd,
+        id_psformation: data._id,
+        mapping: mapping,
       }),
     {
       onSuccess: () => {
         setToaster(true);
       },
+      onError: (error) => console.log(error),
     }
+  );
+
+  const onValidatePsFormation = useMutation(() =>
+    _post("/api/psformation", {
+      id: data._id,
+      mapping_liaison_etablissement: mapping,
+      mapping_code_cfd_formation: data.code_cfd,
+      mapping_code_postal_formation: data.code_postal,
+      // mapping_id_formation_mna: "ID_MNA_FORMATION", // todo for matching 1*
+      mapping_id_formation_ps: data._id,
+      // mapping_annee_formation: "ANNEE_FORMATION", // to validate
+      mapping_etat_reconciliation: "OK",
+    })
   );
 
   const onSuccessModal = useMutation(
@@ -133,7 +146,14 @@ export default ({ data, setToaster }) => {
                 <Button colorScheme="teal" variant="outline" pl={4} marginRight={4} onClick={toggle}>
                   Ajouter un établissement
                 </Button>
-                <Button colorScheme="teal" variant="solid" onClick={() => onValidate.mutate()}>
+                <Button
+                  colorScheme="teal"
+                  variant="solid"
+                  onClick={() => {
+                    onValidatePsReconciliation.mutate();
+                    // onValidatePsFormation.mutate();
+                  }}
+                >
                   Valider
                 </Button>
               </Box>
@@ -157,9 +177,11 @@ const Liaison = ({ data }) => {
         {data.map((item, index) => {
           return (
             <Box key={index}>
-              <Heading size="md"> Type: {item.type}</Heading>
-              <Text fontSize="sm">
-                Identifiant catalogue : <Text as="i">{item._id}</Text>
+              <Heading size="md">
+                Type: <Tag>{item.type}</Tag>
+              </Heading>
+              <Text fontSize="xs">
+                Identifiant : <Text as="i">{item.id}</Text>
               </Text>
             </Box>
           );
@@ -267,7 +289,8 @@ const DetailFormation = ({ data, sameEtab, sameUai }) => {
 };
 
 const Option = ({ _id, type, onSelectChange, etablissement }) => {
-  const handleChange = (e) => onSelectChange.mutate({ type: e.target.value, _id: _id, etablissement: etablissement });
+  const handleChange = (e) =>
+    onSelectChange.mutate({ type: e.target.value, _id: _id, etablissement: etablissement, siret: etablissement.siret });
 
   return (
     <FormControl>
