@@ -104,8 +104,10 @@ export default () => {
                   SIRET, adresse postale, .. vous pouvez vous rapprocher de l’INSEE afin de réaliser les modifications à
                   la source. Pour toute autre incohérence (UAI, Code diplôme, Code RNCP) vous pouvez vous rapprocher de
                   votre Carif-Oref afin qu'il vous aide à identifier l'origine du problème et vous accompagne dans sa
-                  résolution auprès des instances (DEPP, BCN, France Compétences). La prochaine livraison concerna le
-                  module de validation des données.
+                  résolution auprès des instances (DEPP, BCN, France Compétences).
+                  <br />
+                  <br />
+                  La prochaine livraison concernera le module de validation des données.
                   <br />
                   <br />
                   Vos retours utilisateurs sont les bienvenus afin d’améliorer l’usage de ce catalogue, vous pouvez
