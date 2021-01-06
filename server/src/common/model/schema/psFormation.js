@@ -155,7 +155,7 @@ const psFormationSchema = {
   },
   mapping_etat_reconciliation: {
     type: String,
-    enum: ["OK", "OUVERTE"],
+    enum: ["OK", "OUVERTE", "A VERIFIER"],
     default: "OUVERTE",
     description: "Etat de la réconciliation de la formation parcoursup avec le catalogue",
   },

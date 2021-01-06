@@ -1,6 +1,8 @@
 const express = require("express");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const Joi = require("joi");
+const config = require("config");
+const path = require("path");
 
 const userSchema = Joi.object({
   username: Joi.string().required(),
@@ -8,13 +10,18 @@ const userSchema = Joi.object({
   options: Joi.object({
     email: Joi.string().required(),
     academie: Joi.string().required(),
+    roles: Joi.array().required(),
     permissions: Joi.object({
       isAdmin: Joi.boolean().required(),
     }).unknown(),
   }).unknown(),
 });
 
-module.exports = ({ users }) => {
+const getEmailTemplate = (type = "forgotten-password") => {
+  return path.join(__dirname, `../../assets/templates/${type}.mjml.ejs`);
+};
+
+module.exports = ({ users, mailer }) => {
   const router = express.Router();
 
   router.get(
@@ -41,6 +48,17 @@ module.exports = ({ users }) => {
 
       const { username, password, options } = body;
       const user = await users.createUser(username, password, options);
+
+      await mailer.sendEmail(
+        user.email,
+        `[${config.env} Catalogue apprentissage] Bienvenue`,
+        getEmailTemplate("grettings"),
+        {
+          username,
+          tmpPwd: password,
+          publicUrl: config.publicUrl,
+        }
+      );
 
       return res.json(user);
     })

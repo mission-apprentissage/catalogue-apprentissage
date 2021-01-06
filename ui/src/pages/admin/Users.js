@@ -7,19 +7,19 @@ const UserLine = ({ user }) => {
   const { values, handleSubmit, handleChange } = useFormik({
     initialValues: {
       accessAllCheckbox: user?.isAdmin ? ["on"] : [],
+      roles: user?.roles || ["user"],
       accessAcademieList: user ? user.academie.split(",") : "",
       newUsername: user?.username || "",
       newEmail: user?.email || "",
       newTmpPassword: "1MotDePassTemporaire!",
     },
     onSubmit: (
-      { apiKey, accessAllCheckbox, accessAcademieList, newUsername, newEmail, newTmpPassword },
+      { apiKey, accessAllCheckbox, accessAcademieList, newUsername, newEmail, newTmpPassword, roles },
       { setSubmitting }
     ) => {
       return new Promise(async (resolve, reject) => {
         const accessAcademie = accessAcademieList.join(",");
         const accessAll = accessAllCheckbox.includes("on");
-
         try {
           if (user) {
             const body = {
@@ -27,6 +27,7 @@ const UserLine = ({ user }) => {
               options: {
                 academie: accessAcademie,
                 email: newEmail,
+                roles,
                 permissions: {
                   isAdmin: accessAll,
                 },
@@ -41,6 +42,7 @@ const UserLine = ({ user }) => {
               options: {
                 academie: accessAcademie,
                 email: newEmail,
+                roles,
                 permissions: {
                   isAdmin: accessAll,
                 },
@@ -59,9 +61,10 @@ const UserLine = ({ user }) => {
     },
   });
 
-  const onDeleteClicked = async () => {
+  const onDeleteClicked = async (e) => {
+    e.preventDefault();
     // eslint-disable-next-line no-restricted-globals
-    if (confirm("Delete user !?") && user.isAdmin) {
+    if (confirm("Delete user !?")) {
       await _delete(`/api/admin/user/${user.username}`);
       document.location.reload(true);
     }
@@ -106,6 +109,39 @@ const UserLine = ({ user }) => {
           />
           <span>Admin</span>
         </label>
+      </TablerForm.Group>
+
+      <TablerForm.Group label="Rôles">
+        <TablerForm.Group>
+          <label className="custom-control-inline">
+            <input
+              type="checkbox"
+              name="roles"
+              className="custom-control custom-checkbox custom-control-inline"
+              onChange={handleChange}
+              value={"user"}
+              checked={true}
+              disabled
+            />
+            <span>user</span>
+          </label>
+
+          {["reports", "moss"].map((role, i) => {
+            return (
+              <label key={i} className="custom-control-inline">
+                <input
+                  type="checkbox"
+                  name="roles"
+                  className="custom-control custom-checkbox custom-control-inline"
+                  onChange={handleChange}
+                  value={role}
+                  checked={values.roles.includes(role)}
+                />
+                <span>{role}</span>
+              </label>
+            );
+          })}
+        </TablerForm.Group>
       </TablerForm.Group>
 
       <TablerForm.Group label="Académies">

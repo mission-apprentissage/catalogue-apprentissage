@@ -1,5 +1,6 @@
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 const { PsFormation } = require("../../common/model");
+const mongoose = require("mongoose");
 const logger = require("../../common/logger");
 
 module.exports = async (catalogue) => {
@@ -10,15 +11,16 @@ module.exports = async (catalogue) => {
   const baseEtablissement = await catalogue.getEtablissements();
 
   logger.info(`${psFormation.length} formation à traiter`);
-
   await asyncForEach(psFormation, async (formation, index) => {
     logger.info(
-      `Processing ${index}/${PsFormation.length} - ${formation.libelle_uai_affilie} — mef : ${formation.code_mef_10}`
+      `Formation ${index + 1}/${psFormation.length} - ${formation.libelle_uai_affilie} — mef : ${formation.code_mef_10}`
     );
     let etablissements = [];
 
     await asyncForEach(formation.matching_mna_formation, async (matches, index) => {
-      logger.info(`Processing ${index + 1} of ${formation.matching_mna_formation.length} - cfd : ${matches.cfd}`);
+      logger.info(
+        `Processing ${index + 1} of ${formation.matching_mna_formation.length} matching - cfd : ${matches.cfd}`
+      );
 
       if (matches.uai_formation) {
         let resuai = baseEtablissement.filter((x) => x.uai === matches.uai_formation);
@@ -50,20 +52,34 @@ module.exports = async (catalogue) => {
 
     if (etablissements.length === 0) return;
 
-    const t = etablissements.map((x) => {
+    const result = etablissements.reduce((acc, item) => {
+      if (!acc[item._id]) {
+        acc[item._id] = item;
+        acc[item._id].matched_uai = [acc[item._id].matched_uai];
+      } else {
+        const exist = acc[item._id].matched_uai.includes(item.matched_uai);
+        if (acc[item._id].matched_uai !== item.matched_uai) {
+          if (!exist) {
+            acc[item._id].matched_uai = acc[item._id].matched_uai.concat([item.matched_uai]);
+          }
+        }
+      }
+      return acc;
+    }, {});
+
+    const formatted = Object.values(result).map((x) => {
       x.id_mna_etablissement = x._id;
       delete x._id;
       delete x.__v;
-      return x;
-      // await PsFormation.findByIdAndUpdate(formation._id, {
-      //   $push: {
-      //     matching_mna_etablissement: etablissements,
-      //   },
-      // });
+      return {
+        _id: mongoose.Types.ObjectId(),
+        ...x,
+      };
     });
 
+    logger.info(`${formatted.length} etablissement ajouté - id_formation : ${formation._id}`);
     await PsFormation.findByIdAndUpdate(formation._id, {
-      matching_mna_etablissement: t,
+      matching_mna_etablissement: formatted,
     });
   });
 };

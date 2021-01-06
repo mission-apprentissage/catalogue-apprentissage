@@ -35,6 +35,7 @@ module.exports = async () => {
         isAdmin: !!permissions.isAdmin,
         email: options.email || "",
         academie: options.academie || "0",
+        roles: options.roles || ["user"],
       });
 
       await user.save();

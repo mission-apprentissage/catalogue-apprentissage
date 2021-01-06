@@ -1,10 +1,10 @@
 const { pipeline, writeObject } = require("../../../common/utils/streamUtils");
 const logger = require("../../../common/logger");
+const { findOpcosFromCfd } = require("../../../logic/common/apiTablesCorrespondances");
 const { ConvertedFormation, MnaFormation } = require("../../../common/model/index");
-const createReferentiel = require("./referentiel");
-const { infosCodes, computeCodes } = require("./constants");
+const { infosCodes, computeCodes } = require("../../../constants/opco");
 
-const updateFormations = async (model, referentiel, stats) => {
+const updateFormations = async (model, stats) => {
   await pipeline(
     await model.find({}).cursor(),
     writeObject(
@@ -14,15 +14,15 @@ const updateFormations = async (model, referentiel, stats) => {
             f.info_opcos = infosCodes.NotFoundable;
             f.info_opcos_intitule = computeCodes[infosCodes.NotFoundable];
           } else {
-            const opcosForFormations = await referentiel.findOpcosFromCodeEn(f.cfd);
+            const opcosForFormations = await findOpcosFromCfd(f.cfd);
 
-            if (opcosForFormations.length > 0) {
+            if (opcosForFormations?.length > 0) {
               logger.info(
                 `${model.modelName}: Adding OPCOs ${opcosForFormations.map(
-                  (x) => x.Opérateurdecompétences
+                  (x) => x.operateur_de_competences
                 )} for formation ${f._id}`
               );
-              f.opcos = opcosForFormations.map((x) => x.Opérateurdecompétences);
+              f.opcos = opcosForFormations.map(({ operateur_de_competences }) => operateur_de_competences);
               f.info_opcos = infosCodes.Found;
               f.info_opcos_intitule = computeCodes[infosCodes.Found];
               stats.opcosUpdated++;
@@ -47,7 +47,6 @@ const updateFormations = async (model, referentiel, stats) => {
 
 module.exports = async () => {
   logger.info(" -- Start of OPCOs Importer -- ");
-  const referentiel = await createReferentiel();
 
   let stats = {
     opcosUpdated: 0,
@@ -56,8 +55,8 @@ module.exports = async () => {
   };
 
   logger.info("Updating formations...");
-  await updateFormations(ConvertedFormation, referentiel, stats);
-  await updateFormations(MnaFormation, referentiel, stats);
+  await updateFormations(ConvertedFormation, stats);
+  await updateFormations(MnaFormation, stats);
   logger.info(" -- End of OPCOs Importer -- ");
   return stats;
 };

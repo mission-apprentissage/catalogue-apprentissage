@@ -1,8 +1,8 @@
 const logger = require("../../../common/logger");
-const { Report } = require("../../../common/model/index");
 const { mnaFormationUpdater } = require("../../../logic/updaters/mnaFormationUpdater");
 const report = require("../../../logic/reporter/report");
 const config = require("config");
+const { storeByChunks } = require("../../common/utils/reportUtils");
 
 const run = async (model, filter = {}) => {
   const result = await performUpdates(model, filter);
@@ -31,13 +31,11 @@ const performUpdates = async (model, filter = {}) => {
         if (error) {
           formation.update_error = error;
           await model.findOneAndUpdate({ _id: formation._id }, formation, { new: true });
-          logger.error(`${model.modelName} ${formation._id}/${formation.cfd} has error`, error);
           invalidFormations.push({ id: formation._id, cfd: formation.cfd, error });
           return;
         }
 
         if (!updates) {
-          logger.info(`${model.modelName} ${formation._id} nothing to do`);
           notUpdatedFormations.push({ id: formation._id, cfd: formation.cfd });
           return;
         }
@@ -45,7 +43,6 @@ const performUpdates = async (model, filter = {}) => {
         try {
           updatedFormation.last_update_at = Date.now();
           await model.findOneAndUpdate({ _id: formation._id }, updatedFormation, { new: true });
-          logger.info(`${model.modelName} ${formation._id} has been updated`);
           updatedFormations.push({ id: formation._id, cfd: formation.cfd, updates: JSON.stringify(updates) });
         } catch (error) {
           logger.error(error);
@@ -71,19 +68,10 @@ const createReport = async (model, { invalidFormations, updatedFormations, notUp
   // save report in db
   const date = Date.now();
   const type = "trainingsUpdate";
-  await new Report({
-    type,
-    date,
-    data: { summary, updated: updatedFormations, notUpdated: notUpdatedFormations },
-  }).save();
 
-  await new Report({
-    type: `${type}.error`,
-    date,
-    data: {
-      errors: invalidFormations,
-    },
-  }).save();
+  await storeByChunks(type, date, summary, "updated", updatedFormations);
+  await storeByChunks(type, date, summary, "notUpdated", notUpdatedFormations);
+  await storeByChunks(`${type}.error`, date, summary, "errors", invalidFormations);
 
   const link = `${config.publicUrl}/report?type=${type}&date=${date}`;
   const data = {

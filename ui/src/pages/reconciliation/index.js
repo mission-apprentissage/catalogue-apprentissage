@@ -11,12 +11,15 @@ import {
   Spacer,
   Select,
   Tag,
+  useToast,
 } from "@chakra-ui/react";
 import { Layout, Accordion as Item, Loading } from "./components";
 
 import { _get } from "../../common/httpClient";
 
-const StyledButton = ({ type, matching, size, toggleMatching }) => {
+import { useQuery } from "react-query";
+
+const StyledButton = ({ type, matching, size, toggleMatching, ...rest }) => {
   return (
     <Button
       color="white"
@@ -25,6 +28,7 @@ const StyledButton = ({ type, matching, size, toggleMatching }) => {
       size={size ? size : "sm"}
       onClick={() => toggleMatching({ type })}
       isActive={type === matching ? true : false}
+      {...rest}
     >
       {type}
     </Button>
@@ -32,37 +36,36 @@ const StyledButton = ({ type, matching, size, toggleMatching }) => {
 };
 
 export default () => {
-  const [coverage, setCoverage] = React.useState();
-  const [loading, setLoading] = React.useState(false);
+  const toast = useToast();
+  const [updated, setUpdated] = React.useState(false);
   const [matching, setMatching] = React.useState({
     type: 3,
     page: 1,
   });
 
-  async function getCoverage({ type, page }) {
-    setLoading(true);
-    const response = await _get(`/api/psformation?type=${type}&page=${page}`);
-    setCoverage(response);
-    setLoading(false);
-  }
+  const { data, isLoading, isError } = useQuery(
+    ["coverage", { type: matching.type, page: matching.page }],
+    ({ queryKey }) => {
+      return _get(`/api/psformation?type=${queryKey[1].type}&page=${queryKey[1].page}`);
+    }
+  );
 
   const toggleMatching = (values) =>
     setMatching({ type: values.type ? values.type : matching.type, page: values.page ? values.page : matching.page });
 
-  React.useEffect(() => {
-    getCoverage(matching);
-  }, [matching]);
-
-  if (!coverage) {
-    return (
-      <Layout>
-        <Loading />
-      </Layout>
-    );
-  }
-
   return (
     <Layout>
+      {updated && (
+        <Box
+          toast={toast({
+            description: "Enregistré avec succès !",
+            status: "success",
+            duration: 2000,
+            isClosable: true,
+            onCloseComplete: () => setUpdated(false),
+          })}
+        />
+      )}
       <Box p={5} bg="#0c5076">
         <Heading color="white">Page de réconciliation</Heading>
         <Text color="white" fontSize="sm">
@@ -90,31 +93,36 @@ export default () => {
             </Flex>
           </SimpleGrid>
         </Box>
-        {loading && (
+        {isError && (
+          <Flex justify="center">
+            <Text>Aucune donnée disponible</Text>
+          </Flex>
+        )}
+        {isLoading && (
           <Layout>
             <Loading />
           </Layout>
         )}
-        {coverage?.docs?.length > 0 ? (
+        {data?.docs?.length > 0 && (
           <>
             <Container maxW="full">
               <Flex align="center">
                 <Heading size="md">
-                  Formation parcoursup : matching <Tag colorScheme="purple">{matching.type}</Tag> — {coverage.total}{" "}
+                  Formation parcoursup : matching <Tag colorScheme="purple">{matching.type}</Tag> — {data.total}{" "}
                   formations disponibles
                 </Heading>
                 <Spacer />
-                {[...Array(coverage.pages).keys()].length === 1 ? (
+                {[...Array(data.pages).keys()].length === 1 ? (
                   ""
                 ) : (
                   <Flex align="center">
                     <Text mr="6">Page:</Text>
                     <Select
                       variant="filled"
-                      value={matching.page}
+                      value={data.page}
                       onChange={(e) => toggleMatching({ page: e.target.value })}
                     >
-                      {[...Array(coverage.pages).keys()].map((key, index) => {
+                      {[...Array(data.pages).keys()].map((key, index) => {
                         const currentPage = key + 1;
                         return (
                           <option key={index} value={currentPage}>
@@ -128,15 +136,11 @@ export default () => {
               </Flex>
             </Container>
             <Accordion allowToggle>
-              {coverage.docs.map((item, index) => {
-                return <Item data={item} key={index} />;
+              {data.docs.map((item, index) => {
+                return <Item data={item} key={index} setToaster={setUpdated} />;
               })}
             </Accordion>
           </>
-        ) : (
-          <Flex justify="center">
-            <Text>Aucune donnée disponible</Text>
-          </Flex>
         )}
       </Container>
     </Layout>

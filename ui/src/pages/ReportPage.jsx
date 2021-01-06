@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import queryString from "query-string";
-import { Box, Text } from "@chakra-ui/react";
-import { useFetch } from "../common/hooks/useFetch";
-import { Tabs } from "../components/report/Tabs";
+import { Box, Text, Heading } from "@chakra-ui/react";
+import { Tabs } from "../common/components/report/Tabs";
 import { REPORT_TYPE, reportTypes } from "../constants/report";
 import { _get } from "../common/httpClient";
 
-const REPORT_URL = "/api/entity/report";
 const REPORTS_URL = "/api/entity/reports";
 
 const getReportTitle = (reportType) => {
@@ -30,7 +28,7 @@ const getReportTitle = (reportType) => {
   }
 };
 
-const getConversionReport = async (reportType, date, page = 1, fullReport = null) => {
+const getReport = async (reportType, date, page = 1, fullReport = null) => {
   try {
     const response = await _get(`${REPORTS_URL}?type=${reportType}&date=${date}&page=${page}`);
     const { report, pagination } = response;
@@ -38,11 +36,16 @@ const getConversionReport = async (reportType, date, page = 1, fullReport = null
     if (!fullReport) {
       fullReport = report;
     } else {
-      fullReport.data.converted = [...fullReport.data.converted, ...report.data.converted];
+      Object.keys(report.data)
+        .filter((key) => key !== "summary")
+        .forEach((key) => {
+          const prevData = fullReport?.data?.[key] ?? [];
+          fullReport.data[key] = [...prevData, ...report.data[key]];
+        });
     }
 
     if (page < pagination.nombre_de_page) {
-      return getConversionReport(reportType, date, page + 1, fullReport);
+      return getReport(reportType, date, page + 1, fullReport);
     } else {
       return { report: fullReport };
     }
@@ -58,24 +61,21 @@ const ReportPage = () => {
 
   const [report, setReport] = useState(null);
   const [errorFetchData, setErrorFetchData] = useState(null);
+  const [reportErrors, setReportErrors] = useState(null);
 
   useEffect(() => {
-    const fetchReport = async () => {
-      let report;
-      let error;
-      if (reportType === REPORT_TYPE.RCO_CONVERSION) {
-        const response = await getConversionReport(reportType, date);
-        report = response.report;
-        error = response.error;
-      } else if (reportTypes.includes(reportType)) {
-        try {
-          const response = await _get(`${REPORT_URL}?type=${reportType}&date=${date}`);
-          report = response;
-        } catch (e) {
-          error = e;
-        }
+    const fetchReports = async () => {
+      if (!reportTypes.includes(reportType)) {
+        setErrorFetchData({ statusCode: 404 });
+        return;
       }
 
+      const { report, error } = await getReport(reportType, date);
+      const { report: reportErr } = await getReport(`${reportType}.error`, date);
+
+      if (reportErr) {
+        setReportErrors(reportErr);
+      }
       if (error) {
         setErrorFetchData(error);
       } else if (report) {
@@ -83,10 +83,8 @@ const ReportPage = () => {
       }
     };
 
-    fetchReport();
+    fetchReports();
   }, [reportType, date]);
-
-  const [responseErrors] = useFetch(`${REPORT_URL}?type=${reportType}.error&date=${date}`);
 
   const dateLabel = new Date(Number(date)).toLocaleDateString("fr-FR", {
     day: "numeric",
@@ -97,28 +95,39 @@ const ReportPage = () => {
   const reportTitle = getReportTitle(reportType);
 
   return (
-    <Box bg="#2b2b2b">
-      {errorFetchData && (
-        <Text color="#F8F8F8" px={24} py={3}>
-          Erreur lors du chargement des données
-        </Text>
+    <Box bg="grey.750">
+      {errorFetchData && !reportErrors?.data?.errors && (
+        <>
+          <Text color="grey.100" px={[8, 24]} py={3}>
+            Erreur lors du chargement des données
+          </Text>
+          {errorFetchData?.statusCode === 404 && (
+            <Box bg="white">
+              <Text color="grey.750" px={[8, 24]} py={3}>
+                Ce rapport est introuvable
+              </Text>
+            </Box>
+          )}
+        </>
       )}
       {!errorFetchData && !report && (
-        <Text color="#F8F8F8" px={24} py={3}>
+        <Text color="grey.100" px={[8, 24]} py={3}>
           Chargement des données...
         </Text>
       )}
 
-      {report?.data && (
+      {(report?.data || reportErrors?.data?.errors) && (
         <>
-          <Box bg="#E5EDEF" w="100%" py={8} px={24} color="#19414C">
-            <Text fontSize={36}>{reportTitle}</Text>
-            <Text fontSize={28} pt={2}>
+          <Box bg="#E5EDEF" w="100%" py={[4, 8]} px={[8, 24]} color="#19414C">
+            <Heading fontFamily="Marianne" fontWeight="400" fontSize={["beta", "alpha"]} as="h1">
+              {reportTitle}
+            </Heading>
+            <Heading fontFamily="Marianne" fontWeight="400" fontSize={["gamma", "beta"]} pt={2} lineHeight="1.5">
               {dateLabel}
-            </Text>
+            </Heading>
           </Box>
           <Box>
-            <Tabs data={report.data} reportType={reportType} errors={responseErrors?.data?.errors} />
+            <Tabs data={report?.data} reportType={reportType} errors={reportErrors?.data?.errors} />
           </Box>
         </>
       )}
