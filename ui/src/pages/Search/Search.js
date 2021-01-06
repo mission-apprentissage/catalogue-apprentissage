@@ -30,7 +30,7 @@ const endpointOldFront =
 const countItems = async (base, etablissement_reference_catalogue_published = true) => {
   let count = 0;
 
-  const params = new window.URLSearchParams({
+  let params = new window.URLSearchParams({
     query: JSON.stringify({ published: true, etablissement_reference_catalogue_published }),
   });
   if (base === "mnaformation") {
@@ -38,6 +38,9 @@ const countItems = async (base, etablissement_reference_catalogue_published = tr
   } else if (base === "convertedformation") {
     count = await _get(`${endpointNewFront}/entity/formations2021/count?${params}`, false);
   } else {
+    params = new window.URLSearchParams({
+      query: JSON.stringify({ published: true }),
+    });
     const countEtablissement = await _get(`${endpointOldFront}/etablissements/count?${params}`, false);
     count = countEtablissement.count;
   }

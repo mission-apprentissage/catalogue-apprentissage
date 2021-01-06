@@ -358,23 +358,23 @@ const facetDefinition = [
     sortBy: "count",
   },
 
-  // {
-  //   componentId: "opcos",
-  //   dataField: "opcos.keyword",
-  //   title: "OPCOs",
-  //   filterLabel: "opcos",
-  //   selectAllLabel: "Tout OPCOs",
-  //   sortBy: "asc",
-  // },
+  {
+    componentId: "opcos",
+    dataField: "opcos.keyword",
+    title: "OPCOs",
+    filterLabel: "opcos",
+    selectAllLabel: "Tout OPCOs",
+    sortBy: "asc",
+  },
 
-  // {
-  //   componentId: "info_opcos_intitule",
-  //   dataField: "info_opcos_intitule.keyword",
-  //   title: "Statut OPCOs",
-  //   filterLabel: "info_opcos_intitule",
-  //   selectAllLabel: "Tous",
-  //   sortBy: "count",
-  // },
+  {
+    componentId: "info_opcos_intitule",
+    dataField: "info_opcos_intitule.keyword",
+    title: "Statut OPCOs",
+    filterLabel: "info_opcos_intitule",
+    selectAllLabel: "Tous",
+    sortBy: "count",
+  },
 ];
 
 const dataSearch = {
