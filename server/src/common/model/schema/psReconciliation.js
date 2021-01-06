@@ -24,21 +24,21 @@ const psReconciliationSchema = {
     default: null,
     description: "siret de l'établissement gestionnaire",
   },
-  siret_gestionnaire_formateur: {
+  siret_formateur_gestionnaire: {
     type: String,
     default: null,
     description: "siret de l'établissement gestionnaire & formateur",
   },
-  code_cfd_formation: {
+  code_cfd: {
     type: String,
     default: null,
     description:
-      "Code formation diplome de la formation catalogue rapproché. Valeur récupéré de la formation parcousup ou du catalogue des formations pour les matching 1*",
+      "code formation diplome de la formation catalogue rapproché. Valeur récupéré de la formation parcousup ou du catalogue des formations pour les matching 1*",
   },
   id_psformation: {
     type: String,
     default: null,
-    description: "Id de la formation parcoursup",
+    description: "id de la formation parcoursup",
   },
 };
 
