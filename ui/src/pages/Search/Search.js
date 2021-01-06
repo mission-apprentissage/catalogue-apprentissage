@@ -49,7 +49,7 @@ const countItems = async (base, etablissement_reference_catalogue_published = tr
 };
 
 export default ({ match }) => {
-  const [itemsCount, setItemsCount] = useState(0);
+  const [itemsCount, setItemsCount] = useState(`0 formation au Catalogue général`);
   const [mode, setMode] = useState("simple");
   const [base, setBase] = useState("mnaformation");
   const [endPoint, setEndpoint] = useState(endpointNewFront);
@@ -86,9 +86,13 @@ export default ({ match }) => {
         );
         setBase(tmpBase);
 
-        let countFormations = await countItems(tmpBase);
+        let count = await countItems(tmpBase);
 
-        setItemsCount(countFormations);
+        if (tmpBase === "etablissements") {
+          setItemsCount(`${count} établissements`);
+        } else {
+          setItemsCount(`${count} formations au Catalogue général`);
+        }
       } catch (e) {
         console.log(e);
       }
@@ -103,8 +107,12 @@ export default ({ match }) => {
   const resetCount = useCallback(
     async (val) => {
       try {
-        let countFormations = await countItems(base, val);
-        setItemsCount(countFormations);
+        let count = await countItems(base, val);
+        if (base === "etablissements") {
+          setItemsCount(`${count} établissements`);
+        } else {
+          setItemsCount(`${count} formations au ${val ? "Catalogue général" : "Catalogue non-éligible"}`);
+        }
       } catch (error) {
         console.log(error);
       }
@@ -217,12 +225,8 @@ export default ({ match }) => {
                           <div className="summary-stats">
                             <span className="summary-text">
                               {base === "mnaformation" || base === "convertedformation"
-                                ? `${stats.numberOfResults} formations affichées sur ${
-                                    itemsCount !== 0 ? itemsCount : ""
-                                  } formations au total`
-                                : `${stats.numberOfResults} établissements affichées sur ${
-                                    itemsCount !== 0 ? itemsCount : ""
-                                  } établissements`}
+                                ? `${stats.numberOfResults} formations affichées sur ${itemsCount} formations au total`
+                                : `${stats.numberOfResults} établissements affichées sur ${itemsCount}`}
                             </span>
                             {auth?.sub !== "anonymous" && (
                               <ExportButton
