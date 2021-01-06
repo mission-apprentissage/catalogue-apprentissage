@@ -2,12 +2,8 @@ import React, { useState, useEffect, useCallback } from "react";
 import { ReactiveBase, ReactiveList, DataSearch, SingleList } from "@appbaseio/reactivesearch";
 import { Container, Row } from "reactstrap";
 import Switch from "react-switch";
-// import { API } from "aws-amplify";
-// import { useSelector } from "react-redux";
 import useAuth from "../../common/hooks/useAuth";
 import Layout from "../layout/Layout";
-
-// import config from "../../config";
 
 import {
   QueryBuilder,
@@ -27,16 +23,9 @@ import { _get } from "../../common/httpClient";
 
 import "./search.css";
 
-const ENV_NAME = "dev"; //getEnvName();
-const endpointNewFront =
-  ENV_NAME === "local" || ENV_NAME === "dev"
-    ? "https://catalogue-recette.apprentissage.beta.gouv.fr/api"
-    : "https://catalogue.apprentissage.beta.gouv.fr/api";
-
+const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
 const endpointOldFront =
-  ENV_NAME === "local" || ENV_NAME === "dev"
-    ? "https://r7mayzn08d.execute-api.eu-west-3.amazonaws.com/dev"
-    : "https://c7a5ujgw35.execute-api.eu-west-3.amazonaws.com/prod";
+  process.env.REACT_APP_ENDPOINT_OLD_FRONT || "https://c7a5ujgw35.execute-api.eu-west-3.amazonaws.com/prod";
 
 const countItems = async (base, etablissement_reference_catalogue_published = true) => {
   let count = 0;
