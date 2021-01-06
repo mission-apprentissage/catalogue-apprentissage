@@ -7,35 +7,31 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
   const router = express.Router();
 
   /**
-   * Get all parcoursup formations
+   * Get Report /report GET
    */
   router.get(
     "/",
     tryCatch(async (req, res) => {
       const { type, page } = req.query;
-      const data = await PsFormation.paginate({ matching_type: type }, { page });
+      let data = await PsFormation.paginate({ matching_type: type }, { page });
 
       if (data.docs.length > 0) {
-        const mapping = await Promise.all(
+        const result = await Promise.all(
           data.docs.map(async (formation) => {
-            const matchedEtablissement = await PsReconciliation.find({ if_formation_psup: formation._id }).lean();
-            console.log("matchedEtablissement.length", matchedEtablissement.length);
-
             if (formation._doc.code_cfd) {
               const infoCfd = await tableCorrespondance.getCfdInfo(formation.code_cfd);
               let infobcn = infoCfd.result.intitule_long;
 
               return {
-                infobcn,
                 ...formation._doc,
-                ...matchedEtablissement,
+                infobcn,
               };
             }
-            return { formation, ...matchedEtablissement };
+            return formation;
           })
         );
 
-        data.docs = await mapping;
+        data.docs = await result;
         res.json(data);
       } else {
         res.status(404).json([]);
@@ -43,6 +39,11 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
     })
   );
 
+  /**
+   * Matching entries are saved at two places :
+   *  - in psFormation.mapping_liaison_etablissement
+   *  - in PsReconciliation
+   */
   router.post(
     "/",
     tryCatch(async (req, res) => {
@@ -52,8 +53,38 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
     })
   );
 
+  router.post(
+    "/psreconciliation",
+    tryCatch(async (req, res) => {
+      const { mapping, id_psformation, ...rest } = req.body;
+      const exist = await PsReconciliation.find({ id_psformation });
+      console.log("exist", exist);
+
+      const payload = mapping.reduce((acc, item) => {
+        acc.uai_gestionnaire = rest.uai_gestionnaire;
+        acc.uai_affilie = rest.uai_affilie;
+        acc.uai_composante = rest.uai_composante;
+        acc.id_psformation = id_psformation;
+        acc.siret_formateur = item.type === "formateur" ? item.siret : acc.siret_formateur;
+        acc.siret_gestionnaire = item.type === "gestionnaire" ? item.siret : acc.siret_gestionnaire;
+        acc.siret_formateur_gestionnaire =
+          item.type === "formateur-gestionnaire" ? item.siret : acc.siret_formateur_gestionnaire;
+        return acc;
+      }, {});
+
+      if (exist.length > 0) {
+        console.log("update");
+        await PsReconciliation.findByIdAndUpdate(exist._id, { payload });
+      } else {
+        console.log("create");
+        await PsReconciliation.create({ payload });
+        res.status(200);
+      }
+    })
+  );
+
   /**
-   * Add created establishment to the matched list of establishments
+   * Add one establishement to a psformation
    */
   router.put(
     "/",
@@ -77,30 +108,6 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
       const { uai, siret } = req.body;
       const newEtablissement = await catalogue.createEtablissement({ uai, siret });
       res.json(newEtablissement);
-    })
-  );
-
-  /**
-   * Create new line in PsReconciliation collection
-   */
-  router.post(
-    "/nouveau-lien",
-    tryCatch(async (req, res) => {
-      const payload = req.body;
-      const result = await PsReconciliation.create(payload);
-      res.json(result);
-    })
-  );
-
-  /**
-   * Update line in PsReconciliation collection
-   */
-  router.put(
-    "update-lien",
-    tryCatch(async (req, res) => {
-      const { id, ...rest } = req.body;
-      const result = await PsReconciliation.findByIdAndUpdate(id, { ...rest });
-      res.json(result);
     })
   );
 
