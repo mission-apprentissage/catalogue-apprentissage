@@ -54,7 +54,6 @@ export default ({ data, setToaster }) => {
   const sameEtab = new Set([data.libelle_uai_affilie, data.libelle_uai_composante]).size === 1;
 
   const toggle = () => setModalIsOpen(!modalIsOpen);
-  console.log("mapping", mapping);
 
   const onSelectChange = useMutation(
     (payload) =>
@@ -65,7 +64,6 @@ export default ({ data, setToaster }) => {
       }),
     {
       onSuccess: (data, payload) => {
-        // console.log("data", data);
         setMatchingMnaEtablissement(data.matching_mna_etablissement);
         setMapping({ id: payload._id, type: payload.type, siret: payload.siret });
       },
@@ -89,7 +87,6 @@ export default ({ data, setToaster }) => {
       onSuccess: () => {
         setToaster(true);
       },
-      onError: (error) => console.log(error),
     }
   );
 
@@ -151,7 +148,7 @@ export default ({ data, setToaster }) => {
                   variant="solid"
                   onClick={() => {
                     onValidatePsReconciliation.mutate();
-                    // onValidatePsFormation.mutate();
+                    onValidatePsFormation.mutate();
                   }}
                 >
                   Valider
