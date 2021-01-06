@@ -2,13 +2,7 @@ import React, { useState, useEffect } from "react";
 import Autosuggest from "react-autosuggest";
 import { CustomInput, Input, Button } from "reactstrap";
 
-//import config from "../../../../config";
-
-const ENV_NAME = "dev"; //getEnvName();
-const endpointNewFront =
-  ENV_NAME === "local" || ENV_NAME === "dev"
-    ? "https://catalogue-recette.apprentissage.beta.gouv.fr/api"
-    : "https://catalogue.apprentissage.beta.gouv.fr/api";
+const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
 
 const esQuery = (queries) => {
   let query = "";

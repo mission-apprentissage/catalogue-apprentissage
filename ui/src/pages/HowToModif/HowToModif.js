@@ -1,9 +1,6 @@
 import React from "react";
 import { Container, Row, Col } from "reactstrap";
-import { Player } from "video-react";
 import Layout from "../layout/Layout";
-
-//import routes from "../../routes.json";
 
 import "./howToModif.css";
 
@@ -14,7 +11,7 @@ const HowToModif = () => {
         <Container className="mt-5">
           <Row>
             <Col xs="12" className="mission-summary">
-              <h2 className="mt-3 mb-3">Guide de modification Catalogue</h2>
+              <h1 className="mt-3 mb-3">Guide de modification Catalogue</h1>
               <br />
               <h5>
                 Pour modifier un champ , il vous suffit de cliquer sur le crayon, d’effectuer la modification souhaitée
@@ -110,13 +107,9 @@ const HowToModif = () => {
           <Row>
             <Col xs="12" className="mb-5">
               <h5>Video de présentation</h5>
-              <Player
-                playsInline
-                poster="/assets/poster.png"
-                src="https://mna-bucket.s3.eu-west-3.amazonaws.com/pam-23042020.mp4"
-                fluid={false}
-                width={800}
-              />
+              <video controls width={800}>
+                <source src="https://mna-bucket.s3.eu-west-3.amazonaws.com/pam-23042020.mp4" type="video/mp4" />
+              </video>
             </Col>
           </Row>
         </Container>

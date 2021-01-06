@@ -19,6 +19,7 @@ const FILTERS = [
   "code_postal",
   "code_commune_insee",
   "catalogue_published",
+  "published",
   "etablissement_gestionnaire_uai",
   "etablissement_formateur_uai",
   "intitule_long",

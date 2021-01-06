@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { SingleList } from "@appbaseio/reactivesearch";
 
-const ToggleCatalogue = React.memo(({ filters }) => {
+const ToggleCatalogue = React.memo(({ filters, onChanged }) => {
   const [values, setValues] = useState("Catalogue général");
 
   const onChange = (val) => {
-    setValues(val || "Catalogue général");
+    const value = val || "Catalogue général";
+    setValues(value);
+    onChanged(value === "Catalogue général" ? true : false);
   };
 
   return (

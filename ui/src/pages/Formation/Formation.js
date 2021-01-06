@@ -1,48 +1,32 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Button, Spinner, Input, Modal, ModalHeader, ModalBody, Alert } from "reactstrap";
-// import { useSelector, useDispatch } from "react-redux";
-// import { API } from "aws-amplify";
+import { Container, Row, Col, Button, Input } from "reactstrap";
+import { Spinner, Alert, Box } from "@chakra-ui/react";
+import { useHistory, useLocation } from "react-router-dom";
 import { useFormik } from "formik";
+import queryString from "query-string";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faCheck } from "@fortawesome/free-solid-svg-icons";
-// import { push } from "connected-react-router";
-import { _get } from "../../common/httpClient";
+import { faPen } from "@fortawesome/free-solid-svg-icons";
+import { _get, _post } from "../../common/httpClient";
 import Layout from "../layout/Layout";
-
 import Section from "./components/Section";
-// import routes from "../../routes.json";
-
+import useAuth from "../../common/hooks/useAuth";
+import { hasRightToEditFormation } from "../../common/utils/rolesUtils";
 import "./formation.css";
 
-// import { getEnvName } from "../../config";
-const sleep = (m) => new Promise((r) => setTimeout(r, m));
-const ENV_NAME = "dev"; // getEnvName();
-const endpointNewFront =
-  ENV_NAME === "local" || ENV_NAME === "dev"
-    ? "https://catalogue-recette.apprentissage.beta.gouv.fr/api"
-    : "https://catalogue.apprentissage.beta.gouv.fr/api";
-
-// const checkIfHasRightToEdit = (item, userAcm) => {
-//   let hasRightToEdit = userAcm.all;
-//   if (!hasRightToEdit) {
-//     hasRightToEdit = userAcm.academie.includes(`${item.num_academie}`);
-//   }
-//   return hasRightToEdit;
-// };
-
-const EditSection = ({ edition, onEdit, handleSubmit, onDeleteClicked }) => {
+const EditSection = ({ edition, onEdit, handleSubmit, onDeleteClicked, isSubmitting, isDeleteDisabled }) => {
   return (
     <div className="sidebar-section info sidebar-section-edit">
       {edition && (
         <>
-          <Button className="mb-3" color="success" onClick={handleSubmit}>
-            Valider
+          <Button className="mb-3" color="success" onClick={handleSubmit} disabled={isSubmitting}>
+            Valider {isSubmitting && <Spinner size="xs" />}
           </Button>
           <Button
             color="danger"
             onClick={() => {
               onEdit();
             }}
+            disabled={isSubmitting}
           >
             Annuler
           </Button>
@@ -59,7 +43,7 @@ const EditSection = ({ edition, onEdit, handleSubmit, onDeleteClicked }) => {
           >
             Modifier
           </Button>
-          <Button color="danger" onClick={onDeleteClicked}>
+          <Button color="danger" onClick={onDeleteClicked} disabled={isDeleteDisabled}>
             Supprimer
           </Button>
         </>
@@ -68,20 +52,21 @@ const EditSection = ({ edition, onEdit, handleSubmit, onDeleteClicked }) => {
   );
 };
 
-const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, values }) => {
-  // const { acm: userAcm } = useSelector((state) => state.user);
-  const oneEstablishment = formation.etablissement_gestionnaire_siret === formation.etablissement_formateur_siret;
-  const hasRightToEdit = false; // checkIfHasRightToEdit(formation, userAcm);
+const Formation = ({
+  formation,
+  edition,
+  onEdit,
+  handleChange,
+  handleSubmit,
+  values,
+  isMna,
+  isSubmitting,
+  onDelete,
+}) => {
+  const [auth] = useAuth();
 
-  // const dispatch = useDispatch();
-  const onDeleteClicked = async (e) => {
-    // eslint-disable-next-line no-restricted-globals
-    const areYousure = confirm("Souhaitez-vous vraiment supprimer cette formation ?");
-    if (areYousure) {
-      // await API.del("api", `/formation/${formation._id}`);
-      // dispatch(push(routes.SEARCH_FORMATIONS));
-    }
-  };
+  const oneEstablishment = formation.etablissement_gestionnaire_siret === formation.etablissement_formateur_siret;
+  const hasRightToEdit = !isMna && hasRightToEditFormation(formation, auth);
 
   return (
     <Row>
@@ -198,23 +183,19 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
             <p>{formation.rome_codes}</p>
           </div>
         </Section>
-        {/* <Section title="Information OPCOs">
+        <Section title="Information OPCOs">
           <div className="field">
-            {formation.opcos && formation.opcos.length === 0 && (
-              <>
-                <h3>Aucun OPCO rattaché</h3>
-              </>
-            )}
+            {formation.opcos && formation.opcos.length === 0 && <h3>Aucun OPCO rattaché</h3>}
             {formation.opcos && formation.opcos.length > 0 && (
               <>
                 <h3>OPCOs liés à la formation</h3>
-                {formation.opcos.map(x => (
-                  <p>{x}</p>
+                {formation.opcos.map((x, index) => (
+                  <p key={index}>{x}</p>
                 ))}
               </>
             )}
           </div>
-        </Section> */}
+        </Section>
       </Col>
       <Col md="5">
         {hasRightToEdit && (
@@ -222,7 +203,9 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
             edition={edition}
             onEdit={onEdit}
             handleSubmit={handleSubmit}
-            onDeleteClicked={onDeleteClicked}
+            onDeleteClicked={onDelete}
+            isSubmitting={isSubmitting}
+            isDeleteDisabled={!formation.published}
           />
         )}
         <div className="sidebar-section info">
@@ -362,14 +345,18 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
   );
 };
 
-export default ({ match, presetFormation = null }) => {
-  const [formation, setFormation] = useState(presetFormation);
-  const [gatherData, setGatherData] = useState(0);
-  const [edition, setEdition] = useState(presetFormation ? true : false);
-  const [modal, setModal] = useState(false);
-  // const dispatch = useDispatch();
+export default ({ match }) => {
+  const [formation, setFormation] = useState();
+  const [pendingFormation, setPendingFormation] = useState();
+  const displayedFormation = pendingFormation || formation;
 
-  const { values, handleSubmit, handleChange, setFieldValue } = useFormik({
+  const [edition, setEdition] = useState(false);
+  let history = useHistory();
+  const { search } = useLocation();
+  const { source } = queryString.parse(search);
+  const isMna = source === "mna";
+
+  const { values, handleSubmit, handleChange, setFieldValue, isSubmitting } = useFormik({
     initialValues: {
       uai_formation: "",
       code_postal: "",
@@ -379,56 +366,13 @@ export default ({ match, presetFormation = null }) => {
       rncp_code: "",
       num_academie: 0,
     },
-    onSubmit: ({ uai_formation, code_postal, capacite, periode, cfd, num_academie, rncp_code }, { setSubmitting }) => {
-      return new Promise(async (resolve, reject) => {
-        // const body = { uai_formation, code_postal, capacite, periode, cfd, num_academie, rncp_code };
-        let prevStateFormation = formation;
-        if (presetFormation) {
-          // prevStateFormation = await API.post("api", `/formation`, {
-          //   body: {
-          //     ...formation,
-          //   },
-          // });
-        }
+    onSubmit: (values) => {
+      return new Promise(async (resolve) => {
+        const updatedFormation = await _post("/api/entity/formation2021/update", { ...displayedFormation, ...values });
 
-        let result = null;
-        if (
-          uai_formation !== prevStateFormation.uai_formation ||
-          cfd !== prevStateFormation.cfd ||
-          rncp_code !== prevStateFormation.rncp_code ||
-          presetFormation
-        ) {
-          setModal(true);
-          setGatherData(1);
-          // result = await API.put("api", `/formation/${prevStateFormation._id}`, { body });
-
-          setGatherData(2);
-          // await API.get("api", `/services?job=formation-update&id=${result._id}`);
-          setGatherData(3);
-          if (!prevStateFormation.rncp_code && cfd !== "") {
-            // await API.get("api", `/services?job=rncp&id=${result._id}`);
-          } else if (!prevStateFormation.cfd && rncp_code !== "") {
-            // await API.get("api", `/services?job=rncp-inverse&id=${result._id}`);
-          }
-          setGatherData(4);
-          // await API.get("api", `/services?job=onisep&id=${result._id}`);
-          setGatherData(5);
-          // result = await API.get("api", `/formation/${result._id}`);
-          setGatherData(6);
-          await sleep(500);
-
-          setModal(false);
-        } else if (
-          code_postal !== prevStateFormation.code_postal ||
-          capacite !== prevStateFormation.capacite ||
-          periode !== prevStateFormation.periode ||
-          num_academie !== prevStateFormation.num_academie
-        ) {
-          // result = await API.put("api", `/formation/${prevStateFormation._id}`, { body });
-        }
-
+        let result = await _post(`/api/entity/pendingRcoFormation`, updatedFormation);
         if (result) {
-          setFormation(result);
+          setPendingFormation(result);
           setFieldValue("uai_formation", result.uai_formation);
           setFieldValue("code_postal", result.code_postal);
           setFieldValue("periode", result.periode);
@@ -438,9 +382,6 @@ export default ({ match, presetFormation = null }) => {
           setFieldValue("rncp_code", result.rncp_code);
         }
 
-        if (presetFormation) {
-          // dispatch(push(`/formation/${prevStateFormation._id}`));
-        }
         setEdition(false);
         resolve("onSubmitHandler complete");
       });
@@ -450,95 +391,84 @@ export default ({ match, presetFormation = null }) => {
   useEffect(() => {
     async function run() {
       try {
-        let form = null;
-        if (!presetFormation) {
-          // form = await API.get("api", `/formation/${match.params.id}`);
-          form = await _get(`${endpointNewFront}/entity/formation2021/${match.params.id}`, false);
-        } else {
-          form = presetFormation;
-        }
+        let pendingRCOFormation;
+
+        const apiURL = isMna ? "/api/entity/formation/" : "/api/entity/formation2021/";
+        const form = await _get(`${apiURL}${match.params.id}`, false);
         setFormation(form);
 
-        setFieldValue("uai_formation", form.uai_formation || "");
-        setFieldValue("code_postal", form.code_postal || "");
-        setFieldValue("periode", form.periode || "");
-        setFieldValue("capacite", form.capacite || "");
-        setFieldValue("cfd", form.cfd || "");
-        setFieldValue("num_academie", form.num_academie || "");
-        setFieldValue("rncp_code", form.rncp_code || "");
+        try {
+          pendingRCOFormation = await _get(`/api/entity/pendingRcoFormation/${form.id_rco_formation}`, false);
+          setPendingFormation(pendingRCOFormation);
+        } catch (err) {
+          // no pending formation, do nothing
+        }
+
+        const displayedFormation = pendingRCOFormation || form;
+
+        setFieldValue("uai_formation", displayedFormation.uai_formation || "");
+        setFieldValue("code_postal", displayedFormation.code_postal || "");
+        setFieldValue("periode", displayedFormation.periode || "");
+        setFieldValue("capacite", displayedFormation.capacite || "");
+        setFieldValue("cfd", displayedFormation.cfd || "");
+        setFieldValue("num_academie", displayedFormation.num_academie || "");
+        setFieldValue("rncp_code", displayedFormation.rncp_code || "");
       } catch (e) {
-        // dispatch(push(routes.NOTFOUND));
+        history.push("/404");
       }
     }
     run();
-  }, [match, setFieldValue, presetFormation]);
+  }, [match, setFieldValue, isMna, history]);
 
   const onEdit = () => {
     setEdition(!edition);
   };
 
-  if (!formation) {
-    return (
-      <div className="page formation">
-        <Spinner color="secondary" />
-      </div>
-    );
-  }
+  const onDelete = async () => {
+    // eslint-disable-next-line no-restricted-globals
+    const areYousure = confirm("Souhaitez-vous vraiment supprimer cette formation ?");
+    if (areYousure) {
+      // Update as not published
+      let result = await _post(`/api/entity/pendingRcoFormation`, { ...displayedFormation, published: false });
+      if (result) {
+        setPendingFormation(result);
+      }
+    }
+  };
 
   return (
     <Layout>
       <div className="page formation">
         <div className="notice">
           <Container>
-            {presetFormation && (
-              <Alert color="info" style={{ fontSize: "1rem", fontWeight: "bolder" }}>
-                Cette formation est à l'état de brouillon. <br />
-                Pour confirmer vos modifications, veuillez cliquer sur le bouton "Valider".
+            {pendingFormation && (
+              <Alert status="info" fontWeight={"bold"}>
+                Cette formation a été {pendingFormation.published ? "éditée" : "supprimée"} et est en attente de
+                traitement
+                <br />
               </Alert>
             )}
-            <h1 className="heading">{formation.intitule_long}</h1>
-            <Formation
-              formation={formation}
-              edition={edition}
-              onEdit={onEdit}
-              values={values}
-              handleSubmit={handleSubmit}
-              handleChange={handleChange}
-            />
-            <Modal isOpen={modal}>
-              <ModalHeader>Merci ne pas fermer cette page</ModalHeader>
-              <ModalBody>
-                {gatherData !== 0 && (
-                  <div>
-                    <div>
-                      Mise à jour des informations {gatherData === 1 && <Spinner color="secondary" />}
-                      {gatherData > 1 && <FontAwesomeIcon icon={faCheck} className="check-icon" />}
-                    </div>
-                    <div>
-                      Recherche des informations générale {gatherData === 2 && <Spinner color="secondary" />}
-                      {gatherData > 2 && <FontAwesomeIcon icon={faCheck} className="check-icon" />}
-                    </div>
-                    <div>
-                      Recherche des informations RNCP{" "}
-                      {gatherData === 3 && (
-                        <>
-                          <Spinner color="secondary" />
-                        </>
-                      )}
-                      {gatherData > 3 && <FontAwesomeIcon icon={faCheck} className="check-icon" />}
-                    </div>
-                    <div>
-                      Recherche des informations Onisep {gatherData === 4 && <Spinner color="secondary" />}
-                      {gatherData > 4 && <FontAwesomeIcon icon={faCheck} className="check-icon" />}
-                    </div>
-                    <div>
-                      Vérification {gatherData === 5 && <Spinner color="secondary" />}
-                      {gatherData > 5 && <FontAwesomeIcon icon={faCheck} className="check-icon" />}
-                    </div>
-                  </div>
-                )}
-              </ModalBody>
-            </Modal>
+            {!displayedFormation && (
+              <Box align="center" p={2}>
+                <Spinner />
+              </Box>
+            )}
+            {displayedFormation && (
+              <>
+                <h1 className="heading">{displayedFormation.intitule_long}</h1>
+                <Formation
+                  formation={displayedFormation}
+                  edition={edition}
+                  onEdit={onEdit}
+                  values={values}
+                  handleSubmit={handleSubmit}
+                  handleChange={handleChange}
+                  isMna={isMna}
+                  isSubmitting={isSubmitting}
+                  onDelete={onDelete}
+                />
+              </>
+            )}
           </Container>
         </div>
       </div>

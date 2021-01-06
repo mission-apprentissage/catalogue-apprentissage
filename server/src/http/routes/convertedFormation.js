@@ -1,6 +1,7 @@
 const express = require("express");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { ConvertedFormation } = require("../../common/model");
+const { mnaFormationUpdater } = require("../../logic/updaters/mnaFormationUpdater");
 
 /**
  * Sample entity route module for GET
@@ -42,10 +43,9 @@ module.exports = () => {
       const query = qs && qs.query ? JSON.parse(qs.query) : {};
       const retrievedData = await ConvertedFormation.countDocuments(query);
       if (retrievedData) {
-        res.json(retrievedData);
-      } else {
-        res.json({ message: `Item doesn't exist` });
+        return res.json(retrievedData);
       }
+      return res.status(404).send({ message: `Item doesn't exist` });
     })
   );
 
@@ -59,10 +59,9 @@ module.exports = () => {
       const query = qs && qs.query ? JSON.parse(qs.query) : {};
       const retrievedData = await ConvertedFormation.findOne(query);
       if (retrievedData) {
-        res.json(retrievedData);
-      } else {
-        res.json({ message: `Item doesn't exist` });
+        return res.json(retrievedData);
       }
+      return res.status(404).send({ message: `Item doesn't exist` });
     })
   );
 
@@ -75,10 +74,28 @@ module.exports = () => {
       const itemId = req.params.id;
       const retrievedData = await ConvertedFormation.findById(itemId);
       if (retrievedData) {
-        res.json(retrievedData);
-      } else {
-        res.json({ message: `Item ${itemId} doesn't exist` });
+        return res.json(retrievedData);
       }
+      return res.status(404).send({ message: `Item ${itemId} doesn't exist` });
+    })
+  );
+
+  /**
+   * Get updated formation
+   */
+  router.post(
+    "/formation2021/update",
+    tryCatch(async (req, res) => {
+      const formation = req.body;
+      const { formation: updatedFormation, error } = await mnaFormationUpdater(formation, {
+        withHistoryUpdate: false,
+      });
+
+      if (error) {
+        return res.status(500).send({ message: error });
+      }
+
+      return res.json(updatedFormation);
     })
   );
 

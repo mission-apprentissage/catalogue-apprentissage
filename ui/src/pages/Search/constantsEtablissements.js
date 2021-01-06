@@ -1,4 +1,4 @@
-const FILTERS = ["QUERYBUILDER", "SEARCH", "num_departement", "nom_academie", "tags"];
+const FILTERS = ["QUERYBUILDER", "SEARCH", "num_departement", "nom_academie", "tags", "published"];
 
 const columnsDefinition = [
   {
