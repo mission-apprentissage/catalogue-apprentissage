@@ -27,7 +27,6 @@ import { _get } from "../../common/httpClient";
 
 import "./search.css";
 
-// import { getEnvName } from "../../config";
 const ENV_NAME = "dev"; //getEnvName();
 const endpointNewFront =
   ENV_NAME === "local" || ENV_NAME === "dev"
