@@ -35,6 +35,7 @@ function GlobalFilter({ preGlobalFilteredRows, globalFilter, setGlobalFilter, fi
 }
 
 const Table = ({ data, onRowClick }) => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const tableData = useMemo(() => data, []);
 
   const columns = Object.keys(data[0]).map((key) => {
@@ -54,6 +55,7 @@ const Table = ({ data, onRowClick }) => {
       },
       ...columns,
     ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
@@ -116,6 +118,7 @@ const Table = ({ data, onRowClick }) => {
         </Box>
       );
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [prepareRow, rows]
   );
 

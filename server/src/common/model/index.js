@@ -64,6 +64,11 @@ if (!r) {
   r = getModel("report", reportSchema);
 }
 
+let prf = null;
+if (!prf) {
+  prf = getModel("pendingrcoformation", mnaFormationSchema);
+}
+
 let l = null;
 if (!l) {
   l = getMongooseModel("log");
@@ -84,4 +89,5 @@ module.exports = {
   Log: l,
   PsFormation: pf,
   PsReconciliation: psr,
+  PendingRcoFormation: prf,
 };

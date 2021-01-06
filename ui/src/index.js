@@ -6,6 +6,8 @@ import * as serviceWorker from "./serviceWorker";
 import { ChakraProvider } from "@chakra-ui/react";
 import theme from "./theme/index";
 
+//import "bootstrap/dist/css/bootstrap.min.css";
+
 if (
   window.location.hostname.includes("catalogue.apprentissage.beta.gouv.fr") &&
   window.location.pathname !== "/report" &&

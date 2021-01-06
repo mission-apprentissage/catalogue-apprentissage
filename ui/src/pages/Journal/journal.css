@@ -1,0 +1,10 @@
+.journal {
+  display: flex;
+  flex-direction: column;
+  background-color: #e5edef;
+  color: #19414c;
+  min-height: 100vh;
+}
+.journal .changelog-wrapper {
+  width: 700px;
+}

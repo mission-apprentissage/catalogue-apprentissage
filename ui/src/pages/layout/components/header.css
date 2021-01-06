@@ -1,0 +1,10 @@
+.header-brand-img {
+  height: 5rem;
+}
+
+.header-right-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

@@ -1,0 +1,32 @@
+.howToReglement {
+  min-height: 100vh;
+  background-color: #e5edef;
+  color: #19414c;
+}
+.howToReglement h1, .howToReglement h2, .howToReglement h3, .howToReglement h4, .howToReglement h5, .howToReglement h6 {
+  font-size: revert;
+  font-weight: revert;
+}
+.howToReglement ol, .howToReglement ul {
+  margin: initial;
+  padding: revert;
+}
+
+.howToReglement .mission-summary {
+  font-size: 16px;
+}
+.howToReglement .purple {
+  color: #80017f;
+}
+.howToReglement .underline {
+  text-decoration: underline;
+}
+.howToReglement .card-header {
+  cursor: pointer;
+}
+
+.howToReglement a {
+  color: #007bff;
+  text-decoration: none;
+  background-color: transparent;
+}

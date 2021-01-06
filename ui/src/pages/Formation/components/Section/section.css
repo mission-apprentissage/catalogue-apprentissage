@@ -1,0 +1,20 @@
+.section-formation {
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px 0 rgba(189, 189, 189, 0.5);
+}
+.section-formation .card-header {
+  font-size: 1em;
+  display: flex;
+  flex-grow: 1;
+  background-color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.section-formation .card-header .card-header-title {
+  flex: 1;
+}
+.section-formation .card-header .card-header-icon {
+  font-size: 1em;
+  font-weight: bold;
+}
