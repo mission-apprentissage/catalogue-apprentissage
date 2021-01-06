@@ -24,3 +24,9 @@
 .howToReglement .card-header {
   cursor: pointer;
 }
+
+.howToReglement a {
+  color: #007bff;
+  text-decoration: none;
+  background-color: transparent;
+}

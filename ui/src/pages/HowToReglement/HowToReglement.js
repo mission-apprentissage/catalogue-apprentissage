@@ -14,10 +14,10 @@ const HowToReglement = () => {
             <Col xs="12" className="mission-summary">
               <h1 className="mt-3 mb-3">Conditions d’intégration de l’offre de formation en Apprentissage</h1>
               <br />
-              <h5>
+              <h3>
                 Rappel des conditions d’intégration de l’offre de formation en Apprentissage sur Parcoursup et Affelnet{" "}
-              </h5>
-              <h6>
+              </h3>
+              <h4>
                 <a
                   href="https://drive.google.com/file/d/1xL3urYVOJBNkm4HO-iZcTPhieRWpQ7Sk/view"
                   target="_blank"
@@ -25,7 +25,7 @@ const HowToReglement = () => {
                 >
                   (cf note MESRI décembre 2020)
                 </a>
-              </h6>
+              </h4>
               <br />
               <p>
                 <strong>
