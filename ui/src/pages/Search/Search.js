@@ -225,7 +225,7 @@ export default ({ match }) => {
                           <div className="summary-stats">
                             <span className="summary-text">
                               {base === "mnaformation" || base === "convertedformation"
-                                ? `${stats.numberOfResults} formations affichées sur ${itemsCount} formations au total`
+                                ? `${stats.numberOfResults} formations affichées sur ${itemsCount}`
                                 : `${stats.numberOfResults} établissements affichées sur ${itemsCount}`}
                             </span>
                             {auth?.sub !== "anonymous" && (
