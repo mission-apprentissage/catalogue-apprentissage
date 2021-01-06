@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import ChangelogList from "./components/ChangelogList";
 import ChangelogFilter from "./components/ChangelogFilter";
 
+import "@fortawesome/fontawesome-free/css/all.css";
 import "./changelog.css";
 
 const Changelog = ({ content, order, showVersion, hideFilter }) => {
