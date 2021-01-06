@@ -101,7 +101,7 @@ export default () => {
             <CenteredCol>
               <Card>
                 <Card.Header>
-                  <Card.Title>Changement du mot de passe pour le CFA {uai}</Card.Title>
+                  <Card.Title>Changement du mot de passe pour l'utilisateur {uai}</Card.Title>
                 </Card.Header>
                 <Card.Body>
                   <form onSubmit={handleSubmit}>
