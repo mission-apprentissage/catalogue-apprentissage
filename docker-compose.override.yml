@@ -11,6 +11,11 @@ services:
     stdin_open: true
     volumes:
       - ./ui:/app:z #Allows source folders to be watched
+    build:
+      args:
+        - REACT_APP_ENV=dev
+        - REACT_APP_ENDPOINT_NEW_FRONT=https://catalogue-recette.apprentissage.beta.gouv.fr/api
+        - REACT_APP_ENDPOINT_OLD_FRONT=https://r7mayzn08d.execute-api.eu-west-3.amazonaws.com/dev
 
   server:
     command: ["yarn", "debug"]
