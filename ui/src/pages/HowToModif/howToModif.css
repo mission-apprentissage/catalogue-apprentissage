@@ -20,3 +20,9 @@
 .howToModif .underline {
   text-decoration: underline;
 }
+
+.howToModif a {
+  color: #007bff;
+  text-decoration: none;
+  background-color: transparent;
+}

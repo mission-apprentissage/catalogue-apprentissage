@@ -1,13 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { ReactiveBase, ReactiveList, DataSearch } from "@appbaseio/reactivesearch";
+import React, { useState, useEffect, useCallback } from "react";
+import { ReactiveBase, ReactiveList, DataSearch, SingleList } from "@appbaseio/reactivesearch";
 import { Container, Row } from "reactstrap";
 import Switch from "react-switch";
-// import { API } from "aws-amplify";
-// import { useSelector } from "react-redux";
 import useAuth from "../../common/hooks/useAuth";
 import Layout from "../layout/Layout";
-
-// import config from "../../config";
 
 import {
   QueryBuilder,
@@ -27,20 +23,30 @@ import { _get } from "../../common/httpClient";
 
 import "./search.css";
 
-// import { getEnvName } from "../../config";
-const ENV_NAME = "dev"; //getEnvName();
-const endpointNewFront =
-  ENV_NAME === "local" || ENV_NAME === "dev"
-    ? "https://catalogue-recette.apprentissage.beta.gouv.fr/api"
-    : "https://catalogue.apprentissage.beta.gouv.fr/api";
-
+const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
 const endpointOldFront =
-  ENV_NAME === "local" || ENV_NAME === "dev"
-    ? "https://r7mayzn08d.execute-api.eu-west-3.amazonaws.com/dev"
-    : "https://c7a5ujgw35.execute-api.eu-west-3.amazonaws.com/prod";
+  process.env.REACT_APP_ENDPOINT_OLD_FRONT || "https://c7a5ujgw35.execute-api.eu-west-3.amazonaws.com/prod";
+
+const countItems = async (base, etablissement_reference_catalogue_published = true) => {
+  let count = 0;
+
+  const params = new window.URLSearchParams({
+    query: JSON.stringify({ published: true, etablissement_reference_catalogue_published }),
+  });
+  if (base === "mnaformation") {
+    count = await _get(`${endpointNewFront}/entity/formations/count?${params}`, false);
+  } else if (base === "convertedformation") {
+    count = await _get(`${endpointNewFront}/entity/formations2021/count?${params}`, false);
+  } else {
+    const countEtablissement = await _get(`${endpointOldFront}/etablissements/count?${params}`, false);
+    count = countEtablissement.count;
+  }
+
+  return count;
+};
 
 export default ({ match }) => {
-  const [countItems, setCountItems] = useState(0);
+  const [itemsCount, setItemsCount] = useState(0);
   const [mode, setMode] = useState("simple");
   const [base, setBase] = useState("mnaformation");
   const [endPoint, setEndpoint] = useState(endpointNewFront);
@@ -77,21 +83,9 @@ export default ({ match }) => {
         );
         setBase(tmpBase);
 
-        let countFormations = 0;
+        let countFormations = await countItems(tmpBase);
 
-        const params = new window.URLSearchParams({
-          query: JSON.stringify({ published: true }),
-        });
-        if (tmpBase === "mnaformation") {
-          countFormations = await _get(`${endpointNewFront}/entity/formations/count?${params}`, false);
-        } else if (tmpBase === "convertedformation") {
-          countFormations = await _get(`${endpointNewFront}/entity/formations2021/count?${params}`, false);
-        } else {
-          const countEtablissement = await _get(`${endpointOldFront}/etablissements/count?${params}`, false);
-          countFormations = countEtablissement.count;
-        }
-
-        setCountItems(countFormations);
+        setItemsCount(countFormations);
       } catch (e) {
         console.log(e);
       }
@@ -103,10 +97,35 @@ export default ({ match }) => {
     setMode(mode === "simple" ? "advanced" : "simple");
   };
 
+  const resetCount = useCallback(
+    async (val) => {
+      try {
+        let countFormations = await countItems(base, val);
+        setItemsCount(countFormations);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [base]
+  );
+
   return (
     <Layout>
       <div className="page search-page">
         <ReactiveBase url={`${endPoint}/es/search`} app={base}>
+          <SingleList
+            componentId="published"
+            dataField="published"
+            react={{ and: FILTERS }}
+            value={"true"}
+            defaultValue={"true"}
+            showFilter={false}
+            showSearch={false}
+            showCount={false}
+            render={() => {
+              return <div />;
+            }}
+          />
           <div className="search">
             <Container fluid style={{ maxWidth: 1860 }}>
               <label className="react-switch" style={{ right: "70px" }}>
@@ -137,7 +156,9 @@ export default ({ match }) => {
                       />
                     );
                   })}
-                  {(base === "mnaformation" || base === "convertedformation") && <ToggleCatalogue filters={FILTERS} />}
+                  {(base === "mnaformation" || base === "convertedformation") && (
+                    <ToggleCatalogue filters={FILTERS} onChanged={resetCount} />
+                  )}
                 </div>
                 <div className="search-results">
                   {mode !== "simple" && (
@@ -176,16 +197,11 @@ export default ({ match }) => {
                       }}
                       showResultStats={true}
                       sortBy="asc"
-                      defaultQuery={() => {
-                        return {
-                          //_source: exportTrainingColumns.map(def => def.accessor),
-                          query: {
-                            match: {
-                              published: true,
-                            },
-                          },
-                        };
-                      }}
+                      // defaultQuery={() => { // TODO to un-comment to reduce payload size
+                      //   return {
+                      //     //_source: columnsDefinition.map((def) => def.accessor),
+                      //   };
+                      // }}
                       renderItem={(data) =>
                         base === "mnaformation" || base === "convertedformation" ? (
                           <CardListFormation data={data} key={data._id} f2021={base === "convertedformation"} />
@@ -199,10 +215,10 @@ export default ({ match }) => {
                             <span className="summary-text">
                               {base === "mnaformation" || base === "convertedformation"
                                 ? `${stats.numberOfResults} formations affichées sur ${
-                                    countItems !== 0 ? countItems : ""
+                                    itemsCount !== 0 ? itemsCount : ""
                                   } formations au total`
                                 : `${stats.numberOfResults} établissements affichées sur ${
-                                    countItems !== 0 ? countItems : ""
+                                    itemsCount !== 0 ? itemsCount : ""
                                   } établissements`}
                             </span>
                             {auth?.sub !== "anonymous" && (

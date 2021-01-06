@@ -12,5 +12,5 @@ export const roles = {
 };
 
 export const hasRightToEditFormation = (formation, auth) => {
-  return auth?.academie?.split(",")?.includes(`${formation?.num_academie}`);
+  return isUserAdmin(auth) || auth?.academie?.split(",")?.includes(`${formation?.num_academie}`);
 };

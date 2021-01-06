@@ -16,11 +16,8 @@ import "./etablissement.css";
 
 const sleep = (m) => new Promise((r) => setTimeout(r, m));
 
-const ENV_NAME = "dev";
-const endpointNewFront =
-  ENV_NAME === "local" || ENV_NAME === "dev"
-    ? "https://r7mayzn08d.execute-api.eu-west-3.amazonaws.com/dev"
-    : "https://c7a5ujgw35.execute-api.eu-west-3.amazonaws.com/prod";
+const endpointOldFront =
+  process.env.REACT_APP_ENDPOINT_OLD_FRONT || "https://c7a5ujgw35.execute-api.eu-west-3.amazonaws.com/prod";
 
 // const checkIfHasRightToEdit = (item, userAcm) => {
 //   let hasRightToEdit = userAcm.all;
@@ -246,7 +243,7 @@ export default ({ match }) => {
     async function run() {
       try {
         // const eta = await API.get("api", `/etablissement/${match.params.id}`);
-        const eta = await _get(`${endpointNewFront}/etablissement/${match.params.id}`, false);
+        const eta = await _get(`${endpointOldFront}/etablissement/${match.params.id}`, false);
         setEtablissement(eta);
 
         setFieldValue("uai", eta.uai);
