@@ -66,7 +66,9 @@ const Header = () => {
                   <span className="avatar" style={{ backgroundImage: "url(/faces/default.png)" }}></span>
                   <span className="ml-2 d-none d-lg-block">
                     <span className="text-default">{auth.sub}</span>
-                    <small className="text-muted d-block mt-1">Administrateur</small>
+                    <small className="text-muted d-block mt-1">
+                      {auth.permissions.isAdmin ? "Administrateur" : "Utilisateur"}
+                    </small>
                   </span>
                 </span>
               </Dropdown.Trigger>
