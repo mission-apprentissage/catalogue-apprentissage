@@ -5,7 +5,7 @@ import { Table } from "./Table";
 import { CodeModal } from "./CodeModal";
 import { REPORT_TYPE } from "../../../constants/report";
 
-const RcoConversionTabs = ({ data, reportType, errors }) => {
+const RcoConversionTabs = ({ data, reportType, date, errors }) => {
   const { summary } = data;
   const showErrors = errors?.length > 0;
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -40,12 +40,12 @@ const RcoConversionTabs = ({ data, reportType, errors }) => {
           </TabPanel>
           {data?.converted?.length > 0 && (
             <TabPanel>
-              <Table data={data.converted} onRowClick={onRowClick} />
+              <Table data={data.converted} onRowClick={onRowClick} filename={`${reportType}_${date}_converted`} />
             </TabPanel>
           )}
           {showErrors && (
             <TabPanel>
-              <Table data={errors} onRowClick={onErrorClick} />
+              <Table data={errors} onRowClick={onErrorClick} filename={`${reportType}_${date}_errors`} />
             </TabPanel>
           )}
         </TabPanels>
@@ -55,7 +55,7 @@ const RcoConversionTabs = ({ data, reportType, errors }) => {
   );
 };
 
-const TrainingsUpdateTabs = ({ data, reportType, errors }) => {
+const TrainingsUpdateTabs = ({ data, reportType, date, errors }) => {
   const { summary } = data;
   const showErrors = errors?.length > 0;
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -81,17 +81,17 @@ const TrainingsUpdateTabs = ({ data, reportType, errors }) => {
           </TabPanel>
           {data.updated?.length > 0 && (
             <TabPanel>
-              <Table data={data.updated} onRowClick={onRowClick} />
+              <Table data={data.updated} onRowClick={onRowClick} filename={`${reportType}_${date}_updated`} />
             </TabPanel>
           )}
           {data.notUpdated?.length > 0 && (
             <TabPanel>
-              <Table data={data.notUpdated} />
+              <Table data={data.notUpdated} filename={`${reportType}_${date}_notUpdated`} />
             </TabPanel>
           )}
           {showErrors && (
             <TabPanel>
-              <Table data={errors} />
+              <Table data={errors} filename={`${reportType}_${date}_errors`} />
             </TabPanel>
           )}
         </TabPanels>
@@ -101,7 +101,7 @@ const TrainingsUpdateTabs = ({ data, reportType, errors }) => {
   );
 };
 
-const RcoDiffTabs = ({ data, reportType, errors }) => {
+const RcoDiffTabs = ({ data, reportType, date, errors }) => {
   const { summary } = data;
   const showErrors = errors?.length > 0;
 
@@ -118,12 +118,12 @@ const RcoDiffTabs = ({ data, reportType, errors }) => {
         </TabPanel>
         {data.matchingFormations.length > 0 && (
           <TabPanel>
-            <Table data={data.matchingFormations} />
+            <Table data={data.matchingFormations} filename={`${reportType}_${date}_matching`} />
           </TabPanel>
         )}
         {showErrors && (
           <TabPanel>
-            <Table data={errors} />
+            <Table data={errors} filename={`${reportType}_${date}_errors`} />
           </TabPanel>
         )}
       </TabPanels>
@@ -131,7 +131,7 @@ const RcoDiffTabs = ({ data, reportType, errors }) => {
   );
 };
 
-const RcoImportTabs = ({ data, reportType, errors }) => {
+const RcoImportTabs = ({ data, reportType, date, errors }) => {
   const { summary } = data;
   const showErrors = errors?.length > 0;
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -158,22 +158,22 @@ const RcoImportTabs = ({ data, reportType, errors }) => {
           </TabPanel>
           {data.added?.length > 0 && (
             <TabPanel>
-              <Table data={data.added} />
+              <Table data={data.added} filename={`${reportType}_${date}_added`} />
             </TabPanel>
           )}
           {data.updated?.length > 0 && (
             <TabPanel>
-              <Table data={data.updated} onRowClick={onRowClick} />
+              <Table data={data.updated} onRowClick={onRowClick} filename={`${reportType}_${date}_updated`} />
             </TabPanel>
           )}
           {data.deleted?.length > 0 && (
             <TabPanel>
-              <Table data={data.deleted} />
+              <Table data={data.deleted} filename={`${reportType}_${date}_deleted`} />
             </TabPanel>
           )}
           {showErrors && (
             <TabPanel>
-              <Table data={errors} />
+              <Table data={errors} filename={`${reportType}_${date}_errors`} />
             </TabPanel>
           )}
         </TabPanels>
@@ -183,19 +183,19 @@ const RcoImportTabs = ({ data, reportType, errors }) => {
   );
 };
 
-const Tabs = ({ data = { summary: {} }, reportType, errors }) => {
+const Tabs = ({ data = { summary: {} }, reportType, date, errors }) => {
   switch (reportType) {
     case REPORT_TYPE.RCO_CONVERSION:
-      return <RcoConversionTabs data={data} reportType={reportType} errors={errors} />;
+      return <RcoConversionTabs data={data} reportType={reportType} date={date} errors={errors} />;
 
     case REPORT_TYPE.TRAININGS_UPDATE:
-      return <TrainingsUpdateTabs data={data} reportType={reportType} errors={errors} />;
+      return <TrainingsUpdateTabs data={data} reportType={reportType} date={date} errors={errors} />;
 
     case REPORT_TYPE.RCO_DIFF:
-      return <RcoDiffTabs data={data} reportType={reportType} errors={errors} />;
+      return <RcoDiffTabs data={data} reportType={reportType} date={date} errors={errors} />;
 
     case REPORT_TYPE.RCO_IMPORT:
-      return <RcoImportTabs data={data} reportType={reportType} errors={errors} />;
+      return <RcoImportTabs data={data} reportType={reportType} date={date} errors={errors} />;
 
     default:
       console.warn("unexpected report type", reportType);
