@@ -37,7 +37,7 @@ const Header = () => {
       </React.Fragment>
     );
   }
-  console.log(auth);
+
   return (
     <Site.Header>
       {/* Logo */}
