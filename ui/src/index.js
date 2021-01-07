@@ -8,13 +8,13 @@ import theme from "./theme/index";
 
 //import "bootstrap/dist/css/bootstrap.min.css";
 
-if (
-  window.location.hostname.includes("catalogue.apprentissage.beta.gouv.fr") &&
-  window.location.pathname !== "/report" &&
-  window.location.pathname !== "/coverage"
-) {
-  window.location.replace("https://mna-admin-prod.netlify.app");
-}
+// if (
+//   window.location.hostname.includes("catalogue.apprentissage.beta.gouv.fr") &&
+//   window.location.pathname !== "/report" &&
+//   window.location.pathname !== "/coverage"
+// ) {
+//   window.location.replace("https://mna-admin-prod.netlify.app");
+// }
 
 ReactDOM.render(
   <React.StrictMode>

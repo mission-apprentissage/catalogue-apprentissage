@@ -112,6 +112,9 @@ const HowToReglement = () => {
                       <AccordionIcon />
                     </AccordionButton>
                     <AccordionPanel pb={4}>
+                      Dès lors que l’établissement est habilité à délivrer le titre ou diplôme, que celui-ci est réalisé
+                      par voie d’apprentissage et qu’il s’agit d’une formation du 1er cycle de l’enseignement supérieur,
+                      la formation est éligible au référencement sur Parcoursup.
                       <ul>
                         <li>
                           <strong className="underline">
@@ -126,7 +129,7 @@ const HowToReglement = () => {
                         </li>
                       </ul>
                       Il revient aux CFA de se mettre à jour auprès de France Compétences :
-                      certificationprofessionnelle@francecomptences.fr
+                      certificationprofessionnelle@francecompetences.fr
                     </AccordionPanel>
                   </AccordionItem>
                 </Accordion>
@@ -202,82 +205,96 @@ const HowToReglement = () => {
                     </AccordionButton>
                     <AccordionPanel pb={4}>
                       <ul>
-                        <li>
-                          <ul>
-                            <li className="purple">Traitement automatiques réalisés ci-dessus</li>
-                          </ul>
-                        </li>
+                        <li className="purple">Traitement automatiques réalisés ci-dessus</li>
                       </ul>
                     </AccordionPanel>
                   </AccordionItem>
                 </Accordion>
               </div>
 
-              <strong>Concernant l'établissement de formation :</strong>
-              <ul className="mt-2">
-                <li>
-                  la <strong>Base Centrale des Etablissements (BCE)</strong>, consultable sur{" "}
-                  <a
-                    href="https://www.education.gouv.fr/acce_public/index.php"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    l’application de consultation et cartographie des établissements (ACCE)
-                  </a>
-                  ;
-                  <ul>
-                    <li>
-                      l’établissement peut solliciter la mise à jour de ses données (dénomination officielle,
-                      immatriculation UAI,...) via le formulaire « Contact » du site ACCE ;
-                    </li>
-                  </ul>
-                </li>
-                <li>
-                  <a href="http://www.cnefop.gouv.fr/qualite/" target="_blank" rel="noreferrer noopener">
-                    le site internet du CNEFOP
-                  </a>{" "}
-                  pour consulter la liste des organismes certificateurs au sens au Décret du 30 juin 2015
-                </li>
-                <li>
-                  <a
-                    href="https://travail-emploi.gouv.fr/formation-professionnelle/acteurs-cadre-et-qualite-de-la-formation-professionnelle/liste-organismes-certificateurs"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    le site internet du Ministère du Travail
-                  </a>{" "}
-                  pour la liste des organismes certificateurs qualité Qualiopi
-                </li>
-                <li>
-                  <a href="https://www.insee.fr/fr/information/1972062" target="_blank" rel="noreferrer noopener">
-                    le site de l’INSEE
-                  </a>
-                  , permettant d’accéder aux données administratives à partir du Siret de l'établissement
-                  <ul>
-                    <li>
-                      l’établissement peut y signaler des modifications (changement d'adresse, de statut, d'activité, de
-                      raison sociale, ouverture ou fermeture d'un établissement...) afin qu’elles soient mises à jour.
-                    </li>
-                  </ul>
-                </li>
-              </ul>
-              <strong>Concernant la formation :</strong>
-              <ul className="mt-2 mb-5">
-                <li>
-                  <a href="https://certificationprofessionnelle.fr/recherche" target="_blank" rel="noreferrer noopener">
-                    le Répertoire national des certifications professionnelles (RNCP)
-                  </a>{" "}
-                  listant les certificateurs référencés pour chacune des certifications enregistrées au RNCP (hors
-                  Répertoire Spécifique)
-                  <ul>
-                    <li>
-                      il appartient à l'établissement de se rapprocher du certificateur pour solliciter la mise à jour
-                      éventuelle des données (validité, certificateur et/ou établissements partenaires, voie(s)
-                      d’accès...) ;
-                    </li>
-                  </ul>
-                </li>
-              </ul>
+              <Accordion allowMultiple className="card">
+                <AccordionItem>
+                  <AccordionButton>
+                    <Box flex="1" textAlign="left">
+                      3. Bases de données et mises à jour des informations relatives aux CFA et aux formations
+                    </Box>
+                    <AccordionIcon />
+                  </AccordionButton>
+                  <AccordionPanel pb={4}>
+                    <strong>Concernant l'établissement de formation :</strong>
+                    <ul className="mt-2">
+                      <li>
+                        la <strong>Base Centrale des Etablissements (BCE)</strong>, consultable sur{" "}
+                        <a
+                          href="https://www.education.gouv.fr/acce_public/index.php"
+                          target="_blank"
+                          rel="noreferrer noopener"
+                        >
+                          l’application de consultation et cartographie des établissements (ACCE)
+                        </a>
+                        ;
+                        <ul>
+                          <li>
+                            l’établissement peut solliciter la mise à jour de ses données (dénomination officielle,
+                            immatriculation UAI,...) via le formulaire « Contact » du site ACCE ;
+                          </li>
+                        </ul>
+                      </li>
+                      <li>
+                        <a href="http://www.cnefop.gouv.fr/qualite/" target="_blank" rel="noreferrer noopener">
+                          le site internet du CNEFOP
+                        </a>{" "}
+                        pour consulter la liste des organismes certificateurs au sens au Décret du 30 juin 2015
+                      </li>
+                      <li>
+                        <a
+                          href="https://travail-emploi.gouv.fr/formation-professionnelle/acteurs-cadre-et-qualite-de-la-formation-professionnelle/liste-organismes-certificateurs"
+                          target="_blank"
+                          rel="noreferrer noopener"
+                        >
+                          le site internet du Ministère du Travail
+                        </a>{" "}
+                        pour la liste des organismes certificateurs qualité Qualiopi
+                      </li>
+                      <li>
+                        <a href="https://www.insee.fr/fr/information/1972062" target="_blank" rel="noreferrer noopener">
+                          le site de l’INSEE
+                        </a>
+                        , permettant d’accéder aux données administratives à partir du Siret de l'établissement
+                        <ul>
+                          <li>
+                            l’établissement peut y signaler des modifications (changement d'adresse, de statut,
+                            d'activité, de raison sociale, ouverture ou fermeture d'un établissement...) afin qu’elles
+                            soient mises à jour.
+                          </li>
+                        </ul>
+                      </li>
+                    </ul>
+                    <strong>Concernant la formation :</strong>
+                    <ul className="mt-2 mb-5">
+                      <li>
+                        <a
+                          href="https://certificationprofessionnelle.fr/recherche"
+                          target="_blank"
+                          rel="noreferrer noopener"
+                        >
+                          le Répertoire national des certifications professionnelles (RNCP)
+                        </a>{" "}
+                        listant les certificateurs référencés pour chacune des certifications enregistrées au RNCP (hors
+                        Répertoire Spécifique)
+                        <ul>
+                          <li>
+                            il appartient à l'établissement de se rapprocher du certificateur pour solliciter la mise à
+                            jour éventuelle des données (validité, certificateur et/ou établissements partenaires,
+                            voie(s) d’accès...) ou de se mettre à jour auprès de France Compétences :
+                            certificationprofessionnelle@francecompetences.fr.
+                          </li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </AccordionPanel>
+                </AccordionItem>
+              </Accordion>
             </Col>
           </Row>
         </Container>

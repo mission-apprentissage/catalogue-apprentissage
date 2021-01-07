@@ -12,5 +12,9 @@ export const roles = {
 };
 
 export const hasRightToEditFormation = (formation, auth) => {
-  return isUserAdmin(auth) || auth?.academie?.split(",")?.includes(`${formation?.num_academie}`);
+  return (
+    isUserAdmin(auth) ||
+    auth?.academie?.split(",")?.includes(`-1`) ||
+    auth?.academie?.split(",")?.includes(`${formation?.num_academie}`)
+  );
 };

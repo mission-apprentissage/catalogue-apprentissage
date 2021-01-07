@@ -20,7 +20,6 @@ import HowToModif from "./pages/HowToModif";
 import { _post } from "./common/httpClient";
 import ScrollToTop from "./common/components/ScrollToTop";
 import Layout from "./pages/layout/Layout";
-import WebFont from "webfontloader";
 
 import { QueryClient, QueryClientProvider } from "react-query";
 
@@ -36,14 +35,6 @@ function PrivateRoute({ children, ...rest }) {
     />
   );
 }
-
-WebFont.load({
-  google: { families: ["Josefin Sans: 200, 300, 400, 600, 700", "Nexa", "Raleway"] },
-  custom: {
-    families: ["Font Awesome 5 Icons:400,900", "Font Awesome 5 Brands:400"],
-    urls: ["//use.fontawesome.com/releases/v5.0.8/css/all.css"],
-  },
-});
 
 const ResetPasswordWrapper = ({ children }) => {
   let [auth] = useAuth();
