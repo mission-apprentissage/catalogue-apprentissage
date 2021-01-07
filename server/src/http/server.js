@@ -74,7 +74,7 @@ module.exports = async (components) => {
         });
 
       return res.json({
-        name: `Serveur Express MNA - ${config.appName}`,
+        name: `Serveur Express Catalogue - ${config.appName}`,
         version: packageJson.version,
         env: config.env,
         healthcheck: {

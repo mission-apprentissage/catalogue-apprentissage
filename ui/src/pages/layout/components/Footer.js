@@ -28,6 +28,9 @@ const Footer = () => {
                   Code source
                 </a>
               </div>
+              <div className="col-auto">
+                <a href="mailto:catalogue@apprentissage.beta.gouv.fr">Contact</a>
+              </div>
             </div>
           </div>
           <div className="col-12 col-lg-auto mt-3 mt-lg-0 text-center">
