@@ -5,6 +5,46 @@ import { FixedSizeList } from "react-window";
 import { Box, Flex, Text, Input, Button, Stack } from "@chakra-ui/react";
 import { downloadCSV, CSV_SEPARATOR } from "../../utils/downloadUtils";
 
+const csvExport = (headers, rows, filename) => {
+  const hasSiretsHeader = headers.some((header) => header === "sirets");
+
+  const computedHeaders = headers.reduce((acc, header) => {
+    if (header === "sirets") {
+      try {
+        const siretHeaders = Object.keys(JSON.parse(rows[0].values["sirets"])).map((key) => `siret_${key}`);
+        return [...acc, ...siretHeaders];
+      } catch (e) {
+        return [...acc, header];
+      }
+    }
+
+    return [...acc, header];
+  }, []);
+
+  const lines = rows.map(({ values }) => {
+    let computedValues = { ...values };
+    if (hasSiretsHeader) {
+      try {
+        const siretValues = Object.entries(JSON.parse(values["sirets"])).reduce((acc, [key, value]) => {
+          return { ...acc, [`siret_${key}`]: value };
+        }, {});
+
+        computedValues = { ...values, ...siretValues };
+      } catch (e) {
+        // do nothing
+      }
+    }
+
+    const row = computedHeaders.map((header) => {
+      return computedValues[header];
+    });
+    return row.join(CSV_SEPARATOR);
+  });
+
+  const data = [computedHeaders.join(CSV_SEPARATOR), ...lines].join("\n");
+  downloadCSV(`${filename}.csv`, data);
+};
+
 // Define a default UI for filtering
 function GlobalFilter({ preGlobalFilteredRows, globalFilter, setGlobalFilter, rows, headers, filename }) {
   const count = preGlobalFilteredRows.length;
@@ -32,19 +72,7 @@ function GlobalFilter({ preGlobalFilteredRows, globalFilter, setGlobalFilter, ro
           {rows.length} résultat(s) trouvé(s)
         </Text>
       )}
-      <Button
-        colorScheme="teal"
-        disabled={rows.length === 0}
-        onClick={() => {
-          const lines = rows.map(({ values }) => {
-            const row = headers.map((header) => values[header]);
-            return row.join(CSV_SEPARATOR);
-          });
-
-          const data = [headers.join(CSV_SEPARATOR), ...lines].join("\n");
-          downloadCSV(`${filename}.csv`, data);
-        }}
-      >
+      <Button colorScheme="teal" disabled={rows.length === 0} onClick={() => csvExport(headers, rows, filename)}>
         Exporter
       </Button>
     </Stack>
