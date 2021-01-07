@@ -13,7 +13,7 @@ const Header = () => {
   let history = useHistory();
   let logout = () => {
     setAuth(null);
-    history.push("/login");
+    history.push("/");
   };
 
   let dropdownItems = null;
@@ -67,7 +67,7 @@ const Header = () => {
                   <span className="ml-2 d-none d-lg-block">
                     <span className="text-default">{auth.sub}</span>
                     <small className="text-muted d-block mt-1">
-                      {auth.permissions.isAdmin ? "Administrateur" : "Utilisateur"}
+                      {isUserAdmin(auth) ? "Administrateur" : "Utilisateur"}
                     </small>
                   </span>
                 </span>
