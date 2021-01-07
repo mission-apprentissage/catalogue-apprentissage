@@ -9,7 +9,6 @@ const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://ca
 const endpointOldFront =
   process.env.REACT_APP_ENDPOINT_OLD_FRONT || "https://c7a5ujgw35.execute-api.eu-west-3.amazonaws.com/prod";
 
-
 const serializeObject = (columns, obj) => {
   const fieldNames = columns.map((c) => c.fieldName);
   const res = [];
