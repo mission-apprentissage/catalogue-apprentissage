@@ -13,7 +13,7 @@ const Header = () => {
   let history = useHistory();
   let logout = () => {
     setAuth(null);
-    history.push("/login");
+    history.push("/");
   };
 
   let dropdownItems = null;
