@@ -127,7 +127,7 @@ const ReportPage = () => {
             </Heading>
           </Box>
           <Box>
-            <Tabs data={report?.data} reportType={reportType} errors={reportErrors?.data?.errors} />
+            <Tabs data={report?.data} reportType={reportType} date={date} errors={reportErrors?.data?.errors} />
           </Box>
         </>
       )}
