@@ -1,6 +1,6 @@
 const { getJsonFromXlsxFile } = require("../../../common/utils/fileUtils");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
-const { PsFormation } = require("../../../common/model");
+const { PsFormation, PsReconciliation } = require("../../../common/model");
 const logger = require("../../../common/logger");
 const mongoose = require("mongoose");
 
@@ -12,12 +12,34 @@ module.exports = async (filePath) => {
   const match = data.filter((x) => x.Analyse === "TRUE" && x.etablissement_id);
   const verify = data.filter((x) => x.Analyse === "STANDBY");
 
+  const formatMatch = Object.values(
+    match.reduce((acc, item) => {
+      if (!acc[item.formation_id]) {
+        acc[item.formation_id] = [];
+      }
+
+      if (acc[item.formation_id] === item.formation_id) {
+        acc[item.formation_id].push({
+          type: item.matched_uai === "UAI_FORMATEUR" ? "formateur" : "gestionnaire",
+          ...item,
+        });
+      } else {
+        acc[item.formation_id].push({
+          type: item.matched_uai === "UAI_FORMATEUR" ? "formateur" : "gestionnaire",
+          ...item,
+        });
+      }
+      return acc;
+    }, [])
+  );
+
   logger.info(
     `Traitement à effectuer : 
       formation: ${data.filter((x) => x.formation_id).length},
       delete: ${remove.length},
       verify: ${verify.length},
-      match: ${match.length}
+      match: ${match.length},
+      formatted: ${formatMatch.length}
     `
   );
 
@@ -36,12 +58,32 @@ module.exports = async (filePath) => {
           break;
       }
 
-      const payload = {
+      const psformation = {
         type: type,
         id: etablissement_id,
       };
-      await PsFormation.findByIdAndUpdate(formation_id, { $push: { mapping_liaison_etablissement: payload } });
-      logger.info(`Update formation ${formation_id} — etablissement ${payload.id}`);
+
+      await PsFormation.findByIdAndUpdate(formation_id, { $push: { mapping_liaison_etablissement: psformation } });
+      logger.info(`Update formation ${formation_id} — etablissement ${psformation.id}`);
+    });
+
+    await asyncForEach(formatMatch, async (formation) => {
+      console.log(formation);
+      console.log("next");
+
+      const payload = formation.reduce((acc, item) => {
+        acc.uai_gestionnaire = item.uai_gestionnaire;
+        acc.uai_affilie = item.uai_affilie;
+        acc.uai_composante = item.uai_composante;
+        acc.id_psformation = item.formation_id;
+        acc.code_cfd = item.code_cfd;
+        acc.siret_formateur = item.type === "formateur" ? item.etablissement_siret : acc.siret_formateur;
+        acc.siret_gestionnaire = item.type === "gestionnaire" ? item.etablissement_siret : acc.siret_gestionnaire;
+        return acc;
+      }, {});
+
+      console.log("payload", payload);
+      await PsReconciliation.findOneAndUpdate({ ps_idformation: payload.id_psformation }, payload, { upsert: true });
     });
   }
 

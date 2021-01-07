@@ -7,8 +7,10 @@ const updateCreate = require("./updateCreate");
 
 const matching6 = async () => {
   try {
-    const filePath = path.resolve(__dirname, "./assets/Etablissements_6_20201130.xlsx");
-    await updateMatching(filePath);
+    const partOne = path.resolve(__dirname, "./assets/matching-6-create-ABT.xlsx");
+    const partTwo = path.resolve(__dirname, "./assets/matching-6-create-APT.xlsx");
+    await updateMatching(partOne);
+    await updateMatching(partTwo);
   } catch (err) {
     logger.error(err);
   }
@@ -30,8 +32,8 @@ if (process.env.standalone) {
     logger.info(" -- Start oneshot psformation -- ");
 
     await matching6();
-    await matchingCreate(catalogue);
     await bulkUpdate();
+    await matchingCreate(catalogue);
 
     logger.info(" -- End oneshot psformation -- ");
   });
