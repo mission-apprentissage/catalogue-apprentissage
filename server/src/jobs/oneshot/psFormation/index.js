@@ -14,15 +14,6 @@ const matching6 = async () => {
   }
 };
 
-const matching4 = async () => {
-  try {
-    const filePath = path.resolve(__dirname, "./assets/Etablissements_4_20201130.xlsx");
-    await updateMatching(filePath);
-  } catch (error) {
-    logger.error(error);
-  }
-};
-
 const matchingCreate = async (catalogue) => {
   try {
     const partOne = path.resolve(__dirname, "./assets/matching-6-create-ABT.xlsx");
@@ -39,7 +30,6 @@ if (process.env.standalone) {
     logger.info(" -- Start oneshot psformation -- ");
 
     await matching6();
-    await matching4();
     await matchingCreate(catalogue);
     await bulkUpdate();
 
