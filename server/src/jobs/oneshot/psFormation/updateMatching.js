@@ -64,17 +64,14 @@ module.exports = async (filePath) => {
       };
 
       await PsFormation.findByIdAndUpdate(formation_id, { $push: { mapping_liaison_etablissement: psformation } });
-      logger.info(`Update formation ${formation_id} — etablissement ${psformation.id}`);
+      logger.info(`Update PsFormation ${formation_id} — etablissement ${psformation.id}`);
     });
 
     await asyncForEach(formatMatch, async (formation) => {
-      console.log(formation);
-      console.log("next");
-
       const payload = formation.reduce((acc, item) => {
         acc.uai_gestionnaire = item.uai_gestionnaire;
-        acc.uai_affilie = item.uai_affilie;
-        acc.uai_composante = item.uai_composante;
+        acc.uai_affilie = item.uai_gestionnaire;
+        acc.uai_composante = item.uai_gestionnaire;
         acc.id_psformation = item.formation_id;
         acc.code_cfd = item.code_cfd;
         acc.siret_formateur = item.type === "formateur" ? item.etablissement_siret : acc.siret_formateur;
@@ -82,8 +79,8 @@ module.exports = async (filePath) => {
         return acc;
       }, {});
 
-      console.log("payload", payload);
-      await PsReconciliation.findOneAndUpdate({ ps_idformation: payload.id_psformation }, payload, { upsert: true });
+      await PsReconciliation.findOneAndUpdate({ id_psformation: payload.id_psformation }, payload, { upsert: true });
+      logger.info(`Update PsReconciliation ${payload.id_psformation}`);
     });
   }
 
