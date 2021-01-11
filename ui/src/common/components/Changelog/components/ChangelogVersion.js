@@ -1,6 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
-
 import FeatureItem from "./FeatureItem.js";
 
 const createMarkup = (html) => {
@@ -30,14 +28,6 @@ const ChangelogVersion = ({ version, date, about, fixes, features, improvements 
       <div className="changelog-link" />
     </div>
   );
-};
-
-ChangelogVersion.propTypes = {
-  version: PropTypes.string,
-  date: PropTypes.string,
-  fixes: PropTypes.array,
-  features: PropTypes.array,
-  improvements: PropTypes.array,
 };
 
 export default ChangelogVersion;

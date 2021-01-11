@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 
 const ScrollVersionItem = ({ version, slug }) => (
   <div>
@@ -10,10 +9,5 @@ const ScrollVersionItem = ({ version, slug }) => (
     </li>
   </div>
 );
-
-ScrollVersionItem.propTypes = {
-  version: PropTypes.string,
-  slug: PropTypes.string,
-};
 
 export default ScrollVersionItem;

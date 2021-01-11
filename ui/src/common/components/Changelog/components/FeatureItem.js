@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 
 const FeatureItem = ({ type, description }) => {
   let itemClass = "";
@@ -30,11 +29,6 @@ const FeatureItem = ({ type, description }) => {
       {description}
     </p>
   );
-};
-
-FeatureItem.propTypes = {
-  type: PropTypes.number,
-  description: PropTypes.string,
 };
 
 export default FeatureItem;

@@ -20,10 +20,6 @@ var _react2 = _interopRequireDefault(_react);
 
 var _helper = require("@appbaseio/reactivecore/lib/utils/helper");
 
-var _types = require("@appbaseio/reactivecore/lib/utils/types");
-
-var _types2 = _interopRequireDefault(_types);
-
 var _Button = require("@appbaseio/reactivesearch/lib/styles/Button");
 
 var _Button2 = _interopRequireDefault(_Button);
@@ -264,15 +260,5 @@ var Pagination = (function (_React$PureComponent) {
 
   return Pagination;
 })(_react2.default.PureComponent);
-
-Pagination.propTypes = {
-  currentPage: _types2.default.number,
-  innerClass: _types2.default.style,
-  pages: _types2.default.number,
-  setPage: _types2.default.func,
-  totalPages: _types2.default.number,
-  fragmentName: _types2.default.string,
-  showEndPage: _types2.default.bool,
-};
 
 exports.default = Pagination;
