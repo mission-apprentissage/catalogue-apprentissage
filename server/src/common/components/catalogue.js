@@ -1,20 +1,37 @@
-/**
- * Méthode lié à l'ancien catalogue
- */
 const axios = require("axios");
 const logger = require("../logger");
 const config = require("config");
+const methods = ["post", "put", "delete"];
 
-const apiEndpoint = config.oldCatalogue.endpoint;
-const apiKey = config.oldCatalogue.apiKey;
+const API = axios.create({ baseURL: `${config.tableCorrespondance.endpoint}/api` });
+API.interceptors.request.use(async (config) => {
+  if (methods.includes(config.method)) {
+    let token = await getToken();
+    config.headers.authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+const getToken = async () => {
+  try {
+    let {
+      data: { token },
+    } = await axios.post(`${config.tableCorrespondance.endpoint}/api/login`, {
+      username: `${config.tableCorrespondance.username}`,
+      password: `${config.tableCorrespondance.password}`,
+    });
+    return token;
+  } catch (error) {
+    logger.error(error);
+  }
+};
 
 const getEtablissements = async (options) => {
   let { page, allEtablissements, limit, query } = { page: 1, allEtablissements: [], limit: 1050, ...options };
   let params = { page, limit, query };
 
-  logger.debug(`Requesting ${apiEndpoint}/etablissements with parameters`, params);
   try {
-    const response = await axios.get(`${apiEndpoint}/etablissements`, { params });
+    const response = await API.get(`/entity/etablissements`, { params });
 
     const { etablissements, pagination } = response.data;
     allEtablissements = allEtablissements.concat(etablissements);
@@ -31,7 +48,7 @@ const getEtablissements = async (options) => {
 
 const getEtablissement = async (query) => {
   try {
-    const response = await axios.get(`${apiEndpoint}/etablissement/`, { params: { query } });
+    const response = await API.get(`/entity/etablissement/`, { params: { query } });
     return response.data;
   } catch (error) {
     logger.error(error);
@@ -40,7 +57,7 @@ const getEtablissement = async (query) => {
 
 const getEtablissementById = async (idEtablissement) => {
   try {
-    const response = await axios.get(`${apiEndpoint}/etablissement/${idEtablissement}`);
+    const response = await API.get(`/entity/etablissement/${idEtablissement}`);
     return response.data;
   } catch (error) {
     logger.error(error);
@@ -49,9 +66,7 @@ const getEtablissementById = async (idEtablissement) => {
 
 const postEtablissement = async (payload) => {
   try {
-    const response = await axios.post(`${apiEndpoint}/etablissement`, payload, {
-      headers: { Authorization: `${apiKey}` },
-    });
+    const response = await API.post(`/entity/etablissement`, payload);
     return response.data;
   } catch (error) {
     logger.error(error);
@@ -60,9 +75,7 @@ const postEtablissement = async (payload) => {
 
 const updateEtablissement = async (id, payload) => {
   try {
-    const response = await axios.put(`${apiEndpoint}/etablissement/${id}`, payload, {
-      headers: { Authorization: `${apiKey}` },
-    });
+    const response = await API.put(`/entity/etablissement/${id}`, payload);
     return response.data;
   } catch (error) {
     logger.error(error);
@@ -71,24 +84,20 @@ const updateEtablissement = async (id, payload) => {
 
 const deleteEtablissement = async (id) => {
   try {
-    await axios.delete(`${apiEndpoint}/etablissement/${id}`, {
-      headers: { Authorization: `${apiKey}` },
-    });
+    await API.delete(`/entity/etablissement/${id}`);
     return true;
   } catch (error) {
     logger.error(error);
   }
 };
 
-const updateInformation = async (id) => {
-  try {
-    await axios.get(`${apiEndpoint}/services?job=etablissement&id=${id}`);
-  } catch (error) {
-    logger.error(error);
-  }
-};
-
 const createEtablissement = async (data) => {
+  /**
+   * TODO (update whole function once TCO is updated by Antoine):
+   * Generate etablissement object /api/service/etablissement
+   * Post etablissement /api/entity/etablissement
+   */
+
   let etablissement = await postEtablissement(data);
 
   if (etablissement?._id) {
