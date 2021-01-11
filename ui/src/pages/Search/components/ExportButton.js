@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ReactiveComponent } from "@appbaseio/reactivesearch";
-import { Button, Progress } from "reactstrap";
+import { Button } from "@chakra-ui/react";
 
 import { _post } from "../../../common/httpClient";
 import { downloadCSV, CSV_SEPARATOR } from "../../../common/utils/downloadUtils";
@@ -117,7 +117,7 @@ const ExportButton = ({ index, filters, columns, defaultQuery = { match_all: {} 
     return (
       <Button
         size="sm"
-        color="primary"
+        colorScheme="blue"
         onClick={async () => {
           setRequestExport(true);
           setExporting(true);
@@ -157,9 +157,9 @@ const ExportButton = ({ index, filters, columns, defaultQuery = { match_all: {} 
       render={() => {
         if (exporting) {
           return (
-            <Progress min={0} max={100} value={progress} style={{ width: "100%", position: "absolute" }}>
-              {progress}%
-            </Progress>
+            <Button isLoading size="sm" colorScheme="blue" loadingText={`${progress}%`}>
+              Exporter
+            </Button>
           );
         }
         return <div />;
