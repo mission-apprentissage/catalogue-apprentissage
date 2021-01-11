@@ -42,8 +42,8 @@
   width: 80%;
 }
 .etablissement .notice .field.field-button .btn-primary {
-  background-color: #377C88;
-  border-color: #377C88;
+  background-color: #377c88;
+  border-color: #377c88;
   width: 100%;
 }
 .etablissement .notice .field p {
@@ -123,6 +123,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  padding: 20px 60px;
 }
 .etablissement .notice .sidebar-section.sidebar-section-edit .btn-warning,
 .etablissement .notice .sidebar-section.sidebar-section-edit .btn-danger,

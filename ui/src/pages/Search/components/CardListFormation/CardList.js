@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 // import { useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons"; // faPen
-import { Button } from "reactstrap";
+import { Button } from "@chakra-ui/react";
 // import { API } from "aws-amplify";
 import "./cardList.css";
 
@@ -66,10 +66,10 @@ const CardList = ({ data, f2021 }) => {
             <span className="edition-btns">
               {hasRightToEdit && (
                 <>
-                  {/* <Button outline color="warning" onClick={onEditClicked}>
+                  {/* <Button variant="outline" colorScheme="teal" onClick={onEditClicked}>
                     <FontAwesomeIcon icon={faPen} size="xs" />
                   </Button> */}
-                  <Button outline color="danger" onClick={onDeleteClicked}>
+                  <Button variant="outline" colorScheme="red" onClick={onDeleteClicked}>
                     <FontAwesomeIcon icon={faTimes} />
                   </Button>
                 </>

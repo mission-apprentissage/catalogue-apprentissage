@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Button, Input } from "reactstrap";
-import { Spinner, Alert, Box } from "@chakra-ui/react";
+import { Spinner, Alert, Box, Container, Input, Button, Grid, GridItem } from "@chakra-ui/react";
 import { useHistory, useLocation } from "react-router-dom";
 import { useFormik } from "formik";
 import queryString from "query-string";
@@ -17,18 +16,27 @@ const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://ca
 
 const EditSection = ({ edition, onEdit, handleSubmit, onDeleteClicked, isSubmitting, isDeleteDisabled }) => {
   return (
-    <div className="sidebar-section info sidebar-section-edit">
+    <Box className="sidebar-section info sidebar-section-edit">
       {edition && (
         <>
-          <Button className="mb-3" color="success" onClick={handleSubmit} disabled={isSubmitting}>
-            Valider {isSubmitting && <Spinner size="xs" />}
+          <Button
+            mb={3}
+            colorScheme="teal"
+            onClick={handleSubmit}
+            isLoading={isSubmitting}
+            loadingText="Valider"
+            isFullWidth
+          >
+            Valider
           </Button>
           <Button
-            color="danger"
+            variant="outline"
+            colorScheme="teal"
             onClick={() => {
               onEdit();
             }}
             disabled={isSubmitting}
+            isFullWidth
           >
             Annuler
           </Button>
@@ -37,20 +45,21 @@ const EditSection = ({ edition, onEdit, handleSubmit, onDeleteClicked, isSubmitt
       {!edition && (
         <>
           <Button
-            className="mb-3"
-            color="warning"
+            mb={3}
+            colorScheme="teal"
             onClick={() => {
               onEdit();
             }}
+            isFullWidth
           >
             Modifier
           </Button>
-          <Button color="danger" onClick={onDeleteClicked} disabled={isDeleteDisabled}>
+          <Button variant="outline" colorScheme="red" onClick={onDeleteClicked} disabled={isDeleteDisabled} isFullWidth>
             Supprimer
           </Button>
         </>
       )}
-    </div>
+    </Box>
   );
 };
 
@@ -71,8 +80,8 @@ const Formation = ({
   const hasRightToEdit = !isMna && hasRightToEditFormation(formation, auth);
 
   return (
-    <Row>
-      <Col md="7">
+    <Grid templateColumns="repeat(12, 1fr)" gap={4}>
+      <GridItem colSpan={7}>
         <div className="notice-details">
           <h2 className="small">Détails</h2>
           <div className="field">
@@ -198,8 +207,8 @@ const Formation = ({
             )}
           </div>
         </Section>
-      </Col>
-      <Col md="5">
+      </GridItem>
+      <GridItem colSpan={5}>
         {hasRightToEdit && (
           <EditSection
             edition={edition}
@@ -274,7 +283,9 @@ const Formation = ({
             {formation.onisep_url !== "" && formation.onisep_url !== null && (
               <div className="field field-button mt-3">
                 <a href={formation.onisep_url} target="_blank" rel="noreferrer noopener">
-                  <Button color="primary">Voir la fiche descriptive Onisep</Button>
+                  <Button colorScheme="teal" variant="outline" isFullWidth>
+                    Voir la fiche descriptive Onisep
+                  </Button>
                 </a>
               </div>
             )}
@@ -305,7 +316,9 @@ const Formation = ({
                 target="_blank"
                 rel="noreferrer noopener"
               >
-                <Button color="primary">Voir l'organisme {!oneEstablishment && "formateur"}</Button>
+                <Button colorScheme="teal" variant="outline" isFullWidth>
+                  Voir l'organisme {!oneEstablishment && "formateur"}
+                </Button>
               </a>
             </div>
           </div>
@@ -336,14 +349,16 @@ const Formation = ({
                   target="_blank"
                   rel="noreferrer noopener"
                 >
-                  <Button color="primary">Voir l'organisme gestionnaire</Button>
+                  <Button colorScheme="teal" variant="outline" isFullWidth>
+                    Voir l'organisme gestionnaire
+                  </Button>
                 </a>
               </div>
             </div>
           </div>
         )}
-      </Col>
-    </Row>
+      </GridItem>
+    </Grid>
   );
 };
 
@@ -451,7 +466,7 @@ export default ({ match }) => {
     <Layout>
       <div className="page formation">
         <div className="notice">
-          <Container>
+          <Container maxW="xl">
             {pendingFormation && (
               <Alert status="info" fontWeight={"bold"}>
                 Cette formation a été {pendingFormation.published ? "éditée" : "supprimée"} et est en attente de

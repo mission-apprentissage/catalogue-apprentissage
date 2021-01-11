@@ -2,6 +2,7 @@
   min-height: 100vh;
   background-color: #e5edef;
   color: #19414c;
+  justify-content: flex-start;
 }
 .howToReglement h1, .howToReglement h2, .howToReglement h3, .howToReglement h4, .howToReglement h5, .howToReglement h6 {
   font-size: revert;
