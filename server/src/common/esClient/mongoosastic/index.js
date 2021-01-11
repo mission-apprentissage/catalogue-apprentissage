@@ -220,6 +220,17 @@ function Mongoosastic(schema, options) {
     }
   }
 
+  function postSaveMany(docs) {
+    return new Promise(async (resolve, reject) => {
+      for (let i = 0; i < docs.length; i++) {
+        try {
+          await postSave(docs[i]);
+        } catch (e) {}
+      }
+      resolve();
+    });
+  }
+
   /**
    * Use standard Mongoose Middleware hooks
    * to persist to Elasticsearch
@@ -230,17 +241,10 @@ function Mongoosastic(schema, options) {
 
     inSchema.post("save", postSave);
     inSchema.post("findOneAndUpdate", postSave);
+    inSchema.post("replaceOne", postSave);
 
-    inSchema.post("insertMany", (docs) => {
-      return new Promise(async (resolve, reject) => {
-        for (let i = 0; i < docs.length; i++) {
-          try {
-            await postSave(docs[i]);
-          } catch (e) {}
-        }
-        resolve();
-      });
-    });
+    inSchema.post("insertMany", postSaveMany);
+    inSchema.post("updateMany", postSaveMany);
   }
   setUpMiddlewareHooks(schema);
 }
