@@ -21,12 +21,6 @@ const changelog = {
           correction des doublons.
         </li>
         <li>
-          Les établissements affichés sur le catalogue sont soit des établissements répertoriés en 2020 soit
-          des établissements répertoriés en 2021. Certains établissements sont présents sur les 2 années. A
-          titre d'information : - 1943 établissements uniquement 2020 - 1628 établissements 2020 & 2021 -
-          602 établissements uniquement 2021
-        </li>
-        <li>
           Courant janvier 2021 le catalogue des formations 2020 ne sera plus affiché dans cette interface.
         </li>
         <li>
