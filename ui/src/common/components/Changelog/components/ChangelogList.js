@@ -1,6 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
-
 import ChangelogVersion from "./ChangelogVersion.js";
 
 const ChangelogList = ({ list, filter }) => {
@@ -23,11 +21,6 @@ const ChangelogList = ({ list, filter }) => {
         ))}
     </div>
   );
-};
-
-ChangelogList.propTypes = {
-  list: PropTypes.array,
-  filter: PropTypes.object,
 };
 
 export default ChangelogList;

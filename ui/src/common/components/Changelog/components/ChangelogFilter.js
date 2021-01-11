@@ -1,6 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
-
 import ScrollToVersion from "./ScrollToVersion.js";
 
 const ChangelogFilter = ({ versions, onChange }) => (
@@ -41,10 +39,5 @@ const ChangelogFilter = ({ versions, onChange }) => (
     </div>
   </div>
 );
-
-ChangelogFilter.propTypes = {
-  verions: PropTypes.array,
-  onChange: PropTypes.func,
-};
 
 export default ChangelogFilter;
