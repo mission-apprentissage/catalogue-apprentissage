@@ -3,6 +3,7 @@
  */
 const logger = require("../logger");
 const axios = require("axios");
+const config = require("config");
 
 const apiEndpoint = `${config.tableCorrespondance.endpoint}/api`;
 

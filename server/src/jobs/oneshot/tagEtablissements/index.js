@@ -1,6 +1,6 @@
 const { RcoFormation } = require("../../../common/model/index");
 const { runScript } = require("../../scriptWrapper");
-const catalogue = require("../../../common/components/catalogue_old");
+const catalogue = require("../../../common/components/catalogue");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const logger = require("../../../common/logger");
 

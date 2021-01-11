@@ -1,5 +1,5 @@
 const logger = require("../../common/logger");
-const catalogue = require("../../common/components/catalogue_old");
+const catalogue = require("../../common/components/catalogue");
 const { codePostalMapper } = require("./codePostalMapper");
 
 const getAttachedEstablishments = async (etablissement_gestionnaire_siret, etablissement_formateur_siret) => {

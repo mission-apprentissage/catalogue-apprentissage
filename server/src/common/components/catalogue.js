@@ -91,25 +91,12 @@ const deleteEtablissement = async (id) => {
   }
 };
 
-const createEtablissement = async (data) => {
+const createEtablissement = async () => {
   /**
    * TODO (update whole function once TCO is updated by Antoine):
    * Generate etablissement object /api/service/etablissement
    * Post etablissement /api/entity/etablissement
    */
-
-  let etablissement = await postEtablissement(data);
-
-  if (etablissement?._id) {
-    await updateInformation(etablissement._id);
-    etablissement = await getEtablissementById(etablissement._id);
-  } else {
-    // errors may be sent on http success
-    logger.error("unable to create etablissement", etablissement);
-    etablissement = null;
-  }
-
-  return etablissement;
 };
 
 module.exports = () => {
@@ -119,7 +106,6 @@ module.exports = () => {
     getEtablissementById: (opt) => getEtablissementById(opt),
     postEtablissement: (opt) => postEtablissement(opt),
     deleteEtablissement: (opt) => deleteEtablissement(opt),
-    updateInformation: (opt) => updateInformation(opt),
     createEtablissement: (opt) => createEtablissement(opt),
     updateEtablissement: (id, payload) => updateEtablissement(id, payload),
   };
