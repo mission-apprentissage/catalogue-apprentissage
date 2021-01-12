@@ -40,7 +40,7 @@ export default function TransitionsModal({ isOpen, onClose, onSuccess }) {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    if (values.siret === "" || values.siret.length !== 14) {
+    if (values.siret === "" || values.siret.length !== 14 || values.uai || values.uai.length !== 8) {
       setErrors(true);
       return;
     }
@@ -74,6 +74,7 @@ export default function TransitionsModal({ isOpen, onClose, onSuccess }) {
                 <FormControl>
                   <FormLabel>UAI</FormLabel>
                   <Input type="text" name="uai" onChange={handleChange} autoComplete="off" />
+                  <FormErrorMessage>Uai obligatoire (8 caractères)</FormErrorMessage>
                 </FormControl>
 
                 <FormControl isInvalid={errors}>
