@@ -4,12 +4,13 @@ const config = require("config");
 const methods = ["post", "put", "delete"];
 
 const API = axios.create({ baseURL: `${config.tableCorrespondance.endpoint}/api` });
-API.interceptors.request.use(async (config) => {
-  if (methods.includes(config.method)) {
+API.interceptors.request.use(async (req) => {
+  logger.info(`Requesting ${req.method.toUpperCase()} - ${req.url}`);
+  if (methods.includes(req.method)) {
     let token = await getToken();
-    config.headers.authorization = `Bearer ${token}`;
+    req.headers.authorization = `Bearer ${token}`;
   }
-  return config;
+  return req;
 });
 
 const getToken = async () => {
@@ -91,12 +92,18 @@ const deleteEtablissement = async (id) => {
   }
 };
 
-const createEtablissement = async () => {
-  /**
-   * TODO (update whole function once TCO is updated by Antoine):
-   * Generate etablissement object /api/service/etablissement
-   * Post etablissement /api/entity/etablissement
-   */
+const createEtablissement = async (payload) => {
+  if (!payload.siret || !payload.uai) {
+    throw new Error(`Missing siret or uai from payload`);
+  }
+
+  try {
+    let etablissement = await API.post(`/services/etablissement`, payload);
+    const response = await postEtablissement(etablissement.data);
+    return response;
+  } catch (error) {
+    logger.error(error);
+  }
 };
 
 module.exports = () => {
