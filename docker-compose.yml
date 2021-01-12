@@ -31,7 +31,7 @@ services:
     container_name: catalogue_apprentissage_server
     build:
       context: server
-    mem_limit: 1g
+    mem_limit: 512m
     restart: unless-stopped
     networks:
       - catalogue_apprentissage_network
@@ -44,7 +44,7 @@ services:
   mongodb:
     image: mongo:4.2.6-bionic
     container_name: catalogue_apprentissage_mongodb
-    mem_limit: 1g
+    mem_limit: 512m
     restart: unless-stopped
     networks:
       - catalogue_apprentissage_network
@@ -55,7 +55,6 @@ services:
     environment:
       - ES_JAVA_OPTS=-Xmx512m -Xms512m
       - discovery.type=single-node
-    mem_limit: 1g
     networks:
       - catalogue_apprentissage_network
 
@@ -66,6 +65,7 @@ services:
       - elasticsearch
     networks:
       - catalogue_apprentissage_network
+    mem_limit: 512m
     environment:
       - SERVER_BASEPATH=/kibana
 
