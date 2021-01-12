@@ -1,20 +1,38 @@
-/**
- * Méthode lié à l'ancien catalogue
- */
 const axios = require("axios");
 const logger = require("../logger");
 const config = require("config");
+const methods = ["post", "put", "delete"];
 
-const apiEndpoint = config.oldCatalogue.endpoint;
-const apiKey = config.oldCatalogue.apiKey;
+const API = axios.create({ baseURL: `${config.tableCorrespondance.endpoint}/api` });
+API.interceptors.request.use(async (req) => {
+  logger.info(`Requesting ${req.method.toUpperCase()} - ${req.url}`);
+  if (methods.includes(req.method)) {
+    let token = await getToken();
+    req.headers.authorization = `Bearer ${token}`;
+  }
+  return req;
+});
+
+const getToken = async () => {
+  try {
+    let {
+      data: { token },
+    } = await axios.post(`${config.tableCorrespondance.endpoint}/api/login`, {
+      username: `${config.tableCorrespondance.username}`,
+      password: `${config.tableCorrespondance.password}`,
+    });
+    return token;
+  } catch (error) {
+    logger.error(error);
+  }
+};
 
 const getEtablissements = async (options) => {
   let { page, allEtablissements, limit, query } = { page: 1, allEtablissements: [], limit: 1050, ...options };
   let params = { page, limit, query };
 
-  logger.debug(`Requesting ${apiEndpoint}/etablissements with parameters`, params);
   try {
-    const response = await axios.get(`${apiEndpoint}/etablissements`, { params });
+    const response = await API.get(`/entity/etablissements`, { params });
 
     const { etablissements, pagination } = response.data;
     allEtablissements = allEtablissements.concat(etablissements);
@@ -31,7 +49,7 @@ const getEtablissements = async (options) => {
 
 const getEtablissement = async (query) => {
   try {
-    const response = await axios.get(`${apiEndpoint}/etablissement/`, { params: { query } });
+    const response = await API.get(`/entity/etablissement/`, { params: { query } });
     return response.data;
   } catch (error) {
     logger.error(error);
@@ -40,7 +58,7 @@ const getEtablissement = async (query) => {
 
 const getEtablissementById = async (idEtablissement) => {
   try {
-    const response = await axios.get(`${apiEndpoint}/etablissement/${idEtablissement}`);
+    const response = await API.get(`/entity/etablissement/${idEtablissement}`);
     return response.data;
   } catch (error) {
     logger.error(error);
@@ -49,9 +67,7 @@ const getEtablissementById = async (idEtablissement) => {
 
 const postEtablissement = async (payload) => {
   try {
-    const response = await axios.post(`${apiEndpoint}/etablissement`, payload, {
-      headers: { Authorization: `${apiKey}` },
-    });
+    const response = await API.post(`/entity/etablissement`, payload);
     return response.data;
   } catch (error) {
     logger.error(error);
@@ -60,9 +76,7 @@ const postEtablissement = async (payload) => {
 
 const updateEtablissement = async (id, payload) => {
   try {
-    const response = await axios.put(`${apiEndpoint}/etablissement/${id}`, payload, {
-      headers: { Authorization: `${apiKey}` },
-    });
+    const response = await API.put(`/entity/etablissement/${id}`, payload);
     return response.data;
   } catch (error) {
     logger.error(error);
@@ -71,36 +85,25 @@ const updateEtablissement = async (id, payload) => {
 
 const deleteEtablissement = async (id) => {
   try {
-    await axios.delete(`${apiEndpoint}/etablissement/${id}`, {
-      headers: { Authorization: `${apiKey}` },
-    });
+    await API.delete(`/entity/etablissement/${id}`);
     return true;
   } catch (error) {
     logger.error(error);
   }
 };
 
-const updateInformation = async (id) => {
+const createEtablissement = async (payload) => {
+  if (!payload.siret || !payload.uai) {
+    throw new Error(`Missing siret or uai from payload`);
+  }
+
   try {
-    await axios.get(`${apiEndpoint}/services?job=etablissement&id=${id}`);
+    let etablissement = await API.post(`/services/etablissement`, payload);
+    const response = await postEtablissement(etablissement.data);
+    return response;
   } catch (error) {
     logger.error(error);
   }
-};
-
-const createEtablissement = async (data) => {
-  let etablissement = await postEtablissement(data);
-
-  if (etablissement?._id) {
-    await updateInformation(etablissement._id);
-    etablissement = await getEtablissementById(etablissement._id);
-  } else {
-    // errors may be sent on http success
-    logger.error("unable to create etablissement", etablissement);
-    etablissement = null;
-  }
-
-  return etablissement;
 };
 
 module.exports = () => {
@@ -110,7 +113,6 @@ module.exports = () => {
     getEtablissementById: (opt) => getEtablissementById(opt),
     postEtablissement: (opt) => postEtablissement(opt),
     deleteEtablissement: (opt) => deleteEtablissement(opt),
-    updateInformation: (opt) => updateInformation(opt),
     createEtablissement: (opt) => createEtablissement(opt),
     updateEtablissement: (id, payload) => updateEtablissement(id, payload),
   };

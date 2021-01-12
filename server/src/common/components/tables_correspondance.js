@@ -3,8 +3,9 @@
  */
 const logger = require("../logger");
 const axios = require("axios");
+const config = require("config");
 
-const apiEndpoint = "https://tables-correspondances.apprentissage.beta.gouv.fr/api";
+const apiEndpoint = `${config.tableCorrespondance.endpoint}/api`;
 
 module.exports = () => {
   return {
