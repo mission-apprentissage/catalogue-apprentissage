@@ -1,13 +1,11 @@
 import React from "react";
 import * as Yup from "yup";
-import { Form as TablerForm, Card, Page, Button, Grid } from "tabler-react";
+import { Container, Box, Text } from "@chakra-ui/react";
+import { Form as TablerForm, Card, Page, Button } from "tabler-react";
 import { Formik, Field, Form } from "formik";
 import { useHistory } from "react-router-dom";
 import useAuth from "../../common/hooks/useAuth";
 import { _post } from "../../common/httpClient";
-import FormError from "../../common/components/FormError";
-import CenteredCol from "../../common/components/CenteredCol";
-import FormMessage from "../../common/components/FormMessage";
 
 export default () => {
   let [, setAuth] = useAuth();
@@ -38,8 +36,8 @@ export default () => {
     <Page>
       <Page.Main>
         <Page.Content>
-          <Grid.Row>
-            <CenteredCol>
+          <Container maxW="32rem">
+            <Box>
               <Card>
                 <Card.Header>
                   <Card.Title>Mot de passe oublié</Card.Title>
@@ -74,16 +72,24 @@ export default () => {
                           <Button color="primary" className="text-left" type={"submit"}>
                             Demander un nouveau mot de passe
                           </Button>
-                          {status.error && <FormError>{status.error}</FormError>}
-                          {status.message && <FormMessage>{status.message}</FormMessage>}
+                          {status.error && (
+                            <Text fontSize="sm" color="#cd201f" mt={1}>
+                              {status.error}
+                            </Text>
+                          )}
+                          {status.message && (
+                            <Text fontSize="sm" color="#316100" mt={1}>
+                              {status.message}
+                            </Text>
+                          )}
                         </Form>
                       );
                     }}
                   </Formik>
                 </Card.Body>
               </Card>
-            </CenteredCol>
-          </Grid.Row>
+            </Box>
+          </Container>
         </Page.Content>
       </Page.Main>
     </Page>

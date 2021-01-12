@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import queryString from "query-string";
 import * as Yup from "yup";
-import { Form as TablerForm, Card, Page, Button, Grid } from "tabler-react";
+import { Container, Box, Text } from "@chakra-ui/react";
+import { Form as TablerForm, Card, Page, Button } from "tabler-react";
 import { useFormik } from "formik";
 import { useHistory, useLocation } from "react-router-dom";
 import useAuth from "../../common/hooks/useAuth";
 import { _post } from "../../common/httpClient";
 import decodeJWT from "../../common/utils/decodeJWT";
-import FormError from "../../common/components/FormError";
-import CenteredCol from "../../common/components/CenteredCol";
 
 import "./password.css";
 
@@ -97,8 +96,8 @@ export default () => {
     <Page>
       <Page.Main>
         <Page.Content>
-          <Grid.Row>
-            <CenteredCol>
+          <Container maxW="32rem">
+            <Box>
               <Card>
                 <Card.Header>
                   <Card.Title>Changement du mot de passe pour l'utilisateur {uai}</Card.Title>
@@ -139,12 +138,16 @@ export default () => {
                     <Button color="primary" className="text-left" type={"submit"}>
                       Réinitialiser le mot de passe
                     </Button>
-                    {status.error && <FormError>{status.error}</FormError>}
+                    {status.error && (
+                      <Text fontSize="sm" color="#cd201f" mt={1}>
+                        {status.error}
+                      </Text>
+                    )}
                   </form>
                 </Card.Body>
               </Card>
-            </CenteredCol>
-          </Grid.Row>
+            </Box>
+          </Container>
         </Page.Content>
       </Page.Main>
     </Page>
