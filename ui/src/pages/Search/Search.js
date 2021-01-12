@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { ReactiveBase, ReactiveList, DataSearch, SingleList } from "@appbaseio/reactivesearch";
-import { Container, Row } from "reactstrap";
+import { Container, Flex } from "@chakra-ui/react";
 import Switch from "react-switch";
 import useAuth from "../../common/hooks/useAuth";
 import Layout from "../layout/Layout";
@@ -138,7 +138,7 @@ export default ({ match }) => {
             }}
           />
           <div className="search">
-            <Container fluid style={{ maxWidth: 1860 }}>
+            <Container maxW="full">
               <label className="react-switch" style={{ right: "70px" }}>
                 <Switch onChange={handleSearchSwitchChange} checked={mode !== "simple"} />
                 <span>Recherche avancée</span>
@@ -151,7 +151,7 @@ export default ({ match }) => {
                   ? "de formations 2021"
                   : "d'établissements"}
               </h1>
-              <Row className="search-row">
+              <Flex className="search-row">
                 <div className={`search-sidebar`}>
                   {facetDefinition.map((fd, i) => {
                     return (
@@ -249,7 +249,7 @@ export default ({ match }) => {
                     />
                   </div>
                 </div>
-              </Row>
+              </Flex>
             </Container>
           </div>
         </ReactiveBase>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col } from "reactstrap";
+import { Container, Box } from "@chakra-ui/react";
 import Layout from "../layout/Layout";
 
 import "./howToModif.css";
@@ -8,9 +8,9 @@ const HowToModif = () => {
   return (
     <Layout>
       <div className="page howToModif">
-        <Container className="mt-5">
-          <Row>
-            <Col xs="12" className="mission-summary">
+        <Container className="mt-5" maxW="xl">
+          <Box>
+            <Box className="mission-summary">
               <h1 className="mt-3 mb-3">Guide de modification Catalogue</h1>
               <br />
               <h5>
@@ -102,16 +102,16 @@ const HowToModif = () => {
                 <br />
                 Du <strong>numéro d’académie</strong> on déduit le nom d’académie
               </p>
-            </Col>
-          </Row>
-          <Row>
-            <Col xs="12" className="mb-5">
+            </Box>
+          </Box>
+          <Box>
+            <Box className="mb-5">
               <h5>Video de présentation</h5>
               <video controls width={800}>
                 <source src="https://mna-bucket.s3.eu-west-3.amazonaws.com/pam-23042020.mp4" type="video/mp4" />
               </video>
-            </Col>
-          </Row>
+            </Box>
+          </Box>
         </Container>
       </div>
     </Layout>

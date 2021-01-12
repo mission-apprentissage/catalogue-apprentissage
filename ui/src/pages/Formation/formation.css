@@ -116,6 +116,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  padding: 20px 60px;
 }
 .formation .notice .sidebar-section.sidebar-section-edit .btn-warning,
 .formation .notice .sidebar-section.sidebar-section-edit .btn-danger,
