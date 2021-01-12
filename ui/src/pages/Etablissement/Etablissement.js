@@ -1,5 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Button, Spinner, Input, Modal, ModalHeader, ModalBody, Badge } from "reactstrap";
+import {
+  Container,
+  Grid,
+  GridItem,
+  Button,
+  Input,
+  Badge,
+  Spinner,
+  Box,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalOverlay,
+  ModalContent,
+} from "@chakra-ui/react";
+
 //import { useSelector, useDispatch } from "react-redux";
 //import { API } from "aws-amplify";
 import { useFormik } from "formik";
@@ -32,11 +47,13 @@ const EditSection = ({ edition, onEdit, handleSubmit }) => {
     <div className="sidebar-section info sidebar-section-edit">
       {edition && (
         <>
-          <Button className="mb-3" color="success" onClick={handleSubmit}>
+          <Button className="mb-3" colorScheme="teal" onClick={handleSubmit} isFullWidth>
             Valider
           </Button>
           <Button
-            color="danger"
+            colorScheme="teal"
+            variant="outline"
+            isFullWidth
             onClick={() => {
               onEdit();
             }}
@@ -48,8 +65,8 @@ const EditSection = ({ edition, onEdit, handleSubmit }) => {
       {!edition && (
         <>
           <Button
-            className=""
-            color="warning"
+            colorScheme="teal"
+            isFullWidth
             onClick={() => {
               onEdit();
             }}
@@ -67,8 +84,8 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
   const hasRightToEdit = false; // checkIfHasRightToEdit(etablissement, userAcm);
 
   return (
-    <Row>
-      <Col md="7">
+    <Grid templateColumns="repeat(12, 1fr)" gap={4}>
+      <GridItem colSpan="7">
         <div className="notice-details">
           <h2 className="small">Détails</h2>
           <div className="field">
@@ -102,8 +119,8 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
             <p>{etablissement.adresse}</p>
           </div>
         </div>
-      </Col>
-      <Col md="5">
+      </GridItem>
+      <GridItem colSpan="5">
         {hasRightToEdit && <EditSection edition={edition} onEdit={onEdit} handleSubmit={handleSubmit} />}
         <div className="sidebar-section info">
           <h2>À propos</h2>
@@ -111,7 +128,7 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
             <div className="field pills">
               <h3>Tags</h3>
               {etablissement.tags.map((tag, i) => (
-                <Badge color="success" key={i}>
+                <Badge colorScheme="green" variant="solid" key={i} className="badge">
                   {tag}
                 </Badge>
               ))}
@@ -193,8 +210,8 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
             </div>
           </div>
         )}
-      </Col>
-    </Row>
+      </GridItem>
+    </Grid>
   );
 };
 
@@ -259,41 +276,45 @@ export default ({ match }) => {
     setEdition(!edition);
   };
 
-  if (!etablissement) {
-    return (
-      <div className="page etablissement">
-        <Spinner color="secondary" />
-      </div>
-    );
-  }
-
   return (
     <Layout>
-      <div className="page etablissement">
+      <div className="etablissement">
         <div className="notice">
-          <Container>
-            <h1 className="heading">{etablissement.entreprise_raison_sociale}</h1>
-            <Etablissement
-              etablissement={etablissement}
-              edition={edition}
-              onEdit={onEdit}
-              values={values}
-              handleSubmit={handleSubmit}
-              handleChange={handleChange}
-            />
-            <Modal isOpen={modal}>
-              <ModalHeader>Merci ne pas fermer cette page</ModalHeader>
-              <ModalBody>
-                {gatherData !== 0 && (
-                  <div>
-                    <div>
-                      Mise à jour des informations {gatherData === 1 && <Spinner color="secondary" />}
-                      {gatherData > 1 && <FontAwesomeIcon icon={faCheck} className="check-icon" />}
-                    </div>
-                  </div>
-                )}
-              </ModalBody>
-            </Modal>
+          <Container maxW="xl">
+            {!etablissement && (
+              <Box align="center" p={2}>
+                <Spinner />
+              </Box>
+            )}
+            {etablissement && (
+              <>
+                <h1 className="heading">{etablissement.entreprise_raison_sociale}</h1>
+                <Etablissement
+                  etablissement={etablissement}
+                  edition={edition}
+                  onEdit={onEdit}
+                  values={values}
+                  handleSubmit={handleSubmit}
+                  handleChange={handleChange}
+                />
+                <Modal isOpen={modal}>
+                  <ModalOverlay />
+                  <ModalContent>
+                    <ModalHeader>Merci ne pas fermer cette page</ModalHeader>
+                    <ModalBody>
+                      {gatherData !== 0 && (
+                        <div>
+                          <div>
+                            Mise à jour des informations {gatherData === 1 && <Spinner />}
+                            {gatherData > 1 && <FontAwesomeIcon icon={faCheck} className="check-icon" />}
+                          </div>
+                        </div>
+                      )}
+                    </ModalBody>
+                  </ModalContent>
+                </Modal>
+              </>
+            )}
           </Container>
         </div>
       </div>

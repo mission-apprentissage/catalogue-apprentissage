@@ -2,10 +2,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 // import { useSelector } from "react-redux";
-import { Badge } from "reactstrap";
+import { Badge } from "@chakra-ui/react";
 //import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 //import { faPen } from "@fortawesome/free-solid-svg-icons";
-//import { Button } from "reactstrap";
+// import { Button } from "@chakra-ui/react";
 //import { API } from "aws-amplify";
 import "./cardList.css";
 
@@ -52,7 +52,7 @@ const CardList = ({ data }) => {
           <div className="field pills">
             {data.tags &&
               data.tags.map((tag, i) => (
-                <Badge color="success" key={i}>
+                <Badge variant="solid" colorScheme="green" key={i} className="badge">
                   {tag}
                 </Badge>
               ))}
@@ -68,10 +68,10 @@ const CardList = ({ data }) => {
             <span className="edition-btns">
               {hasRightToEdit && (
                 <>
-                  {/* <Button outline color="warning" onClick={onEditClicked}>
+                  {/* <Button variant="outline" colorScheme="teal" onClick={onEditClicked}>
                     <FontAwesomeIcon icon={faPen} size="xs" />
                   </Button> */}
-                  {/* <Button outline color="danger" onClick={onDeleteClicked}>
+                  {/* <Button variant="outline" colorScheme="red" onClick={onDeleteClicked}>
                     <FontAwesomeIcon icon={faTimes} />
                   </Button> */}
                 </>
