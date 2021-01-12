@@ -40,7 +40,7 @@
     }
   },
   "tableCorrespondance": {
-    "endpoint": "https://tables-correspondances-recette.apprentissage.beta.gouv.fr",
+    "endpoint": "CATALOGUE_APPRENTISSAGE_TCO_ENDPOINT",
     "username": "CATALOGUE_APPRENTISSAGE_TCO_USERNAME",
     "password": "CATALOGUE_APPRENTISSAGE_TCO_PASSWORD"
   },
