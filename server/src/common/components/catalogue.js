@@ -5,7 +5,6 @@ const methods = ["post", "put", "delete"];
 
 const API = axios.create({ baseURL: `${config.tableCorrespondance.endpoint}/api` });
 API.interceptors.request.use(async (req) => {
-  logger.info(`Requesting ${req.method.toUpperCase()} - ${req.url}`);
   if (methods.includes(req.method)) {
     let token = await getToken();
     req.headers.authorization = `Bearer ${token}`;
