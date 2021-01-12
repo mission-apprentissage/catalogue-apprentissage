@@ -1,12 +1,11 @@
 import React from "react";
 import * as Yup from "yup";
-import { Form as TablerForm, Card, Page, Button, Grid } from "tabler-react";
+import { Container, Box, Text } from "@chakra-ui/react";
+import { Form as TablerForm, Card, Page, Button } from "tabler-react";
 import { Formik, Field, Form } from "formik";
 import { NavLink, useHistory } from "react-router-dom";
 import useAuth from "../common/hooks/useAuth";
 import { _post } from "../common/httpClient";
-import CenteredCol from "../common/components/CenteredCol";
-import FormError from "../common/components/FormError";
 
 export default () => {
   let [, setAuth] = useAuth();
@@ -36,8 +35,8 @@ export default () => {
     <Page>
       <Page.Main>
         <Page.Content>
-          <Grid.Row>
-            <CenteredCol>
+          <Container maxW="32rem">
+            <Box>
               <Card>
                 <Card.Header>
                   <Card.Title>Connexion</Card.Title>
@@ -90,16 +89,19 @@ export default () => {
                             </Button>
                             <NavLink to="/forgotten-password">Mot de passe oublié</NavLink>
                           </div>
-
-                          {status.error && <FormError>{status.error}</FormError>}
+                          {status.error && (
+                            <Text fontSize="sm" color="#cd201f" mt={1}>
+                              {status.error}
+                            </Text>
+                          )}
                         </Form>
                       );
                     }}
                   </Formik>
                 </Card.Body>
               </Card>
-            </CenteredCol>
-          </Grid.Row>
+            </Box>
+          </Container>
         </Page.Content>
       </Page.Main>
     </Page>
