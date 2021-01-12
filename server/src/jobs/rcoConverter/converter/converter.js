@@ -4,7 +4,7 @@ const { mnaFormationUpdater } = require("../../../logic/updaters/mnaFormationUpd
 const report = require("../../../logic/reporter/report");
 const config = require("config");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
-const catalogue = require("../../../common/components/catalogue_old");
+const catalogue = require("../../../common/components/catalogue");
 const { storeByChunks } = require("../../common/utils/reportUtils");
 
 const formatToMnaFormation = (rcoFormation) => {
