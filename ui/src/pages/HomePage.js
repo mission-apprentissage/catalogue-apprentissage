@@ -29,7 +29,7 @@ export default () => {
         });
 
         const countEtablissement = await _get(`${endpointTCO}/entity/etablissements/count?${params}`, false);
-        setCountEstablishments(countEtablissement.count);
+        setCountEstablishments(countEtablissement);
 
         const countFormations = await _get(`${endpointNewFront}/entity/formations/count?${params}`, false);
         setCountFormations(countFormations);
