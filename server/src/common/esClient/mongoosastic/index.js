@@ -241,7 +241,6 @@ function Mongoosastic(schema, options) {
 
     inSchema.post("save", postSave);
     inSchema.post("findOneAndUpdate", postSave);
-    inSchema.post("findOneAndReplace", postSave);
 
     inSchema.post("insertMany", postSaveMany);
     inSchema.post("updateMany", postSaveMany);
