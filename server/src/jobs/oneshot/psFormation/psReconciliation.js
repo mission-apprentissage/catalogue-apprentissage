@@ -39,6 +39,7 @@ module.exports = async (catalogue, filePath) => {
   await asyncForEach(result, async (item) => {
     if (item.Analyse === "CREATE") {
       await catalogue.createEtablissement({ uai: item.uai_gestionnaire, siret: item.etablissement_siret });
+      logger.info(`Etablissement uai : ${item.uai_gestionnaire} - siret : ${item.etablissement_siret} créé`);
     }
   });
 
@@ -57,6 +58,7 @@ module.exports = async (catalogue, filePath) => {
 
     try {
       await PsReconciliation.save(payload);
+      logger.info(`Formation ${payload.code_cfd} réconcilié`);
     } catch (error) {
       logger.error(error);
     }
