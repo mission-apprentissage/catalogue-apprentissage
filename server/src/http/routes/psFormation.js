@@ -1,7 +1,8 @@
-const express = require("express");
-const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { PsFormation, PsReconciliation } = require("../../common/model");
+const combinate = require("../../logic/mappers/psReconciliationMapper");
+const tryCatch = require("../middlewares/tryCatchMiddleware");
 const mongoose = require("mongoose");
+const express = require("express");
 
 module.exports = ({ catalogue, tableCorrespondance }) => {
   const router = express.Router();
@@ -18,12 +19,21 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
       if (data.docs.length > 0) {
         const result = await Promise.all(
           data.docs.map(async (formation) => {
-            if (formation._doc.code_cfd) {
-              const infoCfd = await tableCorrespondance.getCfdInfo(formation.code_cfd);
+            let { _doc, code_cfd, uai_affilie, uai_composante, uai_gestionnaire } = formation;
+            if (_doc.code_cfd) {
+              const infoCfd = await tableCorrespondance.getCfdInfo(code_cfd);
+              const infoReconciliation = await PsReconciliation.find({
+                code_cfd: code_cfd,
+                uai_affilie,
+                uai_composante,
+                uai_gestionnaire,
+              });
+
               let infobcn = infoCfd.result.intitule_long;
 
               return {
                 ...formation._doc,
+                reconciliation: infoReconciliation,
                 infobcn,
               };
             }
@@ -59,17 +69,15 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
     "/psreconciliation",
     tryCatch(async (req, res) => {
       const { mapping, id_psformation, ...rest } = req.body;
+      const reconciliation = combinate(mapping);
 
-      const payload = mapping.reduce((acc, item) => {
+      let payload = reconciliation.reduce((acc, item) => {
         acc.uai_gestionnaire = rest.uai_gestionnaire;
         acc.uai_affilie = rest.uai_affilie;
         acc.uai_composante = rest.uai_composante;
-        acc.id_psformation = id_psformation;
         acc.code_cfd = rest.code_cfd;
         acc.siret_formateur = item.type === "formateur" ? item.siret : acc.siret_formateur;
         acc.siret_gestionnaire = item.type === "gestionnaire" ? item.siret : acc.siret_gestionnaire;
-        acc.siret_formateur_gestionnaire =
-          item.type === "formateur-gestionnaire" ? item.siret : acc.siret_formateur_gestionnaire;
         return acc;
       }, {});
 
