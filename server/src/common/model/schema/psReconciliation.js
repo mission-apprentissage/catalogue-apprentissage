@@ -4,10 +4,10 @@ const psReconciliationSchema = {
     default: null,
     description: "uai gestionnaire de la formation parcoursup",
   },
-  uai_formateur: {
+  uai_composante: {
     type: String,
     default: null,
-    description: "uai formateur de la formation parcousup",
+    description: "uai composante de la formation parcousup",
   },
   uai_affilie: {
     type: String,
