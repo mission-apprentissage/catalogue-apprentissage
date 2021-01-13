@@ -58,8 +58,22 @@ module.exports = async (catalogue, filePath) => {
       return acc;
     }, {});
 
+    let { code_cfd, uai_affilie, uai_composante, uai_gestionnaire, siret_formateur, siret_gestionnaire } = payload;
+
+    // Avoid duplicate (flat files might have the same record)
+    let exist = await PsReconciliation.findOne({
+      code_cfd,
+      uai_affilie,
+      uai_composante,
+      uai_gestionnaire,
+      siret_formateur,
+      siret_gestionnaire,
+    });
+
+    if (exist) return;
+
     try {
-      await PsReconciliation.save(payload);
+      await PsReconciliation.create(payload);
       logger.info(`Formation ${payload.code_cfd} réconcilié`);
     } catch (error) {
       logger.error(error);
