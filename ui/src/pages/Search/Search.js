@@ -24,8 +24,8 @@ import { _get } from "../../common/httpClient";
 import "./search.css";
 
 const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
-const endpointOldFront =
-  process.env.REACT_APP_ENDPOINT_OLD_FRONT || "https://c7a5ujgw35.execute-api.eu-west-3.amazonaws.com/prod";
+const endpointTCO =
+  process.env.REACT_APP_ENDPOINT_TCO || "https://tables-correspondances.apprentissage.beta.gouv.fr/api";
 
 const countItems = async (base, etablissement_reference_catalogue_published = true) => {
   let count = 0;
@@ -41,7 +41,7 @@ const countItems = async (base, etablissement_reference_catalogue_published = tr
     params = new window.URLSearchParams({
       query: JSON.stringify({ published: true }),
     });
-    const countEtablissement = await _get(`${endpointOldFront}/etablissements/count?${params}`, false);
+    const countEtablissement = await _get(`${endpointTCO}/entity/etablissements/count?${params}`, false);
     count = countEtablissement.count;
   }
 
@@ -81,9 +81,7 @@ export default ({ match }) => {
             break;
         }
 
-        setEndpoint(
-          tmpBase === "mnaformation" || tmpBase === "convertedformation" ? endpointNewFront : endpointOldFront
-        );
+        setEndpoint(tmpBase === "mnaformation" || tmpBase === "convertedformation" ? endpointNewFront : endpointTCO);
         setBase(tmpBase);
 
         let count = await countItems(tmpBase);

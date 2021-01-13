@@ -12,8 +12,8 @@ import { _get } from "../common/httpClient";
 import "./homePage.css";
 
 const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
-const endpointOldFront =
-  process.env.REACT_APP_ENDPOINT_OLD_FRONT || "https://c7a5ujgw35.execute-api.eu-west-3.amazonaws.com/prod";
+const endpointTCO =
+  process.env.REACT_APP_ENDPOINT_TCO || "https://tables-correspondances.apprentissage.beta.gouv.fr/api";
 
 export default () => {
   const [loading, setLoading] = useState(true);
@@ -28,7 +28,7 @@ export default () => {
           query: JSON.stringify({ published: true }),
         });
 
-        const countEtablissement = await _get(`${endpointOldFront}/etablissements/count?${params}`, false);
+        const countEtablissement = await _get(`${endpointTCO}/entity/etablissements/count?${params}`, false);
         setCountEstablishments(countEtablissement.count);
 
         const countFormations = await _get(`${endpointNewFront}/entity/formations/count?${params}`, false);

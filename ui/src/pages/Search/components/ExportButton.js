@@ -6,8 +6,8 @@ import { _post } from "../../../common/httpClient";
 import { downloadCSV, CSV_SEPARATOR } from "../../../common/utils/downloadUtils";
 
 const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
-const endpointOldFront =
-  process.env.REACT_APP_ENDPOINT_OLD_FRONT || "https://c7a5ujgw35.execute-api.eu-west-3.amazonaws.com/prod";
+const endpointTCO =
+  process.env.REACT_APP_ENDPOINT_TCO || "https://tables-correspondances.apprentissage.beta.gouv.fr/api";
 
 const serializeObject = (columns, obj) => {
   const fieldNames = columns.map((c) => c.fieldName);
@@ -35,7 +35,7 @@ const serializeObject = (columns, obj) => {
 let search = (index, query) => {
   if (index === "etablissements") {
     return _post(
-      `${endpointOldFront}/es/search/${index}/_search?scroll=5m`,
+      `${endpointTCO}/es/search/${index}/_search?scroll=5m`,
       {
         size: 1000,
         query: query.query,
@@ -57,7 +57,7 @@ let search = (index, query) => {
 let scroll = (index, scrollId) => {
   if (index === "etablissements") {
     return _post(
-      `${endpointOldFront}/es/search/${index}/scroll?scroll=5m&scroll_id=${scrollId}`,
+      `${endpointTCO}/es/search/${index}/scroll?scroll=5m&scroll_id=${scrollId}`,
       {
         scroll: true,
         scroll_id: scrollId,
