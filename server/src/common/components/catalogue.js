@@ -93,13 +93,13 @@ const deleteEtablissement = async (id) => {
 
 const createEtablissement = async (payload) => {
   if (!payload.siret || !payload.uai) {
-    throw new Error(`Missing siret or uai from payload`);
+    logger.error("Missing siret or uai from payload");
+    return null;
   }
 
   try {
-    let etablissement = await API.post(`/services/etablissement`, payload);
-    const response = await postEtablissement(etablissement.data);
-    return response;
+    const etablissement = await API.post(`/services/etablissement`, payload);
+    return await postEtablissement(etablissement.data);
   } catch (error) {
     logger.error(error);
   }
