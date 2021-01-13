@@ -5,7 +5,7 @@ import Layout from "../layout/Layout";
 const HowToSignal = () => {
   return (
     <Layout>
-      <Flex backgroundColor="#e5edef" color="#19414c">
+      <Flex bg="#e5edef" color="#19414c">
         <Container mt={5} mb={12} maxW="xl">
           <Box>
             <Box>
