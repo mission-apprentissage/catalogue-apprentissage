@@ -1,27 +1,28 @@
 const path = require("path");
 const logger = require("../../../common/logger");
-const updateMatching = require("./updateMatching");
-const bulkUpdate = require("./bulkUpdate");
 const { runScript } = require("../../scriptWrapper");
-const updateCreate = require("./updateCreate");
 
-const matching6 = async () => {
+const bulkUpdate = require("./bulkUpdate");
+const psFormation = require("./psFormation");
+const psReconciliation = require("./psReconciliation");
+
+const reconciliation = async (catalogue) => {
   try {
-    const partOne = path.resolve(__dirname, "./assets/matching-6-create-ABT.xlsx");
-    const partTwo = path.resolve(__dirname, "./assets/matching-6-create-APT.xlsx");
-    await updateMatching(partOne);
-    await updateMatching(partTwo);
-  } catch (err) {
-    logger.error(err);
+    const ABT = path.resolve(__dirname, "./assets/matching-6-create-ABT.xlsx");
+    const APT = path.resolve(__dirname, "./assets/matching-6-create-APT.xlsx");
+    await psReconciliation(catalogue, ABT);
+    await psReconciliation(catalogue, APT);
+  } catch (error) {
+    logger.error(error);
   }
 };
 
-const matchingCreate = async (catalogue) => {
+const formation = async () => {
   try {
-    const partOne = path.resolve(__dirname, "./assets/matching-6-create-ABT.xlsx");
-    const partTwo = path.resolve(__dirname, "./assets/matching-6-create-APT.xlsx");
-    await updateCreate(catalogue, partOne);
-    await updateCreate(catalogue, partTwo);
+    const ABT = path.resolve(__dirname, "./assets/matching-6-create-ABT.xlsx");
+    const APT = path.resolve(__dirname, "./assets/matching-6-create-APT.xlsx");
+    await psFormation(ABT);
+    await psFormation(APT);
   } catch (error) {
     logger.error(error);
   }
@@ -31,9 +32,9 @@ if (process.env.standalone) {
   runScript(async ({ catalogue }) => {
     logger.info(" -- Start oneshot psformation -- ");
 
-    await matching6();
     await bulkUpdate();
-    await matchingCreate(catalogue);
+    await formation();
+    await reconciliation(catalogue);
 
     logger.info(" -- End oneshot psformation -- ");
   });
