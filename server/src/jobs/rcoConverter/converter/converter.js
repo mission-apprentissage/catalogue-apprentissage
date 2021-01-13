@@ -188,12 +188,13 @@ const performConversion = async () => {
         await rcoFormation.save();
 
         // replace or insert new one
-        await ConvertedFormation.findOneAndReplace(
+        await ConvertedFormation.findOneAndUpdate(
           { id_rco_formation: convertedFormation.id_rco_formation },
           convertedFormation,
           {
+            overwrite: true,
             upsert: true,
-            returnNewDocument: true,
+            new: true,
           }
         );
 
