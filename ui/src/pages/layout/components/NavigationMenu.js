@@ -9,6 +9,7 @@ const NavigationMenu = () => {
   let dropDownItems = (
     <>
       <Dropdown.Item to="/guide-reglementaire">Guide réglementaire</Dropdown.Item>
+      <Dropdown.Item to="/guide-signalements">Guide de signalements</Dropdown.Item>
       {auth?.sub !== "anonymous" && <Dropdown.Item to="/guide-modification">Guide d'utilisation</Dropdown.Item>}
     </>
   );
