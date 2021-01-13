@@ -32,13 +32,25 @@ const HowToSignal = () => {
                     <ListItem>
                       <Text fontWeight="bold">Soit vous avez bien déclaré votre formation à votre Carif : </Text>
                       Votre établissement ou certaines de vos formations ne figurent pas dans le catalogue des
-                      formations en apprentissage” Merci de nous envoyer un mail avec les informations suivantes : SIRET
-                      RNCP et/ou le code diplôme si pb uniquement sur une formation la période d'inscription telle que
-                      mentionnée dans le catalogue Carif-Oref (exprimée en AAAA-MM) le lieu de la formation (code
-                      commune INSEE ou à défaut code postal) Mail de la personne signalant l’erreur Nous vous remercions
-                      pour votre signalement. Une investigation va être menée par le Réseau des Carif-Oref et la Mission
-                      Apprentissage pour le traitement que nous espérons rapide de cette anomalie. Nous reviendrons vers
-                      vous avec le mail que vous nous avez renseigné dès la résolution de ce dysfonctionnement.
+                      formations en apprentissage. Merci de nous envoyer un mail (
+                      <Link href="mailto:catalogue@apprentissage.beta.gouv.fr">
+                        catalogue@apprentissage.beta.gouv.fr
+                      </Link>
+                      ) avec les informations suivantes :
+                      <UnorderedList>
+                        <ListItem>SIRET</ListItem>
+                        <ListItem>RNCP et/ou le code diplôme si pb uniquement sur une formation</ListItem>
+                        <ListItem>
+                          la période d'inscription telle que mentionnée dans le catalogue Carif-Oref (exprimée en
+                          AAAA-MM)
+                        </ListItem>
+                        <ListItem>le lieu de la formation (code commune INSEE ou à défaut code postal)</ListItem>
+                        <ListItem>Mail de la personne signalant l’erreur</ListItem>
+                      </UnorderedList>
+                      Nous vous remercions pour votre signalement. Une investigation va être menée par le Réseau des
+                      Carif-Oref et la Mission Apprentissage pour le traitement que nous espérons rapide de cette
+                      anomalie. Nous reviendrons vers vous avec le mail que vous nous avez renseigné dès la résolution
+                      de ce dysfonctionnement.
                     </ListItem>
                   </OrderedList>
                 </ListItem>
@@ -56,10 +68,16 @@ const HowToSignal = () => {
                       adresse postale, .. vous pouvez vous rapprocher de l’INSEE afin de réaliser les modifications à la
                       source (Direccte + Infogreffe). Pour tout autre incohérence (UAI, Code diplôme, Code RNCP, code
                       ROME associé,) rapprochez-vous de votre Carif-Oref, pour la modification de ces données dans les
-                      bases sources (DEPP, BCN, France Compétences). Merci de préparer les éléments suivants : SIRET
-                      RNCP et/ou le code diplôme si pb uniquement sur une formation la période d'inscription telle que
-                      mentionnée dans le catalogue (exprimée en AAAA-MM) le lieu de la formation (code commune INSEE ou
-                      à défaut code postal) Mail de la personne signalant l’erreur.
+                      bases sources (DEPP, BCN, France Compétences). Merci de préparer les éléments suivants :
+                      <UnorderedList>
+                        <ListItem>SIRET</ListItem>
+                        <ListItem>RNCP et/ou le code diplôme si pb uniquement sur une formation</ListItem>
+                        <ListItem>
+                          la période d'inscription telle que mentionnée dans le catalogue (exprimée en AAAA-MM)
+                        </ListItem>
+                        <ListItem>le lieu de la formation (code commune INSEE ou à défaut code postal)</ListItem>
+                        <ListItem>Mail de la personne signalant l’erreur.</ListItem>
+                      </UnorderedList>
                     </ListItem>
                     <ListItem>
                       <Text fontWeight="bold">
