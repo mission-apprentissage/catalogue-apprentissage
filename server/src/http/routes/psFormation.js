@@ -102,6 +102,10 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
     "/etablissement",
     tryCatch(async (req, res) => {
       const { uai, siret } = req.body;
+      if (!siret || !uai) {
+        return res.status(400).send({ error: "Missing siret or uai in request body" });
+      }
+
       const newEtablissement = await catalogue.createEtablissement({ uai, siret });
       res.json(newEtablissement);
     })
