@@ -1,8 +1,8 @@
+const combinate = require("../../../logic/mappers/psReconciliationMapper");
 const { getJsonFromXlsxFile } = require("../../../common/utils/fileUtils");
-const logger = require("../../../common/logger");
-const { partition, zip, size, chain } = require("lodash");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { PsReconciliation } = require("../../../common/model");
+const logger = require("../../../common/logger");
 
 module.exports = async (catalogue, filePath) => {
   logger.info(`Traitement du fichier ${filePath} ...`);
@@ -37,10 +37,12 @@ module.exports = async (catalogue, filePath) => {
 
   // create establishments
   await asyncForEach(result, async (item) => {
-    if (item.Analyse === "CREATE") {
-      await catalogue.createEtablissement({ uai: item.uai_gestionnaire, siret: item.etablissement_siret });
-      logger.info(`Etablissement uai : ${item.uai_gestionnaire} - siret : ${item.etablissement_siret} créé`);
-    }
+    await asyncForEach(item, async ({ Analyse, uai_gestionnaire, etablissement_siret }) => {
+      if (Analyse === "CREATE") {
+        await catalogue.createEtablissement({ uai: uai_gestionnaire, siret: etablissement_siret });
+        logger.info(`Etablissement uai : ${uai_gestionnaire} - siret : ${etablissement_siret} créé`);
+      }
+    });
   });
 
   // save in db
@@ -64,31 +66,3 @@ module.exports = async (catalogue, filePath) => {
     }
   });
 };
-
-/**
- * Distribute arr1 with each arr2 element.
- * arr1 must be taller
- */
-function distribute(arr1, arr2) {
-  let ratio = Math.ceil(size(arr1) / size(arr2));
-  let pattern = chain(new Array(ratio)).fill(arr2).flatten().take(size(arr1)).value();
-
-  return zip(arr1, pattern);
-}
-
-function combinate(array) {
-  if (size(array) <= 2) {
-    return array;
-  }
-
-  let result = [];
-  let [formateur, gestionnaire] = partition(array, (x) => x.type === "formateur");
-
-  if (size(formateur) > size(gestionnaire)) {
-    result.push(distribute(formateur, gestionnaire));
-  } else {
-    result.push(distribute(gestionnaire, formateur));
-  }
-
-  return result;
-}
