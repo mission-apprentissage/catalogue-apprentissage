@@ -41,8 +41,7 @@ const countItems = async (base, etablissement_reference_catalogue_published = tr
     params = new window.URLSearchParams({
       query: JSON.stringify({ published: true }),
     });
-    const countEtablissement = await _get(`${endpointTCO}/entity/etablissements/count?${params}`, false);
-    count = countEtablissement.count;
+    count = await _get(`${endpointTCO}/entity/etablissements/count?${params}`, false);
   }
 
   return count;
