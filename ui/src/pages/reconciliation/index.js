@@ -11,7 +11,6 @@ import {
   Spacer,
   Select,
   Tag,
-  useToast,
 } from "@chakra-ui/react";
 import { Layout, Accordion as Item, Loading } from "./components";
 
@@ -37,8 +36,6 @@ const StyledButton = ({ type, matching, size, toggleMatching, ...rest }) => {
 };
 
 export default () => {
-  const toast = useToast();
-  const [updated, setUpdated] = React.useState(false);
   const [matching, setMatching] = React.useState({
     type: 3,
     page: 1,
@@ -60,24 +57,10 @@ export default () => {
   return (
     <AppLayout>
       <Layout>
-        {updated && (
-          <Box
-            toast={toast({
-              description: "Enregistré avec succès !",
-              status: "success",
-              duration: 2000,
-              isClosable: true,
-              onCloseComplete: () => setUpdated(false),
-            })}
-          />
-        )}
         <Box p={5} bg="#0c5076">
           <Heading color="white">Page de réconciliation</Heading>
           <Text color="white" fontSize="sm">
-            Interface de rapprochement des formations Parcoursup avec les établissements du{" "}
-            <a href="https://mna-admin-prod.netlify.app/" rel="noopener noreferrer" target="_blank">
-              catalogue
-            </a>
+            Interface de rapprochement des formations Parcoursup avec les établissements du catalogue
           </Text>
         </Box>
         <Container maxW="full" bg="lightgrey">
@@ -142,7 +125,7 @@ export default () => {
               </Container>
               <Accordion allowToggle>
                 {data.docs.map((item, index) => {
-                  return <Item data={item} key={index} setToaster={setUpdated} />;
+                  return <Item data={item} key={index} />;
                 })}
               </Accordion>
             </>
