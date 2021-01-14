@@ -120,24 +120,18 @@ export default () => {
               </Grid.Row>
               <Grid.Row className="mt-5">
                 <Grid.Col width={4}>
-                  <Button bg="#007bff" color="#fff">
-                    <NavLink className="nav-link" to="/recherche/formations-2021">
-                      Consulter la liste des formations 2021
-                    </NavLink>
+                  <Button as={NavLink} bg="#007bff" color="#fff" className="nav-link" to="/recherche/formations-2021">
+                    Consulter la liste des formations 2021
                   </Button>
                 </Grid.Col>
                 <Grid.Col width={4}>
-                  <Button bg="#007bff" color="#fff">
-                    <NavLink className="nav-link" to="/recherche/formations-2020">
-                      Consulter la liste des formations 2020
-                    </NavLink>
+                  <Button as={NavLink} bg="#007bff" color="#fff" className="nav-link" to="/recherche/formations-2020">
+                    Consulter la liste des formations 2020
                   </Button>
                 </Grid.Col>
                 <Grid.Col width={4}>
-                  <Button bg="#007bff" color="#fff">
-                    <NavLink className="nav-link" to="/recherche/etablissements">
-                      Consulter la liste des établissements
-                    </NavLink>
+                  <Button as={NavLink} bg="#007bff" color="#fff" className="nav-link" to="/recherche/etablissements">
+                    Consulter la liste des établissements
                   </Button>
                 </Grid.Col>
               </Grid.Row>
@@ -153,10 +147,8 @@ export default () => {
               </Grid.Row>
               <Grid.Row className="mt-1 mb-4">
                 <Grid.Col width={12}>
-                  <Button bg="#007bff" color="#fff">
-                    <NavLink className="nav-link" to="/changelog">
-                      Voir les précédentes versions
-                    </NavLink>
+                  <Button as={NavLink} bg="#007bff" color="#fff" className="nav-link" to="/changelog">
+                    Voir les précédentes versions
                   </Button>
                 </Grid.Col>
               </Grid.Row>
