@@ -68,7 +68,7 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
   router.post(
     "/psreconciliation",
     tryCatch(async (req, res) => {
-      const { mapping, id_psformation, ...rest } = req.body;
+      const { mapping, ...rest } = req.body;
       const reconciliation = combinate(mapping);
 
       let payload = reconciliation.reduce((acc, item) => {
@@ -81,7 +81,13 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
         return acc;
       }, {});
 
-      const result = await PsReconciliation.findOneAndUpdate({ id_psformation }, payload, { upsert: true, new: true });
+      let { code_cfd: code_cfd, uai_affilie, uai_composante, uai_gestionnaire } = payload;
+
+      const result = await PsReconciliation.findOneAndUpdate(
+        { code_cfd: code_cfd, uai_affilie, uai_composante, uai_gestionnaire },
+        payload,
+        { upsert: true, new: true }
+      );
 
       res.json(result);
     })
