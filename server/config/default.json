@@ -5,6 +5,9 @@
   "mongodb": {
     "uri": "mongodb://127.0.0.1:27017/catalogue-apprentissage?retryWrites=true&w=majority"
   },
+  "elasticSearch": {
+    "node": "http://localhost:9200"
+  },
   "auth": {
     "passwordHashRounds": 1001,
     "user": {

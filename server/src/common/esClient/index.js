@@ -9,11 +9,11 @@ const getClientOptions = () => {
     case "recette":
     case "production":
       return {
-        node: `${config.publicUrl}/es`, // TODO HANDLE HTTPS CONNECTOR
+        node: config.elasticSearch.node, // TODO HANDLE HTTPS CONNECTOR
       };
     case "local":
     default:
-      return { node: `${config.publicUrl}/es` };
+      return { node: config.elasticSearch.node };
   }
 };
 
