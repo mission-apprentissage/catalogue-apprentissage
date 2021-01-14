@@ -69,6 +69,8 @@ module.exports = async (payload) => {
   } catch (error) {
     logger.error(error);
 
-    return {};
+    return {
+      error: error,
+    };
   }
 };
