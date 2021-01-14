@@ -5,6 +5,7 @@ import { Box, Text, Heading } from "@chakra-ui/react";
 import { Tabs } from "../common/components/report/Tabs";
 import { REPORT_TYPE, reportTypes } from "../constants/report";
 import { _get } from "../common/httpClient";
+import Layout from "./layout/Layout";
 
 const REPORTS_URL = "/api/entity/reports";
 
@@ -95,43 +96,45 @@ const ReportPage = () => {
   const reportTitle = getReportTitle(reportType);
 
   return (
-    <Box bg="grey.750">
-      {errorFetchData && !reportErrors?.data?.errors && (
-        <>
+    <Layout>
+      <Box bg="grey.750">
+        {errorFetchData && !reportErrors?.data?.errors && (
+          <>
+            <Text color="grey.100" px={[8, 24]} py={3}>
+              Erreur lors du chargement des données
+            </Text>
+            {errorFetchData?.statusCode === 404 && (
+              <Box bg="white">
+                <Text color="grey.750" px={[8, 24]} py={3}>
+                  Ce rapport est introuvable
+                </Text>
+              </Box>
+            )}
+          </>
+        )}
+        {!errorFetchData && !report && (
           <Text color="grey.100" px={[8, 24]} py={3}>
-            Erreur lors du chargement des données
+            Chargement des données...
           </Text>
-          {errorFetchData?.statusCode === 404 && (
-            <Box bg="white">
-              <Text color="grey.750" px={[8, 24]} py={3}>
-                Ce rapport est introuvable
-              </Text>
-            </Box>
-          )}
-        </>
-      )}
-      {!errorFetchData && !report && (
-        <Text color="grey.100" px={[8, 24]} py={3}>
-          Chargement des données...
-        </Text>
-      )}
+        )}
 
-      {(report?.data || reportErrors?.data?.errors) && (
-        <>
-          <Box bg="#E5EDEF" w="100%" py={[4, 8]} px={[8, 24]} color="#19414C">
-            <Heading fontFamily="Marianne" fontWeight="400" fontSize={["beta", "alpha"]} as="h1">
-              {reportTitle}
-            </Heading>
-            <Heading fontFamily="Marianne" fontWeight="400" fontSize={["gamma", "beta"]} pt={2} lineHeight="1.5">
-              {dateLabel}
-            </Heading>
-          </Box>
-          <Box>
-            <Tabs data={report?.data} reportType={reportType} date={date} errors={reportErrors?.data?.errors} />
-          </Box>
-        </>
-      )}
-    </Box>
+        {(report?.data || reportErrors?.data?.errors) && (
+          <>
+            <Box bg="#E5EDEF" w="100%" py={[4, 8]} px={[8, 24]} color="#19414C">
+              <Heading fontFamily="Marianne" fontWeight="400" fontSize={["beta", "alpha"]} as="h1">
+                {reportTitle}
+              </Heading>
+              <Heading fontFamily="Marianne" fontWeight="400" fontSize={["gamma", "beta"]} pt={2} lineHeight="1.5">
+                {dateLabel}
+              </Heading>
+            </Box>
+            <Box>
+              <Tabs data={report?.data} reportType={reportType} date={date} errors={reportErrors?.data?.errors} />
+            </Box>
+          </>
+        )}
+      </Box>
+    </Layout>
   );
 };
 
