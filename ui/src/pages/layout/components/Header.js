@@ -24,9 +24,14 @@ const Header = () => {
           Accueil
         </Dropdown.Item>
         {isUserAdmin(auth) && (
-          <Dropdown.Item icon="users" to="/admin/users">
-            Utilisateurs
-          </Dropdown.Item>
+          <>
+            <Dropdown.Item icon="users" to="/admin/users">
+              Utilisateurs
+            </Dropdown.Item>
+            <Dropdown.Item icon="refresh-cw" to="/coverage">
+              Réconciliation Parcoursup
+            </Dropdown.Item>
+          </>
         )}
         <Dropdown.ItemDivider />
         <Dropdown.Item icon="log-out" to="#" onClick={logout}>
