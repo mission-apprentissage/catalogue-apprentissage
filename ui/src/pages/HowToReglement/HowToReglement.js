@@ -1,7 +1,14 @@
 import React from "react";
-import { Container, Row, Col } from "reactstrap";
 import Layout from "../layout/Layout";
-import { Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, Box } from "@chakra-ui/react";
+import {
+  Container,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
+  Box,
+} from "@chakra-ui/react";
 
 import "./howToReglement.css";
 
@@ -9,9 +16,9 @@ const HowToReglement = () => {
   return (
     <Layout>
       <div className="page howToReglement">
-        <Container className="mt-5">
-          <Row>
-            <Col xs="12" className="mission-summary">
+        <Container className="mt-5" maxW="xl">
+          <Box>
+            <Box className="mission-summary">
               <h1 className="mt-3 mb-3">Conditions d’intégration de l’offre de formation en Apprentissage</h1>
               <br />
               <h3>
@@ -295,8 +302,8 @@ const HowToReglement = () => {
                   </AccordionPanel>
                 </AccordionItem>
               </Accordion>
-            </Col>
-          </Row>
+            </Box>
+          </Box>
         </Container>
       </div>
     </Layout>

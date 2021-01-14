@@ -39,9 +39,10 @@
       "pass": "CATALOGUE_APPRENTISSAGE_SMTP_AUTH_PASS"
     }
   },
-  "oldCatalogue": {
-    "endpoint": "CATALOGUE_APPRENTISSAGE_CATALOGUE_API_ENDPOINT",
-    "apiKey": "CATALOGUE_APPRENTISSAGE_CATALOGUE_API_KEY"
+  "tableCorrespondance": {
+    "endpoint": "CATALOGUE_APPRENTISSAGE_TCO_ENDPOINT",
+    "username": "CATALOGUE_APPRENTISSAGE_TCO_USERNAME",
+    "password": "CATALOGUE_APPRENTISSAGE_TCO_PASSWORD"
   },
   "retentionDays": {
     "logs": 30,

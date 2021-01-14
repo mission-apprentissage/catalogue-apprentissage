@@ -19,6 +19,7 @@ import {
   Button,
   Divider,
   Heading,
+  useToast,
 } from "@chakra-ui/react";
 
 import Datatable from "./Datatable";
@@ -30,9 +31,6 @@ import { useMutation } from "react-query";
 
 function reducer(state, values) {
   const { type, id } = values;
-  if (type === "supprimer") {
-    return [...state];
-  }
 
   const currentState = [...state];
   let index = currentState.findIndex((x) => x.id === id);
@@ -45,9 +43,11 @@ function reducer(state, values) {
   }
 }
 
-export default ({ data, setToaster }) => {
+export default ({ data }) => {
+  const toast = useToast();
   const [modalIsOpen, setModalIsOpen] = React.useState(false);
-  const [mapping, setMapping] = React.useReducer(reducer, data.mapping_liaison_etablissement || []);
+  const [mapping, setMapping] = React.useReducer(reducer, data.reconciliation || []);
+  const [reconciliation, setReconciliation] = React.useState(data.reconciliation || []);
   const [matchingMnaEtablissement, setMatchingMnaEtablissement] = React.useState(data.matching_mna_etablissement);
 
   const sameUai = new Set([data.uai_affilie, data.uai_composante, data.uai_gestionnaire]).size === 1;
@@ -80,12 +80,14 @@ export default ({ data, setToaster }) => {
         uai_gestionnaire: data.uai_gestionnaire,
         uai_composante: data.uai_composante,
         code_cfd: data.code_cfd,
-        id_psformation: data._id,
         mapping: mapping,
       }),
     {
-      onSuccess: () => {
-        setToaster(true);
+      onSuccess: (data) => {
+        setReconciliation([data]);
+      },
+      onError: (error) => {
+        console.log("error", error);
       },
     }
   );
@@ -96,9 +98,7 @@ export default ({ data, setToaster }) => {
       mapping_liaison_etablissement: mapping,
       mapping_code_cfd_formation: data.code_cfd,
       mapping_code_postal_formation: data.code_postal,
-      // mapping_id_formation_mna: "ID_MNA_FORMATION", // todo for matching 1*
       mapping_id_formation_ps: data._id,
-      // mapping_annee_formation: "ANNEE_FORMATION", // to validate
       mapping_etat_reconciliation: "OK",
     })
   );
@@ -130,7 +130,7 @@ export default ({ data, setToaster }) => {
             <Box>
               <DetailFormation data={data} sameEtab={sameEtab} sameUai={sameUai} />
             </Box>
-            <Box>{data && mapping.length > 0 && <Liaison data={mapping} />}</Box>
+            <Box>{reconciliation && reconciliation.length > 0 && <Liaison data={reconciliation} />}</Box>
             <Box>
               {data && matchingMnaEtablissement.length > 0 && (
                 <Etablissement data={matchingMnaEtablissement} onSelectChange={onSelectChange} />
@@ -149,6 +149,12 @@ export default ({ data, setToaster }) => {
                   onClick={() => {
                     onValidatePsReconciliation.mutate();
                     onValidatePsFormation.mutate();
+                    toast({
+                      description: "Enregistré avec succès !",
+                      status: "success",
+                      duration: 1000,
+                      isClosable: true,
+                    });
                   }}
                 >
                   Valider
@@ -167,18 +173,27 @@ const Liaison = ({ data }) => {
   return (
     <Box p={4} bg="aliceblue">
       <Box>
-        <Heading>Etablissements liés au catalogue :</Heading>
+        <Heading>Etablissements liés ({data.length}) :</Heading>
         <Divider mb={4} />
       </Box>
       <SimpleGrid columns={4} spacing={10}>
-        {data.map((item, index) => {
+        {data.map(({ siret_formateur, siret_gestionnaire, uai_gestionnaire, uai_affilie, uai_composante }, index) => {
           return (
             <Box key={index}>
-              <Heading size="md">
-                Type: <Tag>{item.type}</Tag>
-              </Heading>
               <Text fontSize="xs">
-                Identifiant : <Text as="i">{item.id}</Text>
+                Uai gestionnaire: <Text as="i">{uai_gestionnaire}</Text>
+              </Text>
+              <Text fontSize="xs">
+                Uai affilié: <Text as="i">{uai_affilie}</Text>
+              </Text>
+              <Text fontSize="xs">
+                Uai composante: <Text as="i">{uai_composante}</Text>
+              </Text>
+              <Text fontSize="xs">
+                Siret formateur: <Text as="i">{siret_formateur}</Text>
+              </Text>
+              <Text fontSize="xs">
+                Siret gestionnaire: <Text as="i">{siret_gestionnaire}</Text>
               </Text>
             </Box>
           );
@@ -212,7 +227,7 @@ const EnteteFormation = ({ data, sameUai }) => {
             {data.libelle_commune} - {data.code_postal}
           </Text>
         </GridItem>
-        {data.mapping_liaison_etablissement.length > 0 && (
+        {data.reconciliation.length > 0 && (
           <GridItem>
             <Tag variant="solid" colorScheme="teal">
               FORMATION RAPPROCHÉE
@@ -296,10 +311,8 @@ const Option = ({ _id, type, onSelectChange, etablissement }) => {
           Options :
         </option>
         <option value="gestionnaire">Gestionnaire</option>
-        <option value="formateur">Formateur</option>
-        <option value="formateur-gestionnaire">Formateur & Gestionnaire</option>
         <Divider />
-        <option value="supprimer">Supprimer</option>
+        <option value="formateur">Formateur</option>
       </Select>
     </FormControl>
   );

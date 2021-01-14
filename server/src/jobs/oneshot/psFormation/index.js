@@ -1,22 +1,28 @@
 const path = require("path");
 const logger = require("../../../common/logger");
-const updateMatching = require("./updateMatching");
-const bulkUpdate = require("./bulkUpdate");
 const { runScript } = require("../../scriptWrapper");
 
-const matching6 = async (catalogue) => {
+const bulkUpdate = require("./bulkUpdate");
+const psFormation = require("./psFormation");
+const psReconciliation = require("./psReconciliation");
+
+const reconciliation = async (catalogue) => {
   try {
-    const filePath = path.resolve(__dirname, "./assets/Etablissements_6_20201130.xlsx");
-    await updateMatching(catalogue, filePath);
-  } catch (err) {
-    logger.error(err);
+    const ABT = path.resolve(__dirname, "./assets/matching-6-create-ABT.xlsx");
+    const APT = path.resolve(__dirname, "./assets/matching-6-create-APT.xlsx");
+    await psReconciliation(catalogue, ABT);
+    await psReconciliation(catalogue, APT);
+  } catch (error) {
+    logger.error(error);
   }
 };
 
-const matching4 = async (catalogue) => {
+const formation = async () => {
   try {
-    const filePath = path.resolve(__dirname, "./assets/Etablissements_4_20201130.xlsx");
-    await updateMatching(catalogue, filePath);
+    const ABT = path.resolve(__dirname, "./assets/matching-6-create-ABT.xlsx");
+    const APT = path.resolve(__dirname, "./assets/matching-6-create-APT.xlsx");
+    await psFormation(ABT);
+    await psFormation(APT);
   } catch (error) {
     logger.error(error);
   }
@@ -26,9 +32,9 @@ if (process.env.standalone) {
   runScript(async ({ catalogue }) => {
     logger.info(" -- Start oneshot psformation -- ");
 
-    await matching6(catalogue);
-    await matching4(catalogue);
     await bulkUpdate();
+    await formation();
+    await reconciliation(catalogue);
 
     logger.info(" -- End oneshot psformation -- ");
   });

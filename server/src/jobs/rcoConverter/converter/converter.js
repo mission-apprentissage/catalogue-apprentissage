@@ -4,7 +4,7 @@ const { mnaFormationUpdater } = require("../../../logic/updaters/mnaFormationUpd
 const report = require("../../../logic/reporter/report");
 const config = require("config");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
-const catalogue = require("../../../common/components/catalogue_old");
+const catalogue = require("../../../common/components/catalogue");
 const { storeByChunks } = require("../../common/utils/reportUtils");
 
 const formatToMnaFormation = (rcoFormation) => {
@@ -188,11 +188,13 @@ const performConversion = async () => {
         await rcoFormation.save();
 
         // replace or insert new one
-        await ConvertedFormation.replaceOne(
+        await ConvertedFormation.findOneAndUpdate(
           { id_rco_formation: convertedFormation.id_rco_formation },
           convertedFormation,
           {
+            overwrite: true,
             upsert: true,
+            new: true,
           }
         );
 

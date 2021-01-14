@@ -14,7 +14,6 @@
     "@fortawesome/fontawesome-svg-core": "1.2.32",
     "@fortawesome/free-solid-svg-icons": "5.15.1",
     "@fortawesome/react-fontawesome": "0.1.14",
-    "bootstrap": "4.5.3",
     "formik": "2.1.4",
     "framer-motion": "2.9.5",
     "jsonwebtoken": "8.5.1",
@@ -32,8 +31,6 @@
     "react-table": "7.6.2",
     "react-virtualized-auto-sizer": "1.0.2",
     "react-window": "1.8.6",
-    "reactstrap": "8.8.1",
-    "styled-components": "5.1.1",
     "tabler-react": "1.30.1",
     "yup": "0.29.1"
   },
@@ -78,7 +75,6 @@
     "eslint-plugin-react": "7.21.5",
     "eslint-plugin-react-hooks": "4.2.0",
     "local-web-server": "4.2.0",
-    "prettier": "2.0.5",
-    "prop-types": "15.7.2"
+    "prettier": "2.0.5"
   }
 }

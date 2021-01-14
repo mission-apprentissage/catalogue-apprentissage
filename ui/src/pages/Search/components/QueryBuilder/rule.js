@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Autosuggest from "react-autosuggest";
-import { CustomInput, Input, Button } from "reactstrap";
+import { Input, Button, Select } from "@chakra-ui/react";
 
 const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
 
@@ -39,10 +39,10 @@ export default function Rule({ fields, operators, combinators, collection, ...pr
   }, [field, operator, value, combinator]);
 
   const combinatorElement = props.index ? (
-    <CustomInput
+    <Select
       id={`react-es-rule-combinator-${field}-0`}
-      style={{ margin: 5, maxWidth: 90 }}
-      type="select"
+      maxWidth={90}
+      margin={"5px"}
       className="react-es-rule-combinator"
       value={combinator}
       onChange={(e) => setCombinator(e.target.value)}
@@ -52,13 +52,13 @@ export default function Rule({ fields, operators, combinators, collection, ...pr
           {c.text}
         </option>
       ))}
-    </CustomInput>
+    </Select>
   ) : null;
 
   const deleteButton = props.index ? (
     <Button
       size="sm"
-      color="danger"
+      colorScheme="red"
       className="react-es-rule-delete"
       style={{ marginLeft: "10px", alignSelf: "center", fontSize: 16 }}
       onClick={() => props.onDelete(props.index)}
@@ -113,10 +113,10 @@ export default function Rule({ fields, operators, combinators, collection, ...pr
   return (
     <div className="react-es-rule" style={{ display: "flex" }}>
       {combinatorElement}
-      <CustomInput
+      <Select
         id={`react-es-rule-combinator-${field}-1`}
-        style={{ margin: 5, minWidth: 130 }}
-        type="select"
+        minWidth={130}
+        margin={"5px"}
         className="react-es-rule-field"
         value={fields.findIndex((e) => String(e.value) === String(field))}
         onChange={(e) => setField(fields[e.target.value].value)}
@@ -128,11 +128,11 @@ export default function Rule({ fields, operators, combinators, collection, ...pr
             </option>
           );
         })}
-      </CustomInput>
-      <CustomInput
+      </Select>
+      <Select
         id={`react-es-rule-combinator-${field}-2`}
-        style={{ margin: 5, maxWidth: 90 }}
-        type="select"
+        maxWidth={90}
+        margin={"5px"}
         className="react-es-rule-operator"
         value={operator}
         onChange={(e) => setOperator(e.target.value)}
@@ -144,11 +144,11 @@ export default function Rule({ fields, operators, combinators, collection, ...pr
             </option>
           );
         })}
-      </CustomInput>
+      </Select>
       {input}
       <Button
         size="sm"
-        color="primary"
+        colorScheme="blue"
         className="react-es-rule-add"
         onClick={props.onAdd}
         style={{ marginLeft: "10px", alignSelf: "center", fontSize: 16 }}

@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 
@@ -17,9 +16,5 @@ const ScrollToVersion = ({ versions }) => (
     </div>
   </div>
 );
-
-ScrollToVersion.propTypes = {
-  version: PropTypes.array,
-};
 
 export default ScrollToVersion;
