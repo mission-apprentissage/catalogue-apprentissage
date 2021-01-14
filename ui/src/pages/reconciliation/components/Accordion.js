@@ -19,6 +19,7 @@ import {
   Button,
   Divider,
   Heading,
+  useToast,
 } from "@chakra-ui/react";
 
 import Datatable from "./Datatable";
@@ -42,7 +43,8 @@ function reducer(state, values) {
   }
 }
 
-export default ({ data, setToaster }) => {
+export default ({ data }) => {
+  const toast = useToast();
   const [modalIsOpen, setModalIsOpen] = React.useState(false);
   const [mapping, setMapping] = React.useReducer(reducer, data.reconciliation || []);
   const [reconciliation, setReconciliation] = React.useState(data.reconciliation || []);
@@ -83,7 +85,6 @@ export default ({ data, setToaster }) => {
     {
       onSuccess: (data) => {
         setReconciliation([data]);
-        // setToaster(); // quick fix dual render issue
       },
       onError: (error) => {
         console.log("error", error);
@@ -148,6 +149,12 @@ export default ({ data, setToaster }) => {
                   onClick={() => {
                     onValidatePsReconciliation.mutate();
                     onValidatePsFormation.mutate();
+                    toast({
+                      description: "Enregistré avec succès !",
+                      status: "success",
+                      duration: 1000,
+                      isClosable: true,
+                    });
                   }}
                 >
                   Valider
