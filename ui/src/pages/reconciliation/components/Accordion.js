@@ -45,6 +45,7 @@ function reducer(state, values) {
 export default ({ data, setToaster }) => {
   const [modalIsOpen, setModalIsOpen] = React.useState(false);
   const [mapping, setMapping] = React.useReducer(reducer, data.reconciliation || []);
+  const [reconciliation, setReconciliation] = React.useState(data.reconciliation || []);
   const [matchingMnaEtablissement, setMatchingMnaEtablissement] = React.useState(data.matching_mna_etablissement);
 
   const sameUai = new Set([data.uai_affilie, data.uai_composante, data.uai_gestionnaire]).size === 1;
@@ -80,8 +81,12 @@ export default ({ data, setToaster }) => {
         mapping: mapping,
       }),
     {
-      onSuccess: () => {
-        setToaster(true);
+      onSuccess: (data) => {
+        setReconciliation([data]);
+        // setToaster(); // quick fix dual render issue
+      },
+      onError: (error) => {
+        console.log("error", error);
       },
     }
   );
@@ -124,7 +129,7 @@ export default ({ data, setToaster }) => {
             <Box>
               <DetailFormation data={data} sameEtab={sameEtab} sameUai={sameUai} />
             </Box>
-            <Box>{data && mapping.length > 0 && <Liaison data={mapping} />}</Box>
+            <Box>{reconciliation && reconciliation.length > 0 && <Liaison data={reconciliation} />}</Box>
             <Box>
               {data && matchingMnaEtablissement.length > 0 && (
                 <Etablissement data={matchingMnaEtablissement} onSelectChange={onSelectChange} />
