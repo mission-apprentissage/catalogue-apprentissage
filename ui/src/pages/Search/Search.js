@@ -214,11 +214,11 @@ export default ({ match }) => {
                         }}
                         showResultStats={true}
                         sortBy="asc"
-                        // defaultQuery={() => { // TODO to un-comment to reduce payload size
-                        //   return {
-                        //     //_source: columnsDefinition.map((def) => def.accessor),
-                        //   };
-                        // }}
+                        defaultQuery={() => {
+                          return {
+                            _source: columnsDefinition.map(({ accessor }) => accessor),
+                          };
+                        }}
                         renderItem={(data) =>
                           ["mnaformation", "convertedformation"].includes(base) ? (
                             <CardListFormation data={data} key={data._id} f2021={base === "convertedformation"} />
