@@ -29,7 +29,7 @@
     "coverage": "standalone=true node src/jobs/psCoverage/index.js",
     "coverage:import": "standalone=true node src/jobs/psCoverage/coverage/psimporter.js",
     "coverage:oneshot": "standalone=true node src/jobs/oneshot/psFormation/index.js",
-    "oneshot:psup": "standalone=true node src/jobs/oneshot/pSupTemporary/index.js",
+    "psup:reference": "standalone=true node src/jobs/psReference/index.js",
     "opco:importer": "standalone=true node src/jobs/opcoImporter/index.js",
     "opco:importer:stats": "standalone=true node src/jobs/opcoImporter/stats.js",
     "es:index": "standalone=true node src/jobs/esIndex/index.js"

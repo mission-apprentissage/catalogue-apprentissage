@@ -2,7 +2,7 @@ const { runScript } = require("./scriptWrapper");
 const logger = require("../common/logger");
 const rcoImporter = require("./rcoImporter");
 const rcoConverter = require("./rcoConverter");
-const pSupLoader = require("./oneshot/pSupTemporary");
+const psReference = require("./psReference");
 const clean = require("./clean");
 
 runScript(async () => {
@@ -11,7 +11,7 @@ runScript(async () => {
     await clean();
     await rcoImporter();
     await rcoConverter();
-    await pSupLoader();
+    await psReference();
   } catch (error) {
     logger.error(error);
   }
