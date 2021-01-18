@@ -83,7 +83,7 @@ const seed = async () => {
 
 const update = async (tableCorrespondance) => {
   logger.info("Mise à jour des codes formation diplôme");
-  const data = await AfFormation.find({});
+  const data = await AfFormation.find({ libelle_ban: { $ne: null }, code_cfd: { $eq: null } });
   logger.info(`${data.length} formations à traiter...`);
 
   let count;
