@@ -114,6 +114,8 @@ const run = async () => {
           last_update_at: e.last_update_at,
           entreprise_tranche_effectif_salarie: e.entreprise_tranche_effectif_salarie,
           etablissement_siege_id: e.etablissement_siege_id,
+          matched_uai: e.matched_uai,
+          id_mna_etablissement: e.id_mna_etablissement,
         };
       });
     }
