@@ -5,28 +5,31 @@ const { asyncForEach } = require("../../common/utils/asyncUtils");
 const { getJsonFromXlsxFile } = require("../../common/utils/fileUtils");
 const { AfFormation } = require("../../common/model");
 
-const run = async (/*tableCorrespondance*/) => {
+const getLibelleCourt = (libelle) => {
+  switch (libelle) {
+    case "SECONDE PRO BACPRO 3ANS / 1E ANNEE BEP":
+      return "BAC PRO";
+    case "CAP":
+      return "CAP";
+    case "1ERE PROFESSIONNELLE":
+      return "LIC-PRO";
+    case "AUTRES":
+      return ""; // to be discretized
+    case "REDOUBLEMENT 3EME":
+      return "";
+    default:
+      return "";
+  }
+};
+
+const seed = async () => {
   const filePath = path.resolve(__dirname, "./assets/affelnet-2020.xlsx");
   const data = getJsonFromXlsxFile(filePath);
   let count = 0;
 
-  logger.info(`Importing ${data.length} formations in DB...`);
+  logger.info(`${data.length} formations récupéré du fichier excel, début de l'enregistrement...`);
 
   await asyncForEach(data, async (item) => {
-    /**
-     * Code MEF sur 11 caracètres, table de correspondance attend 10
-     */
-
-    // if (item["Code MEF"]) {
-    //   const responseMEF = await tableCorrespondance.getMefInfo(item["Code MEF"]);
-
-    //   if (responseMEF) {
-    //     if (!responseMEF.messages.cfdUpdated === "Non trouvé") {
-    //       item.code_cfd = responseMEF.result.cfd.cfd;
-    //     }
-    //   }
-    // }
-
     try {
       await AfFormation.create({
         uai: item["UAI"],
@@ -51,7 +54,6 @@ const run = async (/*tableCorrespondance*/) => {
         libelle_mnemonique: item["Mnémonique"],
         code_specialite: item["Code spécialité"],
         libelle_ban: item["Libellé BAN"],
-        code_cfd: item.code_cfd,
         code_mef: item["Code MEF"],
         code_voie: item["Code voie"],
         type_voie: item["Libellé voie"],
@@ -76,14 +78,53 @@ const run = async (/*tableCorrespondance*/) => {
     }
   });
 
-  logger.info(`${count} formation importées !`);
+  logger.info(`${count} formations importées !`);
+};
+
+const update = async (tableCorrespondance) => {
+  logger.info("Mise à jour des codes formation diplôme");
+  const data = await AfFormation.find({});
+  logger.info(`${data.length} formations à traiter...`);
+
+  let count;
+
+  await asyncForEach(data, async (item) => {
+    let LIBELLE_COURT = getLibelleCourt(item.type_voie);
+    let LIBELLE_STAT_33 = item.libelle_ban.substring(item.libelle_ban.indexOf(" ") + 1).trimStart();
+
+    let code_cfd;
+
+    logger.info(`get BCN information ${LIBELLE_STAT_33} - ${LIBELLE_COURT}`);
+    const {
+      formationsDiplomes,
+      pagination: { total },
+    } = await tableCorrespondance.getBcnInfo({ query: { LIBELLE_STAT_33, LIBELLE_COURT } });
+
+    if (total === 0) return;
+
+    if (total > 1) {
+      const openFormation = formationsDiplomes.filter((x) => x.DATE_FERMETURE === "");
+      code_cfd = openFormation[0].FORMATION_DIPLOME;
+    }
+
+    code_cfd = formationsDiplomes[0].FORMATION_DIPLOME;
+
+    logger.info(`updating ${item._id} - ${code_cfd}`);
+    await AfFormation.findByIdAndUpdate(item._id, { code_cfd });
+
+    count++;
+  });
+  logger.info(`updated ${count} CFD `);
 };
 
 if (process.env.standalone) {
   runScript(async ({ tableCorrespondance }) => {
     logger.info(`Start affelnet import`);
 
-    await run(tableCorrespondance);
+    if ((await AfFormation.countDocuments({})) == 0) {
+      await seed();
+    }
+    await update(tableCorrespondance);
 
     logger.info(`End affelnet import`);
   });
