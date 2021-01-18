@@ -457,7 +457,18 @@ module.exports = {
       affelnet_a_charger: {
         type: "boolean",
         default: false,
-        description: "La formation doit être ajouter à affelnet",
+        description: "**[DEPRECATED]** La formation doit être ajouter à affelnet",
+      },
+      affelnet_statut: {
+        type: "string",
+        enum: ["non pertinent", "à expertiser", "en cours de publication", "publié", "non publié"],
+        default: "non pertinent",
+        description: "Statut affelnet: non pertinent, a expertiser, en cours de publication, publié, non publié",
+      },
+      affelnet_error: {
+        type: "string",
+        default: "null",
+        description: "Erreur lors du contrôle de référencement sur affelnet de la formation",
       },
       source: {
         type: "string",
