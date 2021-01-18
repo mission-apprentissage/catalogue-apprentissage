@@ -2,6 +2,8 @@ const express = require("express");
 const config = require("config");
 const logger = require("../common/logger");
 const bodyParser = require("body-parser");
+const swaggerJsdoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
 const logMiddleware = require("./middlewares/logMiddleware");
 const errorMiddleware = require("./middlewares/errorMiddleware");
 const tryCatch = require("./middlewares/tryCatchMiddleware");
@@ -26,6 +28,39 @@ const esMultiSearchNoIndex = require("./routes/esMultiSearchNoIndex");
 const psFormation = require("./routes/psFormation");
 const pendingRcoFormation = require("./routes/pendingRcoFormation");
 
+const swaggerSchema = require("../common/model/swaggerSchema");
+
+const options = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Catalogue apprentissage",
+      version: "1.0.0",
+      description: `Vous trouverez ici la définition de l'api catalogue apprentissage<br/><br/>
+      <h3><strong>${config.publicUrl}/api</strong></h3><br/>
+      Contact:
+      `,
+      contact: {
+        name: "Mission Nationale Apprentissage",
+        url: "https://mission-apprentissage.gitbook.io/general/",
+        email: "catalogue@apprentissage.beta.gouv.fr",
+      },
+    },
+    servers: [
+      {
+        url: `${config.publicUrl}/api`,
+      },
+    ],
+  },
+  apis: ["./src/http/routes/*.js"],
+};
+
+const swaggerSpecification = swaggerJsdoc(options);
+
+swaggerSpecification.components = {
+  schemas: swaggerSchema,
+};
+
 module.exports = async (components) => {
   const { db } = components;
   const app = express();
@@ -38,6 +73,8 @@ module.exports = async (components) => {
 
   app.use(corsMiddleware());
   app.use(logMiddleware());
+
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecification));
 
   app.use("/api/es/search", esSearch());
   app.use("/api/search", esMultiSearchNoIndex());
