@@ -366,7 +366,6 @@ const facetDefinition = [
     selectAllLabel: "Tout OPCOs",
     sortBy: "asc",
   },
-
   {
     componentId: "info_opcos_intitule",
     dataField: "info_opcos_intitule.keyword",
@@ -374,6 +373,22 @@ const facetDefinition = [
     filterLabel: "info_opcos_intitule",
     selectAllLabel: "Tous",
     sortBy: "count",
+  },
+  {
+    componentId: "parcoursup_statut",
+    dataField: "parcoursup_statut.keyword",
+    title: "Statut Parcoursup",
+    filterLabel: "parcoursup_statut",
+    selectAllLabel: "Tous",
+    sortBy: "count",
+  },
+  {
+    componentId: "affelnet_statut",
+    dataField: "affelnet_statut.keyword",
+    title: "Statut Affelnet",
+    filterLabel: "affelnet_statut",
+    selectAllLabel: "Tous",
+    sortBy: "asc",
   },
 ];
 
