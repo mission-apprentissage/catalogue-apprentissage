@@ -48,13 +48,15 @@ module.exports = async (payload) => {
       const checkReverse = await PsReconciliation.findOne({
         code_cfd: cfd,
         siret_formateur: siret_gestionnaire,
-        siret_gestionnaire: siret_gestionnaire,
+        siret_gestionnaire: siret_formateur,
       });
 
-      if (!checkReverse) {
+      if (checkReverse) {
         return {
           parcoursup_reference: false,
-          message: "Les sirets sont inversés",
+          messages: {
+            error: "Les sirets sont inversés",
+          },
         };
       }
 

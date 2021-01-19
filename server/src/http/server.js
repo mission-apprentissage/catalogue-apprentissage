@@ -2,6 +2,8 @@ const express = require("express");
 const config = require("config");
 const logger = require("../common/logger");
 const bodyParser = require("body-parser");
+const swaggerJsdoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
 const logMiddleware = require("./middlewares/logMiddleware");
 const errorMiddleware = require("./middlewares/errorMiddleware");
 const tryCatch = require("./middlewares/tryCatchMiddleware");
@@ -26,6 +28,39 @@ const esMultiSearchNoIndex = require("./routes/esMultiSearchNoIndex");
 const psFormation = require("./routes/psFormation");
 const pendingRcoFormation = require("./routes/pendingRcoFormation");
 
+const swaggerSchema = require("../common/model/swaggerSchema");
+
+const options = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Catalogue apprentissage",
+      version: "1.0.0",
+      description: `Vous trouverez ici la définition de l'api catalogue apprentissage<br/><br/>
+      <h3><strong>${config.publicUrl}/api/v1</strong></h3><br/>
+      Contact:
+      `,
+      contact: {
+        name: "Mission Nationale Apprentissage",
+        url: "https://mission-apprentissage.gitbook.io/general/",
+        email: "catalogue@apprentissage.beta.gouv.fr",
+      },
+    },
+    servers: [
+      {
+        url: `${config.publicUrl}/api/v1`,
+      },
+    ],
+  },
+  apis: ["./src/http/routes/*.js"],
+};
+
+const swaggerSpecification = swaggerJsdoc(options);
+
+swaggerSpecification.components = {
+  schemas: swaggerSchema,
+};
+
 module.exports = async (components) => {
   const { db } = components;
   const app = express();
@@ -39,15 +74,32 @@ module.exports = async (components) => {
   app.use(corsMiddleware());
   app.use(logMiddleware());
 
+  app.use("/api/v1/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecification));
+
+  app.use("/api/v1/es/search", esSearch());
+  app.use("/api/v1/search", esMultiSearchNoIndex());
+  app.use("/api/v1/entity", formation());
+  app.use("/api/v1/entity", convertedFormation());
+  app.use("/api/v1/entity", pendingRcoFormation());
+  app.use("/api/v1/entity", report());
+  app.use("/api/v1/entity", checkJwtToken, formationSecure());
+  app.use("/api/v1/rcoformation", rcoFormation());
+  app.use("/api/v1/secured", apiKeyAuthMiddleware, secured());
+  app.use("/api/v1/login", login(components));
+  app.use("/api/v1/authentified", checkJwtToken, authentified());
+  app.use("/api/v1/admin", checkJwtToken, adminOnly, admin(components));
+  app.use("/api/v1/password", password(components));
+  app.use("/api/v1/stats", checkJwtToken, adminOnly, stats(components));
+  app.use("/api/v1/psformation", psFormation(components));
+
+  /** DEPRACATED */
   app.use("/api/es/search", esSearch());
   app.use("/api/search", esMultiSearchNoIndex());
-
   app.use("/api/entity", formation());
   app.use("/api/entity", convertedFormation());
   app.use("/api/entity", pendingRcoFormation());
   app.use("/api/entity", report());
   app.use("/api/entity", checkJwtToken, formationSecure());
-
   app.use("/api/rcoformation", rcoFormation());
   app.use("/api/secured", apiKeyAuthMiddleware, secured());
   app.use("/api/login", login(components));
@@ -84,14 +136,14 @@ module.exports = async (components) => {
     })
   );
 
-  app.get(
-    "/api/config",
-    tryCatch(async (req, res) => {
-      return res.json({
-        config: config,
-      });
-    })
-  );
+  // app.get(
+  //   "/api/config",
+  //   tryCatch(async (req, res) => {
+  //     return res.json({
+  //       config: config,
+  //     });
+  //   })
+  // );
 
   app.use(errorMiddleware());
 
