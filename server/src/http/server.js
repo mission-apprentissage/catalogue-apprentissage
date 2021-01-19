@@ -87,37 +87,37 @@ module.exports = async (components) => {
   app.use("/api/v1/es/search", esSearch());
   app.use("/api/v1/search", esMultiSearchNoIndex());
   app.use("/api/v1/entity", formation());
-  //app.use("/api/v1/entity", checkJwtToken, formationSecure());
   app.use("/api/v1/entity", convertedFormation());
-  app.use("/api/v1/entity", checkJwtToken, convertedFormationSecure());
   app.use("/api/v1/entity", pendingRcoFormation());
   app.use("/api/v1/entity", report());
   app.use("/api/v1/rcoformation", rcoFormation());
   app.use("/api/v1/secured", apiKeyAuthMiddleware, secured());
   app.use("/api/v1/login", login(components));
-  app.use("/api/v1/authentified", checkJwtToken, authentified());
-  app.use("/api/v1/admin", checkJwtToken, adminOnly, admin(components));
   app.use("/api/v1/password", password(components));
-  app.use("/api/v1/stats", checkJwtToken, adminOnly, stats(components));
   app.use("/api/v1/psformation", psFormation(components));
+  app.use("/api/v1/authentified", checkJwtToken, authentified());
+  app.use("/api/v1/entity", checkJwtToken, convertedFormationSecure());
+  app.use("/api/v1/admin", checkJwtToken, adminOnly, admin(components));
+  app.use("/api/v1/stats", checkJwtToken, adminOnly, stats(components));
+  //app.use("/api/v1/entity", checkJwtToken, formationSecure());
 
   /** DEPRECATED */
   app.use("/api/es/search", esSearch());
   app.use("/api/search", esMultiSearchNoIndex());
   app.use("/api/entity", formation());
-  //app.use("/api/entity", checkJwtToken, formationSecure());
   app.use("/api/entity", convertedFormation());
-  app.use("/api/entity", checkJwtToken, convertedFormationSecure());
   app.use("/api/entity", pendingRcoFormation());
   app.use("/api/entity", report());
   app.use("/api/rcoformation", rcoFormation());
-  app.use("/api/secured", apiKeyAuthMiddleware, secured());
   app.use("/api/login", login(components));
+  app.use("/api/password", password(components));
+  app.use("/api/psformation", psFormation(components));
+  app.use("/api/secured", apiKeyAuthMiddleware, secured());
   app.use("/api/authentified", checkJwtToken, authentified());
   app.use("/api/admin", checkJwtToken, adminOnly, admin(components));
-  app.use("/api/password", password(components));
+  app.use("/api/entity", checkJwtToken, convertedFormationSecure());
   app.use("/api/stats", checkJwtToken, adminOnly, stats(components));
-  app.use("/api/psformation", psFormation(components));
+  // app.use("/api/entity", checkJwtToken, formationSecure());
 
   app.get(
     "/api",
