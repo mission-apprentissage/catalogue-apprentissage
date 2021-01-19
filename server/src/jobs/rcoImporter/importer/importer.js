@@ -291,7 +291,8 @@ class Importer {
     for (let ite = 0; ite < currentFormations.length; ite++) {
       const formation = currentFormations[ite];
       const id = this._buildId(formation);
-      const [found, ...duplicates] = pastFormations.filter((pf) => id === this._buildId(pf));
+      // const [found, ...duplicates] = pastFormations.filter((pf) => id === this._buildId(pf));
+      const found = pastFormations.find((pf) => id === this._buildId(pf));
 
       // Some formations has been added
       if (!found) {
@@ -304,9 +305,9 @@ class Importer {
           updated.push(formation);
         }
 
-        if (duplicates.length > 0) {
-          console.log(`found ${duplicates.length} duplicate(s) in RCOFormation collection for ${id}`);
-        }
+        // if (duplicates.length > 0) {
+        //   console.log(`found ${duplicates.length} duplicate(s) in RCOFormation collection for ${id}`);
+        // }
       }
     }
 
