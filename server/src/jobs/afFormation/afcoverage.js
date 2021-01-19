@@ -1,6 +1,6 @@
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 const logger = require("../../common/logger");
-const { AfFormation, MnaFormation } = require("../../common/model");
+const { AfFormation, ConvertedFormation } = require("../../common/model");
 const matcher = require("./matcher");
 
 async function updateMatchedFormation(formation) {
@@ -59,7 +59,12 @@ async function updateDB(formation, matching) {
 
 module.exports = async () => {
   logger.info("Retreiving data from DB ...");
-  const [afFormations, mnaFormations] = await Promise.all([AfFormation.find().lean(), MnaFormation.find().lean()]);
+
+  const [afFormations, mnaFormations] = await Promise.all([
+    AfFormation.find().lean(),
+    ConvertedFormation.find().lean(),
+  ]);
+
   logger.info("Starting matching processus ...");
 
   await asyncForEach(afFormations, async (formation) => {

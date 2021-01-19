@@ -1,4 +1,8 @@
+const { formation, formatMEF } = require("./mapper");
+
 function generateMatching(mode, matchType, ligne, catalogue) {
+  const mef10 = formatMEF(ligne.code_mef);
+
   const uai = (catalogue) =>
     catalogue.uai_formation === ligne.uai ||
     catalogue.etablissement_formateur_uai === ligne.uai ||
@@ -13,7 +17,7 @@ function generateMatching(mode, matchType, ligne, catalogue) {
 
   const cfd = (catalogue) => catalogue.cfd === ligne.code_cfd;
 
-  // const mef = (catalogue) => catalogue.mef_10_code === ligne.code_mef; // mef sur 11 caractères
+  const mef = (catalogue) => catalogue.mef_10_code === mef10;
 
   const dept = (catalogue) => catalogue.num_departement === ligne.code_postal.substring(0, 2);
 
@@ -32,7 +36,7 @@ function generateMatching(mode, matchType, ligne, catalogue) {
       case "5":
         return filter((i) => uai(i) && cfd(i) && cp(i) && academie(i));
       case "6":
-        return filter((i) => uai(i) && cfd(i) && cp(i) && academie(i) /*&& mef(i)*/);
+        return filter((i) => uai(i) && cfd(i) && cp(i) && academie(i) && mef(i));
       default:
         break;
     }
@@ -49,7 +53,7 @@ function generateMatching(mode, matchType, ligne, catalogue) {
       case "5":
         return filter((i) => cfd(i) && cp(i) && academie(i));
       case "6":
-        return filter((i) => cfd(i) && cp(i) && academie(i) /*&& mef(i)*/);
+        return filter((i) => cfd(i) && cp(i) && academie(i) && mef(i));
       default:
         break;
     }
@@ -87,7 +91,7 @@ module.exports = (ligne, catalogue) => {
     buffer.matching_uai.push({
       matching_strengh: index + 1,
       data_length: x.length,
-      data: x,
+      data: formation(x),
     });
   });
 
@@ -99,7 +103,7 @@ module.exports = (ligne, catalogue) => {
       buffer.matching_cfd.push({
         matching_strengh: index + 1,
         data_length: x.length,
-        data: x,
+        data: formation(x),
       });
     });
   }
