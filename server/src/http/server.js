@@ -15,6 +15,7 @@ const packageJson = require("../../package.json");
 const formation = require("./routes/formation");
 const formationSecure = require("./routes/formationSecure");
 const convertedFormation = require("./routes/convertedFormation");
+const convertedFormationSecure = require("./routes/convertedFormationSecure");
 const report = require("./routes/report");
 const rcoFormation = require("./routes/rcoFormation");
 const secured = require("./routes/secured");
@@ -56,9 +57,17 @@ const options = {
 };
 
 const swaggerSpecification = swaggerJsdoc(options);
+console.log(swaggerSchema.mnaFormation.properties.etablissement_gestionnaire_id);
 
 swaggerSpecification.components = {
   schemas: swaggerSchema,
+  securitySchemes: {
+    bearerAuth: {
+      type: "http",
+      scheme: "bearer",
+      bearerFormat: "JWT",
+    },
+  },
 };
 
 module.exports = async (components) => {
@@ -79,10 +88,11 @@ module.exports = async (components) => {
   app.use("/api/v1/es/search", esSearch());
   app.use("/api/v1/search", esMultiSearchNoIndex());
   app.use("/api/v1/entity", formation());
+  app.use("/api/v1/entity", checkJwtToken, formationSecure());
   app.use("/api/v1/entity", convertedFormation());
+  app.use("/api/v1/entity", checkJwtToken, convertedFormationSecure());
   app.use("/api/v1/entity", pendingRcoFormation());
   app.use("/api/v1/entity", report());
-  app.use("/api/v1/entity", checkJwtToken, formationSecure());
   app.use("/api/v1/rcoformation", rcoFormation());
   app.use("/api/v1/secured", apiKeyAuthMiddleware, secured());
   app.use("/api/v1/login", login(components));

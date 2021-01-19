@@ -40,7 +40,7 @@ module.exports = () => {
    *               example: 10
    *     responses:
    *       200:
-   *         description: OK
+   *         description: OK, retourne la formation mise à jour
    *         content:
    *            application/json:
    *              schema:
