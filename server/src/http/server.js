@@ -13,7 +13,7 @@ const authMiddleware = require("./middlewares/authMiddleware");
 const permissionsMiddleware = require("./middlewares/permissionsMiddleware");
 const packageJson = require("../../package.json");
 const formation = require("./routes/formation");
-const formationSecure = require("./routes/formationSecure");
+// const formationSecure = require("./routes/formationSecure");
 const convertedFormation = require("./routes/convertedFormation");
 const convertedFormationSecure = require("./routes/convertedFormationSecure");
 const report = require("./routes/report");
@@ -57,7 +57,6 @@ const options = {
 };
 
 const swaggerSpecification = swaggerJsdoc(options);
-console.log(swaggerSchema.mnaFormation.properties.etablissement_gestionnaire_id);
 
 swaggerSpecification.components = {
   schemas: swaggerSchema,
@@ -88,7 +87,7 @@ module.exports = async (components) => {
   app.use("/api/v1/es/search", esSearch());
   app.use("/api/v1/search", esMultiSearchNoIndex());
   app.use("/api/v1/entity", formation());
-  app.use("/api/v1/entity", checkJwtToken, formationSecure());
+  //app.use("/api/v1/entity", checkJwtToken, formationSecure());
   app.use("/api/v1/entity", convertedFormation());
   app.use("/api/v1/entity", checkJwtToken, convertedFormationSecure());
   app.use("/api/v1/entity", pendingRcoFormation());
@@ -102,14 +101,15 @@ module.exports = async (components) => {
   app.use("/api/v1/stats", checkJwtToken, adminOnly, stats(components));
   app.use("/api/v1/psformation", psFormation(components));
 
-  /** DEPRACATED */
+  /** DEPRECATED */
   app.use("/api/es/search", esSearch());
   app.use("/api/search", esMultiSearchNoIndex());
   app.use("/api/entity", formation());
+  //app.use("/api/entity", checkJwtToken, formationSecure());
   app.use("/api/entity", convertedFormation());
+  app.use("/api/entity", checkJwtToken, convertedFormationSecure());
   app.use("/api/entity", pendingRcoFormation());
   app.use("/api/entity", report());
-  app.use("/api/entity", checkJwtToken, formationSecure());
   app.use("/api/rcoformation", rcoFormation());
   app.use("/api/secured", apiKeyAuthMiddleware, secured());
   app.use("/api/login", login(components));

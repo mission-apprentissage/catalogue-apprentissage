@@ -19,6 +19,7 @@ module.exports = () => {
    *       - Formations
    *     description: >
    *       Permet, à l'aide de critères, de rechercher dans les formations en apprentissage 2021 <br/><br/>
+   *       Le champ Query est une query Mongo stringify<br/><br/>
    *       **Pour definir vos critères de recherche veuillez regarder le schéma mnaFormation (en bas de cette page)**
    *     parameters:
    *       - in: query
@@ -38,9 +39,19 @@ module.exports = () => {
    *             limit:
    *               type: number
    *               example: 10
+   *         examples:
+   *           cfd:
+   *             value: { query: "{\"cfd\": \"40022106\"}", page: 1, limit: 10 }
+   *             summary: Recherche par CFD
+   *           siretM:
+   *             value: { query: "{\"$or\":[{\"etablissement_formateur_siret\":\"79128914300020\"},{\"etablissement_gestionnaire_siret\":\"13001727000310\"}]}" }
+   *             summary: Recherche par siret multiple
+   *           siretS:
+   *             value: { query: "{\"etablissement_gestionnaire_siret\": \"13001727000310\"}" }
+   *             summary: Recherche par siret simple
    *     responses:
    *       200:
-   *         description: OK, retourne la formation mise à jour
+   *         description: OK
    *         content:
    *            application/json:
    *              schema:
