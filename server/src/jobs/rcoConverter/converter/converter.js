@@ -159,9 +159,31 @@ const performConversion = async () => {
       docs.map(async (rcoFormation) => {
         computed += 1;
 
-        await createOrUpdateEtablissements(rcoFormation._doc);
-
         const mnaFormattedRcoFormation = formatToMnaFormation(rcoFormation._doc);
+
+        if (!rcoFormation.published) {
+          // if formation is unpublished, don't create etablissement and don't call mnaUpdater
+          // since we don't care of errors we just want to hide the formation
+          rcoFormation.conversion_error = "success";
+          await rcoFormation.save();
+
+          await ConvertedFormation.findOneAndUpdate(
+            { id_rco_formation: mnaFormattedRcoFormation.id_rco_formation },
+            { published: false },
+            {
+              new: true,
+            }
+          );
+
+          convertedRcoFormations.push({
+            id_rco_formation: mnaFormattedRcoFormation.id_rco_formation,
+            cfd: mnaFormattedRcoFormation.cfd,
+            updates: JSON.stringify({ published: false }),
+          });
+          return;
+        }
+
+        await createOrUpdateEtablissements(rcoFormation._doc);
 
         const { updates, formation: convertedFormation, error } = await mnaFormationUpdater(mnaFormattedRcoFormation, {
           withHistoryUpdate: false,
