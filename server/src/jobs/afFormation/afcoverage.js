@@ -30,7 +30,7 @@ async function updateDB(formation, matching) {
   const found = matching.find((x) => x.data_length === 1);
   if (found) {
     await AfFormation.findByIdAndUpdate(formation._id, {
-      matching_type: "6",
+      matching_type: found.matching_strengh,
       matching_mna_formation: found.data,
     });
 
@@ -44,6 +44,7 @@ async function updateDB(formation, matching) {
         }
         return acc;
       });
+
     try {
       await AfFormation.findByIdAndUpdate(formation._id, {
         matching_type: `${matches.matching_strengh}`,
@@ -61,7 +62,9 @@ module.exports = async () => {
   logger.info("Retreiving data from DB ...");
 
   const [afFormations, mnaFormations] = await Promise.all([
-    AfFormation.find().lean(),
+    AfFormation.find({ code_cfd: { $ne: null } })
+      .lean()
+      .limit(10),
     ConvertedFormation.find().lean(),
   ]);
 
@@ -69,7 +72,7 @@ module.exports = async () => {
 
   await asyncForEach(afFormations, async (formation) => {
     const result = matcher(formation, mnaFormations);
-    logger.info(`Update ${formation.libelle_uai_affilie} - ${formation.code_mef_10} `);
+    logger.info(`Update ${formation._id} - ${formation.code_cfd} `);
 
     await updateMatchedFormation(result);
   });

@@ -2,6 +2,7 @@ const { asyncForEach } = require("../../common/utils/asyncUtils");
 const { AfFormation } = require("../../common/model");
 const mongoose = require("mongoose");
 const logger = require("../../common/logger");
+const { etablissement } = require("./mapper");
 
 module.exports = async (catalogue) => {
   logger.info("Get parcoursup formations...");
@@ -27,7 +28,10 @@ module.exports = async (catalogue) => {
 
         if (resuai.length > 0) {
           logger.info(`Found ${resuai.length} matches with UAI_FORMATION`);
-          resuai.forEach((x) => etablissements.push({ ...x, matched_uai: "UAI_FORMATION" }));
+          resuai.forEach((x) => {
+            const formatted = etablissement(x);
+            etablissements.push({ ...formatted, matched_uai: "UAI_FORMATION" });
+          });
         }
       }
 
@@ -36,7 +40,10 @@ module.exports = async (catalogue) => {
 
         if (resformateur.length > 0) {
           logger.info(`Found ${resformateur.length} matches with UAI_FORMATEUR`);
-          resformateur.forEach((x) => etablissements.push({ ...x, matched_uai: "UAI_FORMATEUR" }));
+          resformateur.forEach((x) => {
+            const formatted = etablissement(x);
+            etablissements.push({ ...formatted, matched_uai: "UAI_FORMATEUR" });
+          });
         }
       }
 
@@ -45,7 +52,10 @@ module.exports = async (catalogue) => {
 
         if (resgestionnaire.length > 0) {
           logger.info(`Found ${resgestionnaire.length} matches with UAI_GESTIONNAIRE`);
-          resgestionnaire.forEach((x) => etablissements.push({ ...x, matched_uai: "UAI_GESTIONNAIRE" }));
+          resgestionnaire.forEach((x) => {
+            const formatted = etablissement(x);
+            etablissements.push({ ...formatted, matched_uai: "UAI_GESTIONNAIRE" });
+          });
         }
       }
     });
@@ -68,9 +78,6 @@ module.exports = async (catalogue) => {
     }, {});
 
     const formatted = Object.values(result).map((x) => {
-      x.id_mna_etablissement = x._id;
-      delete x._id;
-      delete x.__v;
       return {
         _id: mongoose.Types.ObjectId(),
         ...x,

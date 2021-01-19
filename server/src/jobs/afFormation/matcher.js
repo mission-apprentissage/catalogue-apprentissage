@@ -19,23 +19,19 @@ function generateMatching(mode, matchType, ligne, catalogue) {
 
   const mef = (catalogue) => catalogue.mef_10_code === mef10;
 
-  const dept = (catalogue) => catalogue.num_departement === ligne.code_postal.substring(0, 2);
-
   const filter = (condition) => catalogue.filter((catalogue) => condition(catalogue));
 
   if (mode === "UAI") {
     switch (matchType) {
       case "1":
-        return filter(uai);
-      case "2":
         return filter((i) => uai(i));
-      case "3":
+      case "2":
         return filter((i) => uai(i) && cfd(i));
-      case "4":
+      case "3":
         return filter((i) => uai(i) && cfd(i) && cp(i));
-      case "5":
+      case "4":
         return filter((i) => uai(i) && cfd(i) && cp(i) && academie(i));
-      case "6":
+      case "5":
         return filter((i) => uai(i) && cfd(i) && cp(i) && academie(i) && mef(i));
       default:
         break;
@@ -43,16 +39,12 @@ function generateMatching(mode, matchType, ligne, catalogue) {
   } else {
     switch (matchType) {
       case "1":
-        return filter(cfd);
-      case "2":
-        return filter((i) => cfd(i) && dept(i));
-      case "3":
         return filter((i) => cfd(i));
-      case "4":
+      case "2":
         return filter((i) => cfd(i) && cp(i));
-      case "5":
+      case "3":
         return filter((i) => cfd(i) && cp(i) && academie(i));
-      case "6":
+      case "4":
         return filter((i) => cfd(i) && cp(i) && academie(i) && mef(i));
       default:
         break;
@@ -66,7 +58,6 @@ let predicateUAI = [
   (ligne, catalogue) => generateMatching("UAI", "3", ligne, catalogue),
   (ligne, catalogue) => generateMatching("UAI", "4", ligne, catalogue),
   (ligne, catalogue) => generateMatching("UAI", "5", ligne, catalogue),
-  (ligne, catalogue) => generateMatching("UAI", "6", ligne, catalogue),
 ];
 
 let predicateCFD = [
@@ -74,8 +65,6 @@ let predicateCFD = [
   (ligne, catalogue) => generateMatching("CFD", "2", ligne, catalogue),
   (ligne, catalogue) => generateMatching("CFD", "3", ligne, catalogue),
   (ligne, catalogue) => generateMatching("CFD", "4", ligne, catalogue),
-  (ligne, catalogue) => generateMatching("CFD", "5", ligne, catalogue),
-  (ligne, catalogue) => generateMatching("CFD", "6", ligne, catalogue),
 ];
 
 module.exports = (ligne, catalogue) => {
