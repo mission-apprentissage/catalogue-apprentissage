@@ -14,10 +14,6 @@ const getLibelleCourt = (libelle) => {
       return "CAP";
     case "1ERE PROFESSIONNELLE":
       return "LIC-PRO";
-    case "AUTRES":
-      return ""; // to be discretized
-    case "REDOUBLEMENT 3EME":
-      return "";
     default:
       return "";
   }
@@ -35,22 +31,68 @@ const getCfdFromTCO = async (tableCorrespondance, mef) => {
   return null;
 };
 
+const getLibelleLong = (libelle) => {
+  const clean = libelle
+    .split(" ")
+    .filter((e) => e)
+    .join(" ");
+
+  if (clean.includes("2NDE PRO")) {
+    return clean.match(/(?<=(2NDE PRO)\s).*/) ? clean.match(/(?<=(2NDE PRO)\s).*/)[0] : clean;
+  }
+  if (clean.includes("2PROA")) {
+    return clean.match(/(?<=(2PROA)\s).*/) ? clean.match(/(?<=(2PROA)\s).*/)[0] : clean;
+  }
+  if (clean.includes("2DPROA")) {
+    return clean.match(/(?<=(2DPROA)\s).*/) ? clean.match(/(?<=(2DPROA)\s).*/)[0] : clean;
+  }
+  if (clean.includes("2NDPRO")) {
+    return clean.match(/(?<=(2NDPRO)\s).*/) ? clean.match(/(?<=(2NDPRO)\s).*/)[0] : clean;
+  }
+  if (clean.includes("(APPR)")) {
+    return clean.match(/(?<=(\(APPR)\)\s).*/) ? clean.match(/(?<=(\(APPR)\)\s).*/)[0] : clean;
+  }
+  if (clean.includes("1CAP2A")) {
+    return clean.match(/(?<=(1CAP2A)\s).*/) ? clean.match(/(?<=(1CAP2A)\s).*/)[0] : clean;
+  }
+  if (clean.includes("1CAP2")) {
+    return clean.match(/(?<=(1CAP2)\s).*/) ? clean.match(/(?<=(1CAP2)\s).*/)[0] : clean;
+  }
+
+  return clean.match(/(?<=\s).*/) ? clean.match(/(?<=\s).*/)[0] : clean;
+};
+
 const getCfdFromBCN = async (tableCorrespondance, libelle, type) => {
   let LIBELLE_COURT = getLibelleCourt(type);
-  // let LIBELLE_STAT_33 = libelle.substring(libelle.indexOf(" ") + 1).trimStart();
-  let LIBELLE_STAT_33 = libelle.match(/(?<=\s).*/) ? libelle.match(/(?<=\s).*/)[0] : libelle;
+  let LIBELLE_STAT_33 = getLibelleLong(libelle);
 
-  logger.info(`get BCN information ${LIBELLE_STAT_33} - ${LIBELLE_COURT}`);
+  logger.info(`BCN "${LIBELLE_STAT_33}" (${LIBELLE_COURT})`);
 
   const {
     formationsDiplomes,
     pagination: { total },
   } = await tableCorrespondance.getBcnInfo({ query: { LIBELLE_STAT_33, LIBELLE_COURT } });
 
-  if (total === 0) return null;
+  if (total === 0) {
+    const {
+      formationsDiplomes,
+      pagination: { total },
+    } = await tableCorrespondance.getBcnInfo({ query: { LIBELLE_STAT_33 } });
+
+    if (total === 0) return null;
+
+    if (total > 1) {
+      const openFormation = formationsDiplomes.filter((x) => x.DATE_FERMETURE === "");
+      if (openFormation.length === 0) return null;
+      return openFormation[0].FORMATION_DIPLOME;
+    }
+
+    return formationsDiplomes[0].FORMATION_DIPLOME;
+  }
 
   if (total > 1) {
     const openFormation = formationsDiplomes.filter((x) => x.DATE_FERMETURE === "");
+    if (openFormation.length === 0) return null;
     return openFormation[0].FORMATION_DIPLOME;
   }
 
@@ -121,7 +163,7 @@ const update = async (tableCorrespondance) => {
   const data = await AfFormation.find({ libelle_ban: { $ne: null }, code_cfd: { $eq: null } });
   logger.info(`${data.length} formations à traiter...`);
 
-  let count;
+  let count = 0;
 
   await asyncForEach(data, async (item) => {
     const mef10 = item.code_mef.slice(0, -1);
