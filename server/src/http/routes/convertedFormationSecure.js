@@ -82,8 +82,8 @@ module.exports = () => {
       }
 
       logger.info("Updating new item: ", body);
-      //const result = await ConvertedFormation.findOneAndUpdate({ _id: itemId }, body, { new: true });
-      res.json({});
+      const result = await ConvertedFormation.findOneAndUpdate({ _id: itemId }, body, { new: true });
+      res.json(result);
     })
   );
 
