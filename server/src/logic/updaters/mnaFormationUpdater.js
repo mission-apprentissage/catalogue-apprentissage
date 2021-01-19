@@ -62,7 +62,8 @@ const mnaFormationUpdater = async (formation, { withHistoryUpdate = true } = {})
       return { updates: null, formation, error };
     }
 
-    const rcoFormation = await RcoFormation.findOne({ id_rco_formation: formation.id_rco_formation });
+    const [id_formation, id_action, id_certifinfo] = formation.id_rco_formation.split("|");
+    const rcoFormation = await RcoFormation.findOne({ id_formation, id_action, id_certifinfo });
     let published = rcoFormation?.published ?? formation.published;
 
     if (etablissementsMapping?.etablissement_reference_published === false) {
