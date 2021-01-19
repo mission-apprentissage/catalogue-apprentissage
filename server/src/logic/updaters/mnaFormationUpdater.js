@@ -4,6 +4,7 @@ const { cfdMapper } = require("../mappers/cfdMapper");
 const { codePostalMapper } = require("../mappers/codePostalMapper");
 const { etablissementsMapper } = require("../mappers/etablissementsMapper");
 const { diffFormation } = require("../common/utils/diffUtils");
+const { RcoFormation } = require("../../common/model/index");
 
 const formationSchema = Joi.object({
   cfd: Joi.string().required(),
@@ -61,9 +62,12 @@ const mnaFormationUpdater = async (formation, { withHistoryUpdate = true } = {})
       return { updates: null, formation, error };
     }
 
-    const published = etablissementsMapping
-      ? etablissementsMapping.etablissement_reference_published
-      : formation.published;
+    const rcoFormation = await RcoFormation.findOne({ id_rco_formation: formation.id_rco_formation });
+    let published = rcoFormation?.published ?? formation.published;
+
+    if (etablissementsMapping?.etablissement_reference_published === false) {
+      published = false;
+    }
 
     const updatedFormation = {
       ...formation,
