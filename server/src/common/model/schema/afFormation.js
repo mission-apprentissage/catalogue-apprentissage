@@ -199,6 +199,23 @@ const afFormationSchema = {
     default: null,
     description: "coordonnées longitude de l'établissement",
   },
+
+  // Coverage
+  matching_mna_formation: {
+    type: Array,
+    default: [],
+    description: "tableau des matching des formations catalogue",
+  },
+  matching_mna_etablissement: {
+    type: Array,
+    default: [],
+    description: "tableau des matching des établissement catalogue",
+  },
+  matching_type: {
+    type: String,
+    default: null,
+    description: "force du matching",
+  },
 };
 
 module.exports = afFormationSchema;
