@@ -41,10 +41,8 @@ const run = async () => {
         formation.parcoursup_reference = parcoursup_reference;
 
         if (parcoursup_reference) {
-          formation.parcoursup_statut = "publié";
-          formation.parcoursup_error = null;
+          formation.parcoursup_error = "success";
         } else {
-          formation.parcoursup_statut = "non pertinent";
           formation.parcoursup_error = messages?.error ?? null;
         }
 
@@ -57,6 +55,12 @@ const run = async () => {
 
     logger.info(`progress ${computed}/${total}`);
   }
+
+  // update parcoursup_statut outside loop to not mess up with paginate
+  await ConvertedFormation.updateMany(
+    { parcoursup_error: "success" },
+    { $set: { parcoursup_error: null, parcoursup_statut: "publié" } }
+  );
 
   // 3 - set "à expertiser" for trainings matching psup eligibility rules
   await ConvertedFormation.updateMany(
