@@ -152,10 +152,7 @@ const performConversion = async () => {
   let nbFormations = 10;
 
   while (computed < nbFormations) {
-    let { docs, total } = await RcoFormation.paginate(
-      { $or: [{ converted_to_mna: { $ne: true } }, { published: false }] },
-      { offset, limit }
-    );
+    let { docs, total } = await RcoFormation.paginate({ converted_to_mna: { $ne: true } }, { offset, limit });
     nbFormations = total;
 
     await Promise.all(
