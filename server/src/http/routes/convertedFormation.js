@@ -38,9 +38,19 @@ module.exports = () => {
    *             limit:
    *               type: number
    *               example: 10
+   *         examples:
+   *           cfd:
+   *             value: { query: "{\"cfd\": \"40022106\"}", page: 1, limit: 10 }
+   *             summary: Recherche par CFD
+   *           siretM:
+   *             value: { query: "{\"$or\":[{\"etablissement_formateur_siret\":\"79128914300020\"},{\"etablissement_gestionnaire_siret\":\"13001727000310\"}]}" }
+   *             summary: Recherche par siret multiple
+   *           siretS:
+   *             value: { query: "{\"etablissement_gestionnaire_siret\": \"13001727000310\"}" }
+   *             summary: Recherche par siret simple
    *     responses:
    *       200:
-   *         description: OK, retourne la formation mise à jour
+   *         description: OK
    *         content:
    *            application/json:
    *              schema:
