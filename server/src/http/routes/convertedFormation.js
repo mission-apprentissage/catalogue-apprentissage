@@ -19,6 +19,7 @@ module.exports = () => {
    *       - Formations
    *     description: >
    *       Permet, à l'aide de critères, de rechercher dans les formations en apprentissage 2021 <br/><br/>
+   *       Le champ Query est une query Mongo stringify<br/><br/>
    *       **Pour definir vos critères de recherche veuillez regarder le schéma mnaFormation (en bas de cette page)**
    *     parameters:
    *       - in: query
