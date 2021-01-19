@@ -62,9 +62,7 @@ module.exports = async () => {
   logger.info("Retreiving data from DB ...");
 
   const [afFormations, mnaFormations] = await Promise.all([
-    AfFormation.find({ code_cfd: { $ne: null } })
-      .lean()
-      .limit(10),
+    AfFormation.find({ code_cfd: { $ne: null } }).lean(),
     ConvertedFormation.find().lean(),
   ]);
 
