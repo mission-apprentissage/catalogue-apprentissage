@@ -157,6 +157,17 @@ const mnaFormationSchema = {
     default: false,
     description: "La formation doit être ajouter à ParcourSup",
   },
+  parcoursup_statut: {
+    type: String,
+    enum: ["non pertinent", "à expertiser", "en cours de publication", "publié", "non publié"],
+    default: "non pertinent",
+    description: "Statut parcoursup: non pertinent, a expertiser, en cours de publication, publié, non publié",
+  },
+  parcoursup_error: {
+    type: String,
+    default: null,
+    description: "Erreur lors du contrôle de référencement sur ParcourSup de la formation",
+  },
   affelnet_reference: {
     type: Boolean,
     default: false,
@@ -165,7 +176,18 @@ const mnaFormationSchema = {
   affelnet_a_charger: {
     type: Boolean,
     default: false,
-    description: "La formation doit être ajouter à affelnet",
+    description: "**[DEPRECATED]** La formation doit être ajouter à affelnet",
+  },
+  affelnet_statut: {
+    type: String,
+    enum: ["non pertinent", "à expertiser", "en cours de publication", "publié", "non publié"],
+    default: "non pertinent",
+    description: "Statut affelnet: non pertinent, a expertiser, en cours de publication, publié, non publié",
+  },
+  affelnet_error: {
+    type: String,
+    default: null,
+    description: "Erreur lors du contrôle de référencement sur affelnet de la formation",
   },
   source: {
     type: String,

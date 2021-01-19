@@ -246,6 +246,12 @@ const columnsDefinition = [
     exportOnly: true,
     editable: false,
   },
+  {
+    Header: "Tags",
+    accessor: "tags",
+    width: 200,
+    editable: false,
+  },
 ];
 
 const queryBuilderField = [

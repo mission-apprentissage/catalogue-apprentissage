@@ -26,7 +26,46 @@ module.exports = ({ users }) => {
       }
     )
   );
-
+  /**
+   * @swagger
+   *
+   * /login:
+   *   post:
+   *     summary: Récuparation du token d'authentification
+   *     tags:
+   *       - Authentification
+   *     description: >
+   *       Cette api vous permet de récupérer un token d'authentification.<br/><br />
+   *       Vous devez posséder des credentials. Veuillez contacter catalogue@apprentissage.beta.gouv.fr pour en obtenir<br /><br />
+   *       Pour accéder aux routes sécurisé, ```Authorization: Bearer MONTOKEN```
+   *     requestBody:
+   *       description: L'objet JSON **doit** contenir les clés **username** et **password**.
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             required:
+   *               - username
+   *               - password
+   *             properties:
+   *               username:
+   *                 type: string
+   *                 example: "foo"
+   *               password:
+   *                 type: string
+   *                 example: "bar"
+   *     responses:
+   *       200:
+   *         description: OK
+   *         content:
+   *            application/json:
+   *              schema:
+   *                type: object
+   *                properties:
+   *                  token:
+   *                    type: string
+   */
   router.post(
     "/",
     compose([

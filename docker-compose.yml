@@ -39,6 +39,7 @@ services:
       - mongodb
     environment:
       - CATALOGUE_APPRENTISSAGE_MONGODB_URI=mongodb://mongodb:27017/catalogue-apprentissage?retryWrites=true&w=majority
+      - CATALOGUE_APPRENTISSAGE_ELASTICSEARCH_NODE=http://elasticsearch:9200
       - NODE_ICU_DATA=node_modules/full-icu
 
   mongodb:
