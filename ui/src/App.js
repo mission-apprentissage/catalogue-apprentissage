@@ -8,7 +8,8 @@ import HomePage from "./pages/HomePage";
 import ResetPasswordPage from "./pages/password/ResetPasswordPage";
 import ForgottenPasswordPage from "./pages/password/ForgottenPasswordPage";
 import Users from "./pages/admin/Users";
-import PageReconciliation from "./pages/reconciliation";
+import ReconciliationParcoursup from "./pages/reconciliation-parcoursup";
+import ReconciliationAffelnet from "./pages/reconciliation-affelnet";
 import ReportPage from "./pages/ReportPage";
 import NotFoundPage from "./pages/404";
 import Search from "./pages/Search/Search";
@@ -93,7 +94,8 @@ export default () => {
               <Route exact path="/reset-password" component={ResetPasswordPage} />
               <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
               <Route exact path="/report" component={ReportPage} />
-              <Route exact path="/coverage" component={PageReconciliation} />
+              <Route exact path="/couverture-parcoursup" component={ReconciliationParcoursup} />
+              <Route exact path="/couverture-affelnet" component={ReconciliationAffelnet} />
               <Route exact path="/changelog" component={Journal} />
 
               <Route component={NotFoundPage} />

@@ -137,7 +137,7 @@ export default ({ data }) => {
               )}
             </Box>
             <Flex justify="center">
-              <Box>Formation à vérifier</Box>
+              {/* <Box>Formation à vérifier</Box> */}
               <Spacer />
               <Box>
                 <Button colorScheme="teal" variant="outline" pl={4} marginRight={4} onClick={toggle}>
