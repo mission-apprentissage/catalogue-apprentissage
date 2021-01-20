@@ -20,6 +20,18 @@ module.exports = () => {
         return null;
       }
     },
+    getBcnInfo: async (options) => {
+      let { page, limit, query } = { page: 1, limit: 10, ...options };
+      let params = { page, limit, query };
+
+      try {
+        const { data } = await axios.get(`${apiEndpoint}/bcn/formationsDiplomes`, { params });
+        return data;
+      } catch (error) {
+        logger.error(`getBcnInfo: something went wrong`);
+        return null;
+      }
+    },
     getCfdInfo: async (cfd) => {
       try {
         const { data } = await axios.post(`${apiEndpoint}/cfd`, {

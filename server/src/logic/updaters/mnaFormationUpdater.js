@@ -4,6 +4,7 @@ const { cfdMapper } = require("../mappers/cfdMapper");
 const { codePostalMapper } = require("../mappers/codePostalMapper");
 const { etablissementsMapper } = require("../mappers/etablissementsMapper");
 const { diffFormation } = require("../common/utils/diffUtils");
+const { RcoFormation } = require("../../common/model/index");
 
 const formationSchema = Joi.object({
   cfd: Joi.string().required(),
@@ -61,17 +62,41 @@ const mnaFormationUpdater = async (formation, { withHistoryUpdate = true } = {})
       return { updates: null, formation, error };
     }
 
-    const published = etablissementsMapping
-      ? etablissementsMapping.etablissement_reference_published
-      : formation.published;
+    const [id_formation, id_action, id_certifinfo] = formation.id_rco_formation.split("|");
+    const rcoFormation = await RcoFormation.findOne({ id_formation, id_action, id_certifinfo });
+    let published = rcoFormation?.published ?? formation.published;
+
+    let update_error = null;
+    if (etablissementsMapping?.etablissement_reference_published === false) {
+      published = false;
+      if (rcoFormation?.published) {
+        update_error = "Formation not published because of etablissement_reference_published";
+      }
+    }
+
+    // set tags
+    let tags = formation.tags ?? [];
+    try {
+      const years = ["2020", "2021"];
+      const periode = JSON.parse(formation.periode);
+      const periodeTags = years.filter((year) => periode?.some((p) => p.includes(year)));
+
+      // remove tags in years and not in yearTags, and add yearTags
+      tags = tags.filter((tag) => years.includes(tag) && !periodeTags.includes(tag));
+      const tagsToAdd = periodeTags.filter((tag) => !tags.includes(tag));
+      tags = [...tags, ...tagsToAdd];
+    } catch (e) {
+      logger.error("unable to set tags", e);
+    }
 
     const updatedFormation = {
       ...formation,
       ...cfdMapping,
       ...cpMapping,
       ...etablissementsMapping,
+      tags,
       published,
-      update_error: null,
+      update_error,
     };
 
     const { updates, keys } = diffFormation(formation, updatedFormation);

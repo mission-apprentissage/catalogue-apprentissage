@@ -10,8 +10,69 @@ module.exports = () => {
   const router = express.Router();
 
   /**
-   * Get all converted RCO formations /formations2021 GET
-   * */
+   * @swagger
+   *
+   * /entity/formations2021:
+   *   get:
+   *     summary: Permet de récupérer les formations 2021
+   *     tags:
+   *       - Formations
+   *     description: >
+   *       Permet, à l'aide de critères, de rechercher dans les formations en apprentissage 2021 <br/><br/>
+   *       Le champ Query est une query Mongo stringify<br/><br/>
+   *       **Pour definir vos critères de recherche veuillez regarder le schéma mnaFormation (en bas de cette page)**
+   *     parameters:
+   *       - in: query
+   *         name: payload
+   *         required: true
+   *         schema:
+   *           type: object
+   *           required:
+   *             - query
+   *           properties:
+   *             query:
+   *               type: string
+   *               example: '"{\"cfd\": \"40022106\"}"'
+   *             page:
+   *               type: number
+   *               example: 1
+   *             limit:
+   *               type: number
+   *               example: 10
+   *         examples:
+   *           cfd:
+   *             value: { query: "{\"cfd\": \"40022106\"}", page: 1, limit: 10 }
+   *             summary: Recherche par CFD
+   *           siretM:
+   *             value: { query: "{\"$or\":[{\"etablissement_formateur_siret\":\"79128914300020\"},{\"etablissement_gestionnaire_siret\":\"13001727000310\"}]}" }
+   *             summary: Recherche par siret multiple
+   *           siretS:
+   *             value: { query: "{\"etablissement_gestionnaire_siret\": \"13001727000310\"}" }
+   *             summary: Recherche par siret simple
+   *     responses:
+   *       200:
+   *         description: OK
+   *         content:
+   *            application/json:
+   *              schema:
+   *                type: object
+   *                properties:
+   *                  formations:
+   *                    type: array
+   *                    items:
+   *                      $ref: '#/components/schemas/mnaFormation'
+   *                  pagination:
+   *                    type: object
+   *                    properties:
+   *                      page:
+   *                        type: string
+   *                      resultats_par_page:
+   *                        type: number
+   *                      nombre_de_page:
+   *                        type: number
+   *                      total:
+   *                        type: number
+   */
   router.get(
     "/formations2021",
     tryCatch(async (req, res) => {

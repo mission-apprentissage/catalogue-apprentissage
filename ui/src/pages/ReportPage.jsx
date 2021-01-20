@@ -120,7 +120,7 @@ const ReportPage = () => {
 
         {(report?.data || reportErrors?.data?.errors) && (
           <>
-            <Box bg="#E5EDEF" w="100%" py={[4, 8]} px={[8, 24]} color="#19414C">
+            <Box bg="secondaryBackground" w="100%" py={[4, 8]} px={[8, 24]}>
               <Heading fontFamily="Marianne" fontWeight="400" fontSize={["beta", "alpha"]} as="h1">
                 {reportTitle}
               </Heading>

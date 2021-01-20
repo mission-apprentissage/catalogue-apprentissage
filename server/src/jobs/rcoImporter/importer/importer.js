@@ -15,20 +15,33 @@ class Importer {
   }
 
   async run() {
-    const formationsJ1 = await wsRCO.getRCOcatalogue("-j-1");
     const formations = await wsRCO.getRCOcatalogue();
-    console.log("Nb formations J-1 : ", formationsJ1.length);
-    console.log("Nb formations J : ", formations.length);
+    const dbFormations = await RcoFormation.find(
+      { published: true },
+      {
+        _id: 0,
+        __v: 0,
+        updates_history: 0,
+        published: 0,
+        created_at: 0,
+        last_update_at: 0,
+        converted_to_mna: 0,
+        conversion_error: 0,
+      }
+    ).lean();
 
-    await this.start(formations, formationsJ1);
+    console.log("Nb formations J : ", formations.length);
+    console.log("Nb formations published in DB : ", dbFormations.length);
+
+    await this.start(formations, dbFormations);
   }
 
-  async start(formations, formationsJ1) {
+  async start(formations, dbFormations) {
     try {
-      const collection = this.lookupDiff(formations, formationsJ1);
+      const collection = this.lookupDiff(formations, dbFormations);
 
       if (!collection) {
-        await this.report(formations.length, formationsJ1.length);
+        await this.report(formations.length);
         return null;
       }
 
@@ -44,13 +57,13 @@ class Importer {
 
       await this.dbOperationsHandler();
 
-      await this.report(formations.length, formationsJ1.length);
+      await this.report(formations.length);
     } catch (error) {
       console.log(error);
     }
   }
 
-  async report(formationsJCount, formationsJ1Count) {
+  async report(formationsJCount) {
     this.updated.forEach((element) => {
       const { updates, updateInfo } = this.formationsToUpdateToDb.find((u) => u.rcoFormation._id === element.mnaId);
 
@@ -84,7 +97,6 @@ class Importer {
 
     const summary = {
       formationsJCount,
-      formationsJ1Count,
       addedCount: this.added.length,
       updatedCount: this.updated.length - deletedCount,
       deletedCount,
@@ -279,6 +291,7 @@ class Importer {
     for (let ite = 0; ite < currentFormations.length; ite++) {
       const formation = currentFormations[ite];
       const id = this._buildId(formation);
+      // const [found, ...duplicates] = pastFormations.filter((pf) => id === this._buildId(pf));
       const found = pastFormations.find((pf) => id === this._buildId(pf));
 
       // Some formations has been added
@@ -291,18 +304,20 @@ class Importer {
         if (keys.length !== 0) {
           updated.push(formation);
         }
+
+        // if (duplicates.length > 0) {
+        //   console.log(`found ${duplicates.length} duplicate(s) in RCOFormation collection for ${id}`);
+        // }
       }
     }
 
-    if (currentFormations.length < pastFormations.length) {
-      // Some formations has been deleted
-      for (let ite = 0; ite < pastFormations.length; ite++) {
-        const pastFormation = pastFormations[ite];
-        const id = this._buildId(pastFormation);
-        const found = currentFormations.find((f) => id === this._buildId(f));
-        if (!found) {
-          deleted.push(pastFormation);
-        }
+    // check if Some formations has been deleted
+    for (let ite = 0; ite < pastFormations.length; ite++) {
+      const pastFormation = pastFormations[ite];
+      const id = this._buildId(pastFormation);
+      const found = currentFormations.some((f) => id === this._buildId(f));
+      if (!found) {
+        deleted.push(pastFormation);
       }
     }
 
@@ -340,8 +355,16 @@ class Importer {
    * Add to db RCO Formation
    */
   async addRCOFormation(rcoFormation) {
-    const newRcoFormation = new RcoFormation(rcoFormation);
-    await newRcoFormation.save();
+    const { id_formation, id_action, id_certifinfo } = rcoFormation;
+    const newRcoFormation = RcoFormation.findOneAndUpdate(
+      { id_formation, id_action, id_certifinfo },
+      { ...rcoFormation, converted_to_mna: false, conversion_error: null },
+      {
+        new: true,
+        upsert: true,
+        overwrite: true,
+      }
+    );
     const id = this._buildId(newRcoFormation);
     const added = { mnaId: newRcoFormation._id, rcoId: id };
     this.added.push(added);

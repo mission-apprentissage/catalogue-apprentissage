@@ -1,9 +1,30 @@
 import { extendTheme } from "@chakra-ui/react";
-import * as themeBeta from "./theme-beta";
+import { fonts, colors, fontSizes, space, rootFontSizePx } from "./theme-beta";
 import { components } from "./components/index";
 
+const styles = {
+  global: {
+    "html, body": {
+      fontSize: `${rootFontSizePx}px`,
+      fontFamily: "Inter",
+      background: "white",
+      color: "primaryText",
+    },
+  },
+};
+
+const catalogueColors = {
+  primaryText: "#19414c",
+  primaryBackground: "white",
+  secondaryBackground: "#e5edef",
+};
+
 const overrides = {
-  ...themeBeta,
+  fonts,
+  colors: { ...colors, ...catalogueColors },
+  styles,
+  fontSizes,
+  space,
   components,
 };
 

@@ -26,13 +26,19 @@
     "rco:diff": "standalone=true node src/jobs/rcoDiff/index.js",
     "trainings:updater": "standalone=true node src/jobs/trainingsUpdater/index.js",
     "oneshot:hydrate": "standalone=true node src/jobs/oneshot/hydrateFromOldCatalogue/index.js",
-    "coverage": "standalone=true node src/jobs/psCoverage/index.js",
-    "coverage:import": "standalone=true node src/jobs/psCoverage/coverage/psimporter.js",
-    "coverage:oneshot": "standalone=true node src/jobs/oneshot/psFormation/index.js",
     "oneshot:psup": "standalone=true node src/jobs/oneshot/pSupTemporary/index.js",
+    "psup:coverage": "standalone=true node src/jobs/psCoverage/index.js",
+    "psup:import": "standalone=true node src/jobs/psCoverage/coverage/psimporter.js",
+    "psup:oneshot": "standalone=true node src/jobs/oneshot/psFormation/index.js",
+    "psup:cleanup": "standalone=true node src/jobs/oneshot/psFormation/cleanup.js",
+    "psup:missing": "standalone=true node src/jobs/oneshot/psFormation/missingEtablissement.js",
+    "psup:reference": "standalone=true node src/jobs/psReference/index.js",
+    "affelnet:coverage": "standalone=true node src/jobs/afFormation/index.js",
+    "affelnet:import": "standalone=true node src/jobs/oneshot/afFormation/index.js",
     "opco:importer": "standalone=true node src/jobs/opcoImporter/index.js",
     "opco:importer:stats": "standalone=true node src/jobs/opcoImporter/stats.js",
-    "es:index": "standalone=true node src/jobs/esIndex/index.js"
+    "es:index": "standalone=true node src/jobs/esIndex/index.js",
+    "generate:swaggerschema": "standalone=true node src/jobs/generateSwaggerSchema/index.js"
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.6.1",
@@ -63,6 +69,7 @@
     "moment": "2.26.0",
     "mongoose": "5.10.2",
     "mongoose-paginate": "5.0.3",
+    "mongoose-schema-jsonschema": "1.4.4",
     "multipipe": "4.0.0",
     "nodemailer": "^6.4.14",
     "nodemailer-html-to-text": "^3.1.0",
@@ -70,7 +77,10 @@
     "passport-http": "0.3.0",
     "passport-jwt": "4.0.0",
     "passport-local": "1.0.0",
+    "require-all": "3.0.0",
     "sha512crypt-node": "0.1.0",
+    "swagger-jsdoc": "6.0.1",
+    "swagger-ui-express": "4.1.6",
     "xlsx": "0.16.9"
   },
   "engines": {
