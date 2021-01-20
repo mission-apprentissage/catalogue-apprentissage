@@ -10,6 +10,7 @@ const {
   reportSchema,
   psReconciliationSchema,
   afReconciliationSchema,
+  afFormationSchema,
 } = require("../model/schema");
 
 const getMongoostaticModel = (modelName, schema, instanceMongoose = mongooseInstance) => {
@@ -85,6 +86,11 @@ if (!afr) {
   afr = getModel("afreconciliation", afReconciliationSchema);
 }
 
+let af = null;
+if (!af) {
+  af = getModel("afformation", afFormationSchema);
+}
+
 module.exports = {
   Sample: s,
   User: u,
@@ -97,4 +103,5 @@ module.exports = {
   PsReconciliation: psr,
   PendingRcoFormation: prf,
   AfReconciliation: afr,
+  AfFormation: af,
 };

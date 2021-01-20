@@ -7,6 +7,7 @@ const psFormationSchema = require("./psFormation");
 const reportSchema = require("./report");
 const psReconciliationSchema = require("./psReconciliation");
 const afReconciliationSchema = require("./afReconciliation");
+const afFormationSchema = require("./afFormation");
 
 module.exports = {
   sampleSchema,
@@ -18,4 +19,5 @@ module.exports = {
   reportSchema,
   psReconciliationSchema,
   afReconciliationSchema,
+  afFormationSchema,
 };
