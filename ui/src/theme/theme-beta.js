@@ -190,4 +190,4 @@ const space = {
   "15w": `${120 / rootFontSizePx}rem`,
 };
 
-export { fonts, colors, styles, fontSizes, space };
+export { fonts, colors, styles, fontSizes, space, rootFontSizePx };
