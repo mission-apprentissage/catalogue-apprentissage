@@ -1,5 +1,5 @@
 import React from "react";
-import { Site } from "tabler-react";
+import { Container } from "@chakra-ui/react";
 
 import Footer from "./components/Footer";
 import Header from "./components/Header";
@@ -7,12 +7,12 @@ import NavigationMenu from "./components/NavigationMenu";
 
 const Layout = (props) => {
   return (
-    <Site className="flex-fill">
+    <Container maxW="full" p={0}>
       <Header />
       <NavigationMenu />
       {props.children}
       <Footer />
-    </Site>
+    </Container>
   );
 };
 

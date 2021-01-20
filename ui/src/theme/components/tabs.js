@@ -4,7 +4,7 @@ const Tabs = {
     tablist: {
       px: [0, 24],
       border: "none",
-      bg: "#E5EDEF",
+      bg: "secondaryBackground",
       color: "grey.750",
     },
     tabpanel: {
