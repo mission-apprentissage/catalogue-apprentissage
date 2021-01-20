@@ -1,9 +1,8 @@
 const path = require("path");
-const logger = require("../../common/logger");
-const { runScript } = require("../scriptWrapper");
-const { asyncForEach } = require("../../common/utils/asyncUtils");
-const { getJsonFromXlsxFile } = require("../../common/utils/fileUtils");
-const { AfFormation } = require("../../common/model");
+const logger = require("../../../common/logger");
+const { asyncForEach } = require("../../../common/utils/asyncUtils");
+const { getJsonFromXlsxFile } = require("../../../common/utils/fileUtils");
+const { AfFormation } = require("../../../common/model");
 const { isFinite } = require("lodash");
 
 const getLibelleCourt = (libelle) => {
@@ -191,15 +190,4 @@ const update = async (tableCorrespondance) => {
   logger.info(`${count} formations mise à jours `);
 };
 
-if (process.env.standalone) {
-  runScript(async ({ tableCorrespondance }) => {
-    logger.info(`Start affelnet import`);
-
-    if ((await AfFormation.countDocuments({})) == 0) {
-      await seed();
-    }
-    await update(tableCorrespondance);
-
-    logger.info(`End affelnet import`);
-  });
-}
+module.exports = { seed, update };
