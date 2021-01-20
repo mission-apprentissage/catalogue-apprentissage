@@ -7,6 +7,8 @@ import { Link } from "react-router-dom";
 import { Badge } from "@chakra-ui/react";
 // import { API } from "aws-amplify";
 import "./cardList.css";
+import { hasOneOfRoles } from "../../../../common/utils/rolesUtils";
+import useAuth from "../../../../common/hooks/useAuth";
 
 //import image_preview from "./noimage.png";
 
@@ -19,6 +21,7 @@ import "./cardList.css";
 // };
 
 const CardList = ({ data, f2021 }) => {
+  let [auth] = useAuth();
   // const { acm: userAcm } = useSelector((state) => state.user);
   //const ImageComponent = <img src={image_preview} alt={data.intitule_court} />;
 
@@ -60,14 +63,16 @@ const CardList = ({ data, f2021 }) => {
             <p>
               {data.code_postal} {data.nom_academie}
             </p>
-            <div className="pills-statuts">
-              <Badge variant="solid" colorScheme="green" className="badge">
-                Parcoursup - {data.parcoursup_statut}
-              </Badge>
-              <Badge variant="solid" colorScheme="green" className="badge">
-                Affelnet - {data.affelnet_statut}
-              </Badge>
-            </div>
+            {hasOneOfRoles(auth, ["admin", "instructeur"]) && (
+              <div className="pills-statuts">
+                <Badge variant="solid" colorScheme="green" className="badge">
+                  Parcoursup - {data.parcoursup_statut}
+                </Badge>
+                <Badge variant="solid" colorScheme="green" className="badge">
+                  Affelnet - {data.affelnet_statut}
+                </Badge>
+              </div>
+            )}
           </div>
         </div>
         <div className="list-card-right">

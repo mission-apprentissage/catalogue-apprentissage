@@ -4,6 +4,7 @@ import { Container, Flex, Spinner } from "@chakra-ui/react";
 import Switch from "react-switch";
 import useAuth from "../../common/hooks/useAuth";
 import Layout from "../layout/Layout";
+import { hasOneOfRoles } from "../../common/utils/rolesUtils";
 
 import {
   QueryBuilder,
@@ -159,7 +160,22 @@ export default ({ match }) => {
                 <Flex className="search-row">
                   <div className={`search-sidebar`}>
                     {facetDefinition.map((fd, i) => {
-                      return (
+                      return fd.roles ? (
+                        hasOneOfRoles(auth, fd.roles) ? (
+                          <Facet
+                            key={i}
+                            componentId={fd.componentId}
+                            dataField={fd.dataField}
+                            title={fd.title}
+                            filterLabel={fd.filterLabel}
+                            selectAllLabel={fd.selectAllLabel}
+                            filters={FILTERS}
+                            sortBy={fd.sortBy}
+                          />
+                        ) : (
+                          <div key={i} />
+                        )
+                      ) : (
                         <Facet
                           key={i}
                           componentId={fd.componentId}

@@ -393,6 +393,7 @@ const facetDefinition = [
     filterLabel: "parcoursup_statut",
     selectAllLabel: "Tous",
     sortBy: "count",
+    roles: ["admin", "instructeur"],
   },
   {
     componentId: "affelnet_statut",
@@ -401,6 +402,7 @@ const facetDefinition = [
     filterLabel: "affelnet_statut",
     selectAllLabel: "Tous",
     sortBy: "asc",
+    roles: ["admin", "instructeur"],
   },
 ];
 
