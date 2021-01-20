@@ -15,6 +15,8 @@ function generateMatching(mode, matchType, ligne, catalogue) {
 
   const cfd = (catalogue) => catalogue.cfd === ligne.code_cfd;
 
+  const libelle = (catalogue) => ligne.libelle_ban.includes(catalogue.intitule_court);
+
   const filter = (condition) => catalogue.filter((catalogue) => condition(catalogue));
 
   if (mode === "UAI") {
@@ -27,6 +29,8 @@ function generateMatching(mode, matchType, ligne, catalogue) {
         return filter((i) => uai(i) && cfd(i) && cp(i));
       case "4":
         return filter((i) => uai(i) && cfd(i) && cp(i) && academie(i));
+      case "5":
+        return filter((i) => uai(i) && cfd(i) && cp(i) && academie(i) && libelle(i));
       default:
         break;
     }
@@ -38,6 +42,8 @@ function generateMatching(mode, matchType, ligne, catalogue) {
         return filter((i) => cfd(i) && cp(i));
       case "3":
         return filter((i) => cfd(i) && cp(i) && academie(i));
+      case "4":
+        return filter((i) => cfd(i) && cp(i) && academie(i) && libelle(i));
       default:
         break;
     }
@@ -49,12 +55,14 @@ let predicateUAI = [
   (ligne, catalogue) => generateMatching("UAI", "2", ligne, catalogue),
   (ligne, catalogue) => generateMatching("UAI", "3", ligne, catalogue),
   (ligne, catalogue) => generateMatching("UAI", "4", ligne, catalogue),
+  (ligne, catalogue) => generateMatching("UAI", "5", ligne, catalogue),
 ];
 
 let predicateCFD = [
   (ligne, catalogue) => generateMatching("CFD", "1", ligne, catalogue),
   (ligne, catalogue) => generateMatching("CFD", "2", ligne, catalogue),
   (ligne, catalogue) => generateMatching("CFD", "3", ligne, catalogue),
+  (ligne, catalogue) => generateMatching("CFD", "4", ligne, catalogue),
 ];
 
 module.exports = (ligne, catalogue) => {
