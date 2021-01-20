@@ -2,9 +2,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 // import { useSelector } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons"; // faPen
-import { Button } from "@chakra-ui/react";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faTimes } from "@fortawesome/free-solid-svg-icons"; // faPen
+import { Badge } from "@chakra-ui/react";
 // import { API } from "aws-amplify";
 import "./cardList.css";
 
@@ -22,33 +22,67 @@ const CardList = ({ data, f2021 }) => {
   // const { acm: userAcm } = useSelector((state) => state.user);
   //const ImageComponent = <img src={image_preview} alt={data.intitule_court} />;
 
-  const hasRightToEdit = false; // checkIfHasRightToEdit(data, userAcm);
+  //const hasRightToEdit = false; // checkIfHasRightToEdit(data, userAcm);
 
-  const onDeleteClicked = async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    // eslint-disable-next-line no-restricted-globals
-    const areYousure = confirm("Souhaitez-vous vraiment supprimer cette formation ?");
-    if (areYousure) {
-      // await API.del("api", `/formation/${data._id}`);
-      window.location.reload();
-    }
-  };
+  // const onDeleteClicked = async (e) => {
+  //   e.preventDefault();
+  //   e.stopPropagation();
+  //   // eslint-disable-next-line no-restricted-globals
+  //   const areYousure = confirm("Souhaitez-vous vraiment supprimer cette formation ?");
+  //   if (areYousure) {
+  //     // await API.del("api", `/formation/${data._id}`);
+  //     window.location.reload();
+  //   }
+  // };
   // const onEditClicked = async e => {
   //   e.preventDefault();
   //   e.stopPropagation();
   //   // DO STUFF
   // };
 
+  const niv = data.niveau.replace(/\D/g, "");
+
   return (
     <Link
       to={f2021 ? `/formation/${data._id}` : `/formation/${data._id}?source=mna`}
-      className="list-card"
+      className="list-card-formation"
       style={{ textDecoration: "none" }}
       target="_blank"
     >
-      <div className="list-card-container ">
-        <div className="thumbnail">
+      <div className="list-card-container">
+        <div className="list-card-left">
+          <h3>
+            {data.intitule_long} (Niv. {niv})
+          </h3>
+          <div>
+            <p>{data.etablissement_formateur_enseigne}</p>
+            <p>{data.etablissement_gestionnaire_entreprise_raison_sociale}</p>
+            <p>
+              {data.code_postal} {data.nom_academie}
+            </p>
+            <div className="pills-statuts">
+              <Badge variant="solid" colorScheme="green" className="badge">
+                Parcoursup - {data.parcoursup_statut}
+              </Badge>
+              <Badge variant="solid" colorScheme="green" className="badge">
+                Affelnet - {data.affelnet_statut}
+              </Badge>
+            </div>
+          </div>
+        </div>
+        <div className="list-card-right">
+          <small>Code diplôme: {data.cfd}</small>
+        </div>
+      </div>
+    </Link>
+  );
+};
+
+export default CardList;
+
+/*
+
+<div className="thumbnail">
           <div className="field">
             <p>Niveau: {data.niveau}</p>
           </div>
@@ -66,9 +100,6 @@ const CardList = ({ data, f2021 }) => {
             <span className="edition-btns">
               {hasRightToEdit && (
                 <>
-                  {/* <Button variant="outline" colorScheme="teal" onClick={onEditClicked}>
-                    <FontAwesomeIcon icon={faPen} size="xs" />
-                  </Button> */}
                   <Button variant="outline" colorScheme="red" onClick={onDeleteClicked}>
                     <FontAwesomeIcon icon={faTimes} />
                   </Button>
@@ -83,9 +114,4 @@ const CardList = ({ data, f2021 }) => {
             <p>{data.etablissement_formateur_enseigne}</p>
           </div>
         </div>
-      </div>
-    </Link>
-  );
-};
-
-export default CardList;
+*/
