@@ -285,6 +285,11 @@ const mnaFormationSchema = {
     default: null,
     description: "Id de formation RCO (id_formation + id_action + id_certifinfo)",
   },
+  tags: {
+    type: [String],
+    default: [],
+    description: "Tableau de tags (2020, 2021, etc.)",
+  },
 };
 
 module.exports = mnaFormationSchema;

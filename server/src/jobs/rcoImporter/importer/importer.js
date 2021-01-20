@@ -355,8 +355,16 @@ class Importer {
    * Add to db RCO Formation
    */
   async addRCOFormation(rcoFormation) {
-    const newRcoFormation = new RcoFormation(rcoFormation);
-    await newRcoFormation.save();
+    const { id_formation, id_action, id_certifinfo } = rcoFormation;
+    const newRcoFormation = RcoFormation.findOneAndUpdate(
+      { id_formation, id_action, id_certifinfo },
+      { ...rcoFormation, converted_to_mna: false, conversion_error: null },
+      {
+        new: true,
+        upsert: true,
+        overwrite: true,
+      }
+    );
     const id = this._buildId(newRcoFormation);
     const added = { mnaId: newRcoFormation._id, rcoId: id };
     this.added.push(added);
