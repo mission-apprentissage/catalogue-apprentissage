@@ -19,13 +19,14 @@ import { _get } from "../../common/httpClient";
 import { useQuery } from "react-query";
 import AppLayout from "../layout/Layout";
 
+const matchingType = [1, 2, 3, 4, 5];
+
 const StyledButton = ({ type, matching, size, toggleMatching, ...rest }) => {
   return (
     <Button
-      color="white"
-      variant="solid"
-      colorScheme="purple"
-      size={size ? size : "sm"}
+      colorScheme="teal"
+      variant="outline"
+      size="sm"
       onClick={() => toggleMatching({ type })}
       isActive={type === matching ? true : false}
       {...rest}
@@ -35,7 +36,7 @@ const StyledButton = ({ type, matching, size, toggleMatching, ...rest }) => {
   );
 };
 
-export default () => {
+export default (props) => {
   const [matching, setMatching] = React.useState({
     type: 3,
     page: 1,
@@ -44,7 +45,7 @@ export default () => {
   const { data, isLoading, isError } = useQuery(
     ["coverage", { type: matching.type, page: matching.page }],
     ({ queryKey }) => {
-      return _get(`/api/psformation?type=${queryKey[1].type}&page=${queryKey[1].page}`);
+      return _get(`/api/affelnet?type=${queryKey[1].type}&page=${queryKey[1].page}`);
     },
     {
       refetchOnWindowFocus: false,
@@ -57,13 +58,13 @@ export default () => {
   return (
     <AppLayout>
       <Layout>
-        <Box p={5} bg="#0c5076">
-          <Heading color="white">Page de réconciliation</Heading>
-          <Text color="white" fontSize="sm">
-            Interface de rapprochement des formations Parcoursup avec les établissements du catalogue
+        <Box p={5} bg="#e5edef">
+          <Heading>Page de réconciliation Affelnet</Heading>
+          <Text fontSize="sm">
+            Interface de rapprochement des formations Affelnet avec les établissements du catalogue
           </Text>
         </Box>
-        <Container maxW="full" bg="lightgrey">
+        <Container maxW="full" bg="#e5edef">
           <Box m={5}>
             <SimpleGrid columns={1}>
               <Flex align="center" justify="center">
@@ -71,12 +72,9 @@ export default () => {
                   Filtre matching :
                 </Heading>
                 <SimpleGrid columns={6} spacing={4}>
-                  <StyledButton type={1} matching={matching.type} toggleMatching={toggleMatching} />
-                  <StyledButton type={2} matching={matching.type} toggleMatching={toggleMatching} />
-                  <StyledButton type={3} matching={matching.type} toggleMatching={toggleMatching} />
-                  <StyledButton type={4} matching={matching.type} toggleMatching={toggleMatching} />
-                  <StyledButton type={5} matching={matching.type} toggleMatching={toggleMatching} />
-                  <StyledButton type={6} matching={matching.type} toggleMatching={toggleMatching} />
+                  {matchingType.map((match, index) => (
+                    <StyledButton key={index} type={match} matching={matching.type} toggleMatching={toggleMatching} />
+                  ))}
                 </SimpleGrid>
               </Flex>
             </SimpleGrid>
@@ -96,7 +94,7 @@ export default () => {
               <Container maxW="full">
                 <Flex align="center">
                   <Heading size="md">
-                    Formation parcoursup : matching <Tag colorScheme="purple">{matching.type}</Tag> — {data.total}{" "}
+                    Formation parcoursup : matching <Tag colorScheme="teal">{matching.type}</Tag> — {data.total}{" "}
                     formations disponibles
                   </Heading>
                   <Spacer />
