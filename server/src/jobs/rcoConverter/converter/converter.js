@@ -192,6 +192,15 @@ const performConversion = async () => {
         if (error) {
           rcoFormation.conversion_error = error;
           await rcoFormation.save();
+          // unpublish in case of errors if it was already in converted collection
+          await ConvertedFormation.findOneAndUpdate(
+            { id_rco_formation: mnaFormattedRcoFormation.id_rco_formation },
+            { published: false, update_error: error },
+            {
+              new: true,
+            }
+          );
+
           invalidRcoFormations.push({
             id_rco_formation: mnaFormattedRcoFormation.id_rco_formation,
             cfd: mnaFormattedRcoFormation.cfd,
