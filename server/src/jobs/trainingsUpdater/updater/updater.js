@@ -30,7 +30,7 @@ const performUpdates = async (filter = {}) => {
 
         const [id_formation, id_action, id_certifinfo] = formation.id_rco_formation.split("|");
         const rcoFormation = await RcoFormation.findOne({ id_formation, id_action, id_certifinfo });
-        if (rcoFormation?.published === false) {
+        if (!rcoFormation?.published) {
           // if rco formation is not published, don't call mnaUpdater
           // since we just want to hide the formation
           await ConvertedFormation.findOneAndUpdate({ _id: formation._id }, { published: false }, { new: true });
