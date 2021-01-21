@@ -4,7 +4,13 @@ const { runScript } = require("../../scriptWrapper");
 const run = async () => {
   await ConvertedFormation.updateMany(
     {},
-    { $set: { parcoursup_statut: "non pertinent", parcoursup_reference: false, parcoursup_error: null } }
+    {
+      $set: {
+        parcoursup_statut: "hors périmètre",
+        parcoursup_reference: false,
+        parcoursup_error: null,
+      },
+    }
   );
 };
 
