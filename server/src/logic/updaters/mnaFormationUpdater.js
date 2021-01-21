@@ -1,10 +1,10 @@
 const logger = require("../../common/logger");
 const Joi = require("joi");
+const { findRcoFormationFromConvertedId } = require("../../jobs/common/utils/rcoUtils");
 const { cfdMapper } = require("../mappers/cfdMapper");
 const { codePostalMapper } = require("../mappers/codePostalMapper");
 const { etablissementsMapper } = require("../mappers/etablissementsMapper");
 const { diffFormation } = require("../common/utils/diffUtils");
-const { RcoFormation } = require("../../common/model/index");
 
 const formationSchema = Joi.object({
   cfd: Joi.string().required(),
@@ -62,8 +62,7 @@ const mnaFormationUpdater = async (formation, { withHistoryUpdate = true } = {})
       return { updates: null, formation, error };
     }
 
-    const [id_formation, id_action, id_certifinfo] = formation.id_rco_formation.split("|");
-    const rcoFormation = await RcoFormation.findOne({ id_formation, id_action, id_certifinfo });
+    const rcoFormation = await findRcoFormationFromConvertedId(formation.id_rco_formation);
     let published = rcoFormation?.published ?? false; // not found in rco should not be published
 
     let update_error = null;
