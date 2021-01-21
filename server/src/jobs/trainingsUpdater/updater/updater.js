@@ -30,6 +30,8 @@ const performUpdates = async (model, filter = {}) => {
 
         if (error) {
           formation.update_error = error;
+          // unpublish in case of errors
+          formation.published = false;
           await model.findOneAndUpdate({ _id: formation._id }, formation, { new: true });
           invalidFormations.push({ id: formation._id, cfd: formation.cfd, error });
           return;
