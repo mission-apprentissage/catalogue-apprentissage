@@ -20,7 +20,7 @@ module.exports = async (tableCorrespondance) => {
   logger.info("Retreiving data from DB ...");
 
   const [afFormations, mnaFormations] = await Promise.all([
-    AfFormation.find({ code_cfd: { $ne: null }, matching_type: { $eq: null } }).lean(),
+    AfFormation.find({ code_cfd: { $ne: null } }).lean(),
     ConvertedFormation.find().lean(),
   ]);
 

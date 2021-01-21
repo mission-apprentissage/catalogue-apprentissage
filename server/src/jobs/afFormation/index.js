@@ -4,10 +4,10 @@ const coverageFormation = require("./afcoverage");
 const coverageEtablissement = require("./afcoverageEtablissement");
 
 if (process.env.standalone) {
-  runScript(async ({ catalogue }) => {
+  runScript(async ({ catalogue, tableCorrespondance }) => {
     logger.info(`Start affelnet coverage`);
 
-    await coverageFormation();
+    await coverageFormation(tableCorrespondance);
     await coverageEtablissement(catalogue);
 
     logger.info(`End affelnet coverage`);
