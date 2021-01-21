@@ -2,6 +2,7 @@ const logger = require("../../../common/logger");
 const { mnaFormationUpdater } = require("../../../logic/updaters/mnaFormationUpdater");
 const report = require("../../../logic/reporter/report");
 const config = require("config");
+const { findRcoFormationFromConvertedId } = require("../../common/utils/rcoUtils");
 const { storeByChunks } = require("../../common/utils/reportUtils");
 const { RcoFormation, ConvertedFormation } = require("../../../common/model/index");
 
@@ -28,8 +29,7 @@ const performUpdates = async (filter = {}) => {
       docs.map(async (formation) => {
         computed += 1;
 
-        const [id_formation, id_action, id_certifinfo] = formation.id_rco_formation.split("|");
-        const rcoFormation = await RcoFormation.findOne({ id_formation, id_action, id_certifinfo });
+        const rcoFormation = await findRcoFormationFromConvertedId(formation.id_rco_formation);
         if (!rcoFormation?.published) {
           // if rco formation is not published, don't call mnaUpdater
           // since we just want to hide the formation
@@ -45,11 +45,7 @@ const performUpdates = async (filter = {}) => {
           if (formation.published === true) {
             formation.published = false;
             // flag rco formation as not converted so that it retries during nightly jobs
-            const [id_formation, id_action, id_certifinfo] = formation.id_rco_formation.split("|");
-            await RcoFormation.findOneAndUpdate(
-              { id_formation, id_action, id_certifinfo },
-              { converted_to_mna: false }
-            );
+            await RcoFormation.findOneAndUpdate({ _id: rcoFormation?._id }, { converted_to_mna: false });
           }
           await ConvertedFormation.findOneAndUpdate({ _id: formation._id }, formation, { new: true });
           invalidFormations.push({ id: formation._id, cfd: formation.cfd, error });
