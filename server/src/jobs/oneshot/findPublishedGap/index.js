@@ -1,33 +1,49 @@
 const { RcoFormation, ConvertedFormation } = require("../../../common/model/index");
 const { runScript } = require("../../scriptWrapper");
 const logger = require("../../../common/logger");
+const { asyncForEach } = require("../../../common/utils/asyncUtils");
 
 const run = async () => {
-  const publishedRco = await RcoFormation.find({ published: true, converted_to_mna: true });
   let count = 0;
+  let offset = 0;
+  let limit = 100;
+  let computed = 0;
+  let nbFormations = 10;
 
-  await Promise.all(
-    publishedRco.map(async (rcoFormation, index) => {
-      const { id_formation, id_action, id_certifinfo } = rcoFormation;
-      const notPublishedConverted = await ConvertedFormation.findOne({
-        published: false,
-        id_rco_formation: `${id_formation}|${id_action}|${id_certifinfo}`,
-      }).lean();
+  const formationsToInvalidate = [];
 
-      if (notPublishedConverted?.etablissement_reference_published === true) {
-        count += 1;
-        logger.info(count, {
-          id_rco_formation: notPublishedConverted.id_rco_formation,
-          update_error: notPublishedConverted.update_error,
+  while (computed < nbFormations) {
+    let { docs, total } = await RcoFormation.paginate({ published: true, converted_to_mna: true }, { offset, limit });
+    nbFormations = total;
+
+    await Promise.all(
+      docs.map(async (rcoFormation) => {
+        computed += 1;
+
+        const { id_formation, id_action, id_certifinfo } = rcoFormation;
+        const foundCount = await ConvertedFormation.countDocuments({
+          published: false,
+          id_rco_formation: `${id_formation}|${id_action}|${id_certifinfo}`,
+          etablissement_reference_published: true,
         });
-        rcoFormation.converted_to_mna = false;
-        await rcoFormation.save();
-      }
-      logger.info(`progress ${index}/${publishedRco.length}`);
-    })
-  );
+
+        if (foundCount > 0) {
+          count += 1;
+          formationsToInvalidate.push({ id_formation, id_action, id_certifinfo });
+        }
+      })
+    );
+
+    offset += limit;
+
+    logger.info(`progress ${computed}/${total}`);
+  }
 
   logger.info(`found ${count} formations published in RCO and not in converted`);
+
+  await asyncForEach(formationsToInvalidate, async ({ id_formation, id_action, id_certifinfo }) => {
+    await RcoFormation.findOneAndUpdate({ id_formation, id_action, id_certifinfo }, { converted_to_mna: false });
+  });
 };
 
 runScript(async () => {
