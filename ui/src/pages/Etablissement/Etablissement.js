@@ -15,32 +15,20 @@ import {
   ModalContent,
 } from "@chakra-ui/react";
 
-//import { useSelector, useDispatch } from "react-redux";
-//import { API } from "aws-amplify";
 import { useFormik } from "formik";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faCheck } from "@fortawesome/free-solid-svg-icons";
-// import { push } from "connected-react-router";
-import { _get } from "../../common/httpClient";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import useAuth from "../../common/hooks/useAuth";
+import { _get, _put } from "../../common/httpClient";
 import Layout from "../layout/Layout";
-
-//import Section from "./components/Section";
-// import routes from "../../routes.json";
+import { hasOneOfRoles } from "../../common/utils/rolesUtils";
 
 import "./etablissement.css";
 
 const sleep = (m) => new Promise((r) => setTimeout(r, m));
 
 const endpointTCO =
-  process.env.REACT_APP_ENDPOINT_TCO || "https://tables-correspondances.apprentissage.beta.gouv.fr/api";
-
-// const checkIfHasRightToEdit = (item, userAcm) => {
-//   let hasRightToEdit = userAcm.all;
-//   if (!hasRightToEdit) {
-//     hasRightToEdit = userAcm.academie.includes(`${item.num_academie}`);
-//   }
-//   return hasRightToEdit;
-// };
+  process.env.REACT_APP_ENDPOINT_TCO || "https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1";
 
 const EditSection = ({ edition, onEdit, handleSubmit }) => {
   return (
@@ -80,8 +68,8 @@ const EditSection = ({ edition, onEdit, handleSubmit }) => {
 };
 
 const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSubmit, values }) => {
-  // const { acm: userAcm } = useSelector((state) => state.user);
-  const hasRightToEdit = false; // checkIfHasRightToEdit(etablissement, userAcm);
+  const [auth] = useAuth();
+  const hasRightToEdit = hasOneOfRoles(auth, ["admin"]);
 
   return (
     <Grid templateColumns="repeat(12, 1fr)" gap={4}>
@@ -139,7 +127,7 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
                 <p>{etablissement.computed_type}</p>
               </div>
               <div>
-                <h3>UAI{hasRightToEdit && <FontAwesomeIcon className="edit-pen" icon={faPen} size="xs" />}</h3>
+                <h3>UAI</h3>
                 <p>
                   {!edition && <>{etablissement.uai}</>}
                   {edition && <Input type="text" name="uai" onChange={handleChange} value={values.uai} />}
@@ -169,19 +157,9 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
               </div>
             </div>
             <div className="field">
-              <h3>Académie{hasRightToEdit && <FontAwesomeIcon className="edit-pen" icon={faPen} size="xs" />}</h3>
+              <h3>Académie</h3>
               <p>
-                {!edition && (
-                  <>
-                    {etablissement.nom_academie} ({etablissement.num_academie})
-                  </>
-                )}
-                {edition && (
-                  <>
-                    {etablissement.nom_academie}{" "}
-                    <Input type="text" name="num_academie" onChange={handleChange} value={values.num_academie} />
-                  </>
-                )}
+                {etablissement.nom_academie} ({etablissement.num_academie})
               </p>
             </div>
           </div>
@@ -225,29 +203,23 @@ export default ({ match }) => {
   const { values, handleSubmit, handleChange, setFieldValue } = useFormik({
     initialValues: {
       uai: "",
-      num_academie: "",
     },
-    onSubmit: ({ uai, num_academie }, { setSubmitting }) => {
+    onSubmit: ({ uai }, { setSubmitting }) => {
       return new Promise(async (resolve, reject) => {
-        // const body = { uai, num_academie };
-
         let result = null;
-        //if (uai !== etablissement.uai) {
-        setModal(true);
-        setGatherData(1);
-        // result = await API.put("api", `/etablissement/${etablissement._id}`, { body });
-        // await API.get("api", `/services?job=etablissement&id=${result._id}`);
-        // result = await API.get("api", `/etablissement/${result._id}`);
-        setGatherData(2);
-        await sleep(500);
+        if (uai !== etablissement.uai) {
+          setModal(true);
+          setGatherData(1);
+          result = await _put(`${endpointTCO}/entity/etablissement/${match.params.id}`, { uai });
+          setGatherData(2);
+          await sleep(500);
 
-        setModal(false);
-        //}
+          setModal(false);
+        }
 
         if (result) {
           setEtablissement(result);
           setFieldValue("uai", result.uai);
-          setFieldValue("num_academie", result.num_academie);
         }
 
         setEdition(false);
@@ -259,12 +231,10 @@ export default ({ match }) => {
   useEffect(() => {
     async function run() {
       try {
-        // const eta = await API.get("api", `/etablissement/${match.params.id}`);
         const eta = await _get(`${endpointTCO}/entity/etablissement/${match.params.id}`, false);
         setEtablissement(eta);
 
         setFieldValue("uai", eta.uai);
-        setFieldValue("num_academie", eta.num_academie);
       } catch (e) {
         // dispatch(push(routes.NOTFOUND));
       }

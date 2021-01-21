@@ -50,14 +50,11 @@ export default ({ data }) => {
   const [reconciliation, setReconciliation] = React.useState(data.reconciliation || []);
   const [matchingMnaEtablissement, setMatchingMnaEtablissement] = React.useState(data.matching_mna_etablissement);
 
-  const sameUai = new Set([data.uai_affilie, data.uai_composante, data.uai_gestionnaire]).size === 1;
-  const sameEtab = new Set([data.libelle_uai_affilie, data.libelle_uai_composante]).size === 1;
-
   const toggle = () => setModalIsOpen(!modalIsOpen);
 
   const onSelectChange = useMutation(
     (payload) =>
-      _put("/api/psformation/etablissement", {
+      _put("/api/affelnet/etablissement", {
         formation_id: data._id,
         etablissement_id: payload.etablissement._id,
         type: payload.type,
@@ -73,12 +70,10 @@ export default ({ data }) => {
     }
   );
 
-  const onValidatePsReconciliation = useMutation(
+  const onValidateAfReconciliation = useMutation(
     () =>
-      _post("/api/psformation/psreconciliation", {
-        uai_affilie: data.uai_affilie,
-        uai_gestionnaire: data.uai_gestionnaire,
-        uai_composante: data.uai_composante,
+      _post("/api/affelnet/psreconciliation", {
+        uai: data.uai,
         code_cfd: data.code_cfd,
         mapping: mapping,
       }),
@@ -92,8 +87,8 @@ export default ({ data }) => {
     }
   );
 
-  const onValidatePsFormation = useMutation(() =>
-    _post("/api/psformation", {
+  const onValidateAfFormation = useMutation(() =>
+    _post("/api/affelnet", {
       id: data._id,
       mapping_liaison_etablissement: mapping,
       mapping_code_cfd_formation: data.code_cfd,
@@ -105,7 +100,7 @@ export default ({ data }) => {
 
   const onSuccessModal = useMutation(
     (payload) =>
-      _put("/api/psformation", {
+      _put("/api/affelnet", {
         formation_id: data._id,
         etablissement: { ...payload, dangerously_added_by_user: true },
       }),
@@ -122,13 +117,13 @@ export default ({ data }) => {
     <Box bg="white" m={3}>
       <AccordionItem>
         <AccordionButton>
-          <EnteteFormation data={data} sameUai={sameUai} />
+          <EnteteFormation data={data} />
           <AccordionIcon />
         </AccordionButton>
         <AccordionPanel pb={4}>
           <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
             <Box>
-              <DetailFormation data={data} sameEtab={sameEtab} sameUai={sameUai} />
+              <DetailFormation data={data} />
             </Box>
             <Box>{reconciliation && reconciliation.length > 0 && <Liaison data={reconciliation} />}</Box>
             <Box>
@@ -137,7 +132,7 @@ export default ({ data }) => {
               )}
             </Box>
             <Flex justify="center">
-              <Box>Formation à vérifier</Box>
+              {/* <Box>Formation à vérifier</Box> */}
               <Spacer />
               <Box>
                 <Button colorScheme="teal" variant="outline" pl={4} marginRight={4} onClick={toggle}>
@@ -147,8 +142,8 @@ export default ({ data }) => {
                   colorScheme="teal"
                   variant="solid"
                   onClick={() => {
-                    onValidatePsReconciliation.mutate();
-                    onValidatePsFormation.mutate();
+                    onValidateAfReconciliation.mutate();
+                    onValidateAfFormation.mutate();
                     toast({
                       description: "Enregistré avec succès !",
                       status: "success",
@@ -177,17 +172,11 @@ const Liaison = ({ data }) => {
         <Divider mb={4} />
       </Box>
       <SimpleGrid columns={4} spacing={10}>
-        {data.map(({ siret_formateur, siret_gestionnaire, uai_gestionnaire, uai_affilie, uai_composante }, index) => {
+        {data.map(({ siret_formateur, siret_gestionnaire, uai }, index) => {
           return (
             <Box key={index}>
               <Text fontSize="xs">
-                Uai gestionnaire: <Text as="i">{uai_gestionnaire}</Text>
-              </Text>
-              <Text fontSize="xs">
-                Uai affilié: <Text as="i">{uai_affilie}</Text>
-              </Text>
-              <Text fontSize="xs">
-                Uai composante: <Text as="i">{uai_composante}</Text>
+                Uai gestionnaire: <Text as="i">{uai}</Text>
               </Text>
               <Text fontSize="xs">
                 Siret formateur: <Text as="i">{siret_formateur}</Text>
@@ -203,28 +192,19 @@ const Liaison = ({ data }) => {
   );
 };
 
-const EnteteFormation = ({ data, sameUai }) => {
+const EnteteFormation = ({ data }) => {
   return (
     <Box flex="1" textAlign="left">
       <Grid templateColumns=".5fr 2fr .5fr" gap={2}>
         <GridItem>
-          <Text>{data.libelle_uai_affilie}</Text>
-          {sameUai ? (
-            <Text>UAI : {data.uai_affilie}</Text>
-          ) : (
-            <Text>
-              <Text>Affilié : {data.uai_affilie}</Text>
-              <Text>Composante : {data.uai_composante}</Text>
-              <Text>Gestionnaire : {data.uai_gestionnaire}</Text>
-            </Text>
-          )}
+          <Text>Code UAI : {data.uai}</Text>
           <Text>Code formation : {data.code_cfd}</Text>
         </GridItem>
         <GridItem>
           <Text>{data.libelle_formation}</Text>
-          <Text>{data.libelle_specialite}</Text>
+          <Text>{data.type_voie}</Text>
           <Text>
-            {data.libelle_commune} - {data.code_postal}
+            {data.commune} - {data.code_postal}
           </Text>
         </GridItem>
         {data.reconciliation.length > 0 && (
@@ -239,7 +219,7 @@ const EnteteFormation = ({ data, sameUai }) => {
   );
 };
 
-const DetailFormation = ({ data, sameEtab, sameUai }) => {
+const DetailFormation = ({ data }) => {
   const style = {
     color: "rgb(12 80 118 / 0.8)",
     shadow: "2px 2px 2px 0px rgba(0,0,0,0.3)",
@@ -252,15 +232,7 @@ const DetailFormation = ({ data, sameEtab, sameUai }) => {
           <Text color={style.textColor}>Unité administrative immatriculée</Text>
         </Box>
         <Box>
-          {sameUai ? (
-            <Text color={style.textColor}>{data.uai_affilie}</Text>
-          ) : (
-            <>
-              <Text color={style.textColor}>Affilié : {data.uai_affilie}</Text>
-              <Text color={style.textColor}>Composante : {data.uai_composante}</Text>
-              <Text color={style.textColor}>Gestionnaire : {data.uai_gestionnaire}</Text>
-            </>
-          )}
+          <Text color={style.textColor}>{data.uai}</Text>
         </Box>
       </Box>
       <Box bg={style.color} p={2} borderRadius={2} shadow={style.shadow}>
@@ -277,14 +249,7 @@ const DetailFormation = ({ data, sameEtab, sameUai }) => {
           <Text color={style.textColor}>Etablissements</Text>
         </Box>
         <Box>
-          {sameEtab ? (
-            <Text color={style.textColor}>{data.libelle_uai_affilie}</Text>
-          ) : (
-            <>
-              <Text color={style.textColor}>Affilié : {data.libelle_uai_affilie}</Text>
-              <Text color={style.textColor}>Composante : {data.libelle_uai_composante}</Text>
-            </>
-          )}
+          <Text color={style.textColor}>{data.libelle_etablissement_tsa}</Text>
         </Box>
       </Box>
       <Box bg={style.color} p={2} borderRadius={2} shadow={style.shadow}>
@@ -292,7 +257,7 @@ const DetailFormation = ({ data, sameEtab, sameUai }) => {
           <Text color={style.textColor}>Lieu de formation</Text>
         </Box>
         <Box>
-          <Text color={style.textColor}>{data.libelle_commune}</Text>
+          <Text color={style.textColor}>{data.commune}</Text>
           <Text color={style.textColor}>{data.code_postal}</Text>
         </Box>
       </Box>

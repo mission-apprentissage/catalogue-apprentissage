@@ -28,6 +28,7 @@ const esSearch = require("./routes/esSearch");
 const esMultiSearchNoIndex = require("./routes/esMultiSearchNoIndex");
 const psFormation = require("./routes/psFormation");
 const pendingRcoFormation = require("./routes/pendingRcoFormation");
+const affelnet = require("./routes/affelnet");
 
 const swaggerSchema = require("../common/model/swaggerSchema");
 
@@ -99,6 +100,7 @@ module.exports = async (components) => {
   app.use("/api/v1/entity", checkJwtToken, convertedFormationSecure());
   app.use("/api/v1/admin", checkJwtToken, adminOnly, admin(components));
   app.use("/api/v1/stats", checkJwtToken, adminOnly, stats(components));
+  app.use("/api/v1/affelnet", affelnet(components));
   //app.use("/api/v1/entity", checkJwtToken, formationSecure());
 
   /** DEPRECATED */
@@ -117,6 +119,7 @@ module.exports = async (components) => {
   app.use("/api/admin", checkJwtToken, adminOnly, admin(components));
   app.use("/api/entity", checkJwtToken, convertedFormationSecure());
   app.use("/api/stats", checkJwtToken, adminOnly, stats(components));
+  app.use("/api/affelnet", affelnet(components));
   // app.use("/api/entity", checkJwtToken, formationSecure());
 
   app.get(
