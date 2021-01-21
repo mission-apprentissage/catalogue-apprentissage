@@ -2,8 +2,9 @@ const path = require("path");
 const logger = require("../../../common/logger");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { getJsonFromXlsxFile } = require("../../../common/utils/fileUtils");
-const { AfFormation } = require("../../../common/model");
+const { AfFormation, ConvertedFormation } = require("../../../common/model");
 const { isFinite } = require("lodash");
+const stringSimilarity = require("string-similarity");
 
 const getLibelleCourt = (libelle) => {
   switch (libelle) {
@@ -98,6 +99,52 @@ const getCfdFromBCN = async (tableCorrespondance, libelle, type) => {
   return formationsDiplomes[0].FORMATION_DIPLOME;
 };
 
+const getCfdFromCatalogue = async (tableCorrespondance, formation) => {
+  const data = await tableCorrespondance.getCpInfo(formation.code_postal);
+  let cfd;
+
+  if (
+    data.messages?.cp === "Ok" ||
+    data.messages?.cp === `Update: Le code ${formation.code_postal} est un code commune insee`
+  ) {
+    formation.code_postal_modified = { ...data.result };
+  } else {
+    formation.code_postal_modified = { code_postal: formation.code_postal };
+  }
+
+  const dept = `${formation.code_postal_modified.code_postal.substring(0, 2)}`;
+
+  const result = await ConvertedFormation.find({
+    num_departement: dept,
+    $and: [
+      {
+        $or: [
+          { etablissement_gestionnaire_code_postal: formation.code_postal_modified.code_postal },
+          { etablissement_responsable_code_postal: formation.code_postal_modified.code_postal },
+          { code_postal: formation.code_postal_modified.code_postal },
+        ],
+      },
+    ],
+  });
+
+  if (result.length === 0) return null;
+
+  let labels = result.map((x) => x.intitule_court);
+  let similarities = stringSimilarity.findBestMatch(getLibelleLong(formation.libelle_ban), labels);
+
+  if (similarities.bestMatch.rating > 0.5) {
+    console.log("similarities", similarities.bestMatch);
+    let { target } = similarities.bestMatch;
+    let formationCatalogue = result.filter((x) => x.intitule_court === target);
+
+    cfd = formationCatalogue[0].cfd;
+  }
+
+  if (!cfd) return null;
+
+  return cfd;
+};
+
 const seed = async () => {
   const filePath = path.resolve(__dirname, "./assets/affelnet-2020.xlsx");
   const data = getJsonFromXlsxFile(filePath);
@@ -158,32 +205,40 @@ const seed = async () => {
 };
 
 const update = async (tableCorrespondance) => {
-  logger.info("Mise à jour des codes formation diplôme");
-  const data = await AfFormation.find({ libelle_ban: { $ne: null }, code_cfd: { $eq: null } });
-  logger.info(`${data.length} formations à traiter...`);
+  const formations = await AfFormation.find({ libelle_ban: { $ne: null }, code_cfd: { $eq: null } });
+  logger.info(`${formations.length} formations à traiter...`);
 
   let count = 0;
 
-  await asyncForEach(data, async (item) => {
-    const mef10 = item.code_mef.slice(0, -1);
+  await asyncForEach(formations, async (formation) => {
+    const mef10 = formation.code_mef.slice(0, -1);
     const isValid = isFinite(parseInt(mef10));
 
     let code_cfd;
 
     if (isValid) {
       const cfdFromTCO = await getCfdFromTCO(tableCorrespondance, mef10);
+
       if (cfdFromTCO) {
         code_cfd = cfdFromTCO;
       }
     } else {
-      const cfdFromBCN = await getCfdFromBCN(tableCorrespondance, item.libelle_ban, item.type_voie);
-      if (cfdFromBCN) {
-        code_cfd = cfdFromBCN;
+      const cfdFromCatalogue = await getCfdFromCatalogue(tableCorrespondance, formation);
+
+      if (cfdFromCatalogue) {
+        code_cfd = cfdFromCatalogue;
+      } else {
+        const cfdFromBCN = await getCfdFromBCN(tableCorrespondance, formation.libelle_ban, formation.type_voie);
+
+        if (cfdFromBCN) {
+          code_cfd = cfdFromBCN;
+        }
       }
     }
+    if (!code_cfd) return;
 
-    logger.info(`MAJ formation ${item._id} - cfd : ${code_cfd}`);
-    await AfFormation.findByIdAndUpdate(item._id, { code_cfd });
+    logger.info(`MAJ formation ${formation._id} - cfd : ${code_cfd}`);
+    await AfFormation.findByIdAndUpdate(formation._id, { code_cfd });
 
     count++;
   });
