@@ -126,7 +126,7 @@ const UserLine = ({ user }) => {
             <span>user</span>
           </label>
 
-          {["reports", "moss"].map((role, i) => {
+          {["reports", "moss", "instructeur"].map((role, i) => {
             return (
               <label key={i} className="custom-control-inline">
                 <input

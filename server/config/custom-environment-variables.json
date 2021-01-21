@@ -17,7 +17,7 @@
       "jwtSecret": "CATALOGUE_APPRENTISSAGE_AUTH_ACTIVATION_JWT_SECRET"
     },
     "password": {
-      "jwtSecret": "v_AUTH_PASSWORD_JWT_SECRET"
+      "jwtSecret": "CATALOGUE_APPRENTISSAGE_AUTH_PASSWORD_JWT_SECRET"
     }
   },
   "log": {
