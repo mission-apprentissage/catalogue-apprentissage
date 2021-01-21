@@ -3,6 +3,7 @@ const { mnaFormationUpdater } = require("../../../logic/updaters/mnaFormationUpd
 const report = require("../../../logic/reporter/report");
 const config = require("config");
 const { storeByChunks } = require("../../common/utils/reportUtils");
+const { RcoFormation } = require("../../../common/model/index");
 
 const run = async (model, filter = {}) => {
   const result = await performUpdates(model, filter);
@@ -31,7 +32,15 @@ const performUpdates = async (model, filter = {}) => {
         if (error) {
           formation.update_error = error;
           // unpublish in case of errors
-          formation.published = false;
+          if (formation.published === true) {
+            formation.published = false;
+            // flag rco formation as not converted so that it retries during nightly jobs
+            const [id_formation, id_action, id_certifinfo] = formation.id_rco_formation.split("|");
+            await RcoFormation.findOneAndUpdate(
+              { id_formation, id_action, id_certifinfo },
+              { converted_to_mna: false }
+            );
+          }
           await model.findOneAndUpdate({ _id: formation._id }, formation, { new: true });
           invalidFormations.push({ id: formation._id, cfd: formation.cfd, error });
           return;
