@@ -3,25 +3,22 @@ const logger = require("../../common/logger");
 const psReferenceMapper = require("../../logic/mappers/psReferenceMapper");
 
 const run = async () => {
-  // 1 - set "non pertinent"
+  // 1 - set "hors périmètre"
   await ConvertedFormation.updateMany(
     {
       parcoursup_statut: null,
     },
-    { $set: { parcoursup_statut: "non pertinent" } }
+    { $set: { parcoursup_statut: "hors périmètre" } }
   );
 
   // 2 - check for published trainings in psup (set "publié")
-  // run only on those 'non pertinent' to not overwrite actions of users !
-  const filter = { published: true, parcoursup_statut: "non pertinent" };
-
   let offset = 0;
   let limit = 100;
   let computed = 0;
   let nbFormations = 10;
 
   while (computed < nbFormations) {
-    let { docs, total } = await ConvertedFormation.paginate(filter, { offset, limit });
+    let { docs, total } = await ConvertedFormation.paginate({ published: true }, { offset, limit });
     nbFormations = total;
 
     await Promise.all(
@@ -47,7 +44,7 @@ const run = async () => {
         }
 
         formation.last_update_at = Date.now();
-        formation.save();
+        await formation.save();
       })
     );
 
@@ -62,7 +59,18 @@ const run = async () => {
     { $set: { parcoursup_error: null, parcoursup_statut: "publié" } }
   );
 
-  // 3 - set "à expertiser" for trainings matching psup eligibility rules
+  // 3 - set "à publier" for trainings matching psup eligibility rules
+  //reset à publier
+  await ConvertedFormation.updateMany(
+    {
+      parcoursup_statut: "à publier",
+    },
+    { $set: { parcoursup_statut: "hors périmètre" } }
+  );
+
+  // run only on those 'hors périmètre' to not overwrite actions of users !
+  const filter = { published: true, parcoursup_statut: "hors périmètre" };
+
   await ConvertedFormation.updateMany(
     {
       ...filter,
@@ -109,7 +117,7 @@ const run = async () => {
         },
       ],
     },
-    { $set: { last_update_at: Date.now(), parcoursup_statut: "à expertiser" } }
+    { $set: { last_update_at: Date.now(), parcoursup_statut: "à publier" } }
   );
 
   // 4 - stats
@@ -117,12 +125,12 @@ const run = async () => {
   const totalErrors = await ConvertedFormation.countDocuments({ published: true, parcoursup_error: { $ne: null } });
   const totalNotRelevant = await ConvertedFormation.countDocuments({
     published: true,
-    parcoursup_statut: "non pertinent",
+    parcoursup_statut: "hors périmètre",
   });
-  const totalToCheck = await ConvertedFormation.countDocuments({ published: true, parcoursup_statut: "à expertiser" });
+  const totalToCheck = await ConvertedFormation.countDocuments({ published: true, parcoursup_statut: "à publier" });
   const totalPending = await ConvertedFormation.countDocuments({
     published: true,
-    parcoursup_statut: "en cours de publication",
+    parcoursup_statut: "en attente de publication",
   });
   const totalPsPublished = await ConvertedFormation.countDocuments({ published: true, parcoursup_statut: "publié" });
   const totalPsNotPublished = await ConvertedFormation.countDocuments({
@@ -132,9 +140,9 @@ const run = async () => {
 
   logger.info(`Total formations publiées dans le catalogue : ${totalPublished}`);
   logger.info(`Total formations avec erreur de référencement ParcourSup : ${totalErrors}`);
-  logger.info(`Total formations non pertinentes : ${totalNotRelevant}/${totalPublished}`);
-  logger.info(`Total formations à expertiser : ${totalToCheck}/${totalPublished}`);
-  logger.info(`Total formations en cours de publication : ${totalPending}/${totalPublished}`);
+  logger.info(`Total formations hors périmètre : ${totalNotRelevant}/${totalPublished}`);
+  logger.info(`Total formations à publier : ${totalToCheck}/${totalPublished}`);
+  logger.info(`Total formations en attente de publication : ${totalPending}/${totalPublished}`);
   logger.info(`Total formations publiées sur ParcourSup : ${totalPsPublished}/${totalPublished}`);
   logger.info(`Total formations NON publiées sur ParcourSup : ${totalPsNotPublished}/${totalPublished}`);
 };
