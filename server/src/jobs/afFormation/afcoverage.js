@@ -1,64 +1,22 @@
 const { asyncForEach } = require("../../common/utils/asyncUtils");
-const logger = require("../../common/logger");
 const { AfFormation, ConvertedFormation } = require("../../common/model");
+const logger = require("../../common/logger");
 const matcher = require("./matcher");
 
-async function updateMatchedFormation(formation) {
-  if (
-    !formation.matching_uai.find((x) => x.data_length > 0) &&
-    !formation.matching_cfd.find((x) => x.data_length > 0)
-  ) {
-    await AfFormation.findByIdAndUpdate(formation.formation._id, {
-      matching_type: null,
-    });
-    logger.info("UPDATE DB : No matching found", formation.matching_uai, formation.matching_cfd);
-    return;
-  }
+async function updateMatchedFormation({ formation, matching_cfd }) {
+  if (matching_cfd.length === 0) return;
 
-  if (!formation.matching_uai.find((x) => x.data_length > 0)) {
-    // traitement CFD
-    logger.info("Applying CFD process ...");
-    await updateDB(formation.formation, formation.matching_cfd);
-  } else {
-    // traitement UAI
-    logger.info("Applying UAI process ...");
-    await updateDB(formation.formation, formation.matching_uai);
-  }
+  let { matching_strengh, data } = matching_cfd[0];
+
+  logger.info(`update ${formation._id} — strengh: ${matching_strengh}`);
+
+  await AfFormation.findByIdAndUpdate(formation._id, {
+    matching_type: matching_strengh,
+    matching_mna_formation: data,
+  });
 }
 
-async function updateDB(formation, matching) {
-  const found = matching.find((x) => x.data_length === 1);
-  if (found) {
-    await AfFormation.findByIdAndUpdate(formation._id, {
-      matching_type: found.matching_strengh,
-      matching_mna_formation: found.data,
-    });
-
-    logger.info(`UPDATE DB : Matching found, strengh : ${found.matching_strengh}`);
-  } else {
-    let matches = matching
-      .filter((x) => x.data_length > 0)
-      .reduce((acc, item) => {
-        if (!acc || item.data_length < acc.data_length) {
-          acc = item;
-        }
-        return acc;
-      });
-
-    try {
-      await AfFormation.findByIdAndUpdate(formation._id, {
-        matching_type: `${matches.matching_strengh}`,
-        matching_mna_formation: matches.data,
-      });
-
-      logger.info(`UPDATE DB : Matching found, strengh : ${matches.matching_strengh}`);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-}
-
-module.exports = async () => {
+module.exports = async (tableCorrespondance) => {
   logger.info("Retreiving data from DB ...");
 
   const [afFormations, mnaFormations] = await Promise.all([
@@ -66,9 +24,20 @@ module.exports = async () => {
     ConvertedFormation.find().lean(),
   ]);
 
-  logger.info("Starting matching processus ...");
+  logger.info(`${afFormations.length} formations to update ...`);
 
   await asyncForEach(afFormations, async (formation) => {
+    const { messages, result: resultTco } = await tableCorrespondance.getCpInfo(formation.code_postal);
+
+    if (
+      messages?.cp === "Ok" ||
+      messages?.cp === `Update: Le code ${formation.code_postal} est un code commune insee`
+    ) {
+      formation.code_postal_modified = { ...resultTco };
+    } else {
+      formation.code_postal_modified = { code_postal: formation.code_postal };
+    }
+
     const result = matcher(formation, mnaFormations);
     logger.info(`Update ${formation._id} - ${formation.code_cfd} `);
 
