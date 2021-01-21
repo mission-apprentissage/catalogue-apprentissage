@@ -8,8 +8,10 @@ if (process.env.standalone) {
     logger.info(`Start affelnet import`);
 
     if ((await AfFormation.countDocuments({})) == 0) {
+      logger.info("Import des données en base");
       await seed();
     }
+    logger.info("Mise à jour des codes formation diplôme");
     await update(tableCorrespondance);
 
     logger.info(`End affelnet import`);
