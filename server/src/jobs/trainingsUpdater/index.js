@@ -1,6 +1,5 @@
 const logger = require("../../common/logger");
 const updater = require("./updater/updater");
-const { ConvertedFormation } = require("../../common/model/index");
 
 const { runScript } = require("../scriptWrapper");
 
@@ -8,7 +7,7 @@ const trainingsUpdater = async () => {
   try {
     logger.info(" -- Start of training updater -- ");
 
-    await updater.run(ConvertedFormation);
+    await updater.run();
 
     logger.info(" -- End of training updater -- ");
   } catch (err) {
