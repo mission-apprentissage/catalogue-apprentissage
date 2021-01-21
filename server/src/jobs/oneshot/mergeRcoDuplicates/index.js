@@ -38,7 +38,7 @@ const removeDuplicates = async (merged, rest) => {
   });
 };
 
-const run = async ({ runOnConverted = true } = {}) => {
+const run = async ({ runOnConverted = false } = {}) => {
   if (runOnConverted) {
     const result = await ConvertedFormation.aggregate([
       { $group: { _id: "$id_rco_formation", count: { $sum: 1 } } },
@@ -111,5 +111,6 @@ const run = async ({ runOnConverted = true } = {}) => {
 };
 
 runScript(async () => {
-  await run();
+  const args = process.argv.slice(2);
+  await run({ runOnConverted: args?.[0] === "converted" });
 });

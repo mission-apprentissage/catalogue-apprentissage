@@ -1,6 +1,7 @@
-const { RcoFormation, ConvertedFormation } = require("../../../common/model/index");
+const { ConvertedFormation } = require("../../../common/model/index");
 const { runScript } = require("../../scriptWrapper");
 const logger = require("../../../common/logger");
+const { findRcoFormationFromConvertedId } = require("../../common/utils/rcoUtils");
 
 const run = async () => {
   let offset = 0;
@@ -16,8 +17,7 @@ const run = async () => {
       docs.map(async (formation) => {
         computed += 1;
 
-        const [id_formation, id_action, id_certifinfo] = formation.id_rco_formation.split("|");
-        const rcoFormation = await RcoFormation.findOne({ id_formation, id_action, id_certifinfo });
+        const rcoFormation = await findRcoFormationFromConvertedId(formation.id_rco_formation);
         let published = rcoFormation?.published ?? false; // not found in rco should not be published
 
         let update_error = null;
