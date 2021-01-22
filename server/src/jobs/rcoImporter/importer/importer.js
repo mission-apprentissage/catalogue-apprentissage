@@ -356,7 +356,7 @@ class Importer {
    */
   async addRCOFormation(rcoFormation) {
     const { id_formation, id_action, id_certifinfo } = rcoFormation;
-    const newRcoFormation = RcoFormation.findOneAndUpdate(
+    const newRcoFormation = await RcoFormation.findOneAndUpdate(
       { id_formation, id_action, id_certifinfo },
       { ...rcoFormation, converted_to_mna: false, conversion_error: null },
       {
