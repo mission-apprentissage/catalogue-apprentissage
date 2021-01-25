@@ -98,9 +98,7 @@ export default (props) => {
                     formations disponibles
                   </Heading>
                   <Spacer />
-                  {[...Array(data.pages).keys()].length === 1 ? (
-                    ""
-                  ) : (
+                  {[...Array(data.pages).keys()].length > 1 && (
                     <Flex align="center">
                       <Text mr="6">Page:</Text>
                       <Select
@@ -117,6 +115,10 @@ export default (props) => {
                           );
                         })}
                       </Select>
+                      <Text ml="3">sur</Text>
+                      <Heading size="sm" ml="2">
+                        {data.pages}
+                      </Heading>
                     </Flex>
                   )}
                 </Flex>
