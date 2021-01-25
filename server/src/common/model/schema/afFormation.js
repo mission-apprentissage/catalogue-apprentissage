@@ -216,6 +216,11 @@ const afFormationSchema = {
     default: null,
     description: "force du matching",
   },
+  etat_reconciliation: {
+    type: Boolean,
+    default: false,
+    description: "Etat de la réconciliation de la formation",
+  },
 };
 
 module.exports = afFormationSchema;

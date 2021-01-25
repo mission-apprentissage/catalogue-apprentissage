@@ -159,7 +159,7 @@ const mnaFormationSchema = {
   },
   parcoursup_statut: {
     type: String,
-    // enum: ["hors périmètre" | "publié" | "non publié" | "à publier" | "en attente de publication"],
+    enum: ["hors périmètre", "publié", "non publié", "à publier", "en attente de publication"],
     default: "hors périmètre",
     description: "Statut parcoursup",
   },
@@ -180,7 +180,7 @@ const mnaFormationSchema = {
   },
   affelnet_statut: {
     type: String,
-    // enum: ["hors périmètre" | "publié" | "non publié" | "à publier" | "en attente de publication"],
+    enum: ["hors périmètre", "publié", "non publié", "à publier", "en attente de publication"],
     default: "hors périmètre",
     description: "Statut affelnet",
   },

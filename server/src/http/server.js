@@ -26,7 +26,7 @@ const password = require("./routes/password");
 const stats = require("./routes/stats");
 const esSearch = require("./routes/esSearch");
 const esMultiSearchNoIndex = require("./routes/esMultiSearchNoIndex");
-const psFormation = require("./routes/psFormation");
+const parcoursup = require("./routes/parcoursup");
 const pendingRcoFormation = require("./routes/pendingRcoFormation");
 const affelnet = require("./routes/affelnet");
 
@@ -95,7 +95,7 @@ module.exports = async (components) => {
   app.use("/api/v1/secured", apiKeyAuthMiddleware, secured());
   app.use("/api/v1/login", login(components));
   app.use("/api/v1/password", password(components));
-  app.use("/api/v1/psformation", psFormation(components));
+  app.use("/api/v1/parcoursup", parcoursup(components));
   app.use("/api/v1/authentified", checkJwtToken, authentified());
   app.use("/api/v1/entity", checkJwtToken, convertedFormationSecure());
   app.use("/api/v1/admin", checkJwtToken, adminOnly, admin(components));
@@ -113,7 +113,7 @@ module.exports = async (components) => {
   app.use("/api/rcoformation", rcoFormation());
   app.use("/api/login", login(components));
   app.use("/api/password", password(components));
-  app.use("/api/psformation", psFormation(components));
+  app.use("/api/parcoursup", parcoursup(components));
   app.use("/api/secured", apiKeyAuthMiddleware, secured());
   app.use("/api/authentified", checkJwtToken, authentified());
   app.use("/api/admin", checkJwtToken, adminOnly, admin(components));
