@@ -28,8 +28,11 @@ const Header = () => {
             <Dropdown.Item icon="users" to="/admin/users">
               Utilisateurs
             </Dropdown.Item>
-            <Dropdown.Item icon="refresh-cw" to="/coverage">
+            <Dropdown.Item icon="refresh-cw" to="/couverture-parcoursup">
               Réconciliation Parcoursup
+            </Dropdown.Item>
+            <Dropdown.Item icon="refresh-cw" to="/couverture-affelnet">
+              Réconciliation Affelnet
             </Dropdown.Item>
           </>
         )}
