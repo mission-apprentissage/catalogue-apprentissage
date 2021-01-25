@@ -14,7 +14,7 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
     "/",
     tryCatch(async (req, res) => {
       const { type, page } = req.query;
-      let data = await PsFormation.paginate({ matching_type: type }, { page });
+      let data = await PsFormation.paginate({ matching_type: type }, { page, sort: { etat_reconciliation: 1 } });
 
       if (data.docs.length > 0) {
         const result = await Promise.all(
