@@ -8,7 +8,7 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
   const router = express.Router();
 
   /**
-   * Get Report /report GET
+   * Get all PsFormation
    */
   router.get(
     "/",
@@ -66,7 +66,7 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
    */
 
   router.post(
-    "/psreconciliation",
+    "/reconciliation",
     tryCatch(async (req, res) => {
       const { mapping, ...rest } = req.body;
       const reconciliation = combinate(mapping);

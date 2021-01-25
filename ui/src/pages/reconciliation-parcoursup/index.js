@@ -45,7 +45,7 @@ export default (props) => {
   const { data, isLoading, isError } = useQuery(
     ["coverage", { type: matching.type, page: matching.page }],
     ({ queryKey }) => {
-      return _get(`/api/psformation?type=${queryKey[1].type}&page=${queryKey[1].page}`);
+      return _get(`/api/parcoursup?type=${queryKey[1].type}&page=${queryKey[1].page}`);
     },
     {
       refetchOnWindowFocus: false,

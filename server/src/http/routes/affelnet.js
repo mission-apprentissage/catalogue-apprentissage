@@ -1,4 +1,4 @@
-const { AfFormation, PsReconciliation } = require("../../common/model");
+const { AfFormation, AfReconciliation } = require("../../common/model");
 const combinate = require("../../logic/mappers/psReconciliationMapper");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const mongoose = require("mongoose");
@@ -8,7 +8,7 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
   const router = express.Router();
 
   /**
-   * Get Report /report GET
+   * Get all AfFormation
    */
   router.get(
     "/",
@@ -22,7 +22,7 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
             let { _doc, code_cfd, uai } = formation;
             if (_doc.code_cfd) {
               const infoCfd = await tableCorrespondance.getCfdInfo(code_cfd);
-              const infoReconciliation = await PsReconciliation.find({ code_cfd, uai });
+              const infoReconciliation = await AfReconciliation.find({ code_cfd, uai });
 
               let infobcn = infoCfd.result.intitule_long;
 
@@ -57,11 +57,11 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
   );
 
   /**
-   * Update PsReconciliation with mapped establishmet
+   * Update AfReconciliation with mapped establishmet
    */
 
   router.post(
-    "/psreconciliation",
+    "/reconciliation",
     tryCatch(async (req, res) => {
       const { mapping, ...rest } = req.body;
       const reconciliation = combinate(mapping);
@@ -76,7 +76,7 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
 
       let { code_cfd, uai } = payload;
 
-      const result = await PsReconciliation.findOneAndUpdate({ code_cfd, uai }, payload, { upsert: true, new: true });
+      const result = await AfReconciliation.findOneAndUpdate({ code_cfd, uai }, payload, { upsert: true, new: true });
 
       res.json(result);
     })

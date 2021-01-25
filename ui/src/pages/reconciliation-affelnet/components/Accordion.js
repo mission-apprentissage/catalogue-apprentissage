@@ -72,7 +72,7 @@ export default ({ data }) => {
 
   const onValidateAfReconciliation = useMutation(
     () =>
-      _post("/api/affelnet/psreconciliation", {
+      _post("/api/affelnet/reconciliation", {
         uai: data.uai,
         code_cfd: data.code_cfd,
         mapping: mapping,
