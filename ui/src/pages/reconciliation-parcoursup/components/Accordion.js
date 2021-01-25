@@ -95,11 +95,7 @@ export default ({ data }) => {
   const onValidatePsFormation = useMutation(() =>
     _post("/api/parcoursup", {
       id: data._id,
-      mapping_liaison_etablissement: mapping,
-      mapping_code_cfd_formation: data.code_cfd,
-      mapping_code_postal_formation: data.code_postal,
-      mapping_id_formation_ps: data._id,
-      mapping_etat_reconciliation: "OK",
+      etat_reconciliation: true,
     })
   );
 
