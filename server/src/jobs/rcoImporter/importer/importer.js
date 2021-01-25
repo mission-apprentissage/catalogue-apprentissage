@@ -16,29 +16,17 @@ class Importer {
 
   async run() {
     const formations = await wsRCO.getRCOcatalogue();
-    const dbFormations = await RcoFormation.find(
-      { published: true },
-      {
-        _id: 0,
-        __v: 0,
-        updates_history: 0,
-        published: 0,
-        created_at: 0,
-        last_update_at: 0,
-        converted_to_mna: 0,
-        conversion_error: 0,
-      }
-    ).lean();
+    const dbCount = await RcoFormation.countDocuments({ published: true });
 
     console.log("Nb formations J : ", formations.length);
-    console.log("Nb formations published in DB : ", dbFormations.length);
+    console.log("Nb formations published in DB : ", dbCount);
 
-    await this.start(formations, dbFormations);
+    await this.start(formations);
   }
 
-  async start(formations, dbFormations) {
+  async start(formations) {
     try {
-      const collection = this.lookupDiff(formations, dbFormations);
+      const collection = await this.lookupDiff(formations);
 
       if (!collection) {
         await this.report(formations.length);
@@ -253,25 +241,11 @@ class Importer {
         toUpdateToDb,
       };
     }
-    await asyncForEach(deleted, async (rcoFormationDeleted) => {
-      const rcoFormation = await this.getRcoFormation(rcoFormationDeleted);
-
-      // The formation does exist
-      if (rcoFormation) {
-        let updateInfo = {
-          published: false,
-        };
-        // Compare old with new one
-        const { updates, keys } = this.diffRcoFormation(rcoFormation, rcoFormationDeleted);
-        if (updates) {
-          // prepare update
-          for (let ite = 0; ite < keys.length; ite++) {
-            const key = keys[ite];
-            updateInfo[key] = rcoFormationDeleted[key];
-          }
-        }
-        toUpdateToDb.push({ rcoFormation, updateInfo, updates });
-      }
+    await asyncForEach(deleted, async (rcoFormation) => {
+      let updateInfo = {
+        published: false,
+      };
+      toUpdateToDb.push({ rcoFormation, updateInfo, updates: null });
     });
 
     return {
@@ -283,42 +257,58 @@ class Importer {
   /*
    * Comparing collections to find diff
    */
-  lookupDiff(currentFormations, pastFormations) {
+  async lookupDiff(currentFormations) {
     const added = [];
     const updated = [];
     const deleted = [];
 
     for (let ite = 0; ite < currentFormations.length; ite++) {
       const formation = currentFormations[ite];
-      const id = this._buildId(formation);
-      // const [found, ...duplicates] = pastFormations.filter((pf) => id === this._buildId(pf));
-      const found = pastFormations.find((pf) => id === this._buildId(pf));
+      const found = await RcoFormation.findOne({
+        id_formation: formation.id_formation,
+        id_action: formation.id_action,
+        id_certifinfo: formation.id_certifinfo,
+        published: true,
+      }).lean();
 
       // Some formations has been added
       if (!found) {
         added.push(formation);
       } else {
-        const compare = diff(formation, found);
-        const keys = Object.keys(compare);
+        const { keys } = this.diffRcoFormation(found, formation);
         // Some formations has been updated
         if (keys.length !== 0) {
           updated.push(formation);
         }
-
-        // if (duplicates.length > 0) {
-        //   console.log(`found ${duplicates.length} duplicate(s) in RCOFormation collection for ${id}`);
-        // }
       }
     }
 
     // check if Some formations has been deleted
-    for (let ite = 0; ite < pastFormations.length; ite++) {
-      const pastFormation = pastFormations[ite];
-      const id = this._buildId(pastFormation);
-      const found = currentFormations.some((f) => id === this._buildId(f));
-      if (!found) {
-        deleted.push(pastFormation);
-      }
+    let offset = 0;
+    let limit = 100;
+    let computed = 0;
+    let nbFormations = 10;
+
+    while (computed < nbFormations) {
+      let { docs, total } = await RcoFormation.paginate(
+        {
+          published: true,
+        },
+        { offset, limit, lean: true }
+      );
+
+      nbFormations = total;
+
+      docs.forEach((pastFormation) => {
+        computed += 1;
+        const id = this._buildId(pastFormation);
+        const found = currentFormations.some((f) => id === this._buildId(f));
+        if (!found) {
+          deleted.push(pastFormation);
+        }
+      });
+
+      offset += limit;
     }
 
     // No modifications
@@ -344,11 +334,7 @@ class Importer {
    * get RCO Formation
    */
   async getRcoFormation({ id_formation, id_action, id_certifinfo }) {
-    const rcoFormation = await RcoFormation.findOne({ id_formation, id_action, id_certifinfo });
-    if (!rcoFormation) {
-      return null;
-    }
-    return rcoFormation.toObject();
+    return await RcoFormation.findOne({ id_formation, id_action, id_certifinfo }).lean();
   }
 
   /*
