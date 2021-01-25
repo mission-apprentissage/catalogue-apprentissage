@@ -32,6 +32,7 @@
     "psup:oneshot": "standalone=true node src/jobs/oneshot/psFormation/index.js",
     "psup:cleanup": "standalone=true node src/jobs/oneshot/psFormation/cleanup.js",
     "psup:missing": "standalone=true node src/jobs/oneshot/psFormation/missingEtablissement.js",
+    "psup:reconciliation": "standalone=true node src/jobs/oneshot/psFormation/reconciliationUpdate.js",
     "psup:reference": "standalone=true node src/jobs/psReference/index.js",
     "affelnet:coverage": "standalone=true node src/jobs/afFormation/index.js",
     "affelnet:import": "standalone=true node src/jobs/oneshot/afFormation/index.js",

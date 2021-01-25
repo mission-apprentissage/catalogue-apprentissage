@@ -8,13 +8,13 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
   const router = express.Router();
 
   /**
-   * Get Report /report GET
+   * Get all PsFormation
    */
   router.get(
     "/",
     tryCatch(async (req, res) => {
       const { type, page } = req.query;
-      let data = await PsFormation.paginate({ matching_type: type }, { page });
+      let data = await PsFormation.paginate({ matching_type: type }, { page, sort: { etat_reconciliation: 1 } });
 
       if (data.docs.length > 0) {
         const result = await Promise.all(
@@ -55,8 +55,8 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
   router.post(
     "/",
     tryCatch(async (req, res) => {
-      const data = req.body;
-      const response = await PsFormation.findByIdAndUpdate(data.id, { ...data }, { new: true });
+      const { id, ...rest } = req.body;
+      const response = await PsFormation.findByIdAndUpdate(id, { ...rest }, { new: true });
       res.json(response);
     })
   );
@@ -66,7 +66,7 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
    */
 
   router.post(
-    "/psreconciliation",
+    "/reconciliation",
     tryCatch(async (req, res) => {
       const { mapping, ...rest } = req.body;
       const reconciliation = combinate(mapping);

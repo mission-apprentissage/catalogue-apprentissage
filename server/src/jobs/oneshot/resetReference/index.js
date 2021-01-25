@@ -6,6 +6,9 @@ const run = async () => {
     {},
     {
       $set: {
+        affelnet_statut: "hors périmètre",
+        affelnet_reference: false,
+        affelnet_error: null,
         parcoursup_statut: "hors périmètre",
         parcoursup_reference: false,
         parcoursup_error: null,

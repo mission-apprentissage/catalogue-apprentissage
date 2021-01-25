@@ -57,7 +57,7 @@ export default ({ data }) => {
 
   const onSelectChange = useMutation(
     (payload) =>
-      _put("/api/psformation/etablissement", {
+      _put("/api/parcoursup/etablissement", {
         formation_id: data._id,
         etablissement_id: payload.etablissement._id,
         type: payload.type,
@@ -75,7 +75,7 @@ export default ({ data }) => {
 
   const onValidatePsReconciliation = useMutation(
     () =>
-      _post("/api/psformation/psreconciliation", {
+      _post("/api/parcoursup/reconciliation", {
         uai_affilie: data.uai_affilie,
         uai_gestionnaire: data.uai_gestionnaire,
         uai_composante: data.uai_composante,
@@ -93,19 +93,15 @@ export default ({ data }) => {
   );
 
   const onValidatePsFormation = useMutation(() =>
-    _post("/api/psformation", {
+    _post("/api/parcoursup", {
       id: data._id,
-      mapping_liaison_etablissement: mapping,
-      mapping_code_cfd_formation: data.code_cfd,
-      mapping_code_postal_formation: data.code_postal,
-      mapping_id_formation_ps: data._id,
-      mapping_etat_reconciliation: "OK",
+      etat_reconciliation: true,
     })
   );
 
   const onSuccessModal = useMutation(
     (payload) =>
-      _put("/api/psformation", {
+      _put("/api/parcoursup", {
         formation_id: data._id,
         etablissement: { ...payload, dangerously_added_by_user: true },
       }),

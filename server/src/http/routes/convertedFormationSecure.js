@@ -49,10 +49,10 @@ module.exports = () => {
    *                 type: string
    *               affelnet_statut:
    *                 type: string
-   *                 enum: ["hors périmètre" | "publié" | "non publié" | "à publier" | "en attente de publication"]
+   *                 enum: ["hors périmètre", "publié", "non publié", "à publier", "en attente de publication"]
    *               parcoursup_statut:
    *                 type: string
-   *                 enum: ["hors périmètre" | "publié" | "non publié" | "à publier" | "en attente de publication"]
+   *                 enum: ["hors périmètre", "publié", "non publié", "à publier", "en attente de publication"]
    *     responses:
    *       200:
    *         description: OK, retourne la formation mise à jour
