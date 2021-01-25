@@ -1,5 +1,6 @@
 const formation = (data) => {
   if (data.length === 0) return [];
+
   return data.map((f) => {
     return {
       etablissement_reference: f.etablissement_reference,
@@ -104,9 +105,9 @@ const formatMEF = (mef) => {
   const mef10 = mef.slice(0, -1);
   const isValid = isFinite(parseInt(mef10));
 
-  if (isValid) return mef10;
+  if (!isValid) return "";
 
-  return "";
+  return mef10;
 };
 
 module.exports = { formation, etablissement, formatMEF };
