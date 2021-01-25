@@ -55,8 +55,8 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
   router.post(
     "/",
     tryCatch(async (req, res) => {
-      const data = req.body;
-      const response = await PsFormation.findByIdAndUpdate(data.id, { ...data }, { new: true });
+      const { id, ...rest } = req.body;
+      const response = await PsFormation.findByIdAndUpdate(id, { ...rest }, { new: true });
       res.json(response);
     })
   );
