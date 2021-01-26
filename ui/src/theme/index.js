@@ -17,6 +17,9 @@ const catalogueColors = {
   primaryText: "#19414c",
   primaryBackground: "white",
   secondaryBackground: "#e5edef",
+  blue: {
+    500: "#007BFF",
+  },
 };
 
 const overrides = {
