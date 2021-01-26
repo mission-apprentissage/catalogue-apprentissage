@@ -6,6 +6,8 @@ const { AfFormation, ConvertedFormation } = require("../../../common/model");
 const { isFinite } = require("lodash");
 const stringSimilarity = require("string-similarity");
 
+const { oleoduc, writeData } = require("oleoduc");
+
 const getLibelleCourt = (libelle) => {
   switch (libelle) {
     case "SECONDE PRO BACPRO 3ANS / 1E ANNEE BEP":
@@ -204,6 +206,54 @@ const seed = async () => {
   logger.info(`${count} formations importées !`);
 };
 
+const update_oleoduc = async (tableCorrespondance) => {
+  let count = 0;
+
+  await oleoduc(
+    AfFormation.find({ libelle_ban: { $ne: null }, code_cfd: { $eq: null } })
+      .lean()
+      .cursor(),
+    writeData(
+      async (formation) => {
+        const mef10 = formation.code_mef.slice(0, -1);
+        const isValid = isFinite(parseInt(mef10));
+
+        let code_cfd;
+
+        if (isValid) {
+          const cfdFromTCO = await getCfdFromTCO(tableCorrespondance, mef10);
+
+          if (cfdFromTCO) {
+            code_cfd = cfdFromTCO;
+          }
+        } else {
+          const cfdFromCatalogue = await getCfdFromCatalogue(tableCorrespondance, formation);
+
+          if (cfdFromCatalogue) {
+            code_cfd = cfdFromCatalogue;
+          } else {
+            const cfdFromBCN = await getCfdFromBCN(tableCorrespondance, formation.libelle_ban, formation.type_voie);
+
+            if (cfdFromBCN) {
+              code_cfd = cfdFromBCN;
+            }
+          }
+        }
+
+        if (!code_cfd) return;
+
+        logger.info(`MAJ formation ${formation._id} - cfd : ${code_cfd}`);
+        await AfFormation.findByIdAndUpdate(formation._id, { code_cfd });
+
+        count++;
+      },
+      { parallel: 5 }
+    )
+  );
+
+  logger.info(`${count} formations mise à jours `);
+};
+
 const update = async (tableCorrespondance) => {
   const formations = await AfFormation.find({ libelle_ban: { $ne: null }, code_cfd: { $eq: null } });
   logger.info(`${formations.length} formations à traiter...`);
@@ -235,6 +285,7 @@ const update = async (tableCorrespondance) => {
         }
       }
     }
+
     if (!code_cfd) return;
 
     logger.info(`MAJ formation ${formation._id} - cfd : ${code_cfd}`);
@@ -245,4 +296,4 @@ const update = async (tableCorrespondance) => {
   logger.info(`${count} formations mise à jours `);
 };
 
-module.exports = { seed, update };
+module.exports = { seed, update, update_oleoduc };
