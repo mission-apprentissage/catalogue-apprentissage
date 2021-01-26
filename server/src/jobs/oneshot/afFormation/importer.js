@@ -210,7 +210,9 @@ const update_oleoduc = async (tableCorrespondance) => {
   let count = 0;
 
   await oleoduc(
-    AfFormation.find({ libelle_ban: { $ne: null }, code_cfd: { $eq: null } }).cursor(),
+    AfFormation.find({ libelle_ban: { $ne: null }, code_cfd: { $eq: null } })
+      .lean()
+      .cursor(),
     writeData(
       async (formation) => {
         const mef10 = formation.code_mef.slice(0, -1);
