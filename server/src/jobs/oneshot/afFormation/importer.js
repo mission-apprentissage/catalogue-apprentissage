@@ -157,6 +157,7 @@ const seed = async () => {
   await asyncForEach(data, async (item) => {
     try {
       await AfFormation.create({
+        id_mna: item["ID_MNA"],
         uai: item["UAI"]?.trim(),
         libelle_type_etablissement: item["Libellé type établissement"]?.trim(),
         libelle_etablissement: item["Libellé établissement"]?.trim(),
