@@ -1,5 +1,10 @@
 const afFormationSchema = {
   // Etablissement
+  id_mna: {
+    type: String,
+    default: null,
+    description: "id mna temporaire",
+  },
   uai: {
     type: String,
     default: null,
