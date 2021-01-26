@@ -34,6 +34,11 @@ const etablissementReferenceInfo = {
     default: false,
     description: "Etablissement reference entre dans le catalogue",
   },
+  rncp_etablissement_reference_habilite: {
+    type: Boolean,
+    default: false,
+    description: "Etablissement reference est habilité RNCP ou pas",
+  },
 };
 
 module.exports = etablissementReferenceInfo;

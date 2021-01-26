@@ -50,11 +50,18 @@ const mnaFormationUpdater = async (formation, { withHistoryUpdate = true } = {})
       return { updates: null, formation, error };
     }
 
+    const rncpInfo = {
+      rncp_code: cfdMapping?.rncp_code,
+      rncp_intitule: cfdMapping?.rncp_intitule,
+      rncp_eligible_apprentissage: cfdMapping?.rncp_eligible_apprentissage,
+      ...cfdMapping?.rncp_details,
+    };
     const cachedCpResult = { [formation.code_postal]: { result: cpMapping, messages: cpMessages } };
     const { result: etablissementsMapping, messages: etablissementsMessages } = await etablissementsMapper(
       formation.etablissement_gestionnaire_siret,
       formation.etablissement_formateur_siret,
-      cachedCpResult
+      cachedCpResult,
+      rncpInfo
     );
 
     error = parseErrors(etablissementsMessages);
