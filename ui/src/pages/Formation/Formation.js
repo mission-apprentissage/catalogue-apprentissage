@@ -28,12 +28,13 @@ import { NavLink, useHistory, useLocation } from "react-router-dom";
 import { useFormik } from "formik";
 import queryString from "query-string";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faExternalLinkAlt, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import { _get, _post, _put } from "../../common/httpClient";
 import Layout from "../layout/Layout";
 import useAuth from "../../common/hooks/useAuth";
 import { hasRightToEditFormation } from "../../common/utils/rolesUtils";
 import { StatusBadge } from "../../common/components/StatusBadge";
+import { ReactComponent as InfoIcon } from "../../theme/assets/info-circle.svg";
 
 const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
 
@@ -126,7 +127,7 @@ const Formation = ({
       {pendingFormation && (
         <Alert status="info" justifyContent="center">
           <Box mr={1}>
-            <FontAwesomeIcon icon={faInfoCircle} />
+            <InfoIcon />
           </Box>
           Cette formation a été {pendingFormation.published ? "éditée" : "supprimée"} et est en attente de traitement
         </Alert>
