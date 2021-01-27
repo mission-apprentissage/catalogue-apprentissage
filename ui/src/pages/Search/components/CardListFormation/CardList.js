@@ -31,7 +31,7 @@ const CardList = ({ data, f2021 }) => {
             </p>
             {hasOneOfRoles(auth, ["admin", "instructeur"]) && (
               <div className="pills-statuts">
-                <StatusBadge source="Parcoursup" status={data.parcoursup_statut} />
+                <StatusBadge source="Parcoursup" status={data.parcoursup_statut} mr={2} />
                 <StatusBadge source="Affelnet" status={data.affelnet_statut} />
               </div>
             )}
