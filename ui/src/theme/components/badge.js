@@ -1,7 +1,8 @@
 const commonStatusBadgeStyle = {
   fontSize: "zeta",
-  borderRadius: 15,
-  px: 3,
+  borderRadius: 20,
+  pl: 1,
+  pr: 3,
   py: 1,
   textTransform: "none",
   fontWeight: 600,
@@ -11,10 +12,10 @@ const Badge = {
   variants: {
     notRelevant: {
       ...commonStatusBadgeStyle,
-      bg: "white",
+      bg: "#e3e8ea",
       color: "primaryText",
       border: "1px solid",
-      borderColor: "primaryText",
+      borderColor: "#e3e8ea",
     },
     published: {
       ...commonStatusBadgeStyle,
