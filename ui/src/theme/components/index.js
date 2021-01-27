@@ -1,5 +1,6 @@
 import { Tabs } from "./tabs";
+import { Badge } from "./badge";
 
-const components = { Tabs };
+const components = { Tabs, Badge };
 
 export { components };
