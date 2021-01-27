@@ -33,6 +33,22 @@ const getEstablishmentAddress = (establishment) => {
   return [numero_voie, type_voie, nom_voie].filter((val) => val).join(" ");
 };
 
+const isHabiliteRncp = ({ partenaires = [], certificateurs = [] }, siret) => {
+  let isPartenaire =
+    partenaires.filter(
+      (p) =>
+        p.SIRET_PARTENAIRE === siret &&
+        (p.HABILITATION_PARTENAIRE === "HABILITATION_ORGA_FORM" || p.HABILITATION_PARTENAIRE === "HABILITATION_FORMER")
+    ).length > 0;
+
+  let isCertificateur =
+    certificateurs.filter((p) => {
+      return p.SIRET_CERTIFICATEUR === siret;
+    }).length > 0;
+
+  return isPartenaire || isCertificateur;
+};
+
 const getEtablissementReference = ({ gestionnaire, formateur }) => {
   // Check etablissement reference found
   if (!gestionnaire && !formateur) {
@@ -127,7 +143,12 @@ const mapEtablissementKeys = async (
   };
 };
 
-const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissement_formateur_siret, cpMap = {}) => {
+const etablissementsMapper = async (
+  etablissement_gestionnaire_siret,
+  etablissement_formateur_siret,
+  cpMap = {},
+  rncpInfo
+) => {
   try {
     if (!etablissement_gestionnaire_siret && !etablissement_formateur_siret) {
       throw new Error("etablissementsMapper gestionnaire_siret, formateur_siret  must be provided");
@@ -170,6 +191,9 @@ const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissem
         etablissement_reference_type: referenceEstablishment.computed_type,
         etablissement_reference_conventionne: referenceEstablishment.computed_conventionne,
         etablissement_reference_datadock: referenceEstablishment.computed_info_datadock,
+        rncp_etablissement_reference_habilite: isHabiliteRncp(rncpInfo, referenceEstablishment.siret),
+        rncp_etablissement_gestionnaire_habilite: isHabiliteRncp(rncpInfo, etablissement_gestionnaire_siret),
+        rncp_etablissement_formateur_habilite: isHabiliteRncp(rncpInfo, etablissement_formateur_siret),
 
         ...geolocInfo,
       },
