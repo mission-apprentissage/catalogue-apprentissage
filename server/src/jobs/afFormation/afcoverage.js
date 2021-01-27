@@ -43,7 +43,7 @@ module.exports = async (tableCorrespondance) => {
   logger.info(`--- START FORMATION COVERAGE ---`);
 
   await oleoduc(
-    AfFormation.find({ code_cfd: { $ne: null }, matching_mna_formation: { $eq: null } })
+    AfFormation.find({ code_cfd: { $ne: null }, matching_mna_formation: { $eq: [] } })
       .lean()
       .cursor(),
     writeData(

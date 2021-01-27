@@ -11,7 +11,7 @@ module.exports = async (catalogue) => {
   const getEtablissements = (query) => catalogue.getEtablissements({ query });
 
   await oleoduc(
-    AfFormation.find({ matching_type: { $ne: null }, matching_mna_etablissement: { $eq: [] } })
+    AfFormation.find({ matching_type: { $ne: null } })
       .lean()
       .cursor(),
     transformData((formation) => {
