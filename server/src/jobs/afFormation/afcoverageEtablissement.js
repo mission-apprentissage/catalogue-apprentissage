@@ -6,7 +6,7 @@ const { Readable } = require("stream");
 const mongoose = require("mongoose");
 
 module.exports = async (catalogue) => {
-  const getEtablissement = (query) => catalogue.getEtablissements({ query });
+  const getEtablissements = (query) => catalogue.getEtablissements({ query });
 
   await oleoduc(
     AfFormation.find({ matching_type: { $ne: null } })
@@ -18,54 +18,49 @@ module.exports = async (catalogue) => {
     transformData(
       async ({ formations, id }) => {
         let etablissements = [];
+
         await oleoduc(
           Readable.from(formations),
           writeData(async ({ uai_formation, etablissement_formateur_uai, etablissement_gestionnaire_uai }) => {
+            let exist = etablissements.find(
+              (x) =>
+                x.uai === uai_formation ||
+                x.uai === etablissement_formateur_uai ||
+                x.uai === etablissement_gestionnaire_uai
+            );
+
+            if (exist) return;
+
             if (uai_formation) {
-              let exist = etablissements.find((x) => x.uai === uai_formation);
+              let resuai = await getEtablissements({ uai: uai_formation });
 
-              if (!exist) {
-                let resuai = await getEtablissement({ uai: uai_formation });
-
-                if (resuai.length > 0) {
-                  logger.info(`Found ${resuai.length} matches with UAI_FORMATION`);
-                  resuai.forEach((x) => {
-                    const formatted = etablissement(x);
-                    etablissements.push({ ...formatted, matched_uai: "UAI_FORMATION" });
-                  });
-                }
+              if (resuai.length > 0) {
+                resuai.forEach((x) => {
+                  const formatted = etablissement(x);
+                  etablissements.push({ ...formatted, matched_uai: "UAI_FORMATION" });
+                });
               }
             }
 
             if (etablissement_formateur_uai) {
-              let exist = etablissements.find((x) => x.uai === etablissement_formateur_uai);
+              let resformateur = await getEtablissements({ uai: etablissement_formateur_uai });
 
-              if (exist) {
-                let resformateur = await getEtablissement({ uai: etablissement_formateur_uai });
-
-                if (resformateur.length > 0) {
-                  logger.info(`Found ${resformateur.length} matches with UAI_FORMATEUR`);
-                  resformateur.forEach((x) => {
-                    const formatted = etablissement(x);
-                    etablissements.push({ ...formatted, matched_uai: "UAI_FORMATEUR" });
-                  });
-                }
+              if (resformateur.length > 0) {
+                resformateur.forEach((x) => {
+                  const formatted = etablissement(x);
+                  etablissements.push({ ...formatted, matched_uai: "UAI_FORMATEUR" });
+                });
               }
             }
 
             if (etablissement_gestionnaire_uai) {
-              let exist = etablissements.find((x) => x.uai === etablissement_gestionnaire_uai);
+              let resgestionnaire = await getEtablissements({ uai: etablissement_gestionnaire_uai });
 
-              if (!exist) {
-                let resgestionnaire = getEtablissement({ uai: etablissement_gestionnaire_uai });
-
-                if (resgestionnaire.length > 0) {
-                  logger.info(`Found ${resgestionnaire.length} matches with UAI_GESTIONNAIRE`);
-                  resgestionnaire.forEach((x) => {
-                    const formatted = etablissement(x);
-                    etablissements.push({ ...formatted, matched_uai: "UAI_GESTIONNAIRE" });
-                  });
-                }
+              if (resgestionnaire.length > 0) {
+                resgestionnaire.forEach((x) => {
+                  const formatted = etablissement(x);
+                  etablissements.push({ ...formatted, matched_uai: "UAI_GESTIONNAIRE" });
+                });
               }
             }
           })
@@ -79,7 +74,6 @@ module.exports = async (catalogue) => {
       if (etablissements.length === 0) return;
 
       const result = etablissements.reduce((acc, item) => {
-        console.log("item", item.uai);
         if (!acc[item._id]) {
           acc[item._id] = item;
           acc[item._id].matched_uai = [acc[item._id].matched_uai];
