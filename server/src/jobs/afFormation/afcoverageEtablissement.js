@@ -6,10 +6,12 @@ const { Readable } = require("stream");
 const mongoose = require("mongoose");
 
 module.exports = async (catalogue) => {
+  logger.info(`--- START ETABLISSEMENT COVERAGE ---`);
+
   const getEtablissements = (query) => catalogue.getEtablissements({ query });
 
   await oleoduc(
-    AfFormation.find({ matching_type: { $ne: null } })
+    AfFormation.find({ matching_type: { $ne: null }, matching_mna_formation: { $eq: null } })
       .lean()
       .cursor(),
     transformData((formation) => {
@@ -101,4 +103,5 @@ module.exports = async (catalogue) => {
       });
     })
   );
+  logger.info(`--- END ETABLISSEMENT COVERAGE ---`);
 };
