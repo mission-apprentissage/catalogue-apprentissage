@@ -34,18 +34,11 @@ const getEstablishmentAddress = (establishment) => {
 };
 
 const isHabiliteRncp = ({ partenaires = [], certificateurs = [] }, siret) => {
-  let isPartenaire =
-    partenaires.filter(
-      (p) =>
-        p.SIRET_PARTENAIRE === siret &&
-        (p.HABILITATION_PARTENAIRE === "HABILITATION_ORGA_FORM" || p.HABILITATION_PARTENAIRE === "HABILITATION_FORMER")
-    ).length > 0;
-
-  let isCertificateur =
-    certificateurs.filter((p) => {
-      return p.SIRET_CERTIFICATEUR === siret;
-    }).length > 0;
-
+  const isPartenaire = (partenaires ?? []).some(
+    ({ SIRET_PARTENAIRE, HABILITATION_PARTENAIRE }) =>
+      SIRET_PARTENAIRE === siret && ["HABILITATION_ORGA_FORM", "HABILITATION_FORMER"].includes(HABILITATION_PARTENAIRE)
+  );
+  const isCertificateur = (certificateurs ?? []).some(({ SIRET_CERTIFICATEUR }) => SIRET_CERTIFICATEUR === siret);
   return isPartenaire || isCertificateur;
 };
 
