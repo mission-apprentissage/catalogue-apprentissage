@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   Alert,
-  Badge,
   Box,
   Button,
   Container,
@@ -34,6 +33,7 @@ import { _get, _post, _put } from "../../common/httpClient";
 import Layout from "../layout/Layout";
 import useAuth from "../../common/hooks/useAuth";
 import { hasRightToEditFormation } from "../../common/utils/rolesUtils";
+import { StatusBadge } from "../../common/components/StatusBadge";
 
 const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
 
@@ -99,17 +99,14 @@ const Formation = ({
   handleChange,
   handleSubmit,
   values,
-  isMna,
+  hasRightToEdit,
   isSubmitting,
   pendingFormation,
 }) => {
-  const [auth] = useAuth();
-
   const oneEstablishment = formation.etablissement_gestionnaire_siret === formation.etablissement_formateur_siret;
-  const hasRightToEdit = !isMna && hasRightToEditFormation(formation, auth);
 
   return (
-    <Box bg="#fafbfc" boxShadow="0 2px 2px 0 rgba(215, 215, 215, 0.5)" borderRadius={5}>
+    <Box bg="#fafbfc" boxShadow="0 2px 2px 0 rgba(215, 215, 215, 0.5)" borderRadius={4}>
       <Flex
         bg="white"
         justifyContent="space-between"
@@ -373,6 +370,9 @@ export default ({ match }) => {
   const isMna = source === "mna";
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const [auth] = useAuth();
+  const hasRightToEdit = !isMna && hasRightToEditFormation(displayedFormation, auth);
+
   const {
     values: publishValues,
     handleChange: handlePublishChange,
@@ -539,33 +539,33 @@ export default ({ match }) => {
 
           {displayedFormation && (
             <>
-              <Box bg="white" p={10} my={6} boxShadow="0 2px 2px 0 rgba(215, 215, 215, 0.5)" borderRadius={5}>
+              <Box bg="white" p={10} my={6} boxShadow="0 2px 2px 0 rgba(215, 215, 215, 0.5)" borderRadius={4}>
                 <Heading as="h1" fontSize="beta">
                   {displayedFormation.intitule_long}
                 </Heading>
-                <Text fontSize="gamma" fontWeight="bold" mt={3}>
-                  Statuts et publications de la formation
-                </Text>
-                <Flex justify="space-between" alignItems={["center", "flex-end"]} flexDirection={["column", "row"]}>
-                  <Box>
-                    <Badge variant="solid" colorScheme="green" className="badge" mr={3}>
-                      Affelnet - {formation.affelnet_statut}
-                    </Badge>
-                    <Badge variant="solid" colorScheme="green" className="badge">
-                      ParcourSup - {formation.parcoursup_statut}
-                    </Badge>
-                  </Box>
-                  <Button
-                    colorScheme="blue"
-                    px={[8, 20]}
-                    mt={[8, 0]}
-                    onClick={() => {
-                      onOpen();
-                    }}
-                  >
-                    Gérer les publications
-                  </Button>
-                </Flex>
+                {hasRightToEdit && (
+                  <>
+                    <Text fontSize="gamma" fontWeight="bold" mt={3} mb={[2, 0]}>
+                      Statuts et publications de la formation
+                    </Text>
+                    <Flex justify="space-between" alignItems={["center", "flex-end"]} flexDirection={["column", "row"]}>
+                      <Box>
+                        <StatusBadge source="Affelnet" status={formation.affelnet_statut} mr={[0, 3]} />
+                        <StatusBadge source="Parcoursup" status={formation.parcoursup_statut} mt={[1, 0]} />
+                      </Box>
+                      <Button
+                        colorScheme="blue"
+                        px={[8, 20]}
+                        mt={[8, 0]}
+                        onClick={() => {
+                          onOpen();
+                        }}
+                      >
+                        Gérer les publications
+                      </Button>
+                    </Flex>
+                  </>
+                )}
               </Box>
               <Formation
                 formation={displayedFormation}
@@ -574,12 +574,12 @@ export default ({ match }) => {
                 values={values}
                 handleSubmit={handleSubmit}
                 handleChange={handleChange}
-                isMna={isMna}
+                hasRightToEdit={hasRightToEdit}
                 isSubmitting={isSubmitting}
                 onDelete={onDelete}
                 pendingFormation={pendingFormation}
               />
-              {!edition && (
+              {!edition && hasRightToEdit && (
                 <Flex justifyContent={["center", "flex-end"]} my={[6, 12]}>
                   <Button
                     variant="outline"
