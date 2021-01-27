@@ -40,8 +40,10 @@ const match3 = (cfd, num_departement, code_postal) =>
   });
 
 module.exports = async (tableCorrespondance) => {
+  logger.info(`--- START FORMATION COVERAGE ---`);
+
   await oleoduc(
-    AfFormation.find({ code_cfd: { $ne: null } })
+    AfFormation.find({ code_cfd: { $ne: null }, matching_mna_formation: { $eq: null } })
       .lean()
       .cursor(),
     writeData(
@@ -82,4 +84,5 @@ module.exports = async (tableCorrespondance) => {
       { parallel: 5 }
     )
   );
+  logger.info(`--- END FORMATION COVERAGE ---`);
 };
