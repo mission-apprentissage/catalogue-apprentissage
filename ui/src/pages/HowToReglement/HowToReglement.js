@@ -26,7 +26,7 @@ const HowToReglement = () => {
               </h3>
               <h4>
                 <a
-                  href="https://drive.google.com/file/d/1xL3urYVOJBNkm4HO-iZcTPhieRWpQ7Sk/view"
+                  href="https://resana.numerique.gouv.fr/public/information/consulterAccessUrl?cle_url=1016905377VD4HZ1NfAj4HalM1CmRXdwY4DjMKKwNqDGdQbQFgXW4COA88B2MDZVFk"
                   target="_blank"
                   rel="noreferrer noopener"
                 >
