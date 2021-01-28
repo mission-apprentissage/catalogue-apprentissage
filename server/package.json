@@ -41,7 +41,8 @@
     "opco:importer": "standalone=true node src/jobs/opcoImporter/index.js",
     "opco:importer:stats": "standalone=true node src/jobs/opcoImporter/stats.js",
     "es:index": "standalone=true node src/jobs/esIndex/index.js",
-    "generate:swaggerschema": "standalone=true node src/jobs/generateSwaggerSchema/index.js"
+    "generate:swaggerschema": "standalone=true node src/jobs/generateSwaggerSchema/index.js",
+    "etablissement:dump": "node -r dotenv/config src/jobs/etablissements"
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.6.1",
@@ -52,6 +53,7 @@
     "bunyan-mongodb-stream": "0.0.3",
     "bunyan-prettystream": "0.1.3",
     "bunyan-slack": "0.0.10",
+    "cli-progress": "3.8.2",
     "compose-middleware": "5.0.1",
     "config": "3.3.1",
     "convert-csv-to-json": "0.0.15",
@@ -76,7 +78,7 @@
     "multipipe": "4.0.0",
     "nodemailer": "^6.4.14",
     "nodemailer-html-to-text": "^3.1.0",
-    "oleoduc": "0.4.5",
+    "oleoduc": "0.4.6",
     "passport": "0.4.1",
     "passport-http": "0.3.0",
     "passport-jwt": "4.0.0",

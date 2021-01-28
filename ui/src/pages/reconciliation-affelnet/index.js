@@ -19,7 +19,7 @@ import { _get } from "../../common/httpClient";
 import { useQuery } from "react-query";
 import AppLayout from "../layout/Layout";
 
-const matchingType = [1, 2, 3, 4, 5];
+const matchingType = [1, 2, 3];
 
 const StyledButton = ({ type, matching, size, toggleMatching, ...rest }) => {
   return (
@@ -117,6 +117,10 @@ export default (props) => {
                           );
                         })}
                       </Select>
+                      <Text ml="3">sur</Text>
+                      <Heading size="sm" ml="2">
+                        {data.pages}
+                      </Heading>
                     </Flex>
                   )}
                 </Flex>
