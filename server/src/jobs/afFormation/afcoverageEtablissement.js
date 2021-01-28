@@ -12,7 +12,7 @@ module.exports = async () => {
 
   await paginator(
     AfFormation,
-    { filter: { matching_type: { $ne: null } }, lean: true, limit: 6 },
+    { filter: { matching_type: { $ne: null } }, lean: true },
     async ({ matching_mna_formation, _id }) => {
       let etablissements = [];
 
