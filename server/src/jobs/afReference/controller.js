@@ -14,7 +14,7 @@ const run = async () => {
   );
 
   // 2 - check for published trainings in affelnet (set "publié")
-  await paginator(ConvertedFormation, { published: true }, async (formation) => {
+  await paginator(ConvertedFormation, { filter: { published: true } }, async (formation) => {
     const { affelnet_reference, messages, error } = await afReferenceMapper({
       cfd: formation.cfd,
       siret_formateur: formation.etablissement_formateur_siret,

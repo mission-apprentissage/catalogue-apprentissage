@@ -1,6 +1,6 @@
 const cliProgress = require("cli-progress");
 
-const paginator = async (Model, filter = {}, callback, limit = 100) => {
+const paginator = async (Model, { filter = {}, limit = 100, lean = false } = {}, callback) => {
   let offset = 0;
   let computed = 0;
   let nbTotalItems = 10;
@@ -10,7 +10,7 @@ const paginator = async (Model, filter = {}, callback, limit = 100) => {
   progressBar.start(nbTotalItems, 0);
 
   while (computed < nbTotalItems) {
-    let { docs, total } = await Model.paginate(filter, { offset, limit });
+    let { docs, total } = await Model.paginate(filter, { offset, limit, lean });
     nbTotalItems = total;
     progressBar.setTotal(nbTotalItems);
 

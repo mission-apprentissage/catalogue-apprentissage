@@ -14,7 +14,7 @@ const run = async () => {
   );
 
   // 2 - check for published trainings in psup (set "publié")
-  await paginator(ConvertedFormation, { published: true }, async (formation) => {
+  await paginator(ConvertedFormation, { filter: { published: true } }, async (formation) => {
     const { parcoursup_reference, messages, error } = await psReferenceMapper({
       cfd: formation.cfd,
       siret_formateur: formation.etablissement_formateur_siret,
