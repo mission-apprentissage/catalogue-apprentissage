@@ -3,23 +3,20 @@ const { oleoduc, writeData } = require("oleoduc");
 const logger = require("../../common/logger");
 const { formation } = require("./mapper");
 
-const updateMatchedFormation = async ({ formation, matching_cfd }) => {
-  let { matching_strengh, data } = matching_cfd;
+const updateMatchedFormation = async (strengh, matching, _id) => {
+  let formattedResult = {
+    matching_strengh: strengh,
+    data: formation(matching),
+  };
 
-  logger.info(`update ${formation._id} — strengh: ${matching_strengh}`);
+  let { matching_strengh, data } = formattedResult;
 
-  await AfFormation.findByIdAndUpdate(formation._id, {
+  logger.info(`update ${_id} — strengh: ${matching_strengh}`);
+
+  await AfFormation.findByIdAndUpdate(_id, {
     matching_type: matching_strengh,
     matching_mna_formation: data,
   });
-};
-
-const formatResult = (strengh, data) => {
-  return {
-    matching_strengh: strengh,
-    data_length: data.length,
-    data: formation(data),
-  };
 };
 
 const match1 = (cfd) => ConvertedFormation.find({ cfd });
@@ -47,39 +44,36 @@ module.exports = async (tableCorrespondance) => {
       .lean()
       .cursor(),
     writeData(
-      async (formation) => {
-        const { messages, result } = await tableCorrespondance.getCpInfo(formation.code_postal);
-
-        if (
-          messages?.cp === "Ok" ||
-          messages?.cp === `Update: Le code ${formation.code_postal} est un code commune insee`
-        ) {
-          formation.code_postal = result.code_postal;
-        }
-
-        let { code_cfd, code_postal } = formation;
+      async ({ _id, code_postal, code_cfd }) => {
+        const { messages, result } = await tableCorrespondance.getCpInfo(code_postal);
         let dept = code_postal.substring(0, 2);
+
+        if (messages?.cp === "Ok" || messages?.cp === `Update: Le code ${code_postal} est un code commune insee`) {
+          code_postal = result.code_postal;
+        }
 
         const m3 = await match3(code_cfd, dept, code_postal);
 
-        if (m3.length === 1) {
-          let matching_cfd = formatResult("3", m3);
-          await updateMatchedFormation({ formation, matching_cfd });
-        } else {
-          const m2 = await match2(code_cfd, dept);
-
-          if (m2.length === 1) {
-            let matching_cfd = formatResult("2", m2);
-            await updateMatchedFormation({ formation, matching_cfd });
-          } else {
-            const m1 = await match1(code_cfd);
-
-            if (m1.length > 0) {
-              let matching_cfd = formatResult("1", m1);
-              await updateMatchedFormation({ formation, matching_cfd });
-            }
-          }
+        if (m3.length > 0) {
+          await updateMatchedFormation("3", m3, _id);
+          return;
         }
+
+        const m2 = await match2(code_cfd, dept);
+
+        if (m2.length > 0) {
+          await updateMatchedFormation("2", m2, _id);
+          return;
+        }
+
+        const m1 = await match1(code_cfd);
+
+        if (m1.length > 0) {
+          await updateMatchedFormation("1", m1, _id);
+          return;
+        }
+
+        logger.info(`No matching formation found for ${_id} `);
       },
       { parallel: 5 }
     )

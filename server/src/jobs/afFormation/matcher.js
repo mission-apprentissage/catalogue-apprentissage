@@ -47,15 +47,6 @@ module.exports = (ligne, catalogue) => {
     let predicate = predicateCFD[i];
     let { data, strengh } = predicate(ligne, catalogue);
 
-    if (data.length === 1) {
-      buffer.matching_cfd.push({
-        matching_strengh: strengh,
-        data_length: data.length,
-        data: formation(data),
-      });
-      break;
-    }
-
     if (data.length > 0) {
       buffer.matching_cfd.push({
         matching_strengh: strengh,

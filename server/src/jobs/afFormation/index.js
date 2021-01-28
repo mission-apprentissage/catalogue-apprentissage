@@ -8,7 +8,10 @@ if (process.env.standalone) {
   runScript(async ({ catalogue, tableCorrespondance }) => {
     logger.info(`Start affelnet coverage`);
 
-    const formations = await AfFormation.find({ matching_mna_formation: { $eq: [] } }).countDocuments();
+    const formations = await AfFormation.find({
+      matching_mna_formation: { $eq: [] },
+      code_cfd: { $ne: null },
+    }).countDocuments();
 
     console.log("formations", formations);
     if (formations > 0) {
