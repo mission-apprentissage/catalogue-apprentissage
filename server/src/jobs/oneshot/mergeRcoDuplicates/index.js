@@ -3,6 +3,7 @@ const { runScript } = require("../../scriptWrapper");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const importer = require("../../rcoImporter/importer/importer");
 const logger = require("../../../common/logger");
+const { paginator } = require("../../common/utils/paginator");
 const { diff } = require("deep-object-diff");
 
 const removeDuplicates = async (merged, rest) => {
@@ -61,38 +62,20 @@ const run = async ({ runOnConverted = false } = {}) => {
   const distinctIds = [];
   const duplicates = [];
 
-  let offset = 0;
-  let limit = 100;
-  let computed = 0;
-  let nbFormations = 10;
+  await paginator(RcoFormation, { lean: true }, async ({ id_formation, id_action, id_certifinfo }) => {
+    const id = `${id_formation}|${id_action}|${id_certifinfo}`;
 
-  while (computed < nbFormations) {
-    let { docs, total } = await RcoFormation.paginate({}, { offset, limit });
-    nbFormations = total;
+    if (distinctIds.includes(id)) {
+      return;
+    }
+    distinctIds.push(id);
 
-    await Promise.all(
-      docs.map(async ({ id_formation, id_action, id_certifinfo }) => {
-        computed += 1;
-
-        const id = `${id_formation}|${id_action}|${id_certifinfo}`;
-
-        if (distinctIds.includes(id)) {
-          return;
-        }
-        distinctIds.push(id);
-
-        const count = await RcoFormation.countDocuments({ id_formation, id_action, id_certifinfo });
-        if (count > 1) {
-          duplicates.push({ id_formation, id_action, id_certifinfo, count });
-          logger.error(`duplicates for ${id} = ${count}`);
-        }
-      })
-    );
-
-    offset += limit;
-
-    logger.info(`progress ${computed}/${total}`);
-  }
+    const count = await RcoFormation.countDocuments({ id_formation, id_action, id_certifinfo });
+    if (count > 1) {
+      duplicates.push({ id_formation, id_action, id_certifinfo, count });
+      logger.error(`duplicates for ${id} = ${count}`);
+    }
+  });
 
   duplicates.forEach(({ id_formation, id_action, id_certifinfo, count }) => {
     logger.error(`duplicate found for ${id_formation}|${id_action}|${id_certifinfo} = ${count}`);

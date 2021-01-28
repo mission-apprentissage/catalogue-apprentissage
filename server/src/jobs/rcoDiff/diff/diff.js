@@ -2,6 +2,7 @@ const logger = require("../../../common/logger");
 const { ConvertedFormation, MnaFormation } = require("../../../common/model/index");
 const report = require("../../../logic/reporter/report");
 const config = require("config");
+const { paginator } = require("../../common/utils/paginator");
 const { storeByChunks } = require("../../common/utils/reportUtils");
 
 const run = async () => {
@@ -15,48 +16,31 @@ const run = async () => {
 const performDiff = async () => {
   // match MNA /RCO === siret + cfd + code postal + code insee + rncp_code + uai
   const matchingFormations = [];
+  const total = await ConvertedFormation.countDocuments({});
 
-  let offset = 0;
-  let limit = 100;
-  let computed = 0;
-  let nbFormations = 10;
+  await paginator(ConvertedFormation, { lean: true }, async (convertedFormation) => {
+    const matchings = await MnaFormation.find({
+      cfd: convertedFormation.cfd,
+      rncp_code: convertedFormation.rncp_code,
+      code_commune_insee: convertedFormation.code_commune_insee,
+      code_postal: convertedFormation.code_postal,
+      etablissement_gestionnaire_siret: convertedFormation.etablissement_gestionnaire_siret,
+      etablissement_gestionnaire_uai: convertedFormation.etablissement_gestionnaire_uai,
+      etablissement_formateur_siret: convertedFormation.etablissement_formateur_siret,
+      etablissement_formateur_uai: convertedFormation.etablissement_formateur_uai,
+      lieu_formation_siret: convertedFormation.lieu_formation_siret,
+      uai_formation: convertedFormation.uai_formation,
+    });
 
-  while (computed < nbFormations) {
-    let { docs, total } = await ConvertedFormation.paginate({}, { offset, limit });
-    nbFormations = total;
+    if (matchings.length > 0) {
+      matchingFormations.push({
+        id_rco_formation: convertedFormation.id_rco_formation,
+        matchingsMna: matchings.map((m) => m._id),
+      });
+    }
+  });
 
-    await Promise.all(
-      docs.map(async (convertedFormation) => {
-        computed += 1;
-
-        const matchings = await MnaFormation.find({
-          cfd: convertedFormation.cfd,
-          rncp_code: convertedFormation.rncp_code,
-          code_commune_insee: convertedFormation.code_commune_insee,
-          code_postal: convertedFormation.code_postal,
-          etablissement_gestionnaire_siret: convertedFormation.etablissement_gestionnaire_siret,
-          etablissement_gestionnaire_uai: convertedFormation.etablissement_gestionnaire_uai,
-          etablissement_formateur_siret: convertedFormation.etablissement_formateur_siret,
-          etablissement_formateur_uai: convertedFormation.etablissement_formateur_uai,
-          lieu_formation_siret: convertedFormation.lieu_formation_siret,
-          uai_formation: convertedFormation.uai_formation,
-        });
-
-        if (matchings.length > 0) {
-          matchingFormations.push({
-            id_rco_formation: convertedFormation.id_rco_formation,
-            matchingsMna: matchings.map((m) => m._id),
-          });
-        }
-      })
-    );
-
-    offset += limit;
-
-    logger.info(`progress ${computed}/${total}`);
-  }
-
-  return { matchingFormations, total: nbFormations };
+  return { matchingFormations, total };
 };
 
 const createDiffReport = async ({ matchingFormations, total }) => {
