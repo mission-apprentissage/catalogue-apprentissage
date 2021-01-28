@@ -20,8 +20,10 @@ import {
   Text,
   FormControl,
   FormLabel,
-  Switch,
   Center,
+  RadioGroup,
+  Radio,
+  Stack,
   useDisclosure,
 } from "@chakra-ui/react";
 import { NavLink, useHistory, useLocation } from "react-router-dom";
@@ -374,6 +376,17 @@ export default ({ match }) => {
   const [auth] = useAuth();
   const hasRightToEdit = !isMna && hasRightToEditFormation(displayedFormation, auth);
 
+  const getPublishRadioValue = (status) => {
+    if (["publié", "en attente de publication"].includes(status)) {
+      return "true";
+    }
+    if (["non publié"].includes(status)) {
+      return "false";
+    }
+
+    return undefined;
+  };
+
   const {
     values: publishValues,
     handleChange: handlePublishChange,
@@ -382,30 +395,29 @@ export default ({ match }) => {
     setFieldValue: setPublishFieldValue,
   } = useFormik({
     initialValues: {
-      affelnet: ["publié", "en attente de publication"].includes(formation?.affelnet_statut),
-      parcoursup: ["publié", "en attente de publication"].includes(formation?.parcoursup_statut),
+      affelnet: getPublishRadioValue(formation?.affelnet_statut),
+      parcoursup: getPublishRadioValue(formation?.parcoursup_statut),
     },
     onSubmit: ({ affelnet, parcoursup }) => {
       return new Promise(async (resolve) => {
         const body = {};
 
         // check if can edit depending on the status
-
-        if (affelnet) {
+        if (affelnet === "true") {
           if (["non publié", "à publier"].includes(formation?.affelnet_statut)) {
             body.affelnet_statut = "en attente de publication";
           }
-        } else {
+        } else if (affelnet === "false") {
           if (["en attente de publication", "à publier"].includes(formation?.affelnet_statut)) {
             body.affelnet_statut = "non publié";
           }
         }
 
-        if (parcoursup) {
+        if (parcoursup === "true") {
           if (["non publié", "à publier"].includes(formation?.parcoursup_statut)) {
             body.parcoursup_statut = "en attente de publication";
           }
-        } else {
+        } else if (parcoursup === "false") {
           if (["en attente de publication", "à publier"].includes(formation?.parcoursup_statut)) {
             body.parcoursup_statut = "non publié";
           }
@@ -417,14 +429,8 @@ export default ({ match }) => {
             ...body,
           });
           setFormation(updatedFormation);
-          setPublishFieldValue(
-            "affelnet",
-            ["publié", "en attente de publication"].includes(updatedFormation?.affelnet_statut)
-          );
-          setPublishFieldValue(
-            "parcoursup",
-            ["publié", "en attente de publication"].includes(updatedFormation?.parcoursup_statut)
-          );
+          setPublishFieldValue("affelnet", getPublishRadioValue(updatedFormation?.affelnet_statut));
+          setPublishFieldValue("parcoursup", getPublishRadioValue(updatedFormation?.parcoursup_statut));
         }
 
         onClose();
@@ -497,8 +503,8 @@ export default ({ match }) => {
         setFieldValue("num_academie", displayedFormation.num_academie || "");
         setFieldValue("rncp_code", displayedFormation.rncp_code || "");
 
-        setPublishFieldValue("affelnet", ["publié", "en attente de publication"].includes(form?.affelnet_statut));
-        setPublishFieldValue("parcoursup", ["publié", "en attente de publication"].includes(form?.parcoursup_statut));
+        setPublishFieldValue("affelnet", getPublishRadioValue(form?.affelnet_statut));
+        setPublishFieldValue("parcoursup", getPublishRadioValue(form?.parcoursup_statut));
       } catch (e) {
         history.push("/404");
       }
@@ -615,20 +621,28 @@ export default ({ match }) => {
                 <FormLabel htmlFor="affelnet" mb={0} fontSize="gamma">
                   Demander la publication Affelnet:
                 </FormLabel>
-                <Switch
-                  isChecked={publishValues.affelnet}
-                  id="affelnet"
-                  name="affelnet"
-                  size="lg"
-                  mb={0}
-                  mr={3}
-                  onChange={handlePublishChange}
-                  value={publishValues.affelnet}
-                  isDisabled={isAffelnetPublishDisabled}
-                />
-                <Text color={isAffelnetPublishDisabled ? "grey.300" : "grey.600"}>
-                  {publishValues.affelnet ? "Oui" : "Non"}
-                </Text>
+                <RadioGroup defaultValue={publishValues.affelnet} id="affelnet" name="affelnet">
+                  <Stack spacing={4} direction="row">
+                    <Radio
+                      mb={0}
+                      size="lg"
+                      value="true"
+                      isDisabled={isAffelnetPublishDisabled}
+                      onChange={handlePublishChange}
+                    >
+                      Oui
+                    </Radio>
+                    <Radio
+                      mb={0}
+                      size="lg"
+                      value="false"
+                      isDisabled={isAffelnetPublishDisabled}
+                      onChange={handlePublishChange}
+                    >
+                      Non
+                    </Radio>
+                  </Stack>
+                </RadioGroup>
               </FormControl>
             </Center>
             <Center borderBottom="1px solid" borderColor="grey.400" p={4} mx={[0, 24]}>
@@ -636,20 +650,28 @@ export default ({ match }) => {
                 <FormLabel htmlFor="parcoursup" mb={0} fontSize="gamma">
                   Demander la publication ParcourSup:
                 </FormLabel>
-                <Switch
-                  isChecked={publishValues.parcoursup}
-                  id="parcoursup"
-                  name="parcoursup"
-                  size="lg"
-                  mb={0}
-                  mr={3}
-                  onChange={handlePublishChange}
-                  value={publishValues.parcoursup}
-                  isDisabled={isParcoursupPublishDisabled}
-                />
-                <Text color={isParcoursupPublishDisabled ? "grey.300" : "grey.600"}>
-                  {publishValues.parcoursup ? "Oui" : "Non"}
-                </Text>
+                <RadioGroup defaultValue={publishValues.parcoursup} id="parcoursup" name="parcoursup">
+                  <Stack spacing={4} direction="row">
+                    <Radio
+                      mb={0}
+                      size="lg"
+                      value="true"
+                      isDisabled={isParcoursupPublishDisabled}
+                      onChange={handlePublishChange}
+                    >
+                      Oui
+                    </Radio>
+                    <Radio
+                      mb={0}
+                      size="lg"
+                      value="false"
+                      isDisabled={isParcoursupPublishDisabled}
+                      onChange={handlePublishChange}
+                    >
+                      Non
+                    </Radio>
+                  </Stack>
+                </RadioGroup>
               </FormControl>
             </Center>
             <Flex flexDirection={["column", "row"]} pt={[3, 16]} justifyContent="center">
@@ -657,6 +679,8 @@ export default ({ match }) => {
                 variant="outline"
                 colorScheme="blue"
                 onClick={() => {
+                  setPublishFieldValue("affelnet", getPublishRadioValue(formation?.affelnet_statut));
+                  setPublishFieldValue("parcoursup", getPublishRadioValue(formation?.parcoursup_statut));
                   onClose();
                 }}
                 mr={[0, 8]}
