@@ -1,64 +1,96 @@
-import React, { useState, useEffect } from "react";
-import { Spinner, Alert, Box, Container, Input, Button, Grid, GridItem } from "@chakra-ui/react";
-import { useHistory, useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import {
+  Alert,
+  Box,
+  Button,
+  Container,
+  Flex,
+  Grid,
+  GridItem,
+  Heading,
+  Input,
+  Link,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Spinner,
+  Text,
+  FormControl,
+  FormLabel,
+  Center,
+  RadioGroup,
+  Radio,
+  Stack,
+  useDisclosure,
+} from "@chakra-ui/react";
+import { NavLink, useHistory, useLocation } from "react-router-dom";
 import { useFormik } from "formik";
 import queryString from "query-string";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen } from "@fortawesome/free-solid-svg-icons";
-import { _get, _post } from "../../common/httpClient";
+import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
+import { _get, _post, _put } from "../../common/httpClient";
 import Layout from "../layout/Layout";
-import Section from "./components/Section";
 import useAuth from "../../common/hooks/useAuth";
 import { hasRightToEditFormation } from "../../common/utils/rolesUtils";
-import "./formation.css";
+import { StatusBadge } from "../../common/components/StatusBadge";
+import { ReactComponent as InfoIcon } from "../../theme/assets/info-circle.svg";
 
 const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
 
-const EditSection = ({ edition, onEdit, handleSubmit, onDeleteClicked, isSubmitting, isDeleteDisabled }) => {
+const EditSection = ({ edition, onEdit, handleSubmit, isSubmitting }) => {
   return (
-    <Box className="sidebar-section info sidebar-section-edit">
+    <Box>
       {edition && (
-        <>
-          <Button
-            mb={3}
-            colorScheme="teal"
-            onClick={handleSubmit}
-            isLoading={isSubmitting}
-            loadingText="Valider"
-            isFullWidth
-          >
-            Valider
-          </Button>
+        <Flex
+          flexDirection={["column", "row"]}
+          position="fixed"
+          left={0}
+          bottom={0}
+          w="full"
+          bg="white"
+          p={8}
+          zIndex={100}
+          justifyContent="center"
+          boxShadow="0 -2px 5px 0 rgba(215, 215, 215, 0.5)"
+        >
           <Button
             variant="outline"
-            colorScheme="teal"
+            colorScheme="blue"
             onClick={() => {
               onEdit();
             }}
             disabled={isSubmitting}
-            isFullWidth
+            mr={[0, 8]}
+            px={[8, 20]}
+            mb={[3, 0]}
           >
             Annuler
           </Button>
-        </>
-      )}
-      {!edition && (
-        <>
           <Button
-            mb={3}
-            colorScheme="teal"
-            onClick={() => {
-              onEdit();
-            }}
-            isFullWidth
+            colorScheme="blue"
+            onClick={handleSubmit}
+            isLoading={isSubmitting}
+            loadingText="Enregistrement des modifications"
           >
-            Modifier
+            Enregistrer les modifications
           </Button>
-          <Button variant="outline" colorScheme="red" onClick={onDeleteClicked} disabled={isDeleteDisabled} isFullWidth>
-            Supprimer
-          </Button>
-        </>
+        </Flex>
       )}
+      <Button
+        variant="outline"
+        colorScheme="blue"
+        onClick={() => {
+          onEdit();
+        }}
+        disabled={edition}
+        px={8}
+        mt={[6, 0]}
+      >
+        {edition ? "en cours de modification..." : "Modifier les informations"}
+      </Button>
     </Box>
   );
 };
@@ -70,74 +102,76 @@ const Formation = ({
   handleChange,
   handleSubmit,
   values,
-  isMna,
+  hasRightToEdit,
   isSubmitting,
-  onDelete,
+  pendingFormation,
 }) => {
-  const [auth] = useAuth();
-
   const oneEstablishment = formation.etablissement_gestionnaire_siret === formation.etablissement_formateur_siret;
-  const hasRightToEdit = !isMna && hasRightToEditFormation(formation, auth);
 
   return (
-    <Grid templateColumns="repeat(12, 1fr)" gap={4}>
-      <GridItem colSpan={7}>
-        <div className="notice-details">
-          <h2 className="small">Détails</h2>
-          <div className="field">
-            <h3>Intitulé court de la formation</h3>
-            <p>{formation.intitule_court}</p>
-          </div>
-          <div className="field">
-            <h3>Diplôme ou titre visé</h3>
-            <p>{formation.diplome}</p>
-          </div>
-          <div className="field">
-            <h3>Niveau de la formation</h3>
-            <p>{formation.niveau}</p>
-          </div>
-          <div className="field">
-            <h3>
-              Code diplôme (Éducation Nationale)
-              {hasRightToEdit && <FontAwesomeIcon className="edit-pen" icon={faPen} size="xs" />}
-            </h3>
-            <p>
-              {!edition && <>{formation.cfd}</>}
+    <Box bg="#fafbfc" boxShadow="0 2px 2px 0 rgba(215, 215, 215, 0.5)" borderRadius={4}>
+      <Flex
+        bg="white"
+        justifyContent="space-between"
+        alignItems="center"
+        p={8}
+        borderBottom="1px solid"
+        borderColor="grey.300"
+        flexDirection={["column", "row"]}
+      >
+        <Heading as="h2" fontSize="beta">
+          Description de la formation
+        </Heading>
+        {hasRightToEdit && (
+          <EditSection edition={edition} onEdit={onEdit} handleSubmit={handleSubmit} isSubmitting={isSubmitting} />
+        )}
+      </Flex>
+      {pendingFormation && (
+        <Alert status="info" justifyContent="center">
+          <Box mr={1}>
+            <InfoIcon />
+          </Box>
+          Cette formation a été {pendingFormation.published ? "éditée" : "supprimée"} et est en attente de traitement
+        </Alert>
+      )}
+      <Grid templateColumns="repeat(12, 1fr)">
+        <GridItem colSpan={[12, 7]} bg="white" p={8}>
+          <Box mb={16}>
+            <Heading as="h2" fontSize="beta" mb={4}>
+              Détails
+            </Heading>
+            <Text mb={4}>
+              Intitulé court de la formation: <strong>{formation.intitule_court}</strong>
+            </Text>
+            <Text mb={4}>
+              Diplôme ou titre visé: <strong>{formation.diplome}</strong>
+            </Text>
+            <Text mb={4}>
+              Niveau de la formation: <strong>{formation.niveau}</strong>
+            </Text>
+            <Text mb={4}>
+              Code diplôme (Éducation Nationale): {!edition && <strong>{formation.cfd}</strong>}
               {edition && <Input type="text" name="cfd" onChange={handleChange} value={values.cfd} />}
-            </p>
-          </div>
-          <div className="field">
-            <h3>Code MEF 10 caractères</h3>
-            <p>{formation.mef_10_code}</p>
-          </div>
-          <div className="field">
-            <h3>
-              Période d'inscription{hasRightToEdit && <FontAwesomeIcon className="edit-pen" icon={faPen} size="xs" />}
-            </h3>
-            <p>
-              {!edition && <>{formation.periode}</>}
+            </Text>
+            <Text mb={4}>
+              Code MEF 10 caractères: <strong>{formation.mef_10_code}</strong>
+            </Text>
+            <Text mb={4}>
+              Période d'inscription: {!edition && <strong>{formation.periode}</strong>}
               {edition && <Input type="text" name="periode" onChange={handleChange} value={values.periode} />}
-            </p>
-          </div>
-          <div className="field">
-            <h3>
-              Capacite d'accueil{hasRightToEdit && <FontAwesomeIcon className="edit-pen" icon={faPen} size="xs" />}
-            </h3>
-            <p>
-              {!edition && <>{formation.capacite}</>}
+            </Text>
+            <Text mb={4}>
+              Capacite d'accueil: {!edition && <strong>{formation.capacite}</strong>}
               {edition && <Input type="text" name="capacite" onChange={handleChange} value={values.capacite} />}
-            </p>
-          </div>
-          <div className="field">
-            <h3>Durée de la formation</h3>
-            <p>{formation.duree}</p>
-          </div>
-          <div className="field">
-            <h3>Année</h3>
-            <p>{formation.annee}</p>
-          </div>
-        </div>
-        {/* <Section title="Information ParcourSup">
+            </Text>
+            <Text mb={4}>
+              Durée de la formation: <strong>{formation.duree}</strong>
+            </Text>
+            <Text mb={4}>
+              Année: <strong>{formation.annee}</strong>
+            </Text>
+          </Box>
+          {/* <Section title="Information ParcourSup">
           <div className="field">
             <h3>Référencé dans ParcourSup</h3>
             <p>{formation.parcoursup_reference ? "OUI" : "NON"}</p>
@@ -157,208 +191,173 @@ const Formation = ({
             <p>{formation.affelnet_a_charger ? "OUI" : "NON"}</p>
           </div>
         </Section> */}
-        <Section title="Information RNCP">
-          <div className="field">
+          <Box mb={16}>
+            <Heading as="h2" fontSize="beta" mb={4} mt={6}>
+              Informations RNCP et ROME
+            </Heading>
             {!formation.rncp_code && (
-              <>
-                <h3>Code RNCP {hasRightToEdit && <FontAwesomeIcon className="edit-pen" icon={faPen} size="xs" />}</h3>
-                <p>
-                  {!edition && <>{formation.rncp_code}</>}
-                  {edition && <Input type="text" name="rncp_code" onChange={handleChange} value={values.rncp_code} />}
-                </p>
-              </>
+              <Text mb={4}>
+                Code RNCP: {!edition && <strong>{formation.rncp_code}</strong>}
+                {edition && <Input type="text" name="rncp_code" onChange={handleChange} value={values.rncp_code} />}
+              </Text>
             )}
             {formation.rncp_code && (
-              <>
-                <h3>Code RNCP</h3>
-                <p>{formation.rncp_code}</p>
-              </>
+              <Text mb={4}>
+                Code RNCP: <strong>{formation.rncp_code}</strong>
+              </Text>
             )}
-          </div>
-          <div className="field">
-            <h3>Organisme Habilité (RNCP)</h3>
-            <p>{formation.rncp_etablissement_reference_habilite}</p>
-          </div>
-          <div className="field">
-            <h3>Éligible apprentissage (RNCP)</h3>
-            <p>{formation.rncp_eligible_apprentissage}</p>
-          </div>
-          <div className="field">
-            <h3>Intitulé RNCP</h3>
-            <p>{formation.rncp_intitule}</p>
-          </div>
-        </Section>
-        <Section title="Information ROME">
-          <div className="field">
-            <h3>Codes ROME</h3>
-            <p>{formation.rome_codes}</p>
-          </div>
-        </Section>
-        <Section title="Information OPCOs">
-          <div className="field">
-            {formation.opcos && formation.opcos.length === 0 && <h3>Aucun OPCO rattaché</h3>}
-            {formation.opcos && formation.opcos.length > 0 && (
-              <>
-                <h3>OPCOs liés à la formation</h3>
-                {formation.opcos.map((x, index) => (
-                  <p key={index}>{x}</p>
-                ))}
-              </>
-            )}
-          </div>
-        </Section>
-      </GridItem>
-      <GridItem colSpan={5}>
-        {hasRightToEdit && (
-          <EditSection
-            edition={edition}
-            onEdit={onEdit}
-            handleSubmit={handleSubmit}
-            onDeleteClicked={onDelete}
-            isSubmitting={isSubmitting}
-            isDeleteDisabled={!formation.published}
-          />
-        )}
-        <div className="sidebar-section info">
-          <h2>À propos</h2>
-          <div>
-            <div className="field multiple">
-              <div>
-                <h3>Type</h3>
-                <p>{formation.etablissement_reference_type}</p>
-              </div>
-              <div>
-                <h3>UAI{hasRightToEdit && <FontAwesomeIcon className="edit-pen" icon={faPen} size="xs" />}</h3>
-                <p>
-                  {!edition && <>{formation.uai_formation}</>}
-                  {edition && (
-                    <Input type="text" name="uai_formation" onChange={handleChange} value={values.uai_formation} />
-                  )}
-                </p>
-              </div>
-            </div>
-            <div className="field">
-              <h3>Établissement conventionné ?</h3>
-              <p>{formation.etablissement_reference_conventionne}</p>
-            </div>
-            <div className="field">
-              <h3>Établissement déclaré en préfecture ?</h3>
-              <p>{formation.etablissement_reference_declare_prefecture}</p>
-            </div>
-            <div className="field">
-              <h3>Organisme certifié 2015 - datadock ?</h3>
-              <p>{formation.etablissement_reference_datadock}</p>
-            </div>
-            <div className="field">
-              <h3>Académie{hasRightToEdit && <FontAwesomeIcon className="edit-pen" icon={faPen} size="xs" />}</h3>
-              <p>
-                {!edition && (
-                  <>
-                    {formation.nom_academie} ({formation.num_academie})
-                  </>
-                )}
-                {edition && (
-                  <>
-                    {formation.nom_academie}{" "}
-                    <Input type="text" name="num_academie" onChange={handleChange} value={values.num_academie} />
-                  </>
-                )}
-              </p>
-            </div>
-            <div className="field multiple">
-              <div>
-                <h3>Code postal{hasRightToEdit && <FontAwesomeIcon className="edit-pen" icon={faPen} size="xs" />}</h3>
-                <p>
-                  {!edition && <>{formation.code_postal}</>}
-                  {edition && (
-                    <Input type="text" name="code_postal" onChange={handleChange} value={values.code_postal} />
-                  )}
-                </p>
-              </div>
-              <div>
-                <h3>Code commune</h3>
-                <p>{formation.code_commune_insee}</p>
-              </div>
-            </div>
-            {formation.onisep_url !== "" && formation.onisep_url !== null && (
-              <div className="field field-button mt-3">
-                <a href={formation.onisep_url} target="_blank" rel="noreferrer noopener">
-                  <Button colorScheme="teal" variant="outline" isFullWidth>
-                    Voir la fiche descriptive Onisep
-                  </Button>
-                </a>
-              </div>
-            )}
-          </div>
-        </div>
-        <div className="sidebar-section info">
-          <h2>Organisme {!oneEstablishment && "Formateur"}</h2>
-          <div>
-            {formation.etablissement_formateur_entreprise_raison_sociale && (
-              <div className="field">
-                <h3>Raison sociale</h3>
-                <p>{formation.etablissement_formateur_entreprise_raison_sociale}</p>
-              </div>
-            )}
-            {formation.etablissement_formateur_enseigne && (
-              <div className="field">
-                <h3>Enseigne</h3>
-                <p>{formation.etablissement_formateur_enseigne}</p>
-              </div>
-            )}
-            <div className="field">
-              <h3>Uai</h3>
-              <p>{formation.etablissement_formateur_uai}</p>
-            </div>
-            <div className="field field-button mt-3">
-              <a
-                href={`/etablissement/${formation.etablissement_formateur_id}`}
-                target="_blank"
-                rel="noreferrer noopener"
-              >
-                <Button colorScheme="teal" variant="outline" isFullWidth>
-                  Voir l'organisme {!oneEstablishment && "formateur"}
-                </Button>
-              </a>
-            </div>
-          </div>
-        </div>
-        {!oneEstablishment && (
-          <div className="sidebar-section info">
-            <h2>Organisme Gestionnaire</h2>
+            {/*<Text mb={4}>*/}
+            {/*  Organisme Habilité (RNCP): <strong>{formation.rncp_etablissement_reference_habilite}</strong>*/}
+            {/*</Text>*/}
+            {/*<Text mb={4}>*/}
+            {/*  Éligible apprentissage (RNCP): <strong>{formation.rncp_eligible_apprentissage}</strong>*/}
+            {/*</Text>*/}
+            <Text mb={4}>
+              Intitulé RNCP: <strong>{formation.rncp_intitule}</strong>
+            </Text>
+            <Text mb={4}>
+              Codes ROME: <strong>{formation.rome_codes.join(", ")}</strong>
+            </Text>
+
+            <Box>
+              {formation.opcos && formation.opcos.length === 0 && <Text mb={4}>Aucun OPCO rattaché</Text>}
+              {formation.opcos && formation.opcos.length > 0 && (
+                <Text mb={4}>
+                  OPCOs liés à la formation: <strong>{formation.opcos.join(", ")}</strong>
+                </Text>
+              )}
+            </Box>
+          </Box>
+        </GridItem>
+        <GridItem colSpan={[12, 5]} bg="#fafbfc" p={8}>
+          <Box mb={16}>
+            <Heading as="h2" fontSize="beta" mb={4}>
+              À propos
+            </Heading>
+            <Text mb={4}>
+              Type: <strong>{formation.etablissement_reference_type}</strong>
+            </Text>
+            <Text mb={4}>
+              UAI: {!edition && <strong>{formation.uai_formation}</strong>}
+              {edition && (
+                <Input type="text" name="uai_formation" onChange={handleChange} value={values.uai_formation} />
+              )}
+            </Text>
+            <Text mb={4}>
+              Établissement conventionné ? : <strong>{formation.etablissement_reference_conventionne}</strong>
+            </Text>
+            <Text mb={4}>
+              Établissement déclaré en préfecture ? :{" "}
+              <strong>{formation.etablissement_reference_declare_prefecture}</strong>
+            </Text>
+            <Text mb={4}>
+              Organisme certifié 2015 - datadock ? : <strong>{formation.etablissement_reference_datadock}</strong>
+            </Text>
+            <Text mb={4}>
+              Académie:{" "}
+              {!edition && (
+                <strong>
+                  {formation.nom_academie} ({formation.num_academie})
+                </strong>
+              )}
+              {edition && (
+                <>
+                  {formation.nom_academie}{" "}
+                  <Input type="text" name="num_academie" onChange={handleChange} value={values.num_academie} />
+                </>
+              )}
+            </Text>
+            <Text mb={4}>
+              Code postal: {!edition && <strong>{formation.code_postal}</strong>}
+              {edition && <Input type="text" name="code_postal" onChange={handleChange} value={values.code_postal} />}
+            </Text>
+            <Text mb={4}>
+              Code commune: <strong>{formation.code_commune_insee}</strong>
+            </Text>
+            <Box mb={4}>
+              {formation.onisep_url !== "" && formation.onisep_url !== null && (
+                <Link
+                  href={formation.onisep_url}
+                  mt={3}
+                  textDecoration="underline"
+                  color="blue.500"
+                  fontWeight="bold"
+                  isExternal
+                >
+                  Voir la fiche descriptive Onisep <FontAwesomeIcon icon={faExternalLinkAlt} />
+                </Link>
+              )}
+            </Box>
+          </Box>
+          <Box mb={16}>
+            <Heading as="h2" fontSize="beta" mb={4}>
+              Organisme {!oneEstablishment && "Formateur"}
+            </Heading>
             <div>
+              {formation.etablissement_formateur_entreprise_raison_sociale && (
+                <Text mb={4}>
+                  Raison sociale: <strong>{formation.etablissement_formateur_entreprise_raison_sociale}</strong>
+                </Text>
+              )}
+              {formation.etablissement_formateur_enseigne && (
+                <Text mb={4}>
+                  Enseigne: <strong>{formation.etablissement_formateur_enseigne}</strong>
+                </Text>
+              )}
+              <Text mb={4}>
+                Uai: <strong>{formation.etablissement_formateur_uai}</strong>
+              </Text>
+              <Box mb={4}>
+                <Link
+                  as={NavLink}
+                  to={`/etablissement/${formation.etablissement_formateur_id}`}
+                  target="_blank"
+                  mt={3}
+                  textDecoration="underline"
+                  color="blue.500"
+                  fontWeight="bold"
+                >
+                  Voir l'organisme {!oneEstablishment && "formateur"}
+                </Link>
+              </Box>
+            </div>
+          </Box>
+          {!oneEstablishment && (
+            <Box mb={16}>
+              <Heading as="h2" fontSize="beta" mb={4}>
+                Organisme Gestionnaire
+              </Heading>
               {formation.etablissement_gestionnaire_entreprise_raison_sociale && (
-                <div className="field">
-                  <h3>Raison sociale</h3>
-                  <p>{formation.etablissement_gestionnaire_entreprise_raison_sociale}</p>
-                </div>
+                <Text mb={4}>
+                  Raison sociale: <strong>{formation.etablissement_gestionnaire_entreprise_raison_sociale}</strong>
+                </Text>
               )}
               {formation.etablissement_gestionnaire_enseigne && (
-                <div className="field">
-                  <h3>Enseigne</h3>
-                  <p>{formation.etablissement_gestionnaire_enseigne}</p>
-                </div>
+                <Text mb={4}>
+                  Enseigne: <strong>{formation.etablissement_gestionnaire_enseigne}</strong>
+                </Text>
               )}
-              <div className="field">
-                <h3>Uai</h3>
-                <p>{formation.etablissement_gestionnaire_uai}</p>
-              </div>
-              <div className="field field-button mt-3">
-                <a
-                  href={`/etablissement/${formation.etablissement_gestionnaire_id}`}
+              <Text mb={4}>
+                Uai: <strong>{formation.etablissement_gestionnaire_uai}</strong>
+              </Text>
+              <Box mb={4}>
+                <Link
+                  as={NavLink}
+                  to={`/etablissement/${formation.etablissement_gestionnaire_id}`}
                   target="_blank"
-                  rel="noreferrer noopener"
+                  mt={3}
+                  textDecoration="underline"
+                  color="blue.500"
+                  fontWeight="bold"
                 >
-                  <Button colorScheme="teal" variant="outline" isFullWidth>
-                    Voir l'organisme gestionnaire
-                  </Button>
-                </a>
-              </div>
-            </div>
-          </div>
-        )}
-      </GridItem>
-    </Grid>
+                  Voir l'organisme gestionnaire
+                </Link>
+              </Box>
+            </Box>
+          )}
+        </GridItem>
+      </Grid>
+    </Box>
   );
 };
 
@@ -372,6 +371,73 @@ export default ({ match }) => {
   const { search } = useLocation();
   const { source } = queryString.parse(search);
   const isMna = source === "mna";
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const [auth] = useAuth();
+  const hasRightToEdit = !isMna && hasRightToEditFormation(displayedFormation, auth);
+
+  const getPublishRadioValue = (status) => {
+    if (["publié", "en attente de publication"].includes(status)) {
+      return "true";
+    }
+    if (["non publié"].includes(status)) {
+      return "false";
+    }
+
+    return undefined;
+  };
+
+  const {
+    values: publishValues,
+    handleChange: handlePublishChange,
+    handleSubmit: handlePublishSubmit,
+    isSubmitting: isPublishSubmitting,
+    setFieldValue: setPublishFieldValue,
+  } = useFormik({
+    initialValues: {
+      affelnet: getPublishRadioValue(formation?.affelnet_statut),
+      parcoursup: getPublishRadioValue(formation?.parcoursup_statut),
+    },
+    onSubmit: ({ affelnet, parcoursup }) => {
+      return new Promise(async (resolve) => {
+        const body = {};
+
+        // check if can edit depending on the status
+        if (affelnet === "true") {
+          if (["non publié", "à publier"].includes(formation?.affelnet_statut)) {
+            body.affelnet_statut = "en attente de publication";
+          }
+        } else if (affelnet === "false") {
+          if (["en attente de publication", "à publier"].includes(formation?.affelnet_statut)) {
+            body.affelnet_statut = "non publié";
+          }
+        }
+
+        if (parcoursup === "true") {
+          if (["non publié", "à publier"].includes(formation?.parcoursup_statut)) {
+            body.parcoursup_statut = "en attente de publication";
+          }
+        } else if (parcoursup === "false") {
+          if (["en attente de publication", "à publier"].includes(formation?.parcoursup_statut)) {
+            body.parcoursup_statut = "non publié";
+          }
+        }
+
+        if (Object.keys(body).length > 0) {
+          const updatedFormation = await _put(`${endpointNewFront}/entity/formations2021/${formation._id}`, {
+            num_academie: formation.num_academie,
+            ...body,
+          });
+          setFormation(updatedFormation);
+          setPublishFieldValue("affelnet", getPublishRadioValue(updatedFormation?.affelnet_statut));
+          setPublishFieldValue("parcoursup", getPublishRadioValue(updatedFormation?.parcoursup_statut));
+        }
+
+        onClose();
+        resolve("onSubmitHandler publish complete");
+      });
+    },
+  });
 
   const { values, handleSubmit, handleChange, setFieldValue, isSubmitting } = useFormik({
     initialValues: {
@@ -436,12 +502,15 @@ export default ({ match }) => {
         setFieldValue("cfd", displayedFormation.cfd || "");
         setFieldValue("num_academie", displayedFormation.num_academie || "");
         setFieldValue("rncp_code", displayedFormation.rncp_code || "");
+
+        setPublishFieldValue("affelnet", getPublishRadioValue(form?.affelnet_statut));
+        setPublishFieldValue("parcoursup", getPublishRadioValue(form?.parcoursup_statut));
       } catch (e) {
         history.push("/404");
       }
     }
     run();
-  }, [match, setFieldValue, isMna, history]);
+  }, [match, setFieldValue, isMna, history, setPublishFieldValue]);
 
   const onEdit = () => {
     setEdition(!edition);
@@ -462,42 +531,177 @@ export default ({ match }) => {
     }
   };
 
+  const isParcoursupPublishDisabled = ["hors périmètre", "publié"].includes(formation?.parcoursup_statut);
+  const isAffelnetPublishDisabled = ["hors périmètre", "publié"].includes(formation?.affelnet_statut);
+
   return (
     <Layout>
-      <div className="page formation">
-        <div className="notice">
-          <Container maxW="xl">
-            {pendingFormation && (
-              <Alert status="info" fontWeight={"bold"}>
-                Cette formation a été {pendingFormation.published ? "éditée" : "supprimée"} et est en attente de
-                traitement
-                <br />
-              </Alert>
-            )}
-            {!displayedFormation && (
-              <Box align="center" p={2}>
-                <Spinner />
+      <Box bg="secondaryBackground" w="100%" py={[1, 8]} px={[1, 24]}>
+        <Container maxW="xl">
+          {!displayedFormation && (
+            <Box align="center" p={2}>
+              <Spinner />
+            </Box>
+          )}
+
+          {displayedFormation && (
+            <>
+              <Box bg="white" p={10} my={6} boxShadow="0 2px 2px 0 rgba(215, 215, 215, 0.5)" borderRadius={4}>
+                <Heading as="h1" fontSize="beta">
+                  {displayedFormation.intitule_long}
+                </Heading>
+                {hasRightToEdit && (
+                  <>
+                    <Text fontSize="gamma" fontWeight="bold" mt={3} mb={[2, 0]}>
+                      Statuts et publications de la formation
+                    </Text>
+                    <Flex justify="space-between" alignItems={["center", "flex-end"]} flexDirection={["column", "row"]}>
+                      <Box>
+                        <StatusBadge source="Affelnet" status={formation.affelnet_statut} mr={[0, 3]} />
+                        <StatusBadge source="Parcoursup" status={formation.parcoursup_statut} mt={[1, 0]} />
+                      </Box>
+                      <Button
+                        colorScheme="blue"
+                        px={[8, 20]}
+                        mt={[8, 0]}
+                        onClick={() => {
+                          onOpen();
+                        }}
+                      >
+                        Gérer les publications
+                      </Button>
+                    </Flex>
+                  </>
+                )}
               </Box>
-            )}
-            {displayedFormation && (
-              <>
-                <h1 className="heading">{displayedFormation.intitule_long}</h1>
-                <Formation
-                  formation={displayedFormation}
-                  edition={edition}
-                  onEdit={onEdit}
-                  values={values}
-                  handleSubmit={handleSubmit}
-                  handleChange={handleChange}
-                  isMna={isMna}
-                  isSubmitting={isSubmitting}
-                  onDelete={onDelete}
-                />
-              </>
-            )}
-          </Container>
-        </div>
-      </div>
+              <Formation
+                formation={displayedFormation}
+                edition={edition}
+                onEdit={onEdit}
+                values={values}
+                handleSubmit={handleSubmit}
+                handleChange={handleChange}
+                hasRightToEdit={hasRightToEdit}
+                isSubmitting={isSubmitting}
+                onDelete={onDelete}
+                pendingFormation={pendingFormation}
+              />
+              {!edition && hasRightToEdit && (
+                <Flex justifyContent={["center", "flex-end"]} my={[6, 12]}>
+                  <Button
+                    variant="outline"
+                    colorScheme="red"
+                    onClick={onDelete}
+                    disabled={!displayedFormation.published}
+                    px={[8, 20]}
+                    mr={[0, 12]}
+                  >
+                    Supprimer la formation
+                  </Button>
+                </Flex>
+              )}
+            </>
+          )}
+        </Container>
+      </Box>
+      <Modal isOpen={isOpen} onClose={onClose} size="5xl">
+        <ModalOverlay />
+        <ModalContent bg="white" color="primaryText">
+          <ModalCloseButton color="grey.600" _focus={{ boxShadow: "none", outlineWidth: 0 }} />
+          <ModalHeader pt={[3, 20]}>
+            <Center>
+              <Heading as="h2" fontSize="alpha">
+                Gérer les publications
+              </Heading>
+            </Center>
+          </ModalHeader>
+          <ModalBody px={[2, 16]} pt={[2, 8]} pb={[8, 20]}>
+            <Center borderBottom="1px solid" borderColor="grey.400" p={4} mx={[0, 24]}>
+              <FormControl display="flex" alignItems="center" w="auto" isDisabled={isAffelnetPublishDisabled}>
+                <FormLabel htmlFor="affelnet" mb={0} fontSize="gamma">
+                  Demander la publication Affelnet:
+                </FormLabel>
+                <RadioGroup defaultValue={publishValues.affelnet} id="affelnet" name="affelnet">
+                  <Stack spacing={4} direction="row">
+                    <Radio
+                      mb={0}
+                      size="lg"
+                      value="true"
+                      isDisabled={isAffelnetPublishDisabled}
+                      onChange={handlePublishChange}
+                    >
+                      Oui
+                    </Radio>
+                    <Radio
+                      mb={0}
+                      size="lg"
+                      value="false"
+                      isDisabled={isAffelnetPublishDisabled}
+                      onChange={handlePublishChange}
+                    >
+                      Non
+                    </Radio>
+                  </Stack>
+                </RadioGroup>
+              </FormControl>
+            </Center>
+            <Center borderBottom="1px solid" borderColor="grey.400" p={4} mx={[0, 24]}>
+              <FormControl display="flex" alignItems="center" w="auto" isDisabled={isParcoursupPublishDisabled}>
+                <FormLabel htmlFor="parcoursup" mb={0} fontSize="gamma">
+                  Demander la publication ParcourSup:
+                </FormLabel>
+                <RadioGroup defaultValue={publishValues.parcoursup} id="parcoursup" name="parcoursup">
+                  <Stack spacing={4} direction="row">
+                    <Radio
+                      mb={0}
+                      size="lg"
+                      value="true"
+                      isDisabled={isParcoursupPublishDisabled}
+                      onChange={handlePublishChange}
+                    >
+                      Oui
+                    </Radio>
+                    <Radio
+                      mb={0}
+                      size="lg"
+                      value="false"
+                      isDisabled={isParcoursupPublishDisabled}
+                      onChange={handlePublishChange}
+                    >
+                      Non
+                    </Radio>
+                  </Stack>
+                </RadioGroup>
+              </FormControl>
+            </Center>
+            <Flex flexDirection={["column", "row"]} pt={[3, 16]} justifyContent="center">
+              <Button
+                variant="outline"
+                colorScheme="blue"
+                onClick={() => {
+                  setPublishFieldValue("affelnet", getPublishRadioValue(formation?.affelnet_statut));
+                  setPublishFieldValue("parcoursup", getPublishRadioValue(formation?.parcoursup_statut));
+                  onClose();
+                }}
+                mr={[0, 8]}
+                px={[8, 20]}
+                mb={[3, 0]}
+              >
+                Annuler
+              </Button>
+              <Button
+                type="submit"
+                colorScheme="blue"
+                onClick={handlePublishSubmit}
+                isLoading={isPublishSubmitting}
+                loadingText="Enregistrement des modifications"
+              >
+                Enregistrer les modifications
+              </Button>
+            </Flex>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </Layout>
   );
 };

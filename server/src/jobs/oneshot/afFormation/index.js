@@ -1,4 +1,4 @@
-const { seed, update } = require("./importer");
+const { seed, update_oleoduc } = require("./importer");
 const logger = require("../../../common/logger");
 const { runScript } = require("../../scriptWrapper");
 const { AfFormation } = require("../../../common/model");
@@ -12,7 +12,7 @@ if (process.env.standalone) {
       await seed();
     }
     logger.info("Mise à jour des codes formation diplôme");
-    await update(tableCorrespondance);
+    await update_oleoduc(tableCorrespondance);
 
     logger.info(`End affelnet import`);
   });

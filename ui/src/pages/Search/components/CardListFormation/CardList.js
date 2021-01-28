@@ -1,10 +1,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import { Link } from "react-router-dom";
-import { Badge } from "@chakra-ui/react";
 import "./cardList.css";
 import { hasOneOfRoles } from "../../../../common/utils/rolesUtils";
 import useAuth from "../../../../common/hooks/useAuth";
+import { StatusBadge } from "../../../../common/components/StatusBadge";
 
 const CardList = ({ data, f2021 }) => {
   let [auth] = useAuth();
@@ -31,12 +31,8 @@ const CardList = ({ data, f2021 }) => {
             </p>
             {hasOneOfRoles(auth, ["admin", "instructeur"]) && (
               <div className="pills-statuts">
-                <Badge variant="solid" colorScheme="green" className="badge">
-                  Parcoursup - {data.parcoursup_statut}
-                </Badge>
-                <Badge variant="solid" colorScheme="green" className="badge">
-                  Affelnet - {data.affelnet_statut}
-                </Badge>
+                <StatusBadge source="Parcoursup" status={data.parcoursup_statut} mr={2} />
+                <StatusBadge source="Affelnet" status={data.affelnet_statut} />
               </div>
             )}
           </div>

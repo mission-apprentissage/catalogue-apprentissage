@@ -29,8 +29,12 @@ const ToggleCatalogue = React.memo(({ filters, onChanged }) => {
           ? {}
           : {
               query: {
-                match: {
-                  etablissement_reference_catalogue_published: data === "Catalogue général",
+                bool: {
+                  must: [
+                    { match: { etablissement_reference_catalogue_published: data === "Catalogue général" } },
+                    // { match: { rncp_etablissement_reference_habilite: data === "Catalogue général" } },
+                    // { match: { rncp_eligible_apprentissage: data === "Catalogue général" } },
+                  ],
                 },
               },
             };

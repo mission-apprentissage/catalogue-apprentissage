@@ -33,6 +33,15 @@ const getEstablishmentAddress = (establishment) => {
   return [numero_voie, type_voie, nom_voie].filter((val) => val).join(" ");
 };
 
+const isHabiliteRncp = ({ partenaires = [], certificateurs = [] }, siret) => {
+  const isPartenaire = (partenaires ?? []).some(
+    ({ SIRET_PARTENAIRE, HABILITATION_PARTENAIRE }) =>
+      SIRET_PARTENAIRE === siret && ["HABILITATION_ORGA_FORM", "HABILITATION_FORMER"].includes(HABILITATION_PARTENAIRE)
+  );
+  const isCertificateur = (certificateurs ?? []).some(({ SIRET_CERTIFICATEUR }) => SIRET_CERTIFICATEUR === siret);
+  return isPartenaire || isCertificateur;
+};
+
 const getEtablissementReference = ({ gestionnaire, formateur }) => {
   // Check etablissement reference found
   if (!gestionnaire && !formateur) {
@@ -127,7 +136,12 @@ const mapEtablissementKeys = async (
   };
 };
 
-const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissement_formateur_siret, cpMap = {}) => {
+const etablissementsMapper = async (
+  etablissement_gestionnaire_siret,
+  etablissement_formateur_siret,
+  cpMap = {},
+  rncpInfo
+) => {
   try {
     if (!etablissement_gestionnaire_siret && !etablissement_formateur_siret) {
       throw new Error("etablissementsMapper gestionnaire_siret, formateur_siret  must be provided");
@@ -170,6 +184,9 @@ const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissem
         etablissement_reference_type: referenceEstablishment.computed_type,
         etablissement_reference_conventionne: referenceEstablishment.computed_conventionne,
         etablissement_reference_datadock: referenceEstablishment.computed_info_datadock,
+        rncp_etablissement_reference_habilite: isHabiliteRncp(rncpInfo, referenceEstablishment.siret),
+        rncp_etablissement_gestionnaire_habilite: isHabiliteRncp(rncpInfo, etablissement_gestionnaire_siret),
+        rncp_etablissement_formateur_habilite: isHabiliteRncp(rncpInfo, etablissement_formateur_siret),
 
         ...geolocInfo,
       },

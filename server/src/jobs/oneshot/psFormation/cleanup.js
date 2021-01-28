@@ -71,6 +71,7 @@ const run = async () => {
     if (matching_mna_etablissement.length > 0) {
       new_matching_etab = matching_mna_etablissement.map((e) => {
         return {
+          _id: e._id,
           siege_social: e.siege_social,
           etablissement_siege_siret: e.etablissement_siege_siret,
           siret: e.siret,
