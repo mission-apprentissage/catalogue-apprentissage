@@ -1,85 +1,68 @@
-const { oleoduc, writeData, transformData } = require("oleoduc");
+const { asyncForEach } = require("../../common/utils/asyncUtils");
+const { paginator } = require("../common/utils/paginator");
 const { AfFormation } = require("../../common/model");
-const logger = require("../../common/logger");
 const { etablissement } = require("./mapper");
-const { Readable } = require("stream");
+const logger = require("../../common/logger");
 const mongoose = require("mongoose");
 
 module.exports = async (catalogue) => {
   logger.info(`--- START ETABLISSEMENT COVERAGE ---`);
 
-  //const getEtablissements = (query) => catalogue.getEtablissements({ query });
+  const getEtablissements = (query) => catalogue.getEtablissements({ query });
 
-  const allEtablissements = await catalogue.getEtablissements({});
+  await paginator(
+    AfFormation,
+    { filter: { matching_type: { $ne: null } }, lean: true, limit: 6 },
+    async ({ matching_mna_formation, _id }) => {
+      let etablissements = [];
 
-  console.log("allEtablissements.length", allEtablissements.length);
+      await asyncForEach(
+        matching_mna_formation,
+        async ({ uai_formation, etablissement_formateur_uai, etablissement_gestionnaire_uai }) => {
+          let exist = etablissements.find(
+            (x) =>
+              x.uai === uai_formation ||
+              x.uai === etablissement_formateur_uai ||
+              x.uai === etablissement_gestionnaire_uai
+          );
 
-  await oleoduc(
-    AfFormation.find({ matching_type: { $ne: null }, matching_mna_etablissement: { $eq: [] } })
-      .lean()
-      .cursor(),
-    transformData((formation) => {
-      return { formations: formation.matching_mna_formation, id: formation._id };
-    }),
-    transformData(
-      async ({ formations, id }) => {
-        let etablissements = [];
+          if (exist) return;
 
-        await oleoduc(
-          Readable.from(formations),
-          writeData(async ({ uai_formation, etablissement_formateur_uai, etablissement_gestionnaire_uai }) => {
-            let exist = etablissements.find(
-              (x) =>
-                x.uai === uai_formation ||
-                x.uai === etablissement_formateur_uai ||
-                x.uai === etablissement_gestionnaire_uai
-            );
+          if (uai_formation) {
+            let resuai = await getEtablissements({ uai: uai_formation });
 
-            if (exist) return;
-
-            if (uai_formation) {
-              // let resuai = await getEtablissements({ uai: uai_formation });
-              let resuai = allEtablissements.filter((x) => (x.uai = uai_formation));
-
-              if (resuai.length > 0) {
-                resuai.forEach((x) => {
-                  const formatted = etablissement(x);
-                  etablissements.push({ ...formatted, matched_uai: "UAI_FORMATION" });
-                });
-              }
+            if (resuai.length > 0) {
+              resuai.forEach((x) => {
+                const formatted = etablissement(x);
+                etablissements.push({ ...formatted, matched_uai: "UAI_FORMATION" });
+              });
             }
+          }
 
-            if (etablissement_formateur_uai) {
-              // let resformateur = await getEtablissements({ uai: etablissement_formateur_uai });
-              let resformateur = allEtablissements.filter((x) => (x.uai = etablissement_formateur_uai));
+          if (etablissement_formateur_uai) {
+            let resformateur = await getEtablissements({ uai: etablissement_formateur_uai });
 
-              if (resformateur.length > 0) {
-                resformateur.forEach((x) => {
-                  const formatted = etablissement(x);
-                  etablissements.push({ ...formatted, matched_uai: "UAI_FORMATEUR" });
-                });
-              }
+            if (resformateur.length > 0) {
+              resformateur.forEach((x) => {
+                const formatted = etablissement(x);
+                etablissements.push({ ...formatted, matched_uai: "UAI_FORMATEUR" });
+              });
             }
+          }
 
-            if (etablissement_gestionnaire_uai) {
-              // let resgestionnaire = await getEtablissements({ uai: etablissement_gestionnaire_uai });
-              let resgestionnaire = allEtablissements.filter((x) => (x.uai = etablissement_gestionnaire_uai));
+          if (etablissement_gestionnaire_uai) {
+            let resgestionnaire = await getEtablissements({ uai: etablissement_gestionnaire_uai });
 
-              if (resgestionnaire.length > 0) {
-                resgestionnaire.forEach((x) => {
-                  const formatted = etablissement(x);
-                  etablissements.push({ ...formatted, matched_uai: "UAI_GESTIONNAIRE" });
-                });
-              }
+            if (resgestionnaire.length > 0) {
+              resgestionnaire.forEach((x) => {
+                const formatted = etablissement(x);
+                etablissements.push({ ...formatted, matched_uai: "UAI_GESTIONNAIRE" });
+              });
             }
-          })
-        );
+          }
+        }
+      );
 
-        return { etablissements: etablissements, id: id };
-      }
-      // { parallel: 10 }
-    ),
-    writeData(async ({ etablissements, id }) => {
       if (etablissements.length === 0) return;
 
       const result = etablissements.reduce((acc, item) => {
@@ -104,11 +87,12 @@ module.exports = async (catalogue) => {
         };
       });
 
-      logger.info(`${formatted.length} etablissement ajouté - id_formation : ${id}`);
-      await AfFormation.findByIdAndUpdate(id, {
+      // logger.info(`${formatted.length} etablissement ajouté - id_formation : ${_id}`);
+      await AfFormation.findByIdAndUpdate(_id, {
         matching_mna_etablissement: formatted,
       });
-    })
+    }
   );
+
   logger.info(`--- END ETABLISSEMENT COVERAGE ---`);
 };
