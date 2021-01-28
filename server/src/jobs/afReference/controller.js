@@ -1,6 +1,7 @@
 const { ConvertedFormation } = require("../../common/model");
 const logger = require("../../common/logger");
 const afReferenceMapper = require("../../logic/mappers/afReferenceMapper");
+const { paginator } = require("../common/utils/paginator");
 const { toBePublishedRules } = require("../common/utils/referenceUtils");
 
 const run = async () => {
@@ -13,46 +14,29 @@ const run = async () => {
   );
 
   // 2 - check for published trainings in affelnet (set "publié")
-  let offset = 0;
-  let limit = 100;
-  let computed = 0;
-  let nbFormations = 10;
+  await paginator(ConvertedFormation, { published: true }, async (formation) => {
+    const { affelnet_reference, messages, error } = await afReferenceMapper({
+      cfd: formation.cfd,
+      siret_formateur: formation.etablissement_formateur_siret,
+      siret_gestionnaire: formation.etablissement_gestionnaire_siret,
+    });
 
-  while (computed < nbFormations) {
-    let { docs, total } = await ConvertedFormation.paginate({ published: true }, { offset, limit });
-    nbFormations = total;
+    if (error) {
+      // do nothing error is already logged in mapper
+      return;
+    }
 
-    await Promise.all(
-      docs.map(async (formation) => {
-        computed += 1;
-        const { affelnet_reference, messages, error } = await afReferenceMapper({
-          cfd: formation.cfd,
-          siret_formateur: formation.etablissement_formateur_siret,
-          siret_gestionnaire: formation.etablissement_gestionnaire_siret,
-        });
+    formation.affelnet_reference = affelnet_reference;
 
-        if (error) {
-          // do nothing error is already logged in mapper
-          return;
-        }
+    if (affelnet_reference) {
+      formation.affelnet_error = "success";
+    } else {
+      formation.affelnet_error = messages?.error ?? null;
+    }
 
-        formation.affelnet_reference = affelnet_reference;
-
-        if (affelnet_reference) {
-          formation.affelnet_error = "success";
-        } else {
-          formation.affelnet_error = messages?.error ?? null;
-        }
-
-        formation.last_update_at = Date.now();
-        await formation.save();
-      })
-    );
-
-    offset += limit;
-
-    logger.info(`progress ${computed}/${total}`);
-  }
+    formation.last_update_at = Date.now();
+    await formation.save();
+  });
 
   // update affelnet_statut outside loop to not mess up with paginate
   await ConvertedFormation.updateMany(
