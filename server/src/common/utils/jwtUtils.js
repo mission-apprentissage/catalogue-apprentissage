@@ -25,7 +25,7 @@ module.exports = {
       email: user.email,
       academie: user.academie,
       account_status: user.account_status,
-      roles: permissions.isAdmin ? ["admin"] : user.roles,
+      roles: permissions.isAdmin ? ["admin", ...user.roles] : user.roles,
     };
 
     return createToken("user", user.username, { payload, ...options });

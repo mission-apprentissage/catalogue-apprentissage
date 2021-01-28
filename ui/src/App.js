@@ -80,7 +80,7 @@ export default () => {
                 </PrivateRoute>
               )}
               <Route exact path="/" component={HomePage} />
-              <Route exact path="/recherche/formations-2020" component={Search} />
+              {/* <Route exact path="/recherche/formations-2020" component={Search} /> */}
               <Route exact path="/recherche/formations-2021" component={Search} />
               <Route exact path="/recherche/etablissements" component={Search} />
               <Route exact path={`/formation/:id`} component={Formation} />
