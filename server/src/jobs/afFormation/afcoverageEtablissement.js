@@ -9,7 +9,11 @@ const { asyncForEach } = require("../../common/utils/asyncUtils");
 module.exports = async (catalogue) => {
   logger.info(`--- START ETABLISSEMENT COVERAGE ---`);
 
-  const getEtablissements = (query) => catalogue.getEtablissements({ query });
+  //const getEtablissements = (query) => catalogue.getEtablissements({ query });
+
+  const allEtablissements = await catalogue.getEtablissements({});
+
+  console.log("allEtablissements.length", allEtablissements.length);
 
   let offset = 0;
   let limit = 5;
@@ -39,7 +43,8 @@ module.exports = async (catalogue) => {
             if (exist) return;
 
             if (uai_formation) {
-              let resuai = await getEtablissements({ uai: uai_formation });
+              // let resuai = await getEtablissements({ uai: uai_formation });
+              let resuai = allEtablissements.filter((x) => (x.uai = uai_formation));
 
               if (resuai.length > 0) {
                 resuai.forEach((x) => {
@@ -50,7 +55,8 @@ module.exports = async (catalogue) => {
             }
 
             if (etablissement_formateur_uai) {
-              let resformateur = await getEtablissements({ uai: etablissement_formateur_uai });
+              // let resformateur = await getEtablissements({ uai: etablissement_formateur_uai });
+              let resformateur = allEtablissements.filter((x) => (x.uai = etablissement_formateur_uai));
 
               if (resformateur.length > 0) {
                 resformateur.forEach((x) => {
@@ -61,7 +67,8 @@ module.exports = async (catalogue) => {
             }
 
             if (etablissement_gestionnaire_uai) {
-              let resgestionnaire = await getEtablissements({ uai: etablissement_gestionnaire_uai });
+              // let resgestionnaire = await getEtablissements({ uai: etablissement_gestionnaire_uai });
+              let resgestionnaire = allEtablissements.filter((x) => (x.uai = etablissement_gestionnaire_uai));
 
               if (resgestionnaire.length > 0) {
                 resgestionnaire.forEach((x) => {
