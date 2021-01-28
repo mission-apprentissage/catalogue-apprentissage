@@ -1,49 +1,18 @@
-const https = require("https");
-const config = require("config");
+require("dotenv").config();
 const { Readable } = require("stream");
-const { oleoduc, writeData, accumulateData } = require("oleoduc");
+const { oleoduc, writeData } = require("oleoduc");
 const logger = require("../../common/logger");
 const { runScript } = require("../scriptWrapper");
 const { Etablissement } = require("../../common/model");
-const { parse: parseUrl } = require("url"); // eslint-disable-line node/no-deprecated-api
 
-const getEtablissements = async () => {
-  let httpResponse = await new Promise((resolve, reject) => {
-    let options = {
-      ...parseUrl(`${config.tableCorrespondance.endpoint}/api/entity/etablissements?limit=10000`),
-      method: "GET",
-    };
-
-    let req = https.request(options, (res) => {
-      if (res.statusCode >= 400) {
-        reject(new Error(`Unable to request TCO etablissement`));
-      }
-
-      resolve(res);
-    });
-    req.end();
-  });
-
-  let etablissements = [];
-  await oleoduc(
-    httpResponse,
-    accumulateData((acc, data) => acc + data, { accumulator: "" }),
-    writeData((data) => {
-      let { etablissements: res } = JSON.parse(data.toString());
-      etablissements = res;
-    })
-  );
-  return etablissements;
-};
-
-runScript(async () => {
+runScript(async ({ catalogue }) => {
   let stats = {
     total: 0,
     created: 0,
     failed: 0,
   };
 
-  let etablissements = await getEtablissements();
+  let etablissements = await catalogue.getEtablissements({ limit: 10000, query: {} });
 
   logger.info("Deleting all etablissements...");
   await Etablissement.deleteMany({});
