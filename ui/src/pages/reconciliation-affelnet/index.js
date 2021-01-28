@@ -117,6 +117,10 @@ export default (props) => {
                           );
                         })}
                       </Select>
+                      <Text ml="3">sur</Text>
+                      <Heading size="sm" ml="2">
+                        {data.pages}
+                      </Heading>
                     </Flex>
                   )}
                 </Flex>

@@ -14,7 +14,7 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
     "/",
     tryCatch(async (req, res) => {
       const { type, page } = req.query;
-      let data = await AfFormation.paginate({ matching_type: type }, { page });
+      let data = await AfFormation.paginate({ matching_type: type }, { page, sort: { etat_reconciliation: 1 } });
 
       if (data.docs.length > 0) {
         const result = await Promise.all(
@@ -63,7 +63,7 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
   router.post(
     "/reconciliation",
     tryCatch(async (req, res) => {
-      const { mapping, ...rest } = req.body;
+      const { mapping, id_formation, ...rest } = req.body;
       const reconciliation = combinate(mapping);
 
       let payload = reconciliation.reduce((acc, item) => {
@@ -77,6 +77,10 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
       let { code_cfd, uai } = payload;
 
       const result = await AfReconciliation.findOneAndUpdate({ code_cfd, uai }, payload, { upsert: true, new: true });
+
+      if (result) {
+        await AfFormation.findByIdAndUpdate(id_formation, { etat_reconciliation: true });
+      }
 
       res.json(result);
     })

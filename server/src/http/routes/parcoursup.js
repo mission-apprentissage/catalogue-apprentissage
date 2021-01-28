@@ -68,7 +68,7 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
   router.post(
     "/reconciliation",
     tryCatch(async (req, res) => {
-      const { mapping, ...rest } = req.body;
+      const { mapping, id_formation, ...rest } = req.body;
       const reconciliation = combinate(mapping);
 
       let payload = reconciliation.reduce((acc, item) => {
@@ -88,6 +88,10 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
         payload,
         { upsert: true, new: true }
       );
+
+      if (result) {
+        await PsFormation.findByIdAndUpdate(id_formation, { etat_reconciliation: true });
+      }
 
       res.json(result);
     })
