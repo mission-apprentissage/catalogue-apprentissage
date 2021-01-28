@@ -19,7 +19,7 @@ import { _get } from "../../common/httpClient";
 import { useQuery } from "react-query";
 import AppLayout from "../layout/Layout";
 
-const matchingType = [1, 2, 3, 4, 5];
+const matchingType = [1, 2, 3];
 
 const StyledButton = ({ type, matching, size, toggleMatching, ...rest }) => {
   return (
