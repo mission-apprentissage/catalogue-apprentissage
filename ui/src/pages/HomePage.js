@@ -18,7 +18,7 @@ const endpointTCO =
 export default () => {
   const [loading, setLoading] = useState(true);
   const [countEstablishments, setCountEstablishments] = useState(0);
-  const [countFormations, setCountFormations] = useState(0);
+  // const [countFormations, setCountFormations] = useState(0);
   const [countFormations2021, setCountFormations2021] = useState(0);
 
   useEffect(() => {
@@ -31,8 +31,8 @@ export default () => {
         const countEtablissement = await _get(`${endpointTCO}/entity/etablissements/count?${params}`, false);
         setCountEstablishments(countEtablissement);
 
-        const countFormations = await _get(`${endpointNewFront}/entity/formations/count?${params}`, false);
-        setCountFormations(countFormations);
+        // const countFormations = await _get(`${endpointNewFront}/entity/formations/count?${params}`, false);
+        // setCountFormations(countFormations);
 
         const countFormations2021 = await _get(`${endpointNewFront}/entity/formations2021/count?${params}`, false);
         setCountFormations2021(countFormations2021);
@@ -67,8 +67,7 @@ export default () => {
                   {loading && <div>chargement...</div>}
                   {!loading && (
                     <strong>
-                      {countFormations} formations 2020, {countFormations2021} formations 2021 et plus de{" "}
-                      {countEstablishments} établissements !
+                      {countFormations2021} formations 2021 et plus de {countEstablishments} établissements !
                     </strong>
                   )}
                   <br />
@@ -124,11 +123,11 @@ export default () => {
                     Consulter la liste des formations 2021
                   </Button>
                 </Grid.Col>
-                <Grid.Col width={4}>
+                {/* <Grid.Col width={4}>
                   <Button as={NavLink} bg="#007bff" color="#fff" className="nav-link" to="/recherche/formations-2020">
                     Consulter la liste des formations 2020
                   </Button>
-                </Grid.Col>
+                </Grid.Col> */}
                 <Grid.Col width={4}>
                   <Button as={NavLink} bg="#007bff" color="#fff" className="nav-link" to="/recherche/etablissements">
                     Consulter la liste des établissements
