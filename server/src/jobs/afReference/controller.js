@@ -78,13 +78,6 @@ const run = async () => {
       $and: [
         ...toBePublishedRules,
         {
-          $or: [
-            { etablissement_formateur_uai: { $ne: null } },
-            { etablissement_gestionnaire_uai: { $ne: null } },
-            { uai_formation: { $ne: null } },
-          ],
-        },
-        {
           diplome: {
             $nin: [
               "AUTRES DIPLOMES DE NIVEAU IV",
