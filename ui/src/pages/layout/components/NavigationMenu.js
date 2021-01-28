@@ -32,11 +32,11 @@ const NavigationMenu = () => {
                     <i className="fe fe-box"></i> Formations 2021
                   </NavLink>
                 </li>
-                <li className="nav-item">
+                {/* <li className="nav-item">
                   <NavLink className="nav-link" to="/recherche/formations-2020" activeClassName="active">
                     <i className="fe fe-box"></i> Formations 2020
                   </NavLink>
-                </li>
+                </li> */}
                 <li className="nav-item">
                   <NavLink className="nav-link" to="/recherche/etablissements" activeClassName="active">
                     <i className="fe fe-box"></i> Établissements
