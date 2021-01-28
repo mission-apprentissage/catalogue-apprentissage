@@ -1,18 +1,18 @@
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 const { paginator } = require("../common/utils/paginator");
-const { AfFormation } = require("../../common/model");
+const { AfFormation, Etablissement } = require("../../common/model");
 const { etablissement } = require("./mapper");
 const logger = require("../../common/logger");
 const mongoose = require("mongoose");
 
-module.exports = async (catalogue) => {
+module.exports = async () => {
   logger.info(`--- START ETABLISSEMENT COVERAGE ---`);
 
-  const getEtablissements = (query) => catalogue.getEtablissements({ query });
+  // const getEtablissements = (query) => catalogue.getEtablissements({ query });
 
   await paginator(
     AfFormation,
-    { filter: { matching_type: { $ne: null } }, lean: true, limit: 6 },
+    { filter: { matching_type: { $ne: null } }, lean: true },
     async ({ matching_mna_formation, _id }) => {
       let etablissements = [];
 
@@ -29,7 +29,8 @@ module.exports = async (catalogue) => {
           if (exist) return;
 
           if (uai_formation) {
-            let resuai = await getEtablissements({ uai: uai_formation });
+            // let resuai = await getEtablissements({ uai: uai_formation });
+            let resuai = await Etablissement.find({ uai: uai_formation });
 
             if (resuai.length > 0) {
               resuai.forEach((x) => {
@@ -40,7 +41,8 @@ module.exports = async (catalogue) => {
           }
 
           if (etablissement_formateur_uai) {
-            let resformateur = await getEtablissements({ uai: etablissement_formateur_uai });
+            // let resformateur = await getEtablissements({ uai: etablissement_formateur_uai });
+            let resformateur = await Etablissement.find({ uai: etablissement_formateur_uai });
 
             if (resformateur.length > 0) {
               resformateur.forEach((x) => {
@@ -51,7 +53,8 @@ module.exports = async (catalogue) => {
           }
 
           if (etablissement_gestionnaire_uai) {
-            let resgestionnaire = await getEtablissements({ uai: etablissement_gestionnaire_uai });
+            // let resgestionnaire = await getEtablissements({ uai: etablissement_gestionnaire_uai });
+            let resgestionnaire = await Etablissement.find({ uai: etablissement_gestionnaire_uai });
 
             if (resgestionnaire.length > 0) {
               resgestionnaire.forEach((x) => {

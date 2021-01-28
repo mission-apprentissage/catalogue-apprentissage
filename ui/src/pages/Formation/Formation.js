@@ -111,6 +111,7 @@ const Formation = ({
   return (
     <Box bg="#fafbfc" boxShadow="0 2px 2px 0 rgba(215, 215, 215, 0.5)" borderRadius={4}>
       <Flex
+        borderRadius="4px 4px 0 0"
         bg="white"
         justifyContent="space-between"
         alignItems="center"
@@ -135,7 +136,7 @@ const Formation = ({
         </Alert>
       )}
       <Grid templateColumns="repeat(12, 1fr)">
-        <GridItem colSpan={[12, 7]} bg="white" p={8}>
+        <GridItem colSpan={[12, 7]} bg="white" p={8} borderBottomLeftRadius={[0, 4]}>
           <Box mb={16}>
             <Heading as="h2" fontSize="beta" mb={4}>
               Détails
@@ -229,7 +230,7 @@ const Formation = ({
             </Box>
           </Box>
         </GridItem>
-        <GridItem colSpan={[12, 5]} bg="#fafbfc" p={8}>
+        <GridItem colSpan={[12, 5]} bg="#fafbfc" p={8} borderBottomRightRadius={4} borderBottomLeftRadius={[4, 0]}>
           <Box mb={16}>
             <Heading as="h2" fontSize="beta" mb={4}>
               À propos
@@ -607,98 +608,108 @@ export default ({ match }) => {
       <Modal isOpen={isOpen} onClose={onClose} size="5xl">
         <ModalOverlay />
         <ModalContent bg="white" color="primaryText">
-          <ModalCloseButton color="grey.600" _focus={{ boxShadow: "none", outlineWidth: 0 }} />
-          <ModalHeader pt={[3, 20]}>
+          <ModalCloseButton color="grey.600" _focus={{ boxShadow: "none", outlineWidth: 0 }} size="lg" />
+          <ModalHeader pt={[3, 20]} pb={[3, 8]} bg="#f5f8f9" borderRadius="5px 5px 0 0">
             <Center>
               <Heading as="h2" fontSize="alpha">
                 Gérer les publications
               </Heading>
             </Center>
           </ModalHeader>
-          <ModalBody px={[2, 16]} pt={[2, 8]} pb={[8, 20]}>
-            <Center borderBottom="1px solid" borderColor="grey.400" p={4} mx={[0, 24]}>
-              <FormControl display="flex" alignItems="center" w="auto" isDisabled={isAffelnetPublishDisabled}>
-                <FormLabel htmlFor="affelnet" mb={0} fontSize="gamma">
-                  Demander la publication Affelnet:
-                </FormLabel>
-                <RadioGroup defaultValue={publishValues.affelnet} id="affelnet" name="affelnet">
-                  <Stack spacing={4} direction="row">
-                    <Radio
-                      mb={0}
-                      size="lg"
-                      value="true"
-                      isDisabled={isAffelnetPublishDisabled}
-                      onChange={handlePublishChange}
-                    >
-                      Oui
-                    </Radio>
-                    <Radio
-                      mb={0}
-                      size="lg"
-                      value="false"
-                      isDisabled={isAffelnetPublishDisabled}
-                      onChange={handlePublishChange}
-                    >
-                      Non
-                    </Radio>
-                  </Stack>
-                </RadioGroup>
-              </FormControl>
-            </Center>
-            <Center borderBottom="1px solid" borderColor="grey.400" p={4} mx={[0, 24]}>
-              <FormControl display="flex" alignItems="center" w="auto" isDisabled={isParcoursupPublishDisabled}>
-                <FormLabel htmlFor="parcoursup" mb={0} fontSize="gamma">
-                  Demander la publication ParcourSup:
-                </FormLabel>
-                <RadioGroup defaultValue={publishValues.parcoursup} id="parcoursup" name="parcoursup">
-                  <Stack spacing={4} direction="row">
-                    <Radio
-                      mb={0}
-                      size="lg"
-                      value="true"
-                      isDisabled={isParcoursupPublishDisabled}
-                      onChange={handlePublishChange}
-                    >
-                      Oui
-                    </Radio>
-                    <Radio
-                      mb={0}
-                      size="lg"
-                      value="false"
-                      isDisabled={isParcoursupPublishDisabled}
-                      onChange={handlePublishChange}
-                    >
-                      Non
-                    </Radio>
-                  </Stack>
-                </RadioGroup>
-              </FormControl>
-            </Center>
-            <Flex flexDirection={["column", "row"]} pt={[3, 16]} justifyContent="center">
-              <Button
-                variant="outline"
-                colorScheme="blue"
-                onClick={() => {
-                  setPublishFieldValue("affelnet", getPublishRadioValue(formation?.affelnet_statut));
-                  setPublishFieldValue("parcoursup", getPublishRadioValue(formation?.parcoursup_statut));
-                  onClose();
-                }}
-                mr={[0, 8]}
-                px={[8, 20]}
-                mb={[3, 0]}
-              >
-                Annuler
-              </Button>
-              <Button
-                type="submit"
-                colorScheme="blue"
-                onClick={handlePublishSubmit}
-                isLoading={isPublishSubmitting}
-                loadingText="Enregistrement des modifications"
-              >
-                Enregistrer les modifications
-              </Button>
-            </Flex>
+          <ModalBody p={0}>
+            <Box px={[2, 16, 48]}>
+              <Flex px={4} pt={[12, 16]} flexDirection="column">
+                <Box mb={3}>
+                  <StatusBadge source="Affelnet" status={formation?.affelnet_statut} />
+                </Box>
+                <FormControl display="flex" alignItems="center" w="auto" isDisabled={isAffelnetPublishDisabled}>
+                  <FormLabel htmlFor="affelnet" mb={0} fontSize="delta" fontWeight={700}>
+                    Demander la publication Affelnet:
+                  </FormLabel>
+                  <RadioGroup defaultValue={publishValues.affelnet} id="affelnet" name="affelnet">
+                    <Stack spacing={4} direction="row">
+                      <Radio
+                        mb={0}
+                        size="lg"
+                        value="true"
+                        isDisabled={isAffelnetPublishDisabled}
+                        onChange={handlePublishChange}
+                      >
+                        Oui
+                      </Radio>
+                      <Radio
+                        mb={0}
+                        size="lg"
+                        value="false"
+                        isDisabled={isAffelnetPublishDisabled}
+                        onChange={handlePublishChange}
+                      >
+                        Non
+                      </Radio>
+                    </Stack>
+                  </RadioGroup>
+                </FormControl>
+              </Flex>
+              <Flex px={4} pt={[12, 16]} pb={[12, 16]} flexDirection="column">
+                <Box mb={3}>
+                  <StatusBadge source="Parcoursup" status={formation?.parcoursup_statut} />
+                </Box>
+                <FormControl display="flex" alignItems="center" w="auto" isDisabled={isParcoursupPublishDisabled}>
+                  <FormLabel htmlFor="parcoursup" mb={0} fontSize="delta" fontWeight={700}>
+                    Demander la publication Parcoursup:
+                  </FormLabel>
+                  <RadioGroup defaultValue={publishValues.parcoursup} id="parcoursup" name="parcoursup">
+                    <Stack spacing={4} direction="row">
+                      <Radio
+                        mb={0}
+                        size="lg"
+                        value="true"
+                        isDisabled={isParcoursupPublishDisabled}
+                        onChange={handlePublishChange}
+                      >
+                        Oui
+                      </Radio>
+                      <Radio
+                        mb={0}
+                        size="lg"
+                        value="false"
+                        isDisabled={isParcoursupPublishDisabled}
+                        onChange={handlePublishChange}
+                      >
+                        Non
+                      </Radio>
+                    </Stack>
+                  </RadioGroup>
+                </FormControl>
+              </Flex>
+            </Box>
+            <Box borderTop="1px solid" borderColor="grey.300" p={0}>
+              <Flex flexDirection={["column", "row"]} py={[3, 8]} px={3} justifyContent="center">
+                <Button
+                  variant="outline"
+                  colorScheme="blue"
+                  onClick={() => {
+                    setPublishFieldValue("affelnet", getPublishRadioValue(formation?.affelnet_statut));
+                    setPublishFieldValue("parcoursup", getPublishRadioValue(formation?.parcoursup_statut));
+                    onClose();
+                  }}
+                  mr={[0, 8]}
+                  px={[8, 20]}
+                  mb={[3, 0]}
+                >
+                  Annuler
+                </Button>
+                <Button
+                  type="submit"
+                  colorScheme="blue"
+                  onClick={handlePublishSubmit}
+                  isLoading={isPublishSubmitting}
+                  loadingText="Enregistrement des modifications"
+                >
+                  Enregistrer les modifications
+                </Button>
+              </Flex>
+            </Box>
           </ModalBody>
         </ModalContent>
       </Modal>
