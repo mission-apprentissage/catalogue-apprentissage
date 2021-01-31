@@ -42,7 +42,7 @@
     "opco:importer:stats": "standalone=true node src/jobs/opcoImporter/stats.js",
     "es:index": "standalone=true node src/jobs/esIndex/index.js",
     "generate:swaggerschema": "standalone=true node src/jobs/generateSwaggerSchema/index.js",
-    "etablissement:dump": "node -r dotenv/config src/jobs/etablissements"
+    "etablissement:dump": "standalone=true node src/jobs/etablissements"
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.6.1",
@@ -76,6 +76,7 @@
     "mongoose-paginate": "5.0.3",
     "mongoose-schema-jsonschema": "1.4.4",
     "multipipe": "4.0.0",
+    "node-cron": "2.0.3",
     "nodemailer": "^6.4.14",
     "nodemailer-html-to-text": "^3.1.0",
     "oleoduc": "0.4.6",

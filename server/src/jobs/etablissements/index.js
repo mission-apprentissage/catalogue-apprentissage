@@ -1,11 +1,10 @@
-require("dotenv").config();
-const { Readable } = require("stream");
-const { oleoduc, writeData } = require("oleoduc");
-const logger = require("../../common/logger");
-const { runScript } = require("../scriptWrapper");
 const { Etablissement } = require("../../common/model");
+const { oleoduc, writeData } = require("oleoduc");
+const { runScript } = require("../scriptWrapper");
+const logger = require("../../common/logger");
+const { Readable } = require("stream");
 
-runScript(async ({ catalogue }) => {
+const importEtablissements = async (catalogue) => {
   let stats = {
     total: 0,
     created: 0,
@@ -37,4 +36,16 @@ runScript(async ({ catalogue }) => {
   );
 
   return stats;
-});
+};
+
+module.exports = { importEtablissements };
+
+if (process.env.standalone) {
+  runScript(async ({ catalogue }) => {
+    logger.info("Start etablissemnt import");
+
+    await importEtablissements(catalogue);
+
+    logger.info("End etablissemnt import");
+  });
+}
