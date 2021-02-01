@@ -1,15 +1,12 @@
+const { PsFormation, Etablissement } = require("../../common/model");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
-const { paginator } = require("../common/utils/paginator");
-const { AfFormation, Etablissement } = require("../../common/model");
 const { etablissement } = require("../common/utils/formater");
-const logger = require("../../common/logger");
+const { paginator } = require("../common/utils/paginator");
 const mongoose = require("mongoose");
 
 module.exports = async () => {
-  logger.info(`--- START ETABLISSEMENT COVERAGE ---`);
-
   await paginator(
-    AfFormation,
+    PsFormation,
     { filter: { matching_type: { $ne: null } }, lean: true },
     async ({ matching_mna_formation, _id }) => {
       let etablissements = [];
@@ -85,11 +82,9 @@ module.exports = async () => {
         };
       });
 
-      await AfFormation.findByIdAndUpdate(_id, {
+      await PsFormation.findByIdAndUpdate(_id, {
         matching_mna_etablissement: formatted,
       });
     }
   );
-
-  logger.info(`--- END ETABLISSEMENT COVERAGE ---`);
 };
