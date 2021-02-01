@@ -39,7 +39,7 @@ module.exports = async (tableCorrespondance) => {
 
   await paginator(
     AfFormation,
-    { filter: { code_cfd: { $ne: null }, matching_mna_formation: { $eq: [] } }, lean: true },
+    { filter: { code_cfd: { $ne: null } }, lean: true },
     async ({ _id, code_postal, code_cfd }) => {
       const { messages, result } = await tableCorrespondance.getCpInfo(code_postal);
       let dept = code_postal.substring(0, 2);

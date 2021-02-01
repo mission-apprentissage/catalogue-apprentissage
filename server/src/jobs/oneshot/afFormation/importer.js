@@ -214,42 +214,39 @@ const update_oleoduc = async (tableCorrespondance) => {
     AfFormation.find({ libelle_ban: { $ne: null }, code_cfd: { $eq: null } })
       .lean()
       .cursor(),
-    writeData(
-      async (formation) => {
-        const mef10 = formation.code_mef.slice(0, -1);
-        const isValid = isFinite(parseInt(mef10));
+    writeData(async (formation) => {
+      const mef10 = formation.code_mef.slice(0, -1);
+      const isValid = isFinite(parseInt(mef10));
 
-        let code_cfd;
+      let code_cfd;
 
-        if (isValid) {
-          const cfdFromTCO = await getCfdFromTCO(tableCorrespondance, mef10);
+      if (isValid) {
+        const cfdFromTCO = await getCfdFromTCO(tableCorrespondance, mef10);
 
-          if (cfdFromTCO) {
-            code_cfd = cfdFromTCO;
-          }
+        if (cfdFromTCO) {
+          code_cfd = cfdFromTCO;
+        }
+      } else {
+        const cfdFromCatalogue = await getCfdFromCatalogue(tableCorrespondance, formation);
+
+        if (cfdFromCatalogue) {
+          code_cfd = cfdFromCatalogue;
         } else {
-          const cfdFromCatalogue = await getCfdFromCatalogue(tableCorrespondance, formation);
+          const cfdFromBCN = await getCfdFromBCN(tableCorrespondance, formation.libelle_ban, formation.type_voie);
 
-          if (cfdFromCatalogue) {
-            code_cfd = cfdFromCatalogue;
-          } else {
-            const cfdFromBCN = await getCfdFromBCN(tableCorrespondance, formation.libelle_ban, formation.type_voie);
-
-            if (cfdFromBCN) {
-              code_cfd = cfdFromBCN;
-            }
+          if (cfdFromBCN) {
+            code_cfd = cfdFromBCN;
           }
         }
+      }
 
-        if (!code_cfd) return;
+      if (!code_cfd) return;
 
-        logger.info(`MAJ formation ${formation._id} - cfd : ${code_cfd}`);
-        await AfFormation.findByIdAndUpdate(formation._id, { code_cfd });
+      logger.info(`MAJ formation ${formation._id} - cfd : ${code_cfd}`);
+      await AfFormation.findByIdAndUpdate(formation._id, { code_cfd });
 
-        count++;
-      },
-      { parallel: 5 }
-    )
+      count++;
+    })
   );
 
   logger.info(`${count} formations mise à jours `);

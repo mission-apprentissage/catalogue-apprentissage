@@ -64,8 +64,8 @@
   color: white;
 }
 .search-page .search .add-btn .btn-outline-primary {
-  background-color: #377C88;
-  border-color: #377C88;
+  background-color: #377c88;
+  border-color: #377c88;
   width: 100%;
 }
 .search-page .search .result-view {
@@ -117,6 +117,11 @@
 .search-page .debug-text-button {
   font-size: 18px;
 }
+
+.search-page .search .selected-filters-button {
+  background-color: white;
+}
+
 @media screen and (max-width: 767px) {
   .search .search-sidebar {
     position: fixed;

@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 import { SingleList } from "@appbaseio/reactivesearch";
+import { Link, Box } from "@chakra-ui/react";
+import { NavLink } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLink } from "@fortawesome/free-solid-svg-icons";
 
 const ToggleCatalogue = React.memo(({ filters, onChanged }) => {
   const [values, setValues] = useState("Catalogue général");
@@ -39,9 +43,26 @@ const ToggleCatalogue = React.memo(({ filters, onChanged }) => {
               },
             };
       }}
-      showFilter={true}
+      showFilter={false}
       showSearch={false}
       showCount={true}
+      renderItem={(label, count) => (
+        <>
+          <span>
+            <span>
+              <span>{label}</span>
+              {label === "Catalogue non-éligible" && (
+                <Box pt={2}>
+                  <Link as={NavLink} to="/guide-reglementaire#conditions-etablissement" color="grey.600">
+                    <FontAwesomeIcon icon={faLink} /> conditions d'éligibilité
+                  </Link>
+                </Box>
+              )}
+            </span>
+            <span>{count}</span>
+          </span>
+        </>
+      )}
     />
   );
 });
