@@ -591,8 +591,8 @@ export default ({ match }) => {
                     </Text>
                     <Flex justify="space-between" alignItems={["center", "flex-end"]} flexDirection={["column", "row"]}>
                       <Box>
-                        <StatusBadge source="Affelnet" status={formation.affelnet_statut} mr={[0, 3]} />
-                        <StatusBadge source="Parcoursup" status={formation.parcoursup_statut} mt={[1, 0]} />
+                        <StatusBadge source="Parcoursup" status={formation.parcoursup_statut} mr={[0, 3]} />
+                        <StatusBadge source="Affelnet" status={formation.affelnet_statut} mt={[1, 0]} />
                       </Box>
                       <Button
                         colorScheme="blue"
