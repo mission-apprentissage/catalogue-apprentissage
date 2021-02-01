@@ -42,7 +42,7 @@
     "opco:importer:stats": "standalone=true node src/jobs/opcoImporter/stats.js",
     "es:index": "standalone=true node src/jobs/esIndex/index.js",
     "generate:swaggerschema": "standalone=true node src/jobs/generateSwaggerSchema/index.js",
-    "etablissement:dump": "node -r dotenv/config src/jobs/etablissements"
+    "etablissement:dump": "standalone=true node src/jobs/etablissements"
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.6.1",

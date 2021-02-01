@@ -5,6 +5,7 @@ const report = require("../../../logic/reporter/report");
 const config = require("config");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const catalogue = require("../../../common/components/catalogue");
+const { paginator } = require("../../common/utils/paginator");
 const { storeByChunks } = require("../../common/utils/reportUtils");
 
 const formatToMnaFormation = (rcoFormation) => {
@@ -146,101 +147,83 @@ const performConversion = async () => {
   const invalidRcoFormations = [];
   const convertedRcoFormations = [];
 
-  let offset = 0;
-  let limit = 100;
-  let computed = 0;
-  let nbFormations = 10;
+  await paginator(RcoFormation, { filter: { converted_to_mna: { $ne: true } } }, async (rcoFormation) => {
+    const mnaFormattedRcoFormation = formatToMnaFormation(rcoFormation._doc);
 
-  while (computed < nbFormations) {
-    let { docs, total } = await RcoFormation.paginate({ converted_to_mna: { $ne: true } }, { offset, limit });
-    nbFormations = total;
+    if (!rcoFormation.published) {
+      // if formation is unpublished, don't create etablissement and don't call mnaUpdater
+      // since we don't care of errors we just want to hide the formation
+      rcoFormation.conversion_error = "success";
+      await rcoFormation.save();
 
-    await Promise.all(
-      docs.map(async (rcoFormation) => {
-        computed += 1;
-
-        const mnaFormattedRcoFormation = formatToMnaFormation(rcoFormation._doc);
-
-        if (!rcoFormation.published) {
-          // if formation is unpublished, don't create etablissement and don't call mnaUpdater
-          // since we don't care of errors we just want to hide the formation
-          rcoFormation.conversion_error = "success";
-          await rcoFormation.save();
-
-          await ConvertedFormation.findOneAndUpdate(
-            { id_rco_formation: mnaFormattedRcoFormation.id_rco_formation },
-            { published: false },
-            {
-              new: true,
-            }
-          );
-
-          convertedRcoFormations.push({
-            id_rco_formation: mnaFormattedRcoFormation.id_rco_formation,
-            cfd: mnaFormattedRcoFormation.cfd,
-            updates: JSON.stringify({ published: false }),
-          });
-          return;
+      await ConvertedFormation.findOneAndUpdate(
+        { id_rco_formation: mnaFormattedRcoFormation.id_rco_formation },
+        { published: false },
+        {
+          new: true,
         }
+      );
 
-        await createOrUpdateEtablissements(rcoFormation._doc);
+      convertedRcoFormations.push({
+        id_rco_formation: mnaFormattedRcoFormation.id_rco_formation,
+        cfd: mnaFormattedRcoFormation.cfd,
+        updates: JSON.stringify({ published: false }),
+      });
+      return;
+    }
 
-        const { updates, formation: convertedFormation, error } = await mnaFormationUpdater(mnaFormattedRcoFormation, {
-          withHistoryUpdate: false,
-        });
+    await createOrUpdateEtablissements(rcoFormation._doc);
 
-        if (error) {
-          rcoFormation.conversion_error = error;
-          await rcoFormation.save();
-          // unpublish in case of errors if it was already in converted collection
-          await ConvertedFormation.findOneAndUpdate(
-            { id_rco_formation: mnaFormattedRcoFormation.id_rco_formation },
-            { published: false, update_error: error },
-            {
-              new: true,
-            }
-          );
+    const { updates, formation: convertedFormation, error } = await mnaFormationUpdater(mnaFormattedRcoFormation, {
+      withHistoryUpdate: false,
+    });
 
-          invalidRcoFormations.push({
-            id_rco_formation: mnaFormattedRcoFormation.id_rco_formation,
-            cfd: mnaFormattedRcoFormation.cfd,
-            rncp: mnaFormattedRcoFormation.rncp_code,
-            sirets: JSON.stringify({
-              gestionnaire: mnaFormattedRcoFormation.etablissement_gestionnaire_siret,
-              formateur: mnaFormattedRcoFormation.etablissement_formateur_siret,
-              lieu_formation: mnaFormattedRcoFormation.lieu_formation_siret,
-            }),
-            error,
-          });
-          return;
+    if (error) {
+      rcoFormation.conversion_error = error;
+      await rcoFormation.save();
+      // unpublish in case of errors if it was already in converted collection
+      await ConvertedFormation.findOneAndUpdate(
+        { id_rco_formation: mnaFormattedRcoFormation.id_rco_formation },
+        { published: false, update_error: error },
+        {
+          new: true,
         }
+      );
 
-        rcoFormation.conversion_error = "success";
-        await rcoFormation.save();
+      invalidRcoFormations.push({
+        id_rco_formation: mnaFormattedRcoFormation.id_rco_formation,
+        cfd: mnaFormattedRcoFormation.cfd,
+        rncp: mnaFormattedRcoFormation.rncp_code,
+        sirets: JSON.stringify({
+          gestionnaire: mnaFormattedRcoFormation.etablissement_gestionnaire_siret,
+          formateur: mnaFormattedRcoFormation.etablissement_formateur_siret,
+          lieu_formation: mnaFormattedRcoFormation.lieu_formation_siret,
+        }),
+        error,
+      });
+      return;
+    }
 
-        // replace or insert new one
-        await ConvertedFormation.findOneAndUpdate(
-          { id_rco_formation: convertedFormation.id_rco_formation },
-          convertedFormation,
-          {
-            overwrite: true,
-            upsert: true,
-            new: true,
-          }
-        );
+    rcoFormation.conversion_error = "success";
+    await rcoFormation.save();
 
-        convertedRcoFormations.push({
-          id_rco_formation: convertedFormation.id_rco_formation,
-          cfd: convertedFormation.cfd,
-          updates: JSON.stringify(updates),
-        });
-      })
+    // replace or insert new one
+    await ConvertedFormation.findOneAndUpdate(
+      { id_rco_formation: convertedFormation.id_rco_formation },
+      convertedFormation,
+      {
+        overwrite: true,
+        upsert: true,
+        new: true,
+      }
     );
 
-    offset += limit;
-
-    logger.info(`progress ${computed}/${total}`);
-  }
+    convertedRcoFormations.push({
+      id_rco_formation: convertedFormation.id_rco_formation,
+      cfd: convertedFormation.cfd,
+      updates: JSON.stringify(updates),
+    });
+  });
 
   // update converted_to_mna outside loop to not mess up with paginate
   await RcoFormation.updateMany(
