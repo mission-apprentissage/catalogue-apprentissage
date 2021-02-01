@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import {
   Alert,
   Box,
@@ -95,6 +95,39 @@ const EditSection = ({ edition, onEdit, handleSubmit, isSubmitting }) => {
   );
 };
 
+const FormationPeriode = ({ periode }) => {
+  let displayedPeriode = <strong>periode</strong>;
+  try {
+    const periodeArr = JSON.parse(periode);
+
+    const periodeObj = periodeArr.reduce((acc, dateStr) => {
+      const date = new Date(dateStr);
+      const formattedDate = date.toLocaleString("fr-FR", { month: "long" });
+      const displayedDate = formattedDate === "Invalid Date" ? dateStr : formattedDate;
+      acc[date.getFullYear()] = acc[date.getFullYear()] ?? [];
+      acc[date.getFullYear()] = [...acc[date.getFullYear()], displayedDate];
+      return acc;
+    }, {});
+
+    displayedPeriode = Object.entries(periodeObj).map(([key, value]) => {
+      return (
+        <Fragment key={key}>
+          <br />
+          <Text as="span">
+            <strong>
+              {key}: {value.join(", ")}
+            </strong>
+          </Text>
+        </Fragment>
+      );
+    });
+  } catch (e) {
+    console.error("unable to parse periode field", periode, e);
+  }
+
+  return <>{displayedPeriode}</>;
+};
+
 const Formation = ({
   formation,
   edition,
@@ -158,7 +191,7 @@ const Formation = ({
               Code MEF 10 caractères: <strong>{formation.mef_10_code}</strong>
             </Text>
             <Text mb={4}>
-              Période d'inscription: {!edition && <strong>{formation.periode}</strong>}
+              Période d'inscription: {!edition && <FormationPeriode periode={formation.periode} />}
               {edition && <Input type="text" name="periode" onChange={handleChange} value={values.periode} />}
             </Text>
             <Text mb={4}>
@@ -558,8 +591,8 @@ export default ({ match }) => {
                     </Text>
                     <Flex justify="space-between" alignItems={["center", "flex-end"]} flexDirection={["column", "row"]}>
                       <Box>
-                        <StatusBadge source="Affelnet" status={formation.affelnet_statut} mr={[0, 3]} />
-                        <StatusBadge source="Parcoursup" status={formation.parcoursup_statut} mt={[1, 0]} />
+                        <StatusBadge source="Parcoursup" status={formation.parcoursup_statut} mr={[0, 3]} />
+                        <StatusBadge source="Affelnet" status={formation.affelnet_statut} mt={[1, 0]} />
                       </Box>
                       <Button
                         colorScheme="blue"

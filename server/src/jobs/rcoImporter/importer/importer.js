@@ -4,6 +4,7 @@ const { diff } = require("deep-object-diff");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const report = require("../../../logic/reporter/report");
 const config = require("config");
+const { paginator } = require("../../common/utils/paginator");
 const { storeByChunks } = require("../../common/utils/reportUtils");
 
 class Importer {
@@ -284,32 +285,17 @@ class Importer {
     }
 
     // check if Some formations has been deleted
-    let offset = 0;
-    let limit = 100;
-    let computed = 0;
-    let nbFormations = 10;
-
-    while (computed < nbFormations) {
-      let { docs, total } = await RcoFormation.paginate(
-        {
-          published: true,
-        },
-        { offset, limit, lean: true }
-      );
-
-      nbFormations = total;
-
-      docs.forEach((pastFormation) => {
-        computed += 1;
+    await paginator(
+      RcoFormation,
+      { filter: { published: true }, lean: true, showProgress: false },
+      async (pastFormation) => {
         const id = this._buildId(pastFormation);
         const found = currentFormations.some((f) => id === this._buildId(f));
         if (!found) {
           deleted.push(pastFormation);
         }
-      });
-
-      offset += limit;
-    }
+      }
+    );
 
     // No modifications
     if (added.length === 0 && updated.length === 0 && deleted.length === 0) {

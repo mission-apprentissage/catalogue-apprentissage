@@ -2,6 +2,7 @@ const logger = require("../../../common/logger");
 const { mnaFormationUpdater } = require("../../../logic/updaters/mnaFormationUpdater");
 const report = require("../../../logic/reporter/report");
 const config = require("config");
+const { paginator } = require("../../common/utils/paginator");
 const { findRcoFormationFromConvertedId } = require("../../common/utils/rcoUtils");
 const { storeByChunks } = require("../../common/utils/reportUtils");
 const { RcoFormation, ConvertedFormation } = require("../../../common/model/index");
@@ -16,61 +17,43 @@ const performUpdates = async (filter = {}) => {
   const notUpdatedFormations = [];
   const updatedFormations = [];
 
-  let offset = 0;
-  let limit = 100;
-  let computed = 0;
-  let nbFormations = 10;
+  await paginator(ConvertedFormation, { filter }, async (formation) => {
+    const rcoFormation = await findRcoFormationFromConvertedId(formation.id_rco_formation);
+    if (!rcoFormation?.published) {
+      // if rco formation is not published, don't call mnaUpdater
+      // since we just want to hide the formation
+      await ConvertedFormation.findOneAndUpdate({ _id: formation._id }, { published: false }, { new: true });
+      return;
+    }
 
-  while (computed < nbFormations) {
-    let { docs, total } = await ConvertedFormation.paginate(filter, { offset, limit });
-    nbFormations = total;
+    const { updates, formation: updatedFormation, error } = await mnaFormationUpdater(formation._doc);
 
-    await Promise.all(
-      docs.map(async (formation) => {
-        computed += 1;
+    if (error) {
+      formation.update_error = error;
+      // unpublish in case of errors
+      if (formation.published === true) {
+        formation.published = false;
+        // flag rco formation as not converted so that it retries during nightly jobs
+        await RcoFormation.findOneAndUpdate({ _id: rcoFormation?._id }, { converted_to_mna: false });
+      }
+      await ConvertedFormation.findOneAndUpdate({ _id: formation._id }, formation, { new: true });
+      invalidFormations.push({ id: formation._id, cfd: formation.cfd, error });
+      return;
+    }
 
-        const rcoFormation = await findRcoFormationFromConvertedId(formation.id_rco_formation);
-        if (!rcoFormation?.published) {
-          // if rco formation is not published, don't call mnaUpdater
-          // since we just want to hide the formation
-          await ConvertedFormation.findOneAndUpdate({ _id: formation._id }, { published: false }, { new: true });
-          return;
-        }
+    if (!updates) {
+      notUpdatedFormations.push({ id: formation._id, cfd: formation.cfd });
+      return;
+    }
 
-        const { updates, formation: updatedFormation, error } = await mnaFormationUpdater(formation._doc);
-
-        if (error) {
-          formation.update_error = error;
-          // unpublish in case of errors
-          if (formation.published === true) {
-            formation.published = false;
-            // flag rco formation as not converted so that it retries during nightly jobs
-            await RcoFormation.findOneAndUpdate({ _id: rcoFormation?._id }, { converted_to_mna: false });
-          }
-          await ConvertedFormation.findOneAndUpdate({ _id: formation._id }, formation, { new: true });
-          invalidFormations.push({ id: formation._id, cfd: formation.cfd, error });
-          return;
-        }
-
-        if (!updates) {
-          notUpdatedFormations.push({ id: formation._id, cfd: formation.cfd });
-          return;
-        }
-
-        try {
-          updatedFormation.last_update_at = Date.now();
-          await ConvertedFormation.findOneAndUpdate({ _id: formation._id }, updatedFormation, { new: true });
-          updatedFormations.push({ id: formation._id, cfd: formation.cfd, updates: JSON.stringify(updates) });
-        } catch (error) {
-          logger.error(error);
-        }
-      })
-    );
-
-    offset += limit;
-
-    logger.info(`progress ${computed}/${total}`);
-  }
+    try {
+      updatedFormation.last_update_at = Date.now();
+      await ConvertedFormation.findOneAndUpdate({ _id: formation._id }, updatedFormation, { new: true });
+      updatedFormations.push({ id: formation._id, cfd: formation.cfd, updates: JSON.stringify(updates) });
+    } catch (error) {
+      logger.error(error);
+    }
+  });
 
   return { invalidFormations, updatedFormations, notUpdatedFormations };
 };

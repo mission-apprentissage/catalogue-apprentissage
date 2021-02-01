@@ -94,7 +94,7 @@ export default (props) => {
               <Container maxW="full">
                 <Flex align="center">
                   <Heading size="md">
-                    Formation parcoursup : matching <Tag colorScheme="teal">{matching.type}</Tag> — {data.total}{" "}
+                    Formation affelnet : matching <Tag colorScheme="teal">{matching.type}</Tag> — {data.total}{" "}
                     formations disponibles
                   </Heading>
                   <Spacer />
