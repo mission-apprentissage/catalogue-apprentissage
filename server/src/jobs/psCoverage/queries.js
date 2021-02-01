@@ -1,6 +1,6 @@
 const uai = [
   {
-    strengh: "6",
+    strength: "6",
     query: (f) => {
       return {
         $and: [
@@ -33,7 +33,7 @@ const uai = [
     },
   },
   {
-    strengh: "5",
+    strength: "5",
     query: (f) => {
       return {
         $and: [
@@ -65,7 +65,7 @@ const uai = [
     },
   },
   {
-    strengh: "4",
+    strength: "4",
     query: (f) => {
       return {
         $and: [
@@ -96,7 +96,7 @@ const uai = [
     },
   },
   {
-    strengh: "3",
+    strength: "3",
     query: (f) => {
       return {
         $or: [
@@ -116,7 +116,7 @@ const uai = [
     },
   },
   {
-    strengh: "2",
+    strength: "2",
     query: (f) => {
       return {
         $or: [
@@ -136,7 +136,7 @@ const uai = [
     },
   },
   {
-    strengh: "1",
+    strength: "1",
     query: (f) => {
       return {
         $or: [
@@ -157,7 +157,7 @@ const uai = [
 
 const cfd = [
   {
-    strengh: "6",
+    strength: "6",
     query: (f) => {
       return {
         $or: [
@@ -173,7 +173,7 @@ const cfd = [
     },
   },
   {
-    strengh: "5",
+    strength: "5",
     query: (f) => {
       return {
         $or: [
@@ -188,7 +188,7 @@ const cfd = [
     },
   },
   {
-    strengh: "4",
+    strength: "4",
     query: (f) => {
       return {
         $or: [
@@ -202,7 +202,7 @@ const cfd = [
     },
   },
   {
-    strengh: "3",
+    strength: "3",
     query: (f) => {
       return {
         cfd: f.code_cfd,
@@ -211,7 +211,7 @@ const cfd = [
     },
   },
   {
-    strengh: "2",
+    strength: "2",
     query: (f) => {
       return {
         cfd: f.code_cfd,
@@ -220,7 +220,7 @@ const cfd = [
     },
   },
   {
-    strengh: "1",
+    strength: "1",
     query: (f) => {
       return {
         cfd: f.code_cfd,

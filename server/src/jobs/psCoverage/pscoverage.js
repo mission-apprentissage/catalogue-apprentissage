@@ -6,29 +6,30 @@ const { cfd, uai } = require("./queries");
 const updateMatchedFormation = async (matching) => {
   let {
     formation: { _id },
-    match,
   } = matching;
 
-  await PsFormation.findByIdAndUpdate(_id, { matching_mna_formation: match });
+  let { matching_strength, data } = matching.match[0];
+
+  await PsFormation.findByIdAndUpdate(_id, { matching_type: matching_strength, matching_mna_formation: data });
 };
 
 const getMatch = (query) => ConvertedFormation.find(query);
 
 module.exports = async () => {
-  await paginator(PsFormation, { filter: { code_cfd: { $ne: null } }, lean: true }, async (formation) => {
+  await paginator(PsFormation, { filter: { code_cfd: { $ne: null } }, lean: true, limit: 10 }, async (formation) => {
     let buffer = {
       formation,
       match: [],
     };
 
     for (let i = 0; i < cfd.length; i++) {
-      let { query, strengh } = cfd[i];
+      let { query, strength } = cfd[i];
 
       let result = await getMatch(query(formation));
 
       if (result.length > 0) {
         buffer.match.push({
-          matching_strengh: strengh,
+          matching_strength: strength,
           data_length: result.length,
           data: formatFormation(result),
         });
@@ -39,13 +40,13 @@ module.exports = async () => {
 
     if (buffer.match.length === 0) {
       for (let i = 0; i < uai.length; i++) {
-        let { query, strengh } = uai[i];
+        let { query, strength } = uai[i];
 
         let result = await getMatch(query(formation));
 
         if (result.length > 0) {
           buffer.match.push({
-            matching_strengh: strengh,
+            matching_strength: strength,
             data_length: result.length,
             data: formatFormation(result),
           });
@@ -54,6 +55,8 @@ module.exports = async () => {
         }
       }
     }
+
+    if (buffer.match.length === 0) return;
 
     await updateMatchedFormation(buffer);
   });
