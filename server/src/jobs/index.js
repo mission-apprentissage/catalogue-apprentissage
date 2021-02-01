@@ -5,6 +5,7 @@ const rcoConverter = require("./rcoConverter");
 const psReference = require("./psReference");
 const afReference = require("./afReference");
 const clean = require("./clean");
+const importEtablissement = require("./etablissements");
 
 runScript(async () => {
   try {
@@ -14,6 +15,7 @@ runScript(async () => {
     await rcoConverter();
     await psReference();
     await afReference();
+    await importEtablissement();
   } catch (error) {
     logger.error(error);
   }
