@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { ReactiveBase, ReactiveList, DataSearch, SingleList } from "@appbaseio/reactivesearch";
-import { Container, Flex, Spinner } from "@chakra-ui/react";
+import { ReactiveBase, ReactiveList, DataSearch, SingleList, SelectedFilters } from "@appbaseio/reactivesearch";
+import { Container, Flex, Spinner, Box } from "@chakra-ui/react";
 import Switch from "react-switch";
 import useAuth from "../../common/hooks/useAuth";
 import Layout from "../layout/Layout";
@@ -159,6 +159,9 @@ export default ({ match }) => {
                 </h1>
                 <Flex className="search-row">
                   <div className={`search-sidebar`}>
+                    {["mnaformation", "convertedformation"].includes(base) && (
+                      <ToggleCatalogue filters={FILTERS} onChanged={resetCount} />
+                    )}
                     {facetDefinition.map((fd, i) => {
                       return fd.roles ? (
                         hasOneOfRoles(auth, fd.roles) ? (
@@ -188,9 +191,6 @@ export default ({ match }) => {
                         />
                       );
                     })}
-                    {["mnaformation", "convertedformation"].includes(base) && (
-                      <ToggleCatalogue filters={FILTERS} onChanged={resetCount} />
-                    )}
                   </div>
                   <div className="search-results">
                     {mode !== "simple" && (
@@ -216,6 +216,9 @@ export default ({ match }) => {
                         />
                       </div>
                     )}
+                    <Box pt={2}>
+                      <SelectedFilters showClearAll={false} innerClass={{ button: "selected-filters-button" }} />
+                    </Box>
                     <div className={`result-view`}>
                       <ReactiveList
                         componentId="result"
