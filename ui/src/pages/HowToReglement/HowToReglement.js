@@ -11,8 +11,12 @@ import {
 } from "@chakra-ui/react";
 
 import "./howToReglement.css";
+import { useLocation } from "react-router-dom";
 
 const HowToReglement = () => {
+  const { hash } = useLocation();
+  const defaultIndex = hash === "#conditions-etablissement" ? [0] : [];
+
   return (
     <Layout>
       <div className="page howToReglement">
@@ -49,8 +53,8 @@ const HowToReglement = () => {
               <br />
               <br />
               <div className="accordion mb-4">
-                <Accordion allowMultiple className="card">
-                  <AccordionItem>
+                <Accordion allowMultiple className="card" defaultIndex={defaultIndex}>
+                  <AccordionItem id="conditions-etablissement">
                     <AccordionButton>
                       <Box flex="1" textAlign="left">
                         1. Condition concernant l’établissement lui-même : la certification qualité
