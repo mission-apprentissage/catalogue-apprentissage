@@ -33,6 +33,7 @@ const NavItem = ({ children, to = "/", ...rest }) => {
   return (
     <Link
       mx={[0, 4]}
+      _first={{ ml: 0 }}
       py={4}
       as={NavLink}
       to={to}
