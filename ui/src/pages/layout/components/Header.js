@@ -1,12 +1,24 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
-import { Dropdown, Site } from "tabler-react";
-import { NavLink } from "react-router-dom";
-
+import { NavLink, useHistory } from "react-router-dom";
+import {
+  Avatar,
+  Box,
+  Container,
+  Flex,
+  Image,
+  Link,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  MenuDivider,
+  MenuGroup,
+  Text,
+} from "@chakra-ui/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome, faSignOutAlt, faSync, faUsers } from "@fortawesome/free-solid-svg-icons";
 import useAuth from "../../../common/hooks/useAuth";
 import { isUserAdmin } from "../../../common/utils/rolesUtils";
-
-import "./header.css";
 
 const Header = () => {
   let [auth, setAuth] = useAuth();
@@ -16,77 +28,71 @@ const Header = () => {
     history.push("/");
   };
 
-  let dropdownItems = null;
-  if (auth?.sub !== "anonymous") {
-    dropdownItems = (
-      <React.Fragment>
-        <Dropdown.Item icon="home" to="/">
-          Accueil
-        </Dropdown.Item>
-        {isUserAdmin(auth) && (
-          <>
-            <Dropdown.Item icon="users" to="/admin/users">
-              Utilisateurs
-            </Dropdown.Item>
-            <Dropdown.Item icon="refresh-cw" to="/couverture-parcoursup">
-              Réconciliation Parcoursup
-            </Dropdown.Item>
-            <Dropdown.Item icon="refresh-cw" to="/couverture-affelnet">
-              Réconciliation Affelnet
-            </Dropdown.Item>
-          </>
-        )}
-        <Dropdown.ItemDivider />
-        <Dropdown.Item icon="log-out" to="#" onClick={logout}>
-          <span href="#" onClick={logout} role="button">
-            Déconnexion
-          </span>
-        </Dropdown.Item>
-      </React.Fragment>
-    );
-  }
-
   return (
-    <Site.Header>
-      {/* Logo */}
-      <a className="header-brand" href="/">
-        <img src="/brand/marianne.png" className="header-brand-img" alt="tabler logo" />
-      </a>
+    <Box borderBottom="1px solid" borderColor="grey.300">
+      <Container maxW="xl">
+        <Flex justifyContent="space-between">
+          {/* Logo */}
+          <Link as={NavLink} to="/" py={3}>
+            <Image src="/brand/marianne.png" height={"5rem"} alt="Logo de la République Française" />
+          </Link>
 
-      {/* User Menu */}
-      <div className="d-flex order-lg-2 ml-auto">
-        {auth?.sub === "anonymous" && (
-          <>
-            <span className="text-default header-right-text">
-              <NavLink className="nav-link" to="/login">
+          {/* User Menu */}
+          <Box alignSelf="center">
+            {auth?.sub === "anonymous" && (
+              <Link as={NavLink} to="/login">
                 Connexion
-              </NavLink>
-            </span>
-          </>
-        )}
-        {auth?.sub !== "anonymous" && (
-          <Dropdown
-            arrow
-            arrowPosition="right"
-            trigger={
-              <Dropdown.Trigger arrow toggle={false}>
-                <span className="nav-link pr-0 leading-none" data-toggle="dropdown">
-                  <span className="avatar" style={{ backgroundImage: "url(/faces/default.png)" }}></span>
-                  <span className="ml-2 d-none d-lg-block">
-                    <span className="text-default">{auth.sub}</span>
-                    <small className="text-muted d-block mt-1">
-                      {isUserAdmin(auth) ? "Administrateur" : "Utilisateur"}
-                    </small>
-                  </span>
-                </span>
-              </Dropdown.Trigger>
-            }
-            position="bottom"
-            items={dropdownItems}
-          />
-        )}
-      </div>
-    </Site.Header>
+              </Link>
+            )}
+            {auth?.sub !== "anonymous" && (
+              <Menu placement="bottom">
+                <MenuButton as={Link}>
+                  <Flex alignItems="center">
+                    <Avatar bg="blue.400" size="sm" />
+                    <Box display={["none", "block"]} ml={2}>
+                      <Text color="grey.700" fontSize="epsilon">
+                        {auth.sub}
+                      </Text>
+                      <Text fontSize="omega" color="grey.500">
+                        {isUserAdmin(auth) ? "Administrateur" : "Utilisateur"}
+                      </Text>
+                    </Box>
+                  </Flex>
+                </MenuButton>
+                <MenuList>
+                  <MenuItem as={NavLink} to="/" icon={<FontAwesomeIcon icon={faHome} />}>
+                    Accueil
+                  </MenuItem>
+                  {isUserAdmin(auth) && (
+                    <>
+                      <MenuDivider />
+                      <MenuGroup title="Administration">
+                        <MenuItem as={NavLink} to="/admin/users" icon={<FontAwesomeIcon icon={faUsers} />}>
+                          Utilisateurs
+                        </MenuItem>
+                      </MenuGroup>
+                      <MenuDivider />
+                      <MenuGroup title="Réconciliation">
+                        <MenuItem as={NavLink} to="/couverture-parcoursup" icon={<FontAwesomeIcon icon={faSync} />}>
+                          Réconciliation Parcoursup
+                        </MenuItem>
+                        <MenuItem as={NavLink} to="/couverture-affelnet" icon={<FontAwesomeIcon icon={faSync} />}>
+                          Réconciliation Affelnet
+                        </MenuItem>
+                      </MenuGroup>
+                    </>
+                  )}
+                  <MenuDivider />
+                  <MenuItem onClick={logout} icon={<FontAwesomeIcon icon={faSignOutAlt} />}>
+                    Déconnexion
+                  </MenuItem>
+                </MenuList>
+              </Menu>
+            )}
+          </Box>
+        </Flex>
+      </Container>
+    </Box>
   );
 };
 
