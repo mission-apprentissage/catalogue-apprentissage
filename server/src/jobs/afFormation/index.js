@@ -1,11 +1,11 @@
 const logger = require("../../common/logger");
 const { runScript } = require("../scriptWrapper");
 const coverageFormation = require("./afcoverage");
-const coverageEtablissement = require("./afcoverageEtablissement");
 const { AfFormation } = require("../../common/model");
+const coverageEtablissement = require("./afcoverageEtablissement");
 
 if (process.env.standalone) {
-  runScript(async ({ catalogue, tableCorrespondance }) => {
+  runScript(async () => {
     logger.info(`Start affelnet coverage`);
 
     const formations = await AfFormation.find({
@@ -13,11 +13,10 @@ if (process.env.standalone) {
       code_cfd: { $ne: null },
     }).countDocuments();
 
-    console.log("formations", formations);
     if (formations > 0) {
-      await coverageFormation(tableCorrespondance);
+      await coverageFormation();
     }
-    await coverageEtablissement(catalogue);
+    await coverageEtablissement();
 
     logger.info(`End affelnet coverage`);
   });
