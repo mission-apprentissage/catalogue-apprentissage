@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Box } from "@chakra-ui/react";
+import { Container, Box, Flex, Heading } from "@chakra-ui/react";
 import Layout from "../layout/Layout";
 
 import "./howToModif.css";
@@ -7,12 +7,13 @@ import "./howToModif.css";
 const HowToModif = () => {
   return (
     <Layout>
-      <div className="page howToModif">
-        <Container className="mt-5" maxW="xl">
+      <Flex bg="secondaryBackground" className="howToModif">
+        <Container mt={5} mb={12} maxW="xl">
           <Box>
             <Box className="mission-summary">
-              <h1 className="mt-3 mb-3">Guide de modification Catalogue</h1>
-              <br />
+              <Heading as="h1" mb={8} mt={2}>
+                Guide de modification Catalogue
+              </Heading>
               <h5>
                 Pour modifier un champ , il vous suffit de cliquer sur le crayon, d’effectuer la modification souhaitée
                 et de la valider ensuite.
@@ -82,7 +83,7 @@ const HowToModif = () => {
                 <li>Nom commercial.</li>
               </ul>
 
-              <p className="mb-5">
+              <p>
                 Du <strong>SIREN</strong> on déduit : SIRET Siège Social, Raison Sociale, Code Entreprise, Date de
                 création, Code NAF, Libellé code NAF, Adresse, Numéro de voie, Type de Voie, Nom de la voie, Complément
                 d’adresse, Code postal, Localité, Code commune INSEE
@@ -105,7 +106,7 @@ const HowToModif = () => {
             </Box>
           </Box>
           <Box>
-            <Box className="mb-5">
+            <Box my={5}>
               <h5>Video de présentation</h5>
               <video controls width={800}>
                 <source src="https://mna-bucket.s3.eu-west-3.amazonaws.com/pam-23042020.mp4" type="video/mp4" />
@@ -113,7 +114,7 @@ const HowToModif = () => {
             </Box>
           </Box>
         </Container>
-      </div>
+      </Flex>
     </Layout>
   );
 };

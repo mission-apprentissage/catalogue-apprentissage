@@ -35,11 +35,11 @@ const EditSection = ({ edition, onEdit, handleSubmit }) => {
     <div className="sidebar-section info sidebar-section-edit">
       {edition && (
         <>
-          <Button className="mb-3" colorScheme="teal" onClick={handleSubmit} isFullWidth>
+          <Button mb={3} colorScheme="blue" onClick={handleSubmit} isFullWidth>
             Valider
           </Button>
           <Button
-            colorScheme="teal"
+            colorScheme="blue"
             variant="outline"
             isFullWidth
             onClick={() => {
@@ -53,7 +53,8 @@ const EditSection = ({ edition, onEdit, handleSubmit }) => {
       {!edition && (
         <>
           <Button
-            colorScheme="teal"
+            colorScheme="blue"
+            variant="outline"
             isFullWidth
             onClick={() => {
               onEdit();
@@ -180,11 +181,11 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
                   <p>{etablissement.etablissement_siege_siret}</p>
                 </div>
               )}
-              <div className="field field-button mt-3">
+              <Box className="field field-button" mt={3}>
                 <a href="#siege">
-                  <Button color="primary">Voir le siége social</Button>
+                  <Button colorScheme="blue">Voir le siége social</Button>
                 </a>
-              </div>
+              </Box>
             </div>
           </div>
         )}

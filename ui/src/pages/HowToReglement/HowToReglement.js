@@ -8,6 +8,8 @@ import {
   AccordionPanel,
   AccordionIcon,
   Box,
+  Heading,
+  Flex,
 } from "@chakra-ui/react";
 
 import "./howToReglement.css";
@@ -19,12 +21,13 @@ const HowToReglement = () => {
 
   return (
     <Layout>
-      <div className="page howToReglement">
-        <Container className="mt-5" maxW="xl">
+      <Flex bg="secondaryBackground" className="howToReglement">
+        <Container mt={5} mb={12} maxW="xl">
           <Box>
             <Box className="mission-summary">
-              <h1 className="mt-3 mb-3">Conditions d’intégration de l’offre de formation en Apprentissage</h1>
-              <br />
+              <Heading as="h1" mb={8} mt={2}>
+                Conditions d’intégration de l’offre de formation en Apprentissage
+              </Heading>
               <h3>
                 Rappel des conditions d’intégration de l’offre de formation en Apprentissage sur Parcoursup et Affelnet{" "}
               </h3>
@@ -52,8 +55,8 @@ const HowToReglement = () => {
               </span>
               <br />
               <br />
-              <div className="accordion mb-4">
-                <Accordion allowMultiple className="card" defaultIndex={defaultIndex}>
+              <div>
+                <Accordion allowMultiple defaultIndex={defaultIndex} bg="white" mb={6}>
                   <AccordionItem id="conditions-etablissement">
                     <AccordionButton>
                       <Box flex="1" textAlign="left">
@@ -114,7 +117,7 @@ const HowToReglement = () => {
                   </AccordionItem>
                 </Accordion>
 
-                <Accordion allowMultiple className="card">
+                <Accordion allowMultiple bg="white" mb={6}>
                   <AccordionItem>
                     <AccordionButton>
                       <Box flex="1" textAlign="left">
@@ -145,7 +148,7 @@ const HowToReglement = () => {
                   </AccordionItem>
                 </Accordion>
 
-                <Accordion allowMultiple className="card">
+                <Accordion allowMultiple bg="white" mb={6}>
                   <AccordionItem>
                     <AccordionButton>
                       <Box flex="1" textAlign="left">
@@ -176,7 +179,7 @@ const HowToReglement = () => {
                   </AccordionItem>
                 </Accordion>
 
-                <Accordion allowMultiple className="card">
+                <Accordion allowMultiple bg="white" mb={6}>
                   <AccordionItem>
                     <AccordionButton>
                       <Box flex="1" textAlign="left">
@@ -205,7 +208,7 @@ const HowToReglement = () => {
                   </AccordionItem>
                 </Accordion>
 
-                <Accordion allowMultiple className="card">
+                <Accordion allowMultiple bg="white" mb={6}>
                   <AccordionItem>
                     <AccordionButton>
                       <Box flex="1" textAlign="left">
@@ -223,7 +226,7 @@ const HowToReglement = () => {
                 </Accordion>
               </div>
 
-              <Accordion allowMultiple className="card">
+              <Accordion allowMultiple bg="white" mb={6}>
                 <AccordionItem>
                   <AccordionButton>
                     <Box flex="1" textAlign="left">
@@ -233,83 +236,91 @@ const HowToReglement = () => {
                   </AccordionButton>
                   <AccordionPanel pb={4}>
                     <strong>Concernant l'établissement de formation :</strong>
-                    <ul className="mt-2">
-                      <li>
-                        la <strong>Base Centrale des Etablissements (BCE)</strong>, consultable sur{" "}
-                        <a
-                          href="https://www.education.gouv.fr/acce_public/index.php"
-                          target="_blank"
-                          rel="noreferrer noopener"
-                        >
-                          l’application de consultation et cartographie des établissements (ACCE)
-                        </a>
-                        ;
-                        <ul>
-                          <li>
-                            l’établissement peut solliciter la mise à jour de ses données (dénomination officielle,
-                            immatriculation UAI,...) via le formulaire « Contact » du site ACCE ;
-                          </li>
-                        </ul>
-                      </li>
-                      <li>
-                        <a href="http://www.cnefop.gouv.fr/qualite/" target="_blank" rel="noreferrer noopener">
-                          le site internet du CNEFOP
-                        </a>{" "}
-                        pour consulter la liste des organismes certificateurs au sens au Décret du 30 juin 2015
-                      </li>
-                      <li>
-                        <a
-                          href="https://travail-emploi.gouv.fr/formation-professionnelle/acteurs-cadre-et-qualite-de-la-formation-professionnelle/liste-organismes-certificateurs"
-                          target="_blank"
-                          rel="noreferrer noopener"
-                        >
-                          le site internet du Ministère du Travail
-                        </a>{" "}
-                        pour la liste des organismes certificateurs qualité Qualiopi
-                      </li>
-                      <li>
-                        <a href="https://www.insee.fr/fr/information/1972062" target="_blank" rel="noreferrer noopener">
-                          le site de l’INSEE
-                        </a>
-                        , permettant d’accéder aux données administratives à partir du Siret de l'établissement
-                        <ul>
-                          <li>
-                            l’établissement peut y signaler des modifications (changement d'adresse, de statut,
-                            d'activité, de raison sociale, ouverture ou fermeture d'un établissement...) afin qu’elles
-                            soient mises à jour.
-                          </li>
-                        </ul>
-                      </li>
-                    </ul>
+                    <Box mt={2} mb={5}>
+                      <ul>
+                        <li>
+                          la <strong>Base Centrale des Etablissements (BCE)</strong>, consultable sur{" "}
+                          <a
+                            href="https://www.education.gouv.fr/acce_public/index.php"
+                            target="_blank"
+                            rel="noreferrer noopener"
+                          >
+                            l’application de consultation et cartographie des établissements (ACCE)
+                          </a>
+                          ;
+                          <ul>
+                            <li>
+                              l’établissement peut solliciter la mise à jour de ses données (dénomination officielle,
+                              immatriculation UAI,...) via le formulaire « Contact » du site ACCE ;
+                            </li>
+                          </ul>
+                        </li>
+                        <li>
+                          <a href="http://www.cnefop.gouv.fr/qualite/" target="_blank" rel="noreferrer noopener">
+                            le site internet du CNEFOP
+                          </a>{" "}
+                          pour consulter la liste des organismes certificateurs au sens au Décret du 30 juin 2015
+                        </li>
+                        <li>
+                          <a
+                            href="https://travail-emploi.gouv.fr/formation-professionnelle/acteurs-cadre-et-qualite-de-la-formation-professionnelle/liste-organismes-certificateurs"
+                            target="_blank"
+                            rel="noreferrer noopener"
+                          >
+                            le site internet du Ministère du Travail
+                          </a>{" "}
+                          pour la liste des organismes certificateurs qualité Qualiopi
+                        </li>
+                        <li>
+                          <a
+                            href="https://www.insee.fr/fr/information/1972062"
+                            target="_blank"
+                            rel="noreferrer noopener"
+                          >
+                            le site de l’INSEE
+                          </a>
+                          , permettant d’accéder aux données administratives à partir du Siret de l'établissement
+                          <ul>
+                            <li>
+                              l’établissement peut y signaler des modifications (changement d'adresse, de statut,
+                              d'activité, de raison sociale, ouverture ou fermeture d'un établissement...) afin qu’elles
+                              soient mises à jour.
+                            </li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </Box>
                     <strong>Concernant la formation :</strong>
-                    <ul className="mt-2 mb-5">
-                      <li>
-                        <a
-                          href="https://certificationprofessionnelle.fr/recherche"
-                          target="_blank"
-                          rel="noreferrer noopener"
-                        >
-                          le Répertoire national des certifications professionnelles (RNCP)
-                        </a>{" "}
-                        listant les certificateurs référencés pour chacune des certifications enregistrées au RNCP (hors
-                        Répertoire Spécifique)
-                        <ul>
-                          <li>
-                            il appartient à l'établissement de se rapprocher du certificateur pour solliciter la mise à
-                            jour éventuelle des données (validité, certificateur et/ou établissements partenaires,
-                            voie(s) d’accès...) ou de se mettre à jour auprès de France Compétences :
-                            certificationprofessionnelle@francecompetences.fr.
-                          </li>
-                        </ul>
-                      </li>
-                    </ul>
+                    <Box mt={2} mb={5}>
+                      <ul>
+                        <li>
+                          <a
+                            href="https://certificationprofessionnelle.fr/recherche"
+                            target="_blank"
+                            rel="noreferrer noopener"
+                          >
+                            le Répertoire national des certifications professionnelles (RNCP)
+                          </a>{" "}
+                          listant les certificateurs référencés pour chacune des certifications enregistrées au RNCP
+                          (hors Répertoire Spécifique)
+                          <ul>
+                            <li>
+                              il appartient à l'établissement de se rapprocher du certificateur pour solliciter la mise
+                              à jour éventuelle des données (validité, certificateur et/ou établissements partenaires,
+                              voie(s) d’accès...) ou de se mettre à jour auprès de France Compétences :
+                              certificationprofessionnelle@francecompetences.fr.
+                            </li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </Box>
                   </AccordionPanel>
                 </AccordionItem>
               </Accordion>
             </Box>
           </Box>
         </Container>
-      </div>
+      </Flex>
     </Layout>
   );
 };

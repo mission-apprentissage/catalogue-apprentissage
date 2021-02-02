@@ -5,8 +5,6 @@ import useAuth from "../../../../common/hooks/useAuth";
 import { hasOneOfRoles } from "../../../../common/utils/rolesUtils";
 import { compact } from "lodash";
 
-import "./facet.css";
-
 const academies = {
   "01": { nom_academie: "Paris", num_academie: 1 },
   "02": { nom_academie: "Aix-Marseille", num_academie: 2 },
@@ -62,7 +60,7 @@ const Layout = (props) => {
   }
 
   return (
-    <Accordion allowMultiple defaultIndex={defaultIndex} className="card">
+    <Accordion allowMultiple defaultIndex={defaultIndex} bg="white" mb={6}>
       <AccordionItem>
         <AccordionButton>
           <Box flex="1" textAlign="left">

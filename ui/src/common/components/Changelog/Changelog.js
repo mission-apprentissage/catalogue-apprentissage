@@ -37,8 +37,8 @@ const Changelog = ({ content, order, showVersion, hideFilter }) => {
   };
   return (
     <div className="react-changelog-container">
-      <div className="row">
-        <div className="col-md-12">
+      <div>
+        <div>
           <div className="changelog-wrapper">
             {!hideFilter && <ChangelogFilter versions={versions} onChange={onChange} />}
             <ChangelogList list={list} filter={filter} />
