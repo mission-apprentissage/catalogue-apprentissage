@@ -1,66 +1,127 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
-import { Dropdown, Site } from "tabler-react";
+import React, { useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
+import { Link, Box, Flex, Text, Container, Menu, MenuList, MenuButton, MenuItem } from "@chakra-ui/react";
 import useAuth from "../../../common/hooks/useAuth";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes, faBars, faHome, faCube } from "@fortawesome/free-solid-svg-icons";
 
-const NavigationMenu = () => {
-  let [auth] = useAuth();
+const NavigationMenu = (props) => {
+  const [isOpen, setIsOpen] = useState(false);
 
-  let dropDownItems = (
-    <>
-      <Dropdown.Item to="/guide-reglementaire">Guide réglementaire</Dropdown.Item>
-      <Dropdown.Item to="/guide-signalements">Guide de signalements</Dropdown.Item>
-      {auth?.sub !== "anonymous" && <Dropdown.Item to="/guide-modification">Guide d'utilisation</Dropdown.Item>}
-    </>
-  );
+  const toggle = () => setIsOpen(!isOpen);
 
   return (
-    <Site.Nav>
-      <div className="header collapse d-lg-flex p-0" id="headerMenuCollapse">
-        <div className="container">
-          <div className="row row align-items-center">
-            <div className="col-lg-3 ml-auto"></div>
-            <div className="col col-lg order-lg-first">
-              <ul className="nav nav-tabs border-0 flex-column flex-lg-row">
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/" exact={true} activeClassName="active">
-                    <i className="fe fe-home"></i> Accueil
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/recherche/formations-2021" activeClassName="active">
-                    <i className="fe fe-box"></i> Formations 2021
-                  </NavLink>
-                </li>
-                {/* <li className="nav-item">
-                  <NavLink className="nav-link" to="/recherche/formations-2020" activeClassName="active">
-                    <i className="fe fe-box"></i> Formations 2020
-                  </NavLink>
-                </li> */}
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/recherche/etablissements" activeClassName="active">
-                    <i className="fe fe-box"></i> Établissements
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <Dropdown
-                    arrow
-                    arrowPosition="right"
-                    trigger={
-                      <Dropdown.Trigger arrow toggle={false}>
-                        Guides
-                      </Dropdown.Trigger>
-                    }
-                    position="bottom"
-                    items={dropDownItems}
-                  />
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </Site.Nav>
+    <NavBarContainer {...props}>
+      <NavToggle toggle={toggle} isOpen={isOpen} />
+      <NavLinks isOpen={isOpen} />
+    </NavBarContainer>
+  );
+};
+
+const NavToggle = ({ toggle, isOpen }) => {
+  return (
+    <Box display={{ base: "block", md: "none" }} onClick={toggle} py={4}>
+      <FontAwesomeIcon icon={isOpen ? faTimes : faBars} size="2x" />
+    </Box>
+  );
+};
+
+const NavItem = ({ children, to = "/", ...rest }) => {
+  const { pathname } = useLocation();
+  const isActive = pathname === to;
+
+  return (
+    <Link
+      mx={[0, 4]}
+      py={4}
+      as={NavLink}
+      to={to}
+      color={isActive ? "blue.500" : "grey.500"}
+      borderBottom="1px solid"
+      borderColor={isActive ? "blue.500" : "transparent"}
+      _hover={{ textDecoration: "none", color: "grey.600", borderColor: "grey.600" }}
+    >
+      <Text display="block" {...rest}>
+        {children}
+      </Text>
+    </Link>
+  );
+};
+
+const NavLinks = ({ isOpen }) => {
+  const [auth] = useAuth();
+  const { pathname } = useLocation();
+  const menuIsActive = ["/guide-reglementaire", "/guide-signalements", "/guide-modification"].includes(pathname);
+
+  return (
+    <Box display={{ base: isOpen ? "block" : "none", md: "block" }} flexBasis={{ base: "100%", md: "auto" }}>
+      <Flex
+        align="center"
+        justify={["center", "space-between", "flex-end", "flex-end"]}
+        direction={["column", "row", "row", "row"]}
+        pb={[8, 0]}
+      >
+        <NavItem to="/">
+          <FontAwesomeIcon icon={faHome} /> Accueil
+        </NavItem>
+        <NavItem to="/recherche/formations-2021">
+          <FontAwesomeIcon icon={faCube} /> Formations 2021
+        </NavItem>
+        {/*<MenuItem to="/recherche/formations-2020">Formations 2020</MenuItem>*/}
+        <NavItem to="/recherche/etablissements">
+          <FontAwesomeIcon icon={faCube} /> Établissements
+        </NavItem>
+        <Menu placement="bottom">
+          <MenuButton
+            as={Link}
+            mx={[0, 4]}
+            fontWeight="400"
+            display={{ base: "none", md: "block" }}
+            py={4}
+            color={menuIsActive ? "blue.500" : "grey.500"}
+            borderBottom="1px solid"
+            borderColor={menuIsActive ? "blue.500" : "transparent"}
+            _hover={{ textDecoration: "none", color: "grey.600", borderColor: "grey.600" }}
+          >
+            Guides
+          </MenuButton>
+          <MenuList>
+            <MenuItem as={NavLink} to="/guide-reglementaire">
+              Guide réglementaire
+            </MenuItem>
+            <MenuItem as={NavLink} to="/guide-signalements">
+              Guide de signalements
+            </MenuItem>
+            {auth?.sub !== "anonymous" && (
+              <MenuItem as={NavLink} to="/guide-modification">
+                Guide d'utilisation
+              </MenuItem>
+            )}
+          </MenuList>
+        </Menu>
+        <NavItem display={{ base: "block", md: "none" }} to="/guide-reglementaire">
+          Guide réglementaire
+        </NavItem>
+        <NavItem display={{ base: "block", md: "none" }} to="/guide-signalements">
+          Guide de signalements
+        </NavItem>
+        {auth?.sub !== "anonymous" && (
+          <NavItem display={{ base: "block", md: "none" }} to="/guide-modification">
+            Guide d'utilisation
+          </NavItem>
+        )}
+      </Flex>
+    </Box>
+  );
+};
+
+const NavBarContainer = ({ children, ...props }) => {
+  return (
+    <Container maxW="xl">
+      <Flex as="nav" align="center" justify="space-between" wrap="wrap" px={4} w="100%" {...props}>
+        {children}
+      </Flex>
+    </Container>
   );
 };
 
