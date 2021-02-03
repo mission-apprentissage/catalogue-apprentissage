@@ -5,9 +5,9 @@ const rcoConverter = require("./rcoConverter");
 const psReference = require("./psReference");
 const afReference = require("./afReference");
 const clean = require("./clean");
-const importEtablissement = require("./etablissements");
+const { importEtablissements } = require("./etablissements");
 
-runScript(async () => {
+runScript(async ({ catalogue }) => {
   try {
     logger.info(`Start all jobs`);
     await clean();
@@ -15,7 +15,7 @@ runScript(async () => {
     await rcoConverter();
     await psReference();
     await afReference();
-    await importEtablissement();
+    await importEtablissements(catalogue);
   } catch (error) {
     logger.error(error);
   }
