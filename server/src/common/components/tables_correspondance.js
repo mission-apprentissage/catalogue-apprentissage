@@ -54,5 +54,14 @@ module.exports = () => {
         return null;
       }
     },
+    findOpcosFromCfd: async (cfd) => {
+      try {
+        const { data } = await axios.get(`${apiEndpoint}/opcos/opco?cfd=${cfd}`);
+        return data;
+      } catch (error) {
+        logger.error(`findOpcosFromCfd: something went wrong`);
+        return null;
+      }
+    },
   };
 };
