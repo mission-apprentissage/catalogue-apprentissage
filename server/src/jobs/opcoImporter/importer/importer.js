@@ -1,6 +1,7 @@
 const { pipeline, writeObject } = require("../../../common/utils/streamUtils");
 const logger = require("../../../common/logger");
-const { findOpcosFromCfd } = require("../../../logic/common/apiTablesCorrespondances");
+const tablesCorrespondance = require("../../../common/components/tables_correspondance");
+
 const { ConvertedFormation, MnaFormation } = require("../../../common/model/index");
 const { infosCodes, computeCodes } = require("../../../constants/opco");
 
@@ -14,7 +15,7 @@ const updateFormations = async (model, stats) => {
             f.info_opcos = infosCodes.NotFoundable;
             f.info_opcos_intitule = computeCodes[infosCodes.NotFoundable];
           } else {
-            const opcosForFormations = await findOpcosFromCfd(f.cfd);
+            const opcosForFormations = await tablesCorrespondance().findOpcosFromCfd(f.cfd);
 
             if (opcosForFormations?.length > 0) {
               logger.info(

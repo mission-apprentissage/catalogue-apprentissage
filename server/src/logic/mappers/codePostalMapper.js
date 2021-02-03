@@ -1,5 +1,5 @@
 const logger = require("../../common/logger");
-const { getCpInfo } = require("../common/apiTablesCorrespondances");
+const tablesCorrespondance = require("../../common/components/tables_correspondance");
 
 const codePostalMapper = async (codePostal = null) => {
   try {
@@ -7,7 +7,7 @@ const codePostalMapper = async (codePostal = null) => {
       throw new Error("codePostalMapper codePostal must be provided");
     }
 
-    const cpInfo = await getCpInfo(codePostal);
+    const cpInfo = await tablesCorrespondance().getCpInfo(codePostal);
     if (!cpInfo) {
       return {
         result: null,
