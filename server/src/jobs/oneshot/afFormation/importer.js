@@ -5,6 +5,7 @@ const { getJsonFromXlsxFile } = require("../../../common/utils/fileUtils");
 const { AfFormation, ConvertedFormation } = require("../../../common/model");
 const { isFinite } = require("lodash");
 const stringSimilarity = require("string-similarity");
+const { getCpInfo, getBcnInfo, getMefInfo } = require("../../../common/services/tables_correspondance");
 
 const { oleoduc, writeData } = require("oleoduc");
 
@@ -21,8 +22,8 @@ const getLibelleCourt = (libelle) => {
   }
 };
 
-const getCfdFromTCO = async (tableCorrespondance, mef) => {
-  const responseMEF = await tableCorrespondance.getMefInfo(mef);
+const getCfdFromTCO = async (mef) => {
+  const responseMEF = await getMefInfo(mef);
 
   if (responseMEF) {
     if (responseMEF.messages.cfdUpdated === "Trouvé") {
@@ -64,7 +65,7 @@ const getLibelleLong = (libelle) => {
   return clean.match(/(?<=\s).*/) ? clean.match(/(?<=\s).*/)[0] : clean;
 };
 
-const getCfdFromBCN = async (tableCorrespondance, libelle, type) => {
+const getCfdFromBCN = async (libelle, type) => {
   let LIBELLE_COURT = getLibelleCourt(type);
   let LIBELLE_STAT_33 = getLibelleLong(libelle);
 
@@ -73,13 +74,13 @@ const getCfdFromBCN = async (tableCorrespondance, libelle, type) => {
   const {
     formationsDiplomes,
     pagination: { total },
-  } = await tableCorrespondance.getBcnInfo({ query: { LIBELLE_STAT_33, LIBELLE_COURT } });
+  } = await getBcnInfo({ query: { LIBELLE_STAT_33, LIBELLE_COURT } });
 
   if (total === 0) {
     const {
       formationsDiplomes,
       pagination: { total },
-    } = await tableCorrespondance.getBcnInfo({ query: { LIBELLE_STAT_33 } });
+    } = await getBcnInfo({ query: { LIBELLE_STAT_33 } });
 
     if (total === 0) return null;
 
@@ -101,8 +102,8 @@ const getCfdFromBCN = async (tableCorrespondance, libelle, type) => {
   return formationsDiplomes[0].FORMATION_DIPLOME;
 };
 
-const getCfdFromCatalogue = async (tableCorrespondance, formation) => {
-  const data = await tableCorrespondance.getCpInfo(formation.code_postal);
+const getCfdFromCatalogue = async (formation) => {
+  const data = await getCpInfo(formation.code_postal);
   let cfd;
 
   if (
@@ -207,7 +208,7 @@ const seed = async () => {
   logger.info(`${count} formations importées !`);
 };
 
-const update_oleoduc = async (tableCorrespondance) => {
+const update_oleoduc = async () => {
   let count = 0;
 
   await oleoduc(
@@ -221,18 +222,18 @@ const update_oleoduc = async (tableCorrespondance) => {
       let code_cfd;
 
       if (isValid) {
-        const cfdFromTCO = await getCfdFromTCO(tableCorrespondance, mef10);
+        const cfdFromTCO = await getCfdFromTCO(mef10);
 
         if (cfdFromTCO) {
           code_cfd = cfdFromTCO;
         }
       } else {
-        const cfdFromCatalogue = await getCfdFromCatalogue(tableCorrespondance, formation);
+        const cfdFromCatalogue = await getCfdFromCatalogue(formation);
 
         if (cfdFromCatalogue) {
           code_cfd = cfdFromCatalogue;
         } else {
-          const cfdFromBCN = await getCfdFromBCN(tableCorrespondance, formation.libelle_ban, formation.type_voie);
+          const cfdFromBCN = await getCfdFromBCN(formation.libelle_ban, formation.type_voie);
 
           if (cfdFromBCN) {
             code_cfd = cfdFromBCN;
@@ -252,7 +253,7 @@ const update_oleoduc = async (tableCorrespondance) => {
   logger.info(`${count} formations mise à jours `);
 };
 
-const update = async (tableCorrespondance) => {
+const update = async () => {
   const formations = await AfFormation.find({ libelle_ban: { $ne: null }, code_cfd: { $eq: null } });
   logger.info(`${formations.length} formations à traiter...`);
 
@@ -265,18 +266,18 @@ const update = async (tableCorrespondance) => {
     let code_cfd;
 
     if (isValid) {
-      const cfdFromTCO = await getCfdFromTCO(tableCorrespondance, mef10);
+      const cfdFromTCO = await getCfdFromTCO(mef10);
 
       if (cfdFromTCO) {
         code_cfd = cfdFromTCO;
       }
     } else {
-      const cfdFromCatalogue = await getCfdFromCatalogue(tableCorrespondance, formation);
+      const cfdFromCatalogue = await getCfdFromCatalogue(formation);
 
       if (cfdFromCatalogue) {
         code_cfd = cfdFromCatalogue;
       } else {
-        const cfdFromBCN = await getCfdFromBCN(tableCorrespondance, formation.libelle_ban, formation.type_voie);
+        const cfdFromBCN = await getCfdFromBCN(formation.libelle_ban, formation.type_voie);
 
         if (cfdFromBCN) {
           code_cfd = cfdFromBCN;

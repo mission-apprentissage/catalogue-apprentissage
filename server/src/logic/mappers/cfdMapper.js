@@ -1,6 +1,6 @@
 const logger = require("../../common/logger");
 const { infosCodes, computeCodes } = require("../../constants/opco");
-const tablesCorrespondance = require("../../common/components/tables_correspondance");
+const { getCfdInfo, findOpcosFromCfd } = require("../../common/services/tables_correspondance");
 
 const cfdMapper = async (cfd = null) => {
   try {
@@ -8,7 +8,7 @@ const cfdMapper = async (cfd = null) => {
       throw new Error("cfdMapper cfd must be provided");
     }
 
-    const cfdInfo = await tablesCorrespondance().getCfdInfo(cfd);
+    const cfdInfo = await getCfdInfo(cfd);
     if (!cfdInfo) {
       return {
         result: null,
@@ -53,7 +53,7 @@ const cfdMapper = async (cfd = null) => {
     let info_opcos = infosCodes.NotFound;
     let info_opcos_intitule = computeCodes[infosCodes.NotFound];
     try {
-      const opcosForFormations = await tablesCorrespondance().findOpcosFromCfd(cfd);
+      const opcosForFormations = await findOpcosFromCfd(cfd);
       if (opcosForFormations?.length > 0) {
         opcos = opcosForFormations.map(({ operateur_de_competences }) => operateur_de_competences);
         info_opcos = infosCodes.Found;

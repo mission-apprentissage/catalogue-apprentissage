@@ -1,5 +1,6 @@
 const logger = require("../../common/logger");
 const path = require("path");
+const { getMefInfo } = require("../../common/services/tables_correspondance");
 
 const { PsFormation } = require("../../common/model/index");
 
@@ -8,14 +9,14 @@ const { getJsonFromXlsxFile } = require("../../common/utils/fileUtils");
 
 const { runScript } = require("../scriptWrapper");
 
-const run = async (tableCorrespondance) => {
+const run = async () => {
   try {
     const filePath = path.resolve(__dirname, "./assets/Liste_Formation_Apprentissage_Psup.xlsx");
     const data = getJsonFromXlsxFile(filePath);
 
     await asyncForEach(data, async (formation) => {
       if (!formation.CODECFD && formation.CODEMEF) {
-        const responseMEF = await tableCorrespondance.getMefInfo(formation.code_mef_10);
+        const responseMEF = await getMefInfo(formation.code_mef_10);
 
         if (responseMEF) {
           if (!responseMEF.messages.cfdUpdated === "Non trouvé") {
@@ -56,10 +57,10 @@ const run = async (tableCorrespondance) => {
 };
 
 if (process.env.standalone) {
-  runScript(async ({ tableCorrespondance }) => {
+  runScript(async () => {
     logger.info(" -- Start database import -- ");
 
-    await run(tableCorrespondance);
+    await run();
 
     logger.info(" -- End database import -- ");
   });

@@ -5,7 +5,7 @@ const coverageEtablissement = require("./afcoverageEtablissement");
 const { AfFormation } = require("../../common/model");
 
 if (process.env.standalone) {
-  runScript(async ({ catalogue, tableCorrespondance }) => {
+  runScript(async ({ catalogue }) => {
     logger.info(`Start affelnet coverage`);
 
     const formations = await AfFormation.find({
@@ -15,7 +15,7 @@ if (process.env.standalone) {
 
     console.log("formations", formations);
     if (formations > 0) {
-      await coverageFormation(tableCorrespondance);
+      await coverageFormation();
     }
     await coverageEtablissement(catalogue);
 
