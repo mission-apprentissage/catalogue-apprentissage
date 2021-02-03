@@ -212,6 +212,7 @@ export default ({ match }) => {
                           queryFormat="and"
                           size={20}
                           showFilter={true}
+                          filterLabel="recherche"
                           react={{ and: FILTERS.filter((e) => e !== "SEARCH") }}
                         />
                       </div>

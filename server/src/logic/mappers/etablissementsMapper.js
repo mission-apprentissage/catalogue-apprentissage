@@ -1,6 +1,5 @@
 const logger = require("../../common/logger");
 const catalogue = require("../../common/components/catalogue");
-const { codePostalMapper } = require("./codePostalMapper");
 
 const getAttachedEstablishments = async (etablissement_gestionnaire_siret, etablissement_formateur_siret) => {
   // Get establishment Gestionnaire
@@ -85,63 +84,36 @@ const getGeoloc = ({ gestionnaire, formateur }) => {
 
 const mapEtablissementKeys = async (
   etablissement,
-  prefix = "etablissement_gestionnaire" || "etablissement_formateur",
-  cpMap = {}
+  prefix = "etablissement_gestionnaire" || "etablissement_formateur"
 ) => {
-  const { result: cpMapping, messages } =
-    cpMap[etablissement.code_postal] || (await codePostalMapper(etablissement.code_postal));
-
-  if (!cpMap[etablissement.code_postal]) {
-    cpMap[etablissement.code_postal] = { result: cpMapping, messages };
-  }
-
-  const {
-    code_postal = null,
-    code_commune_insee = null,
-    num_departement = null,
-    nom_departement = null,
-    region = null,
-    nom_academie = null,
-    num_academie = null,
-    localite = null,
-  } = cpMapping || {};
-
   return {
-    result: {
-      [`${prefix}_siren`]: etablissement.siren || null,
-      [`${prefix}_published`]: etablissement.published || false,
-      [`${prefix}_catalogue_published`]: etablissement.catalogue_published || false,
-      [`${prefix}_id`]: etablissement._id || null,
-      [`${prefix}_uai`]: etablissement.uai || null,
-      [`${prefix}_enseigne`]: etablissement.enseigne || null,
-      [`${prefix}_type`]: etablissement.computed_type || null,
-      [`${prefix}_conventionne`]: etablissement.computed_conventionne || null,
-      [`${prefix}_declare_prefecture`]: etablissement.computed_declare_prefecture || null,
-      [`${prefix}_datadock`]: etablissement.computed_info_datadock || null,
-      [`${prefix}_adresse`]: getEstablishmentAddress(etablissement),
-      [`${prefix}_complement_adresse`]: etablissement.complement_adresse || null,
-      [`${prefix}_cedex`]: etablissement.cedex || null,
-      [`${prefix}_entreprise_raison_sociale`]: etablissement.entreprise_raison_sociale || null,
+    [`${prefix}_siren`]: etablissement.siren || null,
+    [`${prefix}_published`]: etablissement.published || false,
+    [`${prefix}_catalogue_published`]: etablissement.catalogue_published || false,
+    [`${prefix}_id`]: etablissement._id || null,
+    [`${prefix}_uai`]: etablissement.uai || null,
+    [`${prefix}_enseigne`]: etablissement.enseigne || null,
+    [`${prefix}_type`]: etablissement.computed_type || null,
+    [`${prefix}_conventionne`]: etablissement.computed_conventionne || null,
+    [`${prefix}_declare_prefecture`]: etablissement.computed_declare_prefecture || null,
+    [`${prefix}_datadock`]: etablissement.computed_info_datadock || null,
+    [`${prefix}_adresse`]: getEstablishmentAddress(etablissement),
+    [`${prefix}_complement_adresse`]: etablissement.complement_adresse || null,
+    [`${prefix}_cedex`]: etablissement.cedex || null,
+    [`${prefix}_entreprise_raison_sociale`]: etablissement.entreprise_raison_sociale || null,
 
-      [`${prefix}_code_postal`]: code_postal,
-      [`${prefix}_code_commune_insee`]: code_commune_insee,
-      [`${prefix}_num_departement`]: num_departement,
-      [`${prefix}_nom_departement`]: nom_departement,
-      [`${prefix}_region`]: region,
-      [`${prefix}_nom_academie`]: nom_academie,
-      [`${prefix}_num_academie`]: num_academie,
-      [`${prefix}_localite`]: localite,
-    },
-    messages,
+    [`${prefix}_code_postal`]: etablissement.code_postal || null,
+    [`${prefix}_code_commune_insee`]: etablissement.code_insee_localite || null,
+    [`${prefix}_num_departement`]: etablissement.num_departement || null,
+    [`${prefix}_nom_departement`]: etablissement.nom_departement || null,
+    [`${prefix}_region`]: etablissement.region_implantation_nom || null,
+    [`${prefix}_nom_academie`]: etablissement.nom_academie || null,
+    [`${prefix}_num_academie`]: etablissement.num_academie ? `${etablissement.num_academie}` : null,
+    [`${prefix}_localite`]: etablissement.localite || null,
   };
 };
 
-const etablissementsMapper = async (
-  etablissement_gestionnaire_siret,
-  etablissement_formateur_siret,
-  cpMap = {},
-  rncpInfo
-) => {
+const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissement_formateur_siret, rncpInfo) => {
   try {
     if (!etablissement_gestionnaire_siret && !etablissement_formateur_siret) {
       throw new Error("etablissementsMapper gestionnaire_siret, formateur_siret  must be provided");
@@ -159,15 +131,14 @@ const etablissementsMapper = async (
 
     const { referenceEstablishment, etablissement_reference } = etablissementReference;
 
-    const {
-      result: etablissementGestionnaire,
-      messages: etablissementGestionnaireMessages,
-    } = await mapEtablissementKeys(attachedEstablishments.gestionnaire || {}, "etablissement_gestionnaire", cpMap);
+    const etablissementGestionnaire = await mapEtablissementKeys(
+      attachedEstablishments.gestionnaire || {},
+      "etablissement_gestionnaire"
+    );
 
-    const { result: etablissementFormateur, messages: etablissementFormateurMessages } = await mapEtablissementKeys(
+    const etablissementFormateur = await mapEtablissementKeys(
       attachedEstablishments.formateur || {},
-      "etablissement_formateur",
-      cpMap
+      "etablissement_formateur"
     );
 
     const geolocInfo = getGeoloc(attachedEstablishments);
@@ -190,7 +161,6 @@ const etablissementsMapper = async (
 
         ...geolocInfo,
       },
-      messages: { ...etablissementGestionnaireMessages, ...etablissementFormateurMessages },
     };
   } catch (e) {
     logger.error(e);
