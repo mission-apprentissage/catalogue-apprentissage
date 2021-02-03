@@ -17,7 +17,7 @@ const performUpdates = async (filter = {}) => {
   const notUpdatedFormations = [];
   const updatedFormations = [];
 
-  await paginator(ConvertedFormation, { filter }, async (formation) => {
+  await paginator(ConvertedFormation, { filter, limit: 10 }, async (formation) => {
     const rcoFormation = await findRcoFormationFromConvertedId(formation.id_rco_formation);
     if (!rcoFormation?.published) {
       // if rco formation is not published, don't call mnaUpdater
@@ -26,7 +26,10 @@ const performUpdates = async (filter = {}) => {
       return;
     }
 
-    const { updates, formation: updatedFormation, error } = await mnaFormationUpdater(formation._doc);
+    const { updates, formation: updatedFormation, error } = await mnaFormationUpdater(formation._doc, {
+      // no need to check cp info in trainingsUpdater since it was successfully done once at converter
+      withCodePostalUpdate: false,
+    });
 
     if (error) {
       formation.update_error = error;
