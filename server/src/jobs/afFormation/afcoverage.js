@@ -1,6 +1,7 @@
 const { AfFormation, ConvertedFormation } = require("../../common/model");
 const { paginator } = require("../common/utils/paginator");
 const logger = require("../../common/logger");
+const { getCpInfo } = require("../../common/services/tables_correspondance");
 const { formation } = require("../common/utils/formater");
 
 const updateMatchedFormation = async (strengh, matching, _id) => {
@@ -34,14 +35,14 @@ const match3 = (cfd, num_departement, code_postal) =>
     ],
   });
 
-module.exports = async (tableCorrespondance) => {
+module.exports = async () => {
   logger.info(`--- START FORMATION COVERAGE ---`);
 
   await paginator(
     AfFormation,
     { filter: { code_cfd: { $ne: null } }, lean: true },
     async ({ _id, code_postal, code_cfd }) => {
-      const { messages, result } = await tableCorrespondance.getCpInfo(code_postal);
+      const { messages, result } = await getCpInfo(code_postal);
       let dept = code_postal.substring(0, 2);
 
       if (messages?.cp === "Ok" || messages?.cp === `Update: Le code ${code_postal} est un code commune insee`) {
