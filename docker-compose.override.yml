@@ -15,7 +15,6 @@ services:
       args:
         - REACT_APP_ENV=dev
         - REACT_APP_ENDPOINT_NEW_FRONT=https://catalogue-recette.apprentissage.beta.gouv.fr/api
-        - REACT_APP_ENDPOINT_OLD_FRONT=https://r7mayzn08d.execute-api.eu-west-3.amazonaws.com/dev
         - REACT_APP_ENDPOINT_TCO=https://tables-correspondances-recette.apprentissage.beta.gouv.fr/api
 
   server:
