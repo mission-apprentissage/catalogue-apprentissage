@@ -5,7 +5,8 @@ const { getJsonFromXlsxFile } = require("../../../common/utils/fileUtils");
 const { AfFormation, ConvertedFormation } = require("../../../common/model");
 const { isFinite } = require("lodash");
 const stringSimilarity = require("string-similarity");
-const { getCpInfo, getBcnInfo, getMefInfo } = require("../../../common/services/tables_correspondance");
+const { getCpInfo } = require("@mission-apprentissage/tco-service-node");
+const { getBcnInfo, getMefInfo } = require("../../../common/services/tables_correspondance");
 
 const { oleoduc, writeData } = require("oleoduc");
 
