@@ -26,6 +26,9 @@ services:
       - ./server/config:/app/config:z
       - catalogue_apprentissage_server_data:/data:z
     env_file: ./server/.env
+    build:
+      args:
+        - NPM_TOKEN=local
     environment:
       - CATALOGUE_APPRENTISSAGE_ENV=dev
       - CATALOGUE_APPRENTISSAGE_LOG_LEVEL=debug
