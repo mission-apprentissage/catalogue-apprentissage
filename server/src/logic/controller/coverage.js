@@ -1,5 +1,5 @@
 const { formation: formatFormation, etablissement: formatEtablissement } = require("./formater");
-const { getCpInfo } = require("../../common/services/tables_correspondance");
+const { getCpInfo } = require("@mission-apprentissage/tco-service-node");
 const { ConvertedFormation, Etablissement } = require("../../common/model");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 const { cfd, uai } = require("./queries");
