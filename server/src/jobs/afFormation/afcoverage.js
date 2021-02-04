@@ -1,4 +1,4 @@
-const { getAffelentCoverage } = require("../../logic/controller/coverage");
+const { getAffelnetCoverage } = require("../../logic/controller/coverage");
 const { paginator } = require("../common/utils/paginator");
 const { AfFormation } = require("../../common/model");
 
@@ -12,8 +12,8 @@ const updateMatchedFormation = async (matching) => {
 };
 
 module.exports = async () => {
-  await paginator(AfFormation, { filter: { code_cfd: { $ne: null } }, lean: true }, async (formation) => {
-    let match = getAffelentCoverage(formation);
+  await paginator(AfFormation, { filter: { code_cfd: { $ne: null } }, lean: true, limit: 50 }, async (formation) => {
+    let match = getAffelnetCoverage(formation);
 
     if (!match) return;
 

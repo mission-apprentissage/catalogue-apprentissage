@@ -49,7 +49,7 @@ async function getParcoursupCoverage(formation) {
   return match;
 }
 
-async function getAffelentCoverage(formation) {
+async function getAffelnetCoverage(formation) {
   const match1 = (cfd) => ConvertedFormation.find({ cfd });
   const match2 = (cfd, num_departement) => ConvertedFormation.find({ cfd, num_departement });
   const match3 = (cfd, num_departement, code_postal) =>
@@ -114,7 +114,21 @@ async function getEtablissementCoverage(formations) {
 
   await asyncForEach(
     formations,
-    async ({ uai_formation, etablissement_formateur_uai, etablissement_gestionnaire_uai }) => {
+    async ({
+      uai_formation,
+      etablissement_formateur_uai,
+      etablissement_gestionnaire_uai,
+      etablissement_formateur_id,
+      etablissement_gestionnaire_id,
+    }) => {
+      if (uai_formation === null && etablissement_formateur_uai === null && etablissement_gestionnaire_uai === null) {
+        let gestionnaire = await Etablissement.findById(etablissement_gestionnaire_id);
+        let formateur = await Etablissement.findById(etablissement_formateur_id);
+        match.push({ ...formatEtablissement(gestionnaire), matched_uai: "BY_ID_GESTIONNAIRE" });
+        match.push({ ...formatEtablissement(formateur), matched_uai: "BY_ID_FORMATEUR" });
+        return;
+      }
+
       let exist = match.find(
         (x) =>
           x.uai === uai_formation || x.uai === etablissement_formateur_uai || x.uai === etablissement_gestionnaire_uai
@@ -160,14 +174,16 @@ async function getEtablissementCoverage(formations) {
   if (match.length === 0) return null;
 
   const format = match.reduce((acc, item) => {
-    if (!acc[item._id]) {
-      acc[item._id] = item;
-      acc[item._id].matched_uai = [acc[item._id].matched_uai];
+    if (!acc[item.id_mna_etablissement]) {
+      acc[item.id_mna_etablissement] = item;
+      acc[item.id_mna_etablissement].matched_uai = [acc[item.id_mna_etablissement].matched_uai];
     } else {
-      const exist = acc[item._id].matched_uai.includes(item.matched_uai);
-      if (acc[item._id].matched_uai !== item.matched_uai) {
+      const exist = acc[item.id_mna_etablissement].matched_uai.includes(item.matched_uai);
+      if (acc[item.id_mna_etablissement].matched_uai !== item.matched_uai) {
         if (!exist) {
-          acc[item._id].matched_uai = acc[item._id].matched_uai.concat([item.matched_uai]);
+          acc[item.id_mna_etablissement].matched_uai = acc[item.id_mna_etablissement].matched_uai.concat([
+            item.matched_uai,
+          ]);
         }
       }
     }
@@ -184,4 +200,4 @@ async function getEtablissementCoverage(formations) {
   return etablissements;
 }
 
-module.exports = { getParcoursupCoverage, getAffelentCoverage, getEtablissementCoverage };
+module.exports = { getParcoursupCoverage, getAffelnetCoverage, getEtablissementCoverage };
