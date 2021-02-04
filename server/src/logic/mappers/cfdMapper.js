@@ -104,6 +104,9 @@ const cfdMapper = async (cfd = null) => {
         opcos,
         info_opcos,
         info_opcos_intitule,
+
+        libelle_court: result.libelle_court,
+        niveau_formation_diplome: result.niveau_formation_diplome,
       },
       messages,
     };

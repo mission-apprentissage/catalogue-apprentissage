@@ -62,15 +62,34 @@ const run = async () => {
       $and: [
         ...toBePublishedRules,
         {
-          diplome: {
-            $in: [
-              "BREVET DE TECHNICIEN SUPERIEUR",
-              "BREVET DE TECHNICIEN SUPERIEUR AGRICOLE",
-              "MENTION COMPLEMENTAIRE",
-              "CERTIFICAT DE SPECIALISATION AGRICOLE DE NIVEAU 4",
-              "DIPLOME UNIVERSITAIRE DE TECHNOLOGIE",
-            ],
-          },
+          $or: [
+            {
+              diplome: {
+                $in: [
+                  "BREVET DE TECHNICIEN SUPERIEUR",
+                  "BREVET DE TECHNICIEN SUPERIEUR AGRICOLE",
+                  "CERTIFICAT DE SPECIALISATION AGRICOLE DE NIVEAU 4",
+                  // "DIPLOME UNIVERSITAIRE DE TECHNOLOGIE",
+                ],
+              },
+            },
+            {
+              $or: [
+                { libelle_court: { $in: ["DCG", "MC4"] } },
+                { libelle_court: "BM", niveau_formation_diplome: "36M" },
+              ],
+            },
+          ],
+        },
+        {
+          $or: [
+            { "rncp_details.code_type_certif": { $nin: ["Titre", "TP"] } },
+            {
+              "rncp_details.code_type_certif": { $in: ["Titre", "TP"] },
+              "rncp_details.active_inactive": "ACTIVE",
+              niveau: { $in: ["5 (BTS, DUT...)", "6 (Licence...)"] },
+            },
+          ],
         },
         {
           $or: [{ niveau: "4 (Bac...)" }, { niveau: "5 (BTS, DUT...)" }, { niveau: "6 (Licence...)" }],
