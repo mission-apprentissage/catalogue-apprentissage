@@ -188,7 +188,8 @@ const Formation = ({
               {edition && <Input type="text" name="cfd" onChange={handleChange} value={values.cfd} />}
             </Text>
             <Text mb={4}>
-              Code MEF 10 caractères: <strong>{formation.mef_10_code}</strong>
+              Codes MEF 10 caractères:{" "}
+              <strong>{formation.mef_10_code ?? formation?.mefs_10?.map(({ mef10 }) => mef10).join(", ")}</strong>
             </Text>
             <Text mb={4}>
               Période d'inscription: {!edition && <FormationPeriode periode={formation.periode} />}
