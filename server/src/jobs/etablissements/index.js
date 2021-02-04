@@ -23,7 +23,6 @@ const importEtablissements = async (catalogue) => {
       async (e) => {
         stats.total++;
         try {
-          delete e._id;
           await Etablissement.create(e);
           stats.created++;
         } catch (e) {
@@ -35,7 +34,7 @@ const importEtablissements = async (catalogue) => {
     )
   );
 
-  return stats;
+  console.log({ stats });
 };
 
 module.exports = { importEtablissements };

@@ -318,7 +318,7 @@ const Etablissement = ({ data, onSelectChange }) => {
               );
 
             default:
-              return "";
+              return <Tag key={index}>{val}</Tag>;
           }
         });
       },

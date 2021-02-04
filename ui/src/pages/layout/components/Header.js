@@ -38,58 +38,59 @@ const Header = () => {
           </Link>
 
           {/* User Menu */}
-          <Box alignSelf="center">
-            {auth?.sub === "anonymous" && (
+
+          {auth?.sub === "anonymous" && (
+            <Box alignSelf="center">
               <Link as={NavLink} to="/login">
                 Connexion
               </Link>
-            )}
-            {auth?.sub !== "anonymous" && (
-              <Menu placement="bottom">
-                <MenuButton as={Link}>
-                  <Flex alignItems="center">
-                    <Avatar bg="blue.400" size="sm" />
-                    <Box display={["none", "block"]} ml={2}>
-                      <Text color="grey.700" fontSize="epsilon">
-                        {auth.sub}
-                      </Text>
-                      <Text fontSize="omega" color="grey.500">
-                        {isUserAdmin(auth) ? "Administrateur" : "Utilisateur"}
-                      </Text>
-                    </Box>
-                  </Flex>
-                </MenuButton>
-                <MenuList>
-                  <MenuItem as={NavLink} to="/" icon={<FontAwesomeIcon icon={faHome} />}>
-                    Accueil
-                  </MenuItem>
-                  {isUserAdmin(auth) && (
-                    <>
-                      <MenuDivider />
-                      <MenuGroup title="Administration">
-                        <MenuItem as={NavLink} to="/admin/users" icon={<FontAwesomeIcon icon={faUsers} />}>
-                          Utilisateurs
-                        </MenuItem>
-                      </MenuGroup>
-                      <MenuDivider />
-                      <MenuGroup title="Réconciliation">
-                        <MenuItem as={NavLink} to="/couverture-parcoursup" icon={<FontAwesomeIcon icon={faSync} />}>
-                          Réconciliation Parcoursup
-                        </MenuItem>
-                        <MenuItem as={NavLink} to="/couverture-affelnet" icon={<FontAwesomeIcon icon={faSync} />}>
-                          Réconciliation Affelnet
-                        </MenuItem>
-                      </MenuGroup>
-                    </>
-                  )}
-                  <MenuDivider />
-                  <MenuItem onClick={logout} icon={<FontAwesomeIcon icon={faSignOutAlt} />}>
-                    Déconnexion
-                  </MenuItem>
-                </MenuList>
-              </Menu>
-            )}
-          </Box>
+            </Box>
+          )}
+          {auth?.sub !== "anonymous" && (
+            <Menu placement="bottom">
+              <MenuButton as={Link} alignSelf="center" _hover={{ textDecoration: "none" }}>
+                <Flex alignItems="center">
+                  <Avatar bg="blue.400" size="sm" />
+                  <Box display={["none", "block"]} ml={2}>
+                    <Text color="grey.700" fontSize="epsilon">
+                      {auth.sub}
+                    </Text>
+                    <Text fontSize="omega" color="grey.500">
+                      {isUserAdmin(auth) ? "Administrateur" : "Utilisateur"}
+                    </Text>
+                  </Box>
+                </Flex>
+              </MenuButton>
+              <MenuList>
+                <MenuItem as={NavLink} to="/" icon={<FontAwesomeIcon icon={faHome} />}>
+                  Accueil
+                </MenuItem>
+                {isUserAdmin(auth) && (
+                  <>
+                    <MenuDivider />
+                    <MenuGroup title="Administration">
+                      <MenuItem as={NavLink} to="/admin/users" icon={<FontAwesomeIcon icon={faUsers} />}>
+                        Utilisateurs
+                      </MenuItem>
+                    </MenuGroup>
+                    <MenuDivider />
+                    <MenuGroup title="Réconciliation">
+                      <MenuItem as={NavLink} to="/couverture-parcoursup" icon={<FontAwesomeIcon icon={faSync} />}>
+                        Réconciliation Parcoursup
+                      </MenuItem>
+                      <MenuItem as={NavLink} to="/couverture-affelnet" icon={<FontAwesomeIcon icon={faSync} />}>
+                        Réconciliation Affelnet
+                      </MenuItem>
+                    </MenuGroup>
+                  </>
+                )}
+                <MenuDivider />
+                <MenuItem onClick={logout} icon={<FontAwesomeIcon icon={faSignOutAlt} />}>
+                  Déconnexion
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          )}
         </Flex>
       </Container>
     </Box>

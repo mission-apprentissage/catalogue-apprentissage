@@ -3,8 +3,9 @@ const combinate = require("../../logic/mappers/psReconciliationMapper");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const mongoose = require("mongoose");
 const express = require("express");
+const { getCfdInfo } = require("../../common/services/tables_correspondance");
 
-module.exports = ({ catalogue, tableCorrespondance }) => {
+module.exports = ({ catalogue }) => {
   const router = express.Router();
 
   /**
@@ -21,7 +22,7 @@ module.exports = ({ catalogue, tableCorrespondance }) => {
           data.docs.map(async (formation) => {
             let { _doc, code_cfd, uai } = formation;
             if (_doc.code_cfd) {
-              const infoCfd = await tableCorrespondance.getCfdInfo(code_cfd);
+              const infoCfd = await getCfdInfo(code_cfd);
               const infoReconciliation = await AfReconciliation.find({ code_cfd, uai });
 
               let infobcn = infoCfd.result.intitule_long;
