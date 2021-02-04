@@ -22,6 +22,11 @@ const mnaFormationSchema = {
     default: null,
     description: "Code MEF 10 caractères",
   },
+  mefs_10: {
+    type: [Object],
+    default: [],
+    description: "Tableau de Code MEF 10 caractères et modalités",
+  },
   nom_academie: {
     type: String,
     default: null,
