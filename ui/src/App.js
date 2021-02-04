@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route, Redirect, useHistory } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
-import "tabler-react/dist/Tabler.css";
 import DashboardPage from "./pages/DashboardPage";
 import useAuth from "./common/hooks/useAuth";
 import HomePage from "./pages/HomePage";
@@ -21,7 +20,6 @@ import HowToModif from "./pages/HowToModif";
 import HowToSignal from "./pages/HowToSignal";
 import { _post } from "./common/httpClient";
 import ScrollToTop from "./common/components/ScrollToTop";
-import Layout from "./pages/layout/Layout";
 
 import { QueryClient, QueryClientProvider } from "react-query";
 
@@ -72,13 +70,7 @@ export default () => {
               <PrivateRoute exact path="/admin">
                 {auth && auth.permissions.isAdmin ? <DashboardPage /> : <HomePage />}
               </PrivateRoute>
-              {auth && auth.permissions.isAdmin && (
-                <PrivateRoute exact path="/admin/users">
-                  <Layout>
-                    <Users />
-                  </Layout>
-                </PrivateRoute>
-              )}
+              {auth && auth.permissions.isAdmin && <PrivateRoute exact path="/admin/users" component={Users} />}
               <Route exact path="/" component={HomePage} />
               {/* <Route exact path="/recherche/formations-2020" component={Search} /> */}
               <Route exact path="/recherche/formations-2021" component={Search} />

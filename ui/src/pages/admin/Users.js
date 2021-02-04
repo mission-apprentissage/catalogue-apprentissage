@@ -1,7 +1,57 @@
 import React, { useEffect, useState } from "react";
-import { Page, Grid, Header, Card, Button, Form as TablerForm } from "tabler-react";
-import { _get, _delete, _post, _put } from "../../common/httpClient";
+import { _delete, _get, _post, _put } from "../../common/httpClient";
 import { useFormik } from "formik";
+import Layout from "../layout/Layout";
+import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Box,
+  Button,
+  Checkbox,
+  Container,
+  FormControl,
+  FormLabel,
+  Heading,
+  HStack,
+  Input,
+  Stack,
+} from "@chakra-ui/react";
+
+const ACADEMIES = [
+  "01",
+  "02",
+  "03",
+  "04",
+  "06",
+  "07",
+  "08",
+  "09",
+  "10",
+  "11",
+  "12",
+  "13",
+  "14",
+  "15",
+  "16",
+  "17",
+  "18",
+  "19",
+  "20",
+  "22",
+  "23",
+  "24",
+  "25",
+  "27",
+  "28",
+  "31",
+  "32",
+  "33",
+  "43",
+  "70",
+];
 
 const UserLine = ({ user }) => {
   const { values, handleSubmit, handleChange } = useFormik({
@@ -71,156 +121,107 @@ const UserLine = ({ user }) => {
   };
 
   return (
-    <form className="userLine" onSubmit={handleSubmit}>
-      <TablerForm.Group label="Username">
-        <TablerForm.Input
-          type="text"
-          name="newUsername"
-          id="newUsername"
-          value={values.newUsername}
-          onChange={handleChange}
-        />
-      </TablerForm.Group>
-      <TablerForm.Group label="Email">
-        <TablerForm.Input type="email" name="newEmail" id="newEmail" value={values.newEmail} onChange={handleChange} />
-      </TablerForm.Group>
+    <form onSubmit={handleSubmit}>
+      <FormControl py={2}>
+        <FormLabel>Username</FormLabel>
+        <Input type="text" id="newUsername" name="newUsername" value={values.newUsername} onChange={handleChange} />
+      </FormControl>
+
+      <FormControl py={2}>
+        <FormLabel>Email</FormLabel>
+        <Input type="email" id="newEmail" name="newEmail" value={values.newEmail} onChange={handleChange} />
+      </FormControl>
 
       {!user && (
-        <TablerForm.Group label="Mot de passe temporaire">
-          <TablerForm.Input
+        <FormControl py={2}>
+          <FormLabel>Mot de passe temporaire</FormLabel>
+          <Input
             type="text"
-            name="newTmpPassword"
             id="newTmpPassword"
+            name="newTmpPassword"
             value={values.newTmpPassword}
             onChange={handleChange}
           />
-        </TablerForm.Group>
+        </FormControl>
       )}
 
-      <TablerForm.Group>
-        <label className="custom-control-inline">
-          <input
-            type="checkbox"
-            name="accessAllCheckbox"
-            id="accessAllCheckbox"
-            className="custom-control custom-checkbox custom-control-inline"
-            onChange={handleChange}
-            checked={values.accessAllCheckbox.length > 0}
-          />
-          <span>Admin</span>
-        </label>
-      </TablerForm.Group>
+      <FormControl py={2}>
+        <Checkbox
+          name="accessAllCheckbox"
+          id="accessAllCheckbox"
+          isChecked={values.accessAllCheckbox.length > 0}
+          onChange={handleChange}
+          value="on"
+        >
+          Admin
+        </Checkbox>
+      </FormControl>
 
-      <TablerForm.Group label="Rôles">
-        <TablerForm.Group>
-          <label className="custom-control-inline">
-            <input
-              type="checkbox"
-              name="roles"
-              className="custom-control custom-checkbox custom-control-inline"
-              onChange={handleChange}
-              value={"user"}
-              checked={true}
-              disabled
-            />
-            <span>user</span>
-          </label>
+      <FormControl py={2}>
+        <FormLabel>Rôles</FormLabel>
+        <HStack spacing={5}>
+          <Checkbox name="roles" onChange={handleChange} value={"user"} isDisabled isChecked>
+            user
+          </Checkbox>
 
           {["reports", "moss", "instructeur"].map((role, i) => {
             return (
-              <label key={i} className="custom-control-inline">
-                <input
-                  type="checkbox"
-                  name="roles"
-                  className="custom-control custom-checkbox custom-control-inline"
-                  onChange={handleChange}
-                  value={role}
-                  checked={values.roles.includes(role)}
-                />
-                <span>{role}</span>
-              </label>
+              <Checkbox
+                name="roles"
+                key={i}
+                onChange={handleChange}
+                value={role}
+                isChecked={values.roles.includes(role)}
+              >
+                {role}
+              </Checkbox>
             );
           })}
-        </TablerForm.Group>
-      </TablerForm.Group>
+        </HStack>
+      </FormControl>
 
-      <TablerForm.Group label="Académies">
-        <TablerForm.Group>
-          <label className="custom-control-inline">
-            <input
-              type="checkbox"
-              name="accessAcademieList"
-              id="accessAcademieList"
-              className="custom-control custom-checkbox custom-control-inline"
-              onChange={handleChange}
-              value={"-1"}
-              checked={values.accessAcademieList.includes("-1")}
-            />
-            <span>Toutes</span>
-          </label>
+      <FormControl py={2}>
+        <FormLabel>Académies</FormLabel>
+        <HStack wrap="wrap" spacing={5}>
+          <Checkbox
+            name="accessAcademieList"
+            onChange={handleChange}
+            value={"-1"}
+            isChecked={values.accessAcademieList.includes("-1")}
+            mb={3}
+          >
+            Toutes
+          </Checkbox>
 
-          {[
-            "01",
-            "02",
-            "03",
-            "04",
-            "06",
-            "07",
-            "08",
-            "09",
-            "10",
-            "11",
-            "12",
-            "13",
-            "14",
-            "15",
-            "16",
-            "17",
-            "18",
-            "19",
-            "20",
-            "22",
-            "23",
-            "24",
-            "25",
-            "27",
-            "28",
-            "31",
-            "32",
-            "33",
-            "43",
-            "70",
-          ].map((num, i) => {
+          {ACADEMIES.map((num, i) => {
             return (
-              <label key={i} className="custom-control-inline">
-                <input
-                  type="checkbox"
-                  name="accessAcademieList"
-                  id="accessAcademieList"
-                  className="custom-control custom-checkbox custom-control-inline"
-                  onChange={handleChange}
-                  value={num}
-                  checked={values.accessAcademieList.includes(num)}
-                />
-                <span>{num}</span>
-              </label>
+              <Checkbox
+                key={i}
+                name="accessAcademieList"
+                onChange={handleChange}
+                value={num}
+                isChecked={values.accessAcademieList.includes(num)}
+                mb={3}
+              >
+                {num}
+              </Checkbox>
             );
           })}
-        </TablerForm.Group>
-      </TablerForm.Group>
+        </HStack>
+      </FormControl>
 
       {user && (
-        <>
-          <Button type="submit" color="primary" className="mr-5">
-            Save
+        <Box>
+          <Button type="submit" colorScheme="blue" mr={5}>
+            Enregistrer
           </Button>
-          <Button color="danger" onClick={onDeleteClicked}>
-            Delete user
+          <Button variant="outline" colorScheme="red" onClick={onDeleteClicked}>
+            Supprimer l'utilisateur
           </Button>
-        </>
+        </Box>
       )}
       {!user && (
-        <Button type="submit" color="primary" className="mt-3">
+        <Button type="submit" colorScheme="blue">
           Créer l'utilisateur
         </Button>
       )}
@@ -239,33 +240,47 @@ export default () => {
   }, []);
 
   return (
-    <Page>
-      <Page.Main>
-        <Page.Content title="Utilisateurs">
-          <>
-            <Header.H5>List des utilisateurs</Header.H5>
-            <Grid.Row cards={true}>
-              <Grid.Col sm={12}>
-                {users.map((userAttr, i) => {
-                  return (
-                    <Card title={userAttr.username} isCollapsible isCollapsed key={i}>
-                      <Card.Body>
-                        <UserLine user={userAttr} />
-                      </Card.Body>
-                    </Card>
-                  );
-                })}
+    <Layout>
+      <Box bg="secondaryBackground" w="100%" minH="100vh" py={[1, 8]} px={[1, 24]}>
+        <Container maxW="xl">
+          <Heading as="h1" mb={8} mt={2}>
+            Liste des utilisateurs
+          </Heading>
+          <Stack spacing={2}>
+            {users.map((userAttr, i) => {
+              return (
+                <Accordion bg="white" key={i} allowToggle>
+                  <AccordionItem>
+                    <AccordionButton _expanded={{ bg: "blue.300", color: "white" }}>
+                      <Box flex="1" textAlign="left" fontSize="gamma">
+                        {userAttr.username}
+                      </Box>
+                      <AccordionIcon />
+                    </AccordionButton>
+                    <AccordionPanel pb={4}>
+                      <UserLine user={userAttr} />
+                    </AccordionPanel>
+                  </AccordionItem>
+                </Accordion>
+              );
+            })}
 
-                <Card title="Créer un utilisateur" isCollapsible isCollapsed>
-                  <Card.Body>
-                    <UserLine user={null} />
-                  </Card.Body>
-                </Card>
-              </Grid.Col>
-            </Grid.Row>
-          </>
-        </Page.Content>
-      </Page.Main>
-    </Page>
+            <Accordion bg="white" allowToggle>
+              <AccordionItem>
+                <AccordionButton _expanded={{ bg: "blue.300", color: "white" }}>
+                  <Box flex="1" textAlign="left" fontSize="gamma">
+                    Créer un utilisateur
+                  </Box>
+                  <AccordionIcon />
+                </AccordionButton>
+                <AccordionPanel pb={4}>
+                  <UserLine user={null} />
+                </AccordionPanel>
+              </AccordionItem>
+            </Accordion>
+          </Stack>
+        </Container>
+      </Box>
+    </Layout>
   );
 };
