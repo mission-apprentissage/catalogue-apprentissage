@@ -1,5 +1,5 @@
 const { formation: formatFormation, etablissement: formatEtablissement } = require("./formater");
-const tco = require("../../common/components/tables_correspondance");
+const { getCpInfo } = require("../../common/services/tables_correspondance");
 const { ConvertedFormation, Etablissement } = require("../../common/model");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 const { cfd, uai } = require("./queries");
@@ -69,7 +69,7 @@ async function getAffelentCoverage(formation) {
 
   let { _id, code_postal, code_cfd } = formation;
 
-  const { messages, result } = await tco().getCpInfo(code_postal);
+  const { messages, result } = await getCpInfo(code_postal);
   let dept = code_postal.substring(0, 2);
 
   if (messages?.cp === "Ok" || messages?.cp === `Update: Le code ${code_postal} est un code commune insee`) {
