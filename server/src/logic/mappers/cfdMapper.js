@@ -45,7 +45,7 @@ const cfdMapper = async (cfd = null) => {
 
     const rome_codes = (romes || []).map(({ rome }) => rome);
 
-    const { mef10 = null, modalite = { duree: null, annee: null } } = mefs;
+    const { mef10 = null, modalite = { duree: null, annee: null }, mefs10 = [] } = mefs;
 
     const { url: onisep_url = null } = onisep;
 
@@ -72,7 +72,9 @@ const cfdMapper = async (cfd = null) => {
         intitule_court: result.intitule_court,
         diplome: result.diplome,
 
-        mef_10_code: mef10, // TODO fix tables de correspondances
+        mef_10_code: mef10,
+        mefs_10: mefs10,
+
         duree: modalite.duree,
         annee: modalite.annee,
         onisep_url,
@@ -102,6 +104,9 @@ const cfdMapper = async (cfd = null) => {
         opcos,
         info_opcos,
         info_opcos_intitule,
+
+        libelle_court: result.libelle_court,
+        niveau_formation_diplome: result.niveau_formation_diplome,
       },
       messages,
     };
