@@ -33,7 +33,7 @@ const parseErrors = (messages) => {
     .reduce((acc, [key, value]) => `${acc}${acc ? " " : ""}${key}: ${value}.`, "");
 };
 
-const mnaFormationUpdater = async (formation, { withHistoryUpdate = true } = {}) => {
+const mnaFormationUpdater = async (formation, { withHistoryUpdate = true, withCodePostalUpdate = true } = {}) => {
   try {
     await formationSchema.validateAsync(formation, { abortEarly: false });
 
@@ -44,7 +44,9 @@ const mnaFormationUpdater = async (formation, { withHistoryUpdate = true } = {})
       return { updates: null, formation, error };
     }
 
-    const { result: cpMapping, messages: cpMessages } = await codePostalMapper(formation.code_postal);
+    const { result: cpMapping = {}, messages: cpMessages } = withCodePostalUpdate
+      ? await codePostalMapper(formation.code_postal)
+      : {};
     error = parseErrors(cpMessages);
     if (error) {
       return { updates: null, formation, error };
@@ -56,11 +58,9 @@ const mnaFormationUpdater = async (formation, { withHistoryUpdate = true } = {})
       rncp_eligible_apprentissage: cfdMapping?.rncp_eligible_apprentissage,
       ...cfdMapping?.rncp_details,
     };
-    const cachedCpResult = { [formation.code_postal]: { result: cpMapping, messages: cpMessages } };
     const { result: etablissementsMapping, messages: etablissementsMessages } = await etablissementsMapper(
       formation.etablissement_gestionnaire_siret,
       formation.etablissement_formateur_siret,
-      cachedCpResult,
       rncpInfo
     );
 

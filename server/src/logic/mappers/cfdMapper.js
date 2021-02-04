@@ -1,6 +1,6 @@
 const logger = require("../../common/logger");
-const { getCfdInfo, findOpcosFromCfd } = require("../common/apiTablesCorrespondances");
 const { infosCodes, computeCodes } = require("../../constants/opco");
+const { getCfdInfo, findOpcosFromCfd } = require("../../common/services/tables_correspondance");
 
 const cfdMapper = async (cfd = null) => {
   try {

@@ -1,5 +1,5 @@
 const logger = require("../../common/logger");
-const { getCpInfo } = require("../common/apiTablesCorrespondances");
+const { getCpInfo } = require("../../common/services/tables_correspondance");
 
 const codePostalMapper = async (codePostal = null) => {
   try {

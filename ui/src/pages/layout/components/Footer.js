@@ -1,47 +1,49 @@
 import React from "react";
-
+import { Container, Link, Box, Flex, Button, Text } from "@chakra-ui/react";
 import packageJson from "../../../../package.json";
 
 const Footer = () => {
   return (
-    <footer className="footer">
-      <div className="container">
-        <div className="row align-items-center flex-row-reverse">
-          <div className="col-auto ml-lg-auto">
-            <div className="row align-items-center">
-              <div className="col-auto">
-                <ul className="list-inline list-inline-dots mb-0">
-                  <li className="list-inline-item">
-                    <a href="https://mission-apprentissage.gitbook.io/" target="_blank" rel="noopener noreferrer">
-                      Documentation
-                    </a>
-                  </li>
-                </ul>
-              </div>
-              <div className="col-auto">
-                <a
-                  href="https://github.com/mission-apprentissage/catalogue-apprentissage"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-outline-primary btn-sm"
-                >
-                  Code source
-                </a>
-              </div>
-              <div className="col-auto">
-                <a href="mailto:catalogue@apprentissage.beta.gouv.fr">Contact</a>
-              </div>
-            </div>
-          </div>
-          <div className="col-12 col-lg-auto mt-3 mt-lg-0 text-center">
-            <a href="https://beta.gouv.fr/startups/apprentissage.html" target="_blank" rel="noopener noreferrer">
+    <Box borderTop="1px solid" borderColor="grey.300" color="grey.600" fontSize="zeta">
+      <Container maxW="xl" py={6}>
+        <Flex
+          flexDirection={["column", "row-reverse"]}
+          justifyContent="space-between"
+          alignItems={["center", "flex-start"]}
+        >
+          <Box mb={[4, 0]}>
+            <Link href="https://mission-apprentissage.gitbook.io/" mr={4} isExternal>
+              Documentation
+            </Link>
+            <Button
+              p={3}
+              as={Link}
+              colorScheme={"blue"}
+              variant="outline"
+              href="https://github.com/mission-apprentissage/catalogue-apprentissage"
+              size="xs"
+              mr={4}
+              isExternal
+              _hover={{ textDecoration: "none", bg: "blue.500", color: "white" }}
+            >
+              Code source
+            </Button>
+            <Link href="mailto:catalogue@apprentissage.beta.gouv.fr">Contact</Link>
+          </Box>
+          <Flex flexDirection={["column", "row"]} alignItems={["center", "flex-start"]}>
+            <Link href="https://beta.gouv.fr/startups/apprentissage.html" isExternal>
               Mission Nationale pour l&apos;apprentissage
-            </a>{" "}
-            - © {`${new Date().getFullYear()}`} - Version {packageJson.version}
-          </div>
-        </div>
-      </div>
-    </footer>
+            </Link>
+            <Text as="span" color="grey.500" display={["none", "block"]}>
+              &nbsp;-&nbsp;
+            </Text>
+            <Text as="span" color="grey.500">
+              © {`${new Date().getFullYear()}`} - Version {packageJson.version}
+            </Text>
+          </Flex>
+        </Flex>
+      </Container>
+    </Box>
   );
 };
 

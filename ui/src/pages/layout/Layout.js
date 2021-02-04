@@ -5,12 +5,12 @@ import Footer from "./components/Footer";
 import Header from "./components/Header";
 import NavigationMenu from "./components/NavigationMenu";
 
-const Layout = (props) => {
+const Layout = ({ children, ...rest }) => {
   return (
-    <Container maxW="full" p={0}>
+    <Container maxW="full" p={0} {...rest}>
       <Header />
       <NavigationMenu />
-      {props.children}
+      {children}
       <Footer />
     </Container>
   );

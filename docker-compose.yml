@@ -31,7 +31,7 @@ services:
     container_name: catalogue_apprentissage_server
     build:
       context: server
-    mem_limit: 512m
+    mem_limit: 1g
     restart: unless-stopped
     networks:
       - catalogue_apprentissage_network

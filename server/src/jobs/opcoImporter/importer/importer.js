@@ -1,6 +1,7 @@
 const { pipeline, writeObject } = require("../../../common/utils/streamUtils");
 const logger = require("../../../common/logger");
-const { findOpcosFromCfd } = require("../../../logic/common/apiTablesCorrespondances");
+const { findOpcosFromCfd } = require("../../../common/services/tables_correspondance");
+
 const { ConvertedFormation, MnaFormation } = require("../../../common/model/index");
 const { infosCodes, computeCodes } = require("../../../constants/opco");
 

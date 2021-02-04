@@ -1,15 +1,19 @@
 .howToModif {
   min-height: 100vh;
-  background-color: #e5edef;
-  color: #19414c;
 }
 
-.howToModif h1, .howToModif h2, .howToModif h3, .howToModif h4, .howToModif h5, .howToModif h6 {
+.howToModif h1,
+.howToModif h2,
+.howToModif h3,
+.howToModif h4,
+.howToModif h5,
+.howToModif h6 {
   font-size: revert;
   font-weight: revert;
 }
 
-.howToModif ol, .howToModif ul {
+.howToModif ol,
+.howToModif ul {
   margin: initial;
   padding: revert;
 }

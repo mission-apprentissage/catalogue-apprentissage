@@ -147,7 +147,7 @@ const performConversion = async () => {
   const invalidRcoFormations = [];
   const convertedRcoFormations = [];
 
-  await paginator(RcoFormation, { filter: { converted_to_mna: { $ne: true } } }, async (rcoFormation) => {
+  await paginator(RcoFormation, { filter: { converted_to_mna: { $ne: true } }, limit: 10 }, async (rcoFormation) => {
     const mnaFormattedRcoFormation = formatToMnaFormation(rcoFormation._doc);
 
     if (!rcoFormation.published) {
