@@ -1,7 +1,7 @@
 const { AfFormation, ConvertedFormation } = require("../../common/model");
 const { paginator } = require("../common/utils/paginator");
 const logger = require("../../common/logger");
-const { getCpInfo } = require("../../common/services/tables_correspondance");
+const { getCpInfo } = require("@mission-apprentissage/tco-service-node");
 const { formation } = require("../common/utils/formater");
 
 const updateMatchedFormation = async (strengh, matching, _id) => {
