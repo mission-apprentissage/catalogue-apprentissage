@@ -6,7 +6,7 @@ runScript(async () => {
   await paginator(
     AfFormation,
     { filter: { matching_mna_etablissement: { $size: 1 } }, lean: true, limit: 50 },
-    async ({ code_cfd, matching_mna_etablissement }) => {
+    async ({ code_cfd, matching_mna_etablissement, _id }) => {
       let { siret, uai } = matching_mna_etablissement[0];
 
       let payload = {
@@ -17,6 +17,7 @@ runScript(async () => {
       };
 
       await AfReconciliation.create(payload);
+      await AfFormation.findByIdAndUpdate(_id, { etat_reconciliation: true });
     }
   );
 });
