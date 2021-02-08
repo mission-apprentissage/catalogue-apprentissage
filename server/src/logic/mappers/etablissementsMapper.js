@@ -110,6 +110,8 @@ const mapEtablissementKeys = async (
     [`${prefix}_nom_academie`]: etablissement.nom_academie || null,
     [`${prefix}_num_academie`]: etablissement.num_academie ? `${etablissement.num_academie}` : null,
     [`${prefix}_localite`]: etablissement.localite || null,
+
+    [`${prefix}_date_creation`]: etablissement.date_creation || null,
   };
 };
 
