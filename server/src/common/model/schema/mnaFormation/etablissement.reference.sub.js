@@ -39,6 +39,11 @@ const etablissementReferenceInfo = {
     default: false,
     description: "Etablissement reference est habilité RNCP ou pas",
   },
+  etablissement_reference_date_creation: {
+    type: Date,
+    default: null,
+    description: "Date de création de l'établissement",
+  },
 };
 
 module.exports = etablissementReferenceInfo;
