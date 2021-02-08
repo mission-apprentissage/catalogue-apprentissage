@@ -1,28 +1,57 @@
 const changelog = {
   list: [
     {
-      version: "2.0.3",
+      version: "2.5.0",
       date: "Prochainement",
-      about: `<h5>A venir</h5>
+      about: `<h5>À venir</h5>
       <ul>
+        <li>
+          Réconciliation des formations existantes Affelnet (sur base des éléments publiés dans Affenet en 2020)
+        </li>
+        <li>
+          Réconciliation des formations existantes Parcoursup (sur base des éléments publiés dans Parcoursup en 2021)
+        </li>
+        <li>
+          Formulaire complémentaire pour publication des formations dans catalogue Affelnet
+        </li>
       </ul>`,
       fixes: [],
       features: [],
       improvements: [],
     },
     {
-      version: "2.0.2",
+      version: "2.4.0",
+      date: "31/01/2021",
+      about: `<h5>À propos de cette version</h5>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [],
+      features: [
+        "[Catalogue] Module de publication des formations en mode connecté au sein des bases Parcoursup et Affelnet",
+        "[Page] Ajout du guide des signalements",
+      ],
+      improvements: [],
+    },
+    {
+      version: "2.3.0",
+      date: "06/01/2021",
+      about: `<h5>À propos de cette version</h5>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: ["[Catalogue] Corrections des doublons de formations 2021 RCO"],
+      features: [
+        "[Catalogue] Ajout de la fonctionnalité de modification du catalogue par les instructeurs",
+        "[Catalogue] Ajout de la fonctionnalité d'export des données en mode connecté",
+        "[Catalogue] Affichage des tag 2020 ou 2021 sur les établissements",
+        "[Page] Ajout du guide réglementaire 2021 (hors connexion)",
+      ],
+      improvements: [
+        "[Catalogue] mise à jour des scripts d'éligibilité des établissements et des formations (info datadock à jour)",
+      ],
+    },
+    {
+      version: "2.2.0",
       date: "15 Décembre 2020",
       about: `<h5>À propos de cette version :</h5>
       <ul>
-        <li>
-          La mise à jour du 15/12 peut contenir des doublons au niveau des formations. Des travaux de
-          dédoublonnage sont en cours avec le réseau des Carif-Oref. Un message vous informera de la
-          correction des doublons.
-        </li>
-        <li>
-          Courant janvier 2021 le catalogue des formations 2020 ne sera plus affiché dans cette interface.
-        </li>
         <li>
           A l’attention des services académiques : L’indication « A charger dans Parcoursup » sera
           développée de façon plus précise en fonction de chaque type de formation dans la prochaine version
@@ -43,7 +72,7 @@ const changelog = {
       improvements: [],
     },
     {
-      version: "2.0.1",
+      version: "2.1.0",
       date: "01 Décembre 2020",
       about: `<h5>A propos de cette version :</h5>
       <ul>
@@ -62,7 +91,7 @@ const changelog = {
       date: "17 Juin 2020",
       about: `<h5>A propos de cette version :</h5>
       <ul>
-        <li>Changement d'interface majeure</li>, 
+        <li>Changement d'interface majeur</li>
       </ul>`,
       fixes: [],
       features: [
