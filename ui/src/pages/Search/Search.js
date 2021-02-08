@@ -72,6 +72,8 @@ export default ({ match }) => {
   const [mode, setMode] = useState("simple");
   const matchBase = getBaseFromMatch(match);
   const [base, setBase] = useState(matchBase);
+  const [isCatalogEligible, setCatalogueEligible] = useState(true);
+
   let [auth] = useAuth();
 
   const { FILTERS, facetDefinition, queryBuilderField, dataSearch, columnsDefinition } =
@@ -114,6 +116,7 @@ export default ({ match }) => {
         if (base === "etablissements") {
           setItemsCount(`${count} établissements`);
         } else {
+          setCatalogueEligible(!!val);
           setItemsCount(`${count} formations au ${val ? "Catalogue général" : "Catalogue non-éligible"}`);
         }
       } catch (error) {
@@ -162,9 +165,13 @@ export default ({ match }) => {
                     {["mnaformation", "convertedformation"].includes(base) && (
                       <ToggleCatalogue filters={FILTERS} onChanged={resetCount} />
                     )}
-                    {facetDefinition.map((fd, i) => {
-                      return fd.roles ? (
-                        hasOneOfRoles(auth, fd.roles) ? (
+                    {facetDefinition
+                      .filter(
+                        ({ roles, showCatalogEligibleOnly }) =>
+                          (!showCatalogEligibleOnly || isCatalogEligible) && (!roles || hasOneOfRoles(auth, roles))
+                      )
+                      .map((fd, i) => {
+                        return (
                           <Facet
                             key={i}
                             componentId={fd.componentId}
@@ -175,22 +182,8 @@ export default ({ match }) => {
                             filters={FILTERS}
                             sortBy={fd.sortBy}
                           />
-                        ) : (
-                          <div key={i} />
-                        )
-                      ) : (
-                        <Facet
-                          key={i}
-                          componentId={fd.componentId}
-                          dataField={fd.dataField}
-                          title={fd.title}
-                          filterLabel={fd.filterLabel}
-                          selectAllLabel={fd.selectAllLabel}
-                          filters={FILTERS}
-                          sortBy={fd.sortBy}
-                        />
-                      );
-                    })}
+                        );
+                      })}
                   </div>
                   <div className="search-results">
                     {mode !== "simple" && (

@@ -29,7 +29,7 @@ const CardList = ({ data, f2021 }) => {
             <p>
               {data.code_postal} {data.nom_academie}
             </p>
-            {hasOneOfRoles(auth, ["admin", "instructeur"]) && (
+            {hasOneOfRoles(auth, ["admin", "instructeur"]) && data.etablissement_reference_catalogue_published && (
               <div className="pills-statuts">
                 <StatusBadge source="Parcoursup" status={data.parcoursup_statut} mr={2} />
                 <StatusBadge source="Affelnet" status={data.affelnet_statut} />

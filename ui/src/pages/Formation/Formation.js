@@ -585,7 +585,7 @@ export default ({ match }) => {
                 <Heading as="h1" fontSize="beta">
                   {displayedFormation.intitule_long}
                 </Heading>
-                {hasRightToEdit && (
+                {hasRightToEdit && displayedFormation.etablissement_reference_catalogue_published && (
                   <>
                     <Text fontSize="gamma" fontWeight="bold" mt={3} mb={[2, 0]}>
                       Statuts et publications de la formation

@@ -308,6 +308,12 @@ const columnsDefinition = [
     width: 200,
     editable: false,
   },
+  {
+    Header: "Établissement dans le catalogue éligible ? ",
+    accessor: "etablissement_reference_catalogue_published",
+    width: 200,
+    editable: false,
+  },
 ];
 
 const queryBuilderField = [
@@ -342,6 +348,7 @@ const facetDefinition = [
     selectAllLabel: "Tous",
     sortBy: "count",
     roles: ["admin", "instructeur"],
+    showCatalogEligibleOnly: true,
   },
   {
     componentId: "affelnet_statut",
@@ -351,6 +358,7 @@ const facetDefinition = [
     selectAllLabel: "Tous",
     sortBy: "asc",
     roles: ["admin", "instructeur"],
+    showCatalogEligibleOnly: true,
   },
   {
     componentId: "num_departement",
