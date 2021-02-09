@@ -18,7 +18,7 @@ module.exports = async () => {
 
     if (!match) return;
 
-    if (match.length === 1) {
+    if (match.matching.length === 1) {
       await reconciliationAffelnet(formation, match);
     }
 
