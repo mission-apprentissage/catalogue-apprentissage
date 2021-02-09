@@ -1,5 +1,5 @@
 const logger = require("../../../common/logger");
-const { RcoFormation, ConvertedFormation } = require("../../../common/model/index");
+const { RcoFormation, ConvertedFormation, Etablissement } = require("../../../common/model/index");
 const { mnaFormationUpdater } = require("../../../logic/updaters/mnaFormationUpdater");
 const report = require("../../../logic/reporter/report");
 const config = require("config");
@@ -108,28 +108,33 @@ const createOrUpdateEtablissements = async (rcoFormation) => {
     }
 
     handledSirets.push(data.siret);
-    let etablissement = await catalogue().getEtablissement({ siret: data.siret });
+    let etablissement = await Etablissement.findOne({ siret: data.siret });
     if (!etablissement?._id) {
-      await catalogue().createEtablissement({ ...data, tags });
-    } else {
-      let updates = {};
-      const rcoFields = getRCOEtablissementFields(rcoFormation, type);
+      // create remote etablissement & save locally
+      etablissement = await catalogue().createEtablissement({ ...data, tags });
+      await Etablissement.create(etablissement);
+      return;
+    }
 
-      if (!areEtablissementFieldsEqual(rcoFields, etablissement) && !areRCOFieldsEqual(rcoFields, etablissement)) {
-        updates = {
-          ...updates,
-          ...rcoFields,
-        };
-      }
+    let updates = {};
+    const rcoFields = getRCOEtablissementFields(rcoFormation, type);
 
-      const tagsToAdd = tags.filter((tag) => !etablissement?.tags?.includes(tag));
-      if (tagsToAdd.length > 0) {
-        updates.tags = [...etablissement.tags, ...tagsToAdd];
-      }
+    if (!areEtablissementFieldsEqual(rcoFields, etablissement) && !areRCOFieldsEqual(rcoFields, etablissement)) {
+      updates = {
+        ...updates,
+        ...rcoFields,
+      };
+    }
 
-      if (Object.keys(updates).length > 0) {
-        await catalogue().updateEtablissement(etablissement._id, updates);
-      }
+    const tagsToAdd = tags.filter((tag) => !etablissement?.tags?.includes(tag));
+    if (tagsToAdd.length > 0) {
+      updates.tags = [...etablissement.tags, ...tagsToAdd];
+    }
+
+    if (Object.keys(updates).length > 0) {
+      // update remote etablissement & save locally
+      await catalogue().updateEtablissement(etablissement._id, updates);
+      await Etablissement.findOneAndUpdate({ siret: data.siret }, updates);
     }
   });
 };
