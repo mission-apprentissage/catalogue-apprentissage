@@ -36,7 +36,7 @@ const countItems = async (base, etablissement_reference_catalogue_published = tr
 
   if (base === "mnaformation") {
     count = await _get(`${endpointNewFront}/entity/formations/count?${params}`, false);
-  } else if (base === "convertedformations") {
+  } else if (base === "convertedformation") {
     count = await _get(`${endpointNewFront}/entity/formations2021/count?${params}`, false);
   } else {
     params = new window.URLSearchParams({
@@ -58,7 +58,7 @@ const getBaseFromMatch = (match) => {
       result = "etablissements";
       break;
     case "/recherche/formations-2021":
-      result = "convertedformations";
+      result = "convertedformation";
       break;
     default:
       result = "mnaformation";
@@ -79,11 +79,11 @@ export default ({ match }) => {
   const { FILTERS, facetDefinition, queryBuilderField, dataSearch, columnsDefinition } =
     base === "mnaformation"
       ? constantsFormations
-      : base === "convertedformations"
+      : base === "convertedformation"
       ? constantsRcoFormations
       : constantsEtablissements;
 
-  const endPoint = ["mnaformation", "convertedformations"].includes(base) ? endpointNewFront : endpointTCO;
+  const endPoint = ["mnaformation", "convertedformation"].includes(base) ? endpointNewFront : endpointTCO;
 
   useEffect(() => {
     async function run() {
@@ -156,13 +156,13 @@ export default ({ match }) => {
                   Votre recherche{" "}
                   {base === "mnaformation"
                     ? "de formations"
-                    : base === "convertedformations"
+                    : base === "convertedformation"
                     ? "de formations 2021"
                     : "d'établissements"}
                 </h1>
                 <Flex className="search-row">
                   <div className={`search-sidebar`}>
-                    {["mnaformation", "convertedformations"].includes(base) && (
+                    {["mnaformation", "convertedformation"].includes(base) && (
                       <ToggleCatalogue filters={FILTERS} onChanged={resetCount} />
                     )}
                     {facetDefinition
@@ -233,8 +233,8 @@ export default ({ match }) => {
                           };
                         }}
                         renderItem={(data) =>
-                          ["mnaformation", "convertedformations"].includes(base) ? (
-                            <CardListFormation data={data} key={data._id} f2021={base === "convertedformations"} />
+                          ["mnaformation", "convertedformation"].includes(base) ? (
+                            <CardListFormation data={data} key={data._id} f2021={base === "convertedformation"} />
                           ) : (
                             <CardListEtablissements data={data} key={data._id} />
                           )
@@ -243,7 +243,7 @@ export default ({ match }) => {
                           return (
                             <div className="summary-stats">
                               <span className="summary-text">
-                                {["mnaformation", "convertedformations"].includes(base)
+                                {["mnaformation", "convertedformation"].includes(base)
                                   ? `${stats.numberOfResults} formations affichées sur ${itemsCount}`
                                   : `${stats.numberOfResults} établissements affichées sur ${itemsCount}`}
                               </span>
