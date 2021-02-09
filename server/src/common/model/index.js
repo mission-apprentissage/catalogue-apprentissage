@@ -20,7 +20,7 @@ module.exports = {
   RcoFormation: createModel("rcoformation", schema.rcoFormationSchema),
   MnaFormation: createModel("mnaformation", schema.mnaFormationSchema),
   ConvertedFormation: createModel("convertedformation", schema.mnaFormationSchema, {
-    esIndexName: "convertedformations",
+    esIndexName: "convertedformation",
   }),
   Report: createModel("report", schema.reportSchema),
   Log: createModel("log", schema.logSchema),

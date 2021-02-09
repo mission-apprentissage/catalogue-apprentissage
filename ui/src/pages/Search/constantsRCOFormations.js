@@ -356,7 +356,7 @@ const facetDefinition = [
     title: "Statut Affelnet",
     filterLabel: "Statut Affelnet",
     selectAllLabel: "Tous",
-    sortBy: "asc",
+    sortBy: "count",
     roles: ["admin", "instructeur"],
     showCatalogEligibleOnly: true,
   },
