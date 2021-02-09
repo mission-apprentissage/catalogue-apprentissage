@@ -1,7 +1,7 @@
-const logger = require("../../common/logger");
 const { paginator } = require("../common/utils/paginator");
 const { AfFormation, AfReconciliation } = require("../../common/model");
 const { runScript } = require("../scriptWrapper");
+const logger = require("../../common/logger");
 
 const afReconciliation = async () => {
   try {
@@ -9,25 +9,25 @@ const afReconciliation = async () => {
 
     await paginator(
       AfFormation,
-      { filter: { matching_mna_etablissement: { $size: 1 } }, lean: true, limit: 50 },
-      async ({ code_cfd, matching_mna_etablissement, _id }) => {
-        let { siret, uai } = matching_mna_etablissement[0];
+      { filter: { matching_mna_formation: { $size: 1 } }, lean: true, limit: 200 },
+      async ({ code_cfd, matching_mna_formation, _id, uai }) => {
+        let { etablissement_formateur_siret, etablissement_gestionnaire_siret } = matching_mna_formation[0];
 
         let payload = {
           uai,
           code_cfd,
-          siret_formateur: siret,
-          siret_gestionnaire: siret,
+          siret_formateur: etablissement_formateur_siret,
+          siret_gestionnaire: etablissement_gestionnaire_siret,
         };
 
-        await AfReconciliation.create(payload);
+        await AfReconciliation.findOneAndUpdate({ uai, code_cfd }, payload, { upsert: true });
         await AfFormation.findByIdAndUpdate(_id, { etat_reconciliation: true });
       }
     );
 
     logger.info(`End affelnet reconciliation`);
-  } catch (err) {
-    logger.error(err);
+  } catch (error) {
+    logger.error(error);
   }
 };
 
