@@ -4,8 +4,8 @@ const coverageFormation = require("./afcoverage");
 const { AfFormation } = require("../../common/model");
 const coverageEtablissement = require("./afcoverageEtablissement");
 
-if (process.env.standalone) {
-  runScript(async () => {
+const afCoverage = async () => {
+  try {
     logger.info(`Start affelnet coverage`);
 
     const formations = await AfFormation.find({
@@ -19,5 +19,15 @@ if (process.env.standalone) {
     await coverageEtablissement();
 
     logger.info(`End affelnet coverage`);
+  } catch (err) {
+    logger.error(err);
+  }
+};
+
+module.exports = afCoverage;
+
+if (process.env.standalone) {
+  runScript(async () => {
+    await afCoverage();
   });
 }
