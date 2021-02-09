@@ -1,114 +1,33 @@
 const mongoose = require("mongoose");
-const { mongooseInstance } = require("../mongodb");
 const { mongoosastic, getElasticInstance } = require("../esClient");
-const {
-  sampleSchema,
-  userSchema,
-  rcoFormationSchema,
-  mnaFormationSchema,
-  psFormationSchema,
-  reportSchema,
-  psReconciliationSchema,
-  afReconciliationSchema,
-  afFormationSchema,
-  etablissementSchema,
-} = require("../model/schema");
+const schema = require("../model/schema");
 
-const getMongoostaticModel = (modelName, schema, instanceMongoose = mongooseInstance) => {
-  const Schema = new instanceMongoose.Schema(schema);
-  Schema.plugin(mongoosastic, { esClient: getElasticInstance(), index: modelName });
-  Schema.plugin(require("mongoose-paginate"));
-  return mongooseInstance.model(modelName, Schema);
+const createModel = (modelName, descriptor, options = {}) => {
+  const schema = new mongoose.Schema(descriptor);
+  schema.plugin(require("mongoose-paginate"));
+  if (options.esIndexName) {
+    schema.plugin(mongoosastic, { esClient: getElasticInstance(), index: options.esIndexName });
+  }
+  if (options.createMongoDBIndexes) {
+    options.createMongoDBIndexes(schema);
+  }
+  return mongoose.model(modelName, schema, options.collectionName);
 };
-
-const getMongooseModel = (modelName, callback = () => ({})) => {
-  const modelSchema = new mongoose.Schema(require(`./schema/${modelName}`));
-  callback(modelSchema);
-  return mongoose.model(modelName, modelSchema, modelName);
-};
-
-const getModel = (modelName, schema, instanceMongoose = mongooseInstance) => {
-  if (instanceMongoose) return getMongoostaticModel(modelName, schema);
-  return getMongooseModel(modelName);
-};
-
-let s = null;
-if (!s) {
-  s = getModel("sample", sampleSchema);
-}
-
-let u = null;
-if (!u) {
-  u = getModel("user", userSchema);
-}
-
-let rf = null;
-if (!rf) {
-  rf = getModel("rcoformation", rcoFormationSchema);
-}
-
-let f = null;
-if (!f) {
-  f = getModel("mnaformation", mnaFormationSchema);
-}
-
-let pf = null;
-if (!pf) {
-  pf = getModel("psformation", psFormationSchema);
-}
-
-let cf = null;
-if (!cf) {
-  cf = getModel("convertedformation", mnaFormationSchema);
-}
-
-let r = null;
-if (!r) {
-  r = getModel("report", reportSchema);
-}
-
-let prf = null;
-if (!prf) {
-  prf = getModel("pendingrcoformation", mnaFormationSchema);
-}
-
-let l = null;
-if (!l) {
-  l = getMongooseModel("log");
-}
-
-let psr = null;
-if (!psr) {
-  psr = getModel("psreconciliation", psReconciliationSchema);
-}
-
-let afr = null;
-if (!afr) {
-  afr = getModel("afreconciliation", afReconciliationSchema);
-}
-
-let af = null;
-if (!af) {
-  af = getModel("afformation", afFormationSchema);
-}
-
-let etab = null;
-if (!etab) {
-  etab = getModel("etablissement", etablissementSchema);
-}
 
 module.exports = {
-  Sample: s,
-  User: u,
-  RcoFormation: rf,
-  MnaFormation: f,
-  ConvertedFormation: cf,
-  Report: r,
-  Log: l,
-  PsFormation: pf,
-  PsReconciliation: psr,
-  PendingRcoFormation: prf,
-  AfReconciliation: afr,
-  AfFormation: af,
-  Etablissement: etab,
+  Sample: createModel("sample", schema.sampleSchema),
+  User: createModel("user", schema.userSchema),
+  RcoFormation: createModel("rcoformation", schema.rcoFormationSchema),
+  MnaFormation: createModel("mnaformation", schema.mnaFormationSchema),
+  ConvertedFormation: createModel("convertedformation", schema.mnaFormationSchema, {
+    esIndexName: "convertedformations",
+  }),
+  Report: createModel("report", schema.reportSchema),
+  Log: createModel("log", schema.logSchema),
+  PsFormation: createModel("psformation", schema.psFormationSchema),
+  PsReconciliation: createModel("psreconciliation", schema.psReconciliationSchema),
+  PendingRcoFormation: createModel("pendingrcoformation", schema.mnaFormationSchema),
+  AfFormation: createModel("afformation", schema.afFormationSchema),
+  AfReconciliation: createModel("afreconciliation", schema.afReconciliationSchema),
+  Etablissement: createModel("etablissement", schema.etablissementSchema),
 };

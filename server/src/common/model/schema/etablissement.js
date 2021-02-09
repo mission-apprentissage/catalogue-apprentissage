@@ -94,6 +94,11 @@ const etablissementSchema = {
     default: null,
     description: "Numéro de département",
   },
+  nom_departement: {
+    type: String,
+    default: null,
+    description: "Nom du departement",
+  },
   localite: {
     type: String,
     default: null,
@@ -170,6 +175,12 @@ const etablissementSchema = {
     type: String,
     default: null,
     description: "UAI de l'établissement",
+  },
+
+  uais_potentiels: {
+    type: [String],
+    default: [],
+    description: "UAIs potentiels de l'établissement",
   },
 
   //////////////

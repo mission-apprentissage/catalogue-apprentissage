@@ -80,7 +80,7 @@ const run = async () => {
           },
         },
         {
-          $or: [{ libelle_court: null }, { libelle_court: "" }, { libelle_court: { $regex: /^(?!TH[45]).*/ } }],
+          $or: [{ libelle_court: null }, { libelle_court: "" }, { libelle_court: { $regex: /^(?!(TH[45]|MC4)).*/ } }],
         },
         {
           $or: [{ niveau: "3 (CAP...)" }, { niveau: "4 (Bac...)" }],
