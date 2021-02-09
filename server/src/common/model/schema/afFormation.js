@@ -226,6 +226,11 @@ const afFormationSchema = {
     default: false,
     description: "Etat de la réconciliation de la formation",
   },
+  no_uai: {
+    type: Boolean,
+    default: false,
+    description: "La formation catalogue n'a aucun uai renseigné",
+  },
 };
 
 module.exports = afFormationSchema;

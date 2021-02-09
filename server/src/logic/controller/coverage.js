@@ -50,8 +50,8 @@ async function getParcoursupCoverage(formation) {
 }
 
 async function getAffelnetCoverage(formation) {
-  const match1 = (cfd) => ConvertedFormation.find({ cfd });
-  const match2 = (cfd, num_departement) => ConvertedFormation.find({ cfd, num_departement });
+  const match1 = (cfd) => ConvertedFormation.find({ cfd, published: true });
+  const match2 = (cfd, num_departement) => ConvertedFormation.find({ cfd, num_departement, published: true });
   const match3 = (cfd, num_departement, code_postal) =>
     ConvertedFormation.find({
       cfd,
@@ -65,6 +65,7 @@ async function getAffelnetCoverage(formation) {
           ],
         },
       ],
+      published: true,
     });
 
   let { _id, code_postal, code_cfd } = formation;
