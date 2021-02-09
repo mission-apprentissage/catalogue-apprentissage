@@ -32,8 +32,8 @@ const FILTERS = [
   "parcoursup_statut",
   "affelnet_statut",
   "diplome",
-  //"opcos",
-  //"info_opcos_intitule",
+  "opcos",
+  "info_opcos_intitule",
 ];
 
 const columnsDefinition = [
