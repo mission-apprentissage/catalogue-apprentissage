@@ -1,14 +1,19 @@
 const { rebuildIndex } = require("../../common/utils/esUtils");
-const { ConvertedFormation } = require("../../common/model/index");
+const { ConvertedFormation, MnaFormation } = require("../../common/model/index");
 
 const rebuildEsIndex = async (index, skipNotFound = false) => {
   switch (index) {
-    case "convertedformations":
-      await rebuildIndex("convertedformations", ConvertedFormation, { skipNotFound });
+    case "convertedformation":
+      await rebuildIndex("convertedformation", ConvertedFormation, { skipNotFound });
+      break;
+
+    case "mnaformation":
+      await rebuildIndex("mnaformation", MnaFormation, { skipNotFound });
       break;
 
     default:
-      await rebuildIndex("convertedformations", ConvertedFormation);
+      await rebuildIndex("convertedformation", ConvertedFormation);
+      await rebuildIndex("mnaformation", MnaFormation);
   }
 };
 
