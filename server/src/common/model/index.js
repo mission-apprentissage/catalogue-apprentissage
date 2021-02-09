@@ -27,7 +27,7 @@ module.exports = {
   PsFormation: createModel("psformation", schema.psFormationSchema),
   PsReconciliation: createModel("psreconciliation", schema.psReconciliationSchema),
   PendingRcoFormation: createModel("pendingrcoformation", schema.mnaFormationSchema),
-  AfFormation: createModel("afreconciliation", schema.afFormationSchema),
-  AfReconciliation: createModel("afformation", schema.afReconciliationSchema),
+  AfFormation: createModel("afformation", schema.afFormationSchema),
+  AfReconciliation: createModel("afreconciliation", schema.afReconciliationSchema),
   Etablissement: createModel("etablissement", schema.etablissementSchema),
 };
