@@ -16,7 +16,6 @@ import {
   ExportButton,
 } from "./components";
 
-import constantsFormations from "./constantsFormations";
 import constantsRcoFormations from "./constantsRCOFormations";
 import constantsEtablissements from "./constantsEtablissements";
 
@@ -28,15 +27,15 @@ const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://ca
 const endpointTCO =
   process.env.REACT_APP_ENDPOINT_TCO || "https://tables-correspondances.apprentissage.beta.gouv.fr/api";
 
+const FORMATIONS_ES_INDEX = "convertedformation";
+
 const countItems = async (base, etablissement_reference_catalogue_published = true) => {
   let count;
   let params = new window.URLSearchParams({
     query: JSON.stringify({ published: true, etablissement_reference_catalogue_published }),
   });
 
-  if (base === "mnaformation") {
-    count = await _get(`${endpointNewFront}/entity/formations/count?${params}`, false);
-  } else if (base === "convertedformation") {
+  if (base === FORMATIONS_ES_INDEX) {
     count = await _get(`${endpointNewFront}/entity/formations2021/count?${params}`, false);
   } else {
     params = new window.URLSearchParams({
@@ -51,17 +50,14 @@ const countItems = async (base, etablissement_reference_catalogue_published = tr
 const getBaseFromMatch = (match) => {
   let result;
   switch (match.path) {
-    case "/recherche/formations-2020":
-      result = "mnaformation";
-      break;
     case "/recherche/etablissements":
       result = "etablissements";
       break;
     case "/recherche/formations-2021":
-      result = "convertedformation";
+      result = FORMATIONS_ES_INDEX;
       break;
     default:
-      result = "mnaformation";
+      result = FORMATIONS_ES_INDEX;
       break;
   }
   return result;
@@ -76,14 +72,13 @@ export default ({ match }) => {
 
   let [auth] = useAuth();
 
-  const { FILTERS, facetDefinition, queryBuilderField, dataSearch, columnsDefinition } =
-    base === "mnaformation"
-      ? constantsFormations
-      : base === "convertedformation"
-      ? constantsRcoFormations
-      : constantsEtablissements;
+  const isBaseFormations = base === FORMATIONS_ES_INDEX;
 
-  const endPoint = ["mnaformation", "convertedformation"].includes(base) ? endpointNewFront : endpointTCO;
+  const { FILTERS, facetDefinition, queryBuilderField, dataSearch, columnsDefinition } = isBaseFormations
+    ? constantsRcoFormations
+    : constantsEtablissements;
+
+  const endPoint = isBaseFormations ? endpointNewFront : endpointTCO;
 
   useEffect(() => {
     async function run() {
@@ -153,18 +148,11 @@ export default ({ match }) => {
                   <span>Recherche avancée</span>
                 </label>
                 <h1 className="title">
-                  Votre recherche{" "}
-                  {base === "mnaformation"
-                    ? "de formations"
-                    : base === "convertedformation"
-                    ? "de formations 2021"
-                    : "d'établissements"}
+                  Votre recherche {isBaseFormations ? "de formations 2021" : "d'établissements"}
                 </h1>
                 <Flex className="search-row">
                   <div className={`search-sidebar`}>
-                    {["mnaformation", "convertedformation"].includes(base) && (
-                      <ToggleCatalogue filters={FILTERS} onChanged={resetCount} />
-                    )}
+                    {isBaseFormations && <ToggleCatalogue filters={FILTERS} onChanged={resetCount} />}
                     {facetDefinition
                       .filter(
                         ({ roles, showCatalogEligibleOnly }) =>
@@ -233,8 +221,8 @@ export default ({ match }) => {
                           };
                         }}
                         renderItem={(data) =>
-                          ["mnaformation", "convertedformation"].includes(base) ? (
-                            <CardListFormation data={data} key={data._id} f2021={base === "convertedformation"} />
+                          isBaseFormations ? (
+                            <CardListFormation data={data} key={data._id} />
                           ) : (
                             <CardListEtablissements data={data} key={data._id} />
                           )
@@ -243,7 +231,7 @@ export default ({ match }) => {
                           return (
                             <div className="summary-stats">
                               <span className="summary-text">
-                                {["mnaformation", "convertedformation"].includes(base)
+                                {isBaseFormations
                                   ? `${stats.numberOfResults} formations affichées sur ${itemsCount}`
                                   : `${stats.numberOfResults} établissements affichées sur ${itemsCount}`}
                               </span>
