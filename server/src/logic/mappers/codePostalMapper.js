@@ -1,5 +1,5 @@
 const logger = require("../../common/logger");
-const { getCpInfo } = require("../common/apiTablesCorrespondances");
+const { getCpInfo } = require("@mission-apprentissage/tco-service-node");
 
 const codePostalMapper = async (codePostal = null) => {
   try {

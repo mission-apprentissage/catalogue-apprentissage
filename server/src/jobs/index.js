@@ -2,6 +2,7 @@ const { runScript } = require("./scriptWrapper");
 const logger = require("../common/logger");
 const rcoImporter = require("./rcoImporter");
 const rcoConverter = require("./rcoConverter");
+const trainingsUpdater = require("./trainingsUpdater");
 const psReference = require("./psReference");
 const afReference = require("./afReference");
 const clean = require("./clean");
@@ -13,6 +14,7 @@ runScript(async ({ catalogue }) => {
     await clean();
     await rcoImporter();
     await rcoConverter();
+    await trainingsUpdater();
     await psReference();
     await afReference();
     await importEtablissements(catalogue);

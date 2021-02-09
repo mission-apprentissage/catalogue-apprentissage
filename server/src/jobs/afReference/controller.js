@@ -80,10 +80,16 @@ const run = async () => {
           },
         },
         {
+          $or: [{ libelle_court: null }, { libelle_court: "" }, { libelle_court: { $regex: /^(?!TH[45]).*/ } }],
+        },
+        {
           $or: [{ niveau: "3 (CAP...)" }, { niveau: "4 (Bac...)" }],
         },
         {
-          $or: [{ mef_10_code: null }, { mef_10_code: "" }, { mef_10_code: { $regex: /1$/ } }],
+          $and: [
+            { $or: [{ mef_10_code: null }, { mef_10_code: "" }, { mef_10_code: { $regex: /1$/ } }] },
+            { $or: [{ mefs_10: null }, { mefs_10: [] }, { "mefs_10.mef10": { $regex: /1$/ } }] },
+          ],
         },
       ],
     },

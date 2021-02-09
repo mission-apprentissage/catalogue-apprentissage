@@ -22,6 +22,11 @@ const mnaFormationSchema = {
     default: null,
     description: "Code MEF 10 caractères",
   },
+  mefs_10: {
+    type: [Object],
+    default: [],
+    description: "Tableau de Code MEF 10 caractères et modalités",
+  },
   nom_academie: {
     type: String,
     default: null,
@@ -289,6 +294,16 @@ const mnaFormationSchema = {
     type: [String],
     default: [],
     description: "Tableau de tags (2020, 2021, etc.)",
+  },
+  libelle_court: {
+    type: String,
+    default: null,
+    description: "BCN : libelle court fusion table n_formation_diplome ou v_formation_diplome",
+  },
+  niveau_formation_diplome: {
+    type: String,
+    default: null,
+    description: "BCN : niveau formation diplome",
   },
 };
 

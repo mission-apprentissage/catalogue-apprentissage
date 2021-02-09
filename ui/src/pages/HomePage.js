@@ -61,24 +61,19 @@ export default () => {
               )}
               <br />
               <br />
-              <span>La mise à jour du 06/01/2021 :</span>
+              <span>La mise à jour du 31/01/2021 :</span>
               <Box pl={[2, 4]}>
                 <OrderedList mx={0} stylePosition="inside">
                   <ListItem>
-                    permet l'accès en modification du catalogue par les instructeurs (un flux des formations modifiées
-                    est transmis au réseau des Carif-Oref afin que les modifications soient également reportées dans les
-                    bases régionales).
+                    permet la publication des formations en mode connecté au sein des bases Parcoursup et Affelnet selon
+                    les périmètres définis en lien avec la DGESIP et la DGESCO.
                   </ListItem>
-                  <ListItem>permet d'exporter les données en mode connecté</ListItem>
+                  <ListItem>met en visibilité le guide des signalements</ListItem>
                   <ListItem>
-                    met à jour les scripts d'éligibilité des établissements et des formations (info datadock à jour)
+                    note aux instructeurs : pour les titres 6 certains sont accessibles uniquement après un BTS et sont
+                    actuellement mentionnés sous l'étiquette "Parcoursup - à publier", merci pour votre vigilance.{" "}
                   </ListItem>
-                  <ListItem>affiche des tag 2020 ou 2021 sur les établissements</ListItem>
-                  <ListItem>met en visibilité le guide réglementaire 2021 (hors connexion)</ListItem>
-                  <ListItem>corrige les doublons envoyés par le réseau des Carif-Oref.</ListItem>
-                  <ListItem>
-                    Le 31/01/2021 le catalogue des formations 2020 ne sera plus affiché dans cette interface.
-                  </ListItem>
+
                   <ListItem fontWeight={700} mt={3}>
                     Si vous êtes un CFA et que vous ne retrouvez pas votre offre de formation en apprentissage dans ce
                     catalogue, merci de vous adresser au Carif-Oref de votre région pour déclarer vos formations en
@@ -104,9 +99,6 @@ export default () => {
               toute autre incohérence (UAI, Code diplôme, Code RNCP) vous pouvez vous rapprocher de votre Carif-Oref
               afin qu'il vous aide à identifier l'origine du problème et vous accompagne dans sa résolution auprès des
               instances (DEPP, BCN, France Compétences).
-              <br />
-              <br />
-              La prochaine livraison concernera le module de validation des données.
               <br />
               <br />
               Vos retours utilisateurs sont les bienvenus afin d’améliorer l’usage de ce catalogue, vous pouvez ainsi

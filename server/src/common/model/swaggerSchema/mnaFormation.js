@@ -285,6 +285,11 @@ module.exports = {
         default: false,
         description: "Etablissement reference entre dans le catalogue",
       },
+      rncp_etablissement_reference_habilite: {
+        type: "boolean",
+        default: false,
+        description: "Etablissement reference est habilité RNCP ou pas",
+      },
       cfd: {
         type: "string",
         default: "null",
@@ -299,6 +304,12 @@ module.exports = {
         type: "string",
         default: "null",
         description: "Code MEF 10 caractères",
+      },
+      mefs_10: {
+        type: "array",
+        items: {},
+        default: [],
+        description: "Tableau de Code MEF 10 caractères et modalités",
       },
       nom_academie: {
         type: "string",
@@ -561,6 +572,14 @@ module.exports = {
         type: "string",
         default: "null",
         description: "Id de formation RCO (id_formation + id_action + id_certifinfo)",
+      },
+      tags: {
+        type: "array",
+        items: {
+          type: "string",
+        },
+        default: [],
+        description: "Tableau de tags (2020, 2021, etc.)",
       },
       _id: {
         type: "string",

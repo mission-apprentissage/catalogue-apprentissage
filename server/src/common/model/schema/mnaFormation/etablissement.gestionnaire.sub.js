@@ -126,6 +126,11 @@ const etablissementGestionnaireInfo = {
     default: null,
     description: "Numéro siren gestionnaire",
   },
+  etablissement_gestionnaire_date_creation: {
+    type: Date,
+    default: null,
+    description: "Date de création de l'établissement",
+  },
 };
 
 module.exports = etablissementGestionnaireInfo;
