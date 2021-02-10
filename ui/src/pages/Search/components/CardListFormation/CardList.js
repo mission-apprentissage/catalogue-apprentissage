@@ -6,14 +6,14 @@ import { hasOneOfRoles } from "../../../../common/utils/rolesUtils";
 import useAuth from "../../../../common/hooks/useAuth";
 import { StatusBadge } from "../../../../common/components/StatusBadge";
 
-const CardList = ({ data, f2021 }) => {
+const CardList = ({ data }) => {
   let [auth] = useAuth();
 
   const niv = data.niveau.replace(/\D/g, "");
 
   return (
     <Link
-      to={f2021 ? `/formation/${data._id}` : `/formation/${data._id}?source=mna`}
+      to={`/formation/${data._id}`}
       className="list-card-formation"
       style={{ textDecoration: "none" }}
       target="_blank"

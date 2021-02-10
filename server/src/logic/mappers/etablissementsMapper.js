@@ -1,9 +1,9 @@
 const logger = require("../../common/logger");
-const catalogue = require("../../common/components/catalogue");
+const { Etablissement } = require("../../common/model");
 
 const getAttachedEstablishments = async (etablissement_gestionnaire_siret, etablissement_formateur_siret) => {
   // Get establishment Gestionnaire
-  const gestionnaire = await catalogue().getEtablissement({
+  const gestionnaire = await Etablissement.findOne({
     siret: etablissement_gestionnaire_siret,
   });
 
@@ -12,7 +12,7 @@ const getAttachedEstablishments = async (etablissement_gestionnaire_siret, etabl
   if (etablissement_gestionnaire_siret === etablissement_formateur_siret) {
     formateur = gestionnaire;
   } else {
-    formateur = await catalogue().getEtablissement({
+    formateur = await Etablissement.findOne({
       siret: etablissement_formateur_siret,
     });
   }
