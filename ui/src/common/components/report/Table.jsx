@@ -3,7 +3,7 @@ import { useTable, useFlexLayout, useGlobalFilter, useAsyncDebounce } from "reac
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList } from "react-window";
 import { Box, Flex, Text, Input, Button, Stack } from "@chakra-ui/react";
-import { downloadCSV, REPORTS_CSV_SEPARATOR } from "../../utils/downloadUtils";
+import { downloadCSV, CSV_SEPARATOR } from "../../utils/downloadUtils";
 
 const csvExport = (headers, rows, filename) => {
   const hasSiretsHeader = headers.some((header) => header === "sirets");
@@ -38,10 +38,10 @@ const csvExport = (headers, rows, filename) => {
     const row = computedHeaders.map((header) => {
       return computedValues[header];
     });
-    return row.join(REPORTS_CSV_SEPARATOR);
+    return row.join(CSV_SEPARATOR);
   });
 
-  const data = [computedHeaders.join(REPORTS_CSV_SEPARATOR), ...lines].join("\n");
+  const data = [computedHeaders.join(CSV_SEPARATOR), ...lines].join("\n");
   downloadCSV(`${filename}.csv`, data);
 };
 
