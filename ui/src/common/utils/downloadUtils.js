@@ -16,5 +16,4 @@ export const downloadCSV = (fileName, csv) => {
   }
 };
 
-export const CSV_SEPARATOR = ",";
-export const REPORTS_CSV_SEPARATOR = ";";
+export const CSV_SEPARATOR = ";";
