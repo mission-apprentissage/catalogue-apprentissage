@@ -1,5 +1,6 @@
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 const catalogue = require("../../common/components/catalogue");
+const { getPeriodeTags } = require("../../jobs/common/utils/rcoUtils");
 const { Etablissement } = require("../../common/model/index");
 
 const getRCOEtablissementFields = (rcoFormation, prefix) => {
@@ -52,8 +53,7 @@ const createOrUpdateEtablissements = async (rcoFormation) => {
       return;
     }
 
-    const years = ["2020", "2021"];
-    const tags = years.filter((year) => rcoFormation.periode?.some((p) => p.includes(year)));
+    const tags = getPeriodeTags(rcoFormation.periode);
     if (tags.length === 0) {
       return;
     }
