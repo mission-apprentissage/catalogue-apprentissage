@@ -26,9 +26,8 @@ import {
   Stack,
   useDisclosure,
 } from "@chakra-ui/react";
-import { NavLink, useHistory, useLocation } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import { useFormik } from "formik";
-import queryString from "query-string";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import { _get, _post, _put } from "../../common/httpClient";
@@ -206,26 +205,6 @@ const Formation = ({
               Année: <strong>{formation.annee}</strong>
             </Text>
           </Box>
-          {/* <Section title="Information ParcourSup">
-          <div className="field">
-            <h3>Référencé dans ParcourSup</h3>
-            <p>{formation.parcoursup_reference ? "OUI" : "NON"}</p>
-          </div>
-          <div className="field">
-            <h3>À charger dans ParcourSup</h3>
-            <p>{formation.parcoursup_a_charger ? "OUI" : "NON"}</p>
-          </div>
-        </Section>
-        <Section title="Information Affelnet">
-          <div className="field">
-            <h3>Référencé dans Affelnet</h3>
-            <p>{formation.affelnet_reference ? "OUI" : "NON"}</p>
-          </div>
-          <div className="field">
-            <h3>À charger dans Affelnet</h3>
-            <p>{formation.affelnet_a_charger ? "OUI" : "NON"}</p>
-          </div>
-        </Section> */}
           <Box mb={16}>
             <Heading as="h2" fontSize="beta" mb={4} mt={6}>
               Informations RNCP et ROME
@@ -403,13 +382,10 @@ export default ({ match }) => {
 
   const [edition, setEdition] = useState(false);
   let history = useHistory();
-  const { search } = useLocation();
-  const { source } = queryString.parse(search);
-  const isMna = source === "mna";
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [auth] = useAuth();
-  const hasRightToEdit = !isMna && hasRightToEditFormation(displayedFormation, auth);
+  const hasRightToEdit = hasRightToEditFormation(displayedFormation, auth);
 
   const getPublishRadioValue = (status) => {
     if (["publié", "en attente de publication"].includes(status)) {
@@ -514,7 +490,7 @@ export default ({ match }) => {
       try {
         let pendingRCOFormation;
 
-        const apiURL = isMna ? `${endpointNewFront}/entity/formation/` : `${endpointNewFront}/entity/formation2021/`;
+        const apiURL = `${endpointNewFront}/entity/formation2021/`;
         const form = await _get(`${apiURL}${match.params.id}`, false);
         setFormation(form);
 
@@ -545,7 +521,7 @@ export default ({ match }) => {
       }
     }
     run();
-  }, [match, setFieldValue, isMna, history, setPublishFieldValue]);
+  }, [match, setFieldValue, history, setPublishFieldValue]);
 
   const onEdit = () => {
     setEdition(!edition);

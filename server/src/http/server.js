@@ -13,7 +13,6 @@ const authMiddleware = require("./middlewares/authMiddleware");
 const permissionsMiddleware = require("./middlewares/permissionsMiddleware");
 const packageJson = require("../../package.json");
 const formation = require("./routes/formation");
-// const formationSecure = require("./routes/formationSecure");
 const convertedFormation = require("./routes/convertedFormation");
 const convertedFormationSecure = require("./routes/convertedFormationSecure");
 const report = require("./routes/report");
@@ -101,7 +100,6 @@ module.exports = async (components) => {
   app.use("/api/v1/admin", checkJwtToken, adminOnly, admin(components));
   app.use("/api/v1/stats", checkJwtToken, adminOnly, stats(components));
   app.use("/api/v1/affelnet", affelnet(components));
-  //app.use("/api/v1/entity", checkJwtToken, formationSecure());
 
   /** DEPRECATED */
   app.use("/api/es/search", esSearch());
@@ -120,7 +118,6 @@ module.exports = async (components) => {
   app.use("/api/entity", checkJwtToken, convertedFormationSecure());
   app.use("/api/stats", checkJwtToken, adminOnly, stats(components));
   app.use("/api/affelnet", affelnet(components));
-  // app.use("/api/entity", checkJwtToken, formationSecure());
 
   app.get(
     "/api",
@@ -128,7 +125,7 @@ module.exports = async (components) => {
       let mongodbStatus;
       logger.info("/api called");
       await db
-        .collection("sample")
+        .collection("rcoformation")
         .stats()
         .then(() => {
           mongodbStatus = true;
