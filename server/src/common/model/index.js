@@ -15,10 +15,11 @@ const createModel = (modelName, descriptor, options = {}) => {
 };
 
 module.exports = {
-  Sample: createModel("sample", schema.sampleSchema),
   User: createModel("user", schema.userSchema),
   RcoFormation: createModel("rcoformation", schema.rcoFormationSchema),
-  MnaFormation: createModel("mnaformation", schema.mnaFormationSchema),
+  MnaFormation: createModel("mnaformation", schema.mnaFormationSchema, {
+    esIndexName: "mnaformation",
+  }),
   ConvertedFormation: createModel("convertedformation", schema.mnaFormationSchema, {
     esIndexName: "convertedformation",
   }),
