@@ -126,6 +126,12 @@ module.exports = {
         default: "null",
         description: "Numéro siren gestionnaire",
       },
+      etablissement_gestionnaire_date_creation: {
+        type: "string",
+        default: "null",
+        description: "Date de création de l'établissement",
+        format: "date-time",
+      },
       etablissement_formateur_id: {
         type: "string",
         default: "null",
@@ -250,6 +256,12 @@ module.exports = {
         default: "null",
         description: "Numéro siren formateur",
       },
+      etablissement_formateur_date_creation: {
+        type: "string",
+        default: "null",
+        description: "Date de création de l'établissement",
+        format: "date-time",
+      },
       etablissement_reference: {
         type: "string",
         default: "null",
@@ -289,6 +301,12 @@ module.exports = {
         type: "boolean",
         default: false,
         description: "Etablissement reference est habilité RNCP ou pas",
+      },
+      etablissement_reference_date_creation: {
+        type: "string",
+        default: "null",
+        description: "Date de création de l'établissement",
+        format: "date-time",
       },
       cfd: {
         type: "string",
@@ -580,6 +598,16 @@ module.exports = {
         },
         default: [],
         description: "Tableau de tags (2020, 2021, etc.)",
+      },
+      libelle_court: {
+        type: "string",
+        default: "null",
+        description: "BCN : libelle court fusion table n_formation_diplome ou v_formation_diplome",
+      },
+      niveau_formation_diplome: {
+        type: "string",
+        default: "null",
+        description: "BCN : niveau formation diplome",
       },
       _id: {
         type: "string",
