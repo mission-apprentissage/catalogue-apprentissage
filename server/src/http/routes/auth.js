@@ -1,5 +1,4 @@
 const express = require("express");
-const pick = require("lodash").pick;
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { createUserToken } = require("../../common/utils/jwtUtils");
 
