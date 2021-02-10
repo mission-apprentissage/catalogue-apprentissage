@@ -200,6 +200,7 @@ export default ({ match }) => {
   const [gatherData, setGatherData] = useState(0);
   const [modal, setModal] = useState(false);
   // const dispatch = useDispatch();
+  const [, setAuth] = useAuth();
 
   const { values, handleSubmit, handleChange, setFieldValue } = useFormik({
     initialValues: {
@@ -228,6 +229,16 @@ export default ({ match }) => {
       });
     },
   });
+
+  useEffect(() => {
+    async function getUser() {
+      let { token } = await _get("/api/auth/current-session");
+      if (token) {
+        setAuth(token);
+      }
+    }
+    getUser();
+  }, []);
 
   useEffect(() => {
     async function run() {

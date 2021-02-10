@@ -408,7 +408,7 @@ export default ({ match }) => {
   const isMna = source === "mna";
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [auth] = useAuth();
+  const [auth, setAuth] = useAuth();
   const hasRightToEdit = !isMna && hasRightToEditFormation(displayedFormation, auth);
 
   const getPublishRadioValue = (status) => {
@@ -508,6 +508,16 @@ export default ({ match }) => {
       });
     },
   });
+
+  useEffect(() => {
+    async function getUser() {
+      let { token } = await _get("/api/auth/current-session");
+      if (token) {
+        setAuth(token);
+      }
+    }
+    getUser();
+  }, []);
 
   useEffect(() => {
     async function run() {

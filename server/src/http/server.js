@@ -1,4 +1,7 @@
 const express = require("express");
+const session = require("express-session");
+const MongoStore = require("connect-mongo")(session);
+const passport = require("passport");
 const config = require("config");
 const logger = require("../common/logger");
 const bodyParser = require("body-parser");
@@ -19,7 +22,7 @@ const convertedFormationSecure = require("./routes/convertedFormationSecure");
 const report = require("./routes/report");
 const rcoFormation = require("./routes/rcoFormation");
 const secured = require("./routes/secured");
-const login = require("./routes/login");
+const auth = require("./routes/auth");
 const authentified = require("./routes/authentified");
 const admin = require("./routes/admin");
 const password = require("./routes/password");
@@ -31,6 +34,8 @@ const pendingRcoFormation = require("./routes/pendingRcoFormation");
 const affelnet = require("./routes/affelnet");
 
 const swaggerSchema = require("../common/model/swaggerSchema");
+
+require("../common/passport-config");
 
 const options = {
   definition: {
@@ -73,7 +78,6 @@ swaggerSpecification.components = {
 module.exports = async (components) => {
   const { db } = components;
   const app = express();
-  const checkJwtToken = authMiddleware(components);
   const adminOnly = permissionsMiddleware({ isAdmin: true });
 
   app.use(bodyParser.json({ limit: "50mb" }));
@@ -82,6 +86,22 @@ module.exports = async (components) => {
 
   app.use(corsMiddleware());
   app.use(logMiddleware());
+
+  app.use(
+    session({
+      saveUninitialized: false,
+      resave: true,
+      secret: config.auth.secret,
+      store: new MongoStore({ mongooseConnection: db }),
+      cookie: {
+        secure: config.env === "dev" ? false : true,
+        maxAge: config.env === "dev" ? null : 30 * 24 * 60 * 60 * 1000,
+      },
+    })
+  );
+
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   app.use("/api/v1/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecification));
 
@@ -93,15 +113,15 @@ module.exports = async (components) => {
   app.use("/api/v1/entity", report());
   app.use("/api/v1/rcoformation", rcoFormation());
   app.use("/api/v1/secured", apiKeyAuthMiddleware, secured());
-  app.use("/api/v1/login", login(components));
+  app.use("/api/v1/auth", auth(components));
   app.use("/api/v1/password", password(components));
   app.use("/api/v1/parcoursup", parcoursup(components));
-  app.use("/api/v1/authentified", checkJwtToken, authentified());
-  app.use("/api/v1/entity", checkJwtToken, convertedFormationSecure());
-  app.use("/api/v1/admin", checkJwtToken, adminOnly, admin(components));
-  app.use("/api/v1/stats", checkJwtToken, adminOnly, stats(components));
+  app.use("/api/v1/authentified", authentified());
+  app.use("/api/v1/entity", convertedFormationSecure());
+  app.use("/api/v1/admin", adminOnly, admin(components));
+  app.use("/api/v1/stats", adminOnly, stats(components));
   app.use("/api/v1/affelnet", affelnet(components));
-  //app.use("/api/v1/entity", checkJwtToken, formationSecure());
+  //app.use("/api/v1/entity",  formationSecure());
 
   /** DEPRECATED */
   app.use("/api/es/search", esSearch());
@@ -111,16 +131,16 @@ module.exports = async (components) => {
   app.use("/api/entity", pendingRcoFormation());
   app.use("/api/entity", report());
   app.use("/api/rcoformation", rcoFormation());
-  app.use("/api/login", login(components));
+  app.use("/api/auth", auth(components));
   app.use("/api/password", password(components));
   app.use("/api/parcoursup", parcoursup(components));
   app.use("/api/secured", apiKeyAuthMiddleware, secured());
-  app.use("/api/authentified", checkJwtToken, authentified());
-  app.use("/api/admin", checkJwtToken, adminOnly, admin(components));
-  app.use("/api/entity", checkJwtToken, convertedFormationSecure());
-  app.use("/api/stats", checkJwtToken, adminOnly, stats(components));
+  app.use("/api/authentified", authMiddleware, authentified());
+  app.use("/api/admin", authMiddleware, adminOnly, admin(components));
+  app.use("/api/entity", authMiddleware, convertedFormationSecure());
+  app.use("/api/stats", authMiddleware, adminOnly, stats(components));
   app.use("/api/affelnet", affelnet(components));
-  // app.use("/api/entity", checkJwtToken, formationSecure());
+  // app.use("/api/entity",  formationSecure());
 
   app.get(
     "/api",
