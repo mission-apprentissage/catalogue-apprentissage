@@ -1,6 +1,6 @@
 const logger = require("../../common/logger");
 const Joi = require("joi");
-const { findRcoFormationFromConvertedId } = require("../../jobs/common/utils/rcoUtils");
+const { findRcoFormationFromConvertedId, getPeriodeTags } = require("../../jobs/common/utils/rcoUtils");
 const { cfdMapper } = require("../mappers/cfdMapper");
 const { codePostalMapper } = require("../mappers/codePostalMapper");
 const { etablissementsMapper } = require("../mappers/etablissementsMapper");
@@ -81,16 +81,10 @@ const mnaFormationUpdater = async (formation, { withHistoryUpdate = true, withCo
     }
 
     // set tags
-    let tags = formation.tags ?? [];
+    let tags = [];
     try {
-      const years = ["2020", "2021"];
       const periode = JSON.parse(formation.periode);
-      const periodeTags = years.filter((year) => periode?.some((p) => p.includes(year)));
-
-      // remove tags in years and not in yearTags, and add yearTags
-      tags = tags.filter((tag) => years.includes(tag) && !periodeTags.includes(tag));
-      const tagsToAdd = periodeTags.filter((tag) => !tags.includes(tag));
-      tags = [...tags, ...tagsToAdd];
+      tags = getPeriodeTags(periode);
     } catch (e) {
       logger.error("unable to set tags", e);
     }

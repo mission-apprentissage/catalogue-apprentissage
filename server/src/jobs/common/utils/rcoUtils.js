@@ -17,4 +17,18 @@ const findRcoFormationFromConvertedId = async (id_rco_formation) => {
   return null;
 };
 
-module.exports = { findRcoFormationFromConvertedId };
+/**
+ * extract array of years from array of string dates
+ */
+const getPeriodeTags = (periode = []) => {
+  return periode.reduce((acc, dateStr) => {
+    const date = new Date(dateStr);
+    const year = date.getFullYear();
+    if (!year || acc.includes(`${year}`)) {
+      return acc;
+    }
+    return [...acc, `${year}`];
+  }, []);
+};
+
+module.exports = { findRcoFormationFromConvertedId, getPeriodeTags };
