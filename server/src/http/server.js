@@ -111,14 +111,14 @@ module.exports = async (components) => {
   app.use("/api/v1/entity", pendingRcoFormation());
   app.use("/api/v1/entity", report());
   app.use("/api/v1/rcoformation", rcoFormation());
-  app.use("/api/v1/secured", apiKeyAuthMiddleware, secured());
   app.use("/api/v1/auth", auth(components));
   app.use("/api/v1/password", password(components));
   app.use("/api/v1/parcoursup", parcoursup(components));
-  app.use("/api/v1/authentified", authentified());
-  app.use("/api/v1/entity", convertedFormationSecure());
-  app.use("/api/v1/admin", adminOnly, admin(components));
-  app.use("/api/v1/stats", adminOnly, stats(components));
+  app.use("/api/v1/secured", apiKeyAuthMiddleware, secured());
+  app.use("/api/v1/authentified", apiKeyAuthMiddleware, authentified());
+  app.use("/api/v1/admin", apiKeyAuthMiddleware, adminOnly, admin(components));
+  app.use("/api/v1/entity", apiKeyAuthMiddleware, convertedFormationSecure());
+  app.use("/api/v1/stats", apiKeyAuthMiddleware, adminOnly, stats(components));
   app.use("/api/v1/affelnet", affelnet(components));
 
   /** DEPRECATED */
