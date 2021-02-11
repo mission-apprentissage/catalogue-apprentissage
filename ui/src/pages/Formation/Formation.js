@@ -419,7 +419,7 @@ export default ({ match }) => {
             body.affelnet_statut = "en attente de publication";
           }
         } else if (affelnet === "false") {
-          if (["en attente de publication", "à publier"].includes(formation?.affelnet_statut)) {
+          if (["en attente de publication", "à publier", "publié"].includes(formation?.affelnet_statut)) {
             body.affelnet_statut = "non publié";
           }
         }
@@ -429,7 +429,7 @@ export default ({ match }) => {
             body.parcoursup_statut = "en attente de publication";
           }
         } else if (parcoursup === "false") {
-          if (["en attente de publication", "à publier"].includes(formation?.parcoursup_statut)) {
+          if (["en attente de publication", "à publier", "publié"].includes(formation?.parcoursup_statut)) {
             body.parcoursup_statut = "non publié";
           }
         }
@@ -542,8 +542,8 @@ export default ({ match }) => {
     }
   };
 
-  const isParcoursupPublishDisabled = ["hors périmètre", "publié"].includes(formation?.parcoursup_statut);
-  const isAffelnetPublishDisabled = ["hors périmètre", "publié"].includes(formation?.affelnet_statut);
+  const isParcoursupPublishDisabled = ["hors périmètre"].includes(formation?.parcoursup_statut);
+  const isAffelnetPublishDisabled = ["hors périmètre"].includes(formation?.affelnet_statut);
 
   return (
     <Layout>
