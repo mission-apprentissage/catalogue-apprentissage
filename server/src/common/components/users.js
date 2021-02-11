@@ -1,5 +1,6 @@
 const { User } = require("../model/index");
 const sha512Utils = require("../utils/sha512Utils");
+const { pick } = require("lodash");
 
 const rehashPassword = (user, password) => {
   user.password = sha512Utils.hash(password);
@@ -73,6 +74,18 @@ module.exports = async () => {
       await user.save();
 
       return user.toObject();
+    },
+    structureUser: (user) => {
+      const permissions = pick(user, ["isAdmin"]);
+      const structure = {
+        permissions,
+        sub: user.username,
+        email: user.email,
+        academie: user.academie,
+        account_status: user.account_status,
+        roles: permissions.isAdmin ? ["admin", ...user.roles] : user.roles,
+      };
+      return structure;
     },
   };
 };

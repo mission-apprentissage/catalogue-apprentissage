@@ -18,7 +18,8 @@
     },
     "password": {
       "jwtSecret": "CATALOGUE_APPRENTISSAGE_AUTH_PASSWORD_JWT_SECRET"
-    }
+    },
+    "secret": "CATALOGUE_APPRENTISSAGE_AUTH_SECRET"
   },
   "log": {
     "type": "CATALOGUE_APPRENTISSAGE_LOG_TYPE",
