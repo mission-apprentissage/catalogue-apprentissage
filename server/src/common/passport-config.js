@@ -5,10 +5,10 @@ passport.serializeUser((user, done) => {
   done(null, user);
 });
 
-passport.deserializeUser(({ _id }, done) => {
-  User.findById(_id)
-    .then((userDoc) => {
-      done(null, userDoc);
+passport.deserializeUser(({ email }, done) => {
+  User.findOne({ email })
+    .then((user) => {
+      done(null, user);
     })
     .catch((err) => done(err));
 });

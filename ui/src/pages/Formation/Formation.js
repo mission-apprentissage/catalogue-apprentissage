@@ -384,7 +384,7 @@ export default ({ match }) => {
   let history = useHistory();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [auth, setAuth] = useAuth();
+  const [auth] = useAuth();
   const hasRightToEdit = hasRightToEditFormation(displayedFormation, auth);
 
   const getPublishRadioValue = (status) => {
@@ -484,16 +484,6 @@ export default ({ match }) => {
       });
     },
   });
-
-  useEffect(() => {
-    async function getUser() {
-      let { token } = await _get("/api/auth/current-session");
-      if (token) {
-        setAuth(token);
-      }
-    }
-    getUser();
-  }, []);
 
   useEffect(() => {
     async function run() {

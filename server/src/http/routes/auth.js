@@ -1,6 +1,5 @@
 const express = require("express");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
-const { createUserToken } = require("../../common/utils/jwtUtils");
 
 module.exports = ({ users }) => {
   const router = express.Router(); // eslint-disable-line new-cap
@@ -53,9 +52,9 @@ module.exports = ({ users }) => {
 
       if (!user) res.status("404");
 
-      let token = createUserToken(user);
+      const payload = users.structureUser(user);
 
-      req.logIn({ ...user, token }, () => res.json({ token }));
+      req.logIn(payload, () => res.json(payload));
     })
   );
 
@@ -72,8 +71,8 @@ module.exports = ({ users }) => {
     "/current-session",
     tryCatch((req, res) => {
       if (req.user) {
-        let { token } = req.session.passport.user;
-        res.json({ token });
+        let { user } = req.session.passport;
+        res.json(user);
       }
     })
   );
