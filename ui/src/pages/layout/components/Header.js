@@ -19,13 +19,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faSignOutAlt, faSync, faUsers } from "@fortawesome/free-solid-svg-icons";
 import useAuth from "../../../common/hooks/useAuth";
 import { isUserAdmin } from "../../../common/utils/rolesUtils";
+import { _get } from "../../../common/httpClient";
 
 const Header = () => {
   let [auth, setAuth] = useAuth();
   let history = useHistory();
-  let logout = () => {
-    setAuth(null);
-    history.push("/");
+  let logout = async () => {
+    const { loggedOut } = await _get("/api/auth/logout");
+    if (loggedOut) {
+      setAuth(null);
+      history.push("/");
+    }
   };
 
   return (

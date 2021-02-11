@@ -1,41 +1,19 @@
 const express = require("express");
-const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
-const { createUserToken } = require("../../common/utils/jwtUtils");
-const compose = require("compose-middleware").compose;
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 
 module.exports = ({ users }) => {
   const router = express.Router(); // eslint-disable-line new-cap
-  passport.use(
-    new LocalStrategy(
-      {
-        usernameField: "username",
-        passwordField: "password",
-      },
-      function (username, password, cb) {
-        return users
-          .authenticate(username, password)
-          .then((user) => {
-            if (!user) {
-              return cb(null, false);
-            }
-            return cb(null, user);
-          })
-          .catch((err) => cb(err));
-      }
-    )
-  );
+
   /**
    * @swagger
    *
-   * /login:
+   * /auth:
    *   post:
-   *     summary: Récuparation du token d'authentification
+   *     summary: Authentification
    *     tags:
    *       - Authentification
    *     description: >
-   *       Cette api vous permet de récupérer un token d'authentification.<br/><br />
+   *       Cette api vous permet d'authentifier l'utilisateur<br/><br />
    *       Vous devez posséder des credentials. Veuillez contacter catalogue@apprentissage.beta.gouv.fr pour en obtenir<br /><br />
    *       Pour accéder aux routes sécurisé, ```Authorization: Bearer MONTOKEN```
    *     requestBody:
@@ -63,19 +41,40 @@ module.exports = ({ users }) => {
    *              schema:
    *                type: object
    *                properties:
-   *                  token:
-   *                    type: string
+   *                  user:
+   *                    type: object
    */
   router.post(
-    "/",
-    compose([
-      passport.authenticate("local", { session: false, failWithError: true }),
-      tryCatch(async (req, res) => {
-        const user = req.user;
-        const token = createUserToken(user);
-        return res.json({ token });
-      }),
-    ])
+    "/login",
+    tryCatch(async (req, res) => {
+      const { username, password } = req.body;
+      const user = await users.authenticate(username, password);
+
+      if (!user) res.status("404");
+
+      const payload = users.structureUser(user);
+
+      req.logIn(payload, () => res.json(payload));
+    })
+  );
+
+  router.get(
+    "/logout",
+    tryCatch((req, res) => {
+      req.logOut();
+      req.session.destroy();
+      res.json({ loggedOut: true });
+    })
+  );
+
+  router.get(
+    "/current-session",
+    tryCatch((req, res) => {
+      if (req.user) {
+        let { user } = req.session.passport;
+        res.json(user);
+      }
+    })
   );
 
   return router;
