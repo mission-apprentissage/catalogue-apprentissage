@@ -38,7 +38,7 @@ const ResetPasswordPage = () => {
 
   return (
     <Center height="100vh" verticalAlign="center">
-      <Box width="28rem">
+      <Box width={["auto", "28rem"]}>
         <Heading fontFamily="Marianne" fontWeight="700" marginBottom="2w">
           Changement du mot de passe pour l'utilisateur {uai}
         </Heading>
