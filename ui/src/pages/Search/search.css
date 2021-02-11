@@ -32,7 +32,6 @@
 }
 .search-page .search .search-sidebar {
   flex: 0 0 25%;
-  max-width: 25%;
   position: relative;
   width: 100%;
   min-height: 1px;
@@ -123,20 +122,6 @@
 }
 
 @media screen and (max-width: 767px) {
-  .search .search-sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    height: 100%;
-    background: #fff;
-    width: 100%;
-    z-index: 1000;
-    transform: translateX(-100%);
-    overflow-y: auto;
-    transition: all 0.4s;
-    flex: 0 0 100%;
-    max-width: 100%;
-  }
   .search .filter_mobile_menu {
     display: flex;
     justify-content: center;
@@ -164,7 +149,7 @@
   .react-es-searchbox input::placeholder {
     font-size: 14px;
   }
-  .search .search-results {
+  .search-page .search .search-results {
     flex: 0 0 100%;
     max-width: 100%;
   }

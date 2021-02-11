@@ -74,6 +74,7 @@ module.exports = ({ users }) => {
         let { user } = req.session.passport;
         res.json(user);
       }
+      res.end();
     })
   );
 
