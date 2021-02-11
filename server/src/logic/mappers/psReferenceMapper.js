@@ -39,34 +39,22 @@ module.exports = async (payload) => {
 
   try {
     const response = await PsReconciliation.findOne({
-      code_cfd: cfd,
-      siret_formateur: siret_formateur,
-      siret_gestionnaire: siret_gestionnaire,
+      $or: [
+        {
+          code_cfd: cfd,
+          siret_formateur: siret_formateur,
+          siret_gestionnaire: siret_gestionnaire,
+        },
+        {
+          code_cfd: cfd,
+          siret_formateur: siret_gestionnaire,
+          siret_gestionnaire: siret_formateur,
+        },
+      ],
     });
 
-    if (!response) {
-      const checkReverse = await PsReconciliation.findOne({
-        code_cfd: cfd,
-        siret_formateur: siret_gestionnaire,
-        siret_gestionnaire: siret_formateur,
-      });
-
-      if (checkReverse) {
-        return {
-          parcoursup_reference: false,
-          messages: {
-            error: "Les sirets sont inversés",
-          },
-        };
-      }
-
-      return {
-        parcoursup_reference: false,
-      };
-    }
-
     return {
-      parcoursup_reference: true,
+      parcoursup_reference: !!response,
     };
   } catch (error) {
     logger.error(error);
