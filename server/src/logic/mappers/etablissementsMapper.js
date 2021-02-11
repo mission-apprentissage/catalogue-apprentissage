@@ -90,7 +90,7 @@ const mapEtablissementKeys = async (
     [`${prefix}_siren`]: etablissement.siren || null,
     [`${prefix}_published`]: etablissement.published || false,
     [`${prefix}_catalogue_published`]: etablissement.catalogue_published || false,
-    [`${prefix}_id`]: etablissement._id || null,
+    [`${prefix}_id`]: etablissement._id ? `${etablissement._id}` : null,
     [`${prefix}_uai`]: etablissement.uai || null,
     [`${prefix}_enseigne`]: etablissement.enseigne || null,
     [`${prefix}_type`]: etablissement.computed_type || null,
