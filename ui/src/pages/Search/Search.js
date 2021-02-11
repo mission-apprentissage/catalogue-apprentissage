@@ -150,7 +150,7 @@ export default ({ match }) => {
                 <h1 className="title">
                   Votre recherche {isBaseFormations ? "de formations 2021" : "d'établissements"}
                 </h1>
-                <Flex className="search-row">
+                <Flex className="search-row" flexDirection={["column", "row"]}>
                   <div className={`search-sidebar`}>
                     {isBaseFormations && <ToggleCatalogue filters={FILTERS} onChanged={resetCount} />}
                     {facetDefinition
