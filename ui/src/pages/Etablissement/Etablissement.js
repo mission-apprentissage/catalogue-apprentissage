@@ -19,7 +19,7 @@ import { useFormik } from "formik";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import useAuth from "../../common/hooks/useAuth";
-import { _get, _put } from "../../common/httpClient";
+import { _get, _put, _post } from "../../common/httpClient";
 import Layout from "../layout/Layout";
 import { hasOneOfRoles } from "../../common/utils/rolesUtils";
 
@@ -211,7 +211,8 @@ export default ({ match }) => {
         if (uai !== etablissement.uai) {
           setModal(true);
           setGatherData(1);
-          result = await _put(`${endpointTCO}/entity/etablissement/${match.params.id}`, { uai });
+          const up = await _post(`${endpointTCO}/services/etablissement`, { ...etablissement, uai });
+          result = await _put(`${endpointTCO}/entity/etablissement/${match.params.id}`, { up });
           setGatherData(2);
           await sleep(500);
 
