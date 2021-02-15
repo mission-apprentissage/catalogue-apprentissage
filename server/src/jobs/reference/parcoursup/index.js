@@ -1,7 +1,7 @@
-const logger = require("../../common/logger");
+const logger = require("../../../common/logger");
 const controller = require("./controller");
 
-const { runScript } = require("../scriptWrapper");
+const { runScript } = require("../../scriptWrapper");
 
 const psReference = async () => {
   try {
