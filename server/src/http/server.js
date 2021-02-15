@@ -86,6 +86,10 @@ module.exports = async (components) => {
   app.use(corsMiddleware());
   app.use(logMiddleware());
 
+  if (config.env != "dev") {
+    app.set("trust proxy", 1);
+  }
+
   app.use(
     session({
       saveUninitialized: false,

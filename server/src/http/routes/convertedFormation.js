@@ -20,7 +20,8 @@ module.exports = () => {
    *     description: >
    *       Permet, à l'aide de critères, de rechercher dans les formations en apprentissage 2021 <br/><br/>
    *       Le champ Query est une query Mongo stringify<br/><br/>
-   *       **Pour definir vos critères de recherche veuillez regarder le schéma mnaFormation (en bas de cette page)**
+   *       **Pour definir vos critères de recherche veuillez regarder le schéma mnaFormation (en bas de cette page)**<br/><br/>
+   *       champ **select**: Selection du ou des champs retournés, nom_du_champ: 1 pour l'inclure dans le retour
    *     parameters:
    *       - in: query
    *         name: payload
@@ -39,6 +40,9 @@ module.exports = () => {
    *             limit:
    *               type: number
    *               example: 10
+   *             select:
+   *               type: string
+   *               example: '"{\"cfd\": 1, \"intitule_long\": 1}"'
    *         examples:
    *           cfd:
    *             value: { query: "{\"cfd\": \"40022106\"}", page: 1, limit: 10 }
@@ -49,6 +53,9 @@ module.exports = () => {
    *           siretS:
    *             value: { query: "{\"etablissement_gestionnaire_siret\": \"13001727000310\"}" }
    *             summary: Recherche par siret simple
+   *           siretSelect:
+   *             value: { query: "{\"etablissement_gestionnaire_siret\": \"13001727000310\"}", select: "{\"cfd\": 1, \"intitule_long\": 1}" }
+   *             summary: Recherche avec selection des champs retournés
    *     responses:
    *       200:
    *         description: OK
@@ -80,12 +87,13 @@ module.exports = () => {
       const query = qs && qs.query ? JSON.parse(qs.query) : {};
       const page = qs && qs.page ? qs.page : 1;
       const limit = qs && qs.limit ? parseInt(qs.limit, 10) : 10;
+      const select = qs && qs.select ? JSON.parse(qs.select) : { updates_history: 0, __v: 0 };
 
       const allData = await ConvertedFormation.paginate(query, {
         page,
         limit,
         lean: true,
-        select: { updates_history: 0, __v: 0 },
+        select,
       });
       return res.json({
         formations: allData.docs,
@@ -100,18 +108,42 @@ module.exports = () => {
   );
 
   /**
-   * Get count converted RCO formations formations2021/count GET
+   * @swagger
+   *
+   * /entity/formations2021/count:
+   *   get:
+   *     summary: Permet de récupérer le nombre de formations 2021
+   *     tags:
+   *       - Formations
+   *     description: >
+   *       Permet, à l'aide de critères, de récupérer le nombre de formations en apprentissage 2021 <br/><br/>
+   *       Le champ Query est une query Mongo stringify<br/><br/>
+   *       **Pour definir vos critères de recherche veuillez regarder le schéma mnaFormation (en bas de cette page)**
+   *     parameters:
+   *       - in: query
+   *         name: payload
+   *         required: true
+   *         schema:
+   *           type: object
+   *           required:
+   *             - query
+   *           properties:
+   *             query:
+   *               type: string
+   *               example: '"{\"cfd\": \"40022106\"}"'
+   *     responses:
+   *       200:
+   *         description: OK
+   *       404:
+   *         description: KO
    */
   router.get(
     "/formations2021/count",
     tryCatch(async (req, res) => {
       let qs = req.query;
       const query = qs && qs.query ? JSON.parse(qs.query) : {};
-      const retrievedData = await ConvertedFormation.countDocuments(query);
-      if (retrievedData) {
-        return res.json(retrievedData);
-      }
-      return res.status(404).send({ message: `Item doesn't exist` });
+      const count = await ConvertedFormation.countDocuments(query);
+      return res.json(count);
     })
   );
 
@@ -132,7 +164,29 @@ module.exports = () => {
   );
 
   /**
-   * Get one converted RCO formation by id  /formation2021/{id} GET
+   * @swagger
+   *
+   * /entity/formation2021/{id}:
+   *   get:
+   *     summary: Permet de récupérer une formation 2021 spécifique
+   *     tags:
+   *       - Formations
+   *     description: >
+   *       Permet, à l'aide de critères, de rechercher dans les formations en apprentissage 2021 <br/><br/>
+   *       Le champ Query est une query Mongo stringify<br/><br/>
+   *       **Pour definir vos critères de recherche veuillez regarder le schéma mnaFormation (en bas de cette page)**
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: string
+   *         example: "5fc6166c712d48a9881333c5"
+   *     responses:
+   *       200:
+   *         description: OK
+   *       404:
+   *         description: KO
    */
   router.get(
     "/formation2021/:id",
