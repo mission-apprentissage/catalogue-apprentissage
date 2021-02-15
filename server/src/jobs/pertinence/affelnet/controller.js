@@ -1,11 +1,9 @@
-const { ConvertedFormation } = require("../../common/model");
-const logger = require("../../common/logger");
-const afReferenceMapper = require("../../logic/mappers/afReferenceMapper");
-const { paginator } = require("../common/utils/paginator");
-const { toBePublishedRules } = require("../common/utils/referenceUtils");
+const { ConvertedFormation } = require("../../../common/model");
+const logger = require("../../../common/logger");
+const { toBePublishedRules } = require("../../common/utils/referenceUtils");
 
 const run = async () => {
-  // 1 - set "hors périmètre"
+  // set "hors périmètre"
   await ConvertedFormation.updateMany(
     {
       affelnet_statut: null,
@@ -13,42 +11,7 @@ const run = async () => {
     { $set: { affelnet_statut: "hors périmètre" } }
   );
 
-  // 2 - check for published trainings in affelnet (set "publié") / but don't overwrite those on "non publié" status : it means a user chose not to publish
-  await paginator(
-    ConvertedFormation,
-    { filter: { published: true, affelnet_statut: { $ne: "non publié" } } },
-    async (formation) => {
-      const { affelnet_reference, messages, error } = await afReferenceMapper({
-        cfd: formation.cfd,
-        siret_formateur: formation.etablissement_formateur_siret,
-        siret_gestionnaire: formation.etablissement_gestionnaire_siret,
-      });
-
-      if (error) {
-        // do nothing error is already logged in mapper
-        return;
-      }
-
-      formation.affelnet_reference = affelnet_reference;
-
-      if (affelnet_reference) {
-        formation.affelnet_error = "success";
-      } else {
-        formation.affelnet_error = messages?.error ?? null;
-      }
-
-      formation.last_update_at = Date.now();
-      await formation.save();
-    }
-  );
-
-  // update affelnet_statut outside loop to not mess up with paginate
-  await ConvertedFormation.updateMany(
-    { affelnet_error: "success" },
-    { $set: { affelnet_error: null, affelnet_statut: "publié" } }
-  );
-
-  // 3 - set "à publier" & "à publier (soumis à validation)" for trainings matching affelnet eligibility rules
+  // set "à publier (soumis à validation)" for trainings matching affelnet eligibility rules
   // reset "à publier" & "à publier (soumis à validation)"
   await ConvertedFormation.updateMany(
     {
@@ -99,6 +62,7 @@ const run = async () => {
     { $set: { last_update_at: Date.now(), affelnet_statut: "à publier (soumis à validation)" } }
   );
 
+  //  set "à publier" for trainings matching affelnet eligibility rules
   // run only on those "hors périmètre" & "à publier (soumis à validation)" to not overwrite actions of users !
   const filter = { published: true, affelnet_statut: { $in: ["hors périmètre", "à publier (soumis à validation)"] } };
 
@@ -129,7 +93,7 @@ const run = async () => {
     { $set: { last_update_at: Date.now(), affelnet_statut: "à publier" } }
   );
 
-  // 4 - stats
+  // stats
   const totalPublished = await ConvertedFormation.countDocuments({ published: true });
   const totalErrors = await ConvertedFormation.countDocuments({ published: true, affelnet_error: { $ne: null } });
   const totalNotRelevant = await ConvertedFormation.countDocuments({
@@ -151,14 +115,16 @@ const run = async () => {
     affelnet_statut: "non publié",
   });
 
-  logger.info(`Total formations publiées dans le catalogue : ${totalPublished}`);
-  logger.info(`Total formations avec erreur de référencement Affelnet : ${totalErrors}`);
-  logger.info(`Total formations hors périmètre : ${totalNotRelevant}/${totalPublished}`);
-  logger.info(`Total formations à publier (soumis à validation) : ${totalToValidate}/${totalPublished}`);
-  logger.info(`Total formations à publier : ${totalToCheck}/${totalPublished}`);
-  logger.info(`Total formations en attente de publication : ${totalPending}/${totalPublished}`);
-  logger.info(`Total formations publiées sur Affelnet : ${totalAfPublished}/${totalPublished}`);
-  logger.info(`Total formations NON publiées sur Affelnet : ${totalAfNotPublished}/${totalPublished}`);
+  logger.info(
+    `Total formations publiées dans le catalogue : ${totalPublished}\n` +
+      `Total formations avec erreur de référencement Affelnet : ${totalErrors}\n` +
+      `Total formations hors périmètre : ${totalNotRelevant}/${totalPublished}\n` +
+      `Total formations à publier (soumis à validation) : ${totalToValidate}/${totalPublished}\n` +
+      `Total formations à publier : ${totalToCheck}/${totalPublished}\n` +
+      `Total formations en attente de publication : ${totalPending}/${totalPublished}\n` +
+      `Total formations publiées sur Affelnet : ${totalAfPublished}/${totalPublished}\n` +
+      `Total formations NON publiées sur Affelnet : ${totalAfNotPublished}/${totalPublished}`
+  );
 };
 
 module.exports = { run };

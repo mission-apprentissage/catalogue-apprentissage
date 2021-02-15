@@ -3,8 +3,10 @@ const logger = require("../common/logger");
 const rcoImporter = require("./rcoImporter");
 const rcoConverter = require("./rcoConverter");
 const trainingsUpdater = require("./trainingsUpdater");
-const psReference = require("./psReference");
-const afReference = require("./afReference");
+const psReference = require("./reference/parcoursup");
+const afReference = require("./reference/affelnet");
+const psPertinence = require("./pertinence/parcoursup");
+const afPertinence = require("./pertinence/affelnet");
 const afCoverage = require("./afFormation/index");
 const afReconciliation = require("./afFormation/reconciliation");
 
@@ -25,11 +27,13 @@ runScript(async ({ catalogue }) => {
 
     // parcoursup
     await psReference();
+    await psPertinence();
 
     // affelnet
     await afCoverage();
     await afReconciliation();
     await afReference();
+    await afPertinence();
   } catch (error) {
     logger.error(error);
   }
