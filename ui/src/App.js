@@ -69,7 +69,7 @@ export default () => {
       }
     }
     getUser();
-  }, [auth]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <QueryClientProvider client={queryClient}>
