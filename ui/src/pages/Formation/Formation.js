@@ -415,21 +415,29 @@ export default ({ match }) => {
 
         // check if can edit depending on the status
         if (affelnet === "true") {
-          if (["non publié", "à publier"].includes(formation?.affelnet_statut)) {
+          if (["non publié", "à publier (soumis à validation)", "à publier"].includes(formation?.affelnet_statut)) {
             body.affelnet_statut = "en attente de publication";
           }
         } else if (affelnet === "false") {
-          if (["en attente de publication", "à publier", "publié"].includes(formation?.affelnet_statut)) {
+          if (
+            ["en attente de publication", "à publier (soumis à validation)", "à publier", "publié"].includes(
+              formation?.affelnet_statut
+            )
+          ) {
             body.affelnet_statut = "non publié";
           }
         }
 
         if (parcoursup === "true") {
-          if (["non publié", "à publier"].includes(formation?.parcoursup_statut)) {
+          if (["non publié", "à publier (soumis à validation)", "à publier"].includes(formation?.parcoursup_statut)) {
             body.parcoursup_statut = "en attente de publication";
           }
         } else if (parcoursup === "false") {
-          if (["en attente de publication", "à publier", "publié"].includes(formation?.parcoursup_statut)) {
+          if (
+            ["en attente de publication", "à publier (soumis à validation)", "à publier", "publié"].includes(
+              formation?.parcoursup_statut
+            )
+          ) {
             body.parcoursup_statut = "non publié";
           }
         }
