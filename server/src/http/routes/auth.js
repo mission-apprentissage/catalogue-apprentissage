@@ -15,7 +15,6 @@ module.exports = ({ users }) => {
    *     description: >
    *       Cette api vous permet d'authentifier l'utilisateur<br/><br />
    *       Vous devez posséder des credentials. Veuillez contacter catalogue@apprentissage.beta.gouv.fr pour en obtenir<br /><br />
-   *       Pour accéder aux routes sécurisé, ```Authorization: Bearer MONTOKEN```
    *     requestBody:
    *       description: L'objet JSON **doit** contenir les clés **username** et **password**.
    *       required: true
@@ -63,7 +62,7 @@ module.exports = ({ users }) => {
     tryCatch((req, res) => {
       req.logOut();
       req.session.destroy();
-      res.json({ loggedOut: true });
+      return res.json({ loggedOut: true });
     })
   );
 
@@ -72,9 +71,9 @@ module.exports = ({ users }) => {
     tryCatch((req, res) => {
       if (req.user) {
         let { user } = req.session.passport;
-        res.json(user);
+        return res.json(user);
       }
-      res.end();
+      return res.end();
     })
   );
 

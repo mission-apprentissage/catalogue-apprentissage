@@ -5,7 +5,6 @@ const config = require("config");
 const passport = require("passport");
 const { Strategy, ExtractJwt } = require("passport-jwt");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
-const { createUserToken } = require("../../common/utils/jwtUtils");
 const validators = require("../utils/validators");
 const { createPasswordToken } = require("../../common/utils/jwtUtils");
 const path = require("path");
@@ -85,9 +84,11 @@ module.exports = ({ users, mailer }) => {
         newPassword: validators.password().required(),
       }).validateAsync(req.body, { abortEarly: false });
 
-      const nUser = await users.changePassword(user.username, newPassword);
+      const updatedUser = await users.changePassword(user.username, newPassword);
 
-      return res.json({ token: createUserToken(nUser) });
+      const payload = users.structureUser(updatedUser);
+
+      return res.json(payload);
     })
   );
 

@@ -14,12 +14,12 @@ const ResetPasswordPage = () => {
   const history = useHistory();
   const location = useLocation();
   const { passwordToken } = queryString.parse(location.search);
-  const uai = decodeJWT(passwordToken).sub;
+  const username = decodeJWT(passwordToken).sub;
 
   const changePassword = async (values, { setStatus }) => {
     try {
-      const { token } = await _post("/api/password/reset-password", { ...values, passwordToken });
-      setAuth(token);
+      const user = await _post("/api/password/reset-password", { ...values, passwordToken });
+      setAuth(user);
       history.push("/");
     } catch (e) {
       console.error(e);
@@ -40,7 +40,7 @@ const ResetPasswordPage = () => {
     <Center height="100vh" verticalAlign="center">
       <Box width={["auto", "28rem"]}>
         <Heading fontFamily="Marianne" fontWeight="700" marginBottom="2w">
-          Changement du mot de passe pour l'utilisateur {uai}
+          Changement du mot de passe pour l'utilisateur {username}
         </Heading>
         <Formik
           initialValues={{
