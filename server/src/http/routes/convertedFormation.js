@@ -142,11 +142,8 @@ module.exports = () => {
     tryCatch(async (req, res) => {
       let qs = req.query;
       const query = qs && qs.query ? JSON.parse(qs.query) : {};
-      const retrievedData = await ConvertedFormation.countDocuments(query);
-      if (retrievedData) {
-        return res.json(retrievedData);
-      }
-      return res.status(404).send({ message: `Item doesn't exist` });
+      const count = await ConvertedFormation.countDocuments(query);
+      return res.json(count);
     })
   );
 
