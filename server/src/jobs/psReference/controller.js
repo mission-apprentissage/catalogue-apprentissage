@@ -110,6 +110,10 @@ const run = async () => {
     published: true,
     parcoursup_statut: "hors périmètre",
   });
+  const totalToValidate = await ConvertedFormation.countDocuments({
+    published: true,
+    parcoursup_statut: "à publier (soumis à validation)",
+  });
   const totalToCheck = await ConvertedFormation.countDocuments({ published: true, parcoursup_statut: "à publier" });
   const totalPending = await ConvertedFormation.countDocuments({
     published: true,
@@ -124,6 +128,7 @@ const run = async () => {
   logger.info(`Total formations publiées dans le catalogue : ${totalPublished}`);
   logger.info(`Total formations avec erreur de référencement ParcourSup : ${totalErrors}`);
   logger.info(`Total formations hors périmètre : ${totalNotRelevant}/${totalPublished}`);
+  logger.info(`Total formations à publier (soumis à validation) : ${totalToValidate}/${totalPublished}`);
   logger.info(`Total formations à publier : ${totalToCheck}/${totalPublished}`);
   logger.info(`Total formations en attente de publication : ${totalPending}/${totalPublished}`);
   logger.info(`Total formations publiées sur ParcourSup : ${totalPsPublished}/${totalPublished}`);
