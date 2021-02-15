@@ -63,12 +63,13 @@ export default () => {
   useEffect(() => {
     async function getUser() {
       let user = await _get("/api/auth/current-session");
+
       if (user) {
         setAuth(user);
       }
     }
     getUser();
-  }, auth);
+  }, [auth]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <QueryClientProvider client={queryClient}>
