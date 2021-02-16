@@ -18,7 +18,7 @@ import Journal from "./pages/Journal/Journal";
 import HowToReglement from "./pages/HowToReglement";
 import HowToModif from "./pages/HowToModif";
 import HowToSignal from "./pages/HowToSignal";
-import { _post } from "./common/httpClient";
+import { _post, _get } from "./common/httpClient";
 import ScrollToTop from "./common/components/ScrollToTop";
 
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -58,7 +58,18 @@ const ResetPasswordWrapper = ({ children }) => {
 const queryClient = new QueryClient();
 
 export default () => {
-  let [auth] = useAuth();
+  let [auth, setAuth] = useAuth();
+
+  useEffect(() => {
+    async function getUser() {
+      let user = await _get("/api/auth/current-session");
+
+      if (user) {
+        setAuth(user);
+      }
+    }
+    getUser();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <QueryClientProvider client={queryClient}>

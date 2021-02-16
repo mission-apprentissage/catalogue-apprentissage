@@ -469,7 +469,14 @@ module.exports = {
       },
       parcoursup_statut: {
         type: "string",
-        enum: ["hors périmètre", "publié", "non publié", "à publier", "en attente de publication"],
+        enum: [
+          "hors périmètre",
+          "publié",
+          "non publié",
+          "à publier (soumis à validation)",
+          "à publier",
+          "en attente de publication",
+        ],
         default: "hors périmètre",
         description: "Statut parcoursup",
       },
@@ -490,7 +497,14 @@ module.exports = {
       },
       affelnet_statut: {
         type: "string",
-        enum: ["hors périmètre", "publié", "non publié", "à publier", "en attente de publication"],
+        enum: [
+          "hors périmètre",
+          "publié",
+          "non publié",
+          "à publier (soumis à validation)",
+          "à publier",
+          "en attente de publication",
+        ],
         default: "hors périmètre",
         description: "Statut affelnet",
       },

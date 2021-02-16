@@ -25,8 +25,8 @@ const LoginPage = () => {
 
   const login = async (values, { setStatus }) => {
     try {
-      const { token } = await _post("/api/login", values);
-      setAuth(token);
+      const user = await _post("/api/auth/login", values);
+      setAuth(user);
       history.push("/");
     } catch (e) {
       console.error(e);
@@ -36,7 +36,7 @@ const LoginPage = () => {
 
   return (
     <Center height="100vh" verticalAlign="center">
-      <Box width="28rem">
+      <Box width={["auto", "28rem"]}>
         <Heading fontFamily="Marianne" fontWeight="700" marginBottom="2w">
           Connexion
         </Heading>

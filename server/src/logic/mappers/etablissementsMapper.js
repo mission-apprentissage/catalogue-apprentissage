@@ -90,7 +90,7 @@ const mapEtablissementKeys = async (
     [`${prefix}_siren`]: etablissement.siren || null,
     [`${prefix}_published`]: etablissement.published || false,
     [`${prefix}_catalogue_published`]: etablissement.catalogue_published || false,
-    [`${prefix}_id`]: etablissement._id || null,
+    [`${prefix}_id`]: etablissement._id ? `${etablissement._id}` : null,
     [`${prefix}_uai`]: etablissement.uai || null,
     [`${prefix}_enseigne`]: etablissement.enseigne || null,
     [`${prefix}_type`]: etablissement.computed_type || null,
@@ -129,6 +129,17 @@ const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissem
     const etablissementReference = getEtablissementReference(attachedEstablishments);
     if (!etablissementReference) {
       return { result: null, messages: { error: "Unable to retrieve etablissementReference" } };
+    }
+
+    if (attachedEstablishments?.gestionnaire?.ferme) {
+      return {
+        result: null,
+        messages: { error: `Établissement gestionnaire fermé ${etablissement_gestionnaire_siret}` },
+      };
+    }
+
+    if (attachedEstablishments?.formateur?.ferme) {
+      return { result: null, messages: { error: `Établissement formateur fermé ${etablissement_formateur_siret}` } };
     }
 
     const { referenceEstablishment, etablissement_reference } = etablissementReference;
