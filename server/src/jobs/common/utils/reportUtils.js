@@ -6,7 +6,7 @@ const { asyncForEach } = require("../../../common/utils/asyncUtils");
  * Store by chunks to stay below the Mongo document max size (16Mb)
  */
 const storeByChunks = async (type, date, summary, key, values) => {
-  const chunks = chunk(values, 2000);
+  const chunks = chunk(values, 1000);
   await asyncForEach(chunks, async (chunk) => {
     await new Report({
       type,
