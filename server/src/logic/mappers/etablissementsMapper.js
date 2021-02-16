@@ -131,6 +131,17 @@ const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissem
       return { result: null, messages: { error: "Unable to retrieve etablissementReference" } };
     }
 
+    if (attachedEstablishments?.gestionnaire?.ferme) {
+      return {
+        result: null,
+        messages: { error: `Établissement gestionnaire fermé ${etablissement_gestionnaire_siret}` },
+      };
+    }
+
+    if (attachedEstablishments?.formateur?.ferme) {
+      return { result: null, messages: { error: `Établissement formateur fermé ${etablissement_formateur_siret}` } };
+    }
+
     const { referenceEstablishment, etablissement_reference } = etablissementReference;
 
     const etablissementGestionnaire = await mapEtablissementKeys(
