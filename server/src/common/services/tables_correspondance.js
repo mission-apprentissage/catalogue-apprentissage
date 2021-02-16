@@ -34,7 +34,7 @@ const getBcnInfo = async (options) => {
 
 const getCfdInfo = async (cfd) => {
   try {
-    const { data } = await axios.post(`${apiEndpoint}/cfd`, {
+    const { data } = await axios.post(`${apiEndpoint}/v1/cfd`, {
       cfd,
     });
     return data;
@@ -44,14 +44,4 @@ const getCfdInfo = async (cfd) => {
   }
 };
 
-const findOpcosFromCfd = async (cfd) => {
-  try {
-    const { data } = await axios.get(`${apiEndpoint}/opcos/opco?cfd=${cfd}`);
-    return data;
-  } catch (error) {
-    logger.error(`findOpcosFromCfd: something went wrong`);
-    return null;
-  }
-};
-
-module.exports = { getMefInfo, getBcnInfo, getCfdInfo, findOpcosFromCfd };
+module.exports = { getMefInfo, getBcnInfo, getCfdInfo };

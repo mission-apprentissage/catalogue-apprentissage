@@ -40,8 +40,6 @@
     "affelnet:pertinence": "standalone=true node src/jobs/pertinence/affelnet/index.js",
     "affelnet:missing-cfd": "standalone=true node src/jobs/oneshot/afFormation/missingCfd.js",
     "affelnet:reconciliation": "standalone=true node src/jobs/afFormation/reconciliation.js",
-    "opco:importer": "standalone=true node src/jobs/opcoImporter/index.js",
-    "opco:importer:stats": "standalone=true node src/jobs/opcoImporter/stats.js",
     "es:index": "standalone=true node src/jobs/esIndex/index.js",
     "generate:swaggerschema": "standalone=true node src/jobs/generateSwaggerSchema/index.js",
     "etablissement:dump": "standalone=true node src/jobs/etablissements"
