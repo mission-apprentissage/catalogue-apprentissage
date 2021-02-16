@@ -25,26 +25,7 @@
 .list-card-formation .list-card-left h3 {
   font-weight: 600;
 }
-.list-card-formation .list-card-left .pills-statuts {
-  margin-top: 15px;
-  text-align: left;
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  width: 100%;
-}
-.list-card-formation .list-card-left .pills-statuts .badge {
-  font-size: 0.8em;
-  color: white;
-  margin-right: 5px;
-}
-.list-card-formation .list-card-right {
-  display: flex;
-  justify-content: top;
-  align-items: right;
-  color: black;
-  flex-direction: column;
-}
+
 .list-card-formation .list-card-container:hover {
   box-shadow: 0 3px 6px 0 #bdbdbd;
 }
