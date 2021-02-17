@@ -87,6 +87,24 @@ module.exports = ({ catalogue }) => {
     })
   );
 
+  router.put(
+    "/reconciliation",
+    tryCatch(async (req, res) => {
+      const { uai, cfd, email } = req.body;
+
+      if (!uai || !cfd || !email) {
+        res.status(400).json({ message: "L'uai, le cfd ou l'email est manquant" });
+      }
+
+      try {
+        await AfReconciliation.findOneAndUpdate({ uai, code_cfd: cfd }, { unpublished_by_user: email });
+        return res.status(200);
+      } catch (error) {
+        return res.status(400).json(error);
+      }
+    })
+  );
+
   /**
    * Add one establishement to a psformation
    */

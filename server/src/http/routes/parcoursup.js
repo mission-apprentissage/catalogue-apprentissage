@@ -98,6 +98,27 @@ module.exports = ({ catalogue }) => {
     })
   );
 
+  router.put(
+    "/reconciliation",
+    tryCatch(async (req, res) => {
+      const { uai_gestionnaire, uai_affilie, uai_composante, cfd, email } = req.body;
+
+      if (!uai_gestionnaire || !uai_affilie || !uai_composante || !cfd || !email) {
+        res.status(400).json({ message: "Les uai, le cfd et/ou l'email est manquant" });
+      }
+
+      try {
+        await PsReconciliation.findOneAndUpdate(
+          { uai_gestionnaire, uai_affilie, uai_composante, code_cfd: cfd },
+          { unpublished_by_user: email }
+        );
+        return res.status(200);
+      } catch (error) {
+        return res.status(400).json(error);
+      }
+    })
+  );
+
   /**
    * Add one establishement to a psformation
    */
