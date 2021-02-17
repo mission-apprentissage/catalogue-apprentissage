@@ -101,18 +101,21 @@ module.exports = ({ catalogue }) => {
   router.put(
     "/reconciliation",
     tryCatch(async (req, res) => {
-      const { uai_gestionnaire, uai_affilie, uai_composante, cfd, email } = req.body;
+      const { uai_gestionnaire, uai_composante, cfd, uai_affilie = null, email = null } = req.body;
 
-      if (!uai_gestionnaire || !uai_affilie || !uai_composante || !cfd || !email) {
-        res.status(400).json({ message: "Les uai, le cfd et/ou l'email est manquant" });
+      if (!uai_gestionnaire || !uai_composante || !cfd) {
+        res.status(400).json({ message: "Un uai ou le cfd est manquant" });
       }
 
       try {
-        await PsReconciliation.findOneAndUpdate(
-          { uai_gestionnaire, uai_affilie, uai_composante, code_cfd: cfd },
-          { unpublished_by_user: email }
-        );
-        return res.status(200);
+        const filter = { uai_gestionnaire, uai_composante, code_cfd: cfd };
+        if (uai_affilie) {
+          // optional filter
+          filter.uai_affilie = uai_affilie;
+        }
+
+        await PsReconciliation.findOneAndUpdate(filter, { unpublished_by_user: email });
+        return res.sendStatus(200);
       } catch (error) {
         return res.status(400).json(error);
       }
