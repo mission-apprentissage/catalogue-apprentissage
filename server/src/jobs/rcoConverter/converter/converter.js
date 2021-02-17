@@ -123,6 +123,19 @@ const performConversion = async () => {
     rcoFormation.conversion_error = "success";
     await rcoFormation.save();
 
+    const previousFormation = await ConvertedFormation.findOne({
+      id_rco_formation: convertedFormation.id_rco_formation,
+    }).lean();
+    if (previousFormation) {
+      // Keep Affelnet & Parcoursup related data (to prevent override user modifications)
+      convertedFormation.affelnet_reference = previousFormation.affelnet_reference;
+      convertedFormation.affelnet_statut = previousFormation.affelnet_statut;
+      convertedFormation.affelnet_error = previousFormation.affelnet_error;
+      convertedFormation.parcoursup_reference = previousFormation.parcoursup_reference;
+      convertedFormation.parcoursup_statut = previousFormation.parcoursup_statut;
+      convertedFormation.parcoursup_error = previousFormation.parcoursup_error;
+    }
+
     // replace or insert new one
     await ConvertedFormation.findOneAndUpdate(
       { id_rco_formation: convertedFormation.id_rco_formation },
