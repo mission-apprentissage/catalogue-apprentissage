@@ -5,6 +5,7 @@ import "./cardList.css";
 import { hasOneOfRoles } from "../../../../common/utils/rolesUtils";
 import useAuth from "../../../../common/hooks/useAuth";
 import { StatusBadge } from "../../../../common/components/StatusBadge";
+import { Flex, Box } from "@chakra-ui/react";
 
 const CardList = ({ data }) => {
   let [auth] = useAuth();
@@ -29,17 +30,21 @@ const CardList = ({ data }) => {
             <p>
               {data.code_postal} {data.nom_academie}
             </p>
+            <Box display={["block", "none"]}>
+              <small>Code diplôme: {data.cfd}</small>
+            </Box>
             {hasOneOfRoles(auth, ["admin", "instructeur"]) && data.etablissement_reference_catalogue_published && (
-              <div className="pills-statuts">
-                <StatusBadge source="Parcoursup" status={data.parcoursup_statut} mr={2} />
-                <StatusBadge source="Affelnet" status={data.affelnet_statut} />
-              </div>
+              <Flex mt={15} wrap="wrap">
+                <StatusBadge source="Parcoursup" status={data.parcoursup_statut} mr={[0, 2]} />
+                <StatusBadge source="Affelnet" status={data.affelnet_statut} mt={[2, 0]} />
+              </Flex>
             )}
           </div>
         </div>
-        <div className="list-card-right">
+
+        <Flex display={["none", "flex"]}>
           <small>Code diplôme: {data.cfd}</small>
-        </div>
+        </Flex>
       </div>
     </Link>
   );
