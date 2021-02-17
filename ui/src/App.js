@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Switch, Route, Redirect, useHistory } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
@@ -59,6 +59,7 @@ const queryClient = new QueryClient();
 
 export default () => {
   let [auth, setAuth] = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function getUser() {
@@ -67,9 +68,14 @@ export default () => {
       if (user) {
         setAuth(user);
       }
+      setIsLoading(false);
     }
     getUser();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (isLoading) {
+    return <div />;
+  }
 
   return (
     <QueryClientProvider client={queryClient}>
