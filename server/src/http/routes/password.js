@@ -69,7 +69,7 @@ module.exports = ({ users, mailer }) => {
           }
         );
 
-        return res.json({ url: url });
+        return res.json();
       }
     })
   );
