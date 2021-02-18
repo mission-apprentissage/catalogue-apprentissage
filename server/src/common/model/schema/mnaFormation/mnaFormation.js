@@ -324,6 +324,17 @@ const mnaFormationSchema = {
     default: null,
     description: "Affelnet : Informations offre de formation",
   },
+  affelnet_code_nature: {
+    type: String,
+    default: null,
+    description: "Affelnet : code nature de l'établissement de formation",
+  },
+  affelnet_secteur: {
+    type: String,
+    enum: ["PR", "PU"],
+    default: null,
+    description: "Affelnet : type d'établissement (PR: Privé / PU: Public)",
+  },
 };
 
 module.exports = mnaFormationSchema;
