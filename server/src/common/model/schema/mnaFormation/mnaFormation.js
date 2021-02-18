@@ -319,6 +319,11 @@ const mnaFormationSchema = {
     default: null,
     description: "BCN : niveau formation diplome",
   },
+  affelnet_infos_offre: {
+    type: String,
+    default: null,
+    description: "Affelnet : Informations offre de formation",
+  },
 };
 
 module.exports = mnaFormationSchema;

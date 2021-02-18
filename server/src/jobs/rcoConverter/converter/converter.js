@@ -134,6 +134,7 @@ const performConversion = async () => {
       convertedFormation.parcoursup_reference = previousFormation.parcoursup_reference;
       convertedFormation.parcoursup_statut = previousFormation.parcoursup_statut;
       convertedFormation.parcoursup_error = previousFormation.parcoursup_error;
+      convertedFormation.affelnet_infos_offre = previousFormation.affelnet_infos_offre;
     }
 
     // replace or insert new one

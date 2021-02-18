@@ -623,6 +623,11 @@ module.exports = {
         default: "null",
         description: "BCN : niveau formation diplome",
       },
+      affelnet_infos_offre: {
+        type: "string",
+        default: "null",
+        description: "Affelnet : Informations offre de formation",
+      },
       _id: {
         type: "string",
         pattern: "^[0-9a-fA-F]{24}$",
