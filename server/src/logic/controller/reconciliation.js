@@ -1,13 +1,14 @@
-const { AfReconciliation, AfFormation } = require("../../common/model");
+const { AfReconciliation, AfFormation, ConvertedFormation } = require("../../common/model");
 
 async function reconciliationAffelnet(formation, match) {
-  let { uai, code_cfd, _id } = formation;
+  let { uai, code_cfd, _id, code_nature, etablissement_type } = formation;
   let {
     uai_formation,
     etablissement_formateur_uai,
     etablissement_gestionnaire_uai,
     etablissement_formateur_siret,
     etablissement_gestionnaire_siret,
+    _id: convertedId,
   } = match;
 
   let a = uai_formation === uai;
@@ -26,6 +27,12 @@ async function reconciliationAffelnet(formation, match) {
       await AfReconciliation.findOneAndUpdate({ uai, code_cfd }, payload, { upsert: true });
 
       await AfFormation.findByIdAndUpdate(_id, { etat_reconciliation: true });
+
+      // pass through some data for Affelnet
+      await ConvertedFormation.findByIdAndUpdate(convertedId, {
+        affelnet_code_nature: code_nature,
+        affelnet_secteur: etablissement_type === "Public" ? "PU" : "PR",
+      });
     }
   } else {
     await AfFormation.findByIdAndUpdate(_id, { no_uai: true });
