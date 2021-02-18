@@ -36,6 +36,7 @@ import useAuth from "../../common/hooks/useAuth";
 import { hasRightToEditFormation } from "../../common/utils/rolesUtils";
 import { StatusBadge } from "../../common/components/StatusBadge";
 import { ReactComponent as InfoIcon } from "../../theme/assets/info-circle.svg";
+import { AffelnetFormModal } from "../../common/components/formation/AffelnetFormModal";
 
 const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
 
@@ -382,10 +383,11 @@ export default ({ match }) => {
 
   const [edition, setEdition] = useState(false);
   let history = useHistory();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isOpenPublishModal, onOpen: onOpenPublishModal, onClose: onClosePublishModal } = useDisclosure();
+  const { isOpen: isOpenAffelnetForm, onOpen: onOpenAffelnetForm, onClose: onCloseAffelnetForm } = useDisclosure();
 
-  const [auth] = useAuth();
-  const hasRightToEdit = hasRightToEditFormation(displayedFormation, auth);
+  const [user] = useAuth();
+  const hasRightToEdit = hasRightToEditFormation(displayedFormation, user);
 
   const getPublishRadioValue = (status) => {
     if (["publié", "en attente de publication"].includes(status)) {
@@ -412,11 +414,18 @@ export default ({ match }) => {
     onSubmit: ({ affelnet, parcoursup }) => {
       return new Promise(async (resolve) => {
         const body = {};
+        let shouldRemoveAfReconciliation = false;
+        let shouldRemovePsReconciliation = false;
+        let shouldRestoreAfReconciliation = false;
+        let shouldRestorePsReconciliation = false;
+        let shouldOpenAffelnetForm = false;
 
         // check if can edit depending on the status
         if (affelnet === "true") {
           if (["non publié", "à publier (soumis à validation)", "à publier"].includes(formation?.affelnet_statut)) {
             body.affelnet_statut = "en attente de publication";
+            shouldRestoreAfReconciliation = formation.affelnet_statut === "non publié";
+            shouldOpenAffelnetForm = true;
           }
         } else if (affelnet === "false") {
           if (
@@ -425,12 +434,16 @@ export default ({ match }) => {
             )
           ) {
             body.affelnet_statut = "non publié";
+            shouldRemoveAfReconciliation = ["en attente de publication", "publié"].includes(
+              formation.parcoursup_statut
+            );
           }
         }
 
         if (parcoursup === "true") {
           if (["non publié", "à publier (soumis à validation)", "à publier"].includes(formation?.parcoursup_statut)) {
             body.parcoursup_statut = "en attente de publication";
+            shouldRestorePsReconciliation = formation.parcoursup_statut === "non publié";
           }
         } else if (parcoursup === "false") {
           if (
@@ -439,6 +452,9 @@ export default ({ match }) => {
             )
           ) {
             body.parcoursup_statut = "non publié";
+            shouldRemovePsReconciliation = ["en attente de publication", "publié"].includes(
+              formation.parcoursup_statut
+            );
           }
         }
 
@@ -447,12 +463,44 @@ export default ({ match }) => {
             num_academie: formation.num_academie,
             ...body,
           });
+
+          if (shouldRemoveAfReconciliation || shouldRestoreAfReconciliation) {
+            try {
+              await _put(`${endpointNewFront}/affelnet/reconciliation`, {
+                uai_formation: formation.uai_formation,
+                uai_gestionnaire: formation.etablissement_gestionnaire_uai,
+                uai_formateur: formation.etablissement_formateur_uai,
+                cfd: formation.cfd,
+                email: shouldRemoveAfReconciliation ? user.email : null,
+              });
+            } catch (e) {
+              // do nothing
+            }
+          }
+
+          if (shouldRemovePsReconciliation || shouldRestorePsReconciliation) {
+            try {
+              await _put(`${endpointNewFront}/parcoursup/reconciliation`, {
+                uai_gestionnaire: formation.etablissement_gestionnaire_uai,
+                uai_affilie: formation.uai_formation,
+                uai_composante: formation.etablissement_formateur_uai,
+                cfd: formation.cfd,
+                email: shouldRemovePsReconciliation ? user.email : null,
+              });
+            } catch (e) {
+              // do nothing
+            }
+          }
+
           setFormation(updatedFormation);
           setPublishFieldValue("affelnet", getPublishRadioValue(updatedFormation?.affelnet_statut));
           setPublishFieldValue("parcoursup", getPublishRadioValue(updatedFormation?.parcoursup_statut));
         }
 
-        onClose();
+        onClosePublishModal();
+        if (shouldOpenAffelnetForm) {
+          onOpenAffelnetForm();
+        }
         resolve("onSubmitHandler publish complete");
       });
     },
@@ -584,7 +632,7 @@ export default ({ match }) => {
                         px={[8, 20]}
                         mt={[8, 0]}
                         onClick={() => {
-                          onOpen();
+                          onOpenPublishModal();
                         }}
                       >
                         Gérer les publications
@@ -623,7 +671,7 @@ export default ({ match }) => {
           )}
         </Container>
       </Box>
-      <Modal isOpen={isOpen} onClose={onClose} size="5xl">
+      <Modal isOpen={isOpenPublishModal} onClose={onClosePublishModal} size="5xl">
         <ModalOverlay />
         <ModalContent bg="white" color="primaryText">
           <ModalCloseButton color="grey.600" _focus={{ boxShadow: "none", outlineWidth: 0 }} size="lg" />
@@ -709,7 +757,7 @@ export default ({ match }) => {
                   onClick={() => {
                     setPublishFieldValue("affelnet", getPublishRadioValue(formation?.affelnet_statut));
                     setPublishFieldValue("parcoursup", getPublishRadioValue(formation?.parcoursup_statut));
-                    onClose();
+                    onClosePublishModal();
                   }}
                   mr={[0, 8]}
                   px={[8, 20]}
@@ -731,6 +779,9 @@ export default ({ match }) => {
           </ModalBody>
         </ModalContent>
       </Modal>
+      {formation && (
+        <AffelnetFormModal isOpen={isOpenAffelnetForm} onClose={onCloseAffelnetForm} formation={formation} />
+      )}
     </Layout>
   );
 };

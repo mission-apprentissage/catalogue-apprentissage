@@ -19,7 +19,7 @@ module.exports = async () => {
     if (!match) return;
 
     if (match.matching.length === 1) {
-      await reconciliationAffelnet(formation, match);
+      await reconciliationAffelnet(formation, match.matching[0]);
     }
 
     await updateMatchedFormation(match);

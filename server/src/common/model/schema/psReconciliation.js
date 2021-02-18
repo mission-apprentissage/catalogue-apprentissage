@@ -29,6 +29,11 @@ const psReconciliationSchema = {
     default: null,
     description: "siret de l'établissement gestionnaire de la formation parcoursup",
   },
+  unpublished_by_user: {
+    type: String,
+    default: null,
+    description: "Email utilisateur si la réconciliation a été dépublié depuis l'interface",
+  },
 };
 
 module.exports = psReconciliationSchema;

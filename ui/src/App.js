@@ -63,10 +63,14 @@ export default () => {
 
   useEffect(() => {
     async function getUser() {
-      let user = await _get("/api/auth/current-session");
+      try {
+        let user = await _get("/api/auth/current-session");
 
-      if (user) {
-        setAuth(user);
+        if (user) {
+          setAuth(user);
+        }
+      } catch (error) {
+        console.log(error);
       }
       setIsLoading(false);
     }
