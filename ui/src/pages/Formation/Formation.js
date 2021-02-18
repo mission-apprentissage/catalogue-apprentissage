@@ -384,8 +384,8 @@ export default ({ match }) => {
   let history = useHistory();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [auth] = useAuth();
-  const hasRightToEdit = hasRightToEditFormation(displayedFormation, auth);
+  const [user] = useAuth();
+  const hasRightToEdit = hasRightToEditFormation(displayedFormation, user);
 
   const getPublishRadioValue = (status) => {
     if (["publié", "en attente de publication"].includes(status)) {
@@ -412,11 +412,16 @@ export default ({ match }) => {
     onSubmit: ({ affelnet, parcoursup }) => {
       return new Promise(async (resolve) => {
         const body = {};
+        let shouldRemoveAfReconciliation = false;
+        let shouldRemovePsReconciliation = false;
+        let shouldRestoreAfReconciliation = false;
+        let shouldRestorePsReconciliation = false;
 
         // check if can edit depending on the status
         if (affelnet === "true") {
           if (["non publié", "à publier (soumis à validation)", "à publier"].includes(formation?.affelnet_statut)) {
             body.affelnet_statut = "en attente de publication";
+            shouldRestoreAfReconciliation = formation.affelnet_statut === "non publié";
           }
         } else if (affelnet === "false") {
           if (
@@ -425,12 +430,16 @@ export default ({ match }) => {
             )
           ) {
             body.affelnet_statut = "non publié";
+            shouldRemoveAfReconciliation = ["en attente de publication", "publié"].includes(
+              formation.parcoursup_statut
+            );
           }
         }
 
         if (parcoursup === "true") {
           if (["non publié", "à publier (soumis à validation)", "à publier"].includes(formation?.parcoursup_statut)) {
             body.parcoursup_statut = "en attente de publication";
+            shouldRestorePsReconciliation = formation.parcoursup_statut === "non publié";
           }
         } else if (parcoursup === "false") {
           if (
@@ -439,6 +448,9 @@ export default ({ match }) => {
             )
           ) {
             body.parcoursup_statut = "non publié";
+            shouldRemovePsReconciliation = ["en attente de publication", "publié"].includes(
+              formation.parcoursup_statut
+            );
           }
         }
 
@@ -447,6 +459,35 @@ export default ({ match }) => {
             num_academie: formation.num_academie,
             ...body,
           });
+
+          if (shouldRemoveAfReconciliation || shouldRestoreAfReconciliation) {
+            try {
+              await _put(`${endpointNewFront}/affelnet/reconciliation`, {
+                uai_formation: formation.uai_formation,
+                uai_gestionnaire: formation.etablissement_gestionnaire_uai,
+                uai_formateur: formation.etablissement_formateur_uai,
+                cfd: formation.cfd,
+                email: shouldRemoveAfReconciliation ? user.email : null,
+              });
+            } catch (e) {
+              // do nothing
+            }
+          }
+
+          if (shouldRemovePsReconciliation || shouldRestorePsReconciliation) {
+            try {
+              await _put(`${endpointNewFront}/parcoursup/reconciliation`, {
+                uai_gestionnaire: formation.etablissement_gestionnaire_uai,
+                uai_affilie: formation.uai_formation,
+                uai_composante: formation.etablissement_formateur_uai,
+                cfd: formation.cfd,
+                email: shouldRemovePsReconciliation ? user.email : null,
+              });
+            } catch (e) {
+              // do nothing
+            }
+          }
+
           setFormation(updatedFormation);
           setPublishFieldValue("affelnet", getPublishRadioValue(updatedFormation?.affelnet_statut));
           setPublishFieldValue("parcoursup", getPublishRadioValue(updatedFormation?.parcoursup_statut));
