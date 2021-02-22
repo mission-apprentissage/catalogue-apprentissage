@@ -215,8 +215,12 @@ export default ({ match }) => {
         if (uai !== etablissement.uai) {
           setModal(true);
           setGatherData(1);
-          const up = await _post(`${endpointTCO}/services/etablissement`, { ...etablissement, uai });
-          result = await _put(`${endpointTCO}/entity/etablissement/${match.params.id}`, { up });
+          try {
+            const up = await _post(`${endpointTCO}/services/etablissement`, { ...etablissement, uai });
+            result = await _put(`${endpointTCO}/entity/etablissement/${match.params.id}`, { ...up });
+          } catch (err) {
+            console.error(err);
+          }
           setGatherData(2);
           await sleep(500);
 
