@@ -623,6 +623,22 @@ module.exports = {
         default: "null",
         description: "BCN : niveau formation diplome",
       },
+      affelnet_infos_offre: {
+        type: "string",
+        default: "null",
+        description: "Affelnet : Informations offre de formation",
+      },
+      affelnet_code_nature: {
+        type: "string",
+        default: "null",
+        description: "Affelnet : code nature de l'établissement de formation",
+      },
+      affelnet_secteur: {
+        type: "string",
+        enum: ["PR", "PU"],
+        default: "null",
+        description: "Affelnet : type d'établissement (PR: Privé / PU: Public)",
+      },
       _id: {
         type: "string",
         pattern: "^[0-9a-fA-F]{24}$",

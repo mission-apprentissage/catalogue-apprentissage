@@ -51,6 +51,7 @@ module.exports = async (payload) => {
           siret_gestionnaire: siret_formateur,
         },
       ],
+      unpublished_by_user: null,
     });
 
     return {
