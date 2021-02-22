@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import {
   Alert,
   Box,
@@ -10,33 +10,21 @@ import {
   Heading,
   Input,
   Link,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
   Spinner,
   Text,
-  FormControl,
-  FormLabel,
-  Center,
-  RadioGroup,
-  Radio,
-  Stack,
   useDisclosure,
 } from "@chakra-ui/react";
 import { NavLink, useHistory } from "react-router-dom";
 import { useFormik } from "formik";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
-import { _get, _post, _put } from "../../common/httpClient";
+import { _get, _post } from "../../common/httpClient";
 import Layout from "../layout/Layout";
 import useAuth from "../../common/hooks/useAuth";
 import { hasRightToEditFormation } from "../../common/utils/rolesUtils";
 import { StatusBadge } from "../../common/components/StatusBadge";
 import { ReactComponent as InfoIcon } from "../../theme/assets/info-circle.svg";
-import { AffelnetFormModal } from "../../common/components/formation/AffelnetFormModal";
+import { PublishModal } from "../../common/components/formation/PublishModal";
 
 const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
 
@@ -384,127 +372,9 @@ export default ({ match }) => {
   const [edition, setEdition] = useState(false);
   let history = useHistory();
   const { isOpen: isOpenPublishModal, onOpen: onOpenPublishModal, onClose: onClosePublishModal } = useDisclosure();
-  const { isOpen: isOpenAffelnetForm, onOpen: onOpenAffelnetForm, onClose: onCloseAffelnetForm } = useDisclosure();
 
   const [user] = useAuth();
   const hasRightToEdit = hasRightToEditFormation(displayedFormation, user);
-
-  const getPublishRadioValue = (status) => {
-    if (["publié", "en attente de publication"].includes(status)) {
-      return "true";
-    }
-    if (["non publié"].includes(status)) {
-      return "false";
-    }
-
-    return undefined;
-  };
-
-  const {
-    values: publishValues,
-    handleChange: handlePublishChange,
-    handleSubmit: handlePublishSubmit,
-    isSubmitting: isPublishSubmitting,
-    setFieldValue: setPublishFieldValue,
-  } = useFormik({
-    initialValues: {
-      affelnet: getPublishRadioValue(formation?.affelnet_statut),
-      parcoursup: getPublishRadioValue(formation?.parcoursup_statut),
-    },
-    onSubmit: ({ affelnet, parcoursup }) => {
-      return new Promise(async (resolve) => {
-        const body = {};
-        let shouldRemoveAfReconciliation = false;
-        let shouldRemovePsReconciliation = false;
-        let shouldRestoreAfReconciliation = false;
-        let shouldRestorePsReconciliation = false;
-        let shouldOpenAffelnetForm = false;
-
-        // check if can edit depending on the status
-        if (affelnet === "true") {
-          if (["non publié", "à publier (soumis à validation)", "à publier"].includes(formation?.affelnet_statut)) {
-            body.affelnet_statut = "en attente de publication";
-            shouldRestoreAfReconciliation = formation.affelnet_statut === "non publié";
-            shouldOpenAffelnetForm = true;
-          }
-        } else if (affelnet === "false") {
-          if (
-            ["en attente de publication", "à publier (soumis à validation)", "à publier", "publié"].includes(
-              formation?.affelnet_statut
-            )
-          ) {
-            body.affelnet_statut = "non publié";
-            shouldRemoveAfReconciliation = ["en attente de publication", "publié"].includes(
-              formation.parcoursup_statut
-            );
-          }
-        }
-
-        if (parcoursup === "true") {
-          if (["non publié", "à publier (soumis à validation)", "à publier"].includes(formation?.parcoursup_statut)) {
-            body.parcoursup_statut = "en attente de publication";
-            shouldRestorePsReconciliation = formation.parcoursup_statut === "non publié";
-          }
-        } else if (parcoursup === "false") {
-          if (
-            ["en attente de publication", "à publier (soumis à validation)", "à publier", "publié"].includes(
-              formation?.parcoursup_statut
-            )
-          ) {
-            body.parcoursup_statut = "non publié";
-            shouldRemovePsReconciliation = ["en attente de publication", "publié"].includes(
-              formation.parcoursup_statut
-            );
-          }
-        }
-
-        if (Object.keys(body).length > 0) {
-          const updatedFormation = await _put(`${endpointNewFront}/entity/formations2021/${formation._id}`, {
-            num_academie: formation.num_academie,
-            ...body,
-          });
-
-          if (shouldRemoveAfReconciliation || shouldRestoreAfReconciliation) {
-            try {
-              await _put(`${endpointNewFront}/affelnet/reconciliation`, {
-                uai_formation: formation.uai_formation,
-                uai_gestionnaire: formation.etablissement_gestionnaire_uai,
-                uai_formateur: formation.etablissement_formateur_uai,
-                cfd: formation.cfd,
-                email: shouldRemoveAfReconciliation ? user.email : null,
-              });
-            } catch (e) {
-              // do nothing
-            }
-          }
-
-          if (shouldRemovePsReconciliation || shouldRestorePsReconciliation) {
-            try {
-              await _put(`${endpointNewFront}/parcoursup/reconciliation`, {
-                uai_gestionnaire: formation.etablissement_gestionnaire_uai,
-                uai_affilie: formation.uai_formation,
-                uai_composante: formation.etablissement_formateur_uai,
-                cfd: formation.cfd,
-                email: shouldRemovePsReconciliation ? user.email : null,
-              });
-            } catch (e) {
-              // do nothing
-            }
-          }
-
-          setFormation(updatedFormation);
-          setPublishFieldValue("affelnet", getPublishRadioValue(updatedFormation?.affelnet_statut));
-          setPublishFieldValue("parcoursup", getPublishRadioValue(updatedFormation?.parcoursup_statut));
-        }
-
-        onClosePublishModal();
-        if (shouldOpenAffelnetForm) {
-          onOpenAffelnetForm();
-        }
-        resolve("onSubmitHandler publish complete");
-      });
-    },
-  });
 
   const { values, handleSubmit, handleChange, setFieldValue, isSubmitting } = useFormik({
     initialValues: {
@@ -569,15 +439,12 @@ export default ({ match }) => {
         setFieldValue("cfd", displayedFormation.cfd || "");
         setFieldValue("num_academie", displayedFormation.num_academie || "");
         setFieldValue("rncp_code", displayedFormation.rncp_code || "");
-
-        setPublishFieldValue("affelnet", getPublishRadioValue(form?.affelnet_statut));
-        setPublishFieldValue("parcoursup", getPublishRadioValue(form?.parcoursup_statut));
       } catch (e) {
         history.push("/404");
       }
     }
     run();
-  }, [match, setFieldValue, history, setPublishFieldValue]);
+  }, [match, setFieldValue, history]);
 
   const onEdit = () => {
     setEdition(!edition);
@@ -597,9 +464,6 @@ export default ({ match }) => {
       }
     }
   };
-
-  const isParcoursupPublishDisabled = ["hors périmètre"].includes(formation?.parcoursup_statut);
-  const isAffelnetPublishDisabled = ["hors périmètre"].includes(formation?.affelnet_statut);
 
   return (
     <Layout>
@@ -671,116 +535,15 @@ export default ({ match }) => {
           )}
         </Container>
       </Box>
-      <Modal isOpen={isOpenPublishModal} onClose={onClosePublishModal} size="5xl">
-        <ModalOverlay />
-        <ModalContent bg="white" color="primaryText">
-          <ModalCloseButton color="grey.600" _focus={{ boxShadow: "none", outlineWidth: 0 }} size="lg" />
-          <ModalHeader pt={[3, 20]} pb={[3, 8]} bg="#f5f8f9" borderRadius="5px 5px 0 0">
-            <Center>
-              <Heading as="h2" fontSize="alpha">
-                Gérer les publications
-              </Heading>
-            </Center>
-          </ModalHeader>
-          <ModalBody p={0}>
-            <Box px={[2, 16, 48]}>
-              <Flex px={4} pt={[12, 16]} flexDirection="column">
-                <Box mb={3}>
-                  <StatusBadge source="Affelnet" status={formation?.affelnet_statut} />
-                </Box>
-                <FormControl display="flex" alignItems="center" w="auto" isDisabled={isAffelnetPublishDisabled}>
-                  <FormLabel htmlFor="affelnet" mb={0} fontSize="delta" fontWeight={700}>
-                    Demander la publication Affelnet:
-                  </FormLabel>
-                  <RadioGroup defaultValue={publishValues.affelnet} id="affelnet" name="affelnet">
-                    <Stack spacing={4} direction="row">
-                      <Radio
-                        mb={0}
-                        size="lg"
-                        value="true"
-                        isDisabled={isAffelnetPublishDisabled}
-                        onChange={handlePublishChange}
-                      >
-                        Oui
-                      </Radio>
-                      <Radio
-                        mb={0}
-                        size="lg"
-                        value="false"
-                        isDisabled={isAffelnetPublishDisabled}
-                        onChange={handlePublishChange}
-                      >
-                        Non
-                      </Radio>
-                    </Stack>
-                  </RadioGroup>
-                </FormControl>
-              </Flex>
-              <Flex px={4} pt={[12, 16]} pb={[12, 16]} flexDirection="column">
-                <Box mb={3}>
-                  <StatusBadge source="Parcoursup" status={formation?.parcoursup_statut} />
-                </Box>
-                <FormControl display="flex" alignItems="center" w="auto" isDisabled={isParcoursupPublishDisabled}>
-                  <FormLabel htmlFor="parcoursup" mb={0} fontSize="delta" fontWeight={700}>
-                    Demander la publication Parcoursup:
-                  </FormLabel>
-                  <RadioGroup defaultValue={publishValues.parcoursup} id="parcoursup" name="parcoursup">
-                    <Stack spacing={4} direction="row">
-                      <Radio
-                        mb={0}
-                        size="lg"
-                        value="true"
-                        isDisabled={isParcoursupPublishDisabled}
-                        onChange={handlePublishChange}
-                      >
-                        Oui
-                      </Radio>
-                      <Radio
-                        mb={0}
-                        size="lg"
-                        value="false"
-                        isDisabled={isParcoursupPublishDisabled}
-                        onChange={handlePublishChange}
-                      >
-                        Non
-                      </Radio>
-                    </Stack>
-                  </RadioGroup>
-                </FormControl>
-              </Flex>
-            </Box>
-            <Box borderTop="1px solid" borderColor="grey.300" p={0}>
-              <Flex flexDirection={["column", "row"]} py={[3, 8]} px={3} justifyContent="center">
-                <Button
-                  variant="outline"
-                  colorScheme="blue"
-                  onClick={() => {
-                    setPublishFieldValue("affelnet", getPublishRadioValue(formation?.affelnet_statut));
-                    setPublishFieldValue("parcoursup", getPublishRadioValue(formation?.parcoursup_statut));
-                    onClosePublishModal();
-                  }}
-                  mr={[0, 8]}
-                  px={[8, 20]}
-                  mb={[3, 0]}
-                >
-                  Annuler
-                </Button>
-                <Button
-                  type="submit"
-                  colorScheme="blue"
-                  onClick={handlePublishSubmit}
-                  isLoading={isPublishSubmitting}
-                  loadingText="Enregistrement des modifications"
-                >
-                  Enregistrer les modifications
-                </Button>
-              </Flex>
-            </Box>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
       {formation && (
-        <AffelnetFormModal isOpen={isOpenAffelnetForm} onClose={onCloseAffelnetForm} formation={formation} />
+        <PublishModal
+          isOpen={isOpenPublishModal}
+          onClose={onClosePublishModal}
+          formation={formation}
+          onFormationUpdate={(updatedFormation) => {
+            setFormation(updatedFormation);
+          }}
+        />
       )}
     </Layout>
   );
