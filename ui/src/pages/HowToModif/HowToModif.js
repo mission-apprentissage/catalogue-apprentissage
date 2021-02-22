@@ -1,17 +1,32 @@
 import React from "react";
-import { Container, Box, Flex, Heading } from "@chakra-ui/react";
+import { Container, Box, Flex, Heading, Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@chakra-ui/react";
 import Layout from "../layout/Layout";
 
 import "./howToModif.css";
+import { NavLink } from "react-router-dom";
 
 const HowToModif = () => {
   return (
     <Layout>
+      <Box bg="secondaryBackground" w="100%" pt={[4, 8]} px={[1, 24]}>
+        <Container maxW="xl">
+          <Breadcrumb>
+            <BreadcrumbItem>
+              <BreadcrumbLink as={NavLink} to="/">
+                Accueil
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbItem isCurrentPage>
+              <BreadcrumbLink>Guide de modification</BreadcrumbLink>
+            </BreadcrumbItem>
+          </Breadcrumb>
+        </Container>
+      </Box>
       <Flex bg="secondaryBackground" className="howToModif">
         <Container mt={5} mb={12} maxW="xl">
           <Box>
             <Box className="mission-summary">
-              <Heading as="h1" mb={8} mt={2}>
+              <Heading as="h1" fontSize="beta" mb={8} mt={2}>
                 Guide de modification
               </Heading>
               <h5>

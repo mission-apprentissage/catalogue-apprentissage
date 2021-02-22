@@ -2,15 +2,6 @@
   min-height: 100vh;
 }
 
-.howToReglement h1,
-.howToReglement h2,
-.howToReglement h3,
-.howToReglement h4,
-.howToReglement h5,
-.howToReglement h6 {
-  font-size: revert;
-  font-weight: revert;
-}
 .howToReglement ol,
 .howToReglement ul {
   margin: initial;

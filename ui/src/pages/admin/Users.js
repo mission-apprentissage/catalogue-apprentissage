@@ -18,7 +18,11 @@ import {
   HStack,
   Input,
   Stack,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
 } from "@chakra-ui/react";
+import { NavLink } from "react-router-dom";
 
 const ACADEMIES = [
   "01",
@@ -241,6 +245,20 @@ export default () => {
 
   return (
     <Layout>
+      <Box bg="secondaryBackground" w="100%" pt={[4, 8]} px={[1, 24]}>
+        <Container maxW="xl">
+          <Breadcrumb>
+            <BreadcrumbItem>
+              <BreadcrumbLink as={NavLink} to="/">
+                Accueil
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbItem isCurrentPage>
+              <BreadcrumbLink>Gestion des utilisateurs</BreadcrumbLink>
+            </BreadcrumbItem>
+          </Breadcrumb>
+        </Container>
+      </Box>
       <Box bg="secondaryBackground" w="100%" minH="100vh" py={[1, 8]} px={[1, 24]}>
         <Container maxW="xl">
           <Heading as="h1" mb={8} mt={2}>
