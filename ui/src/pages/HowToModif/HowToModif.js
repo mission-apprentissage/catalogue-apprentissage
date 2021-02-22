@@ -12,7 +12,7 @@ const HowToModif = () => {
           <Box>
             <Box className="mission-summary">
               <Heading as="h1" mb={8} mt={2}>
-                Guide de modification Catalogue
+                Guide de modification
               </Heading>
               <h5>
                 Pour modifier un champ , il vous suffit de cliquer sur le crayon, d’effectuer la modification souhaitée

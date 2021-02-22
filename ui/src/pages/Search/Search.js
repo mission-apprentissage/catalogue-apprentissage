@@ -148,7 +148,9 @@ export default ({ match }) => {
                   <span>Recherche avancée</span>
                 </label>
                 <h1 className="title">
-                  Votre recherche {isBaseFormations ? "de formations 2021" : "d'établissements"}
+                  {isBaseFormations
+                    ? "Catalogue des formations en apprentissage 2021"
+                    : "Liste des établissements de formation"}
                 </h1>
                 <Flex className="search-row" flexDirection={["column", "row"]}>
                   <div className={`search-sidebar`}>

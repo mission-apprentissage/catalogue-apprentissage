@@ -26,11 +26,9 @@ const HowToReglement = () => {
           <Box>
             <Box className="mission-summary">
               <Heading as="h1" mb={8} mt={2}>
-                Conditions d’intégration de l’offre de formation en Apprentissage
+                Guide réglementaire
               </Heading>
-              <h3>
-                Rappel des conditions d’intégration de l’offre de formation en Apprentissage sur Parcoursup et Affelnet{" "}
-              </h3>
+              <h3>Conditions d’intégration de l’offre de formation en Apprentissage sur Parcoursup et Affelnet</h3>
               <h4>
                 <a
                   href="https://resana.numerique.gouv.fr/public/information/consulterAccessUrl?cle_url=1016905377VD4HZ1NfAj4HalM1CmRXdwY4DjMKKwNqDGdQbQFgXW4COA88B2MDZVFk"
