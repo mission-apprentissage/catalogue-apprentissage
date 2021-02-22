@@ -13,6 +13,9 @@ import {
   ModalBody,
   ModalOverlay,
   ModalContent,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
 } from "@chakra-ui/react";
 
 import { useFormik } from "formik";
@@ -24,6 +27,7 @@ import Layout from "../layout/Layout";
 import { hasOneOfRoles } from "../../common/utils/rolesUtils";
 
 import "./etablissement.css";
+import { NavLink } from "react-router-dom";
 
 const sleep = (m) => new Promise((r) => setTimeout(r, m));
 
@@ -250,6 +254,23 @@ export default ({ match }) => {
 
   return (
     <Layout>
+      <Box bg="secondaryBackground" w="100%" pt={[4, 8]} px={[1, 24]}>
+        <Container maxW="xl">
+          <Breadcrumb>
+            <BreadcrumbItem>
+              <BreadcrumbLink as={NavLink} to="/">
+                Accueil
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbItem as={NavLink} to="/recherche/etablissements">
+              <BreadcrumbLink>Établissements</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbItem isCurrentPage>
+              <BreadcrumbLink>{etablissement?.entreprise_raison_sociale}</BreadcrumbLink>
+            </BreadcrumbItem>
+          </Breadcrumb>
+        </Container>
+      </Box>
       <div className="etablissement">
         <div className="notice">
           <Container maxW="xl">

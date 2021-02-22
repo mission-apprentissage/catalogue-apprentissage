@@ -11,14 +11,32 @@ import {
   StatNumber,
   StatArrow,
   StatHelpText,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
 } from "@chakra-ui/react";
 import Layout from "./layout/Layout";
+import { NavLink } from "react-router-dom";
 
 export default () => {
   const [data, loading] = useFetch("api/stats");
 
   return (
     <Layout>
+      <Box bg="secondaryBackground" w="100%" pt={[4, 8]} px={[1, 24]}>
+        <Container maxW="xl">
+          <Breadcrumb>
+            <BreadcrumbItem>
+              <BreadcrumbLink as={NavLink} to="/">
+                Accueil
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbItem isCurrentPage>
+              <BreadcrumbLink>Tableau de bord</BreadcrumbLink>
+            </BreadcrumbItem>
+          </Breadcrumb>
+        </Container>
+      </Box>
       <Box bg="secondaryBackground" w="100%" py={[1, 8]} px={[1, 24]}>
         <Container maxW="xl">
           <Heading as="h1" mb={8} mt={2}>

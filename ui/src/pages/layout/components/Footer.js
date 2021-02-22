@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Link, Box, Flex, Button, Text } from "@chakra-ui/react";
 import packageJson from "../../../../package.json";
+import { NavLink } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -11,7 +12,10 @@ const Footer = () => {
           justifyContent="space-between"
           alignItems={["center", "flex-start"]}
         >
-          <Box mb={[4, 0]}>
+          <Flex mb={[4, 0]} justifyContent={["center", "flex-start"]} wrap="wrap">
+            <Link as={NavLink} to="/changelog" mr={4} mb={[2, 0]}>
+              Journal des modifications
+            </Link>
             <Link href="https://mission-apprentissage.gitbook.io/" mr={4} isExternal>
               Documentation
             </Link>
@@ -29,7 +33,7 @@ const Footer = () => {
               Code source
             </Button>
             <Link href="mailto:catalogue@apprentissage.beta.gouv.fr">Contact</Link>
-          </Box>
+          </Flex>
           <Flex flexDirection={["column", "row"]} alignItems={["center", "flex-start"]}>
             <Link href="https://beta.gouv.fr/startups/apprentissage.html" isExternal>
               Mission Nationale pour l&apos;apprentissage

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import queryString from "query-string";
-import { Box, Text, Heading } from "@chakra-ui/react";
+import { Box, Text, Heading, Container, Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@chakra-ui/react";
 import { Tabs } from "../common/components/report/Tabs";
 import { REPORT_TYPE, reportTypes } from "../constants/report";
 import { _get } from "../common/httpClient";
@@ -97,6 +97,20 @@ const ReportPage = () => {
 
   return (
     <Layout>
+      <Box bg="secondaryBackground" w="100%" pt={[4, 8]} px={[1, 24]}>
+        <Container maxW="xl">
+          <Breadcrumb>
+            <BreadcrumbItem>
+              <BreadcrumbLink as={NavLink} to="/">
+                Accueil
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbItem isCurrentPage>
+              <BreadcrumbLink>{reportTitle}</BreadcrumbLink>
+            </BreadcrumbItem>
+          </Breadcrumb>
+        </Container>
+      </Box>
       <Box bg="grey.750">
         {errorFetchData && !reportErrors?.data?.errors && (
           <>
