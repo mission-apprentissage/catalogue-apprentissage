@@ -2,16 +2,6 @@
   min-height: 100vh;
 }
 
-.howToModif h1,
-.howToModif h2,
-.howToModif h3,
-.howToModif h4,
-.howToModif h5,
-.howToModif h6 {
-  font-size: revert;
-  font-weight: revert;
-}
-
 .howToModif ol,
 .howToModif ul {
   margin: initial;

@@ -10,10 +10,13 @@ import {
   Box,
   Heading,
   Flex,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
 } from "@chakra-ui/react";
 
 import "./howToReglement.css";
-import { useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 const HowToReglement = () => {
   const { hash } = useLocation();
@@ -21,16 +24,30 @@ const HowToReglement = () => {
 
   return (
     <Layout>
+      <Box bg="secondaryBackground" w="100%" pt={[4, 8]} px={[1, 24]}>
+        <Container maxW="xl">
+          <Breadcrumb>
+            <BreadcrumbItem>
+              <BreadcrumbLink as={NavLink} to="/">
+                Accueil
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbItem isCurrentPage>
+              <BreadcrumbLink>Guide réglementaire</BreadcrumbLink>
+            </BreadcrumbItem>
+          </Breadcrumb>
+        </Container>
+      </Box>
       <Flex bg="secondaryBackground" className="howToReglement">
         <Container mt={5} mb={12} maxW="xl">
           <Box>
             <Box className="mission-summary">
-              <Heading as="h1" mb={8} mt={2}>
-                Conditions d’intégration de l’offre de formation en Apprentissage
+              <Heading as="h1" fontSize="beta" mb={8} mt={2}>
+                Guide réglementaire
               </Heading>
-              <h3>
-                Rappel des conditions d’intégration de l’offre de formation en Apprentissage sur Parcoursup et Affelnet{" "}
-              </h3>
+              <Heading as="h3" fontSize="gamma">
+                Conditions d’intégration de l’offre de formation en Apprentissage sur Parcoursup et Affelnet
+              </Heading>
               <h4>
                 <a
                   href="https://resana.numerique.gouv.fr/public/information/consulterAccessUrl?cle_url=1016905377VD4HZ1NfAj4HalM1CmRXdwY4DjMKKwNqDGdQbQFgXW4COA88B2MDZVFk"

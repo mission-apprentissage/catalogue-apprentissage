@@ -1,6 +1,19 @@
 import React, { useState, useEffect } from "react";
 import Layout from "./layout/Layout";
-import { Box, Button, Container, Heading, Flex, ListItem, OrderedList, Link, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Container,
+  Heading,
+  Flex,
+  ListItem,
+  OrderedList,
+  Link,
+  Text,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+} from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
 import Changelog from "../common/components/Changelog/Changelog";
 import changelog from "../CHANGELOG";
@@ -40,6 +53,15 @@ export default () => {
 
   return (
     <Layout>
+      <Box bg="secondaryBackground" w="100%" pt={[4, 8]} px={[1, 24]}>
+        <Container maxW="xl">
+          <Breadcrumb>
+            <BreadcrumbItem isCurrentPage>
+              <BreadcrumbLink>Accueil</BreadcrumbLink>
+            </BreadcrumbItem>
+          </Breadcrumb>
+        </Container>
+      </Box>
       <Box bg="secondaryBackground" w="100%" py={[1, 8]} px={[1, 24]}>
         <Container maxW="xl">
           <Heading as="h1" fontSize="beta" mb={2}>
