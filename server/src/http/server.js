@@ -31,6 +31,7 @@ const esMultiSearchNoIndex = require("./routes/esMultiSearchNoIndex");
 const parcoursup = require("./routes/parcoursup");
 const pendingRcoFormation = require("./routes/pendingRcoFormation");
 const affelnet = require("./routes/affelnet");
+const etablissement = require("./routes/etablissement");
 
 const swaggerSchema = require("../common/model/swaggerSchema");
 
@@ -124,6 +125,7 @@ module.exports = async (components) => {
   app.use("/api/v1/entity", apiKeyAuthMiddleware, convertedFormationSecure());
   app.use("/api/v1/stats", apiKeyAuthMiddleware, adminOnly, stats(components));
   app.use("/api/v1/affelnet", affelnet(components));
+  app.use("/api/v1/entity", apiKeyAuthMiddleware, etablissement(components));
 
   /** DEPRECATED */
   app.use("/api/es/search", esSearch());
@@ -142,6 +144,7 @@ module.exports = async (components) => {
   app.use("/api/entity", authMiddleware, convertedFormationSecure());
   app.use("/api/stats", authMiddleware, adminOnly, stats(components));
   app.use("/api/affelnet", affelnet(components));
+  app.use("/api/entity", authMiddleware, etablissement(components));
 
   app.get(
     "/api",

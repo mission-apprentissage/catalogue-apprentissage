@@ -1,20 +1,48 @@
 import React from "react";
-import { Box, Container, Flex, Heading, Link, ListItem, OrderedList, Text, UnorderedList } from "@chakra-ui/react";
+import {
+  Box,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  Container,
+  Flex,
+  Heading,
+  Link,
+  ListItem,
+  OrderedList,
+  Text,
+  UnorderedList,
+} from "@chakra-ui/react";
 import Layout from "../layout/Layout";
+import { NavLink } from "react-router-dom";
 
 const HowToSignal = () => {
   return (
     <Layout>
+      <Box bg="secondaryBackground" w="100%" pt={[4, 8]} px={[1, 24]}>
+        <Container maxW="xl">
+          <Breadcrumb>
+            <BreadcrumbItem>
+              <BreadcrumbLink as={NavLink} to="/">
+                Accueil
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbItem isCurrentPage>
+              <BreadcrumbLink>Guide de signalements</BreadcrumbLink>
+            </BreadcrumbItem>
+          </Breadcrumb>
+        </Container>
+      </Box>
       <Flex bg="secondaryBackground">
         <Container mt={5} mb={12} maxW="xl">
           <Box>
             <Box>
-              <Heading as="h1" mb={8} mt={2}>
+              <Heading as="h1" fontSize="beta" mb={8} mt={2}>
                 Guide de signalements
               </Heading>
               <UnorderedList spacing={8}>
                 <ListItem>
-                  <Heading as="h2" mb={2} fontSize="beta">
+                  <Heading as="h2" mb={2} fontSize="gamma">
                     Ma formation et ou mon OFA est absent du catalogue MNA
                   </Heading>
                   <OrderedList spacing={4}>
@@ -55,7 +83,7 @@ const HowToSignal = () => {
                   </OrderedList>
                 </ListItem>
                 <ListItem>
-                  <Heading as="h2" mb={2} fontSize="beta">
+                  <Heading as="h2" mb={2} fontSize="gamma">
                     Ma formation et/ou mon établissement est présente dans le catalogue MNA et je souhaite modifier des
                     données
                   </Heading>

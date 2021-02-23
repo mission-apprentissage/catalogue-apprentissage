@@ -11,6 +11,9 @@ import {
   Spacer,
   Select,
   Tag,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
 } from "@chakra-ui/react";
 import { Layout, Accordion as Item, Loading } from "./components";
 
@@ -18,6 +21,7 @@ import { _get } from "../../common/httpClient";
 
 import { useQuery } from "react-query";
 import AppLayout from "../layout/Layout";
+import { NavLink } from "react-router-dom";
 
 const matchingType = [1, 2, 3, 4, 5, 6];
 
@@ -57,6 +61,20 @@ export default (props) => {
 
   return (
     <AppLayout>
+      <Box bg="secondaryBackground" w="100%" pt={[4, 8]} px={[1, 24]}>
+        <Container maxW="xl">
+          <Breadcrumb>
+            <BreadcrumbItem>
+              <BreadcrumbLink as={NavLink} to="/">
+                Accueil
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbItem isCurrentPage>
+              <BreadcrumbLink>Réconciliation Parcoursup</BreadcrumbLink>
+            </BreadcrumbItem>
+          </Breadcrumb>
+        </Container>
+      </Box>
       <Layout>
         <Box p={5} bg="#e5edef">
           <Heading>Page de réconciliation Parcoursup</Heading>

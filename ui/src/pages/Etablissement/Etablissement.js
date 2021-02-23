@@ -13,6 +13,9 @@ import {
   ModalBody,
   ModalOverlay,
   ModalContent,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
 } from "@chakra-ui/react";
 
 import { useFormik } from "formik";
@@ -24,11 +27,14 @@ import Layout from "../layout/Layout";
 import { hasOneOfRoles } from "../../common/utils/rolesUtils";
 
 import "./etablissement.css";
+import { NavLink } from "react-router-dom";
 
 const sleep = (m) => new Promise((r) => setTimeout(r, m));
 
 const endpointTCO =
   process.env.REACT_APP_ENDPOINT_TCO || "https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1";
+
+const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
 
 const EditSection = ({ edition, onEdit, handleSubmit }) => {
   return (
@@ -211,8 +217,12 @@ export default ({ match }) => {
         if (uai !== etablissement.uai) {
           setModal(true);
           setGatherData(1);
-          const up = await _post(`${endpointTCO}/services/etablissement`, { ...etablissement, uai });
-          result = await _put(`${endpointTCO}/entity/etablissement/${match.params.id}`, { up });
+          try {
+            const up = await _post(`${endpointTCO}/services/etablissement`, { ...etablissement, uai });
+            result = await _put(`${endpointNewFront}/entity/etablissement/${match.params.id}`, { ...up });
+          } catch (err) {
+            console.error(err);
+          }
           setGatherData(2);
           await sleep(500);
 
@@ -250,6 +260,23 @@ export default ({ match }) => {
 
   return (
     <Layout>
+      <Box bg="secondaryBackground" w="100%" pt={[4, 8]} px={[1, 24]}>
+        <Container maxW="xl">
+          <Breadcrumb>
+            <BreadcrumbItem>
+              <BreadcrumbLink as={NavLink} to="/">
+                Accueil
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbItem as={NavLink} to="/recherche/etablissements">
+              <BreadcrumbLink>Établissements</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbItem isCurrentPage>
+              <BreadcrumbLink>{etablissement?.entreprise_raison_sociale}</BreadcrumbLink>
+            </BreadcrumbItem>
+          </Breadcrumb>
+        </Container>
+      </Box>
       <div className="etablissement">
         <div className="notice">
           <Container maxW="xl">

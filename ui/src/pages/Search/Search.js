@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { ReactiveBase, ReactiveList, DataSearch, SingleList, SelectedFilters } from "@appbaseio/reactivesearch";
-import { Container, Flex, Spinner, Box } from "@chakra-ui/react";
+import { Container, Flex, Spinner, Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Heading } from "@chakra-ui/react";
 import Switch from "react-switch";
 import useAuth from "../../common/hooks/useAuth";
 import Layout from "../layout/Layout";
@@ -22,6 +22,7 @@ import constantsEtablissements from "./constantsEtablissements";
 import { _get } from "../../common/httpClient";
 
 import "./search.css";
+import { NavLink } from "react-router-dom";
 
 const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
 const endpointTCO =
@@ -123,6 +124,20 @@ export default ({ match }) => {
 
   return (
     <Layout>
+      <Box bg="secondaryBackground" w="100%" pt={[4, 8]} px={[1, 24]}>
+        <Container maxW="xl">
+          <Breadcrumb>
+            <BreadcrumbItem>
+              <BreadcrumbLink as={NavLink} to="/">
+                Accueil
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbItem isCurrentPage>
+              <BreadcrumbLink>{isBaseFormations ? "Formations 2021" : "Établissements"}</BreadcrumbLink>
+            </BreadcrumbItem>
+          </Breadcrumb>
+        </Container>
+      </Box>
       <div className="page search-page">
         {base !== matchBase && <Spinner />}
 
@@ -147,9 +162,11 @@ export default ({ match }) => {
                   <Switch onChange={handleSearchSwitchChange} checked={mode !== "simple"} />
                   <span>Recherche avancée</span>
                 </label>
-                <h1 className="title">
-                  Votre recherche {isBaseFormations ? "de formations 2021" : "d'établissements"}
-                </h1>
+                <Heading as="h1" fontSize="beta" className="title">
+                  {isBaseFormations
+                    ? "Catalogue des formations en apprentissage 2021"
+                    : "Liste des établissements de formation"}
+                </Heading>
                 <Flex className="search-row" flexDirection={["column", "row"]}>
                   <div className={`search-sidebar`}>
                     {isBaseFormations && <ToggleCatalogue filters={FILTERS} onChanged={resetCount} />}
