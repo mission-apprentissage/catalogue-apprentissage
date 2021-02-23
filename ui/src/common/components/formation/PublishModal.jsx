@@ -118,8 +118,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
             try {
               await _put(`${endpointNewFront}/parcoursup/reconciliation`, {
                 uai_gestionnaire: formation.etablissement_gestionnaire_uai,
-                uai_affilie: formation.uai_formation,
-                uai_composante: formation.etablissement_formateur_uai,
+                uai_affilie: formation.etablissement_formateur_uai,
                 cfd: formation.cfd,
                 email: shouldRemovePsReconciliation ? user.email : null,
               });
