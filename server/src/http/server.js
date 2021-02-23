@@ -9,8 +9,8 @@ const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const logMiddleware = require("./middlewares/logMiddleware");
 const errorMiddleware = require("./middlewares/errorMiddleware");
-const tryCatch = require("./middlewares/tryCatchMiddleware");
 const apiKeyAuthMiddleware = require("./middlewares/apiKeyAuthMiddleware");
+const tryCatch = require("./middlewares/tryCatchMiddleware");
 const corsMiddleware = require("./middlewares/corsMiddleware");
 const authMiddleware = require("./middlewares/authMiddleware");
 const permissionsMiddleware = require("./middlewares/permissionsMiddleware");
@@ -138,7 +138,7 @@ module.exports = async (components) => {
   app.use("/api/auth", auth(components));
   app.use("/api/password", password(components));
   app.use("/api/parcoursup", parcoursup(components));
-  app.use("/api/secured", apiKeyAuthMiddleware, secured());
+  app.use("/api/secured", authMiddleware, secured());
   app.use("/api/authentified", authMiddleware, authentified());
   app.use("/api/admin", authMiddleware, adminOnly, admin(components));
   app.use("/api/entity", authMiddleware, convertedFormationSecure());

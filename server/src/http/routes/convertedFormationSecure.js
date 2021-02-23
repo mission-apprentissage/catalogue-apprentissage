@@ -71,8 +71,8 @@ module.exports = () => {
       const formation = await ConvertedFormation.findById(itemId);
       let hasRightToEdit = user.isAdmin;
       if (!hasRightToEdit) {
-        const listAcademie = user.academie.split(",");
-        hasRightToEdit = listAcademie.includes(`${formation.num_academie}`);
+        const listAcademie = user.academie.split(",").map((academieStr) => Number(academieStr));
+        hasRightToEdit = listAcademie.includes(-1) || listAcademie.includes(Number(formation.num_academie));
       }
       if (!hasRightToEdit) {
         throw Boom.unauthorized();
