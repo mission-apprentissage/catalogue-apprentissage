@@ -69,11 +69,6 @@ const run = async () => {
                 { libelle_court: "BM", niveau_formation_diplome: "36M" },
               ],
             },
-          ],
-        },
-        {
-          $or: [
-            { "rncp_details.code_type_certif": { $nin: ["Titre", "TP"] } },
             {
               "rncp_details.code_type_certif": { $in: ["Titre", "TP"] },
               "rncp_details.active_inactive": "ACTIVE",
