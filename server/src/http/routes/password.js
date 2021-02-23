@@ -88,7 +88,9 @@ module.exports = ({ users, mailer }) => {
 
       const payload = users.structureUser(updatedUser);
 
-      return res.json(payload);
+      req.logIn(payload, () => {
+        return res.json(payload);
+      });
     })
   );
 

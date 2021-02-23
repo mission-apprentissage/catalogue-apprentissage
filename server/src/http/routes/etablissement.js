@@ -12,10 +12,6 @@ module.exports = ({ catalogue }) => {
 
       let hasRightToEdit = user.isAdmin;
       if (!hasRightToEdit) {
-        const listAcademie = user.academie.split(",");
-        hasRightToEdit = listAcademie.includes(`${body.num_academie}`);
-      }
-      if (!hasRightToEdit) {
         throw Boom.unauthorized();
       }
 
