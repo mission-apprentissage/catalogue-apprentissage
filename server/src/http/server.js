@@ -144,6 +144,7 @@ module.exports = async (components) => {
   app.use("/api/entity", authMiddleware, convertedFormationSecure());
   app.use("/api/stats", authMiddleware, adminOnly, stats(components));
   app.use("/api/affelnet", affelnet(components));
+  app.use("/api/entity", authMiddleware, etablissement(components));
 
   app.get(
     "/api",

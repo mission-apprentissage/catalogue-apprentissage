@@ -219,7 +219,7 @@ export default ({ match }) => {
           setGatherData(1);
           try {
             const up = await _post(`${endpointTCO}/services/etablissement`, { ...etablissement, uai });
-            result = await _put(`${endpointNewFront}/v1/entity/etablissement/${match.params.id}`, { ...up });
+            result = await _put(`${endpointNewFront}/entity/etablissement/${match.params.id}`, { ...up });
           } catch (err) {
             console.error(err);
           }
