@@ -10,7 +10,6 @@ const swaggerUi = require("swagger-ui-express");
 const logMiddleware = require("./middlewares/logMiddleware");
 const errorMiddleware = require("./middlewares/errorMiddleware");
 const tryCatch = require("./middlewares/tryCatchMiddleware");
-const apiKeyAuthMiddleware = require("./middlewares/apiKeyAuthMiddleware");
 const corsMiddleware = require("./middlewares/corsMiddleware");
 const authMiddleware = require("./middlewares/authMiddleware");
 const permissionsMiddleware = require("./middlewares/permissionsMiddleware");
@@ -119,13 +118,13 @@ module.exports = async (components) => {
   app.use("/api/v1/auth", auth(components));
   app.use("/api/v1/password", password(components));
   app.use("/api/v1/parcoursup", parcoursup(components));
-  app.use("/api/v1/secured", apiKeyAuthMiddleware, secured());
-  app.use("/api/v1/authentified", apiKeyAuthMiddleware, authentified());
-  app.use("/api/v1/admin", apiKeyAuthMiddleware, adminOnly, admin(components));
-  app.use("/api/v1/entity", apiKeyAuthMiddleware, convertedFormationSecure());
-  app.use("/api/v1/stats", apiKeyAuthMiddleware, adminOnly, stats(components));
+  app.use("/api/v1/secured", authMiddleware, secured());
+  app.use("/api/v1/authentified", authMiddleware, authentified());
+  app.use("/api/v1/admin", authMiddleware, adminOnly, admin(components));
+  app.use("/api/v1/entity", authMiddleware, convertedFormationSecure());
+  app.use("/api/v1/stats", authMiddleware, adminOnly, stats(components));
   app.use("/api/v1/affelnet", affelnet(components));
-  app.use("/api/v1/entity", apiKeyAuthMiddleware, etablissement(components));
+  app.use("/api/v1/entity", authMiddleware, etablissement(components));
 
   /** DEPRECATED */
   app.use("/api/es/search", esSearch());
@@ -138,7 +137,7 @@ module.exports = async (components) => {
   app.use("/api/auth", auth(components));
   app.use("/api/password", password(components));
   app.use("/api/parcoursup", parcoursup(components));
-  app.use("/api/secured", apiKeyAuthMiddleware, secured());
+  app.use("/api/secured", authMiddleware, secured());
   app.use("/api/authentified", authMiddleware, authentified());
   app.use("/api/admin", authMiddleware, adminOnly, admin(components));
   app.use("/api/entity", authMiddleware, convertedFormationSecure());
