@@ -39,11 +39,16 @@ const addTagsIfNeeded = async (rcoFormation) => {
   });
 };
 
-const run = async () => {
-  // Info - You may want to delete all tags of etablissements in tco DB before running this script
-  // e.g :  db.getCollection('etablissements').updateMany({}, { $set: { tags: [] } })
+const resetTags = async (etablissement) => {
+  await catalogue().updateEtablissement(etablissement._id, { tags: [] });
+  await Etablissement.findOneAndUpdate({ siret: etablissement.siret }, { tags: [] });
+};
 
-  // 1 loop on converted: true RCO formations, get Etablissements for each --> tag 2021 etablissement
+const run = async () => {
+  // 1 - Delete all tags of etablissements in tco first
+  await paginator(Etablissement, { filter: {}, lean: true }, resetTags);
+
+  // 2 - loop on converted: true RCO formations, get Etablissements for each --> tag 2021 etablissement
   await paginator(RcoFormation, { filter: { converted_to_mna: true }, lean: true }, addTagsIfNeeded);
 };
 
