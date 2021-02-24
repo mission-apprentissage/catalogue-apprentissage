@@ -67,13 +67,9 @@ const run = async () => {
               $or: [
                 { libelle_court: { $in: ["DCG", "MC4"] } },
                 { libelle_court: "BM", niveau_formation_diplome: "36M" },
+                { libelle_court: { $regex: /^TH3-/ } },
               ],
             },
-          ],
-        },
-        {
-          $or: [
-            { "rncp_details.code_type_certif": { $nin: ["Titre", "TP"] } },
             {
               "rncp_details.code_type_certif": { $in: ["Titre", "TP"] },
               "rncp_details.active_inactive": "ACTIVE",

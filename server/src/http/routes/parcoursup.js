@@ -101,14 +101,14 @@ module.exports = ({ catalogue }) => {
   router.put(
     "/reconciliation",
     tryCatch(async (req, res) => {
-      const { uai_gestionnaire, uai_composante, cfd, uai_affilie = null, email = null } = req.body;
+      const { uai_gestionnaire, cfd, uai_affilie = null, email = null } = req.body;
 
-      if (!uai_gestionnaire || !uai_composante || !cfd) {
+      if (!uai_gestionnaire || !cfd) {
         res.status(400).json({ message: "Un uai ou le cfd est manquant" });
       }
 
       try {
-        const filter = { uai_gestionnaire, uai_composante, code_cfd: cfd };
+        const filter = { uai_gestionnaire, code_cfd: cfd };
         if (uai_affilie) {
           // optional filter
           filter.uai_affilie = uai_affilie;
