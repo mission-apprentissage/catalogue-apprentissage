@@ -67,6 +67,7 @@ const run = async () => {
               $or: [
                 { libelle_court: { $in: ["DCG", "MC4"] } },
                 { libelle_court: "BM", niveau_formation_diplome: "36M" },
+                { libelle_court: { $regex: /^TH3-/ } },
               ],
             },
             {
