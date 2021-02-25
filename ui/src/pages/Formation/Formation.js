@@ -119,6 +119,17 @@ const FormationPeriode = ({ periode }) => {
   return <>{displayedPeriode}</>;
 };
 
+const getGeoportailUrl = ({ lieu_formation_geo_coordonnees = "" }) => {
+  const coords = lieu_formation_geo_coordonnees.split(",");
+  const reversedCoords = `${coords[1]},${coords[0]}`;
+
+  const ignStyleLayer = "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2::GEOPORTAIL:OGC:WMTS(1)";
+  const poiEnseignementSup = "UTILITYANDGOVERNMENTALSERVICES.IGN.POI.ENSEIGNEMENTSUPERIEUR::GEOPORTAIL:OGC:WMS(1)";
+  const poiEnseignementSecondaire =
+    "UTILITYANDGOVERNMENTALSERVICES.IGN.POI.ENSEIGNEMENTSECONDAIRE::GEOPORTAIL:OGC:WMS(1)";
+  return `https://www.geoportail.gouv.fr/carte?c=${reversedCoords}&z=19&l0=${ignStyleLayer}&l1=${poiEnseignementSecondaire}&l2=${poiEnseignementSup}&permalink=yes`;
+};
+
 const Formation = ({
   formation,
   edition,
@@ -185,6 +196,14 @@ const Formation = ({
             <Text mb={4}>
               Période d'inscription: {!edition && <FormationPeriode periode={formation.periode} />}
               {edition && <Input type="text" name="periode" onChange={handleChange} value={values.periode} />}
+            </Text>
+            <Text mb={4}>
+              Lieu de la formation:{" "}
+              <strong>
+                <Link href={getGeoportailUrl(formation)} isExternal>
+                  {formation.lieu_formation_adresse}, {formation.code_postal} {formation.localite}
+                </Link>
+              </strong>
             </Text>
             <Text mb={4}>
               Capacite d'accueil: {!edition && <strong>{formation.capacite}</strong>}
