@@ -199,11 +199,21 @@ const Formation = ({
             </Text>
             <Text mb={4}>
               Lieu de la formation:{" "}
-              <strong>
-                <Link href={getGeoportailUrl(formation)} isExternal>
-                  {formation.lieu_formation_adresse}, {formation.code_postal} {formation.localite}
-                </Link>
-              </strong>
+              {!edition && (
+                <strong>
+                  <Link href={getGeoportailUrl(formation)} isExternal>
+                    {formation.lieu_formation_adresse}, {formation.code_postal} {formation.localite}
+                  </Link>
+                </strong>
+              )}
+              {edition && (
+                <Input
+                  type="text"
+                  name="lieu_formation_adresse"
+                  onChange={handleChange}
+                  value={values.lieu_formation_adresse}
+                />
+              )}
             </Text>
             <Text mb={4}>
               Capacite d'accueil: {!edition && <strong>{formation.capacite}</strong>}
@@ -407,6 +417,7 @@ export default ({ match }) => {
       cfd: "",
       rncp_code: "",
       num_academie: 0,
+      lieu_formation_adresse: "",
     },
     onSubmit: (values) => {
       return new Promise(async (resolve) => {
@@ -425,6 +436,7 @@ export default ({ match }) => {
           setFieldValue("cfd", result.cfd);
           setFieldValue("num_academie", result.num_academie);
           setFieldValue("rncp_code", result.rncp_code);
+          setFieldValue("lieu_formation_adresse", result.lieu_formation_adresse);
         }
 
         setEdition(false);
@@ -461,6 +473,7 @@ export default ({ match }) => {
         setFieldValue("cfd", displayedFormation.cfd || "");
         setFieldValue("num_academie", displayedFormation.num_academie || "");
         setFieldValue("rncp_code", displayedFormation.rncp_code || "");
+        setFieldValue("lieu_formation_adresse", displayedFormation.lieu_formation_adresse || "");
       } catch (e) {
         history.push("/404");
       }
