@@ -7,12 +7,12 @@ const { findRcoFormationFromConvertedId } = require("../../common/utils/rcoUtils
 const { storeByChunks } = require("../../common/utils/reportUtils");
 const { RcoFormation, ConvertedFormation } = require("../../../common/model/index");
 
-const run = async (filter = {}) => {
-  const result = await performUpdates(filter);
+const run = async (filter = {}, withCodePostalUpdate = false) => {
+  const result = await performUpdates(filter, withCodePostalUpdate);
   await createReport(result);
 };
 
-const performUpdates = async (filter = {}) => {
+const performUpdates = async (filter = {}, withCodePostalUpdate = false) => {
   const invalidFormations = [];
   const notUpdatedFormations = [];
   const updatedFormations = [];
@@ -28,7 +28,7 @@ const performUpdates = async (filter = {}) => {
 
     const { updates, formation: updatedFormation, error } = await mnaFormationUpdater(formation._doc, {
       // no need to check cp info in trainingsUpdater since it was successfully done once at converter
-      withCodePostalUpdate: false,
+      withCodePostalUpdate,
     });
 
     if (error) {

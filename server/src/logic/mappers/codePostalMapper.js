@@ -8,11 +8,11 @@ const codePostalMapper = async (codePostal = null) => {
     }
 
     const cpInfo = await getCpInfo(codePostal);
-    if (!cpInfo) {
+    if (!cpInfo || cpInfo?.messages?.error) {
       return {
         result: null,
         messages: {
-          error: `Unable to retrieve data from codePostal ${codePostal}`,
+          error: `Unable to retrieve data from codePostal ${codePostal} ${cpInfo?.messages?.error ?? ""}`,
         },
       };
     }
