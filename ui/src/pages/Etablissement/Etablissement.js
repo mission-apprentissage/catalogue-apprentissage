@@ -78,6 +78,13 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
   const [auth] = useAuth();
   const hasRightToEdit = hasOneOfRoles(auth, ["admin"]);
 
+  let creationDate = "";
+  try {
+    creationDate = new Date(new Date(etablissement.date_creation).getTime() * 1000).toLocaleDateString();
+  } catch (e) {
+    console.error("can't display creation date ", etablissement.date_creation);
+  }
+
   return (
     <Grid templateColumns="repeat(12, 1fr)" gap={4}>
       <GridItem colSpan="7">
@@ -107,7 +114,7 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
           </div>
           <div className="field">
             <h3>Date de création</h3>
-            <p>{etablissement.date_creation}</p>
+            <p>{creationDate}</p>
           </div>
           <div className="field">
             <h3>Adresse</h3>
