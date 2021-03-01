@@ -201,18 +201,28 @@ const Formation = ({
               Lieu de la formation:{" "}
               {!edition && (
                 <strong>
-                  <Link href={getGeoportailUrl(formation)} isExternal>
-                    {formation.lieu_formation_adresse}, {formation.code_postal} {formation.localite}
+                  <Link
+                    href={getGeoportailUrl(formation)}
+                    textDecoration="underline"
+                    color="blue.500"
+                    fontWeight="bold"
+                    isExternal
+                  >
+                    {formation.lieu_formation_adresse}, {formation.code_postal} {formation.localite}{" "}
+                    <FontAwesomeIcon icon={faExternalLinkAlt} />
                   </Link>
                 </strong>
               )}
               {edition && (
-                <Input
-                  type="text"
-                  name="lieu_formation_adresse"
-                  onChange={handleChange}
-                  value={values.lieu_formation_adresse}
-                />
+                <>
+                  <Input
+                    type="text"
+                    name="lieu_formation_adresse"
+                    onChange={handleChange}
+                    value={values.lieu_formation_adresse}
+                  />
+                  <Input type="text" name="code_postal" onChange={handleChange} value={values.code_postal} mt={2} />
+                </>
               )}
             </Text>
             <Text mb={4}>
