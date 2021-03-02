@@ -5,6 +5,7 @@ const { cfdMapper } = require("../mappers/cfdMapper");
 const { codePostalMapper } = require("../mappers/codePostalMapper");
 const { etablissementsMapper } = require("../mappers/etablissementsMapper");
 const { diffFormation } = require("../common/utils/diffUtils");
+const { PendingRcoFormation } = require("../../common/model");
 
 const formationSchema = Joi.object({
   cfd: Joi.string().required(),
@@ -89,6 +90,16 @@ const mnaFormationUpdater = async (formation, { withHistoryUpdate = true, withCo
       logger.error("unable to set tags", e);
     }
 
+    let uai_formation = formation.uai_formation;
+    if (!uai_formation) {
+      const pendingFormation = await PendingRcoFormation.findOne(
+        { id_rco_formation: formation.id_rco_formation },
+        { uai_formation: 1 }
+      ).lean();
+      if (pendingFormation) {
+        uai_formation = pendingFormation.uai_formation;
+      }
+    }
     const updatedFormation = {
       ...formation,
       ...cfdMapping,
@@ -97,6 +108,7 @@ const mnaFormationUpdater = async (formation, { withHistoryUpdate = true, withCo
       tags,
       published,
       update_error,
+      uai_formation,
     };
 
     const { updates, keys } = diffFormation(formation, updatedFormation);
