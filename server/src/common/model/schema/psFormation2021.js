@@ -17,6 +17,11 @@ const psFormation2021Schema = {
     default: null,
     description: "uai insert jeune",
   },
+  uai_map: {
+    type: String,
+    default: null,
+    description: "uai",
+  },
   siret_cerfa: {
     type: String,
     default: null,
@@ -26,11 +31,6 @@ const psFormation2021Schema = {
     type: String,
     default: null,
     description: "siret",
-  },
-  uai_map: {
-    type: String,
-    default: null,
-    description: "uai",
   },
 };
 
