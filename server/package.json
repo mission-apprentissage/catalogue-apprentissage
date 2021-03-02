@@ -42,7 +42,8 @@
     "affelnet:reconciliation": "standalone=true node src/jobs/afFormation/reconciliation.js",
     "es:index": "standalone=true node src/jobs/esIndex/index.js",
     "generate:swaggerschema": "standalone=true node src/jobs/generateSwaggerSchema/index.js",
-    "etablissement:dump": "standalone=true node src/jobs/etablissements"
+    "etablissement:dump": "standalone=true node src/jobs/etablissements",
+    "rcoPending:export": "standalone=true node src/jobs/pendingFormations/index.js"
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.6.1",

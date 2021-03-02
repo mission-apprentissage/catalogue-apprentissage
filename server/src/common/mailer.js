@@ -25,7 +25,7 @@ module.exports = (config, transporter = createTransporter(config.smtp)) => {
 
   return {
     renderEmail,
-    sendEmail: async (to, subject, template, data) => {
+    sendEmail: async (to, subject, template, data, attachments) => {
       console.log(data.addedMjmlTable);
       return transporter.sendMail({
         from: "no-reply@apprentissage.beta.gouv.fr",
@@ -33,6 +33,7 @@ module.exports = (config, transporter = createTransporter(config.smtp)) => {
         subject,
         html: await renderEmail(template, data),
         list: {},
+        attachments,
       });
     },
   };
