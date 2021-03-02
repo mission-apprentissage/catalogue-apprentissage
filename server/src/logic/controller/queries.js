@@ -208,33 +208,33 @@ const uai = [
       };
     },
   },
-  {
-    strength: "1",
-    query: (f) => {
-      return {
-        $or: [
-          { uai_formation: f.uai_affilie },
-          { uai_formation: f.uai_gestionnaire },
-          { uai_formation: f.uai_composante },
-          { uai_formation: f.uai_insert_jeune ?? "" },
-          { uai_formation: f.uai_cerfa ?? "" },
-          { uai_formation: f.uai_map ?? "" },
-          { etablissement_formateur_uai: f.uai_affilie },
-          { etablissement_formateur_uai: f.uai_composante },
-          { etablissement_formateur_uai: f.uai_gestionnaire },
-          { etablissement_formateur_uai: f.uai_insert_jeune ?? "" },
-          { etablissement_formateur_uai: f.uai_cerfa ?? "" },
-          { etablissement_formateur_uai: f.uai_map ?? "" },
-          { etablissement_gestionnaire_uai: f.uai_affilie },
-          { etablissement_gestionnaire_uai: f.uai_composante },
-          { etablissement_gestionnaire_uai: f.uai_gestionnaire },
-          { etablissement_gestionnaire_uai: f.uai_insert_jeune ?? "" },
-          { etablissement_gestionnaire_uai: f.uai_cerfa ?? "" },
-          { etablissement_gestionnaire_uai: f.uai_map ?? "" },
-        ],
-      };
-    },
-  },
+  // {
+  //   strength: "1",
+  //   query: (f) => {
+  //     return {
+  //       $or: [
+  //         { uai_formation: f.uai_affilie },
+  //         { uai_formation: f.uai_gestionnaire },
+  //         { uai_formation: f.uai_composante },
+  //         { uai_formation: f.uai_insert_jeune ?? "" },
+  //         { uai_formation: f.uai_cerfa ?? "" },
+  //         { uai_formation: f.uai_map ?? "" },
+  //         { etablissement_formateur_uai: f.uai_affilie },
+  //         { etablissement_formateur_uai: f.uai_composante },
+  //         { etablissement_formateur_uai: f.uai_gestionnaire },
+  //         { etablissement_formateur_uai: f.uai_insert_jeune ?? "" },
+  //         { etablissement_formateur_uai: f.uai_cerfa ?? "" },
+  //         { etablissement_formateur_uai: f.uai_map ?? "" },
+  //         { etablissement_gestionnaire_uai: f.uai_affilie },
+  //         { etablissement_gestionnaire_uai: f.uai_composante },
+  //         { etablissement_gestionnaire_uai: f.uai_gestionnaire },
+  //         { etablissement_gestionnaire_uai: f.uai_insert_jeune ?? "" },
+  //         { etablissement_gestionnaire_uai: f.uai_cerfa ?? "" },
+  //         { etablissement_gestionnaire_uai: f.uai_map ?? "" },
+  //       ],
+  //     };
+  //   },
+  // },
 ];
 
 const cfd = [
@@ -248,10 +248,10 @@ const cfd = [
           { code_postal: f.code_postal },
         ],
         $or: [
-          { etablissement_formateur_siret: f.siret_cerfa },
-          { etablissement_formateur_siret: f.siret_map },
-          { etablissement_gestionnaire_siret: f.siret_cerfa },
-          { etablissement_gestionnaire_siret: f.siret_map },
+          { etablissement_formateur_siret: f.siret_cerfa ?? "" },
+          { etablissement_formateur_siret: f.siret_map ?? "" },
+          { etablissement_gestionnaire_siret: f.siret_cerfa ?? "" },
+          { etablissement_gestionnaire_siret: f.siret_map ?? "" },
         ],
         cfd: f.code_cfd,
         code_commune_insee: f.code_commune_insee,
@@ -323,14 +323,14 @@ const cfd = [
       };
     },
   },
-  {
-    strength: "1",
-    query: (f) => {
-      return {
-        cfd: f.code_cfd,
-      };
-    },
-  },
+  // {
+  //   strength: "1",
+  //   query: (f) => {
+  //     return {
+  //       cfd: f.code_cfd,
+  //     };
+  //   },
+  // },
 ];
 
 module.exports = { uai, cfd };
