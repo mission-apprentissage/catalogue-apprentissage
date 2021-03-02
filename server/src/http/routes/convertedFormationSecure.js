@@ -52,7 +52,7 @@ module.exports = () => {
    *                 enum: ["hors périmètre", "publié", "non publié", "à publier (soumis à validation)", "à publier", "en attente de publication"]
    *               parcoursup_statut:
    *                 type: string
-   *                 enum: ["hors périmètre", "publié", "non publié", "à publier (soumis à validation)", "à publier", "en attente de publication"]
+   *                 enum: ["hors périmètre", "publié", "non publié", "à publier (vérifier accès direct postbac)", "à publier (soumis à validation Recteur)", "à publier", "en attente de publication"]
    *     responses:
    *       200:
    *         description: OK, retourne la formation mise à jour
@@ -79,7 +79,9 @@ module.exports = () => {
       }
 
       logger.info("Updating new item: ", body);
-      const result = await ConvertedFormation.findOneAndUpdate({ _id: itemId }, body, { new: true });
+      const result = await ConvertedFormation.findOneAndUpdate({ _id: itemId }, body, {
+        new: true,
+      });
       res.json(result);
     })
   );
