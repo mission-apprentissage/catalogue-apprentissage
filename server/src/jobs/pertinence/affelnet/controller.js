@@ -2,6 +2,13 @@ const { ConvertedFormation } = require("../../../common/model");
 const logger = require("../../../common/logger");
 const { toBePublishedRules } = require("../../common/utils/referenceUtils");
 
+const getMefRule = (...args) => {
+  const rule = args.reduce((acc, regex) => {
+    return [...acc, { mef_10_code: { $regex: regex } }, { "mefs_10.mef10": { $regex: regex } }];
+  }, []);
+  return { $or: rule };
+};
+
 const run = async () => {
   // set "hors périmètre"
   await ConvertedFormation.updateMany(
@@ -30,27 +37,44 @@ const run = async () => {
         {
           $or: [
             {
-              diplome: {
-                $in: [
-                  "BREVET PROFESSIONNEL",
-                  "BREVET PROFESSIONNEL AGRICOLE DE NIVEAU IV",
-                  "BREVET DES METIERS D'ART - BREVET DES METIERS DU SPECTACLE",
-                ],
-              },
+              diplome: "CERTIFICAT D'APTITUDES PROFESSIONNELLES",
+              $or: [
+                {
+                  ...getMefRule(/11$/),
+                  $and: [getMefRule(/^240/)],
+                },
+                {
+                  ...getMefRule(/31$/),
+                  $and: [getMefRule(/^242/)],
+                },
+              ],
+            },
+            {
+              diplome: "BAC PROFESSIONNEL",
+              ...getMefRule(/21$/),
+              $and: [getMefRule(/^246/)],
+            },
+            {
+              diplome: "BAC PROFESSIONNEL AGRICOLE",
+              ...getMefRule(/21$/),
+              $and: [getMefRule(/^273/)],
+            },
+
+            {
+              diplome: "BREVET PROFESSIONNEL",
+              ...getMefRule(/21$/),
+              $and: [getMefRule(/^254/)],
+            },
+            {
+              diplome: "BREVET DES METIERS D'ART - BREVET DES METIERS DU SPECTACLE",
+              ...getMefRule(/21$/),
+              $and: [getMefRule(/^251/)],
             },
             {
               diplome: "MENTION COMPLEMENTAIRE",
               niveau: "3 (CAP...)",
-            },
-            {
-              diplome: { $in: ["BAC PROFESSIONNEL", "BAC PROFESSIONNEL AGRICOLE"] },
-              $or: [{ mef_10_code: { $regex: /21$/ } }, { "mefs_10.mef10": { $regex: /21$/ } }],
-            },
-            {
-              diplome: {
-                $in: ["CERTIFICAT D'APTITUDES PROFESSIONNELLES", "CERTIFICAT D'APTITUDES PROFESSIONNELLES AGRICOLES"],
-              },
-              $or: [{ mef_10_code: { $regex: /11$/ } }, { "mefs_10.mef10": { $regex: /11$/ } }],
+              ...getMefRule(/11$/),
+              $and: [getMefRule(/^253/, /^274/)],
             },
           ],
         },
@@ -74,14 +98,24 @@ const run = async () => {
         {
           $or: [
             {
-              diplome: { $in: ["BAC PROFESSIONNEL", "BAC PROFESSIONNEL AGRICOLE"] },
-              $or: [{ mef_10_code: { $regex: /31$/ } }, { "mefs_10.mef10": { $regex: /31$/ } }],
+              diplome: "CERTIFICAT D'APTITUDES PROFESSIONNELLES",
+              ...getMefRule(/21$/),
+              $and: [getMefRule(/^241/)],
             },
             {
-              diplome: {
-                $in: ["CERTIFICAT D'APTITUDES PROFESSIONNELLES", "CERTIFICAT D'APTITUDES PROFESSIONNELLES AGRICOLES"],
-              },
-              $or: [{ mef_10_code: { $regex: /21$/ } }, { "mefs_10.mef10": { $regex: /21$/ } }],
+              diplome: "CERTIFICAT D'APTITUDES PROFESSIONNELLES AGRICOLES",
+              ...getMefRule(/21$/),
+              $and: [getMefRule(/^271/)],
+            },
+            {
+              diplome: "BAC PROFESSIONNEL",
+              ...getMefRule(/31$/),
+              $and: [getMefRule(/^247/)],
+            },
+            {
+              diplome: "BAC PROFESSIONNEL AGRICOLE",
+              ...getMefRule(/31$/),
+              $and: [getMefRule(/^276/)],
             },
           ],
         },

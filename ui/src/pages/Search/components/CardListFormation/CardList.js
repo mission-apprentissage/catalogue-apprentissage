@@ -28,7 +28,7 @@ const CardList = ({ data }) => {
             <p>{data.etablissement_formateur_enseigne}</p>
             <p>{data.etablissement_gestionnaire_entreprise_raison_sociale}</p>
             <p>
-              {data.code_postal} {data.nom_academie}
+              {data.code_postal} académie de {data.nom_academie}
             </p>
             <Box display={["block", "none"]}>
               <small>Code diplôme: {data.cfd}</small>
