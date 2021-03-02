@@ -11,17 +11,25 @@ const run = async () => {
     { $set: { parcoursup_statut: "hors périmètre" } }
   );
 
-  // set "à publier (soumis à validation)" for trainings matching psup eligibility rules
-  // reset "à publier" & "à publier (soumis à validation)"
+  // set "à publier (vérifier accès direct postbac)" & "à publier (soumis à validation Recteur)" for trainings matching psup eligibility rules
+  // reset "à publier" & "à publier (vérifier accès direct postbac)" & "à publier (soumis à validation Recteur)"
   await ConvertedFormation.updateMany(
     {
-      parcoursup_statut: { $in: ["à publier (soumis à validation)", "à publier"] },
+      parcoursup_statut: {
+        $in: [
+          "à publier (soumis à validation)",
+          "à publier (vérifier accès direct postbac)",
+          "à publier (soumis à validation Recteur)",
+          "à publier",
+        ],
+      },
     },
     { $set: { parcoursup_statut: "hors périmètre" } }
   );
 
   // run only on those 'hors périmètre' to not overwrite actions of users !
   const filterHP = { published: true, parcoursup_statut: "hors périmètre" };
+
   await ConvertedFormation.updateMany(
     {
       ...filterHP,
@@ -34,17 +42,35 @@ const run = async () => {
               "rncp_details.active_inactive": "ACTIVE",
               niveau: "6 (Licence...)",
             },
-            { libelle_court: "MC4" },
+            { libelle_court: "DCG" },
           ],
         },
       ],
     },
-    { $set: { last_update_at: Date.now(), parcoursup_statut: "à publier (soumis à validation)" } }
+    { $set: { last_update_at: Date.now(), parcoursup_statut: "à publier (vérifier accès direct postbac)" } }
+  );
+
+  await ConvertedFormation.updateMany(
+    {
+      ...filterHP,
+      $and: [
+        ...toBePublishedRules,
+        {
+          libelle_court: "MC4",
+        },
+      ],
+    },
+    { $set: { last_update_at: Date.now(), parcoursup_statut: "à publier (soumis à validation Recteur)" } }
   );
 
   // 3 - set "à publier" for trainings matching psup eligibility rules
   // run only on those 'hors périmètre' to not overwrite actions of users !
-  const filter = { published: true, parcoursup_statut: { $in: ["hors périmètre", "à publier (soumis à validation)"] } };
+  const filter = {
+    published: true,
+    parcoursup_statut: {
+      $in: ["hors périmètre", "à publier (vérifier accès direct postbac)", "à publier (soumis à validation Recteur)"],
+    },
+  };
 
   await ConvertedFormation.updateMany(
     {
@@ -59,16 +85,11 @@ const run = async () => {
                   "BREVET DE TECHNICIEN SUPERIEUR",
                   "BREVET DE TECHNICIEN SUPERIEUR AGRICOLE",
                   "CERTIFICAT DE SPECIALISATION AGRICOLE DE NIVEAU 4",
-                  // "DIPLOME UNIVERSITAIRE DE TECHNOLOGIE",
                 ],
               },
             },
             {
-              $or: [
-                { libelle_court: { $in: ["DCG", "MC4"] } },
-                { libelle_court: "BM", niveau_formation_diplome: "36M" },
-                { libelle_court: { $regex: /^TH3-/ } },
-              ],
+              $or: [{ libelle_court: "BM", niveau_formation_diplome: "36M" }, { libelle_court: { $regex: /^TH3-/ } }],
             },
             {
               "rncp_details.code_type_certif": { $in: ["Titre", "TP"] },
@@ -94,7 +115,11 @@ const run = async () => {
   });
   const totalToValidate = await ConvertedFormation.countDocuments({
     published: true,
-    parcoursup_statut: "à publier (soumis à validation)",
+    parcoursup_statut: "à publier (vérifier accès direct postbac)",
+  });
+  const totalToValidateRecteur = await ConvertedFormation.countDocuments({
+    published: true,
+    parcoursup_statut: "à publier (soumis à validation Recteur)",
   });
   const totalToCheck = await ConvertedFormation.countDocuments({ published: true, parcoursup_statut: "à publier" });
   const totalPending = await ConvertedFormation.countDocuments({
@@ -111,7 +136,8 @@ const run = async () => {
     `Total formations publiées dans le catalogue : ${totalPublished}\n` +
       `Total formations avec erreur de référencement ParcourSup : ${totalErrors}\n` +
       `Total formations hors périmètre : ${totalNotRelevant}/${totalPublished}\n` +
-      `Total formations à publier (soumis à validation) : ${totalToValidate}/${totalPublished}\n` +
+      `Total formations à publier (vérifier accès direct postbac)" : ${totalToValidate}/${totalPublished}\n` +
+      `Total formations à publier (soumis à validation Recteur)" : ${totalToValidateRecteur}/${totalPublished}\n` +
       `Total formations à publier : ${totalToCheck}/${totalPublished}\n` +
       `Total formations en attente de publication : ${totalPending}/${totalPublished}\n` +
       `Total formations publiées sur ParcourSup : ${totalPsPublished}/${totalPublished}\n` +
