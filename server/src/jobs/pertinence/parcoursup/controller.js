@@ -6,7 +6,7 @@ const run = async () => {
   // 1 - set "hors périmètre"
   await ConvertedFormation.updateMany(
     {
-      parcoursup_statut: null,
+      $or: [{ parcoursup_statut: null }, { etablissement_reference_catalogue_published: false }],
     },
     { $set: { parcoursup_statut: "hors périmètre" } }
   );
@@ -28,7 +28,11 @@ const run = async () => {
   );
 
   // run only on those 'hors périmètre' to not overwrite actions of users !
-  const filterHP = { published: true, parcoursup_statut: "hors périmètre" };
+  const filterHP = {
+    published: true,
+    etablissement_reference_catalogue_published: true,
+    parcoursup_statut: "hors périmètre",
+  };
 
   await ConvertedFormation.updateMany(
     {
@@ -67,6 +71,7 @@ const run = async () => {
   // run only on those 'hors périmètre' to not overwrite actions of users !
   const filter = {
     published: true,
+    etablissement_reference_catalogue_published: true,
     parcoursup_statut: {
       $in: ["hors périmètre", "à publier (vérifier accès direct postbac)", "à publier (soumis à validation Recteur)"],
     },

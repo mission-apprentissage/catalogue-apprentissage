@@ -13,7 +13,7 @@ const run = async () => {
   // set "hors périmètre"
   await ConvertedFormation.updateMany(
     {
-      affelnet_statut: null,
+      $or: [{ affelnet_statut: null }, { etablissement_reference_catalogue_published: false }],
     },
     { $set: { affelnet_statut: "hors périmètre" } }
   );
@@ -28,7 +28,11 @@ const run = async () => {
   );
 
   // run only on those 'hors périmètre' to not overwrite actions of users !
-  const filterHP = { published: true, affelnet_statut: "hors périmètre" };
+  const filterHP = {
+    published: true,
+    etablissement_reference_catalogue_published: true,
+    affelnet_statut: "hors périmètre",
+  };
   await ConvertedFormation.updateMany(
     {
       ...filterHP,
@@ -88,7 +92,11 @@ const run = async () => {
 
   //  set "à publier" for trainings matching affelnet eligibility rules
   // run only on those "hors périmètre" & "à publier (soumis à validation)" to not overwrite actions of users !
-  const filter = { published: true, affelnet_statut: { $in: ["hors périmètre", "à publier (soumis à validation)"] } };
+  const filter = {
+    published: true,
+    etablissement_reference_catalogue_published: true,
+    affelnet_statut: { $in: ["hors périmètre", "à publier (soumis à validation)"] },
+  };
 
   await ConvertedFormation.updateMany(
     {

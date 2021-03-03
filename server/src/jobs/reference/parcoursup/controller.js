@@ -7,7 +7,13 @@ const run = async () => {
   // check for published trainings in psup (set "publié") / but don't overwrite those on "non publié" status : it means a user chose not to publish
   await paginator(
     ConvertedFormation,
-    { filter: { published: true, parcoursup_statut: { $ne: "non publié" } } },
+    {
+      filter: {
+        published: true,
+        etablissement_reference_catalogue_published: true,
+        parcoursup_statut: { $ne: "non publié" },
+      },
+    },
     async (formation) => {
       const { parcoursup_reference, messages, error } = await psReferenceMapper({
         cfd: formation.cfd,

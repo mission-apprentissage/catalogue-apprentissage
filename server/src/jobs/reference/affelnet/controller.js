@@ -7,7 +7,13 @@ const run = async () => {
   //  check for published trainings in affelnet (set "publié") / but don't overwrite those on "non publié" status : it means a user chose not to publish
   await paginator(
     ConvertedFormation,
-    { filter: { published: true, affelnet_statut: { $ne: "non publié" } } },
+    {
+      filter: {
+        published: true,
+        etablissement_reference_catalogue_published: true,
+        affelnet_statut: { $ne: "non publié" },
+      },
+    },
     async (formation) => {
       const { affelnet_reference, messages, error } = await afReferenceMapper({
         cfd: formation.cfd,
