@@ -11,6 +11,7 @@ const afCoverage = require("./afFormation/index");
 const afReconciliation = require("./afFormation/reconciliation");
 
 const clean = require("./clean");
+const { rebuildEsIndex } = require("./esIndex/esIndex");
 const { importEtablissements } = require("./etablissements");
 
 runScript(async ({ catalogue }) => {
@@ -34,6 +35,9 @@ runScript(async ({ catalogue }) => {
     await afReconciliation();
     await afReference();
     await afPertinence();
+
+    // es
+    await rebuildEsIndex("convertedformation");
   } catch (error) {
     logger.error(error);
   }
