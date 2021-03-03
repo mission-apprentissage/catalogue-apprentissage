@@ -1,6 +1,6 @@
 {
   "name": "mna-catalogue-apprentissage-server",
-  "version": "0.0.1",
+  "version": "2.6.0",
   "description": "[MNA] App catalogue apprentissage",
   "repository": "https://github.com/mission-apprentissage/catalogue-apprentissage.git",
   "private": false,
