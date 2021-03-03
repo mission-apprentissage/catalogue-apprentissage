@@ -5,8 +5,8 @@ const { asyncForEach } = require("../../common/utils/asyncUtils");
 const { cfd, uai } = require("./queries");
 const mongoose = require("mongoose");
 
-async function getParcoursupCoverage(formation) {
-  const getMatch = (query) => ConvertedFormation.find(query);
+async function getParcoursupCoverage(formation, tag = "2020") {
+  const getMatch = (query) => ConvertedFormation.find({ ...query, tags: tag });
 
   let match = [];
 
@@ -14,6 +14,8 @@ async function getParcoursupCoverage(formation) {
     let { query, strength } = cfd[i];
 
     let result = await getMatch(query(formation));
+
+    // console.log({ type: "CFD", query: query(formation), result: result.length });
 
     if (result.length > 0) {
       match.push({
@@ -31,6 +33,8 @@ async function getParcoursupCoverage(formation) {
       let { query, strength } = uai[i];
 
       let result = await getMatch(query(formation));
+
+      // console.log({ type: "UAI", query: query(formation), result: result.length });
 
       if (result.length > 0) {
         match.push({
