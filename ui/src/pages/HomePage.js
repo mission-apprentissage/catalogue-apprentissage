@@ -13,6 +13,7 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  Center,
 } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
 import Changelog from "../common/components/Changelog/Changelog";
@@ -78,17 +79,34 @@ export default () => {
             )}
             <br />
             <br />
-            <span>La mise à jour du 31/01/2021 :</span>
+            <span>La mise à jour du 03/03/2021 :</span>
             <Box px={[1, 4]}>
               <OrderedList px={0} mx={0} stylePosition="inside">
                 <ListItem>
-                  permet la publication des formations en mode connecté au sein des bases Parcoursup et Affelnet selon
-                  les périmètres définis en lien avec la DGESIP et la DGESCO.
+                  Modifications des filtres pour le périmètre Parcoursup : Modification du filtre à publier (soumis à
+                  validation) qui devient pour les MC4 à publier (soumis à validation Recteur) et pour les titres de niv
+                  6 et les DCG à publier (vérifier accès direct postbac).
                 </ListItem>
-                <ListItem>met en visibilité le guide des signalements</ListItem>
                 <ListItem>
-                  note aux instructeurs : pour les titres 6 certains sont accessibles uniquement après un BTS et sont
-                  actuellement mentionnés sous l'étiquette "Parcoursup - à publier", merci pour votre vigilance.{" "}
+                  Certaines MC de niveau 3 sont codées dans le catalogue comme étant de niveau 3 alors qu'en réalité se
+                  sont des MC de niveau 4. Ces mentions complémentaires sont réintégrées dans le périmètre Parcoursup et
+                  se retrouvent dans le filtre à publier (soumis à validation Recteur), une correction sur le niveau
+                  affiché a été réalisée.
+                </ListItem>
+                <ListItem>
+                  Les certifications qualités transmises au fil de l'eau sont intégrées une fois par semaine
+                  (généralement le mardi avec visibilité le mercredi).
+                </ListItem>
+                <ListItem>Fonctionnalité de dépublication opérationnelle.</ListItem>
+                <ListItem>Ajout dans la fiche formation de l'adresse du site de formation (champs modifiable)</ListItem>
+                <ListItem>
+                  Suite aux travaux de recette intégration Affelnet : identification et exclusion du périmètre Affelnet
+                  des formations qui ne relèvent pas du niveau post 3ème dans le catalogue selon le dispositif de
+                  formation du MEF.
+                </ListItem>
+                <ListItem>
+                  Certaines MC de niveau 3 sont codées dans le catalogue comme étant de niveau 3 alors qu'en réalité se
+                  sont des MC de niveau 4. Ces mentions complémentaires sont exclues du périmètre AFFELNET.
                 </ListItem>
 
                 <ListItem fontWeight={700} mt={3}>
@@ -132,17 +150,20 @@ export default () => {
               Consulter la liste des établissements
             </Button>
           </Flex>
-          <Heading as="h3" mt={5} mb={3} fontSize="beta">
-            Dernières modifications
-          </Heading>
-          <Flex>
-            <Changelog content={changelog} order="desc" showVersion="last2" hideFilter={true} />
-          </Flex>
-          <Flex mt={1} mb={4} flexDirection={["column", "row"]} justifyContent={["space-around", "flex-start"]}>
-            <Button as={NavLink} bg="#007bff" color="#fff" to="/changelog">
-              Voir les précédentes versions
-            </Button>
-          </Flex>
+
+          <Center flexDirection="column" mt={12}>
+            <Heading as="h3" mb={3} fontSize="beta">
+              Dernières modifications
+            </Heading>
+            <Flex>
+              <Changelog content={changelog} order="desc" showVersion="last2" hideFilter={true} />
+            </Flex>
+            <Flex mt={1} mb={4} flexDirection={["column", "row"]} justifyContent={["space-around", "flex-start"]}>
+              <Button as={NavLink} bg="#007bff" color="#fff" to="/changelog">
+                Voir les précédentes versions
+              </Button>
+            </Flex>
+          </Center>
         </Container>
       </Box>
     </Layout>
