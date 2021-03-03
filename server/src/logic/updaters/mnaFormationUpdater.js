@@ -92,12 +92,18 @@ const mnaFormationUpdater = async (formation, { withHistoryUpdate = true, withCo
 
     let uai_formation = formation.uai_formation;
     if (!uai_formation) {
+      // no uai ? check if it was set by user
       const pendingFormation = await PendingRcoFormation.findOne(
         { id_rco_formation: formation.id_rco_formation },
         { uai_formation: 1 }
       ).lean();
       if (pendingFormation) {
         uai_formation = pendingFormation.uai_formation;
+      }
+
+      // still no uai ? try to fill it with etablissement formateur
+      if (!uai_formation) {
+        uai_formation = etablissementsMapping?.etablissement_formateur_uai;
       }
     }
     const updatedFormation = {
