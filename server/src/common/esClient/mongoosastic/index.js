@@ -243,7 +243,6 @@ function Mongoosastic(schema, options) {
     inSchema.post("findOneAndUpdate", postSave);
 
     inSchema.post("insertMany", postSaveMany);
-    inSchema.post("updateMany", postSaveMany);
   }
   setUpMiddlewareHooks(schema);
 }
