@@ -4,7 +4,8 @@ const { getElasticInstance } = require("../esClient");
 const rebuildIndex = async (index, schema, { skipNotFound } = { skipNotFound: false }) => {
   let client = getElasticInstance();
 
-  if (!skipNotFound) {
+  const { body: hasIndex } = await client.indices.exists({ index });
+  if (hasIndex || !skipNotFound) {
     logger.info(`Removing '${index}' index...`);
     await client.indices.delete({ index });
   }

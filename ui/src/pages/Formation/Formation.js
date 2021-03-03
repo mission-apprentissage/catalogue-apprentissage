@@ -119,6 +119,17 @@ const FormationPeriode = ({ periode }) => {
   return <>{displayedPeriode}</>;
 };
 
+const getGeoportailUrl = ({ lieu_formation_geo_coordonnees = "" }) => {
+  const coords = lieu_formation_geo_coordonnees.split(",");
+  const reversedCoords = `${coords[1]},${coords[0]}`;
+
+  const ignStyleLayer = "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2::GEOPORTAIL:OGC:WMTS(1)";
+  const poiEnseignementSup = "UTILITYANDGOVERNMENTALSERVICES.IGN.POI.ENSEIGNEMENTSUPERIEUR::GEOPORTAIL:OGC:WMS(1)";
+  const poiEnseignementSecondaire =
+    "UTILITYANDGOVERNMENTALSERVICES.IGN.POI.ENSEIGNEMENTSECONDAIRE::GEOPORTAIL:OGC:WMS(1)";
+  return `https://www.geoportail.gouv.fr/carte?c=${reversedCoords}&z=19&l0=${ignStyleLayer}&l1=${poiEnseignementSecondaire}&l2=${poiEnseignementSup}&permalink=yes`;
+};
+
 const Formation = ({
   formation,
   edition,
@@ -185,6 +196,34 @@ const Formation = ({
             <Text mb={4}>
               Période d'inscription: {!edition && <FormationPeriode periode={formation.periode} />}
               {edition && <Input type="text" name="periode" onChange={handleChange} value={values.periode} />}
+            </Text>
+            <Text mb={4}>
+              Lieu de la formation:{" "}
+              {!edition && (
+                <strong>
+                  <Link
+                    href={getGeoportailUrl(formation)}
+                    textDecoration="underline"
+                    color="blue.500"
+                    fontWeight="bold"
+                    isExternal
+                  >
+                    {formation.lieu_formation_adresse}, {formation.code_postal} {formation.localite}{" "}
+                    <FontAwesomeIcon icon={faExternalLinkAlt} />
+                  </Link>
+                </strong>
+              )}
+              {edition && (
+                <>
+                  <Input
+                    type="text"
+                    name="lieu_formation_adresse"
+                    onChange={handleChange}
+                    value={values.lieu_formation_adresse}
+                  />
+                  <Input type="text" name="code_postal" onChange={handleChange} value={values.code_postal} mt={2} />
+                </>
+              )}
             </Text>
             <Text mb={4}>
               Capacite d'accueil: {!edition && <strong>{formation.capacite}</strong>}
@@ -388,6 +427,7 @@ export default ({ match }) => {
       cfd: "",
       rncp_code: "",
       num_academie: 0,
+      lieu_formation_adresse: "",
     },
     onSubmit: (values) => {
       return new Promise(async (resolve) => {
@@ -406,6 +446,7 @@ export default ({ match }) => {
           setFieldValue("cfd", result.cfd);
           setFieldValue("num_academie", result.num_academie);
           setFieldValue("rncp_code", result.rncp_code);
+          setFieldValue("lieu_formation_adresse", result.lieu_formation_adresse);
         }
 
         setEdition(false);
@@ -442,6 +483,7 @@ export default ({ match }) => {
         setFieldValue("cfd", displayedFormation.cfd || "");
         setFieldValue("num_academie", displayedFormation.num_academie || "");
         setFieldValue("rncp_code", displayedFormation.rncp_code || "");
+        setFieldValue("lieu_formation_adresse", displayedFormation.lieu_formation_adresse || "");
       } catch (e) {
         history.push("/404");
       }

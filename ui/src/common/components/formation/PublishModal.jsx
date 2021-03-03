@@ -77,15 +77,26 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
         }
 
         if (parcoursup === "true") {
-          if (["non publié", "à publier (soumis à validation)", "à publier"].includes(formation?.parcoursup_statut)) {
+          if (
+            [
+              "non publié",
+              "à publier (vérifier accès direct postbac)",
+              "à publier (soumis à validation Recteur)",
+              "à publier",
+            ].includes(formation?.parcoursup_statut)
+          ) {
             body.parcoursup_statut = "en attente de publication";
             shouldRestorePsReconciliation = formation.parcoursup_statut === "non publié";
           }
         } else if (parcoursup === "false") {
           if (
-            ["en attente de publication", "à publier (soumis à validation)", "à publier", "publié"].includes(
-              formation?.parcoursup_statut
-            )
+            [
+              "en attente de publication",
+              "à publier (vérifier accès direct postbac)",
+              "à publier (soumis à validation Recteur)",
+              "à publier",
+              "publié",
+            ].includes(formation?.parcoursup_statut)
           ) {
             body.parcoursup_statut = "non publié";
             shouldRemovePsReconciliation = ["en attente de publication", "publié"].includes(
