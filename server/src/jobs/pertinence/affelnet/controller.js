@@ -13,7 +13,7 @@ const run = async () => {
   // set "hors périmètre"
   await ConvertedFormation.updateMany(
     {
-      $or: [{ affelnet_statut: null }, { etablissement_reference_catalogue_published: false }],
+      $or: [{ affelnet_statut: null }, { etablissement_reference_catalogue_published: false }, { published: false }],
     },
     { $set: { affelnet_statut: "hors périmètre" } }
   );

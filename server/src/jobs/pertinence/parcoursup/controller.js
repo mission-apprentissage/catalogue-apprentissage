@@ -6,7 +6,7 @@ const run = async () => {
   // 1 - set "hors périmètre"
   await ConvertedFormation.updateMany(
     {
-      $or: [{ parcoursup_statut: null }, { etablissement_reference_catalogue_published: false }],
+      $or: [{ parcoursup_statut: null }, { etablissement_reference_catalogue_published: false }, { published: false }],
     },
     { $set: { parcoursup_statut: "hors périmètre" } }
   );
