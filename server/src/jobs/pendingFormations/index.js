@@ -30,6 +30,7 @@ if (process.env.standalone) {
       cfd: 1,
       periode: 1,
       capacite: 1,
+      published: 1,
     };
 
     const formations = await PendingRcoFormation.find({}, projection);
@@ -51,6 +52,7 @@ if (process.env.standalone) {
               "cfd",
               "periode",
               "capacite",
+              "published",
             ].includes(header)
           ) {
             if (original[header] === formation[header] || (original[header] === null && !formation[header])) {
