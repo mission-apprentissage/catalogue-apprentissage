@@ -49,7 +49,7 @@ module.exports = ({ users }) => {
       const { username, password } = req.body;
       const user = await users.authenticate(username, password);
 
-      if (!user) res.status("404");
+      if (!user) return res.status(401).json({ message: "Utilisateur non trouvé" });
 
       const payload = users.structureUser(user);
 
