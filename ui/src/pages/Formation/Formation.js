@@ -431,26 +431,30 @@ export default ({ match }) => {
     },
     onSubmit: (values) => {
       return new Promise(async (resolve) => {
-        const updatedFormation = await _post(`${endpointNewFront}/entity/formation2021/update`, {
-          ...displayedFormation,
-          ...values,
-        });
+        try {
+          const updatedFormation = await _post(`${endpointNewFront}/entity/formation2021/update`, {
+            ...displayedFormation,
+            ...values,
+          });
 
-        let result = await _post(`${endpointNewFront}/entity/pendingRcoFormation`, updatedFormation);
-        if (result) {
-          setPendingFormation(result);
-          setFieldValue("uai_formation", result.uai_formation);
-          setFieldValue("code_postal", result.code_postal);
-          setFieldValue("periode", result.periode);
-          setFieldValue("capacite", result.capacite);
-          setFieldValue("cfd", result.cfd);
-          setFieldValue("num_academie", result.num_academie);
-          setFieldValue("rncp_code", result.rncp_code);
-          setFieldValue("lieu_formation_adresse", result.lieu_formation_adresse);
+          let result = await _post(`${endpointNewFront}/entity/pendingRcoFormation`, updatedFormation);
+          if (result) {
+            setPendingFormation(result);
+            setFieldValue("uai_formation", result.uai_formation);
+            setFieldValue("code_postal", result.code_postal);
+            setFieldValue("periode", result.periode);
+            setFieldValue("capacite", result.capacite);
+            setFieldValue("cfd", result.cfd);
+            setFieldValue("num_academie", result.num_academie);
+            setFieldValue("rncp_code", result.rncp_code);
+            setFieldValue("lieu_formation_adresse", result.lieu_formation_adresse);
+          }
+        } catch (e) {
+          console.error("Can't perform update", e);
+        } finally {
+          setEdition(false);
+          resolve("onSubmitHandler complete");
         }
-
-        setEdition(false);
-        resolve("onSubmitHandler complete");
       });
     },
   });
