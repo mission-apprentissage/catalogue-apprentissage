@@ -1,8 +1,8 @@
 const { runScript } = require("../scriptWrapper");
 const { mongoose } = require("../../common/mongodb");
-const { init } = require("@mission-apprentissage/tco-service-node");
+const { initTcoModel, getCpInfo } = require("@mission-apprentissage/tco-service-node");
 
 runScript(async () => {
-  await init(mongoose);
-  //console.log(await getCpInfo("92600"));
+  await initTcoModel(mongoose);
+  console.log(await getCpInfo("92600"));
 });
