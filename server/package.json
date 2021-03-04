@@ -24,7 +24,6 @@
     "rco:importer": "standalone=true node src/jobs/rcoImporter/index.js",
     "rco:converter": "standalone=true node src/jobs/rcoConverter/index.js",
     "trainings:updater": "standalone=true node src/jobs/trainingsUpdater/index.js",
-    "oneshot:psup": "standalone=true node src/jobs/oneshot/pSupTemporary/index.js",
     "psup:coverage-2020": "standalone=true node src/jobs/parcoursup/2020/coverage.js",
     "psup:import-2020": "standalone=true node src/jobs/parcoursup/2020/importer.js",
     "psup:coverage-2021": "standalone=true node src/jobs/parcoursup/2021/coverage.js",
