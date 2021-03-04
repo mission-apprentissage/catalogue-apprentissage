@@ -12,29 +12,85 @@ runScript(async () => {
   await psup2021();
 });
 
-const getLibelleLong = (libelle) =>
-  libelle
-    .split(" - en apprentissage")[0]
-    .replace(/\((.)*\)+/g, "")
-    .trim()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toUpperCase();
+// eslint-disable-next-line
+function recoupementAvecFichierSpecific() {
+  const fichierSerge = path.resolve(__dirname, "../assets/traitement-psup-serge.xlsx");
+  const fichierAnne = path.resolve(__dirname, "../assets/recoupement-rncp-romes.xlsx");
+  const dataSerge = getJsonFromXlsxFile(fichierSerge);
+  const dataAnne = getJsonFromXlsxFile(fichierAnne);
 
-const getLibelleCourt = (libelle) => {
-  if (libelle.includes("BUT")) return "DUT";
-  if (libelle.includes("Formation professionnelle")) return "";
-  if (libelle.includes("Formations  des écoles d'ingénieurs")) return "";
-  if (libelle.includes("Certificat de Spécialisation Agricole")) return "";
-  if (libelle.includes("BPJEPS")) return "";
-  if (libelle.includes("Sous-officier")) return "";
-};
+  let stat = {
+    found: 0,
+    cfd: 0,
+    rncp: 0,
+    rome: 0,
+    mef: 0,
+  };
+
+  const matched = dataSerge.map((formation) => {
+    let found = dataAnne.find((x) => x.LIBSPÉCIALITÉ === formation.LIBSPÉCIALITÉ);
+    if (found) {
+      stat.found += 1;
+
+      if (formation.CODE_CFD_MNA == "Non trouvé" && found.CODE_CFD) {
+        formation.CODE_CFD_MNA = found.CODE_CFD;
+        stat.cfd += 1;
+      }
+
+      if (formation.CODE_RNCP == "Non trouvé" && found.CODE_RNCP) {
+        formation.CODE_RNCP = found.CODE_RNCP;
+        stat.rncp += 1;
+      }
+
+      if (formation.CODE_ROME == "Non trouvé" && found.CODE_ROME) {
+        formation.CODE_ROME = found.CODE_ROME;
+        stat.rome += 1;
+      }
+
+      if (formation.CODEMEF == "Non trouvé" && found.CODEMEF) {
+        formation.CODEMEF = found.CODEMEF;
+        stat.mef += 1;
+      }
+    }
+    return formation;
+  });
+
+  console.log({ stat, l: matched.length });
+
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, XLSX.utils.json_to_sheet(matched), "psup");
+
+  XLSX.writeFileAsync(path.join(__dirname, `../assets/traitement-psup-serge-20210304.xlsx`), workbook, (e) => {
+    if (e) {
+      console.log(e);
+      throw new Error("La génération du fichier excel à échoué : ", e);
+    }
+  });
+}
 
 async function psup2021() {
   const file = path.resolve(__dirname, "../assets/formation-psup-2021_26022021.xls");
   const data = getJsonFromXlsxFile(file);
 
   const filtered = uniqBy(data, "CODESPÉCIALITÉ");
+
+  const getLibelleLong = (libelle) =>
+    libelle
+      .split(" - en apprentissage")[0]
+      .replace(/\((.)*\)+/g, "")
+      .trim()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toUpperCase();
+
+  const getLibelleCourt = (libelle) => {
+    if (libelle.includes("BUT")) return "DUT";
+    if (libelle.includes("Formation professionnelle")) return "";
+    if (libelle.includes("Formations  des écoles d'ingénieurs")) return "";
+    if (libelle.includes("Certificat de Spécialisation Agricole")) return "";
+    if (libelle.includes("BPJEPS")) return "";
+    if (libelle.includes("Sous-officier")) return "";
+  };
 
   let updated = [];
 
