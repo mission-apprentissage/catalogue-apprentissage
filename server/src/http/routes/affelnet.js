@@ -26,7 +26,7 @@ module.exports = ({ catalogue }) => {
             let { code_cfd, uai } = formation;
             if (code_cfd) {
               const infoCfd = await getCfdInfo(code_cfd);
-              const infoReconciliation = await AfReconciliation.find({ code_cfd, uai });
+              const infoReconciliation = await AfReconciliation.findOne({ code_cfd, uai });
 
               let infobcn = infoCfd.result.intitule_long;
 

@@ -47,8 +47,8 @@ export default ({ data }) => {
   const toast = useToast();
   const [modalIsOpen, setModalIsOpen] = React.useState(false);
   const [mapping, setMapping] = React.useReducer(reducer, data.reconciliation || []);
-  const [reconciliation, setReconciliation] = React.useState(data.reconciliation || []);
-  const [matchingMnaEtablissement, setMatchingMnaEtablissement] = React.useState(data.matching_mna_etablissement);
+  const [reconciliation, setReconciliation] = React.useState(data.reconciliation || null);
+  const [matchingMnaEtablissement, setMatchingMnaEtablissement] = React.useState(data.matching_mna_etablissement || []);
 
   const sameUai = new Set([data.uai_affilie, data.uai_composante, data.uai_gestionnaire]).size === 1;
   const sameEtab = new Set([data.libelle_uai_affilie, data.libelle_uai_composante]).size === 1;
@@ -126,7 +126,7 @@ export default ({ data }) => {
             <Box>
               <DetailFormation data={data} sameEtab={sameEtab} sameUai={sameUai} />
             </Box>
-            <Box>{reconciliation && reconciliation.length > 0 && <Liaison data={reconciliation} />}</Box>
+            <Box>{reconciliation && <Liaison {...reconciliation} />}</Box>
             <Box>
               {data && matchingMnaEtablissement.length > 0 && (
                 <Etablissement data={matchingMnaEtablissement} onSelectChange={onSelectChange} />
@@ -165,35 +165,31 @@ export default ({ data }) => {
   );
 };
 
-const Liaison = ({ data }) => {
+const Liaison = ({ siret_formateur, siret_gestionnaire, uai_gestionnaire, uai_affilie, uai_composante }) => {
   return (
     <Box p={4} bg="aliceblue">
       <Box>
-        <Heading>Etablissements liés ({data.length}) :</Heading>
+        <Heading>Etablissement(s) lié(s) :</Heading>
         <Divider mb={4} />
       </Box>
       <SimpleGrid columns={4} spacing={10}>
-        {data.map(({ siret_formateur, siret_gestionnaire, uai_gestionnaire, uai_affilie, uai_composante }, index) => {
-          return (
-            <Box key={index}>
-              <Text fontSize="xs">
-                Uai gestionnaire: <Text as="i">{uai_gestionnaire}</Text>
-              </Text>
-              <Text fontSize="xs">
-                Uai affilié: <Text as="i">{uai_affilie}</Text>
-              </Text>
-              <Text fontSize="xs">
-                Uai composante: <Text as="i">{uai_composante}</Text>
-              </Text>
-              <Text fontSize="xs">
-                Siret formateur: <Text as="i">{siret_formateur}</Text>
-              </Text>
-              <Text fontSize="xs">
-                Siret gestionnaire: <Text as="i">{siret_gestionnaire}</Text>
-              </Text>
-            </Box>
-          );
-        })}
+        <Box>
+          <Text fontSize="xs">
+            Uai gestionnaire: <Text as="i">{uai_gestionnaire}</Text>
+          </Text>
+          <Text fontSize="xs">
+            Uai affilié: <Text as="i">{uai_affilie}</Text>
+          </Text>
+          <Text fontSize="xs">
+            Uai composante: <Text as="i">{uai_composante}</Text>
+          </Text>
+          <Text fontSize="xs">
+            Siret formateur: <Text as="i">{siret_formateur}</Text>
+          </Text>
+          <Text fontSize="xs">
+            Siret gestionnaire: <Text as="i">{siret_gestionnaire}</Text>
+          </Text>
+        </Box>
       </SimpleGrid>
     </Box>
   );
@@ -223,13 +219,21 @@ const EnteteFormation = ({ data, sameUai }) => {
             {data.libelle_commune} - {data.code_postal}
           </Text>
         </GridItem>
-        {data.reconciliation.length > 0 && (
-          <GridItem>
-            <Tag variant="solid" colorScheme="teal">
-              FORMATION RAPPROCHÉE
-            </Tag>
-          </GridItem>
-        )}
+        {data.reconciliation ? (
+          data.reconciliation.unpublished_by_user ? (
+            <GridItem>
+              <Tag variant="solid" colorScheme="purple">
+                FORMATION DEPUBLIÉ PAR L'UTILISATEUR
+              </Tag>
+            </GridItem>
+          ) : (
+            <GridItem>
+              <Tag variant="solid" colorScheme="teal">
+                FORMATION RAPPROCHÉE
+              </Tag>
+            </GridItem>
+          )
+        ) : null}
       </Grid>
     </Box>
   );
