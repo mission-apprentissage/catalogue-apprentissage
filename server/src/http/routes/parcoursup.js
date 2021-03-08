@@ -26,7 +26,7 @@ module.exports = ({ catalogue }) => {
             let { code_cfd, uai_affilie, uai_composante, uai_gestionnaire } = formation;
             if (code_cfd) {
               const infoCfd = await getCfdInfo(code_cfd);
-              const infoReconciliation = await PsReconciliation.find({
+              const infoReconciliation = await PsReconciliation.findOne({
                 code_cfd: code_cfd,
                 uai_affilie,
                 uai_composante,
