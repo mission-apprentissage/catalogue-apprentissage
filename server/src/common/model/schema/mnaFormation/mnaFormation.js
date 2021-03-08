@@ -17,6 +17,11 @@ const mnaFormationSchema = {
     default: null,
     description: "Lettre spécialité du code cfd",
   },
+  cfd_outdated: {
+    type: Boolean,
+    default: false,
+    description: "BCN : cfd périmé (fermeture avant le 31 aout de l'année courante)",
+  },
   mef_10_code: {
     type: String,
     default: null,

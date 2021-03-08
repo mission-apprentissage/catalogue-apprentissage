@@ -38,6 +38,7 @@ runScript(async ({ mailer }) => {
     const converted = await ConvertedFormation.findOne(
       {
         id_rco_formation: `${formation.id_formation}|${formation.id_action}|${formation.id_certifinfo}`,
+        published: true,
       },
       projection
     );
