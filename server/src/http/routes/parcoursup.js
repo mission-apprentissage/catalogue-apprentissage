@@ -46,9 +46,9 @@ module.exports = ({ catalogue }) => {
         );
 
         data.docs = await result;
-        res.json(data);
+        return res.json(data);
       } else {
-        res.status(404).json([]);
+        return res.status(404).json([]);
       }
     })
   );
@@ -61,7 +61,7 @@ module.exports = ({ catalogue }) => {
     tryCatch(async (req, res) => {
       const { id, ...rest } = req.body;
       const response = await PsFormation.findByIdAndUpdate(id, { ...rest }, { new: true });
-      res.json(response);
+      return res.json(response);
     })
   );
 
@@ -97,7 +97,7 @@ module.exports = ({ catalogue }) => {
         await PsFormation.findByIdAndUpdate(id_formation, { etat_reconciliation: true });
       }
 
-      res.json(result);
+      return res.json(result);
     })
   );
 
@@ -137,7 +137,7 @@ module.exports = ({ catalogue }) => {
         { $push: { matching_mna_etablissement: { ...etablissement, _id: new mongoose.Types.ObjectId() } } },
         { new: true }
       );
-      res.json(response);
+      return res.json(response);
     })
   );
 
@@ -153,7 +153,7 @@ module.exports = ({ catalogue }) => {
       }
 
       const newEtablissement = await catalogue.createEtablissement({ uai, siret });
-      res.json(newEtablissement);
+      return res.json(newEtablissement);
     })
   );
 
@@ -172,12 +172,12 @@ module.exports = ({ catalogue }) => {
       if (update) {
         if (update.nModified === 1) {
           const response = await PsFormation.findById({ _id: formation_id });
-          res.json(response);
+          return res.json(response);
         } else {
-          res.json(update);
+          return res.json(update);
         }
       } else {
-        res.status(400).json([]);
+        return res.status(400).json([]);
       }
     })
   );
