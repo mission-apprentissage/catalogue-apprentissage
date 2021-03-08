@@ -13,7 +13,12 @@ const run = async () => {
   // set "hors périmètre"
   await ConvertedFormation.updateMany(
     {
-      $or: [{ affelnet_statut: null }, { etablissement_reference_catalogue_published: false }, { published: false }],
+      $or: [
+        { affelnet_statut: null },
+        { etablissement_reference_catalogue_published: false },
+        { published: false },
+        { cfd_outdated: true },
+      ],
     },
     { $set: { affelnet_statut: "hors périmètre" } }
   );
@@ -32,6 +37,7 @@ const run = async () => {
     published: true,
     etablissement_reference_catalogue_published: true,
     affelnet_statut: "hors périmètre",
+    cfd_outdated: { $ne: true },
   };
   await ConvertedFormation.updateMany(
     {
@@ -96,6 +102,7 @@ const run = async () => {
     published: true,
     etablissement_reference_catalogue_published: true,
     affelnet_statut: { $in: ["hors périmètre", "à publier (soumis à validation)"] },
+    cfd_outdated: { $ne: true },
   };
 
   await ConvertedFormation.updateMany(

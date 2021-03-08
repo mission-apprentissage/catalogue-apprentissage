@@ -62,6 +62,7 @@ const cfdMapper = async (cfd = null) => {
       result: {
         cfd: result.cfd,
         cfd_specialite: result.specialite,
+        cfd_outdated: result.cfd_outdated,
         niveau: result.niveau,
         intitule_long: result.intitule_long,
         intitule_court: result.intitule_court,

@@ -12,6 +12,7 @@ const run = async () => {
         published: true,
         etablissement_reference_catalogue_published: true,
         parcoursup_statut: { $ne: "non publié" },
+        cfd_outdated: { $ne: true },
       },
     },
     async (formation) => {
