@@ -24,7 +24,15 @@ runScript(async ({ mailer }) => {
   const projection = { _id: 1, id_rco_formation: 1, code_commune_insee: 1, code_postal: 1 };
   const lines = [];
 
-  const computedHeaders = Object.keys(projection);
+  const headers = [
+    "id mna",
+    "id_formation",
+    "id_action",
+    "id_certifinfo",
+    "code_commune_insee",
+    "code_postal",
+    "original code postal",
+  ];
 
   await asyncForEach(formations, async (formation) => {
     const converted = await ConvertedFormation.findOne(
@@ -37,10 +45,13 @@ runScript(async ({ mailer }) => {
     if (converted) {
       const dept = `${formation.etablissement_lieu_formation_code_postal}`.substring(0, 2);
       if (!converted.code_commune_insee?.startsWith(dept) && !converted.code_postal?.startsWith(dept)) {
-        const row = computedHeaders.map((header) => {
-          return converted[header];
-        });
-
+        const row = [];
+        row.push(converted._id);
+        row.push(formation.id_formation);
+        row.push(formation.id_action);
+        row.push(formation.id_certifinfo);
+        row.push(converted.code_commune_insee);
+        row.push(converted.code_postal);
         row.push(formation.etablissement_lieu_formation_code_postal);
         const actualRow = row.join(";");
         lines.push(actualRow);
@@ -48,8 +59,7 @@ runScript(async ({ mailer }) => {
     }
   });
 
-  computedHeaders.push("original code postal");
-  const data = [computedHeaders.join(";"), ...lines].join("\n");
+  const data = [headers.join(";"), ...lines].join("\n");
 
   const date = DateTime.local().setLocale("fr").toFormat("yyyy-MM-dd");
   const attachments = [{ filename: `zip-codes-gap-${date}.csv`, content: data, contentType: "text/csv" }];

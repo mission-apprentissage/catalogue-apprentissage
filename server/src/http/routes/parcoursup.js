@@ -15,13 +15,16 @@ module.exports = ({ catalogue }) => {
     "/",
     tryCatch(async (req, res) => {
       const { type, page } = req.query;
-      let data = await PsFormation.paginate({ matching_type: type }, { page, sort: { etat_reconciliation: 1 } });
+      let data = await PsFormation.paginate(
+        { matching_type: type },
+        { page, sort: { etat_reconciliation: 1 }, lean: true }
+      );
 
       if (data.docs.length > 0) {
         const result = await Promise.all(
           data.docs.map(async (formation) => {
-            let { _doc, code_cfd, uai_affilie, uai_composante, uai_gestionnaire } = formation;
-            if (_doc.code_cfd) {
+            let { code_cfd, uai_affilie, uai_composante, uai_gestionnaire } = formation;
+            if (code_cfd) {
               const infoCfd = await getCfdInfo(code_cfd);
               const infoReconciliation = await PsReconciliation.find({
                 code_cfd: code_cfd,
@@ -33,7 +36,7 @@ module.exports = ({ catalogue }) => {
               let infobcn = infoCfd.result.intitule_long;
 
               return {
-                ...formation._doc,
+                ...formation,
                 reconciliation: infoReconciliation,
                 infobcn,
               };
