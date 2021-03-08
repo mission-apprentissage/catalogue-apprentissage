@@ -318,6 +318,11 @@ module.exports = {
         default: "null",
         description: "Lettre spécialité du code cfd",
       },
+      cfd_outdated: {
+        type: "boolean",
+        default: false,
+        description: "BCN : cfd périmé (fermeture avant le 31 aout de l'année courante)",
+      },
       mef_10_code: {
         type: "string",
         default: "null",
