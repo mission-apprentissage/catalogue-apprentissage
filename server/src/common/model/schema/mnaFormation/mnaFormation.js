@@ -337,14 +337,14 @@ const mnaFormationSchema = {
   },
   affelnet_secteur: {
     type: String,
-    enum: ["PR", "PU"],
+    enum: ["PR", "PU", null],
     default: null,
     description: "Affelnet : type d'établissement (PR: Privé / PU: Public)",
   },
-  affelnet_mef_10_code: {
-    type: String,
+  affelnet_mefs_10: {
+    type: [String],
     default: null,
-    description: "Affelnet : Code MEF 10 caractères",
+    description: "Affelnet : Codes MEF 10 caractères",
   },
 };
 

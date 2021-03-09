@@ -641,14 +641,17 @@ module.exports = {
       },
       affelnet_secteur: {
         type: "string",
-        enum: ["PR", "PU"],
+        enum: ["PR", "PU", null],
         default: "null",
         description: "Affelnet : type d'établissement (PR: Privé / PU: Public)",
       },
-      affelnet_mef_10_code: {
-        type: "string",
+      affelnet_mefs_10: {
+        type: "array",
+        items: {
+          type: "string",
+        },
         default: "null",
-        description: "Affelnet : Code MEF 10 caractères",
+        description: "Affelnet : Codes MEF 10 caractères",
       },
       _id: {
         type: "string",

@@ -1,13 +1,6 @@
 const { ConvertedFormation } = require("../../../common/model");
 const logger = require("../../../common/logger");
-const { toBePublishedRules } = require("../../common/utils/referenceUtils");
-
-const getMefRule = (...args) => {
-  const rule = args.reduce((acc, regex) => {
-    return [...acc, { mef_10_code: { $regex: regex } }, { "mefs_10.mef10": { $regex: regex } }];
-  }, []);
-  return { $or: rule };
-};
+const { aPublierSoumisAValidationRules, aPublierRules } = require("./rules");
 
 const run = async () => {
   // set "hors périmètre"
@@ -34,64 +27,12 @@ const run = async () => {
 
   // run only on those 'hors périmètre' to not overwrite actions of users !
   const filterHP = {
-    published: true,
-    etablissement_reference_catalogue_published: true,
     affelnet_statut: "hors périmètre",
-    cfd_outdated: { $ne: true },
   };
   await ConvertedFormation.updateMany(
     {
       ...filterHP,
-      $and: [
-        ...toBePublishedRules,
-        {
-          $or: [
-            {
-              diplome: "CERTIFICAT D'APTITUDES PROFESSIONNELLES",
-              $or: [
-                {
-                  ...getMefRule(/11$/),
-                  $and: [getMefRule(/^240/)],
-                },
-                {
-                  ...getMefRule(/31$/),
-                  $and: [getMefRule(/^242/)],
-                },
-              ],
-            },
-            {
-              diplome: "BAC PROFESSIONNEL",
-              ...getMefRule(/21$/),
-              $and: [getMefRule(/^246/)],
-            },
-            {
-              diplome: "BAC PROFESSIONNEL AGRICOLE",
-              ...getMefRule(/21$/),
-              $and: [getMefRule(/^273/)],
-            },
-
-            {
-              diplome: "BREVET PROFESSIONNEL",
-              ...getMefRule(/21$/),
-              $and: [getMefRule(/^254/)],
-            },
-            {
-              diplome: "BREVET DES METIERS D'ART - BREVET DES METIERS DU SPECTACLE",
-              ...getMefRule(/21$/),
-              $and: [getMefRule(/^251/)],
-            },
-            {
-              diplome: "MENTION COMPLEMENTAIRE",
-              niveau: "3 (CAP...)",
-              ...getMefRule(/11$/),
-              $and: [getMefRule(/^253/, /^274/)],
-            },
-          ],
-        },
-        {
-          niveau: { $in: ["3 (CAP...)", "4 (Bac...)"] },
-        },
-      ],
+      ...aPublierSoumisAValidationRules,
     },
     { $set: { last_update_at: Date.now(), affelnet_statut: "à publier (soumis à validation)" } }
   );
@@ -99,45 +40,13 @@ const run = async () => {
   //  set "à publier" for trainings matching affelnet eligibility rules
   // run only on those "hors périmètre" & "à publier (soumis à validation)" to not overwrite actions of users !
   const filter = {
-    published: true,
-    etablissement_reference_catalogue_published: true,
     affelnet_statut: { $in: ["hors périmètre", "à publier (soumis à validation)"] },
-    cfd_outdated: { $ne: true },
   };
 
   await ConvertedFormation.updateMany(
     {
       ...filter,
-      $and: [
-        ...toBePublishedRules,
-        {
-          $or: [
-            {
-              diplome: "CERTIFICAT D'APTITUDES PROFESSIONNELLES",
-              ...getMefRule(/21$/),
-              $and: [getMefRule(/^241/)],
-            },
-            {
-              diplome: "CERTIFICAT D'APTITUDES PROFESSIONNELLES AGRICOLES",
-              ...getMefRule(/21$/),
-              $and: [getMefRule(/^271/)],
-            },
-            {
-              diplome: "BAC PROFESSIONNEL",
-              ...getMefRule(/31$/),
-              $and: [getMefRule(/^247/)],
-            },
-            {
-              diplome: "BAC PROFESSIONNEL AGRICOLE",
-              ...getMefRule(/31$/),
-              $and: [getMefRule(/^276/)],
-            },
-          ],
-        },
-        {
-          niveau: { $in: ["3 (CAP...)", "4 (Bac...)"] },
-        },
-      ],
+      ...aPublierRules,
     },
     { $set: { last_update_at: Date.now(), affelnet_statut: "à publier" } }
   );

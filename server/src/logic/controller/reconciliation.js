@@ -42,7 +42,7 @@ async function reconciliationAffelnet(formation) {
 
         const mefs_10 = converted.mefs_10 ?? [];
         if (mefs_10.some(({ mef10 }) => mef10 === code_mef)) {
-          converted.affelnet_mef_10_code = code_mef;
+          converted.affelnet_mefs_10 = [code_mef];
         }
         await converted.save();
       }
