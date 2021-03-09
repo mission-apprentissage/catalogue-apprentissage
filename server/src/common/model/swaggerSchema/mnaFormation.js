@@ -645,6 +645,11 @@ module.exports = {
         default: "null",
         description: "Affelnet : type d'établissement (PR: Privé / PU: Public)",
       },
+      affelnet_mef_10_code: {
+        type: "string",
+        default: "null",
+        description: "Affelnet : Code MEF 10 caractères",
+      },
       _id: {
         type: "string",
         pattern: "^[0-9a-fA-F]{24}$",

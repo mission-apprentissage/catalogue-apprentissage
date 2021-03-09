@@ -106,6 +106,10 @@ const mnaFormationUpdater = async (formation, { withHistoryUpdate = true, withCo
         uai_formation = etablissementsMapping?.etablissement_formateur_uai;
       }
     }
+
+    // fill mef 10 with affelnet data if we have it
+    formation.mef_10_code = formation.mef_10_code ?? formation.affelnet_mef_10_code;
+
     const updatedFormation = {
       ...formation,
       ...cfdMapping,

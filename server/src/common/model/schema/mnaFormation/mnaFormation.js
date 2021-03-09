@@ -341,6 +341,11 @@ const mnaFormationSchema = {
     default: null,
     description: "Affelnet : type d'établissement (PR: Privé / PU: Public)",
   },
+  affelnet_mef_10_code: {
+    type: String,
+    default: null,
+    description: "Affelnet : Code MEF 10 caractères",
+  },
 };
 
 module.exports = mnaFormationSchema;
