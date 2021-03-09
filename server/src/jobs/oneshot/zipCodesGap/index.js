@@ -12,7 +12,7 @@ runScript(async ({ mailer }) => {
   const to = config.rco.reportMailingList.split(",");
 
   const formations = await RcoFormation.find(
-    { converted_to_mna: true },
+    { published: true },
     {
       id_formation: 1,
       id_action: 1,
@@ -38,7 +38,6 @@ runScript(async ({ mailer }) => {
     const converted = await ConvertedFormation.findOne(
       {
         id_rco_formation: `${formation.id_formation}|${formation.id_action}|${formation.id_certifinfo}`,
-        published: true,
       },
       projection
     );

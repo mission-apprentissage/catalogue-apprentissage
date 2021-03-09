@@ -19,7 +19,7 @@ const formation = async () => {
     PsFormation2021,
     { filter: { code_cfd: { $ne: null } }, lean: true, limit: 50 },
     async (formation) => {
-      let match = await getParcoursupCoverage(formation, "2021");
+      let match = await getParcoursupCoverage(formation, { published: true, tags: "2021" });
 
       if (!match) return;
 
