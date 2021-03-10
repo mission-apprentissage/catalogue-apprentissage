@@ -41,11 +41,11 @@ const run = async () => {
         ...toBePublishedRules,
         {
           $or: [
-            {
-              "rncp_details.code_type_certif": { $in: ["Titre", "TP"] },
-              "rncp_details.active_inactive": "ACTIVE",
-              niveau: "6 (Licence...)",
-            },
+            // {
+            //   "rncp_details.code_type_certif": { $in: ["Titre", "TP"] },
+            //   "rncp_details.active_inactive": "ACTIVE",
+            //   niveau: "6 (Licence...)",
+            // },
             { libelle_court: "DCG" },
           ],
         },
@@ -96,11 +96,11 @@ const run = async () => {
             {
               $or: [{ libelle_court: "BM", niveau_formation_diplome: "36M" }, { libelle_court: { $regex: /^TH3-/ } }],
             },
-            {
-              "rncp_details.code_type_certif": { $in: ["Titre", "TP"] },
-              "rncp_details.active_inactive": "ACTIVE",
-              niveau: "5 (BTS, DUT...)",
-            },
+            // {
+            //   "rncp_details.code_type_certif": { $in: ["Titre", "TP"] },
+            //   "rncp_details.active_inactive": "ACTIVE",
+            //   niveau: "5 (BTS, DUT...)",
+            // },
           ],
         },
         {
@@ -110,6 +110,18 @@ const run = async () => {
     },
     { $set: { last_update_at: Date.now(), parcoursup_statut: "à publier" } }
   );
+
+  // FIXME once check rncp is in prod
+  // force hors périmètre
+  await ConvertedFormation.updateMany(
+    {
+      "rncp_details.code_type_certif": { $in: ["Titre", "TP"] },
+      "rncp_details.active_inactive": "ACTIVE",
+      niveau: { $in: ["5 (BTS, DUT...)", "6 (Licence...)"] },
+    },
+    { $set: { last_update_at: Date.now(), parcoursup_statut: "hors périmètre" } }
+  );
+  // end FIXME
 
   // stats
   const totalPublished = await ConvertedFormation.countDocuments({ published: true });
