@@ -90,21 +90,28 @@ const performConversion = async () => {
 
     await createOrUpdateEtablissements(rcoFormation._doc);
 
-    const { updates, formation: convertedFormation, error } = await mnaFormationUpdater(mnaFormattedRcoFormation, {
-      withHistoryUpdate: false,
-    });
+    const { updates, formation: convertedFormation, error, serviceAvailable = true } = await mnaFormationUpdater(
+      mnaFormattedRcoFormation,
+      {
+        withHistoryUpdate: false,
+      }
+    );
 
     if (error) {
       rcoFormation.conversion_error = error;
       await rcoFormation.save();
-      // unpublish in case of errors if it was already in converted collection
-      await ConvertedFormation.findOneAndUpdate(
-        { id_rco_formation: mnaFormattedRcoFormation.id_rco_formation },
-        { published: false, update_error: error },
-        {
-          new: true,
-        }
-      );
+
+      if (serviceAvailable) {
+        // unpublish in case of errors if it was already in converted collection
+        // but don't do it if service tco is unavailable
+        await ConvertedFormation.findOneAndUpdate(
+          { id_rco_formation: mnaFormattedRcoFormation.id_rco_formation },
+          { published: false, update_error: error },
+          {
+            new: true,
+          }
+        );
+      }
 
       invalidRcoFormations.push({
         id_rco_formation: mnaFormattedRcoFormation.id_rco_formation,

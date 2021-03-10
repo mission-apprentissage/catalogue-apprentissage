@@ -26,19 +26,27 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false) => {
       return;
     }
 
-    const { updates, formation: updatedFormation, error } = await mnaFormationUpdater(formation._doc, {
-      // no need to check cp info in trainingsUpdater since it was successfully done once at converter
-      withCodePostalUpdate,
-    });
+    const { updates, formation: updatedFormation, error, serviceAvailable = true } = await mnaFormationUpdater(
+      formation._doc,
+      {
+        // no need to check cp info in trainingsUpdater since it was successfully done once at converter
+        withCodePostalUpdate,
+      }
+    );
 
     if (error) {
       formation.update_error = error;
-      // unpublish in case of errors
-      if (formation.published === true) {
-        formation.published = false;
-        // flag rco formation as not converted so that it retries during nightly jobs
-        await RcoFormation.findOneAndUpdate({ _id: rcoFormation?._id }, { converted_to_mna: false });
+
+      if (serviceAvailable) {
+        // unpublish in case of errors
+        // but don't do it if service tco is unavailable
+        if (formation.published === true) {
+          formation.published = false;
+          // flag rco formation as not converted so that it retries during nightly jobs
+          await RcoFormation.findOneAndUpdate({ _id: rcoFormation?._id }, { converted_to_mna: false });
+        }
       }
+
       await ConvertedFormation.findOneAndUpdate({ _id: formation._id }, formation, { new: true });
       invalidFormations.push({ id: formation._id, cfd: formation.cfd, error });
       return;
