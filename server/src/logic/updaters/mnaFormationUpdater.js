@@ -38,11 +38,11 @@ const mnaFormationUpdater = async (formation, { withHistoryUpdate = true, withCo
   try {
     await formationSchema.validateAsync(formation, { abortEarly: false });
 
-    const { result: cfdMapping, messages: cfdMessages } = await cfdMapper(formation.cfd);
+    const { result: cfdMapping, messages: cfdMessages, serviceAvailable } = await cfdMapper(formation.cfd);
 
     let error = parseErrors(cfdMessages);
     if (error) {
-      return { updates: null, formation, error };
+      return { updates: null, formation, error, serviceAvailable };
     }
 
     const { result: cpMapping = {}, messages: cpMessages } = withCodePostalUpdate
