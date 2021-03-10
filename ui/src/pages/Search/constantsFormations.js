@@ -192,6 +192,12 @@ const columnsDefinition = [
     editable: false,
   },
   {
+    Header: "Liste MEF rattaché",
+    accessor: ({ mefs_10 }) => mefs_10.map((x) => x.mef).join(","),
+    width: 200,
+    editable: true,
+  },
+  {
     Header: "Statut Affelnet",
     accessor: "affelnet_statut",
     width: 200,
