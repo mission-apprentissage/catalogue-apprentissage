@@ -18,7 +18,11 @@ const serializeObject = (columns, obj) => {
       value = "";
     } else if (Array.isArray(value)) {
       if (value.length && typeof value[0] === "object") {
-        value = JSON.stringify(value);
+        if (fieldNames[i] === "mefs_10") {
+          value = value.map((x) => x.mef10).join(",");
+        } else {
+          value = JSON.stringify(value);
+        }
       } else {
         value = value.join(",");
       }
