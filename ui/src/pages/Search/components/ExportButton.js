@@ -10,7 +10,6 @@ const endpointTCO =
   process.env.REACT_APP_ENDPOINT_TCO || "https://tables-correspondances.apprentissage.beta.gouv.fr/api";
 
 const serializeObject = (columns, obj) => {
-  console.log("export", columns, obj);
   const fieldNames = columns.map((c) => c.fieldName);
   const res = [];
   for (let i = 0; i < fieldNames.length; i++) {
