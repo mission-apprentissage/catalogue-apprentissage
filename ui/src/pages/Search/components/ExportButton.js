@@ -5,11 +5,12 @@ import { Button } from "@chakra-ui/react";
 import { _post } from "../../../common/httpClient";
 import { downloadCSV, CSV_SEPARATOR } from "../../../common/utils/downloadUtils";
 
-const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
+const endpointNewFront = "https://catalogue.apprentissage.beta.gouv.fr/api";
 const endpointTCO =
   process.env.REACT_APP_ENDPOINT_TCO || "https://tables-correspondances.apprentissage.beta.gouv.fr/api";
 
 const serializeObject = (columns, obj) => {
+  console.log("export", columns, obj);
   const fieldNames = columns.map((c) => c.fieldName);
   const res = [];
   for (let i = 0; i < fieldNames.length; i++) {
@@ -18,7 +19,11 @@ const serializeObject = (columns, obj) => {
       value = "";
     } else if (Array.isArray(value)) {
       if (value.length && typeof value[0] === "object") {
-        value = JSON.stringify(value);
+        if (fieldNames[i] === "mefs_10") {
+          value = value.map((x) => x.mef10).join(",");
+        } else {
+          value = JSON.stringify(value);
+        }
       } else {
         value = value.join(",");
       }

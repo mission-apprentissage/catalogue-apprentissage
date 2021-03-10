@@ -193,7 +193,7 @@ const columnsDefinition = [
   },
   {
     Header: "Liste MEF rattaché",
-    accessor: ({ mefs_10 }) => mefs_10.map((x) => x.mef10).join(","),
+    accessor: "mefs_10",
     width: 200,
     editable: true,
   },
