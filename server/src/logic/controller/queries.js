@@ -1,5 +1,4 @@
 /* eslint-disable */
-/* eslint-disable */
 
 const uai = [
   {
@@ -32,15 +31,9 @@ const uai = [
           { etablissement_gestionnaire_siret: f.siret_cerfa ?? "" },
           { etablissement_gestionnaire_siret: f.siret_map ?? "" },
         ],
-        $or: [
-          { etablissement_gestionnaire_code_postal: f.code_postal },
-          { etablissement_formateur_code_postal: f.code_postal },
-          { code_postal: f.code_postal },
-        ],
         code_commune_insee: f.code_commune_insee,
         nom_academie: f.nom_academie,
         cfd: f.code_cfd,
-        mef_10_code: f.code_mef_10,
       };
     },
   },
@@ -104,7 +97,6 @@ const uai = [
           { etablissement_gestionnaire_uai: f.uai_cerfa ?? "" },
           { etablissement_gestionnaire_uai: f.uai_map ?? "" },
         ],
-
         $or: [
           { etablissement_gestionnaire_code_postal: f.code_postal },
           { etablissement_formateur_code_postal: f.code_postal },
@@ -243,11 +235,6 @@ const cfd = [
     query: (f) => {
       return {
         $or: [
-          { etablissement_gestionnaire_code_postal: f.code_postal },
-          { etablissement_formateur_code_postal: f.code_postal },
-          { code_postal: f.code_postal },
-        ],
-        $or: [
           { etablissement_formateur_siret: f.siret_cerfa ?? "" },
           { etablissement_formateur_siret: f.siret_map ?? "" },
           { etablissement_gestionnaire_siret: f.siret_cerfa ?? "" },
@@ -255,8 +242,7 @@ const cfd = [
         ],
         cfd: f.code_cfd,
         code_commune_insee: f.code_commune_insee,
-        academie: f.academie,
-        mef_10_code: f.code_mef_10,
+        nom_academie: f.nom_academie,
       };
     },
   },
@@ -271,7 +257,7 @@ const cfd = [
         ],
         cfd: f.code_cfd,
         code_commune_insee: f.code_commune_insee,
-        academie: f.academie,
+        nom_academie: f.nom_academie,
         mef_10_code: f.code_mef_10,
       };
     },
@@ -287,7 +273,7 @@ const cfd = [
         ],
         cfd: f.code_cfd,
         code_commune_insee: f.code_commune_insee,
-        academie: f.academie,
+        nom_academie: f.nom_academie,
       };
     },
   },
