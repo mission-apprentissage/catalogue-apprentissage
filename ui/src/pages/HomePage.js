@@ -14,6 +14,7 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   Center,
+  Alert,
 } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
 import Changelog from "../common/components/Changelog/Changelog";
@@ -21,6 +22,7 @@ import changelog from "../CHANGELOG";
 import { _get } from "../common/httpClient";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
+import { ReactComponent as InfoIcon } from "../theme/assets/info-circle.svg";
 
 const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
 const endpointTCO =
@@ -65,6 +67,15 @@ export default () => {
       </Box>
       <Box bg="secondaryBackground" w="100%" py={[1, 8]} px={[1, 24]}>
         <Container maxW="xl">
+          <Alert status="warning" justifyContent="center" mb={8}>
+            <Box mr={4}>
+              <InfoIcon />
+            </Box>
+            Grâce à vos retours une anomalie a été détectée dans le code qui testait la présence d'un SIRET sur un
+            titre. Un correctif va être effectué très prochainement. En attendant, les formations à des titres en
+            apprentissage sont toutes affichées en « hors périmètre ». Nous vous informerons dès que le correctif sera
+            appliqué.»
+          </Alert>
           <Heading as="h1" fontSize="beta" mb={2}>
             Catalogue des offres de formations en apprentissage.
           </Heading>
