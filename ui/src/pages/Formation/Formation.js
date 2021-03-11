@@ -356,6 +356,9 @@ const Formation = ({
               <Text mb={4}>
                 Uai: <strong>{formation.etablissement_formateur_uai}</strong>
               </Text>
+              <Text mb={4}>
+                Siret: <strong>{formation.etablissement_formateur_siret}</strong>
+              </Text>
               <Box mb={4}>
                 <Link
                   as={NavLink}
@@ -388,6 +391,9 @@ const Formation = ({
               )}
               <Text mb={4}>
                 Uai: <strong>{formation.etablissement_gestionnaire_uai}</strong>
+              </Text>
+              <Text mb={4}>
+                Siret: <strong>{formation.etablissement_gestionnaire_siret}</strong>
               </Text>
               <Box mb={4}>
                 <Link
