@@ -39,9 +39,7 @@ const etablissement = async () => {
   );
 };
 
-module.exports = { formation, etablissement };
-
-runScript(async () => {
+const afCoverage = async () => {
   logger.info("Start Affelent coverage");
   let check = await Etablissement.find({}).countDocuments();
 
@@ -58,4 +56,12 @@ runScript(async () => {
   await etablissement();
 
   logger.info("End Affelent coverage");
-});
+};
+
+module.exports = afCoverage;
+
+if (process.env.standalone) {
+  runScript(async () => {
+    await afCoverage();
+  });
+}
