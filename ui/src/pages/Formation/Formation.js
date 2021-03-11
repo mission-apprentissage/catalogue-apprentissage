@@ -535,7 +535,13 @@ export default ({ match }) => {
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbItem as={NavLink} to="/recherche/formations-2021">
-              <BreadcrumbLink>Formations 2021</BreadcrumbLink>
+              <BreadcrumbLink>
+                Formations 2021
+                {displayedFormation &&
+                  (displayedFormation.etablissement_reference_catalogue_published
+                    ? " (Catalogue général)"
+                    : " (Catalogue non-éligible)")}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbItem isCurrentPage>
               <BreadcrumbLink>{displayedFormation?.intitule_long}</BreadcrumbLink>
