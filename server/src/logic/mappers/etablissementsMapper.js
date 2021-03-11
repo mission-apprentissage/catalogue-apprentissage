@@ -37,7 +37,7 @@ const isHabiliteRncp = ({ partenaires = [], certificateurs = [] }, siret) => {
     ({ SIRET_PARTENAIRE, HABILITATION_PARTENAIRE }) =>
       SIRET_PARTENAIRE === siret && ["HABILITATION_ORGA_FORM", "HABILITATION_FORMER"].includes(HABILITATION_PARTENAIRE)
   );
-  const isCertificateur = (certificateurs ?? []).some(({ SIRET_CERTIFICATEUR }) => SIRET_CERTIFICATEUR === siret);
+  const isCertificateur = (certificateurs ?? []).some(({ siret_certificateur }) => siret_certificateur === siret);
   return isPartenaire || isCertificateur;
 };
 
