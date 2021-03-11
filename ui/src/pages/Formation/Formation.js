@@ -194,6 +194,10 @@ const Formation = ({
               <strong>{formation.mef_10_code ?? formation?.mefs_10?.map(({ mef10 }) => mef10).join(", ")}</strong>
             </Text>
             <Text mb={4}>
+              Codes MEF 10 caractères dans le périmètre Affelnet:{" "}
+              <strong>{formation?.affelnet_mefs_10?.join(", ")}</strong>
+            </Text>
+            <Text mb={4}>
               Période d'inscription: {!edition && <FormationPeriode periode={formation.periode} />}
               {edition && <Input type="text" name="periode" onChange={handleChange} value={values.periode} />}
             </Text>
@@ -352,6 +356,9 @@ const Formation = ({
               <Text mb={4}>
                 Uai: <strong>{formation.etablissement_formateur_uai}</strong>
               </Text>
+              <Text mb={4}>
+                Siret: <strong>{formation.etablissement_formateur_siret}</strong>
+              </Text>
               <Box mb={4}>
                 <Link
                   as={NavLink}
@@ -384,6 +391,9 @@ const Formation = ({
               )}
               <Text mb={4}>
                 Uai: <strong>{formation.etablissement_gestionnaire_uai}</strong>
+              </Text>
+              <Text mb={4}>
+                Siret: <strong>{formation.etablissement_gestionnaire_siret}</strong>
               </Text>
               <Box mb={4}>
                 <Link
@@ -525,7 +535,13 @@ export default ({ match }) => {
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbItem as={NavLink} to="/recherche/formations-2021">
-              <BreadcrumbLink>Formations 2021</BreadcrumbLink>
+              <BreadcrumbLink>
+                Formations 2021
+                {displayedFormation &&
+                  (displayedFormation.etablissement_reference_catalogue_published
+                    ? " (Catalogue général)"
+                    : " (Catalogue non-éligible)")}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbItem isCurrentPage>
               <BreadcrumbLink>{displayedFormation?.intitule_long}</BreadcrumbLink>
