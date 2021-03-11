@@ -32,14 +32,27 @@ const getBcnInfo = async (options) => {
   }
 };
 
-const getCfdInfo = async (cfd) => {
+const getCfdInfo = async (cfd, { checkService = false }) => {
   try {
     const { data } = await axios.post(`${apiEndpoint}/v1/cfd`, {
       cfd,
     });
+
+    if (checkService) {
+      return { result: data, serviceAvailable: true };
+    }
     return data;
   } catch (error) {
     logger.error(`getCfdInfo: something went wrong`);
+
+    if (checkService) {
+      let serviceAvailable = true;
+      if (!error.response || (error.response.status >= 500 && error.response.status <= 599)) {
+        serviceAvailable = false;
+      }
+      return { result: null, serviceAvailable };
+    }
+
     return null;
   }
 };

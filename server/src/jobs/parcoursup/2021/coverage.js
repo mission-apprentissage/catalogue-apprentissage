@@ -49,15 +49,19 @@ const etablissement = async () => {
 module.exports = { formation, etablissement };
 
 runScript(async () => {
+  logger.info("Start Parcoursup coverage");
   let check = await Etablissement.find({}).countDocuments();
-
-  await formation();
 
   if (check === 0) {
     logger.error("No establishment found, please import collection first");
 
     return;
   }
+  logger.info("Start formation coverage");
+  await formation();
 
+  logger.info("Start etablissement coverage");
   await etablissement();
+
+  logger.info("End Parcoursup coverage");
 });
