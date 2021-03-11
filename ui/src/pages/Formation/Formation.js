@@ -15,6 +15,8 @@ import {
   Link,
   Spinner,
   Text,
+  UnorderedList,
+  ListItem,
   useDisclosure,
 } from "@chakra-ui/react";
 import { NavLink, useHistory } from "react-router-dom";
@@ -130,6 +132,27 @@ const getGeoportailUrl = ({ lieu_formation_geo_coordonnees = "" }) => {
   return `https://www.geoportail.gouv.fr/carte?c=${reversedCoords}&z=19&l0=${ignStyleLayer}&l1=${poiEnseignementSecondaire}&l2=${poiEnseignementSup}&permalink=yes`;
 };
 
+const HabilitationPartenaire = ({ habilitation }) => {
+  let color;
+  switch (habilitation) {
+    case "HABILITATION_ORGA_FORM":
+    case "HABILITATION_FORMER":
+      color = "green";
+      break;
+    case "HABILITATION_ORGANISER":
+      color = "red";
+      break;
+    default:
+      break;
+  }
+
+  return (
+    <Text as="strong" style={{ color }}>
+      {habilitation}
+    </Text>
+  );
+};
+
 const Formation = ({
   formation,
   edition,
@@ -193,10 +216,12 @@ const Formation = ({
               Codes MEF 10 caractères:{" "}
               <strong>{formation.mef_10_code ?? formation?.mefs_10?.map(({ mef10 }) => mef10).join(", ")}</strong>
             </Text>
-            <Text mb={4}>
-              Codes MEF 10 caractères dans le périmètre Affelnet:{" "}
-              <strong>{formation?.affelnet_mefs_10?.join(", ")}</strong>
-            </Text>
+            {formation?.affelnet_mefs_10?.length > 0 && (
+              <Text mb={4}>
+                Codes MEF 10 caractères dans le périmètre <i>Affelnet</i>:{" "}
+                <strong>{formation?.affelnet_mefs_10?.join(", ")}</strong>
+              </Text>
+            )}
             <Text mb={4}>
               Période d'inscription: {!edition && <FormationPeriode periode={formation.periode} />}
               {edition && <Input type="text" name="periode" onChange={handleChange} value={values.periode} />}
@@ -267,7 +292,6 @@ const Formation = ({
             <Text mb={4}>
               Codes ROME: <strong>{formation.rome_codes.join(", ")}</strong>
             </Text>
-
             <Box>
               {formation.opcos && formation.opcos.length === 0 && <Text mb={4}>Aucun OPCO rattaché</Text>}
               {formation.opcos && formation.opcos.length > 0 && (
@@ -276,6 +300,37 @@ const Formation = ({
                 </Text>
               )}
             </Box>
+            {formation.rncp_details && (
+              <>
+                <Text mb={4}>
+                  Certificateurs:{" "}
+                  <strong>
+                    {formation.rncp_details.certificateurs
+                      ?.filter(({ certificateur, siret_certificateur }) => certificateur || siret_certificateur)
+                      ?.map(
+                        ({ certificateur, siret_certificateur }) => `${certificateur} (siret: ${siret_certificateur})`
+                      )
+                      .join(", ")}
+                  </strong>
+                </Text>
+                <Text as="div" mb={4}>
+                  Partenaires: <br />
+                  L'habilitation ORGANISER seule n'ouvre pas les droits
+                  <UnorderedList>
+                    {formation.rncp_details.partenaires?.map(
+                      ({ NOM_PARTENAIRE, SIRET_PARTENAIRE, HABILITATION_PARTENAIRE }) => (
+                        <ListItem key={SIRET_PARTENAIRE}>
+                          <strong>
+                            {NOM_PARTENAIRE} (siret: {SIRET_PARTENAIRE}) :{" "}
+                          </strong>
+                          <HabilitationPartenaire habilitation={HABILITATION_PARTENAIRE} />
+                        </ListItem>
+                      )
+                    )}
+                  </UnorderedList>
+                </Text>
+              </>
+            )}
           </Box>
         </GridItem>
         <GridItem colSpan={[12, 5]} bg="#fafbfc" p={8} borderBottomRightRadius={4} borderBottomLeftRadius={[4, 0]}>
@@ -534,8 +589,8 @@ export default ({ match }) => {
                 Accueil
               </BreadcrumbLink>
             </BreadcrumbItem>
-            <BreadcrumbItem as={NavLink} to="/recherche/formations-2021">
-              <BreadcrumbLink>
+            <BreadcrumbItem>
+              <BreadcrumbLink as={NavLink} to="/recherche/formations-2021">
                 Formations 2021
                 {displayedFormation &&
                   (displayedFormation.etablissement_reference_catalogue_published
