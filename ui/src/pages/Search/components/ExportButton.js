@@ -10,19 +10,17 @@ const endpointTCO =
   process.env.REACT_APP_ENDPOINT_TCO || "https://tables-correspondances.apprentissage.beta.gouv.fr/api";
 
 const serializeObject = (columns, obj) => {
-  const fieldNames = columns.map((c) => c.fieldName);
   const res = [];
-  for (let i = 0; i < fieldNames.length; i++) {
-    let value = obj[fieldNames[i]];
+
+  columns.forEach((c) => {
+    let value = c.fieldName.split(".").reduce((acc, curr) => acc[curr], obj);
     if (!value) {
       value = "";
+    } else if (typeof c.formatter === "function") {
+      value = c.formatter(value);
     } else if (Array.isArray(value)) {
       if (value.length && typeof value[0] === "object") {
-        if (fieldNames[i] === "mefs_10") {
-          value = value.map((x) => x.mef10).join(",");
-        } else {
-          value = JSON.stringify(value);
-        }
+        value = JSON.stringify(value);
       } else {
         value = value.join(",");
       }
@@ -32,7 +30,7 @@ const serializeObject = (columns, obj) => {
       value = `${value}`.trim().replace(/"/g, "'").replace(/;/g, ",").replace(/\n/g, "").replace(/\r/g, "");
     }
     res.push(value !== "" ? `="${value}"` : "");
-  }
+  });
   return res.join(CSV_SEPARATOR);
 };
 
@@ -133,9 +131,7 @@ const ExportButton = ({ index, filters, columns, defaultQuery = { match_all: {} 
   }
 
   const onQueryChange = async (prevQuery, nextQuery) => {
-    // console.log("here");
     // if (countMount === 1) {
-    console.log(nextQuery);
     let csv = await getDataAsCSV(index, nextQuery, columns, setProgress);
     let fileName = `${index}_${new Date().toJSON()}.csv`;
     downloadCSV(fileName, csv);

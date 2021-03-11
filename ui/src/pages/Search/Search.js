@@ -258,7 +258,11 @@ export default ({ match }) => {
                                   filters={FILTERS}
                                   columns={columnsDefinition
                                     .filter((def) => !def.debug)
-                                    .map((def) => ({ header: def.Header, fieldName: def.accessor }))}
+                                    .map((def) => ({
+                                      header: def.Header,
+                                      fieldName: def.accessor,
+                                      formatter: def.formatter,
+                                    }))}
                                   defaultQuery={{
                                     match: {
                                       published: true,
