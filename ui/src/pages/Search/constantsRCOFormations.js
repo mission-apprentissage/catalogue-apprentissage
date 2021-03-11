@@ -198,6 +198,12 @@ const columnsDefinition = [
     editable: true,
   },
   {
+    Header: "Liste MEF affelnet",
+    accessor: "affelnet_mefs_10",
+    width: 200,
+    editable: false,
+  },
+  {
     Header: "Statut Affelnet",
     accessor: "affelnet_statut",
     width: 200,

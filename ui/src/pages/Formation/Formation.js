@@ -194,6 +194,10 @@ const Formation = ({
               <strong>{formation.mef_10_code ?? formation?.mefs_10?.map(({ mef10 }) => mef10).join(", ")}</strong>
             </Text>
             <Text mb={4}>
+              Codes MEF 10 caractères dans le périmètre Affelnet:{" "}
+              <strong>{formation?.affelnet_mefs_10?.join(", ")}</strong>
+            </Text>
+            <Text mb={4}>
               Période d'inscription: {!edition && <FormationPeriode periode={formation.periode} />}
               {edition && <Input type="text" name="periode" onChange={handleChange} value={values.periode} />}
             </Text>
