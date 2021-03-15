@@ -11,6 +11,10 @@ const aPublierVerifierAccesDirectPostBacRules = {
           niveau: "6 (Licence...)",
         },
         { libelle_court: "DCG" },
+        {
+          "rncp_details.certificateurs.certificateur": { $in: [/ministère du travail/i, /ministere du travail/i] },
+          niveau: "6 (Licence...)",
+        },
       ],
     },
   ],
@@ -45,6 +49,10 @@ const aPublierRules = {
         {
           "rncp_details.code_type_certif": { $in: ["Titre", "TP"] },
           "rncp_details.active_inactive": "ACTIVE",
+          niveau: "5 (BTS, DUT...)",
+        },
+        {
+          "rncp_details.certificateurs.certificateur": { $in: [/ministère du travail/i, /ministere du travail/i] },
           niveau: "5 (BTS, DUT...)",
         },
       ],
