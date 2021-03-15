@@ -68,7 +68,6 @@ function getMapping(schema, requireAsciiFolding = false) {
         case "Boolean":
           properties[key] = { type: "boolean" };
           break;
-
         case "Array":
           if (schema.paths[key].caster.instance === "String") {
             properties[key] = {
@@ -79,7 +78,9 @@ function getMapping(schema, requireAsciiFolding = false) {
           } else if (schema.paths[key].caster.instance === "Mixed") {
             properties[key] = { type: "nested" };
           }
-
+          break;
+        case "Mixed":
+          properties[key] = { type: "nested" };
           break;
         default:
           break;

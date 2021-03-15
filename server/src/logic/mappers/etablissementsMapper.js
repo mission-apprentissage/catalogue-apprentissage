@@ -34,8 +34,8 @@ const getEstablishmentAddress = (establishment) => {
 
 const isHabiliteRncp = ({ partenaires = [], certificateurs = [] }, siret) => {
   const isPartenaire = (partenaires ?? []).some(
-    ({ SIRET_PARTENAIRE, HABILITATION_PARTENAIRE }) =>
-      SIRET_PARTENAIRE === siret && ["HABILITATION_ORGA_FORM", "HABILITATION_FORMER"].includes(HABILITATION_PARTENAIRE)
+    ({ Siret_Partenaire, Habilitation_Partenaire }) =>
+      Siret_Partenaire === siret && ["HABILITATION_ORGA_FORM", "HABILITATION_FORMER"].includes(Habilitation_Partenaire)
   );
   const isCertificateur = (certificateurs ?? []).some(({ siret_certificateur }) => siret_certificateur === siret);
   return isPartenaire || isCertificateur;

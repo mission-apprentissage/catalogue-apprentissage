@@ -134,13 +134,19 @@ const getGeoportailUrl = ({ lieu_formation_geo_coordonnees = "" }) => {
 
 const HabilitationPartenaire = ({ habilitation }) => {
   let color;
+  let text = habilitation;
   switch (habilitation) {
     case "HABILITATION_ORGA_FORM":
+      color = "green";
+      text = "ORGANISER ET FORMER";
+      break;
     case "HABILITATION_FORMER":
       color = "green";
+      text = "FORMER";
       break;
     case "HABILITATION_ORGANISER":
       color = "red";
+      text = "ORGANISER";
       break;
     default:
       break;
@@ -148,7 +154,7 @@ const HabilitationPartenaire = ({ habilitation }) => {
 
   return (
     <Text as="strong" style={{ color }}>
-      {habilitation}
+      {text}
     </Text>
   );
 };
@@ -318,12 +324,12 @@ const Formation = ({
                   L'habilitation ORGANISER seule n'ouvre pas les droits
                   <UnorderedList>
                     {formation.rncp_details.partenaires?.map(
-                      ({ NOM_PARTENAIRE, SIRET_PARTENAIRE, HABILITATION_PARTENAIRE }) => (
-                        <ListItem key={SIRET_PARTENAIRE}>
+                      ({ Nom_Partenaire, Siret_Partenaire, Habilitation_Partenaire }) => (
+                        <ListItem key={Siret_Partenaire}>
                           <strong>
-                            {NOM_PARTENAIRE} (siret: {SIRET_PARTENAIRE}) :{" "}
+                            {Nom_Partenaire} (siret: {Siret_Partenaire}) :{" "}
                           </strong>
-                          <HabilitationPartenaire habilitation={HABILITATION_PARTENAIRE} />
+                          <HabilitationPartenaire habilitation={Habilitation_Partenaire} />
                         </ListItem>
                       )
                     )}
