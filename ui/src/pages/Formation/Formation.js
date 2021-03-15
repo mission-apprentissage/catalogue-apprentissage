@@ -171,7 +171,9 @@ const Formation = ({
   pendingFormation,
 }) => {
   const oneEstablishment = formation.etablissement_gestionnaire_siret === formation.etablissement_formateur_siret;
-
+  const filteredPartenaires = formation.rncp_details?.partenaires?.filter(({ Siret_Partenaire }) =>
+    [formation.etablissement_gestionnaire_siret, formation.etablissement_formateur_siret].includes(Siret_Partenaire)
+  );
   return (
     <Box bg="#fafbfc" boxShadow="0 2px 2px 0 rgba(215, 215, 215, 0.5)" borderRadius={4}>
       <Flex
@@ -319,22 +321,33 @@ const Formation = ({
                       .join(", ")}
                   </strong>
                 </Text>
-                <Text as="div" mb={4}>
-                  Partenaires: <br />
-                  L'habilitation ORGANISER seule n'ouvre pas les droits
-                  <UnorderedList>
-                    {formation.rncp_details.partenaires?.map(
-                      ({ Nom_Partenaire, Siret_Partenaire, Habilitation_Partenaire }) => (
-                        <ListItem key={Siret_Partenaire}>
-                          <strong>
-                            {Nom_Partenaire} (siret: {Siret_Partenaire}) :{" "}
-                          </strong>
-                          <HabilitationPartenaire habilitation={Habilitation_Partenaire} />
-                        </ListItem>
-                      )
+                {["Titre", "TP"].includes(formation.rncp_details.code_type_certif) && (
+                  <Text as="div" mb={4}>
+                    Partenaires: <br />
+                    {filteredPartenaires.length > 0 ? (
+                      <>
+                        L'habilitation ORGANISER seule n'ouvre pas les droits
+                        <UnorderedList>
+                          {filteredPartenaires.map(({ Nom_Partenaire, Siret_Partenaire, Habilitation_Partenaire }) => (
+                            <ListItem key={Siret_Partenaire}>
+                              <strong>
+                                {Nom_Partenaire} (siret: {Siret_Partenaire}) :{" "}
+                              </strong>
+                              <HabilitationPartenaire habilitation={Habilitation_Partenaire} />
+                            </ListItem>
+                          ))}
+                        </UnorderedList>
+                      </>
+                    ) : (
+                      <>
+                        Aucune habilitation sur la fiche pour ce SIRET.
+                        <br />
+                        SIRET formateur: {formation.etablissement_formateur_siret}, SIRET gestionnaire:{" "}
+                        {formation.etablissement_gestionnaire_siret}.
+                      </>
                     )}
-                  </UnorderedList>
-                </Text>
+                  </Text>
+                )}
               </>
             )}
           </Box>

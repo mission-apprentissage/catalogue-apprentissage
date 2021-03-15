@@ -14,6 +14,7 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   Center,
+  Alert,
 } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
 import Changelog from "../common/components/Changelog/Changelog";
@@ -21,6 +22,7 @@ import changelog from "../CHANGELOG";
 import { _get } from "../common/httpClient";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
+import { ReactComponent as InfoIcon } from "../theme/assets/info-circle.svg";
 
 const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
 const endpointTCO =
@@ -65,6 +67,35 @@ export default () => {
       </Box>
       <Box bg="secondaryBackground" w="100%" py={[1, 8]} px={[1, 24]}>
         <Container maxW="xl">
+          <Alert status="info" justifyContent="center" mb={8}>
+            <Box mr={4}>
+              <InfoIcon />
+            </Box>
+            <Text>
+              L’anomalie concernant les titres en apprentissages est désormais résolue. La mention « à publier » est de
+              nouveau appliquée aux formations à des titres Niv 5, et la mention “à publier (vérifier accès direct post
+              bac)” à des titres de Niv 6 proposées soit pour des titres dont le certificateur est le Ministère du
+              Travail, soit pour des titres ayant d'autres certificateurs quand le SIRET des établissements est
+              EXPLICITEMENT mentionné sur la fiche RNCP et habilité soit à FORMER, soit à ORGANISER et à FORMER. Les
+              formations à des titres en apprentissage proposées par des établissements dont le SIRET ne figure pas sur
+              la fiche RNCP du titre en question, ou qui sont simplement habilités à ORGANISER sont affichées dans le
+              catalogue en « non éligible ». Nous avons ajouté dans la fiche formation la mention du certificateur, et
+              la mention de l'habilitation délivrée. En effet, pour mémoire : il appartient à l'établissement de se
+              rapprocher du certificateur pour solliciter la mise à jour éventuelle des données (validité, certificateur
+              et/ou établissements partenaires, voie(s) d’accès...) ou de se mettre à jour auprès de France Compétences
+              :{" "}
+              <Link
+                as="span"
+                href="mailto:certificationprofessionnelle@francecompetences.fr"
+                textDecoration="underline"
+                color="blue.500"
+                fontWeight="bold"
+              >
+                certificationprofessionnelle@francecompetences.fr
+              </Link>
+              .
+            </Text>
+          </Alert>
           <Heading as="h1" fontSize="beta" mb={2}>
             Catalogue des offres de formations en apprentissage.
           </Heading>

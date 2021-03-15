@@ -94,7 +94,7 @@ export default function Rule({ fields, operators, combinators, collection, ...pr
             value,
             onChange: (event, { newValue }) => setValue(newValue),
             className: "react-es-rule-value form-control",
-            style: { margin: 5, height: "2.5rem" },
+            style: { margin: 5, height: "2.5rem", borderRadius: 5, border: "1px solid #e2e8f0", paddingLeft: 5 },
             autoComplete: "new-password",
           }}
         />
