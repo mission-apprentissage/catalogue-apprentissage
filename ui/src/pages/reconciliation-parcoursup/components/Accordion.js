@@ -114,8 +114,6 @@ export default ({ data }) => {
     }
   );
 
-  console.log("rec", reconciliation);
-
   return (
     <Box bg="white" m={3}>
       <AccordionItem>
