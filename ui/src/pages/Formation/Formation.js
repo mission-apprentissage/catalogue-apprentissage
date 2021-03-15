@@ -134,13 +134,19 @@ const getGeoportailUrl = ({ lieu_formation_geo_coordonnees = "" }) => {
 
 const HabilitationPartenaire = ({ habilitation }) => {
   let color;
+  let text = habilitation;
   switch (habilitation) {
     case "HABILITATION_ORGA_FORM":
+      color = "green";
+      text = "ORGANISER ET FORMER";
+      break;
     case "HABILITATION_FORMER":
       color = "green";
+      text = "FORMER";
       break;
     case "HABILITATION_ORGANISER":
       color = "red";
+      text = "ORGANISER";
       break;
     default:
       break;
@@ -148,7 +154,7 @@ const HabilitationPartenaire = ({ habilitation }) => {
 
   return (
     <Text as="strong" style={{ color }}>
-      {habilitation}
+      {text}
     </Text>
   );
 };

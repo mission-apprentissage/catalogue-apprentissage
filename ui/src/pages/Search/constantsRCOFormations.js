@@ -196,6 +196,7 @@ const columnsDefinition = [
     accessor: "mefs_10",
     width: 200,
     editable: true,
+    formatter: (value) => value.map((x) => x.mef10).join(","),
   },
   {
     Header: "Liste MEF affelnet",
@@ -337,6 +338,30 @@ const columnsDefinition = [
     accessor: "etablissement_reference_catalogue_published",
     width: 200,
     editable: false,
+  },
+  {
+    Header: "Certificateurs",
+    accessor: "rncp_details.certificateurs",
+    width: 200,
+    editable: false,
+    formatter: (value) =>
+      value
+        .filter(({ certificateur, siret_certificateur }) => certificateur || siret_certificateur)
+        ?.map(({ certificateur, siret_certificateur }) => `${certificateur} (siret: ${siret_certificateur})`)
+        .join(", "),
+  },
+  {
+    Header: "Partenaires",
+    accessor: "rncp_details.partenaires",
+    width: 200,
+    editable: false,
+    formatter: (value) =>
+      value
+        ?.map(
+          ({ NOM_PARTENAIRE, SIRET_PARTENAIRE, HABILITATION_PARTENAIRE }) =>
+            `${NOM_PARTENAIRE} (siret: ${SIRET_PARTENAIRE}) : ${HABILITATION_PARTENAIRE}`
+        )
+        .join(", "),
   },
 ];
 
