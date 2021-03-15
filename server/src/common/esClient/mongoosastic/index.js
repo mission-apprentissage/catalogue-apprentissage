@@ -35,7 +35,7 @@ function getMapping(schema, requireAsciiFolding = false) {
     const key = Object.keys(schema.paths)[i];
 
     const exclude = ["id", "__v", "_id"];
-    if (exclude.includes(key)) {
+    if (exclude.includes(key) || schema.paths[key]?.options?.noIndex === true) {
       continue;
     }
     const mongooseType = schema.paths[key].instance;
