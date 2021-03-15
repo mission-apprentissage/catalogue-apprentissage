@@ -324,12 +324,12 @@ const Formation = ({
                   L'habilitation ORGANISER seule n'ouvre pas les droits
                   <UnorderedList>
                     {formation.rncp_details.partenaires?.map(
-                      ({ NOM_PARTENAIRE, SIRET_PARTENAIRE, HABILITATION_PARTENAIRE }) => (
-                        <ListItem key={SIRET_PARTENAIRE}>
+                      ({ Nom_Partenaire, Siret_Partenaire, Habilitation_Partenaire }) => (
+                        <ListItem key={Siret_Partenaire}>
                           <strong>
-                            {NOM_PARTENAIRE} (siret: {SIRET_PARTENAIRE}) :{" "}
+                            {Nom_Partenaire} (siret: {Siret_Partenaire}) :{" "}
                           </strong>
-                          <HabilitationPartenaire habilitation={HABILITATION_PARTENAIRE} />
+                          <HabilitationPartenaire habilitation={Habilitation_Partenaire} />
                         </ListItem>
                       )
                     )}

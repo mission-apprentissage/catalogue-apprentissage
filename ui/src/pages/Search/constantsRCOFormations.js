@@ -358,8 +358,8 @@ const columnsDefinition = [
     formatter: (value) =>
       value
         ?.map(
-          ({ NOM_PARTENAIRE, SIRET_PARTENAIRE, HABILITATION_PARTENAIRE }) =>
-            `${NOM_PARTENAIRE} (siret: ${SIRET_PARTENAIRE}) : ${HABILITATION_PARTENAIRE}`
+          ({ Nom_Partenaire, Siret_Partenaire, Habilitation_Partenaire }) =>
+            `${Nom_Partenaire} (siret: ${Siret_Partenaire}) : ${Habilitation_Partenaire}`
         )
         .join(", "),
   },
