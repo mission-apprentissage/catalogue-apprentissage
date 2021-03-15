@@ -80,7 +80,7 @@ export default ({ data }) => {
       }),
     {
       onSuccess: (data) => {
-        setReconciliation([data]);
+        setReconciliation(data);
       },
       onError: (error) => {
         console.log("error", error);
