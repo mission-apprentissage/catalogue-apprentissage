@@ -33,6 +33,16 @@ const getEstablishmentAddress = (establishment) => {
 };
 
 const isHabiliteRncp = ({ partenaires = [], certificateurs = [] }, siret) => {
+  const habiliteList = [
+    "Ministère du travail",
+    "Ministère chargé de l'Emploi",
+    "Ministère du Travail - Délégation Générale à l'Emploi et à la Formation Professionnelle (DGEFP)",
+  ];
+
+  if ((certificateurs ?? []).some(({ certificateur }) => habiliteList.includes(certificateur))) {
+    return true;
+  }
+
   const isPartenaire = (partenaires ?? []).some(
     ({ Siret_Partenaire, Habilitation_Partenaire }) =>
       Siret_Partenaire === siret && ["HABILITATION_ORGA_FORM", "HABILITATION_FORMER"].includes(Habilitation_Partenaire)
