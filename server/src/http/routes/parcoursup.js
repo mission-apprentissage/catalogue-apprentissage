@@ -1,4 +1,4 @@
-const { PsFormation, PsReconciliation } = require("../../common/model");
+const { PsReconciliation, PsFormation2021 } = require("../../common/model");
 const combinate = require("../../logic/mappers/psReconciliationMapper");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const mongoose = require("mongoose");
@@ -15,7 +15,7 @@ module.exports = ({ catalogue }) => {
     "/",
     tryCatch(async (req, res) => {
       const { type, page } = req.query;
-      let data = await PsFormation.paginate(
+      let data = await PsFormation2021.paginate(
         { matching_type: type },
         { page, sort: { etat_reconciliation: 1 }, lean: true }
       );
@@ -26,6 +26,7 @@ module.exports = ({ catalogue }) => {
             let { code_cfd, uai_affilie, uai_composante, uai_gestionnaire } = formation;
             if (code_cfd) {
               const infoCfd = await getCfdInfo(code_cfd);
+
               const infoReconciliation = await PsReconciliation.findOne({
                 code_cfd: code_cfd,
                 uai_affilie,
@@ -60,7 +61,7 @@ module.exports = ({ catalogue }) => {
     "/",
     tryCatch(async (req, res) => {
       const { id, ...rest } = req.body;
-      const response = await PsFormation.findByIdAndUpdate(id, { ...rest }, { new: true });
+      const response = await PsFormation2021.findByIdAndUpdate(id, { ...rest }, { new: true });
       return res.json(response);
     })
   );
@@ -94,7 +95,7 @@ module.exports = ({ catalogue }) => {
       );
 
       if (result) {
-        await PsFormation.findByIdAndUpdate(id_formation, { etat_reconciliation: true });
+        await PsFormation2021.findByIdAndUpdate(id_formation, { etat_reconciliation: true });
       }
 
       return res.json(result);
@@ -132,7 +133,7 @@ module.exports = ({ catalogue }) => {
     "/",
     tryCatch(async (req, res) => {
       const { formation_id, etablissement } = req.body;
-      const response = await PsFormation.findByIdAndUpdate(
+      const response = await PsFormation2021.findByIdAndUpdate(
         formation_id,
         { $push: { matching_mna_etablissement: { ...etablissement, _id: new mongoose.Types.ObjectId() } } },
         { new: true }
@@ -164,14 +165,14 @@ module.exports = ({ catalogue }) => {
     "/etablissement",
     tryCatch(async (req, res) => {
       const { formation_id, etablissement_id, type } = req.body;
-      const update = await PsFormation.updateOne(
+      const update = await PsFormation2021.updateOne(
         { _id: formation_id },
         { $set: { "matching_mna_etablissement.$[elem].type": type } },
         { arrayFilters: [{ "elem._id": new mongoose.Types.ObjectId(etablissement_id) }] }
       );
       if (update) {
         if (update.nModified === 1) {
-          const response = await PsFormation.findById({ _id: formation_id });
+          const response = await PsFormation2021.findById({ _id: formation_id });
           return res.json(response);
         } else {
           return res.json(update);
