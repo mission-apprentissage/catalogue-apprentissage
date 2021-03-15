@@ -131,11 +131,15 @@ async function getEtablissementCoverage(formations) {
       if (!uai_formation && !etablissement_formateur_uai && !etablissement_gestionnaire_uai) {
         if (etablissement_formateur_id) {
           let formateur = await Etablissement.findById(etablissement_formateur_id);
-          match.push({ ...formatEtablissement(formateur), matched_uai: "BY_ID_FORMATEUR" });
+          if (formateur) {
+            match.push({ ...formatEtablissement(formateur), matched_uai: "BY_ID_FORMATEUR" });
+          }
         }
         if (etablissement_gestionnaire_id) {
           let gestionnaire = await Etablissement.findById(etablissement_gestionnaire_id);
-          match.push({ ...formatEtablissement(gestionnaire), matched_uai: "BY_ID_GESTIONNAIRE" });
+          if (gestionnaire) {
+            match.push({ ...formatEtablissement(gestionnaire), matched_uai: "BY_ID_GESTIONNAIRE" });
+          }
         }
         return;
       }
