@@ -32,7 +32,7 @@ const getBcnInfo = async (options) => {
   }
 };
 
-const getCfdInfo = async (cfd, { checkService = false }) => {
+const getCfdInfo = async (cfd, { checkService = false } = {}) => {
   try {
     const { data } = await axios.post(`${apiEndpoint}/v1/cfd`, {
       cfd,
