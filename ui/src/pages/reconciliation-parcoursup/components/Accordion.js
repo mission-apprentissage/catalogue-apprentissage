@@ -84,10 +84,10 @@ export default ({ data }) => {
       }),
     {
       onSuccess: (data) => {
-        setReconciliation([data]);
+        setReconciliation(data);
       },
       onError: (error) => {
-        console.log("error", error);
+        console.log("Erreur validation réconciliation:", error);
       },
     }
   );
@@ -113,6 +113,8 @@ export default ({ data }) => {
       },
     }
   );
+
+  console.log("rec", reconciliation);
 
   return (
     <Box bg="white" m={3}>
