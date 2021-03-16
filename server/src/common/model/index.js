@@ -31,4 +31,6 @@ module.exports = {
   AfFormation: createModel("afformation", schema.afFormationSchema),
   AfReconciliation: createModel("afreconciliation", schema.afReconciliationSchema),
   Etablissement: createModel("etablissement", schema.etablissementSchema),
+  PsFormation2021: createModel("psformations2021", schema.psFormation2021Schema),
+  SandboxFormation: createModel("sandboxformation", schema.mnaFormationSchema),
 };

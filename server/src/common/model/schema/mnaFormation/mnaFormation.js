@@ -17,6 +17,11 @@ const mnaFormationSchema = {
     default: null,
     description: "Lettre spécialité du code cfd",
   },
+  cfd_outdated: {
+    type: Boolean,
+    default: false,
+    description: "BCN : cfd périmé (fermeture avant le 31 aout de l'année courante)",
+  },
   mef_10_code: {
     type: String,
     default: null,
@@ -253,6 +258,7 @@ const mnaFormationSchema = {
     type: [Object],
     default: [],
     description: "Historique des mises à jours",
+    noIndex: true,
   },
   last_update_at: {
     type: Date,
@@ -332,9 +338,14 @@ const mnaFormationSchema = {
   },
   affelnet_secteur: {
     type: String,
-    enum: ["PR", "PU"],
+    enum: ["PR", "PU", null],
     default: null,
     description: "Affelnet : type d'établissement (PR: Privé / PU: Public)",
+  },
+  affelnet_mefs_10: {
+    type: [String],
+    default: null,
+    description: "Affelnet : Codes MEF 10 caractères",
   },
 };
 

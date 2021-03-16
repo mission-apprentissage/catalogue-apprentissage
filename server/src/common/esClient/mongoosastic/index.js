@@ -35,7 +35,7 @@ function getMapping(schema, requireAsciiFolding = false) {
     const key = Object.keys(schema.paths)[i];
 
     const exclude = ["id", "__v", "_id"];
-    if (exclude.includes(key)) {
+    if (exclude.includes(key) || schema.paths[key]?.options?.noIndex === true) {
       continue;
     }
     const mongooseType = schema.paths[key].instance;
@@ -68,7 +68,6 @@ function getMapping(schema, requireAsciiFolding = false) {
         case "Boolean":
           properties[key] = { type: "boolean" };
           break;
-
         case "Array":
           if (schema.paths[key].caster.instance === "String") {
             properties[key] = {
@@ -76,8 +75,12 @@ function getMapping(schema, requireAsciiFolding = false) {
               fields: { keyword: { type: "keyword", ignore_above: 256 } },
               ...asciiFoldingParameters,
             };
+          } else if (schema.paths[key].caster.instance === "Mixed") {
+            properties[key] = { type: "nested" };
           }
-
+          break;
+        case "Mixed":
+          properties[key] = { type: "nested" };
           break;
         default:
           break;

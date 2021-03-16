@@ -33,11 +33,21 @@ const getEstablishmentAddress = (establishment) => {
 };
 
 const isHabiliteRncp = ({ partenaires = [], certificateurs = [] }, siret) => {
+  const habiliteList = [
+    "Ministère du travail",
+    "Ministère chargé de l'Emploi",
+    "Ministère du Travail - Délégation Générale à l'Emploi et à la Formation Professionnelle (DGEFP)",
+  ];
+
+  if ((certificateurs ?? []).some(({ certificateur }) => habiliteList.includes(certificateur))) {
+    return true;
+  }
+
   const isPartenaire = (partenaires ?? []).some(
-    ({ SIRET_PARTENAIRE, HABILITATION_PARTENAIRE }) =>
-      SIRET_PARTENAIRE === siret && ["HABILITATION_ORGA_FORM", "HABILITATION_FORMER"].includes(HABILITATION_PARTENAIRE)
+    ({ Siret_Partenaire, Habilitation_Partenaire }) =>
+      Siret_Partenaire === siret && ["HABILITATION_ORGA_FORM", "HABILITATION_FORMER"].includes(Habilitation_Partenaire)
   );
-  const isCertificateur = (certificateurs ?? []).some(({ SIRET_CERTIFICATEUR }) => SIRET_CERTIFICATEUR === siret);
+  const isCertificateur = (certificateurs ?? []).some(({ siret_certificateur }) => siret_certificateur === siret);
   return isPartenaire || isCertificateur;
 };
 
@@ -115,6 +125,21 @@ const mapEtablissementKeys = async (
   };
 };
 
+const isInCatalogEligible = (referenceEstablishment, rncpInfo) => {
+  if (!referenceEstablishment.catalogue_published) {
+    return false;
+  }
+
+  if (
+    ["Titre", "TP"].includes(rncpInfo.code_type_certif) &&
+    (!isHabiliteRncp(rncpInfo, referenceEstablishment.siret) || !rncpInfo.rncp_eligible_apprentissage)
+  ) {
+    return false;
+  }
+
+  return true;
+};
+
 const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissement_formateur_siret, rncpInfo) => {
   try {
     if (!etablissement_gestionnaire_siret && !etablissement_formateur_siret) {
@@ -162,7 +187,7 @@ const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissem
         ...etablissementFormateur,
 
         etablissement_reference,
-        etablissement_reference_catalogue_published: referenceEstablishment.catalogue_published,
+        etablissement_reference_catalogue_published: isInCatalogEligible(referenceEstablishment, rncpInfo),
         etablissement_reference_published: referenceEstablishment.published,
         etablissement_reference_declare_prefecture: referenceEstablishment.computed_declare_prefecture,
         etablissement_reference_type: referenceEstablishment.computed_type,

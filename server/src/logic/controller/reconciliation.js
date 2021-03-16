@@ -1,7 +1,13 @@
-const { AfReconciliation, AfFormation, ConvertedFormation } = require("../../common/model");
+const {
+  AfReconciliation,
+  AfFormation,
+  ConvertedFormation,
+  PsFormation2021,
+  PsReconciliation,
+} = require("../../common/model");
 
-async function reconciliationAffelnet(formation, match) {
-  let { uai, code_cfd, _id, code_nature, etablissement_type } = formation;
+async function reconciliationAffelnet(formation) {
+  let { uai, code_cfd, _id, code_nature, etablissement_type, code_mef, matching_mna_formation } = formation;
   let {
     uai_formation,
     etablissement_formateur_uai,
@@ -9,7 +15,7 @@ async function reconciliationAffelnet(formation, match) {
     etablissement_formateur_siret,
     etablissement_gestionnaire_siret,
     _id: convertedId,
-  } = match;
+  } = matching_mna_formation[0];
 
   let a = uai_formation === uai;
   let b = etablissement_formateur_uai === uai;
@@ -29,14 +35,40 @@ async function reconciliationAffelnet(formation, match) {
       await AfFormation.findByIdAndUpdate(_id, { etat_reconciliation: true });
 
       // pass through some data for Affelnet
-      await ConvertedFormation.findByIdAndUpdate(convertedId, {
-        affelnet_code_nature: code_nature,
-        affelnet_secteur: etablissement_type === "Public" ? "PU" : "PR",
-      });
+      const converted = await ConvertedFormation.findById(convertedId);
+      if (converted) {
+        converted.affelnet_code_nature = code_nature;
+        converted.affelnet_secteur = etablissement_type === "Public" ? "PU" : "PR";
+
+        const mefs_10 = converted.mefs_10 ?? [];
+        if (mefs_10.some(({ mef10 }) => mef10 === code_mef)) {
+          converted.affelnet_mefs_10 = [code_mef];
+        }
+        await converted.save();
+      }
     }
   } else {
     await AfFormation.findByIdAndUpdate(_id, { no_uai: true });
   }
 }
 
-module.exports = { reconciliationAffelnet };
+async function reconciliationParcoursup(formation) {
+  let { code_cfd, matching_mna_formation, _id, uai_gestionnaire, uai_composante, uai_affilie } = formation;
+  let { etablissement_formateur_siret, etablissement_gestionnaire_siret } = matching_mna_formation[0];
+
+  let payload = {
+    uai_gestionnaire,
+    uai_composante,
+    uai_affilie,
+    code_cfd,
+    siret_formateur: etablissement_formateur_siret,
+    siret_gestionnaire: etablissement_gestionnaire_siret,
+  };
+
+  await PsReconciliation.findOneAndUpdate({ uai_affilie, uai_composante, uai_gestionnaire, code_cfd }, payload, {
+    upsert: true,
+  });
+  await PsFormation2021.findByIdAndUpdate(_id, { etat_reconciliation: true });
+}
+
+module.exports = { reconciliationAffelnet, reconciliationParcoursup };

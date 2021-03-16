@@ -1,11 +1,13 @@
 const logger = require("../../common/logger");
 const Joi = require("joi");
+const { aPublierRules, aPublierSoumisAValidationRules } = require("../../jobs/pertinence/affelnet/rules");
+const { asyncForEach } = require("../../common/utils/asyncUtils");
 const { findRcoFormationFromConvertedId, getPeriodeTags } = require("../../jobs/common/utils/rcoUtils");
 const { cfdMapper } = require("../mappers/cfdMapper");
 const { codePostalMapper } = require("../mappers/codePostalMapper");
 const { etablissementsMapper } = require("../mappers/etablissementsMapper");
 const { diffFormation } = require("../common/utils/diffUtils");
-const { PendingRcoFormation } = require("../../common/model");
+const { PendingRcoFormation, SandboxFormation } = require("../../common/model");
 
 const formationSchema = Joi.object({
   cfd: Joi.string().required(),
@@ -38,11 +40,11 @@ const mnaFormationUpdater = async (formation, { withHistoryUpdate = true, withCo
   try {
     await formationSchema.validateAsync(formation, { abortEarly: false });
 
-    const { result: cfdMapping, messages: cfdMessages } = await cfdMapper(formation.cfd);
+    const { result: cfdMapping, messages: cfdMessages, serviceAvailable } = await cfdMapper(formation.cfd);
 
     let error = parseErrors(cfdMessages);
     if (error) {
-      return { updates: null, formation, error };
+      return { updates: null, formation, error, serviceAvailable };
     }
 
     const { result: cpMapping = {}, messages: cpMessages } = withCodePostalUpdate
@@ -106,6 +108,7 @@ const mnaFormationUpdater = async (formation, { withHistoryUpdate = true, withCo
         uai_formation = etablissementsMapping?.etablissement_formateur_uai;
       }
     }
+
     const updatedFormation = {
       ...formation,
       ...cfdMapping,
@@ -116,6 +119,59 @@ const mnaFormationUpdater = async (formation, { withHistoryUpdate = true, withCo
       update_error,
       uai_formation,
     };
+
+    // try to fill mefs for Affelnet
+    // reset field value
+    updatedFormation.affelnet_mefs_10 = null;
+    if (updatedFormation.mefs_10?.length > 0) {
+      //  filter mefs10 to get affelnet_mefs_10
+      await SandboxFormation.deleteMany({});
+
+      // eslint-disable-next-line no-unused-vars
+      const { _id, ...rest } = updatedFormation;
+
+      // Split formation into N formation with 1 mef each
+      // & insert theses into a tmp collection
+      await asyncForEach(updatedFormation.mefs_10, async (mefObj) => {
+        await new SandboxFormation({
+          ...rest,
+          mef_10_code: mefObj.mef10,
+          mefs_10: [mefObj],
+        }).save();
+      });
+
+      // apply pertinence filters against the tmp collection
+      // check "à publier" first to have less mefs
+      let results = await SandboxFormation.find(
+        {
+          $or: [aPublierRules],
+        },
+        { mef_10_code: 1 }
+      ).lean();
+
+      if (results && results.length > 0) {
+        // keep the successful mefs in affelnet field
+        updatedFormation.affelnet_mefs_10 = results.reduce((acc, { mef_10_code }) => {
+          return [...acc, mef_10_code];
+        }, []);
+      }
+
+      results = await SandboxFormation.find(
+        {
+          $or: [aPublierSoumisAValidationRules],
+        },
+        { mef_10_code: 1 }
+      ).lean();
+
+      if (results && results.length > 0) {
+        // keep the successful mefs in affelnet field
+        updatedFormation.affelnet_mefs_10 = results.reduce((acc, { mef_10_code }) => {
+          return [...acc, mef_10_code];
+        }, []);
+      }
+
+      await SandboxFormation.deleteMany({});
+    }
 
     const { updates, keys } = diffFormation(formation, updatedFormation);
     if (updates) {

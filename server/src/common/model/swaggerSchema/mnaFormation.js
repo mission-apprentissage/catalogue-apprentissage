@@ -318,6 +318,11 @@ module.exports = {
         default: "null",
         description: "Lettre spécialité du code cfd",
       },
+      cfd_outdated: {
+        type: "boolean",
+        default: false,
+        description: "BCN : cfd périmé (fermeture avant le 31 aout de l'année courante)",
+      },
       mef_10_code: {
         type: "string",
         default: "null",
@@ -636,9 +641,17 @@ module.exports = {
       },
       affelnet_secteur: {
         type: "string",
-        enum: ["PR", "PU"],
+        enum: ["PR", "PU", null],
         default: "null",
         description: "Affelnet : type d'établissement (PR: Privé / PU: Public)",
+      },
+      affelnet_mefs_10: {
+        type: "array",
+        items: {
+          type: "string",
+        },
+        default: "null",
+        description: "Affelnet : Codes MEF 10 caractères",
       },
       _id: {
         type: "string",

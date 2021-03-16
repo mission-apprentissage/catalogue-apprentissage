@@ -7,8 +7,8 @@ const psReference = require("./reference/parcoursup");
 const afReference = require("./reference/affelnet");
 const psPertinence = require("./pertinence/parcoursup");
 const afPertinence = require("./pertinence/affelnet");
-const afCoverage = require("./afFormation/index");
-const afReconciliation = require("./afFormation/reconciliation");
+const afCoverage = require("./affelnet/coverage");
+const afReconciliation = require("./affelnet/reconciliation");
 
 const clean = require("./clean");
 const { rebuildEsIndex } = require("./esIndex/esIndex");

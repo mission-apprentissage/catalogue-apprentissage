@@ -191,32 +191,57 @@ const columnsDefinition = [
     width: 400,
     editable: false,
   },
-  // {
-  //   Header: "Référencé dans Affelnet",
-  //   accessor: "affelnet_reference",
-  //   debug: true,
-  //   width: 200,
-  //   editable: false,
-  // },
-  // {
-  //   Header: "À charger dans Affelnet",
-  //   accessor: "affelnet_a_charger",
-  //   width: 200,
-  //   debug: true,
-  //   editable: false,
-  // },
-  // {
-  //   Header: "Référencé dans ParcourSup",
-  //   accessor: "parcoursup_reference",
-  //   width: 200,
-  //   editable: false,
-  // },
-  // {
-  //   Header: "À charger dans ParcourSup",
-  //   accessor: "parcoursup_a_charger",
-  //   width: 200,
-  //   editable: false,
-  // },
+  {
+    Header: "Liste MEF rattaché",
+    accessor: "mefs_10",
+    width: 200,
+    editable: true,
+    formatter: (value) => value.map((x) => x.mef10).join(","),
+  },
+  {
+    Header: "Liste MEF affelnet",
+    accessor: "affelnet_mefs_10",
+    width: 200,
+    editable: false,
+  },
+  {
+    Header: "Statut Affelnet",
+    accessor: "affelnet_statut",
+    width: 200,
+    editable: true,
+  },
+  {
+    Header: "Référencé dans Affelnet",
+    accessor: "affelnet_reference",
+    debug: true,
+    width: 200,
+    editable: false,
+  },
+  {
+    Header: "À charger dans Affelnet",
+    accessor: "affelnet_a_charger",
+    width: 200,
+    debug: true,
+    editable: false,
+  },
+  {
+    Header: "Statut Parcoursup",
+    accessor: "parcoursup_statut",
+    width: 200,
+    editable: true,
+  },
+  {
+    Header: "Référencé dans ParcourSup",
+    accessor: "parcoursup_reference",
+    width: 200,
+    editable: false,
+  },
+  {
+    Header: "À charger dans ParcourSup",
+    accessor: "parcoursup_a_charger",
+    width: 200,
+    editable: false,
+  },
   {
     Header: "Niveau de la formation",
     accessor: "niveau",
@@ -231,19 +256,19 @@ const columnsDefinition = [
     editable: true,
   },
   {
-    Header: "Capacite",
+    Header: "Capacité",
     accessor: "capacite",
     width: 200,
     editable: true,
   },
   {
-    Header: "Duree",
+    Header: "Durée",
     accessor: "duree",
     width: 200,
     editable: false,
   },
   {
-    Header: "Annee",
+    Header: "Année",
     accessor: "annee",
     width: 200,
     editable: false,
@@ -255,19 +280,31 @@ const columnsDefinition = [
     editable: true,
   },
   {
-    Header: "CodePostal",
+    Header: "Adresse formation",
+    accessor: "lieu_formation_adresse",
+    width: 200,
+    editable: true,
+  },
+  {
+    Header: "Code Postal",
     accessor: "code_postal",
     width: 200,
     editable: true,
   },
   {
-    Header: "CodeCommuneInsee",
+    Header: "Ville",
+    accessor: "localite",
+    width: 200,
+    editable: true,
+  },
+  {
+    Header: "Code Commune Insee",
     accessor: "code_commune_insee",
     width: 200,
     editable: false,
   },
   {
-    Header: "NumAcademie Siege",
+    Header: "Numéro Academie Siege",
     accessor: "etablissement_gestionnaire_num_academie",
     width: 200,
     editable: false,
@@ -297,22 +334,34 @@ const columnsDefinition = [
     editable: false,
   },
   {
-    Header: "ParcourSup statut",
-    accessor: "parcoursup_statut",
-    width: 200,
-    editable: false,
-  },
-  {
-    Header: "Affelnet statut",
-    accessor: "affelnet_statut",
-    width: 200,
-    editable: false,
-  },
-  {
     Header: "Établissement dans le catalogue éligible ? ",
     accessor: "etablissement_reference_catalogue_published",
     width: 200,
     editable: false,
+  },
+  {
+    Header: "Certificateurs",
+    accessor: "rncp_details.certificateurs",
+    width: 200,
+    editable: false,
+    formatter: (value) =>
+      value
+        .filter(({ certificateur, siret_certificateur }) => certificateur || siret_certificateur)
+        ?.map(({ certificateur, siret_certificateur }) => `${certificateur} (siret: ${siret_certificateur})`)
+        .join(", "),
+  },
+  {
+    Header: "Partenaires",
+    accessor: "rncp_details.partenaires",
+    width: 200,
+    editable: false,
+    formatter: (value) =>
+      value
+        ?.map(
+          ({ Nom_Partenaire, Siret_Partenaire, Habilitation_Partenaire }) =>
+            `${Nom_Partenaire} (siret: ${Siret_Partenaire}) : ${Habilitation_Partenaire}`
+        )
+        .join(", "),
   },
 ];
 
@@ -327,7 +376,7 @@ const queryBuilderField = [
   { text: "Uai du lieu de formation", value: "uai_formation.keyword" },
   { text: "Diplôme", value: "diplome.keyword" },
   { text: "Mef 10", value: "mef_10_code.keyword" },
-  //{ text: "ParcourSup à charger", value: "parcoursup_a_charger" },
+  // { text: "ParcourSup à charger", value: "parcoursup_a_charger" },
   // { text: "Affelnet à charger", value: "affelnet_a_charger" },
 ];
 

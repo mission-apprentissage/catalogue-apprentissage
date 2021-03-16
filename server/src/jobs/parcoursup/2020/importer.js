@@ -1,17 +1,14 @@
-const logger = require("../../common/logger");
 const path = require("path");
-const { getMefInfo } = require("../../common/services/tables_correspondance");
-
-const { PsFormation } = require("../../common/model/index");
-
-const { asyncForEach } = require("../../common/utils/asyncUtils");
-const { getJsonFromXlsxFile } = require("../../common/utils/fileUtils");
-
-const { runScript } = require("../scriptWrapper");
+const logger = require("../../../common/logger");
+const { runScript } = require("../../scriptWrapper");
+const { PsFormation } = require("../../../common/model/index");
+const { asyncForEach } = require("../../../common/utils/asyncUtils");
+const { getJsonFromXlsxFile } = require("../../../common/utils/fileUtils");
+const { getMefInfo } = require("../../../common/services/tables_correspondance");
 
 const run = async () => {
   try {
-    const filePath = path.resolve(__dirname, "./assets/Liste_Formation_Apprentissage_Psup.xlsx");
+    const filePath = path.resolve(__dirname, "../assets/formation-psup-2020.xlsx");
     const data = getJsonFromXlsxFile(filePath);
 
     await asyncForEach(data, async (formation) => {

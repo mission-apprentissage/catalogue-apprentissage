@@ -1,4 +1,4 @@
-const { PsFormation, PsReconciliation } = require("../../common/model");
+const { PsReconciliation, PsFormation2021 } = require("../../common/model");
 const combinate = require("../../logic/mappers/psReconciliationMapper");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const mongoose = require("mongoose");
@@ -9,21 +9,48 @@ module.exports = ({ catalogue }) => {
   const router = express.Router();
 
   /**
+   * Get statistique
+   */
+
+  router.get(
+    "/statistique",
+    tryCatch(async (req, res) => {
+      let [x, y, z] = await Promise.all([
+        PsFormation2021.estimatedDocumentCount(),
+        PsFormation2021.countDocuments({ etat_reconciliation: true }),
+        PsFormation2021.countDocuments({ matching_type: { $ne: null } }),
+      ]);
+
+      let pourcentageOnTotal = (value) => Math.round((value / x) * 100);
+
+      res.json({
+        total: x,
+        reconciled: [y, pourcentageOnTotal(y)],
+        covered: [z, pourcentageOnTotal(z)],
+      });
+    })
+  );
+
+  /**
    * Get all PsFormation
    */
   router.get(
     "/",
     tryCatch(async (req, res) => {
       const { type, page } = req.query;
-      let data = await PsFormation.paginate({ matching_type: type }, { page, sort: { etat_reconciliation: 1 } });
+      let data = await PsFormation2021.paginate(
+        { matching_type: type },
+        { page, sort: { etat_reconciliation: 1 }, lean: true }
+      );
 
       if (data.docs.length > 0) {
         const result = await Promise.all(
           data.docs.map(async (formation) => {
-            let { _doc, code_cfd, uai_affilie, uai_composante, uai_gestionnaire } = formation;
-            if (_doc.code_cfd) {
+            let { code_cfd, uai_affilie, uai_composante, uai_gestionnaire } = formation;
+            if (code_cfd) {
               const infoCfd = await getCfdInfo(code_cfd);
-              const infoReconciliation = await PsReconciliation.find({
+
+              const infoReconciliation = await PsReconciliation.findOne({
                 code_cfd: code_cfd,
                 uai_affilie,
                 uai_composante,
@@ -33,7 +60,7 @@ module.exports = ({ catalogue }) => {
               let infobcn = infoCfd.result.intitule_long;
 
               return {
-                ...formation._doc,
+                ...formation,
                 reconciliation: infoReconciliation,
                 infobcn,
               };
@@ -43,9 +70,9 @@ module.exports = ({ catalogue }) => {
         );
 
         data.docs = await result;
-        res.json(data);
+        return res.json(data);
       } else {
-        res.status(404).json([]);
+        return res.status(404).json([]);
       }
     })
   );
@@ -57,8 +84,8 @@ module.exports = ({ catalogue }) => {
     "/",
     tryCatch(async (req, res) => {
       const { id, ...rest } = req.body;
-      const response = await PsFormation.findByIdAndUpdate(id, { ...rest }, { new: true });
-      res.json(response);
+      const response = await PsFormation2021.findByIdAndUpdate(id, { ...rest }, { new: true });
+      return res.json(response);
     })
   );
 
@@ -91,10 +118,10 @@ module.exports = ({ catalogue }) => {
       );
 
       if (result) {
-        await PsFormation.findByIdAndUpdate(id_formation, { etat_reconciliation: true });
+        await PsFormation2021.findByIdAndUpdate(id_formation, { etat_reconciliation: true });
       }
 
-      res.json(result);
+      return res.json(result);
     })
   );
 
@@ -129,12 +156,12 @@ module.exports = ({ catalogue }) => {
     "/",
     tryCatch(async (req, res) => {
       const { formation_id, etablissement } = req.body;
-      const response = await PsFormation.findByIdAndUpdate(
+      const response = await PsFormation2021.findByIdAndUpdate(
         formation_id,
         { $push: { matching_mna_etablissement: { ...etablissement, _id: new mongoose.Types.ObjectId() } } },
         { new: true }
       );
-      res.json(response);
+      return res.json(response);
     })
   );
 
@@ -150,7 +177,7 @@ module.exports = ({ catalogue }) => {
       }
 
       const newEtablissement = await catalogue.createEtablissement({ uai, siret });
-      res.json(newEtablissement);
+      return res.json(newEtablissement);
     })
   );
 
@@ -161,20 +188,20 @@ module.exports = ({ catalogue }) => {
     "/etablissement",
     tryCatch(async (req, res) => {
       const { formation_id, etablissement_id, type } = req.body;
-      const update = await PsFormation.updateOne(
+      const update = await PsFormation2021.updateOne(
         { _id: formation_id },
         { $set: { "matching_mna_etablissement.$[elem].type": type } },
         { arrayFilters: [{ "elem._id": new mongoose.Types.ObjectId(etablissement_id) }] }
       );
       if (update) {
         if (update.nModified === 1) {
-          const response = await PsFormation.findById({ _id: formation_id });
-          res.json(response);
+          const response = await PsFormation2021.findById({ _id: formation_id });
+          return res.json(response);
         } else {
-          res.json(update);
+          return res.json(update);
         }
       } else {
-        res.status(400).json([]);
+        return res.status(400).json([]);
       }
     })
   );

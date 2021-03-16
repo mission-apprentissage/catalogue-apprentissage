@@ -1,12 +1,17 @@
 const { ConvertedFormation } = require("../../../common/model");
 const logger = require("../../../common/logger");
-const { toBePublishedRules } = require("../../common/utils/referenceUtils");
+const { aPublierVerifierAccesDirectPostBacRules, aPublierValidationRecteurRules, aPublierRules } = require("./rules");
 
 const run = async () => {
   // 1 - set "hors périmètre"
   await ConvertedFormation.updateMany(
     {
-      $or: [{ parcoursup_statut: null }, { etablissement_reference_catalogue_published: false }, { published: false }],
+      $or: [
+        { parcoursup_statut: null },
+        { etablissement_reference_catalogue_published: false },
+        { published: false },
+        { cfd_outdated: true },
+      ],
     },
     { $set: { parcoursup_statut: "hors périmètre" } }
   );
@@ -29,27 +34,13 @@ const run = async () => {
 
   // run only on those 'hors périmètre' to not overwrite actions of users !
   const filterHP = {
-    published: true,
-    etablissement_reference_catalogue_published: true,
     parcoursup_statut: "hors périmètre",
   };
 
   await ConvertedFormation.updateMany(
     {
       ...filterHP,
-      $and: [
-        ...toBePublishedRules,
-        {
-          $or: [
-            // {
-            //   "rncp_details.code_type_certif": { $in: ["Titre", "TP"] },
-            //   "rncp_details.active_inactive": "ACTIVE",
-            //   niveau: "6 (Licence...)",
-            // },
-            { libelle_court: "DCG" },
-          ],
-        },
-      ],
+      ...aPublierVerifierAccesDirectPostBacRules,
     },
     { $set: { last_update_at: Date.now(), parcoursup_statut: "à publier (vérifier accès direct postbac)" } }
   );
@@ -57,12 +48,7 @@ const run = async () => {
   await ConvertedFormation.updateMany(
     {
       ...filterHP,
-      $and: [
-        ...toBePublishedRules,
-        {
-          libelle_court: "MC4",
-        },
-      ],
+      ...aPublierValidationRecteurRules,
     },
     { $set: { last_update_at: Date.now(), parcoursup_statut: "à publier (soumis à validation Recteur)" } }
   );
@@ -70,8 +56,6 @@ const run = async () => {
   // 3 - set "à publier" for trainings matching psup eligibility rules
   // run only on those 'hors périmètre' to not overwrite actions of users !
   const filter = {
-    published: true,
-    etablissement_reference_catalogue_published: true,
     parcoursup_statut: {
       $in: ["hors périmètre", "à publier (vérifier accès direct postbac)", "à publier (soumis à validation Recteur)"],
     },
@@ -80,48 +64,10 @@ const run = async () => {
   await ConvertedFormation.updateMany(
     {
       ...filter,
-      $and: [
-        ...toBePublishedRules,
-        {
-          $or: [
-            {
-              diplome: {
-                $in: [
-                  "BREVET DE TECHNICIEN SUPERIEUR",
-                  "BREVET DE TECHNICIEN SUPERIEUR AGRICOLE",
-                  "CERTIFICAT DE SPECIALISATION AGRICOLE DE NIVEAU 4",
-                ],
-              },
-            },
-            {
-              $or: [{ libelle_court: "BM", niveau_formation_diplome: "36M" }, { libelle_court: { $regex: /^TH3-/ } }],
-            },
-            // {
-            //   "rncp_details.code_type_certif": { $in: ["Titre", "TP"] },
-            //   "rncp_details.active_inactive": "ACTIVE",
-            //   niveau: "5 (BTS, DUT...)",
-            // },
-          ],
-        },
-        {
-          niveau: { $in: ["4 (Bac...)", "5 (BTS, DUT...)", "6 (Licence...)"] },
-        },
-      ],
+      ...aPublierRules,
     },
     { $set: { last_update_at: Date.now(), parcoursup_statut: "à publier" } }
   );
-
-  // FIXME once check rncp is in prod
-  // force hors périmètre
-  await ConvertedFormation.updateMany(
-    {
-      "rncp_details.code_type_certif": { $in: ["Titre", "TP"] },
-      "rncp_details.active_inactive": "ACTIVE",
-      niveau: { $in: ["5 (BTS, DUT...)", "6 (Licence...)"] },
-    },
-    { $set: { last_update_at: Date.now(), parcoursup_statut: "hors périmètre" } }
-  );
-  // end FIXME
 
   // stats
   const totalPublished = await ConvertedFormation.countDocuments({ published: true });

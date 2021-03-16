@@ -15,6 +15,8 @@ import {
   Link,
   Spinner,
   Text,
+  UnorderedList,
+  ListItem,
   useDisclosure,
 } from "@chakra-ui/react";
 import { NavLink, useHistory } from "react-router-dom";
@@ -130,6 +132,33 @@ const getGeoportailUrl = ({ lieu_formation_geo_coordonnees = "" }) => {
   return `https://www.geoportail.gouv.fr/carte?c=${reversedCoords}&z=19&l0=${ignStyleLayer}&l1=${poiEnseignementSecondaire}&l2=${poiEnseignementSup}&permalink=yes`;
 };
 
+const HabilitationPartenaire = ({ habilitation }) => {
+  let color;
+  let text = habilitation;
+  switch (habilitation) {
+    case "HABILITATION_ORGA_FORM":
+      color = "green";
+      text = "ORGANISER ET FORMER";
+      break;
+    case "HABILITATION_FORMER":
+      color = "green";
+      text = "FORMER";
+      break;
+    case "HABILITATION_ORGANISER":
+      color = "red";
+      text = "ORGANISER";
+      break;
+    default:
+      break;
+  }
+
+  return (
+    <Text as="strong" style={{ color }}>
+      {text}
+    </Text>
+  );
+};
+
 const Formation = ({
   formation,
   edition,
@@ -142,7 +171,9 @@ const Formation = ({
   pendingFormation,
 }) => {
   const oneEstablishment = formation.etablissement_gestionnaire_siret === formation.etablissement_formateur_siret;
-
+  const filteredPartenaires = formation.rncp_details?.partenaires?.filter(({ Siret_Partenaire }) =>
+    [formation.etablissement_gestionnaire_siret, formation.etablissement_formateur_siret].includes(Siret_Partenaire)
+  );
   return (
     <Box bg="#fafbfc" boxShadow="0 2px 2px 0 rgba(215, 215, 215, 0.5)" borderRadius={4}>
       <Flex
@@ -193,6 +224,12 @@ const Formation = ({
               Codes MEF 10 caractères:{" "}
               <strong>{formation.mef_10_code ?? formation?.mefs_10?.map(({ mef10 }) => mef10).join(", ")}</strong>
             </Text>
+            {formation?.affelnet_mefs_10?.length > 0 && (
+              <Text mb={4}>
+                Codes MEF 10 caractères dans le périmètre <i>Affelnet</i>:{" "}
+                <strong>{formation?.affelnet_mefs_10?.join(", ")}</strong>
+              </Text>
+            )}
             <Text mb={4}>
               Période d'inscription: {!edition && <FormationPeriode periode={formation.periode} />}
               {edition && <Input type="text" name="periode" onChange={handleChange} value={values.periode} />}
@@ -263,7 +300,6 @@ const Formation = ({
             <Text mb={4}>
               Codes ROME: <strong>{formation.rome_codes.join(", ")}</strong>
             </Text>
-
             <Box>
               {formation.opcos && formation.opcos.length === 0 && <Text mb={4}>Aucun OPCO rattaché</Text>}
               {formation.opcos && formation.opcos.length > 0 && (
@@ -272,6 +308,48 @@ const Formation = ({
                 </Text>
               )}
             </Box>
+            {formation.rncp_details && (
+              <>
+                <Text mb={4}>
+                  Certificateurs:{" "}
+                  <strong>
+                    {formation.rncp_details.certificateurs
+                      ?.filter(({ certificateur, siret_certificateur }) => certificateur || siret_certificateur)
+                      ?.map(
+                        ({ certificateur, siret_certificateur }) => `${certificateur} (siret: ${siret_certificateur})`
+                      )
+                      .join(", ")}
+                  </strong>
+                </Text>
+                {["Titre", "TP"].includes(formation.rncp_details.code_type_certif) && (
+                  <Text as="div" mb={4}>
+                    Partenaires: <br />
+                    {filteredPartenaires.length > 0 ? (
+                      <>
+                        L'habilitation ORGANISER seule n'ouvre pas les droits
+                        <UnorderedList>
+                          {filteredPartenaires.map(({ Nom_Partenaire, Siret_Partenaire, Habilitation_Partenaire }) => (
+                            <ListItem key={Siret_Partenaire}>
+                              <strong>
+                                {Nom_Partenaire} (siret: {Siret_Partenaire}) :{" "}
+                              </strong>
+                              <HabilitationPartenaire habilitation={Habilitation_Partenaire} />
+                            </ListItem>
+                          ))}
+                        </UnorderedList>
+                      </>
+                    ) : (
+                      <>
+                        Aucune habilitation sur la fiche pour ce SIRET.
+                        <br />
+                        SIRET formateur: {formation.etablissement_formateur_siret}, SIRET gestionnaire:{" "}
+                        {formation.etablissement_gestionnaire_siret}.
+                      </>
+                    )}
+                  </Text>
+                )}
+              </>
+            )}
           </Box>
         </GridItem>
         <GridItem colSpan={[12, 5]} bg="#fafbfc" p={8} borderBottomRightRadius={4} borderBottomLeftRadius={[4, 0]}>
@@ -352,6 +430,9 @@ const Formation = ({
               <Text mb={4}>
                 Uai: <strong>{formation.etablissement_formateur_uai}</strong>
               </Text>
+              <Text mb={4}>
+                Siret: <strong>{formation.etablissement_formateur_siret}</strong>
+              </Text>
               <Box mb={4}>
                 <Link
                   as={NavLink}
@@ -384,6 +465,9 @@ const Formation = ({
               )}
               <Text mb={4}>
                 Uai: <strong>{formation.etablissement_gestionnaire_uai}</strong>
+              </Text>
+              <Text mb={4}>
+                Siret: <strong>{formation.etablissement_gestionnaire_siret}</strong>
               </Text>
               <Box mb={4}>
                 <Link
@@ -431,26 +515,30 @@ export default ({ match }) => {
     },
     onSubmit: (values) => {
       return new Promise(async (resolve) => {
-        const updatedFormation = await _post(`${endpointNewFront}/entity/formation2021/update`, {
-          ...displayedFormation,
-          ...values,
-        });
+        try {
+          const updatedFormation = await _post(`${endpointNewFront}/entity/formation2021/update`, {
+            ...displayedFormation,
+            ...values,
+          });
 
-        let result = await _post(`${endpointNewFront}/entity/pendingRcoFormation`, updatedFormation);
-        if (result) {
-          setPendingFormation(result);
-          setFieldValue("uai_formation", result.uai_formation);
-          setFieldValue("code_postal", result.code_postal);
-          setFieldValue("periode", result.periode);
-          setFieldValue("capacite", result.capacite);
-          setFieldValue("cfd", result.cfd);
-          setFieldValue("num_academie", result.num_academie);
-          setFieldValue("rncp_code", result.rncp_code);
-          setFieldValue("lieu_formation_adresse", result.lieu_formation_adresse);
+          let result = await _post(`${endpointNewFront}/entity/pendingRcoFormation`, updatedFormation);
+          if (result) {
+            setPendingFormation(result);
+            setFieldValue("uai_formation", result.uai_formation);
+            setFieldValue("code_postal", result.code_postal);
+            setFieldValue("periode", result.periode);
+            setFieldValue("capacite", result.capacite);
+            setFieldValue("cfd", result.cfd);
+            setFieldValue("num_academie", result.num_academie);
+            setFieldValue("rncp_code", result.rncp_code);
+            setFieldValue("lieu_formation_adresse", result.lieu_formation_adresse);
+          }
+        } catch (e) {
+          console.error("Can't perform update", e);
+        } finally {
+          setEdition(false);
+          resolve("onSubmitHandler complete");
         }
-
-        setEdition(false);
-        resolve("onSubmitHandler complete");
       });
     },
   });
@@ -520,8 +608,14 @@ export default ({ match }) => {
                 Accueil
               </BreadcrumbLink>
             </BreadcrumbItem>
-            <BreadcrumbItem as={NavLink} to="/recherche/formations-2021">
-              <BreadcrumbLink>Formations 2021</BreadcrumbLink>
+            <BreadcrumbItem>
+              <BreadcrumbLink as={NavLink} to="/recherche/formations-2021">
+                Formations 2021
+                {displayedFormation &&
+                  (displayedFormation.etablissement_reference_catalogue_published
+                    ? " (Catalogue général)"
+                    : " (Catalogue non-éligible)")}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbItem isCurrentPage>
               <BreadcrumbLink>{displayedFormation?.intitule_long}</BreadcrumbLink>

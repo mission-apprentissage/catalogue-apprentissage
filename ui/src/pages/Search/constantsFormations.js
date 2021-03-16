@@ -192,6 +192,18 @@ const columnsDefinition = [
     editable: false,
   },
   {
+    Header: "Liste MEF rattaché",
+    accessor: "mefs_10",
+    width: 200,
+    editable: true,
+  },
+  {
+    Header: "Statut Affelnet",
+    accessor: "affelnet_statut",
+    width: 200,
+    editable: true,
+  },
+  {
     Header: "Référencé dans Affelnet",
     accessor: "affelnet_reference",
     debug: true,
@@ -204,6 +216,12 @@ const columnsDefinition = [
     width: 200,
     debug: true,
     editable: false,
+  },
+  {
+    Header: "Statut Parcoursup",
+    accessor: "parcoursup_statut",
+    width: 200,
+    editable: true,
   },
   {
     Header: "Référencé dans ParcourSup",
@@ -255,19 +273,31 @@ const columnsDefinition = [
     editable: true,
   },
   {
-    Header: "CodePostal",
+    Header: "Adresse formation",
+    accessor: "lieu_formation_adresse",
+    width: 200,
+    editable: true,
+  },
+  {
+    Header: "Code Postal",
     accessor: "code_postal",
     width: 200,
     editable: true,
   },
   {
-    Header: "CodeCommuneInsee",
+    Header: "Ville",
+    accessor: "localite",
+    width: 200,
+    editable: true,
+  },
+  {
+    Header: "Code Commune Insee",
     accessor: "code_commune_insee",
     width: 200,
     editable: false,
   },
   {
-    Header: "NumAcademie Siege",
+    Header: "Numéro Academie Siege",
     accessor: "etablissement_gestionnaire_num_academie",
     width: 200,
     editable: false,

@@ -8,10 +8,11 @@ const cfdMapper = async (cfd = null) => {
       throw new Error("cfdMapper cfd must be provided");
     }
 
-    const cfdInfo = await getCfdInfo(cfd);
+    const { result: cfdInfo, serviceAvailable } = await getCfdInfo(cfd, { checkService: true });
     if (!cfdInfo) {
       return {
         result: null,
+        serviceAvailable,
         messages: {
           error: `Unable to retrieve data from cfd ${cfd}`,
         },
@@ -62,6 +63,7 @@ const cfdMapper = async (cfd = null) => {
       result: {
         cfd: result.cfd,
         cfd_specialite: result.specialite,
+        cfd_outdated: result.cfd_outdated,
         niveau: result.niveau,
         intitule_long: result.intitule_long,
         intitule_court: result.intitule_court,
@@ -103,12 +105,14 @@ const cfdMapper = async (cfd = null) => {
         libelle_court: result.libelle_court,
         niveau_formation_diplome: result.niveau_formation_diplome,
       },
+      serviceAvailable,
       messages,
     };
   } catch (e) {
     logger.error(e);
     return {
       result: null,
+      serviceAvailable: true,
       messages: {
         error: e.toString(),
       },
