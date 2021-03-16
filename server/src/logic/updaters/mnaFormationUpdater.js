@@ -141,9 +141,24 @@ const mnaFormationUpdater = async (formation, { withHistoryUpdate = true, withCo
       });
 
       // apply pertinence filters against the tmp collection
-      const results = await SandboxFormation.find(
+      // check "à publier" first to have less mefs
+      let results = await SandboxFormation.find(
         {
-          $or: [aPublierRules, aPublierSoumisAValidationRules],
+          $or: [aPublierRules],
+        },
+        { mef_10_code: 1 }
+      ).lean();
+
+      if (results && results.length > 0) {
+        // keep the successful mefs in affelnet field
+        updatedFormation.affelnet_mefs_10 = results.reduce((acc, { mef_10_code }) => {
+          return [...acc, mef_10_code];
+        }, []);
+      }
+
+      results = await SandboxFormation.find(
+        {
+          $or: [aPublierSoumisAValidationRules],
         },
         { mef_10_code: 1 }
       ).lean();
