@@ -60,23 +60,3 @@ export default () => {
     </Layout>
   );
 };
-
-// nbCataloguePublished,
-// nbRcoPublished,
-// nbRcoConversionError,
-// nbAllPsup,
-// nbAllPsupReconcilied,
-// nbPsupErrors,
-// nbPsupNotRelevant,
-// nbPsupToCheck,
-// nbPsupPending,
-// nbPsupPublished,
-// nbPsupNotPublished,
-// nbAllAffelnet,
-// nbAllAffelnetReconcilied,
-// nbAffelnetErrors,
-// nbAffelnetNotRelevant,
-// nbAffelnetToCheck,
-// nbAffelnetPending,
-// nbAffelnetPublished,
-// nbAffelnetNotPublished,
