@@ -70,7 +70,7 @@ const cfdMapper = async (cfd = null) => {
         diplome: result.diplome,
 
         mef_10_code: mef10,
-        mefs_10: mefs10,
+        bcn_mefs_10: mefs10,
 
         duree: modalite.duree,
         annee: modalite.annee,

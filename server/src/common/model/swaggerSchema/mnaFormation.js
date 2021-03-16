@@ -332,7 +332,7 @@ module.exports = {
         type: "array",
         items: {},
         default: [],
-        description: "Tableau de Code MEF 10 caractères et modalités",
+        description: "Tableau de Code MEF 10 caractères et modalités (filtrés pour Affelnet si applicable)",
       },
       nom_academie: {
         type: "string",
@@ -645,13 +645,11 @@ module.exports = {
         default: "null",
         description: "Affelnet : type d'établissement (PR: Privé / PU: Public)",
       },
-      affelnet_mefs_10: {
+      bcn_mefs_10: {
         type: "array",
-        items: {
-          type: "string",
-        },
+        items: {},
         default: "null",
-        description: "Affelnet : Codes MEF 10 caractères",
+        description: "BCN : Codes MEF 10 caractères",
       },
       _id: {
         type: "string",

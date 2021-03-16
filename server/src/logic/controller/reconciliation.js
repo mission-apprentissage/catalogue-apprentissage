@@ -40,9 +40,10 @@ async function reconciliationAffelnet(formation) {
         converted.affelnet_code_nature = code_nature;
         converted.affelnet_secteur = etablissement_type === "Public" ? "PU" : "PR";
 
-        const mefs_10 = converted.mefs_10 ?? [];
-        if (mefs_10.some(({ mef10 }) => mef10 === code_mef)) {
-          converted.affelnet_mefs_10 = [code_mef];
+        const mefs_10 = converted.bcn_mefs_10 ?? [];
+        const mef = mefs_10.find(({ mef10 }) => mef10 === code_mef);
+        if (mef) {
+          converted.mefs_10 = [mef];
         }
         await converted.save();
       }

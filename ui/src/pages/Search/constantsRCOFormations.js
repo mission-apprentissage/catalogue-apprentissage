@@ -193,16 +193,17 @@ const columnsDefinition = [
   },
   {
     Header: "Liste MEF rattaché",
-    accessor: "mefs_10",
+    accessor: "bcn_mefs_10",
     width: 200,
     editable: true,
     formatter: (value) => value.map((x) => x.mef10).join(","),
   },
   {
     Header: "Liste MEF affelnet",
-    accessor: "affelnet_mefs_10",
+    accessor: "mefs_10",
     width: 200,
     editable: false,
+    formatter: (value) => value.map((x) => x.mef10).join(","),
   },
   {
     Header: "Statut Affelnet",

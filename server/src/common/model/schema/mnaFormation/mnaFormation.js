@@ -30,7 +30,7 @@ const mnaFormationSchema = {
   mefs_10: {
     type: [Object],
     default: [],
-    description: "Tableau de Code MEF 10 caractères et modalités",
+    description: "Tableau de Code MEF 10 caractères et modalités (filtrés pour Affelnet si applicable)",
   },
   nom_academie: {
     type: String,
@@ -342,10 +342,10 @@ const mnaFormationSchema = {
     default: null,
     description: "Affelnet : type d'établissement (PR: Privé / PU: Public)",
   },
-  affelnet_mefs_10: {
-    type: [String],
+  bcn_mefs_10: {
+    type: [Object],
     default: null,
-    description: "Affelnet : Codes MEF 10 caractères",
+    description: "BCN : Codes MEF 10 caractères",
   },
 };
 
