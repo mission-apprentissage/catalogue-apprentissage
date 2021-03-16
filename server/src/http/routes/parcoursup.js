@@ -9,6 +9,29 @@ module.exports = ({ catalogue }) => {
   const router = express.Router();
 
   /**
+   * Get statistique
+   */
+
+  router.get(
+    "/statistique",
+    tryCatch(async (req, res) => {
+      let [x, y, z] = await Promise.all([
+        PsFormation2021.estimatedDocumentCount(),
+        PsFormation2021.countDocuments({ etat_reconciliation: true }),
+        PsFormation2021.countDocuments({ matching_type: { $ne: null } }),
+      ]);
+
+      let pourcentageOnTotal = (value) => Math.round((value / x) * 100);
+
+      res.json({
+        total: x,
+        reconciled: [y, pourcentageOnTotal(y)],
+        covered: [z, pourcentageOnTotal(z)],
+      });
+    })
+  );
+
+  /**
    * Get all PsFormation
    */
   router.get(

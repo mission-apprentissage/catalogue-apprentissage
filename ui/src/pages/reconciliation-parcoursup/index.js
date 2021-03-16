@@ -15,6 +15,7 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   HStack,
+  StatArrow,
 } from "@chakra-ui/react";
 import { Layout, Accordion as Item, Loading } from "./components";
 
@@ -57,6 +58,10 @@ export default (props) => {
     }
   );
 
+  const stat = useQuery("statistique", () => _get("/api/parcoursup/statistique"), {
+    refetchOnWindowFocus: false,
+  });
+
   const toggleMatching = (values) =>
     setMatching({ type: values.type ? values.type : matching.type, page: values.page ? values.page : matching.page });
 
@@ -78,10 +83,34 @@ export default (props) => {
       </Box>
       <Layout>
         <Box p={5} bg="#e5edef">
-          <Heading>Page de réconciliation Parcoursup 2021</Heading>
-          <Text fontSize="sm">
-            Interface de rapprochement des formations Parcoursup avec les établissements du catalogue
-          </Text>
+          <Flex>
+            <Box>
+              <Heading>Page de réconciliation Parcoursup 2021</Heading>
+              <Text fontSize="sm">
+                Interface de rapprochement des formations Parcoursup avec les établissements du catalogue
+              </Text>
+            </Box>
+            <Spacer />
+            {!stat.isLoading && !stat.isError && (
+              <Box>
+                <Text align="right">
+                  <Tag colorScheme="teal">{stat.data.total}</Tag> formations
+                </Text>
+                <Text align="right">
+                  <Tag colorScheme="teal">
+                    {stat.data.reconciled[0]} - {stat.data.reconciled[1]}%
+                  </Tag>{" "}
+                  formations réconciliées
+                </Text>
+                <Text align="right">
+                  <Tag colorScheme="teal">
+                    {stat.data.covered[0]} - {stat.data.covered[1]}%
+                  </Tag>{" "}
+                  formations rapprochées avec le catalogue
+                </Text>
+              </Box>
+            )}
+          </Flex>
         </Box>
         <Container maxW="full" bg="#e5edef">
           <Box m={5}>
