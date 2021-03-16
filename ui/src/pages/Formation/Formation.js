@@ -30,6 +30,7 @@ import { hasRightToEditFormation } from "../../common/utils/rolesUtils";
 import { StatusBadge } from "../../common/components/StatusBadge";
 import { ReactComponent as InfoIcon } from "../../theme/assets/info-circle.svg";
 import { PublishModal } from "../../common/components/formation/PublishModal";
+import { HABILITE_LIST } from "../../constants/certificateurs";
 
 const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
 
@@ -174,6 +175,10 @@ const Formation = ({
   const filteredPartenaires = formation.rncp_details?.partenaires?.filter(({ Siret_Partenaire }) =>
     [formation.etablissement_gestionnaire_siret, formation.etablissement_formateur_siret].includes(Siret_Partenaire)
   );
+  const showPartenaires =
+    ["Titre", "TP"].includes(formation.rncp_details?.code_type_certif) &&
+    !(formation.rncp_details.certificateurs ?? []).some(({ certificateur }) => HABILITE_LIST.includes(certificateur));
+
   return (
     <Box bg="#fafbfc" boxShadow="0 2px 2px 0 rgba(215, 215, 215, 0.5)" borderRadius={4}>
       <Flex
@@ -219,6 +224,12 @@ const Formation = ({
             <Text mb={4}>
               Code diplôme (Éducation Nationale): {!edition && <strong>{formation.cfd}</strong>}
               {edition && <Input type="text" name="cfd" onChange={handleChange} value={values.cfd} />}
+              {formation.cfd_outdated && (
+                <>
+                  <br />
+                  Ce diplôme a une date de fin antérieure au 31/08 de l'année en cours
+                </>
+              )}
             </Text>
             <Text mb={4}>
               Codes MEF 10 caractères:{" "}
@@ -316,12 +327,13 @@ const Formation = ({
                     {formation.rncp_details.certificateurs
                       ?.filter(({ certificateur, siret_certificateur }) => certificateur || siret_certificateur)
                       ?.map(
-                        ({ certificateur, siret_certificateur }) => `${certificateur} (siret: ${siret_certificateur})`
+                        ({ certificateur, siret_certificateur }) =>
+                          `${certificateur} (siret: ${siret_certificateur ?? "n/a"})`
                       )
                       .join(", ")}
                   </strong>
                 </Text>
-                {["Titre", "TP"].includes(formation.rncp_details.code_type_certif) && (
+                {showPartenaires && (
                   <Text as="div" mb={4}>
                     Partenaires: <br />
                     {filteredPartenaires.length > 0 ? (
@@ -331,7 +343,7 @@ const Formation = ({
                           {filteredPartenaires.map(({ Nom_Partenaire, Siret_Partenaire, Habilitation_Partenaire }) => (
                             <ListItem key={Siret_Partenaire}>
                               <strong>
-                                {Nom_Partenaire} (siret: {Siret_Partenaire}) :{" "}
+                                {Nom_Partenaire} (siret: {Siret_Partenaire ?? "n/a"}) :{" "}
                               </strong>
                               <HabilitationPartenaire habilitation={Habilitation_Partenaire} />
                             </ListItem>
