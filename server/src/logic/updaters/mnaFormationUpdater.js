@@ -122,9 +122,9 @@ const mnaFormationUpdater = async (formation, { withHistoryUpdate = true, withCo
 
     // try to fill mefs for Affelnet
     // reset field value
-    updatedFormation.affelnet_mefs_10 = null;
-    if (updatedFormation.mefs_10?.length > 0) {
-      //  filter mefs10 to get affelnet_mefs_10
+    updatedFormation.mefs_10 = null;
+    if (updatedFormation.bcn_mefs_10?.length > 0) {
+      //  filter bcn_mefs_10 to get mefs_10 for affelnet
       await SandboxFormation.deleteMany({});
 
       // eslint-disable-next-line no-unused-vars
@@ -132,11 +132,11 @@ const mnaFormationUpdater = async (formation, { withHistoryUpdate = true, withCo
 
       // Split formation into N formation with 1 mef each
       // & insert theses into a tmp collection
-      await asyncForEach(updatedFormation.mefs_10, async (mefObj) => {
+      await asyncForEach(updatedFormation.bcn_mefs_10, async (mefObj) => {
         await new SandboxFormation({
           ...rest,
           mef_10_code: mefObj.mef10,
-          mefs_10: [mefObj],
+          bcn_mefs_10: [mefObj],
         }).save();
       });
 
@@ -146,13 +146,13 @@ const mnaFormationUpdater = async (formation, { withHistoryUpdate = true, withCo
         {
           $or: [aPublierRules],
         },
-        { mef_10_code: 1 }
+        { bcn_mefs_10: 1 }
       ).lean();
 
       if (results && results.length > 0) {
         // keep the successful mefs in affelnet field
-        updatedFormation.affelnet_mefs_10 = results.reduce((acc, { mef_10_code }) => {
-          return [...acc, mef_10_code];
+        updatedFormation.mefs_10 = results.reduce((acc, { bcn_mefs_10 }) => {
+          return [...acc, ...bcn_mefs_10];
         }, []);
       }
 
@@ -160,13 +160,13 @@ const mnaFormationUpdater = async (formation, { withHistoryUpdate = true, withCo
         {
           $or: [aPublierSoumisAValidationRules],
         },
-        { mef_10_code: 1 }
+        { bcn_mefs_10: 1 }
       ).lean();
 
       if (results && results.length > 0) {
         // keep the successful mefs in affelnet field
-        updatedFormation.affelnet_mefs_10 = results.reduce((acc, { mef_10_code }) => {
-          return [...acc, mef_10_code];
+        updatedFormation.mefs_10 = results.reduce((acc, { bcn_mefs_10 }) => {
+          return [...acc, ...bcn_mefs_10];
         }, []);
       }
 
