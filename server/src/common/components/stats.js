@@ -1,23 +1,19 @@
-const {
-  PsFormation,
-  AfFormation,
-  AfReconciliation,
-  PsReconciliation,
-  RcoFormation,
-  ConvertedFormation,
-} = require("../model");
+const { AfFormation, AfReconciliation, RcoFormation, ConvertedFormation, PsFormation2021 } = require("../model");
 
 async function getAllStats() {
   // Catalogue
-  const nbCataloguePublished = await ConvertedFormation.countDocuments({ published: true });
+  const nbCataloguePublished = {
+    title: "Nombre de formation publié",
+    value: await ConvertedFormation.countDocuments({ published: true }),
+  };
 
   // RCO
   const nbRcoPublished = await RcoFormation.countDocuments({ published: true });
   const nbRcoConversionError = await RcoFormation.countDocuments({ converted_to_mna: { $ne: true } });
 
   // Parcoursup
-  const nbAllPsup = await PsFormation.countDocuments();
-  const nbAllPsupReconcilied = await PsReconciliation.countDocuments();
+  const nbAllPsup = await PsFormation2021.countDocuments();
+  const nbAllPsupReconcilied = await PsFormation2021.countDocuments({ etat_reconciliation: true });
   const nbPsupErrors = await ConvertedFormation.countDocuments({ published: true, parcoursup_error: { $ne: null } });
   const nbPsupNotRelevant = await ConvertedFormation.countDocuments({
     published: true,
@@ -54,6 +50,7 @@ async function getAllStats() {
   });
 
   return {
+    catalogue: [],
     nbCataloguePublished,
     nbRcoPublished,
     nbRcoConversionError,
