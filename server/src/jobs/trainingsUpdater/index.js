@@ -7,7 +7,7 @@ const trainingsUpdater = async (withCodePostalUpdate = false) => {
   try {
     logger.info(" -- Start of training updater -- ");
 
-    await updater.run({}, withCodePostalUpdate);
+    await updater.run({ published: true }, withCodePostalUpdate);
 
     logger.info(" -- End of training updater -- ");
   } catch (err) {
