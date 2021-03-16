@@ -5,7 +5,7 @@ import Layout from "../layout/Layout";
 import StatCard from "./components/StatCard";
 
 export default () => {
-  const [data, loading] = useFetch("api/v1/stats");
+  const [data, loading] = useFetch("api/stats");
 
   return (
     <Layout>
