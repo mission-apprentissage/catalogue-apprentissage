@@ -5,7 +5,7 @@ module.exports = () => {
   const router = express.Router();
   router.get("/", async (req, res) => {
     const stats = await getAllStats();
-    res.json({ stats });
+    res.json(stats);
   });
 
   return router;
