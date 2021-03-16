@@ -126,6 +126,12 @@ module.exports = {
         default: "null",
         description: "Numéro siren gestionnaire",
       },
+      etablissement_gestionnaire_date_creation: {
+        type: "string",
+        default: "null",
+        description: "Date de création de l'établissement",
+        format: "date-time",
+      },
       etablissement_formateur_id: {
         type: "string",
         default: "null",
@@ -250,6 +256,12 @@ module.exports = {
         default: "null",
         description: "Numéro siren formateur",
       },
+      etablissement_formateur_date_creation: {
+        type: "string",
+        default: "null",
+        description: "Date de création de l'établissement",
+        format: "date-time",
+      },
       etablissement_reference: {
         type: "string",
         default: "null",
@@ -290,6 +302,12 @@ module.exports = {
         default: false,
         description: "Etablissement reference est habilité RNCP ou pas",
       },
+      etablissement_reference_date_creation: {
+        type: "string",
+        default: "null",
+        description: "Date de création de l'établissement",
+        format: "date-time",
+      },
       cfd: {
         type: "string",
         default: "null",
@@ -300,6 +318,11 @@ module.exports = {
         default: "null",
         description: "Lettre spécialité du code cfd",
       },
+      cfd_outdated: {
+        type: "boolean",
+        default: false,
+        description: "BCN : cfd périmé (fermeture avant le 31 aout de l'année courante)",
+      },
       mef_10_code: {
         type: "string",
         default: "null",
@@ -309,7 +332,7 @@ module.exports = {
         type: "array",
         items: {},
         default: [],
-        description: "Tableau de Code MEF 10 caractères et modalités",
+        description: "Tableau de Code MEF 10 caractères et modalités (filtrés pour Affelnet si applicable)",
       },
       nom_academie: {
         type: "string",
@@ -451,7 +474,15 @@ module.exports = {
       },
       parcoursup_statut: {
         type: "string",
-        enum: ["hors périmètre", "publié", "non publié", "à publier", "en attente de publication"],
+        enum: [
+          "hors périmètre",
+          "publié",
+          "non publié",
+          "à publier (vérifier accès direct postbac)",
+          "à publier (soumis à validation Recteur)",
+          "à publier",
+          "en attente de publication",
+        ],
         default: "hors périmètre",
         description: "Statut parcoursup",
       },
@@ -472,7 +503,14 @@ module.exports = {
       },
       affelnet_statut: {
         type: "string",
-        enum: ["hors périmètre", "publié", "non publié", "à publier", "en attente de publication"],
+        enum: [
+          "hors périmètre",
+          "publié",
+          "non publié",
+          "à publier (soumis à validation)",
+          "à publier",
+          "en attente de publication",
+        ],
         default: "hors périmètre",
         description: "Statut affelnet",
       },
@@ -580,6 +618,38 @@ module.exports = {
         },
         default: [],
         description: "Tableau de tags (2020, 2021, etc.)",
+      },
+      libelle_court: {
+        type: "string",
+        default: "null",
+        description: "BCN : libelle court fusion table n_formation_diplome ou v_formation_diplome",
+      },
+      niveau_formation_diplome: {
+        type: "string",
+        default: "null",
+        description: "BCN : niveau formation diplome",
+      },
+      affelnet_infos_offre: {
+        type: "string",
+        default: "null",
+        description: "Affelnet : Informations offre de formation",
+      },
+      affelnet_code_nature: {
+        type: "string",
+        default: "null",
+        description: "Affelnet : code nature de l'établissement de formation",
+      },
+      affelnet_secteur: {
+        type: "string",
+        enum: ["PR", "PU", null],
+        default: "null",
+        description: "Affelnet : type d'établissement (PR: Privé / PU: Public)",
+      },
+      bcn_mefs_10: {
+        type: "array",
+        items: {},
+        default: "null",
+        description: "BCN : Codes MEF 10 caractères",
       },
       _id: {
         type: "string",

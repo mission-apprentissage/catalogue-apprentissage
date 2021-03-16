@@ -9,26 +9,52 @@ module.exports = ({ catalogue }) => {
   const router = express.Router();
 
   /**
+   * Get statistique
+   */
+
+  router.get(
+    "/statistique",
+    tryCatch(async (req, res) => {
+      let [x, y, z] = await Promise.all([
+        AfFormation.estimatedDocumentCount(),
+        AfFormation.countDocuments({ etat_reconciliation: true }),
+        AfFormation.countDocuments({ matching_type: { $ne: null } }),
+      ]);
+
+      let percentageOnTotal = (value) => Math.round((value / x) * 100);
+
+      res.json({
+        total: x,
+        reconciled: [y, percentageOnTotal(y)],
+        covered: [z, percentageOnTotal(z)],
+      });
+    })
+  );
+
+  /**
    * Get all AfFormation
    */
   router.get(
     "/",
     tryCatch(async (req, res) => {
       const { type, page } = req.query;
-      let data = await AfFormation.paginate({ matching_type: type }, { page, sort: { etat_reconciliation: 1 } });
+      let data = await AfFormation.paginate(
+        { matching_type: type },
+        { page, sort: { etat_reconciliation: 1 }, lean: true }
+      );
 
       if (data.docs.length > 0) {
         const result = await Promise.all(
           data.docs.map(async (formation) => {
-            let { _doc, code_cfd, uai } = formation;
-            if (_doc.code_cfd) {
+            let { code_cfd, uai } = formation;
+            if (code_cfd) {
               const infoCfd = await getCfdInfo(code_cfd);
-              const infoReconciliation = await AfReconciliation.find({ code_cfd, uai });
+              const infoReconciliation = await AfReconciliation.findOne({ code_cfd, uai });
 
               let infobcn = infoCfd.result.intitule_long;
 
               return {
-                ...formation._doc,
+                ...formation,
                 reconciliation: infoReconciliation,
                 infobcn,
               };
@@ -38,9 +64,9 @@ module.exports = ({ catalogue }) => {
         );
 
         data.docs = await result;
-        res.json(data);
+        return res.json(data);
       } else {
-        res.status(404).json([]);
+        return res.status(404).json([]);
       }
     })
   );
@@ -53,7 +79,7 @@ module.exports = ({ catalogue }) => {
     tryCatch(async (req, res) => {
       const data = req.body;
       const response = await AfFormation.findByIdAndUpdate(data.id, { ...data }, { new: true });
-      res.json(response);
+      return res.json(response);
     })
   );
 
@@ -83,7 +109,26 @@ module.exports = ({ catalogue }) => {
         await AfFormation.findByIdAndUpdate(id_formation, { etat_reconciliation: true });
       }
 
-      res.json(result);
+      return res.json(result);
+    })
+  );
+
+  router.put(
+    "/reconciliation",
+    tryCatch(async (req, res) => {
+      const { uai_formation, uai_gestionnaire, uai_formateur, cfd, email = null } = req.body;
+      const uais = [uai_formation, uai_gestionnaire, uai_formateur].filter((uai) => uai);
+
+      if (uais.length === 0 || !cfd) {
+        res.status(400).json({ message: "Un uai ou le cfd est manquant" });
+      }
+
+      try {
+        await AfReconciliation.findOneAndUpdate({ uai: { $in: uais }, code_cfd: cfd }, { unpublished_by_user: email });
+        return res.sendStatus(200);
+      } catch (error) {
+        return res.status(400).json(error);
+      }
     })
   );
 
@@ -99,7 +144,7 @@ module.exports = ({ catalogue }) => {
         { $push: { matching_mna_etablissement: { ...etablissement, _id: new mongoose.Types.ObjectId() } } },
         { new: true }
       );
-      res.json(response);
+      return res.json(response);
     })
   );
 
@@ -115,7 +160,7 @@ module.exports = ({ catalogue }) => {
       }
 
       const newEtablissement = await catalogue.createEtablissement({ uai, siret });
-      res.json(newEtablissement);
+      return res.json(newEtablissement);
     })
   );
 
@@ -134,12 +179,12 @@ module.exports = ({ catalogue }) => {
       if (update) {
         if (update.nModified === 1) {
           const response = await AfFormation.findById({ _id: formation_id });
-          res.json(response);
+          return res.json(response);
         } else {
-          res.json(update);
+          return res.json(update);
         }
       } else {
-        res.status(400).json([]);
+        return res.status(400).json([]);
       }
     })
   );

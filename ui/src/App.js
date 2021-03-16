@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Switch, Route, Redirect, useHistory } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/Dashboard";
@@ -18,7 +18,7 @@ import Journal from "./pages/Journal/Journal";
 import HowToReglement from "./pages/HowToReglement";
 import HowToModif from "./pages/HowToModif";
 import HowToSignal from "./pages/HowToSignal";
-import { _post } from "./common/httpClient";
+import { _post, _get } from "./common/httpClient";
 import ScrollToTop from "./common/components/ScrollToTop";
 
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -58,7 +58,28 @@ const ResetPasswordWrapper = ({ children }) => {
 const queryClient = new QueryClient();
 
 export default () => {
-  let [auth] = useAuth();
+  let [auth, setAuth] = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function getUser() {
+      try {
+        let user = await _get("/api/auth/current-session");
+
+        if (user) {
+          setAuth(user);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+      setIsLoading(false);
+    }
+    getUser();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (isLoading) {
+    return <div />;
+  }
 
   return (
     <QueryClientProvider client={queryClient}>

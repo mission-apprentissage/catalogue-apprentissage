@@ -49,10 +49,10 @@ module.exports = () => {
    *                 type: string
    *               affelnet_statut:
    *                 type: string
-   *                 enum: ["hors périmètre", "publié", "non publié", "à publier", "en attente de publication"]
+   *                 enum: ["hors périmètre", "publié", "non publié", "à publier (soumis à validation)", "à publier", "en attente de publication"]
    *               parcoursup_statut:
    *                 type: string
-   *                 enum: ["hors périmètre", "publié", "non publié", "à publier", "en attente de publication"]
+   *                 enum: ["hors périmètre", "publié", "non publié", "à publier (vérifier accès direct postbac)", "à publier (soumis à validation Recteur)", "à publier", "en attente de publication"]
    *     responses:
    *       200:
    *         description: OK, retourne la formation mise à jour
@@ -71,15 +71,17 @@ module.exports = () => {
       const formation = await ConvertedFormation.findById(itemId);
       let hasRightToEdit = user.isAdmin;
       if (!hasRightToEdit) {
-        const listAcademie = user.academie.split(",");
-        hasRightToEdit = listAcademie.includes(`${formation.num_academie}`);
+        const listAcademie = user.academie.split(",").map((academieStr) => Number(academieStr));
+        hasRightToEdit = listAcademie.includes(-1) || listAcademie.includes(Number(formation.num_academie));
       }
       if (!hasRightToEdit) {
         throw Boom.unauthorized();
       }
 
       logger.info("Updating new item: ", body);
-      const result = await ConvertedFormation.findOneAndUpdate({ _id: itemId }, body, { new: true });
+      const result = await ConvertedFormation.findOneAndUpdate({ _id: itemId }, body, {
+        new: true,
+      });
       res.json(result);
     })
   );

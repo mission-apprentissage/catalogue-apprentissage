@@ -3,8 +3,8 @@ const { RcoFormation, ConvertedFormation } = require("../../../common/model/inde
 const { mnaFormationUpdater } = require("../../../logic/updaters/mnaFormationUpdater");
 const report = require("../../../logic/reporter/report");
 const config = require("config");
-const { asyncForEach } = require("../../../common/utils/asyncUtils");
-const catalogue = require("../../../common/components/catalogue");
+const { createOrUpdateEtablissements } = require("../../../logic/updaters/etablissementUpdater");
+
 const { paginator } = require("../../common/utils/paginator");
 const { storeByChunks } = require("../../common/utils/reportUtils");
 
@@ -50,90 +50,6 @@ const formatToMnaFormation = (rcoFormation) => {
   };
 };
 
-const getEtablissementData = (rcoFormation, prefix) => {
-  return {
-    siret: rcoFormation[`${prefix}_siret`] || null,
-    uai: rcoFormation[`${prefix}_uai`] || null,
-    geo_coordonnees: rcoFormation[`${prefix}_geo_coordonnees`] || null,
-    ...getRCOEtablissementFields(rcoFormation, prefix),
-  };
-};
-
-const getRCOEtablissementFields = (rcoFormation, prefix) => {
-  return {
-    rco_uai: rcoFormation[`${prefix}_uai`] || null,
-    rco_geo_coordonnees: rcoFormation[`${prefix}_geo_coordonnees`] || null,
-    rco_code_postal: rcoFormation[`${prefix}_code_postal`] || null,
-    rco_adresse: rcoFormation[`${prefix}_adresse`] || null,
-    rco_code_insee_localite: rcoFormation[`${prefix}_code_insee`] || null,
-  };
-};
-
-const areEtablissementFieldsEqual = (rcoFields, etablissement) => {
-  const keyMap = {
-    rco_uai: "uai",
-    rco_geo_coordonnees: "geo_coordonnees",
-    rco_code_postal: "code_postal",
-    rco_adresse: "adresse",
-    rco_code_insee_localite: "code_insee_localite",
-  };
-  return Object.entries(rcoFields).every(([key, value]) => etablissement[keyMap[key]] === value);
-};
-
-const areRCOFieldsEqual = (rcoFields, etablissement) => {
-  return Object.entries(rcoFields).every(([key, value]) => etablissement[key] === value);
-};
-
-const handledSirets = [];
-
-/**
- * Create or update etablissements
- */
-const createOrUpdateEtablissements = async (rcoFormation) => {
-  const etablissementTypes = [
-    "etablissement_gestionnaire",
-    "etablissement_formateur" /*, "etablissement_lieu_formation"*/,
-  ];
-
-  await asyncForEach(etablissementTypes, async (type) => {
-    const data = getEtablissementData(rcoFormation, type);
-    if (!data.siret || handledSirets.includes(data.siret)) {
-      return;
-    }
-
-    const years = ["2020", "2021"];
-    const tags = years.filter((year) => rcoFormation.periode?.some((p) => p.includes(year)));
-    if (tags.length === 0) {
-      return;
-    }
-
-    handledSirets.push(data.siret);
-    let etablissement = await catalogue().getEtablissement({ siret: data.siret });
-    if (!etablissement?._id) {
-      await catalogue().createEtablissement({ ...data, tags });
-    } else {
-      let updates = {};
-      const rcoFields = getRCOEtablissementFields(rcoFormation, type);
-
-      if (!areEtablissementFieldsEqual(rcoFields, etablissement) && !areRCOFieldsEqual(rcoFields, etablissement)) {
-        updates = {
-          ...updates,
-          ...rcoFields,
-        };
-      }
-
-      const tagsToAdd = tags.filter((tag) => !etablissement?.tags?.includes(tag));
-      if (tagsToAdd.length > 0) {
-        updates.tags = [...etablissement.tags, ...tagsToAdd];
-      }
-
-      if (Object.keys(updates).length > 0) {
-        await catalogue().updateEtablissement(etablissement._id, updates);
-      }
-    }
-  });
-};
-
 const run = async () => {
   //  1 : filter rco formations which are not converted yet
   //  2 : convert them to mna format & launch updater on them
@@ -174,21 +90,28 @@ const performConversion = async () => {
 
     await createOrUpdateEtablissements(rcoFormation._doc);
 
-    const { updates, formation: convertedFormation, error } = await mnaFormationUpdater(mnaFormattedRcoFormation, {
-      withHistoryUpdate: false,
-    });
+    const { updates, formation: convertedFormation, error, serviceAvailable = true } = await mnaFormationUpdater(
+      mnaFormattedRcoFormation,
+      {
+        withHistoryUpdate: false,
+      }
+    );
 
     if (error) {
       rcoFormation.conversion_error = error;
       await rcoFormation.save();
-      // unpublish in case of errors if it was already in converted collection
-      await ConvertedFormation.findOneAndUpdate(
-        { id_rco_formation: mnaFormattedRcoFormation.id_rco_formation },
-        { published: false, update_error: error },
-        {
-          new: true,
-        }
-      );
+
+      if (serviceAvailable) {
+        // unpublish in case of errors if it was already in converted collection
+        // but don't do it if service tco is unavailable
+        await ConvertedFormation.findOneAndUpdate(
+          { id_rco_formation: mnaFormattedRcoFormation.id_rco_formation },
+          { published: false, update_error: error },
+          {
+            new: true,
+          }
+        );
+      }
 
       invalidRcoFormations.push({
         id_rco_formation: mnaFormattedRcoFormation.id_rco_formation,
@@ -206,6 +129,20 @@ const performConversion = async () => {
 
     rcoFormation.conversion_error = "success";
     await rcoFormation.save();
+
+    const previousFormation = await ConvertedFormation.findOne({
+      id_rco_formation: convertedFormation.id_rco_formation,
+    }).lean();
+    if (previousFormation) {
+      // Keep Affelnet & Parcoursup related data (to prevent override user modifications)
+      convertedFormation.affelnet_reference = previousFormation.affelnet_reference;
+      convertedFormation.affelnet_statut = previousFormation.affelnet_statut;
+      convertedFormation.affelnet_error = previousFormation.affelnet_error;
+      convertedFormation.parcoursup_reference = previousFormation.parcoursup_reference;
+      convertedFormation.parcoursup_statut = previousFormation.parcoursup_statut;
+      convertedFormation.parcoursup_error = previousFormation.parcoursup_error;
+      convertedFormation.affelnet_infos_offre = previousFormation.affelnet_infos_offre;
+    }
 
     // replace or insert new one
     await ConvertedFormation.findOneAndUpdate(

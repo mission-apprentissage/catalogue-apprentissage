@@ -21,7 +21,8 @@
     "password": {
       "jwtSecret": "91011",
       "expiresIn": "1h"
-    }
+    },
+    "secret": "mission-apprentissage"
   },
   "log": {
     "type": "console",

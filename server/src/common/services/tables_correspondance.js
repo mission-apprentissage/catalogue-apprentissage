@@ -20,8 +20,8 @@ const getMefInfo = async (mef) => {
 };
 
 const getBcnInfo = async (options) => {
-  let { page, limit, query } = { page: 1, limit: 10, ...options };
-  let params = { page, limit, query };
+  let { page, limit, query, queryAsRegex } = { page: 1, limit: 10, ...options };
+  let params = { page, limit, query, queryAsRegex };
 
   try {
     const { data } = await axios.get(`${apiEndpoint}/bcn/formationsDiplomes`, { params });
@@ -32,26 +32,29 @@ const getBcnInfo = async (options) => {
   }
 };
 
-const getCfdInfo = async (cfd) => {
+const getCfdInfo = async (cfd, { checkService = false } = {}) => {
   try {
-    const { data } = await axios.post(`${apiEndpoint}/cfd`, {
+    const { data } = await axios.post(`${apiEndpoint}/v1/cfd`, {
       cfd,
     });
+
+    if (checkService) {
+      return { result: data, serviceAvailable: true };
+    }
     return data;
   } catch (error) {
     logger.error(`getCfdInfo: something went wrong`);
+
+    if (checkService) {
+      let serviceAvailable = true;
+      if (!error.response || (error.response.status >= 500 && error.response.status <= 599)) {
+        serviceAvailable = false;
+      }
+      return { result: null, serviceAvailable };
+    }
+
     return null;
   }
 };
 
-const findOpcosFromCfd = async (cfd) => {
-  try {
-    const { data } = await axios.get(`${apiEndpoint}/opcos/opco?cfd=${cfd}`);
-    return data;
-  } catch (error) {
-    logger.error(`findOpcosFromCfd: something went wrong`);
-    return null;
-  }
-};
-
-module.exports = { getMefInfo, getBcnInfo, getCfdInfo, findOpcosFromCfd };
+module.exports = { getMefInfo, getBcnInfo, getCfdInfo };

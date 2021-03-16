@@ -17,6 +17,11 @@ const mnaFormationSchema = {
     default: null,
     description: "Lettre spécialité du code cfd",
   },
+  cfd_outdated: {
+    type: Boolean,
+    default: false,
+    description: "BCN : cfd périmé (fermeture avant le 31 aout de l'année courante)",
+  },
   mef_10_code: {
     type: String,
     default: null,
@@ -25,7 +30,7 @@ const mnaFormationSchema = {
   mefs_10: {
     type: [Object],
     default: [],
-    description: "Tableau de Code MEF 10 caractères et modalités",
+    description: "Tableau de Code MEF 10 caractères et modalités (filtrés pour Affelnet si applicable)",
   },
   nom_academie: {
     type: String,
@@ -164,7 +169,15 @@ const mnaFormationSchema = {
   },
   parcoursup_statut: {
     type: String,
-    enum: ["hors périmètre", "publié", "non publié", "à publier", "en attente de publication"],
+    enum: [
+      "hors périmètre",
+      "publié",
+      "non publié",
+      "à publier (vérifier accès direct postbac)",
+      "à publier (soumis à validation Recteur)",
+      "à publier",
+      "en attente de publication",
+    ],
     default: "hors périmètre",
     description: "Statut parcoursup",
   },
@@ -185,7 +198,14 @@ const mnaFormationSchema = {
   },
   affelnet_statut: {
     type: String,
-    enum: ["hors périmètre", "publié", "non publié", "à publier", "en attente de publication"],
+    enum: [
+      "hors périmètre",
+      "publié",
+      "non publié",
+      "à publier (soumis à validation)",
+      "à publier",
+      "en attente de publication",
+    ],
     default: "hors périmètre",
     description: "Statut affelnet",
   },
@@ -238,6 +258,7 @@ const mnaFormationSchema = {
     type: [Object],
     default: [],
     description: "Historique des mises à jours",
+    noIndex: true,
   },
   last_update_at: {
     type: Date,
@@ -304,6 +325,27 @@ const mnaFormationSchema = {
     type: String,
     default: null,
     description: "BCN : niveau formation diplome",
+  },
+  affelnet_infos_offre: {
+    type: String,
+    default: null,
+    description: "Affelnet : Informations offre de formation",
+  },
+  affelnet_code_nature: {
+    type: String,
+    default: null,
+    description: "Affelnet : code nature de l'établissement de formation",
+  },
+  affelnet_secteur: {
+    type: String,
+    enum: ["PR", "PU", null],
+    default: null,
+    description: "Affelnet : type d'établissement (PR: Privé / PU: Public)",
+  },
+  bcn_mefs_10: {
+    type: [Object],
+    default: null,
+    description: "BCN : Codes MEF 10 caractères",
   },
 };
 

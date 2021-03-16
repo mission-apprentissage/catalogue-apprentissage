@@ -1,6 +1,6 @@
 const logger = require("../../common/logger");
 const { infosCodes, computeCodes } = require("../../constants/opco");
-const { getCfdInfo, findOpcosFromCfd } = require("../../common/services/tables_correspondance");
+const { getCfdInfo } = require("../../common/services/tables_correspondance");
 
 const cfdMapper = async (cfd = null) => {
   try {
@@ -8,10 +8,11 @@ const cfdMapper = async (cfd = null) => {
       throw new Error("cfdMapper cfd must be provided");
     }
 
-    const cfdInfo = await getCfdInfo(cfd);
+    const { result: cfdInfo, serviceAvailable } = await getCfdInfo(cfd, { checkService: true });
     if (!cfdInfo) {
       return {
         result: null,
+        serviceAvailable,
         messages: {
           error: `Unable to retrieve data from cfd ${cfd}`,
         },
@@ -19,7 +20,7 @@ const cfdMapper = async (cfd = null) => {
     }
 
     const { result, messages } = cfdInfo;
-    const { rncp = {}, mefs = {}, onisep = {} } = result;
+    const { rncp = {}, mefs = {}, onisep = {}, opcos = [] } = result;
 
     const {
       date_fin_validite_enregistrement = null,
@@ -49,31 +50,27 @@ const cfdMapper = async (cfd = null) => {
 
     const { url: onisep_url = null } = onisep;
 
-    let opcos = null;
+    let opcoNames = null;
     let info_opcos = infosCodes.NotFound;
     let info_opcos_intitule = computeCodes[infosCodes.NotFound];
-    try {
-      const opcosForFormations = await findOpcosFromCfd(cfd);
-      if (opcosForFormations?.length > 0) {
-        opcos = opcosForFormations.map(({ operateur_de_competences }) => operateur_de_competences);
-        info_opcos = infosCodes.Found;
-        info_opcos_intitule = computeCodes[infosCodes.Found];
-      }
-    } catch (err) {
-      logger.error(err);
+    if (opcos?.length > 0) {
+      opcoNames = opcos.map(({ operateur_de_competences }) => operateur_de_competences);
+      info_opcos = infosCodes.Found;
+      info_opcos_intitule = computeCodes[infosCodes.Found];
     }
 
     return {
       result: {
         cfd: result.cfd,
         cfd_specialite: result.specialite,
+        cfd_outdated: result.cfd_outdated,
         niveau: result.niveau,
         intitule_long: result.intitule_long,
         intitule_court: result.intitule_court,
         diplome: result.diplome,
 
         mef_10_code: mef10,
-        mefs_10: mefs10,
+        bcn_mefs_10: mefs10,
 
         duree: modalite.duree,
         annee: modalite.annee,
@@ -101,19 +98,21 @@ const cfdMapper = async (cfd = null) => {
           blocs_competences,
           voix_acces,
         },
-        opcos,
+        opcos: opcoNames,
         info_opcos,
         info_opcos_intitule,
 
         libelle_court: result.libelle_court,
         niveau_formation_diplome: result.niveau_formation_diplome,
       },
+      serviceAvailable,
       messages,
     };
   } catch (e) {
     logger.error(e);
     return {
       result: null,
+      serviceAvailable: true,
       messages: {
         error: e.toString(),
       },

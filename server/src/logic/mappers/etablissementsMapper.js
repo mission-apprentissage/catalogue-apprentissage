@@ -1,9 +1,10 @@
 const logger = require("../../common/logger");
-const catalogue = require("../../common/components/catalogue");
+const { habiliteList } = require("../../constants/certificateurs");
+const { Etablissement } = require("../../common/model");
 
 const getAttachedEstablishments = async (etablissement_gestionnaire_siret, etablissement_formateur_siret) => {
   // Get establishment Gestionnaire
-  const gestionnaire = await catalogue().getEtablissement({
+  const gestionnaire = await Etablissement.findOne({
     siret: etablissement_gestionnaire_siret,
   });
 
@@ -12,7 +13,7 @@ const getAttachedEstablishments = async (etablissement_gestionnaire_siret, etabl
   if (etablissement_gestionnaire_siret === etablissement_formateur_siret) {
     formateur = gestionnaire;
   } else {
-    formateur = await catalogue().getEtablissement({
+    formateur = await Etablissement.findOne({
       siret: etablissement_formateur_siret,
     });
   }
@@ -33,11 +34,15 @@ const getEstablishmentAddress = (establishment) => {
 };
 
 const isHabiliteRncp = ({ partenaires = [], certificateurs = [] }, siret) => {
+  if ((certificateurs ?? []).some(({ certificateur }) => habiliteList.includes(certificateur))) {
+    return true;
+  }
+
   const isPartenaire = (partenaires ?? []).some(
-    ({ SIRET_PARTENAIRE, HABILITATION_PARTENAIRE }) =>
-      SIRET_PARTENAIRE === siret && ["HABILITATION_ORGA_FORM", "HABILITATION_FORMER"].includes(HABILITATION_PARTENAIRE)
+    ({ Siret_Partenaire, Habilitation_Partenaire }) =>
+      Siret_Partenaire === siret && ["HABILITATION_ORGA_FORM", "HABILITATION_FORMER"].includes(Habilitation_Partenaire)
   );
-  const isCertificateur = (certificateurs ?? []).some(({ SIRET_CERTIFICATEUR }) => SIRET_CERTIFICATEUR === siret);
+  const isCertificateur = (certificateurs ?? []).some(({ siret_certificateur }) => siret_certificateur === siret);
   return isPartenaire || isCertificateur;
 };
 
@@ -90,7 +95,7 @@ const mapEtablissementKeys = async (
     [`${prefix}_siren`]: etablissement.siren || null,
     [`${prefix}_published`]: etablissement.published || false,
     [`${prefix}_catalogue_published`]: etablissement.catalogue_published || false,
-    [`${prefix}_id`]: etablissement._id || null,
+    [`${prefix}_id`]: etablissement._id ? `${etablissement._id}` : null,
     [`${prefix}_uai`]: etablissement.uai || null,
     [`${prefix}_enseigne`]: etablissement.enseigne || null,
     [`${prefix}_type`]: etablissement.computed_type || null,
@@ -115,6 +120,21 @@ const mapEtablissementKeys = async (
   };
 };
 
+const isInCatalogEligible = (referenceEstablishment, rncpInfo) => {
+  if (!referenceEstablishment.catalogue_published) {
+    return false;
+  }
+
+  if (
+    ["Titre", "TP"].includes(rncpInfo.code_type_certif) &&
+    (!isHabiliteRncp(rncpInfo, referenceEstablishment.siret) || !rncpInfo.rncp_eligible_apprentissage)
+  ) {
+    return false;
+  }
+
+  return true;
+};
+
 const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissement_formateur_siret, rncpInfo) => {
   try {
     if (!etablissement_gestionnaire_siret && !etablissement_formateur_siret) {
@@ -129,6 +149,17 @@ const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissem
     const etablissementReference = getEtablissementReference(attachedEstablishments);
     if (!etablissementReference) {
       return { result: null, messages: { error: "Unable to retrieve etablissementReference" } };
+    }
+
+    if (attachedEstablishments?.gestionnaire?.ferme) {
+      return {
+        result: null,
+        messages: { error: `Établissement gestionnaire fermé ${etablissement_gestionnaire_siret}` },
+      };
+    }
+
+    if (attachedEstablishments?.formateur?.ferme) {
+      return { result: null, messages: { error: `Établissement formateur fermé ${etablissement_formateur_siret}` } };
     }
 
     const { referenceEstablishment, etablissement_reference } = etablissementReference;
@@ -151,7 +182,7 @@ const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissem
         ...etablissementFormateur,
 
         etablissement_reference,
-        etablissement_reference_catalogue_published: referenceEstablishment.catalogue_published,
+        etablissement_reference_catalogue_published: isInCatalogEligible(referenceEstablishment, rncpInfo),
         etablissement_reference_published: referenceEstablishment.published,
         etablissement_reference_declare_prefecture: referenceEstablishment.computed_declare_prefecture,
         etablissement_reference_type: referenceEstablishment.computed_type,

@@ -5,15 +5,16 @@ import "./cardList.css";
 import { hasOneOfRoles } from "../../../../common/utils/rolesUtils";
 import useAuth from "../../../../common/hooks/useAuth";
 import { StatusBadge } from "../../../../common/components/StatusBadge";
+import { Flex, Box } from "@chakra-ui/react";
 
-const CardList = ({ data, f2021 }) => {
+const CardList = ({ data }) => {
   let [auth] = useAuth();
 
   const niv = data.niveau.replace(/\D/g, "");
 
   return (
     <Link
-      to={f2021 ? `/formation/${data._id}` : `/formation/${data._id}?source=mna`}
+      to={`/formation/${data._id}`}
       className="list-card-formation"
       style={{ textDecoration: "none" }}
       target="_blank"
@@ -27,19 +28,23 @@ const CardList = ({ data, f2021 }) => {
             <p>{data.etablissement_formateur_enseigne}</p>
             <p>{data.etablissement_gestionnaire_entreprise_raison_sociale}</p>
             <p>
-              {data.code_postal} {data.nom_academie}
+              {data.code_postal} académie de {data.nom_academie}
             </p>
+            <Box display={["block", "none"]}>
+              <small>Code diplôme: {data.cfd}</small>
+            </Box>
             {hasOneOfRoles(auth, ["admin", "instructeur"]) && data.etablissement_reference_catalogue_published && (
-              <div className="pills-statuts">
-                <StatusBadge source="Parcoursup" status={data.parcoursup_statut} mr={2} />
-                <StatusBadge source="Affelnet" status={data.affelnet_statut} />
-              </div>
+              <Flex mt={15} wrap="wrap">
+                <StatusBadge source="Parcoursup" status={data.parcoursup_statut} mr={[0, 2]} />
+                <StatusBadge source="Affelnet" status={data.affelnet_statut} mt={[2, 0]} />
+              </Flex>
             )}
           </div>
         </div>
-        <div className="list-card-right">
+
+        <Flex display={["none", "flex"]}>
           <small>Code diplôme: {data.cfd}</small>
-        </div>
+        </Flex>
       </div>
     </Link>
   );

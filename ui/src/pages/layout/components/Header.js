@@ -16,16 +16,20 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome, faSignOutAlt, faSync, faUsers } from "@fortawesome/free-solid-svg-icons";
+import { faSignOutAlt, faSync, faUsers } from "@fortawesome/free-solid-svg-icons";
 import useAuth from "../../../common/hooks/useAuth";
 import { isUserAdmin } from "../../../common/utils/rolesUtils";
+import { _get } from "../../../common/httpClient";
 
 const Header = () => {
   let [auth, setAuth] = useAuth();
   let history = useHistory();
-  let logout = () => {
-    setAuth(null);
-    history.push("/");
+  let logout = async () => {
+    const { loggedOut } = await _get("/api/auth/logout");
+    if (loggedOut) {
+      setAuth(null);
+      history.push("/");
+    }
   };
 
   return (
@@ -62,15 +66,11 @@ const Header = () => {
                 </Flex>
               </MenuButton>
               <MenuList>
-                <MenuItem as={NavLink} to="/" icon={<FontAwesomeIcon icon={faHome} />}>
-                  Accueil
-                </MenuItem>
                 {isUserAdmin(auth) && (
                   <>
-                    <MenuDivider />
                     <MenuGroup title="Administration">
                       <MenuItem as={NavLink} to="/admin/users" icon={<FontAwesomeIcon icon={faUsers} />}>
-                        Utilisateurs
+                        Gestion des utilisateurs
                       </MenuItem>
                     </MenuGroup>
                     <MenuDivider />

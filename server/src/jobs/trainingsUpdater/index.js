@@ -3,11 +3,11 @@ const updater = require("./updater/updater");
 
 const { runScript } = require("../scriptWrapper");
 
-const trainingsUpdater = async () => {
+const trainingsUpdater = async (withCodePostalUpdate = false) => {
   try {
     logger.info(" -- Start of training updater -- ");
 
-    await updater.run();
+    await updater.run({}, withCodePostalUpdate);
 
     logger.info(" -- End of training updater -- ");
   } catch (err) {
@@ -19,6 +19,8 @@ module.exports = trainingsUpdater;
 
 if (process.env.standalone) {
   runScript(async () => {
-    await trainingsUpdater();
+    const args = process.argv.slice(2);
+    const withCodePostalUpdate = args?.[0] === "--withCodePostal";
+    await trainingsUpdater(withCodePostalUpdate);
   });
 }

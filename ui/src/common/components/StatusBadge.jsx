@@ -29,6 +29,9 @@ export const StatusBadge = ({ source, status, ...badgeProps }) => {
     "hors périmètre": "notRelevant",
     publié: "published",
     "non publié": "notPublished",
+    "à publier (soumis à validation)": "toBePublished",
+    "à publier (vérifier accès direct postbac)": "toBePublished",
+    "à publier (soumis à validation Recteur)": "toBePublished",
     "à publier": "toBePublished",
     "en attente de publication": "pending",
   };

@@ -5,15 +5,19 @@ const { asyncForEach } = require("../../common/utils/asyncUtils");
 const { cfd, uai } = require("./queries");
 const mongoose = require("mongoose");
 
-async function getParcoursupCoverage(formation) {
-  const getMatch = (query) => ConvertedFormation.find(query);
+const getMatch = async (query) => ConvertedFormation.find(query);
+
+async function getParcoursupCoverage(formation, { published, tags } = {}) {
+  let params = { published, tags };
 
   let match = [];
 
   for (let i = 0; i < cfd.length; i++) {
     let { query, strength } = cfd[i];
 
-    let result = await getMatch(query(formation));
+    let result = await getMatch({ ...query(formation), ...params });
+
+    // console.log({ type: "CFD", query: query(formation), result: result.length });
 
     if (result.length > 0) {
       match.push({
@@ -30,7 +34,9 @@ async function getParcoursupCoverage(formation) {
     for (let i = 0; i < uai.length; i++) {
       let { query, strength } = uai[i];
 
-      let result = await getMatch(query(formation));
+      let result = await getMatch({ ...query(formation), ...params });
+
+      // console.log({ type: "UAI", query: query(formation), result: result.length });
 
       if (result.length > 0) {
         match.push({
@@ -125,11 +131,15 @@ async function getEtablissementCoverage(formations) {
       if (!uai_formation && !etablissement_formateur_uai && !etablissement_gestionnaire_uai) {
         if (etablissement_formateur_id) {
           let formateur = await Etablissement.findById(etablissement_formateur_id);
-          match.push({ ...formatEtablissement(formateur), matched_uai: "BY_ID_FORMATEUR" });
+          if (formateur) {
+            match.push({ ...formatEtablissement(formateur), matched_uai: "BY_ID_FORMATEUR" });
+          }
         }
         if (etablissement_gestionnaire_id) {
           let gestionnaire = await Etablissement.findById(etablissement_gestionnaire_id);
-          match.push({ ...formatEtablissement(gestionnaire), matched_uai: "BY_ID_GESTIONNAIRE" });
+          if (gestionnaire) {
+            match.push({ ...formatEtablissement(gestionnaire), matched_uai: "BY_ID_GESTIONNAIRE" });
+          }
         }
         return;
       }

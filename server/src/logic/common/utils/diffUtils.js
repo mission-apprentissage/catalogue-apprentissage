@@ -23,10 +23,10 @@ const diffFormation = (previousFormationP, nextFormationP) => {
   const keys = Object.keys(compare);
 
   if (keys.length === 0) {
-    return { updates: null, keys: [] };
+    return { updates: null, keys: [], length: 0 };
   }
 
-  return { updates: compare, keys };
+  return { updates: compare, keys, length: keys.length };
 };
 
 module.exports.diffFormation = diffFormation;

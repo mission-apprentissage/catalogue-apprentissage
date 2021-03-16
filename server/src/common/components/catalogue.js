@@ -92,8 +92,8 @@ const deleteEtablissement = async (id) => {
 };
 
 const createEtablissement = async (payload) => {
-  if (!payload.siret || !payload.uai) {
-    logger.error("Missing siret or uai from payload");
+  if (!payload.siret) {
+    logger.error("Missing siret from payload");
     return null;
   }
 

@@ -1,23 +1,53 @@
 const changelog = {
   list: [
     {
-      version: "2.5.0",
+      version: "2.7.0",
       date: "Prochainement",
       about: `<h5>À venir</h5>
       <ul>
         <li>
-          Réconciliation des formations existantes Affelnet (sur base des éléments publiés dans Affenet en 2020)
+          Développement d'un module de gestion des règles
         </li>
         <li>
-          Réconciliation des formations existantes Parcoursup (sur base des éléments publiés dans Parcoursup en 2021)
+          Fiabilisation des UAIs sur les formations
         </li>
         <li>
-          Formulaire complémentaire pour publication des formations dans catalogue Affelnet
+          Amélioration de la réconciliation Parcoursup et Affelnet
+        </li>
+        <li>
+          Travaux sur le flux retour vers les Carif-Oref et gestion des modifications
         </li>
       </ul>`,
       fixes: [],
       features: [],
       improvements: [],
+    },
+    {
+      version: "2.6.0",
+      date: "03/03/2021",
+      about: `<h5>À propos de cette version</h5>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: ["Correction du niveau des MC"],
+      features: [
+        "[Catalogue] Fonctionnalité de dépublication des formations",
+        "[Catalogue] Ajout de l'adresse du site de formation",
+      ],
+      improvements: [
+        "Modifications des filtres pour le périmètre Parcoursup",
+        "Ajustement des périmètres Affelnet et Parcoursup",
+      ],
+    },
+    {
+      version: "2.5.0",
+      date: "22/02/2021",
+      about: `<h5>À propos de cette version</h5>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [],
+      features: ["[Catalogue] Formulaire complémentaire pour publication des formations dans catalogue Affelnet"],
+      improvements: [
+        "[Catalogue] Réconciliation des formations existantes Affelnet (sur base des éléments publiés dans Affenet en 2020)",
+        "[Catalogue] Réconciliation des formations existantes Parcoursup (sur base des éléments publiés dans Parcoursup en 2021)",
+      ],
     },
     {
       version: "2.4.0",

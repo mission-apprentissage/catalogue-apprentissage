@@ -95,7 +95,7 @@ const NavLinks = ({ isOpen }) => {
             </MenuItem>
             {auth?.sub !== "anonymous" && (
               <MenuItem as={NavLink} to="/guide-modification">
-                Guide d'utilisation
+                Guide de modification
               </MenuItem>
             )}
           </MenuList>

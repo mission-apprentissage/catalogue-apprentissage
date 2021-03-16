@@ -1,7 +1,10 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import {
   Alert,
   Box,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
   Button,
   Container,
   Flex,
@@ -10,33 +13,24 @@ import {
   Heading,
   Input,
   Link,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
   Spinner,
   Text,
-  FormControl,
-  FormLabel,
-  Center,
-  RadioGroup,
-  Radio,
-  Stack,
+  UnorderedList,
+  ListItem,
   useDisclosure,
 } from "@chakra-ui/react";
-import { NavLink, useHistory, useLocation } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import { useFormik } from "formik";
-import queryString from "query-string";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
-import { _get, _post, _put } from "../../common/httpClient";
+import { _get, _post } from "../../common/httpClient";
 import Layout from "../layout/Layout";
 import useAuth from "../../common/hooks/useAuth";
 import { hasRightToEditFormation } from "../../common/utils/rolesUtils";
 import { StatusBadge } from "../../common/components/StatusBadge";
 import { ReactComponent as InfoIcon } from "../../theme/assets/info-circle.svg";
+import { PublishModal } from "../../common/components/formation/PublishModal";
+import { HABILITE_LIST } from "../../constants/certificateurs";
 
 const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
 
@@ -128,6 +122,44 @@ const FormationPeriode = ({ periode }) => {
   return <>{displayedPeriode}</>;
 };
 
+const getGeoportailUrl = ({ lieu_formation_geo_coordonnees = "" }) => {
+  const coords = lieu_formation_geo_coordonnees.split(",");
+  const reversedCoords = `${coords[1]},${coords[0]}`;
+
+  const ignStyleLayer = "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2::GEOPORTAIL:OGC:WMTS(1)";
+  const poiEnseignementSup = "UTILITYANDGOVERNMENTALSERVICES.IGN.POI.ENSEIGNEMENTSUPERIEUR::GEOPORTAIL:OGC:WMS(1)";
+  const poiEnseignementSecondaire =
+    "UTILITYANDGOVERNMENTALSERVICES.IGN.POI.ENSEIGNEMENTSECONDAIRE::GEOPORTAIL:OGC:WMS(1)";
+  return `https://www.geoportail.gouv.fr/carte?c=${reversedCoords}&z=19&l0=${ignStyleLayer}&l1=${poiEnseignementSecondaire}&l2=${poiEnseignementSup}&permalink=yes`;
+};
+
+const HabilitationPartenaire = ({ habilitation }) => {
+  let color;
+  let text = habilitation;
+  switch (habilitation) {
+    case "HABILITATION_ORGA_FORM":
+      color = "green";
+      text = "ORGANISER ET FORMER";
+      break;
+    case "HABILITATION_FORMER":
+      color = "green";
+      text = "FORMER";
+      break;
+    case "HABILITATION_ORGANISER":
+      color = "red";
+      text = "ORGANISER";
+      break;
+    default:
+      break;
+  }
+
+  return (
+    <Text as="strong" style={{ color }}>
+      {text}
+    </Text>
+  );
+};
+
 const Formation = ({
   formation,
   edition,
@@ -140,6 +172,12 @@ const Formation = ({
   pendingFormation,
 }) => {
   const oneEstablishment = formation.etablissement_gestionnaire_siret === formation.etablissement_formateur_siret;
+  const filteredPartenaires = formation.rncp_details?.partenaires?.filter(({ Siret_Partenaire }) =>
+    [formation.etablissement_gestionnaire_siret, formation.etablissement_formateur_siret].includes(Siret_Partenaire)
+  );
+  const showPartenaires =
+    ["Titre", "TP"].includes(formation.rncp_details?.code_type_certif) &&
+    !(formation.rncp_details.certificateurs ?? []).some(({ certificateur }) => HABILITE_LIST.includes(certificateur));
 
   return (
     <Box bg="#fafbfc" boxShadow="0 2px 2px 0 rgba(215, 215, 215, 0.5)" borderRadius={4}>
@@ -186,14 +224,54 @@ const Formation = ({
             <Text mb={4}>
               Code diplôme (Éducation Nationale): {!edition && <strong>{formation.cfd}</strong>}
               {edition && <Input type="text" name="cfd" onChange={handleChange} value={values.cfd} />}
+              {formation.cfd_outdated && (
+                <>
+                  <br />
+                  Ce diplôme a une date de fin antérieure au 31/08 de l'année en cours
+                </>
+              )}
             </Text>
             <Text mb={4}>
               Codes MEF 10 caractères:{" "}
-              <strong>{formation.mef_10_code ?? formation?.mefs_10?.map(({ mef10 }) => mef10).join(", ")}</strong>
+              <strong>{formation.mef_10_code ?? formation?.bcn_mefs_10?.map(({ mef10 }) => mef10).join(", ")}</strong>
             </Text>
+            {formation?.mefs_10?.length > 0 && (
+              <Text mb={4}>
+                Codes MEF 10 caractères dans le périmètre <i>Affelnet</i>:{" "}
+                <strong>{formation?.mefs_10?.map(({ mef10 }) => mef10).join(", ")}</strong>
+              </Text>
+            )}
             <Text mb={4}>
               Période d'inscription: {!edition && <FormationPeriode periode={formation.periode} />}
               {edition && <Input type="text" name="periode" onChange={handleChange} value={values.periode} />}
+            </Text>
+            <Text mb={4}>
+              Lieu de la formation:{" "}
+              {!edition && (
+                <strong>
+                  <Link
+                    href={getGeoportailUrl(formation)}
+                    textDecoration="underline"
+                    color="blue.500"
+                    fontWeight="bold"
+                    isExternal
+                  >
+                    {formation.lieu_formation_adresse}, {formation.code_postal} {formation.localite}{" "}
+                    <FontAwesomeIcon icon={faExternalLinkAlt} />
+                  </Link>
+                </strong>
+              )}
+              {edition && (
+                <>
+                  <Input
+                    type="text"
+                    name="lieu_formation_adresse"
+                    onChange={handleChange}
+                    value={values.lieu_formation_adresse}
+                  />
+                  <Input type="text" name="code_postal" onChange={handleChange} value={values.code_postal} mt={2} />
+                </>
+              )}
             </Text>
             <Text mb={4}>
               Capacite d'accueil: {!edition && <strong>{formation.capacite}</strong>}
@@ -206,26 +284,6 @@ const Formation = ({
               Année: <strong>{formation.annee}</strong>
             </Text>
           </Box>
-          {/* <Section title="Information ParcourSup">
-          <div className="field">
-            <h3>Référencé dans ParcourSup</h3>
-            <p>{formation.parcoursup_reference ? "OUI" : "NON"}</p>
-          </div>
-          <div className="field">
-            <h3>À charger dans ParcourSup</h3>
-            <p>{formation.parcoursup_a_charger ? "OUI" : "NON"}</p>
-          </div>
-        </Section>
-        <Section title="Information Affelnet">
-          <div className="field">
-            <h3>Référencé dans Affelnet</h3>
-            <p>{formation.affelnet_reference ? "OUI" : "NON"}</p>
-          </div>
-          <div className="field">
-            <h3>À charger dans Affelnet</h3>
-            <p>{formation.affelnet_a_charger ? "OUI" : "NON"}</p>
-          </div>
-        </Section> */}
           <Box mb={16}>
             <Heading as="h2" fontSize="beta" mb={4} mt={6}>
               Informations RNCP et ROME
@@ -253,7 +311,6 @@ const Formation = ({
             <Text mb={4}>
               Codes ROME: <strong>{formation.rome_codes.join(", ")}</strong>
             </Text>
-
             <Box>
               {formation.opcos && formation.opcos.length === 0 && <Text mb={4}>Aucun OPCO rattaché</Text>}
               {formation.opcos && formation.opcos.length > 0 && (
@@ -262,6 +319,49 @@ const Formation = ({
                 </Text>
               )}
             </Box>
+            {formation.rncp_details && (
+              <>
+                <Text mb={4}>
+                  Certificateurs:{" "}
+                  <strong>
+                    {formation.rncp_details.certificateurs
+                      ?.filter(({ certificateur, siret_certificateur }) => certificateur || siret_certificateur)
+                      ?.map(
+                        ({ certificateur, siret_certificateur }) =>
+                          `${certificateur} (siret: ${siret_certificateur ?? "n/a"})`
+                      )
+                      .join(", ")}
+                  </strong>
+                </Text>
+                {showPartenaires && (
+                  <Text as="div" mb={4}>
+                    Partenaires: <br />
+                    {filteredPartenaires.length > 0 ? (
+                      <>
+                        L'habilitation ORGANISER seule n'ouvre pas les droits
+                        <UnorderedList>
+                          {filteredPartenaires.map(({ Nom_Partenaire, Siret_Partenaire, Habilitation_Partenaire }) => (
+                            <ListItem key={Siret_Partenaire}>
+                              <strong>
+                                {Nom_Partenaire} (siret: {Siret_Partenaire ?? "n/a"}) :{" "}
+                              </strong>
+                              <HabilitationPartenaire habilitation={Habilitation_Partenaire} />
+                            </ListItem>
+                          ))}
+                        </UnorderedList>
+                      </>
+                    ) : (
+                      <>
+                        Aucune habilitation sur la fiche pour ce SIRET.
+                        <br />
+                        SIRET formateur: {formation.etablissement_formateur_siret}, SIRET gestionnaire:{" "}
+                        {formation.etablissement_gestionnaire_siret}.
+                      </>
+                    )}
+                  </Text>
+                )}
+              </>
+            )}
           </Box>
         </GridItem>
         <GridItem colSpan={[12, 5]} bg="#fafbfc" p={8} borderBottomRightRadius={4} borderBottomLeftRadius={[4, 0]}>
@@ -342,6 +442,9 @@ const Formation = ({
               <Text mb={4}>
                 Uai: <strong>{formation.etablissement_formateur_uai}</strong>
               </Text>
+              <Text mb={4}>
+                Siret: <strong>{formation.etablissement_formateur_siret}</strong>
+              </Text>
               <Box mb={4}>
                 <Link
                   as={NavLink}
@@ -375,6 +478,9 @@ const Formation = ({
               <Text mb={4}>
                 Uai: <strong>{formation.etablissement_gestionnaire_uai}</strong>
               </Text>
+              <Text mb={4}>
+                Siret: <strong>{formation.etablissement_gestionnaire_siret}</strong>
+              </Text>
               <Box mb={4}>
                 <Link
                   as={NavLink}
@@ -403,76 +509,10 @@ export default ({ match }) => {
 
   const [edition, setEdition] = useState(false);
   let history = useHistory();
-  const { search } = useLocation();
-  const { source } = queryString.parse(search);
-  const isMna = source === "mna";
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isOpenPublishModal, onOpen: onOpenPublishModal, onClose: onClosePublishModal } = useDisclosure();
 
-  const [auth] = useAuth();
-  const hasRightToEdit = !isMna && hasRightToEditFormation(displayedFormation, auth);
-
-  const getPublishRadioValue = (status) => {
-    if (["publié", "en attente de publication"].includes(status)) {
-      return "true";
-    }
-    if (["non publié"].includes(status)) {
-      return "false";
-    }
-
-    return undefined;
-  };
-
-  const {
-    values: publishValues,
-    handleChange: handlePublishChange,
-    handleSubmit: handlePublishSubmit,
-    isSubmitting: isPublishSubmitting,
-    setFieldValue: setPublishFieldValue,
-  } = useFormik({
-    initialValues: {
-      affelnet: getPublishRadioValue(formation?.affelnet_statut),
-      parcoursup: getPublishRadioValue(formation?.parcoursup_statut),
-    },
-    onSubmit: ({ affelnet, parcoursup }) => {
-      return new Promise(async (resolve) => {
-        const body = {};
-
-        // check if can edit depending on the status
-        if (affelnet === "true") {
-          if (["non publié", "à publier"].includes(formation?.affelnet_statut)) {
-            body.affelnet_statut = "en attente de publication";
-          }
-        } else if (affelnet === "false") {
-          if (["en attente de publication", "à publier"].includes(formation?.affelnet_statut)) {
-            body.affelnet_statut = "non publié";
-          }
-        }
-
-        if (parcoursup === "true") {
-          if (["non publié", "à publier"].includes(formation?.parcoursup_statut)) {
-            body.parcoursup_statut = "en attente de publication";
-          }
-        } else if (parcoursup === "false") {
-          if (["en attente de publication", "à publier"].includes(formation?.parcoursup_statut)) {
-            body.parcoursup_statut = "non publié";
-          }
-        }
-
-        if (Object.keys(body).length > 0) {
-          const updatedFormation = await _put(`${endpointNewFront}/entity/formations2021/${formation._id}`, {
-            num_academie: formation.num_academie,
-            ...body,
-          });
-          setFormation(updatedFormation);
-          setPublishFieldValue("affelnet", getPublishRadioValue(updatedFormation?.affelnet_statut));
-          setPublishFieldValue("parcoursup", getPublishRadioValue(updatedFormation?.parcoursup_statut));
-        }
-
-        onClose();
-        resolve("onSubmitHandler publish complete");
-      });
-    },
-  });
+  const [user] = useAuth();
+  const hasRightToEdit = hasRightToEditFormation(displayedFormation, user);
 
   const { values, handleSubmit, handleChange, setFieldValue, isSubmitting } = useFormik({
     initialValues: {
@@ -483,28 +523,34 @@ export default ({ match }) => {
       cfd: "",
       rncp_code: "",
       num_academie: 0,
+      lieu_formation_adresse: "",
     },
     onSubmit: (values) => {
       return new Promise(async (resolve) => {
-        const updatedFormation = await _post(`${endpointNewFront}/entity/formation2021/update`, {
-          ...displayedFormation,
-          ...values,
-        });
+        try {
+          const updatedFormation = await _post(`${endpointNewFront}/entity/formation2021/update`, {
+            ...displayedFormation,
+            ...values,
+          });
 
-        let result = await _post(`${endpointNewFront}/entity/pendingRcoFormation`, updatedFormation);
-        if (result) {
-          setPendingFormation(result);
-          setFieldValue("uai_formation", result.uai_formation);
-          setFieldValue("code_postal", result.code_postal);
-          setFieldValue("periode", result.periode);
-          setFieldValue("capacite", result.capacite);
-          setFieldValue("cfd", result.cfd);
-          setFieldValue("num_academie", result.num_academie);
-          setFieldValue("rncp_code", result.rncp_code);
+          let result = await _post(`${endpointNewFront}/entity/pendingRcoFormation`, updatedFormation);
+          if (result) {
+            setPendingFormation(result);
+            setFieldValue("uai_formation", result.uai_formation);
+            setFieldValue("code_postal", result.code_postal);
+            setFieldValue("periode", result.periode);
+            setFieldValue("capacite", result.capacite);
+            setFieldValue("cfd", result.cfd);
+            setFieldValue("num_academie", result.num_academie);
+            setFieldValue("rncp_code", result.rncp_code);
+            setFieldValue("lieu_formation_adresse", result.lieu_formation_adresse);
+          }
+        } catch (e) {
+          console.error("Can't perform update", e);
+        } finally {
+          setEdition(false);
+          resolve("onSubmitHandler complete");
         }
-
-        setEdition(false);
-        resolve("onSubmitHandler complete");
       });
     },
   });
@@ -514,7 +560,7 @@ export default ({ match }) => {
       try {
         let pendingRCOFormation;
 
-        const apiURL = isMna ? `${endpointNewFront}/entity/formation/` : `${endpointNewFront}/entity/formation2021/`;
+        const apiURL = `${endpointNewFront}/entity/formation2021/`;
         const form = await _get(`${apiURL}${match.params.id}`, false);
         setFormation(form);
 
@@ -537,15 +583,13 @@ export default ({ match }) => {
         setFieldValue("cfd", displayedFormation.cfd || "");
         setFieldValue("num_academie", displayedFormation.num_academie || "");
         setFieldValue("rncp_code", displayedFormation.rncp_code || "");
-
-        setPublishFieldValue("affelnet", getPublishRadioValue(form?.affelnet_statut));
-        setPublishFieldValue("parcoursup", getPublishRadioValue(form?.parcoursup_statut));
+        setFieldValue("lieu_formation_adresse", displayedFormation.lieu_formation_adresse || "");
       } catch (e) {
         history.push("/404");
       }
     }
     run();
-  }, [match, setFieldValue, isMna, history, setPublishFieldValue]);
+  }, [match, setFieldValue, history]);
 
   const onEdit = () => {
     setEdition(!edition);
@@ -566,11 +610,31 @@ export default ({ match }) => {
     }
   };
 
-  const isParcoursupPublishDisabled = ["hors périmètre", "publié"].includes(formation?.parcoursup_statut);
-  const isAffelnetPublishDisabled = ["hors périmètre", "publié"].includes(formation?.affelnet_statut);
-
   return (
     <Layout>
+      <Box bg="secondaryBackground" w="100%" pt={[4, 8]} px={[1, 24]}>
+        <Container maxW="xl">
+          <Breadcrumb>
+            <BreadcrumbItem>
+              <BreadcrumbLink as={NavLink} to="/">
+                Accueil
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbItem>
+              <BreadcrumbLink as={NavLink} to="/recherche/formations-2021">
+                Formations 2021
+                {displayedFormation &&
+                  (displayedFormation.etablissement_reference_catalogue_published
+                    ? " (Catalogue général)"
+                    : " (Catalogue non-éligible)")}
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbItem isCurrentPage>
+              <BreadcrumbLink>{displayedFormation?.intitule_long}</BreadcrumbLink>
+            </BreadcrumbItem>
+          </Breadcrumb>
+        </Container>
+      </Box>
       <Box bg="secondaryBackground" w="100%" py={[1, 8]} px={[1, 24]}>
         <Container maxW="xl">
           {!displayedFormation && (
@@ -600,7 +664,7 @@ export default ({ match }) => {
                         px={[8, 20]}
                         mt={[8, 0]}
                         onClick={() => {
-                          onOpen();
+                          onOpenPublishModal();
                         }}
                       >
                         Gérer les publications
@@ -639,114 +703,16 @@ export default ({ match }) => {
           )}
         </Container>
       </Box>
-      <Modal isOpen={isOpen} onClose={onClose} size="5xl">
-        <ModalOverlay />
-        <ModalContent bg="white" color="primaryText">
-          <ModalCloseButton color="grey.600" _focus={{ boxShadow: "none", outlineWidth: 0 }} size="lg" />
-          <ModalHeader pt={[3, 20]} pb={[3, 8]} bg="#f5f8f9" borderRadius="5px 5px 0 0">
-            <Center>
-              <Heading as="h2" fontSize="alpha">
-                Gérer les publications
-              </Heading>
-            </Center>
-          </ModalHeader>
-          <ModalBody p={0}>
-            <Box px={[2, 16, 48]}>
-              <Flex px={4} pt={[12, 16]} flexDirection="column">
-                <Box mb={3}>
-                  <StatusBadge source="Affelnet" status={formation?.affelnet_statut} />
-                </Box>
-                <FormControl display="flex" alignItems="center" w="auto" isDisabled={isAffelnetPublishDisabled}>
-                  <FormLabel htmlFor="affelnet" mb={0} fontSize="delta" fontWeight={700}>
-                    Demander la publication Affelnet:
-                  </FormLabel>
-                  <RadioGroup defaultValue={publishValues.affelnet} id="affelnet" name="affelnet">
-                    <Stack spacing={4} direction="row">
-                      <Radio
-                        mb={0}
-                        size="lg"
-                        value="true"
-                        isDisabled={isAffelnetPublishDisabled}
-                        onChange={handlePublishChange}
-                      >
-                        Oui
-                      </Radio>
-                      <Radio
-                        mb={0}
-                        size="lg"
-                        value="false"
-                        isDisabled={isAffelnetPublishDisabled}
-                        onChange={handlePublishChange}
-                      >
-                        Non
-                      </Radio>
-                    </Stack>
-                  </RadioGroup>
-                </FormControl>
-              </Flex>
-              <Flex px={4} pt={[12, 16]} pb={[12, 16]} flexDirection="column">
-                <Box mb={3}>
-                  <StatusBadge source="Parcoursup" status={formation?.parcoursup_statut} />
-                </Box>
-                <FormControl display="flex" alignItems="center" w="auto" isDisabled={isParcoursupPublishDisabled}>
-                  <FormLabel htmlFor="parcoursup" mb={0} fontSize="delta" fontWeight={700}>
-                    Demander la publication Parcoursup:
-                  </FormLabel>
-                  <RadioGroup defaultValue={publishValues.parcoursup} id="parcoursup" name="parcoursup">
-                    <Stack spacing={4} direction="row">
-                      <Radio
-                        mb={0}
-                        size="lg"
-                        value="true"
-                        isDisabled={isParcoursupPublishDisabled}
-                        onChange={handlePublishChange}
-                      >
-                        Oui
-                      </Radio>
-                      <Radio
-                        mb={0}
-                        size="lg"
-                        value="false"
-                        isDisabled={isParcoursupPublishDisabled}
-                        onChange={handlePublishChange}
-                      >
-                        Non
-                      </Radio>
-                    </Stack>
-                  </RadioGroup>
-                </FormControl>
-              </Flex>
-            </Box>
-            <Box borderTop="1px solid" borderColor="grey.300" p={0}>
-              <Flex flexDirection={["column", "row"]} py={[3, 8]} px={3} justifyContent="center">
-                <Button
-                  variant="outline"
-                  colorScheme="blue"
-                  onClick={() => {
-                    setPublishFieldValue("affelnet", getPublishRadioValue(formation?.affelnet_statut));
-                    setPublishFieldValue("parcoursup", getPublishRadioValue(formation?.parcoursup_statut));
-                    onClose();
-                  }}
-                  mr={[0, 8]}
-                  px={[8, 20]}
-                  mb={[3, 0]}
-                >
-                  Annuler
-                </Button>
-                <Button
-                  type="submit"
-                  colorScheme="blue"
-                  onClick={handlePublishSubmit}
-                  isLoading={isPublishSubmitting}
-                  loadingText="Enregistrement des modifications"
-                >
-                  Enregistrer les modifications
-                </Button>
-              </Flex>
-            </Box>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+      {formation && (
+        <PublishModal
+          isOpen={isOpenPublishModal}
+          onClose={onClosePublishModal}
+          formation={formation}
+          onFormationUpdate={(updatedFormation) => {
+            setFormation(updatedFormation);
+          }}
+        />
+      )}
     </Layout>
   );
 };
