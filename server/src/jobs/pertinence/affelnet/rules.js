@@ -2,7 +2,7 @@ const { toBePublishedRules } = require("../../common/utils/referenceUtils");
 
 const getMefRule = (...args) => {
   const rule = args.reduce((acc, regex) => {
-    return [...acc, { mef_10_code: { $regex: regex } }, { "mefs_10.mef10": { $regex: regex } }];
+    return [...acc, { mef_10_code: { $regex: regex } }, { "bcn_mefs_10.mef10": { $regex: regex } }];
   }, []);
   return { $or: rule };
 };

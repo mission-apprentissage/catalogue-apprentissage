@@ -222,12 +222,12 @@ const Formation = ({
             </Text>
             <Text mb={4}>
               Codes MEF 10 caractères:{" "}
-              <strong>{formation.mef_10_code ?? formation?.mefs_10?.map(({ mef10 }) => mef10).join(", ")}</strong>
+              <strong>{formation.mef_10_code ?? formation?.bcn_mefs_10?.map(({ mef10 }) => mef10).join(", ")}</strong>
             </Text>
-            {formation?.affelnet_mefs_10?.length > 0 && (
+            {formation?.mefs_10?.length > 0 && (
               <Text mb={4}>
                 Codes MEF 10 caractères dans le périmètre <i>Affelnet</i>:{" "}
-                <strong>{formation?.affelnet_mefs_10?.join(", ")}</strong>
+                <strong>{formation?.mefs_10?.map(({ mef10 }) => mef10).join(", ")}</strong>
               </Text>
             )}
             <Text mb={4}>
