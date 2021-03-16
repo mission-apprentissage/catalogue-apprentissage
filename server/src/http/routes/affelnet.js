@@ -9,6 +9,27 @@ module.exports = ({ catalogue }) => {
   const router = express.Router();
 
   /**
+   * Get statistique
+   */
+
+  router.get(
+    "/statistique",
+    tryCatch(async (req, res) => {
+      let [x, y, z] = await Promise.all([
+        AfFormation.estimatedDocumentCount(),
+        AfFormation.countDocuments({ etat_reconciliation: true }),
+        AfFormation.countDocuments({ matching_type: { $ne: null } }),
+      ]);
+
+      res.json({
+        total: x,
+        reconciled: y,
+        covered: z,
+      });
+    })
+  );
+
+  /**
    * Get all AfFormation
    */
   router.get(
