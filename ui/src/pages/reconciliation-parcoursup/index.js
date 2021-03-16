@@ -15,6 +15,7 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   HStack,
+  StatArrow,
 } from "@chakra-ui/react";
 import { Layout, Accordion as Item, Loading } from "./components";
 
@@ -96,10 +97,16 @@ export default (props) => {
                   <Tag colorScheme="teal">{stat.data.total}</Tag> formations
                 </Text>
                 <Text align="right">
-                  <Tag colorScheme="teal">{stat.data.reconciled}</Tag> formations réconciliées
+                  <Tag colorScheme="teal">
+                    {stat.data.reconciled[0]} - {stat.data.reconciled[1]}%
+                  </Tag>{" "}
+                  formations réconciliées
                 </Text>
                 <Text align="right">
-                  <Tag colorScheme="teal">{stat.data.covered}</Tag> formations rapprochées avec le catalogue
+                  <Tag colorScheme="teal">
+                    {stat.data.covered[0]} - {stat.data.covered[1]}%
+                  </Tag>{" "}
+                  formations rapprochées avec le catalogue
                 </Text>
               </Box>
             )}

@@ -21,10 +21,12 @@ module.exports = ({ catalogue }) => {
         AfFormation.countDocuments({ matching_type: { $ne: null } }),
       ]);
 
+      let pourcentageOnTotal = (value) => Math.round((value / x) * 100);
+
       res.json({
         total: x,
-        reconciled: y,
-        covered: z,
+        reconciled: [y, pourcentageOnTotal(y)],
+        covered: [z, pourcentageOnTotal(z)],
       });
     })
   );
