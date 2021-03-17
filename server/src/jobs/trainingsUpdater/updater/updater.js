@@ -14,8 +14,8 @@ const run = async (filter = {}, withCodePostalUpdate = false) => {
 
 const performUpdates = async (filter = {}, withCodePostalUpdate = false) => {
   const invalidFormations = [];
-  const notUpdatedFormations = [];
   const updatedFormations = [];
+  let notUpdatedCount = 0;
 
   await paginator(ConvertedFormation, { filter, limit: 10 }, async (formation) => {
     const rcoFormation = await findRcoFormationFromConvertedId(formation.id_rco_formation);
@@ -23,6 +23,7 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false) => {
       // if rco formation is not published, don't call mnaUpdater
       // since we just want to hide the formation
       await ConvertedFormation.findOneAndUpdate({ _id: formation._id }, { published: false }, { new: true });
+      notUpdatedCount += 1;
       return;
     }
 
@@ -53,7 +54,7 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false) => {
     }
 
     if (!updates) {
-      notUpdatedFormations.push({ id: formation._id, cfd: formation.cfd });
+      notUpdatedCount += 1;
       return;
     }
 
@@ -66,14 +67,14 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false) => {
     }
   });
 
-  return { invalidFormations, updatedFormations, notUpdatedFormations };
+  return { invalidFormations, updatedFormations, notUpdatedCount };
 };
 
-const createReport = async ({ invalidFormations, updatedFormations, notUpdatedFormations }) => {
+const createReport = async ({ invalidFormations, updatedFormations, notUpdatedCount }) => {
   const summary = {
     invalidCount: invalidFormations.length,
     updatedCount: updatedFormations.length,
-    notUpdatedCount: notUpdatedFormations.length,
+    notUpdatedCount: notUpdatedCount,
   };
 
   // save report in db
@@ -81,14 +82,12 @@ const createReport = async ({ invalidFormations, updatedFormations, notUpdatedFo
   const type = "trainingsUpdate";
 
   await storeByChunks(type, date, summary, "updated", updatedFormations);
-  await storeByChunks(type, date, summary, "notUpdated", notUpdatedFormations);
   await storeByChunks(`${type}.error`, date, summary, "errors", invalidFormations);
 
   const link = `${config.publicUrl}/report?type=${type}&date=${date}`;
   const data = {
     invalid: invalidFormations,
     updated: updatedFormations,
-    notUpdated: notUpdatedFormations,
     summary,
     link,
   };
