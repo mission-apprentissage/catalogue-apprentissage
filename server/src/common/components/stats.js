@@ -37,6 +37,13 @@ async function getAllStats() {
       parcoursup_statut: "hors périmètre",
     }),
   };
+  const nbPsupToBePublished = {
+    title: "Formations à publier",
+    value: await ConvertedFormation.countDocuments({
+      published: true,
+      parcoursup_statut: "à publier",
+    }),
+  };
   const nbPsupToCheck = {
     title: "Formations à publier (vérifier accès direct postbac)",
     value: await ConvertedFormation.countDocuments({
@@ -127,6 +134,7 @@ async function getAllStats() {
       nbAllPsupReconcilied,
       nbPsupErrors,
       nbPsupNotRelevant,
+      nbPsupToBePublished,
       nbPsupToCheck,
       nbPsupToSubmit,
       nbPsupPending,
