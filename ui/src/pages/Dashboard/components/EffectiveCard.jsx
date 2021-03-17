@@ -1,5 +1,4 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
-import PropTypes from "prop-types";
 import React from "react";
 
 const EffectifCard = ({ label, stat, indicatorColor }) => {
@@ -16,12 +15,6 @@ const EffectifCard = ({ label, stat, indicatorColor }) => {
       </Text>
     </Box>
   );
-};
-
-EffectifCard.propTypes = {
-  label: PropTypes.string.isRequired,
-  stat: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  indicatorColor: PropTypes.string,
 };
 
 export default EffectifCard;

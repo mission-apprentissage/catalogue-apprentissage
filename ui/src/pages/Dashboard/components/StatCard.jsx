@@ -1,5 +1,4 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
-import PropTypes from "prop-types";
 import React from "react";
 
 const StatCard = ({ label, stat, background = "bluefrance", color = "white", indicatorColor }) => {
@@ -16,14 +15,6 @@ const StatCard = ({ label, stat, background = "bluefrance", color = "white", ind
       </Text>
     </Box>
   );
-};
-
-StatCard.propTypes = {
-  label: PropTypes.string.isRequired,
-  stat: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  background: PropTypes.string,
-  color: PropTypes.string,
-  indicatorColor: PropTypes.string,
 };
 
 export default StatCard;
