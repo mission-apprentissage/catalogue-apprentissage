@@ -43,7 +43,8 @@
     "es:index": "standalone=true node src/jobs/esIndex/index.js",
     "generate:swaggerschema": "standalone=true node src/jobs/generateSwaggerSchema/index.js",
     "etablissement:dump": "standalone=true node src/jobs/etablissements",
-    "rcoPending:export": "standalone=true node src/jobs/pendingFormations/index.js"
+    "rcoPending:export": "standalone=true node src/jobs/pendingFormations/index.js",
+    "rcoFormation:id": "standalone=true node src/jobs/oneshot/migrateRcoFormationIds/index.js"
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.6.1",

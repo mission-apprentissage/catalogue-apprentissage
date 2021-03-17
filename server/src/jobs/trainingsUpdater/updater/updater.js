@@ -1,31 +1,31 @@
 const logger = require("../../../common/logger");
 const { mnaFormationUpdater } = require("../../../logic/updaters/mnaFormationUpdater");
-const report = require("../../../logic/reporter/report");
-const config = require("config");
+// const report = require("../../../logic/reporter/report");
+// const config = require("config");
 const { paginator } = require("../../common/utils/paginator");
-const { findRcoFormationFromConvertedId } = require("../../common/utils/rcoUtils");
-const { storeByChunks } = require("../../common/utils/reportUtils");
+// const { findRcoFormationFromConvertedId } = require("../../common/utils/rcoUtils");
+// const { storeByChunks } = require("../../common/utils/reportUtils");
 const { RcoFormation, ConvertedFormation } = require("../../../common/model/index");
 
-const run = async (filter = {}, withCodePostalUpdate = false) => {
-  const result = await performUpdates(filter, withCodePostalUpdate);
-  await createReport(result);
+const run = async (filter = {}, withCodePostalUpdate = false, limit = 10, maxItems = 100, offset = 0) => {
+  const result = await performUpdates(filter, withCodePostalUpdate, limit, maxItems, offset);
+  return result;
+  // const mergeResult = result;
+  // const mergeResult = {
+  //   invalidFormations: [...t1.invalidFormations, ...t2.invalidFormations],
+  //   updatedFormations: [...t1.updatedFormations, ...t2.updatedFormations],
+  //   notUpdatedFormations: [...t1.notUpdatedFormations, ...t2.notUpdatedFormations],
+  // };
+
+  // await createReport(mergeResult);
 };
 
-const performUpdates = async (filter = {}, withCodePostalUpdate = false) => {
+const performUpdates = async (filter = {}, withCodePostalUpdate = false, limit = 10, maxItems = 100, offset = 0) => {
   const invalidFormations = [];
   const notUpdatedFormations = [];
   const updatedFormations = [];
 
-  await paginator(ConvertedFormation, { filter, limit: 10 }, async (formation) => {
-    const rcoFormation = await findRcoFormationFromConvertedId(formation.id_rco_formation);
-    if (!rcoFormation?.published) {
-      // if rco formation is not published, don't call mnaUpdater
-      // since we just want to hide the formation
-      await ConvertedFormation.findOneAndUpdate({ _id: formation._id }, { published: false }, { new: true });
-      return;
-    }
-
+  await paginator(ConvertedFormation, { filter, limit, maxItems, offset }, async (formation) => {
     const { updates, formation: updatedFormation, error, serviceAvailable = true } = await mnaFormationUpdater(
       formation._doc,
       {
@@ -43,7 +43,10 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false) => {
         if (formation.published === true) {
           formation.published = false;
           // flag rco formation as not converted so that it retries during nightly jobs
-          await RcoFormation.findOneAndUpdate({ _id: rcoFormation?._id }, { converted_to_mna: false });
+          await RcoFormation.findOneAndUpdate(
+            { id_rco_formation: formation?.id_rco_formation },
+            { converted_to_mna: false }
+          );
         }
       }
 
@@ -69,32 +72,32 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false) => {
   return { invalidFormations, updatedFormations, notUpdatedFormations };
 };
 
-const createReport = async ({ invalidFormations, updatedFormations, notUpdatedFormations }) => {
-  const summary = {
-    invalidCount: invalidFormations.length,
-    updatedCount: updatedFormations.length,
-    notUpdatedCount: notUpdatedFormations.length,
-  };
+// const createReport = async ({ invalidFormations, updatedFormations, notUpdatedFormations }) => {
+//   const summary = {
+//     invalidCount: invalidFormations.length,
+//     updatedCount: updatedFormations.length,
+//     notUpdatedCount: notUpdatedFormations.length,
+//   };
 
-  // save report in db
-  const date = Date.now();
-  const type = "trainingsUpdate";
+//   // save report in db
+//   const date = Date.now();
+//   const type = "trainingsUpdate";
 
-  await storeByChunks(type, date, summary, "updated", updatedFormations);
-  await storeByChunks(type, date, summary, "notUpdated", notUpdatedFormations);
-  await storeByChunks(`${type}.error`, date, summary, "errors", invalidFormations);
+//   await storeByChunks(type, date, summary, "updated", updatedFormations);
+//   await storeByChunks(type, date, summary, "notUpdated", notUpdatedFormations);
+//   await storeByChunks(`${type}.error`, date, summary, "errors", invalidFormations);
 
-  const link = `${config.publicUrl}/report?type=${type}&date=${date}`;
-  const data = {
-    invalid: invalidFormations,
-    updated: updatedFormations,
-    notUpdated: notUpdatedFormations,
-    summary,
-    link,
-  };
-  const title = "Rapport de mise à jour";
-  const to = config.reportMailingList.split(",");
-  await report.generate(data, title, to, "trainingsUpdateReport");
-};
+//   const link = `${config.publicUrl}/report?type=${type}&date=${date}`;
+//   const data = {
+//     invalid: invalidFormations,
+//     updated: updatedFormations,
+//     notUpdated: notUpdatedFormations,
+//     summary,
+//     link,
+//   };
+//   const title = "Rapport de mise à jour";
+//   const to = config.reportMailingList.split(",");
+//   await report.generate(data, title, to, "trainingsUpdateReport");
+// };
 
 module.exports = { run, performUpdates };
