@@ -7,7 +7,7 @@ const paginator = async (
 ) => {
   let currentOffset = offset;
   let computed = offset;
-  let nbTotalItems = 10;
+  let nbTotalItems = maxItems || 10;
 
   // create a new progress bar instance and use shades_classic theme
   const progressBar = showProgress

@@ -31,7 +31,7 @@ const run = async () => {
     console.log(`Master ${process.pid} is running`);
 
     const filter = {};
-    const limit = 10;
+    const limit = 100;
     const args = process.argv.slice(2);
     const withCodePostalUpdate = args?.[0] === "--withCodePostal";
 
@@ -41,7 +41,7 @@ const run = async () => {
       const activeFilter = { ...filter, ...idFilter }; // FIXEME TODO filter contain id_rco_formation key
 
       const { pages, total } = await ConvertedFormation.paginate(activeFilter, { limit });
-      const halfItems = Math.floor(pages / 2) * 10;
+      const halfItems = Math.floor(pages / 2) * limit;
 
       // Fork workers.
       for (let i = 0; i < numCPUs; i++) {
@@ -52,7 +52,7 @@ const run = async () => {
       let order = 1;
       for (const id in cluster.workers) {
         pOrder[cluster.workers[id].process.pid] =
-          order === 1 ? { offset: 0, maxItems: halfItems } : { offset: halfItems + 10, maxItems: total };
+          order === 1 ? { offset: 0, maxItems: halfItems } : { offset: halfItems + limit, maxItems: total };
         order++;
         cluster.workers[id].on("message", (message) => {
           console.log(message);
@@ -65,6 +65,7 @@ const run = async () => {
           from: "master",
           withCodePostalUpdate,
           activeFilter,
+          limit,
           maxItems: pOrder[worker.process.pid].maxItems,
           offset: pOrder[worker.process.pid].offset,
         });
@@ -77,11 +78,11 @@ const run = async () => {
   } else {
     process.on("message", async (message) => {
       runScript(async () => {
-        console.log(message);
+        console.log(process.pid, message);
         const result = await updater.run(
           message.activeFilter,
           message.withCodePostalUpdate,
-          10,
+          message.limit,
           message.maxItems,
           message.offset
         );
