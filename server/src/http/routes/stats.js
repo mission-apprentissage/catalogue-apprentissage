@@ -1,14 +1,11 @@
 const express = require("express");
-const { ConvertedFormation } = require("../../common/model");
+const { getAllStats } = require("../../common/components/stats");
 
 module.exports = () => {
   const router = express.Router();
   router.get("/", async (req, res) => {
-    res.json({
-      stats: {
-        nbItems: await ConvertedFormation.countDocuments(),
-      },
-    });
+    const stats = await getAllStats();
+    res.json(stats);
   });
 
   return router;
