@@ -30,17 +30,6 @@ const Summary = ({ data, reportType, errors }) => {
         </Text>
       );
 
-    case REPORT_TYPE.RCO_DIFF:
-      return (
-        <Text fontSize={["epsilon", "gamma"]}>
-          Résumé du différentiel entre les formations RCO converties et la base MNA :<br />
-          <br />
-          {summary.matchingCount} Formation(s) qui matchent avec la base MNA
-          <br />
-          sur un total de {summary.total} Formation(s) dans la base de formations RCO converties
-        </Text>
-      );
-
     case REPORT_TYPE.RCO_IMPORT:
       return (
         <Text fontSize={["epsilon", "gamma"]}>
