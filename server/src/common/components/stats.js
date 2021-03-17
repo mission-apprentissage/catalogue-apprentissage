@@ -20,7 +20,7 @@ async function getAllStats() {
   // Parcoursup
   const nbAllPsup = {
     title: "Nombre de formations",
-    value: await PsFormation2021.countDocuments(),
+    value: await PsFormation2021.countDocuments({}),
   };
   const nbAllPsupReconcilied = {
     title: "Formation réconcilié",
@@ -38,8 +38,18 @@ async function getAllStats() {
     }),
   };
   const nbPsupToCheck = {
-    title: "Formations à publier",
-    value: await ConvertedFormation.countDocuments({ published: true, parcoursup_statut: "à publier" }),
+    title: "Formations à publier (vérifier accès direct postbac)",
+    value: await ConvertedFormation.countDocuments({
+      published: true,
+      parcoursup_statut: "à publier (vérifier accès direct postbac)",
+    }),
+  };
+  const nbPsupToSubmit = {
+    title: "Formations à publier (soumis à validation Recteur)",
+    value: await ConvertedFormation.countDocuments({
+      published: true,
+      parcoursup_statut: "à publier (soumis à validation Recteur)",
+    }),
   };
   const nbPsupPending = {
     title: "Formations en attente de publication",
@@ -84,6 +94,13 @@ async function getAllStats() {
     title: "Formations à publier",
     value: await ConvertedFormation.countDocuments({ published: true, affelnet_statut: "à publier" }),
   };
+  const nbAffelnetToSubmit = {
+    title: "Formations à publier (soumis à validation)",
+    value: await ConvertedFormation.countDocuments({
+      published: true,
+      affelnet_statut: "à publier (soumis à validation)",
+    }),
+  };
   const nbAffelnetPending = {
     title: "Formations en attente de publication",
     value: await ConvertedFormation.countDocuments({
@@ -111,6 +128,7 @@ async function getAllStats() {
       nbPsupErrors,
       nbPsupNotRelevant,
       nbPsupToCheck,
+      nbPsupToSubmit,
       nbPsupPending,
       nbPsupPublished,
       nbPsupNotPublished,
@@ -121,6 +139,7 @@ async function getAllStats() {
       nbAffelnetErrors,
       nbAffelnetNotRelevant,
       nbAffelnetToCheck,
+      nbAffelnetToSubmit,
       nbAffelnetPending,
       nbAffelnetPublished,
       nbAffelnetNotPublished,
