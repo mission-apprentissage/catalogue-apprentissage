@@ -95,36 +95,6 @@ const TrainingsUpdateTabs = ({ data, reportType, date, errors }) => {
   );
 };
 
-const RcoDiffTabs = ({ data, reportType, date, errors }) => {
-  const { summary } = data;
-  const showErrors = errors?.length > 0;
-
-  return (
-    <Ctabs isLazy>
-      <TabList>
-        <Tab>Résumé</Tab>
-        {summary.matchingCount > 0 && <Tab>{summary.matchingCount} Formation(s) qui matchent avec la base MNA</Tab>}
-        {showErrors && <Tab>Erreurs</Tab>}
-      </TabList>
-      <TabPanels>
-        <TabPanel>
-          <Summary data={data} reportType={reportType} />
-        </TabPanel>
-        {data.matchingFormations.length > 0 && (
-          <TabPanel>
-            <Table data={data.matchingFormations} filename={`${reportType}_${date}_matching`} />
-          </TabPanel>
-        )}
-        {showErrors && (
-          <TabPanel>
-            <Table data={errors} filename={`${reportType}_${date}_errors`} />
-          </TabPanel>
-        )}
-      </TabPanels>
-    </Ctabs>
-  );
-};
-
 const RcoImportTabs = ({ data, reportType, date, errors }) => {
   const { summary } = data;
   const showErrors = errors?.length > 0;
@@ -184,9 +154,6 @@ const Tabs = ({ data = { summary: {} }, reportType, date, errors }) => {
 
     case REPORT_TYPE.TRAININGS_UPDATE:
       return <TrainingsUpdateTabs data={data} reportType={reportType} date={date} errors={errors} />;
-
-    case REPORT_TYPE.RCO_DIFF:
-      return <RcoDiffTabs data={data} reportType={reportType} date={date} errors={errors} />;
 
     case REPORT_TYPE.RCO_IMPORT:
       return <RcoImportTabs data={data} reportType={reportType} date={date} errors={errors} />;

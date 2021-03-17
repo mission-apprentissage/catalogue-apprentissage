@@ -17,9 +17,6 @@ const getReportTitle = (reportType) => {
     case REPORT_TYPE.TRAININGS_UPDATE:
       return "Rapport de mise à jour des formations du catalogue";
 
-    case REPORT_TYPE.RCO_DIFF:
-      return "Rapport de différentiel des formations RCO avec la base MNA";
-
     case REPORT_TYPE.RCO_IMPORT:
       return "Rapport d'importation catalogue RCO";
 
