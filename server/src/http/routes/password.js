@@ -66,10 +66,12 @@ module.exports = ({ users, mailer }) => {
           getEmailTemplate("forgotten-password"),
           {
             url,
+            username,
+            publicUrl: config.publicUrl,
           }
         );
 
-        return res.json();
+        return res.json({});
       }
     })
   );

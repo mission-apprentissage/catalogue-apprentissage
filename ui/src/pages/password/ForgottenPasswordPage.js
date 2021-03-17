@@ -3,18 +3,14 @@ import { Field, Form, Formik } from "formik";
 import React from "react";
 import { useHistory } from "react-router-dom";
 import * as Yup from "yup";
-
-import useAuth from "../../common/hooks/useAuth";
 import { _post } from "../../common/httpClient";
 
 const ForgottenPasswordPage = () => {
-  const [, setAuth] = useAuth();
   const history = useHistory();
 
   const resetPassword = async (values, { setStatus }) => {
     try {
-      const { token } = await _post("/api/password/forgotten-password", { ...values });
-      setAuth(token);
+      await _post("/api/password/forgotten-password", { ...values });
       setStatus({ message: "Un email vous a été envoyé." });
       setTimeout(() => history.push("/"), 1500);
     } catch (e) {
