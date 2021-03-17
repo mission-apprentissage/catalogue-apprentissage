@@ -72,7 +72,6 @@ const TrainingsUpdateTabs = ({ data, reportType, date, errors }) => {
         <TabList>
           <Tab>Résumé</Tab>
           {summary.updatedCount > 0 && <Tab>{summary.updatedCount} Formation(s) mise(s) à jour</Tab>}
-          {summary.notUpdatedCount > 0 && <Tab>{summary.notUpdatedCount} Formation(s) déjà à jour</Tab>}
           {showErrors && <Tab>{summary.invalidCount ?? errors?.length} Formation(s) en échec de mise à jour</Tab>}
         </TabList>
         <TabPanels>
@@ -82,11 +81,6 @@ const TrainingsUpdateTabs = ({ data, reportType, date, errors }) => {
           {data.updated?.length > 0 && (
             <TabPanel>
               <Table data={data.updated} onRowClick={onRowClick} filename={`${reportType}_${date}_updated`} />
-            </TabPanel>
-          )}
-          {data.notUpdated?.length > 0 && (
-            <TabPanel>
-              <Table data={data.notUpdated} filename={`${reportType}_${date}_notUpdated`} />
             </TabPanel>
           )}
           {showErrors && (
