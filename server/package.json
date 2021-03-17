@@ -17,6 +17,7 @@
     "docker:down": "docker-compose down",
     "docker:clean": "docker-compose kill && docker system prune --force --volumes",
     "seed": "node src/jobs/seed/index.js",
+    "sdk:playground": "node src/jobs/tcoSdkPlayground/index.js",
     "jobs": "node src/jobs/index.js",
     "jobs:test": "mocha --recursive --exit --timeout 60000 src/jobs/**/tests/",
     "clear": "node src/jobs/clear/index.js",
@@ -48,7 +49,7 @@
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.6.1",
-    "@mission-apprentissage/tco-service-node": "1.2.0",
+    "@mission-apprentissage/tco-service-node": "2.2.0",
     "axios": "0.21.1",
     "body-parser": "1.19.0",
     "boom": "7.3.0",
