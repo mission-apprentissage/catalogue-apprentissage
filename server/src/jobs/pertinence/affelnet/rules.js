@@ -42,6 +42,11 @@ const aPublierSoumisAValidationRules = {
           $and: [getMefRule(/^254/)],
         },
         {
+          diplome: "BREVET PROFESSIONNEL AGRICOLE",
+          ...getMefRule(/21$/),
+          $and: [getMefRule(/^254/)],
+        },
+        {
           diplome: "BREVET DES METIERS D'ART - BREVET DES METIERS DU SPECTACLE",
           ...getMefRule(/21$/),
           $and: [getMefRule(/^251/)],
@@ -50,7 +55,13 @@ const aPublierSoumisAValidationRules = {
           diplome: "MENTION COMPLEMENTAIRE",
           niveau: "3 (CAP...)",
           ...getMefRule(/11$/),
-          $and: [getMefRule(/^253/, /^274/)],
+          $and: [getMefRule(/^253/)],
+        },
+        {
+          diplome: "MENTION COMPLEMENTAIRE AGRICOLE",
+          niveau: "3 (CAP...)",
+          ...getMefRule(/11$/),
+          $and: [getMefRule(/^274/)],
         },
       ],
     },

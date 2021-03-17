@@ -36,6 +36,23 @@ const parseErrors = (messages) => {
     .reduce((acc, [key, value]) => `${acc}${acc ? " " : ""}${key}: ${value}.`, "");
 };
 
+const findMefsForAffelnet = async (rules) => {
+  const results = await SandboxFormation.find(
+    {
+      $or: [rules],
+    },
+    { bcn_mefs_10: 1 }
+  ).lean();
+
+  if (results && results.length > 0) {
+    return results.reduce((acc, { bcn_mefs_10 }) => {
+      return [...acc, ...bcn_mefs_10];
+    }, []);
+  }
+
+  return null;
+};
+
 const mnaFormationUpdater = async (formation, { withHistoryUpdate = true, withCodePostalUpdate = true } = {}) => {
   try {
     await formationSchema.validateAsync(formation, { abortEarly: false });
@@ -142,31 +159,18 @@ const mnaFormationUpdater = async (formation, { withHistoryUpdate = true, withCo
 
       // apply pertinence filters against the tmp collection
       // check "à publier" first to have less mefs
-      let results = await SandboxFormation.find(
-        {
-          $or: [aPublierRules],
-        },
-        { bcn_mefs_10: 1 }
-      ).lean();
-
-      if (results && results.length > 0) {
+      let mefs_10 = await findMefsForAffelnet(aPublierRules);
+      if (!mefs_10) {
+        mefs_10 = await findMefsForAffelnet(aPublierSoumisAValidationRules);
+      }
+      if (mefs_10) {
         // keep the successful mefs in affelnet field
-        updatedFormation.mefs_10 = results.reduce((acc, { bcn_mefs_10 }) => {
-          return [...acc, ...bcn_mefs_10];
-        }, []);
-      } else {
-        results = await SandboxFormation.find(
-          {
-            $or: [aPublierSoumisAValidationRules],
-          },
-          { bcn_mefs_10: 1 }
-        ).lean();
+        updatedFormation.mefs_10 = mefs_10;
 
-        if (results && results.length > 0) {
-          // keep the successful mefs in affelnet field
-          updatedFormation.mefs_10 = results.reduce((acc, { bcn_mefs_10 }) => {
-            return [...acc, ...bcn_mefs_10];
-          }, []);
+        if (mefs_10.length === 1 && !updatedFormation.affelnet_infos_offre) {
+          updatedFormation.affelnet_infos_offre = `${updatedFormation.libelle_court} en ${
+            mefs_10[0].modalite.duree
+          } an${Number(mefs_10[0].modalite.duree) > 1 ? "s" : ""}`;
         }
       }
 
