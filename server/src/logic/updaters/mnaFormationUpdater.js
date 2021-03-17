@@ -154,20 +154,20 @@ const mnaFormationUpdater = async (formation, { withHistoryUpdate = true, withCo
         updatedFormation.mefs_10 = results.reduce((acc, { bcn_mefs_10 }) => {
           return [...acc, ...bcn_mefs_10];
         }, []);
-      }
+      } else {
+        results = await SandboxFormation.find(
+          {
+            $or: [aPublierSoumisAValidationRules],
+          },
+          { bcn_mefs_10: 1 }
+        ).lean();
 
-      results = await SandboxFormation.find(
-        {
-          $or: [aPublierSoumisAValidationRules],
-        },
-        { bcn_mefs_10: 1 }
-      ).lean();
-
-      if (results && results.length > 0) {
-        // keep the successful mefs in affelnet field
-        updatedFormation.mefs_10 = results.reduce((acc, { bcn_mefs_10 }) => {
-          return [...acc, ...bcn_mefs_10];
-        }, []);
+        if (results && results.length > 0) {
+          // keep the successful mefs in affelnet field
+          updatedFormation.mefs_10 = results.reduce((acc, { bcn_mefs_10 }) => {
+            return [...acc, ...bcn_mefs_10];
+          }, []);
+        }
       }
 
       await SandboxFormation.deleteMany({});
