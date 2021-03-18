@@ -24,20 +24,21 @@ runScript(async ({ catalogue }) => {
     // rco
     await rcoImporter();
     await rcoConverter();
-    await trainingsUpdater(); // ~ 59 minutes
+    await trainingsUpdater(); // ~ 3h40 minutes => ~ 59 minutes
 
     // parcoursup
-    await psReference(); // ~ 34 minutes
+    await psReference(); // ~ 34 minutes => ~ 30 secondes
     await psPertinence(); // ~ 8 secondes
 
     // affelnet
     await afCoverage();
     await afReconciliation();
-    await afReference();
+    await afReference(); //  ? => ~ 5 minutes
     await afPertinence();
 
     // es
-    await rebuildEsIndex("convertedformation"); // ~ 44 minutes
+    const filter = { published: true };
+    await rebuildEsIndex("convertedformation", false, filter); // ~ 44 minutes
   } catch (error) {
     logger.error(error);
   }
