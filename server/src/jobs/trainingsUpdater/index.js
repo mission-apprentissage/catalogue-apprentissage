@@ -113,9 +113,11 @@ const run = async () => {
           for (const key in pResult) {
             if (Object.hasOwnProperty.call(pResult, key)) {
               const r = pResult[key].result;
-              mR.invalidFormations = [...mR.invalidFormations, ...r.invalidFormations];
-              mR.updatedFormations = [...mR.updatedFormations, ...r.updatedFormations];
-              mR.notUpdatedCount = mR.notUpdatedCount + r.notUpdatedCount;
+              if (r) {
+                mR.invalidFormations = [...mR.invalidFormations, ...r.invalidFormations];
+                mR.updatedFormations = [...mR.updatedFormations, ...r.updatedFormations];
+                mR.notUpdatedCount = mR.notUpdatedCount + r.notUpdatedCount;
+              }
             }
           }
 
