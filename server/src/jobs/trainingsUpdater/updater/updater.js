@@ -29,7 +29,7 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false, limit =
   const cfdInfosCache = new Map();
 
   await paginator(ConvertedFormation, { filter, limit, maxItems, offset }, async (formation) => {
-    const cfdInfoCache = cfdInfosCache.get(formation._doc.formation.cfd) || null;
+    const cfdInfoCache = cfdInfosCache.get(formation._doc.cfd) || null;
     const { updates, formation: updatedFormation, error, serviceAvailable = true, cfdInfo } = await mnaFormationUpdater(
       formation._doc,
       {
@@ -40,7 +40,7 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false, limit =
     );
 
     if (cfdInfo && !cfdInfoCache) {
-      cfdInfosCache.set(formation._doc.formation.cfd, cfdInfo);
+      cfdInfosCache.set(formation._doc.cfd, cfdInfo);
     }
 
     if (error) {
