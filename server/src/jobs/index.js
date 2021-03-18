@@ -37,7 +37,7 @@ runScript(async ({ catalogue }) => {
     await afPertinence();
 
     // es
-    await rebuildEsIndex("convertedformation"); // ~ 8 secondes
+    await rebuildEsIndex("convertedformation"); // ~ 44 minutes
   } catch (error) {
     logger.error(error);
   }
