@@ -3,6 +3,9 @@ const cluster = require("cluster");
 const updater = require("./updater/updater");
 const { runScript } = require("../scriptWrapper");
 const { ConvertedFormation, RcoFormation } = require("../../common/model/index");
+const { storeByChunks } = require("../common/utils/reportUtils");
+const report = require("../../logic/reporter/report");
+const config = require("config");
 
 const numCPUs = 2;
 
@@ -24,6 +27,32 @@ const managedUnPublishedRcoFormation = async () => {
   );
 
   return rcoFormationNotPublishedIds;
+};
+
+const createReport = async ({ invalidFormations, updatedFormations, notUpdatedCount }) => {
+  const summary = {
+    invalidCount: invalidFormations.length,
+    updatedCount: updatedFormations.length,
+    notUpdatedCount: notUpdatedCount,
+  };
+
+  // save report in db
+  const date = Date.now();
+  const type = "trainingsUpdate";
+
+  await storeByChunks(type, date, summary, "updated", updatedFormations);
+  await storeByChunks(`${type}.error`, date, summary, "errors", invalidFormations);
+
+  const link = `${config.publicUrl}/report?type=${type}&date=${date}`;
+  const data = {
+    invalid: invalidFormations,
+    updated: updatedFormations,
+    summary,
+    link,
+  };
+  const title = "Rapport de mise à jour";
+  const to = config.reportMailingList.split(",");
+  await report.generate(data, title, to, "trainingsUpdateReport");
 };
 
 const run = async () => {
@@ -50,12 +79,14 @@ const run = async () => {
 
       let pOrder = {};
       let order = 1;
+      let pResult = {};
       for (const id in cluster.workers) {
         pOrder[cluster.workers[id].process.pid] =
           order === 1 ? { offset: 0, maxItems: halfItems } : { offset: halfItems + limit, maxItems: total };
+        pResult[cluster.workers[id].process.pid] = { result: null };
         order++;
         cluster.workers[id].on("message", (message) => {
-          console.log(message);
+          pResult[message.from].result = message.result;
         });
       }
 
@@ -70,9 +101,29 @@ const run = async () => {
           offset: pOrder[worker.process.pid].offset,
         });
       });
-
-      cluster.on("exit", (worker) => {
+      let countWorkerExist = 1;
+      cluster.on("exit", async (worker) => {
         console.log(`worker ${worker.process.pid} died`);
+        if (countWorkerExist === 2) {
+          const mR = {
+            invalidFormations: [],
+            updatedFormations: [],
+            notUpdatedCount: 0,
+          };
+          for (const key in pResult) {
+            if (Object.hasOwnProperty.call(pResult, key)) {
+              const r = pResult[key].result;
+              mR.invalidFormations = [...mR.invalidFormations, ...r.invalidFormations];
+              mR.updatedFormations = [...mR.updatedFormations, ...r.updatedFormations];
+              mR.notUpdatedCount = mR.notUpdatedCount + r.notUpdatedCount;
+            }
+          }
+
+          await createReport(mR);
+          console.log(`Done`);
+        } else {
+          countWorkerExist += 1;
+        }
       });
     });
   } else {

@@ -1,24 +1,10 @@
 const logger = require("../../../common/logger");
 const { mnaFormationUpdater } = require("../../../logic/updaters/mnaFormationUpdater");
-// const report = require("../../../logic/reporter/report");
-// const config = require("config");
 const { paginator } = require("../../common/utils/paginator");
-// const { findRcoFormationFromConvertedId } = require("../../common/utils/rcoUtils");
-// const { storeByChunks } = require("../../common/utils/reportUtils");
 const { RcoFormation, ConvertedFormation } = require("../../../common/model/index");
 
 const run = async (filter = {}, withCodePostalUpdate = false, limit = 10, maxItems = 100, offset = 0) => {
   const result = await performUpdates(filter, withCodePostalUpdate, limit, maxItems, offset);
-
-  // const mergeResult = result;
-  // const mergeResult = {
-  //   invalidFormations: [...t1.invalidFormations, ...t2.invalidFormations],
-  //   updatedFormations: [...t1.updatedFormations, ...t2.updatedFormations],
-  //   notUpdatedFormations: [...t1.notUpdatedFormations, ...t2.notUpdatedFormations],
-  // };
-
-  // await createReport(mergeResult);
-
   return result;
 };
 
@@ -80,31 +66,5 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false, limit =
 
   return { invalidFormations, updatedFormations, notUpdatedCount };
 };
-
-// const createReport = async ({ invalidFormations, updatedFormations, notUpdatedCount }) => {
-//   const summary = {
-//     invalidCount: invalidFormations.length,
-//     updatedCount: updatedFormations.length,
-//     notUpdatedCount: notUpdatedCount,
-//   };
-
-//   // save report in db
-//   const date = Date.now();
-//   const type = "trainingsUpdate";
-
-//   await storeByChunks(type, date, summary, "updated", updatedFormations);
-//   await storeByChunks(`${type}.error`, date, summary, "errors", invalidFormations);
-
-//   const link = `${config.publicUrl}/report?type=${type}&date=${date}`;
-//   const data = {
-//     invalid: invalidFormations,
-//     updated: updatedFormations,
-//     summary,
-//     link,
-//   };
-//   const title = "Rapport de mise à jour";
-//   const to = config.reportMailingList.split(",");
-//   await report.generate(data, title, to, "trainingsUpdateReport");
-// };
 
 module.exports = { run, performUpdates };

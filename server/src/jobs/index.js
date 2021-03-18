@@ -38,7 +38,7 @@ runScript(async ({ catalogue }) => {
 
     // es
     const filter = { published: true };
-    await rebuildEsIndex("convertedformation", false, filter); // ~ 44 minutes
+    await rebuildEsIndex("convertedformation", false, filter); // ~ 44 minutes => ~ 22 minutes
   } catch (error) {
     logger.error(error);
   }
