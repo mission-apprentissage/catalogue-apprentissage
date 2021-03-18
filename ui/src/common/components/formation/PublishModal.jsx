@@ -62,6 +62,8 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
             body.affelnet_statut = "en attente de publication";
             body.affelnet_infos_offre = affelnet_infos_offre;
             shouldRestoreAfReconciliation = formation.affelnet_statut === "non publié";
+          } else if (["publié"].includes(formation?.affelnet_statut)) {
+            body.affelnet_infos_offre = affelnet_infos_offre;
           }
         } else if (affelnet === "false") {
           if (

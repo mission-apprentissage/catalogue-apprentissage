@@ -2,7 +2,7 @@ const { toBePublishedRules } = require("../../common/utils/referenceUtils");
 
 const getMefRule = (...args) => {
   const rule = args.reduce((acc, regex) => {
-    return [...acc, { mef_10_code: { $regex: regex } }, { "mefs_10.mef10": { $regex: regex } }];
+    return [...acc, { mef_10_code: { $regex: regex } }, { "bcn_mefs_10.mef10": { $regex: regex } }];
   }, []);
   return { $or: rule };
 };
@@ -42,6 +42,11 @@ const aPublierSoumisAValidationRules = {
           $and: [getMefRule(/^254/)],
         },
         {
+          diplome: "BREVET PROFESSIONNEL AGRICOLE",
+          ...getMefRule(/21$/),
+          $and: [getMefRule(/^254/)],
+        },
+        {
           diplome: "BREVET DES METIERS D'ART - BREVET DES METIERS DU SPECTACLE",
           ...getMefRule(/21$/),
           $and: [getMefRule(/^251/)],
@@ -50,7 +55,13 @@ const aPublierSoumisAValidationRules = {
           diplome: "MENTION COMPLEMENTAIRE",
           niveau: "3 (CAP...)",
           ...getMefRule(/11$/),
-          $and: [getMefRule(/^253/, /^274/)],
+          $and: [getMefRule(/^253/)],
+        },
+        {
+          diplome: "MENTION COMPLEMENTAIRE AGRICOLE",
+          niveau: "3 (CAP...)",
+          ...getMefRule(/11$/),
+          $and: [getMefRule(/^274/)],
         },
       ],
     },

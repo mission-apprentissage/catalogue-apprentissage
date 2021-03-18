@@ -7,7 +7,17 @@ const {
 } = require("../../common/model");
 
 async function reconciliationAffelnet(formation) {
-  let { uai, code_cfd, _id, code_nature, etablissement_type, code_mef, matching_mna_formation } = formation;
+  let {
+    uai,
+    code_cfd,
+    _id,
+    code_nature,
+    etablissement_type,
+    code_mef,
+    matching_mna_formation,
+    libelle_mnemonique,
+  } = formation;
+
   let {
     uai_formation,
     etablissement_formateur_uai,
@@ -40,9 +50,13 @@ async function reconciliationAffelnet(formation) {
         converted.affelnet_code_nature = code_nature;
         converted.affelnet_secteur = etablissement_type === "Public" ? "PU" : "PR";
 
-        const mefs_10 = converted.mefs_10 ?? [];
-        if (mefs_10.some(({ mef10 }) => mef10 === code_mef)) {
-          converted.affelnet_mefs_10 = [code_mef];
+        // pre-fill affelnet_infos_offre with data from affelnet import if empty (to not erase user change)
+        converted.affelnet_infos_offre = converted.affelnet_infos_offre || libelle_mnemonique;
+
+        const mefs_10 = converted.bcn_mefs_10 ?? [];
+        const mef = mefs_10.find(({ mef10 }) => mef10 === code_mef);
+        if (mef) {
+          converted.mefs_10 = [mef];
         }
         await converted.save();
       }
