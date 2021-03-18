@@ -24,7 +24,7 @@ runScript(async ({ catalogue }) => {
     // rco
     await rcoImporter();
     await rcoConverter();
-    await trainingsUpdater(); // ~ 3h40 minutes => ~ 59 minutes
+    await trainingsUpdater(); // ~ 3 heures 40 minutes => ~ 59 minutes
 
     // parcoursup
     await psReference(); // ~ 34 minutes => ~ 30 secondes
