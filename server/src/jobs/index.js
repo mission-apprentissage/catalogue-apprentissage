@@ -33,7 +33,7 @@ runScript(async ({ catalogue }) => {
     // affelnet
     await afCoverage();
     await afReconciliation();
-    await afReference(); //  ? => ~ 5 minutes
+    await afReference(); // ~ 50 minutes => ~ 5 minutes
     await afPertinence();
 
     // es
