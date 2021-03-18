@@ -24,11 +24,11 @@ runScript(async ({ catalogue }) => {
     // rco
     await rcoImporter();
     await rcoConverter();
-    await trainingsUpdater();
+    await trainingsUpdater(); // ~ 59 minutes
 
     // parcoursup
-    await psReference();
-    await psPertinence();
+    await psReference(); // ~ 34 minutes
+    await psPertinence(); // ~ 8 secondes
 
     // affelnet
     await afCoverage();
@@ -37,7 +37,7 @@ runScript(async ({ catalogue }) => {
     await afPertinence();
 
     // es
-    await rebuildEsIndex("convertedformation");
+    await rebuildEsIndex("convertedformation"); // ~ 8 secondes
   } catch (error) {
     logger.error(error);
   }
