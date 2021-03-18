@@ -172,7 +172,7 @@ const Formation = ({
   pendingFormation,
 }) => {
   const oneEstablishment = formation.etablissement_gestionnaire_siret === formation.etablissement_formateur_siret;
-  const filteredPartenaires = formation.rncp_details?.partenaires?.filter(({ Siret_Partenaire }) =>
+  const filteredPartenaires = (formation.rncp_details?.partenaires ?? []).filter(({ Siret_Partenaire }) =>
     [formation.etablissement_gestionnaire_siret, formation.etablissement_formateur_siret].includes(Siret_Partenaire)
   );
   const showPartenaires =
