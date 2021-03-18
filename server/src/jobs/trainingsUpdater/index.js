@@ -37,6 +37,7 @@ const run = async () => {
 
     runScript(async () => {
       const idsToSkip = await managedUnPublishedRcoFormation();
+      console.log(idsToSkip.length);
       const idFilter = { id_rco_formation: { $nin: idsToSkip } };
       const activeFilter = { ...filter, ...idFilter }; // FIXEME TODO filter contain id_rco_formation key
 
