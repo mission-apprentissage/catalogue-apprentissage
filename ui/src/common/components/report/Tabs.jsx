@@ -72,7 +72,6 @@ const TrainingsUpdateTabs = ({ data, reportType, date, errors }) => {
         <TabList>
           <Tab>Résumé</Tab>
           {summary.updatedCount > 0 && <Tab>{summary.updatedCount} Formation(s) mise(s) à jour</Tab>}
-          {summary.notUpdatedCount > 0 && <Tab>{summary.notUpdatedCount} Formation(s) déjà à jour</Tab>}
           {showErrors && <Tab>{summary.invalidCount ?? errors?.length} Formation(s) en échec de mise à jour</Tab>}
         </TabList>
         <TabPanels>
@@ -84,11 +83,6 @@ const TrainingsUpdateTabs = ({ data, reportType, date, errors }) => {
               <Table data={data.updated} onRowClick={onRowClick} filename={`${reportType}_${date}_updated`} />
             </TabPanel>
           )}
-          {data.notUpdated?.length > 0 && (
-            <TabPanel>
-              <Table data={data.notUpdated} filename={`${reportType}_${date}_notUpdated`} />
-            </TabPanel>
-          )}
           {showErrors && (
             <TabPanel>
               <Table data={errors} filename={`${reportType}_${date}_errors`} />
@@ -98,36 +92,6 @@ const TrainingsUpdateTabs = ({ data, reportType, date, errors }) => {
       </Ctabs>
       <CodeModal isOpen={isOpen} onClose={onClose} title="Updates" code={selectedData} />
     </>
-  );
-};
-
-const RcoDiffTabs = ({ data, reportType, date, errors }) => {
-  const { summary } = data;
-  const showErrors = errors?.length > 0;
-
-  return (
-    <Ctabs isLazy>
-      <TabList>
-        <Tab>Résumé</Tab>
-        {summary.matchingCount > 0 && <Tab>{summary.matchingCount} Formation(s) qui matchent avec la base MNA</Tab>}
-        {showErrors && <Tab>Erreurs</Tab>}
-      </TabList>
-      <TabPanels>
-        <TabPanel>
-          <Summary data={data} reportType={reportType} />
-        </TabPanel>
-        {data.matchingFormations.length > 0 && (
-          <TabPanel>
-            <Table data={data.matchingFormations} filename={`${reportType}_${date}_matching`} />
-          </TabPanel>
-        )}
-        {showErrors && (
-          <TabPanel>
-            <Table data={errors} filename={`${reportType}_${date}_errors`} />
-          </TabPanel>
-        )}
-      </TabPanels>
-    </Ctabs>
   );
 };
 
@@ -190,9 +154,6 @@ const Tabs = ({ data = { summary: {} }, reportType, date, errors }) => {
 
     case REPORT_TYPE.TRAININGS_UPDATE:
       return <TrainingsUpdateTabs data={data} reportType={reportType} date={date} errors={errors} />;
-
-    case REPORT_TYPE.RCO_DIFF:
-      return <RcoDiffTabs data={data} reportType={reportType} date={date} errors={errors} />;
 
     case REPORT_TYPE.RCO_IMPORT:
       return <RcoImportTabs data={data} reportType={reportType} date={date} errors={errors} />;

@@ -1,4 +1,5 @@
 const logger = require("../../common/logger");
+const { habiliteList } = require("../../constants/certificateurs");
 const { Etablissement } = require("../../common/model");
 
 const getAttachedEstablishments = async (etablissement_gestionnaire_siret, etablissement_formateur_siret) => {
@@ -33,12 +34,6 @@ const getEstablishmentAddress = (establishment) => {
 };
 
 const isHabiliteRncp = ({ partenaires = [], certificateurs = [] }, siret) => {
-  const habiliteList = [
-    "Ministère du travail",
-    "Ministère chargé de l'Emploi",
-    "Ministère du Travail - Délégation Générale à l'Emploi et à la Formation Professionnelle (DGEFP)",
-  ];
-
   if ((certificateurs ?? []).some(({ certificateur }) => habiliteList.includes(certificateur))) {
     return true;
   }
