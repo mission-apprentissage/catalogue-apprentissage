@@ -10,7 +10,12 @@ const Component = (props) => {
       {props.data?.map((item, i) => {
         return (
           <GridItem key={i} colSpan={[6, 3]}>
-            <StatCard background="#ffffff" color="#1a424c" label={item.title} stat={item.value} />
+            <StatCard
+              background={props.background ?? "#ffffff"}
+              color={props.color ?? "#1a424c"}
+              label={item.title}
+              stat={item.value}
+            />
           </GridItem>
         );
       })}
@@ -43,6 +48,10 @@ export default () => {
                 Affelnet
               </Heading>
               <Component data={data.affelnet} />
+              <Heading as="h2" fontSize="gamma" mb={4}>
+                Diplômes
+              </Heading>
+              <Component data={data.diplomes} background="pinksoft.600" />
             </>
           )}
         </Container>
