@@ -9,12 +9,12 @@ async function getAllStats() {
 
   // RCO
   const nbRcoPublished = {
-    title: "Formations RCO publiées",
+    title: "Formations RCO reçues",
     value: await RcoFormation.countDocuments({ published: true }),
   };
   const nbRcoConversionError = {
     title: "Formations RCO en erreur",
-    value: await RcoFormation.countDocuments({ converted_to_mna: { $ne: true } }),
+    value: await RcoFormation.countDocuments({ published: true, converted_to_mna: { $ne: true } }),
   };
 
   // Parcoursup
@@ -127,6 +127,42 @@ async function getAllStats() {
     }),
   };
 
+  // diplomes
+  const result = await ConvertedFormation.aggregate([
+    {
+      $group: {
+        _id: {
+          libelle_court: "$libelle_court",
+          code_type_certif: "$rncp_details.code_type_certif",
+          published: "$published",
+        },
+        count: { $sum: 1 },
+      },
+    },
+    { $match: { "_id.code_type_certif": { $nin: ["Titre", "TP"] }, "_id.published": true } },
+  ]);
+
+  const diplomes = result.map(({ _id, count }) => ({
+    title: _id.libelle_court,
+    value: count,
+  }));
+
+  diplomes.push({
+    title: "Titres",
+    value: await ConvertedFormation.countDocuments({
+      published: true,
+      "rncp_details.code_type_certif": { $in: ["Titre", "TP"] },
+    }),
+  });
+
+  const total = diplomes.reduce((acc, curr) => acc + curr.value, 0);
+  diplomes.push({
+    title: "Total",
+    value: total,
+  });
+
+  diplomes.sort((a, b) => b.value - a.value);
+
   return {
     catalogue: [nbCataloguePublished, nbRcoPublished, nbRcoConversionError],
     parcoursup: [
@@ -152,6 +188,7 @@ async function getAllStats() {
       nbAffelnetPublished,
       nbAffelnetNotPublished,
     ],
+    diplomes,
   };
 }
 
