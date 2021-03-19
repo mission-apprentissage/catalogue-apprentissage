@@ -53,6 +53,18 @@ export default () => {
                   );
                 })}
               </Grid>
+              <Heading as="h2" fontSize="gamma" mb={4}>
+                Diplômes
+              </Heading>
+              <Grid templateColumns="repeat(12, 1fr)" gap={2} pb={4}>
+                {data.diplomes.map((item, i) => {
+                  return (
+                    <GridItem key={i} colSpan={[6, 3]}>
+                      <StatCard label={item.title} stat={item.value} background="pinksoft.600" />
+                    </GridItem>
+                  );
+                })}
+              </Grid>
             </>
           )}
         </Container>
