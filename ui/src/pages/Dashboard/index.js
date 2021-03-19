@@ -2,7 +2,7 @@ import React from "react";
 import { useFetch } from "../../common/hooks/useFetch";
 import { Box, Container, Heading, Grid, GridItem } from "@chakra-ui/react";
 import Layout from "../layout/Layout";
-import StatCard from "./components/StatCard";
+import StatCard from "../../common/components/StatCard";
 
 const Component = (props) => {
   return (
@@ -51,7 +51,7 @@ export default () => {
               <Heading as="h2" fontSize="gamma" mb={4}>
                 Diplômes
               </Heading>
-              <Component data={data.diplomes} background="pinksoft.600" />
+              <Component data={data.diplomes} />
             </>
           )}
         </Container>
