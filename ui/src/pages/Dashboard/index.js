@@ -10,7 +10,7 @@ const Component = (props) => {
       {props.data?.map((item, i) => {
         return (
           <GridItem key={i} colSpan={[6, 3]}>
-            <StatCard label={item.title} stat={item.value} />
+            <StatCard background="#ffffff" color="#1a424c" label={item.title} stat={item.value} />
           </GridItem>
         );
       })}
