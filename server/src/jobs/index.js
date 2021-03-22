@@ -15,10 +15,18 @@ const { rebuildEsIndex } = require("./esIndex/esIndex");
 const { importEtablissements } = require("./etablissements");
 const { spawn } = require("child_process");
 
+const { mongoose } = require("../common/mongodb");
+const { initTcoModel, rncpImporter, bcnImporter } = require("@mission-apprentissage/tco-service-node");
+
 runScript(async ({ catalogue }) => {
   try {
     logger.info(`Start all jobs`);
     await clean();
+
+    // import tco
+    await initTcoModel(mongoose);
+    await bcnImporter();
+    await rncpImporter();
 
     await importEtablissements(catalogue);
 
