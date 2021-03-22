@@ -2,7 +2,26 @@ import React from "react";
 import { useFetch } from "../../common/hooks/useFetch";
 import { Box, Container, Heading, Grid, GridItem } from "@chakra-ui/react";
 import Layout from "../layout/Layout";
-import StatCard from "./components/StatCard";
+import StatCard from "../../common/components/StatCard";
+
+const Component = (props) => {
+  return (
+    <Grid templateColumns="repeat(12, 1fr)" gap={2} pb={4}>
+      {props.data?.map((item, i) => {
+        return (
+          <GridItem key={i} colSpan={[6, 3]}>
+            <StatCard
+              background={props.background ?? "#ffffff"}
+              color={props.color ?? "#1a424c"}
+              label={item.title}
+              stat={item.value}
+            />
+          </GridItem>
+        );
+      })}
+    </Grid>
+  );
+};
 
 export default () => {
   const [data, loading] = useFetch("api/stats");
@@ -20,39 +39,19 @@ export default () => {
               <Heading as="h2" fontSize="gamma" mb={4}>
                 Catalogue
               </Heading>
-              <Grid templateColumns="repeat(12, 1fr)" gap={2} pb={4}>
-                {data.catalogue.map((item, i) => {
-                  return (
-                    <GridItem key={i} colSpan={[6, 3]}>
-                      <StatCard label={item.title} stat={item.value} />
-                    </GridItem>
-                  );
-                })}
-              </Grid>
+              <Component data={data.catalogue} />
               <Heading as="h2" fontSize="gamma" mb={4}>
                 Parcoursup
               </Heading>
-              <Grid templateColumns="repeat(12, 1fr)" gap={2} pb={4}>
-                {data.parcoursup.map((item, i) => {
-                  return (
-                    <GridItem key={i} colSpan={[6, 3]}>
-                      <StatCard label={item.title} stat={item.value} />
-                    </GridItem>
-                  );
-                })}
-              </Grid>
+              <Component data={data.parcoursup} />
               <Heading as="h2" fontSize="gamma" mb={4}>
                 Affelnet
               </Heading>
-              <Grid templateColumns="repeat(12, 1fr)" gap={2} pb={4}>
-                {data.affelnet.map((item, i) => {
-                  return (
-                    <GridItem key={i} colSpan={[6, 3]}>
-                      <StatCard label={item.title} stat={item.value} />
-                    </GridItem>
-                  );
-                })}
-              </Grid>
+              <Component data={data.affelnet} />
+              <Heading as="h2" fontSize="gamma" mb={4}>
+                Diplômes
+              </Heading>
+              <Component data={data.diplomes} />
             </>
           )}
         </Container>
