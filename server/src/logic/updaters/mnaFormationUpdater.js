@@ -2,12 +2,12 @@ const logger = require("../../common/logger");
 const Joi = require("joi");
 const { aPublierRules, aPublierSoumisAValidationRules } = require("../../jobs/pertinence/affelnet/rules");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
-const { findRcoFormationFromConvertedId, getPeriodeTags } = require("../../jobs/common/utils/rcoUtils");
+const { getPeriodeTags } = require("../../jobs/common/utils/rcoUtils");
 const { cfdMapper } = require("../mappers/cfdMapper");
 const { codePostalMapper } = require("../mappers/codePostalMapper");
 const { etablissementsMapper } = require("../mappers/etablissementsMapper");
 const { diffFormation } = require("../common/utils/diffUtils");
-const { PendingRcoFormation, SandboxFormation } = require("../../common/model");
+const { PendingRcoFormation, SandboxFormation, RcoFormation } = require("../../common/model");
 
 const formationSchema = Joi.object({
   cfd: Joi.string().required(),
@@ -53,15 +53,19 @@ const findMefsForAffelnet = async (rules) => {
   return null;
 };
 
-const mnaFormationUpdater = async (formation, { withHistoryUpdate = true, withCodePostalUpdate = true } = {}) => {
+const mnaFormationUpdater = async (
+  formation,
+  { withHistoryUpdate = true, withCodePostalUpdate = true, cfdInfo = null } = {}
+) => {
   try {
     await formationSchema.validateAsync(formation, { abortEarly: false });
 
-    const { result: cfdMapping, messages: cfdMessages, serviceAvailable } = await cfdMapper(formation.cfd);
+    const currentCfdInfo = cfdInfo || (await cfdMapper(formation.cfd));
+    const { result: cfdMapping, messages: cfdMessages } = currentCfdInfo;
 
     let error = parseErrors(cfdMessages);
     if (error) {
-      return { updates: null, formation, error, serviceAvailable };
+      return { updates: null, formation, error, cfdInfo };
     }
 
     const { result: cpMapping = {}, messages: cpMessages } = withCodePostalUpdate
@@ -69,7 +73,7 @@ const mnaFormationUpdater = async (formation, { withHistoryUpdate = true, withCo
       : {};
     error = parseErrors(cpMessages);
     if (error) {
-      return { updates: null, formation, error };
+      return { updates: null, formation, error, cfdInfo };
     }
 
     const rncpInfo = {
@@ -86,10 +90,10 @@ const mnaFormationUpdater = async (formation, { withHistoryUpdate = true, withCo
 
     error = parseErrors(etablissementsMessages);
     if (error) {
-      return { updates: null, formation, error };
+      return { updates: null, formation, error, cfdInfo };
     }
 
-    const rcoFormation = await findRcoFormationFromConvertedId(formation.id_rco_formation);
+    const rcoFormation = await RcoFormation.findOne({ id_rco_formation: formation.id_rco_formation });
     let published = rcoFormation?.published ?? false; // not found in rco should not be published
 
     let update_error = null;
@@ -182,13 +186,13 @@ const mnaFormationUpdater = async (formation, { withHistoryUpdate = true, withCo
       if (withHistoryUpdate) {
         updatedFormation.updates_history = buildUpdatesHistory(formation, updates, keys);
       }
-      return { updates, formation: updatedFormation };
+      return { updates, formation: updatedFormation, cfdInfo };
     }
 
-    return { updates: null, formation };
+    return { updates: null, formation, cfdInfo };
   } catch (e) {
     logger.error(e);
-    return { updates: null, formation, error: e.toString() };
+    return { updates: null, formation, error: e.toString(), cfdInfo: null };
   }
 };
 

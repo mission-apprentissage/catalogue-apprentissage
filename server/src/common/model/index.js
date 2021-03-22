@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const { mongoose } = require("../mongodb");
 const { mongoosastic, getElasticInstance } = require("../esClient");
 const schema = require("../model/schema");
 

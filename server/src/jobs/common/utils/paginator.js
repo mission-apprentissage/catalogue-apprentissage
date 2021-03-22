@@ -1,9 +1,13 @@
 const cliProgress = require("cli-progress");
 
-const paginator = async (Model, { filter = {}, limit = 100, lean = false, showProgress = true } = {}, callback) => {
-  let offset = 0;
-  let computed = 0;
-  let nbTotalItems = 10;
+const paginator = async (
+  Model,
+  { filter = {}, limit = 100, lean = false, showProgress = true, maxItems = null, offset = 0 } = {},
+  callback
+) => {
+  let currentOffset = offset;
+  let computed = offset;
+  let nbTotalItems = maxItems || 10;
 
   // create a new progress bar instance and use shades_classic theme
   const progressBar = showProgress
@@ -12,9 +16,11 @@ const paginator = async (Model, { filter = {}, limit = 100, lean = false, showPr
   progressBar?.start(nbTotalItems, 0);
 
   while (computed < nbTotalItems) {
-    let { docs, total } = await Model.paginate(filter, { offset, limit, lean });
-    nbTotalItems = total;
-    progressBar?.setTotal(nbTotalItems);
+    let { docs, total } = await Model.paginate(filter, { currentOffset, limit, lean });
+    if (nbTotalItems === 10) {
+      nbTotalItems = maxItems || total;
+      progressBar?.setTotal(nbTotalItems);
+    }
 
     await Promise.all(
       docs.map(async (item) => {
@@ -22,7 +28,7 @@ const paginator = async (Model, { filter = {}, limit = 100, lean = false, showPr
         await callback(item);
       })
     );
-    offset += limit;
+    currentOffset += limit;
     progressBar?.update(computed);
   }
 };

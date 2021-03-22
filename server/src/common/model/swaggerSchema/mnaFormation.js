@@ -486,6 +486,12 @@ module.exports = {
         default: "hors périmètre",
         description: "Statut parcoursup",
       },
+      parcoursup_statut_history: {
+        type: "array",
+        items: {},
+        default: [],
+        description: "Parcoursup : historique des statuts",
+      },
       parcoursup_error: {
         type: "string",
         default: "null",
@@ -513,6 +519,12 @@ module.exports = {
         ],
         default: "hors périmètre",
         description: "Statut affelnet",
+      },
+      affelnet_statut_history: {
+        type: "array",
+        items: {},
+        default: [],
+        description: "Affelnet : historique des statuts",
       },
       affelnet_error: {
         type: "string",
