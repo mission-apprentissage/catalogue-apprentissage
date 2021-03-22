@@ -86,7 +86,14 @@ const run = async () => {
         pResult[cluster.workers[id].process.pid] = { result: null };
         order++;
         cluster.workers[id].on("message", (message) => {
+          console.log(
+            `Results send from ${message.from}, invalidFormations: ${message.result.invalidFormations.length}, updatedFormations: ${message.result.updatedFormations.length}, notUpdatedCount: ${message.result.notUpdatedCount}`
+          );
           pResult[message.from].result = message.result;
+          cluster.workers[id].send({
+            from: "master",
+            type: "end",
+          });
         });
       }
 
@@ -94,6 +101,7 @@ const run = async () => {
         console.log("Worker " + worker.process.pid + " is online");
         worker.send({
           from: "master",
+          type: "start",
           withCodePostalUpdate,
           activeFilter,
           limit,
@@ -105,6 +113,7 @@ const run = async () => {
       cluster.on("exit", async (worker) => {
         console.log(`worker ${worker.process.pid} died`);
         if (countWorkerExist === 2) {
+          console.log("Send report");
           const mR = {
             invalidFormations: [],
             updatedFormations: [],
@@ -121,7 +130,15 @@ const run = async () => {
             }
           }
 
-          await createReport(mR);
+          console.log(
+            `Results total, invalidFormations: ${mR.invalidFormations.length}, updatedFormations: ${mR.updatedFormations.length}, notUpdatedCount: ${mR.notUpdatedCount}`
+          );
+
+          try {
+            await createReport(mR);
+          } catch (error) {
+            console.error(error);
+          }
           console.log(`Done`);
         } else {
           countWorkerExist += 1;
@@ -130,22 +147,25 @@ const run = async () => {
     });
   } else {
     process.on("message", async (message) => {
-      runScript(async () => {
-        console.log(process.pid, message);
-        const result = await updater.run(
-          message.activeFilter,
-          message.withCodePostalUpdate,
-          message.limit,
-          message.maxItems,
-          message.offset
-        );
-        process.send({
-          from: process.pid,
-          result,
+      if (message.type === "start") {
+        runScript(async () => {
+          console.log(process.pid, message);
+          const result = await updater.run(
+            message.activeFilter,
+            message.withCodePostalUpdate,
+            message.limit,
+            message.maxItems,
+            message.offset
+          );
+          process.send({
+            from: process.pid,
+            result,
+          });
         });
+      } else if (message.type === "end") {
         // eslint-disable-next-line no-process-exit
         process.exit(0);
-      });
+      }
     });
   }
 };

@@ -2,7 +2,7 @@ const { runScript } = require("./scriptWrapper");
 const logger = require("../common/logger");
 const rcoImporter = require("./rcoImporter");
 const rcoConverter = require("./rcoConverter");
-const trainingsUpdater = require("./trainingsUpdater");
+// const trainingsUpdater = require("./trainingsUpdater");
 const psReference = require("./reference/parcoursup");
 const afReference = require("./reference/affelnet");
 const psPertinence = require("./pertinence/parcoursup");
@@ -13,6 +13,7 @@ const afReconciliation = require("./affelnet/reconciliation");
 const clean = require("./clean");
 const { rebuildEsIndex } = require("./esIndex/esIndex");
 const { importEtablissements } = require("./etablissements");
+const { spawn } = require("child_process");
 
 runScript(async ({ catalogue }) => {
   try {
@@ -24,7 +25,12 @@ runScript(async ({ catalogue }) => {
     // rco
     await rcoImporter();
     await rcoConverter();
-    await trainingsUpdater(); // ~ 3 heures 40 minutes => ~ 59 minutes
+
+    // await trainingsUpdater(); // ~ 3 heures 40 minutes => ~ 59 minutes
+    const trainingsUpdater = spawn("node", ["./src/jobs/trainingsUpdater/index.js"]);
+    for await (const data of trainingsUpdater.stdout) {
+      console.log(`trainingsUpdater: ${data}`);
+    }
 
     // parcoursup
     await psReference(); // ~ 34 minutes => ~ 30 secondes
