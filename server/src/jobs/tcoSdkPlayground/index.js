@@ -12,11 +12,15 @@ const {
   // getSiretInfo,
 } = require("@mission-apprentissage/tco-service-node");
 
+const path = require("path");
+
+const KIT_LOCAL_PATH = path.join(__dirname, "KitApprentissage.latest.xlsx");
+
 runScript(async () => {
   await initTcoModel(mongoose);
   // console.log(await getCpInfo("92600"));
 
-  await rncpImporter();
+  await rncpImporter(KIT_LOCAL_PATH);
   console.log(await getRncpInfo("RNCP7571"));
 
   //await bcnImporter();
