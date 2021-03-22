@@ -18,6 +18,10 @@ const { spawn } = require("child_process");
 const { mongoose } = require("../common/mongodb");
 const { initTcoModel, rncpImporter, bcnImporter } = require("@mission-apprentissage/tco-service-node");
 
+const path = require("path");
+
+const KIT_LOCAL_PATH = path.join(__dirname, "KitApprentissage.latest.xlsx");
+
 runScript(async ({ catalogue }) => {
   try {
     logger.info(`Start all jobs`);
@@ -26,7 +30,7 @@ runScript(async ({ catalogue }) => {
     // import tco
     await initTcoModel(mongoose);
     await bcnImporter();
-    await rncpImporter();
+    await rncpImporter(KIT_LOCAL_PATH);
 
     await importEtablissements(catalogue);
 
