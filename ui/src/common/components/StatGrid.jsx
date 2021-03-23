@@ -1,6 +1,6 @@
 import { Grid, GridItem } from "@chakra-ui/react";
 import React from "react";
-import StatCard from ".StatCard";
+import StatCard from "./StatCard";
 
 const StatGrid = (props) => {
   return (
