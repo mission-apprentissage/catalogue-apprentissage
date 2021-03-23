@@ -1,5 +1,5 @@
 const { runScript } = require("../../scriptWrapper");
-const { RcoFormation } = require("../../../common/model");
+const { RcoFormation, ConvertedFormation } = require("../../../common/model");
 const { paginator } = require("../../common/utils/paginator");
 
 runScript(async () => {
@@ -14,4 +14,25 @@ runScript(async () => {
       }
     );
   });
+
+  let rcoFormationNotPublishedIds = await RcoFormation.find({ published: false })
+    .select({ id_rco_formation: 1 })
+    .lean();
+  rcoFormationNotPublishedIds = rcoFormationNotPublishedIds.map((d) => d.id_rco_formation);
+  await ConvertedFormation.collection.updateMany(
+    {},
+    {
+      $set: {
+        rco_published: true,
+      },
+    }
+  );
+  await ConvertedFormation.collection.updateMany(
+    { id_rco_formation: { $in: rcoFormationNotPublishedIds } },
+    {
+      $set: {
+        rco_published: false,
+      },
+    }
+  );
 });

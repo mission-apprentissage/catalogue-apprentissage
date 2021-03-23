@@ -22,16 +22,10 @@ const managedUnPublishedRcoFormation = async () => {
     {
       $set: {
         published: false,
+        rco_published: false,
       },
     }
   );
-
-  const c = await ConvertedFormation.collection.count({ id_rco_formation: { $in: rcoFormationNotPublishedIds } });
-  console.log(c);
-  const ct = await ConvertedFormation.collection.count({});
-  console.log(ct);
-  const cx = await ConvertedFormation.collection.count({ id_rco_formation: { $nin: rcoFormationNotPublishedIds } });
-  console.log(cx);
 
   return rcoFormationNotPublishedIds;
 };
@@ -76,6 +70,7 @@ const run = async () => {
       const idsToSkip = await managedUnPublishedRcoFormation();
       const idFilter = { id_rco_formation: { $nin: idsToSkip } };
       const activeFilter = { ...filter, ...idFilter }; // FIXEME TODO filter contain id_rco_formation key
+      // TODO add to filter rco_published: false
 
       const { pages, total } = await ConvertedFormation.paginate(activeFilter, { limit });
       const halfItems = Math.floor(pages / 2) * limit;

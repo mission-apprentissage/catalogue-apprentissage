@@ -33,6 +33,7 @@ const formatToMnaFormation = (rcoFormation) => {
     email: rcoFormation.email,
     source: "WS RCO",
     published: rcoFormation.published,
+    rco_published: rcoFormation.published,
 
     etablissement_gestionnaire_siret: rcoFormation.etablissement_gestionnaire_siret,
     etablissement_gestionnaire_uai: rcoFormation.etablissement_gestionnaire_uai,
@@ -74,7 +75,7 @@ const performConversion = async () => {
 
       await ConvertedFormation.findOneAndUpdate(
         { id_rco_formation: mnaFormattedRcoFormation.id_rco_formation },
-        { published: false },
+        { published: false, rco_published: false },
         {
           new: true,
         }
