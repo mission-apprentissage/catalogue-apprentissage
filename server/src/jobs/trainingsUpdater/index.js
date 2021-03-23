@@ -26,6 +26,13 @@ const managedUnPublishedRcoFormation = async () => {
     }
   );
 
+  const c = await ConvertedFormation.collection.count({ id_rco_formation: { $in: rcoFormationNotPublishedIds } });
+  console.log(c);
+  const ct = await ConvertedFormation.collection.count({});
+  console.log(ct);
+  const cx = await ConvertedFormation.collection.count({ id_rco_formation: { $nin: rcoFormationNotPublishedIds } });
+  console.log(cx);
+
   return rcoFormationNotPublishedIds;
 };
 
