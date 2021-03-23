@@ -256,6 +256,11 @@ const mnaFormationSchema = {
     default: false,
     description: "Est publiée, la formation est éligible pour le catalogue",
   },
+  rco_published: {
+    type: Boolean,
+    default: false,
+    description: "Est publiée dans le flux rco",
+  },
   draft: {
     type: Boolean,
     default: false,
