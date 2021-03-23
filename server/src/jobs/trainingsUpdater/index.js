@@ -37,6 +37,7 @@ const managedUnPublishedRcoFormation = async () => {
 };
 
 const createReport = async ({ invalidFormations, updatedFormations, notUpdatedCount }) => {
+  console.log("Send report");
   const summary = {
     invalidCount: invalidFormations.length,
     updatedCount: updatedFormations.length,
@@ -120,7 +121,6 @@ const run = async () => {
       cluster.on("exit", async (worker) => {
         console.log(`worker ${worker.process.pid} died`);
         if (countWorkerExist === 2) {
-          console.log("Send report");
           const mR = {
             invalidFormations: [],
             updatedFormations: [],
@@ -141,12 +141,14 @@ const run = async () => {
             `Results total, invalidFormations: ${mR.invalidFormations.length}, updatedFormations: ${mR.updatedFormations.length}, notUpdatedCount: ${mR.notUpdatedCount}`
           );
 
-          try {
-            await createReport(mR);
-          } catch (error) {
-            console.error(error);
-          }
-          console.log(`Done`);
+          runScript(async () => {
+            try {
+              await createReport(mR);
+            } catch (error) {
+              console.error(error);
+            }
+            console.log(`Done`);
+          });
         } else {
           countWorkerExist += 1;
         }
