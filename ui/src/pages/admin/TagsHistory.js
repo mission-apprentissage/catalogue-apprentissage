@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { _get } from "../../common/httpClient";
 import Layout from "../layout/Layout";
-import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Container, Grid, GridItem, Heading } from "@chakra-ui/react";
+import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Container, Heading } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
-import StatCard from "../Dashboard/components/StatCard";
+import StatGrid from "../../common/components/StatGrid";
 
 //
 // const ACADEMIES = [
@@ -171,39 +171,15 @@ export default () => {
               <Heading as="h3" fontSize="epsilon" mb={2}>
                 Aujourd'hui
               </Heading>
-              <Grid templateColumns="repeat(12, 1fr)" gap={2} pb={4}>
-                {data.affelnet.today.map((item, i) => {
-                  return (
-                    <GridItem key={i} colSpan={[6, 3]}>
-                      <StatCard label={item.title} stat={item.value} />
-                    </GridItem>
-                  );
-                })}
-              </Grid>
+              <StatGrid data={data.affelnet.today} />
               <Heading as="h3" fontSize="epsilon" mb={2}>
                 Hier
               </Heading>
-              <Grid templateColumns="repeat(12, 1fr)" gap={2} pb={4}>
-                {data.affelnet.j1.map((item, i) => {
-                  return (
-                    <GridItem key={i} colSpan={[6, 3]}>
-                      <StatCard label={item.title} stat={item.value} background="bluesoft.600" />
-                    </GridItem>
-                  );
-                })}
-              </Grid>
+              <StatGrid data={data.affelnet.j1} background="bluesoft.600" />
               <Heading as="h3" fontSize="epsilon" mb={2}>
                 Avant-hier
               </Heading>
-              <Grid templateColumns="repeat(12, 1fr)" gap={2} pb={4}>
-                {data.affelnet.j2.map((item, i) => {
-                  return (
-                    <GridItem key={i} colSpan={[6, 3]}>
-                      <StatCard label={item.title} stat={item.value} background="bluesoft.400" />
-                    </GridItem>
-                  );
-                })}
-              </Grid>
+              <StatGrid data={data.affelnet.j2} background="bluesoft.400" />
             </>
           )}
 
@@ -215,39 +191,15 @@ export default () => {
               <Heading as="h3" fontSize="epsilon" mb={2}>
                 Aujourd'hui
               </Heading>
-              <Grid templateColumns="repeat(12, 1fr)" gap={2} pb={4}>
-                {data.parcoursup.today.map((item, i) => {
-                  return (
-                    <GridItem key={i} colSpan={[6, 3]}>
-                      <StatCard label={item.title} stat={item.value} />
-                    </GridItem>
-                  );
-                })}
-              </Grid>
+              <StatGrid data={data.parcoursup.today} />
               <Heading as="h3" fontSize="epsilon" mb={2}>
                 Hier
               </Heading>
-              <Grid templateColumns="repeat(12, 1fr)" gap={2} pb={4}>
-                {data.parcoursup.j1.map((item, i) => {
-                  return (
-                    <GridItem key={i} colSpan={[6, 3]}>
-                      <StatCard label={item.title} stat={item.value} background="bluesoft.600" />
-                    </GridItem>
-                  );
-                })}
-              </Grid>
+              <StatGrid data={data.parcoursup.j1} background="bluesoft.600" />
               <Heading as="h3" fontSize="epsilon" mb={2}>
                 Avant-hier
               </Heading>
-              <Grid templateColumns="repeat(12, 1fr)" gap={2} pb={4}>
-                {data.parcoursup.j2.map((item, i) => {
-                  return (
-                    <GridItem key={i} colSpan={[6, 3]}>
-                      <StatCard label={item.title} stat={item.value} background="bluesoft.400" />
-                    </GridItem>
-                  );
-                })}
-              </Grid>
+              <StatGrid data={data.parcoursup.j2} background="bluesoft.400" />
             </>
           )}
         </Container>
