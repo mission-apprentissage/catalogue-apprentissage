@@ -68,8 +68,9 @@ function recoupementAvecFichierSpecific() {
 }
 
 async function psup2021() {
-  const file = path.resolve(__dirname, "../assets/listeFormationApprentissage_latest.xls");
+  const file = path.resolve(__dirname, "./listeFormationApprentissage_latest.xls");
   const data = getJsonFromXlsxFile(file);
+  console.log(file);
 
   // const filtered = uniqBy(data, "CODESPÉCIALITÉ");
 
