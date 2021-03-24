@@ -68,7 +68,7 @@ function recoupementAvecFichierSpecific() {
 }
 
 async function psup2021() {
-  const file = path.resolve(__dirname, "../assets/formation-psup-2021_26022021.xls");
+  const file = path.resolve(__dirname, "../assets/listeFormationApprentissage_latest.xls");
   const data = getJsonFromXlsxFile(file);
 
   // const filtered = uniqBy(data, "CODESPÉCIALITÉ");
@@ -194,12 +194,16 @@ async function psup2021() {
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, XLSX.utils.json_to_sheet(updated), "psup");
 
-  XLSX.writeFileAsync(path.join(__dirname, `../assets/traitement-psup-serge.xlsx`), workbook, (e) => {
-    if (e) {
-      console.log(e);
-      throw new Error("La génération du fichier excel à échoué : ", e);
+  XLSX.writeFileAsync(
+    path.join(__dirname, `../assets/listeFormationApprentissage_avecRncp_latest.xlsx`),
+    workbook,
+    (e) => {
+      if (e) {
+        console.log(e);
+        throw new Error("La génération du fichier excel à échoué : ", e);
+      }
     }
-  });
+  );
 }
 // eslint-disable-next-line
 async function statistiqueAffelnet() {
