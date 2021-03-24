@@ -89,9 +89,10 @@ export default () => {
           <ResetPasswordWrapper>
             <ScrollToTop />
             <Switch>
-              <PrivateRoute exact path="/stats">
+              {/* <PrivateRoute exact path="/stats">
                 {auth && auth.permissions.isAdmin ? <DashboardPage /> : <HomePage />}
-              </PrivateRoute>
+              </PrivateRoute> */}
+              <Route exact path="/stats" component={DashboardPage} />
               {auth && auth.permissions.isAdmin && <PrivateRoute exact path="/admin/users" component={Users} />}
               <Route exact path="/" component={HomePage} />
               {/* <Route exact path="/recherche/formations-2020" component={Search} /> */}
