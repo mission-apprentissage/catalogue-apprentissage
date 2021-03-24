@@ -17,7 +17,7 @@ const updateMatchedFormation = async (matching) => {
 const formation = async () => {
   await paginator(
     PsFormation2021,
-    { filter: { code_cfd: { $ne: null } }, lean: true, limit: 50 },
+    { filter: { code_cfd: { $ne: null } }, lean: true, limit: 150 },
     async (formation) => {
       let match = await getParcoursupCoverage(formation, { published: true, tags: "2021" });
 
