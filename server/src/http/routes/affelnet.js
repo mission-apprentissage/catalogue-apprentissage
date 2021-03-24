@@ -15,18 +15,20 @@ module.exports = ({ catalogue }) => {
   router.get(
     "/statistique",
     tryCatch(async (req, res) => {
-      let [x, y, z] = await Promise.all([
+      let [w, x, y, z] = await Promise.all([
         AfFormation.estimatedDocumentCount(),
         AfFormation.countDocuments({ etat_reconciliation: true }),
-        AfFormation.countDocuments({ matching_type: { $ne: null } }),
+        AfFormation.countDocuments({ matching_type: { $ne: null }, etat_reconciliation: false }),
+        AfFormation.countDocuments({ matching_type: { $eq: null } }),
       ]);
 
       let percentageOnTotal = (value) => Math.round((value / x) * 100);
 
       res.json({
-        total: x,
-        reconciled: [y, percentageOnTotal(y)],
-        covered: [z, percentageOnTotal(z)],
+        total: w,
+        reconciled: [x, percentageOnTotal(x)],
+        covered: [y, percentageOnTotal(y)],
+        notFound: [z, percentageOnTotal(z)],
       });
     })
   );

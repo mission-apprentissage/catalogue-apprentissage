@@ -91,21 +91,32 @@ export default (props) => {
             <Spacer />
             {!stat.isLoading && !stat.isError && (
               <Box>
-                <Text align="right">
-                  <Tag colorScheme="teal">{stat.data.total}</Tag> formations
-                </Text>
-                <Text align="right">
-                  <Tag colorScheme="teal">
-                    {stat.data.reconciled[0]} - {stat.data.reconciled[1]}%
-                  </Tag>{" "}
-                  formations réconciliées
-                </Text>
-                <Text align="right">
-                  <Tag colorScheme="teal">
-                    {stat.data.covered[0]} - {stat.data.covered[1]}%
-                  </Tag>{" "}
-                  formations rapprochées avec le catalogue
-                </Text>
+                <Heading align="right" size="md">
+                  {stat.data.total} formations
+                </Heading>
+                <Box>
+                  {/* <Text align="right">
+                <Tag colorScheme="teal">{stat.data.total}</Tag> formations
+              </Text> */}
+                  <Text align="right">
+                    <Tag colorScheme="gray">
+                      {stat.data.reconciled[0]} - {stat.data.reconciled[1]}%
+                    </Tag>{" "}
+                    formations réconciliées
+                  </Text>
+                  <Text align="right">
+                    <Tag colorScheme="gray">
+                      {stat.data.covered[0]} - {stat.data.covered[1]}%
+                    </Tag>{" "}
+                    formations à vérifier
+                  </Text>
+                  <Text align="right">
+                    <Tag colorScheme="gray">
+                      {stat.data.notFound[0]} - {stat.data.notFound[1]}%
+                    </Tag>{" "}
+                    formations non rapprochées
+                  </Text>
+                </Box>
               </Box>
             )}
           </Flex>
@@ -140,7 +151,7 @@ export default (props) => {
               <Container maxW="full">
                 <Flex align="center">
                   <Heading size="md">
-                    Formation affelnet : matching <Tag colorScheme="teal">{matching.type}</Tag> — {data.total}{" "}
+                    Formation affelnet : matching <Tag colorScheme="gray">{matching.type}</Tag> — {data.total}{" "}
                     formations disponibles
                   </Heading>
                   <Spacer />

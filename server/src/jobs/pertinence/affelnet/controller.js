@@ -1,5 +1,6 @@
 const { ConvertedFormation } = require("../../../common/model");
 const logger = require("../../../common/logger");
+const { updateTagsHistory } = require("../../../logic/updaters/tagsHistoryUpdater");
 const { aPublierSoumisAValidationRules, aPublierRules } = require("./rules");
 
 const run = async () => {
@@ -51,9 +52,15 @@ const run = async () => {
     { $set: { last_update_at: Date.now(), affelnet_statut: "à publier" } }
   );
 
+  // Push entry in tags history
+  await updateTagsHistory("affelnet_statut");
+
   // stats
   const totalPublished = await ConvertedFormation.countDocuments({ published: true });
-  const totalErrors = await ConvertedFormation.countDocuments({ published: true, affelnet_error: { $ne: null } });
+  const totalErrors = await ConvertedFormation.countDocuments({
+    published: true,
+    affelnet_error: { $ne: null },
+  });
   const totalNotRelevant = await ConvertedFormation.countDocuments({
     published: true,
     affelnet_statut: "hors périmètre",
@@ -62,12 +69,18 @@ const run = async () => {
     published: true,
     affelnet_statut: "à publier (soumis à validation)",
   });
-  const totalToCheck = await ConvertedFormation.countDocuments({ published: true, affelnet_statut: "à publier" });
+  const totalToCheck = await ConvertedFormation.countDocuments({
+    published: true,
+    affelnet_statut: "à publier",
+  });
   const totalPending = await ConvertedFormation.countDocuments({
     published: true,
     affelnet_statut: "en attente de publication",
   });
-  const totalAfPublished = await ConvertedFormation.countDocuments({ published: true, affelnet_statut: "publié" });
+  const totalAfPublished = await ConvertedFormation.countDocuments({
+    published: true,
+    affelnet_statut: "publié",
+  });
   const totalAfNotPublished = await ConvertedFormation.countDocuments({
     published: true,
     affelnet_statut: "non publié",

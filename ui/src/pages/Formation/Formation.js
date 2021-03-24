@@ -236,10 +236,17 @@ const Formation = ({
               <strong>{formation.mef_10_code ?? formation?.bcn_mefs_10?.map(({ mef10 }) => mef10).join(", ")}</strong>
             </Text>
             {formation?.mefs_10?.length > 0 && (
-              <Text mb={4}>
-                Codes MEF 10 caractères dans le périmètre <i>Affelnet</i>:{" "}
-                <strong>{formation?.mefs_10?.map(({ mef10 }) => mef10).join(", ")}</strong>
-              </Text>
+              <>
+                <Text mb={4}>
+                  Codes MEF 10 caractères dans le périmètre <i>Affelnet</i>:{" "}
+                  <strong>{formation?.mefs_10?.map(({ mef10 }) => mef10).join(", ")}</strong>
+                </Text>
+                {formation?.affelnet_infos_offre && (
+                  <Text mb={4}>
+                    Informations offre de formation <i>Affelnet</i>: <strong>{formation?.affelnet_infos_offre}</strong>
+                  </Text>
+                )}
+              </>
             )}
             <Text mb={4}>
               Période d'inscription: {!edition && <FormationPeriode periode={formation.periode} />}
