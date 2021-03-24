@@ -1,6 +1,5 @@
 const path = require("path");
 const XLSX = require("xlsx");
-const { uniqBy } = require("lodash");
 const { runScript } = require("../../scriptWrapper");
 const { paginator } = require("../../common/utils/paginator");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
@@ -69,10 +68,11 @@ function recoupementAvecFichierSpecific() {
 }
 
 async function psup2021() {
-  const file = path.resolve(__dirname, "../assets/formation-psup-2021_26022021.xls");
+  const file = path.resolve(__dirname, "./listeFormationApprentissage_latest.xls");
   const data = getJsonFromXlsxFile(file);
+  console.log(file);
 
-  const filtered = uniqBy(data, "CODESPÉCIALITÉ");
+  // const filtered = uniqBy(data, "CODESPÉCIALITÉ");
 
   const getLibelleLong = (libelle) =>
     libelle
@@ -94,8 +94,8 @@ async function psup2021() {
 
   let updated = [];
 
-  await asyncForEach(filtered, async (item, index) => {
-    console.log(index, filtered.length);
+  await asyncForEach(data, async (item, index) => {
+    console.log(index, data.length);
     if (item.CODEMEF) {
       try {
         let responseMEF = await getMefInfo(item.CODEMEF);
@@ -195,7 +195,7 @@ async function psup2021() {
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, XLSX.utils.json_to_sheet(updated), "psup");
 
-  XLSX.writeFileAsync(path.join(__dirname, `../assets/traitement-psup-serge.xlsx`), workbook, (e) => {
+  XLSX.writeFileAsync(path.join(__dirname, `./listeFormationApprentissage_avecRncp_latest.xlsx`), workbook, (e) => {
     if (e) {
       console.log(e);
       throw new Error("La génération du fichier excel à échoué : ", e);
