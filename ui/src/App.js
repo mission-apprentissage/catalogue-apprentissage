@@ -18,6 +18,7 @@ import Journal from "./pages/Journal/Journal";
 import HowToReglement from "./pages/HowToReglement";
 import HowToModif from "./pages/HowToModif";
 import HowToSignal from "./pages/HowToSignal";
+import TagsHistory from "./pages/admin/TagsHistory";
 import { _post, _get } from "./common/httpClient";
 import ScrollToTop from "./common/components/ScrollToTop";
 
@@ -88,7 +89,7 @@ export default () => {
           <ResetPasswordWrapper>
             <ScrollToTop />
             <Switch>
-              <PrivateRoute exact path="/admin">
+              <PrivateRoute exact path="/stats">
                 {auth && auth.permissions.isAdmin ? <DashboardPage /> : <HomePage />}
               </PrivateRoute>
               {auth && auth.permissions.isAdmin && <PrivateRoute exact path="/admin/users" component={Users} />}
@@ -110,6 +111,8 @@ export default () => {
               <Route exact path="/couverture-parcoursup" component={ReconciliationParcoursup} />
               <Route exact path="/couverture-affelnet" component={ReconciliationAffelnet} />
               <Route exact path="/changelog" component={Journal} />
+
+              {auth && auth.permissions.isAdmin && <PrivateRoute exact path="/tags-history" component={TagsHistory} />}
 
               <Route component={NotFoundPage} />
             </Switch>

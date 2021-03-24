@@ -1,5 +1,6 @@
 const { ConvertedFormation } = require("../../../common/model");
 const logger = require("../../../common/logger");
+const { updateTagsHistory } = require("../../../logic/updaters/tagsHistoryUpdater");
 const { aPublierVerifierAccesDirectPostBacRules, aPublierValidationRecteurRules, aPublierRules } = require("./rules");
 
 const run = async () => {
@@ -68,6 +69,9 @@ const run = async () => {
     },
     { $set: { last_update_at: Date.now(), parcoursup_statut: "à publier" } }
   );
+
+  // Push entry in tags history
+  await updateTagsHistory("parcoursup_statut");
 
   // stats
   const totalPublished = await ConvertedFormation.countDocuments({ published: true });

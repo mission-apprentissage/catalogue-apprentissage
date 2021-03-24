@@ -46,9 +46,7 @@ const etablissement = async () => {
   );
 };
 
-module.exports = { formation, etablissement };
-
-runScript(async () => {
+const psCoverage = async () => {
   logger.info("Start Parcoursup coverage");
   let check = await Etablissement.find({}).countDocuments();
 
@@ -64,4 +62,12 @@ runScript(async () => {
   await etablissement();
 
   logger.info("End Parcoursup coverage");
-});
+};
+
+module.exports = psCoverage;
+
+if (process.env.standalone) {
+  runScript(async () => {
+    await psCoverage();
+  });
+}
