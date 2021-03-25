@@ -2,7 +2,7 @@ const cluster = require("cluster");
 // const logger = require("../../common/logger");
 const updater = require("./updater/updater");
 const { runScript } = require("../scriptWrapper");
-const { ConvertedFormation, RcoFormation } = require("../../common/model/index");
+const { ConvertedFormation, RcoFormation, SandboxFormation } = require("../../common/model/index");
 const { storeByChunks } = require("../common/utils/reportUtils");
 const report = require("../../logic/reporter/report");
 const config = require("config");
@@ -61,8 +61,25 @@ const run = async () => {
   if (cluster.isMaster) {
     console.log(`Master ${process.pid} is running`);
 
-    const filter = {};
-    const limit = 100;
+    const filter = {
+      _id: {
+        $in: [
+          "5fc61695712d48a988133879",
+          "5fc61695712d48a988133883",
+          "5fc61695712d48a988133893",
+          "5fc616c8712d48a988133faf",
+          "5fc616c9712d48a988133fd3",
+          "605b227dd8d50fa2c15a7a5e",
+          "605b227dd8d50fa2c15a7a5a",
+          "605b227dd8d50fa2c15a7a5f",
+          "605b227dd8d50fa2c15a7a59",
+          "605b227dd8d50fa2c15a7a5a",
+          "605b227fd8d50fa2c15a7b64",
+          "5fc61688712d48a98813379d",
+        ],
+      },
+    };
+    const limit = 2;
     const args = process.argv.slice(2);
     const withCodePostalUpdate = args?.[0] === "--withCodePostal";
 
@@ -74,6 +91,8 @@ const run = async () => {
 
       const { pages, total } = await ConvertedFormation.paginate(activeFilter, { limit });
       const halfItems = Math.floor(pages / 2) * limit;
+
+      await SandboxFormation.deleteMany({});
 
       // Fork workers.
       for (let i = 0; i < numCPUs; i++) {
@@ -142,6 +161,7 @@ const run = async () => {
             } catch (error) {
               console.error(error);
             }
+            await SandboxFormation.deleteMany({});
             console.log(`Done`);
           });
         } else {
