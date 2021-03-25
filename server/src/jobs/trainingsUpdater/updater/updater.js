@@ -1,7 +1,7 @@
 const logger = require("../../../common/logger");
 const { mnaFormationUpdater } = require("../../../logic/updaters/mnaFormationUpdater");
 const { paginator } = require("../../common/utils/paginator");
-const { RcoFormation, ConvertedFormation } = require("../../../common/model/index");
+const { RcoFormation, ConvertedFormation, SandboxFormation } = require("../../../common/model/index");
 
 const run = async (filter = {}, withCodePostalUpdate = false, limit = 10, maxItems = 100, offset = 0) => {
   const result = await performUpdates(filter, withCodePostalUpdate, limit, maxItems, offset);
@@ -13,6 +13,8 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false, limit =
   const updatedFormations = [];
   let notUpdatedCount = 0;
   const cfdInfosCache = new Map();
+
+  await SandboxFormation.deleteMany({});
 
   await paginator(ConvertedFormation, { filter, limit, maxItems, offset }, async (formation) => {
     const cfdInfoCache = cfdInfosCache.get(formation._doc.cfd) || null;
@@ -63,6 +65,8 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false, limit =
       logger.error(error);
     }
   });
+
+  await SandboxFormation.deleteMany({});
 
   return { invalidFormations, updatedFormations, notUpdatedCount };
 };
