@@ -162,12 +162,12 @@ const mnaFormationUpdater = async (
 
       // apply pertinence filters against the tmp collection
       // check "à publier" first to have less mefs
-      const currentaPublierRules = aPublierRules;
+      const currentaPublierRules = { ...aPublierRules };
       // Add current id_rco_formation to ensure no concurrent access in db
       currentaPublierRules["$and"].push({ id_rco_formation: rest.id_rco_formation });
       let mefs_10 = await findMefsForAffelnet(currentaPublierRules);
       if (!mefs_10) {
-        const currentaPublierSoumisAValidationRules = aPublierSoumisAValidationRules;
+        const currentaPublierSoumisAValidationRules = { ...aPublierSoumisAValidationRules };
         // Add current id_rco_formation to ensure no concurrent access in db
         currentaPublierSoumisAValidationRules["$and"].push({ id_rco_formation: rest.id_rco_formation });
         mefs_10 = await findMefsForAffelnet(currentaPublierSoumisAValidationRules);
