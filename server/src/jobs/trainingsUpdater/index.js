@@ -70,7 +70,7 @@ const run = async () => {
       const idsToSkip = await managedUnPublishedRcoFormation();
       const idFilter = { id_rco_formation: { $nin: idsToSkip } };
       const activeFilter = { ...filter, ...idFilter }; // FIXEME TODO filter contain id_rco_formation key
-      // TODO add to filter rco_published: false
+      // TODO add to filter rco_published: true
 
       const { pages, total } = await ConvertedFormation.paginate(activeFilter, { limit });
       const halfItems = Math.floor(pages / 2) * limit;
