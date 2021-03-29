@@ -90,10 +90,10 @@ const run = async () => {
       const activeFilter = { ...filter, ...idFilter }; // FIXEME TODO filter contain id_rco_formation key
       // TODO add to filter rco_published: true
 
-      // const { pages, total } = await ConvertedFormation.paginate(activeFilter, { limit });
-      // const halfItems = Math.floor(pages / 2) * limit;
-      const total = 5000;
-      const halfItems = 2500;
+      const { pages, total } = await ConvertedFormation.paginate(activeFilter, { limit });
+      const halfItems = Math.floor(pages / 2) * limit;
+      // const total = 5000;
+      // const halfItems = 2500;
 
       await SandboxFormation.deleteMany({});
 
