@@ -80,7 +80,7 @@ const run = async () => {
     //   },
     // };
     const filter = {};
-    const limit = 2; //100;
+    const limit = 100; //100;
     const args = process.argv.slice(2);
     const withCodePostalUpdate = args?.[0] === "--withCodePostal";
 
