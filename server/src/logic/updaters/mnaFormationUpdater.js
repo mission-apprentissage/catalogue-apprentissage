@@ -37,12 +37,7 @@ const parseErrors = (messages) => {
 };
 
 const findMefsForAffelnet = async (rules) => {
-  const results = await SandboxFormation.find(
-    {
-      $or: [rules],
-    },
-    { bcn_mefs_10: 1 }
-  ).lean();
+  const results = await SandboxFormation.find({ ...rules }, { bcn_mefs_10: 1 }).lean();
 
   if (results && results.length > 0) {
     return results.reduce((acc, { bcn_mefs_10 }) => {
@@ -150,10 +145,6 @@ const mnaFormationUpdater = async (
       // eslint-disable-next-line no-unused-vars
       const { _id, ...rest } = updatedFormation;
 
-      if (rest.id_rco_formation === "01_GE108036|01_GE506876|88281") {
-        console.log("Here");
-      }
-
       // Split formation into N formation with 1 mef each
       // & insert theses into a tmp collection
       await asyncForEach(updatedFormation.bcn_mefs_10, async (mefObj) => {
@@ -170,6 +161,7 @@ const mnaFormationUpdater = async (
       // Add current id_rco_formation to ensure no concurrent access in db
       currentaPublierRules["$and"].push({ id_rco_formation: rest.id_rco_formation });
       let mefs_10 = await findMefsForAffelnet(currentaPublierRules);
+
       if (!mefs_10) {
         const currentaPublierSoumisAValidationRules = { ...aPublierSoumisAValidationRules };
         // Add current id_rco_formation to ensure no concurrent access in db
