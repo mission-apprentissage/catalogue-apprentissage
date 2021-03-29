@@ -183,6 +183,10 @@ const mnaFormationUpdater = async (
           } an${Number(mefs_10[0].modalite.duree) > 1 ? "s" : ""}`;
         }
       }
+
+      await SandboxFormation.deleteMany({
+        id_rco_formation: rest.id_rco_formation,
+      });
     }
 
     const { updates, keys } = diffFormation(formation, updatedFormation);
