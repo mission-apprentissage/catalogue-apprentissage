@@ -61,26 +61,26 @@ const run = async () => {
   if (cluster.isMaster) {
     console.log(`Master ${process.pid} is running`);
 
-    const filter = {
-      _id: {
-        $in: [
-          "5fc61695712d48a988133879",
-          "5fc61695712d48a988133883",
-          "5fc61695712d48a988133893",
-          "5fc616c8712d48a988133faf",
-          "5fc616c9712d48a988133fd3",
-          "605b227dd8d50fa2c15a7a5e",
-          "605b227dd8d50fa2c15a7a5a",
-          "605b227dd8d50fa2c15a7a5f",
-          "605b227dd8d50fa2c15a7a59",
-          "605b227dd8d50fa2c15a7a5a",
-          "605b227fd8d50fa2c15a7b64",
-          "5fc61688712d48a98813379d",
-        ],
-      },
-    };
-    // const filter = {};
-    const limit = 2; //100;
+    // const filter = {
+    //   _id: {
+    //     $in: [
+    //       "5fc61695712d48a988133879",
+    //       "5fc61695712d48a988133883",
+    //       "5fc61695712d48a988133893",
+    //       "5fc616c8712d48a988133faf",
+    //       "5fc616c9712d48a988133fd3",
+    //       "605b227dd8d50fa2c15a7a5e",
+    //       "605b227dd8d50fa2c15a7a5a",
+    //       "605b227dd8d50fa2c15a7a5f",
+    //       "605b227dd8d50fa2c15a7a59",
+    //       "605b227dd8d50fa2c15a7a5a",
+    //       "605b227fd8d50fa2c15a7b64",
+    //       "5fc61688712d48a98813379d",
+    //     ],
+    //   },
+    // };
+    const filter = {};
+    const limit = 100; //2;
     const args = process.argv.slice(2);
     const withCodePostalUpdate = args?.[0] === "--withCodePostal";
 
