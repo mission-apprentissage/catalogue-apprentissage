@@ -11,7 +11,7 @@ const psReconciliation = async () => {
     await paginator(
       PsFormation2021,
       { filter: { matching_mna_formation: { $size: 1 } }, lean: true, limit: 200 },
-      async (formation) => await reconciliationParcoursup(formation)
+      async (formation) => await reconciliationParcoursup(formation, "AUTOMATIQUE")
     );
 
     logger.info(`End parcoursup reconciliation`);

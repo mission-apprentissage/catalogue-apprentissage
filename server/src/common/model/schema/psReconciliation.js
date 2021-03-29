@@ -34,6 +34,12 @@ const psReconciliationSchema = {
     default: null,
     description: "Email utilisateur si la réconciliation a été dépublié depuis l'interface",
   },
+  source: {
+    type: String,
+    default: "MANUEL",
+    enum: ["MANUEL", "AUTOMATIQUE"],
+    description: "Auteur de la réconciliation (MANUEL : par un utilisateur depuis l'interface / AUTO : par script)",
+  },
 };
 
 module.exports = psReconciliationSchema;
