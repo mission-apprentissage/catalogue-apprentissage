@@ -167,6 +167,7 @@ const mnaFormationUpdater = async (
         try {
           mefs_10 = await findMefsForAffelnet(currentaPublierRules);
           console.log(mefs_10);
+          console.log(currentaPublierRules);
         } catch (error) {
           console.log(error);
         }
