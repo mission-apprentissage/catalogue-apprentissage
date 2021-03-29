@@ -305,6 +305,12 @@ const columnsDefinition = [
     editable: false,
   },
   {
+    Header: "Géolocalisation",
+    accessor: "lieu_formation_geo_coordonnees",
+    width: 200,
+    editable: false,
+  },
+  {
     Header: "Numéro Academie Siege",
     accessor: "etablissement_gestionnaire_num_academie",
     width: 200,
@@ -363,6 +369,30 @@ const columnsDefinition = [
             `${Nom_Partenaire} (siret: ${Siret_Partenaire}) : ${Habilitation_Partenaire}`
         )
         .join(", "),
+  },
+  {
+    Header: "Adresse OFA formateur",
+    accessor: "etablissement_formateur_adresse",
+    width: 200,
+    editable: true,
+  },
+  {
+    Header: "Code Postal OFA formateur",
+    accessor: "etablissement_formateur_code_postal",
+    width: 200,
+    editable: true,
+  },
+  {
+    Header: "Ville OFA formateur",
+    accessor: "etablissement_formateur_localite",
+    width: 200,
+    editable: true,
+  },
+  {
+    Header: "Code Commune Insee OFA formateur",
+    accessor: "etablissement_formateur_code_commune_insee",
+    width: 200,
+    editable: false,
   },
 ];
 
