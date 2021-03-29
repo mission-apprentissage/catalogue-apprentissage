@@ -150,6 +150,10 @@ const mnaFormationUpdater = async (
       // eslint-disable-next-line no-unused-vars
       const { _id, ...rest } = updatedFormation;
 
+      if (rest.id_rco_formation === "01_GE108036|01_GE506876|88281") {
+        console.log("Here");
+      }
+
       // Split formation into N formation with 1 mef each
       // & insert theses into a tmp collection
       await asyncForEach(updatedFormation.bcn_mefs_10, async (mefObj) => {
