@@ -150,10 +150,6 @@ const mnaFormationUpdater = async (
       // eslint-disable-next-line no-unused-vars
       const { _id, ...rest } = updatedFormation;
 
-      if (rest.id_rco_formation === "01_GE108036|01_GE506876|88281") {
-        console.log("Here");
-      }
-
       // Split formation into N formation with 1 mef each
       // & insert theses into a tmp collection
       await asyncForEach(updatedFormation.bcn_mefs_10, async (mefObj) => {
@@ -170,6 +166,14 @@ const mnaFormationUpdater = async (
       // Add current id_rco_formation to ensure no concurrent access in db
       currentaPublierRules["$and"].push({ id_rco_formation: rest.id_rco_formation });
       let mefs_10 = await findMefsForAffelnet(currentaPublierRules);
+      if (rest.id_rco_formation === "01_GE108036|01_GE506876|88281") {
+        console.log("Here");
+        try {
+          mefs_10 = await findMefsForAffelnet(currentaPublierRules);
+        } catch (error) {
+          console.log(error);
+        }
+      }
       if (!mefs_10) {
         const currentaPublierSoumisAValidationRules = { ...aPublierSoumisAValidationRules };
         // Add current id_rco_formation to ensure no concurrent access in db
