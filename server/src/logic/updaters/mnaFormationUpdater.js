@@ -157,33 +157,15 @@ const mnaFormationUpdater = async (
 
       // apply pertinence filters against the tmp collection
       // check "à publier" first to have less mefs
-      // const currentaPublierRules = { ...aPublierRules };
       // Add current id_rco_formation to ensure no concurrent access in db
-      // currentaPublierRules["$and"].push({ id_rco_formation: rest.id_rco_formation });
       let mefs_10 = await findMefsForAffelnet({
         $and: [...aPublierRules["$and"], { id_rco_formation: rest.id_rco_formation }],
       });
 
-      if (rest.id_rco_formation === "01_GE108036|01_GE506876|88281") {
-        console.log("Here");
-        try {
-          mefs_10 = await findMefsForAffelnet({
-            $and: [...aPublierRules["$and"], { id_rco_formation: rest.id_rco_formation }],
-          });
-          console.log(mefs_10);
-          console.log({
-            $and: [...aPublierRules["$and"], { id_rco_formation: rest.id_rco_formation }],
-          });
-        } catch (error) {
-          console.log(error);
-        }
-      }
-
       if (!mefs_10) {
-        const currentaPublierSoumisAValidationRules = { ...aPublierSoumisAValidationRules };
-        // Add current id_rco_formation to ensure no concurrent access in db
-        currentaPublierSoumisAValidationRules["$and"].push({ id_rco_formation: rest.id_rco_formation });
-        mefs_10 = await findMefsForAffelnet(currentaPublierSoumisAValidationRules);
+        mefs_10 = await findMefsForAffelnet({
+          $and: [...aPublierSoumisAValidationRules["$and"], { id_rco_formation: rest.id_rco_formation }],
+        });
       }
 
       if (mefs_10) {
@@ -196,10 +178,6 @@ const mnaFormationUpdater = async (
           } an${Number(mefs_10[0].modalite.duree) > 1 ? "s" : ""}`;
         }
       }
-
-      // await SandboxFormation.deleteMany({
-      //   id_rco_formation: rest.id_rco_formation,
-      // });
     }
 
     const { updates, keys } = diffFormation(formation, updatedFormation);
