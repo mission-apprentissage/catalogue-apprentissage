@@ -37,12 +37,7 @@ const parseErrors = (messages) => {
 };
 
 const findMefsForAffelnet = async (rules) => {
-  const results = await SandboxFormation.find(
-    {
-      $or: [rules],
-    },
-    { bcn_mefs_10: 1 }
-  ).lean();
+  const results = await SandboxFormation.find({ ...rules }, { bcn_mefs_10: 1 }).lean();
 
   if (results && results.length > 0) {
     return results.reduce((acc, { bcn_mefs_10 }) => {
@@ -142,7 +137,6 @@ const mnaFormationUpdater = async (formation, { withHistoryUpdate = true, withCo
     updatedFormation.mefs_10 = null;
     if (updatedFormation.bcn_mefs_10?.length > 0) {
       //  filter bcn_mefs_10 to get mefs_10 for affelnet
-      await SandboxFormation.deleteMany({});
 
       // eslint-disable-next-line no-unused-vars
       const { _id, ...rest } = updatedFormation;
@@ -159,9 +153,14 @@ const mnaFormationUpdater = async (formation, { withHistoryUpdate = true, withCo
 
       // apply pertinence filters against the tmp collection
       // check "à publier" first to have less mefs
-      let mefs_10 = await findMefsForAffelnet(aPublierRules);
+      // Add current id_rco_formation to ensure no concurrent access in db
+      let mefs_10 = await findMefsForAffelnet({ ...aPublierRules, id_rco_formation: rest.id_rco_formation });
       if (!mefs_10) {
-        mefs_10 = await findMefsForAffelnet(aPublierSoumisAValidationRules);
+        // Add current id_rco_formation to ensure no concurrent access in db
+        mefs_10 = await findMefsForAffelnet({
+          ...aPublierSoumisAValidationRules,
+          id_rco_formation: rest.id_rco_formation,
+        });
       }
       if (mefs_10) {
         // keep the successful mefs in affelnet field
@@ -174,7 +173,7 @@ const mnaFormationUpdater = async (formation, { withHistoryUpdate = true, withCo
         }
       }
 
-      await SandboxFormation.deleteMany({});
+      await SandboxFormation.deleteMany({ id_rco_formation: rest.id_rco_formation });
     }
 
     const { updates, keys } = diffFormation(formation, updatedFormation);
