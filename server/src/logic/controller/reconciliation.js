@@ -54,9 +54,19 @@ async function reconciliationAffelnet(formation) {
         converted.affelnet_infos_offre = converted.affelnet_infos_offre || libelle_mnemonique;
 
         const mefs_10 = converted.bcn_mefs_10 ?? [];
-        const mef = mefs_10.find(({ mef10 }) => mef10 === code_mef);
+        const mef = mefs_10.find(({ mef10 }) => mef10 === code_mef.substring(0, 10));
         if (mef) {
           converted.mefs_10 = [mef];
+        } else {
+          converted.mefs_10 = [
+            {
+              mef10: code_mef,
+              modalite: {
+                duree: !["", "AFFECTATION"].includes(code_mef) ? code_mef.substring(8, 9) : "",
+                annee: !["", "AFFECTATION"].includes(code_mef) ? code_mef.substring(9, 10) : "",
+              },
+            },
+          ];
         }
         await converted.save();
       }
