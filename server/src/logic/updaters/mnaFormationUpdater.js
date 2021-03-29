@@ -48,6 +48,10 @@ const findMefsForAffelnet = async (rules) => {
   return null;
 };
 
+const getInfosOffreLabel = (formation, mef) => {
+  return `${formation.libelle_court} en ${mef.modalite.duree} an${Number(mef.modalite.duree) > 1 ? "s" : ""}`;
+};
+
 const mnaFormationUpdater = async (formation, { withHistoryUpdate = true, withCodePostalUpdate = true } = {}) => {
   try {
     await formationSchema.validateAsync(formation, { abortEarly: false });
@@ -166,10 +170,14 @@ const mnaFormationUpdater = async (formation, { withHistoryUpdate = true, withCo
         // keep the successful mefs in affelnet field
         updatedFormation.mefs_10 = mefs_10;
 
-        if (mefs_10.length === 1 && !updatedFormation.affelnet_infos_offre) {
-          updatedFormation.affelnet_infos_offre = `${updatedFormation.libelle_court} en ${
-            mefs_10[0].modalite.duree
-          } an${Number(mefs_10[0].modalite.duree) > 1 ? "s" : ""}`;
+        if (
+          mefs_10.length === 1 &&
+          (!updatedFormation.affelnet_infos_offre ||
+            updatedFormation.bcn_mefs_10
+              .map((mef) => getInfosOffreLabel(updatedFormation, mef))
+              .includes(updatedFormation.affelnet_infos_offre))
+        ) {
+          updatedFormation.affelnet_infos_offre = getInfosOffreLabel(updatedFormation, mefs_10[0]);
         }
       }
 
