@@ -167,7 +167,7 @@ const mnaFormationUpdater = async (
       if (rest.id_rco_formation === "01_GE108036|01_GE506876|88281") {
         console.log("Here");
         try {
-          mefs_10 = await await findMefsForAffelnet({
+          mefs_10 = await findMefsForAffelnet({
             $and: [...aPublierRules["$and"], { id_rco_formation: rest.id_rco_formation }],
           });
           console.log(mefs_10);
