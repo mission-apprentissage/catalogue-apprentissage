@@ -91,11 +91,11 @@ const run = async () => {
             pOrder[cluster.workers[id].process.pid] = { offset: 0, maxItems: halfItems };
             break;
           case numCPUs - 1:
-            pOrder[cluster.workers[id].process.pid] = { offset: halfItems * order + limit, maxItems: total };
+            pOrder[cluster.workers[id].process.pid] = { offset: halfItems * order, maxItems: total };
             break;
           default:
             pOrder[cluster.workers[id].process.pid] = {
-              offset: halfItems * order + limit,
+              offset: halfItems * order,
               maxItems: halfItems * (order + 1),
             };
             break;
