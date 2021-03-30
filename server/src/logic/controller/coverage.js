@@ -1,7 +1,7 @@
 const { formation: formatFormation, etablissement: formatEtablissement } = require("./formater");
-const { initTcoModel, getCpInfo } = require("@mission-apprentissage/tco-service-node");
+const { getCpInfo } = require("@mission-apprentissage/tco-service-node");
 const { ConvertedFormation, Etablissement } = require("../../common/model");
-const { mongoose } = require("../../common/mongodb");
+const mongoose = require("mongoose");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 const { cfd, uai } = require("./queries");
 
@@ -76,7 +76,6 @@ async function getAffelnetCoverage(formation) {
 
   let { _id, code_postal, code_cfd } = formation;
 
-  await initTcoModel(mongoose);
   const { messages, result } = await getCpInfo(code_postal);
   let dept = code_postal.substring(0, 2);
 
@@ -208,7 +207,7 @@ async function getEtablissementCoverage(formations) {
 
   const etablissements = Object.values(format).map((x) => {
     return {
-      _id: mongoose.Types.ObjectId(),
+      _id: new mongoose.Types.ObjectId(),
       ...x,
     };
   });

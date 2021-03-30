@@ -17,8 +17,7 @@ const { rebuildEsIndex } = require("./esIndex/esIndex");
 const { importEtablissements } = require("./etablissements");
 const { spawn } = require("child_process");
 
-const { mongoose } = require("../common/mongodb");
-const { initTcoModel, rncpImporter, bcnImporter } = require("@mission-apprentissage/tco-service-node");
+const { rncpImporter, bcnImporter } = require("@mission-apprentissage/tco-service-node");
 
 const path = require("path");
 
@@ -30,7 +29,6 @@ runScript(async ({ catalogue }) => {
     await clean();
 
     // import tco
-    await initTcoModel(mongoose);
     await bcnImporter();
     await rncpImporter(KIT_LOCAL_PATH);
 
