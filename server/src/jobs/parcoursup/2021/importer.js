@@ -5,7 +5,7 @@ const isValidCFD = require("../../../common/utils/cfdUtils");
 const { PsFormation2021 } = require("../../../common/model/index");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { getJsonFromXlsxFile } = require("../../../common/utils/fileUtils");
-const { getMefInfo, getCfdInfo } = require("../../../common/services/tables_correspondance");
+const { getCfdInfo, getMef10Info } = require("@mission-apprentissage/tco-service-node");
 
 const run = async () => {
   try {
@@ -15,7 +15,7 @@ const run = async () => {
     await asyncForEach(data, async (formation) => {
       if (formation.CODEMEF) {
         try {
-          const responseMEF = await getMefInfo(formation.CODEMEF);
+          const responseMEF = await getMef10Info(formation.CODEMEF);
 
           if (responseMEF) {
             formation.CFD = responseMEF.result?.cfd?.cfd;

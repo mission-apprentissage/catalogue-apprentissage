@@ -5,8 +5,8 @@ const { getJsonFromXlsxFile } = require("../../../common/utils/fileUtils");
 const { AfFormation, ConvertedFormation } = require("../../../common/model");
 const { isFinite } = require("lodash");
 const stringSimilarity = require("string-similarity");
-const { getCpInfo } = require("@mission-apprentissage/tco-service-node");
-const { getBcnInfo, getMefInfo } = require("../../../common/services/tables_correspondance");
+const { getCpInfo, getMef10Info } = require("@mission-apprentissage/tco-service-node");
+const { getBcnInfo } = require("../../../common/services/tables_correspondance");
 
 const { oleoduc, writeData } = require("oleoduc");
 
@@ -24,7 +24,7 @@ const getLibelleCourt = (libelle) => {
 };
 
 const getCfdFromTCO = async (mef) => {
-  const responseMEF = await getMefInfo(mef);
+  const responseMEF = await getMef10Info(mef);
 
   if (responseMEF) {
     if (responseMEF.messages.cfdUpdated === "Trouvé") {

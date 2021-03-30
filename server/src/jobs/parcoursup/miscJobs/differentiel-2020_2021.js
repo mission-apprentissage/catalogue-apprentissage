@@ -2,11 +2,12 @@ const XLSX = require("xlsx");
 const path = require("path");
 const { Readable } = require("stream");
 const logger = require("../../../common/logger");
+const { getMef10Info } = require("@mission-apprentissage/tco-service-node");
 const { oleoduc, writeData } = require("oleoduc");
 const { runScript } = require("../../scriptWrapper");
 const { PsFormation } = require("../../../common/model");
 const { getJsonFromXlsxFile } = require("../../../common/utils/fileUtils");
-const { getBcnInfo, getMefInfo } = require("../../../common/services/tables_correspondance");
+const { getBcnInfo } = require("../../../common/services/tables_correspondance");
 
 const getLibelle = (libelle) => {
   let result = libelle.match(/.*?(?=\s- en apprentissage)/);
@@ -92,7 +93,7 @@ const completeFileRun = async () => {
       if (!CODEDIPLOME_MAP) {
         if (CODEMEF) {
           try {
-            let { messages, result } = await getMefInfo(CODEMEF);
+            let { messages, result } = await getMef10Info(CODEMEF);
 
             if (messages?.cfdUpdated === "Trouvé") {
               // CODEDIPLOME_MAP = result.cfd.cfd;
