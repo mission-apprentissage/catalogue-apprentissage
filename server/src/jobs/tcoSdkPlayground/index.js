@@ -1,8 +1,5 @@
 const { runScript } = require("../scriptWrapper");
-const { mongoose } = require("../../common/mongodb");
-
 const {
-  initTcoModel,
   // getCpInfo,
   rncpImporter,
   getRncpInfo,
@@ -17,7 +14,6 @@ const path = require("path");
 const KIT_LOCAL_PATH = path.join(__dirname, "KitApprentissage.latest.xlsx");
 
 runScript(async () => {
-  await initTcoModel(mongoose);
   // console.log(await getCpInfo("92600"));
 
   await rncpImporter(KIT_LOCAL_PATH);
