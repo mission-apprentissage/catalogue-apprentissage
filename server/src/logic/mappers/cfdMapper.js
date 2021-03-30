@@ -1,6 +1,8 @@
 const logger = require("../../common/logger");
 const { infosCodes, computeCodes } = require("../../constants/opco");
-const { getCfdInfo } = require("../../common/services/tables_correspondance");
+// const { getCfdInfo } = require("../../common/services/tables_correspondance");
+const { mongoose } = require("../../common/mongodb");
+const { initTcoModel, getCfdInfo } = require("@mission-apprentissage/tco-service-node");
 
 const cfdMapper = async (cfd = null) => {
   try {
@@ -8,11 +10,12 @@ const cfdMapper = async (cfd = null) => {
       throw new Error("cfdMapper cfd must be provided");
     }
 
-    const { result: cfdInfo, serviceAvailable } = await getCfdInfo(cfd, { checkService: true });
+    await initTcoModel(mongoose);
+    const cfdInfo = await getCfdInfo(cfd);
     if (!cfdInfo) {
       return {
         result: null,
-        serviceAvailable,
+        // serviceAvailable,
         messages: {
           error: `Unable to retrieve data from cfd ${cfd}`,
         },
@@ -105,14 +108,14 @@ const cfdMapper = async (cfd = null) => {
         libelle_court: result.libelle_court,
         niveau_formation_diplome: result.niveau_formation_diplome,
       },
-      serviceAvailable,
+      // serviceAvailable,
       messages,
     };
   } catch (e) {
     logger.error(e);
     return {
       result: null,
-      serviceAvailable: true,
+      // serviceAvailable: true,
       messages: {
         error: e.toString(),
       },
