@@ -1,17 +1,21 @@
-const { connectToMongo } = require("../mongodb");
+const { connectToMongo, mongoose } = require("../mongodb");
 const createUsers = require("./users");
 const createCatalogue = require("./catalogue");
 const createMailer = require("../../common/mailer");
 const config = require("config");
+const { initTcoModel } = require("@mission-apprentissage/tco-service-node");
 
 module.exports = async (options = {}) => {
   const users = options.users || (await createUsers());
   const catalogue = options.catalogue || createCatalogue();
 
+  const db = options.db || (await connectToMongo()).db;
+  await initTcoModel(mongoose);
+
   return {
     catalogue,
     users,
-    db: options.db || (await connectToMongo()).db,
+    db,
     mailer: options.mailer || createMailer({ smtp: { ...config.smtp, secure: false } }),
   };
 };

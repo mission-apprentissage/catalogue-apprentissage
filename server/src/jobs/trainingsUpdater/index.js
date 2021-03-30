@@ -7,7 +7,7 @@ const { storeByChunks } = require("../common/utils/reportUtils");
 const report = require("../../logic/reporter/report");
 const config = require("config");
 
-const numCPUs = 2;
+const numCPUs = 4;
 
 const managedUnPublishedRcoFormation = async () => {
   // if rco formation is not published, don't call mnaUpdater
@@ -61,24 +61,6 @@ const run = async () => {
   if (cluster.isMaster) {
     console.log(`Master ${process.pid} is running`);
 
-    // const filter = {
-    //   _id: {
-    //     $in: [
-    //       "5fc61695712d48a988133879",
-    //       "5fc61695712d48a988133883",
-    //       "5fc61695712d48a988133893",
-    //       "5fc616c8712d48a988133faf",
-    //       "5fc616c9712d48a988133fd3",
-    //       "605b227dd8d50fa2c15a7a5e",
-    //       "605b227dd8d50fa2c15a7a5a",
-    //       "605b227dd8d50fa2c15a7a5f",
-    //       "605b227dd8d50fa2c15a7a59",
-    //       "605b227dd8d50fa2c15a7a5a",
-    //       "605b227fd8d50fa2c15a7b64",
-    //       "5fc61688712d48a98813379d",
-    //     ],
-    //   },
-    // };
     const filter = {};
     const limit = 100; //100;
     const args = process.argv.slice(2);
@@ -91,9 +73,7 @@ const run = async () => {
       // TODO add to filter rco_published: true
 
       const { pages, total } = await ConvertedFormation.paginate(activeFilter, { limit });
-      const halfItems = Math.floor(pages / 2) * limit;
-      // const total = 5000;
-      // const halfItems = 2500;
+      const halfItems = Math.floor(pages / numCPUs) * limit;
 
       await SandboxFormation.deleteMany({});
 
@@ -103,11 +83,23 @@ const run = async () => {
       }
 
       let pOrder = {};
-      let order = 1;
+      let order = 0;
       let pResult = {};
       for (const id in cluster.workers) {
-        pOrder[cluster.workers[id].process.pid] =
-          order === 1 ? { offset: 0, maxItems: halfItems } : { offset: halfItems + limit, maxItems: total };
+        switch (order) {
+          case 0:
+            pOrder[cluster.workers[id].process.pid] = { offset: 0, maxItems: halfItems };
+            break;
+          case numCPUs - 1:
+            pOrder[cluster.workers[id].process.pid] = { offset: halfItems * order, maxItems: total };
+            break;
+          default:
+            pOrder[cluster.workers[id].process.pid] = {
+              offset: halfItems * order,
+              maxItems: halfItems * (order + 1),
+            };
+            break;
+        }
         pResult[cluster.workers[id].process.pid] = { result: null };
         order++;
         cluster.workers[id].on("message", (message) => {
@@ -137,7 +129,7 @@ const run = async () => {
       let countWorkerExist = 1;
       cluster.on("exit", async (worker) => {
         console.log(`worker ${worker.process.pid} died`);
-        if (countWorkerExist === 2) {
+        if (countWorkerExist === numCPUs) {
           const mR = {
             invalidFormations: [],
             updatedFormations: [],
