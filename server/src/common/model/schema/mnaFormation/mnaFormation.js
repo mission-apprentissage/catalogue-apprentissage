@@ -181,6 +181,12 @@ const mnaFormationSchema = {
     default: "hors périmètre",
     description: "Statut parcoursup",
   },
+  parcoursup_statut_history: {
+    type: [Object],
+    default: [],
+    description: "Parcoursup : historique des statuts",
+    noIndex: true,
+  },
   parcoursup_error: {
     type: String,
     default: null,
@@ -208,6 +214,12 @@ const mnaFormationSchema = {
     ],
     default: "hors périmètre",
     description: "Statut affelnet",
+  },
+  affelnet_statut_history: {
+    type: [Object],
+    default: [],
+    description: "Affelnet : historique des statuts",
+    noIndex: true,
   },
   affelnet_error: {
     type: String,
@@ -243,6 +255,11 @@ const mnaFormationSchema = {
     type: Boolean,
     default: false,
     description: "Est publiée, la formation est éligible pour le catalogue",
+  },
+  rco_published: {
+    type: Boolean,
+    default: false,
+    description: "Est publiée dans le flux rco",
   },
   draft: {
     type: Boolean,

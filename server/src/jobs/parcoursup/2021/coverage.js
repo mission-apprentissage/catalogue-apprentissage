@@ -17,7 +17,7 @@ const updateMatchedFormation = async (matching) => {
 const formation = async () => {
   await paginator(
     PsFormation2021,
-    { filter: { code_cfd: { $ne: null } }, lean: true, limit: 50 },
+    { filter: { code_cfd: { $ne: null } }, lean: true, limit: 300 },
     async (formation) => {
       let match = await getParcoursupCoverage(formation, { published: true, tags: "2021" });
 
@@ -46,9 +46,7 @@ const etablissement = async () => {
   );
 };
 
-module.exports = { formation, etablissement };
-
-runScript(async () => {
+const psCoverage = async () => {
   logger.info("Start Parcoursup coverage");
   let check = await Etablissement.find({}).countDocuments();
 
@@ -64,4 +62,12 @@ runScript(async () => {
   await etablissement();
 
   logger.info("End Parcoursup coverage");
-});
+};
+
+module.exports = psCoverage;
+
+if (process.env.standalone) {
+  runScript(async () => {
+    await psCoverage();
+  });
+}
