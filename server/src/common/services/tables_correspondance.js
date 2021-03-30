@@ -43,6 +43,7 @@ const getCfdInfo = async (cfd, { checkService = false } = {}) => {
     }
     return data;
   } catch (error) {
+    console.log(error);
     logger.error(`getCfdInfo: something went wrong`);
 
     if (checkService) {

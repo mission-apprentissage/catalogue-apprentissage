@@ -186,9 +186,9 @@ function Mongoosastic(schema, options) {
     });
   };
 
-  schema.statics.synchronize = async function synchronize() {
+  schema.statics.synchronize = async function synchronize(filter = {}) {
     let count = 0;
-    await this.find({})
+    await this.find(filter)
       .cursor()
       .eachAsync(async (u) => {
         await u.index();

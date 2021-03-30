@@ -25,6 +25,31 @@ module.exports.connectToMongo = (mongoUri = config.mongodb.uri, mongooseInst = n
       reject(e);
     });
 
+    db.on("close", (e) => {
+      console.error("Error...close");
+      reject(e);
+    });
+    db.on("error", (err) => {
+      console.error("Error...error", err);
+      reject(err);
+    });
+    db.on("disconnect", (err) => {
+      console.error("Error...disconnect", err);
+      reject(err);
+    });
+    db.on("disconnected", (err) => {
+      console.error("Error...disconnected", err);
+      reject(err);
+    });
+    db.on("parseError", (err) => {
+      console.error("Error...parse", err);
+      reject(err);
+    });
+    db.on("timeout", (err) => {
+      console.error("Error...timeout", err);
+      reject(err);
+    });
+
     db.once("open", () => {
       console.log("MongoDB: Connected");
       resolve({ db });
@@ -32,5 +57,5 @@ module.exports.connectToMongo = (mongoUri = config.mongodb.uri, mongooseInst = n
   });
 };
 
-module.exports.mongooseInstance = mongooseInstance;
+module.exports.mongoose = mongooseInstance;
 module.exports.closeMongoConnection = (mongooseInst = mongoose) => mongooseInst.disconnect();
