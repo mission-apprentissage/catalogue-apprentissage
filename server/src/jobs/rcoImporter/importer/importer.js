@@ -330,7 +330,12 @@ class Importer {
     const { id_formation, id_action, id_certifinfo } = rcoFormation;
     const newRcoFormation = await RcoFormation.findOneAndUpdate(
       { id_formation, id_action, id_certifinfo },
-      { ...rcoFormation, converted_to_mna: false, conversion_error: null },
+      {
+        ...rcoFormation,
+        converted_to_mna: false,
+        conversion_error: null,
+        id_rco_formation: `${id_formation}|${id_action}|${id_certifinfo}`,
+      },
       {
         new: true,
         upsert: true,
@@ -357,6 +362,7 @@ class Importer {
         last_update_at: Date.now(),
         converted_to_mna: false,
         conversion_error: null,
+        id_rco_formation: `${rcoFormation.id_formation}|${rcoFormation.id_action}|${rcoFormation.id_certifinfo}`,
       },
       { new: true }
     );
