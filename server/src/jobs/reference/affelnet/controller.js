@@ -3,7 +3,11 @@ const logger = require("../../../common/logger");
 const { paginator } = require("../../common/utils/paginator");
 
 const run = async () => {
-  await ConvertedFormation.updateMany({}, { $set: { last_update_at: Date.now(), affelnet_reference: false } });
+  // 1 - reset "publié" to "hors périmètre"
+  await ConvertedFormation.updateMany(
+    { affelnet_statut: "publié" },
+    { $set: { affelnet_statut: "hors périmètre", affelnet_reference: false } }
+  );
 
   //  check for published trainings in affelnet (set "publié") / but don't overwrite those on "non publié" status : it means a user chose not to publish
   await paginator(AfReconciliation, { filter: { unpublished_by_user: null } }, async (reconciliation) => {

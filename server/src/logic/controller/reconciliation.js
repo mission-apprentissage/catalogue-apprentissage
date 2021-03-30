@@ -6,7 +6,7 @@ const {
   PsReconciliation,
 } = require("../../common/model");
 
-async function reconciliationAffelnet(formation) {
+async function reconciliationAffelnet(formation, source = "MANUEL") {
   let {
     uai,
     code_cfd,
@@ -38,6 +38,7 @@ async function reconciliationAffelnet(formation) {
         code_cfd,
         siret_formateur: etablissement_formateur_siret,
         siret_gestionnaire: etablissement_gestionnaire_siret,
+        source,
       };
 
       await AfReconciliation.findOneAndUpdate({ uai, code_cfd }, payload, { upsert: true });
@@ -54,9 +55,19 @@ async function reconciliationAffelnet(formation) {
         converted.affelnet_infos_offre = converted.affelnet_infos_offre || libelle_mnemonique;
 
         const mefs_10 = converted.bcn_mefs_10 ?? [];
-        const mef = mefs_10.find(({ mef10 }) => mef10 === code_mef);
+        const mef = mefs_10.find(({ mef10 }) => mef10 === code_mef.substring(0, 10));
         if (mef) {
           converted.mefs_10 = [mef];
+        } else {
+          converted.mefs_10 = [
+            {
+              mef10: code_mef,
+              modalite: {
+                duree: !["", "AFFECTATION"].includes(code_mef) ? code_mef.substring(8, 9) : "",
+                annee: !["", "AFFECTATION"].includes(code_mef) ? code_mef.substring(9, 10) : "",
+              },
+            },
+          ];
         }
         await converted.save();
       }
@@ -66,7 +77,7 @@ async function reconciliationAffelnet(formation) {
   }
 }
 
-async function reconciliationParcoursup(formation) {
+async function reconciliationParcoursup(formation, source = "MANUEL") {
   let { code_cfd, matching_mna_formation, _id, uai_gestionnaire, uai_composante, uai_affilie } = formation;
   let { etablissement_formateur_siret, etablissement_gestionnaire_siret } = matching_mna_formation[0];
 
@@ -77,6 +88,7 @@ async function reconciliationParcoursup(formation) {
     code_cfd,
     siret_formateur: etablissement_formateur_siret,
     siret_gestionnaire: etablissement_gestionnaire_siret,
+    source,
   };
 
   await PsReconciliation.findOneAndUpdate({ uai_affilie, uai_composante, uai_gestionnaire, code_cfd }, payload, {

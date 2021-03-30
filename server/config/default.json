@@ -8,6 +8,11 @@
   "elasticSearch": {
     "node": "http://localhost:9200"
   },
+  "aws": {
+    "accessKeyId": "CATALOGUE_APPRENTISSAGE_ACCESS_KEY_ID",
+    "secretAccessKey": "CATALOGUE_APPRENTISSAGE_SECRET_ACCESS_KEY"
+  },
+  "apiEntreprise": "TABLES_CORRESPONDANCES_API_ENTREPRISE_KEY",
   "auth": {
     "passwordHashRounds": 1001,
     "user": {

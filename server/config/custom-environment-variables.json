@@ -8,6 +8,11 @@
   "elasticSearch": {
     "node": "CATALOGUE_APPRENTISSAGE_ELASTICSEARCH_NODE"
   },
+  "aws": {
+    "accessKeyId": "CATALOGUE_APPRENTISSAGE_ACCESS_KEY_ID",
+    "secretAccessKey": "CATALOGUE_APPRENTISSAGE_SECRET_ACCESS_KEY"
+  },
+  "apiEntreprise": "TABLES_CORRESPONDANCES_API_ENTREPRISE_KEY",
   "auth": {
     "passwordHashRounds": "CATALOGUE_APPRENTISSAGE_AUTH_PASSWORD_HASH_ROUNDS",
     "user": {
