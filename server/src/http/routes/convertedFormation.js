@@ -88,7 +88,7 @@ module.exports = () => {
       // FIXME: ugly patch because request from Affelnet is not JSON valid
       const strQuery = qs?.query ?? "";
       const cleanedQuery = strQuery.replace(
-        /"num_academie":(0.)/,
+        /"num_academie" :(0.)/,
         (found, capture) => `"num_academie":"${Number(capture)}"`
       );
       // end FIXME
