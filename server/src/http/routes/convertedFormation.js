@@ -84,10 +84,23 @@ module.exports = () => {
     "/formations2021",
     tryCatch(async (req, res) => {
       let qs = req.query;
-      const query = qs && qs.query ? JSON.parse(qs.query) : {};
+
+      // FIXME: ugly patch because request from Affelnet is not JSON valid
+      const strQuery = qs?.query ?? "";
+      const cleanedQuery = strQuery.replace(
+        /"num_academie" :(0.)/,
+        (found, capture) => `"num_academie":"${Number(capture)}"`
+      );
+      // end FIXME
+
+      const query = cleanedQuery ? JSON.parse(cleanedQuery) : {};
+
       const page = qs && qs.page ? qs.page : 1;
       const limit = qs && qs.limit ? parseInt(qs.limit, 10) : 10;
-      const select = qs && qs.select ? JSON.parse(qs.select) : { updates_history: 0, __v: 0 };
+      const select =
+        qs && qs.select
+          ? JSON.parse(qs.select)
+          : { affelnet_statut_history: 0, parcoursup_statut_history: 0, updates_history: 0, __v: 0 };
 
       const allData = await ConvertedFormation.paginate(query, {
         page,
@@ -155,7 +168,12 @@ module.exports = () => {
     tryCatch(async (req, res) => {
       let qs = req.query;
       const query = qs && qs.query ? JSON.parse(qs.query) : {};
-      const retrievedData = await ConvertedFormation.findOne(query, { updates_history: 0, __v: 0 }).lean();
+      const retrievedData = await ConvertedFormation.findOne(query, {
+        affelnet_statut_history: 0,
+        parcoursup_statut_history: 0,
+        updates_history: 0,
+        __v: 0,
+      }).lean();
       if (retrievedData) {
         return res.json(retrievedData);
       }
@@ -192,7 +210,12 @@ module.exports = () => {
     "/formation2021/:id",
     tryCatch(async (req, res) => {
       const itemId = req.params.id;
-      const retrievedData = await ConvertedFormation.findById(itemId, { updates_history: 0, __v: 0 }).lean();
+      const retrievedData = await ConvertedFormation.findById(itemId, {
+        affelnet_statut_history: 0,
+        parcoursup_statut_history: 0,
+        updates_history: 0,
+        __v: 0,
+      }).lean();
       if (retrievedData) {
         return res.json(retrievedData);
       }
