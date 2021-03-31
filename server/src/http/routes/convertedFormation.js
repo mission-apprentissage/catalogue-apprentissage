@@ -84,7 +84,17 @@ module.exports = () => {
     "/formations2021",
     tryCatch(async (req, res) => {
       let qs = req.query;
-      const query = qs && qs.query ? JSON.parse(qs.query) : {};
+
+      // FIXME: ugly patch because request from Affelnet is not JSON valid
+      const strQuery = qs?.query ?? "";
+      const cleanedQuery = strQuery.replace(
+        /"num_academie":(0.)/,
+        (found, capture) => `"num_academie":"${Number(capture)}"`
+      );
+      // end FIXME
+
+      const query = cleanedQuery ? JSON.parse(cleanedQuery) : {};
+
       const page = qs && qs.page ? qs.page : 1;
       const limit = qs && qs.limit ? parseInt(qs.limit, 10) : 10;
       const select =
