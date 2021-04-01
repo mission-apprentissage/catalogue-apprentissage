@@ -2,12 +2,11 @@ const XLSX = require("xlsx");
 const path = require("path");
 const { Readable } = require("stream");
 const logger = require("../../../common/logger");
-const { getMef10Info } = require("@mission-apprentissage/tco-service-node");
+const { getMef10Info, getBcnInfo } = require("@mission-apprentissage/tco-service-node");
 const { oleoduc, writeData } = require("oleoduc");
 const { runScript } = require("../../scriptWrapper");
 const { PsFormation } = require("../../../common/model");
 const { getJsonFromXlsxFile } = require("../../../common/utils/fileUtils");
-const { getBcnInfo } = require("../../../common/services/tables_correspondance");
 
 const getLibelle = (libelle) => {
   let result = libelle.match(/.*?(?=\s- en apprentissage)/);

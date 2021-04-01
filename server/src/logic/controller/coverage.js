@@ -1,11 +1,10 @@
 const { formation: formatFormation, etablissement: formatEtablissement } = require("./formater");
-const { getCpInfo } = require("@mission-apprentissage/tco-service-node");
 const { ConvertedFormation, Etablissement } = require("../../common/model");
 const mongoose = require("mongoose");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 const { cfd, uai } = require("./queries");
 
-const getMatch = async (query) => ConvertedFormation.find(query);
+const getMatch = async (query) => ConvertedFormation.find(query, formatFormation).lean();
 
 async function getParcoursupCoverage(formation, { published, tags } = {}) {
   let params = { published, tags };
@@ -23,7 +22,7 @@ async function getParcoursupCoverage(formation, { published, tags } = {}) {
       match.push({
         matching_strength: strength,
         data_length: result.length,
-        data: formatFormation(result),
+        data: result,
       });
 
       break;
@@ -42,7 +41,7 @@ async function getParcoursupCoverage(formation, { published, tags } = {}) {
         match.push({
           matching_strength: strength,
           data_length: result.length,
-          data: formatFormation(result),
+          data: result,
         });
 
         break;
@@ -56,59 +55,51 @@ async function getParcoursupCoverage(formation, { published, tags } = {}) {
 }
 
 async function getAffelnetCoverage(formation) {
-  const match1 = (cfd) => ConvertedFormation.find({ cfd, published: true });
-  const match2 = (cfd, num_departement) => ConvertedFormation.find({ cfd, num_departement, published: true });
-  const match3 = (cfd, num_departement, code_postal) =>
-    ConvertedFormation.find({
-      cfd,
-      num_departement,
-      $and: [
-        {
-          $or: [
-            { etablissement_formateur_code_postal: code_postal },
-            { etablissement_gestionnaire_code_postal: code_postal },
-            { code_postal },
-          ],
-        },
-      ],
-      published: true,
-    });
-
   let { _id, code_postal, code_cfd } = formation;
-
-  const { messages, result } = await getCpInfo(code_postal);
   let dept = code_postal.substring(0, 2);
 
-  if (messages?.cp === "Ok" || messages?.cp === `Update: Le code ${code_postal} est un code commune insee`) {
-    code_postal = result.code_postal;
-  }
-
-  const m3 = await match3(code_cfd, dept, code_postal);
+  const m3 = await getMatch({
+    cfd: code_cfd,
+    num_departement: dept,
+    $and: [
+      {
+        $or: [
+          { etablissement_formateur_code_postal: code_postal },
+          { etablissement_gestionnaire_code_postal: code_postal },
+          { code_postal },
+          { etablissement_formateur_code_commune_insee: code_postal },
+          { etablissement_gestionnaire_code_commune_insee: code_postal },
+          { code_commune_insee: code_postal },
+        ],
+      },
+    ],
+    published: true,
+  });
 
   if (m3.length > 0) {
     return {
       strengh: "3",
-      matching: formatFormation(m3),
+      matching: m3,
       _id,
     };
   }
 
-  const m2 = await match2(code_cfd, dept);
+  const m2 = await getMatch({ cfd: code_cfd, num_departement: dept, published: true });
 
   if (m2.length > 0) {
     return {
       strengh: "2",
-      matching: formatFormation(m2),
+      matching: m2,
       _id,
     };
   }
 
-  const m1 = await match1(code_cfd);
+  const m1 = await getMatch({ cfd: code_cfd, published: true });
 
   if (m1.length > 0) {
     return {
       strengh: "1",
-      matching: formatFormation(m1),
+      matching: m1,
       _id,
     };
   }
@@ -118,6 +109,9 @@ async function getAffelnetCoverage(formation) {
 
 async function getEtablissementCoverage(formations) {
   let match = [];
+
+  const getEtablissementById = async (id) => await Etablissement.findById(id, formatEtablissement).lean();
+  const getEtablissements = async (query) => await Etablissement.find(query, formatEtablissement).lean();
 
   await asyncForEach(
     formations,
@@ -130,15 +124,17 @@ async function getEtablissementCoverage(formations) {
     }) => {
       if (!uai_formation && !etablissement_formateur_uai && !etablissement_gestionnaire_uai) {
         if (etablissement_formateur_id) {
-          let formateur = await Etablissement.findById(etablissement_formateur_id);
+          let formateur = await getEtablissementById(etablissement_formateur_id);
+
           if (formateur) {
-            match.push({ ...formatEtablissement(formateur), matched_uai: "BY_ID_FORMATEUR" });
+            match.push({ ...formateur, matched_uai: "BY_ID_FORMATEUR", id_mna_etablissement: formateur._id });
           }
         }
         if (etablissement_gestionnaire_id) {
-          let gestionnaire = await Etablissement.findById(etablissement_gestionnaire_id);
+          let gestionnaire = await getEtablissementById(etablissement_gestionnaire_id);
+
           if (gestionnaire) {
-            match.push({ ...formatEtablissement(gestionnaire), matched_uai: "BY_ID_GESTIONNAIRE" });
+            match.push({ ...gestionnaire, matched_uai: "BY_ID_GESTIONNAIRE", id_mna_etablissement: gestionnaire._id });
           }
         }
         return;
@@ -152,34 +148,31 @@ async function getEtablissementCoverage(formations) {
       if (exist) return;
 
       if (uai_formation) {
-        let resuai = await Etablissement.find({ uai: uai_formation });
+        let resuai = await getEtablissements({ uai: uai_formation });
 
         if (resuai.length > 0) {
           resuai.forEach((x) => {
-            const formatted = formatEtablissement(x);
-            match.push({ ...formatted, matched_uai: "UAI_FORMATION" });
+            match.push({ ...x, matched_uai: "UAI_FORMATION", id_mna_etablissement: x._id });
           });
         }
       }
 
       if (etablissement_formateur_uai) {
-        let resformateur = await Etablissement.find({ uai: etablissement_formateur_uai });
+        let resformateur = await getEtablissements({ uai: etablissement_formateur_uai });
 
         if (resformateur.length > 0) {
           resformateur.forEach((x) => {
-            const formatted = formatEtablissement(x);
-            match.push({ ...formatted, matched_uai: "UAI_FORMATEUR" });
+            match.push({ ...x, matched_uai: "UAI_FORMATEUR", id_mna_etablissement: x._id });
           });
         }
       }
 
       if (etablissement_gestionnaire_uai) {
-        let resgestionnaire = await Etablissement.find({ uai: etablissement_gestionnaire_uai });
+        let resgestionnaire = await getEtablissements({ uai: etablissement_gestionnaire_uai });
 
         if (resgestionnaire.length > 0) {
           resgestionnaire.forEach((x) => {
-            const formatted = formatEtablissement(x);
-            match.push({ ...formatted, matched_uai: "UAI_GESTIONNAIRE" });
+            match.push({ ...x, matched_uai: "UAI_GESTIONNAIRE", id_mna_etablissement: x._id });
           });
         }
       }
