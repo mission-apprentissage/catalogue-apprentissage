@@ -5,8 +5,7 @@ const { paginator } = require("../../common/utils/paginator");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { getJsonFromXlsxFile } = require("../../../common/utils/fileUtils");
 const { AfReconciliation, ConvertedFormation } = require("../../../common/model");
-const { getCfdInfo, getMef10Info } = require("@mission-apprentissage/tco-service-node");
-const { getBcnInfo } = require("../../../common/services/tables_correspondance");
+const { getCfdInfo, getMef10Info, getBcnInfo } = require("@mission-apprentissage/tco-service-node");
 
 runScript(async () => {
   await psup2021();
