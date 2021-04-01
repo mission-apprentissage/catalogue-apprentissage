@@ -4,12 +4,14 @@ const { runScript } = require("../../scriptWrapper");
 const isValidCFD = require("../../../common/utils/cfdUtils");
 const { PsFormation2021 } = require("../../../common/model/index");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
+const { downloadAndSaveFileFromS3 } = require("../../../common/utils/awsUtils");
 const { getJsonFromXlsxFile } = require("../../../common/utils/fileUtils");
 const { getCfdInfo, getMef10Info } = require("@mission-apprentissage/tco-service-node");
 
 const run = async () => {
   try {
-    const filePath = path.resolve(__dirname, "../assets/formation-psup-2021_24032021.xls");
+    const filePath = path.join(__dirname, "../assets/psup_latest.xls");
+    await downloadAndSaveFileFromS3("psup_latest.xls", filePath);
     const data = getJsonFromXlsxFile(filePath);
     const psup = await PsFormation2021.find({}).lean();
 
