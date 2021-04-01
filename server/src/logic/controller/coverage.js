@@ -1,5 +1,4 @@
 const { formation: formatFormation, etablissement: formatEtablissement } = require("./formater");
-const { getCpInfo } = require("@mission-apprentissage/tco-service-node");
 const { ConvertedFormation, Etablissement } = require("../../common/model");
 const mongoose = require("mongoose");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
@@ -57,13 +56,7 @@ async function getParcoursupCoverage(formation, { published, tags } = {}) {
 
 async function getAffelnetCoverage(formation) {
   let { _id, code_postal, code_cfd } = formation;
-
-  const { messages, result } = await getCpInfo(code_postal);
   let dept = code_postal.substring(0, 2);
-
-  if (messages?.cp === "Ok" || messages?.cp === `Update: Le code ${code_postal} est un code commune insee`) {
-    code_postal = result.code_postal;
-  }
 
   const m3 = await getMatch({
     cfd: code_cfd,
@@ -74,6 +67,9 @@ async function getAffelnetCoverage(formation) {
           { etablissement_formateur_code_postal: code_postal },
           { etablissement_gestionnaire_code_postal: code_postal },
           { code_postal },
+          { etablissement_formateur_code_commune_insee: code_postal },
+          { etablissement_gestionnaire_code_commune_insee: code_postal },
+          { code_commune_insee: code_postal },
         ],
       },
     ],
