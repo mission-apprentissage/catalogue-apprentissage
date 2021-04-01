@@ -135,7 +135,7 @@ async function getEtablissementCoverage(formations) {
           }
         }
         if (etablissement_gestionnaire_id) {
-          let gestionnaire = getEtablissementById(etablissement_gestionnaire_id);
+          let gestionnaire = await getEtablissementById(etablissement_gestionnaire_id);
 
           if (gestionnaire) {
             match.push({ ...gestionnaire, matched_uai: "BY_ID_GESTIONNAIRE" });
