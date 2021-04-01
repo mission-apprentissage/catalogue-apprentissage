@@ -17,6 +17,7 @@ const run = async () => {
         etablissement_reference_catalogue_published: true,
         affelnet_statut: { $ne: "non publié" },
         cfd_outdated: { $ne: true },
+        mefs_10: { $ne: null },
         $or: [
           {
             cfd: reconciliation.code_cfd,
@@ -33,12 +34,6 @@ const run = async () => {
       { $set: { last_update_at: Date.now(), affelnet_reference: true, affelnet_statut: "publié" } }
     );
   });
-
-  // FIXME: hotfix for mefs null to be removed once reconciliation is fixed
-  await ConvertedFormation.updateMany(
-    { affelnet_statut: "publié", mefs_10: null },
-    { $set: { affelnet_statut: "hors périmètre" } }
-  );
 
   // 4 - stats
   const totalPublished = await ConvertedFormation.countDocuments({ published: true });
