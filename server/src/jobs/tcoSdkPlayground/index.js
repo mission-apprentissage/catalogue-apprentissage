@@ -7,6 +7,7 @@ const {
   // getCfdInfo,
   // getMef10Info,
   // getSiretInfo,
+  // getBcnInfo,
 } = require("@mission-apprentissage/tco-service-node");
 
 const path = require("path");
@@ -24,4 +25,6 @@ runScript(async () => {
   // console.log(await getMef10Info("23310022319"));
 
   // console.log(await getSiretInfo("32922456200234"));
+
+  // console.log(await getBcnInfo({ query: { LIBELLE_STAT_33: "CARROSSERIE", LIBELLE_COURT: "BEP" } }));
 });
