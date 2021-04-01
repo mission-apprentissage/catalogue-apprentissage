@@ -30,7 +30,7 @@
     "secret": "mission-apprentissage"
   },
   "log": {
-    "type": "json",
+    "type": "stdout",
     "level": "info"
   },
   "slackWebhookUrl": null,
