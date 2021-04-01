@@ -88,7 +88,7 @@ async function getAffelnetCoverage(formation) {
     };
   }
 
-  const m2 = await getMatch({ code_cfd, dept, published: true });
+  const m2 = await getMatch({ cfd: code_cfd,  num_departement: dept, published: true });
 
   if (m2.length > 0) {
     return {
