@@ -397,6 +397,7 @@ class Importer {
       last_update_at,
       converted_to_mna,
       conversion_error,
+      id_rco_formation,
       ...rcoFormation
     } = rcoFormationP;
     const compare = diff(rcoFormation, formation);
