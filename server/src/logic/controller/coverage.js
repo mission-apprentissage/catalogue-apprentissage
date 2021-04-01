@@ -66,7 +66,7 @@ async function getAffelnetCoverage(formation) {
   }
 
   const m3 = await getMatch({
-    cfd,
+    cfd: code_cfd,
     num_departement: dept,
     $and: [
       {
