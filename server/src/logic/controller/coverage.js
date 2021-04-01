@@ -88,7 +88,7 @@ async function getAffelnetCoverage(formation) {
     };
   }
 
-  const m2 = await getMatch({ cfd: code_cfd,  num_departement: dept, published: true });
+  const m2 = await getMatch({ cfd: code_cfd, num_departement: dept, published: true });
 
   if (m2.length > 0) {
     return {
@@ -131,14 +131,14 @@ async function getEtablissementCoverage(formations) {
           let formateur = await getEtablissementById(etablissement_formateur_id);
 
           if (formateur) {
-            match.push({ ...formateur, matched_uai: "BY_ID_FORMATEUR" });
+            match.push({ ...formateur, matched_uai: "BY_ID_FORMATEUR", id_mna_etablissement: formateur._id });
           }
         }
         if (etablissement_gestionnaire_id) {
           let gestionnaire = await getEtablissementById(etablissement_gestionnaire_id);
 
           if (gestionnaire) {
-            match.push({ ...gestionnaire, matched_uai: "BY_ID_GESTIONNAIRE" });
+            match.push({ ...gestionnaire, matched_uai: "BY_ID_GESTIONNAIRE", id_mna_etablissement: gestionnaire._id });
           }
         }
         return;
@@ -156,8 +156,7 @@ async function getEtablissementCoverage(formations) {
 
         if (resuai.length > 0) {
           resuai.forEach((x) => {
-            const formatted = x;
-            match.push({ ...formatted, matched_uai: "UAI_FORMATION" });
+            match.push({ ...x, matched_uai: "UAI_FORMATION", id_mna_etablissement: x._id });
           });
         }
       }
@@ -167,8 +166,7 @@ async function getEtablissementCoverage(formations) {
 
         if (resformateur.length > 0) {
           resformateur.forEach((x) => {
-            const formatted = x;
-            match.push({ ...formatted, matched_uai: "UAI_FORMATEUR" });
+            match.push({ ...x, matched_uai: "UAI_FORMATEUR", id_mna_etablissement: x._id });
           });
         }
       }
@@ -178,8 +176,7 @@ async function getEtablissementCoverage(formations) {
 
         if (resgestionnaire.length > 0) {
           resgestionnaire.forEach((x) => {
-            const formatted = x;
-            match.push({ ...formatted, matched_uai: "UAI_GESTIONNAIRE" });
+            match.push({ ...x, matched_uai: "UAI_GESTIONNAIRE", id_mna_etablissement: x._id });
           });
         }
       }

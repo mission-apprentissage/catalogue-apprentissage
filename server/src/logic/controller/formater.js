@@ -90,7 +90,7 @@ const etablissement = {
   entreprise_tranche_effectif_salarie: 1,
   etablissement_siege_id: 1,
   matched_uai: 1,
-  id_mna_etablissement: 1,
+  _id: 1,
 };
 
 module.exports = { formation, etablissement };
