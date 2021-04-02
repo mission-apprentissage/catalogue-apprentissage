@@ -1,7 +1,7 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
 import React from "react";
 
-const StatCard = ({ label, stat, background = "bluefrance", color = "white", indicatorColor }) => {
+const StatCard = ({ label, stat, background = "bluefrance", color = "white", indicatorColor, progress }) => {
   return (
     <Box background={background} borderRadius="0.5rem" padding="3w" width="14rem">
       <Flex alignItems="center">
@@ -10,9 +10,17 @@ const StatCard = ({ label, stat, background = "bluefrance", color = "white", ind
           {label}
         </Text>
       </Flex>
-      <Text color={color} fontSize="alpha">
-        {stat}
-      </Text>
+      <Flex alignItems="center">
+        <Text color={color} fontSize="alpha">
+          {stat}
+        </Text>
+        {progress && (
+          <Text color={color} fontSize="zeta" fontWeight="600">
+            {" "}
+            ({progress})
+          </Text>
+        )}
+      </Flex>
     </Box>
   );
 };
