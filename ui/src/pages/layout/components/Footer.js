@@ -44,6 +44,12 @@ const Footer = () => {
             <Text as="span" color="grey.500">
               © {`${new Date().getFullYear()}`} - Version {packageJson.version}
             </Text>
+            <Text as="span" color="grey.500" display={["none", "block"]}>
+              &nbsp;-&nbsp;
+            </Text>
+            <Text as="span" color="grey.500">
+              Accessibilité : non conforme
+            </Text>
           </Flex>
         </Flex>
       </Container>
