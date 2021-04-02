@@ -112,21 +112,29 @@ const mnaFormationUpdater = async (
       logger.error("unable to set tags", e);
     }
 
-    let uai_formation = formation.uai_formation;
+    /*
+     * UAI rules :
+     * 1. modification de fiche
+     * 2. UAI formateur
+     * 3. UAI RCO ? (mais qui devrait être égale à UAI formateur puisque RCO utilise les TCO pour charger les UAI formateurs)...
+     */
+    let uai_formation;
+    // check if it was set by user
+    const pendingFormation = await PendingRcoFormation.findOne(
+      { id_rco_formation: formation.id_rco_formation },
+      { uai_formation: 1 }
+    ).lean();
+    if (pendingFormation) {
+      uai_formation = pendingFormation.uai_formation;
+    }
+    // no uai ? try to fill it with etablissement formateur
     if (!uai_formation) {
-      // no uai ? check if it was set by user
-      const pendingFormation = await PendingRcoFormation.findOne(
-        { id_rco_formation: formation.id_rco_formation },
-        { uai_formation: 1 }
-      ).lean();
-      if (pendingFormation) {
-        uai_formation = pendingFormation.uai_formation;
-      }
+      uai_formation = etablissementsMapping?.etablissement_formateur_uai;
+    }
 
-      // still no uai ? try to fill it with etablissement formateur
-      if (!uai_formation) {
-        uai_formation = etablissementsMapping?.etablissement_formateur_uai;
-      }
+    // TODO should try with etablissement_lieu_formation_uai from RCO but always empty for now on  ¯\_(ツ)_/¯
+    if (!uai_formation) {
+      uai_formation = formation.uai_formation;
     }
 
     const updatedFormation = {

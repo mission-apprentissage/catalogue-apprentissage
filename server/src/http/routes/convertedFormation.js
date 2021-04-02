@@ -234,6 +234,10 @@ module.exports = () => {
         withHistoryUpdate: false,
       });
 
+      if (formation.uai_formation) {
+        updatedFormation.uai_formation = formation.uai_formation;
+      }
+
       if (error) {
         return res.status(500).send({ message: error });
       }
