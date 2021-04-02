@@ -95,6 +95,7 @@ export default () => {
     buildQueries({ service: "parcoursup", academie, day: { start: startJ2, end: endJ2 } })
   );
 
+  const academieList = Object.values(academies).sort(({ nom_academie: a }, { nom_academie: b }) => (a > b ? 1 : -1));
   return (
     <Layout>
       <Box bg="secondaryBackground" w="100%" pt={[4, 8]} px={[1, 24]}>
@@ -127,9 +128,9 @@ export default () => {
             }}
           >
             <option value="">Toutes les académies</option>
-            {Object.values(academies).map(({ nom_academie, num_academie }) => (
+            {academieList.map(({ nom_academie, num_academie }) => (
               <option key={num_academie} value={num_academie}>
-                {nom_academie}
+                {nom_academie} ({num_academie})
               </option>
             ))}
           </Select>
