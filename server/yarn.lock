@@ -1062,11 +1062,6 @@ convert-csv-to-json-latin@1.0.6:
   resolved "https://registry.yarnpkg.com/convert-csv-to-json-latin/-/convert-csv-to-json-latin-1.0.6.tgz#7b2295c38cb2db2de0a9a77a0cba54adbe4c7a6d"
   integrity sha512-Tg9/Lwgf4awRqDAVJiF4YrTh+v76cmgZVXHd5pOb130uifohP2cjAANVONMy5nK8/vQs0Jr5sSDxpEHAFNsJcQ==
 
-convert-csv-to-json@0.0.15:
-  version "0.0.15"
-  resolved "https://registry.yarnpkg.com/convert-csv-to-json/-/convert-csv-to-json-0.0.15.tgz#f0ac35129b61d857cb370e4eaf2abd4779c2c15a"
-  integrity sha512-mXpZWoSc3RXWuA50GAx/BAj+7GIWLmYCr2/IoW9L+cwwvRt6TkTY+15emUyeNInyfl5uZf+H6sQQkpKhjwJB0w==
-
 convert-csv-to-json@1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/convert-csv-to-json/-/convert-csv-to-json-1.0.2.tgz#9d7717aa44a053b60009dfc00c29e5a3e4f8221f"
