@@ -62,6 +62,14 @@ const buildQueries = ({ service, academie, day }) => {
   });
 };
 
+const getProgress = (before = 0, now) => {
+  if (now === before || before === 0) {
+    return null;
+  }
+  const progress = Number(((now - before) / before) * 100).toFixed(2);
+  return `${progress > 0 ? "+" : ""}${progress}%`;
+};
+
 export default () => {
   const [academie, setAcademie] = useState("");
 
@@ -139,7 +147,11 @@ export default () => {
                   <GridItem key={i} colSpan={[6, 3]}>
                     {item.isLoading && <Spinner />}
                     {item.data && (
-                      <StatCard background="#ffffff" color="#1a424c" label={item.data.title} stat={item.data.value} />
+                      <StatCard
+                        label={item.data.title}
+                        stat={item.data.value}
+                        progress={getProgress(resultsAfJ1[i]?.data?.value, item.data.value)}
+                      />
                     )}
                   </GridItem>
                 );
@@ -157,9 +169,9 @@ export default () => {
                     {item.data && (
                       <StatCard
                         background="bluesoft.600"
-                        color="#1a424c"
                         label={item.data.title}
                         stat={item.data.value}
+                        progress={getProgress(resultsAfJ2[i]?.data?.value, item.data.value)}
                       />
                     )}
                   </GridItem>
@@ -175,14 +187,7 @@ export default () => {
                 return (
                   <GridItem key={i} colSpan={[6, 3]}>
                     {item.isLoading && <Spinner />}
-                    {item.data && (
-                      <StatCard
-                        background="bluesoft.400"
-                        color="#1a424c"
-                        label={item.data.title}
-                        stat={item.data.value}
-                      />
-                    )}
+                    {item.data && <StatCard background="bluesoft.400" label={item.data.title} stat={item.data.value} />}
                   </GridItem>
                 );
               })}
@@ -202,7 +207,11 @@ export default () => {
                   <GridItem key={i} colSpan={[6, 3]}>
                     {item.isLoading && <Spinner />}
                     {item.data && (
-                      <StatCard background="#ffffff" color="#1a424c" label={item.data.title} stat={item.data.value} />
+                      <StatCard
+                        label={item.data.title}
+                        stat={item.data.value}
+                        progress={getProgress(resultsPSJ1[i]?.data?.value, item.data.value)}
+                      />
                     )}
                   </GridItem>
                 );
@@ -219,9 +228,9 @@ export default () => {
                     {item.data && (
                       <StatCard
                         background="bluesoft.600"
-                        color="#1a424c"
                         label={item.data.title}
                         stat={item.data.value}
+                        progress={getProgress(resultsPSJ2[i]?.data?.value, item.data.value)}
                       />
                     )}
                   </GridItem>
@@ -236,14 +245,7 @@ export default () => {
                 return (
                   <GridItem key={i} colSpan={[6, 3]}>
                     {item.isLoading && <Spinner />}
-                    {item.data && (
-                      <StatCard
-                        background="bluesoft.400"
-                        color="#1a424c"
-                        label={item.data.title}
-                        stat={item.data.value}
-                      />
-                    )}
+                    {item.data && <StatCard background="bluesoft.400" label={item.data.title} stat={item.data.value} />}
                   </GridItem>
                 );
               })}
