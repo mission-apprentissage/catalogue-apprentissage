@@ -1,145 +1,125 @@
 import React, { useEffect, useState } from "react";
 import { _get } from "../../common/httpClient";
 import Layout from "../layout/Layout";
-import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Container, Heading } from "@chakra-ui/react";
+import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Container, Heading, Select } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
 import StatGrid from "../../common/components/StatGrid";
-
-//
-// const ACADEMIES = [
-//   "01",
-//   "02",
-//   "03",
-//   "04",
-//   "06",
-//   "07",
-//   "08",
-//   "09",
-//   "10",
-//   "11",
-//   "12",
-//   "13",
-//   "14",
-//   "15",
-//   "16",
-//   "17",
-//   "18",
-//   "19",
-//   "20",
-//   "22",
-//   "23",
-//   "24",
-//   "25",
-//   "27",
-//   "28",
-//   "31",
-//   "32",
-//   "33",
-//   "43",
-//   "70",
-// ];
+import { academies } from "../../constants/academies";
+// import { useQuery } from "react-query";
 
 const affelnetStatuses = [
-  "hors périmètre",
-  "à publier (soumis à validation)",
-  "à publier",
-  "en attente de publication",
   "publié",
+  "en attente de publication",
   "non publié",
+  "à publier",
+  "à publier (soumis à validation)",
+  "hors périmètre",
 ];
 
 const parcoursupStatuses = [
-  "hors périmètre",
+  "publié",
+  "en attente de publication",
+  "non publié",
+  "à publier",
   "à publier (vérifier accès direct postbac)",
   "à publier (soumis à validation Recteur)",
-  "à publier",
-  "en attente de publication",
-  "publié",
-  "non publié",
+  "hors périmètre",
 ];
 
 export default () => {
-  // const [academie, setAcademie] = useState(ACADEMIES[0]);
+  const [academie, setAcademie] = useState("");
 
   const [data, setData] = useState({});
 
-  useEffect(
-    () => {
-      async function run() {
-        const d = new Date();
-        d.setHours(0, 0, 0, 0);
-        const endJ1 = d.getTime();
+  // TODO useQueries for each day affelnet & psup
 
-        d.setDate(d.getDate() - 1);
-        const startJ1 = d.getTime();
+  // const { data, isLoading, isError } = useQuery(
+  //   ["coverage", { type: matching.type, page: matching.page }],
+  //   ({ queryKey }) => {
+  //     return _get(`/api/affelnet?type=${queryKey[1].type}&page=${queryKey[1].page}`);
+  //   },
+  //   {
+  //     refetchOnWindowFocus: false,
+  //   }
+  // );
 
-        const endJ2 = startJ1;
-        d.setDate(d.getDate() - 1);
-        const startJ2 = d.getTime();
-
-        const afToday = [];
-        const afJ1 = [];
-        const afJ2 = [];
-
-        const psToday = [];
-        const psJ1 = [];
-        const psJ2 = [];
-
-        for (let status of affelnetStatuses) {
-          const countToday = await _get(
-            `/api/entity/formations2021/count?query={"published":true,"affelnet_statut":"${status}"}`
-          );
-          afToday.push({ title: `Affelnet - ${status}`, value: countToday });
-
-          const countJ1 = await _get(
-            `/api/entity/formations2021/count?query={"published":true,"affelnet_statut_history":{"$elemMatch":{"date":{"$gte":${startJ1},"$lte":${endJ1}},"affelnet_statut":"${status}"}}}`
-          );
-          afJ1.push({ title: `Affelnet - ${status}`, value: countJ1 });
-
-          const countJ2 = await _get(
-            `/api/entity/formations2021/count?query={"published":true,"affelnet_statut_history":{"$elemMatch":{"date":{"$gt":${startJ2},"$lte":${endJ2}},"affelnet_statut":"${status}"}}}`
-          );
-
-          afJ2.push({ title: `Affelnet - ${status}`, value: countJ2 });
-        }
-
-        for (let status of parcoursupStatuses) {
-          const countToday = await _get(
-            `/api/entity/formations2021/count?query={"published":true,"parcoursup_statut":"${status}"}`
-          );
-          psToday.push({ title: `Parcoursup - ${status}`, value: countToday });
-
-          const countJ1 = await _get(
-            `/api/entity/formations2021/count?query={"published":true,"parcoursup_statut_history":{"$elemMatch":{"date":{"$gte":${startJ1},"$lte":${endJ1}},"parcoursup_statut":"${status}"}}}`
-          );
-          psJ1.push({ title: `Parcoursup - ${status}`, value: countJ1 });
-
-          const countJ2 = await _get(
-            `/api/entity/formations2021/count?query={"published":true,"parcoursup_statut_history":{"$elemMatch":{"date":{"$gt":${startJ2},"$lte":${endJ2}},"parcoursup_statut":"${status}"}}}`
-          );
-
-          psJ2.push({ title: `Parcoursup - ${status}`, value: countJ2 });
-        }
-
-        setData({
-          affelnet: {
-            today: afToday,
-            j1: afJ1,
-            j2: afJ2,
-          },
-          parcoursup: {
-            today: psToday,
-            j1: psJ1,
-            j2: psJ2,
-          },
-        });
+  useEffect(() => {
+    async function run() {
+      let academieQuery = "";
+      if (academie) {
+        academieQuery = `,"num_academie":"${academie}"`;
       }
-      run();
-    },
-    [
-      /*academie*/
-    ]
-  );
+
+      const d = new Date();
+      d.setHours(0, 0, 0, 0);
+      const endJ1 = d.getTime();
+
+      d.setDate(d.getDate() - 1);
+      const startJ1 = d.getTime();
+
+      const endJ2 = startJ1;
+      d.setDate(d.getDate() - 1);
+      const startJ2 = d.getTime();
+
+      const afToday = [];
+      const afJ1 = [];
+      const afJ2 = [];
+
+      const psToday = [];
+      const psJ1 = [];
+      const psJ2 = [];
+
+      for (let status of affelnetStatuses) {
+        const countToday = await _get(
+          `/api/entity/formations2021/count?query={"published":true,"affelnet_statut":"${status}"${academieQuery}}`
+        );
+        afToday.push({ title: `Affelnet - ${status}`, value: countToday });
+
+        const countJ1 = await _get(
+          `/api/entity/formations2021/count?query={"published":true,"affelnet_statut_history":{"$elemMatch":{"date":{"$gte":${startJ1},"$lte":${endJ1}},"affelnet_statut":"${status}"}}${academieQuery}}`
+        );
+        afJ1.push({ title: `Affelnet - ${status}`, value: countJ1 });
+
+        const countJ2 = await _get(
+          `/api/entity/formations2021/count?query={"published":true,"affelnet_statut_history":{"$elemMatch":{"date":{"$gt":${startJ2},"$lte":${endJ2}},"affelnet_statut":"${status}"}}${academieQuery}}`
+        );
+
+        afJ2.push({ title: `Affelnet - ${status}`, value: countJ2 });
+      }
+
+      for (let status of parcoursupStatuses) {
+        const countToday = await _get(
+          `/api/entity/formations2021/count?query={"published":true,"parcoursup_statut":"${status}"${academieQuery}}`
+        );
+        psToday.push({ title: `Parcoursup - ${status}`, value: countToday });
+
+        const countJ1 = await _get(
+          `/api/entity/formations2021/count?query={"published":true,"parcoursup_statut_history":{"$elemMatch":{"date":{"$gte":${startJ1},"$lte":${endJ1}},"parcoursup_statut":"${status}"}}${academieQuery}}`
+        );
+        psJ1.push({ title: `Parcoursup - ${status}`, value: countJ1 });
+
+        const countJ2 = await _get(
+          `/api/entity/formations2021/count?query={"published":true,"parcoursup_statut_history":{"$elemMatch":{"date":{"$gt":${startJ2},"$lte":${endJ2}},"parcoursup_statut":"${status}"}}${academieQuery}}`
+        );
+
+        psJ2.push({ title: `Parcoursup - ${status}`, value: countJ2 });
+      }
+
+      setData({
+        affelnet: {
+          today: afToday,
+          j1: afJ1,
+          j2: afJ2,
+        },
+        parcoursup: {
+          today: psToday,
+          j1: psJ1,
+          j2: psJ2,
+        },
+      });
+    }
+    run();
+  }, [academie]);
 
   return (
     <Layout>
@@ -162,6 +142,23 @@ export default () => {
           <Heading as="h1" mb={8} mt={2}>
             Historique des statuts Affelnet/Parcoursup
           </Heading>
+
+          <Select
+            value={academie}
+            bg="white"
+            w="30%"
+            mb={8}
+            onChange={(e) => {
+              setAcademie(e.target.value);
+            }}
+          >
+            <option value="">Toutes les académies</option>
+            {Object.values(academies).map(({ nom_academie, num_academie }) => (
+              <option key={num_academie} value={num_academie}>
+                {nom_academie}
+              </option>
+            ))}
+          </Select>
 
           {data?.affelnet && (
             <>
