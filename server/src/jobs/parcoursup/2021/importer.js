@@ -4,18 +4,39 @@ const { runScript } = require("../../scriptWrapper");
 const isValidCFD = require("../../../common/utils/cfdUtils");
 const { PsFormation2021 } = require("../../../common/model/index");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
+const { downloadAndSaveFileFromS3 } = require("../../../common/utils/awsUtils");
 const { getJsonFromXlsxFile } = require("../../../common/utils/fileUtils");
-const { getMefInfo, getCfdInfo } = require("../../../common/services/tables_correspondance");
+const { getCfdInfo, getMef10Info } = require("@mission-apprentissage/tco-service-node");
 
 const run = async () => {
   try {
-    const filePath = path.resolve(__dirname, "../assets/formation-psup-2021_26022021.xls");
+    const filePath = path.join(__dirname, "../assets/psup_latest.xls");
+    await downloadAndSaveFileFromS3("psup_latest.xls", filePath);
     const data = getJsonFromXlsxFile(filePath);
+    const psup = await PsFormation2021.find({}).lean();
 
-    await asyncForEach(data, async (formation) => {
+    const newFormation = data.filter((item) => {
+      let exist = psup.find((x) => x.id_parcoursup === item.CODEFORMATIONACCUEIL);
+      if (!exist) {
+        return item;
+      }
+    });
+
+    if (newFormation.length === 0) {
+      logger.info("All formations are already present in the database.");
+      return;
+    }
+
+    let stat = {
+      file: data.length,
+      new: newFormation.length,
+      inserted: 0,
+    };
+
+    await asyncForEach(newFormation, async (formation) => {
       if (formation.CODEMEF) {
         try {
-          const responseMEF = await getMefInfo(formation.CODEMEF);
+          const responseMEF = await getMef10Info(formation.CODEMEF);
 
           if (responseMEF) {
             formation.CFD = responseMEF.result?.cfd?.cfd;
@@ -41,8 +62,6 @@ const run = async () => {
           console.log("[ERROR] getCfdInfo", error);
         }
       }
-
-      logger.info(`Add ${formation.LIB_AFF} — ${formation.CODEMEF} to DB`);
 
       await PsFormation2021.create({
         id_parcoursup: formation.CODEFORMATIONINSCRIPTION,
@@ -71,7 +90,10 @@ const run = async () => {
         siret_map: formation.SIRET_MAP,
         siret_cerfa: formation.SIRET_CERFA,
       });
+
+      stat.inserted += 1;
     });
+    console.log({ stat });
   } catch (err) {
     logger.error(err);
   }

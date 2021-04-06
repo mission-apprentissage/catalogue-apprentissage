@@ -5,7 +5,7 @@ const { paginator } = require("../../common/utils/paginator");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { getJsonFromXlsxFile } = require("../../../common/utils/fileUtils");
 const { AfReconciliation, ConvertedFormation } = require("../../../common/model");
-const { getCfdInfo, getMefInfo, getBcnInfo } = require("../../../common/services/tables_correspondance");
+const { getCfdInfo, getMef10Info, getBcnInfo } = require("@mission-apprentissage/tco-service-node");
 
 runScript(async () => {
   await psup2021();
@@ -98,7 +98,7 @@ async function psup2021() {
     console.log(index, data.length);
     if (item.CODEMEF) {
       try {
-        let responseMEF = await getMefInfo(item.CODEMEF);
+        let responseMEF = await getMef10Info(item.CODEMEF);
 
         if (responseMEF) {
           let romes = responseMEF.result.rncp?.romes?.map((x) => x.rome);

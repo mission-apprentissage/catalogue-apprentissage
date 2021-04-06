@@ -42,7 +42,8 @@ const getEtablissements = async (options) => {
       return allEtablissements;
     }
   } catch (error) {
-    logger.error(error);
+    logger.error("Etablissements", error);
+    throw new Error("unable to fetch Etablissements");
   }
 };
 
