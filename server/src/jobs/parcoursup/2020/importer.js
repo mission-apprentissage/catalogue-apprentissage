@@ -1,10 +1,10 @@
 const path = require("path");
 const logger = require("../../../common/logger");
+const { getMef10Info } = require("@mission-apprentissage/tco-service-node");
 const { runScript } = require("../../scriptWrapper");
 const { PsFormation } = require("../../../common/model/index");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { getJsonFromXlsxFile } = require("../../../common/utils/fileUtils");
-const { getMefInfo } = require("../../../common/services/tables_correspondance");
 
 const run = async () => {
   try {
@@ -13,7 +13,7 @@ const run = async () => {
 
     await asyncForEach(data, async (formation) => {
       if (!formation.CODECFD && formation.CODEMEF) {
-        const responseMEF = await getMefInfo(formation.code_mef_10);
+        const responseMEF = await getMef10Info(formation.code_mef_10);
 
         if (responseMEF) {
           if (!responseMEF.messages.cfdUpdated === "Non trouvé") {

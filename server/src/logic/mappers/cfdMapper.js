@@ -1,8 +1,6 @@
 const logger = require("../../common/logger");
 const { infosCodes, computeCodes } = require("../../constants/opco");
-// const { getCfdInfo } = require("../../common/services/tables_correspondance");
-const { mongoose } = require("../../common/mongodb");
-const { initTcoModel, getCfdInfo } = require("@mission-apprentissage/tco-service-node");
+const { getCfdInfo } = require("@mission-apprentissage/tco-service-node");
 
 const cfdMapper = async (cfd = null) => {
   try {
@@ -10,7 +8,6 @@ const cfdMapper = async (cfd = null) => {
       throw new Error("cfdMapper cfd must be provided");
     }
 
-    await initTcoModel(mongoose);
     const cfdInfo = await getCfdInfo(cfd);
     if (!cfdInfo) {
       return {

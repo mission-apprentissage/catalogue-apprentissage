@@ -3,7 +3,7 @@ const combinate = require("../../logic/mappers/psReconciliationMapper");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const mongoose = require("mongoose");
 const express = require("express");
-const { getCfdInfo } = require("../../common/services/tables_correspondance");
+const { getCfdInfo } = require("@mission-apprentissage/tco-service-node");
 
 module.exports = ({ catalogue }) => {
   const router = express.Router();

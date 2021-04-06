@@ -1,8 +1,5 @@
 const { runScript } = require("../scriptWrapper");
-const { mongoose } = require("../../common/mongodb");
-
 const {
-  initTcoModel,
   // getCpInfo,
   rncpImporter,
   getRncpInfo,
@@ -10,6 +7,7 @@ const {
   // getCfdInfo,
   // getMef10Info,
   // getSiretInfo,
+  // getBcnInfo,
 } = require("@mission-apprentissage/tco-service-node");
 
 const path = require("path");
@@ -17,7 +15,6 @@ const path = require("path");
 const KIT_LOCAL_PATH = path.join(__dirname, "KitApprentissage.latest.xlsx");
 
 runScript(async () => {
-  await initTcoModel(mongoose);
   // console.log(await getCpInfo("92600"));
 
   await rncpImporter(KIT_LOCAL_PATH);
@@ -28,4 +25,6 @@ runScript(async () => {
   // console.log(await getMef10Info("23310022319"));
 
   // console.log(await getSiretInfo("32922456200234"));
+
+  // console.log(await getBcnInfo({ query: { LIBELLE_STAT_33: "CARROSSERIE", LIBELLE_COURT: "BEP" } }));
 });

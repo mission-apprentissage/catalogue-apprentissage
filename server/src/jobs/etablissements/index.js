@@ -5,13 +5,20 @@ const logger = require("../../common/logger");
 const { Readable } = require("stream");
 
 const importEtablissements = async (catalogue) => {
-  let stats = {
+  const stats = {
     total: 0,
     created: 0,
     failed: 0,
   };
 
-  let etablissements = await catalogue.getEtablissements({ limit: 10000, query: {} });
+  let etablissements;
+  try {
+    etablissements = await catalogue.getEtablissements({ limit: 10000, query: {} });
+  } catch (e) {
+    // stop here if not able to get etablissements (keep existing ones)
+    logger.error("Etablissements", e);
+    return;
+  }
 
   logger.info("Deleting all etablissements...");
   await Etablissement.deleteMany({});
@@ -41,10 +48,10 @@ module.exports = { importEtablissements };
 
 if (process.env.standalone) {
   runScript(async ({ catalogue }) => {
-    logger.info("Start etablissemnt import");
+    logger.info("Start etablissements import");
 
     await importEtablissements(catalogue);
 
-    logger.info("End etablissemnt import");
+    logger.info("End etablissements import");
   });
 }

@@ -18,62 +18,59 @@ async function reconciliationAffelnet(formation, source = "MANUEL") {
     libelle_mnemonique,
   } = formation;
 
-  let {
-    uai_formation,
-    etablissement_formateur_uai,
-    etablissement_gestionnaire_uai,
-    etablissement_formateur_siret,
-    etablissement_gestionnaire_siret,
-    _id: convertedId,
-  } = matching_mna_formation[0];
+  let { etablissement_formateur_siret, etablissement_gestionnaire_siret, _id: convertedId } = matching_mna_formation[0];
 
-  let a = uai_formation === uai;
-  let b = etablissement_formateur_uai === uai;
-  let c = etablissement_gestionnaire_uai === uai;
+  if (!uai) {
+    await AfFormation.findByIdAndUpdate(_id, {
+      no_uai: true,
+      etat_reconciliation: false,
+    });
+    return;
+  }
 
-  if (!uai_formation || !etablissement_formateur_uai || !etablissement_gestionnaire_uai) {
-    if (a || b || c) {
-      let payload = {
-        uai,
-        code_cfd,
-        siret_formateur: etablissement_formateur_siret,
-        siret_gestionnaire: etablissement_gestionnaire_siret,
-        source,
-      };
+  let payload = {
+    uai,
+    code_cfd,
+    siret_formateur: etablissement_formateur_siret,
+    siret_gestionnaire: etablissement_gestionnaire_siret,
+    source,
+  };
 
-      await AfReconciliation.findOneAndUpdate({ uai, code_cfd }, payload, { upsert: true });
+  await AfReconciliation.findOneAndUpdate({ uai, code_cfd }, payload, { upsert: true });
 
-      await AfFormation.findByIdAndUpdate(_id, { etat_reconciliation: true });
+  await AfFormation.findByIdAndUpdate(_id, {
+    etat_reconciliation: true,
+  });
 
-      // pass through some data for Affelnet
-      const converted = await ConvertedFormation.findById(convertedId);
-      if (converted) {
-        converted.affelnet_code_nature = code_nature;
-        converted.affelnet_secteur = etablissement_type === "Public" ? "PU" : "PR";
+  // pass through some data for Affelnet
+  const converted = await ConvertedFormation.findById(convertedId, {
+    affelnet_infos_offre: 1,
+    bcn_mefs_10: 1,
+  }).lean();
+  if (converted) {
+    const update = {};
+    update.affelnet_code_nature = code_nature;
+    update.affelnet_secteur = etablissement_type === "Public" ? "PU" : "PR";
 
-        // pre-fill affelnet_infos_offre with data from affelnet import if empty (to not erase user change)
-        converted.affelnet_infos_offre = converted.affelnet_infos_offre || libelle_mnemonique;
+    // pre-fill affelnet_infos_offre with data from affelnet import if empty (to not erase user change)
+    update.affelnet_infos_offre = converted.affelnet_infos_offre || libelle_mnemonique;
 
-        const mefs_10 = converted.bcn_mefs_10 ?? [];
-        const mef = mefs_10.find(({ mef10 }) => mef10 === code_mef.substring(0, 10));
-        if (mef) {
-          converted.mefs_10 = [mef];
-        } else {
-          converted.mefs_10 = [
-            {
-              mef10: code_mef,
-              modalite: {
-                duree: !["", "AFFECTATION"].includes(code_mef) ? code_mef.substring(8, 9) : "",
-                annee: !["", "AFFECTATION"].includes(code_mef) ? code_mef.substring(9, 10) : "",
-              },
-            },
-          ];
-        }
-        await converted.save();
-      }
+    const mefs_10 = converted.bcn_mefs_10 ?? [];
+    const mef = mefs_10.find(({ mef10 }) => mef10 === code_mef.substring(0, 10));
+    if (mef) {
+      update.mefs_10 = [mef];
+    } else {
+      update.mefs_10 = [
+        {
+          mef10: code_mef,
+          modalite: {
+            duree: !["", "AFFECTATION"].includes(code_mef) ? code_mef.substring(8, 9) : "",
+            annee: !["", "AFFECTATION"].includes(code_mef) ? code_mef.substring(9, 10) : "",
+          },
+        },
+      ];
     }
-  } else {
-    await AfFormation.findByIdAndUpdate(_id, { no_uai: true });
+    await ConvertedFormation.findByIdAndUpdate(convertedId, update);
   }
 }
 

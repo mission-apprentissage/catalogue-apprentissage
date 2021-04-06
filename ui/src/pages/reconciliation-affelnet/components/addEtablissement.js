@@ -30,7 +30,6 @@ import { _post } from "../../../common/httpClient";
 export default function TransitionsModal({ isOpen, onClose, onSuccess }) {
   const [etablissement, setEtablissement] = React.useState();
   const [loading, setLoading] = React.useState(false);
-  const [errors, setErrors] = React.useState(false);
   const [values, setValues] = React.useState({
     uai: "",
     siret: "",
@@ -40,13 +39,9 @@ export default function TransitionsModal({ isOpen, onClose, onSuccess }) {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    if (values.siret === "" || values.siret.length !== 14 || values.uai || values.uai.length !== 8) {
-      setErrors(true);
-      return;
-    }
     setLoading(true);
 
-    const response = await _post("/api/psformation/etablissement", values);
+    const response = await _post("/api/affelnet/etablissement", values);
 
     if (response) {
       setEtablissement(response);
@@ -56,7 +51,6 @@ export default function TransitionsModal({ isOpen, onClose, onSuccess }) {
   };
 
   const handleChange = (e) => {
-    setErrors(false);
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
   };
@@ -73,13 +67,21 @@ export default function TransitionsModal({ isOpen, onClose, onSuccess }) {
               <Stack direction="row" spacing={4}>
                 <FormControl>
                   <FormLabel>UAI</FormLabel>
-                  <Input type="text" name="uai" onChange={handleChange} autoComplete="off" />
+                  <Input type="text" name="uai" onChange={handleChange} autoComplete="off" maxLength="8" required />
                   <FormErrorMessage>Uai obligatoire (8 caractères)</FormErrorMessage>
                 </FormControl>
 
-                <FormControl isInvalid={errors}>
+                <FormControl>
                   <FormLabel>SIRET</FormLabel>
-                  <Input type="text" name="siret" onChange={handleChange} autoComplete="off" />
+                  <Input
+                    type="text"
+                    name="siret"
+                    onChange={handleChange}
+                    autoComplete="off"
+                    maxLength="14"
+                    pattern="[0-9]{14}"
+                    required
+                  />
                   <FormErrorMessage>Siret obligatoire (14 chiffres)</FormErrorMessage>
                 </FormControl>
                 <Flex align="flex-end">

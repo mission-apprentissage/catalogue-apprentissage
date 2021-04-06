@@ -17,6 +17,7 @@ const run = async () => {
         etablissement_reference_catalogue_published: true,
         affelnet_statut: { $ne: "non publié" },
         cfd_outdated: { $ne: true },
+        mefs_10: { $ne: null },
         $or: [
           {
             cfd: reconciliation.code_cfd,
