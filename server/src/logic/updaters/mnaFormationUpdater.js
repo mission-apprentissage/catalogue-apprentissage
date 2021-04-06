@@ -187,9 +187,7 @@ const mnaFormationUpdater = async (
         if (
           mefs_10.length === 1 &&
           (!updatedFormation.affelnet_infos_offre ||
-            updatedFormation.bcn_mefs_10
-              .map((mef) => getInfosOffreLabel(updatedFormation, mef))
-              .includes(updatedFormation.affelnet_infos_offre))
+            updatedFormation.affelnet_infos_offre.match(`${updatedFormation.libelle_court} en . an.?$`))
         ) {
           updatedFormation.affelnet_infos_offre = getInfosOffreLabel(updatedFormation, mefs_10[0]);
         }
