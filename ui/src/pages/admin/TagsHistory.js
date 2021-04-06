@@ -49,7 +49,7 @@ const buildQueries = ({ service, academie, day }) => {
         }
         if (day) {
           query[`${service}_statut_history`] = {
-            $elemMatch: { date: { $gte: day.start, $lte: day.end }, affelnet_statut: status },
+            $elemMatch: { date: { $gt: day.start, $lte: day.end }, [`${service}_statut`]: status },
           };
         } else {
           query[`${service}_statut`] = status;
