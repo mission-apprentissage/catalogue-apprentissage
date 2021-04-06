@@ -1,6 +1,6 @@
 ![](https://avatars1.githubusercontent.com/u/63645182?s=200&v=4)
 
-# Template Apprentissage
+# Catalogue Apprentissage
 
 ## Pré-requis
 
