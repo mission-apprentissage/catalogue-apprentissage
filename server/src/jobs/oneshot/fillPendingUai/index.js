@@ -11,7 +11,7 @@ const run = async () => {
     ).lean();
     if (pendingFormation) {
       let editedFields = null;
-      if (pendingFormation.uai_formation && pendingFormation.uai_formation !== formation.uai_formation) {
+      if (pendingFormation.uai_formation) {
         formation.uai_formation = pendingFormation.uai_formation;
         editedFields = {};
         editedFields.uai_formation = pendingFormation.uai_formation;
