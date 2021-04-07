@@ -107,6 +107,34 @@ const mnaFormationSchema = {
     default: null,
     description: "Url de redirection vers le site de l'ONISEP",
   },
+
+  onisep_intitule: {
+    type: String,
+    default: null,
+    description: "Intitulé éditorial l'ONISEP",
+  },
+
+  onisep_libelle_poursuite: {
+    type: String,
+    default: null,
+    description: "Libellé poursuite étude l'ONISEP (séparateur ;)",
+  },
+  onisep_lien_site_onisepfr: {
+    type: String,
+    default: null,
+    description: "Lien vers site de l'ONISEP api",
+  },
+  onisep_discipline: {
+    type: String,
+    default: null,
+    description: "Disciplines ONISEP (séparateur ;)",
+  },
+  onisep_domaine_sousdomaine: {
+    type: String,
+    default: null,
+    description: "Domaine et sous domaine ONISEP (séparateur ;)",
+  },
+
   rncp_code: {
     type: String,
     default: null,
