@@ -22,6 +22,7 @@ import React, { useState } from "react";
 import { useFormik } from "formik";
 import { _put } from "../../httpClient";
 import useAuth from "../../hooks/useAuth";
+import { buildUpdatesHistory } from "../../utils/formationUtils";
 
 const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
 
@@ -111,6 +112,13 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
           const updatedFormation = await _put(`${endpointNewFront}/entity/formations2021/${formation._id}`, {
             num_academie: formation.num_academie,
             ...body,
+            last_update_who: user.email,
+            last_update_at: Date.now(),
+            updates_history: buildUpdatesHistory(
+              formation,
+              { ...body, last_update_who: user.email },
+              Object.keys(body)
+            ),
           });
 
           if (shouldRemoveAfReconciliation || shouldRestoreAfReconciliation) {
