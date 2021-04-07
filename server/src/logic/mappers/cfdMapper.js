@@ -48,7 +48,14 @@ const cfdMapper = async (cfd = null) => {
 
     const { mef10 = null, modalite = { duree: null, annee: null }, mefs10 = [] } = mefs;
 
-    const { url: onisep_url = null } = onisep;
+    const {
+      url: onisep_url = null,
+      libelle_formation_principal: onisep_intitule = null,
+      libelle_poursuite: onisep_libelle_poursuite = null,
+      lien_site_onisepfr: onisep_lien_site_onisepfr = null,
+      discipline: onisep_discipline = null,
+      domaine_sousdomaine: onisep_domaine_sousdomaine = null,
+    } = onisep;
 
     let opcoNames = null;
     let info_opcos = infosCodes.NotFound;
@@ -74,7 +81,13 @@ const cfdMapper = async (cfd = null) => {
 
         duree: modalite.duree,
         annee: modalite.annee,
+
         onisep_url,
+        onisep_intitule,
+        onisep_libelle_poursuite,
+        onisep_lien_site_onisepfr,
+        onisep_discipline,
+        onisep_domaine_sousdomaine,
 
         rncp_code: code_rncp,
         rncp_intitule: intitule_diplome,
