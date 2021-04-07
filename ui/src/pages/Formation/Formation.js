@@ -542,6 +542,7 @@ export default ({ match }) => {
               ...updatedFormation,
               last_update_who: user.email,
               last_update_at: Date.now(),
+              editedFields: { ...formation?.editedFields, ...actualDirectChangeValues },
               updates_history: buildUpdatesHistory(
                 formation,
                 { ...actualDirectChangeValues, last_update_who: user.email },
@@ -611,6 +612,7 @@ export default ({ match }) => {
         let pendingRCOFormation;
 
         const apiURL = `${endpointNewFront}/entity/formation2021/`;
+        // FIXME select={"__v":0} hack to get updates_history
         const form = await _get(`${apiURL}${match.params.id}?select={"__v":0}`, false);
         setFormation(form);
 

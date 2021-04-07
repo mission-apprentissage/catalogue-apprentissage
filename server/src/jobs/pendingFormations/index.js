@@ -12,8 +12,6 @@ if (process.env.standalone) {
 
     const to = config.reportMailingList.split(",");
 
-    const nbFormations = await PendingRcoFormation.countDocuments({});
-
     const projection = {
       _id: 1,
       id_rco_formation: 1,
@@ -27,8 +25,8 @@ if (process.env.standalone) {
       lieu_formation_adresse: 1,
       code_postal: 1,
       cfd: 1,
-      // periode: 1,
-      capacite: 1,
+      periode: 1,
+      // capacite: 1,
       published: 1,
     };
 
@@ -51,8 +49,8 @@ if (process.env.standalone) {
               "lieu_formation_adresse",
               "code_postal",
               "cfd",
-              // "periode",
-              "capacite",
+              "periode",
+              // "capacite",
               "published",
             ].includes(header)
           ) {
@@ -66,18 +64,18 @@ if (process.env.standalone) {
           return formation[header];
         });
 
-        const actualRow = row.join(";");
-        lines.push(actualRow);
-
         if (original.published === false && formation.published) {
           deletableLines.push(formation._id);
           console.log(`not published anymore, can delete pending : ${formation._id}`);
+          return;
         }
-
         if (!hasOneChange) {
           deletableLines.push(formation._id);
           console.log(`no differences can delete pending: ${formation._id} ${formation.id_rco_formation}`);
+          return;
         }
+        const actualRow = row.join(";");
+        lines.push(actualRow);
       } else {
         deletableLines.push(formation._id);
         console.log(`no corresponding converted formation, can delete pending : ${formation._id}`);
@@ -97,7 +95,7 @@ if (process.env.standalone) {
       `[${config.env} Catalogue apprentissage] Pending formations export`,
       path.join(__dirname, "../../assets/templates/pending-formations-export.mjml.ejs"),
       {
-        nbFormations,
+        nbFormations: lines.length,
       },
       attachments
     );
