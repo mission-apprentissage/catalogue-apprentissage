@@ -23,7 +23,7 @@ import { NavLink, useHistory } from "react-router-dom";
 import { useFormik } from "formik";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
-import { _get, _post } from "../../common/httpClient";
+import { _get, _post, _put } from "../../common/httpClient";
 import Layout from "../layout/Layout";
 import useAuth from "../../common/hooks/useAuth";
 import { hasRightToEditFormation } from "../../common/utils/rolesUtils";
@@ -31,6 +31,7 @@ import { StatusBadge } from "../../common/components/StatusBadge";
 import { ReactComponent as InfoIcon } from "../../theme/assets/info-circle.svg";
 import { PublishModal } from "../../common/components/formation/PublishModal";
 import { HABILITE_LIST } from "../../constants/certificateurs";
+import { buildUpdatesHistory } from "../../common/utils/formationUtils";
 
 const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
 
@@ -171,13 +172,16 @@ const Formation = ({
   isSubmitting,
   pendingFormation,
 }) => {
+  const displayedFormation = pendingFormation ?? formation;
   const oneEstablishment = formation.etablissement_gestionnaire_siret === formation.etablissement_formateur_siret;
-  const filteredPartenaires = (formation.rncp_details?.partenaires ?? []).filter(({ Siret_Partenaire }) =>
+  const filteredPartenaires = (displayedFormation.rncp_details?.partenaires ?? []).filter(({ Siret_Partenaire }) =>
     [formation.etablissement_gestionnaire_siret, formation.etablissement_formateur_siret].includes(Siret_Partenaire)
   );
   const showPartenaires =
-    ["Titre", "TP"].includes(formation.rncp_details?.code_type_certif) &&
-    !(formation.rncp_details.certificateurs ?? []).some(({ certificateur }) => HABILITE_LIST.includes(certificateur));
+    ["Titre", "TP"].includes(displayedFormation.rncp_details?.code_type_certif) &&
+    !(displayedFormation.rncp_details.certificateurs ?? []).some(({ certificateur }) =>
+      HABILITE_LIST.includes(certificateur)
+    );
 
   return (
     <Box bg="#fafbfc" boxShadow="0 2px 2px 0 rgba(215, 215, 215, 0.5)" borderRadius={4}>
@@ -213,18 +217,18 @@ const Formation = ({
               Détails
             </Heading>
             <Text mb={4}>
-              Intitulé court de la formation: <strong>{formation.intitule_court}</strong>
+              Intitulé court de la formation: <strong>{displayedFormation.intitule_court}</strong>
             </Text>
             <Text mb={4}>
-              Diplôme ou titre visé: <strong>{formation.diplome}</strong>
+              Diplôme ou titre visé: <strong>{displayedFormation.diplome}</strong>
             </Text>
             <Text mb={4}>
-              Niveau de la formation: <strong>{formation.niveau}</strong>
+              Niveau de la formation: <strong>{displayedFormation.niveau}</strong>
             </Text>
             <Text mb={4}>
-              Code diplôme (Éducation Nationale): {!edition && <strong>{formation.cfd}</strong>}
+              Code diplôme (Éducation Nationale): {!edition && <strong>{displayedFormation.cfd}</strong>}
               {edition && <Input type="text" name="cfd" onChange={handleChange} value={values.cfd} />}
-              {formation.cfd_outdated && (
+              {displayedFormation.cfd_outdated && (
                 <>
                   <br />
                   Ce diplôme a une date de fin antérieure au 31/08 de l'année en cours
@@ -233,13 +237,16 @@ const Formation = ({
             </Text>
             <Text mb={4}>
               Codes MEF 10 caractères:{" "}
-              <strong>{formation.mef_10_code ?? formation?.bcn_mefs_10?.map(({ mef10 }) => mef10).join(", ")}</strong>
+              <strong>
+                {displayedFormation.mef_10_code ??
+                  displayedFormation?.bcn_mefs_10?.map(({ mef10 }) => mef10).join(", ")}
+              </strong>
             </Text>
-            {formation?.mefs_10?.length > 0 && (
+            {displayedFormation?.mefs_10?.length > 0 && (
               <>
                 <Text mb={4}>
                   Codes MEF 10 caractères dans le périmètre <i>Affelnet</i>:{" "}
-                  <strong>{formation?.mefs_10?.map(({ mef10 }) => mef10).join(", ")}</strong>
+                  <strong>{displayedFormation?.mefs_10?.map(({ mef10 }) => mef10).join(", ")}</strong>
                 </Text>
                 {formation?.affelnet_infos_offre && (
                   <Text mb={4}>
@@ -249,7 +256,7 @@ const Formation = ({
               </>
             )}
             <Text mb={4}>
-              Période d'inscription: {!edition && <FormationPeriode periode={formation.periode} />}
+              Période d'inscription: {!edition && <FormationPeriode periode={displayedFormation.periode} />}
               {edition && <Input type="text" name="periode" onChange={handleChange} value={values.periode} />}
             </Text>
             <Text mb={4}>
@@ -263,8 +270,8 @@ const Formation = ({
                     fontWeight="bold"
                     isExternal
                   >
-                    {formation.lieu_formation_adresse}, {formation.code_postal} {formation.localite}{" "}
-                    <FontAwesomeIcon icon={faExternalLinkAlt} />
+                    {displayedFormation.lieu_formation_adresse}, {displayedFormation.code_postal}{" "}
+                    {displayedFormation.localite} <FontAwesomeIcon icon={faExternalLinkAlt} />
                   </Link>
                 </strong>
               )}
@@ -285,53 +292,43 @@ const Formation = ({
               {edition && <Input type="text" name="capacite" onChange={handleChange} value={values.capacite} />}
             </Text>
             <Text mb={4}>
-              Durée de la formation: <strong>{formation.duree}</strong>
+              Durée de la formation: <strong>{displayedFormation.duree}</strong>
             </Text>
             <Text mb={4}>
-              Année: <strong>{formation.annee}</strong>
+              Année: <strong>{displayedFormation.annee}</strong>
             </Text>
           </Box>
           <Box mb={16}>
             <Heading as="h2" fontSize="beta" mb={4} mt={6}>
               Informations RNCP et ROME
             </Heading>
-            {!formation.rncp_code && (
+            {displayedFormation.rncp_code && (
               <Text mb={4}>
-                Code RNCP: {!edition && <strong>{formation.rncp_code}</strong>}
-                {edition && <Input type="text" name="rncp_code" onChange={handleChange} value={values.rncp_code} />}
+                Code RNCP: <strong>{displayedFormation.rncp_code}</strong>
               </Text>
             )}
-            {formation.rncp_code && (
-              <Text mb={4}>
-                Code RNCP: <strong>{formation.rncp_code}</strong>
-              </Text>
-            )}
-            {/*<Text mb={4}>*/}
-            {/*  Organisme Habilité (RNCP): <strong>{formation.rncp_etablissement_reference_habilite}</strong>*/}
-            {/*</Text>*/}
-            {/*<Text mb={4}>*/}
-            {/*  Éligible apprentissage (RNCP): <strong>{formation.rncp_eligible_apprentissage}</strong>*/}
-            {/*</Text>*/}
             <Text mb={4}>
-              Intitulé RNCP: <strong>{formation.rncp_intitule}</strong>
+              Intitulé RNCP: <strong>{displayedFormation.rncp_intitule}</strong>
             </Text>
             <Text mb={4}>
-              Codes ROME: <strong>{formation.rome_codes.join(", ")}</strong>
+              Codes ROME: <strong>{displayedFormation.rome_codes.join(", ")}</strong>
             </Text>
             <Box>
-              {formation.opcos && formation.opcos.length === 0 && <Text mb={4}>Aucun OPCO rattaché</Text>}
-              {formation.opcos && formation.opcos.length > 0 && (
+              {displayedFormation.opcos && displayedFormation.opcos.length === 0 && (
+                <Text mb={4}>Aucun OPCO rattaché</Text>
+              )}
+              {displayedFormation.opcos && displayedFormation.opcos.length > 0 && (
                 <Text mb={4}>
-                  OPCOs liés à la formation: <strong>{formation.opcos.join(", ")}</strong>
+                  OPCOs liés à la formation: <strong>{displayedFormation.opcos.join(", ")}</strong>
                 </Text>
               )}
             </Box>
-            {formation.rncp_details && (
+            {displayedFormation.rncp_details && (
               <>
                 <Text mb={4}>
                   Certificateurs:{" "}
                   <strong>
-                    {formation.rncp_details.certificateurs
+                    {displayedFormation.rncp_details.certificateurs
                       ?.filter(({ certificateur, siret_certificateur }) => certificateur || siret_certificateur)
                       ?.map(
                         ({ certificateur, siret_certificateur }) =>
@@ -397,24 +394,16 @@ const Formation = ({
             </Text>
             <Text mb={4}>
               Académie:{" "}
-              {!edition && (
-                <strong>
-                  {formation.nom_academie} ({formation.num_academie})
-                </strong>
-              )}
-              {edition && (
-                <>
-                  {formation.nom_academie}{" "}
-                  <Input type="text" name="num_academie" onChange={handleChange} value={values.num_academie} />
-                </>
-              )}
+              <strong>
+                {displayedFormation.nom_academie} ({displayedFormation.num_academie})
+              </strong>
             </Text>
             <Text mb={4}>
-              Code postal: {!edition && <strong>{formation.code_postal}</strong>}
+              Code postal: {!edition && <strong>{displayedFormation.code_postal}</strong>}
               {edition && <Input type="text" name="code_postal" onChange={handleChange} value={values.code_postal} />}
             </Text>
             <Text mb={4}>
-              Code commune: <strong>{formation.code_commune_insee}</strong>
+              Code commune: <strong>{displayedFormation.code_commune_insee}</strong>
             </Text>
             <Box mb={4}>
               {formation.onisep_url !== "" && formation.onisep_url !== null && (
@@ -512,14 +501,13 @@ const Formation = ({
 export default ({ match }) => {
   const [formation, setFormation] = useState();
   const [pendingFormation, setPendingFormation] = useState();
-  const displayedFormation = pendingFormation || formation;
 
   const [edition, setEdition] = useState(false);
   let history = useHistory();
   const { isOpen: isOpenPublishModal, onOpen: onOpenPublishModal, onClose: onClosePublishModal } = useDisclosure();
 
   const [user] = useAuth();
-  const hasRightToEdit = hasRightToEditFormation(displayedFormation, user);
+  const hasRightToEdit = hasRightToEditFormation(formation, user);
 
   const { values, handleSubmit, handleChange, setFieldValue, isSubmitting } = useFormik({
     initialValues: {
@@ -528,29 +516,85 @@ export default ({ match }) => {
       capacite: "",
       periode: "",
       cfd: "",
-      rncp_code: "",
-      num_academie: 0,
       lieu_formation_adresse: "",
     },
     onSubmit: (values) => {
       return new Promise(async (resolve) => {
         try {
-          const updatedFormation = await _post(`${endpointNewFront}/entity/formation2021/update`, {
-            ...displayedFormation,
-            ...values,
-          });
+          const directChangeKeys = ["uai_formation", "capacite"];
+          const directChangeValues = directChangeKeys.reduce((acc, key) => {
+            acc[key] = values[key] || null;
+            return acc;
+          }, {});
+          const actualDirectChangeKeys = directChangeKeys.filter((key) => directChangeValues[key] !== formation[key]);
+          const actualDirectChangeValues = actualDirectChangeKeys.reduce((acc, key) => {
+            acc[key] = directChangeValues[key];
+            return acc;
+          }, {});
 
-          let result = await _post(`${endpointNewFront}/entity/pendingRcoFormation`, updatedFormation);
-          if (result) {
-            setPendingFormation(result);
-            setFieldValue("uai_formation", result.uai_formation);
-            setFieldValue("code_postal", result.code_postal);
-            setFieldValue("periode", result.periode);
-            setFieldValue("capacite", result.capacite);
-            setFieldValue("cfd", result.cfd);
-            setFieldValue("num_academie", result.num_academie);
-            setFieldValue("rncp_code", result.rncp_code);
-            setFieldValue("lieu_formation_adresse", result.lieu_formation_adresse);
+          if (actualDirectChangeKeys.length > 0) {
+            const updatedFormation = await _post(`${endpointNewFront}/entity/formation2021/update`, {
+              ...formation,
+              ...actualDirectChangeValues,
+            });
+
+            const result = await _put(`${endpointNewFront}/entity/formations2021/${formation._id}`, {
+              ...updatedFormation,
+              last_update_who: user.email,
+              last_update_at: Date.now(),
+              editedFields: { ...formation?.editedFields, ...actualDirectChangeValues },
+              updates_history: buildUpdatesHistory(
+                formation,
+                { ...actualDirectChangeValues, last_update_who: user.email },
+                actualDirectChangeKeys
+              ),
+            });
+            if (result) {
+              setFormation(result);
+              setFieldValue("uai_formation", result?.uai_formation ?? "");
+              setFieldValue("capacite", result?.capacite ?? "");
+            }
+          }
+
+          const pendingChangeKeys = Object.keys(values).filter((key) => !directChangeKeys.includes(key));
+          const pendingChangeValues = pendingChangeKeys.reduce((acc, key) => {
+            acc[key] = values[key] || null;
+            return acc;
+          }, {});
+          const actualPendingChangeKeys = pendingChangeKeys.filter(
+            (key) => pendingChangeValues[key] !== (pendingFormation ?? formation)[key]
+          );
+          const actualPendingChangeValues = actualPendingChangeKeys.reduce((acc, key) => {
+            acc[key] = pendingChangeValues[key];
+            return acc;
+          }, {});
+
+          if (actualPendingChangeKeys.length > 0) {
+            const updatedFormation = await _post(`${endpointNewFront}/entity/formation2021/update`, {
+              ...formation,
+              ...pendingChangeValues,
+            });
+
+            let result = await _post(`${endpointNewFront}/entity/pendingRcoFormation`, {
+              ...updatedFormation,
+              last_update_who: user.email,
+              last_update_at: Date.now(),
+              updates_history: buildUpdatesHistory(
+                pendingFormation ?? formation,
+                { ...actualPendingChangeValues, last_update_who: user.email },
+                actualPendingChangeKeys
+              ),
+            });
+            if (result) {
+              setPendingFormation(result);
+              setFieldValue("code_postal", result?.code_postal ?? formation.code_postal ?? "");
+              setFieldValue("periode", result?.periode ?? formation.periode ?? "");
+              setFieldValue("cfd", result?.cfd ?? formation.cfd ?? "");
+              setFieldValue(
+                "lieu_formation_adresse",
+                result?.lieu_formation_adresse ?? formation.lieu_formation_adresse ?? ""
+              );
+            }
           }
         } catch (e) {
           console.error("Can't perform update", e);
@@ -568,7 +612,8 @@ export default ({ match }) => {
         let pendingRCOFormation;
 
         const apiURL = `${endpointNewFront}/entity/formation2021/`;
-        const form = await _get(`${apiURL}${match.params.id}`, false);
+        // FIXME select={"__v":0} hack to get updates_history
+        const form = await _get(`${apiURL}${match.params.id}?select={"__v":0}`, false);
         setFormation(form);
 
         try {
@@ -581,16 +626,18 @@ export default ({ match }) => {
           // no pending formation, do nothing
         }
 
-        const displayedFormation = pendingRCOFormation || form;
+        // values from catalog data
+        setFieldValue("uai_formation", form.uai_formation ?? "");
+        setFieldValue("capacite", form.capacite ?? "");
 
-        setFieldValue("uai_formation", displayedFormation.uai_formation || "");
-        setFieldValue("code_postal", displayedFormation.code_postal || "");
-        setFieldValue("periode", displayedFormation.periode || "");
-        setFieldValue("capacite", displayedFormation.capacite || "");
-        setFieldValue("cfd", displayedFormation.cfd || "");
-        setFieldValue("num_academie", displayedFormation.num_academie || "");
-        setFieldValue("rncp_code", displayedFormation.rncp_code || "");
-        setFieldValue("lieu_formation_adresse", displayedFormation.lieu_formation_adresse || "");
+        // values from pending rco data
+        setFieldValue("code_postal", pendingRCOFormation?.code_postal ?? form.code_postal ?? "");
+        setFieldValue("periode", pendingRCOFormation?.periode ?? form.periode ?? "");
+        setFieldValue("cfd", pendingRCOFormation?.cfd ?? form.cfd ?? "");
+        setFieldValue(
+          "lieu_formation_adresse",
+          pendingRCOFormation?.lieu_formation_adresse ?? form.lieu_formation_adresse ?? ""
+        );
       } catch (e) {
         history.push("/404");
       }
@@ -608,7 +655,7 @@ export default ({ match }) => {
     if (areYousure) {
       // Update as not published
       let result = await _post(`${endpointNewFront}/entity/pendingRcoFormation`, {
-        ...displayedFormation,
+        ...formation,
         published: false,
       });
       if (result) {
@@ -630,33 +677,33 @@ export default ({ match }) => {
             <BreadcrumbItem>
               <BreadcrumbLink as={NavLink} to="/recherche/formations-2021">
                 Formations 2021
-                {displayedFormation &&
-                  (displayedFormation.etablissement_reference_catalogue_published
+                {formation &&
+                  (formation.etablissement_reference_catalogue_published
                     ? " (Catalogue général)"
                     : " (Catalogue non-éligible)")}
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink>{displayedFormation?.intitule_long}</BreadcrumbLink>
+              <BreadcrumbLink>{pendingFormation?.intitule_long ?? formation?.intitule_long}</BreadcrumbLink>
             </BreadcrumbItem>
           </Breadcrumb>
         </Container>
       </Box>
       <Box bg="secondaryBackground" w="100%" py={[1, 8]} px={[1, 24]}>
         <Container maxW="xl">
-          {!displayedFormation && (
+          {!formation && (
             <Box align="center" p={2}>
               <Spinner />
             </Box>
           )}
 
-          {displayedFormation && (
+          {formation && (
             <>
               <Box bg="white" p={10} my={6} boxShadow="0 2px 2px 0 rgba(215, 215, 215, 0.5)" borderRadius={4}>
                 <Heading as="h1" fontSize="beta">
-                  {displayedFormation.intitule_long}
+                  {pendingFormation?.intitule_long ?? formation?.intitule_long}
                 </Heading>
-                {hasRightToEdit && displayedFormation.etablissement_reference_catalogue_published && (
+                {hasRightToEdit && formation.etablissement_reference_catalogue_published && (
                   <>
                     <Text fontSize="gamma" fontWeight="bold" mt={3} mb={[2, 0]}>
                       Statuts et publications de la formation
@@ -681,7 +728,7 @@ export default ({ match }) => {
                 )}
               </Box>
               <Formation
-                formation={displayedFormation}
+                formation={formation}
                 edition={edition}
                 onEdit={onEdit}
                 values={values}
@@ -698,7 +745,7 @@ export default ({ match }) => {
                     variant="outline"
                     colorScheme="red"
                     onClick={onDelete}
-                    disabled={!displayedFormation.published}
+                    disabled={formation.published === false || pendingFormation?.published === false}
                     px={[8, 20]}
                     mr={[0, 12]}
                   >

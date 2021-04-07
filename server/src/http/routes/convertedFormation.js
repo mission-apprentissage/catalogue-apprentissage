@@ -168,12 +168,11 @@ module.exports = () => {
     tryCatch(async (req, res) => {
       let qs = req.query;
       const query = qs && qs.query ? JSON.parse(qs.query) : {};
-      const retrievedData = await ConvertedFormation.findOne(query, {
-        affelnet_statut_history: 0,
-        parcoursup_statut_history: 0,
-        updates_history: 0,
-        __v: 0,
-      }).lean();
+      const select =
+        qs && qs.select
+          ? JSON.parse(qs.select)
+          : { affelnet_statut_history: 0, parcoursup_statut_history: 0, updates_history: 0, __v: 0 };
+      const retrievedData = await ConvertedFormation.findOne(query, select).lean();
       if (retrievedData) {
         return res.json(retrievedData);
       }
@@ -210,12 +209,12 @@ module.exports = () => {
     "/formation2021/:id",
     tryCatch(async (req, res) => {
       const itemId = req.params.id;
-      const retrievedData = await ConvertedFormation.findById(itemId, {
-        affelnet_statut_history: 0,
-        parcoursup_statut_history: 0,
-        updates_history: 0,
-        __v: 0,
-      }).lean();
+      const qs = req.query;
+      const select =
+        qs && qs.select
+          ? JSON.parse(qs.select)
+          : { affelnet_statut_history: 0, parcoursup_statut_history: 0, updates_history: 0, __v: 0 };
+      const retrievedData = await ConvertedFormation.findById(itemId, select).lean();
       if (retrievedData) {
         return res.json(retrievedData);
       }

@@ -10,7 +10,19 @@ const run = async () => {
       { uai_formation: 1 }
     ).lean();
     if (pendingFormation) {
-      formation.uai_formation = pendingFormation.uai_formation;
+      let editedFields = null;
+      if (pendingFormation.uai_formation && pendingFormation.uai_formation !== formation.uai_formation) {
+        formation.uai_formation = pendingFormation.uai_formation;
+        editedFields = {};
+        editedFields.uai_formation = pendingFormation.uai_formation;
+      }
+      if (pendingFormation.capacite && pendingFormation.capacite !== formation.capacite) {
+        formation.capacite = pendingFormation.capacite;
+        editedFields = editedFields || {};
+        editedFields.capacite = pendingFormation.capacite;
+      }
+
+      formation.editedFields = editedFields;
       await formation.save();
     }
   });
