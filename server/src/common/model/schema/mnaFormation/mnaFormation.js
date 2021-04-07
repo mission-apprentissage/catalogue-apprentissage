@@ -364,6 +364,11 @@ const mnaFormationSchema = {
     default: null,
     description: "BCN : Codes MEF 10 caractères",
   },
+  editedFields: {
+    type: Object,
+    default: null,
+    description: "Champs édités par un utilisateur",
+  },
 };
 
 module.exports = mnaFormationSchema;
