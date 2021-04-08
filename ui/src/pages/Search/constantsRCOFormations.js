@@ -346,17 +346,17 @@ const columnsDefinition = [
     width: 200,
     editable: false,
   },
-  {
-    Header: "Certificateurs",
-    accessor: "rncp_details.certificateurs",
-    width: 200,
-    editable: false,
-    formatter: (value) =>
-      value
-        .filter(({ certificateur, siret_certificateur }) => certificateur || siret_certificateur)
-        ?.map(({ certificateur, siret_certificateur }) => `${certificateur} (siret: ${siret_certificateur})`)
-        .join(", "),
-  },
+  // {
+  //   Header: "Certificateurs",
+  //   accessor: "rncp_details.certificateurs",
+  //   width: 200,
+  //   editable: false,
+  //   formatter: (value) =>
+  //     value
+  //       ?.filter(({ certificateur, siret_certificateur }) => certificateur || siret_certificateur)
+  //       .map(({ certificateur, siret_certificateur }) => `${certificateur} (siret: ${siret_certificateur ?? "n/a"})`)
+  //       .join(", "),
+  // },
   {
     Header: "Partenaires",
     accessor: "rncp_details.partenaires",
@@ -369,7 +369,7 @@ const columnsDefinition = [
       return filteredPartenaires
         ?.map(
           ({ Nom_Partenaire, Siret_Partenaire, Habilitation_Partenaire }) =>
-            `${Nom_Partenaire} (siret: ${Siret_Partenaire}) : ${Habilitation_Partenaire}`
+            `${Nom_Partenaire} (siret: ${Siret_Partenaire ?? "n/a"}) : ${Habilitation_Partenaire}`
         )
         .join(", ");
     },
