@@ -346,29 +346,33 @@ const columnsDefinition = [
     width: 200,
     editable: false,
   },
-  {
-    Header: "Certificateurs",
-    accessor: "rncp_details.certificateurs",
-    width: 200,
-    editable: false,
-    formatter: (value) =>
-      value
-        .filter(({ certificateur, siret_certificateur }) => certificateur || siret_certificateur)
-        ?.map(({ certificateur, siret_certificateur }) => `${certificateur} (siret: ${siret_certificateur})`)
-        .join(", "),
-  },
+  // {
+  //   Header: "Certificateurs",
+  //   accessor: "rncp_details.certificateurs",
+  //   width: 200,
+  //   editable: false,
+  //   formatter: (value) =>
+  //     value
+  //       ?.filter(({ certificateur, siret_certificateur }) => certificateur || siret_certificateur)
+  //       .map(({ certificateur, siret_certificateur }) => `${certificateur} (siret: ${siret_certificateur ?? "n/a"})`)
+  //       .join(", "),
+  // },
   {
     Header: "Partenaires",
     accessor: "rncp_details.partenaires",
     width: 200,
     editable: false,
-    formatter: (value) =>
-      value
+    formatter: (value, formation) => {
+      const filteredPartenaires = (value ?? []).filter(({ Siret_Partenaire }) =>
+        [formation.etablissement_gestionnaire_siret, formation.etablissement_formateur_siret].includes(Siret_Partenaire)
+      );
+      return filteredPartenaires
         ?.map(
           ({ Nom_Partenaire, Siret_Partenaire, Habilitation_Partenaire }) =>
-            `${Nom_Partenaire} (siret: ${Siret_Partenaire}) : ${Habilitation_Partenaire}`
+            `${Nom_Partenaire} (siret: ${Siret_Partenaire ?? "n/a"}) : ${Habilitation_Partenaire}`
         )
-        .join(", "),
+        .join(", ");
+    },
   },
   {
     Header: "Adresse OFA formateur",
@@ -393,6 +397,12 @@ const columnsDefinition = [
     accessor: "etablissement_formateur_code_commune_insee",
     width: 200,
     editable: false,
+  },
+  {
+    Header: "Id Certif Info",
+    accessor: "id_rco_formation",
+    width: 200,
+    formatter: (value) => value.split("|").pop(),
   },
 ];
 
