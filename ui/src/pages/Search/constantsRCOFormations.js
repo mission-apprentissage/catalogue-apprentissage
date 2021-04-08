@@ -362,13 +362,17 @@ const columnsDefinition = [
     accessor: "rncp_details.partenaires",
     width: 200,
     editable: false,
-    formatter: (value) =>
-      value
+    formatter: (value, formation) => {
+      const filteredPartenaires = (value ?? []).filter(({ Siret_Partenaire }) =>
+        [formation.etablissement_gestionnaire_siret, formation.etablissement_formateur_siret].includes(Siret_Partenaire)
+      );
+      return filteredPartenaires
         ?.map(
           ({ Nom_Partenaire, Siret_Partenaire, Habilitation_Partenaire }) =>
             `${Nom_Partenaire} (siret: ${Siret_Partenaire}) : ${Habilitation_Partenaire}`
         )
-        .join(", "),
+        .join(", ");
+    },
   },
   {
     Header: "Adresse OFA formateur",
