@@ -17,19 +17,20 @@ const { rebuildEsIndex } = require("./esIndex/esIndex");
 const { importEtablissements } = require("./etablissements");
 const { spawn } = require("child_process");
 
-const { rncpImporter, bcnImporter } = require("@mission-apprentissage/tco-service-node");
+const { rncpImporter, bcnImporter, onisepImporter } = require("@mission-apprentissage/tco-service-node");
 
 const path = require("path");
 
 const KIT_LOCAL_PATH = path.join(__dirname, "KitApprentissage.latest.xlsx");
 
-runScript(async ({ catalogue }) => {
+runScript(async ({ catalogue, db }) => {
   try {
     logger.info(`Start all jobs`);
     await clean();
 
     // import tco
     await bcnImporter();
+    await onisepImporter(db);
     await rncpImporter(KIT_LOCAL_PATH);
 
     await importEtablissements(catalogue);
