@@ -17,7 +17,7 @@ const serializeObject = (columns, obj) => {
     if (!value) {
       value = "";
     } else if (typeof c.formatter === "function") {
-      value = c.formatter(value);
+      value = c.formatter(value, obj);
     } else if (Array.isArray(value)) {
       if (value.length && typeof value[0] === "object") {
         value = JSON.stringify(value);
