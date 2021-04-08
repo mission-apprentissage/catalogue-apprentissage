@@ -29,7 +29,7 @@ Object.keys(schemas).forEach((schemaName) => {
     let sout = {};
     sout[baseFilename] = eJsonSchema;
     const edata = JSON.stringify(sout, null, 2);
-    const content = `module.exports = ${edata};`;
+    const content = `module.exports = ${edata};`; // FIXEME linter issue after generate
     fs.writeFileSync(path.resolve(__dirname, `../../common/model/swaggerSchema/${baseFilename}.js`), content);
   }
 });
