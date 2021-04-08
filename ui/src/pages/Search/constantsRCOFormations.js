@@ -398,6 +398,12 @@ const columnsDefinition = [
     width: 200,
     editable: false,
   },
+  {
+    Header: "Id Certif Info",
+    accessor: "id_rco_formation",
+    width: 200,
+    formatter: (value) => value.split("|").pop(),
+  },
 ];
 
 const queryBuilderField = [
