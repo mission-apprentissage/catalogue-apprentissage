@@ -178,6 +178,12 @@ export const operators = [
         },
       })),
   },
+  {
+    value: "*.",
+    text: "regexp",
+    useInput: true,
+    query: (key, value) => value && query(key, value, (k, v) => ({ regexp: { [k]: `${v}` } })),
+  },
 ];
 
 export const combinators = [
