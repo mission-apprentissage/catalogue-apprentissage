@@ -59,7 +59,7 @@ const mnaFormationUpdater = async (
   try {
     await formationSchema.validateAsync(formation, { abortEarly: false });
 
-    const currentCfdInfo = cfdInfo || (await cfdMapper(formation.cfd));
+    const currentCfdInfo = cfdInfo || (await cfdMapper(formation.cfd, { onisep: true }));
     const { result: cfdMapping, messages: cfdMessages } = currentCfdInfo;
 
     let error = parseErrors(cfdMessages);

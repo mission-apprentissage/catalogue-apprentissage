@@ -2,13 +2,13 @@ const logger = require("../../common/logger");
 const { infosCodes, computeCodes } = require("../../constants/opco");
 const { getCfdInfo } = require("@mission-apprentissage/tco-service-node");
 
-const cfdMapper = async (cfd = null) => {
+const cfdMapper = async (cfd = null, options = { onisep: true }) => {
   try {
     if (!cfd) {
       throw new Error("cfdMapper cfd must be provided");
     }
 
-    const cfdInfo = await getCfdInfo(cfd);
+    const cfdInfo = await getCfdInfo(cfd, options);
     if (!cfdInfo) {
       return {
         result: null,
