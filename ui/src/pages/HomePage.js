@@ -123,7 +123,7 @@ export default () => {
             <Text mt={2}>Sur les établissements :</Text>
             <Box px={[1, 4]}>
               <OrderedList px={0} mx={0} stylePosition="inside">
-                <ListItem>Intégration de près de 800 UAI depuis le mois de mars, dont YY UAI Agri</ListItem>
+                <ListItem>Intégration de près de 800 UAI depuis le mois de mars</ListItem>
               </OrderedList>
             </Box>
             <Text mt={2}>Autres fonctionnalités :</Text>
