@@ -22,13 +22,13 @@ module.exports = ({ catalogue }) => {
         PsFormation2021.countDocuments({ matching_type: { $eq: null } }),
       ]);
 
-      let percentageOnTotal = (value) => Math.round((value / x) * 100);
+      let percentageOnTotal = (value, total) => ((value / total) * 100).toFixed(2);
 
       res.json({
         total: w,
-        reconciled: [x, percentageOnTotal(x)],
-        covered: [y, percentageOnTotal(y)],
-        notFound: [z, percentageOnTotal(z)],
+        reconciled: [x, percentageOnTotal(x, w)],
+        covered: [y, percentageOnTotal(y, w)],
+        notFound: [z, percentageOnTotal(z, w)],
       });
     })
   );
