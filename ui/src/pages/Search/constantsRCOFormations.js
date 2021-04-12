@@ -298,6 +298,7 @@ const columnsDefinition = [
     accessor: "lieu_formation_adresse",
     width: 200,
     editable: true,
+    formatter: (value) => escapeDiacritics(value),
   },
   {
     Header: "Code Postal",
@@ -310,6 +311,7 @@ const columnsDefinition = [
     accessor: "localite",
     width: 200,
     editable: true,
+    formatter: (value) => escapeDiacritics(value),
   },
   {
     Header: "Code Commune Insee",
