@@ -25,6 +25,8 @@ import { useQuery } from "react-query";
 import AppLayout from "../layout/Layout";
 import { NavLink } from "react-router-dom";
 
+const percentageOnTotal = (value, total) => ((value / total) * 100).toFixed(2);
+
 const matchingType = [1, 2, 3, 4, 5, 6, 7];
 
 const StyledButton = ({ type, matching, size, toggleMatching, ...rest }) => {
@@ -102,19 +104,21 @@ export default (props) => {
                 </Text> */}
                   <Text align="right">
                     <Tag colorScheme="gray">
-                      {stat.data.reconciled[0]} - {stat.data.reconciled[1]}%
+                      {stat.data.reconciled[0]} - {percentageOnTotal(stat.data.reconciled[0], stat.data.total)}%
                     </Tag>{" "}
                     formations réconciliées
                   </Text>
                   <Text align="right">
                     <Tag colorScheme="gray">
-                      {stat.data.covered[0]} - {stat.data.covered[1]}%
+                      {" "}
+                      {stat.data.covered[0]} - {percentageOnTotal(stat.data.covered[0], stat.data.total)}%
                     </Tag>{" "}
                     formations à vérifier
                   </Text>
                   <Text align="right">
                     <Tag colorScheme="gray">
-                      {stat.data.notFound[0]} - {stat.data.notFound[1]}%
+                      {" "}
+                      {stat.data.notFound[0]} - {percentageOnTotal(stat.data.notFound[0], stat.data.total)}%
                     </Tag>{" "}
                     formations non rapprochées
                   </Text>

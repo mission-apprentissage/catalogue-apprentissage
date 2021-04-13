@@ -14,7 +14,6 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   Center,
-  Alert,
 } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
 import Changelog from "../common/components/Changelog/Changelog";
@@ -22,7 +21,6 @@ import changelog from "../CHANGELOG";
 import { _get } from "../common/httpClient";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
-import { ReactComponent as InfoIcon } from "../theme/assets/info-circle.svg";
 
 const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
 const endpointTCO =
@@ -67,35 +65,6 @@ export default () => {
       </Box>
       <Box bg="secondaryBackground" w="100%" py={[1, 8]} px={[1, 24]}>
         <Container maxW="xl">
-          <Alert status="info" justifyContent="center" mb={8}>
-            <Box mr={4}>
-              <InfoIcon />
-            </Box>
-            <Text>
-              L’anomalie concernant les titres en apprentissages est désormais résolue. La mention « à publier » est de
-              nouveau appliquée aux formations à des titres Niv 5, et la mention “à publier (vérifier accès direct post
-              bac)” à des titres de Niv 6 proposées soit pour des titres dont le certificateur est le Ministère du
-              Travail, soit pour des titres ayant d'autres certificateurs quand le SIRET des établissements est
-              EXPLICITEMENT mentionné sur la fiche RNCP et habilité soit à FORMER, soit à ORGANISER et à FORMER. Les
-              formations à des titres en apprentissage proposées par des établissements dont le SIRET ne figure pas sur
-              la fiche RNCP du titre en question, ou qui sont simplement habilités à ORGANISER sont affichées dans le
-              catalogue en « non éligible ». Nous avons ajouté dans la fiche formation la mention du certificateur, et
-              la mention de l'habilitation délivrée. En effet, pour mémoire : il appartient à l'établissement de se
-              rapprocher du certificateur pour solliciter la mise à jour éventuelle des données (validité, certificateur
-              et/ou établissements partenaires, voie(s) d’accès...) ou de se mettre à jour auprès de France Compétences
-              :{" "}
-              <Link
-                as="span"
-                href="mailto:certificationprofessionnelle@francecompetences.fr"
-                textDecoration="underline"
-                color="blue.500"
-                fontWeight="bold"
-              >
-                certificationprofessionnelle@francecompetences.fr
-              </Link>
-              .
-            </Text>
-          </Alert>
           <Heading as="h1" fontSize="beta" mb={2}>
             Catalogue des offres de formations en apprentissage.
           </Heading>
@@ -110,53 +79,81 @@ export default () => {
             )}
             <br />
             <br />
-            <span>La mise à jour du 03/03/2021 :</span>
+            <span>Mise à jour du 12/04/2021 :</span>
+            <br />
+            <Text>Sur les formations :</Text>
             <Box px={[1, 4]}>
               <OrderedList px={0} mx={0} stylePosition="inside">
                 <ListItem>
-                  Modifications des filtres pour le périmètre Parcoursup : Modification du filtre à publier (soumis à
-                  validation) qui devient pour les MC4 à publier (soumis à validation Recteur) et pour les titres de niv
-                  6 et les DCG à publier (vérifier accès direct postbac).
+                  Intégration de 2 594 formations depuis le mois de mars grâce au travail de collecte des carif-oref
+                </ListItem>
+                <ListItem>Affichage du code MEF affelnet et information sur l'offre de formation Affelnet</ListItem>
+                <ListItem>
+                  Possibilité d'éditer l'information de l'offre de formation affelnet dans le module de publication
                 </ListItem>
                 <ListItem>
-                  Certaines MC de niveau 3 sont codées dans le catalogue comme étant de niveau 3 alors qu'en réalité se
-                  sont des MC de niveau 4. Ces mentions complémentaires sont réintégrées dans le périmètre Parcoursup et
-                  se retrouvent dans le filtre à publier (soumis à validation Recteur), une correction sur le niveau
-                  affiché a été réalisée.
+                  RNCP : identification des certificateurs et des siret habilités à former sur les titres.
+                  <Text>
+                    L’anomalie concernant les titres en apprentissages est désormais résolue. La mention « à publier »
+                    est de nouveau appliquée aux formations à des titres Niv 5, et la mention “à publier (vérifier accès
+                    direct post bac)” à des titres de Niv 6 proposées soit pour des titres dont le certificateur est le
+                    Ministère du Travail, soit pour des titres ayant d'autres certificateurs quand le SIRET des
+                    établissements est EXPLICITEMENT mentionné sur la fiche RNCP et habilité soit à FORMER, soit à
+                    ORGANISER et à FORMER. Les formations à des titres en apprentissage proposées par des établissements
+                    dont le SIRET ne figure pas sur la fiche RNCP du titre en question, ou qui sont simplement habilités
+                    à ORGANISER sont affichées dans le catalogue en « non éligible ». Nous avons ajouté dans la fiche
+                    formation la mention du certificateur, et la mention de l'habilitation délivrée. En effet, pour
+                    mémoire : il appartient à l'établissement de se rapprocher du certificateur pour solliciter la mise
+                    à jour éventuelle des données (validité, certificateur et/ou établissements partenaires, voie(s)
+                    d’accès...) ou de se mettre à jour auprès de France Compétences :{" "}
+                    <Link
+                      as="span"
+                      href="mailto:certificationprofessionnelle@francecompetences.fr"
+                      textDecoration="underline"
+                      color="blue.500"
+                      fontWeight="bold"
+                    >
+                      certificationprofessionnelle@francecompetences.fr
+                    </Link>
+                    .
+                  </Text>
                 </ListItem>
                 <ListItem>
-                  Les certifications qualités transmises au fil de l'eau sont intégrées une fois par semaine
-                  (généralement le mardi avec visibilité le mercredi).
-                </ListItem>
-                <ListItem>Fonctionnalité de dépublication opérationnelle.</ListItem>
-                <ListItem>Ajout dans la fiche formation de l'adresse du site de formation (champs modifiable)</ListItem>
-                <ListItem>
-                  Suite aux travaux de recette intégration Affelnet : identification et exclusion du périmètre Affelnet
-                  des formations qui ne relèvent pas du niveau post 3ème dans le catalogue selon le dispositif de
-                  formation du MEF.
-                </ListItem>
-                <ListItem>
-                  Certaines MC de niveau 3 sont codées dans le catalogue comme étant de niveau 3 alors qu'en réalité se
-                  sont des MC de niveau 4. Ces mentions complémentaires sont exclues du périmètre AFFELNET.
-                </ListItem>
-
-                <ListItem fontWeight={700} mt={3}>
-                  Si vous êtes un CFA et que vous ne retrouvez pas votre offre de formation en apprentissage dans ce
-                  catalogue, merci de vous adresser au Carif-Oref de votre région pour déclarer vos formations en
-                  apprentissage:{" "}
-                  <Link
-                    href="https://reseau.intercariforef.org/referencer-son-offre-de-formation"
-                    textDecoration="underline"
-                    color="blue.500"
-                    fontWeight="bold"
-                    isExternal
-                  >
-                    https://reseau.intercariforef.org/referencer-son-offre-de-formation{" "}
-                    <FontAwesomeIcon icon={faExternalLinkAlt} />
-                  </Link>
+                  Pour sélectionner des codes RNCP par niveau et certificateurs vous pouvez utiliser la recherche
+                  avancée en filtrant sur code RNCP puis <strong>regex</strong> puis par ex: "RNCP.3."
                 </ListItem>
               </OrderedList>
             </Box>
+            <Text mt={2}>Sur les établissements :</Text>
+            <Box px={[1, 4]}>
+              <OrderedList px={0} mx={0} stylePosition="inside">
+                <ListItem>Intégration de près de 800 UAI depuis le mois de mars</ListItem>
+              </OrderedList>
+            </Box>
+            <Text mt={2}>Autres fonctionnalités :</Text>
+            <Box px={[1, 4]}>
+              <OrderedList px={0} mx={0} stylePosition="inside">
+                <ListItem>Modification de l'export</ListItem>
+                <ListItem>Correction des codes postaux en erreur</ListItem>
+                <ListItem>Correction des doublons</ListItem>
+                <ListItem>Réduction du temps de passage des traitements nocturnes</ListItem>
+              </OrderedList>
+            </Box>
+            <Text fontWeight={700} mt={3}>
+              Si vous êtes un CFA et que vous ne retrouvez pas votre offre de formation en apprentissage dans ce
+              catalogue, merci de vous adresser au Carif-Oref de votre région pour déclarer vos formations en
+              apprentissage:{" "}
+              <Link
+                href="https://reseau.intercariforef.org/referencer-son-offre-de-formation"
+                textDecoration="underline"
+                color="blue.500"
+                fontWeight="bold"
+                isExternal
+              >
+                https://reseau.intercariforef.org/referencer-son-offre-de-formation{" "}
+                <FontAwesomeIcon icon={faExternalLinkAlt} />
+              </Link>
+            </Text>
             <br />
             Les référencements et mises à jour effectuées dans les bases Offre des Carif-Oref sont répercutées
             quotidiennement dans le catalogue Apprentissage (délai 72h entre modifications demandées et publication). Si

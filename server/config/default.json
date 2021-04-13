@@ -12,6 +12,10 @@
     "accessKeyId": "CATALOGUE_APPRENTISSAGE_ACCESS_KEY_ID",
     "secretAccessKey": "CATALOGUE_APPRENTISSAGE_SECRET_ACCESS_KEY"
   },
+  "onisepCredential": {
+    "email": "TABLES_CORRESPONDANCE_ONISEP_EMAIL",
+    "password": "TABLES_CORRESPONDANCE_ONISEP_PASSWORD"
+  },
   "apiEntreprise": "TABLES_CORRESPONDANCES_API_ENTREPRISE_KEY",
   "auth": {
     "passwordHashRounds": 1001,
