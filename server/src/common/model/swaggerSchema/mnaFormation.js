@@ -564,6 +564,11 @@ module.exports = {
         default: false,
         description: "Est publiée, la formation est éligible pour le catalogue",
       },
+      rco_published: {
+        type: "boolean",
+        default: false,
+        description: "Est publiée dans le flux rco",
+      },
       draft: {
         type: "boolean",
         default: false,
@@ -662,6 +667,11 @@ module.exports = {
         items: {},
         default: "null",
         description: "BCN : Codes MEF 10 caractères",
+      },
+      editedFields: {
+        type: "object",
+        default: "null",
+        description: "Champs édités par un utilisateur",
       },
       _id: {
         type: "string",

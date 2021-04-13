@@ -1,18 +1,12 @@
 const changelog = {
   list: [
     {
-      version: "2.7.0",
+      version: "3.3.0",
       date: "Prochainement",
       about: `<h5>À venir</h5>
       <ul>
         <li>
           Développement d'un module de gestion des règles
-        </li>
-        <li>
-          Fiabilisation des UAIs sur les formations
-        </li>
-        <li>
-          Amélioration de la réconciliation Parcoursup et Affelnet
         </li>
         <li>
           Travaux sur le flux retour vers les Carif-Oref et gestion des modifications
@@ -21,6 +15,19 @@ const changelog = {
       fixes: [],
       features: [],
       improvements: [],
+    },
+    {
+      version: "3.2.0",
+      date: "12/04/2021",
+      about: `<h5>À propos de cette version</h5>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: ["[Catalogue] Contrôle des habilitations RNCP"],
+      features: [
+        "[Catalogue] Remontée des codes Mef pour Affelnet",
+        "[Catalogue] Édition de l'information de l'offre de formation Affelnet dans le module de publication",
+        "[Catalogue] Recherche avancée par expressions régulières",
+      ],
+      improvements: ["Améliorations de performance des traitements nocturnes"],
     },
     {
       version: "2.6.0",

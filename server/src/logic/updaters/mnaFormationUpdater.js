@@ -7,7 +7,7 @@ const { cfdMapper } = require("../mappers/cfdMapper");
 const { codePostalMapper } = require("../mappers/codePostalMapper");
 const { etablissementsMapper } = require("../mappers/etablissementsMapper");
 const { diffFormation } = require("../common/utils/diffUtils");
-const { PendingRcoFormation, SandboxFormation, RcoFormation } = require("../../common/model");
+const { SandboxFormation, RcoFormation } = require("../../common/model");
 
 const formationSchema = Joi.object({
   cfd: Joi.string().required(),
@@ -59,7 +59,7 @@ const mnaFormationUpdater = async (
   try {
     await formationSchema.validateAsync(formation, { abortEarly: false });
 
-    const currentCfdInfo = cfdInfo || (await cfdMapper(formation.cfd));
+    const currentCfdInfo = cfdInfo || (await cfdMapper(formation.cfd, { onisep: true }));
     const { result: cfdMapping, messages: cfdMessages } = currentCfdInfo;
 
     let error = parseErrors(cfdMessages);
@@ -120,13 +120,7 @@ const mnaFormationUpdater = async (
      */
     let uai_formation;
     // check if it was set by user
-    const pendingFormation = await PendingRcoFormation.findOne(
-      { id_rco_formation: formation.id_rco_formation },
-      { uai_formation: 1 }
-    ).lean();
-    if (pendingFormation) {
-      uai_formation = pendingFormation.uai_formation;
-    }
+    uai_formation = formation?.editedFields?.uai_formation;
     // no uai ? try to fill it with etablissement formateur
     if (!uai_formation) {
       uai_formation = etablissementsMapping?.etablissement_formateur_uai;
@@ -146,6 +140,7 @@ const mnaFormationUpdater = async (
       published,
       update_error,
       uai_formation,
+      ...formation?.editedFields,
     };
 
     // try to fill mefs for Affelnet

@@ -143,6 +143,12 @@ const performConversion = async () => {
       convertedFormation.parcoursup_statut = previousFormation.parcoursup_statut;
       convertedFormation.parcoursup_error = previousFormation.parcoursup_error;
       convertedFormation.affelnet_infos_offre = previousFormation.affelnet_infos_offre;
+
+      // Keep user modifications
+      convertedFormation.editedFields = previousFormation.editedFields;
+      Object.keys(convertedFormation.editedFields ?? {}).forEach((key) => {
+        convertedFormation[key] = convertedFormation.editedFields[key];
+      });
     }
 
     // replace or insert new one

@@ -59,6 +59,21 @@ const etablissementSchema = {
     default: null,
     description: "Enseigne",
   },
+  onisep_nom: {
+    type: String,
+    default: null,
+    description: "Nom de l'etablissement Onisep",
+  },
+  onisep_url: {
+    type: String,
+    default: null,
+    description: "Url Onisep de la fiche etablissement",
+  },
+  onisep_code_postal: {
+    type: String,
+    default: null,
+    description: "Code postal Onisep",
+  },
   adresse: {
     type: String,
     default: null,

@@ -1,6 +1,6 @@
 const express = require("express");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
-const { ConvertedFormation } = require("../../common/model");
+const { ConvertedFormation, PsFormation2021 } = require("../../common/model");
 const { mnaFormationUpdater } = require("../../logic/updaters/mnaFormationUpdater");
 
 /**
@@ -95,6 +95,19 @@ module.exports = () => {
 
       const query = cleanedQuery ? JSON.parse(cleanedQuery) : {};
 
+      const { id_parcoursup, ...filter } = query;
+      // additional filtering for parcoursup
+      if (id_parcoursup) {
+        const psFormations = await PsFormation2021.find(
+          { id_parcoursup, matching_mna_formation: { $size: 1 } },
+          { matching_mna_formation: 1 }
+        ).lean();
+        const ids = psFormations.reduce((acc, { matching_mna_formation }) => {
+          return [...acc, ...matching_mna_formation.map(({ _id }) => _id)];
+        }, []);
+        filter["_id"] = { $in: ids };
+      }
+
       const page = qs && qs.page ? qs.page : 1;
       const limit = qs && qs.limit ? parseInt(qs.limit, 10) : 10;
       const select =
@@ -102,7 +115,7 @@ module.exports = () => {
           ? JSON.parse(qs.select)
           : { affelnet_statut_history: 0, parcoursup_statut_history: 0, updates_history: 0, __v: 0 };
 
-      const allData = await ConvertedFormation.paginate(query, {
+      const allData = await ConvertedFormation.paginate(filter, {
         page,
         limit,
         lean: true,
@@ -168,12 +181,11 @@ module.exports = () => {
     tryCatch(async (req, res) => {
       let qs = req.query;
       const query = qs && qs.query ? JSON.parse(qs.query) : {};
-      const retrievedData = await ConvertedFormation.findOne(query, {
-        affelnet_statut_history: 0,
-        parcoursup_statut_history: 0,
-        updates_history: 0,
-        __v: 0,
-      }).lean();
+      const select =
+        qs && qs.select
+          ? JSON.parse(qs.select)
+          : { affelnet_statut_history: 0, parcoursup_statut_history: 0, updates_history: 0, __v: 0 };
+      const retrievedData = await ConvertedFormation.findOne(query, select).lean();
       if (retrievedData) {
         return res.json(retrievedData);
       }
@@ -210,12 +222,12 @@ module.exports = () => {
     "/formation2021/:id",
     tryCatch(async (req, res) => {
       const itemId = req.params.id;
-      const retrievedData = await ConvertedFormation.findById(itemId, {
-        affelnet_statut_history: 0,
-        parcoursup_statut_history: 0,
-        updates_history: 0,
-        __v: 0,
-      }).lean();
+      const qs = req.query;
+      const select =
+        qs && qs.select
+          ? JSON.parse(qs.select)
+          : { affelnet_statut_history: 0, parcoursup_statut_history: 0, updates_history: 0, __v: 0 };
+      const retrievedData = await ConvertedFormation.findById(itemId, select).lean();
       if (retrievedData) {
         return res.json(retrievedData);
       }

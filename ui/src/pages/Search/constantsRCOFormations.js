@@ -36,22 +36,30 @@ const FILTERS = [
   "info_opcos_intitule",
 ];
 
+const escapeDiacritics = (str) =>
+  str
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, " ")
+    .replaceAll(";", ",");
+
 const columnsDefinition = [
   {
-    Header: "Numéro académie",
+    Header: "Numero academie",
     accessor: "num_academie",
     width: 200,
     editorInput: "text",
     editable: true,
   },
   {
-    Header: "Nom académie",
+    Header: "Nom academie",
     accessor: "nom_academie",
     width: 200,
     editable: false,
+    formatter: (value) => escapeDiacritics(value),
   },
   {
-    Header: "Numéro département",
+    Header: "Numero departement",
     accessor: "num_departement",
     width: 200,
     editable: false,
@@ -105,22 +113,23 @@ const columnsDefinition = [
     editable: false,
   },
   {
-    Header: "CFA conventionné ? ",
+    Header: "CFA conventionne ? ",
     accessor: "etablissement_reference_conventionne",
     width: 200,
     editable: false,
   },
   {
-    Header: "CFA déclaré en préfecture ? ",
+    Header: "CFA declare en prefecture ? ",
     accessor: "etablissement_reference_declare_prefecture",
     width: 200,
     editable: false,
   },
   {
-    Header: "Organisme certifié 2015 ? ",
+    Header: "Organisme certifie 2015 ? ",
     accessor: "etablissement_reference_datadock",
     width: 200,
     editable: false,
+    formatter: (value) => escapeDiacritics(value),
   },
   {
     Header: "Source",
@@ -136,19 +145,19 @@ const columnsDefinition = [
     editableEmpty: true,
   },
   {
-    Header: "Intitulé long de la formation",
+    Header: "Intitule long de la formation",
     accessor: "intitule_long",
     width: 200,
     editable: false,
   },
   {
-    Header: "Intitulé court de la formation",
+    Header: "Intitule court de la formation",
     accessor: "intitule_court",
     width: 200,
     editable: false,
   },
   {
-    Header: "Organisme Habilité (RNCP)",
+    Header: "Organisme Habilite (RNCP)",
     accessor: "rncp_etablissement_gestionnaire_habilite",
     width: 200,
     editable: false,
@@ -166,10 +175,11 @@ const columnsDefinition = [
     editable: false,
   },
   {
-    Header: "Intitulé du code RNCP",
+    Header: "Intitule du code RNCP",
     accessor: "rncp_intitule",
     width: 200,
     editable: false,
+    formatter: (value) => escapeDiacritics(value),
   },
   {
     Header: "Codes ROME",
@@ -178,7 +188,7 @@ const columnsDefinition = [
     editable: false,
   },
   {
-    Header: "Code du diplôme ou du titre suivant la nomenclature de l'Education nationale (CodeEN)",
+    Header: "Code du diplome ou du titre suivant la nomenclature de l'Education nationale (CodeEN)",
     accessor: "cfd",
     width: 400,
     editorInput: "text",
@@ -186,20 +196,20 @@ const columnsDefinition = [
     editableInvalid: true,
   },
   {
-    Header: "Code MEF 10 caractères",
+    Header: "Code MEF 10 caracteres",
     accessor: "mef_10_code",
     width: 400,
     editable: false,
   },
   {
-    Header: "Liste MEF rattaché",
+    Header: "Liste MEF rattaches",
     accessor: "bcn_mefs_10",
     width: 200,
     editable: true,
     formatter: (value) => value.map((x) => x.mef10).join(","),
   },
   {
-    Header: "Liste MEF affelnet",
+    Header: "Liste MEF Affelnet",
     accessor: "mefs_10",
     width: 200,
     editable: false,
@@ -210,16 +220,17 @@ const columnsDefinition = [
     accessor: "affelnet_statut",
     width: 200,
     editable: true,
+    formatter: (value) => escapeDiacritics(value),
   },
   {
-    Header: "Référencé dans Affelnet",
+    Header: "Reference dans Affelnet",
     accessor: "affelnet_reference",
     debug: true,
     width: 200,
     editable: false,
   },
   {
-    Header: "À charger dans Affelnet",
+    Header: "A charger dans Affelnet",
     accessor: "affelnet_a_charger",
     width: 200,
     debug: true,
@@ -230,15 +241,16 @@ const columnsDefinition = [
     accessor: "parcoursup_statut",
     width: 200,
     editable: true,
+    formatter: (value) => escapeDiacritics(value),
   },
   {
-    Header: "Référencé dans ParcourSup",
+    Header: "Reference dans ParcourSup",
     accessor: "parcoursup_reference",
     width: 200,
     editable: false,
   },
   {
-    Header: "À charger dans ParcourSup",
+    Header: "A charger dans ParcourSup",
     accessor: "parcoursup_a_charger",
     width: 200,
     editable: false,
@@ -248,6 +260,7 @@ const columnsDefinition = [
     accessor: "niveau",
     width: 200,
     editable: false,
+    formatter: (value) => escapeDiacritics(value),
   },
   {
     Header: "Periode",
@@ -257,19 +270,19 @@ const columnsDefinition = [
     editable: true,
   },
   {
-    Header: "Capacité",
+    Header: "Capacite",
     accessor: "capacite",
     width: 200,
     editable: true,
   },
   {
-    Header: "Durée",
+    Header: "Duree",
     accessor: "duree",
     width: 200,
     editable: false,
   },
   {
-    Header: "Année",
+    Header: "Annee",
     accessor: "annee",
     width: 200,
     editable: false,
@@ -285,6 +298,7 @@ const columnsDefinition = [
     accessor: "lieu_formation_adresse",
     width: 200,
     editable: true,
+    formatter: (value) => escapeDiacritics(value),
   },
   {
     Header: "Code Postal",
@@ -297,6 +311,7 @@ const columnsDefinition = [
     accessor: "localite",
     width: 200,
     editable: true,
+    formatter: (value) => escapeDiacritics(value),
   },
   {
     Header: "Code Commune Insee",
@@ -305,13 +320,13 @@ const columnsDefinition = [
     editable: false,
   },
   {
-    Header: "Géolocalisation",
+    Header: "Geolocalisation",
     accessor: "lieu_formation_geo_coordonnees",
     width: 200,
     editable: false,
   },
   {
-    Header: "Numéro Academie Siege",
+    Header: "Numero Academie Siege",
     accessor: "etablissement_gestionnaire_num_academie",
     width: 200,
     editable: false,
@@ -335,13 +350,14 @@ const columnsDefinition = [
     editable: false,
   },
   {
-    Header: "Intitulé du statut des OPCOs",
+    Header: "Intitule du statut des OPCOs",
     accessor: "info_opcos_intitule",
     width: 200,
     editable: false,
+    formatter: (value) => escapeDiacritics(value),
   },
   {
-    Header: "Établissement dans le catalogue éligible ? ",
+    Header: "Etablissement dans le catalogue eligible ? ",
     accessor: "etablissement_reference_catalogue_published",
     width: 200,
     editable: false,
@@ -417,6 +433,8 @@ const queryBuilderField = [
   { text: "Uai du lieu de formation", value: "uai_formation.keyword" },
   { text: "Diplôme", value: "diplome.keyword" },
   { text: "Mef 10", value: "mef_10_code.keyword" },
+  { text: "Intitulé", value: "intitule_court.keyword" },
+  { text: "Code RNCP", value: "rncp_code.keyword" },
   // { text: "ParcourSup à charger", value: "parcoursup_a_charger" },
   // { text: "Affelnet à charger", value: "affelnet_a_charger" },
 ];
