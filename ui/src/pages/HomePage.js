@@ -118,6 +118,10 @@ export default () => {
                     .
                   </Text>
                 </ListItem>
+                <ListItem>
+                  Pour sélectionner des codes RNCP par niveau et certificateurs vous pouvez utiliser la recherche
+                  avancée en filtrant sur code RNCP puis <strong>regex</strong> puis par ex: "RNCP.3."
+                </ListItem>
               </OrderedList>
             </Box>
             <Text mt={2}>Sur les établissements :</Text>
