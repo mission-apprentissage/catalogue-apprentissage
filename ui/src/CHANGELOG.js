@@ -24,7 +24,8 @@ const changelog = {
       fixes: ["[Catalogue] Contrôle des habilitations RNCP"],
       features: [
         "[Catalogue] Remontée des codes Mef pour Affelnet",
-        "[Catalogue] Édition de l'information de l'offre de formation affelnet dans le module de publication",
+        "[Catalogue] Édition de l'information de l'offre de formation Affelnet dans le module de publication",
+        "[Catalogue] Recherche avancée par expressions régulières",
       ],
       improvements: ["Améliorations de performance des traitements nocturnes"],
     },
