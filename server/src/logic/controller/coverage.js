@@ -55,26 +55,32 @@ async function getParcoursupCoverage(formation, { published, tags } = {}) {
 }
 
 async function getAffelnetCoverage(formation) {
-  let { _id, code_postal, code_cfd } = formation;
-  let dept = code_postal.substring(0, 2);
+  let { _id, code_postal: cp, code_cfd } = formation;
+  let dept = cp.substring(0, 2);
 
-  const m3 = await getMatch({
-    cfd: code_cfd,
-    num_departement: dept,
-    $and: [
-      {
-        $or: [
-          { etablissement_formateur_code_postal: code_postal },
-          { etablissement_gestionnaire_code_postal: code_postal },
-          { code_postal },
-          { etablissement_formateur_code_commune_insee: code_postal },
-          { etablissement_gestionnaire_code_commune_insee: code_postal },
-          { code_commune_insee: code_postal },
-        ],
-      },
-    ],
-    published: true,
-  });
+  const m1 = await getMatch({ cfd: code_cfd, published: true });
+
+  const m2 = m1.filter(({ num_departement }) => num_departement === dept);
+
+  const m3 = m2.filter(
+    ({
+      etablissement_formateur_code_postal,
+      etablissement_gestionnaire_code_postal,
+      etablissement_formateur_code_commune_insee,
+      etablissement_gestionnaire_code_commune_insee,
+      code_commune_insee,
+      code_postal,
+    }) => {
+      return [
+        etablissement_formateur_code_postal,
+        etablissement_gestionnaire_code_postal,
+        etablissement_formateur_code_commune_insee,
+        etablissement_gestionnaire_code_commune_insee,
+        code_commune_insee,
+        code_postal,
+      ].includes(cp);
+    }
+  );
 
   if (m3.length > 0) {
     return {
@@ -84,8 +90,6 @@ async function getAffelnetCoverage(formation) {
     };
   }
 
-  const m2 = await getMatch({ cfd: code_cfd, num_departement: dept, published: true });
-
   if (m2.length > 0) {
     return {
       strengh: "2",
@@ -93,8 +97,6 @@ async function getAffelnetCoverage(formation) {
       _id,
     };
   }
-
-  const m1 = await getMatch({ cfd: code_cfd, published: true });
 
   if (m1.length > 0) {
     return {

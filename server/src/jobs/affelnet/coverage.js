@@ -4,43 +4,31 @@ const { AfFormation, Etablissement } = require("../../common/model");
 const { runScript } = require("../scriptWrapper");
 const logger = require("../../common/logger");
 
-const updateMatchedFormation = async (match) => {
-  let { strengh, matching, _id } = match;
-
-  await AfFormation.findByIdAndUpdate(_id, {
-    matching_type: strengh,
-    matching_mna_formation: matching,
-  });
-};
-
 const formation = async () => {
-  await paginator(AfFormation, { filter: { code_cfd: { $ne: null } }, lean: true, limit: 100 }, async (formation) => {
+  await paginator(AfFormation, { filter: { code_cfd: { $ne: null } }, limit: 100 }, async (formation) => {
     let match = await getAffelnetCoverage(formation);
 
     if (!match) return;
 
-    await updateMatchedFormation(match);
+    formation.matching_type = match.strengh;
+    formation.matching_mna_formation = match.matching;
+    await formation.save();
   });
 };
 
 const etablissement = async () => {
-  await paginator(
-    AfFormation,
-    { filter: { matching_type: { $ne: null } }, lean: true, limit: 50 },
-    async ({ matching_mna_formation, _id }) => {
-      let match = await getEtablissementCoverage(matching_mna_formation);
+  await paginator(AfFormation, { filter: { matching_type: { $ne: null } }, limit: 50 }, async (formation) => {
+    let match = await getEtablissementCoverage(formation.matching_mna_formation);
 
-      if (!match) return;
+    if (!match) return;
 
-      await AfFormation.findByIdAndUpdate(_id, {
-        matching_mna_etablissement: match,
-      });
-    }
-  );
+    formation.matching_mna_etablissement = match;
+    await formation.save();
+  });
 };
 
 const afCoverage = async () => {
-  logger.info("Start Affelent coverage");
+  logger.info("Start Affelnet coverage");
   let check = await Etablissement.find({}).countDocuments();
 
   if (check === 0) {
@@ -49,13 +37,25 @@ const afCoverage = async () => {
     return;
   }
 
+  // reset matching first
+  await AfFormation.updateMany(
+    {},
+    {
+      $set: {
+        matching_type: null,
+        matching_mna_formation: [],
+        matching_mna_etablissement: [],
+      },
+    }
+  );
+
   logger.info("Start formation coverage");
   await formation();
 
   logger.info("Start etablissement coverage");
   await etablissement();
 
-  logger.info("End Affelent coverage");
+  logger.info("End Affelnet coverage");
 };
 
 module.exports = afCoverage;

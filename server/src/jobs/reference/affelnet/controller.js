@@ -18,6 +18,7 @@ const run = async () => {
         affelnet_statut: { $ne: "non publié" },
         cfd_outdated: { $ne: true },
         mefs_10: { $ne: null },
+        niveau: { $in: ["3 (CAP...)", "4 (Bac...)"] },
         $or: [
           {
             cfd: reconciliation.code_cfd,
