@@ -54,9 +54,8 @@ async function getParcoursupCoverage(formation, { published, tags } = {}) {
   return match;
 }
 
-async function getAffelnetCoverage(formation) {
-  let { _id, code_postal: cp, code_cfd } = formation;
-  let dept = cp.substring(0, 2);
+async function getAffelnetCoverage({ code_postal: cp, code_cfd }) {
+  const dept = cp.substring(0, 2);
 
   const m1 = await getMatch({ cfd: code_cfd, published: true });
 
@@ -84,36 +83,33 @@ async function getAffelnetCoverage(formation) {
 
   if (m3.length > 0) {
     return {
-      strengh: "3",
+      strength: "3",
       matching: m3,
-      _id,
     };
   }
 
   if (m2.length > 0) {
     return {
-      strengh: "2",
+      strength: "2",
       matching: m2,
-      _id,
     };
   }
 
   if (m1.length > 0) {
     return {
-      strengh: "1",
+      strength: "1",
       matching: m1,
-      _id,
     };
   }
 
   return null;
 }
 
+const getEtablissementById = async (id) => await Etablissement.findById(id, formatEtablissement).lean();
+const getEtablissements = async (query) => await Etablissement.find(query, formatEtablissement).lean();
+
 async function getEtablissementCoverage(formations) {
   let match = [];
-
-  const getEtablissementById = async (id) => await Etablissement.findById(id, formatEtablissement).lean();
-  const getEtablissements = async (query) => await Etablissement.find(query, formatEtablissement).lean();
 
   await asyncForEach(
     formations,
