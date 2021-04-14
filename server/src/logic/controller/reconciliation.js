@@ -59,13 +59,13 @@ async function reconciliationAffelnet(formation, source = "MANUEL") {
     const mef = mefs_10.find(({ mef10 }) => mef10 === code_mef.substring(0, 10));
     if (mef) {
       update.mefs_10 = [mef];
-    } else {
+    } else if (!["", "AFFECTATION"].includes(code_mef)) {
       update.mefs_10 = [
         {
           mef10: code_mef,
           modalite: {
-            duree: !["", "AFFECTATION"].includes(code_mef) ? code_mef.substring(8, 9) : "",
-            annee: !["", "AFFECTATION"].includes(code_mef) ? code_mef.substring(9, 10) : "",
+            duree: code_mef.substring(8, 9),
+            annee: code_mef.substring(9, 10),
           },
         },
       ];
