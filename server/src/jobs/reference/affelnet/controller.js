@@ -36,6 +36,12 @@ const run = async () => {
     );
   });
 
+  // FIXME: hotfix for mefs null to be removed once reconciliation is fixed
+  await ConvertedFormation.updateMany(
+    { affelnet_statut: "publié", mefs_10: null },
+    { $set: { affelnet_statut: "hors périmètre" } }
+  );
+
   // 4 - stats
   const totalPublished = await ConvertedFormation.countDocuments({ published: true });
   const totalAfPublished = await ConvertedFormation.countDocuments({ published: true, affelnet_statut: "publié" });
