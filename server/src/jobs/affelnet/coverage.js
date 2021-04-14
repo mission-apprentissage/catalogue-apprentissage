@@ -10,7 +10,7 @@ const formation = async () => {
 
     if (!match) return;
 
-    formation.matching_type = match.strengh;
+    formation.matching_type = match.strength;
     formation.matching_mna_formation = match.matching;
     await formation.save();
   });
