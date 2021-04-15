@@ -52,7 +52,7 @@ runScript(async ({ catalogue, db }) => {
     await psPertinence(); // ~ 8 secondes
 
     // affelnet
-    await afCoverage();
+    await afCoverage(); // ~ 47 minutes => ~ 12 minutes
     await afReconciliation();
     await afReference(); // ~ 50 minutes => ~ 5 minutes
     await afPertinence();
