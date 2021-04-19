@@ -30,6 +30,11 @@ const afReconciliationSchema = {
     enum: ["MANUEL", "AUTOMATIQUE"],
     description: "Auteur de la réconciliation (MANUEL : par un utilisateur depuis l'interface / AUTO : par script)",
   },
+  code_postal: {
+    type: String,
+    default: null,
+    description: "code postal de la formation du catalogue",
+  },
 };
 
 module.exports = afReconciliationSchema;
