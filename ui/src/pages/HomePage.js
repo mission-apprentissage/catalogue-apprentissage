@@ -79,64 +79,19 @@ export default () => {
             )}
             <br />
             <br />
-            <span>Mise à jour du 12/04/2021 :</span>
+            <span>Mise à jour du 19/04/2021 :</span>
             <br />
-            <Text>Sur les formations :</Text>
             <Box px={[1, 4]}>
               <OrderedList px={0} mx={0} stylePosition="inside">
                 <ListItem>
-                  Intégration de 2 594 formations depuis le mois de mars grâce au travail de collecte des carif-oref
+                  Contrôle de niveau avant ajout des étiquettes publication pour Affelnet (impact 12 formations)
                 </ListItem>
-                <ListItem>Affichage du code MEF affelnet et information sur l'offre de formation Affelnet</ListItem>
+                <ListItem>Passage de MEF affectation a des MEF valides pour Affelnet (impact 17 formations)</ListItem>
                 <ListItem>
-                  Possibilité d'éditer l'information de l'offre de formation affelnet dans le module de publication
+                  Retrait des étiquettes "publiées" pour les formations n'ayant pas une réconciliation unique avec la
+                  base Affelnet 2020 (impact 494 formations)
                 </ListItem>
-                <ListItem>
-                  RNCP : identification des certificateurs et des siret habilités à former sur les titres.
-                  <Text>
-                    L’anomalie concernant les titres en apprentissages est désormais résolue. La mention « à publier »
-                    est de nouveau appliquée aux formations à des titres Niv 5, et la mention “à publier (vérifier accès
-                    direct post bac)” à des titres de Niv 6 proposées soit pour des titres dont le certificateur est le
-                    Ministère du Travail, soit pour des titres ayant d'autres certificateurs quand le SIRET des
-                    établissements est EXPLICITEMENT mentionné sur la fiche RNCP et habilité soit à FORMER, soit à
-                    ORGANISER et à FORMER. Les formations à des titres en apprentissage proposées par des établissements
-                    dont le SIRET ne figure pas sur la fiche RNCP du titre en question, ou qui sont simplement habilités
-                    à ORGANISER sont affichées dans le catalogue en « non éligible ». Nous avons ajouté dans la fiche
-                    formation la mention du certificateur, et la mention de l'habilitation délivrée. En effet, pour
-                    mémoire : il appartient à l'établissement de se rapprocher du certificateur pour solliciter la mise
-                    à jour éventuelle des données (validité, certificateur et/ou établissements partenaires, voie(s)
-                    d’accès...) ou de se mettre à jour auprès de France Compétences :{" "}
-                    <Link
-                      as="span"
-                      href="mailto:certificationprofessionnelle@francecompetences.fr"
-                      textDecoration="underline"
-                      color="blue.500"
-                      fontWeight="bold"
-                    >
-                      certificationprofessionnelle@francecompetences.fr
-                    </Link>
-                    .
-                  </Text>
-                </ListItem>
-                <ListItem>
-                  Pour sélectionner des codes RNCP par niveau et certificateurs vous pouvez utiliser la recherche
-                  avancée en filtrant sur code RNCP puis <strong>regex</strong> puis par ex: "RNCP.3."
-                </ListItem>
-              </OrderedList>
-            </Box>
-            <Text mt={2}>Sur les établissements :</Text>
-            <Box px={[1, 4]}>
-              <OrderedList px={0} mx={0} stylePosition="inside">
-                <ListItem>Intégration de près de 800 UAI depuis le mois de mars</ListItem>
-              </OrderedList>
-            </Box>
-            <Text mt={2}>Autres fonctionnalités :</Text>
-            <Box px={[1, 4]}>
-              <OrderedList px={0} mx={0} stylePosition="inside">
-                <ListItem>Modification de l'export</ListItem>
-                <ListItem>Correction des codes postaux en erreur</ListItem>
-                <ListItem>Correction des doublons</ListItem>
-                <ListItem>Réduction du temps de passage des traitements nocturnes</ListItem>
+                <ListItem>Modifications des caractères spéciaux sur les exports</ListItem>
               </OrderedList>
             </Box>
             <Text fontWeight={700} mt={3}>
