@@ -19,6 +19,7 @@ const run = async () => {
         cfd_outdated: { $ne: true },
         mefs_10: { $ne: null },
         niveau: { $in: ["3 (CAP...)", "4 (Bac...)"] },
+        code_postal: reconciliation.code_postal,
         $or: [
           {
             cfd: reconciliation.code_cfd,

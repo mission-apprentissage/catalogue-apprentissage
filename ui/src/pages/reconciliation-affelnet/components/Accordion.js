@@ -76,6 +76,7 @@ export default ({ data }) => {
         id_formation: data._id,
         uai: data.uai,
         code_cfd: data.code_cfd,
+        code_postal: data.code_postal,
         mapping: mapping,
       }),
     {
