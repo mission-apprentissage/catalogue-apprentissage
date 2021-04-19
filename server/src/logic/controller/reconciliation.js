@@ -18,7 +18,12 @@ async function reconciliationAffelnet(formation, source = "MANUEL") {
     libelle_mnemonique,
   } = formation;
 
-  let { etablissement_formateur_siret, etablissement_gestionnaire_siret, _id: convertedId } = matching_mna_formation[0];
+  let {
+    etablissement_formateur_siret,
+    etablissement_gestionnaire_siret,
+    code_postal,
+    _id: convertedId,
+  } = matching_mna_formation[0];
 
   if (!uai) {
     await AfFormation.findByIdAndUpdate(_id, {
@@ -36,7 +41,7 @@ async function reconciliationAffelnet(formation, source = "MANUEL") {
     source,
   };
 
-  await AfReconciliation.findOneAndUpdate({ uai, code_cfd }, payload, { upsert: true });
+  await AfReconciliation.findOneAndUpdate({ uai, code_cfd, code_postal }, payload, { upsert: true });
 
   await AfFormation.findByIdAndUpdate(_id, {
     etat_reconciliation: true,

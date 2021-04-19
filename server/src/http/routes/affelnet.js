@@ -92,7 +92,7 @@ module.exports = ({ catalogue }) => {
   router.post(
     "/reconciliation",
     tryCatch(async (req, res) => {
-      const { mapping, id_formation, ...rest } = req.body;
+      const { mapping, id_formation, code_postal, ...rest } = req.body;
       const reconciliation = combinate(mapping);
 
       let payload = reconciliation.reduce((acc, item) => {
@@ -105,7 +105,11 @@ module.exports = ({ catalogue }) => {
 
       let { code_cfd, uai } = payload;
 
-      const result = await AfReconciliation.findOneAndUpdate({ code_cfd, uai }, payload, { upsert: true, new: true });
+      const result = await AfReconciliation.findOneAndUpdate(
+        { code_cfd, uai },
+        { ...payload, code_postal },
+        { upsert: true, new: true }
+      );
 
       if (result) {
         await AfFormation.findByIdAndUpdate(id_formation, { etat_reconciliation: true });
