@@ -12,7 +12,7 @@ const afReconciliation = async () => {
 
     await paginator(
       AfFormation,
-      { filter: { matching_mna_formation: { $size: 1 } }, lean: true, limit: 200 },
+      { filter: { matching_mna_formation: { $size: 1 }, matching_type: "3" }, lean: true, limit: 200 },
       async (formation) => await reconciliationAffelnet(formation, "AUTOMATIQUE")
     );
 
