@@ -8,6 +8,7 @@ import {
   Image,
   Link,
   Menu,
+  Heading,
   MenuButton,
   MenuItem,
   MenuList,
@@ -15,6 +16,7 @@ import {
   MenuGroup,
   Text,
 } from "@chakra-ui/react";
+import { List, ListItem, ListIcon, OrderedList, UnorderedList } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt, faSync, faUsers, faUpload } from "@fortawesome/free-solid-svg-icons";
 import useAuth from "../../../common/hooks/useAuth";
@@ -33,18 +35,29 @@ const Header = () => {
   };
 
   return (
-    <Box borderBottom="1px solid" borderColor="grey.300">
+    <Box>
       <Container maxW="xl">
-        <Flex justifyContent="space-between">
+        <Flex fontFamily="Marianne" alignItems="center" color="#1E1E1E">
           {/* Logo */}
-          <Link as={NavLink} to="/" py={3}>
-            <Image src="/brand/marianne.png" height={"5rem"} alt="Logo de la République Française" />
+          <Link as={NavLink} to="/" py={4}>
+            <Image src="/brand/mariannev2.jpg" height={"15px"} width={"33px"} alt="Logo de la République Française" />
+            <Text fontWeight="extrabold" fontSize="12px" fontStyle="normal">
+              RÉPUBLIQUE FRANÇAISE{" "}
+            </Text>
+            <List as="i" fontSize="legal">
+              <ListItem>Liberté</ListItem>
+              <ListItem>Égalité</ListItem>
+              <ListItem>Fraternité</ListItem>
+            </List>
           </Link>
-
+          <Box p={6} flex="1">
+            <Heading as="h6" textStyle="h6">
+              Catalogue des offres de formations en apprentissage
+            </Heading>
+          </Box>
           {/* User Menu */}
-
           {auth?.sub === "anonymous" && (
-            <Box alignSelf="center">
+            <Box>
               <Link as={NavLink} to="/login">
                 Connexion
               </Link>
@@ -52,8 +65,8 @@ const Header = () => {
           )}
           {auth?.sub !== "anonymous" && (
             <Menu placement="bottom">
-              <MenuButton as={Link} alignSelf="center" _hover={{ textDecoration: "none" }}>
-                <Flex alignItems="center">
+              <MenuButton as={Link} _hover={{ textDecoration: "none" }}>
+                <Flex>
                   <Avatar bg="blue.400" size="sm" />
                   <Box display={["none", "block"]} ml={2}>
                     <Text color="grey.700" fontSize="epsilon">
