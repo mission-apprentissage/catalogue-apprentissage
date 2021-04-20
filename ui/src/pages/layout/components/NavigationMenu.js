@@ -3,7 +3,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import { Link, Box, Flex, Text, Container, Menu, MenuList, MenuButton, MenuItem } from "@chakra-ui/react";
 import useAuth from "../../../common/hooks/useAuth";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes, faBars, faHome, faCube } from "@fortawesome/free-solid-svg-icons";
+import { faTimes, faBars } from "@fortawesome/free-solid-svg-icons";
 
 const NavigationMenu = (props) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,9 +37,9 @@ const NavItem = ({ children, to = "/", ...rest }) => {
       py={4}
       as={NavLink}
       to={to}
-      color={isActive ? "blue.500" : "grey.500"}
-      borderBottom="1px solid"
-      borderColor={isActive ? "blue.500" : "transparent"}
+      color={isActive ? "bluefrance" : "grey.800"}
+      borderBottom="3px solid"
+      borderColor={isActive ? "bluefrance" : "transparent"}
       _hover={{ textDecoration: "none", color: "grey.600", borderColor: "grey.600" }}
     >
       <Text display="block" {...rest}>
@@ -61,17 +61,14 @@ const NavLinks = ({ isOpen }) => {
         justify={["center", "space-between", "flex-end", "flex-end"]}
         direction={["column", "row", "row", "row"]}
         pb={[8, 0]}
+        textStyle="sm"
       >
-        <NavItem to="/">
-          <FontAwesomeIcon icon={faHome} /> Accueil
-        </NavItem>
-        <NavItem to="/recherche/formations-2021">
-          <FontAwesomeIcon icon={faCube} /> Formations 2021
-        </NavItem>
+        <NavItem to="/">Accueil</NavItem>
+        <NavItem to="/recherche/formations-2021">Mes actions expertes</NavItem>
+        <NavItem to="/recherche/formations-2021">Catalogue des formations en apprentissage 2021</NavItem>
         {/*<MenuItem to="/recherche/formations-2020">Formations 2020</MenuItem>*/}
-        <NavItem to="/recherche/etablissements">
-          <FontAwesomeIcon icon={faCube} /> Établissements
-        </NavItem>
+        <NavItem to="/recherche/etablissements">Liste des établissements</NavItem>
+        <NavItem to="/changelog">Journal des modifications</NavItem>
         <Menu placement="bottom">
           <MenuButton
             as={Link}
@@ -83,9 +80,7 @@ const NavLinks = ({ isOpen }) => {
             borderBottom="1px solid"
             borderColor={menuIsActive ? "blue.500" : "transparent"}
             _hover={{ textDecoration: "none", color: "grey.600", borderColor: "grey.600" }}
-          >
-            Guides
-          </MenuButton>
+          ></MenuButton>
           <MenuList>
             <MenuItem as={NavLink} to="/guide-reglementaire">
               Guide réglementaire
@@ -118,11 +113,13 @@ const NavLinks = ({ isOpen }) => {
 
 const NavBarContainer = ({ children, ...props }) => {
   return (
-    <Container maxW="xl">
-      <Flex as="nav" align="center" justify="space-between" wrap="wrap" px={4} w="100%" {...props}>
-        {children}
-      </Flex>
-    </Container>
+    <Box w="full">
+      <Container maxW="xl">
+        <Flex as="nav" align="center" justify="space-between" wrap="wrap" px={4} w="100%" {...props}>
+          {children}
+        </Flex>
+      </Container>
+    </Box>
   );
 };
 
