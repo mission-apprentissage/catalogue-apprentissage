@@ -7,6 +7,8 @@ import {
   Heading,
   Flex,
   ListItem,
+  Spacer,
+  List,
   OrderedList,
   Link,
   Text,
@@ -21,6 +23,9 @@ import changelog from "../CHANGELOG";
 import { _get } from "../common/httpClient";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
+import { faInfoCircle, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { Code } from "@chakra-ui/react";
+import { Grid, GridItem } from "@chakra-ui/react";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 const endpointTCO =
@@ -61,102 +66,166 @@ export default () => {
 
   return (
     <Layout>
-      <Box bg="secondaryBackground" w="100%" pt={[4, 8]} px={[1, 24]}>
+      <Box w="100%" pt={[4, 8]} px={[1, 24]} color="#1E1E1E">
         <Container maxW="xl">
-          <Breadcrumb>
+          <Box bg="#F8F8F8" color={"#D07C75"} borderLeft="4px" role="none" p={5}>
+            <Flex>
+              <Box>
+                <FontAwesomeIcon icon={faInfoCircle} color={"#D07C75"} />
+              </Box>
+              <Text color="black" textStyle="sm" px={2}>
+                Grâce à vos retours une anomalie a été détectée dans le code qui testait la présence d'un SIRET sur un
+                titre. Un correctif va être effectué très prochainement.
+                <br />
+                <Text fontWeight="700" as="span">
+                  En attendant, les formations à des titres en apprentissage sont toutes affichées en « hors périmètre
+                  ». Nous vous informerons dès que le correctif sera appliqué.
+                </Text>
+              </Text>
+            </Flex>
+          </Box>
+          <Breadcrumb py={5}>
             <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink>Accueil</BreadcrumbLink>
+              <BreadcrumbLink fontSize="omega">Accueil</BreadcrumbLink>
             </BreadcrumbItem>
           </Breadcrumb>
         </Container>
       </Box>
-      <Box bg="secondaryBackground" w="100%" py={[1, 8]} px={[1, 24]}>
+      <Box w="100%" py={[1, 8]} px={[1, 24]} color="#1E1E1E">
         <Container maxW="xl">
-          <Heading as="h1" fontSize="beta" mb={2}>
-            Catalogue des offres de formations en apprentissage.
-          </Heading>
-          <Box>
-            Le catalogue des offres de formation en apprentissage recense aujourd’hui près de
-            <br /> &nbsp;
-            {loading && <Text>chargement...</Text>}
-            {!loading && (
-              <strong>
-                {countFormations2021} formations 2021 et plus de {countEstablishments} établissements !
-              </strong>
-            )}
-            <br />
-            <br />
-            <span>Mise à jour du 12/05/2021 :</span>
-            <br />
-            <Box px={[1, 4]}>
-              <OrderedList px={0} mx={0} stylePosition="inside">
-                <ListItem>
-                  Script de réconciliation Affelnet mis en production avec les données transmises par la DNE au
-                  11/05/2021. Total de 5008 formations publiées, et de 1 040 formations en attente de publication
-                  (certainement dû à un UAI manquant - à transmettre à la mission :{" "}
-                  <Link href="mailto:catalogue@apprentissage.beta.gouv.fr">catalogue@apprentissage.beta.gouv.fr</Link>,{" "}
-                  en indiquant SIRET - UAI)
-                </ListItem>
-                <ListItem>
-                  Modification des règles de récupération des communes des lieux de formation, pour prendre en compte le
-                  code commune insee plus précis en cas de pluri municipalités sur un seul code postal (2 984 fiches
-                  formations corrigées).
-                </ListItem>
-              </OrderedList>
+          <Grid templateColumns={["auto", "auto", "auto", "250px auto"]} w="100%">
+            <Box>
+              <Box bg="#F9F8F6" p={3}>
+                <Heading textStyle="rf-text" fontWeight="700" p={2}>
+                  SOMMAIRE
+                </Heading>
+                <List stylePosition="inside" px={3} textStyle="sm" fontWeight={400}>
+                  <ListItem>
+                    <strong>1.</strong> Mise à jour des données
+                  </ListItem>
+                  <ListItem>
+                    <strong>2.</strong> Vous êtes organisme de formation
+                  </ListItem>
+                  <ListItem>
+                    <strong>3.</strong> Vous travaillez en académie
+                  </ListItem>
+                  <ListItem>
+                    <strong>4.</strong> Journal des modifications
+                  </ListItem>
+                </List>
+              </Box>
             </Box>
-            <Text fontWeight={700} mt={3}>
-              Si vous êtes un CFA et que vous ne retrouvez pas votre offre de formation en apprentissage dans ce
-              catalogue, merci de vous adresser au Carif-Oref de votre région pour déclarer vos formations en
-              apprentissage:{" "}
-              <Link
-                href="https://reseau.intercariforef.org/referencer-son-offre-de-formation"
-                textDecoration="underline"
-                color="blue.500"
-                fontWeight="bold"
-                isExternal
-              >
-                https://reseau.intercariforef.org/referencer-son-offre-de-formation{" "}
-                <FontAwesomeIcon icon={faExternalLinkAlt} />
-              </Link>
-            </Text>
-            <br />
-            Les référencements et mises à jour effectuées dans les bases Offre des Carif-Oref sont répercutées
-            quotidiennement dans le catalogue Apprentissage (délai 72h entre modifications demandées et publication). Si
-            vous souhaitez modifier les caractéristiques de votre établissement : raison sociale, SIRET, adresse
-            postale, .. vous pouvez vous rapprocher de l’INSEE afin de réaliser les modifications à la source. Pour
-            toute autre incohérence (UAI, Code diplôme, Code RNCP) vous pouvez vous rapprocher de votre Carif-Oref afin
-            qu'il vous aide à identifier l'origine du problème et vous accompagne dans sa résolution auprès des
-            instances (DEPP, BCN, France Compétences).
-            <br />
-            <br />
-            Vos retours utilisateurs sont les bienvenus afin d’améliorer l’usage de ce catalogue, vous pouvez ainsi
-            réaliser des modifications directement sur la base si vous repérez une coquille. Nous avons basculé vers une
-            version accessible en ligne qui vous permet de modifier directement certains champs, d’avoir au fil de l’eau
-            la visibilité sur les améliorations apportées au catalogue et éviter les échanges de fichiers plats.
-            <br />
-          </Box>
-          <Flex mt={5} flexDirection={["column", "row"]} justifyContent="space-around">
-            <Button as={NavLink} bg="#007bff" color="#fff" to="/recherche/formations-2021">
-              Consulter la liste des formations 2021
-            </Button>
-            <Button as={NavLink} bg="#007bff" color="#fff" to="/recherche/etablissements" mt={[2, 0]}>
-              Consulter la liste des établissements
-            </Button>
-          </Flex>
-
-          <Center flexDirection="column" mt={12}>
-            <Heading as="h3" mb={3} fontSize="beta">
-              Dernières modifications
-            </Heading>
-            <Flex>
-              <Changelog content={changelog} order="desc" showVersion="last2" hideFilter={true} />
-            </Flex>
-            <Flex mt={1} mb={4} flexDirection={["column", "row"]} justifyContent={["space-around", "flex-start"]}>
-              <Button as={NavLink} bg="#007bff" color="#fff" to="/changelog">
-                Voir les précédentes versions
-              </Button>
-            </Flex>
-          </Center>
+            <Box px={5}>
+              <Heading as="h1" textStyle="h2">
+                Le catalogue des offres de formations en apprentissage recense aujourd’hui :
+              </Heading>
+              <Box>
+                <br /> &nbsp;
+                {loading && <Text>chargement...</Text>}
+                {!loading && (
+                  <Flex flexDirection={["column", "column", "column", "row"]}>
+                    <Box bg="#F9F8F6" p={5} w="340px" h="100px">
+                      <Heading as="h6" textStyle="h6">
+                        {countFormations2021.toLocaleString("fr-FR")} formations
+                      </Heading>
+                      <Flex>
+                        <Text flex="1" textStyle="sm">
+                          en apprentissage
+                        </Text>
+                        <Box alignSelf="flex-end" fontSize="gamma" color={"bluefrance"}>
+                          <FontAwesomeIcon icon={faArrowRight} />
+                        </Box>
+                      </Flex>
+                    </Box>
+                    <Box bg="#F9F8F6" p={5} w="340px" h="100px" mx={[0, 0, 0, 5]} mt={[5, 5, 5, 0]}>
+                      <Heading as="h6" textStyle="h6">
+                        {countEstablishments.toLocaleString("fr-FR")} établissements
+                      </Heading>
+                      <Flex>
+                        <Text flex="1" textStyle="sm">
+                          de formation
+                        </Text>
+                        <Box alignSelf="flex-end" fontSize="gamma" color={"bluefrance"}>
+                          <FontAwesomeIcon icon={faArrowRight} />
+                        </Box>
+                      </Flex>
+                    </Box>
+                    {/* <Box bg="tomato" p="4" mx={5} w="400px" h="50px">
+                      <Text fontWeight="extrabold" fontSize="20px">
+                        {countEstablishments} établissements
+                      </Text>
+                    </Box>{" "} */}
+                  </Flex>
+                )}
+                <br />
+                <br />
+                <Box textStyle="rf-text">
+                  <Heading as="h4" textStyle="h4">
+                    Mise à jour des données
+                  </Heading>
+                  <br />
+                  <Text textStyle="rf-text">
+                    Les référencements et mises à jour effectuées dans les bases “Offre des Carif-Oref” sont répercutées
+                    <br />
+                    quotidiennement dans le “Catalogue des offres de formations en apprentissage” (délai 72h entre
+                    modifications
+                    <br /> demandées et publication).
+                  </Text>
+                </Box>
+                <br /> <br />
+                <Box>
+                  <Heading as="h4" textStyle="h4">
+                    Vous êtes organisme de formation / établissement de formation ?
+                  </Heading>
+                  <br />
+                  <Text textStyle="rf-text">
+                    Pour ajouter une offre de formation au catalogue, merci de la déclarer auprès du Carif-Oref de votre
+                    région en <br />
+                    allant sur la page “référencer son offre de formation” .
+                  </Text>
+                  <br />
+                  <Text textStyle="rf-text">
+                    Pour modifier des caractéristiques de votre établissement (raison sociale, SIRET, adresse postale,
+                    etc.), vous pouvez <br />
+                    vous rapprocher de l’INSEE afin de réaliser les modifications à la source.
+                  </Text>
+                </Box>
+                <br />
+                <br />
+                <Box>
+                  <Heading as="h4" textStyle="h4">
+                    Vous travaillez en académie
+                  </Heading>
+                  <br />
+                  <Link color="bluefrance">Accéder à vos actions expertes</Link>
+                  <br />
+                  <Text textStyle="rf-text">
+                    <strong>Pour signaler une incohérence </strong>(UAI, Code diplôme, Code RNCP), vous pouvez vous
+                    rapprocher de votre Carif-Oref <br />
+                    afin qu'il vous aide à identifier l'origine du problème et vous accompagne dans sa résolution auprès
+                    des instances <br /> (DEPP, BCN, France Compétences).{" "}
+                  </Text>
+                </Box>
+              </Box>
+              <Box flexDirection="column" mt={12}>
+                <Heading as="h4" textStyle="h4" mb={3}>
+                  Journal des modifications
+                </Heading>
+                <Box borderTop="1px solid" borderColor="bluefrance" width="230px">
+                  <Text color="bluefrance">Dernières modifications</Text>
+                </Box>
+                <br />
+                <Flex>
+                  <Changelog content={changelog} order="desc" showVersion="last2" hideFilter={true} />
+                </Flex>
+                <Flex mt={1} mb={4} flexDirection={["column", "row"]} justifyContent={["space-around", "flex-start"]}>
+                  <Button as={NavLink} color="bluefrance" to="/changelog">
+                    Voir le journal des modifications
+                  </Button>
+                </Flex>
+              </Box>
+            </Box>
+          </Grid>
         </Container>
       </Box>
     </Layout>
