@@ -151,11 +151,13 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
           <div>
             <div className="field pills">
               <h3>Tags</h3>
-              {etablissement.tags.map((tag, i) => (
-                <Badge colorScheme="green" variant="solid" key={i} className="badge">
-                  {tag}
-                </Badge>
-              ))}
+              {etablissement.tags
+                .sort((a, b) => a - b)
+                .map((tag, i) => (
+                  <Badge colorScheme="green" variant="solid" key={i} className="badge">
+                    {tag}
+                  </Badge>
+                ))}
             </div>
             <div className="field multiple">
               <div>
