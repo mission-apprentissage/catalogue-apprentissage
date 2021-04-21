@@ -30,6 +30,7 @@ export default () => {
   const [loading, setLoading] = useState(true);
   const [countEstablishments, setCountEstablishments] = useState(0);
   const [countFormations2021, setCountFormations2021] = useState(0);
+  let mounted = true;
 
   useEffect(() => {
     async function run() {
@@ -39,17 +40,23 @@ export default () => {
         });
 
         const countEtablissement = await _get(`${endpointTCO}/entity/etablissements/count?${params}`, false);
-        setCountEstablishments(countEtablissement);
-
         const countFormations2021 = await _get(`${endpointNewFront}/entity/formations2021/count?${params}`, false);
-        setCountFormations2021(countFormations2021);
 
-        setLoading(false);
+        if (mounted) {
+          setCountEstablishments(countEtablissement);
+          setCountFormations2021(countFormations2021);
+          setLoading(false);
+        }
       } catch (e) {
         console.log(e);
       }
     }
     run();
+
+    return () => {
+      // cleanup hook
+      mounted = false;
+    };
   }, []);
 
   return (
