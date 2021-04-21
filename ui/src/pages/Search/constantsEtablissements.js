@@ -1,3 +1,5 @@
+import { escapeDiacritics } from "../../common/utils/downloadUtils";
+
 const FILTERS = ["QUERYBUILDER", "SEARCH", "num_departement", "nom_academie", "tags", "published"];
 
 const columnsDefinition = [
@@ -18,12 +20,14 @@ const columnsDefinition = [
     accessor: "enseigne",
     width: 200,
     editable: false,
+    formatter: (value) => escapeDiacritics(value),
   },
   {
     Header: "Raison sociale de l'entreprise",
     accessor: "entreprise_raison_sociale",
     width: 200,
     editable: false,
+    formatter: (value) => escapeDiacritics(value),
   },
   {
     Header: "Code NAF",
@@ -69,6 +73,7 @@ const columnsDefinition = [
     accessor: "computed_info_datadock",
     width: 200,
     editable: false,
+    formatter: (value) => escapeDiacritics(value),
   },
   {
     Header: "Est le siége de l'entreprise",
@@ -87,6 +92,7 @@ const columnsDefinition = [
     accessor: "adresse",
     width: 200,
     editable: false,
+    formatter: (value) => escapeDiacritics(value),
   },
   {
     Header: "Numéro de voie",
@@ -111,6 +117,7 @@ const columnsDefinition = [
     accessor: "complement_adresse",
     width: 200,
     editable: false,
+    formatter: (value) => escapeDiacritics(value),
   },
   {
     Header: "Code postal",
@@ -129,6 +136,7 @@ const columnsDefinition = [
     accessor: "localite",
     width: 200,
     editable: false,
+    formatter: (value) => escapeDiacritics(value),
   },
   {
     Header: "Code commune INSEE",
@@ -147,6 +155,7 @@ const columnsDefinition = [
     accessor: "region_implantation_nom",
     width: 200,
     editable: false,
+    formatter: (value) => escapeDiacritics(value),
   },
   {
     Header: "Numéro académie",
@@ -159,6 +168,7 @@ const columnsDefinition = [
     accessor: "nom_academie",
     width: 200,
     editable: false,
+    formatter: (value) => escapeDiacritics(value),
   },
   {
     Header: "À charger dans Affelnet",
@@ -251,6 +261,7 @@ const columnsDefinition = [
     accessor: "tags",
     width: 200,
     editable: false,
+    formatter: (tags) => tags.sort((a, b) => a - b),
   },
 ];
 
