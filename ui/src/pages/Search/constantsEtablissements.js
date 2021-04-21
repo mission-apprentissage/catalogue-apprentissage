@@ -1,3 +1,5 @@
+import { escapeDiacritics } from "../../common/utils/downloadUtils";
+
 const FILTERS = ["QUERYBUILDER", "SEARCH", "num_departement", "nom_academie", "tags", "published"];
 
 const columnsDefinition = [
@@ -18,12 +20,14 @@ const columnsDefinition = [
     accessor: "enseigne",
     width: 200,
     editable: false,
+    formatter: (value) => escapeDiacritics(value),
   },
   {
     Header: "Raison sociale de l'entreprise",
     accessor: "entreprise_raison_sociale",
     width: 200,
     editable: false,
+    formatter: (value) => escapeDiacritics(value),
   },
   {
     Header: "Code NAF",
@@ -33,7 +37,7 @@ const columnsDefinition = [
     editable: false,
   },
   {
-    Header: "Libellé du code NAT",
+    Header: "Libelle du code NAT",
     accessor: "naf_libelle",
     width: 200,
     debug: true,
@@ -53,31 +57,32 @@ const columnsDefinition = [
     editable: false,
   },
   {
-    Header: "CFA conventionné ? ",
+    Header: "CFA conventionne ? ",
     accessor: "computed_conventionne",
     width: 200,
     editable: false,
   },
   {
-    Header: "CFA déclaré en préfecture ? ",
+    Header: "CFA declare en prefecture ? ",
     accessor: "computed_declare_prefecture",
     width: 200,
     editable: false,
   },
   {
-    Header: "Organisme certifié 2015 ? ",
+    Header: "Organisme certifie 2015 ? ",
     accessor: "computed_info_datadock",
     width: 200,
     editable: false,
+    formatter: (value) => escapeDiacritics(value),
   },
   {
-    Header: "Est le siége de l'entreprise",
+    Header: "Est le siege de l'entreprise",
     accessor: "siege_social",
     width: 200,
     editable: false,
   },
   {
-    Header: "Siret Siège social",
+    Header: "Siret Siege social",
     accessor: "etablissement_siege_siret",
     width: 200,
     editable: false,
@@ -87,9 +92,10 @@ const columnsDefinition = [
     accessor: "adresse",
     width: 200,
     editable: false,
+    formatter: (value) => escapeDiacritics(value),
   },
   {
-    Header: "Numéro de voie",
+    Header: "Numero de voie",
     accessor: "numero_voie",
     width: 60,
     editable: false,
@@ -107,10 +113,11 @@ const columnsDefinition = [
     editable: false,
   },
   {
-    Header: "Complément d'adresse",
+    Header: "Complement d'adresse",
     accessor: "complement_adresse",
     width: 200,
     editable: false,
+    formatter: (value) => escapeDiacritics(value),
   },
   {
     Header: "Code postal",
@@ -119,16 +126,17 @@ const columnsDefinition = [
     editable: false,
   },
   {
-    Header: "Numéro de département",
+    Header: "Numero de departement",
     accessor: "num_departement",
     width: 120,
     editable: false,
   },
   {
-    Header: "Localité",
+    Header: "Localite",
     accessor: "localite",
     width: 200,
     editable: false,
+    formatter: (value) => escapeDiacritics(value),
   },
   {
     Header: "Code commune INSEE",
@@ -143,32 +151,34 @@ const columnsDefinition = [
     editable: false,
   },
   {
-    Header: "Région",
+    Header: "Region",
     accessor: "region_implantation_nom",
     width: 200,
     editable: false,
+    formatter: (value) => escapeDiacritics(value),
   },
   {
-    Header: "Numéro académie",
+    Header: "Numero academie",
     accessor: "num_academie",
     width: 200,
     editable: false,
   },
   {
-    Header: "Nom de l'académie",
+    Header: "Nom de l'academie",
     accessor: "nom_academie",
     width: 200,
     editable: false,
+    formatter: (value) => escapeDiacritics(value),
   },
   {
-    Header: "À charger dans Affelnet",
+    Header: "A charger dans Affelnet",
     accessor: "affelnet_a_charger",
     width: 200,
     debug: true,
     editable: false,
   },
   {
-    Header: "À charger dans ParcourSup",
+    Header: "A charger dans ParcourSup",
     accessor: "parcoursup_a_charger",
     width: 200,
     editable: false,
@@ -251,6 +261,7 @@ const columnsDefinition = [
     accessor: "tags",
     width: 200,
     editable: false,
+    formatter: (tags) => tags.sort((a, b) => a - b),
   },
 ];
 

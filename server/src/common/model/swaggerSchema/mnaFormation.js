@@ -409,6 +409,31 @@ module.exports = {
         default: "null",
         description: "Url de redirection vers le site de l'ONISEP",
       },
+      onisep_intitule: {
+        type: "string",
+        default: "null",
+        description: "Intitulé éditorial l'ONISEP",
+      },
+      onisep_libelle_poursuite: {
+        type: "string",
+        default: "null",
+        description: "Libellé poursuite étude l'ONISEP (séparateur ;)",
+      },
+      onisep_lien_site_onisepfr: {
+        type: "string",
+        default: "null",
+        description: "Lien vers site de l'ONISEP api",
+      },
+      onisep_discipline: {
+        type: "string",
+        default: "null",
+        description: "Disciplines ONISEP (séparateur ;)",
+      },
+      onisep_domaine_sousdomaine: {
+        type: "string",
+        default: "null",
+        description: "Domaine et sous domaine ONISEP (séparateur ;)",
+      },
       rncp_code: {
         type: "string",
         default: "null",
@@ -661,6 +686,11 @@ module.exports = {
         enum: ["PR", "PU", null],
         default: "null",
         description: "Affelnet : type d'établissement (PR: Privé / PU: Public)",
+      },
+      affelnet_raison_depublication: {
+        type: "string",
+        default: "null",
+        description: "Affelnet : raison de dépublication",
       },
       bcn_mefs_10: {
         type: "array",
