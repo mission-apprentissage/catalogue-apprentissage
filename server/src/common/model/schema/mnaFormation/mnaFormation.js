@@ -387,6 +387,11 @@ const mnaFormationSchema = {
     default: null,
     description: "Affelnet : type d'établissement (PR: Privé / PU: Public)",
   },
+  affelnet_raison_depublication: {
+    type: String,
+    default: null,
+    description: "Affelnet : raison de dépublication",
+  },
   bcn_mefs_10: {
     type: [Object],
     default: null,
