@@ -17,3 +17,10 @@ export const downloadCSV = (fileName, csv) => {
 };
 
 export const CSV_SEPARATOR = ";";
+
+export const escapeDiacritics = (str) =>
+  str
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, " ")
+    .replaceAll(";", ",");
