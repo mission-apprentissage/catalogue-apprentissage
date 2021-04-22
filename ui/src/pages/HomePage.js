@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Layout from "./layout/Layout";
+import packageJson from "../../package.json";
+
 import {
   Box,
   Button,
@@ -7,24 +9,32 @@ import {
   Heading,
   Flex,
   ListItem,
-  Spacer,
   List,
-  OrderedList,
   Link,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
   Text,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  // eslint-disable-next-line no-unused-vars
   Center,
 } from "@chakra-ui/react";
+
 import { NavLink } from "react-router-dom";
 import Changelog from "../common/components/Changelog/Changelog";
 import changelog from "../CHANGELOG";
 import { _get } from "../common/httpClient";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// eslint-disable-next-line no-unused-vars
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import { faInfoCircle, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+// eslint-disable-next-line no-unused-vars
 import { Code } from "@chakra-ui/react";
+// eslint-disable-next-line no-unused-vars
 import { Grid, GridItem } from "@chakra-ui/react";
 
 const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
@@ -204,18 +214,56 @@ export default () => {
                 <Heading as="h4" textStyle="h4" mb={3}>
                   Journal des modifications
                 </Heading>
-                <Box borderTop="1px solid" borderColor="bluefrance" width="230px">
-                  <Text color="bluefrance">Dernières modifications</Text>
-                </Box>
                 <br />
-                <Flex>
-                  <Changelog content={changelog} order="desc" showVersion="last2" hideFilter={true} />
-                </Flex>
-                <Flex mt={1} mb={4} flexDirection={["column", "row"]} justifyContent={["space-around", "flex-start"]}>
-                  <Button as={NavLink} color="bluefrance" to="/changelog">
+                <Box>
+                  <Tabs variant="unstyled">
+                    <TabList textStyle="sm" px={0} bg="white">
+                      <Tab
+                        fontWeight="700"
+                        color="bluefrance"
+                        _selected={{
+                          borderTop: "2px solid #000091",
+                          borderLeft: "1px solid #CECECE",
+                          borderRight: "1px solid #CECECE",
+                          outline: "1px solid white",
+                          zIndex: "1",
+                        }}
+                      >
+                        Dernières modifications
+                      </Tab>
+                      <Tab bg="#EEF1F8" mx={2} color="#383838" fontWeight="700" textStyle="sm">
+                        A venir
+                      </Tab>
+                    </TabList>
+                    <TabPanels px={0}>
+                      <TabPanel color="#383838" p={0} px={0} h={[1000, 1000, 800, 550]}>
+                        <Flex>
+                          <Changelog
+                            content={changelog}
+                            order="desc"
+                            showVersion={packageJson.version}
+                            hideFilter={true}
+                          />
+                        </Flex>
+                      </TabPanel>
+                      <TabPanel color="#1E1E1E">
+                        <Flex>
+                          <Changelog content={changelog} order="desc" nbVersion={1} hideFilter={true} />
+                        </Flex>
+                      </TabPanel>
+                    </TabPanels>
+                  </Tabs>
+                  <Button
+                    as={NavLink}
+                    color="bluefrance"
+                    to="/changelog"
+                    textStyle="rf-text"
+                    border="1px solid #000091"
+                    bg="white"
+                  >
                     Voir le journal des modifications
                   </Button>
-                </Flex>
+                </Box>
               </Box>
             </Box>
           </Grid>
