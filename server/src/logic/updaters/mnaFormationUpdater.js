@@ -8,6 +8,7 @@ const { codePostalMapper } = require("../mappers/codePostalMapper");
 const { etablissementsMapper } = require("../mappers/etablissementsMapper");
 const { diffFormation } = require("../common/utils/diffUtils");
 const { SandboxFormation, RcoFormation } = require("../../common/model");
+const { getCoordinatesFromAddressData } = require("@mission-apprentissage/tco-service-node");
 
 const formationSchema = Joi.object({
   cfd: Joi.string().required(),
@@ -75,6 +76,23 @@ const mnaFormationUpdater = async (
       return { updates: null, formation, error, cfdInfo };
     }
 
+    let geoMapping = {};
+    if (withCodePostalUpdate) {
+      const { result: coordinates, messages: geoMessages } = await getCoordinatesFromAddressData({
+        numero_voie: formation.lieu_formation_adresse,
+        localite: cpMapping.localite,
+        code_postal: cpMapping.code_postal,
+      });
+
+      error = parseErrors(geoMessages);
+      if (!error && coordinates?.results_count === 1) {
+        // set geo coords when we get 1 result only
+        geoMapping = {
+          lieu_formation_geo_coordonnees: coordinates.geo_coordonnees,
+        };
+      }
+    }
+
     const rncpInfo = {
       rncp_code: cfdMapping?.rncp_code,
       rncp_intitule: cfdMapping?.rncp_intitule,
@@ -135,6 +153,7 @@ const mnaFormationUpdater = async (
       ...formation,
       ...cfdMapping,
       ...cpMapping,
+      ...geoMapping,
       ...etablissementsMapping,
       tags,
       published,

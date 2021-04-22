@@ -1,7 +1,7 @@
 const changelog = {
   list: [
     {
-      version: "3.3.0",
+      version: "3.4.0",
       date: "Prochainement",
       about: `<h5>À venir</h5>
       <ul>
@@ -13,6 +13,20 @@ const changelog = {
         </li>
       </ul>`,
       fixes: [],
+      features: [],
+      improvements: [],
+    },
+    {
+      version: "3.3.0",
+      date: "19/04/2021",
+      about: `<h5>À propos de cette version</h5>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [
+        "[Catalogue] Contrôle de niveau avant ajout des étiquettes publication pour Affelnet",
+        "[Catalogue] Passage de MEF affectation a des MEF valides pour Affelnet",
+        "[Catalogue] Retrait des étiquettes 'publiées' pour les formations n'ayant pas une réconciliation unique avec la base Affelnet 2020",
+        "[Catalogue] Modifications des caractères spéciaux sur les exports",
+      ],
       features: [],
       improvements: [],
     },

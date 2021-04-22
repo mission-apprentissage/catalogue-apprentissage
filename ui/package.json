@@ -1,7 +1,7 @@
 {
   "name": "mna-catalogue-apprentissage-ui",
   "description": "[MNA] App catalogue apprentissage",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "private": false,
   "author": "MNA",
   "license": "MIT",
@@ -61,8 +61,8 @@
     "trailingComma": "es5"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "4.2.4",
-    "@testing-library/react": "9.3.2",
+    "@testing-library/jest-dom": "5.11.10",
+    "@testing-library/react": "11.2.6",
     "@testing-library/user-event": "7.1.2",
     "babel-eslint": "10.1.0",
     "eslint-config-prettier": "6.11.0",
@@ -76,6 +76,7 @@
     "husky": "6.0.0",
     "lint-staged": "10.5.4",
     "local-web-server": "4.2.0",
+    "msw": "0.28.1",
     "prettier": "2.0.5"
   },
   "husky": {

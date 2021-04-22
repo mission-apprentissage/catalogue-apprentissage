@@ -1,28 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  Container,
-  Grid,
-  GridItem,
-  Button,
-  Input,
   Badge,
-  Spinner,
   Box,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalOverlay,
-  ModalContent,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  Button,
+  Container,
+  Grid,
+  GridItem,
+  Input,
+  Link,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Spinner,
+  Text,
 } from "@chakra-ui/react";
 
 import { useFormik } from "formik";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import useAuth from "../../common/hooks/useAuth";
-import { _get, _put, _post } from "../../common/httpClient";
+import { _get, _post, _put } from "../../common/httpClient";
 import Layout from "../layout/Layout";
 import { hasOneOfRoles } from "../../common/utils/rolesUtils";
 
@@ -74,9 +76,29 @@ const EditSection = ({ edition, onEdit, handleSubmit }) => {
   );
 };
 
-const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSubmit, values }) => {
+const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSubmit, values, countFormations }) => {
   const [auth] = useAuth();
   const hasRightToEdit = hasOneOfRoles(auth, ["admin"]);
+
+  const query = [
+    {
+      field: "etablissement_formateur_siret.keyword",
+      operator: "===",
+      value: etablissement.siret,
+      combinator: "AND",
+      index: 0,
+    },
+    {
+      field: "etablissement_gestionnaire_siret.keyword",
+      operator: "===",
+      value: etablissement.siret,
+      combinator: "OR",
+      index: 1,
+    },
+  ];
+  const linkFormations = `/recherche/formations-2021?qb=${encodeURIComponent(
+    JSON.stringify(query)
+  )}&defaultMode="advanced"`;
 
   let creationDate = "";
   try {
@@ -129,11 +151,13 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
           <div>
             <div className="field pills">
               <h3>Tags</h3>
-              {etablissement.tags.map((tag, i) => (
-                <Badge colorScheme="green" variant="solid" key={i} className="badge">
-                  {tag}
-                </Badge>
-              ))}
+              {etablissement.tags
+                .sort((a, b) => a - b)
+                .map((tag, i) => (
+                  <Badge colorScheme="green" variant="solid" key={i} className="badge">
+                    {tag}
+                  </Badge>
+                ))}
             </div>
             <div className="field multiple">
               <div>
@@ -177,6 +201,20 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
               </p>
             </div>
           </div>
+          {countFormations > 0 ? (
+            <Link
+              as={NavLink}
+              to={linkFormations}
+              textDecoration="underline"
+              color="blue.500"
+              fontWeight="bold"
+              isExternal
+            >
+              Voir les {countFormations} formations trouvées pour cet établissement
+            </Link>
+          ) : (
+            <Text>Aucune formation trouvée pour cet établissement</Text>
+          )}
         </div>
         {!etablissement.siege_social && (
           <div className="sidebar-section info">
@@ -212,6 +250,8 @@ export default ({ match }) => {
   const [edition, setEdition] = useState(false);
   const [gatherData, setGatherData] = useState(0);
   const [modal, setModal] = useState(false);
+  const [countFormations, setCountFormations] = useState(0);
+
   // const dispatch = useDispatch();
 
   const { values, handleSubmit, handleChange, setFieldValue } = useFormik({
@@ -252,8 +292,19 @@ export default ({ match }) => {
       try {
         const eta = await _get(`${endpointTCO}/entity/etablissement/${match.params.id}`, false);
         setEtablissement(eta);
-
         setFieldValue("uai", eta.uai);
+
+        const query = {
+          published: true,
+          $or: [{ etablissement_formateur_siret: eta.siret }, { etablissement_gestionnaire_siret: eta.siret }],
+        };
+
+        const count = await _get(
+          `${endpointNewFront}/entity/formations2021/count?query=${JSON.stringify(query)}`,
+          false
+        );
+
+        setCountFormations(count);
       } catch (e) {
         // dispatch(push(routes.NOTFOUND));
       }
@@ -275,8 +326,10 @@ export default ({ match }) => {
                 Accueil
               </BreadcrumbLink>
             </BreadcrumbItem>
-            <BreadcrumbItem as={NavLink} to="/recherche/etablissements">
-              <BreadcrumbLink>Établissements</BreadcrumbLink>
+            <BreadcrumbItem>
+              <BreadcrumbLink as={NavLink} to="/recherche/etablissements">
+                Établissements
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbItem isCurrentPage>
               <BreadcrumbLink>{etablissement?.entreprise_raison_sociale}</BreadcrumbLink>
@@ -302,6 +355,7 @@ export default ({ match }) => {
                   values={values}
                   handleSubmit={handleSubmit}
                   handleChange={handleChange}
+                  countFormations={countFormations}
                 />
                 <Modal isOpen={modal}>
                   <ModalOverlay />
