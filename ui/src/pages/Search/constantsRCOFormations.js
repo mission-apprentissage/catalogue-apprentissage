@@ -1,3 +1,5 @@
+import { escapeDiacritics } from "../../common/utils/downloadUtils";
+
 const FILTERS = [
   "QUERYBUILDER",
   "SEARCH",
@@ -35,13 +37,6 @@ const FILTERS = [
   "opcos",
   "info_opcos_intitule",
 ];
-
-const escapeDiacritics = (str) =>
-  str
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/\s+/g, " ")
-    .replaceAll(";", ",");
 
 const columnsDefinition = [
   {

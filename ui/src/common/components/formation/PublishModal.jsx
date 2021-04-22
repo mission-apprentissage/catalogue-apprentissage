@@ -4,6 +4,7 @@ import {
   Center,
   Flex,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   Heading,
   Modal,
@@ -23,6 +24,7 @@ import { useFormik } from "formik";
 import { _put } from "../../httpClient";
 import useAuth from "../../hooks/useAuth";
 import { buildUpdatesHistory } from "../../utils/formationUtils";
+import * as Yup from "yup";
 
 const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
 
@@ -43,13 +45,21 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
     ["publié", "en attente de publication"].includes(formation?.affelnet_statut)
   );
 
-  const { values, handleChange, handleSubmit, isSubmitting, setFieldValue } = useFormik({
+  const [isUnpublishFormOpen, setUnpublishFormOpen] = useState(["non publié"].includes(formation?.affelnet_statut));
+
+  const { values, handleChange, handleSubmit, isSubmitting, setFieldValue, errors } = useFormik({
     initialValues: {
       affelnet: getPublishRadioValue(formation?.affelnet_statut),
       parcoursup: getPublishRadioValue(formation?.parcoursup_statut),
       affelnet_infos_offre: formation?.affelnet_infos_offre,
+      affelnet_raison_depublication: formation?.affelnet_raison_depublication,
     },
-    onSubmit: ({ affelnet, parcoursup, affelnet_infos_offre }) => {
+    validationSchema: Yup.object().shape({
+      affelnet_raison_depublication: isUnpublishFormOpen
+        ? Yup.string().nullable().required("Veuillez saisir la raison")
+        : Yup.string().nullable(),
+    }),
+    onSubmit: ({ affelnet, parcoursup, affelnet_infos_offre, affelnet_raison_depublication }) => {
       return new Promise(async (resolve) => {
         const body = {};
         let shouldRemoveAfReconciliation = false;
@@ -62,6 +72,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
           if (["non publié", "à publier (soumis à validation)", "à publier"].includes(formation?.affelnet_statut)) {
             body.affelnet_statut = "en attente de publication";
             body.affelnet_infos_offre = affelnet_infos_offre;
+            body.affelnet_raison_depublication = null;
             shouldRestoreAfReconciliation = formation.affelnet_statut === "non publié";
           } else if (["publié"].includes(formation?.affelnet_statut)) {
             body.affelnet_infos_offre = affelnet_infos_offre;
@@ -72,6 +83,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
               formation?.affelnet_statut
             )
           ) {
+            body.affelnet_raison_depublication = affelnet_raison_depublication;
             body.affelnet_statut = "non publié";
             shouldRemoveAfReconciliation = ["en attente de publication", "publié"].includes(
               formation.parcoursup_statut
@@ -152,6 +164,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
           setFieldValue("affelnet", getPublishRadioValue(updatedFormation?.affelnet_statut));
           setFieldValue("parcoursup", getPublishRadioValue(updatedFormation?.parcoursup_statut));
           setFieldValue("affelnet_infos_offre", updatedFormation?.affelnet_infos_offre);
+          setFieldValue("affelnet_raison_depublication", updatedFormation?.affelnet_raison_depublication);
         }
 
         onClose();
@@ -194,6 +207,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                       isDisabled={isAffelnetPublishDisabled}
                       onChange={(evt) => {
                         setAffelnetFormOpen(true);
+                        setUnpublishFormOpen(false);
                         handleChange(evt);
                       }}
                     >
@@ -206,6 +220,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                       isDisabled={isAffelnetPublishDisabled}
                       onChange={(evt) => {
                         setAffelnetFormOpen(false);
+                        setUnpublishFormOpen(true);
                         handleChange(evt);
                       }}
                     >
@@ -225,6 +240,28 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                   placeholder="Précisez ici les informations complémentaires que vous souhaitez voir figurer sur la fiche de la formation sur Affelnet, ex : démarches sur obtention contrat apprentissage, modalités inscription, rythme alternance, date entrée formation..."
                   rows={7}
                 />
+              </FormControl>
+              <FormControl
+                isRequired
+                isInvalid={errors.affelnet_raison_depublication}
+                display={isUnpublishFormOpen ? "flex" : "none"}
+                alignItems="center"
+                w="auto"
+                mt={3}
+              >
+                <FormLabel htmlFor="affelnet_raison_depublication" mb={0} fontSize="delta" fontWeight={700}>
+                  Raison de non publication:
+                </FormLabel>
+                <Flex flexDirection="column" w="100%">
+                  <Textarea
+                    name="affelnet_raison_depublication"
+                    value={values.affelnet_raison_depublication}
+                    onChange={handleChange}
+                    placeholder="Précisez ici la raison pour laquelle vous ne souhaitez pas publier la formation sur Affelnet"
+                    rows={7}
+                  />
+                  <FormErrorMessage>{errors.affelnet_raison_depublication}</FormErrorMessage>
+                </Flex>
               </FormControl>
             </Flex>
             <Flex px={4} pt={[12, 16]} pb={[12, 16]} flexDirection="column">
