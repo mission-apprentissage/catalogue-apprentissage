@@ -10,7 +10,11 @@ module.exports = async (options = {}) => {
   const catalogue = options.catalogue || createCatalogue();
 
   const db = options.db || (await connectToMongo()).db;
-  await initTcoModel(mongoose);
+  try {
+    await initTcoModel(mongoose);
+  } catch (error) {
+    console.log(error);
+  }
 
   return {
     catalogue,
