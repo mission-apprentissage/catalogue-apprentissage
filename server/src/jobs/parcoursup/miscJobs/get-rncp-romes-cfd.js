@@ -1,10 +1,8 @@
 const path = require("path");
 const XLSX = require("xlsx");
 const { runScript } = require("../../scriptWrapper");
-const { paginator } = require("../../common/utils/paginator");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { getJsonFromXlsxFile } = require("../../../common/utils/fileUtils");
-const { AfReconciliation, ConvertedFormation } = require("../../../common/model");
 const { getCfdInfo, getMef10Info, getBcnInfo } = require("@mission-apprentissage/tco-service-node");
 
 runScript(async () => {
@@ -195,44 +193,10 @@ async function psup2021() {
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, XLSX.utils.json_to_sheet(updated), "psup");
 
-  XLSX.writeFileAsync(path.join(__dirname, `./listeFormationApprentissage_avecRncp_latest.xlsx`), workbook, (e) => {
+  XLSX.writeFileAsync(path.join(__dirname, `./listeFormationApprentissage_completed.xlsx`), workbook, (e) => {
     if (e) {
       console.log(e);
       throw new Error("La génération du fichier excel à échoué : ", e);
     }
   });
-}
-// eslint-disable-next-line
-async function statistiqueAffelnet() {
-  let stats = {
-    found: [],
-    notfound: [],
-    published: 0,
-    notPublished: 0,
-  };
-
-  await paginator(AfReconciliation, {}, async (x) => {
-    let cv = await ConvertedFormation.findOne({
-      cfd: x.code_cfd,
-      etablissement_formateur_siret: x.siret_formateur,
-      etablissement_gestionnaire_siret: x.siret_gestionnaire,
-    });
-
-    if (cv) {
-      stats.found.push(cv);
-      if (cv.published === true) {
-        stats.published += 1;
-      } else {
-        stats.notPublished += 1;
-      }
-    } else {
-      // console.log("missing", x);
-      stats.notfound.push(x);
-    }
-  });
-
-  stats.foundln = stats.found.length;
-  stats.notFoundln = stats.notfound.length;
-
-  console.log({ stats });
 }
