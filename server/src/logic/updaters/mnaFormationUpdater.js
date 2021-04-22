@@ -85,7 +85,8 @@ const mnaFormationUpdater = async (
       });
 
       error = parseErrors(geoMessages);
-      if (!error && coordinates) {
+      if (!error && coordinates?.results_count === 1) {
+        // set geo coords when we get 1 result only
         geoMapping = {
           lieu_formation_geo_coordonnees: coordinates.geo_coordonnees,
         };
