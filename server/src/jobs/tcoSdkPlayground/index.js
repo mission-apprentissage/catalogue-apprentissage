@@ -1,24 +1,25 @@
 const { runScript } = require("../scriptWrapper");
 const {
   // getCpInfo,
-  rncpImporter,
-  getRncpInfo,
+  // rncpImporter,
+  // getRncpInfo,
   // bcnImporter,
   // getCfdInfo,
   // getMef10Info,
   // getSiretInfo,
   // getBcnInfo,
+  getCoordinatesFromAddressData,
 } = require("@mission-apprentissage/tco-service-node");
 
-const path = require("path");
+// const path = require("path");
 
-const KIT_LOCAL_PATH = path.join(__dirname, "KitApprentissage.latest.xlsx");
+// const KIT_LOCAL_PATH = path.join(__dirname, "KitApprentissage.latest.xlsx");
 
 runScript(async () => {
   // console.log(await getCpInfo("92600"));
 
-  await rncpImporter(KIT_LOCAL_PATH);
-  console.log(await getRncpInfo("RNCP7571"));
+  // await rncpImporter(KIT_LOCAL_PATH);
+  // console.log(await getRncpInfo("RNCP7571"));
 
   //await bcnImporter();
   //console.log(await getCfdInfo("26033206"));
@@ -27,4 +28,12 @@ runScript(async () => {
   // console.log(await getSiretInfo("32922456200234"));
 
   // console.log(await getBcnInfo({ query: { LIBELLE_STAT_33: "CARROSSERIE", LIBELLE_COURT: "BEP" } }));
+
+  console.log(
+    await getCoordinatesFromAddressData({
+      numero_voie: "8 rue de l'Artisanat",
+      localite: "Charleville-Mézières",
+      code_postal: "08000",
+    })
+  );
 });
