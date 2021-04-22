@@ -1,71 +1,26 @@
 const path = require("path");
 const { runScript } = require("../../scriptWrapper");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
-// const { habiliteList } = require("../../../constants/certificateurs");
-// const { createXlsxFromJson } = require("../../../common/utils/fileUtils");
-const { getCfdInfo, getMef10Info, getBcnInfo } = require("@mission-apprentissage/tco-service-node"); // getRncpInfo
+const { createXlsxFromJson } = require("../../../common/utils/fileUtils");
+const { getMef10Info, getModels } = require("@mission-apprentissage/tco-service-node");
 const { getJsonFromXlsxFile } = require("../../../common/utils/fileUtils");
 const { downloadAndSaveFileFromS3 } = require("../../../common/utils/awsUtils");
+const { orderBy } = require("lodash");
 
-// const isHabiliteRncp = ({ partenaires = [], certificateurs = [] }, siret) => {
-//   if ((certificateurs ?? []).some(({ certificateur }) => habiliteList.includes(certificateur))) {
-//     return true;
-//   }
+let Models = null;
 
-//   const isPartenaire = (partenaires ?? []).some(
-//     ({ Siret_Partenaire, Habilitation_Partenaire }) =>
-//       Siret_Partenaire === siret && ["HABILITATION_ORGA_FORM", "HABILITATION_FORMER"].includes(Habilitation_Partenaire)
-//   );
-//   const isCertificateur = (certificateurs ?? []).some(({ siret_certificateur }) => siret_certificateur === siret);
-//   return isPartenaire || isCertificateur;
-// };
-
-// const getInfo = async (rncp, siret) => {
-//   console.log(rncp, siret);
-//   try {
-//     let rncpDetails = await getRncpInfo(rncp);
-//     let habilitation = await isHabiliteRncp(
-//       { partenaires: rncpDetails.result?.partenaires, certificateurs: rncpDetails.result?.certificateurs },
-//       siret
-//     );
-
-//     return habilitation;
-//   } catch (error) {
-//     console.log("rncp error", error);
-
-//     return null;
-//   }
-// };
-
-const parseLibelleLong = (libelle) =>
-  libelle
-    .split(" - en apprentissage")[0]
-    .replace(/\((.)*\)+/g, "")
-    .trim()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toUpperCase();
-
-const parseLibelleCourt = (libelle) => {
-  if (libelle.includes("BUT")) return "DUT";
-  if (libelle.includes("Formation professionnelle")) return "";
-  if (libelle.includes("Formations  des écoles d'ingénieurs")) return "";
-  if (libelle.includes("Certificat de Spécialisation Agricole")) return "";
-  if (libelle.includes("BPJEPS")) return "";
-  if (libelle.includes("Sous-officier")) return "";
-};
-
-const extractTablePs = async (formationsPs) => {
+const generateFile = async (formationsPs) => {
   const specialitePsRawData = formationsPs.map((f) => ({
     // eslint-disable-next-line prettier/prettier
     CODESPÉCIALITÉ: f["CODESPÉCIALITÉ"],
     // eslint-disable-next-line prettier/prettier
     LIBSPÉCIALITÉ: f["LIBSPÉCIALITÉ"],
+    CODEMEF: f.CODEMEF,
     CODE_CFD_MNA: f.CODE_CFD_MNA,
     CODE_RNCP_MNA: f.CODE_RNCP_MNA,
     CODE_ROMES_MNA: f.CODE_ROMES_MNA,
-    TYPE_RAPPROCHEMENT_MNA:
-      f.CODE_CFD_MNA === "Non trouvé" || f.CODE_CFD_MNA === "Non trouvé" ? "ERREUR" : f.TYPE_RAPPROCHEMENT_MNA,
+    TYPE_RAPPROCHEMENT_MNA: f.TYPE_RAPPROCHEMENT_MNA,
+    TEMP_SUBS: f.TEMP_SUBS || [],
   }));
 
   // eslint-disable-next-line no-unused-vars
@@ -78,8 +33,44 @@ const extractTablePs = async (formationsPs) => {
     });
     return exist ? acc : [...acc, current];
   }, []);
-  // console.log(groupByUniq);
-  // await createXlsxFromJson(groupBuUniq, path.join(__dirname, "/table_PS.xlsx"));
+  console.log(groupByUniq.length);
+
+  const specialiteOutput = [];
+  for (let index = 0; index < groupByUniq.length; index++) {
+    const { TEMP_SUBS, ...rest } = groupByUniq[index];
+    specialiteOutput.push(rest);
+    if (TEMP_SUBS.length > 0) {
+      specialiteOutput.push({
+        // eslint-disable-next-line prettier/prettier
+        CODESPÉCIALITÉ: "",
+        // eslint-disable-next-line prettier/prettier
+        LIBSPÉCIALITÉ: "sousLibelle",
+        CODEMEF: "",
+        CODE_CFD_MNA: "CODE_CFD_MNA",
+        CODE_RNCP_MNA: "CODE_RNCP_MNA",
+        CODE_ROMES_MNA: "CODE_ROMES_MNA",
+        TYPE_RAPPROCHEMENT_MNA: "TYPE_RAPPROCHEMENT_MNA",
+      });
+      for (let j = 0; j < TEMP_SUBS.length; j++) {
+        const l = TEMP_SUBS[j];
+        specialiteOutput.push({
+          // eslint-disable-next-line prettier/prettier
+          CODESPÉCIALITÉ: "",
+          // eslint-disable-next-line prettier/prettier
+          LIBSPÉCIALITÉ: l.sousLibelle,
+          CODEMEF: "",
+          CODE_CFD_MNA: l.CODE_CFD_MNA,
+          CODE_RNCP_MNA: l.CODE_RNCP_MNA,
+          CODE_ROMES_MNA: l.CODE_ROMES_MNA,
+          TYPE_RAPPROCHEMENT_MNA: l.TYPE_RAPPROCHEMENT_MNA,
+        });
+      }
+    }
+  }
+
+  await createXlsxFromJson(specialiteOutput, path.join(__dirname, "/table_PS.xlsx"));
+
+  //TODO PS TAB
 };
 
 const getRncpRomesFromSDKresponse = ({ result: { rncp: rncpInfo } }) => ({
@@ -88,25 +79,17 @@ const getRncpRomesFromSDKresponse = ({ result: { rncp: rncpInfo } }) => ({
 });
 
 const findByMef = async ({ CODEMEF }) => {
-  let result = { CODE_CFD_MNA: null, CODE_RNCP_MNA: null, CODE_ROMES_MNA: null };
+  let result = { CODE_CFD_MNA: null, CODE_RNCP_MNA: null, CODE_ROMES_MNA: null, TYPE_RAPPROCHEMENT_MNA: null };
   if (!CODEMEF) return result;
 
   try {
     let responseMEF = await getMef10Info(CODEMEF);
-    result = {
-      CODE_CFD_MNA: responseMEF.result.cfd?.cfd ?? null,
-      ...getRncpRomesFromSDKresponse(responseMEF),
-    };
-
-    if (responseMEF.messages.rncp.error === "Erreur: Non trouvé" && responseMEF.messages.cfdUpdated === "Trouvé") {
-      let responseCFD = await getCfdInfo(result.CODE_CFD_MNA);
-
-      if (responseCFD) {
-        result = {
-          CODE_CFD_MNA: result.CODE_CFD_MNA,
-          ...getRncpRomesFromSDKresponse(responseCFD),
-        };
-      }
+    if (responseMEF.result.cfd && responseMEF.result.cfd?.cfd !== "") {
+      result = {
+        CODE_CFD_MNA: responseMEF.result.cfd?.cfd ?? null,
+        ...getRncpRomesFromSDKresponse(responseMEF),
+        TYPE_RAPPROCHEMENT_MNA: "CODEMEF",
+      };
     }
   } catch (error) {
     console.log("findByMef", error);
@@ -114,45 +97,188 @@ const findByMef = async ({ CODEMEF }) => {
   return result;
 };
 
+const customTemporaryMarker = "*#*#*";
+
+const normalizeStr = (str) => {
+  return str
+    .replace("(ne)", `${customTemporaryMarker}ne${customTemporaryMarker}`)
+    .replace("(e)", `${customTemporaryMarker}e${customTemporaryMarker}`)
+    .replace("(se)", `${customTemporaryMarker}se${customTemporaryMarker}`)
+    .replace(/\((.)*\)+/g, "")
+    .replace("(Bac +3", "")
+    .replace(`${customTemporaryMarker}ne${customTemporaryMarker}`, "(ne)")
+    .replace(`${customTemporaryMarker}e${customTemporaryMarker}`, "(e)")
+    .replace(`${customTemporaryMarker}se${customTemporaryMarker}`, "(se)")
+    .replace(`${customTemporaryMarker} bâtiment et travaux publics`, "- bâtiment et travaux publics")
+    .trim()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+};
+
+const extractSubLibSpecialite = (libSpecialite) => {
+  const [main, ...restRaw] = libSpecialite
+    .replace(/^TP - /, "")
+    .replace("- bâtiment et travaux publics", `${customTemporaryMarker} bâtiment et travaux publics`)
+    .split(" - ");
+
+  let recompose = [];
+  for (let ite = 0; ite < restRaw.length; ite++) {
+    let current = restRaw[ite];
+    let hasApprentissage = !!(/en apprentissage Parcours :/gi.exec(current) || /en apprentissage/gi.exec(current));
+    current = restRaw[ite].replace("en apprentissage Parcours :", "");
+    current = current.replace("Parcours :", "");
+    current = current.replace("en apprentissage", "");
+    if (current !== "") {
+      recompose.push({ intitule: `${normalizeStr(main)} : ${normalizeStr(current).toLowerCase()}`, hasApprentissage });
+    } else {
+      recompose.push({ intitule: `${normalizeStr(main)}`, hasApprentissage });
+    }
+  }
+
+  // Just to be sure - edge case eventually
+  if (restRaw.length === 0) {
+    recompose.push({ intitule: `${normalizeStr(main)}`, hasApprentissage: false });
+    console.log(`recomposeLibSpecialite: edge case`, recompose);
+  }
+
+  recompose = orderBy(recompose, ["hasApprentissage"], ["desc"]);
+  return recompose;
+};
+
+// const getTypeCertif = (libelle) => {
+//   if (libelle.includes("BUT")) return "BUT";
+//   if (libelle.includes("DUT")) return "DUT";
+//   if (libelle.includes("Formation professionnelle")) return "Formation professionnelle";
+//   // Titre professionnel  // Autre // MASTER // "BP" // BTS // "Licence Professionnelle" // "Titre ingénieur" // null
+//   // "BAC PRO" // LICENCE // BEPA // CAP // TP // BT // MC4 // MC5 // BEES // DIPLOVIS // BMA // BEP // DipViGrM
+//   // BTSA // DGE_GM // BAPAAT // DEUST // BTSMarit // DE // CS // CAPA // BPA // BTA // DOCTORAT //BEATEP // Grade_Master
+//   // DEAVS // DMA // DEDPAD  // CAPD // CEAV // BTn // DSTS // CP // DNMADE // DEA // Grade_Licence
+//   // DEEA
+//   if (libelle.includes("Formations  des écoles d'ingénieurs")) return "Formations  des écoles d'ingénieurs";
+//   if (libelle.includes("Certificat de Spécialisation Agricole")) return "Certificat de Spécialisation Agricole";
+//   if (libelle.includes("BPJEPS")) return "BPJEPS";
+//   if (libelle.includes("Sous-officier")) return "Sous-officier";
+// };
+
+// eslint-disable-next-line no-unused-vars
+const findByIntituleInRNCP = async (formationPsRawData) => {
+  // let result = { CODE_CFD_MNA: null, CODE_RNCP_MNA: null, CODE_ROMES_MNA: null, TYPE_RAPPROCHEMENT_MNA: null };
+
+  // const recompose = extractSubLibSpecialite(formationPsRawData["LIBSPÉCIALITÉ"]);
+
+  const [firstSubLib, ...restSubLib] = extractSubLibSpecialite(formationPsRawData["LIBSPÉCIALITÉ"]);
+
+  const matchFirstSubLib = await Models.FicheRncp.find({
+    intitule_diplome: new RegExp(`${firstSubLib.intitule}`),
+  }).lean();
+
+  if (matchFirstSubLib.length === 1 && restSubLib.length === 0) {
+    return {
+      CODE_CFD_MNA: matchFirstSubLib[0].cfds?.join(",") || null,
+      ...getRncpRomesFromSDKresponse({ result: { rncp: matchFirstSubLib[0] } }),
+      TYPE_RAPPROCHEMENT_MNA: "LIBSPÉCIALITÉ_RNCP",
+    };
+  }
+
+  if (matchFirstSubLib.length === 1 && restSubLib.length > 0) {
+    let subs = [
+      {
+        sousLibelle: firstSubLib.intitule,
+        CODE_CFD_MNA: matchFirstSubLib[0].FORMATION_DIPLOME,
+        CODE_RNCP_MNA: "NA",
+        CODE_ROMES_MNA: "NA",
+        TYPE_RAPPROCHEMENT_MNA: "LIBSPÉCIALITÉ_RNCP",
+      },
+    ];
+    await asyncForEach(restSubLib, async (subLib) => {
+      const matchBcn = await Models.FicheRncp.find({
+        intitule_diplome: new RegExp(`${subLib.intitule}`),
+      }).lean();
+      if (matchBcn.length > 0) {
+        subs.push({
+          sousLibelle: subLib.intitule,
+          CODE_CFD_MNA: matchBcn.map((m) => m.cfds?.join(",") || "").join(","),
+          CODE_RNCP_MNA: "TODO",
+          CODE_ROMES_MNA: "NA",
+          TYPE_RAPPROCHEMENT_MNA: "LIBSPÉCIALITÉ_RNCP",
+        });
+      }
+    });
+    if (subs.length === 1) {
+      return {
+        CODE_CFD_MNA: null,
+        //...getRncpRomesFromSDKresponse({ result: { rncp: matchFiches[0] } }),
+        TYPE_RAPPROCHEMENT_MNA: null,
+      };
+    }
+    return {
+      CODE_CFD_MNA: null,
+      //...getRncpRomesFromSDKresponse({ result: { rncp: matchFiches[0] } }),
+      TYPE_RAPPROCHEMENT_MNA: "LIBSPÉCIALITÉ_RNCP_MULTIPLE",
+      TEMP_SUBS: subs,
+    };
+  }
+
+  return { CODE_CFD_MNA: null, CODE_RNCP_MNA: null, CODE_ROMES_MNA: null, TYPE_RAPPROCHEMENT_MNA: null };
+};
+
 const findByIntituleInBcn = async (formationPsRawData) => {
-  let result = { CODE_CFD_MNA: null, CODE_RNCP_MNA: null, CODE_ROMES_MNA: null };
+  // let result = { CODE_CFD_MNA: null, CODE_RNCP_MNA: null, CODE_ROMES_MNA: null, TYPE_RAPPROCHEMENT_MNA: null };
 
-  const libelleLong = parseLibelleLong(formationPsRawData["LIBSPÉCIALITÉ"]);
-  const libelleCourt = parseLibelleCourt(formationPsRawData.LIBFORMATION);
+  const [firstSubLib, ...restSubLib] = extractSubLibSpecialite(formationPsRawData["LIBSPÉCIALITÉ"]);
 
-  try {
-    const {
-      formationsDiplomes,
-      pagination: { total },
-    } = await getBcnInfo({ query: { LIBELLE_LONG_200: libelleLong } });
+  const matchFirstSubLib = await Models.BcnFormationDiplome.find({
+    LIBELLE_LONG_200: new RegExp(`${firstSubLib.intitule.toUpperCase()}`),
+  }).lean();
 
-    if (total > 0) {
-      console.log(total);
-      const openFormation = formationsDiplomes.filter((x) => x.LIBELLE_COURT === libelleCourt);
-
-      if (openFormation.length > 0) {
-        result.CODE_CFD_MNA = openFormation[0].FORMATION_DIPLOME;
-      }
-    }
-  } catch (error) {
-    console.log("findByIntituleInBcn", error);
+  if (matchFirstSubLib.length === 1 && restSubLib.length === 0) {
+    return {
+      CODE_CFD_MNA: matchFirstSubLib[0].FORMATION_DIPLOME,
+      //...getRncpRomesFromSDKresponse({ result: { rncp: matchFiches[0] } }),
+      TYPE_RAPPROCHEMENT_MNA: "LIBSPÉCIALITÉ_CFD",
+    };
   }
 
-  if (result.CODE_CFD_MNA) {
-    try {
-      let responseCFD = await getCfdInfo(result.CODE_CFD_MNA);
-
-      if (responseCFD) {
-        result = {
-          CODE_CFD_MNA: result.CODE_CFD_MNA,
-          ...getRncpRomesFromSDKresponse(responseCFD),
-        };
+  if (matchFirstSubLib.length === 1 && restSubLib.length > 0) {
+    let subs = [
+      {
+        sousLibelle: firstSubLib.intitule,
+        CODE_CFD_MNA: matchFirstSubLib[0].FORMATION_DIPLOME,
+        CODE_RNCP_MNA: "NA",
+        CODE_ROMES_MNA: "NA",
+        TYPE_RAPPROCHEMENT_MNA: "LIBSPÉCIALITÉ_CFD",
+      },
+    ];
+    await asyncForEach(restSubLib, async (subLib) => {
+      const matchBcn = await Models.BcnFormationDiplome.find({
+        LIBELLE_LONG_200: new RegExp(`${subLib.intitule.toUpperCase()}`),
+      }).lean();
+      if (matchBcn.length > 0) {
+        subs.push({
+          sousLibelle: subLib.intitule,
+          CODE_CFD_MNA: matchBcn.map((m) => m.FORMATION_DIPLOME).join(","),
+          CODE_RNCP_MNA: "NA",
+          CODE_ROMES_MNA: "NA",
+          TYPE_RAPPROCHEMENT_MNA: "LIBSPÉCIALITÉ_CFD",
+        });
       }
-    } catch (error) {
-      console.log("findByIntituleInBcn", error);
+    });
+    if (subs.length === 1) {
+      return {
+        CODE_CFD_MNA: null,
+        //...getRncpRomesFromSDKresponse({ result: { rncp: matchFiches[0] } }),
+        TYPE_RAPPROCHEMENT_MNA: null,
+      };
     }
+    return {
+      CODE_CFD_MNA: null,
+      //...getRncpRomesFromSDKresponse({ result: { rncp: matchFiches[0] } }),
+      TYPE_RAPPROCHEMENT_MNA: "LIBSPÉCIALITÉ_BCN_MULTIPLE",
+      TEMP_SUBS: subs,
+    };
   }
-  return result;
+
+  return { CODE_CFD_MNA: null, CODE_RNCP_MNA: null, CODE_ROMES_MNA: null, TYPE_RAPPROCHEMENT_MNA: null };
 };
 
 async function prepare() {
@@ -161,35 +287,49 @@ async function prepare() {
   await downloadAndSaveFileFromS3("psup_latest.xls", filePath);
   const formationsPsRawData = getJsonFromXlsxFile(filePath);
   const formationsPsUpdated = [];
+  Models = await getModels();
 
   console.log(formationsPsRawData.length);
 
-  let countFindByMef = 0;
-  let countFindByIntituleInBcn = 0;
+  let countNotFoundMef = 0;
+  let countNotFoundBcn = 0;
+  let countNotFoundRNCP = 0;
   await asyncForEach(formationsPsRawData, async (formationPsRawData) => {
-    let dataToComplete = { CODE_CFD_MNA: null, CODE_RNCP_MNA: null, CODE_ROMES_MNA: null };
+    let dataToComplete = {
+      CODE_CFD_MNA: null,
+      CODE_RNCP_MNA: null,
+      CODE_ROMES_MNA: null,
+      TYPE_RAPPROCHEMENT_MNA: null,
+    };
 
     dataToComplete = await findByMef(formationPsRawData);
 
-    if (!dataToComplete.CODE_CFD_MNA) {
-      countFindByMef++;
+    if (!dataToComplete.TYPE_RAPPROCHEMENT_MNA) {
+      countNotFoundMef++;
       dataToComplete = await findByIntituleInBcn(formationPsRawData);
-      if (!dataToComplete.CODE_CFD_MNA) {
-        countFindByIntituleInBcn++;
+      if (!dataToComplete.TYPE_RAPPROCHEMENT_MNA) {
+        countNotFoundBcn++;
+        dataToComplete = await findByIntituleInRNCP(formationPsRawData);
+        if (!dataToComplete.TYPE_RAPPROCHEMENT_MNA) {
+          countNotFoundRNCP++;
+        }
       }
     }
 
     // Cosmetic
     dataToComplete = {
+      ...dataToComplete,
       CODE_CFD_MNA: dataToComplete.CODE_CFD_MNA ?? "Non trouvé",
       CODE_RNCP_MNA: dataToComplete.CODE_RNCP_MNA ?? "Non trouvé",
       CODE_ROMES_MNA: dataToComplete.CODE_ROMES_MNA ?? "Non trouvé",
+      TYPE_RAPPROCHEMENT_MNA: dataToComplete.TYPE_RAPPROCHEMENT_MNA ?? "ERREUR",
     };
     formationsPsUpdated.push({ ...formationPsRawData, ...dataToComplete });
   });
-  console.log(countFindByMef);
-  console.log(countFindByIntituleInBcn);
-  await extractTablePs(formationsPsUpdated);
+  console.log(countNotFoundMef);
+  console.log(countNotFoundBcn);
+  console.log(countNotFoundRNCP);
+  await generateFile(formationsPsUpdated);
 }
 
 runScript(async () => {
