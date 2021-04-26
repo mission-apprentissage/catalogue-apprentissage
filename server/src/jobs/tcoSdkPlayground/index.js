@@ -4,7 +4,7 @@ const {
   // rncpImporter,
   // getRncpInfo,
   // bcnImporter,
-  // getCfdInfo,
+  getCfdInfo,
   // getMef10Info,
   // getSiretInfo,
   // getBcnInfo,
@@ -22,7 +22,11 @@ runScript(async () => {
   // console.log(await getRncpInfo("RNCP7571"));
 
   //await bcnImporter();
-  //console.log(await getCfdInfo("26033206"));
+  // console.log(await getCfdInfo("26033206"));
+
+  const cfdInfo = await getCfdInfo("40033002");
+  console.log(new Date(cfdInfo.result.date_fermeture)); // --> 2022-08-30T22:00:00.000Z
+
   // console.log(await getMef10Info("23310022319"));
 
   // console.log(await getSiretInfo("32922456200234"));

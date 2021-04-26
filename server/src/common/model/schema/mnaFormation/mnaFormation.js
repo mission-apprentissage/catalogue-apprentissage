@@ -22,6 +22,11 @@ const mnaFormationSchema = {
     default: false,
     description: "BCN : cfd périmé (fermeture avant le 31 aout de l'année courante)",
   },
+  cfd_date_fermeture: {
+    type: Date,
+    default: null,
+    description: "Date de fermeture du cfd",
+  },
   mef_10_code: {
     type: String,
     default: null,
