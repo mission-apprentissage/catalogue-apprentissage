@@ -62,9 +62,9 @@ const run = async () => {
     console.log(`Master ${process.pid} is running`);
 
     const filter = {};
-    const limit = 100; //100;
     const args = process.argv.slice(2);
     const withCodePostalUpdate = args?.[0] === "--withCodePostal";
+    const limit = withCodePostalUpdate ? 25 : 100; //100;
 
     runScript(async () => {
       const idsToSkip = await managedUnPublishedRcoFormation();
