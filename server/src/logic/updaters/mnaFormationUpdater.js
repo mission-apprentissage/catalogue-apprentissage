@@ -76,23 +76,6 @@ const mnaFormationUpdater = async (
       return { updates: null, formation, error, cfdInfo };
     }
 
-    let geoMapping = {};
-    if (withCodePostalUpdate) {
-      const { result: coordinates, messages: geoMessages } = await getCoordinatesFromAddressData({
-        numero_voie: formation.lieu_formation_adresse,
-        localite: cpMapping.localite,
-        code_postal: cpMapping.code_postal,
-      });
-
-      error = parseErrors(geoMessages);
-      if (!error && coordinates?.results_count === 1) {
-        // set geo coords when we get 1 result only
-        geoMapping = {
-          lieu_formation_geo_coordonnees: coordinates.geo_coordonnees,
-        };
-      }
-    }
-
     const rncpInfo = {
       rncp_code: cfdMapping?.rncp_code,
       rncp_intitule: cfdMapping?.rncp_intitule,
@@ -108,6 +91,25 @@ const mnaFormationUpdater = async (
     error = parseErrors(etablissementsMessages);
     if (error) {
       return { updates: null, formation, error, cfdInfo };
+    }
+
+    let geoMapping = {};
+    if (withCodePostalUpdate) {
+      const { result: coordinates, messages: geoMessages } = await getCoordinatesFromAddressData({
+        numero_voie: formation.lieu_formation_adresse,
+        localite: cpMapping.localite,
+        code_postal: cpMapping.code_postal,
+      });
+
+      const geolocError = parseErrors(geoMessages);
+      if (!geolocError && coordinates.geo_coordonnees) {
+        // set geo coords even if we get multiple results
+        geoMapping = {
+          // will overwrite data computed by etablissementsMapper
+          // field is for LBA only
+          idea_geo_coordonnees_etablissement: coordinates.geo_coordonnees,
+        };
+      }
     }
 
     const rcoFormation = await RcoFormation.findOne({ id_rco_formation: formation.id_rco_formation });
@@ -153,8 +155,8 @@ const mnaFormationUpdater = async (
       ...formation,
       ...cfdMapping,
       ...cpMapping,
-      ...geoMapping,
       ...etablissementsMapping,
+      ...geoMapping,
       tags,
       published,
       update_error,
