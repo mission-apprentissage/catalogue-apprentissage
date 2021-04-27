@@ -220,21 +220,21 @@ const Formation = ({
             </Heading>
             <Text mb={4}>
               Intitulé court de la formation: <strong>{displayedFormation.intitule_court}</strong>{" "}
-              <InfoTooltip description={helpText.intitule_court} />
+              <InfoTooltip description={helpText.formation.intitule_court} />
             </Text>
             <Text mb={4}>
               Diplôme ou titre visé: <strong>{displayedFormation.diplome}</strong>{" "}
-              <InfoTooltip description={helpText.diplome} />
+              <InfoTooltip description={helpText.formation.diplome} />
             </Text>
             <Text mb={4}>
               Niveau de la formation: <strong>{displayedFormation.niveau}</strong>{" "}
-              <InfoTooltip description={helpText.niveau} />
+              <InfoTooltip description={helpText.formation.niveau} />
             </Text>
             <Text mb={4}>
               Code diplôme (Éducation Nationale):{" "}
               {!edition && (
                 <>
-                  <strong>{displayedFormation.cfd}</strong> <InfoTooltip description={helpText.cfd} />
+                  <strong>{displayedFormation.cfd}</strong> <InfoTooltip description={helpText.formation.cfd} />
                 </>
               )}
               {edition && <Input type="text" name="cfd" onChange={handleChange} value={values.cfd} />}
@@ -251,7 +251,7 @@ const Formation = ({
                 {displayedFormation.mef_10_code ??
                   displayedFormation?.bcn_mefs_10?.map(({ mef10 }) => mef10).join(", ")}
               </strong>{" "}
-              <InfoTooltip description={helpText.mef} />
+              <InfoTooltip description={helpText.formation.mef} />
             </Text>
             {displayedFormation?.mefs_10?.length > 0 && (
               <>
@@ -271,7 +271,7 @@ const Formation = ({
               {!edition && (
                 <>
                   <FormationPeriode periode={displayedFormation.periode} />{" "}
-                  <InfoTooltip description={helpText.periode} />
+                  <InfoTooltip description={helpText.formation.periode} />
                 </>
               )}
               {edition && <Input type="text" name="periode" onChange={handleChange} value={values.periode} />}
@@ -292,7 +292,7 @@ const Formation = ({
                       {displayedFormation.localite} <FontAwesomeIcon icon={faExternalLinkAlt} />
                     </Link>
                   </strong>{" "}
-                  <InfoTooltip description={helpText.adresse} />
+                  <InfoTooltip description={helpText.formation.adresse} />
                 </>
               )}
               {edition && (
@@ -311,17 +311,17 @@ const Formation = ({
               Capacite d'accueil:{" "}
               {!edition && (
                 <>
-                  <strong>{formation.capacite}</strong> <InfoTooltip description={helpText.capacite} />
+                  <strong>{formation.capacite}</strong> <InfoTooltip description={helpText.formation.capacite} />
                 </>
               )}
               {edition && <Input type="text" name="capacite" onChange={handleChange} value={values.capacite} />}
             </Text>
             <Text mb={4}>
               Durée de la formation: <strong>{displayedFormation.duree}</strong>{" "}
-              <InfoTooltip description={helpText.duree} />
+              <InfoTooltip description={helpText.formation.duree} />
             </Text>
             <Text mb={4}>
-              Année: <strong>{displayedFormation.annee}</strong> <InfoTooltip description={helpText.annee} />
+              Année: <strong>{displayedFormation.annee}</strong> <InfoTooltip description={helpText.formation.annee} />
             </Text>
           </Box>
           <Box mb={16}>
@@ -331,16 +331,16 @@ const Formation = ({
             {displayedFormation.rncp_code && (
               <Text mb={4}>
                 Code RNCP: <strong>{displayedFormation.rncp_code}</strong>{" "}
-                <InfoTooltip description={helpText.rncp_code} />
+                <InfoTooltip description={helpText.formation.rncp_code} />
               </Text>
             )}
             <Text mb={4}>
               Intitulé RNCP: <strong>{displayedFormation.rncp_intitule}</strong>{" "}
-              <InfoTooltip description={helpText.rncp_intitule} />
+              <InfoTooltip description={helpText.formation.rncp_intitule} />
             </Text>
             <Text mb={4}>
               Codes ROME: <strong>{displayedFormation.rome_codes.join(", ")}</strong>{" "}
-              <InfoTooltip description={helpText.rome_codes} />
+              <InfoTooltip description={helpText.formation.rome_codes} />
             </Text>
             <Box>
               {displayedFormation.opcos && displayedFormation.opcos.length === 0 && (
@@ -365,7 +365,7 @@ const Formation = ({
                       )
                       .join(", ")}
                   </strong>{" "}
-                  <InfoTooltip description={helpText.certificateurs} />
+                  <InfoTooltip description={helpText.formation.certificateurs} />
                 </Text>
                 {showPartenaires && (
                   <Text as="div" mb={4}>
@@ -410,7 +410,8 @@ const Formation = ({
               UAI:{" "}
               {!edition && (
                 <>
-                  <strong>{formation.uai_formation}</strong> <InfoTooltip description={helpText.uai_formation} />
+                  <strong>{formation.uai_formation}</strong>{" "}
+                  <InfoTooltip description={helpText.formation.uai_formation} />
                 </>
               )}
               {edition && (
@@ -432,20 +433,21 @@ const Formation = ({
               <strong>
                 {displayedFormation.nom_academie} ({displayedFormation.num_academie})
               </strong>{" "}
-              <InfoTooltip description={helpText.academie} />
+              <InfoTooltip description={helpText.formation.academie} />
             </Text>
             <Text mb={4}>
               Code postal:{" "}
               {!edition && (
                 <>
-                  <strong>{displayedFormation.code_postal}</strong> <InfoTooltip description={helpText.code_postal} />
+                  <strong>{displayedFormation.code_postal}</strong>{" "}
+                  <InfoTooltip description={helpText.formation.code_postal} />
                 </>
               )}
               {edition && <Input type="text" name="code_postal" onChange={handleChange} value={values.code_postal} />}
             </Text>
             <Text mb={4}>
               Code commune: <strong>{displayedFormation.code_commune_insee}</strong>{" "}
-              <InfoTooltip description={helpText.code_commune_insee} />
+              <InfoTooltip description={helpText.formation.code_commune_insee} />
             </Text>
             <Box mb={4}>
               {formation.onisep_url !== "" && formation.onisep_url !== null && (
@@ -744,7 +746,7 @@ export default ({ match }) => {
               <Box bg="white" p={10} my={6} boxShadow="0 2px 2px 0 rgba(215, 215, 215, 0.5)" borderRadius={4}>
                 <Heading as="h1" fontSize="beta">
                   {pendingFormation?.intitule_long ?? formation?.intitule_long}{" "}
-                  <InfoTooltip description={helpText.intitule_long} />
+                  <InfoTooltip description={helpText.formation.intitule_long} />
                 </Heading>
                 {hasRightToEdit && formation.etablissement_reference_catalogue_published && (
                   <>
