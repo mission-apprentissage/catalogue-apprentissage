@@ -30,6 +30,8 @@ import { hasOneOfRoles } from "../../common/utils/rolesUtils";
 
 import "./etablissement.css";
 import { NavLink } from "react-router-dom";
+import InfoTooltip from "../../common/components/InfoTooltip";
+import helpText from "../../locales/helpText.json";
 
 const sleep = (m) => new Promise((r) => setTimeout(r, m));
 
@@ -114,33 +116,47 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
           <h2 className="small">Détails</h2>
           <div className="field">
             <h3>Enseigne</h3>
-            <p>{etablissement.enseigne}</p>
+            <p>
+              {etablissement.enseigne} <InfoTooltip description={helpText.etablissement.enseigne} />
+            </p>
           </div>
           <div className="field">
             <h3>Siret</h3>
-            <p>{etablissement.siret}</p>
+            <p>
+              {etablissement.siret} <InfoTooltip description={helpText.etablissement.siret} />
+            </p>
           </div>
           <div className="field">
             <h3>Siren</h3>
-            <p>{etablissement.siren}</p>
+            <p>
+              {etablissement.siren} <InfoTooltip description={helpText.etablissement.siren} />
+            </p>
           </div>
           <div className="field">
             <h3>
               Code NAF
-              <p>{etablissement.naf_code}</p>
+              <p>
+                {etablissement.naf_code} <InfoTooltip description={helpText.etablissement.naf_code} />
+              </p>
             </h3>
           </div>
           <div className="field">
             <h3>Libellé NAF</h3>
-            <p>{etablissement.naf_libelle}</p>
+            <p>
+              {etablissement.naf_libelle} <InfoTooltip description={helpText.etablissement.naf_libelle} />
+            </p>
           </div>
           <div className="field">
             <h3>Date de création</h3>
-            <p>{creationDate}</p>
+            <p>
+              {creationDate} <InfoTooltip description={helpText.etablissement.date_creation} />
+            </p>
           </div>
           <div className="field">
             <h3>Adresse</h3>
-            <p>{etablissement.adresse}</p>
+            <p>
+              {etablissement.adresse} <InfoTooltip description={helpText.etablissement.adresse} />
+            </p>
           </div>
         </div>
       </GridItem>
@@ -162,42 +178,61 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
             <div className="field multiple">
               <div>
                 <h3>Type</h3>
-                <p>{etablissement.computed_type}</p>
+                <p>
+                  {etablissement.computed_type} <InfoTooltip description={helpText.etablissement.type} />
+                </p>
               </div>
               <div>
                 <h3>UAI</h3>
                 <p>
-                  {!edition && <>{etablissement.uai}</>}
+                  {!edition && (
+                    <>
+                      {etablissement.uai} <InfoTooltip description={helpText.etablissement.uai} />
+                    </>
+                  )}
                   {edition && <Input type="text" name="uai" onChange={handleChange} value={values.uai} />}
                 </p>
               </div>
             </div>
             <div className="field">
               <h3>Conventionné ?</h3>
-              <p>{etablissement.computed_conventionne}</p>
+              <p>
+                {etablissement.computed_conventionne} <InfoTooltip description={helpText.etablissement.conventionne} />
+              </p>
             </div>
             <div className="field">
               <h3>Déclaré en préfecture ?</h3>
-              <p>{etablissement.computed_declare_prefecture}</p>
+              <p>
+                {etablissement.computed_declare_prefecture}{" "}
+                <InfoTooltip description={helpText.etablissement.declare_prefecture} />
+              </p>
             </div>
             <div className="field">
               <h3>Certifié 2015 - datadock ?</h3>
-              <p>{etablissement.computed_info_datadock}</p>
+              <p>
+                {etablissement.computed_info_datadock} <InfoTooltip description={helpText.etablissement.datadock} />
+              </p>
             </div>
             <div className="field multiple">
               <div>
                 <h3>Code postal</h3>
-                <p>{etablissement.code_postal}</p>
+                <p>
+                  {etablissement.code_postal} <InfoTooltip description={helpText.etablissement.code_postal} />
+                </p>
               </div>
               <div>
                 <h3>Code commune</h3>
-                <p>{etablissement.code_insee_localite}</p>
+                <p>
+                  {etablissement.code_insee_localite}{" "}
+                  <InfoTooltip description={helpText.etablissement.code_insee_localite} />
+                </p>
               </div>
             </div>
             <div className="field">
               <h3>Académie</h3>
               <p>
-                {etablissement.nom_academie} ({etablissement.num_academie})
+                {etablissement.nom_academie} ({etablissement.num_academie}){" "}
+                <InfoTooltip description={helpText.etablissement.academie} />
               </p>
             </div>
           </div>
@@ -347,7 +382,10 @@ export default ({ match }) => {
             )}
             {etablissement && (
               <>
-                <h1 className="heading">{etablissement.entreprise_raison_sociale}</h1>
+                <h1 className="heading">
+                  {etablissement.entreprise_raison_sociale}{" "}
+                  <InfoTooltip description={helpText.etablissement.raison_sociale} />
+                </h1>
                 <Etablissement
                   etablissement={etablissement}
                   edition={edition}
