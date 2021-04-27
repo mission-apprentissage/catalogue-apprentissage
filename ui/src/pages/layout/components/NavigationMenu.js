@@ -40,7 +40,7 @@ const NavItem = ({ children, to = "/", ...rest }) => {
       color={isActive ? "bluefrance" : "grey.800"}
       borderBottom="3px solid"
       borderColor={isActive ? "bluefrance" : "transparent"}
-      _hover={{ textDecoration: "none", color: "grey.600", borderColor: "grey.600" }}
+      _hover={{ textDecoration: "none", color: "grey.800", bg: "grey.200" }}
     >
       <Text display="block" {...rest}>
         {children}
@@ -66,7 +66,6 @@ const NavLinks = ({ isOpen }) => {
         <NavItem to="/">Accueil</NavItem>
         <NavItem to="/recherche/formations-2021">Mes actions expertes</NavItem>
         <NavItem to="/recherche/formations-2021">Catalogue des formations en apprentissage 2021</NavItem>
-        {/*<MenuItem to="/recherche/formations-2020">Formations 2020</MenuItem>*/}
         <NavItem to="/recherche/etablissements">Liste des établissements</NavItem>
         <NavItem to="/changelog">Journal des modifications</NavItem>
         <Menu placement="bottom">
@@ -79,7 +78,7 @@ const NavLinks = ({ isOpen }) => {
             color={menuIsActive ? "blue.500" : "grey.500"}
             borderBottom="1px solid"
             borderColor={menuIsActive ? "blue.500" : "transparent"}
-            _hover={{ textDecoration: "none", color: "grey.600", borderColor: "grey.600" }}
+            _hover={{ textDecoration: "none", color: "red", borderColor: "red" }}
           ></MenuButton>
           <MenuList>
             <MenuItem as={NavLink} to="/guide-reglementaire">
@@ -119,6 +118,7 @@ const NavBarContainer = ({ children, ...props }) => {
           {children}
         </Flex>
       </Container>
+      <Box w="100" boxShadow="md" p={1} />
     </Box>
   );
 };
