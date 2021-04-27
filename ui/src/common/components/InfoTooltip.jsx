@@ -18,14 +18,14 @@ const InfoTooltip = ({ description }) => {
           {description}
         </Text>
       }
-      openDelay={1000}
+      openDelay={600}
       bg="white"
       color="grey.800"
       placement="right"
     >
-      <span>
+      <Text as={"span"} _hover={{ cursor: "pointer" }}>
         <TooltipIcon color={"grey.500"} boxSize={13} />
-      </span>
+      </Text>
     </Tooltip>
   );
 };
