@@ -13,10 +13,10 @@ import {
   Heading,
   Input,
   Link,
+  ListItem,
   Spinner,
   Text,
   UnorderedList,
-  ListItem,
   useDisclosure,
 } from "@chakra-ui/react";
 import { NavLink, useHistory } from "react-router-dom";
@@ -32,6 +32,8 @@ import { ReactComponent as InfoIcon } from "../../theme/assets/info-circle.svg";
 import { PublishModal } from "../../common/components/formation/PublishModal";
 import { HABILITE_LIST } from "../../constants/certificateurs";
 import { buildUpdatesHistory } from "../../common/utils/formationUtils";
+import InfoTooltip from "../../common/components/InfoTooltip";
+import helpText from "../../locales/helpText.json";
 
 const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
 
@@ -217,16 +219,24 @@ const Formation = ({
               Détails
             </Heading>
             <Text mb={4}>
-              Intitulé court de la formation: <strong>{displayedFormation.intitule_court}</strong>
+              Intitulé court de la formation: <strong>{displayedFormation.intitule_court}</strong>{" "}
+              <InfoTooltip description={helpText.formation.intitule_court} />
             </Text>
             <Text mb={4}>
-              Diplôme ou titre visé: <strong>{displayedFormation.diplome}</strong>
+              Diplôme ou titre visé: <strong>{displayedFormation.diplome}</strong>{" "}
+              <InfoTooltip description={helpText.formation.diplome} />
             </Text>
             <Text mb={4}>
-              Niveau de la formation: <strong>{displayedFormation.niveau}</strong>
+              Niveau de la formation: <strong>{displayedFormation.niveau}</strong>{" "}
+              <InfoTooltip description={helpText.formation.niveau} />
             </Text>
             <Text mb={4}>
-              Code diplôme (Éducation Nationale): {!edition && <strong>{displayedFormation.cfd}</strong>}
+              Code diplôme (Éducation Nationale):{" "}
+              {!edition && (
+                <>
+                  <strong>{displayedFormation.cfd}</strong> <InfoTooltip description={helpText.formation.cfd} />
+                </>
+              )}
               {edition && <Input type="text" name="cfd" onChange={handleChange} value={values.cfd} />}
               {displayedFormation.cfd_outdated && (
                 <>
@@ -240,7 +250,8 @@ const Formation = ({
               <strong>
                 {displayedFormation.mef_10_code ??
                   displayedFormation?.bcn_mefs_10?.map(({ mef10 }) => mef10).join(", ")}
-              </strong>
+              </strong>{" "}
+              <InfoTooltip description={helpText.formation.mef} />
             </Text>
             {displayedFormation?.mefs_10?.length > 0 && (
               <>
@@ -256,24 +267,33 @@ const Formation = ({
               </>
             )}
             <Text mb={4}>
-              Période d'inscription: {!edition && <FormationPeriode periode={displayedFormation.periode} />}
+              Période d'inscription:{" "}
+              {!edition && (
+                <>
+                  <FormationPeriode periode={displayedFormation.periode} />{" "}
+                  <InfoTooltip description={helpText.formation.periode} />
+                </>
+              )}
               {edition && <Input type="text" name="periode" onChange={handleChange} value={values.periode} />}
             </Text>
             <Text mb={4}>
               Lieu de la formation:{" "}
               {!edition && (
-                <strong>
-                  <Link
-                    href={getGeoportailUrl(formation)}
-                    textDecoration="underline"
-                    color="blue.500"
-                    fontWeight="bold"
-                    isExternal
-                  >
-                    {displayedFormation.lieu_formation_adresse}, {displayedFormation.code_postal}{" "}
-                    {displayedFormation.localite} <FontAwesomeIcon icon={faExternalLinkAlt} />
-                  </Link>
-                </strong>
+                <>
+                  <strong>
+                    <Link
+                      href={getGeoportailUrl(formation)}
+                      textDecoration="underline"
+                      color="blue.500"
+                      fontWeight="bold"
+                      isExternal
+                    >
+                      {displayedFormation.lieu_formation_adresse}, {displayedFormation.code_postal}{" "}
+                      {displayedFormation.localite} <FontAwesomeIcon icon={faExternalLinkAlt} />
+                    </Link>
+                  </strong>{" "}
+                  <InfoTooltip description={helpText.formation.adresse} />
+                </>
               )}
               {edition && (
                 <>
@@ -288,14 +308,20 @@ const Formation = ({
               )}
             </Text>
             <Text mb={4}>
-              Capacite d'accueil: {!edition && <strong>{formation.capacite}</strong>}
+              Capacite d'accueil:{" "}
+              {!edition && (
+                <>
+                  <strong>{formation.capacite}</strong> <InfoTooltip description={helpText.formation.capacite} />
+                </>
+              )}
               {edition && <Input type="text" name="capacite" onChange={handleChange} value={values.capacite} />}
             </Text>
             <Text mb={4}>
-              Durée de la formation: <strong>{displayedFormation.duree}</strong>
+              Durée de la formation: <strong>{displayedFormation.duree}</strong>{" "}
+              <InfoTooltip description={helpText.formation.duree} />
             </Text>
             <Text mb={4}>
-              Année: <strong>{displayedFormation.annee}</strong>
+              Année: <strong>{displayedFormation.annee}</strong> <InfoTooltip description={helpText.formation.annee} />
             </Text>
           </Box>
           <Box mb={16}>
@@ -304,14 +330,17 @@ const Formation = ({
             </Heading>
             {displayedFormation.rncp_code && (
               <Text mb={4}>
-                Code RNCP: <strong>{displayedFormation.rncp_code}</strong>
+                Code RNCP: <strong>{displayedFormation.rncp_code}</strong>{" "}
+                <InfoTooltip description={helpText.formation.rncp_code} />
               </Text>
             )}
             <Text mb={4}>
-              Intitulé RNCP: <strong>{displayedFormation.rncp_intitule}</strong>
+              Intitulé RNCP: <strong>{displayedFormation.rncp_intitule}</strong>{" "}
+              <InfoTooltip description={helpText.formation.rncp_intitule} />
             </Text>
             <Text mb={4}>
-              Codes ROME: <strong>{displayedFormation.rome_codes.join(", ")}</strong>
+              Codes ROME: <strong>{displayedFormation.rome_codes.join(", ")}</strong>{" "}
+              <InfoTooltip description={helpText.formation.rome_codes} />
             </Text>
             <Box>
               {displayedFormation.opcos && displayedFormation.opcos.length === 0 && (
@@ -335,7 +364,8 @@ const Formation = ({
                           `${certificateur} (siret: ${siret_certificateur ?? "n/a"})`
                       )
                       .join(", ")}
-                  </strong>
+                  </strong>{" "}
+                  <InfoTooltip description={helpText.formation.certificateurs} />
                 </Text>
                 {showPartenaires && (
                   <Text as="div" mb={4}>
@@ -377,7 +407,13 @@ const Formation = ({
               Type: <strong>{formation.etablissement_reference_type}</strong>
             </Text>
             <Text mb={4}>
-              UAI: {!edition && <strong>{formation.uai_formation}</strong>}
+              UAI:{" "}
+              {!edition && (
+                <>
+                  <strong>{formation.uai_formation}</strong>{" "}
+                  <InfoTooltip description={helpText.formation.uai_formation} />
+                </>
+              )}
               {edition && (
                 <Input type="text" name="uai_formation" onChange={handleChange} value={values.uai_formation} />
               )}
@@ -396,14 +432,22 @@ const Formation = ({
               Académie:{" "}
               <strong>
                 {displayedFormation.nom_academie} ({displayedFormation.num_academie})
-              </strong>
+              </strong>{" "}
+              <InfoTooltip description={helpText.formation.academie} />
             </Text>
             <Text mb={4}>
-              Code postal: {!edition && <strong>{displayedFormation.code_postal}</strong>}
+              Code postal:{" "}
+              {!edition && (
+                <>
+                  <strong>{displayedFormation.code_postal}</strong>{" "}
+                  <InfoTooltip description={helpText.formation.code_postal} />
+                </>
+              )}
               {edition && <Input type="text" name="code_postal" onChange={handleChange} value={values.code_postal} />}
             </Text>
             <Text mb={4}>
-              Code commune: <strong>{displayedFormation.code_commune_insee}</strong>
+              Code commune: <strong>{displayedFormation.code_commune_insee}</strong>{" "}
+              <InfoTooltip description={helpText.formation.code_commune_insee} />
             </Text>
             <Box mb={4}>
               {formation.onisep_url !== "" && formation.onisep_url !== null && (
@@ -701,7 +745,8 @@ export default ({ match }) => {
             <>
               <Box bg="white" p={10} my={6} boxShadow="0 2px 2px 0 rgba(215, 215, 215, 0.5)" borderRadius={4}>
                 <Heading as="h1" fontSize="beta">
-                  {pendingFormation?.intitule_long ?? formation?.intitule_long}
+                  {pendingFormation?.intitule_long ?? formation?.intitule_long}{" "}
+                  <InfoTooltip description={helpText.formation.intitule_long} />
                 </Heading>
                 {hasRightToEdit && formation.etablissement_reference_catalogue_published && (
                   <>
