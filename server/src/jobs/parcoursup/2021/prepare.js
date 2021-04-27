@@ -9,18 +9,18 @@ const { orderBy } = require("lodash");
 
 let Models = null;
 
-const generateFile = async (formationsPs) => {
+const createWorkingTable = (formationsPs) => {
   const specialitePsRawData = formationsPs.map((f) => ({
     // eslint-disable-next-line prettier/prettier
     CODESPÉCIALITÉ: f["CODESPÉCIALITÉ"],
     // eslint-disable-next-line prettier/prettier
     LIBSPÉCIALITÉ: f["LIBSPÉCIALITÉ"],
-    CODEMEF: f.CODEMEF,
-    CODE_CFD_MNA: f.CODE_CFD_MNA,
-    CODE_RNCP_MNA: f.CODE_RNCP_MNA,
-    CODE_ROMES_MNA: f.CODE_ROMES_MNA,
-    TYPE_RAPPROCHEMENT_MNA: f.TYPE_RAPPROCHEMENT_MNA,
-    TEMP_SUBS: f.TEMP_SUBS || [],
+    CODEMEF: f.CODEMEF || null,
+    CODE_CFD_MNA: null,
+    CODE_RNCP_MNA: null,
+    CODE_ROMES_MNA: null,
+    TYPE_RAPPROCHEMENT_MNA: null,
+    TEMP_SUBS: [],
   }));
 
   // eslint-disable-next-line no-unused-vars
@@ -33,12 +33,23 @@ const generateFile = async (formationsPs) => {
     });
     return exist ? acc : [...acc, current];
   }, []);
-  console.log(groupByUniq.length);
 
+  return groupByUniq;
+};
+
+const generateSpeTableFile = async (speTable) => {
   const specialiteOutput = [];
-  for (let index = 0; index < groupByUniq.length; index++) {
-    const { TEMP_SUBS, ...rest } = groupByUniq[index];
-    specialiteOutput.push(rest);
+  for (let index = 0; index < speTable.length; index++) {
+    const { TEMP_SUBS, ...rest } = speTable[index];
+    specialiteOutput.push({
+      CODESPÉCIALITÉ: rest.CODESPÉCIALITÉ,
+      LIBSPÉCIALITÉ: rest.LIBSPÉCIALITÉ,
+      CODEMEF: rest.CODEMEF,
+      CODE_CFD_MNA: rest.CODE_CFD_MNA,
+      CODE_RNCP_MNA: rest.CODE_RNCP_MNA,
+      CODE_ROMES_MNA: rest.CODE_ROMES_MNA,
+      TYPE_RAPPROCHEMENT_MNA: rest.TYPE_RAPPROCHEMENT_MNA,
+    });
     if (TEMP_SUBS.length > 0) {
       specialiteOutput.push({
         // eslint-disable-next-line prettier/prettier
@@ -68,9 +79,7 @@ const generateFile = async (formationsPs) => {
     }
   }
 
-  await createXlsxFromJson(specialiteOutput, path.join(__dirname, "/table_PS.xlsx"));
-
-  //TODO PS TAB
+  await createXlsxFromJson(specialiteOutput, path.join(__dirname, "/Table-ParcourSup-Spécialités-xxxx.xlsx"));
 };
 
 const getRncpRomesFromSDKresponse = ({ result: { rncp: rncpInfo } }) => ({
@@ -162,10 +171,6 @@ const extractSubLibSpecialite = (libSpecialite) => {
 
 // eslint-disable-next-line no-unused-vars
 const findByIntituleInRNCP = async (formationPsRawData) => {
-  // let result = { CODE_CFD_MNA: null, CODE_RNCP_MNA: null, CODE_ROMES_MNA: null, TYPE_RAPPROCHEMENT_MNA: null };
-
-  // const recompose = extractSubLibSpecialite(formationPsRawData["LIBSPÉCIALITÉ"]);
-
   const [firstSubLib, ...restSubLib] = extractSubLibSpecialite(formationPsRawData["LIBSPÉCIALITÉ"]);
 
   const matchFirstSubLib = await Models.FicheRncp.find({
@@ -223,8 +228,6 @@ const findByIntituleInRNCP = async (formationPsRawData) => {
 };
 
 const findByIntituleInBcn = async (formationPsRawData) => {
-  // let result = { CODE_CFD_MNA: null, CODE_RNCP_MNA: null, CODE_ROMES_MNA: null, TYPE_RAPPROCHEMENT_MNA: null };
-
   const [firstSubLib, ...restSubLib] = extractSubLibSpecialite(formationPsRawData["LIBSPÉCIALITÉ"]);
 
   const matchFirstSubLib = await Models.BcnFormationDiplome.find({
@@ -281,55 +284,104 @@ const findByIntituleInBcn = async (formationPsRawData) => {
   return { CODE_CFD_MNA: null, CODE_RNCP_MNA: null, CODE_ROMES_MNA: null, TYPE_RAPPROCHEMENT_MNA: null };
 };
 
-async function prepare() {
-  // Fetch latest psup formation from S3
-  const filePath = path.join(__dirname, "./psup_latest.xls");
-  await downloadAndSaveFileFromS3("psup_latest.xls", filePath);
-  const formationsPsRawData = getJsonFromXlsxFile(filePath);
-  const formationsPsUpdated = [];
-  Models = await getModels();
+const createCurrentTable = async (formationsPsRawData) => {
+  const currentSpeTable = createWorkingTable(formationsPsRawData);
 
-  console.log(formationsPsRawData.length);
+  // Fetch previous table ps spe from S3
+  const filePathTable = path.join(__dirname, "./Table-ParcourSup-spe-latest.xlsx");
+  await downloadAndSaveFileFromS3("mna-services/features/ps/Table-ParcourSup-Spécialités-latest.xlsx", filePathTable);
+  const previousSpeTableRaw = getJsonFromXlsxFile(filePathTable);
 
-  let countNotFoundMef = 0;
-  let countNotFoundBcn = 0;
-  let countNotFoundRNCP = 0;
-  await asyncForEach(formationsPsRawData, async (formationPsRawData) => {
-    let dataToComplete = {
+  const previousSpeTable = previousSpeTableRaw.filter((line) => line["CODESPÉCIALITÉ"]);
+
+  // console.log("currentSpeTable", currentSpeTable.length);
+  // console.log("previousSpeTable", previousSpeTable.length);
+
+  const uniqTableMap = new Map();
+  for (let index = 0; index < previousSpeTable.length; index++) {
+    const previous = previousSpeTable[index];
+    uniqTableMap.set(JSON.stringify({ code: previous["CODESPÉCIALITÉ"], lib: previous["LIBSPÉCIALITÉ"] }), {
+      CODEMEF: null,
       CODE_CFD_MNA: null,
       CODE_RNCP_MNA: null,
       CODE_ROMES_MNA: null,
       TYPE_RAPPROCHEMENT_MNA: null,
-    };
+      TEMP_SUBS: [],
+      ...previous,
+    });
+  }
 
-    dataToComplete = await findByMef(formationPsRawData);
+  for (let index = 0; index < currentSpeTable.length; index++) {
+    const current = currentSpeTable[index];
+    // console.log(current);
+    if (!uniqTableMap.get(JSON.stringify({ code: current["CODESPÉCIALITÉ"], lib: current["LIBSPÉCIALITÉ"] }))) {
+      uniqTableMap.set(JSON.stringify({ code: current["CODESPÉCIALITÉ"], lib: current["LIBSPÉCIALITÉ"] }), current);
+    }
+  }
 
-    if (!dataToComplete.TYPE_RAPPROCHEMENT_MNA) {
-      countNotFoundMef++;
-      dataToComplete = await findByIntituleInBcn(formationPsRawData);
+  return [...uniqTableMap.values()]; // Merge
+};
+
+async function prepare() {
+  // Init
+  Models = await getModels();
+
+  // Fetch latest psup formation from S3
+  const filePath = path.join(__dirname, "./psup_latest.xls");
+  await downloadAndSaveFileFromS3("mna-services/features/ps/psup_latest.xls", filePath);
+  const formationsPsRawData = getJsonFromXlsxFile(filePath);
+
+  // console.log(formationsPsRawData.length);
+
+  const workingTableSpe = await createCurrentTable(formationsPsRawData);
+  // console.log(workingTableSpe);
+  // console.log(workingTableSpe.length);
+  const updatedTableSpe = [];
+
+  let countNotFoundMef = 0;
+  let countNotFoundBcn = 0;
+  let countNotFoundRNCP = 0;
+  await asyncForEach(workingTableSpe, async (spe) => {
+    if (spe.TYPE_RAPPROCHEMENT_MNA !== "MANUEL") {
+      let dataToComplete = {
+        CODE_CFD_MNA: null,
+        CODE_RNCP_MNA: null,
+        CODE_ROMES_MNA: null,
+        TYPE_RAPPROCHEMENT_MNA: null,
+      };
+
+      dataToComplete = await findByMef(spe);
+
       if (!dataToComplete.TYPE_RAPPROCHEMENT_MNA) {
-        countNotFoundBcn++;
-        dataToComplete = await findByIntituleInRNCP(formationPsRawData);
+        countNotFoundMef++;
+        dataToComplete = await findByIntituleInBcn(spe);
         if (!dataToComplete.TYPE_RAPPROCHEMENT_MNA) {
-          countNotFoundRNCP++;
+          countNotFoundBcn++;
+          dataToComplete = await findByIntituleInRNCP(spe);
+          if (!dataToComplete.TYPE_RAPPROCHEMENT_MNA) {
+            countNotFoundRNCP++;
+          }
         }
       }
-    }
 
-    // Cosmetic
-    dataToComplete = {
-      ...dataToComplete,
-      CODE_CFD_MNA: dataToComplete.CODE_CFD_MNA ?? "Non trouvé",
-      CODE_RNCP_MNA: dataToComplete.CODE_RNCP_MNA ?? "Non trouvé",
-      CODE_ROMES_MNA: dataToComplete.CODE_ROMES_MNA ?? "Non trouvé",
-      TYPE_RAPPROCHEMENT_MNA: dataToComplete.TYPE_RAPPROCHEMENT_MNA ?? "ERREUR",
-    };
-    formationsPsUpdated.push({ ...formationPsRawData, ...dataToComplete });
+      // Cosmetic
+      dataToComplete = {
+        ...dataToComplete,
+        CODE_CFD_MNA: dataToComplete.CODE_CFD_MNA ?? "Non trouvé",
+        CODE_RNCP_MNA: dataToComplete.CODE_RNCP_MNA ?? "Non trouvé",
+        CODE_ROMES_MNA: dataToComplete.CODE_ROMES_MNA ?? "Non trouvé",
+        TYPE_RAPPROCHEMENT_MNA: dataToComplete.TYPE_RAPPROCHEMENT_MNA ?? "ERREUR",
+      };
+      updatedTableSpe.push({ ...spe, ...dataToComplete });
+    } else {
+      updatedTableSpe.push({ ...spe });
+    }
   });
   console.log(countNotFoundMef);
   console.log(countNotFoundBcn);
   console.log(countNotFoundRNCP);
-  await generateFile(formationsPsUpdated);
+
+  await generateSpeTableFile(updatedTableSpe);
 }
 
 runScript(async () => {
