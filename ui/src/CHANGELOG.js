@@ -57,7 +57,7 @@ const changelog = {
     },
     {
       version: "3.2.0",
-      date: "12/04/2021",
+      date: "12 Avril 2021",
       about: `<h5>À propos de cette version</h5>
       Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: ["[Catalogue] Contrôle des habilitations RNCP"],

@@ -109,6 +109,7 @@ const Header = () => {
           )}
         </Flex>
       </Container>
+      <Box w="100" mt={3} border="1px solid #ECECEC" />
     </Box>
   );
 };
