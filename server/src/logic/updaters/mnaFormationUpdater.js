@@ -105,7 +105,6 @@ const mnaFormationUpdater = async (
       if (!geolocError && coordinates.geo_coordonnees) {
         // set geo coords even if we get multiple results
         geoMapping = {
-          // will overwrite data computed by etablissementsMapper
           // field is for LBA only
           idea_geo_coordonnees_etablissement: coordinates.geo_coordonnees,
         };

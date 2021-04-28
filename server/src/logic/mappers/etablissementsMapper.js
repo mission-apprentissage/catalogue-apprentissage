@@ -82,8 +82,6 @@ const getGeoloc = ({ gestionnaire, formateur }) => {
   return {
     geo_coordonnees_etablissement_formateur,
     geo_coordonnees_etablissement_gestionnaire,
-    idea_geo_coordonnees_etablissement:
-      geo_coordonnees_etablissement_formateur || geo_coordonnees_etablissement_gestionnaire,
   };
 };
 
