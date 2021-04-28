@@ -303,13 +303,13 @@
   padding-top: 20px;
 }
 .react-changelog-container .changelog-update-description.changelog-improvement .changelog-type {
-  background-color: #ffc29e;
+  background-color: #bfeae2;
 }
 .react-changelog-container .changelog-update-description.changelog-bug-fix .changelog-type {
-  background-color: #ffe800;
+  background-color: #e3ebd3;
 }
 .react-changelog-container .changelog-type {
-  background-color: #fdcf41;
+  background-color: #c5e6d8;
   color: #1e1e1e;
   display: inline-block;
   vertical-align: top;

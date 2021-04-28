@@ -36,6 +36,8 @@ import { faInfoCircle, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { Code } from "@chakra-ui/react";
 // eslint-disable-next-line no-unused-vars
 import { Grid, GridItem } from "@chakra-ui/react";
+import { ExternalLinkLine } from "../theme/components/icons/External-link-line";
+import { InformationLine } from "../theme/components/icons/Information-line";
 
 const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
 const endpointTCO =
@@ -71,10 +73,10 @@ export default () => {
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 24]} color="#1E1E1E">
         <Container maxW="xl">
-          <Box bg="#F8F8F8" color={"#D07C75"} borderLeft="4px" role="none" p={5}>
+          <Box bg="#F8F8F8" color="pinksoft.500" borderLeft="4px" role="none" p={5}>
             <Flex>
               <Box>
-                <FontAwesomeIcon icon={faInfoCircle} color={"#D07C75"} />
+                <InformationLine />
               </Box>
               <Text color="black" textStyle="sm" px={2}>
                 Grâce à vos retours une anomalie a été détectée dans le code qui testait la présence d'un SIRET sur un
@@ -168,29 +170,33 @@ export default () => {
                   </Heading>
                   <br />
                   <Text textStyle="rf-text">
-                    Les référencements et mises à jour effectuées dans les bases “Offre des Carif-Oref” sont répercutées
-                    <br />
-                    quotidiennement dans le “Catalogue des offres de formations en apprentissage” (délai 72h entre
-                    modifications
-                    <br /> demandées et publication).
+                    Les référencements et mises à jour effectués dans les bases “Offre des Carif-Oref” de chaque région
+                    sont répercutés <br /> quotidiennement dans le “Catalogue des offres de formations en apprentissage”
+                    (délai de 72h entre modifications <br /> demandées au Carif-Oref et publication dans le Catalogue).
                   </Text>
                 </Box>
                 <br /> <br />
                 <Box>
                   <Heading as="h4" textStyle="h4">
-                    Vous êtes organisme de formation / établissement de formation ?
+                    Vous êtes organisme de formation
                   </Heading>
                   <br />
                   <Text textStyle="rf-text">
-                    Pour ajouter une offre de formation au catalogue, merci de la déclarer auprès du Carif-Oref de votre
-                    région en <br />
-                    allant sur la page “référencer son offre de formation” .
+                    <strong>
+                      Pour ajouter une offre de formation au Catalogue de l’offre de formation en apprentissage
+                    </strong>
+                    , merci de la déclarer <br /> auprès du Carif-Oref de votre région en allant sur la page “
+                    <Link color="bluefrance" textDecoration="underline">
+                      référencer son offre de formation
+                    </Link>
+                    ”
+                    <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} color="bluefrance" />
                   </Text>
                   <br />
                   <Text textStyle="rf-text">
-                    Pour modifier des caractéristiques de votre établissement (raison sociale, SIRET, adresse postale,
-                    etc.), vous pouvez <br />
-                    vous rapprocher de l’INSEE afin de réaliser les modifications à la source.
+                    <strong> Pour modifier les caractéristiques de votre organisme </strong> (raison sociale, SIRET,
+                    adresse postale, etc.), vous pouvez vous <br /> rapprocher de l’INSEE afin de réaliser les
+                    modifications à la source.
                   </Text>
                 </Box>
                 <br />
@@ -200,7 +206,9 @@ export default () => {
                     Vous travaillez en académie
                   </Heading>
                   <br />
-                  <Link color="bluefrance">Accéder à vos actions expertes</Link>
+                  <Link color="bluefrance" textDecoration="underline">
+                    <strong>Accéder à vos actions expertes</strong>
+                  </Link>
                   <br />
                   <Text textStyle="rf-text">
                     <strong>Pour signaler une incohérence </strong>(UAI, Code diplôme, Code RNCP), vous pouvez vous
@@ -260,6 +268,7 @@ export default () => {
                     textStyle="rf-text"
                     border="1px solid #000091"
                     bg="white"
+                    fontWeight="400"
                   >
                     Voir le journal des modifications
                   </Button>

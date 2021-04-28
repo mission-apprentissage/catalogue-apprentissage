@@ -179,6 +179,10 @@ const textStyles = {
     fontSize: ["0.875rem"],
     lineHeight: "1.5rem",
   },
+  xs: {
+    fontSize: ["0.75rem"],
+    lineHeight: "1.35rem",
+  },
 };
 
 const fonts = {
