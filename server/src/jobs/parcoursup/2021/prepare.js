@@ -2,7 +2,7 @@ const path = require("path");
 const { runScript } = require("../../scriptWrapper");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { createXlsxFromJson } = require("../../../common/utils/fileUtils");
-const { getMef10Info, getModels } = require("@mission-apprentissage/tco-service-node");
+const { getMef10Info, getModels, getRncpInfo, getCfdInfo } = require("@mission-apprentissage/tco-service-node");
 const { getJsonFromXlsxFile } = require("../../../common/utils/fileUtils");
 const { downloadAndSaveFileFromS3 } = require("../../../common/utils/awsUtils");
 const { orderBy } = require("lodash");
@@ -327,8 +327,8 @@ async function prepare() {
   Models = await getModels();
 
   // Fetch latest psup formation from S3
-  const filePath = path.join(__dirname, "./psup_latest.xls");
-  await downloadAndSaveFileFromS3("mna-services/features/ps/psup_latest.xls", filePath);
+  const filePath = path.join(__dirname, "./listeFormationApprentissage_latest.xlsx");
+  await downloadAndSaveFileFromS3("mna-services/features/ps/listeFormationApprentissage_latest.xlsx", filePath);
   const formationsPsRawData = getJsonFromXlsxFile(filePath);
 
   // console.log(formationsPsRawData.length);
@@ -380,6 +380,45 @@ async function prepare() {
   console.log(countNotFoundMef);
   console.log(countNotFoundBcn);
   console.log(countNotFoundRNCP);
+
+  // Complete Missing codes for the ones not in errors
+  await asyncForEach(updatedTableSpe, async (spe) => {
+    if (
+      spe.TYPE_RAPPROCHEMENT_MNA !== "ERREUR" &&
+      spe.TYPE_RAPPROCHEMENT_MNA !== "LIBSPÉCIALITÉ_RNCP_MULTIPLE" &&
+      spe.TYPE_RAPPROCHEMENT_MNA !== "LIBSPÉCIALITÉ_BCN_MULTIPLE"
+    ) {
+      if (spe.CODE_CFD_MNA === "Non trouvé" && spe.CODE_RNCP_MNA !== "Non trouvé") {
+        const codesRncp = spe.CODE_RNCP_MNA.split(",");
+        const codesCfd = [];
+        for (let index = 0; index < codesRncp.length; index++) {
+          const codeRNCP = codesRncp[index];
+          const resultRncp = await getRncpInfo(codeRNCP);
+          if (resultRncp && resultRncp.result.cfds && resultRncp.result.cfds.length > 0) {
+            codesCfd.push(resultRncp.result.cfds.join(","));
+          }
+        }
+        if (codesCfd.length > 0) spe.CODE_CFD_MNA = codesCfd.join(",");
+        // TODO FIX ERRORS if _doc null
+      } else if (spe.CODE_CFD_MNA !== "Non trouvé" && spe.CODE_RNCP_MNA === "Non trouvé") {
+        const codesCfds = spe.CODE_CFD_MNA.split(",");
+        const resRncp = [];
+        for (let index = 0; index < codesCfds.length; index++) {
+          const codeCfd = codesCfds[index];
+          const resultCfd = await getCfdInfo(codeCfd);
+          if (resultCfd && resultCfd.result.rncp && resultCfd.result.rncp.code_rncp) {
+            resRncp.push(getRncpRomesFromSDKresponse(resultCfd));
+          }
+        }
+        if (resRncp.length > 0) {
+          // console.log(resRncp.map(({ CODE_RNCP_MNA }) => CODE_RNCP_MNA).join(","));
+          // console.log(resRncp.map(({ CODE_ROMES_MNA }) => CODE_ROMES_MNA).join(","));
+          spe.CODE_RNCP_MNA = resRncp.map(({ CODE_RNCP_MNA }) => CODE_RNCP_MNA).join(",");
+          spe.CODE_ROMES_MNA = resRncp.map(({ CODE_ROMES_MNA }) => CODE_ROMES_MNA).join(",");
+        }
+      }
+    }
+  });
 
   await generateSpeTableFile(updatedTableSpe);
 }
