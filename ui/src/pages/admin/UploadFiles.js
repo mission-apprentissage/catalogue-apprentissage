@@ -27,24 +27,14 @@ const baseStyle = {
   alignItems: "center",
   padding: "20px",
   borderWidth: 2,
-  borderRadius: 2,
-  borderColor: "#bdbdbd",
+  borderColor: "#9c9c9c",
   borderStyle: "dashed",
-  color: "#bdbdbd",
-  outline: "none",
+  color: "#9c9c9c",
   transition: "border .24s ease-in-out",
 };
 
 const activeStyle = {
-  borderColor: "#2196f3",
-};
-
-const acceptStyle = {
-  borderColor: "#00e676",
-};
-
-const rejectStyle = {
-  borderColor: "#ff1744",
+  borderColor: "#3a55d1",
 };
 
 const DOCUMENTS = [
@@ -56,31 +46,35 @@ const DOCUMENTS = [
     filename: "latest_public_ofs.csv",
     label: "Liste des OFs",
   },
+  {
+    filename: "CodeDiplome_RNCP_latest_kit.csv",
+    label: "Kit code diplome - rncp",
+  },
 ];
 
 export default () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [filename, setFilename] = useState(DOCUMENTS[0].filename);
+  const [uploadError, setUploadError] = useState(null);
 
   const maxFiles = 1;
-  const { acceptedFiles, getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject } = useDropzone({
+  const { acceptedFiles, getRootProps, getInputProps, isDragActive } = useDropzone({
     maxFiles,
-    accept: "text/csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    accept: ".csv, .xlsx",
   });
 
   const style = useMemo(
     () => ({
       ...baseStyle,
       ...(isDragActive ? activeStyle : {}),
-      ...(isDragAccept ? acceptStyle : {}),
-      ...(isDragReject ? rejectStyle : {}),
     }),
-    [isDragActive, isDragReject, isDragAccept]
+    [isDragActive]
   );
 
   const onSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setUploadError(null);
 
     try {
       const renamedAcceptedFiles = acceptedFiles.map((file) => new File([file], filename, { type: file.type }));
@@ -89,7 +83,10 @@ export default () => {
       await _postFile(`${endpointNewFront}/upload`, data);
     } catch (e) {
       console.error(e);
+      setUploadError(`Une erreur est survenue : ${e.message}`);
     } finally {
+      // reset dropzone files
+      acceptedFiles.splice(0, acceptedFiles.length);
       setIsSubmitting(false);
     }
   };
@@ -168,6 +165,11 @@ export default () => {
             >
               Envoyer le fichier
             </Button>
+            {uploadError && (
+              <Text color="error" mt={2}>
+                {uploadError}
+              </Text>
+            )}
           </form>
         </Container>
       </Box>
