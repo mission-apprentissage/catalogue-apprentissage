@@ -8,6 +8,8 @@ const bodyParser = require("body-parser");
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const multer = require("multer");
+const { mkdirp } = require("fs-extra");
+
 const logMiddleware = require("./middlewares/logMiddleware");
 const errorMiddleware = require("./middlewares/errorMiddleware");
 const apiKeyAuthMiddleware = require("./middlewares/apiKeyAuthMiddleware");
@@ -174,9 +176,12 @@ module.exports = async (components) => {
     })
   );
 
+  /** Upload */
+  const UPLOAD_DIR = "/data/backups";
+
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, "uploads");
+      mkdirp(UPLOAD_DIR, (err) => cb(err, UPLOAD_DIR));
     },
     filename: function (req, file, cb) {
       cb(null, file.originalname);
