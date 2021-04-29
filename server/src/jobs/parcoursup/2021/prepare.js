@@ -421,6 +421,47 @@ async function prepare() {
   });
 
   await generateSpeTableFile(updatedTableSpe);
+
+  //////////////
+  const tableToUse = updatedTableSpe.filter((spe) => {
+    return (
+      spe.TYPE_RAPPROCHEMENT_MNA !== "ERREUR" &&
+      spe.TYPE_RAPPROCHEMENT_MNA !== "LIBSPÉCIALITÉ_RNCP_MULTIPLE" &&
+      spe.TYPE_RAPPROCHEMENT_MNA !== "LIBSPÉCIALITÉ_BCN_MULTIPLE"
+    );
+  });
+  const formationsPsUpdatedData = [];
+  await asyncForEach(formationsPsRawData, async (formationPsRawData) => {
+    const found = tableToUse.find(
+      (item) =>
+        item["CODESPÉCIALITÉ"] === formationPsRawData["CODESPÉCIALITÉ"] &&
+        item["LIBSPÉCIALITÉ"] === formationPsRawData["LIBSPÉCIALITÉ"]
+    );
+    if (found) {
+      formationsPsUpdatedData.push({
+        ...formationPsRawData,
+        CODE_CFD_MNA: found.CODE_CFD_MNA,
+        CODE_RNCP_MNA: found.CODE_RNCP_MNA,
+        CODE_ROMES_MNA: found.CODE_ROMES_MNA,
+        TYPE_RAPPROCHEMENT_MNA: found.TYPE_RAPPROCHEMENT_MNA,
+      });
+    } else {
+      formationsPsUpdatedData.push({
+        ...formationPsRawData,
+        CODE_CFD_MNA: "",
+        CODE_RNCP_MNA: "",
+        CODE_ROMES_MNA: "",
+        TYPE_RAPPROCHEMENT_MNA: "",
+      });
+    }
+  });
+
+  await createXlsxFromJson(
+    formationsPsUpdatedData,
+    path.join(__dirname, "/listeFormationApprentissage_latest_COMPLETÉ.xlsx")
+  );
+  //////////////
+  // EOS
 }
 
 runScript(async () => {
