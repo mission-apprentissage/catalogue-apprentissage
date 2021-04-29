@@ -94,7 +94,7 @@ export default () => {
       const renamedAcceptedFiles = acceptedFiles.map((file) => new File([file], filename, { type: file.type }));
       const data = new FormData();
       data.append("file", renamedAcceptedFiles[0]);
-      await _postFile(`${endpointNewFront}/upload`, data);
+      await _postFile(`${endpointNewFront}/v1/upload`, data);
       setUploadSuccess(`Merci, le fichier a bien été déposé sur le serveur :)`);
     } catch (e) {
       console.error(e);

@@ -7,9 +7,6 @@ const logger = require("../common/logger");
 const bodyParser = require("body-parser");
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
-const multer = require("multer");
-const { mkdirp } = require("fs-extra");
-
 const logMiddleware = require("./middlewares/logMiddleware");
 const errorMiddleware = require("./middlewares/errorMiddleware");
 const apiKeyAuthMiddleware = require("./middlewares/apiKeyAuthMiddleware");
@@ -35,6 +32,7 @@ const parcoursup = require("./routes/parcoursup");
 const pendingRcoFormation = require("./routes/pendingRcoFormation");
 const affelnet = require("./routes/affelnet");
 const etablissement = require("./routes/etablissement");
+const upload = require("./routes/upload");
 
 const swaggerSchema = require("../common/model/swaggerSchema");
 
@@ -129,6 +127,7 @@ module.exports = async (components) => {
   app.use("/api/v1/stats", apiKeyAuthMiddleware, adminOnly, stats(components));
   app.use("/api/v1/affelnet", affelnet(components));
   app.use("/api/v1/entity", apiKeyAuthMiddleware, etablissement(components));
+  app.use("/api/v1/upload", adminOnly, upload());
 
   /** DEPRECATED */
   app.use("/api/es/search", esSearch());
@@ -175,29 +174,6 @@ module.exports = async (components) => {
       });
     })
   );
-
-  /** Upload */
-  const UPLOAD_DIR = "/data/uploads";
-
-  const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      mkdirp(UPLOAD_DIR, (err) => cb(err, UPLOAD_DIR));
-    },
-    filename: function (req, file, cb) {
-      cb(null, file.originalname);
-    },
-  });
-
-  const upload = multer({ storage: storage }).single("file");
-
-  app.post("/api/upload", (req, res) => {
-    upload(req, res, function (err) {
-      if (err) {
-        return res.status(500).json(err);
-      }
-      return res.status(200).send(req.file);
-    });
-  });
 
   // app.get(
   //   "/api/config",
