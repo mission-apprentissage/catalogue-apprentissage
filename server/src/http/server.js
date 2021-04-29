@@ -177,7 +177,7 @@ module.exports = async (components) => {
   );
 
   /** Upload */
-  const UPLOAD_DIR = "/data/backups";
+  const UPLOAD_DIR = "/data/uploads";
 
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {

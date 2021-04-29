@@ -1,7 +1,7 @@
 const { runScript } = require("../scriptWrapper");
 const {
   // getCpInfo,
-  rncpImporter,
+  // rncpImporter,
   // getRncpInfo,
   // bcnImporter,
   getCfdInfo,
@@ -11,12 +11,12 @@ const {
   getCoordinatesFromAddressData,
 } = require("@mission-apprentissage/tco-service-node");
 
-const KIT_LOCAL_PATH = "/data/backups/CodeDiplome_RNCP_latest_kit.csv";
+// const KIT_LOCAL_PATH = "/data/uploads/CodeDiplome_RNCP_latest_kit.csv";
 
 runScript(async () => {
   // console.log(await getCpInfo("92600"));
 
-  await rncpImporter(KIT_LOCAL_PATH);
+  // await rncpImporter(KIT_LOCAL_PATH);
   // console.log(await getRncpInfo("RNCP7571"));
 
   //await bcnImporter();
