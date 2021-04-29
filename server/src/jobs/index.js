@@ -19,9 +19,7 @@ const { spawn } = require("child_process");
 
 const { rncpImporter, bcnImporter, onisepImporter } = require("@mission-apprentissage/tco-service-node");
 
-const path = require("path");
-
-const KIT_LOCAL_PATH = path.join(__dirname, "KitApprentissage.latest.xlsx");
+// const KIT_LOCAL_PATH = "/data/backups/CodeDiplome_RNCP_latest_kit.csv";
 
 runScript(async ({ catalogue, db }) => {
   try {
@@ -31,7 +29,7 @@ runScript(async ({ catalogue, db }) => {
     // import tco
     await bcnImporter();
     await onisepImporter(db);
-    await rncpImporter(KIT_LOCAL_PATH);
+    await rncpImporter(/*KIT_LOCAL_PATH*/);
 
     await importEtablissements(catalogue);
 
