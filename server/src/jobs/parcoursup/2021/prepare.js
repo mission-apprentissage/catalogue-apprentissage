@@ -12,6 +12,8 @@ let Models = null;
 const createWorkingTable = (formationsPs) => {
   const specialitePsRawData = formationsPs.map((f) => ({
     // eslint-disable-next-line prettier/prettier
+    LIBFORMATION: f["LIBFORMATION"],
+    // eslint-disable-next-line prettier/prettier
     CODESPÉCIALITÉ: f["CODESPÉCIALITÉ"],
     // eslint-disable-next-line prettier/prettier
     LIBSPÉCIALITÉ: f["LIBSPÉCIALITÉ"],
@@ -42,6 +44,7 @@ const generateSpeTableFile = async (speTable) => {
   for (let index = 0; index < speTable.length; index++) {
     const { TEMP_SUBS, ...rest } = speTable[index];
     specialiteOutput.push({
+      LIBFORMATION: rest.LIBFORMATION,
       CODESPÉCIALITÉ: rest.CODESPÉCIALITÉ,
       LIBSPÉCIALITÉ: rest.LIBSPÉCIALITÉ,
       CODEMEF: rest.CODEMEF,
@@ -52,6 +55,7 @@ const generateSpeTableFile = async (speTable) => {
     });
     if (TEMP_SUBS.length > 0) {
       specialiteOutput.push({
+        LIBFORMATION: "",
         // eslint-disable-next-line prettier/prettier
         CODESPÉCIALITÉ: "",
         // eslint-disable-next-line prettier/prettier
@@ -65,6 +69,7 @@ const generateSpeTableFile = async (speTable) => {
       for (let j = 0; j < TEMP_SUBS.length; j++) {
         const l = TEMP_SUBS[j];
         specialiteOutput.push({
+          LIBFORMATION: "",
           // eslint-disable-next-line prettier/prettier
           CODESPÉCIALITÉ: "",
           // eslint-disable-next-line prettier/prettier
@@ -301,6 +306,7 @@ const createCurrentTable = async (formationsPsRawData) => {
   for (let index = 0; index < previousSpeTable.length; index++) {
     const previous = previousSpeTable[index];
     uniqTableMap.set(JSON.stringify({ code: previous["CODESPÉCIALITÉ"], lib: previous["LIBSPÉCIALITÉ"] }), {
+      LIBFORMATION: null,
       CODEMEF: null,
       CODE_CFD_MNA: null,
       CODE_RNCP_MNA: null,
@@ -313,9 +319,17 @@ const createCurrentTable = async (formationsPsRawData) => {
 
   for (let index = 0; index < currentSpeTable.length; index++) {
     const current = currentSpeTable[index];
+    const previous = uniqTableMap.get(
+      JSON.stringify({ code: current["CODESPÉCIALITÉ"], lib: current["LIBSPÉCIALITÉ"] })
+    );
     // console.log(current);
-    if (!uniqTableMap.get(JSON.stringify({ code: current["CODESPÉCIALITÉ"], lib: current["LIBSPÉCIALITÉ"] }))) {
+    if (!previous) {
       uniqTableMap.set(JSON.stringify({ code: current["CODESPÉCIALITÉ"], lib: current["LIBSPÉCIALITÉ"] }), current);
+    } else {
+      uniqTableMap.set(JSON.stringify({ code: current["CODESPÉCIALITÉ"], lib: current["LIBSPÉCIALITÉ"] }), {
+        ...previous,
+        LIBFORMATION: current.LIBFORMATION,
+      });
     }
   }
 
