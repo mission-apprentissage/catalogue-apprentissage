@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useCallback } from "react";
 import Layout from "../layout/Layout";
 import {
   Box,
@@ -56,10 +56,23 @@ export default () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [filename, setFilename] = useState(DOCUMENTS[0].filename);
   const [uploadError, setUploadError] = useState(null);
+  const [uploadSuccess, setUploadSuccess] = useState(null);
 
   const maxFiles = 1;
+
+  const onDrop = useCallback(() => {
+    setUploadError(null);
+    setUploadSuccess(null);
+  }, []);
+
+  const onDropRejected = useCallback((rejections) => {
+    setUploadError(`Ce fichier ne peut pas être déposé sur le serveur: ${rejections?.[0]?.errors?.[0]?.message}`);
+  }, []);
+
   const { acceptedFiles, getRootProps, getInputProps, isDragActive } = useDropzone({
     maxFiles,
+    onDrop,
+    onDropRejected,
     accept: ".csv, .xlsx",
   });
 
@@ -75,12 +88,14 @@ export default () => {
     e.preventDefault();
     setIsSubmitting(true);
     setUploadError(null);
+    setUploadSuccess(null);
 
     try {
       const renamedAcceptedFiles = acceptedFiles.map((file) => new File([file], filename, { type: file.type }));
       const data = new FormData();
       data.append("file", renamedAcceptedFiles[0]);
       await _postFile(`${endpointNewFront}/upload`, data);
+      setUploadSuccess(`Merci, le fichier a bien été déposé sur le serveur :)`);
     } catch (e) {
       console.error(e);
       setUploadError(`Une erreur est survenue : ${e.message}`);
@@ -166,8 +181,13 @@ export default () => {
               Envoyer le fichier
             </Button>
             {uploadError && (
-              <Text color="error" mt={2}>
+              <Text color="error" mt={5}>
                 {uploadError}
+              </Text>
+            )}
+            {uploadSuccess && (
+              <Text color="success" mt={5}>
+                {uploadSuccess}
               </Text>
             )}
           </form>
