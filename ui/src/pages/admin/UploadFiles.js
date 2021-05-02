@@ -97,8 +97,8 @@ export default () => {
       await _postFile(`${endpointNewFront}/v1/upload`, data);
       setUploadSuccess(`Merci, le fichier a bien été déposé sur le serveur :)`);
     } catch (e) {
-      console.error(e);
-      setUploadError(`Une erreur est survenue : ${e.message}`);
+      const messages = await e?.json;
+      setUploadError(`Une erreur est survenue : ${messages?.error ?? e.message}`);
     } finally {
       // reset dropzone files
       acceptedFiles.splice(0, acceptedFiles.length);
