@@ -66,7 +66,7 @@ const aPublierSoumisAValidationRules = {
       ],
     },
     {
-      niveau: { $in: ["3 (CAP...)", "4 (Bac...)"] },
+      niveau: { $in: ["3 (CAP...)", "4 (BAC...)"] },
     },
   ],
 };
@@ -99,7 +99,7 @@ const aPublierRules = {
       ],
     },
     {
-      niveau: { $in: ["3 (CAP...)", "4 (Bac...)"] },
+      niveau: { $in: ["3 (CAP...)", "4 (BAC...)"] },
     },
   ],
 };

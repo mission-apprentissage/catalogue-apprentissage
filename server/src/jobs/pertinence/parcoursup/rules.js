@@ -8,7 +8,7 @@ const aPublierVerifierAccesDirectPostBacRules = {
         {
           "rncp_details.code_type_certif": { $in: ["Titre", "TP"] },
           "rncp_details.active_inactive": "ACTIVE",
-          niveau: "6 (Licence...)",
+          niveau: "6 (Licence, BUT...)",
         },
         { libelle_court: "DCG" },
       ],
@@ -45,12 +45,12 @@ const aPublierRules = {
         {
           "rncp_details.code_type_certif": { $in: ["Titre", "TP"] },
           "rncp_details.active_inactive": "ACTIVE",
-          niveau: "5 (BTS, DUT...)",
+          niveau: "5 (BTS, DEUST...)",
         },
       ],
     },
     {
-      niveau: { $in: ["4 (Bac...)", "5 (BTS, DUT...)", "6 (Licence...)"] },
+      niveau: { $in: ["4 (BAC...)", "5 (BTS, DEUST...)", "6 (Licence, BUT...)"] },
     },
   ],
 };
