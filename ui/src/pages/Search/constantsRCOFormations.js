@@ -430,6 +430,7 @@ const queryBuilderField = [
   { text: "Mef 10", value: "mef_10_code.keyword" },
   { text: "Intitulé", value: "intitule_court.keyword" },
   { text: "Code RNCP", value: "rncp_code.keyword" },
+  { text: "Commune du lieu de formation", value: "localite.keyword" },
   // { text: "ParcourSup à charger", value: "parcoursup_a_charger" },
   // { text: "Affelnet à charger", value: "affelnet_a_charger" },
 ];
