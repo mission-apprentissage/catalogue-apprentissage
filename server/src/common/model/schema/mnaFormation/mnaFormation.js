@@ -407,6 +407,11 @@ const mnaFormationSchema = {
     default: null,
     description: "Champs édités par un utilisateur",
   },
+  parcoursup_raison_depublication: {
+    type: String,
+    default: null,
+    description: "Parcoursup : raison de dépublication",
+  },
 };
 
 module.exports = mnaFormationSchema;
