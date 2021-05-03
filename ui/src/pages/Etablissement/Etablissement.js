@@ -208,7 +208,7 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
               </p>
             </div>
             <div className="field">
-              <h3>Certifié 2015 - datadock ?</h3>
+              <h3>Certification qualité</h3>
               <p>
                 {etablissement.computed_info_datadock} <InfoTooltip description={helpText.etablissement.datadock} />
               </p>
