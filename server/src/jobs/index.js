@@ -19,9 +19,7 @@ const { spawn } = require("child_process");
 
 const { rncpImporter, bcnImporter, onisepImporter } = require("@mission-apprentissage/tco-service-node");
 
-const path = require("path");
-
-const KIT_LOCAL_PATH = path.join(__dirname, "KitApprentissage.latest.xlsx");
+const KIT_LOCAL_PATH = "/data/uploads/CodeDiplome_RNCP_latest_kit.csv";
 
 runScript(async ({ catalogue, db }) => {
   try {
