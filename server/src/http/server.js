@@ -32,6 +32,7 @@ const parcoursup = require("./routes/parcoursup");
 const pendingRcoFormation = require("./routes/pendingRcoFormation");
 const affelnet = require("./routes/affelnet");
 const etablissement = require("./routes/etablissement");
+const upload = require("./routes/upload");
 
 const swaggerSchema = require("../common/model/swaggerSchema");
 
@@ -126,6 +127,7 @@ module.exports = async (components) => {
   app.use("/api/v1/stats", apiKeyAuthMiddleware, adminOnly, stats(components));
   app.use("/api/v1/affelnet", affelnet(components));
   app.use("/api/v1/entity", apiKeyAuthMiddleware, etablissement(components));
+  app.use("/api/v1/upload", adminOnly, upload());
 
   /** DEPRECATED */
   app.use("/api/es/search", esSearch());

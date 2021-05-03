@@ -11,9 +11,7 @@ const {
   getCoordinatesFromAddressData,
 } = require("@mission-apprentissage/tco-service-node");
 
-// const path = require("path");
-
-// const KIT_LOCAL_PATH = path.join(__dirname, "KitApprentissage.latest.xlsx");
+// const KIT_LOCAL_PATH = "/data/uploads/CodeDiplome_RNCP_latest_kit.csv";
 
 runScript(async () => {
   // console.log(await getCpInfo("92600"));
