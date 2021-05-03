@@ -145,7 +145,7 @@ idea_geo_coordonnees_etablissement: '48.070416,-0.771807'
   intitule_long: 'COMMERCE (BAC PRO)',
   intitule_court: 'COMMERCE',
   diplome: 'BAC PROFESSIONNEL',
-  niveau: '4 (Bac...)',
+  niveau: '4 (BAC...)',
 ! educ_nat_code: '40031202',
 + cfd: '40031202',
 !  educ_nat_specialite_lettre: null,
