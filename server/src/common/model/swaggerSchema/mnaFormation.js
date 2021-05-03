@@ -709,6 +709,11 @@ module.exports = {
         default: "null",
         description: "Champs édités par un utilisateur",
       },
+      parcoursup_raison_depublication: {
+        type: "string",
+        default: "null",
+        description: "Parcoursup : raison de dépublication",
+      },
       _id: {
         type: "string",
         pattern: "^[0-9a-fA-F]{24}$",
