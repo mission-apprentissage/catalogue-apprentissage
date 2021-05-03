@@ -19,6 +19,7 @@ import HowToReglement from "./pages/HowToReglement";
 import HowToModif from "./pages/HowToModif";
 import HowToSignal from "./pages/HowToSignal";
 import TagsHistory from "./pages/admin/TagsHistory";
+import UploadFiles from "./pages/admin/UploadFiles";
 import { _post, _get } from "./common/httpClient";
 import ScrollToTop from "./common/components/ScrollToTop";
 
@@ -114,6 +115,7 @@ export default () => {
               <Route exact path="/changelog" component={Journal} />
 
               {auth && auth.permissions.isAdmin && <PrivateRoute exact path="/tags-history" component={TagsHistory} />}
+              {auth && auth.permissions.isAdmin && <PrivateRoute exact path="/admin/upload" component={UploadFiles} />}
 
               <Route component={NotFoundPage} />
             </Switch>
