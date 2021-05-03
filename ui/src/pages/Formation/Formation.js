@@ -419,14 +419,17 @@ const Formation = ({
               )}
             </Text>
             <Text mb={4}>
-              Établissement conventionné ? : <strong>{formation.etablissement_reference_conventionne}</strong>
+              Établissement conventionné ? : <strong>{formation.etablissement_reference_conventionne}</strong>{" "}
+              <InfoTooltip description={helpText.etablissement.conventionne} />
             </Text>
             <Text mb={4}>
               Établissement déclaré en préfecture ? :{" "}
-              <strong>{formation.etablissement_reference_declare_prefecture}</strong>
+              <strong>{formation.etablissement_reference_declare_prefecture}</strong>{" "}
+              <InfoTooltip description={helpText.etablissement.declare_prefecture} />
             </Text>
             <Text mb={4}>
-              Organisme certifié 2015 - datadock ? : <strong>{formation.etablissement_reference_datadock}</strong>
+              Certification qualité de l'organisme : <strong>{formation.etablissement_reference_datadock}</strong>{" "}
+              <InfoTooltip description={helpText.etablissement.datadock} />
             </Text>
             <Text mb={4}>
               Académie:{" "}

@@ -14,7 +14,7 @@
     "rncp_intitule": "La donnée “Intitulé RCNP” provient de France compétences. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
     "rome_codes": "La donnée “Codes ROME” est déduite du Code RNCP",
     "certificateurs": "La donnée “Certificateurs” provient de France compétences. Si cette information est erronée, merci de leur signaler.",
-    "uai_formation": "La donnée “UAI Lieu de formation” correspond à l’UAI de l’organisme formateur ou est renseigné par un instructeur en académie.",
+    "uai_formation": "La donnée “UAI Lieu de formation” correspond à l’UAI de l’organisme formateur ou est renseigné par un instructeur en académie si le lieu de formation est différent de celui du formateur.",
     "academie": "La donnée “Académie” est déduite du Code Académie qui est déduit du Code commune.",
     "adresse": "La donnée “Adresse” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
     "code_postal": "La donnée “Code postal” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
@@ -34,8 +34,8 @@
     "academie": "La donnée “Académie” est déduite du Code Académie qui est déduit du Code commune.",
     "type": "La donnée “Type” est déduite de l’UAI",
     "uai": "La donnée “UAI” est collectée au niveau des Carif-Oref ou renseignée par la Mission apprentissage. Une modification de l’UAI peut donc entraîner un changement de statut des formations qui s’y rattachent, et ainsi les rendre éligibles.",
-    "conventionne": "La donnée “Conventionné” provient de la DEEP.",
+    "conventionne": "La donnée “Conventionné” provient de la DEPP, elle est déduite de l’UAI.",
     "declare_prefecture": "La donnée “Déclarée en préfecture” provient de la DGEFP.",
-    "datadock": "La donnée “Certifié 2015 - datadock” provient du DATADOCK."
+    "datadock": "La donnée “Certification qualité” provient soit d’une certification DATADOCK, soit d’une certification qualiopi."
   }
 }
