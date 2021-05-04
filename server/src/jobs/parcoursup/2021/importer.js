@@ -60,14 +60,30 @@ const run = async () => {
     );
     const data = getJsonFromXlsxFile(filePath);
 
+    let stat = {
+      file: data.length,
+      inserted: 0,
+      updated: 0,
+    };
+
     await asyncForEach(data, async (formation) => {
       const mapped = mapping(formation);
+      const exist = await PsFormation2021.findOne({ id_parcoursup: mapped.id_parcoursup }).lean();
 
-      await PsFormation2021.findOneAndUpdate({ id_parcoursup: mapped.id_parcoursup }, mapped, {
-        upsert: true,
-        new: true,
-      });
+      if (exist) {
+        await PsFormation2021.findOneAndUpdate({ id_parcoursup: mapped.id_parcoursup }, mapped, {
+          upsert: true,
+          new: true,
+        });
+        stat.updated += 1;
+      } else {
+        const psFormation2021 = new PsFormation2021(mapped);
+        await psFormation2021.save();
+
+        stat.inserted += 1;
+      }
     });
+    console.log({ stat });
   } catch (err) {
     logger.error(err);
   }
