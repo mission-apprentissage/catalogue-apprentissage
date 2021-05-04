@@ -1,6 +1,6 @@
 .search-page {
   min-height: 100vh;
-  background-color: #e5edef;
+  background-color: #ffff;
   color: #19414c;
   display: block;
 }
@@ -10,6 +10,13 @@
   min-height: 85vh;
   padding: 20px 0;
   /* margin-bottom: 60px; */
+}
+
+.search-page .css-hodtgc-Input-input-Input {
+  border: 1px solid white;
+  border-bottom: 2px solid #000091;
+  background: #f0f0f0;
+  color: #6a6a6a;
 }
 .search-page .search .title {
   text-align: center;
@@ -47,9 +54,9 @@
 }
 .search-page .search .search-container {
   background-color: #fff;
-  padding: 15px;
+  /* padding: 15px; */
   border-radius: 5px;
-  box-shadow: 0 2px 2px 0 rgba(215, 215, 215, 0.5);
+  /* box-shadow: 0 2px 2px 0 rgba(215, 215, 215, 0.5); */
 }
 .search-page .search .add-btn {
   display: flex;
