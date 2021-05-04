@@ -7,7 +7,7 @@ import { Badge } from "@chakra-ui/react";
 //import { faPen } from "@fortawesome/free-solid-svg-icons";
 // import { Button } from "@chakra-ui/react";
 //import { API } from "aws-amplify";
-import "./cardList.css";
+import "./cardListEtablissements.css";
 
 //import image_preview from "./noimage.png";
 
@@ -19,7 +19,7 @@ import "./cardList.css";
 //   return hasRightToEdit;
 // };
 
-const CardList = ({ data }) => {
+export const CardListEtablissements = ({ data }) => {
   // const { acm: userAcm } = useSelector((state) => state.user);
 
   const hasRightToEdit = false; //checkIfHasRightToEdit(data, userAcm);
@@ -88,5 +88,3 @@ const CardList = ({ data }) => {
     </Link>
   );
 };
-
-export default CardList;

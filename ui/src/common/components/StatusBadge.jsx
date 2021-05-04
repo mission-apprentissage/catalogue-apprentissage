@@ -1,25 +1,43 @@
 import React from "react";
 import { Badge, Text, Flex } from "@chakra-ui/react";
-import { ReactComponent as InfoIcon } from "../../theme/assets/info-circle.svg";
-import { ReactComponent as ExclamationIcon } from "../../theme/assets/exclamation-circle.svg";
-import { ReactComponent as ProcessingIcon } from "../../theme/assets/processing.svg";
-import { ReactComponent as CloudSlashedIcon } from "../../theme/assets/cloud-slashed.svg";
-import { ReactComponent as CloudIcon } from "../../theme/assets/cloud.svg";
+// import { ReactComponent as InfoIcon } from "../../theme/assets/info-circle.svg";
+// import { ReactComponent as ExclamationIcon } from "../../theme/assets/exclamation-circle.svg";
+// import { ReactComponent as ProcessingIcon } from "../../theme/assets/processing.svg";
+// import { ReactComponent as CloudSlashedIcon } from "../../theme/assets/cloud-slashed.svg";
+// import { ReactComponent as CloudIcon } from "../../theme/assets/cloud.svg";
+import { InfoCircle, Cloud, Processing, ExclamationCircle, CloudSlashed } from "../../theme/components/icons/index";
+
+// const Icon = ({ variant }) => {
+//   switch (variant) {
+//     case "notRelevant":
+//       return <InfoIcon />;
+//     case "published":
+//       return <CloudIcon />;
+//     case "notPublished":
+//       return <CloudSlashedIcon />;
+//     case "pending":
+//       return <ProcessingIcon />;
+//     case "toBePublished":
+//       return <ExclamationIcon />;
+//     default:
+//       return <InfoIcon />;
+//   }
+// };
 
 const Icon = ({ variant }) => {
   switch (variant) {
     case "notRelevant":
-      return <InfoIcon />;
+      return <bold />;
     case "published":
-      return <CloudIcon />;
+      return <Cloud w="0.938rem" h="0.938rem" />;
     case "notPublished":
-      return <CloudSlashedIcon />;
+      return <CloudSlashed w="0.938rem" h="0.938rem" />;
     case "pending":
-      return <ProcessingIcon />;
+      return <Processing w="0.938rem" h="0.938rem" />;
     case "toBePublished":
-      return <ExclamationIcon />;
+      return <ExclamationCircle w="0.938rem" h="0.938rem" />;
     default:
-      return <InfoIcon />;
+      return <InfoCircle w="0.938rem" h="0.938rem" />;
   }
 };
 

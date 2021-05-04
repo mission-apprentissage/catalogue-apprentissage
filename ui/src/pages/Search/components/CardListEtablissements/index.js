@@ -1,2 +1,1 @@
-import CardListEtablissements from "./CardList";
-export default CardListEtablissements;
+export * from "./CardListEtablissements";
