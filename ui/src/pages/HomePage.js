@@ -86,19 +86,30 @@ export default () => {
             )}
             <br />
             <br />
-            <span>Mise à jour du 19/04/2021 :</span>
+            <span>Mise à jour du 04/05/2021 :</span>
             <br />
             <Box px={[1, 4]}>
               <OrderedList px={0} mx={0} stylePosition="inside">
+                <ListItem>Intégration d'infobulles pour expliquer la nature des informations restituées</ListItem>
                 <ListItem>
-                  Contrôle de niveau avant ajout des étiquettes publication pour Affelnet (impact 12 formations)
+                  Dépublication -> intégration d'un champ commentaire pour que l'instructeur puisse indiquer la raison
+                  d'une dépublication
                 </ListItem>
-                <ListItem>Passage de MEF affectation a des MEF valides pour Affelnet (impact 17 formations)</ListItem>
                 <ListItem>
-                  Retrait des étiquettes "publiées" pour les formations n'ayant pas une réconciliation unique avec la
-                  base Affelnet 2020 (impact 494 formations)
+                  Export des données établissements :
+                  <OrderedList styleType="lower-alpha">
+                    <ListItem>
+                      Rationalisation de l'ordre des étiquettes "année" dans l'export des établissements
+                    </ListItem>
+                    <ListItem>Lisibilité des caractères spéciaux</ListItem>
+                  </OrderedList>
                 </ListItem>
-                <ListItem>Modifications des caractères spéciaux sur les exports</ListItem>
+                <ListItem>Ajout d'un lien vers les formations 2021 sur la fiche établissement</ListItem>
+                <ListItem>Possibilité de recherche avancée sur la commune du lieu de formation</ListItem>
+                <ListItem>
+                  Désormais le niveau 5 ne mentionne plus les DUT, et les BUT seront progressivement intégrés au niveau
+                  6 (changement uniquement sur les étiquettes des filtres à ce stade)
+                </ListItem>
               </OrderedList>
             </Box>
             <Text fontWeight={700} mt={3}>

@@ -1,7 +1,7 @@
 const changelog = {
   list: [
     {
-      version: "3.4.0",
+      version: "3.5.0",
       date: "Prochainement",
       about: `<h5>À venir</h5>
       <ul>
@@ -15,6 +15,20 @@ const changelog = {
       fixes: [],
       features: [],
       improvements: [],
+    },
+    {
+      version: "3.4.0",
+      date: "4 Mai 2021",
+      about: `<h5>À propos de cette version</h5>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: ["export des données établissements"],
+      features: [
+        "Recherche avancée sur la commune du lieu de formation",
+        "Lien vers les formations 2021 sur la fiche établissement",
+        "Commentaire de dépublication",
+        "Infobulles sur les fiches formations & établissements",
+      ],
+      improvements: ["Mise à jour des étiquettes des niveaux 5 et 6"],
     },
     {
       version: "3.3.0",
