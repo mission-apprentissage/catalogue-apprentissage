@@ -16,7 +16,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSignOutAlt, faSync, faUsers } from "@fortawesome/free-solid-svg-icons";
+import { faSignOutAlt, faSync, faUsers, faUpload } from "@fortawesome/free-solid-svg-icons";
 import useAuth from "../../../common/hooks/useAuth";
 import { isUserAdmin } from "../../../common/utils/rolesUtils";
 import { _get } from "../../../common/httpClient";
@@ -71,6 +71,9 @@ const Header = () => {
                     <MenuGroup title="Administration">
                       <MenuItem as={NavLink} to="/admin/users" icon={<FontAwesomeIcon icon={faUsers} />}>
                         Gestion des utilisateurs
+                      </MenuItem>
+                      <MenuItem as={NavLink} to="/admin/upload" icon={<FontAwesomeIcon icon={faUpload} />}>
+                        Upload de fichiers
                       </MenuItem>
                     </MenuGroup>
                     <MenuDivider />

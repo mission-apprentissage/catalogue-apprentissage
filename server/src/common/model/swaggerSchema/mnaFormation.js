@@ -323,6 +323,12 @@ module.exports = {
         default: false,
         description: "BCN : cfd périmé (fermeture avant le 31 aout de l'année courante)",
       },
+      cfd_date_fermeture: {
+        type: "string",
+        default: "null",
+        description: "Date de fermeture du cfd",
+        format: "date-time",
+      },
       mef_10_code: {
         type: "string",
         default: "null",
@@ -408,6 +414,31 @@ module.exports = {
         type: "string",
         default: "null",
         description: "Url de redirection vers le site de l'ONISEP",
+      },
+      onisep_intitule: {
+        type: "string",
+        default: "null",
+        description: "Intitulé éditorial l'ONISEP",
+      },
+      onisep_libelle_poursuite: {
+        type: "string",
+        default: "null",
+        description: "Libellé poursuite étude l'ONISEP (séparateur ;)",
+      },
+      onisep_lien_site_onisepfr: {
+        type: "string",
+        default: "null",
+        description: "Lien vers site de l'ONISEP api",
+      },
+      onisep_discipline: {
+        type: "string",
+        default: "null",
+        description: "Disciplines ONISEP (séparateur ;)",
+      },
+      onisep_domaine_sousdomaine: {
+        type: "string",
+        default: "null",
+        description: "Domaine et sous domaine ONISEP (séparateur ;)",
       },
       rncp_code: {
         type: "string",
@@ -662,6 +693,11 @@ module.exports = {
         default: "null",
         description: "Affelnet : type d'établissement (PR: Privé / PU: Public)",
       },
+      affelnet_raison_depublication: {
+        type: "string",
+        default: "null",
+        description: "Affelnet : raison de dépublication",
+      },
       bcn_mefs_10: {
         type: "array",
         items: {},
@@ -672,6 +708,11 @@ module.exports = {
         type: "object",
         default: "null",
         description: "Champs édités par un utilisateur",
+      },
+      parcoursup_raison_depublication: {
+        type: "string",
+        default: "null",
+        description: "Parcoursup : raison de dépublication",
       },
       _id: {
         type: "string",

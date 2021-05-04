@@ -37,12 +37,12 @@ const handleResponse = (path, response) => {
   return response.json();
 };
 
-const getHeaders = (authorization = true) => {
+const getHeaders = (authorization = true, contentType = "application/json") => {
   let auth = getAuth();
   let result = {
     Accept: "application/json",
     ...(auth.sub !== "anonymous" ? { Authorization: `Bearer ${auth.token}` } : {}),
-    "Content-Type": "application/json",
+    ...(contentType ? { "Content-Type": contentType } : {}),
   };
   if (!authorization) {
     delete result.Authorization;
@@ -62,6 +62,14 @@ export const _post = (path, body, auth = true) => {
     method: "POST",
     headers: getHeaders(auth),
     body: JSON.stringify(body),
+  }).then((res) => handleResponse(path, res));
+};
+
+export const _postFile = (path, data, auth = true) => {
+  return fetch(`${path}`, {
+    method: "POST",
+    headers: getHeaders(auth, null),
+    body: data,
   }).then((res) => handleResponse(path, res));
 };
 

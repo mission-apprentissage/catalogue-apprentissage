@@ -1,3 +1,5 @@
+import { escapeDiacritics } from "../../common/utils/downloadUtils";
+
 const FILTERS = [
   "QUERYBUILDER",
   "SEARCH",
@@ -35,13 +37,6 @@ const FILTERS = [
   "opcos",
   "info_opcos_intitule",
 ];
-
-const escapeDiacritics = (str) =>
-  str
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/\s+/g, " ")
-    .replaceAll(";", ",");
 
 const columnsDefinition = [
   {
@@ -435,6 +430,7 @@ const queryBuilderField = [
   { text: "Mef 10", value: "mef_10_code.keyword" },
   { text: "Intitulé", value: "intitule_court.keyword" },
   { text: "Code RNCP", value: "rncp_code.keyword" },
+  { text: "Commune du lieu de formation", value: "localite.keyword" },
   // { text: "ParcourSup à charger", value: "parcoursup_a_charger" },
   // { text: "Affelnet à charger", value: "affelnet_a_charger" },
 ];

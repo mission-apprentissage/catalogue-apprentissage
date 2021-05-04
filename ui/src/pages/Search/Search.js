@@ -23,6 +23,7 @@ import { _get } from "../../common/httpClient";
 
 import "./search.css";
 import { NavLink } from "react-router-dom";
+import queryString from "query-string";
 
 const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
 const endpointTCO =
@@ -64,9 +65,10 @@ const getBaseFromMatch = (match) => {
   return result;
 };
 
-export default ({ match }) => {
+export default ({ match, location }) => {
   const [itemsCount, setItemsCount] = useState("");
-  const [mode, setMode] = useState("simple");
+  const { defaultMode } = queryString.parse(location.search);
+  const [mode, setMode] = useState(defaultMode ?? "simple");
   const matchBase = getBaseFromMatch(match);
   const [base, setBase] = useState(matchBase);
   const [isCatalogEligible, setCatalogueEligible] = useState(true);
@@ -102,7 +104,7 @@ export default ({ match }) => {
   }, [match]);
 
   const handleSearchSwitchChange = () => {
-    setMode(mode === "simple" ? "advanced" : "simple");
+    setMode((prevValue) => (prevValue === "simple" ? "advanced" : "simple"));
   };
 
   const resetCount = useCallback(
@@ -141,7 +143,7 @@ export default ({ match }) => {
       <div className="page search-page">
         {base !== matchBase && <Spinner />}
 
-        {base === matchBase && (
+        {base === matchBase && mode && (
           <ReactiveBase url={`${endPoint}/es/search`} app={base}>
             <SingleList
               componentId="published"
