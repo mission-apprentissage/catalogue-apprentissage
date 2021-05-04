@@ -472,7 +472,7 @@ async function prepare() {
 
   await createXlsxFromJson(
     formationsPsUpdatedData,
-    path.join(__dirname, "/listeFormationApprentissage_latest_COMPLETÉ.xlsx")
+    path.join(__dirname, "/listeFormationApprentissage_generate_latest.xlsx")
   );
   //////////////
   // EOS
