@@ -261,7 +261,7 @@ const columnsDefinition = [
     accessor: "tags",
     width: 200,
     editable: false,
-    formatter: (tags) => tags.sort((a, b) => a - b),
+    formatter: (tags) => tags?.sort((a, b) => a - b),
   },
 ];
 
