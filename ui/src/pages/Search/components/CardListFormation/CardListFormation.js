@@ -6,8 +6,9 @@ import { hasOneOfRoles } from "../../../../common/utils/rolesUtils";
 import useAuth from "../../../../common/hooks/useAuth";
 import { StatusBadge } from "../../../../common/components/StatusBadge";
 import { Flex, Box } from "@chakra-ui/react";
+import { ArrowRightLine } from "../../../../theme/components/icons/Arrow-right-line";
 
-const CardList = ({ data }) => {
+export const CardListFormation = ({ data }) => {
   let [auth] = useAuth();
 
   const niv = data.niveau.replace(/\D/g, "");
@@ -21,9 +22,7 @@ const CardList = ({ data }) => {
     >
       <div className="list-card-container">
         <div className="list-card-left">
-          <h3>
-            {data.intitule_long} (Niv. {niv})
-          </h3>
+          <h3>{data.intitule_long}</h3>
           <div>
             <p>{data.etablissement_formateur_enseigne}</p>
             <p>{data.etablissement_gestionnaire_entreprise_raison_sociale}</p>
@@ -37,6 +36,7 @@ const CardList = ({ data }) => {
               <Flex mt={15} wrap="wrap">
                 <StatusBadge source="Parcoursup" status={data.parcoursup_statut} mr={[0, 2]} />
                 <StatusBadge source="Affelnet" status={data.affelnet_statut} mt={[2, 0]} />
+                <ArrowRightLine color="bluefrance" flex="1" />
               </Flex>
             )}
           </div>
@@ -49,5 +49,3 @@ const CardList = ({ data }) => {
     </Link>
   );
 };
-
-export default CardList;

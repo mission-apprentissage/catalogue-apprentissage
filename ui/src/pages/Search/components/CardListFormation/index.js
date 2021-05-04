@@ -1,2 +1,1 @@
-import CardListFormation from "./CardList";
-export default CardListFormation;
+export * from "./CardListFormation";
