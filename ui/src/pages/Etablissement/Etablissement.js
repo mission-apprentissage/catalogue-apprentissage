@@ -1,33 +1,37 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  Container,
-  Grid,
-  GridItem,
-  Button,
-  Input,
   Badge,
-  Spinner,
   Box,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalOverlay,
-  ModalContent,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  Button,
+  Container,
+  Grid,
+  GridItem,
+  Input,
+  Link,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Spinner,
+  Text,
 } from "@chakra-ui/react";
 
 import { useFormik } from "formik";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import useAuth from "../../common/hooks/useAuth";
-import { _get, _put, _post } from "../../common/httpClient";
+import { _get, _post, _put } from "../../common/httpClient";
 import Layout from "../layout/Layout";
 import { hasOneOfRoles } from "../../common/utils/rolesUtils";
 
 import "./etablissement.css";
 import { NavLink } from "react-router-dom";
+import InfoTooltip from "../../common/components/InfoTooltip";
+import helpText from "../../locales/helpText.json";
 
 const sleep = (m) => new Promise((r) => setTimeout(r, m));
 
@@ -74,9 +78,29 @@ const EditSection = ({ edition, onEdit, handleSubmit }) => {
   );
 };
 
-const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSubmit, values }) => {
+const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSubmit, values, countFormations }) => {
   const [auth] = useAuth();
   const hasRightToEdit = hasOneOfRoles(auth, ["admin"]);
+
+  const query = [
+    {
+      field: "etablissement_formateur_siret.keyword",
+      operator: "===",
+      value: etablissement.siret,
+      combinator: "AND",
+      index: 0,
+    },
+    {
+      field: "etablissement_gestionnaire_siret.keyword",
+      operator: "===",
+      value: etablissement.siret,
+      combinator: "OR",
+      index: 1,
+    },
+  ];
+  const linkFormations = `/recherche/formations-2021?qb=${encodeURIComponent(
+    JSON.stringify(query)
+  )}&defaultMode="advanced"`;
 
   let creationDate = "";
   try {
@@ -92,33 +116,47 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
           <h2 className="small">Détails</h2>
           <div className="field">
             <h3>Enseigne</h3>
-            <p>{etablissement.enseigne}</p>
+            <p>
+              {etablissement.enseigne} <InfoTooltip description={helpText.etablissement.enseigne} />
+            </p>
           </div>
           <div className="field">
             <h3>Siret</h3>
-            <p>{etablissement.siret}</p>
+            <p>
+              {etablissement.siret} <InfoTooltip description={helpText.etablissement.siret} />
+            </p>
           </div>
           <div className="field">
             <h3>Siren</h3>
-            <p>{etablissement.siren}</p>
+            <p>
+              {etablissement.siren} <InfoTooltip description={helpText.etablissement.siren} />
+            </p>
           </div>
           <div className="field">
             <h3>
               Code NAF
-              <p>{etablissement.naf_code}</p>
+              <p>
+                {etablissement.naf_code} <InfoTooltip description={helpText.etablissement.naf_code} />
+              </p>
             </h3>
           </div>
           <div className="field">
             <h3>Libellé NAF</h3>
-            <p>{etablissement.naf_libelle}</p>
+            <p>
+              {etablissement.naf_libelle} <InfoTooltip description={helpText.etablissement.naf_libelle} />
+            </p>
           </div>
           <div className="field">
             <h3>Date de création</h3>
-            <p>{creationDate}</p>
+            <p>
+              {creationDate} <InfoTooltip description={helpText.etablissement.date_creation} />
+            </p>
           </div>
           <div className="field">
             <h3>Adresse</h3>
-            <p>{etablissement.adresse}</p>
+            <p>
+              {etablissement.adresse} <InfoTooltip description={helpText.etablissement.adresse} />
+            </p>
           </div>
         </div>
       </GridItem>
@@ -129,54 +167,90 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
           <div>
             <div className="field pills">
               <h3>Tags</h3>
-              {etablissement.tags.map((tag, i) => (
-                <Badge colorScheme="green" variant="solid" key={i} className="badge">
-                  {tag}
-                </Badge>
-              ))}
+              {etablissement.tags &&
+                etablissement.tags
+                  .sort((a, b) => a - b)
+                  .map((tag, i) => (
+                    <Badge colorScheme="green" variant="solid" key={i} className="badge">
+                      {tag}
+                    </Badge>
+                  ))}
             </div>
             <div className="field multiple">
               <div>
                 <h3>Type</h3>
-                <p>{etablissement.computed_type}</p>
+                <p>
+                  {etablissement.computed_type} <InfoTooltip description={helpText.etablissement.type} />
+                </p>
               </div>
               <div>
                 <h3>UAI</h3>
                 <p>
-                  {!edition && <>{etablissement.uai}</>}
+                  {!edition && (
+                    <>
+                      {etablissement.uai} <InfoTooltip description={helpText.etablissement.uai} />
+                    </>
+                  )}
                   {edition && <Input type="text" name="uai" onChange={handleChange} value={values.uai} />}
                 </p>
               </div>
             </div>
             <div className="field">
               <h3>Conventionné ?</h3>
-              <p>{etablissement.computed_conventionne}</p>
+              <p>
+                {etablissement.computed_conventionne} <InfoTooltip description={helpText.etablissement.conventionne} />
+              </p>
             </div>
             <div className="field">
               <h3>Déclaré en préfecture ?</h3>
-              <p>{etablissement.computed_declare_prefecture}</p>
+              <p>
+                {etablissement.computed_declare_prefecture}{" "}
+                <InfoTooltip description={helpText.etablissement.declare_prefecture} />
+              </p>
             </div>
             <div className="field">
-              <h3>Certifié 2015 - datadock ?</h3>
-              <p>{etablissement.computed_info_datadock}</p>
+              <h3>Certification qualité</h3>
+              <p>
+                {etablissement.computed_info_datadock} <InfoTooltip description={helpText.etablissement.datadock} />
+              </p>
             </div>
             <div className="field multiple">
               <div>
                 <h3>Code postal</h3>
-                <p>{etablissement.code_postal}</p>
+                <p>
+                  {etablissement.code_postal} <InfoTooltip description={helpText.etablissement.code_postal} />
+                </p>
               </div>
               <div>
                 <h3>Code commune</h3>
-                <p>{etablissement.code_insee_localite}</p>
+                <p>
+                  {etablissement.code_insee_localite}{" "}
+                  <InfoTooltip description={helpText.etablissement.code_insee_localite} />
+                </p>
               </div>
             </div>
             <div className="field">
               <h3>Académie</h3>
               <p>
-                {etablissement.nom_academie} ({etablissement.num_academie})
+                {etablissement.nom_academie} ({etablissement.num_academie}){" "}
+                <InfoTooltip description={helpText.etablissement.academie} />
               </p>
             </div>
           </div>
+          {countFormations > 0 ? (
+            <Link
+              as={NavLink}
+              to={linkFormations}
+              textDecoration="underline"
+              color="blue.500"
+              fontWeight="bold"
+              isExternal
+            >
+              Voir les {countFormations} formations trouvées pour cet établissement
+            </Link>
+          ) : (
+            <Text>Aucune formation trouvée pour cet établissement</Text>
+          )}
         </div>
         {!etablissement.siege_social && (
           <div className="sidebar-section info">
@@ -212,6 +286,8 @@ export default ({ match }) => {
   const [edition, setEdition] = useState(false);
   const [gatherData, setGatherData] = useState(0);
   const [modal, setModal] = useState(false);
+  const [countFormations, setCountFormations] = useState(0);
+
   // const dispatch = useDispatch();
 
   const { values, handleSubmit, handleChange, setFieldValue } = useFormik({
@@ -252,8 +328,19 @@ export default ({ match }) => {
       try {
         const eta = await _get(`${endpointTCO}/entity/etablissement/${match.params.id}`, false);
         setEtablissement(eta);
-
         setFieldValue("uai", eta.uai);
+
+        const query = {
+          published: true,
+          $or: [{ etablissement_formateur_siret: eta.siret }, { etablissement_gestionnaire_siret: eta.siret }],
+        };
+
+        const count = await _get(
+          `${endpointNewFront}/entity/formations2021/count?query=${JSON.stringify(query)}`,
+          false
+        );
+
+        setCountFormations(count);
       } catch (e) {
         // dispatch(push(routes.NOTFOUND));
       }
@@ -275,8 +362,10 @@ export default ({ match }) => {
                 Accueil
               </BreadcrumbLink>
             </BreadcrumbItem>
-            <BreadcrumbItem as={NavLink} to="/recherche/etablissements">
-              <BreadcrumbLink>Établissements</BreadcrumbLink>
+            <BreadcrumbItem>
+              <BreadcrumbLink as={NavLink} to="/recherche/etablissements">
+                Établissements
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbItem isCurrentPage>
               <BreadcrumbLink>{etablissement?.entreprise_raison_sociale}</BreadcrumbLink>
@@ -294,7 +383,10 @@ export default ({ match }) => {
             )}
             {etablissement && (
               <>
-                <h1 className="heading">{etablissement.entreprise_raison_sociale}</h1>
+                <h1 className="heading">
+                  {etablissement.entreprise_raison_sociale}{" "}
+                  <InfoTooltip description={helpText.etablissement.raison_sociale} />
+                </h1>
                 <Etablissement
                   etablissement={etablissement}
                   edition={edition}
@@ -302,6 +394,7 @@ export default ({ match }) => {
                   values={values}
                   handleSubmit={handleSubmit}
                   handleChange={handleChange}
+                  countFormations={countFormations}
                 />
                 <Modal isOpen={modal}>
                   <ModalOverlay />

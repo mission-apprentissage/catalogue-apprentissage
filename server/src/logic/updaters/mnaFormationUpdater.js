@@ -8,6 +8,7 @@ const { codePostalMapper } = require("../mappers/codePostalMapper");
 const { etablissementsMapper } = require("../mappers/etablissementsMapper");
 const { diffFormation } = require("../common/utils/diffUtils");
 const { SandboxFormation, RcoFormation } = require("../../common/model");
+const { getCoordinatesFromAddressData } = require("@mission-apprentissage/tco-service-node");
 
 const formationSchema = Joi.object({
   cfd: Joi.string().required(),
@@ -92,6 +93,24 @@ const mnaFormationUpdater = async (
       return { updates: null, formation, error, cfdInfo };
     }
 
+    let geoMapping = {};
+    if (withCodePostalUpdate) {
+      const { result: coordinates, messages: geoMessages } = await getCoordinatesFromAddressData({
+        numero_voie: formation.lieu_formation_adresse,
+        localite: cpMapping.localite,
+        code_postal: cpMapping.code_postal,
+      });
+
+      const geolocError = parseErrors(geoMessages);
+      if (!geolocError && coordinates.geo_coordonnees) {
+        // set geo coords even if we get multiple results
+        geoMapping = {
+          // field is for LBA only
+          idea_geo_coordonnees_etablissement: coordinates.geo_coordonnees,
+        };
+      }
+    }
+
     const rcoFormation = await RcoFormation.findOne({ id_rco_formation: formation.id_rco_formation });
     let published = rcoFormation?.published ?? false; // not found in rco should not be published
 
@@ -136,6 +155,7 @@ const mnaFormationUpdater = async (
       ...cfdMapping,
       ...cpMapping,
       ...etablissementsMapping,
+      ...geoMapping,
       tags,
       published,
       update_error,

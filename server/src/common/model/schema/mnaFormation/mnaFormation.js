@@ -22,6 +22,11 @@ const mnaFormationSchema = {
     default: false,
     description: "BCN : cfd périmé (fermeture avant le 31 aout de l'année courante)",
   },
+  cfd_date_fermeture: {
+    type: Date,
+    default: null,
+    description: "Date de fermeture du cfd",
+  },
   mef_10_code: {
     type: String,
     default: null,
@@ -387,6 +392,11 @@ const mnaFormationSchema = {
     default: null,
     description: "Affelnet : type d'établissement (PR: Privé / PU: Public)",
   },
+  affelnet_raison_depublication: {
+    type: String,
+    default: null,
+    description: "Affelnet : raison de dépublication",
+  },
   bcn_mefs_10: {
     type: [Object],
     default: null,
@@ -396,6 +406,11 @@ const mnaFormationSchema = {
     type: Object,
     default: null,
     description: "Champs édités par un utilisateur",
+  },
+  parcoursup_raison_depublication: {
+    type: String,
+    default: null,
+    description: "Parcoursup : raison de dépublication",
   },
 };
 

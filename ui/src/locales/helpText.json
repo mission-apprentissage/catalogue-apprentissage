@@ -1,0 +1,41 @@
+{
+  "formation": {
+    "intitule_long": "La donnée “Intitulé long de la formation” est extraite de la BCN (Base Centrale des Nomenclature), table V_FORMATION_DIPLOME",
+    "intitule_court": "La donnée “Intitulé court de la formation” est déduite du Code formation diplôme",
+    "diplome": "La donnée “Diplôme ou titre visé” est déduite du Code formation diplôme",
+    "niveau": "La donnée “Niveau de la formation” est déduite du Code formation diplôme",
+    "cfd": "La donnée “Code formation diplôme” provient de la Banque Centrale des Nomenclatures (BCN). Si cette information est erronée, merci de leur signaler.",
+    "mef": "La donnée “MEF” est déduite du Code formation diplôme",
+    "periode": "La donnée “période d’inscription” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
+    "capacite": "La donnée “Capacité d’accueil” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
+    "duree": "La donnée “Durée de la formation” est déduite du code MEF",
+    "annee": "La donnée “Année” est déduite du code MEF",
+    "rncp_code": "La donnée “Code RNCP” provient de France compétences. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
+    "rncp_intitule": "La donnée “Intitulé RCNP” provient de France compétences. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
+    "rome_codes": "La donnée “Codes ROME” est déduite du Code RNCP",
+    "certificateurs": "La donnée “Certificateurs” provient de France compétences. Si cette information est erronée, merci de leur signaler.",
+    "uai_formation": "La donnée “UAI Lieu de formation” correspond à l’UAI de l’organisme formateur ou est renseigné par un instructeur en académie si le lieu de formation est différent de celui du formateur.",
+    "academie": "La donnée “Académie” est déduite du Code Académie qui est déduit du Code commune.",
+    "adresse": "La donnée “Adresse” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
+    "code_postal": "La donnée “Code postal” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
+    "code_commune_insee": "La donnée “Code commune” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région."
+  },
+  "etablissement": {
+    "raison_sociale": "La donnée “Raison sociale” provient de l’INSEE puis est déduite du SIREN. Si cette information est erronée, merci de leur signaler.",
+    "enseigne": "La donnée “Enseigne” provient de l’INSEE puis est déduite du SIREN. Si cette information est erronée, merci de leur signaler.",
+    "siret": "La donnée “SIRET Organisme”  provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
+    "siren": "La donnée “SIREN” provient de l’INSEE. Si cette information est erronée, merci de leur signaler.",
+    "naf_code": "La donnée “Code NAF” provient de l’INSEE puis est déduite du SIREN. Si cette information est erronée, merci de leur signaler.",
+    "naf_libelle": "La donnée “Libellé NAF” provient de l’INSEE puis est déduite du SIREN. Si cette information est erronée, merci de leur signaler.",
+    "adresse": "La donnée “Adresse” provient de l’INSEE puis est déduite du SIRET. Si cette information est erronée, merci de leur signaler.",
+    "code_postal": "La donnée “Code postal” provient de l’INSEE puis est déduite du SIRET. Si cette information est erronée, merci de leur signaler.",
+    "code_insee_localite": "La donnée “Code commune” provient de l’INSEE puis est déduite du SIRET. Si cette information est erronée, merci de leur signaler.",
+    "date_creation": "La donnée “Date de création” provient de l’INSEE puis est déduite du SIRET. Si cette information est erronée, merci de leur signaler.",
+    "academie": "La donnée “Académie” est déduite du Code Académie qui est déduit du Code commune.",
+    "type": "La donnée “Type” est déduite de l’UAI",
+    "uai": "La donnée “UAI” est collectée au niveau des Carif-Oref ou renseignée par la Mission apprentissage. Une modification de l’UAI peut donc entraîner un changement de statut des formations qui s’y rattachent, et ainsi les rendre éligibles.",
+    "conventionne": "La donnée “Conventionné” provient de la DEPP, elle est déduite de l’UAI.",
+    "declare_prefecture": "La donnée “Déclarée en préfecture” provient de la DGEFP.",
+    "datadock": "La donnée “Certification qualité” provient soit d’une certification DATADOCK, soit d’une certification qualiopi."
+  }
+}

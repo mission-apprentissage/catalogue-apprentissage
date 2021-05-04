@@ -13,11 +13,8 @@ const managedUnPublishedRcoFormation = async () => {
   // if rco formation is not published, don't call mnaUpdater
   // since we just want to hide the formation
 
-  let rcoFormationNotPublishedIds = await RcoFormation.find({ published: false })
-    .select({ id_rco_formation: 1 })
-    .lean();
-  rcoFormationNotPublishedIds = rcoFormationNotPublishedIds.map((d) => d.id_rco_formation);
-  await ConvertedFormation.collection.updateMany(
+  const rcoFormationNotPublishedIds = await RcoFormation.distinct("id_rco_formation", { published: false });
+  await ConvertedFormation.updateMany(
     { id_rco_formation: { $in: rcoFormationNotPublishedIds } },
     {
       $set: {
@@ -62,9 +59,10 @@ const run = async () => {
     console.log(`Master ${process.pid} is running`);
 
     const filter = {};
-    const limit = 100; //100;
     const args = process.argv.slice(2);
-    const withCodePostalUpdate = args?.[0] === "--withCodePostal";
+    const withCodePostalUpdate = args.includes("--withCodePostal");
+    const limitArg = args.find((arg) => arg.startsWith("--limit"))?.split("=")?.[1];
+    const limit = limitArg ? Number(limitArg) : 100;
 
     runScript(async () => {
       const idsToSkip = await managedUnPublishedRcoFormation();
