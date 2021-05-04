@@ -5,7 +5,6 @@ import Switch from "react-switch";
 import useAuth from "../../common/hooks/useAuth";
 import Layout from "../layout/Layout";
 import { hasOneOfRoles } from "../../common/utils/rolesUtils";
-
 import {
   QueryBuilder,
   CardListFormation,
@@ -15,14 +14,12 @@ import {
   ToggleCatalogue,
   ExportButton,
 } from "./components";
-
 import constantsRcoFormations from "./constantsRCOFormations";
 import constantsEtablissements from "./constantsEtablissements";
-
 import { _get } from "../../common/httpClient";
-
 import "./search.css";
 import { NavLink } from "react-router-dom";
+import { ArrowDropRightLine } from "../../theme/components/icons/";
 
 const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
 const endpointTCO =
@@ -124,165 +121,168 @@ export default ({ match }) => {
 
   return (
     <Layout>
-      <Box bg="secondaryBackground" w="100%" pt={[4, 8]} px={[1, 24]}>
+      <Box w="100%" pt={[4, 8]} px={[1, 24]}>
         <Container maxW="xl">
-          <Breadcrumb>
+          <Breadcrumb separator={<ArrowDropRightLine color="grey.600" />} textStyle="xs">
             <BreadcrumbItem>
-              <BreadcrumbLink as={NavLink} to="/">
+              <BreadcrumbLink as={NavLink} to="/" color="grey.600" textDecoration="underline">
                 Accueil
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink>{isBaseFormations ? "Formations 2021" : "Établissements"}</BreadcrumbLink>
+              <BreadcrumbLink>
+                {isBaseFormations ? "Catalogue des formations en apprentissage 2021" : "Établissements"}
+              </BreadcrumbLink>
             </BreadcrumbItem>
           </Breadcrumb>
+
+          <div className="page search-page">
+            {base !== matchBase && <Spinner />}
+
+            {base === matchBase && (
+              <ReactiveBase url={`${endPoint}/es/search`} app={base}>
+                <SingleList
+                  componentId="published"
+                  dataField="published"
+                  react={{ and: FILTERS }}
+                  value={"true"}
+                  defaultValue={"true"}
+                  showFilter={false}
+                  showSearch={false}
+                  showCount={false}
+                  render={() => {
+                    return <div />;
+                  }}
+                />
+                <div className="search">
+                  <Container maxW="full">
+                    <label className="react-switch" style={{ right: "70px" }}>
+                      <Switch onChange={handleSearchSwitchChange} checked={mode !== "simple"} />
+                      <span textStyle="sm">Recherche avancée</span>
+                    </label>
+                    <Heading as="h1" fontSize="beta" className="title">
+                      {isBaseFormations
+                        ? "Catalogue des formations en apprentissage 2021"
+                        : "Liste des établissements de formation"}
+                    </Heading>
+                    <Flex className="search-row" flexDirection={["column", "row"]}>
+                      <div className={`search-sidebar`}>
+                        {isBaseFormations && <ToggleCatalogue filters={FILTERS} onChanged={resetCount} />}
+                        {facetDefinition
+                          .filter(
+                            ({ roles, showCatalogEligibleOnly }) =>
+                              (!showCatalogEligibleOnly || isCatalogEligible) && (!roles || hasOneOfRoles(auth, roles))
+                          )
+                          .map((fd, i) => {
+                            return (
+                              <Facet
+                                key={i}
+                                componentId={fd.componentId}
+                                dataField={fd.dataField}
+                                title={fd.title}
+                                filterLabel={fd.filterLabel}
+                                selectAllLabel={fd.selectAllLabel}
+                                filters={FILTERS}
+                                sortBy={fd.sortBy}
+                              />
+                            );
+                          })}
+                      </div>
+                      <div className="search-results">
+                        {mode !== "simple" && (
+                          <QueryBuilder
+                            lang="fr"
+                            collection={base}
+                            react={{ and: FILTERS.filter((e) => e !== "QUERYBUILDER") }}
+                            fields={queryBuilderField}
+                          />
+                        )}
+                        {mode === "simple" && (
+                          <div className={`search-container search-container-${mode}`}>
+                            <DataSearch
+                              componentId="SEARCH"
+                              placeholder={dataSearch.placeholder}
+                              fieldWeights={dataSearch.fieldWeights}
+                              dataField={dataSearch.dataField}
+                              autosuggest={true}
+                              queryFormat="and"
+                              size={20}
+                              showFilter={true}
+                              filterLabel="recherche"
+                              react={{ and: FILTERS.filter((e) => e !== "SEARCH") }}
+                            />
+                          </div>
+                        )}
+                        <Box pt={2}>
+                          <SelectedFilters showClearAll={false} innerClass={{ button: "selected-filters-button" }} />
+                        </Box>
+                        <div className={`result-view`}>
+                          <ReactiveList
+                            componentId="result"
+                            title="Results"
+                            dataField="_id"
+                            loader="Chargement des résultats.."
+                            size={8}
+                            pagination={true}
+                            showEndPage={true}
+                            renderPagination={(paginationProp) => {
+                              return <Pagination {...paginationProp} />;
+                            }}
+                            showResultStats={true}
+                            sortBy="asc"
+                            defaultQuery={() => {
+                              return {
+                                _source: columnsDefinition.map(({ accessor }) => accessor),
+                              };
+                            }}
+                            renderItem={(data) =>
+                              isBaseFormations ? (
+                                <CardListFormation data={data} key={data._id} />
+                              ) : (
+                                <CardListEtablissements data={data} key={data._id} />
+                              )
+                            }
+                            renderResultStats={(stats) => {
+                              return (
+                                <div className="summary-stats">
+                                  <span className="summary-text">
+                                    {isBaseFormations
+                                      ? `${itemsCount} formations`
+                                      : `${stats.numberOfResults} établissements affichées sur ${itemsCount}`}
+                                  </span>
+                                  {auth?.sub !== "anonymous" && (
+                                    <ExportButton
+                                      index={base}
+                                      filters={FILTERS}
+                                      columns={columnsDefinition
+                                        .filter((def) => !def.debug)
+                                        .map((def) => ({
+                                          header: def.Header,
+                                          fieldName: def.accessor,
+                                          formatter: def.formatter,
+                                        }))}
+                                      defaultQuery={{
+                                        match: {
+                                          published: true,
+                                        },
+                                      }}
+                                    />
+                                  )}
+                                </div>
+                              );
+                            }}
+                            react={{ and: FILTERS }}
+                          />
+                        </div>
+                      </div>
+                    </Flex>
+                  </Container>
+                </div>
+              </ReactiveBase>
+            )}
+          </div>
         </Container>
       </Box>
-      <div className="page search-page">
-        {base !== matchBase && <Spinner />}
-
-        {base === matchBase && (
-          <ReactiveBase url={`${endPoint}/es/search`} app={base}>
-            <SingleList
-              componentId="published"
-              dataField="published"
-              react={{ and: FILTERS }}
-              value={"true"}
-              defaultValue={"true"}
-              showFilter={false}
-              showSearch={false}
-              showCount={false}
-              render={() => {
-                return <div />;
-              }}
-            />
-            <div className="search">
-              <Container maxW="full">
-                <label className="react-switch" style={{ right: "70px" }}>
-                  <Switch onChange={handleSearchSwitchChange} checked={mode !== "simple"} />
-                  <span>Recherche avancée</span>
-                </label>
-                <Heading as="h1" fontSize="beta" className="title">
-                  {isBaseFormations
-                    ? "Catalogue des formations en apprentissage 2021"
-                    : "Liste des établissements de formation"}
-                </Heading>
-                <Flex className="search-row" flexDirection={["column", "row"]}>
-                  <div className={`search-sidebar`}>
-                    {isBaseFormations && <ToggleCatalogue filters={FILTERS} onChanged={resetCount} />}
-                    {facetDefinition
-                      .filter(
-                        ({ roles, showCatalogEligibleOnly }) =>
-                          (!showCatalogEligibleOnly || isCatalogEligible) && (!roles || hasOneOfRoles(auth, roles))
-                      )
-                      .map((fd, i) => {
-                        return (
-                          <Facet
-                            key={i}
-                            componentId={fd.componentId}
-                            dataField={fd.dataField}
-                            title={fd.title}
-                            filterLabel={fd.filterLabel}
-                            selectAllLabel={fd.selectAllLabel}
-                            filters={FILTERS}
-                            sortBy={fd.sortBy}
-                          />
-                        );
-                      })}
-                  </div>
-                  <div className="search-results">
-                    {mode !== "simple" && (
-                      <QueryBuilder
-                        lang="fr"
-                        collection={base}
-                        react={{ and: FILTERS.filter((e) => e !== "QUERYBUILDER") }}
-                        fields={queryBuilderField}
-                      />
-                    )}
-                    {mode === "simple" && (
-                      <div className={`search-container search-container-${mode}`}>
-                        <DataSearch
-                          componentId="SEARCH"
-                          placeholder={dataSearch.placeholder}
-                          fieldWeights={dataSearch.fieldWeights}
-                          dataField={dataSearch.dataField}
-                          autosuggest={true}
-                          queryFormat="and"
-                          size={20}
-                          showFilter={true}
-                          filterLabel="recherche"
-                          react={{ and: FILTERS.filter((e) => e !== "SEARCH") }}
-                        />
-                      </div>
-                    )}
-                    <Box pt={2}>
-                      <SelectedFilters showClearAll={false} innerClass={{ button: "selected-filters-button" }} />
-                    </Box>
-                    <div className={`result-view`}>
-                      <ReactiveList
-                        componentId="result"
-                        title="Results"
-                        dataField="_id"
-                        loader="Chargement des résultats.."
-                        size={8}
-                        pagination={true}
-                        showEndPage={true}
-                        renderPagination={(paginationProp) => {
-                          return <Pagination {...paginationProp} />;
-                        }}
-                        showResultStats={true}
-                        sortBy="asc"
-                        defaultQuery={() => {
-                          return {
-                            _source: columnsDefinition.map(({ accessor }) => accessor),
-                          };
-                        }}
-                        renderItem={(data) =>
-                          isBaseFormations ? (
-                            <CardListFormation data={data} key={data._id} />
-                          ) : (
-                            <CardListEtablissements data={data} key={data._id} />
-                          )
-                        }
-                        renderResultStats={(stats) => {
-                          return (
-                            <div className="summary-stats">
-                              <span className="summary-text">
-                                {isBaseFormations
-                                  ? `${stats.numberOfResults} formations affichées sur ${itemsCount}`
-                                  : `${stats.numberOfResults} établissements affichées sur ${itemsCount}`}
-                              </span>
-                              {auth?.sub !== "anonymous" && (
-                                <ExportButton
-                                  index={base}
-                                  filters={FILTERS}
-                                  columns={columnsDefinition
-                                    .filter((def) => !def.debug)
-                                    .map((def) => ({
-                                      header: def.Header,
-                                      fieldName: def.accessor,
-                                      formatter: def.formatter,
-                                    }))}
-                                  defaultQuery={{
-                                    match: {
-                                      published: true,
-                                    },
-                                  }}
-                                />
-                              )}
-                            </div>
-                          );
-                        }}
-                        react={{ and: FILTERS }}
-                      />
-                    </div>
-                  </div>
-                </Flex>
-              </Container>
-            </div>
-          </ReactiveBase>
-        )}
-      </div>
     </Layout>
   );
 };
