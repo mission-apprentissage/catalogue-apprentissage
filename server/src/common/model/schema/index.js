@@ -9,6 +9,7 @@ const afReconciliationSchema = require("./afReconciliation");
 const afFormationSchema = require("./afFormation");
 const etablissementSchema = require("./etablissement");
 const psFormation2021Schema = require("./psFormation2021");
+const statistiqueSchema = require("./statistique");
 
 module.exports = {
   logSchema,
@@ -22,4 +23,5 @@ module.exports = {
   afFormationSchema,
   etablissementSchema,
   psFormation2021Schema,
+  statistiqueSchema,
 };
