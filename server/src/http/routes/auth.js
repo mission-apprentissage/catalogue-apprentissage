@@ -53,7 +53,10 @@ module.exports = ({ users }) => {
 
       const payload = users.structureUser(user);
 
-      req.logIn(payload, () => res.json(payload));
+      req.logIn(payload, async () => {
+        await users.registerUser(payload.email);
+        return res.json(payload);
+      });
     })
   );
 

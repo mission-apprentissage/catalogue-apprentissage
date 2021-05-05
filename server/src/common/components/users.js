@@ -87,5 +87,6 @@ module.exports = async () => {
       };
       return structure;
     },
+    registerUser: (email) => User.findOneAndUpdate({ email }, { last_connection: new Date() }),
   };
 };
