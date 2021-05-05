@@ -14,6 +14,12 @@ module.exports = () => {
   router.post(
     "/",
     tryCatch(async (req, res) => {
+      const { source, id_rco_formation } = req.body;
+
+      if (!source || !id_rco_formation) {
+        return res.status(400).json({ error: "source and id_rco_formation are mandatory" });
+      }
+
       const payload = {
         source: req.source,
         id_rco_formation: req.id_rco_formation,
