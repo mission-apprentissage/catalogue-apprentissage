@@ -89,7 +89,7 @@ export default ({ match }) => {
         if (newBase === "etablissements") {
           setItemsCount(`${count} établissements`);
         } else {
-          setItemsCount(`${count} formations au Catalogue général`);
+          setItemsCount(`${count.toLocaleString("fr-FR")}`);
         }
       } catch (e) {
         console.log(e);
