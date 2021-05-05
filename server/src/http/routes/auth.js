@@ -55,7 +55,7 @@ module.exports = ({ users }) => {
 
       req.logIn(payload, async () => {
         await users.registerUser(payload.email);
-        res.json(payload);
+        return res.json(payload);
       });
     })
   );
