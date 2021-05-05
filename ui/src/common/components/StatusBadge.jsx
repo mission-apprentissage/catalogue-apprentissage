@@ -1,43 +1,21 @@
 import React from "react";
 import { Badge, Text, Flex } from "@chakra-ui/react";
-// import { ReactComponent as InfoIcon } from "../../theme/assets/info-circle.svg";
-// import { ReactComponent as ExclamationIcon } from "../../theme/assets/exclamation-circle.svg";
-// import { ReactComponent as ProcessingIcon } from "../../theme/assets/processing.svg";
-// import { ReactComponent as CloudSlashedIcon } from "../../theme/assets/cloud-slashed.svg";
-// import { ReactComponent as CloudIcon } from "../../theme/assets/cloud.svg";
 import { InfoCircle, Cloud, Processing, ExclamationCircle, CloudSlashed } from "../../theme/components/icons/index";
-
-// const Icon = ({ variant }) => {
-//   switch (variant) {
-//     case "notRelevant":
-//       return <InfoIcon />;
-//     case "published":
-//       return <CloudIcon />;
-//     case "notPublished":
-//       return <CloudSlashedIcon />;
-//     case "pending":
-//       return <ProcessingIcon />;
-//     case "toBePublished":
-//       return <ExclamationIcon />;
-//     default:
-//       return <InfoIcon />;
-//   }
-// };
 
 const Icon = ({ variant }) => {
   switch (variant) {
     case "notRelevant":
-      return <bold />;
+      return null;
     case "published":
-      return <Cloud w="0.938rem" h="0.938rem" />;
+      return <Cloud />;
     case "notPublished":
-      return <CloudSlashed w="0.938rem" h="0.938rem" />;
+      return <CloudSlashed />;
     case "pending":
-      return <Processing w="0.938rem" h="0.938rem" />;
+      return <Processing />;
     case "toBePublished":
-      return <ExclamationCircle w="0.938rem" h="0.938rem" />;
+      return <ExclamationCircle />;
     default:
-      return <InfoCircle w="0.938rem" h="0.938rem" />;
+      return <InfoCircle />;
   }
 };
 

@@ -36,7 +36,6 @@ export const CardListFormation = ({ data }) => {
               <Flex mt={15} wrap="wrap">
                 <StatusBadge source="Parcoursup" status={data.parcoursup_statut} mr={[0, 2]} />
                 <StatusBadge source="Affelnet" status={data.affelnet_statut} mt={[2, 0]} />
-                <ArrowRightLine color="bluefrance" flex="1" />
               </Flex>
             )}
           </div>
@@ -44,6 +43,7 @@ export const CardListFormation = ({ data }) => {
 
         <Flex display={["none", "flex"]}>
           <small>Code diplôme: {data.cfd}</small>
+          <ArrowRightLine alignSelf="center" mt="4rem" color="bluefrance" />
         </Flex>
       </div>
     </Link>
