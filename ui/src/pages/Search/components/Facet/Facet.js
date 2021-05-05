@@ -41,7 +41,7 @@ const Layout = (props) => {
     <Accordion allowMultiple defaultIndex={defaultIndex} bg="#F9F8F6" mb={6}>
       <AccordionItem border="none">
         {({ isExpanded }) => (
-          <>
+          <h2>
             <h2>
               <AccordionButton>
                 <Box flex="1" textAlign="left">
@@ -90,7 +90,7 @@ const Layout = (props) => {
                 sortBy={sortBy}
               />
             </AccordionPanel>
-          </>
+          </h2>
         )}
       </AccordionItem>
     </Accordion>
