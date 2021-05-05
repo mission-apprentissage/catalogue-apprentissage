@@ -21,8 +21,8 @@ module.exports = () => {
       }
 
       const payload = {
-        source: req.source,
-        id_rco_formation: req.id_rco_formation,
+        source,
+        id_rco_formation,
         date: new Date(),
       };
 
