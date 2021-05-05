@@ -76,8 +76,8 @@ const getEtablissementReference = ({ gestionnaire, formateur }) => {
 };
 
 const getGeoloc = ({ gestionnaire, formateur }) => {
-  const geo_coordonnees_etablissement_formateur = formateur ? formateur.geo_coordonnees : null;
-  const geo_coordonnees_etablissement_gestionnaire = gestionnaire ? gestionnaire.geo_coordonnees : null;
+  const geo_coordonnees_etablissement_formateur = formateur?.geo_coordonnees ?? null;
+  const geo_coordonnees_etablissement_gestionnaire = gestionnaire?.geo_coordonnees ?? null;
 
   return {
     geo_coordonnees_etablissement_formateur,
