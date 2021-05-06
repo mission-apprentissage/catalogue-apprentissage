@@ -1,4 +1,3 @@
-const path = require("path");
 const logger = require("../../../common/logger");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { getJsonFromXlsxFile } = require("../../../common/utils/fileUtils");
@@ -8,6 +7,8 @@ const stringSimilarity = require("string-similarity");
 const { getCpInfo, getMef10Info, getBcnInfo } = require("@mission-apprentissage/tco-service-node");
 
 const { oleoduc, writeData } = require("oleoduc");
+
+const FILE_PATH = "/data/uploads/affelnet-import.xlsx";
 
 const getLibelleCourt = (libelle) => {
   switch (libelle) {
@@ -149,16 +150,48 @@ const getCfdFromCatalogue = async (formation) => {
 };
 
 const seed = async () => {
-  const filePath = path.resolve(__dirname, "./assets/affelnet-2020.xlsx");
-  const data = getJsonFromXlsxFile(filePath);
+  const data = getJsonFromXlsxFile(FILE_PATH);
   let count = 0;
 
-  logger.info(`${data.length} formations récupéré du fichier excel, début de l'enregistrement...`);
+  logger.info(`${data.length} formations récupérées du fichier excel, début de l'enregistrement...`);
+
+  const oldData = await AfFormation.find(
+    {},
+    { code_mef: 1, code_cfd: 1, code_postal: 1, uai: 1, code_voie: 1, code_specialite: 1 }
+  ).lean();
+
+  await AfFormation.deleteMany({});
+
+  let nbFoundAffectation = 0;
 
   await asyncForEach(data, async (item) => {
     try {
+      /*
+       * - En cas de mef = "AFFECTATION", récupération du cfd dans les données 2020 à partir de la combinaison [code postal + uai + code voie + code spécialité]
+       * - sinon depuis les tco / bcn si toujours pas de cfd
+       */
+
+      let code_cfd;
+      const code_mef = item["Code MEF"]?.trim();
+      const code_postal = item["CP"]?.trim();
+      const uai = item["UAI"]?.trim();
+      const code_voie = item["Code voie"]?.trim();
+      const code_specialite = item["Code spécialité"]?.trim();
+
+      if (code_mef === "AFFECTATION") {
+        const match = oldData.find(
+          ({ code_postal: cp, uai: u, code_voie: cv, code_specialite: cs }) =>
+            code_specialite === cs && code_postal === cp && uai === u && code_voie === cv
+        );
+        code_cfd = match?.code_cfd;
+        if (code_cfd) {
+          nbFoundAffectation += 1;
+        }
+      }
+
       await AfFormation.create({
-        id_mna: item["ID_MNA"],
+        // id_mna: item["ID_MNA"],
+        code_cfd,
         uai: item["UAI"]?.trim(),
         libelle_type_etablissement: item["Libellé type établissement"]?.trim(),
         libelle_etablissement: item["Libellé établissement"]?.trim(),
@@ -169,7 +202,7 @@ const seed = async () => {
         email: item["Mél"]?.trim(),
         academie: item["Académie"]?.trim(),
         ministere: item["Ministère"]?.trim(),
-        etablissement_type: item["Public / Privé"] === "PR" ? "Privée" : "Public"?.trim(),
+        etablissement_type: item["Public / Privé"]?.trim() === "PR" ? "Privée" : "Public",
         type_contrat: item["Type contrat"]?.trim(),
         code_type_etablissement: item["Code type établissement"]?.trim(),
         code_nature: item["Code nature"]?.trim(),
@@ -204,6 +237,7 @@ const seed = async () => {
       logger.error(error);
     }
   });
+  logger.info(`${nbFoundAffectation} formations trouvées sur AFFECTATION !`);
 
   logger.info(`${count} formations importées !`);
 };

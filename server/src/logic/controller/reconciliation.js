@@ -40,6 +40,7 @@ async function reconciliationAffelnet(formation, source = "MANUEL") {
 
   await AfFormation.findByIdAndUpdate(_id, {
     etat_reconciliation: true,
+    no_uai: false,
   });
 
   // pass through some data for Affelnet
