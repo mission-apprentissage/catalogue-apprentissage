@@ -65,10 +65,11 @@ async function getParcoursupCoverage(formation, { published, tags } = {}) {
  */
 async function getAffelnetCoverage({ code_postal: cp, code_cfd, uai }) {
   const dept = cp.substring(0, 2);
+  const deptArr = dept === "20" ? ["2A", "2B"] : [dept];
 
   const m1 = await getMatch({ cfd: code_cfd, published: true });
 
-  const m2 = m1.filter(({ num_departement }) => num_departement === dept);
+  const m2 = m1.filter(({ num_departement }) => deptArr.includes(num_departement));
 
   const m3 = m2.filter(({ uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai }) => {
     return [uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai].includes(uai);
