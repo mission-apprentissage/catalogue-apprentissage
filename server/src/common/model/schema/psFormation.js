@@ -125,5 +125,16 @@ const psFormationSchema = {
     default: false,
     description: "Etat de la réconciliation de la formation",
   },
+  statut_reconciliation: {
+    type: String,
+    default: "INCONNU",
+    enum: ["AUTOMATIQUE", "VALIDE", "REJETE", "INCONNU"],
+    description: "Statut",
+  },
+  id_reconciliation: {
+    type: String,
+    default: null,
+    description: "id mongo reconciliation",
+  },
 };
 module.exports = psFormationSchema;
