@@ -212,6 +212,11 @@ const mnaFormationUpdater = async (
         ) {
           updatedFormation.affelnet_infos_offre = getInfosOffreLabel(updatedFormation, mefs_10[0]);
         }
+
+        if (mefs_10.length === 1) {
+          updatedFormation.duree = mefs_10[0].modalite.duree;
+          updatedFormation.annee = mefs_10[0].modalite.annee;
+        }
       }
 
       await SandboxFormation.deleteMany({ id_rco_formation: rest.id_rco_formation });
