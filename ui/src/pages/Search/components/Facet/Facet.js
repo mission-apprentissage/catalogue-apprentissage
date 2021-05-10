@@ -1,10 +1,21 @@
 import React from "react";
 import { MultiList } from "@appbaseio/reactivesearch";
-import { Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, Box } from "@chakra-ui/react";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
+  Box,
+  Container,
+  Text,
+} from "@chakra-ui/react";
 import useAuth from "../../../../common/hooks/useAuth";
 import { hasOneOfRoles } from "../../../../common/utils/rolesUtils";
 import { compact } from "lodash";
 import { academies } from "../../../../constants/academies";
+import "./facet.css";
+import { AddFill, SubtractLine } from "../../../../theme/components/icons/";
 
 const Layout = (props) => {
   const { componentId, dataField, filterLabel, filters, title, selectAllLabel, sortBy } = props;
@@ -26,48 +37,61 @@ const Layout = (props) => {
       //defaultValue = ["à publier"];
     }
   }
-
   return (
-    <Accordion allowMultiple defaultIndex={defaultIndex} bg="white" mb={6}>
-      <AccordionItem>
-        <AccordionButton>
-          <Box flex="1" textAlign="left">
-            {title}
-          </Box>
-          <AccordionIcon />
-        </AccordionButton>
-        <AccordionPanel pb={4}>
-          <MultiList
-            className="facet-filters"
-            componentId={componentId}
-            dataField={dataField}
-            filterLabel={filterLabel}
-            react={{ and: filters.filter((e) => e !== componentId) }}
-            // showMissing={userAcm.all !== "false"}
-            defaultValue={defaultValue}
-            showCount={true}
-            queryFormat="or"
-            missingLabel="(Vide)"
-            size={20000}
-            selectAllLabel={selectAllLabel}
-            showCheckbox={true}
-            showSearch={true}
-            placeholder="Filtrer..."
-            showFilter={true}
-            URLParams={false}
-            loader="Chargement ..."
-            defaultQuery={() => {
-              return {
-                query: {
-                  match: {
-                    published: true,
-                  },
-                },
-              };
-            }}
-            sortBy={sortBy}
-          />
-        </AccordionPanel>
+    <Accordion allowMultiple defaultIndex={defaultIndex} bg="#F9F8F6" mb={6}>
+      <AccordionItem border="none">
+        {({ isExpanded }) => (
+          <h2>
+            <h2>
+              <AccordionButton>
+                <Box flex="1" textAlign="left">
+                  {title}
+                </Box>
+                {isExpanded ? (
+                  <SubtractLine fontSize="12px" color="bluefrance" />
+                ) : (
+                  <AddFill fontSize="12px" color="bluefrance" />
+                )}
+              </AccordionButton>
+            </h2>
+            <AccordionPanel pb={4}>
+              <MultiList
+                className="facet-filters"
+                componentId={componentId}
+                dataField={dataField}
+                filterLabel={filterLabel}
+                react={{ and: filters.filter((e) => e !== componentId) }}
+                // showMissing={userAcm.all !== "false"}
+                defaultValue={defaultValue}
+                showCount={true}
+                queryFormat="or"
+                missingLabel="(Vide)"
+                size={20000}
+                selectAllLabel={selectAllLabel}
+                showCheckbox={true}
+                innerClass={{
+                  title: "search-title",
+                  input: "search-input",
+                }}
+                showSearch={true}
+                placeholder="Filtrer"
+                showFilter={true}
+                URLParams={false}
+                loader="Chargement"
+                defaultQuery={() => {
+                  return {
+                    query: {
+                      match: {
+                        published: true,
+                      },
+                    },
+                  };
+                }}
+                sortBy={sortBy}
+              />
+            </AccordionPanel>
+          </h2>
+        )}
       </AccordionItem>
     </Accordion>
   );
