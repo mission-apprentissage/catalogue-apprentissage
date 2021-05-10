@@ -67,13 +67,13 @@ const Header = () => {
             <Menu placement="bottom">
               <MenuButton as={Link} _hover={{ textDecoration: "none" }}>
                 <Flex>
-                  <Avatar bg="blue.400" size="sm" />
+                  <Avatar bg="bluefrance" size="sm" w="13px" h="13px" mt="0.4rem" />
                   <Box display={["none", "block"]} ml={2}>
-                    <Text color="grey.700" fontSize="epsilon">
-                      {auth.sub}
-                    </Text>
-                    <Text fontSize="omega" color="grey.500">
-                      {isUserAdmin(auth) ? "Administrateur" : "Utilisateur"}
+                    <Text color="bluefrance" textStyle="sm">
+                      {auth.sub}{" "}
+                      <Text color="grey.500" as="span">
+                        ({isUserAdmin(auth) ? "admin" : "Utilisateur"})
+                      </Text>
                     </Text>
                   </Box>
                 </Flex>
