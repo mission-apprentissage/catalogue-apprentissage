@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ReactiveComponent } from "@appbaseio/reactivesearch";
 import { Button } from "@chakra-ui/react";
-
+import { DownloadLine } from "../../../theme/components/icons/Download-line";
 import { _post } from "../../../common/httpClient";
 import { downloadCSV, CSV_SEPARATOR } from "../../../common/utils/downloadUtils";
 
@@ -118,13 +118,16 @@ const ExportButton = ({ index, filters, columns, defaultQuery = { match_all: {} 
   if (!requestExport) {
     return (
       <Button
-        size="sm"
-        colorScheme="blue"
+        fontWeight="400"
+        textStyle="sm"
+        color="bluefrance"
+        colorScheme="white"
         onClick={async () => {
           setRequestExport(true);
           setExporting(true);
         }}
       >
+        <DownloadLine mx="0.5rem" w="0.75rem" h="0.75rem" />
         Exporter
       </Button>
     );

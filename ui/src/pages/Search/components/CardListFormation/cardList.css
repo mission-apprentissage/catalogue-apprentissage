@@ -4,13 +4,12 @@
 .list-card-formation .list-card-container {
   display: flex;
   flex-direction: row;
-  box-shadow: 0 2px 4px 0 rgba(189, 189, 189, 0.5);
   transition: 0.3s;
   height: 110px;
   overflow: hidden;
-  background-color: white;
+  background-color: #f9f8f6;
   height: auto;
-  margin: 7px 0px 7px 0px;
+  margin: 7px 0px 20px 0px;
   border-radius: 5px;
   padding: 25px;
 }
