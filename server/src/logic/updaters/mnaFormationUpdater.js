@@ -55,7 +55,7 @@ const getInfosOffreLabel = (formation, mef) => {
 
 const mnaFormationUpdater = async (
   formation,
-  { withHistoryUpdate = true, withCodePostalUpdate = true, cfdInfo = null } = {}
+  { withHistoryUpdate = true, withCodePostalUpdate = true, cfdInfo = null, withRCOInsee = false } = {}
 ) => {
   try {
     await formationSchema.validateAsync(formation, { abortEarly: false });
@@ -68,8 +68,14 @@ const mnaFormationUpdater = async (
       return { updates: null, formation, error, cfdInfo };
     }
 
+    let code_commune_insee = formation.code_commune_insee;
+    if (withRCOInsee) {
+      const rcoFormation = await RcoFormation.findOne({ id_rco_formation: formation.id_rco_formation }).lean();
+      code_commune_insee = rcoFormation?.etablissement_lieu_formation_code_insee ?? formation.code_commune_insee;
+    }
+
     const { result: cpMapping = {}, messages: cpMessages } = withCodePostalUpdate
-      ? await codePostalMapper(formation.code_postal)
+      ? await codePostalMapper(formation.code_postal, code_commune_insee)
       : {};
     error = parseErrors(cpMessages);
     if (error) {
