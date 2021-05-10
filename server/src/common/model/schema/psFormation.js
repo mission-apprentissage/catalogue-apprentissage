@@ -128,7 +128,7 @@ const psFormationSchema = {
   statut_reconciliation: {
     type: String,
     default: "INCONNU",
-    enum: ["AUTOMATIQUE", "VALIDE", "REJETE", "INCONNU"],
+    enum: ["AUTOMATIQUE", "VALIDE", "REJETE", "INCONNU", "A_VERIFIER"],
     description: "Statut",
   },
   id_reconciliation: {

@@ -29,6 +29,7 @@
     "psup:import-2020": "standalone=true node src/jobs/parcoursup/2020/importer.js",
     "psup:prepare-2021": "standalone=true node src/jobs/parcoursup/2021/prepare.js",
     "psup:import-2021": "standalone=true node src/jobs/parcoursup/2021/importer.js",
+    "psup:shot-2021": "standalone=true node src/jobs/parcoursup/miscJobs/_fillPsFormationStatus.js",
     "psup:coverage-2021": "standalone=true node src/jobs/parcoursup/2021/coverage.js",
     "psup:reconcile-2021": "standalone=true node src/jobs/parcoursup/2021/reconciliation.js",
     "psup:oneshot": "standalone=true node src/jobs/oneshot/psFormation/index.js",
