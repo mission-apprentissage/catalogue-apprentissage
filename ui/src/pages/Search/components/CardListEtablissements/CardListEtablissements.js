@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Badge } from "@chakra-ui/react";
-import "./cardList.css";
+import "./cardListEtablissements.css";
 
-const CardList = ({ data }) => {
+export const CardListEtablissements = ({ data }) => {
   return (
     <Link to={`/etablissement/${data._id}`} className="list-card" style={{ textDecoration: "none" }} target="_blank">
       <div className="list-card-container ">
@@ -42,5 +42,3 @@ const CardList = ({ data }) => {
     </Link>
   );
 };
-
-export default CardList;

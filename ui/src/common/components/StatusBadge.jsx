@@ -1,25 +1,21 @@
 import React from "react";
 import { Badge, Text, Flex } from "@chakra-ui/react";
-import { ReactComponent as InfoIcon } from "../../theme/assets/info-circle.svg";
-import { ReactComponent as ExclamationIcon } from "../../theme/assets/exclamation-circle.svg";
-import { ReactComponent as ProcessingIcon } from "../../theme/assets/processing.svg";
-import { ReactComponent as CloudSlashedIcon } from "../../theme/assets/cloud-slashed.svg";
-import { ReactComponent as CloudIcon } from "../../theme/assets/cloud.svg";
+import { InfoCircle, Cloud, Processing, ExclamationCircle, CloudSlashed } from "../../theme/components/icons/index";
 
 const Icon = ({ variant }) => {
   switch (variant) {
     case "notRelevant":
-      return <InfoIcon />;
+      return null;
     case "published":
-      return <CloudIcon />;
+      return <Cloud />;
     case "notPublished":
-      return <CloudSlashedIcon />;
+      return <CloudSlashed />;
     case "pending":
-      return <ProcessingIcon />;
+      return <Processing />;
     case "toBePublished":
-      return <ExclamationIcon />;
+      return <ExclamationCircle />;
     default:
-      return <InfoIcon />;
+      return <InfoCircle />;
   }
 };
 
