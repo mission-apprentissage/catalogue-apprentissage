@@ -1,13 +1,13 @@
 const logger = require("../../common/logger");
 const { getCpInfo } = require("@mission-apprentissage/tco-service-node");
 
-const codePostalMapper = async (codePostal = null) => {
+const codePostalMapper = async (codePostal = null, codeInsee = null) => {
   try {
     if (!codePostal) {
       throw new Error("codePostalMapper codePostal must be provided");
     }
 
-    const cpInfo = await getCpInfo(codePostal);
+    const cpInfo = await getCpInfo(codePostal, codeInsee);
     if (!cpInfo || cpInfo?.messages?.error) {
       return {
         result: null,
