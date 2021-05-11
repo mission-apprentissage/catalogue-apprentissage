@@ -9,7 +9,7 @@ export default () => {
   // const [data, loading] = useFetch("api/stats");
 
   const METABASE_SITE_URL = `${process.env.REACT_APP_BASE_URL}/metabase`;
-  const METABASE_SECRET_KEY = "91a7c6d8c4054c4e7e370ac41b55a873d1f698bac6e59155ca19c139fc86baf7";
+  const METABASE_SECRET_KEY = process.env.REACT_APP_METABASE_SECRET_KEY;
 
   const payload = {
     resource: { dashboard: 1 },
