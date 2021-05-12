@@ -38,7 +38,7 @@ const sleep = (m) => new Promise((r) => setTimeout(r, m));
 const endpointTCO =
   process.env.REACT_APP_ENDPOINT_TCO || "https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1";
 
-const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
+const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
 const EditSection = ({ edition, onEdit, handleSubmit }) => {
   return (
