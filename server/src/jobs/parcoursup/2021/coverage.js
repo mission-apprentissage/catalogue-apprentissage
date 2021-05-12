@@ -1,4 +1,4 @@
-const { getParcoursupCoverage } = require("../../../logic/controller/coverage"); // getEtablissementCoverage
+const { getParcoursupCoverage, getEtablissementCoverage } = require("../../../logic/controller/coverage");
 const { paginator } = require("../../common/utils/paginator");
 const { PsFormation2021, Etablissement } = require("../../../common/model");
 const { runScript } = require("../../scriptWrapper");
@@ -59,31 +59,31 @@ const formation = async (filter = {}, limit = 10, maxItems = 100, offset = 0) =>
   // console.log(` ----> ${count}, ${countMultiple}`);
 };
 
-// const etablissement = async () => {
-//   await paginator(
-//     PsFormation2021,
-//     { filter: { matching_type: { $ne: null } }, lean: true },
-//     async ({ matching_mna_formation, _id }) => {
-//       let match = await getEtablissementCoverage(matching_mna_formation);
+const etablissement = async () => {
+  await paginator(
+    PsFormation2021,
+    { filter: { matching_type: { $ne: null } }, lean: true },
+    async ({ matching_mna_formation, _id }) => {
+      let match = await getEtablissementCoverage(matching_mna_formation);
 
-//       if (!match) return;
+      if (!match) return;
 
-//       await PsFormation2021.findByIdAndUpdate(_id, {
-//         matching_mna_etablissement: match,
-//       });
-//     }
-//   );
-// };
+      await PsFormation2021.findByIdAndUpdate(_id, {
+        matching_mna_etablissement: match,
+      });
+    }
+  );
+};
 
 const psCoverage = async (filter = {}, limit = 10, maxItems = 100, offset = 0) => {
   logger.info("Start formation coverage");
   await formation(filter, limit, maxItems, offset);
 
   logger.info("Start etablissement coverage");
-  // await etablissement();
+  await etablissement();
 
   logger.info("End Parcoursup coverage");
-  return 1;
+  return "Ok";
 };
 
 const run = async () => {
@@ -92,10 +92,10 @@ const run = async () => {
 
     console.log(`Master ${process.pid} is running`);
 
-    const filters = { statut_reconciliation: { $nin: ["AUTOMATIQUE", "VALIDE"] } };
+    const filters = { statut_reconciliation: { $nin: ["AUTOMATIQUE", "VALIDE", "A_VERIFIER"] } };
     const args = process.argv.slice(2);
     const limitArg = args.find((arg) => arg.startsWith("--limit"))?.split("=")?.[1];
-    const limit = limitArg ? Number(limitArg) : 100;
+    const limit = limitArg ? Number(limitArg) : 50;
 
     runScript(async () => {
       const check = await Etablissement.find({}).countDocuments();

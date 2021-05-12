@@ -89,10 +89,14 @@ async function reconciliationParcoursup(formation, source = "MANUEL") {
     source,
   };
 
-  await PsReconciliation.findOneAndUpdate({ uai_affilie, uai_composante, uai_gestionnaire, code_cfd }, payload, {
-    upsert: true,
-  });
-  await PsFormation2021.findByIdAndUpdate(_id, { etat_reconciliation: true });
+  const reconciliation = await PsReconciliation.findOneAndUpdate(
+    { uai_affilie, uai_composante, uai_gestionnaire, code_cfd },
+    payload,
+    {
+      upsert: true,
+    }
+  ).lean();
+  await PsFormation2021.findByIdAndUpdate(_id, { etat_reconciliation: true, id_reconciliation: reconciliation._id });
 }
 
 module.exports = { reconciliationAffelnet, reconciliationParcoursup };
