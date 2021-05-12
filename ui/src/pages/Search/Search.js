@@ -25,7 +25,7 @@ import "./search.css";
 import { NavLink } from "react-router-dom";
 import queryString from "query-string";
 
-const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
+const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 const endpointTCO =
   process.env.REACT_APP_ENDPOINT_TCO || "https://tables-correspondances.apprentissage.beta.gouv.fr/api";
 
