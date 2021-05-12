@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Autosuggest from "react-autosuggest";
 import { Input, Button, Select } from "@chakra-ui/react";
 
-const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
+const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
 const esQuery = (queries) => {
   let query = "";
