@@ -26,7 +26,7 @@ import useAuth from "../../hooks/useAuth";
 import { buildUpdatesHistory } from "../../utils/formationUtils";
 import * as Yup from "yup";
 
-const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
+const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
 const getPublishRadioValue = (status) => {
   if (["publié", "en attente de publication"].includes(status)) {

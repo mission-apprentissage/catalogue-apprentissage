@@ -35,7 +35,7 @@ import { buildUpdatesHistory } from "../../common/utils/formationUtils";
 import InfoTooltip from "../../common/components/InfoTooltip";
 import helpText from "../../locales/helpText.json";
 
-const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
+const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
 const EditSection = ({ edition, onEdit, handleSubmit, isSubmitting }) => {
   return (
