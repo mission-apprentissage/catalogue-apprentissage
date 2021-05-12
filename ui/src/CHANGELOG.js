@@ -1,7 +1,7 @@
 const changelog = {
   list: [
     {
-      version: "3.5.0",
+      version: "3.6.0",
       date: "Prochainement",
       about: `<h5>À venir</h5>
       <ul>
@@ -15,6 +15,17 @@ const changelog = {
       fixes: [],
       features: [],
       improvements: [],
+    },
+    {
+      version: "3.5.0",
+      date: "12 Mai 2021",
+      about: `<h5>À propos de cette version</h5>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [
+        "[Fiche formation] Prise en compte du code commune Insee en cas de pluri municipalités sur un seul code postal",
+      ],
+      features: [],
+      improvements: ["Réconciliation Affelnet avec les données transmises par la DNE au 11/05/2021"],
     },
     {
       version: "3.4.0",
