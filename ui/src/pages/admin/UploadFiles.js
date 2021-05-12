@@ -18,7 +18,7 @@ import { NavLink } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
 import { _postFile } from "../../common/httpClient";
 
-const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
+const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
 const baseStyle = {
   flex: 1,
@@ -53,6 +53,10 @@ const DOCUMENTS = [
   {
     filename: "affelnet-import.xlsx",
     label: "Import Affelnet",
+  },
+  {
+    filename: "uai-siret.csv",
+    label: "Import couples Uai-Siret",
   },
 ];
 
