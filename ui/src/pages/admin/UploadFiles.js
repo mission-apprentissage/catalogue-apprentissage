@@ -54,6 +54,10 @@ const DOCUMENTS = [
     filename: "affelnet-import.xlsx",
     label: "Import Affelnet",
   },
+  {
+    filename: "uai-siret.csv",
+    label: "Import couples Uai-Siret",
+  },
 ];
 
 export default () => {
