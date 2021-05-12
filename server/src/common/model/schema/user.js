@@ -35,5 +35,10 @@ const usersSchema = {
     default: [],
     description: "Roles de l'utilisateur",
   },
+  last_connection: {
+    type: Date,
+    default: null,
+    description: "Date de dernière connexion",
+  },
 };
 module.exports = usersSchema;

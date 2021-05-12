@@ -54,14 +54,29 @@ async function getParcoursupCoverage(formation, { published, tags } = {}) {
   return match;
 }
 
-async function getAffelnetCoverage({ code_postal: cp, code_cfd }) {
+/**
+ * Matching avec les formations du catalogue (Affelnet vs RCO)
+ *
+ * m1 = cfd
+ * m2 = cfd + departement
+ * m3 = cfd + departement + uai
+ * m4 = cfd + departement + code postal
+ * m5 = cfd + departement + code postal + uai
+ */
+async function getAffelnetCoverage({ code_postal: cp, code_cfd, uai }) {
   const dept = cp.substring(0, 2);
+  const deptArr = dept === "20" ? ["2A", "2B"] : [dept];
 
   const m1 = await getMatch({ cfd: code_cfd, published: true });
 
-  const m2 = m1.filter(({ num_departement }) => num_departement === dept);
+  const m2 = m1.filter(({ num_departement }) => deptArr.includes(num_departement));
 
-  const m3 = m2.filter(
+  const m3 = m2.filter(({ uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai }) => {
+    return [uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai].includes(uai);
+  });
+
+  // m4 is alternative filtering than m3 (not based on m3 but m2)
+  const m4 = m2.filter(
     ({
       etablissement_formateur_code_postal,
       etablissement_gestionnaire_code_postal,
@@ -80,6 +95,24 @@ async function getAffelnetCoverage({ code_postal: cp, code_cfd }) {
       ].includes(cp);
     }
   );
+
+  const m5 = m4.filter(({ uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai }) => {
+    return [uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai].includes(uai);
+  });
+
+  if (m5.length > 0) {
+    return {
+      strength: "5",
+      matching: m5,
+    };
+  }
+
+  if (m4.length > 0) {
+    return {
+      strength: "4",
+      matching: m4,
+    };
+  }
 
   if (m3.length > 0) {
     return {

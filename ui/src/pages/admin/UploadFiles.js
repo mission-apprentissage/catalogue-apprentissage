@@ -50,6 +50,10 @@ const DOCUMENTS = [
     filename: "CodeDiplome_RNCP_latest_kit.csv",
     label: "Kit code diplome - rncp",
   },
+  {
+    filename: "affelnet-import.xlsx",
+    label: "Import Affelnet",
+  },
 ];
 
 export default () => {
