@@ -61,6 +61,7 @@ const run = async () => {
     const filter = {};
     const args = process.argv.slice(2);
     const withCodePostalUpdate = args.includes("--withCodePostal");
+    const withRCOInsee = args.includes("--withRCOInsee");
     const limitArg = args.find((arg) => arg.startsWith("--limit"))?.split("=")?.[1];
     const limit = limitArg ? Number(limitArg) : 100;
 
@@ -118,6 +119,7 @@ const run = async () => {
           from: "master",
           type: "start",
           withCodePostalUpdate,
+          withRCOInsee,
           activeFilter,
           limit,
           maxItems: pOrder[worker.process.pid].maxItems,
@@ -170,6 +172,7 @@ const run = async () => {
           const result = await updater.run(
             message.activeFilter,
             message.withCodePostalUpdate,
+            message.withRCOInsee,
             message.limit,
             message.maxItems,
             message.offset

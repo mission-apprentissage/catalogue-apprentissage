@@ -12,6 +12,8 @@ services:
     volumes:
       - ./ui:/app:z #Allows source folders to be watched
     build:
+      context: ui
+      dockerfile: Dockerfile.dev
       args:
         - REACT_APP_ENV=dev
         - REACT_APP_ENDPOINT_NEW_FRONT=https://catalogue-recette.apprentissage.beta.gouv.fr/api

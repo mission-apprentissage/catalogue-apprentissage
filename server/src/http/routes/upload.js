@@ -41,7 +41,6 @@ module.exports = () => {
         const src = path.join(UPLOAD_DIR, `tmp-${req.file.originalname}`);
         const dest = path.join(UPLOAD_DIR, req.file.originalname);
 
-        const tmpFile = csvToJson.getJsonFromCsv(src);
         switch (req.file.originalname) {
           case "BaseDataDock-latest.xlsx":
             // TODO implement when etablissements scripts are in tco lib
@@ -49,22 +48,25 @@ module.exports = () => {
           case "latest_public_ofs.csv":
             // TODO implement when etablissements scripts are in tco lib
             break;
-          case "CodeDiplome_RNCP_latest_kit.csv":
+          case "affelnet-import.xlsx":
+            break;
+          case "CodeDiplome_RNCP_latest_kit.csv": {
+            const tmpFile = csvToJson.getJsonFromCsv(src);
             if (!hasCSVHeaders(tmpFile, "Code RNCP", "Code Diplome")) {
               return res.status(400).json({
                 error: `Le contenu du fichier est invalide, il doit contenir les colonnes suivantes : "Code RNCP", "Code Diplome"`,
               });
             }
-
-            // success, move the file
-            await move(src, dest, { overwrite: true }, (err) => {
-              if (err) return logger.error(err);
-            });
             break;
+          }
           default:
             return res.status(400).json({ error: `Le type de fichier est invalide` });
         }
 
+        // success, move the file
+        await move(src, dest, { overwrite: true }, (err) => {
+          if (err) return logger.error(err);
+        });
         return res.status(200).send(req.file);
       });
     })

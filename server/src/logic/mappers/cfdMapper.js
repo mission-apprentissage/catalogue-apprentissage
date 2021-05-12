@@ -71,7 +71,7 @@ const cfdMapper = async (cfd = null, options = { onisep: true }) => {
         cfd: result.cfd,
         cfd_specialite: result.specialite,
         cfd_outdated: result.cfd_outdated,
-        cfd_date_fermeture: result.date_fermeture,
+        cfd_date_fermeture: result?.date_fermeture && new Date(result.date_fermeture),
         niveau: result.niveau,
         intitule_long: result.intitule_long,
         intitule_court: result.intitule_court,
