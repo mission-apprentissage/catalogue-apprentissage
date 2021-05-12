@@ -86,29 +86,21 @@ export default () => {
             )}
             <br />
             <br />
-            <span>Mise à jour du 04/05/2021 :</span>
+            <span>Mise à jour du 12/05/2021 :</span>
             <br />
             <Box px={[1, 4]}>
               <OrderedList px={0} mx={0} stylePosition="inside">
-                <ListItem>Intégration d'infobulles pour expliquer la nature des informations restituées</ListItem>
                 <ListItem>
-                  Dépublication -> intégration d'un champ commentaire pour que l'instructeur puisse indiquer la raison
-                  d'une dépublication
+                  Script de réconciliation Affelnet mis en production avec les données transmises par la DNE au
+                  11/05/2021. Total de 5008 formations publiées, et de 1 040 formations en attente de publication
+                  (certainement dû à un UAI manquant - à transmettre à la mission :{" "}
+                  <Link href="mailto:catalogue@apprentissage.beta.gouv.fr">catalogue@apprentissage.beta.gouv.fr</Link>,{" "}
+                  en indiquant SIRET - UAI)
                 </ListItem>
                 <ListItem>
-                  Export des données établissements :
-                  <OrderedList styleType="lower-alpha">
-                    <ListItem>
-                      Rationalisation de l'ordre des étiquettes "année" dans l'export des établissements
-                    </ListItem>
-                    <ListItem>Lisibilité des caractères spéciaux</ListItem>
-                  </OrderedList>
-                </ListItem>
-                <ListItem>Ajout d'un lien vers les formations 2021 sur la fiche établissement</ListItem>
-                <ListItem>Possibilité de recherche avancée sur la commune du lieu de formation</ListItem>
-                <ListItem>
-                  Désormais le niveau 5 ne mentionne plus les DUT, et les BUT seront progressivement intégrés au niveau
-                  6 (changement uniquement sur les étiquettes des filtres à ce stade)
+                  Modification des règles de récupération des communes des lieux de formation, pour prendre en compte le
+                  code commune insee plus précis en cas de pluri municipalités sur un seul code postal (2 984 fiches
+                  formations corrigées).
                 </ListItem>
               </OrderedList>
             </Box>
