@@ -7,6 +7,7 @@ const { createOrUpdateEtablissements } = require("../../../logic/updaters/etabli
 
 const { paginator } = require("../../common/utils/paginator");
 const { storeByChunks } = require("../../common/utils/reportUtils");
+const { diffFormation, buildUpdatesHistory } = require("../../../logic/common/utils/diffUtils");
 
 const formatToMnaFormation = (rcoFormation) => {
   const periode =
@@ -138,17 +139,29 @@ const performConversion = async () => {
       // Keep Affelnet & Parcoursup related data (to prevent override user modifications)
       convertedFormation.affelnet_reference = previousFormation.affelnet_reference;
       convertedFormation.affelnet_statut = previousFormation.affelnet_statut;
+      convertedFormation.affelnet_statut_history = previousFormation.affelnet_statut_history;
       convertedFormation.affelnet_error = previousFormation.affelnet_error;
       convertedFormation.parcoursup_reference = previousFormation.parcoursup_reference;
       convertedFormation.parcoursup_statut = previousFormation.parcoursup_statut;
+      convertedFormation.parcoursup_statut_history = previousFormation.parcoursup_statut_history;
       convertedFormation.parcoursup_error = previousFormation.parcoursup_error;
       convertedFormation.affelnet_infos_offre = previousFormation.affelnet_infos_offre;
+      convertedFormation.affelnet_code_nature = previousFormation.affelnet_code_nature;
+      convertedFormation.affelnet_secteur = previousFormation.affelnet_secteur;
+      convertedFormation.affelnet_raison_depublication = previousFormation.affelnet_raison_depublication;
+      convertedFormation.parcoursup_raison_depublication = previousFormation.parcoursup_raison_depublication;
 
       // Keep user modifications
       convertedFormation.editedFields = previousFormation.editedFields;
       Object.keys(convertedFormation.editedFields ?? {}).forEach((key) => {
         convertedFormation[key] = convertedFormation.editedFields[key];
       });
+
+      // add entry in updates history
+      const { updates, keys } = diffFormation(previousFormation, convertedFormation);
+      if (updates) {
+        convertedFormation.updates_history = buildUpdatesHistory(previousFormation, updates, keys, "rco");
+      }
     }
 
     // replace or insert new one

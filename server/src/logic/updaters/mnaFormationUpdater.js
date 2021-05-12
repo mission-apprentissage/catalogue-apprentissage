@@ -6,7 +6,7 @@ const { getPeriodeTags } = require("../../jobs/common/utils/rcoUtils");
 const { cfdMapper } = require("../mappers/cfdMapper");
 const { codePostalMapper } = require("../mappers/codePostalMapper");
 const { etablissementsMapper } = require("../mappers/etablissementsMapper");
-const { diffFormation } = require("../common/utils/diffUtils");
+const { diffFormation, buildUpdatesHistory } = require("../common/utils/diffUtils");
 const { SandboxFormation, RcoFormation } = require("../../common/model");
 const { getCoordinatesFromAddressData } = require("@mission-apprentissage/tco-service-node");
 
@@ -16,17 +16,6 @@ const formationSchema = Joi.object({
   etablissement_formateur_siret: Joi.string().required(),
   code_postal: Joi.string().required(),
 }).unknown();
-
-/*
- * Build updates history
- */
-const buildUpdatesHistory = (formation, updates, keys) => {
-  const from = keys.reduce((acc, key) => {
-    acc[key] = formation[key];
-    return acc;
-  }, {});
-  return [...formation.updates_history, { from, to: { ...updates }, updated_at: Date.now() }];
-};
 
 const parseErrors = (messages) => {
   if (!messages) {
