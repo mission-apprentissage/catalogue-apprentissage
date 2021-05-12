@@ -5,7 +5,7 @@ import { Button } from "@chakra-ui/react";
 import { _post } from "../../../common/httpClient";
 import { downloadCSV, CSV_SEPARATOR } from "../../../common/utils/downloadUtils";
 
-const endpointNewFront = process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue.apprentissage.beta.gouv.fr/api";
+const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 const endpointTCO =
   process.env.REACT_APP_ENDPOINT_TCO || "https://tables-correspondances.apprentissage.beta.gouv.fr/api";
 
