@@ -27,7 +27,14 @@ export default () => {
           <Heading as="h1" mb={8} mt={2}>
             Tableau de bord
           </Heading>
-          <iframe src={iframeUrl} frameBorder="0" width="100%" height="100%" allowtransparency="true"></iframe>
+          <iframe
+            src={iframeUrl}
+            frameBorder="0"
+            width="100%"
+            height="100%"
+            allowtransparency="true"
+            title="Statistiques Metabase"
+          ></iframe>
           {/* {loading && "Chargement des données..."}
           {data && (
             <>

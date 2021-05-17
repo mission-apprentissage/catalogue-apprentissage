@@ -1,27 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "./layout/Layout";
 import packageJson from "../../package.json";
 
 import {
   Box,
-  Button,
-  Container,
-  Heading,
-  Flex,
-  ListItem,
-  List,
-  Link,
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
-  Text,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
-  // eslint-disable-next-line no-unused-vars
-  Center,
+  Button,
+  Container,
+  Flex,
+  Grid,
+  Heading,
+  Link,
+  List,
+  ListItem,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Text,
 } from "@chakra-ui/react";
 
 import { NavLink } from "react-router-dom";
@@ -29,15 +28,8 @@ import Changelog from "../common/components/Changelog/Changelog";
 import changelog from "../CHANGELOG";
 import { _get } from "../common/httpClient";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// eslint-disable-next-line no-unused-vars
-import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
-import { faInfoCircle, faArrowRight } from "@fortawesome/free-solid-svg-icons";
-// eslint-disable-next-line no-unused-vars
-import { Code } from "@chakra-ui/react";
-// eslint-disable-next-line no-unused-vars
-import { Grid, GridItem } from "@chakra-ui/react";
-import { ExternalLinkLine } from "../theme/components/icons/External-link-line";
-import { InformationLine } from "../theme/components/icons/Information-line";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { ExternalLinkLine, InformationLine } from "../theme/components/icons";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 const endpointTCO =
@@ -47,9 +39,10 @@ export default () => {
   const [loading, setLoading] = useState(true);
   const [countEstablishments, setCountEstablishments] = useState(0);
   const [countFormations2021, setCountFormations2021] = useState(0);
-  let mounted = true;
 
   useEffect(() => {
+    let mounted = true;
+
     async function run() {
       try {
         const params = new window.URLSearchParams({
@@ -138,7 +131,7 @@ export default () => {
                   <Flex flexDirection={["column", "column", "column", "row"]}>
                     <Box bg="#F9F8F6" p={5} w="340px" h="100px">
                       <Heading as="h6" textStyle="h6">
-                        {countFormations2021.toLocaleString("fr-FR")} formations
+                        {countFormations2021} formations
                       </Heading>
                       <Flex>
                         <Text flex="1" textStyle="sm">
@@ -151,7 +144,7 @@ export default () => {
                     </Box>
                     <Box bg="#F9F8F6" p={5} w="340px" h="100px" mx={[0, 0, 0, 5]} mt={[5, 5, 5, 0]}>
                       <Heading as="h6" textStyle="h6">
-                        {countEstablishments.toLocaleString("fr-FR")} établissements
+                        {countEstablishments} établissements
                       </Heading>
                       <Flex>
                         <Text flex="1" textStyle="sm">
@@ -162,11 +155,6 @@ export default () => {
                         </Box>
                       </Flex>
                     </Box>
-                    {/* <Box bg="tomato" p="4" mx={5} w="400px" h="50px">
-                      <Text fontWeight="extrabold" fontSize="20px">
-                        {countEstablishments} établissements
-                      </Text>
-                    </Box>{" "} */}
                   </Flex>
                 )}
                 <br />
