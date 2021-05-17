@@ -105,16 +105,16 @@ export default () => {
                 </Heading>
                 <List stylePosition="inside" px={3} textStyle="sm" fontWeight={400}>
                   <ListItem>
-                    <strong>1.</strong> Mise à jour des données
+                    <strong>1.</strong> <Link href={"#mise-a-jour"}>Mise à jour des données</Link>
                   </ListItem>
                   <ListItem>
-                    <strong>2.</strong> Vous êtes organisme de formation
+                    <strong>2.</strong> <Link href={"#organisme-de-formation"}>Vous êtes organisme de formation</Link>
                   </ListItem>
                   <ListItem>
-                    <strong>3.</strong> Vous travaillez en académie
+                    <strong>3.</strong> <Link href={"#en-academie"}>Vous travaillez en académie</Link>
                   </ListItem>
                   <ListItem>
-                    <strong>4.</strong> Journal des modifications
+                    <strong>4.</strong> <Link href={"#journal"}>Journal des modifications</Link>
                   </ListItem>
                 </List>
               </Box>
@@ -175,7 +175,7 @@ export default () => {
                 <br />
                 <br />
                 <Box textStyle="rf-text">
-                  <Heading as="h4" textStyle="h4">
+                  <Heading as="h4" textStyle="h4" id="mise-a-jour">
                     Mise à jour des données
                   </Heading>
                   <br />
@@ -187,7 +187,7 @@ export default () => {
                 </Box>
                 <br /> <br />
                 <Box>
-                  <Heading as="h4" textStyle="h4">
+                  <Heading as="h4" textStyle="h4" id="organisme-de-formation">
                     Vous êtes organisme de formation
                   </Heading>
                   <br />
@@ -216,7 +216,7 @@ export default () => {
                 <br />
                 <br />
                 <Box>
-                  <Heading as="h4" textStyle="h4">
+                  <Heading as="h4" textStyle="h4" id="en-academie">
                     Vous travaillez en académie
                   </Heading>
                   {/*<br />*/}
@@ -232,7 +232,7 @@ export default () => {
                 </Box>
               </Box>
               <Box flexDirection="column" mt={12}>
-                <Heading as="h4" textStyle="h4" mb={3}>
+                <Heading as="h4" textStyle="h4" mb={3} id="journal">
                   Journal des modifications
                 </Heading>
                 <br />
