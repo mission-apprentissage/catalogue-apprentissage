@@ -8,9 +8,9 @@ const afReference = require("./reference/affelnet");
 const psPertinence = require("./pertinence/parcoursup");
 const afPertinence = require("./pertinence/affelnet");
 const afCoverage = require("./affelnet/coverage");
-const psCoverage = require("./parcoursup/2021/coverage");
+// const psCoverage = require("./parcoursup/2021/coverage");
 const afReconciliation = require("./affelnet/reconciliation");
-const psReconciliation = require("./parcoursup/2021/reconciliation");
+// const psReconciliation = require("./parcoursup/2021/reconciliation");
 
 const clean = require("./clean");
 const { rebuildEsIndex } = require("./esIndex/esIndex");
@@ -44,8 +44,13 @@ runScript(async ({ catalogue, db }) => {
     }
 
     // parcoursup
-    await psCoverage();
-    await psReconciliation();
+    // await psCoverage();
+    const psCoverage = spawn("node", ["./src/jobs/parcoursup/2021/coverage.js"]);
+    for await (const data of psCoverage.stdout) {
+      console.log(`psCoverage: ${data}`);
+    }
+
+    // await psReconciliation();
     await psReference(); // ~ 34 minutes => ~ 30 secondes
     await psPertinence(); // ~ 8 secondes
 
