@@ -1,15 +1,6 @@
 import React from "react";
 import { MultiList } from "@appbaseio/reactivesearch";
-import {
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon,
-  Box,
-  Container,
-  Text,
-} from "@chakra-ui/react";
+import { Accordion, AccordionButton, AccordionItem, AccordionPanel, Box } from "@chakra-ui/react";
 import useAuth from "../../../../common/hooks/useAuth";
 import { hasOneOfRoles } from "../../../../common/utils/rolesUtils";
 import { compact } from "lodash";
@@ -41,7 +32,7 @@ const Layout = (props) => {
     <Accordion allowMultiple defaultIndex={defaultIndex} bg="#F9F8F6" mb={6}>
       <AccordionItem border="none">
         {({ isExpanded }) => (
-          <h2>
+          <>
             <h2>
               <AccordionButton>
                 <Box flex="1" textAlign="left">
@@ -90,7 +81,7 @@ const Layout = (props) => {
                 sortBy={sortBy}
               />
             </AccordionPanel>
-          </h2>
+          </>
         )}
       </AccordionItem>
     </Accordion>

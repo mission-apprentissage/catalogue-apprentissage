@@ -1,6 +1,16 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { ReactiveBase, ReactiveList, DataSearch, SingleList, SelectedFilters } from "@appbaseio/reactivesearch";
-import { Container, Flex, Spinner, Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Heading } from "@chakra-ui/react";
+import {
+  Container,
+  Flex,
+  Spinner,
+  Box,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  Heading,
+  Text,
+} from "@chakra-ui/react";
 import Switch from "react-switch";
 import useAuth from "../../common/hooks/useAuth";
 import Layout from "../layout/Layout";
@@ -160,7 +170,9 @@ export default ({ match, location }) => {
                   <Container maxW="full">
                     <label className="react-switch" style={{ right: "70px" }}>
                       <Switch onChange={handleSearchSwitchChange} checked={mode !== "simple"} />
-                      <span textStyle="sm">Recherche avancée</span>
+                      <Text as="span" textStyle="sm">
+                        Recherche avancée
+                      </Text>
                     </label>
                     <Heading as="h1" fontSize="beta" className="title">
                       {isBaseFormations
