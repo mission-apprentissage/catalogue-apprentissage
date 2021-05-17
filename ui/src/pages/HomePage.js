@@ -29,7 +29,7 @@ import changelog from "../CHANGELOG";
 import { _get } from "../common/httpClient";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { ExternalLinkLine, InformationLine } from "../theme/components/icons";
+import { ExternalLinkLine } from "../theme/components/icons";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 const endpointTCO =
@@ -73,23 +73,23 @@ export default () => {
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 24]} color="#1E1E1E">
         <Container maxW="xl">
-          <Box bg="#F8F8F8" color="pinksoft.500" borderLeft="4px" role="none" p={5}>
-            <Flex>
-              <Box>
-                <InformationLine />
-              </Box>
-              <Text color="black" textStyle="sm" px={2}>
-                Grâce à vos retours une anomalie a été détectée dans le code qui testait la présence d'un SIRET sur un
-                titre. Un correctif va être effectué très prochainement.
-                <br />
-                <Text fontWeight="700" as="span">
-                  En attendant, les formations à des titres en apprentissage sont toutes affichées en « hors périmètre
-                  ». Nous vous informerons dès que le correctif sera appliqué.
-                </Text>
-              </Text>
-            </Flex>
-          </Box>
-          <Breadcrumb py={5}>
+          {/*<Box bg="#F8F8F8" color="pinksoft.500" borderLeft="4px" role="none" p={5}>*/}
+          {/*  <Flex>*/}
+          {/*    <Box>*/}
+          {/*      <InformationLine />*/}
+          {/*    </Box>*/}
+          {/*    <Text color="black" textStyle="sm" px={2}>*/}
+          {/*      Grâce à vos retours une anomalie a été détectée dans le code qui testait la présence d'un SIRET sur un*/}
+          {/*      titre. Un correctif va être effectué très prochainement.*/}
+          {/*      <br />*/}
+          {/*      <Text fontWeight="700" as="span">*/}
+          {/*        En attendant, les formations à des titres en apprentissage sont toutes affichées en « hors périmètre*/}
+          {/*        ». Nous vous informerons dès que le correctif sera appliqué.*/}
+          {/*      </Text>*/}
+          {/*    </Text>*/}
+          {/*  </Flex>*/}
+          {/*</Box>*/}
+          <Breadcrumb>
             <BreadcrumbItem isCurrentPage>
               <BreadcrumbLink fontSize="omega">Accueil</BreadcrumbLink>
             </BreadcrumbItem>
@@ -129,7 +129,7 @@ export default () => {
                 {loading && <Text>chargement...</Text>}
                 {!loading && (
                   <Flex flexDirection={["column", "column", "column", "row"]}>
-                    <Box bg="#F9F8F6" p={5} w="340px" h="100px">
+                    <Box as={NavLink} to={"/recherche/formations-2021"} bg="#F9F8F6" p={5} w="340px" h="100px">
                       <Heading as="h6" textStyle="h6">
                         {countFormations2021} formations
                       </Heading>
@@ -142,7 +142,16 @@ export default () => {
                         </Box>
                       </Flex>
                     </Box>
-                    <Box bg="#F9F8F6" p={5} w="340px" h="100px" mx={[0, 0, 0, 5]} mt={[5, 5, 5, 0]}>
+                    <Box
+                      as={NavLink}
+                      to={"/recherche/etablissements"}
+                      bg="#F9F8F6"
+                      p={5}
+                      w="340px"
+                      h="100px"
+                      mx={[0, 0, 0, 5]}
+                      mt={[5, 5, 5, 0]}
+                    >
                       <Heading as="h6" textStyle="h6">
                         {countEstablishments} établissements
                       </Heading>
@@ -166,8 +175,8 @@ export default () => {
                   <br />
                   <Text textStyle="rf-text">
                     Les référencements et mises à jour effectués dans les bases “Offre des Carif-Oref” de chaque région
-                    sont répercutés <br /> quotidiennement dans le “Catalogue des offres de formations en apprentissage”
-                    (délai de 72h entre modifications <br /> demandées au Carif-Oref et publication dans le Catalogue).
+                    sont répercutés quotidiennement dans le “Catalogue des offres de formations en apprentissage” (délai
+                    de 72h entre modifications demandées au Carif-Oref et publication dans le Catalogue).
                   </Text>
                 </Box>
                 <br /> <br />
@@ -180,18 +189,22 @@ export default () => {
                     <strong>
                       Pour ajouter une offre de formation au Catalogue de l’offre de formation en apprentissage
                     </strong>
-                    , merci de la déclarer <br /> auprès du Carif-Oref de votre région en allant sur la page “
-                    <Link color="bluefrance" textDecoration="underline">
-                      référencer son offre de formation
+                    , merci de la déclarer <br /> auprès du Carif-Oref de votre région en allant sur la page{" "}
+                    <Link
+                      href="https://reseau.intercariforef.org/referencer-son-offre-de-formation"
+                      textDecoration="underline"
+                      color="bluefrance"
+                      isExternal
+                    >
+                      "référencer son offre de formation{" "}
+                      <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} color="bluefrance" />"
                     </Link>
-                    ”
-                    <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} color="bluefrance" />
                   </Text>
                   <br />
                   <Text textStyle="rf-text">
                     <strong> Pour modifier les caractéristiques de votre organisme </strong> (raison sociale, SIRET,
-                    adresse postale, etc.), vous pouvez vous <br /> rapprocher de l’INSEE afin de réaliser les
-                    modifications à la source.
+                    adresse postale, etc.), vous pouvez vous rapprocher de l’INSEE afin de réaliser les modifications à
+                    la source.
                   </Text>
                 </Box>
                 <br />
@@ -200,16 +213,15 @@ export default () => {
                   <Heading as="h4" textStyle="h4">
                     Vous travaillez en académie
                   </Heading>
-                  <br />
-                  <Link color="bluefrance" textDecoration="underline">
-                    <strong>Accéder à vos actions expertes</strong>
-                  </Link>
+                  {/*<br />*/}
+                  {/*<Link color="bluefrance" textDecoration="underline">*/}
+                  {/*  <strong>Accéder à vos actions expertes</strong>*/}
+                  {/*</Link>*/}
                   <br />
                   <Text textStyle="rf-text">
                     <strong>Pour signaler une incohérence </strong>(UAI, Code diplôme, Code RNCP), vous pouvez vous
-                    rapprocher de votre Carif-Oref <br />
-                    afin qu'il vous aide à identifier l'origine du problème et vous accompagne dans sa résolution auprès
-                    des instances <br /> (DEPP, BCN, France Compétences).{" "}
+                    rapprocher de votre Carif-Oref afin qu'il vous aide à identifier l'origine du problème et vous
+                    accompagne dans sa résolution auprès des instances (DEPP, BCN, France Compétences).{" "}
                   </Text>
                 </Box>
               </Box>
@@ -222,9 +234,12 @@ export default () => {
                   <Tabs variant="unstyled">
                     <TabList textStyle="sm" px={0} bg="white">
                       <Tab
+                        bg="#EEF1F8"
+                        color="#383838"
                         fontWeight="700"
-                        color="bluefrance"
                         _selected={{
+                          bg: "white",
+                          color: "bluefrance",
                           borderTop: "2px solid #000091",
                           borderLeft: "1px solid #CECECE",
                           borderRight: "1px solid #CECECE",
@@ -234,12 +249,26 @@ export default () => {
                       >
                         Dernières modifications
                       </Tab>
-                      <Tab bg="#EEF1F8" mx={2} color="#383838" fontWeight="700" textStyle="sm">
+                      <Tab
+                        mx={2}
+                        bg="#EEF1F8"
+                        color="#383838"
+                        fontWeight="700"
+                        _selected={{
+                          bg: "white",
+                          color: "bluefrance",
+                          borderTop: "2px solid #000091",
+                          borderLeft: "1px solid #CECECE",
+                          borderRight: "1px solid #CECECE",
+                          outline: "1px solid white",
+                          zIndex: "1",
+                        }}
+                      >
                         A venir
                       </Tab>
                     </TabList>
                     <TabPanels px={0}>
-                      <TabPanel color="#383838" p={0} px={0} h={[1000, 1000, 800, 550]}>
+                      <TabPanel color="#383838" p={0} px={0} h="auto">
                         <Flex>
                           <Changelog
                             content={changelog}
@@ -249,7 +278,7 @@ export default () => {
                           />
                         </Flex>
                       </TabPanel>
-                      <TabPanel color="#1E1E1E">
+                      <TabPanel color="#1E1E1E" p={0} px={0} h="auto">
                         <Flex>
                           <Changelog content={changelog} order="desc" nbVersion={1} hideFilter={true} />
                         </Flex>

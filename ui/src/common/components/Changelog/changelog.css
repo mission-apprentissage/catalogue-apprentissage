@@ -1,3 +1,6 @@
+.react-changelog-container {
+  width: 100%;
+}
 .react-changelog-container .changelog-wrapper {
   max-width: 100%;
   margin: 0 auto;

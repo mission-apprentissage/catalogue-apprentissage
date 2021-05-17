@@ -58,7 +58,7 @@ const Footer = () => {
               css={{ "li:not(:last-child):after": { content: "'|'", marginLeft: "0.3rem", marginRight: "0.3rem" } }}
             >
               <ListItem>Plan du site</ListItem>
-              <ListItem>Accessibilité</ListItem>
+              <ListItem>Accessibilité : Non conforme</ListItem>
               <ListItem>Mentions légales</ListItem>
               <ListItem>Données personnelles</ListItem>
               <ListItem>Gestion des cookies</ListItem>

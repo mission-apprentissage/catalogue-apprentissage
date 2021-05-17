@@ -13,7 +13,7 @@ const ChangelogVersion = ({ version, date, about, fixes, features, improvements 
         <p className="changelog-version">
           <a href={`#v${slug}`}>v.{version}</a>
         </p>
-        <h3 className="changelog-date">Le {date}</h3>
+        <h3 className="changelog-date">{date}</h3>
         <h5 className="changelog-about" dangerouslySetInnerHTML={createMarkup(about)} />
       </header>
       <div className="changelog-update-descriptions">
