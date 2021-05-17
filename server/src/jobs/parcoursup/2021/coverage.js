@@ -100,8 +100,9 @@ const run = async () => {
 
         return;
       }
-      const activeFilter = { ...filters };
-      const { pages, total } = await PsFormation2021.paginate(activeFilter, { limit });
+      let activeFilter = { ...filters };
+      const { pages, total, docs } = await PsFormation2021.paginate(activeFilter, { limit, select: { _id: 1 } });
+      activeFilter = { _id: { $in: docs.map((f) => f._id) } };
       const halfItems = Math.floor(pages / numCPUs) * limit;
 
       // Fork workers.
