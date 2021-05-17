@@ -29,6 +29,7 @@ const paginator = async (
       })
     );
     currentOffset += limit;
+    console.log(computed, nbTotalItems, maxItems, currentOffset, total);
     progressBar?.update(computed);
   }
 };
