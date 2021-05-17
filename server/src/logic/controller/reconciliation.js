@@ -94,6 +94,7 @@ async function reconciliationParcoursup(formation, source = "MANUEL") {
     payload,
     {
       upsert: true,
+      new: true,
     }
   ).lean();
   await PsFormation2021.findByIdAndUpdate(_id, { etat_reconciliation: true, id_reconciliation: reconciliation._id });
