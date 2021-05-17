@@ -39,10 +39,26 @@ const Footer = () => {
               display="flex"
               css={{ "li:not(:last-child):after": { content: "' '", marginLeft: "0.3rem", marginRight: "0.3rem" } }}
             >
-              <ListItem>legifrance.gouv.fr</ListItem>
-              <ListItem>gouvernement.fr</ListItem>
-              <ListItem>servicepublic.fr</ListItem>
-              <ListItem>data.gouv.fr</ListItem>
+              <ListItem>
+                <Link href="https://www.legifrance.gouv.fr/" isExternal>
+                  legifrance.gouv.fr
+                </Link>
+              </ListItem>
+              <ListItem>
+                <Link href="https://www.gouvernement.fr/" isExternal>
+                  gouvernement.fr
+                </Link>
+              </ListItem>
+              <ListItem>
+                <Link href="https://www.service-public.fr/" isExternal>
+                  service-public.fr
+                </Link>
+              </ListItem>
+              <ListItem>
+                <Link href="https://www.data.gouv.fr/fr/" isExternal>
+                  data.gouv.fr
+                </Link>
+              </ListItem>
             </List>
           </Box>
         </Flex>
@@ -57,11 +73,27 @@ const Footer = () => {
               flex="1"
               css={{ "li:not(:last-child):after": { content: "'|'", marginLeft: "0.3rem", marginRight: "0.3rem" } }}
             >
-              <ListItem>Plan du site</ListItem>
+              <ListItem>
+                <Link as={NavLink} to={"/"}>
+                  Plan du site
+                </Link>
+              </ListItem>
               <ListItem>Accessibilité : Non conforme</ListItem>
-              <ListItem>Mentions légales</ListItem>
-              <ListItem>Données personnelles</ListItem>
-              <ListItem>Gestion des cookies</ListItem>
+              <ListItem>
+                <Link as={NavLink} to={"/"}>
+                  Mentions légales
+                </Link>
+              </ListItem>
+              <ListItem>
+                <Link as={NavLink} to={"/"}>
+                  Données personnelles
+                </Link>
+              </ListItem>
+              <ListItem>
+                <Link as={NavLink} to={"/"}>
+                  Gestion des cookies
+                </Link>
+              </ListItem>
               <ListItem>
                 <Link href="https://mission-apprentissage.gitbook.io/" isExternal>
                   Documentation
