@@ -64,7 +64,7 @@ const NavLinks = ({ isOpen }) => {
         textStyle="sm"
       >
         <NavItem to="/">Accueil</NavItem>
-        <NavItem to="/recherche/formations-2021">Mes actions expertes</NavItem>
+        {/*<NavItem to="/recherche/formations-2021">Mes actions expertes</NavItem>*/}
         <NavItem to="/recherche/formations-2021">Catalogue des formations en apprentissage 2021</NavItem>
         <NavItem to="/recherche/etablissements">Liste des établissements</NavItem>
         <NavItem to="/changelog">Journal des modifications</NavItem>
@@ -75,11 +75,13 @@ const NavLinks = ({ isOpen }) => {
             fontWeight="400"
             display={{ base: "none", md: "block" }}
             py={4}
-            color={menuIsActive ? "blue.500" : "grey.500"}
-            borderBottom="1px solid"
-            borderColor={menuIsActive ? "blue.500" : "transparent"}
-            _hover={{ textDecoration: "none", color: "red", borderColor: "red" }}
-          ></MenuButton>
+            color={menuIsActive ? "bluefrance" : "grey.800"}
+            borderBottom="3px solid"
+            borderColor={menuIsActive ? "bluefrance" : "transparent"}
+            _hover={{ textDecoration: "none", color: "grey.800", bg: "grey.200" }}
+          >
+            Guides
+          </MenuButton>
           <MenuList>
             <MenuItem as={NavLink} to="/guide-reglementaire">
               Guide réglementaire

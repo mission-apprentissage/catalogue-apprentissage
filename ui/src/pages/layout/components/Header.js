@@ -5,20 +5,21 @@ import {
   Box,
   Container,
   Flex,
+  Heading,
   Image,
   Link,
+  List,
+  ListItem,
   Menu,
-  Heading,
   MenuButton,
-  MenuItem,
-  MenuList,
   MenuDivider,
   MenuGroup,
+  MenuItem,
+  MenuList,
   Text,
 } from "@chakra-ui/react";
-import { List, ListItem, ListIcon, OrderedList, UnorderedList } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSignOutAlt, faSync, faUsers, faUpload } from "@fortawesome/free-solid-svg-icons";
+import { faSignOutAlt, faSync, faUpload, faUsers } from "@fortawesome/free-solid-svg-icons";
 import useAuth from "../../../common/hooks/useAuth";
 import { isUserAdmin } from "../../../common/utils/rolesUtils";
 import { _get } from "../../../common/httpClient";

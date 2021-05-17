@@ -6,7 +6,7 @@ import { hasOneOfRoles } from "../../../../common/utils/rolesUtils";
 import useAuth from "../../../../common/hooks/useAuth";
 import { StatusBadge } from "../../../../common/components/StatusBadge";
 import { Flex, Box } from "@chakra-ui/react";
-import { ArrowRightLine } from "../../../../theme/components/icons/Arrow-right-line";
+import { ArrowRightLine } from "../../../../theme/components/icons";
 
 export const CardListFormation = ({ data }) => {
   let [auth] = useAuth();
@@ -22,7 +22,9 @@ export const CardListFormation = ({ data }) => {
     >
       <div className="list-card-container">
         <div className="list-card-left">
-          <h3>{data.intitule_long}</h3>
+          <h3>
+            {data.intitule_long} (Niv. {niv})
+          </h3>
           <div>
             <p>{data.etablissement_formateur_enseigne}</p>
             <p>{data.etablissement_gestionnaire_entreprise_raison_sociale}</p>
