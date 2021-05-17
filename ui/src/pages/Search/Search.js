@@ -238,10 +238,10 @@ export default ({ match, location }) => {
                             loader="Chargement des résultats.."
                             size={8}
                             pagination={true}
-                            showEndPage={true}
-                            renderPagination={(paginationProp) => {
-                              return <Pagination {...paginationProp} />;
-                            }}
+                            showEndPage={false}
+                            // renderPagination={(paginationProp) => {
+                            //   return <Pagination {...paginationProp} />;
+                            // }}
                             showResultStats={true}
                             sortBy="asc"
                             defaultQuery={() => {
@@ -261,7 +261,7 @@ export default ({ match, location }) => {
                                 <div className="summary-stats">
                                   <span className="summary-text">
                                     {isBaseFormations
-                                      ? `${stats.numberOfResults} formations affichées sur ${itemsCount}`
+                                      ? `${stats.numberOfResults.toLocaleString("fr-FR")} formations`
                                       : `${stats.numberOfResults} établissements affichées sur ${itemsCount}`}
                                   </span>
                                   {auth?.sub !== "anonymous" && (
