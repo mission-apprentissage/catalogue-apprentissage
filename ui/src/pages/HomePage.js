@@ -98,8 +98,8 @@ export default () => {
       </Box>
       <Box w="100%" py={[1, 8]} px={[1, 24]} color="#1E1E1E">
         <Container maxW="xl">
-          <Grid templateColumns={["auto", "auto", "auto", "250px auto"]} w="100%">
-            <Box>
+          <Flex flexDirection={["column", "column", "column", "row"]}>
+            <Box minW="250px">
               <Box bg="#F9F8F6" p={3}>
                 <Heading textStyle="rf-text" fontWeight="700" p={2}>
                   SOMMAIRE
@@ -120,7 +120,7 @@ export default () => {
                 </List>
               </Box>
             </Box>
-            <Box px={5}>
+            <Box px={5} mt={[4, 4, 4, 0]}>
               <Heading as="h1" textStyle="h2">
                 Le catalogue des offres de formations en apprentissage recense aujourd’hui :
               </Heading>
@@ -129,7 +129,14 @@ export default () => {
                 {loading && <Text>chargement...</Text>}
                 {!loading && (
                   <Flex flexDirection={["column", "column", "column", "row"]}>
-                    <Box as={NavLink} to={"/recherche/formations-2021"} bg="#F9F8F6" p={5} w="340px" h="100px">
+                    <Box
+                      as={NavLink}
+                      to={"/recherche/formations-2021"}
+                      bg="#F9F8F6"
+                      p={5}
+                      w={["100%", "340px"]}
+                      h="100px"
+                    >
                       <Heading as="h6" textStyle="h6">
                         {countFormations2021} formations
                       </Heading>
@@ -147,7 +154,7 @@ export default () => {
                       to={"/recherche/etablissements"}
                       bg="#F9F8F6"
                       p={5}
-                      w="340px"
+                      w={["100%", "340px"]}
                       h="100px"
                       mx={[0, 0, 0, 5]}
                       mt={[5, 5, 5, 0]}
@@ -299,7 +306,7 @@ export default () => {
                 </Box>
               </Box>
             </Box>
-          </Grid>
+          </Flex>
         </Container>
       </Box>
     </Layout>

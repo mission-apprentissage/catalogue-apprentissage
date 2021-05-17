@@ -6,8 +6,8 @@ const Footer = () => {
   return (
     <Box borderTop="1px solid" borderColor="bluefrance" color="#1E1E1E" fontSize="zeta" w="full">
       <Container maxW="xl" py={6}>
-        <Flex flexDirection={["column", "row"]}>
-          <Box w="40rem">
+        <Flex flexDirection={["column", "column", "row"]}>
+          <Box w={["100%", "100%", "40rem"]}>
             <Link as={NavLink} to="/" py={4}>
               <Image
                 src="/brand/mariannev2.jpg"
@@ -35,7 +35,7 @@ const Footer = () => {
             <List
               textStyle="sm"
               fontWeight="700"
-              flexDirection={["column", "row"]}
+              flexDirection={["column", "column", "row"]}
               display="flex"
               css={{ "li:not(:last-child):after": { content: "' '", marginLeft: "0.3rem", marginRight: "0.3rem" } }}
             >
@@ -49,10 +49,10 @@ const Footer = () => {
       </Container>
       <Box borderTop="1px solid" borderColor="#CECECE" color="#6A6A6A">
         <Container maxW="xl" py={5}>
-          <Flex flexDirection={["column", "row"]}>
+          <Flex flexDirection={["column", "column", "row"]}>
             <List
               textStyle="sm"
-              flexDirection={["column", "row"]}
+              flexDirection={["column", "column", "row"]}
               display="flex"
               flex="1"
               css={{ "li:not(:last-child):after": { content: "'|'", marginLeft: "0.3rem", marginRight: "0.3rem" } }}
@@ -78,7 +78,7 @@ const Footer = () => {
                 </Link>
               </ListItem>
             </List>
-            <Flex flexDirection={["column", "row"]}>
+            <Flex flexDirection={["column", "column", "row"]}>
               <Text>© République française 2021</Text>
             </Flex>
           </Flex>
