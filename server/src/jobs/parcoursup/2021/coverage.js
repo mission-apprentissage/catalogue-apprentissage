@@ -78,11 +78,6 @@ const etablissement = async () => {
 const psCoverage = async (filter = {}, limit = 10, maxItems = 100, offset = 0) => {
   logger.info("Start formation coverage");
   await formation(filter, limit, maxItems, offset);
-
-  logger.info("Start etablissement coverage");
-  await etablissement();
-
-  logger.info("End Parcoursup coverage");
   return "Ok";
 };
 
@@ -159,19 +154,20 @@ const run = async () => {
       cluster.on("exit", async (worker) => {
         console.log(`worker ${worker.process.pid} died`);
         if (countWorkerExist === numCPUs) {
-          // Merge
-          for (const key in pResult) {
-            if (Object.hasOwnProperty.call(pResult, key)) {
-              const r = pResult[key].result;
-              if (r) {
-                // MERGING RESULTS
-              }
-            }
-          }
+          // // Merge
+          // for (const key in pResult) {
+          //   if (Object.hasOwnProperty.call(pResult, key)) {
+          //     const r = pResult[key].result;
+          //     if (r) {
+          //       // MERGING RESULTS
+          //     }
+          //   }
+          // }
 
           runScript(async () => {
-            // DO STUFF AT THE END
-            console.log(`Done`);
+            logger.info("Start etablissement coverage");
+            await etablissement();
+            logger.info("End Parcoursup coverage");
           });
         } else {
           countWorkerExist += 1;
