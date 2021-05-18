@@ -1,8 +1,8 @@
 .search-page {
-  min-height: 100vh;
-  background-color: #ffff;
+  /* min-height: 100vh; */
+  /* background-color: #ffff;
   color: #19414c;
-  display: block;
+  display: block; */
 }
 .search-page .search {
   display: flex;

@@ -1,12 +1,12 @@
 import React from "react";
 import { MultiList } from "@appbaseio/reactivesearch";
 import { Accordion, AccordionButton, AccordionItem, AccordionPanel, Box } from "@chakra-ui/react";
-import useAuth from "../../../../common/hooks/useAuth";
-import { hasOneOfRoles } from "../../../../common/utils/rolesUtils";
+import useAuth from "../../../../hooks/useAuth";
+import { hasOneOfRoles } from "../../../../utils/rolesUtils";
 import { compact } from "lodash";
-import { academies } from "../../../../constants/academies";
+import { academies } from "../../../../../constants/academies";
 import "./facet.css";
-import { AddFill, SubtractLine } from "../../../../theme/components/icons/";
+import { AddFill, SubtractLine } from "../../../../../theme/components/icons";
 
 const Layout = (props) => {
   const { componentId, dataField, filterLabel, filters, title, selectAllLabel, sortBy } = props;
