@@ -114,7 +114,7 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
       <GridItem colSpan="7" border="1px solid #000091" mt={5}>
         <Box ml="2rem" mt={5}>
           <Heading textStyle="h4" color="grey.800">
-            Caractéritiques de l’établissement
+            Caractéristiques de l’établissement
           </Heading>
           <Box mb={4}>
             {etablissement.onisep_url !== "" && etablissement.onisep_url !== null && (
