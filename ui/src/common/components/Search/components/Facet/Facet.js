@@ -1,6 +1,6 @@
 import React from "react";
 import { MultiList } from "@appbaseio/reactivesearch";
-import { Accordion, AccordionButton, AccordionItem, AccordionPanel, Box } from "@chakra-ui/react";
+import { Accordion, AccordionButton, AccordionItem, AccordionPanel, Box, Text } from "@chakra-ui/react";
 import useAuth from "../../../../hooks/useAuth";
 import { hasOneOfRoles } from "../../../../utils/rolesUtils";
 import { compact } from "lodash";

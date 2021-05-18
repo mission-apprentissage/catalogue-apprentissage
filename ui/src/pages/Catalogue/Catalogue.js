@@ -2,6 +2,7 @@ import React from "react";
 import {
   Container,
   Box,
+  Heading,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
@@ -35,13 +36,66 @@ export default (props) => {
               <BreadcrumbLink>Catalogue des formations en apprentissage 2021</BreadcrumbLink>
             </BreadcrumbItem>
           </Breadcrumb>
+          <Heading textStyle="h2" color="grey.800" mt={5}>
+            Catalogue des formations en apprentissage 2021
+          </Heading>
           {!searchState.loaded && <Spinner />}
           {searchState.loaded && (
-            <Tabs>
-              <TabList>
-                <Tab>Catalogue général ({searchState.countCatalogueGeneral.toLocaleString("fr-FR")})</Tab>
-                <Tab>Catalogue non-éligible ({searchState.countCatalogueNonEligible.toLocaleString("fr-FR")})</Tab>
-                <Tab>Guide reglementaire</Tab>
+            <Tabs variant="formationStyle" mt={5}>
+              <TabList bg="white">
+                <Tab
+                  bg="#EEF1F8"
+                  color="#383838"
+                  fontWeight="700"
+                  textStyle="sm"
+                  _selected={{
+                    bg: "white",
+                    color: "bluefrance",
+                    borderTop: "2px solid #000091",
+                    borderLeft: "1px solid #CECECE",
+                    borderRight: "1px solid #CECECE",
+                    outline: "1px solid white",
+                    zIndex: "1",
+                  }}
+                >
+                  Catalogue général ({searchState.countCatalogueGeneral.toLocaleString("fr-FR")})
+                </Tab>
+                <Tab
+                  mx={2}
+                  textStyle="sm"
+                  bg="#EEF1F8"
+                  color="#383838"
+                  fontWeight="700"
+                  _selected={{
+                    bg: "white",
+                    color: "bluefrance",
+                    borderTop: "2px solid #000091",
+                    borderLeft: "1px solid #CECECE",
+                    borderRight: "1px solid #CECECE",
+                    outline: "1px solid white",
+                    zIndex: "1",
+                  }}
+                >
+                  Catalogue non-éligible ({searchState.countCatalogueNonEligible.toLocaleString("fr-FR")})
+                </Tab>
+                <Tab
+                  mx={2}
+                  bg="#EEF1F8"
+                  textStyle="sm"
+                  color="#383838"
+                  fontWeight="700"
+                  _selected={{
+                    bg: "white",
+                    color: "bluefrance",
+                    borderTop: "2px solid #000091",
+                    borderLeft: "1px solid #CECECE",
+                    borderRight: "1px solid #CECECE",
+                    outline: "1px solid white",
+                    zIndex: "1",
+                  }}
+                >
+                  Guide reglementaire
+                </Tab>
               </TabList>
               <TabPanels>
                 <TabPanel h="100%">

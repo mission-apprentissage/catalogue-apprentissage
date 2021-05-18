@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ReactiveBase, ReactiveList, DataSearch, SelectedFilters } from "@appbaseio/reactivesearch";
-import { Container, Flex, Box, Heading, Text, Spinner } from "@chakra-ui/react";
-import Switch from "react-switch";
+import { Container, Flex, Box, Heading, Text, Spinner, Switch } from "@chakra-ui/react";
+// import Switch from "react-switch";
 import useAuth from "../../hooks/useAuth";
 import { hasOneOfRoles } from "../../utils/rolesUtils";
 import {
@@ -54,18 +54,33 @@ export default React.memo(({ match, location, searchState, context }) => {
       <ReactiveBase url={`${endpoint}/es/search`} app={base}>
         <HardFilters filters={FILTERS} context={context} isBaseFormations={isBaseFormations} />
         <div className="search">
-          <Container maxW="full">
-            <label className="react-switch" style={{ right: "70px" }}>
-              <Switch onChange={handleSearchSwitchChange} checked={mode !== "simple"} />
+          <Container maxW="full" px={0}>
+            {mode === "simple" && (
+              <div className={`search-container search-container-${mode}`}>
+                <DataSearch
+                  componentId="SEARCH"
+                  placeholder={dataSearch.placeholder}
+                  fieldWeights={dataSearch.fieldWeights}
+                  dataField={dataSearch.dataField}
+                  autosuggest={true}
+                  queryFormat="and"
+                  size={20}
+                  showFilter={true}
+                  filterLabel="recherche"
+                  react={{ and: FILTERS.filter((e) => e !== "SEARCH") }}
+                />
+              </div>
+            )}
+            <Box mt={4} mb={4}>
+              <Switch color="bluefrance" size="sm" onChange={handleSearchSwitchChange} checked={mode !== "simple"} />
               <Text as="span" textStyle="sm">
                 Recherche avancée
               </Text>
-            </label>
-            <Heading as="h1" fontSize="beta" className="title">
-              {isBaseFormations
-                ? "Catalogue des formations en apprentissage 2021"
-                : "Liste des établissements de formation"}
-            </Heading>
+            </Box>
+            <Box borderTop="1px solid #E7E7E7" w="full" />
+            <Text fontWeight="700" color="grey.800" mt={4} mb={4} textStyle="rf-text">
+              FILTRER
+            </Text>
             <Flex className="search-row" flexDirection={["column", "row"]}>
               <div className={`search-sidebar`}>
                 {facetDefinition
@@ -96,22 +111,6 @@ export default React.memo(({ match, location, searchState, context }) => {
                     react={{ and: FILTERS.filter((e) => e !== "QUERYBUILDER") }}
                     fields={queryBuilderField}
                   />
-                )}
-                {mode === "simple" && (
-                  <div className={`search-container search-container-${mode}`}>
-                    <DataSearch
-                      componentId="SEARCH"
-                      placeholder={dataSearch.placeholder}
-                      fieldWeights={dataSearch.fieldWeights}
-                      dataField={dataSearch.dataField}
-                      autosuggest={true}
-                      queryFormat="and"
-                      size={20}
-                      showFilter={true}
-                      filterLabel="recherche"
-                      react={{ and: FILTERS.filter((e) => e !== "SEARCH") }}
-                    />
-                  </div>
                 )}
                 <Box pt={2}>
                   <SelectedFilters showClearAll={false} innerClass={{ button: "selected-filters-button" }} />

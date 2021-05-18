@@ -24,6 +24,23 @@ const Tabs = {
         _selected: { color: "grey.800", borderBottom: "4px solid", borderColor: "grey.750" },
       },
     },
+    formationStyle: {
+      tablist: {
+        px: [0, 0],
+        borderBottom: "1px solid #E7E7E7",
+        bg: "secondaryBackground",
+        color: "grey.750",
+      },
+      tabpanel: {
+        px: [0, 0],
+        color: "grey.100",
+        h: 1000,
+      },
+      tab: {
+        color: "grey.500",
+        _focus: { boxShadow: "none", outlineWidth: 0 },
+      },
+    },
   },
 };
 
