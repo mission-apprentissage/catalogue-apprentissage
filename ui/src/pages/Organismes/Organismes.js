@@ -10,13 +10,16 @@ import {
   TabList,
   TabPanels,
   TabPanel,
+  Spinner,
 } from "@chakra-ui/react";
 import Layout from "../layout/Layout";
 import { NavLink } from "react-router-dom";
 import { ArrowDropRightLine } from "../../theme/components/icons";
 import Search from "../../common/components/Search/Search";
+import { useSearch } from "../../common/hooks/useSearch";
 
-export default ({ match, location }) => {
+export default (props) => {
+  const searchState = useSearch("organismes");
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 24]}>
@@ -31,19 +34,21 @@ export default ({ match, location }) => {
               <BreadcrumbLink>Liste des établissements</BreadcrumbLink>
             </BreadcrumbItem>
           </Breadcrumb>
-
-          <Tabs>
-            <TabList>
-              <Tab>Liste</Tab>
-              <Tab>Guide reglementaire</Tab>
-            </TabList>
-            <TabPanels>
-              <TabPanel>
-                <Search context="organismes" match={match} location={location} />
-              </TabPanel>
-              <TabPanel>Guide reglementaire</TabPanel>
-            </TabPanels>
-          </Tabs>
+          {!searchState.loaded && <Spinner />}
+          {searchState.loaded && (
+            <Tabs>
+              <TabList>
+                <Tab>Liste</Tab>
+                <Tab>Guide reglementaire</Tab>
+              </TabList>
+              <TabPanels>
+                <TabPanel h="100%">
+                  <Search {...props} searchState={searchState} context="organismes" />
+                </TabPanel>
+                <TabPanel h="100%">Guide reglementaire</TabPanel>
+              </TabPanels>
+            </Tabs>
+          )}
         </Container>
       </Box>
     </Layout>

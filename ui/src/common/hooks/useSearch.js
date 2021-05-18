@@ -16,48 +16,62 @@ const getEsBase = (context) => {
   return FORMATIONS_ES_INDEX;
 };
 
-const getCountEntities = async (base, etablissement_reference_catalogue_published = true) => {
+const getCountEntities = async (base) => {
   if (base === ETABLISSEMENTS_ES_INDEX) {
     const params = new window.URLSearchParams({
       query: JSON.stringify({ published: true }),
     });
-    return await _get(`${TCO_API_ENDPOINT}/entity/etablissements/count?${params}`, false);
+    const countEtablissement = await _get(`${TCO_API_ENDPOINT}/entity/etablissements/count?${params}`, false);
+    return {
+      countEtablissement,
+      countCatalogueGeneral: 0,
+      countCatalogueNonEligible: 0,
+    };
   }
 
-  const params = new window.URLSearchParams({
-    query: JSON.stringify({ published: true, etablissement_reference_catalogue_published }),
+  const paramsG = new window.URLSearchParams({
+    query: JSON.stringify({ published: true, etablissement_reference_catalogue_published: true }),
   });
-  return await _get(`${CATALOGUE_API_ENDPOINT}/entity/formations2021/count?${params}`, false);
+  const countCatalogueGeneral = await _get(`${CATALOGUE_API_ENDPOINT}/entity/formations2021/count?${paramsG}`, false);
+  const paramsNE = new window.URLSearchParams({
+    query: JSON.stringify({ published: true, etablissement_reference_catalogue_published: false }),
+  });
+  const countCatalogueNonEligible = await _get(
+    `${CATALOGUE_API_ENDPOINT}/entity/formations2021/count?${paramsNE}`,
+    false
+  );
+  return {
+    countEtablissement: 0,
+    countCatalogueGeneral,
+    countCatalogueNonEligible,
+  };
 };
 
-// context: organismes | catalogue_general | catalogue_non_eligible
-export function useSearch({ context }) {
+// context: organismes |  catalogue
+export function useSearch(context) {
   const base = getEsBase(context);
   const isBaseFormations = base === FORMATIONS_ES_INDEX;
   const endpoint = isBaseFormations ? CATALOGUE_API_ENDPOINT : TCO_API_ENDPOINT;
-  const isCatalogueGeneral = context === "catalogue_general";
   const [searchState, setSearchState] = useState({
     loaded: false,
     base,
     count: 0,
     isBaseFormations,
     endpoint,
-    isCatalogueGeneral,
   });
 
   const [error, setError] = useState(null);
   useEffect(() => {
     const abortController = new AbortController();
     getCountEntities(base)
-      .then((countEntities) => {
+      .then((resultCount) => {
         if (!abortController.signal.aborted) {
           setSearchState({
             loaded: true,
             base,
-            count: countEntities,
             isBaseFormations,
             endpoint,
-            isCatalogueGeneral,
+            ...resultCount,
           });
         }
       })
@@ -69,7 +83,7 @@ export function useSearch({ context }) {
     return () => {
       abortController.abort();
     };
-  }, [base, endpoint, isBaseFormations, isCatalogueGeneral]);
+  }, [base, endpoint, isBaseFormations]);
 
   if (error !== null) {
     throw error;

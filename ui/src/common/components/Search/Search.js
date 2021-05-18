@@ -16,14 +16,20 @@ import constantsRcoFormations from "./constantsRCOFormations";
 import constantsEtablissements from "./constantsEtablissements";
 import "./search.css";
 import queryString from "query-string";
-import { useSearch } from "../../hooks/useSearch";
 
-export default ({ match, location, context }) => {
+export default React.memo(({ match, location, searchState, context }) => {
   const { defaultMode } = queryString.parse(location.search);
   const [mode, setMode] = useState(defaultMode ?? "simple");
-
-  const { loaded, base, count, isBaseFormations, endpoint, isCatalogueGeneral } = useSearch({ context });
-  // console.log({ loaded, base, count, isBaseFormations, endpoint, isCatalogueGeneral }); // FIXEME Multiple render
+  const isCatalogueGeneral = context === "catalogue_general";
+  const {
+    loaded,
+    base,
+    countEtablissement,
+    countCatalogueGeneral,
+    countCatalogueNonEligible,
+    isBaseFormations,
+    endpoint,
+  } = searchState;
 
   let [auth] = useAuth();
 
@@ -138,8 +144,16 @@ export default ({ match, location, context }) => {
                         <div className="summary-stats">
                           <span className="summary-text">
                             {isBaseFormations
-                              ? `${stats.numberOfResults.toLocaleString("fr-FR")} formations`
-                              : `${stats.numberOfResults} établissements affichées sur ${count} établissements`}
+                              ? `${stats.numberOfResults.toLocaleString("fr-FR")} formations sur ${
+                                  isCatalogueGeneral
+                                    ? countCatalogueGeneral.toLocaleString("fr-FR")
+                                    : countCatalogueNonEligible.toLocaleString("fr-FR")
+                                } formations `
+                              : `${stats.numberOfResults.toLocaleString(
+                                  "fr-FR"
+                                )} établissements affichées sur ${countEtablissement.toLocaleString(
+                                  "fr-FR"
+                                )} établissements`}
                           </span>
                           {auth?.sub !== "anonymous" && (
                             <ExportButton
@@ -172,4 +186,4 @@ export default ({ match, location, context }) => {
       </ReactiveBase>
     </Box>
   );
-};
+});

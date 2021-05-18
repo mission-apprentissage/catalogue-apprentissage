@@ -10,13 +10,17 @@ import {
   TabList,
   TabPanels,
   TabPanel,
+  Spinner,
 } from "@chakra-ui/react";
 import Layout from "../layout/Layout";
 import { NavLink } from "react-router-dom";
 import { ArrowDropRightLine } from "../../theme/components/icons";
 import Search from "../../common/components/Search/Search";
+import { useSearch } from "../../common/hooks/useSearch";
 
-export default ({ match, location }) => {
+export default (props) => {
+  const searchState = useSearch("catalogue");
+
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 24]}>
@@ -31,23 +35,25 @@ export default ({ match, location }) => {
               <BreadcrumbLink>Catalogue des formations en apprentissage 2021</BreadcrumbLink>
             </BreadcrumbItem>
           </Breadcrumb>
-
-          <Tabs>
-            <TabList>
-              <Tab>Catalogue général (20 242)</Tab>
-              <Tab>Catalogue non-éligible (2 437)</Tab>
-              <Tab>Guide reglementaire</Tab>
-            </TabList>
-            <TabPanels>
-              <TabPanel>
-                <Search context="catalogue_general" match={match} location={location} />
-              </TabPanel>
-              <TabPanel>
-                <Search context="catalogue_non_eligible" match={match} location={location} />
-              </TabPanel>
-              <TabPanel>Guide reglementaire</TabPanel>
-            </TabPanels>
-          </Tabs>
+          {!searchState.loaded && <Spinner />}
+          {searchState.loaded && (
+            <Tabs>
+              <TabList>
+                <Tab>Catalogue général ({searchState.countCatalogueGeneral.toLocaleString("fr-FR")})</Tab>
+                <Tab>Catalogue non-éligible ({searchState.countCatalogueNonEligible.toLocaleString("fr-FR")})</Tab>
+                <Tab>Guide reglementaire</Tab>
+              </TabList>
+              <TabPanels>
+                <TabPanel h="100%">
+                  <Search {...props} searchState={searchState} context="catalogue_general" />
+                </TabPanel>
+                <TabPanel h="100%">
+                  <Search {...props} searchState={searchState} context="catalogue_non_eligible" />
+                </TabPanel>
+                <TabPanel h="100%">Guide reglementaire</TabPanel>
+              </TabPanels>
+            </Tabs>
+          )}
         </Container>
       </Box>
     </Layout>
