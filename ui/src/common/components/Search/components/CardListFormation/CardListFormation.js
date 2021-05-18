@@ -2,11 +2,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./cardList.css";
-import { hasOneOfRoles } from "../../../../common/utils/rolesUtils";
-import useAuth from "../../../../common/hooks/useAuth";
-import { StatusBadge } from "../../../../common/components/StatusBadge";
+import { hasOneOfRoles } from "../../../../utils/rolesUtils";
+import useAuth from "../../../../hooks/useAuth";
+import { StatusBadge } from "../../../StatusBadge";
 import { Flex, Box } from "@chakra-ui/react";
-import { ArrowRightLine } from "../../../../theme/components/icons";
+import { ArrowRightLine } from "../../../../../theme/components/icons";
 
 export const CardListFormation = ({ data }) => {
   let [auth] = useAuth();

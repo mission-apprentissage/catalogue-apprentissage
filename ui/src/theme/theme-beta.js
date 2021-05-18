@@ -162,10 +162,11 @@ const textStyles = {
   h2: {
     fontSize: ["1.75rem", "2rem"],
     lineHeight: ["2.25rem", "2.5rem"],
+    fontWeight: "700",
   },
   h4: {
-    fontSize: ["1.125rem", "1.25rem"],
-    lineHeight: ["1.5rem", "1.75rem"],
+    fontSize: ["1.375rem", "1.5rem"],
+    lineHeight: ["1.75rem", "2rem"],
   },
   h6: {
     fontSize: ["1.125rem", "1.25rem"],
@@ -174,14 +175,17 @@ const textStyles = {
   "rf-text": {
     fontSize: ["1rem"],
     lineHeight: "1.5rem",
+    fontWeight: "400",
   },
   sm: {
     fontSize: ["0.875rem"],
     lineHeight: "1.5rem",
+    fontWeight: "400",
   },
   xs: {
     fontSize: ["0.75rem"],
     lineHeight: "1.35rem",
+    fontWeight: "400",
   },
 };
 

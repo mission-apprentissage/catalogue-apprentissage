@@ -1,4 +1,4 @@
-import { escapeDiacritics } from "../../common/utils/downloadUtils";
+import { escapeDiacritics } from "../../utils/downloadUtils";
 
 const FILTERS = ["QUERYBUILDER", "SEARCH", "num_departement", "nom_academie", "tags", "published"];
 
