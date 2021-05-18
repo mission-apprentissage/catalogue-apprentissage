@@ -35,12 +35,14 @@ export function useSearch({ context }) {
   const base = getEsBase(context);
   const isBaseFormations = base === FORMATIONS_ES_INDEX;
   const endpoint = isBaseFormations ? CATALOGUE_API_ENDPOINT : TCO_API_ENDPOINT;
+  const isCatalogueGeneral = context === "catalogue_general";
   const [searchState, setSearchState] = useState({
     loaded: false,
     base,
     count: 0,
     isBaseFormations,
     endpoint,
+    isCatalogueGeneral,
   });
 
   const [error, setError] = useState(null);
@@ -49,7 +51,14 @@ export function useSearch({ context }) {
     getCountEntities(base)
       .then((countEntities) => {
         if (!abortController.signal.aborted) {
-          setSearchState({ loaded: true, base, count: countEntities, isBaseFormations, endpoint });
+          setSearchState({
+            loaded: true,
+            base,
+            count: countEntities,
+            isBaseFormations,
+            endpoint,
+            isCatalogueGeneral,
+          });
         }
       })
       .catch((e) => {
@@ -60,7 +69,7 @@ export function useSearch({ context }) {
     return () => {
       abortController.abort();
     };
-  }, [base, endpoint, isBaseFormations]);
+  }, [base, endpoint, isBaseFormations, isCatalogueGeneral]);
 
   if (error !== null) {
     throw error;

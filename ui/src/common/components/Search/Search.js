@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from "react";
-import { ReactiveBase, ReactiveList, DataSearch, SingleList, SelectedFilters } from "@appbaseio/reactivesearch";
+import React, { useState } from "react";
+import { ReactiveBase, ReactiveList, DataSearch, SelectedFilters } from "@appbaseio/reactivesearch";
 import { Container, Flex, Box, Heading, Text, Spinner } from "@chakra-ui/react";
 import Switch from "react-switch";
 import useAuth from "../../hooks/useAuth";
@@ -9,8 +9,8 @@ import {
   CardListFormation,
   CardListEtablissements,
   Facet,
-  ToggleCatalogue,
   ExportButton,
+  HardFilters,
 } from "./components";
 import constantsRcoFormations from "./constantsRCOFormations";
 import constantsEtablissements from "./constantsEtablissements";
@@ -21,10 +21,9 @@ import { useSearch } from "../../hooks/useSearch";
 export default ({ match, location, context }) => {
   const { defaultMode } = queryString.parse(location.search);
   const [mode, setMode] = useState(defaultMode ?? "simple");
-  const [isCatalogEligible, setCatalogueEligible] = useState(true);
 
-  const { loaded, base, count, isBaseFormations, endpoint } = useSearch({ context });
-  console.log({ loaded, base, count, isBaseFormations, endpoint });
+  const { loaded, base, count, isBaseFormations, endpoint, isCatalogueGeneral } = useSearch({ context });
+  // console.log({ loaded, base, count, isBaseFormations, endpoint, isCatalogueGeneral }); // FIXEME Multiple render
 
   let [auth] = useAuth();
 
@@ -35,23 +34,6 @@ export default ({ match, location, context }) => {
   const handleSearchSwitchChange = () => {
     setMode((prevValue) => (prevValue === "simple" ? "advanced" : "simple"));
   };
-
-  const resetCount = useCallback(
-    async (val) => {
-      try {
-        // let count = await countItems(base, val);
-        if (base === "etablissements") {
-          // setItemsCount(`${count} établissements`);
-        } else {
-          setCatalogueEligible(!!val);
-          // setItemsCount(`${count} formations au ${val ? "Catalogue général" : "Catalogue non-éligible"}`);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    [base]
-  );
 
   if (!loaded) {
     return (
@@ -64,19 +46,7 @@ export default ({ match, location, context }) => {
   return (
     <Box className="search-page" h="full">
       <ReactiveBase url={`${endpoint}/es/search`} app={base}>
-        <SingleList
-          componentId="published"
-          dataField="published"
-          react={{ and: FILTERS }}
-          value={"true"}
-          defaultValue={"true"}
-          showFilter={false}
-          showSearch={false}
-          showCount={false}
-          render={() => {
-            return <div />;
-          }}
-        />
+        <HardFilters filters={FILTERS} context={context} isBaseFormations={isBaseFormations} />
         <div className="search">
           <Container maxW="full">
             <label className="react-switch" style={{ right: "70px" }}>
@@ -92,11 +62,10 @@ export default ({ match, location, context }) => {
             </Heading>
             <Flex className="search-row" flexDirection={["column", "row"]}>
               <div className={`search-sidebar`}>
-                {isBaseFormations && <ToggleCatalogue filters={FILTERS} onChanged={resetCount} />}
                 {facetDefinition
                   .filter(
                     ({ roles, showCatalogEligibleOnly }) =>
-                      (!showCatalogEligibleOnly || isCatalogEligible) && (!roles || hasOneOfRoles(auth, roles))
+                      (!showCatalogEligibleOnly || isCatalogueGeneral) && (!roles || hasOneOfRoles(auth, roles))
                   )
                   .map((fd, i) => {
                     return (
@@ -168,9 +137,9 @@ export default ({ match, location, context }) => {
                       return (
                         <div className="summary-stats">
                           <span className="summary-text">
-                            {/* {isBaseFormations
+                            {isBaseFormations
                               ? `${stats.numberOfResults.toLocaleString("fr-FR")} formations`
-                              : `${stats.numberOfResults} établissements affichées sur ${itemsCount}`} */}
+                              : `${stats.numberOfResults} établissements affichées sur ${count} établissements`}
                           </span>
                           {auth?.sub !== "anonymous" && (
                             <ExportButton
