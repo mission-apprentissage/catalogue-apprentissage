@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { Link, Box, Flex, Text, Container, Menu, MenuList, MenuButton, MenuItem } from "@chakra-ui/react";
-import useAuth from "../../../common/hooks/useAuth";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faBars } from "@fortawesome/free-solid-svg-icons";
 
@@ -50,9 +49,8 @@ const NavItem = ({ children, to = "/", ...rest }) => {
 };
 
 const NavLinks = ({ isOpen }) => {
-  const [auth] = useAuth();
   const { pathname } = useLocation();
-  const menuIsActive = ["/guide-reglementaire", "/guide-signalements", "/guide-modification"].includes(pathname);
+  const menuIsActive = ["/guide-reglementaire", "/guide-signalements"].includes(pathname);
 
   return (
     <Box display={{ base: isOpen ? "block" : "none", md: "block" }} flexBasis={{ base: "100%", md: "auto" }}>
@@ -89,11 +87,6 @@ const NavLinks = ({ isOpen }) => {
             <MenuItem as={NavLink} to="/guide-signalements">
               Guide de signalements
             </MenuItem>
-            {auth?.sub !== "anonymous" && (
-              <MenuItem as={NavLink} to="/guide-modification">
-                Guide de modification
-              </MenuItem>
-            )}
           </MenuList>
         </Menu>
         <NavItem display={{ base: "block", md: "none" }} to="/guide-reglementaire">
@@ -102,11 +95,6 @@ const NavLinks = ({ isOpen }) => {
         <NavItem display={{ base: "block", md: "none" }} to="/guide-signalements">
           Guide de signalements
         </NavItem>
-        {auth?.sub !== "anonymous" && (
-          <NavItem display={{ base: "block", md: "none" }} to="/guide-modification">
-            Guide d'utilisation
-          </NavItem>
-        )}
       </Flex>
     </Box>
   );
