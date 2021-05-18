@@ -176,7 +176,7 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
                 textStyle="rf-text"
                 isExternal
               >
-                voir les 2 formations associés à cet organisme
+                voir les 2 formations associées à cet organisme
               </Link>
             )}
             <ArrowRightLine w="9px" h="9px" ml={2} />
