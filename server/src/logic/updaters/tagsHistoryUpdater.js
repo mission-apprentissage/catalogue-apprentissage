@@ -13,7 +13,7 @@ const updateTagsHistory = async (scope) => {
     {
       $set: {
         [`${scope}_history`]: {
-          $concatArrays: [`$${scope}_history`, [{ [scope]: `$${scope}`, date: Date.now() }]],
+          $concatArrays: [`$${scope}_history`, [{ [scope]: `$${scope}`, date: new Date() }]],
         },
       },
     },
