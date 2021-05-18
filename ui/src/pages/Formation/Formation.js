@@ -85,18 +85,6 @@ const EditSection = ({ edition, onEdit, handleSubmit, isSubmitting }) => {
           </Button>
         </Flex>
       )}
-      {/* <Button
-        variant="outline"
-        colorScheme="blue"
-        onClick={() => {
-          onEdit();
-        }}
-        disabled={edition}
-        px={8}
-        mt={[6, 0]}
-      >
-        {edition ? "en cours de modification..."  : "Modifier les informations"}
-      </Button> */}
     </Box>
   );
 };
@@ -142,7 +130,7 @@ const getGeoportailUrl = ({ lieu_formation_geo_coordonnees = "" }) => {
   const poiEnseignementSup = "UTILITYANDGOVERNMENTALSERVICES.IGN.POI.ENSEIGNEMENTSUPERIEUR::GEOPORTAIL:OGC:WMS(1)";
   const poiEnseignementSecondaire =
     "UTILITYANDGOVERNMENTALSERVICES.IGN.POI.ENSEIGNEMENTSECONDAIRE::GEOPORTAIL:OGC:WMS(1)";
-  return `https://www.geoportail.gouv.fr/carte?c=${reversedCoords}&z=19&l0=${ignStyleLayer}&l1=${poiEnseignementSecondaire}&l2=${poiEnseignementSup}&permalink=yes`;
+  return `https ://www.geoportail.gouv.fr/carte?c=${reversedCoords}&z=19&l0=${ignStyleLayer}&l1=${poiEnseignementSecondaire}&l2=${poiEnseignementSup}&permalink=yes`;
 };
 
 const HabilitationPartenaire = ({ habilitation }) => {
@@ -331,7 +319,8 @@ const Formation = ({
               Capacite d'accueil :
               {!edition && (
                 <>
-                  <strong>{formation.capacite}</strong> <InfoTooltip description={helpText.formation.capacite} />
+                  <strong>{formation.capacite}</strong>
+                  <InfoTooltip ml="10px" description={helpText.formation.capacite} />
                 </>
               )}
               {edition && <Input type="text" name="capacite" onChange={handleChange} value={values.capacite} />}
@@ -777,7 +766,12 @@ export default ({ match }) => {
                 </Heading>
                 {hasRightToEdit && formation.etablissement_reference_catalogue_published && (
                   <>
-                    <Flex justify="space-between" alignItems={["center", "flex-end"]} flexDirection={["column", "row"]}>
+                    <Flex
+                      justify="space-between"
+                      alignItems={["center", "flex-end"]}
+                      flexDirection={["column", "row"]}
+                      mt={5}
+                    >
                       <Box>
                         <StatusBadge source="Parcoursup" status={formation.parcoursup_statut} mr={[0, 3]} />
                         <StatusBadge source="Affelnet" status={formation.affelnet_statut} mt={[1, 0]} />
@@ -795,6 +789,17 @@ export default ({ match }) => {
                       >
                         <Parametre mr={2} />
                         Gérer les publications
+                      </Button>
+                      <Button
+                        variant="outline"
+                        colorScheme="blue"
+                        onClick={() => {
+                          onEdit();
+                        }}
+                        disabled={edition}
+                        mt={[6, 0]}
+                      >
+                        {edition ? "en cours de modification..." : "Modifier les informations"}
                       </Button>
                     </Flex>
                   </>
