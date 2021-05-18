@@ -138,10 +138,10 @@ const getGeoportailUrl = ({ lieu_formation_geo_coordonnees = "" }) => {
   const coords = lieu_formation_geo_coordonnees.split(",");
   const reversedCoords = `${coords[1]},${coords[0]}`;
 
-  const ignStyleLayer = "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2 : :GEOPORTAIL :OGC :WMTS(1)";
-  const poiEnseignementSup = "UTILITYANDGOVERNMENTALSERVICES.IGN.POI.ENSEIGNEMENTSUPERIEUR : :GEOPORTAIL :OGC :WMS(1)";
+  const ignStyleLayer = "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2::GEOPORTAIL:OGC:WMTS(1)";
+  const poiEnseignementSup = "UTILITYANDGOVERNMENTALSERVICES.IGN.POI.ENSEIGNEMENTSUPERIEUR::GEOPORTAIL:OGC:WMS(1)";
   const poiEnseignementSecondaire =
-    "UTILITYANDGOVERNMENTALSERVICES.IGN.POI.ENSEIGNEMENTSECONDAIRE : :GEOPORTAIL :OGC :WMS(1)";
+    "UTILITYANDGOVERNMENTALSERVICES.IGN.POI.ENSEIGNEMENTSECONDAIRE::GEOPORTAIL:OGC:WMS(1)";
   return `https ://www.geoportail.gouv.fr/carte?c=${reversedCoords}&z=19&l0=${ignStyleLayer}&l1=${poiEnseignementSecondaire}&l2=${poiEnseignementSup}&permalink=yes`;
 };
 
@@ -684,7 +684,7 @@ export default ({ match }) => {
 
         const apiURL = `${endpointNewFront}/entity/formation2021/`;
         // FIXME select={"__v" :0} hack to get updates_history
-        const form = await _get(`${apiURL}${match.params.id}?select={"__v" :0}`, false);
+        const form = await _get(`${apiURL}${match.params.id}?select={"__v":0}`, false);
         setFormation(form);
 
         try {
@@ -793,7 +793,7 @@ export default ({ match }) => {
                           onOpenPublishModal();
                         }}
                       >
-                        <Parametre mt="12px" />
+                        <Parametre mr={2} />
                         Gérer les publications
                       </Button>
                     </Flex>
