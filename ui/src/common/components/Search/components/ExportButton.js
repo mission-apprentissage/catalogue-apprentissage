@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { ReactiveComponent } from "@appbaseio/reactivesearch";
 import { Button } from "@chakra-ui/react";
-import { DownloadLine } from "../../../theme/components/icons/Download-line";
-import { _post } from "../../../common/httpClient";
-import { downloadCSV, CSV_SEPARATOR } from "../../../common/utils/downloadUtils";
+import { DownloadLine } from "../../../../theme/components/icons/Download-line";
+import { _post } from "../../../httpClient";
+import { downloadCSV, CSV_SEPARATOR } from "../../../utils/downloadUtils";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 const endpointTCO =

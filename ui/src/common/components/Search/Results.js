@@ -2,8 +2,8 @@ import React, { useState, useEffect, useCallback } from "react";
 import { ReactiveBase, ReactiveList, DataSearch, SingleList, SelectedFilters } from "@appbaseio/reactivesearch";
 import { Container, Flex, Box, Heading, Text } from "@chakra-ui/react";
 import Switch from "react-switch";
-import useAuth from "../../common/hooks/useAuth";
-import { hasOneOfRoles } from "../../common/utils/rolesUtils";
+import useAuth from "../../hooks/useAuth";
+import { hasOneOfRoles } from "../../utils/rolesUtils";
 import {
   QueryBuilder,
   CardListFormation,
@@ -14,7 +14,7 @@ import {
 } from "./components";
 import constantsRcoFormations from "./constantsRCOFormations";
 import constantsEtablissements from "./constantsEtablissements";
-import { _get } from "../../common/httpClient";
+import { _get } from "../../httpClient";
 import "./search.css";
 import queryString from "query-string";
 
