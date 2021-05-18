@@ -16,7 +16,6 @@ import Formation from "./pages/Formation";
 import Etablissement from "./pages/Etablissement";
 import Journal from "./pages/Journal/Journal";
 import HowToReglement from "./pages/HowToReglement";
-import HowToSignal from "./pages/HowToSignal";
 import TagsHistory from "./pages/admin/TagsHistory";
 import UploadFiles from "./pages/admin/UploadFiles";
 import { _post, _get } from "./common/httpClient";
@@ -102,7 +101,6 @@ export default () => {
               <Route exact path={`/etablissement/:id`} component={Etablissement} />
 
               <Route exact path="/guide-reglementaire" component={HowToReglement} />
-              <Route exact path="/guide-signalements" component={HowToSignal} />
 
               <Route exact path="/login" component={LoginPage} />
               <Route exact path="/reset-password" component={ResetPasswordPage} />

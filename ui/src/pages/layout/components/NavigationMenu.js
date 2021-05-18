@@ -50,7 +50,7 @@ const NavItem = ({ children, to = "/", ...rest }) => {
 
 const NavLinks = ({ isOpen }) => {
   const { pathname } = useLocation();
-  const menuIsActive = ["/guide-reglementaire", "/guide-signalements"].includes(pathname);
+  const menuIsActive = ["/guide-reglementaire"].includes(pathname);
 
   return (
     <Box display={{ base: isOpen ? "block" : "none", md: "block" }} flexBasis={{ base: "100%", md: "auto" }}>
@@ -84,16 +84,10 @@ const NavLinks = ({ isOpen }) => {
             <MenuItem as={NavLink} to="/guide-reglementaire">
               Guide réglementaire
             </MenuItem>
-            <MenuItem as={NavLink} to="/guide-signalements">
-              Guide de signalements
-            </MenuItem>
           </MenuList>
         </Menu>
         <NavItem display={{ base: "block", md: "none" }} to="/guide-reglementaire">
           Guide réglementaire
-        </NavItem>
-        <NavItem display={{ base: "block", md: "none" }} to="/guide-signalements">
-          Guide de signalements
         </NavItem>
       </Flex>
     </Box>
