@@ -18,8 +18,8 @@ import {
   ModalOverlay,
   Spinner,
   Text,
+  Heading,
 } from "@chakra-ui/react";
-
 import { useFormik } from "formik";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
@@ -27,11 +27,11 @@ import useAuth from "../../common/hooks/useAuth";
 import { _get, _post, _put } from "../../common/httpClient";
 import Layout from "../layout/Layout";
 import { hasOneOfRoles } from "../../common/utils/rolesUtils";
-
-import "./etablissement.css";
+// import "./etablissement.css";
 import { NavLink } from "react-router-dom";
 import InfoTooltip from "../../common/components/InfoTooltip";
 import helpText from "../../locales/helpText.json";
+import { ArrowDropRightLine, ExternalLinkLine, ArrowRightLine, Edit2Fill } from "../../theme/components/icons/";
 
 const sleep = (m) => new Promise((r) => setTimeout(r, m));
 
@@ -111,132 +111,118 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
 
   return (
     <Grid templateColumns="repeat(12, 1fr)" gap={4}>
-      <GridItem colSpan="7">
-        <div className="notice-details">
-          <h2 className="small">Détails</h2>
-          <div className="field">
-            <h3>Enseigne</h3>
-            <p>
-              {etablissement.enseigne} <InfoTooltip description={helpText.etablissement.enseigne} />
-            </p>
-          </div>
-          <div className="field">
-            <h3>Siret</h3>
-            <p>
-              {etablissement.siret} <InfoTooltip description={helpText.etablissement.siret} />
-            </p>
-          </div>
-          <div className="field">
-            <h3>Siren</h3>
-            <p>
-              {etablissement.siren} <InfoTooltip description={helpText.etablissement.siren} />
-            </p>
-          </div>
-          <div className="field">
-            <h3>
-              Code NAF
-              <p>
-                {etablissement.naf_code} <InfoTooltip description={helpText.etablissement.naf_code} />
-              </p>
-            </h3>
-          </div>
-          <div className="field">
-            <h3>Libellé NAF</h3>
-            <p>
-              {etablissement.naf_libelle} <InfoTooltip description={helpText.etablissement.naf_libelle} />
-            </p>
-          </div>
-          <div className="field">
-            <h3>Date de création</h3>
-            <p>
-              {creationDate} <InfoTooltip description={helpText.etablissement.date_creation} />
-            </p>
-          </div>
-          <div className="field">
-            <h3>Adresse</h3>
-            <p>
-              {etablissement.adresse} <InfoTooltip description={helpText.etablissement.adresse} />
-            </p>
-          </div>
-        </div>
+      <GridItem colSpan="7" border="1px solid #000091" mt={5}>
+        <Box ml="2rem" mt={5}>
+          <Heading textStyle="h4" color="grey.800">
+            Caractéritiques de l’établissement
+          </Heading>
+          <Box mb={4}>
+            {etablissement.onisep_url !== "" && etablissement.onisep_url !== null && (
+              <Link
+                href={etablissement.onisep_url}
+                mt={3}
+                textDecoration="underline"
+                color="bluefrance"
+                textStyle="rf-text"
+                isExternal
+              >
+                voir la fiche descriptive Onisep <ExternalLinkLine w="9px" h="9px" />.
+              </Link>
+            )}
+          </Box>
+          <Box textStyle="rf-text">
+            <Text mb={4} mt={4}>
+              Enseigne : <strong> {etablissement.enseigne} </strong>
+              <InfoTooltip description={helpText.etablissement.enseigne} />
+            </Text>
+            <Text mb={4}>
+              Siret : <strong> {etablissement.siret}</strong> <InfoTooltip description={helpText.etablissement.siret} />
+            </Text>
+            <Text mb={4}>
+              Siren : <strong> {etablissement.siren} </strong>
+              <InfoTooltip description={helpText.etablissement.siren} />
+            </Text>
+            <Text mb={4}>
+              Code NAF : <strong> {etablissement.naf_code} </strong>
+              <InfoTooltip description={helpText.etablissement.naf_code} />
+            </Text>
+            <Text mb={4}>
+              Libellé NAF : <strong> {etablissement.naf_libelle}</strong>
+              <InfoTooltip description={helpText.etablissement.naf_libelle} />
+            </Text>
+            <Text mb={4}>
+              Date de création : <strong> {creationDate}</strong>
+              <InfoTooltip description={helpText.etablissement.date_creation} />
+            </Text>
+            <Text mb={4}>
+              Adresse : <strong> {etablissement.adresse}</strong>
+              <InfoTooltip description={helpText.etablissement.adresse} />
+            </Text>
+          </Box>
+        </Box>
       </GridItem>
       <GridItem colSpan="5">
-        {hasRightToEdit && <EditSection edition={edition} onEdit={onEdit} handleSubmit={handleSubmit} />}
-        <div className="sidebar-section info">
-          <h2>À propos</h2>
-          <div>
-            <div className="field pills">
-              <h3>Tags</h3>
-              {etablissement.tags &&
-                etablissement.tags
-                  .sort((a, b) => a - b)
-                  .map((tag, i) => (
-                    <Badge colorScheme="green" variant="solid" key={i} className="badge">
-                      {tag}
-                    </Badge>
-                  ))}
-            </div>
-            <div className="field multiple">
-              <div>
-                <h3>Type</h3>
-                <p>
-                  {etablissement.computed_type} <InfoTooltip description={helpText.etablissement.type} />
-                </p>
-              </div>
-              <div>
-                <h3>UAI</h3>
-                <p>
-                  {!edition && (
-                    <>
-                      {etablissement.uai} <InfoTooltip description={helpText.etablissement.uai} />
-                    </>
-                  )}
-                  {edition && <Input type="text" name="uai" onChange={handleChange} value={values.uai} />}
-                </p>
-              </div>
-            </div>
-            <div className="field">
-              <h3>Conventionné ?</h3>
-              <p>
-                {etablissement.computed_conventionne} <InfoTooltip description={helpText.etablissement.conventionne} />
-              </p>
-            </div>
-            <div className="field">
-              <h3>Déclaré en préfecture ?</h3>
-              <p>
-                {etablissement.computed_declare_prefecture}{" "}
-                <InfoTooltip description={helpText.etablissement.declare_prefecture} />
-              </p>
-            </div>
-            <div className="field">
-              <h3>Certification qualité</h3>
-              <p>
-                {etablissement.computed_info_datadock} <InfoTooltip description={helpText.etablissement.datadock} />
-              </p>
-            </div>
-            <div className="field multiple">
-              <div>
-                <h3>Code postal</h3>
-                <p>
-                  {etablissement.code_postal} <InfoTooltip description={helpText.etablissement.code_postal} />
-                </p>
-              </div>
-              <div>
-                <h3>Code commune</h3>
-                <p>
-                  {etablissement.code_insee_localite}{" "}
-                  <InfoTooltip description={helpText.etablissement.code_insee_localite} />
-                </p>
-              </div>
-            </div>
-            <div className="field">
-              <h3>Académie</h3>
-              <p>
-                {etablissement.nom_academie} ({etablissement.num_academie}){" "}
-                <InfoTooltip description={helpText.etablissement.academie} />
-              </p>
-            </div>
-          </div>
+        <Container className="sidebar-section info">
+          <Heading textStyle="h4" color="grey.800">
+            À Informations complémentaires
+          </Heading>
+          <Box mb={4}>
+            {etablissement.onisep_url !== "" && etablissement.onisep_url !== null && (
+              <Link
+                href={etablissement.onisep_url}
+                mt={3}
+                textDecoration="underline"
+                color="bluefrance"
+                textStyle="rf-text"
+                isExternal
+              >
+                voir les 2 formations associés à cet organisme
+              </Link>
+            )}
+            <ArrowRightLine w="9px" h="9px" ml={2} />
+          </Box>
+
+          <Box textStyle="rf-text">
+            <Text mb={4}>
+              Type : {etablissement.computed_type} <InfoTooltip description={helpText.etablissement.type} />
+            </Text>
+            <Text mb={4}>
+              <Edit2Fill w="16px" h="16px" color="bluefrance" mr="8px" mb="7px" /> UAI :
+              {!edition && (
+                <>
+                  {etablissement.uai} <InfoTooltip description={helpText.etablissement.uai} />
+                </>
+              )}
+              {edition && <Input type="text" name="uai" onChange={handleChange} value={values.uai} />}
+            </Text>
+            <Text mb={4}>
+              Conventionné : <strong>{etablissement.computed_conventionne}</strong>
+              <InfoTooltip description={helpText.etablissement.conventionne} />
+            </Text>
+            <Text mb={4}>
+              Déclaré en préfecture : <strong>{etablissement.computed_declare_prefecture} </strong>
+              <InfoTooltip description={helpText.etablissement.declare_prefecture} />
+            </Text>
+            <Text mb={4}>
+              Certification qualité : <strong>{etablissement.computed_info_datadock}</strong>
+              <InfoTooltip description={helpText.etablissement.datadock} />
+            </Text>
+            <Text mb={4}>
+              Code postal : <strong> {etablissement.code_postal}</strong>
+              <InfoTooltip description={helpText.etablissement.code_postal} />
+            </Text>
+            <Text mb={4}>
+              Code commune : <strong>{etablissement.code_insee_localite}</strong>
+              <InfoTooltip description={helpText.etablissement.code_insee_localite} />
+            </Text>
+            <Text mb={4}>
+              Académie :{" "}
+              <strong>
+                {etablissement.nom_academie} ({etablissement.num_academie})
+              </strong>
+              <InfoTooltip description={helpText.etablissement.academie} />
+            </Text>
+          </Box>
           {countFormations > 0 ? (
             <Link
               as={NavLink}
@@ -251,7 +237,7 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
           ) : (
             <Text>Aucune formation trouvée pour cet établissement</Text>
           )}
-        </div>
+        </Container>
         {!etablissement.siege_social && (
           <div className="sidebar-section info">
             <h2>Siége social</h2>
@@ -277,6 +263,14 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
           </div>
         )}
       </GridItem>
+      <GridItem colSpan="5">
+        <Box>
+          <Link textStyle="rf-text" color="bluefrance" flex="1">
+            <ArrowRightLine w="9px" h="9px" mr={2} /> Demander des corrections sur les données sur votre organisme
+          </Link>
+        </Box>
+      </GridItem>
+      <Box h="300px" />
     </Grid>
   );
 };
@@ -354,16 +348,16 @@ export default ({ match }) => {
 
   return (
     <Layout>
-      <Box bg="secondaryBackground" w="100%" pt={[4, 8]} px={[1, 24]}>
+      <Box w="100%" pt={[4, 8]} px={[1, 24]}>
         <Container maxW="xl">
-          <Breadcrumb>
+          <Breadcrumb separator={<ArrowDropRightLine color="grey.600" />} textStyle="xs">
             <BreadcrumbItem>
-              <BreadcrumbLink as={NavLink} to="/">
+              <BreadcrumbLink as={NavLink} to="/" color="grey.600" textDecoration="underline">
                 Accueil
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbItem>
-              <BreadcrumbLink as={NavLink} to="/recherche/etablissements">
+              <BreadcrumbLink as={NavLink} to="/recherche/etablissements" color="grey.600" textDecoration="underline">
                 Établissements
               </BreadcrumbLink>
             </BreadcrumbItem>
@@ -383,10 +377,30 @@ export default ({ match }) => {
             )}
             {etablissement && (
               <>
-                <h1 className="heading">
-                  {etablissement.entreprise_raison_sociale}{" "}
+                <Heading textStyle="h2" color="grey.800" mt={6}>
+                  {etablissement.entreprise_raison_sociale}
                   <InfoTooltip description={helpText.etablissement.raison_sociale} />
-                </h1>
+                </Heading>
+                <Box mb={2}>
+                  {etablissement.tags &&
+                    etablissement.tags
+                      .sort((a, b) => a - b)
+                      .map((tag, i) => (
+                        <Badge
+                          variant="solid"
+                          bg="greenmedium.300"
+                          borderRadius="16px"
+                          color="grey.800"
+                          textStyle="sm"
+                          px="15px"
+                          mr="10px"
+                          mt={3}
+                          key={i}
+                        >
+                          {tag}
+                        </Badge>
+                      ))}
+                </Box>
                 <Etablissement
                   etablissement={etablissement}
                   edition={edition}
