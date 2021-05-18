@@ -2,7 +2,7 @@ import React from "react";
 import {
   Box,
   Button,
-  Center,
+  Flex,
   Heading,
   Link,
   ListItem,
@@ -14,9 +14,7 @@ import {
   Text,
   UnorderedList,
 } from "@chakra-ui/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { ExternalLinkLine } from "../../../theme/components/icons";
+import { ArrowRightLine, ExternalLinkLine } from "../../../theme/components/icons";
 import { Close } from "../../../theme/components/icons/Close";
 
 const HowToAddModal = ({ isOpen, onClose }) => {
@@ -40,16 +38,21 @@ const HowToAddModal = ({ isOpen, onClose }) => {
             <Close boxSize={4} />
           </Text>
         </Button>
-        <ModalHeader px={[4, 8]} pt={[3, 6]} pb={[3, 6]}>
-          <Center>
-            <Heading as="h2" fontSize="alpha">
-              <FontAwesomeIcon icon={faArrowRight} /> Demander l'ajout d'une formation
-            </Heading>
-          </Center>
+        <ModalHeader px={[4, 16]} pt={[3, 6]} pb={[3, 6]}>
+          <Heading as="h2" fontSize="2rem">
+            <Flex>
+              <Text as={"span"}>
+                <ArrowRightLine boxSize={26} />
+              </Text>
+              <Text as={"span"} ml={4}>
+                Demander l'ajout d'une formation
+              </Text>
+            </Flex>
+          </Heading>
         </ModalHeader>
         <ModalBody px={[4, 16]} pb={[4, 16]}>
           <Box border="1px solid" borderColor="bluefrance" p={8}>
-            <Heading as="h3" fontSize="beta">
+            <Heading as="h3" fontSize="1.5rem">
               Vous êtes organisme de formation et vous n’avez pas encore déclaré votre formation auprès de votre
               Carif-Oref :
             </Heading>
@@ -70,7 +73,7 @@ const HowToAddModal = ({ isOpen, onClose }) => {
             </Text>
           </Box>
           <Box border="1px solid" borderColor="bluefrance" p={8} mt={8}>
-            <Heading as="h3" fontSize="beta">
+            <Heading as="h3" fontSize="1.5rem">
               Vous êtes organisme de formation et vous avez déjà déclaré votre formation auprès de votre Carif-Oref :
             </Heading>
             <Box mt={2}>
