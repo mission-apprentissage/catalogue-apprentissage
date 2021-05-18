@@ -40,6 +40,11 @@ const psReconciliationSchema = {
     enum: ["MANUEL", "AUTOMATIQUE"],
     description: "Auteur de la réconciliation (MANUEL : par un utilisateur depuis l'interface / AUTO : par script)",
   },
+  ids_parcoursup: {
+    type: [String],
+    default: [],
+    description: "ids ParcourSup",
+  },
 };
 
 module.exports = psReconciliationSchema;
