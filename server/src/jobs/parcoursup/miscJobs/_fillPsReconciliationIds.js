@@ -1,7 +1,6 @@
 const { runScript } = require("../../scriptWrapper");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { PsReconciliation, PsFormation2021 } = require("../../../common/model");
-// const mongoose = require("mongoose");
 
 runScript(async () => {
   await migrate();
