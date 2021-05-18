@@ -8,6 +8,8 @@ runScript(async () => {
 });
 
 async function migrate() {
+  await PsReconciliation.updateMany({}, { $set: { ids_parcoursup: [] } });
+
   const dataset = await PsFormation2021.find({ id_reconciliation: { $ne: null } }).lean();
   console.log(dataset.length);
 
@@ -18,7 +20,7 @@ async function migrate() {
 
     matching._doc.ids_parcoursup = [...matching._doc.ids_parcoursup, _id.toString()];
 
-    matching.save();
+    await matching.save();
     // await PsReconciliation.findByIdAndUpdate(
     //   id_reconciliation,
     //   {
