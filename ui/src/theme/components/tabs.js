@@ -34,7 +34,7 @@ const Tabs = {
       tabpanel: {
         px: [0, 0],
         color: "grey.100",
-        h: 1000,
+        h: "auto",
       },
       tab: {
         _focus: { boxShadow: "none", outlineWidth: 0 },

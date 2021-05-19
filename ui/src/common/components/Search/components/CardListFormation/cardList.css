@@ -80,15 +80,7 @@
   margin-left: auto;
   text-align: right;
 }
-.list-card p {
-  color: #2a282b;
-  font-weight: 400;
-  font-size: 16px;
-  margin-bottom: 5px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+
 .list-card .base {
   float: right;
 }
@@ -101,24 +93,4 @@
 }
 .list-card img.producteur.mh {
   width: 100px;
-}
-@media screen and (max-width: 767px) {
-  .list-card {
-    height: 110px;
-  }
-  .list-card .thumbnail {
-    width: 150px;
-    margin-right: 10px;
-  }
-  .list-card img.no-img {
-    width: 80px;
-    height: 80px;
-  }
-  .list-card h2 {
-    font-size: 15px;
-  }
-  .list-card p,
-  .list-card span {
-    font-size: 11px;
-  }
 }

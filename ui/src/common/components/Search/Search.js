@@ -42,20 +42,20 @@ export default React.memo(({ match, location, searchState, context }) => {
 
   if (!loaded) {
     return (
-      <Box className="search-page" h="full">
+      <Box h="full">
         <Spinner />
       </Box>
     );
   }
 
   return (
-    <Box className="search-page" h="full">
+    <Box className="search-page">
       <ReactiveBase url={`${endpoint}/es/search`} app={base}>
         <HardFilters filters={FILTERS} context={context} isBaseFormations={isBaseFormations} />
-        <div className="search">
+        <Box className="search">
           <Container maxW="full" px={0}>
             {mode === "simple" && (
-              <div className={`search-container search-container-${mode}`}>
+              <Box className={`search-container search-container-${mode}`}>
                 <DataSearch
                   componentId="SEARCH"
                   placeholder={dataSearch.placeholder}
@@ -68,7 +68,7 @@ export default React.memo(({ match, location, searchState, context }) => {
                   filterLabel="recherche"
                   react={{ and: FILTERS.filter((e) => e !== "SEARCH") }}
                 />
-              </div>
+              </Box>
             )}
             <Box mt={4} mb={4}>
               <Switch color="bluefrance" size="sm" onChange={handleSearchSwitchChange} checked={mode !== "simple"} />
@@ -77,11 +77,11 @@ export default React.memo(({ match, location, searchState, context }) => {
               </Text>
             </Box>
             <Box borderTop="1px solid #E7E7E7" w="full" />
-            <Text fontWeight="700" color="grey.800" mt={4} mb={4} textStyle="rf-text">
-              FILTRER
-            </Text>
             <Flex className="search-row" flexDirection={["column", "row"]}>
-              <div className={`search-sidebar`}>
+              <Box className="search-sidebar">
+                <Text fontWeight="700" color="grey.800" mt={4} mb={4} textStyle="rf-text">
+                  FILTRER
+                </Text>
                 {facetDefinition
                   .filter(
                     ({ roles, showCatalogEligibleOnly }) =>
@@ -101,7 +101,7 @@ export default React.memo(({ match, location, searchState, context }) => {
                       />
                     );
                   })}
-              </div>
+              </Box>
               <div className="search-results">
                 {mode !== "simple" && (
                   <QueryBuilder
@@ -114,7 +114,7 @@ export default React.memo(({ match, location, searchState, context }) => {
                 <Box pt={2}>
                   <SelectedFilters showClearAll={false} innerClass={{ button: "selected-filters-button" }} />
                 </Box>
-                <div className={`result-view`}>
+                <Box className={`result-view`}>
                   <ReactiveList
                     componentId="result"
                     title="Results"
@@ -122,7 +122,7 @@ export default React.memo(({ match, location, searchState, context }) => {
                     loader="Chargement des résultats.."
                     size={8}
                     pagination={true}
-                    showEndPage={false}
+                    showEndPage={true}
                     showResultStats={true}
                     sortBy="asc"
                     defaultQuery={() => {
@@ -176,11 +176,11 @@ export default React.memo(({ match, location, searchState, context }) => {
                     }}
                     react={{ and: FILTERS }}
                   />
-                </div>
+                </Box>
               </div>
             </Flex>
           </Container>
-        </div>
+        </Box>
       </ReactiveBase>
     </Box>
   );
