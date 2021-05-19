@@ -5,6 +5,20 @@ const mongoose = require("mongoose");
 const express = require("express");
 const { getCfdInfo } = require("@mission-apprentissage/tco-service-node");
 
+const { diffFormation } = require("../../logic/common/utils/diffUtils");
+
+const buildUpdatesHistory = (psformation, updates, keys, source) => {
+  const from = keys.reduce((acc, key) => {
+    acc[key] = psformation[key];
+    return acc;
+  }, {});
+
+  return [
+    ...(psformation.statuts_history || []),
+    { from, to: { ...updates }, updated_at: Date.now(), ...(source ? { source } : {}) },
+  ];
+};
+
 module.exports = ({ catalogue }) => {
   const router = express.Router();
 
@@ -115,12 +129,38 @@ module.exports = ({ catalogue }) => {
 
       const result = await PsReconciliation.findOneAndUpdate(
         { code_cfd: code_cfd, uai_affilie, uai_composante, uai_gestionnaire },
-        payload,
+        {
+          ...payload,
+          source: "MANUEL",
+          unpublished_by_user: null,
+          $push: { ids_parcoursup: rest.id_parcoursup },
+        },
         { upsert: true, new: true }
       );
 
+      console.log(result._id, rest.id_parcoursup, id_formation);
+
       if (result) {
-        await PsFormation2021.findByIdAndUpdate(id_formation, { etat_reconciliation: true });
+        const previousFormation = await PsFormation2021.findById(id_formation).lean();
+
+        let updatedFormation = {
+          ...previousFormation,
+          id_reconciliation: result._id,
+          statut_reconciliation: "VALIDE",
+          etat_reconciliation: true,
+          matching_rejete_updated: false,
+        };
+
+        // History
+        const { updates, keys } = diffFormation(previousFormation, updatedFormation);
+        if (updates) {
+          delete updates.matching_mna_formation;
+          const statuts_history = buildUpdatesHistory(previousFormation, updates, keys);
+
+          updatedFormation.statuts_history = statuts_history;
+        }
+
+        await PsFormation2021.findByIdAndUpdate(id_formation, updatedFormation);
       }
 
       return res.json(result);
