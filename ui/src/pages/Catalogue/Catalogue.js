@@ -41,70 +41,22 @@ export default (props) => {
           </Heading>
           {!searchState.loaded && <Spinner />}
           {searchState.loaded && (
-            <Tabs variant="formationStyle" mt={5}>
+            <Tabs variant="searchStyle" mt={5}>
               <TabList bg="white">
-                <Tab
-                  bg="#EEF1F8"
-                  color="#383838"
-                  fontWeight="700"
-                  textStyle="sm"
-                  _selected={{
-                    bg: "white",
-                    color: "bluefrance",
-                    borderTop: "2px solid #000091",
-                    borderLeft: "1px solid #CECECE",
-                    borderRight: "1px solid #CECECE",
-                    outline: "1px solid white",
-                    zIndex: "1",
-                  }}
-                >
-                  Catalogue général ({searchState.countCatalogueGeneral.toLocaleString("fr-FR")})
-                </Tab>
-                <Tab
-                  mx={2}
-                  textStyle="sm"
-                  bg="#EEF1F8"
-                  color="#383838"
-                  fontWeight="700"
-                  _selected={{
-                    bg: "white",
-                    color: "bluefrance",
-                    borderTop: "2px solid #000091",
-                    borderLeft: "1px solid #CECECE",
-                    borderRight: "1px solid #CECECE",
-                    outline: "1px solid white",
-                    zIndex: "1",
-                  }}
-                >
+                <Tab>Catalogue général ({searchState.countCatalogueGeneral.toLocaleString("fr-FR")})</Tab>
+                <Tab mx={2}>
                   Catalogue non-éligible ({searchState.countCatalogueNonEligible.toLocaleString("fr-FR")})
                 </Tab>
-                <Tab
-                  mx={2}
-                  bg="#EEF1F8"
-                  textStyle="sm"
-                  color="#383838"
-                  fontWeight="700"
-                  _selected={{
-                    bg: "white",
-                    color: "bluefrance",
-                    borderTop: "2px solid #000091",
-                    borderLeft: "1px solid #CECECE",
-                    borderRight: "1px solid #CECECE",
-                    outline: "1px solid white",
-                    zIndex: "1",
-                  }}
-                >
-                  Guide reglementaire
-                </Tab>
+                <Tab mx={2}>Guide reglementaire</Tab>
               </TabList>
               <TabPanels>
-                <TabPanel h="100%">
+                <TabPanel>
                   <Search {...props} searchState={searchState} context="catalogue_general" />
                 </TabPanel>
-                <TabPanel h="100%">
+                <TabPanel>
                   <Search {...props} searchState={searchState} context="catalogue_non_eligible" />
                 </TabPanel>
-                <TabPanel h="100%">Guide reglementaire</TabPanel>
+                <TabPanel>Guide reglementaire</TabPanel>
               </TabPanels>
             </Tabs>
           )}

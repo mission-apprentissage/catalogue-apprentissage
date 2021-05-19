@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { ReactiveBase, ReactiveList, DataSearch, SelectedFilters } from "@appbaseio/reactivesearch";
 import { Container, Flex, Box, Heading, Text, Spinner, Switch } from "@chakra-ui/react";
-// import Switch from "react-switch";
 import useAuth from "../../hooks/useAuth";
 import { hasOneOfRoles } from "../../utils/rolesUtils";
 import {
