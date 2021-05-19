@@ -137,7 +137,7 @@ export default () => {
                       h="100px"
                     >
                       <Heading as="h6" textStyle="h6">
-                        {countFormations2021} formations
+                        {countFormations2021.toLocaleString("fr-FR")} formations
                       </Heading>
                       <Flex>
                         <Text flex="1" textStyle="sm">
@@ -159,7 +159,7 @@ export default () => {
                       mt={[5, 5, 5, 0]}
                     >
                       <Heading as="h6" textStyle="h6">
-                        {countEstablishments} établissements
+                        {countEstablishments.toLocaleString("fr-FR")} établissements
                       </Heading>
                       <Flex>
                         <Text flex="1" textStyle="sm">
