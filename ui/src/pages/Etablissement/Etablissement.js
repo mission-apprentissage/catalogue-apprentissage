@@ -75,9 +75,9 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
 
   return (
     <>
-      <Grid templateColumns="repeat(12, 1fr)" gap={4}>
-        <GridItem colSpan="7" border="1px solid" borderColor="bluefrance" mt={5}>
-          <Box ml="2rem" pt={5} pr={5}>
+      <Grid templateColumns="repeat(12, 1fr)" mt={8}>
+        <GridItem colSpan={[12, 7]} border="1px solid" borderColor="bluefrance" p={8}>
+          <Box>
             <Heading textStyle="h4" color="grey.800">
               Caractéristiques de l’établissement
             </Heading>
@@ -98,37 +98,65 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
             )}
             <Box textStyle="rf-text">
               <Text mb={4} mt={4}>
-                Enseigne : <strong> {etablissement.enseigne ?? "N/A"} </strong>{" "}
+                Enseigne :{" "}
+                <Text as="span" variant="highlight">
+                  {" "}
+                  {etablissement.enseigne ?? "N/A"}{" "}
+                </Text>{" "}
                 <InfoTooltip description={helpText.etablissement.enseigne} />
               </Text>
               <Text mb={4}>
-                Siret : <strong> {etablissement.siret} </strong>{" "}
+                Siret :{" "}
+                <Text as="span" variant="highlight">
+                  {" "}
+                  {etablissement.siret}{" "}
+                </Text>{" "}
                 <InfoTooltip description={helpText.etablissement.siret} />
               </Text>
               <Text mb={4}>
-                Siren : <strong> {etablissement.siren} </strong>{" "}
+                Siren :{" "}
+                <Text as="span" variant="highlight">
+                  {" "}
+                  {etablissement.siren}{" "}
+                </Text>{" "}
                 <InfoTooltip description={helpText.etablissement.siren} />
               </Text>
               <Text mb={4}>
-                Code NAF : <strong> {etablissement.naf_code} </strong>{" "}
+                Code NAF :{" "}
+                <Text as="span" variant="highlight">
+                  {" "}
+                  {etablissement.naf_code}{" "}
+                </Text>{" "}
                 <InfoTooltip description={helpText.etablissement.naf_code} />
               </Text>
               <Text mb={4}>
-                Libellé NAF : <strong> {etablissement.naf_libelle} </strong>{" "}
+                Libellé NAF :{" "}
+                <Text as="span" variant="highlight">
+                  {" "}
+                  {etablissement.naf_libelle}{" "}
+                </Text>{" "}
                 <InfoTooltip description={helpText.etablissement.naf_libelle} />
               </Text>
               <Text mb={4}>
-                Date de création : <strong> {creationDate} </strong>{" "}
+                Date de création :{" "}
+                <Text as="span" variant="highlight">
+                  {" "}
+                  {creationDate}{" "}
+                </Text>{" "}
                 <InfoTooltip description={helpText.etablissement.date_creation} />
               </Text>
               <Text mb={4}>
-                Adresse : <strong> {etablissement.adresse} </strong>{" "}
+                Adresse :{" "}
+                <Text as="span" variant="highlight">
+                  {" "}
+                  {etablissement.adresse}{" "}
+                </Text>{" "}
                 <InfoTooltip description={helpText.etablissement.adresse} />
               </Text>
             </Box>
           </Box>
         </GridItem>
-        <GridItem colSpan="5" mt={16}>
+        <GridItem colSpan={[12, 5]} p={8}>
           <Container>
             <Heading textStyle="h4" color="grey.800">
               Informations complémentaires
@@ -152,7 +180,11 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
 
             <Box textStyle="rf-text">
               <Text mb={4}>
-                Type : {etablissement.computed_type} <InfoTooltip description={helpText.etablissement.type} />
+                Type :{" "}
+                <Text as="span" variant="highlight">
+                  {etablissement.computed_type}
+                </Text>{" "}
+                <InfoTooltip description={helpText.etablissement.type} />
               </Text>
               <Text mb={4}>
                 {hasRightToEdit && !edition && (
@@ -163,7 +195,10 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
                 UAI :{" "}
                 {!edition && (
                   <>
-                    {etablissement.uai} <InfoTooltip description={helpText.etablissement.uai} />
+                    <Text as="span" variant="highlight">
+                      {etablissement.uai}
+                    </Text>{" "}
+                    <InfoTooltip description={helpText.etablissement.uai} />
                   </>
                 )}
                 {edition && (
@@ -188,7 +223,11 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
                 )}
               </Text>
               <Text mb={4}>
-                Conventionné : <strong> {etablissement.computed_conventionne} </strong>{" "}
+                Conventionné :{" "}
+                <Text as="span" variant="highlight">
+                  {" "}
+                  {etablissement.computed_conventionne}{" "}
+                </Text>{" "}
                 <InfoTooltip description={helpText.etablissement.conventionne} />
               </Text>
               <Text mb={4}>
@@ -196,22 +235,34 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
                 <InfoTooltip description={helpText.etablissement.declare_prefecture} />
               </Text>
               <Text mb={4}>
-                Certification qualité : <strong> {etablissement.computed_info_datadock} </strong>{" "}
+                Certification qualité :{" "}
+                <Text as="span" variant="highlight">
+                  {" "}
+                  {etablissement.computed_info_datadock}{" "}
+                </Text>{" "}
                 <InfoTooltip description={helpText.etablissement.datadock} />
               </Text>
               <Text mb={4}>
-                Code postal : <strong> {etablissement.code_postal} </strong>{" "}
+                Code postal :{" "}
+                <Text as="span" variant="highlight">
+                  {" "}
+                  {etablissement.code_postal}{" "}
+                </Text>{" "}
                 <InfoTooltip description={helpText.etablissement.code_postal} />
               </Text>
               <Text mb={4}>
-                Code commune : <strong> {etablissement.code_insee_localite} </strong>{" "}
+                Code commune :{" "}
+                <Text as="span" variant="highlight">
+                  {" "}
+                  {etablissement.code_insee_localite}{" "}
+                </Text>{" "}
                 <InfoTooltip description={helpText.etablissement.code_insee_localite} />
               </Text>
               <Text mb={4}>
                 Académie :{" "}
-                <strong>
+                <Text as="span" variant="highlight">
                   {etablissement.nom_academie} ({etablissement.num_academie})
-                </strong>{" "}
+                </Text>{" "}
                 <InfoTooltip description={helpText.etablissement.academie} />
               </Text>
             </Box>
@@ -224,12 +275,20 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
                 <Box>
                   {etablissement.entreprise_raison_sociale && (
                     <Text mb={4}>
-                      Raison sociale : <strong> {etablissement.entreprise_raison_sociale} </strong>{" "}
+                      Raison sociale :{" "}
+                      <Text as="span" variant="highlight">
+                        {" "}
+                        {etablissement.entreprise_raison_sociale}{" "}
+                      </Text>{" "}
                     </Text>
                   )}
                   {etablissement.etablissement_siege_siret && (
                     <Text mb={4}>
-                      Siret : <strong> {etablissement.etablissement_siege_siret} </strong>{" "}
+                      Siret :{" "}
+                      <Text as="span" variant="highlight">
+                        {" "}
+                        {etablissement.etablissement_siege_siret}{" "}
+                      </Text>{" "}
                     </Text>
                   )}
                   <Box mt={3}>
@@ -249,15 +308,13 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
             )}
           </Container>
         </GridItem>
-        <GridItem colSpan="5">
-          <Box>
-            <Link textStyle="rf-text" color="bluefrance" flex="1" onClick={onOpen}>
-              <ArrowRightLine w="9px" h="9px" mr={2} /> Demander des corrections sur les données sur votre organisme
-            </Link>
-          </Box>
-        </GridItem>
-        <Box h="300px" />
       </Grid>
+      <Box mt={8}>
+        <Link textStyle="rf-text" color="bluefrance" flex="1" onClick={onOpen}>
+          <ArrowRightLine w="9px" h="9px" mr={2} /> Demander des corrections sur les données sur votre organisme
+        </Link>
+      </Box>
+      <Box h="300px" />
       <HowToFixModal isOpen={isOpen} onClose={onClose} />
     </>
   );
@@ -372,17 +429,7 @@ export default ({ match }) => {
                     etablissement.tags
                       .sort((a, b) => a - b)
                       .map((tag, i) => (
-                        <Badge
-                          variant="solid"
-                          bg="greenmedium.300"
-                          borderRadius="16px"
-                          color="grey.800"
-                          textStyle="sm"
-                          px="15px"
-                          mr="10px"
-                          mt={3}
-                          key={i}
-                        >
+                        <Badge variant="year" mr="10px" mt={3} key={i}>
                           {tag}
                         </Badge>
                       ))}

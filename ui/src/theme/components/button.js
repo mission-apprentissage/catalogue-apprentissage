@@ -13,11 +13,13 @@ const Button = {
       color: "bluefrance",
       border: "1px solid",
       borderColor: "bluefrance",
+      _hover: { bg: "grey.200" },
     },
     primary: {
       ...commonButtonStyle,
       bg: "bluefrance",
       color: "white",
+      _hover: { bg: "blue.700" },
     },
   },
 };
