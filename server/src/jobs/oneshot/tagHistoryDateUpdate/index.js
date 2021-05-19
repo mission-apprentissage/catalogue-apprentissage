@@ -19,7 +19,7 @@ runScript(async () => {
         };
       });
 
-      formation.affelnet_statut_history = await formation.affelnet_statut_history.map((x) => {
+      formation.affelnet_statut_history = formation.affelnet_statut_history.map((x) => {
         return {
           ...x,
           date: new Date(x.date),
