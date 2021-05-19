@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import {
   Alert,
+  Badge,
   Box,
   Breadcrumb,
   BreadcrumbItem,
@@ -16,14 +17,11 @@ import {
   ListItem,
   Spinner,
   Text,
-  Badge,
   UnorderedList,
   useDisclosure,
 } from "@chakra-ui/react";
 import { NavLink, useHistory } from "react-router-dom";
 import { useFormik } from "formik";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import { _get, _post, _put } from "../../common/httpClient";
 import Layout from "../layout/Layout";
 import useAuth from "../../common/hooks/useAuth";
@@ -36,16 +34,17 @@ import { buildUpdatesHistory } from "../../common/utils/formationUtils";
 import InfoTooltip from "../../common/components/InfoTooltip";
 import helpText from "../../locales/helpText.json";
 import {
-  Parametre,
   ArrowDropRightLine,
-  MapPin2Fill,
-  ExternalLinkLine,
-  Edit2Fill,
   ArrowRightLine,
+  Edit2Fill,
+  ExternalLinkLine,
+  MapPin2Fill,
+  Parametre,
 } from "../../theme/components/icons/";
-import "./formation.css";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
+const endpointTCO =
+  process.env.REACT_APP_ENDPOINT_TCO || "https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1";
 
 const EditSection = ({ edition, onEdit, handleSubmit, isSubmitting }) => {
   return (
@@ -61,10 +60,11 @@ const EditSection = ({ edition, onEdit, handleSubmit, isSubmitting }) => {
           p={8}
           zIndex={100}
           justifyContent="center"
+          borderTop="1px solid"
+          borderColor="grey.300"
         >
           <Button
-            variant="outline"
-            colorScheme="blue"
+            variant="secondary"
             onClick={() => {
               onEdit();
             }}
@@ -76,7 +76,7 @@ const EditSection = ({ edition, onEdit, handleSubmit, isSubmitting }) => {
             Annuler
           </Button>
           <Button
-            colorScheme="blue"
+            variant="primary"
             onClick={handleSubmit}
             isLoading={isSubmitting}
             loadingText="Enregistrement des modifications"
@@ -173,6 +173,30 @@ const Formation = ({
 }) => {
   const displayedFormation = pendingFormation ?? formation;
   const oneEstablishment = formation.etablissement_gestionnaire_siret === formation.etablissement_formateur_siret;
+
+  const [tagsFormateur, setTagsFormateur] = useState([]);
+  const [tagsGestionnaire, setTagsGestionnaire] = useState([]);
+
+  useEffect(() => {
+    async function run() {
+      const formateur = await _get(
+        `${endpointTCO}/entity/etablissement/${formation.etablissement_formateur_id}`,
+        false
+      );
+      setTagsFormateur(formateur.tags ?? []);
+
+      if (!oneEstablishment) {
+        const gestionnaire = await _get(
+          `${endpointTCO}/entity/etablissement/${formation.etablissement_gestionnaire_id}`,
+          false
+        );
+        setTagsGestionnaire(gestionnaire.tags ?? []);
+      }
+    }
+
+    run();
+  }, [oneEstablishment, formation, setTagsFormateur, setTagsGestionnaire]);
+
   const filteredPartenaires = (displayedFormation.rncp_details?.partenaires ?? []).filter(({ Siret_Partenaire }) =>
     [formation.etablissement_gestionnaire_siret, formation.etablissement_formateur_siret].includes(Siret_Partenaire)
   );
@@ -184,20 +208,9 @@ const Formation = ({
 
   return (
     <Box borderRadius={4}>
-      <Flex
-        borderRadius="4px 4px 0 0"
-        bg="white"
-        justifyContent="space-between"
-        alignItems="center"
-        p={8}
-        borderBottom="1px solid"
-        borderColor="grey.300"
-        flexDirection={["column", "row"]}
-      >
-        {hasRightToEdit && (
-          <EditSection edition={edition} onEdit={onEdit} handleSubmit={handleSubmit} isSubmitting={isSubmitting} />
-        )}
-      </Flex>
+      {hasRightToEdit && (
+        <EditSection edition={edition} onEdit={onEdit} handleSubmit={handleSubmit} isSubmitting={isSubmitting} />
+      )}
       {pendingFormation && (
         <Alert status="info" justifyContent="center">
           <Box mr={1}>
@@ -207,7 +220,7 @@ const Formation = ({
         </Alert>
       )}
       <Grid templateColumns="repeat(12, 1fr)">
-        <GridItem colSpan={[12, 7]} bg="white" p={8} borderBottomLeftRadius={[0, 4]} border="1px solid #000091">
+        <GridItem colSpan={[12, 7]} bg="white" p={8} border="1px solid" borderColor="bluefrance">
           <Box mb={16}>
             <Heading textStyle="h4" color="grey.800">
               Description
@@ -227,25 +240,37 @@ const Formation = ({
               )}
             </Box>
             <Text mb={4} mt={4}>
-              Intitulé court de la formation : <strong>{displayedFormation.intitule_court}</strong>
+              Intitulé court de la formation :{" "}
+              <Text as="span" variant="highlight">
+                {displayedFormation.intitule_court}
+              </Text>{" "}
               <InfoTooltip description={helpText.formation.intitule_court} />
             </Text>
             <Text mb={4}>
-              Diplôme ou titre visé : <strong>{displayedFormation.diplome}</strong>
+              Diplôme ou titre visé :{" "}
+              <Text as="span" variant="highlight">
+                {displayedFormation.diplome}
+              </Text>{" "}
               <InfoTooltip description={helpText.formation.diplome} />
             </Text>
             <Text mb={4}>
-              Niveau de la formation : <strong>{displayedFormation.niveau}</strong>
+              Niveau de la formation :{" "}
+              <Text as="span" variant="highlight">
+                {displayedFormation.niveau}
+              </Text>{" "}
               <InfoTooltip description={helpText.formation.niveau} />
             </Text>
             <Text mb={4}>
-              Code diplôme (Éducation Nationale) :
+              Code diplôme (Éducation Nationale) :{" "}
               {!edition && (
                 <>
-                  <strong>{displayedFormation.cfd}</strong> <InfoTooltip description={helpText.formation.cfd} />
+                  <Text as="span" variant="highlight">
+                    {displayedFormation.cfd}
+                  </Text>{" "}
+                  <InfoTooltip description={helpText.formation.cfd} />
                 </>
               )}
-              {edition && <Input type="text" name="cfd" onChange={handleChange} value={values.cfd} />}
+              {edition && <Input variant="edition" type="text" name="cfd" onChange={handleChange} value={values.cfd} />}
               {displayedFormation.cfd_outdated && (
                 <>
                   <br />
@@ -254,22 +279,27 @@ const Formation = ({
               )}
             </Text>
             <Text mb={4}>
-              Codes MEF 10 caractères :
-              <strong>
+              Codes MEF 10 caractères :{" "}
+              <Text as="span" variant="highlight">
                 {displayedFormation.mef_10_code ??
                   displayedFormation?.bcn_mefs_10?.map(({ mef10 }) => mef10).join(", ")}
-              </strong>
+              </Text>{" "}
               <InfoTooltip description={helpText.formation.mef} />
             </Text>
             {displayedFormation?.mefs_10?.length > 0 && (
               <>
                 <Text mb={4}>
-                  Codes MEF 10 caractères dans le périmètre <i>Affelnet</i> :
-                  <strong>{displayedFormation?.mefs_10?.map(({ mef10 }) => mef10).join(", ")}</strong>
+                  Codes MEF 10 caractères dans le périmètre <i>Affelnet</i> :{" "}
+                  <Text as="span" variant="highlight">
+                    {displayedFormation?.mefs_10?.map(({ mef10 }) => mef10).join(", ")}
+                  </Text>
                 </Text>
                 {formation?.affelnet_infos_offre && (
                   <Text mb={4}>
-                    Informations offre de formation <i>Affelnet</i> : <strong>{formation?.affelnet_infos_offre}</strong>
+                    Informations offre de formation <i>Affelnet</i> :{" "}
+                    <Text as="span" variant="highlight">
+                      {formation?.affelnet_infos_offre}
+                    </Text>
                   </Text>
                 )}
               </>
@@ -278,59 +308,72 @@ const Formation = ({
               Période d'inscription :
               {!edition && (
                 <>
-                  <FormationPeriode periode={displayedFormation.periode} />
+                  <FormationPeriode periode={displayedFormation.periode} />{" "}
                   <InfoTooltip description={helpText.formation.periode} />
                 </>
               )}
-              {edition && <Input type="text" name="periode" onChange={handleChange} value={values.periode} />}
+              {edition && (
+                <Input variant="edition" type="text" name="periode" onChange={handleChange} value={values.periode} />
+              )}
             </Text>
             <Text mb={4}>
-              Lieu de la formation :
+              Lieu de la formation :{" "}
               {!edition && (
                 <>
-                  <strong>
-                    <Link
-                      href={getGeoportailUrl(formation)}
-                      textDecoration="underline"
-                      color="blue.500"
-                      fontWeight="bold"
-                      isExternal
-                    >
-                      {displayedFormation.lieu_formation_adresse}, {displayedFormation.code_postal}
-                      {displayedFormation.localite} <FontAwesomeIcon icon={faExternalLinkAlt} />
-                    </Link>
-                  </strong>
+                  <Text as="span" variant="highlight">
+                    {displayedFormation.lieu_formation_adresse}, {displayedFormation.code_postal}{" "}
+                    {displayedFormation.localite}
+                  </Text>{" "}
                   <InfoTooltip description={helpText.formation.adresse} />
                 </>
               )}
               {edition && (
                 <>
                   <Input
+                    variant="edition"
                     type="text"
                     name="lieu_formation_adresse"
                     onChange={handleChange}
                     value={values.lieu_formation_adresse}
                   />
-                  <Input type="text" name="code_postal" onChange={handleChange} value={values.code_postal} mt={2} />
+                  <Input
+                    variant="edition"
+                    type="text"
+                    name="code_postal"
+                    onChange={handleChange}
+                    value={values.code_postal}
+                    mt={2}
+                  />
                 </>
               )}
             </Text>
             <Text mb={4}>
-              Capacite d'accueil :
+              Capacite d'accueil :{" "}
               {!edition && (
                 <>
-                  <strong>{formation.capacite}</strong>
+                  <Text as="span" variant="highlight">
+                    {formation.capacite ?? "N/A"}
+                  </Text>{" "}
                   <InfoTooltip ml="10px" description={helpText.formation.capacite} />
                 </>
               )}
-              {edition && <Input type="text" name="capacite" onChange={handleChange} value={values.capacite} />}
+              {edition && (
+                <Input variant="edition" type="text" name="capacite" onChange={handleChange} value={values.capacite} />
+              )}
             </Text>
             <Text mb={4}>
-              Durée de la formation : <strong>{displayedFormation.duree}</strong>
+              Durée de la formation :{" "}
+              <Text as="span" variant="highlight">
+                {displayedFormation.duree ?? "N/A"}
+              </Text>{" "}
               <InfoTooltip description={helpText.formation.duree} />
             </Text>
             <Text mb={4}>
-              Année : <strong>{displayedFormation.annee}</strong> <InfoTooltip description={helpText.formation.annee} />
+              Année :{" "}
+              <Text as="span" variant="highlight">
+                {displayedFormation.annee ?? "N/A"}
+              </Text>{" "}
+              <InfoTooltip description={helpText.formation.annee} />
             </Text>
           </Box>
           <Box mb={16}>
@@ -339,16 +382,25 @@ const Formation = ({
             </Heading>
             {displayedFormation.rncp_code && (
               <Text mb={4}>
-                Code RNCP : <strong>{displayedFormation.rncp_code}</strong>
+                Code RNCP :{" "}
+                <Text as="span" variant="highlight">
+                  {displayedFormation.rncp_code}
+                </Text>{" "}
                 <InfoTooltip description={helpText.formation.rncp_code} />
               </Text>
             )}
             <Text mb={4}>
-              Intitulé RNCP : <strong>{displayedFormation.rncp_intitule}</strong>
+              Intitulé RNCP :{" "}
+              <Text as="span" variant="highlight">
+                {displayedFormation.rncp_intitule}
+              </Text>{" "}
               <InfoTooltip description={helpText.formation.rncp_intitule} />
             </Text>
             <Text mb={4}>
-              Codes ROME : <strong>{displayedFormation.rome_codes.join(", ")}</strong>
+              Codes ROME :{" "}
+              <Text as="span" variant="highlight">
+                {displayedFormation.rome_codes.join(", ")}
+              </Text>{" "}
               <InfoTooltip description={helpText.formation.rome_codes} />
             </Text>
             <Box>
@@ -357,15 +409,18 @@ const Formation = ({
               )}
               {displayedFormation.opcos && displayedFormation.opcos.length > 0 && (
                 <Text mb={4}>
-                  OPCOs liés à la formation : <strong>{displayedFormation.opcos.join(", ")}</strong>
+                  OPCOs liés à la formation :{" "}
+                  <Text as="span" variant="highlight">
+                    {displayedFormation.opcos.join(", ")}
+                  </Text>
                 </Text>
               )}
             </Box>
             {displayedFormation.rncp_details && (
               <>
                 <Text mb={4}>
-                  Certificateurs :
-                  <strong>
+                  Certificateurs :{" "}
+                  <Text as="span" variant="highlight">
                     {displayedFormation.rncp_details.certificateurs
                       ?.filter(({ certificateur, siret_certificateur }) => certificateur || siret_certificateur)
                       ?.map(
@@ -373,7 +428,7 @@ const Formation = ({
                           `${certificateur} (siret : ${siret_certificateur ?? "n/a"})`
                       )
                       .join(", ")}
-                  </strong>
+                  </Text>{" "}
                   <InfoTooltip description={helpText.formation.certificateurs} />
                 </Text>
                 {showPartenaires && (
@@ -407,150 +462,181 @@ const Formation = ({
             )}
           </Box>
         </GridItem>
-        <GridItem colSpan={[12, 5]} p={8} borderBottomRightRadius={4} borderBottomLeftRadius={[4, 0]}>
+        <GridItem colSpan={[12, 5]} p={8}>
           <Box mb={16}>
             <Heading textStyle="h4" color="grey.800">
               <MapPin2Fill w="12px" h="15px" mr="5px" mb="5px" />
               Lieu de la formation
             </Heading>
-            <Link textStyle="rf-text" color="bluefrance" textDecoration="underline">
+            <Link
+              href={getGeoportailUrl(formation)}
+              textStyle="rf-text"
+              color="bluefrance"
+              textDecoration="underline"
+              isExternal
+            >
               voir sur un plan <ExternalLinkLine w="9px" h="9px" />.
             </Link>
             <Text mb={4} mt={4}>
-              Type : <strong>{formation.etablissement_reference_type}</strong>
+              Type :{" "}
+              <Text as="span" variant="highlight">
+                {formation.etablissement_reference_type}
+              </Text>
             </Text>
             <Text mb={4}>
               <Edit2Fill w="16px" h="16px" color="bluefrance" mr="8px" mb="7px" />
-              UAI du lieu de formation :
+              UAI du lieu de formation :{" "}
               {!edition && (
                 <>
-                  <strong>{formation.uai_formation}</strong>
+                  <Text as="span" variant="highlight">
+                    {formation.uai_formation}
+                  </Text>{" "}
                   <InfoTooltip description={helpText.formation.uai_formation} />
                 </>
               )}
               {edition && (
-                <Input type="text" name="uai_formation" onChange={handleChange} value={values.uai_formation} />
+                <Input
+                  variant="edition"
+                  type="text"
+                  name="uai_formation"
+                  onChange={handleChange}
+                  value={values.uai_formation}
+                />
               )}
             </Text>
             <Text mb={4}>
-              Établissement conventionné ? : <strong>{formation.etablissement_reference_conventionne}</strong>
+              Établissement conventionné ? :{" "}
+              <Text as="span" variant="highlight">
+                {formation.etablissement_reference_conventionne}
+              </Text>{" "}
               <InfoTooltip description={helpText.etablissement.conventionne} />
             </Text>
             <Text mb={4}>
               Établissement déclaré en préfecture ?{" "}
-              <strong>{formation.etablissement_reference_declare_prefecture}</strong>
+              <Text as="span" variant="highlight">
+                {formation.etablissement_reference_declare_prefecture}
+              </Text>{" "}
               <InfoTooltip description={helpText.etablissement.declare_prefecture} />
             </Text>
             <Text mb={4}>
-              Certification qualité de l'organisme : <strong>{formation.etablissement_reference_datadock}</strong>
+              Certification qualité de l'organisme :{" "}
+              <Text as="span" variant="highlight">
+                {formation.etablissement_reference_datadock}
+              </Text>{" "}
               <InfoTooltip description={helpText.etablissement.datadock} />
             </Text>
             <Text mb={4}>
-              Académie :
-              <strong>
+              Académie :{" "}
+              <Text as="span" variant="highlight">
                 {displayedFormation.nom_academie} ({displayedFormation.num_academie})
-              </strong>
+              </Text>{" "}
               <InfoTooltip description={helpText.formation.academie} />
             </Text>
             <Text mb={4}>
-              <Edit2Fill w="16px" h="16px" color="bluefrance" mr="5px" mb="7px" /> Code postal :
+              <Edit2Fill w="16px" h="16px" color="bluefrance" mr="5px" mb="7px" /> Code postal :{" "}
               {!edition && (
                 <>
-                  <strong>{displayedFormation.code_postal}</strong>
+                  <Text as="span" variant="highlight">
+                    {displayedFormation.code_postal}
+                  </Text>{" "}
                   <InfoTooltip description={helpText.formation.code_postal} />
                 </>
               )}
-              {edition && <Input type="text" name="code_postal" onChange={handleChange} value={values.code_postal} />}
+              {edition && (
+                <Input
+                  variant="edition"
+                  type="text"
+                  name="code_postal"
+                  onChange={handleChange}
+                  value={values.code_postal}
+                />
+              )}
             </Text>
             <Text mb={4}>
-              Code commune : <strong>{displayedFormation.code_commune_insee}</strong>
+              Code commune :{" "}
+              <Text as="span" variant="highlight">
+                {displayedFormation.code_commune_insee}
+              </Text>{" "}
               <InfoTooltip description={helpText.formation.code_commune_insee} />
             </Text>
           </Box>
           <Box mb={16}>
             <Heading textStyle="h4" color="grey.800" mb={4}>
-              Organisme(s) associé(s) {!oneEstablishment && "Formateur"}
+              Organisme(s) associé(s)
             </Heading>
-            <Text textStyle="rf-text" color="grey.700" fontWeight="700" mb={3}>
-              Gestionnaire
-            </Text>
-            <Container p={5} bg="#F9F8F6">
-              <div className="list-card-left">
-                <Flex display={["none", "flex"]} textStyle="xs" justifyContent="space-between">
-                  <Text>Siret : {formation.etablissement_formateur_siret}</Text>
-                  <Text>Code diplôme: {formation.cfd}</Text>
-                </Flex>
-                <Heading textStyle="h6" color="grey.800" mt={2}>
-                  {formation.etablissement_formateur_entreprise_raison_sociale}
-                </Heading>
-                <div>
-                  <Text textStyle="sm">Académie : {formation.nom_academie}</Text>
+
+            {!oneEstablishment && (
+              <>
+                <Text textStyle="rf-text" color="grey.700" fontWeight="700" mb={3}>
+                  Gestionnaire
+                </Text>
+                <Box as={NavLink} to={`/etablissement/${formation.etablissement_gestionnaire_id}`}>
+                  <Container p={5} bg="#F9F8F6">
+                    <Box>
+                      <Flex display={["none", "flex"]} textStyle="xs" justifyContent="space-between">
+                        <Text>Siret : {formation.etablissement_gestionnaire_siret}</Text>
+                        <Text>UAI : {formation.etablissement_gestionnaire_uai}</Text>
+                      </Flex>
+                      <Heading textStyle="h6" color="grey.800" mt={2}>
+                        {formation.etablissement_gestionnaire_entreprise_raison_sociale}
+                      </Heading>
+                      <Box>
+                        <Text textStyle="sm">Académie : {formation.etablissement_gestionnaire_nom_academie}</Text>
+                        <Box>
+                          <Flex>
+                            {tagsGestionnaire &&
+                              tagsGestionnaire
+                                .sort((a, b) => a - b)
+                                .map((tag, i) => (
+                                  <Badge variant="year" mr="10px" mt={3} key={i}>
+                                    {tag}
+                                  </Badge>
+                                ))}
+                            <ArrowRightLine alignSelf="center" color="bluefrance" flex="1" ml="13.4rem" />
+                          </Flex>
+                        </Box>
+                      </Box>
+                    </Box>
+                  </Container>
+                </Box>
+              </>
+            )}
+
+            {!oneEstablishment && (
+              <Text textStyle="rf-text" color="grey.700" fontWeight="700" my={5}>
+                Formateur
+              </Text>
+            )}
+
+            <Box as={NavLink} to={`/etablissement/${formation.etablissement_formateur_id}`}>
+              <Container p={5} bg="#F9F8F6">
+                <Box>
+                  <Flex display={["none", "flex"]} textStyle="xs" justifyContent="space-between">
+                    <Text>Siret : {formation.etablissement_formateur_siret}</Text>
+                    <Text>UAI: {formation.etablissement_formateur_uai}</Text>
+                  </Flex>
+                  <Heading textStyle="h6" color="grey.800" mt={2}>
+                    {formation.etablissement_formateur_entreprise_raison_sociale}
+                  </Heading>
                   <Box>
-                    <Flex>
-                      {formation.tags &&
-                        formation.tags
-                          .sort((a, b) => a - b)
-                          .map((tag, i) => (
-                            <Badge
-                              variant="solid"
-                              bg="greenmedium.300"
-                              borderRadius="16px"
-                              color="grey.800"
-                              textStyle="sm"
-                              px="15px"
-                              mr="10px"
-                              mt={3}
-                              key={i}
-                            >
-                              {tag}
-                            </Badge>
-                          ))}
-                      <ArrowRightLine alignSelf="center" color="bluefrance" flex="1" ml="13.4rem" />
-                    </Flex>
+                    <Text textStyle="sm">Académie : {formation.etablissement_formateur_nom_academie}</Text>
+                    <Box>
+                      <Flex>
+                        {tagsFormateur &&
+                          tagsFormateur
+                            .sort((a, b) => a - b)
+                            .map((tag, i) => (
+                              <Badge variant="year" mr="10px" mt={3} key={i}>
+                                {tag}
+                              </Badge>
+                            ))}
+                        <ArrowRightLine alignSelf="center" color="bluefrance" flex="1" ml="13.4rem" />
+                      </Flex>
+                    </Box>
                   </Box>
-                </div>
-              </div>
-            </Container>
-            <Text textStyle="rf-text" color="grey.700" fontWeight="700" my={5}>
-              Formateur
-            </Text>
-            <Container p={5} bg="#F9F8F6">
-              <div className="list-card-left">
-                <Flex display={["none", "flex"]} textStyle="xs" justifyContent="space-between">
-                  <Text>Siret : {formation.etablissement_formateur_siret}</Text>
-                  <Text>Code diplôme: {formation.cfd}</Text>
-                </Flex>
-                <Heading textStyle="h6" color="grey.800" mt={2}>
-                  {formation.etablissement_formateur_entreprise_raison_sociale}
-                </Heading>
-                <div>
-                  <Text textStyle="sm">Académie : {formation.nom_academie}</Text>
-                  <Box>
-                    <Flex>
-                      {formation.tags &&
-                        formation.tags
-                          .sort((a, b) => a - b)
-                          .map((tag, i) => (
-                            <Badge
-                              variant="solid"
-                              bg="greenmedium.300"
-                              borderRadius="16px"
-                              color="grey.800"
-                              textStyle="sm"
-                              px="15px"
-                              mr="10px"
-                              mt={3}
-                              key={i}
-                            >
-                              {tag}
-                            </Badge>
-                          ))}
-                      <ArrowRightLine alignSelf="center" color="bluefrance" flex="1" ml="13.4rem" />
-                    </Flex>
-                  </Box>
-                </div>
-              </div>
-            </Container>
+                </Box>
+              </Container>
+            </Box>
           </Box>
         </GridItem>
       </Grid>
@@ -768,7 +854,7 @@ export default ({ match }) => {
                   <>
                     <Flex
                       justify="space-between"
-                      alignItems={["center", "flex-end"]}
+                      alignItems={["center", "baseline"]}
                       flexDirection={["column", "row"]}
                       mt={5}
                     >
@@ -776,31 +862,29 @@ export default ({ match }) => {
                         <StatusBadge source="Parcoursup" status={formation.parcoursup_statut} mr={[0, 3]} />
                         <StatusBadge source="Affelnet" status={formation.affelnet_statut} mt={[1, 0]} />
                       </Box>
-                      <Button
-                        textStyle="sm"
-                        color="white"
-                        bg="bluefrance"
-                        px={[8, 4]}
-                        borderRadius="none"
-                        mt={[8, 0]}
-                        onClick={() => {
-                          onOpenPublishModal();
-                        }}
-                      >
-                        <Parametre mr={2} />
-                        Gérer les publications
-                      </Button>
-                      <Button
-                        variant="outline"
-                        colorScheme="blue"
-                        onClick={() => {
-                          onEdit();
-                        }}
-                        disabled={edition}
-                        mt={[6, 0]}
-                      >
-                        {edition ? "en cours de modification..." : "Modifier les informations"}
-                      </Button>
+                      <Flex flexDirection="column">
+                        <Button
+                          textStyle="sm"
+                          variant="primary"
+                          mt={[8, 0]}
+                          onClick={() => {
+                            onOpenPublishModal();
+                          }}
+                        >
+                          <Parametre mr={2} />
+                          Gérer les publications
+                        </Button>
+                        <Button
+                          variant="secondary"
+                          onClick={() => {
+                            onEdit();
+                          }}
+                          disabled={edition}
+                          mt={6}
+                        >
+                          {edition ? "en cours de modification..." : "Modifier les informations"}
+                        </Button>
+                      </Flex>
                     </Flex>
                   </>
                 )}

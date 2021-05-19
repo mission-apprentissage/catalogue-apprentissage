@@ -1,11 +1,11 @@
 const commonStatusBadgeStyle = {
   fontSize: "omega",
+  fontWeight: 400,
   borderRadius: 20,
   pl: 1,
   pr: 3,
   py: 1,
   textTransform: "none",
-  fontWeight: 400,
 };
 
 const Badge = {
@@ -44,6 +44,13 @@ const Badge = {
       color: "#a3b3b7",
       border: "1px solid",
       borderColor: "greenmedium.200",
+    },
+    year: {
+      ...commonStatusBadgeStyle,
+      bg: "greenmedium.300",
+      color: "grey.800",
+      pl: "15px",
+      pr: "15px",
     },
   },
 };
