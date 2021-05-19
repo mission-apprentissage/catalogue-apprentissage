@@ -14,6 +14,7 @@ const Footer = () => {
                 height={"1.8rem"}
                 width={"3.75rem"}
                 alt="Logo de la République Française"
+                fallback={<Box height={"1.8rem"} width={"3.75rem"} bg="grey.200" />}
               />
               <Heading as="h6" textStyle="h6">
                 RÉPUBLIQUE FRANÇAISE
