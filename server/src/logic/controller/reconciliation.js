@@ -76,7 +76,15 @@ async function reconciliationAffelnet(formation, source = "MANUEL") {
 }
 
 async function reconciliationParcoursup(formation, source = "MANUEL") {
-  let { code_cfd, matching_mna_formation, _id, uai_gestionnaire, uai_composante, uai_affilie } = formation;
+  let {
+    code_cfd,
+    matching_mna_formation,
+    _id,
+    uai_gestionnaire,
+    uai_composante,
+    uai_affilie,
+    id_parcoursup,
+  } = formation;
   let { etablissement_formateur_siret, etablissement_gestionnaire_siret } = matching_mna_formation[0];
 
   let payload = {
@@ -87,6 +95,7 @@ async function reconciliationParcoursup(formation, source = "MANUEL") {
     siret_formateur: etablissement_formateur_siret,
     siret_gestionnaire: etablissement_gestionnaire_siret,
     source,
+    $push: { ids_parcoursup: id_parcoursup },
   };
 
   const reconciliation = await PsReconciliation.findOneAndUpdate(
