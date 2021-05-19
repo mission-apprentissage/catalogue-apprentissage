@@ -136,5 +136,11 @@ const psFormationSchema = {
     default: null,
     description: "id mongo reconciliation",
   },
+  statuts_history: {
+    type: [Object],
+    default: [],
+    description: "historique des statuts",
+    noIndex: true,
+  },
 };
 module.exports = psFormationSchema;

@@ -2,7 +2,7 @@ const {
   AfReconciliation,
   AfFormation,
   ConvertedFormation,
-  PsFormation2021,
+  // PsFormation2021,
   PsReconciliation,
 } = require("../../common/model");
 
@@ -79,7 +79,7 @@ async function reconciliationParcoursup(formation, source = "MANUEL") {
   let {
     code_cfd,
     matching_mna_formation,
-    _id,
+    // _id,
     uai_gestionnaire,
     uai_composante,
     uai_affilie,
@@ -106,7 +106,8 @@ async function reconciliationParcoursup(formation, source = "MANUEL") {
       new: true,
     }
   ).lean();
-  await PsFormation2021.findByIdAndUpdate(_id, { etat_reconciliation: true, id_reconciliation: reconciliation._id });
+  return reconciliation;
+  // await PsFormation2021.findByIdAndUpdate(_id, { etat_reconciliation: true, id_reconciliation: reconciliation._id }); // Moved to coverage.js
 }
 
 module.exports = { reconciliationAffelnet, reconciliationParcoursup };

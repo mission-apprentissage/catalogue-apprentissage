@@ -5,7 +5,20 @@ const { runScript } = require("../../scriptWrapper");
 const logger = require("../../../common/logger");
 const { reconciliationParcoursup } = require("../../../logic/controller/reconciliation");
 const cluster = require("cluster");
+const { diffFormation } = require("../../../logic/common/utils/diffUtils");
 const numCPUs = 4;
+
+const buildUpdatesHistory = (psformation, updates, keys, source) => {
+  const from = keys.reduce((acc, key) => {
+    acc[key] = psformation[key];
+    return acc;
+  }, {});
+
+  return [
+    ...(psformation.statuts_history || []),
+    { from, to: { ...updates }, updated_at: Date.now(), ...(source ? { source } : {}) },
+  ];
+};
 
 const updateMatchedFormation = async ({ formation, match }) => {
   let statut_reconciliation = "INCONNU";
@@ -18,22 +31,40 @@ const updateMatchedFormation = async ({ formation, match }) => {
   } else if (match.data_length <= 3) {
     statut_reconciliation = "A_VERIFIER";
   }
+  const previousFormation = await PsFormation2021.findById(formation._id).lean();
 
-  const updatedFormation = await PsFormation2021.findByIdAndUpdate(
-    formation._id,
-    {
-      matching_type: match.matching_strength,
-      matching_mna_formation: match.data,
-      statut_reconciliation,
-    },
-    {
-      new: true,
-    }
-  );
+  let updatedFormation = {
+    ...previousFormation,
+    matching_type: match.matching_strength,
+    matching_mna_formation: match.data,
+    statut_reconciliation,
+  };
 
   if (statut_reconciliation === "AUTOMATIQUE") {
-    await reconciliationParcoursup(updatedFormation, "AUTOMATIQUE");
+    const reconciliation = await reconciliationParcoursup(updatedFormation, "AUTOMATIQUE");
+
+    updatedFormation.etat_reconciliation = true;
+    updatedFormation.id_reconciliation = reconciliation._id;
   }
+
+  // formation.statut_reconciliation === "REJETE" // old "A_VERIFIER"
+  // formation.matching_type > match.matching_strength
+  // then matching_updated and update
+
+  // History
+  const { updates, keys } = diffFormation(previousFormation, updatedFormation);
+  if (updates) {
+    delete updates.matching_mna_formation;
+    const statuts_history = buildUpdatesHistory(previousFormation, updates, keys);
+
+    updatedFormation.statuts_history = statuts_history;
+  }
+
+  await PsFormation2021.findByIdAndUpdate(updatedFormation._id, updatedFormation, {
+    overwrite: true,
+    upsert: true,
+    new: true,
+  });
 };
 
 // let count = 0;
