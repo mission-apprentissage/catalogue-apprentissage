@@ -136,6 +136,11 @@ const psFormationSchema = {
     default: null,
     description: "id mongo reconciliation",
   },
+  matching_rejete_updated: {
+    type: Boolean,
+    default: false,
+    description: "Si la formation Précédemment Rejeté a été mise à jour",
+  },
   statuts_history: {
     type: [Object],
     default: [],

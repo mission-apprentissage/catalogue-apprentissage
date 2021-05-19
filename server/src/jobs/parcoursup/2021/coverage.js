@@ -47,9 +47,12 @@ const updateMatchedFormation = async ({ formation, match }) => {
     updatedFormation.id_reconciliation = reconciliation._id;
   }
 
-  // formation.statut_reconciliation === "REJETE" // old "A_VERIFIER"
-  // formation.matching_type > match.matching_strength
-  // then matching_updated and update
+  if (
+    formation.statut_reconciliation === "REJETE" &&
+    (statut_reconciliation === "A_VERIFIER" || statut_reconciliation === "AUTOMATIQUE")
+  ) {
+    updatedFormation.matching_rejete_updated = true;
+  }
 
   // History
   const { updates, keys } = diffFormation(previousFormation, updatedFormation);
