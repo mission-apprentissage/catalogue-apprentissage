@@ -122,15 +122,8 @@ const FormationPeriode = ({ periode }) => {
   return <>{displayedPeriode}</>;
 };
 
-const getGeoportailUrl = ({ lieu_formation_geo_coordonnees = "" }) => {
-  const coords = lieu_formation_geo_coordonnees.split(",");
-  const reversedCoords = `${coords[1]},${coords[0]}`;
-
-  const ignStyleLayer = "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2::GEOPORTAIL:OGC:WMTS(1)";
-  const poiEnseignementSup = "UTILITYANDGOVERNMENTALSERVICES.IGN.POI.ENSEIGNEMENTSUPERIEUR::GEOPORTAIL:OGC:WMS(1)";
-  const poiEnseignementSecondaire =
-    "UTILITYANDGOVERNMENTALSERVICES.IGN.POI.ENSEIGNEMENTSECONDAIRE::GEOPORTAIL:OGC:WMS(1)";
-  return `https://www.geoportail.gouv.fr/carte?c=${reversedCoords}&z=19&l0=${ignStyleLayer}&l1=${poiEnseignementSecondaire}&l2=${poiEnseignementSup}&permalink=yes`;
+const getLBAUrl = ({ _id = "" }) => {
+  return `https://labonnealternance.pole-emploi.fr/recherche-apprentissage?&display=list&page=fiche&type=training&itemId=${_id}`;
 };
 
 const HabilitationPartenaire = ({ habilitation }) => {
@@ -469,7 +462,7 @@ const Formation = ({
               Lieu de la formation
             </Heading>
             <Link
-              href={getGeoportailUrl(formation)}
+              href={getLBAUrl(formation)}
               textStyle="rf-text"
               color="bluefrance"
               textDecoration="underline"
