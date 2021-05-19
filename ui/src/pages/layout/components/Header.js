@@ -41,7 +41,13 @@ const Header = () => {
         <Flex fontFamily="Marianne" alignItems="center" color="#1E1E1E">
           {/* Logo */}
           <Link as={NavLink} to="/" py={4}>
-            <Image src="/brand/mariannev2.jpg" height={"15px"} width={"33px"} alt="Logo de la République Française" />
+            <Image
+              src="/brand/mariannev2.jpg"
+              height={"15px"}
+              width={"33px"}
+              alt="Logo de la République Française"
+              fallback={<Box height={"15px"} width={"33px"} bg="grey.200" />}
+            />
             <Text fontWeight="extrabold" fontSize="12px" fontStyle="normal">
               RÉPUBLIQUE FRANÇAISE{" "}
             </Text>
