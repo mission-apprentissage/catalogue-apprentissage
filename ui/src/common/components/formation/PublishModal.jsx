@@ -281,12 +281,6 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                     Informations offre de formation (facultatif) :
                   </FormLabel>
                   <Textarea
-                    borderBottomRadius={0}
-                    borderWidth={0}
-                    borderBottom={"2px solid"}
-                    marginBottom={"-2px"}
-                    borderColor={"grey.600"}
-                    bg="grey.200"
                     name="affelnet_infos_offre"
                     value={values.affelnet_infos_offre}
                     onChange={handleChange}
@@ -307,12 +301,6 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                   </FormLabel>
                   <Flex flexDirection="column" w="100%">
                     <Textarea
-                      borderBottomRadius={0}
-                      borderWidth={0}
-                      borderBottom={"2px solid"}
-                      marginBottom={"-2px"}
-                      borderColor={"grey.600"}
-                      bg="grey.200"
                       name="affelnet_raison_depublication"
                       value={values.affelnet_raison_depublication}
                       onChange={handleChange}
@@ -382,12 +370,6 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                   </FormLabel>
                   <Flex flexDirection="column" w="100%">
                     <Textarea
-                      borderBottomRadius={0}
-                      borderWidth={0}
-                      borderBottom={"2px solid"}
-                      marginBottom={"-2px"}
-                      borderColor={"grey.600"}
-                      bg="grey.200"
                       name="parcoursup_raison_depublication"
                       value={values.parcoursup_raison_depublication}
                       onChange={handleChange}
