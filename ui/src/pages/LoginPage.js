@@ -75,7 +75,7 @@ const LoginPage = () => {
                     </Field>
                   </Box>
                   <HStack spacing="4w">
-                    <Button colorScheme="blue" type="submit">
+                    <Button variant="primary" type="submit">
                       Connexion
                     </Button>
                     <Link to="/forgotten-password" as={NavLink} color="grey.500">
