@@ -93,7 +93,11 @@ export default () => {
                 {auth && auth.permissions.isAdmin ? <DashboardPage /> : <HomePage />}
               </PrivateRoute> */}
               <Route exact path="/stats" component={DashboardPage} />
-              {auth && auth.permissions.isAdmin && <PrivateRoute exact path="/admin/users" component={Users} />}
+              {auth && auth.permissions.isAdmin && (
+                <PrivateRoute exact path="/admin/users">
+                  <Users />
+                </PrivateRoute>
+              )}
               <Route exact path="/" component={HomePage} />
               <Route exact path="/recherche/formations-2021" component={Catalogue} />
               <Route exact path="/recherche/etablissements" component={Organismes} />
@@ -110,8 +114,17 @@ export default () => {
               <Route exact path="/couverture-affelnet" component={ReconciliationAffelnet} />
               <Route exact path="/changelog" component={Journal} />
 
-              {auth && auth.permissions.isAdmin && <PrivateRoute exact path="/tags-history" component={TagsHistory} />}
-              {auth && auth.permissions.isAdmin && <PrivateRoute exact path="/admin/upload" component={UploadFiles} />}
+              {auth && auth.permissions.isAdmin && (
+                <PrivateRoute exact path="/tags-history">
+                  <TagsHistory />
+                </PrivateRoute>
+              )}
+
+              {auth && auth.permissions.isAdmin && (
+                <PrivateRoute exact path="/admin/upload">
+                  <UploadFiles />
+                </PrivateRoute>
+              )}
 
               <Route component={NotFoundPage} />
             </Switch>
