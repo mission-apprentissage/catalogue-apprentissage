@@ -291,15 +291,7 @@ export default () => {
                       </TabPanel>
                     </TabPanels>
                   </Tabs>
-                  <Button
-                    as={NavLink}
-                    color="bluefrance"
-                    to="/changelog"
-                    textStyle="rf-text"
-                    border="1px solid #000091"
-                    bg="white"
-                    fontWeight="400"
-                  >
+                  <Button variant="secondary" as={NavLink} to="/changelog">
                     Voir le journal des modifications
                   </Button>
                 </Box>
