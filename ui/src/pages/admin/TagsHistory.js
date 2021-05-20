@@ -17,6 +17,7 @@ import { NavLink } from "react-router-dom";
 import { academies } from "../../constants/academies";
 import { useQueries } from "react-query";
 import StatCard from "../../common/components/StatCard";
+import { ArrowDropRightLine } from "../../theme/components/icons";
 
 const statuses = {
   affelnet: [
@@ -98,11 +99,11 @@ export default () => {
   const academieList = Object.values(academies).sort(({ nom_academie: a }, { nom_academie: b }) => (a > b ? 1 : -1));
   return (
     <Layout>
-      <Box bg="secondaryBackground" w="100%" pt={[4, 8]} px={[1, 24]}>
+      <Box w="100%" pt={[4, 8]} px={[1, 24]} color="grey.800">
         <Container maxW="xl">
-          <Breadcrumb>
+          <Breadcrumb separator={<ArrowDropRightLine color="grey.600" />} textStyle="xs">
             <BreadcrumbItem>
-              <BreadcrumbLink as={NavLink} to="/">
+              <BreadcrumbLink as={NavLink} to="/" color="grey.600" textDecoration="underline">
                 Accueil
               </BreadcrumbLink>
             </BreadcrumbItem>
@@ -112,15 +113,16 @@ export default () => {
           </Breadcrumb>
         </Container>
       </Box>
-      <Box bg="secondaryBackground" w="100%" minH="100vh" py={[1, 8]} px={[1, 24]}>
+      <Box w="100%" minH="100vh" px={[1, 24]}>
         <Container maxW="xl">
-          <Heading as="h1" mb={8} mt={2}>
+          <Heading as="h1" mb={8} mt={6}>
             Historique des statuts Affelnet/Parcoursup
           </Heading>
 
           <Select
             value={academie}
             bg="white"
+            borderRadius={0}
             w="30%"
             mb={8}
             onChange={(e) => {

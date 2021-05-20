@@ -5,7 +5,9 @@ export function ArrowDropRightLine(props) {
   return (
     <Icon viewBox="0 0 6 10" {...props}>
       <path
-        d="M3.17202 4.99984L0.343018 2.17184L1.75702 0.756836L6.00002 4.99984L1.75702 9.24284L0.343018 7.82784L3.17202 4.99984Z"
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M3.78145 5.00048L0.481445 1.70048L1.42411 0.757812L5.66678 5.00048L1.42411 9.24315L0.481445 8.30048L3.78145 5.00048Z"
         fill="currentColor"
       />
     </Icon>
