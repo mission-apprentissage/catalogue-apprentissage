@@ -12,7 +12,9 @@ const Footer = () => {
               <Image
                 src="/brand/mariannev2.jpg"
                 height={"1.8rem"}
+                htmlHeight={"1.8rem"}
                 width={"3.75rem"}
+                htmlWidth={"3.75rem"}
                 alt="Logo de la République Française"
                 fallback={<Box height={"1.8rem"} width={"3.75rem"} bg="grey.200" />}
               />
