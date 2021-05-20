@@ -83,11 +83,6 @@ const formation = async (filter = {}, limit = 10, maxItems = 100, offset = 0) =>
 
       const payload = { formation, match };
       await updateMatchedFormation(payload);
-      // if (match.data_length > 1) {
-      //   countMultiple++;
-      // } else {
-      //   count++;
-      // }
     }
   );
   // console.log(` ----> ${count}, ${countMultiple}`);
