@@ -2,7 +2,8 @@ const Text = {
   variants: {
     highlight: {
       bg: "#f9f8f6",
-      p: 2,
+      px: 2,
+      py: 0.5,
       fontWeight: 700,
     },
   },
