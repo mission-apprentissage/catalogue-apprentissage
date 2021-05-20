@@ -6,7 +6,7 @@ const changelog = {
     {
       version: "3.6.0",
       date: "Prochainement",
-      about: `<h5>À venir</h5>`,
+      about: `<h4>À venir</h4>`,
       fixes: [],
       features: ["Développement d'un module de gestion des règles"],
       improvements: ["Travaux sur le flux retour vers les Carif-Oref et gestion des modifications"],
@@ -14,7 +14,7 @@ const changelog = {
     {
       version: "3.5.0",
       date: "Le 12 Mai 2021",
-      about: `<h5>À propos de cette version</h5>
+      about: `<h4>À propos de cette version</h4>
       Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: [
         "Modification des règles de récupération des communes des lieux de formation, pour prendre en compte le code commune insee plus précis en cas de pluri municipalités sur un seul code postal (2 984 fiches formations corrigées)",
@@ -33,7 +33,7 @@ const changelog = {
     {
       version: "3.4.0",
       date: "Le 4 Mai 2021",
-      about: `<h5>À propos de cette version</h5>
+      about: `<h4>À propos de cette version</h4>
       Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: ["export des données établissements"],
       features: [
@@ -47,7 +47,7 @@ const changelog = {
     {
       version: "3.3.0",
       date: "Le 19 Avril 2021",
-      about: `<h5>À propos de cette version</h5>
+      about: `<h4>À propos de cette version</h4>
       Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: [
         "[Catalogue] Contrôle de niveau avant ajout des étiquettes publication pour Affelnet",
@@ -61,7 +61,7 @@ const changelog = {
     {
       version: "3.2.0",
       date: "Le 12 Avril 2021",
-      about: `<h5>À propos de cette version</h5>
+      about: `<h4>À propos de cette version</h4>
       Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: ["[Catalogue] Contrôle des habilitations RNCP"],
       features: [
@@ -74,7 +74,7 @@ const changelog = {
     {
       version: "2.6.0",
       date: "Le 03 Mars 2021",
-      about: `<h5>À propos de cette version</h5>
+      about: `<h4>À propos de cette version</h4>
       Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: ["Correction du niveau des MC"],
       features: [
@@ -89,7 +89,7 @@ const changelog = {
     {
       version: "2.5.0",
       date: "Le 22 Février 2021",
-      about: `<h5>À propos de cette version</h5>
+      about: `<h4>À propos de cette version</h4>
       Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: [],
       features: ["[Catalogue] Formulaire complémentaire pour publication des formations dans catalogue Affelnet"],
@@ -101,7 +101,7 @@ const changelog = {
     {
       version: "2.4.0",
       date: "Le 31 Janvier 2021",
-      about: `<h5>À propos de cette version</h5>
+      about: `<h4>À propos de cette version</h4>
       Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: [],
       features: [
@@ -113,7 +113,7 @@ const changelog = {
     {
       version: "2.3.0",
       date: "Le 06 Janvier 2021",
-      about: `<h5>À propos de cette version</h5>
+      about: `<h4>À propos de cette version</h4>
       Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: ["[Catalogue] Corrections des doublons de formations 2021 RCO"],
       features: [
@@ -129,7 +129,7 @@ const changelog = {
     {
       version: "2.2.0",
       date: "Le 15 Décembre 2020",
-      about: `<h5>À propos de cette version :</h5>
+      about: `<h4>À propos de cette version :</h4>
       <ul>
         <li>
           A l’attention des services académiques : L’indication « A charger dans Parcoursup » sera
@@ -153,7 +153,7 @@ const changelog = {
     {
       version: "2.1.0",
       date: "Le 01 Décembre 2020",
-      about: `<h5>A propos de cette version :</h5>
+      about: `<h4>A propos de cette version :</h4>
       <ul>
         <li>Le catalogue 2021 est issu de la collecte de l'offre de formation en apprentissage réalisée par les Carif-Oref.</li>
         <li>Les formations déclarées sur des nouveaux établissements ne sont pas encore affichées, elles ne seront à compter du 7/12/2021 (une info sera disponible sur l'écran d'accueil quand la fonctionnalité sera opérationnelle)</li>
@@ -168,7 +168,7 @@ const changelog = {
     {
       version: "2.0.0",
       date: "Le 17 Juin 2020",
-      about: `<h5>A propos de cette version :</h5>
+      about: `<h4>A propos de cette version :</h4>
       <ul>
         <li>Changement d'interface majeur</li>
       </ul>`,
@@ -184,7 +184,7 @@ const changelog = {
     {
       version: "1.3.4",
       date: "Le 26 Mai 2020",
-      about: `<h5>A propos de cette version :</h5>
+      about: `<h4>A propos de cette version :</h4>
       Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: ["[Catalogue] Suppression de 780 formations doublons"],
       features: [],
@@ -196,7 +196,7 @@ const changelog = {
     {
       version: "1.3.3",
       date: "Le 19 Mai 2020",
-      about: `<h5>A propos de cette version :</h5>
+      about: `<h4>A propos de cette version :</h4>
       Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: [],
       features: ["[Page] Ajout des guides utilisateurs en mode connecté"],
@@ -205,7 +205,7 @@ const changelog = {
     {
       version: "1.3.2",
       date: "Le 4 Mai 2020",
-      about: `<h5>A propos de cette version :</h5>
+      about: `<h4>A propos de cette version :</h4>
       Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: [],
       features: [
@@ -223,7 +223,7 @@ const changelog = {
     {
       version: "1.3",
       date: "Le 24 Avril 2020",
-      about: `<h5>A propos de cette version :</h5>
+      about: `<h4>A propos de cette version :</h4>
       Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: [
         "[Catalogue] Correction des niveaux de diplômes erronés pour les Mentions Complémentaires",
@@ -244,7 +244,7 @@ const changelog = {
     {
       version: "1.2",
       date: "Le 1er Avril 2020",
-      about: `<h5>A propos de cette version :</h5>
+      about: `<h4>A propos de cette version :</h4>
       <ul>
         <li>
           l’harmonisation de certaines informations :
@@ -271,7 +271,7 @@ const changelog = {
     {
       version: "1.1",
       date: "Le 20 Mars 2020",
-      about: `<h5>A propos de cette version :</h5>
+      about: `<h4>A propos de cette version :</h4>
       <ul>
         <li>les données sont compilées et à jour du 20/03/2020,</li>
         <li>
@@ -299,7 +299,7 @@ const changelog = {
     {
       version: "1.0",
       date: "Le 13 Mars 2020",
-      about: `<h5>A propos de cette version :</h5>
+      about: `<h4>A propos de cette version :</h4>
       <ul>
         <li>Mise en ligne</li>
       </ul>`,
