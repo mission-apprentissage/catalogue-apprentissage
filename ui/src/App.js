@@ -16,7 +16,6 @@ import Organismes from "./pages/Organismes/Organismes";
 import Formation from "./pages/Formation";
 import Etablissement from "./pages/Etablissement";
 import Journal from "./pages/Journal/Journal";
-import HowToReglement from "./pages/HowToReglement";
 import TagsHistory from "./pages/admin/TagsHistory";
 import UploadFiles from "./pages/admin/UploadFiles";
 import { _post, _get } from "./common/httpClient";
@@ -103,8 +102,6 @@ export default () => {
               <Route exact path="/recherche/etablissements" component={Organismes} />
               <Route exact path={`/formation/:id`} component={Formation} />
               <Route exact path={`/etablissement/:id`} component={Etablissement} />
-
-              <Route exact path="/guide-reglementaire" component={HowToReglement} />
 
               <Route exact path="/login" component={LoginPage} />
               <Route exact path="/reset-password" component={ResetPasswordPage} />
