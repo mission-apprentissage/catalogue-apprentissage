@@ -11,13 +11,12 @@ import ReconciliationParcoursup from "./pages/reconciliation-parcoursup";
 import ReconciliationAffelnet from "./pages/reconciliation-affelnet";
 import ReportPage from "./pages/ReportPage";
 import NotFoundPage from "./pages/404";
-import Search from "./pages/Search/Search";
+import Catalogue from "./pages/Catalogue/Catalogue";
+import Organismes from "./pages/Organismes/Organismes";
 import Formation from "./pages/Formation";
 import Etablissement from "./pages/Etablissement";
 import Journal from "./pages/Journal/Journal";
 import HowToReglement from "./pages/HowToReglement";
-import HowToModif from "./pages/HowToModif";
-import HowToSignal from "./pages/HowToSignal";
 import TagsHistory from "./pages/admin/TagsHistory";
 import UploadFiles from "./pages/admin/UploadFiles";
 import { _post, _get } from "./common/httpClient";
@@ -96,15 +95,12 @@ export default () => {
               <Route exact path="/stats" component={DashboardPage} />
               {auth && auth.permissions.isAdmin && <PrivateRoute exact path="/admin/users" component={Users} />}
               <Route exact path="/" component={HomePage} />
-              {/* <Route exact path="/recherche/formations-2020" component={Search} /> */}
-              <Route exact path="/recherche/formations-2021" component={Search} />
-              <Route exact path="/recherche/etablissements" component={Search} />
+              <Route exact path="/recherche/formations-2021" component={Catalogue} />
+              <Route exact path="/recherche/etablissements" component={Organismes} />
               <Route exact path={`/formation/:id`} component={Formation} />
               <Route exact path={`/etablissement/:id`} component={Etablissement} />
 
               <Route exact path="/guide-reglementaire" component={HowToReglement} />
-              <Route exact path="/guide-modification" component={HowToModif} />
-              <Route exact path="/guide-signalements" component={HowToSignal} />
 
               <Route exact path="/login" component={LoginPage} />
               <Route exact path="/reset-password" component={ResetPasswordPage} />

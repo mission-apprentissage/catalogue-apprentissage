@@ -1,35 +1,38 @@
+import React from "react";
+import { Link } from "@chakra-ui/react";
+
 const changelog = {
   list: [
     {
       version: "3.6.0",
       date: "Prochainement",
-      about: `<h5>À venir</h5>
-      <ul>
-        <li>
-          Développement d'un module de gestion des règles
-        </li>
-        <li>
-          Travaux sur le flux retour vers les Carif-Oref et gestion des modifications
-        </li>
-      </ul>`,
+      about: `<h5>À venir</h5>`,
       fixes: [],
-      features: [],
-      improvements: [],
+      features: ["Développement d'un module de gestion des règles"],
+      improvements: ["Travaux sur le flux retour vers les Carif-Oref et gestion des modifications"],
     },
     {
       version: "3.5.0",
-      date: "12 Mai 2021",
+      date: "Le 12 Mai 2021",
       about: `<h5>À propos de cette version</h5>
       Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: [
-        "[Fiche formation] Prise en compte du code commune Insee en cas de pluri municipalités sur un seul code postal",
+        "Modification des règles de récupération des communes des lieux de formation, pour prendre en compte le code commune insee plus précis en cas de pluri municipalités sur un seul code postal (2 984 fiches formations corrigées)",
       ],
       features: [],
-      improvements: ["Réconciliation Affelnet avec les données transmises par la DNE au 11/05/2021"],
+      improvements: [
+        <span>
+          Script de réconciliation Affelnet mis en production avec les données transmises par la DNE au 11/05/2021.
+          Total de 5008 formations publiées, et de 1 040 formations en attente de publication (certainement dû à un UAI
+          manquant - à transmettre à la mission :{" "}
+          <Link href="mailto:catalogue@apprentissage.beta.gouv.fr">catalogue@apprentissage.beta.gouv.fr</Link>, en
+          indiquant SIRET - UAI)
+        </span>,
+      ],
     },
     {
       version: "3.4.0",
-      date: "4 Mai 2021",
+      date: "Le 4 Mai 2021",
       about: `<h5>À propos de cette version</h5>
       Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: ["export des données établissements"],
@@ -43,7 +46,7 @@ const changelog = {
     },
     {
       version: "3.3.0",
-      date: "19/04/2021",
+      date: "Le 19 Avril 2021",
       about: `<h5>À propos de cette version</h5>
       Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: [
@@ -57,7 +60,7 @@ const changelog = {
     },
     {
       version: "3.2.0",
-      date: "12/04/2021",
+      date: "Le 12 Avril 2021",
       about: `<h5>À propos de cette version</h5>
       Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: ["[Catalogue] Contrôle des habilitations RNCP"],
@@ -70,7 +73,7 @@ const changelog = {
     },
     {
       version: "2.6.0",
-      date: "03/03/2021",
+      date: "Le 03 Mars 2021",
       about: `<h5>À propos de cette version</h5>
       Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: ["Correction du niveau des MC"],
@@ -85,7 +88,7 @@ const changelog = {
     },
     {
       version: "2.5.0",
-      date: "22/02/2021",
+      date: "Le 22 Février 2021",
       about: `<h5>À propos de cette version</h5>
       Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: [],
@@ -97,7 +100,7 @@ const changelog = {
     },
     {
       version: "2.4.0",
-      date: "31/01/2021",
+      date: "Le 31 Janvier 2021",
       about: `<h5>À propos de cette version</h5>
       Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: [],
@@ -109,7 +112,7 @@ const changelog = {
     },
     {
       version: "2.3.0",
-      date: "06/01/2021",
+      date: "Le 06 Janvier 2021",
       about: `<h5>À propos de cette version</h5>
       Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: ["[Catalogue] Corrections des doublons de formations 2021 RCO"],
@@ -125,7 +128,7 @@ const changelog = {
     },
     {
       version: "2.2.0",
-      date: "15 Décembre 2020",
+      date: "Le 15 Décembre 2020",
       about: `<h5>À propos de cette version :</h5>
       <ul>
         <li>
@@ -149,7 +152,7 @@ const changelog = {
     },
     {
       version: "2.1.0",
-      date: "01 Décembre 2020",
+      date: "Le 01 Décembre 2020",
       about: `<h5>A propos de cette version :</h5>
       <ul>
         <li>Le catalogue 2021 est issu de la collecte de l'offre de formation en apprentissage réalisée par les Carif-Oref.</li>
@@ -164,7 +167,7 @@ const changelog = {
     },
     {
       version: "2.0.0",
-      date: "17 Juin 2020",
+      date: "Le 17 Juin 2020",
       about: `<h5>A propos de cette version :</h5>
       <ul>
         <li>Changement d'interface majeur</li>
@@ -180,7 +183,7 @@ const changelog = {
     },
     {
       version: "1.3.4",
-      date: "26 Mai 2020",
+      date: "Le 26 Mai 2020",
       about: `<h5>A propos de cette version :</h5>
       Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: ["[Catalogue] Suppression de 780 formations doublons"],
@@ -192,7 +195,7 @@ const changelog = {
     },
     {
       version: "1.3.3",
-      date: "19 Mai 2020",
+      date: "Le 19 Mai 2020",
       about: `<h5>A propos de cette version :</h5>
       Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: [],
@@ -201,7 +204,7 @@ const changelog = {
     },
     {
       version: "1.3.2",
-      date: "4 Mai 2020",
+      date: "Le 4 Mai 2020",
       about: `<h5>A propos de cette version :</h5>
       Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: [],
@@ -219,7 +222,7 @@ const changelog = {
     },
     {
       version: "1.3",
-      date: "24 Avril 2020",
+      date: "Le 24 Avril 2020",
       about: `<h5>A propos de cette version :</h5>
       Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: [
@@ -240,7 +243,7 @@ const changelog = {
     },
     {
       version: "1.2",
-      date: "1er Avril 2020",
+      date: "Le 1er Avril 2020",
       about: `<h5>A propos de cette version :</h5>
       <ul>
         <li>
@@ -267,7 +270,7 @@ const changelog = {
     },
     {
       version: "1.1",
-      date: "20 Mars 2020",
+      date: "Le 20 Mars 2020",
       about: `<h5>A propos de cette version :</h5>
       <ul>
         <li>les données sont compilées et à jour du 20/03/2020,</li>
@@ -295,7 +298,7 @@ const changelog = {
     },
     {
       version: "1.0",
-      date: "13 Mars 2020",
+      date: "Le 13 Mars 2020",
       about: `<h5>A propos de cette version :</h5>
       <ul>
         <li>Mise en ligne</li>

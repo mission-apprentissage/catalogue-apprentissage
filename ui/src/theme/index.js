@@ -1,12 +1,12 @@
 import { extendTheme } from "@chakra-ui/react";
-import { fonts, colors, fontSizes, space, rootFontSizePx } from "./theme-beta";
+import { fonts, colors, fontSizes, space, rootFontSizePx, textStyles } from "./theme-beta";
 import { components } from "./components/index";
 
 const styles = {
   global: {
     "html, body": {
       fontSize: `${rootFontSizePx}px`,
-      fontFamily: "Inter",
+      fontFamily: "Marianne, Arial",
       background: "white",
       color: "primaryText",
     },
@@ -27,6 +27,7 @@ const overrides = {
   colors: { ...colors, ...catalogueColors },
   styles,
   fontSizes,
+  textStyles,
   space,
   components,
 };
