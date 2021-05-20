@@ -48,7 +48,7 @@ const ForgottenPasswordPage = () => {
                     );
                   }}
                 </Field>
-                <Button colorScheme="blue" type={"submit"}>
+                <Button variant="primary" type={"submit"}>
                   Demander un nouveau mot de passe
                 </Button>
                 {status.error && (
