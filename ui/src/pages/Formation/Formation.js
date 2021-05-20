@@ -838,7 +838,7 @@ export default ({ match }) => {
 
           {formation && (
             <>
-              <Box bg="white" p={10} my={6}>
+              <Box mb={8}>
                 <Heading textStyle="h2" color="grey.800">
                   {pendingFormation?.intitule_long ?? formation?.intitule_long}
                   <InfoTooltip description={helpText.formation.intitule_long} />
