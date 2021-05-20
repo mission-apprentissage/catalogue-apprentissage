@@ -17,6 +17,7 @@ import {
 import { NavLink } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
 import { _postFile } from "../../common/httpClient";
+import { ArrowDropRightLine } from "../../theme/components/icons";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -116,11 +117,11 @@ export default () => {
 
   return (
     <Layout>
-      <Box bg="secondaryBackground" w="100%" pt={[4, 8]} px={[1, 24]}>
+      <Box w="100%" pt={[4, 8]} px={[1, 24]} color="grey.800">
         <Container maxW="xl">
-          <Breadcrumb>
+          <Breadcrumb separator={<ArrowDropRightLine color="grey.600" />} textStyle="xs">
             <BreadcrumbItem>
-              <BreadcrumbLink as={NavLink} to="/">
+              <BreadcrumbLink as={NavLink} to="/" color="grey.600" textDecoration="underline">
                 Accueil
               </BreadcrumbLink>
             </BreadcrumbItem>
@@ -130,9 +131,9 @@ export default () => {
           </Breadcrumb>
         </Container>
       </Box>
-      <Box bg="secondaryBackground" w="100%" minH="100vh" py={[1, 8]} px={[1, 24]}>
+      <Box w="100%" minH="100vh" px={[1, 24]}>
         <Container maxW="xl">
-          <Heading as="h1" mb={8} mt={2}>
+          <Heading as="h1" mb={8} mt={6}>
             Formulaire d'upload de fichiers
           </Heading>
 
@@ -140,6 +141,7 @@ export default () => {
             <Select
               value={filename}
               bg="white"
+              borderRadius="none"
               w="30%"
               mb={8}
               onChange={(e) => {
@@ -152,7 +154,7 @@ export default () => {
                 </option>
               ))}
             </Select>
-            <Box {...getRootProps({ style })} mb={5}>
+            <Box {...getRootProps({ style })} mb={8}>
               <Input {...getInputProps()} />
               {isDragActive ? (
                 <Text>Glissez et déposez ici ...</Text>
@@ -166,7 +168,7 @@ export default () => {
               )}
             </Box>
             {acceptedFiles.length > 0 && (
-              <Box mb={5}>
+              <Box mb={8}>
                 <Heading as="h4" fontSize="delta">
                   Fichier
                 </Heading>
@@ -181,7 +183,7 @@ export default () => {
             )}
             <Button
               type="submit"
-              colorScheme="blue"
+              variant="primary"
               isLoading={isSubmitting}
               loadingText="Envoi en cours"
               isDisabled={acceptedFiles.length === 0}
