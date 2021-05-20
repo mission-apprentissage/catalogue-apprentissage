@@ -44,9 +44,9 @@ const mapping = (formation) => {
     complement_commune: formation.COMPLEMENTCOMMUNE,
     libelle_insert_jeune: formation.LIB_INS,
     complement_cedex: formation.COMPLEMENTCEDEX,
-    codes_cfd_mna: formation.CODE_CFD_MNA.split(","),
-    codes_rncp_mna: formation.CODE_RNCP_MNA.split(","),
-    codes_romes_mna: formation.CODE_ROMES_MNA.split(","),
+    codes_cfd_mna: formation.CODE_CFD_MNA?.split(",") || [],
+    codes_rncp_mna: formation.CODE_RNCP_MNA?.split(",") || [],
+    codes_romes_mna: formation.CODE_ROMES_MNA?.split(",") || [],
     type_rapprochement_mna: formation.TYPE_RAPPROCHEMENT_MNA,
   };
 };
