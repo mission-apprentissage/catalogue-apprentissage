@@ -410,8 +410,8 @@ export default ({ match }) => {
           </Breadcrumb>
         </Container>
       </Box>
-      <div className="etablissement">
-        <div className="notice">
+      <Box>
+        <Box>
           <Container maxW="xl">
             {!etablissement && (
               <Box align="center" p={2}>
@@ -449,12 +449,12 @@ export default ({ match }) => {
                     <ModalHeader>Merci ne pas fermer cette page</ModalHeader>
                     <ModalBody>
                       {gatherData !== 0 && (
-                        <div>
-                          <div>
+                        <Box>
+                          <Box>
                             Mise à jour des informations {gatherData === 1 && <Spinner />}
                             {gatherData > 1 && <FontAwesomeIcon icon={faCheck} className="check-icon" />}
-                          </div>
-                        </div>
+                          </Box>
+                        </Box>
                       )}
                     </ModalBody>
                   </ModalContent>
@@ -462,8 +462,8 @@ export default ({ match }) => {
               </>
             )}
           </Container>
-        </div>
-      </div>
+        </Box>
+      </Box>
     </Layout>
   );
 };
