@@ -35,7 +35,7 @@ export default (props) => {
               <BreadcrumbLink>Liste des établissements</BreadcrumbLink>
             </BreadcrumbItem>
           </Breadcrumb>
-          <Heading as="h1" fontSize="beta" className="title">
+          <Heading textStyle="h2" color="grey.800" mt={5}>
             Liste des organismes
           </Heading>
           {!searchState.loaded && <Spinner />}

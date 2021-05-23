@@ -11,6 +11,8 @@ import {
   TabList,
   TabPanels,
   TabPanel,
+  Stack,
+  Switch,
   Spinner,
 } from "@chakra-ui/react";
 import Layout from "../layout/Layout";

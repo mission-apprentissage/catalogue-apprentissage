@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ReactiveBase, ReactiveList, DataSearch, SelectedFilters } from "@appbaseio/reactivesearch";
-import { Container, Flex, Box, Heading, Text, Spinner, Switch } from "@chakra-ui/react";
+import { Container, Flex, Box, Heading, Text, Spinner, Switch, Stack } from "@chakra-ui/react";
 import useAuth from "../../hooks/useAuth";
 import { hasOneOfRoles } from "../../utils/rolesUtils";
 import {
@@ -50,9 +50,14 @@ export default React.memo(({ match, location, searchState, context }) => {
 
   return (
     <Box className="search-page">
-      <ReactiveBase url={`${endpoint}/es/search`} app={base}>
+      <Stack align="center" direction="row">
+        <Switch size="sm" />
+        <Switch size="md" />
+        <Switch size="lg" />
+      </Stack>
+      <ReactiveBase url={`${endpoint}/es/search`} app={base} style={{ boxSizing: "content-box" }}>
         <HardFilters filters={FILTERS} context={context} isBaseFormations={isBaseFormations} />
-        <Box className="search">
+        <Box className="search" maxW="full">
           <Container maxW="full" px={0}>
             {mode === "simple" && (
               <Box className={`search-container search-container-${mode}`}>
@@ -71,7 +76,12 @@ export default React.memo(({ match, location, searchState, context }) => {
               </Box>
             )}
             <Box mt={4} mb={4}>
-              <Switch color="bluefrance" size="sm" onChange={handleSearchSwitchChange} checked={mode !== "simple"} />
+              <Switch
+                color="bluefrance"
+                onChange={handleSearchSwitchChange}
+                checked={mode !== "simple"}
+                boxSizing="content-box"
+              />
               <Text as="span" textStyle="sm">
                 Recherche avancée
               </Text>
