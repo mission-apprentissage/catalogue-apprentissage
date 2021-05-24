@@ -80,13 +80,15 @@ export default React.memo(({ match, location, searchState, context }) => {
               </FormLabel>
             </Box>
             {mode !== "simple" && (
-              <QueryBuilder
-                context={context}
-                lang="fr"
-                collection={base}
-                react={{ and: filters.filter((e) => e !== "QUERYBUILDER") }}
-                fields={queryBuilderField}
-              />
+              <Box mb={4}>
+                <QueryBuilder
+                  context={context}
+                  lang="fr"
+                  collection={base}
+                  react={{ and: filters.filter((e) => e !== "QUERYBUILDER") }}
+                  fields={queryBuilderField}
+                />
+              </Box>
             )}
           </Container>
           <Box borderTop="1px solid #E7E7E7" w="full" />

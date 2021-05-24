@@ -43,10 +43,7 @@ function QueryBuilder({
   }, [JSON.stringify(rules)]);
 
   return (
-    <div
-      className="react-es-query-builder"
-      style={{ backgroundColor: "#fff", boxShadow: "0 0 4px 0 #ddd", padding: "10px" }}
-    >
+    <div className="react-es-query-builder">
       {rules.map((rule) => (
         <Rule
           combinator={rule.combinator}
