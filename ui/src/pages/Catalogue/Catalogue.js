@@ -4,7 +4,9 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  Button,
   Container,
+  Flex,
   Heading,
   Spinner,
   Tab,
@@ -12,16 +14,19 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  useDisclosure,
 } from "@chakra-ui/react";
 import Layout from "../layout/Layout";
 import { NavLink } from "react-router-dom";
-import { ArrowDropRightLine } from "../../theme/components/icons";
+import { ArrowDropRightLine, ArrowRightLine } from "../../theme/components/icons";
 import Search from "../../common/components/Search/Search";
 import { useSearch } from "../../common/hooks/useSearch";
 import { HowToReglement } from "../../common/components/HowToReglement/HowToReglement";
+import { HowToAddModal } from "../../common/components/formation/HowToAddModal";
 
 export default (props) => {
   const searchState = useSearch("catalogue");
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Layout>
@@ -42,26 +47,34 @@ export default (props) => {
           </Heading>
           {!searchState.loaded && <Spinner />}
           {searchState.loaded && (
-            <Tabs variant="search" mt={5}>
-              <TabList bg="white">
-                <Tab>Catalogue général ({searchState.countCatalogueGeneral.toLocaleString("fr-FR")})</Tab>
-                <Tab mx={2}>
-                  Catalogue non-éligible ({searchState.countCatalogueNonEligible.toLocaleString("fr-FR")})
-                </Tab>
-                <Tab mx={2}>Guide réglementaire</Tab>
-              </TabList>
-              <TabPanels>
-                <TabPanel>
-                  <Search {...props} searchState={searchState} context="catalogue_general" />
-                </TabPanel>
-                <TabPanel>
-                  <Search {...props} searchState={searchState} context="catalogue_non_eligible" />
-                </TabPanel>
-                <TabPanel>
-                  <HowToReglement />
-                </TabPanel>
-              </TabPanels>
-            </Tabs>
+            <>
+              <Tabs variant="search" mt={5}>
+                <TabList bg="white" justifyContent="space-between">
+                  <Flex>
+                    <Tab>Catalogue général ({searchState.countCatalogueGeneral.toLocaleString("fr-FR")})</Tab>
+                    <Tab mx={2}>
+                      Catalogue non-éligible ({searchState.countCatalogueNonEligible.toLocaleString("fr-FR")})
+                    </Tab>
+                    <Tab mx={2}>Guide réglementaire</Tab>
+                  </Flex>
+                  <Button variant="unstyled" textStyle="rf-text" color="bluefrance" onClick={onOpen}>
+                    <ArrowRightLine w="9px" h="9px" mr={2} /> Demander l'ajout d'une formation
+                  </Button>
+                  <HowToAddModal isOpen={isOpen} onClose={onClose} />
+                </TabList>
+                <TabPanels>
+                  <TabPanel>
+                    <Search {...props} searchState={searchState} context="catalogue_general" />
+                  </TabPanel>
+                  <TabPanel>
+                    <Search {...props} searchState={searchState} context="catalogue_non_eligible" />
+                  </TabPanel>
+                  <TabPanel>
+                    <HowToReglement />
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
+            </>
           )}
         </Container>
       </Box>
