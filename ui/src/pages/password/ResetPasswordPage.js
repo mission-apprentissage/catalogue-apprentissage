@@ -70,7 +70,7 @@ const ResetPasswordPage = () => {
                     );
                   }}
                 </Field>
-                <Button colorScheme="blue" type="submit">
+                <Button variant="primary" type="submit">
                   Réinitialiser le mot de passe
                 </Button>
                 {status.error && (
