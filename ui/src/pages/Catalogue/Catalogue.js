@@ -5,6 +5,7 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   Button,
+  Center,
   Container,
   Flex,
   Heading,
@@ -45,7 +46,11 @@ export default (props) => {
           <Heading textStyle="h2" color="grey.800" mt={5}>
             Catalogue des formations en apprentissage 2021
           </Heading>
-          {!searchState.loaded && <Spinner />}
+          {!searchState.loaded && (
+            <Center h="70vh">
+              <Spinner />
+            </Center>
+          )}
           {searchState.loaded && (
             <>
               <Tabs variant="search" mt={5}>

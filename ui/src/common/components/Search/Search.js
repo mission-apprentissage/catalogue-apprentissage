@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { DataSearch, ReactiveBase, ReactiveList, SelectedFilters } from "@appbaseio/reactivesearch";
-import { Box, Container, Flex, FormLabel, Spinner, Switch, Text } from "@chakra-ui/react";
+import { Box, Container, Flex, FormLabel, Switch, Text } from "@chakra-ui/react";
 import useAuth from "../../hooks/useAuth";
 import { hasOneOfRoles } from "../../utils/rolesUtils";
 import {
@@ -21,7 +21,6 @@ export default React.memo(({ match, location, searchState, context }) => {
   const [mode, setMode] = useState(defaultMode ?? "simple");
   const isCatalogueGeneral = context === "catalogue_general";
   const {
-    loaded,
     base,
     countEtablissement,
     countCatalogueGeneral,
@@ -41,14 +40,6 @@ export default React.memo(({ match, location, searchState, context }) => {
   const handleSearchSwitchChange = () => {
     setMode((prevValue) => (prevValue === "simple" ? "advanced" : "simple"));
   };
-
-  if (!loaded) {
-    return (
-      <Box h="full">
-        <Spinner />
-      </Box>
-    );
-  }
 
   return (
     <Box className="search-page">
