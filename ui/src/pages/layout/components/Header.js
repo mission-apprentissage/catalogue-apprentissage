@@ -44,7 +44,9 @@ const Header = () => {
             <Image
               src="/brand/mariannev2.jpg"
               height={"15px"}
+              htmlHeight={"15px"}
               width={"33px"}
+              htmlWidth={"33px"}
               alt="Logo de la République Française"
               fallback={<Box height={"15px"} width={"33px"} bg="grey.200" />}
             />

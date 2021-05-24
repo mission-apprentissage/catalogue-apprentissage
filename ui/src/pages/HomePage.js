@@ -136,9 +136,9 @@ export default () => {
                       w={["100%", "340px"]}
                       h="100px"
                     >
-                      <Heading as="h6" textStyle="h6">
+                      <Text fontWeight="700" textStyle="h6">
                         {countFormations2021.toLocaleString("fr-FR")} formations
-                      </Heading>
+                      </Text>
                       <Flex>
                         <Text flex="1" textStyle="sm">
                           en apprentissage
@@ -158,7 +158,7 @@ export default () => {
                       mx={[0, 0, 0, 5]}
                       mt={[5, 5, 5, 0]}
                     >
-                      <Heading as="h6" textStyle="h6">
+                      <Heading fontWeight="700" textStyle="h6">
                         {countEstablishments.toLocaleString("fr-FR")} établissements
                       </Heading>
                       <Flex>
@@ -175,7 +175,7 @@ export default () => {
                 <br />
                 <br />
                 <Box textStyle="rf-text">
-                  <Heading as="h4" textStyle="h4" id="mise-a-jour">
+                  <Heading as="h2" textStyle="h4" id="mise-a-jour">
                     Mise à jour des données
                   </Heading>
                   <br />
@@ -187,7 +187,7 @@ export default () => {
                 </Box>
                 <br /> <br />
                 <Box>
-                  <Heading as="h4" textStyle="h4" id="organisme-de-formation">
+                  <Heading as="h2" textStyle="h4" id="organisme-de-formation">
                     Vous êtes organisme de formation
                   </Heading>
                   <br />
@@ -216,7 +216,7 @@ export default () => {
                 <br />
                 <br />
                 <Box>
-                  <Heading as="h4" textStyle="h4" id="en-academie">
+                  <Heading as="h2" textStyle="h4" id="en-academie">
                     Vous travaillez en académie
                   </Heading>
                   {/*<br />*/}
@@ -232,7 +232,7 @@ export default () => {
                 </Box>
               </Box>
               <Box flexDirection="column" mt={12}>
-                <Heading as="h4" textStyle="h4" mb={3} id="journal">
+                <Heading as="h2" textStyle="h4" mb={3} id="journal">
                   Journal des modifications
                 </Heading>
                 <br />

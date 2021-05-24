@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { Link, Box, Flex, Text, Container, Menu, MenuList, MenuButton, MenuItem } from "@chakra-ui/react";
+import { Box, Container, Flex, Link, Text } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes, faBars } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
 
 const NavigationMenu = (props) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -49,9 +49,6 @@ const NavItem = ({ children, to = "/", ...rest }) => {
 };
 
 const NavLinks = ({ isOpen }) => {
-  const { pathname } = useLocation();
-  const menuIsActive = ["/guide-reglementaire"].includes(pathname);
-
   return (
     <Box display={{ base: isOpen ? "block" : "none", md: "block" }} flexBasis={{ base: "100%", md: "auto" }}>
       <Flex
@@ -66,29 +63,6 @@ const NavLinks = ({ isOpen }) => {
         <NavItem to="/recherche/formations-2021">Catalogue des formations en apprentissage 2021</NavItem>
         <NavItem to="/recherche/etablissements">Liste des établissements</NavItem>
         <NavItem to="/changelog">Journal des modifications</NavItem>
-        <Menu placement="bottom">
-          <MenuButton
-            as={Link}
-            mx={[0, 4]}
-            fontWeight="400"
-            display={{ base: "none", md: "block" }}
-            py={4}
-            color={menuIsActive ? "bluefrance" : "grey.800"}
-            borderBottom="3px solid"
-            borderColor={menuIsActive ? "bluefrance" : "transparent"}
-            _hover={{ textDecoration: "none", color: "grey.800", bg: "grey.200" }}
-          >
-            Guides
-          </MenuButton>
-          <MenuList>
-            <MenuItem as={NavLink} to="/guide-reglementaire">
-              Guide réglementaire
-            </MenuItem>
-          </MenuList>
-        </Menu>
-        <NavItem display={{ base: "block", md: "none" }} to="/guide-reglementaire">
-          Guide réglementaire
-        </NavItem>
       </Flex>
     </Box>
   );
