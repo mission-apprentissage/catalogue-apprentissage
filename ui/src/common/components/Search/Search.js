@@ -57,7 +57,7 @@ export default React.memo(({ match, location, searchState, context }) => {
             {mode === "simple" && (
               <Box className={`search-container search-container-${mode}`}>
                 <DataSearch
-                  componentId="SEARCH"
+                  componentId={`SEARCH-${context}`}
                   placeholder={dataSearch.placeholder}
                   fieldWeights={dataSearch.fieldWeights}
                   dataField={dataSearch.dataField}
@@ -66,7 +66,7 @@ export default React.memo(({ match, location, searchState, context }) => {
                   size={20}
                   showFilter={true}
                   filterLabel="recherche"
-                  react={{ and: FILTERS.filter((e) => e !== "SEARCH") }}
+                  react={{ and: FILTERS.filter((e) => e !== `SEARCH-${context}`) }}
                 />
               </Box>
             )}
