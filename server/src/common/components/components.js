@@ -11,7 +11,7 @@ module.exports = async (options = {}) => {
 
   const db = options.db || (await connectToMongo()).db;
   try {
-    await initTcoModel(mongoose);
+    await initTcoModel(mongoose, {});
   } catch (error) {
     console.log(error);
   }
