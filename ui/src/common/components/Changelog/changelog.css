@@ -1,9 +1,12 @@
+.react-changelog-container {
+  width: 100%;
+}
 .react-changelog-container .changelog-wrapper {
   max-width: 100%;
   margin: 0 auto;
 }
 .react-changelog-container .changelog-version {
-  font-size: 25px;
+  font-size: 12px;
 }
 .react-changelog-container .changelog-scroll-to {
   position: absolute;
@@ -79,7 +82,7 @@
   background-color: #eaedf1;
 }
 .react-changelog-container .changelog-state-new {
-  color: #98C74E;
+  color: #98c74e;
 }
 .react-changelog-container .changelog-state-updated {
   color: #ff4f26;
@@ -100,7 +103,7 @@
 .react-changelog-container .changelog-filters .changelog-link {
   height: 30px;
   bottom: -30px;
-  background-color: #F2F2F2;
+  background-color: #f2f2f2;
 }
 .react-changelog-container .changelog-filters label {
   display: inline-block;
@@ -137,7 +140,7 @@
   font-weight: 900;
 }
 .react-changelog-container .changelog-checkbox + .changelog-checkbox-label:before {
-  content: '';
+  content: "";
   background: #fff;
   border: 1px solid #cbd3dd;
   display: inline-block;
@@ -157,13 +160,13 @@
   border: 1px solid transparent;
 }
 .react-changelog-container .changelog-checkbox:checked + .changelog-checkbox-label.changelog-state-feature:before {
-  background: #98C74E;
+  background: #98c74e;
 }
 .react-changelog-container .changelog-checkbox:checked + .changelog-checkbox-label.changelog-state-bugFix:before {
-  background: #DA5C53;
+  background: #da5c53;
 }
 .react-changelog-container .changelog-checkbox:checked + .changelog-checkbox-label.changelog-state-improvement:before {
-  background: #4AA3BA;
+  background: #4aa3ba;
 }
 .react-changelog-container input.changelog-input {
   display: none;
@@ -191,7 +194,7 @@
 .react-changelog-container .changelog-item:after,
 .react-changelog-container .changelog-item:before {
   display: block;
-  content: '';
+  content: "";
   position: absolute;
   width: 9px;
   height: 9px;
@@ -241,7 +244,7 @@
   opacity: 0.8;
 }
 .react-changelog-container .changelog-version a:after {
-  content: '\f0c1';
+  content: "\f0c1";
   -webkit-transition: opacity 0.25s ease;
   -moz-transition: opacity 0.25s ease;
   -ms-transition: opacity 0.25s ease;
@@ -254,16 +257,17 @@
   opacity: 0.4;
 }
 .react-changelog-container .changelog-date {
-  font-size: 20px;
+  font-size: 24px;
   margin: 5px 0 0;
-  font-size: 0.875em;
-  color: #808488;
+  font-size: 24px;
+  font-weight: bold;
+  color: #1e1e1e;
 }
 .react-changelog-container .changelog-about {
   margin: 5px 0 0;
   font-size: 0.875em;
 }
-.react-changelog-container .changelog-about h5 {
+.react-changelog-container .changelog-about h4 {
   font-size: 20px;
   font-weight: 600;
 }
@@ -277,7 +281,7 @@
   font-size: 15px;
   color: #808488;
   font-weight: 300;
-  border: 1px solid #C5C5C5;
+  border: 1px solid #c5c5c5;
   display: block;
   padding: 10px 15px;
   border-radius: 20px;
@@ -286,11 +290,11 @@
   text-align: center;
 }
 .react-changelog-container .changelog-switch:before {
-  content: 'veiw updated files';
+  content: "veiw updated files";
   display: block;
 }
 .react-changelog-container .changelog-switch:after {
-  content: 'view updated features';
+  content: "view updated features";
   display: none;
 }
 .react-changelog-container .changelog-update-description {
@@ -301,21 +305,29 @@
   border-top: 1px solid #cbd3dd;
   padding-top: 20px;
 }
+
+@media screen and (max-width: 576px) {
+  .react-changelog-container .changelog-update-description {
+    padding-top: 55px;
+    padding-left: 0;
+  }
+}
+
 .react-changelog-container .changelog-update-description.changelog-improvement .changelog-type {
-  background-color: #4AA3BA;
+  background-color: #bfeae2;
 }
 .react-changelog-container .changelog-update-description.changelog-bug-fix .changelog-type {
-  background-color: #DA5C53;
+  background-color: #e3ebd3;
 }
 .react-changelog-container .changelog-type {
-  background-color: #98C74E;
-  color: #fff;
+  background-color: #c5e6d8;
+  color: #1e1e1e;
   display: inline-block;
   vertical-align: top;
   zoom: 1;
   padding: 0 10px;
   margin-right: 5px;
-  border-radius: 3px;
+  border-radius: 16px;
   font-size: 12px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   min-width: 100px;

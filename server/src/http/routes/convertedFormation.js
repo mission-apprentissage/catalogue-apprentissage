@@ -34,6 +34,9 @@ module.exports = () => {
    *             query:
    *               type: string
    *               example: '"{\"cfd\": \"40022106\"}"'
+   *             queryAsRegex:
+   *               type: string
+   *               example: "{\"onisep_intitule\": \"^bac pro Cuisine$\"}"
    *             page:
    *               type: number
    *               example: 1
@@ -47,6 +50,12 @@ module.exports = () => {
    *           cfd:
    *             value: { query: "{\"cfd\": \"40022106\"}", page: 1, limit: 10 }
    *             summary: Recherche par CFD
+   *           intituleLong:
+   *             value: { queryAsRegex: "{\"intitule_long\": \"^CUISINE\"}", page: 1, limit: 10 }
+   *             summary: Recherche par intitulé long BCN
+   *           intituleOnisep:
+   *             value: { queryAsRegex: "{\"onisep_intitule\": \"^bac pro Cuisine$\"}", page: 1, limit: 10 }
+   *             summary: Recherche par intitulé Onisep
    *           siretM:
    *             value: { query: "{\"$or\":[{\"etablissement_formateur_siret\":\"79128914300020\"},{\"etablissement_gestionnaire_siret\":\"13001727000310\"}]}" }
    *             summary: Recherche par siret multiple
@@ -115,7 +124,17 @@ module.exports = () => {
           ? JSON.parse(qs.select)
           : { affelnet_statut_history: 0, parcoursup_statut_history: 0, updates_history: 0, __v: 0 };
 
-      const allData = await ConvertedFormation.paginate(filter, {
+      let queryAsRegex = qs && qs.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
+      for (const prop in queryAsRegex) {
+        queryAsRegex[prop] = new RegExp(queryAsRegex[prop]);
+      }
+
+      const mQuery = {
+        ...filter,
+        ...queryAsRegex,
+      };
+
+      const allData = await ConvertedFormation.paginate(mQuery, {
         page,
         limit,
         lean: true,
