@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { DataSearch, ReactiveBase, ReactiveList, SelectedFilters } from "@appbaseio/reactivesearch";
-import { Box, Container, Flex, Spinner, Switch, Text } from "@chakra-ui/react";
+import { Box, Container, Flex, FormLabel, Spinner, Switch, Text } from "@chakra-ui/react";
 import useAuth from "../../hooks/useAuth";
 import { hasOneOfRoles } from "../../utils/rolesUtils";
 import {
@@ -36,6 +36,8 @@ export default React.memo(({ match, location, searchState, context }) => {
     ? constantsRcoFormations
     : constantsEtablissements;
 
+  const filters = FILTERS(context);
+
   const handleSearchSwitchChange = () => {
     setMode((prevValue) => (prevValue === "simple" ? "advanced" : "simple"));
   };
@@ -51,7 +53,7 @@ export default React.memo(({ match, location, searchState, context }) => {
   return (
     <Box className="search-page">
       <ReactiveBase url={`${endpoint}/es/search`} app={base}>
-        <HardFilters filters={FILTERS} context={context} isBaseFormations={isBaseFormations} />
+        <HardFilters filters={filters} context={context} isBaseFormations={isBaseFormations} />
         <Box className="search" maxW="full">
           <Container maxW="full" px={0}>
             {mode === "simple" && (
@@ -66,7 +68,7 @@ export default React.memo(({ match, location, searchState, context }) => {
                   size={20}
                   showFilter={true}
                   filterLabel="recherche"
-                  react={{ and: FILTERS.filter((e) => e !== `SEARCH-${context}`) }}
+                  react={{ and: filters.filter((e) => e !== `SEARCH-${context}`) }}
                 />
               </Box>
             )}
@@ -76,16 +78,22 @@ export default React.memo(({ match, location, searchState, context }) => {
                 "*, *:after, *:before": { boxSizing: "content-box !important" },
               }}
             >
-              <Switch color="bluefrance" onChange={handleSearchSwitchChange} checked={mode !== "simple"} />
-              <Text as="span" textStyle="sm" px={2}>
+              <Switch
+                color="bluefrance"
+                onChange={handleSearchSwitchChange}
+                checked={mode !== "simple"}
+                id={`search-mode-${context}`}
+              />
+              <FormLabel display="inline" htmlFor={`search-mode-${context}`} textStyle="sm" px={2}>
                 Recherche avancée
-              </Text>
+              </FormLabel>
             </Box>
             {mode !== "simple" && (
               <QueryBuilder
+                context={context}
                 lang="fr"
                 collection={base}
-                react={{ and: FILTERS.filter((e) => e !== "QUERYBUILDER") }}
+                react={{ and: filters.filter((e) => e !== "QUERYBUILDER") }}
                 fields={queryBuilderField}
               />
             )}
@@ -95,7 +103,7 @@ export default React.memo(({ match, location, searchState, context }) => {
                 <Text fontWeight="700" color="grey.800" mt={4} mb={4} textStyle="rf-text">
                   FILTRER
                 </Text>
-                {facetDefinition
+                {facetDefinition(context)
                   .filter(
                     ({ roles, showCatalogEligibleOnly }) =>
                       (!showCatalogEligibleOnly || isCatalogueGeneral) && (!roles || hasOneOfRoles(auth, roles))
@@ -109,7 +117,7 @@ export default React.memo(({ match, location, searchState, context }) => {
                         title={fd.title}
                         filterLabel={fd.filterLabel}
                         selectAllLabel={fd.selectAllLabel}
-                        filters={FILTERS}
+                        filters={filters}
                         sortBy={fd.sortBy}
                       />
                     );
@@ -161,7 +169,7 @@ export default React.memo(({ match, location, searchState, context }) => {
                           {auth?.sub !== "anonymous" && (
                             <ExportButton
                               index={base}
-                              filters={FILTERS}
+                              filters={filters}
                               columns={columnsDefinition
                                 .filter((def) => !def.debug)
                                 .map((def) => ({
@@ -179,7 +187,7 @@ export default React.memo(({ match, location, searchState, context }) => {
                         </div>
                       );
                     }}
-                    react={{ and: FILTERS }}
+                    react={{ and: filters }}
                   />
                 </Box>
               </div>

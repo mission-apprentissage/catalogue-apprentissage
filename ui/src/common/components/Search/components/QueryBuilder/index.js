@@ -16,6 +16,7 @@ function QueryBuilder({
   autoComplete,
   collection,
   lang,
+  context,
 }) {
   let history = useHistory();
 
@@ -37,7 +38,7 @@ function QueryBuilder({
     onQuery(queries);
     const obj = JSON.stringify(rules);
     const str = encodeURIComponent(obj);
-    history.push(`?qb=${str}`);
+    history.push(`?qb-${context}=${str}`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(rules)]);
 
@@ -78,26 +79,28 @@ function QueryBuilder({
   );
 }
 
-export default ({ react, fields, collection, lang = "en" }) => {
+export default ({ react, fields, collection, lang = "en", context }) => {
   return (
     <ReactiveComponent
-      componentId="QUERYBUILDER"
+      componentId={`QUERYBUILDER-${context}`}
       react={react}
       URLParams={true}
-      value="qb"
-      render={(data) => <SubComponent collection={collection} fields={fields} {...data} lang={lang} />}
+      value={`qb-${context}`}
+      render={(data) => (
+        <SubComponent collection={collection} fields={fields} {...data} lang={lang} context={context} />
+      )}
     />
   );
 };
 
-const SubComponent = ({ setQuery, fields, collection, lang }) => {
+const SubComponent = ({ setQuery, fields, collection, lang, context }) => {
   const [initialValue, setInitialValue] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setQuery({ query: { match_all: {} }, value: "" });
     let s = new URLSearchParams(window.location.search);
-    s = s.get("qb");
+    s = s.get(`qb-${context}`);
     if (s) {
       setInitialValue(JSON.parse(s));
     }
@@ -111,6 +114,7 @@ const SubComponent = ({ setQuery, fields, collection, lang }) => {
   return (
     <div>
       <QueryBuilder
+        context={context}
         collection={collection}
         initialValue={initialValue}
         fields={fields}
