@@ -1,6 +1,13 @@
 import { escapeDiacritics } from "../../utils/downloadUtils";
 
-const FILTERS = ["QUERYBUILDER", "SEARCH-organismes", "num_departement", "nom_academie", "tags", "published"];
+const FILTERS = (context) => [
+  `QUERYBUILDER-${context}`,
+  `SEARCH-${context}`,
+  `num_departement-${context}`,
+  `nom_academie-${context}`,
+  `tags-${context}`,
+  "published",
+];
 
 const columnsDefinition = [
   {
@@ -275,9 +282,9 @@ const queryBuilderField = [
   { text: "Uai", value: "uai.keyword" },
 ];
 
-const facetDefinition = [
+const facetDefinition = (context) => [
   {
-    componentId: "nom_academie",
+    componentId: `nom_academie-${context}`,
     dataField: "nom_academie.keyword",
     title: "Académie",
     filterLabel: "Académie",
@@ -285,7 +292,7 @@ const facetDefinition = [
     sortBy: "asc",
   },
   {
-    componentId: "num_departement",
+    componentId: `num_departement-${context}`,
     dataField: "num_departement.keyword",
     title: "Département",
     filterLabel: "Département",
@@ -293,7 +300,7 @@ const facetDefinition = [
     sortBy: "asc",
   },
   {
-    componentId: "tags",
+    componentId: `tags-${context}`,
     dataField: "tags.keyword",
     title: "Année(s)",
     filterLabel: "Année(s)",

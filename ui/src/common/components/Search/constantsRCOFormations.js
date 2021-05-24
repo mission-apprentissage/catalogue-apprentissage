@@ -1,22 +1,21 @@
 import { escapeDiacritics } from "../../utils/downloadUtils";
 
-const FILTERS = [
-  "QUERYBUILDER",
-  "SEARCH-catalogue_general",
-  "SEARCH-catalogue_non_eligible",
+const FILTERS = (context) => [
+  `QUERYBUILDER-${context}`,
+  `SEARCH-${context}`,
   "etablissement_formateur_siret",
   "etablissement_gestionnaire_siret",
   "num_academie",
-  "niveau",
+  `niveau-${context}`,
   "etablissement_gestionnaire_siren",
   "etablissement_reference_type",
   "etablissement_reference_conventionne",
   "etablissement_reference_declare_prefecture",
   "etablissement_reference_datadock",
   "source",
-  "cfd",
-  "num_departement",
-  "nom_academie",
+  `cfd-${context}`,
+  `num_departement-${context}`,
+  `nom_academie-${context}`,
   "etablissement_gestionnaire_num_academie",
   "uai_formation",
   "code_postal",
@@ -30,13 +29,13 @@ const FILTERS = [
   "rncp_eligible_apprentissage",
   "rncp_etablissement_gestionnaire_habilite",
   "rome_codes",
-  "rncp_code",
+  `rncp_code-${context}`,
   "mef_10_code",
-  "parcoursup_statut",
-  "affelnet_statut",
+  `parcoursup_statut-${context}`,
+  `affelnet_statut-${context}`,
   "diplome",
-  "opcos",
-  "info_opcos_intitule",
+  `opcos-${context}`,
+  `info_opcos_intitule-${context}`,
 ];
 
 const columnsDefinition = [
@@ -436,9 +435,9 @@ const queryBuilderField = [
   // { text: "Affelnet à charger", value: "affelnet_a_charger" },
 ];
 
-const facetDefinition = [
+const facetDefinition = (context) => [
   {
-    componentId: "nom_academie",
+    componentId: `nom_academie-${context}`,
     dataField: "nom_academie.keyword",
     title: "Académie",
     filterLabel: "Académie",
@@ -446,7 +445,7 @@ const facetDefinition = [
     sortBy: "asc",
   },
   {
-    componentId: "parcoursup_statut",
+    componentId: `parcoursup_statut-${context}`,
     dataField: "parcoursup_statut.keyword",
     title: "Statut Parcoursup",
     filterLabel: "Statut Parcoursup",
@@ -456,7 +455,7 @@ const facetDefinition = [
     showCatalogEligibleOnly: true,
   },
   {
-    componentId: "affelnet_statut",
+    componentId: `affelnet_statut-${context}`,
     dataField: "affelnet_statut.keyword",
     title: "Statut Affelnet",
     filterLabel: "Statut Affelnet",
@@ -466,7 +465,7 @@ const facetDefinition = [
     showCatalogEligibleOnly: true,
   },
   {
-    componentId: "num_departement",
+    componentId: `num_departement-${context}`,
     dataField: "num_departement.keyword",
     title: "Département",
     filterLabel: "Département",
@@ -475,7 +474,7 @@ const facetDefinition = [
   },
 
   {
-    componentId: "cfd",
+    componentId: `cfd-${context}`,
     dataField: "cfd.keyword",
     title: "Code diplôme",
     filterLabel: "Code diplôme",
@@ -484,7 +483,7 @@ const facetDefinition = [
   },
 
   {
-    componentId: "niveau",
+    componentId: `niveau-${context}`,
     dataField: "niveau.keyword",
     title: "Niveau de formation",
     filterLabel: "Niveau de formation",
@@ -493,7 +492,7 @@ const facetDefinition = [
   },
 
   {
-    componentId: "rncp_code",
+    componentId: `rncp_code-${context}`,
     dataField: "rncp_code.keyword",
     title: "Code RNCP",
     filterLabel: "Code RNCP",
@@ -502,7 +501,7 @@ const facetDefinition = [
   },
 
   {
-    componentId: "opcos",
+    componentId: `opcos-${context}`,
     dataField: "opcos.keyword",
     title: "OPCOs",
     filterLabel: "OPCOs",
@@ -510,7 +509,7 @@ const facetDefinition = [
     sortBy: "asc",
   },
   {
-    componentId: "info_opcos_intitule",
+    componentId: `info_opcos_intitule-${context}`,
     dataField: "info_opcos_intitule.keyword",
     title: "Statut OPCOs",
     filterLabel: "Statut OPCOs",
