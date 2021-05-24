@@ -1,19 +1,17 @@
 import React from "react";
 import {
-  Container,
   Box,
-  Heading,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
-  Tabs,
+  Container,
+  Heading,
+  Spinner,
   Tab,
   TabList,
-  TabPanels,
   TabPanel,
-  Stack,
-  Switch,
-  Spinner,
+  TabPanels,
+  Tabs,
 } from "@chakra-ui/react";
 import Layout from "../layout/Layout";
 import { NavLink } from "react-router-dom";
@@ -43,13 +41,13 @@ export default (props) => {
           </Heading>
           {!searchState.loaded && <Spinner />}
           {searchState.loaded && (
-            <Tabs variant="searchStyle" mt={5}>
+            <Tabs variant="search" mt={5}>
               <TabList bg="white">
                 <Tab>Catalogue général ({searchState.countCatalogueGeneral.toLocaleString("fr-FR")})</Tab>
                 <Tab mx={2}>
                   Catalogue non-éligible ({searchState.countCatalogueNonEligible.toLocaleString("fr-FR")})
                 </Tab>
-                <Tab mx={2}>Guide reglementaire</Tab>
+                <Tab mx={2}>Guide réglementaire</Tab>
               </TabList>
               <TabPanels>
                 <TabPanel>

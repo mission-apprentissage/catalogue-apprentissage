@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import { ReactiveBase, ReactiveList, DataSearch, SelectedFilters } from "@appbaseio/reactivesearch";
-import { Container, Flex, Box, Heading, Text, Spinner, Switch, Stack } from "@chakra-ui/react";
+import { DataSearch, ReactiveBase, ReactiveList, SelectedFilters } from "@appbaseio/reactivesearch";
+import { Box, Container, Flex, Spinner, Switch, Text } from "@chakra-ui/react";
 import useAuth from "../../hooks/useAuth";
 import { hasOneOfRoles } from "../../utils/rolesUtils";
 import {
-  QueryBuilder,
-  CardListFormation,
   CardListEtablissements,
-  Facet,
+  CardListFormation,
   ExportButton,
+  Facet,
   HardFilters,
+  QueryBuilder,
 } from "./components";
 import constantsRcoFormations from "./constantsRCOFormations";
 import constantsEtablissements from "./constantsEtablissements";
@@ -50,12 +50,7 @@ export default React.memo(({ match, location, searchState, context }) => {
 
   return (
     <Box className="search-page">
-      <Stack align="center" direction="row">
-        <Switch size="sm" />
-        <Switch size="md" />
-        <Switch size="lg" />
-      </Stack>
-      <ReactiveBase url={`${endpoint}/es/search`} app={base} style={{ boxSizing: "content-box" }}>
+      <ReactiveBase url={`${endpoint}/es/search`} app={base}>
         <HardFilters filters={FILTERS} context={context} isBaseFormations={isBaseFormations} />
         <Box className="search" maxW="full">
           <Container maxW="full" px={0}>
@@ -75,17 +70,25 @@ export default React.memo(({ match, location, searchState, context }) => {
                 />
               </Box>
             )}
-            <Box mt={4} mb={4}>
-              <Switch
-                color="bluefrance"
-                onChange={handleSearchSwitchChange}
-                checked={mode !== "simple"}
-                boxSizing="content-box"
-              />
-              <Text as="span" textStyle="sm">
+            <Box
+              my={4}
+              css={{
+                "*, *:after, *:before": { boxSizing: "content-box !important" },
+              }}
+            >
+              <Switch color="bluefrance" onChange={handleSearchSwitchChange} checked={mode !== "simple"} />
+              <Text as="span" textStyle="sm" px={2}>
                 Recherche avancée
               </Text>
             </Box>
+            {mode !== "simple" && (
+              <QueryBuilder
+                lang="fr"
+                collection={base}
+                react={{ and: FILTERS.filter((e) => e !== "QUERYBUILDER") }}
+                fields={queryBuilderField}
+              />
+            )}
             <Box borderTop="1px solid #E7E7E7" w="full" />
             <Flex className="search-row" flexDirection={["column", "row"]}>
               <Box className="search-sidebar">
@@ -113,14 +116,6 @@ export default React.memo(({ match, location, searchState, context }) => {
                   })}
               </Box>
               <div className="search-results">
-                {mode !== "simple" && (
-                  <QueryBuilder
-                    lang="fr"
-                    collection={base}
-                    react={{ and: FILTERS.filter((e) => e !== "QUERYBUILDER") }}
-                    fields={queryBuilderField}
-                  />
-                )}
                 <Box pt={2}>
                   <SelectedFilters showClearAll={false} innerClass={{ button: "selected-filters-button" }} />
                 </Box>

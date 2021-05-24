@@ -40,7 +40,7 @@ export default (props) => {
           </Heading>
           {!searchState.loaded && <Spinner />}
           {searchState.loaded && (
-            <Tabs variant="searchStyle" mt={5}>
+            <Tabs variant="search" mt={5}>
               <TabList bg="white">
                 <Tab>Liste</Tab>
                 <Tab mx={2}>Guide reglementaire</Tab>

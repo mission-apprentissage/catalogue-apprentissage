@@ -24,7 +24,7 @@ const Tabs = {
         _selected: { color: "grey.800", borderBottom: "4px solid", borderColor: "grey.750" },
       },
     },
-    searchStyle: {
+    search: {
       tablist: {
         px: [0, 0],
         borderBottom: "1px solid #E7E7E7",
@@ -37,7 +37,6 @@ const Tabs = {
         h: "auto",
       },
       tab: {
-        _focus: { boxShadow: "none", outlineWidth: 0 },
         bg: "#EEF1F8",
         color: "#383838",
         fontWeight: "700",
