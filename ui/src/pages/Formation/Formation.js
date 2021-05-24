@@ -7,6 +7,7 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   Button,
+  Center,
   Container,
   Flex,
   Grid,
@@ -831,9 +832,9 @@ export default ({ match }) => {
       <Box w="100%" py={[1, 8]} px={[1, 24]}>
         <Container maxW="xl">
           {!formation && (
-            <Box align="center" p={2}>
+            <Center h="70vh">
               <Spinner />
-            </Box>
+            </Center>
           )}
 
           {formation && (
