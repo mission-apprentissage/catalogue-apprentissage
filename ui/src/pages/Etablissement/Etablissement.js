@@ -218,12 +218,7 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
             <Box textStyle="rf-text">
               <Text mb={4}>
                 {hasRightToEdit && !edition && (
-                  <Button
-                    onClick={onEdit}
-                    variant="unstyled"
-                    _focus={{ boxShadow: "none", outlineWidth: 0 }}
-                    aria-label="Modifier l'UAI"
-                  >
+                  <Button onClick={onEdit} variant="unstyled" aria-label="Modifier l'UAI">
                     <Edit2Fill w="16px" h="16px" color="bluefrance" mr="8px" mb="7px" />
                   </Button>
                 )}

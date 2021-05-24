@@ -2,11 +2,14 @@ const commonButtonStyle = {
   borderRadius: 0,
   textTransform: "none",
   fontWeight: 400,
-  _focus: { boxShadow: "none", outlineWidth: 0 },
+  _focus: { boxShadow: "0 0 0 3px #000091", outlineColor: "bluefrance" },
 };
 
 const Button = {
   variants: {
+    unstyled: {
+      ...commonButtonStyle,
+    },
     secondary: {
       ...commonButtonStyle,
       bg: "white",

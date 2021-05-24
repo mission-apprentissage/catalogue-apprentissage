@@ -17,6 +17,7 @@ import {
   MenuItem,
   MenuList,
   Text,
+  Button,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt, faSync, faUpload, faUsers } from "@fortawesome/free-solid-svg-icons";
@@ -74,7 +75,7 @@ const Header = () => {
           )}
           {auth?.sub !== "anonymous" && (
             <Menu placement="bottom">
-              <MenuButton as={Link} _hover={{ textDecoration: "none" }}>
+              <MenuButton as={Button} variant="unstyled">
                 <Flex>
                   <Avatar bg="bluefrance" size="sm" w="13px" h="13px" mt="0.4rem" />
                   <Box display={["none", "block"]} ml={2}>

@@ -268,12 +268,7 @@ export default () => {
           <Stack spacing={2}>
             <Accordion bg="white" mb={12} allowToggle>
               <AccordionItem>
-                <AccordionButton
-                  bg="bluefrance"
-                  color="white"
-                  _hover={{ bg: "blue.700" }}
-                  _focus={{ boxShadow: "none", outlineWidth: 0 }}
-                >
+                <AccordionButton bg="bluefrance" color="white" _hover={{ bg: "blue.700" }}>
                   <Box flex="1" textAlign="left" fontSize="gamma">
                     Créer un utilisateur
                   </Box>
@@ -289,12 +284,7 @@ export default () => {
               return (
                 <Accordion bg="white" key={i} allowToggle>
                   <AccordionItem>
-                    <AccordionButton
-                      _expanded={{ bg: "grey.200" }}
-                      border={"1px solid"}
-                      borderColor={"bluefrance"}
-                      _focus={{ boxShadow: "none", outlineWidth: 0 }}
-                    >
+                    <AccordionButton _expanded={{ bg: "grey.200" }} border={"1px solid"} borderColor={"bluefrance"}>
                       <Box flex="1" textAlign="left" fontSize="gamma">
                         {userAttr.username}
                       </Box>

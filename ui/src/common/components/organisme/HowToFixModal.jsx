@@ -26,7 +26,6 @@ const HowToFixModal = ({ isOpen, onClose }) => {
           display={"flex"}
           alignSelf={"flex-end"}
           color="bluefrance"
-          _focus={{ boxShadow: "none", outlineWidth: 0 }}
           fontSize={"epsilon"}
           onClick={onClose}
           variant="unstyled"
