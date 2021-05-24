@@ -81,7 +81,7 @@ const Header = () => {
                   <Box display={["none", "block"]} ml={2}>
                     <Text color="bluefrance" textStyle="sm">
                       {auth.sub}{" "}
-                      <Text color="grey.500" as="span">
+                      <Text color="grey.600" as="span">
                         ({isUserAdmin(auth) ? "admin" : "Utilisateur"})
                       </Text>
                     </Text>
