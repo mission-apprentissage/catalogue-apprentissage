@@ -332,7 +332,7 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
         </GridItem>
       </Grid>
       <Box mt={8} mb={16}>
-        <Link textStyle="rf-text" color="bluefrance" flex="1" onClick={onOpen}>
+        <Link as={"Button"} textStyle="rf-text" color="bluefrance" flex="1" onClick={onOpen}>
           <ArrowRightLine w="9px" h="9px" mr={2} /> Demander des corrections sur les données sur votre organisme
         </Link>
       </Box>
