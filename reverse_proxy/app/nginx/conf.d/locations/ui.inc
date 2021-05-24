@@ -1,4 +1,4 @@
-location / { 
+location / {
     limit_req               zone=flood burst=100 nodelay;
     proxy_pass              http://ui:3000;
 
@@ -9,5 +9,7 @@ location / {
     proxy_set_header        X-Real-IP $remote_addr;
     proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header        X-Forwarded-Host $server_name;
-    proxy_set_header        X-Forwarded-Proto $scheme; 
+    proxy_set_header        X-Forwarded-Proto $scheme;
+
+    expires                 $ui_expires;
 }
