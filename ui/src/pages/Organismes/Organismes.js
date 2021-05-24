@@ -12,6 +12,7 @@ import {
   TabPanels,
   TabPanel,
   Spinner,
+  Center,
 } from "@chakra-ui/react";
 import Layout from "../layout/Layout";
 import { NavLink } from "react-router-dom";
@@ -39,7 +40,11 @@ export default (props) => {
           <Heading textStyle="h2" color="grey.800" mt={5}>
             Liste des organismes
           </Heading>
-          {!searchState.loaded && <Spinner />}
+          {!searchState.loaded && (
+            <Center h="70vh">
+              <Spinner />
+            </Center>
+          )}
           {searchState.loaded && (
             <Tabs variant="search" mt={5}>
               <TabList bg="white">
