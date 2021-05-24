@@ -5,6 +5,7 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  Heading,
   Tabs,
   Tab,
   TabList,
@@ -17,6 +18,7 @@ import { NavLink } from "react-router-dom";
 import { ArrowDropRightLine } from "../../theme/components/icons";
 import Search from "../../common/components/Search/Search";
 import { useSearch } from "../../common/hooks/useSearch";
+import { HowToReglement } from "../../common/components/HowToReglement/HowToReglement";
 
 export default (props) => {
   const searchState = useSearch("organismes");
@@ -34,18 +36,23 @@ export default (props) => {
               <BreadcrumbLink>Liste des établissements</BreadcrumbLink>
             </BreadcrumbItem>
           </Breadcrumb>
+          <Heading textStyle="h2" color="grey.800" mt={5}>
+            Liste des organismes
+          </Heading>
           {!searchState.loaded && <Spinner />}
           {searchState.loaded && (
-            <Tabs>
-              <TabList>
+            <Tabs variant="search" mt={5}>
+              <TabList bg="white">
                 <Tab>Liste</Tab>
-                <Tab>Guide reglementaire</Tab>
+                <Tab mx={2}>Guide réglementaire</Tab>
               </TabList>
               <TabPanels>
-                <TabPanel h="100%">
+                <TabPanel>
                   <Search {...props} searchState={searchState} context="organismes" />
                 </TabPanel>
-                <TabPanel h="100%">Guide reglementaire</TabPanel>
+                <TabPanel>
+                  <HowToReglement />
+                </TabPanel>
               </TabPanels>
             </Tabs>
           )}

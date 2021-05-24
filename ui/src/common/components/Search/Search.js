@@ -1,16 +1,15 @@
 import React, { useState } from "react";
-import { ReactiveBase, ReactiveList, DataSearch, SelectedFilters } from "@appbaseio/reactivesearch";
-import { Container, Flex, Box, Heading, Text, Spinner } from "@chakra-ui/react";
-import Switch from "react-switch";
+import { DataSearch, ReactiveBase, ReactiveList, SelectedFilters } from "@appbaseio/reactivesearch";
+import { Box, Container, Flex, Spinner, Switch, Text } from "@chakra-ui/react";
 import useAuth from "../../hooks/useAuth";
 import { hasOneOfRoles } from "../../utils/rolesUtils";
 import {
-  QueryBuilder,
-  CardListFormation,
   CardListEtablissements,
-  Facet,
+  CardListFormation,
   ExportButton,
+  Facet,
   HardFilters,
+  QueryBuilder,
 } from "./components";
 import constantsRcoFormations from "./constantsRCOFormations";
 import constantsEtablissements from "./constantsEtablissements";
@@ -43,31 +42,59 @@ export default React.memo(({ match, location, searchState, context }) => {
 
   if (!loaded) {
     return (
-      <Box className="search-page" h="full">
+      <Box h="full">
         <Spinner />
       </Box>
     );
   }
 
   return (
-    <Box className="search-page" h="full">
+    <Box className="search-page">
       <ReactiveBase url={`${endpoint}/es/search`} app={base}>
         <HardFilters filters={FILTERS} context={context} isBaseFormations={isBaseFormations} />
-        <div className="search">
-          <Container maxW="full">
-            <label className="react-switch" style={{ right: "70px" }}>
-              <Switch onChange={handleSearchSwitchChange} checked={mode !== "simple"} />
-              <Text as="span" textStyle="sm">
+        <Box className="search" maxW="full">
+          <Container maxW="full" px={0}>
+            {mode === "simple" && (
+              <Box className={`search-container search-container-${mode}`}>
+                <DataSearch
+                  componentId="SEARCH"
+                  placeholder={dataSearch.placeholder}
+                  fieldWeights={dataSearch.fieldWeights}
+                  dataField={dataSearch.dataField}
+                  autosuggest={true}
+                  queryFormat="and"
+                  size={20}
+                  showFilter={true}
+                  filterLabel="recherche"
+                  react={{ and: FILTERS.filter((e) => e !== "SEARCH") }}
+                />
+              </Box>
+            )}
+            <Box
+              my={4}
+              css={{
+                "*, *:after, *:before": { boxSizing: "content-box !important" },
+              }}
+            >
+              <Switch color="bluefrance" onChange={handleSearchSwitchChange} checked={mode !== "simple"} />
+              <Text as="span" textStyle="sm" px={2}>
                 Recherche avancée
               </Text>
-            </label>
-            <Heading as="h1" fontSize="beta" className="title">
-              {isBaseFormations
-                ? "Catalogue des formations en apprentissage 2021"
-                : "Liste des établissements de formation"}
-            </Heading>
+            </Box>
+            {mode !== "simple" && (
+              <QueryBuilder
+                lang="fr"
+                collection={base}
+                react={{ and: FILTERS.filter((e) => e !== "QUERYBUILDER") }}
+                fields={queryBuilderField}
+              />
+            )}
+            <Box borderTop="1px solid #E7E7E7" w="full" />
             <Flex className="search-row" flexDirection={["column", "row"]}>
-              <div className={`search-sidebar`}>
+              <Box className="search-sidebar">
+                <Text fontWeight="700" color="grey.800" mt={4} mb={4} textStyle="rf-text">
+                  FILTRER
+                </Text>
                 {facetDefinition
                   .filter(
                     ({ roles, showCatalogEligibleOnly }) =>
@@ -87,36 +114,12 @@ export default React.memo(({ match, location, searchState, context }) => {
                       />
                     );
                   })}
-              </div>
+              </Box>
               <div className="search-results">
-                {mode !== "simple" && (
-                  <QueryBuilder
-                    lang="fr"
-                    collection={base}
-                    react={{ and: FILTERS.filter((e) => e !== "QUERYBUILDER") }}
-                    fields={queryBuilderField}
-                  />
-                )}
-                {mode === "simple" && (
-                  <div className={`search-container search-container-${mode}`}>
-                    <DataSearch
-                      componentId="SEARCH"
-                      placeholder={dataSearch.placeholder}
-                      fieldWeights={dataSearch.fieldWeights}
-                      dataField={dataSearch.dataField}
-                      autosuggest={true}
-                      queryFormat="and"
-                      size={20}
-                      showFilter={true}
-                      filterLabel="recherche"
-                      react={{ and: FILTERS.filter((e) => e !== "SEARCH") }}
-                    />
-                  </div>
-                )}
                 <Box pt={2}>
                   <SelectedFilters showClearAll={false} innerClass={{ button: "selected-filters-button" }} />
                 </Box>
-                <div className={`result-view`}>
+                <Box className={`result-view`}>
                   <ReactiveList
                     componentId="result"
                     title="Results"
@@ -124,7 +127,7 @@ export default React.memo(({ match, location, searchState, context }) => {
                     loader="Chargement des résultats.."
                     size={8}
                     pagination={true}
-                    showEndPage={false}
+                    showEndPage={true}
                     showResultStats={true}
                     sortBy="asc"
                     defaultQuery={() => {
@@ -178,11 +181,11 @@ export default React.memo(({ match, location, searchState, context }) => {
                     }}
                     react={{ and: FILTERS }}
                   />
-                </div>
+                </Box>
               </div>
             </Flex>
           </Container>
-        </div>
+        </Box>
       </ReactiveBase>
     </Box>
   );
