@@ -63,7 +63,7 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
       index: 1,
     },
   ];
-  const linkFormations = `/recherche/formations-2021?qb=${encodeURIComponent(
+  const linkFormations = `/recherche/formations-2021?qb-catalogue_general=${encodeURIComponent(
     JSON.stringify(query)
   )}&defaultMode="advanced"`;
 
