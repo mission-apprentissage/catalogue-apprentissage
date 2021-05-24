@@ -332,9 +332,9 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
         </GridItem>
       </Grid>
       <Box mt={8} mb={16}>
-        <Link as={"Button"} textStyle="rf-text" color="bluefrance" flex="1" onClick={onOpen}>
+        <Button variant={"unstyled"} textStyle="rf-text" color="bluefrance" flex="1" onClick={onOpen}>
           <ArrowRightLine w="9px" h="9px" mr={2} /> Demander des corrections sur les données sur votre organisme
-        </Link>
+        </Button>
       </Box>
       <HowToFixModal isOpen={isOpen} onClose={onClose} />
     </>

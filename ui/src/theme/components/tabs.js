@@ -24,6 +24,34 @@ const Tabs = {
         _selected: { color: "grey.800", borderBottom: "4px solid", borderColor: "grey.750" },
       },
     },
+    search: {
+      tablist: {
+        px: [0, 0],
+        borderBottom: "1px solid #E7E7E7",
+        bg: "secondaryBackground",
+        color: "grey.750",
+      },
+      tabpanel: {
+        px: [0, 0],
+        color: "grey.100",
+        h: "auto",
+      },
+      tab: {
+        bg: "#EEF1F8",
+        color: "#383838",
+        fontWeight: "700",
+        textStyle: "sm",
+        _selected: {
+          bg: "white",
+          color: "bluefrance",
+          borderTop: "2px solid #000091",
+          borderLeft: "1px solid #CECECE",
+          borderRight: "1px solid #CECECE",
+          outline: "1px solid white",
+          zIndex: "1",
+        },
+      },
+    },
   },
 };
 
