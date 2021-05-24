@@ -9,6 +9,7 @@ import {
   Container,
   Grid,
   GridItem,
+  Heading,
   Input,
   Link,
   Modal,
@@ -18,7 +19,6 @@ import {
   ModalOverlay,
   Spinner,
   Text,
-  Heading,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
@@ -31,7 +31,7 @@ import { hasOneOfRoles } from "../../common/utils/rolesUtils";
 import { NavLink } from "react-router-dom";
 import InfoTooltip from "../../common/components/InfoTooltip";
 import helpText from "../../locales/helpText.json";
-import { ArrowDropRightLine, ExternalLinkLine, ArrowRightLine, Edit2Fill } from "../../theme/components/icons/";
+import { ArrowDropRightLine, ArrowRightLine, Edit2Fill, ExternalLinkLine } from "../../theme/components/icons/";
 import { HowToFixModal } from "../../common/components/organisme/HowToFixModal";
 
 const sleep = (m) => new Promise((r) => setTimeout(r, m));
@@ -148,10 +148,47 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
               <Text mb={4}>
                 Adresse :{" "}
                 <Text as="span" variant="highlight">
-                  {" "}
-                  {etablissement.adresse}{" "}
+                  {etablissement.numero_voie} {etablissement.type_voie} {etablissement.nom_voie}
                 </Text>{" "}
                 <InfoTooltip description={helpText.etablissement.adresse} />
+              </Text>
+              <Text mb={4}>
+                Complément d'adresse :{" "}
+                <Text as="span" variant="highlight">
+                  {etablissement.complement_adresse ?? "N/A"}
+                </Text>{" "}
+                <InfoTooltip description={helpText.etablissement.complement_adresse} />
+              </Text>
+              <Text mb={4}>
+                Code postal :{" "}
+                <Text as="span" variant="highlight">
+                  {" "}
+                  {etablissement.code_postal}{" "}
+                </Text>{" "}
+                <InfoTooltip description={helpText.etablissement.code_postal} />
+              </Text>
+              <Text mb={4}>
+                Commune :{" "}
+                <Text as="span" variant="highlight">
+                  {" "}
+                  {etablissement.localite}{" "}
+                </Text>{" "}
+                <InfoTooltip description={helpText.etablissement.localite} />
+              </Text>
+              <Text mb={4}>
+                Code commune INSEE :{" "}
+                <Text as="span" variant="highlight">
+                  {" "}
+                  {etablissement.code_insee_localite}{" "}
+                </Text>{" "}
+                <InfoTooltip description={helpText.etablissement.code_insee_localite} />
+              </Text>
+              <Text mb={4}>
+                Département :{" "}
+                <Text as="span" variant="highlight">
+                  {" "}
+                  {etablissement.nom_departement}{" "}
+                </Text>
               </Text>
             </Box>
           </Box>
@@ -180,19 +217,17 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
 
             <Box textStyle="rf-text">
               <Text mb={4}>
-                Type :{" "}
-                <Text as="span" variant="highlight">
-                  {etablissement.computed_type}
-                </Text>{" "}
-                <InfoTooltip description={helpText.etablissement.type} />
-              </Text>
-              <Text mb={4}>
                 {hasRightToEdit && !edition && (
-                  <Button onClick={onEdit} variant="unstyled" _focus={{ boxShadow: "none", outlineWidth: 0 }}>
+                  <Button
+                    onClick={onEdit}
+                    variant="unstyled"
+                    _focus={{ boxShadow: "none", outlineWidth: 0 }}
+                    aria-label="Modifier l'UAI"
+                  >
                     <Edit2Fill w="16px" h="16px" color="bluefrance" mr="8px" mb="7px" />
                   </Button>
                 )}
-                UAI :{" "}
+                UAI rattaché au SIRET :{" "}
                 {!edition && (
                   <>
                     <Text as="span" variant="highlight">
@@ -223,6 +258,21 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
                 )}
               </Text>
               <Text mb={4}>
+                Type :{" "}
+                <Text as="span" variant="highlight">
+                  {etablissement.computed_type}
+                </Text>{" "}
+                <InfoTooltip description={helpText.etablissement.type} />
+              </Text>
+              <Text mb={4}>
+                Académie :{" "}
+                <Text as="span" variant="highlight">
+                  {etablissement.nom_academie} ({etablissement.num_academie})
+                </Text>{" "}
+                <InfoTooltip description={helpText.etablissement.academie} />
+              </Text>
+
+              <Text mb={4}>
                 Conventionné :{" "}
                 <Text as="span" variant="highlight">
                   {" "}
@@ -241,29 +291,6 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
                   {etablissement.computed_info_datadock}{" "}
                 </Text>{" "}
                 <InfoTooltip description={helpText.etablissement.datadock} />
-              </Text>
-              <Text mb={4}>
-                Code postal :{" "}
-                <Text as="span" variant="highlight">
-                  {" "}
-                  {etablissement.code_postal}{" "}
-                </Text>{" "}
-                <InfoTooltip description={helpText.etablissement.code_postal} />
-              </Text>
-              <Text mb={4}>
-                Code commune :{" "}
-                <Text as="span" variant="highlight">
-                  {" "}
-                  {etablissement.code_insee_localite}{" "}
-                </Text>{" "}
-                <InfoTooltip description={helpText.etablissement.code_insee_localite} />
-              </Text>
-              <Text mb={4}>
-                Académie :{" "}
-                <Text as="span" variant="highlight">
-                  {etablissement.nom_academie} ({etablissement.num_academie})
-                </Text>{" "}
-                <InfoTooltip description={helpText.etablissement.academie} />
               </Text>
             </Box>
 
@@ -309,12 +336,11 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
           </Container>
         </GridItem>
       </Grid>
-      <Box mt={8}>
+      <Box mt={8} mb={16}>
         <Link textStyle="rf-text" color="bluefrance" flex="1" onClick={onOpen}>
           <ArrowRightLine w="9px" h="9px" mr={2} /> Demander des corrections sur les données sur votre organisme
         </Link>
       </Box>
-      <Box h="300px" />
       <HowToFixModal isOpen={isOpen} onClose={onClose} />
     </>
   );

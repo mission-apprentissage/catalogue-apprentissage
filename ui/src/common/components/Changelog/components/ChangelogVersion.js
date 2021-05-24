@@ -10,11 +10,11 @@ const ChangelogVersion = ({ version, date, about, fixes, features, improvements 
   return (
     <div id={`v${slug}`} className="changelog-item js-changelog-item">
       <header className="changelog-header">
-        <p className="changelog-version">
+        <h2 className="changelog-version">
           <a href={`#v${slug}`}>v.{version}</a>
-        </p>
+        </h2>
         <h3 className="changelog-date">{date}</h3>
-        <h5 className="changelog-about" dangerouslySetInnerHTML={createMarkup(about)} />
+        <div className="changelog-about" dangerouslySetInnerHTML={createMarkup(about)} />
       </header>
       <div className="changelog-update-descriptions">
         {features &&
