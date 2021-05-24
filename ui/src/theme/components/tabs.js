@@ -12,7 +12,10 @@ const Tabs = {
       color: "grey.100",
       h: 1000,
     },
-    tab: { color: "grey.500", _focus: { boxShadow: "none", outlineWidth: 0 } },
+    tab: {
+      color: "grey.500",
+      _focus: { boxShadow: "0 0 0 3px #000091", outlineColor: "bluefrance" },
+    },
   },
   variants: {
     line: {
