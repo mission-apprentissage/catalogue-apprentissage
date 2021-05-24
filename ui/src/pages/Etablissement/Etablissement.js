@@ -6,6 +6,7 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   Button,
+  Center,
   Container,
   Grid,
   GridItem,
@@ -435,9 +436,9 @@ export default ({ match }) => {
         <Box>
           <Container maxW="xl">
             {!etablissement && (
-              <Box align="center" p={2}>
+              <Center h="70vh">
                 <Spinner />
-              </Box>
+              </Center>
             )}
             {etablissement && (
               <>
