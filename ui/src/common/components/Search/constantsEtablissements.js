@@ -1,6 +1,6 @@
 import { escapeDiacritics } from "../../utils/downloadUtils";
 
-const FILTERS = ["QUERYBUILDER", "SEARCH", "num_departement", "nom_academie", "tags", "published"];
+const FILTERS = ["QUERYBUILDER", "SEARCH-organismes", "num_departement", "nom_academie", "tags", "published"];
 
 const columnsDefinition = [
   {

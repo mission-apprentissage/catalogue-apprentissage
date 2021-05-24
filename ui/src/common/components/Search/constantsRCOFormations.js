@@ -2,7 +2,8 @@ import { escapeDiacritics } from "../../utils/downloadUtils";
 
 const FILTERS = [
   "QUERYBUILDER",
-  "SEARCH",
+  "SEARCH-catalogue_general",
+  "SEARCH-catalogue_non_eligible",
   "etablissement_formateur_siret",
   "etablissement_gestionnaire_siret",
   "num_academie",
