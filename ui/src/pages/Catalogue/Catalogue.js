@@ -18,6 +18,7 @@ import { NavLink } from "react-router-dom";
 import { ArrowDropRightLine } from "../../theme/components/icons";
 import Search from "../../common/components/Search/Search";
 import { useSearch } from "../../common/hooks/useSearch";
+import { HowToReglement } from "../../common/components/HowToReglement/HowToReglement";
 
 export default (props) => {
   const searchState = useSearch("catalogue");
@@ -56,7 +57,9 @@ export default (props) => {
                 <TabPanel>
                   <Search {...props} searchState={searchState} context="catalogue_non_eligible" />
                 </TabPanel>
-                <TabPanel>Guide reglementaire</TabPanel>
+                <TabPanel>
+                  <HowToReglement />
+                </TabPanel>
               </TabPanels>
             </Tabs>
           )}

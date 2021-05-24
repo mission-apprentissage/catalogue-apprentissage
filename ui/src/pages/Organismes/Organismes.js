@@ -18,6 +18,7 @@ import { NavLink } from "react-router-dom";
 import { ArrowDropRightLine } from "../../theme/components/icons";
 import Search from "../../common/components/Search/Search";
 import { useSearch } from "../../common/hooks/useSearch";
+import { HowToReglement } from "../../common/components/HowToReglement/HowToReglement";
 
 export default (props) => {
   const searchState = useSearch("organismes");
@@ -43,13 +44,15 @@ export default (props) => {
             <Tabs variant="search" mt={5}>
               <TabList bg="white">
                 <Tab>Liste</Tab>
-                <Tab mx={2}>Guide reglementaire</Tab>
+                <Tab mx={2}>Guide réglementaire</Tab>
               </TabList>
               <TabPanels>
                 <TabPanel>
                   <Search {...props} searchState={searchState} context="organismes" />
                 </TabPanel>
-                <TabPanel>Guide reglementaire</TabPanel>
+                <TabPanel>
+                  <HowToReglement />
+                </TabPanel>
               </TabPanels>
             </Tabs>
           )}
