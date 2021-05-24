@@ -73,6 +73,7 @@
   margin-top: -5px;
   margin-left: 3px;
   padding: 5px;
+  z-index: 1;
 }
 .search-page .react-autosuggest__suggestions-container--open ul {
   list-style-type: none;

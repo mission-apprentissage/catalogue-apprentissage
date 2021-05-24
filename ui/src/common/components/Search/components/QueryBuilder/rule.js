@@ -85,7 +85,7 @@ export default function Rule({ fields, operators, combinators, collection, ...pr
             }
             // arr.push({ query: { bool: { must: [{ range: { created_at: { gte: start_at.toISOString() } } }] } }, size: 0 });
             const suggestions = await esQuery([{ index: collection, type: "_doc" }, query]);
-            setSuggestions(suggestions.responses[0].aggregations[field].buckets.map((e) => e.key));
+            setSuggestions(suggestions?.responses?.[0]?.aggregations?.[field]?.buckets?.map((e) => e.key) ?? []);
           }}
           onSuggestionsClearRequested={() => setSuggestions([])}
           getSuggestionValue={(suggestion) => suggestion}
