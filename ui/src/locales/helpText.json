@@ -39,5 +39,29 @@
     "conventionne": "La donnée “Conventionné” provient de la DEPP, elle est déduite de l’UAI.",
     "declare_prefecture": "La donnée “Déclarée en préfecture” provient de la DGEFP.",
     "datadock": "La donnée “Certification qualité” provient soit d’une certification DATADOCK, soit d’une certification qualiopi."
+  },
+  "search": {
+    "affelnet_statut": {
+      "title": "Statut Affelnet : information concernant la publication de l’offre de formation dans le service Affelnet",
+      "hors périmètre": "offre et organisme de formation qui ne remplissent pas les conditions pour intégrer la service Affelnet",
+      "publié": "offre de formation identifiée comme ayant été publiée sur le service Affelnet l’année précédente et qui a fait l’objet d’un rapprochement automatique par la Mission apprentissage",
+      "non publié": "offre de formation qui a été non-publiée par un instructeur en académie",
+      "à publier (soumis à validation)": "offre ou organisme de formation qui remplissent les conditions pour intégrer le service Affelnet. Une décision du recteur statue sur l’intégration potentielle de ces offres dans le service Affelnet",
+      "à publier": "offre ou organisme de formation qui remplissent les conditions pour intégrer le service Affelnet. L’offre de formation peut faire l’objet d’une publication par un instructeur en académie",
+      "en attente de publication": "offre de formation qui sera intégrée automatiquement dans le service Affelnet via le module l’import"
+    },
+    "parcoursup_statut": {
+      "title": "Statut Parcoursup : information concernant la publication de l’offre de formation dans le plateforme Parcoursup",
+      "hors périmètre": "offre et organisme de formation qui ne remplissent pas les conditions pour intégrer la plateforme Parcoursup",
+      "publié": "offre de formation identifiée comme déjà publiée sur la plateforme Parcoursup et qui a fait l’objet d’un rapprochement automatique par la Mission apprentissage",
+      "non publié": "offre de formation qui a été non-publiée par un instructeur en académie",
+      "à publier (vérifier accès direct postbac)": "offre et organisme de formation qui remplissent les conditions pour intégrer le service Parcoursup. L’accessibilité de l’offre de formation aux bacheliers doit être vérifiée par un instructeur en académie",
+      "à publier (soumis à validation Recteur)": "offre et organisme de formation qui remplissent les conditions pour intégrer la plateforme Parcoursup. Une commission rectorale statue sur l’intégration potentielle de ces offres dans la plateforme Parcoursup",
+      "à publier": "offre et organisme de formation qui remplissent les conditions pour intégrer la plateforme Parcoursup. L’offre de formation peut faire l’objet d’une publication par un instructeur en académie",
+      "en attente de publication": "offre de formation qui pourrait être intégrée automatiquement dans la plateforme Parcoursup via le module l’import"
+    },
+    "tags": {
+      "title": "périodes d’inscriptions en formation ouvertes sur l’organisme"
+    }
   }
 }

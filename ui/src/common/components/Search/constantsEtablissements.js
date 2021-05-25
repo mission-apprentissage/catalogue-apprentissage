@@ -1,4 +1,5 @@
 import { escapeDiacritics } from "../../utils/downloadUtils";
+import helpText from "../../../locales/helpText.json";
 
 const FILTERS = (context) => [
   `QUERYBUILDER-${context}`,
@@ -306,6 +307,7 @@ const facetDefinition = (context) => [
     filterLabel: "Année(s)",
     selectAllLabel: "Toutes",
     sortBy: "asc",
+    helpTextSection: helpText.search.tags,
   },
 ];
 
