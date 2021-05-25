@@ -15,7 +15,7 @@ const Layout = (props) => {
   let defaultIndex = [];
 
   if (hasOneOfRoles(auth, ["instructeur"])) {
-    if (componentId === "nom_academie") {
+    if (componentId.startsWith("nom_academie")) {
       const userAcademies = auth?.academie?.split(",") || [];
       defaultIndex = [0];
       defaultValue = compact(
@@ -23,7 +23,7 @@ const Layout = (props) => {
           return academies[ua]?.nom_academie;
         })
       );
-    } else if (componentId === "affelnet_statut" || componentId === "parcoursup_statut") {
+    } else if (componentId.startsWith("affelnet_statut") || componentId.startsWith("parcoursup_statut")) {
       defaultIndex = [0];
       //defaultValue = ["à publier"];
     }
