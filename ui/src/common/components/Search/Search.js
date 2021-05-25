@@ -114,6 +114,7 @@ export default React.memo(({ match, location, searchState, context }) => {
                         selectAllLabel={fd.selectAllLabel}
                         filters={filters}
                         sortBy={fd.sortBy}
+                        helpTextSection={fd.helpTextSection}
                       />
                     );
                   })}

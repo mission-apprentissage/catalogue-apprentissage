@@ -1,21 +1,21 @@
 import React from "react";
 import { MultiList } from "@appbaseio/reactivesearch";
-import { Accordion, AccordionButton, AccordionItem, AccordionPanel, Box } from "@chakra-ui/react";
+import { Accordion, AccordionButton, AccordionItem, AccordionPanel, Box, Flex, Text } from "@chakra-ui/react";
 import useAuth from "../../../../hooks/useAuth";
 import { hasOneOfRoles } from "../../../../utils/rolesUtils";
 import { compact } from "lodash";
 import { academies } from "../../../../../constants/academies";
 import "./facet.css";
 import { AddFill, SubtractLine } from "../../../../../theme/components/icons";
+import InfoTooltip from "../../../InfoTooltip";
 
-const Layout = (props) => {
-  const { componentId, dataField, filterLabel, filters, title, selectAllLabel, sortBy } = props;
+const Facet = ({ componentId, dataField, filterLabel, filters, title, selectAllLabel, sortBy, helpTextSection }) => {
   let [auth] = useAuth();
   let defaultValue = null;
   let defaultIndex = [];
 
   if (hasOneOfRoles(auth, ["instructeur"])) {
-    if (componentId === "nom_academie") {
+    if (componentId.startsWith("nom_academie")) {
       const userAcademies = auth?.academie?.split(",") || [];
       defaultIndex = [0];
       defaultValue = compact(
@@ -23,7 +23,7 @@ const Layout = (props) => {
           return academies[ua]?.nom_academie;
         })
       );
-    } else if (componentId === "affelnet_statut" || componentId === "parcoursup_statut") {
+    } else if (componentId.startsWith("affelnet_statut") || componentId.startsWith("parcoursup_statut")) {
       defaultIndex = [0];
       //defaultValue = ["à publier"];
     }
@@ -36,7 +36,7 @@ const Layout = (props) => {
             <h2>
               <AccordionButton>
                 <Box flex="1" textAlign="left">
-                  {title}
+                  {title} {helpTextSection?.title && <InfoTooltip description={helpTextSection.title} />}
                 </Box>
                 {isExpanded ? (
                   <SubtractLine fontSize="12px" color="bluefrance" />
@@ -79,6 +79,19 @@ const Layout = (props) => {
                   };
                 }}
                 sortBy={sortBy}
+                renderItem={(label, count) => (
+                  <Flex justifyContent="space-between" w="full">
+                    <Flex pr={2}>
+                      <Text as="span" pr={1}>
+                        {label}
+                      </Text>
+                      {helpTextSection?.[label] && <InfoTooltip description={helpTextSection[label]} />}
+                    </Flex>
+                    <Text as={"span"} color={"grey.500"}>
+                      {count}
+                    </Text>
+                  </Flex>
+                )}
               />
             </AccordionPanel>
           </>
@@ -88,4 +101,4 @@ const Layout = (props) => {
   );
 };
 
-export default Layout;
+export default Facet;
