@@ -59,18 +59,23 @@ export default (props) => {
           {searchState.loaded && (
             <>
               <Tabs variant="search" mt={5}>
-                <TabList bg="white" justifyContent="space-between" px={[2, 8, 32, 40, 80]}>
+                <TabList bg="white" justifyContent="space-between" px={[0, 8, 32, 40, 80]}>
                   <Flex>
                     <Tab>Catalogue général ({searchState.countCatalogueGeneral.toLocaleString("fr-FR")})</Tab>
-                    <Tab mx={2}>
+                    <Tab mx={[0, 2]}>
                       Catalogue non-éligible ({searchState.countCatalogueNonEligible.toLocaleString("fr-FR")})
                     </Tab>
-                    <Tab mx={2}>Guide réglementaire</Tab>
+                    <Tab mx={[0, 2]}>Guide réglementaire</Tab>
                   </Flex>
-                  <Button variant="unstyled" textStyle="rf-text" color="bluefrance" onClick={onOpen}>
+                  <Button
+                    variant="unstyled"
+                    textStyle="rf-text"
+                    color="bluefrance"
+                    onClick={onOpen}
+                    display={["none", "none", "none", "none", "block"]}
+                  >
                     <ArrowRightLine w="9px" h="9px" mr={2} /> Demander l'ajout d'une formation
                   </Button>
-                  <HowToAddModal isOpen={isOpen} onClose={onClose} />
                 </TabList>
                 <TabPanels>
                   <TabPanel>
@@ -84,6 +89,12 @@ export default (props) => {
                   </TabPanel>
                 </TabPanels>
               </Tabs>
+              <Box mb={8} px={8} display={["block", "block", "block", "block", "none"]}>
+                <Button variant="unstyled" textStyle="rf-text" color="bluefrance" onClick={onOpen} whiteSpace="normal">
+                  <ArrowRightLine w="9px" h="9px" mr={2} /> Demander l'ajout d'une formation
+                </Button>
+              </Box>
+              <HowToAddModal isOpen={isOpen} onClose={onClose} />
             </>
           )}
         </Container>
