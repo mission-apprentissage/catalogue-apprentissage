@@ -1,4 +1,5 @@
 import { escapeDiacritics } from "../../utils/downloadUtils";
+import helpText from "../../../locales/helpText.json";
 
 const FILTERS = (context) => [
   `QUERYBUILDER-${context}`,
@@ -453,6 +454,7 @@ const facetDefinition = (context) => [
     sortBy: "count",
     roles: ["admin", "instructeur"],
     showCatalogEligibleOnly: true,
+    helpTextSection: helpText.search.parcoursup_statut,
   },
   {
     componentId: `affelnet_statut-${context}`,
@@ -463,6 +465,7 @@ const facetDefinition = (context) => [
     sortBy: "count",
     roles: ["admin", "instructeur"],
     showCatalogEligibleOnly: true,
+    helpTextSection: helpText.search.affelnet_statut,
   },
   {
     componentId: `num_departement-${context}`,
