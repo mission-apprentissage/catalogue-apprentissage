@@ -167,6 +167,26 @@ module.exports = ({ catalogue }) => {
     })
   );
 
+  router.get(
+    "/reconciliation/count",
+    tryCatch(async (req, res) => {
+      const countTotal = await PsFormation2021.countDocuments({});
+      const countAutomatique = await PsFormation2021.countDocuments({ statut_reconciliation: "AUTOMATIQUE" });
+      const countAVerifier = await PsFormation2021.countDocuments({ statut_reconciliation: "A_VERIFIER" });
+      const countInconnu = await PsFormation2021.countDocuments({
+        $or: [{ statut_reconciliation: "INCONNU" }, { statut_reconciliation: "REJETE" }],
+      });
+      const countValide = await PsFormation2021.countDocuments({ statut_reconciliation: "VALIDE" });
+      return res.json({
+        countTotal,
+        countAutomatique,
+        countAVerifier,
+        countInconnu,
+        countValide,
+      });
+    })
+  );
+
   router.put(
     "/reconciliation",
     tryCatch(async (req, res) => {

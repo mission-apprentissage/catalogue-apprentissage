@@ -6,6 +6,7 @@ import { hasOneOfRoles } from "../../utils/rolesUtils";
 import {
   CardListEtablissements,
   CardListFormation,
+  CardListPsFormations,
   ExportButton,
   Facet,
   HardFilters,
@@ -13,10 +14,11 @@ import {
 } from "./components";
 import constantsRcoFormations from "./constantsRCOFormations";
 import constantsEtablissements from "./constantsEtablissements";
+import constantsReconciliationPS from "./constantsReconciliationPS";
 import "./search.css";
 import queryString from "query-string";
 
-export default React.memo(({ match, location, searchState, context }) => {
+export default React.memo(({ match, location, searchState, context, onReconciliationCardClicked }) => {
   const { defaultMode } = queryString.parse(location.search);
   const [mode, setMode] = useState(defaultMode ?? "simple");
   const isCatalogueGeneral = context === "catalogue_general";
@@ -26,6 +28,7 @@ export default React.memo(({ match, location, searchState, context }) => {
     countCatalogueGeneral,
     countCatalogueNonEligible,
     isBaseFormations,
+    isBaseReconciliationPs,
     endpoint,
   } = searchState;
 
@@ -33,6 +36,8 @@ export default React.memo(({ match, location, searchState, context }) => {
 
   const { FILTERS, facetDefinition, queryBuilderField, dataSearch, columnsDefinition } = isBaseFormations
     ? constantsRcoFormations
+    : isBaseReconciliationPs
+    ? constantsReconciliationPS
     : constantsEtablissements;
 
   const filters = FILTERS(context);
@@ -52,7 +57,12 @@ export default React.memo(({ match, location, searchState, context }) => {
           },
         }}
       >
-        <HardFilters filters={filters} context={context} isBaseFormations={isBaseFormations} />
+        <HardFilters
+          filters={filters}
+          context={context}
+          isBaseFormations={isBaseFormations}
+          isBaseReconciliationPs={isBaseReconciliationPs}
+        />
         <Box className="search" maxW="full">
           <Container maxW="xl" p={0}>
             {mode === "simple" && (
@@ -120,6 +130,19 @@ export default React.memo(({ match, location, searchState, context }) => {
                         selectAllLabel={fd.selectAllLabel}
                         filters={filters}
                         sortBy={fd.sortBy}
+                        defaultQuery={
+                          !isBaseReconciliationPs
+                            ? () => {
+                                return {
+                                  query: {
+                                    match: {
+                                      published: true,
+                                    },
+                                  },
+                                };
+                              }
+                            : null
+                        }
                         helpTextSection={fd.helpTextSection}
                       />
                     );
@@ -149,6 +172,14 @@ export default React.memo(({ match, location, searchState, context }) => {
                     renderItem={(data) =>
                       isBaseFormations ? (
                         <CardListFormation data={data} key={data._id} />
+                      ) : isBaseReconciliationPs ? (
+                        <CardListPsFormations
+                          data={data}
+                          key={data._id}
+                          onCardClicked={() => {
+                            onReconciliationCardClicked(data);
+                          }}
+                        />
                       ) : (
                         <CardListEtablissements data={data} key={data._id} />
                       )
@@ -163,13 +194,18 @@ export default React.memo(({ match, location, searchState, context }) => {
                                     ? countCatalogueGeneral.toLocaleString("fr-FR")
                                     : countCatalogueNonEligible.toLocaleString("fr-FR")
                                 } formations `
+                              : isBaseReconciliationPs
+                              ? `${stats.numberOfResults.toLocaleString("fr-FR")} rapprochements ${context.replace(
+                                  "reconciliation_ps_",
+                                  ""
+                                )}`
                               : `${stats.numberOfResults.toLocaleString(
                                   "fr-FR"
                                 )} établissements affichées sur ${countEtablissement.toLocaleString(
                                   "fr-FR"
                                 )} établissements`}
                           </span>
-                          {auth?.sub !== "anonymous" && (
+                          {auth?.sub !== "anonymous" && !isBaseReconciliationPs && (
                             <ExportButton
                               index={base}
                               filters={filters}
