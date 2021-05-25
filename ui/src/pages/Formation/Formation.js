@@ -240,6 +240,13 @@ const Formation = ({
               </Text>{" "}
               <InfoTooltip description={helpText.formation.intitule_court} />
             </Text>
+            <Text mb={4} mt={4}>
+              Intitulé éditorial :{" "}
+              <Text as="span" variant="highlight">
+                {displayedFormation.onisep_intitule}
+              </Text>{" "}
+              <InfoTooltip description={helpText.formation.onisep_intitule} />
+            </Text>
             <Text mb={4}>
               Diplôme ou titre visé :{" "}
               <Text as="span" variant="highlight">
@@ -256,15 +263,10 @@ const Formation = ({
             </Text>
             <Text mb={4}>
               Code diplôme (Éducation Nationale) :{" "}
-              {!edition && (
-                <>
-                  <Text as="span" variant="highlight">
-                    {displayedFormation.cfd}
-                  </Text>{" "}
-                  <InfoTooltip description={helpText.formation.cfd} />
-                </>
-              )}
-              {edition && <Input variant="edition" type="text" name="cfd" onChange={handleChange} value={values.cfd} />}
+              <Text as="span" variant="highlight">
+                {displayedFormation.cfd}
+              </Text>{" "}
+              <InfoTooltip description={helpText.formation.cfd} />
               {displayedFormation.cfd_outdated && (
                 <>
                   <br />
@@ -300,60 +302,15 @@ const Formation = ({
             )}
             <Text mb={4}>
               Période d'inscription :
-              {!edition && (
-                <>
-                  <FormationPeriode periode={displayedFormation.periode} />{" "}
-                  <InfoTooltip description={helpText.formation.periode} />
-                </>
-              )}
-              {edition && (
-                <Input variant="edition" type="text" name="periode" onChange={handleChange} value={values.periode} />
-              )}
-            </Text>
-            <Text mb={4}>
-              Lieu de la formation :{" "}
-              {!edition && (
-                <>
-                  <Text as="span" variant="highlight">
-                    {displayedFormation.lieu_formation_adresse}, {displayedFormation.code_postal}{" "}
-                    {displayedFormation.localite}
-                  </Text>{" "}
-                  <InfoTooltip description={helpText.formation.adresse} />
-                </>
-              )}
-              {edition && (
-                <>
-                  <Input
-                    variant="edition"
-                    type="text"
-                    name="lieu_formation_adresse"
-                    onChange={handleChange}
-                    value={values.lieu_formation_adresse}
-                  />
-                  <Input
-                    variant="edition"
-                    type="text"
-                    name="code_postal"
-                    onChange={handleChange}
-                    value={values.code_postal}
-                    mt={2}
-                  />
-                </>
-              )}
+              <FormationPeriode periode={displayedFormation.periode} />{" "}
+              <InfoTooltip description={helpText.formation.periode} />
             </Text>
             <Text mb={4}>
               Capacite d'accueil :{" "}
-              {!edition && (
-                <>
-                  <Text as="span" variant="highlight">
-                    {formation.capacite ?? "N/A"}
-                  </Text>{" "}
-                  <InfoTooltip ml="10px" description={helpText.formation.capacite} />
-                </>
-              )}
-              {edition && (
-                <Input variant="edition" type="text" name="capacite" onChange={handleChange} value={values.capacite} />
-              )}
+              <Text as="span" variant="highlight">
+                {formation.capacite ?? "N/A"}
+              </Text>{" "}
+              <InfoTooltip ml="10px" description={helpText.formation.capacite} />
             </Text>
             <Text mb={4}>
               Durée de la formation :{" "}
@@ -416,14 +373,21 @@ const Formation = ({
                   Certificateurs :{" "}
                   <Text as="span" variant="highlight">
                     {displayedFormation.rncp_details.certificateurs
-                      ?.filter(({ certificateur, siret_certificateur }) => certificateur || siret_certificateur)
-                      ?.map(
-                        ({ certificateur, siret_certificateur }) =>
-                          `${certificateur} (siret : ${siret_certificateur ?? "n/a"})`
-                      )
+                      ?.filter(({ certificateur }) => certificateur)
+                      ?.map(({ certificateur }) => certificateur)
                       .join(", ")}
                   </Text>{" "}
                   <InfoTooltip description={helpText.formation.certificateurs} />
+                </Text>
+                <Text mb={4}>
+                  SIRET Certificateurs :{" "}
+                  <Text as="span" variant="highlight">
+                    {displayedFormation.rncp_details.certificateurs
+                      ?.filter(({ siret_certificateur }) => siret_certificateur)
+                      ?.map(({ siret_certificateur }) => siret_certificateur)
+                      .join(", ")}
+                  </Text>{" "}
+                  <InfoTooltip description={helpText.formation.siret_certificateurs} />
                 </Text>
                 {showPartenaires && (
                   <Text as="div" mb={4}>
@@ -462,21 +426,17 @@ const Formation = ({
               <MapPin2Fill w="12px" h="15px" mr="5px" mb="5px" />
               Lieu de la formation
             </Heading>
-            <Link
-              href={getLBAUrl(formation)}
-              textStyle="rf-text"
-              color="bluefrance"
-              textDecoration="underline"
-              isExternal
-            >
-              voir sur un plan <ExternalLinkLine w="9px" h="9px" />.
-            </Link>
-            <Text mb={4} mt={4}>
-              Type :{" "}
-              <Text as="span" variant="highlight">
-                {formation.etablissement_reference_type}
-              </Text>
-            </Text>
+            <Box mb={4}>
+              <Link
+                href={getLBAUrl(formation)}
+                textStyle="rf-text"
+                color="bluefrance"
+                textDecoration="underline"
+                isExternal
+              >
+                voir sur un plan <ExternalLinkLine w="9px" h="9px" />.
+              </Link>
+            </Box>
             <Text mb={4}>
               <Edit2Fill w="16px" h="16px" color="bluefrance" mr="8px" mb="7px" />
               UAI du lieu de formation :{" "}
@@ -499,32 +459,32 @@ const Formation = ({
               )}
             </Text>
             <Text mb={4}>
-              Établissement conventionné ? :{" "}
-              <Text as="span" variant="highlight">
-                {formation.etablissement_reference_conventionne}
-              </Text>{" "}
-              <InfoTooltip description={helpText.etablissement.conventionne} />
-            </Text>
-            <Text mb={4}>
-              Établissement déclaré en préfecture ?{" "}
-              <Text as="span" variant="highlight">
-                {formation.etablissement_reference_declare_prefecture}
-              </Text>{" "}
-              <InfoTooltip description={helpText.etablissement.declare_prefecture} />
-            </Text>
-            <Text mb={4}>
-              Certification qualité de l'organisme :{" "}
-              <Text as="span" variant="highlight">
-                {formation.etablissement_reference_datadock}
-              </Text>{" "}
-              <InfoTooltip description={helpText.etablissement.datadock} />
-            </Text>
-            <Text mb={4}>
               Académie :{" "}
               <Text as="span" variant="highlight">
                 {displayedFormation.nom_academie} ({displayedFormation.num_academie})
               </Text>{" "}
               <InfoTooltip description={helpText.formation.academie} />
+            </Text>
+
+            <Text mb={4}>
+              <Edit2Fill w="16px" h="16px" color="bluefrance" mr="5px" mb="7px" /> Adresse :{" "}
+              {!edition && (
+                <>
+                  <Text as="span" variant="highlight">
+                    {displayedFormation.lieu_formation_adresse}
+                  </Text>{" "}
+                  <InfoTooltip description={helpText.formation.adresse} />
+                </>
+              )}
+              {edition && (
+                <Input
+                  variant="edition"
+                  type="text"
+                  name="lieu_formation_adresse"
+                  onChange={handleChange}
+                  value={values.lieu_formation_adresse}
+                />
+              )}
             </Text>
             <Text mb={4}>
               <Edit2Fill w="16px" h="16px" color="bluefrance" mr="5px" mb="7px" /> Code postal :{" "}
@@ -547,11 +507,32 @@ const Formation = ({
               )}
             </Text>
             <Text mb={4}>
+              <Edit2Fill w="16px" h="16px" color="bluefrance" mr="5px" mb="7px" /> Commune :{" "}
+              {!edition && (
+                <>
+                  <Text as="span" variant="highlight">
+                    {displayedFormation.localite}
+                  </Text>{" "}
+                  <InfoTooltip description={helpText.formation.localite} />
+                </>
+              )}
+              {edition && (
+                <Input variant="edition" type="text" name="localite" onChange={handleChange} value={values.localite} />
+              )}
+            </Text>
+            <Text mb={4}>
               Code commune :{" "}
               <Text as="span" variant="highlight">
                 {displayedFormation.code_commune_insee}
               </Text>{" "}
               <InfoTooltip description={helpText.formation.code_commune_insee} />
+            </Text>
+            <Text mb={4}>
+              Département :{" "}
+              <Text as="span" variant="highlight">
+                {displayedFormation.nom_departement} ({displayedFormation.num_departement})
+              </Text>{" "}
+              <InfoTooltip description={helpText.formation.nom_departement} />
             </Text>
           </Box>
           <Box mb={16}>
@@ -653,15 +634,13 @@ export default ({ match }) => {
     initialValues: {
       uai_formation: "",
       code_postal: "",
-      capacite: "",
-      periode: "",
-      cfd: "",
       lieu_formation_adresse: "",
+      localite: "",
     },
     onSubmit: (values) => {
       return new Promise(async (resolve) => {
         try {
-          const directChangeKeys = ["uai_formation", "capacite"];
+          const directChangeKeys = ["uai_formation"];
           const directChangeValues = directChangeKeys.reduce((acc, key) => {
             acc[key] = values[key] || null;
             return acc;
@@ -692,7 +671,6 @@ export default ({ match }) => {
             if (result) {
               setFormation(result);
               setFieldValue("uai_formation", result?.uai_formation ?? "");
-              setFieldValue("capacite", result?.capacite ?? "");
             }
           }
 
@@ -728,12 +706,11 @@ export default ({ match }) => {
             if (result) {
               setPendingFormation(result);
               setFieldValue("code_postal", result?.code_postal ?? formation.code_postal ?? "");
-              setFieldValue("periode", result?.periode ?? formation.periode ?? "");
-              setFieldValue("cfd", result?.cfd ?? formation.cfd ?? "");
               setFieldValue(
                 "lieu_formation_adresse",
                 result?.lieu_formation_adresse ?? formation.lieu_formation_adresse ?? ""
               );
+              setFieldValue("localite", result?.localite ?? formation.localite ?? "");
             }
           }
         } catch (e) {
@@ -768,16 +745,14 @@ export default ({ match }) => {
 
         // values from catalog data
         setFieldValue("uai_formation", form.uai_formation ?? "");
-        setFieldValue("capacite", form.capacite ?? "");
 
         // values from pending rco data
         setFieldValue("code_postal", pendingRCOFormation?.code_postal ?? form.code_postal ?? "");
-        setFieldValue("periode", pendingRCOFormation?.periode ?? form.periode ?? "");
-        setFieldValue("cfd", pendingRCOFormation?.cfd ?? form.cfd ?? "");
         setFieldValue(
           "lieu_formation_adresse",
           pendingRCOFormation?.lieu_formation_adresse ?? form.lieu_formation_adresse ?? ""
         );
+        setFieldValue("localite", pendingRCOFormation?.localite ?? form.localite ?? "");
       } catch (e) {
         history.push("/404");
       }
