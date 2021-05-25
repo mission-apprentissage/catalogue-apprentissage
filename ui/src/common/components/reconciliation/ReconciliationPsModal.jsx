@@ -17,7 +17,8 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react";
-import { StatusBadge } from "../StatusBadge";
+// import { StatusBadge } from "../StatusBadge";
+import { InfoBadge } from "../InfoBadge";
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import { _put } from "../../httpClient";
@@ -26,6 +27,7 @@ import { buildUpdatesHistory } from "../../utils/formationUtils";
 import * as Yup from "yup";
 import { Close } from "../../../theme/components/icons/Close";
 import { ArrowRightLine } from "../../../theme/components/icons";
+import InfoTooltip from "../../../common/components/InfoTooltip";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -196,9 +198,9 @@ const ReconciliationPsModal = ({ isOpen, onClose, formation, onFormationUpdate }
   const isAffelnetPublishDisabled = ["hors périmètre"].includes(formation?.affelnet_statut);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="3xl">
+    <Modal isOpen={isOpen} onClose={onClose} size="full">
       <ModalOverlay />
-      <ModalContent bg="white" color="primaryText" borderRadius="none">
+      <ModalContent bg="white" color="primaryText" borderRadius="none" my="0">
         <Button
           display={"flex"}
           alignSelf={"flex-end"}
@@ -221,166 +223,131 @@ const ReconciliationPsModal = ({ isOpen, onClose, formation, onFormationUpdate }
                 <ArrowRightLine boxSize={26} />
               </Text>
               <Text as={"span"} ml={4}>
-                Gérer les publications
+                Valider le rapprochement de l’offre de formation
               </Text>
             </Flex>
           </Heading>
         </ModalHeader>
-        <ModalBody p={0}>
-          <Box px={[4, 16]} pb={[4, 16]}>
-            <Box border="1px solid" borderColor="bluefrance" p={8}>
-              <Heading as="h3" fontSize="1.5rem" mb={3}>
-                {formation.intitule_long}
-              </Heading>
-              <Flex flexDirection="column">
-                <Box mb={3}>
-                  <StatusBadge source="Affelnet" status={formation?.affelnet_statut} />
-                </Box>
-                <FormControl display="flex" flexDirection="column" w="auto" isDisabled={isAffelnetPublishDisabled}>
-                  <FormLabel htmlFor="affelnet" mb={3} fontSize="epsilon" fontWeight={400}>
-                    Demander la publication Affelnet:
-                  </FormLabel>
-                  <RadioGroup defaultValue={values.affelnet} id="affelnet" name="affelnet">
-                    <Stack spacing={2} direction="column">
-                      <Radio
-                        mb={0}
-                        size="lg"
-                        value="true"
-                        isDisabled={isAffelnetPublishDisabled}
-                        onChange={(evt) => {
-                          setAffelnetFormOpen(true);
-                          setAffelnetUnpublishFormOpen(false);
-                          handleChange(evt);
-                        }}
-                      >
-                        <Text as={"span"} fontSize="zeta">
-                          Oui
-                        </Text>
-                      </Radio>
-                      <Radio
-                        mb={0}
-                        size="lg"
-                        value="false"
-                        isDisabled={isAffelnetPublishDisabled}
-                        onChange={(evt) => {
-                          setAffelnetFormOpen(false);
-                          setAffelnetUnpublishFormOpen(true);
-                          handleChange(evt);
-                        }}
-                      >
-                        <Text as={"span"} fontSize="zeta">
-                          Non
-                        </Text>
-                      </Radio>
-                    </Stack>
-                  </RadioGroup>
-                </FormControl>
-                <FormControl display={isAffelnetFormOpen ? "flex" : "none"} flexDirection="column" w="auto" mt={6}>
-                  <FormLabel htmlFor="affelnet_infos_offre" mb={3} fontSize="epsilon" fontWeight={400}>
-                    Informations offre de formation (facultatif) :
-                  </FormLabel>
-                  <Textarea
-                    name="affelnet_infos_offre"
-                    value={values.affelnet_infos_offre}
-                    onChange={handleChange}
-                    placeholder="Précisez ici les informations complémentaires que vous souhaitez voir figurer sur la fiche de la formation sur Affelnet, ex : démarches sur obtention contrat apprentissage, modalités inscription, rythme alternance, date entrée formation..."
-                    rows={2}
-                  />
-                </FormControl>
-                <FormControl
-                  isRequired
-                  isInvalid={errors.affelnet_raison_depublication}
-                  display={isAffelnetUnpublishFormOpen ? "flex" : "none"}
-                  flexDirection="column"
-                  w="auto"
-                  mt={6}
-                >
-                  <FormLabel htmlFor="affelnet_raison_depublication" mb={3} fontSize="epsilon" fontWeight={400}>
-                    Raison de non publication:
-                  </FormLabel>
-                  <Flex flexDirection="column" w="100%">
-                    <Textarea
-                      name="affelnet_raison_depublication"
-                      value={values.affelnet_raison_depublication}
-                      onChange={handleChange}
-                      placeholder="Précisez ici la raison pour laquelle vous ne souhaitez pas publier la formation sur Affelnet"
-                      rows={2}
-                    />
-                    <FormErrorMessage>{errors.affelnet_raison_depublication}</FormErrorMessage>
-                  </Flex>
-                </FormControl>
-              </Flex>
-            </Box>
-            <Box border="1px solid" borderColor="bluefrance" p={8} mt={8}>
-              <Heading as="h3" fontSize="1.5rem" mb={3}>
-                {formation.intitule_long}
-              </Heading>
-              <Flex flexDirection="column">
-                <Box mb={3}>
-                  <StatusBadge source="Parcoursup" status={formation?.parcoursup_statut} />
-                </Box>
-                <FormControl display="flex" flexDirection="column" w="auto" isDisabled={isParcoursupPublishDisabled}>
-                  <FormLabel htmlFor="parcoursup" mb={3} fontSize="epsilon" fontWeight={400}>
-                    Demander la publication Parcoursup:
-                  </FormLabel>
-                  <RadioGroup defaultValue={values.parcoursup} id="parcoursup" name="parcoursup">
-                    <Stack spacing={2} direction="column">
-                      <Radio
-                        mb={0}
-                        size="lg"
-                        value="true"
-                        isDisabled={isParcoursupPublishDisabled}
-                        onChange={(evt) => {
-                          setParcousupUnpublishFormOpen(false);
-                          handleChange(evt);
-                        }}
-                      >
-                        <Text as={"span"} fontSize="zeta">
-                          Oui
-                        </Text>
-                      </Radio>
-                      <Radio
-                        mb={0}
-                        size="lg"
-                        value="false"
-                        isDisabled={isParcoursupPublishDisabled}
-                        onChange={(evt) => {
-                          setParcousupUnpublishFormOpen(true);
-                          handleChange(evt);
-                        }}
-                      >
-                        <Text as={"span"} fontSize="zeta">
-                          Non
-                        </Text>
-                      </Radio>
-                    </Stack>
-                  </RadioGroup>
-                </FormControl>
-                <FormControl
-                  isRequired
-                  isInvalid={errors.parcoursup_raison_depublication}
-                  display={isParcoursupUnpublishFormOpen ? "flex" : "none"}
-                  flexDirection="column"
-                  w="auto"
-                  mt={3}
-                >
-                  <FormLabel htmlFor="parcoursup_raison_depublication" mb={3} fontSize="epsilon" fontWeight={400}>
-                    Raison de non publication:
-                  </FormLabel>
-                  <Flex flexDirection="column" w="100%">
-                    <Textarea
-                      name="parcoursup_raison_depublication"
-                      value={values.parcoursup_raison_depublication}
-                      onChange={handleChange}
-                      placeholder="Précisez ici la raison pour laquelle vous ne souhaitez pas publier la formation sur Parcoursup"
-                      rows={2}
-                    />
-                    <FormErrorMessage>{errors.parcoursup_raison_depublication}</FormErrorMessage>
-                  </Flex>
-                </FormControl>
-              </Flex>
-            </Box>
+        <ModalBody p={0} display="flex" flexDirection="column">
+          <Box px={[4, 16]}>
+            <Heading as="h3" fontSize="1.5rem" mb={3} color="bluefrance">
+              Vérifier la similitude des informations
+            </Heading>
           </Box>
+          <Flex px={[4, 16]} pb={[4, 16]} flexGrow="1">
+            <Box border="1px solid" borderColor="bluefrance" p={8} w="50%">
+              <Heading as="h3" fontSize="1.5rem" mb={3}>
+                Informations Parcoursup
+              </Heading>
+              <Flex flexDirection="column">
+                {/* <Box mb={3}>
+                  <StatusBadge source="Parcoursup" status={formation?.parcoursup_statut} />
+                </Box> */}
+                <Text mb={4} mt={4}>
+                  Libellé formation : <InfoTooltip description={"tooltip"} />
+                  <Text as="span" variant="highlight">
+                    {formation.libelle_formation}
+                  </Text>{" "}
+                </Text>
+                <Text mb={4} mt={4}>
+                  Code formation diplôme : <InfoTooltip description={"tooltip"} />
+                  <Text as="span" variant="highlight">
+                    {formation.codes_cfd_mna.join(",")}
+                  </Text>{" "}
+                </Text>
+                <Text mb={4} mt={4}>
+                  Codes UAI collectés : <InfoTooltip description={"tooltip"} />
+                  <Text as="span" variant="highlight">
+                    {formation.uai_gestionnaire}
+                    <InfoBadge text="Gestionnaire" variant="published" />
+                  </Text>
+                  <Text as="span" variant="highlight">
+                    {formation.uai_composante}
+                    <InfoBadge text="Composante" variant="published" />
+                  </Text>
+                  <Text as="span" variant="highlight">
+                    {formation.uai_affilie}
+                    <InfoBadge text="Affilié" variant="published" />
+                  </Text>
+                </Text>
+                <Text mb={4} mt={4}>
+                  Siret : <InfoTooltip description={"tooltip"} />
+                  <Text as="span" variant="highlight">
+                    {formation.siret_cerfa}
+                  </Text>{" "}
+                </Text>
+                <Text mb={4} mt={4}>
+                  Nom de l’établissement : <InfoTooltip description={"tooltip"} />
+                  <Text as="span" variant="highlight">
+                    {formation.libelle_uai_composante}
+                  </Text>{" "}
+                </Text>
+                <Text mb={4} mt={4}>
+                  Adresse : <InfoTooltip description={"tooltip"} />
+                  <Text as="span" variant="highlight">
+                    {formation.complement_adresse_1}
+                  </Text>{" "}
+                </Text>
+              </Flex>
+            </Box>
+            <Box border="1px solid" borderColor="bluefrance" p={8} w="50%">
+              <Heading as="h3" fontSize="1.5rem" mb={3}>
+                Informations Catalogue 2021
+              </Heading>
+              <Flex flexDirection="column">
+                <Text mb={4} mt={4}>
+                  Libellé formation : <InfoTooltip description={"tooltip"} />
+                  <Text as="span" variant="highlight">
+                    {formation.libelle_formation}
+                  </Text>{" "}
+                </Text>
+                <Text mb={4} mt={4}>
+                  Code formation diplôme BCN : <InfoTooltip description={"tooltip"} />
+                  <Text as="span" variant="highlight">
+                    {formation.codes_cfd_mna.join(",")}
+                  </Text>{" "}
+                </Text>
+                <Text mb={4} mt={4}>
+                  Code UAI du lieu de formation : <InfoTooltip description={"tooltip"} />
+                  <Text as="span" variant="highlight">
+                    {formation.uai_gestionnaire}
+                    <InfoBadge text="Formation" variant="published" />
+                  </Text>
+                </Text>
+                <Text mb={4} mt={4}>
+                  Code UAI rattaché au SIRET : <InfoTooltip description={"tooltip"} />
+                  <Text as="span" variant="highlight">
+                    {formation.uai_gestionnaire}
+                    <InfoBadge text="Formateur" variant="published" />
+                  </Text>
+                </Text>
+                <Text mb={4} mt={4}>
+                  Siret Organisme : <InfoTooltip description={"tooltip"} />
+                  <Text as="span" variant="highlight">
+                    {formation.siret_cerfa}
+                  </Text>{" "}
+                </Text>
+                <Text mb={4} mt={4}>
+                  Lieu de la formation : <InfoTooltip description={"tooltip"} />
+                  <Text as="span" variant="highlight">
+                    {formation.complement_adresse_1}
+                  </Text>{" "}
+                </Text>
+                <Text mb={4} mt={4}>
+                  Enseigne : <InfoTooltip description={"tooltip"} />
+                  <Text as="span" variant="highlight">
+                    {formation.complement_adresse_1}
+                  </Text>{" "}
+                </Text>
+                <Text mb={4} mt={4}>
+                  Adresse de l’organisme : <InfoTooltip description={"tooltip"} />
+                  <Text as="span" variant="highlight">
+                    {formation.complement_adresse_1}
+                  </Text>{" "}
+                </Text>
+              </Flex>
+            </Box>
+          </Flex>
           <Box boxShadow={"0 -4px 16px 0 rgba(0, 0, 0, 0.08)"}>
             <Flex flexDirection={["column", "row"]} p={[3, 8]} justifyContent="flex-end">
               <Button
@@ -397,13 +364,26 @@ const ReconciliationPsModal = ({ isOpen, onClose, formation, onFormationUpdate }
                 Annuler
               </Button>
               <Button
+                variant="secondary"
+                onClick={() => {
+                  onClose();
+                }}
+                mr={[0, 4]}
+                px={8}
+                mb={[3, 0]}
+                color="redmarianne"
+                borderColor="redmarianne"
+              >
+                Rejeter
+              </Button>
+              <Button
                 type="submit"
                 variant="primary"
                 onClick={handleSubmit}
                 isLoading={isSubmitting}
                 loadingText="Enregistrement des modifications"
               >
-                Enregistrer les modifications
+                Valider
               </Button>
             </Flex>
           </Box>
