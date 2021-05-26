@@ -47,49 +47,6 @@ const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 const endpointTCO =
   process.env.REACT_APP_ENDPOINT_TCO || "https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1";
 
-const EditSection = ({ edition, onEdit, handleSubmit, isSubmitting }) => {
-  return (
-    <Box>
-      {edition && (
-        <Flex
-          flexDirection={["column", "row"]}
-          position="fixed"
-          left={0}
-          bottom={0}
-          w="full"
-          bg="white"
-          p={8}
-          zIndex={100}
-          justifyContent="center"
-          borderTop="1px solid"
-          borderColor="grey.300"
-        >
-          <Button
-            variant="secondary"
-            onClick={() => {
-              onEdit();
-            }}
-            disabled={isSubmitting}
-            mr={[0, 8]}
-            px={[8, 20]}
-            mb={[3, 0]}
-          >
-            Annuler
-          </Button>
-          <Button
-            variant="primary"
-            onClick={handleSubmit}
-            isLoading={isSubmitting}
-            loadingText="Enregistrement des modifications"
-          >
-            Enregistrer les modifications
-          </Button>
-        </Flex>
-      )}
-    </Box>
-  );
-};
-
 const FormationPeriode = ({ periode }) => {
   let displayedPeriode = <strong>periode</strong>;
   try {
@@ -154,6 +111,56 @@ const HabilitationPartenaire = ({ habilitation }) => {
   );
 };
 
+const EditableField = ({
+  formation,
+  hasRightToEdit,
+  edition,
+  onEdit,
+  handleSubmit,
+  values,
+  handleChange,
+  fieldName,
+  label,
+  ...props
+}) => {
+  return (
+    <Text {...props}>
+      {hasRightToEdit && edition !== fieldName && (
+        <Button
+          onClick={() => onEdit(fieldName)}
+          variant="unstyled"
+          aria-label={`Modifier le champ ${label}`}
+          p={0}
+          minW={0}
+          height="auto"
+        >
+          <Edit2Fill w="16px" h="16px" color="bluefrance" mr="5px" mb="7px" />
+        </Button>
+      )}{" "}
+      {label} :{" "}
+      {edition !== fieldName && (
+        <>
+          <Text as="span" variant="highlight">
+            {formation[fieldName]}
+          </Text>{" "}
+          <InfoTooltip description={helpText.formation[fieldName]} />
+        </>
+      )}
+      {edition === fieldName && (
+        <>
+          <Input variant="edition" type="text" name={fieldName} onChange={handleChange} value={values[fieldName]} />
+          <Button mt={2} mr={2} variant="secondary" onClick={() => onEdit()}>
+            Annuler
+          </Button>
+          <Button mt={2} variant="primary" onClick={handleSubmit}>
+            Valider
+          </Button>
+        </>
+      )}
+    </Text>
+  );
+};
+
 const Formation = ({
   formation,
   edition,
@@ -162,7 +169,6 @@ const Formation = ({
   handleSubmit,
   values,
   hasRightToEdit,
-  isSubmitting,
   pendingFormation,
 }) => {
   const displayedFormation = pendingFormation ?? formation;
@@ -202,9 +208,6 @@ const Formation = ({
 
   return (
     <Box borderRadius={4}>
-      {hasRightToEdit && (
-        <EditSection edition={edition} onEdit={onEdit} handleSubmit={handleSubmit} isSubmitting={isSubmitting} />
-      )}
       {pendingFormation && (
         <Alert status="info" justifyContent="center">
           <Box mr={1}>
@@ -437,27 +440,18 @@ const Formation = ({
                 voir sur un plan <ExternalLinkLine w="9px" h="9px" />.
               </Link>
             </Box>
-            <Text mb={4}>
-              <Edit2Fill w="16px" h="16px" color="bluefrance" mr="8px" mb="7px" />
-              UAI du lieu de formation :{" "}
-              {!edition && (
-                <>
-                  <Text as="span" variant="highlight">
-                    {formation.uai_formation}
-                  </Text>{" "}
-                  <InfoTooltip description={helpText.formation.uai_formation} />
-                </>
-              )}
-              {edition && (
-                <Input
-                  variant="edition"
-                  type="text"
-                  name="uai_formation"
-                  onChange={handleChange}
-                  value={values.uai_formation}
-                />
-              )}
-            </Text>
+            <EditableField
+              fieldName={"uai_formation"}
+              label={"UAI du lieu de formation"}
+              formation={formation}
+              edition={edition}
+              onEdit={onEdit}
+              values={values}
+              handleSubmit={handleSubmit}
+              handleChange={handleChange}
+              hasRightToEdit={hasRightToEdit}
+              mb={4}
+            />
             <Text mb={4}>
               Académie :{" "}
               <Text as="span" variant="highlight">
@@ -465,47 +459,30 @@ const Formation = ({
               </Text>{" "}
               <InfoTooltip description={helpText.formation.academie} />
             </Text>
-
-            <Text mb={4}>
-              <Edit2Fill w="16px" h="16px" color="bluefrance" mr="5px" mb="7px" /> Adresse :{" "}
-              {!edition && (
-                <>
-                  <Text as="span" variant="highlight">
-                    {displayedFormation.lieu_formation_adresse}
-                  </Text>{" "}
-                  <InfoTooltip description={helpText.formation.adresse} />
-                </>
-              )}
-              {edition && (
-                <Input
-                  variant="edition"
-                  type="text"
-                  name="lieu_formation_adresse"
-                  onChange={handleChange}
-                  value={values.lieu_formation_adresse}
-                />
-              )}
-            </Text>
-            <Text mb={4}>
-              <Edit2Fill w="16px" h="16px" color="bluefrance" mr="5px" mb="7px" /> Code postal :{" "}
-              {!edition && (
-                <>
-                  <Text as="span" variant="highlight">
-                    {displayedFormation.code_postal}
-                  </Text>{" "}
-                  <InfoTooltip description={helpText.formation.code_postal} />
-                </>
-              )}
-              {edition && (
-                <Input
-                  variant="edition"
-                  type="text"
-                  name="code_postal"
-                  onChange={handleChange}
-                  value={values.code_postal}
-                />
-              )}
-            </Text>
+            <EditableField
+              fieldName={"lieu_formation_adresse"}
+              label={"Adresse"}
+              formation={formation}
+              edition={edition}
+              onEdit={onEdit}
+              values={values}
+              handleSubmit={handleSubmit}
+              handleChange={handleChange}
+              hasRightToEdit={hasRightToEdit}
+              mb={4}
+            />
+            <EditableField
+              fieldName={"code_postal"}
+              label={"Code postal"}
+              formation={formation}
+              edition={edition}
+              onEdit={onEdit}
+              values={values}
+              handleSubmit={handleSubmit}
+              handleChange={handleChange}
+              hasRightToEdit={hasRightToEdit}
+              mb={4}
+            />
             <Text mb={4}>
               Commune :{" "}
               <Text as="span" variant="highlight">
@@ -513,26 +490,18 @@ const Formation = ({
               </Text>{" "}
               <InfoTooltip description={helpText.formation.localite} />
             </Text>
-            <Text mb={4}>
-              <Edit2Fill w="16px" h="16px" color="bluefrance" mr="5px" mb="7px" /> Code commune :{" "}
-              {!edition && (
-                <>
-                  <Text as="span" variant="highlight">
-                    {displayedFormation.code_commune_insee}
-                  </Text>{" "}
-                  <InfoTooltip description={helpText.formation.code_commune_insee} />
-                </>
-              )}
-              {edition && (
-                <Input
-                  variant="edition"
-                  type="text"
-                  name="code_commune_insee"
-                  onChange={handleChange}
-                  value={values.code_commune_insee}
-                />
-              )}
-            </Text>
+            <EditableField
+              fieldName={"code_commune_insee"}
+              label={"Code commune"}
+              formation={formation}
+              edition={edition}
+              onEdit={onEdit}
+              values={values}
+              handleSubmit={handleSubmit}
+              handleChange={handleChange}
+              hasRightToEdit={hasRightToEdit}
+              mb={4}
+            />
             <Text mb={4}>
               Département :{" "}
               <Text as="span" variant="highlight">
@@ -629,7 +598,7 @@ export default ({ match }) => {
   const [formation, setFormation] = useState();
   const [pendingFormation, setPendingFormation] = useState();
 
-  const [edition, setEdition] = useState(false);
+  const [edition, setEdition] = useState(null);
   let history = useHistory();
   const { isOpen: isOpenPublishModal, onOpen: onOpenPublishModal, onClose: onClosePublishModal } = useDisclosure();
 
@@ -722,7 +691,7 @@ export default ({ match }) => {
         } catch (e) {
           console.error("Can't perform update", e);
         } finally {
-          setEdition(false);
+          setEdition(null);
           resolve("onSubmitHandler complete");
         }
       });
@@ -766,8 +735,8 @@ export default ({ match }) => {
     run();
   }, [match, setFieldValue, history]);
 
-  const onEdit = () => {
-    setEdition(!edition);
+  const onEdit = (fieldName = null) => {
+    setEdition(fieldName);
   };
 
   const onDelete = async () => {
@@ -848,16 +817,6 @@ export default ({ match }) => {
                         >
                           <Parametre mr={2} />
                           Gérer les publications
-                        </Button>
-                        <Button
-                          variant="secondary"
-                          onClick={() => {
-                            onEdit();
-                          }}
-                          disabled={edition}
-                          mt={6}
-                        >
-                          {edition ? "en cours de modification..." : "Modifier les informations"}
                         </Button>
                       </Flex>
                     </Flex>
