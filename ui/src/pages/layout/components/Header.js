@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, useHistory } from "react-router-dom";
 import {
   Avatar,
@@ -13,6 +13,9 @@ import {
   MenuDivider,
   MenuGroup,
   MenuItem,
+  Alert,
+  AlertIcon,
+  Stack,
   MenuList,
   Text,
 } from "@chakra-ui/react";
@@ -27,6 +30,16 @@ import { Logo } from "./Logo";
 const Header = () => {
   let [auth, setAuth] = useAuth();
   let history = useHistory();
+  const [messages, setMessages] = useState([]);
+  useEffect(() => {
+    const run = async () => {
+      const data = await _get("/api/v1/entity/messageScript");
+
+      setMessages(data);
+    };
+    run();
+  }, []);
+
   let logout = async () => {
     const { loggedOut } = await _get("/api/auth/logout");
     if (loggedOut) {
@@ -36,6 +49,17 @@ const Header = () => {
   };
 
   return (
+    <Box>
+      {messages.map((element) => {
+        return (
+          <Stack spacing={3} key={element._id}>
+            <Alert status="error" justifyContent="center">
+              <AlertIcon />
+              <Text>{element.msg}</Text>
+            </Alert>
+          </Stack>
+        );
+      })}
     <Container maxW={"full"} borderBottom={"1px solid"} borderColor={"grey.400"} px={[0, 4]}>
       <Container maxW="xl" py={[0, 2]} px={[0, 4]}>
         <Flex alignItems="center" color="grey.800">

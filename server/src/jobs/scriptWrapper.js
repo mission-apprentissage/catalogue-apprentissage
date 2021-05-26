@@ -4,6 +4,7 @@ const createComponents = require("../common/components/components");
 const logger = require("../common/logger");
 const config = require("config");
 const { access, mkdir } = require("fs").promises;
+const { MessageScript } = require("../common/model/index");
 
 process.on("unhandledRejection", (e) => console.log(e));
 process.on("uncaughtException", (e) => console.log(e));
@@ -56,17 +57,33 @@ const exit = async (rawError) => {
 
 module.exports = {
   runScript: async (job) => {
+    const message = {
+      msg: `Une mise à jour des données du catalogue est en cours, le service sera à nouveau opérationnel d'ici le XX/XX/21 à XXh.`,
+      name: "Pablo",
+      time: new Date(),
+    };
+
+    const messageResult = new MessageScript(message);
+
     try {
       const timer = createTimer();
       timer.start();
 
       await ensureOutputDirExists();
       const components = await createComponents();
+      await messageResult.save();
       const results = await job(components);
 
       timer.stop(results);
+      await MessageScript.deleteOne({
+        _id: messageResult._id,
+      });
+
       await exit();
     } catch (e) {
+      await MessageScript.deleteOne({
+        _id: messageResult._id,
+      });
       await exit(e);
     }
   },
