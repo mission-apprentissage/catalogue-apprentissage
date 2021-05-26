@@ -9,16 +9,34 @@ import {
   ModalOverlay,
   Text,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Close } from "../../../theme/components/icons/Close";
 import { ArrowRightLine } from "../../../theme/components/icons";
 import { Compare } from "./Compare";
+import { _get } from "../../../common/httpClient";
 
-const ReconciliationPsModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
+const endpointNewFront = "http://localhost/api"; // `${process.env.REACT_APP_BASE_URL}/api`;
+
+const ReconciliationPsModal = ({ isOpen, onClose, data, onFormationUpdate }) => {
+  const [formation, setFormation] = useState();
+
+  useEffect(() => {
+    async function run() {
+      try {
+        const apiURL = `${endpointNewFront}/parcoursup/`;
+        const form = await _get(`${apiURL}${data._id}`, false);
+        setFormation(form);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    run();
+  }, [data]);
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="full">
       <ModalOverlay />
-      <ModalContent bg="white" color="primaryText" borderRadius="none" my="0" h="auto">
+      <ModalContent bg="white" color="primaryText" borderRadius="none" my="0" minH="full" h="auto">
         <Button
           display={"flex"}
           alignSelf={"flex-end"}
@@ -47,7 +65,7 @@ const ReconciliationPsModal = ({ isOpen, onClose, formation, onFormationUpdate }
           </Heading>
         </ModalHeader>
         <ModalBody p={0} display="flex" flexDirection="column">
-          <Compare formation={formation} onClose={onClose} />
+          {formation && <Compare formation={formation} onClose={onClose} />}
         </ModalBody>
       </ModalContent>
     </Modal>

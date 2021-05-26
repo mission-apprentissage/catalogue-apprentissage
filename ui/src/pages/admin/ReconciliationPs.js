@@ -140,7 +140,7 @@ export default (props) => {
         <ReconciliationPsModal
           isOpen={isOpenReconciliationPsModal}
           onClose={onCloseReconciliationPsModal}
-          formation={psFormation}
+          data={psFormation}
           // onFormationUpdate={(updatedFormation) => {
           //   setFormation(updatedFormation);
           // }}

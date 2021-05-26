@@ -47,6 +47,20 @@ module.exports = ({ catalogue }) => {
     })
   );
 
+  router.get(
+    "/:id",
+    tryCatch(async (req, res) => {
+      const itemId = req.params.id;
+      const qs = req.query;
+      const select = qs && qs.select ? JSON.parse(qs.select) : { __v: 0 };
+      const retrievedData = await PsFormation2021.findById(itemId, select).lean();
+      if (retrievedData) {
+        return res.json(retrievedData);
+      }
+      return res.status(404).send({ message: `Item ${itemId} doesn't exist` });
+    })
+  );
+
   /**
    * Get all PsFormation
    */

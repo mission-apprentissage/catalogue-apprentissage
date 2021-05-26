@@ -15,3 +15,5 @@ export * from "./Map-pin-2-fill";
 export * from "./Edit-2-fill";
 export * from "./Star";
 export * from "./SortingArrows";
+export * from "./ValidateIcon";
+export * from "./RejectIcon";

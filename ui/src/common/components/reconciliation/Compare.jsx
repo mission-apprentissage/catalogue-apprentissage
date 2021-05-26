@@ -3,16 +3,14 @@ import { Box, Button, Flex, Heading, Text, useDisclosure, Stack } from "@chakra-
 import { InfoBadge } from "../InfoBadge";
 import React, { useState } from "react";
 import { useFormik } from "formik";
-import { _put } from "../../httpClient";
-import useAuth from "../../hooks/useAuth";
-import { buildUpdatesHistory } from "../../utils/formationUtils";
-import * as Yup from "yup";
+// import { _put } from "../../httpClient";
+// import useAuth from "../../hooks/useAuth";
+// import { buildUpdatesHistory } from "../../utils/formationUtils";
+// import * as Yup from "yup";
 import InfoTooltip from "../InfoTooltip";
-import { EtablissementModal } from "./EtablissementModal";
 import { SubModal } from "./SubModal";
 import { Table } from "./Table";
-
-const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
+import { ValidateIcon, RejectIcon } from "../../../theme/components/icons";
 
 const fixture = [
   {
@@ -52,50 +50,28 @@ const fixture = [
   },
 ];
 
-const getPublishRadioValue = (status) => {
-  if (["publié", "en attente de publication"].includes(status)) {
-    return "true";
-  }
-  if (["non publié"].includes(status)) {
-    return "false";
-  }
-
-  return undefined;
-};
-
 const Compare = ({ formation, onClose }) => {
-  const [user] = useAuth();
+  console.log(formation);
 
   const { isOpen: isOpenSubModal, onOpen: onOpenSubModal, onClose: onCloseSubModal } = useDisclosure();
   const [modalType, setModalType] = useState("validate");
 
-  const [isAffelnetFormOpen, setAffelnetFormOpen] = useState(
-    ["publié", "en attente de publication"].includes(formation?.affelnet_statut)
-  );
-
-  const [isAffelnetUnpublishFormOpen, setAffelnetUnpublishFormOpen] = useState(
-    ["non publié"].includes(formation?.affelnet_statut)
-  );
-  const [isParcoursupUnpublishFormOpen, setParcousupUnpublishFormOpen] = useState(
-    ["non publié"].includes(formation?.parcoursup_statut)
-  );
-
   const { values, handleChange, handleSubmit, isSubmitting, setFieldValue, errors } = useFormik({
     initialValues: {
-      affelnet: getPublishRadioValue(formation?.affelnet_statut),
-      parcoursup: getPublishRadioValue(formation?.parcoursup_statut),
+      //affelnet: getPublishRadioValue(formation?.affelnet_statut),
+      //parcoursup: getPublishRadioValue(formation?.parcoursup_statut),
       affelnet_infos_offre: formation?.affelnet_infos_offre ?? "",
       affelnet_raison_depublication: formation?.affelnet_raison_depublication ?? "",
       parcoursup_raison_depublication: formation?.parcoursup_raison_depublication ?? "",
     },
-    validationSchema: Yup.object().shape({
-      affelnet_raison_depublication: isAffelnetUnpublishFormOpen
-        ? Yup.string().nullable().required("Veuillez saisir la raison")
-        : Yup.string().nullable(),
-      parcoursup_raison_depublication: isParcoursupUnpublishFormOpen
-        ? Yup.string().nullable().required("Veuillez saisir la raison")
-        : Yup.string().nullable(),
-    }),
+    // validationSchema: Yup.object().shape({
+    //   affelnet_raison_depublication: isAffelnetUnpublishFormOpen
+    //     ? Yup.string().nullable().required("Veuillez saisir la raison")
+    //     : Yup.string().nullable(),
+    //   parcoursup_raison_depublication: isParcoursupUnpublishFormOpen
+    //     ? Yup.string().nullable().required("Veuillez saisir la raison")
+    //     : Yup.string().nullable(),
+    // }),
     onSubmit: ({
       affelnet,
       parcoursup,
@@ -104,123 +80,13 @@ const Compare = ({ formation, onClose }) => {
       parcoursup_raison_depublication,
     }) => {
       return new Promise(async (resolve) => {
-        // const body = {};
-        // let shouldRemoveAfReconciliation = false;
-        // let shouldRemovePsReconciliation = false;
-        // let shouldRestoreAfReconciliation = false;
-        // let shouldRestorePsReconciliation = false;
-
-        // // check if can edit depending on the status
-        // if (affelnet === "true") {
-        //   if (["non publié", "à publier (soumis à validation)", "à publier"].includes(formation?.affelnet_statut)) {
-        //     body.affelnet_statut = "en attente de publication";
-        //     body.affelnet_infos_offre = affelnet_infos_offre;
-        //     body.affelnet_raison_depublication = null;
-        //     shouldRestoreAfReconciliation = formation.affelnet_statut === "non publié";
-        //   } else if (["publié"].includes(formation?.affelnet_statut)) {
-        //     body.affelnet_infos_offre = affelnet_infos_offre;
-        //   }
-        // } else if (affelnet === "false") {
-        //   if (
-        //     ["en attente de publication", "à publier (soumis à validation)", "à publier", "publié"].includes(
-        //       formation?.affelnet_statut
-        //     )
-        //   ) {
-        //     body.affelnet_raison_depublication = affelnet_raison_depublication;
-        //     body.affelnet_statut = "non publié";
-        //     shouldRemoveAfReconciliation = ["en attente de publication", "publié"].includes(
-        //       formation.parcoursup_statut
-        //     );
-        //   }
-        // }
-
-        // if (parcoursup === "true") {
-        //   if (
-        //     [
-        //       "non publié",
-        //       "à publier (vérifier accès direct postbac)",
-        //       "à publier (soumis à validation Recteur)",
-        //       "à publier",
-        //     ].includes(formation?.parcoursup_statut)
-        //   ) {
-        //     body.parcoursup_statut = "en attente de publication";
-        //     shouldRestorePsReconciliation = formation.parcoursup_statut === "non publié";
-        //     body.parcoursup_raison_depublication = null;
-        //   }
-        // } else if (parcoursup === "false") {
-        //   if (
-        //     [
-        //       "en attente de publication",
-        //       "à publier (vérifier accès direct postbac)",
-        //       "à publier (soumis à validation Recteur)",
-        //       "à publier",
-        //       "publié",
-        //     ].includes(formation?.parcoursup_statut)
-        //   ) {
-        //     body.parcoursup_raison_depublication = parcoursup_raison_depublication;
-        //     body.parcoursup_statut = "non publié";
-        //     shouldRemovePsReconciliation = ["en attente de publication", "publié"].includes(
-        //       formation.parcoursup_statut
-        //     );
-        //   }
-        // }
-
-        // if (Object.keys(body).length > 0) {
-        //   const updatedFormation = await _put(`${endpointNewFront}/entity/formations2021/${formation._id}`, {
-        //     num_academie: formation.num_academie,
-        //     ...body,
-        //     last_update_who: user.email,
-        //     last_update_at: Date.now(),
-        //     updates_history: buildUpdatesHistory(
-        //       formation,
-        //       { ...body, last_update_who: user.email },
-        //       Object.keys(body)
-        //     ),
-        //   });
-
-        //   if (shouldRemoveAfReconciliation || shouldRestoreAfReconciliation) {
-        //     try {
-        //       await _put(`${endpointNewFront}/affelnet/reconciliation`, {
-        //         uai_formation: formation.uai_formation,
-        //         uai_gestionnaire: formation.etablissement_gestionnaire_uai,
-        //         uai_formateur: formation.etablissement_formateur_uai,
-        //         cfd: formation.cfd,
-        //         email: shouldRemoveAfReconciliation ? user.email : null,
-        //       });
-        //     } catch (e) {
-        //       // do nothing
-        //     }
-        //   }
-
-        //   if (shouldRemovePsReconciliation || shouldRestorePsReconciliation) {
-        //     try {
-        //       await _put(`${endpointNewFront}/parcoursup/reconciliation`, {
-        //         uai_gestionnaire: formation.etablissement_gestionnaire_uai,
-        //         uai_affilie: formation.etablissement_formateur_uai,
-        //         cfd: formation.cfd,
-        //         email: shouldRemovePsReconciliation ? user.email : null,
-        //       });
-        //     } catch (e) {
-        //       // do nothing
-        //     }
-        //   }
-
-        //   // onFormationUpdate(updatedFormation);
-        //   setFieldValue("affelnet", getPublishRadioValue(updatedFormation?.affelnet_statut));
-        //   setFieldValue("parcoursup", getPublishRadioValue(updatedFormation?.parcoursup_statut));
-        //   setFieldValue("affelnet_infos_offre", updatedFormation?.affelnet_infos_offre);
-        //   setFieldValue("affelnet_raison_depublication", updatedFormation?.affelnet_raison_depublication);
-        //   setFieldValue("parcoursup_raison_depublication", updatedFormation?.parcoursup_raison_depublication);
-        // }
+        // Do stuff
         setModalType("validate");
         onOpenSubModal();
         resolve("onSubmitHandler publish complete");
       });
     },
   });
-
-  const isParcoursupPublishDisabled = ["hors périmètre"].includes(formation?.parcoursup_statut);
-  const isAffelnetPublishDisabled = ["hors périmètre"].includes(formation?.affelnet_statut);
 
   return (
     <>
@@ -340,37 +206,39 @@ const Compare = ({ formation, onClose }) => {
           </Flex>
         </Box>
       </Flex>
-      <Box px={[4, 16]}>
-        <Heading as="h3" fontSize="1.3rem" mb={3} color="bluefrance">
-          <Stack direction="row">
-            <Text>2. Sélectionner le ou les organisme (s) liés à l’offre de formation</Text>{" "}
-            <Text color="tomato">*</Text>
-          </Stack>
-        </Heading>
-        <Box border="1px solid" borderColor="bluefrance" p={8}>
-          <Box w="full" overflow="hidden">
-            <Box overflowX="scroll" w="full">
-              <Table data={fixture} />
+      {formation.statut_reconciliation === "A_VERIFIER" && (
+        <Box px={[4, 16]} mb="8">
+          <Heading as="h3" fontSize="1.3rem" mb={3} color="bluefrance">
+            <Stack direction="row">
+              <Text>2. Sélectionner le ou les organisme (s) liés à l’offre de formation</Text>{" "}
+              <Text color="tomato">*</Text>
+            </Stack>
+          </Heading>
+          <Box border="1px solid" borderColor="bluefrance" p={8}>
+            <Box w="full" overflow="hidden">
+              <Box overflowX="scroll" w="full">
+                <Table data={fixture} />
+              </Box>
+              <Button
+                variant="unstyled"
+                onClick={() => {
+                  setModalType("etablissement");
+                  onOpenSubModal();
+                }}
+              >
+                ajouter un organisme à la liste
+              </Button>
             </Box>
-            <Button
-              variant="unstyled"
-              onClick={() => {
-                setModalType("etablissement");
-                onOpenSubModal();
-              }}
-            >
-              ajouter un organisme à la liste
-            </Button>
           </Box>
         </Box>
-      </Box>
+      )}
       <Box boxShadow={"0 -4px 16px 0 rgba(0, 0, 0, 0.08)"}>
         <Flex flexDirection={["column", "row"]} p={[3, 8]} justifyContent="flex-end">
           <Button
             variant="secondary"
             onClick={() => {
-              setFieldValue("affelnet", getPublishRadioValue(formation?.affelnet_statut));
-              setFieldValue("parcoursup", getPublishRadioValue(formation?.parcoursup_statut));
+              //setFieldValue("affelnet", getPublishRadioValue(formation?.affelnet_statut));
+              //setFieldValue("parcoursup", getPublishRadioValue(formation?.parcoursup_statut));
               onClose();
             }}
             mr={[0, 4]}
@@ -391,6 +259,7 @@ const Compare = ({ formation, onClose }) => {
             color="redmarianne"
             borderColor="redmarianne"
           >
+            <RejectIcon width="14px" height="14px" color="redmarianne" mr="2" />
             Rejeter
           </Button>
           <Button
@@ -400,6 +269,7 @@ const Compare = ({ formation, onClose }) => {
             isLoading={isSubmitting}
             loadingText="Enregistrement des modifications"
           >
+            <ValidateIcon width="14px" height="14px" color="white" mr="2" />
             Valider
           </Button>
         </Flex>
