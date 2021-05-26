@@ -263,6 +263,7 @@ module.exports = () => {
       const formation = req.body;
       const { formation: updatedFormation, error } = await mnaFormationUpdater(formation, {
         withHistoryUpdate: false,
+        withCodePostalUpdate: true,
       });
 
       if (formation.uai_formation) {
