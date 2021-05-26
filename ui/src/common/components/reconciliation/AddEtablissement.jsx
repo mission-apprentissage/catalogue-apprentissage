@@ -11,6 +11,7 @@ import {
   Stack,
   Text,
   Textarea,
+  Input,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useFormik } from "formik";
@@ -190,8 +191,8 @@ const AddEtablissement = ({ formation, onClose }) => {
     <>
       <Flex px={[4, 16]} pb={[4, 16]}>
         <Box border="1px solid" borderColor="bluefrance" p={8} w="full">
-          <Flex flexDirection="column">
-            <FormControl display="flex" flexDirection="column" w="auto" isDisabled={isParcoursupPublishDisabled}>
+          <Flex flexDirection="row">
+            {/* <FormControl display="flex" flexDirection="column" w="auto" isDisabled={isParcoursupPublishDisabled}>
               <FormLabel htmlFor="parcoursup" mb={3} fontSize="epsilon" fontWeight={400}>
                 Recherche
               </FormLabel>
@@ -227,11 +228,10 @@ const AddEtablissement = ({ formation, onClose }) => {
                   </Radio>
                 </Stack>
               </RadioGroup>
-            </FormControl>
+            </FormControl> */}
             <FormControl
-              // isRequired
+              isRequired
               isInvalid={errors.parcoursup_raison_depublication}
-              // display={isParcoursupUnpublishFormOpen ? "flex" : "none"}
               flexDirection="column"
               w="auto"
               mt={3}
@@ -240,16 +240,46 @@ const AddEtablissement = ({ formation, onClose }) => {
                 UAI
               </FormLabel>
               <Flex flexDirection="column" w="100%">
-                <Textarea
+                <Input
+                  type="text"
                   name="parcoursup_raison_depublication"
-                  value={values.parcoursup_raison_depublication}
                   onChange={handleChange}
-                  placeholder="Précisez ici la raison pour laquelle vous ne souhaitez pas publier la formation sur Parcoursup"
-                  rows={2}
+                  value={values.parcoursup_raison_depublication}
                 />
                 <FormErrorMessage>{errors.parcoursup_raison_depublication}</FormErrorMessage>
               </Flex>
             </FormControl>
+            <FormControl
+              isRequired
+              isInvalid={errors.parcoursup_raison_depublication}
+              flexDirection="column"
+              w="auto"
+              mt={3}
+              ml={3}
+            >
+              <FormLabel htmlFor="parcoursup_raison_depublication" mb={3} fontSize="epsilon" fontWeight={400}>
+                SIRET
+              </FormLabel>
+              <Flex flexDirection="column" w="100%">
+                <Input
+                  type="text"
+                  name="parcoursup_raison_depublication"
+                  onChange={handleChange}
+                  value={values.parcoursup_raison_depublication}
+                />
+                <FormErrorMessage>{errors.parcoursup_raison_depublication}</FormErrorMessage>
+              </Flex>
+            </FormControl>
+            <Flex alignItems="flex-end" ml={3}>
+              <Button
+                variant="primary"
+                // onClick={handleSubmit}
+                // isLoading={isSubmitting}
+                loadingText="..."
+              >
+                Rechercher
+              </Button>
+            </Flex>
           </Flex>
         </Box>
       </Flex>
@@ -274,6 +304,7 @@ const AddEtablissement = ({ formation, onClose }) => {
             onClick={handleSubmit}
             isLoading={isSubmitting}
             loadingText="Enregistrement des modifications"
+            isDisabled={true}
           >
             Ajouter l’organisme
           </Button>
