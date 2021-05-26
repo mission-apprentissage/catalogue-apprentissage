@@ -19,14 +19,10 @@ if (process.env.standalone) {
       etablissement_formateur_uai: 1,
       etablissement_formateur_siret: 1,
       etablissement_gestionnaire_siret: 1,
-      // uai_formation: 1,
-      // nom_academie: 1,
-      // num_academie: 1,
       lieu_formation_adresse: 1,
       code_postal: 1,
+      code_commune_insee: 1,
       cfd: 1,
-      periode: 1,
-      // capacite: 1,
       published: 1,
     };
 
@@ -41,19 +37,7 @@ if (process.env.standalone) {
       if (original) {
         let hasOneChange = false;
         const row = computedHeaders.map((header) => {
-          if (
-            [
-              // "uai_formation",
-              // "nom_academie",
-              // "num_academie",
-              "lieu_formation_adresse",
-              "code_postal",
-              "cfd",
-              "periode",
-              // "capacite",
-              "published",
-            ].includes(header)
-          ) {
+          if (["lieu_formation_adresse", "code_postal", "code_commune_insee", "published"].includes(header)) {
             if (original[header] === formation[header] || (original[header] === null && !formation[header])) {
               return "";
             }
