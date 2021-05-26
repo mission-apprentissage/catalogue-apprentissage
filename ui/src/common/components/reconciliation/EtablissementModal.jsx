@@ -10,28 +10,14 @@ import {
   ModalOverlay,
   Text,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
-import useAuth from "../../hooks/useAuth";
+import React from "react";
 import { Close } from "../../../theme/components/icons/Close";
 import { ArrowRightLine } from "../../../theme/components/icons";
-import { Validate } from "./Validate";
-import { Compare } from "./Compare";
-import { Rejected } from "./Rejected";
+import { AddEtablissement } from "./AddEtablissement";
 
-const ReconciliationPsModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
-  const [user] = useAuth();
-  const [step, setStep] = useState("compare");
-
-  const onCompareValidated = () => {
-    setStep("validated");
-  };
-
-  const onRejected = () => {
-    setStep("rejected");
-  };
-
+const EtablissementModal = ({ isOpen, onClose }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="full">
+    <Modal isOpen={isOpen} onClose={onClose} size="3xl">
       <ModalOverlay />
       <ModalContent bg="white" color="primaryText" borderRadius="none" my="0">
         <Button
@@ -56,23 +42,17 @@ const ReconciliationPsModal = ({ isOpen, onClose, formation, onFormationUpdate }
                 <ArrowRightLine boxSize={26} />
               </Text>
               <Text as={"span"} ml={4}>
-                {step === "compare" && "Valider le rapprochement de l’offre de formation"}
-                {step === "validated" && "Rapprochement validé"}
-                {step === "rejected" && "Rapprochement rejeté"}
+                Ajouter un organisme
               </Text>
             </Flex>
           </Heading>
         </ModalHeader>
         <ModalBody p={0} display="flex" flexDirection="column">
-          {step === "compare" && (
-            <Compare formation={formation} onValidate={onCompareValidated} onRejected={onRejected} onClose={onClose} />
-          )}
-          {step === "validated" && <Validate formation={formation} onClose={onClose} />}
-          {step === "rejected" && <Rejected formation={formation} onClose={onClose} />}
+          <AddEtablissement formation={null} onClose={onClose} />
         </ModalBody>
       </ModalContent>
     </Modal>
   );
 };
 
-export { ReconciliationPsModal };
+export { EtablissementModal };

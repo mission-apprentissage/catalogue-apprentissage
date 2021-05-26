@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Text, useDisclosure } from "@chakra-ui/react";
 // import { StatusBadge } from "../StatusBadge";
 import { InfoBadge } from "../InfoBadge";
 import React, { useState } from "react";
@@ -7,7 +7,8 @@ import { _put } from "../../httpClient";
 import useAuth from "../../hooks/useAuth";
 import { buildUpdatesHistory } from "../../utils/formationUtils";
 import * as Yup from "yup";
-import InfoTooltip from "../../../common/components/InfoTooltip";
+import InfoTooltip from "../InfoTooltip";
+import { EtablissementModal } from "./EtablissementModal";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -22,8 +23,15 @@ const getPublishRadioValue = (status) => {
   return undefined;
 };
 
-const ReconciliationPsModalCompare = ({ formation, onClose, onValidate }) => {
+const Compare = ({ formation, onClose, onValidate, onRejected }) => {
   const [user] = useAuth();
+
+  const {
+    isOpen: isOpenEtablissementModal,
+    onOpen: onOpenEtablissementModal,
+    onClose: onCloseEtablissementModal,
+  } = useDisclosure();
+
   const [isAffelnetFormOpen, setAffelnetFormOpen] = useState(
     ["publié", "en attente de publication"].includes(formation?.affelnet_statut)
   );
@@ -237,7 +245,7 @@ const ReconciliationPsModalCompare = ({ formation, onClose, onValidate }) => {
             </Box>
           </Flex>
         </Box>
-        <Box border="1px solid" borderColor="bluefrance" p={8} w="50%">
+        <Box border="1px solid" borderColor="bluefrance" p={8} w="50%" borderLeft="none">
           <Heading as="h3" fontSize="1.5rem" mb={3}>
             Informations Catalogue 2021
           </Heading>
@@ -313,7 +321,7 @@ const ReconciliationPsModalCompare = ({ formation, onClose, onValidate }) => {
           <Button
             variant="secondary"
             onClick={() => {
-              onClose();
+              onRejected();
             }}
             mr={[0, 4]}
             px={8}
@@ -334,8 +342,12 @@ const ReconciliationPsModalCompare = ({ formation, onClose, onValidate }) => {
           </Button>
         </Flex>
       </Box>
+      <Button variant="secondary" onClick={onOpenEtablissementModal}>
+        ajouter un organisme à la liste
+      </Button>
+      <EtablissementModal isOpen={isOpenEtablissementModal} onClose={onCloseEtablissementModal} />
     </>
   );
 };
 
-export { ReconciliationPsModalCompare };
+export { Compare };

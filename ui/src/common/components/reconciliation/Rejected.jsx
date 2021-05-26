@@ -32,7 +32,7 @@ const getPublishRadioValue = (status) => {
   return undefined;
 };
 
-const ReconciliationPsModalValidated = ({ formation, onClose }) => {
+const Rejected = ({ formation, onClose }) => {
   const [user] = useAuth();
   const [isAffelnetFormOpen, setAffelnetFormOpen] = useState(
     ["publié", "en attente de publication"].includes(formation?.affelnet_statut)
@@ -188,28 +188,12 @@ const ReconciliationPsModalValidated = ({ formation, onClose }) => {
 
   return (
     <>
-      <Flex px={[4, 16]} mb="3">
-        <Box border="1px solid" borderColor="bluefrance" p={8} w="full">
-          <Heading as="h3" fontSize="1.5rem" mb={3}>
-            Récapitualif
-          </Heading>
-          <Text as="span">
-            La formation Parcoursup “BTS - Services Communication - en apprentissage” associée à l’organisme “Ecole
-            Auvergne Formation” a bien été rapprochée à la formation du Catalogue 2021 “COMMUNICATION (BTS)” associée à
-            l’organisme “EAF”
-          </Text>
-        </Box>
-      </Flex>
       <Flex px={[4, 16]} pb={[4, 16]}>
         <Box border="1px solid" borderColor="bluefrance" p={8} w="full">
-          <Heading as="h3" fontSize="1.5rem" mb={3}>
-            Gérer la publication
-          </Heading>
           <Flex flexDirection="column">
             <FormControl display="flex" flexDirection="column" w="auto" isDisabled={isParcoursupPublishDisabled}>
               <FormLabel htmlFor="parcoursup" mb={3} fontSize="epsilon" fontWeight={400}>
-                Elle apparait aujourd’hui dans le Catalogue 2021 sous le statut “publiée”. Conserver la publication dans
-                Parcoursup ?
+                Pouvez-vous préciser les raisons de votre signalement
               </FormLabel>
               <RadioGroup defaultValue={values.parcoursup} id="parcoursup" name="parcoursup">
                 <Stack spacing={2} direction="column">
@@ -224,7 +208,7 @@ const ReconciliationPsModalValidated = ({ formation, onClose }) => {
                     }}
                   >
                     <Text as={"span"} fontSize="zeta">
-                      Oui
+                      Le lieu de le formation pas ok
                     </Text>
                   </Radio>
                   <Radio
@@ -238,11 +222,33 @@ const ReconciliationPsModalValidated = ({ formation, onClose }) => {
                     }}
                   >
                     <Text as={"span"} fontSize="zeta">
-                      Non
+                      Libellé Psup ne correspond pas au Code diplome
                     </Text>
                   </Radio>
                 </Stack>
               </RadioGroup>
+            </FormControl>
+            <FormControl
+              // isRequired
+              isInvalid={errors.parcoursup_raison_depublication}
+              // display={isParcoursupUnpublishFormOpen ? "flex" : "none"}
+              flexDirection="column"
+              w="auto"
+              mt={3}
+            >
+              <FormLabel htmlFor="parcoursup_raison_depublication" mb={3} fontSize="epsilon" fontWeight={400}>
+                Informations complémentaires (facultatif)
+              </FormLabel>
+              <Flex flexDirection="column" w="100%">
+                <Textarea
+                  name="parcoursup_raison_depublication"
+                  value={values.parcoursup_raison_depublication}
+                  onChange={handleChange}
+                  placeholder="Précisez ici la raison pour laquelle vous ne souhaitez pas publier la formation sur Parcoursup"
+                  rows={2}
+                />
+                <FormErrorMessage>{errors.parcoursup_raison_depublication}</FormErrorMessage>
+              </Flex>
             </FormControl>
           </Flex>
         </Box>
@@ -269,7 +275,7 @@ const ReconciliationPsModalValidated = ({ formation, onClose }) => {
             isLoading={isSubmitting}
             loadingText="Enregistrement des modifications"
           >
-            Enregistrer
+            Envoyer
           </Button>
         </Flex>
       </Box>
@@ -277,4 +283,4 @@ const ReconciliationPsModalValidated = ({ formation, onClose }) => {
   );
 };
 
-export { ReconciliationPsModalValidated };
+export { Rejected };
