@@ -507,25 +507,31 @@ const Formation = ({
               )}
             </Text>
             <Text mb={4}>
-              <Edit2Fill w="16px" h="16px" color="bluefrance" mr="5px" mb="7px" /> Commune :{" "}
+              Commune :{" "}
+              <Text as="span" variant="highlight">
+                {displayedFormation.localite}
+              </Text>{" "}
+              <InfoTooltip description={helpText.formation.localite} />
+            </Text>
+            <Text mb={4}>
+              <Edit2Fill w="16px" h="16px" color="bluefrance" mr="5px" mb="7px" /> Code commune :{" "}
               {!edition && (
                 <>
                   <Text as="span" variant="highlight">
-                    {displayedFormation.localite}
+                    {displayedFormation.code_commune_insee}
                   </Text>{" "}
-                  <InfoTooltip description={helpText.formation.localite} />
+                  <InfoTooltip description={helpText.formation.code_commune_insee} />
                 </>
               )}
               {edition && (
-                <Input variant="edition" type="text" name="localite" onChange={handleChange} value={values.localite} />
+                <Input
+                  variant="edition"
+                  type="text"
+                  name="code_commune_insee"
+                  onChange={handleChange}
+                  value={values.code_commune_insee}
+                />
               )}
-            </Text>
-            <Text mb={4}>
-              Code commune :{" "}
-              <Text as="span" variant="highlight">
-                {displayedFormation.code_commune_insee}
-              </Text>{" "}
-              <InfoTooltip description={helpText.formation.code_commune_insee} />
             </Text>
             <Text mb={4}>
               Département :{" "}
@@ -635,7 +641,7 @@ export default ({ match }) => {
       uai_formation: "",
       code_postal: "",
       lieu_formation_adresse: "",
-      localite: "",
+      code_commune_insee: "",
     },
     onSubmit: (values) => {
       return new Promise(async (resolve) => {
@@ -710,7 +716,7 @@ export default ({ match }) => {
                 "lieu_formation_adresse",
                 result?.lieu_formation_adresse ?? formation.lieu_formation_adresse ?? ""
               );
-              setFieldValue("localite", result?.localite ?? formation.localite ?? "");
+              setFieldValue("code_commune_insee", result?.code_commune_insee ?? formation.code_commune_insee ?? "");
             }
           }
         } catch (e) {
@@ -752,7 +758,7 @@ export default ({ match }) => {
           "lieu_formation_adresse",
           pendingRCOFormation?.lieu_formation_adresse ?? form.lieu_formation_adresse ?? ""
         );
-        setFieldValue("localite", pendingRCOFormation?.localite ?? form.localite ?? "");
+        setFieldValue("code_commune_insee", pendingRCOFormation?.code_commune_insee ?? form.code_commune_insee ?? "");
       } catch (e) {
         history.push("/404");
       }
