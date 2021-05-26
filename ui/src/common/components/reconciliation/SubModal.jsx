@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Flex,
   Heading,
@@ -12,13 +13,15 @@ import {
 import React from "react";
 import { Close } from "../../../theme/components/icons/Close";
 import { ArrowRightLine } from "../../../theme/components/icons";
-import { Compare } from "./Compare";
+import { AddEtablissement } from "./AddEtablissement";
+import { Validate } from "./Validate";
+import { Rejected } from "./Rejected";
 
-const ReconciliationPsModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
+const SubModal = ({ isOpen, onClose, type }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="full">
+    <Modal isOpen={isOpen} onClose={onClose} size="3xl">
       <ModalOverlay />
-      <ModalContent bg="white" color="primaryText" borderRadius="none" my="0" h="auto">
+      <ModalContent bg="white" color="primaryText" borderRadius="none" my="0">
         <Button
           display={"flex"}
           alignSelf={"flex-end"}
@@ -41,17 +44,21 @@ const ReconciliationPsModal = ({ isOpen, onClose, formation, onFormationUpdate }
                 <ArrowRightLine boxSize={26} />
               </Text>
               <Text as={"span"} ml={4}>
-                Valider le rapprochement de l’offre de formation
+                {type === "etablissement" && "Ajouter un organisme"}
+                {type === "validate" && "Rapprochement validé"}
+                {type === "reject" && "Rapprochement rejeté"}
               </Text>
             </Flex>
           </Heading>
         </ModalHeader>
         <ModalBody p={0} display="flex" flexDirection="column">
-          <Compare formation={formation} onClose={onClose} />
+          {type === "etablissement" && <AddEtablissement formation={null} onClose={onClose} />}
+          {type === "validate" && <Validate formation={null} onClose={onClose} />}
+          {type === "reject" && <Rejected formation={null} onClose={onClose} />}
         </ModalBody>
       </ModalContent>
     </Modal>
   );
 };
 
-export { ReconciliationPsModal };
+export { SubModal };

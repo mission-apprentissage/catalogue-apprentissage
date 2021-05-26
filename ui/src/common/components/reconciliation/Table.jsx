@@ -112,7 +112,7 @@ const Table = ({ data, onRowClick, filename }) => {
       {
         Header: "select",
         accessor: (row, i) => i,
-        width: 50,
+        width: 20,
       },
       ...columns,
     ],

@@ -9,6 +9,7 @@ import { buildUpdatesHistory } from "../../utils/formationUtils";
 import * as Yup from "yup";
 import InfoTooltip from "../InfoTooltip";
 import { EtablissementModal } from "./EtablissementModal";
+import { SubModal } from "./SubModal";
 import { Table } from "./Table";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
@@ -62,14 +63,11 @@ const getPublishRadioValue = (status) => {
   return undefined;
 };
 
-const Compare = ({ formation, onClose, onValidate, onRejected }) => {
+const Compare = ({ formation, onClose }) => {
   const [user] = useAuth();
 
-  const {
-    isOpen: isOpenEtablissementModal,
-    onOpen: onOpenEtablissementModal,
-    onClose: onCloseEtablissementModal,
-  } = useDisclosure();
+  const { isOpen: isOpenSubModal, onOpen: onOpenSubModal, onClose: onCloseSubModal } = useDisclosure();
+  const [modalType, setModalType] = useState("validate");
 
   const [isAffelnetFormOpen, setAffelnetFormOpen] = useState(
     ["publié", "en attente de publication"].includes(formation?.affelnet_statut)
@@ -214,8 +212,8 @@ const Compare = ({ formation, onClose, onValidate, onRejected }) => {
         //   setFieldValue("affelnet_raison_depublication", updatedFormation?.affelnet_raison_depublication);
         //   setFieldValue("parcoursup_raison_depublication", updatedFormation?.parcoursup_raison_depublication);
         // }
-
-        onValidate();
+        setModalType("validate");
+        onOpenSubModal();
         resolve("onSubmitHandler publish complete");
       });
     },
@@ -354,11 +352,16 @@ const Compare = ({ formation, onClose, onValidate, onRejected }) => {
             <Box overflowX="scroll" w="full">
               <Table data={fixture} />
             </Box>
-            <Button variant="unstyled" onClick={onOpenEtablissementModal}>
+            <Button
+              variant="unstyled"
+              onClick={() => {
+                setModalType("etablissement");
+                onOpenSubModal();
+              }}
+            >
               ajouter un organisme à la liste
             </Button>
           </Box>
-          <EtablissementModal isOpen={isOpenEtablissementModal} onClose={onCloseEtablissementModal} />
         </Box>
       </Box>
       <Box boxShadow={"0 -4px 16px 0 rgba(0, 0, 0, 0.08)"}>
@@ -379,7 +382,8 @@ const Compare = ({ formation, onClose, onValidate, onRejected }) => {
           <Button
             variant="secondary"
             onClick={() => {
-              onRejected();
+              setModalType("reject");
+              onOpenSubModal();
             }}
             mr={[0, 4]}
             px={8}
@@ -400,6 +404,7 @@ const Compare = ({ formation, onClose, onValidate, onRejected }) => {
           </Button>
         </Flex>
       </Box>
+      <SubModal isOpen={isOpenSubModal} onClose={onCloseSubModal} type={modalType} />
     </>
   );
 };
