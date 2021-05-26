@@ -13,3 +13,5 @@ export * from "./Arrow-right-line";
 export * from "./Parametre";
 export * from "./Map-pin-2-fill";
 export * from "./Edit-2-fill";
+export * from "./Star";
+export * from "./SortingArrows";

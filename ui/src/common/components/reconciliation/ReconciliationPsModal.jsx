@@ -33,7 +33,7 @@ const ReconciliationPsModal = ({ isOpen, onClose, formation, onFormationUpdate }
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="full">
       <ModalOverlay />
-      <ModalContent bg="white" color="primaryText" borderRadius="none" my="0">
+      <ModalContent bg="white" color="primaryText" borderRadius="none" my="0" h="auto">
         <Button
           display={"flex"}
           alignSelf={"flex-end"}

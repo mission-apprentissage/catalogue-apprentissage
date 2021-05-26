@@ -9,7 +9,17 @@ import "./facet.css";
 import { AddFill, SubtractLine } from "../../../../../theme/components/icons";
 import InfoTooltip from "../../../InfoTooltip";
 
-const Facet = ({ componentId, dataField, filterLabel, filters, title, selectAllLabel, sortBy, helpTextSection, defaultQuery }) => {
+const Facet = ({
+  componentId,
+  dataField,
+  filterLabel,
+  filters,
+  title,
+  selectAllLabel,
+  sortBy,
+  helpTextSection,
+  defaultQuery,
+}) => {
   let [auth] = useAuth();
   let defaultValue = null;
   let defaultIndex = [];
