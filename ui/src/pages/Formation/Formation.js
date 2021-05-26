@@ -462,7 +462,7 @@ const Formation = ({
             <EditableField
               fieldName={"lieu_formation_adresse"}
               label={"Adresse"}
-              formation={formation}
+              formation={displayedFormation}
               edition={edition}
               onEdit={onEdit}
               values={values}
@@ -474,7 +474,7 @@ const Formation = ({
             <EditableField
               fieldName={"code_postal"}
               label={"Code postal"}
-              formation={formation}
+              formation={displayedFormation}
               edition={edition}
               onEdit={onEdit}
               values={values}
@@ -493,7 +493,7 @@ const Formation = ({
             <EditableField
               fieldName={"code_commune_insee"}
               label={"Code commune"}
-              formation={formation}
+              formation={displayedFormation}
               edition={edition}
               onEdit={onEdit}
               values={values}
