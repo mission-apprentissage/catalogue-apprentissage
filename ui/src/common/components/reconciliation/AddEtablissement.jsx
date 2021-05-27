@@ -5,291 +5,132 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Heading,
   Radio,
   RadioGroup,
-  Stack,
-  Text,
-  Textarea,
+  HStack,
   Input,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useFormik } from "formik";
-import { _put } from "../../httpClient";
-import useAuth from "../../hooks/useAuth";
-import { buildUpdatesHistory } from "../../utils/formationUtils";
-import * as Yup from "yup";
-
-const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
-
-const getPublishRadioValue = (status) => {
-  if (["publié", "en attente de publication"].includes(status)) {
-    return "true";
-  }
-  if (["non publié"].includes(status)) {
-    return "false";
-  }
-
-  return undefined;
-};
+import { _post } from "../../httpClient";
+import { CardListEtablissements } from "../Search/components/CardListEtablissements";
 
 const AddEtablissement = ({ formation, onClose }) => {
-  const [user] = useAuth();
-  const [isAffelnetFormOpen, setAffelnetFormOpen] = useState(
-    ["publié", "en attente de publication"].includes(formation?.affelnet_statut)
-  );
+  const [etablissement, setEtablissement] = useState();
 
-  const [isAffelnetUnpublishFormOpen, setAffelnetUnpublishFormOpen] = useState(
-    ["non publié"].includes(formation?.affelnet_statut)
-  );
-  const [isParcoursupUnpublishFormOpen, setParcousupUnpublishFormOpen] = useState(
-    ["non publié"].includes(formation?.parcoursup_statut)
-  );
-
-  const { values, handleChange, handleSubmit, isSubmitting, setFieldValue, errors } = useFormik({
+  const { values, handleChange, handleSubmit, isSubmitting, resetForm, errors } = useFormik({
     initialValues: {
-      affelnet: getPublishRadioValue(formation?.affelnet_statut),
-      parcoursup: getPublishRadioValue(formation?.parcoursup_statut),
-      affelnet_infos_offre: formation?.affelnet_infos_offre ?? "",
-      affelnet_raison_depublication: formation?.affelnet_raison_depublication ?? "",
-      parcoursup_raison_depublication: formation?.parcoursup_raison_depublication ?? "",
+      uai: "",
+      siret: "",
+      typeOrganisme: "",
     },
-    // validationSchema: Yup.object().shape({
-    //   affelnet_raison_depublication: isAffelnetUnpublishFormOpen
-    //     ? Yup.string().nullable().required("Veuillez saisir la raison")
-    //     : Yup.string().nullable(),
-    //   parcoursup_raison_depublication: isParcoursupUnpublishFormOpen
-    //     ? Yup.string().nullable().required("Veuillez saisir la raison")
-    //     : Yup.string().nullable(),
-    // }),
-    onSubmit: ({
-      affelnet,
-      parcoursup,
-      affelnet_infos_offre,
-      affelnet_raison_depublication,
-      parcoursup_raison_depublication,
-    }) => {
+    onSubmit: ({ uai, siret, typeOrganisme }) => {
       return new Promise(async (resolve) => {
-        // const body = {};
-        // let shouldRemoveAfReconciliation = false;
-        // let shouldRemovePsReconciliation = false;
-        // let shouldRestoreAfReconciliation = false;
-        // let shouldRestorePsReconciliation = false;
-
-        // // check if can edit depending on the status
-        // if (affelnet === "true") {
-        //   if (["non publié", "à publier (soumis à validation)", "à publier"].includes(formation?.affelnet_statut)) {
-        //     body.affelnet_statut = "en attente de publication";
-        //     body.affelnet_infos_offre = affelnet_infos_offre;
-        //     body.affelnet_raison_depublication = null;
-        //     shouldRestoreAfReconciliation = formation.affelnet_statut === "non publié";
-        //   } else if (["publié"].includes(formation?.affelnet_statut)) {
-        //     body.affelnet_infos_offre = affelnet_infos_offre;
-        //   }
-        // } else if (affelnet === "false") {
-        //   if (
-        //     ["en attente de publication", "à publier (soumis à validation)", "à publier", "publié"].includes(
-        //       formation?.affelnet_statut
-        //     )
-        //   ) {
-        //     body.affelnet_raison_depublication = affelnet_raison_depublication;
-        //     body.affelnet_statut = "non publié";
-        //     shouldRemoveAfReconciliation = ["en attente de publication", "publié"].includes(
-        //       formation.parcoursup_statut
-        //     );
-        //   }
-        // }
-
-        // if (parcoursup === "true") {
-        //   if (
-        //     [
-        //       "non publié",
-        //       "à publier (vérifier accès direct postbac)",
-        //       "à publier (soumis à validation Recteur)",
-        //       "à publier",
-        //     ].includes(formation?.parcoursup_statut)
-        //   ) {
-        //     body.parcoursup_statut = "en attente de publication";
-        //     shouldRestorePsReconciliation = formation.parcoursup_statut === "non publié";
-        //     body.parcoursup_raison_depublication = null;
-        //   }
-        // } else if (parcoursup === "false") {
-        //   if (
-        //     [
-        //       "en attente de publication",
-        //       "à publier (vérifier accès direct postbac)",
-        //       "à publier (soumis à validation Recteur)",
-        //       "à publier",
-        //       "publié",
-        //     ].includes(formation?.parcoursup_statut)
-        //   ) {
-        //     body.parcoursup_raison_depublication = parcoursup_raison_depublication;
-        //     body.parcoursup_statut = "non publié";
-        //     shouldRemovePsReconciliation = ["en attente de publication", "publié"].includes(
-        //       formation.parcoursup_statut
-        //     );
-        //   }
-        // }
-
-        // if (Object.keys(body).length > 0) {
-        //   const updatedFormation = await _put(`${endpointNewFront}/entity/formations2021/${formation._id}`, {
-        //     num_academie: formation.num_academie,
-        //     ...body,
-        //     last_update_who: user.email,
-        //     last_update_at: Date.now(),
-        //     updates_history: buildUpdatesHistory(
-        //       formation,
-        //       { ...body, last_update_who: user.email },
-        //       Object.keys(body)
-        //     ),
-        //   });
-
-        //   if (shouldRemoveAfReconciliation || shouldRestoreAfReconciliation) {
-        //     try {
-        //       await _put(`${endpointNewFront}/affelnet/reconciliation`, {
-        //         uai_formation: formation.uai_formation,
-        //         uai_gestionnaire: formation.etablissement_gestionnaire_uai,
-        //         uai_formateur: formation.etablissement_formateur_uai,
-        //         cfd: formation.cfd,
-        //         email: shouldRemoveAfReconciliation ? user.email : null,
-        //       });
-        //     } catch (e) {
-        //       // do nothing
-        //     }
-        //   }
-
-        //   if (shouldRemovePsReconciliation || shouldRestorePsReconciliation) {
-        //     try {
-        //       await _put(`${endpointNewFront}/parcoursup/reconciliation`, {
-        //         uai_gestionnaire: formation.etablissement_gestionnaire_uai,
-        //         uai_affilie: formation.etablissement_formateur_uai,
-        //         cfd: formation.cfd,
-        //         email: shouldRemovePsReconciliation ? user.email : null,
-        //       });
-        //     } catch (e) {
-        //       // do nothing
-        //     }
-        //   }
-
-        //   // onFormationUpdate(updatedFormation);
-        //   setFieldValue("affelnet", getPublishRadioValue(updatedFormation?.affelnet_statut));
-        //   setFieldValue("parcoursup", getPublishRadioValue(updatedFormation?.parcoursup_statut));
-        //   setFieldValue("affelnet_infos_offre", updatedFormation?.affelnet_infos_offre);
-        //   setFieldValue("affelnet_raison_depublication", updatedFormation?.affelnet_raison_depublication);
-        //   setFieldValue("parcoursup_raison_depublication", updatedFormation?.parcoursup_raison_depublication);
-        // }
-
+        // onSuccess.mutate({ ...etablissement, type: typeOrganisme, matched_uai: ["utilisateur"], uai }); // siret
         resolve("onSubmitHandler publish complete");
       });
     },
   });
 
-  const isParcoursupPublishDisabled = ["hors périmètre"].includes(formation?.parcoursup_statut);
-  const isAffelnetPublishDisabled = ["hors périmètre"].includes(formation?.affelnet_statut);
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await _post("/api/parcoursup/etablissement", values);
+
+      if (response) {
+        setEtablissement(response);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
-      <Flex px={[4, 16]} pb={[4, 16]}>
+      <Flex px={[4, 16]} pb={[4, 16]} flexDirection="column">
         <Box border="1px solid" borderColor="bluefrance" p={8} w="full">
           <Flex flexDirection="row">
-            {/* <FormControl display="flex" flexDirection="column" w="auto" isDisabled={isParcoursupPublishDisabled}>
-              <FormLabel htmlFor="parcoursup" mb={3} fontSize="epsilon" fontWeight={400}>
-                Recherche
-              </FormLabel>
-              <RadioGroup defaultValue={values.parcoursup} id="parcoursup" name="parcoursup">
-                <Stack spacing={2} direction="column">
-                  <Radio
-                    mb={0}
-                    size="lg"
-                    value="true"
-                    isDisabled={isParcoursupPublishDisabled}
-                    onChange={(evt) => {
-                      setParcousupUnpublishFormOpen(false);
-                      handleChange(evt);
-                    }}
-                  >
-                    <Text as={"span"} fontSize="zeta">
-                      Le lieu de le formation pas ok
-                    </Text>
-                  </Radio>
-                  <Radio
-                    mb={0}
-                    size="lg"
-                    value="false"
-                    isDisabled={isParcoursupPublishDisabled}
-                    onChange={(evt) => {
-                      setParcousupUnpublishFormOpen(true);
-                      handleChange(evt);
-                    }}
-                  >
-                    <Text as={"span"} fontSize="zeta">
-                      Libellé Psup ne correspond pas au Code diplome
-                    </Text>
-                  </Radio>
-                </Stack>
-              </RadioGroup>
-            </FormControl> */}
-            <FormControl
-              isRequired
-              isInvalid={errors.parcoursup_raison_depublication}
-              flexDirection="column"
-              w="auto"
-              mt={3}
-            >
-              <FormLabel htmlFor="parcoursup_raison_depublication" mb={3} fontSize="epsilon" fontWeight={400}>
+            <FormControl isRequired isInvalid={errors.uai} flexDirection="column" w="auto" mt={3}>
+              <FormLabel htmlFor="uai" mb={3} fontSize="epsilon" fontWeight={400}>
                 UAI
               </FormLabel>
               <Flex flexDirection="column" w="100%">
                 <Input
                   type="text"
-                  name="parcoursup_raison_depublication"
+                  name="uai"
                   onChange={handleChange}
-                  value={values.parcoursup_raison_depublication}
+                  value={values.uai}
+                  autoComplete="off"
+                  maxLength="8"
+                  required
                 />
-                <FormErrorMessage>{errors.parcoursup_raison_depublication}</FormErrorMessage>
+                <FormErrorMessage>{errors.uai}</FormErrorMessage>
               </Flex>
             </FormControl>
-            <FormControl
-              isRequired
-              isInvalid={errors.parcoursup_raison_depublication}
-              flexDirection="column"
-              w="auto"
-              mt={3}
-              ml={3}
-            >
-              <FormLabel htmlFor="parcoursup_raison_depublication" mb={3} fontSize="epsilon" fontWeight={400}>
+            <FormControl isRequired isInvalid={errors.siret} flexDirection="column" w="auto" mt={3} ml={3}>
+              <FormLabel htmlFor="siret" mb={3} fontSize="epsilon" fontWeight={400}>
                 SIRET
               </FormLabel>
               <Flex flexDirection="column" w="100%">
                 <Input
                   type="text"
-                  name="parcoursup_raison_depublication"
+                  name="siret"
                   onChange={handleChange}
-                  value={values.parcoursup_raison_depublication}
+                  value={values.siret}
+                  autoComplete="off"
+                  maxLength="14"
+                  pattern="[0-9]{14}"
+                  required
                 />
-                <FormErrorMessage>{errors.parcoursup_raison_depublication}</FormErrorMessage>
+                <FormErrorMessage>{errors.siret}</FormErrorMessage>
               </Flex>
             </FormControl>
             <Flex alignItems="flex-end" ml={3}>
-              <Button
-                variant="primary"
-                // onClick={handleSubmit}
-                // isLoading={isSubmitting}
-                loadingText="..."
-              >
+              <Button variant="primary" onClick={handleSearch} loadingText="...">
                 Rechercher
               </Button>
             </Flex>
           </Flex>
         </Box>
+        {etablissement && <CardListEtablissements data={etablissement} />}
+        {etablissement && (
+          <FormControl as="fieldset" display="flex" mt={5}>
+            <FormLabel as="div">Ajouter cet organisme en tant que :</FormLabel>
+            <RadioGroup id="typeOrganisme" name="typeOrganisme">
+              <HStack spacing="24px">
+                <Radio
+                  value="formateur"
+                  size="lg"
+                  onChange={(evt) => {
+                    handleChange(evt);
+                  }}
+                >
+                  Formateur
+                </Radio>
+                <Radio
+                  value="gestionnaire"
+                  size="lg"
+                  onChange={(evt) => {
+                    handleChange(evt);
+                  }}
+                >
+                  Gestionnaire
+                </Radio>
+                {/* <Radio value="formateur-gestionnaire">Formateur & gestionnaire</Radio> */}
+              </HStack>
+            </RadioGroup>
+          </FormControl>
+        )}
       </Flex>
       <Box boxShadow={"0 -4px 16px 0 rgba(0, 0, 0, 0.08)"}>
         <Flex flexDirection={["column", "row"]} p={[3, 8]} justifyContent="flex-end">
           <Button
             variant="secondary"
             onClick={() => {
-              setFieldValue("affelnet", getPublishRadioValue(formation?.affelnet_statut));
-              setFieldValue("parcoursup", getPublishRadioValue(formation?.parcoursup_statut));
+              // TODO DELETE IF NEW
+              // if(etablissement.new)
+              // DELETE
+              resetForm();
               onClose();
             }}
             mr={[0, 4]}
@@ -304,7 +145,7 @@ const AddEtablissement = ({ formation, onClose }) => {
             onClick={handleSubmit}
             isLoading={isSubmitting}
             loadingText="Enregistrement des modifications"
-            isDisabled={true}
+            isDisabled={!values.typeOrganisme}
           >
             Ajouter l’organisme
           </Button>

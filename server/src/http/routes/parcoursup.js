@@ -252,8 +252,13 @@ module.exports = ({ catalogue }) => {
         return res.status(400).send({ error: "Missing siret or uai in request body" });
       }
 
-      const newEtablissement = await catalogue.createEtablissement({ uai, siret });
-      return res.json(newEtablissement);
+      let etablissement = await catalogue.getEtablissement({ uai, siret });
+      let newE = false;
+      if (etablissement.message === "Etablissement doesn't exist") {
+        //etablissement = await catalogue.createEtablissement({ uai, siret });
+        newE = true;
+      }
+      return res.json({ ...etablissement, new: newE });
     })
   );
 
