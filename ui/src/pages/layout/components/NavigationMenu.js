@@ -31,15 +31,13 @@ const NavItem = ({ children, to = "/", ...rest }) => {
 
   return (
     <Link
-      mx={[0, 4]}
-      _first={{ ml: 0 }}
-      py={4}
+      p={4}
       as={NavLink}
       to={to}
       color={isActive ? "bluefrance" : "grey.800"}
+      _hover={{ textDecoration: "none", color: "grey.800", bg: "grey.200" }}
       borderBottom="3px solid"
       borderColor={isActive ? "bluefrance" : "transparent"}
-      _hover={{ textDecoration: "none", color: "grey.800", bg: "grey.200" }}
     >
       <Text display="block" {...rest}>
         {children}
@@ -72,7 +70,7 @@ const NavBarContainer = ({ children, ...props }) => {
   return (
     <Box w="full" boxShadow="md">
       <Container maxW="xl">
-        <Flex as="nav" align="center" justify="space-between" wrap="wrap" px={4} w="100%" {...props}>
+        <Flex as="nav" align="center" justify="space-between" wrap="wrap" w="100%" {...props}>
           {children}
         </Flex>
       </Container>

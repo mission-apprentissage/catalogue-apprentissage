@@ -26,9 +26,7 @@ import { NavLink } from "react-router-dom";
 import Changelog from "../common/components/Changelog/Changelog";
 import changelog from "../CHANGELOG";
 import { _get } from "../common/httpClient";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { ExternalLinkLine } from "../theme/components/icons";
+import { ArrowRightLine, ExternalLinkLine } from "../theme/components/icons";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 const endpointTCO =
@@ -128,13 +126,11 @@ export default () => {
                 {loading && <Text>chargement...</Text>}
                 {!loading && (
                   <Flex flexDirection={["column", "column", "column", "row"]}>
-                    <Box
+                    <Link
                       as={NavLink}
                       to={"/recherche/formations-2021"}
-                      bg="#F9F8F6"
-                      p={5}
-                      w={["100%", "340px"]}
-                      h="100px"
+                      variant="card"
+                      w={["100%", "100%", "75%", "40%"]}
                     >
                       <Text fontWeight="700" textStyle="h6">
                         {countFormations2021.toLocaleString("fr-FR")} formations
@@ -144,17 +140,15 @@ export default () => {
                           en apprentissage
                         </Text>
                         <Box alignSelf="flex-end" fontSize="gamma" color={"bluefrance"}>
-                          <FontAwesomeIcon icon={faArrowRight} />
+                          <ArrowRightLine alignSelf="center" color="bluefrance" boxSize={4} />
                         </Box>
                       </Flex>
-                    </Box>
-                    <Box
+                    </Link>
+                    <Link
                       as={NavLink}
                       to={"/recherche/etablissements"}
-                      bg="#F9F8F6"
-                      p={5}
-                      w={["100%", "340px"]}
-                      h="100px"
+                      variant="card"
+                      w={["100%", "100%", "75%", "40%"]}
                       mx={[0, 0, 0, 5]}
                       mt={[5, 5, 5, 0]}
                     >
@@ -166,10 +160,10 @@ export default () => {
                           de formation
                         </Text>
                         <Box alignSelf="flex-end" fontSize="gamma" color={"bluefrance"}>
-                          <FontAwesomeIcon icon={faArrowRight} />
+                          <ArrowRightLine alignSelf="center" color="bluefrance" boxSize={4} />
                         </Box>
                       </Flex>
-                    </Box>
+                    </Link>
                   </Flex>
                 )}
                 <br />
