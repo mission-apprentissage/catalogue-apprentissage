@@ -54,13 +54,11 @@ export default (props) => {
           {searchState.loaded && (
             <>
               <Tabs variant="search" mt={5}>
-                <TabList bg="white" justifyContent="space-between" px={[2, 4]}>
+                <TabList bg="white" justifyContent="space-between">
                   <Flex>
                     <Tab>Catalogue général ({searchState.countCatalogueGeneral.toLocaleString("fr-FR")})</Tab>
-                    <Tab mx={[0, 2]}>
-                      Catalogue non-éligible ({searchState.countCatalogueNonEligible.toLocaleString("fr-FR")})
-                    </Tab>
-                    <Tab mx={[0, 2]}>Guide réglementaire</Tab>
+                    <Tab>Catalogue non-éligible ({searchState.countCatalogueNonEligible.toLocaleString("fr-FR")})</Tab>
+                    <Tab>Guide réglementaire</Tab>
                   </Flex>
                   <Button
                     variant="unstyled"

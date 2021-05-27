@@ -29,7 +29,7 @@ const Facet = ({ componentId, dataField, filterLabel, filters, title, selectAllL
     }
   }
   return (
-    <Accordion allowMultiple defaultIndex={defaultIndex} bg="#F9F8F6" mb={6}>
+    <Accordion allowMultiple defaultIndex={defaultIndex} bg="#F9F8F6">
       <AccordionItem border="none">
         {({ isExpanded }) => (
           <>
