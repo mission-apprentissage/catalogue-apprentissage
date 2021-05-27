@@ -63,7 +63,7 @@ const UserLine = ({ user }) => {
     initialValues: {
       accessAllCheckbox: user?.isAdmin ? ["on"] : [],
       roles: user?.roles || ["user"],
-      accessAcademieList: user ? user.academie.split(",") : "",
+      accessAcademieList: user ? user.academie.split(",") : ["-1"],
       newUsername: user?.username || "",
       newEmail: user?.email || "",
       newTmpPassword: "1MotDePassTemporaire!",
