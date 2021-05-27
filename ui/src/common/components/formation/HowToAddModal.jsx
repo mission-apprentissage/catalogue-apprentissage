@@ -18,10 +18,12 @@ import { ArrowRightLine, ExternalLinkLine } from "../../../theme/components/icon
 import { Close } from "../../../theme/components/icons/Close";
 
 const HowToAddModal = ({ isOpen, onClose }) => {
+  const initialRef = React.useRef();
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="3xl">
+    <Modal isOpen={isOpen} onClose={onClose} size="3xl" initialFocusRef={initialRef}>
       <ModalOverlay />
-      <ModalContent bg="white" color="primaryText" borderRadius="none">
+      <ModalContent bg="white" color="primaryText" borderRadius="none" ref={initialRef}>
         <Button
           display={"flex"}
           alignSelf={"flex-end"}

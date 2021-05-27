@@ -48,9 +48,9 @@ export default (props) => {
           )}
           {searchState.loaded && (
             <Tabs variant="search" mt={5}>
-              <TabList bg="white" px={[2, 4]}>
+              <TabList bg="white">
                 <Tab>Liste</Tab>
-                <Tab mx={2}>Guide réglementaire</Tab>
+                <Tab>Guide réglementaire</Tab>
               </TabList>
               <TabPanels>
                 <TabPanel>

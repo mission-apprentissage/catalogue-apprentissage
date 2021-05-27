@@ -5,10 +5,17 @@ const createMarkup = (html) => {
   return { __html: html };
 };
 
-const ChangelogVersion = ({ version, date, about, fixes, features, improvements }) => {
+const ChangelogVersion = ({ version, date, about, fixes, features, improvements, embedded }) => {
   const slug = version.replace(/\./gi, "");
+
+  let clazz = ["changelog-item", "js-changelog-item"];
+  if (embedded) {
+    clazz = [...clazz, "embedded"];
+  }
+  const className = clazz.join(" ");
+
   return (
-    <div id={`v${slug}`} className="changelog-item js-changelog-item">
+    <div id={`v${slug}`} className={className}>
       <header className="changelog-header">
         <h2 className="changelog-version">
           <a href={`#v${slug}`}>v.{version}</a>
