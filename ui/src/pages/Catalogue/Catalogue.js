@@ -46,11 +46,6 @@ export default (props) => {
           <Heading textStyle="h2" color="grey.800" mt={5}>
             Catalogue des formations en apprentissage 2021
           </Heading>
-        </Container>
-      </Box>
-
-      <Box>
-        <Container maxW="full" p={0}>
           {!searchState.loaded && (
             <Center h="70vh">
               <Spinner />
@@ -59,7 +54,7 @@ export default (props) => {
           {searchState.loaded && (
             <>
               <Tabs variant="search" mt={5}>
-                <TabList bg="white" justifyContent="space-between" px={[0, 8, 32, 40, 80]}>
+                <TabList bg="white" justifyContent="space-between" px={[2, 4]}>
                   <Flex>
                     <Tab>Catalogue général ({searchState.countCatalogueGeneral.toLocaleString("fr-FR")})</Tab>
                     <Tab mx={[0, 2]}>
