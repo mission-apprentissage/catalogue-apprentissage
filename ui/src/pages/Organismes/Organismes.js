@@ -40,11 +40,7 @@ export default (props) => {
           <Heading textStyle="h2" color="grey.800" mt={5}>
             Liste des organismes
           </Heading>
-        </Container>
-      </Box>
 
-      <Box>
-        <Container maxW="full" p={0}>
           {!searchState.loaded && (
             <Center h="70vh">
               <Spinner />
@@ -52,7 +48,7 @@ export default (props) => {
           )}
           {searchState.loaded && (
             <Tabs variant="search" mt={5}>
-              <TabList bg="white" px={[2, 8, 32, 40, 80]}>
+              <TabList bg="white" px={[2, 4]}>
                 <Tab>Liste</Tab>
                 <Tab mx={2}>Guide réglementaire</Tab>
               </TabList>

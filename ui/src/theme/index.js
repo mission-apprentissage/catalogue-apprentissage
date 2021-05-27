@@ -14,7 +14,7 @@ const styles = {
 };
 
 const catalogueColors = {
-  primaryText: "#19414c",
+  primaryText: "grey.800",
   primaryBackground: "white",
   secondaryBackground: "#e5edef",
   blue: {
