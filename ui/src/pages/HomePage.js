@@ -26,8 +26,6 @@ import { NavLink } from "react-router-dom";
 import Changelog from "../common/components/Changelog/Changelog";
 import changelog from "../CHANGELOG";
 import { _get } from "../common/httpClient";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { ArrowRightLine, ExternalLinkLine } from "../theme/components/icons";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;

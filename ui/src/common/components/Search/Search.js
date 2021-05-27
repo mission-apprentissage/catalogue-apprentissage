@@ -54,7 +54,7 @@ export default React.memo(({ match, location, searchState, context }) => {
       >
         <HardFilters filters={filters} context={context} isBaseFormations={isBaseFormations} />
         <Box className="search" maxW="full">
-          <Container maxW="xl">
+          <Container maxW="xl" p={0}>
             {mode === "simple" && (
               <Box className={`search-container search-container-${mode}`}>
                 <DataSearch
@@ -98,9 +98,7 @@ export default React.memo(({ match, location, searchState, context }) => {
                 />
               </Box>
             )}
-          </Container>
-          <Box borderTop="1px solid #E7E7E7" w="full" />
-          <Container maxW="xl">
+            <Box borderTop="1px solid #E7E7E7" w="full" />
             <Flex className="search-row" flexDirection={["column", "row"]}>
               <Box className="search-sidebar">
                 <Text fontWeight="700" color="grey.800" mt={4} mb={4} textStyle="rf-text">

@@ -40,7 +40,7 @@ const Tabs = {
         bg: "#EEF1F8",
         color: "#383838",
         fontWeight: "700",
-        textStyle: "sm",
+        fontSize: "zeta",
         _selected: {
           bg: "white",
           color: "bluefrance",
