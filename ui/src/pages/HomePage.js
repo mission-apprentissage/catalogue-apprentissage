@@ -231,56 +231,26 @@ export default () => {
                 </Heading>
                 <br />
                 <Box>
-                  <Tabs variant="unstyled">
-                    <TabList textStyle="sm" px={0} bg="white">
-                      <Tab
-                        bg="#EEF1F8"
-                        color="#383838"
-                        fontWeight="700"
-                        _selected={{
-                          bg: "white",
-                          color: "bluefrance",
-                          borderTop: "2px solid #000091",
-                          borderLeft: "1px solid #CECECE",
-                          borderRight: "1px solid #CECECE",
-                          outline: "1px solid white",
-                          zIndex: "1",
-                        }}
-                      >
-                        Dernières modifications
-                      </Tab>
-                      <Tab
-                        mx={2}
-                        bg="#EEF1F8"
-                        color="#383838"
-                        fontWeight="700"
-                        _selected={{
-                          bg: "white",
-                          color: "bluefrance",
-                          borderTop: "2px solid #000091",
-                          borderLeft: "1px solid #CECECE",
-                          borderRight: "1px solid #CECECE",
-                          outline: "1px solid white",
-                          zIndex: "1",
-                        }}
-                      >
-                        A venir
-                      </Tab>
+                  <Tabs variant="search">
+                    <TabList bg="white" px={0}>
+                      <Tab ml={[0, 0]}>Dernières modifications</Tab>
+                      <Tab>A venir</Tab>
                     </TabList>
-                    <TabPanels px={0}>
-                      <TabPanel color="#383838" p={0} px={0} h="auto">
+                    <TabPanels>
+                      <TabPanel p={0}>
                         <Flex>
                           <Changelog
                             content={changelog}
                             order="desc"
                             showVersion={packageJson.version}
                             hideFilter={true}
+                            embedded
                           />
                         </Flex>
                       </TabPanel>
-                      <TabPanel color="#1E1E1E" p={0} px={0} h="auto">
+                      <TabPanel p={0}>
                         <Flex>
-                          <Changelog content={changelog} order="desc" nbVersion={1} hideFilter={true} />
+                          <Changelog content={changelog} order="desc" nbVersion={1} hideFilter={true} embedded />
                         </Flex>
                       </TabPanel>
                     </TabPanels>
