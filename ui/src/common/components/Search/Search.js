@@ -43,7 +43,15 @@ export default React.memo(({ match, location, searchState, context }) => {
 
   return (
     <Box className="search-page">
-      <ReactiveBase url={`${endpoint}/es/search`} app={base}>
+      <ReactiveBase
+        url={`${endpoint}/es/search`}
+        app={base}
+        theme={{
+          typography: {
+            fontFamily: "Marianne, Arial",
+          },
+        }}
+      >
         <HardFilters filters={filters} context={context} isBaseFormations={isBaseFormations} />
         <Box className="search" maxW="full">
           <Container maxW="xl">
