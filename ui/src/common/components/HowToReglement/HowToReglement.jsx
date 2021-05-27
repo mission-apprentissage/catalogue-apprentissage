@@ -57,7 +57,7 @@ const HowToReglement = () => {
           <Heading as="h4" fontSize="epsilon" mb={4} mt={8}>
             Conditions d’éligibilité de l’organisme et de l’offre de formation
           </Heading>
-          <Accordion allowMultiple bg="#F9F8F6" mb={6}>
+          <Accordion allowMultiple bg="#F9F8F6">
             <AccordionItem border="none" id="conditions-etablissement">
               {({ isExpanded }) => (
                 <>
@@ -146,7 +146,7 @@ const HowToReglement = () => {
             </AccordionItem>
           </Accordion>
 
-          <Accordion allowMultiple bg="#F9F8F6" mb={6}>
+          <Accordion allowMultiple bg="#F9F8F6">
             <AccordionItem border="none">
               {({ isExpanded }) => (
                 <>
@@ -192,7 +192,7 @@ const HowToReglement = () => {
           <Heading as="h4" fontSize="epsilon" mb={4} mt={8}>
             Conditions d’intégration sur les plateformes Parcoursup et Affelnet
           </Heading>
-          <Accordion allowMultiple bg="#F9F8F6" mb={6}>
+          <Accordion allowMultiple bg="#F9F8F6">
             <AccordionItem border="none">
               {({ isExpanded }) => (
                 <>
@@ -236,7 +236,7 @@ const HowToReglement = () => {
             </AccordionItem>
           </Accordion>
 
-          <Accordion allowMultiple bg="#F9F8F6" mb={6}>
+          <Accordion allowMultiple bg="#F9F8F6">
             <AccordionItem border="none">
               {({ isExpanded }) => (
                 <>
@@ -288,7 +288,7 @@ const HowToReglement = () => {
             </AccordionItem>
           </Accordion>
 
-          <Accordion allowMultiple bg="#F9F8F6" mb={6}>
+          <Accordion allowMultiple bg="#F9F8F6">
             <AccordionItem border="none">
               {({ isExpanded }) => (
                 <>
@@ -323,7 +323,7 @@ const HowToReglement = () => {
         <Heading as="h4" fontSize="epsilon" mb={4} mt={8} id="informations-complementaires">
           Informations complémentaires
         </Heading>
-        <Accordion allowMultiple bg="#F9F8F6" mb={6}>
+        <Accordion allowMultiple bg="#F9F8F6">
           <AccordionItem border="none">
             {({ isExpanded }) => (
               <>
