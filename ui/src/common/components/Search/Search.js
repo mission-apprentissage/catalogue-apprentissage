@@ -18,6 +18,8 @@ import constantsReconciliationPS from "./constantsReconciliationPS";
 import "./search.css";
 import queryString from "query-string";
 import { useHistory } from "react-router-dom";
+import { CloseCircleLine } from "../../../theme/components/icons/CloseCircleLine";
+import { SearchLine } from "../../../theme/components/icons/SearchLine";
 
 export default React.memo(({ location, searchState, context, onReconciliationCardClicked }) => {
   const { defaultMode } = queryString.parse(location.search);
@@ -85,10 +87,13 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                   autosuggest={true}
                   queryFormat="and"
                   size={20}
-                  showFilter={true}
+                  showFilter={false}
                   URLParams={true}
                   filterLabel="recherche"
                   react={{ and: filters.filter((e) => e !== `SEARCH`) }}
+                  showClear={true}
+                  clearIcon={<CloseCircleLine boxSize={4} />}
+                  icon={<SearchLine color={"bluefrance"} boxSize={5} />}
                 />
               </Box>
             )}
