@@ -61,6 +61,45 @@ module.exports = ({ catalogue }) => {
     })
   );
 
+  router.get(
+    "/reconciliation/result/:id",
+    tryCatch(async (req, res) => {
+      const psId = req.params.id;
+      const qs = req.query;
+      const select = qs && qs.select ? JSON.parse(qs.select) : { __v: 0 };
+      const retrievedData = await PsFormation2021.findById(psId, select).lean();
+      if (retrievedData) {
+        let diffFields = null;
+        if (retrievedData.statut_reconciliation === "AUTOMATIQUE") {
+          const {
+            uai_formation,
+            etablissement_formateur_uai,
+            etablissement_gestionnaire_uai,
+            cfd,
+          } = retrievedData.matching_mna_formation[0];
+
+          const compareUais = (psFormation, uai) => {
+            return {
+              uai_affilie: psFormation.uai_affilie === uai,
+              uai_gestionnaire: psFormation.uai_gestionnaire === uai,
+              uai_composante: psFormation.uai_composante === uai,
+              uai_insert_jeune: psFormation.uai_insert_jeune === uai,
+              uai_cerfa: psFormation.uai_cerfa === uai,
+            };
+          };
+          diffFields = {
+            uai_formation: compareUais(retrievedData, uai_formation),
+            etablissement_formateur_uai: compareUais(retrievedData, etablissement_formateur_uai),
+            etablissement_gestionnaire_uai: compareUais(retrievedData, etablissement_gestionnaire_uai),
+            cfd: retrievedData.codes_cfd_mna.includes(cfd),
+          };
+        }
+        return res.json({ ...retrievedData, diff: diffFields });
+      }
+      return res.status(404).send({ message: `Item ${psId} doesn't exist` });
+    })
+  );
+
   /**
    * Get all PsFormation
    */

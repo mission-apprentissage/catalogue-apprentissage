@@ -23,7 +23,7 @@ const ReconciliationPsModal = ({ isOpen, onClose, data, onFormationUpdate }) => 
   useEffect(() => {
     async function run() {
       try {
-        const apiURL = `${endpointNewFront}/parcoursup/`;
+        const apiURL = `${endpointNewFront}/parcoursup/reconciliation/result/`;
         const form = await _get(`${apiURL}${data._id}`, false);
         setFormation(form);
       } catch (e) {

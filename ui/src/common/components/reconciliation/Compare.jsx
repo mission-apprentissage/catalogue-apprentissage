@@ -56,22 +56,8 @@ const Compare = ({ formation, onClose }) => {
   const { isOpen: isOpenSubModal, onOpen: onOpenSubModal, onClose: onCloseSubModal } = useDisclosure();
   const [modalType, setModalType] = useState("validate");
 
-  const { values, handleChange, handleSubmit, isSubmitting, setFieldValue, errors } = useFormik({
-    initialValues: {
-      //affelnet: getPublishRadioValue(formation?.affelnet_statut),
-      //parcoursup: getPublishRadioValue(formation?.parcoursup_statut),
-      affelnet_infos_offre: formation?.affelnet_infos_offre ?? "",
-      affelnet_raison_depublication: formation?.affelnet_raison_depublication ?? "",
-      parcoursup_raison_depublication: formation?.parcoursup_raison_depublication ?? "",
-    },
-    // validationSchema: Yup.object().shape({
-    //   affelnet_raison_depublication: isAffelnetUnpublishFormOpen
-    //     ? Yup.string().nullable().required("Veuillez saisir la raison")
-    //     : Yup.string().nullable(),
-    //   parcoursup_raison_depublication: isParcoursupUnpublishFormOpen
-    //     ? Yup.string().nullable().required("Veuillez saisir la raison")
-    //     : Yup.string().nullable(),
-    // }),
+  const { handleSubmit, isSubmitting } = useFormik({
+    initialValues: {},
     onSubmit: ({
       affelnet,
       parcoursup,
@@ -237,8 +223,6 @@ const Compare = ({ formation, onClose }) => {
           <Button
             variant="secondary"
             onClick={() => {
-              //setFieldValue("affelnet", getPublishRadioValue(formation?.affelnet_statut));
-              //setFieldValue("parcoursup", getPublishRadioValue(formation?.parcoursup_statut));
               onClose();
             }}
             mr={[0, 4]}

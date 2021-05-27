@@ -5,83 +5,50 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Heading,
   Radio,
   RadioGroup,
   Stack,
   Text,
   Textarea,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React from "react";
 import { useFormik } from "formik";
-// import { _put } from "../../httpClient";
-import useAuth from "../../hooks/useAuth";
 // import { buildUpdatesHistory } from "../../utils/formationUtils";
-import * as Yup from "yup";
 
 const Rejected = ({ formation, onClose }) => {
-  const [user] = useAuth();
-  const [isAffelnetFormOpen, setAffelnetFormOpen] = useState(
-    ["publié", "en attente de publication"].includes(formation?.affelnet_statut)
-  );
-
-  const [isAffelnetUnpublishFormOpen, setAffelnetUnpublishFormOpen] = useState(
-    ["non publié"].includes(formation?.affelnet_statut)
-  );
-  const [isParcoursupUnpublishFormOpen, setParcousupUnpublishFormOpen] = useState(
-    ["non publié"].includes(formation?.parcoursup_statut)
-  );
-
-  const { values, handleChange, handleSubmit, isSubmitting, setFieldValue, errors } = useFormik({
+  const { values, handleChange, handleSubmit, isSubmitting, resetForm, errors } = useFormik({
     initialValues: {
-      //affelnet: getPublishRadioValue(formation?.affelnet_statut),
-      //parcoursup: getPublishRadioValue(formation?.parcoursup_statut),
-      affelnet_infos_offre: formation?.affelnet_infos_offre ?? "",
-      affelnet_raison_depublication: formation?.affelnet_raison_depublication ?? "",
-      parcoursup_raison_depublication: formation?.parcoursup_raison_depublication ?? "",
+      parcoursup_raison_rejet: "",
+      parcoursup_raison_rejet_complement: "",
     },
-    // validationSchema: Yup.object().shape({
-    //   affelnet_raison_depublication: isAffelnetUnpublishFormOpen
-    //     ? Yup.string().nullable().required("Veuillez saisir la raison")
-    //     : Yup.string().nullable(),
-    //   parcoursup_raison_depublication: isParcoursupUnpublishFormOpen
-    //     ? Yup.string().nullable().required("Veuillez saisir la raison")
-    //     : Yup.string().nullable(),
-    // }),
-    onSubmit: ({
-      affelnet,
-      parcoursup,
-      affelnet_infos_offre,
-      affelnet_raison_depublication,
-      parcoursup_raison_depublication,
-    }) => {
+    onSubmit: ({ parcoursup_raison_rejet, parcoursup_raison_rejet_complement }) => {
       return new Promise(async (resolve) => {
+        onClose();
         resolve("onSubmitHandler publish complete");
       });
     },
   });
-
-  const isParcoursupPublishDisabled = ["hors périmètre"].includes(formation?.parcoursup_statut);
-  const isAffelnetPublishDisabled = ["hors périmètre"].includes(formation?.affelnet_statut);
 
   return (
     <>
       <Flex px={[4, 16]} pb={[4, 16]}>
         <Box border="1px solid" borderColor="bluefrance" p={8} w="full">
           <Flex flexDirection="column">
-            <FormControl display="flex" flexDirection="column" w="auto" isDisabled={isParcoursupPublishDisabled}>
-              <FormLabel htmlFor="parcoursup" mb={3} fontSize="epsilon" fontWeight={400}>
+            <FormControl display="flex" flexDirection="column" w="auto">
+              <FormLabel htmlFor="parcoursup_raison_rejet" mb={3} fontSize="epsilon" fontWeight={400}>
                 Pouvez-vous préciser les raisons de votre signalement
               </FormLabel>
-              <RadioGroup defaultValue={values.parcoursup} id="parcoursup" name="parcoursup">
+              <RadioGroup
+                defaultValue={values.parcoursup_raison_rejet}
+                id="parcoursup_raison_rejet"
+                name="parcoursup_raison_rejet"
+              >
                 <Stack spacing={2} direction="column">
                   <Radio
                     mb={0}
                     size="lg"
-                    value="true"
-                    isDisabled={isParcoursupPublishDisabled}
+                    value="lieu de le formation"
                     onChange={(evt) => {
-                      setParcousupUnpublishFormOpen(false);
                       handleChange(evt);
                     }}
                   >
@@ -92,10 +59,8 @@ const Rejected = ({ formation, onClose }) => {
                   <Radio
                     mb={0}
                     size="lg"
-                    value="false"
-                    isDisabled={isParcoursupPublishDisabled}
+                    value="Libellé Psup"
                     onChange={(evt) => {
-                      setParcousupUnpublishFormOpen(true);
                       handleChange(evt);
                     }}
                   >
@@ -106,26 +71,19 @@ const Rejected = ({ formation, onClose }) => {
                 </Stack>
               </RadioGroup>
             </FormControl>
-            <FormControl
-              // isRequired
-              isInvalid={errors.parcoursup_raison_depublication}
-              // display={isParcoursupUnpublishFormOpen ? "flex" : "none"}
-              flexDirection="column"
-              w="auto"
-              mt={8}
-            >
-              <FormLabel htmlFor="parcoursup_raison_depublication" mb={3} fontSize="epsilon" fontWeight={400}>
+            <FormControl isInvalid={errors.parcoursup_raison_rejet_complement} flexDirection="column" w="auto" mt={8}>
+              <FormLabel htmlFor="parcoursup_raison_rejet_complement" mb={3} fontSize="epsilon" fontWeight={400}>
                 Informations complémentaires (facultatif)
               </FormLabel>
               <Flex flexDirection="column" w="100%">
                 <Textarea
-                  name="parcoursup_raison_depublication"
-                  value={values.parcoursup_raison_depublication}
+                  name="parcoursup_raison_rejet_complement"
+                  value={values.parcoursup_raison_rejet_complement}
                   onChange={handleChange}
                   placeholder="Précisez ici la raison pour laquelle vous souhaitez rejeter ce rapprochement..."
                   rows={2}
                 />
-                <FormErrorMessage>{errors.parcoursup_raison_depublication}</FormErrorMessage>
+                <FormErrorMessage>{errors.parcoursup_raison_rejet_complement}</FormErrorMessage>
               </Flex>
             </FormControl>
           </Flex>
@@ -136,8 +94,7 @@ const Rejected = ({ formation, onClose }) => {
           <Button
             variant="secondary"
             onClick={() => {
-              //setFieldValue("affelnet", getPublishRadioValue(formation?.affelnet_statut));
-              //setFieldValue("parcoursup", getPublishRadioValue(formation?.parcoursup_statut));
+              resetForm();
               onClose();
             }}
             mr={[0, 4]}
@@ -146,13 +103,7 @@ const Rejected = ({ formation, onClose }) => {
           >
             Annuler
           </Button>
-          <Button
-            type="submit"
-            variant="primary"
-            onClick={handleSubmit}
-            isLoading={isSubmitting}
-            loadingText="Enregistrement des modifications"
-          >
+          <Button type="submit" variant="primary" onClick={handleSubmit} isLoading={isSubmitting} loadingText="...">
             Envoyer
           </Button>
         </Flex>
