@@ -1,7 +1,7 @@
 import React from "react";
 import ChangelogVersion from "./ChangelogVersion.js";
 
-const ChangelogList = ({ list, filter }) => {
+const ChangelogList = ({ list, filter, embedded }) => {
   // Will override filters if all of them are false
   const empty = !filter.improvement && !filter.feature && !filter.bugFix;
   return (
@@ -17,6 +17,7 @@ const ChangelogList = ({ list, filter }) => {
             features={empty || filter.feature ? features : []}
             improvements={empty || filter.improvement ? improvements : []}
             key={i}
+            embedded={embedded}
           />
         ))}
     </div>

@@ -4,7 +4,7 @@ import ChangelogFilter from "./components/ChangelogFilter";
 import "@fortawesome/fontawesome-free/css/all.css";
 import "./changelog.css";
 
-const Changelog = ({ content, order, showVersion, hideFilter, nbVersion }) => {
+const Changelog = ({ content, order, showVersion, hideFilter, nbVersion, embedded = false }) => {
   const [list, setList] = useState([]);
   const [versions, setVersions] = useState([]);
   const [filter, setFilter] = useState({
@@ -41,7 +41,7 @@ const Changelog = ({ content, order, showVersion, hideFilter, nbVersion }) => {
         <div>
           <div className="changelog-wrapper">
             {!hideFilter && <ChangelogFilter versions={versions} onChange={onChange} />}
-            <ChangelogList list={list} filter={filter} />
+            <ChangelogList list={list} filter={filter} embedded={embedded} />
           </div>
         </div>
       </div>
