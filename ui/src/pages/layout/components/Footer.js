@@ -33,25 +33,19 @@ const Footer = () => {
               Cras si amet mollis dolor.
             </Text>
             <br />
-            <List
-              textStyle="sm"
-              fontWeight="700"
-              flexDirection={["column", "column", "row"]}
-              display="flex"
-              css={{ "li:not(:last-child):after": { content: "' '", marginLeft: "0.3rem", marginRight: "0.3rem" } }}
-            >
+            <List textStyle="sm" fontWeight="700" flexDirection={["column", "column", "row"]} display="flex">
               <ListItem>
-                <Link href="https://www.legifrance.gouv.fr/" isExternal>
+                <Link href="https://www.legifrance.gouv.fr/" mr={4} isExternal>
                   legifrance.gouv.fr
                 </Link>
               </ListItem>
               <ListItem>
-                <Link href="https://www.gouvernement.fr/" isExternal>
+                <Link href="https://www.gouvernement.fr/" mr={4} isExternal>
                   gouvernement.fr
                 </Link>
               </ListItem>
               <ListItem>
-                <Link href="https://www.service-public.fr/" isExternal>
+                <Link href="https://www.service-public.fr/" mr={4} isExternal>
                   service-public.fr
                 </Link>
               </ListItem>
@@ -68,11 +62,11 @@ const Footer = () => {
         <Container maxW="xl" py={5}>
           <Flex flexDirection={["column", "column", "row"]}>
             <List
-              textStyle="sm"
+              textStyle="xs"
               flexDirection={["column", "column", "row"]}
               display="flex"
               flex="1"
-              css={{ "li:not(:last-child):after": { content: "'|'", marginLeft: "0.3rem", marginRight: "0.3rem" } }}
+              css={{ "li:not(:last-child):after": { content: "'|'", marginLeft: "0.5rem", marginRight: "0.5rem" } }}
             >
               <ListItem>
                 <Link as={NavLink} to={"/"}>

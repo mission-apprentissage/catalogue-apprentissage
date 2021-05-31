@@ -17,13 +17,13 @@ import {
   MenuItem,
   MenuList,
   Text,
-  Button,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt, faSync, faUpload, faUsers } from "@fortawesome/free-solid-svg-icons";
 import useAuth from "../../../common/hooks/useAuth";
 import { isUserAdmin } from "../../../common/utils/rolesUtils";
 import { _get } from "../../../common/httpClient";
+import { LockFill } from "../../../theme/components/icons/LockFill";
 
 const Header = () => {
   let [auth, setAuth] = useAuth();
@@ -68,14 +68,15 @@ const Header = () => {
           {/* User Menu */}
           {auth?.sub === "anonymous" && (
             <Box>
-              <Link as={NavLink} to="/login">
+              <Link as={NavLink} to="/login" variant="pill">
+                <LockFill boxSize={3} mb={1} mr={2} />
                 Connexion
               </Link>
             </Box>
           )}
           {auth?.sub !== "anonymous" && (
             <Menu placement="bottom">
-              <MenuButton as={Button} variant="unstyled">
+              <MenuButton as={Link} variant="pill">
                 <Flex>
                   <Avatar bg="bluefrance" size="sm" w="13px" h="13px" mt="0.4rem" />
                   <Box display={["none", "block"]} ml={2}>
