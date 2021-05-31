@@ -17,6 +17,11 @@ const Link = {
       py: 1,
       _hover: { bg: "grey.200", textDecoration: "none", borderRadius: 16 },
     },
+    summary: {
+      fontSize: "zeta",
+      _hover: { textDecoration: "none", bg: "grey.200" },
+      p: 2,
+    },
   },
 };
 

@@ -331,7 +331,7 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
         </GridItem>
       </Grid>
       <Box mt={8} mb={16}>
-        <Button variant={"unstyled"} textStyle="rf-text" color="bluefrance" onClick={onOpen} whiteSpace="normal">
+        <Button variant={"pill"} textStyle="rf-text" onClick={onOpen} whiteSpace="normal">
           <ArrowRightLine w="9px" h="9px" mr={2} /> Demander des corrections sur les données sur votre organisme
         </Button>
       </Box>

@@ -24,6 +24,15 @@ const Button = {
       color: "white",
       _hover: { bg: "#0000dd" },
     },
+    pill: {
+      ...commonButtonStyle,
+      height: "auto",
+      fontSize: "zeta",
+      color: "bluefrance",
+      px: 3,
+      py: 1,
+      _hover: { bg: "grey.200", textDecoration: "none", borderRadius: 24 },
+    },
   },
 };
 

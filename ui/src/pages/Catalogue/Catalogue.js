@@ -51,10 +51,10 @@ export default (props) => {
                     <Tab>Guide réglementaire</Tab>
                   </Flex>
                   <Button
-                    variant="unstyled"
+                    variant="pill"
                     textStyle="rf-text"
-                    color="bluefrance"
                     onClick={onOpen}
+                    px={4}
                     display={["none", "none", "none", "none", "block"]}
                   >
                     <ArrowRightLine w="9px" h="9px" mr={2} /> Demander l'ajout d'une formation
@@ -73,7 +73,7 @@ export default (props) => {
                 </TabPanels>
               </Tabs>
               <Box mb={8} px={8} display={["block", "block", "block", "block", "none"]}>
-                <Button variant="unstyled" textStyle="rf-text" color="bluefrance" onClick={onOpen} whiteSpace="normal">
+                <Button variant="pill" onClick={onOpen} textStyle="rf-text" whiteSpace="normal">
                   <ArrowRightLine w="9px" h="9px" mr={2} /> Demander l'ajout d'une formation
                 </Button>
               </Box>
