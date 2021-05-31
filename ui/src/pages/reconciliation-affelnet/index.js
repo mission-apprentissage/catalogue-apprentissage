@@ -1,27 +1,24 @@
 import React from "react";
 import {
-  Box,
-  Container,
   Accordion,
-  SimpleGrid,
+  Box,
   Button,
-  Heading,
-  Text,
+  Container,
   Flex,
-  Spacer,
+  Heading,
   Select,
+  SimpleGrid,
+  Spacer,
   Tag,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
+  Text,
 } from "@chakra-ui/react";
-import { Layout, Accordion as Item, Loading } from "./components";
+import { Accordion as Item, Layout, Loading } from "./components";
 
 import { _get } from "../../common/httpClient";
 
 import { useQuery } from "react-query";
 import AppLayout from "../layout/Layout";
-import { NavLink } from "react-router-dom";
+import { Breadcrumb } from "../../common/components/Breadcrumb";
 
 const percentageOnTotal = (value, total) => ((value / total) * 100).toFixed(2);
 
@@ -69,16 +66,7 @@ export default (props) => {
     <AppLayout>
       <Box bg="secondaryBackground" w="100%" pt={[4, 8]} px={[1, 24]}>
         <Container maxW="xl">
-          <Breadcrumb>
-            <BreadcrumbItem>
-              <BreadcrumbLink as={NavLink} to="/">
-                Accueil
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink>Réconciliation Affelnet</BreadcrumbLink>
-            </BreadcrumbItem>
-          </Breadcrumb>
+          <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: "Réconciliation Affelnet" }]} />
         </Container>
       </Box>
       <Layout>

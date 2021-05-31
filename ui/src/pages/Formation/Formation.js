@@ -3,9 +3,6 @@ import {
   Alert,
   Badge,
   Box,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
   Button,
   Center,
   Container,
@@ -34,14 +31,8 @@ import { HABILITE_LIST } from "../../constants/certificateurs";
 import { buildUpdatesHistory } from "../../common/utils/formationUtils";
 import InfoTooltip from "../../common/components/InfoTooltip";
 import helpText from "../../locales/helpText.json";
-import {
-  ArrowDropRightLine,
-  ArrowRightLine,
-  Edit2Fill,
-  ExternalLinkLine,
-  MapPin2Fill,
-  Parametre,
-} from "../../theme/components/icons/";
+import { ArrowRightLine, Edit2Fill, ExternalLinkLine, MapPin2Fill, Parametre } from "../../theme/components/icons/";
+import { Breadcrumb } from "../../common/components/Breadcrumb";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 const endpointTCO =
@@ -758,25 +749,22 @@ export default ({ match }) => {
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 24]}>
         <Container maxW="xl">
-          <Breadcrumb separator={<ArrowDropRightLine color="grey.600" />} textStyle="xs">
-            <BreadcrumbItem>
-              <BreadcrumbLink as={NavLink} to="/" color="grey.600" textDecoration="underline">
-                Accueil
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem>
-              <BreadcrumbLink as={NavLink} to="/recherche/formations-2021" color="grey.600" textDecoration="underline">
-                Catalogue des formations en apprentissage 2021
-                {formation &&
+          <Breadcrumb
+            pages={[
+              { title: "Accueil", to: "/" },
+              {
+                title: `Catalogue des formations en apprentissage 2021
+                ${
+                  formation &&
                   (formation.etablissement_reference_catalogue_published
                     ? " (Catalogue général)"
-                    : " (Catalogue non-éligible)")}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink>{pendingFormation?.intitule_long ?? formation?.intitule_long}</BreadcrumbLink>
-            </BreadcrumbItem>
-          </Breadcrumb>
+                    : " (Catalogue non-éligible)")
+                }`,
+                to: "/recherche/formations-2021",
+              },
+              { title: `${pendingFormation?.intitule_long ?? formation?.intitule_long}` },
+            ]}
+          />
         </Container>
       </Box>
       <Box w="100%" py={[1, 8]} px={[1, 24]}>
