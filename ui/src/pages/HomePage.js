@@ -95,18 +95,26 @@ export default () => {
                 <Heading textStyle="rf-text" fontWeight="700" p={2}>
                   SOMMAIRE
                 </Heading>
-                <List stylePosition="inside" px={3} textStyle="sm" fontWeight={400}>
-                  <ListItem>
-                    <strong>1.</strong> <Link href={"#mise-a-jour"}>Mise à jour des données</Link>
+                <List stylePosition="inside">
+                  <ListItem py={1}>
+                    <Link href={"#mise-a-jour"} variant="summary">
+                      <strong>1.</strong> Mise à jour des données
+                    </Link>
                   </ListItem>
-                  <ListItem>
-                    <strong>2.</strong> <Link href={"#organisme-de-formation"}>Vous êtes organisme de formation</Link>
+                  <ListItem py={1}>
+                    <Link href={"#organisme-de-formation"} variant="summary">
+                      <strong>2.</strong> Vous êtes organisme de formation
+                    </Link>
                   </ListItem>
-                  <ListItem>
-                    <strong>3.</strong> <Link href={"#en-academie"}>Vous travaillez en académie</Link>
+                  <ListItem py={1}>
+                    <Link href={"#en-academie"} variant="summary">
+                      <strong>3.</strong> Vous travaillez en académie
+                    </Link>
                   </ListItem>
-                  <ListItem>
-                    <strong>4.</strong> <Link href={"#journal"}>Journal des modifications</Link>
+                  <ListItem py={1}>
+                    <Link href={"#journal"} variant="summary">
+                      <strong>4.</strong> Journal des modifications
+                    </Link>
                   </ListItem>
                 </List>
               </Box>
