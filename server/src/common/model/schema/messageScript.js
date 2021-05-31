@@ -9,7 +9,7 @@ const messageScriptSchema = {
   },
   time: {
     type: Date,
-    required: true,
+    required: false,
   },
 };
 module.exports = messageScriptSchema;
