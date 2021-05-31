@@ -1,25 +1,10 @@
 import React from "react";
-import {
-  Container,
-  Box,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  Heading,
-  Tabs,
-  Tab,
-  TabList,
-  TabPanels,
-  TabPanel,
-  Spinner,
-  Center,
-} from "@chakra-ui/react";
+import { Box, Center, Container, Heading, Spinner, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import Layout from "../layout/Layout";
-import { NavLink } from "react-router-dom";
-import { ArrowDropRightLine } from "../../theme/components/icons";
 import Search from "../../common/components/Search/Search";
 import { useSearch } from "../../common/hooks/useSearch";
 import { HowToReglement } from "../../common/components/HowToReglement/HowToReglement";
+import { Breadcrumb } from "../../common/components/Breadcrumb";
 
 export default (props) => {
   const searchState = useSearch("organismes");
@@ -27,16 +12,7 @@ export default (props) => {
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 24]}>
         <Container maxW="xl">
-          <Breadcrumb separator={<ArrowDropRightLine color="grey.600" />} textStyle="xs">
-            <BreadcrumbItem>
-              <BreadcrumbLink as={NavLink} to="/" color="grey.600" textDecoration="underline">
-                Accueil
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink>Liste des établissements</BreadcrumbLink>
-            </BreadcrumbItem>
-          </Breadcrumb>
+          <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: "Liste des établissements" }]} />
           <Heading textStyle="h2" color="grey.800" mt={5}>
             Liste des organismes
           </Heading>

@@ -1,9 +1,6 @@
 import React from "react";
 import {
   Box,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
   Button,
   Center,
   Container,
@@ -18,12 +15,12 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import Layout from "../layout/Layout";
-import { NavLink } from "react-router-dom";
-import { ArrowDropRightLine, ArrowRightLine } from "../../theme/components/icons";
+import { ArrowRightLine } from "../../theme/components/icons";
 import Search from "../../common/components/Search/Search";
 import { useSearch } from "../../common/hooks/useSearch";
 import { HowToReglement } from "../../common/components/HowToReglement/HowToReglement";
 import { HowToAddModal } from "../../common/components/formation/HowToAddModal";
+import { Breadcrumb } from "../../common/components/Breadcrumb";
 
 export default (props) => {
   const searchState = useSearch("catalogue");
@@ -33,16 +30,9 @@ export default (props) => {
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 24]}>
         <Container maxW="xl">
-          <Breadcrumb separator={<ArrowDropRightLine color="grey.600" />} textStyle="xs">
-            <BreadcrumbItem>
-              <BreadcrumbLink as={NavLink} to="/" color="grey.600" textDecoration="underline">
-                Accueil
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink>Catalogue des formations en apprentissage 2021</BreadcrumbLink>
-            </BreadcrumbItem>
-          </Breadcrumb>
+          <Breadcrumb
+            pages={[{ title: "Accueil", to: "/" }, { title: "Catalogue des formations en apprentissage 2021" }]}
+          />
           <Heading textStyle="h2" color="grey.800" mt={5}>
             Catalogue des formations en apprentissage 2021
           </Heading>

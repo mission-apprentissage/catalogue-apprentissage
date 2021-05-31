@@ -4,9 +4,6 @@ import packageJson from "../../package.json";
 
 import {
   Box,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
   Button,
   Container,
   Flex,
@@ -27,6 +24,7 @@ import Changelog from "../common/components/Changelog/Changelog";
 import changelog from "../CHANGELOG";
 import { _get } from "../common/httpClient";
 import { ArrowRightLine, ExternalLinkLine } from "../theme/components/icons";
+import { Breadcrumb } from "../common/components/Breadcrumb";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 const endpointTCO =
@@ -86,11 +84,7 @@ export default () => {
           {/*    </Text>*/}
           {/*  </Flex>*/}
           {/*</Box>*/}
-          <Breadcrumb>
-            <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink fontSize="omega">Accueil</BreadcrumbLink>
-            </BreadcrumbItem>
-          </Breadcrumb>
+          <Breadcrumb pages={[{ title: "Accueil" }]} />
         </Container>
       </Box>
       <Box w="100%" py={[1, 8]} px={[1, 24]} color="#1E1E1E">

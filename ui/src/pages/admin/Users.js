@@ -18,12 +18,8 @@ import {
   HStack,
   Input,
   Stack,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
 } from "@chakra-ui/react";
-import { NavLink } from "react-router-dom";
-import { ArrowDropRightLine } from "../../theme/components/icons";
+import { Breadcrumb } from "../../common/components/Breadcrumb";
 
 const ACADEMIES = [
   "01",
@@ -248,16 +244,7 @@ export default () => {
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 24]} color="grey.800">
         <Container maxW="xl">
-          <Breadcrumb separator={<ArrowDropRightLine color="grey.600" />} textStyle="xs">
-            <BreadcrumbItem>
-              <BreadcrumbLink as={NavLink} to="/" color="grey.600" textDecoration="underline">
-                Accueil
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink>Gestion des utilisateurs</BreadcrumbLink>
-            </BreadcrumbItem>
-          </Breadcrumb>
+          <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: "Gestion des utilisateurs" }]} />
         </Container>
       </Box>
       <Box w="100%" minH="100vh" px={[1, 24]}>

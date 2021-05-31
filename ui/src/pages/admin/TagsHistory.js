@@ -1,23 +1,11 @@
 import React, { useState } from "react";
 import { _get } from "../../common/httpClient";
 import Layout from "../layout/Layout";
-import {
-  Box,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  Container,
-  Grid,
-  GridItem,
-  Heading,
-  Select,
-  Spinner,
-} from "@chakra-ui/react";
-import { NavLink } from "react-router-dom";
+import { Box, Container, Grid, GridItem, Heading, Select, Spinner } from "@chakra-ui/react";
 import { academies } from "../../constants/academies";
 import { useQueries } from "react-query";
 import StatCard from "../../common/components/StatCard";
-import { ArrowDropRightLine } from "../../theme/components/icons";
+import { Breadcrumb } from "../../common/components/Breadcrumb";
 
 const statuses = {
   affelnet: [
@@ -101,16 +89,9 @@ export default () => {
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 24]} color="grey.800">
         <Container maxW="xl">
-          <Breadcrumb separator={<ArrowDropRightLine color="grey.600" />} textStyle="xs">
-            <BreadcrumbItem>
-              <BreadcrumbLink as={NavLink} to="/" color="grey.600" textDecoration="underline">
-                Accueil
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink>Historique des statuts Affelnet/Parcoursup</BreadcrumbLink>
-            </BreadcrumbItem>
-          </Breadcrumb>
+          <Breadcrumb
+            pages={[{ title: "Accueil", to: "/" }, { title: "Historique des statuts Affelnet/Parcoursup" }]}
+          />
         </Container>
       </Box>
       <Box w="100%" minH="100vh" px={[1, 24]}>

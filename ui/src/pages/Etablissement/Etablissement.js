@@ -2,9 +2,6 @@ import React, { useEffect, useState } from "react";
 import {
   Badge,
   Box,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
   Button,
   Center,
   Container,
@@ -32,8 +29,9 @@ import { hasOneOfRoles } from "../../common/utils/rolesUtils";
 import { NavLink } from "react-router-dom";
 import InfoTooltip from "../../common/components/InfoTooltip";
 import helpText from "../../locales/helpText.json";
-import { ArrowDropRightLine, ArrowRightLine, Edit2Fill, ExternalLinkLine } from "../../theme/components/icons/";
+import { ArrowRightLine, Edit2Fill, ExternalLinkLine } from "../../theme/components/icons/";
 import { HowToFixModal } from "../../common/components/organisme/HowToFixModal";
+import { Breadcrumb } from "../../common/components/Breadcrumb";
 
 const sleep = (m) => new Promise((r) => setTimeout(r, m));
 
@@ -415,21 +413,13 @@ export default ({ match }) => {
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 24]}>
         <Container maxW="xl">
-          <Breadcrumb separator={<ArrowDropRightLine color="grey.600" />} textStyle="xs">
-            <BreadcrumbItem>
-              <BreadcrumbLink as={NavLink} to="/" color="grey.600" textDecoration="underline">
-                Accueil
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem>
-              <BreadcrumbLink as={NavLink} to="/recherche/etablissements" color="grey.600" textDecoration="underline">
-                Établissements
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink>{etablissement?.entreprise_raison_sociale}</BreadcrumbLink>
-            </BreadcrumbItem>
-          </Breadcrumb>
+          <Breadcrumb
+            pages={[
+              { title: "Accueil", to: "/" },
+              { title: "Liste des établissements", to: "/recherche/etablissements" },
+              { title: `${etablissement?.entreprise_raison_sociale}` },
+            ]}
+          />
         </Container>
       </Box>
       <Box>
