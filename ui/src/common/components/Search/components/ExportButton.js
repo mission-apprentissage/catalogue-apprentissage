@@ -118,10 +118,8 @@ const ExportButton = ({ index, filters, columns, defaultQuery = { match_all: {} 
   if (!requestExport) {
     return (
       <Button
-        fontWeight="400"
-        textStyle="sm"
-        color="bluefrance"
-        colorScheme="white"
+        variant="pill"
+        py={2}
         onClick={async () => {
           setRequestExport(true);
           setExporting(true);
@@ -160,7 +158,7 @@ const ExportButton = ({ index, filters, columns, defaultQuery = { match_all: {} 
       render={() => {
         if (exporting) {
           return (
-            <Button isLoading size="sm" colorScheme="blue" loadingText={`${progress}%`}>
+            <Button isLoading size="sm" variant="pill" py={2} loadingText={`${progress}%`}>
               Exporter
             </Button>
           );

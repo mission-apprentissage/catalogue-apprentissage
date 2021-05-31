@@ -511,35 +511,33 @@ const Formation = ({
                 <Text textStyle="rf-text" color="grey.700" fontWeight="700" mb={3}>
                   Gestionnaire
                 </Text>
-                <Box as={NavLink} to={`/etablissement/${formation.etablissement_gestionnaire_id}`}>
-                  <Container p={5} bg="#F9F8F6">
+                <Link as={NavLink} to={`/etablissement/${formation.etablissement_gestionnaire_id}`} variant="card">
+                  <Flex display={["none", "flex"]} textStyle="xs" justifyContent="space-between">
+                    <Text>Siret : {formation.etablissement_gestionnaire_siret}</Text>
+                    <Text>UAI : {formation.etablissement_gestionnaire_uai}</Text>
+                  </Flex>
+                  <Heading textStyle="h6" color="grey.800" mt={2}>
+                    {formation.etablissement_gestionnaire_entreprise_raison_sociale}
+                  </Heading>
+                  <Box>
+                    <Text textStyle="sm">Académie : {formation.etablissement_gestionnaire_nom_academie}</Text>
                     <Box>
-                      <Flex display={["none", "flex"]} textStyle="xs" justifyContent="space-between">
-                        <Text>Siret : {formation.etablissement_gestionnaire_siret}</Text>
-                        <Text>UAI : {formation.etablissement_gestionnaire_uai}</Text>
-                      </Flex>
-                      <Heading textStyle="h6" color="grey.800" mt={2}>
-                        {formation.etablissement_gestionnaire_entreprise_raison_sociale}
-                      </Heading>
-                      <Box>
-                        <Text textStyle="sm">Académie : {formation.etablissement_gestionnaire_nom_academie}</Text>
+                      <Flex justifyContent={"space-between"}>
                         <Box>
-                          <Flex>
-                            {tagsGestionnaire &&
-                              tagsGestionnaire
-                                .sort((a, b) => a - b)
-                                .map((tag, i) => (
-                                  <Badge variant="year" mr="10px" mt={3} key={i}>
-                                    {tag}
-                                  </Badge>
-                                ))}
-                            <ArrowRightLine alignSelf="center" color="bluefrance" flex="1" ml="13.4rem" />
-                          </Flex>
+                          {tagsGestionnaire &&
+                            tagsGestionnaire
+                              .sort((a, b) => a - b)
+                              .map((tag, i) => (
+                                <Badge variant="year" mr="10px" mt={3} key={i}>
+                                  {tag}
+                                </Badge>
+                              ))}
                         </Box>
-                      </Box>
+                        <ArrowRightLine alignSelf="center" color="bluefrance" />
+                      </Flex>
                     </Box>
-                  </Container>
-                </Box>
+                  </Box>
+                </Link>
               </>
             )}
 
@@ -549,35 +547,33 @@ const Formation = ({
               </Text>
             )}
 
-            <Box as={NavLink} to={`/etablissement/${formation.etablissement_formateur_id}`}>
-              <Container p={5} bg="#F9F8F6">
+            <Link as={NavLink} to={`/etablissement/${formation.etablissement_formateur_id}`} variant="card">
+              <Flex display={["none", "flex"]} textStyle="xs" justifyContent="space-between">
+                <Text>Siret : {formation.etablissement_formateur_siret}</Text>
+                <Text>UAI: {formation.etablissement_formateur_uai}</Text>
+              </Flex>
+              <Heading textStyle="h6" color="grey.800" mt={2}>
+                {formation.etablissement_formateur_entreprise_raison_sociale}
+              </Heading>
+              <Box>
+                <Text textStyle="sm">Académie : {formation.etablissement_formateur_nom_academie}</Text>
                 <Box>
-                  <Flex display={["none", "flex"]} textStyle="xs" justifyContent="space-between">
-                    <Text>Siret : {formation.etablissement_formateur_siret}</Text>
-                    <Text>UAI: {formation.etablissement_formateur_uai}</Text>
-                  </Flex>
-                  <Heading textStyle="h6" color="grey.800" mt={2}>
-                    {formation.etablissement_formateur_entreprise_raison_sociale}
-                  </Heading>
-                  <Box>
-                    <Text textStyle="sm">Académie : {formation.etablissement_formateur_nom_academie}</Text>
+                  <Flex justifyContent={"space-between"}>
                     <Box>
-                      <Flex>
-                        {tagsFormateur &&
-                          tagsFormateur
-                            .sort((a, b) => a - b)
-                            .map((tag, i) => (
-                              <Badge variant="year" mr="10px" mt={3} key={i}>
-                                {tag}
-                              </Badge>
-                            ))}
-                        <ArrowRightLine alignSelf="center" color="bluefrance" flex="1" ml="13.4rem" />
-                      </Flex>
+                      {tagsFormateur &&
+                        tagsFormateur
+                          .sort((a, b) => a - b)
+                          .map((tag, i) => (
+                            <Badge variant="year" mr="10px" mt={3} key={i}>
+                              {tag}
+                            </Badge>
+                          ))}
                     </Box>
-                  </Box>
+                    <ArrowRightLine alignSelf="center" color="bluefrance" />
+                  </Flex>
                 </Box>
-              </Container>
-            </Box>
+              </Box>
+            </Link>
           </Box>
         </GridItem>
       </Grid>

@@ -31,7 +31,7 @@ const Button = {
       color: "bluefrance",
       px: 3,
       py: 1,
-      _hover: { bg: "grey.200", textDecoration: "none", borderRadius: 16 },
+      _hover: { bg: "grey.200", textDecoration: "none", borderRadius: 24 },
     },
   },
 };
