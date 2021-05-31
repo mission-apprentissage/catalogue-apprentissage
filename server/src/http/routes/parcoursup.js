@@ -1,6 +1,7 @@
-const { PsReconciliation, PsFormation2021 } = require("../../common/model");
+const { PsReconciliation, PsFormation2021, ConvertedFormation } = require("../../common/model");
 const combinate = require("../../logic/mappers/psReconciliationMapper");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
+const { asyncForEach } = require("../../common/utils/asyncUtils");
 const mongoose = require("mongoose");
 const express = require("express");
 const { getCfdInfo } = require("@mission-apprentissage/tco-service-node");
@@ -61,6 +62,104 @@ module.exports = ({ catalogue }) => {
     })
   );
 
+  const buildDiff = async (psFormation, matchedMnaFormation, select) => {
+    const mnaFormation = await ConvertedFormation.findById(matchedMnaFormation._id, select).lean();
+    const {
+      uai_formation,
+      etablissement_formateur_uai,
+      etablissement_gestionnaire_uai,
+      cfd,
+      lieu_formation_siret,
+      etablissement_formateur_siret,
+      etablissement_gestionnaire_siret,
+      code_commune_insee,
+      nom_academie,
+      rncp_code,
+    } = mnaFormation;
+
+    const compareUais = (psFormation, uai) => {
+      const r = {
+        uai_affilie: psFormation.uai_affilie === uai,
+        uai_gestionnaire: psFormation.uai_gestionnaire === uai,
+        uai_composante: psFormation.uai_composante === uai,
+        uai_insert_jeune: psFormation.uai_insert_jeune === uai,
+        uai_cerfa: psFormation.uai_cerfa === uai,
+      };
+      return {
+        ...r,
+        match: r.uai_affilie || r.uai_gestionnaire || r.uai_composante || r.uai_insert_jeune || r.uai_cerfa,
+      };
+    };
+
+    const compareSiret = (psFormation, siret) => {
+      const r = {
+        siret_cerfa: psFormation.siret_cerfa === siret,
+        siret_map: psFormation.siret_map === siret,
+      };
+      return {
+        ...r,
+        match: r.siret_cerfa || r.siret_map,
+      };
+    };
+    const uai = {
+      uai_formation: compareUais(psFormation, uai_formation),
+      etablissement_formateur_uai: compareUais(psFormation, etablissement_formateur_uai),
+      etablissement_gestionnaire_uai: compareUais(psFormation, etablissement_gestionnaire_uai),
+    };
+    const siret = {
+      lieu_formation_siret: compareSiret(psFormation, lieu_formation_siret),
+      etablissement_formateur_siret: compareSiret(psFormation, etablissement_formateur_siret),
+      etablissement_gestionnaire_siret: compareSiret(psFormation, etablissement_gestionnaire_siret),
+    };
+    const diffFields = {
+      uai: {
+        ...uai,
+        match:
+          uai.uai_formation.match || uai.etablissement_formateur_uai.match || uai.etablissement_gestionnaire_uai.match,
+        uai_affilie:
+          uai.uai_formation.uai_affilie ||
+          uai.etablissement_formateur_uai.uai_affilie ||
+          uai.etablissement_gestionnaire_uai.uai_affilie,
+        uai_gestionnaire:
+          uai.uai_formation.uai_gestionnaire ||
+          uai.etablissement_formateur_uai.uai_gestionnaire ||
+          uai.etablissement_gestionnaire_uai.uai_gestionnaire,
+        uai_composante:
+          uai.uai_formation.uai_composante ||
+          uai.etablissement_formateur_uai.uai_composante ||
+          uai.etablissement_gestionnaire_uai.uai_composante,
+        uai_insert_jeune:
+          uai.uai_formation.uai_insert_jeune ||
+          uai.etablissement_formateur_uai.uai_insert_jeune ||
+          uai.etablissement_gestionnaire_uai.uai_insert_jeune,
+        uai_cerfa:
+          uai.uai_formation.uai_cerfa ||
+          uai.etablissement_formateur_uai.uai_cerfa ||
+          uai.etablissement_gestionnaire_uai.uai_cerfa,
+      },
+      siret: {
+        ...siret,
+        siret_cerfa:
+          siret.lieu_formation_siret.siret_cerfa ||
+          siret.etablissement_formateur_siret.siret_cerfa ||
+          siret.etablissement_gestionnaire_siret.siret_cerfa,
+        siret_map:
+          siret.lieu_formation_siret.siret_map ||
+          siret.etablissement_formateur_siret.siret_map ||
+          siret.etablissement_gestionnaire_siret.siret_map,
+      },
+      cfd: psFormation.codes_cfd_mna.includes(cfd),
+      rncp_code: psFormation.codes_rncp_mna.includes(rncp_code),
+      code_commune_insee: psFormation.code_commune_insee === code_commune_insee,
+      nom_academie: psFormation.nom_academie === nom_academie,
+    };
+
+    return {
+      mnaFormation,
+      diffFields,
+    };
+  };
+
   router.get(
     "/reconciliation/result/:id",
     tryCatch(async (req, res) => {
@@ -69,32 +168,22 @@ module.exports = ({ catalogue }) => {
       const select = qs && qs.select ? JSON.parse(qs.select) : { __v: 0 };
       const retrievedData = await PsFormation2021.findById(psId, select).lean();
       if (retrievedData) {
-        let diffFields = null;
-        if (retrievedData.statut_reconciliation === "AUTOMATIQUE") {
-          const {
-            uai_formation,
-            etablissement_formateur_uai,
-            etablissement_gestionnaire_uai,
-            cfd,
-          } = retrievedData.matching_mna_formation[0];
+        const diffFields = [];
+        let matching_mna_formation = retrievedData.matching_mna_formation;
+        if (
+          retrievedData.statut_reconciliation === "AUTOMATIQUE" ||
+          retrievedData.statut_reconciliation === "A_VERIFIER"
+        ) {
+          const updated_matching_mna_formation = [];
 
-          const compareUais = (psFormation, uai) => {
-            return {
-              uai_affilie: psFormation.uai_affilie === uai,
-              uai_gestionnaire: psFormation.uai_gestionnaire === uai,
-              uai_composante: psFormation.uai_composante === uai,
-              uai_insert_jeune: psFormation.uai_insert_jeune === uai,
-              uai_cerfa: psFormation.uai_cerfa === uai,
-            };
-          };
-          diffFields = {
-            uai_formation: compareUais(retrievedData, uai_formation),
-            etablissement_formateur_uai: compareUais(retrievedData, etablissement_formateur_uai),
-            etablissement_gestionnaire_uai: compareUais(retrievedData, etablissement_gestionnaire_uai),
-            cfd: retrievedData.codes_cfd_mna.includes(cfd),
-          };
+          await asyncForEach(retrievedData.matching_mna_formation, async (mnaF) => {
+            const diffResult = await buildDiff(retrievedData, mnaF, select);
+            updated_matching_mna_formation.push(diffResult.mnaFormation);
+            diffFields.push(diffResult.diffFields);
+          });
+          matching_mna_formation = updated_matching_mna_formation;
         }
-        return res.json({ ...retrievedData, diff: diffFields });
+        return res.json({ ...retrievedData, diff: diffFields, matching_mna_formation });
       }
       return res.status(404).send({ message: `Item ${psId} doesn't exist` });
     })

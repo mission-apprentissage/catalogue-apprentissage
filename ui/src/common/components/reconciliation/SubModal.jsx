@@ -14,7 +14,7 @@ import React from "react";
 import { Close } from "../../../theme/components/icons/Close";
 import { ArrowRightLine } from "../../../theme/components/icons";
 import { AddEtablissement } from "./AddEtablissement";
-import { Validate } from "./Validate";
+// import { Validate } from "./Validate";
 import { Rejected } from "./Rejected";
 
 const SubModal = ({ isOpen, onClose, type }) => {
@@ -53,7 +53,7 @@ const SubModal = ({ isOpen, onClose, type }) => {
         </ModalHeader>
         <ModalBody p={0} display="flex" flexDirection="column">
           {type === "etablissement" && <AddEtablissement formation={null} onClose={onClose} />}
-          {type === "validate" && <Validate formation={null} onClose={onClose} />}
+          {/* {type === "validate" && <Validate formation={null} onClose={onClose} />} */}
           {type === "reject" && <Rejected formation={null} onClose={onClose} />}
         </ModalBody>
       </ModalContent>
