@@ -137,6 +137,7 @@ export default React.memo(({ match, location, searchState, context }) => {
                     loader="Chargement des résultats.."
                     size={8}
                     pagination={true}
+                    innerClass={{ pagination: "search-pagination" }}
                     showEndPage={true}
                     showResultStats={true}
                     sortBy="asc"

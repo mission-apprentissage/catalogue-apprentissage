@@ -20,7 +20,14 @@ const Breadcrumb = ({ pages }) => {
         } else {
           return (
             <BreadcrumbItem key={page.title}>
-              <BreadcrumbLink as={NavLink} to={page.to} color="grey.600" textDecoration="underline">
+              <BreadcrumbLink
+                as={NavLink}
+                to={page.to}
+                color="grey.600"
+                textDecoration="underline"
+                _focus={{ boxShadow: "0 0 0 3px #3a55d1", outlineColor: "info" }}
+                _focusVisible={{ outlineColor: "info" }}
+              >
                 {page.title}
               </BreadcrumbLink>
             </BreadcrumbItem>

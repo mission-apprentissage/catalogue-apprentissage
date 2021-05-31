@@ -105,6 +105,24 @@
   background-color: white;
 }
 
+.search .search-pagination a {
+  background: none;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border-width: 0;
+  color: #1e1e1e;
+}
+.search .search-pagination a:hover {
+  background: #f0f0f0;
+}
+.search .search-pagination a.active {
+  background: #000091;
+  color: white;
+}
+.search .search-pagination a:focus {
+  box-shadow: 0 0 0 3px #3a55d1;
+}
+
 @media screen and (max-width: 767px) {
   .search .filter_mobile_menu {
     display: flex;
