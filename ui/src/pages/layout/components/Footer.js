@@ -1,30 +1,15 @@
 import React from "react";
-import { Box, Container, Flex, Image, Link, List, ListItem, Text } from "@chakra-ui/react";
+import { Box, Container, Flex, Link, List, ListItem, Text } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
+import { Logo } from "./Logo";
 
 const Footer = () => {
   return (
     <Box borderTop="1px solid" borderColor="bluefrance" color="#1E1E1E" fontSize="zeta" w="full">
-      <Container maxW="xl" py={6}>
+      <Container maxW="xl">
         <Flex flexDirection={["column", "column", "row"]}>
           <Link as={NavLink} to="/" py={4} w={["100%", "100%", "40rem"]}>
-            <Image
-              src="/brand/mariannev2.jpg"
-              height={"1.8rem"}
-              htmlHeight={"1.8rem"}
-              width={"3.75rem"}
-              htmlWidth={"3.75rem"}
-              alt="Logo de la République Française"
-              fallback={<Box height={"1.8rem"} width={"3.75rem"} bg="grey.200" />}
-            />
-            <Text textStyle="h6" fontWeight="700">
-              RÉPUBLIQUE FRANÇAISE
-            </Text>
-            <List as="i" fontSize="legal">
-              <ListItem>Liberté</ListItem>
-              <ListItem>Égalité</ListItem>
-              <ListItem>Fraternité</ListItem>
-            </List>
+            <Logo size={"xl"} />
           </Link>
           <Box alignSelf="center" flex="1">
             <Text>
@@ -33,7 +18,13 @@ const Footer = () => {
               Cras si amet mollis dolor.
             </Text>
             <br />
-            <List textStyle="sm" fontWeight="700" flexDirection={["column", "column", "row"]} display="flex">
+            <List
+              textStyle="sm"
+              fontWeight="700"
+              flexDirection={["column", "column", "row"]}
+              mb={[2, 2, 0]}
+              display="flex"
+            >
               <ListItem>
                 <Link href="https://www.legifrance.gouv.fr/" mr={4} isExternal>
                   legifrance.gouv.fr

@@ -3,13 +3,11 @@ import { NavLink, useHistory } from "react-router-dom";
 import {
   Avatar,
   Box,
+  Button,
   Container,
   Flex,
   Heading,
-  Image,
   Link,
-  List,
-  ListItem,
   Menu,
   MenuButton,
   MenuDivider,
@@ -24,6 +22,7 @@ import useAuth from "../../../common/hooks/useAuth";
 import { isUserAdmin } from "../../../common/utils/rolesUtils";
 import { _get } from "../../../common/httpClient";
 import { LockFill } from "../../../theme/components/icons/LockFill";
+import { Logo } from "./Logo";
 
 const Header = () => {
   let [auth, setAuth] = useAuth();
@@ -37,29 +36,14 @@ const Header = () => {
   };
 
   return (
-    <Box>
-      <Container maxW="xl">
-        <Flex fontFamily="Marianne" alignItems="center" color="#1E1E1E">
+    <Container maxW={"full"} borderBottom={"1px solid"} borderColor={"grey.400"}>
+      <Container maxW="xl" py={2}>
+        <Flex alignItems="center" color="grey.800">
           {/* Logo */}
-          <Link as={NavLink} to="/" py={4}>
-            <Image
-              src="/brand/mariannev2.jpg"
-              height={"15px"}
-              htmlHeight={"15px"}
-              width={"33px"}
-              htmlWidth={"33px"}
-              alt="Logo de la République Française"
-              fallback={<Box height={"15px"} width={"33px"} bg="grey.200" />}
-            />
-            <Text fontWeight="extrabold" fontSize="12px" fontStyle="normal">
-              RÉPUBLIQUE FRANÇAISE{" "}
-            </Text>
-            <List as="i" fontSize="legal">
-              <ListItem>Liberté</ListItem>
-              <ListItem>Égalité</ListItem>
-              <ListItem>Fraternité</ListItem>
-            </List>
+          <Link as={NavLink} to="/">
+            <Logo />
           </Link>
+
           <Box p={6} flex="1">
             <Heading as="h6" textStyle="h6">
               Catalogue des offres de formations en apprentissage
@@ -76,7 +60,7 @@ const Header = () => {
           )}
           {auth?.sub !== "anonymous" && (
             <Menu placement="bottom">
-              <MenuButton as={Link} variant="pill">
+              <MenuButton as={Button} variant="pill">
                 <Flex>
                   <Avatar bg="bluefrance" size="sm" w="13px" h="13px" mt="0.4rem" />
                   <Box display={["none", "block"]} ml={2}>
@@ -120,8 +104,7 @@ const Header = () => {
           )}
         </Flex>
       </Container>
-      <Box w="100" mt={3} border="1px solid #ECECEC" />
-    </Box>
+    </Container>
   );
 };
 
