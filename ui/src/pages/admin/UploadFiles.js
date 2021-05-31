@@ -1,23 +1,9 @@
-import React, { useMemo, useState, useCallback } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import Layout from "../layout/Layout";
-import {
-  Box,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  Button,
-  Container,
-  Heading,
-  Input,
-  ListItem,
-  Select,
-  Text,
-  UnorderedList,
-} from "@chakra-ui/react";
-import { NavLink } from "react-router-dom";
+import { Box, Button, Container, Heading, Input, ListItem, Select, Text, UnorderedList } from "@chakra-ui/react";
 import { useDropzone } from "react-dropzone";
 import { _postFile } from "../../common/httpClient";
-import { ArrowDropRightLine } from "../../theme/components/icons";
+import { Breadcrumb } from "../../common/components/Breadcrumb";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -119,16 +105,7 @@ export default () => {
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 24]} color="grey.800">
         <Container maxW="xl">
-          <Breadcrumb separator={<ArrowDropRightLine color="grey.600" />} textStyle="xs">
-            <BreadcrumbItem>
-              <BreadcrumbLink as={NavLink} to="/" color="grey.600" textDecoration="underline">
-                Accueil
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink>Upload de fichiers</BreadcrumbLink>
-            </BreadcrumbItem>
-          </Breadcrumb>
+          <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: "Upload de fichiers" }]} />
         </Container>
       </Box>
       <Box w="100%" minH="100vh" px={[1, 24]}>
