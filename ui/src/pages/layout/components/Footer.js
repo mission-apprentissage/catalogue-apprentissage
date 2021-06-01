@@ -58,17 +58,17 @@ const Footer = () => {
               </ListItem>
               <ListItem>Accessibilité : Non conforme</ListItem>
               <ListItem>
-                <Link as={NavLink} to={"/"}>
+                <Link as={NavLink} to={"/mentions-legales"}>
                   Mentions légales
                 </Link>
               </ListItem>
               <ListItem>
-                <Link as={NavLink} to={"/"}>
+                <Link as={NavLink} to={"/donnees-personnelles"}>
                   Données personnelles
                 </Link>
               </ListItem>
               <ListItem>
-                <Link as={NavLink} to={"/"}>
+                <Link as={NavLink} to={"/cookies"}>
                   Gestion des cookies
                 </Link>
               </ListItem>
@@ -83,7 +83,9 @@ const Footer = () => {
                 </Link>
               </ListItem>
               <ListItem>
-                <Link href="mailto:catalogue@apprentissage.beta.gouv.fr">Contact</Link>
+                <Link as={NavLink} to={"/contact"}>
+                  Contact
+                </Link>
               </ListItem>
             </List>
             <Text textStyle="xs" mt={[2, 2, 0]}>
