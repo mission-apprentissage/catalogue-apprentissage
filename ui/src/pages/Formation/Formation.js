@@ -208,120 +208,116 @@ const Formation = ({
         </Alert>
       )}
       <Grid templateColumns="repeat(12, 1fr)">
-        <GridItem colSpan={[12, 7]} bg="white" p={8} border="1px solid" borderColor="bluefrance">
-          <Box mb={16}>
-            <Heading textStyle="h4" color="grey.800">
+        <GridItem colSpan={[12, 12, 7]} bg="white" border="1px solid" borderColor="bluefrance">
+          <Box mb={16} pt={8}>
+            <Heading textStyle="h4" color="grey.800" px={8}>
               Description
             </Heading>
-            <Box mb={4}>
-              {formation.onisep_url !== "" && formation.onisep_url !== null && (
-                <Link
-                  href={formation.onisep_url}
-                  mt={3}
-                  textDecoration="underline"
-                  color="bluefrance"
-                  textStyle="rf-text"
-                  isExternal
-                >
-                  voir la fiche descriptive Onisep <ExternalLinkLine w="9px" h="9px" />.
+            {formation.onisep_url !== "" && formation.onisep_url !== null && (
+              <Box mt={2} mb={4} px={5}>
+                <Link href={formation.onisep_url} mt={3} variant="pill" textStyle="rf-text" isExternal>
+                  voir la fiche descriptive Onisep <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
                 </Link>
-              )}
-            </Box>
-            <Text mb={4} mt={4}>
-              Intitulé court de la formation :{" "}
-              <Text as="span" variant="highlight">
-                {displayedFormation.intitule_court}
-              </Text>{" "}
-              <InfoTooltip description={helpText.formation.intitule_court} />
-            </Text>
-            <Text mb={4} mt={4}>
-              Intitulé éditorial :{" "}
-              <Text as="span" variant="highlight">
-                {displayedFormation.onisep_intitule}
-              </Text>{" "}
-              <InfoTooltip description={helpText.formation.onisep_intitule} />
-            </Text>
-            <Text mb={4}>
-              Diplôme ou titre visé :{" "}
-              <Text as="span" variant="highlight">
-                {displayedFormation.diplome}
-              </Text>{" "}
-              <InfoTooltip description={helpText.formation.diplome} />
-            </Text>
-            <Text mb={4}>
-              Niveau de la formation :{" "}
-              <Text as="span" variant="highlight">
-                {displayedFormation.niveau}
-              </Text>{" "}
-              <InfoTooltip description={helpText.formation.niveau} />
-            </Text>
-            <Text mb={4}>
-              Code diplôme (Éducation Nationale) :{" "}
-              <Text as="span" variant="highlight">
-                {displayedFormation.cfd}
-              </Text>{" "}
-              <InfoTooltip description={helpText.formation.cfd} />
-              {displayedFormation.cfd_outdated && (
+              </Box>
+            )}
+
+            <Box px={8}>
+              <Text mb={4} mt={4}>
+                Intitulé court de la formation :{" "}
+                <Text as="span" variant="highlight">
+                  {displayedFormation.intitule_court}
+                </Text>{" "}
+                <InfoTooltip description={helpText.formation.intitule_court} />
+              </Text>
+              <Text mb={4} mt={4}>
+                Intitulé éditorial :{" "}
+                <Text as="span" variant="highlight">
+                  {displayedFormation.onisep_intitule}
+                </Text>{" "}
+                <InfoTooltip description={helpText.formation.onisep_intitule} />
+              </Text>
+              <Text mb={4}>
+                Diplôme ou titre visé :{" "}
+                <Text as="span" variant="highlight">
+                  {displayedFormation.diplome}
+                </Text>{" "}
+                <InfoTooltip description={helpText.formation.diplome} />
+              </Text>
+              <Text mb={4}>
+                Niveau de la formation :{" "}
+                <Text as="span" variant="highlight">
+                  {displayedFormation.niveau}
+                </Text>{" "}
+                <InfoTooltip description={helpText.formation.niveau} />
+              </Text>
+              <Text mb={4}>
+                Code diplôme (Éducation Nationale) :{" "}
+                <Text as="span" variant="highlight">
+                  {displayedFormation.cfd}
+                </Text>{" "}
+                <InfoTooltip description={helpText.formation.cfd} />
+                {displayedFormation.cfd_outdated && (
+                  <>
+                    <br />
+                    Ce diplôme a une date de fin antérieure au 31/08 de l'année en cours
+                  </>
+                )}
+              </Text>
+              <Text mb={4}>
+                Codes MEF 10 caractères :{" "}
+                <Text as="span" variant="highlight">
+                  {displayedFormation.mef_10_code ??
+                    displayedFormation?.bcn_mefs_10?.map(({ mef10 }) => mef10).join(", ")}
+                </Text>{" "}
+                <InfoTooltip description={helpText.formation.mef} />
+              </Text>
+              {displayedFormation?.mefs_10?.length > 0 && (
                 <>
-                  <br />
-                  Ce diplôme a une date de fin antérieure au 31/08 de l'année en cours
-                </>
-              )}
-            </Text>
-            <Text mb={4}>
-              Codes MEF 10 caractères :{" "}
-              <Text as="span" variant="highlight">
-                {displayedFormation.mef_10_code ??
-                  displayedFormation?.bcn_mefs_10?.map(({ mef10 }) => mef10).join(", ")}
-              </Text>{" "}
-              <InfoTooltip description={helpText.formation.mef} />
-            </Text>
-            {displayedFormation?.mefs_10?.length > 0 && (
-              <>
-                <Text mb={4}>
-                  Codes MEF 10 caractères dans le périmètre <i>Affelnet</i> :{" "}
-                  <Text as="span" variant="highlight">
-                    {displayedFormation?.mefs_10?.map(({ mef10 }) => mef10).join(", ")}
-                  </Text>
-                </Text>
-                {formation?.affelnet_infos_offre && (
                   <Text mb={4}>
-                    Informations offre de formation <i>Affelnet</i> :{" "}
+                    Codes MEF 10 caractères dans le périmètre <i>Affelnet</i> :{" "}
                     <Text as="span" variant="highlight">
-                      {formation?.affelnet_infos_offre}
+                      {displayedFormation?.mefs_10?.map(({ mef10 }) => mef10).join(", ")}
                     </Text>
                   </Text>
-                )}
-              </>
-            )}
-            <Text mb={4}>
-              Période d'inscription :
-              <FormationPeriode periode={displayedFormation.periode} />{" "}
-              <InfoTooltip description={helpText.formation.periode} />
-            </Text>
-            <Text mb={4}>
-              Capacite d'accueil :{" "}
-              <Text as="span" variant="highlight">
-                {formation.capacite ?? "N/A"}
-              </Text>{" "}
-              <InfoTooltip ml="10px" description={helpText.formation.capacite} />
-            </Text>
-            <Text mb={4}>
-              Durée de la formation :{" "}
-              <Text as="span" variant="highlight">
-                {displayedFormation.duree ?? "N/A"}
-              </Text>{" "}
-              <InfoTooltip description={helpText.formation.duree} />
-            </Text>
-            <Text mb={4}>
-              Année :{" "}
-              <Text as="span" variant="highlight">
-                {displayedFormation.annee ?? "N/A"}
-              </Text>{" "}
-              <InfoTooltip description={helpText.formation.annee} />
-            </Text>
+                  {formation?.affelnet_infos_offre && (
+                    <Text mb={4}>
+                      Informations offre de formation <i>Affelnet</i> :{" "}
+                      <Text as="span" variant="highlight">
+                        {formation?.affelnet_infos_offre}
+                      </Text>
+                    </Text>
+                  )}
+                </>
+              )}
+              <Text mb={4}>
+                Période d'inscription :
+                <FormationPeriode periode={displayedFormation.periode} />{" "}
+                <InfoTooltip description={helpText.formation.periode} />
+              </Text>
+              <Text mb={4}>
+                Capacite d'accueil :{" "}
+                <Text as="span" variant="highlight">
+                  {formation.capacite ?? "N/A"}
+                </Text>{" "}
+                <InfoTooltip ml="10px" description={helpText.formation.capacite} />
+              </Text>
+              <Text mb={4}>
+                Durée de la formation :{" "}
+                <Text as="span" variant="highlight">
+                  {displayedFormation.duree ?? "N/A"}
+                </Text>{" "}
+                <InfoTooltip description={helpText.formation.duree} />
+              </Text>
+              <Text mb={4}>
+                Année :{" "}
+                <Text as="span" variant="highlight">
+                  {displayedFormation.annee ?? "N/A"}
+                </Text>{" "}
+                <InfoTooltip description={helpText.formation.annee} />
+              </Text>
+            </Box>
           </Box>
-          <Box mb={16}>
+          <Box mb={16} px={8}>
             <Heading textStyle="h4" color="grey.800" mb={4} mt={6}>
               Informations RNCP et ROME
             </Heading>
@@ -414,94 +410,91 @@ const Formation = ({
             )}
           </Box>
         </GridItem>
-        <GridItem colSpan={[12, 5]} p={8}>
+        <GridItem colSpan={[12, 12, 5]} py={8}>
           <Box mb={16}>
-            <Heading textStyle="h4" color="grey.800">
+            <Heading textStyle="h4" color="grey.800" px={8}>
               <MapPin2Fill w="12px" h="15px" mr="5px" mb="5px" />
               Lieu de la formation
             </Heading>
-            <Box mb={4}>
-              <Link
-                href={getLBAUrl(formation)}
-                textStyle="rf-text"
-                color="bluefrance"
-                textDecoration="underline"
-                isExternal
-              >
-                voir sur un plan <ExternalLinkLine w="9px" h="9px" />.
+            <Box mt={2} mb={4} px={5}>
+              <Link href={getLBAUrl(formation)} textStyle="rf-text" variant="pill" isExternal>
+                voir sur un plan <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
               </Link>
             </Box>
-            <EditableField
-              fieldName={"uai_formation"}
-              label={"UAI du lieu de formation"}
-              formation={formation}
-              edition={edition}
-              onEdit={onEdit}
-              values={values}
-              handleSubmit={handleSubmit}
-              handleChange={handleChange}
-              hasRightToEdit={hasRightToEdit}
-              mb={4}
-            />
-            <Text mb={4}>
-              Académie :{" "}
-              <Text as="span" variant="highlight">
-                {displayedFormation.nom_academie} ({displayedFormation.num_academie})
-              </Text>{" "}
-              <InfoTooltip description={helpText.formation.academie} />
-            </Text>
-            <EditableField
-              fieldName={"lieu_formation_adresse"}
-              label={"Adresse"}
-              formation={displayedFormation}
-              edition={edition}
-              onEdit={onEdit}
-              values={values}
-              handleSubmit={handleSubmit}
-              handleChange={handleChange}
-              hasRightToEdit={hasRightToEdit}
-              mb={4}
-            />
-            <EditableField
-              fieldName={"code_postal"}
-              label={"Code postal"}
-              formation={displayedFormation}
-              edition={edition}
-              onEdit={onEdit}
-              values={values}
-              handleSubmit={handleSubmit}
-              handleChange={handleChange}
-              hasRightToEdit={hasRightToEdit}
-              mb={4}
-            />
-            <Text mb={4}>
-              Commune :{" "}
-              <Text as="span" variant="highlight">
-                {displayedFormation.localite}
-              </Text>{" "}
-              <InfoTooltip description={helpText.formation.localite} />
-            </Text>
-            <EditableField
-              fieldName={"code_commune_insee"}
-              label={"Code commune"}
-              formation={displayedFormation}
-              edition={edition}
-              onEdit={onEdit}
-              values={values}
-              handleSubmit={handleSubmit}
-              handleChange={handleChange}
-              hasRightToEdit={hasRightToEdit}
-              mb={4}
-            />
-            <Text mb={4}>
-              Département :{" "}
-              <Text as="span" variant="highlight">
-                {displayedFormation.nom_departement} ({displayedFormation.num_departement})
-              </Text>{" "}
-              <InfoTooltip description={helpText.formation.nom_departement} />
-            </Text>
+
+            <Box px={8}>
+              <EditableField
+                fieldName={"uai_formation"}
+                label={"UAI du lieu de formation"}
+                formation={formation}
+                edition={edition}
+                onEdit={onEdit}
+                values={values}
+                handleSubmit={handleSubmit}
+                handleChange={handleChange}
+                hasRightToEdit={hasRightToEdit}
+                mb={4}
+              />
+              <Text mb={4}>
+                Académie :{" "}
+                <Text as="span" variant="highlight">
+                  {displayedFormation.nom_academie} ({displayedFormation.num_academie})
+                </Text>{" "}
+                <InfoTooltip description={helpText.formation.academie} />
+              </Text>
+              <EditableField
+                fieldName={"lieu_formation_adresse"}
+                label={"Adresse"}
+                formation={displayedFormation}
+                edition={edition}
+                onEdit={onEdit}
+                values={values}
+                handleSubmit={handleSubmit}
+                handleChange={handleChange}
+                hasRightToEdit={hasRightToEdit}
+                mb={4}
+              />
+              <EditableField
+                fieldName={"code_postal"}
+                label={"Code postal"}
+                formation={displayedFormation}
+                edition={edition}
+                onEdit={onEdit}
+                values={values}
+                handleSubmit={handleSubmit}
+                handleChange={handleChange}
+                hasRightToEdit={hasRightToEdit}
+                mb={4}
+              />
+              <Text mb={4}>
+                Commune :{" "}
+                <Text as="span" variant="highlight">
+                  {displayedFormation.localite}
+                </Text>{" "}
+                <InfoTooltip description={helpText.formation.localite} />
+              </Text>
+              <EditableField
+                fieldName={"code_commune_insee"}
+                label={"Code commune"}
+                formation={displayedFormation}
+                edition={edition}
+                onEdit={onEdit}
+                values={values}
+                handleSubmit={handleSubmit}
+                handleChange={handleChange}
+                hasRightToEdit={hasRightToEdit}
+                mb={4}
+              />
+              <Text mb={4}>
+                Département :{" "}
+                <Text as="span" variant="highlight">
+                  {displayedFormation.nom_departement} ({displayedFormation.num_departement})
+                </Text>{" "}
+                <InfoTooltip description={helpText.formation.nom_departement} />
+              </Text>
+            </Box>
           </Box>
-          <Box mb={16}>
+          <Box mb={[0, 0, 16]} px={8}>
             <Heading textStyle="h4" color="grey.800" mb={4}>
               Organisme(s) associé(s)
             </Heading>
@@ -743,7 +736,7 @@ export default ({ match }) => {
 
   return (
     <Layout>
-      <Box w="100%" pt={[4, 8]} px={[1, 24]}>
+      <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
         <Container maxW="xl">
           <Breadcrumb
             pages={[
@@ -763,7 +756,7 @@ export default ({ match }) => {
           />
         </Container>
       </Box>
-      <Box w="100%" py={[1, 8]} px={[1, 24]}>
+      <Box w="100%" py={[1, 8]} px={[1, 1, 12, 24]}>
         <Container maxW="xl">
           {!formation && (
             <Center h="70vh">
@@ -774,8 +767,8 @@ export default ({ match }) => {
           {formation && (
             <>
               <Box mb={8}>
-                <Flex alignItems="center" justify="space-between" flexDirection={["column", "row"]}>
-                  <Heading textStyle="h2" color="grey.800" pr={[0, 8]}>
+                <Flex alignItems="center" justify="space-between" flexDirection={["column", "column", "row"]}>
+                  <Heading textStyle="h2" color="grey.800" pr={[0, 0, 8]}>
                     {pendingFormation?.intitule_long ?? formation?.intitule_long}{" "}
                     <InfoTooltip description={helpText.formation.intitule_long} />
                   </Heading>
@@ -784,7 +777,7 @@ export default ({ match }) => {
                       textStyle="sm"
                       variant="primary"
                       px={8}
-                      mt={[8, 0]}
+                      mt={[8, 8, 0]}
                       onClick={() => {
                         onOpenPublishModal();
                       }}

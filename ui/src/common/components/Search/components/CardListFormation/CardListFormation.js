@@ -26,7 +26,7 @@ export const CardListFormation = ({ data }) => {
         <Box>
           <Flex justifyContent="space-between">
             {hasOneOfRoles(auth, ["admin", "instructeur"]) && data.etablissement_reference_catalogue_published && (
-              <Flex mt={3}>
+              <Flex mt={3} flexWrap={"wrap"}>
                 <StatusBadge source="Parcoursup" status={data.parcoursup_statut} mr={[0, 2]} />
                 <StatusBadge source="Affelnet" status={data.affelnet_statut} mt={[2, 0]} />
               </Flex>

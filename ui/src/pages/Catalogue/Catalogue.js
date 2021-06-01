@@ -28,7 +28,7 @@ export default (props) => {
 
   return (
     <Layout>
-      <Box w="100%" pt={[4, 8]} px={[1, 24]}>
+      <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
         <Container maxW="xl">
           <Breadcrumb
             pages={[{ title: "Accueil", to: "/" }, { title: "Catalogue des formations en apprentissage 2021" }]}

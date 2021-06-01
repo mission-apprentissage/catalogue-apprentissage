@@ -66,7 +66,7 @@ export default () => {
 
   return (
     <Layout>
-      <Box w="100%" pt={[4, 8]} px={[1, 24]} color="#1E1E1E">
+      <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]} color="#1E1E1E">
         <Container maxW="xl">
           {/*<Box bg="#F8F8F8" color="pinksoft.500" borderLeft="4px" role="none" p={5}>*/}
           {/*  <Flex>*/}
@@ -87,9 +87,9 @@ export default () => {
           <Breadcrumb pages={[{ title: "Accueil" }]} />
         </Container>
       </Box>
-      <Box w="100%" py={[1, 8]} px={[1, 24]} color="#1E1E1E">
+      <Box w="100%" py={[4, 8]} px={[1, 1, 12, 24]} color="#1E1E1E">
         <Container maxW="xl">
-          <Flex flexDirection={["column", "column", "column", "row"]}>
+          <Flex flexDirection={["column", "column", "column", "column", "row"]}>
             <Box minW="250px">
               <Box bg="#F9F8F6" p={3}>
                 <Heading textStyle="rf-text" fontWeight="700" p={2}>
@@ -119,8 +119,8 @@ export default () => {
                 </List>
               </Box>
             </Box>
-            <Box px={5} mt={[4, 4, 4, 0]}>
-              <Heading as="h1" textStyle="h2">
+            <Box px={[1, 5]} mt={[4, 4, 4, 0]}>
+              <Heading as="h1" textStyle={"h2"}>
                 Le catalogue des offres de formations en apprentissage recense aujourd’hui :
               </Heading>
               <Box>
@@ -195,11 +195,10 @@ export default () => {
                     <Link
                       href="https://reseau.intercariforef.org/referencer-son-offre-de-formation"
                       textDecoration="underline"
-                      color="bluefrance"
                       isExternal
                     >
                       "référencer son offre de formation{" "}
-                      <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} color="bluefrance" />"
+                      <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />"
                     </Link>
                   </Text>
                   <br />
