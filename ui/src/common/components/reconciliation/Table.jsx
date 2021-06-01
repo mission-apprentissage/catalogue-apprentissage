@@ -1,39 +1,8 @@
-import React, { useMemo, useState } from "react";
-import { useTable, useFlexLayout, useGlobalFilter, useAsyncDebounce, useSortBy } from "react-table";
-import { Box, Flex, Text, Input, Stack, Checkbox } from "@chakra-ui/react";
+import React, { useMemo } from "react";
+import { useTable, useFlexLayout, useGlobalFilter, useSortBy } from "react-table";
+import { Box, Flex, Text, Stack, Checkbox } from "@chakra-ui/react";
 import { Star, SortingArrows } from "../../../theme/components/icons";
 import { InfoBadge } from "../InfoBadge";
-
-// Define a default UI for filtering
-function GlobalFilter({ preGlobalFilteredRows, globalFilter, setGlobalFilter, rows, headers, filename }) {
-  const count = preGlobalFilteredRows.length;
-  const [value, setValue] = useState(globalFilter);
-
-  const onChange = useAsyncDebounce((value) => {
-    setGlobalFilter(value || undefined);
-  }, 200);
-
-  return (
-    <Stack direction="row" spacing={4} mb={8} justifyContent={"space-between"}>
-      <Input
-        flex={1}
-        maxWidth="500px"
-        variant="flushed"
-        value={value || ""}
-        onChange={(e) => {
-          setValue(e.target.value);
-          onChange(e.target.value);
-        }}
-        placeholder={`Rechercher parmi les ${count} résultats`}
-      />
-      {rows.length !== count && (
-        <Text flex={1} px={8} alignSelf="center">
-          {rows.length} résultat(s) trouvé(s)
-        </Text>
-      )}
-    </Stack>
-  );
-}
 
 const buildColumns = (key) => {
   switch (key) {
@@ -73,19 +42,19 @@ const buildColumns = (key) => {
         accessor: key,
         width: 360,
       };
-    case "nature_activite":
+    case "naf_libelle":
       return {
         Header: "Nature de l’activité",
         accessor: key,
         width: 225,
       };
-    case "estSiege":
+    case "siege_social":
       return {
         Header: "Siège social",
         accessor: key,
         width: 200,
       };
-    case "information_similaire":
+    case "matched_uai":
       return {
         Header: "Informations similaires",
         accessor: key,
@@ -99,7 +68,7 @@ const buildColumns = (key) => {
   }
 };
 
-const Table = ({ data, onRowClick, filename }) => {
+const Table = ({ data, onRowClick, filename, onSelect }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const tableData = useMemo(() => data, []);
 
@@ -145,16 +114,13 @@ const Table = ({ data, onRowClick, filename }) => {
     setGlobalFilter,
   } = tableInstance;
 
+  const handleChange = (cell) => {
+    console.log(cell);
+    // onSelect();
+  };
+
   return (
     <>
-      {/* <GlobalFilter
-        preGlobalFilteredRows={preGlobalFilteredRows}
-        globalFilter={state.globalFilter}
-        setGlobalFilter={setGlobalFilter}
-        rows={rows}
-        headers={headerGroups[0].headers.map(({ Header }) => Header)}
-        filename={filename}
-      /> */}
       <Box as="table" {...getTableProps()} flex={1} fontSize="delta">
         <Box as="thead">
           {headerGroups.map((headerGroup) => (
@@ -226,7 +192,9 @@ const Table = ({ data, onRowClick, filename }) => {
                           <Checkbox
                             name="selectEta"
                             id="selectEta"
-                            // onChange={handleChange}
+                            onChange={() => {
+                              handleChange(cell);
+                            }}
                             value="on"
                           />
                         </Stack>
@@ -244,8 +212,9 @@ const Table = ({ data, onRowClick, filename }) => {
                       {i > 1 && i !== 9 && (!cell.value ? <Text color="grey.500">N.A</Text> : cell.render("Cell"))}
                       {i === 9 && (
                         <Stack mt="0.35rem">
-                          <InfoBadge text="UAI_FORMATION" variant="published" />
-                          <InfoBadge text="Gestionnaire" variant="published" />
+                          {cell.value.map((v, i) => (
+                            <InfoBadge text={v} variant="published" key={i} />
+                          ))}
                         </Stack>
                       )}
                     </Box>

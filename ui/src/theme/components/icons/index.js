@@ -17,3 +17,4 @@ export * from "./Star";
 export * from "./SortingArrows";
 export * from "./ValidateIcon";
 export * from "./RejectIcon";
+export * from "./DoubleArrows";

@@ -1,19 +1,44 @@
 import { Box, Button, Flex, FormControl, FormLabel, Heading, Radio, RadioGroup, Stack, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useFormik } from "formik";
-// import { buildUpdatesHistory } from "../../utils/formationUtils";
-import { ValidateIcon } from "../../../theme/components/icons";
+import { ValidateIcon, DoubleArrows } from "../../../theme/components/icons";
+import { _post } from "../../../common/httpClient";
 
-const Validate = ({ formation, onClose }) => {
+const Validate = ({ formation, mnaFormation, onClose, onValidationSubmit }) => {
   const [canSubmit, setCanSubmit] = useState(false);
-
+  console.log(mnaFormation);
   const { values, handleChange, handleSubmit, isSubmitting, setFieldValue } = useFormik({
     initialValues: {
       parcoursup_keep_publish: undefined,
     },
     onSubmit: ({ parcoursup_keep_publish }) => {
       return new Promise(async (resolve) => {
-        onClose();
+        const mapping = [];
+
+        mapping.push({
+          id: mnaFormation.etablissement_formateur_id,
+          siret: mnaFormation.etablissement_formateur_siret,
+          type: "formateur",
+        });
+        mapping.push({
+          id: mnaFormation.etablissement_gestionnaire_id,
+          siret: mnaFormation.etablissement_gestionnaire_siret,
+          type: "gestionnaire",
+        });
+
+        // console.log(formation._id);
+        await _post("/api/parcoursup/reconciliation", {
+          id_formation: formation._id,
+          id_parcoursup: formation.id_parcoursup,
+          uai_affilie: formation.uai_affilie,
+          uai_gestionnaire: formation.uai_gestionnaire,
+          uai_composante: formation.uai_composante,
+          code_cfd: mnaFormation.cfd,
+          mapping,
+          reject: false,
+        });
+
+        onValidationSubmit();
         resolve("onSubmitHandler publish complete");
       });
     },
@@ -24,13 +49,32 @@ const Validate = ({ formation, onClose }) => {
       <Flex w="35%">
         <Box p={8} w="full">
           <Heading as="h3" fontSize="1.5rem" mb={3}>
-            Récapitualif
+            Récapilutatif du rapprochement
           </Heading>
-          <Text as="span">
-            La formation Parcoursup “BTS - Services Communication - en apprentissage” associée à l’organisme “Ecole
-            Auvergne Formation” a bien été rapprochée à la formation du Catalogue 2021 “COMMUNICATION (BTS)” associée à
-            l’organisme “EAF”
-          </Text>
+          <Box mb={4} mt={4}>
+            Formation Parcoursup
+            <Text as="span" variant="highlight" mt="1" display="inline-block">
+              {formation.libelle_specialite}
+            </Text>
+            <br />
+            <br />
+            <Text as="span" variant="highlight" mt="1" display="inline-block">
+              {formation.libelle_uai_composante}
+            </Text>
+          </Box>
+          <DoubleArrows width="12px" height="14px" color="grey.800" my={5} />
+          <Box mb={4} mt={4}>
+            rapproché à la formation du Catalogue 2021
+            <Text as="span" variant="highlight" mt="1" display="inline-block">
+              {mnaFormation.intitule_long}
+            </Text>
+            <br />
+            <br />
+            <Text as="span" variant="highlight" mt="1" display="inline-block">
+              {mnaFormation.etablissement_gestionnaire_entreprise_raison_sociale ||
+                mnaFormation.etablissement_gestionnaire_enseigne}
+            </Text>
+          </Box>
         </Box>
       </Flex>
       <Flex w="65%">
@@ -38,26 +82,29 @@ const Validate = ({ formation, onClose }) => {
           <Heading as="h3" fontSize="1.3rem" mb={3} color="bluefrance" flexGrow="1">
             Vérification automatique des conditions d’intégration
           </Heading>
-          <Text
-            as="div"
-            variant="highlight"
-            borderLeft="3px solid"
-            borderColor="greensoft.500"
-            display="flex"
-            flexDirection="row"
-            justifyContent="center"
-            alignItems="flex-start"
-            p={3}
-            mb={5}
-          >
-            <ValidateIcon width="14px" height="14px" color="greensoft.500" mr="2" mt="0.35rem" />
-            <Text fontWeight="normal">
-              La formation est paramétrée dans la plateforme Parcoursup et répond bien aux conditions d’intégration.{" "}
-              <Text fontWeight="bold" as="span">
-                Elle apparait aujourd’hui dans le Catalogue 2021 sous le statut “publiée”.
+          {mnaFormation.parcoursup_statut === "publié" && (
+            <Text
+              as="div"
+              variant="highlight"
+              borderLeft="3px solid"
+              borderColor="greensoft.500"
+              display="flex"
+              flexDirection="row"
+              justifyContent="center"
+              alignItems="flex-start"
+              p={3}
+              mb={5}
+            >
+              <ValidateIcon width="14px" height="14px" color="greensoft.500" mr="2" mt="0.35rem" />
+              <Text fontWeight="normal">
+                La formation est paramétrée dans la plateforme Parcoursup et répond bien aux conditions d’intégration.{" "}
+                <Text fontWeight="bold" as="span">
+                  Elle apparait aujourd’hui dans le Catalogue 2021 sous le statut “publiée”.
+                </Text>
               </Text>
             </Text>
-          </Text>
+          )}
+
           <Flex flexDirection="column">
             <FormControl display="flex" flexDirection="column" w="auto">
               <FormLabel htmlFor="parcoursup_keep_publish" mb={3} fontSize="epsilon" fontWeight={400}>

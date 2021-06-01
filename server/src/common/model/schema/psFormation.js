@@ -141,6 +141,11 @@ const psFormationSchema = {
     default: false,
     description: "Si la formation Précédemment Rejeté a été mise à jour",
   },
+  matching_rejete_raison: {
+    type: String,
+    default: null,
+    description: "Affelnet : raison de dépublication",
+  },
   statuts_history: {
     type: [Object],
     default: [],

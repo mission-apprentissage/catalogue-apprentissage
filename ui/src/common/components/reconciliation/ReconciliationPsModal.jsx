@@ -20,7 +20,7 @@ import { _get } from "../../../common/httpClient";
 
 const endpointNewFront = "http://localhost/api"; // `${process.env.REACT_APP_BASE_URL}/api`;
 
-const ReconciliationPsModal = ({ isOpen, onClose: onCloseProp, data, onFormationUpdate }) => {
+const ReconciliationPsModal = React.memo(({ isOpen, onClose: onCloseProp, data, onFormationUpdate }) => {
   const [formation, setFormation] = useState();
   const [step, setStep] = useState(1);
 
@@ -30,6 +30,9 @@ const ReconciliationPsModal = ({ isOpen, onClose: onCloseProp, data, onFormation
         const apiURL = `${endpointNewFront}/parcoursup/reconciliation/result/`;
         const form = await _get(`${apiURL}${data._id}`, false);
         setFormation(form);
+        if (form.statut_reconciliation === "VALIDE" && form.etat_reconciliation) {
+          setStep(3);
+        }
       } catch (e) {
         console.log(e);
       }
@@ -41,6 +44,10 @@ const ReconciliationPsModal = ({ isOpen, onClose: onCloseProp, data, onFormation
     setStep(s);
   }, []);
 
+  let onValidationSubmit = useCallback(() => {
+    setStep(1);
+    window.location.reload();
+  }, []);
   let onClose = useCallback(() => {
     setStep(1);
     onCloseProp();
@@ -51,56 +58,61 @@ const ReconciliationPsModal = ({ isOpen, onClose: onCloseProp, data, onFormation
       <ModalOverlay />
       <ModalContent bg="white" color="primaryText" borderRadius="none" my="0" minH="full" h="auto">
         <HStack px={[4, 16]} mt={5}>
-          <Button
-            variant="secondary"
-            onClick={() => {
-              onStepClicked(1);
-            }}
-            leftIcon={
-              <IconButton
-                as="div"
-                isRound
-                bg={step === 1 ? "bluefrance" : "gray.600"}
-                color="white"
-                size="sm"
-                icon={<Text>1</Text>}
-              />
-            }
-            px={8}
-            py={2}
-            fontWeight="bold"
-            h="auto"
-            color={step === 1 ? "bluefrance" : "gray.600"}
-            border="1px solid #cecece !important"
-          >
-            Valider le rapprochement
-          </Button>
-          <Button
-            disabled={step !== 2}
-            variant="secondary"
-            onClick={() => {
-              onStepClicked(2);
-            }}
-            leftIcon={
-              <IconButton
+          {step < 3 && (
+            <>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  onStepClicked(1);
+                }}
+                leftIcon={
+                  <IconButton
+                    as="div"
+                    isRound
+                    bg={step === 1 ? "bluefrance" : "gray.600"}
+                    color="white"
+                    size="sm"
+                    icon={<Text>1</Text>}
+                  />
+                }
+                px={8}
+                py={2}
+                fontWeight="bold"
+                h="auto"
+                color={step === 1 ? "bluefrance" : "gray.600"}
+                border="1px solid #cecece !important"
+              >
+                Valider le rapprochement
+              </Button>
+              <Button
                 disabled={step !== 2}
-                isRound
-                as="div"
-                bg={step === 2 ? "bluefrance" : "gray.600"}
-                color="white"
-                size="sm"
-                icon={<Text>2</Text>}
-              />
-            }
-            px={8}
-            py={2}
-            fontWeight="bold"
-            h="auto"
-            color={step === 2 ? "bluefrance" : "gray.600"}
-            border="1px solid #cecece !important"
-          >
-            Gérer la publication
-          </Button>
+                variant="secondary"
+                onClick={() => {
+                  onStepClicked(2);
+                }}
+                leftIcon={
+                  <IconButton
+                    disabled={step !== 2}
+                    isRound
+                    as="div"
+                    bg={step === 2 ? "bluefrance" : "gray.600"}
+                    color="white"
+                    size="sm"
+                    icon={<Text>2</Text>}
+                  />
+                }
+                px={8}
+                py={2}
+                fontWeight="bold"
+                h="auto"
+                color={step === 2 ? "bluefrance" : "gray.600"}
+                border="1px solid #cecece !important"
+              >
+                Gérer la publication
+              </Button>
+            </>
+          )}
+
           <Box flexGrow="1" textAlign="end">
             <Button color="bluefrance" fontSize={"epsilon"} onClick={onClose} variant="unstyled" p={8} fontWeight={400}>
               fermer{" "}
@@ -120,16 +132,25 @@ const ReconciliationPsModal = ({ isOpen, onClose: onCloseProp, data, onFormation
               <Text as={"span"} ml={4}>
                 {step === 1 && "Valider le rapprochement de l’offre de formation"}
                 {step === 2 && "Gérer la publication"}
+                {step === 3 && "Rapprochement validé de l’offre de formation"}
               </Text>
             </Flex>
           </Heading>
         </ModalHeader>
         <ModalBody p={0} display="flex" flexDirection="column">
-          {formation && <Compare formation={formation} onClose={onClose} onStepChanged={onStepClicked} step={step} />}
+          {formation && (
+            <Compare
+              formation={formation}
+              onClose={onClose}
+              onValidationSubmit={onValidationSubmit}
+              onStepChanged={onStepClicked}
+              step={step}
+            />
+          )}
         </ModalBody>
       </ModalContent>
     </Modal>
   );
-};
+});
 
 export { ReconciliationPsModal };

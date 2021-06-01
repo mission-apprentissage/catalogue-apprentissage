@@ -159,7 +159,7 @@ const facetDefinition = (context) => [
 
 const dataSearch = {
   dataField: ["uai_gestionnaire", "id_parcoursup", "libelle_commune"],
-  placeholder: "Saisissez un UAI, indentifiant parcoursup ou une commune",
+  placeholder: "Saisissez un UAI, identifiant parcoursup ou une commune",
   fieldWeights: [3, 2, 1],
 };
 

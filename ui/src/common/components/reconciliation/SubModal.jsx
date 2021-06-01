@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Flex,
   Heading,
@@ -14,10 +13,9 @@ import React from "react";
 import { Close } from "../../../theme/components/icons/Close";
 import { ArrowRightLine } from "../../../theme/components/icons";
 import { AddEtablissement } from "./AddEtablissement";
-// import { Validate } from "./Validate";
 import { Rejected } from "./Rejected";
 
-const SubModal = ({ isOpen, onClose, type }) => {
+const SubModal = ({ isOpen, onClose, type, formation, onSubmitReject }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="3xl">
       <ModalOverlay />
@@ -52,9 +50,8 @@ const SubModal = ({ isOpen, onClose, type }) => {
           </Heading>
         </ModalHeader>
         <ModalBody p={0} display="flex" flexDirection="column">
-          {type === "etablissement" && <AddEtablissement formation={null} onClose={onClose} />}
-          {/* {type === "validate" && <Validate formation={null} onClose={onClose} />} */}
-          {type === "reject" && <Rejected formation={null} onClose={onClose} />}
+          {type === "etablissement" && <AddEtablissement formation={formation} onClose={onClose} />}
+          {type === "reject" && <Rejected formation={formation} onClose={onClose} onSubmitReject={onSubmitReject} />}
         </ModalBody>
       </ModalContent>
     </Modal>

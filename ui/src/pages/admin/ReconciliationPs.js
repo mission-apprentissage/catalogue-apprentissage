@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import {
   Box,
   Breadcrumb,
@@ -24,13 +24,17 @@ import { useSearch } from "../../common/hooks/useSearch";
 import { ReconciliationPsModal } from "../../common/components/reconciliation/ReconciliationPsModal";
 
 export default (props) => {
-  const searchState = useSearch("reconciliation_ps");
+  let searchState = useSearch("reconciliation_ps");
   const [psFormation, setPsFormation] = React.useState();
   const {
     isOpen: isOpenReconciliationPsModal,
     onOpen: onOpenReconciliationPsModal,
-    onClose: onCloseReconciliationPsModal,
+    onClose: onCloseModal,
   } = useDisclosure();
+
+  let onCloseReconciliationPsModal = useCallback(() => {
+    onCloseModal();
+  }, [onCloseModal]);
 
   return (
     <Layout>
@@ -115,8 +119,7 @@ export default (props) => {
                       searchState={searchState}
                       context="reconciliation_ps_inconnus"
                       onReconciliationCardClicked={(data) => {
-                        setPsFormation(data);
-                        onOpenReconciliationPsModal();
+                        alert("Nous ne disposons pas de suffisamment d'éléments pour réaliser un rapprochement.");
                       }}
                     />
                   </TabPanel>
@@ -126,7 +129,8 @@ export default (props) => {
                       searchState={searchState}
                       context="reconciliation_ps_valides"
                       onReconciliationCardClicked={(data) => {
-                        console.log("Do nothing");
+                        setPsFormation(data);
+                        onOpenReconciliationPsModal();
                       }}
                     />
                   </TabPanel>
@@ -141,9 +145,6 @@ export default (props) => {
           isOpen={isOpenReconciliationPsModal}
           onClose={onCloseReconciliationPsModal}
           data={psFormation}
-          // onFormationUpdate={(updatedFormation) => {
-          //   setFormation(updatedFormation);
-          // }}
         />
       )}
     </Layout>

@@ -114,20 +114,9 @@ module.exports = ({ catalogue }) => {
     const diffFields = {
       uai: {
         ...uai,
-        match:
-          uai.uai_formation.match || uai.etablissement_formateur_uai.match || uai.etablissement_gestionnaire_uai.match,
-        uai_affilie:
-          uai.uai_formation.uai_affilie ||
-          uai.etablissement_formateur_uai.uai_affilie ||
-          uai.etablissement_gestionnaire_uai.uai_affilie,
-        uai_gestionnaire:
-          uai.uai_formation.uai_gestionnaire ||
-          uai.etablissement_formateur_uai.uai_gestionnaire ||
-          uai.etablissement_gestionnaire_uai.uai_gestionnaire,
-        uai_composante:
-          uai.uai_formation.uai_composante ||
-          uai.etablissement_formateur_uai.uai_composante ||
-          uai.etablissement_gestionnaire_uai.uai_composante,
+        uai_affilie: uai.uai_formation.uai_affilie,
+        uai_composante: uai.etablissement_formateur_uai.uai_composante,
+        uai_gestionnaire: uai.etablissement_gestionnaire_uai.uai_gestionnaire,
         uai_insert_jeune:
           uai.uai_formation.uai_insert_jeune ||
           uai.etablissement_formateur_uai.uai_insert_jeune ||
@@ -172,7 +161,8 @@ module.exports = ({ catalogue }) => {
         let matching_mna_formation = retrievedData.matching_mna_formation;
         if (
           retrievedData.statut_reconciliation === "AUTOMATIQUE" ||
-          retrievedData.statut_reconciliation === "A_VERIFIER"
+          retrievedData.statut_reconciliation === "A_VERIFIER" ||
+          retrievedData.statut_reconciliation === "VALIDE"
         ) {
           const updated_matching_mna_formation = [];
 
@@ -254,7 +244,33 @@ module.exports = ({ catalogue }) => {
   router.post(
     "/reconciliation",
     tryCatch(async (req, res) => {
-      const { mapping, id_formation, ...rest } = req.body;
+      const { mapping, id_formation, reject, matching_rejete_raison, ...rest } = req.body;
+
+      if (reject) {
+        const previousFormation = await PsFormation2021.findById(id_formation).lean();
+
+        let updatedFormation = {
+          ...previousFormation,
+          statut_reconciliation: "REJETE",
+          matching_rejete_raison,
+          etat_reconciliation: false,
+          matching_rejete_updated: false,
+        };
+
+        // History
+        const { updates, keys } = diffFormation(previousFormation, updatedFormation);
+        if (updates) {
+          delete updates.matching_mna_formation;
+          const statuts_history = buildUpdatesHistory(previousFormation, updates, keys);
+
+          updatedFormation.statuts_history = statuts_history;
+        }
+
+        await PsFormation2021.findOneAndUpdate({ _id: id_formation }, updatedFormation, { new: true });
+
+        return res.json({});
+      }
+
       const reconciliation = combinate(mapping);
 
       let payload = reconciliation.reduce((acc, item) => {
@@ -280,14 +296,12 @@ module.exports = ({ catalogue }) => {
         { upsert: true, new: true }
       );
 
-      console.log(result._id, rest.id_parcoursup, id_formation);
-
       if (result) {
         const previousFormation = await PsFormation2021.findById(id_formation).lean();
 
         let updatedFormation = {
           ...previousFormation,
-          id_reconciliation: result._id,
+          id_reconciliation: result._id.toString(),
           statut_reconciliation: "VALIDE",
           etat_reconciliation: true,
           matching_rejete_updated: false,
@@ -302,7 +316,7 @@ module.exports = ({ catalogue }) => {
           updatedFormation.statuts_history = statuts_history;
         }
 
-        await PsFormation2021.findByIdAndUpdate(id_formation, updatedFormation);
+        await PsFormation2021.findOneAndUpdate({ _id: id_formation }, updatedFormation, { new: true });
       }
 
       return res.json(result);

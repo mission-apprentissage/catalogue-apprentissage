@@ -1,55 +1,12 @@
 import { Box, Button, Flex, Heading, Text, useDisclosure, Stack, HStack } from "@chakra-ui/react";
-// import { StatusBadge } from "../StatusBadge";
-// import { InfoBadge } from "../InfoBadge";
-import React, { useState } from "react";
+import { InfoBadge } from "../InfoBadge";
+import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
-// import { _put } from "../../httpClient";
-// import useAuth from "../../hooks/useAuth";
-// import { buildUpdatesHistory } from "../../utils/formationUtils";
-// import * as Yup from "yup";
 import InfoTooltip from "../InfoTooltip";
 import { SubModal } from "./SubModal";
 import { Table } from "./Table";
 import { ValidateIcon, RejectIcon } from "../../../theme/components/icons";
 import { Validate } from "./Validate";
-
-const fixture = [
-  {
-    indice: 1,
-    uai: "0754679D",
-    siret: "13002087800240",
-    enseigne: null,
-    raison_sociale: null,
-    adresse: "SARL GUINOT-MARY COHR L'ACADEMIE 52-52 52 B RUE LAFFITTE 75009 PARIS 9 FRANCE",
-    nature_activite: "Formation continue d'adultes",
-    estSiege: false,
-    information_similaire: ["uai_formation", "uai_formateur", "uai_gestionnaire"],
-  },
-  {
-    indice: 2,
-    uai: "0922778V",
-    siret: "53150773900013",
-    enseigne: "AFMEE ILE DE FRANCE",
-    raison_sociale: null,
-    adresse:
-      "ASS FORMATION AUX METIERS DES ENERGIES ELECTRIQUES ILE DE FRANCE 45 RUE KLEBER 92300 LEVALLOIS-PERRET FRANCE",
-    nature_activite: "Autres enseignements",
-    estSiege: false,
-    information_similaire: ["uai_formation", "uai_formateur", "uai_gestionnaire"],
-  },
-  {
-    indice: 3,
-    uai: "0922778V",
-    siret: "53150773900013",
-    enseigne: "AFMEE ILE DE FRANCE",
-    raison_sociale: null,
-    adresse:
-      "ASS FORMATION AUX METIERS DES ENERGIES ELECTRIQUES ILE DE FRANCE 45 RUE KLEBER 92300 LEVALLOIS-PERRET FRANCE",
-    nature_activite: "Formation continue d'adultes",
-    estSiege: false,
-    information_similaire: ["uai_formation", "uai_formateur", "uai_gestionnaire"],
-  },
-];
 
 const Section = ({ left, right, withBorder, minH }) => {
   return (
@@ -64,15 +21,22 @@ const Section = ({ left, right, withBorder, minH }) => {
   );
 };
 
-const Compare = ({ formation, onClose, step, onStepChanged }) => {
-  const { isOpen: isOpenSubModal, onOpen: onOpenSubModal, onClose: onCloseSubModal } = useDisclosure();
+const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidationSubmit }) => {
+  const { isOpen: isOpenSubModal, onOpen: onOpenSubModal, onClose: onCloseSubM } = useDisclosure();
   const [modalType, setModalType] = useState("validate");
   const [mnaFormation, setMnaFormation] = useState(formation.matching_mna_formation[0]);
   const [formationDiff, setFormationDiff] = useState(formation.diff[0]);
-
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [slidesCount, setSlidesCount] = useState(formation.matching_mna_formation.length);
 
-  const slidesCount = formation.matching_mna_formation.length;
+  useEffect(() => {
+    setMnaFormation(formation.matching_mna_formation[0]);
+    setFormationDiff(formation.diff[0]);
+    setSlidesCount(formation.matching_mna_formation.length);
+    setCurrentSlide(0);
+  }, [formation]);
+
+  // console.log(formation);
 
   const prevSlide = () => {
     let val = currentSlide;
@@ -89,13 +53,19 @@ const Compare = ({ formation, onClose, step, onStepChanged }) => {
       val = s === slidesCount - 1 ? 0 : s + 1;
       return val;
     });
-    // console.log(formation.matching_mna_formation[val]);
-    // console.log(formation.diff[val]);
     setMnaFormation(formation.matching_mna_formation[val]);
     setFormationDiff(formation.diff[val]);
   };
 
-  // console.log(formation);
+  const onSelectEtablissement = () => {};
+  const onCloseSubModal = () => {
+    onCloseSubM();
+  };
+  const onSubmitReject = () => {
+    onCloseSubM();
+    onClose();
+    window.location.reload();
+  };
 
   const arrowStyles = {
     cursor: "pointer",
@@ -131,7 +101,14 @@ const Compare = ({ formation, onClose, step, onStepChanged }) => {
   });
 
   if (step === 2) {
-    return <Validate formation={formation} onClose={onClose} />;
+    return (
+      <Validate
+        formation={formation}
+        onClose={onClose}
+        onValidationSubmit={onValidationSubmit}
+        mnaFormation={mnaFormation}
+      />
+    );
   }
 
   return (
@@ -139,20 +116,22 @@ const Compare = ({ formation, onClose, step, onStepChanged }) => {
       <Box px={[4, 16]} mb={4}>
         <HStack borderBottom={"1px solid"} borderColor="bluefrance">
           <Heading as="h3" fontSize="1.3rem" mb={3} color="bluefrance" flexGrow="1">
-            1. Vérifier la similitude des informations
+            {step === 1 && "1. Vérifier la similitude des informations"}
           </Heading>
-          <HStack
-            onClick={() => {
-              setModalType("reject");
-              onOpenSubModal();
-            }}
-            cursor="pointer"
-          >
-            <RejectIcon width="14px" height="14px" color="redmarianne" />
-            <Text color="redmarianne" ml="0.25rem!important" mt="-0.15rem !important">
-              Rejeter le rapprochement
-            </Text>
-          </HStack>
+          {step < 3 && (
+            <HStack
+              onClick={() => {
+                setModalType("reject");
+                onOpenSubModal();
+              }}
+              cursor="pointer"
+            >
+              <RejectIcon width="14px" height="14px" color="redmarianne" />
+              <Text color="redmarianne" ml="0.25rem!important" mt="-0.15rem !important">
+                Rejeter le rapprochement
+              </Text>
+            </HStack>
+          )}
         </HStack>
       </Box>
       <Section
@@ -170,7 +149,7 @@ const Compare = ({ formation, onClose, step, onStepChanged }) => {
             {slidesCount > 1 && (
               <>
                 <Heading as="h4" fontSize="0.9rem" mb={3} color="bluefrance">
-                  {slidesCount} Formations peuvent correspondres dqns le catalogue 2021.
+                  {slidesCount} Formations peuvent correspondres dans le catalogue 2021.
                 </Heading>
                 <HStack>
                   <Button {...arrowStyles} onClick={prevSlide} variant="primary">
@@ -298,7 +277,7 @@ const Compare = ({ formation, onClose, step, onStepChanged }) => {
             <Text
               as="span"
               variant="highlight"
-              bg={`${formationDiff.uai.uai_formation.match ? "greensoft.200" : "galt"}`}
+              bg={`${formationDiff.uai.uai_formation.uai_affilie ? "greensoft.200" : "galt"}`}
               color={`${mnaFormation.uai_formation ? "inherit" : "grey.500"}`}
             >
               {mnaFormation.uai_formation ?? "N.A"}
@@ -311,7 +290,7 @@ const Compare = ({ formation, onClose, step, onStepChanged }) => {
         withBorder
         left={
           <Box mb={4} mt={4}>
-            Code UAI - Affilié <InfoTooltip description={"tooltip"} />
+            Code UAI - Composante <InfoTooltip description={"tooltip"} />
             <Text as="span" variant="highlight" bg={`${formationDiff.uai.uai_composante ? "greensoft.200" : "galt"}`}>
               {formation.uai_composante}
             </Text>
@@ -319,11 +298,11 @@ const Compare = ({ formation, onClose, step, onStepChanged }) => {
         }
         right={
           <Box mb={4} mt={4}>
-            Code UAI rattaché au SIRET - formateur <InfoTooltip description={"tooltip"} />
+            Code UAI rattaché au SIRET formateur <InfoTooltip description={"tooltip"} />
             <Text
               as="span"
               variant="highlight"
-              bg={`${formationDiff.uai.etablissement_formateur_uai.match ? "greensoft.200" : "galt"}`}
+              bg={`${formationDiff.uai.etablissement_formateur_uai.uai_composante ? "greensoft.200" : "galt"}`}
               color={`${mnaFormation.etablissement_formateur_uai ? "inherit" : "grey.500"}`}
             >
               {mnaFormation.etablissement_formateur_uai ?? "N.A"}
@@ -344,15 +323,115 @@ const Compare = ({ formation, onClose, step, onStepChanged }) => {
         }
         right={
           <Box mb={4} mt={4}>
-            Code UAI rattaché au SIRET - gestionnaire <InfoTooltip description={"tooltip"} />
+            Code UAI rattaché au SIRET gestionnaire <InfoTooltip description={"tooltip"} />
             <Text
               as="span"
               variant="highlight"
-              bg={`${formationDiff.uai.etablissement_gestionnaire_uai.match ? "greensoft.200" : "galt"}`}
+              bg={`${formationDiff.uai.etablissement_gestionnaire_uai.uai_gestionnaire ? "greensoft.200" : "galt"}`}
               color={`${mnaFormation.etablissement_gestionnaire_uai ? "inherit" : "grey.500"}`}
             >
               {mnaFormation.etablissement_gestionnaire_uai ?? "N.A"}
             </Text>
+          </Box>
+        }
+      />
+
+      <Section
+        withBorder
+        left={
+          <Box mb={4} mt={4}>
+            Code UAI - Cerfa <InfoTooltip description={"tooltip"} />
+            <Text as="span" variant="highlight" bg={`${formationDiff.uai.uai_cerfa ? "greensoft.200" : "galt"}`}>
+              {formation.uai_cerfa}
+            </Text>
+          </Box>
+        }
+        right={
+          <Box mb={4} mt={4}>
+            Codes UAI <InfoTooltip description={"tooltip"} />
+            {formationDiff.uai.uai_formation.uai_cerfa && (
+              <Text
+                as="span"
+                variant="highlight"
+                bg="greensoft.200"
+                color={`${mnaFormation.uai_formation ? "inherit" : "grey.500"}`}
+              >
+                {mnaFormation.uai_formation ?? "N.A"}
+                <InfoBadge text="Formation" variant="published" />
+              </Text>
+            )}
+            {formationDiff.uai.etablissement_formateur_uai.uai_cerfa && (
+              <Text
+                as="span"
+                variant="highlight"
+                bg="greensoft.200"
+                color={`${mnaFormation.etablissement_formateur_uai ? "inherit" : "grey.500"}`}
+              >
+                {mnaFormation.etablissement_formateur_uai ?? "N.A"}
+                <InfoBadge text="Formateur" variant="published" />
+              </Text>
+            )}
+            {formationDiff.uai.etablissement_gestionnaire_uai.uai_cerfa && (
+              <Text
+                as="span"
+                variant="highlight"
+                bg="greensoft.200"
+                color={`${mnaFormation.etablissement_gestionnaire_uai ? "inherit" : "grey.500"}`}
+              >
+                {mnaFormation.etablissement_gestionnaire_uai ?? "N.A"}
+                <InfoBadge text="Gestionnaire" variant="published" />
+              </Text>
+            )}
+          </Box>
+        }
+      />
+
+      <Section
+        withBorder
+        left={
+          <Box mb={4} mt={4}>
+            Code UAI - Insert Jeune <InfoTooltip description={"tooltip"} />
+            <Text as="span" variant="highlight" bg={`${formationDiff.uai.uai_insert_jeune ? "greensoft.200" : "galt"}`}>
+              {formation.uai_insert_jeune}
+            </Text>
+          </Box>
+        }
+        right={
+          <Box mb={4} mt={4}>
+            Codes UAI <InfoTooltip description={"tooltip"} />
+            {formationDiff.uai.uai_formation.uai_insert_jeune && (
+              <Text
+                as="span"
+                variant="highlight"
+                bg="greensoft.200"
+                color={`${mnaFormation.uai_formation ? "inherit" : "grey.500"}`}
+              >
+                {mnaFormation.uai_formation ?? "N.A"}
+                <InfoBadge text="Formation" variant="published" />
+              </Text>
+            )}
+            {formationDiff.uai.etablissement_formateur_uai.uai_insert_jeune && (
+              <Text
+                as="span"
+                variant="highlight"
+                bg="greensoft.200"
+                color={`${mnaFormation.etablissement_formateur_uai ? "inherit" : "grey.500"}`}
+              >
+                {mnaFormation.etablissement_formateur_uai ?? "N.A"}
+                <InfoBadge text="Formateur" variant="published" />
+              </Text>
+            )}
+            {formationDiff.uai.etablissement_gestionnaire_uai.uai_insert_jeune && (
+              <Text
+                as="span"
+                variant="highlight"
+                bg="greensoft.200"
+                color={`${mnaFormation.etablissement_gestionnaire_uai ? "inherit" : "grey.500"}`}
+              >
+                {mnaFormation.etablissement_gestionnaire_uai ?? "N.A"}
+                <InfoBadge text="Gestionnaire" variant="published" />
+              </Text>
+            )}
           </Box>
         }
       />
@@ -369,7 +448,7 @@ const Compare = ({ formation, onClose, step, onStepChanged }) => {
         }
         right={
           <Box mb={4} mt={4}>
-            Siret Organisme : <InfoTooltip description={"tooltip"} />
+            Siret Organisme <InfoTooltip description={"tooltip"} />
             <Text
               as="span"
               variant="highlight"
@@ -485,14 +564,27 @@ const Compare = ({ formation, onClose, step, onStepChanged }) => {
         <Box px={[4, 16]} my={8}>
           <Heading as="h3" fontSize="1.3rem" mb={3} color="bluefrance">
             <Stack direction="row">
-              <Text>2. Sélectionner le ou les organisme (s) liés à l’offre de formation</Text>
-              <Text color="tomato">*</Text>
+              <Text>Sélectionner directement le ou les organisme (s) liés à l’offre de formation</Text>
+              {/* <Text color="tomato">*</Text> */}
             </Stack>
           </Heading>
           <Box border="1px solid" borderColor="bluefrance" p={8}>
             <Box w="full" overflow="hidden">
               <Box overflowX="scroll" w="full">
-                <Table data={fixture} />
+                <Table
+                  data={formation.matching_mna_etablissement.map((item) => ({
+                    indice: item.matched_uai.length,
+                    uai: item.uai,
+                    siret: item.siret,
+                    enseigne: item.enseigne,
+                    raison_sociale: item.raison_sociale,
+                    adresse: item.adresse,
+                    naf_libelle: item.naf_libelle,
+                    siege_social: item.siege_social,
+                    matched_uai: item.matched_uai,
+                  }))}
+                  onSelect={onSelectEtablissement}
+                />
               </Box>
               <Button
                 variant="unstyled"
@@ -500,6 +592,7 @@ const Compare = ({ formation, onClose, step, onStepChanged }) => {
                   setModalType("etablissement");
                   onOpenSubModal();
                 }}
+                disabled
               >
                 ajouter un organisme à la liste
               </Button>
@@ -507,37 +600,45 @@ const Compare = ({ formation, onClose, step, onStepChanged }) => {
           </Box>
         </Box>
       )}
-      <Box boxShadow={"0 -4px 16px 0 rgba(0, 0, 0, 0.08)"}>
-        <Flex flexDirection={["column", "row"]} p={[3, 8]} justifyContent="flex-end" px={[4, 16]}>
-          <Button
-            variant="secondary"
-            onClick={() => {
-              onClose();
-            }}
-            mr={[0, 4]}
-            px={8}
-            mb={[3, 0]}
-          >
-            Annuler
-          </Button>
-
-          <Box flexGrow="1" textAlign="end">
+      {step < 3 && (
+        <Box boxShadow={"0 -4px 16px 0 rgba(0, 0, 0, 0.08)"}>
+          <Flex flexDirection={["column", "row"]} p={[3, 8]} justifyContent="flex-end" px={[4, 16]}>
             <Button
-              type="submit"
-              variant="primary"
-              onClick={handleSubmit}
-              isLoading={isSubmitting}
-              loadingText="Enregistrement des modifications"
+              variant="secondary"
+              onClick={() => {
+                onClose();
+              }}
+              mr={[0, 4]}
+              px={8}
+              mb={[3, 0]}
             >
-              <ValidateIcon width="14px" height="14px" color="white" mr="2" />
-              Valider et passer à l’étape suivante
+              Annuler
             </Button>
-          </Box>
-        </Flex>
-      </Box>
-      <SubModal isOpen={isOpenSubModal} onClose={onCloseSubModal} type={modalType} />
+
+            <Box flexGrow="1" textAlign="end">
+              <Button
+                type="submit"
+                variant="primary"
+                onClick={handleSubmit}
+                isLoading={isSubmitting}
+                loadingText="Enregistrement des modifications"
+              >
+                <ValidateIcon width="14px" height="14px" color="white" mr="2" />
+                Valider et passer à l’étape suivante
+              </Button>
+            </Box>
+          </Flex>
+        </Box>
+      )}
+      <SubModal
+        isOpen={isOpenSubModal}
+        onClose={onCloseSubModal}
+        type={modalType}
+        formation={formation}
+        onSubmitReject={onSubmitReject}
+      />
     </>
   );
-};
+});
 
 export { Compare };

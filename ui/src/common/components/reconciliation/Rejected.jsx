@@ -13,9 +13,9 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { useFormik } from "formik";
-// import { buildUpdatesHistory } from "../../utils/formationUtils";
+import { _post } from "../../../common/httpClient";
 
-const Rejected = ({ formation, onClose }) => {
+const Rejected = ({ formation, onClose, onSubmitReject }) => {
   const { values, handleChange, handleSubmit, isSubmitting, resetForm, errors } = useFormik({
     initialValues: {
       parcoursup_raison_rejet: "",
@@ -23,7 +23,12 @@ const Rejected = ({ formation, onClose }) => {
     },
     onSubmit: ({ parcoursup_raison_rejet, parcoursup_raison_rejet_complement }) => {
       return new Promise(async (resolve) => {
-        onClose();
+        await _post("/api/parcoursup/reconciliation", {
+          id_formation: formation._id,
+          reject: true,
+          matching_rejete_raison: `${parcoursup_raison_rejet}#-complement-#${parcoursup_raison_rejet_complement}`,
+        });
+        onSubmitReject();
         resolve("onSubmitHandler publish complete");
       });
     },

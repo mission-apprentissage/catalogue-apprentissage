@@ -12,7 +12,7 @@ const HardFilters = React.memo(({ filters, context, isBaseFormations, isBaseReco
         setStatutReconciliation("A_VERIFIER");
         break;
       case "reconciliation_ps_inconnus":
-        setStatutReconciliation("INCONNU"); // REJETE
+        setStatutReconciliation("INCONNU");
         break;
       case "reconciliation_ps_valides":
         setStatutReconciliation("VALIDE");
@@ -74,7 +74,7 @@ const HardFilters = React.memo(({ filters, context, isBaseFormations, isBaseReco
           }}
         />
       )}
-      {isBaseReconciliationPs && (
+      {isBaseReconciliationPs && statutReconciliation !== "INCONNU" && (
         <SingleList
           componentId="statut_reconciliation"
           dataField="statut_reconciliation.keyword"
@@ -84,6 +84,31 @@ const HardFilters = React.memo(({ filters, context, isBaseFormations, isBaseReco
           showFilter={false}
           showSearch={false}
           showCount={false}
+          render={() => {
+            return <div />;
+          }}
+        />
+      )}
+      {isBaseReconciliationPs && statutReconciliation === "INCONNU" && (
+        <SingleList
+          componentId="statut_reconciliation"
+          dataField="statut_reconciliation.keyword"
+          react={{ and: filters }}
+          showFilter={false}
+          showSearch={false}
+          showCount={false}
+          customQuery={(data) => {
+            return {
+              query: {
+                bool: {
+                  should: [
+                    { match: { statut_reconciliation: "INCONNU" } },
+                    { match: { statut_reconciliation: "REJETE" } },
+                  ],
+                },
+              },
+            };
+          }}
           render={() => {
             return <div />;
           }}
