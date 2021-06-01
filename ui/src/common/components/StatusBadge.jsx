@@ -38,7 +38,7 @@ export const StatusBadge = ({ source, status, ...badgeProps }) => {
     <Badge variant={variant} {...badgeProps}>
       <Flex alignItems="center">
         <Icon variant={variant} />
-        <Text ml={1}>
+        <Text ml={1} as={"span"} whiteSpace={"break-spaces"}>
           {source} - {status}
         </Text>
       </Flex>

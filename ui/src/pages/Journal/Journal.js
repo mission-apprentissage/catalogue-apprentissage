@@ -8,12 +8,12 @@ import { Breadcrumb } from "../../common/components/Breadcrumb";
 const Journal = () => {
   return (
     <Layout>
-      <Box w="100%" pt={[4, 8]} px={[1, 24]} color="grey.800">
+      <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]} color="grey.800">
         <Container maxW="xl">
           <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: "Journal" }]} />
         </Container>
       </Box>
-      <Center flexDir="column" py={[1, 8]} px={[1, 24]}>
+      <Center flexDir="column" py={[1, 8]} px={[1, 1, 12, 24]}>
         <Heading as="h1" color="grey.800" mb={[4, 8]} px={[5, 0]}>
           Journal des modifications
         </Heading>

@@ -208,7 +208,7 @@ const Formation = ({
         </Alert>
       )}
       <Grid templateColumns="repeat(12, 1fr)">
-        <GridItem colSpan={[12, 7]} bg="white" border="1px solid" borderColor="bluefrance">
+        <GridItem colSpan={[12, 12, 7]} bg="white" border="1px solid" borderColor="bluefrance">
           <Box mb={16} pt={8}>
             <Heading textStyle="h4" color="grey.800" px={8}>
               Description
@@ -410,7 +410,7 @@ const Formation = ({
             )}
           </Box>
         </GridItem>
-        <GridItem colSpan={[12, 5]} py={8}>
+        <GridItem colSpan={[12, 12, 5]} py={8}>
           <Box mb={16}>
             <Heading textStyle="h4" color="grey.800" px={8}>
               <MapPin2Fill w="12px" h="15px" mr="5px" mb="5px" />
@@ -494,7 +494,7 @@ const Formation = ({
               </Text>
             </Box>
           </Box>
-          <Box mb={16} px={8}>
+          <Box mb={[0, 0, 16]} px={8}>
             <Heading textStyle="h4" color="grey.800" mb={4}>
               Organisme(s) associé(s)
             </Heading>
@@ -736,7 +736,7 @@ export default ({ match }) => {
 
   return (
     <Layout>
-      <Box w="100%" pt={[4, 8]} px={[1, 24]}>
+      <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
         <Container maxW="xl">
           <Breadcrumb
             pages={[
@@ -756,7 +756,7 @@ export default ({ match }) => {
           />
         </Container>
       </Box>
-      <Box w="100%" py={[1, 8]} px={[1, 24]}>
+      <Box w="100%" py={[1, 8]} px={[1, 1, 12, 24]}>
         <Container maxW="xl">
           {!formation && (
             <Center h="70vh">
@@ -767,8 +767,8 @@ export default ({ match }) => {
           {formation && (
             <>
               <Box mb={8}>
-                <Flex alignItems="center" justify="space-between" flexDirection={["column", "row"]}>
-                  <Heading textStyle="h2" color="grey.800" pr={[0, 8]}>
+                <Flex alignItems="center" justify="space-between" flexDirection={["column", "column", "row"]}>
+                  <Heading textStyle="h2" color="grey.800" pr={[0, 0, 8]}>
                     {pendingFormation?.intitule_long ?? formation?.intitule_long}{" "}
                     <InfoTooltip description={helpText.formation.intitule_long} />
                   </Heading>
@@ -777,7 +777,7 @@ export default ({ match }) => {
                       textStyle="sm"
                       variant="primary"
                       px={8}
-                      mt={[8, 0]}
+                      mt={[8, 8, 0]}
                       onClick={() => {
                         onOpenPublishModal();
                       }}

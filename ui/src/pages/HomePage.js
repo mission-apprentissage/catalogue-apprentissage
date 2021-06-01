@@ -66,7 +66,7 @@ export default () => {
 
   return (
     <Layout>
-      <Box w="100%" pt={[4, 8]} px={[1, 24]} color="#1E1E1E">
+      <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]} color="#1E1E1E">
         <Container maxW="xl">
           {/*<Box bg="#F8F8F8" color="pinksoft.500" borderLeft="4px" role="none" p={5}>*/}
           {/*  <Flex>*/}

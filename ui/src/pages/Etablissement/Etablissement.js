@@ -75,7 +75,7 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
   return (
     <>
       <Grid templateColumns="repeat(12, 1fr)" mt={8}>
-        <GridItem colSpan={[12, 7]} border="1px solid" borderColor="bluefrance" py={8}>
+        <GridItem colSpan={[12, 12, 7]} border="1px solid" borderColor="bluefrance" py={8}>
           <Box>
             <Heading textStyle="h4" color="grey.800" px={8}>
               Caractéristiques de l’établissement
@@ -190,8 +190,8 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
             </Box>
           </Box>
         </GridItem>
-        <GridItem colSpan={[12, 5]} py={8}>
-          <Container>
+        <GridItem colSpan={[12, 12, 5]} py={8}>
+          <Box>
             <Heading textStyle="h4" color="grey.800" px={8}>
               Informations complémentaires
             </Heading>
@@ -320,7 +320,7 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
                 </Box>
               </Box>
             )}
-          </Container>
+          </Box>
         </GridItem>
       </Grid>
       <Box mt={8} mb={16}>
@@ -404,7 +404,7 @@ export default ({ match }) => {
 
   return (
     <Layout>
-      <Box w="100%" pt={[4, 8]} px={[1, 24]}>
+      <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
         <Container maxW="xl">
           <Breadcrumb
             pages={[
@@ -415,7 +415,7 @@ export default ({ match }) => {
           />
         </Container>
       </Box>
-      <Box>
+      <Box px={[1, 1, 12, 24]}>
         <Box>
           <Container maxW="xl">
             {!etablissement && (

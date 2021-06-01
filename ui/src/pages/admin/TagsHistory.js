@@ -87,14 +87,14 @@ export default () => {
   const academieList = Object.values(academies).sort(({ nom_academie: a }, { nom_academie: b }) => (a > b ? 1 : -1));
   return (
     <Layout>
-      <Box w="100%" pt={[4, 8]} px={[1, 24]} color="grey.800">
+      <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]} color="grey.800">
         <Container maxW="xl">
           <Breadcrumb
             pages={[{ title: "Accueil", to: "/" }, { title: "Historique des statuts Affelnet/Parcoursup" }]}
           />
         </Container>
       </Box>
-      <Box w="100%" minH="100vh" px={[1, 24]}>
+      <Box w="100%" minH="100vh" px={[1, 1, 12, 24]}>
         <Container maxW="xl">
           <Heading as="h1" mb={8} mt={6}>
             Historique des statuts Affelnet/Parcoursup
