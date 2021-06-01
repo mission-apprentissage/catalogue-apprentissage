@@ -85,9 +85,7 @@ const Footer = () => {
                 </Link>
               </ListItem>
               <ListItem>
-                <Link href="https://beta.gouv.fr/startups/apprentissage.html" isExternal>
-                  Contact
-                </Link>
+                <Link href="mailto:catalogue@apprentissage.beta.gouv.fr">Contact</Link>
               </ListItem>
             </List>
             <Text textStyle="xs" mt={[2, 2, 0]}>
