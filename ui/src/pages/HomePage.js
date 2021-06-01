@@ -195,11 +195,10 @@ export default () => {
                     <Link
                       href="https://reseau.intercariforef.org/referencer-son-offre-de-formation"
                       textDecoration="underline"
-                      color="bluefrance"
                       isExternal
                     >
                       "référencer son offre de formation{" "}
-                      <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} color="bluefrance" />"
+                      <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />"
                     </Link>
                   </Text>
                   <br />
