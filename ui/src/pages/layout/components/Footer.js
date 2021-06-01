@@ -13,9 +13,8 @@ const Footer = () => {
           </Link>
           <Box alignSelf="center" flex="1">
             <Text>
-              Texte optionnel 3 lignes maximum.
-              <br /> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Consectetur et vel quam auctor semper.
-              Cras si amet mollis dolor.
+              Créé pour organiser la collecte des formations en apprentissage, le catalogue des formations en
+              apprentissage permet de rendre plus visibles les offres auprès des jeunes et des employeurs.
             </Text>
             <br />
             <List textStyle="sm" fontWeight="700" flexDirection={"row"} flexWrap={"wrap"} mb={[3, 3, 0]} display="flex">
@@ -55,9 +54,7 @@ const Footer = () => {
               css={{ "li:not(:last-child):after": { content: "'|'", marginLeft: "0.5rem", marginRight: "0.5rem" } }}
             >
               <ListItem>
-                <Link as={NavLink} to={"/"}>
-                  Plan du site
-                </Link>
+                <Link href={`${process.env.PUBLIC_URL}/sitemap.xml`}>Plan du site</Link>
               </ListItem>
               <ListItem>Accessibilité : Non conforme</ListItem>
               <ListItem>
@@ -86,9 +83,7 @@ const Footer = () => {
                 </Link>
               </ListItem>
               <ListItem>
-                <Link href="https://beta.gouv.fr/startups/apprentissage.html" isExternal>
-                  Contact
-                </Link>
+                <Link href="mailto:catalogue@apprentissage.beta.gouv.fr">Contact</Link>
               </ListItem>
             </List>
             <Text textStyle="xs" mt={[2, 2, 0]}>

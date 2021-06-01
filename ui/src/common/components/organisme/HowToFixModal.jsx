@@ -14,7 +14,7 @@ import {
   Text,
   UnorderedList,
 } from "@chakra-ui/react";
-import { ArrowRightLine } from "../../../theme/components/icons";
+import { ArrowRightLine, ExternalLinkLine } from "../../../theme/components/icons";
 import { Close } from "../../../theme/components/icons/Close";
 
 const HowToFixModal = ({ isOpen, onClose }) => {
@@ -54,7 +54,7 @@ const HowToFixModal = ({ isOpen, onClose }) => {
         <ModalBody px={[4, 16]} pb={[4, 16]}>
           <Box border="1px solid" borderColor="bluefrance" p={8}>
             <Heading as="h3" fontSize="1.5rem">
-              Votre organisme fait partie des CFAs historiques et que votre UAI a été modifié depuis le 01/01/2020 :
+              Votre organisme fait partie des CFAs historiques et votre UAI a été modifié depuis le 01/01/2020 :
             </Heading>
             <Text as={"p"} mt={2}>
               Merci de signaler votre nouvel UAI à cette adresse :{" "}
@@ -70,7 +70,17 @@ const HowToFixModal = ({ isOpen, onClose }) => {
             <Box mt={2}>
               Merci de réaliser la démarche suivante :
               <UnorderedList>
-                <ListItem>rendez-vous sur la liste publique des Organismes des formations</ListItem>
+                <ListItem>
+                  rendez-vous sur la{" "}
+                  <Link
+                    href="https://www.data.gouv.fr/fr/datasets/liste-publique-des-organismes-de-formation-l-6351-7-1-du-code-du-travail/"
+                    textDecoration={"underline"}
+                    isExternal
+                  >
+                    liste publique des Organismes des formations{" "}
+                    <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
+                  </Link>
+                </ListItem>
                 <ListItem>téléchargez la “liste OF à jour”</ListItem>
                 <ListItem>vérifiez que :</ListItem>
                 <UnorderedList>

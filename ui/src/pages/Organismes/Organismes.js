@@ -12,7 +12,7 @@ export default (props) => {
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
         <Container maxW="xl">
-          <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: "Liste des établissements" }]} />
+          <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: "Liste des organismes" }]} />
           <Heading textStyle="h2" color="grey.800" mt={5}>
             Liste des organismes
           </Heading>
@@ -23,7 +23,7 @@ export default (props) => {
             </Center>
           )}
           {searchState.loaded && (
-            <Tabs variant="search" mt={5}>
+            <Tabs variant="search" mt={5} isLazy>
               <TabList bg="white">
                 <Tab>Liste</Tab>
                 <Tab>Guide réglementaire</Tab>
