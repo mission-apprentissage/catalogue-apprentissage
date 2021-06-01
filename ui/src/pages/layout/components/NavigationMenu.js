@@ -59,7 +59,7 @@ const NavLinks = ({ isOpen }) => {
         <NavItem to="/">Accueil</NavItem>
         {/*<NavItem to="/recherche/formations-2021">Mes actions expertes</NavItem>*/}
         <NavItem to="/recherche/formations-2021">Catalogue des formations en apprentissage 2021</NavItem>
-        <NavItem to="/recherche/etablissements">Liste des établissements</NavItem>
+        <NavItem to="/recherche/etablissements">Liste des organismes</NavItem>
         <NavItem to="/changelog">Journal des modifications</NavItem>
       </Flex>
     </Box>

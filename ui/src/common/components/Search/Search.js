@@ -80,7 +80,7 @@ export default React.memo(({ match, location, searchState, context }) => {
               <Switch
                 color="bluefrance"
                 onChange={handleSearchSwitchChange}
-                checked={mode !== "simple"}
+                defaultIsChecked={mode !== "simple"}
                 id={`search-mode-${context}`}
               />
               <FormLabel display="inline" htmlFor={`search-mode-${context}`} textStyle="sm" px={2}>
