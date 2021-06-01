@@ -1,11 +1,11 @@
 {
   "formation": {
-    "intitule_long": "La donnée “Intitulé long de la formation” est extraite de la BCN (Base Centrale des Nomenclature), table V_FORMATION_DIPLOME",
+    "intitule_long": "La donnée “Intitulé long de la formation” est extraite de la BCN (Base Centrale des Nomenclatures), table V_FORMATION_DIPLOME",
     "intitule_court": "La donnée “Intitulé court de la formation” est déduite du Code formation diplôme",
     "onisep_intitule": "La donnée “Intitulé éditorial” provient de l’Onisep",
     "diplome": "La donnée “Diplôme ou titre visé” est déduite du Code formation diplôme",
     "niveau": "La donnée “Niveau de la formation” est déduite du Code formation diplôme",
-    "cfd": "La donnée “Code formation diplôme” provient de la Banque Centrale des Nomenclatures (BCN). Si cette information est erronée, merci de leur signaler.",
+    "cfd": "La donnée “Code formation diplôme” provient de la Base Centrale des Nomenclatures (BCN). Si cette information est erronée, merci de leur signaler.",
     "mef": "La donnée “MEF” est déduite du Code formation diplôme",
     "periode": "La donnée “période d’inscription” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
     "capacite": "La donnée “Capacité d’accueil” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
@@ -18,10 +18,11 @@
     "siret_certificateurs": "La donnée “SIRET Certificateurs” provient de France compétences. Si cette information est erronée, merci de leur signaler.",
     "uai_formation": "La donnée “UAI Lieu de formation” correspond à l’UAI de l’organisme formateur ou est renseigné par un instructeur en académie si le lieu de formation est différent de celui du formateur.",
     "academie": "La donnée “Académie” est déduite du Code Académie qui est déduit du Code commune.",
-    "adresse": "La donnée “Adresse” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
+    "lieu_formation_adresse": "La donnée “Adresse” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
     "code_postal": "La donnée “Code postal” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
     "localite": "La donnée “Commune” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
-    "code_commune_insee": "La donnée “Code commune” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région."
+    "code_commune_insee": "La donnée “Code commune” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
+    "nom_departement": "La donnée “ Département” est déduite du Code postal"
   },
   "etablissement": {
     "raison_sociale": "La donnée “Raison sociale” provient de l’INSEE puis est déduite du SIREN. Si cette information est erronée, merci de leur signaler.",
@@ -46,7 +47,7 @@
   "search": {
     "affelnet_statut": {
       "title": "Statut Affelnet : information concernant la publication de l’offre de formation dans le service Affelnet",
-      "hors périmètre": "offre et organisme de formation qui ne remplissent pas les conditions pour intégrer la service Affelnet",
+      "hors périmètre": "offre et organisme de formation qui ne remplissent pas les conditions pour intégrer le service Affelnet",
       "publié": "offre de formation identifiée comme ayant été publiée sur le service Affelnet l’année précédente et qui a fait l’objet d’un rapprochement automatique par la Mission apprentissage",
       "non publié": "offre de formation qui a été non-publiée par un instructeur en académie",
       "à publier (soumis à validation)": "offre ou organisme de formation qui remplissent les conditions pour intégrer le service Affelnet. Une décision du recteur statue sur l’intégration potentielle de ces offres dans le service Affelnet",
@@ -54,7 +55,7 @@
       "en attente de publication": "offre de formation qui sera intégrée automatiquement dans le service Affelnet via le module l’import"
     },
     "parcoursup_statut": {
-      "title": "Statut Parcoursup : information concernant la publication de l’offre de formation dans le plateforme Parcoursup",
+      "title": "Statut Parcoursup : information concernant la publication de l’offre de formation dans la plateforme Parcoursup",
       "hors périmètre": "offre et organisme de formation qui ne remplissent pas les conditions pour intégrer la plateforme Parcoursup",
       "publié": "offre de formation identifiée comme déjà publiée sur la plateforme Parcoursup et qui a fait l’objet d’un rapprochement automatique par la Mission apprentissage",
       "non publié": "offre de formation qui a été non-publiée par un instructeur en académie",

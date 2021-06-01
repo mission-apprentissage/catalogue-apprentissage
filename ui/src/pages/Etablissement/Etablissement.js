@@ -78,7 +78,7 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
         <GridItem colSpan={[12, 12, 7]} border="1px solid" borderColor="bluefrance" py={8}>
           <Box>
             <Heading textStyle="h4" color="grey.800" px={8}>
-              Caractéristiques de l’établissement
+              Caractéristiques de l’organisme
             </Heading>
             {etablissement.onisep_url !== "" && etablissement.onisep_url !== null && (
               <Box mt={2} mb={4} px={5}>
@@ -409,7 +409,7 @@ export default ({ match }) => {
           <Breadcrumb
             pages={[
               { title: "Accueil", to: "/" },
-              { title: "Liste des établissements", to: "/recherche/etablissements" },
+              { title: "Liste des organismes", to: "/recherche/etablissements" },
               { title: `${etablissement?.entreprise_raison_sociale}` },
             ]}
           />
