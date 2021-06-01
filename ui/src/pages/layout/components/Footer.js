@@ -8,7 +8,7 @@ const Footer = () => {
     <Box borderTop="1px solid" borderColor="bluefrance" color="#1E1E1E" fontSize="zeta" w="full">
       <Container maxW="xl">
         <Flex flexDirection={["column", "column", "row"]}>
-          <Link as={NavLink} to="/" py={4} w={["100%", "100%", "40rem"]}>
+          <Link as={NavLink} to="/" py={4} w={["100%", "100%", "50%"]}>
             <Logo size={"xl"} />
           </Link>
           <Box alignSelf="center" flex="1">
@@ -18,13 +18,7 @@ const Footer = () => {
               Cras si amet mollis dolor.
             </Text>
             <br />
-            <List
-              textStyle="sm"
-              fontWeight="700"
-              flexDirection={["column", "column", "row"]}
-              mb={[2, 2, 0]}
-              display="flex"
-            >
+            <List textStyle="sm" fontWeight="700" flexDirection={"row"} flexWrap={"wrap"} mb={[3, 3, 0]} display="flex">
               <ListItem>
                 <Link href="https://www.legifrance.gouv.fr/" mr={4} isExternal>
                   legifrance.gouv.fr
@@ -50,11 +44,12 @@ const Footer = () => {
         </Flex>
       </Container>
       <Box borderTop="1px solid" borderColor="#CECECE" color="#6A6A6A">
-        <Container maxW="xl" py={5}>
+        <Container maxW="xl" py={[3, 3, 5]}>
           <Flex flexDirection={["column", "column", "row"]}>
             <List
               textStyle="xs"
-              flexDirection={["column", "column", "row"]}
+              flexDirection={"row"}
+              flexWrap={"wrap"}
               display="flex"
               flex="1"
               css={{ "li:not(:last-child):after": { content: "'|'", marginLeft: "0.5rem", marginRight: "0.5rem" } }}
@@ -96,9 +91,9 @@ const Footer = () => {
                 </Link>
               </ListItem>
             </List>
-            <Flex flexDirection={["column", "column", "row"]}>
-              <Text>© République française 2021</Text>
-            </Flex>
+            <Text textStyle="xs" mt={[2, 2, 0]}>
+              © République française 2021
+            </Text>
           </Flex>
         </Container>
       </Box>

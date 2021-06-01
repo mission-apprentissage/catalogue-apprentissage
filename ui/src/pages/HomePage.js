@@ -87,9 +87,9 @@ export default () => {
           <Breadcrumb pages={[{ title: "Accueil" }]} />
         </Container>
       </Box>
-      <Box w="100%" py={[1, 8]} px={[1, 24]} color="#1E1E1E">
+      <Box w="100%" py={[4, 8]} px={[1, 1, 12, 24]} color="#1E1E1E">
         <Container maxW="xl">
-          <Flex flexDirection={["column", "column", "column", "row"]}>
+          <Flex flexDirection={["column", "column", "column", "column", "row"]}>
             <Box minW="250px">
               <Box bg="#F9F8F6" p={3}>
                 <Heading textStyle="rf-text" fontWeight="700" p={2}>
@@ -119,8 +119,8 @@ export default () => {
                 </List>
               </Box>
             </Box>
-            <Box px={5} mt={[4, 4, 4, 0]}>
-              <Heading as="h1" textStyle="h2">
+            <Box px={[1, 5]} mt={[4, 4, 4, 0]}>
+              <Heading as="h1" textStyle={"h2"}>
                 Le catalogue des offres de formations en apprentissage recense aujourd’hui :
               </Heading>
               <Box>
