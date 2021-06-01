@@ -1,24 +1,41 @@
+const commonFieldStyle = {
+  color: "grey.800",
+  borderBottomRadius: 0,
+  borderWidth: 0,
+  borderBottom: "2px solid",
+  marginBottom: "-2px",
+  borderColor: "grey.600",
+  bg: "grey.200",
+  _focus: {
+    borderColor: "grey.600",
+    boxShadow: "none",
+    outline: "2px solid",
+    outlineColor: "info",
+    outlineOffset: "2px",
+    borderTopRadius: "4px",
+  },
+  _invalid: {
+    borderColor: "grey.600",
+    boxShadow: "none",
+    outline: "2px solid",
+    outlineColor: "error",
+    outlineOffset: "2px",
+    borderTopRadius: "4px",
+  },
+};
+
 const Input = {
   parts: ["field"],
   variants: {
     edition: {
       field: {
-        borderRadius: 0,
+        ...commonFieldStyle,
         fontWeight: 700,
-        bg: "grey.200",
-        color: "grey.800",
-        border: "1px solid",
-        borderColor: "bluefrance",
       },
     },
     outline: {
       field: {
-        borderBottomRadius: 0,
-        borderWidth: 0,
-        borderBottom: "2px solid",
-        marginBottom: "-2px",
-        borderColor: "grey.600",
-        bg: "grey.200",
+        ...commonFieldStyle,
       },
     },
   },

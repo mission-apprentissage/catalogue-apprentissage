@@ -99,7 +99,7 @@ export default React.memo(({ match, location, searchState, context }) => {
               </Box>
             )}
             <Box borderTop="1px solid #E7E7E7" w="full" />
-            <Flex className="search-row" flexDirection={["column", "row"]}>
+            <Flex className="search-row" flexDirection={["column", "column", "row"]}>
               <Box className="search-sidebar">
                 <Text fontWeight="700" color="grey.800" mt={4} mb={4} textStyle="rf-text">
                   FILTRER
