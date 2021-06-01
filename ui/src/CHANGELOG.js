@@ -25,8 +25,10 @@ const changelog = {
           Script de réconciliation Affelnet mis en production avec les données transmises par la DNE au 11/05/2021.
           Total de 5008 formations publiées, et de 1 040 formations en attente de publication (certainement dû à un UAI
           manquant - à transmettre à la mission :{" "}
-          <Link href="mailto:catalogue@apprentissage.beta.gouv.fr">catalogue@apprentissage.beta.gouv.fr</Link>, en
-          indiquant SIRET - UAI)
+          <Link href="mailto:catalogue@apprentissage.beta.gouv.fr" textDecoration={"underline"}>
+            catalogue@apprentissage.beta.gouv.fr
+          </Link>
+          , en indiquant SIRET - UAI)
         </span>,
       ],
     },

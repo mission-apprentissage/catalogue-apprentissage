@@ -75,27 +75,25 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
   return (
     <>
       <Grid templateColumns="repeat(12, 1fr)" mt={8}>
-        <GridItem colSpan={[12, 7]} border="1px solid" borderColor="bluefrance" p={8}>
+        <GridItem colSpan={[12, 12, 7]} border="1px solid" borderColor="bluefrance" py={8}>
           <Box>
-            <Heading textStyle="h4" color="grey.800">
+            <Heading textStyle="h4" color="grey.800" px={8}>
               Caractéristiques de l’établissement
             </Heading>
             {etablissement.onisep_url !== "" && etablissement.onisep_url !== null && (
-              <Box mb={4}>
+              <Box mt={2} mb={4} px={5}>
                 <Link
                   href={`https://${etablissement.onisep_url}`}
                   mt={3}
-                  textDecoration="underline"
-                  color="bluefrance"
+                  variant={"pill"}
                   textStyle="rf-text"
                   isExternal
                 >
-                  voir la fiche descriptive Onisep <ExternalLinkLine w="9px" h="9px" />
+                  voir la fiche descriptive Onisep <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
                 </Link>
-                .
               </Box>
             )}
-            <Box textStyle="rf-text">
+            <Box textStyle="rf-text" px={8}>
               <Text mb={4} mt={4}>
                 Enseigne :{" "}
                 <Text as="span" variant="highlight">
@@ -192,29 +190,24 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
             </Box>
           </Box>
         </GridItem>
-        <GridItem colSpan={[12, 5]} p={8}>
-          <Container>
-            <Heading textStyle="h4" color="grey.800">
+        <GridItem colSpan={[12, 12, 5]} py={8}>
+          <Box>
+            <Heading textStyle="h4" color="grey.800" px={8}>
               Informations complémentaires
             </Heading>
-            <Box mb={4}>
-              {countFormations > 0 ? (
-                <Link
-                  as={NavLink}
-                  to={linkFormations}
-                  textDecoration="underline"
-                  color="bluefrance"
-                  textStyle="rf-text"
-                  isExternal
-                >
+            {countFormations > 0 ? (
+              <Box mt={2} mb={4} px={5}>
+                <Link as={NavLink} to={linkFormations} variant={"pill"} textStyle="rf-text" isExternal>
                   Voir les {countFormations} formations associées à cet organisme <ArrowRightLine w="9px" h="9px" />
                 </Link>
-              ) : (
+              </Box>
+            ) : (
+              <Box mt={2} mb={4} px={8}>
                 <Text>Aucune formation associée à cet organisme</Text>
-              )}
-            </Box>
+              </Box>
+            )}
 
-            <Box textStyle="rf-text">
+            <Box textStyle="rf-text" px={8}>
               <Text mb={4}>
                 {hasRightToEdit && !edition && (
                   <Button onClick={onEdit} variant="unstyled" aria-label="Modifier l'UAI">
@@ -327,7 +320,7 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
                 </Box>
               </Box>
             )}
-          </Container>
+          </Box>
         </GridItem>
       </Grid>
       <Box mt={8} mb={16}>
@@ -411,7 +404,7 @@ export default ({ match }) => {
 
   return (
     <Layout>
-      <Box w="100%" pt={[4, 8]} px={[1, 24]}>
+      <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
         <Container maxW="xl">
           <Breadcrumb
             pages={[
@@ -422,7 +415,7 @@ export default ({ match }) => {
           />
         </Container>
       </Box>
-      <Box>
+      <Box px={[1, 1, 12, 24]}>
         <Box>
           <Container maxW="xl">
             {!etablissement && (

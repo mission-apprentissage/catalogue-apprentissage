@@ -36,15 +36,15 @@ const Header = () => {
   };
 
   return (
-    <Container maxW={"full"} borderBottom={"1px solid"} borderColor={"grey.400"}>
-      <Container maxW="xl" py={2}>
+    <Container maxW={"full"} borderBottom={"1px solid"} borderColor={"grey.400"} px={[0, 4]}>
+      <Container maxW="xl" py={[0, 2]} px={[0, 4]}>
         <Flex alignItems="center" color="grey.800">
           {/* Logo */}
-          <Link as={NavLink} to="/">
+          <Link as={NavLink} to="/" p={[4, 0]}>
             <Logo />
           </Link>
 
-          <Box p={6} flex="1">
+          <Box p={[1, 6]} flex="1">
             <Heading as="h6" textStyle="h6">
               Catalogue des offres de formations en apprentissage
             </Heading>

@@ -10,7 +10,7 @@ export default (props) => {
   const searchState = useSearch("organismes");
   return (
     <Layout>
-      <Box w="100%" pt={[4, 8]} px={[1, 24]}>
+      <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
         <Container maxW="xl">
           <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: "Liste des établissements" }]} />
           <Heading textStyle="h2" color="grey.800" mt={5}>

@@ -11,11 +11,12 @@ const Link = {
       display: "block",
     },
     pill: {
+      borderRadius: 24,
       fontSize: "zeta",
       color: "bluefrance",
       px: 3,
       py: 1,
-      _hover: { bg: "grey.200", textDecoration: "none", borderRadius: 16 },
+      _hover: { bg: "grey.200", textDecoration: "none" },
     },
     summary: {
       fontSize: "zeta",
