@@ -54,9 +54,7 @@ const Footer = () => {
               css={{ "li:not(:last-child):after": { content: "'|'", marginLeft: "0.5rem", marginRight: "0.5rem" } }}
             >
               <ListItem>
-                <Link as={NavLink} to={"/"}>
-                  Plan du site
-                </Link>
+                <Link href={`${process.env.PUBLIC_URL}/sitemap.xml`}>Plan du site</Link>
               </ListItem>
               <ListItem>Accessibilité : Non conforme</ListItem>
               <ListItem>
