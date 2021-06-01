@@ -23,6 +23,10 @@ const Etablissement = lazy(() => import("./pages/Etablissement"));
 const Journal = lazy(() => import("./pages/Journal/Journal"));
 const TagsHistory = lazy(() => import("./pages/admin/TagsHistory"));
 const UploadFiles = lazy(() => import("./pages/admin/UploadFiles"));
+const Contact = lazy(() => import("./pages/legal/Contact"));
+const Cookies = lazy(() => import("./pages/legal/Cookies"));
+const DonneesPersonnelles = lazy(() => import("./pages/legal/DonneesPersonnelles"));
+const MentionsLegales = lazy(() => import("./pages/legal/MentionsLegales"));
 
 function PrivateRoute({ children, ...rest }) {
   let [auth] = useAuth();
@@ -112,6 +116,10 @@ export default () => {
                 <Route exact path="/couverture-parcoursup" component={ReconciliationParcoursup} />
                 <Route exact path="/couverture-affelnet" component={ReconciliationAffelnet} />
                 <Route exact path="/changelog" component={Journal} />
+                <Route exact path="/contact" component={Contact} />
+                <Route exact path="/cookies" component={Cookies} />
+                <Route exact path="/donnees-personnelles" component={DonneesPersonnelles} />
+                <Route exact path="/mentions-legales" component={MentionsLegales} />
 
                 {auth && auth.permissions.isAdmin && (
                   <PrivateRoute exact path="/tags-history">
