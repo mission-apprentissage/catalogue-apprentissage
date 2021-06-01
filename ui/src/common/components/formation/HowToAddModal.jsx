@@ -63,10 +63,9 @@ const HowToAddModal = ({ isOpen, onClose }) => {
               <Link
                 href="https://reseau.intercariforef.org/referencer-son-offre-de-formation"
                 textDecoration="underline"
-                color="bluefrance"
                 isExternal
               >
-                "référencer son offre de formation <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} color="bluefrance" />"
+                "référencer son offre de formation <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />"
               </Link>
               . Les référencements et mises à jour effectuées dans les bases “Offre des Carif-Oref” sont répercutés
               quotidiennement dans le “Catalogue des offres de formations en apprentissage” (délai 72h entre
@@ -80,7 +79,9 @@ const HowToAddModal = ({ isOpen, onClose }) => {
             <Box mt={2}>
               Votre formation devrait figurer dans le catalogue. Si ce n’est pas le cas, merci de nous signaler votre
               situation par mail :{" "}
-              <Link href="mailto:pole-apprentissage@intercariforef.org">pole-apprentissage@intercariforef.org</Link>{" "}
+              <Link href="mailto:pole-apprentissage@intercariforef.org" textDecoration={"underline"}>
+                pole-apprentissage@intercariforef.org
+              </Link>{" "}
               avec les informations suivantes :
               <UnorderedList>
                 <ListItem>SIRET;</ListItem>

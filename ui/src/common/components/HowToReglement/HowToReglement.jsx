@@ -14,7 +14,7 @@ import {
   UnorderedList,
 } from "@chakra-ui/react";
 
-import { AddFill, SubtractLine } from "../../../theme/components/icons";
+import { AddFill, ExternalLinkLine, SubtractLine } from "../../../theme/components/icons";
 
 const HowToReglement = () => {
   return (
@@ -30,10 +30,10 @@ const HowToReglement = () => {
           (
           <Link
             href="https://resana.numerique.gouv.fr/public/information/consulterAccessUrl?cle_url=1016905377VD4HZ1NfAj4HalM1CmRXdwY4DjMKKwNqDGdQbQFgXW4COA88B2MDZVFk"
-            color="bluefrance"
+            textDecoration={"underline"}
             isExternal
           >
-            cf note MESRI décembre 2020
+            cf note MESRI décembre 2020 <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
           </Link>
           )
         </h4>
@@ -44,7 +44,7 @@ const HowToReglement = () => {
           <br />
           <strong>Vous êtes un organisme de formation :</strong> assurez-vous que les données relatives à votre offre et
           organisme de formation sont à jour dans les différentes{" "}
-          <Link href="#informations-complementaires" color="bluefrance">
+          <Link href="#informations-complementaires" textDecoration={"underline"}>
             bases de données
           </Link>
           .
@@ -320,7 +320,7 @@ const HowToReglement = () => {
           </Accordion>
         </div>
 
-        <Heading as="h4" fontSize="epsilon" mb={4} mt={8} id="informations-complementaires">
+        <Heading as="h4" fontSize="epsilon" mb={4} mt={8} id="informations-complementaires" tabIndex="-1">
           Informations complémentaires
         </Heading>
         <Accordion allowMultiple bg="#F9F8F6">
@@ -343,8 +343,13 @@ const HowToReglement = () => {
                     <UnorderedList>
                       <ListItem>
                         la <strong>Base Centrale des Etablissements (BCE)</strong>, consultable sur{" "}
-                        <Link href="https://www.education.gouv.fr/acce_public/index.php" color="bluefrance" isExternal>
-                          l’application de consultation et cartographie des établissements (ACCE)
+                        <Link
+                          href="https://www.education.gouv.fr/acce_public/index.php"
+                          textDecoration={"underline"}
+                          isExternal
+                        >
+                          l’application de consultation et cartographie des établissements (ACCE){" "}
+                          <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
                         </Link>
                         ;
                         <UnorderedList styleType="circle">
@@ -355,24 +360,29 @@ const HowToReglement = () => {
                         </UnorderedList>
                       </ListItem>
                       <ListItem>
-                        <Link href="http://www.cnefop.gouv.fr/qualite/" color="bluefrance" isExternal>
-                          le site internet du CNEFOP
+                        <Link href="http://www.cnefop.gouv.fr/qualite/" textDecoration={"underline"} isExternal>
+                          le site internet du CNEFOP <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
                         </Link>{" "}
                         pour consulter la liste des organismes certificateurs au sens au Décret du 30 juin 2015
                       </ListItem>
                       <ListItem>
                         <Link
                           href="https://travail-emploi.gouv.fr/formation-professionnelle/acteurs-cadre-et-qualite-de-la-formation-professionnelle/liste-organismes-certificateurs"
-                          color="bluefrance"
+                          textDecoration={"underline"}
                           isExternal
                         >
-                          le site internet du Ministère du Travail
+                          le site internet du Ministère du Travail{" "}
+                          <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
                         </Link>{" "}
                         pour la liste des organismes certificateurs qualité Qualiopi
                       </ListItem>
                       <ListItem>
-                        <Link href="https://www.insee.fr/fr/information/1972062" color="bluefrance" isExternal>
-                          le site de l’INSEE
+                        <Link
+                          href="https://www.insee.fr/fr/information/1972062"
+                          textDecoration={"underline"}
+                          isExternal
+                        >
+                          le site de l’INSEE <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
                         </Link>
                         , permettant d’accéder aux données administratives à partir du Siret de l'établissement
                         <UnorderedList styleType="circle">
@@ -389,8 +399,13 @@ const HowToReglement = () => {
                   <Box mt={2} mb={5}>
                     <UnorderedList>
                       <ListItem>
-                        <Link href="https://certificationprofessionnelle.fr/recherche" color="bluefrance" isExternal>
-                          le Répertoire national des certifications professionnelles (RNCP)
+                        <Link
+                          href="https://certificationprofessionnelle.fr/recherche"
+                          textDecoration={"underline"}
+                          isExternal
+                        >
+                          le Répertoire national des certifications professionnelles (RNCP){" "}
+                          <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
                         </Link>{" "}
                         listant les certificateurs référencés pour chacune des certifications enregistrées au RNCP (hors
                         Répertoire Spécifique)
@@ -399,7 +414,10 @@ const HowToReglement = () => {
                             il appartient à l'établissement de se rapprocher du certificateur pour solliciter la mise à
                             jour éventuelle des données (validité, certificateur et/ou établissements partenaires,
                             voie(s) d’accès...) ou de se mettre à jour auprès de France Compétences :{" "}
-                            <Link href="mailto:certificationprofessionnelle@francecompetences.fr">
+                            <Link
+                              href="mailto:certificationprofessionnelle@francecompetences.fr"
+                              textDecoration={"underline"}
+                            >
                               certificationprofessionnelle@francecompetences.fr
                             </Link>
                             .
