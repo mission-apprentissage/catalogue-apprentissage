@@ -13,9 +13,8 @@ const Footer = () => {
           </Link>
           <Box alignSelf="center" flex="1">
             <Text>
-              Texte optionnel 3 lignes maximum.
-              <br /> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Consectetur et vel quam auctor semper.
-              Cras si amet mollis dolor.
+              Créé pour organiser la collecte des formations en apprentissage, le catalogue des formations en
+              apprentissage permet de rendre plus visibles les offres auprès des jeunes et des employeurs.
             </Text>
             <br />
             <List textStyle="sm" fontWeight="700" flexDirection={"row"} flexWrap={"wrap"} mb={[3, 3, 0]} display="flex">
