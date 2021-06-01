@@ -23,7 +23,7 @@ export default (props) => {
             </Center>
           )}
           {searchState.loaded && (
-            <Tabs variant="search" mt={5}>
+            <Tabs variant="search" mt={5} isLazy>
               <TabList bg="white">
                 <Tab>Liste</Tab>
                 <Tab>Guide réglementaire</Tab>

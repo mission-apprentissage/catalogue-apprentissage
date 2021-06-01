@@ -43,7 +43,7 @@ export default (props) => {
           )}
           {searchState.loaded && (
             <>
-              <Tabs variant="search" mt={5}>
+              <Tabs variant="search" mt={5} isLazy>
                 <TabList bg="white" justifyContent="space-between">
                   <Flex>
                     <Tab>Catalogue général ({searchState.countCatalogueGeneral.toLocaleString("fr-FR")})</Tab>
