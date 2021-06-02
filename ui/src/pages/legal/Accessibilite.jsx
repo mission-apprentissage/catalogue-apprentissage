@@ -14,14 +14,11 @@ export default () => {
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
         <Container maxW="xl">
           <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: title }]} />
-          <Heading textStyle="h2" color="grey.800" mt={5}>
+          <Heading textStyle="h2" mt={5}>
             {title}
           </Heading>
           <Box pt={4} pb={16}>
             <Box>
-              <Heading as={"h3"} textStyle="h3" mb={2}>
-                Accessibilité : indice
-              </Heading>
               <Text>
                 L'initiative internationale pour l'accessibilité du Web (Web Accessiblility Initiative) définit
                 l'accessibilité du Web comme suit :<br />
@@ -60,7 +57,7 @@ export default () => {
               </Text>
             </Box>
             <Box mt={4}>
-              <Heading as={"h3"} textStyle="h3" mb={2}>
+              <Heading as={"h3"} textStyle="h6" mb={2}>
                 Nos engagements
               </Heading>
               <Text>
@@ -92,7 +89,7 @@ export default () => {
               </Text>
             </Box>
             <Box mt={4}>
-              <Heading as={"h3"} textStyle="h3" mb={2}>
+              <Heading as={"h3"} textStyle="h6" mb={2}>
                 Voie de recours
               </Heading>
               <Text>
