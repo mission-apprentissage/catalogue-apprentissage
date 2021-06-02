@@ -125,5 +125,32 @@ const psFormationSchema = {
     default: false,
     description: "Etat de la réconciliation de la formation",
   },
+  statut_reconciliation: {
+    type: String,
+    default: "INCONNU",
+    enum: ["AUTOMATIQUE", "VALIDE", "REJETE", "INCONNU", "A_VERIFIER"],
+    description: "Statut",
+  },
+  id_reconciliation: {
+    type: String,
+    default: null,
+    description: "id mongo reconciliation",
+  },
+  matching_rejete_updated: {
+    type: Boolean,
+    default: false,
+    description: "Si la formation Précédemment Rejeté a été mise à jour",
+  },
+  matching_rejete_raison: {
+    type: String,
+    default: null,
+    description: "Affelnet : raison de dépublication",
+  },
+  statuts_history: {
+    type: [Object],
+    default: [],
+    description: "historique des statuts",
+    noIndex: true,
+  },
 };
 module.exports = psFormationSchema;
