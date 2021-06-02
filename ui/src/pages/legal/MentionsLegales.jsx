@@ -26,8 +26,8 @@ export default () => {
                   Éditeur du site
                 </Heading>
                 <Text>
-                  Le Catalogue de l’offre de formation en apprentissage est édité par La Mission Interministérielle
-                  Apprentissage, située à l'adresse:
+                  Le Catalogue de l’offre de formation en apprentissage est édité par La Mission interministérielle pour
+                  l'apprentissage, située à l'adresse:
                   <br />
                   Beta.gouv
                   <br />

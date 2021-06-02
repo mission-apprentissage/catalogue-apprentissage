@@ -13,8 +13,16 @@ const Footer = () => {
           </Link>
           <Box alignSelf="center" flex="1">
             <Text>
-              Créé pour organiser la collecte des formations en apprentissage, le catalogue des formations en
-              apprentissage permet de rendre plus visibles les offres auprès des jeunes et des employeurs.
+              Mandatée par les ministres en charge de l’éducation nationale, de l’enseignement supérieur, du travail et
+              de la transformation publique, la{" "}
+              <Link
+                href={"https://beta.gouv.fr/startups/?incubateur=mission-apprentissage"}
+                textDecoration={"underline"}
+                isExternal
+              >
+                Mission interministérielle pour l'apprentissage
+              </Link>{" "}
+              développe plusieurs services destinés à faciliter les entrées en apprentissage.
             </Text>
             <br />
             <List textStyle="sm" fontWeight="700" flexDirection={"row"} flexWrap={"wrap"} mb={[3, 3, 0]} display="flex">
