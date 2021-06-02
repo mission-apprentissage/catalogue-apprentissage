@@ -7,19 +7,7 @@ const express = require("express");
 const { getCfdInfo } = require("@mission-apprentissage/tco-service-node");
 const { getEtablissementCoverage } = require("../../logic/controller/coverage");
 
-const { diffFormation } = require("../../logic/common/utils/diffUtils");
-
-const buildUpdatesHistory = (psformation, updates, keys, source) => {
-  const from = keys.reduce((acc, key) => {
-    acc[key] = psformation[key];
-    return acc;
-  }, {});
-
-  return [
-    ...(psformation.statuts_history || []),
-    { from, to: { ...updates }, updated_at: Date.now(), ...(source ? { source } : {}) },
-  ];
-};
+const { diffFormation, buildUpdatesHistory } = require("../../logic/common/utils/diffUtils");
 
 module.exports = ({ catalogue }) => {
   const router = express.Router();
@@ -264,7 +252,7 @@ module.exports = ({ catalogue }) => {
         const { updates, keys } = diffFormation(previousFormation, updatedFormation);
         if (updates) {
           delete updates.matching_mna_formation;
-          const statuts_history = buildUpdatesHistory(previousFormation, updates, keys);
+          const statuts_history = buildUpdatesHistory(previousFormation, updates, keys, null, true);
 
           updatedFormation.statuts_history = statuts_history;
         }
@@ -323,7 +311,7 @@ module.exports = ({ catalogue }) => {
         const { updates, keys } = diffFormation(previousFormation, updatedFormation);
         if (updates) {
           delete updates.matching_mna_formation;
-          const statuts_history = buildUpdatesHistory(previousFormation, updates, keys);
+          const statuts_history = buildUpdatesHistory(previousFormation, updates, keys, null, true);
 
           updatedFormation.statuts_history = statuts_history;
         }

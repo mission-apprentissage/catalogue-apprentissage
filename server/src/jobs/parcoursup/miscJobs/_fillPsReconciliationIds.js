@@ -1,5 +1,5 @@
 const { runScript } = require("../../scriptWrapper");
-const { asyncForEach } = require("../../../common/utils/asyncUtils");
+const { paginator } = require("../../common/utils/paginator");
 const { PsReconciliation, PsFormation2021 } = require("../../../common/model");
 
 runScript(async () => {
@@ -9,22 +9,21 @@ runScript(async () => {
 async function migrate() {
   await PsReconciliation.updateMany({}, { $set: { ids_parcoursup: [] } });
 
-  const dataset = await PsFormation2021.find({ id_reconciliation: { $ne: null } }).lean();
-  console.log(dataset.length);
+  await paginator(
+    PsFormation2021,
+    { filter: { id_reconciliation: { $ne: null } }, limit: 300, lean: true },
+    async ({ id_parcoursup, id_reconciliation }) => {
+      let matching = await PsReconciliation.findOne({ _id: id_reconciliation });
 
-  await asyncForEach(dataset, async (psFormation2021) => {
-    const { id_parcoursup, id_reconciliation } = psFormation2021;
-
-    let matching = await PsReconciliation.findOne({ _id: id_reconciliation });
-
-    await PsReconciliation.findByIdAndUpdate(
-      id_reconciliation,
-      {
-        ids_parcoursup: [...matching._doc.ids_parcoursup, id_parcoursup],
-      },
-      {
-        new: true,
-      }
-    );
-  });
+      await PsReconciliation.findByIdAndUpdate(
+        id_reconciliation,
+        {
+          ids_parcoursup: [...matching._doc.ids_parcoursup, id_parcoursup],
+        },
+        {
+          new: true,
+        }
+      );
+    }
+  );
 }

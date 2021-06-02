@@ -32,11 +32,18 @@ const diffFormation = (previousFormationP, nextFormationP) => {
 /*
  * Build updates history
  */
-const buildUpdatesHistory = (formation, updates, keys, source) => {
+const buildUpdatesHistory = (formation, updates, keys, source, psFormation = false) => {
   const from = keys.reduce((acc, key) => {
     acc[key] = formation[key];
     return acc;
   }, {});
+
+  if (psFormation) {
+    return [
+      ...(formation.statuts_history || []),
+      { from, to: { ...updates }, updated_at: Date.now(), ...(source ? { source } : {}) },
+    ];
+  }
 
   return [
     ...formation.updates_history,

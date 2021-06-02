@@ -5,20 +5,8 @@ const { runScript } = require("../../scriptWrapper");
 const logger = require("../../../common/logger");
 const { reconciliationParcoursup } = require("../../../logic/controller/reconciliation");
 const cluster = require("cluster");
-const { diffFormation } = require("../../../logic/common/utils/diffUtils");
+const { diffFormation, buildUpdatesHistory } = require("../../../logic/common/utils/diffUtils");
 const numCPUs = 4;
-
-const buildUpdatesHistory = (psformation, updates, keys, source) => {
-  const from = keys.reduce((acc, key) => {
-    acc[key] = psformation[key];
-    return acc;
-  }, {});
-
-  return [
-    ...(psformation.statuts_history || []),
-    { from, to: { ...updates }, updated_at: Date.now(), ...(source ? { source } : {}) },
-  ];
-};
 
 const updateMatchedFormation = async ({ formation, match }) => {
   let statut_reconciliation = "INCONNU";
@@ -58,7 +46,7 @@ const updateMatchedFormation = async ({ formation, match }) => {
   const { updates, keys } = diffFormation(previousFormation, updatedFormation);
   if (updates) {
     delete updates.matching_mna_formation;
-    const statuts_history = buildUpdatesHistory(previousFormation, updates, keys);
+    const statuts_history = buildUpdatesHistory(previousFormation, updates, keys, null, true);
 
     updatedFormation.statuts_history = statuts_history;
   }
