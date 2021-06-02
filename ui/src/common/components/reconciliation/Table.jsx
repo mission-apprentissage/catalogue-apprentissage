@@ -114,9 +114,14 @@ const Table = ({ data, onRowClick, filename, onSelect }) => {
     setGlobalFilter,
   } = tableInstance;
 
-  const handleChange = (cell) => {
-    console.log(cell);
-    // onSelect();
+  const handleChange = (cell, val) => {
+    if (document.querySelector(val).checked) {
+      const { siret, uai } = cell.row.values;
+      onSelect({
+        siret,
+        uai,
+      });
+    }
   };
 
   return (
@@ -162,7 +167,7 @@ const Table = ({ data, onRowClick, filename, onSelect }) => {
           ))}
         </Box>
         <Box as="tbody" {...getTableBodyProps()}>
-          {rows.map((row, i) => {
+          {rows.map((row, j) => {
             prepareRow(row);
             return (
               <Box
@@ -175,7 +180,7 @@ const Table = ({ data, onRowClick, filename, onSelect }) => {
                 cursor={onRowClick ? "pointer" : undefined}
                 h="auto!important"
                 color="grey.800"
-                bg={i % 2 === 0 ? "galt" : "white"}
+                bg={j % 2 === 0 ? "galt" : "white"}
                 py="3"
               >
                 {row.cells.map((cell, i) => {
@@ -191,9 +196,9 @@ const Table = ({ data, onRowClick, filename, onSelect }) => {
                         <Stack mt="0.35rem">
                           <Checkbox
                             name="selectEta"
-                            id="selectEta"
+                            id={`selectEta${j}_${i}`}
                             onChange={() => {
-                              handleChange(cell);
+                              handleChange(cell, `#selectEta${j}_${i}`);
                             }}
                             value="on"
                           />

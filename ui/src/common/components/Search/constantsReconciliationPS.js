@@ -3,10 +3,10 @@ import { escapeDiacritics } from "../../utils/downloadUtils";
 const FILTERS = (context) => [
   `QUERYBUILDER-${context}`,
   `SEARCH-${context}`,
-  // `num_departement-${context}`,
   `nom_academie-${context}`,
-  // `tags-${context}`,
   "statut_reconciliation",
+  `rncp-${context}`,
+  `cfd-${context}`,
 ];
 
 const columnsDefinition = [
@@ -53,6 +53,12 @@ const columnsDefinition = [
     width: 200,
     editable: false,
     formatter: (value) => escapeDiacritics(value),
+  },
+  {
+    Header: "Informations similaires",
+    accessor: "matching_type",
+    width: 120,
+    editable: false,
   },
   {
     Header: "match",
@@ -120,17 +126,17 @@ const columnsDefinition = [
   // },
 ];
 
-const queryBuilderField = [
-  { text: "Identifiant parcoursup", value: "id_parcoursup.keyword" },
-  // { text: "Siret", value: "siret.keyword" },
-  // { text: "Type d'établissement", value: "computed_type.keyword" },
-  // { text: "Conventionné", value: "computed_conventionne.keyword" },
-  // { text: "Déclaré en prefecture", value: "computed_declare_prefecture.keyword" },
-  // { text: "Référencé datadock", value: "computed_info_datadock.keyword" },
-  // { text: "Uai", value: "uai.keyword" },
-];
+const queryBuilderField = [{ text: "Identifiant parcoursup", value: "id_parcoursup.keyword" }];
 
 const facetDefinition = (context) => [
+  {
+    componentId: `matching_type-${context}`,
+    dataField: "matching_type.keyword",
+    title: "Informations similaires",
+    filterLabel: "Informations similaires",
+    selectAllLabel: "Tous",
+    sortBy: "asc",
+  },
   {
     componentId: `nom_academie-${context}`,
     dataField: "nom_academie.keyword",
@@ -155,6 +161,23 @@ const facetDefinition = (context) => [
   //   selectAllLabel: "Toutes",
   //   sortBy: "asc",
   // },
+
+  {
+    componentId: `cfd-${context}`,
+    dataField: "codes_cfd_mna.keyword",
+    title: "Code diplôme",
+    filterLabel: "Code diplôme",
+    selectAllLabel: "Tous",
+    sortBy: "asc",
+  },
+  {
+    componentId: `rncp-${context}`,
+    dataField: "codes_rncp_mna.keyword",
+    title: "Code RNCP",
+    filterLabel: "Code RNCP",
+    selectAllLabel: "Tous",
+    sortBy: "asc",
+  },
 ];
 
 const dataSearch = {

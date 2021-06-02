@@ -26,7 +26,6 @@ const AddEtablissement = ({ formation, onClose }) => {
     },
     onSubmit: ({ uai, siret, typeOrganisme }) => {
       return new Promise(async (resolve) => {
-        // onSuccess.mutate({ ...etablissement, type: typeOrganisme, matched_uai: ["utilisateur"], uai }); // siret
         resolve("onSubmitHandler publish complete");
       });
     },

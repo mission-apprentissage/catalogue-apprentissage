@@ -59,9 +59,22 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
     setFormationDiff(formation.diff[val]);
   };
 
-  const onSelectEtablissement = () => {
-    // TODO
+  const onSelectEtablissement = ({ siret, uai }) => {
+    // console.log({ siret, uai });
+    const mIndex = formation.matching_mna_formation.findIndex((mnaF) => {
+      return (
+        mnaF.etablissement_formateur_siret === siret ||
+        mnaF.etablissement_gestionnaire_siret === siret ||
+        mnaF.lieu_formation_siret === siret
+      );
+    });
+    const index = mIndex >= 0 ? mIndex : 0;
+    setCurrentSlide(index);
+    setMnaFormation(formation.matching_mna_formation[index]);
+    setFormationDiff(formation.diff[index]);
+    document.getElementById("chakra-modal-reconciliationPsModal").parentNode.scrollTo(0, 0);
   };
+
   const onCloseSubModal = () => {
     onCloseSubM();
   };

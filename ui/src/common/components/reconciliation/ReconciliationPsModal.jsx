@@ -55,7 +55,7 @@ const ReconciliationPsModal = React.memo(({ isOpen, onClose: onCloseProp, data, 
   }, [onCloseProp]);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="full">
+    <Modal isOpen={isOpen} onClose={onClose} size="full" id="reconciliationPsModal">
       <ModalOverlay />
       <ModalContent bg="white" color="primaryText" borderRadius="none" my="0" minH="full" h="auto">
         <HStack px={[4, 16]} mt={5}>
