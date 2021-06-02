@@ -4,12 +4,25 @@ import { Link } from "@chakra-ui/react";
 const changelog = {
   list: [
     {
-      version: "3.6.0",
+      version: "4.1.0",
       date: "Prochainement",
       about: `<h4>À venir</h4>`,
       fixes: [],
       features: ["Développement d'un module de gestion des règles"],
       improvements: ["Travaux sur le flux retour vers les Carif-Oref et gestion des modifications"],
+    },
+    {
+      version: "4.0.0",
+      date: "Le 03 Juin 2021",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [],
+      features: [],
+      improvements: [
+        "Nouvelle interface utilisateur (respect de la charte graphique Etat)",
+        "Lien vers la carte LBA depuis la fiche formation",
+        "Affichage durée et année si un seul code MEF est retourné par la BCN, sinon faute d'informations transmises via la collecte ces champs restent vides",
+      ],
     },
     {
       version: "3.5.0",
