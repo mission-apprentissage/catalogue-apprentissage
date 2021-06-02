@@ -74,11 +74,11 @@ const Footer = () => {
                   Mentions légales
                 </Link>
               </ListItem>
-              <ListItem>
-                <Link as={NavLink} to={"/donnees-personnelles"}>
-                  Données personnelles
-                </Link>
-              </ListItem>
+              {/*<ListItem>*/}
+              {/*  <Link as={NavLink} to={"/donnees-personnelles"}>*/}
+              {/*    Données personnelles*/}
+              {/*  </Link>*/}
+              {/*</ListItem>*/}
               <ListItem>
                 <Link as={NavLink} to={"/cookies"}>
                   Gestion des cookies
