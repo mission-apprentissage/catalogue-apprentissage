@@ -26,6 +26,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
   const [modalType, setModalType] = useState("validate");
   const [mnaFormation, setMnaFormation] = useState(formation.matching_mna_formation[0]);
   const [formationDiff, setFormationDiff] = useState(formation.diff[0]);
+  const [etablissements, setEtablissements] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [slidesCount, setSlidesCount] = useState(formation.matching_mna_formation.length);
 
@@ -34,6 +35,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
     setFormationDiff(formation.diff[0]);
     setSlidesCount(formation.matching_mna_formation.length);
     setCurrentSlide(0);
+    setEtablissements(formation.matching_mna_etablissement);
   }, [formation]);
 
   // console.log(formation);
@@ -57,7 +59,9 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
     setFormationDiff(formation.diff[val]);
   };
 
-  const onSelectEtablissement = () => {};
+  const onSelectEtablissement = () => {
+    // TODO
+  };
   const onCloseSubModal = () => {
     onCloseSubM();
   };
@@ -568,36 +572,38 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
               {/* <Text color="tomato">*</Text> */}
             </Stack>
           </Heading>
-          <Box border="1px solid" borderColor="bluefrance" p={8}>
-            <Box w="full" overflow="hidden">
-              <Box overflowX="scroll" w="full">
-                <Table
-                  data={formation.matching_mna_etablissement.map((item) => ({
-                    indice: item.matched_uai.length,
-                    uai: item.uai,
-                    siret: item.siret,
-                    enseigne: item.enseigne,
-                    raison_sociale: item.raison_sociale,
-                    adresse: item.adresse,
-                    naf_libelle: item.naf_libelle,
-                    siege_social: item.siege_social,
-                    matched_uai: item.matched_uai,
-                  }))}
-                  onSelect={onSelectEtablissement}
-                />
+          {etablissements.length > 0 && (
+            <Box border="1px solid" borderColor="bluefrance" p={8}>
+              <Box w="full" overflow="hidden">
+                <Box overflowX="scroll" w="full">
+                  <Table
+                    data={etablissements.map((item) => ({
+                      indice: item.matched_uai.length,
+                      uai: item.uai,
+                      siret: item.siret,
+                      enseigne: item.enseigne,
+                      raison_sociale: item.raison_sociale,
+                      adresse: item.adresse,
+                      naf_libelle: item.naf_libelle,
+                      siege_social: item.siege_social,
+                      matched_uai: item.matched_uai,
+                    }))}
+                    onSelect={onSelectEtablissement}
+                  />
+                </Box>
+                <Button
+                  variant="unstyled"
+                  onClick={() => {
+                    setModalType("etablissement");
+                    onOpenSubModal();
+                  }}
+                  disabled
+                >
+                  ajouter un organisme à la liste
+                </Button>
               </Box>
-              <Button
-                variant="unstyled"
-                onClick={() => {
-                  setModalType("etablissement");
-                  onOpenSubModal();
-                }}
-                disabled
-              >
-                ajouter un organisme à la liste
-              </Button>
             </Box>
-          </Box>
+          )}
         </Box>
       )}
       {step < 3 && (

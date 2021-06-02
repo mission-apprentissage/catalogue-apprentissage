@@ -6,7 +6,7 @@ import { _post } from "../../../common/httpClient";
 
 const Validate = ({ formation, mnaFormation, onClose, onValidationSubmit }) => {
   const [canSubmit, setCanSubmit] = useState(false);
-  console.log(mnaFormation);
+  // console.log(formation);
   const { values, handleChange, handleSubmit, isSubmitting, setFieldValue } = useFormik({
     initialValues: {
       parcoursup_keep_publish: undefined,
@@ -34,6 +34,7 @@ const Validate = ({ formation, mnaFormation, onClose, onValidationSubmit }) => {
           uai_gestionnaire: formation.uai_gestionnaire,
           uai_composante: formation.uai_composante,
           code_cfd: mnaFormation.cfd,
+          mnaFormationId: mnaFormation._id,
           mapping,
           reject: false,
         });

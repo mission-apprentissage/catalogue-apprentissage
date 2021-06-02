@@ -39,6 +39,7 @@
     "psup:missing": "standalone=true node src/jobs/oneshot/psFormation/missingEtablissement.js",
     "psup:reference": "standalone=true node src/jobs/reference/parcoursup/index.js",
     "psup:pertinence": "standalone=true node src/jobs/pertinence/parcoursup/index.js",
+    "psup:updatemna": "standalone=true node src/jobs/parcoursup/miscJobs/_updateMnaFormationInPs.js",
     "affelnet:coverage": "standalone=true node src/jobs/affelnet/coverage.js",
     "affelnet:reconciliation": "standalone=true node src/jobs/affelnet/reconciliation.js",
     "affelnet:reference": "standalone=true node src/jobs/reference/affelnet/index.js",

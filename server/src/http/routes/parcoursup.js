@@ -5,6 +5,7 @@ const { asyncForEach } = require("../../common/utils/asyncUtils");
 const mongoose = require("mongoose");
 const express = require("express");
 const { getCfdInfo } = require("@mission-apprentissage/tco-service-node");
+const { getEtablissementCoverage } = require("../../logic/controller/coverage");
 
 const { diffFormation } = require("../../logic/common/utils/diffUtils");
 
@@ -159,6 +160,7 @@ module.exports = ({ catalogue }) => {
       if (retrievedData) {
         const diffFields = [];
         let matching_mna_formation = retrievedData.matching_mna_formation;
+        let matching_mna_etablissement = [];
         if (
           retrievedData.statut_reconciliation === "AUTOMATIQUE" ||
           retrievedData.statut_reconciliation === "A_VERIFIER" ||
@@ -172,8 +174,9 @@ module.exports = ({ catalogue }) => {
             diffFields.push(diffResult.diffFields);
           });
           matching_mna_formation = updated_matching_mna_formation;
+          matching_mna_etablissement = await getEtablissementCoverage(matching_mna_formation);
         }
-        return res.json({ ...retrievedData, diff: diffFields, matching_mna_formation });
+        return res.json({ ...retrievedData, diff: diffFields, matching_mna_formation, matching_mna_etablissement });
       }
       return res.status(404).send({ message: `Item ${psId} doesn't exist` });
     })
@@ -299,12 +302,21 @@ module.exports = ({ catalogue }) => {
       if (result) {
         const previousFormation = await PsFormation2021.findById(id_formation).lean();
 
+        const mnaFormation = await ConvertedFormation.findById(rest.mnaFormationId).lean();
+
         let updatedFormation = {
           ...previousFormation,
           id_reconciliation: result._id.toString(),
           statut_reconciliation: "VALIDE",
           etat_reconciliation: true,
           matching_rejete_updated: false,
+          matching_mna_formation: [
+            {
+              _id: mnaFormation._id,
+              intitule_court: mnaFormation.intitule_court,
+              parcoursup_statut: mnaFormation.parcoursup_statut,
+            },
+          ],
         };
 
         // History

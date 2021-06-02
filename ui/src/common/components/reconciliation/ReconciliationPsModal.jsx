@@ -50,6 +50,7 @@ const ReconciliationPsModal = React.memo(({ isOpen, onClose: onCloseProp, data, 
   }, []);
   let onClose = useCallback(() => {
     setStep(1);
+    setFormation(null);
     onCloseProp();
   }, [onCloseProp]);
 

@@ -1,4 +1,4 @@
-const { getParcoursupCoverage, getEtablissementCoverage } = require("../../../logic/controller/coverage");
+const { getParcoursupCoverage } = require("../../../logic/controller/coverage"); // getEtablissementCoverage
 const { paginator } = require("../../common/utils/paginator");
 const { PsFormation2021, Etablissement } = require("../../../common/model");
 const { runScript } = require("../../scriptWrapper");
@@ -88,21 +88,21 @@ const formation = async (filter = {}, limit = 10, maxItems = 100, offset = 0) =>
   // console.log(` ----> ${count}, ${countMultiple}`);
 };
 
-const etablissement = async () => {
-  await paginator(
-    PsFormation2021,
-    { filter: { matching_type: { $ne: null } }, lean: true },
-    async ({ matching_mna_formation, _id }) => {
-      let match = await getEtablissementCoverage(matching_mna_formation);
+// const etablissement = async () => {
+//   await paginator(
+//     PsFormation2021,
+//     { filter: { matching_type: { $ne: null } }, lean: true },
+//     async ({ matching_mna_formation, _id }) => {
+//       let match = await getEtablissementCoverage(matching_mna_formation);
 
-      if (!match) return;
+//       if (!match) return;
 
-      await PsFormation2021.findByIdAndUpdate(_id, {
-        matching_mna_etablissement: match,
-      });
-    }
-  );
-};
+//       await PsFormation2021.findByIdAndUpdate(_id, {
+//         matching_mna_etablissement: match,
+//       });
+//     }
+//   );
+// };
 
 const psCoverage = async (filter = {}, limit = 10, maxItems = 100, offset = 0) => {
   logger.info("Start formation coverage");
@@ -199,8 +199,8 @@ const run = async () => {
           // }
 
           runScript(async () => {
-            logger.info("Start etablissement coverage");
-            await etablissement();
+            // logger.info("Start etablissement coverage");
+            // await etablissement();
             logger.info("End Parcoursup coverage");
           });
         } else {
