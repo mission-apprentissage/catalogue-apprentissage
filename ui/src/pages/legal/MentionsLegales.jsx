@@ -26,20 +26,21 @@ export default () => {
                   Éditeur du site
                 </Heading>
                 <Text>
-                  Le Catalogue de l’offre de formation en apprentissage est édité par Pôle Emploi, situé :
+                  Le Catalogue de l’offre de formation en apprentissage est édité par La Mission Interministérielle
+                  Apprentissage, située à l'adresse:
                   <br />
-                  15 avenue du Docteur Gley
+                  Beta.gouv
                   <br />
-                  75987 Paris cedex 20
+                  20 avenue de Ségur
                   <br />
-                  Tél. : 01 40 30 60 00
+                  75007 PARIS
                 </Text>
               </Box>
               <Box mt={4}>
                 <Heading as={"h3"} textStyle="h6" mb={2}>
                   Directeur de la publication
                 </Heading>
-                <Text>Monsieur Jean Bassères, Directeur Général.</Text>
+                <Text>Monsieur Guillaume Houzel.</Text>
               </Box>
               <Box mt={4}>
                 <Heading as={"h3"} textStyle="h6" mb={2}>
