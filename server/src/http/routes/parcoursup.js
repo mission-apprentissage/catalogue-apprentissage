@@ -407,12 +407,12 @@ module.exports = ({ catalogue }) => {
       }
 
       let etablissement = await catalogue.getEtablissement({ uai, siret });
-      let newE = false;
+      let newEtablissement = false;
       if (etablissement.message === "Etablissement doesn't exist") {
-        //etablissement = await catalogue.createEtablissement({ uai, siret });
-        newE = true;
+        //TODO once we create etablissement = await catalogue.createEtablissement({ uai, siret });
+        newEtablissement = true;
       }
-      return res.json({ ...etablissement, new: newE });
+      return res.json({ ...etablissement, new: newEtablissement });
     })
   );
 

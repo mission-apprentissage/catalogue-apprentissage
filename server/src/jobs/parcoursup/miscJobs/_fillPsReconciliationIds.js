@@ -26,14 +26,5 @@ async function migrate() {
         new: true,
       }
     );
-    // await PsReconciliation.findByIdAndUpdate(
-    //   id_reconciliation,
-    //   {
-    //     ids_parcoursup: [],
-    //   },
-    //   {
-    //     new: true,
-    //   }
-    // );
   });
 }

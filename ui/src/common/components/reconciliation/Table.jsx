@@ -103,16 +103,7 @@ const Table = ({ data, onRowClick, filename, onSelect }) => {
     useGlobalFilter,
     useSortBy
   );
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-    state,
-    preGlobalFilteredRows,
-    setGlobalFilter,
-  } = tableInstance;
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = tableInstance;
 
   const handleChange = (cell, val) => {
     if (document.querySelector(val).checked) {

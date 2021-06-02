@@ -1,4 +1,4 @@
-const { getParcoursupCoverage } = require("../../../logic/controller/coverage"); // getEtablissementCoverage
+const { getParcoursupCoverage } = require("../../../logic/controller/coverage");
 const { paginator } = require("../../common/utils/paginator");
 const { PsFormation2021, Etablissement } = require("../../../common/model");
 const { runScript } = require("../../scriptWrapper");
@@ -70,8 +70,6 @@ const updateMatchedFormation = async ({ formation, match }) => {
   });
 };
 
-// let count = 0;
-// let countMultiple = 0;
 const formation = async (filter = {}, limit = 10, maxItems = 100, offset = 0) => {
   await paginator(
     PsFormation2021,
@@ -85,24 +83,7 @@ const formation = async (filter = {}, limit = 10, maxItems = 100, offset = 0) =>
       await updateMatchedFormation(payload);
     }
   );
-  // console.log(` ----> ${count}, ${countMultiple}`);
 };
-
-// const etablissement = async () => {
-//   await paginator(
-//     PsFormation2021,
-//     { filter: { matching_type: { $ne: null } }, lean: true },
-//     async ({ matching_mna_formation, _id }) => {
-//       let match = await getEtablissementCoverage(matching_mna_formation);
-
-//       if (!match) return;
-
-//       await PsFormation2021.findByIdAndUpdate(_id, {
-//         matching_mna_etablissement: match,
-//       });
-//     }
-//   );
-// };
 
 const psCoverage = async (filter = {}, limit = 10, maxItems = 100, offset = 0) => {
   logger.info("Start formation coverage");
@@ -188,19 +169,7 @@ const run = async () => {
       cluster.on("exit", async (worker) => {
         console.log(`worker ${worker.process.pid} died`);
         if (countWorkerExist === numCPUs) {
-          // // Merge
-          // for (const key in pResult) {
-          //   if (Object.hasOwnProperty.call(pResult, key)) {
-          //     const r = pResult[key].result;
-          //     if (r) {
-          //       // MERGING RESULTS
-          //     }
-          //   }
-          // }
-
           runScript(async () => {
-            // logger.info("Start etablissement coverage");
-            // await etablissement();
             logger.info("End Parcoursup coverage");
           });
         } else {

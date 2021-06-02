@@ -1,10 +1,4 @@
-const {
-  AfReconciliation,
-  AfFormation,
-  ConvertedFormation,
-  // PsFormation2021,
-  PsReconciliation,
-} = require("../../common/model");
+const { AfReconciliation, AfFormation, ConvertedFormation, PsReconciliation } = require("../../common/model");
 
 async function reconciliationAffelnet(formation, source = "MANUEL") {
   let {
@@ -76,15 +70,7 @@ async function reconciliationAffelnet(formation, source = "MANUEL") {
 }
 
 async function reconciliationParcoursup(formation, source = "MANUEL") {
-  let {
-    code_cfd,
-    matching_mna_formation,
-    // _id,
-    uai_gestionnaire,
-    uai_composante,
-    uai_affilie,
-    id_parcoursup,
-  } = formation;
+  let { code_cfd, matching_mna_formation, uai_gestionnaire, uai_composante, uai_affilie, id_parcoursup } = formation;
   let { etablissement_formateur_siret, etablissement_gestionnaire_siret } = matching_mna_formation[0];
 
   let payload = {
@@ -107,7 +93,6 @@ async function reconciliationParcoursup(formation, source = "MANUEL") {
     }
   ).lean();
   return reconciliation;
-  // await PsFormation2021.findByIdAndUpdate(_id, { etat_reconciliation: true, id_reconciliation: reconciliation._id }); // Moved to coverage.js
 }
 
 module.exports = { reconciliationAffelnet, reconciliationParcoursup };
