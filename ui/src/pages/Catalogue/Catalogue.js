@@ -21,20 +21,22 @@ import { useSearch } from "../../common/hooks/useSearch";
 import { HowToReglement } from "../../common/components/HowToReglement/HowToReglement";
 import { HowToAddModal } from "../../common/components/formation/HowToAddModal";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
+import { setTitle } from "../../common/utils/pageUtils";
 
 export default (props) => {
   const searchState = useSearch("catalogue");
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const title = "Catalogue des formations en apprentissage 2021";
+  setTitle(title);
+
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
         <Container maxW="xl">
-          <Breadcrumb
-            pages={[{ title: "Accueil", to: "/" }, { title: "Catalogue des formations en apprentissage 2021" }]}
-          />
+          <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: title }]} />
           <Heading textStyle="h2" color="grey.800" mt={5}>
-            Catalogue des formations en apprentissage 2021
+            {title}
           </Heading>
           {!searchState.loaded && (
             <Center h="70vh">

@@ -18,5 +18,11 @@ export default (
     <Route exact path="/couverture-parcoursup" />
     <Route exact path="/couverture-affelnet" />
     <Route exact path="/changelog" />
+
+    <Route exact path="/contact" />
+    <Route exact path="/cookies" />
+    <Route exact path="/donnees-personnelles" />
+    <Route exact path="/mentions-legales" />
+    <Route exact path="/accessibilite" />
   </Route>
 );

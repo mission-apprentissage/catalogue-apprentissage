@@ -18,6 +18,7 @@ import * as Yup from "yup";
 
 import useAuth from "../common/hooks/useAuth";
 import { _post } from "../common/httpClient";
+import { setTitle } from "../common/utils/pageUtils";
 
 const LoginPage = () => {
   const [, setAuth] = useAuth();
@@ -34,11 +35,14 @@ const LoginPage = () => {
     }
   };
 
+  const title = "Connexion";
+  setTitle(title);
+
   return (
     <Center height="100vh" verticalAlign="center">
       <Box width={["auto", "28rem"]}>
         <Heading fontFamily="Marianne" fontWeight="700" marginBottom="2w">
-          Connexion
+          {title}
         </Heading>
         <Box>
           <Formik

@@ -7,6 +7,7 @@ import { REPORT_TYPE, reportTypes } from "../constants/report";
 import { _get } from "../common/httpClient";
 import Layout from "./layout/Layout";
 import { Breadcrumb } from "../common/components/Breadcrumb";
+import { setTitle } from "../common/utils/pageUtils";
 
 const REPORTS_URL = "/api/entity/reports";
 
@@ -92,6 +93,7 @@ const ReportPage = () => {
   });
 
   const reportTitle = getReportTitle(reportType);
+  setTitle(reportTitle);
 
   return (
     <Layout>

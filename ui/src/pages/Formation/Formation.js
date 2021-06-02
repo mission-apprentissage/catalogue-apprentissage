@@ -33,6 +33,7 @@ import InfoTooltip from "../../common/components/InfoTooltip";
 import helpText from "../../locales/helpText.json";
 import { ArrowRightLine, Edit2Fill, ExternalLinkLine, MapPin2Fill, Parametre } from "../../theme/components/icons/";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
+import { setTitle } from "../../common/utils/pageUtils";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 const endpointTCO =
@@ -734,6 +735,9 @@ export default ({ match }) => {
     }
   };
 
+  const title = `${pendingFormation?.intitule_long ?? formation?.intitule_long}`;
+  setTitle(title);
+
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
@@ -751,7 +755,7 @@ export default ({ match }) => {
                 }`,
                 to: "/recherche/formations-2021",
               },
-              { title: `${pendingFormation?.intitule_long ?? formation?.intitule_long}` },
+              { title: title },
             ]}
           />
         </Container>
@@ -769,8 +773,7 @@ export default ({ match }) => {
               <Box mb={8}>
                 <Flex alignItems="center" justify="space-between" flexDirection={["column", "column", "row"]}>
                   <Heading textStyle="h2" color="grey.800" pr={[0, 0, 8]}>
-                    {pendingFormation?.intitule_long ?? formation?.intitule_long}{" "}
-                    <InfoTooltip description={helpText.formation.intitule_long} />
+                    {title} <InfoTooltip description={helpText.formation.intitule_long} />
                   </Heading>
                   {hasRightToEdit && formation.etablissement_reference_catalogue_published && (
                     <Button
