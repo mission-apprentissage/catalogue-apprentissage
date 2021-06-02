@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import queryString from "query-string";
-import { Box, Text, Heading, Container, Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@chakra-ui/react";
+import { Box, Container, Heading, Text } from "@chakra-ui/react";
 import { Tabs } from "../common/components/report/Tabs";
 import { REPORT_TYPE, reportTypes } from "../constants/report";
 import { _get } from "../common/httpClient";
 import Layout from "./layout/Layout";
+import { Breadcrumb } from "../common/components/Breadcrumb";
+import { setTitle } from "../common/utils/pageUtils";
 
 const REPORTS_URL = "/api/entity/reports";
 
@@ -91,21 +93,13 @@ const ReportPage = () => {
   });
 
   const reportTitle = getReportTitle(reportType);
+  setTitle(reportTitle);
 
   return (
     <Layout>
       <Box bg="secondaryBackground" w="100%" pt={[4, 8]} px={[1, 24]}>
         <Container maxW="xl">
-          <Breadcrumb>
-            <BreadcrumbItem>
-              <BreadcrumbLink as={NavLink} to="/">
-                Accueil
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink>{reportTitle}</BreadcrumbLink>
-            </BreadcrumbItem>
-          </Breadcrumb>
+          <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: `${reportTitle}` }]} />
         </Container>
       </Box>
       <Box bg="grey.750">

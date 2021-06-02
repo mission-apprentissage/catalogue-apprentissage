@@ -1,22 +1,10 @@
-import React, { useMemo, useState, useCallback } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import Layout from "../layout/Layout";
-import {
-  Box,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  Button,
-  Container,
-  Heading,
-  Input,
-  ListItem,
-  Select,
-  Text,
-  UnorderedList,
-} from "@chakra-ui/react";
-import { NavLink } from "react-router-dom";
+import { Box, Button, Container, Heading, Input, ListItem, Select, Text, UnorderedList } from "@chakra-ui/react";
 import { useDropzone } from "react-dropzone";
 import { _postFile } from "../../common/httpClient";
+import { Breadcrumb } from "../../common/components/Breadcrumb";
+import { setTitle } from "../../common/utils/pageUtils";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -114,32 +102,27 @@ export default () => {
     }
   };
 
+  const title = "Formulaire d'upload de fichiers";
+  setTitle(title);
+
   return (
     <Layout>
-      <Box bg="secondaryBackground" w="100%" pt={[4, 8]} px={[1, 24]}>
+      <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]} color="grey.800">
         <Container maxW="xl">
-          <Breadcrumb>
-            <BreadcrumbItem>
-              <BreadcrumbLink as={NavLink} to="/">
-                Accueil
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink>Upload de fichiers</BreadcrumbLink>
-            </BreadcrumbItem>
-          </Breadcrumb>
+          <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: title }]} />
         </Container>
       </Box>
-      <Box bg="secondaryBackground" w="100%" minH="100vh" py={[1, 8]} px={[1, 24]}>
+      <Box w="100%" minH="100vh" px={[1, 1, 12, 24]}>
         <Container maxW="xl">
-          <Heading as="h1" mb={8} mt={2}>
-            Formulaire d'upload de fichiers
+          <Heading as="h1" mb={8} mt={6}>
+            {title}
           </Heading>
 
           <form onSubmit={onSubmit}>
             <Select
               value={filename}
               bg="white"
+              borderRadius="none"
               w="30%"
               mb={8}
               onChange={(e) => {
@@ -152,7 +135,7 @@ export default () => {
                 </option>
               ))}
             </Select>
-            <Box {...getRootProps({ style })} mb={5}>
+            <Box {...getRootProps({ style })} mb={8}>
               <Input {...getInputProps()} />
               {isDragActive ? (
                 <Text>Glissez et déposez ici ...</Text>
@@ -166,7 +149,7 @@ export default () => {
               )}
             </Box>
             {acceptedFiles.length > 0 && (
-              <Box mb={5}>
+              <Box mb={8}>
                 <Heading as="h4" fontSize="delta">
                   Fichier
                 </Heading>
@@ -181,7 +164,7 @@ export default () => {
             )}
             <Button
               type="submit"
-              colorScheme="blue"
+              variant="primary"
               isLoading={isSubmitting}
               loadingText="Envoi en cours"
               isDisabled={acceptedFiles.length === 0}

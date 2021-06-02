@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Center,
   Flex,
   FormControl,
   FormErrorMessage,
@@ -9,13 +8,13 @@ import {
   Heading,
   Modal,
   ModalBody,
-  ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
   Radio,
   RadioGroup,
   Stack,
+  Text,
   Textarea,
 } from "@chakra-ui/react";
 import { StatusBadge } from "../StatusBadge";
@@ -25,6 +24,8 @@ import { _put } from "../../httpClient";
 import useAuth from "../../hooks/useAuth";
 import { buildUpdatesHistory } from "../../utils/formationUtils";
 import * as Yup from "yup";
+import { Close } from "../../../theme/components/icons/Close";
+import { ArrowRightLine } from "../../../theme/components/icons";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -194,174 +195,212 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
   const isParcoursupPublishDisabled = ["hors périmètre"].includes(formation?.parcoursup_statut);
   const isAffelnetPublishDisabled = ["hors périmètre"].includes(formation?.affelnet_statut);
 
+  const initialRef = React.useRef();
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="5xl">
+    <Modal isOpen={isOpen} onClose={onClose} size="3xl" initialFocusRef={initialRef}>
       <ModalOverlay />
-      <ModalContent bg="white" color="primaryText">
-        <ModalCloseButton color="grey.600" _focus={{ boxShadow: "none", outlineWidth: 0 }} size="lg" />
-        <ModalHeader pt={[3, 20]} pb={[3, 8]} bg="#f5f8f9" borderRadius="5px 5px 0 0">
-          <Center>
-            <Heading as="h2" fontSize="alpha">
-              Gérer les publications
-            </Heading>
-          </Center>
+      <ModalContent bg="white" color="primaryText" borderRadius="none" ref={initialRef}>
+        <Button
+          display={"flex"}
+          alignSelf={"flex-end"}
+          color="bluefrance"
+          fontSize={"epsilon"}
+          onClick={onClose}
+          variant="unstyled"
+          p={8}
+          fontWeight={400}
+        >
+          fermer{" "}
+          <Text as={"span"} ml={2}>
+            <Close boxSize={4} />
+          </Text>
+        </Button>
+        <ModalHeader px={[4, 16]} pt={[3, 6]} pb={[3, 6]}>
+          <Heading as="h2" fontSize="2rem">
+            <Flex>
+              <Text as={"span"}>
+                <ArrowRightLine boxSize={26} />
+              </Text>
+              <Text as={"span"} ml={4}>
+                Gérer les publications
+              </Text>
+            </Flex>
+          </Heading>
         </ModalHeader>
         <ModalBody p={0}>
-          <Box px={[2, 16, 48]}>
-            <Flex px={4} pt={[12, 16]} flexDirection="column">
-              <Box mb={3}>
-                <StatusBadge source="Affelnet" status={formation?.affelnet_statut} />
-              </Box>
-              <FormControl display="flex" alignItems="center" w="auto" isDisabled={isAffelnetPublishDisabled}>
-                <FormLabel htmlFor="affelnet" mb={0} fontSize="delta" fontWeight={700}>
-                  Demander la publication Affelnet:
-                </FormLabel>
-                <RadioGroup defaultValue={values.affelnet} id="affelnet" name="affelnet">
-                  <Stack spacing={4} direction="row">
-                    <Radio
-                      mb={0}
-                      size="lg"
-                      value="true"
-                      isDisabled={isAffelnetPublishDisabled}
-                      onChange={(evt) => {
-                        setAffelnetFormOpen(true);
-                        setAffelnetUnpublishFormOpen(false);
-                        handleChange(evt);
-                      }}
-                    >
-                      Oui
-                    </Radio>
-                    <Radio
-                      mb={0}
-                      size="lg"
-                      value="false"
-                      isDisabled={isAffelnetPublishDisabled}
-                      onChange={(evt) => {
-                        setAffelnetFormOpen(false);
-                        setAffelnetUnpublishFormOpen(true);
-                        handleChange(evt);
-                      }}
-                    >
-                      Non
-                    </Radio>
-                  </Stack>
-                </RadioGroup>
-              </FormControl>
-              <FormControl display={isAffelnetFormOpen ? "flex" : "none"} alignItems="center" w="auto" mt={3}>
-                <FormLabel htmlFor="affelnet_infos_offre" mb={0} fontSize="delta" fontWeight={700}>
-                  Informations offre de formation (facultatif) :
-                </FormLabel>
-                <Textarea
-                  name="affelnet_infos_offre"
-                  value={values.affelnet_infos_offre}
-                  onChange={handleChange}
-                  placeholder="Précisez ici les informations complémentaires que vous souhaitez voir figurer sur la fiche de la formation sur Affelnet, ex : démarches sur obtention contrat apprentissage, modalités inscription, rythme alternance, date entrée formation..."
-                  rows={7}
-                />
-              </FormControl>
-              <FormControl
-                isRequired
-                isInvalid={errors.affelnet_raison_depublication}
-                display={isAffelnetUnpublishFormOpen ? "flex" : "none"}
-                alignItems="center"
-                w="auto"
-                mt={3}
-              >
-                <FormLabel htmlFor="affelnet_raison_depublication" mb={0} fontSize="delta" fontWeight={700}>
-                  Raison de non publication:
-                </FormLabel>
-                <Flex flexDirection="column" w="100%">
+          <Box px={[4, 16]} pb={[4, 16]}>
+            <Box border="1px solid" borderColor="bluefrance" p={8}>
+              <Heading as="h3" fontSize="1.5rem" mb={3}>
+                {formation.intitule_long}
+              </Heading>
+              <Flex flexDirection="column">
+                <Box mb={3}>
+                  <StatusBadge source="Affelnet" status={formation?.affelnet_statut} />
+                </Box>
+                <FormControl display="flex" flexDirection="column" w="auto" isDisabled={isAffelnetPublishDisabled}>
+                  <FormLabel htmlFor="affelnet" mb={3} fontSize="epsilon" fontWeight={400}>
+                    Demander la publication Affelnet:
+                  </FormLabel>
+                  <RadioGroup defaultValue={values.affelnet} id="affelnet" name="affelnet">
+                    <Stack spacing={2} direction="column">
+                      <Radio
+                        mb={0}
+                        size="lg"
+                        value="true"
+                        isDisabled={isAffelnetPublishDisabled}
+                        onChange={(evt) => {
+                          setAffelnetFormOpen(true);
+                          setAffelnetUnpublishFormOpen(false);
+                          handleChange(evt);
+                        }}
+                      >
+                        <Text as={"span"} fontSize="zeta">
+                          Oui
+                        </Text>
+                      </Radio>
+                      <Radio
+                        mb={0}
+                        size="lg"
+                        value="false"
+                        isDisabled={isAffelnetPublishDisabled}
+                        onChange={(evt) => {
+                          setAffelnetFormOpen(false);
+                          setAffelnetUnpublishFormOpen(true);
+                          handleChange(evt);
+                        }}
+                      >
+                        <Text as={"span"} fontSize="zeta">
+                          Non
+                        </Text>
+                      </Radio>
+                    </Stack>
+                  </RadioGroup>
+                </FormControl>
+                <FormControl display={isAffelnetFormOpen ? "flex" : "none"} flexDirection="column" w="auto" mt={6}>
+                  <FormLabel htmlFor="affelnet_infos_offre" mb={3} fontSize="epsilon" fontWeight={400}>
+                    Informations offre de formation (facultatif) :
+                  </FormLabel>
                   <Textarea
-                    name="affelnet_raison_depublication"
-                    value={values.affelnet_raison_depublication}
+                    name="affelnet_infos_offre"
+                    value={values.affelnet_infos_offre}
                     onChange={handleChange}
-                    placeholder="Précisez ici la raison pour laquelle vous ne souhaitez pas publier la formation sur Affelnet"
-                    rows={7}
+                    placeholder="Précisez ici les informations complémentaires que vous souhaitez voir figurer sur la fiche de la formation sur Affelnet, ex : démarches sur obtention contrat apprentissage, modalités inscription, rythme alternance, date entrée formation..."
+                    rows={2}
                   />
-                  <FormErrorMessage>{errors.affelnet_raison_depublication}</FormErrorMessage>
-                </Flex>
-              </FormControl>
-            </Flex>
-            <Flex px={4} pt={[12, 16]} pb={[12, 16]} flexDirection="column">
-              <Box mb={3}>
-                <StatusBadge source="Parcoursup" status={formation?.parcoursup_statut} />
-              </Box>
-              <FormControl display="flex" alignItems="center" w="auto" isDisabled={isParcoursupPublishDisabled}>
-                <FormLabel htmlFor="parcoursup" mb={0} fontSize="delta" fontWeight={700}>
-                  Demander la publication Parcoursup:
-                </FormLabel>
-                <RadioGroup defaultValue={values.parcoursup} id="parcoursup" name="parcoursup">
-                  <Stack spacing={4} direction="row">
-                    <Radio
-                      mb={0}
-                      size="lg"
-                      value="true"
-                      isDisabled={isParcoursupPublishDisabled}
-                      onChange={(evt) => {
-                        setParcousupUnpublishFormOpen(false);
-                        handleChange(evt);
-                      }}
-                    >
-                      Oui
-                    </Radio>
-                    <Radio
-                      mb={0}
-                      size="lg"
-                      value="false"
-                      isDisabled={isParcoursupPublishDisabled}
-                      onChange={(evt) => {
-                        setParcousupUnpublishFormOpen(true);
-                        handleChange(evt);
-                      }}
-                    >
-                      Non
-                    </Radio>
-                  </Stack>
-                </RadioGroup>
-              </FormControl>
-              <FormControl
-                isRequired
-                isInvalid={errors.parcoursup_raison_depublication}
-                display={isParcoursupUnpublishFormOpen ? "flex" : "none"}
-                alignItems="center"
-                w="auto"
-                mt={3}
-              >
-                <FormLabel htmlFor="parcoursup_raison_depublication" mb={0} fontSize="delta" fontWeight={700}>
-                  Raison de non publication:
-                </FormLabel>
-                <Flex flexDirection="column" w="100%">
-                  <Textarea
-                    name="parcoursup_raison_depublication"
-                    value={values.parcoursup_raison_depublication}
-                    onChange={handleChange}
-                    placeholder="Précisez ici la raison pour laquelle vous ne souhaitez pas publier la formation sur Parcoursup"
-                    rows={7}
-                  />
-                  <FormErrorMessage>{errors.parcoursup_raison_depublication}</FormErrorMessage>
-                </Flex>
-              </FormControl>
-            </Flex>
+                </FormControl>
+                <FormControl
+                  isRequired
+                  isInvalid={errors.affelnet_raison_depublication}
+                  display={isAffelnetUnpublishFormOpen ? "flex" : "none"}
+                  flexDirection="column"
+                  w="auto"
+                  mt={6}
+                >
+                  <FormLabel htmlFor="affelnet_raison_depublication" mb={3} fontSize="epsilon" fontWeight={400}>
+                    Raison de non publication:
+                  </FormLabel>
+                  <Flex flexDirection="column" w="100%">
+                    <Textarea
+                      name="affelnet_raison_depublication"
+                      value={values.affelnet_raison_depublication}
+                      onChange={handleChange}
+                      placeholder="Précisez ici la raison pour laquelle vous ne souhaitez pas publier la formation sur Affelnet"
+                      rows={2}
+                    />
+                    <FormErrorMessage>{errors.affelnet_raison_depublication}</FormErrorMessage>
+                  </Flex>
+                </FormControl>
+              </Flex>
+            </Box>
+            <Box border="1px solid" borderColor="bluefrance" p={8} mt={8}>
+              <Heading as="h3" fontSize="1.5rem" mb={3}>
+                {formation.intitule_long}
+              </Heading>
+              <Flex flexDirection="column">
+                <Box mb={3}>
+                  <StatusBadge source="Parcoursup" status={formation?.parcoursup_statut} />
+                </Box>
+                <FormControl display="flex" flexDirection="column" w="auto" isDisabled={isParcoursupPublishDisabled}>
+                  <FormLabel htmlFor="parcoursup" mb={3} fontSize="epsilon" fontWeight={400}>
+                    Demander la publication Parcoursup:
+                  </FormLabel>
+                  <RadioGroup defaultValue={values.parcoursup} id="parcoursup" name="parcoursup">
+                    <Stack spacing={2} direction="column">
+                      <Radio
+                        mb={0}
+                        size="lg"
+                        value="true"
+                        isDisabled={isParcoursupPublishDisabled}
+                        onChange={(evt) => {
+                          setParcousupUnpublishFormOpen(false);
+                          handleChange(evt);
+                        }}
+                      >
+                        <Text as={"span"} fontSize="zeta">
+                          Oui
+                        </Text>
+                      </Radio>
+                      <Radio
+                        mb={0}
+                        size="lg"
+                        value="false"
+                        isDisabled={isParcoursupPublishDisabled}
+                        onChange={(evt) => {
+                          setParcousupUnpublishFormOpen(true);
+                          handleChange(evt);
+                        }}
+                      >
+                        <Text as={"span"} fontSize="zeta">
+                          Non
+                        </Text>
+                      </Radio>
+                    </Stack>
+                  </RadioGroup>
+                </FormControl>
+                <FormControl
+                  isRequired
+                  isInvalid={errors.parcoursup_raison_depublication}
+                  display={isParcoursupUnpublishFormOpen ? "flex" : "none"}
+                  flexDirection="column"
+                  w="auto"
+                  mt={3}
+                >
+                  <FormLabel htmlFor="parcoursup_raison_depublication" mb={3} fontSize="epsilon" fontWeight={400}>
+                    Raison de non publication:
+                  </FormLabel>
+                  <Flex flexDirection="column" w="100%">
+                    <Textarea
+                      name="parcoursup_raison_depublication"
+                      value={values.parcoursup_raison_depublication}
+                      onChange={handleChange}
+                      placeholder="Précisez ici la raison pour laquelle vous ne souhaitez pas publier la formation sur Parcoursup"
+                      rows={2}
+                    />
+                    <FormErrorMessage>{errors.parcoursup_raison_depublication}</FormErrorMessage>
+                  </Flex>
+                </FormControl>
+              </Flex>
+            </Box>
           </Box>
-          <Box borderTop="1px solid" borderColor="grey.300" p={0}>
-            <Flex flexDirection={["column", "row"]} py={[3, 8]} px={3} justifyContent="center">
+          <Box boxShadow={"0 -4px 16px 0 rgba(0, 0, 0, 0.08)"}>
+            <Flex flexDirection={["column", "row"]} p={[3, 8]} justifyContent="flex-end">
               <Button
-                variant="outline"
-                colorScheme="blue"
+                variant="secondary"
                 onClick={() => {
                   setFieldValue("affelnet", getPublishRadioValue(formation?.affelnet_statut));
                   setFieldValue("parcoursup", getPublishRadioValue(formation?.parcoursup_statut));
                   onClose();
                 }}
-                mr={[0, 8]}
-                px={[8, 20]}
+                mr={[0, 4]}
+                px={8}
                 mb={[3, 0]}
               >
                 Annuler
               </Button>
               <Button
                 type="submit"
-                colorScheme="blue"
+                variant="primary"
                 onClick={handleSubmit}
                 isLoading={isSubmitting}
                 loadingText="Enregistrement des modifications"
