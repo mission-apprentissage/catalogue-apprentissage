@@ -20,6 +20,7 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
+import { setTitle } from "../../common/utils/pageUtils";
 
 const ACADEMIES = [
   "01",
@@ -240,17 +241,20 @@ export default () => {
     run();
   }, []);
 
+  const title = "Gestion des utilisateurs";
+  setTitle(title);
+
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]} color="grey.800">
         <Container maxW="xl">
-          <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: "Gestion des utilisateurs" }]} />
+          <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: title }]} />
         </Container>
       </Box>
       <Box w="100%" minH="100vh" px={[1, 1, 12, 24]}>
         <Container maxW="xl">
           <Heading as="h1" mb={8} mt={6}>
-            Gestion des utilisateurs
+            {title}
           </Heading>
           <Stack spacing={2}>
             <Accordion bg="white" mb={12} allowToggle>

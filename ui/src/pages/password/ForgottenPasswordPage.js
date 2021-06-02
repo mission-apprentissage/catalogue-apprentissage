@@ -4,6 +4,7 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import * as Yup from "yup";
 import { _post } from "../../common/httpClient";
+import { setTitle } from "../../common/utils/pageUtils";
 
 const ForgottenPasswordPage = () => {
   const history = useHistory();
@@ -19,11 +20,14 @@ const ForgottenPasswordPage = () => {
     }
   };
 
+  const title = "Mot de passe oublié";
+  setTitle(title);
+
   return (
     <Center height="100vh" verticalAlign="center">
       <Box width={["auto", "28rem"]}>
         <Heading fontFamily="Marianne" fontWeight="700" marginBottom="2w">
-          Mot de passe oublié
+          {title}
         </Heading>
         <Formik
           initialValues={{

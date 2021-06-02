@@ -32,6 +32,7 @@ import helpText from "../../locales/helpText.json";
 import { ArrowRightLine, Edit2Fill, ExternalLinkLine } from "../../theme/components/icons/";
 import { HowToFixModal } from "../../common/components/organisme/HowToFixModal";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
+import { setTitle } from "../../common/utils/pageUtils";
 
 const sleep = (m) => new Promise((r) => setTimeout(r, m));
 
@@ -402,6 +403,9 @@ export default ({ match }) => {
     setEdition(!edition);
   };
 
+  const title = `${etablissement?.entreprise_raison_sociale}`;
+  setTitle(title);
+
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
@@ -410,7 +414,7 @@ export default ({ match }) => {
             pages={[
               { title: "Accueil", to: "/" },
               { title: "Liste des organismes", to: "/recherche/etablissements" },
-              { title: `${etablissement?.entreprise_raison_sociale}` },
+              { title: title },
             ]}
           />
         </Container>
@@ -426,8 +430,7 @@ export default ({ match }) => {
             {etablissement && (
               <>
                 <Heading textStyle="h2" color="grey.800" mt={6}>
-                  {etablissement.entreprise_raison_sociale}{" "}
-                  <InfoTooltip description={helpText.etablissement.raison_sociale} />
+                  {title} <InfoTooltip description={helpText.etablissement.raison_sociale} />
                 </Heading>
                 <Box mb={2}>
                   {etablissement.tags &&

@@ -4,6 +4,7 @@ import { Box, Button, Container, Heading, Input, ListItem, Select, Text, Unorder
 import { useDropzone } from "react-dropzone";
 import { _postFile } from "../../common/httpClient";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
+import { setTitle } from "../../common/utils/pageUtils";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -101,17 +102,20 @@ export default () => {
     }
   };
 
+  const title = "Formulaire d'upload de fichiers";
+  setTitle(title);
+
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]} color="grey.800">
         <Container maxW="xl">
-          <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: "Upload de fichiers" }]} />
+          <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: title }]} />
         </Container>
       </Box>
       <Box w="100%" minH="100vh" px={[1, 1, 12, 24]}>
         <Container maxW="xl">
           <Heading as="h1" mb={8} mt={6}>
-            Formulaire d'upload de fichiers
+            {title}
           </Heading>
 
           <form onSubmit={onSubmit}>

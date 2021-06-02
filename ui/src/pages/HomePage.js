@@ -25,6 +25,7 @@ import changelog from "../CHANGELOG";
 import { _get } from "../common/httpClient";
 import { ArrowRightLine, ExternalLinkLine } from "../theme/components/icons";
 import { Breadcrumb } from "../common/components/Breadcrumb";
+import { setTitle } from "../common/utils/pageUtils";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 const endpointTCO =
@@ -64,6 +65,9 @@ export default () => {
     };
   }, []);
 
+  const title = "Accueil";
+  setTitle(title);
+
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]} color="#1E1E1E">
@@ -84,7 +88,7 @@ export default () => {
           {/*    </Text>*/}
           {/*  </Flex>*/}
           {/*</Box>*/}
-          <Breadcrumb pages={[{ title: "Accueil" }]} />
+          <Breadcrumb pages={[{ title: title }]} />
         </Container>
       </Box>
       <Box w="100%" py={[4, 8]} px={[1, 1, 12, 24]} color="#1E1E1E">
