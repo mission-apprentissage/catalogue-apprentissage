@@ -76,6 +76,8 @@ export default ({ data }) => {
   const onValidatePsReconciliation = useMutation(
     () =>
       _post("/api/parcoursup/reconciliation", {
+        id_formation: data._id,
+        id_parcoursup: data.id_parcoursup,
         uai_affilie: data.uai_affilie,
         uai_gestionnaire: data.uai_gestionnaire,
         uai_composante: data.uai_composante,
@@ -92,12 +94,12 @@ export default ({ data }) => {
     }
   );
 
-  const onValidatePsFormation = useMutation(() =>
-    _post("/api/parcoursup", {
-      id: data._id,
-      etat_reconciliation: true,
-    })
-  );
+  // const onValidatePsFormation = useMutation(() =>
+  //   _post("/api/parcoursup", {
+  //     id: data._id,
+  //     etat_reconciliation: true,
+  //   })
+  // );
 
   const onSuccessModal = useMutation(
     (payload) =>
@@ -144,7 +146,7 @@ export default ({ data }) => {
                   variant="solid"
                   onClick={() => {
                     onValidatePsReconciliation.mutate();
-                    onValidatePsFormation.mutate();
+                    // onValidatePsFormation.mutate();
                     toast({
                       description: "Enregistré avec succès !",
                       status: "success",

@@ -225,6 +225,11 @@ const mnaFormationSchema = {
     default: null,
     description: "Erreur lors du contrôle de référencement sur ParcourSup de la formation",
   },
+  parcoursup_ids: {
+    type: [String],
+    default: [],
+    description: "ids ParcourSup",
+  },
   affelnet_reference: {
     type: Boolean,
     default: false,

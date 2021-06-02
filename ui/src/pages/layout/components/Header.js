@@ -86,7 +86,7 @@ const Header = () => {
                     </MenuGroup>
                     <MenuDivider />
                     <MenuGroup title="Réconciliation">
-                      <MenuItem as={NavLink} to="/couverture-parcoursup" icon={<FontAwesomeIcon icon={faSync} />}>
+                      <MenuItem as={NavLink} to="/couverture-ps" icon={<FontAwesomeIcon icon={faSync} />}>
                         Réconciliation Parcoursup
                       </MenuItem>
                       <MenuItem as={NavLink} to="/couverture-affelnet" icon={<FontAwesomeIcon icon={faSync} />}>
