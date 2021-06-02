@@ -13,7 +13,7 @@ const changelog = {
     },
     {
       version: "4.0.0",
-      date: "Le 03 Juin 2021",
+      date: "Le 02 Juin 2021",
       about: `<h4>À propos de cette version</h4>
       Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: [],
