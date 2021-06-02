@@ -5,6 +5,7 @@ import {
   Button,
   Center,
   Container,
+  Flex,
   Grid,
   GridItem,
   Heading,
@@ -33,6 +34,7 @@ import { ArrowRightLine, Edit2Fill, ExternalLinkLine } from "../../theme/compone
 import { HowToFixModal } from "../../common/components/organisme/HowToFixModal";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
+import { StatusBadge } from "../../common/components/StatusBadge";
 
 const sleep = (m) => new Promise((r) => setTimeout(r, m));
 
@@ -283,42 +285,25 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
             </Box>
 
             {!etablissement.siege_social && (
-              <Box>
-                <Heading textStyle="h4" color="grey.800">
+              <Box px={8} pt={8}>
+                <Text textStyle="rf-text" color="grey.700" fontWeight="700" mb={3}>
                   Siège social
-                </Heading>
-                <Box>
+                </Text>
+                <Link as={NavLink} to={`/etablissement/${etablissement.etablissement_siege_id}`} variant="card">
                   {etablissement.entreprise_raison_sociale && (
                     <Text mb={4}>
-                      Raison sociale :{" "}
-                      <Text as="span" variant="highlight">
-                        {" "}
-                        {etablissement.entreprise_raison_sociale}{" "}
-                      </Text>{" "}
+                      Raison sociale : <Text as="span"> {etablissement.entreprise_raison_sociale} </Text>{" "}
                     </Text>
                   )}
                   {etablissement.etablissement_siege_siret && (
                     <Text mb={4}>
-                      Siret :{" "}
-                      <Text as="span" variant="highlight">
-                        {" "}
-                        {etablissement.etablissement_siege_siret}{" "}
-                      </Text>{" "}
+                      Siret : <Text as="span"> {etablissement.etablissement_siege_siret} </Text>{" "}
                     </Text>
                   )}
-                  <Box mt={3}>
-                    <Link
-                      as={NavLink}
-                      to={`/etablissement/${etablissement.etablissement_siege_id}`}
-                      textDecoration="underline"
-                      color="bluefrance"
-                      textStyle="rf-text"
-                      isExternal
-                    >
-                      Voir le siége social <ArrowRightLine w="9px" h="9px" />
-                    </Link>
-                  </Box>
-                </Box>
+                  <Flex justifyContent="flex-end">
+                    <ArrowRightLine alignSelf="center" color="bluefrance" boxSize={4} />
+                  </Flex>
+                </Link>
               </Box>
             )}
           </Box>
