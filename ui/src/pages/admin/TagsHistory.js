@@ -6,6 +6,7 @@ import { academies } from "../../constants/academies";
 import { useQueries } from "react-query";
 import StatCard from "../../common/components/StatCard";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
+import { setTitle } from "../../common/utils/pageUtils";
 
 const statuses = {
   affelnet: [
@@ -85,19 +86,21 @@ export default () => {
   );
 
   const academieList = Object.values(academies).sort(({ nom_academie: a }, { nom_academie: b }) => (a > b ? 1 : -1));
+
+  const title = "Historique des statuts Affelnet/Parcoursup";
+  setTitle(title);
+
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]} color="grey.800">
         <Container maxW="xl">
-          <Breadcrumb
-            pages={[{ title: "Accueil", to: "/" }, { title: "Historique des statuts Affelnet/Parcoursup" }]}
-          />
+          <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: title }]} />
         </Container>
       </Box>
       <Box w="100%" minH="100vh" px={[1, 1, 12, 24]}>
         <Container maxW="xl">
           <Heading as="h1" mb={8} mt={6}>
-            Historique des statuts Affelnet/Parcoursup
+            {title}
           </Heading>
 
           <Select
