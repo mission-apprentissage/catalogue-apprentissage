@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Container, Heading, Link, Text } from "@chakra-ui/react";
+import { Box, Container, Heading, Link, ListItem, Text, UnorderedList } from "@chakra-ui/react";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import Layout from "../layout/Layout";
 import { setTitle } from "../../common/utils/pageUtils";
@@ -54,7 +54,9 @@ export default () => {
                 >
                   RGAA v3 <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
                 </Link>
-                . La déclaration de conformité sera publiée ultérieurement.
+                .
+                <br />
+                La déclaration de conformité sera publiée ultérieurement.
               </Text>
             </Box>
             <Box mt={4}>
@@ -87,6 +89,44 @@ export default () => {
                   https://www.numerique.gouv.fr/publications/rgaa-accessibilite/{" "}
                   <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
                 </Link>
+              </Text>
+            </Box>
+            <Box mt={4}>
+              <Heading as={"h3"} textStyle="h3" mb={2}>
+                Voie de recours
+              </Heading>
+              <Text>
+                Cette procédure est à utiliser dans le cas suivant : vous avez signalé au responsable du site internet
+                un défaut d’accessibilité qui vous empêche d’accéder à un contenu ou à un des services du portail et
+                vous n’avez pas obtenu de réponse satisfaisante.
+                <br />
+                <br />
+                Vous pouvez :
+                <UnorderedList stylePosition="inside">
+                  <ListItem>
+                    Écrire un message au{" "}
+                    <Link href={"https://formulaire.defenseurdesdroits.fr/"} textDecoration={"underline"} isExternal>
+                      Défenseur des droits <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
+                    </Link>
+                  </ListItem>
+                  <ListItem>
+                    Contacter le délégué du{" "}
+                    <Link
+                      href={"https://www.defenseurdesdroits.fr/saisir/delegues"}
+                      textDecoration={"underline"}
+                      isExternal
+                    >
+                      Défenseur des droits dans votre région{" "}
+                      <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
+                    </Link>
+                  </ListItem>
+                  <ListItem>
+                    Envoyer un courrier par la poste (gratuit, ne pas mettre de timbre) :<br />
+                    Défenseur des droits
+                    <br />
+                    Libre réponse 71120 75342 Paris CEDEX 07
+                  </ListItem>
+                </UnorderedList>
               </Text>
             </Box>
           </Box>
