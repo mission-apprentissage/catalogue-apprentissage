@@ -4,6 +4,8 @@ import { Box, Flex, Text, Stack, Checkbox } from "@chakra-ui/react";
 import { Star, SortingArrows } from "../../../theme/components/icons";
 import { InfoBadge } from "../InfoBadge";
 
+// TODO FIXEME !important css rules
+
 const buildColumns = (key) => {
   switch (key) {
     case "indice":

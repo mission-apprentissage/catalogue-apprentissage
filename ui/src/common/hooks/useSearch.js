@@ -5,7 +5,8 @@ const FORMATIONS_ES_INDEX = "convertedformation";
 const ETABLISSEMENTS_ES_INDEX = "etablissements";
 const RECONCILIATION_PS_ES_INDEX = "psformations2021";
 
-const CATALOGUE_API_ENDPOINT = "http://localhost/api"; // process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue-recette.apprentissage.beta.gouv.fr/api";
+const CATALOGUE_API_ENDPOINT =
+  process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue-recette.apprentissage.beta.gouv.fr/api"; // "http://localhost/api";
 const TCO_API_ENDPOINT =
   process.env.REACT_APP_ENDPOINT_TCO || "https://tables-correspondances.apprentissage.beta.gouv.fr/api";
 

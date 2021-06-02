@@ -8,6 +8,8 @@ import { Table } from "./Table";
 import { ValidateIcon, RejectIcon } from "../../../theme/components/icons";
 import { Validate } from "./Validate";
 
+// TODO FIXEME !important css rules
+
 const Section = ({ left, right, withBorder, minH }) => {
   return (
     <HStack spacing="8" px={[4, 16]} minH={minH ?? "60px"} alignItems="stretch">

@@ -18,7 +18,9 @@ import { ArrowRightLine } from "../../../theme/components/icons";
 import { Compare } from "./Compare";
 import { _get } from "../../../common/httpClient";
 
-const endpointNewFront = "http://localhost/api"; // `${process.env.REACT_APP_BASE_URL}/api`;
+// TODO FIXEME !important css rules
+
+const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`; // "http://localhost/api";
 
 const ReconciliationPsModal = React.memo(({ isOpen, onClose: onCloseProp, data, onFormationUpdate }) => {
   const [formation, setFormation] = useState();
