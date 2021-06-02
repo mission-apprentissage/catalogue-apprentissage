@@ -15,14 +15,14 @@ runScript(async () => {
       formation.parcoursup_statut_history = formation.parcoursup_statut_history.map((x) => {
         return {
           ...x,
-          date: new Date(x.date),
+          date: new Date(new Date(x.date)),
         };
       });
 
       formation.affelnet_statut_history = formation.affelnet_statut_history.map((x) => {
         return {
           ...x,
-          date: new Date(x.date),
+          date: new Date(new Date(x.date)),
         };
       });
 
