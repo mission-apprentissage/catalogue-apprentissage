@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import { Box, Container, Heading } from "@chakra-ui/react";
 
 import Layout from "../layout/Layout";
+import { setTitle } from "../../common/utils/pageUtils";
 
 export default () => {
   const METABASE_SITE_URL = `${process.env.REACT_APP_BASE_URL}/metabase`;
@@ -17,12 +18,15 @@ export default () => {
   const token = jwt.sign(payload, METABASE_SECRET_KEY);
   const iframeURL = METABASE_SITE_URL + "/embed/dashboard/" + token + "#bordered=true&titled=true";
 
+  const title = "Tableau de bord";
+  setTitle(title);
+
   return (
     <Layout>
       <Box bg="secondaryBackground" w="100%" py={[1, 8]} px={[1, 24]}>
         <Container maxW="xl">
           <Heading as="h1" mb={8} mt={2}>
-            Tableau de bord
+            {title}
           </Heading>
           {iframeURL && (
             <iframe

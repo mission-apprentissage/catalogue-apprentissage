@@ -8,6 +8,7 @@ import * as Yup from "yup";
 import useAuth from "../../common/hooks/useAuth";
 import { _post } from "../../common/httpClient";
 import decodeJWT from "../../common/utils/decodeJWT";
+import { setTitle } from "../../common/utils/pageUtils";
 
 const ResetPasswordPage = () => {
   const [, setAuth] = useAuth();
@@ -36,11 +37,14 @@ const ResetPasswordPage = () => {
     }
   };
 
+  const title = `Changement du mot de passe pour l'utilisateur ${username}`;
+  setTitle(title);
+
   return (
     <Center height="100vh" verticalAlign="center">
       <Box width={["auto", "28rem"]}>
         <Heading fontFamily="Marianne" fontWeight="700" marginBottom="2w">
-          Changement du mot de passe pour l'utilisateur {username}
+          {title}
         </Heading>
         <Formik
           initialValues={{
