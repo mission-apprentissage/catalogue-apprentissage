@@ -25,12 +25,14 @@ export const CardListFormation = ({ data }) => {
         <Text textStyle="sm">Académie : {data.nom_academie}</Text>
         <Box>
           <Flex justifyContent="space-between">
-            {hasOneOfRoles(auth, ["admin", "instructeur"]) && data.etablissement_reference_catalogue_published && (
-              <Flex mt={3} flexWrap={"wrap"}>
-                <StatusBadge source="Parcoursup" status={data.parcoursup_statut} mr={[0, 2]} />
-                <StatusBadge source="Affelnet" status={data.affelnet_statut} mt={[2, 0]} />
-              </Flex>
-            )}
+            <Flex mt={3} flexWrap={"wrap"}>
+              {hasOneOfRoles(auth, ["admin", "instructeur"]) && data.etablissement_reference_catalogue_published && (
+                <>
+                  <StatusBadge source="Parcoursup" status={data.parcoursup_statut} mr={[0, 2]} />
+                  <StatusBadge source="Affelnet" status={data.affelnet_statut} mt={[2, 0]} />
+                </>
+              )}
+            </Flex>
             <ArrowRightLine alignSelf="center" color="bluefrance" boxSize={4} />
           </Flex>
         </Box>
