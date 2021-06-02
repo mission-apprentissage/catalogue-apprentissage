@@ -56,7 +56,11 @@ const Footer = () => {
               <ListItem>
                 <Link href={`${process.env.PUBLIC_URL}/sitemap.xml`}>Plan du site</Link>
               </ListItem>
-              <ListItem>Accessibilité : Non conforme</ListItem>
+              <ListItem>
+                <Link as={NavLink} to={"/accessibilite"}>
+                  Accessibilité : Non conforme
+                </Link>
+              </ListItem>
               <ListItem>
                 <Link as={NavLink} to={"/mentions-legales"}>
                   Mentions légales
