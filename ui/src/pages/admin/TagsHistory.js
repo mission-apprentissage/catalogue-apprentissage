@@ -1,22 +1,12 @@
 import React, { useState } from "react";
 import { _get } from "../../common/httpClient";
 import Layout from "../layout/Layout";
-import {
-  Box,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  Container,
-  Grid,
-  GridItem,
-  Heading,
-  Select,
-  Spinner,
-} from "@chakra-ui/react";
-import { NavLink } from "react-router-dom";
+import { Box, Container, Grid, GridItem, Heading, Select, Spinner } from "@chakra-ui/react";
 import { academies } from "../../constants/academies";
 import { useQueries } from "react-query";
 import StatCard from "../../common/components/StatCard";
+import { Breadcrumb } from "../../common/components/Breadcrumb";
+import { setTitle } from "../../common/utils/pageUtils";
 
 const statuses = {
   affelnet: [
@@ -96,31 +86,27 @@ export default () => {
   );
 
   const academieList = Object.values(academies).sort(({ nom_academie: a }, { nom_academie: b }) => (a > b ? 1 : -1));
+
+  const title = "Historique des statuts Affelnet/Parcoursup";
+  setTitle(title);
+
   return (
     <Layout>
-      <Box bg="secondaryBackground" w="100%" pt={[4, 8]} px={[1, 24]}>
+      <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]} color="grey.800">
         <Container maxW="xl">
-          <Breadcrumb>
-            <BreadcrumbItem>
-              <BreadcrumbLink as={NavLink} to="/">
-                Accueil
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink>Historique des statuts Affelnet/Parcoursup</BreadcrumbLink>
-            </BreadcrumbItem>
-          </Breadcrumb>
+          <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: title }]} />
         </Container>
       </Box>
-      <Box bg="secondaryBackground" w="100%" minH="100vh" py={[1, 8]} px={[1, 24]}>
+      <Box w="100%" minH="100vh" px={[1, 1, 12, 24]}>
         <Container maxW="xl">
-          <Heading as="h1" mb={8} mt={2}>
-            Historique des statuts Affelnet/Parcoursup
+          <Heading as="h1" mb={8} mt={6}>
+            {title}
           </Heading>
 
           <Select
             value={academie}
             bg="white"
+            borderRadius={0}
             w="30%"
             mb={8}
             onChange={(e) => {

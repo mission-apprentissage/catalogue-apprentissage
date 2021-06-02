@@ -18,11 +18,9 @@ import {
   HStack,
   Input,
   Stack,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
 } from "@chakra-ui/react";
-import { NavLink } from "react-router-dom";
+import { Breadcrumb } from "../../common/components/Breadcrumb";
+import { setTitle } from "../../common/utils/pageUtils";
 
 const ACADEMIES = [
   "01",
@@ -62,7 +60,7 @@ const UserLine = ({ user }) => {
     initialValues: {
       accessAllCheckbox: user?.isAdmin ? ["on"] : [],
       roles: user?.roles || ["user"],
-      accessAcademieList: user ? user.academie.split(",") : "",
+      accessAcademieList: user ? user.academie.split(",") : ["-1"],
       newUsername: user?.username || "",
       newEmail: user?.email || "",
       newTmpPassword: "1MotDePassTemporaire!",
@@ -216,16 +214,16 @@ const UserLine = ({ user }) => {
 
       {user && (
         <Box>
-          <Button type="submit" colorScheme="blue" mr={5}>
+          <Button type="submit" variant="primary" mr={5}>
             Enregistrer
           </Button>
-          <Button variant="outline" colorScheme="red" onClick={onDeleteClicked}>
+          <Button variant="outline" colorScheme="red" borderRadius="none" onClick={onDeleteClicked}>
             Supprimer l'utilisateur
           </Button>
         </Box>
       )}
       {!user && (
-        <Button type="submit" colorScheme="blue">
+        <Button type="submit" variant="primary">
           Créer l'utilisateur
         </Button>
       )}
@@ -243,37 +241,31 @@ export default () => {
     run();
   }, []);
 
+  const title = "Gestion des utilisateurs";
+  setTitle(title);
+
   return (
     <Layout>
-      <Box bg="secondaryBackground" w="100%" pt={[4, 8]} px={[1, 24]}>
+      <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]} color="grey.800">
         <Container maxW="xl">
-          <Breadcrumb>
-            <BreadcrumbItem>
-              <BreadcrumbLink as={NavLink} to="/">
-                Accueil
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink>Gestion des utilisateurs</BreadcrumbLink>
-            </BreadcrumbItem>
-          </Breadcrumb>
+          <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: title }]} />
         </Container>
       </Box>
-      <Box bg="secondaryBackground" w="100%" minH="100vh" py={[1, 8]} px={[1, 24]}>
+      <Box w="100%" minH="100vh" px={[1, 1, 12, 24]}>
         <Container maxW="xl">
-          <Heading as="h1" mb={8} mt={2}>
-            Gestion des utilisateurs
+          <Heading as="h1" mb={8} mt={6}>
+            {title}
           </Heading>
           <Stack spacing={2}>
             <Accordion bg="white" mb={12} allowToggle>
               <AccordionItem>
-                <AccordionButton bg="blue.500" color="white" _hover={{ bg: "blue.300", color: "white" }}>
+                <AccordionButton bg="bluefrance" color="white" _hover={{ bg: "blue.700" }}>
                   <Box flex="1" textAlign="left" fontSize="gamma">
                     Créer un utilisateur
                   </Box>
                   <AccordionIcon />
                 </AccordionButton>
-                <AccordionPanel pb={4}>
+                <AccordionPanel pb={4} border={"1px solid"} borderTop={0} borderColor={"bluefrance"}>
                   <UserLine user={null} />
                 </AccordionPanel>
               </AccordionItem>
@@ -283,13 +275,13 @@ export default () => {
               return (
                 <Accordion bg="white" key={i} allowToggle>
                   <AccordionItem>
-                    <AccordionButton _expanded={{ bg: "blue.100" }}>
+                    <AccordionButton _expanded={{ bg: "grey.200" }} border={"1px solid"} borderColor={"bluefrance"}>
                       <Box flex="1" textAlign="left" fontSize="gamma">
                         {userAttr.username}
                       </Box>
                       <AccordionIcon />
                     </AccordionButton>
-                    <AccordionPanel pb={4}>
+                    <AccordionPanel pb={4} border={"1px solid"} borderTop={0} borderColor={"bluefrance"}>
                       <UserLine user={userAttr} />
                     </AccordionPanel>
                   </AccordionItem>

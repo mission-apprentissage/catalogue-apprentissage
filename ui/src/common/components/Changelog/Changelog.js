@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
-
 import ChangelogList from "./components/ChangelogList";
 import ChangelogFilter from "./components/ChangelogFilter";
-
 import "@fortawesome/fontawesome-free/css/all.css";
 import "./changelog.css";
 
-const Changelog = ({ content, order, showVersion, hideFilter }) => {
+const Changelog = ({ content, order, showVersion, hideFilter, nbVersion, embedded = false }) => {
   const [list, setList] = useState([]);
   const [versions, setVersions] = useState([]);
   const [filter, setFilter] = useState({
@@ -15,7 +13,9 @@ const Changelog = ({ content, order, showVersion, hideFilter }) => {
     feature: false,
   });
   useEffect(() => {
-    const mList = showVersion === "last2" ? content.list.slice(0, 2) : content.list;
+    const mList = showVersion
+      ? content.list.filter((item) => item.version === showVersion)
+      : content.list.slice(0, nbVersion);
     const mversions = mList.map(({ version }) => {
       return {
         version,
@@ -28,7 +28,7 @@ const Changelog = ({ content, order, showVersion, hideFilter }) => {
     } else {
       setList(mList);
     }
-  }, [content.list, order, showVersion]);
+  }, [content.list, nbVersion, order, showVersion]);
 
   const onChange = (e) => {
     const mfilter = { ...filter };
@@ -41,7 +41,7 @@ const Changelog = ({ content, order, showVersion, hideFilter }) => {
         <div>
           <div className="changelog-wrapper">
             {!hideFilter && <ChangelogFilter versions={versions} onChange={onChange} />}
-            <ChangelogList list={list} filter={filter} />
+            <ChangelogList list={list} filter={filter} embedded={embedded} />
           </div>
         </div>
       </div>

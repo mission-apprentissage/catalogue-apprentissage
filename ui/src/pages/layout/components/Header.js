@@ -3,23 +3,26 @@ import { NavLink, useHistory } from "react-router-dom";
 import {
   Avatar,
   Box,
+  Button,
   Container,
   Flex,
-  Image,
+  Heading,
   Link,
   Menu,
   MenuButton,
-  MenuItem,
-  MenuList,
   MenuDivider,
   MenuGroup,
+  MenuItem,
+  MenuList,
   Text,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSignOutAlt, faSync, faUsers, faUpload } from "@fortawesome/free-solid-svg-icons";
+import { faSignOutAlt, faSync, faUpload, faUsers } from "@fortawesome/free-solid-svg-icons";
 import useAuth from "../../../common/hooks/useAuth";
 import { isUserAdmin } from "../../../common/utils/rolesUtils";
 import { _get } from "../../../common/httpClient";
+import { LockFill } from "../../../theme/components/icons/LockFill";
+import { Logo } from "./Logo";
 
 const Header = () => {
   let [auth, setAuth] = useAuth();
@@ -33,34 +36,39 @@ const Header = () => {
   };
 
   return (
-    <Box borderBottom="1px solid" borderColor="grey.300">
-      <Container maxW="xl">
-        <Flex justifyContent="space-between">
+    <Container maxW={"full"} borderBottom={"1px solid"} borderColor={"grey.400"} px={[0, 4]}>
+      <Container maxW="xl" py={[0, 2]} px={[0, 4]}>
+        <Flex alignItems="center" color="grey.800">
           {/* Logo */}
-          <Link as={NavLink} to="/" py={3}>
-            <Image src="/brand/marianne.png" height={"5rem"} alt="Logo de la République Française" />
+          <Link as={NavLink} to="/" p={[4, 0]}>
+            <Logo />
           </Link>
 
+          <Box p={[1, 6]} flex="1">
+            <Heading as="h6" textStyle="h6">
+              Catalogue des offres de formations en apprentissage
+            </Heading>
+          </Box>
           {/* User Menu */}
-
           {auth?.sub === "anonymous" && (
-            <Box alignSelf="center">
-              <Link as={NavLink} to="/login">
+            <Box>
+              <Link as={NavLink} to="/login" variant="pill">
+                <LockFill boxSize={3} mb={1} mr={2} />
                 Connexion
               </Link>
             </Box>
           )}
           {auth?.sub !== "anonymous" && (
             <Menu placement="bottom">
-              <MenuButton as={Link} alignSelf="center" _hover={{ textDecoration: "none" }}>
-                <Flex alignItems="center">
-                  <Avatar bg="blue.400" size="sm" />
+              <MenuButton as={Button} variant="pill">
+                <Flex>
+                  <Avatar bg="bluefrance" size="sm" w="13px" h="13px" mt="0.4rem" />
                   <Box display={["none", "block"]} ml={2}>
-                    <Text color="grey.700" fontSize="epsilon">
-                      {auth.sub}
-                    </Text>
-                    <Text fontSize="omega" color="grey.500">
-                      {isUserAdmin(auth) ? "Administrateur" : "Utilisateur"}
+                    <Text color="bluefrance" textStyle="sm">
+                      {auth.sub}{" "}
+                      <Text color="grey.600" as="span">
+                        ({isUserAdmin(auth) ? "admin" : "Utilisateur"})
+                      </Text>
                     </Text>
                   </Box>
                 </Flex>
@@ -96,7 +104,7 @@ const Header = () => {
           )}
         </Flex>
       </Container>
-    </Box>
+    </Container>
   );
 };
 

@@ -140,3 +140,6 @@ dist
 build
 sdk/lib
 .npmrc
+
+# Local History for Visual Studio Code
+.history/
