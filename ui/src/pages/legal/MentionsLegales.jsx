@@ -22,7 +22,7 @@ export default () => {
             <Box>
               <Text>Dernière mise à jour le : 02/06/2021</Text>
               <Box mt={4}>
-                <Heading as={"h3"} textStyle="h3" mb={2}>
+                <Heading as={"h3"} textStyle="h6" mb={2}>
                   Éditeur du site
                 </Heading>
                 <Text>
@@ -36,13 +36,13 @@ export default () => {
                 </Text>
               </Box>
               <Box mt={4}>
-                <Heading as={"h3"} textStyle="h3" mb={2}>
+                <Heading as={"h3"} textStyle="h6" mb={2}>
                   Directeur de la publication
                 </Heading>
                 <Text>Monsieur Jean Bassères, Directeur Général.</Text>
               </Box>
               <Box mt={4}>
-                <Heading as={"h3"} textStyle="h3" mb={2}>
+                <Heading as={"h3"} textStyle="h6" mb={2}>
                   Hébergement du site
                 </Heading>
                 <Text>
@@ -56,7 +56,7 @@ export default () => {
                 </Text>
               </Box>
               <Box mt={4}>
-                <Heading as={"h3"} textStyle="h3" mb={2}>
+                <Heading as={"h3"} textStyle="h6" mb={2}>
                   Amélioration et contact
                 </Heading>
                 <Text>
@@ -82,7 +82,7 @@ export default () => {
                 </Text>
               </Box>
               <Box mt={4}>
-                <Heading as={"h3"} textStyle="h3" mb={2}>
+                <Heading as={"h3"} textStyle="h6" mb={2}>
                   Sécurité
                 </Heading>
                 <Text>
