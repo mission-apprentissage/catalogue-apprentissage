@@ -23,5 +23,6 @@ export default (
     <Route exact path="/cookies" />
     <Route exact path="/donnees-personnelles" />
     <Route exact path="/mentions-legales" />
+    <Route exact path="/accessibilite" />
   </Route>
 );

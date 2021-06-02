@@ -27,6 +27,7 @@ const Contact = lazy(() => import("./pages/legal/Contact"));
 const Cookies = lazy(() => import("./pages/legal/Cookies"));
 const DonneesPersonnelles = lazy(() => import("./pages/legal/DonneesPersonnelles"));
 const MentionsLegales = lazy(() => import("./pages/legal/MentionsLegales"));
+const Accessibilite = lazy(() => import("./pages/legal/Accessibilite"));
 
 function PrivateRoute({ children, ...rest }) {
   let [auth] = useAuth();
@@ -120,6 +121,7 @@ export default () => {
                 <Route exact path="/cookies" component={Cookies} />
                 <Route exact path="/donnees-personnelles" component={DonneesPersonnelles} />
                 <Route exact path="/mentions-legales" component={MentionsLegales} />
+                <Route exact path="/accessibilite" component={Accessibilite} />
 
                 {auth && auth.permissions.isAdmin && (
                   <PrivateRoute exact path="/tags-history">
