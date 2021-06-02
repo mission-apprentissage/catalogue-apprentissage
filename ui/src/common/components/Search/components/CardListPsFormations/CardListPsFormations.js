@@ -26,15 +26,17 @@ export const CardListPsFormations = ({ data, onCardClicked }) => {
             <Box display={["block", "none"]}>
               <small>Code diplôme: {data.codes_cfd_mna.join(",")}</small>
             </Box>
-            {data.matching_mna_formation.length === 1 && (
-              <Box mt={5}>
-                {data.matching_mna_formation[0].intitule_court}
+            {data.matching_mna_formation.map((mnaF, i) => (
+              <Box mt={5} key={i}>
+                {mnaF.intitule_court}
                 <DoubleArrows width="12px" height="14px" color="grey.800" mx={5} />
-                <StatusBadge
-                  source="Parcoursup"
-                  status={data.matching_mna_formation[0].parcoursup_statut}
-                  mr={[0, 2]}
-                />
+                <StatusBadge source="Parcoursup" status={mnaF.parcoursup_statut} mr={[0, 2]} />
+              </Box>
+            ))}
+            {data.matching_mna_formation.length === 0 && (
+              <Box mt={5}>
+                <DoubleArrows width="12px" height="14px" color="grey.800" mx={5} />
+                N.A
               </Box>
             )}
           </div>
