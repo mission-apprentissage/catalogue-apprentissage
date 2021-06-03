@@ -2,54 +2,32 @@ const { formation: formatFormation, etablissement: formatEtablissement } = requi
 const { ConvertedFormation, Etablissement } = require("../../common/model");
 const mongoose = require("mongoose");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
-const { cfd, uai } = require("./queries");
+const { psRules } = require("./queries");
 
 const getMatch = async (query) => ConvertedFormation.find(query, formatFormation).lean();
 
 async function getParcoursupCoverage(formation, { published, tags } = {}) {
   let params = { published, tags };
 
-  let match = [];
+  let match = null;
 
-  for (let i = 0; i < cfd.length; i++) {
-    let { query, strength } = cfd[i];
+  for (let i = 0; i < psRules.length; i++) {
+    let { query, strength } = psRules[i];
 
     let result = await getMatch({ ...query(formation), ...params });
 
-    // console.log({ type: "CFD", query: query(formation), result: result.length });
+    // console.log({ type: "PsRules", query: query(formation), result: result.length });
 
     if (result.length > 0) {
-      match.push({
+      match = {
         matching_strength: strength,
         data_length: result.length,
         data: result,
-      });
+      };
 
       break;
     }
   }
-
-  if (match.length === 0) {
-    for (let i = 0; i < uai.length; i++) {
-      let { query, strength } = uai[i];
-
-      let result = await getMatch({ ...query(formation), ...params });
-
-      // console.log({ type: "UAI", query: query(formation), result: result.length });
-
-      if (result.length > 0) {
-        match.push({
-          matching_strength: strength,
-          data_length: result.length,
-          data: result,
-        });
-
-        break;
-      }
-    }
-  }
-
-  if (match.length === 0) return null;
 
   return match;
 }

@@ -1,22 +1,43 @@
 import React from "react";
 import { SingleList } from "@appbaseio/reactivesearch";
 
-const HardFilters = React.memo(({ filters, context, isBaseFormations }) => {
+const HardFilters = React.memo(({ filters, context, isBaseFormations, isBaseReconciliationPs }) => {
+  const [statutReconciliation, setStatutReconciliation] = React.useState("AUTOMATIQUE");
+  React.useEffect(() => {
+    switch (context) {
+      case "reconciliation_ps_forts":
+        setStatutReconciliation("AUTOMATIQUE");
+        break;
+      case "reconciliation_ps_faibles":
+        setStatutReconciliation("A_VERIFIER");
+        break;
+      case "reconciliation_ps_inconnus":
+        setStatutReconciliation("INCONNU");
+        break;
+      case "reconciliation_ps_valides":
+        setStatutReconciliation("VALIDE");
+        break;
+      default:
+        break;
+    }
+  }, [context]);
   return (
     <>
-      <SingleList
-        componentId="published"
-        dataField="published"
-        react={{ and: filters }}
-        value={"true"}
-        defaultValue={"true"}
-        showFilter={false}
-        showSearch={false}
-        showCount={false}
-        render={() => {
-          return <div />;
-        }}
-      />
+      {!isBaseReconciliationPs && (
+        <SingleList
+          componentId="published"
+          dataField="published"
+          react={{ and: filters }}
+          value={"true"}
+          defaultValue={"true"}
+          showFilter={false}
+          showSearch={false}
+          showCount={false}
+          render={() => {
+            return <div />;
+          }}
+        />
+      )}
       {isBaseFormations && (
         <SingleList
           componentId="catalogue_published"
@@ -48,6 +69,46 @@ const HardFilters = React.memo(({ filters, context, isBaseFormations }) => {
           showFilter={false}
           showSearch={false}
           showCount={true}
+          render={() => {
+            return <div />;
+          }}
+        />
+      )}
+      {isBaseReconciliationPs && statutReconciliation !== "INCONNU" && (
+        <SingleList
+          componentId="statut_reconciliation"
+          dataField="statut_reconciliation.keyword"
+          react={{ and: filters }}
+          value={statutReconciliation}
+          defaultValue={statutReconciliation}
+          showFilter={false}
+          showSearch={false}
+          showCount={false}
+          render={() => {
+            return <div />;
+          }}
+        />
+      )}
+      {isBaseReconciliationPs && statutReconciliation === "INCONNU" && (
+        <SingleList
+          componentId="statut_reconciliation"
+          dataField="statut_reconciliation.keyword"
+          react={{ and: filters }}
+          showFilter={false}
+          showSearch={false}
+          showCount={false}
+          customQuery={(data) => {
+            return {
+              query: {
+                bool: {
+                  should: [
+                    { match: { statut_reconciliation: "INCONNU" } },
+                    { match: { statut_reconciliation: "REJETE" } },
+                  ],
+                },
+              },
+            };
+          }}
           render={() => {
             return <div />;
           }}

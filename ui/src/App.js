@@ -28,6 +28,7 @@ const Cookies = lazy(() => import("./pages/legal/Cookies"));
 const DonneesPersonnelles = lazy(() => import("./pages/legal/DonneesPersonnelles"));
 const MentionsLegales = lazy(() => import("./pages/legal/MentionsLegales"));
 const Accessibilite = lazy(() => import("./pages/legal/Accessibilite"));
+const ReconciliationPs = lazy(() => import("./pages/admin/ReconciliationPs"));
 
 function PrivateRoute({ children, ...rest }) {
   let [auth] = useAuth();
@@ -115,6 +116,7 @@ export default () => {
                 <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
                 <Route exact path="/report" component={ReportPage} />
                 <Route exact path="/couverture-parcoursup" component={ReconciliationParcoursup} />
+                <Route exact path="/couverture-ps" component={ReconciliationPs} />
                 <Route exact path="/couverture-affelnet" component={ReconciliationAffelnet} />
                 <Route exact path="/changelog" component={Journal} />
                 <Route exact path="/contact" component={Contact} />
