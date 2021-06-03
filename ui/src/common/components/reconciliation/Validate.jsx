@@ -16,6 +16,7 @@ import React, { useState } from "react";
 import { useFormik } from "formik";
 import useAuth from "../../hooks/useAuth";
 import { buildUpdatesHistory } from "../../utils/formationUtils";
+import * as Yup from "yup";
 import { ValidateIcon, DoubleArrows, ErrorIcon } from "../../../theme/components/icons";
 import { _post, _put } from "../../../common/httpClient";
 
@@ -29,6 +30,12 @@ const Validate = ({ formation, mnaFormation, onClose, onValidationSubmit }) => {
       parcoursup_keep_publish: undefined,
       parcoursup_raison_depublication: "",
     },
+    validationSchema: Yup.object().shape({
+      parcoursup_keep_publish: Yup.string().nullable(),
+      parcoursup_raison_depublication: showRaison
+        ? Yup.string().nullable().required("Veuillez saisir la raison")
+        : Yup.string().nullable(),
+    }),
     onSubmit: ({ parcoursup_keep_publish, parcoursup_raison_depublication }) => {
       return new Promise(async (resolve) => {
         const mapping = [];
@@ -65,10 +72,11 @@ const Validate = ({ formation, mnaFormation, onClose, onValidationSubmit }) => {
               "non publié",
               "à publier (vérifier accès direct postbac)",
               "à publier (soumis à validation Recteur)",
+              "en attente de publication",
               "à publier",
             ].includes(formation?.parcoursup_statut)
           ) {
-            body.parcoursup_statut = "en attente de publication";
+            body.parcoursup_statut = "publié";
             shouldRestorePsReconciliation = formation.parcoursup_statut === "non publié";
             body.parcoursup_raison_depublication = null;
           }
@@ -249,6 +257,7 @@ const Validate = ({ formation, mnaFormation, onClose, onValidationSubmit }) => {
                         size="lg"
                         value="true"
                         onChange={(evt) => {
+                          setShowRaison(false);
                           setCanSubmit(true);
                           handleChange(evt);
                         }}
