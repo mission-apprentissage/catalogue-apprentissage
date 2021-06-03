@@ -225,6 +225,7 @@ export default React.memo(({ match, location, searchState, context, onReconcilia
                           onCardClicked={() => {
                             onReconciliationCardClicked(data);
                           }}
+                          context={context}
                         />
                       ) : (
                         <CardListEtablissements data={data} key={data._id} />

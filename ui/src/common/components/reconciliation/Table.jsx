@@ -58,7 +58,7 @@ const buildColumns = (key) => {
       };
     case "matched_uai":
       return {
-        Header: "Informations similaires",
+        Header: "Infos issues collecte Carif",
         accessor: key,
         width: 300,
       };

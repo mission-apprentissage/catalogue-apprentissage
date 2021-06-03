@@ -11,16 +11,25 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react";
-import React from "react";
+import * as Yup from "yup";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import { _post } from "../../../common/httpClient";
 
 const Rejected = ({ formation, onClose, onSubmitReject }) => {
+  const [canSubmit, setCanSubmit] = useState(false);
+  const [showRaison, setShowRaison] = useState(false);
   const { values, handleChange, handleSubmit, isSubmitting, resetForm, errors } = useFormik({
     initialValues: {
       parcoursup_raison_rejet: "",
       parcoursup_raison_rejet_complement: "",
     },
+    validationSchema: Yup.object().shape({
+      parcoursup_raison_rejet: Yup.string().nullable(),
+      parcoursup_raison_rejet_complement: showRaison
+        ? Yup.string().nullable().required("Veuillez saisir la raison")
+        : Yup.string().nullable(),
+    }),
     onSubmit: ({ parcoursup_raison_rejet, parcoursup_raison_rejet_complement }) => {
       return new Promise(async (resolve) => {
         await _post("/api/parcoursup/reconciliation", {
@@ -54,6 +63,8 @@ const Rejected = ({ formation, onClose, onSubmitReject }) => {
                     size="lg"
                     value="lieu de le formation"
                     onChange={(evt) => {
+                      setShowRaison(false);
+                      setCanSubmit(true);
                       handleChange(evt);
                     }}
                   >
@@ -66,6 +77,8 @@ const Rejected = ({ formation, onClose, onSubmitReject }) => {
                     size="lg"
                     value="Libellé Psup"
                     onChange={(evt) => {
+                      setShowRaison(false);
+                      setCanSubmit(true);
                       handleChange(evt);
                     }}
                   >
@@ -73,24 +86,47 @@ const Rejected = ({ formation, onClose, onSubmitReject }) => {
                       Libellé Psup ne correspond pas au Code diplome
                     </Text>
                   </Radio>
+                  <Radio
+                    mb={0}
+                    size="lg"
+                    value="Autres"
+                    onChange={(evt) => {
+                      setShowRaison(true);
+                      setCanSubmit(true);
+                      handleChange(evt);
+                    }}
+                  >
+                    <Text as={"span"} fontSize="zeta">
+                      Autres - informations complémentaires
+                    </Text>
+                  </Radio>
                 </Stack>
               </RadioGroup>
             </FormControl>
-            <FormControl isInvalid={errors.parcoursup_raison_rejet_complement} flexDirection="column" w="auto" mt={8}>
-              <FormLabel htmlFor="parcoursup_raison_rejet_complement" mb={3} fontSize="epsilon" fontWeight={400}>
-                Informations complémentaires (facultatif)
-              </FormLabel>
-              <Flex flexDirection="column" w="100%">
-                <Textarea
-                  name="parcoursup_raison_rejet_complement"
-                  value={values.parcoursup_raison_rejet_complement}
-                  onChange={handleChange}
-                  placeholder="Précisez ici la raison pour laquelle vous souhaitez rejeter ce rapprochement..."
-                  rows={2}
-                />
-                <FormErrorMessage>{errors.parcoursup_raison_rejet_complement}</FormErrorMessage>
-              </Flex>
-            </FormControl>
+            {showRaison && (
+              <FormControl
+                isInvalid={errors.parcoursup_raison_rejet_complement}
+                flexDirection="column"
+                w="auto"
+                mt={8}
+                isRequired={showRaison}
+              >
+                <FormLabel htmlFor="parcoursup_raison_rejet_complement" mb={3} fontSize="epsilon" fontWeight={400}>
+                  Informations complémentaires
+                </FormLabel>
+                <Flex flexDirection="column" w="100%">
+                  <Textarea
+                    name="parcoursup_raison_rejet_complement"
+                    value={values.parcoursup_raison_rejet_complement}
+                    onChange={handleChange}
+                    placeholder="Précisez ici la raison pour laquelle vous souhaitez rejeter ce rapprochement..."
+                    rows={2}
+                    isRequired
+                  />
+                  <FormErrorMessage>{errors.parcoursup_raison_rejet_complement}</FormErrorMessage>
+                </Flex>
+              </FormControl>
+            )}
           </Flex>
         </Box>
       </Flex>
@@ -108,7 +144,14 @@ const Rejected = ({ formation, onClose, onSubmitReject }) => {
           >
             Annuler
           </Button>
-          <Button type="submit" variant="primary" onClick={handleSubmit} isLoading={isSubmitting} loadingText="...">
+          <Button
+            type="submit"
+            variant="primary"
+            onClick={handleSubmit}
+            isLoading={isSubmitting}
+            loadingText="..."
+            isDisabled={!canSubmit}
+          >
             Envoyer
           </Button>
         </Flex>

@@ -203,6 +203,18 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
       />
       <Section
         withBorder
+        left={<div />}
+        right={
+          <Box mb={4} mt={4}>
+            Période: <InfoTooltip description={"tooltip"} />
+            <Text as="span" variant="highlight">
+              {mnaFormation.periode}
+            </Text>
+          </Box>
+        }
+      />
+      <Section
+        withBorder
         left={
           <Box mb={4} mt={4}>
             Libellé formation : <InfoTooltip description={"tooltip"} />
