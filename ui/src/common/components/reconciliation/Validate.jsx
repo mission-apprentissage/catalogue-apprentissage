@@ -72,10 +72,11 @@ const Validate = ({ formation, mnaFormation, onClose, onValidationSubmit }) => {
               "non publié",
               "à publier (vérifier accès direct postbac)",
               "à publier (soumis à validation Recteur)",
+              "en attente de publication",
               "à publier",
             ].includes(formation?.parcoursup_statut)
           ) {
-            body.parcoursup_statut = "en attente de publication";
+            body.parcoursup_statut = "publié";
             shouldRestorePsReconciliation = formation.parcoursup_statut === "non publié";
             body.parcoursup_raison_depublication = null;
           }
