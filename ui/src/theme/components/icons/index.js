@@ -19,3 +19,7 @@ export * from "./ValidateIcon";
 export * from "./RejectIcon";
 export * from "./DoubleArrows";
 export * from "./ErrorIcon";
+export * from "./EmojiSmile";
+export * from "./EmojiFlat";
+export * from "./Question";
+export * from "./Tick";
