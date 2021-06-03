@@ -9,7 +9,7 @@ export const CardListPsFormations = ({ data, onCardClicked }) => {
     <Link variant="card" mt={4} onClick={onCardClicked}>
       <Flex display={["none", "flex"]} textStyle="xs" justifyContent="space-between">
         <Text>{data.etablissement_gestionnaire_entreprise_raison_sociale}</Text>
-        <Text>Code diplôme : {data.codes_cfd_mna}</Text>
+        <Text>Code diplôme : {data.codes_cfd_mna.join(",")}</Text>
       </Flex>
       <Heading textStyle="h6" color="grey.800" mt={2}>
         {data.libelle_formation} - {data.libelle_specialite}

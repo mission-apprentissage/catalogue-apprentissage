@@ -1,5 +1,6 @@
 import { Box, Button, Flex, Heading, Text, useDisclosure, Stack, HStack } from "@chakra-ui/react";
 import { InfoBadge } from "../InfoBadge";
+import { StatusBadge } from "../StatusBadge";
 import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import InfoTooltip from "../InfoTooltip";
@@ -163,7 +164,9 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
         right={
           <>
             <Heading as="h3" fontSize="1.2rem" mb={5}>
-              Informations Catalogue 2021
+              <Flex justifyContent="space-between">
+                Informations Catalogue 2021 <StatusBadge source="Parcoursup" status={mnaFormation.parcoursup_statut} />
+              </Flex>
             </Heading>
             {slidesCount > 1 && (
               <>
