@@ -1,5 +1,4 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
 import { StatusBadge } from "../../../StatusBadge";
 import { Box, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { ArrowRightLine, DoubleArrows } from "../../../../../theme/components/icons";
@@ -7,7 +6,7 @@ import { InfoBadge } from "../../../InfoBadge";
 
 export const CardListPsFormations = ({ data, onCardClicked }) => {
   return (
-    <Link as={NavLink} to={`/formation/${data._id}`} variant="card" mt={4} isExternal onClick={onCardClicked}>
+    <Link variant="card" mt={4} onClick={onCardClicked}>
       <Flex display={["none", "flex"]} textStyle="xs" justifyContent="space-between">
         <Text>{data.etablissement_gestionnaire_entreprise_raison_sociale}</Text>
         <Text>Code diplôme : {data.codes_cfd_mna}</Text>

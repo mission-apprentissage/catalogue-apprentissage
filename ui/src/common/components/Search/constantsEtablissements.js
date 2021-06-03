@@ -276,7 +276,7 @@ const columnsDefinition = [
 const queryBuilderField = [
   { text: "Raison sociale", value: "entreprise_raison_sociale.keyword" },
   { text: "Siret", value: "siret.keyword" },
-  { text: "Type d'établissement", value: "computed_type.keyword" },
+  { text: "Type d'organisme", value: "computed_type.keyword" },
   { text: "Conventionné", value: "computed_conventionne.keyword" },
   { text: "Déclaré en prefecture", value: "computed_declare_prefecture.keyword" },
   { text: "Référencé datadock", value: "computed_info_datadock.keyword" },
