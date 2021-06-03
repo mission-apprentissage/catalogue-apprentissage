@@ -407,7 +407,7 @@ const queryBuilderField = [
   { text: "Raison sociale", value: "etablissement_gestionnaire_entreprise_raison_sociale.keyword" },
   { text: "Siret formateur", value: "etablissement_formateur_siret.keyword" },
   { text: "Siret gestionnaire", value: "etablissement_gestionnaire_siret.keyword" },
-  { text: "Type d'établissement", value: "etablissement_reference_type.keyword" },
+  { text: "Type d'organisme", value: "etablissement_reference_type.keyword" },
   { text: "Conventionné", value: "etablissement_reference_conventionne.keyword" },
   { text: "Déclaré en prefecture", value: "etablissement_reference_declare_prefecture.keyword" },
   { text: "Référencé datadock", value: "etablissement_reference_datadock.keyword" },
