@@ -38,31 +38,6 @@ const Validate = ({ formation, mnaFormation, onClose, onValidationSubmit }) => {
     }),
     onSubmit: ({ parcoursup_keep_publish, parcoursup_raison_depublication }) => {
       return new Promise(async (resolve) => {
-        const mapping = [];
-
-        mapping.push({
-          id: mnaFormation.etablissement_formateur_id,
-          siret: mnaFormation.etablissement_formateur_siret,
-          type: "formateur",
-        });
-        mapping.push({
-          id: mnaFormation.etablissement_gestionnaire_id,
-          siret: mnaFormation.etablissement_gestionnaire_siret,
-          type: "gestionnaire",
-        });
-
-        await _post("/api/parcoursup/reconciliation", {
-          id_formation: formation._id,
-          id_parcoursup: formation.id_parcoursup,
-          uai_affilie: formation.uai_affilie,
-          uai_gestionnaire: formation.uai_gestionnaire,
-          uai_composante: formation.uai_composante,
-          code_cfd: mnaFormation.cfd,
-          mnaFormationId: mnaFormation._id,
-          mapping,
-          reject: false,
-        });
-
         const body = {};
         let shouldRemovePsReconciliation = false;
         let shouldRestorePsReconciliation = false;
@@ -124,6 +99,31 @@ const Validate = ({ formation, mnaFormation, onClose, onValidationSubmit }) => {
             }
           }
         }
+
+        const mapping = [];
+
+        mapping.push({
+          id: mnaFormation.etablissement_formateur_id,
+          siret: mnaFormation.etablissement_formateur_siret,
+          type: "formateur",
+        });
+        mapping.push({
+          id: mnaFormation.etablissement_gestionnaire_id,
+          siret: mnaFormation.etablissement_gestionnaire_siret,
+          type: "gestionnaire",
+        });
+
+        await _post("/api/parcoursup/reconciliation", {
+          id_formation: formation._id,
+          id_parcoursup: formation.id_parcoursup,
+          uai_affilie: formation.uai_affilie,
+          uai_gestionnaire: formation.uai_gestionnaire,
+          uai_composante: formation.uai_composante,
+          code_cfd: mnaFormation.cfd,
+          mnaFormationId: mnaFormation._id,
+          mapping,
+          reject: false,
+        });
 
         onValidationSubmit();
         resolve("onSubmitHandler publish complete");
