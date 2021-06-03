@@ -79,10 +79,10 @@ function QueryBuilder({
   );
 }
 
-export default ({ react, fields, collection, lang = "en", context }) => {
+export default ({ react, fields, collection, lang = "en" }) => {
   return (
     <ReactiveComponent
-      componentId={`QUERYBUILDER-${context}`}
+      componentId={`QUERYBUILDER`}
       react={react}
       URLParams={true}
       value={"qb"}

@@ -78,7 +78,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
             {mode === "simple" && (
               <Box className={`search-container search-container-${mode}`}>
                 <DataSearch
-                  componentId={`SEARCH-${context}`}
+                  componentId={`SEARCH`}
                   placeholder={dataSearch.placeholder}
                   fieldWeights={dataSearch.fieldWeights}
                   dataField={dataSearch.dataField}
@@ -86,8 +86,9 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                   queryFormat="and"
                   size={20}
                   showFilter={true}
+                  URLParams={true}
                   filterLabel="recherche"
-                  react={{ and: filters.filter((e) => e !== `SEARCH-${context}`) }}
+                  react={{ and: filters.filter((e) => e !== `SEARCH`) }}
                 />
               </Box>
             )}
@@ -101,16 +102,15 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                 color="bluefrance"
                 onChange={handleSearchSwitchChange}
                 defaultIsChecked={mode !== "simple"}
-                id={`search-mode-${context}`}
+                id={`search-mode`}
               />
-              <FormLabel display="inline" htmlFor={`search-mode-${context}`} textStyle="sm" px={2}>
+              <FormLabel display="inline" htmlFor={`search-mode`} textStyle="sm" px={2}>
                 Recherche avancée
               </FormLabel>
             </Box>
             {mode !== "simple" && (
               <Box mb={4}>
                 <QueryBuilder
-                  context={context}
                   lang="fr"
                   collection={base}
                   react={{ and: filters.filter((e) => e !== "QUERYBUILDER") }}
