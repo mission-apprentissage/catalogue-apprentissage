@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 import Layout from "../layout/Layout";
 import { NavLink } from "react-router-dom";
-import { ArrowDropRightLine } from "../../theme/components/icons";
+import { ArrowDropRightLine, EmojiSmile, EmojiFlat, Question, Tick } from "../../theme/components/icons";
 import Search from "../../common/components/Search/Search";
 import { useSearch } from "../../common/hooks/useSearch";
 import { ReconciliationPsModal } from "../../common/components/reconciliation/ReconciliationPsModal";
@@ -70,18 +70,23 @@ export default (props) => {
           )}
           {searchState.loaded && (
             <>
-              <Tabs variant="search" mt={5}>
+              <Tabs variant="search" mt={5} isLazy>
                 <TabList bg="white" justifyContent="space-between" px={[2, 8, 32, 40, 80]}>
                   <Flex>
                     <Tab>
+                      <EmojiSmile color="grey.700" mr="1" />
                       {searchState.countReconciliationPs.countAutomatique.toLocaleString("fr-FR")} rapprochements forts
                     </Tab>
                     <Tab mx={2}>
-                      {" "}
+                      <EmojiFlat color="grey.700" mr="1" />
                       {searchState.countReconciliationPs.countAVerifier.toLocaleString("fr-FR")} rapprochements faibles
                     </Tab>
-                    <Tab mx={2}> {searchState.countReconciliationPs.countInconnu.toLocaleString("fr-FR")} inconnus</Tab>
                     <Tab mx={2}>
+                      <Question color="grey.700" mr="1" />
+                      {searchState.countReconciliationPs.countInconnu.toLocaleString("fr-FR")} inconnus
+                    </Tab>
+                    <Tab mx={2}>
+                      <Tick color="grey.700" mr="1" />
                       {(
                         (searchState.countReconciliationPs.countValide * 100) /
                         searchState.countReconciliationPs.countTotal
