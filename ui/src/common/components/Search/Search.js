@@ -17,8 +17,9 @@ import constantsEtablissements from "./constantsEtablissements";
 import constantsReconciliationPS from "./constantsReconciliationPS";
 import "./search.css";
 import queryString from "query-string";
+import { useHistory } from "react-router-dom";
 
-export default React.memo(({ match, location, searchState, context, onReconciliationCardClicked }) => {
+export default React.memo(({ location, searchState, context, onReconciliationCardClicked }) => {
   const { defaultMode } = queryString.parse(location.search);
   const [mode, setMode] = useState(defaultMode ?? "simple");
   const isCatalogueGeneral = context === "catalogue_general";
@@ -33,6 +34,7 @@ export default React.memo(({ match, location, searchState, context, onReconcilia
   } = searchState;
 
   let [auth] = useAuth();
+  const history = useHistory();
 
   const { FILTERS, facetDefinition, queryBuilderField, dataSearch, columnsDefinition } = isBaseFormations
     ? constantsRcoFormations
@@ -43,7 +45,15 @@ export default React.memo(({ match, location, searchState, context, onReconcilia
   const filters = FILTERS(context);
 
   const handleSearchSwitchChange = () => {
-    setMode((prevValue) => (prevValue === "simple" ? "advanced" : "simple"));
+    setMode((prevValue) => {
+      const newValue = prevValue === "simple" ? "advanced" : "simple";
+
+      let s = new URLSearchParams(location.search);
+      s.set("defaultMode", newValue);
+      history.push(`?${s}`);
+
+      return newValue;
+    });
   };
 
   return (
