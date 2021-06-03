@@ -1,13 +1,26 @@
 import { escapeDiacritics } from "../../utils/downloadUtils";
 
-const FILTERS = (context) => [
-  `QUERYBUILDER-${context}`,
-  `SEARCH-${context}`,
-  `nom_academie-${context}`,
-  "statut_reconciliation",
-  `rncp-${context}`,
-  `cfd-${context}`,
-];
+const FILTERS = (context) => {
+  if (context === "reconciliation_ps_inconnus") {
+    return [
+      `QUERYBUILDER-${context}`,
+      `SEARCH-${context}`,
+      `nom_academie-${context}`,
+      "statut_reconciliation",
+      `rncp-${context}`,
+      `cfd-${context}`,
+      `reject-${context}`,
+    ];
+  }
+  return [
+    `QUERYBUILDER-${context}`,
+    `SEARCH-${context}`,
+    `nom_academie-${context}`,
+    "statut_reconciliation",
+    `rncp-${context}`,
+    `cfd-${context}`,
+  ];
+};
 
 const columnsDefinition = [
   {

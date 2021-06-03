@@ -19,6 +19,8 @@ const Facet = ({
   sortBy,
   helpTextSection,
   defaultQuery,
+  transformData,
+  customQuery,
 }) => {
   let [auth] = useAuth();
   let defaultValue = null;
@@ -62,7 +64,6 @@ const Facet = ({
                 dataField={dataField}
                 filterLabel={filterLabel}
                 react={{ and: filters.filter((e) => e !== componentId) }}
-                // showMissing={userAcm.all !== "false"}
                 defaultValue={defaultValue}
                 showCount={true}
                 queryFormat="or"
@@ -80,6 +81,8 @@ const Facet = ({
                 URLParams={false}
                 loader="Chargement"
                 defaultQuery={defaultQuery}
+                transformData={transformData}
+                customQuery={customQuery}
                 sortBy={sortBy}
                 renderItem={(label, count) => (
                   <Flex justifyContent="space-between" w="full">

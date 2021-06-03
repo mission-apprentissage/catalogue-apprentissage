@@ -147,6 +147,52 @@ export default React.memo(({ match, location, searchState, context, onReconcilia
                       />
                     );
                   })}
+                {isBaseReconciliationPs && context === "reconciliation_ps_inconnus" && (
+                  <Facet
+                    componentId={`reject-${context}`}
+                    dataField="statut_reconciliation.keyword"
+                    title="Statut rapprochement"
+                    filterLabel="Statut rapprochement"
+                    selectAllLabel={"Tous"}
+                    filters={filters.filter((e) => e !== "statut_reconciliation")}
+                    sortBy="asc"
+                    defaultQuery={() => {
+                      return {
+                        query: {
+                          bool: {
+                            should: [
+                              { match: { statut_reconciliation: "INCONNU" } },
+                              { match: { statut_reconciliation: "REJETE" } },
+                            ],
+                          },
+                        },
+                      };
+                    }}
+                    transformData={(data) => {
+                      return data.map((d) => ({
+                        ...d,
+                        key: d.key === "INCONNU" ? "Inconnus" : "Rejetés",
+                      }));
+                    }}
+                    customQuery={(data) => {
+                      return !data || data.length === 0 || data.length === 2
+                        ? {}
+                        : {
+                            query: {
+                              bool: {
+                                must: [
+                                  {
+                                    match: {
+                                      statut_reconciliation: data.includes("Rejetés") ? "REJETE" : "INCONNU",
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          };
+                    }}
+                  />
+                )}
               </Box>
               <div className="search-results">
                 <Box pt={2}>
@@ -179,6 +225,7 @@ export default React.memo(({ match, location, searchState, context, onReconcilia
                           onCardClicked={() => {
                             onReconciliationCardClicked(data);
                           }}
+                          context={context}
                         />
                       ) : (
                         <CardListEtablissements data={data} key={data._id} />
