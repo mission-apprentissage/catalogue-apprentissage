@@ -2,15 +2,12 @@ const { runScript } = require("./scriptWrapper");
 const logger = require("../common/logger");
 const rcoImporter = require("./rcoImporter");
 const rcoConverter = require("./rcoConverter");
-// const trainingsUpdater = require("./trainingsUpdater");
 const psReference = require("./reference/parcoursup");
 const afReference = require("./reference/affelnet");
 const psPertinence = require("./pertinence/parcoursup");
 const afPertinence = require("./pertinence/affelnet");
 const afCoverage = require("./affelnet/coverage");
-const psCoverage = require("./parcoursup/2021/coverage");
 const afReconciliation = require("./affelnet/reconciliation");
-const psReconciliation = require("./parcoursup/2021/reconciliation");
 
 const clean = require("./clean");
 const { rebuildEsIndex } = require("./esIndex/esIndex");
@@ -37,15 +34,18 @@ runScript(async ({ catalogue, db }) => {
     await rcoImporter();
     await rcoConverter();
 
-    // await trainingsUpdater(); // ~ 3 heures 40 minutes => ~ 59 minutes
+    // ~ 3 heures 40 minutes => ~ 59 minutes
     const trainingsUpdater = spawn("node", ["./src/jobs/trainingsUpdater/index.js"]);
     for await (const data of trainingsUpdater.stdout) {
       console.log(`trainingsUpdater: ${data}`);
     }
 
     // parcoursup
-    await psCoverage();
-    await psReconciliation();
+    const psCoverage = spawn("node", ["./src/jobs/parcoursup/2021/coverage.js"]);
+    for await (const data of psCoverage.stdout) {
+      console.log(`psCoverage: ${data}`);
+    }
+
     await psReference(); // ~ 34 minutes => ~ 30 secondes
     await psPertinence(); // ~ 8 secondes
 
