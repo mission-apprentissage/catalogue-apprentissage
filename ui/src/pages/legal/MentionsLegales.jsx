@@ -90,8 +90,8 @@ export default () => {
                   Le site est protégé par un certificat électronique, matérialisé pour la grande majorité des
                   navigateurs par un cadenas. Cette protection participe à la confidentialité des échanges.
                   <br />
-                  En aucun cas les services associés à au site ne seront à l’origine d’envoi de courriels pour demander
-                  la saisie d’informations personnelles.
+                  En aucun cas les services associés au site ne seront à l’origine d’envoi de courriels pour demander la
+                  saisie d’informations personnelles.
                 </Text>
               </Box>
             </Box>

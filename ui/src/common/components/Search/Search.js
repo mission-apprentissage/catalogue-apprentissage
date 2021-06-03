@@ -165,9 +165,7 @@ export default React.memo(({ match, location, searchState, context }) => {
                                 } formations `
                               : `${stats.numberOfResults.toLocaleString(
                                   "fr-FR"
-                                )} établissements affichées sur ${countEtablissement.toLocaleString(
-                                  "fr-FR"
-                                )} établissements`}
+                                )} organismes affichées sur ${countEtablissement.toLocaleString("fr-FR")} organismes`}
                           </span>
                           {auth?.sub !== "anonymous" && (
                             <ExportButton
