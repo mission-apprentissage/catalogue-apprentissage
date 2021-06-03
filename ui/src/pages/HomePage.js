@@ -159,7 +159,7 @@ export default () => {
                       mt={[5, 5, 5, 0]}
                     >
                       <Heading fontWeight="700" textStyle="h6">
-                        {countEstablishments.toLocaleString("fr-FR")} établissements
+                        {countEstablishments.toLocaleString("fr-FR")} organismes
                       </Heading>
                       <Flex>
                         <Text flex="1" textStyle="sm">

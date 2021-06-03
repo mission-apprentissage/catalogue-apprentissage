@@ -63,7 +63,7 @@ const HowToReglement = () => {
                 <>
                   <AccordionButton>
                     <Box flex="1" textAlign="left">
-                      1. Condition concernant l’établissement lui-même : la certification qualité
+                      1. Condition concernant l’organisme lui-même : la certification qualité
                     </Box>
                     {isExpanded ? (
                       <SubtractLine fontSize="12px" color="bluefrance" />
@@ -75,7 +75,7 @@ const HowToReglement = () => {
                     <UnorderedList>
                       <ListItem>
                         <Text as="span" fontWeight="bold" textDecoration="underline">
-                          Établissements précédemment sous convention régionale dits CFA historiques
+                          Organismes précédemment sous convention régionale dits CFA historiques
                         </Text>
                         <UnorderedList styleType="circle">
                           <ListItem>
@@ -92,16 +92,16 @@ const HowToReglement = () => {
                       </ListItem>
                       <ListItem>
                         <Text as="span" fontWeight="bold" textDecoration="underline">
-                          Établissements délivrant des formations en apprentissage hors ‘CFA historiques’
+                          Organismes délivrant des formations en apprentissage hors ‘CFA historiques’
                         </Text>
                         <br />
                         <br />
                         Deux situations peuvent se présenter :
                         <OrderedList>
                           <ListItem>
-                            les établissements sont déclarés en préfecture <strong>ET</strong> attestent de leur qualité
-                            au sens du décret du 30 juin 2015 émanant de l’organisme certificateur et référencé sur le
-                            site internet du CNEFOP.
+                            les organismes sont déclarés en préfecture <strong>ET</strong> attestent de leur qualité au
+                            sens du décret du 30 juin 2015 émanant de l’organisme certificateur et référencé sur le site
+                            internet du CNEFOP.
                             <UnorderedList styleType="square">
                               <ListItem>
                                 <Text as="span" color="#7d4e5b">
@@ -121,9 +121,8 @@ const HowToReglement = () => {
                             </UnorderedList>
                           </ListItem>
                           <ListItem>
-                            les établissements sont déclarés en préfecture <strong>ET</strong> attestent de leur qualité
-                            par une certification Qualiopi demandée directement dans la liste des certificateurs
-                            habilités
+                            les organismes sont déclarés en préfecture <strong>ET</strong> attestent de leur qualité par
+                            une certification Qualiopi demandée directement dans la liste des certificateurs habilités
                             <UnorderedList styleType="square">
                               <ListItem>cette vérification est réalisée par les référents en académie</ListItem>
                               <ListItem>
@@ -137,8 +136,7 @@ const HowToReglement = () => {
                     <br />
                     <br />
                     <Text as="span" color="#7d4e5b">
-                      Si l’une de ces conditions n’est pas remplie, l’établissement figure dans le catalogue
-                      non-éligible
+                      Si l’une de ces conditions n’est pas remplie, l’organisme figure dans le catalogue non-éligible
                     </Text>
                   </AccordionPanel>
                 </>
@@ -152,7 +150,7 @@ const HowToReglement = () => {
                 <>
                   <AccordionButton>
                     <Box flex="1" textAlign="left">
-                      2. Conditions complémentaires concernant la formation délivrée par un établissement éligible :
+                      2. Conditions complémentaires concernant la formation délivrée par un organisme éligible :
                     </Box>
                     {isExpanded ? (
                       <SubtractLine fontSize="12px" color="bluefrance" />
@@ -161,16 +159,16 @@ const HowToReglement = () => {
                     )}
                   </AccordionButton>
                   <AccordionPanel pb={4}>
-                    Dès lors que l’établissement est habilité à délivrer le titre ou diplôme, que celui-ci est réalisé
-                    par voie d’apprentissage et qu’il s’agit d’une formation du 1er cycle de l’enseignement supérieur,
-                    la formation est éligible au référencement sur Parcoursup.
+                    Dès lors que l’organisme est habilité à délivrer le titre ou diplôme, que celui-ci est réalisé par
+                    voie d’apprentissage et qu’il s’agit d’une formation du 1er cycle de l’enseignement supérieur, la
+                    formation est éligible au référencement sur Parcoursup.
                     <UnorderedList>
                       <ListItem>
                         <Text as="span" fontWeight="bold" textDecoration="underline">
                           Toutes les formations en apprentissage doivent être enregistrées au RNCP,
                         </Text>
-                        qu’il s’agisse ou non d’un titre ou diplôme délivré au nom de l’Etat. Dès lors que
-                        l’établissement est habilité à délivrer le titre ou diplôme et que celui-ci est réalisé par voie
+                        qu’il s’agisse ou non d’un titre ou diplôme délivré au nom de l’Etat. Dès lors que l’organisme
+                        est habilité à délivrer le titre ou diplôme et que celui-ci est réalisé par voie
                         d’apprentissage.
                         <UnorderedList styleType="circle">
                           <ListItem>
@@ -259,9 +257,9 @@ const HowToReglement = () => {
                         <Text as="span" fontWeight="bold" textDecoration="underline">
                           Titre ou diplôme non délivré au nom de l’Etat :
                         </Text>
-                        Toutes les formations enregistrées au RNCP et pour lesquelles l'établissement est soit
-                        l’autorité responsable de la certification, soit partenaire de l’autorité certificatrice et que
-                        le titre est réalisé par voie d’apprentissage.
+                        Toutes les formations enregistrées au RNCP et pour lesquelles l'organisme est soit l’autorité
+                        responsable de la certification, soit partenaire de l’autorité certificatrice et que le titre
+                        est réalisé par voie d’apprentissage.
                         <UnorderedList styleType="circle">
                           <ListItem>
                             <Text as="span" color="#7d4e5b">
@@ -338,7 +336,7 @@ const HowToReglement = () => {
                   )}
                 </AccordionButton>
                 <AccordionPanel pb={4}>
-                  <strong>Concernant l'établissement de formation :</strong>
+                  <strong>Concernant l'organisme de formation :</strong>
                   <Box mt={2} mb={5}>
                     <UnorderedList>
                       <ListItem>
@@ -348,13 +346,13 @@ const HowToReglement = () => {
                           textDecoration={"underline"}
                           isExternal
                         >
-                          l’application de consultation et cartographie des établissements (ACCE){" "}
+                          l’application de consultation et cartographie des organismes (ACCE){" "}
                           <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
                         </Link>
                         ;
                         <UnorderedList styleType="circle">
                           <ListItem>
-                            l’établissement peut solliciter la mise à jour de ses données (dénomination officielle,
+                            l’organisme peut solliciter la mise à jour de ses données (dénomination officielle,
                             immatriculation UAI,...) via le formulaire « Contact » du site ACCE ;
                           </ListItem>
                         </UnorderedList>
@@ -384,12 +382,12 @@ const HowToReglement = () => {
                         >
                           le site de l’INSEE <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
                         </Link>
-                        , permettant d’accéder aux données administratives à partir du Siret de l'établissement
+                        , permettant d’accéder aux données administratives à partir du Siret de l'organisme
                         <UnorderedList styleType="circle">
                           <ListItem>
-                            l’établissement peut y signaler des modifications (changement d'adresse, de statut,
-                            d'activité, de raison sociale, ouverture ou fermeture d'un établissement...) afin qu’elles
-                            soient mises à jour.
+                            l’organisme peut y signaler des modifications (changement d'adresse, de statut, d'activité,
+                            de raison sociale, ouverture ou fermeture d'un organisme...) afin qu’elles soient mises à
+                            jour.
                           </ListItem>
                         </UnorderedList>
                       </ListItem>
@@ -411,9 +409,9 @@ const HowToReglement = () => {
                         Répertoire Spécifique)
                         <UnorderedList styleType="circle">
                           <ListItem>
-                            il appartient à l'établissement de se rapprocher du certificateur pour solliciter la mise à
-                            jour éventuelle des données (validité, certificateur et/ou établissements partenaires,
-                            voie(s) d’accès...) ou de se mettre à jour auprès de France Compétences :{" "}
+                            il appartient à l'organisme de se rapprocher du certificateur pour solliciter la mise à jour
+                            éventuelle des données (validité, certificateur et/ou organisme partenaires, voie(s)
+                            d’accès...) ou de se mettre à jour auprès de France Compétences :{" "}
                             <Link
                               href="mailto:certificationprofessionnelle@francecompetences.fr"
                               textDecoration={"underline"}
