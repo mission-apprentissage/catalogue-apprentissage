@@ -35,8 +35,6 @@ const FILTERS = (context) => [
   `parcoursup_statut-${context}`,
   `affelnet_statut-${context}`,
   "diplome",
-  `opcos-${context}`,
-  `info_opcos_intitule-${context}`,
 ];
 
 const columnsDefinition = [
@@ -340,19 +338,6 @@ const columnsDefinition = [
     editable: false,
   },
   {
-    Header: "OPCOs",
-    accessor: "opcos",
-    width: 200,
-    editable: false,
-  },
-  {
-    Header: "Intitule du statut des OPCOs",
-    accessor: "info_opcos_intitule",
-    width: 200,
-    editable: false,
-    formatter: (value) => escapeDiacritics(value),
-  },
-  {
     Header: "Etablissement dans le catalogue eligible ? ",
     accessor: "etablissement_reference_catalogue_published",
     width: 200,
@@ -499,23 +484,6 @@ const facetDefinition = (context) => [
     dataField: "rncp_code.keyword",
     title: "Code RNCP",
     filterLabel: "Code RNCP",
-    selectAllLabel: "Tous",
-    sortBy: "count",
-  },
-
-  {
-    componentId: `opcos-${context}`,
-    dataField: "opcos.keyword",
-    title: "OPCOs",
-    filterLabel: "OPCOs",
-    selectAllLabel: "Tout OPCOs",
-    sortBy: "asc",
-  },
-  {
-    componentId: `info_opcos_intitule-${context}`,
-    dataField: "info_opcos_intitule.keyword",
-    title: "Statut OPCOs",
-    filterLabel: "Statut OPCOs",
     selectAllLabel: "Tous",
     sortBy: "count",
   },
