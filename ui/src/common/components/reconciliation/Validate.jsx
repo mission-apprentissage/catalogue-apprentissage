@@ -42,45 +42,45 @@ const Validate = ({ formation, mnaFormation, onClose, onValidationSubmit }) => {
         let shouldRemovePsReconciliation = false;
         let shouldRestorePsReconciliation = false;
         if (parcoursup_keep_publish === "true") {
-          if (
-            [
-              "non publié",
-              "à publier (vérifier accès direct postbac)",
-              "à publier (soumis à validation Recteur)",
-              "en attente de publication",
-              "à publier",
-            ].includes(formation?.parcoursup_statut)
-          ) {
-            body.parcoursup_statut = "publié";
-            shouldRestorePsReconciliation = formation.parcoursup_statut === "non publié";
-            body.parcoursup_raison_depublication = null;
-          }
+          // if (
+          //   [
+          //     "non publié",
+          //     "à publier (vérifier accès direct postbac)",
+          //     "à publier (soumis à validation Recteur)",
+          //     "en attente de publication",
+          //     "à publier",
+          //   ].includes(mnaFormation?.parcoursup_statut)
+          // ) {
+          body.parcoursup_statut = "publié";
+          shouldRestorePsReconciliation = mnaFormation.parcoursup_statut === "non publié";
+          body.parcoursup_raison_depublication = null;
+          // }
         } else if (parcoursup_keep_publish === "false") {
-          if (
-            [
-              "en attente de publication",
-              "à publier (vérifier accès direct postbac)",
-              "à publier (soumis à validation Recteur)",
-              "à publier",
-              "publié",
-            ].includes(formation?.parcoursup_statut)
-          ) {
-            body.parcoursup_raison_depublication = parcoursup_raison_depublication;
-            body.parcoursup_statut = "non publié";
-            shouldRemovePsReconciliation = ["en attente de publication", "publié"].includes(
-              formation.parcoursup_statut
-            );
-          }
+          // if (
+          //   [
+          //     "en attente de publication",
+          //     "à publier (vérifier accès direct postbac)",
+          //     "à publier (soumis à validation Recteur)",
+          //     "à publier",
+          //     "publié",
+          //   ].includes(mnaFormation?.parcoursup_statut)
+          // ) {
+          body.parcoursup_raison_depublication = parcoursup_raison_depublication;
+          body.parcoursup_statut = "non publié";
+          shouldRemovePsReconciliation = ["en attente de publication", "publié"].includes(
+            mnaFormation.parcoursup_statut
+          );
+          // }
         }
 
         if (Object.keys(body).length > 0) {
-          await _put(`/entity/formations2021/${mnaFormation._id}`, {
-            num_academie: formation.num_academie,
+          await _put(`/api/entity/formations2021/${mnaFormation._id}`, {
+            num_academie: mnaFormation.num_academie,
             ...body,
             last_update_who: user.email,
             last_update_at: Date.now(),
             updates_history: buildUpdatesHistory(
-              formation,
+              mnaFormation,
               { ...body, last_update_who: user.email },
               Object.keys(body)
             ),
@@ -88,10 +88,10 @@ const Validate = ({ formation, mnaFormation, onClose, onValidationSubmit }) => {
 
           if (shouldRemovePsReconciliation || shouldRestorePsReconciliation) {
             try {
-              await _put(`/parcoursup/reconciliation`, {
-                uai_gestionnaire: formation.etablissement_gestionnaire_uai,
-                uai_affilie: formation.etablissement_formateur_uai,
-                cfd: formation.cfd,
+              await _put(`/api/parcoursup/reconciliation`, {
+                uai_gestionnaire: mnaFormation.etablissement_gestionnaire_uai,
+                uai_affilie: mnaFormation.etablissement_formateur_uai,
+                cfd: mnaFormation.cfd,
                 email: shouldRemovePsReconciliation ? user.email : null,
               });
             } catch (e) {
