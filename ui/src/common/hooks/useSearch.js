@@ -4,8 +4,7 @@ import { _get } from "../httpClient";
 const FORMATIONS_ES_INDEX = "convertedformation";
 const ETABLISSEMENTS_ES_INDEX = "etablissements";
 
-const CATALOGUE_API_ENDPOINT =
-  process.env.REACT_APP_ENDPOINT_NEW_FRONT || "https://catalogue-recette.apprentissage.beta.gouv.fr/api";
+const CATALOGUE_API_ENDPOINT = `${process.env.REACT_APP_BASE_URL}/api`;
 const TCO_API_ENDPOINT =
   process.env.REACT_APP_ENDPOINT_TCO || "https://tables-correspondances.apprentissage.beta.gouv.fr/api";
 
