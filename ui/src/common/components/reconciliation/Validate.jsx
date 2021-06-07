@@ -136,7 +136,7 @@ const Validate = ({ formation, mnaFormation, onClose, onValidationSubmit }) => {
       <Flex w="35%">
         <Box p={8} w="full">
           <Heading as="h3" fontSize="1.5rem" mb={3}>
-            Récapilutatif du rapprochement
+            Récapitulatif du rapprochement
           </Heading>
           <Box mb={4} mt={4}>
             Formation Parcoursup

@@ -81,6 +81,13 @@ const columnsDefinition = [
     formatter: (value) => escapeDiacritics(value),
   },
   {
+    Header: "matching_mna_parcoursup_statuts",
+    accessor: "matching_mna_parcoursup_statuts",
+    width: 200,
+    editable: false,
+    formatter: (value) => escapeDiacritics(value),
+  },
+  {
     Header: "statut_reconciliation",
     accessor: "statut_reconciliation",
     width: 200,
