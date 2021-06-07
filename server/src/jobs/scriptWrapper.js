@@ -59,7 +59,7 @@ module.exports = {
   runScript: async (job) => {
     const message = {
       msg: `Une mise à jour des données du catalogue est en cours, le service sera à nouveau opérationnel d'ici le XX/XX/21 à XXh.`,
-      name: "Pablo",
+      name: "auto",
       time: new Date(),
     };
 
