@@ -12,15 +12,15 @@ module.exports = () => {
 
   router.post(
     "/messageScript",
-    tryCatch(async (req, res) => {
-      const msg = req.body.msg;
-      const name = req.body.name;
+    tryCatch(async ({ body }, res) => {
+      const { msg, name, type } = body;
 
-      if (!msg || !name) {
-        return res.status(400).send({ error: "Erreur avec le message ou avec le nom" });
+      if (!msg || !name || !type) {
+        return res.status(400).send({ error: "Erreur avec le message ou avec le nom ou le type" });
       }
 
       const newMessageScript = new MessageScript({
+        type,
         name,
         msg,
         time: new Date(),
@@ -32,10 +32,28 @@ module.exports = () => {
     })
   );
 
+  router.put(
+    "/messageScript/:id",
+    tryCatch(async ({ body, params }, res) => {
+      const { msg, name, type } = body;
+      const itemId = params.id;
+
+      if (!msg || !name || !type) {
+        return res.status(400).send({ error: "Erreur avec le message ou avec le nom ou le type" });
+      }
+
+      const result = await MessageScript.findOneAndUpdate({ _id: itemId }, body, {
+        new: true,
+      });
+
+      return res.json(result);
+    })
+  );
+
   router.delete(
     "/messageScript",
     tryCatch(async (req, res) => {
-      const result = await MessageScript.deleteOne({});
+      const result = await MessageScript.deleteOne({ type: "manuel" });
       return res.json(result);
     })
   );
