@@ -15,6 +15,7 @@ import {
   TabPanels,
   Tabs,
   useDisclosure,
+  Text,
 } from "@chakra-ui/react";
 import Layout from "../layout/Layout";
 import { NavLink } from "react-router-dom";
@@ -58,6 +59,21 @@ export default (props) => {
           <Heading textStyle="h2" color="grey.800" mt={5}>
             Rapprochement des bases Carif-Oref et Parcoursup
           </Heading>
+          <Text fontWeight="normal" mt={5}>
+            Pour réaliser le rapprochement des bases, les formations paramétrées sur Parcoursup sont comparées aux
+            offres de formation de la base Carif-Oref.
+            <br />
+            {searchState.loaded &&
+              `${searchState.countReconciliationPs.countTotal} formations paramétrées sur Parcoursup.`}
+            <br />
+            <br />
+            Les informations comparées pour réaliser le rapprochement sont les suivantes :
+            <br />
+            Codes formation diplôme BCN, Codes MEF, Codes UAI, Codes postaux, Académie et SIRET. Les rapprochements sont
+            forts lorsque les informations sont similaires à la fois sur les données concernant la formation et le(s)
+            organisme(s) associé(s) ; les rapprochements sont faibles lorsque les informations sont similaires sur les
+            données concernant la formation.
+          </Text>
         </Container>
       </Box>
 

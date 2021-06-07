@@ -10,7 +10,6 @@ const FILTERS = (context) => {
       `rncp-${context}`,
       `cfd-${context}`,
       `reject-${context}`,
-      `statuts-${context}`,
     ];
   }
   return [
