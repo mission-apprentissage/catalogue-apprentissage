@@ -16,9 +16,8 @@ function QueryBuilder({
   autoComplete,
   collection,
   lang,
-  context,
 }) {
-  let history = useHistory();
+  const history = useHistory();
 
   operators = operators || (lang === "fr" ? frOperators : defaultOperators);
   combinators = combinators || (lang === "fr" ? frCombinators : defaultCombinators);
@@ -38,7 +37,11 @@ function QueryBuilder({
     onQuery(queries);
     const obj = JSON.stringify(rules);
     const str = encodeURIComponent(obj);
-    history.push(`?qb-${context}=${str}`);
+
+    let s = new URLSearchParams(window.location.search);
+    s.set("qb", str);
+
+    history.push(`?${s}`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(rules)]);
 
@@ -76,30 +79,33 @@ function QueryBuilder({
   );
 }
 
-export default ({ react, fields, collection, lang = "en", context }) => {
+export default ({ react, fields, collection, lang = "en" }) => {
   return (
     <ReactiveComponent
-      componentId={`QUERYBUILDER-${context}`}
+      componentId={`QUERYBUILDER`}
       react={react}
       URLParams={true}
-      value={`qb-${context}`}
-      render={(data) => (
-        <SubComponent collection={collection} fields={fields} {...data} lang={lang} context={context} />
-      )}
+      value={"qb"}
+      render={(data) => <SubComponent collection={collection} fields={fields} {...data} lang={lang} />}
     />
   );
 };
 
-const SubComponent = ({ setQuery, fields, collection, lang, context }) => {
+const SubComponent = ({ setQuery, fields, collection, lang }) => {
   const [initialValue, setInitialValue] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setQuery({ query: { match_all: {} }, value: "" });
     let s = new URLSearchParams(window.location.search);
-    s = s.get(`qb-${context}`);
+    s = s.get("qb");
     if (s) {
-      setInitialValue(JSON.parse(s));
+      try {
+        setInitialValue(JSON.parse(decodeURIComponent(s)));
+      } catch (e) {
+        console.error(e);
+        console.log(s);
+      }
     }
 
     setLoading(false);
@@ -111,7 +117,6 @@ const SubComponent = ({ setQuery, fields, collection, lang, context }) => {
   return (
     <div>
       <QueryBuilder
-        context={context}
         collection={collection}
         initialValue={initialValue}
         fields={fields}
