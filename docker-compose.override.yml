@@ -48,7 +48,6 @@ services:
       - "127.0.0.1:9200:9200"
     volumes:
       - catalogue_apprentissage_data_elasticsearch:/usr/share/elasticsearch/data:z
-      - ./elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,z
 
   kibana:
     ports:
