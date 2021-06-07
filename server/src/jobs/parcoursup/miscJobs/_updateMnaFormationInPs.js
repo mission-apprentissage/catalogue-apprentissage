@@ -13,6 +13,7 @@ async function update() {
     const { _id, matching_mna_formation } = psFormation2021;
 
     const updateMna = [];
+    const statutsPsMna = [];
     await asyncForEach(matching_mna_formation, async (mnaFormation) => {
       const mnaFormationU = await ConvertedFormation.findById(mnaFormation._id).lean();
       updateMna.push({
@@ -20,6 +21,7 @@ async function update() {
         intitule_court: mnaFormationU.intitule_court,
         parcoursup_statut: mnaFormationU.parcoursup_statut,
       });
+      statutsPsMna.push(mnaFormationU.parcoursup_statut);
     });
 
     await PsFormation2021.findOneAndUpdate(
@@ -27,6 +29,7 @@ async function update() {
       {
         matching_mna_formation: updateMna,
         matching_mna_etablissement: [],
+        matching_mna_parcoursup_statuts: statutsPsMna,
       }
     );
   });
