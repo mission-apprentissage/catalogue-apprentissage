@@ -120,6 +120,11 @@ const psFormationSchema = {
     default: null,
     description: "Etablissement du catalogue matchant les formation présente dans matching_mna_formation",
   },
+  matching_mna_parcoursup_statuts: {
+    type: [String],
+    default: [],
+    description: "Statuts ParcourSup MNA module de pertinence",
+  },
   etat_reconciliation: {
     type: Boolean,
     default: false,

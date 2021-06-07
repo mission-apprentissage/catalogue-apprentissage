@@ -305,6 +305,7 @@ module.exports = ({ catalogue }) => {
               parcoursup_statut: mnaFormation.parcoursup_statut,
             },
           ],
+          matching_mna_parcoursup_statuts: [mnaFormation.parcoursup_statut],
         };
 
         // History
