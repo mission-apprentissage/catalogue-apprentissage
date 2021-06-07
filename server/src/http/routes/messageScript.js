@@ -13,16 +13,30 @@ module.exports = () => {
   router.post(
     "/messageScript",
     tryCatch(async (req, res) => {
-      const { msg, name } = req.body;
+      const msg = req.body.msg;
+      const name = req.body.name;
 
-      const payload = {
-        msg,
+      if (!msg || !name) {
+        return res.status(400).send({ error: "Erreur avec le message ou avec le nom" });
+      }
+
+      const newMessageScript = new MessageScript({
         name,
+        msg,
         time: new Date(),
-      };
+      });
 
-      await MessageScript.create(payload);
-      return res.sendStatus(200);
+      newMessageScript.save();
+
+      return res.json(newMessageScript);
+    })
+  );
+
+  router.delete(
+    "/messageScript",
+    tryCatch(async (req, res) => {
+      const result = await MessageScript.deleteOne({});
+      return res.json(result);
     })
   );
 

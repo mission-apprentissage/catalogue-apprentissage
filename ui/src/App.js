@@ -24,13 +24,13 @@ const Etablissement = lazy(() => import("./pages/Etablissement"));
 const Journal = lazy(() => import("./pages/Journal/Journal"));
 const TagsHistory = lazy(() => import("./pages/admin/TagsHistory"));
 const UploadFiles = lazy(() => import("./pages/admin/UploadFiles"));
+const Message = lazy(() => import("./pages/admin/MessageScript"));
 const Contact = lazy(() => import("./pages/legal/Contact"));
 const Cookies = lazy(() => import("./pages/legal/Cookies"));
 const DonneesPersonnelles = lazy(() => import("./pages/legal/DonneesPersonnelles"));
 const MentionsLegales = lazy(() => import("./pages/legal/MentionsLegales"));
 const Accessibilite = lazy(() => import("./pages/legal/Accessibilite"));
 const ReconciliationPs = lazy(() => import("./pages/admin/ReconciliationPs"));
-const Message = lazy(() => import("./pages/MessageScript"));
 
 function PrivateRoute({ component, ...rest }) {
   let [auth] = useAuth();
