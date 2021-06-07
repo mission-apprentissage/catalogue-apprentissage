@@ -128,7 +128,10 @@ export default () => {
                 <Route exact path="/donnees-personnelles" component={DonneesPersonnelles} />
                 <Route exact path="/mentions-legales" component={MentionsLegales} />
                 <Route exact path="/accessibilite" component={Accessibilite} />
-                <Route exact path="/messagescript" component={Message} />
+
+                {auth && hasOneOfRoles(auth, ["admin"]) && (
+                  <PrivateRoute exact path="/admin/messagescript" component={Message} />
+                )}
 
                 {auth && auth.permissions.isAdmin && (
                   <PrivateRoute exact path="/tags-history">
