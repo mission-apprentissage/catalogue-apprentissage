@@ -73,8 +73,6 @@ export default () => {
   let [auth, setAuth] = useAuth();
   const [isLoading, setIsLoading] = useState(true);
 
-  console.log(auth);
-
   useEffect(() => {
     async function getUser() {
       try {
