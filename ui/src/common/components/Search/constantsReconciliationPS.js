@@ -10,6 +10,7 @@ const FILTERS = (context) => {
       `rncp-${context}`,
       `cfd-${context}`,
       `reject-${context}`,
+      `statuts-${context}`,
     ];
   }
   return [
@@ -19,6 +20,7 @@ const FILTERS = (context) => {
     "statut_reconciliation",
     `rncp-${context}`,
     `cfd-${context}`,
+    `statuts-${context}`,
   ];
 };
 
@@ -195,6 +197,14 @@ const facetDefinition = (context) => [
     dataField: "codes_rncp_mna.keyword",
     title: "Code RNCP",
     filterLabel: "Code RNCP",
+    selectAllLabel: "Tous",
+    sortBy: "asc",
+  },
+  {
+    componentId: `statuts-${context}`,
+    dataField: "matching_mna_parcoursup_statuts.keyword",
+    title: "Statuts",
+    filterLabel: "Statuts",
     selectAllLabel: "Tous",
     sortBy: "asc",
   },
