@@ -4,6 +4,7 @@ import useAuth from "./common/hooks/useAuth";
 import { _post, _get } from "./common/httpClient";
 import ScrollToTop from "./common/components/ScrollToTop";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { hasOneOfRoles } from "./common/utils/rolesUtils";
 
 // Route-based code splitting @see https://reactjs.org/docs/code-splitting.html#route-based-code-splitting
 const HomePage = lazy(() => import("./pages/HomePage"));
@@ -30,14 +31,18 @@ const MentionsLegales = lazy(() => import("./pages/legal/MentionsLegales"));
 const Accessibilite = lazy(() => import("./pages/legal/Accessibilite"));
 const ReconciliationPs = lazy(() => import("./pages/admin/ReconciliationPs"));
 
-function PrivateRoute({ children, ...rest }) {
+function PrivateRoute({ component, ...rest }) {
   let [auth] = useAuth();
+
+  if (auth.sub !== "anonymous") {
+    return <Route {...rest} component={component} />;
+  }
 
   return (
     <Route
       {...rest}
       render={() => {
-        return auth.sub !== "anonymous" ? children : <Redirect to="/login" />;
+        return <Redirect to="/login" />;
       }}
     />
   );
@@ -68,6 +73,8 @@ export default () => {
   let [auth, setAuth] = useAuth();
   const [isLoading, setIsLoading] = useState(true);
 
+  console.log(auth);
+
   useEffect(() => {
     async function getUser() {
       try {
@@ -96,15 +103,14 @@ export default () => {
             <ResetPasswordWrapper>
               <ScrollToTop />
               <Switch>
-                {/* <PrivateRoute exact path="/stats">
-                {auth && auth.permissions.isAdmin ? <DashboardPage /> : <HomePage />}
-              </PrivateRoute> */}
                 <Route exact path="/stats" component={DashboardPage} />
-                {auth && auth.permissions.isAdmin && (
-                  <PrivateRoute exact path="/admin/users">
-                    <Users />
-                  </PrivateRoute>
+
+                {auth && auth.permissions.isAdmin && <PrivateRoute exact path="/admin/users" component={Users} />}
+
+                {auth && hasOneOfRoles(auth, ["admin", "moss"]) && (
+                  <PrivateRoute exact path="/couverture-ps" component={ReconciliationPs} />
                 )}
+
                 <Route exact path="/" component={HomePage} />
                 <Route exact path="/recherche/formations-2021" component={Catalogue} />
                 <Route exact path="/recherche/etablissements" component={Organismes} />
@@ -116,7 +122,6 @@ export default () => {
                 <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
                 <Route exact path="/report" component={ReportPage} />
                 <Route exact path="/couverture-parcoursup" component={ReconciliationParcoursup} />
-                <Route exact path="/couverture-ps" component={ReconciliationPs} />
                 <Route exact path="/couverture-affelnet" component={ReconciliationAffelnet} />
                 <Route exact path="/changelog" component={Journal} />
                 <Route exact path="/contact" component={Contact} />

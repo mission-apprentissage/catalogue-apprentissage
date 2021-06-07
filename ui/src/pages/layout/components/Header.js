@@ -19,7 +19,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt, faSync, faUpload, faUsers } from "@fortawesome/free-solid-svg-icons";
 import useAuth from "../../../common/hooks/useAuth";
-import { isUserAdmin } from "../../../common/utils/rolesUtils";
+import { isUserAdmin, hasOneOfRoles } from "../../../common/utils/rolesUtils";
 import { _get } from "../../../common/httpClient";
 import { LockFill } from "../../../theme/components/icons/LockFill";
 import { Logo } from "./Logo";
@@ -74,24 +74,30 @@ const Header = () => {
                 </Flex>
               </MenuButton>
               <MenuList>
-                {isUserAdmin(auth) && (
+                {hasOneOfRoles(auth, ["admin", "moss"]) && (
                   <>
-                    <MenuGroup title="Administration">
-                      <MenuItem as={NavLink} to="/admin/users" icon={<FontAwesomeIcon icon={faUsers} />}>
-                        Gestion des utilisateurs
-                      </MenuItem>
-                      <MenuItem as={NavLink} to="/admin/upload" icon={<FontAwesomeIcon icon={faUpload} />}>
-                        Upload de fichiers
-                      </MenuItem>
-                    </MenuGroup>
+                    {isUserAdmin(auth) && (
+                      <MenuGroup title="Administration">
+                        <MenuItem as={NavLink} to="/admin/users" icon={<FontAwesomeIcon icon={faUsers} />}>
+                          Gestion des utilisateurs
+                        </MenuItem>
+                        <MenuItem as={NavLink} to="/admin/upload" icon={<FontAwesomeIcon icon={faUpload} />}>
+                          Upload de fichiers
+                        </MenuItem>
+                      </MenuGroup>
+                    )}
                     <MenuDivider />
                     <MenuGroup title="Réconciliation">
-                      <MenuItem as={NavLink} to="/couverture-ps" icon={<FontAwesomeIcon icon={faSync} />}>
-                        Réconciliation Parcoursup
-                      </MenuItem>
-                      <MenuItem as={NavLink} to="/couverture-affelnet" icon={<FontAwesomeIcon icon={faSync} />}>
-                        Réconciliation Affelnet
-                      </MenuItem>
+                      {hasOneOfRoles(auth, ["admin", "moss"]) && (
+                        <MenuItem as={NavLink} to="/couverture-ps" icon={<FontAwesomeIcon icon={faSync} />}>
+                          Réconciliation Parcoursup
+                        </MenuItem>
+                      )}
+                      {hasOneOfRoles(auth, ["admin"]) && (
+                        <MenuItem as={NavLink} to="/couverture-affelnet" icon={<FontAwesomeIcon icon={faSync} />}>
+                          Réconciliation Affelnet
+                        </MenuItem>
+                      )}
                     </MenuGroup>
                   </>
                 )}
