@@ -11,8 +11,9 @@ const AlertMessage = () => {
     const run = async () => {
       const data = await _get("/api/v1/entity/messageScript");
       const hasMessages = data.reduce((acc, item) => acc || item.enabled, false);
-      console.log(hasMessages);
-      setMessages(data);
+      if (hasMessages) {
+        setMessages(data);
+      }
     };
     run();
   }, []);
@@ -20,7 +21,7 @@ const AlertMessage = () => {
     e.preventDefault();
     const messageDeleted = await _delete("/api/v1/entity/messageScript");
     if (messageDeleted) {
-      alert("Le message a bien été supprimé.");
+      alert("Le message MANUEL seulement a bien été supprimé.");
     }
     window.location.reload();
   };
@@ -32,7 +33,9 @@ const AlertMessage = () => {
         <AlertTitle mr={2}>Maintenance : </AlertTitle>
         <AlertDescription>
           {messages.map((element) => (
-            <Text key={element._id}>{element.msg}</Text>
+            <Text key={element._id} mb={2}>
+              {element.msg}
+            </Text>
           ))}
         </AlertDescription>
         {auth && hasOneOfRoles(auth, ["admin"]) && (

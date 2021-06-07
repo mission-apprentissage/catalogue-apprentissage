@@ -1,16 +1,12 @@
-const { boolean } = require("joi");
-
 const messageScriptSchema = {
   msg: {
     type: String,
     required: true,
   },
-
   type: {
     type: String,
     required: true,
   },
-
   name: {
     type: String,
     required: true,
@@ -19,9 +15,8 @@ const messageScriptSchema = {
     type: Date,
     required: false,
   },
-
   enabled: {
-    type: boolean,
+    type: Boolean,
     default: false,
   },
 };

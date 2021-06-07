@@ -11,87 +11,85 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  Textarea,
 } from "@chakra-ui/react";
+import { useFormik } from "formik";
 import { _post, _get, _put } from "../../common/httpClient";
 import Layout from "../layout/Layout";
 import { NavLink } from "react-router-dom";
 import { ArrowDropRightLine } from "../../theme/components/icons";
 
 const Message = () => {
-  const [inputManuel, setInputManuel] = useState({
-    type: "",
-    msg: "",
-    name: "",
-  });
-  const [inputAutomatique, setInputAutomatique] = useState({
-    type: "",
-    msg: "",
-    name: "",
+  const [messageAutomatique, setMessageAutomatique] = useState([]);
+
+  const { values: valuesM, handleSubmit: handleSubmitM, handleChange: handleChangeM } = useFormik({
+    initialValues: {
+      msg: "",
+      name: "",
+    },
+    onSubmit: ({ msg, name }, { setSubmitting }) => {
+      return new Promise(async (resolve, reject) => {
+        try {
+          const newMessageScript = {
+            type: "manuel",
+            msg,
+            name,
+          };
+          const messagePosted = await _post("/api/v1/entity/messageScript", newMessageScript);
+          if (messagePosted) {
+            alert("Le message a bien été envoyé.");
+          }
+          window.location.reload();
+        } catch (e) {
+          console.log(e);
+        }
+
+        setSubmitting(false);
+        resolve("onSubmitHandler complete");
+      });
+    },
   });
 
-  const [messageAutomatique, setMessageAutomatique] = useState([]);
+  const { values: valuesA, handleSubmit: handleSubmitA, handleChange: handleChangeA, setFieldValue } = useFormik({
+    initialValues: {
+      msg: "",
+    },
+    onSubmit: ({ msg, name }, { setSubmitting }) => {
+      return new Promise(async (resolve, reject) => {
+        try {
+          const newMessageScript = {
+            type: "automatique",
+            msg,
+            name: "auto",
+          };
+          const messagePosted = await _put(`/api/v1/entity/messageScript/${messageAutomatique._id}`, newMessageScript);
+          if (messagePosted) {
+            alert("Le message a bien été mise à jour.");
+          }
+          window.location.reload();
+        } catch (e) {
+          console.log(e);
+        }
+
+        setSubmitting(false);
+        resolve("onSubmitHandler complete");
+      });
+    },
+  });
+
   useEffect(() => {
     const run = async () => {
       const data = await _get("/api/v1/entity/messageScript");
-
-      const a = data.filter((d) => d.type === "automatique");
+      const [a] = data.filter((d) => d.type === "automatique");
       setMessageAutomatique(a);
-      setInputAutomatique({
-        type: a.type,
-        msg: a.msg,
-        name: a.name,
-      });
+      setFieldValue(
+        "msg",
+        a.msg ||
+          "Une mise à jour des données du catalogue est en cours, le service sera à nouveau opérationnel d'ici le XX/XX/21 à XXh."
+      );
     };
     run();
-  }, []);
-
-  const handleChangeManuel = (e) => {
-    const { name, value } = e.target;
-    setInputManuel((prevInput) => {
-      return {
-        ...prevInput,
-        [name]: value,
-      };
-    });
-  };
-
-  const handleChangeAutomatique = (e) => {
-    const { name, value } = e.target;
-    setInputAutomatique((prevInput) => {
-      return {
-        ...prevInput,
-        [name]: value,
-      };
-    });
-  };
-
-  const handleClickManuel = async (e) => {
-    e.preventDefault();
-    const newMessageScript = {
-      type: "manuel",
-      msg: inputManuel.msg,
-      name: inputManuel.name,
-    };
-    const messagePosted = await _post("/api/v1/entity/messageScript", newMessageScript);
-    if (messagePosted) {
-      alert("Le message a bien été envoyé.");
-    }
-    window.location.reload();
-  };
-
-  const handleClickAutomatique = async (e) => {
-    e.preventDefault();
-    const newMessageScript = {
-      type: "automatique",
-      msg: inputAutomatique.msg,
-      name: inputAutomatique.name,
-    };
-    const messagePosted = await _put(`/api/v1/entity/messageScript/${messageAutomatique._id}`, newMessageScript);
-    if (messagePosted) {
-      alert("Le message a bien été envoyé.");
-    }
-    window.location.reload();
-  };
+  }, [setFieldValue]);
 
   return (
     <Layout>
@@ -117,25 +115,20 @@ const Message = () => {
           <Box>
             <FormControl as="fieldset">
               <FormLabel as="legend">Message manuel: </FormLabel>
-              <Input
-                onChange={handleChangeManuel}
+              <Textarea
                 name="msg"
-                value={inputManuel.msg}
-                placeholder="Message"
+                value={valuesM.msg}
+                onChange={handleChangeM}
+                placeholder="Message Manuel"
+                rows={3}
                 required
-              ></Input>
+              />
               <Box mt="2rem">
-                <FormLabel>Text : </FormLabel>
-                <Input
-                  onChange={handleChangeManuel}
-                  name="name"
-                  value={inputManuel.name}
-                  placeholder="Nom"
-                  required
-                ></Input>
+                <FormLabel>Nom : </FormLabel>
+                <Input onChange={handleChangeM} name="name" value={valuesM.name} placeholder="Nom" required />
               </Box>
               <Box mt="2rem">
-                <Button textStyle="sm" variant="primary" onClick={handleClickManuel}>
+                <Button textStyle="sm" variant="primary" onClick={handleSubmitM}>
                   Enregistrer
                 </Button>
               </Box>
@@ -144,25 +137,16 @@ const Message = () => {
           <Box>
             <FormControl as="fieldset" mt={5}>
               <FormLabel as="legend">Message Automatique : </FormLabel>
-              <Input
-                onChange={handleChangeAutomatique}
+              <Textarea
                 name="msg"
-                value={inputAutomatique.msg}
+                value={valuesA.msg}
+                onChange={handleChangeA}
                 placeholder="Message Automatique"
+                rows={3}
                 required
-              ></Input>
+              />
               <Box mt="2rem">
-                <FormLabel>Text : </FormLabel>
-                <Input
-                  onChange={handleChangeAutomatique}
-                  name="name"
-                  value={inputAutomatique.name}
-                  placeholder="Text"
-                  required
-                ></Input>
-              </Box>
-              <Box mt="2rem">
-                <Button textStyle="sm" variant="primary" onClick={handleClickAutomatique}>
+                <Button textStyle="sm" variant="primary" onClick={handleSubmitA}>
                   Mettre à jour le message automatique
                 </Button>
               </Box>
