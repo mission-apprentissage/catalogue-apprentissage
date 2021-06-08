@@ -10,7 +10,7 @@ export const CardListFormation = ({ data }) => {
   let [auth] = useAuth();
 
   return (
-    <Link as={NavLink} to={`/formation/${data._id}`} variant="card" mt={4} isExternal>
+    <Link as={NavLink} to={`/formation/${data._id}`} variant="card" mt={4} isExternal pb={0}>
       <Flex display={["none", "flex"]} textStyle="xs" justifyContent="space-between">
         <Text>{data.etablissement_gestionnaire_entreprise_raison_sociale}</Text>
         <Text>CFD : {data.cfd}</Text>
@@ -35,6 +35,11 @@ export const CardListFormation = ({ data }) => {
             </Flex>
             <ArrowRightLine alignSelf="center" color="bluefrance" boxSize={4} />
           </Flex>
+          {data.ids_action.length > 0 && (
+            <Text textStyle="xs" mt={4} mb={1}>
+              identifiant actions Carif Oref: {data.ids_action.join(",")}
+            </Text>
+          )}
         </Box>
       </Box>
     </Link>
