@@ -18,6 +18,7 @@ runScript(async () => {
       const ids_action = parts;
       await ConvertedFormation.findByIdAndUpdate(_id, {
         id_formation,
+        id_action: ids_action.join("|"),
         ids_action,
         id_certifinfo,
       });
