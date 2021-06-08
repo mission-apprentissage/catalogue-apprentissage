@@ -13,17 +13,17 @@ module.exports = () => {
   router.post(
     "/messageScript",
     tryCatch(async ({ body }, res) => {
-      const { msg, name, type } = body;
+      const { msg, name, type, enabled } = body;
 
-      if (!msg || !name || !type) {
-        return res.status(400).send({ error: "Erreur avec le message ou avec le nom ou le type" });
+      if (!msg || !name || !type || enabled === undefined) {
+        return res.status(400).send({ error: "Erreur avec le message ou avec le nom ou le type ou enabled" });
       }
 
       const newMessageScript = new MessageScript({
         type,
         name,
         msg,
-        enabled: true,
+        enabled,
         time: new Date(),
       });
 
