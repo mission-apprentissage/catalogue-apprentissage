@@ -18,9 +18,12 @@ import { _post, _get, _put } from "../../common/httpClient";
 import Layout from "../layout/Layout";
 import { NavLink } from "react-router-dom";
 import { ArrowDropRightLine } from "../../theme/components/icons";
+import useAuth from "../../common/hooks/useAuth";
 
 const Message = () => {
   const [messageAutomatique, setMessageAutomatique] = useState([]);
+
+  const [user] = useAuth();
 
   const { values: valuesM, handleSubmit: handleSubmitM, handleChange: handleChangeM } = useFormik({
     initialValues: {
@@ -125,7 +128,7 @@ const Message = () => {
               />
               <Box mt="2rem">
                 <FormLabel>Nom : </FormLabel>
-                <Input onChange={handleChangeM} name="name" value={valuesM.name} placeholder="Nom" required />
+                <Input onChange={handleChangeM} name="name" value={user.email} placeholder="Nom" required />
               </Box>
               <Box mt="2rem">
                 <Button textStyle="sm" variant="primary" onClick={handleSubmitM}>
@@ -146,7 +149,7 @@ const Message = () => {
                 required
               />
               <Box mt="2rem">
-                <Button textStyle="sm" variant="primary" onClick={handleSubmitA}>
+                <Button textStyle="sm" variant="primary" onClick={handleSubmitA} mb={8}>
                   Mettre à jour le message automatique
                 </Button>
               </Box>
