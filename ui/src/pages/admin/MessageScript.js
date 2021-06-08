@@ -36,6 +36,7 @@ const Message = () => {
             type: "manuel",
             msg,
             name: user.email,
+            enabled: true,
           };
           const messagePosted = await _post("/api/v1/entity/messageScript", newMessageScript);
           if (messagePosted) {
@@ -82,13 +83,25 @@ const Message = () => {
   useEffect(() => {
     const run = async () => {
       const data = await _get("/api/v1/entity/messageScript");
-      const [a] = data.filter((d) => d.type === "automatique");
-      setMessageAutomatique(a);
-      setFieldValue(
-        "msg",
-        a.msg ||
-          "Une mise à jour des données du catalogue est en cours, le service sera à nouveau opérationnel d'ici le XX/XX/21 à XXh."
-      );
+      if (data.length === 0) {
+        const newMessageScript = {
+          type: "automatique",
+          msg:
+            "Une mise à jour des données du catalogue est en cours, le service sera à nouveau opérationnel d'ici le XX/XX/21 à XXh.",
+          name: "auto",
+          enabled: false,
+        };
+        await _post("/api/v1/entity/messageScript", newMessageScript);
+        window.location.reload();
+      } else {
+        const [a] = data.filter((d) => d.type === "automatique");
+        setMessageAutomatique(a);
+        setFieldValue(
+          "msg",
+          a.msg ||
+            "Une mise à jour des données du catalogue est en cours, le service sera à nouveau opérationnel d'ici le XX/XX/21 à XXh."
+        );
+      }
     };
     run();
   }, [setFieldValue]);
@@ -127,7 +140,7 @@ const Message = () => {
               />
               <Box mt="2rem">
                 <Button textStyle="sm" variant="primary" onClick={handleSubmitM}>
-                  Enregistrer
+                  Enregistrer et activé
                 </Button>
               </Box>
             </FormControl>
