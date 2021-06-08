@@ -371,8 +371,8 @@ const mnaFormationSchema = {
     default: null,
     description: "Identifiant de la formation",
   },
-  id_action: {
-    type: String,
+  ids_action: {
+    type: [String],
     default: null,
     description: "Identifant des actions concaténés",
   },
