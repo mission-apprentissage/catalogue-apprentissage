@@ -32,11 +32,7 @@ const AlertMessage = () => {
         <AlertIcon />
         <AlertTitle mr={2}>Maintenance : </AlertTitle>
         <AlertDescription>
-          {messages.map((element) => (
-            <Text key={element._id} mb={2}>
-              {element.msg}
-            </Text>
-          ))}
+          {messages.map((element) => element.enabled && <Text key={element._id}>{element.msg}</Text>)}
         </AlertDescription>
         {auth && hasOneOfRoles(auth, ["admin"]) && (
           <CloseButton position="absolute" right="8px" top="8px" onClick={onDeleteClicked} />

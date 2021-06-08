@@ -55,35 +55,46 @@ const exit = async (rawError) => {
   process.exitCode = error ? 1 : 0;
 };
 
+function timeout(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 module.exports = {
   runScript: async (job) => {
-    const message = {
-      msg: `Une mise à jour des données du catalogue est en cours, le service sera à nouveau opérationnel d'ici le XX/XX/21 à XXh.`,
-      name: "auto",
-      time: new Date(),
-    };
-
-    const messageResult = new MessageScript(message);
-
+    await MessageScript.findOneAndUpdate(
+      { type: "automatique" },
+      { enabled: true },
+      {
+        new: true,
+      }
+    );
     try {
       const timer = createTimer();
       timer.start();
 
       await ensureOutputDirExists();
       const components = await createComponents();
-      await messageResult.save();
       const results = await job(components);
 
       timer.stop(results);
-      await MessageScript.deleteOne({
-        _id: messageResult._id,
-      });
 
+      timeout(2000);
+      await MessageScript.findOneAndUpdate(
+        { type: "automatique" },
+        { enabled: false },
+        {
+          new: true,
+        }
+      );
       await exit();
     } catch (e) {
-      await MessageScript.deleteOne({
-        _id: messageResult._id,
-      });
+      await MessageScript.findOneAndUpdate(
+        { type: "automatique" },
+        { enabled: false },
+        {
+          new: true,
+        }
+      );
       await exit(e);
     }
   },

@@ -23,6 +23,7 @@ module.exports = () => {
         type,
         name,
         msg,
+        enabled: true,
         time: new Date(),
       });
 
