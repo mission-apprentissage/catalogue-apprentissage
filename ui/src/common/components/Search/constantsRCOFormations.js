@@ -396,10 +396,25 @@ const columnsDefinition = [
     editable: false,
   },
   {
-    Header: "Id Certif Info",
+    Header: "Id RCO Info",
     accessor: "id_rco_formation",
     width: 200,
     formatter: (value) => value.split("|").pop(),
+  },
+  {
+    Header: "id RCO formation",
+    accessor: "id_formation",
+    width: 200,
+  },
+  {
+    Header: "id RCO action",
+    accessor: "id_action",
+    width: 200,
+  },
+  {
+    Header: "id RCO certifinfo",
+    accessor: "id_certifinfo",
+    width: 200,
   },
 ];
 
@@ -417,6 +432,9 @@ const queryBuilderField = [
   { text: "Intitulé", value: "intitule_court.keyword" },
   { text: "Code RNCP", value: "rncp_code.keyword" },
   { text: "Commune du lieu de formation", value: "localite.keyword" },
+  { text: "Identifiant Formation CO", value: "id_formation.keyword" },
+  { text: "Identifiant Action CO", value: "id_action.keyword" },
+  { text: "Identifiant Certif Info", value: "id_certifinfo.keyword" },
   // { text: "ParcourSup à charger", value: "parcoursup_a_charger" },
   // { text: "Affelnet à charger", value: "affelnet_a_charger" },
 ];
