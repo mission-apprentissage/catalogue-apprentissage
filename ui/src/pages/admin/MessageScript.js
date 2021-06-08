@@ -64,6 +64,7 @@ const Message = () => {
             type: "automatique",
             msg,
             name: "auto",
+            enabled: false,
           };
           const messagePosted = await _put(`/api/v1/entity/messageScript/${messageAutomatique._id}`, newMessageScript);
           if (messagePosted) {
