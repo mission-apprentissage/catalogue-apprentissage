@@ -36,4 +36,5 @@ module.exports = {
   }),
   SandboxFormation: createModel("sandboxformation", schema.mnaFormationSchema),
   Statistique: createModel("statistique", schema.statistiqueSchema),
+  MessageScript: createModel("messageScript", schema.messageScriptSchema),
 };

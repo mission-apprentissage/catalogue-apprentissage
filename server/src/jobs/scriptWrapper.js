@@ -4,6 +4,7 @@ const createComponents = require("../common/components/components");
 const logger = require("../common/logger");
 const config = require("config");
 const { access, mkdir } = require("fs").promises;
+const { MessageScript } = require("../common/model/index");
 
 process.on("unhandledRejection", (e) => console.log(e));
 process.on("uncaughtException", (e) => console.log(e));
@@ -62,11 +63,33 @@ module.exports = {
 
       await ensureOutputDirExists();
       const components = await createComponents();
+      await MessageScript.findOneAndUpdate(
+        { type: "automatique" },
+        { enabled: true },
+        {
+          new: true,
+          upsert: true,
+        }
+      );
       const results = await job(components);
-
       timer.stop(results);
+
+      await MessageScript.findOneAndUpdate(
+        { type: "automatique" },
+        { enabled: false },
+        {
+          new: true,
+        }
+      );
       await exit();
     } catch (e) {
+      await MessageScript.findOneAndUpdate(
+        { type: "automatique" },
+        { enabled: false },
+        {
+          new: true,
+        }
+      );
       await exit(e);
     }
   },
