@@ -35,6 +35,7 @@ const FILTERS = () => [
   `parcoursup_statut`,
   `affelnet_statut`,
   "diplome",
+  "ids_action",
 ];
 
 const columnsDefinition = [
@@ -408,7 +409,7 @@ const columnsDefinition = [
   },
   {
     Header: "id RCO action",
-    accessor: "id_action",
+    accessor: "ids_action",
     width: 200,
   },
   {
@@ -433,7 +434,7 @@ const queryBuilderField = [
   { text: "Code RNCP", value: "rncp_code.keyword" },
   { text: "Commune du lieu de formation", value: "localite.keyword" },
   { text: "Identifiant Formation CO", value: "id_formation.keyword" },
-  { text: "Identifiant Action CO", value: "id_action.keyword" },
+  { text: "Identifiants Action CO", value: "ids_action.keyword" },
   { text: "Identifiant Certif Info", value: "id_certifinfo.keyword" },
   // { text: "ParcourSup à charger", value: "parcoursup_a_charger" },
   // { text: "Affelnet à charger", value: "affelnet_a_charger" },
@@ -502,6 +503,14 @@ const facetDefinition = () => [
     dataField: "rncp_code.keyword",
     title: "Code RNCP",
     filterLabel: "Code RNCP",
+    selectAllLabel: "Tous",
+    sortBy: "count",
+  },
+  {
+    componentId: `ids_action`,
+    dataField: "ids_action.keyword",
+    title: "Identifiant action CO",
+    filterLabel: "Identifiant action CO",
     selectAllLabel: "Tous",
     sortBy: "count",
   },
