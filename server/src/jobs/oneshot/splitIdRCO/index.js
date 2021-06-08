@@ -6,7 +6,7 @@ runScript(async () => {
   await paginator(
     ConvertedFormation,
     {
-      filter: {},
+      filter: { published: true },
       select: { id_rco_formation: 1 },
       limit: 50,
       lean: true,
