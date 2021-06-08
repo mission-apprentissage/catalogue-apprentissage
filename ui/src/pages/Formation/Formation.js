@@ -316,6 +316,12 @@ const Formation = ({
                 </Text>{" "}
                 <InfoTooltip description={helpText.formation.annee} />
               </Text>
+              <Text mb={4}>
+                Identifiant Af_CO:
+                <Text as="span" variant="highlight">
+                  {displayedFormation.ids_action.join(",") ?? "N/A"}
+                </Text>
+              </Text>
             </Box>
           </Box>
           <Box mb={16} px={8}>
