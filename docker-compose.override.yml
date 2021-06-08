@@ -18,6 +18,8 @@ services:
         - REACT_APP_ENV=dev
         - REACT_APP_BASE_URL=https://catalogue-recette.apprentissage.beta.gouv.fr
         - REACT_APP_ENDPOINT_TCO=https://tables-correspondances-recette.apprentissage.beta.gouv.fr/api
+    environment:
+      - FAST_REFRESH=false
 
   server:
     command: ["yarn", "debug"]
@@ -46,7 +48,6 @@ services:
       - "127.0.0.1:9200:9200"
     volumes:
       - catalogue_apprentissage_data_elasticsearch:/usr/share/elasticsearch/data:z
-      - ./elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,z
 
   kibana:
     ports:
