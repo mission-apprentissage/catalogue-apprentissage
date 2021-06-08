@@ -28,15 +28,14 @@ const Message = () => {
   const { values: valuesM, handleSubmit: handleSubmitM, handleChange: handleChangeM } = useFormik({
     initialValues: {
       msg: "",
-      name: "",
     },
-    onSubmit: ({ msg, name }, { setSubmitting }) => {
+    onSubmit: ({ msg }, { setSubmitting }) => {
       return new Promise(async (resolve, reject) => {
         try {
           const newMessageScript = {
             type: "manuel",
             msg,
-            name,
+            name: user.email,
           };
           const messagePosted = await _post("/api/v1/entity/messageScript", newMessageScript);
           if (messagePosted) {
@@ -57,7 +56,7 @@ const Message = () => {
     initialValues: {
       msg: "",
     },
-    onSubmit: ({ msg, name }, { setSubmitting }) => {
+    onSubmit: ({ msg }, { setSubmitting }) => {
       return new Promise(async (resolve, reject) => {
         try {
           const newMessageScript = {
@@ -126,10 +125,6 @@ const Message = () => {
                 rows={3}
                 required
               />
-              <Box mt="2rem">
-                <FormLabel>Nom : </FormLabel>
-                <Input onChange={handleChangeM} name="name" value={user.email} placeholder="Nom" required />
-              </Box>
               <Box mt="2rem">
                 <Button textStyle="sm" variant="primary" onClick={handleSubmitM}>
                   Enregistrer

@@ -55,30 +55,25 @@ const exit = async (rawError) => {
   process.exitCode = error ? 1 : 0;
 };
 
-function timeout(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 module.exports = {
   runScript: async (job) => {
-    await MessageScript.findOneAndUpdate(
-      { type: "automatique" },
-      { enabled: true },
-      {
-        new: true,
-      }
-    );
     try {
       const timer = createTimer();
       timer.start();
 
       await ensureOutputDirExists();
       const components = await createComponents();
+      await MessageScript.findOneAndUpdate(
+        { type: "automatique" },
+        { enabled: true },
+        {
+          new: true,
+          upsert: true,
+        }
+      );
       const results = await job(components);
-
       timer.stop(results);
 
-      timeout(2000);
       await MessageScript.findOneAndUpdate(
         { type: "automatique" },
         { enabled: false },
