@@ -37,7 +37,7 @@ export const CardListFormation = ({ data }) => {
           </Flex>
           {data.ids_action.length > 0 && (
             <Text textStyle="xs" mt={4} mb={1}>
-              identifiant Af_CO: {data.ids_action.join(",")}
+              identifiant actions Carif Oref: {data.ids_action.join(",")}
             </Text>
           )}
         </Box>
