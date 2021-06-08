@@ -366,6 +366,21 @@ const mnaFormationSchema = {
     default: null,
     description: "Id de formation RCO (id_formation + id_action + id_certifinfo)",
   },
+  id_formation: {
+    type: String,
+    default: null,
+    description: "Identifiant de la formation",
+  },
+  id_action: {
+    type: String,
+    default: null,
+    description: "Identifant des actions concaténés",
+  },
+  id_certifinfo: {
+    type: String,
+    default: null,
+    description: "Identifant certifInfo (unicité de la certification)",
+  },
   tags: {
     type: [String],
     default: [],
