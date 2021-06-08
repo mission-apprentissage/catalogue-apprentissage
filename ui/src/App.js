@@ -24,6 +24,7 @@ const Etablissement = lazy(() => import("./pages/Etablissement"));
 const Journal = lazy(() => import("./pages/Journal/Journal"));
 const TagsHistory = lazy(() => import("./pages/admin/TagsHistory"));
 const UploadFiles = lazy(() => import("./pages/admin/UploadFiles"));
+const Message = lazy(() => import("./pages/admin/MessageScript"));
 const Contact = lazy(() => import("./pages/legal/Contact"));
 const Cookies = lazy(() => import("./pages/legal/Cookies"));
 const DonneesPersonnelles = lazy(() => import("./pages/legal/DonneesPersonnelles"));
@@ -127,6 +128,10 @@ export default () => {
                 <Route exact path="/donnees-personnelles" component={DonneesPersonnelles} />
                 <Route exact path="/mentions-legales" component={MentionsLegales} />
                 <Route exact path="/accessibilite" component={Accessibilite} />
+
+                {auth && hasOneOfRoles(auth, ["admin"]) && (
+                  <PrivateRoute exact path="/admin/messagescript" component={Message} />
+                )}
 
                 {auth && auth.permissions.isAdmin && (
                   <PrivateRoute exact path="/tags-history">

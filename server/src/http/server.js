@@ -33,6 +33,7 @@ const pendingRcoFormation = require("./routes/pendingRcoFormation");
 const affelnet = require("./routes/affelnet");
 const etablissement = require("./routes/etablissement");
 const upload = require("./routes/upload");
+const messageScript = require("./routes/messageScript");
 
 const swaggerSchema = require("../common/model/swaggerSchema");
 
@@ -120,6 +121,7 @@ module.exports = async (components) => {
   app.use("/api/v1/auth", auth(components));
   app.use("/api/v1/password", password(components));
   app.use("/api/v1/parcoursup", parcoursup(components));
+  app.use("/api/v1/entity", messageScript());
   app.use("/api/v1/secured", apiKeyAuthMiddleware, secured());
   app.use("/api/v1/authentified", apiKeyAuthMiddleware, authentified());
   app.use("/api/v1/admin", apiKeyAuthMiddleware, adminOnly, admin(components));
