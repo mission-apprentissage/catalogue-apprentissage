@@ -317,9 +317,21 @@ const Formation = ({
                 <InfoTooltip description={helpText.formation.annee} />
               </Text>
               <Text mb={4}>
-                Identifiant Af_CO:
+                Identifiant formation Carif Oref:
+                <Text as="span" variant="highlight">
+                  {displayedFormation.id_formation ?? "N/A"}
+                </Text>
+              </Text>
+              <Text mb={4}>
+                Identifiant actions Carif Oref:
                 <Text as="span" variant="highlight">
                   {displayedFormation.ids_action.join(",") ?? "N/A"}
+                </Text>
+              </Text>
+              <Text mb={4}>
+                Code Certif Info:
+                <Text as="span" variant="highlight">
+                  {displayedFormation.id_certifinfo ?? "N/A"}
                 </Text>
               </Text>
             </Box>
