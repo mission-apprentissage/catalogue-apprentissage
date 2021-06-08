@@ -13,7 +13,7 @@ const FILTERS = () => [
   "etablissement_reference_conventionne",
   "etablissement_reference_declare_prefecture",
   "etablissement_reference_datadock",
-  "source",
+  // "source",
   `cfd`,
   `num_departement`,
   `nom_academie`,
@@ -126,12 +126,12 @@ const columnsDefinition = [
     editable: false,
     formatter: (value) => escapeDiacritics(value),
   },
-  {
-    Header: "Source",
-    accessor: "source",
-    width: 200,
-    editable: false,
-  },
+  // {
+  //   Header: "Source",
+  //   accessor: "source",
+  //   width: 200,
+  //   editable: false,
+  // },
   {
     Header: "Diplome",
     accessor: "diplome",
@@ -244,12 +244,12 @@ const columnsDefinition = [
     width: 200,
     editable: false,
   },
-  {
-    Header: "A charger dans ParcourSup",
-    accessor: "parcoursup_a_charger",
-    width: 200,
-    editable: false,
-  },
+  // {
+  //   Header: "A charger dans ParcourSup",
+  //   accessor: "parcoursup_a_charger",
+  //   width: 200,
+  //   editable: false,
+  // },
   {
     Header: "Niveau de la formation",
     accessor: "niveau",
