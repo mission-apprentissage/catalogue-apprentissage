@@ -35,7 +35,7 @@ const FILTERS = () => [
   `parcoursup_statut`,
   `affelnet_statut`,
   "diplome",
-  "ids_action",
+  // "ids_action",
 ];
 
 const columnsDefinition = [
@@ -506,14 +506,14 @@ const facetDefinition = () => [
     selectAllLabel: "Tous",
     sortBy: "count",
   },
-  {
-    componentId: `ids_action`,
-    dataField: "ids_action.keyword",
-    title: "Identifiant action CO",
-    filterLabel: "Identifiant action CO",
-    selectAllLabel: "Tous",
-    sortBy: "count",
-  },
+  // {
+  //   componentId: `ids_action`,
+  //   dataField: "ids_action.keyword",
+  //   title: "Identifiant action CO",
+  //   filterLabel: "Identifiant action CO",
+  //   selectAllLabel: "Tous",
+  //   sortBy: "count",
+  // },
 ];
 
 const dataSearch = {
