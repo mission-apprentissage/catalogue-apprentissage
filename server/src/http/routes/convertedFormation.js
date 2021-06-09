@@ -152,6 +152,69 @@ module.exports = () => {
     })
   );
 
+  router.post(
+    "/formations2021",
+    tryCatch(async (req, res) => {
+      let qs = req.body;
+
+      // FIXME: ugly patch because request from Affelnet is not JSON valid
+      const strQuery = qs?.query ?? "";
+      const cleanedQuery = strQuery.replace(
+        /"num_academie" :(0.)/,
+        (found, capture) => `"num_academie":"${Number(capture)}"`
+      );
+      // end FIXME
+
+      const query = cleanedQuery ? JSON.parse(cleanedQuery) : {};
+
+      const { id_parcoursup, ...filter } = query;
+      // additional filtering for parcoursup
+      if (id_parcoursup) {
+        const psFormations = await PsFormation2021.find(
+          { id_parcoursup, matching_mna_formation: { $size: 1 } },
+          { matching_mna_formation: 1 }
+        ).lean();
+        const ids = psFormations.reduce((acc, { matching_mna_formation }) => {
+          return [...acc, ...matching_mna_formation.map(({ _id }) => _id)];
+        }, []);
+        filter["_id"] = { $in: ids };
+      }
+
+      const page = qs && qs.page ? qs.page : 1;
+      const limit = qs && qs.limit ? parseInt(qs.limit, 10) : 10;
+      const select =
+        qs && qs.select
+          ? JSON.parse(qs.select)
+          : { affelnet_statut_history: 0, parcoursup_statut_history: 0, updates_history: 0, __v: 0 };
+
+      let queryAsRegex = qs && qs.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
+      for (const prop in queryAsRegex) {
+        queryAsRegex[prop] = new RegExp(queryAsRegex[prop]);
+      }
+
+      const mQuery = {
+        ...filter,
+        ...queryAsRegex,
+      };
+
+      const allData = await ConvertedFormation.paginate(mQuery, {
+        page,
+        limit,
+        lean: true,
+        select,
+      });
+      return res.json({
+        formations: allData.docs,
+        pagination: {
+          page: allData.page,
+          resultats_par_page: limit,
+          nombre_de_page: allData.pages,
+          total: allData.total,
+        },
+      });
+    })
+  );
+
   /**
    * @swagger
    *
