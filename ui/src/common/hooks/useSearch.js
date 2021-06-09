@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { _get } from "../httpClient";
+import { mergedQueries, withUniqueKey } from "../components/Search/components/QueryBuilder/utils";
+import { operators as frOperators } from "../components/Search/components/QueryBuilder/utils_fr";
 
 const FORMATIONS_ES_INDEX = "convertedformation";
 const ETABLISSEMENTS_ES_INDEX = "etablissements";
@@ -17,6 +19,20 @@ const getEsBase = (context) => {
     return RECONCILIATION_PS_ES_INDEX;
   }
   return FORMATIONS_ES_INDEX;
+};
+
+const esQueryParser = () => {
+  let s = new URLSearchParams(window.location.search);
+  s = s.get("qb");
+  if (!s) return null;
+
+  const initialValue = JSON.parse(decodeURIComponent(s));
+  const rules = withUniqueKey(initialValue);
+  const queries = mergedQueries(
+    rules.map((r) => ({ ...r, query: frOperators.find((o) => o.value === r.operator).query(r.field, r.value) }))
+  );
+  console.log(queries);
+  return { query: { bool: queries } };
 };
 
 const getCountEntities = async (base) => {
@@ -78,6 +94,7 @@ export function useSearch(context) {
   const [error, setError] = useState(null);
   useEffect(() => {
     const abortController = new AbortController();
+    esQueryParser(); // TODO
     getCountEntities(base)
       .then((resultCount) => {
         if (!abortController.signal.aborted) {
