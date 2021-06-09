@@ -3,6 +3,8 @@ import { NavLink, useLocation } from "react-router-dom";
 import { Box, Container, Flex, Link, Text } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
+import useAuth from "../../../common/hooks/useAuth";
+import { hasOneOfRoles } from "../../../common/utils/rolesUtils";
 
 const NavigationMenu = (props) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -47,6 +49,7 @@ const NavItem = ({ children, to = "/", ...rest }) => {
 };
 
 const NavLinks = ({ isOpen }) => {
+  let [auth] = useAuth();
   return (
     <Box display={{ base: isOpen ? "block" : "none", md: "block" }} flexBasis={{ base: "100%", md: "auto" }}>
       <Flex
@@ -57,7 +60,7 @@ const NavLinks = ({ isOpen }) => {
         textStyle="sm"
       >
         <NavItem to="/">Accueil</NavItem>
-        {/*<NavItem to="/recherche/formations-2021">Mes actions expertes</NavItem>*/}
+        {hasOneOfRoles(auth, ["admin", "moss"]) && <NavItem to="/mes-actions">Mes actions expertes</NavItem>}
         <NavItem to="/recherche/formations-2021">Catalogue des formations en apprentissage 2021</NavItem>
         <NavItem to="/recherche/etablissements">Liste des organismes</NavItem>
         <NavItem to="/changelog">Journal des modifications</NavItem>

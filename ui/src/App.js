@@ -31,6 +31,7 @@ const DonneesPersonnelles = lazy(() => import("./pages/legal/DonneesPersonnelles
 const MentionsLegales = lazy(() => import("./pages/legal/MentionsLegales"));
 const Accessibilite = lazy(() => import("./pages/legal/Accessibilite"));
 const ReconciliationPs = lazy(() => import("./pages/admin/ReconciliationPs"));
+const ActionsExpertes = lazy(() => import("./pages/ActionsExpertes/ActionsExpertes"));
 
 function PrivateRoute({ component, ...rest }) {
   let [auth] = useAuth();
@@ -128,6 +129,10 @@ export default () => {
                 <Route exact path="/donnees-personnelles" component={DonneesPersonnelles} />
                 <Route exact path="/mentions-legales" component={MentionsLegales} />
                 <Route exact path="/accessibilite" component={Accessibilite} />
+
+                {auth && hasOneOfRoles(auth, ["admin", "moss"]) && (
+                  <PrivateRoute exact path="/mes-actions" component={ActionsExpertes} />
+                )}
 
                 {auth && hasOneOfRoles(auth, ["admin"]) && (
                   <PrivateRoute exact path="/admin/messagescript" component={Message} />
