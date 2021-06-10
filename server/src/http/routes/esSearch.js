@@ -77,15 +77,7 @@ module.exports = () => {
         index,
         body: req.body,
       });
-      // const result = await esClient.count({
-      //   index,
-      //   body: {
-      //     query: {
-      //       match_all: {},
-      //     },
-      //   },
-      // });
-      // ('{"must":[],"must_not":[],"should":[{"term":{"etablissement_formateur_siret.keyword":"41387086600105"}},{"term":{"etablissement_gestionnaire_siret.keyword":"41387086600105"}}],"should_not":[]}');
+
       return res.json({
         index,
         result,
