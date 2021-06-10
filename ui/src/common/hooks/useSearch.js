@@ -7,7 +7,7 @@ const FORMATIONS_ES_INDEX = "convertedformation";
 const ETABLISSEMENTS_ES_INDEX = "etablissements";
 const RECONCILIATION_PS_ES_INDEX = "psformations2021";
 
-const CATALOGUE_API_ENDPOINT = `${process.env.REACT_APP_BASE_URL}/api`; // `http://localhost/api`;
+const CATALOGUE_API_ENDPOINT = `http://localhost/api`; // `${process.env.REACT_APP_BASE_URL}/api`;
 const TCO_API_ENDPOINT =
   process.env.REACT_APP_ENDPOINT_TCO || "https://tables-correspondances.apprentissage.beta.gouv.fr/api";
 
@@ -24,14 +24,22 @@ const getEsBase = (context) => {
 const esQueryParser = async () => {
   let s = new URLSearchParams(window.location.search);
   s = s.get("qb");
-  if (!s) return null;
+  if (!s) return Promise.resolve();
 
   const initialValue = JSON.parse(decodeURIComponent(s));
   const rules = withUniqueKey(initialValue);
   const queries = mergedQueries(
     rules.map((r) => ({ ...r, query: frOperators.find((o) => o.value === r.operator).query(r.field, r.value) }))
   );
-  console.log(queries);
+
+  queries.must.push({
+    match: {
+      published: true,
+    },
+  });
+  queries.must.push({ match: { etablissement_reference_catalogue_published: true } }); // Catalogue General
+
+  console.log({ query: { bool: queries } });
 
   const results = await _post("/api/es/search/convertedformation/_count", { query: { bool: queries } });
   console.log(results);
