@@ -18,9 +18,11 @@ import {
   HStack,
   Input,
   Stack,
+  Flex,
 } from "@chakra-ui/react";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
+import ACL from "./acl";
 
 const ACADEMIES = [
   "01",
@@ -181,6 +183,60 @@ const UserLine = ({ user }) => {
           })}
         </HStack>
       </FormControl>
+
+      <Accordion bg="white" mt={3} allowToggle>
+        <AccordionItem>
+          <AccordionButton _expanded={{ bg: "grey.200" }} border={"none"}>
+            <Box flex="1" textAlign="left" fontSize="sm">
+              Droits d'accès Supplémentaire
+            </Box>
+            <AccordionIcon />
+          </AccordionButton>
+          <AccordionPanel pb={4} border={"none"} bg="grey.100">
+            <Box mt={5} ml={5}>
+              {ACL.map((item, i) => {
+                return (
+                  <Flex flexDirection="column" mb={5} key={i}>
+                    <Box mb={2}>
+                      <Checkbox
+                        name="custom_acl"
+                        onChange={handleChange}
+                        value={item.ref}
+                        // isChecked={values.roles.includes(role)}
+                        fontWeight="bold"
+                      >
+                        {item.feature}
+                      </Checkbox>
+                    </Box>
+                    <Flex ml={5} justifyContent="space-between" pr={14}>
+                      {item.subFeatures.map((subitem, j) => {
+                        return (
+                          <HStack spacing={5} key={`${i}_${j}`}>
+                            <Checkbox
+                              name="custom_acl"
+                              onChange={handleChange}
+                              value={subitem.ref}
+                              // isChecked={values.roles.includes(role)}
+                            >
+                              {subitem.feature}
+                            </Checkbox>
+                          </HStack>
+                        );
+                      })}
+                    </Flex>
+                  </Flex>
+                );
+              })}
+            </Box>
+          </AccordionPanel>
+        </AccordionItem>
+      </Accordion>
+      {/* <FormControl py={2} border={"1px solid"} borderColor={"bluefrance"}>
+        <FormLabel fontWeight="bold" fontSize="md">
+          Droits d'accès Supplémentaire
+        </FormLabel>
+        
+      </FormControl> */}
 
       <FormControl py={2}>
         <FormLabel>Académies</FormLabel>
