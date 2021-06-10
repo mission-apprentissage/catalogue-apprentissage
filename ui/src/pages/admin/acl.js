@@ -7,6 +7,14 @@ export default [
         feature: "Exporter les formations",
         ref: "page_catalogue/export_btn",
       },
+      {
+        feature: "Consulter le guide réglementaire",
+        ref: "page_catalogue/guide_reglementaire",
+      },
+      {
+        feature: "Demande d'ajout de formation",
+        ref: "page_catalogue/demande_ajout",
+      },
     ],
   },
   {
@@ -30,5 +38,27 @@ export default [
         ref: "page_formation/supprimer_formation",
       },
     ],
+  },
+  {
+    feature: "Voir la page des organismes",
+    ref: "page_organismes",
+    subFeatures: [
+      {
+        feature: "Exporter les organismes",
+        ref: "page_organismes/export_btn",
+      },
+      {
+        feature: "Consulter le guide réglementaire",
+        ref: "page_organismes/guide_reglementaire",
+      },
+    ],
+  },
+  {
+    feature: "Voir le journal des modifications",
+    ref: "page_journal",
+  },
+  {
+    feature: "Actions expertes",
+    ref: "page_actions_expertes",
   },
 ];

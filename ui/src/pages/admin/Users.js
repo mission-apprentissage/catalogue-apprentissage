@@ -209,7 +209,7 @@ const UserLine = ({ user }) => {
                       </Checkbox>
                     </Box>
                     <Flex ml={5} justifyContent="space-between" pr={14}>
-                      {item.subFeatures.map((subitem, j) => {
+                      {item.subFeatures?.map((subitem, j) => {
                         return (
                           <HStack spacing={5} key={`${i}_${j}`}>
                             <Checkbox
