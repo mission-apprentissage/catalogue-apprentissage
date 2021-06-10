@@ -24,45 +24,13 @@ module.exports = () => {
     tryCatch(async (req, res) => {
       const { index } = req.params;
 
-      console.log("================");
-
-      // const result = await esClient.count({
-      //   index,
-      //   ...req.query,
-      //   body: req.body,
-      // });
       const result = await esClient.count({
         index,
-        body: {
-          query: {
-            bool: {
-              must: [
-                { match: { etablissement_reference_catalogue_published: true } },
-                { match: { published: true } },
-                { match: { "etablissement_formateur_siret.keyword": "41387086600105" } },
-              ],
-              // should: [
-              //   {
-              //     term: {
-              //       "etablissement_formateur_siret.keyword": "41387086600105",
-              //     },
-              //   },
-              //   {
-              //     term: {
-              //       "etablissement_gestionnaire_siret.keyword": "41387086600105",
-              //     },
-              //   },
-              // ],
-            },
-          },
-        },
-      });
-
-      return res.json({
-        index,
-        result: result.body,
+        ...req.query,
         body: req.body,
       });
+
+      return res.json(result.body);
     })
   );
 

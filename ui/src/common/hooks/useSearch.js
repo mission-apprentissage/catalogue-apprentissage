@@ -21,7 +21,7 @@ const getEsBase = (context) => {
   return FORMATIONS_ES_INDEX;
 };
 
-const esQueryParser = async () => {
+const esQueryParser = async (catalogue_general = true) => {
   let s = new URLSearchParams(window.location.search);
   s = s.get("qb");
   if (!s) return Promise.resolve();
@@ -37,11 +37,17 @@ const esQueryParser = async () => {
       published: true,
     },
   });
-  queries.must.push({ match: { etablissement_reference_catalogue_published: true } }); // Catalogue General
+  queries.must.push({ match: { etablissement_reference_catalogue_published: catalogue_general } });
 
-  console.log({ query: { bool: queries } });
-
-  const results = await _post("/api/es/search/convertedformation/_count", { query: { bool: queries } });
+  const countEsQuery = {
+    query: {
+      bool: {
+        ...queries,
+        minimum_should_match: 1,
+      },
+    },
+  };
+  const results = await _post("/api/es/search/convertedformation/_count", countEsQuery);
   console.log(results);
   // return { query: { bool: queries } };
 };
