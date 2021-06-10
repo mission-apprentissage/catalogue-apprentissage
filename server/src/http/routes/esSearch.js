@@ -66,5 +66,33 @@ module.exports = () => {
     })
   );
 
+  router.post(
+    "/:index/_count",
+    tryCatch(async (req, res) => {
+      const { index } = req.params;
+
+      console.log("================");
+
+      const result = await esClient.count({
+        index,
+        body: req.body,
+      });
+      // const result = await esClient.count({
+      //   index,
+      //   body: {
+      //     query: {
+      //       match_all: {},
+      //     },
+      //   },
+      // });
+      // ('{"must":[],"must_not":[],"should":[{"term":{"etablissement_formateur_siret.keyword":"41387086600105"}},{"term":{"etablissement_gestionnaire_siret.keyword":"41387086600105"}}],"should_not":[]}');
+      return res.json({
+        index,
+        result,
+        body: req.body,
+      });
+    })
+  );
+
   return router;
 };

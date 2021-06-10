@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { _get } from "../httpClient";
+import { _get, _post } from "../httpClient";
 import { mergedQueries, withUniqueKey } from "../components/Search/components/QueryBuilder/utils";
 import { operators as frOperators } from "../components/Search/components/QueryBuilder/utils_fr";
 
@@ -7,7 +7,7 @@ const FORMATIONS_ES_INDEX = "convertedformation";
 const ETABLISSEMENTS_ES_INDEX = "etablissements";
 const RECONCILIATION_PS_ES_INDEX = "psformations2021";
 
-const CATALOGUE_API_ENDPOINT = `${process.env.REACT_APP_BASE_URL}/api`;
+const CATALOGUE_API_ENDPOINT = `http://localhost/api`;
 const TCO_API_ENDPOINT =
   process.env.REACT_APP_ENDPOINT_TCO || "https://tables-correspondances.apprentissage.beta.gouv.fr/api";
 
@@ -21,7 +21,7 @@ const getEsBase = (context) => {
   return FORMATIONS_ES_INDEX;
 };
 
-const esQueryParser = () => {
+const esQueryParser = async () => {
   let s = new URLSearchParams(window.location.search);
   s = s.get("qb");
   if (!s) return null;
@@ -31,7 +31,11 @@ const esQueryParser = () => {
   const queries = mergedQueries(
     rules.map((r) => ({ ...r, query: frOperators.find((o) => o.value === r.operator).query(r.field, r.value) }))
   );
-  return { query: { bool: queries } };
+  console.log(queries);
+
+  const results = await _post("/api/es/search/convertedformation/_count", { query: { bool: queries } });
+  console.log(results);
+  // return { query: { bool: queries } };
 };
 
 const getCountEntities = async (base) => {
