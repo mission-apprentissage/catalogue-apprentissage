@@ -86,7 +86,6 @@ const UserLine = ({ user, roles }) => {
       { setSubmitting }
     ) => {
       return new Promise(async (resolve, reject) => {
-        console.log(acl); // TODO
         const accessAcademie = accessAcademieList.join(",");
         const accessAll = accessAllCheckbox.includes("on");
         try {
@@ -97,6 +96,7 @@ const UserLine = ({ user, roles }) => {
                 academie: accessAcademie,
                 email: newEmail,
                 roles,
+                acl,
                 permissions: {
                   isAdmin: accessAll,
                 },
@@ -112,6 +112,7 @@ const UserLine = ({ user, roles }) => {
                 academie: accessAcademie,
                 email: newEmail,
                 roles,
+                acl,
                 permissions: {
                   isAdmin: accessAll,
                 },

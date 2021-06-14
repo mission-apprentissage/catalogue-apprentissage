@@ -37,6 +37,7 @@ module.exports = async () => {
         email: options.email || "",
         academie: options.academie || "0",
         roles: options.roles || ["user"],
+        acl: options.acl || [],
       });
 
       await user.save();
@@ -84,6 +85,7 @@ module.exports = async () => {
         academie: user.academie,
         account_status: user.account_status,
         roles: permissions.isAdmin ? ["admin", ...user.roles] : user.roles,
+        acl: user.acl,
       };
       return structure;
     },

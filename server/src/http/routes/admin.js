@@ -81,6 +81,7 @@ module.exports = ({ users, mailer }) => {
         academie: body.options.academie,
         username: body.username,
         roles: body.options.roles,
+        acl: body.options.acl,
       });
 
       res.json({ message: `User ${username} updated !` });
