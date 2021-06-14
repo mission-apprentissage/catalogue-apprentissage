@@ -57,21 +57,36 @@ const ACADEMIES = [
   "70",
 ];
 
-const UserLine = ({ user }) => {
-  const { values, handleSubmit, handleChange } = useFormik({
+const buildRolesAcl = (newRoles, roles) => {
+  let acl = [];
+  for (let i = 0; i < newRoles.length; i++) {
+    const selectedRole = newRoles[i];
+    const selectedRoleAcl = roles.reduce((acc, curr) => {
+      if (selectedRole === curr.name) return [...acc, ...curr.acl];
+      return acc;
+    }, []);
+    acl = [...acl, ...selectedRoleAcl];
+  }
+  return acl;
+};
+
+const UserLine = ({ user, roles }) => {
+  const { values, handleSubmit, handleChange, setFieldValue } = useFormik({
     initialValues: {
       accessAllCheckbox: user?.isAdmin ? ["on"] : [],
       roles: user?.roles || ["user"],
+      acl: user?.acl || [],
       accessAcademieList: user ? user.academie.split(",") : ["-1"],
       newUsername: user?.username || "",
       newEmail: user?.email || "",
       newTmpPassword: "1MotDePassTemporaire!",
     },
     onSubmit: (
-      { apiKey, accessAllCheckbox, accessAcademieList, newUsername, newEmail, newTmpPassword, roles },
+      { apiKey, accessAllCheckbox, accessAcademieList, newUsername, newEmail, newTmpPassword, roles, acl },
       { setSubmitting }
     ) => {
       return new Promise(async (resolve, reject) => {
+        console.log(acl); // TODO
         const accessAcademie = accessAcademieList.join(",");
         const accessAll = accessAllCheckbox.includes("on");
         try {
@@ -124,6 +139,32 @@ const UserLine = ({ user }) => {
     }
   };
 
+  const handleRoleChange = (roleName) => {
+    let oldRolesAcl = [];
+    oldRolesAcl = buildRolesAcl(values.roles, roles);
+
+    let customAcl = [];
+    for (let i = 0; i < values.acl.length; i++) {
+      const currentAcl = values.acl[i];
+      if (!oldRolesAcl.includes(currentAcl)) {
+        customAcl.push(currentAcl);
+      }
+    }
+
+    let newRolesAcl = [];
+    let newRoles = [];
+    if (values.roles.includes(roleName)) {
+      newRoles = values.roles.filter((r) => r !== roleName);
+      newRolesAcl = buildRolesAcl(newRoles, roles);
+    } else {
+      newRoles = [...values.roles, roleName];
+      newRolesAcl = buildRolesAcl(newRoles, roles);
+    }
+
+    setFieldValue("acl", [...customAcl, ...newRolesAcl]);
+    setFieldValue("roles", newRoles);
+  };
+
   return (
     <form onSubmit={handleSubmit}>
       <FormControl py={2}>
@@ -149,13 +190,15 @@ const UserLine = ({ user }) => {
         </FormControl>
       )}
 
-      <FormControl py={2}>
+      <FormControl py={2} mt={3}>
         <Checkbox
           name="accessAllCheckbox"
           id="accessAllCheckbox"
           isChecked={values.accessAllCheckbox.length > 0}
           onChange={handleChange}
           value="on"
+          fontWeight={values.accessAllCheckbox.length > 0 ? "bold" : "normal"}
+          color={"bluefrance"}
         >
           Admin
         </Checkbox>
@@ -164,20 +207,20 @@ const UserLine = ({ user }) => {
       <FormControl py={2}>
         <FormLabel>Rôles</FormLabel>
         <HStack spacing={5}>
-          <Checkbox name="roles" onChange={handleChange} value={"user"} isDisabled isChecked>
+          {/* <Checkbox name="roles" onChange={handleRoleChange} value={"user"} isDisabled isChecked>
             user
-          </Checkbox>
+          </Checkbox> */}
 
-          {["reports", "moss", "instructeur"].map((role, i) => {
+          {roles.map((role, i) => {
             return (
               <Checkbox
                 name="roles"
                 key={i}
-                onChange={handleChange}
-                value={role}
-                isChecked={values.roles.includes(role)}
+                onChange={() => handleRoleChange(role.name)}
+                value={role.name}
+                isChecked={values.roles.includes(role.name)}
               >
-                {role}
+                {role.name}
               </Checkbox>
             );
           })}
@@ -199,24 +242,24 @@ const UserLine = ({ user }) => {
                   <Flex flexDirection="column" mb={5} key={i}>
                     <Box mb={2}>
                       <Checkbox
-                        name="custom_acl"
+                        name="acl"
                         onChange={handleChange}
                         value={item.ref}
-                        // isChecked={values.roles.includes(role)}
+                        isChecked={values.acl.includes(item.ref)}
                         fontWeight="bold"
                       >
                         {item.feature}
                       </Checkbox>
                     </Box>
-                    <Flex ml={5} justifyContent="space-between" pr={14}>
+                    <Flex ml={5} pr={14}>
                       {item.subFeatures?.map((subitem, j) => {
                         return (
-                          <HStack spacing={5} key={`${i}_${j}`}>
+                          <HStack spacing={5} ml={5} key={`${i}_${j}`}>
                             <Checkbox
-                              name="custom_acl"
+                              name="acl"
                               onChange={handleChange}
                               value={subitem.ref}
-                              // isChecked={values.roles.includes(role)}
+                              isChecked={values.acl.includes(subitem.ref)}
                             >
                               {subitem.feature}
                             </Checkbox>
@@ -231,12 +274,6 @@ const UserLine = ({ user }) => {
           </AccordionPanel>
         </AccordionItem>
       </Accordion>
-      {/* <FormControl py={2} border={"1px solid"} borderColor={"bluefrance"}>
-        <FormLabel fontWeight="bold" fontSize="md">
-          Droits d'accès Supplémentaire
-        </FormLabel>
-        
-      </FormControl> */}
 
       <FormControl py={2}>
         <FormLabel>Académies</FormLabel>
@@ -289,10 +326,13 @@ const UserLine = ({ user }) => {
 
 export default () => {
   const [users, setUsers] = useState([]);
+  const [roles, setRoles] = useState([]);
   useEffect(() => {
     async function run() {
       const usersList = await _get(`/api/admin/users/`);
       setUsers(usersList);
+      const rolesList = await _get(`/api/admin/roles/`);
+      setRoles(rolesList);
     }
     run();
   }, []);
@@ -322,7 +362,7 @@ export default () => {
                   <AccordionIcon />
                 </AccordionButton>
                 <AccordionPanel pb={4} border={"1px solid"} borderTop={0} borderColor={"bluefrance"}>
-                  <UserLine user={null} />
+                  <UserLine user={null} roles={roles} />
                 </AccordionPanel>
               </AccordionItem>
             </Accordion>
@@ -338,7 +378,7 @@ export default () => {
                       <AccordionIcon />
                     </AccordionButton>
                     <AccordionPanel pb={4} border={"1px solid"} borderTop={0} borderColor={"bluefrance"}>
-                      <UserLine user={userAttr} />
+                      <UserLine user={userAttr} roles={roles} />
                     </AccordionPanel>
                   </AccordionItem>
                 </Accordion>

@@ -13,6 +13,7 @@ const DashboardPage = lazy(() => import("./pages/Dashboard"));
 const ResetPasswordPage = lazy(() => import("./pages/password/ResetPasswordPage"));
 const ForgottenPasswordPage = lazy(() => import("./pages/password/ForgottenPasswordPage"));
 const Users = lazy(() => import("./pages/admin/Users"));
+const Roles = lazy(() => import("./pages/admin/Roles"));
 const ReconciliationParcoursup = lazy(() => import("./pages/reconciliation-parcoursup"));
 const ReconciliationAffelnet = lazy(() => import("./pages/reconciliation-affelnet"));
 const ReportPage = lazy(() => import("./pages/ReportPage"));
@@ -106,6 +107,7 @@ export default () => {
                 <Route exact path="/stats" component={DashboardPage} />
 
                 {auth && auth.permissions.isAdmin && <PrivateRoute exact path="/admin/users" component={Users} />}
+                {auth && auth.permissions.isAdmin && <PrivateRoute exact path="/admin/roles" component={Roles} />}
 
                 {auth && hasOneOfRoles(auth, ["admin", "moss"]) && (
                   <PrivateRoute exact path="/couverture-ps" component={ReconciliationPs} />

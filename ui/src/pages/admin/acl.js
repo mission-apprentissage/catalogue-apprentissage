@@ -15,6 +15,10 @@ export default [
         feature: "Demande d'ajout de formation",
         ref: "page_catalogue/demande_ajout",
       },
+      {
+        feature: "Voir les statuts de publication",
+        ref: "page_catalogue/voir_status_publication",
+      },
     ],
   },
   {
@@ -54,11 +58,65 @@ export default [
     ],
   },
   {
+    feature: "Voir la page détails d'un organisme",
+    ref: "page_organisme",
+    subFeatures: [
+      {
+        feature: "Modifier les informations",
+        ref: "page_organisme/modifier_informations",
+      },
+      {
+        feature: "Demander des corrections",
+        ref: "page_organisme/demandes_corretions",
+      },
+    ],
+  },
+  {
     feature: "Voir le journal des modifications",
     ref: "page_journal",
   },
   {
     feature: "Actions expertes",
     ref: "page_actions_expertes",
+  },
+  {
+    feature: "Rapprochement des bases Carif-Oref et Parcoursup",
+    ref: "page_reconciliation_ps",
+    subFeatures: [
+      {
+        feature: "valider / invalider la correspondance",
+        ref: "page_reconciliation_ps/validation_rejection",
+      },
+    ],
+  },
+  {
+    feature: "Rapprochement des bases Carif-Oref et Affelnet",
+    ref: "page_reconciliation_af",
+    subFeatures: [
+      {
+        feature: "valider / invalider la correspondance",
+        ref: "page_reconciliation_af/validation_rejection",
+      },
+    ],
+  },
+  {
+    feature: "Rapports de conversion",
+    ref: "rapports_conversion",
+  },
+  {
+    feature: "Rapports d'importation",
+    ref: "rapports_importation",
+  },
+  {
+    feature: "Gestion des utilisateurs",
+    ref: "page_gestion_utilisateurs",
+  },
+  {
+    feature: "Gestion des Rôles",
+    ref: "page_gestion_roles",
+  },
+  {
+    feature: "Upload de fichiers source",
+    ref: "page_upload",
   },
 ];

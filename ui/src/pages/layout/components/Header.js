@@ -85,6 +85,9 @@ const Header = () => {
                           <MenuItem as={NavLink} to="/admin/users" icon={<FontAwesomeIcon icon={faUsers} />}>
                             Gestion des utilisateurs
                           </MenuItem>
+                          <MenuItem as={NavLink} to="/admin/roles" icon={<FontAwesomeIcon icon={faUsers} />}>
+                            Gestion des rôles
+                          </MenuItem>
                           <MenuItem as={NavLink} to="/admin/upload" icon={<FontAwesomeIcon icon={faUpload} />}>
                             Upload de fichiers
                           </MenuItem>
