@@ -80,12 +80,16 @@ export default (props) => {
                   )}
                 </TabPanels>
               </Tabs>
-              <Box mb={8} px={8} display={["block", "block", "block", "block", "none"]}>
-                <Button variant="pill" onClick={onOpen} textStyle="rf-text" whiteSpace="normal">
-                  <ArrowRightLine w="9px" h="9px" mr={2} /> Demander l'ajout d'une formation
-                </Button>
-              </Box>
-              <HowToAddModal isOpen={isOpen} onClose={onClose} />
+              {hasAccessTo(auth, "page_catalogue/demande_ajout") && (
+                <>
+                  <Box mb={8} px={8} display={["block", "block", "block", "block", "none"]}>
+                    <Button variant="pill" onClick={onOpen} textStyle="rf-text" whiteSpace="normal">
+                      <ArrowRightLine w="9px" h="9px" mr={2} /> Demander l'ajout d'une formation
+                    </Button>
+                  </Box>
+                  <HowToAddModal isOpen={isOpen} onClose={onClose} />
+                </>
+              )}
             </>
           )}
         </Container>
