@@ -51,7 +51,7 @@ module.exports = ({ users }) => {
 
       if (!user) return res.status(401).json({ message: "Utilisateur non trouvé" });
 
-      const payload = users.structureUser(user);
+      const payload = await users.structureUser(user);
 
       req.logIn(payload, async () => {
         await users.registerUser(payload.email);

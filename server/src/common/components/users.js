@@ -1,6 +1,6 @@
-const { User } = require("../model/index");
+const { User, Role } = require("../model/index");
 const sha512Utils = require("../utils/sha512Utils");
-const { pick } = require("lodash");
+const { pick, uniq } = require("lodash");
 
 const rehashPassword = (user, password) => {
   user.password = sha512Utils.hash(password);
@@ -76,8 +76,15 @@ module.exports = async () => {
 
       return user.toObject();
     },
-    structureUser: (user) => {
+    structureUser: async (user) => {
       const permissions = pick(user, ["isAdmin"]);
+
+      const rolesList = await Role.find({ name: { $in: user.roles } }).lean();
+      let rolesAcl = [];
+      for (let index = 0; index < rolesList.length; index++) {
+        rolesAcl = [...rolesAcl, ...rolesList[index].acl];
+      }
+
       const structure = {
         permissions,
         sub: user.username,
@@ -85,7 +92,7 @@ module.exports = async () => {
         academie: user.academie,
         account_status: user.account_status,
         roles: permissions.isAdmin ? ["admin", ...user.roles] : user.roles,
-        acl: user.acl,
+        acl: uniq([...rolesAcl, ...user.acl]),
       };
       return structure;
     },

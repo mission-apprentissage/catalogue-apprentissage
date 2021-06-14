@@ -70,11 +70,24 @@ const buildRolesAcl = (newRoles, roles) => {
   return acl;
 };
 
-const UserLine = ({ user, roles }) => {
+const UserLine = ({ user }) => {
+  const [rolesAcl, setRolesAcl] = useState([]);
+  const [roles, setRoles] = useState([]);
+
+  useEffect(() => {
+    async function run() {
+      const rolesList = await _get(`/api/admin/roles/`);
+      setRoles(rolesList);
+
+      setRolesAcl(buildRolesAcl(user?.roles || [], rolesList));
+    }
+    run();
+  }, [user?.roles]);
+
   const { values, handleSubmit, handleChange, setFieldValue } = useFormik({
     initialValues: {
       accessAllCheckbox: user?.isAdmin ? ["on"] : [],
-      roles: user?.roles || ["user"],
+      roles: user?.roles || [],
       acl: user?.acl || [],
       accessAcademieList: user ? user.academie.split(",") : ["-1"],
       newUsername: user?.username || "",
@@ -162,8 +175,10 @@ const UserLine = ({ user, roles }) => {
       newRolesAcl = buildRolesAcl(newRoles, roles);
     }
 
-    setFieldValue("acl", [...customAcl, ...newRolesAcl]);
+    setFieldValue("acl", customAcl);
     setFieldValue("roles", newRoles);
+
+    setRolesAcl(newRolesAcl);
   };
 
   return (
@@ -246,7 +261,8 @@ const UserLine = ({ user, roles }) => {
                         name="acl"
                         onChange={handleChange}
                         value={item.ref}
-                        isChecked={values.acl.includes(item.ref)}
+                        isChecked={values.acl.includes(item.ref) || rolesAcl.includes(item.ref)}
+                        isDisabled={rolesAcl.includes(item.ref)}
                         fontWeight="bold"
                       >
                         {item.feature}
@@ -260,7 +276,8 @@ const UserLine = ({ user, roles }) => {
                               name="acl"
                               onChange={handleChange}
                               value={subitem.ref}
-                              isChecked={values.acl.includes(subitem.ref)}
+                              isChecked={values.acl.includes(subitem.ref) || rolesAcl.includes(subitem.ref)}
+                              isDisabled={rolesAcl.includes(subitem.ref)}
                             >
                               {subitem.feature}
                             </Checkbox>
@@ -327,13 +344,10 @@ const UserLine = ({ user, roles }) => {
 
 export default () => {
   const [users, setUsers] = useState([]);
-  const [roles, setRoles] = useState([]);
   useEffect(() => {
     async function run() {
       const usersList = await _get(`/api/admin/users/`);
       setUsers(usersList);
-      const rolesList = await _get(`/api/admin/roles/`);
-      setRoles(rolesList);
     }
     run();
   }, []);
@@ -363,7 +377,7 @@ export default () => {
                   <AccordionIcon />
                 </AccordionButton>
                 <AccordionPanel pb={4} border={"1px solid"} borderTop={0} borderColor={"bluefrance"}>
-                  <UserLine user={null} roles={roles} />
+                  <UserLine user={null} />
                 </AccordionPanel>
               </AccordionItem>
             </Accordion>
@@ -379,7 +393,7 @@ export default () => {
                       <AccordionIcon />
                     </AccordionButton>
                     <AccordionPanel pb={4} border={"1px solid"} borderTop={0} borderColor={"bluefrance"}>
-                      <UserLine user={userAttr} roles={roles} />
+                      <UserLine user={userAttr} />
                     </AccordionPanel>
                   </AccordionItem>
                 </Accordion>
