@@ -186,19 +186,6 @@ function Mongoosastic(schema, options) {
     });
   };
 
-  // schema.statics.synchronize = async function synchronize(filter = {}) {
-  //   let count = 0;
-  //   await this.find(filter)
-  //     .cursor()
-  //     .eachAsync(async (u) => {
-  //       await u.index();
-  //       count++;
-  //       if (count % 100 == 0) {
-  //         console.log(`${count} indexed`);
-  //       }
-  //     });
-  // };
-
   schema.statics.synchronize = async function synchronize(filter = {}) {
     let count = 0;
     await oleoduc(
