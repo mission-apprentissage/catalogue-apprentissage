@@ -15,5 +15,5 @@ export const hasOneOfRoles = (auth, roles) => {
 };
 
 export const hasAccessTo = (auth, aclRef) => {
-  return isUserAdmin(auth) || auth.acl.includes(aclRef);
+  return isUserAdmin(auth) || auth.acl?.includes(aclRef);
 };
