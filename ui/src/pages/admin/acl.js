@@ -30,8 +30,12 @@ export default [
     ref: "page_formation",
     subFeatures: [
       {
-        feature: "Voir les statuts de publication",
-        ref: "page_formation/voir_status_publication",
+        feature: "Voir les statuts de publication ParcourSup",
+        ref: "page_formation/voir_status_publication_ps",
+      },
+      {
+        feature: "Voir les statuts de publication affelnet",
+        ref: "page_formation/voir_status_publication_aff",
       },
       {
         feature: "Gestion des publications",
@@ -75,10 +79,10 @@ export default [
       },
     ],
   },
-  {
-    feature: "Voir le journal des modifications",
-    ref: "page_journal",
-  },
+  // {
+  //   feature: "Voir le journal des modifications",
+  //   ref: "page_journal",
+  // },
   {
     feature: "Actions expertes",
     ref: "page_actions_expertes",

@@ -260,24 +260,26 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                                   "fr-FR"
                                 )} organismes affichées sur ${countEtablissement.toLocaleString("fr-FR")} organismes`}
                           </span>
-                          {hasAccessTo(auth, "page_catalogue/export_btn") && !isBaseReconciliationPs && (
-                            <ExportButton
-                              index={base}
-                              filters={filters}
-                              columns={columnsDefinition
-                                .filter((def) => !def.debug)
-                                .map((def) => ({
-                                  header: def.Header,
-                                  fieldName: def.accessor,
-                                  formatter: def.formatter,
-                                }))}
-                              defaultQuery={{
-                                match: {
-                                  published: true,
-                                },
-                              }}
-                            />
-                          )}
+                          {(hasAccessTo(auth, "page_catalogue/export_btn") ||
+                            hasAccessTo(auth, "page_organismes/export_btn")) &&
+                            !isBaseReconciliationPs && (
+                              <ExportButton
+                                index={base}
+                                filters={filters}
+                                columns={columnsDefinition
+                                  .filter((def) => !def.debug)
+                                  .map((def) => ({
+                                    header: def.Header,
+                                    fieldName: def.accessor,
+                                    formatter: def.formatter,
+                                  }))}
+                                defaultQuery={{
+                                  match: {
+                                    published: true,
+                                  },
+                                }}
+                              />
+                            )}
                         </div>
                       );
                     }}
