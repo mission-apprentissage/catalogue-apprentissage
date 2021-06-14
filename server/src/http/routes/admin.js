@@ -27,7 +27,51 @@ const getEmailTemplate = (type = "forgotten-password") => {
   return path.join(__dirname, `../../assets/templates/${type}.mjml.ejs`);
 };
 
-module.exports = ({ users, mailer }) => {
+const closeSessionsOfThisRole = async (db, name) =>
+  new Promise((resolve, reject) => {
+    db.collection("sessions", function (err, collection) {
+      collection.find({}).toArray(function (err, data) {
+        const sessionIdToDelete = [];
+        for (let index = 0; index < data.length; index++) {
+          const element = data[index];
+          const session = JSON.parse(element.session);
+          if (session.passport.user.roles?.includes(name)) {
+            sessionIdToDelete.push(element._id);
+          }
+        }
+        collection.deleteMany({ _id: { $in: sessionIdToDelete } }, function (err, r) {
+          if (err) {
+            return reject(err);
+          }
+          resolve(r);
+        });
+      });
+    });
+  });
+
+const closeSessionsOfThisUser = async (db, username) =>
+  new Promise((resolve, reject) => {
+    db.collection("sessions", function (err, collection) {
+      collection.find({}).toArray(function (err, data) {
+        const sessionIdToDelete = [];
+        for (let index = 0; index < data.length; index++) {
+          const element = data[index];
+          const session = JSON.parse(element.session);
+          if (session.passport.user.sub === username) {
+            sessionIdToDelete.push(element._id);
+          }
+        }
+        collection.deleteMany({ _id: { $in: sessionIdToDelete } }, function (err, r) {
+          if (err) {
+            return reject(err);
+          }
+          resolve(r);
+        });
+      });
+    });
+  });
+
+module.exports = ({ users, mailer, db: { db } }) => {
   const router = express.Router();
 
   router.get(
@@ -84,6 +128,8 @@ module.exports = ({ users, mailer }) => {
         acl: body.options.acl,
       });
 
+      await closeSessionsOfThisUser(db, username);
+
       res.json({ message: `User ${username} updated !` });
     })
   );
@@ -94,6 +140,8 @@ module.exports = ({ users, mailer }) => {
       const username = params.username;
 
       await users.removeUser(username);
+
+      await closeSessionsOfThisUser(db, username);
 
       res.json({ message: `User ${username} deleted !` });
     })
@@ -143,6 +191,8 @@ module.exports = ({ users, mailer }) => {
         { new: true }
       );
 
+      await closeSessionsOfThisRole(db, name);
+
       res.json({ message: `Rôle ${name} updated !` });
     })
   );
@@ -158,6 +208,8 @@ module.exports = ({ users, mailer }) => {
       }
 
       await role.deleteOne({ name });
+
+      await closeSessionsOfThisRole(db, name);
 
       res.json({ message: `Rôle ${name} deleted !` });
     })
