@@ -80,10 +80,7 @@ module.exports = async () => {
       const permissions = pick(user, ["isAdmin"]);
 
       const rolesList = await Role.find({ name: { $in: user.roles } }).lean();
-      let rolesAcl = [];
-      for (let index = 0; index < rolesList.length; index++) {
-        rolesAcl = [...rolesAcl, ...rolesList[index].acl];
-      }
+      const rolesAcl = rolesList.reduce((acc, { acl }) => [...acc, ...acl], []);
 
       const structure = {
         permissions,
