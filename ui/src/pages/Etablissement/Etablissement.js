@@ -21,8 +21,6 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import useAuth from "../../common/hooks/useAuth";
 import { _get, _post, _put } from "../../common/httpClient";
 import Layout from "../layout/Layout";
@@ -30,7 +28,7 @@ import { hasOneOfRoles } from "../../common/utils/rolesUtils";
 import { NavLink } from "react-router-dom";
 import InfoTooltip from "../../common/components/InfoTooltip";
 import helpText from "../../locales/helpText.json";
-import { ArrowRightLine, Edit2Fill, ExternalLinkLine } from "../../theme/components/icons/";
+import { ArrowRightLine, Edit2Fill, ExternalLinkLine, Tick } from "../../theme/components/icons/";
 import { HowToFixModal } from "../../common/components/organisme/HowToFixModal";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
@@ -444,7 +442,7 @@ export default ({ match }) => {
                         <Box>
                           <Box>
                             Mise à jour des informations {gatherData === 1 && <Spinner />}
-                            {gatherData > 1 && <FontAwesomeIcon icon={faCheck} className="check-icon" />}
+                            {gatherData > 1 && <Tick color={"success"} boxSize={5} />}
                           </Box>
                         </Box>
                       )}

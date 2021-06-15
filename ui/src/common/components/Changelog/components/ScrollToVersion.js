@@ -1,13 +1,11 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
-
 import ScrollToVersionItem from "./ScrollToVersionItem.js";
+import { ArrowDownLine } from "../../../../theme/components/icons";
 
 const ScrollToVersion = ({ versions }) => (
   <div>
     <div className="changelog-scroll-to">
-      Aller à <FontAwesomeIcon icon={faAngleDown} />
+      Aller à <ArrowDownLine />
       <ul className="changelog-scroll-to-list">
         {versions &&
           versions.length > 0 &&
