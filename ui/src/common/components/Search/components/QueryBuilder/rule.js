@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Autosuggest from "react-autosuggest";
-import { Input, Button, Select } from "@chakra-ui/react";
+import { Input, Button, Select, Flex, InputGroup, InputRightElement } from "@chakra-ui/react";
+import { AddBoxFill, Trash } from "../../../../../theme/components/icons";
+import { CloseCircleLine } from "../../../../../theme/components/icons/CloseCircleLine";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -32,21 +34,23 @@ export default function Rule({ fields, operators, combinators, collection, ...pr
   const [operator, setOperator] = useState(props.operator);
   const [value, setValue] = useState(props.value);
   const [suggestions, setSuggestions] = useState([]);
+  const timer = useRef(null);
 
   useEffect(() => {
-    props.onChange({ field, operator, value, combinator, index: props.index });
+    // debounce here to prevent lags
+    clearTimeout(timer.current);
+
+    timer.current = setTimeout(() => {
+      props.onChange({ field, operator, value, combinator, index: props.index });
+    }, 500);
+
+    return () => clearTimeout(timer.current);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [field, operator, value, combinator]);
 
   const combinatorElement = props.index ? (
-    <Select
-      id={`react-es-rule-combinator-${field}-0`}
-      maxWidth={90}
-      margin={"5px"}
-      className="react-es-rule-combinator"
-      value={combinator}
-      onChange={(e) => setCombinator(e.target.value)}
-    >
+    <Select maxWidth={90} m={"5px"} value={combinator} onChange={(e) => setCombinator(e.target.value)}>
       {combinators.map((c) => (
         <option key={c.value} value={c.value}>
           {c.text}
@@ -57,15 +61,21 @@ export default function Rule({ fields, operators, combinators, collection, ...pr
 
   const deleteButton = props.index ? (
     <Button
-      size="sm"
-      colorScheme="red"
-      className="react-es-rule-delete"
-      style={{ marginLeft: "10px", alignSelf: "center", fontSize: 16 }}
+      variant={"unstyled"}
+      m={"5px"}
+      aria-label={"Supprimer la condition"}
       onClick={() => props.onDelete(props.index)}
     >
-      &times;
+      <Trash color={"bluefrance"} boxSize={5} />
     </Button>
   ) : null;
+
+  const addButton =
+    props.index === props.length - 1 ? (
+      <Button variant={"pill"} textStyle="rf-text" onClick={props.onAdd}>
+        <AddBoxFill color={"bluefrance"} boxSize={4} mr={2} /> ajouter une condition
+      </Button>
+    ) : null;
 
   let input = null;
   if (operators.find((o) => o.value === operator && o.useInput)) {
@@ -90,73 +100,56 @@ export default function Rule({ fields, operators, combinators, collection, ...pr
           onSuggestionsClearRequested={() => setSuggestions([])}
           getSuggestionValue={(suggestion) => suggestion}
           renderSuggestion={(suggestion) => <div>{suggestion}</div>}
+          renderInputComponent={(inputProps) => (
+            <InputGroup>
+              <Input m="5px" autoComplete="new-password" {...inputProps} />
+              {inputProps.value && (
+                <InputRightElement m={"5px"} children={<CloseCircleLine boxSize={4} onClick={() => setValue("")} />} />
+              )}
+            </InputGroup>
+          )}
           inputProps={{
             value,
             onChange: (event, { newValue }) => setValue(newValue),
-            className: "react-es-rule-value form-control",
-            style: { margin: 5, height: "2.5rem", borderRadius: 5, border: "1px solid #e2e8f0", paddingLeft: 5 },
-            autoComplete: "new-password",
           }}
         />
       );
     } else {
-      input = (
-        <Input
-          className="react-es-rule-value"
-          value={value}
-          m="5px"
-          autoComplete="new-password"
-          onChange={(e) => setValue(e.target.value)}
-        />
-      );
+      input = <Input value={value} m="5px" autoComplete="new-password" onChange={(e) => setValue(e.target.value)} />;
     }
   }
   return (
-    <div className="react-es-rule" style={{ display: "flex" }}>
-      {combinatorElement}
-      <Select
-        id={`react-es-rule-combinator-${field}-1`}
-        minWidth={130}
-        margin={"5px"}
-        className="react-es-rule-field"
-        value={fields.findIndex((e) => String(e.value) === String(field))}
-        onChange={(e) => setField(fields[e.target.value].value)}
-      >
-        {fields.map((f, k) => {
-          return (
-            <option key={k} value={k}>
-              {f.text}
-            </option>
-          );
-        })}
-      </Select>
-      <Select
-        id={`react-es-rule-combinator-${field}-2`}
-        maxWidth={90}
-        margin={"5px"}
-        className="react-es-rule-operator"
-        value={operator}
-        onChange={(e) => setOperator(e.target.value)}
-      >
-        {operators.map((o) => {
-          return (
-            <option key={o.value} value={o.value}>
-              {o.text}
-            </option>
-          );
-        })}
-      </Select>
-      {input}
-      <Button
-        size="sm"
-        colorScheme="blue"
-        className="react-es-rule-add"
-        onClick={props.onAdd}
-        style={{ marginLeft: "10px", alignSelf: "center", fontSize: 16 }}
-      >
-        +
-      </Button>
-      {deleteButton}
-    </div>
+    <>
+      <Flex>
+        {combinatorElement}
+        <Select
+          width={"auto"}
+          margin={"5px"}
+          value={fields.findIndex((e) => String(e.value) === String(field))}
+          onChange={(e) => setField(fields[e.target.value].value)}
+        >
+          {fields.map((f, k) => {
+            return (
+              <option key={k} value={k}>
+                {f.text}
+              </option>
+            );
+          })}
+        </Select>
+        <Select width={"auto"} margin={"5px"} value={operator} onChange={(e) => setOperator(e.target.value)}>
+          {operators.map((o) => {
+            return (
+              <option key={o.value} value={o.value}>
+                {o.text}
+              </option>
+            );
+          })}
+        </Select>
+        {input}
+
+        {deleteButton}
+      </Flex>
+      {addButton}
+    </>
   );
 }

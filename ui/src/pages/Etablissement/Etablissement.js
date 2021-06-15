@@ -34,7 +34,6 @@ import { ArrowRightLine, Edit2Fill, ExternalLinkLine } from "../../theme/compone
 import { HowToFixModal } from "../../common/components/organisme/HowToFixModal";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
-import { StatusBadge } from "../../common/components/StatusBadge";
 
 const sleep = (m) => new Promise((r) => setTimeout(r, m));
 
