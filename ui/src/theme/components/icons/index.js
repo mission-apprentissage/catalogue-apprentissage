@@ -23,3 +23,5 @@ export * from "./EmojiSmile";
 export * from "./EmojiFlat";
 export * from "./Question";
 export * from "./Tick";
+export * from "./AddBoxFill";
+export * from "./Trash";

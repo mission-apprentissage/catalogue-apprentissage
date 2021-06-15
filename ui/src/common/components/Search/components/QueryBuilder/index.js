@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { ReactiveComponent } from "@appbaseio/reactivesearch";
 import { useHistory } from "react-router-dom";
 
@@ -43,8 +43,26 @@ function QueryBuilder({
 
     history.push(`?${s}`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(rules)]);
+  }, [rules]);
 
+  const onAdd = useCallback(
+    () => setRules((prevRules) => [...prevRules, { ...templateRule, index: prevRules.length, key: uuidv4() }]),
+    [templateRule]
+  );
+  const onDelete = useCallback((index) => {
+    setRules((prevRules) =>
+      prevRules
+        .filter((e) => e.index !== index)
+        .filter((e) => e)
+        .map((v, k) => ({ ...v, index: k }))
+    );
+  }, []);
+  const onChange = useCallback((r) => {
+    setRules((prevRules) => {
+      prevRules[r.index] = { ...r, key: prevRules[r.index].key };
+      return [...prevRules];
+    });
+  }, []);
   return (
     <div className="react-es-query-builder">
       {rules.map((rule) => (
@@ -59,20 +77,11 @@ function QueryBuilder({
           key={rule.key}
           collection={collection}
           index={rule.index}
+          length={rules.length}
           autoComplete={autoComplete}
-          onAdd={() => setRules([...rules, { ...templateRule, index: rules.length, key: uuidv4() }])}
-          onDelete={(index) => {
-            setRules(
-              rules
-                .filter((e) => e.index !== index)
-                .filter((e) => e)
-                .map((v, k) => ({ ...v, index: k }))
-            );
-          }}
-          onChange={(r) => {
-            rules[r.index] = { ...r, key: rules[r.index].key };
-            setRules([...rules]);
-          }}
+          onAdd={onAdd}
+          onDelete={onDelete}
+          onChange={onChange}
         />
       ))}
     </div>

@@ -1,8 +1,10 @@
-.search-page .css-hodtgc-Input-input-Input {
-  border: 1px solid white;
+.search-page .search .search-container input {
+  border: none;
+  border-radius: 4px 4px 0 0;
   border-bottom: 2px solid #000091;
   background: #f0f0f0;
   color: #6a6a6a;
+  padding-left: 42px;
 }
 .search-page .search .title {
   text-align: center;
@@ -58,7 +60,10 @@
   padding-top: 25px;
 }
 .search-page .search .search-container.search-container-simple .ekqohx90 {
-  top: 14px;
+  top: 8px;
+}
+.search-page .react-autosuggest__container {
+  flex-grow: 1;
 }
 .search-page .react-autosuggest__suggestions-container--open {
   position: absolute;
@@ -102,7 +107,10 @@
 }
 
 .search-page .search .selected-filters-button {
-  background-color: white;
+  background-color: rgba(0, 0, 145, 0.08);
+  color: #000091;
+  border-radius: 16px;
+  padding: 4px 12px;
 }
 
 .search .search-pagination a {
