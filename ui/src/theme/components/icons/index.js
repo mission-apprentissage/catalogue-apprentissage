@@ -25,3 +25,8 @@ export * from "./Question";
 export * from "./Tick";
 export * from "./AddBoxFill";
 export * from "./Trash";
+export * from "./AccountFill";
+export * from "./Close";
+export * from "./MenuFill";
+export * from "./ArrowDownLine";
+export * from "./LinkLine";

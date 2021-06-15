@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { Box, Container, Flex, Link, Text } from "@chakra-ui/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
 import useAuth from "../../../common/hooks/useAuth";
 import { hasOneOfRoles } from "../../../common/utils/rolesUtils";
+import { MenuFill, Close } from "../../../theme/components/icons";
 
 const NavigationMenu = (props) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +21,7 @@ const NavigationMenu = (props) => {
 const NavToggle = ({ toggle, isOpen }) => {
   return (
     <Box display={{ base: "block", md: "none" }} onClick={toggle} py={4}>
-      <FontAwesomeIcon icon={isOpen ? faTimes : faBars} size="2x" />
+      {isOpen ? <Close boxSize={8} /> : <MenuFill boxSize={8} />}
     </Box>
   );
 };
