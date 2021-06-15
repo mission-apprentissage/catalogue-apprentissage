@@ -31,7 +31,6 @@ const esQueryParser = () => {
   const queries = mergedQueries(
     rules.map((r) => ({ ...r, query: frOperators.find((o) => o.value === r.operator).query(r.field, r.value) }))
   );
-  console.log(queries);
   return { query: { bool: queries } };
 };
 
