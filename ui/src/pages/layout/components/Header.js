@@ -1,7 +1,6 @@
 import React from "react";
 import { NavLink, useHistory } from "react-router-dom";
 import {
-  Avatar,
   Box,
   Button,
   Container,
@@ -16,14 +15,13 @@ import {
   MenuList,
   Text,
 } from "@chakra-ui/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSignOutAlt, faSync, faUpload, faUsers } from "@fortawesome/free-solid-svg-icons";
 import useAuth from "../../../common/hooks/useAuth";
-import { isUserAdmin, hasOneOfRoles } from "../../../common/utils/rolesUtils";
+import { hasOneOfRoles, isUserAdmin } from "../../../common/utils/rolesUtils";
 import { _get } from "../../../common/httpClient";
 import { LockFill } from "../../../theme/components/icons/LockFill";
 import { Logo } from "./Logo";
 import AlertMessage from "./AlertMessage";
+import { AccountFill, DoubleArrows, DownloadLine, InfoCircle } from "../../../theme/components/icons";
 
 const Header = () => {
   let [auth, setAuth] = useAuth();
@@ -66,7 +64,7 @@ const Header = () => {
               <Menu placement="bottom">
                 <MenuButton as={Button} variant="pill">
                   <Flex>
-                    <Avatar bg="bluefrance" size="sm" w="13px" h="13px" mt="0.4rem" />
+                    <AccountFill color={"bluefrance"} mt="0.3rem" boxSize={4} />
                     <Box display={["none", "block"]} ml={2}>
                       <Text color="bluefrance" textStyle="sm">
                         {auth.sub}{" "}
@@ -82,13 +80,13 @@ const Header = () => {
                     <>
                       {isUserAdmin(auth) && (
                         <MenuGroup title="Administration">
-                          <MenuItem as={NavLink} to="/admin/users" icon={<FontAwesomeIcon icon={faUsers} />}>
+                          <MenuItem as={NavLink} to="/admin/users" icon={<AccountFill boxSize={4} />}>
                             Gestion des utilisateurs
                           </MenuItem>
-                          <MenuItem as={NavLink} to="/admin/upload" icon={<FontAwesomeIcon icon={faUpload} />}>
+                          <MenuItem as={NavLink} to="/admin/upload" icon={<DownloadLine boxSize={4} />}>
                             Upload de fichiers
                           </MenuItem>
-                          <MenuItem as={NavLink} to="/admin/messagescript" icon={<FontAwesomeIcon icon={faUpload} />}>
+                          <MenuItem as={NavLink} to="/admin/messagescript" icon={<InfoCircle boxSize={4} />}>
                             Message de maintenance
                           </MenuItem>
                         </MenuGroup>
@@ -96,12 +94,12 @@ const Header = () => {
                       <MenuDivider />
                       <MenuGroup title="Réconciliation">
                         {hasOneOfRoles(auth, ["admin", "moss"]) && (
-                          <MenuItem as={NavLink} to="/couverture-ps" icon={<FontAwesomeIcon icon={faSync} />}>
+                          <MenuItem as={NavLink} to="/couverture-ps" icon={<DoubleArrows boxSize={4} />}>
                             Réconciliation Parcoursup
                           </MenuItem>
                         )}
                         {hasOneOfRoles(auth, ["admin"]) && (
-                          <MenuItem as={NavLink} to="/couverture-affelnet" icon={<FontAwesomeIcon icon={faSync} />}>
+                          <MenuItem as={NavLink} to="/couverture-affelnet" icon={<DoubleArrows boxSize={4} />}>
                             Réconciliation Affelnet
                           </MenuItem>
                         )}
@@ -109,9 +107,7 @@ const Header = () => {
                     </>
                   )}
                   <MenuDivider />
-                  <MenuItem onClick={logout} icon={<FontAwesomeIcon icon={faSignOutAlt} />}>
-                    Déconnexion
-                  </MenuItem>
+                  <MenuItem onClick={logout}>Déconnexion</MenuItem>
                 </MenuList>
               </Menu>
             )}

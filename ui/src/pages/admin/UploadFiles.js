@@ -121,8 +121,6 @@ export default () => {
           <form onSubmit={onSubmit}>
             <Select
               value={filename}
-              bg="white"
-              borderRadius="none"
               w="30%"
               mb={8}
               onChange={(e) => {

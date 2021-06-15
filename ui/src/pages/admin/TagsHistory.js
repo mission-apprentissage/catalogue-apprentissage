@@ -105,8 +105,6 @@ export default () => {
 
           <Select
             value={academie}
-            bg="white"
-            borderRadius={0}
             w="30%"
             mb={8}
             onChange={(e) => {

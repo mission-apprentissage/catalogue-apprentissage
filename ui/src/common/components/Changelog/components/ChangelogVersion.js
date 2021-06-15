@@ -1,5 +1,6 @@
 import React from "react";
 import FeatureItem from "./FeatureItem.js";
+import { LinkLine } from "../../../../theme/components/icons";
 
 const createMarkup = (html) => {
   return { __html: html };
@@ -18,7 +19,12 @@ const ChangelogVersion = ({ version, date, about, fixes, features, improvements,
     <div id={`v${slug}`} className={className}>
       <header className="changelog-header">
         <h2 className="changelog-version">
-          <a href={`#v${slug}`}>v.{version}</a>
+          <a href={`#v${slug}`}>
+            v.{version}
+            <span className={"link"}>
+              <LinkLine boxSize={4} />
+            </span>
+          </a>
         </h2>
         <h3 className="changelog-date">{date}</h3>
         <div className="changelog-about" dangerouslySetInnerHTML={createMarkup(about)} />
