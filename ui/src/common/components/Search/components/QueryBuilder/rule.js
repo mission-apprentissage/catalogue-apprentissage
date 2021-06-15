@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import Autosuggest from "react-autosuggest";
-import { Input, Button, Select, Flex } from "@chakra-ui/react";
+import { Input, Button, Select, Flex, InputGroup, InputRightElement } from "@chakra-ui/react";
 import { AddBoxFill, Trash } from "../../../../../theme/components/icons";
+import { CloseCircleLine } from "../../../../../theme/components/icons/CloseCircleLine";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -99,7 +100,14 @@ export default function Rule({ fields, operators, combinators, collection, ...pr
           onSuggestionsClearRequested={() => setSuggestions([])}
           getSuggestionValue={(suggestion) => suggestion}
           renderSuggestion={(suggestion) => <div>{suggestion}</div>}
-          renderInputComponent={(inputProps) => <Input m="5px" autoComplete="new-password" {...inputProps} />}
+          renderInputComponent={(inputProps) => (
+            <InputGroup>
+              <Input m="5px" autoComplete="new-password" {...inputProps} />
+              {inputProps.value && (
+                <InputRightElement m={"5px"} children={<CloseCircleLine boxSize={4} onClick={() => setValue("")} />} />
+              )}
+            </InputGroup>
+          )}
           inputProps={{
             value,
             onChange: (event, { newValue }) => setValue(newValue),

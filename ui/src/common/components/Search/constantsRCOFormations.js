@@ -526,7 +526,7 @@ const dataSearch = {
     "etablissement_formateur_siret",
     "etablissement_gestionnaire_siret",
   ],
-  placeholder: "Saisissez une raison sociale, un intitulé, un UAI, ou un numéro de Siret",
+  placeholder: "Saisissez une raison sociale, un intitulé de formation, un UAI, ou un numéro de Siret",
   fieldWeights: [4, 3, 2, 2, 2, 1, 1],
 };
 

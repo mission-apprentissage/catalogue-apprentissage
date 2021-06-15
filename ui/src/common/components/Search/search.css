@@ -107,7 +107,10 @@
 }
 
 .search-page .search .selected-filters-button {
-  background-color: white;
+  background-color: rgba(0, 0, 145, 0.08);
+  color: #000091;
+  border-radius: 16px;
+  padding: 4px 12px;
 }
 
 .search .search-pagination a {

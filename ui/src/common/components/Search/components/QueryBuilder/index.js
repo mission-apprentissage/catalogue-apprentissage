@@ -47,7 +47,7 @@ function QueryBuilder({
 
   const onAdd = useCallback(
     () => setRules((prevRules) => [...prevRules, { ...templateRule, index: prevRules.length, key: uuidv4() }]),
-    []
+    [templateRule]
   );
   const onDelete = useCallback((index) => {
     setRules((prevRules) =>

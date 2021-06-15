@@ -89,7 +89,6 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                   size={20}
                   showFilter={false}
                   URLParams={true}
-                  filterLabel="recherche"
                   react={{ and: filters.filter((e) => e !== `SEARCH`) }}
                   showClear={true}
                   clearIcon={<CloseCircleLine boxSize={4} />}
@@ -103,12 +102,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                 "*, *:after, *:before": { boxSizing: "content-box !important" },
               }}
             >
-              <Switch
-                color="bluefrance"
-                onChange={handleSearchSwitchChange}
-                defaultIsChecked={mode !== "simple"}
-                id={`search-mode`}
-              />
+              <Switch onChange={handleSearchSwitchChange} defaultIsChecked={mode !== "simple"} id={`search-mode`} />
               <FormLabel display="inline" htmlFor={`search-mode`} textStyle="sm" px={2}>
                 Recherche avancée
               </FormLabel>
