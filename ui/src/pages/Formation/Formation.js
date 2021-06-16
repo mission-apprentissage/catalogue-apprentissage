@@ -325,7 +325,7 @@ const Formation = ({
               <Text mb={4}>
                 Identifiant actions Carif Oref:
                 <Text as="span" variant="highlight">
-                  {displayedFormation.ids_action.join(",") ?? "N/A"}
+                  {displayedFormation.ids_action?.join(",") ?? "N/A"}
                 </Text>
               </Text>
               <Text mb={4}>
