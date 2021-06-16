@@ -6,6 +6,7 @@ import { hasOneOfRoles } from "../../utils/rolesUtils";
 import {
   CardListEtablissements,
   CardListFormation,
+  CardListPsFormations,
   ExportButton,
   Facet,
   HardFilters,
@@ -13,10 +14,14 @@ import {
 } from "./components";
 import constantsRcoFormations from "./constantsRCOFormations";
 import constantsEtablissements from "./constantsEtablissements";
+import constantsReconciliationPS from "./constantsReconciliationPS";
 import "./search.css";
 import queryString from "query-string";
+import { useHistory } from "react-router-dom";
+import { CloseCircleLine } from "../../../theme/components/icons/CloseCircleLine";
+import { SearchLine } from "../../../theme/components/icons/SearchLine";
 
-export default React.memo(({ match, location, searchState, context }) => {
+export default React.memo(({ location, searchState, context, onReconciliationCardClicked }) => {
   const { defaultMode } = queryString.parse(location.search);
   const [mode, setMode] = useState(defaultMode ?? "simple");
   const isCatalogueGeneral = context === "catalogue_general";
@@ -26,19 +31,31 @@ export default React.memo(({ match, location, searchState, context }) => {
     countCatalogueGeneral,
     countCatalogueNonEligible,
     isBaseFormations,
+    isBaseReconciliationPs,
     endpoint,
   } = searchState;
 
   let [auth] = useAuth();
+  const history = useHistory();
 
   const { FILTERS, facetDefinition, queryBuilderField, dataSearch, columnsDefinition } = isBaseFormations
     ? constantsRcoFormations
+    : isBaseReconciliationPs
+    ? constantsReconciliationPS
     : constantsEtablissements;
 
   const filters = FILTERS(context);
 
   const handleSearchSwitchChange = () => {
-    setMode((prevValue) => (prevValue === "simple" ? "advanced" : "simple"));
+    setMode((prevValue) => {
+      const newValue = prevValue === "simple" ? "advanced" : "simple";
+
+      let s = new URLSearchParams(location.search);
+      s.set("defaultMode", newValue);
+      history.push(`?${s}`);
+
+      return newValue;
+    });
   };
 
   return (
@@ -52,22 +69,30 @@ export default React.memo(({ match, location, searchState, context }) => {
           },
         }}
       >
-        <HardFilters filters={filters} context={context} isBaseFormations={isBaseFormations} />
+        <HardFilters
+          filters={filters}
+          context={context}
+          isBaseFormations={isBaseFormations}
+          isBaseReconciliationPs={isBaseReconciliationPs}
+        />
         <Box className="search" maxW="full">
           <Container maxW="xl" p={0}>
             {mode === "simple" && (
               <Box className={`search-container search-container-${mode}`}>
                 <DataSearch
-                  componentId={`SEARCH-${context}`}
+                  componentId={`SEARCH`}
                   placeholder={dataSearch.placeholder}
                   fieldWeights={dataSearch.fieldWeights}
                   dataField={dataSearch.dataField}
                   autosuggest={true}
                   queryFormat="and"
                   size={20}
-                  showFilter={true}
-                  filterLabel="recherche"
-                  react={{ and: filters.filter((e) => e !== `SEARCH-${context}`) }}
+                  showFilter={false}
+                  URLParams={true}
+                  react={{ and: filters.filter((e) => e !== `SEARCH`) }}
+                  showClear={true}
+                  clearIcon={<CloseCircleLine boxSize={4} />}
+                  icon={<SearchLine color={"bluefrance"} boxSize={5} />}
                 />
               </Box>
             )}
@@ -77,20 +102,14 @@ export default React.memo(({ match, location, searchState, context }) => {
                 "*, *:after, *:before": { boxSizing: "content-box !important" },
               }}
             >
-              <Switch
-                color="bluefrance"
-                onChange={handleSearchSwitchChange}
-                defaultIsChecked={mode !== "simple"}
-                id={`search-mode-${context}`}
-              />
-              <FormLabel display="inline" htmlFor={`search-mode-${context}`} textStyle="sm" px={2}>
+              <Switch onChange={handleSearchSwitchChange} defaultIsChecked={mode !== "simple"} id={`search-mode`} />
+              <FormLabel display="inline" htmlFor={`search-mode`} textStyle="sm" px={2}>
                 Recherche avancée
               </FormLabel>
             </Box>
             {mode !== "simple" && (
               <Box mb={4}>
                 <QueryBuilder
-                  context={context}
                   lang="fr"
                   collection={base}
                   react={{ and: filters.filter((e) => e !== "QUERYBUILDER") }}
@@ -120,10 +139,69 @@ export default React.memo(({ match, location, searchState, context }) => {
                         selectAllLabel={fd.selectAllLabel}
                         filters={filters}
                         sortBy={fd.sortBy}
+                        defaultQuery={
+                          !isBaseReconciliationPs
+                            ? () => {
+                                return {
+                                  query: {
+                                    match: {
+                                      published: true,
+                                    },
+                                  },
+                                };
+                              }
+                            : null
+                        }
                         helpTextSection={fd.helpTextSection}
                       />
                     );
                   })}
+                {isBaseReconciliationPs && context === "reconciliation_ps_inconnus" && (
+                  <Facet
+                    componentId={`reject-${context}`}
+                    dataField="statut_reconciliation.keyword"
+                    title="Statut rapprochement"
+                    filterLabel="Statut rapprochement"
+                    selectAllLabel={"Tous"}
+                    filters={filters.filter((e) => e !== "statut_reconciliation")}
+                    sortBy="asc"
+                    defaultQuery={() => {
+                      return {
+                        query: {
+                          bool: {
+                            should: [
+                              { match: { statut_reconciliation: "INCONNU" } },
+                              { match: { statut_reconciliation: "REJETE" } },
+                            ],
+                          },
+                        },
+                      };
+                    }}
+                    transformData={(data) => {
+                      return data.map((d) => ({
+                        ...d,
+                        key: d.key === "INCONNU" ? "Inconnus" : "Rejetés",
+                      }));
+                    }}
+                    customQuery={(data) => {
+                      return !data || data.length === 0 || data.length === 2
+                        ? {}
+                        : {
+                            query: {
+                              bool: {
+                                must: [
+                                  {
+                                    match: {
+                                      statut_reconciliation: data.includes("Rejetés") ? "REJETE" : "INCONNU",
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          };
+                    }}
+                  />
+                )}
               </Box>
               <div className="search-results">
                 <Box pt={2}>
@@ -149,6 +227,15 @@ export default React.memo(({ match, location, searchState, context }) => {
                     renderItem={(data) =>
                       isBaseFormations ? (
                         <CardListFormation data={data} key={data._id} />
+                      ) : isBaseReconciliationPs ? (
+                        <CardListPsFormations
+                          data={data}
+                          key={data._id}
+                          onCardClicked={() => {
+                            onReconciliationCardClicked(data);
+                          }}
+                          context={context}
+                        />
                       ) : (
                         <CardListEtablissements data={data} key={data._id} />
                       )
@@ -163,11 +250,16 @@ export default React.memo(({ match, location, searchState, context }) => {
                                     ? countCatalogueGeneral.toLocaleString("fr-FR")
                                     : countCatalogueNonEligible.toLocaleString("fr-FR")
                                 } formations `
+                              : isBaseReconciliationPs
+                              ? `${stats.numberOfResults.toLocaleString("fr-FR")} rapprochements ${context.replace(
+                                  "reconciliation_ps_",
+                                  ""
+                                )}`
                               : `${stats.numberOfResults.toLocaleString(
                                   "fr-FR"
                                 )} organismes affichées sur ${countEtablissement.toLocaleString("fr-FR")} organismes`}
                           </span>
-                          {auth?.sub !== "anonymous" && (
+                          {auth?.sub !== "anonymous" && !isBaseReconciliationPs && (
                             <ExportButton
                               index={base}
                               filters={filters}

@@ -120,10 +120,42 @@ const psFormationSchema = {
     default: null,
     description: "Etablissement du catalogue matchant les formation présente dans matching_mna_formation",
   },
+  matching_mna_parcoursup_statuts: {
+    type: [String],
+    default: [],
+    description: "Statuts ParcourSup MNA module de pertinence",
+  },
   etat_reconciliation: {
     type: Boolean,
     default: false,
     description: "Etat de la réconciliation de la formation",
+  },
+  statut_reconciliation: {
+    type: String,
+    default: "INCONNU",
+    enum: ["AUTOMATIQUE", "VALIDE", "REJETE", "INCONNU", "A_VERIFIER"],
+    description: "Statut",
+  },
+  id_reconciliation: {
+    type: String,
+    default: null,
+    description: "id mongo reconciliation",
+  },
+  matching_rejete_updated: {
+    type: Boolean,
+    default: false,
+    description: "Si la formation Précédemment Rejeté a été mise à jour",
+  },
+  matching_rejete_raison: {
+    type: String,
+    default: null,
+    description: "Affelnet : raison de dépublication",
+  },
+  statuts_history: {
+    type: [Object],
+    default: [],
+    description: "historique des statuts",
+    noIndex: true,
   },
 };
 module.exports = psFormationSchema;

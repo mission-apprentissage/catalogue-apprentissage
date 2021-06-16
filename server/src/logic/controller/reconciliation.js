@@ -1,10 +1,4 @@
-const {
-  AfReconciliation,
-  AfFormation,
-  ConvertedFormation,
-  PsFormation2021,
-  PsReconciliation,
-} = require("../../common/model");
+const { AfReconciliation, AfFormation, ConvertedFormation, PsReconciliation } = require("../../common/model");
 
 async function reconciliationAffelnet(formation, source = "MANUEL") {
   let {
@@ -76,7 +70,7 @@ async function reconciliationAffelnet(formation, source = "MANUEL") {
 }
 
 async function reconciliationParcoursup(formation, source = "MANUEL") {
-  let { code_cfd, matching_mna_formation, _id, uai_gestionnaire, uai_composante, uai_affilie } = formation;
+  let { code_cfd, matching_mna_formation, uai_gestionnaire, uai_composante, uai_affilie, id_parcoursup } = formation;
   let { etablissement_formateur_siret, etablissement_gestionnaire_siret } = matching_mna_formation[0];
 
   let payload = {
@@ -87,12 +81,18 @@ async function reconciliationParcoursup(formation, source = "MANUEL") {
     siret_formateur: etablissement_formateur_siret,
     siret_gestionnaire: etablissement_gestionnaire_siret,
     source,
+    $push: { ids_parcoursup: id_parcoursup },
   };
 
-  await PsReconciliation.findOneAndUpdate({ uai_affilie, uai_composante, uai_gestionnaire, code_cfd }, payload, {
-    upsert: true,
-  });
-  await PsFormation2021.findByIdAndUpdate(_id, { etat_reconciliation: true });
+  const reconciliation = await PsReconciliation.findOneAndUpdate(
+    { uai_affilie, uai_composante, uai_gestionnaire, code_cfd },
+    payload,
+    {
+      upsert: true,
+      new: true,
+    }
+  ).lean();
+  return reconciliation;
 }
 
 module.exports = { reconciliationAffelnet, reconciliationParcoursup };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { ReactiveComponent } from "@appbaseio/reactivesearch";
 import { useHistory } from "react-router-dom";
 
@@ -16,9 +16,8 @@ function QueryBuilder({
   autoComplete,
   collection,
   lang,
-  context,
 }) {
-  let history = useHistory();
+  const history = useHistory();
 
   operators = operators || (lang === "fr" ? frOperators : defaultOperators);
   combinators = combinators || (lang === "fr" ? frCombinators : defaultCombinators);
@@ -38,10 +37,32 @@ function QueryBuilder({
     onQuery(queries);
     const obj = JSON.stringify(rules);
     const str = encodeURIComponent(obj);
-    history.push(`?qb-${context}=${str}`);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(rules)]);
 
+    let s = new URLSearchParams(window.location.search);
+    s.set("qb", str);
+
+    history.push(`?${s}`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rules]);
+
+  const onAdd = useCallback(
+    () => setRules((prevRules) => [...prevRules, { ...templateRule, index: prevRules.length, key: uuidv4() }]),
+    [templateRule]
+  );
+  const onDelete = useCallback((index) => {
+    setRules((prevRules) =>
+      prevRules
+        .filter((e) => e.index !== index)
+        .filter((e) => e)
+        .map((v, k) => ({ ...v, index: k }))
+    );
+  }, []);
+  const onChange = useCallback((r) => {
+    setRules((prevRules) => {
+      prevRules[r.index] = { ...r, key: prevRules[r.index].key };
+      return [...prevRules];
+    });
+  }, []);
   return (
     <div className="react-es-query-builder">
       {rules.map((rule) => (
@@ -56,50 +77,44 @@ function QueryBuilder({
           key={rule.key}
           collection={collection}
           index={rule.index}
+          length={rules.length}
           autoComplete={autoComplete}
-          onAdd={() => setRules([...rules, { ...templateRule, index: rules.length, key: uuidv4() }])}
-          onDelete={(index) => {
-            setRules(
-              rules
-                .filter((e) => e.index !== index)
-                .filter((e) => e)
-                .map((v, k) => ({ ...v, index: k }))
-            );
-          }}
-          onChange={(r) => {
-            rules[r.index] = { ...r, key: rules[r.index].key };
-            setRules([...rules]);
-          }}
+          onAdd={onAdd}
+          onDelete={onDelete}
+          onChange={onChange}
         />
       ))}
     </div>
   );
 }
 
-export default ({ react, fields, collection, lang = "en", context }) => {
+export default ({ react, fields, collection, lang = "en" }) => {
   return (
     <ReactiveComponent
-      componentId={`QUERYBUILDER-${context}`}
+      componentId={`QUERYBUILDER`}
       react={react}
       URLParams={true}
-      value={`qb-${context}`}
-      render={(data) => (
-        <SubComponent collection={collection} fields={fields} {...data} lang={lang} context={context} />
-      )}
+      value={"qb"}
+      render={(data) => <SubComponent collection={collection} fields={fields} {...data} lang={lang} />}
     />
   );
 };
 
-const SubComponent = ({ setQuery, fields, collection, lang, context }) => {
+const SubComponent = ({ setQuery, fields, collection, lang }) => {
   const [initialValue, setInitialValue] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setQuery({ query: { match_all: {} }, value: "" });
     let s = new URLSearchParams(window.location.search);
-    s = s.get(`qb-${context}`);
+    s = s.get("qb");
     if (s) {
-      setInitialValue(JSON.parse(s));
+      try {
+        setInitialValue(JSON.parse(decodeURIComponent(s)));
+      } catch (e) {
+        console.error(e);
+        console.log(s);
+      }
     }
 
     setLoading(false);
@@ -111,7 +126,6 @@ const SubComponent = ({ setQuery, fields, collection, lang, context }) => {
   return (
     <div>
       <QueryBuilder
-        context={context}
         collection={collection}
         initialValue={initialValue}
         fields={fields}

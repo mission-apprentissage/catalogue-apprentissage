@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { Badge, Text, Flex, Box, Heading, Link } from "@chakra-ui/react";
 import { ArrowRightLine } from "../../../../../theme/components/icons";
 
-export const CardListEtablissements = ({ data }) => {
+const CardListEtablissements = ({ data }) => {
   return (
     <Link as={NavLink} to={`/etablissement/${data._id}`} variant="card" mt={4} isExternal>
       <Flex display={["none", "flex"]} textStyle="xs" justifyContent="space-between">
@@ -45,3 +45,5 @@ export const CardListEtablissements = ({ data }) => {
     </Link>
   );
 };
+
+export default CardListEtablissements;

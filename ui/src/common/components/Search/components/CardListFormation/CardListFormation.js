@@ -35,6 +35,11 @@ export const CardListFormation = ({ data }) => {
             </Flex>
             <ArrowRightLine alignSelf="center" color="bluefrance" boxSize={4} />
           </Flex>
+          {data.ids_action?.length > 0 && (
+            <Text textStyle="xs" mt={4}>
+              identifiant actions Carif Oref: {data.ids_action.join(",")}
+            </Text>
+          )}
         </Box>
       </Box>
     </Link>

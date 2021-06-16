@@ -1,17 +1,18 @@
 const logger = require("../../../common/logger");
 const { runScript } = require("../../scriptWrapper");
-const { RcoFormation } = require("../../../common/model");
+const { ConvertedFormation } = require("../../../common/model");
 const config = require("config");
 const path = require("path");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { DateTime } = require("luxon");
+const { uniq } = require("lodash");
 
 /*
  * Some formations received from RCO have the same properties.
  * They should be merged on RCO side, so we export a file to notify RCO of these duplicates.
  * We call them duplicates if they share :
  * - cfd
- * - etablissement_lieu_formation_code_postal
+ * - code_postal
  * - etablissement_formateur_siret
  * - etablissement_gestionnaire_siret
  * - published
@@ -20,18 +21,33 @@ const { DateTime } = require("luxon");
 runScript(async ({ mailer }) => {
   logger.info(`Start find RCO duplicates`);
 
-  const result = await RcoFormation.aggregate([
+  const result = await ConvertedFormation.aggregate([
     {
       $group: {
         _id: {
           cfd: "$cfd",
-          etablissement_lieu_formation_code_postal: "$etablissement_lieu_formation_code_postal",
+          code_postal: "$code_postal",
           etablissement_formateur_siret: "$etablissement_formateur_siret",
           etablissement_gestionnaire_siret: "$etablissement_gestionnaire_siret",
           published: "$published",
         },
-        duplicates: {
-          $push: { id_formation: "$id_formation", id_action: "$id_action", id_certifinfo: "$id_certifinfo" },
+        // duplicates: {
+        //   $push: { id_formation: "$id_formation", id_action: "$id_action", id_certifinfo: "$id_certifinfo" },
+        // },
+        // id_rco_formation: {
+        //   $push: { id_rco_formation: "$id_rco_formation" },
+        // },
+        id_formation: {
+          $push: { id_formation: "$id_formation" },
+        },
+        id_action: {
+          $push: { id_action: "$id_action" },
+        },
+        id_certifinfo: {
+          $push: { id_certifinfo: "$id_certifinfo" },
+        },
+        nom_academie: {
+          $push: { nom_academie: "$nom_academie" },
         },
         count: { $sum: 1 },
       },
@@ -41,12 +57,16 @@ runScript(async ({ mailer }) => {
   ]);
 
   const headers = [
-    "duplicates count",
+    "Nombre de doublons",
+    "Académie",
     "cfd",
     "etablissement_lieu_formation_code_postal",
     "etablissement_formateur_siret",
     "etablissement_gestionnaire_siret",
-    "ids rco",
+    // "ids RCO",
+    "ids formations",
+    "ids actions",
+    "ids certif info",
   ];
 
   const lines = [];
@@ -54,11 +74,15 @@ runScript(async ({ mailer }) => {
     const row = [];
 
     row.push(entry.count);
-    row.push(entry._id.cfd);
-    row.push(entry._id.etablissement_lieu_formation_code_postal);
-    row.push(entry._id.etablissement_formateur_siret);
-    row.push(entry._id.etablissement_gestionnaire_siret);
-    row.push(JSON.stringify(entry.duplicates));
+    row.push(uniq(entry.nom_academie.map((e) => e.nom_academie)).join(","));
+    row.push(`="${entry._id.cfd}"`);
+    row.push(`="${entry._id.code_postal}"`);
+    row.push(`="${entry._id.etablissement_formateur_siret}"`);
+    row.push(`="${entry._id.etablissement_gestionnaire_siret}"`);
+    // row.push(JSON.stringify(entry.id_rco_formation));
+    row.push(JSON.stringify(entry.id_formation));
+    row.push(JSON.stringify(entry.id_action));
+    row.push(JSON.stringify(entry.id_certifinfo));
 
     const actualRow = row.join(";");
     lines.push(actualRow);
@@ -67,7 +91,9 @@ runScript(async ({ mailer }) => {
   const data = [headers.join(";"), ...lines].join("\n");
 
   const date = DateTime.local().setLocale("fr").toFormat("yyyy-MM-dd");
-  const attachments = [{ filename: `rco-duplicates-${date}.csv`, content: data, contentType: "text/csv" }];
+  const attachments = [
+    { filename: `rco-duplicates-${date}.csv`, content: Buffer.from(data, "latin1"), contentType: "text/csv" },
+  ];
   const to = config.rco.reportMailingList.split(",");
 
   await mailer.sendEmail(

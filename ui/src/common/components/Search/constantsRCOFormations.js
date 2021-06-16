@@ -1,22 +1,22 @@
 import { escapeDiacritics } from "../../utils/downloadUtils";
 import helpText from "../../../locales/helpText.json";
 
-const FILTERS = (context) => [
-  `QUERYBUILDER-${context}`,
-  `SEARCH-${context}`,
+const FILTERS = () => [
+  `QUERYBUILDER`,
+  `SEARCH`,
   "etablissement_formateur_siret",
   "etablissement_gestionnaire_siret",
   "num_academie",
-  `niveau-${context}`,
+  `niveau`,
   "etablissement_gestionnaire_siren",
   "etablissement_reference_type",
   "etablissement_reference_conventionne",
   "etablissement_reference_declare_prefecture",
   "etablissement_reference_datadock",
-  "source",
-  `cfd-${context}`,
-  `num_departement-${context}`,
-  `nom_academie-${context}`,
+  // "source",
+  `cfd`,
+  `num_departement`,
+  `nom_academie`,
   "etablissement_gestionnaire_num_academie",
   "uai_formation",
   "code_postal",
@@ -30,11 +30,12 @@ const FILTERS = (context) => [
   "rncp_eligible_apprentissage",
   "rncp_etablissement_gestionnaire_habilite",
   "rome_codes",
-  `rncp_code-${context}`,
+  `rncp_code`,
   "mef_10_code",
-  `parcoursup_statut-${context}`,
-  `affelnet_statut-${context}`,
+  `parcoursup_statut`,
+  `affelnet_statut`,
   "diplome",
+  // "ids_action",
 ];
 
 const columnsDefinition = [
@@ -125,12 +126,12 @@ const columnsDefinition = [
     editable: false,
     formatter: (value) => escapeDiacritics(value),
   },
-  {
-    Header: "Source",
-    accessor: "source",
-    width: 200,
-    editable: false,
-  },
+  // {
+  //   Header: "Source",
+  //   accessor: "source",
+  //   width: 200,
+  //   editable: false,
+  // },
   {
     Header: "Diplome",
     accessor: "diplome",
@@ -243,12 +244,12 @@ const columnsDefinition = [
     width: 200,
     editable: false,
   },
-  {
-    Header: "A charger dans ParcourSup",
-    accessor: "parcoursup_a_charger",
-    width: 200,
-    editable: false,
-  },
+  // {
+  //   Header: "A charger dans ParcourSup",
+  //   accessor: "parcoursup_a_charger",
+  //   width: 200,
+  //   editable: false,
+  // },
   {
     Header: "Niveau de la formation",
     accessor: "niveau",
@@ -396,10 +397,25 @@ const columnsDefinition = [
     editable: false,
   },
   {
-    Header: "Id Certif Info",
+    Header: "Id RCO Info",
     accessor: "id_rco_formation",
     width: 200,
     formatter: (value) => value.split("|").pop(),
+  },
+  {
+    Header: "id RCO formation",
+    accessor: "id_formation",
+    width: 200,
+  },
+  {
+    Header: "id RCO action",
+    accessor: "ids_action",
+    width: 200,
+  },
+  {
+    Header: "id RCO certifinfo",
+    accessor: "id_certifinfo",
+    width: 200,
   },
 ];
 
@@ -417,13 +433,16 @@ const queryBuilderField = [
   { text: "Intitulé", value: "intitule_court.keyword" },
   { text: "Code RNCP", value: "rncp_code.keyword" },
   { text: "Commune du lieu de formation", value: "localite.keyword" },
+  { text: "Identifiant Formation CO", value: "id_formation.keyword" },
+  { text: "Identifiants Action CO", value: "ids_action.keyword" },
+  { text: "Identifiant Certif Info", value: "id_certifinfo.keyword" },
   // { text: "ParcourSup à charger", value: "parcoursup_a_charger" },
   // { text: "Affelnet à charger", value: "affelnet_a_charger" },
 ];
 
-const facetDefinition = (context) => [
+const facetDefinition = () => [
   {
-    componentId: `nom_academie-${context}`,
+    componentId: `nom_academie`,
     dataField: "nom_academie.keyword",
     title: "Académie",
     filterLabel: "Académie",
@@ -431,7 +450,7 @@ const facetDefinition = (context) => [
     sortBy: "asc",
   },
   {
-    componentId: `parcoursup_statut-${context}`,
+    componentId: `parcoursup_statut`,
     dataField: "parcoursup_statut.keyword",
     title: "Statut Parcoursup",
     filterLabel: "Statut Parcoursup",
@@ -442,7 +461,7 @@ const facetDefinition = (context) => [
     helpTextSection: helpText.search.parcoursup_statut,
   },
   {
-    componentId: `affelnet_statut-${context}`,
+    componentId: `affelnet_statut`,
     dataField: "affelnet_statut.keyword",
     title: "Statut Affelnet",
     filterLabel: "Statut Affelnet",
@@ -453,7 +472,7 @@ const facetDefinition = (context) => [
     helpTextSection: helpText.search.affelnet_statut,
   },
   {
-    componentId: `num_departement-${context}`,
+    componentId: `num_departement`,
     dataField: "num_departement.keyword",
     title: "Département",
     filterLabel: "Département",
@@ -462,7 +481,7 @@ const facetDefinition = (context) => [
   },
 
   {
-    componentId: `cfd-${context}`,
+    componentId: `cfd`,
     dataField: "cfd.keyword",
     title: "Code diplôme",
     filterLabel: "Code diplôme",
@@ -471,7 +490,7 @@ const facetDefinition = (context) => [
   },
 
   {
-    componentId: `niveau-${context}`,
+    componentId: `niveau`,
     dataField: "niveau.keyword",
     title: "Niveau de formation",
     filterLabel: "Niveau de formation",
@@ -480,13 +499,21 @@ const facetDefinition = (context) => [
   },
 
   {
-    componentId: `rncp_code-${context}`,
+    componentId: `rncp_code`,
     dataField: "rncp_code.keyword",
     title: "Code RNCP",
     filterLabel: "Code RNCP",
     selectAllLabel: "Tous",
     sortBy: "count",
   },
+  // {
+  //   componentId: `ids_action`,
+  //   dataField: "ids_action.keyword",
+  //   title: "Identifiant action CO",
+  //   filterLabel: "Identifiant action CO",
+  //   selectAllLabel: "Tous",
+  //   sortBy: "count",
+  // },
 ];
 
 const dataSearch = {
@@ -499,7 +526,7 @@ const dataSearch = {
     "etablissement_formateur_siret",
     "etablissement_gestionnaire_siret",
   ],
-  placeholder: "Saisissez une raison sociale, un intitulé, un UAI, ou un numéro de Siret",
+  placeholder: "Saisissez une raison sociale, un intitulé de formation, un UAI, ou un numéro de Siret",
   fieldWeights: [4, 3, 2, 2, 2, 1, 1],
 };
 

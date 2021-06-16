@@ -4,12 +4,28 @@ import { Link } from "@chakra-ui/react";
 const changelog = {
   list: [
     {
-      version: "4.1.0",
+      version: "4.2.0",
       date: "Prochainement",
       about: `<h4>À venir</h4>`,
       fixes: [],
       features: ["Développement d'un module de gestion des règles"],
       improvements: ["Travaux sur le flux retour vers les Carif-Oref et gestion des modifications"],
+    },
+    {
+      version: "4.1.0",
+      date: "Le 15 Juin 2021",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [],
+      features: [
+        "[Admin] possibilité de télécharger des fichiers pour la mise à jour des UAI, des données RNCP ou réaliser des importations Affelnet",
+        "Ajout de l'identifiant formation Carif Oref, de l'identifiant actions Carif Oref et du Code Certif Info sur la page formation, possibilité de faire une recherche sur ces informations",
+      ],
+      improvements: [
+        "Recherche avancée plus ergonomique",
+        "Message utilisateur affiché pour indiquer quand une maintenance est en cours (s'affiche quand la maintenance est en cours - bandeau rose)",
+        "Retrait du périmètre Affelnet des formations dont la date de validité ne permet pas une inscription en première année sur 2021: principalement des CAP (environ 130) et BAC pro (environ 100)",
+      ],
     },
     {
       version: "4.0.0",
