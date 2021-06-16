@@ -35,6 +35,11 @@ const usersSchema = {
     default: [],
     description: "Roles de l'utilisateur",
   },
+  acl: {
+    type: [String],
+    default: null,
+    description: "Access control level array",
+  },
   last_connection: {
     type: Date,
     default: null,

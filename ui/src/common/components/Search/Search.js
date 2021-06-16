@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { DataSearch, ReactiveBase, ReactiveList, SelectedFilters } from "@appbaseio/reactivesearch";
 import { Box, Container, Flex, FormLabel, Switch, Text } from "@chakra-ui/react";
 import useAuth from "../../hooks/useAuth";
-import { hasOneOfRoles } from "../../utils/rolesUtils";
+import { hasOneOfRoles, hasAccessTo } from "../../utils/rolesUtils";
 import {
   CardListEtablissements,
   CardListFormation,
@@ -125,8 +125,8 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                 </Text>
                 {facetDefinition(context)
                   .filter(
-                    ({ roles, showCatalogEligibleOnly }) =>
-                      (!showCatalogEligibleOnly || isCatalogueGeneral) && (!roles || hasOneOfRoles(auth, roles))
+                    ({ acl, showCatalogEligibleOnly }) =>
+                      (!showCatalogEligibleOnly || isCatalogueGeneral) && (!acl || hasAccessTo(auth, acl))
                   )
                   .map((fd, i) => {
                     return (
@@ -259,24 +259,26 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                                   "fr-FR"
                                 )} organismes affichées sur ${countEtablissement.toLocaleString("fr-FR")} organismes`}
                           </span>
-                          {auth?.sub !== "anonymous" && !isBaseReconciliationPs && (
-                            <ExportButton
-                              index={base}
-                              filters={filters}
-                              columns={columnsDefinition
-                                .filter((def) => !def.debug)
-                                .map((def) => ({
-                                  header: def.Header,
-                                  fieldName: def.accessor,
-                                  formatter: def.formatter,
-                                }))}
-                              defaultQuery={{
-                                match: {
-                                  published: true,
-                                },
-                              }}
-                            />
-                          )}
+                          {(hasAccessTo(auth, "page_catalogue/export_btn") ||
+                            hasAccessTo(auth, "page_organismes/export_btn")) &&
+                            !isBaseReconciliationPs && (
+                              <ExportButton
+                                index={base}
+                                filters={filters}
+                                columns={columnsDefinition
+                                  .filter((def) => !def.debug)
+                                  .map((def) => ({
+                                    header: def.Header,
+                                    fieldName: def.accessor,
+                                    formatter: def.formatter,
+                                  }))}
+                                defaultQuery={{
+                                  match: {
+                                    published: true,
+                                  },
+                                }}
+                              />
+                            )}
                         </div>
                       );
                     }}
