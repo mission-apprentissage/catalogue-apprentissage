@@ -24,7 +24,7 @@ import { useFormik } from "formik";
 import useAuth from "../../common/hooks/useAuth";
 import { _get, _post, _put } from "../../common/httpClient";
 import Layout from "../layout/Layout";
-import { hasOneOfRoles } from "../../common/utils/rolesUtils";
+import { hasAccessTo } from "../../common/utils/rolesUtils";
 import { NavLink } from "react-router-dom";
 import InfoTooltip from "../../common/components/InfoTooltip";
 import helpText from "../../locales/helpText.json";
@@ -42,7 +42,7 @@ const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
 const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSubmit, values, countFormations }) => {
   const [auth] = useAuth();
-  const hasRightToEdit = hasOneOfRoles(auth, ["admin"]);
+  const hasRightToEdit = hasAccessTo(auth, "page_organisme/modifier_informations");
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const query = [
@@ -306,11 +306,14 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
           </Box>
         </GridItem>
       </Grid>
-      <Box mt={8} mb={16}>
-        <Button variant={"pill"} textStyle="rf-text" onClick={onOpen} whiteSpace="normal">
-          <ArrowRightLine w="9px" h="9px" mr={2} /> Demander des corrections sur les données sur votre organisme
-        </Button>
-      </Box>
+      {hasAccessTo(auth, "page_organisme/demandes_corretions") && (
+        <Box mt={8} mb={16}>
+          <Button variant={"pill"} textStyle="rf-text" onClick={onOpen} whiteSpace="normal">
+            <ArrowRightLine w="9px" h="9px" mr={2} /> Demander des corrections sur les données sur votre organisme
+          </Button>
+        </Box>
+      )}
+
       <HowToFixModal isOpen={isOpen} onClose={onClose} />
     </>
   );

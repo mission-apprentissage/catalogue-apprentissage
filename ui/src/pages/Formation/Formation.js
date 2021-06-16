@@ -23,7 +23,7 @@ import { useFormik } from "formik";
 import { _get, _post, _put } from "../../common/httpClient";
 import Layout from "../layout/Layout";
 import useAuth from "../../common/hooks/useAuth";
-import { hasRightToEditFormation } from "../../common/utils/rolesUtils";
+import { hasRightToEditFormation, hasAccessTo } from "../../common/utils/rolesUtils";
 import { StatusBadge } from "../../common/components/StatusBadge";
 import { ReactComponent as InfoIcon } from "../../theme/assets/info-circle.svg";
 import { PublishModal } from "../../common/components/formation/PublishModal";
@@ -786,7 +786,7 @@ export default ({ match }) => {
             </Center>
           )}
 
-          {formation && (
+          {hasAccessTo(user, "page_formation/gestion_publication") && formation && (
             <>
               <Box mb={8}>
                 <Flex alignItems="center" justify="space-between" flexDirection={["column", "column", "row"]}>
@@ -808,10 +808,14 @@ export default ({ match }) => {
                     </Button>
                   )}
                 </Flex>
-                {hasRightToEdit && formation.etablissement_reference_catalogue_published && (
+                {formation.etablissement_reference_catalogue_published && (
                   <Box mt={5}>
-                    <StatusBadge source="Parcoursup" status={formation.parcoursup_statut} mr={[0, 3]} />
-                    <StatusBadge source="Affelnet" status={formation.affelnet_statut} mt={[1, 0]} />
+                    {hasAccessTo(user, "page_formation/voir_status_publication_ps") && (
+                      <StatusBadge source="Parcoursup" status={formation.parcoursup_statut} mr={[0, 3]} />
+                    )}
+                    {hasAccessTo(user, "page_formation/voir_status_publication_aff") && (
+                      <StatusBadge source="Affelnet" status={formation.affelnet_statut} mt={[1, 0]} />
+                    )}
                   </Box>
                 )}
               </Box>
@@ -822,12 +826,12 @@ export default ({ match }) => {
                 values={values}
                 handleSubmit={handleSubmit}
                 handleChange={handleChange}
-                hasRightToEdit={hasRightToEdit}
+                hasRightToEdit={hasAccessTo(user, "page_formation/modifier_informations") && hasRightToEdit}
                 isSubmitting={isSubmitting}
                 onDelete={onDelete}
                 pendingFormation={pendingFormation}
               />
-              {!edition && hasRightToEdit && (
+              {hasAccessTo(user, "page_formation/supprimer_formation") && !edition && hasRightToEdit && (
                 <Flex justifyContent={["center", "flex-end"]} my={[6, 12]}>
                   <Button
                     variant="outline"
@@ -846,7 +850,7 @@ export default ({ match }) => {
           )}
         </Container>
       </Box>
-      {formation && (
+      {hasAccessTo(user, "page_formation/gestion_publication") && formation && (
         <PublishModal
           isOpen={isOpenPublishModal}
           onClose={onClosePublishModal}

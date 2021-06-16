@@ -18,9 +18,11 @@ import {
   HStack,
   Input,
   Stack,
+  Flex,
 } from "@chakra-ui/react";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
+import ACL from "./acl";
 
 const ACADEMIES = [
   "01",
@@ -55,18 +57,45 @@ const ACADEMIES = [
   "70",
 ];
 
+const buildRolesAcl = (newRoles, roles) => {
+  let acl = [];
+  for (let i = 0; i < newRoles.length; i++) {
+    const selectedRole = newRoles[i];
+    const selectedRoleAcl = roles.reduce((acc, curr) => {
+      if (selectedRole === curr.name) return [...acc, ...curr.acl];
+      return acc;
+    }, []);
+    acl = [...acl, ...selectedRoleAcl];
+  }
+  return acl;
+};
+
 const UserLine = ({ user }) => {
-  const { values, handleSubmit, handleChange } = useFormik({
+  const [rolesAcl, setRolesAcl] = useState([]);
+  const [roles, setRoles] = useState([]);
+
+  useEffect(() => {
+    async function run() {
+      const rolesList = await _get(`/api/admin/roles/`);
+      setRoles(rolesList);
+
+      setRolesAcl(buildRolesAcl(user?.roles || [], rolesList));
+    }
+    run();
+  }, [user?.roles]);
+
+  const { values, handleSubmit, handleChange, setFieldValue } = useFormik({
     initialValues: {
       accessAllCheckbox: user?.isAdmin ? ["on"] : [],
-      roles: user?.roles || ["user"],
+      roles: user?.roles || [],
+      acl: user?.acl || [],
       accessAcademieList: user ? user.academie.split(",") : ["-1"],
       newUsername: user?.username || "",
       newEmail: user?.email || "",
       newTmpPassword: "1MotDePassTemporaire!",
     },
     onSubmit: (
-      { apiKey, accessAllCheckbox, accessAcademieList, newUsername, newEmail, newTmpPassword, roles },
+      { apiKey, accessAllCheckbox, accessAcademieList, newUsername, newEmail, newTmpPassword, roles, acl },
       { setSubmitting }
     ) => {
       return new Promise(async (resolve, reject) => {
@@ -80,6 +109,7 @@ const UserLine = ({ user }) => {
                 academie: accessAcademie,
                 email: newEmail,
                 roles,
+                acl,
                 permissions: {
                   isAdmin: accessAll,
                 },
@@ -95,6 +125,7 @@ const UserLine = ({ user }) => {
                 academie: accessAcademie,
                 email: newEmail,
                 roles,
+                acl,
                 permissions: {
                   isAdmin: accessAll,
                 },
@@ -122,6 +153,34 @@ const UserLine = ({ user }) => {
     }
   };
 
+  const handleRoleChange = (roleName) => {
+    let oldRolesAcl = [];
+    oldRolesAcl = buildRolesAcl(values.roles, roles);
+
+    let customAcl = [];
+    for (let i = 0; i < values.acl.length; i++) {
+      const currentAcl = values.acl[i];
+      if (!oldRolesAcl.includes(currentAcl)) {
+        customAcl.push(currentAcl);
+      }
+    }
+
+    let newRolesAcl = [];
+    let newRoles = [];
+    if (values.roles.includes(roleName)) {
+      newRoles = values.roles.filter((r) => r !== roleName);
+      newRolesAcl = buildRolesAcl(newRoles, roles);
+    } else {
+      newRoles = [...values.roles, roleName];
+      newRolesAcl = buildRolesAcl(newRoles, roles);
+    }
+
+    setFieldValue("acl", customAcl);
+    setFieldValue("roles", newRoles);
+
+    setRolesAcl(newRolesAcl);
+  };
+
   return (
     <form onSubmit={handleSubmit}>
       <FormControl py={2}>
@@ -147,13 +206,15 @@ const UserLine = ({ user }) => {
         </FormControl>
       )}
 
-      <FormControl py={2}>
+      <FormControl py={2} mt={3}>
         <Checkbox
           name="accessAllCheckbox"
           id="accessAllCheckbox"
           isChecked={values.accessAllCheckbox.length > 0}
           onChange={handleChange}
           value="on"
+          fontWeight={values.accessAllCheckbox.length > 0 ? "bold" : "normal"}
+          color={"bluefrance"}
         >
           Admin
         </Checkbox>
@@ -162,25 +223,75 @@ const UserLine = ({ user }) => {
       <FormControl py={2}>
         <FormLabel>Rôles</FormLabel>
         <HStack spacing={5}>
-          <Checkbox name="roles" onChange={handleChange} value={"user"} isDisabled isChecked>
+          {/* <Checkbox name="roles" onChange={handleRoleChange} value={"user"} isDisabled isChecked>
             user
-          </Checkbox>
+          </Checkbox> */}
 
-          {["reports", "moss", "instructeur"].map((role, i) => {
+          {roles.map((role, i) => {
             return (
               <Checkbox
                 name="roles"
                 key={i}
-                onChange={handleChange}
-                value={role}
-                isChecked={values.roles.includes(role)}
+                onChange={() => handleRoleChange(role.name)}
+                value={role.name}
+                isChecked={values.roles.includes(role.name)}
               >
-                {role}
+                {role.name}
               </Checkbox>
             );
           })}
         </HStack>
       </FormControl>
+
+      <Accordion bg="white" mt={3} allowToggle>
+        <AccordionItem>
+          <AccordionButton _expanded={{ bg: "grey.200" }} border={"none"}>
+            <Box flex="1" textAlign="left" fontSize="sm">
+              Droits d'accès Supplémentaire
+            </Box>
+            <AccordionIcon />
+          </AccordionButton>
+          <AccordionPanel pb={4} border={"none"} bg="grey.100">
+            <Box mt={5} ml={5}>
+              {ACL.map((item, i) => {
+                return (
+                  <Flex flexDirection="column" mb={5} key={i}>
+                    <Box mb={2}>
+                      <Checkbox
+                        name="acl"
+                        onChange={handleChange}
+                        value={item.ref}
+                        isChecked={values.acl.includes(item.ref) || rolesAcl.includes(item.ref)}
+                        isDisabled={rolesAcl.includes(item.ref)}
+                        fontWeight="bold"
+                      >
+                        {item.feature}
+                      </Checkbox>
+                    </Box>
+                    <Flex ml={5} pr={14}>
+                      {item.subFeatures?.map((subitem, j) => {
+                        return (
+                          <HStack spacing={5} ml={5} key={`${i}_${j}`}>
+                            <Checkbox
+                              name="acl"
+                              onChange={handleChange}
+                              value={subitem.ref}
+                              isChecked={values.acl.includes(subitem.ref) || rolesAcl.includes(subitem.ref)}
+                              isDisabled={rolesAcl.includes(subitem.ref)}
+                            >
+                              {subitem.feature}
+                            </Checkbox>
+                          </HStack>
+                        );
+                      })}
+                    </Flex>
+                  </Flex>
+                );
+              })}
+            </Box>
+          </AccordionPanel>
+        </AccordionItem>
+      </Accordion>
 
       <FormControl py={2}>
         <FormLabel>Académies</FormLabel>

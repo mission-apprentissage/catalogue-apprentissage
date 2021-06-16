@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { hasOneOfRoles } from "../../../../utils/rolesUtils";
+import { hasOneOfRoles, hasAccessTo } from "../../../../utils/rolesUtils";
 import useAuth from "../../../../hooks/useAuth";
 import { StatusBadge } from "../../../StatusBadge";
 import { Box, Flex, Heading, Link, Text } from "@chakra-ui/react";
@@ -26,12 +26,13 @@ export const CardListFormation = ({ data }) => {
         <Box>
           <Flex justifyContent="space-between">
             <Flex mt={3} flexWrap={"wrap"}>
-              {hasOneOfRoles(auth, ["admin", "instructeur"]) && data.etablissement_reference_catalogue_published && (
-                <>
-                  <StatusBadge source="Parcoursup" status={data.parcoursup_statut} mr={[0, 2]} />
-                  <StatusBadge source="Affelnet" status={data.affelnet_statut} mt={[2, 0]} />
-                </>
-              )}
+              {hasAccessTo(auth, "page_catalogue/voir_status_publication") &&
+                data.etablissement_reference_catalogue_published && (
+                  <>
+                    <StatusBadge source="Parcoursup" status={data.parcoursup_statut} mr={[0, 2]} />
+                    <StatusBadge source="Affelnet" status={data.affelnet_statut} mt={[2, 0]} />
+                  </>
+                )}
             </Flex>
             <ArrowRightLine alignSelf="center" color="bluefrance" boxSize={4} />
           </Flex>

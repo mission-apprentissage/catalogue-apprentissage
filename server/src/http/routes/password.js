@@ -88,7 +88,7 @@ module.exports = ({ users, mailer }) => {
 
       const updatedUser = await users.changePassword(user.username, newPassword);
 
-      const payload = users.structureUser(updatedUser);
+      const payload = await users.structureUser(updatedUser);
 
       req.logIn(payload, () => {
         return res.json(payload);
