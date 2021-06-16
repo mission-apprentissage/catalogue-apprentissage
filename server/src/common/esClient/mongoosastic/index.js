@@ -11,7 +11,7 @@
 "use strict";
 
 const serialize = require("./serialize");
-
+const { oleoduc, writeData } = require("oleoduc");
 // https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/bulk_examples.html
 
 let isMappingNeedingGeoPoint = false;
@@ -188,15 +188,18 @@ function Mongoosastic(schema, options) {
 
   schema.statics.synchronize = async function synchronize(filter = {}) {
     let count = 0;
-    await this.find(filter)
-      .cursor()
-      .eachAsync(async (u) => {
-        await u.index();
-        count++;
-        if (count % 100 == 0) {
-          console.log(`${count} indexed`);
-        }
-      });
+    await oleoduc(
+      await this.find(filter).cursor(),
+      writeData(
+        async (doc) => {
+          await doc.index();
+          if (++count % 100 === 0) {
+            console.error(`${count} indexed`);
+          }
+        },
+        { parallel: 25 }
+      )
+    );
   };
 
   schema.statics.unsynchronize = function unsynchronize() {
