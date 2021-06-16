@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { hasOneOfRoles, hasAccessTo } from "../../../../utils/rolesUtils";
+import { hasAccessTo } from "../../../../utils/rolesUtils";
 import useAuth from "../../../../hooks/useAuth";
 import { StatusBadge } from "../../../StatusBadge";
 import { Box, Flex, Heading, Link, Text } from "@chakra-ui/react";
