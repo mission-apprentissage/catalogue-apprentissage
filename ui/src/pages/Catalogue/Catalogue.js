@@ -23,7 +23,11 @@ import { HowToAddModal } from "../../common/components/formation/HowToAddModal";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
 
+import useAuth from "../../common/hooks/useAuth";
+import { hasAccessTo } from "../../common/utils/rolesUtils";
+
 export default (props) => {
+  let [auth] = useAuth();
   const searchState = useSearch("catalogue");
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -50,7 +54,7 @@ export default (props) => {
                   <Flex>
                     <Tab>Catalogue général ({searchState.countCatalogueGeneral.toLocaleString("fr-FR")})</Tab>
                     <Tab>Catalogue non-éligible ({searchState.countCatalogueNonEligible.toLocaleString("fr-FR")})</Tab>
-                    <Tab>Guide réglementaire</Tab>
+                    {hasAccessTo(auth, "page_catalogue/guide_reglementaire") && <Tab>Guide réglementaire</Tab>}
                   </Flex>
                   <Button
                     variant="pill"
@@ -69,17 +73,23 @@ export default (props) => {
                   <TabPanel>
                     <Search {...props} searchState={searchState} context="catalogue_non_eligible" />
                   </TabPanel>
-                  <TabPanel>
-                    <HowToReglement />
-                  </TabPanel>
+                  {hasAccessTo(auth, "page_catalogue/guide_reglementaire") && (
+                    <TabPanel>
+                      <HowToReglement />
+                    </TabPanel>
+                  )}
                 </TabPanels>
               </Tabs>
-              <Box mb={8} px={8} display={["block", "block", "block", "block", "none"]}>
-                <Button variant="pill" onClick={onOpen} textStyle="rf-text" whiteSpace="normal">
-                  <ArrowRightLine w="9px" h="9px" mr={2} /> Demander l'ajout d'une formation
-                </Button>
-              </Box>
-              <HowToAddModal isOpen={isOpen} onClose={onClose} />
+              {hasAccessTo(auth, "page_catalogue/demande_ajout") && (
+                <>
+                  <Box mb={8} px={8} display={["block", "block", "block", "block", "none"]}>
+                    <Button variant="pill" onClick={onOpen} textStyle="rf-text" whiteSpace="normal">
+                      <ArrowRightLine w="9px" h="9px" mr={2} /> Demander l'ajout d'une formation
+                    </Button>
+                  </Box>
+                  <HowToAddModal isOpen={isOpen} onClose={onClose} />
+                </>
+              )}
             </>
           )}
         </Container>

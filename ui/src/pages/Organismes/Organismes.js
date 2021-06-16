@@ -6,8 +6,11 @@ import { useSearch } from "../../common/hooks/useSearch";
 import { HowToReglement } from "../../common/components/HowToReglement/HowToReglement";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
+import useAuth from "../../common/hooks/useAuth";
+import { hasAccessTo } from "../../common/utils/rolesUtils";
 
 export default (props) => {
+  let [auth] = useAuth();
   const searchState = useSearch("organismes");
   const title = "Liste des organismes";
   setTitle(title);
@@ -30,15 +33,17 @@ export default (props) => {
             <Tabs variant="search" mt={5} isLazy>
               <TabList bg="white">
                 <Tab>Liste</Tab>
-                <Tab>Guide réglementaire</Tab>
+                {hasAccessTo(auth, "page_organismes/guide_reglementaire") && <Tab>Guide réglementaire</Tab>}
               </TabList>
               <TabPanels>
                 <TabPanel>
                   <Search {...props} searchState={searchState} context="organismes" />
                 </TabPanel>
-                <TabPanel>
-                  <HowToReglement />
-                </TabPanel>
+                {hasAccessTo(auth, "page_organismes/guide_reglementaire") && (
+                  <TabPanel>
+                    <HowToReglement />
+                  </TabPanel>
+                )}
               </TabPanels>
             </Tabs>
           )}

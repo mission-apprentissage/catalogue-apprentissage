@@ -1,5 +1,6 @@
 const logSchema = require("./log");
 const userSchema = require("./user");
+const roleSchema = require("./role");
 const rcoFormationSchema = require("./rcoFormation");
 const mnaFormationSchema = require("./mnaFormation/mnaFormation");
 const psFormation2020Schema = require("./psFormation");
@@ -15,6 +16,7 @@ const messageScriptSchema = require("./messageScript");
 module.exports = {
   logSchema,
   userSchema,
+  roleSchema,
   rcoFormationSchema,
   mnaFormationSchema,
   psFormation2020Schema,
