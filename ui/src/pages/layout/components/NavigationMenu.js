@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { Box, Container, Flex, Link, Text } from "@chakra-ui/react";
-import useAuth from "../../../common/hooks/useAuth";
-import { hasOneOfRoles } from "../../../common/utils/rolesUtils";
+// import useAuth from "../../../common/hooks/useAuth";
+// import { hasOneOfRoles } from "../../../common/utils/rolesUtils";
 import { MenuFill, Close } from "../../../theme/components/icons";
 
 const NavigationMenu = (props) => {
@@ -48,7 +48,7 @@ const NavItem = ({ children, to = "/", ...rest }) => {
 };
 
 const NavLinks = ({ isOpen }) => {
-  let [auth] = useAuth();
+  // let [auth] = useAuth();
   return (
     <Box display={{ base: isOpen ? "block" : "none", md: "block" }} flexBasis={{ base: "100%", md: "auto" }}>
       <Flex
@@ -59,7 +59,7 @@ const NavLinks = ({ isOpen }) => {
         textStyle="sm"
       >
         <NavItem to="/">Accueil</NavItem>
-        {hasOneOfRoles(auth, ["admin", "moss"]) && <NavItem to="/mes-actions">Mes actions expertes</NavItem>}
+        {/*{hasOneOfRoles(auth, ["admin", "moss"]) && <NavItem to="/mes-actions">Mes actions expertes</NavItem>}*/}
         <NavItem to="/recherche/formations-2021">Catalogue des formations en apprentissage 2021</NavItem>
         <NavItem to="/recherche/etablissements">Liste des organismes</NavItem>
         <NavItem to="/changelog">Journal des modifications</NavItem>
