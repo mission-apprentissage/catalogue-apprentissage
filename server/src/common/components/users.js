@@ -1,6 +1,6 @@
-const { User } = require("../model/index");
+const { User, Role } = require("../model/index");
 const sha512Utils = require("../utils/sha512Utils");
-const { pick } = require("lodash");
+const { pick, uniq } = require("lodash");
 
 const rehashPassword = (user, password) => {
   user.password = sha512Utils.hash(password);
@@ -37,6 +37,7 @@ module.exports = async () => {
         email: options.email || "",
         academie: options.academie || "0",
         roles: options.roles || ["user"],
+        acl: options.acl || [],
       });
 
       await user.save();
@@ -75,8 +76,12 @@ module.exports = async () => {
 
       return user.toObject();
     },
-    structureUser: (user) => {
+    structureUser: async (user) => {
       const permissions = pick(user, ["isAdmin"]);
+
+      const rolesList = await Role.find({ name: { $in: user.roles } }).lean();
+      const rolesAcl = rolesList.reduce((acc, { acl }) => [...acc, ...acl], []);
+
       const structure = {
         permissions,
         sub: user.username,
@@ -84,6 +89,7 @@ module.exports = async () => {
         academie: user.academie,
         account_status: user.account_status,
         roles: permissions.isAdmin ? ["admin", ...user.roles] : user.roles,
+        acl: uniq([...rolesAcl, ...user.acl]),
       };
       return structure;
     },
