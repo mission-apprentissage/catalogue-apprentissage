@@ -83,7 +83,7 @@ const Header = () => {
                           <MenuItem as={NavLink} to="/admin/users" icon={<AccountFill boxSize={4} />}>
                             Gestion des utilisateurs
                           </MenuItem>
-                          <MenuItem as={NavLink} to="/admin/roles" icon={<FontAwesomeIcon icon={faUsers} />}>
+                          <MenuItem as={NavLink} to="/admin/roles" icon={<AccountFill boxSize={4} />}>
                             Gestion des rôles
                           </MenuItem>
                           <MenuItem as={NavLink} to="/admin/upload" icon={<DownloadLine boxSize={4} />}>
