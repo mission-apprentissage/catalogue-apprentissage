@@ -1,1 +1,3 @@
-export * from "./CardListEtablissements";
+import CardListEtablissements from "./CardListEtablissements";
+
+export { CardListEtablissements };

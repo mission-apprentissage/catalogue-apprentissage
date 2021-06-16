@@ -136,7 +136,6 @@
 .react-changelog-container .changelog-file-changed:before,
 .react-changelog-container .changelog-version a:after,
 .react-changelog-container .vjs-playlist ul li a.vjs-track:before {
-  font-family: "Font Awesome\ 5 Free";
   font-weight: 900;
 }
 .react-changelog-container .changelog-checkbox + .changelog-checkbox-label:before {
@@ -153,7 +152,7 @@
   margin-top: -4px;
 }
 .react-changelog-container .changelog-checkbox:checked + .changelog-checkbox-label:before {
-  content: "\f00c";
+  content: "✓";
   color: #fff;
   font-size: 12px;
   line-height: 14px;
@@ -243,8 +242,7 @@
 .react-changelog-container .changelog-version a:hover:after {
   opacity: 0.8;
 }
-.react-changelog-container .changelog-version a:after {
-  content: "\f0c1";
+.react-changelog-container .changelog-version .link {
   -webkit-transition: opacity 0.25s ease;
   -moz-transition: opacity 0.25s ease;
   -ms-transition: opacity 0.25s ease;
@@ -290,7 +288,7 @@
   text-align: center;
 }
 .react-changelog-container .changelog-switch:before {
-  content: "veiw updated files";
+  content: "view updated files";
   display: block;
 }
 .react-changelog-container .changelog-switch:after {

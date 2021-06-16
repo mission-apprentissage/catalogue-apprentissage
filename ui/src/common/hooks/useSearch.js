@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
 import { _get } from "../httpClient";
+import { mergedQueries, withUniqueKey } from "../components/Search/components/QueryBuilder/utils";
+import { operators as frOperators } from "../components/Search/components/QueryBuilder/utils_fr";
 
 const FORMATIONS_ES_INDEX = "convertedformation";
 const ETABLISSEMENTS_ES_INDEX = "etablissements";
+const RECONCILIATION_PS_ES_INDEX = "psformations2021";
 
 const CATALOGUE_API_ENDPOINT = `${process.env.REACT_APP_BASE_URL}/api`;
 const TCO_API_ENDPOINT =
@@ -12,7 +15,23 @@ const getEsBase = (context) => {
   if (context === "organismes") {
     return ETABLISSEMENTS_ES_INDEX;
   }
+  if (context === "reconciliation_ps") {
+    return RECONCILIATION_PS_ES_INDEX;
+  }
   return FORMATIONS_ES_INDEX;
+};
+
+const esQueryParser = () => {
+  let s = new URLSearchParams(window.location.search);
+  s = s.get("qb");
+  if (!s) return null;
+
+  const initialValue = JSON.parse(decodeURIComponent(s));
+  const rules = withUniqueKey(initialValue);
+  const queries = mergedQueries(
+    rules.map((r) => ({ ...r, query: frOperators.find((o) => o.value === r.operator).query(r.field, r.value) }))
+  );
+  return { query: { bool: queries } };
 };
 
 const getCountEntities = async (base) => {
@@ -23,6 +42,16 @@ const getCountEntities = async (base) => {
     const countEtablissement = await _get(`${TCO_API_ENDPOINT}/entity/etablissements/count?${params}`, false);
     return {
       countEtablissement,
+      countCatalogueGeneral: 0,
+      countCatalogueNonEligible: 0,
+    };
+  }
+
+  if (base === RECONCILIATION_PS_ES_INDEX) {
+    const countReconciliationPs = await _get(`${CATALOGUE_API_ENDPOINT}/parcoursup/reconciliation/count`, false);
+    return {
+      countReconciliationPs,
+      countEtablissement: 0,
       countCatalogueGeneral: 0,
       countCatalogueNonEligible: 0,
     };
@@ -50,18 +79,21 @@ const getCountEntities = async (base) => {
 export function useSearch(context) {
   const base = getEsBase(context);
   const isBaseFormations = base === FORMATIONS_ES_INDEX;
-  const endpoint = isBaseFormations ? CATALOGUE_API_ENDPOINT : TCO_API_ENDPOINT;
+  const isBaseReconciliationPs = base === RECONCILIATION_PS_ES_INDEX;
+  const endpoint = base === ETABLISSEMENTS_ES_INDEX ? TCO_API_ENDPOINT : CATALOGUE_API_ENDPOINT;
   const [searchState, setSearchState] = useState({
     loaded: false,
     base,
     count: 0,
     isBaseFormations,
+    isBaseReconciliationPs,
     endpoint,
   });
 
   const [error, setError] = useState(null);
   useEffect(() => {
     const abortController = new AbortController();
+    esQueryParser(); // TODO
     getCountEntities(base)
       .then((resultCount) => {
         if (!abortController.signal.aborted) {
@@ -69,6 +101,7 @@ export function useSearch(context) {
             loaded: true,
             base,
             isBaseFormations,
+            isBaseReconciliationPs,
             endpoint,
             ...resultCount,
           });
@@ -82,7 +115,7 @@ export function useSearch(context) {
     return () => {
       abortController.abort();
     };
-  }, [base, endpoint, isBaseFormations]);
+  }, [base, endpoint, isBaseFormations, isBaseReconciliationPs]);
 
   if (error !== null) {
     throw error;

@@ -4,6 +4,7 @@ import useAuth from "./common/hooks/useAuth";
 import { _post, _get } from "./common/httpClient";
 import ScrollToTop from "./common/components/ScrollToTop";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { hasOneOfRoles } from "./common/utils/rolesUtils";
 
 // Route-based code splitting @see https://reactjs.org/docs/code-splitting.html#route-based-code-splitting
 const HomePage = lazy(() => import("./pages/HomePage"));
@@ -23,20 +24,27 @@ const Etablissement = lazy(() => import("./pages/Etablissement"));
 const Journal = lazy(() => import("./pages/Journal/Journal"));
 const TagsHistory = lazy(() => import("./pages/admin/TagsHistory"));
 const UploadFiles = lazy(() => import("./pages/admin/UploadFiles"));
+const Message = lazy(() => import("./pages/admin/MessageScript"));
 const Contact = lazy(() => import("./pages/legal/Contact"));
 const Cookies = lazy(() => import("./pages/legal/Cookies"));
 const DonneesPersonnelles = lazy(() => import("./pages/legal/DonneesPersonnelles"));
 const MentionsLegales = lazy(() => import("./pages/legal/MentionsLegales"));
 const Accessibilite = lazy(() => import("./pages/legal/Accessibilite"));
+const ReconciliationPs = lazy(() => import("./pages/admin/ReconciliationPs"));
+const ActionsExpertes = lazy(() => import("./pages/ActionsExpertes/ActionsExpertes"));
 
-function PrivateRoute({ children, ...rest }) {
+function PrivateRoute({ component, ...rest }) {
   let [auth] = useAuth();
+
+  if (auth.sub !== "anonymous") {
+    return <Route {...rest} component={component} />;
+  }
 
   return (
     <Route
       {...rest}
       render={() => {
-        return auth.sub !== "anonymous" ? children : <Redirect to="/login" />;
+        return <Redirect to="/login" />;
       }}
     />
   );
@@ -95,15 +103,14 @@ export default () => {
             <ResetPasswordWrapper>
               <ScrollToTop />
               <Switch>
-                {/* <PrivateRoute exact path="/stats">
-                {auth && auth.permissions.isAdmin ? <DashboardPage /> : <HomePage />}
-              </PrivateRoute> */}
                 <Route exact path="/stats" component={DashboardPage} />
-                {auth && auth.permissions.isAdmin && (
-                  <PrivateRoute exact path="/admin/users">
-                    <Users />
-                  </PrivateRoute>
+
+                {auth && auth.permissions.isAdmin && <PrivateRoute exact path="/admin/users" component={Users} />}
+
+                {auth && hasOneOfRoles(auth, ["admin", "moss"]) && (
+                  <PrivateRoute exact path="/couverture-ps" component={ReconciliationPs} />
                 )}
+
                 <Route exact path="/" component={HomePage} />
                 <Route exact path="/recherche/formations-2021" component={Catalogue} />
                 <Route exact path="/recherche/etablissements" component={Organismes} />
@@ -122,6 +129,14 @@ export default () => {
                 <Route exact path="/donnees-personnelles" component={DonneesPersonnelles} />
                 <Route exact path="/mentions-legales" component={MentionsLegales} />
                 <Route exact path="/accessibilite" component={Accessibilite} />
+
+                {auth && hasOneOfRoles(auth, ["admin", "moss"]) && (
+                  <PrivateRoute exact path="/mes-actions" component={ActionsExpertes} />
+                )}
+
+                {auth && hasOneOfRoles(auth, ["admin"]) && (
+                  <PrivateRoute exact path="/admin/messagescript" component={Message} />
+                )}
 
                 {auth && auth.permissions.isAdmin && (
                   <PrivateRoute exact path="/tags-history">

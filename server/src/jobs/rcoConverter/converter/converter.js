@@ -17,6 +17,10 @@ const formatToMnaFormation = (rcoFormation) => {
 
   return {
     id_rco_formation: `${rcoFormation.id_formation}|${rcoFormation.id_action}|${rcoFormation.id_certifinfo}`,
+    id_formation: rcoFormation.id_formation,
+    id_action: rcoFormation.id_action,
+    ids_action: rcoFormation.id_action.split("|"),
+    id_certifinfo: rcoFormation.id_certifinfo,
     cfd: rcoFormation.cfd,
 
     uai_formation: rcoFormation.etablissement_lieu_formation_uai,

@@ -225,6 +225,11 @@ const mnaFormationSchema = {
     default: null,
     description: "Erreur lors du contrôle de référencement sur ParcourSup de la formation",
   },
+  parcoursup_ids: {
+    type: [String],
+    default: [],
+    description: "ids ParcourSup",
+  },
   affelnet_reference: {
     type: Boolean,
     default: false,
@@ -360,6 +365,26 @@ const mnaFormationSchema = {
     type: String,
     default: null,
     description: "Id de formation RCO (id_formation + id_action + id_certifinfo)",
+  },
+  id_formation: {
+    type: String,
+    default: null,
+    description: "Identifiant de la formation",
+  },
+  id_action: {
+    type: String,
+    default: null,
+    description: "Identifant des actions concaténés",
+  },
+  ids_action: {
+    type: [String],
+    default: null,
+    description: "Identifant des actions concaténés",
+  },
+  id_certifinfo: {
+    type: String,
+    default: null,
+    description: "Identifant certifInfo (unicité de la certification)",
   },
   tags: {
     type: [String],

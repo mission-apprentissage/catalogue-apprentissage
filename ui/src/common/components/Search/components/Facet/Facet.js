@@ -9,7 +9,19 @@ import "./facet.css";
 import { AddFill, SubtractLine } from "../../../../../theme/components/icons";
 import InfoTooltip from "../../../InfoTooltip";
 
-const Facet = ({ componentId, dataField, filterLabel, filters, title, selectAllLabel, sortBy, helpTextSection }) => {
+const Facet = ({
+  componentId,
+  dataField,
+  filterLabel,
+  filters,
+  title,
+  selectAllLabel,
+  sortBy,
+  helpTextSection,
+  defaultQuery,
+  transformData,
+  customQuery,
+}) => {
   let [auth] = useAuth();
   let defaultValue = null;
   let defaultIndex = [];
@@ -52,7 +64,6 @@ const Facet = ({ componentId, dataField, filterLabel, filters, title, selectAllL
                 dataField={dataField}
                 filterLabel={filterLabel}
                 react={{ and: filters.filter((e) => e !== componentId) }}
-                // showMissing={userAcm.all !== "false"}
                 defaultValue={defaultValue}
                 showCount={true}
                 queryFormat="or"
@@ -67,17 +78,11 @@ const Facet = ({ componentId, dataField, filterLabel, filters, title, selectAllL
                 showSearch={true}
                 placeholder="Filtrer"
                 showFilter={true}
-                URLParams={false}
+                URLParams={true}
                 loader="Chargement"
-                defaultQuery={() => {
-                  return {
-                    query: {
-                      match: {
-                        published: true,
-                      },
-                    },
-                  };
-                }}
+                defaultQuery={defaultQuery}
+                transformData={transformData}
+                customQuery={customQuery}
                 sortBy={sortBy}
                 renderItem={(label, count) => (
                   <Flex justifyContent="space-between" w="full">
