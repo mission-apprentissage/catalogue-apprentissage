@@ -78,7 +78,7 @@ export default function Rule({ fields, operators, combinators, collection, ...pr
   const addButton =
     props.index === props.length - 1 ? (
       <Button variant={"secondary"} height={8} fontSize={"zeta"} onClick={props.onAdd}>
-        <AddBoxFill color={"bluefrance"} boxSize={3} mr={2} /> ajouter une condition
+        Ajouter une condition
       </Button>
     ) : null;
 
