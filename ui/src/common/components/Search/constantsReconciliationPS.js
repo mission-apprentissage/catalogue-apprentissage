@@ -156,7 +156,7 @@ const facetDefinition = (context) => [
     title: "Informations similaires",
     filterLabel: "Informations similaires",
     selectAllLabel: "Tous",
-    sortBy: "asc",
+    sortBy: "desc",
   },
   {
     componentId: `nom_academie-${context}`,

@@ -1,9 +1,6 @@
 import React, { useCallback } from "react";
 import {
   Box,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
   Center,
   Container,
   Flex,
@@ -18,11 +15,12 @@ import {
   Text,
 } from "@chakra-ui/react";
 import Layout from "../layout/Layout";
-import { NavLink } from "react-router-dom";
-import { ArrowDropRightLine, EmojiSmile, EmojiFlat, Question, Tick } from "../../theme/components/icons";
+import { EmojiSmile, EmojiFlat, Question, Tick } from "../../theme/components/icons";
 import Search from "../../common/components/Search/Search";
 import { useSearch } from "../../common/hooks/useSearch";
 import { ReconciliationPsModal } from "../../common/components/reconciliation/ReconciliationPsModal";
+import { Breadcrumb } from "../../common/components/Breadcrumb";
+import { setTitle } from "../../common/utils/pageUtils";
 
 export default (props) => {
   let searchState = useSearch("reconciliation_ps");
@@ -33,52 +31,39 @@ export default (props) => {
     onClose: onCloseModal,
   } = useDisclosure();
 
+  const title = "Rapprochement des bases Carif-Oref et Parcoursup";
+  setTitle(title);
+
   let onCloseReconciliationPsModal = useCallback(() => {
     onCloseModal();
   }, [onCloseModal]);
 
   return (
     <Layout>
-      <Box w="100%" pt={[4, 8]} px={[1, 24]}>
+      <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
         <Container maxW="xl">
-          <Breadcrumb separator={<ArrowDropRightLine color="grey.600" />} textStyle="xs">
-            <BreadcrumbItem>
-              <BreadcrumbLink as={NavLink} to="/" color="grey.600" textDecoration="underline">
-                Accueil
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem>
-              <BreadcrumbLink as={NavLink} to="/" color="grey.600" textDecoration="underline">
-                Mes actions expertes
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink>Rapprochement des bases Carif-Oref et Parcoursup</BreadcrumbLink>
-            </BreadcrumbItem>
-          </Breadcrumb>
+          <Breadcrumb
+            pages={[
+              { title: "Accueil", to: "/" },
+              { title: "Mes actions expertes", to: "/mes-actions" },
+              { title: title },
+            ]}
+          />
           <Heading textStyle="h2" color="grey.800" mt={5}>
-            Rapprochement des bases Carif-Oref et Parcoursup
+            {title}
           </Heading>
-          <Text fontWeight="normal" mt={5}>
-            Pour réaliser le rapprochement des bases, les formations paramétrées sur Parcoursup sont comparées aux
-            offres de formation de la base Carif-Oref.
-            <br />
-            {searchState.loaded &&
-              `${searchState.countReconciliationPs.countTotal} formations paramétrées sur Parcoursup.`}
-            <br />
-            <br />
-            Les informations comparées pour réaliser le rapprochement sont les suivantes :
-            <br />
-            Codes formation diplôme BCN, Codes MEF, Codes UAI, Codes postaux, Académie et SIRET. Les rapprochements sont
-            forts lorsque les informations sont similaires à la fois sur les données concernant la formation et le(s)
-            organisme(s) associé(s) ; les rapprochements sont faibles lorsque les informations sont similaires sur les
-            données concernant la formation.
+          <Text fontWeight="bold" mt={5}>
+            Pour réaliser le rapprochement des bases, les{" "}
+            {searchState.loaded && `${searchState.countReconciliationPs.countTotal}`} formations paramétrées sur
+            Parcoursup sont comparées aux offres de formation de la base Carif-Oref.
           </Text>
-        </Container>
-      </Box>
-
-      <Box>
-        <Container maxW="full" p={0}>
+          <Text fontSize="sm" mt={5}>
+            Les informations comparées pour réaliser le rapprochement sont les suivantes : Codes formation diplôme BCN,
+            Codes MEF, Codes UAI, Codes postaux, Académie et SIRET. Les rapprochements sont forts lorsque les
+            informations sont similaires à la fois sur les données concernant la formation et le(s) organisme(s)
+            associé(s) ; les rapprochements sont faibles lorsque les informations sont similaires sur les données
+            concernant la formation.
+          </Text>
           {!searchState.loaded && (
             <Center h="70vh">
               <Spinner />
@@ -87,7 +72,7 @@ export default (props) => {
           {searchState.loaded && (
             <>
               <Tabs variant="search" mt={5} isLazy>
-                <TabList bg="white" justifyContent="space-between" px={[2, 8, 32, 40, 80]}>
+                <TabList bg="white" justifyContent="space-between">
                   <Flex>
                     <Tab>
                       <EmojiSmile color="grey.700" mr="1" />
