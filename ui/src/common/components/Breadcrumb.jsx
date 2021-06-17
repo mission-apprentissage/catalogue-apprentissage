@@ -25,8 +25,8 @@ const Breadcrumb = ({ pages }) => {
                 to={page.to}
                 color="grey.600"
                 textDecoration="underline"
-                _focus={{ boxShadow: "0 0 0 3px #3a55d1", outlineColor: "info" }}
-                _focusVisible={{ outlineColor: "info" }}
+                _focus={{ boxShadow: "0 0 0 3px #2A7FFE", outlineColor: "#2A7FFE" }}
+                _focusVisible={{ outlineColor: "#2A7FFE" }}
               >
                 {page.title}
               </BreadcrumbLink>
