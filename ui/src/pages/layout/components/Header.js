@@ -102,7 +102,12 @@ const Header = () => {
                           </MenuItem>
                         )}
                         {hasOneOfRoles(auth, ["admin"]) && (
-                          <MenuItem as={NavLink} to="/couverture-affelnet" icon={<DoubleArrows boxSize={4} />}>
+                          <MenuItem
+                            as={NavLink}
+                            to="/couverture-affelnet"
+                            icon={<DoubleArrows boxSize={4} />}
+                            isDisabled
+                          >
                             Réconciliation Affelnet
                           </MenuItem>
                         )}
