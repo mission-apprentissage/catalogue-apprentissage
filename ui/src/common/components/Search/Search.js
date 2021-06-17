@@ -209,6 +209,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                 </Box>
                 <Box className={`result-view`}>
                   <ReactiveList
+                    scrollOnChange={false}
                     componentId="result"
                     title="Results"
                     dataField="_id"
