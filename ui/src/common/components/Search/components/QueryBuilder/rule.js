@@ -61,19 +61,24 @@ export default function Rule({ fields, operators, combinators, collection, ...pr
 
   const deleteButton = props.index ? (
     <Button
-      variant={"unstyled"}
+      variant={"secondary"}
       m={"5px"}
+      p={0}
+      height={8}
+      width={8}
+      minW={8}
       aria-label={"Supprimer la condition"}
       onClick={() => props.onDelete(props.index)}
+      alignSelf="center"
     >
-      <Trash color={"bluefrance"} boxSize={5} />
+      <Trash color={"bluefrance"} boxSize={3} />
     </Button>
   ) : null;
 
   const addButton =
     props.index === props.length - 1 ? (
-      <Button variant={"pill"} textStyle="rf-text" onClick={props.onAdd}>
-        <AddBoxFill color={"bluefrance"} boxSize={4} mr={2} /> ajouter une condition
+      <Button variant={"secondary"} height={8} fontSize={"zeta"} onClick={props.onAdd}>
+        <AddBoxFill color={"bluefrance"} boxSize={3} mr={2} /> ajouter une condition
       </Button>
     ) : null;
 
@@ -120,7 +125,7 @@ export default function Rule({ fields, operators, combinators, collection, ...pr
   }
   return (
     <>
-      <Flex>
+      <Flex mb={2}>
         {combinatorElement}
         <Select
           width={"auto"}
