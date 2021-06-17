@@ -20,6 +20,21 @@ module.exports = () => {
   );
 
   router.post(
+    "/:index/_count",
+    tryCatch(async (req, res) => {
+      const { index } = req.params;
+
+      const result = await esClient.count({
+        index,
+        ...req.query,
+        body: req.body,
+      });
+
+      return res.json(result.body);
+    })
+  );
+
+  router.post(
     "/:index/_msearch",
     tryCatch(async (req, res) => {
       const { index } = req.params;

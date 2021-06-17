@@ -52,8 +52,20 @@ export default (props) => {
               <Tabs variant="search" mt={5} isLazy>
                 <TabList bg="white" justifyContent="space-between">
                   <Flex>
-                    <Tab>Catalogue général ({searchState.countCatalogueGeneral.toLocaleString("fr-FR")})</Tab>
-                    <Tab>Catalogue non-éligible ({searchState.countCatalogueNonEligible.toLocaleString("fr-FR")})</Tab>
+                    <Tab>
+                      Catalogue général (
+                      {searchState.countCatalogueGeneral.filtered === null
+                        ? searchState.countCatalogueGeneral.total.toLocaleString("fr-FR")
+                        : searchState.countCatalogueGeneral.filtered.toLocaleString("fr-FR")}
+                      )
+                    </Tab>
+                    <Tab>
+                      Catalogue non-éligible (
+                      {searchState.countCatalogueNonEligible.filtered === null
+                        ? searchState.countCatalogueNonEligible.total.toLocaleString("fr-FR")
+                        : searchState.countCatalogueNonEligible.filtered.toLocaleString("fr-FR")}
+                      )
+                    </Tab>
                     {hasAccessTo(auth, "page_catalogue/guide_reglementaire") && <Tab>Guide réglementaire</Tab>}
                   </Flex>
                   <Button
