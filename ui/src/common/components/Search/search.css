@@ -3,9 +3,18 @@
   border-radius: 4px 4px 0 0;
   border-bottom: 2px solid #000091;
   background: #f0f0f0;
-  color: #6a6a6a;
+  color: #1e1e1e;
   padding-left: 42px;
 }
+.search-page .search .search-container input::placeholder {
+  font-style: italic;
+  color: #6a6a6a;
+}
+.search-page .search .search-container input:focus-visible {
+  outline: #2a7ffe solid 2px;
+  outline-offset: 2px;
+}
+
 .search-page .search .title {
   text-align: center;
   color: #19414c;
@@ -128,7 +137,7 @@
   color: white;
 }
 .search .search-pagination a:focus {
-  box-shadow: 0 0 0 3px #3a55d1;
+  box-shadow: 0 0 0 3px #2a7ffe;
 }
 
 @media screen and (max-width: 767px) {
