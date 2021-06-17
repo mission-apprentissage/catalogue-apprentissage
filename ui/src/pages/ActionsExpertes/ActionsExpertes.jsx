@@ -9,26 +9,39 @@ import { useSearch } from "../../common/hooks/useSearch";
 // import useAuth from "../../common/hooks/useAuth";
 import { ArrowRightLine } from "../../theme/components/icons";
 
-export const Card = ({ info, linkTo, title, body }) => {
-  return (
-    <Link as={NavLink} to={linkTo} variant="card" mt={4}>
-      <Flex display={["none", "flex"]} textStyle="xs">
-        <Text color="bluefrance">{info}</Text>
-      </Flex>
-      <Heading textStyle="h6" color="grey.800" mt={2} mb={2}>
-        {title}
-      </Heading>
+export const Card = ({ info, linkTo, title, body, isDisabled }) => {
+  const CardContent = () => (
+    <Flex flexDirection="column" h="full">
       <Box>
-        <Text textStyle="sm" color="grey.600">
+        <Flex display={["none", "flex"]} textStyle="md">
+          <Text color={!isDisabled ? "bluefrance" : "grey.600"}>{info}</Text>
+        </Flex>
+        <Heading textStyle="h6" color={!isDisabled ? "grey.800" : "grey.600"} mt={2} mb={2}>
+          {title}
+        </Heading>
+      </Box>
+      <Flex flexDirection="column" flexGrow="1">
+        <Text textStyle="md" color="grey.600">
           {body}
         </Text>
-        <Box>
-          <Flex justifyContent="flex-end">
-            <ArrowRightLine alignSelf="center" color="bluefrance" boxSize={4} />
-          </Flex>
-        </Box>
-      </Box>
-    </Link>
+      </Flex>
+      <Flex justifyContent="flex-end">
+        {!isDisabled && <ArrowRightLine alignSelf="center" color="bluefrance" boxSize={4} />}
+      </Flex>
+    </Flex>
+  );
+  return (
+    <>
+      {!isDisabled ? (
+        <Link as={NavLink} to={linkTo} variant="card" mt={4} h="100%" p={6}>
+          <CardContent />
+        </Link>
+      ) : (
+        <Text variant="card" as="div" mt={4} h="100%" p={6}>
+          <CardContent />
+        </Text>
+      )}
+    </>
   );
 };
 
@@ -49,21 +62,14 @@ export default () => {
             {title}
           </Heading>
           {searchState.loaded && (
-            <Grid templateRows="repeat(2, 1fr)" templateColumns="repeat(2, 1fr)" gap={4}>
+            <Grid templateColumns="repeat(4, 1fr)" gap={4} minH="350px">
               <GridItem>
                 <Card
-                  info="0% de correspondances validées"
+                  info="0% de validées"
                   linkTo="/couverture-affelnet"
                   title="Rapprochement des bases Carif-Oref et Affelnet"
                   body="Valider la correspondance des données entre la base Affelnet et le Catalogue des offres de formations en apprentissage 2021 (base Carif-Oref)"
-                />
-              </GridItem>
-              <GridItem>
-                <Card
-                  info="0% de converture"
-                  linkTo="#"
-                  title="Intégration des formations à la plateforme Affelnet"
-                  body="Déterminer les règles d’intégration des formations du Catalogue des offres de formation en apprentissage 2021 (Carif-Oref) sur la plateforme Affelnet"
+                  isDisabled
                 />
               </GridItem>
               <GridItem>
@@ -71,7 +77,7 @@ export default () => {
                   info={`${(
                     (searchState.countReconciliationPs.countValide * 100) /
                     searchState.countReconciliationPs.countTotal
-                  ).toFixed(2)}% de correspondances validées`}
+                  ).toFixed(2)}% de validées`}
                   linkTo="/couverture-ps"
                   title="Rapprochement des bases Carif-Oref et Parcoursup"
                   body="Valider la correspondance des données entre la base Parcoursup et le Catalogue des offres de formations en apprentissage 2021 (base Carif-Oref)"
@@ -81,8 +87,18 @@ export default () => {
                 <Card
                   info="0% de converture"
                   linkTo="#"
+                  title="Intégration des formations à la plateforme Affelnet"
+                  body="Déterminer les règles d’intégration des formations du Catalogue des offres de formation en apprentissage 2021 (Carif-Oref) sur la plateforme Affelnet"
+                  isDisabled
+                />
+              </GridItem>
+              <GridItem>
+                <Card
+                  info="0% de converture"
+                  linkTo="#"
                   title="Intégration des formations à la plateforme Parcoursup"
                   body="Déterminer les règles d’intégration des formations du Catalogue des offres de formation en apprentissage 2021 (Carif-Oref) sur la plateforme Parcoursup"
+                  isDisabled
                 />
               </GridItem>
             </Grid>
