@@ -1,3 +1,4 @@
+const { serialize } = require("../../../common/utils/rulesUtils");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { ReglePerimetre } = require("../../../common/model");
 const { cloneDeep } = require("lodash");
@@ -39,7 +40,7 @@ const createRulesInDB = async (rules, plateforme, statut) => {
       niveau,
       diplome,
       statut,
-      regle_complementaire: JSON.stringify(rest),
+      regle_complementaire: serialize(rest),
       editable: false,
       last_update_who: "mna",
     }).save();

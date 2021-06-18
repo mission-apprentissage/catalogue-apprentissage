@@ -1,7 +1,8 @@
 const { ConvertedFormation } = require("../../../common/model");
 const logger = require("../../../common/logger");
+const { getQueryFromRule } = require("../../../common/utils/rulesUtils");
+const { ReglePerimetre } = require("../../../common/model");
 const { updateTagsHistory } = require("../../../logic/updaters/tagsHistoryUpdater");
-const { aPublierVerifierAccesDirectPostBacRules, aPublierValidationRecteurRules, aPublierRules } = require("./rules");
 
 const run = async () => {
   // 1 - set "hors périmètre"
@@ -38,18 +39,28 @@ const run = async () => {
     parcoursup_statut: "hors périmètre",
   };
 
-  await ConvertedFormation.updateMany(
-    {
-      ...filterHP,
-      ...aPublierVerifierAccesDirectPostBacRules,
-    },
-    { $set: { last_update_at: Date.now(), parcoursup_statut: "à publier (vérifier accès direct postbac)" } }
-  );
+  const aPublierVerifierAccesDirectPostBacRules = await ReglePerimetre.find({
+    plateforme: "parcoursup",
+    statut: "à publier (vérifier accès direct postbac)",
+  }).lean();
 
   await ConvertedFormation.updateMany(
     {
       ...filterHP,
-      ...aPublierValidationRecteurRules,
+      $or: aPublierVerifierAccesDirectPostBacRules.map(getQueryFromRule),
+    },
+    { $set: { last_update_at: Date.now(), parcoursup_statut: "à publier (vérifier accès direct postbac)" } }
+  );
+
+  const aPublierValidationRecteurRules = await ReglePerimetre.find({
+    plateforme: "parcoursup",
+    statut: "à publier (soumis à validation Recteur)",
+  }).lean();
+
+  await ConvertedFormation.updateMany(
+    {
+      ...filterHP,
+      $or: aPublierValidationRecteurRules.map(getQueryFromRule),
     },
     { $set: { last_update_at: Date.now(), parcoursup_statut: "à publier (soumis à validation Recteur)" } }
   );
@@ -62,10 +73,15 @@ const run = async () => {
     },
   };
 
+  const aPublierRules = await ReglePerimetre.find({
+    plateforme: "parcoursup",
+    statut: "à publier",
+  }).lean();
+
   await ConvertedFormation.updateMany(
     {
       ...filter,
-      ...aPublierRules,
+      $or: aPublierRules.map(getQueryFromRule),
     },
     { $set: { last_update_at: Date.now(), parcoursup_statut: "à publier" } }
   );
