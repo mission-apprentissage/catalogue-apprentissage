@@ -40,11 +40,15 @@ const aPublierValidationRecteurRules = {
   $and: [
     ...toBePublishedRules,
     {
-      niveau: { $in: ["4 (BAC...)", "5 (BTS, DEUST...)", "6 (Licence, BUT...)"] },
-      diplome: "MENTION COMPLEMENTAIRE",
-      $and: [
+      $or: [
         {
-          libelle_court: "MC4",
+          niveau: { $in: ["4 (BAC...)", "5 (BTS, DEUST...)", "6 (Licence, BUT...)"] },
+          diplome: "MENTION COMPLEMENTAIRE",
+          $and: [
+            {
+              libelle_court: "MC4",
+            },
+          ],
         },
       ],
     },
@@ -67,31 +71,27 @@ const aPublierRules = {
           },
         },
         {
-          $or: [
-            {
-              niveau: { $in: ["4 (BAC...)", "5 (BTS, DEUST...)", "6 (Licence, BUT...)"] },
-              diplome: "TH DE NIV 3 DES CHAMBRES DE METIERS",
-              $and: [{ libelle_court: "BM", niveau_formation_diplome: "36M" }],
-            },
-            {
-              niveau: { $in: ["4 (BAC...)", "5 (BTS, DEUST...)", "6 (Licence, BUT...)"] },
-              diplome: {
-                $in: [
-                  "TH DE NIV 2 ORGANISMES GESTIONNAIRES DIVERS",
-                  "TH DE NIV 3 DES CCI ET MINISTERE COMMERCE ARTISANAT PME",
-                  "TH DE NIV 3 DES CHAMBRES DE METIERS",
-                  "TH DE NIV 3 EDUCATION RECTORAT GRETA ...",
-                  "TH DE NIV 3 INSTANCES REGIONALES",
-                  "TH DE NIV 3 MINISTERE DE L'EQUIPEMENT TRANSPORT TOURISME",
-                  "TH DE NIV 3 MINISTERE DU TRAVAIL - AFPA",
-                  "TH DE NIV 3 MINISTERE INDUSTRIE",
-                  "TH DE NIV 3 ORGANISMES GESTIONNAIRES DIVERS",
-                  "TH DE NIV 3 SANTE SOCIAL",
-                ],
-              },
-              $and: [{ libelle_court: { $regex: /^TH3-/ } }],
-            },
-          ],
+          niveau: { $in: ["4 (BAC...)", "5 (BTS, DEUST...)", "6 (Licence, BUT...)"] },
+          diplome: "TH DE NIV 3 DES CHAMBRES DE METIERS",
+          $and: [{ libelle_court: "BM", niveau_formation_diplome: "36M" }],
+        },
+        {
+          niveau: { $in: ["4 (BAC...)", "5 (BTS, DEUST...)", "6 (Licence, BUT...)"] },
+          diplome: {
+            $in: [
+              "TH DE NIV 2 ORGANISMES GESTIONNAIRES DIVERS",
+              "TH DE NIV 3 DES CCI ET MINISTERE COMMERCE ARTISANAT PME",
+              "TH DE NIV 3 DES CHAMBRES DE METIERS",
+              "TH DE NIV 3 EDUCATION RECTORAT GRETA ...",
+              "TH DE NIV 3 INSTANCES REGIONALES",
+              "TH DE NIV 3 MINISTERE DE L'EQUIPEMENT TRANSPORT TOURISME",
+              "TH DE NIV 3 MINISTERE DU TRAVAIL - AFPA",
+              "TH DE NIV 3 MINISTERE INDUSTRIE",
+              "TH DE NIV 3 ORGANISMES GESTIONNAIRES DIVERS",
+              "TH DE NIV 3 SANTE SOCIAL",
+            ],
+          },
+          $and: [{ libelle_court: { $regex: /^TH3-/ } }],
         },
         {
           niveau: "5 (BTS, DEUST...)",
