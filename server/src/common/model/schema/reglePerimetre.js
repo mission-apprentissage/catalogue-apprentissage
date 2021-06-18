@@ -41,9 +41,10 @@ const reglePerimetre = {
     description: "Académie sur laquelle la règle s'applique, toutes par défaut",
   },
   regle_complementaire: {
-    type: Object,
+    type: String,
     default: null,
-    description: "La règle pour matcher les formations (i.e: query mongo) qui s'ajoute au niveau + diplome",
+    description:
+      "La règle pour matcher les formations (i.e: query mongo) qui s'ajoute au niveau + diplome (stringified)",
   },
   priorite: {
     type: Number,

@@ -1,3 +1,5 @@
+const { asyncForEach } = require("../../../common/utils/asyncUtils");
+const { ReglePerimetre } = require("../../../common/model");
 const { cloneDeep } = require("lodash");
 const { runScript } = require("../../scriptWrapper");
 const {
@@ -6,15 +8,13 @@ const {
 } = require("../../pertinence/affelnet/rules");
 
 const {
-  aPublierVerifierAccesDirectPostBacRules: psAPublierVerifierAccesDirectPostBacRules,
-  aPublierValidationRecteurRules: psAPublierValidationRecteurRules,
+  aPublierVerifierAccesDirectPostBacRules: psPostBacRules,
+  aPublierValidationRecteurRules: psAPublierRecteurRules,
   aPublierRules: psAPublierRules,
 } = require("../../pertinence/parcoursup/rules");
 
-const { toBePublishedRules } = require("../../common/utils/referenceUtils");
-
 const specificRulesNode = (rules) => {
-  return rules["$and"][rules["$and"].length - 1]["$or"];
+  return rules["$or"];
 };
 
 const rulesReducer = (acc, rule) => {
@@ -25,63 +25,44 @@ const rulesReducer = (acc, rule) => {
   const baseRule = cloneDeep(rule);
   niveaux.forEach((niveau) => {
     diplomes.forEach((diplome) => {
-      rules.push({ $and: [...toBePublishedRules, { ...baseRule, niveau, diplome }] });
+      rules.push({ ...baseRule, niveau, diplome });
     });
   });
 
   return [...acc, ...rules];
 };
 
+const createRulesInDB = async (rules, plateforme, statut) => {
+  await asyncForEach(rules, async ({ niveau, diplome, ...rest }) => {
+    await new ReglePerimetre({
+      plateforme,
+      niveau,
+      diplome,
+      statut,
+      regle_complementaire: JSON.stringify(rest),
+      editable: false,
+      last_update_who: "mna",
+    }).save();
+  });
+};
+
 const run = async () => {
   // affelnet
-  const flattenedAfAPublierSoumisAValidationRules = specificRulesNode(afAPublierSoumisAValidationRules).reduce(
-    rulesReducer,
-    []
-  );
-  console.log(
-    "flattenedAfAPublierSoumisAValidationRules",
-    flattenedAfAPublierSoumisAValidationRules.length,
-    specificRulesNode(flattenedAfAPublierSoumisAValidationRules[2])
-  );
+  const flatAfAPublierValidationRules = specificRulesNode(afAPublierSoumisAValidationRules).reduce(rulesReducer, []);
+  await createRulesInDB(flatAfAPublierValidationRules, "affelnet", "à publier (soumis à validation)");
 
-  const flattenedAfAPublierRules = specificRulesNode(afAPublierRules).reduce(rulesReducer, []);
-  console.log(
-    "flattenedAfAPublierRules",
-    flattenedAfAPublierRules.length,
-    specificRulesNode(flattenedAfAPublierRules[0])
-  );
+  const flatAfAPublierRules = specificRulesNode(afAPublierRules).reduce(rulesReducer, []);
+  await createRulesInDB(flatAfAPublierRules, "affelnet", "à publier");
 
   // psup
-  const flattenedPsAPublierVerifierAccesDirectPostBacRules = specificRulesNode(
-    psAPublierVerifierAccesDirectPostBacRules
-  ).reduce(rulesReducer, []);
-  console.log(
-    "flattenedPsAPublierVerifierAccesDirectPostBacRules",
-    flattenedPsAPublierVerifierAccesDirectPostBacRules.length,
-    flattenedPsAPublierVerifierAccesDirectPostBacRules[0]["$and"][
-      flattenedPsAPublierVerifierAccesDirectPostBacRules[0]["$and"].length - 1
-    ]
-  );
+  const flatPsPostBacRules = specificRulesNode(psPostBacRules).reduce(rulesReducer, []);
+  await createRulesInDB(flatPsPostBacRules, "parcoursup", "à publier (vérifier accès direct postbac)");
 
-  const flattenedPsAPublierValidationRecteurRules = specificRulesNode(psAPublierValidationRecteurRules).reduce(
-    rulesReducer,
-    []
-  );
-  console.log(
-    "flattenedPsAPublierValidationRecteurRules",
-    flattenedPsAPublierValidationRecteurRules.length,
-    flattenedPsAPublierValidationRecteurRules[0]["$and"][
-      flattenedPsAPublierValidationRecteurRules[0]["$and"].length - 1
-    ]
-  );
+  const flatPsAPublierRecteurRules = specificRulesNode(psAPublierRecteurRules).reduce(rulesReducer, []);
+  await createRulesInDB(flatPsAPublierRecteurRules, "parcoursup", "à publier (soumis à validation Recteur)");
 
-  const flattenedPsAPublierRules = specificRulesNode(psAPublierRules).reduce(rulesReducer, []);
-  console.log(
-    "flattenedPsAPublierRules",
-    flattenedPsAPublierRules.length,
-    flattenedPsAPublierRules[0]["$and"][flattenedPsAPublierRules[0]["$and"].length - 1],
-    flattenedPsAPublierRules[18]["$and"][flattenedPsAPublierRules[18]["$and"].length - 1]
-  );
+  const flatPsAPublierRules = specificRulesNode(psAPublierRules).reduce(rulesReducer, []);
+  await createRulesInDB(flatPsAPublierRules, "parcoursup", "à publier");
 };
 
 runScript(async () => {
