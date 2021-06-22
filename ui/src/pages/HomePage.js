@@ -237,7 +237,7 @@ export default () => {
                 <br />
                 <Box>
                   <Tabs variant="search">
-                    <TabList bg="white" px={0}>
+                    <TabList bg="white" px={0} borderBottomWidth={0}>
                       <Tab ml={[0, 0]}>Dernières modifications</Tab>
                       <Tab>A venir</Tab>
                     </TabList>
