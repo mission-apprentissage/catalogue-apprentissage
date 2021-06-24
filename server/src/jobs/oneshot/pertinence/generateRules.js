@@ -41,7 +41,7 @@ const createRulesInDB = async (rules, plateforme, statut) => {
       diplome,
       statut,
       regle_complementaire: serialize(rest),
-      editable: false,
+      is_regle_nationale: true,
       last_update_who: "mna",
     }).save();
   });

@@ -52,10 +52,10 @@ const reglePerimetre = {
     description:
       "En cas d'égalité sur la plateforme, niveau, diplome et num_academie, priorité de la règle pour savoir laquelle est la plus forte",
   },
-  editable: {
+  is_regle_nationale: {
     type: Boolean,
     default: true,
-    description: "True si la règle peut être éditée (quand l'utilisateur a des droits suffisants)",
+    description: "True si la règle est une règle nationale (définie dans les textes de loi)",
   },
   // history
   created_at: {
