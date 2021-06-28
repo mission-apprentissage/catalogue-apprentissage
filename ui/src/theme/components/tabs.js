@@ -54,7 +54,6 @@ const Tabs = {
           borderTop: "2px solid #000091",
           borderLeft: "1px solid #e7e7e7",
           borderRight: "1px solid #e7e7e7",
-          borderBottom: "1px solid white",
         },
       },
     },
