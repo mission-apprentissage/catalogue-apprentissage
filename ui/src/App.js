@@ -32,6 +32,7 @@ const MentionsLegales = lazy(() => import("./pages/legal/MentionsLegales"));
 const Accessibilite = lazy(() => import("./pages/legal/Accessibilite"));
 const ReconciliationPs = lazy(() => import("./pages/admin/ReconciliationPs"));
 const ActionsExpertes = lazy(() => import("./pages/ActionsExpertes/ActionsExpertes"));
+const Perimetre = lazy(() => import("./pages/perimetre/Perimetre"));
 
 function PrivateRoute({ component, ...rest }) {
   let [auth] = useAuth();
@@ -154,6 +155,22 @@ export default () => {
                   <PrivateRoute exact path="/admin/upload">
                     <UploadFiles />
                   </PrivateRoute>
+                )}
+
+                {auth && hasAccessTo(auth, "page_perimetre_ps") && (
+                  <Route
+                    exact
+                    path="/perimetre-parcoursup"
+                    render={(props) => <Perimetre {...props} plateforme="parcoursup" />}
+                  />
+                )}
+
+                {auth && hasAccessTo(auth, "page_perimetre_af") && (
+                  <Route
+                    exact
+                    path="/perimetre-affelnet"
+                    render={(props) => <Perimetre {...props} plateforme="affelnet" />}
+                  />
                 )}
 
                 <Route component={NotFoundPage} />
