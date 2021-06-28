@@ -1,0 +1,37 @@
+@media print {
+  * {
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  body {
+    padding: 25px 40px;
+    line-height: 1.5;
+    font-size: 12px;
+  }
+  /*section {*/
+  /*  padding-bottom: 10px;*/
+  /*}*/
+  a {
+    text-decoration: none;
+  }
+  @page {
+    margin: 0.5cm;
+  }
+  /*h2 {*/
+  /*  border-bottom: 1px solid #888888;*/
+  /*}*/
+  /*p, h2, h3 {*/
+  /*  orphans: 3;*/
+  /*  widows: 3;*/
+  /*}*/
+  /*h2, h3 {*/
+  /*  page-break-after: avoid;*/
+  /*}*/
+  /*nav {*/
+  /*  display: none;*/
+  /*}*/
+  /*section {*/
+  /*  border: none;*/
+  /*}*/
+}
