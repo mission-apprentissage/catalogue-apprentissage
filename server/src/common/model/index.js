@@ -26,7 +26,7 @@ module.exports = {
   }),
   Report: createModel("report", schema.reportSchema),
   Log: createModel("log", schema.logSchema),
-  PsFormation: createModel("psformation", schema.psFormationSchema),
+  PsFormation: createModel("psformation", schema.psFormation2020Schema),
   PsReconciliation: createModel("psreconciliation", schema.psReconciliationSchema),
   PendingRcoFormation: createModel("pendingrcoformation", schema.mnaFormationSchema),
   AfFormation: createModel("afformation", schema.afFormationSchema),
@@ -38,4 +38,5 @@ module.exports = {
   SandboxFormation: createModel("sandboxformation", schema.mnaFormationSchema),
   Statistique: createModel("statistique", schema.statistiqueSchema),
   MessageScript: createModel("messageScript", schema.messageScriptSchema),
+  ReglePerimetre: createModel("regleperimetre", schema.reglePerimetreSchema),
 };
