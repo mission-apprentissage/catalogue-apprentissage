@@ -17,6 +17,10 @@ class Importer {
 
   async run() {
     const formations = await wsRCO.getRCOcatalogue();
+    if (!formations?.length) {
+      throw new Error("rco: empty data");
+    }
+
     const dbCount = await RcoFormation.countDocuments({ published: true });
 
     console.log("Nb formations J : ", formations.length);
