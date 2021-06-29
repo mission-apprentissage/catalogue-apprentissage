@@ -84,7 +84,7 @@ export default () => {
           setAuth(user);
         }
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
       setIsLoading(false);
     }
