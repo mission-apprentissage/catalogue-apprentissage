@@ -95,7 +95,7 @@ const run = async () => {
 
     console.log(`Master ${process.pid} is running`);
 
-    const filters = { statut_reconciliation: { $nin: ["VALIDE", "A_VERIFIER"] } }; // TODO "AUTOMATIQUE" temporary remove
+    const filters = { statut_reconciliation: { $nin: ["AUTOMATIQUE", "VALIDE", "A_VERIFIER"] } };
     const args = process.argv.slice(2);
     const limitArg = args.find((arg) => arg.startsWith("--limit"))?.split("=")?.[1];
     const limit = limitArg ? Number(limitArg) : 50;
