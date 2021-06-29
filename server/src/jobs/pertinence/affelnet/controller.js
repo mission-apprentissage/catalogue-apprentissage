@@ -1,7 +1,8 @@
 const { ConvertedFormation } = require("../../../common/model");
 const logger = require("../../../common/logger");
+const { getQueryFromRule } = require("../../../common/utils/rulesUtils");
+const { ReglePerimetre } = require("../../../common/model");
 const { updateTagsHistory } = require("../../../logic/updaters/tagsHistoryUpdater");
-const { aPublierSoumisAValidationRules, aPublierRules } = require("./rules");
 
 const run = async () => {
   // set "hors périmètre"
@@ -30,10 +31,15 @@ const run = async () => {
   const filterHP = {
     affelnet_statut: "hors périmètre",
   };
+  const aPublierSoumisAValidationRules = await ReglePerimetre.find({
+    plateforme: "affelnet",
+    statut: "à publier (soumis à validation)",
+  }).lean();
+
   await ConvertedFormation.updateMany(
     {
       ...filterHP,
-      ...aPublierSoumisAValidationRules,
+      $or: aPublierSoumisAValidationRules.map(getQueryFromRule),
     },
     { $set: { last_update_at: Date.now(), affelnet_statut: "à publier (soumis à validation)" } }
   );
@@ -44,10 +50,15 @@ const run = async () => {
     affelnet_statut: { $in: ["hors périmètre", "à publier (soumis à validation)"] },
   };
 
+  const aPublierRules = await ReglePerimetre.find({
+    plateforme: "affelnet",
+    statut: "à publier",
+  }).lean();
+
   await ConvertedFormation.updateMany(
     {
       ...filter,
-      ...aPublierRules,
+      $or: aPublierRules.map(getQueryFromRule),
     },
     { $set: { last_update_at: Date.now(), affelnet_statut: "à publier" } }
   );
