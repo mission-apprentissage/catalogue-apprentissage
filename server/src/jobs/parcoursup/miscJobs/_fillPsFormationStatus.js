@@ -55,7 +55,7 @@ async function migrate() {
         const [reconciliationEntry] = matching;
         let statut_reconciliation = "INCONNU";
         if (!reconciliationEntry.source || reconciliationEntry.source === "MANUEL") {
-          statut_reconciliation = "VALIDE"; // TODO We Actually want to reset => "INCONNU"
+          statut_reconciliation = "VALIDE"; // TODO We Actually want to reset in new session year by year => "INCONNU"
         } else if (reconciliationEntry.source === "AUTOMATIQUE") {
           statut_reconciliation = "AUTOMATIQUE";
         }
