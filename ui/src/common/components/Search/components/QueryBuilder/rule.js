@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Autosuggest from "react-autosuggest";
 import { Input, Button, Select, Flex, InputGroup, InputRightElement } from "@chakra-ui/react";
-import { AddBoxFill, Trash } from "../../../../../theme/components/icons";
+import { Trash } from "../../../../../theme/components/icons";
 import { CloseCircleLine } from "../../../../../theme/components/icons/CloseCircleLine";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
