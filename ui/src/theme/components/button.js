@@ -2,7 +2,8 @@ const commonButtonStyle = {
   borderRadius: 0,
   textTransform: "none",
   fontWeight: 400,
-  _focus: { boxShadow: "0 0 0 3px #3a55d1", outlineColor: "info" },
+  _focus: { boxShadow: "none", outlineColor: "none" },
+  _focusVisible: { boxShadow: "0 0 0 3px #2A7FFE", outlineColor: "#2A7FFE" },
 };
 
 const Button = {

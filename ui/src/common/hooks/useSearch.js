@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { _get } from "../httpClient";
+import { _get, _post } from "../httpClient";
 import { mergedQueries, withUniqueKey } from "../components/Search/components/QueryBuilder/utils";
 import { operators as frOperators } from "../components/Search/components/QueryBuilder/utils_fr";
 
@@ -21,17 +21,31 @@ const getEsBase = (context) => {
   return FORMATIONS_ES_INDEX;
 };
 
-const esQueryParser = () => {
+const esQueryParser = async () => {
   let s = new URLSearchParams(window.location.search);
   s = s.get("qb");
-  if (!s) return null;
+  if (!s) return Promise.resolve(null);
 
   const initialValue = JSON.parse(decodeURIComponent(s));
   const rules = withUniqueKey(initialValue);
   const queries = mergedQueries(
     rules.map((r) => ({ ...r, query: frOperators.find((o) => o.value === r.operator).query(r.field, r.value) }))
   );
-  return { query: { bool: queries } };
+
+  return queries;
+};
+
+const getEsCount = async (queries) => {
+  const countEsQuery = {
+    query: {
+      bool: {
+        ...queries,
+        minimum_should_match: 1,
+      },
+    },
+  };
+  const results = await _post("/api/es/search/convertedformation/_count", countEsQuery);
+  return results;
 };
 
 const getCountEntities = async (base) => {
@@ -42,8 +56,8 @@ const getCountEntities = async (base) => {
     const countEtablissement = await _get(`${TCO_API_ENDPOINT}/entity/etablissements/count?${params}`, false);
     return {
       countEtablissement,
-      countCatalogueGeneral: 0,
-      countCatalogueNonEligible: 0,
+      countCatalogueGeneral: null,
+      countCatalogueNonEligible: null,
     };
   }
 
@@ -52,22 +66,57 @@ const getCountEntities = async (base) => {
     return {
       countReconciliationPs,
       countEtablissement: 0,
-      countCatalogueGeneral: 0,
-      countCatalogueNonEligible: 0,
+      countCatalogueGeneral: null,
+      countCatalogueNonEligible: null,
     };
+  }
+
+  const countCatalogueGeneral = {
+    total: 0,
+    filtered: null,
+  };
+  const countCatalogueNonEligible = {
+    total: 0,
+    filtered: null,
+  };
+
+  const esQueryParameter = await esQueryParser();
+  if (esQueryParameter) {
+    esQueryParameter.must.push({
+      match: {
+        published: true,
+      },
+    });
+
+    const esQueryParameterCatalogueGeneral = { ...esQueryParameter, must: [...esQueryParameter.must] };
+    esQueryParameterCatalogueGeneral.must.push({ match: { etablissement_reference_catalogue_published: true } });
+    const { count: countEsCatalogueGeneral } = await getEsCount(esQueryParameterCatalogueGeneral);
+    countCatalogueGeneral.filtered = countEsCatalogueGeneral;
+
+    const esQueryParameterCatalogueNonEligible = { ...esQueryParameter, must: [...esQueryParameter.must] };
+    esQueryParameterCatalogueNonEligible.must.push({ match: { etablissement_reference_catalogue_published: false } });
+    const { count: countEsCatalogueNonEligible } = await getEsCount(esQueryParameterCatalogueNonEligible);
+    countCatalogueNonEligible.filtered = countEsCatalogueNonEligible;
   }
 
   const paramsG = new window.URLSearchParams({
     query: JSON.stringify({ published: true, etablissement_reference_catalogue_published: true }),
   });
-  const countCatalogueGeneral = await _get(`${CATALOGUE_API_ENDPOINT}/entity/formations2021/count?${paramsG}`, false);
+  const countTotalCatalogueGeneral = await _get(
+    `${CATALOGUE_API_ENDPOINT}/entity/formations2021/count?${paramsG}`,
+    false
+  );
+  countCatalogueGeneral.total = countTotalCatalogueGeneral;
+
   const paramsNE = new window.URLSearchParams({
     query: JSON.stringify({ published: true, etablissement_reference_catalogue_published: false }),
   });
-  const countCatalogueNonEligible = await _get(
+  const countTotalCatalogueNonEligible = await _get(
     `${CATALOGUE_API_ENDPOINT}/entity/formations2021/count?${paramsNE}`,
     false
   );
+  countCatalogueNonEligible.total = countTotalCatalogueNonEligible;
+
   return {
     countEtablissement: 0,
     countCatalogueGeneral,
@@ -93,7 +142,7 @@ export function useSearch(context) {
   const [error, setError] = useState(null);
   useEffect(() => {
     const abortController = new AbortController();
-    esQueryParser(); // TODO
+
     getCountEntities(base)
       .then((resultCount) => {
         if (!abortController.signal.aborted) {

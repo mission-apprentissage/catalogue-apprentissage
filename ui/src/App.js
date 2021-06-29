@@ -4,7 +4,7 @@ import useAuth from "./common/hooks/useAuth";
 import { _post, _get } from "./common/httpClient";
 import ScrollToTop from "./common/components/ScrollToTop";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { hasOneOfRoles } from "./common/utils/rolesUtils";
+import { hasOneOfRoles, hasAccessTo } from "./common/utils/rolesUtils";
 
 // Route-based code splitting @see https://reactjs.org/docs/code-splitting.html#route-based-code-splitting
 const HomePage = lazy(() => import("./pages/HomePage"));
@@ -13,7 +13,7 @@ const DashboardPage = lazy(() => import("./pages/Dashboard"));
 const ResetPasswordPage = lazy(() => import("./pages/password/ResetPasswordPage"));
 const ForgottenPasswordPage = lazy(() => import("./pages/password/ForgottenPasswordPage"));
 const Users = lazy(() => import("./pages/admin/Users"));
-const ReconciliationParcoursup = lazy(() => import("./pages/reconciliation-parcoursup"));
+const Roles = lazy(() => import("./pages/admin/Roles"));
 const ReconciliationAffelnet = lazy(() => import("./pages/reconciliation-affelnet"));
 const ReportPage = lazy(() => import("./pages/ReportPage"));
 const NotFoundPage = lazy(() => import("./pages/404"));
@@ -105,9 +105,14 @@ export default () => {
               <Switch>
                 <Route exact path="/stats" component={DashboardPage} />
 
-                {auth && auth.permissions.isAdmin && <PrivateRoute exact path="/admin/users" component={Users} />}
+                {auth && hasAccessTo(auth, "page_gestion_utilisateurs") && (
+                  <PrivateRoute exact path="/admin/users" component={Users} />
+                )}
+                {auth && hasAccessTo(auth, "page_gestion_roles") && (
+                  <PrivateRoute exact path="/admin/roles" component={Roles} />
+                )}
 
-                {auth && hasOneOfRoles(auth, ["admin", "moss"]) && (
+                {auth && hasAccessTo(auth, "page_reconciliation_ps") && (
                   <PrivateRoute exact path="/couverture-ps" component={ReconciliationPs} />
                 )}
 
@@ -121,8 +126,9 @@ export default () => {
                 <Route exact path="/reset-password" component={ResetPasswordPage} />
                 <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
                 <Route exact path="/report" component={ReportPage} />
-                <Route exact path="/couverture-parcoursup" component={ReconciliationParcoursup} />
-                <Route exact path="/couverture-affelnet" component={ReconciliationAffelnet} />
+                {hasAccessTo(auth, "page_reconciliation_af") && (
+                  <Route exact path="/couverture-affelnet" component={ReconciliationAffelnet} />
+                )}
                 <Route exact path="/changelog" component={Journal} />
                 <Route exact path="/contact" component={Contact} />
                 <Route exact path="/cookies" component={Cookies} />
@@ -130,7 +136,7 @@ export default () => {
                 <Route exact path="/mentions-legales" component={MentionsLegales} />
                 <Route exact path="/accessibilite" component={Accessibilite} />
 
-                {auth && hasOneOfRoles(auth, ["admin", "moss"]) && (
+                {auth && hasAccessTo(auth, "page_actions_expertes") && (
                   <PrivateRoute exact path="/mes-actions" component={ActionsExpertes} />
                 )}
 
@@ -144,7 +150,7 @@ export default () => {
                   </PrivateRoute>
                 )}
 
-                {auth && auth.permissions.isAdmin && (
+                {auth && hasAccessTo(auth, "page_upload") && (
                   <PrivateRoute exact path="/admin/upload">
                     <UploadFiles />
                   </PrivateRoute>

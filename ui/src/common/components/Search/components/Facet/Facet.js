@@ -74,6 +74,8 @@ const Facet = ({
                 innerClass={{
                   title: "search-title",
                   input: "search-input",
+                  checkbox: "search-checkbox",
+                  label: "search-label",
                 }}
                 showSearch={true}
                 placeholder="Filtrer"

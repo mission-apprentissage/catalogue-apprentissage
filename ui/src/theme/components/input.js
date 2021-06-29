@@ -1,26 +1,33 @@
 const commonFieldStyle = {
   color: "grey.800",
   borderBottomRadius: 0,
+  borderTopRadius: "4px",
   borderWidth: 0,
   borderBottom: "2px solid",
   marginBottom: "-2px",
-  borderColor: "grey.600",
+  borderBottomColor: "grey.600",
   bg: "grey.200",
   _focus: {
-    borderColor: "grey.600",
+    borderBottomColor: "grey.600",
+    boxShadow: "none",
+    outlineColor: "none",
+  },
+  _focusVisible: {
+    borderBottomColor: "grey.600",
     boxShadow: "none",
     outline: "2px solid",
-    outlineColor: "info",
+    outlineColor: "#2A7FFE",
     outlineOffset: "2px",
-    borderTopRadius: "4px",
   },
   _invalid: {
-    borderColor: "grey.600",
+    borderBottomColor: "grey.600",
     boxShadow: "none",
     outline: "2px solid",
     outlineColor: "error",
     outlineOffset: "2px",
-    borderTopRadius: "4px",
+  },
+  _hover: {
+    borderBottomColor: "grey.600",
   },
 };
 

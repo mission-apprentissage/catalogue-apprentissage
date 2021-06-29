@@ -83,6 +83,9 @@ const Header = () => {
                           <MenuItem as={NavLink} to="/admin/users" icon={<AccountFill boxSize={4} />}>
                             Gestion des utilisateurs
                           </MenuItem>
+                          <MenuItem as={NavLink} to="/admin/roles" icon={<AccountFill boxSize={4} />}>
+                            Gestion des rôles
+                          </MenuItem>
                           <MenuItem as={NavLink} to="/admin/upload" icon={<DownloadLine boxSize={4} />}>
                             Upload de fichiers
                           </MenuItem>
@@ -99,7 +102,12 @@ const Header = () => {
                           </MenuItem>
                         )}
                         {hasOneOfRoles(auth, ["admin"]) && (
-                          <MenuItem as={NavLink} to="/couverture-affelnet" icon={<DoubleArrows boxSize={4} />}>
+                          <MenuItem
+                            as={NavLink}
+                            to="/couverture-affelnet"
+                            icon={<DoubleArrows boxSize={4} />}
+                            isDisabled
+                          >
                             Réconciliation Affelnet
                           </MenuItem>
                         )}
