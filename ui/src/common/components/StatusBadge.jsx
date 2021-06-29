@@ -1,6 +1,14 @@
 import React from "react";
 import { Badge, Text, Flex } from "@chakra-ui/react";
-import { InfoCircle, Cloud, Processing, ExclamationCircle, CloudSlashed } from "../../theme/components/icons/index";
+import {
+  InfoCircle,
+  Cloud,
+  Processing,
+  ExclamationCircle,
+  CloudSlashed,
+  RejectIcon,
+  Question,
+} from "../../theme/components/icons/index";
 
 const Icon = ({ variant }) => {
   switch (variant) {
@@ -14,6 +22,10 @@ const Icon = ({ variant }) => {
       return <Processing />;
     case "toBePublished":
       return <ExclamationCircle />;
+    case "reject":
+      return <RejectIcon />;
+    case "unknown":
+      return <Question />;
     default:
       return <InfoCircle />;
   }
@@ -30,6 +42,8 @@ export const StatusBadge = ({ source, status, ...badgeProps }) => {
     "à publier (soumis à validation Recteur)": "toBePublished",
     "à publier": "toBePublished",
     "en attente de publication": "pending",
+    Rejeté: "reject",
+    Inconnu: "unknown",
   };
 
   const variant = variantsMap[status] ?? defaultVariant;
@@ -39,7 +53,7 @@ export const StatusBadge = ({ source, status, ...badgeProps }) => {
       <Flex alignItems="center">
         <Icon variant={variant} />
         <Text ml={1} as={"span"} whiteSpace={"break-spaces"}>
-          {source} - {status}
+          {source ? `${source} - ${status}` : `${status}`}
         </Text>
       </Flex>
     </Badge>

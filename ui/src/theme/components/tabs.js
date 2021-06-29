@@ -14,7 +14,8 @@ const Tabs = {
     },
     tab: {
       color: "grey.500",
-      _focus: { boxShadow: "0 0 0 3px #3a55d1", outlineColor: "info" },
+      _focus: { boxShadow: "none", outlineColor: "none" },
+      _focusVisible: { boxShadow: "0 0 0 3px #2A7FFE", outlineColor: "#2A7FFE" },
     },
   },
   variants: {
@@ -53,7 +54,6 @@ const Tabs = {
           borderTop: "2px solid #000091",
           borderLeft: "1px solid #e7e7e7",
           borderRight: "1px solid #e7e7e7",
-          borderBottom: "1px solid white",
         },
       },
     },

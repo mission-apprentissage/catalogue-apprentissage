@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { DataSearch, ReactiveBase, ReactiveList, SelectedFilters } from "@appbaseio/reactivesearch";
 import { Box, Container, Flex, FormLabel, Switch, Text } from "@chakra-ui/react";
 import useAuth from "../../hooks/useAuth";
-import { hasOneOfRoles } from "../../utils/rolesUtils";
+import { hasAccessTo } from "../../utils/rolesUtils";
 import {
   CardListEtablissements,
   CardListFormation,
@@ -125,8 +125,8 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                 </Text>
                 {facetDefinition(context)
                   .filter(
-                    ({ roles, showCatalogEligibleOnly }) =>
-                      (!showCatalogEligibleOnly || isCatalogueGeneral) && (!roles || hasOneOfRoles(auth, roles))
+                    ({ acl, showCatalogEligibleOnly }) =>
+                      (!showCatalogEligibleOnly || isCatalogueGeneral) && (!acl || hasAccessTo(auth, acl))
                   )
                   .map((fd, i) => {
                     return (
@@ -209,6 +209,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                 </Box>
                 <Box className={`result-view`}>
                   <ReactiveList
+                    scrollOnChange={false}
                     componentId="result"
                     title="Results"
                     dataField="_id"
@@ -244,39 +245,54 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                       return (
                         <div className="summary-stats">
                           <span className="summary-text">
-                            {isBaseFormations
-                              ? `${stats.numberOfResults.toLocaleString("fr-FR")} formations sur ${
-                                  isCatalogueGeneral
-                                    ? countCatalogueGeneral.toLocaleString("fr-FR")
-                                    : countCatalogueNonEligible.toLocaleString("fr-FR")
-                                } formations `
-                              : isBaseReconciliationPs
-                              ? `${stats.numberOfResults.toLocaleString("fr-FR")} rapprochements ${context.replace(
-                                  "reconciliation_ps_",
-                                  ""
-                                )}`
-                              : `${stats.numberOfResults.toLocaleString(
-                                  "fr-FR"
-                                )} organismes affichées sur ${countEtablissement.toLocaleString("fr-FR")} organismes`}
+                            {isBaseFormations &&
+                              isCatalogueGeneral &&
+                              `${
+                                searchState.countCatalogueGeneral.filtered === null
+                                  ? stats.numberOfResults.toLocaleString("fr-FR")
+                                  : searchState.countCatalogueGeneral.filtered.toLocaleString("fr-FR")
+                              } formations sur ${countCatalogueGeneral.total.toLocaleString("fr-FR")}`}
+                            {isBaseFormations &&
+                              !isCatalogueGeneral &&
+                              `${
+                                searchState.countCatalogueNonEligible.filtered === null
+                                  ? stats.numberOfResults.toLocaleString("fr-FR")
+                                  : searchState.countCatalogueNonEligible.filtered.toLocaleString("fr-FR")
+                              } formations sur ${countCatalogueNonEligible.total.toLocaleString("fr-FR")}`}
+                            {!isBaseFormations &&
+                              `${
+                                isBaseReconciliationPs
+                                  ? `${stats.numberOfResults.toLocaleString("fr-FR")} rapprochements ${context.replace(
+                                      "reconciliation_ps_",
+                                      ""
+                                    )}`
+                                  : `${stats.numberOfResults.toLocaleString(
+                                      "fr-FR"
+                                    )} organismes affichées sur ${countEtablissement.toLocaleString(
+                                      "fr-FR"
+                                    )} organismes`
+                              }`}
                           </span>
-                          {auth?.sub !== "anonymous" && !isBaseReconciliationPs && (
-                            <ExportButton
-                              index={base}
-                              filters={filters}
-                              columns={columnsDefinition
-                                .filter((def) => !def.debug)
-                                .map((def) => ({
-                                  header: def.Header,
-                                  fieldName: def.accessor,
-                                  formatter: def.formatter,
-                                }))}
-                              defaultQuery={{
-                                match: {
-                                  published: true,
-                                },
-                              }}
-                            />
-                          )}
+                          {(hasAccessTo(auth, "page_catalogue/export_btn") ||
+                            hasAccessTo(auth, "page_organismes/export_btn")) &&
+                            !isBaseReconciliationPs && (
+                              <ExportButton
+                                index={base}
+                                filters={filters}
+                                columns={columnsDefinition
+                                  .filter((def) => !def.debug)
+                                  .map((def) => ({
+                                    header: def.Header,
+                                    fieldName: def.accessor,
+                                    formatter: def.formatter,
+                                  }))}
+                                defaultQuery={{
+                                  match: {
+                                    published: true,
+                                  },
+                                }}
+                              />
+                            )}
                         </div>
                       );
                     }}

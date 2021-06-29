@@ -3,7 +3,6 @@ import { InfoBadge } from "../InfoBadge";
 import { StatusBadge } from "../StatusBadge";
 import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
-import InfoTooltip from "../InfoTooltip";
 import { SubModal } from "./SubModal";
 import { Table } from "./Table";
 import { ValidateIcon, RejectIcon } from "../../../theme/components/icons";
@@ -136,7 +135,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
       <Box px={[4, 16]} mb={4}>
         <HStack borderBottom={"1px solid"} borderColor="bluefrance">
           <Heading as="h3" fontSize="1.3rem" mb={3} color="bluefrance" flexGrow="1">
-            {step === 1 && "1. Vérifier la similitude des informations"}
+            {step === 1 && "Vérifier la similitude des informations"}
           </Heading>
           {step < 3 && (
             <HStack
@@ -194,7 +193,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
         left={<div />}
         right={
           <Box mb={4} mt={4}>
-            id_rco_formation (test): <InfoTooltip description={"tooltip"} />
+            id_rco_formation (test):
             <Text as="span" variant="highlight">
               {mnaFormation.id_rco_formation}
             </Text>
@@ -206,7 +205,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
         left={<div />}
         right={
           <Box mb={4} mt={4}>
-            Période: <InfoTooltip description={"tooltip"} />
+            Période:
             <Text as="span" variant="highlight">
               {mnaFormation.periode}
             </Text>
@@ -217,7 +216,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
         withBorder
         left={
           <Box mb={4} mt={4}>
-            Libellé formation : <InfoTooltip description={"tooltip"} />
+            Libellé formation :
             <Text as="span" variant="highlight" mt="1" display="inline-block">
               {formation.libelle_specialite}
             </Text>
@@ -225,7 +224,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
         }
         right={
           <Box mb={4} mt={4}>
-            Libellé formation : <InfoTooltip description={"tooltip"} />
+            Libellé formation :
             <Text as="span" variant="highlight" mt="1" display="inline-block">
               {mnaFormation.intitule_long}
             </Text>
@@ -236,7 +235,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
         withBorder
         left={
           <Box mb={4} mt={4}>
-            Code formation diplôme : <InfoTooltip description={"tooltip"} />
+            Code formation diplôme :
             <Text
               as="span"
               variant="highlight"
@@ -250,7 +249,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
         }
         right={
           <Box mb={4} mt={4}>
-            Code formation diplôme BCN : <InfoTooltip description={"tooltip"} />
+            Code formation diplôme BCN :
             <Text
               as="span"
               variant="highlight"
@@ -267,7 +266,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
         withBorder
         left={
           <Box mb={4} mt={4}>
-            Code RNCP : <InfoTooltip description={"tooltip"} />
+            Code RNCP :
             <Text
               as="span"
               variant="highlight"
@@ -281,7 +280,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
         }
         right={
           <Box mb={4} mt={4}>
-            Code RNCP : <InfoTooltip description={"tooltip"} />
+            Code RNCP :
             <Text
               as="span"
               variant="highlight"
@@ -299,7 +298,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
         withBorder
         left={
           <Box mb={4} mt={4}>
-            Code UAI - Affilié <InfoTooltip description={"tooltip"} />
+            Code UAI - Affilié
             <Text as="span" variant="highlight" bg={`${formationDiff.uai.uai_affilie ? "greensoft.200" : "galt"}`}>
               {formation.uai_affilie}
             </Text>
@@ -307,7 +306,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
         }
         right={
           <Box mb={4} mt={4}>
-            Code UAI du lieu de formation <InfoTooltip description={"tooltip"} />
+            Code UAI du lieu de formation
             <Text
               as="span"
               variant="highlight"
@@ -324,7 +323,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
         withBorder
         left={
           <Box mb={4} mt={4}>
-            Code UAI - Composante <InfoTooltip description={"tooltip"} />
+            Code UAI - Composante
             <Text as="span" variant="highlight" bg={`${formationDiff.uai.uai_composante ? "greensoft.200" : "galt"}`}>
               {formation.uai_composante}
             </Text>
@@ -332,7 +331,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
         }
         right={
           <Box mb={4} mt={4}>
-            Code UAI rattaché au SIRET formateur <InfoTooltip description={"tooltip"} />
+            Code UAI rattaché au SIRET formateur
             <Text
               as="span"
               variant="highlight"
@@ -349,7 +348,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
         withBorder
         left={
           <Box mb={4} mt={4}>
-            Code UAI - Gestionnaire <InfoTooltip description={"tooltip"} />
+            Code UAI - Gestionnaire
             <Text as="span" variant="highlight" bg={`${formationDiff.uai.uai_gestionnaire ? "greensoft.200" : "galt"}`}>
               {formation.uai_gestionnaire}
             </Text>
@@ -357,7 +356,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
         }
         right={
           <Box mb={4} mt={4}>
-            Code UAI rattaché au SIRET gestionnaire <InfoTooltip description={"tooltip"} />
+            Code UAI rattaché au SIRET gestionnaire
             <Text
               as="span"
               variant="highlight"
@@ -374,7 +373,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
         withBorder
         left={
           <Box mb={4} mt={4}>
-            Code UAI - Cerfa <InfoTooltip description={"tooltip"} />
+            Code UAI - Cerfa
             <Text as="span" variant="highlight" bg={`${formationDiff.uai.uai_cerfa ? "greensoft.200" : "galt"}`}>
               {formation.uai_cerfa}
             </Text>
@@ -382,7 +381,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
         }
         right={
           <Box mb={4} mt={4}>
-            Codes UAI <InfoTooltip description={"tooltip"} />
+            Codes UAI
             {formationDiff.uai.uai_formation.uai_cerfa && (
               <Text
                 as="span"
@@ -424,7 +423,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
         withBorder
         left={
           <Box mb={4} mt={4}>
-            Code UAI - Insert Jeune <InfoTooltip description={"tooltip"} />
+            Code UAI - Insert Jeune
             <Text as="span" variant="highlight" bg={`${formationDiff.uai.uai_insert_jeune ? "greensoft.200" : "galt"}`}>
               {formation.uai_insert_jeune}
             </Text>
@@ -432,7 +431,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
         }
         right={
           <Box mb={4} mt={4}>
-            Codes UAI <InfoTooltip description={"tooltip"} />
+            Codes UAI
             {formationDiff.uai.uai_formation.uai_insert_jeune && (
               <Text
                 as="span"
@@ -474,7 +473,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
         withBorder
         left={
           <Box mb={4} mt={4}>
-            Siret : <InfoTooltip description={"tooltip"} />
+            Siret :
             <Text as="span" variant="highlight" bg={`${formationDiff.siret.siret_cerfa ? "greensoft.200" : "galt"}`}>
               {formation.siret_cerfa}
             </Text>
@@ -482,7 +481,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
         }
         right={
           <Box mb={4} mt={4}>
-            Siret Organisme <InfoTooltip description={"tooltip"} />
+            Siret Organisme
             <Text
               as="span"
               variant="highlight"
@@ -497,7 +496,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
         withBorder
         left={
           <Box mb={4} mt={4}>
-            Nom de l’établissement : <InfoTooltip description={"tooltip"} />
+            Nom de l’établissement :
             <Text as="span" variant="highlight">
               {formation.libelle_uai_composante}
             </Text>
@@ -505,7 +504,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
         }
         right={
           <Box mb={4} mt={4}>
-            Enseigne : <InfoTooltip description={"tooltip"} />
+            Enseigne :
             <Text as="span" variant="highlight">
               {mnaFormation.etablissement_gestionnaire_entreprise_raison_sociale}
               {mnaFormation.etablissement_gestionnaire_enseigne}
@@ -517,7 +516,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
         withBorder
         left={
           <Box mb={4} mt={4}>
-            Type de l’établissement : <InfoTooltip description={"tooltip"} />
+            Type de l’établissement :
             <Text as="span" variant="highlight">
               {formation.type_etablissement}
             </Text>
@@ -529,7 +528,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
         withBorder
         left={
           <Box mb={4} mt={4}>
-            Adresse : <InfoTooltip description={"tooltip"} />
+            Adresse :
             <Text as="span" variant="highlight" color={`${formation.complement_adresse_1 ? "inherit" : "grey.500"}`}>
               {formation.complement_adresse_1 ?? "N.A"}
             </Text>
@@ -537,7 +536,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
         }
         right={
           <Box mb={4} mt={4}>
-            Adresse de l’organisme : <InfoTooltip description={"tooltip"} />
+            Adresse de l’organisme :
             <Text as="span" variant="highlight">
               {mnaFormation.etablissement_gestionnaire_adresse}
             </Text>
@@ -549,7 +548,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
         left={<div />}
         right={
           <Box mb={4} mt={4}>
-            Adresse lieu de la formation : <InfoTooltip description={"tooltip"} />
+            Adresse lieu de la formation :
             <Text as="span" variant="highlight">
               {mnaFormation.lieu_formation_adresse}
             </Text>
@@ -560,7 +559,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
         withBorder
         left={
           <Box mb={4} mt={4}>
-            Code Commune Insee: <InfoTooltip description={"tooltip"} />
+            Code Commune Insee:
             <Text as="span" variant="highlight" bg={`${formationDiff.code_commune_insee ? "greensoft.200" : "galt"}`}>
               {formation.code_commune_insee}
             </Text>
@@ -568,7 +567,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
         }
         right={
           <Box mb={4} mt={4}>
-            Code Commune Insee: <InfoTooltip description={"tooltip"} />
+            Code Commune Insee:
             <Text as="span" variant="highlight" bg={`${formationDiff.code_commune_insee ? "greensoft.200" : "galt"}`}>
               {mnaFormation.code_commune_insee}
             </Text>
@@ -579,7 +578,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
         withBorder
         left={
           <Box mb={4} mt={4}>
-            Nom académie: <InfoTooltip description={"tooltip"} />
+            Nom académie:
             <Text as="span" variant="highlight" bg={`${formationDiff.nom_academie ? "greensoft.200" : "galt"}`}>
               {formation.nom_academie}
             </Text>
@@ -587,7 +586,7 @@ const Compare = React.memo(({ formation, onClose, step, onStepChanged, onValidat
         }
         right={
           <Box mb={4} mt={4}>
-            Nom académie: <InfoTooltip description={"tooltip"} />
+            Nom académie:
             <Text as="span" variant="highlight" bg={`${formationDiff.code_commune_insee ? "greensoft.200" : "galt"}`}>
               {mnaFormation.nom_academie}
             </Text>

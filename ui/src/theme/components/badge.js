@@ -45,6 +45,20 @@ const Badge = {
       border: "1px solid",
       borderColor: "greenmedium.200",
     },
+    reject: {
+      ...commonStatusBadgeStyle,
+      bg: "#D5DBEF",
+      color: "grey.800",
+      border: "1px solid",
+      borderColor: "#D5DBEF",
+    },
+    unknown: {
+      ...commonStatusBadgeStyle,
+      bg: "#D5DBEF",
+      color: "grey.800",
+      border: "1px solid",
+      borderColor: "#D5DBEF",
+    },
     year: {
       ...commonStatusBadgeStyle,
       bg: "greenmedium.300",
