@@ -9,6 +9,7 @@ const {
   // getSiretInfo,
   // getBcnInfo,
   getCoordinatesFromAddressData,
+  getNiveauxDiplomesTree,
 } = require("@mission-apprentissage/tco-service-node");
 
 // const KIT_LOCAL_PATH = "/data/uploads/CodeDiplome_RNCP_latest_kit.csv";
@@ -38,4 +39,7 @@ runScript(async () => {
       code_postal: "08000",
     })
   );
+
+  const tree = await getNiveauxDiplomesTree();
+  console.log(tree);
 });
