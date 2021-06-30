@@ -19,7 +19,7 @@ const aPublierSoumisAValidationRules = {
   ...toBePublishedRules,
   $or: [
     {
-      niveau: { $in: ["3 (CAP...)", "4 (BAC...)"] },
+      niveau: "3 (CAP...)",
       diplome: "CERTIFICAT D'APTITUDES PROFESSIONNELLES",
       $or: [
         {
@@ -33,31 +33,37 @@ const aPublierSoumisAValidationRules = {
       ],
     },
     {
-      niveau: { $in: ["3 (CAP...)", "4 (BAC...)"] },
+      niveau: "4 (BAC...)",
       diplome: "BAC PROFESSIONNEL",
       ...getMefRule(/21$/),
       $and: [getMefRule(/^246/), getCfdExpireRule(2)],
     },
     {
-      niveau: { $in: ["3 (CAP...)", "4 (BAC...)"] },
+      niveau: "4 (BAC...)",
       diplome: "BAC PROFESSIONNEL AGRICOLE",
       ...getMefRule(/21$/),
       $and: [getMefRule(/^273/), getCfdExpireRule(2)],
     },
     {
-      niveau: { $in: ["3 (CAP...)", "4 (BAC...)"] },
+      niveau: "4 (BAC...)",
       diplome: "BREVET PROFESSIONNEL",
       ...getMefRule(/21$/),
       $and: [getMefRule(/^254/), getCfdExpireRule(2)],
     },
     {
-      niveau: { $in: ["3 (CAP...)", "4 (BAC...)"] },
-      diplome: "BREVET PROFESSIONNEL AGRICOLE",
+      niveau: "4 (BAC...)",
+      diplome: "BREVET PROFESSIONNEL AGRICOLE DE NIVEAU IV",
       ...getMefRule(/21$/),
       $and: [getMefRule(/^254/), getCfdExpireRule(2)],
     },
     {
-      niveau: { $in: ["3 (CAP...)", "4 (BAC...)"] },
+      niveau: "3 (CAP...)",
+      diplome: "BREVET PROFESSIONNEL AGRICOLE DE NIVEAU V",
+      ...getMefRule(/21$/),
+      $and: [getMefRule(/^254/), getCfdExpireRule(2)],
+    },
+    {
+      niveau: "4 (BAC...)",
       diplome: "BREVET DES METIERS D'ART - BREVET DES METIERS DU SPECTACLE",
       ...getMefRule(/21$/),
       $and: [getMefRule(/^251/), getCfdExpireRule(2)],
@@ -70,7 +76,7 @@ const aPublierSoumisAValidationRules = {
     },
     {
       niveau: "3 (CAP...)",
-      diplome: "MENTION COMPLEMENTAIRE AGRICOLE",
+      diplome: "MENTION COMPLEMENTAIRE AGRICOLE", // FIXME J'ai pas ça
       ...getMefRule(/11$/),
       $and: [getMefRule(/^274/), getCfdExpireRule(1)],
     },
@@ -81,25 +87,25 @@ const aPublierRules = {
   ...toBePublishedRules,
   $or: [
     {
-      niveau: { $in: ["3 (CAP...)", "4 (BAC...)"] },
+      niveau: "3 (CAP...)",
       diplome: "CERTIFICAT D'APTITUDES PROFESSIONNELLES",
       ...getMefRule(/21$/),
       $and: [getMefRule(/^241/), getCfdExpireRule(2)],
     },
     {
-      niveau: { $in: ["3 (CAP...)", "4 (BAC...)"] },
+      niveau: "3 (CAP...)",
       diplome: "CERTIFICAT D'APTITUDES PROFESSIONNELLES AGRICOLES",
       ...getMefRule(/21$/),
       $and: [getMefRule(/^271/), getCfdExpireRule(2)],
     },
     {
-      niveau: { $in: ["3 (CAP...)", "4 (BAC...)"] },
+      niveau: "4 (BAC...)",
       diplome: "BAC PROFESSIONNEL",
       ...getMefRule(/31$/),
       $and: [getMefRule(/^247/), getCfdExpireRule(3)],
     },
     {
-      niveau: { $in: ["3 (CAP...)", "4 (BAC...)"] },
+      niveau: "4 (BAC...)",
       diplome: "BAC PROFESSIONNEL AGRICOLE",
       ...getMefRule(/31$/),
       $and: [getMefRule(/^276/), getCfdExpireRule(3)],
