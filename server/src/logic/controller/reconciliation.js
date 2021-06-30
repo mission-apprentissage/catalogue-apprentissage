@@ -81,7 +81,7 @@ async function reconciliationParcoursup(formation, source = "MANUEL") {
     siret_formateur: etablissement_formateur_siret,
     siret_gestionnaire: etablissement_gestionnaire_siret,
     source,
-    $push: { ids_parcoursup: id_parcoursup },
+    $addToSet: { ids_parcoursup: id_parcoursup },
   };
 
   const reconciliation = await PsReconciliation.findOneAndUpdate(
@@ -95,4 +95,16 @@ async function reconciliationParcoursup(formation, source = "MANUEL") {
   return reconciliation;
 }
 
-module.exports = { reconciliationAffelnet, reconciliationParcoursup };
+async function dereconciliationParcoursup(formation) {
+  let { code_cfd, uai_gestionnaire, uai_composante, uai_affilie } = formation;
+
+  const reconciliation = await PsReconciliation.findOneAndDelete({
+    uai_affilie,
+    uai_composante,
+    uai_gestionnaire,
+    code_cfd,
+  }).lean();
+  return reconciliation;
+}
+
+module.exports = { reconciliationAffelnet, reconciliationParcoursup, dereconciliationParcoursup };

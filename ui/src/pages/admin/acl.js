@@ -127,4 +127,12 @@ export default [
     feature: "Upload de fichiers source",
     ref: "page_upload",
   },
+  {
+    feature: "Réglage des périmètres Parcoursup",
+    ref: "page_perimetre_ps",
+  },
+  {
+    feature: "Réglage des périmètres Affelnet",
+    ref: "page_perimetre_af",
+  },
 ];

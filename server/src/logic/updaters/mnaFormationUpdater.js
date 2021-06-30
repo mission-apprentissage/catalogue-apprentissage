@@ -1,6 +1,7 @@
 const logger = require("../../common/logger");
 const Joi = require("joi");
-const { aPublierRules, aPublierSoumisAValidationRules } = require("../../jobs/pertinence/affelnet/rules");
+const { getQueryFromRule } = require("../../common/utils/rulesUtils");
+const { ReglePerimetre } = require("../../common/model");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 const { getPeriodeTags } = require("../../jobs/common/utils/rcoUtils");
 const { cfdMapper } = require("../mappers/cfdMapper");
@@ -167,6 +168,16 @@ const mnaFormationUpdater = async (
       // eslint-disable-next-line no-unused-vars
       const { _id, ...rest } = updatedFormation;
 
+      const aPublierRules = await ReglePerimetre.find({
+        plateforme: "affelnet",
+        statut: "à publier",
+      }).lean();
+
+      const aPublierSoumisAValidationRules = await ReglePerimetre.find({
+        plateforme: "affelnet",
+        statut: "à publier (soumis à validation)",
+      }).lean();
+
       // Split formation into N formation with 1 mef each
       // & insert theses into a tmp collection
       await asyncForEach(updatedFormation.bcn_mefs_10, async (mefObj) => {
@@ -181,12 +192,14 @@ const mnaFormationUpdater = async (
       // check "à publier" first to have less mefs
       // Add current id_rco_formation to ensure no concurrent access in db
       let mefs_10 = await findMefsForAffelnet({
-        $and: [...aPublierRules["$and"], { id_rco_formation: rest.id_rco_formation }],
+        id_rco_formation: rest.id_rco_formation,
+        $or: aPublierRules.map(getQueryFromRule),
       });
 
       if (!mefs_10) {
         mefs_10 = await findMefsForAffelnet({
-          $and: [...aPublierSoumisAValidationRules["$and"], { id_rco_formation: rest.id_rco_formation }],
+          id_rco_formation: rest.id_rco_formation,
+          $or: aPublierSoumisAValidationRules.map(getQueryFromRule),
         });
       }
 

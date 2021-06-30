@@ -3,7 +3,7 @@ const { paginator } = require("../../common/utils/paginator");
 const { PsFormation2021, Etablissement } = require("../../../common/model");
 const { runScript } = require("../../scriptWrapper");
 const logger = require("../../../common/logger");
-const { reconciliationParcoursup } = require("../../../logic/controller/reconciliation");
+const { reconciliationParcoursup, dereconciliationParcoursup } = require("../../../logic/controller/reconciliation");
 const cluster = require("cluster");
 const { diffFormation, buildUpdatesHistory } = require("../../../logic/common/utils/diffUtils");
 const numCPUs = 4;
@@ -40,6 +40,16 @@ const updateMatchedFormation = async ({ formation, match }) => {
     (statut_reconciliation === "A_VERIFIER" || statut_reconciliation === "AUTOMATIQUE")
   ) {
     updatedFormation.matching_rejete_updated = true;
+  }
+
+  if (
+    formation.statut_reconciliation === "AUTOMATIQUE" &&
+    (statut_reconciliation === "A_VERIFIER" || statut_reconciliation === "INCONNU")
+  ) {
+    // De-Reconcilier
+    await dereconciliationParcoursup(updatedFormation);
+    updatedFormation.etat_reconciliation = false;
+    updatedFormation.id_reconciliation = null;
   }
 
   // History

@@ -71,12 +71,13 @@ module.exports = ({ users }) => {
 
   router.get(
     "/current-session",
-    tryCatch((req, res) => {
+    tryCatch(async (req, res) => {
       if (req.user) {
         let { user } = req.session.passport;
         return res.json(user);
       }
-      return res.end();
+      const payload = await users.structureUser({ username: "anonymous", roles: ["public"], acl: [] });
+      return res.json(payload);
     })
   );
 
