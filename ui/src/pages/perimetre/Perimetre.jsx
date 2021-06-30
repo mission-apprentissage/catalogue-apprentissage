@@ -1,9 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Box, Container, Heading, ListItem, UnorderedList } from "@chakra-ui/react";
+import {
+  Accordion,
+  AccordionButton,
+  AccordionItem,
+  AccordionPanel,
+  Box,
+  Container,
+  Flex,
+  Heading,
+  Text,
+} from "@chakra-ui/react";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import Layout from "../layout/Layout";
 import { setTitle } from "../../common/utils/pageUtils";
 import { _get } from "../../common/httpClient";
+import { AddFill, SubtractLine } from "../../theme/components/icons";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -63,28 +74,69 @@ export default ({ plateforme }) => {
           <Box mt={4}>
             {niveaux.map(({ niveau, diplomes }) => {
               return (
-                <Box key={niveau} mb={8}>
-                  <Box>{niveau}</Box>
-                  <UnorderedList>
-                    {diplomes.map(({ diplome, regles }) => (
-                      <ListItem key={`${niveau}-${diplome}`}>
-                        <Box>{diplome}</Box>
-                        {regles?.length > 0 && (
-                          <>
-                            <Box>Règles :</Box>
-                            <UnorderedList>
-                              {regles.map(({ _id, statut, regle_complementaire }) => (
-                                <ListItem key={_id}>
-                                  {statut} : {regle_complementaire}
-                                </ListItem>
-                              ))}
-                            </UnorderedList>
-                          </>
-                        )}
-                      </ListItem>
-                    ))}
-                  </UnorderedList>
-                </Box>
+                <Accordion allowMultiple bg="#FFFFFF" key={niveau}>
+                  <AccordionItem border="none">
+                    {({ isExpanded }) => (
+                      <>
+                        <AccordionButton bg="#F9F8F6">
+                          {isExpanded ? (
+                            <SubtractLine fontSize="12px" color="bluefrance" mr={2} />
+                          ) : (
+                            <AddFill fontSize="12px" color="bluefrance" mr={2} />
+                          )}
+                          <Text color="bluefrance" fontWeight={700}>
+                            {niveau}
+                          </Text>
+                        </AccordionButton>
+                        <AccordionPanel p={0} bg="#FFFFFF">
+                          {diplomes.map(({ diplome, regles }) => (
+                            <Accordion
+                              allowMultiple
+                              bg="#FFFFFF"
+                              key={`${niveau}-${diplome}`}
+                              borderBottom={"1px solid"}
+                              borderColor={"grey.300"}
+                            >
+                              <AccordionItem border="none" m={0}>
+                                {({ isExpanded }) => (
+                                  <>
+                                    <AccordionButton>
+                                      <Flex px={4} alignItems="center">
+                                        {regles?.length > 0 ? (
+                                          isExpanded ? (
+                                            <SubtractLine fontSize="12px" color="bluefrance" mr={2} />
+                                          ) : (
+                                            <AddFill fontSize="12px" color="bluefrance" mr={2} />
+                                          )
+                                        ) : (
+                                          ""
+                                        )}
+                                        <Text>{diplome}</Text>
+                                      </Flex>
+                                    </AccordionButton>
+                                    <AccordionPanel>
+                                      {regles?.length > 0 && (
+                                        <Box px={8}>
+                                          {regles.map(
+                                            ({ _id, nom_regle_complementaire, statut, regle_complementaire }) => (
+                                              <Box key={_id}>
+                                                {nom_regle_complementaire} {statut} : {regle_complementaire}
+                                              </Box>
+                                            )
+                                          )}
+                                        </Box>
+                                      )}
+                                    </AccordionPanel>
+                                  </>
+                                )}
+                              </AccordionItem>
+                            </Accordion>
+                          ))}
+                        </AccordionPanel>
+                      </>
+                    )}
+                  </AccordionItem>
+                </Accordion>
               );
             })}
           </Box>
