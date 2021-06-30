@@ -786,7 +786,7 @@ export default ({ match }) => {
             </Center>
           )}
 
-          {hasAccessTo(user, "page_formation/gestion_publication") && formation && (
+          {hasAccessTo(user, "page_formation") && formation && (
             <>
               <Box mb={8}>
                 <Flex alignItems="center" justify="space-between" flexDirection={["column", "column", "row"]}>
