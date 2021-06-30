@@ -1,7 +1,8 @@
 const express = require("express");
 const Boom = require("boom");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
-const { ConvertedFormation, ReglePerimetre } = require("../../common/model");
+const { getNiveauxDiplomesTree } = require("@mission-apprentissage/tco-service-node");
+const { ReglePerimetre } = require("../../common/model");
 
 module.exports = () => {
   const router = express.Router();
@@ -9,9 +10,8 @@ module.exports = () => {
   router.get(
     "/perimetre/niveau",
     tryCatch(async (req, res) => {
-      // get all "niveaux" available in all formations
-      const result = await ConvertedFormation.distinct("niveau");
-      return res.json(result);
+      const tree = await getNiveauxDiplomesTree();
+      return res.json(tree);
     })
   );
 

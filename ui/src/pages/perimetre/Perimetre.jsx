@@ -21,13 +21,29 @@ export default ({ plateforme }) => {
         const reglesUrl = `${endpointNewFront}/v1/entity/perimetre/regles`;
         const regles = await _get(`${reglesUrl}?plateforme=${plateforme}`, false);
 
-        const niveauxTree = niveaux.map((niv) => {
+        let reglesInTree = [];
+
+        const niveauxTree = Object.entries(niveaux).map(([niveau, diplomes]) => {
           return {
-            niveau: niv,
-            regles: regles.filter(({ niveau }) => niveau === niv),
+            niveau,
+            diplomes: diplomes.map((diplome) => {
+              const filteredRegles = regles.filter(
+                ({ niveau: niv, diplome: dip }) => niveau === niv && diplome === dip
+              );
+              reglesInTree = [...reglesInTree, ...filteredRegles.map(({ _id }) => _id)];
+              return {
+                diplome,
+                regles: filteredRegles,
+              };
+            }),
           };
         });
 
+        const obsoleteRegles = regles.filter(({ _id }) => !reglesInTree.includes(_id));
+        if (obsoleteRegles.length > 0) {
+          console.error("Des règles obsolètes ont été trouvées :", obsoleteRegles);
+          // This rules should probably be deleted
+        }
         setNiveaux(niveauxTree);
       } catch (e) {
         console.error(e);
@@ -45,16 +61,26 @@ export default ({ plateforme }) => {
             {title}
           </Heading>
           <Box mt={4}>
-            {niveaux.map(({ niveau, regles }) => {
+            {niveaux.map(({ niveau, diplomes }) => {
               return (
                 <Box key={niveau} mb={8}>
                   <Box>{niveau}</Box>
                   <UnorderedList>
-                    {regles.map(({ diplome, statut }) => (
-                      <ListItem key={diplome}>
-                        <Box>
-                          {diplome} : {statut}
-                        </Box>
+                    {diplomes.map(({ diplome, regles }) => (
+                      <ListItem key={`${niveau}-${diplome}`}>
+                        <Box>{diplome}</Box>
+                        {regles?.length > 0 && (
+                          <>
+                            <Box>Règles :</Box>
+                            <UnorderedList>
+                              {regles.map(({ _id, statut, regle_complementaire }) => (
+                                <ListItem key={_id}>
+                                  {statut} : {regle_complementaire}
+                                </ListItem>
+                              ))}
+                            </UnorderedList>
+                          </>
+                        )}
                       </ListItem>
                     ))}
                   </UnorderedList>
