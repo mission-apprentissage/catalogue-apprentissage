@@ -49,5 +49,23 @@ module.exports = () => {
     })
   );
 
+  router.get(
+    "/perimetre/regle/count",
+    tryCatch(async (req, res) => {
+      const niveau = req.query?.niveau;
+      const diplome = req.query?.diplome;
+      const regle_complementaire = req.query?.regle_complementaire;
+
+      if (!niveau || !diplome) {
+        throw Boom.badRequest();
+      }
+
+      const result = await ConvertedFormation.countDocuments(
+        getQueryFromRule({ niveau, diplome, regle_complementaire })
+      );
+      return res.json(result);
+    })
+  );
+
   return router;
 };

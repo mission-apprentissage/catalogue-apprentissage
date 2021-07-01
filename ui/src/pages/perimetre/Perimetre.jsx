@@ -21,6 +21,121 @@ import { StatusBadge } from "../../common/components/StatusBadge";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
+const Line = ({
+  isExpanded,
+  showIcon,
+  label,
+  count,
+  status,
+  plateforme,
+  niveau,
+  diplome,
+  regle_complementaire,
+  shouldFetchCount,
+  ...rest
+}) => {
+  const [lineCount, setLineCount] = useState(count);
+
+  useEffect(() => {
+    async function run() {
+      try {
+        const countUrl = `${endpointNewFront}/v1/entity/perimetre/regle/count`;
+        const count = await _get(
+          `${countUrl}?niveau=${niveau}&diplome=${diplome}&regle_complementaire=${regle_complementaire}`,
+          false
+        );
+        setLineCount(count);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    if (regle_complementaire && !count && shouldFetchCount) {
+      run();
+    }
+  }, [count, regle_complementaire, shouldFetchCount]);
+
+  return (
+    <AccordionButton>
+      <Flex px={4} alignItems="center" w={"full"}>
+        <Flex grow={1} alignItems="center" {...rest}>
+          {showIcon ? (
+            isExpanded ? (
+              <SubtractLine fontSize="12px" color="bluefrance" mr={2} />
+            ) : (
+              <AddFill fontSize="12px" color="bluefrance" mr={2} />
+            )
+          ) : (
+            ""
+          )}
+          <Text>{label}</Text>
+        </Flex>
+        <Flex flexBasis={"40%"} justifyContent={"space-between"} alignItems="center">
+          <Flex minW={8}>{lineCount}</Flex>
+          <Flex>
+            {status ? (
+              <StatusBadge source={plateforme} status={status} />
+            ) : (
+              <StatusBadge source={plateforme} status="hors périmètre" />
+            )}
+          </Flex>
+          <Flex alignItems="center">
+            <Dots color={"bluefrance"} boxSize={4} />
+          </Flex>
+        </Flex>
+      </Flex>
+    </AccordionButton>
+  );
+};
+
+const Diplome = ({ plateforme, niveau, diplome }) => {
+  const { value, count, regles } = diplome;
+
+  // check if it has one rule at diplome level
+  const [diplomeRule] = regles.filter(({ regle_complementaire }) => regle_complementaire === "{}");
+
+  const otherRules = regles.filter(({ regle_complementaire }) => regle_complementaire !== "{}");
+
+  return (
+    <Accordion allowMultiple bg="#FFFFFF" borderBottom={"1px solid"} borderColor={"grey.300"}>
+      <AccordionItem border="none" m={0}>
+        {({ isExpanded }) => (
+          <>
+            <Line
+              plateforme={plateforme}
+              niveau={niveau}
+              diplome={value}
+              isExpanded={isExpanded}
+              showIcon={otherRules?.length > 0}
+              label={value}
+              status={diplomeRule?.statut}
+              count={count}
+            />
+            {otherRules?.length > 0 && (
+              <AccordionPanel p={0}>
+                {otherRules.map(({ _id, nom_regle_complementaire, statut, regle_complementaire }) => (
+                  <Line
+                    pl={6}
+                    key={_id}
+                    plateforme={plateforme}
+                    niveau={niveau}
+                    diplome={value}
+                    isExpanded={false}
+                    showIcon={false}
+                    label={nom_regle_complementaire}
+                    status={statut}
+                    regle_complementaire={regle_complementaire}
+                    shouldFetchCount={isExpanded}
+                  />
+                ))}
+              </AccordionPanel>
+            )}
+          </>
+        )}
+      </AccordionItem>
+    </Accordion>
+  );
+};
+
 export default ({ plateforme }) => {
   const [niveaux, setNiveaux] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
@@ -115,84 +230,14 @@ export default ({ plateforme }) => {
                                 </Flex>
                               </AccordionButton>
                               <AccordionPanel p={0} bg="#FFFFFF">
-                                {diplomes.map(({ value, count, regles }) => {
-                                  // check if it has one rule at diplome level
-                                  const [diplomeRule] = regles.filter(
-                                    ({ regle_complementaire }) => regle_complementaire === "{}"
-                                  );
-
-                                  const otherRules = regles.filter(
-                                    ({ regle_complementaire }) => regle_complementaire !== "{}"
-                                  );
-
-                                  return (
-                                    <Accordion
-                                      allowMultiple
-                                      bg="#FFFFFF"
-                                      key={`${niveau.value}-${value}`}
-                                      borderBottom={"1px solid"}
-                                      borderColor={"grey.300"}
-                                    >
-                                      <AccordionItem border="none" m={0}>
-                                        {({ isExpanded }) => (
-                                          <>
-                                            <AccordionButton>
-                                              <Flex px={4} alignItems="center" w={"full"}>
-                                                <Flex grow={1} alignItems="center">
-                                                  {otherRules?.length > 0 ? (
-                                                    isExpanded ? (
-                                                      <SubtractLine fontSize="12px" color="bluefrance" mr={2} />
-                                                    ) : (
-                                                      <AddFill fontSize="12px" color="bluefrance" mr={2} />
-                                                    )
-                                                  ) : (
-                                                    ""
-                                                  )}
-                                                  <Text>{value}</Text>
-                                                </Flex>
-                                                <Flex
-                                                  flexBasis={"40%"}
-                                                  justifyContent={"space-between"}
-                                                  alignItems="center"
-                                                >
-                                                  <Flex minW={8}>{count}</Flex>
-                                                  <Flex>
-                                                    {diplomeRule ? (
-                                                      <StatusBadge source={plateforme} status={diplomeRule.statut} />
-                                                    ) : (
-                                                      <StatusBadge source={plateforme} status="hors périmètre" />
-                                                    )}
-                                                  </Flex>
-                                                  <Flex alignItems="center">
-                                                    <Dots color={"bluefrance"} boxSize={4} />
-                                                  </Flex>
-                                                </Flex>
-                                              </Flex>
-                                            </AccordionButton>
-                                            {otherRules?.length > 0 && (
-                                              <AccordionPanel>
-                                                <Box px={8}>
-                                                  {otherRules.map(
-                                                    ({
-                                                      _id,
-                                                      nom_regle_complementaire,
-                                                      statut,
-                                                      regle_complementaire,
-                                                    }) => (
-                                                      <Box key={_id}>
-                                                        {nom_regle_complementaire} {statut} : {regle_complementaire}
-                                                      </Box>
-                                                    )
-                                                  )}
-                                                </Box>
-                                              </AccordionPanel>
-                                            )}
-                                          </>
-                                        )}
-                                      </AccordionItem>
-                                    </Accordion>
-                                  );
-                                })}
+                                {diplomes.map((diplome) => (
+                                  <Diplome
+                                    key={`${niveau.value}-${diplome.value}`}
+                                    plateforme={plateforme}
+                                    niveau={niveau.value}
+                                    diplome={diplome}
+                                  />
+                                ))}
                               </AccordionPanel>
                             </>
                           )}
