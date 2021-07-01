@@ -46,6 +46,11 @@ const reglePerimetre = {
     description:
       "La règle pour matcher les formations (i.e: query mongo) qui s'ajoute au niveau + diplome (stringified)",
   },
+  nom_regle_complementaire: {
+    type: String,
+    default: null,
+    description: "Nom du sous-ensemble",
+  },
   priorite: {
     type: Number,
     default: 0,
