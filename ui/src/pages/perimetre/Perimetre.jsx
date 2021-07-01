@@ -9,6 +9,11 @@ import {
   Container,
   Flex,
   Heading,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Spinner,
   Text,
 } from "@chakra-ui/react";
@@ -52,10 +57,10 @@ const Line = ({
     if (regle_complementaire && !count && shouldFetchCount) {
       run();
     }
-  }, [count, regle_complementaire, shouldFetchCount]);
+  }, [count, diplome, niveau, regle_complementaire, shouldFetchCount]);
 
   return (
-    <AccordionButton>
+    <AccordionButton as={Box} role={"button"}>
       <Flex px={4} alignItems="center" w={"full"}>
         <Flex grow={1} alignItems="center" {...rest}>
           {showIcon ? (
@@ -79,7 +84,21 @@ const Line = ({
             )}
           </Flex>
           <Flex alignItems="center">
-            <Dots color={"bluefrance"} boxSize={4} />
+            <Menu>
+              <MenuButton
+                as={IconButton}
+                aria-label="Options"
+                icon={<Dots color={"bluefrance"} boxSize={4} />}
+                variant="unstyled"
+                _hover={{ bg: "grey.300" }}
+                onClick={(evt) => evt.stopPropagation()}
+              />
+              <MenuList minW={"25rem"} minH={"10rem"} borderRadius={0} color={"bluefrance"}>
+                <MenuItem onClick={(evt) => evt.stopPropagation()}>Afficher les conditions</MenuItem>
+                <MenuItem onClick={(evt) => evt.stopPropagation()}>Dupliquer les conditions</MenuItem>
+                <MenuItem onClick={(evt) => evt.stopPropagation()}>Supprimer les conditions</MenuItem>
+              </MenuList>
+            </Menu>
           </Flex>
         </Flex>
       </Flex>
