@@ -131,12 +131,7 @@ const SubComponent = ({ setQuery, fields, collection, lang }) => {
         fields={fields}
         lang={lang}
         onQuery={(queries) => {
-          if (
-            !queries.must.length &&
-            !queries.must_not.length &&
-            !queries.should.length &&
-            !queries.should_not.length
-          ) {
+          if (!queries.must.length && !queries.must_not.length && !queries.should.length) {
             return setQuery({ query: { match_all: {} }, value: "" });
           }
 
