@@ -14,7 +14,8 @@ import { Breadcrumb } from "../../common/components/Breadcrumb";
 import Layout from "../layout/Layout";
 import { setTitle } from "../../common/utils/pageUtils";
 import { _get } from "../../common/httpClient";
-import { AddFill, SubtractLine } from "../../theme/components/icons";
+import { AddFill, Dots, SubtractLine } from "../../theme/components/icons";
+import { StatusBadge } from "../../common/components/StatusBadge";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -89,49 +90,71 @@ export default ({ plateforme }) => {
                           </Text>
                         </AccordionButton>
                         <AccordionPanel p={0} bg="#FFFFFF">
-                          {diplomes.map(({ diplome, regles }) => (
-                            <Accordion
-                              allowMultiple
-                              bg="#FFFFFF"
-                              key={`${niveau}-${diplome}`}
-                              borderBottom={"1px solid"}
-                              borderColor={"grey.300"}
-                            >
-                              <AccordionItem border="none" m={0}>
-                                {({ isExpanded }) => (
-                                  <>
-                                    <AccordionButton>
-                                      <Flex px={4} alignItems="center">
-                                        {regles?.length > 0 ? (
-                                          isExpanded ? (
-                                            <SubtractLine fontSize="12px" color="bluefrance" mr={2} />
-                                          ) : (
-                                            <AddFill fontSize="12px" color="bluefrance" mr={2} />
-                                          )
-                                        ) : (
-                                          ""
-                                        )}
-                                        <Text>{diplome}</Text>
-                                      </Flex>
-                                    </AccordionButton>
-                                    <AccordionPanel>
-                                      {regles?.length > 0 && (
-                                        <Box px={8}>
-                                          {regles.map(
-                                            ({ _id, nom_regle_complementaire, statut, regle_complementaire }) => (
-                                              <Box key={_id}>
-                                                {nom_regle_complementaire} {statut} : {regle_complementaire}
-                                              </Box>
-                                            )
-                                          )}
-                                        </Box>
+                          {diplomes.map(({ diplome, regles }) => {
+                            // check if it has one rule at diplome level
+                            const [diplomeRule] = regles.filter(
+                              ({ regle_complementaire }) => regle_complementaire === "{}"
+                            );
+
+                            const otherRules = regles.filter(
+                              ({ regle_complementaire }) => regle_complementaire !== "{}"
+                            );
+
+                            return (
+                              <Accordion
+                                allowMultiple
+                                bg="#FFFFFF"
+                                key={`${niveau}-${diplome}`}
+                                borderBottom={"1px solid"}
+                                borderColor={"grey.300"}
+                              >
+                                <AccordionItem border="none" m={0}>
+                                  {({ isExpanded }) => (
+                                    <>
+                                      <AccordionButton>
+                                        <Flex px={4} alignItems="center" w={"full"}>
+                                          <Flex grow={2} alignItems="center">
+                                            {otherRules?.length > 0 ? (
+                                              isExpanded ? (
+                                                <SubtractLine fontSize="12px" color="bluefrance" mr={2} />
+                                              ) : (
+                                                <AddFill fontSize="12px" color="bluefrance" mr={2} />
+                                              )
+                                            ) : (
+                                              ""
+                                            )}
+                                            <Text>{diplome}</Text>
+                                          </Flex>
+                                          <Flex px={4}>12</Flex>
+                                          <Flex pl={12} pr={24}>
+                                            {diplomeRule && (
+                                              <StatusBadge source={plateforme} status={diplomeRule.statut} />
+                                            )}
+                                          </Flex>
+                                          <Flex pl={4}>
+                                            <Dots color={"bluefrance"} boxSize={4} />
+                                          </Flex>
+                                        </Flex>
+                                      </AccordionButton>
+                                      {otherRules?.length > 0 && (
+                                        <AccordionPanel>
+                                          <Box px={8}>
+                                            {otherRules.map(
+                                              ({ _id, nom_regle_complementaire, statut, regle_complementaire }) => (
+                                                <Box key={_id}>
+                                                  {nom_regle_complementaire} {statut} : {regle_complementaire}
+                                                </Box>
+                                              )
+                                            )}
+                                          </Box>
+                                        </AccordionPanel>
                                       )}
-                                    </AccordionPanel>
-                                  </>
-                                )}
-                              </AccordionItem>
-                            </Accordion>
-                          ))}
+                                    </>
+                                  )}
+                                </AccordionItem>
+                              </Accordion>
+                            );
+                          })}
                         </AccordionPanel>
                       </>
                     )}
