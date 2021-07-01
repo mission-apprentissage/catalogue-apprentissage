@@ -1,8 +1,9 @@
 const express = require("express");
 const Boom = require("boom");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
+const { getQueryFromRule } = require("../../common/utils/rulesUtils");
 const { getNiveauxDiplomesTree } = require("@mission-apprentissage/tco-service-node");
-const { ReglePerimetre } = require("../../common/model");
+const { ReglePerimetre, ConvertedFormation } = require("../../common/model");
 
 module.exports = () => {
   const router = express.Router();
@@ -11,7 +12,27 @@ module.exports = () => {
     "/perimetre/niveau",
     tryCatch(async (req, res) => {
       const tree = await getNiveauxDiplomesTree();
-      return res.json(tree);
+
+      const niveauxTree = await Promise.all(
+        Object.entries(tree).map(async ([niveau, diplomes]) => {
+          return {
+            niveau: {
+              value: niveau,
+              count: await ConvertedFormation.countDocuments(getQueryFromRule({ niveau })),
+            },
+            diplomes: await Promise.all(
+              diplomes.map(async (diplome) => {
+                return {
+                  value: diplome,
+                  count: await ConvertedFormation.countDocuments(getQueryFromRule({ niveau, diplome })),
+                };
+              })
+            ),
+          };
+        })
+      );
+
+      return res.json(niveauxTree);
     })
   );
 
