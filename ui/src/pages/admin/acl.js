@@ -16,6 +16,10 @@ export default [
         ref: "page_catalogue/demande_ajout",
       },
       {
+        feature: "Voir tous les statuts de publication",
+        ref: "page_catalogue/voir_status_publication",
+      },
+      {
         feature: "Voir les statuts de publication parcourSup",
         ref: "page_catalogue/voir_status_publication",
       },
