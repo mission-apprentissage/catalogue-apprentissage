@@ -80,7 +80,7 @@ const mnaFormationSchema = {
   uai_formation: {
     type: String,
     default: null,
-    description: "UAI de la formation",
+    description: "UAI du lieu de la formation",
   },
   nom: {
     type: String,

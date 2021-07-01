@@ -36,7 +36,7 @@ const aPublierValidationRecteurRules = {
   ...toBePublishedRules,
   $or: [
     {
-      niveau: { $in: ["4 (BAC...)", "5 (BTS, DEUST...)", "6 (Licence, BUT...)"] },
+      niveau: "4 (BAC...)",
       diplome: "MENTION COMPLEMENTAIRE",
       $and: [
         {
@@ -51,25 +51,24 @@ const aPublierRules = {
   ...toBePublishedRules,
   $or: [
     {
-      niveau: { $in: ["4 (BAC...)", "5 (BTS, DEUST...)", "6 (Licence, BUT...)"] },
+      niveau: "4 (BAC...)",
+      diplome: "CERTIFICAT DE SPECIALISATION AGRICOLE DE NIVEAU 4",
+    },
+    {
+      niveau: "5 (BTS, DEUST...)",
       diplome: {
-        $in: [
-          "BREVET DE TECHNICIEN SUPERIEUR",
-          "BREVET DE TECHNICIEN SUPERIEUR AGRICOLE",
-          "CERTIFICAT DE SPECIALISATION AGRICOLE DE NIVEAU 4",
-        ],
+        $in: ["BREVET DE TECHNICIEN SUPERIEUR", "BREVET DE TECHNICIEN SUPERIEUR AGRICOLE"],
       },
     },
     {
-      niveau: { $in: ["4 (BAC...)", "5 (BTS, DEUST...)", "6 (Licence, BUT...)"] },
+      niveau: "5 (BTS, DEUST...)",
       diplome: "TH DE NIV 3 DES CHAMBRES DE METIERS",
       $and: [{ libelle_court: "BM", niveau_formation_diplome: "36M" }],
     },
     {
-      niveau: { $in: ["4 (BAC...)", "5 (BTS, DEUST...)", "6 (Licence, BUT...)"] },
+      niveau: "5 (BTS, DEUST...)",
       diplome: {
         $in: [
-          "TH DE NIV 2 ORGANISMES GESTIONNAIRES DIVERS",
           "TH DE NIV 3 DES CCI ET MINISTERE COMMERCE ARTISANAT PME",
           "TH DE NIV 3 DES CHAMBRES DE METIERS",
           "TH DE NIV 3 EDUCATION RECTORAT GRETA ...",
@@ -81,6 +80,11 @@ const aPublierRules = {
           "TH DE NIV 3 SANTE SOCIAL",
         ],
       },
+      $and: [{ libelle_court: { $regex: /^TH3-/ } }],
+    },
+    {
+      niveau: "6 (Licence, BUT...)",
+      diplome: "TH DE NIV 2 ORGANISMES GESTIONNAIRES DIVERS",
       $and: [{ libelle_court: { $regex: /^TH3-/ } }],
     },
     {
