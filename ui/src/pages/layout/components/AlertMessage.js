@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Alert, AlertIcon, AlertTitle, AlertDescription, CloseButton, Text } from "@chakra-ui/react";
 import { _get, _delete } from "../../../common/httpClient";
 import useAuth from "../../../common/hooks/useAuth";
-import { hasOneOfRoles } from "../../../common/utils/rolesUtils";
+import { hasAccessTo } from "../../../common/utils/rolesUtils";
 
 const AlertMessage = () => {
   let [auth] = useAuth();
@@ -34,7 +34,7 @@ const AlertMessage = () => {
         <AlertDescription>
           {messages.map((element) => element.enabled && <Text key={element._id}>{element.msg}</Text>)}
         </AlertDescription>
-        {auth && hasOneOfRoles(auth, ["admin"]) && (
+        {auth && hasAccessTo(auth, "page_message_maintenance") && (
           <CloseButton position="absolute" right="8px" top="8px" onClick={onDeleteClicked} />
         )}
       </Alert>
