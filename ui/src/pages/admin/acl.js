@@ -136,6 +136,10 @@ export default [
     ref: "page_upload",
   },
   {
+    feature: "Message de maintenance",
+    ref: "page_message_maintenance",
+  },
+  {
     feature: "Réglage des périmètres Parcoursup",
     ref: "page_perimetre_ps",
   },
