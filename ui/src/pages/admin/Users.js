@@ -70,19 +70,15 @@ const buildRolesAcl = (newRoles, roles) => {
   return acl;
 };
 
-const UserLine = ({ user }) => {
-  const [rolesAcl, setRolesAcl] = useState([]);
-  const [roles, setRoles] = useState([]);
+const UserLine = ({ user, roles }) => {
+  const [rolesAcl, setRolesAcl] = useState(buildRolesAcl(user?.roles || [], roles));
 
   useEffect(() => {
     async function run() {
-      const rolesList = await _get(`/api/admin/roles/`);
-      setRoles(rolesList);
-
-      setRolesAcl(buildRolesAcl(user?.roles || [], rolesList));
+      setRolesAcl(buildRolesAcl(user?.roles || [], roles));
     }
     run();
-  }, [user?.roles]);
+  }, [roles, user?.roles]);
 
   const { values, handleSubmit, handleChange, setFieldValue } = useFormik({
     initialValues: {
@@ -344,10 +340,13 @@ const UserLine = ({ user }) => {
 
 export default () => {
   const [users, setUsers] = useState([]);
+  const [roles, setRoles] = useState([]);
   useEffect(() => {
     async function run() {
       const usersList = await _get(`/api/admin/users/`);
       setUsers(usersList);
+      const rolesList = await _get(`/api/admin/roles/`);
+      setRoles(rolesList);
     }
     run();
   }, []);
@@ -377,7 +376,7 @@ export default () => {
                   <AccordionIcon />
                 </AccordionButton>
                 <AccordionPanel pb={4} border={"1px solid"} borderTop={0} borderColor={"bluefrance"}>
-                  <UserLine user={null} />
+                  <UserLine user={null} roles={roles} />
                 </AccordionPanel>
               </AccordionItem>
             </Accordion>
@@ -393,7 +392,7 @@ export default () => {
                       <AccordionIcon />
                     </AccordionButton>
                     <AccordionPanel pb={4} border={"1px solid"} borderTop={0} borderColor={"bluefrance"}>
-                      <UserLine user={userAttr} />
+                      <UserLine user={userAttr} roles={roles} />
                     </AccordionPanel>
                   </AccordionItem>
                 </Accordion>
