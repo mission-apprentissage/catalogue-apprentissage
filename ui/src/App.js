@@ -4,7 +4,7 @@ import useAuth from "./common/hooks/useAuth";
 import { _post, _get } from "./common/httpClient";
 import ScrollToTop from "./common/components/ScrollToTop";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { hasOneOfRoles, hasAccessTo } from "./common/utils/rolesUtils";
+import { hasAccessTo } from "./common/utils/rolesUtils";
 
 // Route-based code splitting @see https://reactjs.org/docs/code-splitting.html#route-based-code-splitting
 const HomePage = lazy(() => import("./pages/HomePage"));
@@ -140,7 +140,7 @@ export default () => {
                   <PrivateRoute exact path="/mes-actions" component={ActionsExpertes} />
                 )}
 
-                {auth && hasOneOfRoles(auth, ["admin"]) && (
+                {auth && hasAccessTo(auth, "page_message_maintenance") && (
                   <PrivateRoute exact path="/admin/messagescript" component={Message} />
                 )}
 

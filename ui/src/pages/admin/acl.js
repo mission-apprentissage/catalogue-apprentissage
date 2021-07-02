@@ -131,4 +131,16 @@ export default [
     feature: "Upload de fichiers source",
     ref: "page_upload",
   },
+  {
+    feature: "Message de maintenance",
+    ref: "page_message_maintenance",
+  },
+  {
+    feature: "Réglage des périmètres Parcoursup",
+    ref: "page_perimetre_ps",
+  },
+  {
+    feature: "Réglage des périmètres Affelnet",
+    ref: "page_perimetre_af",
+  },
 ];

@@ -16,7 +16,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import useAuth from "../../../common/hooks/useAuth";
-import { hasOneOfRoles, isUserAdmin, hasAccessTo } from "../../../common/utils/rolesUtils";
+import { isUserAdmin, hasAccessTo } from "../../../common/utils/rolesUtils";
 import { _get } from "../../../common/httpClient";
 import { LockFill } from "../../../theme/components/icons/LockFill";
 import { Logo } from "./Logo";
@@ -76,44 +76,42 @@ const Header = () => {
                   </Flex>
                 </MenuButton>
                 <MenuList>
-                  {hasOneOfRoles(auth, ["admin", "moss"]) && (
-                    <>
-                      {isUserAdmin(auth) && (
-                        <MenuGroup title="Administration">
-                          <MenuItem as={NavLink} to="/admin/users" icon={<AccountFill boxSize={4} />}>
-                            Gestion des utilisateurs
-                          </MenuItem>
-                          <MenuItem as={NavLink} to="/admin/roles" icon={<AccountFill boxSize={4} />}>
-                            Gestion des rôles
-                          </MenuItem>
-                          <MenuItem as={NavLink} to="/admin/upload" icon={<DownloadLine boxSize={4} />}>
-                            Upload de fichiers
-                          </MenuItem>
-                          <MenuItem as={NavLink} to="/admin/messagescript" icon={<InfoCircle boxSize={4} />}>
-                            Message de maintenance
-                          </MenuItem>
-                        </MenuGroup>
-                      )}
-                      <MenuDivider />
-                      <MenuGroup title="Réconciliation">
-                        {hasAccessTo(auth, "page_reconciliation_ps") && (
-                          <MenuItem as={NavLink} to="/couverture-ps" icon={<DoubleArrows boxSize={4} />}>
-                            Réconciliation Parcoursup
-                          </MenuItem>
-                        )}
-                        {hasOneOfRoles(auth, ["admin"]) && (
-                          <MenuItem
-                            as={NavLink}
-                            to="/couverture-affelnet"
-                            icon={<DoubleArrows boxSize={4} />}
-                            isDisabled
-                          >
-                            Réconciliation Affelnet
-                          </MenuItem>
-                        )}
-                      </MenuGroup>
-                    </>
-                  )}
+                  <MenuGroup title="Administration">
+                    {hasAccessTo(auth, "page_gestion_utilisateurs") && (
+                      <MenuItem as={NavLink} to="/admin/users" icon={<AccountFill boxSize={4} />}>
+                        Gestion des utilisateurs
+                      </MenuItem>
+                    )}
+                    {hasAccessTo(auth, "page_gestion_roles") && (
+                      <MenuItem as={NavLink} to="/admin/roles" icon={<AccountFill boxSize={4} />}>
+                        Gestion des rôles
+                      </MenuItem>
+                    )}
+                    {hasAccessTo(auth, "page_upload") && (
+                      <MenuItem as={NavLink} to="/admin/upload" icon={<DownloadLine boxSize={4} />}>
+                        Upload de fichiers
+                      </MenuItem>
+                    )}
+                    {hasAccessTo(auth, "page_message_maintenance") && (
+                      <MenuItem as={NavLink} to="/admin/messagescript" icon={<InfoCircle boxSize={4} />}>
+                        Message de maintenance
+                      </MenuItem>
+                    )}
+                  </MenuGroup>
+                  <MenuDivider />
+                  <MenuGroup title="Réconciliation">
+                    {hasAccessTo(auth, "page_reconciliation_ps") && (
+                      <MenuItem as={NavLink} to="/couverture-ps" icon={<DoubleArrows boxSize={4} />}>
+                        Réconciliation Parcoursup
+                      </MenuItem>
+                    )}
+                    {hasAccessTo(auth, "page_reconciliation_af") && (
+                      <MenuItem as={NavLink} to="/couverture-affelnet" icon={<DoubleArrows boxSize={4} />} isDisabled>
+                        Réconciliation Affelnet
+                      </MenuItem>
+                    )}
+                  </MenuGroup>
+
                   <MenuDivider />
                   <MenuItem onClick={logout}>Déconnexion</MenuItem>
                 </MenuList>
