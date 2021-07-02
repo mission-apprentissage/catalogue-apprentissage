@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { Box, Container, Flex, Link, Text } from "@chakra-ui/react";
 import useAuth from "../../../common/hooks/useAuth";
-import { hasOneOfRoles } from "../../../common/utils/rolesUtils";
+import { hasAccessTo } from "../../../common/utils/rolesUtils";
 import { MenuFill, Close } from "../../../theme/components/icons";
 
 const NavigationMenu = (props) => {
@@ -59,7 +59,7 @@ const NavLinks = ({ isOpen }) => {
         textStyle="sm"
       >
         <NavItem to="/">Accueil</NavItem>
-        {hasOneOfRoles(auth, ["admin", "moss"]) && <NavItem to="/mes-actions">Mes actions expertes</NavItem>}
+        {hasAccessTo(auth, "page_actions_expertes") && <NavItem to="/mes-actions">Mes actions expertes</NavItem>}
         <NavItem to="/recherche/formations-2021">Catalogue des formations en apprentissage 2021</NavItem>
         <NavItem to="/recherche/etablissements">Liste des organismes</NavItem>
         <NavItem to="/changelog">Journal des modifications</NavItem>
