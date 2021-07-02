@@ -16,7 +16,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import useAuth from "../../../common/hooks/useAuth";
-import { hasOneOfRoles, isUserAdmin } from "../../../common/utils/rolesUtils";
+import { hasOneOfRoles, isUserAdmin, hasAccessTo } from "../../../common/utils/rolesUtils";
 import { _get } from "../../../common/httpClient";
 import { LockFill } from "../../../theme/components/icons/LockFill";
 import { Logo } from "./Logo";
@@ -96,7 +96,7 @@ const Header = () => {
                       )}
                       <MenuDivider />
                       <MenuGroup title="Réconciliation">
-                        {hasOneOfRoles(auth, ["admin", "moss"]) && (
+                        {hasAccessTo(auth, "page_reconciliation_ps") && (
                           <MenuItem as={NavLink} to="/couverture-ps" icon={<DoubleArrows boxSize={4} />}>
                             Réconciliation Parcoursup
                           </MenuItem>
