@@ -79,7 +79,7 @@ export default () => {
                   linkTo="/couverture-ps"
                   title="Rapprochement des bases Carif-Oref et Parcoursup"
                   body="Valider la correspondance des données entre la base Parcoursup et le Catalogue des offres de formations en apprentissage 2021 (base Carif-Oref)"
-                  isDisabled={hasAccessTo(auth, "page_reconciliation_ps")}
+                  isDisabled={!hasAccessTo(auth, "page_reconciliation_ps")}
                 />
               </GridItem>
               <GridItem>
