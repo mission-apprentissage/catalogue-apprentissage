@@ -5,8 +5,8 @@ import Layout from "../layout/Layout";
 import { setTitle } from "../../common/utils/pageUtils";
 import { NavLink } from "react-router-dom";
 import { useSearch } from "../../common/hooks/useSearch";
-// import { hasOneOfRoles } from "../../common/utils/rolesUtils";
-// import useAuth from "../../common/hooks/useAuth";
+import { hasAccessTo } from "../../common/utils/rolesUtils";
+import useAuth from "../../common/hooks/useAuth";
 import { ArrowRightLine } from "../../theme/components/icons";
 
 export const Card = ({ info, linkTo, title, body, isDisabled }) => {
@@ -49,9 +49,7 @@ export default () => {
   let searchState = useSearch("reconciliation_ps");
   const title = "Mes actions expertes";
   setTitle(title);
-
-  // let [auth] = useAuth();
-  //hasOneOfRoles(auth, ["admin", "instructeur"])
+  let [auth] = useAuth();
 
   return (
     <Layout>
@@ -81,6 +79,7 @@ export default () => {
                   linkTo="/couverture-ps"
                   title="Rapprochement des bases Carif-Oref et Parcoursup"
                   body="Valider la correspondance des données entre la base Parcoursup et le Catalogue des offres de formations en apprentissage 2021 (base Carif-Oref)"
+                  isDisabled={hasAccessTo(auth, "page_reconciliation_ps")}
                 />
               </GridItem>
               <GridItem>
