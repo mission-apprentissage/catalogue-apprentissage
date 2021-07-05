@@ -49,7 +49,7 @@ export default (props) => {
           )}
           {searchState.loaded && (
             <>
-              <Tabs variant="search" mt={5} isLazy>
+              <Tabs variant="search" mt={5} isLazy defaultIndex={props.guide ? 2 : 0}>
                 <TabList bg="white" justifyContent="space-between">
                   <Flex>
                     <Tab>
