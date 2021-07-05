@@ -118,6 +118,10 @@ export default () => {
 
                 <Route exact path="/" component={HomePage} />
                 <Route exact path="/recherche/formations-2021" component={Catalogue} />
+                <Route exact path="/guide-reglementaire">
+                  <Catalogue guide />
+                </Route>
+
                 <Route exact path="/recherche/etablissements" component={Organismes} />
                 <Route exact path={`/formation/:id`} component={Formation} />
                 <Route exact path={`/etablissement/:id`} component={Etablissement} />
