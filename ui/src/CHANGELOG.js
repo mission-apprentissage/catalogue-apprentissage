@@ -4,12 +4,25 @@ import { Link } from "@chakra-ui/react";
 const changelog = {
   list: [
     {
-      version: "4.2.0",
+      version: "4.3.0",
       date: "Prochainement",
       about: `<h4>À venir</h4>`,
       fixes: [],
       features: ["Développement d'un module de gestion des règles"],
       improvements: ["Travaux sur le flux retour vers les Carif-Oref et gestion des modifications"],
+    },
+    {
+      version: "4.2.0",
+      date: "Le 29 Juin 2021",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [],
+      features: [
+        "Module de rapprochement des bases Carif-Oref et Parcoursup",
+        "Page mes actions expertes qui permet aux instructeurs en académie d'accéder aux modules de rapprochement des bases Carif-Oref et Parcoursup",
+        "[Admin] Module gestion des rôles",
+      ],
+      improvements: [],
     },
     {
       version: "4.1.0",
