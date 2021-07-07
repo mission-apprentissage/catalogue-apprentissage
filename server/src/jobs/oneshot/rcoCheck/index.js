@@ -36,7 +36,7 @@ const getMismatchPipeline = (key, rcoKey) => {
 };
 
 const findMismatch = async (totalFormationsMna, key, rcoKey) => {
-  const [{ total }] = await ConvertedFormation.aggregate(getMismatchPipeline(key, rcoKey));
+  const [{ total = 0 } = {}] = await ConvertedFormation.aggregate(getMismatchPipeline(key, rcoKey));
   console.log(`total ${key} changés :`, total, `(${((total / totalFormationsMna) * 100).toFixed(2)}%)`);
 };
 
