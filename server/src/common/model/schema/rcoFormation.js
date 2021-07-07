@@ -160,6 +160,7 @@ const rcoFormationsSchema = {
     description: "Erreur lors de la conversion de la formation",
   },
   id_rco_formation: {
+    index: true,
     type: String,
     default: null,
     description: "Id de formation RCO (id_formation + id_action + id_certifinfo)",
