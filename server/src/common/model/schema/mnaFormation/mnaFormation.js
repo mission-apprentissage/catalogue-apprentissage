@@ -8,6 +8,7 @@ const mnaFormationSchema = {
   ...etablissementReferenceInfo,
 
   cfd: {
+    index: true,
     type: String,
     default: null,
     description: "Code formation diplome (education nationale)",
@@ -290,6 +291,7 @@ const mnaFormationSchema = {
     description: "Intitule du statut de liaison avec un/des opcos",
   },
   published: {
+    index: true,
     type: Boolean,
     default: false,
     description: "Est publiée, la formation est éligible pour le catalogue",
@@ -362,6 +364,7 @@ const mnaFormationSchema = {
     description: "Siret du lieu de formation",
   },
   id_rco_formation: {
+    index: true,
     type: String,
     default: null,
     description: "Id de formation RCO (id_formation + id_action + id_certifinfo)",
