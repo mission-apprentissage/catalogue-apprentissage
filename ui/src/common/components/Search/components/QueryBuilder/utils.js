@@ -1,5 +1,5 @@
 export function mergedQueries(queries) {
-  let obj = { must: [], must_not: [], should: [], should_not: [] };
+  let obj = { must: [], must_not: [], should: [] };
   queries
     .filter((q) => q.query)
     .forEach((q, k) => {
