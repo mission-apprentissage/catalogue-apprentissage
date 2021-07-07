@@ -53,6 +53,7 @@ runScript(async () => {
   await findMismatch(totalFormationsMna, "code_postal", "etablissement_lieu_formation_code_postal");
   await findMismatch(totalFormationsMna, "code_commune_insee", "etablissement_lieu_formation_code_insee");
   await findMismatch(totalFormationsMna, "uai_formation", "etablissement_lieu_formation_uai");
+  await findMismatch(totalFormationsMna, "rncp_code");
 
   await findMismatch(totalFormationsMna, "etablissement_gestionnaire_siret");
   await findMismatch(totalFormationsMna, "etablissement_gestionnaire_uai");
