@@ -7,6 +7,7 @@ const { getPeriodeTags } = require("../../jobs/common/utils/rcoUtils");
 const { cfdMapper } = require("../mappers/cfdMapper");
 const { codePostalMapper } = require("../mappers/codePostalMapper");
 const { etablissementsMapper } = require("../mappers/etablissementsMapper");
+const { geoMapper } = require("../mappers/geoMapper");
 const { diffFormation, buildUpdatesHistory } = require("../common/utils/diffUtils");
 const { SandboxFormation, RcoFormation } = require("../../common/model");
 const { getCoordinatesFromAddressData } = require("@mission-apprentissage/tco-service-node");
@@ -64,12 +65,26 @@ const mnaFormationUpdater = async (
       code_commune_insee = rcoFormation?.etablissement_lieu_formation_code_insee ?? formation.code_commune_insee;
     }
 
-    const { result: cpMapping = {}, messages: cpMessages } = withCodePostalUpdate
-      ? await codePostalMapper(formation.code_postal, code_commune_insee)
-      : {};
-    error = parseErrors(cpMessages);
-    if (error) {
-      return { updates: null, formation, error, cfdInfo };
+    let cpMapping = {};
+    if (formation.lieu_formation_geo_coordonnees) {
+      const { result = {}, messages: geoMessages } = withCodePostalUpdate
+        ? await geoMapper(formation.lieu_formation_geo_coordonnees, code_commune_insee)
+        : {};
+      const { adresse, ...rest } = result ?? {};
+      cpMapping = { lieu_formation_adresse: adresse, ...rest };
+      error = parseErrors(geoMessages);
+      if (error) {
+        return { updates: null, formation, error, cfdInfo };
+      }
+    } else {
+      const { result = {}, messages: cpMessages } = withCodePostalUpdate
+        ? await codePostalMapper(formation.code_postal, code_commune_insee)
+        : {};
+      cpMapping = result;
+      error = parseErrors(cpMessages);
+      if (error) {
+        return { updates: null, formation, error, cfdInfo };
+      }
     }
 
     const rncpInfo = {
@@ -89,8 +104,8 @@ const mnaFormationUpdater = async (
       return { updates: null, formation, error, cfdInfo };
     }
 
-    let geoMapping = {};
-    if (withCodePostalUpdate) {
+    let geoMapping = { idea_geo_coordonnees_etablissement: formation.lieu_formation_geo_coordonnees };
+    if (withCodePostalUpdate && !geoMapping.idea_geo_coordonnees_etablissement) {
       const { result: coordinates, messages: geoMessages } = await getCoordinatesFromAddressData({
         numero_voie: formation.lieu_formation_adresse,
         localite: cpMapping.localite,
