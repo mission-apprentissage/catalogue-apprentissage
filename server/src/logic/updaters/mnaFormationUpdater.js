@@ -95,6 +95,7 @@ const mnaFormationUpdater = async (
         numero_voie: formation.lieu_formation_adresse,
         localite: cpMapping.localite,
         code_postal: cpMapping.code_postal,
+        code_insee: cpMapping.code_commune_insee,
       });
 
       const geolocError = parseErrors(geoMessages);
