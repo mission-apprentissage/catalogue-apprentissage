@@ -38,6 +38,7 @@ import { setTitle } from "../../common/utils/pageUtils";
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 const endpointTCO =
   process.env.REACT_APP_ENDPOINT_TCO || "https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1";
+const endpointLBA = process.env.REACT_APP_ENDPOINT_LBA || "https://labonnealternance.pole-emploi.fr";
 
 const FormationPeriode = ({ periode }) => {
   let displayedPeriode = <strong>periode</strong>;
@@ -73,7 +74,7 @@ const FormationPeriode = ({ periode }) => {
 };
 
 const getLBAUrl = ({ _id = "" }) => {
-  return `https://labonnealternance.pole-emploi.fr/recherche-apprentissage?&display=list&page=fiche&type=training&itemId=${_id}`;
+  return `${endpointLBA}/recherche-apprentissage?&display=list&page=fiche&type=training&itemId=${_id}`;
 };
 
 const HabilitationPartenaire = ({ habilitation }) => {
