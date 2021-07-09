@@ -10,6 +10,7 @@ const {
   // getBcnInfo,
   getCoordinatesFromAddressData,
   getNiveauxDiplomesTree,
+  getAddressFromCoordinates,
 } = require("@mission-apprentissage/tco-service-node");
 
 // const KIT_LOCAL_PATH = "/data/uploads/CodeDiplome_RNCP_latest_kit.csv";
@@ -42,4 +43,11 @@ runScript(async () => {
 
   const tree = await getNiveauxDiplomesTree();
   console.log(tree);
+
+  console.log(
+    await getAddressFromCoordinates({
+      latitude: 45.2344404,
+      longitude: 5.67547279999997,
+    })
+  );
 });
