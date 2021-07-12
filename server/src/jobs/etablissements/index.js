@@ -11,37 +11,35 @@ const importEtablissements = async (catalogue) => {
     failed: 0,
   };
 
-  let etablissements;
+  logger.info("Deleting all etablissements...");
+  await Etablissement.deleteMany({});
+
   try {
-    etablissements = await catalogue.getEtablissements({ limit: 10000, query: {} });
+    await catalogue.getEtablissements({ limit: 1000, query: {} }, async (chunck) => {
+      logger.info(`Inserting ${chunck.length} etablissements...`);
+      await oleoduc(
+        Readable.from(chunck),
+        writeData(
+          async (e) => {
+            stats.total++;
+            try {
+              await Etablissement.create(e);
+              stats.created++;
+            } catch (e) {
+              stats.failed++;
+              logger.error(e);
+            }
+          },
+          { parallel: 5 }
+        )
+      );
+    });
+    console.log({ stats });
   } catch (e) {
     // stop here if not able to get etablissements (keep existing ones)
     logger.error("Etablissements", e);
     return;
   }
-
-  logger.info("Deleting all etablissements...");
-  await Etablissement.deleteMany({});
-
-  logger.info(`Inserting ${etablissements.length} etablissements...`);
-  await oleoduc(
-    Readable.from(etablissements),
-    writeData(
-      async (e) => {
-        stats.total++;
-        try {
-          await Etablissement.create(e);
-          stats.created++;
-        } catch (e) {
-          stats.failed++;
-          logger.error(e);
-        }
-      },
-      { parallel: 5 }
-    )
-  );
-
-  console.log({ stats });
 };
 
 module.exports = { importEtablissements };
@@ -50,7 +48,15 @@ if (process.env.standalone) {
   runScript(async ({ catalogue }) => {
     logger.info("Start etablissements import");
 
-    await importEtablissements(catalogue);
+    try {
+      const totalEtablissments = await catalogue.countEtablissements();
+      console.log(totalEtablissments);
+      if (totalEtablissments > 0) {
+        await importEtablissements(catalogue);
+      }
+    } catch (error) {
+      logger.error(error);
+    }
 
     logger.info("End etablissements import");
   });
