@@ -69,6 +69,7 @@ const updateMatchedFormation = async ({ formation, match }) => {
 };
 
 const formation = async (filter = {}, limit = 10, maxItems = 100, offset = 0) => {
+  PsFormation2021.pauseAllMongoosaticHooks();
   await paginator(
     PsFormation2021,
     { filter, limit, maxItems, offset, lean: true, showProgress: false },
