@@ -6,7 +6,7 @@ import Layout from "../layout/Layout";
 import { setTitle } from "../../common/utils/pageUtils";
 
 export default () => {
-  const METABASE_SITE_URL = `${process.env.REACT_APP_BASE_URL}/metabase`;
+  const METABASE_SITE_URL = `${process.env.REACT_APP_METABASE_URL ?? process.env.REACT_APP_BASE_URL}/metabase`;
   const METABASE_SECRET_KEY = process.env.REACT_APP_METABASE_SECRET_KEY;
 
   const payload = {
