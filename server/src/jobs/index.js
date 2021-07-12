@@ -13,6 +13,7 @@ const clean = require("./clean");
 const { rebuildEsIndex } = require("./esIndex/esIndex");
 const { importEtablissements } = require("./etablissements");
 const { spawn } = require("child_process");
+const { ConvertedFormation } = require("../common/model");
 
 const { rncpImporter, bcnImporter, onisepImporter } = require("@mission-apprentissage/tco-service-node");
 
@@ -21,6 +22,9 @@ const KIT_LOCAL_PATH = "/data/uploads/CodeDiplome_RNCP_latest_kit.csv";
 runScript(async ({ catalogue, db }) => {
   try {
     logger.info(`Start all jobs`);
+
+    ConvertedFormation.toogleAllMongoosaticHooks();
+
     await clean();
 
     // import tco
@@ -54,6 +58,8 @@ runScript(async ({ catalogue, db }) => {
     await afReconciliation();
     await afReference(); // ~ 50 minutes => ~ 5 minutes
     await afPertinence();
+
+    ConvertedFormation.toogleAllMongoosaticHooks();
 
     // es
     const filter = { published: true };

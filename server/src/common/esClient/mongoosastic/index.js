@@ -90,6 +90,8 @@ function getMapping(schema, requireAsciiFolding = false) {
   return { properties };
 }
 
+let isHooksPaused = false;
+
 function Mongoosastic(schema, options) {
   const { esClient } = options;
 
@@ -186,6 +188,11 @@ function Mongoosastic(schema, options) {
     });
   };
 
+  schema.statics.toogleAllMongoosaticHooks = function toogleAllMongoosaticHooks() {
+    isHooksPaused = !isHooksPaused;
+    console.log(`Mongoose Hooks have been ${isHooksPaused ? "paused" : "actived"}`);
+  };
+
   schema.statics.synchronize = async function synchronize(filter = {}) {
     let count = 0;
     await oleoduc(
@@ -213,6 +220,7 @@ function Mongoosastic(schema, options) {
   };
 
   function postRemove(doc) {
+    if (isHooksPaused) return;
     if (doc) {
       const _doc = new doc.constructor(doc);
       return _doc.unIndex();
@@ -220,6 +228,7 @@ function Mongoosastic(schema, options) {
   }
 
   function postSave(doc) {
+    if (isHooksPaused) return;
     if (doc) {
       const _doc = new doc.constructor(doc);
       return _doc.index();
@@ -227,6 +236,7 @@ function Mongoosastic(schema, options) {
   }
 
   function postSaveMany(docs) {
+    if (isHooksPaused) return;
     return new Promise(async (resolve, reject) => {
       for (let i = 0; i < docs.length; i++) {
         try {
