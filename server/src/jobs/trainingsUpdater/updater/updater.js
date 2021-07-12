@@ -28,7 +28,7 @@ const performUpdates = async (
   let notUpdatedCount = 0;
   const cfdInfosCache = new Map();
 
-  ConvertedFormation.toogleAllMongoosaticHooks();
+  ConvertedFormation.pauseAllMongoosaticHooks();
 
   await paginator(ConvertedFormation, { filter, limit, maxItems, offset }, async (formation) => {
     const cfdInfoCache = cfdInfosCache.get(formation._doc.cfd) || null;

@@ -25,7 +25,7 @@ runScript(async ({ catalogue, db }) => {
   try {
     logger.info(`Start all jobs`);
 
-    ConvertedFormation.toogleAllMongoosaticHooks();
+    ConvertedFormation.pauseAllMongoosaticHooks();
 
     await clean();
 
@@ -73,7 +73,7 @@ runScript(async ({ catalogue, db }) => {
     await afPertinence();
     await sleep(30000);
 
-    ConvertedFormation.toogleAllMongoosaticHooks();
+    ConvertedFormation.startAllMongoosaticHooks();
 
     // es
     const filter = { published: true };

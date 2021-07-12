@@ -188,9 +188,14 @@ function Mongoosastic(schema, options) {
     });
   };
 
-  schema.statics.toogleAllMongoosaticHooks = function toogleAllMongoosaticHooks() {
-    isHooksPaused = !isHooksPaused;
-    console.log(`Mongoose Hooks have been ${isHooksPaused ? "paused" : "actived"}`);
+  schema.statics.pauseAllMongoosaticHooks = function pauseAllMongoosaticHooks() {
+    isHooksPaused = true;
+    console.log(`Mongoose Hooks have been paused`);
+  };
+
+  schema.statics.startAllMongoosaticHooks = function startAllMongoosaticHooks() {
+    isHooksPaused = false;
+    console.log(`Mongoose Hooks have been actived`);
   };
 
   schema.statics.synchronize = async function synchronize(filter = {}) {
