@@ -12,12 +12,12 @@ import {
   HStack,
   Box,
 } from "@chakra-ui/react";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Close } from "../../../theme/components/icons/Close";
 import { ArrowRightLine } from "../../../theme/components/icons";
 import { Compare } from "./Compare";
 import { _get } from "../../../common/httpClient";
-
+import "./index.css";
 // TODO FIXEME !important css rules
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`; // "http://localhost/api";
@@ -59,82 +59,53 @@ const ReconciliationPsModal = React.memo(({ isOpen, onClose: onCloseProp, data, 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="full" id="reconciliationPsModal">
       <ModalOverlay />
-      <ModalContent bg="white" color="primaryText" borderRadius="none" my="0" minH="full" h="auto">
-        <HStack px={[4, 16]} mt={5}>
+      <ModalContent bg="white" color="primaryText" borderRadius="none" my="0" minH="full" h="auto" px={20}>
+        <HStack px={[4, 5]} mt={5} position="sticky" top="0">
+          className="sticky-inner"
+          <Box borderBottom="3px solid grey" />
           {step < 3 && (
             <>
-              <Button
+              <Text
                 variant="secondary"
                 onClick={() => {
                   onStepClicked(1);
                 }}
-                leftIcon={
-                  <IconButton
-                    as="div"
-                    isRound
-                    bg={step === 1 ? "bluefrance" : "gray.600"}
-                    color="white"
-                    size="sm"
-                    icon={<Text>1</Text>}
-                  />
-                }
-                px={8}
                 py={2}
+                px={8}
                 fontWeight="bold"
+                textStyle="h4"
                 h="auto"
                 color={step === 1 ? "bluefrance" : "gray.600"}
-                border="1px solid #cecece !important"
               >
-                Valider le rapprochement
-              </Button>
-              <Button
+                1. Valider le rapprochement
+              </Text>
+              <Text
                 disabled={step !== 2}
-                variant="secondary"
-                onClick={() => {
-                  onStepClicked(2);
-                }}
-                leftIcon={
-                  <IconButton
-                    disabled={step !== 2}
-                    isRound
-                    as="div"
-                    bg={step === 2 ? "bluefrance" : "gray.600"}
-                    color="white"
-                    size="sm"
-                    icon={<Text>2</Text>}
-                  />
-                }
-                px={8}
                 py={2}
                 fontWeight="bold"
+                textStyle="h4"
                 h="auto"
                 color={step === 2 ? "bluefrance" : "gray.600"}
-                border="1px solid #cecece !important"
               >
-                Gérer la publication
-              </Button>
+                2. Gérer la publication
+              </Text>
+
+              <Box flexGrow="1" textAlign="end">
+                <Button color="bluefrance" fontSize={"epsilon"} onClick={onClose} variant="unstyled" fontWeight={400}>
+                  fermer{" "}
+                  <Text as={"span"} ml={2}>
+                    <Close boxSize={4} />
+                  </Text>
+                </Button>
+              </Box>
             </>
           )}
-
-          <Box flexGrow="1" textAlign="end">
-            <Button color="bluefrance" fontSize={"epsilon"} onClick={onClose} variant="unstyled" p={8} fontWeight={400}>
-              fermer{" "}
-              <Text as={"span"} ml={2}>
-                <Close boxSize={4} />
-              </Text>
-            </Button>
-          </Box>
         </HStack>
 
-        <ModalHeader px={[4, 16]} pt={[3, 6]} pb={[3, 6]}>
+        <ModalHeader px={[4, 16]} pt={[3, 6]} pb={[3, 6]} borderTop="1px solid #E7E7E7">
           <Heading as="h2" fontSize="2rem">
             <Flex>
-              <Text as={"span"}>
-                <ArrowRightLine boxSize={26} />
-              </Text>
               <Text as={"span"} ml={4}>
-                {step === 1 && "Valider le rapprochement de l’offre de formation"}
-                {step === 2 && "Gérer la publication"}
                 {step === 3 && "Rapprochement validé de l’offre de formation"}
               </Text>
             </Flex>
