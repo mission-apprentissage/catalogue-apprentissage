@@ -168,10 +168,12 @@ const textStyles = {
   h4: {
     fontSize: ["1.375rem", "1.5rem"],
     lineHeight: ["1.75rem", "2rem"],
+    fontWeight: "700",
   },
   h6: {
     fontSize: ["1.125rem", "1.25rem"],
     lineHeight: ["1.5rem", "1.75rem"],
+    fontWeight: "700",
   },
   "rf-text": {
     fontSize: ["1rem"],
