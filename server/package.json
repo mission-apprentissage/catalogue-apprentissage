@@ -21,7 +21,6 @@
     "jobs": "node src/jobs/index.js",
     "jobs:test": "mocha --recursive --exit --timeout 60000 src/jobs/**/tests/",
     "clear": "node src/jobs/clear/index.js",
-    "stats": "node src/jobs/stats/index.js",
     "rco:importer": "standalone=true node src/jobs/rcoImporter/index.js",
     "rco:converter": "standalone=true node src/jobs/rcoConverter/index.js",
     "trainings:updater": "standalone=true node src/jobs/trainingsUpdater/index.js",
