@@ -19,7 +19,7 @@ export default () => {
   const token = jwt.sign(payload, METABASE_SECRET_KEY);
   const iframeURL = METABASE_SITE_URL + "/embed/dashboard/" + token + "#bordered=false&titled=false";
 
-  const title = "Tableau de bord";
+  const title = "Statistiques du catalogue";
   setTitle(title);
 
   return (
@@ -34,7 +34,7 @@ export default () => {
             <iframe
               src={iframeURL}
               frameBorder="0"
-              style={{ height: "400vh", width: "100%" }}
+              style={{ height: "500vh", width: "100%" }}
               title="Statistiques Metabase"
               allowtransparency
             />
