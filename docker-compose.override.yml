@@ -14,11 +14,7 @@ services:
     build:
       context: ui
       dockerfile: Dockerfile.dev
-      args:
-        - REACT_APP_ENV=dev
-        - REACT_APP_BASE_URL=https://catalogue-recette.apprentissage.beta.gouv.fr
-        - REACT_APP_ENDPOINT_TCO=https://tables-correspondances-recette.apprentissage.beta.gouv.fr/api
-        - REACT_APP_ENDPOINT_LBA=https://labonnealternance-recette.apprentissage.beta.gouv.fr
+    env_file: ./ui/.env
     environment:
       - FAST_REFRESH=false
 
