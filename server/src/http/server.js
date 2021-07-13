@@ -25,7 +25,6 @@ const auth = require("./routes/auth");
 const authentified = require("./routes/authentified");
 const admin = require("./routes/admin");
 const password = require("./routes/password");
-const stats = require("./routes/stats");
 const esSearch = require("./routes/esSearch");
 const esMultiSearchNoIndex = require("./routes/esMultiSearchNoIndex");
 const parcoursup = require("./routes/parcoursup");
@@ -126,7 +125,6 @@ module.exports = async (components) => {
   app.use("/api/v1/authentified", apiKeyAuthMiddleware, authentified());
   app.use("/api/v1/admin", apiKeyAuthMiddleware, adminOnly, admin(components));
   app.use("/api/v1/entity", apiKeyAuthMiddleware, convertedFormationSecure());
-  app.use("/api/v1/stats", apiKeyAuthMiddleware, adminOnly, stats(components));
   app.use("/api/v1/affelnet", affelnet(components));
   app.use("/api/v1/entity", apiKeyAuthMiddleware, etablissement(components));
   app.use("/api/v1/upload", adminOnly, upload());
@@ -146,7 +144,6 @@ module.exports = async (components) => {
   app.use("/api/authentified", authMiddleware, authentified());
   app.use("/api/admin", authMiddleware, adminOnly, admin(components));
   app.use("/api/entity", authMiddleware, convertedFormationSecure());
-  app.use("/api/stats", stats(components));
   app.use("/api/affelnet", affelnet(components));
   app.use("/api/entity", authMiddleware, etablissement(components));
 
