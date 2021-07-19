@@ -60,9 +60,18 @@ const TrainingsUpdateTabs = ({ data, reportType, date, errors }) => {
   const showErrors = errors?.length > 0;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedData, setSelectedData] = useState();
+  const [title, setTitle] = useState();
 
   const onRowClick = (index) => {
+    setTitle("Updates");
     setSelectedData(data.updated?.[index]?.updates);
+    onOpen();
+  };
+
+  const onErrorClick = (index) => {
+    setTitle("Détail de l'erreur");
+    const error = { ...errors?.[index] } ?? {};
+    setSelectedData(JSON.stringify(error));
     onOpen();
   };
 
@@ -85,12 +94,12 @@ const TrainingsUpdateTabs = ({ data, reportType, date, errors }) => {
           )}
           {showErrors && (
             <TabPanel>
-              <Table data={errors} filename={`${reportType}_${date}_errors`} />
+              <Table data={errors} onRowClick={onErrorClick} filename={`${reportType}_${date}_errors`} />
             </TabPanel>
           )}
         </TabPanels>
       </Ctabs>
-      <CodeModal isOpen={isOpen} onClose={onClose} title="Updates" code={selectedData} />
+      <CodeModal isOpen={isOpen} onClose={onClose} title={title} code={selectedData} />
     </>
   );
 };
