@@ -46,7 +46,7 @@ const getInfosOffreLabel = (formation, mef) => {
 
 const mnaFormationUpdater = async (
   formation,
-  { withHistoryUpdate = true, withCodePostalUpdate = true, cfdInfo = null, withRCOInsee = false } = {}
+  { withHistoryUpdate = true, withCodePostalUpdate = true, cfdInfo = null } = {}
 ) => {
   try {
     await formationSchema.validateAsync(formation, { abortEarly: false });
@@ -59,19 +59,19 @@ const mnaFormationUpdater = async (
       return { updates: null, formation, error, cfdInfo };
     }
 
-    let code_commune_insee = formation.code_commune_insee;
-    if (withRCOInsee) {
-      const rcoFormation = await RcoFormation.findOne({ id_rco_formation: formation.id_rco_formation }).lean();
-      code_commune_insee = rcoFormation?.etablissement_lieu_formation_code_insee ?? formation.code_commune_insee;
-    }
+    // Trust RCO for geocoords & insee
+    const rcoFormation = await RcoFormation.findOne({ id_rco_formation: formation.id_rco_formation }).lean();
+    const code_commune_insee = rcoFormation?.etablissement_lieu_formation_code_insee ?? formation.code_commune_insee;
+    const geoCoords =
+      rcoFormation?.etablissement_lieu_formation_geo_coordonnees ?? formation.lieu_formation_geo_coordonnees;
 
     let cpMapping = {};
-    if (formation.lieu_formation_geo_coordonnees) {
+    if (geoCoords) {
       const { result = {}, messages: geoMessages } = withCodePostalUpdate
-        ? await geoMapper(formation.lieu_formation_geo_coordonnees, code_commune_insee)
+        ? await geoMapper(geoCoords, code_commune_insee)
         : {};
       const { adresse, ...rest } = result ?? {};
-      cpMapping = { lieu_formation_adresse: adresse, ...rest };
+      cpMapping = adresse ? { lieu_formation_adresse: adresse, ...rest } : {};
       error = parseErrors(geoMessages);
       if (error) {
         return { updates: null, formation, error, cfdInfo };
@@ -104,7 +104,7 @@ const mnaFormationUpdater = async (
       return { updates: null, formation, error, cfdInfo };
     }
 
-    let geoMapping = { idea_geo_coordonnees_etablissement: formation.lieu_formation_geo_coordonnees };
+    let geoMapping = { idea_geo_coordonnees_etablissement: geoCoords };
     if (withCodePostalUpdate && !geoMapping.idea_geo_coordonnees_etablissement) {
       const { result: coordinates, messages: geoMessages } = await getCoordinatesFromAddressData({
         numero_voie: formation.lieu_formation_adresse,
@@ -123,7 +123,6 @@ const mnaFormationUpdater = async (
       }
     }
 
-    const rcoFormation = await RcoFormation.findOne({ id_rco_formation: formation.id_rco_formation });
     let published = rcoFormation?.published ?? false; // not found in rco should not be published
 
     let update_error = null;
