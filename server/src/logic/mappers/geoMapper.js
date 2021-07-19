@@ -31,7 +31,7 @@ const geoMapper = async (coordinates = "", codeInsee) => {
     return {
       result: {
         ...rest,
-        adresse: `${numero_voie} ${type_voie} ${nom_voie}`,
+        adresse: [numero_voie, type_voie, nom_voie].join(" ").trim(),
         localite: commune,
       },
       messages,

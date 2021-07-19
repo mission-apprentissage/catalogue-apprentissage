@@ -46,8 +46,8 @@ runScript(async () => {
 
   console.log(
     await getAddressFromCoordinates({
-      latitude: 45.2344404,
-      longitude: 5.67547279999997,
+      latitude: 43.648819,
+      longitude: 1.3780513000000383,
     })
   );
 });
