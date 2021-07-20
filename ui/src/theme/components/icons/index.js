@@ -30,3 +30,4 @@ export * from "./Close";
 export * from "./MenuFill";
 export * from "./ArrowDownLine";
 export * from "./LinkLine";
+export * from "./Dots";
