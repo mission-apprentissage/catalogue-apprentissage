@@ -22,7 +22,6 @@ const Organismes = lazy(() => import("./pages/Organismes/Organismes"));
 const Formation = lazy(() => import("./pages/Formation"));
 const Etablissement = lazy(() => import("./pages/Etablissement"));
 const Journal = lazy(() => import("./pages/Journal/Journal"));
-const TagsHistory = lazy(() => import("./pages/admin/TagsHistory"));
 const UploadFiles = lazy(() => import("./pages/admin/UploadFiles"));
 const Message = lazy(() => import("./pages/admin/MessageScript"));
 const Contact = lazy(() => import("./pages/legal/Contact"));
@@ -147,12 +146,6 @@ export default () => {
 
                 {auth && hasAccessTo(auth, "page_message_maintenance") && (
                   <PrivateRoute exact path="/admin/messagescript" component={Message} />
-                )}
-
-                {auth && auth.permissions.isAdmin && (
-                  <PrivateRoute exact path="/tags-history">
-                    <TagsHistory />
-                  </PrivateRoute>
                 )}
 
                 {auth && hasAccessTo(auth, "page_upload") && (
