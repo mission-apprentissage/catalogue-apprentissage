@@ -43,8 +43,6 @@
     "generate:swaggerschema": "standalone=true node src/jobs/generateSwaggerSchema/index.js",
     "etablissement:dump": "standalone=true node src/jobs/etablissements",
     "rcoPending:export": "standalone=true node src/jobs/pendingFormations/index.js",
-    "rcoFormation:id": "standalone=true node src/jobs/oneshot/migrateRcoFormationIds/index.js",
-    "converted:idrco": "standalone=true node src/jobs/oneshot/splitIdRCO/index.js",
     "rcoFormation:duplicate": "standalone=true node src/jobs/oneshot/findRcoDuplicates/index.js"
   },
   "dependencies": {
