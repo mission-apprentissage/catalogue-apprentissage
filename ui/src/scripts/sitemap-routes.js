@@ -7,6 +7,7 @@ export default (
 
     <Route exact path="/" />
     <Route exact path="/recherche/formations-2021" />
+    <Route exact path="/guide-reglementaire" />
     <Route exact path="/recherche/etablissements" />
     <Route exact path={`/formation/:id`} />
     <Route exact path={`/etablissement/:id`} />
@@ -15,9 +16,13 @@ export default (
     <Route exact path="/reset-password" />
     <Route exact path="/forgotten-password" />
     <Route exact path="/report" />
-    <Route exact path="/couverture-parcoursup" />
+    <Route exact path="/couverture-ps" />
     <Route exact path="/couverture-affelnet" />
     <Route exact path="/changelog" />
+
+    <Route exact path="/mes-actions" />
+    <Route exact path="/perimetre-parcoursup" />
+    <Route exact path="/perimetre-affelnet" />
 
     <Route exact path="/contact" />
     <Route exact path="/cookies" />

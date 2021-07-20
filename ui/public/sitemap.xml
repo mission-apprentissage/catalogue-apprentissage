@@ -4,6 +4,7 @@
 <url> <loc>https://catalogue.apprentissage.beta.gouv.fr/stats</loc> </url>
 <url> <loc>https://catalogue.apprentissage.beta.gouv.fr/</loc> </url>
 <url> <loc>https://catalogue.apprentissage.beta.gouv.fr/recherche/formations-2021</loc> </url>
+<url> <loc>https://catalogue.apprentissage.beta.gouv.fr/guide-reglementaire</loc> </url>
 <url> <loc>https://catalogue.apprentissage.beta.gouv.fr/recherche/etablissements</loc> </url>
 <url> <loc>https://catalogue.apprentissage.beta.gouv.fr/formation/:id</loc> </url>
 <url> <loc>https://catalogue.apprentissage.beta.gouv.fr/etablissement/:id</loc> </url>
@@ -11,9 +12,12 @@
 <url> <loc>https://catalogue.apprentissage.beta.gouv.fr/reset-password</loc> </url>
 <url> <loc>https://catalogue.apprentissage.beta.gouv.fr/forgotten-password</loc> </url>
 <url> <loc>https://catalogue.apprentissage.beta.gouv.fr/report</loc> </url>
-<url> <loc>https://catalogue.apprentissage.beta.gouv.fr/couverture-parcoursup</loc> </url>
+<url> <loc>https://catalogue.apprentissage.beta.gouv.fr/couverture-ps</loc> </url>
 <url> <loc>https://catalogue.apprentissage.beta.gouv.fr/couverture-affelnet</loc> </url>
 <url> <loc>https://catalogue.apprentissage.beta.gouv.fr/changelog</loc> </url>
+<url> <loc>https://catalogue.apprentissage.beta.gouv.fr/mes-actions</loc> </url>
+<url> <loc>https://catalogue.apprentissage.beta.gouv.fr/perimetre-parcoursup</loc> </url>
+<url> <loc>https://catalogue.apprentissage.beta.gouv.fr/perimetre-affelnet</loc> </url>
 <url> <loc>https://catalogue.apprentissage.beta.gouv.fr/contact</loc> </url>
 <url> <loc>https://catalogue.apprentissage.beta.gouv.fr/cookies</loc> </url>
 <url> <loc>https://catalogue.apprentissage.beta.gouv.fr/donnees-personnelles</loc> </url>
