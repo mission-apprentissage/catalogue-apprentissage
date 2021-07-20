@@ -41,9 +41,15 @@ const reglePerimetre = {
     description: "Académie sur laquelle la règle s'applique, toutes par défaut",
   },
   regle_complementaire: {
-    type: Object,
+    type: String,
     default: null,
-    description: "La règle pour matcher les formations (i.e: query mongo) qui s'ajoute au niveau + diplome",
+    description:
+      "La règle pour matcher les formations (i.e: query mongo) qui s'ajoute au niveau + diplome (stringified)",
+  },
+  nom_regle_complementaire: {
+    type: String,
+    default: null,
+    description: "Nom du sous-ensemble",
   },
   priorite: {
     type: Number,
@@ -51,10 +57,10 @@ const reglePerimetre = {
     description:
       "En cas d'égalité sur la plateforme, niveau, diplome et num_academie, priorité de la règle pour savoir laquelle est la plus forte",
   },
-  editable: {
+  is_regle_nationale: {
     type: Boolean,
     default: true,
-    description: "True si la règle peut être éditée (quand l'utilisateur a des droits suffisants)",
+    description: "True si la règle est une règle nationale (définie dans les textes de loi)",
   },
   // history
   created_at: {

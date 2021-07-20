@@ -9,6 +9,8 @@ const {
   // getSiretInfo,
   // getBcnInfo,
   getCoordinatesFromAddressData,
+  getNiveauxDiplomesTree,
+  getAddressFromCoordinates,
 } = require("@mission-apprentissage/tco-service-node");
 
 // const KIT_LOCAL_PATH = "/data/uploads/CodeDiplome_RNCP_latest_kit.csv";
@@ -36,6 +38,16 @@ runScript(async () => {
       numero_voie: "8 rue de l'Artisanat",
       localite: "Charleville-Mézières",
       code_postal: "08000",
+    })
+  );
+
+  const tree = await getNiveauxDiplomesTree();
+  console.log(tree);
+
+  console.log(
+    await getAddressFromCoordinates({
+      latitude: 43.648819,
+      longitude: 1.3780513000000383,
     })
   );
 });

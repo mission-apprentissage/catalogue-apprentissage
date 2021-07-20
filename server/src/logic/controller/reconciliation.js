@@ -81,7 +81,7 @@ async function reconciliationParcoursup(formation, source = "MANUEL") {
     siret_formateur: etablissement_formateur_siret,
     siret_gestionnaire: etablissement_gestionnaire_siret,
     source,
-    $push: { ids_parcoursup: id_parcoursup },
+    $addToSet: { ids_parcoursup: id_parcoursup },
   };
 
   const reconciliation = await PsReconciliation.findOneAndUpdate(

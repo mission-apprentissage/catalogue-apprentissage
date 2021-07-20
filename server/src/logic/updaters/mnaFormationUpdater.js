@@ -1,11 +1,13 @@
 const logger = require("../../common/logger");
 const Joi = require("joi");
-const { aPublierRules, aPublierSoumisAValidationRules } = require("../../jobs/pertinence/affelnet/rules");
+const { getQueryFromRule } = require("../../common/utils/rulesUtils");
+const { ReglePerimetre } = require("../../common/model");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 const { getPeriodeTags } = require("../../jobs/common/utils/rcoUtils");
 const { cfdMapper } = require("../mappers/cfdMapper");
 const { codePostalMapper } = require("../mappers/codePostalMapper");
 const { etablissementsMapper } = require("../mappers/etablissementsMapper");
+const { geoMapper } = require("../mappers/geoMapper");
 const { diffFormation, buildUpdatesHistory } = require("../common/utils/diffUtils");
 const { SandboxFormation, RcoFormation } = require("../../common/model");
 const { getCoordinatesFromAddressData } = require("@mission-apprentissage/tco-service-node");
@@ -44,7 +46,7 @@ const getInfosOffreLabel = (formation, mef) => {
 
 const mnaFormationUpdater = async (
   formation,
-  { withHistoryUpdate = true, withCodePostalUpdate = true, cfdInfo = null, withRCOInsee = false } = {}
+  { withHistoryUpdate = true, withCodePostalUpdate = true, cfdInfo = null } = {}
 ) => {
   try {
     await formationSchema.validateAsync(formation, { abortEarly: false });
@@ -57,18 +59,32 @@ const mnaFormationUpdater = async (
       return { updates: null, formation, error, cfdInfo };
     }
 
-    let code_commune_insee = formation.code_commune_insee;
-    if (withRCOInsee) {
-      const rcoFormation = await RcoFormation.findOne({ id_rco_formation: formation.id_rco_formation }).lean();
-      code_commune_insee = rcoFormation?.etablissement_lieu_formation_code_insee ?? formation.code_commune_insee;
-    }
+    // Trust RCO for geocoords & insee
+    const rcoFormation = await RcoFormation.findOne({ id_rco_formation: formation.id_rco_formation }).lean();
+    const code_commune_insee = rcoFormation?.etablissement_lieu_formation_code_insee ?? formation.code_commune_insee;
+    const geoCoords =
+      rcoFormation?.etablissement_lieu_formation_geo_coordonnees ?? formation.lieu_formation_geo_coordonnees;
 
-    const { result: cpMapping = {}, messages: cpMessages } = withCodePostalUpdate
-      ? await codePostalMapper(formation.code_postal, code_commune_insee)
-      : {};
-    error = parseErrors(cpMessages);
-    if (error) {
-      return { updates: null, formation, error, cfdInfo };
+    let cpMapping = {};
+    if (geoCoords) {
+      const { result = {}, messages: geoMessages } = withCodePostalUpdate
+        ? await geoMapper(geoCoords, code_commune_insee)
+        : {};
+      const { adresse, ...rest } = result ?? {};
+      cpMapping = adresse ? { lieu_formation_adresse: adresse, ...rest } : {};
+      error = parseErrors(geoMessages);
+      if (error) {
+        return { updates: null, formation, error, cfdInfo };
+      }
+    } else {
+      const { result = {}, messages: cpMessages } = withCodePostalUpdate
+        ? await codePostalMapper(formation.code_postal, code_commune_insee)
+        : {};
+      cpMapping = result;
+      error = parseErrors(cpMessages);
+      if (error) {
+        return { updates: null, formation, error, cfdInfo };
+      }
     }
 
     const rncpInfo = {
@@ -88,12 +104,13 @@ const mnaFormationUpdater = async (
       return { updates: null, formation, error, cfdInfo };
     }
 
-    let geoMapping = {};
-    if (withCodePostalUpdate) {
+    let geoMapping = { idea_geo_coordonnees_etablissement: geoCoords };
+    if (withCodePostalUpdate && !geoMapping.idea_geo_coordonnees_etablissement) {
       const { result: coordinates, messages: geoMessages } = await getCoordinatesFromAddressData({
         numero_voie: formation.lieu_formation_adresse,
         localite: cpMapping.localite,
         code_postal: cpMapping.code_postal,
+        code_insee: cpMapping.code_commune_insee,
       });
 
       const geolocError = parseErrors(geoMessages);
@@ -106,7 +123,6 @@ const mnaFormationUpdater = async (
       }
     }
 
-    const rcoFormation = await RcoFormation.findOne({ id_rco_formation: formation.id_rco_formation });
     let published = rcoFormation?.published ?? false; // not found in rco should not be published
 
     let update_error = null;
@@ -167,6 +183,16 @@ const mnaFormationUpdater = async (
       // eslint-disable-next-line no-unused-vars
       const { _id, ...rest } = updatedFormation;
 
+      const aPublierRules = await ReglePerimetre.find({
+        plateforme: "affelnet",
+        statut: "à publier",
+      }).lean();
+
+      const aPublierSoumisAValidationRules = await ReglePerimetre.find({
+        plateforme: "affelnet",
+        statut: "à publier (soumis à validation)",
+      }).lean();
+
       // Split formation into N formation with 1 mef each
       // & insert theses into a tmp collection
       await asyncForEach(updatedFormation.bcn_mefs_10, async (mefObj) => {
@@ -181,12 +207,14 @@ const mnaFormationUpdater = async (
       // check "à publier" first to have less mefs
       // Add current id_rco_formation to ensure no concurrent access in db
       let mefs_10 = await findMefsForAffelnet({
-        $and: [...aPublierRules["$and"], { id_rco_formation: rest.id_rco_formation }],
+        id_rco_formation: rest.id_rco_formation,
+        $or: aPublierRules.map(getQueryFromRule),
       });
 
       if (!mefs_10) {
         mefs_10 = await findMefsForAffelnet({
-          $and: [...aPublierSoumisAValidationRules["$and"], { id_rco_formation: rest.id_rco_formation }],
+          id_rco_formation: rest.id_rco_formation,
+          $or: aPublierSoumisAValidationRules.map(getQueryFromRule),
         });
       }
 

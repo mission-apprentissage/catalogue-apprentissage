@@ -26,7 +26,7 @@ const getToken = async () => {
   }
 };
 
-const getEtablissements = async (options) => {
+const getEtablissements = async (options, chunckCallback = null) => {
   let { page, allEtablissements, limit, query } = { page: 1, allEtablissements: [], limit: 1050, ...options };
   let params = { page, limit, query };
 
@@ -37,8 +37,16 @@ const getEtablissements = async (options) => {
     allEtablissements = allEtablissements.concat(etablissements);
 
     if (page < pagination.nombre_de_page) {
-      return getEtablissements({ page: page + 1, allEtablissements, limit });
+      if (chunckCallback) {
+        await chunckCallback(allEtablissements);
+        allEtablissements = [];
+      }
+      return getEtablissements({ page: page + 1, allEtablissements, limit }, chunckCallback);
     } else {
+      if (chunckCallback) {
+        await chunckCallback(allEtablissements);
+        return [];
+      }
       return allEtablissements;
     }
   } catch (error) {
@@ -50,6 +58,15 @@ const getEtablissements = async (options) => {
 const getEtablissement = async (query) => {
   try {
     const response = await API.get(`/entity/etablissement/`, { params: { query } });
+    return response.data;
+  } catch (error) {
+    logger.error(error);
+  }
+};
+
+const countEtablissements = async (query = {}) => {
+  try {
+    const response = await API.get(`/entity/etablissements/count`, { params: { query } });
     return response.data;
   } catch (error) {
     logger.error(error);
@@ -108,8 +125,9 @@ const createEtablissement = async (payload) => {
 
 module.exports = () => {
   return {
-    getEtablissements: (opt) => getEtablissements(opt),
+    getEtablissements: (opt, cb = null) => getEtablissements(opt, cb),
     getEtablissement: (opt) => getEtablissement(opt),
+    countEtablissements: (opt) => countEtablissements(opt),
     getEtablissementById: (opt) => getEtablissementById(opt),
     postEtablissement: (opt) => postEtablissement(opt),
     deleteEtablissement: (opt) => deleteEtablissement(opt),

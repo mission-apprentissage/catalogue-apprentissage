@@ -38,6 +38,7 @@ import { setTitle } from "../../common/utils/pageUtils";
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 const endpointTCO =
   process.env.REACT_APP_ENDPOINT_TCO || "https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1";
+const endpointLBA = process.env.REACT_APP_ENDPOINT_LBA || "https://labonnealternance.pole-emploi.fr";
 
 const FormationPeriode = ({ periode }) => {
   let displayedPeriode = <strong>periode</strong>;
@@ -73,7 +74,7 @@ const FormationPeriode = ({ periode }) => {
 };
 
 const getLBAUrl = ({ _id = "" }) => {
-  return `https://labonnealternance.pole-emploi.fr/recherche-apprentissage?&display=list&page=fiche&type=training&itemId=${_id}`;
+  return `${endpointLBA}/recherche-apprentissage?&display=list&page=fiche&type=training&itemId=${_id}`;
 };
 
 const HabilitationPartenaire = ({ habilitation }) => {
@@ -171,11 +172,13 @@ const Formation = ({
 
   useEffect(() => {
     async function run() {
-      const formateur = await _get(
-        `${endpointTCO}/entity/etablissement/${formation.etablissement_formateur_id}`,
-        false
-      );
-      setTagsFormateur(formateur.tags ?? []);
+      if (formation.etablissement_formateur_id) {
+        const formateur = await _get(
+          `${endpointTCO}/entity/etablissement/${formation.etablissement_formateur_id}`,
+          false
+        );
+        setTagsFormateur(formateur?.tags ?? []);
+      }
 
       if (!oneEstablishment) {
         const gestionnaire = await _get(
@@ -553,39 +556,41 @@ const Formation = ({
               </>
             )}
 
-            {!oneEstablishment && (
+            {!oneEstablishment && formation.etablissement_formateur_id && (
               <Text textStyle="rf-text" color="grey.700" fontWeight="700" my={5}>
                 Formateur
               </Text>
             )}
 
-            <Link as={NavLink} to={`/etablissement/${formation.etablissement_formateur_id}`} variant="card">
-              <Flex display={["none", "flex"]} textStyle="xs" justifyContent="space-between">
-                <Text>Siret : {formation.etablissement_formateur_siret}</Text>
-                <Text>UAI: {formation.etablissement_formateur_uai}</Text>
-              </Flex>
-              <Heading textStyle="h6" color="grey.800" mt={2}>
-                {formation.etablissement_formateur_entreprise_raison_sociale}
-              </Heading>
-              <Box>
-                <Text textStyle="sm">Académie : {formation.etablissement_formateur_nom_academie}</Text>
+            {formation.etablissement_formateur_id && (
+              <Link as={NavLink} to={`/etablissement/${formation.etablissement_formateur_id}`} variant="card">
+                <Flex display={["none", "flex"]} textStyle="xs" justifyContent="space-between">
+                  <Text>Siret : {formation.etablissement_formateur_siret}</Text>
+                  <Text>UAI: {formation.etablissement_formateur_uai}</Text>
+                </Flex>
+                <Heading textStyle="h6" color="grey.800" mt={2}>
+                  {formation.etablissement_formateur_entreprise_raison_sociale}
+                </Heading>
                 <Box>
-                  <Flex justifyContent={"space-between"}>
-                    <Box>
-                      {tagsFormateur &&
-                        tagsFormateur
-                          .sort((a, b) => a - b)
-                          .map((tag, i) => (
-                            <Badge variant="year" mr="10px" mt={3} key={i}>
-                              {tag}
-                            </Badge>
-                          ))}
-                    </Box>
-                    <ArrowRightLine alignSelf="center" color="bluefrance" />
-                  </Flex>
+                  <Text textStyle="sm">Académie : {formation.etablissement_formateur_nom_academie}</Text>
+                  <Box>
+                    <Flex justifyContent={"space-between"}>
+                      <Box>
+                        {tagsFormateur &&
+                          tagsFormateur
+                            .sort((a, b) => a - b)
+                            .map((tag, i) => (
+                              <Badge variant="year" mr="10px" mt={3} key={i}>
+                                {tag}
+                              </Badge>
+                            ))}
+                      </Box>
+                      <ArrowRightLine alignSelf="center" color="bluefrance" />
+                    </Flex>
+                  </Box>
                 </Box>
-              </Box>
-            </Link>
+              </Link>
+            )}
           </Box>
         </GridItem>
       </Grid>

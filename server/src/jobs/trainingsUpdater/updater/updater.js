@@ -3,30 +3,17 @@ const { mnaFormationUpdater } = require("../../../logic/updaters/mnaFormationUpd
 const { paginator } = require("../../common/utils/paginator");
 const { RcoFormation, ConvertedFormation } = require("../../../common/model/index");
 
-const run = async (
-  filter = {},
-  withCodePostalUpdate = false,
-  withRCOInsee = false,
-  limit = 10,
-  maxItems = 100,
-  offset = 0
-) => {
-  const result = await performUpdates(filter, withCodePostalUpdate, withRCOInsee, limit, maxItems, offset);
-  return result;
+const run = async (filter = {}, withCodePostalUpdate = false, limit = 10, maxItems = 100, offset = 0) => {
+  return await performUpdates(filter, withCodePostalUpdate, limit, maxItems, offset);
 };
 
-const performUpdates = async (
-  filter = {},
-  withCodePostalUpdate = false,
-  withRCOInsee = false,
-  limit = 10,
-  maxItems = 100,
-  offset = 0
-) => {
+const performUpdates = async (filter = {}, withCodePostalUpdate = false, limit = 10, maxItems = 100, offset = 0) => {
   const invalidFormations = [];
   const updatedFormations = [];
   let notUpdatedCount = 0;
   const cfdInfosCache = new Map();
+
+  ConvertedFormation.pauseAllMongoosaticHooks();
 
   await paginator(ConvertedFormation, { filter, limit, maxItems, offset }, async (formation) => {
     const cfdInfoCache = cfdInfosCache.get(formation._doc.cfd) || null;
@@ -35,7 +22,6 @@ const performUpdates = async (
       {
         // no need to check cp info in trainingsUpdater since it was successfully done once at converter
         withCodePostalUpdate,
-        withRCOInsee,
         cfdInfo: cfdInfoCache,
       }
     );

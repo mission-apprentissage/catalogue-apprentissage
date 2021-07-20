@@ -4,12 +4,25 @@ import { Link } from "@chakra-ui/react";
 const changelog = {
   list: [
     {
-      version: "4.3.0",
+      version: "4.4.0",
       date: "Prochainement",
       about: `<h4>À venir</h4>`,
       fixes: [],
       features: ["Développement d'un module de gestion des règles"],
       improvements: ["Travaux sur le flux retour vers les Carif-Oref et gestion des modifications"],
+    },
+    {
+      version: "4.3.0",
+      date: "Le 20 Juillet 2021",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: ["Meilleure gestion de la mémoire lors de l'exécution des scripts nocturnes"],
+      features: [],
+      improvements: [
+        "Mise à jour de la page de statistiques (diplômes, titres, statuts Affelnet et Parcoursup, etc.)",
+        "Amélioration de la géolocalisation et des adresses des formations",
+        "Lien direct pour la page de guide réglementaire",
+      ],
     },
     {
       version: "4.2.0",
