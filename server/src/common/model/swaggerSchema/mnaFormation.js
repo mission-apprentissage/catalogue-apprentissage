@@ -383,7 +383,7 @@ module.exports = {
       uai_formation: {
         type: "string",
         default: "null",
-        description: "UAI de la formation",
+        description: "UAI du lieu de la formation",
       },
       nom: {
         type: "string",
@@ -528,6 +528,14 @@ module.exports = {
         default: "null",
         description: "Erreur lors du contrôle de référencement sur ParcourSup de la formation",
       },
+      parcoursup_ids: {
+        type: "array",
+        items: {
+          type: "string",
+        },
+        default: [],
+        description: "ids ParcourSup",
+      },
       affelnet_reference: {
         type: "boolean",
         default: false,
@@ -658,6 +666,29 @@ module.exports = {
         type: "string",
         default: "null",
         description: "Id de formation RCO (id_formation + id_action + id_certifinfo)",
+      },
+      id_formation: {
+        type: "string",
+        default: "null",
+        description: "Identifiant de la formation",
+      },
+      id_action: {
+        type: "string",
+        default: "null",
+        description: "Identifant des actions concaténés",
+      },
+      ids_action: {
+        type: "array",
+        items: {
+          type: "string",
+        },
+        default: "null",
+        description: "Identifant des actions concaténés",
+      },
+      id_certifinfo: {
+        type: "string",
+        default: "null",
+        description: "Identifant certifInfo (unicité de la certification)",
       },
       tags: {
         type: "array",
