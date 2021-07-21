@@ -32,6 +32,7 @@ const parcoursup = require("./routes/parcoursup");
 const pendingRcoFormation = require("./routes/pendingRcoFormation");
 const affelnet = require("./routes/affelnet");
 const etablissement = require("./routes/etablissement");
+const etablissementSecure = require("./routes/etablissementSecure");
 const upload = require("./routes/upload");
 const messageScript = require("./routes/messageScript");
 const reglePerimetre = require("./routes/reglePerimetre");
@@ -118,6 +119,7 @@ module.exports = async (components) => {
   app.use("/api/v1/entity", convertedFormation());
   app.use("/api/v1/entity", pendingRcoFormation());
   app.use("/api/v1/entity", report());
+  app.use("/api/v1/entity", etablissement(components));
   app.use("/api/v1/rcoformation", rcoFormation());
   app.use("/api/v1/auth", auth(components));
   app.use("/api/v1/password", password(components));
@@ -130,7 +132,7 @@ module.exports = async (components) => {
   app.use("/api/v1/entity", apiKeyAuthMiddleware, convertedFormationSecure());
   app.use("/api/v1/stats", apiKeyAuthMiddleware, adminOnly, stats(components));
   app.use("/api/v1/affelnet", affelnet(components));
-  app.use("/api/v1/entity", apiKeyAuthMiddleware, etablissement(components));
+  app.use("/api/v1/entity", apiKeyAuthMiddleware, etablissementSecure(components));
   app.use("/api/v1/upload", adminOnly, upload());
 
   /** DEPRECATED */
@@ -141,6 +143,7 @@ module.exports = async (components) => {
   app.use("/api/entity", pendingRcoFormation());
   app.use("/api/entity", report());
   app.use("/api/rcoformation", rcoFormation());
+  app.use("/api/entity", etablissement(components));
   app.use("/api/auth", auth(components));
   app.use("/api/password", password(components));
   app.use("/api/parcoursup", parcoursup(components));
@@ -150,7 +153,7 @@ module.exports = async (components) => {
   app.use("/api/entity", authMiddleware, convertedFormationSecure());
   app.use("/api/stats", stats(components));
   app.use("/api/affelnet", affelnet(components));
-  app.use("/api/entity", authMiddleware, etablissement(components));
+  app.use("/api/entity", authMiddleware, etablissementSecure(components));
 
   app.get(
     "/api",

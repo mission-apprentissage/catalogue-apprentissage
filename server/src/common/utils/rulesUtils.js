@@ -22,8 +22,8 @@ const getQueryFromRule = ({ niveau, diplome, regle_complementaire }) => {
   return {
     ...toBePublishedRules,
     niveau,
-    diplome,
-    ...deserialize(regle_complementaire),
+    ...(diplome && { diplome }),
+    ...(regle_complementaire && deserialize(regle_complementaire)),
   };
 };
 

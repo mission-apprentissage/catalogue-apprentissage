@@ -385,7 +385,7 @@ module.exports = ({ catalogue }) => {
   );
 
   /**
-   * Create establishment
+   * Get establishment
    */
   router.post(
     "/etablissement",

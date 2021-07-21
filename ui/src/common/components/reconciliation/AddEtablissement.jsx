@@ -13,7 +13,7 @@ import {
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import { _post } from "../../httpClient";
-import { CardListEtablissements } from "../Search/components/CardListEtablissements";
+import { CardListEtablissements } from "../CardListEtablissements";
 
 const AddEtablissement = ({ formation, onClose }) => {
   const [etablissement, setEtablissement] = useState();
