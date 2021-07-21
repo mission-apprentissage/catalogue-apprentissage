@@ -31,6 +31,7 @@ const MentionsLegales = lazy(() => import("./pages/legal/MentionsLegales"));
 const Accessibilite = lazy(() => import("./pages/legal/Accessibilite"));
 const ReconciliationPs = lazy(() => import("./pages/admin/ReconciliationPs"));
 const ActionsExpertes = lazy(() => import("./pages/ActionsExpertes/ActionsExpertes"));
+const Collecte = lazy(() => import("./pages/Collecte/Collecte"));
 const Perimetre = lazy(() => import("./pages/perimetre/Perimetre"));
 
 function PrivateRoute({ component, ...rest }) {
@@ -142,6 +143,10 @@ export default () => {
 
                 {auth && hasAccessTo(auth, "page_actions_expertes") && (
                   <PrivateRoute exact path="/mes-actions" component={ActionsExpertes} />
+                )}
+
+                {auth && hasAccessTo(auth, "page_collecte") && (
+                  <PrivateRoute exact path="/collecte" component={Collecte} />
                 )}
 
                 {auth && hasAccessTo(auth, "page_message_maintenance") && (

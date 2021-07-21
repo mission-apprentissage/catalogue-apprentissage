@@ -143,4 +143,8 @@ export default [
     feature: "Réglage des périmètres Affelnet",
     ref: "page_perimetre_af",
   },
+  {
+    feature: "Voir la page de collecte",
+    ref: "page_collecte",
+  },
 ];
