@@ -2,6 +2,7 @@ import { Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, Input, Hea
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import { _post } from "../../../common/httpClient";
+import * as Yup from "yup";
 
 const endpointTCO =
   process.env.REACT_APP_ENDPOINT_TCO || "https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1";
@@ -9,14 +10,27 @@ const endpointTCO =
 const Rncp = ({ onSubmited }) => {
   const [rncp, setRncp] = useState();
 
-  const { values, handleChange, errors } = useFormik({
+  const { values, handleChange, handleSubmit, errors, touched } = useFormik({
     initialValues: {
       rncp: "",
     },
+    validationSchema: Yup.object().shape({
+      rncp: Yup.string()
+        .matches(
+          /^(RNCP)?[0-9]{2,5}$/,
+          "Le code RNCP doit être définit et au format 5 ou 9 caractères,  RNCP24440 ou 24440"
+        )
+        .required("Veuillez saisir un RNCP"),
+    }),
+    onSubmit: () => {
+      return new Promise(async (resolve) => {
+        await handleSearch();
+        resolve("onSubmitHandler rncp complete");
+      });
+    },
   });
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
+  const handleSearch = async () => {
     try {
       const response = await _post(`${endpointTCO}/rncp`, { rncp: values.rncp });
       if (response) {
@@ -40,25 +54,25 @@ const Rncp = ({ onSubmited }) => {
               <FormLabel htmlFor="rncp" mb={3} fontSize="epsilon" fontWeight={400}>
                 RNCP
               </FormLabel>
-              <Flex flexDirection="column" w="100%">
-                <Input
-                  type="text"
-                  name="rncp"
-                  onChange={handleChange}
-                  value={values.rncp}
-                  autoComplete="off"
-                  maxLength="9"
-                  pattern="[0-9A-Z]{8}[A-Z]?"
-                  required
-                />
-                <FormErrorMessage>{errors.rncp}</FormErrorMessage>
+              <Flex>
+                <Flex flexDirection="column" w="100%">
+                  <Input
+                    type="text"
+                    name="rncp"
+                    onChange={handleChange}
+                    value={values.rncp}
+                    autoComplete="off"
+                    maxLength="9"
+                    pattern="(RNCP)?[0-9]{2,5}"
+                    required
+                  />
+                  {errors.rncp && touched.rncp && <FormErrorMessage>{errors.rncp}</FormErrorMessage>}
+                </Flex>
+                <Button ml={3} variant="primary" onClick={handleSubmit} loadingText="...">
+                  Rechercher
+                </Button>
               </Flex>
             </FormControl>
-            <Flex alignItems="flex-end" ml={3}>
-              <Button variant="primary" onClick={handleSearch} loadingText="...">
-                Rechercher
-              </Button>
-            </Flex>
           </Flex>
         </Box>
         {rncp && (
@@ -71,12 +85,13 @@ const Rncp = ({ onSubmited }) => {
                   Nouvelle Fiche {rncp.result.nouvelle_fiche}.
                 </li>
               )}
-
+              <li>Anciennes Fiches: {rncp.result.ancienne_fiche?.join(", ")}</li>
               <li>Diplôme: {rncp.result.intitule_diplome}</li>
               <li>Niveau: {rncp.result.niveau_europe}</li>
-              <li>Codes diplômes associés: {rncp.result.cfds.join(", ")})</li>
-              <li>--</li>
-              <li>Anciennes Fiches: {rncp.result.ancienne_fiche.join(", ")}</li>
+              <li>
+                {rncp.result.cfds && <strong>Codes diplômes associés: {rncp.result.cfds?.join(", ")}</strong>}
+                {!rncp.result.cfds && <strong>Aucun code diplôme retrouvé</strong>}
+              </li>
             </ul>
           </Box>
         )}

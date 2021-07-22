@@ -1,7 +1,7 @@
 import { Box, Input, Spinner, Image, Text, HStack } from "@chakra-ui/react";
 import React, { useState } from "react";
 import markerMove from "./marker.png";
-import { GoogleMap, Autocomplete, Marker, useLoadScript, InfoBox } from "@react-google-maps/api";
+import { GoogleMap, Autocomplete, Marker, useLoadScript } from "@react-google-maps/api";
 
 const defaultContainerStyle = {
   width: "100%",

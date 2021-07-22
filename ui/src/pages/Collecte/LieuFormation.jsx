@@ -28,6 +28,7 @@ const LieuFormation = ({ onSubmited, formateur }) => {
   const [isloading, setIsloading] = useState(false);
   const [etablissement, setEtablissement] = useState();
   const [resetSiret, setResetSiret] = useState(false);
+  const [siretFoundByUai, setSiretFoundByUai] = useState();
 
   const getAdresse = async (coordinate) => {
     try {
@@ -38,7 +39,11 @@ const LieuFormation = ({ onSubmited, formateur }) => {
       });
       if (response) {
         setIsloading(false);
-        setAdresse(response.result.adresse);
+        setAdresse({
+          ...response.result.adresse,
+          latitude: `${coordinate.latitude}`,
+          longitude: `${coordinate.longitude}`,
+        });
       }
     } catch (error) {
       setIsloading(false);
@@ -62,11 +67,12 @@ const LieuFormation = ({ onSubmited, formateur }) => {
             latitude: formateur.latitude,
             longitude: formateur.longitude,
           });
-          lieu.adresse = response.result.adresse;
+          lieu.adresse = { ...response.result.adresse, latitude: formateur.latitude, longitude: formateur.longitude };
         } else if (sameFormateur === "non" && hasSiretLieu === "oui") {
           lieu.siret = etablissement.siret;
+        } else if (siretFoundByUai) {
+          lieu.siret = siretFoundByUai;
         }
-        console.log(lieu);
         onSubmited(lieu);
         resolve("onSubmitHandler complete");
       });
@@ -90,6 +96,7 @@ const LieuFormation = ({ onSubmited, formateur }) => {
                   onChange={(evt) => {
                     handleChange(evt);
                     setAdresse(formateur);
+                    setEtablissement();
                   }}
                 >
                   Oui - ({formateur.adresse.toLowerCase()})
@@ -101,6 +108,7 @@ const LieuFormation = ({ onSubmited, formateur }) => {
                   size="lg"
                   onChange={(evt) => {
                     handleChange(evt);
+                    setEtablissement();
                     setAdresse(null);
                   }}
                 >
@@ -124,6 +132,7 @@ const LieuFormation = ({ onSubmited, formateur }) => {
                       handleChange(evt);
                       setResetSiret(true);
                       setAdresse(null);
+                      setEtablissement();
                       setFieldValue("uai", "");
                     }}
                   >
@@ -136,6 +145,7 @@ const LieuFormation = ({ onSubmited, formateur }) => {
                       handleChange(evt);
                       setResetSiret(true);
                       setAdresse(null);
+                      setEtablissement();
                       setFieldValue("uai", "");
                     }}
                   >
@@ -226,22 +236,47 @@ const LieuFormation = ({ onSubmited, formateur }) => {
                 </ul>
               </Box>
             )}
+            {adresse && etablissement && values.hasSiretLieu === "oui" && (
+              <Uai
+                handleSubmit={({ uai }) => {
+                  setFieldValue("uai", uai);
+                }}
+                onError={() => {
+                  setFieldValue("uai", "");
+                }}
+                siret={etablissement.siret}
+              />
+            )}
+            {adresse && values.hasSiretLieu === "non" && (
+              <Uai
+                handleSubmit={({ uai, siret }) => {
+                  setFieldValue("uai", uai);
+                  if (siret) {
+                    setSiretFoundByUai(siret);
+                  }
+                }}
+                onError={() => {
+                  setFieldValue("uai", "");
+                }}
+                adresse={adresse}
+              />
+            )}
+            {(adresse || etablissement) && values.sameFormateur === "non" && values.uai && (
+              <Box mt={3}>
+                UAI lieu de formatiom: <strong>{values.uai}</strong>
+              </Box>
+            )}
+            {(adresse || etablissement) && values.sameFormateur === "non" && values.uai && siretFoundByUai && (
+              <Box mt={3}>
+                Siret associé retrouvé: <strong>{siretFoundByUai}</strong>
+              </Box>
+            )}
+            {(adresse || etablissement) && values.sameFormateur === "non" && !values.uai && (
+              <Box mt={3}>
+                UAI lieu de formatiom: <strong>Aucun</strong>
+              </Box>
+            )}
           </>
-        )}
-        {adresse && etablissement && values.hasSiretLieu === "oui" && (
-          <Uai
-            handleSubmit={(uai) => {
-              setFieldValue("uai", uai);
-            }}
-            siret={etablissement.siret}
-          />
-        )}
-        {adresse && values.hasSiretLieu === "non" && (
-          <Uai
-            handleSubmit={(uai) => {
-              setFieldValue("uai", uai);
-            }}
-          />
         )}
       </Flex>
       <Box boxShadow={"0 -4px 16px 0 rgba(0, 0, 0, 0.08)"}>
