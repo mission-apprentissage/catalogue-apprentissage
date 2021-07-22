@@ -2,6 +2,7 @@ import { Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, Input } fr
 import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import { _post } from "../../../common/httpClient";
+import * as Yup from "yup";
 
 const endpointTCO =
   process.env.REACT_APP_ENDPOINT_TCO || "https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1";
@@ -9,9 +10,20 @@ const endpointTCO =
 function Siret({ onFetched, reset, onReset }) {
   const [isFetching, setIsFetching] = useState(false);
 
-  const { values, handleChange, errors, resetForm } = useFormik({
+  const { values, handleChange, handleSubmit, errors, resetForm, touched } = useFormik({
     initialValues: {
       siret: "",
+    },
+    validationSchema: Yup.object().shape({
+      siret: Yup.string()
+        .matches(/[0-9]{14}/, "Le siret est code sur 14 caractères numérique")
+        .required("Veuillez saisir un siret"),
+    }),
+    onSubmit: () => {
+      return new Promise(async (resolve) => {
+        await handleSearch();
+        resolve("onSubmitHandler siret complete");
+      });
     },
   });
 
@@ -22,8 +34,7 @@ function Siret({ onFetched, reset, onReset }) {
     }
   }, [onReset, reset, resetForm]);
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
+  const handleSearch = async () => {
     setIsFetching(true);
     try {
       const response = await _post("/api/entity/etablissement", { query: { siret: values.siret } });
@@ -49,25 +60,25 @@ function Siret({ onFetched, reset, onReset }) {
           <FormLabel htmlFor="siret" mb={3} fontSize="epsilon" fontWeight={400}>
             SIRET
           </FormLabel>
-          <Flex flexDirection="column" w="100%">
-            <Input
-              type="text"
-              name="siret"
-              onChange={handleChange}
-              value={values.siret}
-              autoComplete="off"
-              maxLength="14"
-              pattern="[0-9]{14}"
-              required
-            />
-            <FormErrorMessage>{errors.siret}</FormErrorMessage>
+          <Flex>
+            <Flex flexDirection="column" w="100%">
+              <Input
+                type="text"
+                name="siret"
+                onChange={handleChange}
+                value={values.siret}
+                autoComplete="off"
+                maxLength="14"
+                pattern="[0-9]{14}"
+                required
+              />
+              {errors.siret && touched.siret && <FormErrorMessage>{errors.siret}</FormErrorMessage>}
+            </Flex>
+            <Button variant="primary" ml={3} onClick={handleSubmit} loadingText="Rechercher" isLoading={isFetching}>
+              Rechercher
+            </Button>
           </Flex>
         </FormControl>
-        <Flex alignItems="flex-end" ml={3}>
-          <Button variant="primary" onClick={handleSearch} loadingText="Rechercher" isLoading={isFetching}>
-            Rechercher
-          </Button>
-        </Flex>
       </Flex>
     </Box>
   );

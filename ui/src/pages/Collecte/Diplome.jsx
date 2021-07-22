@@ -2,6 +2,7 @@ import { Box, Flex, Heading, Button, FormControl, FormLabel, RadioGroup, HStack,
 import React, { useState } from "react";
 import { Cfd } from "./components/Cfd";
 import { Rncp } from "./components/rncp";
+import { Periodes } from "./components/Periodes";
 
 const Diplome = ({ onSubmited }) => {
   const [typeCode, setTypeCode] = useState("");
@@ -9,6 +10,8 @@ const Diplome = ({ onSubmited }) => {
   const [cfd, setCfd] = useState();
   // eslint-disable-next-line no-unused-vars
   const [rncp, setRncp] = useState();
+  const [periodes, setPeriodes] = useState();
+  const [codesSelected, setCodesSelected] = useState(false);
   const [isDisabled, setIsDisabled] = useState(true);
 
   return (
@@ -29,6 +32,7 @@ const Diplome = ({ onSubmited }) => {
                   setTypeCode("cfd");
                   setCfd(null);
                   setIsDisabled(true);
+                  setCodesSelected(false);
                 }}
               >
                 Code Formation Diplôme
@@ -40,6 +44,7 @@ const Diplome = ({ onSubmited }) => {
                   setTypeCode("rncp");
                   setCfd(null);
                   setIsDisabled(true);
+                  setCodesSelected(false);
                 }}
               >
                 Fiche RNCP
@@ -51,17 +56,27 @@ const Diplome = ({ onSubmited }) => {
         {typeCode === "cfd" && (
           <Cfd
             onSubmited={(result) => {
-              console.log(result);
               setCfd(result.cfd);
-              setIsDisabled(false);
+              setRncp(result.rncp.code_rncp);
+              setCodesSelected(true);
             }}
           />
         )}
         {typeCode === "rncp" && (
           <Rncp
             onSubmited={(result) => {
-              console.log(result);
-              setRncp(result.rncp);
+              setRncp(result.code_rncp);
+              if (result.cfds) {
+                setCodesSelected(true);
+                // setCfd(result.cfds[0]);
+              }
+            }}
+          />
+        )}
+        {codesSelected && (
+          <Periodes
+            onSubmited={(result) => {
+              setPeriodes(result);
               setIsDisabled(false);
             }}
           />
@@ -72,9 +87,9 @@ const Diplome = ({ onSubmited }) => {
           <Button
             type="submit"
             variant="primary"
-            // onClick={() => {
-            //   onSubmited(adresse);
-            // }}
+            onClick={() => {
+              onSubmited({ cfd, rncp, periodes });
+            }}
             isDisabled={isDisabled}
           >
             Confirmer ce diplôme

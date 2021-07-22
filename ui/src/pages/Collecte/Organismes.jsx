@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
 
 import { AddEtablissement } from "./components/AddEtablissement";
@@ -29,6 +29,14 @@ const Organismes = ({ onSubmited }) => {
         <Heading as="h3" fontSize="1.5rem" mt={3} mb={5}>
           Selection des organismes
         </Heading>
+        <Box mb={5}>
+          <Text mb={1}>À cette étape, nous associons les établissements. Vous aurez besoin:</Text>
+          <ul>
+            <li>Du numéro de Siret et de l'UAI de l'organisme Gestionnaire</li>
+            <li>Du numéro de Siret et de l'UAI de l'organisme Formateur</li>
+          </ul>
+        </Box>
+
         <AddEtablissement
           onSubmited={onAdd}
           alreadySelected={alreadySelected}

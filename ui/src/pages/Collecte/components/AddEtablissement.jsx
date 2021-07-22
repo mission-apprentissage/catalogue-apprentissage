@@ -197,9 +197,12 @@ const AddEtablissement = ({ onSubmited, alreadySelected, reset, onReset }) => {
                     </Grid>
                   </Box>
                   <Uai
-                    handleSubmit={(uai) => {
+                    handleSubmit={({ uai }) => {
                       setFieldValue("uai", uai);
                       setShowConventionnement(true);
+                    }}
+                    onError={() => {
+                      setFieldValue("uai", "");
                     }}
                     siret={etablissement.siret}
                     isRequired

@@ -145,9 +145,11 @@ export default () => {
                   <PrivateRoute exact path="/mes-actions" component={ActionsExpertes} />
                 )}
 
-                {auth && hasAccessTo(auth, "page_collecte") && (
+                {/* {auth && hasAccessTo(auth, "page_collecte") && (
                   <PrivateRoute exact path="/collecte" component={Collecte} />
-                )}
+                )} */}
+                {/* Temporairement publique */}
+                <Route exact path="/collecte" component={Collecte} />
 
                 {auth && hasAccessTo(auth, "page_message_maintenance") && (
                   <PrivateRoute exact path="/admin/messagescript" component={Message} />
