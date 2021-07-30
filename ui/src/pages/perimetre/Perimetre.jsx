@@ -197,7 +197,7 @@ export default ({ plateforme }) => {
     if (currentRule) {
       onOpen();
     }
-  }, [currentRule]);
+  }, [currentRule, onOpen]);
 
   const onCreateRule = useCallback(async (ruleData) => {
     const newRule = await createRule(ruleData);
