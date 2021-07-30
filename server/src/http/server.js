@@ -36,6 +36,7 @@ const etablissementSecure = require("./routes/etablissementSecure");
 const upload = require("./routes/upload");
 const messageScript = require("./routes/messageScript");
 const reglePerimetre = require("./routes/reglePerimetre");
+const reglePerimetreSecure = require("./routes/reglePerimetreSecure");
 
 const swaggerSchema = require("../common/model/swaggerSchema");
 
@@ -134,6 +135,7 @@ module.exports = async (components) => {
   app.use("/api/v1/affelnet", affelnet(components));
   app.use("/api/v1/entity", apiKeyAuthMiddleware, etablissementSecure(components));
   app.use("/api/v1/upload", adminOnly, upload());
+  app.use("/api/v1/entity", apiKeyAuthMiddleware, reglePerimetreSecure());
 
   /** DEPRECATED */
   app.use("/api/es/search", esSearch());
@@ -154,6 +156,7 @@ module.exports = async (components) => {
   app.use("/api/stats", stats(components));
   app.use("/api/affelnet", affelnet(components));
   app.use("/api/entity", authMiddleware, etablissementSecure(components));
+  app.use("/api/entity", authMiddleware, reglePerimetreSecure());
 
   app.get(
     "/api",

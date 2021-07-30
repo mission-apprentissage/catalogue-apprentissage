@@ -46,6 +46,11 @@ const reglePerimetre = {
     description:
       "La règle pour matcher les formations (i.e: query mongo) qui s'ajoute au niveau + diplome (stringified)",
   },
+  regle_complementaire_query: {
+    type: String,
+    default: null,
+    description: "La règle complémentaire, de type eS pour le rule builder",
+  },
   nom_regle_complementaire: {
     type: String,
     default: null,
@@ -82,6 +87,23 @@ const reglePerimetre = {
     type: String,
     default: null,
     description: "Qui a réalisé la dernière modification",
+  },
+  is_deleted: {
+    type: Boolean,
+    default: false,
+    description: "True si la règle a été supprimée (soft delete)",
+  },
+  condition_integration: {
+    type: String,
+    enum: ["doit intégrer", "peut intégrer", "ne doit pas intégrer"],
+    default: "peut intégrer",
+    description: "Condition d'intégration dans la plateforme",
+    required: true,
+  },
+  duree: {
+    type: Number,
+    default: null,
+    description: "Durée en années pour matcher les formations",
   },
 };
 module.exports = reglePerimetre;

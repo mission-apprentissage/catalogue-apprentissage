@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -18,22 +19,21 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { StatusBadge } from "../StatusBadge";
-import React, { useState } from "react";
 import { useFormik } from "formik";
 import { _put } from "../../httpClient";
 import useAuth from "../../hooks/useAuth";
 import { buildUpdatesHistory } from "../../utils/formationUtils";
 import * as Yup from "yup";
-import { Close } from "../../../theme/components/icons/Close";
-import { ArrowRightLine } from "../../../theme/components/icons";
+import { ArrowRightLine, Close } from "../../../theme/components/icons";
+import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
 const getPublishRadioValue = (status) => {
-  if (["publié", "en attente de publication"].includes(status)) {
+  if ([COMMON_STATUS.PUBLIE, COMMON_STATUS.EN_ATTENTE].includes(status)) {
     return "true";
   }
-  if (["non publié"].includes(status)) {
+  if ([COMMON_STATUS.NON_PUBLIE].includes(status)) {
     return "false";
   }
 
@@ -43,14 +43,14 @@ const getPublishRadioValue = (status) => {
 const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
   const [user] = useAuth();
   const [isAffelnetFormOpen, setAffelnetFormOpen] = useState(
-    ["publié", "en attente de publication"].includes(formation?.affelnet_statut)
+    [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.EN_ATTENTE].includes(formation?.affelnet_statut)
   );
 
   const [isAffelnetUnpublishFormOpen, setAffelnetUnpublishFormOpen] = useState(
-    ["non publié"].includes(formation?.affelnet_statut)
+    [AFFELNET_STATUS.NON_PUBLIE].includes(formation?.affelnet_statut)
   );
   const [isParcoursupUnpublishFormOpen, setParcousupUnpublishFormOpen] = useState(
-    ["non publié"].includes(formation?.parcoursup_statut)
+    [PARCOURSUP_STATUS.NON_PUBLIE].includes(formation?.parcoursup_statut)
   );
 
   const { values, handleChange, handleSubmit, isSubmitting, setFieldValue, errors } = useFormik({
@@ -85,23 +85,30 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
 
         // check if can edit depending on the status
         if (affelnet === "true") {
-          if (["non publié", "à publier (soumis à validation)", "à publier"].includes(formation?.affelnet_statut)) {
-            body.affelnet_statut = "en attente de publication";
+          if (
+            [AFFELNET_STATUS.NON_PUBLIE, AFFELNET_STATUS.A_PUBLIER_VALIDATION, AFFELNET_STATUS.A_PUBLIER].includes(
+              formation?.affelnet_statut
+            )
+          ) {
+            body.affelnet_statut = AFFELNET_STATUS.EN_ATTENTE;
             body.affelnet_infos_offre = affelnet_infos_offre;
             body.affelnet_raison_depublication = null;
-            shouldRestoreAfReconciliation = formation.affelnet_statut === "non publié";
-          } else if (["publié"].includes(formation?.affelnet_statut)) {
+            shouldRestoreAfReconciliation = formation.affelnet_statut === AFFELNET_STATUS.NON_PUBLIE;
+          } else if ([AFFELNET_STATUS.PUBLIE].includes(formation?.affelnet_statut)) {
             body.affelnet_infos_offre = affelnet_infos_offre;
           }
         } else if (affelnet === "false") {
           if (
-            ["en attente de publication", "à publier (soumis à validation)", "à publier", "publié"].includes(
-              formation?.affelnet_statut
-            )
+            [
+              AFFELNET_STATUS.EN_ATTENTE,
+              AFFELNET_STATUS.A_PUBLIER_VALIDATION,
+              AFFELNET_STATUS.A_PUBLIER,
+              AFFELNET_STATUS.PUBLIE,
+            ].includes(formation?.affelnet_statut)
           ) {
             body.affelnet_raison_depublication = affelnet_raison_depublication;
-            body.affelnet_statut = "non publié";
-            shouldRemoveAfReconciliation = ["en attente de publication", "publié"].includes(
+            body.affelnet_statut = AFFELNET_STATUS.NON_PUBLIE;
+            shouldRemoveAfReconciliation = [AFFELNET_STATUS.EN_ATTENTE, AFFELNET_STATUS.PUBLIE].includes(
               formation.parcoursup_statut
             );
           }
@@ -110,29 +117,29 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
         if (parcoursup === "true") {
           if (
             [
-              "non publié",
-              "à publier (vérifier accès direct postbac)",
-              "à publier (soumis à validation Recteur)",
-              "à publier",
+              PARCOURSUP_STATUS.NON_PUBLIE,
+              PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
+              PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+              PARCOURSUP_STATUS.A_PUBLIER,
             ].includes(formation?.parcoursup_statut)
           ) {
-            body.parcoursup_statut = "en attente de publication";
-            shouldRestorePsReconciliation = formation.parcoursup_statut === "non publié";
+            body.parcoursup_statut = PARCOURSUP_STATUS.EN_ATTENTE;
+            shouldRestorePsReconciliation = formation.parcoursup_statut === PARCOURSUP_STATUS.NON_PUBLIE;
             body.parcoursup_raison_depublication = null;
           }
         } else if (parcoursup === "false") {
           if (
             [
-              "en attente de publication",
-              "à publier (vérifier accès direct postbac)",
-              "à publier (soumis à validation Recteur)",
-              "à publier",
-              "publié",
+              PARCOURSUP_STATUS.EN_ATTENTE,
+              PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
+              PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+              PARCOURSUP_STATUS.A_PUBLIER,
+              PARCOURSUP_STATUS.PUBLIE,
             ].includes(formation?.parcoursup_statut)
           ) {
             body.parcoursup_raison_depublication = parcoursup_raison_depublication;
-            body.parcoursup_statut = "non publié";
-            shouldRemovePsReconciliation = ["en attente de publication", "publié"].includes(
+            body.parcoursup_statut = PARCOURSUP_STATUS.NON_PUBLIE;
+            shouldRemovePsReconciliation = [PARCOURSUP_STATUS.EN_ATTENTE, PARCOURSUP_STATUS.PUBLIE].includes(
               formation.parcoursup_statut
             );
           }
@@ -192,8 +199,8 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
     },
   });
 
-  const isParcoursupPublishDisabled = ["hors périmètre"].includes(formation?.parcoursup_statut);
-  const isAffelnetPublishDisabled = ["hors périmètre"].includes(formation?.affelnet_statut);
+  const isParcoursupPublishDisabled = [PARCOURSUP_STATUS.HORS_PERIMETRE].includes(formation?.parcoursup_statut);
+  const isAffelnetPublishDisabled = [AFFELNET_STATUS.HORS_PERIMETRE].includes(formation?.affelnet_statut);
 
   const initialRef = React.useRef();
 

@@ -2,10 +2,7 @@ import { useState, useEffect } from "react";
 import { _get, _post } from "../httpClient";
 import { mergedQueries, withUniqueKey } from "../components/Search/components/QueryBuilder/utils";
 import { operators as frOperators } from "../components/Search/components/QueryBuilder/utils_fr";
-
-const FORMATIONS_ES_INDEX = "convertedformation";
-const ETABLISSEMENTS_ES_INDEX = "etablissements";
-const RECONCILIATION_PS_ES_INDEX = "psformations2021";
+import { ETABLISSEMENTS_ES_INDEX, FORMATIONS_ES_INDEX, RECONCILIATION_PS_ES_INDEX } from "../../constants/es";
 
 const CATALOGUE_API_ENDPOINT = `${process.env.REACT_APP_BASE_URL}/api`;
 const TCO_API_ENDPOINT =
