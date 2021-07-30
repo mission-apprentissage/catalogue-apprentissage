@@ -189,12 +189,9 @@ export default ({ plateforme }) => {
     }
   }, [plateforme, niveauxData]);
 
-  const onShowRule = useCallback(
-    (rule) => {
-      setCurrentRule(rule);
-    },
-    [onOpen]
-  );
+  const onShowRule = useCallback((rule) => {
+    setCurrentRule(rule);
+  }, []);
 
   useEffect(() => {
     if (currentRule) {
