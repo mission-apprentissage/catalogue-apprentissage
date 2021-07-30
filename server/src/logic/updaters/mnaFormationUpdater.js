@@ -186,11 +186,13 @@ const mnaFormationUpdater = async (
       const aPublierRules = await ReglePerimetre.find({
         plateforme: "affelnet",
         statut: "à publier",
+        is_deleted: { $ne: true },
       }).lean();
 
       const aPublierSoumisAValidationRules = await ReglePerimetre.find({
         plateforme: "affelnet",
         statut: "à publier (soumis à validation)",
+        is_deleted: { $ne: true },
       }).lean();
 
       // Split formation into N formation with 1 mef each

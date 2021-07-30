@@ -19,6 +19,7 @@ import { buildUpdatesHistory } from "../../utils/formationUtils";
 import * as Yup from "yup";
 import { ValidateIcon, DoubleArrows, ErrorIcon } from "../../../theme/components/icons";
 import { _post, _put } from "../../../common/httpClient";
+import { PARCOURSUP_STATUS } from "../../../constants/status";
 
 const Validate = ({ formation, mnaFormation, onClose, onValidationSubmit }) => {
   const [canSubmit, setCanSubmit] = useState(false);
@@ -42,35 +43,15 @@ const Validate = ({ formation, mnaFormation, onClose, onValidationSubmit }) => {
         let shouldRemovePsReconciliation = false;
         let shouldRestorePsReconciliation = false;
         if (parcoursup_keep_publish === "true") {
-          // if (
-          //   [
-          //     "non publié",
-          //     "à publier (vérifier accès direct postbac)",
-          //     "à publier (soumis à validation Recteur)",
-          //     "en attente de publication",
-          //     "à publier",
-          //   ].includes(mnaFormation?.parcoursup_statut)
-          // ) {
-          body.parcoursup_statut = "publié";
-          shouldRestorePsReconciliation = mnaFormation.parcoursup_statut === "non publié";
+          body.parcoursup_statut = PARCOURSUP_STATUS.PUBLIE;
+          shouldRestorePsReconciliation = mnaFormation.parcoursup_statut === PARCOURSUP_STATUS.NON_PUBLIE;
           body.parcoursup_raison_depublication = null;
-          // }
         } else if (parcoursup_keep_publish === "false") {
-          // if (
-          //   [
-          //     "en attente de publication",
-          //     "à publier (vérifier accès direct postbac)",
-          //     "à publier (soumis à validation Recteur)",
-          //     "à publier",
-          //     "publié",
-          //   ].includes(mnaFormation?.parcoursup_statut)
-          // ) {
           body.parcoursup_raison_depublication = parcoursup_raison_depublication;
-          body.parcoursup_statut = "non publié";
-          shouldRemovePsReconciliation = ["en attente de publication", "publié"].includes(
+          body.parcoursup_statut = PARCOURSUP_STATUS.NON_PUBLIE;
+          shouldRemovePsReconciliation = [PARCOURSUP_STATUS.EN_ATTENTE, PARCOURSUP_STATUS.PUBLIE].includes(
             mnaFormation.parcoursup_statut
           );
-          // }
         }
 
         if (Object.keys(body).length > 0) {
@@ -169,7 +150,8 @@ const Validate = ({ formation, mnaFormation, onClose, onValidationSubmit }) => {
           <Heading as="h3" fontSize="1.3rem" mb={3} color="bluefrance" flexGrow="1">
             Vérification automatique des conditions d’intégration
           </Heading>
-          {(mnaFormation.parcoursup_statut === "publié" || mnaFormation.parcoursup_statut === "à publier") && (
+          {(mnaFormation.parcoursup_statut === PARCOURSUP_STATUS.PUBLIE ||
+            mnaFormation.parcoursup_statut === PARCOURSUP_STATUS.A_PUBLIER) && (
             <Text
               as="div"
               variant="highlight"
@@ -187,12 +169,12 @@ const Validate = ({ formation, mnaFormation, onClose, onValidationSubmit }) => {
                 La formation est paramétrée dans la plateforme Parcoursup et répond bien aux conditions d’intégration.{" "}
                 <Text fontWeight="bold" as="span">
                   Elle apparait aujourd’hui dans le Catalogue 2021 sous le statut{" "}
-                  {mnaFormation.parcoursup_statut === "publié" ? "“publiée”" : "“à publier”"}.
+                  {mnaFormation.parcoursup_statut === PARCOURSUP_STATUS.PUBLIE ? "“publiée”" : "“à publier”"}.
                 </Text>
               </Text>
             </Text>
           )}
-          {mnaFormation.parcoursup_statut === "hors périmètre" && (
+          {mnaFormation.parcoursup_statut === PARCOURSUP_STATUS.HORS_PERIMETRE && (
             <Text
               as="div"
               variant="highlight"
@@ -229,13 +211,13 @@ const Validate = ({ formation, mnaFormation, onClose, onValidationSubmit }) => {
               </Text>
             </Text>
           )}
-          {mnaFormation.parcoursup_statut !== "hors périmètre" && (
+          {mnaFormation.parcoursup_statut !== PARCOURSUP_STATUS.HORS_PERIMETRE && (
             <>
               <Flex flexDirection="column">
                 <FormControl display="flex" flexDirection="column" w="auto">
                   <FormLabel htmlFor="parcoursup_keep_publish" mb={3} fontSize="epsilon" fontWeight={400}>
                     <Heading as="h3" fontSize="1.3rem" mb={3} color="bluefrance" flexGrow="1">
-                      {mnaFormation.parcoursup_statut === "publié"
+                      {mnaFormation.parcoursup_statut === PARCOURSUP_STATUS.PUBLIE
                         ? "Conserver la publication"
                         : "Demander la publication"}{" "}
                       <Text as="span" color="redmarianne">

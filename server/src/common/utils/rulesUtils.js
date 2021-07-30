@@ -18,12 +18,22 @@ const deserialize = (str) => {
   });
 };
 
-const getQueryFromRule = ({ niveau, diplome, regle_complementaire }) => {
+const getCfdExpireRule = (duration) => {
+  return {
+    $or: [
+      { cfd_date_fermeture: { $gt: new Date(`${new Date().getFullYear() + duration - 1}-12-31T00:00:00.000Z`) } },
+      { cfd_date_fermeture: null },
+    ],
+  };
+};
+
+const getQueryFromRule = ({ niveau, diplome, regle_complementaire, duree }) => {
   return {
     ...toBePublishedRules,
     niveau,
     ...(diplome && { diplome }),
     ...(regle_complementaire && deserialize(regle_complementaire)),
+    ...(duree && getCfdExpireRule(duree)),
   };
 };
 

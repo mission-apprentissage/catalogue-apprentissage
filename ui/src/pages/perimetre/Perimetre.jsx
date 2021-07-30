@@ -1,19 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Accordion,
   AccordionButton,
   AccordionItem,
   AccordionPanel,
   Box,
+  Button,
   Center,
   Container,
   Flex,
   Heading,
-  IconButton,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   Spinner,
   Text,
   useDisclosure,
@@ -21,149 +17,118 @@ import {
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import Layout from "../layout/Layout";
 import { setTitle } from "../../common/utils/pageUtils";
-import { _get } from "../../common/httpClient";
-import { AddFill, Dots, SubtractLine } from "../../theme/components/icons";
-import { StatusBadge } from "../../common/components/StatusBadge";
-import { RuleModal } from "./RuleModal";
+import { _delete, _get, _post, _put } from "../../common/httpClient";
+import { FolderLine, FolderOpenLine } from "../../theme/components/icons";
+import { RuleModal } from "./components/RuleModal";
+import { Diplome } from "./components/Diplome";
+import { Headline } from "./components/Headline";
+import { useQuery } from "react-query";
+import { CONDITIONS } from "../../constants/conditionsIntegration";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
-const Line = ({
-  isExpanded,
-  showIcon,
-  label,
-  count,
-  status,
+const createRule = async ({
   plateforme,
   niveau,
   diplome,
+  statut,
   regle_complementaire,
-  shouldFetchCount,
-  onShowRule,
-  ...rest
+  regle_complementaire_query,
+  nom_regle_complementaire,
+  condition_integration,
+  duree,
 }) => {
-  const [lineCount, setLineCount] = useState(count);
+  return await _post(`${endpointNewFront}/entity/perimetre/regle`, {
+    plateforme,
+    niveau,
+    diplome,
+    statut,
+    regle_complementaire,
+    regle_complementaire_query,
+    nom_regle_complementaire,
+    condition_integration,
+    duree,
+  });
+};
+
+const updateRule = async ({
+  _id,
+  plateforme,
+  niveau,
+  diplome,
+  statut,
+  regle_complementaire,
+  regle_complementaire_query,
+  nom_regle_complementaire,
+  condition_integration,
+  duree,
+}) => {
+  return await _put(`${endpointNewFront}/entity/perimetre/regle/${_id}`, {
+    plateforme,
+    niveau,
+    diplome,
+    statut,
+    regle_complementaire,
+    regle_complementaire_query,
+    nom_regle_complementaire,
+    condition_integration,
+    duree,
+  });
+};
+
+const deleteRule = async ({ _id }) => {
+  return await _delete(`${endpointNewFront}/entity/perimetre/regle/${_id}`);
+};
+
+const CountText = ({ totalFormationsCount, plateforme, niveaux, ...rest }) => {
+  const [integrationCount, setIntegrationCount] = useState("-");
 
   useEffect(() => {
     async function run() {
       try {
-        const countUrl = `${endpointNewFront}/v1/entity/perimetre/regle/count`;
-        const count = await _get(
-          `${countUrl}?niveau=${niveau}&diplome=${diplome}&regle_complementaire=${regle_complementaire}`,
-          false
-        );
-        setLineCount(count);
+        const countUrl = `${endpointNewFront}/v1/entity/perimetre/regles/integration/count`;
+        const count = await _get(`${countUrl}?plateforme=${plateforme}`, false);
+        setIntegrationCount(count);
       } catch (e) {
         console.error(e);
       }
     }
-    if (regle_complementaire && !count && shouldFetchCount) {
-      run();
-    }
-  }, [count, diplome, niveau, regle_complementaire, shouldFetchCount]);
 
-  return (
-    <AccordionButton as={Box} role={"button"}>
-      <Flex px={4} alignItems="center" w={"full"}>
-        <Flex grow={1} alignItems="center" {...rest}>
-          {showIcon ? (
-            isExpanded ? (
-              <SubtractLine fontSize="12px" color="bluefrance" mr={2} />
-            ) : (
-              <AddFill fontSize="12px" color="bluefrance" mr={2} />
-            )
-          ) : (
-            ""
-          )}
-          <Text>{label}</Text>
-        </Flex>
-        <Flex flexBasis={"40%"} justifyContent={"space-between"} alignItems="center">
-          <Flex minW={8}>{lineCount}</Flex>
-          <Flex>
-            {status ? (
-              <StatusBadge source={plateforme} status={status} />
-            ) : (
-              <StatusBadge source={plateforme} status="hors périmètre" />
-            )}
-          </Flex>
-          <Flex alignItems="center">
-            <Menu>
-              <MenuButton
-                as={IconButton}
-                aria-label="Options"
-                icon={<Dots color={"bluefrance"} boxSize={4} />}
-                variant="unstyled"
-                _hover={{ bg: "grey.300" }}
-                onClick={(evt) => evt.stopPropagation()}
-              />
-              <MenuList minW={"25rem"} minH={"10rem"} borderRadius={0} color={"bluefrance"}>
-                <MenuItem
-                  onClick={(evt) => {
-                    evt.stopPropagation();
-                    onShowRule();
-                  }}
-                >
-                  Afficher les conditions
-                </MenuItem>
-                <MenuItem onClick={(evt) => evt.stopPropagation()}>Dupliquer les conditions</MenuItem>
-                <MenuItem onClick={(evt) => evt.stopPropagation()}>Supprimer les conditions</MenuItem>
-              </MenuList>
-            </Menu>
-          </Flex>
-        </Flex>
-      </Flex>
-    </AccordionButton>
+    run();
+  }, [plateforme]);
+
+  const diplomesCount = niveaux.reduce(
+    (acc, { diplomes }) =>
+      acc +
+      diplomes.length +
+      diplomes.reduce(
+        (acc2, { regles }) =>
+          acc2 + regles.filter(({ nom_regle_complementaire }) => nom_regle_complementaire !== null).length,
+        0
+      ),
+    0
   );
-};
 
-const Diplome = ({ plateforme, niveau, diplome, onShowRule }) => {
-  const { value, count, regles } = diplome;
-
-  // check if it has one rule at diplome level
-  const [diplomeRule] = regles.filter(({ regle_complementaire }) => regle_complementaire === "{}");
-
-  const otherRules = regles.filter(({ regle_complementaire }) => regle_complementaire !== "{}");
+  const shouldOrMustCount = niveaux.reduce(
+    (acc, { diplomes }) =>
+      acc +
+      diplomes.reduce(
+        (acc2, { regles }) =>
+          acc2 +
+          regles.filter(({ condition_integration }) =>
+            [CONDITIONS.DOIT_INTEGRER, CONDITIONS.PEUT_INTEGRER].includes(condition_integration)
+          ).length,
+        0
+      ),
+    0
+  );
 
   return (
-    <Accordion allowMultiple bg="#FFFFFF" borderBottom={"1px solid"} borderColor={"grey.300"}>
-      <AccordionItem border="none" m={0}>
-        {({ isExpanded }) => (
-          <>
-            <Line
-              plateforme={plateforme}
-              niveau={niveau}
-              diplome={value}
-              isExpanded={isExpanded}
-              showIcon={otherRules?.length > 0}
-              label={value}
-              status={diplomeRule?.statut}
-              count={count}
-              onShowRule={() => onShowRule(value, "")}
-            />
-            {otherRules?.length > 0 && (
-              <AccordionPanel p={0}>
-                {otherRules.map(({ _id, nom_regle_complementaire, statut, regle_complementaire }) => (
-                  <Line
-                    pl={6}
-                    key={_id}
-                    plateforme={plateforme}
-                    niveau={niveau}
-                    diplome={value}
-                    isExpanded={false}
-                    showIcon={false}
-                    label={nom_regle_complementaire}
-                    status={statut}
-                    regle_complementaire={regle_complementaire}
-                    shouldFetchCount={isExpanded}
-                    onShowRule={() => onShowRule(value, regle_complementaire, nom_regle_complementaire)}
-                  />
-                ))}
-              </AccordionPanel>
-            )}
-          </>
-        )}
-      </AccordionItem>
-    </Accordion>
+    <Text {...rest}>
+      Actuellement au national, {shouldOrMustCount} diplômes ou titres en apprentissage ({integrationCount} formations)
+      doivent ou peuvent intégrer la plateforme Parcoursup sur les {diplomesCount} recensés ({totalFormationsCount}{" "}
+      formations dont le diplôme a une date de fin supérieure au 31/08 de l'année en cours) dans le Catalogue général.
+    </Text>
   );
 };
 
@@ -171,23 +136,26 @@ export default ({ plateforme }) => {
   const [niveaux, setNiveaux] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [currentRule, setCurrentRule] = useState({});
+  const [currentRule, setCurrentRule] = useState(null);
 
   const title = `Conditions d’intégration des formations dans la plateforme ${plateforme}`;
   setTitle(title);
 
+  const niveauxURL = `${endpointNewFront}/v1/entity/perimetre/niveau`;
+  const { data: niveauxData } = useQuery("niveaux", () => _get(niveauxURL, false), {
+    refetchOnWindowFocus: false,
+    staleTime: 60 * 60 * 1000, // 1 hour
+  });
+
   useEffect(() => {
     async function run() {
       try {
-        const niveauxURL = `${endpointNewFront}/v1/entity/perimetre/niveau`;
-        const niveaux = await _get(niveauxURL, false);
-
         const reglesUrl = `${endpointNewFront}/v1/entity/perimetre/regles`;
         const regles = await _get(`${reglesUrl}?plateforme=${plateforme}`, false);
 
         let reglesInTree = [];
 
-        const niveauxTree = niveaux.map(({ niveau, diplomes }) => {
+        const niveauxTree = niveauxData.map(({ niveau, diplomes }) => {
           return {
             niveau,
             diplomes: diplomes.map((diplome) => {
@@ -203,7 +171,7 @@ export default ({ plateforme }) => {
           };
         });
 
-        const total = niveaux.reduce((acc, { niveau }) => acc + niveau.count, 0);
+        const total = niveauxData.reduce((acc, { niveau }) => acc + niveau.count, 0);
         setTotalCount(total);
 
         const obsoleteRegles = regles.filter(({ _id }) => !reglesInTree.includes(_id));
@@ -216,22 +184,136 @@ export default ({ plateforme }) => {
         console.error(e);
       }
     }
-    run();
-  }, [plateforme]);
+    if (niveauxData) {
+      run();
+    }
+  }, [plateforme, niveauxData]);
 
-  const onShowRule = (title, rule, name) => {
-    setCurrentRule({ title, rule, name });
-    onOpen();
-  };
+  const onShowRule = useCallback((rule) => {
+    setCurrentRule(rule);
+  }, []);
+
+  useEffect(() => {
+    if (currentRule) {
+      onOpen();
+    }
+  }, [currentRule, onOpen]);
+
+  const onCreateRule = useCallback(async (ruleData) => {
+    const newRule = await createRule(ruleData);
+    const { niveau: ruleNiveau, diplome: ruleDiplome } = newRule;
+    setNiveaux((currentTree) => {
+      return currentTree.map(({ niveau, diplomes }) => {
+        if (niveau.value !== ruleNiveau) {
+          return { niveau, diplomes };
+        }
+
+        return {
+          niveau,
+          diplomes: diplomes.map((diplome) => {
+            if (diplome.value !== ruleDiplome) {
+              return diplome;
+            }
+
+            return {
+              ...diplome,
+              regles: [...diplome.regles, newRule],
+            };
+          }),
+        };
+      });
+    });
+    return newRule;
+  }, []);
+
+  const onUpdateRule = useCallback(async (ruleData) => {
+    const updatedRule = await updateRule(ruleData);
+    const { niveau: ruleNiveau, diplome: ruleDiplome } = updatedRule;
+
+    setNiveaux((currentTree) => {
+      return currentTree.map(({ niveau, diplomes }) => {
+        if (niveau.value !== ruleNiveau) {
+          return {
+            niveau,
+            diplomes: diplomes.map((diplome) => {
+              return {
+                ...diplome,
+                regles: diplome.regles.filter(({ _id }) => _id !== updatedRule._id),
+              };
+            }),
+          };
+        }
+
+        return {
+          niveau,
+          diplomes: diplomes.map((diplome) => {
+            if (diplome.value !== ruleDiplome) {
+              return {
+                ...diplome,
+                regles: diplome.regles.filter(({ _id }) => _id !== updatedRule._id),
+              };
+            }
+
+            const regles = diplome.regles.map((regle) => {
+              if (regle._id !== updatedRule._id) {
+                return regle;
+              }
+              return updatedRule;
+            });
+
+            if (regles.every(({ _id }) => _id !== updatedRule._id)) {
+              regles.push(updatedRule);
+            }
+
+            return {
+              ...diplome,
+              regles,
+            };
+          }),
+        };
+      });
+    });
+    return updatedRule;
+  }, []);
+
+  const onDeleteRule = useCallback(async (ruleData) => {
+    const deletedRule = await deleteRule(ruleData);
+    const { niveau: ruleNiveau, diplome: ruleDiplome } = deletedRule;
+    setNiveaux((currentTree) => {
+      return currentTree.map(({ niveau, diplomes }) => {
+        if (niveau.value !== ruleNiveau) {
+          return { niveau, diplomes };
+        }
+
+        return {
+          niveau,
+          diplomes: diplomes.map((diplome) => {
+            if (diplome.value !== ruleDiplome) {
+              return diplome;
+            }
+
+            return {
+              ...diplome,
+              regles: diplome.regles.filter((regle) => regle._id !== deletedRule._id),
+            };
+          }),
+        };
+      });
+    });
+  }, []);
 
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
         <Container maxW="xl">
           <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: title }]} />
-          <Heading textStyle="h2" color="grey.800" mt={5}>
+          <Heading textStyle="h2" color="grey.800" mt={5} pb={4}>
             {title}
           </Heading>
+          <Text fontWeight={700} pb={4}>
+            Déterminer par niveau et par titres et diplômes, les formations qui doivent ou peuvent intégrer la
+            plateforme {plateforme} et leurs règles de publication.
+          </Text>
           <Box mt={4}>
             {niveaux.length === 0 && (
               <Center h="70vh">
@@ -241,59 +323,92 @@ export default ({ plateforme }) => {
 
             {niveaux.length !== 0 && (
               <>
-                <Text pb={4}>
-                  {totalCount} formations dans le catalogue général, dont le diplôme a une date de fin supérieure au
-                  31/08 de l'année en cours.
-                </Text>
+                <Flex
+                  justifyContent={"flex-end"}
+                  py={4}
+                  borderTop={"1px solid"}
+                  borderBottom={"1px solid"}
+                  borderColor={"grey.300"}
+                >
+                  <Button
+                    variant="primary"
+                    onClick={() => {
+                      setCurrentRule(null);
+                      onOpen();
+                    }}
+                  >
+                    Ajouter un diplôme, un titre ou des formations
+                  </Button>
+                </Flex>
+                <CountText py={4} totalFormationsCount={totalCount} niveaux={niveaux} plateforme={plateforme} />
                 <Box minH="70vh">
-                  {niveaux.map(({ niveau, diplomes }) => {
-                    return (
-                      <Accordion allowMultiple bg="#FFFFFF" key={niveau.value}>
-                        <AccordionItem border="none">
+                  <Accordion bg="#FFFFFF" mb={24} allowToggle>
+                    {niveaux.map(({ niveau, diplomes }) => {
+                      const rulesCount = diplomes.reduce(
+                        (acc, { regles }) =>
+                          acc +
+                          regles.filter(({ nom_regle_complementaire }) => nom_regle_complementaire !== null).length,
+                        0
+                      );
+
+                      return (
+                        <AccordionItem border="none" key={niveau.value} mt={6}>
                           {({ isExpanded }) => (
                             <>
-                              <AccordionButton bg="#F9F8F6">
-                                <Flex alignItems="center" w={"full"}>
-                                  <Flex grow={1} alignItems="center">
+                              <AccordionButton borderBottom={"1px solid"} borderColor={"grey.300"} px={0}>
+                                <Flex alignItems="center" w={"full"} justifyContent={"space-between"}>
+                                  <Flex alignItems="center">
                                     {isExpanded ? (
-                                      <SubtractLine fontSize="12px" color="bluefrance" mr={2} />
+                                      <FolderOpenLine color="bluefrance" mr={4} boxSize={5} />
                                     ) : (
-                                      <AddFill fontSize="12px" color="bluefrance" mr={2} />
+                                      <FolderLine color="bluefrance" mr={4} boxSize={5} />
                                     )}
-                                    <Text color="bluefrance" fontWeight={700}>
-                                      {niveau.value}
-                                    </Text>
+                                    <Text textStyle={"h4"}>Niveau {niveau.value}</Text>
                                   </Flex>
-                                  <Flex flexBasis={"40%"}>{niveau.count}</Flex>
+                                  <Text textStyle={"rf-text"}>
+                                    {diplomes.length + rulesCount} diplômes et titres ce qui représente {niveau.count}{" "}
+                                    formations
+                                  </Text>
                                 </Flex>
                               </AccordionButton>
-                              <AccordionPanel p={0} bg="#FFFFFF">
-                                {diplomes.map((diplome) => (
+                              <AccordionPanel p={0} bg="#FFFFFF" mb={16}>
+                                <Headline plateforme={plateforme} />
+                                {diplomes.map((diplome, index) => (
                                   <Diplome
+                                    bg={index % 2 === 0 ? "#fff" : "grey.100"}
                                     key={`${niveau.value}-${diplome.value}`}
                                     plateforme={plateforme}
                                     niveau={niveau.value}
                                     diplome={diplome}
                                     onShowRule={onShowRule}
+                                    onCreateRule={onCreateRule}
+                                    onUpdateRule={onUpdateRule}
+                                    onDeleteRule={onDeleteRule}
+                                    isExpanded={isExpanded}
                                   />
                                 ))}
                               </AccordionPanel>
                             </>
                           )}
                         </AccordionItem>
-                      </Accordion>
-                    );
-                  })}
+                      );
+                    })}
+                  </Accordion>
                 </Box>
               </>
             )}
           </Box>
           <RuleModal
             isOpen={isOpen}
-            onClose={onClose}
-            title={currentRule.title}
-            rule={currentRule.rule}
-            name={currentRule.name}
+            onClose={() => {
+              onClose();
+              setCurrentRule(null);
+            }}
+            rule={currentRule}
+            onUpdateRule={onUpdateRule}
+            onDeleteRule={onDeleteRule}
+            onCreateRule={onCreateRule}
+            plateforme={plateforme}
           />
         </Container>
       </Box>

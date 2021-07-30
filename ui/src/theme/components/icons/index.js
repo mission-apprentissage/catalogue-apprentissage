@@ -31,3 +31,7 @@ export * from "./MenuFill";
 export * from "./ArrowDownLine";
 export * from "./LinkLine";
 export * from "./Dots";
+export * from "./ArrowRightDownLine";
+export * from "./FolderLine";
+export * from "./FolderOpenLine";
+export * from "./CloseCircleLine";

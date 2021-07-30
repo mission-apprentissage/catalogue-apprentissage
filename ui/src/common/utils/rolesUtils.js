@@ -1,7 +1,4 @@
-import { some, intersection } from "lodash";
-
-export const isUserInRole = (auth, role) =>
-  auth && auth.permissions && some(auth.permissions, (item) => role.includes(item));
+import { intersection } from "lodash";
 
 export const isUserAdmin = (auth) => auth && auth.permissions && auth.permissions.isAdmin;
 

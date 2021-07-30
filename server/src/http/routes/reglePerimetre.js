@@ -1,6 +1,7 @@
 const express = require("express");
 const Boom = require("boom");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
+const { toBePublishedRules } = require("../../jobs/common/utils/referenceUtils");
 const { getQueryFromRule } = require("../../common/utils/rulesUtils");
 const { getNiveauxDiplomesTree } = require("@mission-apprentissage/tco-service-node");
 const { ReglePerimetre, ConvertedFormation } = require("../../common/model");
@@ -13,24 +14,45 @@ module.exports = () => {
     tryCatch(async (req, res) => {
       const tree = await getNiveauxDiplomesTree();
 
-      const niveauxTree = await Promise.all(
-        Object.entries(tree).map(async ([niveau, diplomes]) => {
-          return {
-            niveau: {
-              value: niveau,
-              count: await ConvertedFormation.countDocuments(getQueryFromRule({ niveau })),
+      const diplomesCounts = await ConvertedFormation.aggregate([
+        {
+          $match: {
+            ...toBePublishedRules,
+          },
+        },
+        {
+          $group: {
+            _id: {
+              niveau: "$niveau",
+              diplome: "$diplome",
             },
-            diplomes: await Promise.all(
-              diplomes.map(async (diplome) => {
-                return {
-                  value: diplome,
-                  count: await ConvertedFormation.countDocuments(getQueryFromRule({ niveau, diplome })),
-                };
-              })
-            ),
-          };
-        })
-      );
+            count: { $sum: 1 },
+          },
+        },
+      ]);
+
+      const counts = diplomesCounts.reduce((acc, { _id, count }) => {
+        acc[_id.niveau] = acc[_id.niveau] ?? 0;
+        acc[_id.niveau] += count;
+
+        acc[`${_id.niveau}-${_id.diplome}`] = count;
+        return acc;
+      }, {});
+
+      const niveauxTree = Object.entries(tree).map(([niveau, diplomes]) => {
+        return {
+          niveau: {
+            value: niveau,
+            count: counts[niveau] ?? 0,
+          },
+          diplomes: diplomes.map((diplome) => {
+            return {
+              value: diplome,
+              count: counts[`${niveau}-${diplome}`] ?? 0,
+            };
+          }),
+        };
+      });
 
       return res.json(niveauxTree);
     })
@@ -44,7 +66,7 @@ module.exports = () => {
         throw Boom.badRequest();
       }
 
-      const result = await ReglePerimetre.find({ plateforme }).lean();
+      const result = await ReglePerimetre.find({ plateforme, is_deleted: { $ne: true } }).lean();
       return res.json(result);
     })
   );
@@ -63,6 +85,28 @@ module.exports = () => {
       const result = await ConvertedFormation.countDocuments(
         getQueryFromRule({ niveau, diplome, regle_complementaire })
       );
+      return res.json(result);
+    })
+  );
+
+  router.get(
+    "/perimetre/regles/integration/count",
+    tryCatch(async (req, res) => {
+      const plateforme = req.query?.plateforme;
+
+      if (!plateforme) {
+        throw Boom.badRequest();
+      }
+
+      const rules = await ReglePerimetre.find({
+        plateforme,
+        condition_integration: { $in: ["peut intégrer", "doit intégrer"] },
+        is_deleted: { $ne: true },
+      }).lean();
+
+      const result = await ConvertedFormation.countDocuments({
+        $or: rules.map(getQueryFromRule),
+      });
       return res.json(result);
     })
   );

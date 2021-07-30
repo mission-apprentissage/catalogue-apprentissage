@@ -42,6 +42,7 @@ const run = async () => {
   const aPublierVerifierAccesDirectPostBacRules = await ReglePerimetre.find({
     plateforme: "parcoursup",
     statut: "à publier (vérifier accès direct postbac)",
+    is_deleted: { $ne: true },
   }).lean();
 
   await ConvertedFormation.updateMany(
@@ -55,6 +56,7 @@ const run = async () => {
   const aPublierValidationRecteurRules = await ReglePerimetre.find({
     plateforme: "parcoursup",
     statut: "à publier (soumis à validation Recteur)",
+    is_deleted: { $ne: true },
   }).lean();
 
   await ConvertedFormation.updateMany(
@@ -76,6 +78,7 @@ const run = async () => {
   const aPublierRules = await ReglePerimetre.find({
     plateforme: "parcoursup",
     statut: "à publier",
+    is_deleted: { $ne: true },
   }).lean();
 
   await ConvertedFormation.updateMany(
