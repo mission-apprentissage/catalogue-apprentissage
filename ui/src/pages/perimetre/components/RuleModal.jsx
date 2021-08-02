@@ -47,16 +47,28 @@ const formatDate = (date) => {
   });
 };
 
+const humanReadablekeyMap = {
+  regle_complementaire: "Autre(s) critère(s)",
+  nom_regle_complementaire: "Nom du diplôme ou titre",
+  last_update_who: "Modifié par",
+  condition_integration: "Condition d'intégration",
+  statut: "Règle de publication",
+  diplome: "Type de diplôme ou titre",
+  niveau: "Niveau",
+};
+
 const UpdatesHistory = ({ label, value }) => {
   return (
     <Flex flexDirection={"column"} w={"full"} h={"full"}>
       <Text mb={1}>{label} :</Text>
       <Flex p={2} bg={"grey.750"} color="grey.100" h={"full"} flexDirection={"column"}>
-        {Object.entries(value).map(([key, value]) => (
-          <Text as={"span"} key={key}>
-            {key} : "{value}"
-          </Text>
-        ))}
+        {Object.entries(value)
+          .filter(([key]) => key !== "regle_complementaire_query")
+          .map(([key, value]) => (
+            <Text as={"span"} key={key} overflowWrap={"anywhere"}>
+              <strong>{humanReadablekeyMap[key] ?? key}:</strong> "{value}"
+            </Text>
+          ))}
       </Flex>
     </Flex>
   );
@@ -310,7 +322,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
 
                     <FormControl isInvalid={errors.condition && touched.condition} isRequired>
                       <Flex flexDirection={"column"} mt={8} alignItems={"flex-start"}>
-                        <FormLabel htmlFor={"status"}>Condition d'intégration</FormLabel>
+                        <FormLabel htmlFor={"condition"}>Condition d'intégration</FormLabel>
                         <ActionsSelect
                           id={"condition"}
                           name="condition"

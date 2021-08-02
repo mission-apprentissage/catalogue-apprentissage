@@ -87,6 +87,7 @@ export default () => {
                   linkTo="/perimetre-affelnet"
                   title="Intégration des formations à la plateforme Affelnet"
                   body="Déterminer les règles d’intégration des formations du Catalogue des offres de formation en apprentissage 2021 (Carif-Oref) sur la plateforme Affelnet"
+                  isDisabled={!hasAccessTo(auth, "page_perimetre_af")}
                 />
               </GridItem>
               <GridItem>
@@ -94,6 +95,7 @@ export default () => {
                   linkTo="/perimetre-parcoursup"
                   title="Intégration des formations à la plateforme Parcoursup"
                   body="Déterminer les règles d’intégration des formations du Catalogue des offres de formation en apprentissage 2021 (Carif-Oref) sur la plateforme Parcoursup"
+                  isDisabled={!hasAccessTo(auth, "page_perimetre_ps")}
                 />
               </GridItem>
             </Grid>
