@@ -58,6 +58,7 @@ const updateSchema = Joi.object({
  */
 const hasPerimeterRights = (user, plateforme) => {
   return (
+    user.isAdmin ||
     (plateforme === "affelnet" && user.acl?.includes("page_perimetre_af")) ||
     (plateforme === "parcoursup" && user.acl?.includes("page_perimetre_ps"))
   );
