@@ -13,17 +13,23 @@ import {
   Tabs,
   useDisclosure,
   Text,
+  Button,
 } from "@chakra-ui/react";
-import Layout from "../layout/Layout";
-import { EmojiSmile, EmojiFlat, Question, Tick } from "../../theme/components/icons";
-import Search from "../../common/components/Search/Search";
-import { useSearch } from "../../common/hooks/useSearch";
-import { ReconciliationPsModal } from "../../common/components/reconciliation/ReconciliationPsModal";
-import { Breadcrumb } from "../../common/components/Breadcrumb";
-import { setTitle } from "../../common/utils/pageUtils";
+import Layout from "../../layout/Layout";
+import { EmojiSmile, EmojiFlat, Question, Tick, RejectIcon } from "../../../theme/components/icons";
+import Search from "../../../common/components/Search/Search";
+import { useSearch } from "../../../common/hooks/useSearch";
+import { ReconciliationModal } from "./components/ReconciliationModal";
+import { Breadcrumb } from "../../../common/components/Breadcrumb";
+import { setTitle } from "../../../common/utils/pageUtils";
+import { _post } from "../../../common/httpClient";
+
+import useAuth from "../../../common/hooks/useAuth";
+import { hasAccessTo } from "../../../common/utils/rolesUtils";
 
 export default (props) => {
   let searchState = useSearch("reconciliation_ps");
+  let [auth] = useAuth();
   const [psFormation, setPsFormation] = React.useState();
   const {
     isOpen: isOpenReconciliationPsModal,
@@ -31,12 +37,16 @@ export default (props) => {
     onClose: onCloseModal,
   } = useDisclosure();
 
-  const title = "Rapprochement des bases Carif-Oref et Parcoursup";
+  const title = "Rapprochement des bases Parcoursup et Carif-Oref";
   setTitle(title);
 
   let onCloseReconciliationPsModal = useCallback(() => {
     onCloseModal();
   }, [onCloseModal]);
+
+  const sendReport = async () => {
+    await _post("/api/parcoursup/reconciliation/sendreport");
+  };
 
   return (
     <Layout>
@@ -55,7 +65,7 @@ export default (props) => {
           <Text fontWeight="bold" mt={5}>
             Pour réaliser le rapprochement des bases, les{" "}
             {searchState.loaded && `${searchState.countReconciliationPs.countTotal}`} formations paramétrées sur
-            Parcoursup sont comparées aux offres de formation de la base Carif-Oref.
+            Parcoursup sont comparées aux formations de la base Carif-Oref.
           </Text>
           <Text fontSize="sm" mt={5}>
             Les informations comparées pour réaliser le rapprochement sont les suivantes : Codes formation diplôme BCN,
@@ -83,8 +93,12 @@ export default (props) => {
                       {searchState.countReconciliationPs.countAVerifier.toLocaleString("fr-FR")} rapprochements faibles
                     </Tab>
                     <Tab mx={2}>
+                      <RejectIcon color="grey.700" mr="1" />
+                      {searchState.countReconciliationPs.countRejete.toLocaleString("fr-FR")} rejeté(s)
+                    </Tab>
+                    <Tab mx={2}>
                       <Question color="grey.700" mr="1" />
-                      {searchState.countReconciliationPs.countInconnu.toLocaleString("fr-FR")} inconnus
+                      {searchState.countReconciliationPs.countInconnu.toLocaleString("fr-FR")} inconnu(s)
                     </Tab>
                     <Tab mx={2}>
                       <Tick color="grey.700" mr="1" />
@@ -120,6 +134,22 @@ export default (props) => {
                     />
                   </TabPanel>
                   <TabPanel>
+                    {auth && hasAccessTo(auth, "page_reconciliation_ps/send_rapport_anomalies") && (
+                      <Button variant="primary" onClick={sendReport}>
+                        Envoyer un rapport
+                      </Button>
+                    )}
+                    <Search
+                      {...props}
+                      searchState={searchState}
+                      context="reconciliation_ps_rejetes"
+                      onReconciliationCardClicked={(data) => {
+                        setPsFormation(data);
+                        onOpenReconciliationPsModal();
+                      }}
+                    />
+                  </TabPanel>
+                  <TabPanel>
                     <Search
                       {...props}
                       searchState={searchState}
@@ -147,7 +177,7 @@ export default (props) => {
         </Container>
       </Box>
       {psFormation && (
-        <ReconciliationPsModal
+        <ReconciliationModal
           isOpen={isOpenReconciliationPsModal}
           onClose={onCloseReconciliationPsModal}
           data={psFormation}

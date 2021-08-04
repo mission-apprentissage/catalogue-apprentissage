@@ -56,6 +56,25 @@ const Summary = ({ data, reportType, errors }) => {
         </Text>
       );
 
+    case REPORT_TYPE.PS_REJECT:
+      return (
+        <Text fontSize={["epsilon", "gamma"]}>
+          Résumé des rapprochements des bases Parcoursup et Carif-Oref :<br />
+          {summary.countTotal ?? 0} Formation(s) Parcoursup
+          <br />
+          {summary.countAutomatique ?? 0} rapprochements Forts
+          <br />
+          {summary.countAVerifier ?? 0} rapprochements Faibles
+          <br />
+          {summary.countInconnu ?? 0} rapprochements Inconnus
+          <br />
+          {summary.countRejete ?? 0} rapprochements Rejetés
+          <br />
+          {summary.countValide ?? 0} rapprochements Validés
+          <br />
+        </Text>
+      );
+
     default:
       console.warn("unexpected report type", reportType);
       return <></>;

@@ -29,7 +29,7 @@ const Cookies = lazy(() => import("./pages/legal/Cookies"));
 const DonneesPersonnelles = lazy(() => import("./pages/legal/DonneesPersonnelles"));
 const MentionsLegales = lazy(() => import("./pages/legal/MentionsLegales"));
 const Accessibilite = lazy(() => import("./pages/legal/Accessibilite"));
-const ReconciliationPs = lazy(() => import("./pages/admin/ReconciliationPs"));
+const ReconciliationPs = lazy(() => import("./pages/admin/ReconciliationPs/ReconciliationPs"));
 const ActionsExpertes = lazy(() => import("./pages/ActionsExpertes/ActionsExpertes"));
 const Collecte = lazy(() => import("./pages/Collecte/Collecte"));
 const Perimetre = lazy(() => import("./pages/perimetre/Perimetre"));

@@ -22,6 +22,9 @@ const getReportTitle = (reportType) => {
     case REPORT_TYPE.RCO_IMPORT:
       return "Rapport d'importation catalogue RCO";
 
+    case REPORT_TYPE.PS_REJECT:
+      return "Rapport de rapprochements Parcoursup / Carif-Oref";
+
     default:
       console.warn("unexpected report type", reportType);
       return reportType;

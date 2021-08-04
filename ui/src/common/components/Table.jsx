@@ -1,8 +1,8 @@
 import React, { useMemo } from "react";
 import { useTable, useFlexLayout, useGlobalFilter, useSortBy } from "react-table";
 import { Box, Flex, Text, Stack, Checkbox } from "@chakra-ui/react";
-import { Star, SortingArrows } from "../../../theme/components/icons";
-import { InfoBadge } from "../InfoBadge";
+import { Star, SortingArrows } from "../../theme/components/icons";
+import { InfoBadge } from "./InfoBadge";
 
 // TODO FIXEME !important css rules
 

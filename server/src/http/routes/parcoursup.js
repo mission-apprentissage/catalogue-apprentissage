@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const express = require("express");
 const { getCfdInfo } = require("@mission-apprentissage/tco-service-node");
 const { getEtablissementCoverage } = require("../../logic/controller/coverage");
+const reportRejected = require("../../jobs/parcoursup/2021/reportRejected");
 
 const { diffFormation, buildUpdatesHistory } = require("../../logic/common/utils/diffUtils");
 
@@ -152,6 +153,7 @@ module.exports = ({ catalogue }) => {
         if (
           retrievedData.statut_reconciliation === "AUTOMATIQUE" ||
           retrievedData.statut_reconciliation === "A_VERIFIER" ||
+          retrievedData.statut_reconciliation === "REJETE" ||
           retrievedData.statut_reconciliation === "VALIDE"
         ) {
           const updated_matching_mna_formation = [];
@@ -248,6 +250,16 @@ module.exports = ({ catalogue }) => {
           matching_rejete_updated: false,
         };
 
+        if (matching_rejete_raison === "##USER_CANCEL##") {
+          updatedFormation = {
+            ...previousFormation,
+            statut_reconciliation: "A_VERIFIER",
+            matching_rejete_raison: null,
+            etat_reconciliation: false,
+            matching_rejete_updated: true,
+          };
+        }
+
         // History
         const { updates, keys } = diffFormation(previousFormation, updatedFormation);
         if (updates) {
@@ -330,15 +342,15 @@ module.exports = ({ catalogue }) => {
       const countTotal = await PsFormation2021.countDocuments({});
       const countAutomatique = await PsFormation2021.countDocuments({ statut_reconciliation: "AUTOMATIQUE" });
       const countAVerifier = await PsFormation2021.countDocuments({ statut_reconciliation: "A_VERIFIER" });
-      const countInconnu = await PsFormation2021.countDocuments({
-        $or: [{ statut_reconciliation: "INCONNU" }, { statut_reconciliation: "REJETE" }],
-      });
+      const countRejete = await PsFormation2021.countDocuments({ statut_reconciliation: "REJETE" });
+      const countInconnu = await PsFormation2021.countDocuments({ statut_reconciliation: "INCONNU" });
       const countValide = await PsFormation2021.countDocuments({ statut_reconciliation: "VALIDE" });
       return res.json({
         countTotal,
         countAutomatique,
         countAVerifier,
         countInconnu,
+        countRejete,
         countValide,
       });
     })
@@ -427,6 +439,19 @@ module.exports = ({ catalogue }) => {
       } else {
         return res.status(400).json([]);
       }
+    })
+  );
+
+  /**
+   * Send Reject report
+   */
+  router.post(
+    "/reconciliation/sendreport",
+    tryCatch(async (req, res) => {
+      // const formation = req.body;
+      await reportRejected();
+
+      return res.json();
     })
   );
 
