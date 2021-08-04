@@ -103,6 +103,10 @@ export default [
         feature: "valider / invalider la correspondance",
         ref: "page_reconciliation_ps/validation_rejection",
       },
+      {
+        feature: "Envoyer rapport d'anomalies",
+        ref: "page_reconciliation_ps/send_rapport_anomalies",
+      },
     ],
   },
   {

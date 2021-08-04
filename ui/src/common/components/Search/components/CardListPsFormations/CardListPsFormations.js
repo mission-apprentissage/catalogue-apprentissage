@@ -48,7 +48,15 @@ export const CardListPsFormations = ({ data, onCardClicked, context }) => {
           </Box>
         </Box>
       </Box>
-      <Flex flexGrow={1} textAlign="right" flexDirection="column" justifyContent="space-between">
+      <Flex
+        flexGrow={1}
+        textAlign="right"
+        flexDirection="column"
+        justifyContent="space-between"
+        textOverflow="ellipsis"
+        whiteSpace="nowrap"
+        overflow="hidden"
+      >
         <Text textStyle="xs">CFD: {data.codes_cfd_mna.join(",")}</Text>
         <Flex justifyContent="flex-end">
           {context !== "reconciliation_ps_inconnus" && (

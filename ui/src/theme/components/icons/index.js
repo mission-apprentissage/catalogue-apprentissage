@@ -35,3 +35,4 @@ export * from "./ArrowRightDownLine";
 export * from "./FolderLine";
 export * from "./FolderOpenLine";
 export * from "./CloseCircleLine";
+export * from "./CheckLine";
