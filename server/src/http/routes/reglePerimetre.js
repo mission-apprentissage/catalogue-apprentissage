@@ -62,11 +62,26 @@ module.exports = () => {
     "/perimetre/regles",
     tryCatch(async (req, res) => {
       const plateforme = req.query?.plateforme;
+      const condition_integration = req.query?.condition_integration;
+      const nom_regle_complementaire = req.query?.nom_regle_complementaire;
       if (!plateforme) {
         throw Boom.badRequest();
       }
 
-      const result = await ReglePerimetre.find({ plateforme, is_deleted: { $ne: true } }).lean();
+      const filter = {
+        plateforme,
+        is_deleted: { $ne: true },
+      };
+
+      if (condition_integration) {
+        filter.condition_integration = condition_integration;
+      }
+
+      if (nom_regle_complementaire) {
+        filter.nom_regle_complementaire = nom_regle_complementaire === "null" ? null : nom_regle_complementaire;
+      }
+
+      const result = await ReglePerimetre.find(filter).lean();
       return res.json(result);
     })
   );
@@ -77,13 +92,14 @@ module.exports = () => {
       const niveau = req.query?.niveau;
       const diplome = req.query?.diplome;
       const regle_complementaire = req.query?.regle_complementaire;
+      const num_academie = req.query?.num_academie === "null" ? null : req.query?.num_academie;
 
-      if (!niveau || !diplome) {
+      if (!niveau) {
         throw Boom.badRequest();
       }
 
       const result = await ConvertedFormation.countDocuments(
-        getQueryFromRule({ niveau, diplome, regle_complementaire })
+        getQueryFromRule({ niveau, diplome, regle_complementaire, num_academie })
       );
       return res.json(result);
     })

@@ -6,6 +6,7 @@ import { StatusSelect } from "./StatusSelect";
 import { ActionsSelect } from "./ActionsSelect";
 import { CONDITIONS } from "../../../constants/conditionsIntegration";
 import { COMMON_STATUS } from "../../../constants/status";
+import { academies } from "../../../constants/academies";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -22,28 +23,49 @@ export const Line = ({
   onUpdateRule,
   onDeleteRule,
   rule = {},
+  academie,
 }) => {
   const [lineCount, setLineCount] = useState(count);
 
-  const { statut: status, _id: idRule, nom_regle_complementaire, regle_complementaire, condition_integration } = rule;
+  const {
+    statut: status,
+    _id: idRule,
+    nom_regle_complementaire,
+    regle_complementaire,
+    condition_integration,
+    statut_academies,
+    num_academie,
+  } = rule;
+
+  const isConditionChangeEnabled = !academie;
+  const isStatusChangeEnabled = academie
+    ? (!num_academie || String(num_academie) === academie) && condition_integration === CONDITIONS.PEUT_INTEGRER
+    : true;
+  const currentStatus = statut_academies?.[academie] ?? status;
+  const academieLabel = Object.values(academies).find(({ num_academie: num }) => num === num_academie)?.nom_academie;
 
   useEffect(() => {
     async function run() {
       try {
         const countUrl = `${endpointNewFront}/v1/entity/perimetre/regle/count`;
-        const count = await _get(
-          `${countUrl}?niveau=${niveau}&diplome=${diplome}&regle_complementaire=${regle_complementaire}`,
-          false
-        );
+        const params = new URLSearchParams({
+          niveau,
+          diplome,
+          ...(regle_complementaire && { regle_complementaire }),
+          ...(academie && { num_academie: academie }),
+        });
+        const count = await _get(`${countUrl}?${params}`, false);
         setLineCount(count ?? 0);
       } catch (e) {
         console.error(e);
       }
     }
-    if (nom_regle_complementaire && !count && shouldFetchCount) {
+    if (shouldFetchCount && (academie || (nom_regle_complementaire && !count))) {
       run();
+    } else {
+      setLineCount(count ?? 0);
     }
-  }, [count, diplome, niveau, regle_complementaire, nom_regle_complementaire, shouldFetchCount]);
+  }, [count, diplome, niveau, regle_complementaire, nom_regle_complementaire, shouldFetchCount, academie]);
 
   return (
     <Box
@@ -57,13 +79,17 @@ export const Line = ({
       <Flex px={8} py={3} alignItems="center" w={"full"}>
         <Flex grow={1} alignItems="center" pl={showIcon ? 2 : 0} pr={2} maxWidth={"50%"} isTruncated>
           {showIcon && <ArrowRightDownLine boxSize={3} mr={2} />}
-          <Text isTruncated>{label}</Text>
+          <Text isTruncated>
+            {num_academie ? `${academieLabel} (${num_academie}) - ` : ""}
+            {label}
+          </Text>
         </Flex>
         <Flex flexBasis={"50%"} justifyContent={"flex-start"} alignItems="center">
           <Flex minW={12}>{lineCount}</Flex>
           <Flex justifyContent={"space-between"}>
             <Flex px={2}>
               <ActionsSelect
+                disabled={!isConditionChangeEnabled}
                 value={condition_integration ?? CONDITIONS.NE_DOIT_PAS_INTEGRER}
                 onChange={async (e) => {
                   const action = e.target.value;
@@ -71,7 +97,6 @@ export const Line = ({
                     if (nom_regle_complementaire) {
                       await onUpdateRule({
                         _id: idRule,
-                        plateforme,
                         condition_integration: e.target.value,
                         statut: COMMON_STATUS.HORS_PERIMETRE,
                       });
@@ -82,7 +107,6 @@ export const Line = ({
                     if (idRule) {
                       await onUpdateRule({
                         _id: idRule,
-                        plateforme,
                         condition_integration: e.target.value,
                         statut: COMMON_STATUS.A_PUBLIER,
                       });
@@ -102,11 +126,31 @@ export const Line = ({
             </Flex>
             <Flex alignItems="center">
               <StatusSelect
+                disabled={!isStatusChangeEnabled}
                 plateforme={plateforme}
-                currentStatus={status}
+                currentStatus={currentStatus}
                 condition={condition_integration ?? CONDITIONS.NE_DOIT_PAS_INTEGRER}
                 onChange={async (e) => {
-                  await onUpdateRule({ _id: idRule, plateforme, statut: e.target.value });
+                  if (!academie) {
+                    // update the status for the rule
+                    await onUpdateRule({ _id: idRule, statut: e.target.value });
+                  } else {
+                    // update the status only for the selected academy
+                    const statusAcademies = {
+                      ...statut_academies,
+                      [academie]: e.target.value,
+                    };
+
+                    // if the status equals the national one just remove the academy specificity
+                    if (status === e.target.value) {
+                      delete statusAcademies[academie];
+                    }
+
+                    await onUpdateRule({
+                      _id: idRule,
+                      statut_academies: statusAcademies,
+                    });
+                  }
                 }}
               />
             </Flex>

@@ -39,6 +39,8 @@ const createSchema = Joi.object({
   nom_regle_complementaire: Joi.string(),
   condition_integration: conditionSchema.required(),
   duree: Joi.number().allow(null),
+  statut_academies: Joi.object().allow(null),
+  num_academie: Joi.number().allow(null),
 }).unknown();
 
 const updateSchema = Joi.object({
@@ -51,6 +53,7 @@ const updateSchema = Joi.object({
   nom_regle_complementaire: Joi.string(),
   condition_integration: conditionSchema,
   duree: Joi.number().allow(null),
+  statut_academies: Joi.object().allow(null),
 }).unknown();
 
 /**
@@ -62,6 +65,18 @@ const hasPerimeterRights = (user, plateforme) => {
     (plateforme === "affelnet" && user.acl?.includes("page_perimetre_af")) ||
     (plateforme === "parcoursup" && user.acl?.includes("page_perimetre_ps"))
   );
+};
+
+const hasAcademyRights = (user, { num_academie }, body) => {
+  const userAcademies = user.academie.split(",");
+  const hasAllAcademies = user.isAdmin || userAcademies.includes("-1");
+
+  if (!num_academie) {
+    const isEditingStatusOnly = body && Object.keys(body).length === 1 && body.statut_academies;
+    return hasAllAcademies || isEditingStatusOnly;
+  }
+
+  return hasAllAcademies || userAcademies.includes(`${num_academie}`.padStart(2, "0"));
 };
 
 module.exports = () => {
@@ -83,13 +98,13 @@ module.exports = () => {
         nom_regle_complementaire,
         condition_integration,
         duree,
+        statut_academies,
+        num_academie,
       } = body;
 
       if (!hasPerimeterRights(user, plateforme)) {
         throw Boom.unauthorized();
       }
-
-      // TODO @EPT handle num_academie and is_regle_nationale
 
       const regle = new ReglePerimetre({
         plateforme,
@@ -102,6 +117,8 @@ module.exports = () => {
         last_update_who: user.email,
         condition_integration,
         duree,
+        statut_academies: statut_academies ?? {},
+        num_academie,
       });
 
       await regle.save();
@@ -129,7 +146,7 @@ module.exports = () => {
         throw Boom.notFound();
       }
 
-      if (!hasPerimeterRights(user, rule.plateforme)) {
+      if (!hasPerimeterRights(user, rule.plateforme) || !hasAcademyRights(user, rule, body)) {
         throw Boom.unauthorized();
       }
 
@@ -164,7 +181,7 @@ module.exports = () => {
         throw Boom.notFound();
       }
 
-      if (!hasPerimeterRights(user, rule.plateforme)) {
+      if (!hasPerimeterRights(user, rule.plateforme) || !hasAcademyRights(user, rule)) {
         throw Boom.unauthorized();
       }
 

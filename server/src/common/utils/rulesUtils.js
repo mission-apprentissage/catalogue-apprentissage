@@ -27,13 +27,14 @@ const getCfdExpireRule = (duration) => {
   };
 };
 
-const getQueryFromRule = ({ niveau, diplome, regle_complementaire, duree }) => {
+const getQueryFromRule = ({ niveau, diplome, regle_complementaire, duree, num_academie }) => {
   return {
     ...toBePublishedRules,
     niveau,
     ...(diplome && { diplome }),
     ...(regle_complementaire && deserialize(regle_complementaire)),
     ...(duree && getCfdExpireRule(duree)),
+    ...(num_academie && { num_academie }),
   };
 };
 

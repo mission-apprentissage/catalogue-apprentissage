@@ -42,7 +42,6 @@ const createRulesInDB = async (rules, plateforme, statut) => {
       statut,
       regle_complementaire: serialize(rest),
       nom_regle_complementaire: Object.keys(rest).length > 0 ? "Sous-ensemble" : null,
-      is_regle_nationale: true,
       last_update_who: "mna",
       condition_integration: "peut intégrer",
       duree,

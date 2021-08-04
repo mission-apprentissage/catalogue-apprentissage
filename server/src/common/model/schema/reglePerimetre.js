@@ -38,7 +38,12 @@ const reglePerimetre = {
   num_academie: {
     type: Number,
     default: 0,
-    description: "Académie sur laquelle la règle s'applique, toutes par défaut",
+    description: "Académie pour laquelle la règle a été créé si il y en a une",
+  },
+  statut_academies: {
+    type: Object,
+    default: {},
+    description: "Les statuts à appliquer pour cette règle en académies",
   },
   regle_complementaire: {
     type: String,
@@ -60,12 +65,7 @@ const reglePerimetre = {
     type: Number,
     default: 0,
     description:
-      "En cas d'égalité sur la plateforme, niveau, diplome et num_academie, priorité de la règle pour savoir laquelle est la plus forte",
-  },
-  is_regle_nationale: {
-    type: Boolean,
-    default: true,
-    description: "True si la règle est une règle nationale (définie dans les textes de loi)",
+      "En cas d'égalité sur la plateforme, niveau et diplome, priorité de la règle pour savoir laquelle est la plus forte",
   },
   // history
   created_at: {

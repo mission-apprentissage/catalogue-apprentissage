@@ -27,7 +27,7 @@ export function computeQuery(queries) {
   return obj;
 }
 
-export const RuleBuilder = ({ regle_complementaire_query, regle_complementaire, onQueryChange }) => {
+export const RuleBuilder = ({ regle_complementaire_query, regle_complementaire, onQueryChange, isDisabled }) => {
   const { queryBuilderField: fields } = constantsReglesPerimetre;
 
   const templateRule = useMemo(
@@ -96,6 +96,7 @@ export const RuleBuilder = ({ regle_complementaire_query, regle_complementaire, 
     <>
       {rules.map((rule) => (
         <Rule
+          isDisabled={isDisabled}
           key={rule.key}
           combinator={rule.combinator}
           field={rule.field}
