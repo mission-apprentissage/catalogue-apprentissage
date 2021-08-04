@@ -1,4 +1,4 @@
-const { toBePublishedRules } = require("../../common/utils/referenceUtils");
+const { toBePublishedRules } = require("../../../common/utils/referenceUtils");
 
 const getMefRule = (regex) => {
   return { "bcn_mefs_10.mef10": { $regex: regex } };

@@ -4,8 +4,8 @@ const { diff } = require("deep-object-diff");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const report = require("../../../logic/reporter/report");
 const config = require("config");
-const { paginator } = require("../../common/utils/paginator");
-const { storeByChunks } = require("../../common/utils/reportUtils");
+const { paginator } = require("../../../common/utils/paginator");
+const { storeByChunks } = require("../../../common/utils/reportUtils");
 
 class Importer {
   constructor() {

@@ -1,4 +1,4 @@
-const { toBePublishedRules } = require("../../jobs/common/utils/referenceUtils");
+const { toBePublishedRules } = require("./referenceUtils");
 
 const serialize = (obj) => {
   return JSON.stringify(obj, (key, value) => {

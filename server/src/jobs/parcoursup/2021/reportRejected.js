@@ -4,7 +4,7 @@ const { runScript } = require("../../scriptWrapper");
 const report = require("../../../logic/reporter/report");
 const config = require("config");
 const { PsFormation2021 } = require("../../../common/model");
-const { storeByChunks } = require("../../common/utils/reportUtils");
+const { storeByChunks } = require("../../../common/utils/reportUtils");
 
 const createConversionReport = async (summary, rejetes) => {
   // save report in db

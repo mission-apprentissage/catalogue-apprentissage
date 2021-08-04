@@ -1,5 +1,5 @@
 const { getAffelnetCoverage, getEtablissementCoverage } = require("../../logic/controller/coverage");
-const { paginator } = require("../common/utils/paginator");
+const { paginator } = require("../../common/utils/paginator");
 const { AfFormation, Etablissement } = require("../../common/model");
 const { runScript } = require("../scriptWrapper");
 const logger = require("../../common/logger");

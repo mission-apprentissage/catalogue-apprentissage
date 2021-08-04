@@ -1,5 +1,5 @@
 const { runScript } = require("../../scriptWrapper");
-const { paginator } = require("../../common/utils/paginator");
+const { paginator } = require("../../../common/utils/paginator");
 const { PsReconciliation, PsFormation2021 } = require("../../../common/model");
 
 runScript(async () => {

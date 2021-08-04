@@ -3,7 +3,7 @@ const cluster = require("cluster");
 const updater = require("./updater/updater");
 const { runScript } = require("../scriptWrapper");
 const { ConvertedFormation, RcoFormation, SandboxFormation } = require("../../common/model/index");
-const { storeByChunks } = require("../common/utils/reportUtils");
+const { storeByChunks } = require("../../common/utils/reportUtils");
 const report = require("../../logic/reporter/report");
 const config = require("config");
 

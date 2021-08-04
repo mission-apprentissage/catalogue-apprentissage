@@ -1,6 +1,6 @@
 const { chunk } = require("lodash");
-const { Report } = require("../../../common/model/index");
-const { asyncForEach } = require("../../../common/utils/asyncUtils");
+const { Report } = require("../model/index");
+const { asyncForEach } = require("./asyncUtils");
 
 /**
  * Store by chunks to stay below the Mongo document max size (16Mb)

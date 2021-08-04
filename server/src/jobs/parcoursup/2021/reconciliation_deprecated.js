@@ -1,4 +1,4 @@
-const { paginator } = require("../../common/utils/paginator");
+const { paginator } = require("../../../common/utils/paginator");
 const { PsFormation2021 } = require("../../../common/model");
 const { runScript } = require("../../scriptWrapper");
 const { reconciliationParcoursup } = require("../../../logic/controller/reconciliation");
