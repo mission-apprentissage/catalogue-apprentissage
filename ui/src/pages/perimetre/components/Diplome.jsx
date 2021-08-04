@@ -12,15 +12,12 @@ export const Diplome = ({
   onUpdateRule,
   onDeleteRule,
   isExpanded,
+  academie,
 }) => {
   const { value, count, regles } = diplome;
 
   // check if it has one rule at diplome level
-  const [diplomeRule] = regles.filter(
-    ({ regle_complementaire, nom_regle_complementaire }) =>
-      regle_complementaire === "{}" && nom_regle_complementaire === null
-  );
-
+  const [diplomeRule] = regles.filter(({ nom_regle_complementaire }) => nom_regle_complementaire === null);
   const otherRules = regles.filter(({ nom_regle_complementaire }) => nom_regle_complementaire !== null);
 
   return (
@@ -36,6 +33,8 @@ export const Diplome = ({
         onUpdateRule={onUpdateRule}
         onDeleteRule={onDeleteRule}
         count={count}
+        academie={academie}
+        shouldFetchCount={isExpanded}
       />
       {otherRules?.length > 0 &&
         otherRules.map((rule) => (
@@ -52,6 +51,7 @@ export const Diplome = ({
             onDeleteRule={onDeleteRule}
             shouldFetchCount={isExpanded}
             showIcon={true}
+            academie={academie}
           />
         ))}
     </Box>

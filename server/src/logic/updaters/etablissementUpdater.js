@@ -1,6 +1,6 @@
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 const catalogue = require("../../common/components/catalogue");
-const { getPeriodeTags } = require("../../jobs/common/utils/rcoUtils");
+const { getPeriodeTags } = require("../../common/utils/rcoUtils");
 const { Etablissement } = require("../../common/model/index");
 
 const getRCOEtablissementFields = (rcoFormation, prefix) => {

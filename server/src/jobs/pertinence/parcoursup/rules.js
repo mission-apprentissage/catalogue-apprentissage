@@ -1,4 +1,4 @@
-const { toBePublishedRules } = require("../../common/utils/referenceUtils");
+const { toBePublishedRules } = require("../../../common/utils/referenceUtils");
 
 const aPublierVerifierAccesDirectPostBacRules = {
   ...toBePublishedRules,

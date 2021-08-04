@@ -3,6 +3,7 @@ const logger = require("../../../common/logger");
 const { getQueryFromRule } = require("../../../common/utils/rulesUtils");
 const { ReglePerimetre } = require("../../../common/model");
 const { updateTagsHistory } = require("../../../logic/updaters/tagsHistoryUpdater");
+const { asyncForEach } = require("../../../common/utils/asyncUtils");
 
 const run = async () => {
   // 1 - set "hors périmètre"
@@ -88,6 +89,33 @@ const run = async () => {
     },
     { $set: { last_update_at: Date.now(), parcoursup_statut: "à publier" } }
   );
+
+  // apply academy rules
+  const academieRules = [
+    ...aPublierVerifierAccesDirectPostBacRules,
+    ...aPublierValidationRecteurRules,
+    ...aPublierRules,
+  ].filter(({ statut_academies }) => statut_academies && Object.keys(statut_academies).length > 0);
+
+  await asyncForEach(academieRules, async (rule) => {
+    await asyncForEach(Object.entries(rule.statut_academies), async ([num_academie, status]) => {
+      await ConvertedFormation.updateMany(
+        {
+          parcoursup_statut: {
+            $in: [
+              "hors périmètre",
+              "à publier (vérifier accès direct postbac)",
+              "à publier (soumis à validation Recteur)",
+              "à publier",
+            ],
+          },
+          num_academie,
+          ...getQueryFromRule(rule),
+        },
+        { $set: { last_update_at: Date.now(), parcoursup_statut: status } }
+      );
+    });
+  });
 
   // Push entry in tags history
   await updateTagsHistory("parcoursup_statut");

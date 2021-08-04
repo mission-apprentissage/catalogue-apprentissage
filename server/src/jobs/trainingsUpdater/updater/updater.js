@@ -1,6 +1,6 @@
 const logger = require("../../../common/logger");
 const { mnaFormationUpdater } = require("../../../logic/updaters/mnaFormationUpdater");
-const { paginator } = require("../../common/utils/paginator");
+const { paginator } = require("../../../common/utils/paginator");
 const { RcoFormation, ConvertedFormation } = require("../../../common/model/index");
 
 const run = async (filter = {}, withCodePostalUpdate = false, limit = 10, maxItems = 100, offset = 0) => {

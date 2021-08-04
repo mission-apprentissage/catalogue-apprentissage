@@ -5,8 +5,8 @@ const report = require("../../../logic/reporter/report");
 const config = require("config");
 const { createOrUpdateEtablissements } = require("../../../logic/updaters/etablissementUpdater");
 
-const { paginator } = require("../../common/utils/paginator");
-const { storeByChunks } = require("../../common/utils/reportUtils");
+const { paginator } = require("../../../common/utils/paginator");
+const { storeByChunks } = require("../../../common/utils/reportUtils");
 const { diffFormation, buildUpdatesHistory } = require("../../../logic/common/utils/diffUtils");
 
 const formatToMnaFormation = (rcoFormation) => {

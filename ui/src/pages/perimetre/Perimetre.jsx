@@ -9,7 +9,9 @@ import {
   Center,
   Container,
   Flex,
+  FormLabel,
   Heading,
+  Select,
   Spinner,
   Text,
   useDisclosure,
@@ -24,6 +26,9 @@ import { Diplome } from "./components/Diplome";
 import { Headline } from "./components/Headline";
 import { useQuery } from "react-query";
 import { CONDITIONS } from "../../constants/conditionsIntegration";
+import { academies } from "../../constants/academies";
+import useAuth from "../../common/hooks/useAuth";
+import { hasAcademyRight, hasAllAcademiesRight, isUserAdmin } from "../../common/utils/rolesUtils";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -37,6 +42,8 @@ const createRule = async ({
   nom_regle_complementaire,
   condition_integration,
   duree,
+  statut_academies,
+  num_academie,
 }) => {
   return await _post(`${endpointNewFront}/entity/perimetre/regle`, {
     plateforme,
@@ -48,6 +55,8 @@ const createRule = async ({
     nom_regle_complementaire,
     condition_integration,
     duree,
+    statut_academies,
+    num_academie,
   });
 };
 
@@ -62,6 +71,7 @@ const updateRule = async ({
   nom_regle_complementaire,
   condition_integration,
   duree,
+  statut_academies,
 }) => {
   return await _put(`${endpointNewFront}/entity/perimetre/regle/${_id}`, {
     plateforme,
@@ -73,6 +83,7 @@ const updateRule = async ({
     nom_regle_complementaire,
     condition_integration,
     duree,
+    statut_academies,
   });
 };
 
@@ -133,10 +144,14 @@ const CountText = ({ totalFormationsCount, plateforme, niveaux, ...rest }) => {
 };
 
 export default ({ plateforme }) => {
+  const [user] = useAuth();
   const [niveaux, setNiveaux] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [currentRule, setCurrentRule] = useState(null);
+  const [currentAcademie, setCurrentAcademie] = useState(null);
+  const [niveauxCount, setNiveauxCount] = useState({});
+  const [academiesList, setAcademiesList] = useState([]);
 
   const title = `Conditions d’intégration des formations dans la plateforme ${plateforme}`;
   setTitle(title);
@@ -146,6 +161,19 @@ export default ({ plateforme }) => {
     refetchOnWindowFocus: false,
     staleTime: 60 * 60 * 1000, // 1 hour
   });
+
+  useEffect(() => {
+    if (user) {
+      if (isUserAdmin(user) || hasAllAcademiesRight(user)) {
+        setAcademiesList(Object.values(academies));
+        setCurrentAcademie(null);
+      } else {
+        setAcademiesList(Object.values(academies).filter(({ num_academie }) => hasAcademyRight(user, num_academie)));
+        const [firstAcademy] = user.academie?.split(",")?.map((academieStr) => Number(academieStr)) ?? [];
+        setCurrentAcademie(`${firstAcademy}`);
+      }
+    }
+  }, [user]);
 
   useEffect(() => {
     async function run() {
@@ -302,6 +330,33 @@ export default ({ plateforme }) => {
     });
   }, []);
 
+  useEffect(() => {
+    async function run() {
+      try {
+        const counts = {};
+        await Promise.all(
+          niveaux.map(async ({ niveau }) => {
+            const countUrl = `${endpointNewFront}/v1/entity/perimetre/regle/count`;
+            const params = new URLSearchParams({
+              niveau: niveau.value,
+              num_academie: currentAcademie,
+            });
+            counts[niveau.value] = await _get(`${countUrl}?${params}`, false);
+          })
+        );
+        setNiveauxCount(counts);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    if (currentAcademie) {
+      run();
+    } else {
+      setNiveauxCount({});
+    }
+  }, [currentAcademie, niveaux]);
+
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
@@ -324,12 +379,35 @@ export default ({ plateforme }) => {
             {niveaux.length !== 0 && (
               <>
                 <Flex
-                  justifyContent={"flex-end"}
+                  justifyContent={"space-between"}
                   py={4}
                   borderTop={"1px solid"}
                   borderBottom={"1px solid"}
                   borderColor={"grey.300"}
                 >
+                  <Flex alignItems={"center"}>
+                    <FormLabel htmlFor="academie">Afficher les conditions :</FormLabel>
+                    <Select
+                      id={"academie"}
+                      name={"academie"}
+                      w={"auto"}
+                      onChange={(e) => {
+                        const academie = e.target.value === "national" ? null : e.target.value;
+                        setCurrentAcademie(academie);
+                      }}
+                    >
+                      {user && (isUserAdmin(user) || hasAllAcademiesRight(user)) && (
+                        <option value={"national"}>au National</option>
+                      )}
+                      {academiesList.map(({ nom_academie, num_academie }) => {
+                        return (
+                          <option key={num_academie} value={num_academie}>
+                            de {nom_academie} ({num_academie})
+                          </option>
+                        );
+                      })}
+                    </Select>
+                  </Flex>
                   <Button
                     variant="primary"
                     onClick={() => {
@@ -366,8 +444,8 @@ export default ({ plateforme }) => {
                                     <Text textStyle={"h4"}>Niveau {niveau.value}</Text>
                                   </Flex>
                                   <Text textStyle={"rf-text"}>
-                                    {diplomes.length + rulesCount} diplômes et titres ce qui représente {niveau.count}{" "}
-                                    formations
+                                    {diplomes.length + rulesCount} diplômes et titres ce qui représente{" "}
+                                    {niveauxCount[niveau.value] ?? niveau.count} formations
                                   </Text>
                                 </Flex>
                               </AccordionButton>
@@ -385,6 +463,7 @@ export default ({ plateforme }) => {
                                     onUpdateRule={onUpdateRule}
                                     onDeleteRule={onDeleteRule}
                                     isExpanded={isExpanded}
+                                    academie={currentAcademie}
                                   />
                                 ))}
                               </AccordionPanel>
@@ -409,6 +488,7 @@ export default ({ plateforme }) => {
             onDeleteRule={onDeleteRule}
             onCreateRule={onCreateRule}
             plateforme={plateforme}
+            academie={currentAcademie}
           />
         </Container>
       </Box>

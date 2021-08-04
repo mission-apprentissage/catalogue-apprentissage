@@ -1,5 +1,5 @@
 const { getParcoursupCoverage, getEtablissementCoverage } = require("../../../logic/controller/coverage");
-const { paginator } = require("../../common/utils/paginator");
+const { paginator } = require("../../../common/utils/paginator");
 const { PsFormation, Etablissement } = require("../../../common/model");
 const { runScript } = require("../../scriptWrapper");
 const logger = require("../../../common/logger");

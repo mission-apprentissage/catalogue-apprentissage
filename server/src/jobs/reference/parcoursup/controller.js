@@ -1,6 +1,6 @@
 const { ConvertedFormation, PsReconciliation } = require("../../../common/model");
 const logger = require("../../../common/logger");
-const { paginator } = require("../../common/utils/paginator");
+const { paginator } = require("../../../common/utils/paginator");
 
 const run = async () => {
   // 1 - reset "publié" to "hors périmètre"

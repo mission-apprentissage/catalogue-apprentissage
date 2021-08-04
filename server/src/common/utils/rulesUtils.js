@@ -1,4 +1,4 @@
-const { toBePublishedRules } = require("../../jobs/common/utils/referenceUtils");
+const { toBePublishedRules } = require("./referenceUtils");
 
 const serialize = (obj) => {
   return JSON.stringify(obj, (key, value) => {
@@ -27,13 +27,14 @@ const getCfdExpireRule = (duration) => {
   };
 };
 
-const getQueryFromRule = ({ niveau, diplome, regle_complementaire, duree }) => {
+const getQueryFromRule = ({ niveau, diplome, regle_complementaire, duree, num_academie }) => {
   return {
     ...toBePublishedRules,
     niveau,
     ...(diplome && { diplome }),
     ...(regle_complementaire && deserialize(regle_complementaire)),
     ...(duree && getCfdExpireRule(duree)),
+    ...(num_academie && { num_academie }),
   };
 };
 

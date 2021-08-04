@@ -26,9 +26,15 @@ const esQuery = (queries) => {
     });
 };
 
-const Combinator = ({ combinator, setCombinator, combinators }) => {
+const Combinator = ({ combinator, setCombinator, combinators, isDisabled }) => {
   return (
-    <Select maxWidth={90} m={"5px"} value={combinator} onChange={(e) => setCombinator(e.target.value)}>
+    <Select
+      isDisabled={isDisabled}
+      maxWidth={90}
+      m={"5px"}
+      value={combinator}
+      onChange={(e) => setCombinator(e.target.value)}
+    >
       {combinators.map((c) => (
         <option key={c.value} value={c.value}>
           {c.text}
@@ -38,8 +44,9 @@ const Combinator = ({ combinator, setCombinator, combinators }) => {
   );
 };
 
-const DeleteButton = ({ deleteFn }) => (
+const DeleteButton = ({ deleteFn, isDisabled }) => (
   <Button
+    isDisabled={isDisabled}
     variant={"secondary"}
     m={"5px"}
     p={0}
@@ -54,13 +61,13 @@ const DeleteButton = ({ deleteFn }) => (
   </Button>
 );
 
-const AddButton = ({ onAdd }) => (
-  <Button ml={"5px"} variant={"secondary"} height={8} fontSize={"zeta"} onClick={onAdd}>
+const AddButton = ({ onAdd, isDisabled }) => (
+  <Button isDisabled={isDisabled} ml={"5px"} variant={"secondary"} height={8} fontSize={"zeta"} onClick={onAdd}>
     Ajouter une condition
   </Button>
 );
 
-const RuleInput = ({ suggestionQuery, field, collection, value, setValue, noSuggest }) => {
+const RuleInput = ({ suggestionQuery, field, collection, value, setValue, noSuggest, isDisabled }) => {
   const [suggestions, setSuggestions] = useState([]);
 
   // Autocomplete zone.
@@ -94,19 +101,26 @@ const RuleInput = ({ suggestionQuery, field, collection, value, setValue, noSugg
         inputProps={{
           value,
           onChange: (event, { newValue }) => setValue(newValue),
+          isDisabled,
         }}
       />
     );
   }
   return (
     <InputGroup>
-      <Input value={value} m="5px" autoComplete="new-password" onChange={(e) => setValue(e.target.value)} />
+      <Input
+        isDisabled={isDisabled}
+        value={value}
+        m="5px"
+        autoComplete="new-password"
+        onChange={(e) => setValue(e.target.value)}
+      />
       {value && <InputRightElement m={"5px"} children={<CloseCircleLine boxSize={4} onClick={() => setValue("")} />} />}
     </InputGroup>
   );
 };
 
-export default function Rule({ fields, operators, combinators, collection, noSuggest, ...props }) {
+export default function Rule({ fields, operators, combinators, collection, noSuggest, isDisabled, ...props }) {
   // const [{ url, headers }] = useSharedContext();
   const [combinator, setCombinator] = useState(props.combinator);
   const [field, setField] = useState(props.field);
@@ -133,9 +147,15 @@ export default function Rule({ fields, operators, combinators, collection, noSug
     <>
       <Flex mb={2}>
         {!!props.index && (
-          <Combinator combinator={combinator} combinators={combinators} setCombinator={setCombinator} />
+          <Combinator
+            isDisabled={isDisabled}
+            combinator={combinator}
+            combinators={combinators}
+            setCombinator={setCombinator}
+          />
         )}
         <Select
+          isDisabled={isDisabled}
           width={"auto"}
           margin={"5px"}
           value={fields.findIndex((e) => String(e.value) === String(field))}
@@ -149,7 +169,13 @@ export default function Rule({ fields, operators, combinators, collection, noSug
             );
           })}
         </Select>
-        <Select width={"auto"} margin={"5px"} value={operator} onChange={(e) => setOperator(e.target.value)}>
+        <Select
+          isDisabled={isDisabled}
+          width={"auto"}
+          margin={"5px"}
+          value={operator}
+          onChange={(e) => setOperator(e.target.value)}
+        >
           {operators.map((o) => {
             return (
               <option key={o.value} value={o.value}>
@@ -161,6 +187,7 @@ export default function Rule({ fields, operators, combinators, collection, noSug
 
         {currentOperator?.useInput && (
           <RuleInput
+            isDisabled={isDisabled}
             collection={collection}
             field={field}
             value={value}
@@ -170,9 +197,9 @@ export default function Rule({ fields, operators, combinators, collection, noSug
           />
         )}
 
-        {!!props.index && <DeleteButton deleteFn={() => props.onDelete(props.index)} />}
+        {!!props.index && <DeleteButton deleteFn={() => props.onDelete(props.index)} isDisabled={isDisabled} />}
       </Flex>
-      {props.index === props.length - 1 && <AddButton onAdd={props.onAdd} />}
+      {props.index === props.length - 1 && <AddButton onAdd={props.onAdd} isDisabled={isDisabled} />}
     </>
   );
 }

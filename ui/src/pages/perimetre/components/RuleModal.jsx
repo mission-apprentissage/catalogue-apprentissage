@@ -36,6 +36,7 @@ import { COMMON_STATUS } from "../../../constants/status";
 import { useQuery } from "react-query";
 import { _get } from "../../../common/httpClient";
 import * as Yup from "yup";
+import { academies } from "../../../constants/academies";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -62,13 +63,14 @@ const UpdatesHistory = ({ label, value }) => {
     <Flex flexDirection={"column"} w={"full"} h={"full"}>
       <Text mb={1}>{label} :</Text>
       <Flex p={2} bg={"grey.750"} color="grey.100" h={"full"} flexDirection={"column"}>
-        {Object.entries(value)
-          .filter(([key]) => key !== "regle_complementaire_query")
-          .map(([key, value]) => (
-            <Text as={"span"} key={key} overflowWrap={"anywhere"}>
-              <strong>{humanReadablekeyMap[key] ?? key}:</strong> "{value}"
-            </Text>
-          ))}
+        {value &&
+          Object.entries(value)
+            .filter(([key]) => key !== "regle_complementaire_query")
+            .map(([key, value]) => (
+              <Text as={"span"} key={key} overflowWrap={"anywhere"}>
+                <strong>{humanReadablekeyMap[key] ?? key}:</strong> {JSON.stringify(value)}
+              </Text>
+            ))}
       </Flex>
     </Flex>
   );
@@ -83,7 +85,7 @@ const validationSchema = Yup.object().shape({
   duration: Yup.number().nullable(),
 });
 
-const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreateRule, plateforme }) => {
+const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreateRule, plateforme, academie }) => {
   const isCreating = !rule;
 
   const {
@@ -97,18 +99,47 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
     condition_integration = "",
     niveau,
     duree,
+    statut_academies,
+    num_academie,
   } = rule ?? {};
 
   const initialRef = React.useRef();
+
+  const isDisabled = !!academie && !isCreating && (!num_academie || String(num_academie) !== academie);
+  const isStatusChangeEnabled =
+    isCreating ||
+    (academie
+      ? (!num_academie || String(num_academie) === academie) && condition_integration === CONDITIONS.PEUT_INTEGRER
+      : true);
+  const isConditionChangeEnabled = !academie;
+  const initialCondition = academie && isCreating ? CONDITIONS.PEUT_INTEGRER : condition_integration;
+  const academieLabel = Object.values(academies).find(({ num_academie: num }) => num === num_academie)?.nom_academie;
+
+  const niveauxURL = `${endpointNewFront}/v1/entity/perimetre/niveau`;
+  const { data: niveauxData } = useQuery("niveaux", () => _get(niveauxURL, false), {
+    refetchOnWindowFocus: false,
+    staleTime: 60 * 60 * 1000, // 1 hour
+  });
+
+  const params = new URLSearchParams({
+    plateforme,
+    condition_integration: "peut intégrer",
+    nom_regle_complementaire: null,
+  });
+
+  const reglesUrl = `${endpointNewFront}/v1/entity/perimetre/regles?${params}`;
+  const { data: diplomesRegles } = useQuery("diplomesRegles", () => _get(reglesUrl, false), {
+    refetchOnWindowFocus: false,
+  });
 
   const { values, handleChange, handleSubmit, isSubmitting, setFieldValue, resetForm, errors, touched } = useFormik({
     enableReinitialize: true,
     initialValues: {
       name: nom_regle_complementaire,
-      status: statut,
+      status: statut_academies?.[academie] ?? statut,
       regle: regle_complementaire,
       query: regle_complementaire_query,
-      condition: condition_integration,
+      condition: initialCondition,
       niveau: niveau,
       diplome: diplome,
       duration: duree ?? "",
@@ -117,29 +148,76 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
     onSubmit: ({ name, status, regle, condition, niveau, diplome, duration, query }) => {
       return new Promise(async (resolve) => {
         if (idRule) {
-          await onUpdateRule({
-            _id: idRule,
-            niveau,
-            diplome,
-            nom_regle_complementaire: name,
-            statut: status,
-            regle_complementaire: regle,
-            regle_complementaire_query: query,
-            condition_integration: condition,
-            duree: duration ? Number(duration) : null,
-          });
+          if (!academie) {
+            await onUpdateRule({
+              _id: idRule,
+              niveau,
+              diplome,
+              nom_regle_complementaire: name,
+              statut: status,
+              regle_complementaire: regle,
+              regle_complementaire_query: query,
+              condition_integration: condition,
+              duree: duration ? Number(duration) : null,
+            });
+          } else {
+            // update the status only for the selected academy
+            const statusAcademies = {
+              ...statut_academies,
+              [academie]: status,
+            };
+
+            // if the status equals the national one just remove the academy specificity
+            if (statut === status) {
+              delete statusAcademies[academie];
+            }
+
+            await onUpdateRule({
+              _id: idRule,
+              niveau,
+              diplome,
+              nom_regle_complementaire: name,
+              statut: status,
+              regle_complementaire: regle,
+              regle_complementaire_query: query,
+              duree: duration ? Number(duration) : null,
+              statut_academies: statusAcademies,
+            });
+          }
         } else {
-          await onCreateRule({
-            plateforme,
-            niveau,
-            diplome,
-            nom_regle_complementaire: name,
-            statut: status,
-            regle_complementaire: regle,
-            regle_complementaire_query: query,
-            condition_integration: condition,
-            duree: duration ? Number(duration) : null,
-          });
+          if (!academie) {
+            await onCreateRule({
+              plateforme,
+              niveau,
+              diplome,
+              nom_regle_complementaire: name,
+              statut: status,
+              regle_complementaire: regle,
+              regle_complementaire_query: query,
+              condition_integration: condition,
+              duree: duration ? Number(duration) : null,
+            });
+          } else {
+            // create rule for an academy, that will be visible at national level
+            // set national status to the same as the enclosing diploma
+            const nationalStatus = diplomesRegles.find(({ diplome: dip }) => dip === diplome).statut;
+
+            await onCreateRule({
+              plateforme,
+              niveau,
+              diplome,
+              nom_regle_complementaire: name,
+              statut: nationalStatus,
+              regle_complementaire: regle,
+              regle_complementaire_query: query,
+              condition_integration: condition,
+              duree: duration ? Number(duration) : null,
+              num_academie: academie,
+              statut_academies: {
+                [academie]: status,
+              },
+            });
+          }
         }
 
         resetForm();
@@ -153,12 +231,6 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
     resetForm();
     onClose();
   };
-
-  const niveauxURL = `${endpointNewFront}/v1/entity/perimetre/niveau`;
-  const { data: niveauxData } = useQuery("niveaux", () => _get(niveauxURL, false), {
-    refetchOnWindowFocus: false,
-    staleTime: 60 * 60 * 1000, // 1 hour
-  });
 
   return (
     <Modal isOpen={isOpen} onClose={close} size="5xl" initialFocusRef={initialRef}>
@@ -193,6 +265,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                 ) : (
                   <>
                     <Text as={"span"} ml={4}>
+                      {num_academie ? `${academieLabel} (${num_academie}) - ` : ""}
                       {values.name}
                     </Text>
                     <Text ml={4} mt={2} as={"span"} fontSize="1rem" fontWeight={400}>
@@ -222,6 +295,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                         <Flex flexDirection={"column"} alignItems={"flex-start"}>
                           <FormLabel htmlFor="niveau">Niveau</FormLabel>
                           <Select
+                            isDisabled={isDisabled}
                             id={"niveau"}
                             name={"niveau"}
                             onChange={handleChange}
@@ -247,6 +321,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                         <Flex flexDirection={"column"} alignItems={"flex-start"} mt={8}>
                           <FormLabel htmlFor={"diplome"}>Type de diplôme ou titre</FormLabel>
                           <Select
+                            isDisabled={isDisabled}
                             id={"diplome"}
                             name={"diplome"}
                             onChange={handleChange}
@@ -256,7 +331,13 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                           >
                             {niveauxData
                               .find(({ niveau: { value } }) => value === values.niveau)
-                              ?.diplomes.map(({ value }) => {
+                              ?.diplomes.filter(({ value }) => {
+                                if (!academie) {
+                                  return true;
+                                }
+                                return diplomesRegles.some(({ diplome }) => diplome === value);
+                              })
+                              .map(({ value }) => {
                                 return (
                                   <option key={value} value={value}>
                                     {value}
@@ -273,6 +354,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                       <Flex flexDirection={"column"} mt={8} alignItems={"flex-start"}>
                         <FormLabel htmlFor={"duration"}>Durée (en années)</FormLabel>
                         <NumberInput
+                          isDisabled={isDisabled}
                           id="duration"
                           name="duration"
                           size="md"
@@ -302,6 +384,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                       </Text>
                       <Box bg={"grey.100"} p={4} borderLeft={"4px solid"} borderColor={"bluefrance"}>
                         <RuleBuilder
+                          isDisabled={isDisabled}
                           regle_complementaire_query={values.query}
                           regle_complementaire={values.regle}
                           onQueryChange={(regle, query) => {
@@ -315,7 +398,14 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                     <FormControl isInvalid={errors.name && touched.name} isRequired>
                       <Flex flexDirection={"column"} mt={16} alignItems={"flex-start"}>
                         <FormLabel htmlFor={"name"}>Nom du diplôme ou titre</FormLabel>
-                        <Input id="name" name="name" value={values.name ?? ""} onChange={handleChange} w={"auto"} />
+                        <Input
+                          isDisabled={isDisabled}
+                          id="name"
+                          name="name"
+                          value={values.name ?? ""}
+                          onChange={handleChange}
+                          w={"auto"}
+                        />
                         <FormErrorMessage>{errors.name}</FormErrorMessage>
                       </Flex>
                     </FormControl>
@@ -324,6 +414,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                       <Flex flexDirection={"column"} mt={8} alignItems={"flex-start"}>
                         <FormLabel htmlFor={"condition"}>Condition d'intégration</FormLabel>
                         <ActionsSelect
+                          isDisabled={!isConditionChangeEnabled}
                           id={"condition"}
                           name="condition"
                           value={values.condition}
@@ -347,6 +438,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                       <Flex flexDirection={"column"} mt={8} alignItems={"flex-start"}>
                         <FormLabel htmlFor={"status"}>Règle de publication</FormLabel>
                         <StatusSelect
+                          isDisabled={!isStatusChangeEnabled}
                           id={"status"}
                           name="status"
                           plateforme={plateforme}
@@ -366,6 +458,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                 <Flex justifyContent={isCreating ? "flex-end" : "space-between"} mt={8}>
                   {!isCreating && (
                     <Button
+                      isDisabled={isDisabled}
                       variant="outline"
                       colorScheme="red"
                       borderRadius="none"
@@ -384,6 +477,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                       Annuler
                     </Button>
                     <Button
+                      isDisabled={!isStatusChangeEnabled}
                       variant={"primary"}
                       type={"submit"}
                       onClick={handleSubmit}
