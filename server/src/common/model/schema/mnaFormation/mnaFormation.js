@@ -442,6 +442,11 @@ const mnaFormationSchema = {
     default: null,
     description: "Parcoursup : raison de dépublication",
   },
+  distance_lieu_formation_etablissement_formateur: {
+    type: Number,
+    default: null,
+    description: "distance entre le Lieu de formation et l'établissement formateur",
+  },
 };
 
 module.exports = mnaFormationSchema;

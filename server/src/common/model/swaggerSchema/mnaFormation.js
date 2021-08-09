@@ -745,6 +745,11 @@ module.exports = {
         default: "null",
         description: "Parcoursup : raison de dépublication",
       },
+      distance_lieu_formation_etablissement_formateur: {
+        type: "number",
+        default: "null",
+        description: "distance entre le Lieu de formation et l'établissement formateur",
+      },
       _id: {
         type: "string",
         pattern: "^[0-9a-fA-F]{24}$",

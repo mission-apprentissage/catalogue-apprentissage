@@ -23,9 +23,13 @@ const geoMapper = async (coordinates = "", codeInsee) => {
 
     // check result is in the same town
     if (codeInsee !== rest.code_commune_insee) {
-      throw new Error(
-        `geoMapper code Insee inconsistent results : original code ${codeInsee}, code given by api adresse ${rest.code_commune_insee}`
-      );
+      return {
+        result: null,
+        messages: {
+          errorType: "Insee",
+          error: `geoMapper code Insee inconsistent results : original code ${codeInsee}, code given by api adresse ${rest.code_commune_insee}`,
+        },
+      };
     }
 
     return {
