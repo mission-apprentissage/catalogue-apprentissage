@@ -462,6 +462,8 @@ const etablissementSchema = {
   ds_questions_email: {
     type: String,
     default: null,
+    select: false,
+    noIndex: true,
     description: "Email du contact saisi dans Démarche Simplifiée",
   },
   ds_questions_uai: {

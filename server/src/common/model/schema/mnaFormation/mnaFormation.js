@@ -189,6 +189,8 @@ const mnaFormationSchema = {
   email: {
     type: String,
     default: null,
+    select: false,
+    noIndex: true,
     description: "Email du contact pour cette formation",
   },
   parcoursup_reference: {
