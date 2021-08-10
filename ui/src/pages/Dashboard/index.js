@@ -36,7 +36,7 @@ export default () => {
               frameBorder="0"
               style={{ height: "500vh", width: "100%" }}
               title="Statistiques Metabase"
-              allowtransparency
+              allowtransparency={"true"}
             />
           )}
         </Container>
