@@ -61,12 +61,13 @@ const aPublierSoumisAValidationRules = {
       duree: 1,
       $and: [getMefRule(/11$/), getMefRule(/^253/)],
     },
-    {
-      niveau: "3 (CAP...)",
-      diplome: "MENTION COMPLEMENTAIRE AGRICOLE", // FIXME J'ai pas ça
-      duree: 1,
-      $and: [getMefRule(/11$/), getMefRule(/^274/)],
-    },
+    //  FIXME ce diplome n'existe pas
+    // {
+    //   niveau: "3 (CAP...)",
+    //   diplome: "MENTION COMPLEMENTAIRE AGRICOLE",
+    //   duree: 1,
+    //   $and: [getMefRule(/11$/), getMefRule(/^274/)],
+    // },
   ],
 };
 

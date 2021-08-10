@@ -34,6 +34,7 @@ export const StatusSelect = ({ plateforme, currentStatus, condition, onChange, s
       }}
       value={currentStatus}
       onChange={onChange}
+      iconColor={rest.disabled ? "gray.400" : "gray.800"}
     >
       {statusList?.map((status) => (
         <option value={status} key={status}>

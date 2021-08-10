@@ -7,6 +7,7 @@ import { ActionsSelect } from "./ActionsSelect";
 import { CONDITIONS } from "../../../constants/conditionsIntegration";
 import { COMMON_STATUS } from "../../../constants/status";
 import { academies } from "../../../constants/academies";
+import InfoTooltip from "../../../common/components/InfoTooltip";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -43,6 +44,8 @@ export const Line = ({
     : true;
   const currentStatus = statut_academies?.[academie] ?? status;
   const academieLabel = Object.values(academies).find(({ num_academie: num }) => num === num_academie)?.nom_academie;
+
+  const isAcademySpecific = (num_academie && String(num_academie) === academie) || !!statut_academies?.[academie];
 
   useEffect(() => {
     async function run() {
@@ -153,6 +156,13 @@ export const Line = ({
                   }
                 }}
               />
+              {isAcademySpecific && (
+                <Box px={4}>
+                  <InfoTooltip
+                    description={"sur ce diplôme et titre la règle d'intégration est spécifique à cette académie"}
+                  />
+                </Box>
+              )}
             </Flex>
           </Flex>
         </Flex>

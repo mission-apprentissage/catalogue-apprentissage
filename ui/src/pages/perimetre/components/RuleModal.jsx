@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -85,9 +85,18 @@ const validationSchema = Yup.object().shape({
   duration: Yup.number().nullable(),
 });
 
-const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreateRule, plateforme, academie }) => {
-  const isCreating = !rule;
+const getCount = async ({ niveau, diplome, regle_complementaire, academie }) => {
+  const countUrl = `${endpointNewFront}/v1/entity/perimetre/regle/count`;
+  const params = new URLSearchParams({
+    niveau,
+    diplome,
+    ...(regle_complementaire && { regle_complementaire }),
+    ...(academie && { num_academie: academie }),
+  });
+  return await _get(`${countUrl}?${params}`, false);
+};
 
+const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreateRule, plateforme, academie }) => {
   const {
     _id: idRule,
     diplome,
@@ -103,6 +112,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
     num_academie,
   } = rule ?? {};
 
+  const isCreating = !rule;
   const initialRef = React.useRef();
 
   const isDisabled = !!academie && !isCreating && (!num_academie || String(num_academie) !== academie);
@@ -232,8 +242,28 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
     onClose();
   };
 
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const run = async () => {
+      const result = await getCount({
+        niveau: values.niveau,
+        diplome: values.diplome,
+        regle_complementaire: values.regle,
+        academie,
+      });
+      setCount(result);
+    };
+
+    if (values.niveau && values.diplome) {
+      run();
+    } else {
+      setCount(0);
+    }
+  }, [values.niveau, values.diplome, values.regle, academie]);
+
   return (
-    <Modal isOpen={isOpen} onClose={close} size="5xl" initialFocusRef={initialRef}>
+    <Modal isOpen={isOpen} onClose={close} size="6xl" initialFocusRef={initialRef}>
       <ModalOverlay />
       <ModalContent bg="white" color="primaryText" borderRadius="none" ref={initialRef}>
         <Button
@@ -352,7 +382,13 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
 
                     <FormControl isInvalid={errors.duration && touched.duration}>
                       <Flex flexDirection={"column"} mt={8} alignItems={"flex-start"}>
-                        <FormLabel htmlFor={"duration"}>Durée (en années)</FormLabel>
+                        <FormLabel htmlFor={"duration"} mb={1}>
+                          Durée (en années)
+                        </FormLabel>
+                        <Text color={"gray.600"} fontSize={"omega"} mb={4}>
+                          Indiquer la durée de la formation permet d'éviter des inscriptions sur une session de
+                          formation qui arrive à expiration
+                        </Text>
                         <NumberInput
                           isDisabled={isDisabled}
                           id="duration"
@@ -382,7 +418,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                       <Text as={"p"} mb={1}>
                         Autre(s) critère(s)
                       </Text>
-                      <Box bg={"grey.100"} p={4} borderLeft={"4px solid"} borderColor={"bluefrance"}>
+                      <Box bg={"grey.100"} p={4} borderLeft={"4px solid"} borderColor={"bluefrance"} w={"full"}>
                         <RuleBuilder
                           isDisabled={isDisabled}
                           regle_complementaire_query={values.query}
@@ -404,7 +440,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                           name="name"
                           value={values.name ?? ""}
                           onChange={handleChange}
-                          w={"auto"}
+                          w={"full"}
                         />
                         <FormErrorMessage>{errors.name}</FormErrorMessage>
                       </Flex>
@@ -452,6 +488,10 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                         <FormErrorMessage>{errors.status}</FormErrorMessage>
                       </Flex>
                     </FormControl>
+
+                    <Flex justifyContent={"flex-end"}>
+                      <Text>{count} formations ciblées par cet ensemble de conditions</Text>
+                    </Flex>
                   </Flex>
                 </Box>
 

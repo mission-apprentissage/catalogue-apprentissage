@@ -91,7 +91,7 @@ const RuleInput = ({ suggestionQuery, field, collection, value, setValue, noSugg
         getSuggestionValue={(suggestion) => suggestion}
         renderSuggestion={(suggestion) => <div>{suggestion}</div>}
         renderInputComponent={(inputProps) => (
-          <InputGroup>
+          <InputGroup flex={"1 1 auto"} w={"auto"}>
             <Input m="5px" autoComplete="new-password" {...inputProps} />
             {inputProps.value && (
               <InputRightElement m={"5px"} children={<CloseCircleLine boxSize={4} onClick={() => setValue("")} />} />
@@ -107,7 +107,7 @@ const RuleInput = ({ suggestionQuery, field, collection, value, setValue, noSugg
     );
   }
   return (
-    <InputGroup>
+    <InputGroup flex={"1 1 auto"} w={"auto"}>
       <Input
         isDisabled={isDisabled}
         value={value}
@@ -155,6 +155,7 @@ export default function Rule({ fields, operators, combinators, collection, noSug
           />
         )}
         <Select
+          flex={"0 1 auto"}
           isDisabled={isDisabled}
           width={"auto"}
           margin={"5px"}
@@ -170,6 +171,7 @@ export default function Rule({ fields, operators, combinators, collection, noSug
           })}
         </Select>
         <Select
+          flex={"0 1 auto"}
           isDisabled={isDisabled}
           width={"auto"}
           margin={"5px"}

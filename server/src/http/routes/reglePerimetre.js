@@ -109,21 +109,32 @@ module.exports = () => {
     "/perimetre/regles/integration/count",
     tryCatch(async (req, res) => {
       const plateforme = req.query?.plateforme;
+      const num_academie = req.query?.num_academie;
+      const niveau = req.query?.niveau;
 
       if (!plateforme) {
         throw Boom.badRequest();
       }
 
-      const rules = await ReglePerimetre.find({
+      const filter = {
         plateforme,
+        ...(niveau && niveau !== "null" ? { niveau } : {}),
         condition_integration: { $in: ["peut intégrer", "doit intégrer"] },
         is_deleted: { $ne: true },
-      }).lean();
+      };
+
+      const rules = await ReglePerimetre.find(filter).lean();
+
+      if (rules.length === 0) {
+        return res.json({ nbRules: rules.length, nbFormations: 0 });
+      }
 
       const result = await ConvertedFormation.countDocuments({
+        ...(num_academie && num_academie !== "null" ? { num_academie } : {}),
         $or: rules.map(getQueryFromRule),
       });
-      return res.json(result);
+
+      return res.json({ nbRules: rules.length, nbFormations: result });
     })
   );
 
