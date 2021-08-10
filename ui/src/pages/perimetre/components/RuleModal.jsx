@@ -430,6 +430,11 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                         />
                       </Box>
                     </Flex>
+                    <Flex justifyContent={"flex-start"} mt={4}>
+                      <Text fontWeight={700} color={"info"}>
+                        {count} formations correspondent à l’ensemble des critères sélectionnés
+                      </Text>
+                    </Flex>
 
                     <FormControl isInvalid={errors.name && touched.name} isRequired>
                       <Flex flexDirection={"column"} mt={16} alignItems={"flex-start"}>
@@ -488,10 +493,6 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                         <FormErrorMessage>{errors.status}</FormErrorMessage>
                       </Flex>
                     </FormControl>
-
-                    <Flex justifyContent={"flex-end"}>
-                      <Text>{count} formations ciblées par cet ensemble de conditions</Text>
-                    </Flex>
                   </Flex>
                 </Box>
 
