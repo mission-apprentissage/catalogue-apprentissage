@@ -246,11 +246,11 @@ const etablissementSchema = {
     description: "L'établissement est présent ou pas dans le fichier dataDock",
   },
 
-  // info_qualiopi_info: {
-  //   type: String,
-  //   default: null,
-  //   description: "L'établissement est présent ou pas dans le fichier qualiopi",
-  // },
+  info_qualiopi_info: {
+    type: String,
+    default: null,
+    description: "L'établissement est présent ou pas dans le fichier qualiopi",
+  },
 
   computed_type: {
     type: String,
@@ -582,6 +582,21 @@ const etablissementSchema = {
     type: String,
     implicit_type: "geo_point",
     description: "Latitude et longitude de l'établissement RCO",
+  },
+  idcc: {
+    type: Number,
+    default: 0,
+    description: "id convention collective",
+  },
+  opco_nom: {
+    type: String,
+    default: null,
+    description: "Nom de l'opérateur de compétence",
+  },
+  opco_siren: {
+    type: String,
+    default: null,
+    description: "Siren de l'opérateur de compétence",
   },
 };
 
