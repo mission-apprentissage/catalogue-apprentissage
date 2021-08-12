@@ -82,25 +82,29 @@ const Message = () => {
 
   useEffect(() => {
     const run = async () => {
-      const data = await _get("/api/v1/entity/messageScript");
-      if (data.length === 0) {
-        const newMessageScript = {
-          type: "automatique",
-          msg:
-            "Une mise à jour des données du catalogue est en cours, le service sera à nouveau opérationnel d'ici le XX/XX/21 à XXh.",
-          name: "auto",
-          enabled: false,
-        };
-        await _post("/api/v1/entity/messageScript", newMessageScript);
-        window.location.reload();
-      } else {
-        const [a] = data.filter((d) => d.type === "automatique");
-        setMessageAutomatique(a);
-        setFieldValue(
-          "msg",
-          a.msg ||
-            "Une mise à jour des données du catalogue est en cours, le service sera à nouveau opérationnel d'ici le XX/XX/21 à XXh."
-        );
+      try {
+        const data = await _get("/api/v1/entity/messageScript");
+        if (data.length === 0) {
+          const newMessageScript = {
+            type: "automatique",
+            msg:
+              "Une mise à jour des données du catalogue est en cours, le service sera à nouveau opérationnel d'ici le XX/XX/21 à XXh.",
+            name: "auto",
+            enabled: false,
+          };
+          await _post("/api/v1/entity/messageScript", newMessageScript);
+          window.location.reload();
+        } else {
+          const [a] = data.filter((d) => d.type === "automatique");
+          setMessageAutomatique(a);
+          setFieldValue(
+            "msg",
+            a.msg ||
+              "Une mise à jour des données du catalogue est en cours, le service sera à nouveau opérationnel d'ici le XX/XX/21 à XXh."
+          );
+        }
+      } catch (e) {
+        console.error(e);
       }
     };
     run();

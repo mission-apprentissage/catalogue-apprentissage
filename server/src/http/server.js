@@ -1,6 +1,6 @@
 const express = require("express");
 const session = require("express-session");
-const MongoStore = require("connect-mongo")(session);
+const MongoStore = require("connect-mongo");
 const passport = require("passport");
 const config = require("config");
 const logger = require("../common/logger");
@@ -101,7 +101,8 @@ module.exports = async (components) => {
       saveUninitialized: false,
       resave: true,
       secret: config.auth.secret,
-      store: new MongoStore({ mongooseConnection: db }),
+      // https://github.com/jdesboeufs/connect-mongo/blob/HEAD/MIGRATION_V4.md
+      store: MongoStore.create({ client: db.getClient() }),
       cookie: {
         secure: config.env === "dev" ? false : true,
         maxAge: config.env === "dev" ? null : 30 * 24 * 60 * 60 * 1000,

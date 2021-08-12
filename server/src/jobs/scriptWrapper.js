@@ -9,6 +9,10 @@ const { MessageScript } = require("../common/model/index");
 process.on("unhandledRejection", (e) => console.log(e));
 process.on("uncaughtException", (e) => console.log(e));
 
+function timeout(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 const createTimer = () => {
   let launchTime;
   return {
@@ -42,15 +46,15 @@ const exit = async (rawError) => {
     logger.error(rawError.constructor.name === "EnvVarError" ? rawError.message : rawError);
   }
 
-  setTimeout(() => {
-    //Waiting logger to flush all logs (MongoDB)
-    closeMongoConnection()
-      .then(() => {})
-      .catch((closeError) => {
-        error = closeError;
-        console.log(error);
-      });
-  }, 250);
+  //Waiting logger to flush all logs (MongoDB)
+  await timeout(250);
+
+  try {
+    await closeMongoConnection();
+  } catch (closeError) {
+    error = closeError;
+    console.log(error);
+  }
 
   process.exitCode = error ? 1 : 0;
 };
