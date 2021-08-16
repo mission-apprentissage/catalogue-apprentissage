@@ -23,6 +23,7 @@ import {
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
 import ACL from "./acl";
+import generator from "generate-password-browser";
 
 const ACADEMIES = [
   "01",
@@ -80,6 +81,14 @@ const UserLine = ({ user, roles }) => {
     run();
   }, [roles, user?.roles]);
 
+  const newTmpPassword = generator.generate({
+    length: 10,
+    numbers: true,
+    lowercase: true,
+    uppercase: true,
+    strict: true,
+  });
+
   const { values, handleSubmit, handleChange, setFieldValue } = useFormik({
     initialValues: {
       accessAllCheckbox: user?.isAdmin ? ["on"] : [],
@@ -88,7 +97,7 @@ const UserLine = ({ user, roles }) => {
       accessAcademieList: user ? user.academie.split(",") : ["-1"],
       newUsername: user?.username || "",
       newEmail: user?.email || "",
-      newTmpPassword: "1MotDePassTemporaire!",
+      newTmpPassword,
     },
     onSubmit: (
       { apiKey, accessAllCheckbox, accessAcademieList, newUsername, newEmail, newTmpPassword, roles, acl },

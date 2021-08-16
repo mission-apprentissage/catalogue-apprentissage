@@ -93,6 +93,7 @@ module.exports = async () => {
       };
       return structure;
     },
-    registerUser: (email) => User.findOneAndUpdate({ email }, { last_connection: new Date() }),
+    registerUser: (email) =>
+      User.findOneAndUpdate({ email }, { last_connection: new Date(), $push: { connection_history: new Date() } }),
   };
 };
