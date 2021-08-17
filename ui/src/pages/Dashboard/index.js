@@ -1,23 +1,44 @@
 import React from "react";
 import jwt from "jsonwebtoken";
-import { Box, Container, Heading } from "@chakra-ui/react";
+import { Box, Container, Heading, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 
 import Layout from "../layout/Layout";
 import { setTitle } from "../../common/utils/pageUtils";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 
-export default () => {
-  const METABASE_SITE_URL = `${process.env.REACT_APP_METABASE_URL ?? process.env.REACT_APP_BASE_URL}/metabase`;
-  const METABASE_SECRET_KEY = process.env.REACT_APP_METABASE_SECRET_KEY;
+const METABASE_SITE_URL = `${process.env.REACT_APP_METABASE_URL ?? process.env.REACT_APP_BASE_URL}/metabase`;
+const METABASE_SECRET_KEY = process.env.REACT_APP_METABASE_SECRET_KEY;
 
+const getIframeUrl = ({ id }) => {
   const payload = {
-    resource: { dashboard: 1 },
+    resource: { dashboard: id },
     params: {},
     exp: Math.round(Date.now() / 1000) + 10 * 60, // 10 minutes
   };
 
   const token = jwt.sign(payload, METABASE_SECRET_KEY);
-  const iframeURL = METABASE_SITE_URL + "/embed/dashboard/" + token + "#bordered=false&titled=false";
+  return METABASE_SITE_URL + "/embed/dashboard/" + token + "#bordered=false&titled=false";
+};
+
+export default () => {
+  const dashboards = [
+    {
+      title: "Collecte",
+      iframeURL: getIframeUrl({ id: 2 }),
+    },
+    {
+      title: "Consommation",
+      iframeURL: getIframeUrl({ id: 3 }),
+    },
+    {
+      title: "Acquisition",
+      iframeURL: getIframeUrl({ id: 34 }),
+    },
+    {
+      title: "Qualité de la donnée",
+      iframeURL: getIframeUrl({ id: 35 }),
+    },
+  ];
 
   const title = "Statistiques du catalogue";
   setTitle(title);
@@ -30,15 +51,29 @@ export default () => {
           <Heading textStyle="h2" color="grey.800" mt={5}>
             {title}
           </Heading>
-          {iframeURL && (
-            <iframe
-              src={iframeURL}
-              frameBorder="0"
-              style={{ height: "500vh", width: "100%" }}
-              title="Statistiques Metabase"
-              allowtransparency={"true"}
-            />
-          )}
+
+          <Tabs variant={"search"} mt={5} isLazy>
+            <TabList bg="white">
+              {dashboards.map(({ title }) => {
+                return <Tab key={title}>{title}</Tab>;
+              })}
+            </TabList>
+            <TabPanels>
+              {dashboards.map(({ iframeURL, title }) => {
+                return (
+                  <TabPanel key={title}>
+                    <iframe
+                      src={iframeURL}
+                      frameBorder="0"
+                      style={{ height: "250vh", width: "100%" }}
+                      title={`Statistiques Metabase - ${title}`}
+                      allowtransparency={"true"}
+                    />
+                  </TabPanel>
+                );
+              })}
+            </TabPanels>
+          </Tabs>
         </Container>
       </Box>
     </Layout>
