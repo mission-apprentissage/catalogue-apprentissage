@@ -146,7 +146,10 @@ const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissem
 
     const etablissementReference = getEtablissementReference(attachedEstablishments);
     if (!etablissementReference) {
-      return { result: null, messages: { error: "Unable to retrieve etablissementReference" } };
+      return {
+        result: null,
+        messages: { error: "Unable to retrieve neither gestionnaire and formateur, both are null" },
+      };
     }
 
     if (attachedEstablishments?.gestionnaire?.ferme) {
