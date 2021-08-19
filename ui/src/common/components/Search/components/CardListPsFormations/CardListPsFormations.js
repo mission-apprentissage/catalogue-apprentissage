@@ -2,11 +2,12 @@ import React from "react";
 import { StatusBadge } from "../../../StatusBadge";
 import { Box, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { ArrowRightLine, DoubleArrows } from "../../../../../theme/components/icons";
+import { PARCOURSUP_STATUS } from "../../../../../constants/status";
 
 export const CardListPsFormations = ({ data, onCardClicked, context }) => {
   const CardContent = () => (
     <Flex w="100%">
-      <Box width="70%">
+      <Box width="75%">
         <Heading textStyle="h6" color="grey.800" mt={2} textOverflow="ellipsis" whiteSpace="nowrap" overflow="hidden">
           {data.libelle_formation} - {data.libelle_specialite}
         </Heading>
@@ -34,7 +35,25 @@ export const CardListPsFormations = ({ data, onCardClicked, context }) => {
                     <Box mt={5} key={i} fontSize="sm">
                       <DoubleArrows width="12px" height="14px" color="grey.800" mr={5} />
                       {mnaF.intitule_court}
-                      <StatusBadge source="Parcoursup" status={mnaF.parcoursup_statut} ml={[0, 5]} mr={[0, 2]} />
+
+                      {mnaF.parcoursup_statut === PARCOURSUP_STATUS.HORS_PERIMETRE && (
+                        <StatusBadge
+                          source="Parcoursup"
+                          status="nonConforme"
+                          text="non-conforme au guide règlementaire"
+                          ml={[0, 1]}
+                          mr={[0, 1]}
+                        />
+                      )}
+                      {mnaF.parcoursup_statut !== PARCOURSUP_STATUS.HORS_PERIMETRE && (
+                        <StatusBadge
+                          source="Parcoursup"
+                          status="conforme"
+                          text="conforme au guide règlementaire"
+                          ml={[0, 1]}
+                          mr={[0, 1]}
+                        />
+                      )}
                     </Box>
                   ))}
                 {context !== "reconciliation_ps_inconnus" && data.matching_mna_formation.length === 0 && (

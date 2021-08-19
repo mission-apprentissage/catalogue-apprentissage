@@ -21,7 +21,7 @@ import { useHistory } from "react-router-dom";
 import { CloseCircleLine } from "../../../theme/components/icons/CloseCircleLine";
 import { SearchLine } from "../../../theme/components/icons/SearchLine";
 
-export default React.memo(({ location, searchState, context, onReconciliationCardClicked }) => {
+export default React.memo(({ location, searchState, context, onReconciliationCardClicked, extraButtons = null }) => {
   const { defaultMode } = queryString.parse(location.search);
   const [mode, setMode] = useState(defaultMode ?? "simple");
   const isCatalogueGeneral = context === "catalogue_general";
@@ -246,6 +246,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                               // }}
                             />
                           )}
+                          {extraButtons}
                         </div>
                       );
                     }}

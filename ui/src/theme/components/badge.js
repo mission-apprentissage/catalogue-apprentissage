@@ -17,6 +17,20 @@ const Badge = {
       border: "1px solid",
       borderColor: "#e3e8ea",
     },
+    nonConforme: {
+      ...commonStatusBadgeStyle,
+      bg: "#e3e8ea",
+      color: "grey.800",
+      border: "1px solid",
+      borderColor: "#e3e8ea",
+    },
+    conforme: {
+      ...commonStatusBadgeStyle,
+      bg: "greenmedium.300",
+      color: "grey.800",
+      border: "1px solid",
+      borderColor: "greenmedium.200",
+    },
     published: {
       ...commonStatusBadgeStyle,
       bg: "greenmedium.300",

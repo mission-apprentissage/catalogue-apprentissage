@@ -14,7 +14,7 @@ import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../constan
 const Icon = ({ variant }) => {
   switch (variant) {
     case "notRelevant":
-      return null;
+      return <CloudSlashed />;
     case "published":
       return <Cloud />;
     case "notPublished":
@@ -25,14 +25,18 @@ const Icon = ({ variant }) => {
       return <ExclamationCircle />;
     case "reject":
       return <RejectIcon />;
+    case "nonConforme":
+      return <RejectIcon />;
     case "unknown":
       return <Question />;
+    case "conforme":
+      return <InfoCircle />;
     default:
       return <InfoCircle />;
   }
 };
 
-export const StatusBadge = ({ source, status, ...badgeProps }) => {
+export const StatusBadge = ({ source, status, text, ...badgeProps }) => {
   const defaultVariant = "notRelevant";
   const variantsMap = {
     [COMMON_STATUS.HORS_PERIMETRE]: "notRelevant",
@@ -45,6 +49,8 @@ export const StatusBadge = ({ source, status, ...badgeProps }) => {
     [COMMON_STATUS.EN_ATTENTE]: "pending",
     Rejeté: "reject",
     Inconnu: "unknown",
+    nonConforme: "nonConforme",
+    conforme: "conforme",
   };
 
   const variant = variantsMap[status] ?? defaultVariant;
@@ -54,7 +60,7 @@ export const StatusBadge = ({ source, status, ...badgeProps }) => {
       <Flex alignItems="center">
         <Icon variant={variant} />
         <Text ml={1} as={"span"} whiteSpace={"break-spaces"}>
-          {source ? `${source} - ${status}` : `${status}`}
+          {text ? `${text}` : source ? `${source} - ${status}` : `${status}`}
         </Text>
       </Flex>
     </Badge>
