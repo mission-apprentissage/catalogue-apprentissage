@@ -275,9 +275,17 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
                 Certification qualité :{" "}
                 <Text as="span" variant="highlight">
                   {" "}
-                  {etablissement.computed_info_datadock}{" "}
-                </Text>{" "}
+                  {etablissement.computed_info_datadock}
+                </Text>
                 <InfoTooltip description={helpText.etablissement.datadock} />
+              </Text>
+              <Text mb={4}>
+                Certification qualité :{" "}
+                <Text as="span" variant="highlight">
+                  {" "}
+                  {etablissement.info_qualiopi_info === "OUI" && "qualiopi OUI"}
+                  {etablissement.info_qualiopi_info === "NON" && "qualiopi NON"}
+                </Text>
               </Text>
             </Box>
 
