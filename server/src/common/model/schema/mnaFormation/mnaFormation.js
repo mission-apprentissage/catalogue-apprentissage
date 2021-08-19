@@ -331,10 +331,10 @@ const mnaFormationSchema = {
   },
 
   // Flags
-  to_verified: {
+  to_update: {
     type: Boolean,
     default: false,
-    description: "Formation à vérifier manuellement",
+    description: "Formation à mette à jour lors du script d'enrichissement",
   },
 
   // Product specific

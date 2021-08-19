@@ -8,6 +8,7 @@ const psPertinence = require("./pertinence/parcoursup");
 const afPertinence = require("./pertinence/affelnet");
 const afCoverage = require("./affelnet/coverage");
 const afReconciliation = require("./affelnet/reconciliation");
+const crypto = require("crypto");
 
 const { rebuildEsIndex } = require("./esIndex/esIndex");
 const { importEtablissements } = require("./etablissements");
@@ -37,13 +38,16 @@ runScript(async ({ catalogue, db }) => {
     await importEtablissements(catalogue);
     await sleep(30000);
     // rco
-    await rcoImporter();
+    let uuidReport = await rcoImporter();
     await sleep(30000);
-    await rcoConverter();
+    if (!uuidReport) {
+      uuidReport = crypto.randomBytes(16).toString("hex");
+    }
+    await rcoConverter(uuidReport);
     await sleep(30000);
 
     // ~ 3 heures 40 minutes => ~ 59 minutes
-    const trainingsUpdater = spawn("node", ["./src/jobs/trainingsUpdater/index.js"]);
+    const trainingsUpdater = spawn("node", ["./src/jobs/trainingsUpdater/index.js", `--uuidReport=${uuidReport}`]);
     for await (const data of trainingsUpdater.stdout) {
       console.log(`trainingsUpdater: ${data}`);
     }

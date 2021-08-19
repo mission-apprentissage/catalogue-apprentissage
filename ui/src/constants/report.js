@@ -1,7 +1,7 @@
 const REPORT_TYPE = {
+  RCO_IMPORT: "rcoImport",
   RCO_CONVERSION: "rcoConversion",
   TRAININGS_UPDATE: "trainingsUpdate",
-  RCO_IMPORT: "rcoImport",
   PS_REJECT: "psReject",
 };
 

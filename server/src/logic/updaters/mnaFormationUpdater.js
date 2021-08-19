@@ -289,6 +289,7 @@ const mnaFormationUpdater = async (
     return { updates: null, formation, cfdInfo };
   } catch (e) {
     logger.error(e);
+    console.error(e);
     return { updates: null, formation, error: e.toString(), cfdInfo: null };
   }
 };

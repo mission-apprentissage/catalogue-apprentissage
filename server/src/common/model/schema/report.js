@@ -15,6 +15,11 @@ const reportSchema = {
     default: {},
     description: "Données du rapport",
   },
+  uuid: {
+    type: String,
+    default: null,
+    description: "uuid across report",
+  },
 };
 
 module.exports = reportSchema;
