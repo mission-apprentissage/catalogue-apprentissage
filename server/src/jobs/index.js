@@ -9,7 +9,6 @@ const afPertinence = require("./pertinence/affelnet");
 const afCoverage = require("./affelnet/coverage");
 const afReconciliation = require("./affelnet/reconciliation");
 
-const clean = require("./clean");
 const { rebuildEsIndex } = require("./esIndex/esIndex");
 const { importEtablissements } = require("./etablissements");
 const { spawn } = require("child_process");
@@ -26,8 +25,6 @@ runScript(async ({ catalogue, db }) => {
     logger.info(`Start all jobs`);
 
     ConvertedFormation.pauseAllMongoosaticHooks();
-
-    await clean();
 
     // import tco
     await bcnImporter();
