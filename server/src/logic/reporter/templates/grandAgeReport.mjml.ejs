@@ -1,6 +1,6 @@
 <mjml>
     <mj-head>
-        <mj-title>Catalogue apprentissage - Rapport d'importation RCO</mj-title>
+        <mj-title>Catalogue apprentissage - Rapport des métiers du grand-âge</mj-title>
         <mj-font name="Public Sans"
                  href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,600;0,900;1,400"/>
         <mj-style inline="inline">
@@ -32,7 +32,7 @@
             <mj-column padding-right="0">
                 <mj-text align="left" padding="10px 0 25px 25px" font-size="22px" line-height="26px"
                          color="#19414C">
-                    Rapport d'importation catalogue RCO <br>
+                    Rapport des métiers du grand-âge<br>
                     <%= data.date %>
                 </mj-text>
             </mj-column>
@@ -41,25 +41,28 @@
         <mj-section padding-bottom="10px" padding-top="10px" background-color="#E5EDEF">
             <mj-column>
                 <mj-text align="left" padding-top="20px" color="#19414C">
-                    Résumé de l'importation :<br>
+                    Résumé :<br>
                     <br>
-                    Données reçues du webservice RCO :<br>
-                    <strong><%= data.summary.formationsJCount %></strong> Formation(s) J<br>
-                    <br>
-                    Résultat de l'import :<br>
-                    <%= data.summary.addedCount %> Formation(s) ajoutée(s)<br>
-                    <%= data.summary.updatedCount %> Formation(s) mise(s) à jour<br>
-                    <%= data.summary.deletedCount %> Formation(s) supprimée(s)<br>
-                    <br>
-                    État de la base de données de formations RCO :<br>
-                    <strong><%= data.summary.publishedCount %></strong> Formation(s) publiée(s)<br>
-                    <%= data.summary.deactivatedCount %> Formation(s) désactivée(s)
+                    <ul>
+                        <li><%= data.summary.count %> Formation(s) ajoutée(s) aujourd'hui</li>
+                        <li><%= data.summary.count40033003 %> Formation(s) CFD: 40033003<br>
+                            Baccalauréat professionnel | Accompagnement soins et services à la personne option A - à domicile</li>
+                        <li><%= data.summary.count01033001 %> Formation(s) CFD: 01033001<br>
+                            Mention complémentaire de niveau 3 | Aide à domicile</li>
+                        <li><%= data.summary.count50033205 %> Formation(s) CFD: 50033205<br>
+                            Certificat d'aptitude professionnelle | Accompagnant éducatif petite enfance</li>
+                        <li><%= data.summary.count40033004 %> Formation(s) CFD: 40033004<br>
+                            Baccalauréat professionnel | Accompagnement soins et services à la personne option B - en structure</li>
+                        <li> <%= data.summary.count40033006 %> Formation(s) CFD: 40033006<br>
+                            <%= data.summary.count40033002 %> Formation(s) CFD: 40033002<br>
+                            Baccalauréat professionnel | Animation - enfance et personnes âgées</li>
+                        <li><%= data.summary.count50033411 %> Formation(s) CFD: 50033411<br>
+                            Certificat d'aptitude professionnelle | Assistant technique en milieux familial et collectif</li>
+                    </ul>
                 </mj-text>
-                <%if (data.link) { %>
                 <mj-text align="left" padding-top="20px" color="#19414C">
                     <a href="<%= data.link %>" class="button">Consultez le rapport en ligne</a>
                 </mj-text>
-                <% } %>
             </mj-column>
         </mj-section>
 

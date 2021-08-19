@@ -99,9 +99,10 @@ runScript(async ({ mailer }) => {
   await mailer.sendEmail(
     to,
     `[${config.env} Catalogue apprentissage] Export des doublons de formations RCO`,
-    path.join(__dirname, "../../../assets/templates/rco-duplicates-export.mjml.ejs"),
+    path.join(__dirname, "../../../assets/templates/oneshot-jobs.mjml.ejs"),
     {
-      nbFormations: lines.length,
+      title: "Doublons de formations RCO",
+      description: `Il y a ${lines.length} formations RCO avec des doublons`,
     },
     attachments
   );

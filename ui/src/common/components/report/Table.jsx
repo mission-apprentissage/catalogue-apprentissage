@@ -1,9 +1,11 @@
-import React, { useMemo, useState, useCallback } from "react";
-import { useTable, useFlexLayout, useGlobalFilter, useAsyncDebounce } from "react-table";
+import React, { useMemo, useState, useCallback, useEffect } from "react";
+import { useTable, useFlexLayout, useGlobalFilter, useFilters, useAsyncDebounce } from "react-table";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList } from "react-window";
 import { Box, Flex, Text, Input, Button, Stack } from "@chakra-ui/react";
 import { downloadCSV, CSV_SEPARATOR } from "../../utils/downloadUtils";
+// A great library for fuzzy filtering/sorting items
+import { matchSorter } from "match-sorter";
 
 const csvExport = (headers, rows, filename) => {
   const hasSiretsHeader = headers.some((header) => header === "sirets");
@@ -47,31 +49,11 @@ const csvExport = (headers, rows, filename) => {
 
 // Define a default UI for filtering
 function GlobalFilter({ preGlobalFilteredRows, globalFilter, setGlobalFilter, rows, headers, filename }) {
-  const count = preGlobalFilteredRows.length;
-  const [value, setValue] = useState(globalFilter);
-
-  const onChange = useAsyncDebounce((value) => {
-    setGlobalFilter(value || undefined);
-  }, 200);
-
   return (
     <Stack direction="row" spacing={4} mb={8} justifyContent={"space-between"}>
-      <Input
-        flex={1}
-        maxWidth="500px"
-        variant="flushed"
-        value={value || ""}
-        onChange={(e) => {
-          setValue(e.target.value);
-          onChange(e.target.value);
-        }}
-        placeholder={`Rechercher parmi les ${count} résultats`}
-      />
-      {rows.length !== count && (
-        <Text flex={1} px={8} alignSelf="center">
-          {rows.length} résultat(s) trouvé(s)
-        </Text>
-      )}
+      <Text flex={1} px={8} alignSelf="center">
+        {rows.length} résultat(s) trouvé(s)
+      </Text>
       <Button colorScheme="teal" disabled={rows.length === 0} onClick={() => csvExport(headers, rows, filename)}>
         Exporter
       </Button>
@@ -79,15 +61,98 @@ function GlobalFilter({ preGlobalFilteredRows, globalFilter, setGlobalFilter, ro
   );
 }
 
-const Table = ({ data, onRowClick, filename }) => {
+// Define a default UI for filtering
+function DefaultColumnFilter({ column: { Header, filterValue, setFilter }, outsideFilter }) {
+  const [value, setValue] = useState(filterValue);
+  const onChange = useAsyncDebounce((value) => {
+    setFilter(value || undefined);
+  }, 200);
+
+  useEffect(() => {
+    const val = outsideFilter?.values?.join("###");
+    if (outsideFilter && Header === outsideFilter.key && val !== value) {
+      setValue(val);
+      onChange(val);
+    }
+  }, [outsideFilter, Header, onChange, value]);
+
+  return (
+    <Input
+      maxWidth="500px"
+      variant="flushed"
+      value={value || ""}
+      onChange={(e) => {
+        setValue(e.target.value);
+        onChange(e.target.value);
+      }}
+      placeholder={`Filtrer`}
+    />
+  );
+}
+
+function fuzzyTextFilterFn(rows, id, filterValue) {
+  return matchSorter(rows, filterValue, { keys: [(row) => row.values[id]], threshold: matchSorter.rankings.CONTAINS });
+}
+
+// Let the table remove the filter if the string is empty
+fuzzyTextFilterFn.autoRemove = (val) => !val;
+
+function multipleValuesSearchFilterFn(rows, id, filterValue) {
+  if (!filterValue || !filterValue.length) {
+    return rows;
+  }
+
+  const terms = filterValue.split("###");
+  if (!terms) {
+    return rows;
+  }
+
+  let results = [];
+  terms.reduce((acc, term) => {
+    const match = matchSorter(acc, term, {
+      keys: [(row) => row.values[id]],
+      threshold: matchSorter.rankings.CONTAINS,
+    });
+
+    results = [...results, ...match];
+
+    const idToRemove = match.map(({ index }) => index);
+    return acc.filter(({ index }) => !idToRemove.includes(index));
+  }, rows);
+  return results;
+}
+// Let the table remove the filter if the string is empty
+multipleValuesSearchFilterFn.autoRemove = (val) => !val;
+
+const Table = ({ data, onRowClick, filename, outsideFilter }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const tableData = useMemo(() => data, []);
+
+  const filterTypes = React.useMemo(
+    () => ({
+      // Add a new fuzzyTextFilterFn filter type.
+      fuzzyText: fuzzyTextFilterFn,
+      multipleValuesSearch: multipleValuesSearchFilterFn,
+      // Or, override the default text filter to use
+      // "startWith"
+      text: (rows, id, filterValue) => {
+        return rows.filter((row) => {
+          const rowValue = row.values[id];
+          return rowValue !== undefined
+            ? String(rowValue).toLowerCase().startsWith(String(filterValue).toLowerCase())
+            : true;
+        });
+      },
+    }),
+    []
+  );
 
   const columns = Object.keys(data[0]).map((key) => {
     return {
       Header: key,
       accessor: key,
-      width: key === "updates" ? 300 : 150,
+      width: key === "updates" ? 300 : key === "mnaId" || key === "id" || key === "cfd" || key === "rncp" ? 60 : 150,
+      filter: outsideFilter?.key === key ? "multipleValuesSearch" : "fuzzyText",
     };
   });
 
@@ -96,7 +161,8 @@ const Table = ({ data, onRowClick, filename }) => {
       {
         Header: "index",
         accessor: (row, i) => i,
-        width: 50,
+        width: 25,
+        disableFilters: true,
       },
       ...columns,
     ],
@@ -108,14 +174,17 @@ const Table = ({ data, onRowClick, filename }) => {
     () => ({
       // When using the useFlexLayout:
       width: 150, // width is used for both the flex-basis and flex-grow
+      // Let's set up our default Filter UI
+      Filter: DefaultColumnFilter,
     }),
     []
   );
 
   const tableInstance = useTable(
-    { columns: tableColumns, data: tableData, defaultColumn },
+    { columns: tableColumns, data: tableData, defaultColumn, filterTypes },
     useFlexLayout,
-    useGlobalFilter
+    useGlobalFilter,
+    useFilters
   );
   const {
     getTableProps,
@@ -123,7 +192,7 @@ const Table = ({ data, onRowClick, filename }) => {
     headerGroups,
     rows,
     prepareRow,
-    state,
+    state: { globalFilter },
     preGlobalFilteredRows,
     setGlobalFilter,
   } = tableInstance;
@@ -132,6 +201,7 @@ const Table = ({ data, onRowClick, filename }) => {
     ({ index, style }) => {
       const row = rows[index];
       prepareRow(row);
+
       return (
         <Box
           as="tr"
@@ -156,7 +226,7 @@ const Table = ({ data, onRowClick, filename }) => {
                 px={2}
                 overflow="hidden"
               >
-                {cell.render("Cell")}
+                {cell.value !== "null" ? cell.render("Cell") : "N.A"}
               </Box>
             );
           })}
@@ -171,7 +241,7 @@ const Table = ({ data, onRowClick, filename }) => {
     <>
       <GlobalFilter
         preGlobalFilteredRows={preGlobalFilteredRows}
-        globalFilter={state.globalFilter}
+        globalFilter={globalFilter}
         setGlobalFilter={setGlobalFilter}
         rows={rows}
         headers={headerGroups[0].headers.map(({ Header }) => Header)}
@@ -182,17 +252,23 @@ const Table = ({ data, onRowClick, filename }) => {
           {headerGroups.map((headerGroup) => (
             <Flex as="tr" flex={1} {...headerGroup.getHeaderGroupProps({})} pb={4}>
               {headerGroup.headers.map((column, i) => (
-                <Text
+                <Box
                   as="th"
                   {...column.getHeaderProps()}
                   display={[i === 0 || i > 2 ? "none" : "flex", "flex"]}
-                  textTransform="uppercase"
-                  fontWeight="normal"
                   overflow="hidden"
                   px={2}
                 >
-                  {column.render("Header")}
-                </Text>
+                  <Flex flexDirection="column" w="full" alignItems="flex-start">
+                    <Text textTransform="uppercase" fontWeight="normal" textAlign="left">
+                      {column.render("Header")}
+                    </Text>
+                    {/* Render the columns filter UI */}
+                    <Flex w="90%" alignItems="flex-start">
+                      {column.canFilter ? column.render("Filter", { outsideFilter }) : null}
+                    </Flex>
+                  </Flex>
+                </Box>
               ))}
             </Flex>
           ))}

@@ -1,8 +1,9 @@
 const REPORT_TYPE = {
+  RCO_IMPORT: "rcoImport",
   RCO_CONVERSION: "rcoConversion",
   TRAININGS_UPDATE: "trainingsUpdate",
-  RCO_IMPORT: "rcoImport",
   PS_REJECT: "psReject",
+  METIER_GRAND_AGE: "grandAge",
 };
 
 const reportTypes = Object.values(REPORT_TYPE);

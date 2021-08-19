@@ -10,6 +10,9 @@ const rulesOperators = operators.filter(({ value }) =>
   ["===", "!==", "===*", "!==*", "===^", "===$", "*."].includes(value)
 );
 
+const eqOperator = rulesOperators.find(({ value }) => value === "===") ?? {};
+eqOperator.text = "correspond à";
+
 export function computeQuery(queries) {
   const obj = {};
   queries

@@ -127,6 +127,8 @@ const rcoFormationsSchema = {
   email: {
     type: String,
     default: null,
+    select: false,
+    noIndex: true,
     description: "Email de contact pour cette formation",
   },
   updates_history: {

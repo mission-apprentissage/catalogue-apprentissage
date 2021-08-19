@@ -13,6 +13,7 @@ export const ActionsSelect = ({ value = CONDITIONS.NE_DOIT_PAS_INTEGRER, onChang
       }}
       onChange={onChange}
       value={value}
+      iconColor={rest.disabled ? "gray.400" : "gray.800"}
     >
       {Object.values(CONDITIONS).map((value) => {
         return (

@@ -1,5 +1,6 @@
 const logger = require("../../../common/logger");
 const { mnaFormationUpdater } = require("../../../logic/updaters/mnaFormationUpdater");
+const { detectNewDiplomeGrandAge } = require("../../../logic/controller/diplomes-grand-age");
 const { paginator } = require("../../../common/utils/paginator");
 const { RcoFormation, ConvertedFormation } = require("../../../common/model/index");
 
@@ -10,7 +11,8 @@ const run = async (filter = {}, withCodePostalUpdate = false, limit = 10, maxIte
 const performUpdates = async (filter = {}, withCodePostalUpdate = false, limit = 10, maxItems = 100, offset = 0) => {
   const invalidFormations = [];
   const updatedFormations = [];
-  let notUpdatedCount = 0;
+  const noUpdatedFormations = [];
+  const formationsGrandAge = [];
   const cfdInfosCache = new Map();
 
   ConvertedFormation.pauseAllMongoosaticHooks();
@@ -30,6 +32,11 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false, limit =
       cfdInfosCache.set(formation._doc.cfd, cfdInfo);
     }
 
+    const resultGrandAge = detectNewDiplomeGrandAge(formation._doc);
+    if (resultGrandAge) {
+      formationsGrandAge.push(resultGrandAge);
+    }
+
     if (error) {
       formation.update_error = error;
 
@@ -47,25 +54,40 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false, limit =
       }
 
       await ConvertedFormation.findOneAndUpdate({ _id: formation._id }, formation, { new: true });
-      invalidFormations.push({ id: formation._id, cfd: formation.cfd, error });
+      invalidFormations.push({
+        id: formation._id,
+        id_rco_formation: formation.id_rco_formation,
+        cfd: formation.cfd,
+        error,
+      });
       return;
     }
 
     if (!updates) {
-      notUpdatedCount += 1;
+      noUpdatedFormations.push({
+        id: formation._id,
+        id_rco_formation: formation.id_rco_formation,
+      });
       return;
     }
 
     try {
+      updatedFormation.update_error = null;
+      updatedFormation.to_update = false;
       updatedFormation.last_update_at = Date.now();
       await ConvertedFormation.findOneAndUpdate({ _id: formation._id }, updatedFormation, { new: true });
-      updatedFormations.push({ id: formation._id, cfd: formation.cfd, updates: JSON.stringify(updates) });
+      updatedFormations.push({
+        id: formation._id,
+        id_rco_formation: formation.id_rco_formation,
+        cfd: formation.cfd,
+        updates: JSON.stringify(updates),
+      });
     } catch (error) {
       logger.error(error);
     }
   });
 
-  return { invalidFormations, updatedFormations, notUpdatedCount };
+  return { invalidFormations, updatedFormations, noUpdatedFormations, formationsGrandAge };
 };
 
 module.exports = { run, performUpdates };

@@ -13,6 +13,7 @@ const logSchema = {
   },
   time: {
     type: Date,
+    expires: "7d", // mongo will auto-remove data after 7 days
     required: true,
   },
 };

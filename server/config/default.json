@@ -57,10 +57,6 @@
     "username": "CATALOGUE_APPRENTISSAGE_TCO_USERNAME",
     "password": "CATALOGUE_APPRENTISSAGE_TCO_PASSWORD"
   },
-  "retentionDays": {
-    "logs": 30,
-    "reports": 30
-  },
   "franceCompetences": {
     "host": "TABLES_CORRESPONDANCE_FRANCE_COMPETENCES_HOST",
     "port": "TABLES_CORRESPONDANCE_FRANCE_COMPETENCES_PORT",

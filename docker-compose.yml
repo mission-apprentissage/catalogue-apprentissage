@@ -43,7 +43,7 @@ services:
       - NODE_ICU_DATA=node_modules/full-icu
 
   mongodb:
-    image: mongo:4.2.6-bionic
+    image: mongo:5.0.2-focal
     container_name: catalogue_apprentissage_mongodb
     restart: unless-stopped
     networks:

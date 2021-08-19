@@ -13,10 +13,11 @@ import {
   RadioGroup,
   Textarea,
   FormErrorMessage,
+  Switch,
 } from "@chakra-ui/react";
 import { buildUpdatesHistory } from "../../../../common/utils/formationUtils";
 import { StatusBadge } from "../../../../common/components/StatusBadge";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useFormik } from "formik";
 import { RejectedModal } from "./RejectedModal";
 import { Section } from "./Section";
@@ -24,6 +25,7 @@ import { ButtonIndicator } from "./ButtonIndicator";
 import useAuth from "../../../../common/hooks/useAuth";
 import * as Yup from "yup";
 import { _post, _put } from "../../../../common/httpClient";
+import { PARCOURSUP_STATUS } from "../../../../constants/status";
 
 import { Close, CheckLine, ValidateIcon, ErrorIcon } from "../../../../theme/components/icons";
 
@@ -34,6 +36,7 @@ const ReconciliationModalHeader = React.memo(
     const [canSubmit, setCanSubmit] = useState(false);
     const [showRaison, setShowRaison] = useState(false);
     const [currentMnaFormation, setCurrentMnaFormation] = useState(0);
+    const [selectedFormation, setSelectedFormation] = useState([]);
     const slidesCount = formation.matching_mna_formation.length;
     const [user] = useAuth();
 
@@ -162,6 +165,22 @@ const ReconciliationModalHeader = React.memo(
       window.location.reload();
     };
 
+    let onSelectChecked = useCallback(
+      (e) => {
+        let selected = [];
+        if (e.target.checked) {
+          selected = [...selectedFormation, currentMnaFormation];
+        } else {
+          selected = selectedFormation.filter((s) => s !== currentMnaFormation);
+        }
+
+        // TODO do multiple reconciliation
+
+        setSelectedFormation(selected);
+      },
+      [currentMnaFormation, selectedFormation]
+    );
+
     const height =
       formation.statut_reconciliation === "REJETE"
         ? "450px"
@@ -169,7 +188,7 @@ const ReconciliationModalHeader = React.memo(
         ? slidesCount > 1
           ? "370px"
           : "255px"
-        : mnaFormation.parcoursup_statut !== "hors périmètre"
+        : mnaFormation.parcoursup_statut !== PARCOURSUP_STATUS.HORS_PERIMETRE
         ? showRaison
           ? slidesCount > 1
             ? "745px"
@@ -177,6 +196,8 @@ const ReconciliationModalHeader = React.memo(
           : slidesCount > 1
           ? "620px"
           : "505px"
+        : slidesCount > 1
+        ? "560px"
         : "450px";
 
     return (
@@ -198,7 +219,8 @@ const ReconciliationModalHeader = React.memo(
                 color={step === 1 ? "bluefrance" : "gray.600"}
                 cursor="pointer"
               >
-                1. Valider le rapprochement
+                {slidesCount === 1 && `1. Valider le rapprochement`}
+                {slidesCount > 1 && `1. Valider le(s) rapprochement(s)`}
                 {step === 2 && <CheckLine color="greensoft.500" ml={2} mb={1} />}
               </Text>
               <Text
@@ -259,8 +281,10 @@ const ReconciliationModalHeader = React.memo(
                         onClick={() => {
                           onStepChanged(2);
                         }}
+                        isDisabled={slidesCount > 1 && selectedFormation.length === 0}
                       >
-                        Valider le rapprochement et passer à l’étape suivante
+                        {slidesCount === 1 && `Valider le rapprochement et passer à l’étape suivante`}
+                        {slidesCount > 1 && `Valider le(s) rapprochement(s) et passer à l’étape suivante`}
                       </Button>
                     </Box>
                   </HStack>
@@ -281,7 +305,7 @@ const ReconciliationModalHeader = React.memo(
                       alignItems="flex-start"
                       p={3}
                       h="full"
-                      w="70%"
+                      w="55%"
                     >
                       <ErrorIcon color="redmarianne" mr="2" mt="0.35rem" />
                       <Text fontWeight="normal">
@@ -307,7 +331,7 @@ const ReconciliationModalHeader = React.memo(
                           />
                         ))}
                       <Text textStyle="sm" ml="0.9rem" color="info" flexGrow="1">
-                        Cette formation nécessite un traitement pour être rapprochée
+                        {selectedFormation.length} formations sélectionnées
                       </Text>
                     </HStack>
                   </HStack>
@@ -328,9 +352,20 @@ const ReconciliationModalHeader = React.memo(
                   </Text>
                 }
                 right={
-                  <Text textStyle="h6" mb={4}>
-                    Formations Catalogue 2021
-                  </Text>
+                  <HStack mb={4}>
+                    <Box flexGrow="1">
+                      <Text textStyle="h6">Formations Catalogue 2021</Text>
+                    </Box>
+                    <HStack>
+                      <Switch
+                        variant="icon"
+                        onChange={onSelectChecked}
+                        isChecked={selectedFormation.includes(currentMnaFormation)}
+                        id={`select-rapprochement`}
+                      />
+                      <Text>à rapprocher</Text>
+                    </HStack>
+                  </HStack>
                 }
               />
               <Section
@@ -348,7 +383,16 @@ const ReconciliationModalHeader = React.memo(
                 }
                 right={
                   <Box mb={4} mt={4}>
-                    <StatusBadge source="Parcoursup" status={mnaFormation.parcoursup_statut} />
+                    {mnaFormation.parcoursup_statut === PARCOURSUP_STATUS.HORS_PERIMETRE && (
+                      <StatusBadge
+                        source="Parcoursup"
+                        status="nonConforme"
+                        text="non-conforme au guide règlementaire"
+                      />
+                    )}
+                    {mnaFormation.parcoursup_statut !== PARCOURSUP_STATUS.HORS_PERIMETRE && (
+                      <StatusBadge source="Parcoursup" status="conforme" text="conforme au guide règlementaire" />
+                    )}
                   </Box>
                 }
               />
@@ -376,7 +420,7 @@ const ReconciliationModalHeader = React.memo(
                       alignItems="flex-start"
                       p={3}
                       h="full"
-                      w="70%"
+                      w="55%"
                     >
                       <ErrorIcon color="redmarianne" mr="2" mt="0.35rem" />
                       <Text fontWeight="normal">
@@ -388,21 +432,26 @@ const ReconciliationModalHeader = React.memo(
                     <HStack>
                       {Array(slidesCount)
                         .fill("")
-                        .map((unuse, ide) => (
-                          <ButtonIndicator
-                            text={ide + 1}
-                            // withIcon
-                            active={ide === currentMnaFormation}
-                            onClicked={() => {
-                              setCurrentMnaFormation(ide);
-                              onMnaFormationSelected(ide);
-                              setMnaFormation(formation.matching_mna_formation[ide]);
-                            }}
-                            key={ide}
-                          />
-                        ))}
+                        .map((unuse, ide) => {
+                          if (selectedFormation.includes(ide)) {
+                            return (
+                              <ButtonIndicator
+                                text={ide + 1}
+                                withIcon
+                                active={ide === currentMnaFormation}
+                                onClicked={() => {
+                                  setCurrentMnaFormation(ide);
+                                  onMnaFormationSelected(ide);
+                                  setMnaFormation(formation.matching_mna_formation[ide]);
+                                }}
+                                key={ide}
+                              />
+                            );
+                          }
+                          return <ButtonIndicator text={ide + 1} key={ide} />;
+                        })}
                       <Text textStyle="sm" ml="0.9rem" color="info" flexGrow="1">
-                        Cette formation nécessite un traitement pour être rapprochée
+                        {selectedFormation.length} formations sélectionnées à l'étape 1.
                       </Text>
                     </HStack>
                   </HStack>
@@ -462,7 +511,7 @@ const ReconciliationModalHeader = React.memo(
                           </Text>
                         </Text>
                       )}
-                      {mnaFormation.parcoursup_statut === "hors périmètre" && (
+                      {mnaFormation.parcoursup_statut === PARCOURSUP_STATUS.HORS_PERIMETRE && (
                         <Text
                           as="div"
                           variant="highlight"
@@ -490,10 +539,19 @@ const ReconciliationModalHeader = React.memo(
                 right={
                   <Flex mb={4} mt={4} flexDirection="column" h="full">
                     <Box mb={4} mt={4} h="30px">
-                      <StatusBadge source="Parcoursup" status="non publié" />
+                      {mnaFormation.parcoursup_statut === PARCOURSUP_STATUS.HORS_PERIMETRE && (
+                        <StatusBadge
+                          source="Parcoursup"
+                          status="nonConforme"
+                          text="non-conforme au guide règlementaire"
+                        />
+                      )}
+                      {mnaFormation.parcoursup_statut !== PARCOURSUP_STATUS.HORS_PERIMETRE && (
+                        <StatusBadge source="Parcoursup" status="conforme" text="conforme au guide règlementaire" />
+                      )}
                     </Box>
 
-                    {mnaFormation.parcoursup_statut === "hors périmètre" && (
+                    {mnaFormation.parcoursup_statut === PARCOURSUP_STATUS.HORS_PERIMETRE && (
                       <Box flexGrow="1">
                         <Flex flexDirection="column" border="1px solid" borderColor="bluefrance" p={6} h="full">
                           <Heading as="h3" fontSize="1.3rem" mb={3}>
@@ -505,7 +563,7 @@ const ReconciliationModalHeader = React.memo(
                         </Flex>
                       </Box>
                     )}
-                    {mnaFormation.parcoursup_statut !== "hors périmètre" && (
+                    {mnaFormation.parcoursup_statut !== PARCOURSUP_STATUS.HORS_PERIMETRE && (
                       <Box flexGrow="1">
                         <Flex flexDirection="column" border="1px solid" borderColor="bluefrance" p={6} h="full">
                           <FormControl display="flex" flexDirection="column" w="auto">
@@ -589,7 +647,7 @@ const ReconciliationModalHeader = React.memo(
                       </Box>
                     )}
                     <Flex mb={4} mt={4} h="30px" justifyContent="flex-end">
-                      {mnaFormation.parcoursup_statut === "hors périmètre" && (
+                      {mnaFormation.parcoursup_statut === PARCOURSUP_STATUS.HORS_PERIMETRE && (
                         <Button
                           type="submit"
                           variant="primary"
@@ -600,7 +658,7 @@ const ReconciliationModalHeader = React.memo(
                           J’ai compris
                         </Button>
                       )}
-                      {mnaFormation.parcoursup_statut !== "hors périmètre" && (
+                      {mnaFormation.parcoursup_statut !== PARCOURSUP_STATUS.HORS_PERIMETRE && (
                         <Button
                           type="submit"
                           variant="primary"

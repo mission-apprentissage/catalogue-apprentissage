@@ -11,6 +11,7 @@ const { geoMapper } = require("../mappers/geoMapper");
 const { diffFormation, buildUpdatesHistory } = require("../common/utils/diffUtils");
 const { SandboxFormation, RcoFormation } = require("../../common/model");
 const { getCoordinatesFromAddressData } = require("@mission-apprentissage/tco-service-node");
+const { distanceBetweenCoordinates } = require("../../common/utils/distanceUtils");
 
 const formationSchema = Joi.object({
   cfd: Joi.string().required(),
@@ -73,6 +74,30 @@ const mnaFormationUpdater = async (
       const { adresse, ...rest } = result ?? {};
       cpMapping = adresse ? { lieu_formation_adresse: adresse, ...rest } : {};
       error = parseErrors(geoMessages);
+
+      if (geoMessages?.errorType === "Insee") {
+        // on Insee inconsistency calculate distance between rco address search geoloc & rco geocoords
+        const { result: coordinates, messages: coordsMessages } = await getCoordinatesFromAddressData({
+          numero_voie: formation.lieu_formation_adresse,
+          localite: formation.localite,
+          code_postal: formation.code_postal,
+          code_insee: code_commune_insee,
+        });
+
+        const geolocError = parseErrors(coordsMessages);
+        if (!geolocError && coordinates.geo_coordonnees) {
+          const [lat, lon] = geoCoords.split(",");
+          const [inconsistentLat, inconsistentLon] = coordinates.geo_coordonnees.split(",");
+          const distance = distanceBetweenCoordinates(lat, lon, inconsistentLat, inconsistentLon);
+
+          error = `${error} Distance entre le lieu de formation et la géolocalisation de ce même lieu via l'adresse fournie par RCO: ${(
+            distance / 1000
+          ).toFixed(2)}km (coordonnées geoloc rco : ${geoCoords} / coordonnées via adresse rco : ${
+            coordinates.geo_coordonnees
+          })`;
+        }
+      }
+
       if (error) {
         return { updates: null, formation, error, cfdInfo };
       }
@@ -241,6 +266,18 @@ const mnaFormationUpdater = async (
       await SandboxFormation.deleteMany({ id_rco_formation: rest.id_rco_formation });
     }
 
+    // compute distance between lieu formation & etablissement formateur
+    if (updatedFormation.lieu_formation_geo_coordonnees && updatedFormation.geo_coordonnees_etablissement_formateur) {
+      const [formateurLat, formateurLon] = updatedFormation.geo_coordonnees_etablissement_formateur.split(",");
+      const [lat, lon] = updatedFormation.lieu_formation_geo_coordonnees.split(",");
+      updatedFormation.distance_lieu_formation_etablissement_formateur = distanceBetweenCoordinates(
+        Number(formateurLat),
+        Number(formateurLon),
+        Number(lat),
+        Number(lon)
+      );
+    }
+
     const { updates, keys } = diffFormation(formation, updatedFormation);
     if (updates) {
       if (withHistoryUpdate) {
@@ -252,6 +289,7 @@ const mnaFormationUpdater = async (
     return { updates: null, formation, cfdInfo };
   } catch (e) {
     logger.error(e);
+    console.error(e);
     return { updates: null, formation, error: e.toString(), cfdInfo: null };
   }
 };

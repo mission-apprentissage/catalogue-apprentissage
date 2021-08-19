@@ -45,5 +45,15 @@ const usersSchema = {
     default: null,
     description: "Date de dernière connexion",
   },
+  connection_history: {
+    type: [Date],
+    default: null,
+    description: "Historique des dates de connexion",
+  },
+  created_at: {
+    type: Date,
+    default: Date.now,
+    description: "Date de création du compte",
+  },
 };
 module.exports = usersSchema;

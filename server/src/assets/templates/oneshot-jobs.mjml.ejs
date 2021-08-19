@@ -1,6 +1,6 @@
 <mjml>
     <mj-head>
-        <mj-title>Catalogue apprentissage - Écarts de codes postaux</mj-title>
+        <mj-title>Catalogue apprentissage - <%= data.title %></mj-title>
         <mj-font name="Public Sans"
                  href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,600;0,900;1,400"/>
         <mj-style inline="inline">
@@ -31,7 +31,7 @@
             <mj-column padding-right="0">
                 <mj-text align="left" padding="10px 0 25px 25px" font-size="22px" line-height="26px"
                          color="#19414C">
-                    Écarts de codes postaux sur le catalogue apprentissage <br>
+                    <%= data.title %><br>
                 </mj-text>
             </mj-column>
         </mj-section>
@@ -39,7 +39,7 @@
         <mj-section padding-bottom="10px" padding-top="10px" background-color="#E5EDEF">
             <mj-column>
                 <mj-text align="left" padding-top="20px" color="#19414C" font-size="22px" font-weight="900" >
-                    Il y a <%= data.nbFormations %> formations avec des codes postaux inconsistants par rapport à ceux reçus de RCO (cedex ?)
+                    <%= data.description %>
                 </mj-text>
             </mj-column>
         </mj-section>

@@ -1,6 +1,6 @@
 import { Box, Avatar, AvatarBadge } from "@chakra-ui/react";
 import React from "react";
-import { ErrorIcon } from "../../../../theme/components/icons";
+import { CheckLine } from "../../../../theme/components/icons";
 
 const ButtonIndicator = ({ text, withIcon, active, onClicked, ...props }) => {
   return (
@@ -30,15 +30,15 @@ const ButtonIndicator = ({ text, withIcon, active, onClicked, ...props }) => {
     >
       {withIcon && (
         <AvatarBadge
-          boxSize="0.9em"
-          bg="white"
+          boxSize="1.2em"
+          bg="#00ac8c"
           fontSize="sm"
           fontWeight="semibold"
           color="tomato"
           top="-0.5rem"
           left="1.5rem"
         >
-          <ErrorIcon color="redmarianne" width="20px" height="20px" />
+          <CheckLine color="white" width="10px" height="10px" />
         </AvatarBadge>
       )}
     </Avatar>

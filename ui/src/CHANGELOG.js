@@ -4,12 +4,24 @@ import { Link } from "@chakra-ui/react";
 const changelog = {
   list: [
     {
-      version: "4.4.0",
+      version: "4.5.0",
       date: "Prochainement",
       about: `<h4>À venir</h4>`,
       fixes: [],
-      features: ["Développement d'un module de gestion des règles"],
+      features: [],
       improvements: ["Travaux sur le flux retour vers les Carif-Oref et gestion des modifications"],
+    },
+    {
+      version: "4.4.0",
+      date: "Le 19 Août 2021",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: ["Code postal et académie des établissements à partir des données de l'API Entreprise"],
+      features: ["[Admin] Module de gestion des règles d'intégration dans les plateformes Parcoursup et Affelnet"],
+      improvements: [
+        "Mise à jour de la page de statistiques, avec des nouvelles métriques : raisons de non éligibilité, couverture de réconciliation, graphique d'évolution de la collecte, classement des erreurs...",
+        "Chaînage et optimisation des rapports d'import et d'enrichissement des formations",
+      ],
     },
     {
       version: "4.3.0",

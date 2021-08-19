@@ -25,7 +25,6 @@ import { RuleModal } from "./components/RuleModal";
 import { Diplome } from "./components/Diplome";
 import { Headline } from "./components/Headline";
 import { useQuery } from "react-query";
-import { CONDITIONS } from "../../constants/conditionsIntegration";
 import { academies } from "../../constants/academies";
 import useAuth from "../../common/hooks/useAuth";
 import { hasAcademyRight, hasAllAcademiesRight, isUserAdmin } from "../../common/utils/rolesUtils";
@@ -91,22 +90,32 @@ const deleteRule = async ({ _id }) => {
   return await _delete(`${endpointNewFront}/entity/perimetre/regle/${_id}`);
 };
 
-const CountText = ({ totalFormationsCount, plateforme, niveaux, ...rest }) => {
-  const [integrationCount, setIntegrationCount] = useState("-");
+const getIntegrationCount = async ({ plateforme, niveau, academie }) => {
+  try {
+    const countUrl = `${endpointNewFront}/v1/entity/perimetre/regles/integration/count`;
+    const params = new URLSearchParams({
+      plateforme: plateforme,
+      num_academie: academie,
+      ...(niveau ? { niveau } : {}),
+    });
+    return await _get(`${countUrl}?${params}`, false);
+  } catch (e) {
+    console.error(e);
+    return { nbRules: 0, nbFormations: 0 };
+  }
+};
+
+const CountText = ({ totalFormationsCount, plateforme, niveaux, academie, ...rest }) => {
+  const [integrationCount, setIntegrationCount] = useState({});
 
   useEffect(() => {
     async function run() {
-      try {
-        const countUrl = `${endpointNewFront}/v1/entity/perimetre/regles/integration/count`;
-        const count = await _get(`${countUrl}?plateforme=${plateforme}`, false);
-        setIntegrationCount(count);
-      } catch (e) {
-        console.error(e);
-      }
+      const count = await getIntegrationCount({ plateforme, academie });
+      setIntegrationCount(count);
     }
 
     run();
-  }, [plateforme]);
+  }, [plateforme, academie]);
 
   const diplomesCount = niveaux.reduce(
     (acc, { diplomes }) =>
@@ -120,25 +129,18 @@ const CountText = ({ totalFormationsCount, plateforme, niveaux, ...rest }) => {
     0
   );
 
-  const shouldOrMustCount = niveaux.reduce(
-    (acc, { diplomes }) =>
-      acc +
-      diplomes.reduce(
-        (acc2, { regles }) =>
-          acc2 +
-          regles.filter(({ condition_integration }) =>
-            [CONDITIONS.DOIT_INTEGRER, CONDITIONS.PEUT_INTEGRER].includes(condition_integration)
-          ).length,
-        0
-      ),
-    0
-  );
-
   return (
     <Text {...rest}>
-      Actuellement au national, {shouldOrMustCount} diplômes ou titres en apprentissage ({integrationCount} formations)
-      doivent ou peuvent intégrer la plateforme Parcoursup sur les {diplomesCount} recensés ({totalFormationsCount}{" "}
-      formations dont le diplôme a une date de fin supérieure au 31/08 de l'année en cours) dans le Catalogue général.
+      Actuellement{" "}
+      {academie
+        ? `pour l'académie de ${
+            Object.values(academies).find(({ num_academie }) => num_academie === Number(academie))?.nom_academie
+          }`
+        : "au national"}
+      , {integrationCount?.nbRules ?? "-"} diplômes ou titres en apprentissage ({integrationCount?.nbFormations ?? "-"}{" "}
+      formations) doivent ou peuvent intégrer la plateforme {plateforme} sur les {diplomesCount} recensés (
+      {totalFormationsCount} formations dont le diplôme a une date de fin supérieure au 31/08 de l'année en cours) dans
+      le Catalogue général.
     </Text>
   );
 };
@@ -332,30 +334,25 @@ export default ({ plateforme }) => {
 
   useEffect(() => {
     async function run() {
-      try {
-        const counts = {};
-        await Promise.all(
-          niveaux.map(async ({ niveau }) => {
-            const countUrl = `${endpointNewFront}/v1/entity/perimetre/regle/count`;
-            const params = new URLSearchParams({
-              niveau: niveau.value,
-              num_academie: currentAcademie,
-            });
-            counts[niveau.value] = await _get(`${countUrl}?${params}`, false);
-          })
-        );
-        setNiveauxCount(counts);
-      } catch (e) {
-        console.error(e);
-      }
+      const counts = {};
+      await Promise.all(
+        niveaux.map(async ({ niveau }) => {
+          counts[niveau.value] = await getIntegrationCount({
+            plateforme,
+            niveau: niveau.value,
+            academie: currentAcademie,
+          });
+        })
+      );
+      setNiveauxCount(counts);
     }
 
-    if (currentAcademie) {
+    if (plateforme) {
       run();
     } else {
       setNiveauxCount({});
     }
-  }, [currentAcademie, niveaux]);
+  }, [currentAcademie, niveaux, plateforme]);
 
   return (
     <Layout>
@@ -379,6 +376,10 @@ export default ({ plateforme }) => {
             {niveaux.length !== 0 && (
               <>
                 <Flex
+                  zIndex={1}
+                  bg={"white"}
+                  position={"sticky"}
+                  top={0}
                   justifyContent={"space-between"}
                   py={4}
                   borderTop={"1px solid"}
@@ -418,17 +419,16 @@ export default ({ plateforme }) => {
                     Ajouter un diplôme, un titre ou des formations
                   </Button>
                 </Flex>
-                <CountText py={4} totalFormationsCount={totalCount} niveaux={niveaux} plateforme={plateforme} />
+                <CountText
+                  py={4}
+                  totalFormationsCount={totalCount}
+                  niveaux={niveaux}
+                  plateforme={plateforme}
+                  academie={currentAcademie}
+                />
                 <Box minH="70vh">
                   <Accordion bg="#FFFFFF" mb={24} allowToggle>
                     {niveaux.map(({ niveau, diplomes }) => {
-                      const rulesCount = diplomes.reduce(
-                        (acc, { regles }) =>
-                          acc +
-                          regles.filter(({ nom_regle_complementaire }) => nom_regle_complementaire !== null).length,
-                        0
-                      );
-
                       return (
                         <AccordionItem border="none" key={niveau.value} mt={6}>
                           {({ isExpanded }) => (
@@ -444,8 +444,9 @@ export default ({ plateforme }) => {
                                     <Text textStyle={"h4"}>Niveau {niveau.value}</Text>
                                   </Flex>
                                   <Text textStyle={"rf-text"}>
-                                    {diplomes.length + rulesCount} diplômes et titres ce qui représente{" "}
-                                    {niveauxCount[niveau.value] ?? niveau.count} formations
+                                    {niveauxCount[niveau.value]?.nbRules ?? 0} diplômes et titres doivent ou peuvent
+                                    intégrer la plateforme ce qui représente{" "}
+                                    {niveauxCount[niveau.value]?.nbFormations ?? 0} formations
                                   </Text>
                                 </Flex>
                               </AccordionButton>

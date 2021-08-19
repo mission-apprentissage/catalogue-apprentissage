@@ -5,6 +5,7 @@ const { runScript } = require("../scriptWrapper");
 const { ConvertedFormation, RcoFormation, SandboxFormation } = require("../../common/model/index");
 const { storeByChunks } = require("../../common/utils/reportUtils");
 const report = require("../../logic/reporter/report");
+const { createReportNewDiplomeGrandAge } = require("../../logic/controller/diplomes-grand-age");
 const config = require("config");
 
 const numCPUs = 4;
@@ -20,6 +21,8 @@ const managedUnPublishedRcoFormation = async () => {
       $set: {
         published: false,
         rco_published: false,
+        update_error: null,
+        to_update: false,
       },
     }
   );
@@ -27,25 +30,30 @@ const managedUnPublishedRcoFormation = async () => {
   return rcoFormationNotPublishedIds;
 };
 
-const createReport = async ({ invalidFormations, updatedFormations, notUpdatedCount }) => {
+const createReport = async (
+  { invalidFormations, updatedFormations, noUpdatedFormations, unpublishedFormations },
+  uuidReport
+) => {
   console.log("Send report");
   const summary = {
     invalidCount: invalidFormations.length,
     updatedCount: updatedFormations.length,
-    notUpdatedCount: notUpdatedCount,
+    notUpdatedCount: noUpdatedFormations.length,
+    unpublishedCount: unpublishedFormations.length,
   };
 
   // save report in db
   const date = Date.now();
   const type = "trainingsUpdate";
 
-  await storeByChunks(type, date, summary, "updated", updatedFormations);
-  await storeByChunks(`${type}.error`, date, summary, "errors", invalidFormations);
+  await storeByChunks(type, date, summary, "updated", updatedFormations, uuidReport);
+  await storeByChunks(type, date, summary, "noupdated", noUpdatedFormations, uuidReport);
+  await storeByChunks(type, date, summary, "unpublished", unpublishedFormations, uuidReport);
+  await storeByChunks(`${type}.error`, date, summary, "errors", invalidFormations, uuidReport);
 
-  const link = `${config.publicUrl}/report?type=${type}&date=${date}`;
+  const link = `${config.publicUrl}/report?type=${type}&date=${date}&id=${uuidReport}`;
+  console.log(link); // Useful when send in blue is down
   const data = {
-    invalid: invalidFormations,
-    updated: updatedFormations,
     summary,
     link,
   };
@@ -58,20 +66,39 @@ const run = async () => {
   if (cluster.isMaster) {
     console.log(`Master ${process.pid} is running`);
 
-    const filter = {};
     const args = process.argv.slice(2);
     const withCodePostalUpdate = args.includes("--withCodePostal");
+    const noUpdatesFilters = args.includes("--noUpdatesFilters");
     const limitArg = args.find((arg) => arg.startsWith("--limit"))?.split("=")?.[1];
+    const uuidReport = args.find((arg) => arg.startsWith("--uuidReport"))?.split("=")?.[1];
     const limit = limitArg ? Number(limitArg) : 100;
+    const filter = noUpdatesFilters
+      ? {}
+      : {
+          $or: [
+            {
+              to_update: true,
+            },
+            {
+              update_error: { $ne: null },
+            },
+          ],
+        };
 
     runScript(async () => {
-      const idsToSkip = await managedUnPublishedRcoFormation();
-      const idFilter = { id_rco_formation: { $nin: idsToSkip } };
-      const activeFilter = { ...filter, ...idFilter }; // FIXEME TODO filter contain id_rco_formation key
-      // TODO add to filter rco_published: true
+      const idsUnPublishedToSkip = await managedUnPublishedRcoFormation();
+      const idFilter = { id_rco_formation: { $nin: idsUnPublishedToSkip } };
+      const activeFilterTmp = { ...filter, ...idFilter }; // FIXEME TODO filter contain id_rco_formation key
+
+      console.log("Filters : ", activeFilterTmp);
+      let allIds = await ConvertedFormation.find(activeFilterTmp, { _id: 1 });
+      allIds = allIds.map(({ _id }) => `${_id}`);
+      const activeFilter = { _id: { $in: allIds } }; // Avoid issues when the updter modifies a field which is in the filters
 
       const { pages, total } = await ConvertedFormation.paginate(activeFilter, { limit });
       const halfItems = Math.floor(pages / numCPUs) * limit;
+
+      console.log(`total: ${total}`, pages, halfItems);
 
       await SandboxFormation.deleteMany({});
 
@@ -99,10 +126,11 @@ const run = async () => {
             break;
         }
         pResult[cluster.workers[id].process.pid] = { result: null };
+
         order++;
         cluster.workers[id].on("message", (message) => {
           console.log(
-            `Results send from ${message.from}, invalidFormations: ${message.result.invalidFormations.length}, updatedFormations: ${message.result.updatedFormations.length}, notUpdatedCount: ${message.result.notUpdatedCount}`
+            `Results send from ${message.from}, invalidFormations: ${message.result.invalidFormations.length}, updatedFormations: ${message.result.updatedFormations.length}, noUpdatedFormations: ${message.result.noUpdatedFormations.length}`
           );
           pResult[message.from].result = message.result;
           cluster.workers[id].send({
@@ -111,6 +139,8 @@ const run = async () => {
           });
         });
       }
+
+      console.log(pOrder);
 
       cluster.on("online", (worker) => {
         console.log("Worker " + worker.process.pid + " is online");
@@ -131,26 +161,31 @@ const run = async () => {
           const mR = {
             invalidFormations: [],
             updatedFormations: [],
-            notUpdatedCount: 0,
+            noUpdatedFormations: [],
+            unpublishedFormations: idsUnPublishedToSkip,
           };
+          let mFormationsGrandAge = [];
           for (const key in pResult) {
             if (Object.hasOwnProperty.call(pResult, key)) {
               const r = pResult[key].result;
               if (r) {
                 mR.invalidFormations = [...mR.invalidFormations, ...r.invalidFormations];
                 mR.updatedFormations = [...mR.updatedFormations, ...r.updatedFormations];
-                mR.notUpdatedCount = mR.notUpdatedCount + r.notUpdatedCount;
+                mR.noUpdatedFormations = [...mR.noUpdatedFormations, ...r.noUpdatedFormations];
+
+                mFormationsGrandAge = [...mFormationsGrandAge, ...r.formationsGrandAge];
               }
             }
           }
 
           console.log(
-            `Results total, invalidFormations: ${mR.invalidFormations.length}, updatedFormations: ${mR.updatedFormations.length}, notUpdatedCount: ${mR.notUpdatedCount}`
+            `Results total, invalidFormations: ${mR.invalidFormations.length}, updatedFormations: ${mR.updatedFormations.length}, noUpdatedFormations: ${mR.noUpdatedFormations.length}`
           );
 
           runScript(async () => {
             try {
-              await createReport(mR);
+              await createReport(mR, uuidReport);
+              await createReportNewDiplomeGrandAge(mFormationsGrandAge, uuidReport);
             } catch (error) {
               console.error(error);
             }
@@ -167,17 +202,28 @@ const run = async () => {
       if (message.type === "start") {
         runScript(async () => {
           console.log(process.pid, message);
-          const result = await updater.run(
-            message.activeFilter,
-            message.withCodePostalUpdate,
-            message.limit,
-            message.maxItems,
-            message.offset
-          );
-          process.send({
-            from: process.pid,
-            result,
-          });
+          if (message.maxItems === 0 && message.offset === 0) {
+            process.send({
+              from: process.pid,
+              result: {
+                invalidFormations: [],
+                updatedFormations: [],
+                noUpdatedFormations: [],
+              },
+            });
+          } else {
+            const result = await updater.run(
+              message.activeFilter,
+              message.withCodePostalUpdate,
+              message.limit,
+              message.maxItems,
+              message.offset
+            );
+            process.send({
+              from: process.pid,
+              result,
+            });
+          }
         });
       } else if (message.type === "end") {
         // eslint-disable-next-line no-process-exit

@@ -19,39 +19,33 @@ module.exports.connectToMongo = (mongoUri = config.mongodb.uri, mongooseInst = n
     mI.Promise = global.Promise; // Get the default connection
     const db = mI.connection;
 
-    // Bind connection to error event (to get notification of connection errors)
-    db.on("error", (e) => {
-      console.error("MongoDB: connection error:");
-      reject(e);
-    });
-
     db.on("close", (e) => {
-      console.error("Error...close");
+      console.log("MongoDB", "...close");
       reject(e);
     });
     db.on("error", (err) => {
-      console.error("Error...error", err);
+      console.error("MongoDB", "Error...error", err);
       reject(err);
     });
     db.on("disconnect", (err) => {
-      console.error("Error...disconnect", err);
+      console.log("MongoDB", "...disconnect", err ?? "");
       reject(err);
     });
     db.on("disconnected", (err) => {
-      console.error("Error...disconnected", err);
+      console.log("MongoDB", "...disconnected", err ?? "");
       reject(err);
     });
     db.on("parseError", (err) => {
-      console.error("Error...parse", err);
+      console.error("MongoDB", "Error...parse", err);
       reject(err);
     });
     db.on("timeout", (err) => {
-      console.error("Error...timeout", err);
+      console.error("MongoDB", "Error...timeout", err);
       reject(err);
     });
 
     db.once("open", () => {
-      console.log("MongoDB: Connected");
+      console.log("MongoDB", "Connected");
       resolve({ db });
     });
   });
