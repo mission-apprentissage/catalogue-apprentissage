@@ -25,6 +25,9 @@ const getReportTitle = (reportType) => {
     case REPORT_TYPE.PS_REJECT:
       return "Rapport de rapprochements Parcoursup / Carif-Oref";
 
+    case REPORT_TYPE.METIER_GRAND_AGE:
+      return "Rapport des métiers du grand-âge";
+
     default:
       console.warn("unexpected report type", reportType);
       return reportType;

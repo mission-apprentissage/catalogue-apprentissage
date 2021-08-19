@@ -418,6 +418,39 @@ const PsRejectTabs = ({ data, reportType, date, errors }) => {
   );
 };
 
+const MetiersGrandAgeTabs = ({ data, reportType, date, errors }) => {
+  const { summary } = data;
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedData, setSelectedData] = useState();
+
+  const onRowClick = (index) => {
+    setSelectedData(JSON.stringify(data.rejected?.[index]));
+    onOpen();
+  };
+
+  return (
+    <>
+      <Ctabs isLazy>
+        <TabList>
+          <Tab>Résumé</Tab>
+          {summary.count > 0 && <Tab>{summary.count} ajoutée(s)</Tab>}
+        </TabList>
+        <TabPanels>
+          <TabPanel>
+            <Summary data={data} reportType={reportType} />
+          </TabPanel>
+          {data?.new?.length > 0 && (
+            <TabPanel>
+              <Table data={data.new} onRowClick={onRowClick} filename={`${reportType}_${date}_new`} />
+            </TabPanel>
+          )}
+        </TabPanels>
+      </Ctabs>
+      <CodeModal isOpen={isOpen} onClose={onClose} title="Updates" code={selectedData} />
+    </>
+  );
+};
+
 const Tabs = ({ data = { summary: {} }, reportType, date, errors, importReport, convertReport }) => {
   switch (reportType) {
     case REPORT_TYPE.RCO_IMPORT:
@@ -448,6 +481,9 @@ const Tabs = ({ data = { summary: {} }, reportType, date, errors, importReport, 
 
     case REPORT_TYPE.PS_REJECT:
       return <PsRejectTabs data={data} reportType={reportType} date={date} errors={errors} />;
+
+    case REPORT_TYPE.METIER_GRAND_AGE:
+      return <MetiersGrandAgeTabs data={data} reportType={reportType} date={date} errors={errors} />;
 
     default:
       console.warn("unexpected report type", reportType);

@@ -1,5 +1,6 @@
 const logger = require("../../../common/logger");
 const { mnaFormationUpdater } = require("../../../logic/updaters/mnaFormationUpdater");
+const { detectNewDiplomeGrandAge } = require("../../../logic/controller/diplomes-grand-age");
 const { paginator } = require("../../../common/utils/paginator");
 const { RcoFormation, ConvertedFormation } = require("../../../common/model/index");
 
@@ -11,6 +12,7 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false, limit =
   const invalidFormations = [];
   const updatedFormations = [];
   const noUpdatedFormations = [];
+  const formationsGrandAge = [];
   const cfdInfosCache = new Map();
 
   ConvertedFormation.pauseAllMongoosaticHooks();
@@ -28,6 +30,11 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false, limit =
 
     if (cfdInfo && !cfdInfoCache) {
       cfdInfosCache.set(formation._doc.cfd, cfdInfo);
+    }
+
+    const resultGrandAge = detectNewDiplomeGrandAge(formation._doc);
+    if (resultGrandAge) {
+      formationsGrandAge.push(resultGrandAge);
     }
 
     if (error) {
@@ -80,7 +87,7 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false, limit =
     }
   });
 
-  return { invalidFormations, updatedFormations, noUpdatedFormations };
+  return { invalidFormations, updatedFormations, noUpdatedFormations, formationsGrandAge };
 };
 
 module.exports = { run, performUpdates };

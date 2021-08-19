@@ -312,6 +312,67 @@ const Summary = ({ data, reportType, errors, importReportRelatedData, onGoToClic
       );
     }
 
+    case REPORT_TYPE.METIER_GRAND_AGE: {
+      const { summary } = data;
+      return (
+        <Text fontSize={["epsilon", "gamma"]}>
+          Résumé rapport des métiers du grand-âge :<br />
+          <ul>
+            <li>{summary.count} Formation(s) ajoutée(s) aujourd'hui</li>
+            <li>
+              {summary.count40033003} Formation(s) CFD: 40033003
+              <br />
+              Baccalauréat professionnel | Accompagnement soins et services à la personne option A - à domicile
+            </li>
+            <li>
+              {summary.count01033001} Formation(s) CFD: 01033001
+              <br />
+              Mention complémentaire de niveau 3 | Aide à domicile
+            </li>
+            <li>
+              {summary.count50033205} Formation(s) CFD: 50033205
+              <br />
+              Certificat d'aptitude professionnelle | Accompagnant éducatif petite enfance
+            </li>
+            <li>
+              {summary.count40033004} Formation(s) CFD: 40033004
+              <br />
+              Baccalauréat professionnel | Accompagnement soins et services à la personne option B - en structure
+            </li>
+            <li>
+              {" "}
+              {summary.count40033006} Formation(s) CFD: 40033006
+              <br />
+              {summary.count40033002} Formation(s) CFD: 40033002
+              <br />
+              Baccalauréat professionnel | Animation - enfance et personnes âgées
+            </li>
+            <li>
+              {summary.count50033411} Formation(s) CFD: 50033411
+              <br />
+              Certificat d'aptitude professionnelle | Assistant technique en milieux familial et collectif
+            </li>
+          </ul>
+          <Link
+            color="pinklight.400"
+            fontStyle="italic"
+            href="https://catalogue.apprentissage.beta.gouv.fr/metabase/public/question/3ca6e33a-1720-4465-b6f4-acf7c25236c0"
+            isExternal
+          >
+            Voir l'ensemble des formations
+          </Link>
+          <Link
+            color="pinklight.400"
+            fontStyle="italic"
+            href="https://catalogue.apprentissage.beta.gouv.fr/metabase/public/question/c0bf84e2-66f4-4640-833f-ef70cda69805"
+            isExternal
+          >
+            Voir l'ensemble des organismes
+          </Link>
+        </Text>
+      );
+    }
+
     default:
       console.warn("unexpected report type", reportType);
       return <></>;

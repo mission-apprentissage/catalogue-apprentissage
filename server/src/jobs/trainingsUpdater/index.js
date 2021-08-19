@@ -5,6 +5,7 @@ const { runScript } = require("../scriptWrapper");
 const { ConvertedFormation, RcoFormation, SandboxFormation } = require("../../common/model/index");
 const { storeByChunks } = require("../../common/utils/reportUtils");
 const report = require("../../logic/reporter/report");
+const { createReportNewDiplomeGrandAge } = require("../../logic/controller/diplomes-grand-age");
 const config = require("config");
 
 const numCPUs = 4;
@@ -163,6 +164,7 @@ const run = async () => {
             noUpdatedFormations: [],
             unpublishedFormations: idsUnPublishedToSkip,
           };
+          let mFormationsGrandAge = [];
           for (const key in pResult) {
             if (Object.hasOwnProperty.call(pResult, key)) {
               const r = pResult[key].result;
@@ -170,6 +172,8 @@ const run = async () => {
                 mR.invalidFormations = [...mR.invalidFormations, ...r.invalidFormations];
                 mR.updatedFormations = [...mR.updatedFormations, ...r.updatedFormations];
                 mR.noUpdatedFormations = [...mR.noUpdatedFormations, ...r.noUpdatedFormations];
+
+                mFormationsGrandAge = [...mFormationsGrandAge, ...r.formationsGrandAge];
               }
             }
           }
@@ -181,6 +185,7 @@ const run = async () => {
           runScript(async () => {
             try {
               await createReport(mR, uuidReport);
+              await createReportNewDiplomeGrandAge(mFormationsGrandAge, uuidReport);
             } catch (error) {
               console.error(error);
             }
