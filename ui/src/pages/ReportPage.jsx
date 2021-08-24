@@ -98,14 +98,16 @@ const ReportPage = () => {
 
       if (reportType === REPORT_TYPE.TRAININGS_UPDATE) {
         const convertReportResp = await getReport(REPORT_TYPE.RCO_CONVERSION, date, uuidReport, 1, null, true);
-        const { converted, summary: convertSummary } = convertReportResp.report?.data;
-        setConvertReport({
-          convertedIds: converted.map(({ id_rco_formation, _id }) => ({
-            id_rco_formation,
-            _id,
-          })),
-          summary: convertSummary,
-        });
+        if (convertReportResp.report && convertReportResp.report.data) {
+          const { converted, summary: convertSummary } = convertReportResp.report?.data;
+          setConvertReport({
+            convertedIds: converted.map(({ id_rco_formation, _id }) => ({
+              id_rco_formation,
+              _id,
+            })),
+            summary: convertSummary,
+          });
+        }
       }
 
       if (reportType === REPORT_TYPE.RCO_CONVERSION || reportType === REPORT_TYPE.TRAININGS_UPDATE) {
