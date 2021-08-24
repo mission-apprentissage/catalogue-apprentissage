@@ -1,7 +1,7 @@
 const wsRCO = require("./wsRCO");
 const { RcoFormation } = require("../../../common/model/index");
 const { diff } = require("deep-object-diff");
-const { asyncForEach } = require("../../../common/utils/asyncUtils");
+const { asyncForEach, chunkedAsyncForEach } = require("../../../common/utils/asyncUtils");
 const report = require("../../../logic/reporter/report");
 const config = require("config");
 const { paginator } = require("../../../common/utils/paginator");
@@ -286,8 +286,7 @@ class Importer {
     const deleted = [];
 
     console.log("Lookup for new or update trainings");
-    for (let ite = 0; ite < currentFormations.length; ite++) {
-      const formation = currentFormations[ite];
+    await chunkedAsyncForEach(currentFormations, async (formation) => {
       const found = await RcoFormation.findOne({
         id_formation: formation.id_formation,
         id_action: formation.id_action,
@@ -307,7 +306,7 @@ class Importer {
           updated.push(formation);
         }
       }
-    }
+    });
 
     console.log("Lookup for deleted trainings");
     // check if Some formations has been deleted
