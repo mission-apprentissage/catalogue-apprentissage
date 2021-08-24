@@ -10,7 +10,7 @@
   "scripts": {
     "start": "nodemon --ignore tests/ src/index.js",
     "debug": "nodemon --inspect=0.0.0.0 --signal SIGINT --ignore tests/ src/index.js",
-    "test": "mocha --recursive --exit --timeout 5000 tests/",
+    "test": "mocha --recursive --exit --timeout 60000 tests/ src/jobs/**/tests/",
     "lint": "eslint src/ tests/",
     "docker:start": "docker-compose up -d --build --force-recreate",
     "docker:stop": "docker-compose stop",
@@ -19,7 +19,6 @@
     "seed": "node src/jobs/seed/index.js",
     "sdk:playground": "node src/jobs/tcoSdkPlayground/index.js",
     "jobs": "node src/jobs/index.js",
-    "jobs:test": "mocha --recursive --exit --timeout 60000 src/jobs/**/tests/",
     "clear": "node src/jobs/clear/index.js",
     "rco:importer": "standalone=true node src/jobs/rcoImporter/index.js",
     "rco:converter": "standalone=true node src/jobs/rcoConverter/index.js",

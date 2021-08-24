@@ -22,7 +22,7 @@ afterAll(() => server.close());
 
 test("renders title", () => {
   const { getByText } = renderWithRouter(<HomePage />);
-  const title = getByText(/Catalogue des offres de formations en apprentissage/i);
+  const title = getByText(/^Catalogue des offres de formations en apprentissage$/i);
   expect(title).toBeInTheDocument();
 });
 
@@ -31,9 +31,9 @@ test("should fetch formations & etablissements counts", async () => {
 
   await waitForElementToBeRemoved(() => getByText(/chargement/i));
 
-  const countFormations = getByText(/8900 formations 2021/i);
+  const countFormations = getByText(/8 900 formations/i);
   expect(countFormations).toBeInTheDocument();
 
-  const countEtablissements = getByText(/150 établissements/i);
+  const countEtablissements = getByText(/150 organismes/i);
   expect(countEtablissements).toBeInTheDocument();
 });

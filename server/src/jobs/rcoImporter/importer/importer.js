@@ -312,7 +312,7 @@ class Importer {
     // check if Some formations has been deleted
     await paginator(
       RcoFormation,
-      { filter: { published: true }, lean: true, showProgress: true },
+      { filter: { published: true }, select: "+email", lean: true, showProgress: true },
       async (pastFormation) => {
         const id = this._buildId(pastFormation);
         const found = currentFormations.some((f) => id === this._buildId(f));

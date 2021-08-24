@@ -80,7 +80,7 @@ swaggerSpecification.components = {
   },
 };
 
-module.exports = async (components) => {
+module.exports = async (components, verbose = true) => {
   const { db } = components;
   const app = express();
   const adminOnly = permissionsMiddleware({ isAdmin: true });
@@ -90,7 +90,7 @@ module.exports = async (components) => {
   app.use(bodyParser.text({ type: "application/x-ndjson" }));
 
   app.use(corsMiddleware());
-  app.use(logMiddleware());
+  verbose && app.use(logMiddleware());
 
   if (config.env != "dev") {
     app.set("trust proxy", 1);
@@ -162,18 +162,16 @@ module.exports = async (components) => {
   app.get(
     "/api",
     tryCatch(async (req, res) => {
+      verbose && logger.info("/api called - healthcheck");
+
       let mongodbStatus;
-      logger.info("/api called");
-      await db
-        .collection("rcoformation")
-        .stats()
-        .then(() => {
-          mongodbStatus = true;
-        })
-        .catch((e) => {
-          mongodbStatus = false;
-          logger.error("Healthcheck failed", e);
-        });
+      try {
+        await db.collection("rcoformation").stats();
+        mongodbStatus = true;
+      } catch (e) {
+        mongodbStatus = false;
+        logger.error("Healthcheck failed", e);
+      }
 
       return res.json({
         name: `Serveur Express Catalogue - ${config.appName}`,
