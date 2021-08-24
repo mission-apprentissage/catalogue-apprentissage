@@ -90,11 +90,17 @@ const mnaFormationUpdater = async (
           const [inconsistentLat, inconsistentLon] = coordinates.geo_coordonnees.split(",");
           const distance = distanceBetweenCoordinates(lat, lon, inconsistentLat, inconsistentLon);
 
-          error = `${error} Distance entre le lieu de formation et la géolocalisation de ce même lieu via l'adresse fournie par RCO: ${(
-            distance / 1000
-          ).toFixed(2)}km (coordonnées geoloc rco : ${geoCoords} / coordonnées via adresse rco : ${
-            coordinates.geo_coordonnees
-          })`;
+          // limit to 5 km the error threshold
+          if (distance > 5000) {
+            error = `${error} Distance entre le lieu de formation et la géolocalisation de ce même lieu via l'adresse fournie par RCO: ${(
+              distance / 1000
+            ).toFixed(2)}km (coordonnées geoloc rco : ${geoCoords} / coordonnées via adresse rco : ${
+              coordinates.geo_coordonnees
+            })`;
+          } else {
+            // consider it's not an error if the distance gap is under 5km
+            error = null;
+          }
         }
       }
 
