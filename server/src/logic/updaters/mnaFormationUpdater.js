@@ -173,17 +173,17 @@ const mnaFormationUpdater = async (
      * 2. UAI formateur
      * 3. UAI RCO ? (mais qui devrait être égale à UAI formateur puisque RCO utilise les TCO pour charger les UAI formateurs)...
      */
-    let uai_formation;
+    let uai_formation = null;
     // check if it was set by user
-    uai_formation = formation?.editedFields?.uai_formation;
+    uai_formation = formation?.editedFields?.uai_formation || null;
     // no uai ? try to fill it with etablissement formateur
     if (!uai_formation) {
-      uai_formation = etablissementsMapping?.etablissement_formateur_uai;
+      uai_formation = etablissementsMapping?.etablissement_formateur_uai || null;
     }
 
     // TODO should try with etablissement_lieu_formation_uai from RCO but always empty for now on  ¯\_(ツ)_/¯
     if (!uai_formation) {
-      uai_formation = formation.uai_formation;
+      uai_formation = formation.uai_formation || null;
     }
 
     const updatedFormation = {
