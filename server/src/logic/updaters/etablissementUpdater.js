@@ -86,7 +86,7 @@ const createOrUpdateEtablissements = async (rcoFormation) => {
       }
 
       // create remote etablissement & save locally
-      etablissement = await catalogue().createEtablissement({ ...data, tags });
+      etablissement = await catalogue.createEtablissement({ ...data, tags });
       await Etablissement.create(etablissement);
 
       result[type].created = true;
@@ -110,7 +110,7 @@ const createOrUpdateEtablissements = async (rcoFormation) => {
 
     if (Object.keys(updates).length > 0) {
       // update remote etablissement & save locally
-      await catalogue().updateEtablissement(etablissement._id, updates);
+      await catalogue.updateEtablissement(etablissement._id, updates);
       await Etablissement.findOneAndUpdate({ siret: data.siret }, updates);
 
       result[type].updated = updates;

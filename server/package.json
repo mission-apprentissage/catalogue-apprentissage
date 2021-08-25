@@ -10,7 +10,7 @@
   "scripts": {
     "start": "nodemon --ignore tests/ src/index.js",
     "debug": "nodemon --inspect=0.0.0.0 --signal SIGINT --ignore tests/ src/index.js",
-    "test": "mocha --recursive --exit --timeout 60000 tests/ src/jobs/**/tests/",
+    "test": "mocha --file tests/globalSetup.js --recursive --exit --timeout 60000 tests/ src/jobs/**/tests/",
     "lint": "eslint src/ tests/",
     "docker:start": "docker-compose up -d --build --force-recreate",
     "docker:stop": "docker-compose stop",
@@ -115,7 +115,8 @@
     "lint-staged": ">=10",
     "mocha": "7.1.2",
     "nodemon": "2.0.3",
-    "prettier": "2.0.5"
+    "prettier": "2.0.5",
+    "sinon": "11.1.2"
   },
   "husky": {
     "hooks": {
