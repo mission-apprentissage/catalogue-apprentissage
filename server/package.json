@@ -47,7 +47,7 @@
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.6.1",
-    "@mission-apprentissage/tco-service-node": "2.23.2",
+    "@mission-apprentissage/tco-service-node": "2.24.0",
     "aws-sdk": "2.785.0",
     "axios": "0.21.1",
     "body-parser": "1.19.0",
@@ -116,6 +116,7 @@
     "mocha": "7.1.2",
     "nodemon": "2.0.3",
     "prettier": "2.0.5",
+    "rewiremock": "3.14.3",
     "sinon": "11.1.2"
   },
   "husky": {
