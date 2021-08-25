@@ -7,12 +7,14 @@ import { hasAccessTo } from "../../../common/utils/rolesUtils";
 const AlertMessage = () => {
   let [auth] = useAuth();
   const [messages, setMessages] = useState([]);
+
   useEffect(() => {
+    let mounted = true;
     const run = async () => {
       try {
         const data = await _get("/api/v1/entity/messageScript");
         const hasMessages = data.reduce((acc, item) => acc || item.enabled, false);
-        if (hasMessages) {
+        if (hasMessages && mounted) {
           setMessages(data);
         }
       } catch (e) {
@@ -20,7 +22,13 @@ const AlertMessage = () => {
       }
     };
     run();
+
+    return () => {
+      // cleanup hook
+      mounted = false;
+    };
   }, []);
+
   const onDeleteClicked = async (e) => {
     e.preventDefault();
     try {

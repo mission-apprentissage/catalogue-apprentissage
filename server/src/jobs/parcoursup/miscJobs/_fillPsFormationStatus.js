@@ -1,17 +1,16 @@
 const { runScript } = require("../../scriptWrapper");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
-const { PsReconciliation, PsFormation2021 } = require("../../../common/model");
-// const { PsFormation2021 } = require("../../../common/model");
+const { PsReconciliation, PsFormation } = require("../../../common/model");
 
 runScript(async () => {
   await migrate();
 });
 
 async function migrate() {
-  const dataset = await PsFormation2021.find({}).lean();
+  const dataset = await PsFormation.find({}).lean();
   console.log(dataset.length);
 
-  await asyncForEach(dataset, async (psFormation2021) => {
+  await asyncForEach(dataset, async (psFormation) => {
     const {
       _id,
       uai_gestionnaire,
@@ -20,7 +19,7 @@ async function migrate() {
       code_cfd,
       etat_reconciliation,
       matching_mna_etablissement,
-    } = psFormation2021;
+    } = psFormation;
 
     if (etat_reconciliation) {
       let matching = await PsReconciliation.find({
@@ -60,13 +59,13 @@ async function migrate() {
           statut_reconciliation = "AUTOMATIQUE";
         }
 
-        await PsFormation2021.findByIdAndUpdate(_id, {
+        await PsFormation.findByIdAndUpdate(_id, {
           statut_reconciliation,
           id_reconciliation: reconciliationEntry._id,
         });
       }
     } else {
-      await PsFormation2021.findByIdAndUpdate(_id, {
+      await PsFormation.findByIdAndUpdate(_id, {
         statut_reconciliation: "INCONNU",
         id_reconciliation: null,
         etat_reconciliation: false,

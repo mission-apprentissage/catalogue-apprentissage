@@ -1,6 +1,6 @@
 const { runScript } = require("../../scriptWrapper");
 const { paginator } = require("../../../common/utils/paginator");
-const { PsReconciliation, PsFormation2021 } = require("../../../common/model");
+const { PsReconciliation, PsFormation } = require("../../../common/model");
 
 runScript(async () => {
   await migrate();
@@ -10,7 +10,7 @@ async function migrate() {
   await PsReconciliation.updateMany({}, { $set: { ids_parcoursup: [] } });
 
   await paginator(
-    PsFormation2021,
+    PsFormation,
     { filter: { id_reconciliation: { $ne: null } }, limit: 300, lean: true },
     async ({ id_parcoursup, id_reconciliation }) => {
       let matching = await PsReconciliation.findOne({ _id: id_reconciliation });

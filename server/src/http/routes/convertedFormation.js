@@ -1,6 +1,6 @@
 const express = require("express");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
-const { ConvertedFormation, PsFormation2021 } = require("../../common/model");
+const { ConvertedFormation, PsFormation } = require("../../common/model");
 const { mnaFormationUpdater } = require("../../logic/updaters/mnaFormationUpdater");
 
 /**
@@ -107,7 +107,7 @@ module.exports = () => {
       const { id_parcoursup, ...filter } = query;
       // additional filtering for parcoursup
       if (id_parcoursup) {
-        const psFormations = await PsFormation2021.find(
+        const psFormations = await PsFormation.find(
           { id_parcoursup, matching_mna_formation: { $size: 1 } },
           { matching_mna_formation: 1 }
         ).lean();
@@ -171,7 +171,7 @@ module.exports = () => {
       const { id_parcoursup, ...filter } = query;
       // additional filtering for parcoursup
       if (id_parcoursup) {
-        const psFormations = await PsFormation2021.find(
+        const psFormations = await PsFormation.find(
           { id_parcoursup, matching_mna_formation: { $size: 1 } },
           { matching_mna_formation: 1 }
         ).lean();

@@ -3,14 +3,14 @@
 const { runScript } = require("../../scriptWrapper");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { diffFormation } = require("../../../logic/common/utils/diffUtils");
-const { ConvertedFormation, PsFormation2021 } = require("../../../common/model");
+const { ConvertedFormation, PsFormation } = require("../../../common/model");
 
 runScript(async () => {
   await AnalyseDuplicate();
 });
 
 async function AnalyseDuplicate() {
-  const dataset = await PsFormation2021.find({ nom_academie: "Lille", matching_mna_formation: { $size: 2 } }).lean();
+  const dataset = await PsFormation.find({ nom_academie: "Lille", matching_mna_formation: { $size: 2 } }).lean();
   console.log(dataset.length);
 
   let buff = [];

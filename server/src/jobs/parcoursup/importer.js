@@ -1,10 +1,10 @@
 const path = require("path");
-const logger = require("../../../common/logger");
-const { runScript } = require("../../scriptWrapper");
-const { PsFormation2021 } = require("../../../common/model/index");
-const { asyncForEach } = require("../../../common/utils/asyncUtils");
-const { downloadAndSaveFileFromS3 } = require("../../../common/utils/awsUtils");
-const { getJsonFromXlsxFile } = require("../../../common/utils/fileUtils");
+const logger = require("../../common/logger");
+const { runScript } = require("../scriptWrapper");
+const { PsFormation } = require("../../common/model/index");
+const { asyncForEach } = require("../../common/utils/asyncUtils");
+const { downloadAndSaveFileFromS3 } = require("../../common/utils/awsUtils");
+const { getJsonFromXlsxFile } = require("../../common/utils/fileUtils");
 
 const mapping = (formation) => {
   return {
@@ -68,17 +68,17 @@ const run = async () => {
 
     await asyncForEach(data, async (formation) => {
       const mapped = mapping(formation);
-      const exist = await PsFormation2021.findOne({ id_parcoursup: mapped.id_parcoursup }).lean();
+      const exist = await PsFormation.findOne({ id_parcoursup: mapped.id_parcoursup }).lean();
 
       if (exist) {
-        await PsFormation2021.findOneAndUpdate({ id_parcoursup: mapped.id_parcoursup }, mapped, {
+        await PsFormation.findOneAndUpdate({ id_parcoursup: mapped.id_parcoursup }, mapped, {
           upsert: true,
           new: true,
         });
         stat.updated += 1;
       } else {
-        const psFormation2021 = new PsFormation2021(mapped);
-        await psFormation2021.save();
+        const psFormation = new PsFormation(mapped);
+        await psFormation.save();
 
         stat.inserted += 1;
       }

@@ -1,4 +1,4 @@
-const { PsReconciliation, PsFormation2021, ConvertedFormation } = require("../../common/model");
+const { PsReconciliation, PsFormation, ConvertedFormation } = require("../../common/model");
 const combinate = require("../../logic/mappers/psReconciliationMapper");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 const express = require("express");
 const { getCfdInfo } = require("@mission-apprentissage/tco-service-node");
 const { getEtablissementCoverage } = require("../../logic/controller/coverage");
-const reportRejected = require("../../jobs/parcoursup/2021/reportRejected");
+const reportRejected = require("../../jobs/parcoursup/reportRejected");
 
 const { diffFormation, buildUpdatesHistory } = require("../../logic/common/utils/diffUtils");
 
@@ -21,10 +21,10 @@ module.exports = ({ catalogue }) => {
     "/statistique",
     tryCatch(async (req, res) => {
       let [w, x, y, z] = await Promise.all([
-        PsFormation2021.estimatedDocumentCount(),
-        PsFormation2021.countDocuments({ etat_reconciliation: true }),
-        PsFormation2021.countDocuments({ matching_type: { $ne: null }, etat_reconciliation: false }),
-        PsFormation2021.countDocuments({ matching_type: { $eq: null } }),
+        PsFormation.estimatedDocumentCount(),
+        PsFormation.countDocuments({ etat_reconciliation: true }),
+        PsFormation.countDocuments({ matching_type: { $ne: null }, etat_reconciliation: false }),
+        PsFormation.countDocuments({ matching_type: { $eq: null } }),
       ]);
 
       let percentageOnTotal = (value, total) => ((value / total) * 100).toFixed(2);
@@ -44,7 +44,7 @@ module.exports = ({ catalogue }) => {
       const itemId = req.params.id;
       const qs = req.query;
       const select = qs && qs.select ? JSON.parse(qs.select) : { __v: 0 };
-      const retrievedData = await PsFormation2021.findById(itemId, select).lean();
+      const retrievedData = await PsFormation.findById(itemId, select).lean();
       if (retrievedData) {
         return res.json(retrievedData);
       }
@@ -145,7 +145,7 @@ module.exports = ({ catalogue }) => {
       const psId = req.params.id;
       const qs = req.query;
       const select = qs && qs.select ? JSON.parse(qs.select) : { __v: 0 };
-      const retrievedData = await PsFormation2021.findById(psId, select).lean();
+      const retrievedData = await PsFormation.findById(psId, select).lean();
       if (retrievedData) {
         const diffFields = [];
         let matching_mna_formation = retrievedData.matching_mna_formation;
@@ -179,7 +179,7 @@ module.exports = ({ catalogue }) => {
     "/",
     tryCatch(async (req, res) => {
       const { type, page } = req.query;
-      let data = await PsFormation2021.paginate(
+      let data = await PsFormation.paginate(
         { matching_type: type },
         { page, sort: { etat_reconciliation: 1 }, lean: true }
       );
@@ -225,7 +225,7 @@ module.exports = ({ catalogue }) => {
     "/",
     tryCatch(async (req, res) => {
       const { id, ...rest } = req.body;
-      const response = await PsFormation2021.findByIdAndUpdate(id, { ...rest }, { new: true });
+      const response = await PsFormation.findByIdAndUpdate(id, { ...rest }, { new: true });
       return res.json(response);
     })
   );
@@ -240,7 +240,7 @@ module.exports = ({ catalogue }) => {
       const { mapping, id_formation, reject, matching_rejete_raison, ...rest } = req.body;
 
       if (reject) {
-        const previousFormation = await PsFormation2021.findById(id_formation).lean();
+        const previousFormation = await PsFormation.findById(id_formation).lean();
 
         let updatedFormation = {
           ...previousFormation,
@@ -269,7 +269,7 @@ module.exports = ({ catalogue }) => {
           updatedFormation.statuts_history = statuts_history;
         }
 
-        await PsFormation2021.findOneAndUpdate({ _id: id_formation }, updatedFormation, { new: true });
+        await PsFormation.findOneAndUpdate({ _id: id_formation }, updatedFormation, { new: true });
 
         return res.json({});
       }
@@ -300,7 +300,7 @@ module.exports = ({ catalogue }) => {
       );
 
       if (result) {
-        const previousFormation = await PsFormation2021.findById(id_formation).lean();
+        const previousFormation = await PsFormation.findById(id_formation).lean();
 
         const mnaFormation = await ConvertedFormation.findById(rest.mnaFormationId).lean();
 
@@ -329,7 +329,7 @@ module.exports = ({ catalogue }) => {
           updatedFormation.statuts_history = statuts_history;
         }
 
-        await PsFormation2021.findOneAndUpdate({ _id: id_formation }, updatedFormation, { new: true });
+        await PsFormation.findOneAndUpdate({ _id: id_formation }, updatedFormation, { new: true });
       }
 
       return res.json(result);
@@ -339,12 +339,12 @@ module.exports = ({ catalogue }) => {
   router.get(
     "/reconciliation/count",
     tryCatch(async (req, res) => {
-      const countTotal = await PsFormation2021.countDocuments({});
-      const countAutomatique = await PsFormation2021.countDocuments({ statut_reconciliation: "AUTOMATIQUE" });
-      const countAVerifier = await PsFormation2021.countDocuments({ statut_reconciliation: "A_VERIFIER" });
-      const countRejete = await PsFormation2021.countDocuments({ statut_reconciliation: "REJETE" });
-      const countInconnu = await PsFormation2021.countDocuments({ statut_reconciliation: "INCONNU" });
-      const countValide = await PsFormation2021.countDocuments({ statut_reconciliation: "VALIDE" });
+      const countTotal = await PsFormation.countDocuments({});
+      const countAutomatique = await PsFormation.countDocuments({ statut_reconciliation: "AUTOMATIQUE" });
+      const countAVerifier = await PsFormation.countDocuments({ statut_reconciliation: "A_VERIFIER" });
+      const countRejete = await PsFormation.countDocuments({ statut_reconciliation: "REJETE" });
+      const countInconnu = await PsFormation.countDocuments({ statut_reconciliation: "INCONNU" });
+      const countValide = await PsFormation.countDocuments({ statut_reconciliation: "VALIDE" });
       return res.json({
         countTotal,
         countAutomatique,
@@ -387,7 +387,7 @@ module.exports = ({ catalogue }) => {
     "/",
     tryCatch(async (req, res) => {
       const { formation_id, etablissement } = req.body;
-      const response = await PsFormation2021.findByIdAndUpdate(
+      const response = await PsFormation.findByIdAndUpdate(
         formation_id,
         { $push: { matching_mna_etablissement: { ...etablissement, _id: new mongoose.Types.ObjectId() } } },
         { new: true }
@@ -424,14 +424,14 @@ module.exports = ({ catalogue }) => {
     "/etablissement",
     tryCatch(async (req, res) => {
       const { formation_id, etablissement_id, type } = req.body;
-      const update = await PsFormation2021.updateOne(
+      const update = await PsFormation.updateOne(
         { _id: formation_id },
         { $set: { "matching_mna_etablissement.$[elem].type": type } },
         { arrayFilters: [{ "elem._id": new mongoose.Types.ObjectId(etablissement_id) }] }
       );
       if (update) {
         if (update.nModified === 1) {
-          const response = await PsFormation2021.findById({ _id: formation_id });
+          const response = await PsFormation.findById({ _id: formation_id });
           return res.json(response);
         } else {
           return res.json(update);

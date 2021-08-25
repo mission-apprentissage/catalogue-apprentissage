@@ -24,7 +24,11 @@ const geoMapper = async (coordinates = "", codeInsee) => {
     // check result is in the same town
     if (codeInsee !== rest.code_commune_insee) {
       return {
-        result: null,
+        result: {
+          ...rest,
+          adresse: [numero_voie, type_voie, nom_voie].join(" ").trim(),
+          localite: commune,
+        },
         messages: {
           errorType: "Insee",
           error: `geoMapper code Insee inconsistent results : original code ${codeInsee}, code given by api adresse ${rest.code_commune_insee}`,

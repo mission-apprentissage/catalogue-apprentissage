@@ -1,15 +1,15 @@
-const { paginator } = require("../../../common/utils/paginator");
-const { PsFormation2021 } = require("../../../common/model");
-const { runScript } = require("../../scriptWrapper");
-const { reconciliationParcoursup } = require("../../../logic/controller/reconciliation");
-const logger = require("../../../common/logger");
+const { paginator } = require("../../common/utils/paginator");
+const { PsFormation } = require("../../common/model");
+const { runScript } = require("../scriptWrapper");
+const { reconciliationParcoursup } = require("../../logic/controller/reconciliation");
+const logger = require("../../common/logger");
 
 const psReconciliation = async () => {
   try {
     logger.info(`Start parcoursup reconciliation`);
 
     await paginator(
-      PsFormation2021,
+      PsFormation,
       { filter: { matching_mna_formation: { $size: 1 } }, lean: true, limit: 200 },
       async (formation) => await reconciliationParcoursup(formation, "AUTOMATIQUE")
     );

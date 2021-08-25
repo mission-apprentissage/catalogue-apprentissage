@@ -12,7 +12,7 @@ const {
   aPublierVerifierAccesDirectPostBacRules: psPostBacRules,
   aPublierValidationRecteurRules: psAPublierRecteurRules,
   aPublierRules: psAPublierRules,
-} = require("../../pertinence/parcoursup/rules");
+} = require("../../parcoursup/pertinence/rules");
 
 const specificRulesNode = (rules) => {
   return rules["$or"];

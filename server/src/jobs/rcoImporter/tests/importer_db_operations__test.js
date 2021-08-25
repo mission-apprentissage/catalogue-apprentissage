@@ -9,7 +9,7 @@ describe(__filename, () => {
     // Connection to test collection
     await connectToMongoForTests();
     await RcoFormation.deleteMany({});
-    const collection = importer.lookupDiff(formationsJMinus1, []);
+    const collection = await importer.lookupDiff(formationsJMinus1);
     const result = await importer.addedFormationsHandler(collection.added);
     importer.addtoDbTasks(result);
     await importer.dbOperationsHandler();
@@ -25,18 +25,22 @@ describe(__filename, () => {
   });
 
   it("checkAddedFormations >> Si aucunes modifications entre 2 jours ne doit retourner aucunes modifications de db", async () => {
-    const collection = importer.lookupDiff(formationsJMinus1, formationsJMinus1);
+    let count = await RcoFormation.countDocuments({});
+    assert.equal(count, 230);
+
+    const collection = await importer.lookupDiff(formationsJMinus1);
     const result = await importer.addedFormationsHandler(collection);
     assert.deepStrictEqual(result, {
       toAddToDb: [],
       toUpdateToDb: [],
     });
-    const count = await RcoFormation.countDocuments({});
+
+    count = await RcoFormation.countDocuments({});
     assert.equal(count, 230);
   });
 
   it("lookupDiff >> Si ajouts ou modifications entre 2 jours doit ajouter et modifier en db", async () => {
-    const collection = importer.lookupDiff(formationsJ, formationsJMinus1);
+    const collection = await importer.lookupDiff(formationsJ);
 
     const resultAdded = await importer.addedFormationsHandler(collection.added);
     importer.addtoDbTasks(resultAdded);
@@ -70,7 +74,7 @@ describe(__filename, () => {
   });
 
   it("lookupDiff >> Si Supression entre 2 jours doit dépublier la formation en db", async () => {
-    const collection = importer.lookupDiff(formationsJPlus1, formationsJ);
+    const collection = await importer.lookupDiff(formationsJPlus1);
 
     const resultDeleted = await importer.deletedFormationsHandler(collection.deleted);
     importer.addtoDbTasks(resultDeleted);
@@ -100,7 +104,7 @@ describe(__filename, () => {
   });
 
   it("lookupDiff >> Si Ajout d'une formation deja presente doit retourner la(es) formation(s) reactivée et mise à jour", async () => {
-    const collection = importer.lookupDiff(formationsJPlus2, formationsJPlus1);
+    const collection = await importer.lookupDiff(formationsJPlus2);
 
     const resultAdded = await importer.addedFormationsHandler(collection.added);
     importer.addtoDbTasks(resultAdded);
