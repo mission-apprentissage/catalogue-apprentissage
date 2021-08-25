@@ -1,7 +1,7 @@
-const { paginator } = require("../../../common/utils/paginator");
-const { PsReconciliation, ConvertedFormation } = require("../../../common/model");
-const { runScript } = require("../../scriptWrapper");
-const logger = require("../../../common/logger");
+const { paginator } = require("../../common/utils/paginator");
+const { PsReconciliation, ConvertedFormation } = require("../../common/model");
+const { runScript } = require("../scriptWrapper");
+const logger = require("../../common/logger");
 
 const setPsIds = async () => {
   try {

@@ -2,9 +2,9 @@ const { runScript } = require("./scriptWrapper");
 const logger = require("../common/logger");
 const rcoImporter = require("./rcoImporter");
 const rcoConverter = require("./rcoConverter");
-const psReference = require("./reference/parcoursup");
+const psReference = require("./parcoursup/reference");
 const afReference = require("./reference/affelnet");
-const psPertinence = require("./pertinence/parcoursup");
+const psPertinence = require("./parcoursup/pertinence");
 const afPertinence = require("./pertinence/affelnet");
 const afCoverage = require("./affelnet/coverage");
 const afReconciliation = require("./affelnet/reconciliation");
@@ -54,7 +54,7 @@ runScript(async ({ catalogue, db }) => {
     await sleep(30000);
 
     // parcoursup
-    const psCoverage = spawn("node", ["./src/jobs/parcoursup/2021/coverage.js"]);
+    const psCoverage = spawn("node", ["./src/jobs/parcoursup/coverage.js"]);
     for await (const data of psCoverage.stdout) {
       console.log(`psCoverage: ${data}`);
     }

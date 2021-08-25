@@ -1,10 +1,10 @@
 /* eslint-disable no-unused-vars */
-const { runScript } = require("../../scriptWrapper");
+const { runScript } = require("../scriptWrapper");
 
-const report = require("../../../logic/reporter/report");
+const report = require("../../logic/reporter/report");
 const config = require("config");
-const { PsFormation2021 } = require("../../../common/model");
-const { storeByChunks } = require("../../../common/utils/reportUtils");
+const { PsFormation } = require("../../common/model");
+const { storeByChunks } = require("../../common/utils/reportUtils");
 
 const createConversionReport = async (summary, rejetes) => {
   // save report in db
@@ -27,12 +27,12 @@ const reportRejected = async () => {
   try {
     console.log(" -- Start of Repports reconciliation rejected -- ");
 
-    const countTotal = await PsFormation2021.countDocuments({});
-    const countAutomatique = await PsFormation2021.countDocuments({ statut_reconciliation: "AUTOMATIQUE" });
-    const countAVerifier = await PsFormation2021.countDocuments({ statut_reconciliation: "A_VERIFIER" });
-    const rejetes = await PsFormation2021.find({ statut_reconciliation: "REJETE" }).lean();
-    const countInconnu = await PsFormation2021.countDocuments({ statut_reconciliation: "INCONNU" });
-    const countValide = await PsFormation2021.countDocuments({ statut_reconciliation: "VALIDE" });
+    const countTotal = await PsFormation.countDocuments({});
+    const countAutomatique = await PsFormation.countDocuments({ statut_reconciliation: "AUTOMATIQUE" });
+    const countAVerifier = await PsFormation.countDocuments({ statut_reconciliation: "A_VERIFIER" });
+    const rejetes = await PsFormation.find({ statut_reconciliation: "REJETE" }).lean();
+    const countInconnu = await PsFormation.countDocuments({ statut_reconciliation: "INCONNU" });
+    const countValide = await PsFormation.countDocuments({ statut_reconciliation: "VALIDE" });
 
     const cleannedData = rejetes.map(
       ({

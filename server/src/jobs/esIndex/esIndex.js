@@ -1,5 +1,5 @@
 const { rebuildIndex } = require("../../common/utils/esUtils");
-const { ConvertedFormation, MnaFormation, PsFormation2021 } = require("../../common/model/index");
+const { ConvertedFormation, MnaFormation, PsFormation } = require("../../common/model/index");
 
 const rebuildEsIndex = async (index, skipNotFound = false, filter = {}) => {
   switch (index) {
@@ -7,8 +7,8 @@ const rebuildEsIndex = async (index, skipNotFound = false, filter = {}) => {
       await rebuildIndex("convertedformation", ConvertedFormation, { skipNotFound, filter });
       break;
 
-    case "psformations2021":
-      await rebuildIndex("psformations2021", PsFormation2021, { skipNotFound, filter });
+    case "psformations":
+      await rebuildIndex("psformations", PsFormation, { skipNotFound, filter });
       break;
 
     case "mnaformation":
@@ -17,7 +17,7 @@ const rebuildEsIndex = async (index, skipNotFound = false, filter = {}) => {
 
     default:
       await rebuildIndex("convertedformation", ConvertedFormation);
-      await rebuildIndex("psformations2021", PsFormation2021);
+      await rebuildIndex("psformations", PsFormation);
       await rebuildIndex("mnaformation", MnaFormation);
   }
 };

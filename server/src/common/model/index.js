@@ -26,14 +26,14 @@ module.exports = {
   }),
   Report: createModel("report", schema.reportSchema),
   Log: createModel("log", schema.logSchema),
-  PsFormation: createModel("psformation", schema.psFormation2020Schema),
+  // PsFormation: createModel("psformation", schema.psFormation2020Schema),
   PsReconciliation: createModel("psreconciliation", schema.psReconciliationSchema),
   PendingRcoFormation: createModel("pendingrcoformation", schema.mnaFormationSchema),
   AfFormation: createModel("afformation", schema.afFormationSchema),
   AfReconciliation: createModel("afreconciliation", schema.afReconciliationSchema),
   Etablissement: createModel("etablissement", schema.etablissementSchema),
-  PsFormation2021: createModel("psformations2021", schema.psFormation2021Schema, {
-    esIndexName: "psformations2021",
+  PsFormation: createModel("psformations", schema.psFormationSchema, {
+    esIndexName: "psformations",
   }),
   SandboxFormation: createModel("sandboxformation", schema.mnaFormationSchema),
   Statistique: createModel("statistique", schema.statistiqueSchema),

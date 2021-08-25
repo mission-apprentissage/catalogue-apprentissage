@@ -1,10 +1,10 @@
 const path = require("path");
-const { runScript } = require("../../scriptWrapper");
-const { asyncForEach } = require("../../../common/utils/asyncUtils");
-const { createXlsxFromJson } = require("../../../common/utils/fileUtils");
+const { runScript } = require("../scriptWrapper");
+const { asyncForEach } = require("../../common/utils/asyncUtils");
+const { createXlsxFromJson } = require("../../common/utils/fileUtils");
 const { getMef10Info, getModels, getRncpInfo, getCfdInfo } = require("@mission-apprentissage/tco-service-node");
-const { getJsonFromXlsxFile } = require("../../../common/utils/fileUtils");
-const { downloadAndSaveFileFromS3 } = require("../../../common/utils/awsUtils");
+const { getJsonFromXlsxFile } = require("../../common/utils/fileUtils");
+const { downloadAndSaveFileFromS3 } = require("../../common/utils/awsUtils");
 const { orderBy } = require("lodash");
 
 let Models = null;

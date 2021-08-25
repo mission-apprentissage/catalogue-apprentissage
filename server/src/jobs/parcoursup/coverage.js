@@ -1,11 +1,11 @@
-const { getParcoursupCoverage } = require("../../../logic/controller/coverage");
-const { paginator } = require("../../../common/utils/paginator");
-const { PsFormation2021, Etablissement } = require("../../../common/model");
-const { runScript } = require("../../scriptWrapper");
-const logger = require("../../../common/logger");
-const { reconciliationParcoursup, dereconciliationParcoursup } = require("../../../logic/controller/reconciliation");
+const { getParcoursupCoverage } = require("../../logic/controller/coverage");
+const { paginator } = require("../../common/utils/paginator");
+const { PsFormation, Etablissement } = require("../../common/model");
+const { runScript } = require("../scriptWrapper");
+const logger = require("../../common/logger");
+const { reconciliationParcoursup, dereconciliationParcoursup } = require("../../logic/controller/reconciliation");
 const cluster = require("cluster");
-const { diffFormation, buildUpdatesHistory } = require("../../../logic/common/utils/diffUtils");
+const { diffFormation, buildUpdatesHistory } = require("../../logic/common/utils/diffUtils");
 const numCPUs = 4;
 
 const updateMatchedFormation = async ({ formation, match }) => {
@@ -19,7 +19,7 @@ const updateMatchedFormation = async ({ formation, match }) => {
   } else if (match.data_length <= 3) {
     statut_reconciliation = "A_VERIFIER";
   }
-  const previousFormation = await PsFormation2021.findById(formation._id).lean();
+  const previousFormation = await PsFormation.findById(formation._id).lean();
 
   let updatedFormation = {
     ...previousFormation,
@@ -61,7 +61,7 @@ const updateMatchedFormation = async ({ formation, match }) => {
     updatedFormation.statuts_history = statuts_history;
   }
 
-  await PsFormation2021.findByIdAndUpdate(updatedFormation._id, updatedFormation, {
+  await PsFormation.findByIdAndUpdate(updatedFormation._id, updatedFormation, {
     overwrite: true,
     upsert: true,
     new: true,
@@ -69,9 +69,9 @@ const updateMatchedFormation = async ({ formation, match }) => {
 };
 
 const formation = async (filter = {}, limit = 10, maxItems = 100, offset = 0) => {
-  PsFormation2021.pauseAllMongoosaticHooks();
+  PsFormation.pauseAllMongoosaticHooks();
   await paginator(
-    PsFormation2021,
+    PsFormation,
     { filter, limit, maxItems, offset, lean: true, showProgress: false },
     async (formation) => {
       let match = await getParcoursupCoverage(formation, { published: true, tags: "2021" });
@@ -110,9 +110,9 @@ const run = async () => {
         return;
       }
       let activeFilter = { ...filters };
-      const { pages, total } = await PsFormation2021.paginate(activeFilter, { limit, select: { _id: 1 } });
+      const { pages, total } = await PsFormation.paginate(activeFilter, { limit, select: { _id: 1 } });
 
-      const allIds = await PsFormation2021.find(activeFilter, { _id: 1 }).lean();
+      const allIds = await PsFormation.find(activeFilter, { _id: 1 }).lean();
       activeFilter = { _id: { $in: allIds.map((f) => f._id) } };
       console.log(allIds.map((f) => f._id).length, total);
 
