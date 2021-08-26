@@ -10,7 +10,8 @@
   "scripts": {
     "start": "nodemon --ignore tests/ src/index.js",
     "debug": "nodemon --inspect=0.0.0.0 --signal SIGINT --ignore tests/ src/index.js",
-    "test": "mocha --recursive --exit --timeout 60000 tests/ src/jobs/**/tests/",
+    "test": "mocha --file tests/globalSetup.js --recursive --exit --timeout 60000 tests/ src/jobs/**/tests/",
+    "test:coverage": "nyc --reporter=text mocha --file tests/globalSetup.js --recursive --exit --timeout 60000 tests/ src/jobs/**/tests/",
     "lint": "eslint src/ tests/",
     "docker:start": "docker-compose up -d --build --force-recreate",
     "docker:stop": "docker-compose stop",
@@ -47,7 +48,7 @@
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.6.1",
-    "@mission-apprentissage/tco-service-node": "2.23.2",
+    "@mission-apprentissage/tco-service-node": "2.24.0",
     "aws-sdk": "2.785.0",
     "axios": "0.21.1",
     "body-parser": "1.19.0",
@@ -115,7 +116,10 @@
     "lint-staged": ">=10",
     "mocha": "7.1.2",
     "nodemon": "2.0.3",
-    "prettier": "2.0.5"
+    "nyc": "15.1.0",
+    "prettier": "2.0.5",
+    "rewiremock": "3.14.3",
+    "sinon": "11.1.2"
   },
   "husky": {
     "hooks": {

@@ -1,5 +1,9 @@
 const cliProgress = require("cli-progress");
 
+let isShownProgressBar = true;
+
+const showProgressBar = (show) => (isShownProgressBar = show);
+
 const paginator = async (
   Model,
   { filter = {}, select = {}, limit = 100, lean = false, showProgress = true, maxItems = null, offset = 0 } = {},
@@ -10,9 +14,10 @@ const paginator = async (
   let nbTotalItems = maxItems || 10;
 
   // create a new progress bar instance and use shades_classic theme
-  const progressBar = showProgress
-    ? new cliProgress.SingleBar({ stopOnComplete: true }, cliProgress.Presets.shades_classic)
-    : null;
+  const progressBar =
+    showProgress && isShownProgressBar
+      ? new cliProgress.SingleBar({ stopOnComplete: true }, cliProgress.Presets.shades_classic)
+      : null;
   progressBar?.start(nbTotalItems, 0);
 
   while (computed < nbTotalItems) {
@@ -33,4 +38,4 @@ const paginator = async (
   }
 };
 
-module.exports = { paginator };
+module.exports = { paginator, showProgressBar };
