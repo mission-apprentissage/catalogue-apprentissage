@@ -4,32 +4,29 @@ const assert = require("assert");
 const rewiremock = require("rewiremock/node");
 const { mock } = require("@mission-apprentissage/tco-service-node");
 rewiremock("@mission-apprentissage/tco-service-node").with(mock);
-rewiremock.enable();
-// now you can require some module using TCO below
-
-const {
-  initTcoModel,
-  rncpImporter,
-  bcnImporter,
-  onisepImporter,
-  getCfdInfo,
-  isValideUAI,
-  getCpInfo,
-  getRncpInfo,
-  getMef10Info,
-  getSiretInfo,
-  getBcnInfo,
-  getCoordinatesFromAddressData,
-  getAddressFromCoordinates,
-  getNiveauxDiplomesTree,
-} = require("@mission-apprentissage/tco-service-node");
 
 describe(__filename, () => {
-  after(() => {
-    rewiremock.disable();
-  });
+  beforeEach(() => rewiremock.enable());
+  afterEach(() => rewiremock.disable());
 
   it("should have mocked tco", async () => {
+    const {
+      initTcoModel,
+      rncpImporter,
+      bcnImporter,
+      onisepImporter,
+      getCfdInfo,
+      isValideUAI,
+      getCpInfo,
+      getRncpInfo,
+      getMef10Info,
+      getSiretInfo,
+      getBcnInfo,
+      getCoordinatesFromAddressData,
+      getAddressFromCoordinates,
+      getNiveauxDiplomesTree,
+    } = require("@mission-apprentissage/tco-service-node");
+
     // dummy calls to init functions to show it is properly mocked
     await initTcoModel(null, null);
     await rncpImporter();
