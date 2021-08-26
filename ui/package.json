@@ -35,6 +35,7 @@
     "build": "react-scripts build",
     "serve": "ws --port 3000 -d build --log.format dev --spa index.html",
     "test": "react-scripts test",
+    "test:coverage": "react-scripts test --watchAll=false --coverage",
     "eject": "react-scripts eject",
     "sitemap": "babel-node src/scripts/sitemap-generator.js"
   },

@@ -1,4 +1,3 @@
-/* eslint-disable node/no-unpublished-require */
 const axiosist = require("axiosist");
 const createComponents = require("../../src/common/components/components");
 const { connectToMongoForTests, cleanAll } = require("./testUtils.js");

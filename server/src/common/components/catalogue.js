@@ -123,15 +123,13 @@ const createEtablissement = async (payload) => {
   }
 };
 
-module.exports = () => {
-  return {
-    getEtablissements: (opt, cb = null) => getEtablissements(opt, cb),
-    getEtablissement: (opt) => getEtablissement(opt),
-    countEtablissements: (opt) => countEtablissements(opt),
-    getEtablissementById: (opt) => getEtablissementById(opt),
-    postEtablissement: (opt) => postEtablissement(opt),
-    deleteEtablissement: (opt) => deleteEtablissement(opt),
-    createEtablissement: (opt) => createEtablissement(opt),
-    updateEtablissement: (id, payload) => updateEtablissement(id, payload),
-  };
+module.exports = {
+  getEtablissements: (opt, cb = null) => getEtablissements(opt, cb),
+  getEtablissement: (opt) => getEtablissement(opt),
+  countEtablissements: (opt) => countEtablissements(opt),
+  getEtablissementById: (opt) => getEtablissementById(opt),
+  postEtablissement: (opt) => postEtablissement(opt),
+  deleteEtablissement: (opt) => deleteEtablissement(opt),
+  createEtablissement: (opt) => createEtablissement(opt),
+  updateEtablissement: (id, payload) => updateEtablissement(id, payload),
 };
