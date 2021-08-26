@@ -1,14 +1,6 @@
 const assert = require("assert");
 
-// mock TCO
-const rewiremock = require("rewiremock/node");
-const { mock } = require("@mission-apprentissage/tco-service-node");
-rewiremock("@mission-apprentissage/tco-service-node").with(mock);
-
 describe(__filename, () => {
-  beforeEach(() => rewiremock.enable());
-  afterEach(() => rewiremock.disable());
-
   it("should have mocked tco", async () => {
     const {
       initTcoModel,
