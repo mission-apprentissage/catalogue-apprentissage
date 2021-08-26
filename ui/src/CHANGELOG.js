@@ -13,7 +13,7 @@ const changelog = {
     },
     {
       version: "4.4.0",
-      date: "Le 19 Août 2021",
+      date: "Le 26 Août 2021",
       about: `<h4>À propos de cette version</h4>
       Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: ["Code postal et académie des établissements à partir des données de l'API Entreprise"],
