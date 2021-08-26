@@ -1,11 +1,12 @@
 const wsRCO = require("./wsRCO");
 const { RcoFormation } = require("../../../common/model/index");
 const { diff } = require("deep-object-diff");
-const { asyncForEach } = require("../../../common/utils/asyncUtils");
+const { asyncForEach, chunkedAsyncForEach } = require("../../../common/utils/asyncUtils");
 const report = require("../../../logic/reporter/report");
 const config = require("config");
-const { paginator } = require("../../common/utils/paginator");
-const { storeByChunks } = require("../../common/utils/reportUtils");
+const { paginator } = require("../../../common/utils/paginator");
+const { storeByChunks } = require("../../../common/utils/reportUtils");
+const crypto = require("crypto");
 
 class Importer {
   constructor() {
@@ -15,8 +16,8 @@ class Importer {
     this.formationsToUpdateToDb = [];
   }
 
-  async run() {
-    const formations = await wsRCO.getRCOcatalogue();
+  async run(importDay = "") {
+    const formations = await wsRCO.getRCOcatalogue(importDay); // "-j-1"
     if (!formations?.length) {
       throw new Error("rco: empty data");
     }
@@ -26,7 +27,8 @@ class Importer {
     console.log("Nb formations J : ", formations.length);
     console.log("Nb formations published in DB : ", dbCount);
 
-    await this.start(formations);
+    const uuidReport = await this.start(formations);
+    return uuidReport;
   }
 
   async start(formations) {
@@ -50,9 +52,11 @@ class Importer {
 
       await this.dbOperationsHandler();
 
-      await this.report(formations.length);
+      const uuid = await this.report(formations.length);
+      return uuid;
     } catch (error) {
       console.log(error);
+      return null;
     }
   }
 
@@ -81,8 +85,16 @@ class Importer {
       // element.to = JSON.stringify(updates_history.to);
     });
 
-    const deleted = this.updated.filter(({ published }) => published === "Supprimée");
-    const justUpdated = this.updated.filter(({ published }) => published !== "Supprimée");
+    // eslint-disable-next-line no-unused-vars
+    const added = this.added.map(({ mnaId, ...i }) => ({ ...i }));
+    const deleted = this.updated
+      // eslint-disable-next-line no-unused-vars
+      .map(({ mnaId, ...i }) => ({ ...i }))
+      .filter(({ published }) => published === "Supprimée");
+    const justUpdated = this.updated
+      // eslint-disable-next-line no-unused-vars
+      .map(({ mnaId, ...i }) => ({ ...i }))
+      .filter(({ published }) => published !== "Supprimée");
 
     const deletedCount = deleted.length;
     const publishedCount = await RcoFormation.countDocuments({ published: true });
@@ -90,7 +102,7 @@ class Importer {
 
     const summary = {
       formationsJCount,
-      addedCount: this.added.length,
+      addedCount: added.length,
       updatedCount: this.updated.length - deletedCount,
       deletedCount,
       publishedCount,
@@ -101,15 +113,21 @@ class Importer {
     const date = Date.now();
     const type = "rcoImport";
 
-    await storeByChunks(type, date, summary, "added", this.added);
-    await storeByChunks(type, date, summary, "updated", justUpdated);
-    await storeByChunks(type, date, summary, "deleted", deleted);
+    const uuid = crypto.randomBytes(16).toString("hex");
+    await storeByChunks(type, date, summary, "added", added, uuid);
+    await storeByChunks(type, date, summary, "updated", justUpdated, uuid);
+    await storeByChunks(type, date, summary, "deleted", deleted, uuid);
 
-    const link = `${config.publicUrl}/report?type=${type}&date=${date}`;
-    const data = { added: this.added, updated: this.updated, summary, link };
+    const zeroChanges = summary.addedCount === 0 && summary.updatedCount === 0 && deletedCount === 0;
+
+    const link = !zeroChanges ? `${config.publicUrl}/report?type=${type}&date=${date}&id=${uuid}` : null;
+    console.log(link); // Useful when send in blue is down
+
+    const data = { added, updated: this.updated, summary, link };
     const title = "[Webservice RCO] Rapport d'importation";
     const to = config.rco.reportMailingList.split(",");
     await report.generate(data, title, to, "rcoReport");
+    return uuid;
   }
 
   /*
@@ -267,14 +285,16 @@ class Importer {
     const updated = [];
     const deleted = [];
 
-    for (let ite = 0; ite < currentFormations.length; ite++) {
-      const formation = currentFormations[ite];
+    console.log("Lookup for new or update trainings");
+    await chunkedAsyncForEach(currentFormations, async (formation) => {
       const found = await RcoFormation.findOne({
         id_formation: formation.id_formation,
         id_action: formation.id_action,
         id_certifinfo: formation.id_certifinfo,
         published: true,
-      }).lean();
+      })
+        .select("+email")
+        .lean();
 
       // Some formations has been added
       if (!found) {
@@ -286,12 +306,13 @@ class Importer {
           updated.push(formation);
         }
       }
-    }
+    });
 
+    console.log("Lookup for deleted trainings");
     // check if Some formations has been deleted
     await paginator(
       RcoFormation,
-      { filter: { published: true }, lean: true, showProgress: false },
+      { filter: { published: true }, select: "+email", lean: true, showProgress: true },
       async (pastFormation) => {
         const id = this._buildId(pastFormation);
         const found = currentFormations.some((f) => id === this._buildId(f));
@@ -324,7 +345,7 @@ class Importer {
    * get RCO Formation
    */
   async getRcoFormation({ id_formation, id_action, id_certifinfo }) {
-    return await RcoFormation.findOne({ id_formation, id_action, id_certifinfo }).lean();
+    return await RcoFormation.findOne({ id_formation, id_action, id_certifinfo }).select("+email").lean();
   }
 
   /*

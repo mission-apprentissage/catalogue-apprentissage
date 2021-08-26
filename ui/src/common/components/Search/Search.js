@@ -21,7 +21,7 @@ import { useHistory } from "react-router-dom";
 import { CloseCircleLine } from "../../../theme/components/icons/CloseCircleLine";
 import { SearchLine } from "../../../theme/components/icons/SearchLine";
 
-export default React.memo(({ location, searchState, context, onReconciliationCardClicked }) => {
+export default React.memo(({ location, searchState, context, onReconciliationCardClicked, extraButtons = null }) => {
   const { defaultMode } = queryString.parse(location.search);
   const [mode, setMode] = useState(defaultMode ?? "simple");
   const isCatalogueGeneral = context === "catalogue_general";
@@ -156,52 +156,6 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                       />
                     );
                   })}
-                {isBaseReconciliationPs && context === "reconciliation_ps_inconnus" && (
-                  <Facet
-                    componentId={`reject-${context}`}
-                    dataField="statut_reconciliation.keyword"
-                    title="Statut rapprochement"
-                    filterLabel="Statut rapprochement"
-                    selectAllLabel={"Tous"}
-                    filters={filters.filter((e) => e !== "statut_reconciliation")}
-                    sortBy="asc"
-                    defaultQuery={() => {
-                      return {
-                        query: {
-                          bool: {
-                            should: [
-                              { match: { statut_reconciliation: "INCONNU" } },
-                              { match: { statut_reconciliation: "REJETE" } },
-                            ],
-                          },
-                        },
-                      };
-                    }}
-                    transformData={(data) => {
-                      return data.map((d) => ({
-                        ...d,
-                        key: d.key === "INCONNU" ? "Inconnus" : "Rejetés",
-                      }));
-                    }}
-                    customQuery={(data) => {
-                      return !data || data.length === 0 || data.length === 2
-                        ? {}
-                        : {
-                            query: {
-                              bool: {
-                                must: [
-                                  {
-                                    match: {
-                                      statut_reconciliation: data.includes("Rejetés") ? "REJETE" : "INCONNU",
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          };
-                    }}
-                  />
-                )}
               </Box>
               <div className="search-results">
                 <Box pt={2}>
@@ -274,25 +228,25 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                               }`}
                           </span>
                           {(hasAccessTo(auth, "page_catalogue/export_btn") ||
-                            hasAccessTo(auth, "page_organismes/export_btn")) &&
-                            !isBaseReconciliationPs && (
-                              <ExportButton
-                                index={base}
-                                filters={filters}
-                                columns={columnsDefinition
-                                  .filter((def) => !def.debug)
-                                  .map((def) => ({
-                                    header: def.Header,
-                                    fieldName: def.accessor,
-                                    formatter: def.formatter,
-                                  }))}
-                                defaultQuery={{
-                                  match: {
-                                    published: true,
-                                  },
-                                }}
-                              />
-                            )}
+                            hasAccessTo(auth, "page_organismes/export_btn")) && (
+                            <ExportButton
+                              index={base}
+                              filters={filters}
+                              columns={columnsDefinition
+                                .filter((def) => def.exportable)
+                                .map((def) => ({
+                                  header: def.Header,
+                                  fieldName: def.accessor,
+                                  formatter: def.formatter,
+                                }))}
+                              // defaultQuery={{
+                              //   match: {
+                              //     published: true,
+                              //   },
+                              // }}
+                            />
+                          )}
+                          {extraButtons}
                         </div>
                       );
                     }}

@@ -43,6 +43,7 @@ const formation = {
   _id: 1,
   etablissement_formateur_id: 1,
   etablissement_gestionnaire_id: 1,
+  id_rco_formation: 1,
 };
 
 const etablissement = {

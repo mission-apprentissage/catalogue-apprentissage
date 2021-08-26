@@ -49,6 +49,7 @@ export const operators = [
     useInput: true,
     query: (key, value) => value && query(key, value, (k, v) => ({ term: { [k]: v } })),
     suggestionQuery: (key, value) => suggestionQuery(key, `${escapeRegex(value)}.*`),
+    mongoQuery: (key, value) => value && { [key]: value },
   },
   {
     value: "!==",
@@ -56,6 +57,7 @@ export const operators = [
     useInput: true,
     query: (key, value) => value && query(key, value, (k, v) => ({ bool: { must_not: { term: { [k]: v } } } })),
     suggestionQuery: (key, value) => suggestionQuery(key, `${escapeRegex(value)}.*`),
+    mongoQuery: (key, value) => value && { [key]: { $ne: value } },
   },
   {
     value: "===*",
@@ -63,6 +65,7 @@ export const operators = [
     useInput: true,
     query: (key, value) => value && query(key, value, (k, v) => ({ wildcard: { [k]: `*${v}*` } })),
     suggestionQuery: (key, value) => suggestionQuery(key, `.*${escapeRegex(value)}.*`),
+    mongoQuery: (key, value) => value && { [key]: { $regex: new RegExp(`.*${escapeRegex(value)}.*`) } },
   },
   {
     value: "!==*",
@@ -71,6 +74,7 @@ export const operators = [
     query: (key, value) =>
       value && query(key, value, (k, v) => ({ bool: { must_not: { wildcard: { [k]: `*${v}*` } } } })),
     suggestionQuery: (key, value) => suggestionQuery(key, `.*${escapeRegex(value)}.*`),
+    mongoQuery: (key, value) => value && { [key]: { $not: { $regex: new RegExp(`.*${escapeRegex(value)}.*`) } } },
   },
   {
     value: "===^",
@@ -78,6 +82,15 @@ export const operators = [
     useInput: true,
     query: (key, value) => value && query(key, value, (k, v) => ({ wildcard: { [k]: `${v}*` } })),
     suggestionQuery: (key, value) => suggestionQuery(key, `${escapeRegex(value)}.*`),
+    mongoQuery: (key, value) => value && { [key]: { $regex: new RegExp(`^${escapeRegex(value)}`) } },
+  },
+  {
+    value: "===$",
+    text: "termine par (recherche stricte)",
+    useInput: true,
+    query: (key, value) => value && query(key, value, (k, v) => ({ wildcard: { [k]: `*${v}` } })),
+    suggestionQuery: (key, value) => suggestionQuery(key, `.*${escapeRegex(value)}`),
+    mongoQuery: (key, value) => value && { [key]: { $regex: new RegExp(`${escapeRegex(value)}$`) } },
   },
   {
     value: "==",
@@ -85,6 +98,7 @@ export const operators = [
     useInput: true,
     query: (key, value) => value && query(key, value, (k, v) => ({ regexp: { [k]: notStrict(v) } })),
     suggestionQuery: (key, value) => suggestionQuery(key, `${notStrict(value)}.*`),
+    mongoQuery: (key, value) => value && { [key]: { $regex: new RegExp(`${notStrict(value)}`) } },
   },
   {
     value: "!=",
@@ -93,6 +107,7 @@ export const operators = [
     query: (key, value) =>
       value && query(key, value, (k, v) => ({ bool: { must_not: { regexp: { [k]: notStrict(v) } } } })),
     suggestionQuery: (key, value) => suggestionQuery(key, `${notStrict(value)}.*`),
+    mongoQuery: (key, value) => value && { [key]: { $not: { $regex: new RegExp(`${notStrict(value)}`) } } },
   },
   {
     value: "*",
@@ -100,6 +115,7 @@ export const operators = [
     useInput: true,
     query: (key, value) => value && query(key, value, (k, v) => ({ regexp: { [k]: `.*${notStrict(v)}.*` } })),
     suggestionQuery: (key, value) => suggestionQuery(key, `.*${notStrict(value)}.*`),
+    mongoQuery: (key, value) => value && { [key]: { $regex: new RegExp(`.*${notStrict(value)}.*`) } },
   },
   {
     value: "!*",
@@ -111,6 +127,7 @@ export const operators = [
         bool: { must_not: { regexp: { [k]: `.*${notStrict(v)}.*` } } },
       })),
     suggestionQuery: (key, value) => suggestionQuery(key, `.*${notStrict(value)}.*`),
+    mongoQuery: (key, value) => value && { [key]: { $not: { $regex: new RegExp(`.*${notStrict(value)}.*`) } } },
   },
   {
     value: "^",
@@ -118,6 +135,15 @@ export const operators = [
     useInput: true,
     query: (key, value) => value && query(key, value, (k, v) => ({ regexp: { [k]: `${notStrict(v)}.*` } })),
     suggestionQuery: (key, value) => suggestionQuery(key, `${notStrict(value)}.*`),
+    mongoQuery: (key, value) => value && { [key]: { $regex: new RegExp(`^${notStrict(value)}`) } },
+  },
+  {
+    value: "$",
+    text: "termine par",
+    useInput: true,
+    query: (key, value) => value && query(key, value, (k, v) => ({ regexp: { [k]: `.*${notStrict(v)}` } })),
+    suggestionQuery: (key, value) => suggestionQuery(key, `.*${notStrict(value)}`),
+    mongoQuery: (key, value) => value && { [key]: { $regex: new RegExp(`${notStrict(value)}$`) } },
   },
   {
     value: ">=",
@@ -125,6 +151,7 @@ export const operators = [
     useInput: true,
     query: (key, value) => value && query(key, value, (k, v) => ({ range: { [k]: { gte: v } } })),
     suggestionQuery: (key, value) => suggestionQuery(key, `${escapeRegex(value)}.*`),
+    mongoQuery: (key, value) => value && { [key]: { $gte: value } },
   },
   {
     value: "<=",
@@ -132,6 +159,7 @@ export const operators = [
     useInput: true,
     query: (key, value) => value && query(key, value, (k, v) => ({ range: { [k]: { lte: v } } })),
     suggestionQuery: (key, value) => suggestionQuery(key, `${escapeRegex(value)}.*`),
+    mongoQuery: (key, value) => value && { [key]: { $lte: value } },
   },
   {
     value: ">",
@@ -139,6 +167,7 @@ export const operators = [
     useInput: true,
     query: (key, value) => value && query(key, value, (k, v) => ({ range: { [k]: { gt: v } } })),
     suggestionQuery: (key, value) => suggestionQuery(key, `${escapeRegex(value)}.*`),
+    mongoQuery: (key, value) => value && { [key]: { $gt: value } },
   },
   {
     value: "<",
@@ -146,6 +175,7 @@ export const operators = [
     useInput: true,
     query: (key, value) => value && query(key, value, (k, v) => ({ range: { [k]: { lt: v } } })),
     suggestionQuery: (key, value) => suggestionQuery(key, `${escapeRegex(value)}.*`),
+    mongoQuery: (key, value) => value && { [key]: { $lt: value } },
   },
   {
     value: "∃",
@@ -160,6 +190,7 @@ export const operators = [
           must_not: { term: { [k]: "" } },
         },
       })),
+    mongoQuery: (key, value) => value && { [key]: { $exists: true } },
   },
   {
     value: "!∃",
@@ -177,12 +208,14 @@ export const operators = [
           ],
         },
       })),
+    mongoQuery: (key, value) => value && { [key]: { $exists: false } },
   },
   {
     value: "*.",
     text: "regexp",
     useInput: true,
     query: (key, value) => value && query(key, value, (k, v) => ({ regexp: { [k]: `${v}` } })),
+    mongoQuery: (key, value) => value && { [key]: { $regex: new RegExp(value) } },
   },
 ];
 

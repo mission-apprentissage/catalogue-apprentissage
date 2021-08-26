@@ -85,6 +85,11 @@ const Footer = () => {
                 </Link>
               </ListItem>
               <ListItem>
+                <Link as={NavLink} to={"/stats"}>
+                  Statistiques
+                </Link>
+              </ListItem>
+              <ListItem>
                 <Link href="https://mission-apprentissage.gitbook.io/" isExternal>
                   Documentation
                 </Link>

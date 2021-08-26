@@ -1,0 +1,46 @@
+import React from "react";
+import { Select } from "@chakra-ui/react";
+import { CONDITIONS } from "../../../constants/conditionsIntegration";
+import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
+
+const STATUS_LIST = {
+  [CONDITIONS.PEUT_INTEGRER]: {
+    parcoursup: [
+      PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
+      PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+      PARCOURSUP_STATUS.A_PUBLIER,
+    ],
+    affelnet: [AFFELNET_STATUS.A_PUBLIER_VALIDATION, AFFELNET_STATUS.A_PUBLIER],
+  },
+  [CONDITIONS.DOIT_INTEGRER]: {
+    parcoursup: [PARCOURSUP_STATUS.A_PUBLIER],
+    affelnet: [AFFELNET_STATUS.A_PUBLIER],
+  },
+  [CONDITIONS.NE_DOIT_PAS_INTEGRER]: {
+    parcoursup: [PARCOURSUP_STATUS.HORS_PERIMETRE],
+    affelnet: [AFFELNET_STATUS.HORS_PERIMETRE],
+  },
+};
+
+export const StatusSelect = ({ plateforme, currentStatus, condition, onChange, size = "sm", ...rest }) => {
+  const statusList = STATUS_LIST[condition]?.[plateforme];
+  return (
+    <Select
+      {...rest}
+      bg={currentStatus && currentStatus !== COMMON_STATUS.HORS_PERIMETRE ? "orangemedium.200" : "greendark.200"}
+      size={size}
+      onClick={(e) => {
+        e.stopPropagation();
+      }}
+      value={currentStatus}
+      onChange={onChange}
+      iconColor={rest.disabled ? "gray.400" : "gray.800"}
+    >
+      {statusList?.map((status) => (
+        <option value={status} key={status}>
+          {status}
+        </option>
+      ))}
+    </Select>
+  );
+};

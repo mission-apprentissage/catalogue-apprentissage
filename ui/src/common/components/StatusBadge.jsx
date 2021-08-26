@@ -9,11 +9,12 @@ import {
   RejectIcon,
   Question,
 } from "../../theme/components/icons/index";
+import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
 
 const Icon = ({ variant }) => {
   switch (variant) {
     case "notRelevant":
-      return null;
+      return <CloudSlashed />;
     case "published":
       return <Cloud />;
     case "notPublished":
@@ -24,26 +25,32 @@ const Icon = ({ variant }) => {
       return <ExclamationCircle />;
     case "reject":
       return <RejectIcon />;
+    case "nonConforme":
+      return <RejectIcon />;
     case "unknown":
       return <Question />;
+    case "conforme":
+      return <InfoCircle />;
     default:
       return <InfoCircle />;
   }
 };
 
-export const StatusBadge = ({ source, status, ...badgeProps }) => {
+export const StatusBadge = ({ source, status, text, ...badgeProps }) => {
   const defaultVariant = "notRelevant";
   const variantsMap = {
-    "hors périmètre": "notRelevant",
-    publié: "published",
-    "non publié": "notPublished",
-    "à publier (soumis à validation)": "toBePublished",
-    "à publier (vérifier accès direct postbac)": "toBePublished",
-    "à publier (soumis à validation Recteur)": "toBePublished",
-    "à publier": "toBePublished",
-    "en attente de publication": "pending",
+    [COMMON_STATUS.HORS_PERIMETRE]: "notRelevant",
+    [COMMON_STATUS.PUBLIE]: "published",
+    [COMMON_STATUS.NON_PUBLIE]: "notPublished",
+    [AFFELNET_STATUS.A_PUBLIER_VALIDATION]: "toBePublished",
+    [PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC]: "toBePublished",
+    [PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR]: "toBePublished",
+    [COMMON_STATUS.A_PUBLIER]: "toBePublished",
+    [COMMON_STATUS.EN_ATTENTE]: "pending",
     Rejeté: "reject",
     Inconnu: "unknown",
+    nonConforme: "nonConforme",
+    conforme: "conforme",
   };
 
   const variant = variantsMap[status] ?? defaultVariant;
@@ -53,7 +60,7 @@ export const StatusBadge = ({ source, status, ...badgeProps }) => {
       <Flex alignItems="center">
         <Icon variant={variant} />
         <Text ml={1} as={"span"} whiteSpace={"break-spaces"}>
-          {source ? `${source} - ${status}` : `${status}`}
+          {text ? `${text}` : source ? `${source} - ${status}` : `${status}`}
         </Text>
       </Flex>
     </Badge>

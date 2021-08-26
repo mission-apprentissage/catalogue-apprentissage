@@ -55,9 +55,11 @@
                     <strong><%= data.summary.publishedCount %></strong> Formation(s) publiée(s)<br>
                     <%= data.summary.deactivatedCount %> Formation(s) désactivée(s)
                 </mj-text>
+                <%if (data.link) { %>
                 <mj-text align="left" padding-top="20px" color="#19414C">
                     <a href="<%= data.link %>" class="button">Consultez le rapport en ligne</a>
                 </mj-text>
+                <% } %>
             </mj-column>
         </mj-section>
 

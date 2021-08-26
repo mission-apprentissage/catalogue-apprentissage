@@ -29,6 +29,7 @@ const commonFieldStyle = {
   _hover: {
     borderBottomColor: "grey.600",
   },
+  _disabled: { opacity: 0.7 },
 };
 
 const Select = {

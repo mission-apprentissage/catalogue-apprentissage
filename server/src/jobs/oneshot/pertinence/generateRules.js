@@ -12,7 +12,7 @@ const {
   aPublierVerifierAccesDirectPostBacRules: psPostBacRules,
   aPublierValidationRecteurRules: psAPublierRecteurRules,
   aPublierRules: psAPublierRules,
-} = require("../../pertinence/parcoursup/rules");
+} = require("../../parcoursup/pertinence/rules");
 
 const specificRulesNode = (rules) => {
   return rules["$or"];
@@ -34,7 +34,7 @@ const rulesReducer = (acc, rule) => {
 };
 
 const createRulesInDB = async (rules, plateforme, statut) => {
-  await asyncForEach(rules, async ({ niveau, diplome, ...rest }) => {
+  await asyncForEach(rules, async ({ niveau, diplome, duree, ...rest }) => {
     await new ReglePerimetre({
       plateforme,
       niveau,
@@ -42,13 +42,17 @@ const createRulesInDB = async (rules, plateforme, statut) => {
       statut,
       regle_complementaire: serialize(rest),
       nom_regle_complementaire: Object.keys(rest).length > 0 ? "Sous-ensemble" : null,
-      is_regle_nationale: true,
       last_update_who: "mna",
+      condition_integration: "peut intégrer",
+      duree,
     }).save();
   });
 };
 
 const run = async () => {
+  // reset
+  await ReglePerimetre.deleteMany({});
+
   // affelnet
   const flatAfAPublierValidationRules = specificRulesNode(afAPublierSoumisAValidationRules).reduce(rulesReducer, []);
   await createRulesInDB(flatAfAPublierValidationRules, "affelnet", "à publier (soumis à validation)");

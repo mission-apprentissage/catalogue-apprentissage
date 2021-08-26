@@ -3,7 +3,7 @@ const Joi = require("joi");
 const { getQueryFromRule } = require("../../common/utils/rulesUtils");
 const { ReglePerimetre } = require("../../common/model");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
-const { getPeriodeTags } = require("../../jobs/common/utils/rcoUtils");
+const { getPeriodeTags } = require("../../common/utils/rcoUtils");
 const { cfdMapper } = require("../mappers/cfdMapper");
 const { codePostalMapper } = require("../mappers/codePostalMapper");
 const { etablissementsMapper } = require("../mappers/etablissementsMapper");
@@ -11,6 +11,7 @@ const { geoMapper } = require("../mappers/geoMapper");
 const { diffFormation, buildUpdatesHistory } = require("../common/utils/diffUtils");
 const { SandboxFormation, RcoFormation } = require("../../common/model");
 const { getCoordinatesFromAddressData } = require("@mission-apprentissage/tco-service-node");
+const { distanceBetweenCoordinates } = require("../../common/utils/distanceUtils");
 
 const formationSchema = Joi.object({
   cfd: Joi.string().required(),
@@ -73,6 +74,36 @@ const mnaFormationUpdater = async (
       const { adresse, ...rest } = result ?? {};
       cpMapping = adresse ? { lieu_formation_adresse: adresse, ...rest } : {};
       error = parseErrors(geoMessages);
+
+      if (geoMessages?.errorType === "Insee") {
+        // on Insee inconsistency calculate distance between rco address search geoloc & rco geocoords
+        const { result: coordinates, messages: coordsMessages } = await getCoordinatesFromAddressData({
+          numero_voie: formation.lieu_formation_adresse,
+          localite: formation.localite,
+          code_postal: formation.code_postal,
+          code_insee: code_commune_insee,
+        });
+
+        const geolocError = parseErrors(coordsMessages);
+        if (!geolocError && coordinates.geo_coordonnees) {
+          const [lat, lon] = geoCoords.split(",");
+          const [inconsistentLat, inconsistentLon] = coordinates.geo_coordonnees.split(",");
+          const distance = distanceBetweenCoordinates(lat, lon, inconsistentLat, inconsistentLon);
+
+          // limit to 5 km the error threshold
+          if (distance > 5000) {
+            error = `${error} Distance entre le lieu de formation et la géolocalisation de ce même lieu via l'adresse fournie par RCO: ${(
+              distance / 1000
+            ).toFixed(2)}km (coordonnées geoloc rco : ${geoCoords} / coordonnées via adresse rco : ${
+              coordinates.geo_coordonnees
+            })`;
+          } else {
+            // consider it's not an error if the distance gap is under 5km
+            error = null;
+          }
+        }
+      }
+
       if (error) {
         return { updates: null, formation, error, cfdInfo };
       }
@@ -148,17 +179,17 @@ const mnaFormationUpdater = async (
      * 2. UAI formateur
      * 3. UAI RCO ? (mais qui devrait être égale à UAI formateur puisque RCO utilise les TCO pour charger les UAI formateurs)...
      */
-    let uai_formation;
+    let uai_formation = null;
     // check if it was set by user
-    uai_formation = formation?.editedFields?.uai_formation;
+    uai_formation = formation?.editedFields?.uai_formation || null;
     // no uai ? try to fill it with etablissement formateur
     if (!uai_formation) {
-      uai_formation = etablissementsMapping?.etablissement_formateur_uai;
+      uai_formation = etablissementsMapping?.etablissement_formateur_uai || null;
     }
 
     // TODO should try with etablissement_lieu_formation_uai from RCO but always empty for now on  ¯\_(ツ)_/¯
     if (!uai_formation) {
-      uai_formation = formation.uai_formation;
+      uai_formation = formation.uai_formation || null;
     }
 
     const updatedFormation = {
@@ -186,11 +217,13 @@ const mnaFormationUpdater = async (
       const aPublierRules = await ReglePerimetre.find({
         plateforme: "affelnet",
         statut: "à publier",
+        is_deleted: { $ne: true },
       }).lean();
 
       const aPublierSoumisAValidationRules = await ReglePerimetre.find({
         plateforme: "affelnet",
         statut: "à publier (soumis à validation)",
+        is_deleted: { $ne: true },
       }).lean();
 
       // Split formation into N formation with 1 mef each
@@ -239,6 +272,18 @@ const mnaFormationUpdater = async (
       await SandboxFormation.deleteMany({ id_rco_formation: rest.id_rco_formation });
     }
 
+    // compute distance between lieu formation & etablissement formateur
+    if (updatedFormation.lieu_formation_geo_coordonnees && updatedFormation.geo_coordonnees_etablissement_formateur) {
+      const [formateurLat, formateurLon] = updatedFormation.geo_coordonnees_etablissement_formateur.split(",");
+      const [lat, lon] = updatedFormation.lieu_formation_geo_coordonnees.split(",");
+      updatedFormation.distance_lieu_formation_etablissement_formateur = distanceBetweenCoordinates(
+        Number(formateurLat),
+        Number(formateurLon),
+        Number(lat),
+        Number(lon)
+      );
+    }
+
     const { updates, keys } = diffFormation(formation, updatedFormation);
     if (updates) {
       if (withHistoryUpdate) {
@@ -250,6 +295,7 @@ const mnaFormationUpdater = async (
     return { updates: null, formation, cfdInfo };
   } catch (e) {
     logger.error(e);
+    console.error(e);
     return { updates: null, formation, error: e.toString(), cfdInfo: null };
   }
 };

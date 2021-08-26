@@ -22,7 +22,6 @@ const Organismes = lazy(() => import("./pages/Organismes/Organismes"));
 const Formation = lazy(() => import("./pages/Formation"));
 const Etablissement = lazy(() => import("./pages/Etablissement"));
 const Journal = lazy(() => import("./pages/Journal/Journal"));
-const TagsHistory = lazy(() => import("./pages/admin/TagsHistory"));
 const UploadFiles = lazy(() => import("./pages/admin/UploadFiles"));
 const Message = lazy(() => import("./pages/admin/MessageScript"));
 const Contact = lazy(() => import("./pages/legal/Contact"));
@@ -30,8 +29,9 @@ const Cookies = lazy(() => import("./pages/legal/Cookies"));
 const DonneesPersonnelles = lazy(() => import("./pages/legal/DonneesPersonnelles"));
 const MentionsLegales = lazy(() => import("./pages/legal/MentionsLegales"));
 const Accessibilite = lazy(() => import("./pages/legal/Accessibilite"));
-const ReconciliationPs = lazy(() => import("./pages/admin/ReconciliationPs"));
+const ReconciliationPs = lazy(() => import("./pages/admin/ReconciliationPs/ReconciliationPs"));
 const ActionsExpertes = lazy(() => import("./pages/ActionsExpertes/ActionsExpertes"));
+const Collecte = lazy(() => import("./pages/Collecte/Collecte"));
 const Perimetre = lazy(() => import("./pages/perimetre/Perimetre"));
 
 function PrivateRoute({ component, ...rest }) {
@@ -145,14 +145,14 @@ export default () => {
                   <PrivateRoute exact path="/mes-actions" component={ActionsExpertes} />
                 )}
 
+                {/* {auth && hasAccessTo(auth, "page_collecte") && (
+                  <PrivateRoute exact path="/collecte" component={Collecte} />
+                )} */}
+                {/* Temporairement publique */}
+                <Route exact path="/collecte" component={Collecte} />
+
                 {auth && hasAccessTo(auth, "page_message_maintenance") && (
                   <PrivateRoute exact path="/admin/messagescript" component={Message} />
-                )}
-
-                {auth && auth.permissions.isAdmin && (
-                  <PrivateRoute exact path="/tags-history">
-                    <TagsHistory />
-                  </PrivateRoute>
                 )}
 
                 {auth && hasAccessTo(auth, "page_upload") && (

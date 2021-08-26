@@ -2,14 +2,14 @@ const { runScript } = require("./scriptWrapper");
 const logger = require("../common/logger");
 const rcoImporter = require("./rcoImporter");
 const rcoConverter = require("./rcoConverter");
-const psReference = require("./reference/parcoursup");
+const psReference = require("./parcoursup/reference");
 const afReference = require("./reference/affelnet");
-const psPertinence = require("./pertinence/parcoursup");
+const psPertinence = require("./parcoursup/pertinence");
 const afPertinence = require("./pertinence/affelnet");
 const afCoverage = require("./affelnet/coverage");
 const afReconciliation = require("./affelnet/reconciliation");
+const crypto = require("crypto");
 
-const clean = require("./clean");
 const { rebuildEsIndex } = require("./esIndex/esIndex");
 const { importEtablissements } = require("./etablissements");
 const { spawn } = require("child_process");
@@ -27,8 +27,6 @@ runScript(async ({ catalogue, db }) => {
 
     ConvertedFormation.pauseAllMongoosaticHooks();
 
-    await clean();
-
     // import tco
     await bcnImporter();
     await sleep(30000);
@@ -40,20 +38,23 @@ runScript(async ({ catalogue, db }) => {
     await importEtablissements(catalogue);
     await sleep(30000);
     // rco
-    await rcoImporter();
+    let uuidReport = await rcoImporter();
     await sleep(30000);
-    await rcoConverter();
+    if (!uuidReport) {
+      uuidReport = crypto.randomBytes(16).toString("hex");
+    }
+    await rcoConverter(uuidReport);
     await sleep(30000);
 
     // ~ 3 heures 40 minutes => ~ 59 minutes
-    const trainingsUpdater = spawn("node", ["./src/jobs/trainingsUpdater/index.js"]);
+    const trainingsUpdater = spawn("node", ["./src/jobs/trainingsUpdater/index.js", `--uuidReport=${uuidReport}`]);
     for await (const data of trainingsUpdater.stdout) {
       console.log(`trainingsUpdater: ${data}`);
     }
     await sleep(30000);
 
     // parcoursup
-    const psCoverage = spawn("node", ["./src/jobs/parcoursup/2021/coverage.js"]);
+    const psCoverage = spawn("node", ["./src/jobs/parcoursup/coverage.js"]);
     for await (const data of psCoverage.stdout) {
       console.log(`psCoverage: ${data}`);
     }

@@ -13,14 +13,20 @@ const REPORTS_URL = "/api/entity/reports";
 
 const getReportTitle = (reportType) => {
   switch (reportType) {
+    case REPORT_TYPE.RCO_IMPORT:
+      return "Rapport d'importation catalogue RCO";
+
     case REPORT_TYPE.RCO_CONVERSION:
       return "Rapport de conversion des formations RCO";
 
     case REPORT_TYPE.TRAININGS_UPDATE:
       return "Rapport de mise à jour des formations du catalogue";
 
-    case REPORT_TYPE.RCO_IMPORT:
-      return "Rapport d'importation catalogue RCO";
+    case REPORT_TYPE.PS_REJECT:
+      return "Rapport de rapprochements Parcoursup / Carif-Oref";
+
+    case REPORT_TYPE.METIER_GRAND_AGE:
+      return "Rapport des métiers du grand-âge";
 
     default:
       console.warn("unexpected report type", reportType);
@@ -28,9 +34,24 @@ const getReportTitle = (reportType) => {
   }
 };
 
-const getReport = async (reportType, date, page = 1, fullReport = null) => {
+function timeout(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+const getReport = async (reportType, date, uuidReport = null, page = 1, fullReport = null, range = false) => {
   try {
-    const response = await _get(`${REPORTS_URL}?type=${reportType}&date=${date}&page=${page}`);
+    let response = null;
+
+    if (range) {
+      const maxDate = new Date(parseInt(date));
+      const minDate = new Date(new Date(parseInt(date)).setHours(0, 0, 0, 0));
+      response = await _get(
+        `${REPORTS_URL}?type=${reportType}&minDate=${minDate.toISOString()}&maxDate=${maxDate.toISOString()}&page=${page}&uuidReport=${uuidReport}`
+      );
+    } else {
+      response = await _get(`${REPORTS_URL}?type=${reportType}&date=${date}&page=${page}&uuidReport=${uuidReport}`);
+    }
+
     const { report, pagination } = response;
 
     if (!fullReport) {
@@ -45,7 +66,8 @@ const getReport = async (reportType, date, page = 1, fullReport = null) => {
     }
 
     if (page < pagination.nombre_de_page) {
-      return getReport(reportType, date, page + 1, fullReport);
+      await timeout(150);
+      return getReport(reportType, date, uuidReport, page + 1, fullReport, range);
     } else {
       return { report: fullReport };
     }
@@ -57,9 +79,11 @@ const getReport = async (reportType, date, page = 1, fullReport = null) => {
 
 const ReportPage = () => {
   const { search } = useLocation();
-  const { type: reportType, date } = queryString.parse(search);
+  const { type: reportType, date, id: uuidReport } = queryString.parse(search);
 
   const [report, setReport] = useState(null);
+  const [importReport, setImportReport] = useState(null);
+  const [convertReport, setConvertReport] = useState(null);
   const [errorFetchData, setErrorFetchData] = useState(null);
   const [reportErrors, setReportErrors] = useState(null);
 
@@ -70,8 +94,36 @@ const ReportPage = () => {
         return;
       }
 
-      const { report, error } = await getReport(reportType, date);
-      const { report: reportErr } = await getReport(`${reportType}.error`, date);
+      const { report, error } = await getReport(reportType, date, uuidReport);
+
+      if (reportType === REPORT_TYPE.TRAININGS_UPDATE) {
+        const convertReportResp = await getReport(REPORT_TYPE.RCO_CONVERSION, date, uuidReport, 1, null, true);
+        if (convertReportResp.report && convertReportResp.report.data) {
+          const { converted, summary: convertSummary } = convertReportResp.report?.data;
+          setConvertReport({
+            convertedIds: converted.map(({ id_rco_formation, _id }) => ({
+              id_rco_formation,
+              _id,
+            })),
+            summary: convertSummary,
+          });
+        }
+      }
+
+      if (reportType === REPORT_TYPE.RCO_CONVERSION || reportType === REPORT_TYPE.TRAININGS_UPDATE) {
+        const importReportResp = await getReport(REPORT_TYPE.RCO_IMPORT, date, uuidReport, 1, null, true);
+        if (importReportResp.report) {
+          const { added, updated, deleted, summary } = importReportResp.report?.data;
+          setImportReport({
+            addedIds: added?.map(({ rcoId }) => rcoId.replaceAll(" ", "|")),
+            updatedIds: updated?.map(({ rcoId }) => rcoId.replaceAll(" ", "|")),
+            deletedIds: deleted?.map(({ rcoId }) => rcoId.replaceAll(" ", "|")),
+            summary,
+          });
+        }
+      }
+
+      const { report: reportErr } = await getReport(`${reportType}.error`, date, uuidReport);
 
       if (reportErr) {
         setReportErrors(reportErr);
@@ -84,7 +136,7 @@ const ReportPage = () => {
     };
 
     fetchReports();
-  }, [reportType, date]);
+  }, [reportType, date, uuidReport]);
 
   const dateLabel = new Date(Number(date)).toLocaleDateString("fr-FR", {
     day: "numeric",
@@ -119,7 +171,7 @@ const ReportPage = () => {
         )}
         {!errorFetchData && !report && (
           <Text color="grey.100" px={[8, 24]} py={3}>
-            Chargement des données...
+            Chargement des données... Cette opération peut prendre jusqu'a 1 minute
           </Text>
         )}
 
@@ -134,7 +186,14 @@ const ReportPage = () => {
               </Heading>
             </Box>
             <Box>
-              <Tabs data={report?.data} reportType={reportType} date={date} errors={reportErrors?.data?.errors} />
+              <Tabs
+                data={report?.data}
+                reportType={reportType}
+                date={date}
+                errors={reportErrors?.data?.errors}
+                importReport={importReport}
+                convertReport={convertReport}
+              />
             </Box>
           </>
         )}

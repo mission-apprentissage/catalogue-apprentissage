@@ -7,23 +7,39 @@ import { hasAccessTo } from "../../../common/utils/rolesUtils";
 const AlertMessage = () => {
   let [auth] = useAuth();
   const [messages, setMessages] = useState([]);
+
   useEffect(() => {
+    let mounted = true;
     const run = async () => {
-      const data = await _get("/api/v1/entity/messageScript");
-      const hasMessages = data.reduce((acc, item) => acc || item.enabled, false);
-      if (hasMessages) {
-        setMessages(data);
+      try {
+        const data = await _get("/api/v1/entity/messageScript");
+        const hasMessages = data.reduce((acc, item) => acc || item.enabled, false);
+        if (hasMessages && mounted) {
+          setMessages(data);
+        }
+      } catch (e) {
+        console.error(e);
       }
     };
     run();
+
+    return () => {
+      // cleanup hook
+      mounted = false;
+    };
   }, []);
+
   const onDeleteClicked = async (e) => {
     e.preventDefault();
-    const messageDeleted = await _delete("/api/v1/entity/messageScript");
-    if (messageDeleted) {
-      alert("Le message MANUEL seulement a bien été supprimé.");
+    try {
+      const messageDeleted = await _delete("/api/v1/entity/messageScript");
+      if (messageDeleted) {
+        alert("Le message MANUEL seulement a bien été supprimé.");
+      }
+      window.location.reload();
+    } catch (e) {
+      console.error(e);
     }
-    window.location.reload();
   };
   if (messages.length === 0) return null;
   return (

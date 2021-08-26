@@ -189,6 +189,8 @@ const mnaFormationSchema = {
   email: {
     type: String,
     default: null,
+    select: false,
+    noIndex: true,
     description: "Email du contact pour cette formation",
   },
   parcoursup_reference: {
@@ -329,10 +331,10 @@ const mnaFormationSchema = {
   },
 
   // Flags
-  to_verified: {
+  to_update: {
     type: Boolean,
     default: false,
-    description: "Formation à vérifier manuellement",
+    description: "Formation à mette à jour lors du script d'enrichissement",
   },
 
   // Product specific
@@ -439,6 +441,11 @@ const mnaFormationSchema = {
     type: String,
     default: null,
     description: "Parcoursup : raison de dépublication",
+  },
+  distance_lieu_formation_etablissement_formateur: {
+    type: Number,
+    default: null,
+    description: "distance entre le Lieu de formation et l'établissement formateur",
   },
 };
 

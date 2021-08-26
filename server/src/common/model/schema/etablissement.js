@@ -219,6 +219,11 @@ const etablissementSchema = {
     default: 0,
     description: "L'établissement est présent ou pas dans le fichier dataDock",
   },
+  info_qualiopi: {
+    type: Number,
+    default: 0,
+    description: "L'établissement est référencé qualiopi",
+  },
 
   info_depp_info: {
     type: String,
@@ -241,6 +246,12 @@ const etablissementSchema = {
     description: "L'établissement est présent ou pas dans le fichier dataDock",
   },
 
+  info_qualiopi_info: {
+    type: String,
+    default: null,
+    description: "L'établissement est présent ou pas dans le fichier qualiopi",
+  },
+
   computed_type: {
     type: String,
     default: null,
@@ -261,6 +272,11 @@ const etablissementSchema = {
     default: null,
     description: "Etablissement est connu de datadock",
   },
+  // computed_info_qualiopi: {
+  //   type: String,
+  //   default: null,
+  //   description: "Etablissement est connu de qualiopi",
+  // },
   api_entreprise_reference: {
     type: Boolean,
     default: false,
@@ -462,6 +478,8 @@ const etablissementSchema = {
   ds_questions_email: {
     type: String,
     default: null,
+    select: false,
+    noIndex: true,
     description: "Email du contact saisi dans Démarche Simplifiée",
   },
   ds_questions_uai: {
@@ -564,6 +582,21 @@ const etablissementSchema = {
     type: String,
     implicit_type: "geo_point",
     description: "Latitude et longitude de l'établissement RCO",
+  },
+  idcc: {
+    type: Number,
+    default: 0,
+    description: "id convention collective",
+  },
+  opco_nom: {
+    type: String,
+    default: null,
+    description: "Nom de l'opérateur de compétence",
+  },
+  opco_siren: {
+    type: String,
+    default: null,
+    description: "Siren de l'opérateur de compétence",
   },
 };
 

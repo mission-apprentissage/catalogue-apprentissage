@@ -38,13 +38,23 @@ const reglePerimetre = {
   num_academie: {
     type: Number,
     default: 0,
-    description: "Académie sur laquelle la règle s'applique, toutes par défaut",
+    description: "Académie pour laquelle la règle a été créé si il y en a une",
+  },
+  statut_academies: {
+    type: Object,
+    default: {},
+    description: "Les statuts à appliquer pour cette règle en académies",
   },
   regle_complementaire: {
     type: String,
     default: null,
     description:
       "La règle pour matcher les formations (i.e: query mongo) qui s'ajoute au niveau + diplome (stringified)",
+  },
+  regle_complementaire_query: {
+    type: String,
+    default: null,
+    description: "La règle complémentaire, de type eS pour le rule builder",
   },
   nom_regle_complementaire: {
     type: String,
@@ -55,12 +65,7 @@ const reglePerimetre = {
     type: Number,
     default: 0,
     description:
-      "En cas d'égalité sur la plateforme, niveau, diplome et num_academie, priorité de la règle pour savoir laquelle est la plus forte",
-  },
-  is_regle_nationale: {
-    type: Boolean,
-    default: true,
-    description: "True si la règle est une règle nationale (définie dans les textes de loi)",
+      "En cas d'égalité sur la plateforme, niveau et diplome, priorité de la règle pour savoir laquelle est la plus forte",
   },
   // history
   created_at: {
@@ -82,6 +87,23 @@ const reglePerimetre = {
     type: String,
     default: null,
     description: "Qui a réalisé la dernière modification",
+  },
+  is_deleted: {
+    type: Boolean,
+    default: false,
+    description: "True si la règle a été supprimée (soft delete)",
+  },
+  condition_integration: {
+    type: String,
+    enum: ["doit intégrer", "peut intégrer", "ne doit pas intégrer"],
+    default: "peut intégrer",
+    description: "Condition d'intégration dans la plateforme",
+    required: true,
+  },
+  duree: {
+    type: Number,
+    default: null,
+    description: "Durée en années pour matcher les formations",
   },
 };
 module.exports = reglePerimetre;

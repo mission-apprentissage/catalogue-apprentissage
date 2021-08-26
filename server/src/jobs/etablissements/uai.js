@@ -11,14 +11,14 @@ const upsertEtablissements = async () => {
 
   await asyncForEach(lines, async ({ Uai: uai, Siret: siret }, index) => {
     logger.info(`upsert element ${index + 1}/${lines.length}`);
-    const etablissement = await catalogue().getEtablissement({ siret });
+    const etablissement = await catalogue.getEtablissement({ siret });
     if (!etablissement?._id) {
-      const created = await catalogue().createEtablissement({ siret, uai });
+      const created = await catalogue.createEtablissement({ siret, uai });
       if (!created?._id) {
         logger.error(`Failed to create etablissement ${index + 1}/${lines.length}: `, siret, uai);
       }
     } else {
-      await catalogue().updateEtablissement(etablissement._id, { uai });
+      await catalogue.updateEtablissement(etablissement._id, { uai });
     }
   });
 };

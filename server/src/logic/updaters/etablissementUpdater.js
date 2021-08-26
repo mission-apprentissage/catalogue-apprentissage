@@ -1,6 +1,6 @@
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 const catalogue = require("../../common/components/catalogue");
-const { getPeriodeTags } = require("../../jobs/common/utils/rcoUtils");
+const { getPeriodeTags } = require("../../common/utils/rcoUtils");
 const { Etablissement } = require("../../common/model/index");
 
 const getRCOEtablissementFields = (rcoFormation, prefix) => {
@@ -47,23 +47,49 @@ const createOrUpdateEtablissements = async (rcoFormation) => {
     "etablissement_formateur" /*, "etablissement_lieu_formation"*/,
   ];
 
+  const result = {
+    etablissement_gestionnaire: {
+      created: false,
+      updated: null,
+      error: null,
+      alreadyHandled: false,
+    },
+    etablissement_formateur: {
+      created: false,
+      updated: null,
+      error: null,
+      alreadyHandled: false,
+    },
+    errored: false,
+  };
+
   await asyncForEach(etablissementTypes, async (type) => {
     const data = getEtablissementData(rcoFormation, type);
-    if (!data.siret || handledSirets.includes(data.siret)) {
+    if (!data.siret) {
+      result[type].error = "Aucun siret trouvé";
       return;
     }
 
-    const tags = getPeriodeTags(rcoFormation.periode);
-    if (tags.length === 0) {
+    if (handledSirets.includes(data.siret)) {
+      result[type].alreadyHandled = true;
       return;
     }
 
     handledSirets.push(data.siret);
     let etablissement = await Etablissement.findOne({ siret: data.siret });
+    const tags = getPeriodeTags(rcoFormation.periode);
+
     if (!etablissement?._id) {
+      if (tags.length === 0) {
+        result[type].error = "Aucune periodes pour cet établissement";
+        return;
+      }
+
       // create remote etablissement & save locally
-      etablissement = await catalogue().createEtablissement({ ...data, tags });
+      etablissement = await catalogue.createEtablissement({ ...data, tags });
       await Etablissement.create(etablissement);
+
+      result[type].created = true;
       return;
     }
 
@@ -84,10 +110,16 @@ const createOrUpdateEtablissements = async (rcoFormation) => {
 
     if (Object.keys(updates).length > 0) {
       // update remote etablissement & save locally
-      await catalogue().updateEtablissement(etablissement._id, updates);
+      await catalogue.updateEtablissement(etablissement._id, updates);
       await Etablissement.findOneAndUpdate({ siret: data.siret }, updates);
+
+      result[type].updated = updates;
     }
   });
+
+  result.errored = result.etablissement_gestionnaire.error || result.etablissement_formateur.error ? true : false;
+
+  return result;
 };
 
 module.exports = { createOrUpdateEtablissements };

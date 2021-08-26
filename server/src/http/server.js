@@ -1,6 +1,6 @@
 const express = require("express");
 const session = require("express-session");
-const MongoStore = require("connect-mongo")(session);
+const MongoStore = require("connect-mongo");
 const passport = require("passport");
 const config = require("config");
 const logger = require("../common/logger");
@@ -32,9 +32,11 @@ const parcoursup = require("./routes/parcoursup");
 const pendingRcoFormation = require("./routes/pendingRcoFormation");
 const affelnet = require("./routes/affelnet");
 const etablissement = require("./routes/etablissement");
+const etablissementSecure = require("./routes/etablissementSecure");
 const upload = require("./routes/upload");
 const messageScript = require("./routes/messageScript");
 const reglePerimetre = require("./routes/reglePerimetre");
+const reglePerimetreSecure = require("./routes/reglePerimetreSecure");
 
 const swaggerSchema = require("../common/model/swaggerSchema");
 
@@ -78,7 +80,7 @@ swaggerSpecification.components = {
   },
 };
 
-module.exports = async (components) => {
+module.exports = async (components, verbose = true) => {
   const { db } = components;
   const app = express();
   const adminOnly = permissionsMiddleware({ isAdmin: true });
@@ -88,7 +90,7 @@ module.exports = async (components) => {
   app.use(bodyParser.text({ type: "application/x-ndjson" }));
 
   app.use(corsMiddleware());
-  app.use(logMiddleware());
+  verbose && app.use(logMiddleware());
 
   if (config.env != "dev") {
     app.set("trust proxy", 1);
@@ -99,7 +101,8 @@ module.exports = async (components) => {
       saveUninitialized: false,
       resave: true,
       secret: config.auth.secret,
-      store: new MongoStore({ mongooseConnection: db }),
+      // https://github.com/jdesboeufs/connect-mongo/blob/HEAD/MIGRATION_V4.md
+      store: MongoStore.create({ client: db.getClient() }),
       cookie: {
         secure: config.env === "dev" ? false : true,
         maxAge: config.env === "dev" ? null : 30 * 24 * 60 * 60 * 1000,
@@ -118,6 +121,7 @@ module.exports = async (components) => {
   app.use("/api/v1/entity", convertedFormation());
   app.use("/api/v1/entity", pendingRcoFormation());
   app.use("/api/v1/entity", report());
+  app.use("/api/v1/entity", etablissement(components));
   app.use("/api/v1/rcoformation", rcoFormation());
   app.use("/api/v1/auth", auth(components));
   app.use("/api/v1/password", password(components));
@@ -130,8 +134,9 @@ module.exports = async (components) => {
   app.use("/api/v1/entity", apiKeyAuthMiddleware, convertedFormationSecure());
   app.use("/api/v1/stats", apiKeyAuthMiddleware, adminOnly, stats(components));
   app.use("/api/v1/affelnet", affelnet(components));
-  app.use("/api/v1/entity", apiKeyAuthMiddleware, etablissement(components));
+  app.use("/api/v1/entity", apiKeyAuthMiddleware, etablissementSecure(components));
   app.use("/api/v1/upload", adminOnly, upload());
+  app.use("/api/v1/entity", apiKeyAuthMiddleware, reglePerimetreSecure());
 
   /** DEPRECATED */
   app.use("/api/es/search", esSearch());
@@ -141,6 +146,7 @@ module.exports = async (components) => {
   app.use("/api/entity", pendingRcoFormation());
   app.use("/api/entity", report());
   app.use("/api/rcoformation", rcoFormation());
+  app.use("/api/entity", etablissement(components));
   app.use("/api/auth", auth(components));
   app.use("/api/password", password(components));
   app.use("/api/parcoursup", parcoursup(components));
@@ -150,23 +156,22 @@ module.exports = async (components) => {
   app.use("/api/entity", authMiddleware, convertedFormationSecure());
   app.use("/api/stats", stats(components));
   app.use("/api/affelnet", affelnet(components));
-  app.use("/api/entity", authMiddleware, etablissement(components));
+  app.use("/api/entity", authMiddleware, etablissementSecure(components));
+  app.use("/api/entity", authMiddleware, reglePerimetreSecure());
 
   app.get(
     "/api",
     tryCatch(async (req, res) => {
+      verbose && logger.info("/api called - healthcheck");
+
       let mongodbStatus;
-      logger.info("/api called");
-      await db
-        .collection("rcoformation")
-        .stats()
-        .then(() => {
-          mongodbStatus = true;
-        })
-        .catch((e) => {
-          mongodbStatus = false;
-          logger.error("Healthcheck failed", e);
-        });
+      try {
+        await db.collection("rcoformation").stats();
+        mongodbStatus = true;
+      } catch (e) {
+        mongodbStatus = false;
+        logger.error("Healthcheck failed", e);
+      }
 
       return res.json({
         name: `Serveur Express Catalogue - ${config.appName}`,

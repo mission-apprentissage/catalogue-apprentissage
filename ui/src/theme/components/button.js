@@ -23,7 +23,7 @@ const Button = {
       ...commonButtonStyle,
       bg: "bluefrance",
       color: "white",
-      _hover: { bg: "#0000dd" },
+      _hover: { bg: "#0000dd", _disabled: { bg: "bluefrance" } },
     },
     pill: {
       ...commonButtonStyle,

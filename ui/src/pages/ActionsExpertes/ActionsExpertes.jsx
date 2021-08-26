@@ -74,7 +74,7 @@ export default () => {
                 <Card
                   info={`${(
                     (searchState.countReconciliationPs.countValide * 100) /
-                    searchState.countReconciliationPs.countTotal
+                    (searchState.countReconciliationPs.countTotal || 1)
                   ).toFixed(2)}% de validées`}
                   linkTo="/couverture-ps"
                   title="Rapprochement des bases Carif-Oref et Parcoursup"
@@ -84,20 +84,18 @@ export default () => {
               </GridItem>
               <GridItem>
                 <Card
-                  info="0% de converture"
-                  linkTo="#"
+                  linkTo="/perimetre-affelnet"
                   title="Intégration des formations à la plateforme Affelnet"
                   body="Déterminer les règles d’intégration des formations du Catalogue des offres de formation en apprentissage 2021 (Carif-Oref) sur la plateforme Affelnet"
-                  isDisabled
+                  isDisabled={!hasAccessTo(auth, "page_perimetre_af")}
                 />
               </GridItem>
               <GridItem>
                 <Card
-                  info="0% de converture"
-                  linkTo="#"
+                  linkTo="/perimetre-parcoursup"
                   title="Intégration des formations à la plateforme Parcoursup"
                   body="Déterminer les règles d’intégration des formations du Catalogue des offres de formation en apprentissage 2021 (Carif-Oref) sur la plateforme Parcoursup"
-                  isDisabled
+                  isDisabled={!hasAccessTo(auth, "page_perimetre_ps")}
                 />
               </GridItem>
             </Grid>

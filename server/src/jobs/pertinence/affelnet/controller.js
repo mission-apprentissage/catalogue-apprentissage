@@ -3,6 +3,7 @@ const logger = require("../../../common/logger");
 const { getQueryFromRule } = require("../../../common/utils/rulesUtils");
 const { ReglePerimetre } = require("../../../common/model");
 const { updateTagsHistory } = require("../../../logic/updaters/tagsHistoryUpdater");
+const { asyncForEach } = require("../../../common/utils/asyncUtils");
 
 const run = async () => {
   // set "hors périmètre"
@@ -34,6 +35,7 @@ const run = async () => {
   const aPublierSoumisAValidationRules = await ReglePerimetre.find({
     plateforme: "affelnet",
     statut: "à publier (soumis à validation)",
+    is_deleted: { $ne: true },
   }).lean();
 
   await ConvertedFormation.updateMany(
@@ -53,6 +55,7 @@ const run = async () => {
   const aPublierRules = await ReglePerimetre.find({
     plateforme: "affelnet",
     statut: "à publier",
+    is_deleted: { $ne: true },
   }).lean();
 
   await ConvertedFormation.updateMany(
@@ -62,6 +65,26 @@ const run = async () => {
     },
     { $set: { last_update_at: Date.now(), affelnet_statut: "à publier" } }
   );
+
+  // apply academy rules
+  const academieRules = [...aPublierSoumisAValidationRules, ...aPublierRules].filter(
+    ({ statut_academies }) => statut_academies && Object.keys(statut_academies).length > 0
+  );
+
+  await asyncForEach(academieRules, async (rule) => {
+    await asyncForEach(Object.entries(rule.statut_academies), async ([num_academie, status]) => {
+      await ConvertedFormation.updateMany(
+        {
+          affelnet_statut: {
+            $in: ["hors périmètre", "à publier (soumis à validation)", "à publier"],
+          },
+          num_academie,
+          ...getQueryFromRule(rule),
+        },
+        { $set: { last_update_at: Date.now(), affelnet_statut: status } }
+      );
+    });
+  });
 
   // Push entry in tags history
   await updateTagsHistory("affelnet_statut");

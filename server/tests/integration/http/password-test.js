@@ -1,7 +1,4 @@
 const assert = require("assert");
-const config = require("config");
-const omit = require("lodash").omit;
-const jwt = require("jsonwebtoken");
 const httpTests = require("../../utils/httpTests");
 const { createPasswordToken } = require("../../../src/common/utils/jwtUtils");
 
@@ -10,19 +7,19 @@ httpTests(__filename, ({ startServer }) => {
     const { httpClient, createAndLogUser } = await startServer();
     await createAndLogUser("user", "password", { permissions: { isAdmin: true } });
 
-    const response = await httpClient.post("/api/password/forgotten-password", {
+    const response = await httpClient.post("/api/password/forgotten-password?noEmail=true", {
       username: "user",
     });
 
     assert.strictEqual(response.status, 200);
-    assert.ok(response.data.url);
+    assert.ok(response.data.token);
   });
 
   it("Vérifie qu'on ne peut pas demander la réinitialisation du mot de passe pour un utilisateur inconnu", async () => {
     const { httpClient, createAndLogUser } = await startServer();
     await createAndLogUser("admin", "password", { permissions: { isAdmin: true } });
 
-    const response = await httpClient.post("/api/password/forgotten-password", {
+    const response = await httpClient.post("/api/password/forgotten-password?noEmail=true", {
       username: "inconnu",
     });
 
@@ -33,7 +30,7 @@ httpTests(__filename, ({ startServer }) => {
     const { httpClient, createAndLogUser } = await startServer();
     await createAndLogUser("user123", "password");
 
-    const response = await httpClient.post("/api/password/forgotten-password", {
+    const response = await httpClient.post("/api/password/forgotten-password?noEmail=true", {
       type: "cfa",
       username: "user123456",
     });
@@ -51,16 +48,15 @@ httpTests(__filename, ({ startServer }) => {
     });
 
     assert.strictEqual(response.status, 200);
-    const decoded = jwt.verify(response.data.token, config.auth.user.jwtSecret);
-    assert.ok(decoded.iat);
-    assert.ok(decoded.exp);
-    assert.deepStrictEqual(omit(decoded, ["iat", "exp"]), {
-      sub: "admin",
-      iss: config.appName,
-      permissions: {
-        isAdmin: true,
-      },
+    const responseLogin = await httpClient.post("/api/auth/login", {
+      username: "admin",
+      password: "Password!123456",
     });
+
+    assert.strictEqual(responseLogin.status, 200);
+    const { permissions, sub } = responseLogin.data;
+    assert.strictEqual(permissions.isAdmin, true);
+    assert.strictEqual(sub, "admin");
   });
 
   it("Vérifie qu'on doit spécifier un mot de passe valide", async () => {
@@ -80,7 +76,7 @@ httpTests(__filename, ({ startServer }) => {
       details: [
         {
           message:
-            '"newPassword" with value "invalid" fails to match the required pattern: /^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$/',
+            '"newPassword" with value "invalid" fails to match the required pattern: /^(?=.*\\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^\\w\\d\\s:])([^\\s]){8,}$/',
           path: ["newPassword"],
           type: "string.pattern.base",
           context: { regex: {}, value: "invalid", label: "newPassword", key: "newPassword" },
