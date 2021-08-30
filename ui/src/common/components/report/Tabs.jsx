@@ -5,17 +5,17 @@ import { Table } from "./Table";
 import { CodeModal } from "./CodeModal";
 import { REPORT_TYPE } from "../../../constants/report";
 
-const getConvetedMetricsFromImportReport = (allConverted, importReport) => {
+const getConvetedMetricsFromImportReport = (allConverted = [], importReport) => {
   const addedConvertedIds = [];
   const updatedConvertedIds = [];
   const deletedConvertedIds = [];
   for (let index = 0; index < allConverted.length; index++) {
     const { id_rco_formation } = allConverted[index];
-    if (importReport.addedIds?.includes(id_rco_formation)) {
+    if (importReport?.addedIds?.includes(id_rco_formation)) {
       addedConvertedIds.push(id_rco_formation);
-    } else if (importReport.deletedIds?.includes(id_rco_formation)) {
+    } else if (importReport?.deletedIds?.includes(id_rco_formation)) {
       deletedConvertedIds.push(id_rco_formation);
-    } else if (importReport.updatedIds?.includes(id_rco_formation)) {
+    } else if (importReport?.updatedIds?.includes(id_rco_formation)) {
       updatedConvertedIds.push(id_rco_formation);
     }
   }
@@ -238,10 +238,10 @@ const TrainingsUpdateTabs = ({ data, reportType, date, errors, importReport, con
 
   useEffect(() => {
     const lookup = async () => {
-      if (data && data.updated && importReport && convertReport) {
+      if (data && data.updated) {
         // console.log(data);
 
-        const metricsImportedConverted = getConvetedMetricsFromImportReport(convertReport.convertedIds, importReport);
+        const metricsImportedConverted = getConvetedMetricsFromImportReport(convertReport?.convertedIds, importReport);
         // console.log(metricsImportedConverted);
 
         // "Dummy check"
