@@ -49,7 +49,7 @@ const run = async ({ mailer }) => {
   logger.info("-- Trouver mon master --");
 
   const date = DateTime.local().setLocale("fr").toFormat("yyyy-MM-dd");
-  const to = config.rco.reportMailingList.split(",");
+  const to = ["eric.plaquevent@beta.gouv.fr"];
 
   const { data: linesLieux } = await axios.get(lieuxUrl);
   const { data: linesMentions } = await axios.get(mentionsUrl);
