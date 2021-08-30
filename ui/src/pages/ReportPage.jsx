@@ -97,37 +97,29 @@ const ReportPage = () => {
       const { report, error } = await getReport(reportType, date, uuidReport);
 
       if (reportType === REPORT_TYPE.TRAININGS_UPDATE) {
-        try {
-          const convertReportResp = await getReport(REPORT_TYPE.RCO_CONVERSION, date, uuidReport, 1, null, true);
-          if (convertReportResp.report && convertReportResp.report.data) {
-            const { converted, summary: convertSummary } = convertReportResp.report?.data;
-            setConvertReport({
-              convertedIds: converted.map(({ id_rco_formation, _id }) => ({
-                id_rco_formation,
-                _id,
-              })),
-              summary: convertSummary,
-            });
-          }
-        } catch (e) {
-          console.warn("unable to load corresponding conversion report", e.toString());
+        const convertReportResp = await getReport(REPORT_TYPE.RCO_CONVERSION, date, uuidReport, 1, null, true);
+        if (convertReportResp.report && convertReportResp.report.data) {
+          const { converted, summary: convertSummary } = convertReportResp.report?.data;
+          setConvertReport({
+            convertedIds: converted.map(({ id_rco_formation, _id }) => ({
+              id_rco_formation,
+              _id,
+            })),
+            summary: convertSummary,
+          });
         }
       }
 
       if (reportType === REPORT_TYPE.RCO_CONVERSION || reportType === REPORT_TYPE.TRAININGS_UPDATE) {
-        try {
-          const importReportResp = await getReport(REPORT_TYPE.RCO_IMPORT, date, uuidReport, 1, null, true);
-          if (importReportResp.report) {
-            const { added, updated, deleted, summary } = importReportResp.report?.data;
-            setImportReport({
-              addedIds: added?.map(({ rcoId }) => rcoId.replaceAll(" ", "|")),
-              updatedIds: updated?.map(({ rcoId }) => rcoId.replaceAll(" ", "|")),
-              deletedIds: deleted?.map(({ rcoId }) => rcoId.replaceAll(" ", "|")),
-              summary,
-            });
-          }
-        } catch (e) {
-          console.warn("unable to load corresponding import report", e.toString());
+        const importReportResp = await getReport(REPORT_TYPE.RCO_IMPORT, date, uuidReport, 1, null, true);
+        if (importReportResp.report) {
+          const { added, updated, deleted, summary } = importReportResp.report?.data;
+          setImportReport({
+            addedIds: added?.map(({ rcoId }) => rcoId.replaceAll(" ", "|")),
+            updatedIds: updated?.map(({ rcoId }) => rcoId.replaceAll(" ", "|")),
+            deletedIds: deleted?.map(({ rcoId }) => rcoId.replaceAll(" ", "|")),
+            summary,
+          });
         }
       }
 
