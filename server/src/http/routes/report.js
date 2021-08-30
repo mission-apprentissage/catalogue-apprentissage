@@ -45,10 +45,11 @@ module.exports = () => {
               };
         data = await Report.paginate(filter, { page, limit: 1 });
       } else {
-        data = await Report.paginate(
-          { type, date, uuid: uuidReport === "null" ? null : uuidReport },
-          { page, limit: 1 }
-        );
+        const filter = { type, date };
+        if (uuidReport !== "null") {
+          filter.uuid = uuidReport;
+        }
+        data = await Report.paginate(filter, { page, limit: 1 });
       }
 
       if (data?.docs?.[0]) {
