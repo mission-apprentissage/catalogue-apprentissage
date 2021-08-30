@@ -173,7 +173,7 @@ const run = async () => {
                 mR.updatedFormations = [...mR.updatedFormations, ...r.updatedFormations];
                 mR.noUpdatedFormations = [...mR.noUpdatedFormations, ...r.noUpdatedFormations];
 
-                mFormationsGrandAge = [...mFormationsGrandAge, ...r.formationsGrandAge];
+                mFormationsGrandAge = [...mFormationsGrandAge, ...(r?.formationsGrandAge ?? [])];
               }
             }
           }
@@ -209,6 +209,7 @@ const run = async () => {
                 invalidFormations: [],
                 updatedFormations: [],
                 noUpdatedFormations: [],
+                formationsGrandAge: [],
               },
             });
           } else {
