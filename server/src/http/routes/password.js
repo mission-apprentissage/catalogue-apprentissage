@@ -48,13 +48,14 @@ module.exports = ({ users, mailer }) => {
         username: Joi.string().required(),
       }).validateAsync(req.body, { abortEarly: false });
 
-      const user = await users.getUser(username);
+      // try also by email since users tends to do that
+      const user = (await users.getUser(username)) ?? (await users.getUserByEmail(username));
       if (!user) {
         throw Boom.badRequest();
       }
       let noEmail = req.query.noEmail;
 
-      const token = createPasswordToken(username);
+      const token = createPasswordToken(user.username);
       const url = `${config.publicUrl}/reset-password?passwordToken=${token}`;
 
       if (noEmail) {
@@ -66,7 +67,7 @@ module.exports = ({ users, mailer }) => {
           getEmailTemplate("forgotten-password"),
           {
             url,
-            username,
+            username: user.username,
             publicUrl: config.publicUrl,
           }
         );
