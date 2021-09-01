@@ -59,7 +59,7 @@ const updateSchema = Joi.object({
 /**
  * Ensure user can edit perimeter rules
  */
-const hasPerimeterRights = (user, plateforme) => {
+const hasPerimeterRights = (user = {}, plateforme) => {
   return (
     user.isAdmin ||
     (plateforme === "affelnet" && user.acl?.includes("page_perimetre_af")) ||
@@ -72,7 +72,7 @@ const hasAcademyRights = (user, { num_academie }, body) => {
   const hasAllAcademies = user.isAdmin || userAcademies.includes("-1");
 
   if (!num_academie) {
-    const isEditingStatusOnly = body && Object.keys(body).length === 1 && body.statut_academies;
+    const isEditingStatusOnly = body && Object.keys(body).length === 1 && !!body.statut_academies;
     return hasAllAcademies || isEditingStatusOnly;
   }
 
@@ -85,7 +85,13 @@ module.exports = () => {
   // Create
   router.post(
     "/perimetre/regle",
-    tryCatch(async ({ body, user }, res) => {
+    tryCatch(async (req, res) => {
+      const { body } = req;
+      let user = {};
+      if (req.user) {
+        user = req.session?.passport?.user;
+      }
+
       await createSchema.validateAsync(body, { abortEarly: false });
 
       const {
@@ -128,7 +134,13 @@ module.exports = () => {
 
   router.put(
     "/perimetre/regle/:id",
-    tryCatch(async ({ params, body, user }, res) => {
+    tryCatch(async (req, res) => {
+      const { params, body } = req;
+      let user = {};
+      if (req.user) {
+        user = req.session?.passport?.user;
+      }
+
       await updateSchema.validateAsync(body, { abortEarly: false });
       const id = params.id;
       if (!id) {
@@ -170,7 +182,13 @@ module.exports = () => {
 
   router.delete(
     "/perimetre/regle/:id",
-    tryCatch(async ({ params, user }, res) => {
+    tryCatch(async (req, res) => {
+      const { params } = req;
+      let user = {};
+      if (req.user) {
+        user = req.session?.passport?.user;
+      }
+
       const id = params.id;
       if (!id) {
         throw Boom.badRequest();
