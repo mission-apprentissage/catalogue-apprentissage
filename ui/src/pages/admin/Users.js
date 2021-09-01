@@ -24,6 +24,7 @@ import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
 import ACL from "./acl";
 import generator from "generate-password-browser";
+import { useQuery } from "react-query";
 
 const ACADEMIES = [
   "01",
@@ -348,17 +349,13 @@ const UserLine = ({ user, roles }) => {
 };
 
 export default () => {
-  const [users, setUsers] = useState([]);
-  const [roles, setRoles] = useState([]);
-  useEffect(() => {
-    async function run() {
-      const usersList = await _get(`/api/admin/users/`);
-      setUsers(usersList);
-      const rolesList = await _get(`/api/admin/roles/`);
-      setRoles(rolesList);
-    }
-    run();
-  }, []);
+  const { data: roles } = useQuery("roles", () => _get(`/api/admin/roles/`), {
+    refetchOnWindowFocus: false,
+  });
+
+  const { data: users } = useQuery("users", () => _get(`/api/admin/users/`), {
+    refetchOnWindowFocus: false,
+  });
 
   const title = "Gestion des utilisateurs";
   setTitle(title);
@@ -376,37 +373,46 @@ export default () => {
             {title}
           </Heading>
           <Stack spacing={2}>
-            <Accordion bg="white" mb={12} allowToggle>
-              <AccordionItem>
-                <AccordionButton bg="bluefrance" color="white" _hover={{ bg: "blue.700" }}>
-                  <Box flex="1" textAlign="left" fontSize="gamma">
-                    Créer un utilisateur
-                  </Box>
-                  <AccordionIcon />
-                </AccordionButton>
-                <AccordionPanel pb={4} border={"1px solid"} borderTop={0} borderColor={"bluefrance"}>
-                  <UserLine user={null} roles={roles} />
-                </AccordionPanel>
-              </AccordionItem>
-            </Accordion>
+            <Accordion bg="white" allowToggle>
+              {roles && (
+                <AccordionItem mb={12}>
+                  <AccordionButton bg="bluefrance" color="white" _hover={{ bg: "blue.700" }}>
+                    <Box flex="1" textAlign="left" fontSize="gamma">
+                      Créer un utilisateur
+                    </Box>
+                    <AccordionIcon />
+                  </AccordionButton>
+                  <AccordionPanel pb={4} border={"1px solid"} borderTop={0} borderColor={"bluefrance"}>
+                    <UserLine user={null} roles={roles} />
+                  </AccordionPanel>
+                </AccordionItem>
+              )}
 
-            {users.map((userAttr, i) => {
-              return (
-                <Accordion bg="white" key={i} allowToggle>
-                  <AccordionItem>
-                    <AccordionButton _expanded={{ bg: "grey.200" }} border={"1px solid"} borderColor={"bluefrance"}>
-                      <Box flex="1" textAlign="left" fontSize="gamma">
-                        {userAttr.username}
-                      </Box>
-                      <AccordionIcon />
-                    </AccordionButton>
-                    <AccordionPanel pb={4} border={"1px solid"} borderTop={0} borderColor={"bluefrance"}>
-                      <UserLine user={userAttr} roles={roles} />
-                    </AccordionPanel>
-                  </AccordionItem>
-                </Accordion>
-              );
-            })}
+              {roles &&
+                users?.map((user) => {
+                  return (
+                    <AccordionItem key={user.username}>
+                      {({ isExpanded }) => (
+                        <>
+                          <AccordionButton
+                            _expanded={{ bg: "grey.200" }}
+                            border={"1px solid"}
+                            borderColor={"bluefrance"}
+                          >
+                            <Box flex="1" textAlign="left" fontSize="gamma">
+                              {user.username}
+                            </Box>
+                            <AccordionIcon />
+                          </AccordionButton>
+                          <AccordionPanel pb={4} border={"1px solid"} borderTop={0} borderColor={"bluefrance"}>
+                            {isExpanded && <UserLine user={user} roles={roles} />}
+                          </AccordionPanel>
+                        </>
+                      )}
+                    </AccordionItem>
+                  );
+                })}
+            </Accordion>
           </Stack>
         </Container>
       </Box>
