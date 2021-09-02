@@ -446,6 +446,20 @@ const columnsDefinition = [
     editable: false,
   },
   {
+    Header: "Nda gestionnaire",
+    accessor: "etablissement_gestionnaire_nda",
+    width: 200,
+    exportable: true,
+    editable: false,
+  },
+  {
+    Header: "Nda formateur",
+    accessor: "etablissement_formateur_nda",
+    width: 200,
+    exportable: true,
+    editable: false,
+  },
+  {
     Header: "Id RCO Info",
     accessor: "id_rco_formation",
     width: 200,
@@ -489,6 +503,8 @@ const queryBuilderField = [
   { text: "Identifiant Formation CO", value: "id_formation.keyword" },
   { text: "Identifiants Action CO", value: "ids_action.keyword" },
   { text: "Identifiant Certif Info", value: "id_certifinfo.keyword" },
+  { text: "Nda gestionnaire", value: "etablissement_gestionnaire_nda.keyword" },
+  { text: "Nda formateur", value: "etablissement_formateur_nda.keyword" },
   // { text: "ParcourSup à charger", value: "parcoursup_a_charger" },
   // { text: "Affelnet à charger", value: "affelnet_a_charger" },
 ];
