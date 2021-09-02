@@ -126,6 +126,11 @@ const etablissementFormateurInfo = {
     default: null,
     description: "Numéro siren formateur",
   },
+  etablissement_formateur_nda: {
+    type: String,
+    default: null,
+    description: "Numéro Déclaration formateur",
+  },
   etablissement_formateur_date_creation: {
     type: Date,
     default: null,

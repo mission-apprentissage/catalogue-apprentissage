@@ -126,6 +126,11 @@ const etablissementGestionnaireInfo = {
     default: null,
     description: "Numéro siren gestionnaire",
   },
+  etablissement_gestionnaire_nda: {
+    type: String,
+    default: null,
+    description: "Numéro Déclaration gestionnaire",
+  },
   etablissement_gestionnaire_date_creation: {
     type: Date,
     default: null,
