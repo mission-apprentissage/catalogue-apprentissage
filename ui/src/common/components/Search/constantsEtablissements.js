@@ -12,6 +12,13 @@ const columnsDefinition = [
     editable: false,
   },
   {
+    Header: "Nda",
+    accessor: "nda",
+    width: 200,
+    exportable: true,
+    editable: false,
+  },
+  {
     Header: "Siret",
     accessor: "siret",
     width: 200,
@@ -305,6 +312,7 @@ const queryBuilderField = [
   { text: "Déclaré en prefecture", value: "computed_declare_prefecture.keyword" },
   { text: "Référencé datadock", value: "computed_info_datadock.keyword" },
   { text: "Uai", value: "uai.keyword" },
+  { text: "Nda", value: "nda.keyword" },
 ];
 
 const facetDefinition = () => [
