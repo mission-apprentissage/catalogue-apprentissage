@@ -91,6 +91,7 @@ const mapEtablissementKeys = async (
 ) => {
   return {
     [`${prefix}_siren`]: etablissement.siren || null,
+    [`${prefix}_nda`]: etablissement.nda || null,
     [`${prefix}_published`]: etablissement.published || false,
     [`${prefix}_catalogue_published`]: etablissement.catalogue_published || false,
     [`${prefix}_id`]: etablissement._id ? `${etablissement._id}` : null,
