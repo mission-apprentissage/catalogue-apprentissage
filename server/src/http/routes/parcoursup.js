@@ -303,6 +303,40 @@ module.exports = ({ catalogue }) => {
         const previousFormation = await PsFormation.findById(id_formation).lean();
 
         const mnaFormation = await ConvertedFormation.findById(rest.mnaFormationId).lean();
+        let matching_mna_formation = [];
+        let matching_mna_parcoursup_statuts = [];
+        if (
+          previousFormation.statut_reconciliation === "VALIDE" &&
+          previousFormation.matching_mna_formation.length > 0
+        ) {
+          if (!previousFormation.matching_mna_formation.map(({ _id }) => `${_id}`).includes(rest.mnaFormationId)) {
+            matching_mna_formation = [
+              ...previousFormation.matching_mna_formation,
+              {
+                _id: mnaFormation._id,
+                intitule_court: mnaFormation.intitule_court,
+                parcoursup_statut: mnaFormation.parcoursup_statut,
+              },
+            ];
+
+            matching_mna_parcoursup_statuts = [
+              ...previousFormation.matching_mna_parcoursup_statuts,
+              mnaFormation.parcoursup_statut,
+            ];
+          } else {
+            matching_mna_formation = previousFormation.matching_mna_formation;
+            matching_mna_parcoursup_statuts = previousFormation.matching_mna_parcoursup_statuts;
+          }
+        } else {
+          matching_mna_formation = [
+            {
+              _id: mnaFormation._id,
+              intitule_court: mnaFormation.intitule_court,
+              parcoursup_statut: mnaFormation.parcoursup_statut,
+            },
+          ];
+          matching_mna_parcoursup_statuts = [mnaFormation.parcoursup_statut];
+        }
 
         let updatedFormation = {
           ...previousFormation,
@@ -310,14 +344,8 @@ module.exports = ({ catalogue }) => {
           statut_reconciliation: "VALIDE",
           etat_reconciliation: true,
           matching_rejete_updated: false,
-          matching_mna_formation: [
-            {
-              _id: mnaFormation._id,
-              intitule_court: mnaFormation.intitule_court,
-              parcoursup_statut: mnaFormation.parcoursup_statut,
-            },
-          ],
-          matching_mna_parcoursup_statuts: [mnaFormation.parcoursup_statut],
+          matching_mna_formation,
+          matching_mna_parcoursup_statuts,
         };
 
         // History
