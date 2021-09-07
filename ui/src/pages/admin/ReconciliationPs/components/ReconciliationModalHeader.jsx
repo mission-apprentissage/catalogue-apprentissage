@@ -29,6 +29,8 @@ import { PARCOURSUP_STATUS } from "../../../../constants/status";
 
 import { Close, CheckLine, ValidateIcon, ErrorIcon } from "../../../../theme/components/icons";
 
+// let finalValidation = [];
+
 const ReconciliationModalHeader = React.memo(
   ({ formation, onClose, step, onStepChanged, onValidationSubmit, onStepClicked, onMnaFormationSelected }) => {
     const { isOpen: isOpenSubModal, onOpen: onOpenSubModal, onClose: onCloseSubM } = useDisclosure();
@@ -63,6 +65,7 @@ const ReconciliationModalHeader = React.memo(
       }),
       onSubmit: ({ parcoursup_keep_publish, parcoursup_raison_depublication }) => {
         return new Promise(async (resolve) => {
+          const formationARapprocher = formation.matching_mna_formation[currentMnaFormation];
           const body = {};
           let shouldRemovePsReconciliation = false;
           let shouldRestorePsReconciliation = false;
@@ -74,10 +77,10 @@ const ReconciliationModalHeader = React.memo(
             //     "à publier (soumis à validation Recteur)",
             //     "en attente de publication",
             //     "à publier",
-            //   ].includes(mnaFormation?.parcoursup_statut)
+            //   ].includes(formationARapprocher?.parcoursup_statut)
             // ) {
             body.parcoursup_statut = "publié";
-            shouldRestorePsReconciliation = mnaFormation.parcoursup_statut === "non publié";
+            shouldRestorePsReconciliation = formationARapprocher.parcoursup_statut === "non publié";
             body.parcoursup_raison_depublication = null;
             // }
           } else if (parcoursup_keep_publish === "false") {
@@ -88,24 +91,24 @@ const ReconciliationModalHeader = React.memo(
             //     "à publier (soumis à validation Recteur)",
             //     "à publier",
             //     "publié",
-            //   ].includes(mnaFormation?.parcoursup_statut)
+            //   ].includes(formationARapprocher?.parcoursup_statut)
             // ) {
             body.parcoursup_raison_depublication = parcoursup_raison_depublication;
             body.parcoursup_statut = "non publié";
             shouldRemovePsReconciliation = ["en attente de publication", "publié"].includes(
-              mnaFormation.parcoursup_statut
+              formationARapprocher.parcoursup_statut
             );
             // }
           }
 
           if (Object.keys(body).length > 0) {
-            await _put(`/api/entity/formations2021/${mnaFormation._id}`, {
-              num_academie: mnaFormation.num_academie,
+            await _put(`/api/entity/formations2021/${formationARapprocher._id}`, {
+              num_academie: formationARapprocher.num_academie,
               ...body,
               last_update_who: user.email,
               last_update_at: Date.now(),
               updates_history: buildUpdatesHistory(
-                mnaFormation,
+                formationARapprocher,
                 { ...body, last_update_who: user.email },
                 Object.keys(body)
               ),
@@ -114,9 +117,9 @@ const ReconciliationModalHeader = React.memo(
             if (shouldRemovePsReconciliation || shouldRestorePsReconciliation) {
               try {
                 await _put(`/api/parcoursup/reconciliation`, {
-                  uai_gestionnaire: mnaFormation.etablissement_gestionnaire_uai,
-                  uai_affilie: mnaFormation.etablissement_formateur_uai,
-                  cfd: mnaFormation.cfd,
+                  uai_gestionnaire: formationARapprocher.etablissement_gestionnaire_uai,
+                  uai_affilie: formationARapprocher.etablissement_formateur_uai,
+                  cfd: formationARapprocher.cfd,
                   email: shouldRemovePsReconciliation ? user.email : null,
                 });
               } catch (e) {
@@ -128,13 +131,13 @@ const ReconciliationModalHeader = React.memo(
           const mapping = [];
 
           mapping.push({
-            id: mnaFormation.etablissement_formateur_id,
-            siret: mnaFormation.etablissement_formateur_siret,
+            id: formationARapprocher.etablissement_formateur_id,
+            siret: formationARapprocher.etablissement_formateur_siret,
             type: "formateur",
           });
           mapping.push({
-            id: mnaFormation.etablissement_gestionnaire_id,
-            siret: mnaFormation.etablissement_gestionnaire_siret,
+            id: formationARapprocher.etablissement_gestionnaire_id,
+            siret: formationARapprocher.etablissement_gestionnaire_siret,
             type: "gestionnaire",
           });
 
@@ -144,13 +147,21 @@ const ReconciliationModalHeader = React.memo(
             uai_affilie: formation.uai_affilie,
             uai_gestionnaire: formation.uai_gestionnaire,
             uai_composante: formation.uai_composante,
-            code_cfd: mnaFormation.cfd,
-            mnaFormationId: mnaFormation._id,
+            code_cfd: formationARapprocher.cfd,
+            mnaFormationId: formationARapprocher._id,
             mapping,
             reject: false,
           });
 
-          onValidationSubmit();
+          // console.log(selectedFormation);
+          // console.log(finalValidation);
+          // if (!finalValidation.includes(currentMnaFormation)) {
+          //   finalValidation = [...finalValidation, currentMnaFormation];
+          // } else {
+          //   if (JSON.stringify(selectedFormation) === JSON.stringify(finalValidation)) {
+          //     onValidationSubmit();
+          //   }
+          // }
           resolve("onSubmitHandler publish complete");
         });
       },
@@ -182,7 +193,9 @@ const ReconciliationModalHeader = React.memo(
     );
 
     const height =
-      formation.statut_reconciliation === "REJETE"
+      formation.statut_reconciliation === "VALIDE"
+        ? "100px"
+        : formation.statut_reconciliation === "REJETE"
         ? "450px"
         : step === 1
         ? slidesCount > 1
@@ -356,15 +369,17 @@ const ReconciliationModalHeader = React.memo(
                     <Box flexGrow="1">
                       <Text textStyle="h6">Formations Catalogue 2021</Text>
                     </Box>
-                    <HStack>
-                      <Switch
-                        variant="icon"
-                        onChange={onSelectChecked}
-                        isChecked={selectedFormation.includes(currentMnaFormation)}
-                        id={`select-rapprochement`}
-                      />
-                      <Text>à rapprocher</Text>
-                    </HStack>
+                    {slidesCount > 1 && (
+                      <HStack>
+                        <Switch
+                          variant="icon"
+                          onChange={onSelectChecked}
+                          isChecked={selectedFormation.includes(currentMnaFormation)}
+                          id={`select-rapprochement`}
+                        />
+                        <Text>à rapprocher</Text>
+                      </HStack>
+                    )}
                   </HStack>
                 }
               />
