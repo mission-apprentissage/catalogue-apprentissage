@@ -29,6 +29,8 @@ import { PARCOURSUP_STATUS } from "../../../../constants/status";
 
 import { Close, CheckLine, ValidateIcon, ErrorIcon } from "../../../../theme/components/icons";
 
+// let finalValidation = [];
+
 const ReconciliationModalHeader = React.memo(
   ({ formation, onClose, step, onStepChanged, onValidationSubmit, onStepClicked, onMnaFormationSelected }) => {
     const { isOpen: isOpenSubModal, onOpen: onOpenSubModal, onClose: onCloseSubM } = useDisclosure();
@@ -63,8 +65,6 @@ const ReconciliationModalHeader = React.memo(
       }),
       onSubmit: ({ parcoursup_keep_publish, parcoursup_raison_depublication }) => {
         return new Promise(async (resolve) => {
-          // selectedFormation
-          console.log(currentMnaFormation);
           const formationARapprocher = formation.matching_mna_formation[currentMnaFormation];
           const body = {};
           let shouldRemovePsReconciliation = false;
@@ -153,7 +153,15 @@ const ReconciliationModalHeader = React.memo(
             reject: false,
           });
 
-          // onValidationSubmit();
+          // console.log(selectedFormation);
+          // console.log(finalValidation);
+          // if (!finalValidation.includes(currentMnaFormation)) {
+          //   finalValidation = [...finalValidation, currentMnaFormation];
+          // } else {
+          //   if (JSON.stringify(selectedFormation) === JSON.stringify(finalValidation)) {
+          //     onValidationSubmit();
+          //   }
+          // }
           resolve("onSubmitHandler publish complete");
         });
       },
