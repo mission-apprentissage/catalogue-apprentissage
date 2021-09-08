@@ -161,6 +161,8 @@ const ReconciliationModalHeader = React.memo(
           setRestIde(restDiff);
           if (restDiff.length > 0) {
             setCurrentMnaFormation(restDiff[0]);
+            setMnaFormation(formation.matching_mna_formation[restDiff[0]]);
+            onMnaFormationSelected(restDiff[0]);
           } else {
             onValidationSubmit();
           }
@@ -193,6 +195,16 @@ const ReconciliationModalHeader = React.memo(
         setSelectedFormation(selected);
       },
       [currentMnaFormation, selectedFormation]
+    );
+
+    let onGoToStepPublish = useCallback(
+      (e) => {
+        setMnaFormation(formation.matching_mna_formation[0]);
+        setCurrentMnaFormation(0);
+        onMnaFormationSelected(0);
+        onStepChanged(2);
+      },
+      [formation.matching_mna_formation, onMnaFormationSelected, onStepChanged]
     );
 
     const height =
@@ -294,11 +306,7 @@ const ReconciliationModalHeader = React.memo(
                       <Button
                         type="submit"
                         variant="primary"
-                        onClick={() => {
-                          // setHandlePublishFormation(selectedFormation);
-                          setCurrentMnaFormation(0);
-                          onStepChanged(2);
-                        }}
+                        onClick={onGoToStepPublish}
                         isDisabled={slidesCount > 1 && selectedFormation.length === 0}
                       >
                         {slidesCount === 1 && `Valider le rapprochement et passer à l’étape suivante`}
