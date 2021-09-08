@@ -1,7 +1,7 @@
-import { Box, Text, Heading } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import { Section } from "./Section";
-import { CardEtablissements } from "./CardEtablissements";
+// import { CardEtablissements } from "./CardEtablissements";
 
 const getEtablissementFields = (mnaFormation, type, diff, code_commune_insee) => {
   return {
