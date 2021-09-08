@@ -4,12 +4,21 @@ import { Link } from "@chakra-ui/react";
 const changelog = {
   list: [
     {
-      version: "4.5.0",
+      version: "4.6.0",
       date: "Prochainement",
       about: `<h4>À venir</h4>`,
       fixes: [],
       features: [],
       improvements: ["Travaux sur le flux retour vers les Carif-Oref et gestion des modifications"],
+    },
+    {
+      version: "4.5.0",
+      date: "Le 8 Septembre 2021",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [],
+      features: [],
+      improvements: ["[Admin] Rapprochements ParcourSup et Base Carif Oref nouvelle version"],
     },
     {
       version: "4.4.0",

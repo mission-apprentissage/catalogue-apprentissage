@@ -2,16 +2,16 @@ import { Box, Avatar, AvatarBadge } from "@chakra-ui/react";
 import React from "react";
 import { CheckLine } from "../../../../theme/components/icons";
 
-const ButtonIndicator = ({ text, withIcon, active, onClicked, ...props }) => {
+const ButtonIndicator = ({ text, withIcon, active, onClicked, isDisabled, ...props }) => {
   return (
     <Avatar
       icon={
         <Box
           boxSize="2.25em"
-          bg={active ? "bluefrance" : "galt"}
+          bg={isDisabled ? "#4A5568" : active ? "bluefrance" : "galt"}
           fontSize="md"
           fontWeight="semibold"
-          color={active ? "white" : "grey.800"}
+          color={active || isDisabled ? "white" : "grey.800"}
           borderRadius="full"
           display="flex"
           alignItems="center"
@@ -24,9 +24,10 @@ const ButtonIndicator = ({ text, withIcon, active, onClicked, ...props }) => {
       bg="none"
       h="auto"
       w="auto"
-      cursor="pointer"
-      onClick={onClicked}
+      cursor={!isDisabled ? "pointer" : "unset"}
+      onClick={isDisabled ? () => {} : onClicked}
       {...props}
+      isDisabled
     >
       {withIcon && (
         <AvatarBadge

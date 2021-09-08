@@ -26,6 +26,7 @@ import useAuth from "../../../../common/hooks/useAuth";
 import * as Yup from "yup";
 import { _post, _put } from "../../../../common/httpClient";
 import { PARCOURSUP_STATUS } from "../../../../constants/status";
+import { difference } from "lodash";
 
 import { Close, CheckLine, ValidateIcon, ErrorIcon } from "../../../../theme/components/icons";
 
@@ -39,6 +40,8 @@ const ReconciliationModalHeader = React.memo(
     const [showRaison, setShowRaison] = useState(false);
     const [currentMnaFormation, setCurrentMnaFormation] = useState(0);
     const [selectedFormation, setSelectedFormation] = useState([]);
+    const [handlePublishFormation, setHandlePublishFormation] = useState([]);
+    const [restIde, setRestIde] = useState([]);
     const slidesCount = formation.matching_mna_formation.length;
     const [user] = useAuth();
 
@@ -153,15 +156,15 @@ const ReconciliationModalHeader = React.memo(
             reject: false,
           });
 
-          // console.log(selectedFormation);
-          // console.log(finalValidation);
-          // if (!finalValidation.includes(currentMnaFormation)) {
-          //   finalValidation = [...finalValidation, currentMnaFormation];
-          // } else {
-          //   if (JSON.stringify(selectedFormation) === JSON.stringify(finalValidation)) {
-          //     onValidationSubmit();
-          //   }
-          // }
+          setHandlePublishFormation([...handlePublishFormation, currentMnaFormation]);
+          const restDiff = difference(selectedFormation, [...handlePublishFormation, currentMnaFormation]).sort();
+          setRestIde(restDiff);
+          if (restDiff.length > 0) {
+            setCurrentMnaFormation(restDiff[0]);
+          } else {
+            onValidationSubmit();
+          }
+
           resolve("onSubmitHandler publish complete");
         });
       },
@@ -292,6 +295,8 @@ const ReconciliationModalHeader = React.memo(
                         type="submit"
                         variant="primary"
                         onClick={() => {
+                          // setHandlePublishFormation(selectedFormation);
+                          setCurrentMnaFormation(0);
                           onStepChanged(2);
                         }}
                         isDisabled={slidesCount > 1 && selectedFormation.length === 0}
@@ -333,7 +338,7 @@ const ReconciliationModalHeader = React.memo(
                         .map((unuse, ide) => (
                           <ButtonIndicator
                             text={ide + 1}
-                            // withIcon
+                            withIcon={selectedFormation.includes(ide)}
                             active={ide === currentMnaFormation}
                             onClicked={() => {
                               setCurrentMnaFormation(ide);
@@ -452,7 +457,7 @@ const ReconciliationModalHeader = React.memo(
                             return (
                               <ButtonIndicator
                                 text={ide + 1}
-                                withIcon
+                                withIcon={handlePublishFormation.includes(ide)}
                                 active={ide === currentMnaFormation}
                                 onClicked={() => {
                                   setCurrentMnaFormation(ide);
@@ -460,10 +465,15 @@ const ReconciliationModalHeader = React.memo(
                                   setMnaFormation(formation.matching_mna_formation[ide]);
                                 }}
                                 key={ide}
+                                isDisabled={
+                                  restIde[0] !== ide &&
+                                  ide !== currentMnaFormation &&
+                                  !handlePublishFormation.includes(ide)
+                                }
                               />
                             );
                           }
-                          return <ButtonIndicator text={ide + 1} key={ide} />;
+                          return null;
                         })}
                       <Text textStyle="sm" ml="0.9rem" color="info" flexGrow="1">
                         {selectedFormation.length} formations sélectionnées à l'étape 1.
