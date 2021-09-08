@@ -554,17 +554,17 @@ const Rapprochement = React.memo(({ formation, currentMnaFormation }) => {
           </Box>
         }
       />
-      <br />
+      <br /> <br />
       <Section
         withBorder
         left={<Box mb={4} mt={4}></Box>}
         middle={
-          <Box mb={4} mt={4}>
+          <Box mb={4} mt={4} fontSize="20px">
             N.A
           </Box>
         }
         right={
-          <Box mb={4} mt={4}>
+          <Box mb={4} mt={4} fontSize="20px">
             Organisme gestionnaire
           </Box>
         }
