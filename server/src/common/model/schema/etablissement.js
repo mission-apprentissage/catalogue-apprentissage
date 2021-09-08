@@ -24,6 +24,11 @@ const etablissementSchema = {
     default: null,
     description: "Numéro siren de l'entreprise",
   },
+  nda: {
+    type: String,
+    default: null,
+    description: "Numéro Déclaration",
+  },
   naf_code: {
     type: String,
     default: null,
