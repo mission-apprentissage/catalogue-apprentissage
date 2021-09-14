@@ -47,7 +47,11 @@ runScript(async ({ catalogue, db }) => {
     await sleep(30000);
 
     // ~ 3 heures 40 minutes => ~ 59 minutes
-    const trainingsUpdater = spawn("node", ["./src/jobs/trainingsUpdater/index.js", `--uuidReport=${uuidReport}`]);
+    const trainingsUpdater = spawn("node", [
+      "./src/jobs/trainingsUpdater/index.js",
+      `--uuidReport=${uuidReport}`,
+      "--withCodePostal",
+    ]);
     for await (const data of trainingsUpdater.stdout) {
       console.log(`trainingsUpdater: ${data}`);
     }
