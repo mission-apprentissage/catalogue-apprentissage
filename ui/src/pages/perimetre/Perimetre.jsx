@@ -139,8 +139,7 @@ const CountText = ({ totalFormationsCount, plateforme, niveaux, academie, ...res
         : "au national"}
       , {integrationCount?.nbRules ?? "-"} diplômes ou titres en apprentissage ({integrationCount?.nbFormations ?? "-"}{" "}
       formations) doivent ou peuvent intégrer la plateforme {plateforme} sur les {diplomesCount} recensés (
-      {totalFormationsCount} formations dont le diplôme a une date de fin supérieure au 31/08 de l'année en cours) dans
-      le Catalogue général.
+      {totalFormationsCount} formations) dans le Catalogue général.
     </Text>
   );
 };
