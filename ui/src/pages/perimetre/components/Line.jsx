@@ -74,7 +74,10 @@ export const Line = ({
     <Box
       borderBottom={"1px solid"}
       borderColor={"grey.300"}
-      _hover={{ bg: nom_regle_complementaire ? "grey.200" : "none" }}
+      _hover={{
+        bg: nom_regle_complementaire ? "grey.200" : "none",
+        cursor: nom_regle_complementaire ? "pointer" : "auto",
+      }}
       onClick={() => {
         nom_regle_complementaire && onShowRule(rule);
       }}
