@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Container, Heading, Flex, Link, Text, Grid, GridItem } from "@chakra-ui/react";
+import { Box, Container, Flex, Grid, GridItem, Heading, Link, Text } from "@chakra-ui/react";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import Layout from "../layout/Layout";
 import { setTitle } from "../../common/utils/pageUtils";
@@ -33,11 +33,11 @@ export const Card = ({ info, linkTo, title, body, isDisabled }) => {
   return (
     <>
       {!isDisabled ? (
-        <Link as={NavLink} to={linkTo} variant="card" mt={4} h="100%" p={6}>
+        <Link as={NavLink} to={linkTo} variant="card" h="100%" p={6}>
           <CardContent />
         </Link>
       ) : (
-        <Text variant="card" as="div" mt={4} h="100%" p={6}>
+        <Text variant="card" as="div" h="100%" p={6}>
           <CardContent />
         </Text>
       )}
@@ -60,7 +60,7 @@ export default () => {
             {title}
           </Heading>
           {searchState.loaded && (
-            <Grid templateColumns="repeat(4, 1fr)" gap={4} minH="350px">
+            <Grid templateColumns="repeat(4, 1fr)" gap={4} minH="350px" my={4}>
               <GridItem>
                 <Card
                   info="0% de validées"
@@ -85,16 +85,16 @@ export default () => {
               <GridItem>
                 <Card
                   linkTo="/perimetre-affelnet"
-                  title="Intégration des formations à la plateforme Affelnet"
-                  body="Déterminer les règles d’intégration des formations du Catalogue des offres de formation en apprentissage 2021 (Carif-Oref) sur la plateforme Affelnet"
+                  title="Règles d'intégration des formations à la plateforme Affelnet"
+                  body="Déterminer les conditions d'intégrations des formations en apprentissage du Catalogue (Carif-Oref) sur la plateforme Affelnet"
                   isDisabled={!hasAccessTo(auth, "page_perimetre_af")}
                 />
               </GridItem>
               <GridItem>
                 <Card
                   linkTo="/perimetre-parcoursup"
-                  title="Intégration des formations à la plateforme Parcoursup"
-                  body="Déterminer les règles d’intégration des formations du Catalogue des offres de formation en apprentissage 2021 (Carif-Oref) sur la plateforme Parcoursup"
+                  title="Règles d'intégration des formations à la plateforme Parcoursup"
+                  body="Déterminer les conditions d'intégrations des formations en apprentissage du Catalogue (Carif-Oref) sur la plateforme Parcoursup"
                   isDisabled={!hasAccessTo(auth, "page_perimetre_ps")}
                 />
               </GridItem>
