@@ -22,11 +22,12 @@ const STATUS_LIST = {
   },
 };
 
-export const StatusSelect = ({ plateforme, currentStatus, condition, onChange, size = "sm", ...rest }) => {
+export const StatusSelect = ({ plateforme, currentStatus, condition, onChange, size = "sm", disabled, ...rest }) => {
   const statusList = STATUS_LIST[condition]?.[plateforme];
   return (
     <Select
       {...rest}
+      disabled={disabled || statusList?.length <= 1}
       bg={currentStatus && currentStatus !== COMMON_STATUS.HORS_PERIMETRE ? "orangemedium.200" : "greendark.200"}
       size={size}
       onClick={(e) => {
