@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
+  Collapse,
   Flex,
   FormControl,
   FormErrorMessage,
@@ -25,8 +26,9 @@ import {
   TabPanels,
   Tabs,
   Text,
+  useDisclosure,
 } from "@chakra-ui/react";
-import { ArrowRightLine, Close } from "../../../theme/components/icons";
+import { ArrowDownLine, ArrowRightLine, Close } from "../../../theme/components/icons";
 import { useFormik } from "formik";
 import { StatusSelect } from "./StatusSelect";
 import { RuleBuilder } from "./RuleBuilder";
@@ -262,6 +264,8 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
     }
   }, [values.niveau, values.diplome, values.regle, academie]);
 
+  const { isOpen: isCriteriaOpen, onToggle: onCriteriaToggle } = useDisclosure();
+
   return (
     <Modal isOpen={isOpen} onClose={close} size="6xl" initialFocusRef={initialRef}>
       <ModalOverlay />
@@ -415,20 +419,23 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                     </FormControl>
 
                     <Flex flexDirection={"column"} mt={8} alignItems={"flex-start"}>
-                      <Text as={"p"} mb={1}>
-                        Autre(s) critère(s)
-                      </Text>
-                      <Box bg={"grey.100"} p={4} borderLeft={"4px solid"} borderColor={"bluefrance"} w={"full"}>
-                        <RuleBuilder
-                          isDisabled={isDisabled}
-                          regle_complementaire_query={values.query}
-                          regle_complementaire={values.regle}
-                          onQueryChange={(regle, query) => {
-                            setFieldValue("regle", regle);
-                            setFieldValue("query", query);
-                          }}
-                        />
-                      </Box>
+                      <Button mb={1} onClick={onCriteriaToggle} variant={"unstyled"}>
+                        Affiner les critères{" "}
+                        <ArrowDownLine boxSize={5} transform={isCriteriaOpen ? "rotate(180deg)" : "none"} />
+                      </Button>
+                      <Collapse in={isCriteriaOpen} animateOpacity>
+                        <Box bg={"grey.100"} p={4} borderLeft={"4px solid"} borderColor={"bluefrance"} w={"full"}>
+                          <RuleBuilder
+                            isDisabled={isDisabled}
+                            regle_complementaire_query={values.query}
+                            regle_complementaire={values.regle}
+                            onQueryChange={(regle, query) => {
+                              setFieldValue("regle", regle);
+                              setFieldValue("query", query);
+                            }}
+                          />
+                        </Box>
+                      </Collapse>
                     </Flex>
                     <Flex justifyContent={"flex-start"} mt={4}>
                       <Text fontWeight={700} color={"info"}>
