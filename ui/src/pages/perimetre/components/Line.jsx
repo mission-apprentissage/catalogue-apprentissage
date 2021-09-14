@@ -132,7 +132,7 @@ export const Line = ({
             </Flex>
             <Flex alignItems="center">
               <StatusSelect
-                disabled={!isStatusChangeEnabled}
+                isDisabled={!isStatusChangeEnabled}
                 plateforme={plateforme}
                 currentStatus={currentStatus}
                 condition={condition_integration ?? CONDITIONS.NE_DOIT_PAS_INTEGRER}

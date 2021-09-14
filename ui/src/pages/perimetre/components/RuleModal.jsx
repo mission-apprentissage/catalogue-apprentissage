@@ -27,6 +27,7 @@ import {
   Tabs,
   Text,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { ArrowDownLine, ArrowRightLine, Close } from "../../../theme/components/icons";
 import { useFormik } from "formik";
@@ -116,6 +117,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
 
   const isCreating = !rule;
   const initialRef = React.useRef();
+  const toast = useToast();
 
   const isDisabled = !!academie && !isCreating && (!num_academie || String(num_academie) !== academie);
   const isStatusChangeEnabled =
@@ -196,6 +198,13 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
               statut_academies: statusAcademies,
             });
           }
+
+          toast({
+            title: "Mise à jour",
+            description: `La règle "${name}" a été mise à jour`,
+            status: "success",
+            duration: 5000,
+          });
         } else {
           if (!academie) {
             await onCreateRule({
@@ -230,6 +239,13 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
               },
             });
           }
+
+          toast({
+            title: "Création",
+            description: `La règle "${name}" a été créée`,
+            status: "success",
+            duration: 5000,
+          });
         }
 
         resetForm();
@@ -513,6 +529,13 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                       onClick={async () => {
                         await onDeleteRule({
                           _id: idRule,
+                        });
+
+                        toast({
+                          title: "Suppression",
+                          description: `La règle "${nom_regle_complementaire}" a été supprimée`,
+                          status: "success",
+                          duration: 5000,
                         });
                         close();
                       }}
