@@ -384,6 +384,21 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                       </FormControl>
                     )}
 
+                    <FormControl isInvalid={errors.name && touched.name} isRequired>
+                      <Flex flexDirection={"column"} mt={8} alignItems={"flex-start"}>
+                        <FormLabel htmlFor={"name"}>Nom du diplôme ou titre</FormLabel>
+                        <Input
+                          isDisabled={isDisabled}
+                          id="name"
+                          name="name"
+                          value={values.name ?? ""}
+                          onChange={handleChange}
+                          w={"full"}
+                        />
+                        <FormErrorMessage>{errors.name}</FormErrorMessage>
+                      </Flex>
+                    </FormControl>
+
                     <FormControl isInvalid={errors.duration && touched.duration}>
                       <Flex flexDirection={"column"} mt={8} alignItems={"flex-start"}>
                         <FormLabel htmlFor={"duration"} mb={1}>
@@ -443,23 +458,8 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                       </Text>
                     </Flex>
 
-                    <FormControl isInvalid={errors.name && touched.name} isRequired>
-                      <Flex flexDirection={"column"} mt={16} alignItems={"flex-start"}>
-                        <FormLabel htmlFor={"name"}>Nom du diplôme ou titre</FormLabel>
-                        <Input
-                          isDisabled={isDisabled}
-                          id="name"
-                          name="name"
-                          value={values.name ?? ""}
-                          onChange={handleChange}
-                          w={"full"}
-                        />
-                        <FormErrorMessage>{errors.name}</FormErrorMessage>
-                      </Flex>
-                    </FormControl>
-
                     <FormControl isInvalid={errors.condition && touched.condition} isRequired>
-                      <Flex flexDirection={"column"} mt={8} alignItems={"flex-start"}>
+                      <Flex flexDirection={"column"} mt={16} alignItems={"flex-start"}>
                         <FormLabel htmlFor={"condition"}>Condition d'intégration</FormLabel>
                         <ActionsSelect
                           isDisabled={!isConditionChangeEnabled}
