@@ -335,7 +335,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                             onChange={handleChange}
                             value={values.niveau}
                             w={"auto"}
-                            placeholder={"Sélectionnez une option"}
+                            placeholder={"Sélectionnez un niveau"}
                           >
                             {niveauxData.map(({ niveau: { value } }) => {
                               return (
@@ -361,7 +361,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                             onChange={handleChange}
                             value={values.diplome}
                             w={"auto"}
-                            placeholder={"Sélectionnez une option"}
+                            placeholder={"Sélectionnez un type de diplôme ou un titre"}
                           >
                             {niveauxData
                               .find(({ niveau: { value } }) => value === values.niveau)
@@ -476,7 +476,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                           }}
                           size={"md"}
                           w={"auto"}
-                          placeholder={"Sélectionnez une option"}
+                          placeholder={"Sélectionnez une condition d'intégration"}
                         />
                         <FormErrorMessage>{errors.condition}</FormErrorMessage>
                       </Flex>
@@ -495,7 +495,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                           onChange={handleChange}
                           size={"md"}
                           w={"auto"}
-                          placeholder={"Sélectionnez une option"}
+                          placeholder={"Sélectionnez une règle de publication"}
                         />
                         <FormErrorMessage>{errors.status}</FormErrorMessage>
                       </Flex>
