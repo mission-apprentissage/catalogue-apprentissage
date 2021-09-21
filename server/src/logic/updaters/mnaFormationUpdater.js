@@ -75,7 +75,8 @@ const mnaFormationUpdater = async (
     }
 
     // ensure address from RCO is kept
-    cpMapping.lieu_formation_adresse = rcoFormation.etablissement_lieu_formation_adresse;
+    cpMapping.lieu_formation_adresse =
+      rcoFormation?.etablissement_lieu_formation_adresse ?? formation.lieu_formation_adresse;
 
     // retrieve informative data to help RCO fix the collect
     const geoCoords =
