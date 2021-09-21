@@ -126,6 +126,11 @@ module.exports = {
         default: "null",
         description: "Numéro siren gestionnaire",
       },
+      etablissement_gestionnaire_nda: {
+        type: "string",
+        default: "null",
+        description: "Numéro Déclaration gestionnaire",
+      },
       etablissement_gestionnaire_date_creation: {
         type: "string",
         default: "null",
@@ -255,6 +260,11 @@ module.exports = {
         type: "string",
         default: "null",
         description: "Numéro siren formateur",
+      },
+      etablissement_formateur_nda: {
+        type: "string",
+        default: "null",
+        description: "Numéro Déclaration formateur",
       },
       etablissement_formateur_date_creation: {
         type: "string",
@@ -634,10 +644,10 @@ module.exports = {
         default: "null",
         description: "Qui a réalisé la derniere modification",
       },
-      to_verified: {
+      to_update: {
         type: "boolean",
         default: false,
-        description: "Formation à vérifier manuellement",
+        description: "Formation à mette à jour lors du script d'enrichissement",
       },
       idea_geo_coordonnees_etablissement: {
         type: "string",
@@ -656,6 +666,11 @@ module.exports = {
         type: "string",
         default: "null",
         description: "Adresse du lieu de formation",
+      },
+      lieu_formation_adresse_computed: {
+        type: "string",
+        default: "null",
+        description: "Adresse du lieu de formation déduit de la géolocalisation le flux RCO",
       },
       lieu_formation_siret: {
         type: "string",

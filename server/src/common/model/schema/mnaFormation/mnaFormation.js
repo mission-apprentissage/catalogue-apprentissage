@@ -360,6 +360,11 @@ const mnaFormationSchema = {
     default: null,
     description: "Adresse du lieu de formation",
   },
+  lieu_formation_adresse_computed: {
+    type: String,
+    default: null,
+    description: "Adresse du lieu de formation déduit de la géolocalisation le flux RCO",
+  },
   lieu_formation_siret: {
     type: String,
     default: null,
