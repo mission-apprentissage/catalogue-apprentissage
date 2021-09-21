@@ -27,8 +27,29 @@ const getCfdExpireRule = (duration) => {
   };
 };
 
+// if code_type_certif is "Titre" or "TP" check RNCP sheet is ACTIVE, else no need to check
+const titresRule = {
+  $and: [
+    {
+      $or: [
+        {
+          "rncp_details.code_type_certif": {
+            $in: ["Titre", "TP"],
+          },
+          "rncp_details.active_inactive": "ACTIVE",
+        },
+        {
+          "rncp_details.code_type_certif": {
+            $nin: ["Titre", "TP"],
+          },
+        },
+      ],
+    },
+  ],
+};
+
 const getQueryFromRule = ({ niveau, diplome, regle_complementaire, duree, num_academie }) => {
-  return {
+  const query = {
     ...toBePublishedRules,
     niveau,
     ...(diplome && { diplome }),
@@ -36,6 +57,8 @@ const getQueryFromRule = ({ niveau, diplome, regle_complementaire, duree, num_ac
     ...(duree && getCfdExpireRule(duree)),
     ...(num_academie && { num_academie }),
   };
+  query["$and"] = [...(query["$and"] ?? []), ...titresRule["$and"]];
+  return query;
 };
 
 module.exports = { serialize, deserialize, getQueryFromRule };
