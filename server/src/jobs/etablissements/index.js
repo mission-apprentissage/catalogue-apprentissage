@@ -15,7 +15,7 @@ const importEtablissements = async (catalogue) => {
   await Etablissement.deleteMany({});
 
   try {
-    await catalogue.getEtablissements({ limit: 1000, query: {} }, async (chunck) => {
+    await catalogue.getEtablissements({ limit: 500, query: {} }, async (chunck) => {
       logger.info(`Inserting ${chunck.length} etablissements...`);
       await oleoduc(
         Readable.from(chunck),

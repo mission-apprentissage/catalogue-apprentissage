@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   Center,
+  Collapse,
   Container,
   Flex,
   Grid,
@@ -31,7 +32,14 @@ import { HABILITE_LIST } from "../../constants/certificateurs";
 import { buildUpdatesHistory } from "../../common/utils/formationUtils";
 import InfoTooltip from "../../common/components/InfoTooltip";
 import helpText from "../../locales/helpText.json";
-import { ArrowRightLine, Edit2Fill, ExternalLinkLine, MapPin2Fill, Parametre } from "../../theme/components/icons/";
+import {
+  ArrowDownLine,
+  ArrowRightLine,
+  Edit2Fill,
+  ExternalLinkLine,
+  MapPin2Fill,
+  Parametre,
+} from "../../theme/components/icons/";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
 
@@ -191,6 +199,8 @@ const Formation = ({
 
     run();
   }, [oneEstablishment, formation, setTagsFormateur, setTagsGestionnaire]);
+
+  const { isOpen: isComputedAdressOpen, onToggle: onComputedAdressToggle } = useDisclosure();
 
   const filteredPartenaires = (displayedFormation.rncp_details?.partenaires ?? []).filter(({ Siret_Partenaire }) =>
     [formation.etablissement_gestionnaire_siret, formation.etablissement_formateur_siret].includes(Siret_Partenaire)
@@ -474,8 +484,29 @@ const Formation = ({
                 handleSubmit={handleSubmit}
                 handleChange={handleChange}
                 hasRightToEdit={hasRightToEdit}
-                mb={4}
+                mb={displayedFormation?.lieu_formation_adresse_computed ? 0 : 4}
               />
+
+              {displayedFormation?.lieu_formation_adresse_computed && (
+                <Box mb={4}>
+                  <Button
+                    onClick={onComputedAdressToggle}
+                    variant={"unstyled"}
+                    fontSize={"zeta"}
+                    fontStyle={"italic"}
+                    color={"grey.600"}
+                  >
+                    Adresse calculée depuis la géolocalisation{" "}
+                    <ArrowDownLine boxSize={5} transform={isComputedAdressOpen ? "rotate(180deg)" : "none"} />
+                  </Button>
+                  <Collapse in={isComputedAdressOpen} animateOpacity>
+                    <Text mb={4} fontSize={"zeta"} color={"grey.600"}>
+                      {displayedFormation.lieu_formation_adresse_computed}
+                    </Text>
+                  </Collapse>
+                </Box>
+              )}
+
               <EditableField
                 fieldName={"code_postal"}
                 label={"Code postal"}
