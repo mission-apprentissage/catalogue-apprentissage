@@ -248,7 +248,7 @@ const Rapprochement = React.memo(({ formation, currentMnaFormation }) => {
               mt="1"
               display="inline-block"
             >
-              {formation.uai_affilie} (affililié)
+              {formation.uai_affilie} (affilié)
             </Text>
           </Box>
         }
