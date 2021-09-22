@@ -23,7 +23,7 @@
     "localite": "La donnée “Commune” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
     "code_commune_insee": "La donnée “Code commune” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
     "nom_departement": "La donnée “Département” est déduite du Code postal",
-    "lieu_formation_adresse_computed": "L'adresse est calculée à partir de la géolocalisation renseignée par le Carif-Oref. Rapprochez vous de votre Carif-Oref pour préciser cette géolocalisation afin que les jeunes puissent identifier où se situe le lieu de formation."
+    "lieu_formation_adresse_computed": "L'adresse est calculée à partir de la géolocalisation. Rapprochez vous de votre Carif-Oref pour préciser cette géolocalisation afin que les jeunes puissent identifier où se situe le lieu de formation."
   },
   "etablissement": {
     "raison_sociale": "La donnée “Raison sociale” provient de l’INSEE puis est déduite du SIREN. Si cette information est erronée, merci de leur signaler.",
