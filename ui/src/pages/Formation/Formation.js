@@ -500,8 +500,11 @@ const Formation = ({
                     <ArrowDownLine boxSize={5} transform={isComputedAdressOpen ? "rotate(180deg)" : "none"} />
                   </Button>
                   <Collapse in={isComputedAdressOpen} animateOpacity>
-                    <Text mb={4} fontSize={"zeta"} color={"grey.600"}>
-                      {displayedFormation.lieu_formation_adresse_computed}
+                    <Text mb={4}>
+                      <Text fontSize={"zeta"} color={"grey.600"} as="span">
+                        {displayedFormation.lieu_formation_adresse_computed}
+                      </Text>{" "}
+                      <InfoTooltip description={helpText.formation.lieu_formation_adresse_computed} />
                     </Text>
                   </Collapse>
                 </Box>
