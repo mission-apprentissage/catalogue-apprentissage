@@ -51,8 +51,12 @@ const createReport = async (
   await storeByChunks(type, date, summary, "unpublished", unpublishedFormations, uuidReport);
   await storeByChunks(`${type}.error`, date, summary, "errors", invalidFormations, uuidReport);
 
-  const link = `${config.publicUrl}/report?type=${type}&date=${date}&id=${uuidReport}`;
+  let link = `${config.publicUrl}/report?type=${type}&date=${date}`;
+  if (uuidReport) {
+    link = `${config.publicUrl}/report?type=${type}&date=${date}&id=${uuidReport}`;
+  }
   console.log(link); // Useful when send in blue is down
+
   const data = {
     summary,
     link,

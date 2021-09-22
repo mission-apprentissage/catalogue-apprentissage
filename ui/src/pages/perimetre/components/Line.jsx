@@ -74,7 +74,10 @@ export const Line = ({
     <Box
       borderBottom={"1px solid"}
       borderColor={"grey.300"}
-      _hover={{ bg: nom_regle_complementaire ? "grey.200" : "none" }}
+      _hover={{
+        bg: nom_regle_complementaire ? "grey.200" : "none",
+        cursor: nom_regle_complementaire ? "pointer" : "auto",
+      }}
       onClick={() => {
         nom_regle_complementaire && onShowRule(rule);
       }}
@@ -129,7 +132,7 @@ export const Line = ({
             </Flex>
             <Flex alignItems="center">
               <StatusSelect
-                disabled={!isStatusChangeEnabled}
+                isDisabled={!isStatusChangeEnabled}
                 plateforme={plateforme}
                 currentStatus={currentStatus}
                 condition={condition_integration ?? CONDITIONS.NE_DOIT_PAS_INTEGRER}

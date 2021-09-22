@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
+  Collapse,
   Flex,
   FormControl,
   FormErrorMessage,
@@ -25,8 +26,10 @@ import {
   TabPanels,
   Tabs,
   Text,
+  useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
-import { ArrowRightLine, Close } from "../../../theme/components/icons";
+import { ArrowDownLine, ArrowRightLine, Close } from "../../../theme/components/icons";
 import { useFormik } from "formik";
 import { StatusSelect } from "./StatusSelect";
 import { RuleBuilder } from "./RuleBuilder";
@@ -114,6 +117,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
 
   const isCreating = !rule;
   const initialRef = React.useRef();
+  const toast = useToast();
 
   const isDisabled = !!academie && !isCreating && (!num_academie || String(num_academie) !== academie);
   const isStatusChangeEnabled =
@@ -194,6 +198,13 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
               statut_academies: statusAcademies,
             });
           }
+
+          toast({
+            title: "Mise à jour",
+            description: `La règle "${name}" a été mise à jour`,
+            status: "success",
+            duration: 5000,
+          });
         } else {
           if (!academie) {
             await onCreateRule({
@@ -228,6 +239,13 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
               },
             });
           }
+
+          toast({
+            title: "Création",
+            description: `La règle "${name}" a été créée`,
+            status: "success",
+            duration: 5000,
+          });
         }
 
         resetForm();
@@ -261,6 +279,8 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
       setCount(0);
     }
   }, [values.niveau, values.diplome, values.regle, academie]);
+
+  const { isOpen: isCriteriaOpen, onToggle: onCriteriaToggle } = useDisclosure();
 
   return (
     <Modal isOpen={isOpen} onClose={close} size="6xl" initialFocusRef={initialRef}>
@@ -331,7 +351,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                             onChange={handleChange}
                             value={values.niveau}
                             w={"auto"}
-                            placeholder={"Sélectionnez une option"}
+                            placeholder={"Sélectionnez un niveau"}
                           >
                             {niveauxData.map(({ niveau: { value } }) => {
                               return (
@@ -357,7 +377,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                             onChange={handleChange}
                             value={values.diplome}
                             w={"auto"}
-                            placeholder={"Sélectionnez une option"}
+                            placeholder={"Sélectionnez un type de diplôme ou un titre"}
                           >
                             {niveauxData
                               .find(({ niveau: { value } }) => value === values.niveau)
@@ -379,6 +399,21 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                         </Flex>
                       </FormControl>
                     )}
+
+                    <FormControl isInvalid={errors.name && touched.name} isRequired>
+                      <Flex flexDirection={"column"} mt={8} alignItems={"flex-start"}>
+                        <FormLabel htmlFor={"name"}>Nom du diplôme ou titre</FormLabel>
+                        <Input
+                          isDisabled={isDisabled}
+                          id="name"
+                          name="name"
+                          value={values.name ?? ""}
+                          onChange={handleChange}
+                          w={"full"}
+                        />
+                        <FormErrorMessage>{errors.name}</FormErrorMessage>
+                      </Flex>
+                    </FormControl>
 
                     <FormControl isInvalid={errors.duration && touched.duration}>
                       <Flex flexDirection={"column"} mt={8} alignItems={"flex-start"}>
@@ -415,20 +450,23 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                     </FormControl>
 
                     <Flex flexDirection={"column"} mt={8} alignItems={"flex-start"}>
-                      <Text as={"p"} mb={1}>
-                        Autre(s) critère(s)
-                      </Text>
-                      <Box bg={"grey.100"} p={4} borderLeft={"4px solid"} borderColor={"bluefrance"} w={"full"}>
-                        <RuleBuilder
-                          isDisabled={isDisabled}
-                          regle_complementaire_query={values.query}
-                          regle_complementaire={values.regle}
-                          onQueryChange={(regle, query) => {
-                            setFieldValue("regle", regle);
-                            setFieldValue("query", query);
-                          }}
-                        />
-                      </Box>
+                      <Button mb={1} onClick={onCriteriaToggle} variant={"unstyled"}>
+                        Affiner les critères{" "}
+                        <ArrowDownLine boxSize={5} transform={isCriteriaOpen ? "rotate(180deg)" : "none"} />
+                      </Button>
+                      <Collapse in={isCriteriaOpen} animateOpacity>
+                        <Box bg={"grey.100"} p={4} borderLeft={"4px solid"} borderColor={"bluefrance"} w={"full"}>
+                          <RuleBuilder
+                            isDisabled={isDisabled}
+                            regle_complementaire_query={values.query}
+                            regle_complementaire={values.regle}
+                            onQueryChange={(regle, query) => {
+                              setFieldValue("regle", regle);
+                              setFieldValue("query", query);
+                            }}
+                          />
+                        </Box>
+                      </Collapse>
                     </Flex>
                     <Flex justifyContent={"flex-start"} mt={4}>
                       <Text fontWeight={700} color={"info"}>
@@ -436,23 +474,8 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                       </Text>
                     </Flex>
 
-                    <FormControl isInvalid={errors.name && touched.name} isRequired>
-                      <Flex flexDirection={"column"} mt={16} alignItems={"flex-start"}>
-                        <FormLabel htmlFor={"name"}>Nom du diplôme ou titre</FormLabel>
-                        <Input
-                          isDisabled={isDisabled}
-                          id="name"
-                          name="name"
-                          value={values.name ?? ""}
-                          onChange={handleChange}
-                          w={"full"}
-                        />
-                        <FormErrorMessage>{errors.name}</FormErrorMessage>
-                      </Flex>
-                    </FormControl>
-
                     <FormControl isInvalid={errors.condition && touched.condition} isRequired>
-                      <Flex flexDirection={"column"} mt={8} alignItems={"flex-start"}>
+                      <Flex flexDirection={"column"} mt={16} alignItems={"flex-start"}>
                         <FormLabel htmlFor={"condition"}>Condition d'intégration</FormLabel>
                         <ActionsSelect
                           isDisabled={!isConditionChangeEnabled}
@@ -469,7 +492,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                           }}
                           size={"md"}
                           w={"auto"}
-                          placeholder={"Sélectionnez une option"}
+                          placeholder={"Sélectionnez une condition d'intégration"}
                         />
                         <FormErrorMessage>{errors.condition}</FormErrorMessage>
                       </Flex>
@@ -488,7 +511,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                           onChange={handleChange}
                           size={"md"}
                           w={"auto"}
-                          placeholder={"Sélectionnez une option"}
+                          placeholder={"Sélectionnez une règle de publication"}
                         />
                         <FormErrorMessage>{errors.status}</FormErrorMessage>
                       </Flex>
@@ -506,6 +529,13 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                       onClick={async () => {
                         await onDeleteRule({
                           _id: idRule,
+                        });
+
+                        toast({
+                          title: "Suppression",
+                          description: `La règle "${nom_regle_complementaire}" a été supprimée`,
+                          status: "success",
+                          duration: 5000,
                         });
                         close();
                       }}

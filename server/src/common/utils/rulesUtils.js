@@ -18,17 +18,54 @@ const deserialize = (str) => {
   });
 };
 
+/**
+ * Suite aux discussions avec Christine Bourdin et Rachel Bourdon,
+ * la règle est d'envoyer les formations aux plateformes pour le cfd qui n'expire pas :
+ * du 01/10/N au 31/08/N + durée (-1)
+ */
 const getCfdExpireRule = (duration) => {
+  let durationShift = 1;
+  const now = new Date();
+  const sessionStart = new Date(`${new Date().getFullYear()}-10-01T00:00:00.000Z`);
+  if (now > sessionStart) {
+    durationShift = 0;
+  }
+
   return {
     $or: [
-      { cfd_date_fermeture: { $gt: new Date(`${new Date().getFullYear() + duration - 1}-12-31T00:00:00.000Z`) } },
+      {
+        cfd_date_fermeture: {
+          $gt: new Date(`${new Date().getFullYear() + duration - durationShift}-08-31T00:00:00.000Z`),
+        },
+      },
       { cfd_date_fermeture: null },
     ],
   };
 };
 
+// if code_type_certif is "Titre" or "TP" check RNCP sheet is ACTIVE, else no need to check
+const titresRule = {
+  $and: [
+    {
+      $or: [
+        {
+          "rncp_details.code_type_certif": {
+            $in: ["Titre", "TP"],
+          },
+          "rncp_details.active_inactive": "ACTIVE",
+        },
+        {
+          "rncp_details.code_type_certif": {
+            $nin: ["Titre", "TP"],
+          },
+        },
+      ],
+    },
+  ],
+};
+
 const getQueryFromRule = ({ niveau, diplome, regle_complementaire, duree, num_academie }) => {
-  return {
+  const query = {
     ...toBePublishedRules,
     niveau,
     ...(diplome && { diplome }),
@@ -36,6 +73,8 @@ const getQueryFromRule = ({ niveau, diplome, regle_complementaire, duree, num_ac
     ...(duree && getCfdExpireRule(duree)),
     ...(num_academie && { num_academie }),
   };
+  query["$and"] = [...(query["$and"] ?? []), ...titresRule["$and"]];
+  return query;
 };
 
 module.exports = { serialize, deserialize, getQueryFromRule };

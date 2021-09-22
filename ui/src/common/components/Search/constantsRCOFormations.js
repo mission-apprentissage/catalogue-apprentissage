@@ -484,6 +484,20 @@ const columnsDefinition = [
     width: 200,
     exportable: true,
   },
+  {
+    Header: "Date de fermeture du CFD",
+    accessor: "cfd_date_fermeture",
+    width: 200,
+    exportable: true,
+    formatter: (value) => new Date(value).toLocaleDateString(),
+  },
+  {
+    Header: "Date de fin de validite au RNCP",
+    accessor: "rncp_details",
+    width: 200,
+    exportable: true,
+    formatter: (value) => value.date_fin_validite_enregistrement ?? "",
+  },
 ];
 
 const queryBuilderField = [

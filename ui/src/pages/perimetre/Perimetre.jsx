@@ -139,8 +139,7 @@ const CountText = ({ totalFormationsCount, plateforme, niveaux, academie, ...res
         : "au national"}
       , {integrationCount?.nbRules ?? "-"} diplômes ou titres en apprentissage ({integrationCount?.nbFormations ?? "-"}{" "}
       formations) doivent ou peuvent intégrer la plateforme {plateforme} sur les {diplomesCount} recensés (
-      {totalFormationsCount} formations dont le diplôme a une date de fin supérieure au 31/08 de l'année en cours) dans
-      le Catalogue général.
+      {totalFormationsCount} formations) dans le Catalogue général.
     </Text>
   );
 };
@@ -155,7 +154,7 @@ export default ({ plateforme }) => {
   const [niveauxCount, setNiveauxCount] = useState({});
   const [academiesList, setAcademiesList] = useState([]);
 
-  const title = `Conditions d’intégration des formations dans la plateforme ${plateforme}`;
+  const title = `Règles d'intégration des formations à la plateforme ${plateforme}`;
   setTitle(title);
 
   const niveauxURL = `${endpointNewFront}/v1/entity/perimetre/niveau`;
@@ -363,8 +362,8 @@ export default ({ plateforme }) => {
             {title}
           </Heading>
           <Text fontWeight={700} pb={4}>
-            Déterminer par niveau et par titres et diplômes, les formations qui doivent ou peuvent intégrer la
-            plateforme {plateforme} et leurs règles de publication.
+            Déterminer les conditions d'intégrations des formations en apprentissage du Catalogue (Carif-Oref) sur la
+            plateforme {plateforme}
           </Text>
           <Box mt={4}>
             {niveaux.length === 0 && (
@@ -441,9 +440,11 @@ export default ({ plateforme }) => {
                                     ) : (
                                       <FolderLine color="bluefrance" mr={4} boxSize={5} />
                                     )}
-                                    <Text textStyle={"h4"}>Niveau {niveau.value}</Text>
+                                    <Text textStyle={"h4"} textAlign={"start"}>
+                                      Niveau {niveau.value}
+                                    </Text>
                                   </Flex>
-                                  <Text textStyle={"rf-text"}>
+                                  <Text textStyle={"rf-text"} textAlign={"end"}>
                                     {niveauxCount[niveau.value]?.nbRules ?? 0} diplômes et titres doivent ou peuvent
                                     intégrer la plateforme ce qui représente{" "}
                                     {niveauxCount[niveau.value]?.nbFormations ?? 0} formations
