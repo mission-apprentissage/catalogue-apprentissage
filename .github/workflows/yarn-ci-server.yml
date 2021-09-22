@@ -20,24 +20,28 @@ jobs:
       # Install dependencies
       - name: Run Yarn Install
         run: |
-          cd server
-          yarn install
+          yarn --cwd server install
 
       # Lint
       - name: Run Lint
         run: |
-          cd server
-          yarn lint
+          yarn --cwd server lint
 
-      # # Start dockers containers
-      # - name: Start Docker
-      #   run: |
-      #     cd server
-      #     yarn docker:start
+      # Start docker container for tests (e.g: mongodb)
+      - name: Start Docker
+        run: |
+          cd ui
+          cp .env.example .env
+          cd ../server
+          cp .env.example .env
+          yarn --cwd server docker:start-ci
 
-      # # Run mocha tests
-      # - name: Run Tests
-      #   run: |
-      #     cd server
-      #     yarn test
-      #     yarn jobs:test
+      # Run mocha tests
+      - name: Run Tests
+        run: |
+          yarn --cwd server test
+
+      # Teardown
+      - name: Teardown
+        run: |
+          yarn --cwd server docker:down

@@ -14,6 +14,7 @@
     "test:coverage": "nyc --reporter=text mocha --file tests/globalSetup.js --recursive --exit --timeout 60000 tests/ src/jobs/**/tests/",
     "lint": "eslint src/ tests/",
     "docker:start": "docker-compose up -d --build --force-recreate",
+    "docker:start-ci": "docker-compose up -d mongodb",
     "docker:stop": "docker-compose stop",
     "docker:down": "docker-compose down",
     "docker:clean": "docker-compose kill && docker system prune --force --volumes",

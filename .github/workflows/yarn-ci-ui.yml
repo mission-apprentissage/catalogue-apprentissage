@@ -15,5 +15,9 @@ jobs:
       # Install dependencies
       - name: Run Yarn Install
         run: |
-          cd ui
-          yarn install
+          yarn --cwd ui install
+
+      # Run tests
+      - name: Run Tests
+        run: |
+          yarn --cwd ui test
