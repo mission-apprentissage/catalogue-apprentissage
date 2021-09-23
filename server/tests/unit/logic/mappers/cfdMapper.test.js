@@ -31,7 +31,7 @@ describe(__filename, () => {
     };
 
     const { result, messages } = await cfdMapper("test");
-    assert.deepStrictEqual(messages.cfd, expected.messages.cfd);
+    assert.deepStrictEqual(messages.error, expected.messages.error);
     assert.deepStrictEqual(result, expected.result);
   });
 
