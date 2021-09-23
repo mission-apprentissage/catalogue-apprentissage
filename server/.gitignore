@@ -1,3 +1,4 @@
 .local/
 *.xls*
 dump/
+coverage.lcov

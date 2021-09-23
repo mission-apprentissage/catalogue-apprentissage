@@ -20,4 +20,13 @@ jobs:
       # Run tests
       - name: Run Tests
         run: |
-          yarn --cwd ui test
+          yarn --cwd ui test:coverage
+
+      # codecov
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          directory: ./ui/coverage
+          name: codecov-ui
+          verbose: true
