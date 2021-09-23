@@ -85,10 +85,7 @@ const getGeoloc = ({ gestionnaire, formateur }) => {
   };
 };
 
-const mapEtablissementKeys = async (
-  etablissement,
-  prefix = "etablissement_gestionnaire" || "etablissement_formateur"
-) => {
+const mapEtablissementKeys = (etablissement, prefix = "etablissement_gestionnaire") => {
   return {
     [`${prefix}_siren`]: etablissement.siren || null,
     [`${prefix}_nda`]: etablissement.nda || null,
@@ -178,15 +175,12 @@ const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissem
 
     const { referenceEstablishment, etablissement_reference } = etablissementReference;
 
-    const etablissementGestionnaire = await mapEtablissementKeys(
-      attachedEstablishments.gestionnaire || {},
+    const etablissementGestionnaire = mapEtablissementKeys(
+      attachedEstablishments.gestionnaire,
       "etablissement_gestionnaire"
     );
 
-    const etablissementFormateur = await mapEtablissementKeys(
-      attachedEstablishments.formateur || {},
-      "etablissement_formateur"
-    );
+    const etablissementFormateur = mapEtablissementKeys(attachedEstablishments.formateur, "etablissement_formateur");
 
     const geolocInfo = getGeoloc(attachedEstablishments);
 
@@ -215,4 +209,13 @@ const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissem
   }
 };
 
-module.exports = { etablissementsMapper };
+module.exports = {
+  getAttachedEstablishments,
+  getEstablishmentAddress,
+  isHabiliteRncp,
+  getEtablissementReference,
+  getGeoloc,
+  mapEtablissementKeys,
+  isInCatalogEligible,
+  etablissementsMapper,
+};
