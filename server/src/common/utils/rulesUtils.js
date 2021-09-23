@@ -23,11 +23,11 @@ const deserialize = (str) => {
  * la règle est d'envoyer les formations aux plateformes pour le cfd qui n'expire pas :
  * du 01/10/N au 31/08/N + durée (-1)
  */
-const getCfdExpireRule = (duration) => {
+const getCfdExpireRule = (duration, currentDate = new Date()) => {
   let durationShift = 1;
-  const now = new Date();
-  const sessionStart = new Date(`${new Date().getFullYear()}-10-01T00:00:00.000Z`);
-  if (now > sessionStart) {
+  const now = currentDate;
+  const sessionStart = new Date(`${currentDate.getFullYear()}-10-01T00:00:00.000Z`);
+  if (now >= sessionStart) {
     durationShift = 0;
   }
 
@@ -35,7 +35,7 @@ const getCfdExpireRule = (duration) => {
     $or: [
       {
         cfd_date_fermeture: {
-          $gt: new Date(`${new Date().getFullYear() + duration - durationShift}-08-31T00:00:00.000Z`),
+          $gt: new Date(`${currentDate.getFullYear() + duration - durationShift}-08-31T00:00:00.000Z`),
         },
       },
       { cfd_date_fermeture: null },
@@ -77,4 +77,4 @@ const getQueryFromRule = ({ niveau, diplome, regle_complementaire, duree, num_ac
   return query;
 };
 
-module.exports = { serialize, deserialize, getQueryFromRule };
+module.exports = { serialize, deserialize, getQueryFromRule, getCfdExpireRule };

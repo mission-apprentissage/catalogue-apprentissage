@@ -4,12 +4,27 @@ import { Link } from "@chakra-ui/react";
 const changelog = {
   list: [
     {
-      version: "4.6.0",
+      version: "4.7.0",
       date: "Prochainement",
       about: `<h4>À venir</h4>`,
       fixes: [],
       features: [],
       improvements: ["Travaux sur le flux retour vers les Carif-Oref et gestion des modifications"],
+    },
+    {
+      version: "4.6.0",
+      date: "Le 22 Septembre 2021",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [
+        "Correction de l'affichage des académies sur les organismes en Corse",
+        "Correction des mises à jour hebdomadaires des certifications sur les organismes",
+      ],
+      features: [],
+      improvements: [
+        "[Page formation] Affichage de l'adresse collectée par le réseau des Carif-Oref et de l'adresse calculée à partir de la géolocalisation collectée",
+        "Ajout des dates d'expiration BCN et RNCP dans les exports des formations",
+      ],
     },
     {
       version: "4.5.0",
