@@ -1,5 +1,5 @@
 const { AfFormation, AfReconciliation } = require("../../common/model");
-const combinate = require("../../logic/mappers/psReconciliationMapper");
+const combinate = require("../../logic/mappers/reconciliationMapper");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const mongoose = require("mongoose");
 const express = require("express");

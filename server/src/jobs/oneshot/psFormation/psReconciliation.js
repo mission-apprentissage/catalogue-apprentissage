@@ -1,4 +1,4 @@
-const combinate = require("../../../logic/mappers/psReconciliationMapper");
+const combinate = require("../../../logic/mappers/reconciliationMapper");
 const { getJsonFromXlsxFile } = require("../../../common/utils/fileUtils");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { PsReconciliation } = require("../../../common/model");
