@@ -1,5 +1,5 @@
 [![Uptime](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fmission-apprentissage%2Fupptime%2Fmaster%2Fapi%2Fcatalogue%2Fuptime.json)](https://mission-apprentissage.github.io/upptime/history/catalogue)
-[![codecov](https://codecov.io/gh/mission-apprentissage/catalogue-apprentissage/branch/2Fmaster/graph/badge.svg?token=PNKREEQN2Z)](https://codecov.io/gh/mission-apprentissage/catalogue-apprentissage)
+[![codecov](https://codecov.io/gh/mission-apprentissage/catalogue-apprentissage/branch/master/graph/badge.svg?token=PNKREEQN2Z)](https://codecov.io/gh/mission-apprentissage/catalogue-apprentissage)
 
 ![](https://avatars1.githubusercontent.com/u/63645182?s=200&v=4)
 
