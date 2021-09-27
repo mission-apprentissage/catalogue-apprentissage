@@ -83,6 +83,7 @@ runScript(async ({ catalogue, db }) => {
     // es
     const filter = { published: true };
     await rebuildEsIndex("convertedformation", false, filter); // ~ 44 minutes => ~ 22 minutes
+    await rebuildEsIndex("psformations", false); // ~ 3 minutes
   } catch (error) {
     logger.error(error);
   }

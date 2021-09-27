@@ -2,7 +2,6 @@ import React from "react";
 import { waitForElementToBeRemoved } from "@testing-library/react";
 import HomePage from "./HomePage";
 import { renderWithRouter } from "../common/utils/testUtils";
-import "@testing-library/jest-dom/extend-expect";
 
 import { rest } from "msw";
 import { setupServer } from "msw/node";
