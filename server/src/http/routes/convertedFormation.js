@@ -1,7 +1,10 @@
 const express = require("express");
+const Joi = require("joi");
+const { oleoduc, transformData } = require("oleoduc");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { ConvertedFormation, PsFormation } = require("../../common/model");
 const { mnaFormationUpdater } = require("../../logic/updaters/mnaFormationUpdater");
+const { sendJsonStream } = require("../../common/utils/httpUtils");
 
 /**
  * Sample entity route module for GET
@@ -122,7 +125,12 @@ module.exports = () => {
       const select =
         qs && qs.select
           ? JSON.parse(qs.select)
-          : { affelnet_statut_history: 0, parcoursup_statut_history: 0, updates_history: 0, __v: 0 };
+          : {
+              affelnet_statut_history: 0,
+              parcoursup_statut_history: 0,
+              updates_history: 0,
+              __v: 0,
+            };
 
       let queryAsRegex = qs && qs.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
       for (const prop in queryAsRegex) {
@@ -185,7 +193,12 @@ module.exports = () => {
       const limit = qs && qs.limit ? parseInt(qs.limit, 10) : 10;
       const select = qs?.select
         ? JSON.parse(qs.select)
-        : { affelnet_statut_history: 0, parcoursup_statut_history: 0, updates_history: 0, __v: 0 };
+        : {
+            affelnet_statut_history: 0,
+            parcoursup_statut_history: 0,
+            updates_history: 0,
+            __v: 0,
+          };
 
       let queryAsRegex = qs && qs.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
       for (const prop in queryAsRegex) {
@@ -266,7 +279,12 @@ module.exports = () => {
       const select =
         qs && qs.select
           ? JSON.parse(qs.select)
-          : { affelnet_statut_history: 0, parcoursup_statut_history: 0, updates_history: 0, __v: 0 };
+          : {
+              affelnet_statut_history: 0,
+              parcoursup_statut_history: 0,
+              updates_history: 0,
+              __v: 0,
+            };
       const retrievedData = await ConvertedFormation.findOne(query, select).lean();
       if (retrievedData) {
         return res.json(retrievedData);
@@ -308,7 +326,12 @@ module.exports = () => {
       const select =
         qs && qs.select
           ? JSON.parse(qs.select)
-          : { affelnet_statut_history: 0, parcoursup_statut_history: 0, updates_history: 0, __v: 0 };
+          : {
+              affelnet_statut_history: 0,
+              parcoursup_statut_history: 0,
+              updates_history: 0,
+              __v: 0,
+            };
       const retrievedData = await ConvertedFormation.findById(itemId, select).lean();
       if (retrievedData) {
         return res.json(retrievedData);
@@ -338,6 +361,32 @@ module.exports = () => {
       }
 
       return res.json(updatedFormation);
+    })
+  );
+
+  /**
+   * Fetch formations as ndjson
+   */
+  router.get(
+    "/formations2021.ndjson",
+    tryCatch(async (req, res) => {
+      let { query, select, limit } = await Joi.object({
+        query: Joi.string().default("{}"),
+        select: Joi.string().default(
+          '{"affelnet_statut_history":0,"parcoursup_statut_history":0,"updates_history":0,"__v":0}'
+        ),
+        limit: Joi.number().default(10),
+      }).validateAsync(req.query, { abortEarly: false });
+
+      const filter = JSON.parse(query);
+      const selector = JSON.parse(select);
+
+      let stream = oleoduc(
+        ConvertedFormation.find(filter, selector).limit(limit).cursor(),
+        transformData((formation) => `${JSON.stringify(formation)}\n`)
+      );
+
+      return sendJsonStream(stream, res);
     })
   );
 

@@ -2040,7 +2040,7 @@ dtrace-provider@~0.8:
   dependencies:
     nan "^2.14.0"
 
-duplexer2@0.1.4, duplexer2@^0.1.2:
+duplexer2@^0.1.2:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/duplexer2/-/duplexer2-0.1.4.tgz#8b12dab878c0d69e3e7891051662a32fc6bddcc1"
   integrity sha1-ixLauHjA1p4+eJEFFmKjL8a93ME=
@@ -4695,14 +4695,13 @@ object-assign@^4.1.0, object-assign@^4.1.1:
   resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
   integrity sha1-IQmtx5ZYh8/AXLvUQsrIv7s2CGM=
 
-oleoduc@0.4.6:
-  version "0.4.6"
-  resolved "https://registry.yarnpkg.com/oleoduc/-/oleoduc-0.4.6.tgz#653ddaac8610ae420fed923ce79b9a6b61726473"
-  integrity sha512-iIn8feaVCjUSu2ekrhI3LDOMsfxPTnDzUWLUzoJ8insMaMoRfXRc+Em0DnoBwmfjXLwd1qBgWJXUqFyHEPnlyg==
+oleoduc@0.5.11:
+  version "0.5.11"
+  resolved "https://registry.yarnpkg.com/oleoduc/-/oleoduc-0.5.11.tgz#7773e3f649585fe92f54f0547cbe1818b808bfed"
+  integrity sha512-LwBp1vyaGhviQ//AqIKkpppwDQ5UiVI6EDGhPqlIv3utPcwymH3yhTb9m+98s+aAhP1KY5vnx1bPrS8IbV8Szw==
   dependencies:
     cyclist "1.0.1"
-    duplexer2 "0.1.4"
-    merge-stream "2.0.0"
+    duplexer3 "0.1.4"
     parallel-transform "1.2.0"
 
 oleoduc@0.5.9:
