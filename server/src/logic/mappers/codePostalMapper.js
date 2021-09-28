@@ -12,7 +12,9 @@ const codePostalMapper = async (codePostal = null, codeInsee = null) => {
       return {
         result: null,
         messages: {
-          error: `Unable to retrieve data from codePostal ${codePostal} ${cpInfo?.messages?.error ?? ""}`,
+          error: `Unable to retrieve data from codePostal ${codePostal}${codeInsee ? ` (${codeInsee})` : ""} ${
+            cpInfo?.messages?.error ?? ""
+          }`,
         },
       };
     }
@@ -25,7 +27,9 @@ const codePostalMapper = async (codePostal = null, codeInsee = null) => {
     const dept = `${codePostal}`.substring(0, 2);
     if (!result.code_commune_insee?.startsWith(dept) && !result.code_postal?.startsWith(dept)) {
       throw new Error(
-        `codePostalMapper codePostal inconsistent results : original code ${codePostal}, code given by api adresse ${result.code_postal}`
+        `codePostalMapper codePostal inconsistent results : original code ${codePostal}${
+          codeInsee ? ` (${codeInsee})` : ""
+        }, code given by api adresse ${result.code_postal} (${result.code_commune_insee})`
       );
     }
 
