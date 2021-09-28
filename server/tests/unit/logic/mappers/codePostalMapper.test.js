@@ -35,6 +35,25 @@ describe(__filename, () => {
     assert.deepStrictEqual(result, expected.result);
   });
 
+  it("should return error and log insee if cp is not found", async () => {
+    rewiremock("@mission-apprentissage/tco-service-node").with({
+      getCpInfo: () => null,
+    });
+
+    const { codePostalMapper } = require("../../../../src/logic/mappers/codePostalMapper");
+
+    const expected = {
+      result: null,
+      messages: {
+        error: `Unable to retrieve data from codePostal 999999 (88888) `,
+      },
+    };
+
+    const { result, messages } = await codePostalMapper("999999", "88888");
+    assert.deepStrictEqual(messages.error, expected.messages.error);
+    assert.deepStrictEqual(result, expected.result);
+  });
+
   it("should return error if cp has an error", async () => {
     rewiremock("@mission-apprentissage/tco-service-node").with({
       getCpInfo: () => ({ messages: { error: "nope" } }),
@@ -60,11 +79,26 @@ describe(__filename, () => {
     const expected = {
       result: null,
       messages: {
-        error: `Error: codePostalMapper codePostal inconsistent results : original code 93100, code given by api adresse 92600`,
+        error: `Error: codePostalMapper codePostal inconsistent results : original code 93100, code given by api adresse 92600 (92004)`,
       },
     };
 
     const { result, messages } = await codePostalMapper("93100");
+    assert.deepStrictEqual(messages.error, expected.messages.error);
+    assert.deepStrictEqual(result, expected.result);
+  });
+
+  it("should return error & log insee if cp or insee provided is inconsistent with result", async () => {
+    const { codePostalMapper } = require("../../../../src/logic/mappers/codePostalMapper");
+
+    const expected = {
+      result: null,
+      messages: {
+        error: `Error: codePostalMapper codePostal inconsistent results : original code 93100 (93048), code given by api adresse 92600 (92004)`,
+      },
+    };
+
+    const { result, messages } = await codePostalMapper("93100", "93048");
     assert.deepStrictEqual(messages.error, expected.messages.error);
     assert.deepStrictEqual(result, expected.result);
   });
