@@ -28,6 +28,7 @@ import { useQuery } from "react-query";
 import { academies } from "../../constants/academies";
 import useAuth from "../../common/hooks/useAuth";
 import { hasAcademyRight, hasAllAcademiesRight, isUserAdmin } from "../../common/utils/rolesUtils";
+import { ExportButton } from "./components/ExportButton";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -147,6 +148,7 @@ const CountText = ({ totalFormationsCount, plateforme, niveaux, academie, ...res
 export default ({ plateforme }) => {
   const [user] = useAuth();
   const [niveaux, setNiveaux] = useState([]);
+  const [rules, setRules] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [currentRule, setCurrentRule] = useState(null);
@@ -209,6 +211,7 @@ export default ({ plateforme }) => {
           // This rules should probably be deleted
         }
         setNiveaux(niveauxTree);
+        setRules(regles.filter(({ _id }) => reglesInTree.includes(_id)));
       } catch (e) {
         console.error(e);
       }
@@ -425,6 +428,11 @@ export default ({ plateforme }) => {
                   plateforme={plateforme}
                   academie={currentAcademie}
                 />
+                {user && (isUserAdmin(user) || hasAllAcademiesRight(user)) && (
+                  <Flex justifyContent={"flex-end"}>
+                    <ExportButton plateforme={plateforme} rules={rules} />
+                  </Flex>
+                )}
                 <Box minH="70vh">
                   <Accordion bg="#FFFFFF" mb={24} allowToggle>
                     {niveaux.map(({ niveau, diplomes }) => {
