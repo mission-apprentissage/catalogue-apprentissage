@@ -24,3 +24,14 @@ export const escapeDiacritics = (str) =>
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/\s+/g, " ")
     .replaceAll(";", ",");
+
+export const createCSV = ({ headers, rows }) => {
+  const lines = rows.map((rowData) => {
+    const row = headers.map(({ key, formatter }) => {
+      return rowData[key] && formatter ? formatter(rowData[key]) : rowData[key];
+    });
+    return row.join(CSV_SEPARATOR);
+  });
+
+  return [headers.map(({ label }) => label).join(CSV_SEPARATOR), ...lines].join("\n");
+};
