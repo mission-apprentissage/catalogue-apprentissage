@@ -1,5 +1,5 @@
 const { PsReconciliation, PsFormation, ConvertedFormation } = require("../../common/model");
-const combinate = require("../../logic/mappers/psReconciliationMapper");
+const combinate = require("../../logic/mappers/reconciliationMapper");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 const mongoose = require("mongoose");

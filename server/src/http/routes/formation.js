@@ -1,6 +1,9 @@
 const express = require("express");
+const Joi = require("joi");
+const { oleoduc, transformData } = require("oleoduc");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { MnaFormation } = require("../../common/model");
+const { sendJsonStream } = require("../../common/utils/httpUtils");
 
 /**
  * Sample entity route module for GET
@@ -79,6 +82,28 @@ module.exports = () => {
       } else {
         res.json({ message: `Item ${itemId} doesn't exist` });
       }
+    })
+  );
+
+  /**
+   * Fetch formations as ndjson
+   */
+  router.get(
+    "/formations.ndjson",
+    tryCatch(async (req, res) => {
+      let { query, limit } = await Joi.object({
+        query: Joi.string().default("{}"),
+        limit: Joi.number().default(10),
+      }).validateAsync(req.query, { abortEarly: false });
+
+      const filter = JSON.parse(query);
+
+      const stream = oleoduc(
+        MnaFormation.find(filter).limit(limit).cursor(),
+        transformData((formation) => `${JSON.stringify(formation)}\n`)
+      );
+
+      return sendJsonStream(stream, res);
     })
   );
 
