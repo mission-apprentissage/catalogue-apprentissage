@@ -511,17 +511,20 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                       colorScheme="red"
                       borderRadius="none"
                       onClick={async () => {
-                        await onDeleteRule({
-                          _id: idRule,
-                        });
+                        const isUserSure = window.confirm("Voulez vous vraiment supprimer ce diplôme ?");
+                        if (isUserSure) {
+                          await onDeleteRule({
+                            _id: idRule,
+                          });
 
-                        toast({
-                          title: "Suppression",
-                          description: `La règle "${nom_regle_complementaire}" a été supprimée`,
-                          status: "success",
-                          duration: 5000,
-                        });
-                        close();
+                          toast({
+                            title: "Suppression",
+                            description: `La règle "${nom_regle_complementaire}" a été supprimée`,
+                            status: "success",
+                            duration: 5000,
+                          });
+                          close();
+                        }
                       }}
                     >
                       Supprimer
