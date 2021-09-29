@@ -8,6 +8,7 @@ import { CONDITIONS } from "../../../constants/conditionsIntegration";
 import { COMMON_STATUS } from "../../../constants/status";
 import { academies } from "../../../constants/academies";
 import InfoTooltip from "../../../common/components/InfoTooltip";
+import { isStatusChangeEnabled } from "../../../common/utils/rulesUtils";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -39,9 +40,15 @@ export const Line = ({
   } = rule;
 
   const isConditionChangeEnabled = !academie;
-  const isStatusChangeEnabled = academie
-    ? (!num_academie || String(num_academie) === academie) && condition_integration === CONDITIONS.PEUT_INTEGRER
-    : true;
+
+  const isStatusChangeDisabled = !isStatusChangeEnabled({
+    plateforme,
+    academie,
+    num_academie,
+    status,
+    condition_integration,
+  });
+
   const currentStatus = statut_academies?.[academie] ?? status;
   const academieLabel = Object.values(academies).find(({ num_academie: num }) => num === num_academie)?.nom_academie;
 
@@ -132,7 +139,7 @@ export const Line = ({
             </Flex>
             <Flex alignItems="center">
               <StatusSelect
-                isDisabled={!isStatusChangeEnabled}
+                isDisabled={isStatusChangeDisabled}
                 plateforme={plateforme}
                 currentStatus={currentStatus}
                 condition={condition_integration ?? CONDITIONS.NE_DOIT_PAS_INTEGRER}
