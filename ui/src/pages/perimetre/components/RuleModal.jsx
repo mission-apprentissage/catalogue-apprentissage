@@ -105,6 +105,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
     num_academie,
   } = rule ?? {};
 
+  let isClosing = false;
   const isCreating = !rule;
   const initialRef = React.useRef();
   const toast = useToast();
@@ -240,7 +241,8 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
   });
 
   const close = () => {
-    resetForm();
+    isClosing = true;
+    // resetForm();
     onClose();
   };
 
@@ -257,10 +259,12 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
       setCount(result);
     };
 
-    if (values.niveau && values.diplome) {
-      run();
-    } else {
-      setCount(0);
+    if (!isClosing) {
+      if (values.niveau && values.diplome) {
+        run();
+      } else {
+        setCount(0);
+      }
     }
   }, [values.niveau, values.diplome, values.regle, academie]);
 
