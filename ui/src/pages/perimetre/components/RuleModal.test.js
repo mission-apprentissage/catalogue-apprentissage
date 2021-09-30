@@ -45,7 +45,7 @@ test("should compute an url filtering with condition 'peut intégrer' for affeln
   );
 });
 
-test("renders the modal in creation mode", async () => {
+test("renders the modal in creation mode for psup", async () => {
   const onClose = jest.fn();
   const onUpdateRule = jest.fn();
   const onDeleteRule = jest.fn();
@@ -70,6 +70,39 @@ test("renders the modal in creation mode", async () => {
 
   const deleteButton = queryByText(/^Supprimer$/i);
   expect(deleteButton).not.toBeInTheDocument();
+
+  const affelnetField = queryByText(/^Année d'inscription$/i);
+  expect(affelnetField).not.toBeInTheDocument();
+});
+
+test("renders the modal in creation mode for affelnet", async () => {
+  const onClose = jest.fn();
+  const onUpdateRule = jest.fn();
+  const onDeleteRule = jest.fn();
+  const onCreateRule = jest.fn();
+
+  const { queryByText } = renderWithRouter(
+    <QueryClientProvider client={queryClient}>
+      <RuleModal
+        plateforme={"affelnet"}
+        isOpen={true}
+        onClose={onClose}
+        onUpdateRule={onUpdateRule}
+        onDeleteRule={onDeleteRule}
+        onCreateRule={onCreateRule}
+        academie={12}
+      />
+    </QueryClientProvider>
+  );
+
+  const title = queryByText(/^Ajouter un diplôme, un titre ou des formations$/i);
+  expect(title).toBeInTheDocument();
+
+  const deleteButton = queryByText(/^Supprimer$/i);
+  expect(deleteButton).not.toBeInTheDocument();
+
+  const affelnetField = queryByText(/^Année d'inscription$/i);
+  expect(affelnetField).toBeInTheDocument();
 });
 
 test("renders the modal in update mode and can delete", async () => {

@@ -42,6 +42,7 @@ const createRule = async ({
   nom_regle_complementaire,
   condition_integration,
   duree,
+  annee,
   statut_academies,
   num_academie,
 }) => {
@@ -55,6 +56,7 @@ const createRule = async ({
     nom_regle_complementaire,
     condition_integration,
     duree,
+    annee,
     statut_academies,
     num_academie,
   });
@@ -71,6 +73,7 @@ const updateRule = async ({
   nom_regle_complementaire,
   condition_integration,
   duree,
+  annee,
   statut_academies,
 }) => {
   return await _put(`${endpointNewFront}/entity/perimetre/regle/${_id}`, {
@@ -83,6 +86,7 @@ const updateRule = async ({
     nom_regle_complementaire,
     condition_integration,
     duree,
+    annee,
     statut_academies,
   });
 };

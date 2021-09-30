@@ -34,7 +34,7 @@ const rulesReducer = (acc, rule) => {
 };
 
 const createRulesInDB = async (rules, plateforme, statut) => {
-  await asyncForEach(rules, async ({ niveau, diplome, duree, ...rest }) => {
+  await asyncForEach(rules, async ({ niveau, diplome, duree, annee, ...rest }) => {
     await new ReglePerimetre({
       plateforme,
       niveau,
@@ -45,6 +45,7 @@ const createRulesInDB = async (rules, plateforme, statut) => {
       last_update_who: "mna",
       condition_integration: "peut intégrer",
       duree,
+      annee,
     }).save();
   });
 };
