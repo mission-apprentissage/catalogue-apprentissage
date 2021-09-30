@@ -51,6 +51,7 @@ runScript(async ({ catalogue, db }) => {
       "./src/jobs/trainingsUpdater/index.js",
       `--uuidReport=${uuidReport}`,
       "--withCodePostal",
+      "--limit=1", // handle updates 1 by 1 to prevent timeout of api adresse
     ]);
     for await (const data of trainingsUpdater.stdout) {
       console.log(`trainingsUpdater: ${data}`);

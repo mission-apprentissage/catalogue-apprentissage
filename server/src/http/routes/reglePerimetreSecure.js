@@ -39,6 +39,7 @@ const createSchema = Joi.object({
   nom_regle_complementaire: Joi.string(),
   condition_integration: conditionSchema.required(),
   duree: Joi.number().allow(null),
+  annee: Joi.number().allow(null),
   statut_academies: Joi.object().allow(null),
   num_academie: Joi.number().allow(null),
 }).unknown();
@@ -53,6 +54,7 @@ const updateSchema = Joi.object({
   nom_regle_complementaire: Joi.string(),
   condition_integration: conditionSchema,
   duree: Joi.number().allow(null),
+  annee: Joi.number().allow(null),
   statut_academies: Joi.object().allow(null),
 }).unknown();
 
@@ -104,6 +106,7 @@ module.exports = () => {
         nom_regle_complementaire,
         condition_integration,
         duree,
+        annee,
         statut_academies,
         num_academie,
       } = body;
@@ -123,6 +126,7 @@ module.exports = () => {
         last_update_who: user.email,
         condition_integration,
         duree,
+        annee,
         statut_academies: statut_academies ?? {},
         num_academie,
       });

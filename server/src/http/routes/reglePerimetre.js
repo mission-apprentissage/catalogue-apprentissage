@@ -64,6 +64,8 @@ module.exports = () => {
       const plateforme = req.query?.plateforme;
       const condition_integration = req.query?.condition_integration;
       const nom_regle_complementaire = req.query?.nom_regle_complementaire;
+      const statut = req.query?.statut;
+
       if (!plateforme) {
         throw Boom.badRequest();
       }
@@ -75,6 +77,10 @@ module.exports = () => {
 
       if (condition_integration) {
         filter.condition_integration = condition_integration;
+      }
+
+      if (statut) {
+        filter.statut = statut;
       }
 
       if (nom_regle_complementaire) {

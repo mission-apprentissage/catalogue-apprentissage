@@ -35,11 +35,13 @@ import { StatusSelect } from "./StatusSelect";
 import { RuleBuilder } from "./RuleBuilder";
 import { ActionsSelect } from "./ActionsSelect";
 import { CONDITIONS } from "../../../constants/conditionsIntegration";
-import { COMMON_STATUS } from "../../../constants/status";
+import { COMMON_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
 import { useQuery } from "react-query";
 import { _get } from "../../../common/httpClient";
 import * as Yup from "yup";
 import { academies } from "../../../constants/academies";
+import { isStatusChangeEnabled } from "../../../common/utils/rulesUtils";
+import { RuleUpdatesHistory } from "./RuleUpdatesHistory";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -49,34 +51,6 @@ const formatDate = (date) => {
     month: "long",
     year: "numeric",
   });
-};
-
-const humanReadablekeyMap = {
-  regle_complementaire: "Autre(s) critère(s)",
-  nom_regle_complementaire: "Nom du diplôme ou titre",
-  last_update_who: "Modifié par",
-  condition_integration: "Condition d'intégration",
-  statut: "Règle de publication",
-  diplome: "Type de diplôme ou titre",
-  niveau: "Niveau",
-};
-
-const UpdatesHistory = ({ label, value }) => {
-  return (
-    <Flex flexDirection={"column"} w={"full"} h={"full"}>
-      <Text mb={1}>{label} :</Text>
-      <Flex p={2} bg={"grey.750"} color="grey.100" h={"full"} flexDirection={"column"}>
-        {value &&
-          Object.entries(value)
-            .filter(([key]) => key !== "regle_complementaire_query")
-            .map(([key, value]) => (
-              <Text as={"span"} key={key} overflowWrap={"anywhere"}>
-                <strong>{humanReadablekeyMap[key] ?? key}:</strong> {JSON.stringify(value)}
-              </Text>
-            ))}
-      </Flex>
-    </Flex>
-  );
 };
 
 const validationSchema = Yup.object().shape({
@@ -99,6 +73,22 @@ const getCount = async ({ niveau, diplome, regle_complementaire, academie }) => 
   return await _get(`${countUrl}?${params}`, false);
 };
 
+export const getDiplomesAllowedForSubRulesUrl = (plateforme) => {
+  const filters = {
+    plateforme,
+    nom_regle_complementaire: null,
+  };
+
+  if (plateforme === "parcoursup") {
+    filters.statut = PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR;
+  } else {
+    filters.condition_integration = CONDITIONS.PEUT_INTEGRER;
+  }
+
+  const params = new URLSearchParams(filters);
+  return `${endpointNewFront}/v1/entity/perimetre/regles?${params}`;
+};
+
 const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreateRule, plateforme, academie }) => {
   const {
     _id: idRule,
@@ -111,20 +101,22 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
     condition_integration = "",
     niveau,
     duree,
+    annee,
     statut_academies,
     num_academie,
   } = rule ?? {};
 
+  let isClosing = false;
   const isCreating = !rule;
   const initialRef = React.useRef();
   const toast = useToast();
 
   const isDisabled = !!academie && !isCreating && (!num_academie || String(num_academie) !== academie);
-  const isStatusChangeEnabled =
-    isCreating ||
-    (academie
-      ? (!num_academie || String(num_academie) === academie) && condition_integration === CONDITIONS.PEUT_INTEGRER
-      : true);
+
+  const isStatusChangeDisabled = !(
+    isCreating || isStatusChangeEnabled({ plateforme, academie, num_academie, status: statut, condition_integration })
+  );
+
   const isConditionChangeEnabled = !academie;
   const initialCondition = academie && isCreating ? CONDITIONS.PEUT_INTEGRER : condition_integration;
   const academieLabel = Object.values(academies).find(({ num_academie: num }) => num === num_academie)?.nom_academie;
@@ -135,13 +127,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
     staleTime: 60 * 60 * 1000, // 1 hour
   });
 
-  const params = new URLSearchParams({
-    plateforme,
-    condition_integration: "peut intégrer",
-    nom_regle_complementaire: null,
-  });
-
-  const reglesUrl = `${endpointNewFront}/v1/entity/perimetre/regles?${params}`;
+  const reglesUrl = getDiplomesAllowedForSubRulesUrl(plateforme);
   const { data: diplomesRegles } = useQuery("diplomesRegles", () => _get(reglesUrl, false), {
     refetchOnWindowFocus: false,
   });
@@ -157,9 +143,10 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
       niveau: niveau,
       diplome: diplome,
       duration: duree ?? "",
+      registrationYear: annee ?? "",
     },
     validationSchema: validationSchema,
-    onSubmit: ({ name, status, regle, condition, niveau, diplome, duration, query }) => {
+    onSubmit: ({ name, status, regle, condition, niveau, diplome, duration, query, registrationYear }) => {
       return new Promise(async (resolve) => {
         if (idRule) {
           if (!academie) {
@@ -173,6 +160,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
               regle_complementaire_query: query,
               condition_integration: condition,
               duree: duration ? Number(duration) : null,
+              annee: registrationYear ? Number(registrationYear) : null,
             });
           } else {
             // update the status only for the selected academy
@@ -195,6 +183,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
               regle_complementaire: regle,
               regle_complementaire_query: query,
               duree: duration ? Number(duration) : null,
+              annee: registrationYear ? Number(registrationYear) : null,
               statut_academies: statusAcademies,
             });
           }
@@ -217,6 +206,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
               regle_complementaire_query: query,
               condition_integration: condition,
               duree: duration ? Number(duration) : null,
+              annee: registrationYear ? Number(registrationYear) : null,
             });
           } else {
             // create rule for an academy, that will be visible at national level
@@ -233,6 +223,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
               regle_complementaire_query: query,
               condition_integration: condition,
               duree: duration ? Number(duration) : null,
+              annee: registrationYear ? Number(registrationYear) : null,
               num_academie: academie,
               statut_academies: {
                 [academie]: status,
@@ -256,7 +247,8 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
   });
 
   const close = () => {
-    resetForm();
+    isClosing = true;
+    // resetForm();
     onClose();
   };
 
@@ -269,16 +261,19 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
         diplome: values.diplome,
         regle_complementaire: values.regle,
         academie,
+        // TODO filter with annee & duree when modalites will be available in RCO data
       });
       setCount(result);
     };
 
-    if (values.niveau && values.diplome) {
-      run();
-    } else {
-      setCount(0);
+    if (!isClosing) {
+      if (values.niveau && values.diplome) {
+        run();
+      } else {
+        setCount(0);
+      }
     }
-  }, [values.niveau, values.diplome, values.regle, academie]);
+  }, [values.niveau, values.diplome, values.regle, academie, isClosing]);
 
   const { isOpen: isCriteriaOpen, onToggle: onCriteriaToggle } = useDisclosure();
 
@@ -449,6 +444,38 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                       </Flex>
                     </FormControl>
 
+                    {plateforme === "affelnet" && (
+                      <FormControl isInvalid={errors.registrationYear && touched.registrationYear}>
+                        <Flex flexDirection={"column"} mt={8} alignItems={"flex-start"}>
+                          <FormLabel htmlFor={"registrationYear"} mb={1}>
+                            Année d'inscription
+                          </FormLabel>
+                          <NumberInput
+                            isDisabled={isDisabled}
+                            id="registrationYear"
+                            name="registrationYear"
+                            size="md"
+                            maxW={24}
+                            value={values.registrationYear}
+                            min={1}
+                            max={3}
+                            onChange={(value) => {
+                              // can't use handleChange since onChange receives directly value and not an Event
+                              setFieldValue("registrationYear", value);
+                            }}
+                          >
+                            <NumberInputField />
+                            <NumberInputStepper>
+                              <NumberIncrementStepper />
+                              <NumberDecrementStepper />
+                            </NumberInputStepper>
+                          </NumberInput>
+
+                          <FormErrorMessage>{errors.registrationYear}</FormErrorMessage>
+                        </Flex>
+                      </FormControl>
+                    )}
+
                     <Flex flexDirection={"column"} mt={8} alignItems={"flex-start"}>
                       <Button mb={1} onClick={onCriteriaToggle} variant={"unstyled"}>
                         Affiner les critères{" "}
@@ -502,7 +529,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                       <Flex flexDirection={"column"} mt={8} alignItems={"flex-start"}>
                         <FormLabel htmlFor={"status"}>Règle de publication</FormLabel>
                         <StatusSelect
-                          isDisabled={!isStatusChangeEnabled}
+                          isDisabled={isStatusChangeDisabled}
                           id={"status"}
                           name="status"
                           plateforme={plateforme}
@@ -527,17 +554,20 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                       colorScheme="red"
                       borderRadius="none"
                       onClick={async () => {
-                        await onDeleteRule({
-                          _id: idRule,
-                        });
+                        const isUserSure = window.confirm("Voulez vous vraiment supprimer ce diplôme ?");
+                        if (isUserSure) {
+                          await onDeleteRule({
+                            _id: idRule,
+                          });
 
-                        toast({
-                          title: "Suppression",
-                          description: `La règle "${nom_regle_complementaire}" a été supprimée`,
-                          status: "success",
-                          duration: 5000,
-                        });
-                        close();
+                          toast({
+                            title: "Suppression",
+                            description: `La règle "${nom_regle_complementaire}" a été supprimée`,
+                            status: "success",
+                            duration: 5000,
+                          });
+                          close();
+                        }
                       }}
                     >
                       Supprimer
@@ -548,7 +578,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                       Annuler
                     </Button>
                     <Button
-                      isDisabled={!isStatusChangeEnabled}
+                      isDisabled={isStatusChangeDisabled}
                       variant={"primary"}
                       type={"submit"}
                       onClick={handleSubmit}
@@ -573,10 +603,10 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                       </Text>
                       <Flex>
                         <Flex flexBasis={"50%"} pr={2}>
-                          <UpdatesHistory label={"Avant"} value={from} />
+                          <RuleUpdatesHistory label={"Avant"} value={from} />
                         </Flex>
                         <Flex flexBasis={"50%"} pl={2} flexDirection={"column"}>
-                          <UpdatesHistory label={"Après"} value={to} />
+                          <RuleUpdatesHistory label={"Après"} value={to} />
                         </Flex>
                       </Flex>
                     </Box>
