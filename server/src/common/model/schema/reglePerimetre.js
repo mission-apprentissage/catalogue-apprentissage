@@ -105,5 +105,10 @@ const reglePerimetre = {
     default: null,
     description: "Durée en années pour matcher les formations",
   },
+  annee: {
+    type: Number,
+    default: null,
+    description: "Année d'inscription de la formation",
+  },
 };
 module.exports = reglePerimetre;

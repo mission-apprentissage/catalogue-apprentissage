@@ -117,9 +117,10 @@ const createEtablissement = async (payload) => {
 
   try {
     const etablissement = await API.post(`/services/etablissement`, payload);
+    logger.info("Try to create etablissement with data", etablissement.data);
     return await postEtablissement(etablissement.data);
   } catch (error) {
-    logger.error(error);
+    logger.error("Error during etablissement creation", error);
   }
 };
 
