@@ -19,7 +19,6 @@ import {
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import Layout from "../layout/Layout";
 import { setTitle } from "../../common/utils/pageUtils";
-import { _delete, _get, _post, _put } from "../../common/httpClient";
 import { FolderLine, FolderOpenLine } from "../../theme/components/icons";
 import { RuleModal } from "./components/RuleModal";
 import { Diplome } from "./components/Diplome";
@@ -29,86 +28,14 @@ import { academies } from "../../constants/academies";
 import useAuth from "../../common/hooks/useAuth";
 import { hasAcademyRight, hasAllAcademiesRight, isUserAdmin } from "../../common/utils/rolesUtils";
 import { ExportButton } from "./components/ExportButton";
-
-const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
-
-const createRule = async ({
-  plateforme,
-  niveau,
-  diplome,
-  statut,
-  regle_complementaire,
-  regle_complementaire_query,
-  nom_regle_complementaire,
-  condition_integration,
-  duree,
-  annee,
-  statut_academies,
-  num_academie,
-}) => {
-  return await _post(`${endpointNewFront}/entity/perimetre/regle`, {
-    plateforme,
-    niveau,
-    diplome,
-    statut,
-    regle_complementaire,
-    regle_complementaire_query,
-    nom_regle_complementaire,
-    condition_integration,
-    duree,
-    annee,
-    statut_academies,
-    num_academie,
-  });
-};
-
-const updateRule = async ({
-  _id,
-  plateforme,
-  niveau,
-  diplome,
-  statut,
-  regle_complementaire,
-  regle_complementaire_query,
-  nom_regle_complementaire,
-  condition_integration,
-  duree,
-  annee,
-  statut_academies,
-}) => {
-  return await _put(`${endpointNewFront}/entity/perimetre/regle/${_id}`, {
-    plateforme,
-    niveau,
-    diplome,
-    statut,
-    regle_complementaire,
-    regle_complementaire_query,
-    nom_regle_complementaire,
-    condition_integration,
-    duree,
-    annee,
-    statut_academies,
-  });
-};
-
-const deleteRule = async ({ _id }) => {
-  return await _delete(`${endpointNewFront}/entity/perimetre/regle/${_id}`);
-};
-
-const getIntegrationCount = async ({ plateforme, niveau, academie }) => {
-  try {
-    const countUrl = `${endpointNewFront}/v1/entity/perimetre/regles/integration/count`;
-    const params = new URLSearchParams({
-      plateforme: plateforme,
-      num_academie: academie,
-      ...(niveau ? { niveau } : {}),
-    });
-    return await _get(`${countUrl}?${params}`, false);
-  } catch (e) {
-    console.error(e);
-    return { nbRules: 0, nbFormations: 0 };
-  }
-};
+import {
+  createRule,
+  deleteRule,
+  getIntegrationCount,
+  getNiveaux,
+  getRules,
+  updateRule,
+} from "../../common/api/perimetre";
 
 const CountText = ({ totalFormationsCount, plateforme, niveaux, academie, ...rest }) => {
   const [integrationCount, setIntegrationCount] = useState({});
@@ -163,8 +90,7 @@ export default ({ plateforme }) => {
   const title = `Règles d'intégration des formations à la plateforme ${plateforme}`;
   setTitle(title);
 
-  const niveauxURL = `${endpointNewFront}/v1/entity/perimetre/niveau`;
-  const { data: niveauxData } = useQuery("niveaux", () => _get(niveauxURL, false), {
+  const { data: niveauxData } = useQuery("niveaux", () => getNiveaux(), {
     refetchOnWindowFocus: false,
     staleTime: 60 * 60 * 1000, // 1 hour
   });
@@ -185,24 +111,24 @@ export default ({ plateforme }) => {
   useEffect(() => {
     async function run() {
       try {
-        const reglesUrl = `${endpointNewFront}/v1/entity/perimetre/regles`;
-        const regles = await _get(`${reglesUrl}?plateforme=${plateforme}`, false);
-
+        const regles = await getRules({ plateforme });
         let reglesInTree = [];
 
         const niveauxTree = niveauxData.map(({ niveau, diplomes }) => {
           return {
             niveau,
-            diplomes: diplomes.map((diplome) => {
-              const filteredRegles = regles.filter(
-                ({ niveau: niv, diplome: dip }) => niveau.value === niv && diplome.value === dip
-              );
-              reglesInTree = [...reglesInTree, ...filteredRegles.map(({ _id }) => _id)];
-              return {
-                ...diplome,
-                regles: filteredRegles,
-              };
-            }),
+            diplomes: diplomes
+              .map((diplome) => {
+                const filteredRegles = regles.filter(
+                  ({ niveau: niv, diplome: dip }) => niveau.value === niv && diplome.value === dip
+                );
+                reglesInTree = [...reglesInTree, ...filteredRegles.map(({ _id }) => _id)];
+                return {
+                  ...diplome,
+                  regles: filteredRegles,
+                };
+              })
+              .sort((diplomeA, diplomeB) => diplomeB.count - diplomeA.count),
           };
         });
 

@@ -12,7 +12,17 @@ const server = setupServer(
     return res(ctx.json({ nbRules: 2, nbFormations: 100 }));
   }),
   rest.get(/\/api\/v1\/entity\/perimetre\/niveau/, (req, res, ctx) => {
-    return res(ctx.json([{ niveau: { value: "1", count: 10 }, diplomes: [{ value: "bts" }] }]));
+    return res(
+      ctx.json([
+        {
+          niveau: { value: "1", count: 10 },
+          diplomes: [
+            { value: "bts", count: 8 },
+            { value: "cap", count: 30 },
+          ],
+        },
+      ])
+    );
   }),
   rest.get(/\/api\/v1\/entity\/perimetre\/regles/, (req, res, ctx) => {
     return res(ctx.json([]));
@@ -39,7 +49,7 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 test("renders basic tree", async () => {
-  const { getAllByText, getByText } = renderWithRouter(
+  const { getAllByText, getByText, getAllByTestId } = renderWithRouter(
     <QueryClientProvider client={queryClient}>
       <Perimetre plateforme={"parcoursup"} />
     </QueryClientProvider>
@@ -58,6 +68,12 @@ test("renders basic tree", async () => {
 
   const diplomeLabel = getByText(/^bts$/i);
   expect(diplomeLabel).toBeInTheDocument();
+
+  const diplomesSorted = ["cap", "bts"];
+  const lineTitleNodes = getAllByTestId("line");
+  lineTitleNodes.forEach((lineTitleNode, index) => {
+    expect(lineTitleNode.textContent).toBe(diplomesSorted[index]);
+  });
 });
 
 test("opens rule modal to add a diploma", async () => {
