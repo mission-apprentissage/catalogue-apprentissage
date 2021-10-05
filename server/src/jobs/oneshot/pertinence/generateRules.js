@@ -6,7 +6,7 @@ const { runScript } = require("../../scriptWrapper");
 const {
   aPublierRules: afAPublierRules,
   aPublierSoumisAValidationRules: afAPublierSoumisAValidationRules,
-} = require("../../pertinence/affelnet/rules");
+} = require("../../affelnet/pertinence/rules");
 
 const {
   aPublierVerifierAccesDirectPostBacRules: psPostBacRules,
