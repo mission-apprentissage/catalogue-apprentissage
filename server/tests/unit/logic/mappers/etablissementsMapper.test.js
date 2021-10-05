@@ -116,7 +116,7 @@ describe(__filename, () => {
 
   describe("getEtablissementReference", () => {
     it("should return null if no gestionnaire and formateur", async () => {
-      let result = getEtablissementReference({});
+      let result = getEtablissementReference({}, {});
       assert.deepStrictEqual(result, null);
     });
 
@@ -127,7 +127,7 @@ describe(__filename, () => {
           _id: "test",
         },
       };
-      let result = getEtablissementReference({ gestionnaire: { _id: "test" }, formateur: { _id: "test2" } });
+      let result = getEtablissementReference({ gestionnaire: { _id: "test" }, formateur: { _id: "test2" } }, {});
       assert.deepStrictEqual(result, expected);
     });
 
@@ -138,10 +138,13 @@ describe(__filename, () => {
           _id: "test2",
         },
       };
-      let result = getEtablissementReference({
-        gestionnaire: null,
-        formateur: { _id: "test2" },
-      });
+      let result = getEtablissementReference(
+        {
+          gestionnaire: null,
+          formateur: { _id: "test2" },
+        },
+        {}
+      );
       assert.deepStrictEqual(result, expected);
     });
 
@@ -153,12 +156,78 @@ describe(__filename, () => {
           computed_conventionne: "OUI",
         },
       };
-      let result = getEtablissementReference({
-        gestionnaire: { _id: "test" },
-        formateur: { _id: "test2", computed_conventionne: "OUI" },
-      });
+      let result = getEtablissementReference(
+        {
+          gestionnaire: { _id: "test" },
+          formateur: { _id: "test2", computed_conventionne: "OUI" },
+        },
+        {}
+      );
       assert.deepStrictEqual(result, expected);
     });
+  });
+
+  it("should return gestionnaire if habilite", async () => {
+    const expected = {
+      etablissement_reference: "gestionnaire",
+      referenceEstablishment: {
+        _id: "test",
+        siret: "123456789",
+      },
+    };
+    let result = getEtablissementReference(
+      {
+        gestionnaire: { _id: "test", siret: "123456789" },
+        formateur: { _id: "test2", computed_conventionne: "OUI" },
+      },
+      {
+        code_type_certif: "TP",
+        partenaires: [{ Siret_Partenaire: "123456789", Habilitation_Partenaire: "HABILITATION_ORGA_FORM" }],
+      }
+    );
+    assert.deepStrictEqual(result, expected);
+  });
+
+  it("should return formateur if habilite", async () => {
+    const expected = {
+      etablissement_reference: "formateur",
+      referenceEstablishment: {
+        _id: "test2",
+        siret: "12345678",
+      },
+    };
+    let result = getEtablissementReference(
+      {
+        gestionnaire: { _id: "test", siret: "123456789" },
+        formateur: { _id: "test2", siret: "12345678" },
+      },
+      {
+        code_type_certif: "TP",
+        partenaires: [{ Siret_Partenaire: "12345678", Habilitation_Partenaire: "HABILITATION_ORGA_FORM" }],
+      }
+    );
+    assert.deepStrictEqual(result, expected);
+  });
+
+  it("should return gestionnaire if none habilite & none conventionne", async () => {
+    const expected = {
+      etablissement_reference: "gestionnaire",
+      referenceEstablishment: {
+        _id: "test",
+        siret: "123456789",
+      },
+    };
+    let result = getEtablissementReference(
+      {
+        gestionnaire: { _id: "test", siret: "123456789" },
+        formateur: { _id: "test2", siret: "12345678" },
+      },
+      {
+        code_type_certif: "TP",
+        partenaires: [{ Siret_Partenaire: "12345", Habilitation_Partenaire: "HABILITATION_ORGA_FORM" }],
+      }
+    );
+    assert.deepStrictEqual(result, expected);
   });
 
   describe("getGeoloc", () => {
