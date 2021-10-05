@@ -2,9 +2,8 @@ import React from "react";
 import { rest } from "msw";
 import { setupServer } from "msw/node";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { renderWithRouter } from "../../../common/utils/testUtils";
 import { getDiplomesAllowedForSubRulesUrl, RuleModal } from "./RuleModal";
-import { fireEvent } from "@testing-library/react";
+import { fireEvent, render, waitFor } from "@testing-library/react";
 
 const server = setupServer(
   rest.get(/\/api\/v1\/entity\/perimetre\/niveau/, (req, res, ctx) => {
@@ -51,7 +50,7 @@ test("renders the modal in creation mode for psup", async () => {
   const onDeleteRule = jest.fn();
   const onCreateRule = jest.fn();
 
-  const { queryByText } = renderWithRouter(
+  const { queryByText } = render(
     <QueryClientProvider client={queryClient}>
       <RuleModal
         plateforme={"parcoursup"}
@@ -81,7 +80,7 @@ test("renders the modal in creation mode for affelnet", async () => {
   const onDeleteRule = jest.fn();
   const onCreateRule = jest.fn();
 
-  const { queryByText } = renderWithRouter(
+  const { queryByText } = render(
     <QueryClientProvider client={queryClient}>
       <RuleModal
         plateforme={"affelnet"}
@@ -124,7 +123,7 @@ test("renders the modal in update mode and can delete", async () => {
     niveau: "4",
     duree: "1",
   };
-  const { queryByText } = renderWithRouter(
+  const { queryByText } = render(
     <QueryClientProvider client={queryClient}>
       <RuleModal
         plateforme={"parcoursup"}
