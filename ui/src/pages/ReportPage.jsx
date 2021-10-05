@@ -97,6 +97,12 @@ const ReportPage = () => {
       const { report, error } = await getReport(reportType, date, uuidReport);
 
       if (reportType === REPORT_TYPE.TRAININGS_UPDATE) {
+        if (report) {
+          // handle no update case
+          report.data = report.data ?? {};
+          report.data.updated = report.data.updated ?? [];
+        }
+
         const convertReportResp = await getReport(REPORT_TYPE.RCO_CONVERSION, date, uuidReport, 1, null, true);
         if (convertReportResp.report && convertReportResp.report.data) {
           const { converted, summary: convertSummary } = convertReportResp.report?.data;
@@ -119,18 +125,6 @@ const ReportPage = () => {
             updatedIds: updated?.map(({ rcoId }) => rcoId.replaceAll(" ", "|")),
             deletedIds: deleted?.map(({ rcoId }) => rcoId.replaceAll(" ", "|")),
             summary,
-          });
-        } else {
-          // in case of no change in data (rco import is the same than yesterday)
-          setImportReport({
-            addedIds: [],
-            updatedIds: [],
-            deletedIds: [],
-            summary: {
-              addedCount: 0,
-              updatedCount: 0,
-              deletedCount: 0,
-            },
           });
         }
       }
