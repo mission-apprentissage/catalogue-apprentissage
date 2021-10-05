@@ -46,7 +46,7 @@ const isHabiliteRncp = ({ partenaires = [], certificateurs = [] }, siret) => {
   return isPartenaire || isCertificateur;
 };
 
-const getEtablissementReference = ({ gestionnaire, formateur }) => {
+const getEtablissementReference = ({ gestionnaire, formateur }, rncpInfo) => {
   // Check etablissement reference found
   if (!gestionnaire && !formateur) {
     logger.error(`getEtablissementReference: both gestionnaire and formateur null`);
@@ -59,14 +59,22 @@ const getEtablissementReference = ({ gestionnaire, formateur }) => {
     gestionnaire && referenceEstablishment._id === gestionnaire._id ? "gestionnaire" : "formateur";
 
   // Check if etablissement responsable is conventionne if not take etablissement formateur
-  if (
-    formateur &&
-    gestionnaire &&
-    gestionnaire.computed_conventionne !== "OUI" &&
-    formateur.computed_conventionne === "OUI"
-  ) {
-    referenceEstablishment = formateur;
-    etablissement_reference = "formateur";
+  if (formateur && gestionnaire) {
+    if (gestionnaire.computed_conventionne !== "OUI" && formateur.computed_conventionne === "OUI") {
+      referenceEstablishment = formateur;
+      etablissement_reference = "formateur";
+    }
+
+    // for RNCP formation, take the establishment that is habilite
+    if (["Titre", "TP"].includes(rncpInfo?.code_type_certif)) {
+      if (isHabiliteRncp(rncpInfo, gestionnaire.siret)) {
+        referenceEstablishment = gestionnaire;
+        etablissement_reference = "gestionnaire";
+      } else if (isHabiliteRncp(rncpInfo, formateur.siret)) {
+        referenceEstablishment = formateur;
+        etablissement_reference = "formateur";
+      }
+    }
   }
 
   return {
@@ -142,7 +150,7 @@ const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissem
       etablissement_formateur_siret
     );
 
-    const etablissementReference = getEtablissementReference(attachedEstablishments);
+    const etablissementReference = getEtablissementReference(attachedEstablishments, rncpInfo);
     if (!etablissementReference) {
       return {
         result: null,
