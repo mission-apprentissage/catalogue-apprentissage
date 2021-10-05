@@ -1,5 +1,6 @@
 import { escapeDiacritics } from "../../utils/downloadUtils";
 import helpText from "../../../locales/helpText.json";
+import constantsReglesPerimetre from "./constantsReglesPerimetre";
 
 const FILTERS = () => [
   `QUERYBUILDER`,
@@ -510,7 +511,6 @@ const queryBuilderField = [
   { text: "Référencé datadock", value: "etablissement_reference_datadock.keyword" },
   { text: "Uai du lieu de formation", value: "uai_formation.keyword" },
   { text: "Diplôme", value: "diplome.keyword" },
-  { text: "Mef 10", value: "mef_10_code.keyword" },
   { text: "Intitulé", value: "intitule_court.keyword" },
   { text: "Code RNCP", value: "rncp_code.keyword" },
   { text: "Commune du lieu de formation", value: "localite.keyword" },
@@ -519,8 +519,8 @@ const queryBuilderField = [
   { text: "Identifiant Certif Info", value: "id_certifinfo.keyword" },
   { text: "Nda gestionnaire", value: "etablissement_gestionnaire_nda.keyword" },
   { text: "Nda formateur", value: "etablissement_formateur_nda.keyword" },
-  // { text: "ParcourSup à charger", value: "parcoursup_a_charger" },
-  // { text: "Affelnet à charger", value: "affelnet_a_charger" },
+
+  ...constantsReglesPerimetre.queryBuilderField,
 ];
 
 const facetDefinition = () => [

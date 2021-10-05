@@ -16,4 +16,6 @@ subscribeToHttpEvent("http:error", (response) => {
 
 export const getAuth = () => getGlobalState("auth");
 export const useAuthState = () => useGlobalState("auth");
+export const setAuthState = (user) => setGlobalState("auth", user);
+
 export { anonymous };
