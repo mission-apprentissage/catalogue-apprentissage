@@ -120,6 +120,18 @@ const ReportPage = () => {
             deletedIds: deleted?.map(({ rcoId }) => rcoId.replaceAll(" ", "|")),
             summary,
           });
+        } else {
+          // in case of no change in data (rco import is the same than yesterday)
+          setImportReport({
+            addedIds: [],
+            updatedIds: [],
+            deletedIds: [],
+            summary: {
+              addedCount: 0,
+              updatedCount: 0,
+              deletedCount: 0,
+            },
+          });
         }
       }
 

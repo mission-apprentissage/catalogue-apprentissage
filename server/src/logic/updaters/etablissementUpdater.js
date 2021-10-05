@@ -85,11 +85,13 @@ const createOrUpdateEtablissements = async (rcoFormation) => {
         return;
       }
 
-      // create remote etablissement & save locally
       etablissement = await catalogue.createEtablissement({ ...data, tags });
-      await Etablissement.create(etablissement);
-
-      result[type].created = true;
+      if (etablissement) {
+        await Etablissement.create(etablissement);
+        result[type].created = true;
+      } else {
+        result[type].error = "Échec de la création de cet établissement";
+      }
       return;
     }
 
