@@ -17,7 +17,6 @@ export default (
     <Route exact path="/forgotten-password" />
     <Route exact path="/report" />
     <Route exact path="/couverture-ps" />
-    <Route exact path="/couverture-affelnet" />
     <Route exact path="/changelog" />
 
     <Route exact path="/mes-actions" />

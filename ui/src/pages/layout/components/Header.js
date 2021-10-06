@@ -105,11 +105,6 @@ const Header = () => {
                         Réconciliation Parcoursup
                       </MenuItem>
                     )}
-                    {hasAccessTo(auth, "page_reconciliation_af") && (
-                      <MenuItem as={NavLink} to="/couverture-affelnet" icon={<DoubleArrows boxSize={4} />} isDisabled>
-                        Réconciliation Affelnet
-                      </MenuItem>
-                    )}
                   </MenuGroup>
 
                   <MenuDivider />
