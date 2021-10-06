@@ -19,6 +19,7 @@ import {
   Input,
   Stack,
   Flex,
+  useToast,
 } from "@chakra-ui/react";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
@@ -73,6 +74,7 @@ const buildRolesAcl = (newRoles, roles) => {
 };
 
 const UserLine = ({ user, roles }) => {
+  const toast = useToast();
   const [rolesAcl, setRolesAcl] = useState(buildRolesAcl(user?.roles || [], roles));
 
   useEffect(() => {
@@ -104,7 +106,7 @@ const UserLine = ({ user, roles }) => {
       { apiKey, accessAllCheckbox, accessAcademieList, newUsername, newEmail, newTmpPassword, roles, acl },
       { setSubmitting }
     ) => {
-      return new Promise(async (resolve, reject) => {
+      return new Promise(async (resolve) => {
         const accessAcademie = accessAcademieList.join(",");
         const accessAll = accessAllCheckbox.includes("on");
         try {
@@ -142,6 +144,15 @@ const UserLine = ({ user, roles }) => {
           }
         } catch (e) {
           console.log(e);
+          const response = await (e?.json ?? {});
+          const message = response?.message ?? e?.message;
+
+          toast({
+            title: "Error",
+            description: message,
+            status: "error",
+            duration: 10000,
+          });
         }
 
         setSubmitting(false);

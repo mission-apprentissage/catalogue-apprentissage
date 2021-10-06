@@ -61,18 +61,6 @@ export default () => {
           </Heading>
           {searchState.loaded && (
             <Grid templateColumns="repeat(4, 1fr)" gap={4} minH="350px" my={4} data-testid={"grid"}>
-              {(isUserAdmin(auth) || hasAccessTo(auth, "page_reconciliation_af")) && (
-                <GridItem>
-                  <Card
-                    info="0% de validées"
-                    linkTo="/couverture-affelnet"
-                    title="Rapprochement des bases Carif-Oref et Affelnet"
-                    body="Valider la correspondance des données entre la base Affelnet et le Catalogue des offres de formations en apprentissage 2021 (base Carif-Oref)"
-                    isDisabled
-                  />
-                </GridItem>
-              )}
-
               {(isUserAdmin(auth) || hasAccessTo(auth, "page_reconciliation_ps")) && (
                 <GridItem>
                   <Card
