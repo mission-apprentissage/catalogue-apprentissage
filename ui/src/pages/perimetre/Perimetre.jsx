@@ -11,7 +11,6 @@ import {
   Flex,
   FormLabel,
   Heading,
-  Select,
   Spinner,
   Text,
   useDisclosure,
@@ -24,10 +23,10 @@ import { RuleModal } from "./components/RuleModal";
 import { Diplome } from "./components/Diplome";
 import { Headline } from "./components/Headline";
 import { useQuery } from "react-query";
-import { academies } from "../../constants/academies";
 import useAuth from "../../common/hooks/useAuth";
-import { hasAcademyRight, hasAllAcademiesRight, isUserAdmin } from "../../common/utils/rolesUtils";
+import { hasAllAcademiesRight, isUserAdmin } from "../../common/utils/rolesUtils";
 import { ExportButton } from "./components/ExportButton";
+import { CountText } from "./components/CountText";
 import {
   createRule,
   deleteRule,
@@ -36,45 +35,7 @@ import {
   getRules,
   updateRule,
 } from "../../common/api/perimetre";
-
-const CountText = ({ totalFormationsCount, plateforme, niveaux, academie, ...rest }) => {
-  const [integrationCount, setIntegrationCount] = useState({});
-
-  useEffect(() => {
-    async function run() {
-      const count = await getIntegrationCount({ plateforme, academie });
-      setIntegrationCount(count);
-    }
-
-    run();
-  }, [plateforme, academie]);
-
-  const diplomesCount = niveaux.reduce(
-    (acc, { diplomes }) =>
-      acc +
-      diplomes.length +
-      diplomes.reduce(
-        (acc2, { regles }) =>
-          acc2 + regles.filter(({ nom_regle_complementaire }) => nom_regle_complementaire !== null).length,
-        0
-      ),
-    0
-  );
-
-  return (
-    <Text {...rest}>
-      Actuellement{" "}
-      {academie
-        ? `pour l'académie de ${
-            Object.values(academies).find(({ num_academie }) => num_academie === Number(academie))?.nom_academie
-          }`
-        : "au national"}
-      , {integrationCount?.nbRules ?? "-"} diplômes ou titres en apprentissage ({integrationCount?.nbFormations ?? "-"}{" "}
-      formations) doivent ou peuvent intégrer la plateforme {plateforme} sur les {diplomesCount} recensés (
-      {totalFormationsCount} formations) dans le Catalogue général.
-    </Text>
-  );
-};
+import { AcademiesSelect } from "./components/AcademiesSelect";
 
 export default ({ plateforme }) => {
   const [user] = useAuth();
@@ -85,7 +46,6 @@ export default ({ plateforme }) => {
   const [currentRule, setCurrentRule] = useState(null);
   const [currentAcademie, setCurrentAcademie] = useState(null);
   const [niveauxCount, setNiveauxCount] = useState({});
-  const [academiesList, setAcademiesList] = useState([]);
 
   const title = `Règles d'intégration des formations à la plateforme ${plateforme}`;
   setTitle(title);
@@ -94,19 +54,6 @@ export default ({ plateforme }) => {
     refetchOnWindowFocus: false,
     staleTime: 60 * 60 * 1000, // 1 hour
   });
-
-  useEffect(() => {
-    if (user) {
-      if (isUserAdmin(user) || hasAllAcademiesRight(user)) {
-        setAcademiesList(Object.values(academies));
-        setCurrentAcademie(null);
-      } else {
-        setAcademiesList(Object.values(academies).filter(({ num_academie }) => hasAcademyRight(user, num_academie)));
-        const [firstAcademy] = user.academie?.split(",")?.map((academieStr) => Number(academieStr)) ?? [];
-        setCurrentAcademie(`${firstAcademy}`);
-      }
-    }
-  }, [user]);
 
   useEffect(() => {
     async function run() {
@@ -286,6 +233,8 @@ export default ({ plateforme }) => {
     }
   }, [currentAcademie, niveaux, plateforme]);
 
+  const onAcademieChange = useCallback((academie) => setCurrentAcademie(academie), []);
+
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
@@ -320,26 +269,13 @@ export default ({ plateforme }) => {
                 >
                   <Flex alignItems={"center"}>
                     <FormLabel htmlFor="academie">Afficher les conditions :</FormLabel>
-                    <Select
+                    <AcademiesSelect
                       id={"academie"}
                       name={"academie"}
                       w={"auto"}
-                      onChange={(e) => {
-                        const academie = e.target.value === "national" ? null : e.target.value;
-                        setCurrentAcademie(academie);
-                      }}
-                    >
-                      {user && (isUserAdmin(user) || hasAllAcademiesRight(user)) && (
-                        <option value={"national"}>au National</option>
-                      )}
-                      {academiesList.map(({ nom_academie, num_academie }) => {
-                        return (
-                          <option key={num_academie} value={num_academie}>
-                            de {nom_academie} ({num_academie})
-                          </option>
-                        );
-                      })}
-                    </Select>
+                      onChange={onAcademieChange}
+                      user={user}
+                    />
                   </Flex>
                   <Button
                     variant="primary"
