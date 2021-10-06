@@ -43,9 +43,6 @@ test("renders all actions for admin", async () => {
   const percentageLink = getByText(/^10\.00% de validées$/i);
   expect(percentageLink).toBeInTheDocument();
 
-  const reconciliationAfLink = getByText(/^Rapprochement des bases Carif-Oref et Affelnet$/i);
-  expect(reconciliationAfLink).toBeInTheDocument();
-
   const perimetrePsLink = getByText(/^Règles d'intégration des formations à la plateforme Parcoursup$/i);
   expect(perimetrePsLink).toBeInTheDocument();
 
@@ -77,7 +74,7 @@ test("renders ps actions for acl ps", async () => {
 });
 
 test("renders af actions for acl af", async () => {
-  setAuthState({ permissions: { isAdmin: false }, acl: ["page_perimetre_af", "page_reconciliation_af"] });
+  setAuthState({ permissions: { isAdmin: false }, acl: ["page_perimetre_af"] });
 
   const { queryByText, getByTestId } = renderWithRouter(<ActionsExpertes />);
 
@@ -88,9 +85,6 @@ test("renders af actions for acl af", async () => {
 
   const percentageLink = queryByText(/^10\.00% de validées$/i);
   expect(percentageLink).not.toBeInTheDocument();
-
-  const reconciliationAfLink = queryByText(/^Rapprochement des bases Carif-Oref et Affelnet$/i);
-  expect(reconciliationAfLink).toBeInTheDocument();
 
   const perimetrePsLink = queryByText(/^Règles d'intégration des formations à la plateforme Parcoursup$/i);
   expect(perimetrePsLink).not.toBeInTheDocument();

@@ -14,7 +14,6 @@ const ResetPasswordPage = lazy(() => import("./pages/password/ResetPasswordPage"
 const ForgottenPasswordPage = lazy(() => import("./pages/password/ForgottenPasswordPage"));
 const Users = lazy(() => import("./pages/admin/Users"));
 const Roles = lazy(() => import("./pages/admin/Roles"));
-const ReconciliationAffelnet = lazy(() => import("./pages/reconciliation-affelnet"));
 const ReportPage = lazy(() => import("./pages/ReportPage"));
 const NotFoundPage = lazy(() => import("./pages/404"));
 const Catalogue = lazy(() => import("./pages/Catalogue/Catalogue"));
@@ -131,9 +130,7 @@ export default () => {
                 <Route exact path="/reset-password" component={ResetPasswordPage} />
                 <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
                 <Route exact path="/report" component={ReportPage} />
-                {hasAccessTo(auth, "page_reconciliation_af") && (
-                  <Route exact path="/couverture-affelnet" component={ReconciliationAffelnet} />
-                )}
+
                 <Route exact path="/changelog" component={Journal} />
                 <Route exact path="/contact" component={Contact} />
                 <Route exact path="/cookies" component={Cookies} />
