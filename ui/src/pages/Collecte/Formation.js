@@ -1,7 +1,6 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Alert,
-  Badge,
   Box,
   Button,
   Center,
@@ -10,143 +9,29 @@ import {
   Grid,
   GridItem,
   Heading,
-  Input,
   Link,
-  ListItem,
   Spinner,
   Text,
-  UnorderedList,
 } from "@chakra-ui/react";
-import { NavLink } from "react-router-dom";
 import { useFormik } from "formik";
-import { _get, _post, _put } from "../../common/httpClient";
+import { _post, _put } from "../../common/httpClient";
 import useAuth from "../../common/hooks/useAuth";
-import { hasRightToEditFormation, hasAccessTo } from "../../common/utils/rolesUtils";
+import { hasAccessTo, hasRightToEditFormation } from "../../common/utils/rolesUtils";
 import { ReactComponent as InfoIcon } from "../../theme/assets/info-circle.svg";
-import { HABILITE_LIST } from "../../constants/certificateurs";
 import { buildUpdatesHistory } from "../../common/utils/formationUtils";
 import InfoTooltip from "../../common/components/InfoTooltip";
 import helpText from "../../locales/helpText.json";
-import { ArrowRightLine, Edit2Fill, ExternalLinkLine, MapPin2Fill } from "../../theme/components/icons";
+import { ExternalLinkLine, MapPin2Fill } from "../../theme/components/icons";
 import { setTitle } from "../../common/utils/pageUtils";
+import { EditableField } from "../../common/components/formation/EditableField";
+import { DescriptionBlock } from "../../common/components/formation/DescriptionBlock";
+import { OrganismesBlock } from "../../common/components/formation/OrganismesBlock";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
-const endpointTCO =
-  process.env.REACT_APP_ENDPOINT_TCO || "https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1";
 const endpointLBA = process.env.REACT_APP_ENDPOINT_LBA || "https://labonnealternance.pole-emploi.fr";
-
-const FormationPeriode = ({ periode }) => {
-  let displayedPeriode = <strong>periode</strong>;
-  try {
-    const periodeArr = JSON.parse(periode);
-
-    const periodeObj = periodeArr.reduce((acc, dateStr) => {
-      const date = new Date(dateStr);
-      const formattedDate = date.toLocaleString("fr-FR", { month: "long" });
-      const displayedDate = formattedDate === "Invalid Date" ? dateStr : formattedDate;
-      acc[date.getFullYear()] = acc[date.getFullYear()] ?? [];
-      acc[date.getFullYear()] = [...acc[date.getFullYear()], displayedDate];
-      return acc;
-    }, {});
-
-    displayedPeriode = Object.entries(periodeObj).map(([key, value]) => {
-      return (
-        <Fragment key={key}>
-          <br />
-          <Text as="span">
-            <strong>
-              {key} : {value.join(", ")}
-            </strong>
-          </Text>
-        </Fragment>
-      );
-    });
-  } catch (e) {
-    console.error("unable to parse periode field", periode, e);
-  }
-
-  return <>{displayedPeriode}</>;
-};
 
 const getLBAUrl = ({ _id = "" }) => {
   return `${endpointLBA}/recherche-apprentissage?&display=list&page=fiche&type=training&itemId=${_id}`;
-};
-
-const HabilitationPartenaire = ({ habilitation }) => {
-  let color;
-  let text = habilitation;
-  switch (habilitation) {
-    case "HABILITATION_ORGA_FORM":
-      color = "green";
-      text = "ORGANISER ET FORMER";
-      break;
-    case "HABILITATION_FORMER":
-      color = "green";
-      text = "FORMER";
-      break;
-    case "HABILITATION_ORGANISER":
-      color = "red";
-      text = "ORGANISER";
-      break;
-    default:
-      break;
-  }
-
-  return (
-    <Text as="strong" style={{ color }}>
-      {text}
-    </Text>
-  );
-};
-
-const EditableField = ({
-  formation,
-  hasRightToEdit,
-  edition,
-  onEdit,
-  handleSubmit,
-  values,
-  handleChange,
-  fieldName,
-  label,
-  ...props
-}) => {
-  return (
-    <Text {...props}>
-      {hasRightToEdit && edition !== fieldName && (
-        <Button
-          onClick={() => onEdit(fieldName)}
-          variant="unstyled"
-          aria-label={`Modifier le champ ${label}`}
-          p={0}
-          minW={0}
-          height="auto"
-        >
-          <Edit2Fill w="16px" h="16px" color="bluefrance" mr="5px" mb="7px" />
-        </Button>
-      )}{" "}
-      {label} :{" "}
-      {edition !== fieldName && (
-        <>
-          <Text as="span" variant="highlight">
-            {formation[fieldName]}
-          </Text>{" "}
-          <InfoTooltip description={helpText.formation[fieldName]} />
-        </>
-      )}
-      {edition === fieldName && (
-        <>
-          <Input variant="edition" type="text" name={fieldName} onChange={handleChange} value={values[fieldName]} />
-          <Button mt={2} mr={2} variant="secondary" onClick={() => onEdit()}>
-            Annuler
-          </Button>
-          <Button mt={2} variant="primary" onClick={handleSubmit}>
-            Valider
-          </Button>
-        </>
-      )}
-    </Text>
-  );
 };
 
 const Formation = ({
@@ -160,41 +45,6 @@ const Formation = ({
   pendingFormation,
 }) => {
   const displayedFormation = pendingFormation ?? formation;
-  const oneEstablishment = formation.etablissement_gestionnaire_siret === formation.etablissement_formateur_siret;
-
-  const [tagsFormateur, setTagsFormateur] = useState([]);
-  const [tagsGestionnaire, setTagsGestionnaire] = useState([]);
-
-  useEffect(() => {
-    async function run() {
-      if (formation.etablissement_formateur_id) {
-        const formateur = await _get(
-          `${endpointTCO}/entity/etablissement/${formation.etablissement_formateur_id}`,
-          false
-        );
-        setTagsFormateur(formateur?.tags ?? []);
-      }
-
-      if (!oneEstablishment) {
-        const gestionnaire = await _get(
-          `${endpointTCO}/entity/etablissement/${formation.etablissement_gestionnaire_id}`,
-          false
-        );
-        setTagsGestionnaire(gestionnaire.tags ?? []);
-      }
-    }
-
-    run();
-  }, [oneEstablishment, formation, setTagsFormateur, setTagsGestionnaire]);
-
-  const filteredPartenaires = (displayedFormation.rncp_details?.partenaires ?? []).filter(({ Siret_Partenaire }) =>
-    [formation.etablissement_gestionnaire_siret, formation.etablissement_formateur_siret].includes(Siret_Partenaire)
-  );
-  const showPartenaires =
-    ["Titre", "TP"].includes(displayedFormation.rncp_details?.code_type_certif) &&
-    !(displayedFormation.rncp_details.certificateurs ?? []).some(({ certificateur }) =>
-      HABILITE_LIST.includes(certificateur)
-    );
 
   return (
     <Box borderRadius={4}>
@@ -208,224 +58,7 @@ const Formation = ({
       )}
       <Grid templateColumns="repeat(12, 1fr)">
         <GridItem colSpan={[12, 12, 7]} bg="white" border="1px solid" borderColor="bluefrance">
-          <Box mb={16} pt={8}>
-            <Heading textStyle="h4" color="grey.800" px={8}>
-              Description
-            </Heading>
-            {formation.onisep_url !== "" && formation.onisep_url !== null && (
-              <Box mt={2} mb={4} px={5}>
-                <Link href={formation.onisep_url} mt={3} variant="pill" textStyle="rf-text" isExternal>
-                  voir la fiche descriptive Onisep <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
-                </Link>
-              </Box>
-            )}
-
-            <Box px={8}>
-              <Text mb={4} mt={4}>
-                Intitulé court de la formation :{" "}
-                <Text as="span" variant="highlight">
-                  {displayedFormation.intitule_court}
-                </Text>{" "}
-                <InfoTooltip description={helpText.formation.intitule_court} />
-              </Text>
-              <Text mb={4} mt={4}>
-                Intitulé éditorial :{" "}
-                <Text as="span" variant="highlight">
-                  {displayedFormation.onisep_intitule}
-                </Text>{" "}
-                <InfoTooltip description={helpText.formation.onisep_intitule} />
-              </Text>
-              <Text mb={4}>
-                Diplôme ou titre visé :{" "}
-                <Text as="span" variant="highlight">
-                  {displayedFormation.diplome}
-                </Text>{" "}
-                <InfoTooltip description={helpText.formation.diplome} />
-              </Text>
-              <Text mb={4}>
-                Niveau de la formation :{" "}
-                <Text as="span" variant="highlight">
-                  {displayedFormation.niveau}
-                </Text>{" "}
-                <InfoTooltip description={helpText.formation.niveau} />
-              </Text>
-              <Text mb={4}>
-                Code diplôme (Éducation Nationale) :{" "}
-                <Text as="span" variant="highlight">
-                  {displayedFormation.cfd}
-                </Text>{" "}
-                <InfoTooltip description={helpText.formation.cfd} />
-                {displayedFormation.cfd_outdated && (
-                  <>
-                    <br />
-                    Ce diplôme a une date de fin antérieure au 31/08 de l'année en cours
-                  </>
-                )}
-              </Text>
-              <Text mb={4}>
-                Codes MEF 10 caractères :{" "}
-                <Text as="span" variant="highlight">
-                  {displayedFormation.mef_10_code ??
-                    displayedFormation?.bcn_mefs_10?.map(({ mef10 }) => mef10).join(", ")}
-                </Text>{" "}
-                <InfoTooltip description={helpText.formation.mef} />
-              </Text>
-              {displayedFormation?.mefs_10?.length > 0 && (
-                <>
-                  <Text mb={4}>
-                    Codes MEF 10 caractères dans le périmètre <i>Affelnet</i> :{" "}
-                    <Text as="span" variant="highlight">
-                      {displayedFormation?.mefs_10?.map(({ mef10 }) => mef10).join(", ")}
-                    </Text>
-                  </Text>
-                  {formation?.affelnet_infos_offre && (
-                    <Text mb={4}>
-                      Informations offre de formation <i>Affelnet</i> :{" "}
-                      <Text as="span" variant="highlight">
-                        {formation?.affelnet_infos_offre}
-                      </Text>
-                    </Text>
-                  )}
-                </>
-              )}
-              <Text mb={4}>
-                Période d'inscription :
-                <FormationPeriode periode={displayedFormation.periode} />{" "}
-                <InfoTooltip description={helpText.formation.periode} />
-              </Text>
-              <Text mb={4}>
-                Capacite d'accueil :{" "}
-                <Text as="span" variant="highlight">
-                  {formation.capacite ?? "N/A"}
-                </Text>{" "}
-                <InfoTooltip ml="10px" description={helpText.formation.capacite} />
-              </Text>
-              <Text mb={4}>
-                Durée de la formation :{" "}
-                <Text as="span" variant="highlight">
-                  {displayedFormation.duree ?? "N/A"}
-                </Text>{" "}
-                <InfoTooltip description={helpText.formation.duree} />
-              </Text>
-              <Text mb={4}>
-                Année :{" "}
-                <Text as="span" variant="highlight">
-                  {displayedFormation.annee ?? "N/A"}
-                </Text>{" "}
-                <InfoTooltip description={helpText.formation.annee} />
-              </Text>
-              <Text mb={4}>
-                Identifiant formation Carif Oref:
-                <Text as="span" variant="highlight">
-                  {displayedFormation.id_formation ?? "N/A"}
-                </Text>
-              </Text>
-              <Text mb={4}>
-                Identifiant actions Carif Oref:
-                <Text as="span" variant="highlight">
-                  {displayedFormation.ids_action?.join(",") ?? "N/A"}
-                </Text>
-              </Text>
-              <Text mb={4}>
-                Code Certif Info:
-                <Text as="span" variant="highlight">
-                  {displayedFormation.id_certifinfo ?? "N/A"}
-                </Text>
-              </Text>
-            </Box>
-          </Box>
-          <Box mb={16} px={8}>
-            <Heading textStyle="h4" color="grey.800" mb={4} mt={6}>
-              Informations RNCP et ROME
-            </Heading>
-            {displayedFormation.rncp_code && (
-              <Text mb={4}>
-                Code RNCP :{" "}
-                <Text as="span" variant="highlight">
-                  {displayedFormation.rncp_code}
-                </Text>{" "}
-                <InfoTooltip description={helpText.formation.rncp_code} />
-              </Text>
-            )}
-            <Text mb={4}>
-              Intitulé RNCP :{" "}
-              <Text as="span" variant="highlight">
-                {displayedFormation.rncp_intitule}
-              </Text>{" "}
-              <InfoTooltip description={helpText.formation.rncp_intitule} />
-            </Text>
-            <Text mb={4}>
-              Codes ROME :{" "}
-              <Text as="span" variant="highlight">
-                {displayedFormation.rome_codes.join(", ")}
-              </Text>{" "}
-              <InfoTooltip description={helpText.formation.rome_codes} />
-            </Text>
-            <Box>
-              {displayedFormation.opcos && displayedFormation.opcos.length === 0 && (
-                <Text mb={4}>Aucun OPCO rattaché</Text>
-              )}
-              {displayedFormation.opcos && displayedFormation.opcos.length > 0 && (
-                <Text mb={4}>
-                  OPCOs liés à la formation :{" "}
-                  <Text as="span" variant="highlight">
-                    {displayedFormation.opcos.join(", ")}
-                  </Text>
-                </Text>
-              )}
-            </Box>
-            {displayedFormation.rncp_details && (
-              <>
-                <Text mb={4}>
-                  Certificateurs :{" "}
-                  <Text as="span" variant="highlight">
-                    {displayedFormation.rncp_details.certificateurs
-                      ?.filter(({ certificateur }) => certificateur)
-                      ?.map(({ certificateur }) => certificateur)
-                      .join(", ")}
-                  </Text>{" "}
-                  <InfoTooltip description={helpText.formation.certificateurs} />
-                </Text>
-                <Text mb={4}>
-                  SIRET Certificateurs :{" "}
-                  <Text as="span" variant="highlight">
-                    {displayedFormation.rncp_details.certificateurs
-                      ?.filter(({ siret_certificateur }) => siret_certificateur)
-                      ?.map(({ siret_certificateur }) => siret_certificateur)
-                      .join(", ")}
-                  </Text>{" "}
-                  <InfoTooltip description={helpText.formation.siret_certificateurs} />
-                </Text>
-                {showPartenaires && (
-                  <Text as="div" mb={4}>
-                    Partenaires : <br />
-                    {filteredPartenaires.length > 0 ? (
-                      <>
-                        L'habilitation ORGANISER seule n'ouvre pas les droits
-                        <UnorderedList>
-                          {filteredPartenaires.map(({ Nom_Partenaire, Siret_Partenaire, Habilitation_Partenaire }) => (
-                            <ListItem key={Siret_Partenaire}>
-                              <strong>
-                                {Nom_Partenaire} (siret : {Siret_Partenaire ?? "n/a"}) :
-                              </strong>
-                              <HabilitationPartenaire habilitation={Habilitation_Partenaire} />
-                            </ListItem>
-                          ))}
-                        </UnorderedList>
-                      </>
-                    ) : (
-                      <>
-                        Aucune habilitation sur la fiche pour ce SIRET.
-                        <br />
-                        SIRET formateur : {formation.etablissement_formateur_siret}, SIRET gestionnaire :
-                        {formation.etablissement_gestionnaire_siret}.
-                      </>
-                    )}
-                  </Text>
-                )}
-              </>
-            )}
-          </Box>
+          <DescriptionBlock formation={formation} pendingFormation={pendingFormation} />
         </GridItem>
         <GridItem colSpan={[12, 12, 5]} py={8}>
           <Box mb={16}>
@@ -518,80 +151,7 @@ const Formation = ({
             </Box>
           </Box>
           <Box mb={[0, 0, 16]} px={8}>
-            <Heading textStyle="h4" color="grey.800" mb={4}>
-              Organisme(s) associé(s)
-            </Heading>
-
-            {!oneEstablishment && (
-              <>
-                <Text textStyle="rf-text" color="grey.700" fontWeight="700" mb={3}>
-                  Gestionnaire
-                </Text>
-                <Link as={NavLink} to={`/etablissement/${formation.etablissement_gestionnaire_id}`} variant="card">
-                  <Flex display={["none", "flex"]} textStyle="xs" justifyContent="space-between">
-                    <Text>Siret : {formation.etablissement_gestionnaire_siret}</Text>
-                    <Text>UAI : {formation.etablissement_gestionnaire_uai}</Text>
-                  </Flex>
-                  <Heading textStyle="h6" color="grey.800" mt={2}>
-                    {formation.etablissement_gestionnaire_entreprise_raison_sociale}
-                  </Heading>
-                  <Box>
-                    <Text textStyle="sm">Académie : {formation.etablissement_gestionnaire_nom_academie}</Text>
-                    <Box>
-                      <Flex justifyContent={"space-between"}>
-                        <Box>
-                          {tagsGestionnaire &&
-                            tagsGestionnaire
-                              .sort((a, b) => a - b)
-                              .map((tag, i) => (
-                                <Badge variant="year" mr="10px" mt={3} key={i}>
-                                  {tag}
-                                </Badge>
-                              ))}
-                        </Box>
-                        <ArrowRightLine alignSelf="center" color="bluefrance" />
-                      </Flex>
-                    </Box>
-                  </Box>
-                </Link>
-              </>
-            )}
-
-            {!oneEstablishment && formation.etablissement_formateur_id && (
-              <Text textStyle="rf-text" color="grey.700" fontWeight="700" my={5}>
-                Formateur
-              </Text>
-            )}
-
-            {formation.etablissement_formateur_id && (
-              <Link as={NavLink} to={`/etablissement/${formation.etablissement_formateur_id}`} variant="card">
-                <Flex display={["none", "flex"]} textStyle="xs" justifyContent="space-between">
-                  <Text>Siret : {formation.etablissement_formateur_siret}</Text>
-                  <Text>UAI: {formation.etablissement_formateur_uai}</Text>
-                </Flex>
-                <Heading textStyle="h6" color="grey.800" mt={2}>
-                  {formation.etablissement_formateur_entreprise_raison_sociale}
-                </Heading>
-                <Box>
-                  <Text textStyle="sm">Académie : {formation.etablissement_formateur_nom_academie}</Text>
-                  <Box>
-                    <Flex justifyContent={"space-between"}>
-                      <Box>
-                        {tagsFormateur &&
-                          tagsFormateur
-                            .sort((a, b) => a - b)
-                            .map((tag, i) => (
-                              <Badge variant="year" mr="10px" mt={3} key={i}>
-                                {tag}
-                              </Badge>
-                            ))}
-                      </Box>
-                      <ArrowRightLine alignSelf="center" color="bluefrance" />
-                    </Flex>
-                  </Box>
-                </Box>
-              </Link>
-            )}
+            <OrganismesBlock formation={formation} />
           </Box>
         </GridItem>
       </Grid>

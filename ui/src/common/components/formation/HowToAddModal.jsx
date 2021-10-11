@@ -14,8 +14,7 @@ import {
   Text,
   UnorderedList,
 } from "@chakra-ui/react";
-import { ArrowRightLine, ExternalLinkLine } from "../../../theme/components/icons";
-import { Close } from "../../../theme/components/icons/Close";
+import { ArrowRightLine, ExternalLinkLine, Close } from "../../../theme/components/icons";
 
 const HowToAddModal = ({ isOpen, onClose }) => {
   const initialRef = React.useRef();
