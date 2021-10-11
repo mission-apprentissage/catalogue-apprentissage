@@ -44,7 +44,7 @@ import { academies } from "../../../constants/academies";
 import { isStatusChangeEnabled } from "../../../common/utils/rulesUtils";
 import { RuleUpdatesHistory } from "./RuleUpdatesHistory";
 import { NavLink } from "react-router-dom";
-import { getNiveaux, getCount } from "../../../common/api/perimetre";
+import { getCount, useNiveaux } from "../../../common/api/perimetre";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -113,10 +113,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
   const initialCondition = academie && isCreating ? CONDITIONS.PEUT_INTEGRER : condition_integration;
   const academieLabel = Object.values(academies).find(({ num_academie: num }) => num === num_academie)?.nom_academie;
 
-  const { data: niveauxData } = useQuery("niveaux", () => getNiveaux(), {
-    refetchOnWindowFocus: false,
-    staleTime: 60 * 60 * 1000, // 1 hour
-  });
+  const { data: niveauxData } = useNiveaux();
 
   const reglesUrl = getDiplomesAllowedForSubRulesUrl(plateforme);
   const { data: diplomesRegles } = useQuery("diplomesRegles", () => _get(reglesUrl, false), {

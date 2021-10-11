@@ -1,4 +1,5 @@
 import { _delete, _get, _post, _put } from "../httpClient";
+import { useQuery } from "react-query";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -88,6 +89,13 @@ export const getRules = async ({ plateforme }) => {
 export const getNiveaux = async () => {
   const niveauxURL = `${endpointNewFront}/v1/entity/perimetre/niveau`;
   return await _get(niveauxURL, false);
+};
+
+export const useNiveaux = () => {
+  return useQuery("niveaux", () => getNiveaux(), {
+    refetchOnWindowFocus: false,
+    staleTime: 60 * 60 * 1000, // 1 hour
+  });
 };
 
 export const getCount = async ({ niveau, diplome, regle_complementaire, academie }) => {
