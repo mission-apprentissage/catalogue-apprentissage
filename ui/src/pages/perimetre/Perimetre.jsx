@@ -22,7 +22,6 @@ import { FolderLine, FolderOpenLine } from "../../theme/components/icons";
 import { RuleModal } from "./components/RuleModal";
 import { Diplome } from "./components/Diplome";
 import { Headline } from "./components/Headline";
-import { useQuery } from "react-query";
 import useAuth from "../../common/hooks/useAuth";
 import { hasAllAcademiesRight, isUserAdmin } from "../../common/utils/rolesUtils";
 import { ExportButton } from "./components/ExportButton";
@@ -31,11 +30,12 @@ import {
   createRule,
   deleteRule,
   getIntegrationCount,
-  getNiveaux,
   getRules,
   updateRule,
+  useNiveaux,
 } from "../../common/api/perimetre";
 import { AcademiesSelect } from "./components/AcademiesSelect";
+import { DiplomesAutosuggest } from "./components/DiplomesAutosuggest";
 
 export default ({ plateforme }) => {
   const [user] = useAuth();
@@ -46,14 +46,13 @@ export default ({ plateforme }) => {
   const [currentRule, setCurrentRule] = useState(null);
   const [currentAcademie, setCurrentAcademie] = useState(null);
   const [niveauxCount, setNiveauxCount] = useState({});
+  const [selectedNiveauIndex, setSelectedNiveauIndex] = useState(null);
+  const [selectedDiplome, setSelectedDiplome] = useState(null);
 
   const title = `Règles d'intégration des formations à la plateforme ${plateforme}`;
   setTitle(title);
 
-  const { data: niveauxData } = useQuery("niveaux", () => getNiveaux(), {
-    refetchOnWindowFocus: false,
-    staleTime: 60 * 60 * 1000, // 1 hour
-  });
+  const { data: niveauxData } = useNiveaux();
 
   useEffect(() => {
     async function run() {
@@ -294,19 +293,35 @@ export default ({ plateforme }) => {
                   plateforme={plateforme}
                   academie={currentAcademie}
                 />
+                <Box py={4}>
+                  <DiplomesAutosuggest
+                    onSuggestionSelected={({ suggestion }) => {
+                      const index = niveaux.findIndex(({ niveau }) => niveau.value === suggestion.niveau);
+                      setSelectedNiveauIndex(index);
+                      setTimeout(() => setSelectedDiplome(suggestion.value), 800);
+                    }}
+                  />
+                </Box>
                 {user && (isUserAdmin(user) || hasAllAcademiesRight(user)) && (
                   <Flex justifyContent={"flex-end"}>
                     <ExportButton plateforme={plateforme} rules={rules} />
                   </Flex>
                 )}
                 <Box minH="70vh">
-                  <Accordion bg="#FFFFFF" mb={24} allowToggle>
-                    {niveaux.map(({ niveau, diplomes }) => {
+                  <Accordion bg="#FFFFFF" mb={24} index={selectedNiveauIndex} allowToggle>
+                    {niveaux.map(({ niveau, diplomes }, index) => {
                       return (
                         <AccordionItem border="none" key={niveau.value} mt={6}>
                           {({ isExpanded }) => (
                             <>
-                              <AccordionButton borderBottom={"1px solid"} borderColor={"grey.300"} px={0}>
+                              <AccordionButton
+                                borderBottom={"1px solid"}
+                                borderColor={"grey.300"}
+                                px={0}
+                                onClick={() =>
+                                  setSelectedNiveauIndex((prevIndex) => (prevIndex !== index ? index : null))
+                                }
+                              >
                                 <Flex alignItems="center" w={"full"} justifyContent={"space-between"}>
                                   <Flex alignItems="center">
                                     {isExpanded ? (
@@ -340,6 +355,7 @@ export default ({ plateforme }) => {
                                     onDeleteRule={onDeleteRule}
                                     isExpanded={isExpanded}
                                     academie={currentAcademie}
+                                    isSelected={selectedDiplome === diplome.value}
                                   />
                                 ))}
                               </AccordionPanel>
