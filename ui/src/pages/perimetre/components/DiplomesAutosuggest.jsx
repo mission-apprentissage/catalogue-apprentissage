@@ -1,15 +1,11 @@
 import React, { useState } from "react";
 import Autosuggest from "react-autosuggest";
-import { useQuery } from "react-query";
-import { getNiveaux } from "../../../common/api/perimetre";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/react";
+import { useNiveaux } from "../../../common/api/perimetre";
 import { CloseCircleLine } from "../../../theme/components/icons";
 
 export const DiplomesAutosuggest = ({ onSuggestionSelected }) => {
-  const { data: niveauxData } = useQuery("niveaux", () => getNiveaux(), {
-    refetchOnWindowFocus: false,
-    staleTime: 60 * 60 * 1000, // 1 hour
-  });
+  const { data: niveauxData } = useNiveaux();
 
   const diplomes = niveauxData.reduce(
     (acc, { niveau, diplomes }) => [...acc, ...diplomes.map((diplome) => ({ ...diplome, niveau: niveau.value }))],
@@ -63,7 +59,7 @@ export const DiplomesAutosuggest = ({ onSuggestionSelected }) => {
           {inputProps.value && (
             <InputRightElement
               m={"5px"}
-              children={<CloseCircleLine boxSize={4} onClick={() => setChosenValue("")} />}
+              children={<CloseCircleLine data-testid={"clear-btn"} boxSize={4} onClick={() => setChosenValue("")} />}
             />
           )}
         </InputGroup>

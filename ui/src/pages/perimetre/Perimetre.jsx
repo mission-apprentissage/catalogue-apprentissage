@@ -22,7 +22,6 @@ import { FolderLine, FolderOpenLine } from "../../theme/components/icons";
 import { RuleModal } from "./components/RuleModal";
 import { Diplome } from "./components/Diplome";
 import { Headline } from "./components/Headline";
-import { useQuery } from "react-query";
 import useAuth from "../../common/hooks/useAuth";
 import { hasAllAcademiesRight, isUserAdmin } from "../../common/utils/rolesUtils";
 import { ExportButton } from "./components/ExportButton";
@@ -31,9 +30,9 @@ import {
   createRule,
   deleteRule,
   getIntegrationCount,
-  getNiveaux,
   getRules,
   updateRule,
+  useNiveaux,
 } from "../../common/api/perimetre";
 import { AcademiesSelect } from "./components/AcademiesSelect";
 import { DiplomesAutosuggest } from "./components/DiplomesAutosuggest";
@@ -53,10 +52,7 @@ export default ({ plateforme }) => {
   const title = `Règles d'intégration des formations à la plateforme ${plateforme}`;
   setTitle(title);
 
-  const { data: niveauxData } = useQuery("niveaux", () => getNiveaux(), {
-    refetchOnWindowFocus: false,
-    staleTime: 60 * 60 * 1000, // 1 hour
-  });
+  const { data: niveauxData } = useNiveaux();
 
   useEffect(() => {
     async function run() {
