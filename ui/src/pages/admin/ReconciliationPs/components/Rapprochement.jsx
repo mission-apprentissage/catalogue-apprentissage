@@ -1,7 +1,9 @@
 import { Box, Text } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import { Section } from "./Section";
-// import { CardEtablissements } from "./CardEtablissements";
+
+import InfoTooltip from "../../../../common/components/InfoTooltip";
+import helpText from "../../../../locales/helpText.json";
 
 const getEtablissementFields = (mnaFormation, type, diff, code_commune_insee) => {
   return {
@@ -129,7 +131,7 @@ const Rapprochement = React.memo(({ formation, currentMnaFormation }) => {
         withBorder
         left={
           <Box mb={4} mt={4}>
-            Code formation :
+            Code diplôme :
           </Box>
         }
         middle={
@@ -210,7 +212,7 @@ const Rapprochement = React.memo(({ formation, currentMnaFormation }) => {
               mt="1"
               display="inline-block"
             >
-              {formation.uai_composante} (composante)
+              {formation.uai_composante} (de référencement ParcourSup)
             </Text>
           </Box>
         }
@@ -236,19 +238,8 @@ const Rapprochement = React.memo(({ formation, currentMnaFormation }) => {
         }
         middle={
           <Box mb={4} mt={4}>
-            <Text
-              variant="highlight"
-              bg={`${
-                formationDiff.uai.uai_affilie ||
-                formationDiff.uai.etablissement_gestionnaire_uai.uai_affilie ||
-                formationDiff.uai.etablissement_formateur_uai.uai_affilie
-                  ? identicalColor
-                  : diffColor
-              }`}
-              mt="1"
-              display="inline-block"
-            >
-              {formation.uai_affilie} (affilié)
+            <Text as="span" variant="highlight" color="grey.500">
+              N.A
             </Text>
           </Box>
         }
@@ -274,19 +265,8 @@ const Rapprochement = React.memo(({ formation, currentMnaFormation }) => {
         }
         middle={
           <Box mb={4} mt={4}>
-            <Text
-              variant="highlight"
-              bg={`${
-                formationDiff.uai.uai_gestionnaire ||
-                formationDiff.uai.etablissement_gestionnaire_uai.uai_gestionnaire ||
-                formationDiff.uai.etablissement_formateur_uai.uai_gestionnaire
-                  ? identicalColor
-                  : diffColor
-              }`}
-              mt="1"
-              display="inline-block"
-            >
-              {formation.uai_gestionnaire} (gestionnaire)
+            <Text as="span" variant="highlight" color="grey.500">
+              N.A
             </Text>
           </Box>
         }
@@ -303,72 +283,58 @@ const Rapprochement = React.memo(({ formation, currentMnaFormation }) => {
           </Box>
         }
       />
-      <Section
-        withBorder
-        left={
-          <Box mb={4} mt={4}>
-            Code UAI
-          </Box>
-        }
-        middle={
-          <Box mb={4} mt={4}>
-            <Text
-              variant="highlight"
-              bg={`${
-                formationDiff.uai.uai_cerfa ||
-                formationDiff.uai.etablissement_gestionnaire_uai.uai_cerfa ||
-                formationDiff.uai.etablissement_formateur_uai.uai_cerfa
-                  ? identicalColor
-                  : diffColor
-              }`}
-              mt="1"
-              display="inline-block"
-            >
-              {formation.uai_cerfa} (cerfa)
-            </Text>
-          </Box>
-        }
-        right={
-          <Box mb={4} mt={4}>
-            <Text as="span" variant="highlight" color="grey.500">
-              N.A
-            </Text>
-          </Box>
-        }
-      />
-      <Section
-        withBorder
-        left={
-          <Box mb={4} mt={4}>
-            Code UAI :
-          </Box>
-        }
-        middle={
-          <Box mb={4} mt={4}>
-            <Text
-              variant="highlight"
-              bg={`${
-                formationDiff.uai.uai_insert_jeune ||
-                formationDiff.uai.etablissement_gestionnaire_uai.uai_insert_jeune ||
-                formationDiff.uai.etablissement_formateur_uai.uai_insert_jeune
-                  ? identicalColor
-                  : diffColor
-              }`}
-              mt="1"
-              display="inline-block"
-            >
-              {formation.uai_insert_jeune} (insertjeune)
-            </Text>
-          </Box>
-        }
-        right={
-          <Box mb={4} mt={4}>
-            <Text as="span" variant="highlight" color="grey.500">
-              N.A
-            </Text>
-          </Box>
-        }
-      />
+      {formationDiff.uai.uai_cerfa ||
+        formationDiff.uai.etablissement_gestionnaire_uai.uai_cerfa ||
+        (formationDiff.uai.etablissement_formateur_uai.uai_cerfa && (
+          <Section
+            withBorder
+            left={
+              <Box mb={4} mt={4}>
+                Code UAI
+              </Box>
+            }
+            middle={
+              <Box mb={4} mt={4}>
+                <Text variant="highlight" bg={`${identicalColor}`} mt="1" display="inline-block">
+                  {formation.uai_cerfa} (cerfa)
+                </Text>
+              </Box>
+            }
+            right={
+              <Box mb={4} mt={4}>
+                <Text as="span" variant="highlight" color="grey.500">
+                  N.A
+                </Text>
+              </Box>
+            }
+          />
+        ))}
+      {formationDiff.uai.uai_insert_jeune ||
+        formationDiff.uai.etablissement_gestionnaire_uai.uai_insert_jeune ||
+        (formationDiff.uai.etablissement_formateur_uai.uai_insert_jeune && (
+          <Section
+            withBorder
+            left={
+              <Box mb={4} mt={4}>
+                Code UAI :
+              </Box>
+            }
+            middle={
+              <Box mb={4} mt={4}>
+                <Text variant="highlight" bg={`${identicalColor}`} mt="1" display="inline-block">
+                  {formation.uai_insert_jeune} (insertjeune)
+                </Text>
+              </Box>
+            }
+            right={
+              <Box mb={4} mt={4}>
+                <Text as="span" variant="highlight" color="grey.500">
+                  N.A
+                </Text>
+              </Box>
+            }
+          />
+        ))}
       <Section
         withBorder
         left={
@@ -378,14 +344,87 @@ const Rapprochement = React.memo(({ formation, currentMnaFormation }) => {
         }
         middle={
           <Box mb={4} mt={4}>
-            <Text as="span" variant="highlight" color={`${formation.complement_adresse_1 ? "inherit" : "grey.500"}`}>
-              {formation.complement_adresse_1 ?? "N.A"}
+            <Text
+              as="span"
+              variant="highlight"
+              bg={`${formationDiff.lieu_formation_adresse ? identicalColor : neutralColor}`}
+              color={`${formation.adresse_etablissement_l1 ? "inherit" : "grey.500"}`}
+            >
+              {formation.adresse_etablissement_l1
+                ? `${formation.adresse_etablissement_l1} ${formation.adresse_etablissement_l2 ?? ""}`
+                : "N.A"}
             </Text>
           </Box>
         }
         right={
           <Box mb={4} mt={4}>
-            <Text>{mnaFormation.lieu_formation_adresse}</Text>
+            <Text
+              as="span"
+              variant="highlight"
+              bg={`${formationDiff.lieu_formation_adresse ? identicalColor : neutralColor}`}
+            >
+              {mnaFormation.lieu_formation_adresse}
+            </Text>
+          </Box>
+        }
+      />
+      <Section
+        withBorder
+        left={
+          <Box mb={4} mt={4}>
+            Commune :
+          </Box>
+        }
+        middle={
+          <Box mb={4} mt={4}>
+            <Text
+              as="span"
+              variant="highlight"
+              bg={`${formation.libelle_commune === mnaFormation.localite ? identicalColor : neutralColor}`}
+            >
+              {formation.libelle_commune ?? "N.A"}
+            </Text>
+          </Box>
+        }
+        right={
+          <Box mb={4} mt={4}>
+            <Text
+              as="span"
+              variant="highlight"
+              bg={`${formation.libelle_commune === mnaFormation.localite ? identicalColor : neutralColor}`}
+            >
+              {mnaFormation.localite}
+            </Text>
+          </Box>
+        }
+      />
+      <Section
+        withBorder
+        left={
+          <Box mb={4} mt={4}>
+            Code Commune Insee :
+          </Box>
+        }
+        middle={
+          <Box mb={4} mt={4}>
+            <Text
+              as="span"
+              variant="highlight"
+              bg={`${formation.code_commune_insee === mnaFormation.code_commune_insee ? identicalColor : neutralColor}`}
+            >
+              {formation.code_commune_insee ?? "N.A"}
+            </Text>
+          </Box>
+        }
+        right={
+          <Box mb={4} mt={4}>
+            <Text
+              as="span"
+              variant="highlight"
+              bg={`${formation.code_commune_insee === mnaFormation.code_commune_insee ? identicalColor : neutralColor}`}
+            >
+              {mnaFormation.code_commune_insee}
+            </Text>
           </Box>
         }
       />
@@ -413,14 +452,25 @@ const Rapprochement = React.memo(({ formation, currentMnaFormation }) => {
         }
         middle={
           <Box mb={4} mt={4}>
-            <Text as="span" color={`${formation.siret_cerfa ? "inherit" : "grey.500"}`} variant="highlight">
+            <Text
+              as="span"
+              color={`${formation.siret_cerfa ? "inherit" : "grey.500"}`}
+              variant="highlight"
+              bg={`${formation.siret_cerfa === etablissements.formateur.siret ? identicalColor : neutralColor}`}
+            >
               {formation.siret_cerfa ?? "N.A"}
             </Text>
           </Box>
         }
         right={
           <Box mb={4} mt={4}>
-            {etablissements.formateur.siret}
+            <Text
+              as="span"
+              variant="highlight"
+              bg={`${formation.siret_cerfa === etablissements.formateur.siret ? identicalColor : neutralColor}`}
+            >
+              {etablissements.formateur.siret ?? "N.A"}
+            </Text>
           </Box>
         }
       />
@@ -433,14 +483,24 @@ const Rapprochement = React.memo(({ formation, currentMnaFormation }) => {
         }
         middle={
           <Box mb={4} mt={4}>
-            <Text as="span" color={`${formation.uai_cerfa ? "inherit" : "grey.500"}`} variant="highlight">
+            <Text
+              as="span"
+              color={`${formation.uai_cerfa ? "inherit" : "grey.500"}`}
+              bg={`${formation.uai_cerfa === etablissements.formateur.uai ? identicalColor : neutralColor}`}
+              variant="highlight"
+            >
               {formation.uai_cerfa ?? "N.A"}
             </Text>
           </Box>
         }
         right={
           <Box mb={4} mt={4}>
-            <Text as="span" color={`${etablissements.formateur.uai ? "inherit" : "grey.500"}`} variant="highlight">
+            <Text
+              as="span"
+              color={`${etablissements.formateur.uai ? "inherit" : "grey.500"}`}
+              bg={`${formation.uai_cerfa === etablissements.formateur.uai ? identicalColor : neutralColor}`}
+              variant="highlight"
+            >
               {etablissements.formateur.uai ?? "N.A"}
             </Text>
           </Box>
@@ -450,7 +510,7 @@ const Rapprochement = React.memo(({ formation, currentMnaFormation }) => {
         withBorder
         left={
           <Box mb={4} mt={4}>
-            Nom de l’organisme :
+            Nom de l’organisme : <InfoTooltip description={helpText.rapprochement.parcoursup.nom_organisme} />
           </Box>
         }
         middle={
@@ -461,96 +521,6 @@ const Rapprochement = React.memo(({ formation, currentMnaFormation }) => {
         right={
           <Box mb={4} mt={4}>
             <Text>{etablissements.formateur.entreprise_raison_sociale}</Text>
-          </Box>
-        }
-      />
-      <Section
-        withBorder
-        left={
-          <Box mb={4} mt={4}>
-            Type d’organisme :
-          </Box>
-        }
-        middle={
-          <Box mb={4} mt={4}>
-            <Text>{formation.type_etablissement}</Text>
-          </Box>
-        }
-        right={
-          <Box mb={4} mt={4}>
-            <Text color="grey.500" variant="highlight" as="span">
-              N.A
-            </Text>
-          </Box>
-        }
-      />
-      <Section
-        withBorder
-        left={
-          <Box mb={4} mt={4}>
-            Adresse :
-          </Box>
-        }
-        middle={
-          <Box mb={4} mt={4}>
-            <Text as="span" color={`${formation.complement_adresse_1 ? "inherit" : "grey.500"}`} variant="highlight">
-              {formation.complement_adresse_1 ?? "N.A"}
-            </Text>
-          </Box>
-        }
-        right={
-          <Box mb={4} mt={4}>
-            <Text as="span" color={`${etablissements.formateur.adresse ? "inherit" : "grey.500"}`} variant="highlight">
-              {etablissements.formateur.adresse ?? "N.A"}
-            </Text>
-          </Box>
-        }
-      />
-      <Section
-        withBorder
-        left={
-          <Box mb={4} mt={4}>
-            Code Commune INSEE:
-          </Box>
-        }
-        middle={
-          <Box mb={4} mt={4}>
-            <Text as="span" bg={`${formationDiff.nom_academie ? identicalColor : diffColor}`} variant="highlight">
-              {formation.code_commune_insee}
-            </Text>
-          </Box>
-        }
-        right={
-          <Box mb={4} mt={4}>
-            <Text as="span" variant="highlight" bg={`${formationDiff.nom_academie ? identicalColor : neutralColor}`}>
-              {etablissements.formateur.code_commune_insee}
-            </Text>
-          </Box>
-        }
-      />
-      <Section
-        withBorder
-        left={
-          <Box mb={4} mt={4}>
-            Académie :
-          </Box>
-        }
-        middle={
-          <Box mb={4} mt={4}>
-            <Text as="span" variant="highlight" bg={`${formationDiff.nom_academie ? identicalColor : diffColor}`}>
-              {formation.nom_academie}
-            </Text>
-          </Box>
-        }
-        right={
-          <Box mb={4} mt={4}>
-            <Text
-              as="span"
-              variant="highlight"
-              bg={`${etablissements.formateur.nom_academie ? identicalColor : neutralColor}`}
-            >
-              {etablissements.formateur.nom_academie}
-            </Text>
           </Box>
         }
       />
@@ -613,7 +583,7 @@ const Rapprochement = React.memo(({ formation, currentMnaFormation }) => {
         withBorder
         left={
           <Box mb={4} mt={4}>
-            Nom de l’organisme :
+            Nom de l’organisme : <InfoTooltip description={helpText.rapprochement.parcoursup.nom_organisme} />
           </Box>
         }
         middle={
@@ -629,389 +599,6 @@ const Rapprochement = React.memo(({ formation, currentMnaFormation }) => {
           </Box>
         }
       />
-      <Section
-        withBorder
-        left={
-          <Box mb={4} mt={4}>
-            Type d’organisme :
-          </Box>
-        }
-        middle={
-          <Box mb={4} mt={4}>
-            <Text color="grey.500" variant="highlight" as="span">
-              N.A
-            </Text>
-          </Box>
-        }
-        right={
-          <Box mb={4} mt={4}>
-            <Text color="grey.500" variant="highlight" as="span">
-              N.A
-            </Text>
-          </Box>
-        }
-      />
-      <Section
-        withBorder
-        left={
-          <Box mb={4} mt={4}>
-            Adresse :
-          </Box>
-        }
-        middle={
-          <Box mb={4} mt={4}>
-            <Text color="grey.500" variant="highlight" as="span">
-              N.A
-            </Text>
-          </Box>
-        }
-        right={
-          <Box mb={4} mt={4}>
-            <Text as="span" color={`${etablissements.gestionnaire.adresse ? "inherit" : "grey.500"}`}>
-              {etablissements.gestionnaire.adresse ?? "N.A"}
-            </Text>
-          </Box>
-        }
-      />
-      <Section
-        withBorder
-        left={
-          <Box mb={4} mt={4}>
-            Code Commune INSEE:
-          </Box>
-        }
-        middle={
-          <Box mb={4} mt={4}>
-            <Text color="grey.500" variant="highlight" as="span">
-              N.A
-            </Text>
-          </Box>
-        }
-        right={
-          <Box mb={4} mt={4}>
-            <Text
-              as="span"
-              variant="highlight"
-              bg={`${etablissements.gestionnaire.nom_academie ? identicalColor : neutralColor}`}
-            >
-              {etablissements.gestionnaire.code_commune_insee}
-            </Text>
-          </Box>
-        }
-      />
-      <Section
-        left={
-          <Box mb={4} mt={4}>
-            Académie :
-          </Box>
-        }
-        middle={
-          <Box mb={4} mt={4}>
-            <Text color="grey.500" variant="highlight" as="span">
-              N.A
-            </Text>
-          </Box>
-        }
-        right={
-          <Box mb={4} mt={4}>
-            <Text
-              as="span"
-              variant="highlight"
-              bg={`${etablissements.gestionnaire.nom_academie ? identicalColor : neutralColor}`}
-            >
-              {etablissements.gestionnaire.nom_academie}
-            </Text>
-          </Box>
-        }
-      />
-      {/* {!hasMultiple && (
-        <>
-          <Section
-            withBorder
-            left={
-              <Box mb={4} mt={4}>
-                Siret :
-              </Box>
-            }
-            middle={
-              <Box mb={4} mt={4}>
-                <Text>{formation.siret_cerfa}</Text>
-              </Box>
-            }
-            right={
-              <Box mb={4} mt={4}>
-                <Text>{mnaFormation.etablissement_gestionnaire_siret}</Text>
-              </Box>
-            }
-          />
-          <Section
-            withBorder
-            left={
-              <Box mb={4} mt={4}>
-                Nom de l’organisme :
-              </Box>
-            }
-            middle={
-              <Box mb={4} mt={4}>
-                <Text>{formation.libelle_uai_composante}</Text>
-              </Box>
-            }
-            right={
-              <Box mb={4} mt={4}>
-                <Text>
-                  {mnaFormation.etablissement_gestionnaire_entreprise_raison_sociale}
-                  {mnaFormation.etablissement_gestionnaire_enseigne}
-                </Text>
-              </Box>
-            }
-          />
-          <Section
-            withBorder
-            left={
-              <Box mb={4} mt={4}>
-                Type d’organisme :
-              </Box>
-            }
-            middle={
-              <Box mb={4} mt={4}>
-                <Text>{formation.type_etablissement}</Text>
-              </Box>
-            }
-            right={
-              <Box mb={4} mt={4}>
-                <Text as="span" variant="highlight" color="grey.500">
-                  N.A
-                </Text>
-              </Box>
-            }
-          />
-          <Section
-            withBorder
-            left={
-              <Box mb={4} mt={4}>
-                Adresse :
-              </Box>
-            }
-            middle={
-              <Box mb={4} mt={4}>
-                <Text
-                  as="span"
-                  variant="highlight"
-                  color={`${formation.complement_adresse_1 ? "inherit" : "grey.500"}`}
-                >
-                  {formation.complement_adresse_1 ?? "N.A"}
-                </Text>
-              </Box>
-            }
-            right={
-              <Box mb={4} mt={4}>
-                <Text>{mnaFormation.etablissement_gestionnaire_adresse}</Text>
-              </Box>
-            }
-          />
-          <Section
-            withBorder
-            left={
-              <Box mb={4} mt={4}>
-                Lieu de la formation :
-              </Box>
-            }
-            middle={
-              <Box mb={4} mt={4}>
-                <Text
-                  as="span"
-                  variant="highlight"
-                  color={`${formation.complement_adresse_1 ? "inherit" : "grey.500"}`}
-                >
-                  {formation.complement_adresse_1 ?? "N.A"}
-                </Text>
-              </Box>
-            }
-            right={
-              <Box mb={4} mt={4}>
-                <Text>{mnaFormation.lieu_formation_adresse}</Text>
-              </Box>
-            }
-          />
-          <Section
-            withBorder
-            left={
-              <Box mb={4} mt={4}>
-                Code Commune :
-              </Box>
-            }
-            middle={
-              <Box mb={4} mt={4}>
-                <Text as="span" variant="highlight" bg={`${formationDiff.nom_academie ? identicalColor : diffColor}`}>
-                  {formation.code_commune_insee}
-                </Text>
-              </Box>
-            }
-            right={
-              <Box mb={4} mt={4}>
-                <Text as="span" variant="highlight" bg={`${formationDiff.nom_academie ? identicalColor : diffColor}`}>
-                  {mnaFormation.code_commune_insee}
-                </Text>
-              </Box>
-            }
-          />
-          <Section
-            withBorder
-            left={
-              <Box mb={4} mt={4}>
-                Nom académie:
-              </Box>
-            }
-            middle={
-              <Box mb={4} mt={4}>
-                <Text as="span" variant="highlight" bg={`${formationDiff.nom_academie ? identicalColor : diffColor}`}>
-                  {formation.nom_academie}
-                </Text>
-              </Box>
-            }
-            right={
-              <Box mb={4} mt={4}>
-                <Text as="span" variant="highlight" bg={`${formationDiff.nom_academie ? identicalColor : diffColor}`}>
-                  {mnaFormation.nom_academie}
-                </Text>
-              </Box>
-            }
-          />
-        </>
-      )} */}
-      {/* <Section
-        withBorder
-        left={
-          <>
-            <Section
-              withBorder
-              left={
-                <Box mb={4} mt={4}>
-                  Siret :
-                </Box>
-              }
-              leftWith="2%"
-              middle={
-                <Box mb={4} mt={4}>
-                  <Text
-                    variant="highlight"
-                    bg={`${formationDiff.siret.siret_cerfa ? identicalColor : diffColor}`}
-                    mt="1"
-                    display="inline-block"
-                  >
-                    {formation.siret_cerfa} (cerfa)
-                  </Text>
-                </Box>
-              }
-            />
-            <Section
-              withBorder
-              left={
-                <Box mb={4} mt={4}>
-                  Siret :
-                </Box>
-              }
-              leftWith="2%"
-              middle={
-                <Box mb={4} mt={4}>
-                  <Text
-                    variant="highlight"
-                    bg={`${formationDiff.siret.siret_map ? identicalColor : diffColor}`}
-                    mt="1"
-                    display="inline-block"
-                  >
-                    {formation.siret_map} (apprentissage)
-                  </Text>
-                </Box>
-              }
-            />
-
-            <Section
-              withBorder
-              left={
-                <Box mb={4} mt={4}>
-                  Lieu de la formation :
-                </Box>
-              }
-              leftWith="2%"
-              middle={
-                <Box mb={4} mt={4}>
-                  <Text
-                    as="span"
-                    variant="highlight"
-                    color={`${formation.complement_adresse_1 ? "inherit" : "grey.500"}`}
-                  >
-                    {formation.complement_adresse_1 ?? "N.A"}
-                  </Text>
-                </Box>
-              }
-            />
-            <Section
-              withBorder
-              left={
-                <Box mb={4} mt={4}>
-                  Code Commune :
-                </Box>
-              }
-              leftWith="2%"
-              middle={
-                <Box mb={4} mt={4}>
-                  <Text as="span" variant="highlight" bg={`${formationDiff.nom_academie ? identicalColor : diffColor}`}>
-                    {formation.code_commune_insee}
-                  </Text>
-                </Box>
-              }
-            />
-            <Section
-              withBorder
-              left={
-                <Box mb={4} mt={4}>
-                  Nom académie:
-                </Box>
-              }
-              leftWith="2%"
-              middle={
-                <Box mb={4} mt={4}>
-                  <Text as="span" variant="highlight" bg={`${formationDiff.nom_academie ? identicalColor : diffColor}`}>
-                    {formation.nom_academie}
-                  </Text>
-                </Box>
-              }
-            />
-          </>
-        }
-        right={<Box mb={4} mt={4}></Box>}
-      /> */}
-      {/*  mnaFormation   {formation.statut_reconciliation === "A_VERIFIER" && (
-        <Box px={[4, 16]} my={8}>
-          <Heading as="h3" fontSize="1.3rem" mb={3} color="bluefrance">
-            <Stack direction="row">
-              <Text>Sélectionner directement le ou les organisme (s) liés à l’offre de formation</Text>
-            </Stack>
-          </Heading>
-          {etablissements.length > 0 && (
-            <Box border="1px solid" borderColor="bluefrance" p={8}>
-              <Box w="full" overflow="hidden">
-                <Box overflowX="scroll" w="full">
-                  <Table
-                    data={etablissements.map((item) => ({
-                      indice: item.matched_uai.length,
-                      uai: item.uai,
-                      siret: item.siret,
-                      enseigne: item.enseigne,
-                      raison_sociale: item.raison_sociale,
-                      adresse: item.adresse,
-                      naf_libelle: item.naf_libelle,
-                      siege_social: item.siege_social,
-                      matched_uai: item.matched_uai,
-                    }))}
-                  />
-                </Box>
-              </Box>
-            </Box>
-          )}
-        </Box>
-      )} */}
     </>
   );
 });

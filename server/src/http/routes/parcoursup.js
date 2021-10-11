@@ -65,6 +65,7 @@ module.exports = ({ catalogue }) => {
       code_commune_insee,
       nom_academie,
       rncp_code,
+      lieu_formation_adresse,
     } = mnaFormation;
 
     const compareUais = (psFormation, uai) => {
@@ -131,6 +132,7 @@ module.exports = ({ catalogue }) => {
       rncp_code: psFormation.codes_rncp_mna.includes(rncp_code),
       code_commune_insee: psFormation.code_commune_insee === code_commune_insee,
       nom_academie: psFormation.nom_academie === nom_academie,
+      lieu_formation_adresse: psFormation.adresse_etablissement_l1 === lieu_formation_adresse,
     };
 
     return {
