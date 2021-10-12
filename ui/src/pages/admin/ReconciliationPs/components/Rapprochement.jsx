@@ -38,8 +38,8 @@ const getEtablissementFields = (mnaFormation, type, diff, code_commune_insee) =>
   };
 };
 
-const identicalColor = "greensoft.300";
-const diffColor = "orangesoft.300";
+const identicalColor = "galt"; // "greensoft.300";
+const diffColor = "galt"; //"orangesoft.300";
 const neutralColor = "galt";
 
 const Rapprochement = React.memo(({ formation, currentMnaFormation }) => {
