@@ -7,16 +7,14 @@ runScript(async () => {
 });
 
 async function update() {
-  const dataset = await PsFormation.find({}).lean();
+  const dataset = await PsFormation.find({}, { _id: 1, matching_mna_formation: 1, statut_reconciliation: 1 }).lean();
 
-  await asyncForEach(dataset, async (psFormation) => {
-    const { _id, matching_mna_formation, statut_reconciliation } = psFormation;
-
-    if (statut_reconciliation === "AUTOMATIQUE") {
+  await asyncForEach(dataset, async ({ _id, matching_mna_formation, statut_reconciliation }) => {
+    if (statut_reconciliation !== "VALIDE") {
       const updateMna = [];
       const statutsPsMna = [];
       await asyncForEach(matching_mna_formation, async (mnaFormation) => {
-        const mnaFormationU = await ConvertedFormation.findById(mnaFormation._id).lean();
+        const mnaFormationU = await ConvertedFormation.findById(mnaFormation._id);
 
         if (mnaFormationU && mnaFormationU.parcoursup_statut === "publié") {
           updateMna.push({
@@ -26,6 +24,9 @@ async function update() {
             id_rco_formation: mnaFormationU.id_rco_formation,
           });
           statutsPsMna.push("hors périmètre");
+
+          mnaFormationU.parcoursup_statut = "hors périmètre";
+          mnaFormationU.save();
         } else {
           updateMna.push({
             _id: mnaFormationU._id,
