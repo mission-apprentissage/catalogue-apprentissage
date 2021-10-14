@@ -434,7 +434,7 @@ const Rapprochement = React.memo(({ formation, currentMnaFormation }) => {
         left={<Box mb={4} mt={4}></Box>}
         middle={
           <Box mb={4} mt={4} fontSize="20px">
-            Etablissement
+            Etablissement Formateur ou Gestionnaire
           </Box>
         }
         right={
@@ -530,7 +530,7 @@ const Rapprochement = React.memo(({ formation, currentMnaFormation }) => {
         left={<Box mb={4} mt={4}></Box>}
         middle={
           <Box mb={4} mt={4} fontSize="20px">
-            N.A
+            {" "}
           </Box>
         }
         right={
