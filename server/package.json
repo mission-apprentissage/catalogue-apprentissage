@@ -33,6 +33,7 @@
     "psup:reference": "standalone=true node src/jobs/parcoursup/reference/index.js",
     "psup:pertinence": "standalone=true node src/jobs/parcoursup/pertinence/index.js",
     "psup:updatemna": "standalone=true node src/jobs/parcoursup/miscJobs/_updateMnaFormationInPs.js",
+    "psup:resetStatus": "standalone=true node src/jobs/parcoursup/miscJobs/_cleanMnaFStatus.js",
     "psup:report": "standalone=true node src/jobs/parcoursup/reportRejected.js",
     "affelnet:coverage": "standalone=true node src/jobs/affelnet/coverage.js",
     "affelnet:reconciliation": "standalone=true node src/jobs/affelnet/reconciliation.js",
