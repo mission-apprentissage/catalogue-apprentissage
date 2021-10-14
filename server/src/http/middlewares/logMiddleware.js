@@ -36,7 +36,7 @@ module.exports = () => {
               path: (req.baseUrl || "") + (req.path || ""),
               parameters: withoutSensibleFields(req.query),
             },
-            body: withoutSensibleFields(req.body),
+            ...(relativeUrl.includes("_msearch") ? {} : { body: withoutSensibleFields(req.body) }),
           },
           response: {
             statusCode,
