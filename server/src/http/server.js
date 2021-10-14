@@ -15,7 +15,6 @@ const corsMiddleware = require("./middlewares/corsMiddleware");
 const authMiddleware = require("./middlewares/authMiddleware");
 const permissionsMiddleware = require("./middlewares/permissionsMiddleware");
 const packageJson = require("../../package.json");
-const formation = require("./routes/formation");
 const convertedFormation = require("./routes/convertedFormation");
 const convertedFormationSecure = require("./routes/convertedFormationSecure");
 const report = require("./routes/report");
@@ -115,7 +114,6 @@ module.exports = async (components, verbose = true) => {
 
   app.use("/api/v1/es/search", esSearch());
   app.use("/api/v1/search", esMultiSearchNoIndex());
-  app.use("/api/v1/entity", formation());
   app.use("/api/v1/entity", convertedFormation());
   app.use("/api/v1/entity", pendingRcoFormation());
   app.use("/api/v1/entity", report());
@@ -137,7 +135,6 @@ module.exports = async (components, verbose = true) => {
   /** DEPRECATED */
   app.use("/api/es/search", esSearch());
   app.use("/api/search", esMultiSearchNoIndex());
-  app.use("/api/entity", formation());
   app.use("/api/entity", convertedFormation());
   app.use("/api/entity", pendingRcoFormation());
   app.use("/api/entity", report());

@@ -59,7 +59,7 @@ module.exports = () => {
    *         content:
    *            application/json:
    *              schema:
-   *                   $ref: '#/components/schemas/mnaFormation'
+   *                   $ref: '#/components/schemas/formation'
    */
   router.put(
     "/formations2021/:id",
