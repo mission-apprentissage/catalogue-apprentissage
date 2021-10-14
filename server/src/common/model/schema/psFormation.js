@@ -247,6 +247,16 @@ const psFormationSchema = {
     default: null,
     description: "COMPLEMENTCEDEX",
   },
+  adresse_etablissement_l1: {
+    type: String,
+    default: null,
+    description: "PREMIERELIGNEADRESSEETAB",
+  },
+  adresse_etablissement_l2: {
+    type: String,
+    default: null,
+    description: "SECONDELIGNEADRESSEETAB",
+  },
   codes_cfd_mna: {
     type: [String],
     default: null,

@@ -44,6 +44,8 @@ const mapping = (formation) => {
     complement_commune: formation.COMPLEMENTCOMMUNE,
     libelle_insert_jeune: formation.LIB_INS,
     complement_cedex: formation.COMPLEMENTCEDEX,
+    adresse_etablissement_l1: formation.PREMIERELIGNEADRESSEETAB,
+    adresse_etablissement_l2: formation.SECONDELIGNEADRESSEETAB,
     codes_cfd_mna: formation.CODE_CFD_MNA?.split(",") || [],
     codes_rncp_mna: formation.CODE_RNCP_MNA?.split(",") || [],
     codes_romes_mna: formation.CODE_ROMES_MNA?.split(",") || [],

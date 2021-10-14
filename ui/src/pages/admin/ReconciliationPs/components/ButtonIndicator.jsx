@@ -27,7 +27,6 @@ const ButtonIndicator = ({ text, withIcon, active, onClicked, isDisabled, ...pro
       cursor={!isDisabled ? "pointer" : "unset"}
       onClick={isDisabled ? () => {} : onClicked}
       {...props}
-      isDisabled
     >
       {withIcon && (
         <AvatarBadge
