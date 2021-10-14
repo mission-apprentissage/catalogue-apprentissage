@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Line } from "./Line";
 import { Box } from "@chakra-ui/react";
 
@@ -13,7 +13,16 @@ export const Diplome = ({
   onDeleteRule,
   isExpanded,
   academie,
+  isSelected,
 }) => {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    if (isSelected) {
+      ref.current.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+    }
+  }, [isSelected]);
+
   const { value, count, regles } = diplome;
 
   // check if it has one rule at diplome level
@@ -21,7 +30,7 @@ export const Diplome = ({
   const otherRules = regles.filter(({ nom_regle_complementaire }) => nom_regle_complementaire !== null);
 
   return (
-    <Box bg={bg}>
+    <Box bg={bg} ref={ref}>
       <Line
         plateforme={plateforme}
         niveau={niveau}

@@ -9,6 +9,7 @@ import {
   FormLabel,
   Heading,
   Input,
+  Link,
   Modal,
   ModalBody,
   ModalContent,
@@ -42,6 +43,8 @@ import * as Yup from "yup";
 import { academies } from "../../../constants/academies";
 import { isStatusChangeEnabled } from "../../../common/utils/rulesUtils";
 import { RuleUpdatesHistory } from "./RuleUpdatesHistory";
+import { NavLink } from "react-router-dom";
+import { getCount, useNiveaux } from "../../../common/api/perimetre";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -61,17 +64,6 @@ const validationSchema = Yup.object().shape({
   diplome: Yup.string().required("Veuillez choisir un diplôme"),
   duration: Yup.number().nullable(),
 });
-
-const getCount = async ({ niveau, diplome, regle_complementaire, academie }) => {
-  const countUrl = `${endpointNewFront}/v1/entity/perimetre/regle/count`;
-  const params = new URLSearchParams({
-    niveau,
-    diplome,
-    ...(regle_complementaire && { regle_complementaire }),
-    ...(academie && { num_academie: academie }),
-  });
-  return await _get(`${countUrl}?${params}`, false);
-};
 
 export const getDiplomesAllowedForSubRulesUrl = (plateforme) => {
   const filters = {
@@ -121,11 +113,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
   const initialCondition = academie && isCreating ? CONDITIONS.PEUT_INTEGRER : condition_integration;
   const academieLabel = Object.values(academies).find(({ num_academie: num }) => num === num_academie)?.nom_academie;
 
-  const niveauxURL = `${endpointNewFront}/v1/entity/perimetre/niveau`;
-  const { data: niveauxData } = useQuery("niveaux", () => _get(niveauxURL, false), {
-    refetchOnWindowFocus: false,
-    staleTime: 60 * 60 * 1000, // 1 hour
-  });
+  const { data: niveauxData } = useNiveaux();
 
   const reglesUrl = getDiplomesAllowedForSubRulesUrl(plateforme);
   const { data: diplomesRegles } = useQuery("diplomesRegles", () => _get(reglesUrl, false), {
@@ -251,6 +239,26 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
     // resetForm();
     onClose();
   };
+
+  // create link with  diplome / regle_complementaire
+  const linkQuery = [
+    {
+      field: "diplome.keyword",
+      operator: "===",
+      value: diplome,
+      combinator: "AND",
+      index: 0,
+    },
+    ...((values?.query &&
+      JSON.parse(values?.query)
+        ?.filter((q) => q.value)
+        .map((q) => ({ ...q, index: q.index + 1 }))) ??
+      []),
+  ];
+
+  const linkFormations = `/recherche/formations-2021?qb=${encodeURIComponent(
+    JSON.stringify(linkQuery)
+  )}&defaultMode="advanced"`;
 
   const [count, setCount] = useState(0);
 
@@ -495,10 +503,17 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                         </Box>
                       </Collapse>
                     </Flex>
-                    <Flex justifyContent={"flex-start"} mt={4}>
+                    <Flex justifyContent={"space-between"} mt={4}>
                       <Text fontWeight={700} color={"info"}>
                         {count} formations correspondent à l’ensemble des critères sélectionnés
                       </Text>
+                      <Box>
+                        {count > 0 && (
+                          <Link as={NavLink} to={linkFormations} variant={"pill"} textStyle="rf-text" isExternal>
+                            Voir les formations <ArrowRightLine w="9px" h="9px" />
+                          </Link>
+                        )}
+                      </Box>
                     </Flex>
 
                     <FormControl isInvalid={errors.condition && touched.condition} isRequired>

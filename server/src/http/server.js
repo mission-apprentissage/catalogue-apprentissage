@@ -20,9 +20,7 @@ const convertedFormation = require("./routes/convertedFormation");
 const convertedFormationSecure = require("./routes/convertedFormationSecure");
 const report = require("./routes/report");
 const rcoFormation = require("./routes/rcoFormation");
-const secured = require("./routes/secured");
 const auth = require("./routes/auth");
-const authentified = require("./routes/authentified");
 const admin = require("./routes/admin");
 const password = require("./routes/password");
 const stats = require("./routes/stats");
@@ -128,8 +126,6 @@ module.exports = async (components, verbose = true) => {
   app.use("/api/v1/parcoursup", parcoursup(components));
   app.use("/api/v1/entity", messageScript());
   app.use("/api/v1/entity", reglePerimetre());
-  app.use("/api/v1/secured", apiKeyAuthMiddleware, secured());
-  app.use("/api/v1/authentified", apiKeyAuthMiddleware, authentified());
   app.use("/api/v1/admin", apiKeyAuthMiddleware, adminOnly, admin(components));
   app.use("/api/v1/entity", apiKeyAuthMiddleware, convertedFormationSecure());
   app.use("/api/v1/stats", apiKeyAuthMiddleware, adminOnly, stats(components));
@@ -150,8 +146,6 @@ module.exports = async (components, verbose = true) => {
   app.use("/api/auth", auth(components));
   app.use("/api/password", password(components));
   app.use("/api/parcoursup", parcoursup(components));
-  app.use("/api/secured", authMiddleware, secured());
-  app.use("/api/authentified", authMiddleware, authentified());
   app.use("/api/admin", authMiddleware, adminOnly, admin(components));
   app.use("/api/entity", authMiddleware, convertedFormationSecure());
   app.use("/api/stats", stats(components));

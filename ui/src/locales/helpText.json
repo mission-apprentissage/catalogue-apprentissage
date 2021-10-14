@@ -68,5 +68,10 @@
     "tags": {
       "title": "périodes d’inscriptions en formation ouvertes sur l’organisme"
     }
+  },
+  "rapprochement": {
+    "parcoursup": {
+      "nom_organisme": "correspond à l’utilisation de la fonction : cocher la case nom établissement, utiliser un nom spécifique d’établissement pour cette formation"
+    }
   }
 }

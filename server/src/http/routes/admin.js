@@ -4,6 +4,7 @@ const Joi = require("joi");
 const config = require("config");
 const path = require("path");
 const { Role } = require("../../common/model");
+const Boom = require("boom");
 
 const userSchema = Joi.object({
   username: Joi.string().required(),
@@ -97,6 +98,12 @@ module.exports = ({ users, mailer, db: { db } }) => {
       await userSchema.validateAsync(body, { abortEarly: false });
 
       const { username, password, options } = body;
+
+      const alreadyExists = await users.getUser(username);
+      if (alreadyExists) {
+        throw Boom.conflict(`Unable to create, user ${username} already exists`);
+      }
+
       const user = await users.createUser(username, password, options);
 
       await mailer.sendEmail(

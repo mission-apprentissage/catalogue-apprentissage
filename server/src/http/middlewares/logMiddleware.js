@@ -1,18 +1,24 @@
 const omitBy = require("lodash").omitBy;
 const logger = require("../../common/logger");
 
+function withoutSensibleFields(obj) {
+  return omitBy(obj, (value, key) => {
+    const lower = key.toLowerCase();
+    return lower.indexOf("token") !== -1 || ["authorization", "password", "newpassword"].includes(lower);
+  });
+}
+
 module.exports = () => {
   return (req, res, next) => {
     const relativeUrl = (req.baseUrl || "") + (req.url || "");
     const startTime = new Date().getTime();
-    const withoutSensibleFields = (obj) => {
-      return omitBy(obj, (value, key) => {
-        const lower = key.toLowerCase();
-        return lower.indexOf("token") !== -1 || ["authorization", "password", "newpassword"].includes(lower);
-      });
-    };
 
-    const log = () => {
+    if (relativeUrl.indexOf(".ndjson") !== -1) {
+      next();
+      return;
+    }
+
+    function log() {
       try {
         const error = req.err;
         const statusCode = res.statusCode;
@@ -30,7 +36,7 @@ module.exports = () => {
               path: (req.baseUrl || "") + (req.path || ""),
               parameters: withoutSensibleFields(req.query),
             },
-            body: withoutSensibleFields(req.body),
+            ...(relativeUrl.includes("_msearch") ? {} : { body: withoutSensibleFields(req.body) }),
           },
           response: {
             statusCode,
@@ -54,7 +60,7 @@ module.exports = () => {
         res.removeListener("finish", log);
         res.removeListener("close", log);
       }
-    };
+    }
 
     res.on("close", log);
     res.on("finish", log);

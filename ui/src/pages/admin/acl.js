@@ -106,16 +106,6 @@ export default [
     ],
   },
   {
-    feature: "Rapprochement des bases Carif-Oref et Affelnet",
-    ref: "page_reconciliation_af",
-    subFeatures: [
-      {
-        feature: "valider / invalider la correspondance",
-        ref: "page_reconciliation_af/validation_rejection",
-      },
-    ],
-  },
-  {
     feature: "Rapports de conversion",
     ref: "rapports_conversion",
   },

@@ -11,7 +11,6 @@ import {
   Flex,
   FormLabel,
   Heading,
-  Select,
   Spinner,
   Text,
   useDisclosure,
@@ -19,135 +18,24 @@ import {
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import Layout from "../layout/Layout";
 import { setTitle } from "../../common/utils/pageUtils";
-import { _delete, _get, _post, _put } from "../../common/httpClient";
 import { FolderLine, FolderOpenLine } from "../../theme/components/icons";
 import { RuleModal } from "./components/RuleModal";
 import { Diplome } from "./components/Diplome";
 import { Headline } from "./components/Headline";
-import { useQuery } from "react-query";
-import { academies } from "../../constants/academies";
 import useAuth from "../../common/hooks/useAuth";
-import { hasAcademyRight, hasAllAcademiesRight, isUserAdmin } from "../../common/utils/rolesUtils";
+import { hasAllAcademiesRight, isUserAdmin } from "../../common/utils/rolesUtils";
 import { ExportButton } from "./components/ExportButton";
-
-const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
-
-const createRule = async ({
-  plateforme,
-  niveau,
-  diplome,
-  statut,
-  regle_complementaire,
-  regle_complementaire_query,
-  nom_regle_complementaire,
-  condition_integration,
-  duree,
-  annee,
-  statut_academies,
-  num_academie,
-}) => {
-  return await _post(`${endpointNewFront}/entity/perimetre/regle`, {
-    plateforme,
-    niveau,
-    diplome,
-    statut,
-    regle_complementaire,
-    regle_complementaire_query,
-    nom_regle_complementaire,
-    condition_integration,
-    duree,
-    annee,
-    statut_academies,
-    num_academie,
-  });
-};
-
-const updateRule = async ({
-  _id,
-  plateforme,
-  niveau,
-  diplome,
-  statut,
-  regle_complementaire,
-  regle_complementaire_query,
-  nom_regle_complementaire,
-  condition_integration,
-  duree,
-  annee,
-  statut_academies,
-}) => {
-  return await _put(`${endpointNewFront}/entity/perimetre/regle/${_id}`, {
-    plateforme,
-    niveau,
-    diplome,
-    statut,
-    regle_complementaire,
-    regle_complementaire_query,
-    nom_regle_complementaire,
-    condition_integration,
-    duree,
-    annee,
-    statut_academies,
-  });
-};
-
-const deleteRule = async ({ _id }) => {
-  return await _delete(`${endpointNewFront}/entity/perimetre/regle/${_id}`);
-};
-
-const getIntegrationCount = async ({ plateforme, niveau, academie }) => {
-  try {
-    const countUrl = `${endpointNewFront}/v1/entity/perimetre/regles/integration/count`;
-    const params = new URLSearchParams({
-      plateforme: plateforme,
-      num_academie: academie,
-      ...(niveau ? { niveau } : {}),
-    });
-    return await _get(`${countUrl}?${params}`, false);
-  } catch (e) {
-    console.error(e);
-    return { nbRules: 0, nbFormations: 0 };
-  }
-};
-
-const CountText = ({ totalFormationsCount, plateforme, niveaux, academie, ...rest }) => {
-  const [integrationCount, setIntegrationCount] = useState({});
-
-  useEffect(() => {
-    async function run() {
-      const count = await getIntegrationCount({ plateforme, academie });
-      setIntegrationCount(count);
-    }
-
-    run();
-  }, [plateforme, academie]);
-
-  const diplomesCount = niveaux.reduce(
-    (acc, { diplomes }) =>
-      acc +
-      diplomes.length +
-      diplomes.reduce(
-        (acc2, { regles }) =>
-          acc2 + regles.filter(({ nom_regle_complementaire }) => nom_regle_complementaire !== null).length,
-        0
-      ),
-    0
-  );
-
-  return (
-    <Text {...rest}>
-      Actuellement{" "}
-      {academie
-        ? `pour l'académie de ${
-            Object.values(academies).find(({ num_academie }) => num_academie === Number(academie))?.nom_academie
-          }`
-        : "au national"}
-      , {integrationCount?.nbRules ?? "-"} diplômes ou titres en apprentissage ({integrationCount?.nbFormations ?? "-"}{" "}
-      formations) doivent ou peuvent intégrer la plateforme {plateforme} sur les {diplomesCount} recensés (
-      {totalFormationsCount} formations) dans le Catalogue général.
-    </Text>
-  );
-};
+import { CountText } from "./components/CountText";
+import {
+  createRule,
+  deleteRule,
+  getIntegrationCount,
+  getRules,
+  updateRule,
+  useNiveaux,
+} from "../../common/api/perimetre";
+import { AcademiesSelect } from "./components/AcademiesSelect";
+import { DiplomesAutosuggest } from "./components/DiplomesAutosuggest";
 
 export default ({ plateforme }) => {
   const [user] = useAuth();
@@ -158,51 +46,35 @@ export default ({ plateforme }) => {
   const [currentRule, setCurrentRule] = useState(null);
   const [currentAcademie, setCurrentAcademie] = useState(null);
   const [niveauxCount, setNiveauxCount] = useState({});
-  const [academiesList, setAcademiesList] = useState([]);
+  const [selectedNiveauIndex, setSelectedNiveauIndex] = useState(null);
+  const [selectedDiplome, setSelectedDiplome] = useState(null);
 
   const title = `Règles d'intégration des formations à la plateforme ${plateforme}`;
   setTitle(title);
 
-  const niveauxURL = `${endpointNewFront}/v1/entity/perimetre/niveau`;
-  const { data: niveauxData } = useQuery("niveaux", () => _get(niveauxURL, false), {
-    refetchOnWindowFocus: false,
-    staleTime: 60 * 60 * 1000, // 1 hour
-  });
-
-  useEffect(() => {
-    if (user) {
-      if (isUserAdmin(user) || hasAllAcademiesRight(user)) {
-        setAcademiesList(Object.values(academies));
-        setCurrentAcademie(null);
-      } else {
-        setAcademiesList(Object.values(academies).filter(({ num_academie }) => hasAcademyRight(user, num_academie)));
-        const [firstAcademy] = user.academie?.split(",")?.map((academieStr) => Number(academieStr)) ?? [];
-        setCurrentAcademie(`${firstAcademy}`);
-      }
-    }
-  }, [user]);
+  const { data: niveauxData } = useNiveaux();
 
   useEffect(() => {
     async function run() {
       try {
-        const reglesUrl = `${endpointNewFront}/v1/entity/perimetre/regles`;
-        const regles = await _get(`${reglesUrl}?plateforme=${plateforme}`, false);
-
+        const regles = await getRules({ plateforme });
         let reglesInTree = [];
 
         const niveauxTree = niveauxData.map(({ niveau, diplomes }) => {
           return {
             niveau,
-            diplomes: diplomes.map((diplome) => {
-              const filteredRegles = regles.filter(
-                ({ niveau: niv, diplome: dip }) => niveau.value === niv && diplome.value === dip
-              );
-              reglesInTree = [...reglesInTree, ...filteredRegles.map(({ _id }) => _id)];
-              return {
-                ...diplome,
-                regles: filteredRegles,
-              };
-            }),
+            diplomes: diplomes
+              .map((diplome) => {
+                const filteredRegles = regles.filter(
+                  ({ niveau: niv, diplome: dip }) => niveau.value === niv && diplome.value === dip
+                );
+                reglesInTree = [...reglesInTree, ...filteredRegles.map(({ _id }) => _id)];
+                return {
+                  ...diplome,
+                  regles: filteredRegles,
+                };
+              })
+              .sort((diplomeA, diplomeB) => diplomeB.count - diplomeA.count),
           };
         });
 
@@ -360,6 +232,8 @@ export default ({ plateforme }) => {
     }
   }, [currentAcademie, niveaux, plateforme]);
 
+  const onAcademieChange = useCallback((academie) => setCurrentAcademie(academie), []);
+
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
@@ -394,26 +268,13 @@ export default ({ plateforme }) => {
                 >
                   <Flex alignItems={"center"}>
                     <FormLabel htmlFor="academie">Afficher les conditions :</FormLabel>
-                    <Select
+                    <AcademiesSelect
                       id={"academie"}
                       name={"academie"}
                       w={"auto"}
-                      onChange={(e) => {
-                        const academie = e.target.value === "national" ? null : e.target.value;
-                        setCurrentAcademie(academie);
-                      }}
-                    >
-                      {user && (isUserAdmin(user) || hasAllAcademiesRight(user)) && (
-                        <option value={"national"}>au National</option>
-                      )}
-                      {academiesList.map(({ nom_academie, num_academie }) => {
-                        return (
-                          <option key={num_academie} value={num_academie}>
-                            de {nom_academie} ({num_academie})
-                          </option>
-                        );
-                      })}
-                    </Select>
+                      onChange={onAcademieChange}
+                      user={user}
+                    />
                   </Flex>
                   <Button
                     variant="primary"
@@ -432,19 +293,35 @@ export default ({ plateforme }) => {
                   plateforme={plateforme}
                   academie={currentAcademie}
                 />
+                <Box py={4}>
+                  <DiplomesAutosuggest
+                    onSuggestionSelected={({ suggestion }) => {
+                      const index = niveaux.findIndex(({ niveau }) => niveau.value === suggestion.niveau);
+                      setSelectedNiveauIndex(index);
+                      setTimeout(() => setSelectedDiplome(suggestion.value), 800);
+                    }}
+                  />
+                </Box>
                 {user && (isUserAdmin(user) || hasAllAcademiesRight(user)) && (
                   <Flex justifyContent={"flex-end"}>
                     <ExportButton plateforme={plateforme} rules={rules} />
                   </Flex>
                 )}
                 <Box minH="70vh">
-                  <Accordion bg="#FFFFFF" mb={24} allowToggle>
-                    {niveaux.map(({ niveau, diplomes }) => {
+                  <Accordion bg="#FFFFFF" mb={24} index={selectedNiveauIndex} allowToggle>
+                    {niveaux.map(({ niveau, diplomes }, index) => {
                       return (
                         <AccordionItem border="none" key={niveau.value} mt={6}>
                           {({ isExpanded }) => (
                             <>
-                              <AccordionButton borderBottom={"1px solid"} borderColor={"grey.300"} px={0}>
+                              <AccordionButton
+                                borderBottom={"1px solid"}
+                                borderColor={"grey.300"}
+                                px={0}
+                                onClick={() =>
+                                  setSelectedNiveauIndex((prevIndex) => (prevIndex !== index ? index : null))
+                                }
+                              >
                                 <Flex alignItems="center" w={"full"} justifyContent={"space-between"}>
                                   <Flex alignItems="center">
                                     {isExpanded ? (
@@ -478,6 +355,7 @@ export default ({ plateforme }) => {
                                     onDeleteRule={onDeleteRule}
                                     isExpanded={isExpanded}
                                     academie={currentAcademie}
+                                    isSelected={selectedDiplome === diplome.value}
                                   />
                                 ))}
                               </AccordionPanel>

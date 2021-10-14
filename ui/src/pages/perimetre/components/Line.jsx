@@ -92,7 +92,7 @@ export const Line = ({
       <Flex px={8} py={3} alignItems="center" w={"full"}>
         <Flex grow={1} alignItems="center" pl={showIcon ? 2 : 0} pr={2} maxWidth={"50%"} isTruncated>
           {showIcon && <ArrowRightDownLine boxSize={3} mr={2} />}
-          <Text isTruncated>
+          <Text data-testid={"line"} isTruncated>
             {num_academie ? `${academieLabel} (${num_academie}) - ` : ""}
             {label}
           </Text>

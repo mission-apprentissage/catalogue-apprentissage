@@ -97,6 +97,12 @@ const ReportPage = () => {
       const { report, error } = await getReport(reportType, date, uuidReport);
 
       if (reportType === REPORT_TYPE.TRAININGS_UPDATE) {
+        if (report) {
+          // handle no update case
+          report.data = report.data ?? {};
+          report.data.updated = report.data.updated ?? [];
+        }
+
         const convertReportResp = await getReport(REPORT_TYPE.RCO_CONVERSION, date, uuidReport, 1, null, true);
         if (convertReportResp.report && convertReportResp.report.data) {
           const { converted, summary: convertSummary } = convertReportResp.report?.data;

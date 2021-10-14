@@ -121,6 +121,7 @@ const createEtablissement = async (payload) => {
     return await postEtablissement(etablissement.data);
   } catch (error) {
     logger.error("Error during etablissement creation", error);
+    return null;
   }
 };
 
