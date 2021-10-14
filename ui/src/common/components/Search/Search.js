@@ -110,7 +110,6 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
             {mode !== "simple" && (
               <Box mb={4}>
                 <QueryBuilder
-                  lang="fr"
                   collection={base}
                   react={{ and: filters.filter((e) => e !== "QUERYBUILDER") }}
                   fields={queryBuilderField}

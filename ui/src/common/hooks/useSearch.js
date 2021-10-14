@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { _get, _post } from "../httpClient";
-import { mergedQueries, withUniqueKey } from "../components/Search/components/QueryBuilder/utils";
-import { operators as frOperators } from "../components/Search/components/QueryBuilder/utils_fr";
+import { mergedQueries, withUniqueKey, operators } from "../components/Search/components/QueryBuilder/utils";
 import { ETABLISSEMENTS_ES_INDEX, FORMATIONS_ES_INDEX, RECONCILIATION_PS_ES_INDEX } from "../../constants/es";
 
 const CATALOGUE_API_ENDPOINT = `${process.env.REACT_APP_BASE_URL}/api`;
@@ -26,7 +25,7 @@ const esQueryParser = async () => {
   const initialValue = JSON.parse(decodeURIComponent(s));
   const rules = withUniqueKey(initialValue);
   const queries = mergedQueries(
-    rules.map((r) => ({ ...r, query: frOperators.find((o) => o.value === r.operator).query(r.field, r.value) }))
+    rules.map((r) => ({ ...r, query: operators.find((o) => o.value === r.operator).query(r.field, r.value) }))
   );
 
   return queries;
