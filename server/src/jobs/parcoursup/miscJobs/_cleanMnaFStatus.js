@@ -48,4 +48,8 @@ async function update() {
       );
     }
   });
+  await ConvertedFormation.updateMany(
+    { parcoursup_statut: "publié", published: true },
+    { $set: { parcoursup_statut: "hors périmètre", parcoursup_reference: false } }
+  );
 }
