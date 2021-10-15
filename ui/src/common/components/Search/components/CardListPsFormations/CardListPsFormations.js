@@ -6,7 +6,7 @@ import { PARCOURSUP_STATUS } from "../../../../../constants/status";
 
 export const CardListPsFormations = ({ data, onCardClicked, context }) => {
   const CardContent = () => (
-    <Flex w="100%" data-testid={"cardps"}>
+    <Flex w="100%">
       <Box width="75%">
         <Heading textStyle="h6" color="grey.800" mt={2} textOverflow="ellipsis" whiteSpace="nowrap" overflow="hidden">
           {data.libelle_formation} - {data.libelle_specialite}
@@ -94,7 +94,7 @@ export const CardListPsFormations = ({ data, onCardClicked, context }) => {
     );
   }
   return (
-    <Link variant="card" mt={4} onClick={onCardClicked} py={5}>
+    <Link variant="card" mt={4} onClick={onCardClicked} py={5} data-testid={"cardps"}>
       <CardContent />
     </Link>
   );
