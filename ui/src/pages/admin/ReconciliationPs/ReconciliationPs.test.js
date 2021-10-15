@@ -10,7 +10,8 @@ import { fireEvent, waitFor } from "@testing-library/react";
 import { renderHook, act } from "@testing-library/react-hooks";
 
 const server = setupServer(
-  rest.get(/\/api\/v1\/parcoursup\/reconciliation\/result\/:id/, (req, res, ctx) => {
+  rest.get("/api/parcoursup/reconciliation/result/:id", (req, res, ctx) => {
+    console.log("--------------");
     return res(
       ctx.json({
         _id: "616450e9b4ad29922f7785bf",
@@ -162,24 +163,7 @@ const server = setupServer(
                   libelle: "Assistanat en ressources humaines",
                 },
               ],
-              blocs_competences: [
-                {
-                  numero_bloc: "RNCP35030BC02",
-                  intitule: "Contribuer au développement des ressources humaines",
-                  liste_competences:
-                    "<p>Contribuer aux opérations liées à la gestion des emplois et carrières</p> <p>Contribuer au processus de recrutement et d'intégration du personnel</p> <p>Contribuer à l'élaboration et au suivi du développement des compétences du personnel</p>",
-                  modalites_evaluation:
-                    "<p>Les compétences des candidats (VAE ou issus de la formation) sont évaluées par un jury au vu :</p> <p>a) D’une mise en situation professionnelle ou d’une présentation d’un projet réalisé en amont de la session, éventuellement complétée par d’autres modalités d’évaluation : entretien technique, questionnaire professionnel, questionnement à partir de production(s)</p> <p>b) d’un dossier faisant état des pratiques professionnelles du candidat</p> <p>c) des résultats des évaluations passées en cours de formation pour les candidats issus d’un parcours de formation</p>",
-                },
-                {
-                  numero_bloc: "RNCP35030BC01",
-                  intitule: "Assurer les missions opérationnelles de la gestion des ressources humaines",
-                  liste_competences:
-                    "<p>Assurer la gestion administrative du personnel</p> <p>Assurer la gestion des variables et paramètres de paie</p> <p>Mettre en place et suivre les indicateurs ressources humaines</p>",
-                  modalites_evaluation:
-                    "<p>Les compétences des candidats (VAE ou issus de la formation) sont évaluées par un jury au vu :</p> <p>a) D’une mise en situation professionnelle ou d’une présentation d’un projet réalisé en amont de la session, éventuellement complétée par d’autres modalités d’évaluation : entretien technique, questionnaire professionnel, questionnement à partir de production(s)</p> <p>b) d’un dossier faisant état des pratiques professionnelles du candidat</p> <p>c) des résultats des évaluations passées en cours de formation pour les candidats issus d’un parcours de formation</p>",
-                },
-              ],
+              blocs_competences: [],
               voix_acces: null,
             },
             rome_codes: ["M1502", "M1501"],
@@ -190,29 +174,9 @@ const server = setupServer(
             parcoursup_reference: false,
             parcoursup_a_charger: false,
             parcoursup_statut: "à publier",
-            parcoursup_statut_history: [
-              {
-                parcoursup_statut: "à publier",
-                date: "2021-10-11T00:05:01.387Z",
-              },
-              {
-                parcoursup_statut: "à publier",
-                date: "2021-10-11T17:26:39.325Z",
-              },
-            ],
+            parcoursup_statut_history: [],
             parcoursup_error: null,
             parcoursup_ids: [],
-            affelnet_reference: false,
-            affelnet_a_charger: false,
-            affelnet_statut: "hors périmètre",
-            affelnet_statut_history: [
-              {
-                affelnet_statut: "hors périmètre",
-                date: "2021-10-11T00:23:48.072Z",
-              },
-            ],
-            affelnet_error: null,
-            source: "WS RCO",
             commentaires: null,
             opcos: null,
             info_opcos: 0,
@@ -220,103 +184,7 @@ const server = setupServer(
             published: true,
             rco_published: true,
             draft: false,
-            updates_history: [
-              {
-                from: {
-                  etablissement_gestionnaire_adresse: null,
-                  etablissement_formateur_adresse: null,
-                  uai_formation: null,
-                  rncp_code: "RNCP6161",
-                  rncp_details: {
-                    date_fin_validite_enregistrement: "05/11/2025",
-                    active_inactive: "ACTIVE",
-                    etat_fiche_rncp: "Publiée",
-                    niveau_europe: "niveau5",
-                    code_type_certif: "TP",
-                    type_certif: "Titre professionnel",
-                    ancienne_fiche: ["RNCP6161"],
-                    nouvelle_fiche: null,
-                    demande: 0,
-                    certificateurs: [
-                      {
-                        certificateur: "Ministère du travail",
-                        siret_certificateur: "11000007200014",
-                      },
-                    ],
-                    nsf_code: "315m",
-                    nsf_libelle: "Ressources humaines, gestion de l'emploi",
-                    partenaires: [
-                      {
-                        Nom_Partenaire: "GRETA DES YVELINES",
-                        Siret_Partenaire: "19782587000052",
-                        Habilitation_Partenaire: "HABILITATION_ORGA_FORM",
-                      },
-                      {
-                        Nom_Partenaire: "ASSOFAC",
-                        Siret_Partenaire: "51819150700046",
-                        Habilitation_Partenaire: "HABILITATION_ORGA_FORM",
-                      },
-                    ],
-                    romes: [
-                      {
-                        rome: "M1502",
-                        libelle: "Développement des ressources humaines",
-                      },
-                      {
-                        rome: "M1501",
-                        libelle: "Assistanat en ressources humaines",
-                      },
-                    ],
-                    blocs_competences: [
-                      {
-                        numero_bloc: "RNCP35030BC02",
-                        intitule: "Contribuer au développement des ressources humaines",
-                        liste_competences:
-                          "<p>Contribuer aux opérations liées à la gestion des emplois et carrières</p><p>Contribuer au processus de recrutement et d'intégration du personnel</p><p>Contribuer à l'élaboration et au suivi du développement des compétences du personnel</p>",
-                        modalites_evaluation:
-                          "<p>Les compétences des candidats (VAE ou issus de la formation) sont évaluées par un jury au vu :</p><p>a)  D’une mise en situation professionnelle ou d’une présentation d’un projet réalisé en amont de la session, éventuellement complétée par d’autres modalités d’évaluation : entretien technique, questionnaire professionnel, questionnement à partir de production(s)</p><p>b)  d’un dossier faisant état des pratiques professionnelles du candidat</p><p>c)  des résultats des évaluations passées en cours de formation pour les candidats issus d’un parcours de formation</p>",
-                      },
-                      {
-                        numero_bloc: "RNCP35030BC01",
-                        intitule: "Assurer les missions opérationnelles de la gestion des ressources humaines",
-                        liste_competences:
-                          "<p>Assurer la gestion administrative du personnel</p><p>Assurer la gestion des variables et paramètres de paie</p><p>Mettre en place et suivre les indicateurs ressources humaines</p>",
-                        modalites_evaluation:
-                          "<p>Les compétences des candidats (VAE ou issus de la formation) sont évaluées par un jury au vu :</p><p>a)  D’une mise en situation professionnelle ou d’une présentation d’un projet réalisé en amont de la session, éventuellement complétée par d’autres modalités d’évaluation : entretien technique, questionnaire professionnel, questionnement à partir de production(s)</p><p>b)  d’un dossier faisant état des pratiques professionnelles du candidat</p><p>c)  des résultats des évaluations passées en cours de formation pour les candidats issus d’un parcours de formation</p>",
-                      },
-                    ],
-                    voix_acces: null,
-                  },
-                  geo_coordonnees_etablissement_gestionnaire: null,
-                  geo_coordonnees_etablissement_formateur: null,
-                },
-                to: {
-                  etablissement_gestionnaire_adresse: "16 RUE DUFOUR",
-                  etablissement_formateur_adresse: "16 RUE DUFOUR",
-                  uai_formation: "0441975H",
-                  rncp_code: "RNCP35030",
-                  rncp_details: {
-                    blocs_competences: {
-                      "0": {
-                        liste_competences:
-                          "<p>Contribuer aux opérations liées à la gestion des emplois et carrières</p> <p>Contribuer au processus de recrutement et d'intégration du personnel</p> <p>Contribuer à l'élaboration et au suivi du développement des compétences du personnel</p>",
-                        modalites_evaluation:
-                          "<p>Les compétences des candidats (VAE ou issus de la formation) sont évaluées par un jury au vu :</p> <p>a) D’une mise en situation professionnelle ou d’une présentation d’un projet réalisé en amont de la session, éventuellement complétée par d’autres modalités d’évaluation : entretien technique, questionnaire professionnel, questionnement à partir de production(s)</p> <p>b) d’un dossier faisant état des pratiques professionnelles du candidat</p> <p>c) des résultats des évaluations passées en cours de formation pour les candidats issus d’un parcours de formation</p>",
-                      },
-                      "1": {
-                        liste_competences:
-                          "<p>Assurer la gestion administrative du personnel</p> <p>Assurer la gestion des variables et paramètres de paie</p> <p>Mettre en place et suivre les indicateurs ressources humaines</p>",
-                        modalites_evaluation:
-                          "<p>Les compétences des candidats (VAE ou issus de la formation) sont évaluées par un jury au vu :</p> <p>a) D’une mise en situation professionnelle ou d’une présentation d’un projet réalisé en amont de la session, éventuellement complétée par d’autres modalités d’évaluation : entretien technique, questionnaire professionnel, questionnement à partir de production(s)</p> <p>b) d’un dossier faisant état des pratiques professionnelles du candidat</p> <p>c) des résultats des évaluations passées en cours de formation pour les candidats issus d’un parcours de formation</p>",
-                      },
-                    },
-                  },
-                  geo_coordonnees_etablissement_gestionnaire: "47.225241,-1.54471",
-                  geo_coordonnees_etablissement_formateur: "47.225241,-1.54471",
-                },
-                updated_at: 1633735727823,
-              },
-            ],
+            updates_history: [],
             last_update_who: null,
             to_verified: false,
             update_error: null,
@@ -596,7 +464,7 @@ test("opens rapprochement modal", async () => {
 
   const cardPsNodes = getAllByTestId("cardps");
   expect(cardPsNodes).toHaveLength(8);
-  // console.log(cardPsNodes[0]);
+
   fireEvent(
     cardPsNodes[0],
     new MouseEvent("click", {
@@ -605,13 +473,11 @@ test("opens rapprochement modal", async () => {
     })
   );
 
+  // await waitFor(() => getByText(/yooo!/i));
   //   await waitFor(() => getByText(/^Vérifier la similitude des informations$/i));
 
-  // const tt = queryByText(/^Vérifier la similitude des informations$/i);
-  // expect(tt).toBeInTheDocument();
-
-  // const closeButton = getByText(/^fermer$/i);
-  // expect(closeButton).toBeInTheDocument();
+  //   const closeButton = getByText(/^fermer$/i);
+  //   expect(closeButton).toBeInTheDocument();
 
   // fireEvent(
   //   closeButton,
