@@ -9,7 +9,7 @@ Afin de transmettre aux parties prenantes les modules et les données qui leur s
 
 ## Vue d'ensemble
 
-![Architecture cible pour la passation](<../.gitbook/assets/Architecture passation - octobre 2021 (3).png>)
+![Architecture cible pour la passation](../../.gitbook/assets/architecture-passation-octobre-2021-3-.png)
 
 ## Métriques
 

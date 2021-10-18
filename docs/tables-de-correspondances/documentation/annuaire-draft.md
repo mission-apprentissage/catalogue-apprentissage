@@ -37,7 +37,7 @@ Swagger:  [https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs
 
 [https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Annuaire/get_annuaire_etablissements](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Annuaire/get_annuaire_etablissements)
 
-![](<../../.gitbook/assets/image (6).png>)
+![](<../../../.gitbook/assets/image (6).png>)
 
 ### SDK
 

@@ -230,7 +230,7 @@ chaîne de 8 caractères (+ 1 optionnels correspondant à la spécialité)
 
 [https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_cfd](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_cfd)
 
-![](../../.gitbook/assets/image.png)
+![](../../../.gitbook/assets/image.png)
 
 ### SDK
 

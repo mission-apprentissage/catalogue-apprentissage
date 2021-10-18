@@ -56,7 +56,7 @@ Appels sous-jacents aux tables BCN V et N formations, MEF
 
 [https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_mef](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_mef)
 
-![](<../../.gitbook/assets/image (2).png>)
+![](<../../../.gitbook/assets/image (2).png>)
 
 ### SDK
 

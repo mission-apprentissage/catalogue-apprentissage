@@ -27,7 +27,7 @@ Tester:
 
 [https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Etablissements/get_entity_etablissements](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Etablissements/get_entity_etablissements)
 
-![](<../.gitbook/assets/image (7).png>)
+![](<../../.gitbook/assets/image (7).png>)
 
 Exemple de retour (mise à jour des informations de localisation): 
 

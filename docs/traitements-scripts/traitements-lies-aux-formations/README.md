@@ -2,17 +2,17 @@
 
 ## I. Vue d’ensemble
 
-![](<../../.gitbook/assets/Architecture Technique - Juill 2021@2x.png>)
+![](<../../../.gitbook/assets/architecture-technique-juill-2021-2x (1).png>)
 
 ## II.  Détails des traitements
 
-![](../../.gitbook/assets/verifications-formations.png)
+![](../../../.gitbook/assets/verifications-formations.png)
 
 ### II.1 Vérifications et enrichissements via le code formation diplôme (CFD)
 
 _Vérification des données Diplôme Niveau Intitulé_
 
-![](../../.gitbook/assets/CFD.png)
+![](../../../.gitbook/assets/cfd.png)
 
 * Vérifier que le code formation diplôme existe dans l'une des tables BCN (Base Centrale des Nomenclatures) [N_FORMATION_DIPLOME](http://infocentre.pleiade.education.fr/bcn/workspace/viewTable/n/N_FORMATION_DIPLOME) ou [V_FORMATION_DIPLOME](http://infocentre.pleiade.education.fr/bcn/workspace/viewTable/n/V_FORMATION_DIPLOME)
 * Vérifier que le code formation diplôme est valide : 
@@ -27,7 +27,7 @@ _Vérification des données Diplôme Niveau Intitulé_
 
 ### II.2 Vérifications et enrichissements via la géolocalisation et le code commune Insee
 
-![](<../../.gitbook/assets/Architecture Technique - Juill 2021@2x (1).png>)
+![](<../../../.gitbook/assets/architecture-technique-juill-2021-2x-1- (1).png>)
 
 _Vérification cohérence et rattachement académique_
 
@@ -855,7 +855,7 @@ Les informations de géolocalisation (longitude / latitude) sont collectées par
 
 ### II.3 Rattachements basés sur les établissements collectés
 
-![](../../.gitbook/assets/eta.png)
+![](../../../.gitbook/assets/eta.png)
 
 * S'assurer que le code UAI partie formation existe et correspond à un “numéro UAI site”
 * Identifier les UAI invalides afin de permettre une investigation et correction des données en base (BCE, Accé, ...)\
@@ -871,7 +871,7 @@ Les informations de géolocalisation (longitude / latitude) sont collectées par
 
 ### II.4 Vérification de la publication de la formation
 
-![](../../.gitbook/assets/publis.png)
+![](../../../.gitbook/assets/publis.png)
 
 ### II.5 Historique des modifications et sauvegardes
 
@@ -885,7 +885,7 @@ Un mécanisme de sauvegarde est en place et effectue un backup quotidien de tout
 
 ### III.1 Vérifications RNCP pour une formation
 
-![](../../.gitbook/assets/RNCPFormation.png)
+![](../../../.gitbook/assets/rncpformation.png)
 
 [Voir le détail d'une fiche RNCP](../../tables-de-correspondances/documentation/rncp.md)
 
@@ -905,7 +905,7 @@ Un mécanisme de sauvegarde est en place et effectue un backup quotidien de tout
 
 ### III.2 Vérifications RNCP pour un établissement (Habilitation RNCP)
 
-![](../../.gitbook/assets/rncpEta.png)
+![](../../../.gitbook/assets/rncpeta.png)
 
 ### III.3 Conditions d'entrée d'une formation au sein des systèmes d'information Affelnet et Parcoursup
 
@@ -939,7 +939,7 @@ Cette déduction du MEF éligible Affelnet est temporaire et sera retirée lorsq
 
 ### III.5 Onisep (descriptif formation)
 
-![](../../.gitbook/assets/onisepFormation.png)
+![](../../../.gitbook/assets/onisepformation.png)
 
 Via une API privée mise à disposition de la mission par l'Onisep nous récupérerons les informations suivantes:  
 
@@ -954,4 +954,4 @@ _Le taux de couverture reste néanmoins faible._
 
 ### III.6 Publication catalogue général ou non éligible
 
-![](../../.gitbook/assets/CataGene.png)
+![](../../../.gitbook/assets/catagene.png)

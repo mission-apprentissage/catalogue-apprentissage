@@ -2,11 +2,11 @@
 
 ### Vue d'ensemble
 
-![](../.gitbook/assets/Archi.png)
+![](../../.gitbook/assets/archi.png)
 
 ### Architecture
 
-![](<../.gitbook/assets/Archi (2).png>)
+![](../../.gitbook/assets/archi-2-.png)
 
 ####   Front
 

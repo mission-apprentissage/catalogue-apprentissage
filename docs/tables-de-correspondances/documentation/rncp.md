@@ -78,7 +78,7 @@ Appels sous-jacents aux données France Compétences, tables BCN V et N formatio
 
 [https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_rncp](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_rncp)
 
-![](<../../.gitbook/assets/image (1).png>)
+![](<../../../.gitbook/assets/image (1).png>)
 
 ### SDK
 

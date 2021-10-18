@@ -64,7 +64,7 @@ Si
 
 [https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_coordinate](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_coordinate)
 
-![](<../../.gitbook/assets/image (5).png>)
+![](<../../../.gitbook/assets/image (5).png>)
 
 ### SDK
 

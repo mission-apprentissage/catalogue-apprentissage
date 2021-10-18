@@ -2,7 +2,7 @@
 
 Le bloc de conversion permet principalement le passage du format Lhéo vers un Format consommable et améliorable dans le cadre de l'apprentissage. 
 
-![Flux macro de convertion ](../../.gitbook/assets/workflowtraitements-convertir.png)
+![Flux macro de convertion ](../../../.gitbook/assets/workflowtraitements-convertir.png)
 
 Ci-dessus les boîtes marquées:one:correspondent à l'étape de conversion.
 

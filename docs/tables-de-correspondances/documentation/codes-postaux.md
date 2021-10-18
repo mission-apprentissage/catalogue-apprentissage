@@ -48,7 +48,7 @@ Si
 
 [https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_code_postal](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_code_postal)
 
-![](<../../.gitbook/assets/image (4).png>)
+![](<../../../.gitbook/assets/image (4).png>)
 
 ### SDK
 

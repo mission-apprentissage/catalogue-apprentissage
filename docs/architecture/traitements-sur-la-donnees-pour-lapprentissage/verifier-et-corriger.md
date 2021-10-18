@@ -1,6 +1,6 @@
 # Vérifier, corriger et enrichir
 
-![Flux macro Vérification et Enrichissements ](../../.gitbook/assets/workflowtraitementsverifenrichir.png)
+![Flux macro Vérification et Enrichissements ](../../../.gitbook/assets/workflowtraitementsverifenrichir.png)
 
 Ci-dessus les boites marquées:two:correspondent à l'étape de vérification et correction, et celles marquées:three:à l'étape d'enrichissement.
 

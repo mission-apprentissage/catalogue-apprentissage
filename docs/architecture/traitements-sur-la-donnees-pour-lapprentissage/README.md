@@ -5,11 +5,11 @@ Vous trouverez les détails des traitements permettant de **vérifier, corriger 
 \
 Pour des besoins de lisibilité dans ce chapitre, ci-dessous le diagramme simplifié centré autour des traitements de données :
 
-![](../../.gitbook/assets/trait1.png)
+![](../../../.gitbook/assets/trait1.png)
 
 ### Flux macro de traitements
 
-![](../../.gitbook/assets/workflowtraitements.png)
+![](../../../.gitbook/assets/workflowtraitements.png)
 
 Vous trouverez les détails de chaque traitement dans les pages suivantes : 
 

@@ -44,7 +44,7 @@ Appels sous-jacents API entreprise et API Sirene
 
 [https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_siret](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_siret)
 
-![](<../../.gitbook/assets/image (3).png>)
+![](<../../../.gitbook/assets/image (3).png>)
 
 ### SDK
 

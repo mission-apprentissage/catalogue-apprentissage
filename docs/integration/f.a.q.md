@@ -27,7 +27,7 @@ Tester:
 
 [https://catalogue.apprentissage.beta.gouv.fr/api/v1/docs/#/Formations/get_entity_formations2021](https://catalogue.apprentissage.beta.gouv.fr/api/v1/docs/#/Formations/get_entity_formations2021)
 
-![](<../.gitbook/assets/image (8).png>)
+![](<../../.gitbook/assets/image (8).png>)
 
 Exemple de retour (toutes les mises à jour des informations): 
 

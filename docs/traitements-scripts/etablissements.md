@@ -2,11 +2,11 @@
 
 ## Vue d’ensemble
 
-![](../.gitbook/assets/vue-ensemble-etablissements.png)
+![](../../.gitbook/assets/vue-ensemble-etablissements.png)
 
 ## Détails des traitements
 
-![](../.gitbook/assets/verifications-etablissements.png)
+![](../../.gitbook/assets/verifications-etablissements.png)
 
 Les différents traitements sur un établissement se font autour de la donnée pivot **SIRET**.
 
@@ -17,7 +17,7 @@ Les différents traitements sur un établissement se font autour de la donnée p
 
 ### 1. Vérifications et enrichissements via Entreprise.api.gouv.fr
 
-![](../.gitbook/assets/E3.png)
+![](../../.gitbook/assets/e3.png)
 
 La consolidation des informations de l'entreprise se fait par l’intermédiaire de l'API entreprise [https://entreprise.api.gouv.fr/](https://entreprise.api.gouv.fr). 
 
@@ -207,13 +207,13 @@ _Vous pouvez retrouver les détails du traitement "Vérifications et enrichissem
 
 [https://geo.api.gouv.fr/adresse](https://geo.api.gouv.fr/adresse)
 
-|                                     |                                                    |
-| ----------------------------------- | -------------------------------------------------- |
-| ![](../.gitbook/assets/apigeo2.png) | Recherche geo coordonnées - Latitude et longitude  |
+|                                        |                                                    |
+| -------------------------------------- | -------------------------------------------------- |
+| ![](../../.gitbook/assets/apigeo2.png) | Recherche geo coordonnées - Latitude et longitude  |
 
 ### 3. Vérifications et enrichissements Conventionnement
 
-![](../.gitbook/assets/E4.png)
+![](../../.gitbook/assets/e4.png)
 
 #### Règles de conventionnements .
 
@@ -274,7 +274,7 @@ retrouvez le code source de ce script sur : [https://github.com/mission-apprenti
 
 ### 4. Vérifications et enrichissements via l'Onisep
 
-![](../.gitbook/assets/E5.png)
+![](../../.gitbook/assets/e5.png)
 
 **Recherche des informations supplémentaires collectées par l'Onisep**
 
