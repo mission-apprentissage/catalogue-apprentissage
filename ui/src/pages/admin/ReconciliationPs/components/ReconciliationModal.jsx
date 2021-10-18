@@ -32,7 +32,7 @@ const ReconciliationModal = React.memo(({ isOpen, onClose: onCloseProp, data, on
 
   let onValidationSubmit = useCallback(() => {
     setStep(1);
-    // window.location.reload();
+    window.location.reload();
   }, []);
   let onClose = useCallback(() => {
     setStep(1);
