@@ -2,9 +2,8 @@ import { Modal, ModalBody, ModalContent, ModalOverlay, Center, Spinner } from "@
 import React, { useState, useEffect, useCallback } from "react";
 import { Rapprochement } from "./Rapprochement";
 import { ReconciliationModalHeader } from "./ReconciliationModalHeader";
-import { _get } from "../../../../common/httpClient";
 
-const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`; // "http://localhost/api";
+import { getResult } from "../../../../common/api/rapprochement";
 
 const ReconciliationModal = React.memo(({ isOpen, onClose: onCloseProp, data, onFormationUpdate, mnaFormation }) => {
   const [formation, setFormation] = useState();
@@ -14,8 +13,8 @@ const ReconciliationModal = React.memo(({ isOpen, onClose: onCloseProp, data, on
   useEffect(() => {
     async function run() {
       try {
-        const apiURL = `${endpointNewFront}/parcoursup/reconciliation/result/`;
-        const form = await _get(`${apiURL}${data._id}`, false);
+        const form = await getResult({ id: data._id });
+        console.log(form);
         setFormation(form);
         setCurrentMnaFormation(0);
         if (form.statut_reconciliation === "VALIDE" && form.etat_reconciliation) {
