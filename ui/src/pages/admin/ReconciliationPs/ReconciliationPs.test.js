@@ -1,14 +1,12 @@
 import React from "react";
 import ReconciliationPs from "./ReconciliationPs";
 import { renderWithRouter } from "../../../common/utils/testUtils";
-
 import { QueryClient, QueryClientProvider } from "react-query";
-import { fireEvent, waitFor } from "@testing-library/react";
-// import { renderHook, act } from "@testing-library/react-hooks";
+import { waitFor } from "@testing-library/react";
+import { act } from "react-dom/test-utils";
 import userEvent from "@testing-library/user-event";
 
 import * as api from "../../../common/api/rapprochement";
-
 import * as useAuth from "../../../common/hooks/useAuth";
 import * as search from "../../../common/hooks/useSearch";
 
@@ -86,12 +84,6 @@ test("opens rapprochement modal", async () => {
           etablissement_gestionnaire_siret: "19440029700025",
           etablissement_gestionnaire_enseigne: "GRETA LOIRE-ATLANTIQUE",
           etablissement_gestionnaire_uai: "0441975H",
-          etablissement_gestionnaire_type: "CFA",
-          etablissement_gestionnaire_conventionne: "NON",
-          etablissement_gestionnaire_declare_prefecture: "OUI",
-          etablissement_gestionnaire_datadock: "datadocké",
-          etablissement_gestionnaire_published: true,
-          etablissement_gestionnaire_catalogue_published: true,
           etablissement_gestionnaire_adresse: "16 RUE DUFOUR",
           etablissement_gestionnaire_code_postal: "44000",
           etablissement_gestionnaire_code_commune_insee: "44109",
@@ -111,12 +103,6 @@ test("opens rapprochement modal", async () => {
           etablissement_formateur_siret: "19440029700025",
           etablissement_formateur_enseigne: "GRETA LOIRE-ATLANTIQUE",
           etablissement_formateur_uai: "0441975H",
-          etablissement_formateur_type: "CFA",
-          etablissement_formateur_conventionne: "NON",
-          etablissement_formateur_declare_prefecture: "OUI",
-          etablissement_formateur_datadock: "datadocké",
-          etablissement_formateur_published: true,
-          etablissement_formateur_catalogue_published: true,
           etablissement_formateur_adresse: "16 RUE DUFOUR",
           etablissement_formateur_code_postal: "44000",
           etablissement_formateur_code_commune_insee: "44109",
@@ -131,22 +117,7 @@ test("opens rapprochement modal", async () => {
           etablissement_formateur_nom_academie: "Nantes",
           etablissement_formateur_num_academie: "17",
           etablissement_formateur_siren: "194400297",
-          etablissement_formateur_date_creation: "1970-01-08T00:45:57.600Z",
-          etablissement_reference: "gestionnaire",
-          etablissement_reference_type: "CFA",
-          etablissement_reference_conventionne: "NON",
-          etablissement_reference_declare_prefecture: "OUI",
-          etablissement_reference_datadock: "datadocké",
-          etablissement_reference_published: true,
-          etablissement_reference_catalogue_published: true,
-          rncp_etablissement_reference_habilite: true,
-          etablissement_reference_date_creation: null,
           cfd: "36T31502",
-          cfd_specialite: null,
-          cfd_outdated: false,
-          cfd_date_fermeture: "2026-08-31T00:00:00.000Z",
-          mef_10_code: null,
-          mefs_10: null,
           nom_academie: "Nantes",
           num_academie: "17",
           code_postal: "44100",
@@ -161,54 +132,9 @@ test("opens rapprochement modal", async () => {
           intitule_court: "ASSISTANT RESSOURCES HUMAINES",
           diplome: "TH DE NIV 3 MINISTERE DU TRAVAIL - AFPA",
           niveau: "5 (BTS, DEUST...)",
-          onisep_url: "http://www.onisep.fr/http/redirection/formation/identifiant/33848",
-          onisep_intitule: null,
-          onisep_libelle_poursuite: null,
-          onisep_lien_site_onisepfr: null,
-          onisep_discipline: null,
-          onisep_domaine_sousdomaine: null,
           rncp_code: "RNCP35030",
           rncp_intitule: "Assistant ressources humaines",
           rncp_eligible_apprentissage: true,
-          rncp_details: {
-            date_fin_validite_enregistrement: "05/11/2025",
-            active_inactive: "ACTIVE",
-            etat_fiche_rncp: "Publiée",
-            niveau_europe: "niveau5",
-            code_type_certif: "TP",
-            type_certif: "Titre professionnel",
-            ancienne_fiche: ["RNCP6161"],
-            nouvelle_fiche: null,
-            demande: 0,
-            certificateurs: [
-              {
-                certificateur: "Ministère du travail",
-                siret_certificateur: "11000007200014",
-              },
-            ],
-            nsf_code: "315m",
-            nsf_libelle: "Ressources humaines, gestion de l'emploi",
-            partenaires: [
-              {
-                Nom_Partenaire: "GRETA DES YVELINES",
-                Siret_Partenaire: "19782587000052",
-                Habilitation_Partenaire: "HABILITATION_ORGA_FORM",
-              },
-            ],
-            romes: [
-              {
-                rome: "M1502",
-                libelle: "Développement des ressources humaines",
-              },
-              {
-                rome: "M1501",
-                libelle: "Assistanat en ressources humaines",
-              },
-            ],
-            blocs_competences: [],
-            voix_acces: null,
-          },
-          rome_codes: ["M1502", "M1501"],
           periode: '["2021-10"]',
           capacite: null,
           duree: null,
@@ -219,17 +145,6 @@ test("opens rapprochement modal", async () => {
           parcoursup_statut_history: [],
           parcoursup_error: null,
           parcoursup_ids: [],
-          commentaires: null,
-          opcos: null,
-          info_opcos: 0,
-          info_opcos_intitule: "Non trouvés",
-          published: true,
-          rco_published: true,
-          draft: false,
-          updates_history: [],
-          last_update_who: null,
-          to_verified: false,
-          update_error: null,
           lieu_formation_adresse: "44 boulevard Jean Moulin Immeuble Bellevue - Jean Moulin",
           lieu_formation_siret: null,
           id_rco_formation: "21_133656|21_133656|81506",
@@ -240,103 +155,20 @@ test("opens rapprochement modal", async () => {
           tags: ["2021"],
           libelle_court: "TH3-T",
           niveau_formation_diplome: "36T",
-          affelnet_infos_offre: null,
-          affelnet_code_nature: null,
-          affelnet_secteur: null,
-          affelnet_raison_depublication: null,
-          bcn_mefs_10: [],
           editedFields: null,
           parcoursup_raison_depublication: null,
-          lieu_formation_geo_coordonnees: "47.2057587,-1.6016692000001",
-          geo_coordonnees_etablissement_gestionnaire: "47.225241,-1.54471",
-          geo_coordonnees_etablissement_formateur: "47.225241,-1.54471",
-          idea_geo_coordonnees_etablissement: "47.2057587,-1.6016692000001",
-          created_at: "2021-08-08T01:41:53.862Z",
-          last_update_at: "2021-10-11T17:26:23.610Z",
-          distance_lieu_formation_etablissement_formateur: 4817,
-          etablissement_formateur_nda: "52440417944",
-          etablissement_gestionnaire_nda: "52440417944",
           to_update: false,
           lieu_formation_adresse_computed: "44 Boulevard Jean Moulin, 44100 Nantes",
         },
       ],
-      matching_mna_etablissement: [
-        {
-          _id: "5e8df92020ff3b2161268710",
-          siege_social: false,
-          etablissement_siege_siret: "19440029700017",
-          siret: "19440029700025",
-          siren: "194400297",
-          naf_code: "8559A",
-          naf_libelle: "Formation continue d'adultes",
-          date_creation: "1970-01-08T00:45:57.600Z",
-          date_mise_a_jour: "1970-01-19T11:59:03.250Z",
-          enseigne: "GRETA LOIRE-ATLANTIQUE",
-          adresse:
-            "LYCEE GENERAL ET TECHNOLOGIQUE LIVET\r\nGRETA LOIRE-ATLANTIQUE\r\n16 RUE DUFOUR\r\nBP 94225\r\n44042 NANTES CEDEX 1\r\nFRANCE",
-          numero_voie: "16",
-          type_voie: "RUE",
-          nom_voie: "DUFOUR",
-          complement_adresse: null,
-          code_postal: "44000",
-          num_departement: "44",
-          localite: "NANTES",
-          code_insee_localite: "44109",
-          cedex: "44042",
-          date_fermeture: "1970-01-01T00:00:00.000Z",
-          ferme: false,
-          region_implantation_code: "52",
-          region_implantation_nom: "Pays de la Loire",
-          commune_implantation_code: "44109",
-          commune_implantation_nom: "Nantes",
-          num_academie: 17,
-          nom_academie: "Nantes",
-          uai: "0441975H",
-          entreprise_siren: "194400297",
-          entreprise_enseigne: null,
-          entreprise_raison_sociale: "LYCEE GENERAL ET TECHNOLOGIQUE LIVET",
-          entreprise_nom_commercial: "",
-          entreprise_date_creation: "1969-12-30T07:03:18.000Z",
-          entreprise_date_radiation: null,
-          entreprise_siret_siege_social: "19440029700017",
-          created_at: "2020-02-29T17:35:39.246Z",
-          last_update_at: "2021-10-10T01:22:40.723Z",
-          entreprise_tranche_effectif_salarie: {
-            de: 250,
-            a: 499,
-            code: "32",
-            date_reference: "2018",
-            intitule: "250 à 499 salariés",
-          },
-          etablissement_siege_id: "5ec4bd2b68445bbb317602a5",
-          matched_uai: ["UAI_FORMATION", "UAI_FORMATEUR", "UAI_GESTIONNAIRE"],
-          id_mna_etablissement: "5e8df92020ff3b2161268710",
-        },
-      ],
+      matching_mna_etablissement: [],
       matching_mna_parcoursup_statuts: ["à publier"],
       etat_reconciliation: true,
       statut_reconciliation: "AUTOMATIQUE",
       id_reconciliation: "6138ac992e5f18469236f169",
       matching_rejete_updated: false,
       matching_rejete_raison: null,
-      statuts_history: [
-        {
-          from: {
-            matching_type: null,
-            matching_mna_formation: [],
-            etat_reconciliation: false,
-            statut_reconciliation: "INCONNU",
-            id_reconciliation: null,
-          },
-          to: {
-            matching_type: "7",
-            etat_reconciliation: true,
-            statut_reconciliation: "AUTOMATIQUE",
-            id_reconciliation: "6138ac992e5f18469236f169",
-          },
-          updated_at: 1633964751330,
-        },
-      ],
+      statuts_history: [],
       id_parcoursup: "33639",
       uai_cerfa: "0441975H",
       uai_insert_jeune: "0441975H",
@@ -423,61 +255,30 @@ test("opens rapprochement modal", async () => {
     };
   });
 
-  // const { result } = renderHook(() => useAuth());
+  await act(async () => {
+    const { getAllByText, getByText, getAllByTestId } = renderWithRouter(
+      <QueryClientProvider client={queryClient}>
+        <ReconciliationPs location={{ search: { defaultMode: "simple" } }} />
+      </QueryClientProvider>
+    );
 
-  // act(() => {
-  //   // eslint-disable-next-line no-unused-vars
-  //   const [auth, setAuth] = result.current;
-  //   setAuth({
-  //     permissions: { isAdmin: true },
-  //     sub: "test",
-  //     email: "test@apprentissage.beta.gouv.fr",
-  //     academie: "-1",
-  //     account_status: "CONFIRMED",
-  //     roles: ["admin", "user"],
-  //     acl: [],
-  //   });
-  // });
+    const match = getAllByText(/^Rapprochement des bases Parcoursup et Carif-Oref$/i);
+    expect(match).toHaveLength(2);
 
-  // await act(async () => {
-  const { getAllByText, getByText, getAllByTestId } = renderWithRouter(
-    <QueryClientProvider client={queryClient}>
-      <ReconciliationPs location={{ search: { defaultMode: "simple" } }} />
-    </QueryClientProvider>
-  );
+    await waitFor(() => getByText(/Pour réaliser le rapprochement des bases,/i));
+    await waitFor(() => getByText(/FILTRER/i));
+    await waitFor(() => getByText(/Exporter/i), { timeout: 40000 });
 
-  const match = getAllByText(/^Rapprochement des bases Parcoursup et Carif-Oref$/i);
-  expect(match).toHaveLength(2);
+    const cardPsNodes = getAllByTestId("cardps");
+    expect(cardPsNodes).toHaveLength(8);
 
-  await waitFor(() => getByText(/Pour réaliser le rapprochement des bases,/i));
-  await waitFor(() => getByText(/FILTRER/i));
-  await waitFor(() => getByText(/Exporter/i), { timeout: 40000 });
+    userEvent.click(cardPsNodes[0]);
 
-  const cardPsNodes = getAllByTestId("cardps");
-  expect(cardPsNodes).toHaveLength(8);
+    await waitFor(() => getByText(/^Vérifier la similitude des informations$/i));
 
-  // act(() => {
-  // userEvent.click(cardPsNodes[0]);
-  // fireEvent(
-  //   cardPsNodes[0],
-  //   new MouseEvent("click", {
-  //     bubbles: true,
-  //     cancelable: true,
-  //   })
-  // );
-  // });
+    const closeButton = getByText(/^fermer$/i);
+    expect(closeButton).toBeInTheDocument();
 
-  // await waitFor(() => getByText(/yooo!/i));
-  // await waitFor(() => getByText(/^Vérifier la similitude des informations$/i));
-
-  //   const closeButton = getByText(/^fermer$/i);
-  //   expect(closeButton).toBeInTheDocument();
-
-  // fireEvent(
-  //   closeButton,
-  //   new MouseEvent("click", {
-  //     bubbles: true,
-  //     cancelable: true,
-  //   })
-  // );
+    userEvent.click(closeButton);
+  });
 });

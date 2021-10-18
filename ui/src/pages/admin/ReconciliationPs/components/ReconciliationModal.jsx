@@ -14,7 +14,6 @@ const ReconciliationModal = React.memo(({ isOpen, onClose: onCloseProp, data, on
     async function run() {
       try {
         const form = await getResult({ id: data._id });
-        console.log(form);
         setFormation(form);
         setCurrentMnaFormation(0);
         if (form.statut_reconciliation === "VALIDE" && form.etat_reconciliation) {
@@ -33,7 +32,7 @@ const ReconciliationModal = React.memo(({ isOpen, onClose: onCloseProp, data, on
 
   let onValidationSubmit = useCallback(() => {
     setStep(1);
-    window.location.reload();
+    // window.location.reload();
   }, []);
   let onClose = useCallback(() => {
     setStep(1);
