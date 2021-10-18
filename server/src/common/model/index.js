@@ -18,8 +18,8 @@ module.exports = {
   User: createModel("user", schema.userSchema),
   Role: createModel("role", schema.roleSchema),
   RcoFormation: createModel("rcoformation", schema.rcoFormationSchema),
-  ConvertedFormation: createModel("convertedformation", schema.formationSchema, {
-    esIndexName: "convertedformation",
+  Formation: createModel("formation", schema.formationSchema, {
+    esIndexName: "formation",
   }),
   Report: createModel("report", schema.reportSchema),
   Log: createModel("log", schema.logSchema),

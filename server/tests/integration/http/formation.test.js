@@ -1,21 +1,21 @@
 const assert = require("assert");
 const httpTests = require("../../utils/httpTests");
-const { ConvertedFormation } = require("../../../src/common/model");
+const { Formation } = require("../../../src/common/model");
 
 httpTests(__filename, ({ startServer }) => {
   before(async () => {
-    await ConvertedFormation.deleteMany({});
+    await Formation.deleteMany({});
   });
 
   it("Should get formations list in ndjson format", async () => {
     const { httpClient } = await startServer();
-    await new ConvertedFormation({
+    await new Formation({
       cfd: "123456789",
     }).save();
-    await new ConvertedFormation({
+    await new Formation({
       cfd: "12345678",
     }).save();
-    await new ConvertedFormation({
+    await new Formation({
       cfd: "1234567",
     }).save();
 

@@ -1,5 +1,5 @@
 const logger = require("../../../common/logger");
-const { RcoFormation, ConvertedFormation } = require("../../../common/model/index");
+const { RcoFormation, Formation } = require("../../../common/model/index");
 const report = require("../../../logic/reporter/report");
 const config = require("config");
 const { createOrUpdateEtablissements } = require("../../../logic/updaters/etablissementUpdater");
@@ -80,7 +80,7 @@ const performConversion = async () => {
           rcoFormation.conversion_error = "success";
           await rcoFormation.save();
 
-          const cF = await ConvertedFormation.findOneAndUpdate(
+          const cF = await Formation.findOneAndUpdate(
             { id_rco_formation: mnaFormattedRcoFormation.id_rco_formation },
             { published: false, rco_published: false, update_error: null, to_update: false },
             {
@@ -125,7 +125,7 @@ const performConversion = async () => {
 
         mnaFormattedRcoFormation.to_update = true;
         // replace or insert new one
-        const newCf = await ConvertedFormation.findOneAndUpdate(
+        const newCf = await Formation.findOneAndUpdate(
           { id_rco_formation: mnaFormattedRcoFormation.id_rco_formation },
           mnaFormattedRcoFormation,
           {

@@ -1,6 +1,6 @@
 const express = require("express");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
-const { Report, ConvertedFormation } = require("../../common/model");
+const { Report, Formation } = require("../../common/model");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 
 module.exports = () => {
@@ -59,7 +59,7 @@ module.exports = () => {
         if (type === "trainingsUpdate" && report.data?.updated && !report.data.updated?.[0].id_rco_formation) {
           const maj = [];
           await asyncForEach(report.data?.updated || [], async ({ id, ...rest }) => {
-            const res = await ConvertedFormation.findOne({ _id: id }, { id_rco_formation: 1 }).lean();
+            const res = await Formation.findOne({ _id: id }, { id_rco_formation: 1 }).lean();
             maj.push({
               ...rest,
               ...res,
@@ -73,7 +73,7 @@ module.exports = () => {
           try {
             const maj = [];
             await asyncForEach(report.data.converted, async ({ id_rco_formation, ...rest }) => {
-              const cF = await ConvertedFormation.findOne({ id_rco_formation }).lean();
+              const cF = await Formation.findOne({ id_rco_formation }).lean();
               if (cF) {
                 maj.push({
                   ...rest,

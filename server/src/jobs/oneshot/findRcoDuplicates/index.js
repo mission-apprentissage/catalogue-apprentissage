@@ -1,6 +1,6 @@
 const logger = require("../../../common/logger");
 const { runScript } = require("../../scriptWrapper");
-const { ConvertedFormation } = require("../../../common/model");
+const { Formation } = require("../../../common/model");
 const config = require("config");
 const path = require("path");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
@@ -21,7 +21,7 @@ const { uniq } = require("lodash");
 runScript(async ({ mailer }) => {
   logger.info(`Start find RCO duplicates`);
 
-  const result = await ConvertedFormation.aggregate([
+  const result = await Formation.aggregate([
     {
       $group: {
         _id: {

@@ -1,7 +1,7 @@
 const axios = require("axios");
 const { runScript } = require("../../scriptWrapper");
 const logger = require("../../../common/logger");
-const { ConvertedFormation } = require("../../../common/model");
+const { Formation } = require("../../../common/model");
 const { DateTime } = require("luxon");
 const config = require("config");
 const path = require("path");
@@ -78,7 +78,7 @@ const run = async ({ mailer }) => {
   const uaiNotFound = [];
 
   await chunkedAsyncForEach(uais, async (uai) => {
-    const found = await ConvertedFormation.exists({
+    const found = await Formation.exists({
       published: true,
       $or: [{ uai_formation: uai }, { etablissement_formateur_uai: uai }, { etablissement_gestionnaire_uai: uai }],
     });
@@ -113,7 +113,7 @@ const run = async ({ mailer }) => {
     }
 
     const regex = new RegExp(`^${escapeRegex(intitule)}$`, "i");
-    const found = await ConvertedFormation.exists({
+    const found = await Formation.exists({
       published: true,
       $or: [
         { intitule_long: { $regex: regex } },
@@ -152,7 +152,7 @@ const run = async ({ mailer }) => {
     }
 
     const regex = new RegExp(`^${escapeRegex(intitule)}$`, "i");
-    const found = await ConvertedFormation.exists({
+    const found = await Formation.exists({
       published: true,
       $or: [
         { intitule_long: { $regex: regex } },

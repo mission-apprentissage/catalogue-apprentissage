@@ -2,7 +2,7 @@ const cluster = require("cluster");
 // const logger = require("../../common/logger");
 const updater = require("./updater/updater");
 const { runScript } = require("../scriptWrapper");
-const { ConvertedFormation, RcoFormation, SandboxFormation } = require("../../common/model/index");
+const { Formation, RcoFormation, SandboxFormation } = require("../../common/model/index");
 const { storeByChunks } = require("../../common/utils/reportUtils");
 const report = require("../../logic/reporter/report");
 const { createReportNewDiplomeGrandAge } = require("../../logic/controller/diplomes-grand-age");
@@ -15,7 +15,7 @@ const managedUnPublishedRcoFormation = async () => {
   // since we just want to hide the formation
 
   const rcoFormationNotPublishedIds = await RcoFormation.distinct("id_rco_formation", { published: false });
-  await ConvertedFormation.updateMany(
+  await Formation.updateMany(
     { id_rco_formation: { $in: rcoFormationNotPublishedIds } },
     {
       $set: {
@@ -95,11 +95,11 @@ const run = async () => {
       const activeFilterTmp = { ...filter, ...idFilter }; // FIXEME TODO filter contain id_rco_formation key
 
       console.log("Filters : ", activeFilterTmp);
-      let allIds = await ConvertedFormation.find(activeFilterTmp, { _id: 1 });
+      let allIds = await Formation.find(activeFilterTmp, { _id: 1 });
       allIds = allIds.map(({ _id }) => `${_id}`);
       const activeFilter = { _id: { $in: allIds } }; // Avoid issues when the updter modifies a field which is in the filters
 
-      const { pages, total } = await ConvertedFormation.paginate(activeFilter, { limit });
+      const { pages, total } = await Formation.paginate(activeFilter, { limit });
       const halfItems = Math.floor(pages / numCPUs) * limit;
 
       console.log(`total: ${total}`, pages, halfItems);

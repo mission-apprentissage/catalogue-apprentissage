@@ -14,7 +14,7 @@ const crypto = require("crypto");
 const { rebuildEsIndex } = require("./esIndex/esIndex");
 const { importEtablissements } = require("./etablissements");
 const { spawn } = require("child_process");
-const { ConvertedFormation } = require("../common/model");
+const { Formation } = require("../common/model");
 
 const { rncpImporter, bcnImporter, onisepImporter } = require("@mission-apprentissage/tco-service-node");
 
@@ -26,7 +26,7 @@ runScript(async ({ catalogue, db }) => {
   try {
     logger.info(`Start all jobs`);
 
-    ConvertedFormation.pauseAllMongoosaticHooks();
+    Formation.pauseAllMongoosaticHooks();
 
     // import tco
     await bcnImporter();
@@ -83,11 +83,11 @@ runScript(async ({ catalogue, db }) => {
     await afPertinence();
     await sleep(30000);
 
-    ConvertedFormation.startAllMongoosaticHooks();
+    Formation.startAllMongoosaticHooks();
 
     // es
     const filter = { published: true };
-    await rebuildEsIndex("convertedformation", false, filter); // ~ 44 minutes => ~ 22 minutes
+    await rebuildEsIndex("formation", false, filter); // ~ 44 minutes => ~ 22 minutes
     await rebuildEsIndex("psformations", false); // ~ 3 minutes
   } catch (error) {
     logger.error(error);
