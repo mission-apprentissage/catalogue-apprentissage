@@ -20,7 +20,6 @@
     "docker:clean": "docker-compose kill && docker system prune --force --volumes",
     "seed": "node src/jobs/seed/index.js",
     "jobs": "node src/jobs/index.js",
-    "clear": "node src/jobs/clear/index.js",
     "rco:importer": "standalone=true node src/jobs/rcoImporter/index.js",
     "rco:converter": "standalone=true node src/jobs/rcoConverter/index.js",
     "trainings:updater": "standalone=true node src/jobs/trainingsUpdater/index.js",

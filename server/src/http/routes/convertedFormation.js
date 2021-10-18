@@ -23,7 +23,7 @@ module.exports = () => {
    *     description: >
    *       Permet, à l'aide de critères, de rechercher dans les formations en apprentissage 2021 <br/><br/>
    *       Le champ Query est une query Mongo stringify<br/><br/>
-   *       **Pour definir vos critères de recherche veuillez regarder le schéma mnaFormation (en bas de cette page)**<br/><br/>
+   *       **Pour definir vos critères de recherche veuillez regarder le schéma formation (en bas de cette page)**<br/><br/>
    *       champ **select**: Selection du ou des champs retournés, nom_du_champ: 1 pour l'inclure dans le retour
    *     parameters:
    *       - in: query
@@ -79,7 +79,7 @@ module.exports = () => {
    *                  formations:
    *                    type: array
    *                    items:
-   *                      $ref: '#/components/schemas/mnaFormation'
+   *                      $ref: '#/components/schemas/formation'
    *                  pagination:
    *                    type: object
    *                    properties:
@@ -239,7 +239,7 @@ module.exports = () => {
    *     description: >
    *       Permet, à l'aide de critères, de récupérer le nombre de formations en apprentissage 2021 <br/><br/>
    *       Le champ Query est une query Mongo stringify<br/><br/>
-   *       **Pour definir vos critères de recherche veuillez regarder le schéma mnaFormation (en bas de cette page)**
+   *       **Pour definir vos critères de recherche veuillez regarder le schéma formation (en bas de cette page)**
    *     parameters:
    *       - in: query
    *         name: payload
@@ -304,7 +304,7 @@ module.exports = () => {
    *     description: >
    *       Permet, à l'aide de critères, de rechercher dans les formations en apprentissage 2021 <br/><br/>
    *       Le champ Query est une query Mongo stringify<br/><br/>
-   *       **Pour definir vos critères de recherche veuillez regarder le schéma mnaFormation (en bas de cette page)**
+   *       **Pour definir vos critères de recherche veuillez regarder le schéma formation (en bas de cette page)**
    *     parameters:
    *       - in: path
    *         name: id

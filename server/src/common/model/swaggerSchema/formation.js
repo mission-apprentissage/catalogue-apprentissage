@@ -1,5 +1,5 @@
 module.exports = {
-  mnaFormation: {
+  formation: {
     type: "object",
     properties: {
       etablissement_gestionnaire_id: {

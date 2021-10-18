@@ -2,7 +2,7 @@ const etablissementFormateurInfo = require("./etablissement.formateur.sub");
 const etablissementGestionnaireInfo = require("./etablissement.gestionnaire.sub");
 const etablissementReferenceInfo = require("./etablissement.reference.sub");
 
-const mnaFormationSchema = {
+const formationSchema = {
   ...etablissementGestionnaireInfo,
   ...etablissementFormateurInfo,
   ...etablissementReferenceInfo,
@@ -454,4 +454,4 @@ const mnaFormationSchema = {
   },
 };
 
-module.exports = mnaFormationSchema;
+module.exports = formationSchema;
