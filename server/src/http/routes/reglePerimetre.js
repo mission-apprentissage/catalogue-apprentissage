@@ -4,7 +4,7 @@ const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { toBePublishedRules } = require("../../common/utils/referenceUtils");
 const { getQueryFromRule } = require("../../common/utils/rulesUtils");
 const { getNiveauxDiplomesTree } = require("@mission-apprentissage/tco-service-node");
-const { ReglePerimetre, ConvertedFormation } = require("../../common/model");
+const { ReglePerimetre, Formation } = require("../../common/model");
 
 module.exports = () => {
   const router = express.Router();
@@ -14,7 +14,7 @@ module.exports = () => {
     tryCatch(async (req, res) => {
       const tree = await getNiveauxDiplomesTree();
 
-      const diplomesCounts = await ConvertedFormation.aggregate([
+      const diplomesCounts = await Formation.aggregate([
         {
           $match: {
             ...toBePublishedRules,
@@ -104,7 +104,7 @@ module.exports = () => {
         throw Boom.badRequest();
       }
 
-      const result = await ConvertedFormation.countDocuments(
+      const result = await Formation.countDocuments(
         getQueryFromRule({ niveau, diplome, regle_complementaire, num_academie })
       );
       return res.json(result);
@@ -135,7 +135,7 @@ module.exports = () => {
         return res.json({ nbRules: rules.length, nbFormations: 0 });
       }
 
-      const result = await ConvertedFormation.countDocuments({
+      const result = await Formation.countDocuments({
         ...(num_academie && num_academie !== "null" ? { num_academie } : {}),
         $or: rules.map(getQueryFromRule),
       });

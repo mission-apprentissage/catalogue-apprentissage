@@ -15,8 +15,8 @@ const corsMiddleware = require("./middlewares/corsMiddleware");
 const authMiddleware = require("./middlewares/authMiddleware");
 const permissionsMiddleware = require("./middlewares/permissionsMiddleware");
 const packageJson = require("../../package.json");
-const convertedFormation = require("./routes/convertedFormation");
-const convertedFormationSecure = require("./routes/convertedFormationSecure");
+const formation = require("./routes/formation");
+const formationSecure = require("./routes/formationSecure");
 const report = require("./routes/report");
 const rcoFormation = require("./routes/rcoFormation");
 const auth = require("./routes/auth");
@@ -114,7 +114,7 @@ module.exports = async (components, verbose = true) => {
 
   app.use("/api/v1/es/search", esSearch());
   app.use("/api/v1/search", esMultiSearchNoIndex());
-  app.use("/api/v1/entity", convertedFormation());
+  app.use("/api/v1/entity", formation());
   app.use("/api/v1/entity", pendingRcoFormation());
   app.use("/api/v1/entity", report());
   app.use("/api/v1/entity", etablissement(components));
@@ -125,7 +125,7 @@ module.exports = async (components, verbose = true) => {
   app.use("/api/v1/entity", messageScript());
   app.use("/api/v1/entity", reglePerimetre());
   app.use("/api/v1/admin", apiKeyAuthMiddleware, adminOnly, admin(components));
-  app.use("/api/v1/entity", apiKeyAuthMiddleware, convertedFormationSecure());
+  app.use("/api/v1/entity", apiKeyAuthMiddleware, formationSecure());
   app.use("/api/v1/stats", apiKeyAuthMiddleware, adminOnly, stats(components));
   app.use("/api/v1/affelnet", affelnet(components));
   app.use("/api/v1/entity", apiKeyAuthMiddleware, etablissementSecure(components));
@@ -135,7 +135,7 @@ module.exports = async (components, verbose = true) => {
   /** DEPRECATED */
   app.use("/api/es/search", esSearch());
   app.use("/api/search", esMultiSearchNoIndex());
-  app.use("/api/entity", convertedFormation());
+  app.use("/api/entity", formation());
   app.use("/api/entity", pendingRcoFormation());
   app.use("/api/entity", report());
   app.use("/api/rcoformation", rcoFormation());
@@ -144,7 +144,7 @@ module.exports = async (components, verbose = true) => {
   app.use("/api/password", password(components));
   app.use("/api/parcoursup", parcoursup(components));
   app.use("/api/admin", authMiddleware, adminOnly, admin(components));
-  app.use("/api/entity", authMiddleware, convertedFormationSecure());
+  app.use("/api/entity", authMiddleware, formationSecure());
   app.use("/api/stats", stats(components));
   app.use("/api/affelnet", affelnet(components));
   app.use("/api/entity", authMiddleware, etablissementSecure(components));

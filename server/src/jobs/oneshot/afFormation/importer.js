@@ -1,7 +1,7 @@
 const logger = require("../../../common/logger");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { getJsonFromXlsxFile } = require("../../../common/utils/fileUtils");
-const { AfFormation, ConvertedFormation } = require("../../../common/model");
+const { AfFormation, Formation } = require("../../../common/model");
 const { isFinite } = require("lodash");
 const stringSimilarity = require("string-similarity");
 const { getCpInfo, getMef10Info, getBcnInfo } = require("@mission-apprentissage/tco-service-node");
@@ -118,7 +118,7 @@ const getCfdFromCatalogue = async (formation) => {
 
   const dept = `${formation.code_postal_modified.code_postal.substring(0, 2)}`;
 
-  const result = await ConvertedFormation.find({
+  const result = await Formation.find({
     num_departement: dept,
     $and: [
       {

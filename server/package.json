@@ -28,7 +28,7 @@
     "psup:shot-2021": "standalone=true node src/jobs/parcoursup/miscJobs/_fillPsFormationStatus.js",
     "psup:shot2-2021": "standalone=true node src/jobs/parcoursup/miscJobs/_fillPsReconciliationIds.js",
     "psup:coverage-2021": "standalone=true node src/jobs/parcoursup/coverage.js",
-    "psup:setPsIds-2021": "standalone=true node src/jobs/parcoursup/setPsIdsToConvertedFormations.js",
+    "psup:setPsIds-2021": "standalone=true node src/jobs/parcoursup/setPsIdsToFormations.js",
     "psup:reference": "standalone=true node src/jobs/parcoursup/reference/index.js",
     "psup:pertinence": "standalone=true node src/jobs/parcoursup/pertinence/index.js",
     "psup:updatemna": "standalone=true node src/jobs/parcoursup/updateMatchInfo.js",

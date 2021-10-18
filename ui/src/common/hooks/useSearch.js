@@ -40,7 +40,7 @@ const getEsCount = async (queries) => {
       },
     },
   };
-  const results = await _post("/api/es/search/convertedformation/_count", countEsQuery);
+  const results = await _post("/api/es/search/formation/_count", countEsQuery);
   return results;
 };
 

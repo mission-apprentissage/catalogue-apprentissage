@@ -1,4 +1,4 @@
-const { ConvertedFormation } = require("../../../common/model");
+const { Formation } = require("../../../common/model");
 const logger = require("../../../common/logger");
 const { getQueryFromRule } = require("../../../common/utils/rulesUtils");
 const { ReglePerimetre } = require("../../../common/model");
@@ -7,7 +7,7 @@ const { asyncForEach } = require("../../../common/utils/asyncUtils");
 
 const run = async () => {
   // set "hors périmètre"
-  await ConvertedFormation.updateMany(
+  await Formation.updateMany(
     {
       $or: [
         { affelnet_statut: null },
@@ -21,7 +21,7 @@ const run = async () => {
 
   // set "à publier (soumis à validation)" for trainings matching affelnet eligibility rules
   // reset "à publier" & "à publier (soumis à validation)"
-  await ConvertedFormation.updateMany(
+  await Formation.updateMany(
     {
       affelnet_statut: { $in: ["à publier (soumis à validation)", "à publier"] },
     },
@@ -38,7 +38,7 @@ const run = async () => {
     is_deleted: { $ne: true },
   }).lean();
 
-  await ConvertedFormation.updateMany(
+  await Formation.updateMany(
     {
       ...filterHP,
       $or: aPublierSoumisAValidationRules.map(getQueryFromRule),
@@ -58,7 +58,7 @@ const run = async () => {
     is_deleted: { $ne: true },
   }).lean();
 
-  await ConvertedFormation.updateMany(
+  await Formation.updateMany(
     {
       ...filter,
       $or: aPublierRules.map(getQueryFromRule),
@@ -73,7 +73,7 @@ const run = async () => {
 
   await asyncForEach(academieRules, async (rule) => {
     await asyncForEach(Object.entries(rule.statut_academies), async ([num_academie, status]) => {
-      await ConvertedFormation.updateMany(
+      await Formation.updateMany(
         {
           affelnet_statut: {
             $in: ["hors périmètre", "à publier (soumis à validation)", "à publier"],
@@ -90,32 +90,32 @@ const run = async () => {
   await updateTagsHistory("affelnet_statut");
 
   // stats
-  const totalPublished = await ConvertedFormation.countDocuments({ published: true });
-  const totalErrors = await ConvertedFormation.countDocuments({
+  const totalPublished = await Formation.countDocuments({ published: true });
+  const totalErrors = await Formation.countDocuments({
     published: true,
     affelnet_error: { $ne: null },
   });
-  const totalNotRelevant = await ConvertedFormation.countDocuments({
+  const totalNotRelevant = await Formation.countDocuments({
     published: true,
     affelnet_statut: "hors périmètre",
   });
-  const totalToValidate = await ConvertedFormation.countDocuments({
+  const totalToValidate = await Formation.countDocuments({
     published: true,
     affelnet_statut: "à publier (soumis à validation)",
   });
-  const totalToCheck = await ConvertedFormation.countDocuments({
+  const totalToCheck = await Formation.countDocuments({
     published: true,
     affelnet_statut: "à publier",
   });
-  const totalPending = await ConvertedFormation.countDocuments({
+  const totalPending = await Formation.countDocuments({
     published: true,
     affelnet_statut: "en attente de publication",
   });
-  const totalAfPublished = await ConvertedFormation.countDocuments({
+  const totalAfPublished = await Formation.countDocuments({
     published: true,
     affelnet_statut: "publié",
   });
-  const totalAfNotPublished = await ConvertedFormation.countDocuments({
+  const totalAfNotPublished = await Formation.countDocuments({
     published: true,
     affelnet_statut: "non publié",
   });

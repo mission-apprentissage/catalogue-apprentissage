@@ -2,7 +2,7 @@ const express = require("express");
 const Joi = require("joi");
 const { oleoduc, transformData } = require("oleoduc");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
-const { ConvertedFormation, PsFormation } = require("../../common/model");
+const { Formation, PsFormation } = require("../../common/model");
 const { mnaFormationUpdater } = require("../../logic/updaters/mnaFormationUpdater");
 const { sendJsonStream } = require("../../common/utils/httpUtils");
 
@@ -142,7 +142,7 @@ module.exports = () => {
         ...queryAsRegex,
       };
 
-      const allData = await ConvertedFormation.paginate(mQuery, {
+      const allData = await Formation.paginate(mQuery, {
         page,
         limit,
         lean: true,
@@ -210,7 +210,7 @@ module.exports = () => {
         ...queryAsRegex,
       };
 
-      const allData = await ConvertedFormation.paginate(mQuery, {
+      const allData = await Formation.paginate(mQuery, {
         page,
         limit,
         lean: true,
@@ -263,7 +263,7 @@ module.exports = () => {
     tryCatch(async (req, res) => {
       let qs = req.query;
       const query = qs && qs.query ? JSON.parse(qs.query) : {};
-      const count = await ConvertedFormation.countDocuments(query);
+      const count = await Formation.countDocuments(query);
       return res.json(count);
     })
   );
@@ -285,7 +285,7 @@ module.exports = () => {
               updates_history: 0,
               __v: 0,
             };
-      const retrievedData = await ConvertedFormation.findOne(query, select).lean();
+      const retrievedData = await Formation.findOne(query, select).lean();
       if (retrievedData) {
         return res.json(retrievedData);
       }
@@ -332,7 +332,7 @@ module.exports = () => {
               updates_history: 0,
               __v: 0,
             };
-      const retrievedData = await ConvertedFormation.findById(itemId, select).lean();
+      const retrievedData = await Formation.findById(itemId, select).lean();
       if (retrievedData) {
         return res.json(retrievedData);
       }
@@ -382,7 +382,7 @@ module.exports = () => {
       const selector = JSON.parse(select);
 
       let stream = oleoduc(
-        ConvertedFormation.find(filter, selector).limit(limit).cursor(),
+        Formation.find(filter, selector).limit(limit).cursor(),
         transformData((formation) => `${JSON.stringify(formation)}\n`)
       );
 
