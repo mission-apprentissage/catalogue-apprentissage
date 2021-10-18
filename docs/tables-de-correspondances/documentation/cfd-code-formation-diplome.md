@@ -8,200 +8,62 @@ description: Code formation diplôme (CFD - code Éducation Nationale)
 
 Un code cfd dont je recherche les informations détaillées. Défini comme ci-dessous 
 
-<table>
-  <thead>
-    <tr>
-      <th style="text-align:left">
-        <p>CDF</p>
-        <p></p>
-      </th>
-      <th style="text-align:left">
-        <p>50022427</p>
-        <p>(<a href="http://infocentre.pleiade.education.fr/bcn/workspace/viewTable/n/V_FORMATION_DIPLOME">table</a>)</p>
-      </th>
-      <th style="text-align:left">ARTS ET TECHNIQUES DU VERRE OPTION DECORATEUR (CAP)</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align:left">500</td>
-      <td style="text-align:left">Niveau formation dipl&#xF4;me (<a href="http://infocentre.pleiade.education.fr/bcn/index.php/workspace/viewTable/n/N_NIVEAU_FORMATION_DIPLOME/nbElements/20">table</a>)</td>
-      <td
-      style="text-align:left">
-        <p>CERTIFICAT D&apos;APTITUDES PROFESSIONNELLES</p>
-        <p><em>! la table des niveaux n&#x2019;est pas &#xE0; jour</em>
-        </p>
-        </td>
-    </tr>
-    <tr>
-      <td style="text-align:left">224</td>
-      <td style="text-align:left">Groupe sp&#xE9;cialit&#xE9; ou NSF (<a href="http://infocentre.pleiade.education.fr/bcn/workspace/viewTable/n/N_GROUPE_SPECIALITE">table</a>)</td>
-      <td
-      style="text-align:left">MATERIAUX DE CONSTRUCTION, VERRE, CERAM.</td>
-    </tr>
-    <tr>
-      <td style="text-align:left">27</td>
-      <td style="text-align:left">Num&#xE9;ro d&#x2019;ordre</td>
-      <td style="text-align:left"></td>
-    </tr>
-    <tr>
-      <td style="text-align:left"></td>
-      <td style="text-align:left">Lettre sp&#xE9;cialit&#xE9;</td>
-      <td style="text-align:left">(Optionnel)</td>
-    </tr>
-  </tbody>
-</table>
+| <p>CDF</p><p></p> | <p>50022427</p><p>(<a href="http://infocentre.pleiade.education.fr/bcn/workspace/viewTable/n/V_FORMATION_DIPLOME">table</a>)</p>                        | ARTS ET TECHNIQUES DU VERRE OPTION DECORATEUR (CAP)                                                   |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| 500               | Niveau formation diplôme ([table](http://infocentre.pleiade.education.fr/bcn/index.php/workspace/viewTable/n/N_NIVEAU_FORMATION_DIPLOME/nbElements/20)) | <p>CERTIFICAT D'APTITUDES PROFESSIONNELLES</p><p><em>! la table des niveaux n’est pas à jour</em></p> |
+| 224               | Groupe spécialité ou NSF ([table](http://infocentre.pleiade.education.fr/bcn/workspace/viewTable/n/N_GROUPE_SPECIALITE))                                | MATERIAUX DE CONSTRUCTION, VERRE, CERAM.                                                              |
+| 27                | Numéro d’ordre                                                                                                                                          |                                                                                                       |
+|                   | Lettre spécialité                                                                                                                                       | (Optionnel)                                                                                           |
 
 **Exemple pour le CAP Arts et technique du verre - option décorateur :**
 
 * liste les formations qui existent de droit et reconnues par l'état
 * dépend du ministère de l'Education Nationale
-* utilisé par Ministère de l’éducation nationale et de la jeunesse \(MENJ\) et le Ministère de l’enseignement supérieur, de la recherche et de l’innovation \(MESRI\)
+* utilisé par Ministère de l’éducation nationale et de la jeunesse (MENJ) et le Ministère de l’enseignement supérieur, de la recherche et de l’innovation (MESRI)
 * Ce code est forcément sur **8 caractères alphanumériques**
 
 ## En sortie ?
 
 Ce que je peux récupérer à partir CFD. 
 
-<table>
-  <thead>
-    <tr>
-      <th style="text-align:left">Nom du champ</th>
-      <th style="text-align:left">Description</th>
-      <th style="text-align:left">Type</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align:left">cfd</td>
-      <td style="text-align:left">
-        <p>La valeur du code formation dipl&#xF4;me <b>Mise &#xE0; jour </b>&#x26A0;&#xFE0F;</p>
-        <p>Peu importe le CFD recherch&#xE9; ce champ retournera le CFD le plus &#xE0;
-          jour possible bas&#xE9; sur les informations de la BCN. Si le cfd est diff&#xE9;rent
-          alors le champ cfd_outdated sera &#xE0; <em><code>true</code></em>.</p>
-      </td>
-      <td style="text-align:left">string</td>
-    </tr>
-    <tr>
-      <td style="text-align:left">cfd_outdated</td>
-      <td style="text-align:left">
-        <p>Indique si le CFD recherch&#xE9; n&apos;est plus &#xE0; jour.</p>
-        <p>Si vrai alors la valeur de champ cfd est diff&#xE9;rente de celle recherch&#xE9;e.</p>
-      </td>
-      <td style="text-align:left">bolean</td>
-    </tr>
-    <tr>
-      <td style="text-align:left">date_fermeture</td>
-      <td style="text-align:left">
-        <p>Date &#xE0; laquelle le code recherch&#xE9; a ferm&#xE9;.</p>
-        <p>Si la valeur est &#xE9;gale &#xE0; <em><code>null</code></em> alors ce code
-          est en vigueur.</p>
-      </td>
-      <td style="text-align:left">date | null</td>
-    </tr>
-    <tr>
-      <td style="text-align:left">specialite</td>
-      <td style="text-align:left">Retourne l&apos;information de sp&#xE9;cialit&#xE9; du code recherch&#xE9;.
-        <br
-        />Cette information ne peut &#xEA;tre trouv&#xE9;e que si le code recherch&#xE9;
-        est sur 9 caract&#xE8;res. exemple: <em><code>26033206T</code></em> 
-      </td>
-      <td style="text-align:left">object | null</td>
-    </tr>
-    <tr>
-      <td style="text-align:left">niveau</td>
-      <td style="text-align:left">
-        <p>Niveau de la formation.</p>
-        <p>&quot;3 (CAP...)&quot;, &quot;4 (BAC...)&quot;, &quot;5 (BTS, DEUST...)&quot;,
-          &quot;6 (Licence, BUT...)&quot;, &quot;7 (Master, titre ing&#xE9;nieur...)&quot;,
-          &quot;8 (Doctorat...)&quot;,</p>
-      </td>
-      <td style="text-align:left">string</td>
-    </tr>
-    <tr>
-      <td style="text-align:left">intitule_long</td>
-      <td style="text-align:left">Intitul&#xE9; long BCN (N ou V)_FORMATION_DIPLOME LIBELLE_LONG_200</td>
-      <td
-      style="text-align:left">string</td>
-    </tr>
-    <tr>
-      <td style="text-align:left">intitule_court</td>
-      <td style="text-align:left">Intitul&#xE9; court BCN (N ou V)_FORMATION_DIPLOME LIBELLE_STAT_33</td>
-      <td
-      style="text-align:left">string</td>
-    </tr>
-    <tr>
-      <td style="text-align:left">libelle_court</td>
-      <td style="text-align:left">Libelle court BCN (N ou V)_FORMATION_DIPLOME LIBELLE_COURT</td>
-      <td style="text-align:left">string</td>
-    </tr>
-    <tr>
-      <td style="text-align:left">diplome</td>
-      <td style="text-align:left">Nom du dipl&#xF4;me BCN Table N_NIVEAU_FORMATION LIBELLE_100</td>
-      <td style="text-align:left">string</td>
-    </tr>
-    <tr>
-      <td style="text-align:left">niveau_formation_diplome</td>
-      <td style="text-align:left">Code niveau dipl&#xF4;me BCN (N ou V)_FORMATION_DIPLOME NIVEAU_FORMATION_DIPLOME</td>
-      <td
-      style="text-align:left">string</td>
-    </tr>
-    <tr>
-      <td style="text-align:left">rncp</td>
-      <td style="text-align:left"><em>Plus de d&#xE9;tails sur </em><a href="rncp.md"><em>la page RNCP</em></a>&lt;em&gt;&lt;/em&gt;</td>
-      <td
-      style="text-align:left">object</td>
-    </tr>
-    <tr>
-      <td style="text-align:left">mefs</td>
-      <td style="text-align:left"><em>Plus de d&#xE9;tails sur </em><a href="mef.md"><em>la page MEF</em></a>&lt;em&gt;&lt;/em&gt;</td>
-      <td
-      style="text-align:left">object</td>
-    </tr>
-    <tr>
-      <td style="text-align:left">onisep</td>
-      <td style="text-align:left"></td>
-      <td style="text-align:left">object</td>
-    </tr>
-    <tr>
-      <td style="text-align:left">opcos</td>
-      <td style="text-align:left"></td>
-      <td style="text-align:left">[string]</td>
-    </tr>
-  </tbody>
-</table>
+| Nom du champ             | Description                                                                                                                                                                                                                                                                                   | Type           |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| cfd                      | <p>La valeur du code formation diplôme <strong>Mise à jour </strong>⚠️</p><p>Peu importe le CFD recherché ce champ retournera le CFD le plus à jour possible basé sur les informations de la BCN.  Si le cfd est différent alors le champ cfd_outdated sera à <em><code>true</code></em>.</p> | string         |
+| cfd_outdated             | <p>Indique si le CFD recherché n'est plus à jour.</p><p>Si vrai alors la valeur de champ cfd est différente de celle recherchée.</p>                                                                                                                                                          | bolean         |
+| date_fermeture           | <p>Date à laquelle le code recherché a fermé.</p><p>Si la valeur est égale à <em><code>null</code></em> alors ce code est en vigueur. </p>                                                                                                                                                    | date \| null   |
+| specialite               | <p>Retourne l'information de spécialité du code recherché.<br>Cette information ne peut être trouvée que si le code recherché est sur 9 caractères. exemple: <em><code>26033206T</code></em>   </p>                                                                                           | object \| null |
+| niveau                   | <p>Niveau de la formation. </p><p>"3 (CAP...)", "4 (BAC...)", "5 (BTS, DEUST...)", "6 (Licence, BUT...)", "7 (Master, titre ingénieur...)", "8 (Doctorat...)",</p>                                                                                                                            | string         |
+| intitule_long            | Intitulé long BCN (N ou V)\_FORMATION_DIPLOME  LIBELLE_LONG\_200                                                                                                                                                                                                                              | string         |
+| intitule_court           | Intitulé court BCN (N ou V)\_FORMATION_DIPLOME  LIBELLE_STAT\_33                                                                                                                                                                                                                              | string         |
+| libelle_court            | Libelle court BCN (N ou V)\_FORMATION_DIPLOME LIBELLE_COURT                                                                                                                                                                                                                                   | string         |
+| diplome                  | Nom du diplôme BCN Table N_NIVEAU_FORMATION LIBELLE\_100                                                                                                                                                                                                                                      | string         |
+| niveau_formation_diplome | Code niveau diplôme BCN (N ou V)\_FORMATION_DIPLOME  NIVEAU_FORMATION_DIPLOME                                                                                                                                                                                                                 | string         |
+| rncp                     | _Plus de détails sur _[_la page RNCP_](rncp.md)__                                                                                                                                                                                                                                             | object         |
+| mefs                     | _Plus de détails sur _[_la page MEF_](mef.md)__                                                                                                                                                                                                                                               | object         |
+| onisep                   |                                                                                                                                                                                                                                                                                               | object         |
+| opcos                    |                                                                                                                                                                                                                                                                                               | \[string]      |
 
 ## Intégration ? 
 
 ### API
 
-Swagger: [https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/\#/Outils/post\_cfd](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_cfd)
+Swagger: [https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_cfd](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_cfd)
 
-{% api-method method="post" host="https://tables-correspondances.apprentissage.beta.gouv.fr/api" path="/v1/cfd" %}
-{% api-method-summary %}
-Récupérer les informations liées à un CFD 
-{% endapi-method-summary %}
+{% swagger baseUrl="https://tables-correspondances.apprentissage.beta.gouv.fr/api" path="/v1/cfd" method="post" summary="Récupérer les informations liées à un CFD " %}
+{% swagger-description %}
+Cette API vous permet de récupérer les informations relatives à un CFD. 
 
-{% api-method-description %}
-Cette API vous permet de récupérer les informations relatives à un CFD.   
+\
+
+
 Appels sous-jacents aux tables BCN V et N formations, MEF, référentiel RNCP
-{% endapi-method-description %}
+{% endswagger-description %}
 
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-body-parameters %}
-{% api-method-parameter name="cfd" type="string" required=true %}
-chaîne de 8 caractères \(+ 1 optionnels correspondant à la spécialité\)
-{% endapi-method-parameter %}
-{% endapi-method-body-parameters %}
-{% endapi-method-request %}
+{% swagger-parameter in="body" name="cfd" type="string" %}
+chaîne de 8 caractères (+ 1 optionnels correspondant à la spécialité)
+{% endswagger-parameter %}
 
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
-CFD successfully retrieved.
-{% endapi-method-response-example-description %}
-
+{% swagger-response status="200" description="CFD successfully retrieved." %}
 ```javascript
 {
   "result": {
@@ -361,14 +223,12 @@ CFD successfully retrieved.
   }
 }
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
+{% endswagger-response %}
+{% endswagger %}
 
 #### Exemple:
 
-[https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/\#/Outils/post\_cfd](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_cfd)
+[https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_cfd](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_cfd)
 
 ![](../../.gitbook/assets/image.png)
 
@@ -377,4 +237,3 @@ CFD successfully retrieved.
 ```javascript
 // TODO
 ```
-

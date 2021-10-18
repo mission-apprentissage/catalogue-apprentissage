@@ -2,11 +2,11 @@
 
 ## Peut-on récupérer l’historique de mise à jour d'un Établissement ?
 
-Oui, il possible d'obtenir les informations de mise à jour d'un établissement.   
-L'ancienne valeur et la nouvelle sont stockées dans le champ _`updates_history`_   
-Sous la forme :
+Oui, il possible d'obtenir les informations de mise à jour d'un établissement. \
+L'ancienne valeur et la nouvelle sont stockées dans le champ _`updates_history` _\
+__Sous la forme :
 
-```text
+```
 updates_history: [
     {
         from: { 
@@ -21,17 +21,17 @@ updates_history: [
 ]
 ```
 
-Les critères de recherche sont très libres, avec l'aide d'un développeur vous pouvez rechercher via une requête sous forme MongoDB.   
-  
+Les critères de recherche sont très libres, avec l'aide d'un développeur vous pouvez rechercher via une requête sous forme MongoDB. \
+\
 Tester: 
 
-[https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/\#/Etablissements/get\_entity\_etablissements](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Etablissements/get_entity_etablissements)
+[https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Etablissements/get_entity_etablissements](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Etablissements/get_entity_etablissements)
 
-![](../.gitbook/assets/image%20%287%29.png)
+![](<../.gitbook/assets/image (7).png>)
 
-Exemple de retour \(mise à jour des informations de localisation\): 
+Exemple de retour (mise à jour des informations de localisation): 
 
-```text
+```
       {
           "from": {
             "code_commune_insee": null,
@@ -51,17 +51,19 @@ Exemple de retour \(mise à jour des informations de localisation\):
 
 Via appels directs dans votre navigateur : 
 
-```text
+```
 https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/entity/etablissements?select={"updates_history":1}&query={MA_REQUETE_MONGO}
 ```
 
 ## Comment récupérer les évolutions d'un code formation diplôme ? 
 
-Le chemin API [https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/cfd](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/cfd)   
-vous retournera les mises à jour BCN du code formation diplôme que vous recherchez.  
+Le chemin API [https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/cfd](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/cfd) \
+vous retournera les mises à jour BCN du code formation diplôme que vous recherchez.\
 Vous trouverez les détails sur cette page :  
 
-{% page-ref page="documentation/cfd-code-formation-diplome.md" %}
+{% content-ref url="documentation/cfd-code-formation-diplome.md" %}
+[cfd-code-formation-diplome.md](documentation/cfd-code-formation-diplome.md)
+{% endcontent-ref %}
 
 
 
@@ -69,5 +71,6 @@ Vous trouverez les détails sur cette page :
 
 Vous pouvez retrouver les détails sur cette page :
 
-{% page-ref page="documentation/swagger/api-etablissement.md" %}
-
+{% content-ref url="documentation/swagger/api-etablissement.md" %}
+[api-etablissement.md](documentation/swagger/api-etablissement.md)
+{% endcontent-ref %}

@@ -17,9 +17,9 @@ Les différents traitements sur un établissement se font autour de la donnée p
 
 ### 1. Vérifications et enrichissements via Entreprise.api.gouv.fr
 
-![](../.gitbook/assets/e3.png)
+![](../.gitbook/assets/E3.png)
 
-La consolidation des informations de l'entreprise se fait par l’intermédiaire de l'API entreprise [https://entreprise.api.gouv.fr/](https://entreprise.api.gouv.fr/). 
+La consolidation des informations de l'entreprise se fait par l’intermédiaire de l'API entreprise [https://entreprise.api.gouv.fr/](https://entreprise.api.gouv.fr). 
 
 Si le SIRET existe dans l'api, nous retournons les informations suivantes : 
 
@@ -201,43 +201,42 @@ retrouvez le code source de ce script sur : [https://github.com/mission-apprenti
 * API Siren 
 * API Entreprise 
 
-_Vous pouvez retrouver les détails du traitement "Vérifications et enrichissements  **Conventionnement**" sur cette page section numéro 5._ 
+_Vous pouvez retrouver les détails du traitement "Vérifications et enrichissements  **Conventionnement**" sur cette page section numéro 5. _
 
 ### 2. Récupération des informations de géolocalisation via geo.api.gouv.fr
 
 [https://geo.api.gouv.fr/adresse](https://geo.api.gouv.fr/adresse)
 
-|  |  |
-| :--- | :--- |
+|                                     |                                                    |
+| ----------------------------------- | -------------------------------------------------- |
 | ![](../.gitbook/assets/apigeo2.png) | Recherche geo coordonnées - Latitude et longitude  |
 
 ### 3. Vérifications et enrichissements Conventionnement
 
-![](../.gitbook/assets/e4.png)
+![](../.gitbook/assets/E4.png)
 
 #### Règles de conventionnements .
 
 **Vérifications CFA conventionné, CFA déclaré en préfecture et condition certification datadock**
 
-* Etablissement en capacité de proposer des actions de formations par apprentissage, c’est-à-dire
+*   Etablissement en capacité de proposer des actions de formations par apprentissage, c’est-à-dire
 
-  soit un CFA précédemment conventionné avec un conseil régional, présent dans la liste établie par la DEPP \(vérification sur l'UAI\)
-
-* soit un établissement connu en tant qu'organisme de formation dûment déclaré en préfecture \(vérification sur le SIRET\)...
-* ...qui, s’il n’est pas un CFA conventionné avec un conseil régional, a pu faire attester la qualité de ses actions de formation suivant les termes du décret du décret du 30 juin 2015. À cette fin, la mission a utilisé la base de données du groupement d’intérêt économique DATADOCK réunissant les OPCO \(vérification sur le SIRET\).
+    soit un CFA précédemment conventionné avec un conseil régional, présent dans la liste établie par la DEPP (vérification sur l'UAI)
+* soit un établissement connu en tant qu'organisme de formation dûment déclaré en préfecture (vérification sur le SIRET)...
+* ...qui, s’il n’est pas un CFA conventionné avec un conseil régional, a pu faire attester la qualité de ses actions de formation suivant les termes du décret du décret du 30 juin 2015. À cette fin, la mission a utilisé la base de données du groupement d’intérêt économique DATADOCK réunissant les OPCO (vérification sur le SIRET).
 
 **Vérification des codes UAI**
 
 * s’assurer que le code UAI partie établissement existe et correspond à un “numéro UAI CFA”.
-* identifier les UAI invalides afin de permettre une investigation/ correction des données en base \(BCE, ACCE, ...\)
+* identifier les UAI invalides afin de permettre une investigation/ correction des données en base (BCE, ACCE, ...)
 * identifier les erreurs de mariage entre UAI CFA et UAI site
 * s’assurer de la complétude des UAI site dans le catalogue des formations
 
 **Vérification RNCP**
 
-Vérifier que l'établissement est présent dans la liste des certificateurs pour délivrer ce titre, dans la fiche RNCP de la certification consultable via Répertoire national des certifications professionnelles \(RNCP\)
+Vérifier que l'établissement est présent dans la liste des certificateurs pour délivrer ce titre, dans la fiche RNCP de la certification consultable via Répertoire national des certifications professionnelles (RNCP)
 
-Vérifier que l'établissement est habilité à délivrer des titres professionnels au RNCP \(Organisme certifié 2015\) : Vérification sur les fiches RNCP.
+Vérifier que l'établissement est habilité à délivrer des titres professionnels au RNCP (Organisme certifié 2015) : Vérification sur les fiches RNCP.
 
 **Identification des établissements principaux vs secondaires**
 
@@ -262,7 +261,7 @@ Note DGESCO du 13 janvier 2020
 **Vérification du conventionnement**
 
 {% hint style="info" %}
-retrouvez le code source de ce script sur : [https://github.com/mission-apprentissage/tables-correspondances/blob/master/server/src/logic/controllers/conventionController.js\#L47](https://github.com/mission-apprentissage/tables-correspondances/blob/master/server/src/logic/controllers/conventionController.js#L47)
+retrouvez le code source de ce script sur : [https://github.com/mission-apprentissage/tables-correspondances/blob/master/server/src/logic/controllers/conventionController.js#L47](https://github.com/mission-apprentissage/tables-correspondances/blob/master/server/src/logic/controllers/conventionController.js#L47)
 {% endhint %}
 
 **Consolidation des données**
@@ -275,12 +274,12 @@ retrouvez le code source de ce script sur : [https://github.com/mission-apprenti
 
 ### 4. Vérifications et enrichissements via l'Onisep
 
-![](../.gitbook/assets/e5.png)
+![](../.gitbook/assets/E5.png)
 
 **Recherche des informations supplémentaires collectées par l'Onisep**
 
 {% hint style="info" %}
-retrouvez le code source de ce script sur : [https://github.com/mission-apprentissage/tables-correspondances/blob/master/server/src/logic/controllers/onisep/onisepController.js\#L4](https://github.com/mission-apprentissage/tables-correspondances/blob/master/server/src/logic/controllers/onisep/onisepController.js#L4)
+retrouvez le code source de ce script sur : [https://github.com/mission-apprentissage/tables-correspondances/blob/master/server/src/logic/controllers/onisep/onisepController.js#L4](https://github.com/mission-apprentissage/tables-correspondances/blob/master/server/src/logic/controllers/onisep/onisepController.js#L4)
 {% endhint %}
 
 **Consolidation des données**
@@ -303,6 +302,4 @@ Les mises à jours des établissements sont quotidiennes.
 Lors des mises à jour l'historique des modifications est stocké sur chaque établissement.
 
 Un mécanisme de sauvegarde est en place et effectue un backup quotidien de toute la base des établissements.
-
-
 

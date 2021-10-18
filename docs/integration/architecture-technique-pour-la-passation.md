@@ -9,7 +9,7 @@ Afin de transmettre aux parties prenantes les modules et les données qui leur s
 
 ## Vue d'ensemble
 
-![Architecture cible pour la passation](../.gitbook/assets/architecture-passation-octobre-2021-3-.png)
+![Architecture cible pour la passation](<../.gitbook/assets/Architecture passation - octobre 2021 (3).png>)
 
 ## Métriques
 
@@ -17,7 +17,7 @@ Afin de transmettre aux parties prenantes les modules et les données qui leur s
 
 Nous n'avons pas encore fait la séparation entre le code cœur du catalogue et le code spécifique pour les ministères éducatifs.
 
-Il y a un bloc squelette à prendre côté backend \(7500 lignes environ\) et le tout le code du front \(20K lignes environ\) :
+Il y a un bloc squelette à prendre côté backend (7500 lignes environ) et le tout le code du front (20K lignes environ) :
 
 * Réconciliation / Rapprochement - back 1200 lignes / front 2500 lignes
 * Périmètre - back 800 lignes / front 2000 lignes
@@ -26,8 +26,6 @@ Il y a un bloc squelette à prendre côté backend \(7500 lignes environ\) et le
 * Gestion des rôles / droits - back 200 lignes / front 500 lignes
 * Squelette backend - back 7 500 lignes
 * Total frontend - front 20 000 lignes
-
-
 
 
 

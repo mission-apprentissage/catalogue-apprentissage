@@ -11,69 +11,60 @@ Une adresse dont je recherche les coordonnées  GPS. Définie comme ci-dessous
 Ce que je peux récupérer à partir d'une adresse. 
 
 | Nom du champ | Description | Type |
-| :--- | :--- | :--- |
-|  |  |  |
+| ------------ | ----------- | ---- |
+|              |             |      |
 
 ## Intégration ? 
 
 ### API
 
-Swagger: [https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/\#/Outils/post\_coordinate](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_coordinate)
+Swagger: [https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_coordinate](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_coordinate)
 
-{% api-method method="post" host="https://tables-correspondances.apprentissage.beta.gouv.fr/api" path="/v1/coordinate" %}
-{% api-method-summary %}
-Récupérer les coordonnées GPS  liées à une adresse
-{% endapi-method-summary %}
+{% swagger baseUrl="https://tables-correspondances.apprentissage.beta.gouv.fr/api" path="/v1/coordinate" method="post" summary="Récupérer les coordonnées GPS  liées à une adresse" %}
+{% swagger-description %}
+Cette api vous permet de récupérer les informations relatives à une adresse.
 
-{% api-method-description %}
-Cette api vous permet de récupérer les informations relatives à une adresse.  
-Si **malencontreusement** vous appelez cette route avec un code commune Insee, l'api corrigera l'information.
-{% endapi-method-description %}
+\
 
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-body-parameters %}
-{% api-method-parameter name="numero\_voie" type="string" required=true %}
 
-{% endapi-method-parameter %}
+Si 
 
-{% api-method-parameter name="type\_voie" type="string" required=true %}
+**malencontreusement**
 
-{% endapi-method-parameter %}
+ vous appelez cette route avec un code commune Insee, l'api corrigera l'information.
+{% endswagger-description %}
 
-{% api-method-parameter name="nom\_voie" type="string" required=true %}
+{% swagger-parameter in="body" name="numero_voie" type="string" %}
 
-{% endapi-method-parameter %}
+{% endswagger-parameter %}
 
-{% api-method-parameter name="code\_postal" type="string" required=true %}
+{% swagger-parameter in="body" name="type_voie" type="string" %}
 
-{% endapi-method-parameter %}
+{% endswagger-parameter %}
 
-{% api-method-parameter name="localite" type="string" required=true %}
+{% swagger-parameter in="body" name="nom_voie" type="string" %}
 
-{% endapi-method-parameter %}
-{% endapi-method-body-parameters %}
-{% endapi-method-request %}
+{% endswagger-parameter %}
 
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
-COODINATE successfully retrieved.
-{% endapi-method-response-example-description %}
+{% swagger-parameter in="body" name="code_postal" type="string" %}
 
+{% endswagger-parameter %}
+
+{% swagger-parameter in="body" name="localite" type="string" %}
+
+{% endswagger-parameter %}
+
+{% swagger-response status="200" description="COODINATE successfully retrieved." %}
 ```javascript
-
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
+{% endswagger-response %}
+{% endswagger %}
 
 #### Exemple:
 
-[https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/\#/Outils/post\_coordinate](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_coordinate)
+[https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_coordinate](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_coordinate)
 
-![](../../.gitbook/assets/image%20%285%29.png)
+![](<../../.gitbook/assets/image (5).png>)
 
 ### SDK
 
@@ -82,4 +73,3 @@ COODINATE successfully retrieved.
 ```
 
 ## Annexes
-

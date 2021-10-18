@@ -10,66 +10,53 @@ Un code MEF 10 ou 11 caractères dont je recherche les informations détaillées
 
 **Exemple pour le CAP Arts et technique du verre - option décorateur :**
 
-| MEF  | 2402242711 \([table](http://infocentre.pleiade.education.fr/bcn/index.php/workspace/viewTable/n/N_MEF/nbElements/20)\) | 1CAP1 ARTS & TECH.VERRE: DECORATEUR |
-| :--- | :--- | :--- |
-| 240 | Dispositif formation \([table](http://infocentre.pleiade.education.fr/bcn/index.php/workspace/viewTable/n/N_DISPOSITIF_FORMATION/nbElements/20)\) | CAP EN 1 AN |
-| 224 | Groupe spécialité ou NSF \([table](http://infocentre.pleiade.education.fr/bcn/workspace/viewTable/n/N_GROUPE_SPECIALITE)\) | MATERIAUX DE CONSTRUCTION, VERRE, CERAM. |
-| 27 | Numéro d’ordre | ?? |
-| 1 | Durée | 1 an |
-| 1 | Année | 1ère année |
+| MEF  | 2402242711 ([table](http://infocentre.pleiade.education.fr/bcn/index.php/workspace/viewTable/n/N_MEF/nbElements/20))                            | 1CAP1 ARTS & TECH.VERRE: DECORATEUR      |
+| ---- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| 240  | Dispositif formation ([table](http://infocentre.pleiade.education.fr/bcn/index.php/workspace/viewTable/n/N_DISPOSITIF_FORMATION/nbElements/20)) | CAP EN 1 AN                              |
+| 224  | Groupe spécialité ou NSF ([table](http://infocentre.pleiade.education.fr/bcn/workspace/viewTable/n/N_GROUPE_SPECIALITE))                        | MATERIAUX DE CONSTRUCTION, VERRE, CERAM. |
+| 27   | Numéro d’ordre                                                                                                                                  | ??                                       |
+| 1    | Durée                                                                                                                                           | 1 an                                     |
+| 1    | Année                                                                                                                                           | 1ère année                               |
 
 ## En sortie ?
 
 Ce que je peux récupérer à partir d'un MEF. 
 
 | Nom du champ | Description | Type |
-| :--- | :--- | :--- |
-|  |  |  |
+| ------------ | ----------- | ---- |
+|              |             |      |
 
 ## Intégration ? 
 
 ### API
 
-Swagger: [https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/\#/Outils/post\_mef](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_mef)
+Swagger: [https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_mef](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_mef)
 
-{% api-method method="post" host="https://tables-correspondances.apprentissage.beta.gouv.fr/api" path="/v1/mef" %}
-{% api-method-summary %}
-Récupérer les informations liées à un MEF 
-{% endapi-method-summary %}
+{% swagger baseUrl="https://tables-correspondances.apprentissage.beta.gouv.fr/api" path="/v1/mef" method="post" summary="Récupérer les informations liées à un MEF " %}
+{% swagger-description %}
+Cette api vous permet de récupérer les informations relatives à un MEF 10 ou 11 caractères. 
 
-{% api-method-description %}
-Cette api vous permet de récupérer les informations relatives à un MEF 10 ou 11 caractères.   
+\
+
+
 Appels sous-jacents aux tables BCN V et N formations, MEF 
-{% endapi-method-description %}
+{% endswagger-description %}
 
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-body-parameters %}
-{% api-method-parameter name="mef" type="string" required=true %}
+{% swagger-parameter in="body" name="mef" type="string" %}
 
-{% endapi-method-parameter %}
-{% endapi-method-body-parameters %}
-{% endapi-method-request %}
+{% endswagger-parameter %}
 
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
-MEF successfully retrieved.
-{% endapi-method-response-example-description %}
-
+{% swagger-response status="200" description="MEF successfully retrieved." %}
 ```javascript
-
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
+{% endswagger-response %}
+{% endswagger %}
 
 #### Exemple:
 
-[https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/\#/Outils/post\_mef](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_mef)
+[https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_mef](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_mef)
 
-![](../../.gitbook/assets/image%20%282%29.png)
+![](<../../.gitbook/assets/image (2).png>)
 
 ### SDK
 
@@ -78,4 +65,3 @@ MEF successfully retrieved.
 ```
 
 ## Annexes
-

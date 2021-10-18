@@ -2,11 +2,11 @@
 
 ## Peut-on récupérer l’historique de mise à jour d'une Formation ?
 
-Oui, il possible d'obtenir les informations de mise à jour d'une Formation.   
-L'ancienne valeur et la nouvelle sont stockées dans le champ _`updates_history`_   
-Sous la forme :
+Oui, il possible d'obtenir les informations de mise à jour d'une Formation. \
+L'ancienne valeur et la nouvelle sont stockées dans le champ _`updates_history` _\
+__Sous la forme :
 
-```text
+```
 updates_history: [
     {
         from: { 
@@ -21,15 +21,15 @@ updates_history: [
 ]
 ```
 
-Les critères de recherche sont très libre, avec l'aide d'un développeur vous pouvez rechercher via une requête sous forme MongoDB.   
-  
+Les critères de recherche sont très libre, avec l'aide d'un développeur vous pouvez rechercher via une requête sous forme MongoDB. \
+\
 Tester: 
 
-[https://catalogue.apprentissage.beta.gouv.fr/api/v1/docs/\#/Formations/get\_entity\_formations2021](https://catalogue.apprentissage.beta.gouv.fr/api/v1/docs/#/Formations/get_entity_formations2021)
+[https://catalogue.apprentissage.beta.gouv.fr/api/v1/docs/#/Formations/get_entity_formations2021](https://catalogue.apprentissage.beta.gouv.fr/api/v1/docs/#/Formations/get_entity_formations2021)
 
-![](../.gitbook/assets/image%20%288%29.png)
+![](<../.gitbook/assets/image (8).png>)
 
-Exemple de retour \(toutes les mises à jour des informations\): 
+Exemple de retour (toutes les mises à jour des informations): 
 
 ```javascript
  {
@@ -274,11 +274,10 @@ Exemple de retour \(toutes les mises à jour des informations\):
 
 Via appels directs dans votre navigateur : 
 
-```text
+```
 https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/entity/etablissements?select={"updates_history":1}&query={MA_REQUETE_MONGO}
 ```
 
 ## Question ? 
 
 Réponse
-

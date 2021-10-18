@@ -1,14 +1,26 @@
 # Documentation
 
-{% page-ref page="cfd-code-formation-diplome.md" %}
+{% content-ref url="cfd-code-formation-diplome.md" %}
+[cfd-code-formation-diplome.md](cfd-code-formation-diplome.md)
+{% endcontent-ref %}
 
-{% page-ref page="rncp.md" %}
+{% content-ref url="rncp.md" %}
+[rncp.md](rncp.md)
+{% endcontent-ref %}
 
-{% page-ref page="mef.md" %}
+{% content-ref url="mef.md" %}
+[mef.md](mef.md)
+{% endcontent-ref %}
 
-{% page-ref page="swagger/" %}
+{% content-ref url="swagger/" %}
+[swagger](swagger/)
+{% endcontent-ref %}
 
-{% page-ref page="../f.a.q.md" %}
+{% content-ref url="broken-reference" %}
+[Broken link](broken-reference)
+{% endcontent-ref %}
 
-
+{% content-ref url="../f.a.q.md" %}
+[f.a.q.md](../f.a.q.md)
+{% endcontent-ref %}
 

@@ -1,49 +1,93 @@
 ---
-description: 'https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs'
+description: https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs
 ---
 
 # API établissement
 
 ## Définition 
 
-{% api-method method="get" host="https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/entity" path="/etablissements/siret-uai" %}
-{% api-method-summary %}
-Recherche d' établissement par UAI, Siret ou adresse.
-{% endapi-method-summary %}
+{% swagger baseUrl="https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/entity" path="/etablissements/siret-uai" method="get" summary="Recherche d' établissement par UAI, Siret ou adresse." %}
+{% swagger-description %}
+Ce chemin vous permet de récupérer les informations établissement à partir  d'un UAI et/ou d'un Siret et/ou d'une adresse.
 
-{% api-method-description %}
-Ce chemin vous permet de récupérer les informations établissement à partir  d'un UAI et/ou d'un Siret et/ou d'une adresse. ****
-{% endapi-method-description %}
+** **
+{% endswagger-description %}
 
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-query-parameters %}
-{% api-method-parameter name="query" type="object" required=true %}
-Ce paramètre vous permet d’effectuer   
-votre recherche.   
-Exemples:  
-query={"siret":"19400750600018"}  
-  
-query={"uai":"0400898J"}  
-  
-query={"siret":"19400750600018",  "uai": "0400898J"}  
-  
-query={"adresse": "2915 RTE DES BARTHES 40180"}  
-  
-La recherche peut contenir tous les champs du modèle établissement.    
-  
-⚠️ URL Encoded param   
+{% swagger-parameter in="query" name="query" type="object" %}
+Ce paramètre vous permet d’effectuer 
+
+\
+
+
+votre recherche. 
+
+\
+
+
+Exemples:
+
+\
+
+
+query={"siret":"19400750600018"}
+
+\
+
+
+
+
+\
+
+
+query={"uai":"0400898J"}
+
+\
+
+
+
+
+\
+
+
+query={"siret":"19400750600018",  "uai": "0400898J"}
+
+\
+
+
+
+
+\
+
+
+query={"adresse": "2915 RTE DES BARTHES 40180"}
+
+\
+
+
+
+
+\
+
+
+La recherche peut contenir tous les champs du modèle établissement.  
+
+\
+
+
+
+
+\
+
+
+⚠️ URL Encoded param 
+
+\
+
+
  
-{% endapi-method-parameter %}
-{% endapi-method-query-parameters %}
-{% endapi-method-request %}
+{% endswagger-parameter %}
 
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
-Etablissements trouvés
-{% endapi-method-response-example-description %}
-
+{% swagger-response status="200" description="Etablissements trouvés" %}
 ```javascript
 {
     "etablissements": [
@@ -133,23 +177,17 @@ Etablissements trouvés
     }
 }
 ```
-{% endapi-method-response-example %}
+{% endswagger-response %}
 
-{% api-method-response-example httpCode=404 %}
-{% api-method-response-example-description %}
-Erreur.
-{% endapi-method-response-example-description %}
-
+{% swagger-response status="404" description="Erreur." %}
 ```javascript
 {    "error": "DETAILS de l'erreure"}
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
+{% endswagger-response %}
+{% endswagger %}
 
-⚠️ **Attention: les paramètres URL doivent être Encodés.   
-                         Pensez à encoder vos paramètres**    
+⚠️** Attention: les paramètres URL doivent être Encodés. **\
+**                         Pensez à encoder vos paramètres  **\
 Exemple :
 
 > https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/entity/etablissements/siret-uai?query={"siret":"19400750600018"}
@@ -158,21 +196,21 @@ Devient
 
 > [https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/entity/etablissements/siret-uai?query=%7B%22siret%22%3A%2219400750600018%22%7D](https://tables-correspondances.apprentissage.beta.gouv.fr/api/entity/etablissements/siret-uai?query=%7B%22siret%22%3A%2219400750600018%22%7D)
 
-Vous pouvez utiliser : [https://www.urlencoder.org/](https://www.urlencoder.org/)
+Vous pouvez utiliser : [https://www.urlencoder.org/](https://www.urlencoder.org)
 
 ## Exemples d'usages: 
 
 ### Recherche par Adresse
 
-Il est **impératif** que chaque mots du champ adresse soit séparé par un " "\(espace\).  
-Le champ **ne doit pas contenir de caractères spéciaux** de saut de ligne "\n", "\n\t" et autres.  
-Le champ **"query"** adresse est insensible à la case.  
-  
-Les résultats sont triés par poids \("score"\) de récurrences des mots présent dans le champs adresse.
+Il est **impératif** que chaque mots du champ adresse soit séparé par un " "(espace).\
+Le champ **ne doit pas contenir de caractères spéciaux** de saut de ligne "\n", "\n\t" et autres.\
+Le champ **"query"** adresse est insensible à la case.\
+\
+Les résultats sont triés par poids ("score") de récurrences des mots présent dans le champs adresse.
 
 > https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/entity/etablissements/siret-uai?query={"adresse":"2915 RtE DES BarTHES 40180"}
 
-Tester -&gt;
+Tester ->
 
 **Réponse simplifié :**
 
@@ -307,4 +345,3 @@ Tester -&gt;
     }
 }
 ```
-
