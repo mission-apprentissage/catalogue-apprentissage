@@ -256,7 +256,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
       []),
   ];
 
-  const linkFormations = `/recherche/formations-2021?qb=${encodeURIComponent(
+  const linkFormations = `/recherche/formations?qb=${encodeURIComponent(
     JSON.stringify(linkQuery)
   )}&defaultMode="advanced"`;
 

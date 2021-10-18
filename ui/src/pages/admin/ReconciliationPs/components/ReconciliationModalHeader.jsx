@@ -335,7 +335,7 @@ const ReconciliationModalHeader = React.memo(
                     >
                       <ErrorIcon color="redmarianne" mr="2" mt="0.35rem" />
                       <Text fontWeight="normal">
-                        {slidesCount} formations référencées dans le Catalogue 2021 (base Carif-Oref) peuvent être
+                        {slidesCount} formations référencées dans le Catalogue (base Carif-Oref) peuvent être
                         rapprochées ensembles à la formation Parcoursup
                       </Text>
                     </Text>
@@ -374,13 +374,13 @@ const ReconciliationModalHeader = React.memo(
                 }
                 middle={
                   <Text textStyle="h6" mb={4}>
-                    Formation Parcoursup 2021
+                    Formation Parcoursup
                   </Text>
                 }
                 right={
                   <HStack mb={4}>
                     <Box flexGrow="1">
-                      <Text textStyle="h6">Formations Catalogue 2021</Text>
+                      <Text textStyle="h6">Formations Catalogue</Text>
                     </Box>
                     {slidesCount > 1 && (
                       <HStack>
@@ -452,7 +452,7 @@ const ReconciliationModalHeader = React.memo(
                     >
                       <ErrorIcon color="redmarianne" mr="2" mt="0.35rem" />
                       <Text fontWeight="normal">
-                        {slidesCount} formations référencées dans le Catalogue 2021 (base Carif-Oref) peuvent être
+                        {slidesCount} formations référencées dans le Catalogue (base Carif-Oref) peuvent être
                         rapprochées ensembles à la formation Parcoursup
                       </Text>
                     </Text>

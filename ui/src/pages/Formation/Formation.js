@@ -358,14 +358,14 @@ export default ({ match }) => {
             pages={[
               { title: "Accueil", to: "/" },
               {
-                title: `Catalogue des formations en apprentissage 2021
+                title: `Catalogue des formations en apprentissage
                 ${
                   formation &&
                   (formation.etablissement_reference_catalogue_published
                     ? " (Catalogue général)"
                     : " (Catalogue non-éligible)")
                 }`,
-                to: "/recherche/formations-2021",
+                to: "/recherche/formations",
               },
               { title: title },
             ]}

@@ -117,7 +117,7 @@ export default () => {
                 )}
 
                 <Route exact path="/" component={HomePage} />
-                <Route exact path="/recherche/formations-2021" component={Catalogue} />
+                <Route exact path="/recherche/formations" component={Catalogue} />
                 <Route exact path="/guide-reglementaire">
                   <Catalogue guide />
                 </Route>
