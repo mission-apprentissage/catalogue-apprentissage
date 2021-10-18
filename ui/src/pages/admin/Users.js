@@ -26,39 +26,9 @@ import { setTitle } from "../../common/utils/pageUtils";
 import ACL from "./acl";
 import generator from "generate-password-browser";
 import { useQuery } from "react-query";
+import { academies } from "../../constants/academies";
 
-const ACADEMIES = [
-  "01",
-  "02",
-  "03",
-  "04",
-  "06",
-  "07",
-  "08",
-  "09",
-  "10",
-  "11",
-  "12",
-  "13",
-  "14",
-  "15",
-  "16",
-  "17",
-  "18",
-  "19",
-  "20",
-  "22",
-  "23",
-  "24",
-  "25",
-  "27",
-  "28",
-  "31",
-  "32",
-  "33",
-  "43",
-  "70",
-];
+const ACADEMIES = Object.keys(academies).sort((a, b) => Number(a) - Number(b));
 
 const buildRolesAcl = (newRoles, roles) => {
   let acl = [];

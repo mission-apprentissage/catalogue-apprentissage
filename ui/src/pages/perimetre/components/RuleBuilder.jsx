@@ -1,7 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Rule from "../../../common/components/Search/components/QueryBuilder/rule";
-import { combinators, operators } from "../../../common/components/Search/components/QueryBuilder/utils_fr";
-import { uuidv4, withUniqueKey } from "../../../common/components/Search/components/QueryBuilder/utils";
+import {
+  uuidv4,
+  withUniqueKey,
+  combinators,
+  operators,
+} from "../../../common/components/Search/components/QueryBuilder/utils";
 import constantsReglesPerimetre from "../../../common/components/Search/constantsReglesPerimetre";
 import { FORMATIONS_ES_INDEX } from "../../../constants/es";
 import { serialize } from "../../../common/utils/rulesUtils";

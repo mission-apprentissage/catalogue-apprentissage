@@ -2,25 +2,27 @@ import React, { useState, useEffect, useCallback } from "react";
 import { ReactiveComponent } from "@appbaseio/reactivesearch";
 import { useHistory } from "react-router-dom";
 
-import { defaultOperators, defaultCombinators, mergedQueries, uuidv4, withUniqueKey } from "./utils";
-import { operators as frOperators, combinators as frCombinators } from "./utils_fr";
+import {
+  mergedQueries,
+  uuidv4,
+  withUniqueKey,
+  operators as defaultOperators,
+  combinators as defaultCombinators,
+} from "./utils";
 import Rule from "./rule";
 
 function QueryBuilder({
   fields,
-  operators,
-  combinators,
+  operators = defaultOperators,
+  combinators = defaultCombinators,
   templateRule,
   initialValue,
   onQuery,
   autoComplete,
   collection,
-  lang,
 }) {
   const history = useHistory();
 
-  operators = operators || (lang === "fr" ? frOperators : defaultOperators);
-  combinators = combinators || (lang === "fr" ? frCombinators : defaultCombinators);
   templateRule = templateRule || {
     field: fields[0].value,
     operator: operators[0].value,
@@ -88,19 +90,19 @@ function QueryBuilder({
   );
 }
 
-export default ({ react, fields, collection, lang = "en" }) => {
+export default ({ react, fields, collection }) => {
   return (
     <ReactiveComponent
       componentId={`QUERYBUILDER`}
       react={react}
       URLParams={true}
       value={"qb"}
-      render={(data) => <SubComponent collection={collection} fields={fields} {...data} lang={lang} />}
+      render={(data) => <SubComponent collection={collection} fields={fields} {...data} />}
     />
   );
 };
 
-const SubComponent = ({ setQuery, fields, collection, lang }) => {
+const SubComponent = ({ setQuery, fields, collection }) => {
   const [initialValue, setInitialValue] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -129,7 +131,6 @@ const SubComponent = ({ setQuery, fields, collection, lang }) => {
         collection={collection}
         initialValue={initialValue}
         fields={fields}
-        lang={lang}
         onQuery={(queries) => {
           if (!queries.must.length && !queries.must_not.length && !queries.should.length) {
             return setQuery({ query: { match_all: {} }, value: "" });
