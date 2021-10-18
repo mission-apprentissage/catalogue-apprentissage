@@ -2,7 +2,7 @@ const logger = require("../../../common/logger");
 const { mnaFormationUpdater } = require("../../../logic/updaters/mnaFormationUpdater");
 const { detectNewDiplomeGrandAge } = require("../../../logic/controller/diplomes-grand-age");
 const { paginator } = require("../../../common/utils/paginator");
-const { RcoFormation, ConvertedFormation } = require("../../../common/model/index");
+const { RcoFormation, Formation } = require("../../../common/model/index");
 
 const run = async (filter = {}, withCodePostalUpdate = false, limit = 10, maxItems = 100, offset = 0) => {
   return await performUpdates(filter, withCodePostalUpdate, limit, maxItems, offset);
@@ -15,9 +15,9 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false, limit =
   const formationsGrandAge = [];
   const cfdInfosCache = new Map();
 
-  ConvertedFormation.pauseAllMongoosaticHooks();
+  Formation.pauseAllMongoosaticHooks();
 
-  await paginator(ConvertedFormation, { filter, limit, maxItems, offset }, async (formation) => {
+  await paginator(Formation, { filter, limit, maxItems, offset }, async (formation) => {
     const cfdInfoCache = cfdInfosCache.get(formation._doc.cfd) || null;
     const { updates, formation: updatedFormation, error, serviceAvailable = true, cfdInfo } = await mnaFormationUpdater(
       formation._doc,
@@ -53,7 +53,7 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false, limit =
         }
       }
 
-      await ConvertedFormation.findOneAndUpdate({ _id: formation._id }, formation, { new: true });
+      await Formation.findOneAndUpdate({ _id: formation._id }, formation, { new: true });
       invalidFormations.push({
         id: formation._id,
         id_rco_formation: formation.id_rco_formation,
@@ -75,7 +75,7 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false, limit =
       updatedFormation.update_error = null;
       updatedFormation.to_update = false;
       updatedFormation.last_update_at = Date.now();
-      await ConvertedFormation.findOneAndUpdate({ _id: formation._id }, updatedFormation, { new: true });
+      await Formation.findOneAndUpdate({ _id: formation._id }, updatedFormation, { new: true });
       updatedFormations.push({
         id: formation._id,
         id_rco_formation: formation.id_rco_formation,

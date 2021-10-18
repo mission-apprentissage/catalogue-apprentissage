@@ -1,10 +1,10 @@
 const { formation: formatFormation, etablissement: formatEtablissement } = require("./formater");
-const { ConvertedFormation, Etablissement } = require("../../common/model");
+const { Formation, Etablissement } = require("../../common/model");
 const mongoose = require("mongoose");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 const { psRules } = require("./queries");
 
-const getMatch = async (query) => ConvertedFormation.find(query, formatFormation).lean();
+const getMatch = async (query) => Formation.find(query, formatFormation).lean();
 
 async function getParcoursupCoverage(formation, { published, tags } = {}) {
   let params = { published, tags };

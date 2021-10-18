@@ -3,7 +3,7 @@
 const { runScript } = require("../../scriptWrapper");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { diffFormation } = require("../../../logic/common/utils/diffUtils");
-const { ConvertedFormation, PsFormation } = require("../../../common/model");
+const { Formation, PsFormation } = require("../../../common/model");
 
 runScript(async () => {
   await AnalyseDuplicate();
@@ -19,8 +19,8 @@ async function AnalyseDuplicate() {
     let { matching_mna_formation } = f;
 
     let [f1, f2] = await Promise.all([
-      await ConvertedFormation.findById(matching_mna_formation[0]._id).lean(),
-      await ConvertedFormation.findById(matching_mna_formation[1]._id).lean(),
+      await Formation.findById(matching_mna_formation[0]._id).lean(),
+      await Formation.findById(matching_mna_formation[1]._id).lean(),
     ]);
 
     const res = diffFormation(f1, f2);
@@ -57,7 +57,7 @@ async function AnalyseDuplicate() {
 }
 
 const getSiretFromConverted = async (f) => {
-  const formationMna = await ConvertedFormation.find({
+  const formationMna = await Formation.find({
     $or: [
       { etablissement_formateur_siret: f.siret_cerfa ?? "" },
       { etablissement_formateur_siret: f.siret_map ?? "" },

@@ -1,4 +1,4 @@
-const { ConvertedFormation } = require("../../../common/model");
+const { Formation } = require("../../../common/model");
 const logger = require("../../../common/logger");
 const { getQueryFromRule } = require("../../../common/utils/rulesUtils");
 const { ReglePerimetre } = require("../../../common/model");
@@ -7,7 +7,7 @@ const { asyncForEach } = require("../../../common/utils/asyncUtils");
 
 const run = async () => {
   // 1 - set "hors périmètre"
-  await ConvertedFormation.updateMany(
+  await Formation.updateMany(
     {
       $or: [
         { parcoursup_statut: null },
@@ -21,7 +21,7 @@ const run = async () => {
 
   // set "à publier (vérifier accès direct postbac)" & "à publier (soumis à validation Recteur)" for trainings matching psup eligibility rules
   // reset "à publier" & "à publier (vérifier accès direct postbac)" & "à publier (soumis à validation Recteur)"
-  await ConvertedFormation.updateMany(
+  await Formation.updateMany(
     {
       parcoursup_statut: {
         $in: [
@@ -46,7 +46,7 @@ const run = async () => {
     is_deleted: { $ne: true },
   }).lean();
 
-  await ConvertedFormation.updateMany(
+  await Formation.updateMany(
     {
       ...filterHP,
       $or: aPublierVerifierAccesDirectPostBacRules.map(getQueryFromRule),
@@ -60,7 +60,7 @@ const run = async () => {
     is_deleted: { $ne: true },
   }).lean();
 
-  await ConvertedFormation.updateMany(
+  await Formation.updateMany(
     {
       ...filterHP,
       $or: aPublierValidationRecteurRules.map(getQueryFromRule),
@@ -82,7 +82,7 @@ const run = async () => {
     is_deleted: { $ne: true },
   }).lean();
 
-  await ConvertedFormation.updateMany(
+  await Formation.updateMany(
     {
       ...filter,
       $or: aPublierRules.map(getQueryFromRule),
@@ -99,7 +99,7 @@ const run = async () => {
 
   await asyncForEach(academieRules, async (rule) => {
     await asyncForEach(Object.entries(rule.statut_academies), async ([num_academie, status]) => {
-      await ConvertedFormation.updateMany(
+      await Formation.updateMany(
         {
           parcoursup_statut: {
             $in: [
@@ -121,27 +121,27 @@ const run = async () => {
   await updateTagsHistory("parcoursup_statut");
 
   // stats
-  const totalPublished = await ConvertedFormation.countDocuments({ published: true });
-  const totalErrors = await ConvertedFormation.countDocuments({ published: true, parcoursup_error: { $ne: null } });
-  const totalNotRelevant = await ConvertedFormation.countDocuments({
+  const totalPublished = await Formation.countDocuments({ published: true });
+  const totalErrors = await Formation.countDocuments({ published: true, parcoursup_error: { $ne: null } });
+  const totalNotRelevant = await Formation.countDocuments({
     published: true,
     parcoursup_statut: "hors périmètre",
   });
-  const totalToValidate = await ConvertedFormation.countDocuments({
+  const totalToValidate = await Formation.countDocuments({
     published: true,
     parcoursup_statut: "à publier (vérifier accès direct postbac)",
   });
-  const totalToValidateRecteur = await ConvertedFormation.countDocuments({
+  const totalToValidateRecteur = await Formation.countDocuments({
     published: true,
     parcoursup_statut: "à publier (soumis à validation Recteur)",
   });
-  const totalToCheck = await ConvertedFormation.countDocuments({ published: true, parcoursup_statut: "à publier" });
-  const totalPending = await ConvertedFormation.countDocuments({
+  const totalToCheck = await Formation.countDocuments({ published: true, parcoursup_statut: "à publier" });
+  const totalPending = await Formation.countDocuments({
     published: true,
     parcoursup_statut: "en attente de publication",
   });
-  const totalPsPublished = await ConvertedFormation.countDocuments({ published: true, parcoursup_statut: "publié" });
-  const totalPsNotPublished = await ConvertedFormation.countDocuments({
+  const totalPsPublished = await Formation.countDocuments({ published: true, parcoursup_statut: "publié" });
+  const totalPsNotPublished = await Formation.countDocuments({
     published: true,
     parcoursup_statut: "non publié",
   });

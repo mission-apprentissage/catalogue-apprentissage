@@ -2,7 +2,7 @@ const logSchema = require("./log");
 const userSchema = require("./user");
 const roleSchema = require("./role");
 const rcoFormationSchema = require("./rcoFormation");
-const mnaFormationSchema = require("./mnaFormation/mnaFormation");
+const formationSchema = require("./formation/formation");
 const reportSchema = require("./report");
 const psReconciliationSchema = require("./psReconciliation");
 const afReconciliationSchema = require("./afReconciliation");
@@ -18,7 +18,7 @@ module.exports = {
   userSchema,
   roleSchema,
   rcoFormationSchema,
-  mnaFormationSchema,
+  formationSchema,
   reportSchema,
   psReconciliationSchema,
   afReconciliationSchema,

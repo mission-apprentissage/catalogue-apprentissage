@@ -1,6 +1,6 @@
 const { runScript } = require("../../scriptWrapper");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
-const { PsFormation, ConvertedFormation } = require("../../../common/model");
+const { PsFormation, Formation } = require("../../../common/model");
 
 runScript(async () => {
   await update();
@@ -14,7 +14,7 @@ async function update() {
       const updateMna = [];
       const statutsPsMna = [];
       await asyncForEach(matching_mna_formation, async (mnaFormation) => {
-        const mnaFormationU = await ConvertedFormation.findById(mnaFormation._id);
+        const mnaFormationU = await Formation.findById(mnaFormation._id);
 
         if (mnaFormationU && mnaFormationU.parcoursup_statut === "publié") {
           updateMna.push({
@@ -48,7 +48,7 @@ async function update() {
       );
     }
   });
-  await ConvertedFormation.updateMany(
+  await Formation.updateMany(
     { parcoursup_statut: "publié", published: true },
     { $set: { parcoursup_statut: "hors périmètre", parcoursup_reference: false } }
   );
