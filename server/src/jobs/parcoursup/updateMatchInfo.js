@@ -1,10 +1,6 @@
-const { runScript } = require("../../scriptWrapper");
-const { asyncForEach } = require("../../../common/utils/asyncUtils");
-const { PsFormation, ConvertedFormation } = require("../../../common/model");
-
-runScript(async () => {
-  await update();
-});
+const { runScript } = require("../scriptWrapper");
+const { asyncForEach } = require("../../common/utils/asyncUtils");
+const { PsFormation, ConvertedFormation } = require("../../common/model");
 
 async function update() {
   const dataset = await PsFormation.find({}).lean();
@@ -35,5 +31,13 @@ async function update() {
         matching_mna_parcoursup_statuts: statutsPsMna,
       }
     );
+  });
+}
+
+module.exports = update;
+
+if (process.env.standalone) {
+  runScript(async () => {
+    await update();
   });
 }
