@@ -36,4 +36,4 @@ Cet open catalogue vise à réunir toutes les informations utiles à une présen
 
 La mise en visibilité d’une offre de formation en apprentissage complète et interconnectée permet d'augmenter le nombre (et le bon enregistrement) des vœux en apprentissage : 
 
-En 2020, plus de 19% de vœux ont été exprimés en apprentissage sur ParcourSup par rapport à l’année précédente (145 000 vœux en 2019 et 173 000 en 2020)\
+En 2020, plus de 19% de vœux ont été exprimés en apprentissage sur Parcoursup par rapport à l’année précédente (145 000 vœux en 2019 et 173 000 en 2020)\
