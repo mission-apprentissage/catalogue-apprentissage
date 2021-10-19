@@ -57,7 +57,7 @@ const ReconciliationModalHeader = React.memo(
 
     const { values, handleChange, handleSubmit: handleSave, errors, isSubmitting } = useFormik({
       initialValues: {
-        parcoursup_keep_publish: undefined,
+        parcoursup_keep_publish: "true",
         parcoursup_raison_depublication: "",
       },
       validationSchema: Yup.object().shape({
@@ -226,7 +226,7 @@ const ReconciliationModalHeader = React.memo(
           : "505px"
         : slidesCount > 1
         ? "560px"
-        : "450px";
+        : "470px";
 
     return (
       <>
@@ -591,7 +591,7 @@ const ReconciliationModalHeader = React.memo(
                             Statut automatiquement appliqué
                           </Heading>
                           <Text as={"span"} fontSize="zeta">
-                            <StatusBadge source="Parcoursup" status="non publié" />
+                            <StatusBadge source="Parcoursup" status={PARCOURSUP_STATUS.HORS_PERIMETRE} />
                           </Text>
                         </Flex>
                       </Box>
@@ -625,6 +625,7 @@ const ReconciliationModalHeader = React.memo(
                                     setCanSubmit(true);
                                     handleChange(evt);
                                   }}
+                                  isChecked
                                 >
                                   <Text as={"span"} fontSize="zeta">
                                     <StatusBadge source="Parcoursup" status="publié" />
