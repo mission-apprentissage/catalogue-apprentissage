@@ -74,75 +74,69 @@ const Rejected = ({ formation, onClose, onSubmitReject }) => {
                 <Radio
                   mb={0}
                   size="lg"
-                  value="UAI Formation ne correspond pas (UAI gestionnaire correspond)"
+                  value="Codes diplômes différents"
                   onChange={(evt) => {
                     setShowRaison(false);
                     setCanSubmit(true);
                     handleChange(evt);
                   }}
                 >
-                  <Text fontSize="1rem">UAI Formation ne correspond pas (UAI gestionnaire correspond)</Text>
+                  <Text fontSize="1rem">Codes diplômes différents</Text>
                 </Radio>
                 <Radio
                   mb={0}
                   size="lg"
-                  value="UAI Formateur ne correspond pas (UAI gestionnaire correspond)"
+                  value="Codes RNCP différents"
                   onChange={(evt) => {
                     setShowRaison(false);
                     setCanSubmit(true);
                     handleChange(evt);
                   }}
                 >
-                  <Text fontSize="1rem">UAI Formateur ne correspond pas (UAI gestionnaire correspond)</Text>
+                  <Text fontSize="1rem">Codes RNCP différents</Text>
                 </Radio>
                 <Radio
                   mb={0}
                   size="lg"
-                  value="les codes formations ne sont pas cohérents (entre PS et Catalogue)"
+                  value="Différence entre un des UAI (CERFA ou Inserjeunes) et un des UAI (formateur ou gestionnaire)"
                   onChange={(evt) => {
                     setShowRaison(false);
                     setCanSubmit(true);
                     handleChange(evt);
                   }}
                 >
-                  <Text fontSize="1rem">Les codes formations ne sont pas cohérents (entre PS et Catalogue)</Text>
+                  <Text fontSize="1rem">
+                    Différence entre un des UAI (CERFA ou Inserjeunes) et un des UAI (formateur ou gestionnaire)
+                  </Text>
                 </Radio>
                 <Radio
                   mb={0}
                   size="lg"
-                  value="les établissements sont différents"
+                  value="Adresses des lieux de formation différentes"
                   onChange={(evt) => {
                     setShowRaison(false);
                     setCanSubmit(true);
                     handleChange(evt);
                   }}
                 >
-                  <Text fontSize="1rem">Les établissements sont différents</Text>
+                  <Text fontSize="1rem">Adresses des lieux de formation différentes</Text>
                 </Radio>
                 <Radio
                   mb={0}
                   size="lg"
-                  value="Nouvelle formation / formation récente"
+                  value="Différence entre le SIRET Etablissement Parcoursup et un des SIRET Formateur ou Gestionnaire Catalogue"
                   onChange={(evt) => {
                     setShowRaison(false);
                     setCanSubmit(true);
                     handleChange(evt);
                   }}
                 >
-                  <Text fontSize="1rem">Nouvelle formation / formation récente</Text>
+                  <Text fontSize="1rem">
+                    Différence entre le SIRET Etablissement Parcoursup et un des SIRET Formateur ou Gestionnaire
+                    Catalogue
+                  </Text>
                 </Radio>
-                <Radio
-                  mb={0}
-                  size="lg"
-                  value="incohérence entre UAI et SIRET"
-                  onChange={(evt) => {
-                    setShowRaison(false);
-                    setCanSubmit(true);
-                    handleChange(evt);
-                  }}
-                >
-                  <Text fontSize="1rem">Incohérence entre UAI et SIRET</Text>
-                </Radio>
+
                 <Radio
                   mb={0}
                   size="lg"
