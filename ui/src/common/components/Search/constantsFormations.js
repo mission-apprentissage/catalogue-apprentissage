@@ -37,6 +37,7 @@ const FILTERS = () => [
   `affelnet_statut`,
   "diplome",
   // "ids_action",
+  "tags",
 ];
 
 const columnsDefinition = [
@@ -499,6 +500,14 @@ const columnsDefinition = [
     exportable: true,
     formatter: (value) => value.date_fin_validite_enregistrement ?? "",
   },
+  {
+    Header: "Tags",
+    accessor: "tags",
+    width: 200,
+    exportable: true,
+    editable: false,
+    formatter: (tags) => tags?.sort((a, b) => a - b),
+  },
 ];
 
 const queryBuilderField = [
@@ -588,6 +597,14 @@ const facetDefinition = () => [
     filterLabel: "Code RNCP",
     selectAllLabel: "Tous",
     sortBy: "count",
+  },
+  {
+    componentId: `tags`,
+    dataField: "tags.keyword",
+    title: "Année(s)",
+    filterLabel: "Année(s)",
+    selectAllLabel: "Toutes",
+    sortBy: "asc",
   },
   // {
   //   componentId: `ids_action`,
