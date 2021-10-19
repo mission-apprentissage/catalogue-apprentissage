@@ -12,6 +12,15 @@ const changelog = {
       improvements: ["Travaux sur le flux retour vers les Carif-Oref et gestion des modifications"],
     },
     {
+      version: "4.8.1",
+      date: "Le 19 Octobre 2021",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [],
+      features: [],
+      improvements: ["[Rapprochement Parcoursup] Pré lancement campagne"],
+    },
+    {
       version: "4.8.0",
       date: "Le 19 Octobre 2021",
       about: `<h4>À propos de cette version</h4>
