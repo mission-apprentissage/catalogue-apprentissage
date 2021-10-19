@@ -238,8 +238,8 @@ const Rapprochement = React.memo(({ formation, currentMnaFormation }) => {
         }
         middle={
           <Box mb={4} mt={4}>
-            <Text as="span" variant="highlight" color="grey.500">
-              N.A
+            <Text variant="highlight" bg={`${identicalColor}`} mt="1" display="inline-block">
+              {formation.uai_insert_jeune} (insertjeune)
             </Text>
           </Box>
         }
@@ -265,8 +265,8 @@ const Rapprochement = React.memo(({ formation, currentMnaFormation }) => {
         }
         middle={
           <Box mb={4} mt={4}>
-            <Text as="span" variant="highlight" color="grey.500">
-              N.A
+            <Text variant="highlight" bg={`${identicalColor}`} mt="1" display="inline-block">
+              {formation.uai_cerfa} (cerfa)
             </Text>
           </Box>
         }
@@ -283,58 +283,6 @@ const Rapprochement = React.memo(({ formation, currentMnaFormation }) => {
           </Box>
         }
       />
-      {formationDiff.uai.uai_cerfa ||
-        formationDiff.uai.etablissement_gestionnaire_uai.uai_cerfa ||
-        (formationDiff.uai.etablissement_formateur_uai.uai_cerfa && (
-          <Section
-            withBorder
-            left={
-              <Box mb={4} mt={4}>
-                Code UAI
-              </Box>
-            }
-            middle={
-              <Box mb={4} mt={4}>
-                <Text variant="highlight" bg={`${identicalColor}`} mt="1" display="inline-block">
-                  {formation.uai_cerfa} (cerfa)
-                </Text>
-              </Box>
-            }
-            right={
-              <Box mb={4} mt={4}>
-                <Text as="span" variant="highlight" color="grey.500">
-                  N.A
-                </Text>
-              </Box>
-            }
-          />
-        ))}
-      {formationDiff.uai.uai_insert_jeune ||
-        formationDiff.uai.etablissement_gestionnaire_uai.uai_insert_jeune ||
-        (formationDiff.uai.etablissement_formateur_uai.uai_insert_jeune && (
-          <Section
-            withBorder
-            left={
-              <Box mb={4} mt={4}>
-                Code UAI :
-              </Box>
-            }
-            middle={
-              <Box mb={4} mt={4}>
-                <Text variant="highlight" bg={`${identicalColor}`} mt="1" display="inline-block">
-                  {formation.uai_insert_jeune} (insertjeune)
-                </Text>
-              </Box>
-            }
-            right={
-              <Box mb={4} mt={4}>
-                <Text as="span" variant="highlight" color="grey.500">
-                  N.A
-                </Text>
-              </Box>
-            }
-          />
-        ))}
       <Section
         withBorder
         left={
