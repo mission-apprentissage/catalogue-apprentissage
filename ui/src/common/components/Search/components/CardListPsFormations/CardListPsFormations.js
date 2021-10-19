@@ -94,7 +94,7 @@ export const CardListPsFormations = ({ data, onCardClicked, context }) => {
     );
   }
   return (
-    <Link variant="card" mt={4} onClick={onCardClicked} py={5}>
+    <Link variant="card" mt={4} onClick={onCardClicked} py={5} data-testid={"cardps"}>
       <CardContent />
     </Link>
   );
