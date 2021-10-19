@@ -1,15 +1,15 @@
 const { paginator } = require("../../common/utils/paginator");
-const { PsReconciliation, ConvertedFormation } = require("../../common/model");
+const { PsReconciliation, Formation } = require("../../common/model");
 const { runScript } = require("../scriptWrapper");
 const logger = require("../../common/logger");
 
 const setPsIds = async () => {
   try {
     logger.info(`Start parcoursup set ids`);
-    await ConvertedFormation.updateMany({}, { $set: { parcoursup_ids: [] } });
+    await Formation.updateMany({}, { $set: { parcoursup_ids: [] } });
 
     await paginator(PsReconciliation, { filter: {} }, async (reconciliation) => {
-      await ConvertedFormation.updateMany(
+      await Formation.updateMany(
         {
           published: true,
           etablissement_reference_catalogue_published: true,

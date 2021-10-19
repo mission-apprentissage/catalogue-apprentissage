@@ -1,4 +1,4 @@
-const { PsReconciliation, PsFormation, ConvertedFormation } = require("../../common/model");
+const { PsReconciliation, PsFormation, Formation } = require("../../common/model");
 const combinate = require("../../logic/mappers/reconciliationMapper");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
@@ -53,7 +53,7 @@ module.exports = ({ catalogue }) => {
   );
 
   const buildDiff = async (psFormation, matchedMnaFormation, select) => {
-    const mnaFormation = await ConvertedFormation.findById(matchedMnaFormation._id, select).lean();
+    const mnaFormation = await Formation.findById(matchedMnaFormation._id, select).lean();
     const {
       uai_formation,
       etablissement_formateur_uai,
@@ -304,7 +304,7 @@ module.exports = ({ catalogue }) => {
       if (result) {
         const previousFormation = await PsFormation.findById(id_formation).lean();
 
-        const mnaFormation = await ConvertedFormation.findById(rest.mnaFormationId).lean();
+        const mnaFormation = await Formation.findById(rest.mnaFormationId).lean();
         let matching_mna_formation = [];
         let matching_mna_parcoursup_statuts = [];
         if (

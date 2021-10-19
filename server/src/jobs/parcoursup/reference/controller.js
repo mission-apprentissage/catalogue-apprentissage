@@ -1,17 +1,17 @@
-const { ConvertedFormation, PsReconciliation } = require("../../../common/model");
+const { Formation, PsReconciliation } = require("../../../common/model");
 const logger = require("../../../common/logger");
 const { paginator } = require("../../../common/utils/paginator");
 
 const run = async () => {
   // 1 - reset "publié" to "hors périmètre"
-  await ConvertedFormation.updateMany(
+  await Formation.updateMany(
     { parcoursup_statut: "publié" },
     { $set: { parcoursup_statut: "hors périmètre", parcoursup_reference: false } }
   );
 
   // check for published trainings in psup (set "publié") / but don't overwrite those on "non publié" status : it means a user chose not to publish
   await paginator(PsReconciliation, { filter: { unpublished_by_user: null } }, async (reconciliation) => {
-    await ConvertedFormation.updateMany(
+    await Formation.updateMany(
       {
         published: true,
         etablissement_reference_catalogue_published: true,
@@ -35,8 +35,8 @@ const run = async () => {
   });
 
   // 4 - stats
-  const totalPublished = await ConvertedFormation.countDocuments({ published: true });
-  const totalPsPublished = await ConvertedFormation.countDocuments({ published: true, parcoursup_statut: "publié" });
+  const totalPublished = await Formation.countDocuments({ published: true });
+  const totalPsPublished = await Formation.countDocuments({ published: true, parcoursup_statut: "publié" });
   logger.info(`Total formations publiées sur ParcourSup : ${totalPsPublished}/${totalPublished}`);
 };
 

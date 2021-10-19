@@ -1,7 +1,7 @@
-const { ConvertedFormation } = require("../../common/model/index");
+const { Formation } = require("../../common/model/index");
 
 const updateTagsHistory = async (scope) => {
-  await ConvertedFormation.updateMany(
+  await Formation.updateMany(
     { [`${scope}_history`]: null },
     {
       $set: {
@@ -9,7 +9,7 @@ const updateTagsHistory = async (scope) => {
       },
     }
   );
-  await ConvertedFormation.updateMany({}, [
+  await Formation.updateMany({}, [
     {
       $set: {
         [`${scope}_history`]: {

@@ -1,4 +1,4 @@
-const { AfReconciliation, AfFormation, ConvertedFormation, PsReconciliation } = require("../../common/model");
+const { AfReconciliation, AfFormation, Formation, PsReconciliation } = require("../../common/model");
 
 async function reconciliationAffelnet(formation, source = "MANUEL") {
   let {
@@ -38,7 +38,7 @@ async function reconciliationAffelnet(formation, source = "MANUEL") {
   });
 
   // pass through some data for Affelnet
-  const converted = await ConvertedFormation.findById(convertedId, {
+  const converted = await Formation.findById(convertedId, {
     affelnet_infos_offre: 1,
     bcn_mefs_10: 1,
   }).lean();
@@ -65,7 +65,7 @@ async function reconciliationAffelnet(formation, source = "MANUEL") {
         },
       ];
     }
-    await ConvertedFormation.findByIdAndUpdate(convertedId, update);
+    await Formation.findByIdAndUpdate(convertedId, update);
   }
 }
 

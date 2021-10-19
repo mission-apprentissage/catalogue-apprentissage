@@ -20,14 +20,11 @@ import {
 } from "@chakra-ui/react";
 import { StatusBadge } from "../StatusBadge";
 import { useFormik } from "formik";
-import { _put } from "../../httpClient";
 import useAuth from "../../hooks/useAuth";
-import { buildUpdatesHistory } from "../../utils/formationUtils";
 import * as Yup from "yup";
 import { ArrowRightLine, Close } from "../../../theme/components/icons";
 import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
-
-const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
+import { updateFormation, updateReconciliationAffelnet, updateReconciliationParcoursup } from "../../api/formation";
 
 const getPublishRadioValue = (status) => {
   if ([COMMON_STATUS.PUBLIE, COMMON_STATUS.EN_ATTENTE].includes(status)) {
@@ -40,6 +37,122 @@ const getPublishRadioValue = (status) => {
   return undefined;
 };
 
+const getSubmitBody = ({
+  formation,
+  affelnet,
+  parcoursup,
+  affelnet_infos_offre,
+  affelnet_raison_depublication,
+  parcoursup_raison_depublication,
+}) => {
+  const body = {};
+  let shouldRemoveAfReconciliation = false;
+  let shouldRemovePsReconciliation = false;
+  let shouldRestoreAfReconciliation = false;
+  let shouldRestorePsReconciliation = false;
+
+  // check if can edit depending on the status
+  if (affelnet === "true") {
+    if (
+      [AFFELNET_STATUS.NON_PUBLIE, AFFELNET_STATUS.A_PUBLIER_VALIDATION, AFFELNET_STATUS.A_PUBLIER].includes(
+        formation?.affelnet_statut
+      )
+    ) {
+      body.affelnet_statut = AFFELNET_STATUS.EN_ATTENTE;
+      body.affelnet_infos_offre = affelnet_infos_offre;
+      body.affelnet_raison_depublication = null;
+      shouldRestoreAfReconciliation = formation.affelnet_statut === AFFELNET_STATUS.NON_PUBLIE;
+    } else if ([AFFELNET_STATUS.PUBLIE].includes(formation?.affelnet_statut)) {
+      body.affelnet_infos_offre = affelnet_infos_offre;
+    }
+  } else if (affelnet === "false") {
+    if (
+      [
+        AFFELNET_STATUS.EN_ATTENTE,
+        AFFELNET_STATUS.A_PUBLIER_VALIDATION,
+        AFFELNET_STATUS.A_PUBLIER,
+        AFFELNET_STATUS.PUBLIE,
+      ].includes(formation?.affelnet_statut)
+    ) {
+      body.affelnet_raison_depublication = affelnet_raison_depublication;
+      body.affelnet_statut = AFFELNET_STATUS.NON_PUBLIE;
+      shouldRemoveAfReconciliation = [AFFELNET_STATUS.EN_ATTENTE, AFFELNET_STATUS.PUBLIE].includes(
+        formation.affelnet_statut
+      );
+    }
+  }
+
+  if (parcoursup === "true") {
+    if (
+      [
+        PARCOURSUP_STATUS.NON_PUBLIE,
+        PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
+        PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+        PARCOURSUP_STATUS.A_PUBLIER,
+      ].includes(formation?.parcoursup_statut)
+    ) {
+      body.parcoursup_statut = PARCOURSUP_STATUS.EN_ATTENTE;
+      shouldRestorePsReconciliation = formation.parcoursup_statut === PARCOURSUP_STATUS.NON_PUBLIE;
+      body.parcoursup_raison_depublication = null;
+    }
+  } else if (parcoursup === "false") {
+    if (
+      [
+        PARCOURSUP_STATUS.EN_ATTENTE,
+        PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
+        PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+        PARCOURSUP_STATUS.A_PUBLIER,
+        PARCOURSUP_STATUS.PUBLIE,
+      ].includes(formation?.parcoursup_statut)
+    ) {
+      body.parcoursup_raison_depublication = parcoursup_raison_depublication;
+      body.parcoursup_statut = PARCOURSUP_STATUS.NON_PUBLIE;
+      shouldRemovePsReconciliation = [PARCOURSUP_STATUS.EN_ATTENTE, PARCOURSUP_STATUS.PUBLIE].includes(
+        formation.parcoursup_statut
+      );
+    }
+  }
+  return {
+    body,
+    shouldRestoreAfReconciliation,
+    shouldRestorePsReconciliation,
+    shouldRemoveAfReconciliation,
+    shouldRemovePsReconciliation,
+  };
+};
+
+const updateFormationAndReconciliation = async ({
+  body,
+  shouldRestoreAfReconciliation,
+  shouldRestorePsReconciliation,
+  shouldRemoveAfReconciliation,
+  shouldRemovePsReconciliation,
+  formation,
+  user,
+  onFormationUpdate,
+}) => {
+  const updatedFormation = await updateFormation({ formation, body, user });
+
+  if (shouldRemoveAfReconciliation || shouldRestoreAfReconciliation) {
+    try {
+      await updateReconciliationAffelnet({ formation, shouldRemoveAfReconciliation, user });
+    } catch (e) {
+      // do nothing
+    }
+  }
+
+  if (shouldRemovePsReconciliation || shouldRestorePsReconciliation) {
+    try {
+      await updateReconciliationParcoursup({ formation, shouldRemovePsReconciliation, user });
+    } catch (e) {
+      // do nothing
+    }
+  }
+
+  onFormationUpdate(updatedFormation);
+  return updatedFormation;
+};
+
 const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
   const [user] = useAuth();
   const [isAffelnetFormOpen, setAffelnetFormOpen] = useState(
@@ -49,7 +162,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
   const [isAffelnetUnpublishFormOpen, setAffelnetUnpublishFormOpen] = useState(
     [AFFELNET_STATUS.NON_PUBLIE].includes(formation?.affelnet_statut)
   );
-  const [isParcoursupUnpublishFormOpen, setParcousupUnpublishFormOpen] = useState(
+  const [isParcoursupUnpublishFormOpen, setParcoursupUnpublishFormOpen] = useState(
     [PARCOURSUP_STATUS.NON_PUBLIE].includes(formation?.parcoursup_statut)
   );
 
@@ -77,115 +190,23 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
       parcoursup_raison_depublication,
     }) => {
       return new Promise(async (resolve) => {
-        const body = {};
-        let shouldRemoveAfReconciliation = false;
-        let shouldRemovePsReconciliation = false;
-        let shouldRestoreAfReconciliation = false;
-        let shouldRestorePsReconciliation = false;
+        const result = getSubmitBody({
+          formation,
+          affelnet,
+          parcoursup,
+          affelnet_infos_offre,
+          affelnet_raison_depublication,
+          parcoursup_raison_depublication,
+        });
 
-        // check if can edit depending on the status
-        if (affelnet === "true") {
-          if (
-            [AFFELNET_STATUS.NON_PUBLIE, AFFELNET_STATUS.A_PUBLIER_VALIDATION, AFFELNET_STATUS.A_PUBLIER].includes(
-              formation?.affelnet_statut
-            )
-          ) {
-            body.affelnet_statut = AFFELNET_STATUS.EN_ATTENTE;
-            body.affelnet_infos_offre = affelnet_infos_offre;
-            body.affelnet_raison_depublication = null;
-            shouldRestoreAfReconciliation = formation.affelnet_statut === AFFELNET_STATUS.NON_PUBLIE;
-          } else if ([AFFELNET_STATUS.PUBLIE].includes(formation?.affelnet_statut)) {
-            body.affelnet_infos_offre = affelnet_infos_offre;
-          }
-        } else if (affelnet === "false") {
-          if (
-            [
-              AFFELNET_STATUS.EN_ATTENTE,
-              AFFELNET_STATUS.A_PUBLIER_VALIDATION,
-              AFFELNET_STATUS.A_PUBLIER,
-              AFFELNET_STATUS.PUBLIE,
-            ].includes(formation?.affelnet_statut)
-          ) {
-            body.affelnet_raison_depublication = affelnet_raison_depublication;
-            body.affelnet_statut = AFFELNET_STATUS.NON_PUBLIE;
-            shouldRemoveAfReconciliation = [AFFELNET_STATUS.EN_ATTENTE, AFFELNET_STATUS.PUBLIE].includes(
-              formation.parcoursup_statut
-            );
-          }
-        }
-
-        if (parcoursup === "true") {
-          if (
-            [
-              PARCOURSUP_STATUS.NON_PUBLIE,
-              PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
-              PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
-              PARCOURSUP_STATUS.A_PUBLIER,
-            ].includes(formation?.parcoursup_statut)
-          ) {
-            body.parcoursup_statut = PARCOURSUP_STATUS.EN_ATTENTE;
-            shouldRestorePsReconciliation = formation.parcoursup_statut === PARCOURSUP_STATUS.NON_PUBLIE;
-            body.parcoursup_raison_depublication = null;
-          }
-        } else if (parcoursup === "false") {
-          if (
-            [
-              PARCOURSUP_STATUS.EN_ATTENTE,
-              PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
-              PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
-              PARCOURSUP_STATUS.A_PUBLIER,
-              PARCOURSUP_STATUS.PUBLIE,
-            ].includes(formation?.parcoursup_statut)
-          ) {
-            body.parcoursup_raison_depublication = parcoursup_raison_depublication;
-            body.parcoursup_statut = PARCOURSUP_STATUS.NON_PUBLIE;
-            shouldRemovePsReconciliation = [PARCOURSUP_STATUS.EN_ATTENTE, PARCOURSUP_STATUS.PUBLIE].includes(
-              formation.parcoursup_statut
-            );
-          }
-        }
-
-        if (Object.keys(body).length > 0) {
-          const updatedFormation = await _put(`${endpointNewFront}/entity/formations2021/${formation._id}`, {
-            num_academie: formation.num_academie,
-            ...body,
-            last_update_who: user.email,
-            last_update_at: Date.now(),
-            updates_history: buildUpdatesHistory(
-              formation,
-              { ...body, last_update_who: user.email },
-              Object.keys(body)
-            ),
+        if (Object.keys(result.body).length > 0) {
+          const updatedFormation = await updateFormationAndReconciliation({
+            ...result,
+            formation,
+            user,
+            onFormationUpdate,
           });
 
-          if (shouldRemoveAfReconciliation || shouldRestoreAfReconciliation) {
-            try {
-              await _put(`${endpointNewFront}/affelnet/reconciliation`, {
-                uai_formation: formation.uai_formation,
-                uai_gestionnaire: formation.etablissement_gestionnaire_uai,
-                uai_formateur: formation.etablissement_formateur_uai,
-                cfd: formation.cfd,
-                email: shouldRemoveAfReconciliation ? user.email : null,
-              });
-            } catch (e) {
-              // do nothing
-            }
-          }
-
-          if (shouldRemovePsReconciliation || shouldRestorePsReconciliation) {
-            try {
-              await _put(`${endpointNewFront}/parcoursup/reconciliation`, {
-                uai_gestionnaire: formation.etablissement_gestionnaire_uai,
-                uai_affilie: formation.etablissement_formateur_uai,
-                cfd: formation.cfd,
-                email: shouldRemovePsReconciliation ? user.email : null,
-              });
-            } catch (e) {
-              // do nothing
-            }
-          }
-
-          onFormationUpdate(updatedFormation);
           setFieldValue("affelnet", getPublishRadioValue(updatedFormation?.affelnet_statut));
           setFieldValue("parcoursup", getPublishRadioValue(updatedFormation?.parcoursup_statut));
           setFieldValue("affelnet_infos_offre", updatedFormation?.affelnet_infos_offre);
@@ -245,7 +266,14 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                 <Box mb={3}>
                   <StatusBadge source="Affelnet" status={formation?.affelnet_statut} />
                 </Box>
-                <FormControl display="flex" flexDirection="column" w="auto" isDisabled={isAffelnetPublishDisabled}>
+                <FormControl
+                  display="flex"
+                  flexDirection="column"
+                  w="auto"
+                  isDisabled={isAffelnetPublishDisabled}
+                  data-testid={"affelnet-form"}
+                  aria-disabled={isAffelnetPublishDisabled}
+                >
                   <FormLabel htmlFor="affelnet" mb={3} fontSize="epsilon" fontWeight={400}>
                     Demander la publication Affelnet:
                   </FormLabel>
@@ -261,6 +289,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                           setAffelnetUnpublishFormOpen(false);
                           handleChange(evt);
                         }}
+                        data-testid={"af-radio-yes"}
                       >
                         <Text as={"span"} fontSize="zeta">
                           Oui
@@ -276,6 +305,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                           setAffelnetUnpublishFormOpen(true);
                           handleChange(evt);
                         }}
+                        data-testid={"af-radio-no"}
                       >
                         <Text as={"span"} fontSize="zeta">
                           Non
@@ -309,6 +339,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                   </FormLabel>
                   <Flex flexDirection="column" w="100%">
                     <Textarea
+                      data-testid={"af-unpublish-form"}
                       name="affelnet_raison_depublication"
                       value={values.affelnet_raison_depublication}
                       onChange={handleChange}
@@ -328,7 +359,14 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                 <Box mb={3}>
                   <StatusBadge source="Parcoursup" status={formation?.parcoursup_statut} />
                 </Box>
-                <FormControl display="flex" flexDirection="column" w="auto" isDisabled={isParcoursupPublishDisabled}>
+                <FormControl
+                  display="flex"
+                  flexDirection="column"
+                  w="auto"
+                  isDisabled={isParcoursupPublishDisabled}
+                  data-testid={"parcoursup-form"}
+                  aria-disabled={isParcoursupPublishDisabled}
+                >
                   <FormLabel htmlFor="parcoursup" mb={3} fontSize="epsilon" fontWeight={400}>
                     Demander la publication Parcoursup:
                   </FormLabel>
@@ -340,9 +378,10 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                         value="true"
                         isDisabled={isParcoursupPublishDisabled}
                         onChange={(evt) => {
-                          setParcousupUnpublishFormOpen(false);
+                          setParcoursupUnpublishFormOpen(false);
                           handleChange(evt);
                         }}
+                        data-testid={"ps-radio-yes"}
                       >
                         <Text as={"span"} fontSize="zeta">
                           Oui
@@ -354,9 +393,10 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                         value="false"
                         isDisabled={isParcoursupPublishDisabled}
                         onChange={(evt) => {
-                          setParcousupUnpublishFormOpen(true);
+                          setParcoursupUnpublishFormOpen(true);
                           handleChange(evt);
                         }}
+                        data-testid={"ps-radio-no"}
                       >
                         <Text as={"span"} fontSize="zeta">
                           Non
@@ -378,6 +418,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                   </FormLabel>
                   <Flex flexDirection="column" w="100%">
                     <Textarea
+                      data-testid={"ps-unpublish-form"}
                       name="parcoursup_raison_depublication"
                       value={values.parcoursup_raison_depublication}
                       onChange={handleChange}
@@ -422,4 +463,4 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
   );
 };
 
-export { PublishModal };
+export { PublishModal, getPublishRadioValue, getSubmitBody, updateFormationAndReconciliation };

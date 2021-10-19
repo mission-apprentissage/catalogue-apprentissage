@@ -1,7 +1,7 @@
 const express = require("express");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const Joi = require("joi");
-const { ConvertedFormation } = require("../../common/model");
+const { Formation } = require("../../common/model");
 const logger = require("../../common/logger");
 const Boom = require("boom");
 
@@ -59,7 +59,7 @@ module.exports = () => {
    *         content:
    *            application/json:
    *              schema:
-   *                   $ref: '#/components/schemas/mnaFormation'
+   *                   $ref: '#/components/schemas/formation'
    */
   router.put(
     "/formations2021/:id",
@@ -68,7 +68,7 @@ module.exports = () => {
 
       const itemId = params.id;
 
-      const formation = await ConvertedFormation.findById(itemId);
+      const formation = await Formation.findById(itemId);
       let hasRightToEdit = user.isAdmin;
       if (!hasRightToEdit) {
         const listAcademie = user.academie.split(",").map((academieStr) => Number(academieStr));
@@ -79,7 +79,7 @@ module.exports = () => {
       }
 
       logger.info("Updating new item: ", body);
-      const result = await ConvertedFormation.findOneAndUpdate({ _id: itemId }, body, {
+      const result = await Formation.findOneAndUpdate({ _id: itemId }, body, {
         new: true,
       });
       res.json(result);

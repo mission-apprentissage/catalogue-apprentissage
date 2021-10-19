@@ -1,6 +1,6 @@
 const logger = require("../../common/logger");
 const { runScript } = require("../scriptWrapper");
-const { PendingRcoFormation, ConvertedFormation } = require("../../common/model");
+const { PendingRcoFormation, Formation } = require("../../common/model");
 const config = require("config");
 const path = require("path");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
@@ -32,7 +32,7 @@ if (process.env.standalone) {
     const lines = [];
     const deletableLines = [];
     await asyncForEach(formations, async (formation) => {
-      const original = await ConvertedFormation.findById(formation._id);
+      const original = await Formation.findById(formation._id);
 
       if (original) {
         let hasOneChange = false;

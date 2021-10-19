@@ -6,17 +6,9 @@ import { rest } from "msw";
 import { setupServer } from "msw/node";
 import { setAuthState } from "../../common/auth";
 import { waitFor } from "@testing-library/react";
+import * as search from "../../common/hooks/useSearch";
 
 const server = setupServer(
-  rest.get(/\/api\/parcoursup\/reconciliation\/count/, (req, res, ctx) => {
-    return res(
-      ctx.json({
-        countValide: 10,
-        countTotal: 100,
-      })
-    );
-  }),
-
   rest.get(/\/api\/entity\/formations2021\/count/, (req, res, ctx) => {
     return res(ctx.json(1000));
   }),
@@ -31,6 +23,14 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 test("renders all actions for admin", async () => {
+  jest.spyOn(search, "useSearch").mockImplementation(() => ({
+    loaded: true,
+    countReconciliationPs: {
+      countValide: 10,
+      countTotal: 100,
+    },
+  }));
+
   setAuthState({ permissions: { isAdmin: true } });
 
   const { getByText, getByTestId } = renderWithRouter(<ActionsExpertes />);
@@ -51,6 +51,14 @@ test("renders all actions for admin", async () => {
 });
 
 test("renders ps actions for acl ps", async () => {
+  jest.spyOn(search, "useSearch").mockImplementation(() => ({
+    loaded: true,
+    countReconciliationPs: {
+      countValide: 10,
+      countTotal: 100,
+    },
+  }));
+
   setAuthState({ permissions: { isAdmin: false }, acl: ["page_perimetre_ps", "page_reconciliation_ps"] });
 
   const { queryByText, getByTestId } = renderWithRouter(<ActionsExpertes />);
@@ -74,6 +82,14 @@ test("renders ps actions for acl ps", async () => {
 });
 
 test("renders af actions for acl af", async () => {
+  jest.spyOn(search, "useSearch").mockImplementation(() => ({
+    loaded: true,
+    countReconciliationPs: {
+      countValide: 10,
+      countTotal: 100,
+    },
+  }));
+
   setAuthState({ permissions: { isAdmin: false }, acl: ["page_perimetre_af"] });
 
   const { queryByText, getByTestId } = renderWithRouter(<ActionsExpertes />);

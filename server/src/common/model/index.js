@@ -18,24 +18,21 @@ module.exports = {
   User: createModel("user", schema.userSchema),
   Role: createModel("role", schema.roleSchema),
   RcoFormation: createModel("rcoformation", schema.rcoFormationSchema),
-  MnaFormation: createModel("mnaformation", schema.mnaFormationSchema, {
-    esIndexName: "mnaformation",
-  }),
-  ConvertedFormation: createModel("convertedformation", schema.mnaFormationSchema, {
-    esIndexName: "convertedformation",
+  Formation: createModel("formation", schema.formationSchema, {
+    esIndexName: "formation",
   }),
   Report: createModel("report", schema.reportSchema),
   Log: createModel("log", schema.logSchema),
   // PsFormation: createModel("psformation", schema.psFormation2020Schema),
   PsReconciliation: createModel("psreconciliation", schema.psReconciliationSchema),
-  PendingRcoFormation: createModel("pendingrcoformation", schema.mnaFormationSchema),
+  PendingRcoFormation: createModel("pendingrcoformation", schema.formationSchema),
   AfFormation: createModel("afformation", schema.afFormationSchema),
   AfReconciliation: createModel("afreconciliation", schema.afReconciliationSchema),
   Etablissement: createModel("etablissement", schema.etablissementSchema),
   PsFormation: createModel("psformations", schema.psFormationSchema, {
     esIndexName: "psformations",
   }),
-  SandboxFormation: createModel("sandboxformation", schema.mnaFormationSchema),
+  SandboxFormation: createModel("sandboxformation", schema.formationSchema),
   Statistique: createModel("statistique", schema.statistiqueSchema),
   MessageScript: createModel("messageScript", schema.messageScriptSchema),
   ReglePerimetre: createModel("regleperimetre", schema.reglePerimetreSchema),
