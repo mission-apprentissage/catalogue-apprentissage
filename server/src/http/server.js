@@ -20,7 +20,8 @@ const formationSecure = require("./routes/formationSecure");
 const report = require("./routes/report");
 const rcoFormation = require("./routes/rcoFormation");
 const auth = require("./routes/auth");
-const admin = require("./routes/admin");
+const user = require("./routes/user");
+const role = require("./routes/role");
 const password = require("./routes/password");
 const stats = require("./routes/stats");
 const esSearch = require("./routes/esSearch");
@@ -124,12 +125,23 @@ module.exports = async (components, verbose = true) => {
   app.use("/api/v1/parcoursup", parcoursup(components));
   app.use("/api/v1/entity", messageScript());
   app.use("/api/v1/entity", reglePerimetre());
-  app.use("/api/v1/admin", apiKeyAuthMiddleware, adminOnly, admin(components));
+  app.use(
+    "/api/v1/admin",
+    apiKeyAuthMiddleware,
+    permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs"]),
+    user(components)
+  );
+  app.use(
+    "/api/v1/admin",
+    apiKeyAuthMiddleware,
+    permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs", "page_gestion_roles"]),
+    role(components)
+  );
   app.use("/api/v1/entity", apiKeyAuthMiddleware, formationSecure());
   app.use("/api/v1/stats", apiKeyAuthMiddleware, adminOnly, stats(components));
   app.use("/api/v1/affelnet", affelnet(components));
   app.use("/api/v1/entity", apiKeyAuthMiddleware, etablissementSecure(components));
-  app.use("/api/v1/upload", adminOnly, upload());
+  app.use("/api/v1/upload", permissionsMiddleware({ isAdmin: true }, ["page_upload"]), upload());
   app.use("/api/v1/entity", apiKeyAuthMiddleware, reglePerimetreSecure());
 
   /** DEPRECATED */
@@ -143,7 +155,18 @@ module.exports = async (components, verbose = true) => {
   app.use("/api/auth", auth(components));
   app.use("/api/password", password(components));
   app.use("/api/parcoursup", parcoursup(components));
-  app.use("/api/admin", authMiddleware, adminOnly, admin(components));
+  app.use(
+    "/api/admin",
+    authMiddleware,
+    permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs"]),
+    user(components)
+  );
+  app.use(
+    "/api/admin",
+    authMiddleware,
+    permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs", "page_gestion_roles"]),
+    role(components)
+  );
   app.use("/api/entity", authMiddleware, formationSecure());
   app.use("/api/stats", stats(components));
   app.use("/api/affelnet", affelnet(components));
