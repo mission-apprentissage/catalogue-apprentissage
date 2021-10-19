@@ -57,7 +57,7 @@ const Diplome = ({ onSubmited }) => {
           <Cfd
             onSubmited={(result) => {
               setCfd(result.cfd);
-              setRncp(result.rncp.code_rncp);
+              setRncp(result?.rncp?.code_rncp || "");
               setCodesSelected(true);
             }}
           />
@@ -66,9 +66,9 @@ const Diplome = ({ onSubmited }) => {
           <Rncp
             onSubmited={(result) => {
               setRncp(result.code_rncp);
-              if (result.cfds) {
-                setCodesSelected(true);
-                // setCfd(result.cfds[0]);
+              setCodesSelected(true);
+              if (result.cfds && result.cfds.length > 0) {
+                setCfd(result.cfds[0]);
               }
             }}
           />
