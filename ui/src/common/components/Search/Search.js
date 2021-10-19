@@ -12,13 +12,13 @@ import {
   HardFilters,
   QueryBuilder,
 } from "./components";
-import constantsRcoFormations from "./constantsRCOFormations";
+import constantsFormations from "./constantsFormations";
 import constantsEtablissements from "./constantsEtablissements";
 import constantsReconciliationPS from "./constantsReconciliationPS";
 import "./search.css";
 import queryString from "query-string";
 import { useHistory } from "react-router-dom";
-import { CloseCircleLine } from "../../../theme/components/icons/CloseCircleLine";
+import { CloseCircleLine } from "../../../theme/components/icons";
 import { SearchLine } from "../../../theme/components/icons/SearchLine";
 
 export default React.memo(({ location, searchState, context, onReconciliationCardClicked, extraButtons = null }) => {
@@ -39,7 +39,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
   const history = useHistory();
 
   const { FILTERS, facetDefinition, queryBuilderField, dataSearch, columnsDefinition } = isBaseFormations
-    ? constantsRcoFormations
+    ? constantsFormations
     : isBaseReconciliationPs
     ? constantsReconciliationPS
     : constantsEtablissements;

@@ -12,4 +12,8 @@ location / {
     proxy_set_header        X-Forwarded-Proto $scheme;
 
     expires                 $ui_expires;
+
+    location /recherche/formations-2021 {
+        return 301 /recherche/formations$is_args$args;
+    }
 }

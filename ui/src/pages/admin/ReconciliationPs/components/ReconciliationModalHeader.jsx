@@ -57,7 +57,7 @@ const ReconciliationModalHeader = React.memo(
 
     const { values, handleChange, handleSubmit: handleSave, errors, isSubmitting } = useFormik({
       initialValues: {
-        parcoursup_keep_publish: undefined,
+        parcoursup_keep_publish: "true",
         parcoursup_raison_depublication: "",
       },
       validationSchema: Yup.object().shape({
@@ -226,7 +226,7 @@ const ReconciliationModalHeader = React.memo(
           : "505px"
         : slidesCount > 1
         ? "560px"
-        : "450px";
+        : "470px";
 
     return (
       <>
@@ -335,7 +335,7 @@ const ReconciliationModalHeader = React.memo(
                     >
                       <ErrorIcon color="redmarianne" mr="2" mt="0.35rem" />
                       <Text fontWeight="normal">
-                        {slidesCount} formations référencées dans le Catalogue 2021 (base Carif-Oref) peuvent être
+                        {slidesCount} formations référencées dans le Catalogue (base Carif-Oref) peuvent être
                         rapprochées ensembles à la formation Parcoursup
                       </Text>
                     </Text>
@@ -374,13 +374,13 @@ const ReconciliationModalHeader = React.memo(
                 }
                 middle={
                   <Text textStyle="h6" mb={4}>
-                    Formation Parcoursup 2021
+                    Formation Parcoursup
                   </Text>
                 }
                 right={
                   <HStack mb={4}>
                     <Box flexGrow="1">
-                      <Text textStyle="h6">Formations Catalogue 2021</Text>
+                      <Text textStyle="h6">Formations Catalogue</Text>
                     </Box>
                     {slidesCount > 1 && (
                       <HStack>
@@ -452,7 +452,7 @@ const ReconciliationModalHeader = React.memo(
                     >
                       <ErrorIcon color="redmarianne" mr="2" mt="0.35rem" />
                       <Text fontWeight="normal">
-                        {slidesCount} formations référencées dans le Catalogue 2021 (base Carif-Oref) peuvent être
+                        {slidesCount} formations référencées dans le Catalogue (base Carif-Oref) peuvent être
                         rapprochées ensembles à la formation Parcoursup
                       </Text>
                     </Text>
@@ -591,7 +591,7 @@ const ReconciliationModalHeader = React.memo(
                             Statut automatiquement appliqué
                           </Heading>
                           <Text as={"span"} fontSize="zeta">
-                            <StatusBadge source="Parcoursup" status="non publié" />
+                            <StatusBadge source="Parcoursup" status={PARCOURSUP_STATUS.HORS_PERIMETRE} />
                           </Text>
                         </Flex>
                       </Box>
@@ -625,6 +625,7 @@ const ReconciliationModalHeader = React.memo(
                                     setCanSubmit(true);
                                     handleChange(evt);
                                   }}
+                                  isChecked
                                 >
                                   <Text as={"span"} fontSize="zeta">
                                     <StatusBadge source="Parcoursup" status="publié" />

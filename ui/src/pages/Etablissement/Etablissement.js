@@ -61,9 +61,7 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
       index: 1,
     },
   ];
-  const linkFormations = `/recherche/formations-2021?qb=${encodeURIComponent(
-    JSON.stringify(query)
-  )}&defaultMode="advanced"`;
+  const linkFormations = `/recherche/formations?qb=${encodeURIComponent(JSON.stringify(query))}&defaultMode="advanced"`;
 
   let creationDate = "";
   try {
