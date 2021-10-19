@@ -31,7 +31,7 @@ export default (props) => {
   const searchState = useSearch("catalogue");
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const title = "Catalogue des formations en apprentissage 2021";
+  const title = "Catalogue des formations en apprentissage";
   setTitle(title);
 
   return (

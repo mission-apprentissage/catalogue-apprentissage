@@ -6,7 +6,7 @@ export default (
     <Route exact path="/stats" />
 
     <Route exact path="/" />
-    <Route exact path="/recherche/formations-2021" />
+    <Route exact path="/recherche/formations" />
     <Route exact path="/guide-reglementaire" />
     <Route exact path="/recherche/etablissements" />
     <Route exact path={`/formation/:id`} />

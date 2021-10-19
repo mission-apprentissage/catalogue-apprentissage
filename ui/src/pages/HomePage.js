@@ -34,7 +34,7 @@ const endpointTCO =
 export default () => {
   const [loading, setLoading] = useState(true);
   const [countEstablishments, setCountEstablishments] = useState(0);
-  const [countFormations2021, setCountFormations2021] = useState(0);
+  const [countFormations, setCountFormations] = useState(0);
 
   useEffect(() => {
     let mounted = true;
@@ -46,11 +46,11 @@ export default () => {
         });
 
         const countEtablissement = await _get(`${endpointTCO}/entity/etablissements/count?${params}`, false);
-        const countFormations2021 = await _get(`${endpointNewFront}/entity/formations2021/count?${params}`, false);
+        const count = await _get(`${endpointNewFront}/entity/formations2021/count?${params}`, false);
 
         if (mounted) {
           setCountEstablishments(countEtablissement);
-          setCountFormations2021(countFormations2021);
+          setCountFormations(count);
           setLoading(false);
         }
       } catch (e) {
@@ -132,14 +132,9 @@ export default () => {
                 {loading && <Text>chargement...</Text>}
                 {!loading && (
                   <Flex flexDirection={["column", "column", "column", "row"]}>
-                    <Link
-                      as={NavLink}
-                      to={"/recherche/formations-2021"}
-                      variant="card"
-                      w={["100%", "100%", "75%", "40%"]}
-                    >
+                    <Link as={NavLink} to={"/recherche/formations"} variant="card" w={["100%", "100%", "75%", "40%"]}>
                       <Text fontWeight="700" textStyle="h6">
-                        {countFormations2021.toLocaleString("fr-FR")} formations
+                        {countFormations.toLocaleString("fr-FR")} formations
                       </Text>
                       <Flex>
                         <Text flex="1" textStyle="sm">
