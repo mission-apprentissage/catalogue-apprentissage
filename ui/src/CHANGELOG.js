@@ -4,12 +4,33 @@ import { Link } from "@chakra-ui/react";
 const changelog = {
   list: [
     {
-      version: "4.7.0",
+      version: "4.9.0",
       date: "Prochainement",
       about: `<h4>À venir</h4>`,
       fixes: [],
       features: [],
       improvements: ["Travaux sur le flux retour vers les Carif-Oref et gestion des modifications"],
+    },
+    {
+      version: "4.8.0",
+      date: "Le 19 Octobre 2021",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [],
+      features: [],
+      improvements: ["Migration technique des formations"],
+    },
+    {
+      version: "4.7.0",
+      date: "Le 14 Octobre 2021",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [],
+      features: ["[Admin] Ajout de la recherche dans le module de périmètre"],
+      improvements: [
+        "[Admin] Améliorations de l'interface du module de rapprochement",
+        "[Page formation] Amélioration du contrôle des habilitations RNCP",
+      ],
     },
     {
       version: "4.6.0",
