@@ -46,13 +46,14 @@ const run = async () => {
     is_deleted: { $ne: true },
   }).lean();
 
-  await Formation.updateMany(
-    {
-      ...filterHP,
-      $or: aPublierVerifierAccesDirectPostBacRules.map(getQueryFromRule),
-    },
-    { $set: { last_update_at: Date.now(), parcoursup_statut: "à publier (vérifier accès direct postbac)" } }
-  );
+  aPublierVerifierAccesDirectPostBacRules.length > 0 &&
+    (await Formation.updateMany(
+      {
+        ...filterHP,
+        $or: aPublierVerifierAccesDirectPostBacRules.map(getQueryFromRule),
+      },
+      { $set: { last_update_at: Date.now(), parcoursup_statut: "à publier (vérifier accès direct postbac)" } }
+    ));
 
   const aPublierValidationRecteurRules = await ReglePerimetre.find({
     plateforme: "parcoursup",
@@ -60,13 +61,14 @@ const run = async () => {
     is_deleted: { $ne: true },
   }).lean();
 
-  await Formation.updateMany(
-    {
-      ...filterHP,
-      $or: aPublierValidationRecteurRules.map(getQueryFromRule),
-    },
-    { $set: { last_update_at: Date.now(), parcoursup_statut: "à publier (soumis à validation Recteur)" } }
-  );
+  aPublierValidationRecteurRules.length > 0 &&
+    (await Formation.updateMany(
+      {
+        ...filterHP,
+        $or: aPublierValidationRecteurRules.map(getQueryFromRule),
+      },
+      { $set: { last_update_at: Date.now(), parcoursup_statut: "à publier (soumis à validation Recteur)" } }
+    ));
 
   // 3 - set "à publier" for trainings matching psup eligibility rules
   // run only on those 'hors périmètre' to not overwrite actions of users !
@@ -82,13 +84,14 @@ const run = async () => {
     is_deleted: { $ne: true },
   }).lean();
 
-  await Formation.updateMany(
-    {
-      ...filter,
-      $or: aPublierRules.map(getQueryFromRule),
-    },
-    { $set: { last_update_at: Date.now(), parcoursup_statut: "à publier" } }
-  );
+  aPublierRules.length > 0 &&
+    (await Formation.updateMany(
+      {
+        ...filter,
+        $or: aPublierRules.map(getQueryFromRule),
+      },
+      { $set: { last_update_at: Date.now(), parcoursup_statut: "à publier" } }
+    ));
 
   // apply academy rules
   const academieRules = [
