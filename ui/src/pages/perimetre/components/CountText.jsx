@@ -1,18 +1,10 @@
 import React from "react";
 import { Text } from "@chakra-ui/react";
 import { academies } from "../../../constants/academies";
-import { getIntegrationCount } from "../../../common/api/perimetre";
-import { useQuery } from "react-query";
+import { useIntegrationCount } from "../../../common/api/perimetre";
 
 export const CountText = ({ totalFormationsCount, plateforme, niveaux, academie, ...rest }) => {
-  const { data: integrationCount } = useQuery(
-    ["integration", plateforme, academie],
-    () => getIntegrationCount({ plateforme, academie }),
-    {
-      refetchOnWindowFocus: false,
-      staleTime: 5 * 60 * 1000, // 5 minutes
-    }
-  );
+  const { data: integrationCount } = useIntegrationCount({ plateforme, academie });
 
   const diplomesCount = niveaux.reduce(
     (acc, { diplomes }) =>
