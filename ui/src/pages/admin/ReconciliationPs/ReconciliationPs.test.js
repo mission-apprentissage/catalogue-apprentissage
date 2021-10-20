@@ -10,6 +10,38 @@ import * as api from "../../../common/api/rapprochement";
 import * as useAuth from "../../../common/hooks/useAuth";
 import * as search from "../../../common/hooks/useSearch";
 
+import { rest } from "msw";
+import { setupServer } from "msw/node";
+
+const server = setupServer(
+  rest.get(/\/api\/es\/search\/psformations\/_msearch/, (req, res, ctx) => {
+    return res(
+      ctx.json({
+        took: 4,
+        responses: [
+          {
+            took: 4,
+            timed_out: false,
+            _shards: { total: 1, successful: 1, skipped: 0, failed: 0 },
+            hits: { total: { value: 3730, relation: "eq" }, max_score: null, hits: [] },
+            aggregations: {
+              "statut_reconciliation.keyword": {
+                doc_count_error_upper_bound: 0,
+                sum_other_doc_count: 0,
+                buckets: [{ key: "AUTOMATIQUE", doc_count: 3730 }],
+              },
+            },
+            status: 200,
+          },
+        ],
+      })
+    );
+  }),
+  rest.get(/\/api\/v1\/entity\/messageScript/, (req, res, ctx) => {
+    return res(ctx.json([]));
+  })
+);
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -18,6 +50,10 @@ const queryClient = new QueryClient({
     },
   },
 });
+
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
 
 test("opens rapprochement modal", async () => {
   jest.spyOn(search, "useSearch").mockImplementation(() => ({
