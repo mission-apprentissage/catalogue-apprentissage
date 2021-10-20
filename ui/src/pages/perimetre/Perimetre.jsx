@@ -211,6 +211,8 @@ export default ({ plateforme }) => {
   }, []);
 
   useEffect(() => {
+    let mounted = true;
+
     async function run() {
       const counts = {};
       await Promise.all(
@@ -222,7 +224,9 @@ export default ({ plateforme }) => {
           });
         })
       );
-      setNiveauxCount(counts);
+      if (mounted) {
+        setNiveauxCount(counts);
+      }
     }
 
     if (plateforme) {
@@ -230,6 +234,10 @@ export default ({ plateforme }) => {
     } else {
       setNiveauxCount({});
     }
+    return () => {
+      // cleanup hook
+      mounted = false;
+    };
   }, [currentAcademie, niveaux, plateforme]);
 
   const onAcademieChange = useCallback((academie) => setCurrentAcademie(academie), []);
