@@ -4,9 +4,9 @@ const rcoImporter = require("./rcoImporter");
 const rcoConverter = require("./rcoConverter");
 const psReference = require("./parcoursup/reference");
 const afReference = require("./affelnet/reference");
-const psPertinence = require("./parcoursup/pertinence");
+const psPerimetre = require("./parcoursup/perimetre");
 const psUpdateMatchInfo = require("./parcoursup/updateMatchInfo");
-const afPertinence = require("./affelnet/pertinence");
+const afPerimetre = require("./affelnet/perimetre");
 const afCoverage = require("./affelnet/coverage");
 const afReconciliation = require("./affelnet/reconciliation");
 const crypto = require("crypto");
@@ -68,7 +68,7 @@ runScript(async ({ catalogue, db }) => {
 
     await psReference(); // ~ 34 minutes => ~ 30 secondes
     await sleep(30000);
-    await psPertinence(); // ~ 8 secondes
+    await psPerimetre(); // ~ 8 secondes
     await sleep(30000);
     await psUpdateMatchInfo();
     await sleep(30000);
@@ -80,7 +80,7 @@ runScript(async ({ catalogue, db }) => {
     await sleep(30000);
     await afReference(); // ~ 50 minutes => ~ 5 minutes
     await sleep(30000);
-    await afPertinence();
+    await afPerimetre();
     await sleep(30000);
 
     Formation.startAllMongoosaticHooks();
