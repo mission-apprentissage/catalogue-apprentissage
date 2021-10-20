@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { _get } from "../../../common/httpClient";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { ArrowRightDownLine } from "../../../theme/components/icons";
 import { StatusSelect } from "./StatusSelect";
@@ -9,8 +8,7 @@ import { COMMON_STATUS } from "../../../constants/status";
 import { academies } from "../../../constants/academies";
 import InfoTooltip from "../../../common/components/InfoTooltip";
 import { isStatusChangeEnabled } from "../../../common/utils/rulesUtils";
-
-const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
+import { getCount } from "../../../common/api/perimetre";
 
 export const Line = ({
   showIcon,
@@ -57,14 +55,7 @@ export const Line = ({
   useEffect(() => {
     async function run() {
       try {
-        const countUrl = `${endpointNewFront}/v1/entity/perimetre/regle/count`;
-        const params = new URLSearchParams({
-          niveau,
-          diplome,
-          ...(regle_complementaire && { regle_complementaire }),
-          ...(academie && { num_academie: academie }),
-        });
-        const count = await _get(`${countUrl}?${params}`, false);
+        const count = await getCount({ niveau, diplome, regle_complementaire, academie });
         setLineCount(count ?? 0);
       } catch (e) {
         console.error(e);
@@ -79,6 +70,7 @@ export const Line = ({
 
   return (
     <Box
+      data-testid={"line"}
       borderBottom={"1px solid"}
       borderColor={"grey.300"}
       _hover={{
@@ -92,7 +84,7 @@ export const Line = ({
       <Flex px={8} py={3} alignItems="center" w={"full"}>
         <Flex grow={1} alignItems="center" pl={showIcon ? 2 : 0} pr={2} maxWidth={"50%"} isTruncated>
           {showIcon && <ArrowRightDownLine boxSize={3} mr={2} />}
-          <Text data-testid={"line"} isTruncated>
+          <Text data-testid={"line-label"} isTruncated>
             {num_academie ? `${academieLabel} (${num_academie}) - ` : ""}
             {label}
           </Text>
@@ -102,6 +94,8 @@ export const Line = ({
           <Flex justifyContent={"space-between"}>
             <Flex px={2}>
               <ActionsSelect
+                data-testid={"actions-select"}
+                aria-disabled={!isConditionChangeEnabled}
                 disabled={!isConditionChangeEnabled}
                 value={condition_integration ?? CONDITIONS.NE_DOIT_PAS_INTEGRER}
                 onChange={async (e) => {
@@ -139,6 +133,8 @@ export const Line = ({
             </Flex>
             <Flex alignItems="center">
               <StatusSelect
+                data-testid={"status-select"}
+                aria-disabled={isStatusChangeDisabled}
                 isDisabled={isStatusChangeDisabled}
                 plateforme={plateforme}
                 currentStatus={currentStatus}
