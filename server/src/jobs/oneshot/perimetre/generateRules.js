@@ -6,13 +6,13 @@ const { runScript } = require("../../scriptWrapper");
 const {
   aPublierRules: afAPublierRules,
   aPublierSoumisAValidationRules: afAPublierSoumisAValidationRules,
-} = require("../../affelnet/pertinence/rules");
+} = require("../../affelnet/perimetre/rules");
 
 const {
   aPublierVerifierAccesDirectPostBacRules: psPostBacRules,
   aPublierValidationRecteurRules: psAPublierRecteurRules,
   aPublierRules: psAPublierRules,
-} = require("../../parcoursup/pertinence/rules");
+} = require("../../parcoursup/perimetre/rules");
 
 const specificRulesNode = (rules) => {
   return rules["$or"];

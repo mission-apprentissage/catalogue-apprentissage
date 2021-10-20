@@ -123,7 +123,7 @@ const psFormationSchema = {
   matching_mna_parcoursup_statuts: {
     type: [String],
     default: [],
-    description: "Statuts ParcourSup MNA module de pertinence",
+    description: "Statuts ParcourSup MNA module de perimetre",
   },
   etat_reconciliation: {
     type: Boolean,
