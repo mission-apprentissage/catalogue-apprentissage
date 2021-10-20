@@ -7,6 +7,8 @@ import { setupServer } from "msw/node";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { fireEvent, waitFor } from "@testing-library/react";
 
+jest.setTimeout(20000);
+
 const server = setupServer(
   rest.get(/\/api\/v1\/entity\/perimetre\/regles\/integration\/count/, (req, res, ctx) => {
     return res(ctx.json({ nbRules: 2, nbFormations: 100 }));
@@ -70,7 +72,7 @@ test("renders basic tree", async () => {
   expect(diplomeLabel).toBeInTheDocument();
 
   const diplomesSorted = ["cap", "bts"];
-  const lineTitleNodes = getAllByTestId("line");
+  const lineTitleNodes = getAllByTestId("line-label");
   lineTitleNodes.forEach((lineTitleNode, index) => {
     expect(lineTitleNode.textContent).toBe(diplomesSorted[index]);
   });
