@@ -58,13 +58,13 @@ module.exports = () => {
               const tmpFile = csvToJson.getJsonFromCsv(src);
               if (!hasCSVHeaders(tmpFile, "Code RNCP", "Code Diplome")) {
                 return res.status(400).json({
-                  error: `Le contenu du fichier est invalide, il doit contenir les colonnes suivantes : "Code RNCP", "Code Diplome"`,
+                  error: `Le contenu du fichier est invalide, il doit contenir les colonnes suivantes : "Code RNCP;Code Diplome" (et cette première ligne d'en-tête)`,
                 });
               }
             } catch (e) {
               logger.error(e);
               return res.status(400).json({
-                error: `Le contenu du fichier est invalide, il doit être au format CSV et contenir les colonnes suivantes : "Code RNCP", "Code Diplome"`,
+                error: `Le contenu du fichier est invalide, il doit être au format CSV (;) et contenir les colonnes suivantes : "Code RNCP;Code Diplome" (et cette première ligne d'en-tête)`,
               });
             }
             break;
@@ -74,14 +74,14 @@ module.exports = () => {
               const tmpFile = csvToJson.getJsonFromCsv(src);
               if (!hasCSVHeaders(tmpFile, "Uai", "Siret")) {
                 return res.status(400).json({
-                  error: `Le contenu du fichier est invalide, il doit contenir les colonnes suivantes : "Uai", "Siret"`,
+                  error: `Le contenu du fichier est invalide, il doit contenir les colonnes suivantes : "Uai;Siret" (et cette première ligne d'en-tête)`,
                 });
               }
               callback = upsertEtablissements;
             } catch (e) {
               logger.error(e);
               return res.status(400).json({
-                error: `Le contenu du fichier est invalide, il doit être au format CSV et contenir les colonnes suivantes : "Uai", "Siret"`,
+                error: `Le contenu du fichier est invalide, il doit être au format CSV (;) et contenir les colonnes suivantes : "Uai;Siret" (et cette première ligne d'en-tête)`,
               });
             }
             break;
