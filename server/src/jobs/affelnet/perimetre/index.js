@@ -3,22 +3,22 @@ const controller = require("./controller");
 
 const { runScript } = require("../../scriptWrapper");
 
-const psPertinence = async () => {
+const afPerimetre = async () => {
   try {
-    logger.info(" -- Start psup pertinence -- ");
+    logger.info(" -- Start affelnet perimetre -- ");
 
     await controller.run();
 
-    logger.info(" -- End of psup pertinence -- ");
+    logger.info(" -- End of affelnet perimetre -- ");
   } catch (err) {
     logger.error(err);
   }
 };
 
-module.exports = psPertinence;
+module.exports = afPerimetre;
 
 if (process.env.standalone) {
   runScript(async () => {
-    await psPertinence();
+    await afPerimetre();
   });
 }
