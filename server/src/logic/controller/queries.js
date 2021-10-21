@@ -37,7 +37,7 @@ const uai = [
             ],
           },
           {
-            $or: [{ rncp_code: { $in: f.codes_rncp_mna } }, { cfd: { $in: f.codes_cfd_mna } }],
+            $or: [{ rncp_code: { $in: f.codes_rncp_mna } }, { cfd_entree: { $in: f.codes_cfd_mna } }],
           },
         ],
         code_commune_insee: f.code_commune_insee,
@@ -80,7 +80,7 @@ const uai = [
             ],
           },
           {
-            $or: [{ rncp_code: { $in: f.codes_rncp_mna } }, { cfd: { $in: f.codes_cfd_mna } }],
+            $or: [{ rncp_code: { $in: f.codes_rncp_mna } }, { cfd_entree: { $in: f.codes_cfd_mna } }],
           },
         ],
         code_commune_insee: f.code_commune_insee,
@@ -259,7 +259,7 @@ const cfd = [
             ],
           },
           {
-            $or: [{ rncp_code: { $in: f.codes_rncp_mna } }, { cfd: { $in: f.codes_cfd_mna } }],
+            $or: [{ rncp_code: { $in: f.codes_rncp_mna } }, { cfd_entree: { $in: f.codes_cfd_mna } }],
           },
         ],
         code_commune_insee: f.code_commune_insee,
@@ -280,7 +280,7 @@ const cfd = [
             ],
           },
           {
-            $or: [{ rncp_code: { $in: f.codes_rncp_mna } }, { cfd: { $in: f.codes_cfd_mna } }],
+            $or: [{ rncp_code: { $in: f.codes_rncp_mna } }, { cfd_entree: { $in: f.codes_cfd_mna } }],
           },
         ],
         code_commune_insee: f.code_commune_insee,
@@ -367,7 +367,7 @@ const psRules = [
             ],
           },
           {
-            $or: [{ rncp_code: { $in: f.codes_rncp_mna } }, { cfd: { $in: f.codes_cfd_mna } }],
+            $or: [{ rncp_code: { $in: f.codes_rncp_mna } }, { cfd_entree: { $in: f.codes_cfd_mna } }],
           },
         ],
         code_commune_insee: f.code_commune_insee,
@@ -389,7 +389,7 @@ const psRules = [
             ],
           },
           {
-            $or: [{ rncp_code: { $in: f.codes_rncp_mna } }, { cfd: { $in: f.codes_cfd_mna } }],
+            $or: [{ rncp_code: { $in: f.codes_rncp_mna } }, { cfd_entree: { $in: f.codes_cfd_mna } }],
           },
         ],
         code_commune_insee: f.code_commune_insee,
@@ -432,7 +432,7 @@ const psRules = [
             ],
           },
           {
-            $or: [{ rncp_code: { $in: f.codes_rncp_mna } }, { cfd: { $in: f.codes_cfd_mna } }],
+            $or: [{ rncp_code: { $in: f.codes_rncp_mna } }, { cfd_entree: { $in: f.codes_cfd_mna } }],
           },
         ],
         code_commune_insee: f.code_commune_insee,
@@ -453,7 +453,7 @@ const psRules = [
             ],
           },
           {
-            $or: [{ rncp_code: { $in: f.codes_rncp_mna } }, { cfd: { $in: f.codes_cfd_mna } }],
+            $or: [{ rncp_code: { $in: f.codes_rncp_mna } }, { cfd_entree: { $in: f.codes_cfd_mna } }],
           },
         ],
         code_commune_insee: f.code_commune_insee,
@@ -496,7 +496,7 @@ const psRules = [
             ],
           },
           {
-            $or: [{ rncp_code: { $in: f.codes_rncp_mna } }, { cfd: { $in: f.codes_cfd_mna } }],
+            $or: [{ rncp_code: { $in: f.codes_rncp_mna } }, { cfd_entree: { $in: f.codes_cfd_mna } }],
           },
         ],
         code_commune_insee: f.code_commune_insee,
@@ -516,7 +516,7 @@ const psRules = [
             ],
           },
           {
-            $or: [{ rncp_code: { $in: f.codes_rncp_mna } }, { cfd: { $in: f.codes_cfd_mna } }],
+            $or: [{ rncp_code: { $in: f.codes_rncp_mna } }, { cfd_entree: { $in: f.codes_cfd_mna } }],
           },
         ],
         code_commune_insee: f.code_commune_insee,
@@ -552,7 +552,7 @@ const psRules = [
             ],
           },
           {
-            $or: [{ rncp_code: { $in: f.codes_rncp_mna } }, { cfd: { $in: f.codes_cfd_mna } }],
+            $or: [{ rncp_code: { $in: f.codes_rncp_mna } }, { cfd_entree: { $in: f.codes_cfd_mna } }],
           },
         ],
         code_commune_insee: f.code_commune_insee,
@@ -565,7 +565,7 @@ const psRules = [
       return {
         $and: [
           {
-            $or: [{ rncp_code: { $in: f.codes_rncp_mna } }, { cfd: { $in: f.codes_cfd_mna } }],
+            $or: [{ rncp_code: { $in: f.codes_rncp_mna } }, { cfd_entree: { $in: f.codes_cfd_mna } }],
           },
         ],
         code_commune_insee: f.code_commune_insee,

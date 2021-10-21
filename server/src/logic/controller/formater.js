@@ -33,6 +33,7 @@ const formation = {
   diplome: 1,
   niveau: 1,
   cfd: 1,
+  cfd_entree: 1,
   mef_10_code: 1,
   rncp_code: 1,
   rncp_intitule: 1,

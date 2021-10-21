@@ -19,12 +19,12 @@ const run = async () => {
         cfd_outdated: { $ne: true },
         $or: [
           {
-            cfd: reconciliation.code_cfd,
+            cfd_entree: reconciliation.code_cfd,
             etablissement_formateur_siret: reconciliation.siret_formateur,
             etablissement_gestionnaire_siret: reconciliation.siret_gestionnaire,
           },
           {
-            cfd: reconciliation.code_cfd,
+            cfd_entree: reconciliation.code_cfd,
             etablissement_formateur_siret: reconciliation.siret_gestionnaire,
             etablissement_gestionnaire_siret: reconciliation.siret_formateur,
           },
