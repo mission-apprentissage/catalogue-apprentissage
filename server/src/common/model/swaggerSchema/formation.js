@@ -339,6 +339,11 @@ module.exports = {
         description: "Date de fermeture du cfd",
         format: "date-time",
       },
+      cfd_entree: {
+        type: "string",
+        default: "null",
+        description: "Code formation diplome d'entrée (année 1 de l'apprentissage)",
+      },
       mef_10_code: {
         type: "string",
         default: "null",
