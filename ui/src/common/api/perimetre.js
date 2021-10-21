@@ -81,6 +81,13 @@ export const getIntegrationCount = async ({ plateforme, niveau, academie }) => {
   }
 };
 
+export const useIntegrationCount = ({ plateforme, academie }) => {
+  return useQuery(["integration", plateforme, academie], () => getIntegrationCount({ plateforme, academie }), {
+    refetchOnWindowFocus: false,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+};
+
 export const getRules = async ({ plateforme }) => {
   const reglesUrl = `${endpointNewFront}/v1/entity/perimetre/regles`;
   return await _get(`${reglesUrl}?plateforme=${plateforme}`, false);

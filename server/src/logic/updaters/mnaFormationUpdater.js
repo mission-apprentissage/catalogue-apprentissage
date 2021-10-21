@@ -244,7 +244,7 @@ const mnaFormationUpdater = async (
         }).save();
       });
 
-      // apply pertinence filters against the tmp collection
+      // apply perimetre filters against the tmp collection
       // check "à publier" first to have less mefs
       // Add current id_rco_formation to ensure no concurrent access in db
       let mefs_10 = await findMefsForAffelnet({

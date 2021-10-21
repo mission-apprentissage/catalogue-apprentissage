@@ -1,8 +1,8 @@
-# Pertinence Affelnet
+# Périmètre Affelnet
 
-Les règles de pertinence s'appliquent sur l'ensemble des formations du catalogue, afin de mettre un statut (et visuellement un badge) sur les formations qui sont dans le périmètre Affelnet.
+Les règles de périmètre s'appliquent sur l'ensemble des formations du catalogue, afin de mettre un statut (et visuellement un badge) sur les formations qui sont dans le périmètre Affelnet.
 
-Le script de pertinence est exécuté chaque nuit, après l'import RCO qui peut ajouter, supprimer ou modifier des formations et donc modifier leur statut pour Affelnet.
+Le script de périmètre est exécuté chaque nuit, après l'import RCO qui peut ajouter, supprimer ou modifier des formations et donc modifier leur statut pour Affelnet.
 
 ## Liste des statuts
 
@@ -17,11 +17,11 @@ La liste des statuts possibles est la suivante :
 
 Après action utilisateur on ne change plus le statut de la formation, donc le statut **"non publié"** ne bouge pas, et le statut **"en attente de publication"** peut passer à "publié" uniquement.
 
-En revanche pour les statuts "hors périmètre", "à publier (soumis à validation)" et "à publier" on recalcule chaque soir. À noter que ces statuts on la priorité suivante : `"à publier" > "à publier (soumis à validation)" > "hors périmètre"`. 
+En revanche pour les statuts "hors périmètre", "à publier (soumis à validation)" et "à publier" on recalcule chaque soir. À noter que ces statuts on la priorité suivante : `"à publier" > "à publier (soumis à validation)" > "hors périmètre"`.
 
-## Règles de pertinence
+## Règles de périmètre
 
-Les règles de pertinence pour Affelnet sont sur les diplômes et les mefs, cf. le fichier `rules.js`.
+Les règles de périmètre pour Affelnet sont sur les diplômes et les mefs, cf. le fichier `rules.js`.
 exemple : les "BAC PROFESSIONNEL" dont le mef termine par "31" et commence par "247" auront le statut **"à publier"**.
 
 Pour chaque règle on contrôle également la date de fermeture du cfd, on exclut les formations dont le cfd expire avant le 31/12 de l'année `N + durée -1`.
@@ -38,12 +38,14 @@ https://catalogue.apprentissage.beta.gouv.fr/api/entity/formations2021?query={"a
 ```
 
 ## Déduction du mef Affelnet & modalités
-Les règles de pertinences ont également une autre utilité, celle de déterminer le mef de la formation et d'en extraire les modalités (durée et année d'inscription).
-En effet les formations ont un tableau de mefs (correspondant à tous les mefs existants pour le cfd de la formation), on applique alors les règles de pertinence sur chaque formation, et si la formation est eligible via une des règles, on lui donne le mef correspondant et on en déduit les modalités.
-Cette déduction est effectuée dans le code dans le fichier `mnaFormationUpdater.js`. 
+
+Les règles de périmètre ont également une autre utilité, celle de déterminer le mef de la formation et d'en extraire les modalités (durée et année d'inscription).
+En effet les formations ont un tableau de mefs (correspondant à tous les mefs existants pour le cfd de la formation), on applique alors les règles de périmètre sur chaque formation, et si la formation est eligible via une des règles, on lui donne le mef correspondant et on en déduit les modalités.
+Cette déduction est effectuée dans le code dans le fichier `mnaFormationUpdater.js`.
 
 **/!\ Ce mef est indispensable pour l'import automatique par Affelnet**
 
 ## Historique des statuts
+
 Chaque soir après le calcul des statuts affelnet, on écrit dans l'historique de la formation le statut Affelnet qui lui a été attribué (champ `affelnet_statut_history`).
 Cela nous permet de suivre les variations de statuts au niveau des académies, de suivre l'avancement de la collecte RCO, etc.

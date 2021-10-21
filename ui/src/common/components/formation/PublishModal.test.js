@@ -5,7 +5,7 @@ import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../../cons
 import * as api from "../../api/formation";
 import userEvent from "@testing-library/user-event";
 
-jest.setTimeout(10000);
+jest.setTimeout(20000);
 
 test("should return undefined when status is not known or à publier", () => {
   expect(getPublishRadioValue(COMMON_STATUS.A_PUBLIER)).toEqual(undefined);
