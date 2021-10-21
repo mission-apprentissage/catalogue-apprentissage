@@ -54,22 +54,36 @@ module.exports = () => {
           case "affelnet-import.xlsx":
             break;
           case "CodeDiplome_RNCP_latest_kit.csv": {
-            const tmpFile = csvToJson.getJsonFromCsv(src);
-            if (!hasCSVHeaders(tmpFile, "Code RNCP", "Code Diplome")) {
+            try {
+              const tmpFile = csvToJson.getJsonFromCsv(src);
+              if (!hasCSVHeaders(tmpFile, "Code RNCP", "Code Diplome")) {
+                return res.status(400).json({
+                  error: `Le contenu du fichier est invalide, il doit contenir les colonnes suivantes : "Code RNCP", "Code Diplome"`,
+                });
+              }
+            } catch (e) {
+              logger.error(e);
               return res.status(400).json({
-                error: `Le contenu du fichier est invalide, il doit contenir les colonnes suivantes : "Code RNCP", "Code Diplome"`,
+                error: `Le contenu du fichier est invalide, il doit être au format CSV et contenir les colonnes suivantes : "Code RNCP", "Code Diplome"`,
               });
             }
             break;
           }
           case "uai-siret.csv": {
-            const tmpFile = csvToJson.getJsonFromCsv(src);
-            if (!hasCSVHeaders(tmpFile, "Uai", "Siret")) {
+            try {
+              const tmpFile = csvToJson.getJsonFromCsv(src);
+              if (!hasCSVHeaders(tmpFile, "Uai", "Siret")) {
+                return res.status(400).json({
+                  error: `Le contenu du fichier est invalide, il doit contenir les colonnes suivantes : "Uai", "Siret"`,
+                });
+              }
+              callback = upsertEtablissements;
+            } catch (e) {
+              logger.error(e);
               return res.status(400).json({
-                error: `Le contenu du fichier est invalide, il doit contenir les colonnes suivantes : "Uai", "Siret"`,
+                error: `Le contenu du fichier est invalide, il doit être au format CSV et contenir les colonnes suivantes : "Uai", "Siret"`,
               });
             }
-            callback = upsertEtablissements;
             break;
           }
           default:
