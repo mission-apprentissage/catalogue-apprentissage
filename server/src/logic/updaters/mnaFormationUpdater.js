@@ -57,7 +57,7 @@ const mnaFormationUpdater = async (
 
     let error = parseErrors(cfdMessages);
     if (error) {
-      return { updates: null, formation, error, cfdInfo };
+      return { updates: null, formation, error, cfdInfo: currentCfdInfo };
     }
 
     // Trust RCO for geocoords & insee
@@ -71,7 +71,7 @@ const mnaFormationUpdater = async (
     let cpMapping = result;
     error = parseErrors(cpMessages);
     if (error) {
-      return { updates: null, formation, error, cfdInfo };
+      return { updates: null, formation, error, cfdInfo: currentCfdInfo };
     }
 
     // ensure address from RCO is kept
@@ -122,7 +122,7 @@ const mnaFormationUpdater = async (
       }
 
       if (error) {
-        return { updates: null, formation, error, cfdInfo };
+        return { updates: null, formation, error, cfdInfo: currentCfdInfo };
       }
     }
 
@@ -140,7 +140,7 @@ const mnaFormationUpdater = async (
 
     error = parseErrors(etablissementsMessages);
     if (error) {
-      return { updates: null, formation, error, cfdInfo };
+      return { updates: null, formation, error, cfdInfo: currentCfdInfo };
     }
 
     let geoMapping = { idea_geo_coordonnees_etablissement: geoCoords };
@@ -297,10 +297,10 @@ const mnaFormationUpdater = async (
       if (withHistoryUpdate) {
         updatedFormation.updates_history = buildUpdatesHistory(formation, updates, keys);
       }
-      return { updates, formation: updatedFormation, cfdInfo };
+      return { updates, formation: updatedFormation, cfdInfo: currentCfdInfo };
     }
 
-    return { updates: null, formation, cfdInfo };
+    return { updates: null, formation, cfdInfo: currentCfdInfo };
   } catch (e) {
     logger.error(e);
     console.error(e);
