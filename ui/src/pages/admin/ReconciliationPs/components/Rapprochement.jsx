@@ -1,4 +1,5 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Text, Link } from "@chakra-ui/react";
+import { NavLink } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { Section } from "./Section";
 
@@ -226,6 +227,9 @@ const Rapprochement = React.memo(({ formation, currentMnaFormation }) => {
             >
               {mnaFormation.uai_formation ?? "N.A"} (lieu de formation)
             </Text>
+            <Link as={NavLink} to={`/formation/${mnaFormation._id}`} variant="pill" mt={4} isExternal>
+              Modifier
+            </Link>
           </Box>
         }
       />
