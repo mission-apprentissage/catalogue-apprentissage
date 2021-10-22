@@ -58,7 +58,7 @@ module.exports = ({ catalogue }) => {
       uai_formation,
       etablissement_formateur_uai,
       etablissement_gestionnaire_uai,
-      cfd,
+      cfd_entree,
       lieu_formation_siret,
       etablissement_formateur_siret,
       etablissement_gestionnaire_siret,
@@ -128,7 +128,7 @@ module.exports = ({ catalogue }) => {
           siret.etablissement_formateur_siret.siret_map ||
           siret.etablissement_gestionnaire_siret.siret_map,
       },
-      cfd: psFormation.codes_cfd_mna.includes(cfd),
+      cfd_entree: psFormation.codes_cfd_mna.includes(cfd_entree),
       rncp_code: psFormation.codes_rncp_mna.includes(rncp_code),
       code_commune_insee: psFormation.code_commune_insee === code_commune_insee,
       nom_academie: psFormation.nom_academie === nom_academie,

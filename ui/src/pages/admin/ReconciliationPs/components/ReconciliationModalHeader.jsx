@@ -14,6 +14,8 @@ import {
   Textarea,
   FormErrorMessage,
   Switch,
+  UnorderedList,
+  ListItem,
 } from "@chakra-ui/react";
 import { buildUpdatesHistory } from "../../../../common/utils/formationUtils";
 import { StatusBadge } from "../../../../common/components/StatusBadge";
@@ -228,6 +230,12 @@ const ReconciliationModalHeader = React.memo(
         ? "560px"
         : "470px";
 
+    const showRejectRaisons = (formation) => {
+      const [raisonsString, details] = formation.matching_rejete_raison.split("#-REJECT_COMPLEMENT-#");
+      const raisons = raisonsString.split("||");
+      return raisons.map((r) => (r === "Autre" ? `${r}: ${details}` : r));
+    };
+
     return (
       <>
         <Box border="1px solid red" h={height} />
@@ -276,9 +284,20 @@ const ReconciliationModalHeader = React.memo(
             <>
               <HStack px={[4, 16]} mb={5}>
                 {formation.statut_reconciliation === "REJETE" && (
-                  <Text textStyle="lg" fontWeight="bold" mb={3} color="error" flexGrow="1" mt={3}>
-                    Raison du signalement: {formation.matching_rejete_raison.split("#-REJECT_COMPLEMENT-#").join(": ")}
-                  </Text>
+                  <Box flexGrow="1">
+                    <Text textStyle="lg" fontWeight="bold" mb={3} color="error" flexGrow="1" mt={3}>
+                      Raison du signalement:
+                    </Text>
+                    <UnorderedList>
+                      {showRejectRaisons(formation).map((raison, i) => {
+                        return (
+                          <ListItem color="error" key={i}>
+                            {raison}
+                          </ListItem>
+                        );
+                      })}
+                    </UnorderedList>
+                  </Box>
                 )}
                 {formation.statut_reconciliation !== "REJETE" && (
                   <Text textStyle="sm" fontStyle="italic" mb={3} color="info" flexGrow="1">

@@ -12,9 +12,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  RadioGroup,
-  Stack,
-  Radio,
+  Checkbox,
 } from "@chakra-ui/react";
 import * as Yup from "yup";
 import React, { useState } from "react";
@@ -23,24 +21,37 @@ import { _post } from "../../../../common/httpClient";
 import { Close } from "../../../../theme/components/icons/Close";
 import { ArrowRightLine } from "../../../../theme/components/icons";
 
+const raisons = [
+  "Codes diplômes différents",
+  "Codes RNCP différents",
+  "Différence entre un des UAI (CERFA ou Inserjeunes) et un des UAI (formateur ou gestionnaire)",
+  "Adresses des lieux de formation différentes",
+  "Différence entre le SIRET Etablissement Parcoursup et un des SIRET Formateur ou Gestionnaire Catalogue",
+  "Autre",
+];
+
 const Rejected = ({ formation, onClose, onSubmitReject }) => {
   const [canSubmit, setCanSubmit] = useState(false);
   const [showRaison, setShowRaison] = useState(false);
-  const { values, handleChange, handleSubmit, isSubmitting, resetForm } = useFormik({
+  const { values, handleChange, handleSubmit, isSubmitting, resetForm, setFieldValue } = useFormik({
     initialValues: {
-      parcoursup_raison_rejet: "",
       parcoursup_raison_rejet_complement: "",
+      raisons: [],
     },
     validationSchema: Yup.object().shape({
-      parcoursup_raison_rejet: Yup.string().nullable().required("Veuillez selectionner la raison"),
       parcoursup_raison_rejet_complement: Yup.string().nullable(),
     }),
-    onSubmit: ({ parcoursup_raison_rejet, parcoursup_raison_rejet_complement }) => {
+    onSubmit: ({ raisons: raisonsForm, parcoursup_raison_rejet_complement }) => {
       return new Promise(async (resolve) => {
-        let matching_rejete_raison = parcoursup_raison_rejet;
-        if (parcoursup_raison_rejet === "Autre") {
-          matching_rejete_raison = `${parcoursup_raison_rejet}#-REJECT_COMPLEMENT-#${parcoursup_raison_rejet_complement}`;
+        if (raisonsForm.length === 0) {
+          resolve();
         }
+
+        let matching_rejete_raison = raisonsForm.join("||");
+        if (raisonsForm.includes("Autre")) {
+          matching_rejete_raison = `${matching_rejete_raison}#-REJECT_COMPLEMENT-#${parcoursup_raison_rejet_complement}`;
+        }
+
         await _post("/api/parcoursup/reconciliation", {
           id_formation: formation._id,
           reject: true,
@@ -52,105 +63,57 @@ const Rejected = ({ formation, onClose, onSubmitReject }) => {
     },
   });
 
+  const handleRaisonsChange = (raison) => {
+    let newRaisons = [];
+    let checked = false;
+    if (values.raisons.includes(raison)) {
+      newRaisons = values.raisons.filter((r) => r !== raison);
+    } else {
+      newRaisons = [...values.raisons, raison];
+      checked = true;
+    }
+
+    if (raison === "Autre") {
+      setShowRaison(checked);
+
+      if (!checked) {
+        setFieldValue("parcoursup_raison_rejet_complement", "");
+      } else {
+        setCanSubmit(values.parcoursup_raison_rejet_complement !== "");
+      }
+    } else {
+      setCanSubmit(newRaisons.length > 0);
+    }
+
+    setFieldValue("raisons", newRaisons);
+  };
+
   return (
     <>
       <Flex px={[4, 16]} pb={[4, 16]}>
         <Box border="1px solid" borderColor="bluefrance" p={8} w="full">
           <FormControl display="flex" flexDirection="column" w="auto">
-            <RadioGroup
-              defaultValue={values.parcoursup_raison_rejet}
-              id="parcoursup_raison_rejet"
-              name="parcoursup_raison_rejet"
-            >
-              <Stack spacing={2} direction="column">
-                <FormLabel htmlFor="parcoursup_raison_rejet" mb={3} fontSize="epsilon" fontWeight={400}>
-                  <Heading as="h3" fontSize="1.3rem" flexGrow="1">
-                    Pouvez-vous préciser les raisons de votre signalement{" "}
-                    <Text as="span" color="redmarianne">
-                      *
-                    </Text>
-                  </Heading>
-                </FormLabel>
-                <Radio
-                  mb={0}
-                  size="lg"
-                  value="Codes diplômes différents"
-                  onChange={(evt) => {
-                    setShowRaison(false);
-                    setCanSubmit(true);
-                    handleChange(evt);
-                  }}
+            <FormLabel htmlFor="raisons" mb={3} fontSize="epsilon" fontWeight={400}>
+              <Heading as="h3" fontSize="1.3rem" flexGrow="1">
+                Pouvez-vous préciser les raisons de votre signalement{" "}
+                <Text as="span" color="redmarianne">
+                  *
+                </Text>
+              </Heading>
+            </FormLabel>
+            {raisons.map((raison, i) => {
+              return (
+                <Checkbox
+                  name="raisons"
+                  key={i}
+                  onChange={() => handleRaisonsChange(raison)}
+                  value={raison}
+                  isChecked={values.raisons.includes(raison)}
                 >
-                  <Text fontSize="1rem">Codes diplômes différents</Text>
-                </Radio>
-                <Radio
-                  mb={0}
-                  size="lg"
-                  value="Codes RNCP différents"
-                  onChange={(evt) => {
-                    setShowRaison(false);
-                    setCanSubmit(true);
-                    handleChange(evt);
-                  }}
-                >
-                  <Text fontSize="1rem">Codes RNCP différents</Text>
-                </Radio>
-                <Radio
-                  mb={0}
-                  size="lg"
-                  value="Différence entre un des UAI (CERFA ou Inserjeunes) et un des UAI (formateur ou gestionnaire)"
-                  onChange={(evt) => {
-                    setShowRaison(false);
-                    setCanSubmit(true);
-                    handleChange(evt);
-                  }}
-                >
-                  <Text fontSize="1rem">
-                    Différence entre un des UAI (CERFA ou Inserjeunes) et un des UAI (formateur ou gestionnaire)
-                  </Text>
-                </Radio>
-                <Radio
-                  mb={0}
-                  size="lg"
-                  value="Adresses des lieux de formation différentes"
-                  onChange={(evt) => {
-                    setShowRaison(false);
-                    setCanSubmit(true);
-                    handleChange(evt);
-                  }}
-                >
-                  <Text fontSize="1rem">Adresses des lieux de formation différentes</Text>
-                </Radio>
-                <Radio
-                  mb={0}
-                  size="lg"
-                  value="Différence entre le SIRET Etablissement Parcoursup et un des SIRET Formateur ou Gestionnaire Catalogue"
-                  onChange={(evt) => {
-                    setShowRaison(false);
-                    setCanSubmit(true);
-                    handleChange(evt);
-                  }}
-                >
-                  <Text fontSize="1rem">
-                    Différence entre le SIRET Etablissement Parcoursup et un des SIRET Formateur ou Gestionnaire
-                    Catalogue
-                  </Text>
-                </Radio>
-
-                <Radio
-                  mb={0}
-                  size="lg"
-                  value="Autre"
-                  onChange={(evt) => {
-                    setShowRaison(true);
-                    setCanSubmit(false);
-                    handleChange(evt);
-                  }}
-                >
-                  <Text fontSize="1rem">Autre</Text>
-                </Radio>
-              </Stack>
-            </RadioGroup>
+                  {raison}
+                </Checkbox>
+              );
+            })}
           </FormControl>
           {showRaison && (
             <Flex flexDirection="column" mt={2}>

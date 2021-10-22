@@ -138,7 +138,7 @@ const Rapprochement = React.memo(({ formation, currentMnaFormation }) => {
           <Box mb={4} mt={4}>
             <Text
               variant="highlight"
-              bg={`${formationDiff.cfd ? identicalColor : diffColor}`}
+              bg={`${formationDiff.cfd_entree ? identicalColor : diffColor}`}
               mt="1"
               display="inline-block"
             >
@@ -150,11 +150,11 @@ const Rapprochement = React.memo(({ formation, currentMnaFormation }) => {
           <Box mb={4} mt={4}>
             <Text
               variant="highlight"
-              bg={`${formationDiff.cfd ? identicalColor : neutralColor}`}
+              bg={`${formationDiff.cfd_entree ? identicalColor : neutralColor}`}
               mt="1"
               display="inline-block"
             >
-              {mnaFormation.cfd}
+              {mnaFormation.cfd_entree}
             </Text>
           </Box>
         }
