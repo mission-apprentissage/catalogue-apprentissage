@@ -1,9 +1,9 @@
 const { getParcoursupCoverage } = require("../../logic/controller/coverage");
 const { paginator } = require("../../common/utils/paginator");
-const { PsFormation, Etablissement } = require("../../common/model");
+const { PsFormation } = require("../../common/model");
 const { runScript } = require("../scriptWrapper");
 const logger = require("../../common/logger");
-const { reconciliationParcoursup, dereconciliationParcoursup } = require("../../logic/controller/reconciliation");
+// const { reconciliationParcoursup, dereconciliationParcoursup } = require("../../logic/controller/reconciliation"); --------------------------------
 const cluster = require("cluster");
 const { diffFormation, buildUpdatesHistory } = require("../../logic/common/utils/diffUtils");
 const numCPUs = 4;
@@ -29,10 +29,10 @@ const updateMatchedFormation = async ({ formation, match }) => {
   };
 
   if (statut_reconciliation === "AUTOMATIQUE") {
-    const reconciliation = await reconciliationParcoursup(updatedFormation, "AUTOMATIQUE");
+    // const reconciliation = await reconciliationParcoursup(updatedFormation, "AUTOMATIQUE");   --------------------------------
 
     updatedFormation.etat_reconciliation = true;
-    updatedFormation.id_reconciliation = reconciliation._id;
+    // updatedFormation.id_reconciliation = reconciliation._id;   ------------------------------
   }
 
   if (
@@ -47,7 +47,7 @@ const updateMatchedFormation = async ({ formation, match }) => {
     (statut_reconciliation === "A_VERIFIER" || statut_reconciliation === "INCONNU")
   ) {
     // De-Reconcilier
-    await dereconciliationParcoursup(updatedFormation);
+    // await dereconciliationParcoursup(updatedFormation);    --------------------------------
     updatedFormation.etat_reconciliation = false;
     updatedFormation.id_reconciliation = null;
   }
@@ -96,19 +96,13 @@ const run = async () => {
 
     console.log(`Master ${process.pid} is running`);
 
-    const filters = { statut_reconciliation: { $nin: ["AUTOMATIQUE", "VALIDE", "A_VERIFIER"] } };
+    // const filters = { statut_reconciliation: { $nin: ["AUTOMATIQUE", "VALIDE", "A_VERIFIER"] } };
+    const filters = { statut_reconciliation: { $nin: ["VALIDE", "REJETE"] } };
     const args = process.argv.slice(2);
     const limitArg = args.find((arg) => arg.startsWith("--limit"))?.split("=")?.[1];
     const limit = limitArg ? Number(limitArg) : 50;
 
     runScript(async () => {
-      const check = await Etablissement.find({}).countDocuments();
-
-      if (check === 0) {
-        logger.error("No establishment found, please import collection first");
-
-        return;
-      }
       let activeFilter = { ...filters };
       const { pages, total } = await PsFormation.paginate(activeFilter, { limit, select: { _id: 1 } });
 

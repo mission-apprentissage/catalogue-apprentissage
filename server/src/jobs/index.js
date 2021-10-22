@@ -2,7 +2,7 @@ const { runScript } = require("./scriptWrapper");
 const logger = require("../common/logger");
 const rcoImporter = require("./rcoImporter");
 const rcoConverter = require("./rcoConverter");
-const psReference = require("./parcoursup/reference");
+// const psReference = require("./parcoursup/reference");
 const afReference = require("./affelnet/reference");
 const psPerimetre = require("./parcoursup/perimetre");
 const psUpdateMatchInfo = require("./parcoursup/updateMatchInfo");
@@ -59,6 +59,9 @@ runScript(async ({ catalogue, db }) => {
     }
     await sleep(30000);
 
+    await psPerimetre(); // ~ 8 secondes
+    await sleep(30000);
+
     // parcoursup
     const psCoverage = spawn("node", ["./src/jobs/parcoursup/coverage.js"]);
     for await (const data of psCoverage.stdout) {
@@ -66,10 +69,9 @@ runScript(async ({ catalogue, db }) => {
     }
     await sleep(30000);
 
-    await psReference(); // ~ 34 minutes => ~ 30 secondes
-    await sleep(30000);
-    await psPerimetre(); // ~ 8 secondes
-    await sleep(30000);
+    // await psReference(); // ~ 34 minutes => ~ 30 secondes
+    // await sleep(30000);
+
     await psUpdateMatchInfo();
     await sleep(30000);
 

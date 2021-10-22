@@ -23,8 +23,6 @@ module.exports = {
   }),
   Report: createModel("report", schema.reportSchema),
   Log: createModel("log", schema.logSchema),
-  // PsFormation: createModel("psformation", schema.psFormation2020Schema),
-  PsReconciliation: createModel("psreconciliation", schema.psReconciliationSchema),
   PendingRcoFormation: createModel("pendingrcoformation", schema.formationSchema),
   AfFormation: createModel("afformation", schema.afFormationSchema),
   AfReconciliation: createModel("afreconciliation", schema.afReconciliationSchema),

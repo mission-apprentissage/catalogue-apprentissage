@@ -1,10 +1,9 @@
-const { PsReconciliation, PsFormation, Formation } = require("../../common/model");
-const combinate = require("../../logic/mappers/reconciliationMapper");
+const { PsFormation, Formation } = require("../../common/model");
+// const combinate = require("../../logic/mappers/reconciliationMapper");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 const mongoose = require("mongoose");
 const express = require("express");
-const { getCfdInfo } = require("@mission-apprentissage/tco-service-node");
 const { getEtablissementCoverage } = require("../../logic/controller/coverage");
 const reportRejected = require("../../jobs/parcoursup/reportRejected");
 
@@ -175,52 +174,6 @@ module.exports = ({ catalogue }) => {
   );
 
   /**
-   * Get all PsFormation
-   */
-  router.get(
-    "/",
-    tryCatch(async (req, res) => {
-      const { type, page } = req.query;
-      let data = await PsFormation.paginate(
-        { matching_type: type },
-        { page, sort: { etat_reconciliation: 1 }, lean: true }
-      );
-
-      if (data.docs.length > 0) {
-        const result = await Promise.all(
-          data.docs.map(async (formation) => {
-            let { code_cfd, uai_affilie, uai_composante, uai_gestionnaire } = formation;
-            if (code_cfd) {
-              const infoCfd = await getCfdInfo(code_cfd);
-
-              const infoReconciliation = await PsReconciliation.findOne({
-                code_cfd: code_cfd,
-                uai_affilie,
-                uai_composante,
-                uai_gestionnaire,
-              });
-
-              let infobcn = infoCfd.result.intitule_long;
-
-              return {
-                ...formation,
-                reconciliation: infoReconciliation,
-                infobcn,
-              };
-            }
-            return formation;
-          })
-        );
-
-        data.docs = await result;
-        return res.json(data);
-      } else {
-        return res.status(404).json([]);
-      }
-    })
-  );
-
-  /**
    * Update PsFormation with mapped establisment
    */
   router.post(
@@ -233,13 +186,13 @@ module.exports = ({ catalogue }) => {
   );
 
   /**
-   * Update PsReconciliation with mapped establishmet
+   * Update
    */
 
   router.post(
     "/reconciliation",
     tryCatch(async (req, res) => {
-      const { mapping, id_formation, reject, matching_rejete_raison, ...rest } = req.body;
+      const { id_formation, reject, matching_rejete_raison, ...rest } = req.body; // mapping ---------
 
       if (reject) {
         const previousFormation = await PsFormation.findById(id_formation).lean();
@@ -276,93 +229,90 @@ module.exports = ({ catalogue }) => {
         return res.json({});
       }
 
-      const reconciliation = combinate(mapping);
+      // const reconciliation = combinate(mapping);
 
-      let payload = reconciliation.reduce((acc, item) => {
-        acc.uai_gestionnaire = rest.uai_gestionnaire;
-        acc.uai_affilie = rest.uai_affilie;
-        acc.uai_composante = rest.uai_composante;
-        acc.code_cfd = rest.code_cfd;
-        acc.siret_formateur = item.type === "formateur" ? item.siret : acc.siret_formateur;
-        acc.siret_gestionnaire = item.type === "gestionnaire" ? item.siret : acc.siret_gestionnaire;
-        return acc;
-      }, {});
+      // let payload = reconciliation.reduce((acc, item) => {
+      //   acc.uai_gestionnaire = rest.uai_gestionnaire;
+      //   acc.uai_affilie = rest.uai_affilie;
+      //   acc.uai_composante = rest.uai_composante;
+      //   acc.code_cfd = rest.code_cfd;
+      //   acc.siret_formateur = item.type === "formateur" ? item.siret : acc.siret_formateur;
+      //   acc.siret_gestionnaire = item.type === "gestionnaire" ? item.siret : acc.siret_gestionnaire;
+      //   return acc;
+      // }, {});
 
-      let { code_cfd: code_cfd, uai_affilie, uai_composante, uai_gestionnaire } = payload;
+      // let { code_cfd: code_cfd, uai_affilie, uai_composante, uai_gestionnaire } = payload; ------------
 
-      const result = await PsReconciliation.findOneAndUpdate(
-        { code_cfd: code_cfd, uai_affilie, uai_composante, uai_gestionnaire },
-        {
-          ...payload,
-          source: "MANUEL",
-          unpublished_by_user: null,
-          $push: { ids_parcoursup: rest.id_parcoursup },
-        },
-        { upsert: true, new: true }
-      );
+      // const result = await PsReconciliation.findOneAndUpdate(
+      //   { code_cfd: code_cfd, uai_affilie, uai_composante, uai_gestionnaire },
+      //   {
+      //     ...payload,
+      //     source: "MANUEL",
+      //     unpublished_by_user: null,
+      //     $push: { ids_parcoursup: rest.id_parcoursup },
+      //   },
+      //   { upsert: true, new: true }
+      // );
 
-      if (result) {
-        const previousFormation = await PsFormation.findById(id_formation).lean();
+      // if (result) {
+      const previousFormation = await PsFormation.findById(id_formation).lean();
 
-        const mnaFormation = await Formation.findById(rest.mnaFormationId).lean();
-        let matching_mna_formation = [];
-        let matching_mna_parcoursup_statuts = [];
-        if (
-          previousFormation.statut_reconciliation === "VALIDE" &&
-          previousFormation.matching_mna_formation.length > 0
-        ) {
-          if (!previousFormation.matching_mna_formation.map(({ _id }) => `${_id}`).includes(rest.mnaFormationId)) {
-            matching_mna_formation = [
-              ...previousFormation.matching_mna_formation,
-              {
-                _id: mnaFormation._id,
-                intitule_court: mnaFormation.intitule_court,
-                parcoursup_statut: mnaFormation.parcoursup_statut,
-              },
-            ];
-
-            matching_mna_parcoursup_statuts = [
-              ...previousFormation.matching_mna_parcoursup_statuts,
-              mnaFormation.parcoursup_statut,
-            ];
-          } else {
-            matching_mna_formation = previousFormation.matching_mna_formation;
-            matching_mna_parcoursup_statuts = previousFormation.matching_mna_parcoursup_statuts;
-          }
-        } else {
+      const mnaFormation = await Formation.findById(rest.mnaFormationId).lean();
+      let matching_mna_formation = [];
+      let matching_mna_parcoursup_statuts = [];
+      if (previousFormation.statut_reconciliation === "VALIDE" && previousFormation.matching_mna_formation.length > 0) {
+        if (!previousFormation.matching_mna_formation.map(({ _id }) => `${_id}`).includes(rest.mnaFormationId)) {
           matching_mna_formation = [
+            ...previousFormation.matching_mna_formation,
             {
               _id: mnaFormation._id,
               intitule_court: mnaFormation.intitule_court,
               parcoursup_statut: mnaFormation.parcoursup_statut,
             },
           ];
-          matching_mna_parcoursup_statuts = [mnaFormation.parcoursup_statut];
+
+          matching_mna_parcoursup_statuts = [
+            ...previousFormation.matching_mna_parcoursup_statuts,
+            mnaFormation.parcoursup_statut,
+          ];
+        } else {
+          matching_mna_formation = previousFormation.matching_mna_formation;
+          matching_mna_parcoursup_statuts = previousFormation.matching_mna_parcoursup_statuts;
         }
-
-        let updatedFormation = {
-          ...previousFormation,
-          id_reconciliation: result._id.toString(),
-          statut_reconciliation: "VALIDE",
-          etat_reconciliation: true,
-          matching_rejete_updated: false,
-          matching_mna_formation,
-          matching_mna_parcoursup_statuts,
-        };
-
-        // History
-        const { updates, keys } = diffFormation(previousFormation, updatedFormation);
-        if (updates) {
-          delete updates.matching_mna_formation;
-          const statuts_history = buildUpdatesHistory(previousFormation, updates, keys, null, true);
-
-          updatedFormation.statuts_history = statuts_history;
-        }
-
-        await PsFormation.findOneAndUpdate({ _id: id_formation }, updatedFormation, { new: true });
+      } else {
+        matching_mna_formation = [
+          {
+            _id: mnaFormation._id,
+            intitule_court: mnaFormation.intitule_court,
+            parcoursup_statut: mnaFormation.parcoursup_statut,
+          },
+        ];
+        matching_mna_parcoursup_statuts = [mnaFormation.parcoursup_statut];
       }
 
-      return res.json(result);
+      let updatedFormation = {
+        ...previousFormation,
+        // id_reconciliation: result._id.toString(), -----------------------
+        statut_reconciliation: "VALIDE",
+        etat_reconciliation: true,
+        matching_rejete_updated: false,
+        matching_mna_formation,
+        matching_mna_parcoursup_statuts,
+      };
+
+      // History
+      const { updates, keys } = diffFormation(previousFormation, updatedFormation);
+      if (updates) {
+        delete updates.matching_mna_formation;
+        const statuts_history = buildUpdatesHistory(previousFormation, updates, keys, null, true);
+
+        updatedFormation.statuts_history = statuts_history;
+      }
+
+      await PsFormation.findOneAndUpdate({ _id: id_formation }, updatedFormation, { new: true });
+      // }
+
+      return res.json(); /// result -------------------
     })
   );
 
@@ -386,29 +336,29 @@ module.exports = ({ catalogue }) => {
     })
   );
 
-  router.put(
-    "/reconciliation",
-    tryCatch(async (req, res) => {
-      const { uai_gestionnaire, cfd, uai_affilie = null, email = null } = req.body;
+  // router.put(   ---------------
+  //   "/reconciliation",
+  //   tryCatch(async (req, res) => {
+  //     const { uai_gestionnaire, cfd, uai_affilie = null, email = null } = req.body;
 
-      if (!uai_gestionnaire || !cfd) {
-        res.status(400).json({ message: "Un uai ou le cfd est manquant" });
-      }
+  //     if (!uai_gestionnaire || !cfd) {
+  //       res.status(400).json({ message: "Un uai ou le cfd est manquant" });
+  //     }
 
-      try {
-        const filter = { uai_gestionnaire, code_cfd: cfd };
-        if (uai_affilie) {
-          // optional filter
-          filter.uai_affilie = uai_affilie;
-        }
+  //     try {
+  //       const filter = { uai_gestionnaire, code_cfd: cfd };
+  //       if (uai_affilie) {
+  //         // optional filter
+  //         filter.uai_affilie = uai_affilie;
+  //       }
 
-        await PsReconciliation.findOneAndUpdate(filter, { unpublished_by_user: email });
-        return res.sendStatus(200);
-      } catch (error) {
-        return res.status(400).json(error);
-      }
-    })
-  );
+  //       await PsReconciliation.findOneAndUpdate(filter, { unpublished_by_user: email });
+  //       return res.sendStatus(200);
+  //     } catch (error) {
+  //       return res.status(400).json(error);
+  //     }
+  //   })
+  // );
 
   /**
    * Add one establishement to a psformation

@@ -72,8 +72,8 @@ const ReconciliationModalHeader = React.memo(
         return new Promise(async (resolve) => {
           const formationARapprocher = formation.matching_mna_formation[currentMnaFormation];
           const body = {};
-          let shouldRemovePsReconciliation = false;
-          let shouldRestorePsReconciliation = false;
+          // let shouldRemovePsReconciliation = false; --------------------
+          // let shouldRestorePsReconciliation = false;
           if (parcoursup_keep_publish === "true") {
             // if (
             //   [
@@ -85,7 +85,7 @@ const ReconciliationModalHeader = React.memo(
             //   ].includes(formationARapprocher?.parcoursup_statut)
             // ) {
             body.parcoursup_statut = "publié";
-            shouldRestorePsReconciliation = formationARapprocher.parcoursup_statut === "non publié";
+            // shouldRestorePsReconciliation = formationARapprocher.parcoursup_statut === "non publié"; --------
             body.parcoursup_raison_depublication = null;
             // }
           } else if (parcoursup_keep_publish === "false") {
@@ -100,9 +100,9 @@ const ReconciliationModalHeader = React.memo(
             // ) {
             body.parcoursup_raison_depublication = parcoursup_raison_depublication;
             body.parcoursup_statut = "non publié";
-            shouldRemovePsReconciliation = ["en attente de publication", "publié"].includes(
-              formationARapprocher.parcoursup_statut
-            );
+            // shouldRemovePsReconciliation = ["en attente de publication", "publié"].includes(
+            //   formationARapprocher.parcoursup_statut
+            // ); --------------------
             // }
           }
 
@@ -119,18 +119,18 @@ const ReconciliationModalHeader = React.memo(
               ),
             });
 
-            if (shouldRemovePsReconciliation || shouldRestorePsReconciliation) {
-              try {
-                await _put(`/api/parcoursup/reconciliation`, {
-                  uai_gestionnaire: formationARapprocher.etablissement_gestionnaire_uai,
-                  uai_affilie: formationARapprocher.etablissement_formateur_uai,
-                  cfd: formationARapprocher.cfd,
-                  email: shouldRemovePsReconciliation ? user.email : null,
-                });
-              } catch (e) {
-                // do nothing
-              }
-            }
+            // if (shouldRemovePsReconciliation || shouldRestorePsReconciliation) {  ----------------
+            //   try {
+            //     await _put(`/api/parcoursup/reconciliation`, {
+            //       uai_gestionnaire: formationARapprocher.etablissement_gestionnaire_uai,
+            //       uai_affilie: formationARapprocher.etablissement_formateur_uai,
+            //       cfd: formationARapprocher.cfd,
+            //       email: shouldRemovePsReconciliation ? user.email : null,
+            //     });
+            //   } catch (e) {
+            //     // do nothing
+            //   }
+            // }
           }
 
           const mapping = [];
