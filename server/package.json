@@ -40,7 +40,8 @@
     "etablissement:dump": "standalone=true node src/jobs/etablissements",
     "rcoPending:export": "standalone=true node src/jobs/pendingFormations/index.js",
     "rcoFormation:duplicate": "standalone=true node src/jobs/oneshot/findRcoDuplicates/index.js",
-    "hydratecfdentree": "standalone=true node src/jobs/parcoursup/_hydrateCfdEntree.js"
+    "hydratecfdentree": "standalone=true node src/jobs/parcoursup/_hydrateCfdEntree.js",
+    "migrateRaisonsRejet": "standalone=true node src/jobs/parcoursup/_migrationRaisonsRejet.js"
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.6.1",

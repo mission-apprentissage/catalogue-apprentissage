@@ -51,8 +51,8 @@ module.exports = ({ catalogue }) => {
     })
   );
 
-  const buildDiff = async (psFormation, matchedMnaFormation, select) => {
-    const mnaFormation = await Formation.findById(matchedMnaFormation._id, select).lean();
+  const buildDiff = async (psFormation, _id, select) => {
+    const mnaFormation = await Formation.findById(_id, select).lean();
     const {
       uai_formation,
       etablissement_formateur_uai,
@@ -145,7 +145,10 @@ module.exports = ({ catalogue }) => {
     tryCatch(async (req, res) => {
       const psId = req.params.id;
       const qs = req.query;
-      const select = qs && qs.select ? JSON.parse(qs.select) : { __v: 0 };
+      const select =
+        qs && qs.select
+          ? JSON.parse(qs.select)
+          : { __v: 0, rncp_details: 0, updates_history: 0, affelnet_statut_history: 0 };
       const retrievedData = await PsFormation.findById(psId, select).lean();
       if (retrievedData) {
         const diffFields = [];
@@ -159,8 +162,8 @@ module.exports = ({ catalogue }) => {
         ) {
           const updated_matching_mna_formation = [];
 
-          await asyncForEach(retrievedData.matching_mna_formation, async (mnaF) => {
-            const diffResult = await buildDiff(retrievedData, mnaF, select);
+          await asyncForEach(retrievedData.matching_mna_formation, async ({ _id }) => {
+            const diffResult = await buildDiff(retrievedData, _id, select);
             updated_matching_mna_formation.push(diffResult.mnaFormation);
             diffFields.push(diffResult.diffFields);
           });
@@ -192,8 +195,14 @@ module.exports = ({ catalogue }) => {
   router.post(
     "/reconciliation",
     tryCatch(async (req, res) => {
-      const { id_formation, reject, matching_rejete_raison, ...rest } = req.body; // mapping ---------
-
+      const {
+        id_formation,
+        reject,
+        matching_rejete_raison,
+        rapprochement_rejete_raisons,
+        rapprochement_rejete_raison_autre,
+        ...rest
+      } = req.body; // mapping ---------
       if (reject) {
         const previousFormation = await PsFormation.findById(id_formation).lean();
 
@@ -203,15 +212,19 @@ module.exports = ({ catalogue }) => {
           matching_rejete_raison,
           etat_reconciliation: false,
           matching_rejete_updated: false,
+          rapprochement_rejete_raisons,
+          rapprochement_rejete_raison_autre,
         };
 
         if (matching_rejete_raison === "##USER_CANCEL##") {
           updatedFormation = {
             ...previousFormation,
-            statut_reconciliation: "A_VERIFIER",
+            statut_reconciliation: "A_VERIFIER", // ERROR TODO Take the previous one instead
             matching_rejete_raison: null,
             etat_reconciliation: false,
             matching_rejete_updated: true,
+            rapprochement_rejete_raisons: [],
+            rapprochement_rejete_raison_autre: null,
           };
         }
 

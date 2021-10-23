@@ -4,7 +4,8 @@ const { asyncForEach } = require("../../common/utils/asyncUtils");
 const { getCfdEntree } = require("../../logic/mappers/cfdMapper");
 
 const run = async () => {
-  const dataset = await Formation.find({});
+  Formation.pauseAllMongoosaticHooks();
+  const dataset = await Formation.find({}, { cfd: 1, cfd_entree: 1 });
   await asyncForEach(dataset, async (formation) => {
     formation.cfd_entree = getCfdEntree(formation.cfd);
     await formation.save();

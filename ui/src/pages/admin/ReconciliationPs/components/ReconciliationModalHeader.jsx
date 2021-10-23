@@ -231,9 +231,9 @@ const ReconciliationModalHeader = React.memo(
         : "470px";
 
     const showRejectRaisons = (formation) => {
-      const [raisonsString, details] = formation.matching_rejete_raison.split("#-REJECT_COMPLEMENT-#");
-      const raisons = raisonsString.split("||");
-      return raisons.map((r) => (r === "Autre" ? `${r}: ${details}` : r));
+      return formation.rapprochement_rejete_raisons.map((r) =>
+        r === "Autre" ? `${r}: ${formation.rapprochement_rejete_raison_autre}` : r
+      );
     };
 
     return (

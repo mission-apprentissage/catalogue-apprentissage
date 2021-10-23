@@ -35,22 +35,22 @@ const updateMatchedFormation = async ({ formation, match }) => {
     // updatedFormation.id_reconciliation = reconciliation._id;   ------------------------------
   }
 
-  if (
-    formation.statut_reconciliation === "REJETE" &&
-    (statut_reconciliation === "A_VERIFIER" || statut_reconciliation === "AUTOMATIQUE")
-  ) {
-    updatedFormation.matching_rejete_updated = true;
-  }
+  // if (   ----------------------      TODO   check if(statuts_history[statuts_history.length-1].from.statut_reconciliation !== statut_reconciliation)
+  //   formation.statut_reconciliation === "REJETE" &&
+  //   (statut_reconciliation === "A_VERIFIER" || statut_reconciliation === "AUTOMATIQUE")
+  // ) {
+  //   updatedFormation.matching_rejete_updated = true;
+  // }
 
-  if (
-    formation.statut_reconciliation === "AUTOMATIQUE" &&
-    (statut_reconciliation === "A_VERIFIER" || statut_reconciliation === "INCONNU")
-  ) {
-    // De-Reconcilier
-    // await dereconciliationParcoursup(updatedFormation);    --------------------------------
-    updatedFormation.etat_reconciliation = false;
-    updatedFormation.id_reconciliation = null;
-  }
+  // if (
+  //   formation.statut_reconciliation === "AUTOMATIQUE" &&
+  //   (statut_reconciliation === "A_VERIFIER" || statut_reconciliation === "INCONNU")
+  // ) {
+  //   // De-Reconcilier
+  //   // await dereconciliationParcoursup(updatedFormation);    --------------------------------
+  //   updatedFormation.etat_reconciliation = false;
+  //   // updatedFormation.id_reconciliation = null;
+  // }
 
   // History
   const { updates, keys } = diffFormation(previousFormation, updatedFormation);
@@ -74,7 +74,7 @@ const formation = async (filter = {}, limit = 10, maxItems = 100, offset = 0) =>
     PsFormation,
     { filter, limit, maxItems, offset, lean: true, showProgress: false },
     async (formation) => {
-      let match = await getParcoursupCoverage(formation, { published: true, tags: "2021" });
+      let match = await getParcoursupCoverage(formation, { published: true, tags: "2021" }); // TO CHECK TAGS
 
       if (!match) return;
 

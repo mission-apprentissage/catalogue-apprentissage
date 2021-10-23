@@ -56,6 +56,8 @@ const Rejected = ({ formation, onClose, onSubmitReject }) => {
           id_formation: formation._id,
           reject: true,
           matching_rejete_raison,
+          rapprochement_rejete_raisons: raisonsForm,
+          rapprochement_rejete_raison_autre: parcoursup_raison_rejet_complement ?? null,
         });
         onSubmitReject();
         resolve("onSubmitHandler publish complete");
