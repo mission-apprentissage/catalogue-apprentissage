@@ -33,16 +33,25 @@ const formation = {
   diplome: 1,
   niveau: 1,
   cfd: 1,
+  cfd_entree: 1,
   mef_10_code: 1,
   rncp_code: 1,
   rncp_intitule: 1,
   parcoursup_reference: 1,
   parcoursup_a_charger: 1,
+  parcoursup_statut: 1,
   affelnet_reference: 1,
   affelnet_a_charger: 1,
   _id: 1,
   etablissement_formateur_id: 1,
   etablissement_gestionnaire_id: 1,
+  id_rco_formation: 1,
+};
+
+const formationSelectPs = {
+  intitule_court: 1,
+  parcoursup_statut: 1,
+  _id: 1,
   id_rco_formation: 1,
 };
 
@@ -94,4 +103,4 @@ const etablissement = {
   _id: 1,
 };
 
-module.exports = { formation, etablissement };
+module.exports = { formation, etablissement, formationSelectPs };

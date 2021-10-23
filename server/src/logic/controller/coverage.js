@@ -1,10 +1,10 @@
-const { formation: formatFormation, etablissement: formatEtablissement } = require("./formater");
+const { formation: formatFormation, formationSelectPs, etablissement: formatEtablissement } = require("./formater");
 const { Formation, Etablissement } = require("../../common/model");
 const mongoose = require("mongoose");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 const { psRules } = require("./queries");
 
-const getMatch = async (query) => Formation.find(query, formatFormation).lean();
+const getMatch = async (query, select = null) => Formation.find(query, select || formatFormation).lean();
 
 async function getParcoursupCoverage(formation, { published, tags } = {}) {
   let params = { published, tags };
@@ -14,9 +14,7 @@ async function getParcoursupCoverage(formation, { published, tags } = {}) {
   for (let i = 0; i < psRules.length; i++) {
     let { query, strength } = psRules[i];
 
-    let result = await getMatch({ ...query(formation), ...params });
-
-    // console.log({ type: "PsRules", query: query(formation), result: result.length });
+    let result = await getMatch({ ...query(formation), ...params }, formationSelectPs);
 
     if (result.length > 0) {
       match = {

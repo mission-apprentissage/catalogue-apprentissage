@@ -4,7 +4,6 @@ const roleSchema = require("./role");
 const rcoFormationSchema = require("./rcoFormation");
 const formationSchema = require("./formation/formation");
 const reportSchema = require("./report");
-const psReconciliationSchema = require("./psReconciliation");
 const afReconciliationSchema = require("./afReconciliation");
 const afFormationSchema = require("./afFormation");
 const etablissementSchema = require("./etablissement");
@@ -20,7 +19,6 @@ module.exports = {
   rcoFormationSchema,
   formationSchema,
   reportSchema,
-  psReconciliationSchema,
   afReconciliationSchema,
   afFormationSchema,
   etablissementSchema,
