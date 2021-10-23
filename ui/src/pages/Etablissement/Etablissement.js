@@ -292,21 +292,42 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
                 <Text textStyle="rf-text" color="grey.700" fontWeight="700" mb={3}>
                   Siège social
                 </Text>
-                <Link as={NavLink} to={`/etablissement/${etablissement.etablissement_siege_id}`} variant="card">
-                  {etablissement.entreprise_raison_sociale && (
-                    <Text mb={4}>
-                      Raison sociale : <Text as="span"> {etablissement.entreprise_raison_sociale} </Text>{" "}
+
+                {etablissement.etablissement_siege_id && (
+                  <Link as={NavLink} to={`/etablissement/${etablissement.etablissement_siege_id}`} variant="card">
+                    {etablissement.entreprise_raison_sociale && (
+                      <Text mb={4}>
+                        Raison sociale : <Text as="span"> {etablissement.entreprise_raison_sociale} </Text>{" "}
+                      </Text>
+                    )}
+                    {etablissement.etablissement_siege_siret && (
+                      <Text mb={4}>
+                        Siret : <Text as="span"> {etablissement.etablissement_siege_siret} </Text>{" "}
+                      </Text>
+                    )}
+                    <Flex justifyContent="flex-end">
+                      <ArrowRightLine alignSelf="center" color="bluefrance" boxSize={4} />
+                    </Flex>
+                  </Link>
+                )}
+
+                {!etablissement.etablissement_siege_id && (
+                  <Text variant="card" as="div">
+                    <Text mb={4} fontStyle="italic">
+                      Données issues de l'API Entreprise
                     </Text>
-                  )}
-                  {etablissement.etablissement_siege_siret && (
-                    <Text mb={4}>
-                      Siret : <Text as="span"> {etablissement.etablissement_siege_siret} </Text>{" "}
-                    </Text>
-                  )}
-                  <Flex justifyContent="flex-end">
-                    <ArrowRightLine alignSelf="center" color="bluefrance" boxSize={4} />
-                  </Flex>
-                </Link>
+                    {etablissement.entreprise_raison_sociale && (
+                      <Text mb={4}>
+                        Raison sociale : <Text as="span"> {etablissement.entreprise_raison_sociale} </Text>{" "}
+                      </Text>
+                    )}
+                    {etablissement.etablissement_siege_siret && (
+                      <Text mb={4}>
+                        Siret : <Text as="span"> {etablissement.etablissement_siege_siret} </Text>{" "}
+                      </Text>
+                    )}
+                  </Text>
+                )}
               </Box>
             )}
           </Box>
