@@ -5,7 +5,7 @@ const rcoConverter = require("./rcoConverter");
 // const psReference = require("./parcoursup/reference");
 const afReference = require("./affelnet/reference");
 const psPerimetre = require("./parcoursup/perimetre");
-const psUpdateMatchInfo = require("./parcoursup/updateMatchInfo");
+// const psUpdateMatchInfo = require("./parcoursup/updateMatchInfo");
 const afPerimetre = require("./affelnet/perimetre");
 const afCoverage = require("./affelnet/coverage");
 const afReconciliation = require("./affelnet/reconciliation");
@@ -72,8 +72,8 @@ runScript(async ({ catalogue, db }) => {
     // await psReference(); // ~ 34 minutes => ~ 30 secondes
     // await sleep(30000);
 
-    await psUpdateMatchInfo();
-    await sleep(30000);
+    // await psUpdateMatchInfo();
+    // await sleep(30000);
 
     // affelnet
     await afCoverage(); // ~ 47 minutes => ~ 12 minutes

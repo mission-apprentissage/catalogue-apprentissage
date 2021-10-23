@@ -142,16 +142,17 @@ export default (props) => {
                         setPsFormation(data);
                         onOpenReconciliationPsModal();
                       }}
-                      extraButtons={
-                        auth && hasAccessTo(auth, "page_reconciliation_ps/send_rapport_anomalies") ? (
-                          <Button variant="pill" py={2} onClick={sendReport}>
-                            <SentPaperPlane mx="0.5rem" w="0.75rem" h="0.75rem" />
-                            Envoyer un rapport au Carif-Oref
-                          </Button>
-                        ) : (
-                          <></>
-                        )
-                      }
+                      // extraButtons={
+                      //   auth && hasAccessTo(auth, "page_reconciliation_ps/send_rapport_anomalies") ? (
+                      //     <Button variant="pill" py={2} onClick={sendReport}>
+                      //       <SentPaperPlane mx="0.5rem" w="0.75rem" h="0.75rem" />
+                      //       Envoyer un rapport au Carif-Oref
+                      //     </Button>
+                      //   ) : (
+                      //     <></>
+                      //   )
+                      // }
+                      extraButtons={<></>}
                     />
                   </TabPanel>
                   <TabPanel>

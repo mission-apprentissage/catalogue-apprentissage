@@ -25,9 +25,8 @@
     "trainings:updater": "standalone=true node src/jobs/trainingsUpdater/index.js",
     "psup:prepare-2021": "standalone=true node src/jobs/parcoursup/prepare.js",
     "psup:import-2021": "standalone=true node src/jobs/parcoursup/importer.js",
-    "psup:coverage-2021": "standalone=true node src/jobs/parcoursup/coverage.js",
     "psup:perimetre": "standalone=true node src/jobs/parcoursup/perimetre/index.js",
-    "psup:updatemna": "standalone=true node src/jobs/parcoursup/updateMatchInfo.js",
+    "psup:coverage-2021": "standalone=true node src/jobs/parcoursup/coverage.js",
     "psup:report": "standalone=true node src/jobs/parcoursup/reportRejected.js",
     "affelnet:coverage": "standalone=true node src/jobs/affelnet/coverage.js",
     "affelnet:reconciliation": "standalone=true node src/jobs/affelnet/reconciliation.js",
@@ -41,7 +40,8 @@
     "rcoPending:export": "standalone=true node src/jobs/pendingFormations/index.js",
     "rcoFormation:duplicate": "standalone=true node src/jobs/oneshot/findRcoDuplicates/index.js",
     "hydratecfdentree": "standalone=true node src/jobs/parcoursup/_hydrateCfdEntree.js",
-    "migrateRaisonsRejet": "standalone=true node src/jobs/parcoursup/_migrationRaisonsRejet.js"
+    "migrateRaisonsRejet": "standalone=true node src/jobs/parcoursup/_migrationRaisonsRejet.js",
+    "psup:updatemna": "standalone=true node src/jobs/parcoursup/_updateMatchInfo.js"
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.6.1",

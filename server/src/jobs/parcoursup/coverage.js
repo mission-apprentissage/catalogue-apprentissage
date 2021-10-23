@@ -21,10 +21,17 @@ const updateMatchedFormation = async ({ formation, match }) => {
   }
   const previousFormation = await PsFormation.findById(formation._id).lean();
 
+  const statutsPsMna = [];
+  for (let index = 0; index < match.data.length; index++) {
+    const element = match.data[index];
+    statutsPsMna.push(element.parcoursup_statut);
+  }
+
   let updatedFormation = {
     ...previousFormation,
     matching_type: match.matching_strength,
     matching_mna_formation: match.data,
+    matching_mna_parcoursup_statuts: statutsPsMna,
     statut_reconciliation,
   };
 
