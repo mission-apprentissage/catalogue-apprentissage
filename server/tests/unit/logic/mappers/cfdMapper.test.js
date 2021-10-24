@@ -120,4 +120,19 @@ describe(__filename, () => {
     assert.deepStrictEqual(result.diplome, expected.result.diplome);
     assert.deepStrictEqual(result.rncp_details.code_type_certif, expected.result.rncp_details.code_type_certif);
   });
+
+  it("should compute cfd entree ", () => {
+    const { getCfdEntree } = require("../../../../src/logic/mappers/cfdMapper");
+
+    // get cfd entree is different for some listed cfd
+    assert.strictEqual(getCfdEntree("32033423"), "32033422");
+    assert.strictEqual(getCfdEntree("32033425"), "32033422");
+    assert.strictEqual(getCfdEntree("32033604"), "32033606");
+    assert.strictEqual(getCfdEntree("32022312"), "32022310");
+
+    // else it is the same
+    assert.strictEqual(getCfdEntree("32022388"), "32022388");
+    assert.strictEqual(getCfdEntree("32022399"), "32022399");
+    assert.strictEqual(getCfdEntree("38123376"), "38123376");
+  });
 });

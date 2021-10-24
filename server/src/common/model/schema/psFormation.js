@@ -149,7 +149,17 @@ const psFormationSchema = {
   matching_rejete_raison: {
     type: String,
     default: null,
-    description: "Affelnet : raison de dépublication",
+    description: " raison de dépublication",
+  },
+  rapprochement_rejete_raisons: {
+    type: [String],
+    default: [],
+    description: "Tableau des raisons de rejet",
+  },
+  rapprochement_rejete_raison_autre: {
+    type: String,
+    default: null,
+    description: "Details raison autre rejet",
   },
   statuts_history: {
     type: [Object],

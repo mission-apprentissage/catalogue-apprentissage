@@ -2,6 +2,20 @@ const logger = require("../../common/logger");
 const { infosCodes, computeCodes } = require("../../constants/opco");
 const { getCfdInfo } = require("@mission-apprentissage/tco-service-node");
 
+const cfdEntreeMap = {
+  32033422: ["32033423", "32033424", "32033425"],
+  32022316: ["32022317", "32022318"],
+  32032209: ["32032210", "32032211"],
+  32033606: ["32033603", "32033604", "32033605"],
+  32032612: ["32032613", "32032614"],
+  32022310: ["32022311", "32022312"],
+};
+
+const getCfdEntree = (cfd) => {
+  const entry = Object.entries(cfdEntreeMap).find(([, values]) => values.includes(cfd));
+  return entry ? entry[0] : cfd;
+};
+
 const cfdMapper = async (cfd = null, options = { onisep: true }) => {
   try {
     if (!cfd) {
@@ -66,12 +80,15 @@ const cfdMapper = async (cfd = null, options = { onisep: true }) => {
       info_opcos_intitule = computeCodes[infosCodes.Found];
     }
 
+    const cfd_entree = getCfdEntree(result.cfd);
+
     return {
       result: {
         cfd: result.cfd,
         cfd_specialite: result.specialite,
         cfd_outdated: result.cfd_outdated,
         cfd_date_fermeture: result?.date_fermeture && new Date(result.date_fermeture),
+        cfd_entree,
         niveau: result.niveau,
         intitule_long: result.intitule_long,
         intitule_court: result.intitule_court,
@@ -134,4 +151,4 @@ const cfdMapper = async (cfd = null, options = { onisep: true }) => {
   }
 };
 
-module.exports.cfdMapper = cfdMapper;
+module.exports = { cfdMapper, getCfdEntree };

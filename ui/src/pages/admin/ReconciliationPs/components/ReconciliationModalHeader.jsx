@@ -14,6 +14,8 @@ import {
   Textarea,
   FormErrorMessage,
   Switch,
+  UnorderedList,
+  ListItem,
 } from "@chakra-ui/react";
 import { buildUpdatesHistory } from "../../../../common/utils/formationUtils";
 import { StatusBadge } from "../../../../common/components/StatusBadge";
@@ -70,8 +72,8 @@ const ReconciliationModalHeader = React.memo(
         return new Promise(async (resolve) => {
           const formationARapprocher = formation.matching_mna_formation[currentMnaFormation];
           const body = {};
-          let shouldRemovePsReconciliation = false;
-          let shouldRestorePsReconciliation = false;
+          // let shouldRemovePsReconciliation = false; --------------------
+          // let shouldRestorePsReconciliation = false;
           if (parcoursup_keep_publish === "true") {
             // if (
             //   [
@@ -83,7 +85,7 @@ const ReconciliationModalHeader = React.memo(
             //   ].includes(formationARapprocher?.parcoursup_statut)
             // ) {
             body.parcoursup_statut = "publié";
-            shouldRestorePsReconciliation = formationARapprocher.parcoursup_statut === "non publié";
+            // shouldRestorePsReconciliation = formationARapprocher.parcoursup_statut === "non publié"; --------
             body.parcoursup_raison_depublication = null;
             // }
           } else if (parcoursup_keep_publish === "false") {
@@ -98,9 +100,9 @@ const ReconciliationModalHeader = React.memo(
             // ) {
             body.parcoursup_raison_depublication = parcoursup_raison_depublication;
             body.parcoursup_statut = "non publié";
-            shouldRemovePsReconciliation = ["en attente de publication", "publié"].includes(
-              formationARapprocher.parcoursup_statut
-            );
+            // shouldRemovePsReconciliation = ["en attente de publication", "publié"].includes(
+            //   formationARapprocher.parcoursup_statut
+            // ); --------------------
             // }
           }
 
@@ -117,18 +119,18 @@ const ReconciliationModalHeader = React.memo(
               ),
             });
 
-            if (shouldRemovePsReconciliation || shouldRestorePsReconciliation) {
-              try {
-                await _put(`/api/parcoursup/reconciliation`, {
-                  uai_gestionnaire: formationARapprocher.etablissement_gestionnaire_uai,
-                  uai_affilie: formationARapprocher.etablissement_formateur_uai,
-                  cfd: formationARapprocher.cfd,
-                  email: shouldRemovePsReconciliation ? user.email : null,
-                });
-              } catch (e) {
-                // do nothing
-              }
-            }
+            // if (shouldRemovePsReconciliation || shouldRestorePsReconciliation) {  ----------------
+            //   try {
+            //     await _put(`/api/parcoursup/reconciliation`, {
+            //       uai_gestionnaire: formationARapprocher.etablissement_gestionnaire_uai,
+            //       uai_affilie: formationARapprocher.etablissement_formateur_uai,
+            //       cfd: formationARapprocher.cfd,
+            //       email: shouldRemovePsReconciliation ? user.email : null,
+            //     });
+            //   } catch (e) {
+            //     // do nothing
+            //   }
+            // }
           }
 
           const mapping = [];
@@ -228,6 +230,12 @@ const ReconciliationModalHeader = React.memo(
         ? "560px"
         : "470px";
 
+    const showRejectRaisons = (formation) => {
+      return formation.rapprochement_rejete_raisons.map((r) =>
+        r === "Autre" ? `${r}: ${formation.rapprochement_rejete_raison_autre}` : r
+      );
+    };
+
     return (
       <>
         <Box border="1px solid red" h={height} />
@@ -276,9 +284,20 @@ const ReconciliationModalHeader = React.memo(
             <>
               <HStack px={[4, 16]} mb={5}>
                 {formation.statut_reconciliation === "REJETE" && (
-                  <Text textStyle="lg" fontWeight="bold" mb={3} color="error" flexGrow="1" mt={3}>
-                    Raison du signalement: {formation.matching_rejete_raison.split("#-REJECT_COMPLEMENT-#").join(": ")}
-                  </Text>
+                  <Box flexGrow="1">
+                    <Text textStyle="lg" fontWeight="bold" mb={3} color="error" flexGrow="1" mt={3}>
+                      Raison du signalement:
+                    </Text>
+                    <UnorderedList>
+                      {showRejectRaisons(formation).map((raison, i) => {
+                        return (
+                          <ListItem color="error" key={i}>
+                            {raison}
+                          </ListItem>
+                        );
+                      })}
+                    </UnorderedList>
+                  </Box>
                 )}
                 {formation.statut_reconciliation !== "REJETE" && (
                   <Text textStyle="sm" fontStyle="italic" mb={3} color="info" flexGrow="1">

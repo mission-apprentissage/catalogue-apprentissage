@@ -25,14 +25,8 @@
     "trainings:updater": "standalone=true node src/jobs/trainingsUpdater/index.js",
     "psup:prepare-2021": "standalone=true node src/jobs/parcoursup/prepare.js",
     "psup:import-2021": "standalone=true node src/jobs/parcoursup/importer.js",
-    "psup:shot-2021": "standalone=true node src/jobs/parcoursup/miscJobs/_fillPsFormationStatus.js",
-    "psup:shot2-2021": "standalone=true node src/jobs/parcoursup/miscJobs/_fillPsReconciliationIds.js",
-    "psup:coverage-2021": "standalone=true node src/jobs/parcoursup/coverage.js",
-    "psup:setPsIds-2021": "standalone=true node src/jobs/parcoursup/setPsIdsToFormations.js",
-    "psup:reference": "standalone=true node src/jobs/parcoursup/reference/index.js",
     "psup:perimetre": "standalone=true node src/jobs/parcoursup/perimetre/index.js",
-    "psup:updatemna": "standalone=true node src/jobs/parcoursup/updateMatchInfo.js",
-    "psup:resetStatus": "standalone=true node src/jobs/parcoursup/miscJobs/_cleanMnaFStatus.js",
+    "psup:coverage-2021": "standalone=true node src/jobs/parcoursup/coverage.js",
     "psup:report": "standalone=true node src/jobs/parcoursup/reportRejected.js",
     "affelnet:coverage": "standalone=true node src/jobs/affelnet/coverage.js",
     "affelnet:reconciliation": "standalone=true node src/jobs/affelnet/reconciliation.js",
@@ -44,7 +38,10 @@
     "generate:swaggerschema": "standalone=true node src/jobs/generateSwaggerSchema/index.js",
     "etablissement:dump": "standalone=true node src/jobs/etablissements",
     "rcoPending:export": "standalone=true node src/jobs/pendingFormations/index.js",
-    "rcoFormation:duplicate": "standalone=true node src/jobs/oneshot/findRcoDuplicates/index.js"
+    "rcoFormation:duplicate": "standalone=true node src/jobs/oneshot/findRcoDuplicates/index.js",
+    "hydratecfdentree": "standalone=true node src/jobs/parcoursup/_hydrateCfdEntree.js",
+    "migrateRaisonsRejet": "standalone=true node src/jobs/parcoursup/_migrationRaisonsRejet.js",
+    "psup:updatemna": "standalone=true node src/jobs/parcoursup/_updateMatchInfo.js"
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.6.1",
