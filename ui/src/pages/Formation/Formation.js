@@ -14,6 +14,7 @@ import {
   Spinner,
   Text,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
 import { useFormik } from "formik";
@@ -188,6 +189,7 @@ const Formation = ({
 };
 
 export default ({ match }) => {
+  const toast = useToast();
   const [formation, setFormation] = useState();
   const [pendingFormation, setPendingFormation] = useState();
 
@@ -283,6 +285,16 @@ export default ({ match }) => {
           }
         } catch (e) {
           console.error("Can't perform update", e);
+
+          const response = await (e?.json ?? {});
+          const message = response?.message ?? e?.message;
+
+          toast({
+            title: "Error",
+            description: message,
+            status: "error",
+            duration: 10000,
+          });
         } finally {
           setEdition(null);
           resolve("onSubmitHandler complete");
