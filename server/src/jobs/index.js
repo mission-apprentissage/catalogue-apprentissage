@@ -12,17 +12,18 @@ const afReconciliation = require("./affelnet/reconciliation");
 const crypto = require("crypto");
 
 const { rebuildEsIndex } = require("./esIndex/esIndex");
-const { importEtablissements } = require("./etablissements");
 const { spawn } = require("child_process");
 const { Formation } = require("../common/model");
 
 const { rncpImporter, bcnImporter, onisepImporter } = require("@mission-apprentissage/tco-service-node");
+const { EtablissementsUpdater } = require("./EtablissementsUpdater");
+const { findAndUpdateSiegeSocial } = require("./EtablissementsUpdater/orphans");
 
 const KIT_LOCAL_PATH = "/data/uploads/CodeDiplome_RNCP_latest_kit.csv";
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-runScript(async ({ catalogue, db }) => {
+runScript(async ({ db }) => {
   try {
     logger.info(`Start all jobs`);
 
@@ -36,7 +37,9 @@ runScript(async ({ catalogue, db }) => {
     await rncpImporter(KIT_LOCAL_PATH);
     await sleep(30000);
 
-    await importEtablissements(catalogue);
+    await EtablissementsUpdater();
+    await findAndUpdateSiegeSocial();
+
     await sleep(30000);
     // rco
     let uuidReport = await rcoImporter();
@@ -91,6 +94,7 @@ runScript(async ({ catalogue, db }) => {
     const filter = { published: true };
     await rebuildEsIndex("formation", false, filter); // ~ 44 minutes => ~ 22 minutes
     await rebuildEsIndex("psformations", false); // ~ 3 minutes
+    await rebuildEsIndex("etablissements", false);
   } catch (error) {
     logger.error(error);
   }

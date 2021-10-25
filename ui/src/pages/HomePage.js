@@ -28,8 +28,6 @@ import { Breadcrumb } from "../common/components/Breadcrumb";
 import { setTitle } from "../common/utils/pageUtils";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
-const endpointTCO =
-  process.env.REACT_APP_ENDPOINT_TCO || "https://tables-correspondances.apprentissage.beta.gouv.fr/api";
 
 export default () => {
   const [loading, setLoading] = useState(true);
@@ -45,7 +43,7 @@ export default () => {
           query: JSON.stringify({ published: true }),
         });
 
-        const countEtablissement = await _get(`${endpointTCO}/entity/etablissements/count?${params}`, false);
+        const countEtablissement = await _get(`${endpointNewFront}/entity/etablissements/count?${params}`, false);
         const count = await _get(`${endpointNewFront}/entity/formations2021/count?${params}`, false);
 
         if (mounted) {

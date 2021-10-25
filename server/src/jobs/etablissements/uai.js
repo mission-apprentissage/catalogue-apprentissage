@@ -3,6 +3,7 @@ const catalogue = require("../../common/components/catalogue");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 const csvToJson = require("convert-csv-to-json-latin");
 const logger = require("../../common/logger");
+const { Etablissement } = require("../../common/model");
 
 const FILE_PATH = "/data/uploads/uai-siret.csv";
 
@@ -11,14 +12,14 @@ const upsertEtablissements = async () => {
 
   await asyncForEach(lines, async ({ Uai: uai, Siret: siret }, index) => {
     logger.info(`upsert element ${index + 1}/${lines.length}`);
-    const etablissement = await catalogue.getEtablissement({ siret });
+    const etablissement = await Etablissement.findOne({ siret });
     if (!etablissement?._id) {
       const created = await catalogue.createEtablissement({ siret, uai });
       if (!created?._id) {
         logger.error(`Failed to create etablissement ${index + 1}/${lines.length}: `, siret, uai);
       }
     } else {
-      await catalogue.updateEtablissement(etablissement._id, { uai });
+      await Etablissement.findByIdAndUpdate(etablissement._id, { uai });
     }
   });
 };
