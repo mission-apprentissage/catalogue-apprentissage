@@ -183,6 +183,14 @@ const ReconciliationModalHeader = React.memo(
       window.location.reload();
     };
 
+    const cancelRapprochement = async () => {
+      await _post("/api/parcoursup/reconciliation", {
+        id_formation: formation._id,
+        matching_rejete_raison: `##USER_CANCEL##`,
+      });
+      window.location.reload();
+    };
+
     let onSelectChecked = useCallback(
       (e) => {
         let selected = [];
@@ -211,7 +219,7 @@ const ReconciliationModalHeader = React.memo(
 
     const height =
       formation.statut_reconciliation === "VALIDE"
-        ? "100px"
+        ? "135px"
         : formation.statut_reconciliation === "REJETE"
         ? "450px"
         : step === 1
@@ -279,6 +287,12 @@ const ReconciliationModalHeader = React.memo(
               </Box>
             </>
           </HStack>
+
+          {formation.statut_reconciliation === "VALIDE" && (
+            <Button type="submit" variant="primary" onClick={cancelRapprochement}>
+              Annuler le rapprochement
+            </Button>
+          )}
 
           {step === 1 && (
             <>
