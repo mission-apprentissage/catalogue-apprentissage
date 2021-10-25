@@ -145,10 +145,7 @@ module.exports = ({ catalogue }) => {
     tryCatch(async (req, res) => {
       const psId = req.params.id;
       const qs = req.query;
-      const select =
-        qs && qs.select
-          ? JSON.parse(qs.select)
-          : { __v: 0, rncp_details: 0, updates_history: 0, affelnet_statut_history: 0 };
+      const select = qs && qs.select ? JSON.parse(qs.select) : { __v: 0, rncp_details: 0, affelnet_statut_history: 0 };
       const retrievedData = await PsFormation.findById(psId, select).lean();
       if (retrievedData) {
         const diffFields = [];
@@ -268,15 +265,44 @@ module.exports = ({ catalogue }) => {
       // );
 
       // if (result) {
-      const previousFormation = await PsFormation.findById(id_formation).lean();
+      const psFormation = await PsFormation.findById(id_formation).lean();
+      let statut_reconciliation = "VALIDE";
+      let etat_reconciliation = true;
+      let matching_rejete_updated = false;
+
+      if (matching_rejete_raison === "##USER_CANCEL##") {
+        statut_reconciliation =
+          psFormation.statuts_history[psFormation.statuts_history.length - 1].from.statut_reconciliation;
+        etat_reconciliation = false;
+
+        let updatedFormation = {
+          ...psFormation,
+          statut_reconciliation, // statut_reconciliation: "A_VERIFIER",
+          etat_reconciliation,
+          matching_rejete_updated,
+        };
+
+        // History
+        const { updates, keys } = diffFormation(psFormation, updatedFormation);
+        if (updates) {
+          delete updates.matching_mna_formation;
+          const statuts_history = buildUpdatesHistory(psFormation, updates, keys, null, true);
+
+          updatedFormation.statuts_history = statuts_history;
+        }
+
+        await PsFormation.findOneAndUpdate({ _id: id_formation }, updatedFormation, { new: true });
+
+        return res.json({});
+      }
 
       const mnaFormation = await Formation.findById(rest.mnaFormationId).lean();
       let matching_mna_formation = [];
       let matching_mna_parcoursup_statuts = [];
-      if (previousFormation.statut_reconciliation === "VALIDE" && previousFormation.matching_mna_formation.length > 0) {
-        if (!previousFormation.matching_mna_formation.map(({ _id }) => `${_id}`).includes(rest.mnaFormationId)) {
+      if (psFormation.statut_reconciliation === "VALIDE" && psFormation.matching_mna_formation.length > 0) {
+        if (!psFormation.matching_mna_formation.map(({ _id }) => `${_id}`).includes(mnaFormation._id)) {
           matching_mna_formation = [
-            ...previousFormation.matching_mna_formation,
+            ...psFormation.matching_mna_formation,
             {
               _id: mnaFormation._id,
               intitule_court: mnaFormation.intitule_court,
@@ -285,39 +311,40 @@ module.exports = ({ catalogue }) => {
           ];
 
           matching_mna_parcoursup_statuts = [
-            ...previousFormation.matching_mna_parcoursup_statuts,
+            ...psFormation.matching_mna_parcoursup_statuts,
             mnaFormation.parcoursup_statut,
           ];
         } else {
-          matching_mna_formation = previousFormation.matching_mna_formation;
-          matching_mna_parcoursup_statuts = previousFormation.matching_mna_parcoursup_statuts;
+          matching_mna_formation = psFormation.matching_mna_formation;
+          matching_mna_parcoursup_statuts = psFormation.matching_mna_parcoursup_statuts;
         }
       } else {
-        matching_mna_formation = [
-          {
-            _id: mnaFormation._id,
-            intitule_court: mnaFormation.intitule_court,
-            parcoursup_statut: mnaFormation.parcoursup_statut,
-          },
-        ];
-        matching_mna_parcoursup_statuts = [mnaFormation.parcoursup_statut];
+        // matching_mna_formation = [
+        //   {
+        //     _id: mnaFormation._id,
+        //     intitule_court: mnaFormation.intitule_court,
+        //     parcoursup_statut: mnaFormation.parcoursup_statut,
+        //   },
+        // ];
+        // matching_mna_parcoursup_statuts = [mnaFormation.parcoursup_statut];
+        matching_mna_formation = psFormation.matching_mna_formation;
+        matching_mna_parcoursup_statuts = psFormation.matching_mna_parcoursup_statuts;
       }
 
       let updatedFormation = {
-        ...previousFormation,
-        // id_reconciliation: result._id.toString(), -----------------------
-        statut_reconciliation: "VALIDE",
-        etat_reconciliation: true,
-        matching_rejete_updated: false,
+        ...psFormation,
+        statut_reconciliation,
+        etat_reconciliation,
+        matching_rejete_updated,
         matching_mna_formation,
         matching_mna_parcoursup_statuts,
       };
 
       // History
-      const { updates, keys } = diffFormation(previousFormation, updatedFormation);
+      const { updates, keys } = diffFormation(psFormation, updatedFormation);
       if (updates) {
         delete updates.matching_mna_formation;
-        const statuts_history = buildUpdatesHistory(previousFormation, updates, keys, null, true);
+        const statuts_history = buildUpdatesHistory(psFormation, updates, keys, null, true);
 
         updatedFormation.statuts_history = statuts_history;
       }
@@ -325,7 +352,7 @@ module.exports = ({ catalogue }) => {
       await PsFormation.findOneAndUpdate({ _id: id_formation }, updatedFormation, { new: true });
       // }
 
-      return res.json(); /// result -------------------
+      return res.json({}); /// result -------------------
     })
   );
 
