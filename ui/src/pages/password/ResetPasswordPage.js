@@ -54,8 +54,8 @@ const ResetPasswordPage = () => {
             newPassword: Yup.string()
               .required("Veuillez saisir un mot de passe")
               .matches(
-                "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.=/])(?=.{8,})",
-                "Le mot de passe doit contenir au moins 8 caractères, une lettre en minuscule, une lettre en majuscule, un chiffre et un caractère spécial"
+                "^(?=.*\\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^\\w\\d\\s:])([^\\s]){8,}$",
+                "Le mot de passe doit contenir au moins 8 caractères, une lettre en minuscule, une lettre en majuscule, un chiffre et un caractère spécial (les espaces ne sont pas acceptés)"
               ),
           })}
           onSubmit={changePassword}
