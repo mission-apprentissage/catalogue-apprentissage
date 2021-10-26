@@ -15,7 +15,7 @@ export const HabilitationPartenaire = ({ habilitation }) => {
       break;
     case "HABILITATION_ORGANISER":
       color = "red";
-      text = "Établissement habilité à organiser la formation";
+      text = "Établissement habilité à organiser la formation, mais non habilité à former pour cette certification";
       break;
     default:
       break;
