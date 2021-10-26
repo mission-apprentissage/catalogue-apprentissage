@@ -96,13 +96,6 @@ const Formation = ({
                 hasRightToEdit={hasRightToEdit}
                 mb={4}
               />
-              <Text mb={4}>
-                Académie :{" "}
-                <Text as="span" variant="highlight">
-                  {displayedFormation.nom_academie} ({displayedFormation.num_academie})
-                </Text>{" "}
-                <InfoTooltip description={helpText.formation.academie} />
-              </Text>
               <EditableField
                 fieldName={"lieu_formation_adresse"}
                 label={"Adresse"}
@@ -170,12 +163,19 @@ const Formation = ({
                 hasRightToEdit={hasRightToEdit}
                 mb={4}
               />
-              <Text mb={4}>
+              <Text mb={8}>
                 Département :{" "}
                 <Text as="span" variant="highlight">
                   {displayedFormation.nom_departement} ({displayedFormation.num_departement})
                 </Text>{" "}
                 <InfoTooltip description={helpText.formation.nom_departement} />
+              </Text>
+              <Text mb={4}>
+                Académie de rattachement :{" "}
+                <Text as="span" variant="highlight">
+                  {displayedFormation.nom_academie} ({displayedFormation.num_academie})
+                </Text>{" "}
+                <InfoTooltip description={helpText.formation.academie} />
               </Text>
             </Box>
           </Box>
