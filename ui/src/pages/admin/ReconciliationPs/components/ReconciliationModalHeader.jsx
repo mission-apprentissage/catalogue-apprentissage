@@ -656,44 +656,46 @@ const ReconciliationModalHeader = React.memo(
             </Box>
           )}
 
-          {step === 3 && slidesCount > 1 && (
+          {step === 3 && (
             <>
-              {slidesCount > 1 && (
-                <Box px={[4, 16]} mb={5}>
-                  <HStack spacing="8" minH="60px" alignItems="stretch" textStyle="rf-text" fontWeight="700">
-                    <HStack w="full">
-                      {Array(slidesCount)
-                        .fill("")
-                        .map((unuse, ide) => {
-                          return formation.validated_formation_ids.includes(
-                            formation.matching_mna_formation[ide]._id
-                          ) ? (
-                            <ButtonIndicator
-                              text={ide + 1}
-                              active={ide === currentMnaFormation}
-                              onClicked={() => {
-                                setCurrentMnaFormation(ide);
-                                onMnaFormationSelected(ide);
-                                setMnaFormation(formation.matching_mna_formation[ide]);
-                              }}
-                              key={ide}
-                            />
-                          ) : null;
-                        })}
-                      <Text textStyle="sm" ml="0.9rem" color="info" flexGrow="1">
-                        {formation.validated_formation_ids?.length || 0} formations rapprochées
-                      </Text>
-                      <Box flexGrow="1" textAlign="right">
-                        {formation.statut_reconciliation === "VALIDE" && (
-                          <Button type="submit" variant="primary" onClick={cancelRapprochement}>
-                            Annuler le rapprochement
-                          </Button>
-                        )}
-                      </Box>
-                    </HStack>
+              <Box px={[4, 16]} mb={5}>
+                <HStack spacing="8" minH="60px" alignItems="stretch" textStyle="rf-text" fontWeight="700">
+                  <HStack w="full">
+                    {slidesCount > 1 && (
+                      <>
+                        {Array(slidesCount)
+                          .fill("")
+                          .map((unuse, ide) => {
+                            return formation.validated_formation_ids.includes(
+                              formation.matching_mna_formation[ide]._id
+                            ) ? (
+                              <ButtonIndicator
+                                text={ide + 1}
+                                active={ide === currentMnaFormation}
+                                onClicked={() => {
+                                  setCurrentMnaFormation(ide);
+                                  onMnaFormationSelected(ide);
+                                  setMnaFormation(formation.matching_mna_formation[ide]);
+                                }}
+                                key={ide}
+                              />
+                            ) : null;
+                          })}
+                      </>
+                    )}
+                    <Text textStyle="sm" ml="0.9rem" color="info" flexGrow="1">
+                      {formation.validated_formation_ids?.length || 0} formations rapprochées
+                    </Text>
+                    <Box flexGrow="1" textAlign="right">
+                      {formation.statut_reconciliation === "VALIDE" && (
+                        <Button type="submit" variant="primary" onClick={cancelRapprochement}>
+                          Annuler le rapprochement
+                        </Button>
+                      )}
+                    </Box>
                   </HStack>
-                </Box>
-              )}
+                </HStack>
+              </Box>
 
               <Section
                 minH="30px"
