@@ -16,7 +16,7 @@ const ReconciliationModal = React.memo(({ isOpen, onClose: onCloseProp, data, on
         const form = await getResult({ id: data._id });
         setFormation(form);
         setCurrentMnaFormation(0);
-        if (form.statut_reconciliation === "VALIDE" && form.etat_reconciliation) {
+        if (form.statut_reconciliation === "VALIDE") {
           setStep(3);
         }
       } catch (e) {
