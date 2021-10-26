@@ -21,7 +21,9 @@ test("should display 'FORMER'", () => {
 test("should display 'ORGANISER'", () => {
   const { queryByText } = render(<HabilitationPartenaire habilitation={"HABILITATION_ORGANISER"} />);
 
-  const title = queryByText("Établissement habilité à organiser la formation");
+  const title = queryByText(
+    "Établissement habilité à organiser la formation, mais non habilité à former pour cette certification"
+  );
   expect(title).toBeInTheDocument();
   expect(title).toHaveStyle("color: red");
 });
