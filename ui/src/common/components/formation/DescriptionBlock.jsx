@@ -19,6 +19,10 @@ export const DescriptionBlock = ({ formation, pendingFormation }) => {
       HABILITE_LIST.includes(certificateur)
     );
 
+  const showDisclaimer = filteredPartenaires.some(
+    ({ Habilitation_Partenaire }) => Habilitation_Partenaire === "HABILITATION_ORGANISER"
+  );
+
   return (
     <>
       <Box mb={16} pt={8}>
@@ -211,7 +215,7 @@ export const DescriptionBlock = ({ formation, pendingFormation }) => {
                 Partenaires : <br />
                 {filteredPartenaires.length > 0 ? (
                   <>
-                    L'habilitation ORGANISER seule n'ouvre pas les droits
+                    {showDisclaimer && "L'habilitation ORGANISER seule n'ouvre pas les droits"}
                     <UnorderedList>
                       {filteredPartenaires.map(({ Nom_Partenaire, Siret_Partenaire, Habilitation_Partenaire }) => (
                         <ListItem key={Siret_Partenaire}>
