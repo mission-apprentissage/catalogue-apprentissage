@@ -41,7 +41,8 @@
     "rcoFormation:duplicate": "standalone=true node src/jobs/oneshot/findRcoDuplicates/index.js",
     "hydratecfdentree": "standalone=true node src/jobs/parcoursup/_hydrateCfdEntree.js",
     "migrateRaisonsRejet": "standalone=true node src/jobs/parcoursup/_migrationRaisonsRejet.js",
-    "psup:updatemna": "standalone=true node src/jobs/parcoursup/_updateMatchInfo.js"
+    "psup:updatemna": "standalone=true node src/jobs/parcoursup/_updateMatchInfo.js",
+    "migrateFillPsId": "standalone=true node src/jobs/parcoursup/_migrationFillParcourSupId.js"
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.6.1",
