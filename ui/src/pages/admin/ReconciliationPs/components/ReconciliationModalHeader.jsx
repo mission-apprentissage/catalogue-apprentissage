@@ -28,11 +28,8 @@ import useAuth from "../../../../common/hooks/useAuth";
 import * as Yup from "yup";
 import { _post, _put } from "../../../../common/httpClient";
 import { PARCOURSUP_STATUS } from "../../../../constants/status";
-import { difference } from "lodash";
 
 import { Close, CheckLine, ValidateIcon, ErrorIcon } from "../../../../theme/components/icons";
-
-// let finalValidation = [];
 
 const ReconciliationModalHeader = React.memo(
   ({ formation, onClose, step, onStepChanged, onValidationSubmit, onStepClicked, onMnaFormationSelected }) => {
@@ -42,8 +39,6 @@ const ReconciliationModalHeader = React.memo(
     const [showRaison, setShowRaison] = useState(false);
     const [currentMnaFormation, setCurrentMnaFormation] = useState(0);
     const [selectedFormation, setSelectedFormation] = useState([]);
-    const [handlePublishFormation, setHandlePublishFormation] = useState([]);
-    const [restIde, setRestIde] = useState([]);
     const slidesCount = formation.matching_mna_formation.length;
     const [user] = useAuth();
 
@@ -70,104 +65,54 @@ const ReconciliationModalHeader = React.memo(
       }),
       onSubmit: ({ parcoursup_keep_publish, parcoursup_raison_depublication }) => {
         return new Promise(async (resolve) => {
-          const formationARapprocher = formation.matching_mna_formation[currentMnaFormation];
-          const body = {};
-          // let shouldRemovePsReconciliation = false; --------------------
-          // let shouldRestorePsReconciliation = false;
+          const body = {
+            parcoursup_id: formation._id,
+          };
           if (parcoursup_keep_publish === "true") {
-            // if (
-            //   [
-            //     "non publié",
-            //     "à publier (vérifier accès direct postbac)",
-            //     "à publier (soumis à validation Recteur)",
-            //     "en attente de publication",
-            //     "à publier",
-            //   ].includes(formationARapprocher?.parcoursup_statut)
-            // ) {
             body.parcoursup_statut = "publié";
-            // shouldRestorePsReconciliation = formationARapprocher.parcoursup_statut === "non publié"; --------
             body.parcoursup_raison_depublication = null;
-            // }
           } else if (parcoursup_keep_publish === "false") {
-            // if (
-            //   [
-            //     "en attente de publication",
-            //     "à publier (vérifier accès direct postbac)",
-            //     "à publier (soumis à validation Recteur)",
-            //     "à publier",
-            //     "publié",
-            //   ].includes(formationARapprocher?.parcoursup_statut)
-            // ) {
             body.parcoursup_raison_depublication = parcoursup_raison_depublication;
             body.parcoursup_statut = "non publié";
-            // shouldRemovePsReconciliation = ["en attente de publication", "publié"].includes(
-            //   formationARapprocher.parcoursup_statut
-            // ); --------------------
-            // }
           }
 
-          if (Object.keys(body).length > 0) {
-            await _put(`/api/entity/formations2021/${formationARapprocher._id}`, {
-              num_academie: formationARapprocher.num_academie,
-              ...body,
-              last_update_who: user.email,
-              last_update_at: Date.now(),
-              updates_history: buildUpdatesHistory(
-                formationARapprocher,
-                { ...body, last_update_who: user.email },
-                Object.keys(body)
-              ),
-            });
-
-            // if (shouldRemovePsReconciliation || shouldRestorePsReconciliation) {  ----------------
-            //   try {
-            //     await _put(`/api/parcoursup/reconciliation`, {
-            //       uai_gestionnaire: formationARapprocher.etablissement_gestionnaire_uai,
-            //       uai_affilie: formationARapprocher.etablissement_formateur_uai,
-            //       cfd: formationARapprocher.cfd,
-            //       email: shouldRemovePsReconciliation ? user.email : null,
-            //     });
-            //   } catch (e) {
-            //     // do nothing
-            //   }
-            // }
-          }
-
-          const mapping = [];
-
-          mapping.push({
-            id: formationARapprocher.etablissement_formateur_id,
-            siret: formationARapprocher.etablissement_formateur_siret,
-            type: "formateur",
-          });
-          mapping.push({
-            id: formationARapprocher.etablissement_gestionnaire_id,
-            siret: formationARapprocher.etablissement_gestionnaire_siret,
-            type: "gestionnaire",
-          });
-
-          await _post("/api/parcoursup/reconciliation", {
-            id_formation: formation._id,
-            id_parcoursup: formation.id_parcoursup,
-            uai_affilie: formation.uai_affilie,
-            uai_gestionnaire: formation.uai_gestionnaire,
-            uai_composante: formation.uai_composante,
-            code_cfd: formationARapprocher.cfd,
-            mnaFormationId: formationARapprocher._id,
-            mapping,
-            reject: false,
-          });
-
-          setHandlePublishFormation([...handlePublishFormation, currentMnaFormation]);
-          const restDiff = difference(selectedFormation, [...handlePublishFormation, currentMnaFormation]).sort();
-          setRestIde(restDiff);
-          if (restDiff.length > 0) {
-            setCurrentMnaFormation(restDiff[0]);
-            setMnaFormation(formation.matching_mna_formation[restDiff[0]]);
-            onMnaFormationSelected(restDiff[0]);
+          const formationsARapprocher = [];
+          if (selectedFormation.length > 0) {
+            for (let index = 0; index < selectedFormation.length; index++) {
+              formationsARapprocher.push(formation.matching_mna_formation[selectedFormation[index]]);
+            }
           } else {
-            onValidationSubmit();
+            formationsARapprocher.push(formation.matching_mna_formation[currentMnaFormation]);
           }
+
+          for (let index = 0; index < formationsARapprocher.length; index++) {
+            const formationARapprocher = formationsARapprocher[index];
+            if (Object.keys(body).length > 0) {
+              await _put(`/api/entity/formations2021/${formationARapprocher._id}`, {
+                num_academie: formationARapprocher.num_academie,
+                ...body,
+                last_update_who: user.email,
+                last_update_at: Date.now(),
+                updates_history: buildUpdatesHistory(
+                  formationARapprocher,
+                  { ...body, last_update_who: user.email },
+                  Object.keys(body)
+                ),
+              });
+            }
+            await _post("/api/parcoursup/reconciliation", {
+              id_formation: formation._id,
+              id_parcoursup: formation.id_parcoursup,
+              uai_affilie: formation.uai_affilie,
+              uai_gestionnaire: formation.uai_gestionnaire,
+              uai_composante: formation.uai_composante,
+              code_cfd: formationARapprocher.cfd,
+              mnaFormationId: formationARapprocher._id,
+              reject: false,
+            });
+          }
+
+          onValidationSubmit();
 
           resolve("onSubmitHandler publish complete");
         });
@@ -200,8 +145,6 @@ const ReconciliationModalHeader = React.memo(
           selected = selectedFormation.filter((s) => s !== currentMnaFormation);
         }
 
-        // TODO do multiple reconciliation
-
         setSelectedFormation(selected);
       },
       [currentMnaFormation, selectedFormation]
@@ -219,7 +162,7 @@ const ReconciliationModalHeader = React.memo(
 
     const height =
       formation.statut_reconciliation === "VALIDE"
-        ? "135px"
+        ? "250px"
         : formation.statut_reconciliation === "REJETE"
         ? "450px"
         : step === 1
@@ -263,9 +206,9 @@ const ReconciliationModalHeader = React.memo(
                 color={step === 1 ? "bluefrance" : "gray.600"}
                 cursor="pointer"
               >
+                {step === 2 && <CheckLine color="greensoft.500" ml={2} mb={1} />}
                 {slidesCount === 1 && `1. Valider le rapprochement`}
                 {slidesCount > 1 && `1. Valider le(s) rapprochement(s)`}
-                {step === 2 && <CheckLine color="greensoft.500" ml={2} mb={1} />}
               </Text>
               <Text
                 disabled={step !== 2}
@@ -287,12 +230,6 @@ const ReconciliationModalHeader = React.memo(
               </Box>
             </>
           </HStack>
-
-          {formation.statut_reconciliation === "VALIDE" && (
-            <Button type="submit" variant="primary" onClick={cancelRapprochement}>
-              Annuler le rapprochement
-            </Button>
-          )}
 
           {step === 1 && (
             <>
@@ -491,31 +428,6 @@ const ReconciliationModalHeader = React.memo(
                     </Text>
 
                     <HStack>
-                      {Array(slidesCount)
-                        .fill("")
-                        .map((unuse, ide) => {
-                          if (selectedFormation.includes(ide)) {
-                            return (
-                              <ButtonIndicator
-                                text={ide + 1}
-                                withIcon={handlePublishFormation.includes(ide)}
-                                active={ide === currentMnaFormation}
-                                onClicked={() => {
-                                  setCurrentMnaFormation(ide);
-                                  onMnaFormationSelected(ide);
-                                  setMnaFormation(formation.matching_mna_formation[ide]);
-                                }}
-                                key={ide}
-                                isDisabled={
-                                  restIde[0] !== ide &&
-                                  ide !== currentMnaFormation &&
-                                  !handlePublishFormation.includes(ide)
-                                }
-                              />
-                            );
-                          }
-                          return null;
-                        })}
                       <Text textStyle="sm" ml="0.9rem" color="info" flexGrow="1">
                         {selectedFormation.length} formations sélectionnées à l'étape 1.
                       </Text>
@@ -742,6 +654,69 @@ const ReconciliationModalHeader = React.memo(
                 }
               />
             </Box>
+          )}
+
+          {step === 3 && slidesCount > 1 && (
+            <>
+              {slidesCount > 1 && (
+                <Box px={[4, 16]} mb={5}>
+                  <HStack spacing="8" minH="60px" alignItems="stretch" textStyle="rf-text" fontWeight="700">
+                    <HStack w="full">
+                      {Array(slidesCount)
+                        .fill("")
+                        .map((unuse, ide) => {
+                          return formation.validated_formation_ids.includes(
+                            formation.matching_mna_formation[ide]._id
+                          ) ? (
+                            <ButtonIndicator
+                              text={ide + 1}
+                              active={ide === currentMnaFormation}
+                              onClicked={() => {
+                                setCurrentMnaFormation(ide);
+                                onMnaFormationSelected(ide);
+                                setMnaFormation(formation.matching_mna_formation[ide]);
+                              }}
+                              key={ide}
+                            />
+                          ) : null;
+                        })}
+                      <Text textStyle="sm" ml="0.9rem" color="info" flexGrow="1">
+                        {formation.validated_formation_ids?.length || 0} formations rapprochées
+                      </Text>
+                      <Box flexGrow="1" textAlign="right">
+                        {formation.statut_reconciliation === "VALIDE" && (
+                          <Button type="submit" variant="primary" onClick={cancelRapprochement}>
+                            Annuler le rapprochement
+                          </Button>
+                        )}
+                      </Box>
+                    </HStack>
+                  </HStack>
+                </Box>
+              )}
+
+              <Section
+                minH="30px"
+                withBorder
+                left={
+                  <Text textStyle="h6" fontWeight="700" mb={4}>
+                    Champs
+                  </Text>
+                }
+                middle={
+                  <Text textStyle="h6" mb={4}>
+                    Formation Parcoursup
+                  </Text>
+                }
+                right={
+                  <HStack mb={4}>
+                    <Box flexGrow="1">
+                      <Text textStyle="h6">Formations Catalogue</Text>
+                    </Box>
+                  </HStack>
+                }
+              />
+            </>
           )}
         </Box>
       </>

@@ -141,6 +141,11 @@ const psFormationSchema = {
     default: null,
     description: "id mongo reconciliation",
   },
+  validated_formation_ids: {
+    type: [String],
+    default: [],
+    description: "Identifiant formation mna validés",
+  },
   matching_rejete_updated: {
     type: Boolean,
     default: false,

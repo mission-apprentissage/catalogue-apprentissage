@@ -31,6 +31,7 @@ export const CardListPsFormations = ({ data, onCardClicked, context }) => {
                   </Box>
                 )}
                 {context !== "reconciliation_ps_inconnus" &&
+                  context !== "reconciliation_ps_valides" &&
                   data.matching_mna_formation.map((mnaF, i) => (
                     <Box mt={5} key={i} fontSize="sm">
                       <DoubleArrows width="12px" height="14px" color="grey.800" mr={5} />
