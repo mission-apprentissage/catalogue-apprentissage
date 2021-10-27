@@ -7,14 +7,15 @@ const schemas = require("../../common/model/schema");
 
 const { Schema } = mongoose;
 
-// Should not be use, issue https://github.com/deliveryhero/serverless-aws-documentation/blob/master/src/models.js#L9
-const replaceNullDefault = (schem) => {
-  const obj = { ...schem };
-  // eslint-disable-next-line no-restricted-syntax
+const cleanSchema = (schema) => {
+  const obj = { ...schema };
   for (const key of Object.keys(obj)) {
-    // eslint-disable-next-line no-prototype-builtins
-    if (obj[key].hasOwnProperty("default") && obj[key].default === null) {
+    if (obj[key]?.default === null) {
       obj[key].default = "null";
+    }
+
+    if (obj[key].select === false) {
+      delete obj[key];
     }
   }
   return obj;
@@ -24,7 +25,7 @@ Object.keys(schemas).forEach((schemaName) => {
   if (schemaName === "formationSchema") {
     const schema = schemas[schemaName];
     const baseFilename = schemaName.replace("Schema", "");
-    const eSchema = new Schema(replaceNullDefault(schema));
+    const eSchema = new Schema(cleanSchema(schema));
     const eJsonSchema = eSchema.jsonSchema();
     let sout = {};
     sout[baseFilename] = eJsonSchema;
