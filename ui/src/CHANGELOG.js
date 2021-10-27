@@ -17,14 +17,13 @@ const changelog = {
       about: `<h4>À propos de cette version</h4>
       Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: [
+        "Les formations pour lesquelles les organismes sont certifiés Qualiopi, Eduform, ou QualiFormAgri, sont éligibles à Parcoursup et Affelnet, même sans référencement Datadock",
         "Correction du contrôle et du message d'erreur de changement de mot de passe (les espaces ne sont pas acceptés)",
-        "[Rapprochement Parcoursup] publication unifiée lors de rapprochements faibles multiples",
+        "[Page formation] L’académie de rattachement est déterminée depuis l’établissement formateur (et non le lieu de formation, celui-ci pouvant être situé en dehors de l’académie de rattachement)",
       ],
       features: [],
       improvements: [
-        "Les formations dont les organismes ont la certification Qualiopi sont éligibles même sans référencement Datadock",
-        "[Page formation] L'académie de rattachement est déterminée depuis l'établissement formateur",
-        "[Page formation] Amélioration de l'affichage des habilitations RNCP",
+        "[Rapprochement Parcoursup] Améliorations d’interface du module de rapprochement des formations Parcoursup et Catalogue à l’usage des académies : le cas des rapprochements entre une formation Parcoursup et plusieurs formations Catalogue a été simplifié",
       ],
     },
     {
