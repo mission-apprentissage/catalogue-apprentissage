@@ -161,10 +161,14 @@ module.exports = () => {
     "/etablissement/:id",
     tryCatch(async (req, res) => {
       const itemId = req.params.id;
-      const retrievedData = await Etablissement.findById(itemId);
-      if (retrievedData) {
-        res.json(retrievedData);
-      } else {
+      try {
+        const retrievedData = await Etablissement.findById(itemId);
+        if (retrievedData) {
+          res.json(retrievedData);
+        } else {
+          res.json({ message: `Etablissement ${itemId} doesn't exist` });
+        }
+      } catch (e) {
         res.json({ message: `Etablissement ${itemId} doesn't exist` });
       }
     })
