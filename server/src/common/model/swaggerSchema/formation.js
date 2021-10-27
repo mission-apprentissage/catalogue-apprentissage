@@ -503,11 +503,6 @@ module.exports = {
         default: "null",
         description: "Année de la formation (cursus)",
       },
-      email: {
-        type: "string",
-        default: "null",
-        description: "Email du contact pour cette formation",
-      },
       parcoursup_reference: {
         type: "boolean",
         default: false,
@@ -543,12 +538,9 @@ module.exports = {
         default: "null",
         description: "Erreur lors du contrôle de référencement sur ParcourSup de la formation",
       },
-      parcoursup_ids: {
-        type: "array",
-        items: {
-          type: "string",
-        },
-        default: [],
+      parcoursup_id: {
+        type: "string",
+        default: "null",
         description: "ids ParcourSup",
       },
       affelnet_reference: {
