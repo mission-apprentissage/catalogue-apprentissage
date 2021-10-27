@@ -7,6 +7,8 @@ import { _get } from "../../../common/httpClient";
 const endpointTCO =
   process.env.REACT_APP_ENDPOINT_TCO || "https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1";
 
+const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
+
 const Uai = ({ handleSubmit, siret, isRequired, onError, adresse }) => {
   const [show, setShow] = useState(false);
   const [uaiFound, setUaiFound] = useState(false);
@@ -97,11 +99,11 @@ const Uai = ({ handleSubmit, siret, isRequired, onError, adresse }) => {
     }
   };
 
-  const handleSearch = async ({ siret, uai }: { siret: null, uaisiret: null }) => {
+  const handleSearch = async ({ siret, uai } = { siret: null, uai: null }) => {
     try {
       let searchUrl = "";
-      if (siret) searchUrl = `${endpointTCO}/entity/etablissements/siret-uai?query={"siret":"${siret}"}`;
-      if (uai) searchUrl = `${endpointTCO}/entity/etablissements/siret-uai?query={"uai":"${uai}"}`;
+      if (siret) searchUrl = `${endpointNewFront}/entity/etablissements/siret-uai?query={"siret":"${siret}"}`;
+      if (uai) searchUrl = `${endpointNewFront}/entity/etablissements/siret-uai?query={"uai":"${uai}"}`;
       const {
         pagination: { total },
         etablissements,

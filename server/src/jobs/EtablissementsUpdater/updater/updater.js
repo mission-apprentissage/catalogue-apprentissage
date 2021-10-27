@@ -1,0 +1,46 @@
+const logger = require("../../../common/logger");
+const { Etablissement } = require("../../../common/model/index");
+const catalogue = require("../../../common/components/catalogue");
+
+const run = async (filter = {}, options = null) => {
+  await performUpdates(filter, options);
+};
+
+const performUpdates = async (filter = {}, options = null) => {
+  let etablissementServiceOptions = options || {
+    withHistoryUpdate: true,
+    scope: { siret: true, geoloc: true, conventionnement: true, onisep: true },
+  };
+
+  let count = 0;
+  let cursor = Etablissement.find(filter).cursor();
+  for await (const etablissement of cursor) {
+    try {
+      const { updates, etablissement: updatedEtablissement, error } = await catalogue.etablissementService(
+        etablissement._doc,
+        etablissementServiceOptions
+      );
+
+      count++;
+
+      if (error) {
+        etablissement.update_error = error;
+        await Etablissement.findOneAndUpdate({ _id: etablissement._id }, etablissement, { new: true });
+        logger.error(`${count}: Etablissement ${etablissement._id} errored`, error);
+      } else if (!updates) {
+        // Do nothing
+        logger.info(`${count}: Etablissement ${etablissement._id} nothing to do`);
+      } else {
+        updatedEtablissement.last_update_at = Date.now();
+        await Etablissement.findOneAndUpdate({ _id: etablissement._id }, updatedEtablissement, { new: true });
+        logger.info(`${count}: Etablissement ${etablissement._id} updated`);
+      }
+    } catch (error) {
+      logger.error(error);
+    }
+  }
+
+  return true;
+};
+
+module.exports = { run, performUpdates };
