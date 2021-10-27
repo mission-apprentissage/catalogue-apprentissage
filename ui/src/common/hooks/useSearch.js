@@ -4,8 +4,6 @@ import { mergedQueries, withUniqueKey, operators } from "../components/Search/co
 import { ETABLISSEMENTS_ES_INDEX, FORMATIONS_ES_INDEX, RECONCILIATION_PS_ES_INDEX } from "../../constants/es";
 
 const CATALOGUE_API_ENDPOINT = `${process.env.REACT_APP_BASE_URL}/api`;
-const TCO_API_ENDPOINT =
-  process.env.REACT_APP_ENDPOINT_TCO || "https://tables-correspondances.apprentissage.beta.gouv.fr/api";
 
 const getEsBase = (context) => {
   if (context === "organismes") {
@@ -49,7 +47,7 @@ const getCountEntities = async (base) => {
     const params = new window.URLSearchParams({
       query: JSON.stringify({ published: true }),
     });
-    const countEtablissement = await _get(`${TCO_API_ENDPOINT}/entity/etablissements/count?${params}`, false);
+    const countEtablissement = await _get(`${CATALOGUE_API_ENDPOINT}/entity/etablissements/count?${params}`, false);
     return {
       countEtablissement,
       countCatalogueGeneral: null,
@@ -125,7 +123,7 @@ export function useSearch(context) {
   const base = getEsBase(context);
   const isBaseFormations = base === FORMATIONS_ES_INDEX;
   const isBaseReconciliationPs = base === RECONCILIATION_PS_ES_INDEX;
-  const endpoint = base === ETABLISSEMENTS_ES_INDEX ? TCO_API_ENDPOINT : CATALOGUE_API_ENDPOINT;
+  const endpoint = CATALOGUE_API_ENDPOINT;
   const [searchState, setSearchState] = useState({
     loaded: false,
     base,

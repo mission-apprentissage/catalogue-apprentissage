@@ -4,12 +4,36 @@ import { Link } from "@chakra-ui/react";
 const changelog = {
   list: [
     {
-      version: "4.9.0",
+      version: "4.10.0",
       date: "Prochainement",
       about: `<h4>À venir</h4>`,
       fixes: [],
       features: [],
-      improvements: ["Travaux sur le flux retour vers les Carif-Oref et gestion des modifications"],
+      improvements: [],
+    },
+    {
+      version: "4.9.0",
+      date: "Le 27 Octobre 2021",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [
+        "Les formations pour lesquelles les organismes sont certifiés Qualiopi, Eduform, ou QualiFormAgri, sont éligibles à Parcoursup et Affelnet, même sans référencement Datadock",
+        "Correction du contrôle et du message d'erreur de changement de mot de passe (les espaces ne sont pas acceptés)",
+        "[Page formation] L’académie de rattachement est déterminée depuis l’établissement formateur (et non le lieu de formation, celui-ci pouvant être situé en dehors de l’académie de rattachement)",
+      ],
+      features: [],
+      improvements: [
+        "[Rapprochement Parcoursup] Améliorations d’interface du module de rapprochement des formations Parcoursup et Catalogue à l’usage des académies : le cas des rapprochements entre une formation Parcoursup et plusieurs formations Catalogue a été simplifié",
+      ],
+    },
+    {
+      version: "4.8.1",
+      date: "Le 19 Octobre 2021",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [],
+      features: [],
+      improvements: ["[Rapprochement Parcoursup] Pré lancement campagne"],
     },
     {
       version: "4.8.0",
