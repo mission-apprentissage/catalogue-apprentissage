@@ -211,7 +211,6 @@ export const DescriptionBlock = ({ formation, pendingFormation }) => {
                 Partenaires : <br />
                 {filteredPartenaires.length > 0 ? (
                   <>
-                    L'habilitation ORGANISER seule n'ouvre pas les droits
                     <UnorderedList>
                       {filteredPartenaires.map(({ Nom_Partenaire, Siret_Partenaire, Habilitation_Partenaire }) => (
                         <ListItem key={Siret_Partenaire}>

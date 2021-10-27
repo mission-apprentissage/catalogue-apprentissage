@@ -233,9 +233,9 @@ const formationSchema = {
     default: null,
     description: "Erreur lors du contrôle de référencement sur ParcourSup de la formation",
   },
-  parcoursup_ids: {
-    type: [String],
-    default: [],
+  parcoursup_id: {
+    type: String,
+    default: null,
     description: "ids ParcourSup",
   },
   affelnet_reference: {

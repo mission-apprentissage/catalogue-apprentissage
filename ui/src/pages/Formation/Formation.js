@@ -14,6 +14,7 @@ import {
   Spinner,
   Text,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
 import { useFormik } from "formik";
@@ -95,13 +96,6 @@ const Formation = ({
                 hasRightToEdit={hasRightToEdit}
                 mb={4}
               />
-              <Text mb={4}>
-                Académie :{" "}
-                <Text as="span" variant="highlight">
-                  {displayedFormation.nom_academie} ({displayedFormation.num_academie})
-                </Text>{" "}
-                <InfoTooltip description={helpText.formation.academie} />
-              </Text>
               <EditableField
                 fieldName={"lieu_formation_adresse"}
                 label={"Adresse"}
@@ -169,12 +163,19 @@ const Formation = ({
                 hasRightToEdit={hasRightToEdit}
                 mb={4}
               />
-              <Text mb={4}>
+              <Text mb={8}>
                 Département :{" "}
                 <Text as="span" variant="highlight">
                   {displayedFormation.nom_departement} ({displayedFormation.num_departement})
                 </Text>{" "}
                 <InfoTooltip description={helpText.formation.nom_departement} />
+              </Text>
+              <Text mb={4}>
+                Académie de rattachement :{" "}
+                <Text as="span" variant="highlight">
+                  {displayedFormation.nom_academie} ({displayedFormation.num_academie})
+                </Text>{" "}
+                <InfoTooltip description={helpText.formation.academie} />
               </Text>
             </Box>
           </Box>
@@ -188,6 +189,7 @@ const Formation = ({
 };
 
 export default ({ match }) => {
+  const toast = useToast();
   const [formation, setFormation] = useState();
   const [pendingFormation, setPendingFormation] = useState();
 
@@ -283,6 +285,16 @@ export default ({ match }) => {
           }
         } catch (e) {
           console.error("Can't perform update", e);
+
+          const response = await (e?.json ?? {});
+          const message = response?.message ?? e?.message;
+
+          toast({
+            title: "Error",
+            description: message,
+            status: "error",
+            duration: 10000,
+          });
         } finally {
           setEdition(null);
           resolve("onSubmitHandler complete");

@@ -5,23 +5,25 @@ import { render } from "@testing-library/react";
 test("should display 'ORGANISER ET FORMER'", () => {
   const { queryByText } = render(<HabilitationPartenaire habilitation={"HABILITATION_ORGA_FORM"} />);
 
-  const title = queryByText("ORGANISER ET FORMER");
+  const title = queryByText("Établissement habilité à organiser la formation et à former sur cette certification");
   expect(title).toBeInTheDocument();
-  expect(title).toHaveStyle("color: green");
+  expect(title).toHaveStyle("color: gray.800");
 });
 
 test("should display 'FORMER'", () => {
   const { queryByText } = render(<HabilitationPartenaire habilitation={"HABILITATION_FORMER"} />);
 
-  const title = queryByText("FORMER");
+  const title = queryByText("Établissement habilité à former sur cette certification");
   expect(title).toBeInTheDocument();
-  expect(title).toHaveStyle("color: green");
+  expect(title).toHaveStyle("color: gray.800");
 });
 
 test("should display 'ORGANISER'", () => {
   const { queryByText } = render(<HabilitationPartenaire habilitation={"HABILITATION_ORGANISER"} />);
 
-  const title = queryByText("ORGANISER");
+  const title = queryByText(
+    "Établissement habilité à organiser la formation, mais non habilité à former pour cette certification"
+  );
   expect(title).toBeInTheDocument();
   expect(title).toHaveStyle("color: red");
 });

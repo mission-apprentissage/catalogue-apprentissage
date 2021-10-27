@@ -87,6 +87,9 @@ const Rapprochement = React.memo(({ formation, currentMnaFormation }) => {
         right={
           <Box mb={4} mt={4}>
             <Text>{mnaFormation.id_rco_formation}</Text>
+            <Link as={NavLink} to={`/formation/${mnaFormation._id}`} variant="pill" mt={4} isExternal>
+              Voir la fiche formation
+            </Link>
           </Box>
         }
       />

@@ -13,23 +13,30 @@ import {
   Tabs,
   useDisclosure,
   Text,
-  Button,
+  // Button,
 } from "@chakra-ui/react";
 import Layout from "../../layout/Layout";
-import { EmojiSmile, EmojiFlat, Question, Tick, RejectIcon, SentPaperPlane } from "../../../theme/components/icons";
+import {
+  EmojiSmile,
+  EmojiFlat,
+  Question,
+  Tick,
+  RejectIcon,
+  // SentPaperPlane
+} from "../../../theme/components/icons";
 import Search from "../../../common/components/Search/Search";
 import { useSearch } from "../../../common/hooks/useSearch";
 import { ReconciliationModal } from "./components/ReconciliationModal";
 import { Breadcrumb } from "../../../common/components/Breadcrumb";
 import { setTitle } from "../../../common/utils/pageUtils";
-import { _post } from "../../../common/httpClient";
+// import { _post } from "../../../common/httpClient";
 
-import useAuth from "../../../common/hooks/useAuth";
-import { hasAccessTo } from "../../../common/utils/rolesUtils";
+// import useAuth from "../../../common/hooks/useAuth";
+// import { hasAccessTo } from "../../../common/utils/rolesUtils";
 
 export default (props) => {
   let searchState = useSearch("reconciliation_ps");
-  let [auth] = useAuth();
+  // let [auth] = useAuth();
   const [psFormation, setPsFormation] = React.useState();
   const {
     isOpen: isOpenReconciliationPsModal,
@@ -44,9 +51,9 @@ export default (props) => {
     onCloseModal();
   }, [onCloseModal]);
 
-  const sendReport = async () => {
-    await _post("/api/parcoursup/reconciliation/sendreport");
-  };
+  // const sendReport = async () => {
+  //   await _post("/api/parcoursup/reconciliation/sendreport");
+  // };
 
   return (
     <Layout>
