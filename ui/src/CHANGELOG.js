@@ -4,12 +4,28 @@ import { Link } from "@chakra-ui/react";
 const changelog = {
   list: [
     {
-      version: "4.9.0",
+      version: "4.10.0",
       date: "Prochainement",
       about: `<h4>À venir</h4>`,
       fixes: [],
       features: [],
-      improvements: ["Travaux sur le flux retour vers les Carif-Oref et gestion des modifications"],
+      improvements: [],
+    },
+    {
+      version: "4.9.0",
+      date: "Le 27 Octobre 2021",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [
+        "Correction du contrôle et du message d'erreur de changement de mot de passe (les espaces ne sont pas acceptés)",
+        "[Rapprochement Parcoursup] publication unifiée lors de rapprochements faibles multiples",
+      ],
+      features: [],
+      improvements: [
+        "Les formations dont les organismes ont la certification Qualiopi sont éligibles même sans référencement Datadock",
+        "[Page formation] L'académie de rattachement est déterminée depuis l'établissement formateur",
+        "[Page formation] Amélioration de l'affichage des habilitations RNCP",
+      ],
     },
     {
       version: "4.8.0",
