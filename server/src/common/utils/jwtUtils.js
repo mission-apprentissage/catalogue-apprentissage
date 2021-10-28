@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const config = require("config");
+const crypto = require("crypto");
 
 const createToken = (type, subject, options = {}) => {
   const defaults = config.auth[type];
@@ -14,6 +15,33 @@ const createToken = (type, subject, options = {}) => {
   });
 };
 
+/**
+ * Generate a JWT token to use for Parcoursup Web Service
+ */
+const createParcoursupToken = ({ ttl, id, data, privateKey, pwd }) => {
+  const expire = Date.now() + ttl;
+  console.log("expire :", expire, "->", new Date(expire));
+
+  const dataStr = JSON.stringify(data); // TODO ensure body hash will match
+  const hash = crypto.createHash("sha512").update(dataStr, "utf-8").digest("hex");
+  console.log("hash:", hash);
+
+  return jwt.sign(
+    {
+      id,
+      expire,
+      hash,
+    },
+    { key: privateKey, passphrase: pwd },
+    {
+      algorithm: "RS512",
+      noTimestamp: true,
+      // keyid: "devKey", // TODO @EPT no keyid yet
+    }
+  );
+};
+
 module.exports = {
+  createParcoursupToken,
   createPasswordToken: (subject, options = {}) => createToken("password", subject, options),
 };
