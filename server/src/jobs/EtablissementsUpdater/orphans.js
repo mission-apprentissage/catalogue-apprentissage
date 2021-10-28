@@ -36,7 +36,7 @@ const findAndUpdateSiegeSocial = async () => {
 
 module.exports = { findAndUpdateSiegeSocial };
 
-if (process.env.run) {
+if (process.env.standalone) {
   runScript(async () => {
     await findAndUpdateSiegeSocial();
   });
