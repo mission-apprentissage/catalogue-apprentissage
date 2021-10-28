@@ -13,6 +13,7 @@ const performUpdates = async (filter = {}, options = null) => {
   };
 
   let count = 0;
+  const total = await Etablissement.countDocuments(filter);
   let cursor = Etablissement.find(filter).cursor();
   for await (const etablissement of cursor) {
     try {
@@ -26,14 +27,14 @@ const performUpdates = async (filter = {}, options = null) => {
       if (error) {
         etablissement.update_error = error;
         await Etablissement.findOneAndUpdate({ _id: etablissement._id }, etablissement, { new: true });
-        logger.error(`${count}: Etablissement ${etablissement._id} errored`, error);
+        logger.error(`${count}/${total}: Etablissement ${etablissement._id} errored`, error);
       } else if (!updates) {
         // Do nothing
-        logger.info(`${count}: Etablissement ${etablissement._id} nothing to do`);
+        logger.info(`${count}/${total}: Etablissement ${etablissement._id} nothing to do`);
       } else {
         updatedEtablissement.last_update_at = Date.now();
         await Etablissement.findOneAndUpdate({ _id: etablissement._id }, updatedEtablissement, { new: true });
-        logger.info(`${count}: Etablissement ${etablissement._id} updated`);
+        logger.info(`${count}/${total}: Etablissement ${etablissement._id} updated`);
       }
     } catch (error) {
       logger.error(error);

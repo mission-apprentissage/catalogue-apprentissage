@@ -5,7 +5,7 @@ const commandLineArgs = require("command-line-args");
 const { runScript } = require("../scriptWrapper");
 
 const optionDefinitions = [
-  { name: "filter", alias: "f", type: String, defaultValue: "{}" },
+  { name: "filter", alias: "f", type: String, defaultValue: null },
   { name: "withHistoryUpdate", alias: "h", type: Boolean, defaultValue: true },
   { name: "siret", alias: "s", type: Boolean, defaultValue: false },
   { name: "geoloc", alias: "g", type: Boolean, defaultValue: false },
@@ -24,7 +24,11 @@ const EtablissementsUpdater = async () => {
 
     const all = !optionsCmd.siret && !optionsCmd.geoloc && !optionsCmd.conventionnement && !optionsCmd.onisep;
 
-    const filter = JSON.parse(optionsCmd.filter);
+    const yearTag = new Date().getFullYear();
+
+    const filter = optionsCmd.filter
+      ? JSON.parse(optionsCmd.filter)
+      : { tags: { $in: [`${yearTag}`, `${yearTag + 1}`] } };
 
     let options = {
       withHistoryUpdate: optionsCmd.withHistoryUpdate,
@@ -52,7 +56,7 @@ const EtablissementsUpdater = async () => {
 
 module.exports.EtablissementsUpdater = EtablissementsUpdater;
 
-if (process.env.run) {
+if (process.env.standalone) {
   runScript(async () => {
     await EtablissementsUpdater();
   });

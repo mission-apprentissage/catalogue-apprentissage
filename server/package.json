@@ -42,7 +42,9 @@
     "migrateRaisonsRejet": "standalone=true node src/jobs/parcoursup/_migrationRaisonsRejet.js",
     "psup:updatemna": "standalone=true node src/jobs/parcoursup/_updateMatchInfo.js",
     "migrateFillPsId": "standalone=true node src/jobs/parcoursup/_migrationFillParcourSupId.js",
-    "etablissements:duplicate": "standalone=true node src/jobs/oneshot/mergeEtablissementDuplicates/index.js"
+    "etablissements:duplicate": "standalone=true node src/jobs/oneshot/mergeEtablissementDuplicates/index.js",
+    "etablissements:updater": "standalone=true node src/jobs/EtablissementsUpdater/index.js",
+    "etablissements:orphans": "standalone=true node src/jobs/EtablissementsUpdater/orphans.js"
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.6.1",
