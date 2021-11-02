@@ -1,12 +1,10 @@
 const assert = require("assert");
 const fs = require("fs-extra");
 const path = require("path");
-const sinon = require("sinon");
 const { connectToMongoForTests, cleanAll } = require("../../../../tests/utils/testUtils.js");
 const { Etablissement } = require("../../../common/model/index");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
-const { performUpdates } = require("../updater/updater.js");
-const catalogue = require("../../../common/components/catalogue");
+const rewiremock = require("rewiremock/node");
 
 const EtablissementsTest = fs.readJsonSync(path.resolve(__dirname, "../assets/sample.json"));
 
@@ -18,17 +16,10 @@ describe(__filename, () => {
 
     // insert sample data in DB
     await asyncForEach(EtablissementsTest, async (etablissement) => await new Etablissement(etablissement).save());
-
-    // mocks
-    sinon
-      .stub(catalogue, "etablissementService")
-      .returns(Promise.resolve({ updates: { published: true }, etablissement: { published: true }, error: null }));
   });
 
   after(async () => {
     await cleanAll();
-    // clean mocks
-    sinon.restore();
   });
 
   it("should have inserted sample data", async () => {
@@ -37,6 +28,16 @@ describe(__filename, () => {
   });
 
   it("should have updated data with etablissement service call", async () => {
+    rewiremock("@mission-apprentissage/tco-service-node").with({
+      getEtablissementUpdates: () => ({
+        updates: { published: true },
+        etablissement: { published: true },
+        error: null,
+      }),
+    });
+
+    const { performUpdates } = require("../updater/updater.js");
+
     await performUpdates({}, {});
 
     const etablissement = await Etablissement.findById("5fd2551ee7630d000905875e");

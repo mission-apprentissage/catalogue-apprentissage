@@ -428,10 +428,10 @@
   resolved "https://registry.yarnpkg.com/@jsdevtools/ono/-/ono-7.1.3.tgz#9df03bbd7c696a5c58885c34aa06da41c8543796"
   integrity sha512-4JQNk+3mVzK3xh2rqd6RB4J46qUR19azEHBneZyTZM+c456qOrbbM/5xcR8huNCCcbVt7+UmizG6GuUvPvKUYg==
 
-"@mission-apprentissage/tco-service-node@2.24.1":
-  version "2.24.1"
-  resolved "https://npm.pkg.github.com/download/@mission-apprentissage/tco-service-node/2.24.1/e6a68b55b8563e9f023c8786386cfd22f6a8e046850229813ad0f352a3af3ae6#ce0d4b6a7055c9ca29accc8c1424c3d73f8fced5"
-  integrity sha512-A6+fx0Yzu1tRcZik7tqMR2P13A9PJT7d2g8GLKCiZ72T5VUkrr/KlwIpsb4ZBOPb2kKTqspW21vsoS65jpVLKA==
+"@mission-apprentissage/tco-service-node@2.25.1":
+  version "2.25.1"
+  resolved "https://npm.pkg.github.com/download/@mission-apprentissage/tco-service-node/2.25.1/d41c6eaed9319c2cd85a0d60bdd4d3339ea241ad02cbeec0b362a1fcb6694e47#0643c4d52deb4a0e165ef5a86ef970322e99cdc0"
+  integrity sha512-1RIeXI218YHu4w1SvgooIvpFsXmYKXj36DDKR+1UiSKolY4YV0wcI7zTkBeh+2wH8XVKSj8ewx42OiC2KftLwQ==
   dependencies:
     "@azure/storage-blob" "12.3.0"
     "@elastic/elasticsearch" "7.6.1"
@@ -459,7 +459,6 @@
     elasticsearch-scroll-stream "1.2.1"
     env-var "7.0.0"
     express "4.17.1"
-    faker "5.1.0"
     fast-luhn "2.0.0"
     form-data "4.0.0"
     fs-extra "9.0.0"
@@ -468,13 +467,12 @@
     json2csv "5.0.1"
     jsonwebtoken "8.5.1"
     lodash "4.17.15"
-    merge-stream "2.0.0"
     moment "2.26.0"
     mongoose "5.13.7"
     mongoose-paginate "5.0.3"
     mongoose-schema-jsonschema "1.4.7"
     multipipe "4.0.0"
-    oleoduc "0.5.9"
+    oleoduc "0.5.11"
     passport "0.4.1"
     passport-http "0.3.0"
     passport-jwt "4.0.0"
@@ -2479,11 +2477,6 @@ extsprintf@^1.2.0:
   resolved "https://registry.yarnpkg.com/extsprintf/-/extsprintf-1.4.0.tgz#e2689f8f356fad62cca65a3a91c5df5f9551692f"
   integrity sha1-4mifjzVvrWLMplo6kcXfX5VRaS8=
 
-faker@5.1.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/faker/-/faker-5.1.0.tgz#e10fa1dec4502551aee0eb771617a7e7b94692e8"
-  integrity sha512-RrWKFSSA/aNLP0g3o2WW1Zez7/MnMr7xkiZmoCfAGZmdkDQZ6l2KtuXHN5XjdvpRjDl8+3vf+Rrtl06Z352+Mw==
-
 faker@5.5.3:
   version "5.5.3"
   resolved "https://registry.yarnpkg.com/faker/-/faker-5.5.3.tgz#c57974ee484431b25205c2c8dc09fda861e51e0e"
@@ -3912,7 +3905,7 @@ merge-descriptors@1.0.1:
   resolved "https://registry.yarnpkg.com/merge-descriptors/-/merge-descriptors-1.0.1.tgz#b00aaa556dd8b44568150ec9d1b953f3f90cbb61"
   integrity sha1-sAqqVW3YtEVoFQ7J0blT8/kMu2E=
 
-merge-stream@2.0.0, merge-stream@^2.0.0:
+merge-stream@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/merge-stream/-/merge-stream-2.0.0.tgz#52823629a14dd00c9770fb6ad47dc6310f2c1f60"
   integrity sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w==
@@ -4714,15 +4707,6 @@ oleoduc@0.5.11:
   version "0.5.11"
   resolved "https://registry.yarnpkg.com/oleoduc/-/oleoduc-0.5.11.tgz#7773e3f649585fe92f54f0547cbe1818b808bfed"
   integrity sha512-LwBp1vyaGhviQ//AqIKkpppwDQ5UiVI6EDGhPqlIv3utPcwymH3yhTb9m+98s+aAhP1KY5vnx1bPrS8IbV8Szw==
-  dependencies:
-    cyclist "1.0.1"
-    duplexer3 "0.1.4"
-    parallel-transform "1.2.0"
-
-oleoduc@0.5.9:
-  version "0.5.9"
-  resolved "https://registry.yarnpkg.com/oleoduc/-/oleoduc-0.5.9.tgz#f888e2a7776b3774e457887d6e425c108d04eac4"
-  integrity sha512-3fQqs/KghgB7xPUlh36HnMlBZ0lvOBlm8eZudDn+3TeBf1W7BrpiHy9dtWOe4rUDKk7rlQW4c0Mjjeu2ByHl7w==
   dependencies:
     cyclist "1.0.1"
     duplexer3 "0.1.4"

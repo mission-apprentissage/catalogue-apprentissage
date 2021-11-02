@@ -1,6 +1,6 @@
 const logger = require("../../../common/logger");
 const { Etablissement } = require("../../../common/model/index");
-const catalogue = require("../../../common/components/catalogue");
+const { getEtablissementUpdates } = require("@mission-apprentissage/tco-service-node");
 
 const run = async (filter = {}, options = null) => {
   await performUpdates(filter, options);
@@ -17,7 +17,7 @@ const performUpdates = async (filter = {}, options = null) => {
   let cursor = Etablissement.find(filter).cursor();
   for await (const etablissement of cursor) {
     try {
-      const { updates, etablissement: updatedEtablissement, error } = await catalogue.etablissementService(
+      const { updates, etablissement: updatedEtablissement, error } = await getEtablissementUpdates(
         etablissement._doc,
         etablissementServiceOptions
       );
