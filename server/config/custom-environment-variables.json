@@ -19,12 +19,6 @@
   "apiEntreprise": "TABLES_CORRESPONDANCES_API_ENTREPRISE_KEY",
   "auth": {
     "passwordHashRounds": "CATALOGUE_APPRENTISSAGE_AUTH_PASSWORD_HASH_ROUNDS",
-    "user": {
-      "jwtSecret": "CATALOGUE_APPRENTISSAGE_AUTH_USER_JWT_SECRET"
-    },
-    "activation": {
-      "jwtSecret": "CATALOGUE_APPRENTISSAGE_AUTH_ACTIVATION_JWT_SECRET"
-    },
     "password": {
       "jwtSecret": "CATALOGUE_APPRENTISSAGE_AUTH_PASSWORD_JWT_SECRET"
     },
@@ -48,11 +42,6 @@
       "user": "CATALOGUE_APPRENTISSAGE_SMTP_AUTH_USER",
       "pass": "CATALOGUE_APPRENTISSAGE_SMTP_AUTH_PASS"
     }
-  },
-  "tableCorrespondance": {
-    "endpoint": "CATALOGUE_APPRENTISSAGE_TCO_ENDPOINT",
-    "username": "CATALOGUE_APPRENTISSAGE_TCO_USERNAME",
-    "password": "CATALOGUE_APPRENTISSAGE_TCO_PASSWORD"
   },
   "franceCompetences": {
     "host": "TABLES_CORRESPONDANCE_FRANCE_COMPETENCES_HOST",
