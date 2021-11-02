@@ -29,6 +29,7 @@
     "psup:coverage-2021": "standalone=true node src/jobs/parcoursup/coverage.js",
     "psup:report": "standalone=true node src/jobs/parcoursup/reportRejected.js",
     "psup:token": "node src/jobs/oneshot/generateParcoursupToken/index.js",
+    "psup:export": "standalone=true node src/jobs/parcoursup/export/index.js",
     "affelnet:coverage": "standalone=true node src/jobs/affelnet/coverage.js",
     "affelnet:reconciliation": "standalone=true node src/jobs/affelnet/reconciliation.js",
     "affelnet:reference": "standalone=true node src/jobs/affelnet/reference/index.js",

@@ -18,11 +18,11 @@ const createToken = (type, subject, options = {}) => {
 /**
  * Generate a JWT token to use for Parcoursup Web Service
  */
-const createParcoursupToken = ({ ttl, id, data, privateKey, pwd }) => {
+const createParcoursupToken = ({ ttl = 3600000, id, data, privateKey, pwd }) => {
   const expire = Date.now() + ttl;
   console.log("expire :", expire, "->", new Date(expire));
 
-  const dataStr = JSON.stringify(data); // TODO ensure body hash will match
+  const dataStr = JSON.stringify(data);
   const hash = crypto.createHash("sha512").update(dataStr, "utf-8").digest("hex");
   console.log("hash:", hash);
 
@@ -36,7 +36,7 @@ const createParcoursupToken = ({ ttl, id, data, privateKey, pwd }) => {
     {
       algorithm: "RS512",
       noTimestamp: true,
-      // keyid: "devKey", // TODO @EPT no keyid yet
+      // keyid: "devKey", // no keyid yet
     }
   );
 };

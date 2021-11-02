@@ -25,9 +25,6 @@ const run = async () => {
   const options = commandLineArgs(optionsList);
   console.log(options);
 
-  // private key in file system :
-  // const privateKey = fs.readFileSync(path.resolve(__dirname, "test-api-catalogue.psup.fr.encrypted.key"));
-
   // private key in env var :
   const privateKey = process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_PRIVATE_KEY.replace(/\\n/gm, "\n");
   const pwd = process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_PRIVATE_KEY_PWD;
@@ -39,8 +36,8 @@ const run = async () => {
 
   console.log("Parcoursup token :", `"${token}"`);
 
-  const publicKey = fs.readFileSync(path.resolve(__dirname, "test-api-catalogue.psup.fr.cert"));
-  const decodedToken = jwt.verify(token, publicKey, {
+  const cert = fs.readFileSync(path.resolve(__dirname, "test-api-catalogue.psup.fr.cert"));
+  const decodedToken = jwt.verify(token, cert, {
     algorithms: ["RS512"],
   });
 
