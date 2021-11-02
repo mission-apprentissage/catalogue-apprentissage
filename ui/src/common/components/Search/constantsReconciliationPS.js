@@ -158,73 +158,64 @@ const queryBuilderField = [
   // { text: "Nom academie", value: "nom_academie.keyword" },
 ];
 
-const facetDefinition = (context) => [
-  {
-    componentId: `matching_type`,
-    dataField: "matching_type.keyword",
-    title: "Informations similaires",
-    filterLabel: "Informations similaires",
-    selectAllLabel: "Tous",
-    sortBy: "desc",
-  },
-  {
-    componentId: `nom_academie`,
-    dataField: "nom_academie.keyword",
-    title: "Académie",
-    filterLabel: "Académie",
-    selectAllLabel: "Toutes les académies",
-    sortBy: "asc",
-  },
-  // {
-  //   componentId: `num_departement-${context}`,
-  //   dataField: "num_departement.keyword",
-  //   title: "Département",
-  //   filterLabel: "Département",
-  //   selectAllLabel: "Tous",
-  //   sortBy: "asc",
-  // },
-  // {
-  //   componentId: `tags-${context}`,
-  //   dataField: "tags.keyword",
-  //   title: "Année(s)",
-  //   filterLabel: "Année(s)",
-  //   selectAllLabel: "Toutes",
-  //   sortBy: "asc",
-  // },
+const facetDefinition = (context) => {
+  const base = [
+    {
+      componentId: `matching_type`,
+      dataField: "matching_type.keyword",
+      title: "Informations similaires",
+      filterLabel: "Informations similaires",
+      selectAllLabel: "Tous",
+      sortBy: "desc",
+    },
+    {
+      componentId: `nom_academie`,
+      dataField: "nom_academie.keyword",
+      title: "Académie",
+      filterLabel: "Académie",
+      selectAllLabel: "Toutes les académies",
+      sortBy: "asc",
+    },
+    {
+      componentId: `cfd`,
+      dataField: "codes_cfd_mna.keyword",
+      title: "Code diplôme",
+      filterLabel: "Code diplôme",
+      selectAllLabel: "Tous",
+      sortBy: "asc",
+    },
+    {
+      componentId: `rncp`,
+      dataField: "codes_rncp_mna.keyword",
+      title: "Code RNCP",
+      filterLabel: "Code RNCP",
+      selectAllLabel: "Tous",
+      sortBy: "asc",
+    },
+    {
+      componentId: `libelle_formation`,
+      dataField: "libelle_formation.keyword",
+      title: "Libellé formation",
+      filterLabel: "Libellé formation",
+      selectAllLabel: "Tous",
+      sortBy: "asc",
+    },
+  ];
 
-  {
-    componentId: `cfd`,
-    dataField: "codes_cfd_mna.keyword",
-    title: "Code diplôme",
-    filterLabel: "Code diplôme",
-    selectAllLabel: "Tous",
-    sortBy: "asc",
-  },
-  {
-    componentId: `rncp`,
-    dataField: "codes_rncp_mna.keyword",
-    title: "Code RNCP",
-    filterLabel: "Code RNCP",
-    selectAllLabel: "Tous",
-    sortBy: "asc",
-  },
-  {
-    componentId: `libelle_formation`,
-    dataField: "libelle_formation.keyword",
-    title: "Libellé formation",
-    filterLabel: "Libellé formation",
-    selectAllLabel: "Tous",
-    sortBy: "asc",
-  },
-  {
-    componentId: `statuts`,
-    dataField: "matching_mna_parcoursup_statuts.keyword",
-    title: "Statuts",
-    filterLabel: "Statuts",
-    selectAllLabel: "Tous",
-    sortBy: "asc",
-  },
-];
+  return context !== "reconciliation_ps_valides"
+    ? [
+        ...base,
+        {
+          componentId: `statuts`,
+          dataField: "matching_mna_parcoursup_statuts.keyword",
+          title: "Statuts",
+          filterLabel: "Statuts",
+          selectAllLabel: "Tous",
+          sortBy: "asc",
+        },
+      ]
+    : [...base];
+};
 
 const dataSearch = {
   dataField: ["uai_gestionnaire", "id_parcoursup", "libelle_commune"],
