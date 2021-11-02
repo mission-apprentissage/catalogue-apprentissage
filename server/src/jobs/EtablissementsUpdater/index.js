@@ -28,7 +28,7 @@ const EtablissementsUpdater = async () => {
 
     const filter = optionsCmd.filter
       ? JSON.parse(optionsCmd.filter)
-      : { tags: { $in: [`${yearTag}`, `${yearTag + 1}`] } };
+      : { ferme: false, tags: { $in: [`${yearTag}`, `${yearTag + 1}`] } };
 
     let options = {
       withHistoryUpdate: optionsCmd.withHistoryUpdate,
