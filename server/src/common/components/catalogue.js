@@ -1,31 +1,6 @@
-const axios = require("axios");
 const logger = require("../logger");
-const config = require("config");
 const { Etablissement } = require("../model");
-// const methods = ["post"];
-
-const API = axios.create({ baseURL: `${config.tableCorrespondance.endpoint}/api` });
-// API.interceptors.request.use(async (req) => {
-//   if (methods.includes(req.method)) {
-//     let token = await getToken();
-//     req.headers.authorization = `Bearer ${token}`;
-//   }
-//   return req;
-// });
-//
-// const getToken = async () => {
-//   try {
-//     let {
-//       data: { token },
-//     } = await axios.post(`${config.tableCorrespondance.endpoint}/api/login`, {
-//       username: `${config.tableCorrespondance.username}`,
-//       password: `${config.tableCorrespondance.password}`,
-//     });
-//     return token;
-//   } catch (error) {
-//     logger.error(error);
-//   }
-// };
+const { getEtablissementUpdates } = require("@mission-apprentissage/tco-service-node");
 
 const createEtablissement = async (payload) => {
   if (!payload.siret) {
@@ -42,7 +17,7 @@ const createEtablissement = async (payload) => {
   }
 
   try {
-    const { etablissement, error } = await etablissementService(payload);
+    const { etablissement, error } = await getEtablissementUpdates(payload);
     if (error) {
       logger.error("Error during etablissement creation", error);
       return null;
@@ -58,22 +33,6 @@ const createEtablissement = async (payload) => {
   }
 };
 
-const etablissementService = async (payload, options) => {
-  try {
-    const {
-      data: { updates, etablissement, error },
-    } = await API.post(`/services/etablissement`, {
-      ...payload,
-      ...options,
-    });
-
-    return { updates, etablissement, error };
-  } catch (error) {
-    return { updates: null, etablissement: null, error };
-  }
-};
-
 module.exports = {
   createEtablissement,
-  etablissementService,
 };

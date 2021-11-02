@@ -111,10 +111,7 @@ const createOrUpdateEtablissements = async (rcoFormation) => {
     }
 
     if (Object.keys(updates).length > 0) {
-      // update remote etablissement & save locally
-      await catalogue.updateEtablissement(etablissement._id, updates);
       await Etablissement.findOneAndUpdate({ siret: data.siret }, updates);
-
       result[type].updated = updates;
     }
   });
