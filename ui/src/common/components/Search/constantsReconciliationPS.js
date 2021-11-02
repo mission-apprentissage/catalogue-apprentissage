@@ -110,6 +110,23 @@ const columnsDefinition = [
     editable: false,
   },
   {
+    Header: "Raison(s) rejet",
+    accessor: "rapprochement_rejete_raisons",
+    width: 200,
+    exportable: true,
+    editable: false,
+    formatter: (values) => {
+      return values.join(", ");
+    },
+  },
+  {
+    Header: "Détails rejet",
+    accessor: "rapprochement_rejete_raison_autre",
+    width: 200,
+    exportable: true,
+    editable: false,
+  },
+  {
     Header: "Uai Gestionnaire",
     accessor: "uai_gestionnaire",
     width: 120,
