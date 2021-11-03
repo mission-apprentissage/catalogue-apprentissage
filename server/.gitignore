@@ -2,3 +2,11 @@
 *.xls*
 dump/
 coverage.lcov
+
+# exclude keys
+id_rsa*
+*.cert
+*.key
+
+# files that will be downloaded anyway
+latest_public_ofs.csv

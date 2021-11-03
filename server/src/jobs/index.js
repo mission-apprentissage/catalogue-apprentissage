@@ -15,11 +15,18 @@ const { rebuildEsIndex } = require("./esIndex/esIndex");
 const { spawn } = require("child_process");
 const { Formation } = require("../common/model");
 
-const { rncpImporter, bcnImporter, onisepImporter } = require("@mission-apprentissage/tco-service-node");
+const {
+  rncpImporter,
+  bcnImporter,
+  onisepImporter,
+  conventionFilesImporter,
+} = require("@mission-apprentissage/tco-service-node");
 const { EtablissementsUpdater } = require("./EtablissementsUpdater");
 const { findAndUpdateSiegeSocial } = require("./EtablissementsUpdater/orphans");
+const path = require("path");
 
 const KIT_LOCAL_PATH = "/data/uploads/CodeDiplome_RNCP_latest_kit.csv";
+const CONVENTION_FILES_DIR = path.join(__dirname, "conventionFilesImporter/assets");
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -33,6 +40,8 @@ runScript(async ({ db }) => {
     await bcnImporter();
     await sleep(30000);
     await onisepImporter(db);
+    await sleep(30000);
+    await conventionFilesImporter(db, CONVENTION_FILES_DIR);
     await sleep(30000);
     await rncpImporter(KIT_LOCAL_PATH);
     await sleep(30000);
