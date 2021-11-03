@@ -225,6 +225,7 @@ export default ({ match }) => {
             const updatedFormation = await _post(`${endpointNewFront}/entity/formation2021/update`, {
               ...formation,
               ...actualDirectChangeValues,
+              withCodePostalUpdate: false,
             });
 
             const result = await _put(`${endpointNewFront}/entity/formations2021/${formation._id}`, {

@@ -346,10 +346,10 @@ module.exports = () => {
   router.post(
     "/formation2021/update",
     tryCatch(async (req, res) => {
-      const formation = req.body;
+      const { withCodePostalUpdate = true, withHistoryUpdate = false, ...formation } = req.body;
       const { formation: updatedFormation, error } = await mnaFormationUpdater(formation, {
-        withHistoryUpdate: false,
-        withCodePostalUpdate: true,
+        withHistoryUpdate,
+        withCodePostalUpdate,
       });
 
       if (formation.uai_formation) {
