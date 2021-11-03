@@ -12,6 +12,15 @@ const changelog = {
       improvements: [],
     },
     {
+      version: "4.9.1",
+      date: "Le 03 Novembre 2021",
+      about: `<h4>À propos de cette version</h4>
+      Correctif édition uai lieu de formation`,
+      fixes: ["[Fiche formation] correctif édition de l'uai du lieu de formation"],
+      features: [],
+      improvements: [],
+    },
+    {
       version: "4.9.0",
       date: "Le 27 Octobre 2021",
       about: `<h4>À propos de cette version</h4>
