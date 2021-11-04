@@ -48,17 +48,26 @@ runScript(async ({ db }) => {
 
     await EtablissementsUpdater();
     await findAndUpdateSiegeSocial();
+    await sleep(30000);
 
-    await sleep(30000);
-    // rco
-    let uuidReport = await rcoImporter();
-    await sleep(30000);
+    let uuidReport;
+    if (process.env.CATALOGUE_APPRENTISSAGE_RCO_IMPORT_ENABLED === "true") {
+      // rco
+      console.log("Import RCO enabled, starting...");
+      uuidReport = await rcoImporter();
+      await sleep(30000);
+      if (!uuidReport) {
+        uuidReport = crypto.randomBytes(16).toString("hex");
+      }
+      await rcoConverter(uuidReport);
+      await sleep(30000);
+    } else {
+      console.log("Import RCO disabled, skipping...");
+    }
+
     if (!uuidReport) {
       uuidReport = crypto.randomBytes(16).toString("hex");
     }
-    await rcoConverter(uuidReport);
-    await sleep(30000);
-
     // ~ 3 heures 40 minutes => ~ 59 minutes
     const trainingsUpdater = spawn("node", [
       "./src/jobs/trainingsUpdater/index.js",
