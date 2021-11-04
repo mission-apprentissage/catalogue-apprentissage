@@ -31,6 +31,7 @@ const Accessibilite = lazy(() => import("./pages/legal/Accessibilite"));
 const ReconciliationPs = lazy(() => import("./pages/admin/ReconciliationPs/ReconciliationPs"));
 const ActionsExpertes = lazy(() => import("./pages/ActionsExpertes/ActionsExpertes"));
 const Collecte = lazy(() => import("./pages/Collecte/Collecte"));
+const GeneratorCfa = lazy(() => import("./pages/GeneratorCfa/Collecte"));
 const Perimetre = lazy(() => import("./pages/perimetre/Perimetre"));
 
 function PrivateRoute({ component, ...rest }) {
@@ -147,6 +148,7 @@ export default () => {
                 )} */}
                 {/* Temporairement publique */}
                 <Route exact path="/collecte" component={Collecte} />
+                <Route exact path="/generatorCfa" component={GeneratorCfa} />
 
                 {auth && hasAccessTo(auth, "page_message_maintenance") && (
                   <PrivateRoute exact path="/admin/messagescript" component={Message} />
