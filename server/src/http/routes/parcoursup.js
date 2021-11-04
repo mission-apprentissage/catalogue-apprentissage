@@ -1,4 +1,4 @@
-const { PsFormation, Formation } = require("../../common/model");
+const { PsFormation, Formation, Etablissement } = require("../../common/model");
 // const combinate = require("../../logic/mappers/reconciliationMapper");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
@@ -9,7 +9,7 @@ const reportRejected = require("../../jobs/parcoursup/reportRejected");
 
 const { diffFormation, buildUpdatesHistory } = require("../../logic/common/utils/diffUtils");
 
-module.exports = ({ catalogue }) => {
+module.exports = () => {
   const router = express.Router();
 
   /**
@@ -375,9 +375,9 @@ module.exports = ({ catalogue }) => {
         return res.status(400).send({ error: "Missing siret or uai in request body" });
       }
 
-      let etablissement = await catalogue.getEtablissement({ uai, siret });
+      let etablissement = await Etablissement.findOne({ uai, siret });
       let newEtablissement = false;
-      if (etablissement.message === "Etablissement doesn't exist") {
+      if (!etablissement) {
         //TODO once we create etablissement = await catalogue.createEtablissement({ uai, siret });
         newEtablissement = true;
       }

@@ -26,7 +26,12 @@ module.exports = {
   PendingRcoFormation: createModel("pendingrcoformation", schema.formationSchema),
   AfFormation: createModel("afformation", schema.afFormationSchema),
   AfReconciliation: createModel("afreconciliation", schema.afReconciliationSchema),
-  Etablissement: createModel("etablissement", schema.etablissementSchema),
+  Etablissement: createModel("etablissement", schema.etablissementSchema, {
+    esIndexName: "etablissements",
+    createMongoDBIndexes: (schema) => {
+      schema.index({ adresse: "text" });
+    },
+  }),
   PsFormation: createModel("psformations", schema.psFormationSchema, {
     esIndexName: "psformations",
   }),

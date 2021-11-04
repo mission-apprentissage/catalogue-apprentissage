@@ -12,17 +12,25 @@ const afReconciliation = require("./affelnet/reconciliation");
 const crypto = require("crypto");
 
 const { rebuildEsIndex } = require("./esIndex/esIndex");
-const { importEtablissements } = require("./etablissements");
 const { spawn } = require("child_process");
 const { Formation } = require("../common/model");
 
-const { rncpImporter, bcnImporter, onisepImporter } = require("@mission-apprentissage/tco-service-node");
+const {
+  rncpImporter,
+  bcnImporter,
+  onisepImporter,
+  conventionFilesImporter,
+} = require("@mission-apprentissage/tco-service-node");
+const { EtablissementsUpdater } = require("./EtablissementsUpdater");
+const { findAndUpdateSiegeSocial } = require("./EtablissementsUpdater/orphans");
+const path = require("path");
 
 const KIT_LOCAL_PATH = "/data/uploads/CodeDiplome_RNCP_latest_kit.csv";
+const CONVENTION_FILES_DIR = path.join(__dirname, "conventionFilesImporter/assets");
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-runScript(async ({ catalogue, db }) => {
+runScript(async ({ db }) => {
   try {
     logger.info(`Start all jobs`);
 
@@ -33,20 +41,33 @@ runScript(async ({ catalogue, db }) => {
     await sleep(30000);
     await onisepImporter(db);
     await sleep(30000);
+    await conventionFilesImporter(db, CONVENTION_FILES_DIR);
+    await sleep(30000);
     await rncpImporter(KIT_LOCAL_PATH);
     await sleep(30000);
 
-    await importEtablissements(catalogue);
+    await EtablissementsUpdater();
+    await findAndUpdateSiegeSocial();
     await sleep(30000);
-    // rco
-    let uuidReport = await rcoImporter();
-    await sleep(30000);
+
+    let uuidReport;
+    if (process.env.CATALOGUE_APPRENTISSAGE_RCO_IMPORT_ENABLED === "true") {
+      // rco
+      console.log("Import RCO enabled, starting...");
+      uuidReport = await rcoImporter();
+      await sleep(30000);
+      if (!uuidReport) {
+        uuidReport = crypto.randomBytes(16).toString("hex");
+      }
+      await rcoConverter(uuidReport);
+      await sleep(30000);
+    } else {
+      console.log("Import RCO disabled, skipping...");
+    }
+
     if (!uuidReport) {
       uuidReport = crypto.randomBytes(16).toString("hex");
     }
-    await rcoConverter(uuidReport);
-    await sleep(30000);
-
     // ~ 3 heures 40 minutes => ~ 59 minutes
     const trainingsUpdater = spawn("node", [
       "./src/jobs/trainingsUpdater/index.js",
@@ -91,6 +112,7 @@ runScript(async ({ catalogue, db }) => {
     const filter = { published: true };
     await rebuildEsIndex("formation", false, filter); // ~ 44 minutes => ~ 22 minutes
     await rebuildEsIndex("psformations", false); // ~ 3 minutes
+    await rebuildEsIndex("etablissements", false);
   } catch (error) {
     logger.error(error);
   }

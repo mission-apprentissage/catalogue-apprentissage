@@ -11,7 +11,7 @@ const numCPUs = 4;
 const updateMatchedFormation = async ({ formation, match }) => {
   let statut_reconciliation = "INCONNU";
 
-  if (match.data_length === 1 && (match.matching_strength === "7" || match.matching_strength === "6")) {
+  if (match.data_length === 1 && match.matching_strength >= "6") {
     // AUTO + recon
     statut_reconciliation = "AUTOMATIQUE";
   } else if (match.data_length === 1 && (match.matching_strength === "5" || match.matching_strength === "4")) {

@@ -363,14 +363,23 @@ export default ({ match }) => {
       uai: "",
     },
     onSubmit: ({ uai }) => {
-      return new Promise(async (resolve, reject) => {
+      return new Promise(async (resolve) => {
         let result = null;
         if (uai !== etablissement.uai) {
           setModal(true);
           setGatherData(1);
           try {
-            const up = await _post(`${endpointTCO}/services/etablissement`, { ...etablissement, uai });
-            result = await _put(`${endpointNewFront}/entity/etablissement/${match.params.id}`, { ...up });
+            const { etablissement: up, error } = await _post(`${endpointTCO}/services/etablissement`, {
+              ...etablissement,
+              uai,
+            });
+
+            if (error) {
+              console.error(error);
+              return;
+            }
+
+            result = await _put(`${endpointNewFront}/entity/etablissement/${match.params.id}`, up);
           } catch (err) {
             console.error(err);
           }
@@ -394,7 +403,7 @@ export default ({ match }) => {
   useEffect(() => {
     async function run() {
       try {
-        const eta = await _get(`${endpointTCO}/entity/etablissement/${match.params.id}`, false);
+        const eta = await _get(`${endpointNewFront}/entity/etablissement/${match.params.id}`, false);
         setEtablissement(eta);
         setFieldValue("uai", eta.uai);
 

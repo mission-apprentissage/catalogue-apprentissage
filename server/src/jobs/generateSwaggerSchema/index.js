@@ -22,7 +22,7 @@ const cleanSchema = (schema) => {
 };
 
 Object.keys(schemas).forEach((schemaName) => {
-  if (schemaName === "formationSchema") {
+  if (["formationSchema", "etablissementSchema"].includes(schemaName)) {
     const schema = schemas[schemaName];
     const baseFilename = schemaName.replace("Schema", "");
     const eSchema = new Schema(cleanSchema(schema));

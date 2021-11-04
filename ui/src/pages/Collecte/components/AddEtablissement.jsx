@@ -30,14 +30,20 @@ const InformationConventionnement = ({ etablissement, onFetched }) => {
   useEffect(() => {
     async function run() {
       try {
-        const response = await _post(`${endpointTCO}/services/etablissement`, {
+        const { etablissement: updatedEtablissement, error } = await _post(`${endpointTCO}/services/etablissement`, {
           ...etablissement,
         });
+
+        if (error) {
+          console.error(error);
+          return;
+        }
+
         // console.log(response);
-        setConventionnementResp(response);
+        setConventionnementResp(updatedEtablissement);
         onFetched(etablissement);
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
     }
     run();

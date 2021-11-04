@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import { ReactiveComponent } from "@appbaseio/reactivesearch";
 import { Button } from "@chakra-ui/react";
-import { DownloadLine } from "../../../../theme/components/icons/Download-line";
+import { DownloadLine } from "../../../../theme/components/icons";
 import { _post } from "../../../httpClient";
 import { downloadCSV, CSV_SEPARATOR } from "../../../utils/downloadUtils";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
-const endpointTCO =
-  process.env.REACT_APP_ENDPOINT_TCO || "https://tables-correspondances.apprentissage.beta.gouv.fr/api";
 
 const serializeObject = (columns, obj) => {
   const res = [];
@@ -35,17 +33,6 @@ const serializeObject = (columns, obj) => {
 };
 
 let search = (index, query) => {
-  if (index === "etablissements") {
-    return _post(
-      `${endpointTCO}/es/search/${index}/_search?scroll=5m`,
-      {
-        size: 1000,
-        query: query.query,
-      },
-      false
-    );
-  }
-
   return _post(
     `${endpointNewFront}/es/search/${index}/_search?scroll=5m`,
     {
@@ -57,21 +44,6 @@ let search = (index, query) => {
 };
 
 let scroll = (index, scrollId) => {
-  if (index === "etablissements") {
-    return _post(
-      `${endpointTCO}/es/search/${index}/scroll?scroll=5m&scroll_id=${scrollId}`,
-      {
-        scroll: true,
-        scroll_id: scrollId,
-        activeQuery: {
-          scroll: "1m",
-          scroll_id: scrollId,
-        },
-      },
-      false
-    );
-  }
-
   return _post(
     `${endpointNewFront}/es/search/${index}/scroll?scroll=5m&scroll_id=${scrollId}`,
     {

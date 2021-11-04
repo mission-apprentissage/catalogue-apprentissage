@@ -666,7 +666,7 @@ const ReconciliationModalHeader = React.memo(
                         {Array(slidesCount)
                           .fill("")
                           .map((unuse, ide) => {
-                            return formation.validated_formation_ids.includes(
+                            return formation.validated_formation_ids?.includes(
                               formation.matching_mna_formation[ide]._id
                             ) ? (
                               <ButtonIndicator
