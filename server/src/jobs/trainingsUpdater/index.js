@@ -75,9 +75,13 @@ const run = async () => {
     const noUpdatesFilters = args.includes("--noUpdatesFilters");
     const limitArg = args.find((arg) => arg.startsWith("--limit"))?.split("=")?.[1];
     const uuidReport = args.find((arg) => arg.startsWith("--uuidReport"))?.split("=")?.[1];
+    const argFilters = args.find((arg) => arg.startsWith("--filters"))?.split("=")?.[1];
     const limit = limitArg ? Number(limitArg) : 100;
+
     const filter = noUpdatesFilters
-      ? {}
+      ? argFilters
+        ? JSON.parse(argFilters)
+        : {}
       : {
           $or: [
             {
