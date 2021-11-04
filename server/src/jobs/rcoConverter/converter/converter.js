@@ -6,6 +6,12 @@ const { createOrUpdateEtablissements } = require("../../../logic/updaters/etabli
 
 const { paginator } = require("../../../common/utils/paginator");
 const { storeByChunks } = require("../../../common/utils/reportUtils");
+const {
+  findPreviousFormations,
+  copyAffelnetFields,
+  copyParcoursupFields,
+  extractFlatIdsAction,
+} = require("./migrationFinder");
 
 const formatToMnaFormation = (rcoFormation) => {
   const periode =
@@ -13,11 +19,23 @@ const formatToMnaFormation = (rcoFormation) => {
       ? `[${rcoFormation.periode.reduce((acc, e) => `${acc}${acc ? ", " : ""}"${e}"`, "")}]`
       : null;
 
+  let niveau_entree_obligatoire = null;
+  if (rcoFormation.niveau_entree_obligatoire !== null) {
+    const niveauEntreeNbr = Number(rcoFormation.niveau_entree_obligatoire);
+    if (!Number.isNaN(niveauEntreeNbr)) {
+      niveau_entree_obligatoire = niveauEntreeNbr;
+    }
+  }
+
+  // TODO id_formation ; intitulé_formation et période.  --> split stuff separated by ##
+  // TODO code postal, adresses, emails  --> split stuff separated by ##
+
   return {
+    cle_ministere_educatif: rcoFormation.cle_ministere_educatif,
     id_rco_formation: `${rcoFormation.id_formation}|${rcoFormation.id_action}|${rcoFormation.id_certifinfo}`,
     id_formation: rcoFormation.id_formation,
     id_action: rcoFormation.id_action,
-    ids_action: rcoFormation.id_action.split("|"),
+    ids_action: extractFlatIdsAction(rcoFormation.id_action),
     id_certifinfo: rcoFormation.id_certifinfo,
     cfd: rcoFormation.cfd,
 
@@ -51,7 +69,65 @@ const formatToMnaFormation = (rcoFormation) => {
     etablissement_formateur_code_postal: rcoFormation.etablissement_formateur_code_postal,
     etablissement_formateur_code_commune_insee: rcoFormation.etablissement_formateur_code_insee,
     geo_coordonnees_etablissement_formateur: rcoFormation.etablissement_formateur_geo_coordonnees,
+
+    niveau_entree_obligatoire,
+    entierement_a_distance: rcoFormation.entierement_a_distance === "oui",
+    etablissement_formateur_courriel: rcoFormation.etablissement_formateur_courriel,
+    etablissement_gestionnaire_courriel: rcoFormation.etablissement_gestionnaire_courriel,
   };
+};
+
+const createFormation = async (
+  rcoFormation,
+  mnaFormattedRcoFormation,
+  invalidRcoFormations,
+  convertedRcoFormations
+) => {
+  const stateEtablissements = await createOrUpdateEtablissements(rcoFormation._doc);
+
+  if (stateEtablissements.errored) {
+    const error = `${stateEtablissements.etablissement_gestionnaire.error} ${stateEtablissements.etablissement_formateur.error}`;
+    rcoFormation.conversion_error = error;
+    await rcoFormation.save();
+
+    invalidRcoFormations.push({
+      id_rco_formation: mnaFormattedRcoFormation.id_rco_formation,
+      cfd: mnaFormattedRcoFormation.cfd,
+      rncp: mnaFormattedRcoFormation.rncp_code,
+      sirets: JSON.stringify({
+        gestionnaire: mnaFormattedRcoFormation.etablissement_gestionnaire_siret,
+        formateur: mnaFormattedRcoFormation.etablissement_formateur_siret,
+        lieu_formation: mnaFormattedRcoFormation.lieu_formation_siret,
+      }),
+      error,
+    });
+
+    return;
+  }
+
+  rcoFormation.conversion_error = "success";
+  await rcoFormation.save();
+
+  mnaFormattedRcoFormation.to_update = true;
+  // replace or insert new one
+  const newCf = await Formation.findOneAndUpdate(
+    { id_rco_formation: mnaFormattedRcoFormation.id_rco_formation },
+    mnaFormattedRcoFormation,
+    {
+      upsert: true,
+      new: true,
+    }
+  );
+
+  convertedRcoFormations.push({
+    _id: newCf._id,
+    id_rco_formation: newCf.id_rco_formation,
+    cfd: newCf.cfd,
+    updates: {},
+    // stateEtablissements, // TODO Keep for now
+  });
+
+  return newCf;
 };
 
 const run = async (uuidReport = null) => {
@@ -66,6 +142,80 @@ const run = async (uuidReport = null) => {
 const performConversion = async () => {
   const invalidRcoFormations = [];
   const convertedRcoFormations = [];
+
+  /*************************************************************************************/
+  /* FIXME: below migration code. To be removed after RCO migration without duplicates */
+  /*************************************************************************************/
+
+  // first loop only on published
+  // try to find englobing actions
+  // if found keep data like statut, rapprochement ...
+  await paginator(
+    RcoFormation,
+    { filter: { published: true, converted_to_mna: { $ne: true } }, limit: 10, select: "+email" },
+    async (rcoFormation) => {
+      const oldFormations = await findPreviousFormations(rcoFormation);
+
+      // if 0 do nothing : just create as below
+      if (oldFormations.length === 0) {
+        const mnaFormattedRcoFormation = formatToMnaFormation(rcoFormation._doc);
+        await createFormation(rcoFormation, mnaFormattedRcoFormation, invalidRcoFormations, convertedRcoFormations);
+        return;
+      }
+
+      if (oldFormations.length === 1) {
+        const mnaFormattedRcoFormation = formatToMnaFormation(rcoFormation._doc);
+        const newFormation = await createFormation(
+          rcoFormation,
+          mnaFormattedRcoFormation,
+          invalidRcoFormations,
+          convertedRcoFormations
+        );
+
+        copyAffelnetFields(oldFormations[0], newFormation);
+        copyParcoursupFields(oldFormations[0], newFormation);
+
+        // TODO update rapprochement
+
+        await newFormation.save();
+        return;
+      }
+
+      if (oldFormations.length > 1) {
+        const mnaFormattedRcoFormation = formatToMnaFormation(rcoFormation._doc);
+        const newFormation = await createFormation(
+          rcoFormation,
+          mnaFormattedRcoFormation,
+          invalidRcoFormations,
+          convertedRcoFormations
+        );
+
+        const affelnet_statut = oldFormations[0].affelnet_statut;
+        if (oldFormations.every((f) => f.affelnet_statut === affelnet_statut)) {
+          copyAffelnetFields(oldFormations[0], newFormation);
+        }
+
+        const parcoursup_statut = oldFormations[0].parcoursup_statut;
+        if (oldFormations.every((f) => f.parcoursup_statut === parcoursup_statut)) {
+          copyParcoursupFields(oldFormations[0], newFormation);
+        }
+
+        // TODO if same rapprochement, keep rapprochement, else discard
+
+        await newFormation.save();
+        return;
+      }
+    }
+  );
+
+  // update converted_to_mna outside loop to not mess up with paginate
+  await RcoFormation.updateMany(
+    { conversion_error: "success" },
+    { $set: { conversion_error: null, converted_to_mna: true } }
+  );
+  /******************************************************/
+  /*  FIXME: /END RCO migration code. remove code above */
+  /******************************************************/
 
   await paginator(
     RcoFormation,
@@ -98,49 +248,7 @@ const performConversion = async () => {
           return;
         }
 
-        const stateEtablissements = await createOrUpdateEtablissements(rcoFormation._doc);
-
-        if (stateEtablissements.errored) {
-          const error = `${stateEtablissements.etablissement_gestionnaire.error} ${stateEtablissements.etablissement_formateur.error}`;
-          rcoFormation.conversion_error = error;
-          await rcoFormation.save();
-
-          invalidRcoFormations.push({
-            id_rco_formation: mnaFormattedRcoFormation.id_rco_formation,
-            cfd: mnaFormattedRcoFormation.cfd,
-            rncp: mnaFormattedRcoFormation.rncp_code,
-            sirets: JSON.stringify({
-              gestionnaire: mnaFormattedRcoFormation.etablissement_gestionnaire_siret,
-              formateur: mnaFormattedRcoFormation.etablissement_formateur_siret,
-              lieu_formation: mnaFormattedRcoFormation.lieu_formation_siret,
-            }),
-            error,
-          });
-
-          return;
-        }
-
-        rcoFormation.conversion_error = "success";
-        await rcoFormation.save();
-
-        mnaFormattedRcoFormation.to_update = true;
-        // replace or insert new one
-        const newCf = await Formation.findOneAndUpdate(
-          { id_rco_formation: mnaFormattedRcoFormation.id_rco_formation },
-          mnaFormattedRcoFormation,
-          {
-            upsert: true,
-            new: true,
-          }
-        );
-
-        convertedRcoFormations.push({
-          _id: newCf._id,
-          id_rco_formation: newCf.id_rco_formation,
-          cfd: newCf.cfd,
-          updates: {},
-          // stateEtablissements, // TODO Keep for now
-        });
+        await createFormation(rcoFormation, mnaFormattedRcoFormation, invalidRcoFormations, convertedRcoFormations);
       } catch (error) {
         console.log(error);
       }

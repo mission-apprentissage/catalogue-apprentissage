@@ -197,9 +197,9 @@ class Importer {
         toUpdateToDb.push({ rcoFormation, updateInfo, updates });
       } else {
         console.error(
-          `addedFormationsHandler >> Formation ${this._buildId(rcoFormationAdded)} existe et est publiée ${
-            rcoFormation._id
-          }`
+          `addedFormationsHandler >> Formation ${
+            rcoFormationAdded.cle_ministere_educatif ?? this._buildId(rcoFormationAdded)
+          } existe et est publiée ${rcoFormation._id}`
         );
       }
     });
@@ -241,7 +241,9 @@ class Importer {
         }
       } else {
         console.error(
-          `updatedFormationsHandler >> Formation ${this._buildId(rcoFormationUpdated)} n'existe pas en base`
+          `updatedFormationsHandler >> Formation ${
+            rcoFormationUpdated.cle_ministere_educatif ?? this._buildId(rcoFormationUpdated)
+          } n'existe pas en base`
         );
       }
     });
@@ -287,14 +289,7 @@ class Importer {
 
     console.log("Lookup for new or update trainings");
     await chunkedAsyncForEach(currentFormations, async (formation) => {
-      const found = await RcoFormation.findOne({
-        id_formation: formation.id_formation,
-        id_action: formation.id_action,
-        id_certifinfo: formation.id_certifinfo,
-        published: true,
-      })
-        .select("+email")
-        .lean();
+      const found = await this.getRcoFormation(formation, true);
 
       // Some formations has been added
       if (!found) {
@@ -315,7 +310,12 @@ class Importer {
       { filter: { published: true }, select: "+email", lean: true, showProgress: true },
       async (pastFormation) => {
         const id = this._buildId(pastFormation);
-        const found = currentFormations.some((f) => id === this._buildId(f));
+        const found = currentFormations.some((f) => {
+          if (f.cle_ministere_educatif) {
+            return f.cle_ministere_educatif === pastFormation.cle_ministere_educatif || id === this._buildId(f);
+          }
+          return id === this._buildId(f);
+        });
         if (!found) {
           deleted.push(pastFormation);
         }
@@ -344,8 +344,30 @@ class Importer {
   /*
    * get RCO Formation
    */
-  async getRcoFormation({ id_formation, id_action, id_certifinfo }) {
-    return await RcoFormation.findOne({ id_formation, id_action, id_certifinfo }).select("+email").lean();
+  async getRcoFormation({ cle_ministere_educatif, id_formation, id_action, id_certifinfo }, onlyPublished = false) {
+    let found;
+    if (cle_ministere_educatif) {
+      found = await RcoFormation.findOne({
+        cle_ministere_educatif,
+        ...(onlyPublished ? { published: true } : {}),
+      })
+        .select("+email")
+        .lean();
+    }
+
+    if (!found) {
+      // fallback on old ID
+      found = await RcoFormation.findOne({
+        id_formation,
+        id_action,
+        id_certifinfo,
+        ...(onlyPublished ? { published: true } : {}),
+      })
+        .select("+email")
+        .lean();
+    }
+
+    return found;
   }
 
   /*
@@ -368,7 +390,7 @@ class Importer {
       }
     );
     const id = this._buildId(newRcoFormation);
-    const added = { mnaId: newRcoFormation._id, rcoId: id };
+    const added = { mnaId: newRcoFormation._id, rcoId: rcoFormation.cle_ministere_educatif ?? id };
     this.added.push(added);
     return added;
   }
@@ -392,7 +414,7 @@ class Importer {
       { new: true }
     );
     const id = this._buildId(rcoFormation);
-    const updated = { mnaId: rcoFormation._id, rcoId: id };
+    const updated = { mnaId: rcoFormation._id, rcoId: rcoFormation.cle_ministere_educatif ?? id };
     this.updated.push(updated);
     return updated;
   }

@@ -1,4 +1,10 @@
 const rcoFormationsSchema = {
+  cle_ministere_educatif: {
+    index: true,
+    type: String,
+    default: null,
+    description: "Clé unique de la formation (pour envoi aux ministères éducatifs)",
+  },
   id_formation: {
     index: true,
     type: String,
@@ -171,6 +177,31 @@ const rcoFormationsSchema = {
     type: String,
     default: null,
     description: "Id de formation RCO (id_formation + id_action + id_certifinfo)",
+  },
+  niveau_entree_obligatoire: {
+    type: String,
+    default: null,
+    description: "Niveau d'entrée de l'apprenti minimum obligatoire pour cette formation",
+  },
+  entierement_a_distance: {
+    type: String,
+    default: null,
+    description: "Renseigné si la formation peut être suivie entièrement à distance",
+  },
+  etablissement_formateur_courriel: {
+    type: String,
+    default: null,
+    description: "Adresse email de contact de l'établissement formateur",
+  },
+  etablissement_gestionnaire_courriel: {
+    type: String,
+    default: null,
+    description: "Adresse email de contact de l'établissement gestionnaire",
+  },
+  intitule_formation: {
+    type: String,
+    default: null,
+    description: "Intitule de la formation",
   },
 };
 

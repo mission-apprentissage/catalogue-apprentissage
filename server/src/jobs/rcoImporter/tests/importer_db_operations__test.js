@@ -66,9 +66,11 @@ describe(__filename, () => {
 
     assert.deepStrictEqual(updatedFormation.periode, ["2021-11", "2021-12"]);
     assert.deepStrictEqual(updatedFormation.updates_history[0].from, {
+      cle_ministere_educatif: null,
       periode: ["2021-11"],
     });
     assert.deepStrictEqual(updatedFormation.updates_history[0].to, {
+      cle_ministere_educatif: "a098765433",
       periode: ["2021-11", "2021-12"],
     });
   });
