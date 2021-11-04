@@ -112,6 +112,12 @@ module.exports = async (components, verbose = true) => {
   app.use(passport.session());
 
   app.use("/api/v1/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecification));
+  app.get(
+    "/api/v1/schema.json",
+    tryCatch(async (req, res) => {
+      return res.json(swaggerSpecification);
+    })
+  );
 
   app.use("/api/v1/es/search", esSearch());
   app.use("/api/v1/search", esMultiSearchNoIndex());
