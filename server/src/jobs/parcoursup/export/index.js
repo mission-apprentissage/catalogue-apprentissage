@@ -31,6 +31,7 @@ const select = {
   id_rco_formation: 1,
   bcn_mefs_10: 1,
   rome_codes: 1,
+  parcoursup_statut_history: 1,
 };
 
 const formatter = ({ rncp_code, cfd, uai_formation, id_rco_formation, bcn_mefs_10 = [], rome_codes = [] }) => {
@@ -57,12 +58,21 @@ const run = async () => {
     const token = createParcoursupToken({ data, privateKey, pwd, id });
 
     try {
-      // const response =
-      await axios.post(endpoint, data, {
+      const { data: responseData } = await axios.post(endpoint, data, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // TODO @EPT in case of success --> change "parcoursup_statut" to "publié" & store gta_code
+      // console.log("psup response", responseData);
+      formation.parcoursup_id = responseData.formation.g_ta_cod;
+      formation.parcoursup_statut = "publié";
+      formation.last_update_at = Date.now();
+      formation.last_update_who = "web service Parcoursup";
+      formation.parcoursup_statut_history.push({
+        date: new Date(),
+        parcoursup_statut: "publié",
+        last_update_who: "web service Parcoursup",
+      });
+      await formation.save();
     } catch (e) {
       logger.error(e);
     }
