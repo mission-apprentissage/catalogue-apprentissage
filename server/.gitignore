@@ -7,6 +7,3 @@ coverage.lcov
 id_rsa*
 *.cert
 *.key
-
-# files that will be downloaded anyway
-latest_public_ofs.csv
