@@ -85,12 +85,19 @@ const columnsDefinition = [
     editable: false,
   },
   {
-    Header: "Organisme certifie 2015 ? ",
+    Header: "Datadock ? ",
     accessor: "computed_info_datadock",
     width: 200,
     exportable: true,
     editable: false,
     formatter: (value) => escapeDiacritics(value),
+  },
+  {
+    Header: "Qualiopi ?",
+    accessor: "info_qualiopi",
+    width: 200,
+    exportable: true,
+    editable: false,
   },
   {
     Header: "Est le siege de l'entreprise",
