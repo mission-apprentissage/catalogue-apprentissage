@@ -8,12 +8,20 @@ const privateKey = process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_PRIVATE_KEY.re
 const pwd = process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_PRIVATE_KEY_PWD;
 const id = process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_CERTIFICATE_ID;
 const limit = Number(process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_LIMIT || 50);
-const PARCOURSUP_WS_ENDPOINT = "/api/test-ps";
+const endpoint = process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_ENDPOINT;
 
 const filter = {
   parcoursup_statut: "en attente de publication",
   uai_formation: { $ne: null },
   rncp_code: { $ne: null },
+  $or: [
+    {
+      bcn_mefs_10: { $size: 0 },
+    },
+    {
+      bcn_mefs_10: { $size: 1 },
+    },
+  ],
 };
 
 const select = {
@@ -26,15 +34,15 @@ const select = {
 };
 
 const formatter = ({ rncp_code, cfd, uai_formation, id_rco_formation, bcn_mefs_10 = [], rome_codes = [] }) => {
-  const [rome = ""] = rome_codes; // TODO @EPT 1 seul rome ? (le plus récent ?)
-  const [{ mef10: mef } = { mef10: "" }] = bcn_mefs_10; // TODO @EPT 1 seul mef ?
+  const [{ mef10: mef } = { mef10: "" }] = bcn_mefs_10;
+
   return {
-    rncp: rncp_code,
+    rncp: Number(rncp_code.replace("RNCP", "")),
     cfd,
     uai: uai_formation,
     rco: id_rco_formation,
     mef,
-    rome,
+    rome: rome_codes,
   };
 };
 
@@ -50,11 +58,11 @@ const run = async () => {
 
     try {
       // const response =
-      await axios.post(PARCOURSUP_WS_ENDPOINT, data, {
+      await axios.post(endpoint, data, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // TODO @EPT in case of success --> change "parcoursup_statut" to "publié"
+      // TODO @EPT in case of success --> change "parcoursup_statut" to "publié" & store gta_code
     } catch (e) {
       logger.error(e);
     }
