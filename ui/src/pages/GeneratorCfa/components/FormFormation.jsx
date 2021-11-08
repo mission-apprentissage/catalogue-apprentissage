@@ -10,61 +10,62 @@ import {
   Text,
   Flex,
   HStack,
+  Checkbox,
 } from "@chakra-ui/react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 
 // import { _post, _get, _put } from "../../common/httpClient";
 
-const FormEmployer = () => {
-  const phoneRegExp = /^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/;
-
+const FormFormation = () => {
   return (
     <Box>
       <Box w="100%" pt={[4, 8]} px={[1, 24]} color="grey.800"></Box>
       <Box mx="5rem">
         <Heading textStyle="h2" marginBottom="2w">
-          FORMULAIRE EMPLOYEUR
+          FORMULAIRE DE LA FORMATION
         </Heading>
         <Box>
           <Formik
             initialValues={{
-              priveOrPublic: "",
-              name: "",
+              companyCfa: "",
+              nameResponsibleCFA: "",
+              uaiCFA: "",
+              siretCFA: "",
               number: "",
               way: "",
               complement: "",
               zipCode: "",
               townShip: "",
-              phone: "",
-              email: "",
-              siret: "",
-              typeEmployer: "",
-              specificEmployer: "",
-              companyCode: "",
-              numberOfEmployees: "",
-              collectiveAgreement: "",
-              codeIDCC: "",
-              publicSector: "",
+              titleTargeted: "",
+              preciseTitle: "",
+              diplomaCode: "",
+              codeRNCP: "",
+              startDateTrainingCycle: "",
+              endDateExams: "",
+              trainingDuration: "",
+              checkEmployer: "",
+              madeIn: "",
             }}
             validationSchema={Yup.object().shape({
-              priveOrPublic: Yup.string().required("Requis"),
-              name: Yup.string().required("Requis"),
+              companyCfa: Yup.string().required("Requis"),
+              nameResponsibleCFA: Yup.string().required("Requis"),
+              uaiCFA: Yup.string().required("Requis"),
+              siretCFA: Yup.string().required("Requis"),
               number: Yup.string().required("Requis"),
               way: Yup.string().required("Requis"),
               complement: Yup.string().required("Requis"),
               zipCode: Yup.string().required("Requis"),
               townShip: Yup.string().required("Requis"),
-              phone: Yup.string().matches(phoneRegExp, "Phone number is not valid").required("Requis"),
-              email: Yup.string().email("Email invalide").required("Required"),
-              siret: Yup.string().required("Requis"),
-              typeEmployer: Yup.string().required("Requis"),
-              specificEmployer: Yup.string().required("Requis"),
-              companyCode: Yup.string().required("Requis"),
-              numberOfEmployees: Yup.string().required("Requis"),
-              collectiveAgreement: Yup.string().required("Requis"),
-              codeIDCC: Yup.string().required("Requis"),
-              publicSector: Yup.string().required("Requis"),
+              titleTargeted: Yup.string().required("Requis"),
+              preciseTitle: Yup.string().required("Requis"),
+              diplomaCode: Yup.string().required("Requis"),
+              codeRNCP: Yup.string().required("Requis"),
+              startDateTrainingCycle: Yup.string().required("Requis"),
+              endDateExams: Yup.string().required("Requis"),
+              trainingDuration: Yup.string().required("Requis"),
+              checkEmployer: Yup.string().required("Requis"),
+              madeIn: Yup.string().required("Requis"),
             })}
             onSubmit={(value) => {
               console.log(value);
@@ -73,17 +74,18 @@ const FormEmployer = () => {
             {({ status = {} }) => {
               return (
                 <Form>
-                  <Field name="priveOrPublic">
+                  <Field name="companyCfa">
                     {({ meta }) => (
                       <FormControl isRequired isInvalid={meta.error && meta.touched} marginBottom="2w">
                         <HStack w="40%">
-                          <Flex flex="1" alignItems="center">
-                            <Field type="radio" name="priveOrPublic" value="prive" />
-                            <Text ml="1w">employeur privé</Text>
+                          <FormLabel>CFA d’entreprise :</FormLabel>
+                          <Flex alignItems="center">
+                            <Field type="radio" name="companyCfa" value="oui" />
+                            <Text ml="1w">oui</Text>
                           </Flex>
                           <Flex alignItems="center">
-                            <Field type="radio" name="priveOrPublic" value="public" ml="2w" />
-                            <Text ml="1w">employeur « public »</Text>
+                            <Field type="radio" name="companyCfa" value="non" ml="2w" />
+                            <Text ml="1w">non</Text>
                           </Flex>
                         </HStack>
                         <FormErrorMessage>{meta.error}</FormErrorMessage>
@@ -92,16 +94,34 @@ const FormEmployer = () => {
                   </Field>
                   <Flex>
                     <Box w="55%" flex="1">
-                      <Field name="name">
+                      <Field name="nameResponsibleCFA">
                         {({ field, meta }) => (
                           <FormControl isRequired isInvalid={meta.error && meta.touched} marginBottom="2w">
-                            <FormLabel>Nom et prénom ou dénomination :</FormLabel>
+                            <FormLabel>Dénomination du CFA responsable :</FormLabel>
                             <Input {...field} id={field.name} />
                             <FormErrorMessage>{meta.error}</FormErrorMessage>
                           </FormControl>
                         )}
                       </Field>
-                      <Text mb={5}>Adresse de l’établissement d’exécution du contrat :</Text>
+                      <Field name="uaiCFA">
+                        {({ field, meta }) => (
+                          <FormControl isRequired isInvalid={meta.error && meta.touched} marginBottom="2w">
+                            <FormLabel>N° UAI du CFA :</FormLabel>
+                            <Input {...field} id={field.name} />
+                            <FormErrorMessage>{meta.error}</FormErrorMessage>
+                          </FormControl>
+                        )}
+                      </Field>
+                      <Field name="siretCFA">
+                        {({ field, meta }) => (
+                          <FormControl isRequired isInvalid={meta.error && meta.touched} marginBottom="2w">
+                            <FormLabel>N° SIRET CFA :</FormLabel>
+                            <Input {...field} id={field.name} />
+                            <FormErrorMessage>{meta.error}</FormErrorMessage>
+                          </FormControl>
+                        )}
+                      </Field>
+                      <FormLabel fontWeight={700}>Adresse du CFA responsable : </FormLabel>
                       <Field name="number">
                         {({ field, meta }) => (
                           <FormControl isRequired isInvalid={meta.error && meta.touched} marginBottom="2w">
@@ -147,103 +167,102 @@ const FormEmployer = () => {
                           </FormControl>
                         )}
                       </Field>
-                      <Field name="phone">
-                        {({ field, meta }) => (
-                          <FormControl isRequired isInvalid={meta.error && meta.touched} marginBottom="2w">
-                            <FormLabel>Téléphone :</FormLabel>
-                            <Input {...field} id={field.name} type="tel" />
-                            <FormErrorMessage>{meta.error}</FormErrorMessage>
-                          </FormControl>
-                        )}
-                      </Field>
-                      <Field name="email">
-                        {({ field, meta }) => (
-                          <FormControl isRequired isInvalid={meta.error && meta.touched} marginBottom="2w">
-                            <FormLabel>Courriel :</FormLabel>
-                            <Input {...field} id={field.name} />
-                            <FormErrorMessage>{meta.error}</FormErrorMessage>
-                          </FormControl>
-                        )}
-                      </Field>
                     </Box>
                     <Box w="45%" ml="5w">
-                      <Field name="siret">
+                      <Field name="titleTargeted">
                         {({ field, meta }) => (
                           <FormControl isRequired isInvalid={meta.error && meta.touched} marginBottom="2w">
-                            <FormLabel>N°SIRET de l’établissement d’exécution du contrat :</FormLabel>
+                            <FormLabel>Diplôme ou titre visé par l’apprenti :</FormLabel>
                             <Input {...field} id={field.name} />
                             <FormErrorMessage>{meta.error}</FormErrorMessage>
                           </FormControl>
                         )}
                       </Field>
-                      <Field name="typeEmployer">
+                      <Field name="preciseTitle">
                         {({ field, meta }) => (
                           <FormControl isRequired isInvalid={meta.error && meta.touched} marginBottom="2w">
-                            <FormLabel>Type d’employeur :</FormLabel>
+                            <FormLabel>Intitulé précis :</FormLabel>
                             <Input {...field} id={field.name} />
                             <FormErrorMessage>{meta.error}</FormErrorMessage>
                           </FormControl>
                         )}
                       </Field>
-                      <Field name="specificEmployer">
+                      <Field name="diplomaCode">
                         {({ field, meta }) => (
                           <FormControl isRequired isInvalid={meta.error && meta.touched} marginBottom="2w">
-                            <FormLabel>Employeur spécifique :</FormLabel>
+                            <FormLabel>Code du diplôme :</FormLabel>
                             <Input {...field} id={field.name} />
                             <FormErrorMessage>{meta.error}</FormErrorMessage>
                           </FormControl>
                         )}
                       </Field>
-                      <Field name="companyCode">
+                      <Field name="codeRNCP">
                         {({ field, meta }) => (
                           <FormControl isRequired isInvalid={meta.error && meta.touched} marginBottom="2w">
-                            <FormLabel>Code activité de l’entreprise (NAF) :</FormLabel>
+                            <FormLabel>Code RNCP :</FormLabel>
                             <Input {...field} id={field.name} />
                             <FormErrorMessage>{meta.error}</FormErrorMessage>
                           </FormControl>
                         )}
                       </Field>
-                      <Field name="numberOfEmployees">
+                      <FormLabel fontWeight={700}>Organisation de la formation en CFA :</FormLabel>
+                      <Field name="startDateTrainingCycle">
                         {({ field, meta }) => (
                           <FormControl isRequired isInvalid={meta.error && meta.touched} marginBottom="2w">
-                            <FormLabel>Effectif total salariés de l’entreprise :</FormLabel>
-                            <Input {...field} id={field.name} />
+                            <FormLabel>Date de début du cycle de formation : </FormLabel>
+                            <Input {...field} id={field.name} type="date" />
                             <FormErrorMessage>{meta.error}</FormErrorMessage>
                           </FormControl>
                         )}
                       </Field>
-                      <Field name="collectiveAgreement">
+                      <Field name="endDateExams">
                         {({ field, meta }) => (
                           <FormControl isRequired isInvalid={meta.error && meta.touched} marginBottom="2w">
-                            <FormLabel>Convention collective applicable :</FormLabel>
-                            <Input {...field} id={field.name} />
+                            <FormLabel>Date prévue de fin des épreuves ou examens :</FormLabel>
+                            <Input {...field} id={field.name} type="date" />
                             <FormErrorMessage>{meta.error}</FormErrorMessage>
                           </FormControl>
                         )}
                       </Field>
-                      <Field name="codeIDCC">
+                      <Field name="trainingDuration">
                         {({ field, meta }) => (
                           <FormControl isRequired isInvalid={meta.error && meta.touched} marginBottom="2w">
-                            <FormLabel>Code IDCC de la convention :</FormLabel>
-                            <Input {...field} id={field.name} />
-                            <FormErrorMessage>{meta.error}</FormErrorMessage>
-                          </FormControl>
-                        )}
-                      </Field>
-                      <Field name="publicSector">
-                        {({ field, meta }) => (
-                          <FormControl isRequired isInvalid={meta.error && meta.touched} marginBottom="2w">
-                            <FormLabel>
-                              *Pour les employeurs du secteur public, adhésion de l’apprenti au régime spécifique
-                              d’assurance chômage :
-                            </FormLabel>
-                            <Input {...field} id={field.name} />
+                            <FormLabel>Durée de la formation : </FormLabel>
+                            <Flex>
+                              <Input {...field} id={field.name} />
+                              <Text ml="1w">heures</Text>
+                            </Flex>
                             <FormErrorMessage>{meta.error}</FormErrorMessage>
                           </FormControl>
                         )}
                       </Field>
                     </Box>
                   </Flex>
+                  <Box>
+                    <Field name="checkEmployer">
+                      {({ field, meta }) => (
+                        <FormControl isRequired isInvalid={meta.error && meta.touched} marginBottom="2w">
+                          <Flex>
+                            <Checkbox {...field} id={field.name} type="checkbox" value="oui" />
+                            <FormLabel ml={3} mt={2} fontWeight={700} textStyle="sm" fontStyle="italic">
+                              L’employeur atteste disposer de l’ensemble des pièces justificatives nécessaires au dépôt
+                              du contrat
+                            </FormLabel>
+                          </Flex>
+                          <FormErrorMessage>{meta.error}</FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+                    <Field name="madeIn">
+                      {({ field, meta }) => (
+                        <FormControl isRequired isInvalid={meta.error && meta.touched} marginBottom="2w">
+                          <FormLabel>Fait à :</FormLabel>
+                          <Input {...field} id={field.name} />
+                          <FormErrorMessage>{meta.error}</FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+                  </Box>
                   <Box mt="2rem">
                     <Button textStyle="sm" variant="primary" type="submit">
                       Enregistrer
@@ -264,4 +283,4 @@ const FormEmployer = () => {
   );
 };
 
-export default FormEmployer;
+export default FormFormation;
