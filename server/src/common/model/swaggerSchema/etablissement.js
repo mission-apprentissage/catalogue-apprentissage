@@ -8,7 +8,8 @@ module.exports = {
         description: "Cet établissement est le siége sociale",
       },
       etablissement_siege_id: {
-        type: "object",
+        type: "string",
+        default: "null",
         description: "Identifiant établissement siége",
       },
       etablissement_siege_siret: {
@@ -403,7 +404,9 @@ module.exports = {
       },
       formations_ids: {
         type: "array",
-        items: {},
+        items: {
+          type: "string",
+        },
         default: [],
         description: "Id des formations rattachées",
       },
@@ -454,11 +457,6 @@ module.exports = {
         type: "string",
         default: "null",
         description: "Nom du contact saisi dans Démarche Simplifiée",
-      },
-      ds_questions_email: {
-        type: "string",
-        default: "null",
-        description: "Email du contact saisi dans Démarche Simplifiée",
       },
       ds_questions_uai: {
         type: "string",
