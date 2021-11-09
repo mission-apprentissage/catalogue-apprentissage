@@ -62,8 +62,8 @@ const run = async () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // console.log("psup response", responseData);
-      formation.parcoursup_id = responseData.formation.g_ta_cod;
+      // console.log("Parcoursup WS response", responseData);
+      formation.parcoursup_id = responseData.g_ta_cod;
       formation.parcoursup_statut = "publié";
       formation.last_update_at = Date.now();
       formation.last_update_who = "web service Parcoursup";
@@ -74,7 +74,7 @@ const run = async () => {
       });
       await formation.save();
     } catch (e) {
-      logger.error(e);
+      logger.error("Parcoursup WS error", e?.response?.data ?? e);
     }
   }
 };
