@@ -46,11 +46,12 @@
     "migrateFillPsId": "standalone=true node src/jobs/parcoursup/_migrationFillParcourSupId.js",
     "etablissements:duplicate": "standalone=true node src/jobs/oneshot/mergeEtablissementDuplicates/index.js",
     "etablissements:updater": "standalone=true node src/jobs/EtablissementsUpdater/index.js",
-    "etablissements:orphans": "standalone=true node src/jobs/EtablissementsUpdater/orphans.js"
+    "etablissements:orphans": "standalone=true node src/jobs/EtablissementsUpdater/orphans.js",
+    "convention:updater": "standalone=true node src/jobs/oneshot/conventionUpdater/index.js"
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.6.1",
-    "@mission-apprentissage/tco-service-node": "2.26.4",
+    "@mission-apprentissage/tco-service-node": "2.27.0",
     "aws-sdk": "2.785.0",
     "axios": "0.21.1",
     "body-parser": "1.19.0",

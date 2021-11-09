@@ -94,7 +94,7 @@ const columnsDefinition = [
   },
   {
     Header: "Qualiopi ?",
-    accessor: "info_qualiopi",
+    accessor: "info_qualiopi_info",
     width: 200,
     exportable: true,
     editable: false,
