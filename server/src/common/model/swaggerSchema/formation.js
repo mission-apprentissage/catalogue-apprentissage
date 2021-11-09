@@ -472,6 +472,110 @@ module.exports = {
       },
       rncp_details: {
         type: "object",
+        properties: {
+          date_fin_validite_enregistrement: {
+            type: ["string", "null"],
+            default: null,
+            description: "Date de validité de la fiche",
+          },
+          active_inactive: {
+            type: ["string", "null"],
+            default: null,
+            description: "fiche active ou non",
+          },
+          etat_fiche_rncp: {
+            type: ["string", "null"],
+            default: null,
+            description: "état fiche ex: Publiée",
+          },
+          niveau_europe: {
+            type: ["string", "null"],
+            default: null,
+            description: "Niveau europeen ex: niveauu5",
+          },
+          code_type_certif: {
+            type: ["string", "null"],
+            default: null,
+            description: "Code type de certification (ex: DE)",
+          },
+          type_certif: {
+            type: ["string", "null"],
+            default: null,
+            description: "Type de certification (ex: diplome d'etat)",
+          },
+          ancienne_fiche: {
+            type: ["array", "null"],
+            items: {
+              type: "string",
+            },
+            default: null,
+            description: "Code rncp de l'ancienne fiche",
+          },
+          nouvelle_fiche: {
+            type: ["array", "null"],
+            items: {
+              type: "string",
+            },
+            default: null,
+            description: "Code rncp de la nouvelle fiche",
+          },
+          demande: {
+            type: "number",
+            default: 0,
+            description: "demande en cours de d'habilitation",
+          },
+          certificateurs: {
+            type: "array",
+            items: {
+              type: "object",
+            },
+            default: [],
+            description: "Certificateurs",
+          },
+          nsf_code: {
+            type: ["string", "null"],
+            default: null,
+            description: "code NSF",
+          },
+          nsf_libelle: {
+            type: ["string", "null"],
+            default: null,
+            description: "libéllé NSF",
+          },
+          romes: {
+            type: "array",
+            items: {
+              type: "object",
+            },
+            default: [],
+            description: "Romes",
+          },
+          blocs_competences: {
+            type: "array",
+            items: {
+              type: "object",
+            },
+            default: [],
+            description: "Blocs de compétences",
+          },
+          voix_acces: {
+            type: "array",
+            items: {
+              type: "object",
+            },
+            default: [],
+            description: "voix d'accès",
+          },
+          partenaires: {
+            type: "array",
+            items: {
+              type: "object",
+            },
+            default: [],
+            description: "partenaires",
+          },
+        },
+        title: "rncp_details",
         default: "null",
         description: "Détails RNCP (bloc de compétences etc..)",
       },
