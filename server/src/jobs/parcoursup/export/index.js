@@ -9,14 +9,7 @@ const filter = {
   parcoursup_statut: "en attente de publication",
   uai_formation: { $ne: null },
   rncp_code: { $ne: null },
-  $or: [
-    {
-      bcn_mefs_10: { $size: 0 },
-    },
-    {
-      bcn_mefs_10: { $size: 1 },
-    },
-  ],
+  $or: [{ bcn_mefs_10: { $size: 0 } }, { bcn_mefs_10: { $size: 1 } }],
 };
 
 const select = {
@@ -70,7 +63,7 @@ const createFormation = async (formation) => {
     await formation.save();
   } catch (e) {
     logger.error("Parcoursup WS error", e?.response?.data ?? e);
-    formation.parcoursup_error = e?.response?.data ?? "erreur de création";
+    formation.parcoursup_error = e?.response?.data?.message || "erreur de création";
     await formation.save();
   }
 };
