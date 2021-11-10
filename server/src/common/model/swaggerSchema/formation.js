@@ -640,7 +640,7 @@ module.exports = {
       parcoursup_error: {
         type: "string",
         default: "null",
-        description: "Erreur lors du contrôle de référencement sur ParcourSup de la formation",
+        description: "Erreur lors de la création de la formation sur ParcourSup (via le WS)",
       },
       parcoursup_id: {
         type: "string",
@@ -675,11 +675,6 @@ module.exports = {
         items: {},
         default: [],
         description: "Affelnet : historique des statuts",
-      },
-      affelnet_error: {
-        type: "string",
-        default: "null",
-        description: "Erreur lors du contrôle de référencement sur affelnet de la formation",
       },
       source: {
         type: "string",
