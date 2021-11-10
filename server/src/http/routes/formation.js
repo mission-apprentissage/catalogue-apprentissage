@@ -144,7 +144,7 @@ module.exports = () => {
 
       const allData = await Formation.paginate(mQuery, {
         page,
-        limit,
+        limit: Math.min(limit, 1000),
         lean: true,
         select,
       });
@@ -152,7 +152,7 @@ module.exports = () => {
         formations: allData.docs,
         pagination: {
           page: allData.page,
-          resultats_par_page: limit,
+          resultats_par_page: Math.min(limit, 1000),
           nombre_de_page: allData.pages,
           total: allData.total,
         },
@@ -212,7 +212,7 @@ module.exports = () => {
 
       const allData = await Formation.paginate(mQuery, {
         page,
-        limit,
+        limit: Math.min(limit, 1000),
         lean: true,
         select,
       });
@@ -220,7 +220,7 @@ module.exports = () => {
         formations: allData.docs,
         pagination: {
           page: allData.page,
-          resultats_par_page: limit,
+          resultats_par_page: Math.min(limit, 1000),
           nombre_de_page: allData.pages,
           total: allData.total,
         },

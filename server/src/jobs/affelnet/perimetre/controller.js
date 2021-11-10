@@ -91,10 +91,6 @@ const run = async () => {
 
   // stats
   const totalPublished = await Formation.countDocuments({ published: true });
-  const totalErrors = await Formation.countDocuments({
-    published: true,
-    affelnet_error: { $ne: null },
-  });
   const totalNotRelevant = await Formation.countDocuments({
     published: true,
     affelnet_statut: "hors périmètre",
@@ -122,7 +118,6 @@ const run = async () => {
 
   logger.info(
     `Total formations publiées dans le catalogue : ${totalPublished}\n` +
-      `Total formations avec erreur de référencement Affelnet : ${totalErrors}\n` +
       `Total formations hors périmètre : ${totalNotRelevant}/${totalPublished}\n` +
       `Total formations à publier (soumis à validation) : ${totalToValidate}/${totalPublished}\n` +
       `Total formations à publier : ${totalToCheck}/${totalPublished}\n` +
