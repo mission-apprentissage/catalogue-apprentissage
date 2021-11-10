@@ -14,7 +14,7 @@ const filter = {
 
 const select = {
   rncp_code: 1,
-  cfd: 1,
+  cfd_entree: 1,
   uai_formation: 1,
   id_rco_formation: 1,
   bcn_mefs_10: 1,
@@ -28,12 +28,12 @@ const sort = {
   parcoursup_error: 1,
 };
 
-const formatter = ({ rncp_code, cfd, uai_formation, id_rco_formation, bcn_mefs_10 = [], rome_codes = [] }) => {
+const formatter = ({ rncp_code, cfd_entree, uai_formation, id_rco_formation, bcn_mefs_10 = [], rome_codes = [] }) => {
   const [{ mef10: mef } = { mef10: "" }] = bcn_mefs_10;
 
   return {
     rncp: Number(rncp_code.replace("RNCP", "")),
-    cfd,
+    cfd: cfd_entree,
     uai: uai_formation,
     rco: id_rco_formation, // TODO send cle_ministere_educatif
     mef,
@@ -93,4 +93,5 @@ module.exports = {
   createCursor,
   createFormation,
   run,
+  formatter,
 };
