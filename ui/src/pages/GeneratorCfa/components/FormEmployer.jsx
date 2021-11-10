@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Heading,
@@ -14,11 +14,15 @@ import {
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-// import { _post, _get, _put } from "../../common/httpClient";
+import { _post } from "../../../common/httpClient";
+const endpointTCO =
+  process.env.REACT_APP_ENDPOINT_TCO || "https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1";
 
-const FormEmployer = () => {
+const FormEmployer = ({ onFetched }) => {
+  const [isFetching, setIsFetching] = useState(false);
+
   const phoneRegExp = /^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/;
-  const { values, handleChange, handleSubmit, errors, touched } = useFormik({
+  const { values, handleChange, handleSubmit, errors, touched, setFieldValue } = useFormik({
     initialValues: {
       priveOrPublic: "",
       name: "",
@@ -48,7 +52,9 @@ const FormEmployer = () => {
       townShip: Yup.string().required("Requis"),
       phone: Yup.string().matches(phoneRegExp, "Phone number is not valid").required("Requis"),
       email: Yup.string().email("Email invalide").required("Required"),
-      siret: Yup.string().required("Requis"),
+      siret: Yup.string()
+        .matches(/[0-9]{14}/, "Le siret est code sur 14 caractères numérique")
+        .required("Veuillez saisir un siret"),
       typeEmployer: Yup.string().required("Requis"),
       specificEmployer: Yup.string().required("Requis"),
       companyCode: Yup.string().required("Requis"),
@@ -59,8 +65,28 @@ const FormEmployer = () => {
     }),
     onSubmit: (values) => {
       alert(JSON.stringify(values, null, 2));
+      console.log(values);
     },
   });
+
+  const handleSearch = async () => {
+    setIsFetching(true);
+    try {
+      const { result } = await _post(`${endpointTCO}/siret`, { siret: values.siret });
+      console.log(result);
+      setFieldValue("number", result.numero_voie);
+      setFieldValue("way", result.nom_voie);
+      setFieldValue("complement", result.complement_adresse ?? "N/A");
+      setFieldValue("zipCode", result.code_postal);
+      setFieldValue("townShip", result.commune_implantation_nom);
+      setFieldValue("companyCode", result.naf_code);
+      setFieldValue("numberOfEmployees", result.entreprise_tranche_effectif_salarie.a);
+    } catch (error) {
+      console.log(error);
+    }
+    setIsFetching(false);
+  };
+
   return (
     <Box>
       <Box w="100%" pt={[4, 8]} px={[1, 24]} color="grey.800"></Box>
@@ -106,17 +132,17 @@ const FormEmployer = () => {
               <FormLabel my={3} fontWeight={700}>
                 Adresse de l’établissement d’exécution du contrat :
               </FormLabel>
-              <FormControl isRequired mt={2} isInvalid={errors.number}>
+              <FormControl isRequired isInvalid={errors.number} mt={2}>
                 <FormLabel>N° :</FormLabel>
                 <Input type="text" name="number" onChange={handleChange} value={values.number} required />
                 {errors.number && touched.number && <FormErrorMessage>{errors.number}</FormErrorMessage>}
               </FormControl>
-              <FormControl isRequired mt={2} isInvalid={errors.way}>
+              <FormControl isRequired isInvalid={errors.way} mt={2}>
                 <FormLabel>Voie :</FormLabel>
                 <Input type="text" name="way" onChange={handleChange} value={values.way} required />
                 {errors.way && touched.way && <FormErrorMessage>{errors.way}</FormErrorMessage>}
               </FormControl>
-              <FormControl isRequired mt={2} isInvalid={errors.complement}>
+              <FormControl isRequired isInvalid={errors.complement} mt={2}>
                 <FormLabel>Complément :</FormLabel>
                 <Input type="text" name="complement" onChange={handleChange} value={values.complement} required />
                 {errors.complement && touched.complement && <FormErrorMessage>{errors.complement}</FormErrorMessage>}
@@ -145,8 +171,28 @@ const FormEmployer = () => {
             <Box w="45%" ml="5w">
               <FormControl isRequired mt={2} isInvalid={errors.siret}>
                 <FormLabel>N°SIRET de l’établissement d’exécution du contrat :</FormLabel>
-                <Input type="siret" name="siret" onChange={handleChange} value={values.siret} required />
+                <Input
+                  type="text"
+                  name="siret"
+                  onChange={handleChange}
+                  value={values.siret}
+                  autoComplete="off"
+                  maxLength="14"
+                  pattern="[0-9]{14}"
+                  isLoading={isFetching}
+                  required
+                />
                 {errors.siret && touched.siret && <FormErrorMessage>{errors.siret}</FormErrorMessage>}
+                <Button
+                  variant="primary"
+                  ml={3}
+                  my={4}
+                  onClick={handleSearch}
+                  loadingText="Rechercher"
+                  isLoading={isFetching}
+                >
+                  Rechercher
+                </Button>
               </FormControl>
               <FormControl isRequired mt={2} isInvalid={errors.typeEmployer}>
                 <FormLabel>Type d’employeur :</FormLabel>
@@ -168,12 +214,12 @@ const FormEmployer = () => {
                   <FormErrorMessage>{errors.specificEmployer}</FormErrorMessage>
                 )}
               </FormControl>
-              <FormControl isRequired mt={2} isInvalid={errors.companyCode}>
+              <FormControl isRequired isInvalid={errors.companyCode} mt={2}>
                 <FormLabel>Code activité de l’entreprise (NAF) :</FormLabel>
-                <Input type="text" name="companyCode" onChange={handleChange} value={values.companyCode} required />
+                <Input type="text" name="companyCode" onChange={handleChange} value={values.companyCode} />
                 {errors.companyCode && touched.companyCode && <FormErrorMessage>{errors.companyCode}</FormErrorMessage>}
               </FormControl>
-              <FormControl isRequired mt={2} isInvalid={errors.numberOfEmployees}>
+              <FormControl isRequired isInvalid={errors.numberOfEmployees} mt={2}>
                 <FormLabel>Effectif total salariés de l’entreprise :</FormLabel>
                 <Input
                   type="text"
@@ -217,7 +263,7 @@ const FormEmployer = () => {
             </Box>
           </Flex>
           <Box mt="2rem">
-            <Button variant="primary" ml={3} onClick={handleSubmit} type="submit">
+            <Button variant="primary" ml={3} onClick={handleSubmit} type="submit" isLoading={isFetching}>
               Enregistrer
             </Button>
           </Box>
