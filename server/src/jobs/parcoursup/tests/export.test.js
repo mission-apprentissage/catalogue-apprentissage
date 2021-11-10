@@ -4,7 +4,7 @@ const { connectToMongoForTests, cleanAll } = require("../../../../tests/utils/te
 const { createCursor } = require("../export/index.js");
 const sinon = require("sinon");
 const parcoursupApi = require("../export/parcoursupApi");
-const { createFormation } = require("../export");
+const { createFormation, formatter } = require("../export");
 
 describe(__filename, () => {
   before(async () => {
@@ -17,6 +17,7 @@ describe(__filename, () => {
     await Formation.create({
       rncp_code: "RNCP1234",
       cfd: "6789",
+      cfd_entree: "1212",
       uai_formation: "uai-1",
       id_rco_formation: "rco-1",
       bcn_mefs_10: [],
@@ -29,6 +30,7 @@ describe(__filename, () => {
     await Formation.create({
       rncp_code: null,
       cfd: "6789",
+      cfd_entree: "1212",
       uai_formation: "uai-2",
       id_rco_formation: "rco-2",
       bcn_mefs_10: [],
@@ -41,6 +43,7 @@ describe(__filename, () => {
     await Formation.create({
       rncp_code: "RNCP1234",
       cfd: "6789",
+      cfd_entree: "1212",
       uai_formation: null,
       id_rco_formation: "rco-3",
       bcn_mefs_10: [],
@@ -53,6 +56,7 @@ describe(__filename, () => {
     await Formation.create({
       rncp_code: "RNCP1234",
       cfd: "6789",
+      cfd_entree: "1212",
       uai_formation: "uai-4",
       id_rco_formation: "rco-4",
       bcn_mefs_10: [{}, {}, {}],
@@ -65,6 +69,7 @@ describe(__filename, () => {
     await Formation.create({
       rncp_code: "RNCP1234",
       cfd: "6789",
+      cfd_entree: "1212",
       uai_formation: "uai-5",
       id_rco_formation: "rco-5",
       bcn_mefs_10: [{ mef10: "mef-5" }],
@@ -77,6 +82,7 @@ describe(__filename, () => {
     await Formation.create({
       rncp_code: "RNCP1234",
       cfd: "6789",
+      cfd_entree: "1212",
       uai_formation: "uai-6",
       id_rco_formation: "rco-6",
       bcn_mefs_10: [{ mef10: "mef-6" }],
@@ -89,6 +95,7 @@ describe(__filename, () => {
     await Formation.create({
       rncp_code: "RNCP1234",
       cfd: "6789",
+      cfd_entree: "1212",
       uai_formation: "uai-7",
       id_rco_formation: "rco-7",
       bcn_mefs_10: [{ mef10: "mef-7" }],
@@ -101,6 +108,7 @@ describe(__filename, () => {
     await Formation.create({
       rncp_code: "RNCP1234",
       cfd: "6789",
+      cfd_entree: "1212",
       uai_formation: "uai-8",
       id_rco_formation: "rco-8",
       bcn_mefs_10: [{ mef10: "mef-8" }],
@@ -167,6 +175,7 @@ describe(__filename, () => {
     const f = new Formation({
       rncp_code: "RNCP1234",
       cfd: "6789",
+      cfd_entree: "1212",
       uai_formation: "uai-9",
       id_rco_formation: "rco-9",
       bcn_mefs_10: [{ mef10: "mef-9" }],
@@ -190,10 +199,11 @@ describe(__filename, () => {
     const f = new Formation({
       rncp_code: "RNCP1234",
       cfd: "6789",
-      uai_formation: "uai-9",
-      id_rco_formation: "rco-9",
-      bcn_mefs_10: [{ mef10: "mef-9" }],
-      rome_codes: ["rome-90", "rome-91"],
+      cfd_entree: "1212",
+      uai_formation: "uai-10",
+      id_rco_formation: "rco-10",
+      bcn_mefs_10: [{ mef10: "mef-10" }],
+      rome_codes: ["rome-100", "rome-101"],
       parcoursup_statut: "en attente de publication",
       parcoursup_error: null,
       parcoursup_statut_history: [],
@@ -205,5 +215,30 @@ describe(__filename, () => {
 
     assert.strictEqual(f.parcoursup_statut, "en attente de publication");
     assert.strictEqual(f.parcoursup_error, "erreur de création");
+  });
+
+  it("should format properly", async () => {
+    const formatted = formatter({
+      rncp_code: "RNCP1234",
+      cfd: "6789",
+      cfd_entree: "123134",
+      uai_formation: "uai-11",
+      id_rco_formation: "rco-11",
+      bcn_mefs_10: [{ mef10: "mef-11" }],
+      rome_codes: ["rome-110", "rome-111"],
+      parcoursup_statut: "en attente de publication",
+      parcoursup_error: null,
+      parcoursup_statut_history: [],
+    });
+
+    const expected = {
+      cfd: "123134",
+      mef: "mef-11",
+      rco: "rco-11",
+      rncp: 1234,
+      rome: ["rome-110", "rome-111"],
+      uai: "uai-11",
+    };
+    assert.deepStrictEqual(formatted, expected);
   });
 });
