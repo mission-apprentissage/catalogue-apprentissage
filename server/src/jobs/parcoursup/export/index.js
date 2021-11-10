@@ -99,4 +99,5 @@ if (process.env.standalone) {
 module.exports = {
   createCursor,
   createFormation,
+  run,
 };
