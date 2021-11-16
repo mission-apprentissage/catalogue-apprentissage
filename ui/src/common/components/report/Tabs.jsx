@@ -5,18 +5,19 @@ import { Table } from "./Table";
 import { CodeModal } from "./CodeModal";
 import { REPORT_TYPE } from "../../../constants/report";
 
-const getConvetedMetricsFromImportReport = (allConverted = [], importReport) => {
+const getConvertedMetricsFromImportReport = (allConverted = [], importReport) => {
   const addedConvertedIds = [];
   const updatedConvertedIds = [];
   const deletedConvertedIds = [];
   for (let index = 0; index < allConverted.length; index++) {
-    const { id_rco_formation } = allConverted[index];
-    if (importReport?.addedIds?.includes(id_rco_formation)) {
-      addedConvertedIds.push(id_rco_formation);
-    } else if (importReport?.deletedIds?.includes(id_rco_formation)) {
-      deletedConvertedIds.push(id_rco_formation);
-    } else if (importReport?.updatedIds?.includes(id_rco_formation)) {
-      updatedConvertedIds.push(id_rco_formation);
+    const { id_rco_formation, cle_ministere_educatif } = allConverted[index];
+    const id = cle_ministere_educatif ?? id_rco_formation;
+    if (importReport?.addedIds?.includes(id)) {
+      addedConvertedIds.push(id);
+    } else if (importReport?.deletedIds?.includes(id)) {
+      deletedConvertedIds.push(id);
+    } else if (importReport?.updatedIds?.includes(id)) {
+      updatedConvertedIds.push(id);
     }
   }
   const convertedIds = [...addedConvertedIds, ...updatedConvertedIds, ...deletedConvertedIds];
@@ -28,7 +29,10 @@ const getConvetedMetricsFromImportReport = (allConverted = [], importReport) => 
     updatedConvertedIds,
     countDeletedConverted: deletedConvertedIds.length,
     deletedConvertedIds,
-    convertedIdsRest: allConverted.filter((item) => !convertedIds.includes(item.id_rco_formation)),
+    convertedIdsRest: allConverted.filter(
+      ({ id_rco_formation, cle_ministere_educatif }) =>
+        !convertedIds.includes(cle_ministere_educatif ?? id_rco_formation)
+    ),
   };
 };
 
@@ -134,7 +138,7 @@ const RcoConversionTabs = ({ data, reportType, date, errors, importReport }) => 
   useEffect(() => {
     const lookup = async () => {
       if (data && data.converted && importReport) {
-        const metrics = getConvetedMetricsFromImportReport(data.converted, importReport);
+        const metrics = getConvertedMetricsFromImportReport(data.converted, importReport);
 
         let countAddedErrored = 0;
         let countUpdatedErrored = 0;
@@ -142,15 +146,16 @@ const RcoConversionTabs = ({ data, reportType, date, errors, importReport }) => 
         const erroredIds = [];
         for (let index = 0; index < errors?.length; index++) {
           const error = errors[index];
-          if (importReport.addedIds?.includes(error.id_rco_formation)) {
+          const id = error.cle_ministere_educatif ?? error.id_rco_formation;
+          if (importReport.addedIds?.includes(id)) {
             countAddedErrored++;
-            erroredIds.push(error.id_rco_formation);
-          } else if (importReport.deletedIds?.includes(error.id_rco_formation)) {
+            erroredIds.push(id);
+          } else if (importReport.deletedIds?.includes(id)) {
             countDeletedErrored++;
-            erroredIds.push(error.id_rco_formation);
-          } else if (importReport.updatedIds?.includes(error.id_rco_formation)) {
+            erroredIds.push(id);
+          } else if (importReport.updatedIds?.includes(id)) {
             countUpdatedErrored++;
-            erroredIds.push(error.id_rco_formation);
+            erroredIds.push(id);
           }
         }
         setImportReportRelatedData({
@@ -241,7 +246,7 @@ const TrainingsUpdateTabs = ({ data, reportType, date, errors, importReport, con
       if (data && data.updated) {
         // console.log(data);
 
-        const metricsImportedConverted = getConvetedMetricsFromImportReport(convertReport?.convertedIds, importReport);
+        const metricsImportedConverted = getConvertedMetricsFromImportReport(convertReport?.convertedIds, importReport);
         // console.log(metricsImportedConverted);
 
         // "Dummy check"
@@ -255,7 +260,9 @@ const TrainingsUpdateTabs = ({ data, reportType, date, errors, importReport, con
         // console.log("unpublishedToday", unpublishedToday.length); // unpublishedToday
 
         const addedConvertedUpdatedIds = [];
-        const updatedIds = data.updated.map(({ id_rco_formation }) => id_rco_formation);
+        const updatedIds = data.updated.map(
+          ({ id_rco_formation, cle_ministere_educatif }) => cle_ministere_educatif ?? id_rco_formation
+        );
         for (let k = 0; k < metricsImportedConverted.addedConvertedIds.length; k++) {
           const id = metricsImportedConverted.addedConvertedIds[k];
           if (updatedIds.includes(id)) {
@@ -265,7 +272,9 @@ const TrainingsUpdateTabs = ({ data, reportType, date, errors, importReport, con
         // console.log("nb add-> converted-> updated", addedConvertedUpdatedIds.length); // nb add-> converted-> updated
 
         const addedConvertedErroredIds = [];
-        const errorIds = errors.map(({ id_rco_formation }) => id_rco_formation);
+        const errorIds = errors.map(
+          ({ id_rco_formation, cle_ministere_educatif }) => cle_ministere_educatif ?? id_rco_formation
+        );
         for (let k = 0; k < metricsImportedConverted.addedConvertedIds.length; k++) {
           const id = metricsImportedConverted.addedConvertedIds[k];
           if (errorIds.includes(id)) {
@@ -293,7 +302,9 @@ const TrainingsUpdateTabs = ({ data, reportType, date, errors, importReport, con
         // console.log("nb up-> converted-> error", updatedConvertedErroredIds.length); // nb up-> converted-> error
 
         const restConvertedUpdatedIds = [];
-        const restIds = metricsImportedConverted.convertedIdsRest.map(({ id_rco_formation }) => id_rco_formation);
+        const restIds = metricsImportedConverted.convertedIdsRest.map(
+          ({ id_rco_formation, cle_ministere_educatif }) => cle_ministere_educatif ?? id_rco_formation
+        );
         for (let k = 0; k < restIds.length; k++) {
           const id = restIds[k];
           if (updatedIds.includes(id)) {

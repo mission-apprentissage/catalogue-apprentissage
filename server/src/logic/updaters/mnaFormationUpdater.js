@@ -61,7 +61,9 @@ const mnaFormationUpdater = async (
     }
 
     // Trust RCO for geocoords & insee
-    const rcoFormation = await RcoFormation.findOne({ id_rco_formation: formation.id_rco_formation }).lean();
+    const rcoFormation = await RcoFormation.findOne({
+      cle_ministere_educatif: formation.cle_ministere_educatif,
+    }).lean();
     const code_commune_insee = rcoFormation?.etablissement_lieu_formation_code_insee ?? formation.code_commune_insee;
     const code_postal = rcoFormation?.etablissement_lieu_formation_code_postal ?? formation.code_postal;
 
@@ -247,15 +249,15 @@ const mnaFormationUpdater = async (
 
       // apply perimetre filters against the tmp collection
       // check "à publier" first to have less mefs
-      // Add current id_rco_formation to ensure no concurrent access in db
+      // Add current cle_ministere_educatif to ensure no concurrent access in db
       let mefs_10 = await findMefsForAffelnet({
-        id_rco_formation: rest.id_rco_formation,
+        cle_ministere_educatif: rest.cle_ministere_educatif,
         $or: aPublierRules.map(getQueryFromRule),
       });
 
       if (!mefs_10) {
         mefs_10 = await findMefsForAffelnet({
-          id_rco_formation: rest.id_rco_formation,
+          cle_ministere_educatif: rest.cle_ministere_educatif,
           $or: aPublierSoumisAValidationRules.map(getQueryFromRule),
         });
       }
@@ -278,7 +280,7 @@ const mnaFormationUpdater = async (
         }
       }
 
-      await SandboxFormation.deleteMany({ id_rco_formation: rest.id_rco_formation });
+      await SandboxFormation.deleteMany({ cle_ministere_educatif: rest.cle_ministere_educatif });
     }
 
     // compute distance between lieu formation & etablissement formateur

@@ -77,6 +77,26 @@ const formatToMnaFormation = (rcoFormation) => {
   };
 };
 
+const getOrCreateFormation = async ({ cle_ministere_educatif, id_rco_formation }) => {
+  let cF;
+  if (cle_ministere_educatif) {
+    cF = await Formation.findOne({
+      cle_ministere_educatif,
+    });
+  }
+
+  if (!cF) {
+    cF = await Formation.findOne({
+      id_rco_formation,
+    });
+  }
+
+  if (!cF) {
+    cF = new Formation();
+  }
+  return cF;
+};
+
 const createFormation = async (
   rcoFormation,
   mnaFormattedRcoFormation,
@@ -91,6 +111,7 @@ const createFormation = async (
     await rcoFormation.save();
 
     invalidRcoFormations.push({
+      cle_ministere_educatif: mnaFormattedRcoFormation.cle_ministere_educatif,
       id_rco_formation: mnaFormattedRcoFormation.id_rco_formation,
       cfd: mnaFormattedRcoFormation.cfd,
       rncp: mnaFormattedRcoFormation.rncp_code,
@@ -110,18 +131,17 @@ const createFormation = async (
 
   mnaFormattedRcoFormation.to_update = true;
   // replace or insert new one
-  const newCf = await Formation.findOneAndUpdate(
-    { id_rco_formation: mnaFormattedRcoFormation.id_rco_formation },
-    mnaFormattedRcoFormation,
-    {
-      upsert: true,
-      new: true,
-    }
-  );
+
+  const cF = await getOrCreateFormation(mnaFormattedRcoFormation);
+  const newCf = await Formation.findOneAndUpdate({ _id: cF._id }, mnaFormattedRcoFormation, {
+    upsert: true,
+    new: true,
+  });
 
   convertedRcoFormations.push({
     _id: newCf._id,
     id_rco_formation: newCf.id_rco_formation,
+    cle_ministere_educatif: newCf.cle_ministere_educatif,
     cfd: newCf.cfd,
     updates: {},
     // stateEtablissements, // TODO Keep for now
@@ -172,6 +192,10 @@ const performConversion = async () => {
           convertedRcoFormations
         );
 
+        if (!newFormation) {
+          return;
+        }
+
         copyAffelnetFields(oldFormations[0], newFormation);
         copyParcoursupFields(oldFormations[0], newFormation);
 
@@ -189,6 +213,10 @@ const performConversion = async () => {
           invalidRcoFormations,
           convertedRcoFormations
         );
+
+        if (!newFormation) {
+          return;
+        }
 
         const affelnet_statut = oldFormations[0].affelnet_statut;
         if (oldFormations.every((f) => f.affelnet_statut === affelnet_statut)) {
@@ -230,9 +258,18 @@ const performConversion = async () => {
           rcoFormation.conversion_error = "success";
           await rcoFormation.save();
 
-          const cF = await Formation.findOneAndUpdate(
-            { id_rco_formation: mnaFormattedRcoFormation.id_rco_formation },
-            { published: false, rco_published: false, update_error: null, to_update: false },
+          const cF = await getOrCreateFormation(mnaFormattedRcoFormation);
+
+          await Formation.findOneAndUpdate(
+            { _id: cF._id },
+            {
+              id_rco_formation: mnaFormattedRcoFormation.id_rco_formation,
+              cle_ministere_educatif: mnaFormattedRcoFormation.cle_ministere_educatif,
+              published: false,
+              rco_published: false,
+              update_error: null,
+              to_update: false,
+            },
             {
               upsert: true,
               new: true,
@@ -243,6 +280,7 @@ const performConversion = async () => {
             _id: cF._id,
             id_rco_formation: mnaFormattedRcoFormation.id_rco_formation,
             cfd: mnaFormattedRcoFormation.cfd,
+            cle_ministere_educatif: mnaFormattedRcoFormation.cle_ministere_educatif,
             updates: JSON.stringify({ published: false }),
           });
           return;
