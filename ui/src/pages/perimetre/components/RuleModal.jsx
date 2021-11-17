@@ -245,7 +245,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
     {
       field: "diplome.keyword",
       operator: "===",
-      value: diplome,
+      value: values.diplome,
       combinator: "AND",
       index: 0,
     },
