@@ -12,11 +12,16 @@ const {
   copyParcoursupFields,
   extractFlatIdsAction,
 } = require("./migrationFinder");
+const { extractFirstValue } = require("../../../common/utils/rcoUtils");
+
+const extractPeriodeArray = (arr) => {
+  return Array.from(new Set(arr.map((v) => v.split("##")).flat()));
+};
 
 const formatToMnaFormation = (rcoFormation) => {
   const periode =
     rcoFormation.periode && rcoFormation.periode.length > 0
-      ? `[${rcoFormation.periode.reduce((acc, e) => `${acc}${acc ? ", " : ""}"${e}"`, "")}]`
+      ? `[${extractPeriodeArray(rcoFormation.periode).reduce((acc, e) => `${acc}${acc ? ", " : ""}"${e}"`, "")}]`
       : null;
 
   let niveau_entree_obligatoire = null;
@@ -27,8 +32,7 @@ const formatToMnaFormation = (rcoFormation) => {
     }
   }
 
-  // TODO id_formation ; intitulé_formation et période.  --> split stuff separated by ##
-  // TODO code postal, adresses, emails  --> split stuff separated by ##
+  // TODO intitule, id_formation, emails  --> split stuff separated by ## ?
 
   return {
     cle_ministere_educatif: rcoFormation.cle_ministere_educatif,
@@ -40,11 +44,11 @@ const formatToMnaFormation = (rcoFormation) => {
     cfd: rcoFormation.cfd,
 
     uai_formation: rcoFormation.etablissement_lieu_formation_uai,
-    code_postal: rcoFormation.etablissement_lieu_formation_code_postal,
-    code_commune_insee: rcoFormation.etablissement_lieu_formation_code_insee,
+    code_postal: extractFirstValue(rcoFormation.etablissement_lieu_formation_code_postal),
+    code_commune_insee: extractFirstValue(rcoFormation.etablissement_lieu_formation_code_insee),
 
-    lieu_formation_geo_coordonnees: rcoFormation.etablissement_lieu_formation_geo_coordonnees,
-    lieu_formation_adresse: rcoFormation.etablissement_lieu_formation_adresse,
+    lieu_formation_geo_coordonnees: extractFirstValue(rcoFormation.etablissement_lieu_formation_geo_coordonnees),
+    lieu_formation_adresse: extractFirstValue(rcoFormation.etablissement_lieu_formation_adresse),
     lieu_formation_siret: rcoFormation.etablissement_lieu_formation_siret,
 
     rncp_code: rcoFormation.rncp_code,

@@ -3,7 +3,7 @@ const Joi = require("joi");
 const { getQueryFromRule } = require("../../common/utils/rulesUtils");
 const { ReglePerimetre } = require("../../common/model");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
-const { getPeriodeTags } = require("../../common/utils/rcoUtils");
+const { getPeriodeTags, extractFirstValue } = require("../../common/utils/rcoUtils");
 const { cfdMapper } = require("../mappers/cfdMapper");
 const { codePostalMapper } = require("../mappers/codePostalMapper");
 const { etablissementsMapper } = require("../mappers/etablissementsMapper");
@@ -64,8 +64,12 @@ const mnaFormationUpdater = async (
     const rcoFormation = await RcoFormation.findOne({
       cle_ministere_educatif: formation.cle_ministere_educatif,
     }).lean();
-    const code_commune_insee = rcoFormation?.etablissement_lieu_formation_code_insee ?? formation.code_commune_insee;
-    const code_postal = rcoFormation?.etablissement_lieu_formation_code_postal ?? formation.code_postal;
+    const code_commune_insee = extractFirstValue(
+      rcoFormation?.etablissement_lieu_formation_code_insee ?? formation.code_commune_insee
+    );
+    const code_postal = extractFirstValue(
+      rcoFormation?.etablissement_lieu_formation_code_postal ?? formation.code_postal
+    );
 
     const { result = {}, messages: cpMessages } = withCodePostalUpdate
       ? await codePostalMapper(code_postal, code_commune_insee)
@@ -78,12 +82,14 @@ const mnaFormationUpdater = async (
     }
 
     // ensure address from RCO is kept
-    cpMapping.lieu_formation_adresse =
-      rcoFormation?.etablissement_lieu_formation_adresse ?? formation.lieu_formation_adresse;
+    cpMapping.lieu_formation_adresse = extractFirstValue(
+      rcoFormation?.etablissement_lieu_formation_adresse ?? formation.lieu_formation_adresse
+    );
 
     // retrieve informative data to help RCO fix the collect
-    const geoCoords =
-      rcoFormation?.etablissement_lieu_formation_geo_coordonnees ?? formation.lieu_formation_geo_coordonnees;
+    const geoCoords = extractFirstValue(
+      rcoFormation?.etablissement_lieu_formation_geo_coordonnees ?? formation.lieu_formation_geo_coordonnees
+    );
     if (geoCoords) {
       const { result = {}, messages: geoMessages } = withCodePostalUpdate
         ? await geoMapper(geoCoords, code_commune_insee)
