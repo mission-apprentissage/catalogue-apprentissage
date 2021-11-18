@@ -235,7 +235,7 @@ describe(__filename, () => {
       cfd: "123134",
       mef: "mef-11",
       rco: "rco-11",
-      rncp: 1234,
+      rncp: [1234],
       rome: ["rome-110", "rome-111"],
       uai: "uai-11",
     };

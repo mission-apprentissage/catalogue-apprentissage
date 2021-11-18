@@ -32,7 +32,7 @@ const formatter = ({ rncp_code, cfd_entree, uai_formation, id_rco_formation, bcn
   const [{ mef10: mef } = { mef10: "" }] = bcn_mefs_10;
 
   return {
-    rncp: Number(rncp_code.replace("RNCP", "")),
+    rncp: [Number(rncp_code.replace("RNCP", ""))],
     cfd: cfd_entree,
     uai: uai_formation,
     rco: id_rco_formation, // TODO send cle_ministere_educatif
@@ -48,10 +48,10 @@ const createCursor = () => {
 const createFormation = async (formation) => {
   try {
     const data = formatter(formation);
-    const responseData = await parcoursupApi.postFormation(data);
+    const { g_ta_cod, dejaEnvoye } = await parcoursupApi.postFormation(data);
 
-    // console.log("Parcoursup WS response", responseData);
-    formation.parcoursup_id = responseData.g_ta_cod;
+    logger.info("Parcoursup WS response", g_ta_cod, dejaEnvoye);
+    formation.parcoursup_id = g_ta_cod;
     formation.parcoursup_statut = "publié";
     formation.last_update_at = Date.now();
     formation.last_update_who = "web service Parcoursup";
