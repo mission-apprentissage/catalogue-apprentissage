@@ -23,7 +23,7 @@ const createEtablissement = async (payload) => {
       return null;
     }
 
-    logger.info("Try to create etablissement with data", etablissement);
+    logger.info("Create etablissement with data", etablissement);
     const newEtablissement = new Etablissement(etablissement);
     await newEtablissement.save();
     return newEtablissement;

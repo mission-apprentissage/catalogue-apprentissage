@@ -1,15 +1,18 @@
 const rcoFormationsSchema = {
   id_formation: {
+    index: true,
     type: String,
     default: null,
     description: "Identifiant de la formation",
   },
   id_action: {
+    index: true,
     type: String,
     default: null,
     description: "Identifant des actions concaténés",
   },
   id_certifinfo: {
+    index: true,
     type: String,
     default: null,
     description: "Identifant certifInfo (unicité de la certification)",
@@ -137,6 +140,7 @@ const rcoFormationsSchema = {
     description: "Historique des mises à jours",
   },
   published: {
+    index: true,
     type: Boolean,
     default: true,
     description: "Est publiée",
@@ -152,6 +156,7 @@ const rcoFormationsSchema = {
     description: "Date de dernières mise à jour",
   },
   converted_to_mna: {
+    index: true,
     type: Boolean,
     default: false,
     description: "A été convertie en mna formation",
