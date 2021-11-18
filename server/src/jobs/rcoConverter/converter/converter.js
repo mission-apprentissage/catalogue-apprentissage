@@ -18,6 +18,41 @@ const extractPeriodeArray = (arr) => {
   return Array.from(new Set(arr.map((v) => v.split("##")).flat()));
 };
 
+const extractUsefulNewFields = (formation) => {
+  const {
+    cle_ministere_educatif,
+    etablissement_gestionnaire_courriel,
+    etablissement_formateur_courriel,
+    niveau_entree_obligatoire,
+    entierement_a_distance,
+  } = formation;
+
+  return {
+    cle_ministere_educatif,
+    etablissement_gestionnaire_courriel,
+    etablissement_formateur_courriel,
+    niveau_entree_obligatoire,
+    entierement_a_distance,
+  };
+};
+
+/**
+ * check last updates_history entry on RCOFormation and if only new fields, to_update=false (to spare much time)
+ */
+const hasOnlyUpdatedNewFields = (rcoFormation) => {
+  const newFields = [
+    "cle_ministere_educatif",
+    "etablissement_gestionnaire_courriel",
+    "etablissement_formateur_courriel",
+    "intitule_formation",
+    "niveau_entree_obligatoire",
+    "entierement_a_distance",
+  ];
+  const updatedFields = Object.keys(rcoFormation?.updates_history[rcoFormation?.updates_history?.length - 1]?.to ?? {});
+
+  return updatedFields.length === newFields.length && updatedFields.every((field) => newFields.includes(field));
+};
+
 const formatToMnaFormation = (rcoFormation) => {
   const periode =
     rcoFormation.periode && rcoFormation.periode.length > 0
@@ -189,6 +224,33 @@ const performConversion = async () => {
 
       if (oldFormations.length === 1) {
         const mnaFormattedRcoFormation = formatToMnaFormation(rcoFormation._doc);
+
+        if (hasOnlyUpdatedNewFields(rcoFormation)) {
+          const cF = await Formation.findOneAndUpdate(
+            { _id: oldFormations[0]._id },
+            {
+              ...extractUsefulNewFields(mnaFormattedRcoFormation),
+              to_update: false,
+            },
+            {
+              new: true,
+            }
+          );
+
+          rcoFormation.conversion_error = "success";
+          await rcoFormation.save();
+
+          convertedRcoFormations.push({
+            _id: cF._id,
+            id_rco_formation: cF.id_rco_formation,
+            cle_ministere_educatif: cF.cle_ministere_educatif,
+            cfd: cF.cfd,
+            updates: {},
+          });
+
+          return;
+        }
+
         const newFormation = await createFormation(
           rcoFormation,
           mnaFormattedRcoFormation,
