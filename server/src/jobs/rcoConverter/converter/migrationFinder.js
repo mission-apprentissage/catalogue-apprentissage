@@ -1,4 +1,5 @@
-const { Formation } = require("../../../common/model");
+const { Formation, PsFormation } = require("../../../common/model");
+const { asyncForEach } = require("../../../common/utils/asyncUtils");
 
 /**
  * For a given RcoFormation, try to find some Formation published in catalogue which includes ids_action
@@ -39,6 +40,64 @@ const copyParcoursupFields = (oldFormation, newFormation) => {
   return newFormation;
 };
 
+const copyRapprochementFields = (oldFormation, newFormation) => {
+  newFormation.parcoursup_id = oldFormation.parcoursup_id;
+  newFormation.parcoursup_reference = oldFormation.parcoursup_reference;
+  newFormation.parcoursup_a_charger = oldFormation.parcoursup_a_charger;
+  return newFormation;
+};
+
+const updateRapprochement = async (oldFormation, newFormation) => {
+  const psFormation = await PsFormation.findById(oldFormation.parcoursup_id).lean();
+  const matchs = psFormation.matching_mna_formation.map((match) => {
+    let _id = match._id;
+    let id_rco_formation = match.id_rco_formation;
+    if (_id?.toString() === oldFormation._id?.toString()) {
+      _id = newFormation._id;
+      id_rco_formation = newFormation.id_rco_formation;
+    }
+    return { ...match, _id, id_rco_formation };
+  });
+
+  const validatedIds = psFormation.validated_formation_ids.map((id) => {
+    if (id === oldFormation._id?.toString()) {
+      return newFormation._id?.toString();
+    }
+    return id;
+  });
+
+  await PsFormation.findByIdAndUpdate(oldFormation.parcoursup_id, {
+    matching_mna_formation: matchs,
+    matching_mna_parcoursup_statuts: matchs.map(({ parcoursup_statut }) => parcoursup_statut),
+    validated_formation_ids: validatedIds,
+  });
+
+  return newFormation;
+};
+
+const updateMultipleRapprochement = async (oldFormations, newFormation) => {
+  const oldPsFormations = [];
+  await asyncForEach(oldFormations, async (oldFormation) => {
+    const psFormation = await PsFormation.findById(oldFormation.parcoursup_id).lean();
+    oldPsFormations.push(psFormation);
+  });
+
+  const etat_reconciliation = oldPsFormations?.[0]?.etat_reconciliation;
+  const statut_reconciliation = oldPsFormations?.[0]?.statut_reconciliation;
+  if (
+    oldPsFormations.every((f) => f.etat_reconciliation === etat_reconciliation) &&
+    oldPsFormations.every((f) => f.statut_reconciliation === statut_reconciliation)
+  ) {
+    newFormation = copyRapprochementFields(oldFormations[0], newFormation);
+
+    await asyncForEach(oldFormations, async (oldFormation) => {
+      await updateRapprochement(oldFormation, newFormation);
+    });
+  }
+
+  return newFormation;
+};
+
 const extractIdsAction = (id_action) => {
   const ids_action_arr = id_action.split("##");
   return ids_action_arr.map((actions) => actions.split("|"));
@@ -48,4 +107,12 @@ const extractFlatIdsAction = (id_action) => {
   return extractIdsAction(id_action).flat();
 };
 
-module.exports = { findPreviousFormations, copyAffelnetFields, copyParcoursupFields, extractFlatIdsAction };
+module.exports = {
+  findPreviousFormations,
+  copyAffelnetFields,
+  copyParcoursupFields,
+  extractFlatIdsAction,
+  copyRapprochementFields,
+  updateRapprochement,
+  updateMultipleRapprochement,
+};

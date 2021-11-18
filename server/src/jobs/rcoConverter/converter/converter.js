@@ -11,6 +11,9 @@ const {
   copyAffelnetFields,
   copyParcoursupFields,
   extractFlatIdsAction,
+  copyRapprochementFields,
+  updateRapprochement,
+  updateMultipleRapprochement,
 } = require("./migrationFinder");
 const { extractFirstValue } = require("../../../common/utils/rcoUtils");
 
@@ -264,8 +267,9 @@ const performConversion = async () => {
 
         copyAffelnetFields(oldFormations[0], newFormation);
         copyParcoursupFields(oldFormations[0], newFormation);
+        copyRapprochementFields(oldFormations[0], newFormation);
 
-        // TODO update rapprochement
+        await updateRapprochement(oldFormations[0], newFormation);
 
         await newFormation.save();
         return;
@@ -294,7 +298,10 @@ const performConversion = async () => {
           copyParcoursupFields(oldFormations[0], newFormation);
         }
 
-        // TODO if same rapprochement, keep rapprochement, else discard
+        const parcoursup_id = oldFormations[0].parcoursup_id;
+        if (parcoursup_id && oldFormations.every((f) => f.parcoursup_id === parcoursup_id)) {
+          await updateMultipleRapprochement(oldFormations, newFormation);
+        }
 
         await newFormation.save();
         return;
