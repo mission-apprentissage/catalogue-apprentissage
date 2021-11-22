@@ -1,12 +1,18 @@
 const { runScript } = require("../../scriptWrapper");
 const logger = require("../../../common/logger");
-const { Formation } = require("../../../common/model/index");
+const { Formation, User } = require("../../../common/model");
 const parcoursupApi = require("./parcoursupApi");
+const { findLast } = require("lodash");
 
 const limit = Number(process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_LIMIT || 50);
 
+const STATUS = {
+  PUBLIE: "publié",
+  EN_ATTENTE: "en attente de publication",
+};
+
 const filter = {
-  parcoursup_statut: "en attente de publication",
+  parcoursup_statut: STATUS.EN_ATTENTE,
   uai_formation: { $ne: null },
   rncp_code: { $ne: null },
   $or: [{ bcn_mefs_10: { $size: 0 } }, { bcn_mefs_10: { $size: 1 } }],
@@ -21,6 +27,7 @@ const select = {
   rome_codes: 1,
   parcoursup_statut_history: 1,
   parcoursup_error: 1,
+  updates_history: 1,
 };
 
 // Retry the ones with errors last
@@ -30,10 +37,32 @@ const sort = {
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const formatter = ({ rncp_code, cfd_entree, uai_formation, id_rco_formation, bcn_mefs_10 = [], rome_codes = [] }) => {
+const findPublishUser = async (updates_history) => {
+  const modification = findLast(updates_history, ({ to }) => {
+    return to.parcoursup_statut === STATUS.EN_ATTENTE;
+  });
+
+  if (modification?.to?.last_update_who) {
+    const user = await User.findOne({ email: modification?.to?.last_update_who });
+    return user?._id;
+  }
+
+  return "";
+};
+
+const formatter = async ({
+  rncp_code,
+  cfd_entree,
+  uai_formation,
+  id_rco_formation,
+  bcn_mefs_10 = [],
+  rome_codes = [],
+  updates_history = [],
+}) => {
   const [{ mef10: mef } = { mef10: "" }] = bcn_mefs_10;
 
   return {
+    user: await findPublishUser(updates_history),
     rncp: [Number(rncp_code.replace("RNCP", ""))],
     cfd: cfd_entree,
     uai: uai_formation,
@@ -49,17 +78,17 @@ const createCursor = () => {
 
 const createFormation = async (formation) => {
   try {
-    const data = formatter(formation);
+    const data = await formatter(formation);
     const { g_ta_cod, dejaEnvoye } = await parcoursupApi.postFormation(data);
 
     logger.info("Parcoursup WS response", g_ta_cod, dejaEnvoye);
     formation.parcoursup_id = g_ta_cod;
-    formation.parcoursup_statut = "publié";
+    formation.parcoursup_statut = STATUS.PUBLIE;
     formation.last_update_at = Date.now();
     formation.last_update_who = "web service Parcoursup";
     formation.parcoursup_statut_history.push({
       date: new Date(),
-      parcoursup_statut: "publié",
+      parcoursup_statut: STATUS.PUBLIE,
       last_update_who: "web service Parcoursup",
     });
     await formation.save();

@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { Formation } = require("../../../common/model/index");
+const { Formation, User } = require("../../../common/model");
 const { connectToMongoForTests, cleanAll } = require("../../../../tests/utils/testUtils.js");
 const { createCursor } = require("../export/index.js");
 const sinon = require("sinon");
@@ -10,9 +10,13 @@ describe(__filename, () => {
   before(async () => {
     // Connection to test collection
     await connectToMongoForTests();
+    await User.deleteMany({});
     await Formation.deleteMany({});
 
     // insert sample data in DB
+    await User.create({ email: "test@beta.gouv.fr", username: "test" });
+    await User.create({ email: "test2@beta.gouv.fr", username: "test2" });
+
     // formations
     await Formation.create({
       rncp_code: "RNCP1234",
@@ -218,7 +222,7 @@ describe(__filename, () => {
   });
 
   it("should format properly", async () => {
-    const formatted = formatter({
+    const formatted = await formatter({
       rncp_code: "RNCP1234",
       cfd: "6789",
       cfd_entree: "123134",
@@ -229,9 +233,19 @@ describe(__filename, () => {
       parcoursup_statut: "en attente de publication",
       parcoursup_error: null,
       parcoursup_statut_history: [],
+      updates_history: [
+        {
+          from: { parcoursup_statut: "à publier" },
+          to: { parcoursup_statut: "en attente de publication", last_update_who: "test@beta.gouv.fr" },
+        },
+        { from: {}, to: {} },
+      ],
     });
 
+    const user = await User.findOne({ email: "test@beta.gouv.fr" });
+
     const expected = {
+      user: user._id,
       cfd: "123134",
       mef: "mef-11",
       rco: "rco-11",
