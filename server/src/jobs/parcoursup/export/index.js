@@ -28,6 +28,8 @@ const sort = {
   parcoursup_error: 1,
 };
 
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 const formatter = ({ rncp_code, cfd_entree, uai_formation, id_rco_formation, bcn_mefs_10 = [], rome_codes = [] }) => {
   const [{ mef10: mef } = { mef10: "" }] = bcn_mefs_10;
 
@@ -76,6 +78,7 @@ const run = async () => {
   let cursor = createCursor();
   for await (const formation of cursor) {
     await createFormation(formation);
+    await sleep(500);
   }
 };
 
