@@ -2,7 +2,7 @@ const express = require("express");
 const Boom = require("boom");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { toBePublishedRules } = require("../../common/utils/referenceUtils");
-const { getQueryFromRule } = require("../../common/utils/rulesUtils");
+const { getQueryFromRule, titresRule } = require("../../common/utils/rulesUtils");
 const { getNiveauxDiplomesTree } = require("@mission-apprentissage/tco-service-node");
 const { ReglePerimetre, Formation } = require("../../common/model");
 
@@ -18,6 +18,7 @@ module.exports = () => {
         {
           $match: {
             ...toBePublishedRules,
+            ...titresRule,
           },
         },
         {

@@ -78,4 +78,4 @@ const getQueryFromRule = ({ niveau, diplome, regle_complementaire, duree, num_ac
   return query;
 };
 
-module.exports = { serialize, deserialize, getQueryFromRule, getCfdExpireRule };
+module.exports = { serialize, deserialize, getQueryFromRule, getCfdExpireRule, titresRule };
