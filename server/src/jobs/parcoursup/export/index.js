@@ -77,11 +77,12 @@ const createCursor = () => {
 };
 
 const createFormation = async (formation) => {
+  let data;
   try {
-    const data = await formatter(formation);
+    data = await formatter(formation);
     const { g_ta_cod, dejaEnvoye } = await parcoursupApi.postFormation(data);
 
-    logger.info("Parcoursup WS response", g_ta_cod, dejaEnvoye);
+    logger.info(`Parcoursup WS response: g_ta_cod=${g_ta_cod} dejaEnvoye=${dejaEnvoye}`);
     formation.parcoursup_id = g_ta_cod;
     formation.parcoursup_statut = STATUS.PUBLIE;
     formation.last_update_at = Date.now();
@@ -93,8 +94,8 @@ const createFormation = async (formation) => {
     });
     await formation.save();
   } catch (e) {
-    logger.error("Parcoursup WS error", e?.response?.data ?? e);
-    formation.parcoursup_error = e?.response?.data?.message || "erreur de création";
+    logger.error("Parcoursup WS error", e?.response?.status, e?.response?.data ?? e, data);
+    formation.parcoursup_error = `${e?.response?.status} ${e?.response?.data?.message || "erreur de création"}`;
     await formation.save();
   }
 };
