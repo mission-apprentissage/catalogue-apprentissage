@@ -39,7 +39,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const findPublishUser = async (updates_history) => {
   const modification = findLast(updates_history, ({ to }) => {
-    return to.parcoursup_statut === STATUS.EN_ATTENTE;
+    return to?.parcoursup_statut === STATUS.EN_ATTENTE;
   });
 
   if (modification?.to?.last_update_who) {
@@ -80,10 +80,17 @@ const createFormation = async (formation) => {
   let data;
   try {
     data = await formatter(formation);
-    const { g_ta_cod, dejaEnvoye } = await parcoursupApi.postFormation(data);
+    const response = await parcoursupApi.postFormation(data);
 
-    logger.info(`Parcoursup WS response: g_ta_cod=${g_ta_cod} dejaEnvoye=${dejaEnvoye}`);
-    formation.parcoursup_id = g_ta_cod;
+    logger.info(`Parcoursup WS response: g_ta_cod=${response.g_ta_cod} dejaEnvoye=${response.dejaEnvoye}`);
+
+    if (!response.g_ta_cod) {
+      const e = new Error("Missing g_ta_cod");
+      e.response = { status: 200, data: response };
+      throw e;
+    }
+
+    formation.parcoursup_id = response.g_ta_cod;
     formation.parcoursup_statut = STATUS.PUBLIE;
     formation.last_update_at = Date.now();
     formation.last_update_who = "web service Parcoursup";
@@ -95,7 +102,9 @@ const createFormation = async (formation) => {
     await formation.save();
   } catch (e) {
     logger.error("Parcoursup WS error", e?.response?.status, e?.response?.data ?? e, data);
-    formation.parcoursup_error = `${e?.response?.status} ${e?.response?.data?.message || "erreur de création"}`;
+    formation.parcoursup_error = `${e?.response?.status} ${
+      e?.response?.data?.message ?? e?.response?.data ?? "erreur de création"
+    }`;
     await formation.save();
   }
 };
