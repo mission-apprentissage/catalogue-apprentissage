@@ -16,6 +16,10 @@ const formationsJPlus2 = fs.readJsonSync(
 );
 
 const adding = {
+  duree: null,
+  parcours: null,
+  entree_apprentissage: null,
+  lieu_different: null,
   intitule_formation: "",
   cle_ministere_educatif: "a098765432",
   id_formation: "24_208063",
@@ -70,6 +74,10 @@ const adding = {
 };
 
 const updated = {
+  duree: null,
+  parcours: null,
+  entree_apprentissage: null,
+  lieu_different: null,
   intitule_formation: "",
   cle_ministere_educatif: "a098765433",
   id_formation: "24_208037",
@@ -105,6 +113,10 @@ const updated = {
 };
 
 const deleted = {
+  duree: null,
+  parcours: null,
+  entree_apprentissage: null,
+  lieu_different: null,
   intitule_formation: "",
   id_formation: "24_207466",
   id_action: "24_1461053",
@@ -156,6 +168,10 @@ const deleted = {
 };
 
 const reAdded = {
+  duree: null,
+  parcours: null,
+  entree_apprentissage: null,
+  lieu_different: null,
   intitule_formation: "",
   cle_ministere_educatif: "a076E55E",
   id_formation: "24_207466",

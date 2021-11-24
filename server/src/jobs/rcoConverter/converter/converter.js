@@ -28,6 +28,12 @@ const extractUsefulNewFields = (formation) => {
     etablissement_formateur_courriel,
     niveau_entree_obligatoire,
     entierement_a_distance,
+    // TODO below check once rco deliver the new JSON stream
+    duree,
+    annee,
+    // TODO select ??
+    // parcours:
+    // lieu_different: ??
   } = formation;
 
   return {
@@ -36,6 +42,8 @@ const extractUsefulNewFields = (formation) => {
     etablissement_formateur_courriel,
     niveau_entree_obligatoire,
     entierement_a_distance,
+    duree,
+    annee,
   };
 };
 
@@ -50,6 +58,11 @@ const hasOnlyUpdatedNewFields = (rcoFormation) => {
     "intitule_formation",
     "niveau_entree_obligatoire",
     "entierement_a_distance",
+    // TODO below check once rco deliver the new JSON stream
+    "duree",
+    "entree_apprentissage",
+    "parcours",
+    "lieu_different",
   ];
   const updatedFields = Object.keys(rcoFormation?.updates_history[rcoFormation?.updates_history?.length - 1]?.to ?? {});
 
@@ -116,6 +129,18 @@ const formatToMnaFormation = (rcoFormation) => {
     entierement_a_distance: rcoFormation.entierement_a_distance === "oui",
     etablissement_formateur_courriel: rcoFormation.etablissement_formateur_courriel,
     etablissement_gestionnaire_courriel: rcoFormation.etablissement_gestionnaire_courriel,
+
+    duree: rcoFormation.duree,
+    annee: rcoFormation.entree_apprentissage,
+
+    // TODO select ??
+    // parcours:
+    // lieu_different: ??
+
+    // TODO change AFF mef selection rule ?
+    // TODO create PS mef selection rule
+
+    // TODO multisite / mono site stuff.
   };
 };
 

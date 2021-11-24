@@ -203,6 +203,28 @@ const rcoFormationsSchema = {
     default: null,
     description: "Intitule de la formation",
   },
+  parcours: {
+    type: String,
+    default: null,
+    description:
+      "Parcours suivi sur 3 caractères : P00 (quand la question du parcours ne se pose pas), sinon  P01, P02 et Pnt – tant que les sessions ne sont pas expertisées",
+  },
+  duree: {
+    type: String,
+    default: null,
+    description: "Durée de la formation en années (1 à 5, X si en cours de collecte)",
+  },
+  entree_apprentissage: {
+    type: String,
+    default: null,
+    description: "Année d'entrée en apprentissage (1 à 5, X si en cours de collecte)",
+  },
+  lieu_different: {
+    type: String,
+    default: null,
+    description:
+      "Code du lieu sur 3 caractères : L00 (quand la question du lieu ne se pose pas), sinon  L01, L2 et Lnt – tant que les sessions ne sont pas expertisées",
+  },
 };
 
 module.exports = rcoFormationsSchema;
