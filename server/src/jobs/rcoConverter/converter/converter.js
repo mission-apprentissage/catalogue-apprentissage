@@ -230,10 +230,6 @@ const performConversion = async () => {
   const invalidRcoFormations = [];
   const convertedRcoFormations = [];
 
-  /*************************************************************************************/
-  /* FIXME: below migration code. To be removed after RCO migration without duplicates */
-  /*************************************************************************************/
-
   // first loop only on published
   // try to find englobing actions
   // if found keep data like statut, rapprochement ...
@@ -342,9 +338,6 @@ const performConversion = async () => {
     { conversion_error: "success" },
     { $set: { conversion_error: null, converted_to_mna: true } }
   );
-  /******************************************************/
-  /*  FIXME: /END RCO migration code. remove code above */
-  /******************************************************/
 
   await paginator(
     RcoFormation,

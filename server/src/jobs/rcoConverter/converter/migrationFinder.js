@@ -4,7 +4,28 @@ const { asyncForEach } = require("../../../common/utils/asyncUtils");
 /**
  * For a given RcoFormation, try to find some Formation published in catalogue which includes ids_action
  */
-const findPreviousFormations = async ({ id_formation, id_certifinfo, id_action }) => {
+const findPreviousFormations = async ({
+  id_formation,
+  id_certifinfo,
+  id_action,
+  cle_ministere_educatif,
+  etablissement_lieu_formation_code_insee,
+}) => {
+  if (cle_ministere_educatif?.includes("-")) {
+    // here merge multi-site / mono-site : check cle_ministere_educatif + code_insee
+    const rootKey = cle_ministere_educatif?.split("-")[0];
+
+    const previousFormation = await Formation.findOne({
+      cle_ministere_educatif: rootKey,
+      code_commune_insee: etablissement_lieu_formation_code_insee,
+      published: true,
+    }).lean();
+
+    if (previousFormation) {
+      return [previousFormation];
+    }
+  }
+
   const ids_action = extractIdsAction(id_action);
   const ids_formation = id_formation.split("##");
 
