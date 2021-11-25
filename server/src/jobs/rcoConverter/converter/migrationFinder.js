@@ -48,7 +48,7 @@ const copyRapprochementFields = (oldFormation, newFormation) => {
 };
 
 const updateRapprochement = async (oldFormation, newFormation) => {
-  const psFormation = await PsFormation.findById(oldFormation.parcoursup_id).lean();
+  const psFormation = await PsFormation.findOne({ id_parcoursup: oldFormation.parcoursup_id }).lean();
   const matchs = psFormation.matching_mna_formation.map((match) => {
     let _id = match._id;
     let id_rco_formation = match.id_rco_formation;
@@ -66,11 +66,14 @@ const updateRapprochement = async (oldFormation, newFormation) => {
     return id;
   });
 
-  await PsFormation.findByIdAndUpdate(oldFormation.parcoursup_id, {
-    matching_mna_formation: matchs,
-    matching_mna_parcoursup_statuts: matchs.map(({ parcoursup_statut }) => parcoursup_statut),
-    validated_formation_ids: validatedIds,
-  });
+  await PsFormation.findOneAndUpdate(
+    { id_parcoursup: oldFormation.parcoursup_id },
+    {
+      matching_mna_formation: matchs,
+      matching_mna_parcoursup_statuts: matchs.map(({ parcoursup_statut }) => parcoursup_statut),
+      validated_formation_ids: validatedIds,
+    }
+  );
 
   return newFormation;
 };
@@ -78,7 +81,7 @@ const updateRapprochement = async (oldFormation, newFormation) => {
 const updateMultipleRapprochement = async (oldFormations, newFormation) => {
   const oldPsFormations = [];
   await asyncForEach(oldFormations, async (oldFormation) => {
-    const psFormation = await PsFormation.findById(oldFormation.parcoursup_id).lean();
+    const psFormation = await PsFormation.findOne({ id_parcoursup: oldFormation.parcoursup_id }).lean();
     oldPsFormations.push(psFormation);
   });
 
