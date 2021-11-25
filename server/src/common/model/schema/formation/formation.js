@@ -315,6 +315,7 @@ const formationSchema = {
     description: "Erreur lors de la création de la formation sur ParcourSup (via le WS)",
   },
   parcoursup_id: {
+    index: true,
     type: String,
     default: null,
     description: "ids ParcourSup",
