@@ -13,9 +13,9 @@ const {
   extractFlatIdsAction,
   copyRapprochementFields,
   updateRapprochement,
-  updateMultipleRapprochement,
 } = require("./migrationFinder");
 const { extractFirstValue } = require("../../../common/utils/rcoUtils");
+const { asyncForEach } = require("../../../common/utils/asyncUtils");
 
 const extractPeriodeArray = (arr) => {
   return Array.from(new Set(arr.map((v) => v.split("##")).flat()));
@@ -325,8 +325,11 @@ const performConversion = async () => {
 
         const parcoursup_id = oldFormations[0].parcoursup_id;
         if (parcoursup_id && oldFormations.every((f) => f.parcoursup_id === parcoursup_id)) {
-          await updateMultipleRapprochement(oldFormations, newFormation);
+          copyRapprochementFields(oldFormations[0], newFormation);
         }
+        await asyncForEach(oldFormations, async (oldFormation) => {
+          await updateRapprochement(oldFormation, newFormation);
+        });
 
         await newFormation.save();
         return;
