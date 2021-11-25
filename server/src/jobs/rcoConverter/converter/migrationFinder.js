@@ -9,7 +9,10 @@ const findPreviousFormations = async ({ id_formation, id_certifinfo, id_action }
   const ids_formation = id_formation.split("##");
 
   const previousFormations = await Formation.find({
-    cle_ministere_educatif: null, // no key means it is a legacy formation
+    $or: [
+      { cle_ministere_educatif: null }, // no key means it is a legacy formation
+      { annee: "X" }, // X means it is not validated yet
+    ],
     published: true,
     id_formation: { $in: ids_formation },
     id_certifinfo,
