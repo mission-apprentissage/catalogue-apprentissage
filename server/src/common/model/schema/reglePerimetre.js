@@ -25,6 +25,7 @@ const reglePerimetre = {
       "hors périmètre",
       "publié",
       "non publié",
+      "à publier (sous condition habilitation)",
       "à publier (vérifier accès direct postbac)",
       "à publier (soumis à validation Recteur)",
       "à publier (soumis à validation)",
