@@ -17,7 +17,7 @@
     "certificateurs": "La donnée “Certificateurs” provient de France compétences. Si cette information est erronée, merci de leur signaler.",
     "siret_certificateurs": "La donnée “SIRET Certificateurs” provient de France compétences. Si cette information est erronée, merci de leur signaler.",
     "uai_formation": "La donnée “UAI Lieu de formation” correspond à l’UAI de l’organisme formateur ou est renseigné par un instructeur en académie si le lieu de formation est différent de celui du formateur.",
-    "academie": "La donnée “Académie” est déduite du Code Académie qui est déduit du Code commune de l'établissement formateur. L'académie de rattachement peut être différente du lieu de formation.",
+    "academie": "La donnée “Académie” est déduite du Code Académie qui est déduit du Code commune.",
     "lieu_formation_adresse": "La donnée “Adresse” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
     "code_postal": "La donnée “Code postal” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
     "localite": "La donnée “Commune” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",

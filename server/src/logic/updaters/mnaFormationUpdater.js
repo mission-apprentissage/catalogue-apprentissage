@@ -68,15 +68,12 @@ const mnaFormationUpdater = async (
     const { result = {}, messages: cpMessages } = withCodePostalUpdate
       ? await codePostalMapper(code_postal, code_commune_insee)
       : {};
+    let cpMapping = result;
 
     error = parseErrors(cpMessages);
     if (error) {
       return { updates: null, formation, error, cfdInfo: currentCfdInfo };
     }
-
-    // ensure academie is set from etablissement formateur
-    // eslint-disable-next-line no-unused-vars
-    let { nom_academie, num_academie, ...cpMapping } = result;
 
     // ensure address from RCO is kept
     cpMapping.lieu_formation_adresse =
@@ -146,10 +143,6 @@ const mnaFormationUpdater = async (
     if (error) {
       return { updates: null, formation, error, cfdInfo: currentCfdInfo };
     }
-
-    // ensure academie is set from etablissement formateur
-    etablissementsMapping.nom_academie = etablissementsMapping.etablissement_formateur_nom_academie;
-    etablissementsMapping.num_academie = etablissementsMapping.etablissement_formateur_num_academie;
 
     let geoMapping = { idea_geo_coordonnees_etablissement: geoCoords };
     if (withCodePostalUpdate && !geoMapping.idea_geo_coordonnees_etablissement) {
