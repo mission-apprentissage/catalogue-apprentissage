@@ -12,6 +12,19 @@ const changelog = {
       improvements: [],
     },
     {
+      version: "4.11.0",
+      date: "Le 30 Novembre 2021",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [
+        "[Page formation] L’académie de rattachement est déterminée depuis le lieu de formation (et non plus depuis l’établissement formateur)",
+      ],
+      features: [
+        '[Admin] Nouvelle étiquette "à publier  (sous condition habilitation)" dans le module de périmètre pour les formations éligibles à Parcoursup',
+      ],
+      improvements: [],
+    },
+    {
       version: "4.10.0",
       date: "Le 4 Novembre 2021",
       about: `<h4>À propos de cette version</h4>

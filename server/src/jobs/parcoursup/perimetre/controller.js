@@ -25,6 +25,7 @@ const run = async () => {
     {
       parcoursup_statut: {
         $in: [
+          "à publier (sous condition habilitation)",
           "à publier (soumis à validation)",
           "à publier (vérifier accès direct postbac)",
           "à publier (soumis à validation Recteur)",
@@ -39,6 +40,21 @@ const run = async () => {
   const filterHP = {
     parcoursup_statut: "hors périmètre",
   };
+
+  const aPublierHabilitationRules = await ReglePerimetre.find({
+    plateforme: "parcoursup",
+    statut: "à publier (sous condition habilitation)",
+    is_deleted: { $ne: true },
+  }).lean();
+
+  aPublierHabilitationRules.length > 0 &&
+    (await Formation.updateMany(
+      {
+        ...filterHP,
+        $or: aPublierHabilitationRules.map(getQueryFromRule),
+      },
+      { $set: { last_update_at: Date.now(), parcoursup_statut: "à publier (sous condition habilitation)" } }
+    ));
 
   const aPublierVerifierAccesDirectPostBacRules = await ReglePerimetre.find({
     plateforme: "parcoursup",
@@ -95,6 +111,7 @@ const run = async () => {
 
   // apply academy rules
   const academieRules = [
+    ...aPublierHabilitationRules,
     ...aPublierVerifierAccesDirectPostBacRules,
     ...aPublierValidationRecteurRules,
     ...aPublierRules,
@@ -107,6 +124,7 @@ const run = async () => {
           parcoursup_statut: {
             $in: [
               "hors périmètre",
+              "à publier (sous condition habilitation)",
               "à publier (vérifier accès direct postbac)",
               "à publier (soumis à validation Recteur)",
               "à publier",
@@ -128,6 +146,10 @@ const run = async () => {
   const totalNotRelevant = await Formation.countDocuments({
     published: true,
     parcoursup_statut: "hors périmètre",
+  });
+  const totalToValidateHabilitation = await Formation.countDocuments({
+    published: true,
+    parcoursup_statut: "à publier (sous condition habilitation)",
   });
   const totalToValidate = await Formation.countDocuments({
     published: true,
@@ -151,6 +173,7 @@ const run = async () => {
   logger.info(
     `Total formations publiées dans le catalogue : ${totalPublished}\n` +
       `Total formations hors périmètre : ${totalNotRelevant}/${totalPublished}\n` +
+      `Total formations à publier (sous condition habilitation)" : ${totalToValidateHabilitation}/${totalPublished}\n` +
       `Total formations à publier (vérifier accès direct postbac)" : ${totalToValidate}/${totalPublished}\n` +
       `Total formations à publier (soumis à validation Recteur)" : ${totalToValidateRecteur}/${totalPublished}\n` +
       `Total formations à publier : ${totalToCheck}/${totalPublished}\n` +

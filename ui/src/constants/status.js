@@ -10,6 +10,7 @@ export const PARCOURSUP_STATUS = {
   ...COMMON_STATUS,
   A_PUBLIER_VERIFIER_POSTBAC: "à publier (vérifier accès direct postbac)",
   A_PUBLIER_VALIDATION_RECTEUR: "à publier (soumis à validation Recteur)",
+  A_PUBLIER_HABILITATION: "à publier (sous condition habilitation)",
 };
 
 export const AFFELNET_STATUS = {

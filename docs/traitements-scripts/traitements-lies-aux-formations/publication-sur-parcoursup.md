@@ -14,17 +14,18 @@ Le script d'intégration est exécuté chaque nuit, après l'import RCO qui peut
 
 La liste des statuts possibles est la suivante :
 
-* **"hors périmètre"** : la formation n'est pas éligible à Parcoursup
-* **"publié"** : la formation est déjà publiée sur Parcoursup
-* **"non publié"** : la formation a été manuellement sortie du périmètre Parcoursup, via une action instructeur dans le module de publication
-* **"à publier (vérifier accès direct postbac)": **la formation est éligible à Parcoursup mais un contrôle concernant l'accès postbac doit être effectué
-* **"à publier (soumis à validation Recteur)":** la formation est éligible à Parcoursup mais doit être validée en académie avant
-* **"à publier"** : la formation est éligible à Parcoursup, un instructeur doit utiliser le module de publication pour la faire passer à "en attente de publication"
-* **"en attente de publication"** : la formation est éligible et un instructeur l'a publiée depuis le module de publication
+- **"hors périmètre"** : la formation n'est pas éligible à Parcoursup
+- **"publié"** : la formation est déjà publiée sur Parcoursup
+- **"non publié"** : la formation a été manuellement sortie du périmètre Parcoursup, via une action instructeur dans le module de publication
+- **"à publier (sous condition habilitation)":** la formation est éligible à Parcoursup mais un contrôle concernant l'habilitation de l'organisme formateur doit être effectué
+- **"à publier (vérifier accès direct postbac)":** la formation est éligible à Parcoursup mais un contrôle concernant l'accès postbac doit être effectué
+- **"à publier (soumis à validation Recteur)":** la formation est éligible à Parcoursup mais doit être validée en académie avant
+- **"à publier"** : la formation est éligible à Parcoursup, un instructeur doit utiliser le module de publication pour la faire passer à "en attente de publication"
+- **"en attente de publication"** : la formation est éligible et un instructeur l'a publiée depuis le module de publication
 
 Après action utilisateur on ne change plus le statut de la formation, donc le statut **"non publié"** ne bouge pas, et le statut **"en attente de publication"** peut passer à "publié" uniquement.
 
-En revanche pour les statuts "hors périmètre", "à publier (...)" et "à publier" on recalcule chaque soir. À noter que ces statuts on la priorité suivante : `"à publier" > "à publier (soumis à validation Recteur)" > "à publier (vérifier accès direct postbac)" > "hors périmètre"`
+En revanche pour les statuts "hors périmètre", "à publier (...)" et "à publier" on recalcule chaque soir. À noter que ces statuts on la priorité suivante : `"à publier" > "à publier (soumis à validation Recteur)" > "à publier (vérifier accès direct postbac)" > "à publier (sous condition habilitation)" > "hors périmètre"`
 
 ## Règles d'intégration
 
