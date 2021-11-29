@@ -198,7 +198,7 @@ describe(__filename, () => {
   });
 
   it("should save error", async () => {
-    sinon.stub(parcoursupApi, "postFormation").throws();
+    sinon.stub(parcoursupApi, "postFormation").throws({ response: { status: 400 } });
 
     const f = new Formation({
       rncp_code: "RNCP1234",
@@ -218,7 +218,7 @@ describe(__filename, () => {
     await createFormation(f);
 
     assert.strictEqual(f.parcoursup_statut, "en attente de publication");
-    assert.strictEqual(f.parcoursup_error, "erreur de création");
+    assert.strictEqual(f.parcoursup_error, "400 erreur de création");
   });
 
   it("should format properly", async () => {

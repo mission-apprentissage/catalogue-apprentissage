@@ -15,6 +15,7 @@ const etablissementSchema = {
     description: "Numéro siret du siége sociale",
   },
   siret: {
+    index: true,
     type: String,
     default: null,
     description: "Numéro siret",
@@ -192,6 +193,7 @@ const etablissementSchema = {
     description: "Nom de l'académie",
   },
   uai: {
+    index: true,
     type: String,
     default: null,
     description: "UAI de l'établissement",

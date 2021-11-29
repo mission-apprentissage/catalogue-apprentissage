@@ -227,7 +227,6 @@ const server = setupServer(
         parcoursup_a_charger: false,
         parcoursup_statut: "hors périmètre",
         parcoursup_statut_history: [],
-        parcoursup_ids: [],
         affelnet_reference: true,
         affelnet_a_charger: false,
         affelnet_statut: "publié",

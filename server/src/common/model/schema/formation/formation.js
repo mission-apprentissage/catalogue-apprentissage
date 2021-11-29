@@ -315,6 +315,7 @@ const formationSchema = {
     description: "Erreur lors de la création de la formation sur ParcourSup (via le WS)",
   },
   parcoursup_id: {
+    index: true,
     type: String,
     default: null,
     description: "ids ParcourSup",
@@ -413,6 +414,7 @@ const formationSchema = {
 
   // Flags
   to_update: {
+    index: true,
     type: Boolean,
     default: false,
     description: "Formation à mette à jour lors du script d'enrichissement",
@@ -458,21 +460,25 @@ const formationSchema = {
     description: "Id de formation RCO (id_formation + id_action + id_certifinfo)",
   },
   id_formation: {
+    index: true,
     type: String,
     default: null,
     description: "Identifiant de la formation",
   },
   id_action: {
+    index: true,
     type: String,
     default: null,
     description: "Identifant des actions concaténés",
   },
   ids_action: {
+    index: true,
     type: [String],
     default: null,
     description: "Identifant des actions concaténés",
   },
   id_certifinfo: {
+    index: true,
     type: String,
     default: null,
     description: "Identifant certifInfo (unicité de la certification)",

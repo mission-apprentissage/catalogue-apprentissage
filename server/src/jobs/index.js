@@ -97,8 +97,10 @@ runScript(async ({ db }) => {
     // await psUpdateMatchInfo();
     // await sleep(30000);
 
-    await parcoursupExport.run();
-    await sleep(30000);
+    if (process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_EXPORT_ENABLED === "true") {
+      await parcoursupExport.run();
+      await sleep(30000);
+    }
 
     // affelnet
     await afCoverage(); // ~ 47 minutes => ~ 12 minutes

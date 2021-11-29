@@ -66,7 +66,7 @@ const ReconciliationModalHeader = React.memo(
       onSubmit: ({ parcoursup_keep_publish, parcoursup_raison_depublication }) => {
         return new Promise(async (resolve) => {
           const body = {
-            parcoursup_id: formation._id,
+            parcoursup_id: formation.id_parcoursup,
           };
           if (parcoursup_keep_publish === "true") {
             body.parcoursup_statut = "publié";
