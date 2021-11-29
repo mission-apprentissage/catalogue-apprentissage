@@ -295,6 +295,7 @@ const formationSchema = {
       "hors périmètre",
       "publié",
       "non publié",
+      "à publier (sous condition habilitation)",
       "à publier (vérifier accès direct postbac)",
       "à publier (soumis à validation Recteur)",
       "à publier",
@@ -312,9 +313,10 @@ const formationSchema = {
   parcoursup_error: {
     type: String,
     default: null,
-    description: "Erreur lors du contrôle de référencement sur ParcourSup de la formation",
+    description: "Erreur lors de la création de la formation sur ParcourSup (via le WS)",
   },
   parcoursup_id: {
+    index: true,
     type: String,
     default: null,
     description: "ids ParcourSup",
@@ -347,11 +349,6 @@ const formationSchema = {
     default: [],
     description: "Affelnet : historique des statuts",
     noIndex: true,
-  },
-  affelnet_error: {
-    type: String,
-    default: null,
-    description: "Erreur lors du contrôle de référencement sur affelnet de la formation",
   },
   source: {
     type: String,
@@ -418,6 +415,7 @@ const formationSchema = {
 
   // Flags
   to_update: {
+    index: true,
     type: Boolean,
     default: false,
     description: "Formation à mette à jour lors du script d'enrichissement",
@@ -463,21 +461,25 @@ const formationSchema = {
     description: "Id de formation RCO (id_formation + id_action + id_certifinfo)",
   },
   id_formation: {
+    index: true,
     type: String,
     default: null,
     description: "Identifiant de la formation",
   },
   id_action: {
+    index: true,
     type: String,
     default: null,
     description: "Identifant des actions concaténés",
   },
   ids_action: {
+    index: true,
     type: [String],
     default: null,
     description: "Identifant des actions concaténés",
   },
   id_certifinfo: {
+    index: true,
     type: String,
     default: null,
     description: "Identifant certifInfo (unicité de la certification)",

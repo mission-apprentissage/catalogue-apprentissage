@@ -2,7 +2,7 @@ const express = require("express");
 const Joi = require("joi");
 const { oleoduc, transformData } = require("oleoduc");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
-const { Formation, PsFormation } = require("../../common/model");
+const { Formation } = require("../../common/model");
 const { mnaFormationUpdater } = require("../../logic/updaters/mnaFormationUpdater");
 const { sendJsonStream } = require("../../common/utils/httpUtils");
 
@@ -110,14 +110,7 @@ module.exports = () => {
       const { id_parcoursup, ...filter } = query;
       // additional filtering for parcoursup
       if (id_parcoursup) {
-        const psFormations = await PsFormation.find(
-          { id_parcoursup, matching_mna_formation: { $size: 1 } },
-          { matching_mna_formation: 1 }
-        ).lean();
-        const ids = psFormations.reduce((acc, { matching_mna_formation }) => {
-          return [...acc, ...matching_mna_formation.map(({ _id }) => _id)];
-        }, []);
-        filter["_id"] = { $in: ids };
+        filter["parcoursup_id"] = id_parcoursup;
       }
 
       const page = qs && qs.page ? qs.page : 1;
@@ -179,14 +172,7 @@ module.exports = () => {
       const { id_parcoursup, ...filter } = query;
       // additional filtering for parcoursup
       if (id_parcoursup) {
-        const psFormations = await PsFormation.find(
-          { id_parcoursup, matching_mna_formation: { $size: 1 } },
-          { matching_mna_formation: 1 }
-        ).lean();
-        const ids = psFormations.reduce((acc, { matching_mna_formation }) => {
-          return [...acc, ...matching_mna_formation.map(({ _id }) => _id)];
-        }, []);
-        filter["_id"] = { $in: ids };
+        filter["parcoursup_id"] = id_parcoursup;
       }
 
       const page = qs && qs.page ? qs.page : 1;

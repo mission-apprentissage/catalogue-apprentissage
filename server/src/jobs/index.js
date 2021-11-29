@@ -1,5 +1,18 @@
+const crypto = require("crypto");
+const { spawn } = require("child_process");
+const path = require("path");
+const {
+  rncpImporter,
+  bcnImporter,
+  onisepImporter,
+  conventionFilesImporter,
+} = require("@mission-apprentissage/tco-service-node");
+
 const { runScript } = require("./scriptWrapper");
 const logger = require("../common/logger");
+const { Formation } = require("../common/model");
+const { rebuildEsIndex } = require("./esIndex/esIndex");
+
 const rcoImporter = require("./rcoImporter");
 const rcoConverter = require("./rcoConverter");
 // const psReference = require("./parcoursup/reference");
@@ -9,21 +22,9 @@ const psPerimetre = require("./parcoursup/perimetre");
 const afPerimetre = require("./affelnet/perimetre");
 const afCoverage = require("./affelnet/coverage");
 const afReconciliation = require("./affelnet/reconciliation");
-const crypto = require("crypto");
-
-const { rebuildEsIndex } = require("./esIndex/esIndex");
-const { spawn } = require("child_process");
-const { Formation } = require("../common/model");
-
-const {
-  rncpImporter,
-  bcnImporter,
-  onisepImporter,
-  conventionFilesImporter,
-} = require("@mission-apprentissage/tco-service-node");
 const { EtablissementsUpdater } = require("./EtablissementsUpdater");
 const { findAndUpdateSiegeSocial } = require("./EtablissementsUpdater/orphans");
-const path = require("path");
+const parcoursupExport = require("./parcoursup/export");
 
 const KIT_LOCAL_PATH = "/data/uploads/CodeDiplome_RNCP_latest_kit.csv";
 const CONVENTION_FILES_DIR = path.join(__dirname, "conventionFilesImporter/assets");
@@ -95,6 +96,11 @@ runScript(async ({ db }) => {
 
     // await psUpdateMatchInfo();
     // await sleep(30000);
+
+    if (process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_EXPORT_ENABLED === "true") {
+      await parcoursupExport.run();
+      await sleep(30000);
+    }
 
     // affelnet
     await afCoverage(); // ~ 47 minutes => ~ 12 minutes

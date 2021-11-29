@@ -17,7 +17,9 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false, limit =
 
   Formation.pauseAllMongoosaticHooks();
 
-  await paginator(Formation, { filter, limit, maxItems, offset }, async (formation) => {
+  await paginator(Formation, { filter, limit, maxItems, offset }, async (formation, index, total) => {
+    console.log(`updating formation ${index}/${total}`);
+
     const cfdInfoCache = cfdInfosCache.get(formation._doc.cfd) || null;
     const { updates, formation: updatedFormation, error, serviceAvailable = true, cfdInfo } = await mnaFormationUpdater(
       formation._doc,

@@ -1,50 +1,112 @@
 const { runScript } = require("../../scriptWrapper");
 const logger = require("../../../common/logger");
-const { Formation } = require("../../../common/model/index");
-const { createParcoursupToken } = require("../../../common/utils/jwtUtils");
-const axios = require("axios");
+const { Formation, User } = require("../../../common/model");
+const parcoursupApi = require("./parcoursupApi");
+const { findLast } = require("lodash");
 
-const privateKey = process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_PRIVATE_KEY.replace(/\\n/gm, "\n");
-const pwd = process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_PRIVATE_KEY_PWD;
-const id = process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_CERTIFICATE_ID;
 const limit = Number(process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_LIMIT || 50);
-const endpoint = process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_ENDPOINT;
+
+const STATUS = {
+  PUBLIE: "publié",
+  EN_ATTENTE: "en attente de publication",
+};
 
 const filter = {
-  parcoursup_statut: "en attente de publication",
+  parcoursup_statut: STATUS.EN_ATTENTE,
   uai_formation: { $ne: null },
   rncp_code: { $ne: null },
-  $or: [
-    {
-      bcn_mefs_10: { $size: 0 },
-    },
-    {
-      bcn_mefs_10: { $size: 1 },
-    },
-  ],
+  $or: [{ bcn_mefs_10: { $size: 0 } }, { bcn_mefs_10: { $size: 1 } }],
 };
 
 const select = {
   rncp_code: 1,
-  cfd: 1,
+  cfd_entree: 1,
   uai_formation: 1,
   id_rco_formation: 1,
   bcn_mefs_10: 1,
   rome_codes: 1,
   parcoursup_statut_history: 1,
+  parcoursup_error: 1,
+  updates_history: 1,
 };
 
-const formatter = ({ rncp_code, cfd, uai_formation, id_rco_formation, bcn_mefs_10 = [], rome_codes = [] }) => {
+// Retry the ones with errors last
+const sort = {
+  parcoursup_error: 1,
+};
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const findPublishUser = async (updates_history) => {
+  const modification = findLast(updates_history, ({ to }) => {
+    return to?.parcoursup_statut === STATUS.EN_ATTENTE;
+  });
+
+  if (modification?.to?.last_update_who) {
+    const user = await User.findOne({ email: modification?.to?.last_update_who });
+    return user?._id;
+  }
+
+  return "";
+};
+
+const formatter = async ({
+  rncp_code,
+  cfd_entree,
+  uai_formation,
+  id_rco_formation,
+  bcn_mefs_10 = [],
+  rome_codes = [],
+  updates_history = [],
+}) => {
   const [{ mef10: mef } = { mef10: "" }] = bcn_mefs_10;
 
   return {
-    rncp: Number(rncp_code.replace("RNCP", "")),
-    cfd,
+    user: await findPublishUser(updates_history),
+    rncp: [Number(rncp_code.replace("RNCP", ""))],
+    cfd: cfd_entree,
     uai: uai_formation,
-    rco: id_rco_formation,
+    rco: id_rco_formation, // TODO send cle_ministere_educatif
     mef,
     rome: rome_codes,
   };
+};
+
+const createCursor = () => {
+  return Formation.find(filter, select).sort(sort).limit(limit).cursor();
+};
+
+const createFormation = async (formation) => {
+  let data;
+  try {
+    data = await formatter(formation);
+    const response = await parcoursupApi.postFormation(data);
+
+    logger.info(`Parcoursup WS response: g_ta_cod=${response.g_ta_cod} dejaEnvoye=${response.dejaEnvoye}`);
+
+    if (!response.g_ta_cod) {
+      const e = new Error("Missing g_ta_cod");
+      e.response = { status: 200, data: response };
+      throw e;
+    }
+
+    formation.parcoursup_id = response.g_ta_cod;
+    formation.parcoursup_statut = STATUS.PUBLIE;
+    formation.last_update_at = Date.now();
+    formation.last_update_who = "web service Parcoursup";
+    formation.parcoursup_statut_history.push({
+      date: new Date(),
+      parcoursup_statut: STATUS.PUBLIE,
+      last_update_who: "web service Parcoursup",
+    });
+    await formation.save();
+  } catch (e) {
+    logger.error("Parcoursup WS error", e?.response?.status, e?.response?.data ?? e, data);
+    formation.parcoursup_error = `${e?.response?.status} ${
+      e?.response?.data?.message ?? e?.response?.data ?? "erreur de création"
+    }`;
+    await formation.save();
+  }
 };
 
 /**
@@ -52,30 +114,10 @@ const formatter = ({ rncp_code, cfd, uai_formation, id_rco_formation, bcn_mefs_1
  * pour création sur Parcoursup via le Web Service dédié
  */
 const run = async () => {
-  let cursor = Formation.find(filter, select).limit(limit).cursor();
+  let cursor = createCursor();
   for await (const formation of cursor) {
-    const data = formatter(formation);
-    const token = createParcoursupToken({ data, privateKey, pwd, id });
-
-    try {
-      const { data: responseData } = await axios.post(endpoint, data, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      // console.log("psup response", responseData);
-      formation.parcoursup_id = responseData.formation.g_ta_cod;
-      formation.parcoursup_statut = "publié";
-      formation.last_update_at = Date.now();
-      formation.last_update_who = "web service Parcoursup";
-      formation.parcoursup_statut_history.push({
-        date: new Date(),
-        parcoursup_statut: "publié",
-        last_update_who: "web service Parcoursup",
-      });
-      await formation.save();
-    } catch (e) {
-      logger.error(e);
-    }
+    await createFormation(formation);
+    await sleep(500);
   }
 };
 
@@ -88,3 +130,10 @@ if (process.env.standalone) {
     logger.info(" -- End psup export -- ");
   });
 }
+
+module.exports = {
+  createCursor,
+  createFormation,
+  run,
+  formatter,
+};

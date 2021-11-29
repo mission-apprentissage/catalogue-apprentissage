@@ -450,8 +450,6 @@ test("opens rapprochement modal", async () => {
           parcoursup_a_charger: false,
           parcoursup_statut: "à publier",
           parcoursup_statut_history: [],
-          parcoursup_error: null,
-          parcoursup_ids: [],
           lieu_formation_adresse: "44 boulevard Jean Moulin Immeuble Bellevue - Jean Moulin",
           lieu_formation_siret: null,
           id_rco_formation: "21_133656|21_133656|81506",

@@ -173,6 +173,7 @@ const psFormationSchema = {
     noIndex: true,
   },
   id_parcoursup: {
+    index: true,
     type: String,
     default: null,
     description: "identifiant unique de la formation côté parcoursup (CODEFORMATIONINSCRIPTION)",

@@ -6,11 +6,11 @@ async function update() {
   const dataset = await PsFormation.find({ statut_reconciliation: "VALIDE" }).lean();
 
   await asyncForEach(dataset, async (psFormation) => {
-    const { _id, matching_mna_formation } = psFormation;
+    const { id_parcoursup, matching_mna_formation } = psFormation;
     await asyncForEach(matching_mna_formation, async (mnaFormation) => {
       const mnaFormationU = await Formation.findById(mnaFormation._id);
       if (mnaFormationU) {
-        mnaFormationU.parcoursup_id = `${_id}`;
+        mnaFormationU.parcoursup_id = id_parcoursup;
         await mnaFormationU.save();
       }
     });

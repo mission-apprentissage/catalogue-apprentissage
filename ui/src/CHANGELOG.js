@@ -4,12 +4,37 @@ import { Link } from "@chakra-ui/react";
 const changelog = {
   list: [
     {
-      version: "4.10.0",
+      version: "5.0.0",
       date: "Prochainement",
       about: `<h4>À venir</h4>`,
       fixes: [],
       features: [],
       improvements: [],
+    },
+    {
+      version: "4.11.0",
+      date: "Le 30 Novembre 2021",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [
+        "[Page formation] L’académie de rattachement est déterminée depuis le lieu de formation (et non plus depuis l’établissement formateur)",
+      ],
+      features: [
+        '[Admin] Nouvelle étiquette "à publier  (sous condition habilitation)" dans le module de périmètre pour les formations éligibles à Parcoursup',
+      ],
+      improvements: [],
+    },
+    {
+      version: "4.10.0",
+      date: "Le 4 Novembre 2021",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [
+        "[Page formation] Prise en compte de la certification qualité EDUFORM",
+        "[Rapprochement Parcoursup] Divers correctifs et améliorations suite aux retours utilisateurs",
+      ],
+      features: [],
+      improvements: ["Migration technique des organismes"],
     },
     {
       version: "4.9.1",
