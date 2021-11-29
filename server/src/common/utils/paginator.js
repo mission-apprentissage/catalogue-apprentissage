@@ -29,8 +29,8 @@ const paginator = async (
 
     await Promise.all(
       docs.map(async (item) => {
-        await callback(item, computed, nbTotalItems);
         computed += 1;
+        await callback(item, computed, nbTotalItems);
       })
     );
     currentOffset += limit;
