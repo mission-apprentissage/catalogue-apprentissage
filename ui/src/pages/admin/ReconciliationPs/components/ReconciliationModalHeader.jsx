@@ -16,6 +16,7 @@ import {
   Switch,
   UnorderedList,
   ListItem,
+  useToast,
 } from "@chakra-ui/react";
 import { buildUpdatesHistory } from "../../../../common/utils/formationUtils";
 import { StatusBadge } from "../../../../common/components/StatusBadge";
@@ -41,6 +42,7 @@ const ReconciliationModalHeader = React.memo(
     const [selectedFormation, setSelectedFormation] = useState([]);
     const slidesCount = formation.matching_mna_formation.length;
     const [user] = useAuth();
+    const toast = useToast();
 
     const onSubmitReject = () => {
       onCloseSubM();
@@ -65,50 +67,63 @@ const ReconciliationModalHeader = React.memo(
       }),
       onSubmit: ({ parcoursup_keep_publish, parcoursup_raison_depublication }) => {
         return new Promise(async (resolve) => {
-          const body = {
-            parcoursup_id: formation.id_parcoursup,
-          };
-          if (parcoursup_keep_publish === "true") {
-            body.parcoursup_statut = "publié";
-            body.parcoursup_raison_depublication = null;
-          } else if (parcoursup_keep_publish === "false") {
-            body.parcoursup_raison_depublication = parcoursup_raison_depublication;
-            body.parcoursup_statut = "non publié";
-          }
-
-          const formationsARapprocher = [];
-          if (selectedFormation.length > 0) {
-            for (let index = 0; index < selectedFormation.length; index++) {
-              formationsARapprocher.push(formation.matching_mna_formation[selectedFormation[index]]);
+          try {
+            const body = {
+              parcoursup_id: formation.id_parcoursup,
+            };
+            if (parcoursup_keep_publish === "true") {
+              body.parcoursup_statut = "publié";
+              body.parcoursup_raison_depublication = null;
+            } else if (parcoursup_keep_publish === "false") {
+              body.parcoursup_raison_depublication = parcoursup_raison_depublication;
+              body.parcoursup_statut = "non publié";
             }
-          } else {
-            formationsARapprocher.push(formation.matching_mna_formation[currentMnaFormation]);
-          }
 
-          for (let index = 0; index < formationsARapprocher.length; index++) {
-            const formationARapprocher = formationsARapprocher[index];
-            if (Object.keys(body).length > 0) {
-              await _put(`/api/entity/formations2021/${formationARapprocher._id}`, {
-                num_academie: formationARapprocher.num_academie,
-                ...body,
-                last_update_who: user.email,
-                last_update_at: Date.now(),
-                updates_history: buildUpdatesHistory(
-                  formationARapprocher,
-                  { ...body, last_update_who: user.email },
-                  Object.keys(body)
-                ),
+            const formationsARapprocher = [];
+            if (selectedFormation.length > 0) {
+              for (let index = 0; index < selectedFormation.length; index++) {
+                formationsARapprocher.push(formation.matching_mna_formation[selectedFormation[index]]);
+              }
+            } else {
+              formationsARapprocher.push(formation.matching_mna_formation[currentMnaFormation]);
+            }
+
+            for (let index = 0; index < formationsARapprocher.length; index++) {
+              const formationARapprocher = formationsARapprocher[index];
+              if (Object.keys(body).length > 0) {
+                await _put(`/api/entity/formations2021/${formationARapprocher._id}`, {
+                  num_academie: formationARapprocher.num_academie,
+                  ...body,
+                  last_update_who: user.email,
+                  last_update_at: Date.now(),
+                  updates_history: buildUpdatesHistory(
+                    formationARapprocher,
+                    { ...body, last_update_who: user.email },
+                    Object.keys(body)
+                  ),
+                });
+              }
+              await _post("/api/parcoursup/reconciliation", {
+                id_formation: formation._id,
+                id_parcoursup: formation.id_parcoursup,
+                uai_affilie: formation.uai_affilie,
+                uai_gestionnaire: formation.uai_gestionnaire,
+                uai_composante: formation.uai_composante,
+                code_cfd: formationARapprocher.cfd,
+                mnaFormationId: formationARapprocher._id,
+                reject: false,
               });
             }
-            await _post("/api/parcoursup/reconciliation", {
-              id_formation: formation._id,
-              id_parcoursup: formation.id_parcoursup,
-              uai_affilie: formation.uai_affilie,
-              uai_gestionnaire: formation.uai_gestionnaire,
-              uai_composante: formation.uai_composante,
-              code_cfd: formationARapprocher.cfd,
-              mnaFormationId: formationARapprocher._id,
-              reject: false,
+          } catch (e) {
+            console.error(e);
+            const response = await (e?.json ?? {});
+            const message = response?.message ?? e?.message;
+
+            toast({
+              title: "Error",
+              description: message,
+              status: "error",
+              duration: 10000,
             });
           }
 
