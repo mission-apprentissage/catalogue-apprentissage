@@ -428,10 +428,10 @@
   resolved "https://registry.yarnpkg.com/@jsdevtools/ono/-/ono-7.1.3.tgz#9df03bbd7c696a5c58885c34aa06da41c8543796"
   integrity sha512-4JQNk+3mVzK3xh2rqd6RB4J46qUR19azEHBneZyTZM+c456qOrbbM/5xcR8huNCCcbVt7+UmizG6GuUvPvKUYg==
 
-"@mission-apprentissage/tco-service-node@2.27.1":
-  version "2.27.1"
-  resolved "https://npm.pkg.github.com/download/@mission-apprentissage/tco-service-node/2.27.1/b1db82c4b316bba66da1cf8546bab63510947ae7565f1f99bdf67265a899fad9#5e56d9d411fe8817daffb19a913365b7947e2007"
-  integrity sha512-YSROcE0PlS3S2WUd+fHHkYVVFrbjH2o5altEZ6BicISsdB2xlgd2k1T+C1Pdis/DgrBoN7Fl8kkEyyjxDil4Yg==
+"@mission-apprentissage/tco-service-node@2.27.2":
+  version "2.27.2"
+  resolved "https://npm.pkg.github.com/download/@mission-apprentissage/tco-service-node/2.27.2/f6b68c9d296448c8e3140d97f72f54e2a5a973ba77f87122406b0ab9e7a4360d#69c93f8d139f775fd309792f93c85d4a9c8c4369"
+  integrity sha512-nhjNA67uwTWkxWxxXOzLlBMoTgiiGyn6hBKeI+0YNPbUuqGqxLR+K0JeoUDboOZ8cCo26U1g7YBrSt71UyjeIg==
   dependencies:
     "@azure/storage-blob" "12.3.0"
     "@elastic/elasticsearch" "7.6.1"
