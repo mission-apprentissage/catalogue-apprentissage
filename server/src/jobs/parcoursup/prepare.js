@@ -113,8 +113,8 @@ const findByMef = async ({ CODEMEF }) => {
 
 const customTemporaryMarker = "*#*#*";
 
-const normalizeStr = (str) => {
-  return str
+const normalizeStr = (str, removeAccents = true) => {
+  const res = str
     .replace("(ne)", `${customTemporaryMarker}ne${customTemporaryMarker}`)
     .replace("(e)", `${customTemporaryMarker}e${customTemporaryMarker}`)
     .replace("(se)", `${customTemporaryMarker}se${customTemporaryMarker}`)
@@ -124,12 +124,12 @@ const normalizeStr = (str) => {
     .replace(`${customTemporaryMarker}e${customTemporaryMarker}`, "(e)")
     .replace(`${customTemporaryMarker}se${customTemporaryMarker}`, "(se)")
     .replace(`${customTemporaryMarker} bâtiment et travaux publics`, "- bâtiment et travaux publics")
-    .trim()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
+    .trim();
+
+  return removeAccents ? res.normalize("NFD").replace(/[\u0300-\u036f]/g, "") : res;
 };
 
-const extractSubLibSpecialite = (libSpecialite) => {
+const extractSubLibSpecialite = (libSpecialite, removeAccents = true) => {
   const [main, ...restRaw] = libSpecialite
     .replace(/^TP - /, "")
     .replace("- bâtiment et travaux publics", `${customTemporaryMarker} bâtiment et travaux publics`)
@@ -143,15 +143,18 @@ const extractSubLibSpecialite = (libSpecialite) => {
     current = current.replace("Parcours :", "");
     current = current.replace("en apprentissage", "");
     if (current !== "") {
-      recompose.push({ intitule: `${normalizeStr(main)} : ${normalizeStr(current).toLowerCase()}`, hasApprentissage });
+      recompose.push({
+        intitule: `${normalizeStr(main, removeAccents)} : ${normalizeStr(current, removeAccents).toLowerCase()}`,
+        hasApprentissage,
+      });
     } else {
-      recompose.push({ intitule: `${normalizeStr(main)}`, hasApprentissage });
+      recompose.push({ intitule: `${normalizeStr(main, removeAccents)}`, hasApprentissage });
     }
   }
 
   // Just to be sure - edge case eventually
   if (restRaw.length === 0) {
-    recompose.push({ intitule: `${normalizeStr(main)}`, hasApprentissage: false });
+    recompose.push({ intitule: `${normalizeStr(main, removeAccents)}`, hasApprentissage: false });
     console.log(`recomposeLibSpecialite: edge case`, recompose);
   }
 
@@ -176,16 +179,35 @@ const extractSubLibSpecialite = (libSpecialite) => {
 
 // eslint-disable-next-line no-unused-vars
 const findByIntituleInRNCP = async (formationPsRawData) => {
-  const [firstSubLib, ...restSubLib] = extractSubLibSpecialite(formationPsRawData["LIBSPÉCIALITÉ"]);
+  const [firstSubLib, ...restSubLib] = extractSubLibSpecialite(formationPsRawData["LIBSPÉCIALITÉ"], false);
 
-  const matchFirstSubLib = await Models.FicheRncp.find({
+  let matchFirstSubLib = await Models.FicheRncp.find({
     intitule_diplome: new RegExp(`${firstSubLib.intitule}`),
+    active_inactive: "ACTIVE",
   }).lean();
+
+  // if (matchFirstSubLib.length === 0) {
+  //   // try fiche nationale
+  //   matchFirstSubLib = await Models.FicheRncp.find({
+  //     intitule_diplome: `${firstSubLib.intitule} (fiche nationale)`,
+  //     active_inactive: "ACTIVE",
+  //   }).lean();
+  // }
+  //
+  // if (matchFirstSubLib.length === 0) {
+  //   // try starts with
+  //   matchFirstSubLib = await Models.FicheRncp.find({
+  //     intitule_diplome: { $regex: new RegExp(`^${firstSubLib.intitule}`) },
+  //     active_inactive: "ACTIVE",
+  //   }).lean();
+  // }
 
   if (matchFirstSubLib.length === 1 && restSubLib.length === 0) {
     return {
       CODE_CFD_MNA: matchFirstSubLib[0].cfds?.join(",") || null,
-      ...getRncpRomesFromSDKresponse({ result: { rncp: matchFirstSubLib[0] } }),
+      ...getRncpRomesFromSDKresponse({
+        result: { rncp: matchFirstSubLib[0] },
+      }),
       TYPE_RAPPROCHEMENT_MNA: "LIBSPÉCIALITÉ_RNCP",
     };
   }
@@ -203,6 +225,7 @@ const findByIntituleInRNCP = async (formationPsRawData) => {
     await asyncForEach(restSubLib, async (subLib) => {
       const matchBcn = await Models.FicheRncp.find({
         intitule_diplome: new RegExp(`${subLib.intitule}`),
+        active_inactive: "ACTIVE",
       }).lean();
       if (matchBcn.length > 0) {
         subs.push({
@@ -229,7 +252,12 @@ const findByIntituleInRNCP = async (formationPsRawData) => {
     };
   }
 
-  return { CODE_CFD_MNA: null, CODE_RNCP_MNA: null, CODE_ROMES_MNA: null, TYPE_RAPPROCHEMENT_MNA: null };
+  return {
+    CODE_CFD_MNA: null,
+    CODE_RNCP_MNA: null,
+    CODE_ROMES_MNA: null,
+    TYPE_RAPPROCHEMENT_MNA: null,
+  };
 };
 
 const findByIntituleInBcn = async (formationPsRawData) => {

@@ -1,4 +1,10 @@
 const rcoFormationsSchema = {
+  cle_ministere_educatif: {
+    index: true,
+    type: String,
+    default: null,
+    description: "Clé unique de la formation (pour envoi aux ministères éducatifs)",
+  },
   id_formation: {
     index: true,
     type: String,
@@ -172,6 +178,53 @@ const rcoFormationsSchema = {
     default: null,
     description: "Id de formation RCO (id_formation + id_action + id_certifinfo)",
   },
+  niveau_entree_obligatoire: {
+    type: String,
+    default: null,
+    description: "Niveau d'entrée de l'apprenti minimum obligatoire pour cette formation",
+  },
+  entierement_a_distance: {
+    type: String,
+    default: null,
+    description: "Renseigné si la formation peut être suivie entièrement à distance",
+  },
+  etablissement_formateur_courriel: {
+    type: String,
+    default: null,
+    description: "Adresse email de contact de l'établissement formateur",
+  },
+  etablissement_gestionnaire_courriel: {
+    type: String,
+    default: null,
+    description: "Adresse email de contact de l'établissement gestionnaire",
+  },
+  intitule_formation: {
+    type: String,
+    default: null,
+    description: "Intitule de la formation",
+  },
+  parcours: {
+    type: String,
+    default: null,
+    description:
+      "Parcours suivi sur 3 caractères : P00 (quand la question du parcours ne se pose pas), sinon  P01, P02 et Pnt – tant que les sessions ne sont pas expertisées",
+  },
+  duree: {
+    type: String,
+    default: null,
+    description: "Durée de la formation en années (1 à 5, X si en cours de collecte)",
+  },
+  entree_apprentissage: {
+    type: String,
+    default: null,
+    description: "Année d'entrée en apprentissage (1 à 5, X si en cours de collecte)",
+  },
+  // lieu_different: {
+  //   type: String,
+  //   default: null,
+  //   description:
+  //     "Code du lieu sur 3 caractères : L00 (quand la question du lieu ne se pose pas), sinon  L01, L2 et Lnt – tant que les sessions ne sont pas expertisées",
+  // },
 };
 
 module.exports = rcoFormationsSchema;
