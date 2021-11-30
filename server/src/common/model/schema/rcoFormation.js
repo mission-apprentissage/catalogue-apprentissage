@@ -219,12 +219,12 @@ const rcoFormationsSchema = {
     default: null,
     description: "Année d'entrée en apprentissage (1 à 5, X si en cours de collecte)",
   },
-  lieu_different: {
-    type: String,
-    default: null,
-    description:
-      "Code du lieu sur 3 caractères : L00 (quand la question du lieu ne se pose pas), sinon  L01, L2 et Lnt – tant que les sessions ne sont pas expertisées",
-  },
+  // lieu_different: {
+  //   type: String,
+  //   default: null,
+  //   description:
+  //     "Code du lieu sur 3 caractères : L00 (quand la question du lieu ne se pose pas), sinon  L01, L2 et Lnt – tant que les sessions ne sont pas expertisées",
+  // },
 };
 
 module.exports = rcoFormationsSchema;

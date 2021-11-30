@@ -58,11 +58,10 @@ const hasOnlyUpdatedNewFields = (rcoFormation) => {
     "intitule_formation",
     "niveau_entree_obligatoire",
     "entierement_a_distance",
-    // TODO below check once rco deliver the new JSON stream
     "duree",
     "entree_apprentissage",
     "parcours",
-    "lieu_different",
+    // "lieu_different",
   ];
   const updatedFields = Object.keys(rcoFormation?.updates_history[rcoFormation?.updates_history?.length - 1]?.to ?? {});
 
