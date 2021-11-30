@@ -14,4 +14,8 @@ const getPeriodeTags = (periode = []) => {
   return tags.sort().map((year) => `${year}`);
 };
 
-module.exports = { getPeriodeTags };
+const extractFirstValue = (value) => {
+  return value?.split("##")[0] ?? null;
+};
+
+module.exports = { getPeriodeTags, extractFirstValue };

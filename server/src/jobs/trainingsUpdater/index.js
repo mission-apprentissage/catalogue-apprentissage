@@ -14,6 +14,7 @@ const managedUnPublishedRcoFormation = async () => {
   // if rco formation is not published, don't call mnaUpdater
   // since we just want to hide the formation
 
+  // TODO once migration is finished, filter by cle_ministere_educatif
   const rcoFormationNotPublishedIds = await RcoFormation.distinct("id_rco_formation", { published: false });
   await Formation.updateMany(
     { id_rco_formation: { $in: rcoFormationNotPublishedIds } },

@@ -77,6 +77,9 @@ describe(__filename, () => {
             ],
           },
         ],
+        annee: {
+          $ne: "X",
+        },
         cfd_outdated: {
           $ne: true,
         },
