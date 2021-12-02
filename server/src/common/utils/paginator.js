@@ -21,7 +21,13 @@ const paginator = async (
   progressBar?.start(nbTotalItems, 0);
 
   while (computed < nbTotalItems) {
-    let { docs, total } = await Model.paginate(filter, { select, offset: currentOffset, limit, lean });
+    let { docs, total } = await Model.paginate(filter, {
+      select,
+      offset: currentOffset,
+      limit,
+      lean,
+      leanWithId: false,
+    });
     if (nbTotalItems === 10) {
       nbTotalItems = maxItems || total;
       progressBar?.setTotal(nbTotalItems);
