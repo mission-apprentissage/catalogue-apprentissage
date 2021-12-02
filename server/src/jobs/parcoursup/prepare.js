@@ -177,6 +177,27 @@ const extractSubLibSpecialite = (libSpecialite, removeAccents = true) => {
 //   if (libelle.includes("Sous-officier")) return "Sous-officier";
 // };
 
+const findByCodeRNCP = async (codeRncp) => {
+  const match = await Models.FicheRncp.findOne({
+    code_rncp: codeRncp,
+    active_inactive: "ACTIVE",
+  }).lean();
+
+  return {
+    cfds: match?.cfds ?? null,
+    romes: match?.romes?.map(({ rome }) => rome) ?? null,
+  };
+};
+
+const findByCodeCfd = async (cfd) => {
+  const { result } = await getCfdInfo(cfd);
+
+  return {
+    rncps: result?.rncp?.code_rncp ? [result?.rncp?.code_rncp] : null,
+    romes: result?.rncp?.romes?.map(({ rome }) => rome) ?? null,
+  };
+};
+
 // eslint-disable-next-line no-unused-vars
 const findByIntituleInRNCP = async (formationPsRawData) => {
   const [firstSubLib, ...restSubLib] = extractSubLibSpecialite(formationPsRawData["LIBSPÉCIALITÉ"], false);
@@ -185,22 +206,6 @@ const findByIntituleInRNCP = async (formationPsRawData) => {
     intitule_diplome: new RegExp(`${firstSubLib.intitule}`),
     active_inactive: "ACTIVE",
   }).lean();
-
-  // if (matchFirstSubLib.length === 0) {
-  //   // try fiche nationale
-  //   matchFirstSubLib = await Models.FicheRncp.find({
-  //     intitule_diplome: `${firstSubLib.intitule} (fiche nationale)`,
-  //     active_inactive: "ACTIVE",
-  //   }).lean();
-  // }
-  //
-  // if (matchFirstSubLib.length === 0) {
-  //   // try starts with
-  //   matchFirstSubLib = await Models.FicheRncp.find({
-  //     intitule_diplome: { $regex: new RegExp(`^${firstSubLib.intitule}`) },
-  //     active_inactive: "ACTIVE",
-  //   }).lean();
-  // }
 
   if (matchFirstSubLib.length === 1 && restSubLib.length === 0) {
     return {
@@ -416,7 +421,61 @@ async function prepare() {
       };
       updatedTableSpe.push({ ...spe, ...dataToComplete });
     } else {
-      updatedTableSpe.push({ ...spe });
+      if (
+        (spe.CODE_ROMES_MNA === "Non trouvé" || spe.CODE_CFD_MNA === "Non trouvé") &&
+        spe.CODE_RNCP_MNA !== "Non trouvé"
+      ) {
+        const rncps = spe.CODE_RNCP_MNA.split(",");
+        let romes = [];
+        let cfds = [];
+        await asyncForEach(rncps, async (rncp) => {
+          const res = await findByCodeRNCP(rncp);
+
+          if (res.romes) {
+            romes = [...romes, ...res.romes];
+          }
+
+          if (res.cfds) {
+            cfds = [...cfds, ...res.cfds];
+          }
+        });
+
+        const newFields = {
+          CODE_ROMES_MNA: romes.length === 0 ? "Non trouvé" : romes.join(","),
+          CODE_CFD_MNA: cfds.length === 0 ? "Non trouvé" : cfds.join(","),
+        };
+        console.log(newFields);
+
+        updatedTableSpe.push({ ...spe, ...newFields });
+      } else if (
+        (spe.CODE_ROMES_MNA === "Non trouvé" || spe.CODE_RNCP_MNA === "Non trouvé") &&
+        spe.CODE_CFD_MNA !== "Non trouvé"
+      ) {
+        const cfds = spe.CODE_CFD_MNA.split(",");
+        let romes = [];
+        let rncps = [];
+        await asyncForEach(cfds, async (cfd) => {
+          const res = await findByCodeCfd(cfd);
+
+          if (res.romes) {
+            romes = [...romes, ...res.romes];
+          }
+
+          if (res.rncps) {
+            rncps = [...rncps, ...res.rncps];
+          }
+        });
+
+        const newFields = {
+          CODE_ROMES_MNA: romes.length === 0 ? "Non trouvé" : romes.join(","),
+          CODE_RNCP_MNA: rncps.length === 0 ? "Non trouvé" : rncps.join(","),
+        };
+        console.log(newFields);
+
+        updatedTableSpe.push({ ...spe, ...newFields });
+      } else {
+        updatedTableSpe.push({ ...spe });
+      }
     }
   });
   console.log(countNotFoundMef);
