@@ -15,6 +15,7 @@ const etablissementGestionnaireInfo = {
     description: "Enseigne établissement gestionnaire",
   },
   etablissement_gestionnaire_uai: {
+    index: true,
     type: String,
     default: null,
     description: "UAI de l'etablissement gestionnaire",

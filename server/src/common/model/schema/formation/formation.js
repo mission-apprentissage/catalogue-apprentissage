@@ -89,6 +89,7 @@ const formationSchema = {
     description: "Localité",
   },
   uai_formation: {
+    index: true,
     type: String,
     default: null,
     description: "UAI du lieu de la formation",

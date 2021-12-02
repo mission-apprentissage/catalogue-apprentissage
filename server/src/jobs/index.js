@@ -25,6 +25,7 @@ const afReconciliation = require("./affelnet/reconciliation");
 const { EtablissementsUpdater } = require("./EtablissementsUpdater");
 const { findAndUpdateSiegeSocial } = require("./EtablissementsUpdater/orphans");
 const parcoursupExport = require("./parcoursup/export");
+const psCoverage = require("./parcoursup/coverage");
 
 const KIT_LOCAL_PATH = "/data/uploads/CodeDiplome_RNCP_latest_kit.csv";
 const CONVENTION_FILES_DIR = path.join(__dirname, "conventionFilesImporter/assets");
@@ -85,10 +86,7 @@ runScript(async ({ db }) => {
     await sleep(30000);
 
     // parcoursup
-    const psCoverage = spawn("node", ["./src/jobs/parcoursup/coverage.js"]);
-    for await (const data of psCoverage.stdout) {
-      console.log(`psCoverage: ${data}`);
-    }
+    await psCoverage();
     await sleep(30000);
 
     // await psReference(); // ~ 34 minutes => ~ 30 secondes

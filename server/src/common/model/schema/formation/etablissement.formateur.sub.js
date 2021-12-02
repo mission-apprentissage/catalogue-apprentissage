@@ -15,6 +15,7 @@ const etablissementFormateurInfo = {
     description: "Enseigne établissement formateur",
   },
   etablissement_formateur_uai: {
+    index: true,
     type: String,
     default: null,
     description: "UAI de l'etablissement formateur",
