@@ -168,6 +168,13 @@ const columnsDefinition = [
     exportable: true,
     editable: false,
   },
+  {
+    Header: "clé ministere educatif ",
+    accessor: "cle_ministere_educatif",
+    width: 200,
+    exportable: true,
+    editable: false,
+  },
 ];
 
 const queryBuilderField = [
