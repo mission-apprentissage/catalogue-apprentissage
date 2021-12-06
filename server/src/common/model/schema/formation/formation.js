@@ -3,9 +3,6 @@ const etablissementGestionnaireInfo = require("./etablissement.gestionnaire.sub"
 const etablissementReferenceInfo = require("./etablissement.reference.sub");
 
 const formationSchema = {
-  ...etablissementGestionnaireInfo,
-  ...etablissementFormateurInfo,
-  ...etablissementReferenceInfo,
   cle_ministere_educatif: {
     index: true,
     type: String,
@@ -556,16 +553,9 @@ const formationSchema = {
     default: false,
     description: "Renseigné si la formation peut être suivie entièrement à distance",
   },
-  etablissement_formateur_courriel: {
-    type: String,
-    default: null,
-    description: "Adresse email de contact de l'établissement formateur",
-  },
-  etablissement_gestionnaire_courriel: {
-    type: String,
-    default: null,
-    description: "Adresse email de contact de l'établissement gestionnaire",
-  },
+  ...etablissementGestionnaireInfo,
+  ...etablissementFormateurInfo,
+  ...etablissementReferenceInfo,
 };
 
 module.exports = formationSchema;

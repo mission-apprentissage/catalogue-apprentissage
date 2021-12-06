@@ -137,6 +137,11 @@ const etablissementFormateurInfo = {
     default: null,
     description: "Date de création de l'établissement",
   },
+  etablissement_formateur_courriel: {
+    type: String,
+    default: null,
+    description: "Adresse email de contact de l'établissement formateur",
+  },
 };
 
 module.exports = etablissementFormateurInfo;
