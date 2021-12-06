@@ -118,7 +118,7 @@ const run = async () => {
   let cursor = createCursor();
   for await (const formation of cursor) {
     await createFormation(formation);
-    await sleep(500);
+    await sleep(5000);
   }
 };
 
