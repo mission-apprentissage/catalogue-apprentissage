@@ -15,6 +15,7 @@ const etablissementFormateurInfo = {
     description: "Enseigne établissement formateur",
   },
   etablissement_formateur_uai: {
+    index: true,
     type: String,
     default: null,
     description: "UAI de l'etablissement formateur",
@@ -135,6 +136,11 @@ const etablissementFormateurInfo = {
     type: Date,
     default: null,
     description: "Date de création de l'établissement",
+  },
+  etablissement_formateur_courriel: {
+    type: String,
+    default: null,
+    description: "Adresse email de contact de l'établissement formateur",
   },
 };
 

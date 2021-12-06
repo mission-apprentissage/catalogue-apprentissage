@@ -49,7 +49,7 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false, limit =
           formation.published = false;
           // flag rco formation as not converted so that it retries during nightly jobs
           await RcoFormation.findOneAndUpdate(
-            { id_rco_formation: formation?.id_rco_formation },
+            { cle_ministere_educatif: formation.cle_ministere_educatif },
             { converted_to_mna: false }
           );
         }
@@ -59,6 +59,7 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false, limit =
       invalidFormations.push({
         id: formation._id,
         id_rco_formation: formation.id_rco_formation,
+        cle_ministere_educatif: formation.cle_ministere_educatif,
         cfd: formation.cfd,
         error,
       });
@@ -68,6 +69,7 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false, limit =
     if (!updates) {
       noUpdatedFormations.push({
         id: formation._id,
+        cle_ministere_educatif: formation.cle_ministere_educatif,
         id_rco_formation: formation.id_rco_formation,
       });
       return;
@@ -81,6 +83,7 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false, limit =
       updatedFormations.push({
         id: formation._id,
         id_rco_formation: formation.id_rco_formation,
+        cle_ministere_educatif: formation.cle_ministere_educatif,
         cfd: formation.cfd,
         updates: JSON.stringify(updates),
       });

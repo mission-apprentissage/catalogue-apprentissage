@@ -3,10 +3,12 @@ const etablissementGestionnaireInfo = require("./etablissement.gestionnaire.sub"
 const etablissementReferenceInfo = require("./etablissement.reference.sub");
 
 const formationSchema = {
-  ...etablissementGestionnaireInfo,
-  ...etablissementFormateurInfo,
-  ...etablissementReferenceInfo,
-
+  cle_ministere_educatif: {
+    index: true,
+    type: String,
+    default: null,
+    description: "Clé unique de la formation (pour envoi aux ministères éducatifs)",
+  },
   cfd: {
     index: true,
     type: String,
@@ -84,6 +86,7 @@ const formationSchema = {
     description: "Localité",
   },
   uai_formation: {
+    index: true,
     type: String,
     default: null,
     description: "UAI du lieu de la formation",
@@ -540,6 +543,19 @@ const formationSchema = {
     default: null,
     description: "distance entre le Lieu de formation et l'établissement formateur",
   },
+  niveau_entree_obligatoire: {
+    type: Number,
+    default: null,
+    description: "Niveau d'entrée de l'apprenti minimum obligatoire pour cette formation",
+  },
+  entierement_a_distance: {
+    type: Boolean,
+    default: false,
+    description: "Renseigné si la formation peut être suivie entièrement à distance",
+  },
+  ...etablissementGestionnaireInfo,
+  ...etablissementFormateurInfo,
+  ...etablissementReferenceInfo,
 };
 
 module.exports = formationSchema;

@@ -15,6 +15,7 @@ const etablissementGestionnaireInfo = {
     description: "Enseigne établissement gestionnaire",
   },
   etablissement_gestionnaire_uai: {
+    index: true,
     type: String,
     default: null,
     description: "UAI de l'etablissement gestionnaire",
@@ -135,6 +136,11 @@ const etablissementGestionnaireInfo = {
     type: Date,
     default: null,
     description: "Date de création de l'établissement",
+  },
+  etablissement_gestionnaire_courriel: {
+    type: String,
+    default: null,
+    description: "Adresse email de contact de l'établissement gestionnaire",
   },
 };
 

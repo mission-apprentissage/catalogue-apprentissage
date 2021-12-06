@@ -16,6 +16,12 @@ const formationsJPlus2 = fs.readJsonSync(
 );
 
 const adding = {
+  duree: null,
+  parcours: null,
+  entree_apprentissage: null,
+  // lieu_different: null,
+  intitule_formation: "",
+  cle_ministere_educatif: "a098765432",
   id_formation: "24_208063",
   id_action: "24_1462357",
   id_certifinfo: "107551",
@@ -61,9 +67,19 @@ const adding = {
     "2022-07",
   ],
   email: "no-reply@apprentissage.beta.gouv.fr",
+  entierement_a_distance: null,
+  etablissement_formateur_courriel: null,
+  etablissement_gestionnaire_courriel: null,
+  niveau_entree_obligatoire: null,
 };
 
 const updated = {
+  duree: null,
+  parcours: null,
+  entree_apprentissage: null,
+  // lieu_different: null,
+  intitule_formation: "",
+  cle_ministere_educatif: "a098765433",
   id_formation: "24_208037",
   id_action: "24_1462311",
   id_certifinfo: "106623",
@@ -90,9 +106,18 @@ const updated = {
   capacite: null,
   periode: ["2021-11", "2021-12"],
   email: "no-reply@apprentissage.beta.gouv.fr",
+  entierement_a_distance: null,
+  etablissement_formateur_courriel: null,
+  etablissement_gestionnaire_courriel: null,
+  niveau_entree_obligatoire: null,
 };
 
 const deleted = {
+  duree: null,
+  parcours: null,
+  entree_apprentissage: null,
+  // lieu_different: null,
+  intitule_formation: "",
   id_formation: "24_207466",
   id_action: "24_1461053",
   id_certifinfo: "100429",
@@ -136,9 +161,19 @@ const deleted = {
     "2022-06",
   ],
   email: "no-reply@apprentissage.beta.gouv.fr",
+  entierement_a_distance: null,
+  etablissement_formateur_courriel: null,
+  etablissement_gestionnaire_courriel: null,
+  niveau_entree_obligatoire: null,
 };
 
 const reAdded = {
+  duree: null,
+  parcours: null,
+  entree_apprentissage: null,
+  // lieu_different: null,
+  intitule_formation: "",
+  cle_ministere_educatif: "a076E55E",
   id_formation: "24_207466",
   id_action: "24_1461053",
   id_certifinfo: "100429",
@@ -182,6 +217,10 @@ const reAdded = {
     "2022-07",
   ],
   email: "no-reply@apprentissage.beta.gouv.fr",
+  entierement_a_distance: null,
+  etablissement_formateur_courriel: null,
+  etablissement_gestionnaire_courriel: null,
+  niveau_entree_obligatoire: null,
 };
 
 module.exports = {

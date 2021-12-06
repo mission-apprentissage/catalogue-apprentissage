@@ -29,6 +29,7 @@ describe(__filename, () => {
       parcoursup_statut: "hors périmètre",
       parcoursup_error: null,
       parcoursup_statut_history: [],
+      cle_ministere_educatif: "12345-cle",
     });
 
     await Formation.create({
@@ -42,6 +43,7 @@ describe(__filename, () => {
       parcoursup_statut: "en attente de publication",
       parcoursup_error: null,
       parcoursup_statut_history: [],
+      cle_ministere_educatif: "12345-cle2",
     });
 
     await Formation.create({
@@ -55,6 +57,7 @@ describe(__filename, () => {
       parcoursup_statut: "en attente de publication",
       parcoursup_error: null,
       parcoursup_statut_history: [],
+      cle_ministere_educatif: "12345-cle3",
     });
 
     await Formation.create({
@@ -68,6 +71,7 @@ describe(__filename, () => {
       parcoursup_statut: "en attente de publication",
       parcoursup_error: null,
       parcoursup_statut_history: [],
+      cle_ministere_educatif: "12345-cle4",
     });
 
     await Formation.create({
@@ -81,6 +85,7 @@ describe(__filename, () => {
       parcoursup_statut: "en attente de publication",
       parcoursup_error: null,
       parcoursup_statut_history: [],
+      cle_ministere_educatif: "12345-cle5",
     });
 
     await Formation.create({
@@ -94,6 +99,7 @@ describe(__filename, () => {
       parcoursup_statut: "en attente de publication",
       parcoursup_error: "error ws",
       parcoursup_statut_history: [],
+      cle_ministere_educatif: "12345-cle6",
     });
 
     await Formation.create({
@@ -107,6 +113,7 @@ describe(__filename, () => {
       parcoursup_statut: "en attente de publication",
       parcoursup_error: "error ws",
       parcoursup_statut_history: [],
+      cle_ministere_educatif: "12345-cle7",
     });
 
     await Formation.create({
@@ -120,6 +127,7 @@ describe(__filename, () => {
       parcoursup_statut: "en attente de publication",
       parcoursup_error: null,
       parcoursup_statut_history: [],
+      cle_ministere_educatif: "12345-cle8",
     });
   });
 
@@ -187,6 +195,7 @@ describe(__filename, () => {
       parcoursup_statut: "en attente de publication",
       parcoursup_error: null,
       parcoursup_statut_history: [],
+      cle_ministere_educatif: "12345-cle9",
     });
 
     await f.save();
@@ -211,6 +220,7 @@ describe(__filename, () => {
       parcoursup_statut: "en attente de publication",
       parcoursup_error: null,
       parcoursup_statut_history: [],
+      cle_ministere_educatif: "12345-cle10",
     });
 
     await f.save();
@@ -240,6 +250,7 @@ describe(__filename, () => {
         },
         { from: {}, to: {} },
       ],
+      cle_ministere_educatif: "12345-cle11",
     });
 
     const user = await User.findOne({ email: "test@beta.gouv.fr" });
@@ -248,7 +259,7 @@ describe(__filename, () => {
       user: user._id,
       cfd: "123134",
       mef: "mef-11",
-      rco: "rco-11",
+      rco: "12345-cle11",
       rncp: [1234],
       rome: ["rome-110", "rome-111"],
       uai: "uai-11",

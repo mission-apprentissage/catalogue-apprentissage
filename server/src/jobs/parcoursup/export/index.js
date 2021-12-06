@@ -28,6 +28,7 @@ const select = {
   parcoursup_statut_history: 1,
   parcoursup_error: 1,
   updates_history: 1,
+  cle_ministere_educatif: 1,
 };
 
 // Retry the ones with errors last
@@ -54,7 +55,7 @@ const formatter = async ({
   rncp_code,
   cfd_entree,
   uai_formation,
-  id_rco_formation,
+  cle_ministere_educatif,
   bcn_mefs_10 = [],
   rome_codes = [],
   updates_history = [],
@@ -66,7 +67,7 @@ const formatter = async ({
     rncp: [Number(rncp_code.replace("RNCP", ""))],
     cfd: cfd_entree,
     uai: uai_formation,
-    rco: id_rco_formation, // TODO send cle_ministere_educatif
+    rco: cle_ministere_educatif,
     mef,
     rome: rome_codes,
   };
@@ -117,7 +118,7 @@ const run = async () => {
   let cursor = createCursor();
   for await (const formation of cursor) {
     await createFormation(formation);
-    await sleep(500);
+    await sleep(5000);
   }
 };
 

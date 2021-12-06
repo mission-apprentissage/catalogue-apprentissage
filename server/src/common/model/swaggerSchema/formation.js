@@ -2,321 +2,10 @@ module.exports = {
   formation: {
     type: "object",
     properties: {
-      etablissement_gestionnaire_id: {
+      cle_ministere_educatif: {
         type: "string",
         default: "null",
-        description: "Identifiant établissement gestionnaire",
-      },
-      etablissement_gestionnaire_siret: {
-        type: "string",
-        default: "null",
-        description: "Numéro siret gestionnaire",
-      },
-      etablissement_gestionnaire_enseigne: {
-        type: "string",
-        default: "null",
-        description: "Enseigne établissement gestionnaire",
-      },
-      etablissement_gestionnaire_uai: {
-        type: "string",
-        default: "null",
-        description: "UAI de l'etablissement gestionnaire",
-      },
-      etablissement_gestionnaire_type: {
-        type: "string",
-        default: "null",
-        description: "Etablissement gestionnaire est un CFA ou un OF",
-      },
-      etablissement_gestionnaire_conventionne: {
-        type: "string",
-        default: "null",
-        description: "Etablissement gestionnaire est conventionné ou pas",
-      },
-      etablissement_gestionnaire_declare_prefecture: {
-        type: "string",
-        default: "null",
-        description: "Etablissement gestionnaire est déclaré en prefecture",
-      },
-      etablissement_gestionnaire_datadock: {
-        type: "string",
-        default: "null",
-        description: "Etablissement gestionnaire est connu de datadock",
-      },
-      etablissement_gestionnaire_published: {
-        type: "boolean",
-        default: false,
-        description: "Etablissement gestionnaire est publié",
-      },
-      etablissement_gestionnaire_catalogue_published: {
-        type: "boolean",
-        default: false,
-        description: "Etablissement gestionnaire entre dans le catalogue",
-      },
-      etablissement_gestionnaire_adresse: {
-        type: "string",
-        default: "null",
-        description: "Numéro et rue établissement gestionnaire",
-      },
-      etablissement_gestionnaire_code_postal: {
-        type: "string",
-        default: "null",
-        description: "Code postal établissement gestionnaire",
-      },
-      etablissement_gestionnaire_code_commune_insee: {
-        type: "string",
-        default: "null",
-        description: "Code commune insee établissement gestionnaire",
-      },
-      etablissement_gestionnaire_localite: {
-        type: "string",
-        default: "null",
-        description: "Localité établissement gestionnaire",
-      },
-      etablissement_gestionnaire_complement_adresse: {
-        type: "string",
-        default: "null",
-        description: "Complément d'adresse de l'établissement gestionnaire",
-      },
-      etablissement_gestionnaire_cedex: {
-        type: "string",
-        default: "null",
-        description: "Cedex",
-      },
-      etablissement_gestionnaire_entreprise_raison_sociale: {
-        type: "string",
-        default: "null",
-        description: "Raison sociale établissement gestionnaire",
-      },
-      geo_coordonnees_etablissement_gestionnaire: {
-        type: "string",
-        description: "Latitude et longitude de l'établissement gestionnaire",
-      },
-      rncp_etablissement_gestionnaire_habilite: {
-        type: "boolean",
-        default: false,
-        description: "Etablissement gestionnaire est habilité RNCP ou pas",
-      },
-      etablissement_gestionnaire_region: {
-        type: "string",
-        default: "null",
-        description: "région gestionnaire",
-      },
-      etablissement_gestionnaire_num_departement: {
-        type: "string",
-        default: "null",
-        description: "Numéro de departement gestionnaire",
-      },
-      etablissement_gestionnaire_nom_departement: {
-        type: "string",
-        default: "null",
-        description: "Nom du departement gestionnaire",
-      },
-      etablissement_gestionnaire_nom_academie: {
-        type: "string",
-        default: "null",
-        description: "Nom de l'académie gestionnaire",
-      },
-      etablissement_gestionnaire_num_academie: {
-        type: "string",
-        default: 0,
-        description: "Numéro de l'académie gestionnaire",
-      },
-      etablissement_gestionnaire_siren: {
-        type: "string",
-        default: "null",
-        description: "Numéro siren gestionnaire",
-      },
-      etablissement_gestionnaire_nda: {
-        type: "string",
-        default: "null",
-        description: "Numéro Déclaration gestionnaire",
-      },
-      etablissement_gestionnaire_date_creation: {
-        type: "string",
-        default: "null",
-        description: "Date de création de l'établissement",
-        format: "date-time",
-      },
-      etablissement_formateur_id: {
-        type: "string",
-        default: "null",
-        description: "Identifiant établissement formateur",
-      },
-      etablissement_formateur_siret: {
-        type: "string",
-        default: "null",
-        description: "Numéro siret formateur",
-      },
-      etablissement_formateur_enseigne: {
-        type: "string",
-        default: "null",
-        description: "Enseigne établissement formateur",
-      },
-      etablissement_formateur_uai: {
-        type: "string",
-        default: "null",
-        description: "UAI de l'etablissement formateur",
-      },
-      etablissement_formateur_type: {
-        type: "string",
-        default: "null",
-        description: "Etablissement formateur est un CFA ou un OF",
-      },
-      etablissement_formateur_conventionne: {
-        type: "string",
-        default: "null",
-        description: "Etablissement formateur est conventionné ou pas",
-      },
-      etablissement_formateur_declare_prefecture: {
-        type: "string",
-        default: "null",
-        description: "Etablissement formateur est déclaré en prefecture",
-      },
-      etablissement_formateur_datadock: {
-        type: "string",
-        default: "null",
-        description: "Etablissement formateur est connu de datadock",
-      },
-      etablissement_formateur_published: {
-        type: "boolean",
-        default: false,
-        description: "Etablissement formateur est publié",
-      },
-      etablissement_formateur_catalogue_published: {
-        type: "boolean",
-        default: false,
-        description: "Etablissement formateur entre dans le catalogue",
-      },
-      etablissement_formateur_adresse: {
-        type: "string",
-        default: "null",
-        description: "Numéro et rue établissement formateur",
-      },
-      etablissement_formateur_code_postal: {
-        type: "string",
-        default: "null",
-        description: "Code postal établissement formateur",
-      },
-      etablissement_formateur_code_commune_insee: {
-        type: "string",
-        default: "null",
-        description: "Code commune insee établissement formateur",
-      },
-      etablissement_formateur_localite: {
-        type: "string",
-        default: "null",
-        description: "Localité établissement formateur",
-      },
-      etablissement_formateur_complement_adresse: {
-        type: "string",
-        default: "null",
-        description: "Complément d'adresse de l'établissement",
-      },
-      etablissement_formateur_cedex: {
-        type: "string",
-        default: "null",
-        description: "Cedex",
-      },
-      etablissement_formateur_entreprise_raison_sociale: {
-        type: "string",
-        default: "null",
-        description: "Raison sociale établissement formateur",
-      },
-      geo_coordonnees_etablissement_formateur: {
-        type: "string",
-        description: "Latitude et longitude de l'établissement formateur",
-      },
-      rncp_etablissement_formateur_habilite: {
-        type: "boolean",
-        default: false,
-        description: "Etablissement formateur est habilité RNCP ou pas",
-      },
-      etablissement_formateur_region: {
-        type: "string",
-        default: "null",
-        description: "région formateur",
-      },
-      etablissement_formateur_num_departement: {
-        type: "string",
-        default: "null",
-        description: "Numéro de departement formateur",
-      },
-      etablissement_formateur_nom_departement: {
-        type: "string",
-        default: "null",
-        description: "Nom du departement formateur",
-      },
-      etablissement_formateur_nom_academie: {
-        type: "string",
-        default: "null",
-        description: "Nom de l'académie formateur",
-      },
-      etablissement_formateur_num_academie: {
-        type: "string",
-        default: 0,
-        description: "Numéro de l'académie formateur",
-      },
-      etablissement_formateur_siren: {
-        type: "string",
-        default: "null",
-        description: "Numéro siren formateur",
-      },
-      etablissement_formateur_nda: {
-        type: "string",
-        default: "null",
-        description: "Numéro Déclaration formateur",
-      },
-      etablissement_formateur_date_creation: {
-        type: "string",
-        default: "null",
-        description: "Date de création de l'établissement",
-        format: "date-time",
-      },
-      etablissement_reference: {
-        type: "string",
-        default: "null",
-        description: "Etablissement reference  est soit formateur soit le gestionnaire",
-      },
-      etablissement_reference_type: {
-        type: "string",
-        default: "null",
-        description: "Etablissement reference est un CFA ou un OF",
-      },
-      etablissement_reference_conventionne: {
-        type: "string",
-        default: "null",
-        description: "Etablissement reference est conventionné ou pas",
-      },
-      etablissement_reference_declare_prefecture: {
-        type: "string",
-        default: "null",
-        description: "Etablissement reference est déclaré en prefecture",
-      },
-      etablissement_reference_datadock: {
-        type: "string",
-        default: "null",
-        description: "Etablissement reference est connu de datadock",
-      },
-      etablissement_reference_published: {
-        type: "boolean",
-        default: false,
-        description: "Etablissement reference est publié",
-      },
-      etablissement_reference_catalogue_published: {
-        type: "boolean",
-        default: false,
-        description: "Etablissement reference entre dans le catalogue",
-      },
-      rncp_etablissement_reference_habilite: {
-        type: "boolean",
-        default: false,
-        description: "Etablissement reference est habilité RNCP ou pas",
-      },
-      etablissement_reference_date_creation: {
-        type: "string",
-        default: "null",
-        description: "Date de création de l'établissement",
-        format: "date-time",
+        description: "Clé unique de la formation (pour envoi aux ministères éducatifs)",
       },
       cfd: {
         type: "string",
@@ -861,6 +550,342 @@ module.exports = {
         type: "number",
         default: "null",
         description: "distance entre le Lieu de formation et l'établissement formateur",
+      },
+      niveau_entree_obligatoire: {
+        type: "number",
+        default: "null",
+        description: "Niveau d'entrée de l'apprenti minimum obligatoire pour cette formation",
+      },
+      entierement_a_distance: {
+        type: "boolean",
+        default: false,
+        description: "Renseigné si la formation peut être suivie entièrement à distance",
+      },
+      etablissement_gestionnaire_id: {
+        type: "string",
+        default: "null",
+        description: "Identifiant établissement gestionnaire",
+      },
+      etablissement_gestionnaire_siret: {
+        type: "string",
+        default: "null",
+        description: "Numéro siret gestionnaire",
+      },
+      etablissement_gestionnaire_enseigne: {
+        type: "string",
+        default: "null",
+        description: "Enseigne établissement gestionnaire",
+      },
+      etablissement_gestionnaire_uai: {
+        type: "string",
+        default: "null",
+        description: "UAI de l'etablissement gestionnaire",
+      },
+      etablissement_gestionnaire_type: {
+        type: "string",
+        default: "null",
+        description: "Etablissement gestionnaire est un CFA ou un OF",
+      },
+      etablissement_gestionnaire_conventionne: {
+        type: "string",
+        default: "null",
+        description: "Etablissement gestionnaire est conventionné ou pas",
+      },
+      etablissement_gestionnaire_declare_prefecture: {
+        type: "string",
+        default: "null",
+        description: "Etablissement gestionnaire est déclaré en prefecture",
+      },
+      etablissement_gestionnaire_datadock: {
+        type: "string",
+        default: "null",
+        description: "Etablissement gestionnaire est connu de datadock",
+      },
+      etablissement_gestionnaire_published: {
+        type: "boolean",
+        default: false,
+        description: "Etablissement gestionnaire est publié",
+      },
+      etablissement_gestionnaire_catalogue_published: {
+        type: "boolean",
+        default: false,
+        description: "Etablissement gestionnaire entre dans le catalogue",
+      },
+      etablissement_gestionnaire_adresse: {
+        type: "string",
+        default: "null",
+        description: "Numéro et rue établissement gestionnaire",
+      },
+      etablissement_gestionnaire_code_postal: {
+        type: "string",
+        default: "null",
+        description: "Code postal établissement gestionnaire",
+      },
+      etablissement_gestionnaire_code_commune_insee: {
+        type: "string",
+        default: "null",
+        description: "Code commune insee établissement gestionnaire",
+      },
+      etablissement_gestionnaire_localite: {
+        type: "string",
+        default: "null",
+        description: "Localité établissement gestionnaire",
+      },
+      etablissement_gestionnaire_complement_adresse: {
+        type: "string",
+        default: "null",
+        description: "Complément d'adresse de l'établissement gestionnaire",
+      },
+      etablissement_gestionnaire_cedex: {
+        type: "string",
+        default: "null",
+        description: "Cedex",
+      },
+      etablissement_gestionnaire_entreprise_raison_sociale: {
+        type: "string",
+        default: "null",
+        description: "Raison sociale établissement gestionnaire",
+      },
+      geo_coordonnees_etablissement_gestionnaire: {
+        type: "string",
+        description: "Latitude et longitude de l'établissement gestionnaire",
+      },
+      rncp_etablissement_gestionnaire_habilite: {
+        type: "boolean",
+        default: false,
+        description: "Etablissement gestionnaire est habilité RNCP ou pas",
+      },
+      etablissement_gestionnaire_region: {
+        type: "string",
+        default: "null",
+        description: "région gestionnaire",
+      },
+      etablissement_gestionnaire_num_departement: {
+        type: "string",
+        default: "null",
+        description: "Numéro de departement gestionnaire",
+      },
+      etablissement_gestionnaire_nom_departement: {
+        type: "string",
+        default: "null",
+        description: "Nom du departement gestionnaire",
+      },
+      etablissement_gestionnaire_nom_academie: {
+        type: "string",
+        default: "null",
+        description: "Nom de l'académie gestionnaire",
+      },
+      etablissement_gestionnaire_num_academie: {
+        type: "string",
+        default: 0,
+        description: "Numéro de l'académie gestionnaire",
+      },
+      etablissement_gestionnaire_siren: {
+        type: "string",
+        default: "null",
+        description: "Numéro siren gestionnaire",
+      },
+      etablissement_gestionnaire_nda: {
+        type: "string",
+        default: "null",
+        description: "Numéro Déclaration gestionnaire",
+      },
+      etablissement_gestionnaire_date_creation: {
+        type: "string",
+        default: "null",
+        description: "Date de création de l'établissement",
+        format: "date-time",
+      },
+      etablissement_gestionnaire_courriel: {
+        type: "string",
+        default: "null",
+        description: "Adresse email de contact de l'établissement gestionnaire",
+      },
+      etablissement_formateur_id: {
+        type: "string",
+        default: "null",
+        description: "Identifiant établissement formateur",
+      },
+      etablissement_formateur_siret: {
+        type: "string",
+        default: "null",
+        description: "Numéro siret formateur",
+      },
+      etablissement_formateur_enseigne: {
+        type: "string",
+        default: "null",
+        description: "Enseigne établissement formateur",
+      },
+      etablissement_formateur_uai: {
+        type: "string",
+        default: "null",
+        description: "UAI de l'etablissement formateur",
+      },
+      etablissement_formateur_type: {
+        type: "string",
+        default: "null",
+        description: "Etablissement formateur est un CFA ou un OF",
+      },
+      etablissement_formateur_conventionne: {
+        type: "string",
+        default: "null",
+        description: "Etablissement formateur est conventionné ou pas",
+      },
+      etablissement_formateur_declare_prefecture: {
+        type: "string",
+        default: "null",
+        description: "Etablissement formateur est déclaré en prefecture",
+      },
+      etablissement_formateur_datadock: {
+        type: "string",
+        default: "null",
+        description: "Etablissement formateur est connu de datadock",
+      },
+      etablissement_formateur_published: {
+        type: "boolean",
+        default: false,
+        description: "Etablissement formateur est publié",
+      },
+      etablissement_formateur_catalogue_published: {
+        type: "boolean",
+        default: false,
+        description: "Etablissement formateur entre dans le catalogue",
+      },
+      etablissement_formateur_adresse: {
+        type: "string",
+        default: "null",
+        description: "Numéro et rue établissement formateur",
+      },
+      etablissement_formateur_code_postal: {
+        type: "string",
+        default: "null",
+        description: "Code postal établissement formateur",
+      },
+      etablissement_formateur_code_commune_insee: {
+        type: "string",
+        default: "null",
+        description: "Code commune insee établissement formateur",
+      },
+      etablissement_formateur_localite: {
+        type: "string",
+        default: "null",
+        description: "Localité établissement formateur",
+      },
+      etablissement_formateur_complement_adresse: {
+        type: "string",
+        default: "null",
+        description: "Complément d'adresse de l'établissement",
+      },
+      etablissement_formateur_cedex: {
+        type: "string",
+        default: "null",
+        description: "Cedex",
+      },
+      etablissement_formateur_entreprise_raison_sociale: {
+        type: "string",
+        default: "null",
+        description: "Raison sociale établissement formateur",
+      },
+      geo_coordonnees_etablissement_formateur: {
+        type: "string",
+        description: "Latitude et longitude de l'établissement formateur",
+      },
+      rncp_etablissement_formateur_habilite: {
+        type: "boolean",
+        default: false,
+        description: "Etablissement formateur est habilité RNCP ou pas",
+      },
+      etablissement_formateur_region: {
+        type: "string",
+        default: "null",
+        description: "région formateur",
+      },
+      etablissement_formateur_num_departement: {
+        type: "string",
+        default: "null",
+        description: "Numéro de departement formateur",
+      },
+      etablissement_formateur_nom_departement: {
+        type: "string",
+        default: "null",
+        description: "Nom du departement formateur",
+      },
+      etablissement_formateur_nom_academie: {
+        type: "string",
+        default: "null",
+        description: "Nom de l'académie formateur",
+      },
+      etablissement_formateur_num_academie: {
+        type: "string",
+        default: 0,
+        description: "Numéro de l'académie formateur",
+      },
+      etablissement_formateur_siren: {
+        type: "string",
+        default: "null",
+        description: "Numéro siren formateur",
+      },
+      etablissement_formateur_nda: {
+        type: "string",
+        default: "null",
+        description: "Numéro Déclaration formateur",
+      },
+      etablissement_formateur_date_creation: {
+        type: "string",
+        default: "null",
+        description: "Date de création de l'établissement",
+        format: "date-time",
+      },
+      etablissement_formateur_courriel: {
+        type: "string",
+        default: "null",
+        description: "Adresse email de contact de l'établissement formateur",
+      },
+      etablissement_reference: {
+        type: "string",
+        default: "null",
+        description: "Etablissement reference  est soit formateur soit le gestionnaire",
+      },
+      etablissement_reference_type: {
+        type: "string",
+        default: "null",
+        description: "Etablissement reference est un CFA ou un OF",
+      },
+      etablissement_reference_conventionne: {
+        type: "string",
+        default: "null",
+        description: "Etablissement reference est conventionné ou pas",
+      },
+      etablissement_reference_declare_prefecture: {
+        type: "string",
+        default: "null",
+        description: "Etablissement reference est déclaré en prefecture",
+      },
+      etablissement_reference_datadock: {
+        type: "string",
+        default: "null",
+        description: "Etablissement reference est connu de datadock",
+      },
+      etablissement_reference_published: {
+        type: "boolean",
+        default: false,
+        description: "Etablissement reference est publié",
+      },
+      etablissement_reference_catalogue_published: {
+        type: "boolean",
+        default: false,
+        description: "Etablissement reference entre dans le catalogue",
+      },
+      rncp_etablissement_reference_habilite: {
+        type: "boolean",
+        default: false,
+        description: "Etablissement reference est habilité RNCP ou pas",
+      },
+      etablissement_reference_date_creation: {
+        type: "string",
+        default: "null",
+        description: "Date de création de l'établissement",
+        format: "date-time",
       },
       _id: {
         type: "string",
