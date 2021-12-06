@@ -21,10 +21,6 @@ export default [
       },
       {
         feature: "Voir les statuts de publication parcourSup",
-        ref: "page_catalogue/voir_status_publication",
-      },
-      {
-        feature: "Voir les statuts de publication parcourSup",
         ref: "page_catalogue/voir_status_publication_ps",
       },
       {
