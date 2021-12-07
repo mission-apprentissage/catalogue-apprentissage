@@ -221,17 +221,6 @@ const etablissementSchema = {
     default: 0,
     description: "L'établissement est présent ou pas dans le fichier datagouv",
   },
-  info_datadock: {
-    type: Number,
-    default: 0,
-    description: "L'établissement est présent ou pas dans le fichier dataDock",
-  },
-  info_qualiopi: {
-    type: Number,
-    default: 0,
-    description: "L'établissement est référencé qualiopi",
-  },
-
   info_depp_info: {
     type: String,
     default: null,
@@ -247,18 +236,11 @@ const etablissementSchema = {
     default: null,
     description: "L'établissement est présent ou pas dans le fichier datagouv",
   },
-  info_datadock_info: {
-    type: String,
-    default: null,
-    description: "L'établissement est présent ou pas dans le fichier dataDock",
-  },
-
   info_qualiopi_info: {
     type: String,
     default: null,
     description: "L'établissement est présent ou pas dans le fichier qualiopi",
   },
-
   computed_type: {
     type: String,
     default: null,
@@ -274,16 +256,6 @@ const etablissementSchema = {
     default: null,
     description: "Etablissement est conventionné ou pas",
   },
-  computed_info_datadock: {
-    type: String,
-    default: null,
-    description: "Etablissement est connu de datadock",
-  },
-  // computed_info_qualiopi: {
-  //   type: String,
-  //   default: null,
-  //   description: "Etablissement est connu de qualiopi",
-  // },
   api_entreprise_reference: {
     type: Boolean,
     default: false,

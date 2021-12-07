@@ -19,11 +19,6 @@ const etablissementReferenceInfo = {
     default: null,
     description: "Etablissement reference est déclaré en prefecture",
   },
-  etablissement_reference_datadock: {
-    type: String,
-    default: null,
-    description: "Etablissement reference est connu de datadock",
-  },
   etablissement_reference_published: {
     type: Boolean,
     default: false,

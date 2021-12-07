@@ -257,12 +257,10 @@ describe(__filename, () => {
     it("should fill default values", () => {
       const expected = {
         etablissement_gestionnaire_adresse: "",
-        etablissement_gestionnaire_datadock: null,
         etablissement_gestionnaire_num_academie: null,
       };
       const result = mapEtablissementKeys({});
       assert.deepStrictEqual(result.etablissement_gestionnaire_adresse, expected.etablissement_gestionnaire_adresse);
-      assert.deepStrictEqual(result.etablissement_gestionnaire_datadock, expected.etablissement_gestionnaire_datadock);
       assert.deepStrictEqual(
         result.etablissement_gestionnaire_num_academie,
         expected.etablissement_gestionnaire_num_academie
@@ -272,13 +270,11 @@ describe(__filename, () => {
     it("should convert num academie & id to string ", () => {
       const expected = {
         etablissement_formateur_adresse: "",
-        etablissement_formateur_datadock: null,
         etablissement_formateur_num_academie: "12",
         etablissement_formateur_id: "35",
       };
       const result = mapEtablissementKeys({ num_academie: 12, _id: 35 }, "etablissement_formateur");
       assert.deepStrictEqual(result.etablissement_formateur_adresse, expected.etablissement_formateur_adresse);
-      assert.deepStrictEqual(result.etablissement_formateur_datadock, expected.etablissement_formateur_datadock);
       assert.deepStrictEqual(
         result.etablissement_formateur_num_academie,
         expected.etablissement_formateur_num_academie
@@ -289,12 +285,13 @@ describe(__filename, () => {
 
   describe("isInCatalogEligible", () => {
     it("should return false if etablissement not published", () => {
-      const result = isInCatalogEligible({ siret: "1234" }, {});
+      const result = isInCatalogEligible({ siret: "1234" }, { siret: "1234" }, {});
       assert.deepStrictEqual(result, false);
     });
 
     it("should return false if etablissement is not habilite and formation is a Titre or TP", () => {
       const result = isInCatalogEligible(
+        { siret: "1234", catalogue_published: true },
         { siret: "1234", catalogue_published: true },
         { code_type_certif: "TP", rncp_eligible_apprentissage: true }
       );
@@ -303,6 +300,7 @@ describe(__filename, () => {
 
     it("should return false if etablissement is not rncp_eligible_apprentissage and formation is a Titre or TP", () => {
       const result = isInCatalogEligible(
+        { siret: "1234", catalogue_published: true },
         { siret: "1234", catalogue_published: true },
         {
           code_type_certif: "TP",
@@ -317,6 +315,7 @@ describe(__filename, () => {
     it("should return true if etablissement is habilite rncp and formation is a Titre or TP", () => {
       const result = isInCatalogEligible(
         { siret: "1234", catalogue_published: true },
+        { siret: "1234", catalogue_published: true },
         {
           code_type_certif: "TP",
           partenaires: [],
@@ -328,7 +327,11 @@ describe(__filename, () => {
     });
 
     it("should return true if etablissement is published and formation is not Titre or TP", () => {
-      const result = isInCatalogEligible({ siret: "1234", catalogue_published: true }, {});
+      const result = isInCatalogEligible(
+        { siret: "1234", catalogue_published: true },
+        { siret: "1234", catalogue_published: true },
+        {}
+      );
       assert.deepStrictEqual(result, true);
     });
   });

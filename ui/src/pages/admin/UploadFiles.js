@@ -26,14 +26,6 @@ const activeStyle = {
 };
 
 const DOCUMENTS = [
-  // {
-  //   filename: "BaseDataDock-latest.xlsx",
-  //   label: "datadock",
-  // },
-  // {
-  //   filename: "latest_public_ofs.csv",
-  //   label: "Liste des OFs",
-  // },
   {
     filename: "CodeDiplome_RNCP_latest_kit.csv",
     label: "Kit code diplome - rncp",

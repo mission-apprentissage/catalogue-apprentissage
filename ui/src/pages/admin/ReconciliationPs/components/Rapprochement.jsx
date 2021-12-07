@@ -15,7 +15,6 @@ const getEtablissementFields = (mnaFormation, type, diff, code_commune_insee) =>
     code_postal: mnaFormation[`etablissement_${type}_code_postal`],
     complement_adresse: mnaFormation[`etablissement_${type}_complement_adresse`],
     conventionne: mnaFormation[`etablissement_${type}_conventionne`],
-    datadock: mnaFormation[`etablissement_${type}_datadock`],
     date_creation: mnaFormation[`etablissement_${type}_date_creation`],
     declare_prefecture: mnaFormation[`etablissement_${type}_declare_prefecture`],
     enseigne: mnaFormation[`etablissement_${type}_enseigne`],
