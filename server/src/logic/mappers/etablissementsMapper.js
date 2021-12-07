@@ -123,8 +123,9 @@ const mapEtablissementKeys = (etablissement, prefix = "etablissement_gestionnair
   };
 };
 
-const isInCatalogEligible = (referenceEstablishment, rncpInfo) => {
-  if (!referenceEstablishment.catalogue_published) {
+const isInCatalogEligible = (gestionnaire, referenceEstablishment, rncpInfo) => {
+  // ensure gestionnaire is published = is qualiopi certified
+  if (!gestionnaire.catalogue_published) {
     return false;
   }
 
@@ -197,7 +198,11 @@ const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissem
         ...etablissementFormateur,
 
         etablissement_reference,
-        etablissement_reference_catalogue_published: isInCatalogEligible(referenceEstablishment, rncpInfo),
+        etablissement_reference_catalogue_published: isInCatalogEligible(
+          attachedEstablishments?.gestionnaire,
+          referenceEstablishment,
+          rncpInfo
+        ),
         etablissement_reference_published: referenceEstablishment.published,
         etablissement_reference_declare_prefecture: referenceEstablishment.computed_declare_prefecture,
         etablissement_reference_type: referenceEstablishment.computed_type,
