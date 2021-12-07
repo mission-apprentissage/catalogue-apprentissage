@@ -221,11 +221,6 @@ module.exports = {
         default: 0,
         description: "L'établissement est présent ou pas dans le fichier datagouv",
       },
-      info_datadock: {
-        type: "number",
-        default: 0,
-        description: "L'établissement est présent ou pas dans le fichier dataDock",
-      },
       info_depp_info: {
         type: "string",
         default: "null",
@@ -240,11 +235,6 @@ module.exports = {
         type: "string",
         default: "null",
         description: "L'établissement est présent ou pas dans le fichier datagouv",
-      },
-      info_datadock_info: {
-        type: "string",
-        default: "null",
-        description: "L'établissement est présent ou pas dans le fichier dataDock",
       },
       info_qualiopi_info: {
         type: "string",
@@ -265,11 +255,6 @@ module.exports = {
         type: "string",
         default: "null",
         description: "Etablissement est conventionné ou pas",
-      },
-      computed_info_datadock: {
-        type: "string",
-        default: "null",
-        description: "Etablissement est connu de datadock",
       },
       api_entreprise_reference: {
         type: "boolean",

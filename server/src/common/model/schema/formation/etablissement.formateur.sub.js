@@ -35,11 +35,6 @@ const etablissementFormateurInfo = {
     default: null,
     description: "Etablissement formateur est déclaré en prefecture",
   },
-  etablissement_formateur_datadock: {
-    type: String,
-    default: null,
-    description: "Etablissement formateur est connu de datadock",
-  },
   etablissement_formateur_published: {
     type: Boolean,
     default: false,

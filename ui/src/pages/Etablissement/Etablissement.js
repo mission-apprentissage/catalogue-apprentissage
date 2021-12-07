@@ -270,17 +270,6 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
                 <InfoTooltip description={helpText.etablissement.declare_prefecture} />
               </Text>
 
-              {(etablissement.computed_info_datadock === "datadocké" || etablissement.info_qualiopi_info === "NON") && (
-                <Text mb={4}>
-                  Certification qualité :{" "}
-                  <Text as="span" variant="highlight">
-                    {" "}
-                    {etablissement.computed_info_datadock}
-                  </Text>
-                  <InfoTooltip description={helpText.etablissement.datadock} />
-                </Text>
-              )}
-
               <Text mb={4}>
                 Certification qualité :{" "}
                 <Text as="span" variant="highlight">
@@ -288,7 +277,7 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
                   {etablissement.info_qualiopi_info === "OUI" && "qualiopi OUI"}
                   {etablissement.info_qualiopi_info === "NON" && "qualiopi NON"}
                 </Text>
-                <InfoTooltip description={helpText.etablissement.datadock} />
+                <InfoTooltip description={helpText.etablissement.qualiopi} />
               </Text>
             </Box>
 

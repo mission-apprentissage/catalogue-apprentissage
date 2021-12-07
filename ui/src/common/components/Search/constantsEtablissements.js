@@ -85,14 +85,6 @@ const columnsDefinition = [
     editable: false,
   },
   {
-    Header: "Datadock ? ",
-    accessor: "computed_info_datadock",
-    width: 200,
-    exportable: true,
-    editable: false,
-    formatter: (value) => escapeDiacritics(value),
-  },
-  {
     Header: "Qualiopi ?",
     accessor: "info_qualiopi_info",
     width: 200,
@@ -317,7 +309,6 @@ const queryBuilderField = [
   { text: "Type d'organisme", value: "computed_type.keyword" },
   { text: "Conventionné", value: "computed_conventionne.keyword" },
   { text: "Déclaré en prefecture", value: "computed_declare_prefecture.keyword" },
-  { text: "Référencé datadock", value: "computed_info_datadock.keyword" },
   { text: "Uai", value: "uai.keyword" },
   { text: "Nda", value: "nda.keyword" },
 ];

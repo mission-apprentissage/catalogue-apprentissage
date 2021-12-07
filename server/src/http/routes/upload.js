@@ -45,12 +45,6 @@ module.exports = () => {
         let callback;
 
         switch (req.file.originalname) {
-          case "BaseDataDock-latest.xlsx":
-            // TODO implement when etablissements scripts are in tco lib
-            break;
-          case "latest_public_ofs.csv":
-            // TODO implement when etablissements scripts are in tco lib
-            break;
           case "affelnet-import.xlsx":
             break;
           case "CodeDiplome_RNCP_latest_kit.csv": {
