@@ -285,12 +285,13 @@ describe(__filename, () => {
 
   describe("isInCatalogEligible", () => {
     it("should return false if etablissement not published", () => {
-      const result = isInCatalogEligible({ siret: "1234" }, {});
+      const result = isInCatalogEligible({ siret: "1234" }, { siret: "1234" }, {});
       assert.deepStrictEqual(result, false);
     });
 
     it("should return false if etablissement is not habilite and formation is a Titre or TP", () => {
       const result = isInCatalogEligible(
+        { siret: "1234", catalogue_published: true },
         { siret: "1234", catalogue_published: true },
         { code_type_certif: "TP", rncp_eligible_apprentissage: true }
       );
@@ -299,6 +300,7 @@ describe(__filename, () => {
 
     it("should return false if etablissement is not rncp_eligible_apprentissage and formation is a Titre or TP", () => {
       const result = isInCatalogEligible(
+        { siret: "1234", catalogue_published: true },
         { siret: "1234", catalogue_published: true },
         {
           code_type_certif: "TP",
@@ -313,6 +315,7 @@ describe(__filename, () => {
     it("should return true if etablissement is habilite rncp and formation is a Titre or TP", () => {
       const result = isInCatalogEligible(
         { siret: "1234", catalogue_published: true },
+        { siret: "1234", catalogue_published: true },
         {
           code_type_certif: "TP",
           partenaires: [],
@@ -324,7 +327,11 @@ describe(__filename, () => {
     });
 
     it("should return true if etablissement is published and formation is not Titre or TP", () => {
-      const result = isInCatalogEligible({ siret: "1234", catalogue_published: true }, {});
+      const result = isInCatalogEligible(
+        { siret: "1234", catalogue_published: true },
+        { siret: "1234", catalogue_published: true },
+        {}
+      );
       assert.deepStrictEqual(result, true);
     });
   });
