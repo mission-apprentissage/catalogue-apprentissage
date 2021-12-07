@@ -51,5 +51,6 @@
   },
   "conventionFiles": {
     "path": "TABLES_CORRESPONDANCE_CONVENTION_FILES_PATH"
-  }
+  },
+  "ofsFile": "TABLES_CORRESPONDANCE_OFS_FILE"
 }

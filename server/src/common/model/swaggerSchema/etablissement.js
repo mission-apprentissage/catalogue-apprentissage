@@ -226,11 +226,6 @@ module.exports = {
         default: 0,
         description: "L'établissement est présent ou pas dans le fichier dataDock",
       },
-      info_qualiopi: {
-        type: "number",
-        default: 0,
-        description: "L'établissement est référencé qualiopi",
-      },
       info_depp_info: {
         type: "string",
         default: "null",
