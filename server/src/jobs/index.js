@@ -70,6 +70,7 @@ runScript(async ({ db }) => {
       uuidReport = crypto.randomBytes(16).toString("hex");
     }
     // ~ 3 heures 40 minutes => ~ 59 minutes
+    // update trainings newly converted
     const trainingsUpdater = spawn("node", [
       "./src/jobs/trainingsUpdater/index.js",
       `--uuidReport=${uuidReport}`,
@@ -78,6 +79,17 @@ runScript(async ({ db }) => {
     ]);
     for await (const data of trainingsUpdater.stdout) {
       console.log(`trainingsUpdater: ${data}`);
+    }
+    await sleep(30000);
+
+    // ~ 20 minutes : update cfd (BCN) & qualiopi (france compétences)
+    const allTrainingsUpdater = spawn("node", [
+      "./src/jobs/trainingsUpdater/index.js",
+      "--noUpdatesFilters",
+      "--noMail",
+    ]);
+    for await (const data of allTrainingsUpdater.stdout) {
+      console.log(`allTrainingsUpdater: ${data}`);
     }
     await sleep(30000);
 
