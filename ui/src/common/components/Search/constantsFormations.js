@@ -132,6 +132,14 @@ const columnsDefinition = [
     editable: false,
   },
   {
+    Header: "Gestionnaire certifié qualiopi ? ",
+    accessor: "etablissement_gestionnaire_catalogue_published",
+    width: 200,
+    exportable: true,
+    editable: false,
+    formatter: (value) => (value ? "OUI" : "NON"),
+  },
+  {
     Header: "Diplome",
     accessor: "diplome",
     width: 200,

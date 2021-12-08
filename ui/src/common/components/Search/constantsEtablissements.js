@@ -309,6 +309,7 @@ const queryBuilderField = [
   { text: "Type d'organisme", value: "computed_type.keyword" },
   { text: "Conventionné", value: "computed_conventionne.keyword" },
   { text: "Déclaré en prefecture", value: "computed_declare_prefecture.keyword" },
+  { text: "Certifié qualiopi", value: "info_qualiopi_info.keyword" },
   { text: "Uai", value: "uai.keyword" },
   { text: "Nda", value: "nda.keyword" },
 ];
