@@ -14,10 +14,9 @@ const managedUnPublishedRcoFormation = async () => {
   // if rco formation is not published, don't call mnaUpdater
   // since we just want to hide the formation
 
-  // TODO once migration is finished, filter by cle_ministere_educatif
-  const rcoFormationNotPublishedIds = await RcoFormation.distinct("id_rco_formation", { published: false });
+  const rcoFormationNotPublishedIds = await RcoFormation.distinct("cle_ministere_educatif", { published: false });
   await Formation.updateMany(
-    { id_rco_formation: { $in: rcoFormationNotPublishedIds } },
+    { cle_ministere_educatif: { $in: [...rcoFormationNotPublishedIds, null] } },
     {
       $set: {
         published: false,
@@ -28,7 +27,7 @@ const managedUnPublishedRcoFormation = async () => {
     }
   );
 
-  return rcoFormationNotPublishedIds;
+  return [...rcoFormationNotPublishedIds, null];
 };
 
 const createReport = async (
@@ -101,13 +100,12 @@ const run = async () => {
 
     runScript(async () => {
       const idsUnPublishedToSkip = await managedUnPublishedRcoFormation();
-      const idFilter = { id_rco_formation: { $nin: idsUnPublishedToSkip } };
-      const activeFilterTmp = { ...filter, ...idFilter }; // FIXEME TODO filter contain id_rco_formation key
+      const idFilter = { cle_ministere_educatif: { $nin: idsUnPublishedToSkip } };
+      const activeFilterTmp = { ...filter, ...idFilter }; // warn:  won't work if filter contain cle_ministere_educatif key
 
       console.log("Filters : ", activeFilterTmp);
-      let allIds = await Formation.find(activeFilterTmp, { _id: 1 });
-      allIds = allIds.map(({ _id }) => `${_id}`);
-      const activeFilter = { _id: { $in: allIds } }; // Avoid issues when the updter modifies a field which is in the filters
+      let allIds = await Formation.distinct("cle_ministere_educatif", activeFilterTmp);
+      const activeFilter = { cle_ministere_educatif: { $in: allIds } }; // Avoid issues when the updater modifies a field which is in the filters
 
       const { pages, total } = await Formation.paginate(activeFilter, { limit });
       const halfItems = Math.floor(pages / numCPUs) * limit;

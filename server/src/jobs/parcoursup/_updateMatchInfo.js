@@ -8,27 +8,25 @@ async function update() {
   await asyncForEach(dataset, async (psFormation) => {
     const { _id, matching_mna_formation } = psFormation;
 
-    const updateMna = [];
-    const statutsPsMna = [];
+    const matchs = [];
     await asyncForEach(matching_mna_formation, async (mnaFormation) => {
       const mnaFormationU = await Formation.findById(mnaFormation._id).lean();
       if (mnaFormationU) {
-        updateMna.push({
+        matchs.push({
           _id: mnaFormationU._id,
           intitule_court: mnaFormationU.intitule_court,
           parcoursup_statut: mnaFormationU.parcoursup_statut,
-          id_rco_formation: mnaFormationU.id_rco_formation,
+          cle_ministere_educatif: mnaFormationU.cle_ministere_educatif,
         });
-        statutsPsMna.push(mnaFormationU.parcoursup_statut);
       }
     });
 
     await PsFormation.findOneAndUpdate(
       { _id },
       {
-        matching_mna_formation: updateMna,
+        matching_mna_formation: matchs,
         matching_mna_etablissement: [],
-        matching_mna_parcoursup_statuts: statutsPsMna,
+        matching_mna_parcoursup_statuts: matchs?.map(({ parcoursup_statut }) => parcoursup_statut),
       }
     );
   });

@@ -6,7 +6,7 @@ const config = require("config");
 const { PsFormation } = require("../../common/model");
 const { storeByChunks } = require("../../common/utils/reportUtils");
 
-const createConversionReport = async (summary, rejetes) => {
+const createRejectedReport = async (summary, rejetes) => {
   // save report in db
   const date = Date.now();
   const type = "psReject";
@@ -61,10 +61,10 @@ const reportRejected = async () => {
               // etablissement_formateur_complement_adresse,
               // nom,
               // num_academie,
-              id_rco_formation,
-              ...subitem
+              cle_ministere_educatif,
+              // ...subitem
             }) => {
-              return id_rco_formation; //JSON.stringify(subitem, null, 2);
+              return cle_ministere_educatif; //JSON.stringify(subitem, null, 2);
             }
           ),
         };
@@ -72,21 +72,21 @@ const reportRejected = async () => {
     );
 
     const reportData = cleannedData.map(
-      ({ matching_mna_formation, nom_academie, matching_rejete_raison, id_parcoursup, ...item }) => {
+      ({ matching_mna_formation, nom_academie, matching_rejete_raison, id_parcoursup }) => {
         return {
           nom_academie,
           id_parcoursup,
           raison: matching_rejete_raison,
           // parcourSup: JSON.stringify(item),
-          id_rco_formation1: matching_mna_formation?.[0] || null,
-          id_rco_formation2: matching_mna_formation?.[1] || null,
-          id_rco_formation3: matching_mna_formation?.[2] || null,
+          cle_ministere_educatif1: matching_mna_formation?.[0] || null,
+          cle_ministere_educatif2: matching_mna_formation?.[0] || null,
+          cle_ministere_educatif3: matching_mna_formation?.[0] || null,
         };
       }
     );
     // console.log(reportData);
 
-    await createConversionReport(
+    await createRejectedReport(
       {
         countTotal,
         countAutomatique,
