@@ -596,11 +596,6 @@ module.exports = {
         default: "null",
         description: "Etablissement gestionnaire est déclaré en prefecture",
       },
-      etablissement_gestionnaire_datadock: {
-        type: "string",
-        default: "null",
-        description: "Etablissement gestionnaire est connu de datadock",
-      },
       etablissement_gestionnaire_published: {
         type: "boolean",
         default: false,
@@ -736,11 +731,6 @@ module.exports = {
         default: "null",
         description: "Etablissement formateur est déclaré en prefecture",
       },
-      etablissement_formateur_datadock: {
-        type: "string",
-        default: "null",
-        description: "Etablissement formateur est connu de datadock",
-      },
       etablissement_formateur_published: {
         type: "boolean",
         default: false,
@@ -860,11 +850,6 @@ module.exports = {
         type: "string",
         default: "null",
         description: "Etablissement reference est déclaré en prefecture",
-      },
-      etablissement_reference_datadock: {
-        type: "string",
-        default: "null",
-        description: "Etablissement reference est connu de datadock",
       },
       etablissement_reference_published: {
         type: "boolean",

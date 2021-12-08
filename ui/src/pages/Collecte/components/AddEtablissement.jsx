@@ -69,7 +69,6 @@ const InformationConventionnement = ({ etablissement, onFetched }) => {
           <ul>
             <li>Conventionné: {conventionnementResp.computed_conventionne}</li>
             <li>Déclaré en préfecture: {conventionnementResp.computed_declare_prefecture}</li>
-            <li>Datadock: {conventionnementResp.computed_info_datadock}</li>
           </ul>
         </Box>
       )}

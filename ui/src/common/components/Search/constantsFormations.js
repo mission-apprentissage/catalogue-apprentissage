@@ -13,8 +13,6 @@ const FILTERS = () => [
   "etablissement_reference_type",
   "etablissement_reference_conventionne",
   "etablissement_reference_declare_prefecture",
-  "etablissement_reference_datadock",
-  // "source",
   `cfd`,
   `num_departement`,
   `nom_academie`,
@@ -36,7 +34,6 @@ const FILTERS = () => [
   `parcoursup_statut`,
   `affelnet_statut`,
   "diplome",
-  // "ids_action",
   "tags",
 ];
 
@@ -135,19 +132,13 @@ const columnsDefinition = [
     editable: false,
   },
   {
-    Header: "Organisme certifie 2015 ? ",
-    accessor: "etablissement_reference_datadock",
+    Header: "Gestionnaire certifié qualiopi ? ",
+    accessor: "etablissement_gestionnaire_catalogue_published",
     width: 200,
     exportable: true,
     editable: false,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: (value) => (value ? "OUI" : "NON"),
   },
-  // {
-  //   Header: "Source",
-  //   accessor: "source",
-  //   width: 200,
-  //   editable: false,
-  // },
   {
     Header: "Diplome",
     accessor: "diplome",
@@ -524,7 +515,6 @@ const queryBuilderField = [
   { text: "Type d'organisme", value: "etablissement_reference_type.keyword" },
   { text: "Conventionné", value: "etablissement_reference_conventionne.keyword" },
   { text: "Déclaré en prefecture", value: "etablissement_reference_declare_prefecture.keyword" },
-  { text: "Référencé datadock", value: "etablissement_reference_datadock.keyword" },
   { text: "Uai du lieu de formation", value: "uai_formation.keyword" },
   { text: "Diplôme", value: "diplome.keyword" },
   { text: "Intitulé", value: "intitule_court.keyword" },

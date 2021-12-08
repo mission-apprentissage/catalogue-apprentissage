@@ -35,11 +35,6 @@ const etablissementGestionnaireInfo = {
     default: null,
     description: "Etablissement gestionnaire est déclaré en prefecture",
   },
-  etablissement_gestionnaire_datadock: {
-    type: String,
-    default: null,
-    description: "Etablissement gestionnaire est connu de datadock",
-  },
   etablissement_gestionnaire_published: {
     type: Boolean,
     default: false,

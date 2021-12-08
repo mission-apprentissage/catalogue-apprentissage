@@ -287,7 +287,6 @@ module.exports = () => {
         delete e.info_depp;
         delete e.info_dgefp;
         delete e.info_datagouv_ofs;
-        delete e.info_datadock;
 
         delete e.api_entreprise_reference;
         delete e.parcoursup_a_charger;

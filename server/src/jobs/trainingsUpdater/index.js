@@ -33,7 +33,8 @@ const managedUnPublishedRcoFormation = async () => {
 
 const createReport = async (
   { invalidFormations, updatedFormations, noUpdatedFormations, unpublishedFormations },
-  uuidReport
+  uuidReport,
+  noMail = false
 ) => {
   console.log("Send report");
   const summary = {
@@ -58,13 +59,15 @@ const createReport = async (
   }
   console.log(link); // Useful when send in blue is down
 
-  const data = {
-    summary,
-    link,
-  };
-  const title = "Rapport de mise à jour";
-  const to = config.reportMailingList.split(",");
-  await report.generate(data, title, to, "trainingsUpdateReport");
+  if (!noMail) {
+    const data = {
+      summary,
+      link,
+    };
+    const title = "Rapport de mise à jour";
+    const to = config.reportMailingList.split(",");
+    await report.generate(data, title, to, "trainingsUpdateReport");
+  }
 };
 
 const run = async () => {
@@ -77,6 +80,8 @@ const run = async () => {
     const limitArg = args.find((arg) => arg.startsWith("--limit"))?.split("=")?.[1];
     const uuidReport = args.find((arg) => arg.startsWith("--uuidReport"))?.split("=")?.[1];
     const argFilters = args.find((arg) => arg.startsWith("--filters"))?.split("=")?.[1];
+    const noMail = args.includes("--noMail");
+
     const limit = limitArg ? Number(limitArg) : 100;
 
     const filter = noUpdatesFilters
@@ -193,8 +198,8 @@ const run = async () => {
 
           runScript(async () => {
             try {
-              await createReport(mR, uuidReport);
-              await createReportNewDiplomeGrandAge(mFormationsGrandAge, uuidReport);
+              await createReport(mR, uuidReport, noMail);
+              await createReportNewDiplomeGrandAge(mFormationsGrandAge, uuidReport, noMail);
             } catch (error) {
               console.error(error);
             }

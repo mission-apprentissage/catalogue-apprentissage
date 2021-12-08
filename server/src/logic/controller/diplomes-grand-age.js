@@ -5,7 +5,7 @@ const config = require("config");
 const cfds = ["40033003", "01033001", "50033205", "40033004", "40033006", "40033002", "50033411"];
 const allformationsGrandAge = [];
 
-const createReportNewDiplomeGrandAge = async (formationsGrandAge = [], uuidReport = null) => {
+const createReportNewDiplomeGrandAge = async (formationsGrandAge = [], uuidReport = null, noMail = false) => {
   if (!formationsGrandAge.length && !allformationsGrandAge.length) {
     // Nothing to send
     return;
@@ -35,13 +35,15 @@ const createReportNewDiplomeGrandAge = async (formationsGrandAge = [], uuidRepor
   }
   console.log(link); // Useful when send in blue is down
 
-  const data = {
-    summary,
-    link,
-  };
-  const title = "Rapport des métiers du grand-âge";
-  const to = config.reportMailingList.split(",");
-  await report.generate(data, title, to, "grandAgeReport");
+  if (!noMail) {
+    const data = {
+      summary,
+      link,
+    };
+    const title = "Rapport des métiers du grand-âge";
+    const to = config.reportMailingList.split(",");
+    await report.generate(data, title, to, "grandAgeReport");
+  }
 };
 
 const detectNewDiplomeGrandAge = (formation, standalone = false) => {

@@ -80,7 +80,10 @@ const formation = async (filter = {}, limit = 10, maxItems = 100, offset = 0) =>
     PsFormation,
     { filter, limit, maxItems, offset, lean: true, showProgress: false },
     async (formation, index, total) => {
-      logger.info(`running coverage on ${index}/${total}`);
+      if (index % 100 === 0) {
+        console.log(`running coverage on ${index}/${total}`);
+      }
+
       let match = await getParcoursupCoverage(formation, { published: true, tags: "2021" }); // TO CHECK TAGS
 
       if (!match) return;
