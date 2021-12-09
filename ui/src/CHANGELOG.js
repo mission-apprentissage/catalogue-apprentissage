@@ -4,11 +4,33 @@ import { Link } from "@chakra-ui/react";
 const changelog = {
   list: [
     {
-      version: "5.0.0",
+      version: "5.2.0",
       date: "Prochainement",
       about: `<h4>À venir</h4>`,
       fixes: [],
       features: [],
+      improvements: [],
+    },
+    {
+      version: "5.1.0",
+      date: "Le 9 Décembre 2021",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [],
+      features: [
+        "Automatisation de l’intégration des certifications Qualiopi (et équivalents) depuis les données déclarées par les certificateurs qualité auprès du ministère du travail. Seules les formations dont le gestionnaire est certifié Qualiopi apparaissent dans le “catalogue général” (éligibilité à l’affichage Parcoursup ou Affelnet, sous réserve de publication par les instructeurs en académies)",
+      ],
+      improvements: [],
+    },
+    {
+      version: "5.0.0",
+      date: "Le 6 Décembre 2021",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [],
+      features: [
+        "Intégration du nouveau flux de données du réseau des Carif-Oref, contenant toutes les formations sans limite de date et, pour chaque formation, un identifiant stable d’une année sur l’autre",
+      ],
       improvements: [],
     },
     {
