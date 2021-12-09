@@ -520,6 +520,7 @@ const etablissementSchema = {
     description: "Date de dernières mise à jour",
   },
   updates_history: {
+    noIndex: true,
     type: [Object],
     default: [],
     description: "Historique des mises à jours",
