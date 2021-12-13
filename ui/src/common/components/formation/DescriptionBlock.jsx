@@ -127,6 +127,12 @@ export const DescriptionBlock = ({ formation, pendingFormation }) => {
             <InfoTooltip description={helpText.formation.annee} />
           </Text>
           <Text mb={4}>
+            Clé ministères éducatifs:
+            <Text as="span" variant="highlight">
+              {displayedFormation.cle_ministere_educatif ?? "N/A"}
+            </Text>
+          </Text>
+          <Text mb={4}>
             Identifiant formation Carif Oref:
             <Text as="span" variant="highlight">
               {displayedFormation.id_formation ?? "N/A"}

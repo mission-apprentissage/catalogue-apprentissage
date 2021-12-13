@@ -31,7 +31,7 @@ describe(__filename, () => {
 
   it("checkAddedFormations >> Si j-1 vide doit remplir l'ensemble des formations J", async () => {
     const collection = await importer.lookupDiff(formationsJMinus1);
-    assert.equal(collection.added.length, 230);
+    assert.equal(collection.added.length, 20);
 
     const result = await importer.addedFormationsHandler(collection.added);
     importer.addtoDbTasks(result);

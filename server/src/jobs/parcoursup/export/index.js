@@ -22,7 +22,6 @@ const select = {
   rncp_code: 1,
   cfd_entree: 1,
   uai_formation: 1,
-  id_rco_formation: 1,
   bcn_mefs_10: 1,
   rome_codes: 1,
   parcoursup_statut_history: 1,

@@ -46,13 +46,14 @@ const formation = {
   etablissement_formateur_id: 1,
   etablissement_gestionnaire_id: 1,
   id_rco_formation: 1,
+  cle_ministere_educatif: 1,
 };
 
 const formationSelectPs = {
   intitule_court: 1,
   parcoursup_statut: 1,
   _id: 1,
-  id_rco_formation: 1,
+  cle_ministere_educatif: 1,
 };
 
 const etablissement = {

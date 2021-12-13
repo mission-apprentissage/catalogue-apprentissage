@@ -107,8 +107,7 @@ const ReportPage = () => {
         if (convertReportResp.report && convertReportResp.report.data) {
           const { converted, summary: convertSummary } = convertReportResp.report?.data;
           setConvertReport({
-            convertedIds: converted.map(({ id_rco_formation, cle_ministere_educatif, _id }) => ({
-              id_rco_formation,
+            convertedIds: converted.map(({ cle_ministere_educatif, _id }) => ({
               cle_ministere_educatif,
               _id,
             })),

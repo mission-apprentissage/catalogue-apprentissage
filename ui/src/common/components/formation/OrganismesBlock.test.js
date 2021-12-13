@@ -6,6 +6,7 @@ import * as api from "../../api/organisme";
 
 const formation = {
   _id: "5fc6166e712d48a988133449",
+  cle_ministere_educatif: "cle_1",
   etablissement_gestionnaire_id: "5e8df8b220ff3b2161267d90",
   etablissement_gestionnaire_siret: "34958609900021",
   etablissement_gestionnaire_enseigne: "CFAI",
@@ -151,7 +152,6 @@ const formation = {
   update_error: null,
   lieu_formation_adresse: "Zone Megazone de Moselle Est Parc d'Activités du district de Freyming-Merlebach",
   lieu_formation_siret: null,
-  id_rco_formation: "01_GE108189|01_GE506980|97049",
   id_formation: "01_GE108189",
   id_action: "01_GE506980",
   ids_action: ["01_GE506980"],

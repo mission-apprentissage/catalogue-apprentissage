@@ -60,7 +60,6 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false, limit =
       await Formation.findOneAndUpdate({ _id: formation._id }, formation, { new: true });
       invalidFormations.push({
         id: formation._id,
-        id_rco_formation: formation.id_rco_formation,
         cle_ministere_educatif: formation.cle_ministere_educatif,
         cfd: formation.cfd,
         error,
@@ -72,7 +71,6 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false, limit =
       noUpdatedFormations.push({
         id: formation._id,
         cle_ministere_educatif: formation.cle_ministere_educatif,
-        id_rco_formation: formation.id_rco_formation,
       });
       return;
     }
@@ -84,7 +82,6 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false, limit =
       await Formation.findOneAndUpdate({ _id: formation._id }, updatedFormation, { new: true });
       updatedFormations.push({
         id: formation._id,
-        id_rco_formation: formation.id_rco_formation,
         cle_ministere_educatif: formation.cle_ministere_educatif,
         cfd: formation.cfd,
         updates: JSON.stringify(updates),
