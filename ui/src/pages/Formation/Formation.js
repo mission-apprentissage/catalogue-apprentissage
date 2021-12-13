@@ -400,20 +400,22 @@ export default ({ match }) => {
                   <Heading textStyle="h2" color="grey.800" pr={[0, 0, 8]}>
                     {title} <InfoTooltip description={helpText.formation.intitule_long} />
                   </Heading>
-                  {hasRightToEdit && formation.etablissement_reference_catalogue_published && (
-                    <Button
-                      textStyle="sm"
-                      variant="primary"
-                      px={8}
-                      mt={[8, 8, 0]}
-                      onClick={() => {
-                        onOpenPublishModal();
-                      }}
-                    >
-                      <Parametre mr={2} />
-                      Gérer les publications
-                    </Button>
-                  )}
+                  {hasRightToEdit &&
+                    formation.etablissement_reference_catalogue_published &&
+                    hasAccessTo(user, "page_formation/gestion_publication") && (
+                      <Button
+                        textStyle="sm"
+                        variant="primary"
+                        px={8}
+                        mt={[8, 8, 0]}
+                        onClick={() => {
+                          onOpenPublishModal();
+                        }}
+                      >
+                        <Parametre mr={2} />
+                        Gérer les publications
+                      </Button>
+                    )}
                 </Flex>
                 {formation.etablissement_reference_catalogue_published && (
                   <Box mt={5}>
