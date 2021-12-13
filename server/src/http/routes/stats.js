@@ -11,15 +11,16 @@ module.exports = () => {
   router.post(
     "/",
     tryCatch(async (req, res) => {
-      const { source, id_rco_formation } = req.body;
+      const { source, id_rco_formation, cle_ministere_educatif } = req.body;
 
-      if (!source || !id_rco_formation) {
-        return res.status(400).json({ error: "source and id_rco_formation are mandatory" });
+      if (!source || !(id_rco_formation || cle_ministere_educatif)) {
+        return res.status(400).json({ error: "source and (id_rco_formation or cle_ministere_educatif) are mandatory" });
       }
 
       const payload = {
         source,
         id_rco_formation,
+        cle_ministere_educatif,
         date: new Date(),
       };
 

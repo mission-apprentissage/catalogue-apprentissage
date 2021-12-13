@@ -28,12 +28,8 @@ const extractUsefulNewFields = (formation) => {
     etablissement_formateur_courriel,
     niveau_entree_obligatoire,
     entierement_a_distance,
-    // TODO below check once rco deliver the new JSON stream
     duree,
     annee,
-    // TODO select ??
-    // parcours:
-    // lieu_different: ??
   } = formation;
 
   return {
@@ -61,7 +57,6 @@ const hasOnlyUpdatedNewFields = (rcoFormation) => {
     "duree",
     "entree_apprentissage",
     "parcours",
-    // "lieu_different",
   ];
   const updatedFields = Object.keys(rcoFormation?.updates_history[rcoFormation?.updates_history?.length - 1]?.to ?? {});
 
@@ -82,11 +77,9 @@ const formatToMnaFormation = (rcoFormation) => {
     }
   }
 
-  // TODO intitule, id_formation, emails  --> split stuff separated by ## ?
-
   return {
     cle_ministere_educatif: rcoFormation.cle_ministere_educatif,
-    id_rco_formation: `${rcoFormation.id_formation}|${rcoFormation.id_action}|${rcoFormation.id_certifinfo}`,
+    id_rco_formation: rcoFormation.id_rco_formation,
     id_formation: rcoFormation.id_formation,
     id_action: rcoFormation.id_action,
     ids_action: extractFlatIdsAction(rcoFormation.id_action),
@@ -132,18 +125,12 @@ const formatToMnaFormation = (rcoFormation) => {
     duree: rcoFormation.duree,
     annee: rcoFormation.entree_apprentissage,
 
-    // TODO select ??
-    // parcours:
-    // lieu_different: ??
-
     // TODO change AFF mef selection rule ?
-    // TODO create PS mef selection rule
-
-    // TODO multisite / mono site stuff.
+    // TODO create PS mef selection rule ?
   };
 };
 
-const getOrCreateFormation = async ({ cle_ministere_educatif, id_rco_formation }) => {
+const getOrCreateFormation = async ({ cle_ministere_educatif }) => {
   let cF;
   if (cle_ministere_educatif) {
     cF = await Formation.findOne({
@@ -152,13 +139,8 @@ const getOrCreateFormation = async ({ cle_ministere_educatif, id_rco_formation }
   }
 
   if (!cF) {
-    cF = await Formation.findOne({
-      id_rco_formation,
-    });
-  }
-
-  if (!cF) {
-    cF = new Formation();
+    cF = new Formation({ cle_ministere_educatif });
+    await cF.save();
   }
   return cF;
 };
@@ -178,7 +160,6 @@ const createFormation = async (
 
     invalidRcoFormations.push({
       cle_ministere_educatif: mnaFormattedRcoFormation.cle_ministere_educatif,
-      id_rco_formation: mnaFormattedRcoFormation.id_rco_formation,
       cfd: mnaFormattedRcoFormation.cfd,
       rncp: mnaFormattedRcoFormation.rncp_code,
       sirets: JSON.stringify({
@@ -206,7 +187,6 @@ const createFormation = async (
 
   convertedRcoFormations.push({
     _id: newCf._id,
-    id_rco_formation: newCf.id_rco_formation,
     cle_ministere_educatif: newCf.cle_ministere_educatif,
     cfd: newCf.cfd,
     updates: {},
@@ -265,7 +245,6 @@ const performConversion = async () => {
 
           convertedRcoFormations.push({
             _id: cF._id,
-            id_rco_formation: cF.id_rco_formation,
             cle_ministere_educatif: cF.cle_ministere_educatif,
             cfd: cF.cfd,
             updates: {},
@@ -356,8 +335,6 @@ const performConversion = async () => {
           await Formation.findOneAndUpdate(
             { _id: cF._id },
             {
-              id_rco_formation: mnaFormattedRcoFormation.id_rco_formation,
-              cle_ministere_educatif: mnaFormattedRcoFormation.cle_ministere_educatif,
               published: false,
               rco_published: false,
               update_error: null,
@@ -371,7 +348,6 @@ const performConversion = async () => {
 
           convertedRcoFormations.push({
             _id: cF._id,
-            id_rco_formation: mnaFormattedRcoFormation.id_rco_formation,
             cfd: mnaFormattedRcoFormation.cfd,
             cle_ministere_educatif: mnaFormattedRcoFormation.cle_ministere_educatif,
             updates: JSON.stringify({ published: false }),

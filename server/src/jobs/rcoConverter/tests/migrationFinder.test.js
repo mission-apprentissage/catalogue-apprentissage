@@ -6,42 +6,42 @@ const { findPreviousFormations } = require("../converter/migrationFinder");
 
 const sampleData = [
   {
-    id_rco_formation: "1",
+    cfd: "1",
     published: true,
     id_formation: "123",
     id_certifinfo: "097",
     ids_action: ["1111", "2222", "0101"],
   },
   {
-    id_rco_formation: "2",
+    cfd: "2",
     published: true,
     id_formation: "123",
     id_certifinfo: "097",
     ids_action: ["999"],
   },
   {
-    id_rco_formation: "3",
+    cfd: "3",
     published: true,
     id_formation: "123",
     id_certifinfo: "097",
     ids_action: ["888", "555"],
   },
   {
-    id_rco_formation: "4",
+    cfd: "4",
     published: true,
     id_formation: "649",
     id_certifinfo: "881",
     ids_action: ["123", "456", "789"],
   },
   {
-    id_rco_formation: "5",
+    cfd: "5",
     published: true,
     id_formation: "649",
     id_certifinfo: "881",
     ids_action: [],
   },
   {
-    id_rco_formation: "6",
+    cfd: "6",
     published: true,
     id_formation: "649",
     id_certifinfo: "097",
@@ -76,7 +76,7 @@ describe(__filename, () => {
     });
 
     assert.strictEqual(formations.length, 1);
-    assert.strictEqual(formations[0].id_rco_formation, "1");
+    assert.strictEqual(formations[0].cfd, "1");
   });
 
   it("should find 2 Formation", async () => {
@@ -87,8 +87,8 @@ describe(__filename, () => {
     });
 
     assert.strictEqual(formations.length, 2);
-    assert.strictEqual(formations[0].id_rco_formation, "2");
-    assert.strictEqual(formations[1].id_rco_formation, "3");
+    assert.strictEqual(formations[0].cfd, "2");
+    assert.strictEqual(formations[1].cfd, "3");
   });
 
   it("should find 0 Formation", async () => {

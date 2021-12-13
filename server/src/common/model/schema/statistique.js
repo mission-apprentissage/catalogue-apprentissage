@@ -12,6 +12,10 @@ const statistiqueSchema = {
     type: Date,
     description: "Date de l'évènement",
   },
+  cle_ministere_educatif: {
+    type: String,
+    description: "Clé unique de la formation",
+  },
 };
 
 module.exports = statistiqueSchema;

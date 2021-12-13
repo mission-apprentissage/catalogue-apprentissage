@@ -23,7 +23,6 @@ describe(__filename, () => {
       cfd: "6789",
       cfd_entree: "1212",
       uai_formation: "uai-1",
-      id_rco_formation: "rco-1",
       bcn_mefs_10: [],
       rome_codes: ["rome-1", "rome-2"],
       parcoursup_statut: "hors périmètre",
@@ -37,7 +36,6 @@ describe(__filename, () => {
       cfd: "6789",
       cfd_entree: "1212",
       uai_formation: "uai-2",
-      id_rco_formation: "rco-2",
       bcn_mefs_10: [],
       rome_codes: ["rome-1", "rome-2"],
       parcoursup_statut: "en attente de publication",
@@ -51,7 +49,6 @@ describe(__filename, () => {
       cfd: "6789",
       cfd_entree: "1212",
       uai_formation: null,
-      id_rco_formation: "rco-3",
       bcn_mefs_10: [],
       rome_codes: ["rome-1", "rome-2"],
       parcoursup_statut: "en attente de publication",
@@ -65,7 +62,6 @@ describe(__filename, () => {
       cfd: "6789",
       cfd_entree: "1212",
       uai_formation: "uai-4",
-      id_rco_formation: "rco-4",
       bcn_mefs_10: [{}, {}, {}],
       rome_codes: ["rome-1", "rome-2"],
       parcoursup_statut: "en attente de publication",
@@ -79,7 +75,6 @@ describe(__filename, () => {
       cfd: "6789",
       cfd_entree: "1212",
       uai_formation: "uai-5",
-      id_rco_formation: "rco-5",
       bcn_mefs_10: [{ mef10: "mef-5" }],
       rome_codes: ["rome-50", "rome-51"],
       parcoursup_statut: "en attente de publication",
@@ -93,7 +88,6 @@ describe(__filename, () => {
       cfd: "6789",
       cfd_entree: "1212",
       uai_formation: "uai-6",
-      id_rco_formation: "rco-6",
       bcn_mefs_10: [{ mef10: "mef-6" }],
       rome_codes: ["rome-60", "rome-61"],
       parcoursup_statut: "en attente de publication",
@@ -107,7 +101,6 @@ describe(__filename, () => {
       cfd: "6789",
       cfd_entree: "1212",
       uai_formation: "uai-7",
-      id_rco_formation: "rco-7",
       bcn_mefs_10: [{ mef10: "mef-7" }],
       rome_codes: ["rome-70", "rome-71"],
       parcoursup_statut: "en attente de publication",
@@ -121,7 +114,6 @@ describe(__filename, () => {
       cfd: "6789",
       cfd_entree: "1212",
       uai_formation: "uai-8",
-      id_rco_formation: "rco-8",
       bcn_mefs_10: [{ mef10: "mef-8" }],
       rome_codes: ["rome-80", "rome-81"],
       parcoursup_statut: "en attente de publication",
@@ -165,16 +157,16 @@ describe(__filename, () => {
       }
 
       if (index === 0) {
-        assert.strictEqual(formation.id_rco_formation, "rco-5");
+        assert.strictEqual(formation.cle_ministere_educatif, "12345-cle5");
       }
       if (index === 1) {
-        assert.strictEqual(formation.id_rco_formation, "rco-8");
+        assert.strictEqual(formation.cle_ministere_educatif, "12345-cle8");
       }
       if (index === 2) {
-        assert.strictEqual(formation.id_rco_formation, "rco-6");
+        assert.strictEqual(formation.cle_ministere_educatif, "12345-cle6");
       }
       if (index === 3) {
-        assert.strictEqual(formation.id_rco_formation, "rco-7");
+        assert.strictEqual(formation.cle_ministere_educatif, "12345-cle7");
       }
       index += 1;
     }
@@ -189,7 +181,6 @@ describe(__filename, () => {
       cfd: "6789",
       cfd_entree: "1212",
       uai_formation: "uai-9",
-      id_rco_formation: "rco-9",
       bcn_mefs_10: [{ mef10: "mef-9" }],
       rome_codes: ["rome-90", "rome-91"],
       parcoursup_statut: "en attente de publication",
@@ -214,7 +205,6 @@ describe(__filename, () => {
       cfd: "6789",
       cfd_entree: "1212",
       uai_formation: "uai-10",
-      id_rco_formation: "rco-10",
       bcn_mefs_10: [{ mef10: "mef-10" }],
       rome_codes: ["rome-100", "rome-101"],
       parcoursup_statut: "en attente de publication",
@@ -237,7 +227,6 @@ describe(__filename, () => {
       cfd: "6789",
       cfd_entree: "123134",
       uai_formation: "uai-11",
-      id_rco_formation: "rco-11",
       bcn_mefs_10: [{ mef10: "mef-11" }],
       rome_codes: ["rome-110", "rome-111"],
       parcoursup_statut: "en attente de publication",

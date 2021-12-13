@@ -73,18 +73,18 @@ const copyRapprochementFields = (oldFormation, newFormation) => {
 
 const updateRapprochement = async (oldFormation, newFormation) => {
   const psFormations = await PsFormation.find({
-    "matching_mna_formation.id_rco_formation": oldFormation.id_rco_formation,
+    "matching_mna_formation.cle_ministere_educatif": oldFormation.cle_ministere_educatif,
   }).lean();
 
   await asyncForEach(psFormations, async (psFormation) => {
     let matchs = psFormation.matching_mna_formation?.map((match) => {
       let _id = match._id;
-      let id_rco_formation = match.id_rco_formation;
+      let cle_ministere_educatif = match.cle_ministere_educatif;
       if (_id?.toString() === oldFormation._id?.toString()) {
         _id = newFormation._id;
-        id_rco_formation = newFormation.id_rco_formation;
+        cle_ministere_educatif = newFormation.cle_ministere_educatif;
       }
-      return { ...match, _id, id_rco_formation };
+      return { ...match, _id, cle_ministere_educatif };
     });
 
     // keep unique match
