@@ -329,7 +329,6 @@ const FormationContainer = ({ formation }) => {
                   onDelete={onDelete}
                   pendingFormation={pendingFormation}
                 />
-                {/* {hasAccessTo(user, "page_formation/supprimer_formation") && !edition && hasRightToEdit && ( */}
                 <Flex justifyContent={["center", "flex-end"]} my={[6, 12]}>
                   <Button variant="primary" disabled px={[8, 8]} mr={[0, 12]}>
                     Enregistrer la formation
@@ -346,7 +345,6 @@ const FormationContainer = ({ formation }) => {
                     Annuler la formation
                   </Button>
                 </Flex>
-                {/* )} */}
               </>
             )}
           </Container>

@@ -14,7 +14,6 @@ if (process.env.standalone) {
 
     const projection = {
       _id: 1,
-      id_rco_formation: 1,
       etablissement_gestionnaire_uai: 1,
       etablissement_formateur_uai: 1,
       etablissement_formateur_siret: 1,
@@ -24,6 +23,7 @@ if (process.env.standalone) {
       code_commune_insee: 1,
       cfd: 1,
       published: 1,
+      cle_ministere_educatif: 1,
     };
 
     const formations = await PendingRcoFormation.find({}, projection);
@@ -45,6 +45,10 @@ if (process.env.standalone) {
             return `${original[header]} / ${formation[header]}`;
           }
 
+          if ("cle_ministere_educatif" === header) {
+            return original[header];
+          }
+
           return formation[header];
         });
 
@@ -55,7 +59,7 @@ if (process.env.standalone) {
         }
         if (!hasOneChange) {
           deletableLines.push(formation._id);
-          console.log(`no differences can delete pending: ${formation._id} ${formation.id_rco_formation}`);
+          console.log(`no differences can delete pending: ${formation._id}`);
           return;
         }
         const actualRow = row.join(";");

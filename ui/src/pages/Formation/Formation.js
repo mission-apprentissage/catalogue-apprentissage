@@ -64,7 +64,7 @@ const Formation = ({
           <Box mr={1}>
             <InfoIcon />
           </Box>
-          Cette formation a été {pendingFormation.published ? "éditée" : "supprimée"} et est en attente de traitement
+          Cette formation a été éditée et est en attente de traitement
         </Alert>
       )}
       <Grid templateColumns="repeat(12, 1fr)">
@@ -345,21 +345,6 @@ export default ({ match }) => {
     setEdition(fieldName);
   };
 
-  const onDelete = async () => {
-    // eslint-disable-next-line no-restricted-globals
-    const areYousure = confirm("Souhaitez-vous vraiment supprimer cette formation ?");
-    if (areYousure) {
-      // Update as not published
-      let result = await _post(`${endpointNewFront}/entity/pendingRcoFormation`, {
-        ...formation,
-        published: false,
-      });
-      if (result) {
-        setPendingFormation(result);
-      }
-    }
-  };
-
   const title = `${pendingFormation?.intitule_long ?? formation?.intitule_long}`;
   setTitle(title);
 
@@ -437,24 +422,8 @@ export default ({ match }) => {
                 handleChange={handleChange}
                 hasRightToEdit={hasAccessTo(user, "page_formation/modifier_informations") && hasRightToEdit}
                 isSubmitting={isSubmitting}
-                onDelete={onDelete}
                 pendingFormation={pendingFormation}
               />
-              {hasAccessTo(user, "page_formation/supprimer_formation") && !edition && hasRightToEdit && (
-                <Flex justifyContent={["center", "flex-end"]} my={[6, 12]}>
-                  <Button
-                    variant="outline"
-                    colorScheme="red"
-                    onClick={onDelete}
-                    disabled={formation.published === false || pendingFormation?.published === false}
-                    px={[8, 8]}
-                    mr={[0, 12]}
-                    borderRadius="none"
-                  >
-                    Supprimer la formation
-                  </Button>
-                </Flex>
-              )}
             </>
           )}
         </Container>

@@ -49,10 +49,6 @@ export default [
         feature: "Modifier les informations",
         ref: "page_formation/modifier_informations",
       },
-      {
-        feature: "Supprimer la formation",
-        ref: "page_formation/supprimer_formation",
-      },
     ],
   },
   {
