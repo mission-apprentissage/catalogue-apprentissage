@@ -52,6 +52,8 @@ const hasAcademy = ({ nom_academie }, academie) => nom_academie === academie;
  * m5''' = code postal + (rncp ou cfd) + code insee
  * m3 = uai + (cfd ou rncp) + code insee
  * m3' = (cfd ou rncp) + code insee
+ * m2 =  uai + (rncp ou cfd)
+ * m2' = siret + (rncp ou cfd)
  */
 async function getParcoursupCoverage(formation, { published, tags } = {}) {
   let params = { published, tags };
@@ -73,7 +75,7 @@ async function getParcoursupCoverage(formation, { published, tags } = {}) {
 
   // strength 2
   const m1 = m0.filter((f) => hasSiret(f, sirets)); // siret + (rncp ou cfd)
-  // const m2 = m0.filter((f) => hasUai(f, uais)); // uai + (rncp ou cfd)
+  const m2 = m0.filter((f) => hasUai(f, uais)); // uai + (rncp ou cfd)
 
   // strength 3
   const m3 = m0.filter((f) => hasInsee(f, formation.code_commune_insee)); // insee + (rncp ou cfd)
@@ -155,6 +157,14 @@ async function getParcoursupCoverage(formation, { published, tags } = {}) {
     {
       strength: "3",
       result: m3,
+    },
+    {
+      strength: "2",
+      result: m2,
+    },
+    {
+      strength: "2",
+      result: m1,
     },
   ];
 
