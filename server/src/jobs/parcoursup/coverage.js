@@ -3,19 +3,16 @@ const { paginator } = require("../../common/utils/paginator");
 const { PsFormation } = require("../../common/model");
 const { runScript } = require("../scriptWrapper");
 const logger = require("../../common/logger");
-// const { reconciliationParcoursup, dereconciliationParcoursup } = require("../../logic/controller/reconciliation"); --------------------------------
 const cluster = require("cluster");
 const { diffFormation, buildUpdatesHistory } = require("../../logic/common/utils/diffUtils");
+
 const numCPUs = 4;
 
 const updateMatchedFormation = async ({ formation: previousFormation, match }) => {
   let statut_reconciliation = "INCONNU";
 
   if (match.data_length === 1 && match.matching_strength >= "6") {
-    // AUTO + recon
     statut_reconciliation = "AUTOMATIQUE";
-  } else if (match.data_length === 1 && (match.matching_strength === "5" || match.matching_strength === "4")) {
-    statut_reconciliation = "A_VERIFIER";
   } else if (match.data_length <= 3) {
     statut_reconciliation = "A_VERIFIER";
   }
@@ -35,28 +32,8 @@ const updateMatchedFormation = async ({ formation: previousFormation, match }) =
   };
 
   if (statut_reconciliation === "AUTOMATIQUE") {
-    // const reconciliation = await reconciliationParcoursup(updatedFormation, "AUTOMATIQUE");   --------------------------------
-
     updatedFormation.etat_reconciliation = true;
-    // updatedFormation.id_reconciliation = reconciliation._id;   ------------------------------
   }
-
-  // if (   ----------------------      TODO   check if(statuts_history[statuts_history.length-1].from.statut_reconciliation !== statut_reconciliation)
-  //   formation.statut_reconciliation === "REJETE" &&
-  //   (statut_reconciliation === "A_VERIFIER" || statut_reconciliation === "AUTOMATIQUE")
-  // ) {
-  //   updatedFormation.matching_rejete_updated = true;
-  // }
-
-  // if (
-  //   formation.statut_reconciliation === "AUTOMATIQUE" &&
-  //   (statut_reconciliation === "A_VERIFIER" || statut_reconciliation === "INCONNU")
-  // ) {
-  //   // De-Reconcilier
-  //   // await dereconciliationParcoursup(updatedFormation);    --------------------------------
-  //   updatedFormation.etat_reconciliation = false;
-  //   // updatedFormation.id_reconciliation = null;
-  // }
 
   // History
   const { updates, keys } = diffFormation(previousFormation, updatedFormation);
@@ -106,8 +83,7 @@ const run = async () => {
 
     console.log(`Master ${process.pid} is running`);
 
-    // const filters = { statut_reconciliation: { $nin: ["AUTOMATIQUE", "VALIDE", "A_VERIFIER"] } };
-    const filters = { statut_reconciliation: { $nin: ["VALIDE", "REJETE"] } }; //"AUTOMATIQUE"
+    const filters = { statut_reconciliation: { $nin: ["VALIDE", "REJETE"] } };
     const args = process.argv.slice(2);
     const limitArg = args.find((arg) => arg.startsWith("--limit"))?.split("=")?.[1];
     const limit = limitArg ? Number(limitArg) : 1;

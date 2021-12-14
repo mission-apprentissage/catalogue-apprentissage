@@ -1,26 +1,190 @@
-const { formation: formatFormation, formationSelectPs, etablissement: formatEtablissement } = require("./formater");
+const { formation: formatFormation, etablissement: formatEtablissement } = require("./formater");
 const { Formation, Etablissement } = require("../../common/model");
 const mongoose = require("mongoose");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
-const { psRules } = require("./queries");
 
-const getMatch = async (query, select = null) => Formation.find(query, select || formatFormation).lean();
+const getMatch = async (query) => Formation.find(query, formatFormation).lean();
 
+const hasSiret = ({ etablissement_formateur_siret, etablissement_gestionnaire_siret }, sirets) => {
+  return [etablissement_formateur_siret, etablissement_gestionnaire_siret].some((siret) => sirets.includes(siret));
+};
+
+const hasUai = ({ uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai }, uais) => {
+  return [uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai].some((uai) => uais.includes(uai));
+};
+
+const hasPostalCode = (
+  { etablissement_gestionnaire_code_postal, etablissement_formateur_code_postal, code_postal },
+  codePostal
+) => {
+  return [etablissement_gestionnaire_code_postal, etablissement_formateur_code_postal, code_postal].includes(
+    codePostal
+  );
+};
+
+const hasInsee = ({ code_commune_insee }, codeInsee) => code_commune_insee === codeInsee;
+
+const hasRncp = ({ rncp_code }, rncps) => rncps.includes(rncp_code);
+
+const hasCfd = ({ cfd_entree }, cfds) => cfds.includes(cfd_entree);
+
+const hasAcademy = ({ nom_academie }, academie) => nom_academie === academie;
+
+/**
+ * Rapprochements des formations Parcoursup avec les formations du catalogue (Parcoursup vs RCO)
+ *
+ * On prend les matchs les plus forts dans l'ordre.
+ * Si on a 1 seul match, et de force 6 ou plus, on met la formation PS dans les rapprochements "Forts".
+ * Si on a 3 ou moins matchs, on met la formation PS dans les rapprochements "Faibles".
+ * Sinon on met la formation PS dans rapprochements "Inconnus".
+ *
+ * m8 = siret + uai + rncp + cfd + code insee + academie
+ * m8' = siret + rncp + cfd + code insee + academie
+ * m7 = siret + uai + (rncp ou cfd) + code insee + academie
+ * m7' = siret + (rncp ou cfd) + code insee + academie
+ * m6 = uai + code postal + rncp + cfd + code insee + academie
+ * m6' = uai + code postal + (rncp ou cfd) + code insee + academie
+ * m6'' = code postal + rncp + cfd + code insee + academie
+ * m6''' = code postal + (rncp ou cfd) + code insee + academie
+ * m5 = uai + code postal + rncp + cfd + code insee
+ * m5' = uai + code postal + (rncp ou cfd) + code insee
+ * m5'' = code postal + rncp + cfd + code insee
+ * m5''' = code postal + (rncp ou cfd) + code insee
+ * m3 = uai + (cfd ou rncp) + code insee
+ * m3' = (cfd ou rncp) + code insee
+ * m2 =  uai + (rncp ou cfd)
+ * m2' = siret + (rncp ou cfd)
+ */
 async function getParcoursupCoverage(formation, { published, tags } = {}) {
   let params = { published, tags };
 
+  const sirets = [formation.siret_cerfa ?? "", formation.siret_map ?? ""];
+  const uais = [
+    formation.uai_affilie,
+    formation.uai_gestionnaire,
+    formation.uai_composante,
+    formation.uai_insert_jeune ?? "",
+    formation.uai_cerfa ?? "",
+    formation.uai_map ?? "",
+  ];
+
+  const m0 = await getMatch({
+    $or: [{ rncp_code: { $in: formation.codes_rncp_mna } }, { cfd_entree: { $in: formation.codes_cfd_mna } }],
+    ...params,
+  });
+
+  // strength 2
+  const m1 = m0.filter((f) => hasSiret(f, sirets)); // siret + (rncp ou cfd)
+  const m2 = m0.filter((f) => hasUai(f, uais)); // uai + (rncp ou cfd)
+
+  // strength 3
+  const m3 = m0.filter((f) => hasInsee(f, formation.code_commune_insee)); // insee + (rncp ou cfd)
+  const m4 = m3.filter((f) => hasUai(f, uais)); // insee + uai + (rncp ou cfd)
+
+  // strength 5
+  const m5 = m3.filter((f) => hasPostalCode(f, formation.code_postal)); // code postal + insee + (rncp ou cfd)
+  const m6 = m5.filter((f) => hasRncp(f, formation.codes_rncp_mna) && hasCfd(f, formation.codes_cfd_mna)); // code postal + insee + rncp + cfd
+  const m7 = m5.filter((f) => hasUai(f, uais)); // uai + code postal + insee + (rncp ou cfd)
+  const m8 = m6.filter((f) => hasUai(f, uais)); // uai + code postal + insee + rncp + cfd
+
+  // strength 6
+  const m9 = m5.filter((f) => hasAcademy(f, formation.nom_academie)); // academie + code postal + insee + (rncp ou cfd)
+  const m10 = m6.filter((f) => hasAcademy(f, formation.nom_academie)); // academie + code postal + insee + rncp + cfd
+  const m11 = m7.filter((f) => hasAcademy(f, formation.nom_academie)); // academie + uai + code postal + insee + (rncp ou cfd)
+  const m12 = m8.filter((f) => hasAcademy(f, formation.nom_academie)); // academie + uai + code postal + insee + rncp + cfd
+
+  // strength 7
+  const m13 = m1.filter((f) => hasInsee(f, formation.code_commune_insee) && hasAcademy(f, formation.nom_academie)); // insee + academie +siret + (rncp ou cfd)
+  const m14 = m13.filter((f) => hasUai(f, uais)); // uai + insee + academie +siret + (rncp ou cfd)
+
+  // strength 8
+  const m15 = m13.filter((f) => hasRncp(f, formation.codes_rncp_mna) && hasCfd(f, formation.codes_cfd_mna)); // insee + academie +siret + rncp + cfd
+  const m16 = m14.filter((f) => hasRncp(f, formation.codes_rncp_mna) && hasCfd(f, formation.codes_cfd_mna)); // uai + insee + academie + siret + rncp + cfd
+
+  const psMatchs = [
+    {
+      strength: "8",
+      result: m16,
+    },
+    {
+      strength: "8",
+      result: m15,
+    },
+    {
+      strength: "7",
+      result: m14,
+    },
+    {
+      strength: "7",
+      result: m13,
+    },
+    {
+      strength: "6",
+      result: m12,
+    },
+    {
+      strength: "6",
+      result: m11,
+    },
+    {
+      strength: "6",
+      result: m10,
+    },
+    {
+      strength: "6",
+      result: m9,
+    },
+    {
+      strength: "5",
+      result: m8,
+    },
+    {
+      strength: "5",
+      result: m7,
+    },
+    {
+      strength: "5",
+      result: m6,
+    },
+    {
+      strength: "5",
+      result: m5,
+    },
+    {
+      strength: "3",
+      result: m4,
+    },
+    {
+      strength: "3",
+      result: m3,
+    },
+    {
+      strength: "2",
+      result: m2,
+    },
+    {
+      strength: "2",
+      result: m1,
+    },
+  ];
+
   let match = null;
 
-  for (let i = 0; i < psRules.length; i++) {
-    let { query, strength } = psRules[i];
-
-    let result = await getMatch({ ...query(formation), ...params }, formationSelectPs);
+  for (let i = 0; i < psMatchs.length; i++) {
+    const { result, strength } = psMatchs[i];
 
     if (result.length > 0) {
       match = {
         matching_strength: strength,
         data_length: result.length,
-        data: result,
+        data: result.map(({ _id, cle_ministere_educatif, intitule_court, parcoursup_statut }) => {
+          return {
+            intitule_court,
+            parcoursup_statut,
+            _id,
+            cle_ministere_educatif,
+          };
+        }),
       };
 
       break;

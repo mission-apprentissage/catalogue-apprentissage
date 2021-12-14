@@ -49,13 +49,6 @@ const formation = {
   cle_ministere_educatif: 1,
 };
 
-const formationSelectPs = {
-  intitule_court: 1,
-  parcoursup_statut: 1,
-  _id: 1,
-  cle_ministere_educatif: 1,
-};
-
 const etablissement = {
   siege_social: 1,
   etablissement_siege_siret: 1,
@@ -104,4 +97,4 @@ const etablissement = {
   _id: 1,
 };
 
-module.exports = { formation, etablissement, formationSelectPs };
+module.exports = { formation, etablissement };
