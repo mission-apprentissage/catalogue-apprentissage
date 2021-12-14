@@ -31,6 +31,7 @@ const formationSchema = {
     description: "Date de fermeture du cfd",
   },
   cfd_entree: {
+    index: true,
     type: String,
     default: null,
     description: "Code formation diplome d'entrée (année 1 de l'apprentissage)",
@@ -150,6 +151,7 @@ const formationSchema = {
   },
 
   rncp_code: {
+    index: true,
     type: String,
     default: null,
     description: "Code RNCP",
