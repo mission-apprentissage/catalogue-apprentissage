@@ -37,7 +37,6 @@ const server = setupServer(
                     matching_mna_formation: [
                       {
                         parcoursup_statut: "à publier",
-                        id_rco_formation: "07_37815|07_218728|104239",
                         intitule_court: "MANAGEMENT COMMERC. OPERATIONNEL",
                         _id: "5fd2c73a5d44ea18bbe39425",
                       },
@@ -70,7 +69,6 @@ const server = setupServer(
                     matching_mna_formation: [
                       {
                         parcoursup_statut: "à publier",
-                        id_rco_formation: "07_37816|07_218729|100357",
                         intitule_court: "NEGO. ET DIGITAL. RELATION CLIENT",
                         _id: "5fd24e7cc67da3c3e6bc3bb1",
                       },
@@ -103,7 +101,6 @@ const server = setupServer(
                     matching_mna_formation: [
                       {
                         parcoursup_statut: "à publier",
-                        id_rco_formation: "07_39461|07_218735|100365",
                         intitule_court: "SUPPORT A L'ACTION MANAGERIALE",
                         _id: "5fd24e95c67da3c3e6bc3dd1",
                       },
@@ -136,7 +133,6 @@ const server = setupServer(
                     matching_mna_formation: [
                       {
                         parcoursup_statut: "à publier",
-                        id_rco_formation: "07_37798|07_220510|63656",
                         intitule_court: "COMMUNICATION",
                         _id: "5fc62847712d48a988156c7a",
                       },
@@ -169,7 +165,6 @@ const server = setupServer(
                     matching_mna_formation: [
                       {
                         parcoursup_statut: "à publier",
-                        id_rco_formation: "14_AF_0000086438|14_SE_0000597664|100357",
                         intitule_court: "NEGO. ET DIGITAL. RELATION CLIENT",
                         _id: "60ca89081f12d18c038ee291",
                       },
@@ -202,7 +197,6 @@ const server = setupServer(
                     matching_mna_formation: [
                       {
                         parcoursup_statut: "hors périmètre",
-                        id_rco_formation: "03_2111916F|03_1179673|100561",
                         intitule_court: "MAINTEN.SYST. OPT.A SYST.PRODUCT",
                         _id: "61315d178d0fa4e9373f1a83",
                       },
@@ -235,7 +229,6 @@ const server = setupServer(
                     matching_mna_formation: [
                       {
                         parcoursup_statut: "à publier",
-                        id_rco_formation: "03_2105710F|03_1160078|100367",
                         intitule_court: "GESTION DE LA PME",
                         _id: "608c910155952bac89d9cb76",
                       },
@@ -268,7 +261,6 @@ const server = setupServer(
                     matching_mna_formation: [
                       {
                         parcoursup_statut: "à publier",
-                        id_rco_formation: "03_2064561F|03_1133273|75789",
                         intitule_court: "BATIMENT",
                         _id: "5fd255dac67da3c3e6bd019b",
                       },
@@ -452,7 +444,6 @@ test("opens rapprochement modal", async () => {
           parcoursup_statut_history: [],
           lieu_formation_adresse: "44 boulevard Jean Moulin Immeuble Bellevue - Jean Moulin",
           lieu_formation_siret: null,
-          id_rco_formation: "21_133656|21_133656|81506",
           id_formation: "21_133656",
           id_action: "21_133656",
           ids_action: ["21_133656"],

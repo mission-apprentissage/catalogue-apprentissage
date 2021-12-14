@@ -31,12 +31,6 @@ runScript(async ({ mailer }) => {
           etablissement_gestionnaire_siret: "$etablissement_gestionnaire_siret",
           published: "$published",
         },
-        // duplicates: {
-        //   $push: { id_formation: "$id_formation", id_action: "$id_action", id_certifinfo: "$id_certifinfo" },
-        // },
-        // id_rco_formation: {
-        //   $push: { id_rco_formation: "$id_rco_formation" },
-        // },
         id_formation: {
           $push: { id_formation: "$id_formation" },
         },
@@ -79,7 +73,6 @@ runScript(async ({ mailer }) => {
     row.push(`="${entry._id.code_postal}"`);
     row.push(`="${entry._id.etablissement_formateur_siret}"`);
     row.push(`="${entry._id.etablissement_gestionnaire_siret}"`);
-    // row.push(JSON.stringify(entry.id_rco_formation));
     row.push(JSON.stringify(entry.id_formation));
     row.push(JSON.stringify(entry.id_action));
     row.push(JSON.stringify(entry.id_certifinfo));

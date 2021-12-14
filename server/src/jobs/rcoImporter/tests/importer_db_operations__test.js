@@ -26,7 +26,7 @@ describe(__filename, () => {
 
   it("checkAddedFormations >> Si aucunes modifications entre 2 jours ne doit retourner aucunes modifications de db", async () => {
     let count = await RcoFormation.countDocuments({});
-    assert.equal(count, 230);
+    assert.equal(count, 20);
 
     const collection = await importer.lookupDiff(formationsJMinus1);
     const result = await importer.addedFormationsHandler(collection);
@@ -36,7 +36,7 @@ describe(__filename, () => {
     });
 
     count = await RcoFormation.countDocuments({});
-    assert.equal(count, 230);
+    assert.equal(count, 20);
   });
 
   it("lookupDiff >> Si ajouts ou modifications entre 2 jours doit ajouter et modifier en db", async () => {
@@ -56,21 +56,15 @@ describe(__filename, () => {
     });
 
     const count = await RcoFormation.countDocuments({});
-    assert.equal(count, 231);
+    assert.equal(count, 21);
 
-    const updatedFormation = await importer.getRcoFormation({
-      id_formation: "24_208037",
-      id_action: "24_1462311",
-      id_certifinfo: "106623",
-    });
+    const updatedFormation = await importer.getRcoFormation({ cle_ministere_educatif: "16" });
 
     assert.deepStrictEqual(updatedFormation.periode, ["2021-11", "2021-12"]);
     assert.deepStrictEqual(updatedFormation.updates_history[0].from, {
-      cle_ministere_educatif: null,
       periode: ["2021-11"],
     });
     assert.deepStrictEqual(updatedFormation.updates_history[0].to, {
-      cle_ministere_educatif: "a098765433",
       periode: ["2021-11", "2021-12"],
     });
   });
@@ -88,13 +82,9 @@ describe(__filename, () => {
     });
 
     const count = await RcoFormation.countDocuments({});
-    assert.equal(count, 231);
+    assert.equal(count, 21);
 
-    const deletedFormation = await importer.getRcoFormation({
-      id_formation: "24_207466",
-      id_action: "24_1461053",
-      id_certifinfo: "100429",
-    });
+    const deletedFormation = await importer.getRcoFormation({ cle_ministere_educatif: "15" });
 
     assert.equal(deletedFormation.published, false);
     assert.deepStrictEqual(deletedFormation.updates_history[0].from, {
@@ -114,35 +104,14 @@ describe(__filename, () => {
     await importer.dbOperationsHandler();
 
     const count = await RcoFormation.countDocuments({});
-    assert.equal(count, 231);
+    assert.equal(count, 21);
 
-    const updatedFormation = await importer.getRcoFormation({
-      id_formation: "24_207466",
-      id_action: "24_1461053",
-      id_certifinfo: "100429",
-    });
+    const updatedFormation = await importer.getRcoFormation({ cle_ministere_educatif: "15" });
 
     assert.equal(updatedFormation.published, true);
     assert.deepStrictEqual(updatedFormation.updates_history[1].from, {
       published: false,
-      periode: [
-        "2021-01",
-        "2021-02",
-        "2021-03",
-        "2021-04",
-        "2021-05",
-        "2021-06",
-        "2021-09",
-        "2021-10",
-        "2021-11",
-        "2021-12",
-        "2022-01",
-        "2022-02",
-        "2022-03",
-        "2022-04",
-        "2022-05",
-        "2022-06",
-      ],
+      periode: ["2021-09"],
     });
     assert.deepStrictEqual(updatedFormation.updates_history[1].to, {
       published: true,
@@ -153,6 +122,8 @@ describe(__filename, () => {
         "2021-04",
         "2021-05",
         "2021-06",
+        "2021-07",
+        "2021-08",
         "2021-09",
         "2021-10",
         "2021-11",
@@ -162,7 +133,9 @@ describe(__filename, () => {
         "2022-03",
         "2022-04",
         "2022-05",
+        "2022-06",
         "2022-07",
+        "2022-08",
       ],
     });
   });

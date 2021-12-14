@@ -622,9 +622,10 @@ const dataSearch = {
     "etablissement_formateur_uai",
     "etablissement_formateur_siret",
     "etablissement_gestionnaire_siret",
+    "cle_ministere_educatif",
   ],
   placeholder: "Saisissez une raison sociale, un intitulé de formation, un UAI, ou un numéro de Siret",
-  fieldWeights: [4, 3, 2, 2, 2, 1, 1],
+  fieldWeights: [4, 3, 2, 2, 2, 1, 1, 1],
 };
 
 export default {

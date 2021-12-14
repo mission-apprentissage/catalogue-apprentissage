@@ -10,8 +10,8 @@ const getConvertedMetricsFromImportReport = (allConverted = [], importReport) =>
   const updatedConvertedIds = [];
   const deletedConvertedIds = [];
   for (let index = 0; index < allConverted.length; index++) {
-    const { id_rco_formation, cle_ministere_educatif } = allConverted[index];
-    const id = cle_ministere_educatif ?? id_rco_formation;
+    const { cle_ministere_educatif } = allConverted[index];
+    const id = cle_ministere_educatif;
     if (importReport?.addedIds?.includes(id)) {
       addedConvertedIds.push(id);
     } else if (importReport?.deletedIds?.includes(id)) {
@@ -30,22 +30,10 @@ const getConvertedMetricsFromImportReport = (allConverted = [], importReport) =>
     countDeletedConverted: deletedConvertedIds.length,
     deletedConvertedIds,
     convertedIdsRest: allConverted.filter(
-      ({ id_rco_formation, cle_ministere_educatif }) =>
-        !convertedIds.includes(cle_ministere_educatif ?? id_rco_formation)
+      ({ cle_ministere_educatif }) => !convertedIds.includes(cle_ministere_educatif)
     ),
   };
 };
-
-// const getUpdatedMetricsFromConvertedMetrics = (allConverted, updaterArr) => {
-//   const resultIds = [];
-//   for (let index = 0; index < allConverted.length; index++) {
-//     const { id_rco_formation } = allConverted[index];
-//     if (updaterArr.includes(id_rco_formation)) {
-//       resultIds.push(id_rco_formation);
-//     }
-//   }
-//   return resultIds;
-// };
 
 const RcoImportTabs = ({ data, reportType, date, errors }) => {
   const { summary } = data;
@@ -146,7 +134,7 @@ const RcoConversionTabs = ({ data, reportType, date, errors, importReport }) => 
         const erroredIds = [];
         for (let index = 0; index < errors?.length; index++) {
           const error = errors[index];
-          const id = error.cle_ministere_educatif ?? error.id_rco_formation;
+          const id = error.cle_ministere_educatif;
           if (importReport.addedIds?.includes(id)) {
             countAddedErrored++;
             erroredIds.push(id);
@@ -244,10 +232,7 @@ const TrainingsUpdateTabs = ({ data, reportType, date, errors, importReport, con
   useEffect(() => {
     const lookup = async () => {
       if (data && data.updated) {
-        // console.log(data);
-
         const metricsImportedConverted = getConvertedMetricsFromImportReport(convertReport?.convertedIds, importReport);
-        // console.log(metricsImportedConverted);
 
         // "Dummy check"
         const unpublishedToday = [];
@@ -260,9 +245,7 @@ const TrainingsUpdateTabs = ({ data, reportType, date, errors, importReport, con
         // console.log("unpublishedToday", unpublishedToday.length); // unpublishedToday
 
         const addedConvertedUpdatedIds = [];
-        const updatedIds = data.updated.map(
-          ({ id_rco_formation, cle_ministere_educatif }) => cle_ministere_educatif ?? id_rco_formation
-        );
+        const updatedIds = data.updated.map(({ cle_ministere_educatif }) => cle_ministere_educatif);
         for (let k = 0; k < metricsImportedConverted.addedConvertedIds.length; k++) {
           const id = metricsImportedConverted.addedConvertedIds[k];
           if (updatedIds.includes(id)) {
@@ -272,9 +255,7 @@ const TrainingsUpdateTabs = ({ data, reportType, date, errors, importReport, con
         // console.log("nb add-> converted-> updated", addedConvertedUpdatedIds.length); // nb add-> converted-> updated
 
         const addedConvertedErroredIds = [];
-        const errorIds = errors.map(
-          ({ id_rco_formation, cle_ministere_educatif }) => cle_ministere_educatif ?? id_rco_formation
-        );
+        const errorIds = errors.map(({ cle_ministere_educatif }) => cle_ministere_educatif);
         for (let k = 0; k < metricsImportedConverted.addedConvertedIds.length; k++) {
           const id = metricsImportedConverted.addedConvertedIds[k];
           if (errorIds.includes(id)) {
@@ -303,7 +284,7 @@ const TrainingsUpdateTabs = ({ data, reportType, date, errors, importReport, con
 
         const restConvertedUpdatedIds = [];
         const restIds = metricsImportedConverted.convertedIdsRest.map(
-          ({ id_rco_formation, cle_ministere_educatif }) => cle_ministere_educatif ?? id_rco_formation
+          ({ cle_ministere_educatif }) => cle_ministere_educatif
         );
         for (let k = 0; k < restIds.length; k++) {
           const id = restIds[k];

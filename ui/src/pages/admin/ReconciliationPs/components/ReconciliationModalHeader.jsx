@@ -2,25 +2,25 @@ import {
   Box,
   Button,
   Flex,
-  Heading,
-  Text,
-  useDisclosure,
-  Stack,
-  HStack,
-  FormLabel,
   FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Heading,
+  HStack,
+  ListItem,
   Radio,
   RadioGroup,
-  Textarea,
-  FormErrorMessage,
+  Stack,
   Switch,
+  Text,
+  Textarea,
   UnorderedList,
-  ListItem,
+  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { buildUpdatesHistory } from "../../../../common/utils/formationUtils";
 import { StatusBadge } from "../../../../common/components/StatusBadge";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { RejectedModal } from "./RejectedModal";
 import { Section } from "./Section";
@@ -30,7 +30,7 @@ import * as Yup from "yup";
 import { _post, _put } from "../../../../common/httpClient";
 import { PARCOURSUP_STATUS } from "../../../../constants/status";
 
-import { Close, CheckLine, ValidateIcon, ErrorIcon } from "../../../../theme/components/icons";
+import { CheckLine, Close, ErrorIcon, ValidateIcon } from "../../../../theme/components/icons";
 
 const ReconciliationModalHeader = React.memo(
   ({ formation, onClose, step, onStepChanged, onValidationSubmit, onStepClicked, onMnaFormationSelected }) => {
@@ -165,15 +165,13 @@ const ReconciliationModalHeader = React.memo(
       [currentMnaFormation, selectedFormation]
     );
 
-    let onGoToStepPublish = useCallback(
-      (e) => {
-        setMnaFormation(formation.matching_mna_formation[0]);
-        setCurrentMnaFormation(0);
-        onMnaFormationSelected(0);
-        onStepChanged(2);
-      },
-      [formation.matching_mna_formation, onMnaFormationSelected, onStepChanged]
-    );
+    let onGoToStepPublish = useCallback(() => {
+      const index = selectedFormation[0] ?? 0;
+      setMnaFormation(formation.matching_mna_formation[index]);
+      setCurrentMnaFormation(index);
+      onMnaFormationSelected(index);
+      onStepChanged(2);
+    }, [formation.matching_mna_formation, onMnaFormationSelected, onStepChanged, selectedFormation]);
 
     const height =
       formation.statut_reconciliation === "VALIDE"

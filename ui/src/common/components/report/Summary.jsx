@@ -214,7 +214,7 @@ const Summary = ({ data, reportType, errors, importReportRelatedData, onGoToClic
                         color="pinklight.400"
                         fontStyle="italic"
                         onClick={() => {
-                          onGoToClicked(1, "id_rco_formation", importReportRelatedData.convertedIds);
+                          onGoToClicked(1, "cle_ministere_educatif", importReportRelatedData.convertedIds);
                         }}
                       >
                         Voir les détails
@@ -236,7 +236,7 @@ const Summary = ({ data, reportType, errors, importReportRelatedData, onGoToClic
                         color="pinklight.400"
                         fontStyle="italic"
                         onClick={() => {
-                          onGoToClicked(2, "id_rco_formation", importReportRelatedData.erroredIds);
+                          onGoToClicked(2, "cle_ministere_educatif", importReportRelatedData.erroredIds);
                         }}
                       >
                         Voir les détails
