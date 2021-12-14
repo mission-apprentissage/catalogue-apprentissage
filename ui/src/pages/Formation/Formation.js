@@ -312,6 +312,12 @@ export default ({ match }) => {
         const apiURL = `${endpointNewFront}/entity/formation2021/`;
         // FIXME select={"__v" :0} hack to get updates_history
         const form = await _get(`${apiURL}${match.params.id}?select={"__v":0}`, false);
+
+        // don't display archived formations
+        if (!form.published) {
+          throw new Error("Cette formation n'est pas publiée dans le catalogue");
+        }
+
         setFormation(form);
 
         try {
