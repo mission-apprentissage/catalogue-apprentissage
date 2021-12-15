@@ -12,10 +12,11 @@ const optionDefinitions = [
   { name: "conventionnement", alias: "c", type: Boolean, defaultValue: false },
   { name: "onisep", alias: "o", type: Boolean, defaultValue: false },
 ];
+
 // Usage
-// Only conventionnment -c
+// Only conventionnement -c
 // Only siret -s
-// Only location and geoloc -lg
+// Only geoloc lg
 const EtablissementsUpdater = async () => {
   try {
     logger.info(" -- Start of etablissements updater -- ");
@@ -24,11 +25,7 @@ const EtablissementsUpdater = async () => {
 
     const all = !optionsCmd.siret && !optionsCmd.geoloc && !optionsCmd.conventionnement && !optionsCmd.onisep;
 
-    const yearTag = new Date().getFullYear();
-
-    const filter = optionsCmd.filter
-      ? JSON.parse(optionsCmd.filter)
-      : { ferme: false, tags: { $in: [`${yearTag}`, `${yearTag + 1}`] } };
+    const filter = optionsCmd.filter ? JSON.parse(optionsCmd.filter) : { ferme: false };
 
     let options = {
       withHistoryUpdate: optionsCmd.withHistoryUpdate,
