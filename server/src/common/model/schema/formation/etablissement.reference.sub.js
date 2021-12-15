@@ -25,6 +25,7 @@ const etablissementReferenceInfo = {
     description: "Etablissement reference est publié",
   },
   etablissement_reference_catalogue_published: {
+    index: true,
     type: Boolean,
     default: false,
     description: "Etablissement reference entre dans le catalogue",
