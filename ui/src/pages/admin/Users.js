@@ -303,7 +303,7 @@ const UserLine = ({ user, roles }) => {
                 isChecked={values.accessAcademieList.includes(num)}
                 mb={3}
               >
-                {num}
+                {academies[num].nom_academie} ({num})
               </Checkbox>
             );
           })}
