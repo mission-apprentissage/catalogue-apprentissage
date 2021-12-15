@@ -2,6 +2,10 @@ import { intersection } from "lodash";
 
 export const isUserAdmin = (auth) => auth && auth.permissions && auth.permissions.isAdmin;
 
+export const hasRightToEditEtablissement = (etablissement, auth) => {
+  return hasAcademyRight(auth, etablissement?.num_academie);
+};
+
 export const hasRightToEditFormation = (formation, auth) => {
   return hasAcademyRight(auth, formation?.num_academie);
 };

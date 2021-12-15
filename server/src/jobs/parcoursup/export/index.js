@@ -72,8 +72,8 @@ const formatter = async ({
   };
 };
 
-const createCursor = () => {
-  return Formation.find(filter, select).sort(sort).limit(limit).cursor();
+const createCursor = (query = filter) => {
+  return Formation.find(query, select).sort(sort).limit(limit).cursor();
 };
 
 const createFormation = async (formation) => {
@@ -114,7 +114,11 @@ const createFormation = async (formation) => {
  * pour création sur Parcoursup via le Web Service dédié
  */
 const run = async () => {
-  let cursor = createCursor();
+  const args = process.argv.slice(2);
+  const id = args.find((arg) => arg.startsWith("--id"))?.split("=")?.[1];
+  const query = id ? { _id: id } : filter;
+
+  let cursor = createCursor(query);
   for await (const formation of cursor) {
     await createFormation(formation);
     await sleep(10000);

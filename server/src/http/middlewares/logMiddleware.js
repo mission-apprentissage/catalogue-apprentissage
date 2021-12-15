@@ -14,6 +14,10 @@ module.exports = () => {
 
     const log = () => {
       try {
+        if (relativeUrl.includes("_msearch")) {
+          return;
+        }
+
         const error = req.err;
         const statusCode = res.statusCode;
         const data = {
