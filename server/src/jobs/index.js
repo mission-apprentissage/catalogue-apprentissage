@@ -103,12 +103,6 @@ runScript(async ({ db }) => {
     }
     await sleep(30000);
 
-    // await psReference(); // ~ 34 minutes => ~ 30 secondes
-    // await sleep(30000);
-
-    // await psUpdateMatchInfo();
-    // await sleep(30000);
-
     if (process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_EXPORT_ENABLED === "true") {
       await parcoursupExport.run();
       await sleep(30000);

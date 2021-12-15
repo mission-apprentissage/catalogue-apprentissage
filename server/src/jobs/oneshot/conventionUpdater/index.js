@@ -12,7 +12,7 @@ runScript(async ({ db }) => {
     logger.info(`Convention updater ${CONVENTION_FILES_DIR}`);
     await conventionFilesImporter(db, CONVENTION_FILES_DIR);
 
-    const filter = { ferme: false, tags: { $in: ["2021", "2022"] } };
+    const filter = { ferme: false };
 
     const options = {
       withHistoryUpdate: true,
