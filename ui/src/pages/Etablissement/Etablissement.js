@@ -24,7 +24,7 @@ import { useFormik } from "formik";
 import useAuth from "../../common/hooks/useAuth";
 import { _get, _post, _put } from "../../common/httpClient";
 import Layout from "../layout/Layout";
-import { hasAccessTo } from "../../common/utils/rolesUtils";
+import { hasAccessTo, hasRightToEditEtablissement } from "../../common/utils/rolesUtils";
 import { NavLink } from "react-router-dom";
 import InfoTooltip from "../../common/components/InfoTooltip";
 import helpText from "../../locales/helpText.json";
@@ -42,7 +42,8 @@ const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
 const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSubmit, values, countFormations }) => {
   const [auth] = useAuth();
-  const hasRightToEdit = hasAccessTo(auth, "page_organisme/modifier_informations");
+  const hasRightToEdit =
+    hasAccessTo(auth, "page_organisme/modifier_informations") && hasRightToEditEtablissement(etablissement, auth);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const query = [
