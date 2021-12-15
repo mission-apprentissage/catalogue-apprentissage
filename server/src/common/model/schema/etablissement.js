@@ -505,6 +505,7 @@ const etablissementSchema = {
   },
 
   published: {
+    index: true,
     type: Boolean,
     default: false,
     description: "Est publié",
