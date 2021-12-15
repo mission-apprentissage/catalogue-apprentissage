@@ -175,6 +175,13 @@ const columnsDefinition = [
     exportable: true,
     editable: false,
   },
+  {
+    Header: "Force du rapprochement",
+    accessor: "matching_type",
+    width: 200,
+    exportable: true,
+    editable: false,
+  },
 ];
 
 const queryBuilderField = [
@@ -187,8 +194,8 @@ const facetDefinition = (context) => {
     {
       componentId: `matching_type`,
       dataField: "matching_type.keyword",
-      title: "Informations similaires",
-      filterLabel: "Informations similaires",
+      title: "Force du rapprochement",
+      filterLabel: "Force du rapprochement",
       selectAllLabel: "Tous",
       sortBy: "desc",
     },
