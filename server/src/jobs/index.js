@@ -12,19 +12,17 @@ const { runScript } = require("./scriptWrapper");
 const logger = require("../common/logger");
 const { Formation } = require("../common/model");
 const { rebuildEsIndex } = require("./esIndex/esIndex");
-
 const rcoImporter = require("./rcoImporter");
 const rcoConverter = require("./rcoConverter");
-// const psReference = require("./parcoursup/reference");
 const afReference = require("./affelnet/reference");
 const psPerimetre = require("./parcoursup/perimetre");
-// const psUpdateMatchInfo = require("./parcoursup/updateMatchInfo");
 const afPerimetre = require("./affelnet/perimetre");
 const afCoverage = require("./affelnet/coverage");
 const afReconciliation = require("./affelnet/reconciliation");
 const { EtablissementsUpdater } = require("./EtablissementsUpdater");
 const { findAndUpdateSiegeSocial } = require("./EtablissementsUpdater/orphans");
 const parcoursupExport = require("./parcoursup/export");
+const { psCoverage } = require("./parcoursup/coverage");
 
 const KIT_LOCAL_PATH = "/data/uploads/CodeDiplome_RNCP_latest_kit.csv";
 const CONVENTION_FILES_DIR = path.join(__dirname, "conventionFilesImporter/assets");
@@ -97,10 +95,7 @@ runScript(async ({ db }) => {
     await sleep(30000);
 
     // parcoursup
-    const psCoverage = spawn("node", ["./src/jobs/parcoursup/coverage.js"]);
-    for await (const data of psCoverage.stdout) {
-      console.log(`psCoverage: ${data}`);
-    }
+    await psCoverage(); // ~ 30 secondes
     await sleep(30000);
 
     if (process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_EXPORT_ENABLED === "true") {
