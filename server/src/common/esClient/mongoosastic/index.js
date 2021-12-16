@@ -211,6 +211,10 @@ function Mongoosastic(schema, options) {
         { parallel: 25 }
       )
     );
+
+    await esClient.indices.refresh({
+      index: indexName,
+    });
   };
 
   schema.statics.unsynchronize = function unsynchronize() {
