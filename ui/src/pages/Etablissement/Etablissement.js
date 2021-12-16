@@ -66,7 +66,7 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
 
   let creationDate = "";
   try {
-    creationDate = new Date(new Date(etablissement.date_creation).getTime() * 1000).toLocaleDateString();
+    creationDate = new Date(etablissement.date_creation).toLocaleDateString();
   } catch (e) {
     console.error("can't display creation date ", etablissement.date_creation);
   }

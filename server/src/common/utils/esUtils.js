@@ -16,10 +16,6 @@ const rebuildIndex = async (index, schema, { skipNotFound, filter } = { skipNotF
 
   logger.info(`Synching '${index}' index ...`);
   await schema.synchronize(filter);
-
-  await client.indices.refresh({
-    index,
-  });
 };
 
 module.exports.rebuildIndex = rebuildIndex;

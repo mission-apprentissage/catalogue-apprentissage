@@ -15,14 +15,13 @@ const filter = {
   parcoursup_statut: STATUS.EN_ATTENTE,
   uai_formation: { $ne: null },
   rncp_code: { $ne: null },
-  $or: [{ bcn_mefs_10: { $size: 0 } }, { bcn_mefs_10: { $size: 1 } }],
 };
 
 const select = {
   rncp_code: 1,
   cfd_entree: 1,
   uai_formation: 1,
-  bcn_mefs_10: 1,
+  parcoursup_mefs_10: 1,
   rome_codes: 1,
   parcoursup_statut_history: 1,
   parcoursup_error: 1,
@@ -55,11 +54,11 @@ const formatter = async ({
   cfd_entree,
   uai_formation,
   cle_ministere_educatif,
-  bcn_mefs_10 = [],
+  parcoursup_mefs_10 = [],
   rome_codes = [],
   updates_history = [],
 }) => {
-  const [{ mef10: mef } = { mef10: "" }] = bcn_mefs_10;
+  const [{ mef10: mef } = { mef10: "" }] = parcoursup_mefs_10;
 
   return {
     user: await findPublishUser(updates_history),
@@ -67,7 +66,7 @@ const formatter = async ({
     cfd: cfd_entree,
     uai: uai_formation,
     rco: cle_ministere_educatif,
-    mef,
+    mef: parcoursup_mefs_10.length <= 1 ? mef : "",
     rome: rome_codes,
   };
 };

@@ -60,7 +60,7 @@ const cfdMapper = async (cfd = null, options = { onisep: true }) => {
 
     const rome_codes = (romes || []).map(({ rome }) => rome);
 
-    const { mef10 = null, modalite = { duree: null, annee: null }, mefs10 = [] } = mefs;
+    const { modalite = { duree: null, annee: null }, mefs10 = [] } = mefs;
 
     const {
       url: onisep_url = null,
@@ -94,7 +94,6 @@ const cfdMapper = async (cfd = null, options = { onisep: true }) => {
         intitule_court: result.intitule_court,
         diplome: result.diplome,
 
-        mef_10_code: mef10,
         bcn_mefs_10: mefs10,
 
         duree: modalite.duree,

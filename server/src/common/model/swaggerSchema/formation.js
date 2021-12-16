@@ -33,16 +33,17 @@ module.exports = {
         default: "null",
         description: "Code formation diplome d'entrée (année 1 de l'apprentissage)",
       },
-      mef_10_code: {
-        type: "string",
-        default: "null",
-        description: "Code MEF 10 caractères",
-      },
       mefs_10: {
         type: "array",
         items: {},
         default: [],
         description: "Tableau de Code MEF 10 caractères et modalités (filtrés pour Affelnet si applicable)",
+      },
+      parcoursup_mefs_10: {
+        type: "array",
+        items: {},
+        default: [],
+        description: "Tableau de Code MEF 10 caractères et modalités (filtrés pour Parcoursup si applicable)",
       },
       nom_academie: {
         type: "string",
