@@ -12,6 +12,7 @@ const { diffFormation, buildUpdatesHistory } = require("../common/utils/diffUtil
 const { SandboxFormation, RcoFormation } = require("../../common/model");
 const { getCoordinatesFromAddressData } = require("@mission-apprentissage/tco-service-node");
 const { distanceBetweenCoordinates } = require("../../common/utils/distanceUtils");
+const { findMefsForParcoursup } = require("../../common/utils/parcoursupUtils");
 
 const formationSchema = Joi.object({
   cfd: Joi.string().required(),
@@ -248,7 +249,6 @@ const mnaFormationUpdater = async (
       await asyncForEach(updatedFormation.bcn_mefs_10, async (mefObj) => {
         await new SandboxFormation({
           ...rest,
-          mef_10_code: mefObj.mef10,
           bcn_mefs_10: [mefObj],
         }).save();
       });
@@ -287,6 +287,11 @@ const mnaFormationUpdater = async (
       }
 
       await SandboxFormation.deleteMany({ cle_ministere_educatif: rest.cle_ministere_educatif });
+    }
+
+    // try to fill mefs for Parcoursup
+    if (updatedFormation.bcn_mefs_10?.length > 0) {
+      updatedFormation.parcoursup_mefs_10 = findMefsForParcoursup(updatedFormation);
     }
 
     // compute distance between lieu formation & etablissement formateur

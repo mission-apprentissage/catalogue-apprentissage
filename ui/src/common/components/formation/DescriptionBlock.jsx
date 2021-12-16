@@ -78,7 +78,7 @@ export const DescriptionBlock = ({ formation, pendingFormation }) => {
           <Text mb={4}>
             Codes MEF 10 caractères :{" "}
             <Text as="span" variant="highlight">
-              {displayedFormation.mef_10_code ?? displayedFormation?.bcn_mefs_10?.map(({ mef10 }) => mef10).join(", ")}
+              {displayedFormation?.bcn_mefs_10?.map(({ mef10 }) => mef10).join(", ")}
             </Text>{" "}
             <InfoTooltip description={helpText.formation.mef} />
           </Text>
@@ -99,6 +99,14 @@ export const DescriptionBlock = ({ formation, pendingFormation }) => {
                 </Text>
               )}
             </>
+          )}
+          {displayedFormation?.parcoursup_mefs_10?.length > 0 && (
+            <Text mb={4}>
+              Codes MEF 10 caractères dans le périmètre <i>Parcoursup</i> :{" "}
+              <Text as="span" variant="highlight">
+                {displayedFormation?.parcoursup_mefs_10?.map(({ mef10 }) => mef10).join(", ")}
+              </Text>
+            </Text>
           )}
           <Text mb={4}>
             Période d'inscription :
