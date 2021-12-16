@@ -6,23 +6,23 @@
 
 "use strict";
 
-const serialize = (model, mapping) => {
-  let name, outModel;
-
-  function _serializeObject(object, mappingData) {
-    let serialized = {};
-    let field;
-    let val;
-    for (field in mappingData.properties) {
-      if (mappingData.properties.hasOwnProperty(field)) {
-        val = serialize.call(object, object[field], mappingData.properties[field]);
-        if (val !== undefined) {
-          serialized[field] = val;
-        }
+function _serializeObject(object, mappingData) {
+  let serialized = {};
+  let field;
+  let val;
+  for (field in mappingData.properties) {
+    if (mappingData.properties.hasOwnProperty(field)) {
+      val = serialize.call(object, object[field], mappingData.properties[field]);
+      if (val !== undefined) {
+        serialized[field] = val;
       }
     }
-    return serialized;
   }
+  return serialized;
+}
+
+const serialize = (model, mapping) => {
+  let name, outModel;
 
   if (mapping.properties && model) {
     if (Array.isArray(model)) {
