@@ -38,6 +38,10 @@ const DOCUMENTS = [
     filename: "uai-siret.csv",
     label: "Import couples Uai-Siret",
   },
+  {
+    filename: "mefs-parcoursup.csv",
+    label: "Liste de MEFs fiabilisés sur Parcoursup",
+  },
 ];
 
 export default () => {
@@ -113,7 +117,7 @@ export default () => {
           <form onSubmit={onSubmit}>
             <Select
               value={filename}
-              w="30%"
+              w="40%"
               mb={8}
               onChange={(e) => {
                 setFilename(e.target.value);
