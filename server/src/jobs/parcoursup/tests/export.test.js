@@ -23,7 +23,7 @@ describe(__filename, () => {
       cfd: "6789",
       cfd_entree: "1212",
       uai_formation: "uai-1",
-      bcn_mefs_10: [],
+      parcoursup_mefs_10: [],
       rome_codes: ["rome-1", "rome-2"],
       parcoursup_statut: "hors périmètre",
       parcoursup_error: null,
@@ -36,7 +36,7 @@ describe(__filename, () => {
       cfd: "6789",
       cfd_entree: "1212",
       uai_formation: "uai-2",
-      bcn_mefs_10: [],
+      parcoursup_mefs_10: [],
       rome_codes: ["rome-1", "rome-2"],
       parcoursup_statut: "en attente de publication",
       parcoursup_error: null,
@@ -49,7 +49,7 @@ describe(__filename, () => {
       cfd: "6789",
       cfd_entree: "1212",
       uai_formation: null,
-      bcn_mefs_10: [],
+      parcoursup_mefs_10: [],
       rome_codes: ["rome-1", "rome-2"],
       parcoursup_statut: "en attente de publication",
       parcoursup_error: null,
@@ -62,7 +62,7 @@ describe(__filename, () => {
       cfd: "6789",
       cfd_entree: "1212",
       uai_formation: "uai-4",
-      bcn_mefs_10: [{}, {}, {}],
+      parcoursup_mefs_10: [{ mef10: "mef-41" }, { mef10: "mef-42" }, { mef10: "mef-43" }],
       rome_codes: ["rome-1", "rome-2"],
       parcoursup_statut: "en attente de publication",
       parcoursup_error: null,
@@ -75,7 +75,7 @@ describe(__filename, () => {
       cfd: "6789",
       cfd_entree: "1212",
       uai_formation: "uai-5",
-      bcn_mefs_10: [{ mef10: "mef-5" }],
+      parcoursup_mefs_10: [{ mef10: "mef-5" }],
       rome_codes: ["rome-50", "rome-51"],
       parcoursup_statut: "en attente de publication",
       parcoursup_error: null,
@@ -88,7 +88,7 @@ describe(__filename, () => {
       cfd: "6789",
       cfd_entree: "1212",
       uai_formation: "uai-6",
-      bcn_mefs_10: [{ mef10: "mef-6" }],
+      parcoursup_mefs_10: [{ mef10: "mef-6" }],
       rome_codes: ["rome-60", "rome-61"],
       parcoursup_statut: "en attente de publication",
       parcoursup_error: "error ws",
@@ -101,7 +101,7 @@ describe(__filename, () => {
       cfd: "6789",
       cfd_entree: "1212",
       uai_formation: "uai-7",
-      bcn_mefs_10: [{ mef10: "mef-7" }],
+      parcoursup_mefs_10: [{ mef10: "mef-7" }],
       rome_codes: ["rome-70", "rome-71"],
       parcoursup_statut: "en attente de publication",
       parcoursup_error: "error ws",
@@ -114,7 +114,7 @@ describe(__filename, () => {
       cfd: "6789",
       cfd_entree: "1212",
       uai_formation: "uai-8",
-      bcn_mefs_10: [{ mef10: "mef-8" }],
+      parcoursup_mefs_10: [{ mef10: "mef-8" }],
       rome_codes: ["rome-80", "rome-81"],
       parcoursup_statut: "en attente de publication",
       parcoursup_error: null,
@@ -137,40 +137,43 @@ describe(__filename, () => {
     assert.strictEqual(countFormations, 8);
   });
 
-  it("should filter only 4 formations", async () => {
+  it("should filter only 5 formations", async () => {
     let cursor = createCursor();
     let index = 0;
     while (await cursor.next()) {
       index += 1;
     }
-    assert.strictEqual(index, 4);
+    assert.strictEqual(index, 5);
   });
 
   it("should sort formations with errors at last", async () => {
     let cursor = createCursor();
     let index = 0;
     for await (const formation of cursor) {
-      if (index < 2) {
+      if (index < 3) {
         assert.strictEqual(formation.parcoursup_error, null);
       } else {
         assert.strictEqual(formation.parcoursup_error, "error ws");
       }
 
       if (index === 0) {
-        assert.strictEqual(formation.cle_ministere_educatif, "12345-cle5");
+        assert.strictEqual(formation.cle_ministere_educatif, "12345-cle4");
       }
       if (index === 1) {
-        assert.strictEqual(formation.cle_ministere_educatif, "12345-cle8");
+        assert.strictEqual(formation.cle_ministere_educatif, "12345-cle5");
       }
       if (index === 2) {
-        assert.strictEqual(formation.cle_ministere_educatif, "12345-cle6");
+        assert.strictEqual(formation.cle_ministere_educatif, "12345-cle8");
       }
       if (index === 3) {
+        assert.strictEqual(formation.cle_ministere_educatif, "12345-cle6");
+      }
+      if (index === 4) {
         assert.strictEqual(formation.cle_ministere_educatif, "12345-cle7");
       }
       index += 1;
     }
-    assert.strictEqual(index, 4);
+    assert.strictEqual(index, 5);
   });
 
   it("should create 1 formation on ps side", async () => {
@@ -181,7 +184,7 @@ describe(__filename, () => {
       cfd: "6789",
       cfd_entree: "1212",
       uai_formation: "uai-9",
-      bcn_mefs_10: [{ mef10: "mef-9" }],
+      parcoursup_mefs_10: [{ mef10: "mef-9" }],
       rome_codes: ["rome-90", "rome-91"],
       parcoursup_statut: "en attente de publication",
       parcoursup_error: null,
@@ -205,7 +208,7 @@ describe(__filename, () => {
       cfd: "6789",
       cfd_entree: "1212",
       uai_formation: "uai-10",
-      bcn_mefs_10: [{ mef10: "mef-10" }],
+      parcoursup_mefs_10: [{ mef10: "mef-10" }],
       rome_codes: ["rome-100", "rome-101"],
       parcoursup_statut: "en attente de publication",
       parcoursup_error: null,
@@ -227,7 +230,7 @@ describe(__filename, () => {
       cfd: "6789",
       cfd_entree: "123134",
       uai_formation: "uai-11",
-      bcn_mefs_10: [{ mef10: "mef-11" }],
+      parcoursup_mefs_10: [{ mef10: "mef-11" }],
       rome_codes: ["rome-110", "rome-111"],
       parcoursup_statut: "en attente de publication",
       parcoursup_error: null,
@@ -252,6 +255,41 @@ describe(__filename, () => {
       rncp: [1234],
       rome: ["rome-110", "rome-111"],
       uai: "uai-11",
+    };
+    assert.deepStrictEqual(formatted, expected);
+  });
+
+  it("should exclude mef from format if multiple are found", async () => {
+    const formatted = await formatter({
+      rncp_code: "RNCP1234",
+      cfd: "6789",
+      cfd_entree: "123134",
+      uai_formation: "uai-12",
+      parcoursup_mefs_10: [{ mef10: "mef-12-1" }, { mef10: "mef-12-2" }],
+      rome_codes: ["rome-120", "rome-121"],
+      parcoursup_statut: "en attente de publication",
+      parcoursup_error: null,
+      parcoursup_statut_history: [],
+      updates_history: [
+        {
+          from: { parcoursup_statut: "à publier" },
+          to: { parcoursup_statut: "en attente de publication", last_update_who: "test@beta.gouv.fr" },
+        },
+        { from: {}, to: {} },
+      ],
+      cle_ministere_educatif: "12345-cle12",
+    });
+
+    const user = await User.findOne({ email: "test@beta.gouv.fr" });
+
+    const expected = {
+      user: user._id,
+      cfd: "123134",
+      mef: "",
+      rco: "12345-cle12",
+      rncp: [1234],
+      rome: ["rome-120", "rome-121"],
+      uai: "uai-12",
     };
     assert.deepStrictEqual(formatted, expected);
   });

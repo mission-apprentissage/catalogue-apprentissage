@@ -12,6 +12,7 @@ const { diffFormation, buildUpdatesHistory } = require("../common/utils/diffUtil
 const { SandboxFormation, RcoFormation } = require("../../common/model");
 const { getCoordinatesFromAddressData } = require("@mission-apprentissage/tco-service-node");
 const { distanceBetweenCoordinates } = require("../../common/utils/distanceUtils");
+const { findMefsForParcoursup } = require("../../common/utils/parcoursupUtils");
 
 const formationSchema = Joi.object({
   cfd: Joi.string().required(),
@@ -222,6 +223,19 @@ const mnaFormationUpdater = async (
       ...formation?.editedFields,
     };
 
+    // trust rco for duree & annee
+    updatedFormation.duree = rcoFormation?.duree ?? formation.duree;
+    updatedFormation.annee = rcoFormation?.entree_apprentissage ?? formation.annee;
+
+    // filter bcn_mefs_10 with data received from RCO
+    const duree = updatedFormation.duree;
+    const annee = updatedFormation.annee;
+    if (duree && annee && duree !== "X" && annee !== "X") {
+      updatedFormation.bcn_mefs_10 = updatedFormation.bcn_mefs_10?.filter(({ modalite }) => {
+        return modalite.duree === duree && modalite.annee === annee;
+      });
+    }
+
     // try to fill mefs for Affelnet
     // reset field value
     updatedFormation.mefs_10 = null;
@@ -248,7 +262,6 @@ const mnaFormationUpdater = async (
       await asyncForEach(updatedFormation.bcn_mefs_10, async (mefObj) => {
         await new SandboxFormation({
           ...rest,
-          mef_10_code: mefObj.mef10,
           bcn_mefs_10: [mefObj],
         }).save();
       });
@@ -279,14 +292,14 @@ const mnaFormationUpdater = async (
         ) {
           updatedFormation.affelnet_infos_offre = getInfosOffreLabel(updatedFormation, mefs_10[0]);
         }
-
-        if (mefs_10.length === 1) {
-          updatedFormation.duree = mefs_10[0].modalite.duree;
-          updatedFormation.annee = mefs_10[0].modalite.annee;
-        }
       }
 
       await SandboxFormation.deleteMany({ cle_ministere_educatif: rest.cle_ministere_educatif });
+    }
+
+    // try to fill mefs for Parcoursup
+    if (updatedFormation.bcn_mefs_10?.length > 0) {
+      updatedFormation.parcoursup_mefs_10 = findMefsForParcoursup(updatedFormation);
     }
 
     // compute distance between lieu formation & etablissement formateur

@@ -30,7 +30,6 @@ const FILTERS = () => [
   "rncp_etablissement_gestionnaire_habilite",
   "rome_codes",
   `rncp_code`,
-  "mef_10_code",
   `parcoursup_statut`,
   `affelnet_statut`,
   "diplome",
@@ -207,13 +206,6 @@ const columnsDefinition = [
     editableInvalid: true,
   },
   {
-    Header: "Code MEF 10 caracteres",
-    accessor: "mef_10_code",
-    width: 400,
-    exportable: true,
-    editable: false,
-  },
-  {
     Header: "Liste MEF rattaches",
     accessor: "bcn_mefs_10",
     width: 200,
@@ -224,6 +216,14 @@ const columnsDefinition = [
   {
     Header: "Liste MEF Affelnet",
     accessor: "mefs_10",
+    width: 200,
+    exportable: true,
+    editable: false,
+    formatter: (value) => value.map((x) => x.mef10).join(","),
+  },
+  {
+    Header: "Liste MEF Parcoursup",
+    accessor: "parcoursup_mefs_10",
     width: 200,
     exportable: true,
     editable: false,
