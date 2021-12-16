@@ -223,6 +223,19 @@ const mnaFormationUpdater = async (
       ...formation?.editedFields,
     };
 
+    // trust rco for duree & annee
+    updatedFormation.duree = rcoFormation?.duree ?? formation.duree;
+    updatedFormation.annee = rcoFormation?.entree_apprentissage ?? formation.annee;
+
+    // filter bcn_mefs_10 with data received from RCO
+    const duree = updatedFormation.duree;
+    const annee = updatedFormation.annee;
+    if (duree && annee && duree !== "X" && annee !== "X") {
+      updatedFormation.bcn_mefs_10 = updatedFormation.bcn_mefs_10?.filter(({ modalite }) => {
+        return modalite.duree === duree && modalite.annee === annee;
+      });
+    }
+
     // try to fill mefs for Affelnet
     // reset field value
     updatedFormation.mefs_10 = null;
@@ -278,11 +291,6 @@ const mnaFormationUpdater = async (
             updatedFormation.affelnet_infos_offre.match(`${updatedFormation.libelle_court} en . an.?$`))
         ) {
           updatedFormation.affelnet_infos_offre = getInfosOffreLabel(updatedFormation, mefs_10[0]);
-        }
-
-        if (mefs_10.length === 1) {
-          updatedFormation.duree = mefs_10[0].modalite.duree;
-          updatedFormation.annee = mefs_10[0].modalite.annee;
         }
       }
 
