@@ -1,6 +1,5 @@
 import { escapeDiacritics } from "../../utils/downloadUtils";
 import helpText from "../../../locales/helpText.json";
-import constantsReglesPerimetre from "./constantsReglesPerimetre";
 
 const FILTERS = () => [
   `QUERYBUILDER`,
