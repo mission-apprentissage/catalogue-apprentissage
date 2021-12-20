@@ -66,8 +66,6 @@ const copyParcoursupFields = (oldFormation, newFormation) => {
 
 const copyRapprochementFields = (oldFormation, newFormation) => {
   newFormation.parcoursup_id = oldFormation.parcoursup_id;
-  newFormation.parcoursup_reference = oldFormation.parcoursup_reference;
-  newFormation.parcoursup_a_charger = oldFormation.parcoursup_a_charger;
   return newFormation;
 };
 

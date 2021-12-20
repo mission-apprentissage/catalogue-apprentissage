@@ -284,16 +284,6 @@ const formationSchema = {
     noIndex: true,
     description: "Email du contact pour cette formation",
   },
-  parcoursup_reference: {
-    type: Boolean,
-    default: false,
-    description: "La formation est présent sur parcourSup",
-  },
-  parcoursup_a_charger: {
-    type: Boolean,
-    default: false,
-    description: "La formation doit être ajouter à ParcourSup",
-  },
   parcoursup_statut: {
     type: String,
     enum: [
@@ -325,16 +315,6 @@ const formationSchema = {
     type: String,
     default: null,
     description: "ids ParcourSup",
-  },
-  affelnet_reference: {
-    type: Boolean,
-    default: false,
-    description: "La formation est présent sur affelnet",
-  },
-  affelnet_a_charger: {
-    type: Boolean,
-    default: false,
-    description: "**[DEPRECATED]** La formation doit être ajouter à affelnet",
   },
   affelnet_statut: {
     type: String,
