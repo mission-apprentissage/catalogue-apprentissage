@@ -214,6 +214,7 @@ const facetDefinition = (context) => {
       filterLabel: "Code diplôme",
       selectAllLabel: "Tous",
       sortBy: "asc",
+      size: 5000,
     },
     {
       componentId: `rncp`,
@@ -222,6 +223,7 @@ const facetDefinition = (context) => {
       filterLabel: "Code RNCP",
       selectAllLabel: "Tous",
       sortBy: "asc",
+      size: 5000,
     },
     {
       componentId: `libelle_formation`,
@@ -230,6 +232,7 @@ const facetDefinition = (context) => {
       filterLabel: "Libellé formation",
       selectAllLabel: "Tous",
       sortBy: "asc",
+      size: 5000,
     },
   ];
 

@@ -535,6 +535,7 @@ const facetDefinition = () => [
     filterLabel: "Code diplôme",
     selectAllLabel: "Tous",
     sortBy: "asc",
+    size: 5000,
   },
 
   {
@@ -553,6 +554,7 @@ const facetDefinition = () => [
     filterLabel: "Code RNCP",
     selectAllLabel: "Tous",
     sortBy: "count",
+    size: 5000,
   },
   {
     componentId: `tags`,
