@@ -214,7 +214,7 @@ const columnsDefinition = [
   },
   {
     Header: "Liste MEF Affelnet",
-    accessor: "mefs_10",
+    accessor: "affelnet_mefs_10",
     width: 200,
     exportable: true,
     editable: false,

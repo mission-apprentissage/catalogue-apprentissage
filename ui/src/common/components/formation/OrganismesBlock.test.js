@@ -67,7 +67,7 @@ const formation = {
   cfd_specialite: null,
   cfd_outdated: false,
   cfd_date_fermeture: null,
-  mefs_10: [{ mef10: "2472541131", modalite: { duree: "3", annee: "1" } }],
+  affelnet_mefs_10: [{ mef10: "2472541131", modalite: { duree: "3", annee: "1" } }],
   nom_academie: "Nancy-Metz",
   num_academie: "12",
   code_postal: "57450",

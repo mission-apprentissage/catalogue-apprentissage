@@ -33,7 +33,7 @@ module.exports = {
         default: "null",
         description: "Code formation diplome d'entrée (année 1 de l'apprentissage)",
       },
-      mefs_10: {
+      affelnet_mefs_10: {
         type: "array",
         items: {},
         default: [],

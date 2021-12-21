@@ -50,12 +50,12 @@ async function reconciliationAffelnet(formation, source = "MANUEL") {
     // pre-fill affelnet_infos_offre with data from affelnet import if empty (to not erase user change)
     update.affelnet_infos_offre = converted.affelnet_infos_offre || libelle_mnemonique;
 
-    const mefs_10 = converted.bcn_mefs_10 ?? [];
-    const mef = mefs_10.find(({ mef10 }) => mef10 === code_mef.substring(0, 10));
+    const affelnet_mefs_10 = converted.bcn_mefs_10 ?? [];
+    const mef = affelnet_mefs_10.find(({ mef10 }) => mef10 === code_mef.substring(0, 10));
     if (mef) {
-      update.mefs_10 = [mef];
+      update.affelnet_mefs_10 = [mef];
     } else if (!["", "AFFECTATION"].includes(code_mef)) {
-      update.mefs_10 = [
+      update.affelnet_mefs_10 = [
         {
           mef10: code_mef,
           modalite: {

@@ -36,7 +36,7 @@ const formationSchema = {
     default: null,
     description: "Code formation diplome d'entrée (année 1 de l'apprentissage)",
   },
-  mefs_10: {
+  affelnet_mefs_10: {
     type: [Object],
     default: [],
     description: "Tableau de Code MEF 10 caractères et modalités (filtrés pour Affelnet si applicable)",
@@ -443,7 +443,7 @@ const formationSchema = {
     index: true,
     type: String,
     default: null,
-    description: "Id de formation RCO (id_formation + id_action + id_certifinfo)",
+    description: "**[DEPRECATED]** Id de formation RCO (id_formation + id_action + id_certifinfo)",
   },
   id_formation: {
     index: true,
