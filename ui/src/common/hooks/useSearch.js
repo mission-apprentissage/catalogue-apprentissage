@@ -34,7 +34,6 @@ const getEsCount = async (queries) => {
     query: {
       bool: {
         ...queries,
-        minimum_should_match: 1,
       },
     },
   };
@@ -93,22 +92,14 @@ const getCountEntities = async (base) => {
     countCatalogueNonEligible.filtered = countEsCatalogueNonEligible;
   }
 
-  const paramsG = new window.URLSearchParams({
-    query: JSON.stringify({ published: true, etablissement_reference_catalogue_published: true }),
+  const { count: countTotalCatalogueGeneral } = await getEsCount({
+    must: [{ match: { etablissement_reference_catalogue_published: true } }, { match: { published: true } }],
   });
-  const countTotalCatalogueGeneral = await _get(
-    `${CATALOGUE_API_ENDPOINT}/entity/formations2021/count?${paramsG}`,
-    false
-  );
   countCatalogueGeneral.total = countTotalCatalogueGeneral;
 
-  const paramsNE = new window.URLSearchParams({
-    query: JSON.stringify({ published: true, etablissement_reference_catalogue_published: false }),
+  const { count: countTotalCatalogueNonEligible } = await getEsCount({
+    must: [{ match: { etablissement_reference_catalogue_published: false } }, { match: { published: true } }],
   });
-  const countTotalCatalogueNonEligible = await _get(
-    `${CATALOGUE_API_ENDPOINT}/entity/formations2021/count?${paramsNE}`,
-    false
-  );
   countCatalogueNonEligible.total = countTotalCatalogueNonEligible;
 
   return {
