@@ -138,6 +138,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                         selectAllLabel={fd.selectAllLabel}
                         filters={filters}
                         sortBy={fd.sortBy}
+                        size={fd.size}
                         defaultQuery={
                           !isBaseReconciliationPs
                             ? () => {

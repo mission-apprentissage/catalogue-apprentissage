@@ -21,6 +21,7 @@ const Facet = ({
   defaultQuery,
   transformData,
   customQuery,
+  size,
 }) => {
   let [auth] = useAuth();
   let defaultValue = null;
@@ -86,6 +87,7 @@ const Facet = ({
                 showCount={true}
                 queryFormat="or"
                 missingLabel="(Vide)"
+                size={size}
                 selectAllLabel={selectAllLabel}
                 showCheckbox={true}
                 innerClass={{
