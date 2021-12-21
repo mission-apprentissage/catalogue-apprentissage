@@ -39,7 +39,7 @@ module.exports = () => {
     tryCatch(async (req, res) => {
       const { index } = req.params;
       logger.info(`Es Multi search ${index}`);
-      const result = await esClient.msearch({ index, ...req.query, body: req.body });
+      const result = await esClient.msearch({ index, ...req.query, body: req.body, rest_total_hits_as_int: true });
 
       return res.json(result.body);
     })
