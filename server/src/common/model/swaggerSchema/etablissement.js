@@ -261,16 +261,6 @@ module.exports = {
         default: false,
         description: "L'établissement est trouvé via l'API Entreprise",
       },
-      parcoursup_a_charger: {
-        type: "boolean",
-        default: false,
-        description: "L'établissement doit être ajouter à ParcourSup",
-      },
-      affelnet_a_charger: {
-        type: "boolean",
-        default: false,
-        description: "La formation doit être ajouter à affelnet",
-      },
       entreprise_siren: {
         type: "string",
         default: "null",

@@ -18,4 +18,16 @@ const rebuildIndex = async (index, schema, { skipNotFound, filter } = { skipNotF
   await schema.synchronize(filter);
 };
 
-module.exports.rebuildIndex = rebuildIndex;
+const deleteIndex = async (index) => {
+  let client = getElasticInstance();
+
+  const { body: hasIndex } = await client.indices.exists({ index });
+  if (hasIndex) {
+    logger.info(`Removing '${index}' index...`);
+    await client.indices.delete({ index });
+  } else {
+    logger.info(`'${index}' index doesn't exist...`);
+  }
+};
+
+module.exports = { rebuildIndex, deleteIndex };

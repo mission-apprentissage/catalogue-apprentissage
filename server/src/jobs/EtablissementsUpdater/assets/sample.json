@@ -47,8 +47,6 @@
     "computed_declare_prefecture":"OUI",
     "computed_conventionne":"NON",
     "api_entreprise_reference":true,
-    "parcoursup_a_charger":false,
-    "affelnet_a_charger":false,
     "entreprise_siren":"412662090",
     "entreprise_procedure_collective":false,
     "entreprise_enseigne":null,

@@ -438,8 +438,6 @@ test("opens rapprochement modal", async () => {
           capacite: null,
           duree: null,
           annee: null,
-          parcoursup_reference: false,
-          parcoursup_a_charger: false,
           parcoursup_statut: "à publier",
           parcoursup_statut_history: [],
           lieu_formation_adresse: "44 boulevard Jean Moulin Immeuble Bellevue - Jean Moulin",

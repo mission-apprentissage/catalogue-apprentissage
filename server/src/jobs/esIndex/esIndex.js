@@ -1,4 +1,4 @@
-const { rebuildIndex } = require("../../common/utils/esUtils");
+const { rebuildIndex, deleteIndex } = require("../../common/utils/esUtils");
 const { Formation, PsFormation, Etablissement } = require("../../common/model/index");
 
 const rebuildEsIndex = async (index, skipNotFound = false, filter = {}) => {
@@ -22,4 +22,4 @@ const rebuildEsIndex = async (index, skipNotFound = false, filter = {}) => {
   }
 };
 
-module.exports = { rebuildEsIndex };
+module.exports = { rebuildEsIndex, deleteIndex };

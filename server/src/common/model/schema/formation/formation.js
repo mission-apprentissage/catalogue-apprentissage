@@ -36,7 +36,7 @@ const formationSchema = {
     default: null,
     description: "Code formation diplome d'entrée (année 1 de l'apprentissage)",
   },
-  mefs_10: {
+  affelnet_mefs_10: {
     type: [Object],
     default: [],
     description: "Tableau de Code MEF 10 caractères et modalités (filtrés pour Affelnet si applicable)",
@@ -284,16 +284,6 @@ const formationSchema = {
     noIndex: true,
     description: "Email du contact pour cette formation",
   },
-  parcoursup_reference: {
-    type: Boolean,
-    default: false,
-    description: "La formation est présent sur parcourSup",
-  },
-  parcoursup_a_charger: {
-    type: Boolean,
-    default: false,
-    description: "La formation doit être ajouter à ParcourSup",
-  },
   parcoursup_statut: {
     type: String,
     enum: [
@@ -325,16 +315,6 @@ const formationSchema = {
     type: String,
     default: null,
     description: "ids ParcourSup",
-  },
-  affelnet_reference: {
-    type: Boolean,
-    default: false,
-    description: "La formation est présent sur affelnet",
-  },
-  affelnet_a_charger: {
-    type: Boolean,
-    default: false,
-    description: "**[DEPRECATED]** La formation doit être ajouter à affelnet",
   },
   affelnet_statut: {
     type: String,
@@ -463,7 +443,7 @@ const formationSchema = {
     index: true,
     type: String,
     default: null,
-    description: "Id de formation RCO (id_formation + id_action + id_certifinfo)",
+    description: "**[DEPRECATED]** Id de formation RCO (id_formation + id_action + id_certifinfo)",
   },
   id_formation: {
     index: true,

@@ -82,12 +82,12 @@ export const DescriptionBlock = ({ formation, pendingFormation }) => {
             </Text>{" "}
             <InfoTooltip description={helpText.formation.mef} />
           </Text>
-          {displayedFormation?.mefs_10?.length > 0 && (
+          {displayedFormation?.affelnet_mefs_10?.length > 0 && (
             <>
               <Text mb={4}>
                 Codes MEF 10 caractères dans le périmètre <i>Affelnet</i> :{" "}
                 <Text as="span" variant="highlight">
-                  {displayedFormation?.mefs_10?.map(({ mef10 }) => mef10).join(", ")}
+                  {displayedFormation?.affelnet_mefs_10?.map(({ mef10 }) => mef10).join(", ")}
                 </Text>
               </Text>
               {formation?.affelnet_infos_offre && (
