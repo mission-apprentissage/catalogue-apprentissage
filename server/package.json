@@ -26,7 +26,7 @@
     "psup:prepare-2021": "standalone=true node src/jobs/parcoursup/prepare.js",
     "psup:import-2021": "standalone=true node src/jobs/parcoursup/importer.js",
     "psup:perimetre": "standalone=true node src/jobs/parcoursup/perimetre/index.js",
-    "psup:coverage-2021": "standalone=true node src/jobs/parcoursup/coverage.js",
+    "psup:coverage": "standalone=true node src/jobs/parcoursup/coverage.js",
     "psup:report": "standalone=true node src/jobs/parcoursup/reportRejected.js",
     "psup:token": "node src/jobs/oneshot/generateParcoursupToken/index.js",
     "psup:export": "standalone=true node src/jobs/parcoursup/export/index.js",

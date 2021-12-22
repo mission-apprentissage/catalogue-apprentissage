@@ -10,7 +10,7 @@ const updateMatchedFormation = async ({ formation: previousFormation, match }) =
 
   if (match.data_length === 1 && match.matching_strength >= "6") {
     statut_reconciliation = "AUTOMATIQUE";
-  } else if (match.data_length <= 3) {
+  } else if (match.data_length > 0 && match.data_length <= 3) {
     statut_reconciliation = "A_VERIFIER";
   }
 
@@ -50,11 +50,23 @@ const updateMatchedFormation = async ({ formation: previousFormation, match }) =
 
 const formationsCoverage = async (filter = {}, limit = 10) => {
   await paginator(PsFormation, { filter, limit, lean: true }, async (formation) => {
-    const match = await getParcoursupCoverage(formation, { published: true, tags: "2021" }); // TODO CHECK TAGS
+    const match = await getParcoursupCoverage(formation);
 
-    if (!match) return;
+    let payload;
+    if (!match) {
+      // remove previous matchs if any
+      payload = {
+        formation,
+        match: {
+          matching_strength: null,
+          data_length: 0,
+          data: [],
+        },
+      };
+    } else {
+      payload = { formation, match };
+    }
 
-    const payload = { formation, match };
     await updateMatchedFormation(payload);
   });
 };
