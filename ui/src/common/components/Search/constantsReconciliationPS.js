@@ -1,18 +1,17 @@
 import { escapeDiacritics } from "../../utils/downloadUtils";
 
-const FILTERS = (context) => {
-  const filters = [
-    `QUERYBUILDER`,
-    `SEARCH`,
+const FILTERS = () => {
+  return [
+    "QUERYBUILDER",
+    "SEARCH",
     "libelle_formation",
-    `nom_academie`,
-    `matching_type`,
+    "nom_academie",
+    "matching_type",
     "statut_reconciliation",
-    `rncp`,
-    `cfd`,
-    `statuts`,
+    "rncp",
+    "cfd",
+    "statuts",
   ];
-  return filters;
 };
 
 const columnsDefinition = [
@@ -181,6 +180,16 @@ const columnsDefinition = [
     width: 200,
     exportable: true,
     editable: false,
+  },
+  {
+    Header: "Formation catalogue toujours publiée ?",
+    accessor: "is_orphan",
+    width: 200,
+    exportable: true,
+    editable: false,
+    formatter: (value) => {
+      return value ? "Formation rapprochée absente du catalogue" : "OUI";
+    },
   },
 ];
 

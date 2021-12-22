@@ -12,10 +12,10 @@ const serializeObject = (columns, obj) => {
 
   columns.forEach((c) => {
     let value = c.fieldName.split(".").reduce((acc, curr) => acc[curr], obj);
-    if (!value) {
-      value = "";
-    } else if (typeof c.formatter === "function") {
+    if (typeof c.formatter === "function") {
       value = c.formatter(value, obj);
+    } else if (!value) {
+      value = "";
     } else if (Array.isArray(value)) {
       if (value.length && typeof value[0] === "object") {
         value = JSON.stringify(value);
