@@ -136,11 +136,6 @@ const psFormationSchema = {
     enum: ["AUTOMATIQUE", "VALIDE", "REJETE", "INCONNU", "A_VERIFIER"],
     description: "Statut",
   },
-  id_reconciliation: {
-    type: String,
-    default: null,
-    description: "id mongo reconciliation",
-  },
   validated_formation_ids: {
     type: [String],
     default: [],
@@ -292,6 +287,12 @@ const psFormationSchema = {
     type: String,
     default: null,
     description: "TYPE_RAPPROCHEMENT_MNA",
+  },
+  is_orphan: {
+    type: Boolean,
+    default: false,
+    description:
+      "vaut true si aucune formation publiée dans le catalogue ne correspond (utile pour les VALIDE & REJETE)",
   },
 };
 

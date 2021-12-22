@@ -12,6 +12,7 @@ const { diffFormation, buildUpdatesHistory } = require("../common/utils/diffUtil
 const { SandboxFormation, RcoFormation } = require("../../common/model");
 const { getCoordinatesFromAddressData } = require("@mission-apprentissage/tco-service-node");
 const { distanceBetweenCoordinates } = require("../../common/utils/distanceUtils");
+const { findMefsForParcoursup } = require("../../common/utils/parcoursupUtils");
 
 const formationSchema = Joi.object({
   cfd: Joi.string().required(),
@@ -222,11 +223,24 @@ const mnaFormationUpdater = async (
       ...formation?.editedFields,
     };
 
+    // trust rco for duree & annee
+    updatedFormation.duree = rcoFormation?.duree ?? formation.duree;
+    updatedFormation.annee = rcoFormation?.entree_apprentissage ?? formation.annee;
+
+    // filter bcn_mefs_10 with data received from RCO
+    const duree = updatedFormation.duree;
+    const annee = updatedFormation.annee;
+    if (duree && annee && duree !== "X" && annee !== "X") {
+      updatedFormation.bcn_mefs_10 = updatedFormation.bcn_mefs_10?.filter(({ modalite }) => {
+        return modalite.duree === duree && modalite.annee === annee;
+      });
+    }
+
     // try to fill mefs for Affelnet
     // reset field value
-    updatedFormation.mefs_10 = null;
+    updatedFormation.affelnet_mefs_10 = null;
     if (updatedFormation.bcn_mefs_10?.length > 0) {
-      //  filter bcn_mefs_10 to get mefs_10 for affelnet
+      //  filter bcn_mefs_10 to get affelnet_mefs_10 for affelnet
 
       // eslint-disable-next-line no-unused-vars
       const { _id, ...rest } = updatedFormation;
@@ -248,7 +262,6 @@ const mnaFormationUpdater = async (
       await asyncForEach(updatedFormation.bcn_mefs_10, async (mefObj) => {
         await new SandboxFormation({
           ...rest,
-          mef_10_code: mefObj.mef10,
           bcn_mefs_10: [mefObj],
         }).save();
       });
@@ -256,37 +269,37 @@ const mnaFormationUpdater = async (
       // apply perimetre filters against the tmp collection
       // check "à publier" first to have less mefs
       // Add current cle_ministere_educatif to ensure no concurrent access in db
-      let mefs_10 = await findMefsForAffelnet({
+      let affelnet_mefs_10 = await findMefsForAffelnet({
         cle_ministere_educatif: rest.cle_ministere_educatif,
         $or: aPublierRules.map(getQueryFromRule),
       });
 
-      if (!mefs_10) {
-        mefs_10 = await findMefsForAffelnet({
+      if (!affelnet_mefs_10) {
+        affelnet_mefs_10 = await findMefsForAffelnet({
           cle_ministere_educatif: rest.cle_ministere_educatif,
           $or: aPublierSoumisAValidationRules.map(getQueryFromRule),
         });
       }
 
-      if (mefs_10) {
+      if (affelnet_mefs_10) {
         // keep the successful mefs in affelnet field
-        updatedFormation.mefs_10 = mefs_10;
+        updatedFormation.affelnet_mefs_10 = affelnet_mefs_10;
 
         if (
-          mefs_10.length === 1 &&
+          affelnet_mefs_10.length === 1 &&
           (!updatedFormation.affelnet_infos_offre ||
             updatedFormation.affelnet_infos_offre.match(`${updatedFormation.libelle_court} en . an.?$`))
         ) {
-          updatedFormation.affelnet_infos_offre = getInfosOffreLabel(updatedFormation, mefs_10[0]);
-        }
-
-        if (mefs_10.length === 1) {
-          updatedFormation.duree = mefs_10[0].modalite.duree;
-          updatedFormation.annee = mefs_10[0].modalite.annee;
+          updatedFormation.affelnet_infos_offre = getInfosOffreLabel(updatedFormation, affelnet_mefs_10[0]);
         }
       }
 
       await SandboxFormation.deleteMany({ cle_ministere_educatif: rest.cle_ministere_educatif });
+    }
+
+    // try to fill mefs for Parcoursup
+    if (updatedFormation.bcn_mefs_10?.length > 0) {
+      updatedFormation.parcoursup_mefs_10 = findMefsForParcoursup(updatedFormation);
     }
 
     // compute distance between lieu formation & etablissement formateur

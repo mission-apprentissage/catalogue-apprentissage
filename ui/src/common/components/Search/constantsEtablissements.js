@@ -202,20 +202,6 @@ const columnsDefinition = [
     formatter: (value) => escapeDiacritics(value),
   },
   {
-    Header: "A charger dans Affelnet",
-    accessor: "affelnet_a_charger",
-    width: 200,
-    exportable: false,
-    editable: false,
-  },
-  {
-    Header: "A charger dans ParcourSup",
-    accessor: "parcoursup_a_charger",
-    width: 200,
-    exportable: true,
-    editable: false,
-  },
-  {
     Header: "A des formations de niveau 3",
     accessor: "formations_n3",
     width: 200,

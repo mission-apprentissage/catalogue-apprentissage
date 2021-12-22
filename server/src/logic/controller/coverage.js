@@ -55,9 +55,7 @@ const hasAcademy = ({ nom_academie }, academie) => nom_academie === academie;
  * m2 =  uai + (rncp ou cfd)
  * m2' = siret + (rncp ou cfd)
  */
-async function getParcoursupCoverage(formation, { published, tags } = {}) {
-  let params = { published, tags };
-
+async function getParcoursupCoverage(formation) {
   const sirets = [formation.siret_cerfa ?? "", formation.siret_map ?? ""];
   const uais = [
     formation.uai_affilie,
@@ -70,7 +68,7 @@ async function getParcoursupCoverage(formation, { published, tags } = {}) {
 
   const m0 = await getMatch({
     $or: [{ rncp_code: { $in: formation.codes_rncp_mna } }, { cfd_entree: { $in: formation.codes_cfd_mna } }],
-    ...params,
+    published: true,
   });
 
   // strength 2

@@ -1,6 +1,5 @@
 import { escapeDiacritics } from "../../utils/downloadUtils";
 import helpText from "../../../locales/helpText.json";
-import constantsReglesPerimetre from "./constantsReglesPerimetre";
 
 const FILTERS = () => [
   `QUERYBUILDER`,
@@ -30,7 +29,6 @@ const FILTERS = () => [
   "rncp_etablissement_gestionnaire_habilite",
   "rome_codes",
   `rncp_code`,
-  "mef_10_code",
   `parcoursup_statut`,
   `affelnet_statut`,
   "diplome",
@@ -207,13 +205,6 @@ const columnsDefinition = [
     editableInvalid: true,
   },
   {
-    Header: "Code MEF 10 caracteres",
-    accessor: "mef_10_code",
-    width: 400,
-    exportable: true,
-    editable: false,
-  },
-  {
     Header: "Liste MEF rattaches",
     accessor: "bcn_mefs_10",
     width: 200,
@@ -223,7 +214,15 @@ const columnsDefinition = [
   },
   {
     Header: "Liste MEF Affelnet",
-    accessor: "mefs_10",
+    accessor: "affelnet_mefs_10",
+    width: 200,
+    exportable: true,
+    editable: false,
+    formatter: (value) => value.map((x) => x.mef10).join(","),
+  },
+  {
+    Header: "Liste MEF Parcoursup",
+    accessor: "parcoursup_mefs_10",
     width: 200,
     exportable: true,
     editable: false,
@@ -238,20 +237,6 @@ const columnsDefinition = [
     formatter: (value) => escapeDiacritics(value),
   },
   {
-    Header: "Reference dans Affelnet",
-    accessor: "affelnet_reference",
-    width: 200,
-    exportable: false,
-    editable: false,
-  },
-  {
-    Header: "A charger dans Affelnet",
-    accessor: "affelnet_a_charger",
-    width: 200,
-    exportable: false,
-    editable: false,
-  },
-  {
     Header: "Statut Parcoursup",
     accessor: "parcoursup_statut",
     width: 200,
@@ -259,19 +244,6 @@ const columnsDefinition = [
     editable: true,
     formatter: (value) => escapeDiacritics(value),
   },
-  {
-    Header: "Reference dans ParcourSup",
-    accessor: "parcoursup_reference",
-    width: 200,
-    exportable: true,
-    editable: false,
-  },
-  // {
-  //   Header: "A charger dans ParcourSup",
-  //   accessor: "parcoursup_a_charger",
-  //   width: 200,
-  //   editable: false,
-  // },
   {
     Header: "Niveau de la formation",
     accessor: "niveau",
@@ -388,17 +360,6 @@ const columnsDefinition = [
     exportable: true,
     editable: false,
   },
-  // {
-  //   Header: "Certificateurs",
-  //   accessor: "rncp_details.certificateurs",
-  //   width: 200,
-  //   editable: false,
-  //   formatter: (value) =>
-  //     value
-  //       ?.filter(({ certificateur, siret_certificateur }) => certificateur || siret_certificateur)
-  //       .map(({ certificateur, siret_certificateur }) => `${certificateur} (siret: ${siret_certificateur ?? "n/a"})`)
-  //       .join(", "),
-  // },
   {
     Header: "Partenaires",
     accessor: "rncp_details.partenaires",
@@ -525,8 +486,6 @@ const queryBuilderField = [
   { text: "Identifiant Certif Info", value: "id_certifinfo.keyword" },
   { text: "Nda gestionnaire", value: "etablissement_gestionnaire_nda.keyword" },
   { text: "Nda formateur", value: "etablissement_formateur_nda.keyword" },
-
-  ...constantsReglesPerimetre.queryBuilderField,
 ];
 
 const facetDefinition = () => [
@@ -576,6 +535,7 @@ const facetDefinition = () => [
     filterLabel: "Code diplôme",
     selectAllLabel: "Tous",
     sortBy: "asc",
+    size: 5000,
   },
 
   {
@@ -594,6 +554,7 @@ const facetDefinition = () => [
     filterLabel: "Code RNCP",
     selectAllLabel: "Tous",
     sortBy: "count",
+    size: 5000,
   },
   {
     componentId: `tags`,

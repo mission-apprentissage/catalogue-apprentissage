@@ -1,18 +1,17 @@
 import { escapeDiacritics } from "../../utils/downloadUtils";
 
-const FILTERS = (context) => {
-  const filters = [
-    `QUERYBUILDER`,
-    `SEARCH`,
+const FILTERS = () => {
+  return [
+    "QUERYBUILDER",
+    "SEARCH",
     "libelle_formation",
-    `nom_academie`,
-    `matching_type`,
+    "nom_academie",
+    "matching_type",
     "statut_reconciliation",
-    `rncp`,
-    `cfd`,
-    `statuts`,
+    "rncp",
+    "cfd",
+    "statuts",
   ];
-  return filters;
 };
 
 const columnsDefinition = [
@@ -182,6 +181,16 @@ const columnsDefinition = [
     exportable: true,
     editable: false,
   },
+  {
+    Header: "Formation catalogue toujours publiée ?",
+    accessor: "is_orphan",
+    width: 200,
+    exportable: true,
+    editable: false,
+    formatter: (value) => {
+      return value ? "Formation rapprochée absente du catalogue" : "OUI";
+    },
+  },
 ];
 
 const queryBuilderField = [
@@ -214,6 +223,7 @@ const facetDefinition = (context) => {
       filterLabel: "Code diplôme",
       selectAllLabel: "Tous",
       sortBy: "asc",
+      size: 5000,
     },
     {
       componentId: `rncp`,
@@ -222,6 +232,7 @@ const facetDefinition = (context) => {
       filterLabel: "Code RNCP",
       selectAllLabel: "Tous",
       sortBy: "asc",
+      size: 5000,
     },
     {
       componentId: `libelle_formation`,
@@ -230,6 +241,7 @@ const facetDefinition = (context) => {
       filterLabel: "Libellé formation",
       selectAllLabel: "Tous",
       sortBy: "asc",
+      size: 5000,
     },
   ];
 

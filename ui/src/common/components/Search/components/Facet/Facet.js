@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { MultiList } from "@appbaseio/reactivesearch";
 import { Accordion, AccordionButton, AccordionItem, AccordionPanel, Box, Flex, Text } from "@chakra-ui/react";
 import useAuth from "../../../../hooks/useAuth";
@@ -21,6 +21,7 @@ const Facet = ({
   defaultQuery,
   transformData,
   customQuery,
+  size,
 }) => {
   let [auth] = useAuth();
   let defaultValue = null;
@@ -40,6 +41,24 @@ const Facet = ({
       //defaultValue = ["à publier"];
     }
   }
+
+  const renderItem = useCallback(
+    (label, count) => (
+      <Flex justifyContent="space-between" w="full">
+        <Flex pr={2}>
+          <Text as="span" pr={1}>
+            {label}
+          </Text>
+          {helpTextSection?.[label] && <InfoTooltip description={helpTextSection[label]} />}
+        </Flex>
+        <Text as={"span"} color={"grey.500"}>
+          {count}
+        </Text>
+      </Flex>
+    ),
+    [helpTextSection]
+  );
+
   return (
     <Accordion allowMultiple defaultIndex={defaultIndex} bg="#F9F8F6">
       <AccordionItem border="none">
@@ -68,7 +87,7 @@ const Facet = ({
                 showCount={true}
                 queryFormat="or"
                 missingLabel="(Vide)"
-                size={20000}
+                size={size}
                 selectAllLabel={selectAllLabel}
                 showCheckbox={true}
                 innerClass={{
@@ -86,19 +105,7 @@ const Facet = ({
                 transformData={transformData}
                 customQuery={customQuery}
                 sortBy={sortBy}
-                renderItem={(label, count) => (
-                  <Flex justifyContent="space-between" w="full">
-                    <Flex pr={2}>
-                      <Text as="span" pr={1}>
-                        {label}
-                      </Text>
-                      {helpTextSection?.[label] && <InfoTooltip description={helpTextSection[label]} />}
-                    </Flex>
-                    <Text as={"span"} color={"grey.500"}>
-                      {count}
-                    </Text>
-                  </Flex>
-                )}
+                renderItem={helpTextSection ? renderItem : null}
               />
             </AccordionPanel>
           </>

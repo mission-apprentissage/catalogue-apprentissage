@@ -40,7 +40,6 @@ const reportRejected = async () => {
         matching_mna_parcoursup_statuts,
         etat_reconciliation,
         statut_reconciliation,
-        id_reconciliation,
         matching_rejete_updated,
         statuts_history,
         matching_type,
@@ -52,10 +51,6 @@ const reportRejected = async () => {
           ...item,
           matching_mna_formation: item.matching_mna_formation.map(
             ({
-              // parcoursup_reference,
-              // parcoursup_a_charger,
-              // affelnet_reference,
-              // affelnet_a_charger,
               // etablissement_reference,
               // etablissement_gestionnaire_complement_adresse,
               // etablissement_formateur_complement_adresse,

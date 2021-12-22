@@ -1,19 +1,16 @@
 const { getParcoursupCoverage } = require("../../logic/controller/coverage");
 const { paginator } = require("../../common/utils/paginator");
-const { PsFormation } = require("../../common/model");
+const { PsFormation, Formation } = require("../../common/model");
 const { runScript } = require("../scriptWrapper");
 const logger = require("../../common/logger");
-const cluster = require("cluster");
 const { diffFormation, buildUpdatesHistory } = require("../../logic/common/utils/diffUtils");
-
-const numCPUs = 4;
 
 const updateMatchedFormation = async ({ formation: previousFormation, match }) => {
   let statut_reconciliation = "INCONNU";
 
   if (match.data_length === 1 && match.matching_strength >= "6") {
     statut_reconciliation = "AUTOMATIQUE";
-  } else if (match.data_length <= 3) {
+  } else if (match.data_length > 0 && match.data_length <= 3) {
     statut_reconciliation = "A_VERIFIER";
   }
 
@@ -51,127 +48,92 @@ const updateMatchedFormation = async ({ formation: previousFormation, match }) =
   });
 };
 
-const formation = async (filter = {}, limit = 10, maxItems = 100, offset = 0) => {
-  PsFormation.pauseAllMongoosaticHooks();
-  await paginator(
-    PsFormation,
-    { filter, limit, maxItems, offset, lean: true, showProgress: false },
-    async (formation, index, total) => {
-      if (index % 100 === 0) {
-        console.log(`running coverage on ${index}/${total}`);
-      }
+const formationsCoverage = async (filter = {}, limit = 10) => {
+  await paginator(PsFormation, { filter, limit, lean: true }, async (formation) => {
+    const match = await getParcoursupCoverage(formation);
 
-      let match = await getParcoursupCoverage(formation, { published: true, tags: "2021" }); // TO CHECK TAGS
-
-      if (!match) return;
-
-      const payload = { formation, match };
-      await updateMatchedFormation(payload);
+    let payload;
+    if (!match) {
+      // remove previous matchs if any
+      payload = {
+        formation: { ...formation, is_orphan: false },
+        match: {
+          matching_strength: null,
+          data_length: 0,
+          data: [],
+        },
+      };
+    } else {
+      payload = { formation: { ...formation, is_orphan: false }, match };
     }
-  );
+
+    await updateMatchedFormation(payload);
+  });
 };
 
-const psCoverage = async (filter = {}, limit = 10, maxItems = 100, offset = 0) => {
-  logger.info("Start formation coverage");
-  await formation(filter, limit, maxItems, offset);
-  return "Ok";
+const checkPublished = async (filter = {}, limit = 10) => {
+  let countValideOrphans = 0;
+  let countRejeteOrphans = 0;
+
+  await paginator(PsFormation, { filter, limit }, async (formation) => {
+    // case "VALIDE"
+    // --> findById check published if yes do nothing, if no delete validated_formation_ids & change VALIDE to A_VERIFIER ?
+    if (formation.statut_reconciliation === "VALIDE") {
+      const ids = formation.validated_formation_ids;
+      const found = await Formation.findOne({ _id: { $in: ids }, published: true });
+      if (!found) {
+        countValideOrphans += 1;
+        formation.is_orphan = true;
+      } else {
+        formation.is_orphan = false;
+      }
+      formation.save();
+      return;
+    }
+
+    // case REJETE
+    // --> findById check published if yes do nothing, if NO published in matching, change REJETE to A_VERIFIER ?
+    if (formation.statut_reconciliation === "REJETE") {
+      const ids = formation.matching_mna_formation.map(({ _id }) => _id);
+      const found = await Formation.findOne({ _id: { $in: ids }, published: true });
+      if (!found) {
+        countRejeteOrphans += 1;
+        formation.is_orphan = true;
+      } else {
+        formation.is_orphan = false;
+      }
+      formation.save();
+    }
+  });
+
+  logger.info(`VALIDE without parent : ${countValideOrphans}`);
+  logger.info(`REJETE without parent : ${countRejeteOrphans}`);
 };
 
-const run = async () => {
-  if (cluster.isMaster) {
-    logger.info("Start Parcoursup coverage");
+const psCoverage = async () => {
+  logger.info("Start Parcoursup coverage");
 
-    console.log(`Master ${process.pid} is running`);
+  PsFormation.pauseAllMongoosaticHooks();
 
-    const filters = { statut_reconciliation: { $nin: ["VALIDE", "REJETE"] } };
-    const args = process.argv.slice(2);
-    const limitArg = args.find((arg) => arg.startsWith("--limit"))?.split("=")?.[1];
-    const limit = limitArg ? Number(limitArg) : 1;
+  const filtersCheckPublished = { statut_reconciliation: { $in: ["VALIDE", "REJETE"] } };
+  const allIdsCheckPublished = await PsFormation.distinct("_id", { ...filtersCheckPublished });
+  const activeFilterCheckPublished = { _id: { $in: allIdsCheckPublished } };
 
-    runScript(async () => {
-      let activeFilter = { ...filters };
-      const { pages, total } = await PsFormation.paginate(activeFilter, { limit, select: { _id: 1 } });
+  await checkPublished(activeFilterCheckPublished);
 
-      const allIds = await PsFormation.distinct("_id", { ...filters });
-      activeFilter = { _id: { $in: allIds } };
+  const filters = { statut_reconciliation: { $nin: ["VALIDE", "REJETE"] } };
+  const allIds = await PsFormation.distinct("_id", { ...filters });
+  const activeFilter = { _id: { $in: allIds } };
 
-      const halfItems = Math.floor(pages / numCPUs) * limit;
+  await formationsCoverage(activeFilter);
 
-      // Fork workers.
-      for (let i = 0; i < numCPUs; i++) {
-        cluster.fork();
-      }
-
-      let pOrder = {};
-      let order = 0;
-      let pResult = {};
-      for (const id in cluster.workers) {
-        switch (order) {
-          case 0:
-            pOrder[cluster.workers[id].process.pid] = { offset: 0, maxItems: halfItems };
-            break;
-          case numCPUs - 1:
-            pOrder[cluster.workers[id].process.pid] = { offset: halfItems * order, maxItems: total };
-            break;
-          default:
-            pOrder[cluster.workers[id].process.pid] = {
-              offset: halfItems * order,
-              maxItems: halfItems * (order + 1),
-            };
-            break;
-        }
-        pResult[cluster.workers[id].process.pid] = { result: null };
-        order++;
-        cluster.workers[id].on("message", (message) => {
-          console.log(`Results send from ${message.from}`);
-          pResult[message.from].result = message.result;
-          cluster.workers[id].send({
-            from: "master",
-            type: "end",
-          });
-        });
-      }
-
-      cluster.on("online", (worker) => {
-        console.log("Worker " + worker.process.pid + " is online");
-        worker.send({
-          from: "master",
-          type: "start",
-          activeFilter,
-          limit,
-          maxItems: pOrder[worker.process.pid].maxItems,
-          offset: pOrder[worker.process.pid].offset,
-        });
-      });
-      let countWorkerExist = 1;
-      cluster.on("exit", async (worker) => {
-        console.log(`worker ${worker.process.pid} died`);
-        if (countWorkerExist === numCPUs) {
-          runScript(async () => {
-            logger.info("End Parcoursup coverage");
-          });
-        } else {
-          countWorkerExist += 1;
-        }
-      });
-    });
-  } else {
-    process.on("message", async (message) => {
-      if (message.type === "start") {
-        runScript(async () => {
-          console.log(process.pid, message);
-          const result = await psCoverage(message.activeFilter, message.limit, message.maxItems, message.offset);
-          process.send({
-            from: process.pid,
-            result,
-          });
-        });
-      } else if (message.type === "end") {
-        // eslint-disable-next-line no-process-exit
-        process.exit(0);
-      }
-    });
-  }
+  PsFormation.startAllMongoosaticHooks();
 };
 
-run();
+module.exports = { psCoverage };
+
+if (process.env.standalone) {
+  runScript(async () => {
+    await psCoverage();
+  });
+}

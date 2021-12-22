@@ -124,9 +124,6 @@ const formatToMnaFormation = (rcoFormation) => {
 
     duree: rcoFormation.duree,
     annee: rcoFormation.entree_apprentissage,
-
-    // TODO change AFF mef selection rule ?
-    // TODO create PS mef selection rule ?
   };
 };
 

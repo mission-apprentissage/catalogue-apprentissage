@@ -33,16 +33,17 @@ module.exports = {
         default: "null",
         description: "Code formation diplome d'entrée (année 1 de l'apprentissage)",
       },
-      mef_10_code: {
-        type: "string",
-        default: "null",
-        description: "Code MEF 10 caractères",
-      },
-      mefs_10: {
+      affelnet_mefs_10: {
         type: "array",
         items: {},
         default: [],
         description: "Tableau de Code MEF 10 caractères et modalités (filtrés pour Affelnet si applicable)",
+      },
+      parcoursup_mefs_10: {
+        type: "array",
+        items: {},
+        default: [],
+        description: "Tableau de Code MEF 10 caractères et modalités (filtrés pour Parcoursup si applicable)",
       },
       nom_academie: {
         type: "string",
@@ -296,16 +297,6 @@ module.exports = {
         default: "null",
         description: "Année de la formation (cursus)",
       },
-      parcoursup_reference: {
-        type: "boolean",
-        default: false,
-        description: "La formation est présent sur parcourSup",
-      },
-      parcoursup_a_charger: {
-        type: "boolean",
-        default: false,
-        description: "La formation doit être ajouter à ParcourSup",
-      },
       parcoursup_statut: {
         type: "string",
         enum: [
@@ -336,16 +327,6 @@ module.exports = {
         type: "string",
         default: "null",
         description: "ids ParcourSup",
-      },
-      affelnet_reference: {
-        type: "boolean",
-        default: false,
-        description: "La formation est présent sur affelnet",
-      },
-      affelnet_a_charger: {
-        type: "boolean",
-        default: false,
-        description: "**[DEPRECATED]** La formation doit être ajouter à affelnet",
       },
       affelnet_statut: {
         type: "string",
@@ -466,7 +447,7 @@ module.exports = {
       id_rco_formation: {
         type: "string",
         default: "null",
-        description: "Id de formation RCO (id_formation + id_action + id_certifinfo)",
+        description: "**[DEPRECATED]** Id de formation RCO (id_formation + id_action + id_certifinfo)",
       },
       id_formation: {
         type: "string",
