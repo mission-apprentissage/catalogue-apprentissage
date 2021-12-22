@@ -40,7 +40,6 @@ const reportRejected = async () => {
         matching_mna_parcoursup_statuts,
         etat_reconciliation,
         statut_reconciliation,
-        id_reconciliation,
         matching_rejete_updated,
         statuts_history,
         matching_type,

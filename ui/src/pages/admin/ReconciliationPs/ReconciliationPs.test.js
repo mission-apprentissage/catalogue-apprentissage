@@ -459,7 +459,6 @@ test("opens rapprochement modal", async () => {
       matching_mna_parcoursup_statuts: ["à publier"],
       etat_reconciliation: true,
       statut_reconciliation: "AUTOMATIQUE",
-      id_reconciliation: "6138ac992e5f18469236f169",
       matching_rejete_updated: false,
       matching_rejete_raison: null,
       statuts_history: [],
