@@ -50,7 +50,7 @@ const updateMatchedFormation = async ({ formation: previousFormation, match }) =
 
 const formationsCoverage = async (filter = {}, limit = 10) => {
   await paginator(PsFormation, { filter, limit, lean: true }, async (formation) => {
-    const match = await getParcoursupCoverage(formation, { published: true, tags: "2021" }); // TODO CHECK TAGS
+    const match = await getParcoursupCoverage(formation);
 
     let payload;
     if (!match) {
