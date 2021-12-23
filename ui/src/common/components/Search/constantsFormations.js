@@ -33,6 +33,7 @@ const FILTERS = () => [
   `affelnet_statut`,
   "diplome",
   "tags",
+  "annee",
 ];
 
 const columnsDefinition = [

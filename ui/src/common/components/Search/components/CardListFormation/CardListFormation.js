@@ -4,7 +4,7 @@ import { hasAccessTo } from "../../../../utils/rolesUtils";
 import useAuth from "../../../../hooks/useAuth";
 import { StatusBadge } from "../../../StatusBadge";
 import { Box, Flex, Heading, Link, Text } from "@chakra-ui/react";
-import { ArrowRightLine } from "../../../../../theme/components/icons";
+import { ArrowRightLine, InfoCircle } from "../../../../../theme/components/icons";
 
 export const CardListFormation = ({ data }) => {
   let [auth] = useAuth();
@@ -36,11 +36,21 @@ export const CardListFormation = ({ data }) => {
             </Flex>
             <ArrowRightLine alignSelf="center" color="bluefrance" boxSize={4} />
           </Flex>
-          {data.ids_action?.length > 0 && (
-            <Text textStyle="xs" mt={4}>
-              identifiant actions Carif Oref: {data.ids_action.join(",")}
-            </Text>
-          )}
+          <Flex justifyContent="space-between">
+            {data.ids_action?.length > 0 && (
+              <Text textStyle="xs" mt={4}>
+                identifiant actions Carif Oref: {data.ids_action.join(",")}
+              </Text>
+            )}
+            {data.annee === "X" && (
+              <Flex textStyle="xs" mt={4} alignItems="center">
+                <InfoCircle />
+                <Text as={"span"} ml={1}>
+                  Année d'entrée en apprentissage non collectée
+                </Text>
+              </Flex>
+            )}
+          </Flex>
         </Box>
       </Box>
     </Link>
