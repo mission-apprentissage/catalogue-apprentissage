@@ -4,12 +4,98 @@ import { Link } from "@chakra-ui/react";
 const changelog = {
   list: [
     {
-      version: "5.2.0",
+      version: "5.3.0",
       date: "Prochainement",
       about: `<h4>À venir</h4>`,
       fixes: [],
       features: [],
       improvements: [],
+    },
+    {
+      version: "5.2.1",
+      date: "Le 23 Décembre 2021",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [
+        "    Module de rapprochement des formations Catalogue et Parcoursup, à l'usage des services académiques : correction d'une erreur qui ne mettait pas à jour les correspondances après une annulation de rapprochement rejeté ou validé (avec pour effet de diriger sur des pages introuvables).",
+      ],
+      features: [],
+      improvements: [],
+    },
+    {
+      version: "5.2.0",
+      date: "Le 22 Décembre 2021",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [
+        "Module de rapprochement des formations Catalogue et Parcoursup, à l'usage des services académiques : les évolutions de correspondances entre fiches (d'une correspondance faible à nulle par exemple) ne se mettaient pas à jour. Avec pour conséquence des rapprochements qui ne devaient plus être exposés, et des liens vers des pages inconnues (404) ",
+        "Module de rapprochement des formations Catalogue et Parcoursup, à l'usage des services académiques : les formations 2022 étaient filtrées par erreur dans le module de rapprochement. Le filtre a été supprimé, avec pour conséquence 184 formations supplémentaires à rapprocher, et une baisse des formations inconnues (passant de 895 à 709)",
+        "Paramétrage d'un code formation diplôme (01025409) qui était sans correspondance de niveau de sortie (4-EU)",
+      ],
+      features: [
+        "Flux de données du catalogue vers Parcoursup : affectation des codes MEF 10 uniquement pour certains types de formation (BTS, BTSA, MC de niveau 4, CSA de niveau 4). Ces codes MEF étant fiabilisés dans la base centrale des nomenclatures. Pour les autres types de formation, c'est le RNCP qui est utilisé. Et en l'absence de RNCP, c'est le CFD qui est utilisé.",
+      ],
+      improvements: ["Amélioration de performances d'affichage du catalogue"],
+    },
+    {
+      version: "5.1.9",
+      date: "Le 21 Décembre 2021",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [
+        "Liste des formations — Correction d'une erreur sur les compteurs de nombre de formations, qui étaient plafonnés à 10000 dans certains cas.",
+      ],
+      features: [],
+      improvements: [],
+    },
+    {
+      version: "5.1.7",
+      date: "Le 16 Décembre 2021",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [
+        "Liste des organismes / Fiches établissement : correction d'une anomalie d'affichage de la date de création de l'établissement.",
+      ],
+      features: [],
+      improvements: [],
+    },
+    {
+      version: "5.1.6",
+      date: "Le 15 Décembre 2021",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [
+        "Fiches formation — Correction d'une erreur qui permettait d'accéder, via l'URL, à des formations archivées. Les liens pointent maintenant vers des pages introuvables (404)",
+      ],
+      features: [],
+      improvements: [
+        "Module de rapprochement des formations Catalogue et Parcoursup, à l'usage des services académiques — Ajout d'un critère permettant d'établir plus de rapprochements entre les formations enregistrées dans Parcoursup et celles du catalogue : (CFD ou RNCP) et UAI ; (CFD ou RNCP) et Siret",
+      ],
+    },
+    {
+      version: "5.1.5",
+      date: "Le 15 Décembre 2021",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [
+        "Fiches établissement / Qualiopi — Correction d'une erreur qui empêchait de mettre à jour les informations Qualiopi sur les établissements sans offre de formation associée sur le catalogue.",
+      ],
+      features: [],
+      improvements: [],
+    },
+    {
+      version: "5.1.3",
+      date: "Le 14 Décembre 2021",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [
+        "Module de rapprochement des formations Catalogue et Parcoursup, à l'usage des services académiques — Correction d'erreurs isolées sur des formations étiquetées à publiées, ni figurant pas dans Parcoursup",
+        "Module de rapprochement des formations Catalogue et Parcoursup, à l'usage des services académiques — Correction d'une erreur qui empêchait les actions de rapprochements lorsqu'une formation Parcoursup était mise en correspondance avec plusieurs formations catalogue (l'action effectuée ne s'appliquait que sur la première formation catalogue remontée, mais pas sur les suivantes)",
+      ],
+      features: [],
+      improvements: [
+        'Données, interfaces, exports — Remplacement des précédent "ID_RCO" (identifiants de formations utilisés par le réseau des Carif-Oref) par la nouvelle "Clé ministères éducatifs", à divers endroits : fiches formations, rapports automatisés, exports de fichiers csv, module de rapprochement, etc.',
+      ],
     },
     {
       version: "5.1.0",
