@@ -564,14 +564,14 @@ const facetDefinition = () => [
     selectAllLabel: "Toutes",
     sortBy: "asc",
   },
-  // {
-  //   componentId: `ids_action`,
-  //   dataField: "ids_action.keyword",
-  //   title: "Identifiant action CO",
-  //   filterLabel: "Identifiant action CO",
-  //   selectAllLabel: "Tous",
-  //   sortBy: "count",
-  // },
+  {
+    componentId: `annee`,
+    dataField: "annee.keyword",
+    title: "Année d'entrée en apprentissage",
+    filterLabel: "Année",
+    selectAllLabel: "Toutes",
+    sortBy: "asc",
+  },
 ];
 
 const dataSearch = {
