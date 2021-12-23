@@ -1,7 +1,7 @@
 const express = require("express");
 const Boom = require("boom");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
-const { toBePublishedRules } = require("../../common/utils/referenceUtils");
+const { getPublishedRules } = require("../../common/utils/referenceUtils");
 const { getQueryFromRule, titresRule } = require("../../common/utils/rulesUtils");
 const { getNiveauxDiplomesTree } = require("@mission-apprentissage/tco-service-node");
 const { ReglePerimetre, Formation } = require("../../common/model");
@@ -12,12 +12,17 @@ module.exports = () => {
   router.get(
     "/perimetre/niveau",
     tryCatch(async (req, res) => {
+      const plateforme = req.query?.plateforme;
+      if (!plateforme) {
+        throw Boom.badRequest();
+      }
+
       const tree = await getNiveauxDiplomesTree();
 
       const diplomesCounts = await Formation.aggregate([
         {
           $match: {
-            ...toBePublishedRules,
+            ...getPublishedRules(plateforme),
             ...titresRule,
           },
         },
@@ -96,17 +101,18 @@ module.exports = () => {
   router.get(
     "/perimetre/regle/count",
     tryCatch(async (req, res) => {
+      const plateforme = req.query?.plateforme;
       const niveau = req.query?.niveau;
       const diplome = req.query?.diplome;
       const regle_complementaire = req.query?.regle_complementaire;
       const num_academie = req.query?.num_academie === "null" ? null : req.query?.num_academie;
 
-      if (!niveau) {
+      if (!plateforme || !niveau) {
         throw Boom.badRequest();
       }
 
       const result = await Formation.countDocuments(
-        getQueryFromRule({ niveau, diplome, regle_complementaire, num_academie })
+        getQueryFromRule({ plateforme, niveau, diplome, regle_complementaire, num_academie })
       );
       return res.json(result);
     })

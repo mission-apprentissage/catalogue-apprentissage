@@ -93,21 +93,22 @@ export const getRules = async ({ plateforme }) => {
   return await _get(`${reglesUrl}?plateforme=${plateforme}`, false);
 };
 
-export const getNiveaux = async () => {
-  const niveauxURL = `${endpointNewFront}/v1/entity/perimetre/niveau`;
+export const getNiveaux = async ({ plateforme }) => {
+  const niveauxURL = `${endpointNewFront}/v1/entity/perimetre/niveau?plateforme=${plateforme}`;
   return await _get(niveauxURL, false);
 };
 
-export const useNiveaux = () => {
-  return useQuery("niveaux", () => getNiveaux(), {
+export const useNiveaux = ({ plateforme }) => {
+  return useQuery(`niveaux-${plateforme}`, () => getNiveaux({ plateforme }), {
     refetchOnWindowFocus: false,
     staleTime: 60 * 60 * 1000, // 1 hour
   });
 };
 
-export const getCount = async ({ niveau, diplome, regle_complementaire, academie }) => {
+export const getCount = async ({ plateforme, niveau, diplome, regle_complementaire, academie }) => {
   const countUrl = `${endpointNewFront}/v1/entity/perimetre/regle/count`;
   const params = new URLSearchParams({
+    plateforme,
     niveau,
     diplome,
     ...(regle_complementaire && { regle_complementaire }),

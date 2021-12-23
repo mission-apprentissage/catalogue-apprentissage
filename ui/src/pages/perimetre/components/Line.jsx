@@ -55,7 +55,7 @@ export const Line = ({
   useEffect(() => {
     async function run() {
       try {
-        const count = await getCount({ niveau, diplome, regle_complementaire, academie });
+        const count = await getCount({ plateforme, niveau, diplome, regle_complementaire, academie });
         setLineCount(count ?? 0);
       } catch (e) {
         console.error(e);
@@ -66,7 +66,7 @@ export const Line = ({
     } else {
       setLineCount(count ?? 0);
     }
-  }, [count, diplome, niveau, regle_complementaire, nom_regle_complementaire, shouldFetchCount, academie]);
+  }, [plateforme, count, diplome, niveau, regle_complementaire, nom_regle_complementaire, shouldFetchCount, academie]);
 
   return (
     <Box
