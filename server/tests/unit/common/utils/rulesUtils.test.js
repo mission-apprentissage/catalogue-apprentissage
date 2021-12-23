@@ -90,7 +90,7 @@ describe(__filename, () => {
         published: true,
       };
 
-      let result = getQueryFromRule({ niveau: "4", diplome: "BTS", num_academie: "10" });
+      let result = getQueryFromRule({ plateforme: "affelnet", niveau: "4", diplome: "BTS", num_academie: "10" });
       assert.deepStrictEqual(result, expected);
     });
   });

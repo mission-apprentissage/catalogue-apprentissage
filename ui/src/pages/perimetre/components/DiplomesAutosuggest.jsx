@@ -4,8 +4,8 @@ import { Input, InputGroup, InputRightElement } from "@chakra-ui/react";
 import { useNiveaux } from "../../../common/api/perimetre";
 import { CloseCircleLine } from "../../../theme/components/icons";
 
-export const DiplomesAutosuggest = ({ onSuggestionSelected }) => {
-  const { data: niveauxData } = useNiveaux();
+export const DiplomesAutosuggest = ({ plateforme, onSuggestionSelected }) => {
+  const { data: niveauxData } = useNiveaux({ plateforme });
 
   const diplomes = niveauxData.reduce(
     (acc, { niveau, diplomes }) => [...acc, ...diplomes.map((diplome) => ({ ...diplome, niveau: niveau.value }))],
