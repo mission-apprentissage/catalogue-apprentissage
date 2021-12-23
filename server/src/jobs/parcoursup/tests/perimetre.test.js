@@ -50,6 +50,7 @@ describe(__filename, () => {
       niveau: "6 (Licence, BUT...)",
       diplome: "Licence",
       parcoursup_statut: "hors périmètre",
+      annee: "1",
     });
     await Formation.create({
       published: true,
@@ -57,6 +58,7 @@ describe(__filename, () => {
       niveau: "6 (Licence, BUT...)",
       diplome: "Licence",
       parcoursup_statut: "hors périmètre",
+      annee: "1",
     });
     await Formation.create({
       published: true,
@@ -64,6 +66,7 @@ describe(__filename, () => {
       niveau: "6 (Licence, BUT...)",
       diplome: "Licence Agri",
       parcoursup_statut: "à publier (vérifier accès direct postbac)",
+      annee: "1",
     });
     await Formation.create({
       published: true,
@@ -71,6 +74,7 @@ describe(__filename, () => {
       niveau: "5 (BTS, DEUST...)",
       diplome: "BTS",
       parcoursup_statut: "à publier (vérifier accès direct postbac)",
+      annee: "1",
     });
     await Formation.create({
       published: true,
@@ -79,6 +83,7 @@ describe(__filename, () => {
       diplome: "BUT",
       num_academie: "12",
       parcoursup_statut: "hors périmètre",
+      annee: "1",
     });
     await Formation.create({
       published: true,
@@ -87,6 +92,7 @@ describe(__filename, () => {
       diplome: "BUT",
       num_academie: "14",
       parcoursup_statut: "hors périmètre",
+      annee: "1",
     });
     await Formation.create({
       published: true,
@@ -95,6 +101,7 @@ describe(__filename, () => {
       diplome: "BUT",
       num_academie: "14",
       parcoursup_statut: "publié",
+      annee: "1",
     });
     await Formation.create({
       published: true,
@@ -102,6 +109,7 @@ describe(__filename, () => {
       niveau: "7 (Master, titre ingénieur...)",
       diplome: "Master",
       parcoursup_statut: "en attente de publication",
+      annee: "1",
     });
   });
 

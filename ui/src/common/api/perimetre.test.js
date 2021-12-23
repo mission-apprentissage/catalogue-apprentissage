@@ -37,7 +37,7 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 test("test custom hook", async () => {
-  const { result, waitFor } = renderHook(() => useNiveaux(), { wrapper });
+  const { result, waitFor } = renderHook(() => useNiveaux({ plateforme: "parcoursup" }), { wrapper });
 
   await waitFor(() => result.current.isSuccess);
 

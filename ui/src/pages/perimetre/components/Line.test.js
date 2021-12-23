@@ -103,6 +103,7 @@ test("renders Line for academie & show rule", async () => {
     diplome: "BTS",
     niveau: "5 (BTS, DEUST...)",
     regle_complementaire: "{}",
+    plateforme: "parcoursup",
   });
 
   await waitFor(() => expect(queryByText("123")).toBeInTheDocument());

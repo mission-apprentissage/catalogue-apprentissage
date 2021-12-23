@@ -113,7 +113,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
   const initialCondition = academie && isCreating ? CONDITIONS.PEUT_INTEGRER : condition_integration;
   const academieLabel = Object.values(academies).find(({ num_academie: num }) => num === num_academie)?.nom_academie;
 
-  const { data: niveauxData } = useNiveaux();
+  const { data: niveauxData } = useNiveaux({ plateforme });
 
   const reglesUrl = getDiplomesAllowedForSubRulesUrl(plateforme);
   const { data: diplomesRegles } = useQuery("diplomesRegles", () => _get(reglesUrl, false), {
@@ -265,6 +265,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
   useEffect(() => {
     const run = async () => {
       const result = await getCount({
+        plateforme,
         niveau: values.niveau,
         diplome: values.diplome,
         regle_complementaire: values.regle,
@@ -281,7 +282,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
         setCount(0);
       }
     }
-  }, [values.niveau, values.diplome, values.regle, academie, isClosing]);
+  }, [plateforme, values.niveau, values.diplome, values.regle, academie, isClosing]);
 
   const { isOpen: isCriteriaOpen, onToggle: onCriteriaToggle } = useDisclosure();
 
