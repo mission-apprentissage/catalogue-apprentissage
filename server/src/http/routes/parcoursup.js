@@ -8,6 +8,7 @@ const { getEtablissementCoverage } = require("../../logic/controller/coverage");
 const reportRejected = require("../../jobs/parcoursup/reportRejected");
 
 const { diffFormation, buildUpdatesHistory } = require("../../logic/common/utils/diffUtils");
+const { updateParcoursupCoverage } = require("../../logic/updaters/coverageUpdater");
 
 module.exports = () => {
   const router = express.Router();
@@ -237,7 +238,14 @@ module.exports = () => {
           updatedFormation.statuts_history = statuts_history;
         }
 
-        await PsFormation.findOneAndUpdate({ _id: id_formation }, updatedFormation, { new: true });
+        const formation = await PsFormation.findOneAndUpdate({ _id: id_formation }, updatedFormation, {
+          new: true,
+        });
+
+        if (["A_VERIFIER", "AUTOMATIQUE"].includes(formation.statut_reconciliation)) {
+          // re-run coverage to prevent match with unpublished formations
+          await updateParcoursupCoverage(formation._doc);
+        }
 
         return res.json({});
       }
@@ -298,7 +306,14 @@ module.exports = () => {
           updatedFormation.statuts_history = statuts_history;
         }
 
-        await PsFormation.findOneAndUpdate({ _id: id_formation }, updatedFormation, { new: true });
+        const formation = await PsFormation.findOneAndUpdate({ _id: id_formation }, updatedFormation, {
+          new: true,
+        });
+
+        if (["A_VERIFIER", "AUTOMATIQUE"].includes(formation.statut_reconciliation)) {
+          // re-run coverage to prevent match with unpublished formations
+          await updateParcoursupCoverage(formation._doc);
+        }
 
         return res.json({});
       }
@@ -322,7 +337,14 @@ module.exports = () => {
         updatedFormation.statuts_history = statuts_history;
       }
 
-      await PsFormation.findOneAndUpdate({ _id: id_formation }, updatedFormation, { new: true });
+      const formation = await PsFormation.findOneAndUpdate({ _id: id_formation }, updatedFormation, {
+        new: true,
+      });
+
+      if (["A_VERIFIER", "AUTOMATIQUE"].includes(formation.statut_reconciliation)) {
+        // re-run coverage to prevent match with unpublished formations
+        await updateParcoursupCoverage(formation._doc);
+      }
 
       return res.json({});
     })

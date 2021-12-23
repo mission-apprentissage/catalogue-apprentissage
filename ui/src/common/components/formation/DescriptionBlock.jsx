@@ -7,6 +7,13 @@ import { FormationPeriode } from "./FormationPeriode";
 import { HabilitationPartenaire } from "./HabilitationPartenaire";
 import { HABILITE_LIST } from "../../../constants/certificateurs";
 
+const DureeAnnee = ({ value }) => {
+  if (!value) {
+    return "N/A";
+  }
+  return value === "9" ? "Sans objet (code BCN: 9)" : value;
+};
+
 export const DescriptionBlock = ({ formation, pendingFormation }) => {
   const displayedFormation = pendingFormation ?? formation;
 
@@ -123,14 +130,14 @@ export const DescriptionBlock = ({ formation, pendingFormation }) => {
           <Text mb={4}>
             Durée de la formation :{" "}
             <Text as="span" variant="highlight">
-              {displayedFormation.duree ?? "N/A"}
+              <DureeAnnee value={displayedFormation.duree} />
             </Text>{" "}
             <InfoTooltip description={helpText.formation.duree} />
           </Text>
           <Text mb={4}>
             Année :{" "}
             <Text as="span" variant="highlight">
-              {displayedFormation.annee ?? "N/A"}
+              <DureeAnnee value={displayedFormation.annee} />
             </Text>{" "}
             <InfoTooltip description={helpText.formation.annee} />
           </Text>
