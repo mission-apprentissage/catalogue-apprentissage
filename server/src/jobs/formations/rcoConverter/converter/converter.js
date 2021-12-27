@@ -1,11 +1,11 @@
-const logger = require("../../../common/logger");
-const { RcoFormation, Formation } = require("../../../common/model/index");
-const report = require("../../../logic/reporter/report");
+const logger = require("../../../../common/logger");
+const { RcoFormation, Formation } = require("../../../../common/model/index");
+const report = require("../../../../logic/reporter/report");
 const config = require("config");
-const { createOrUpdateEtablissements } = require("../../../logic/updaters/etablissementUpdater");
+const { createOrUpdateEtablissements } = require("../../../../logic/updaters/etablissementUpdater");
 
-const { paginator } = require("../../../common/utils/paginator");
-const { storeByChunks } = require("../../../common/utils/reportUtils");
+const { paginator } = require("../../../../common/utils/paginator");
+const { storeByChunks } = require("../../../../common/utils/reportUtils");
 const {
   findPreviousFormations,
   copyAffelnetFields,
@@ -14,8 +14,8 @@ const {
   copyRapprochementFields,
   updateRapprochement,
 } = require("./migrationFinder");
-const { extractFirstValue } = require("../../../common/utils/rcoUtils");
-const { asyncForEach } = require("../../../common/utils/asyncUtils");
+const { extractFirstValue } = require("../../../../common/utils/rcoUtils");
+const { asyncForEach } = require("../../../../common/utils/asyncUtils");
 
 const extractPeriodeArray = (arr) => {
   return Array.from(new Set(arr.map((v) => v.split("##")).flat()));

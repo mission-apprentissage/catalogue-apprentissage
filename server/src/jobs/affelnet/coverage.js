@@ -29,7 +29,7 @@ const etablissement = async () => {
 
 const afCoverage = async () => {
   logger.info("Start Affelnet coverage");
-  let check = await Etablissement.find({}).countDocuments();
+  let check = await Etablissement.countDocuments({});
 
   if (check === 0) {
     logger.error("No establishment found, please import collection first");

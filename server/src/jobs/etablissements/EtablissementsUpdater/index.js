@@ -1,8 +1,8 @@
-const logger = require("../../common/logger");
+const logger = require("../../../common/logger");
 const updater = require("./updater/updater");
 const commandLineArgs = require("command-line-args");
 
-const { runScript } = require("../scriptWrapper");
+const { runScript } = require("../../scriptWrapper");
 
 const optionDefinitions = [
   { name: "filter", alias: "f", type: String, defaultValue: null },

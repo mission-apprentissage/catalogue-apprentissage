@@ -1,5 +1,5 @@
-const logger = require("../../../common/logger");
-const { Etablissement } = require("../../../common/model/index");
+const logger = require("../../../../common/logger");
+const { Etablissement } = require("../../../../common/model/index");
 const { getEtablissementUpdates } = require("@mission-apprentissage/tco-service-node");
 
 const run = async (filter = {}, options = null) => {

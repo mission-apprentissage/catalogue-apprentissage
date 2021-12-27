@@ -1,5 +1,5 @@
-const { Formation, PsFormation } = require("../../../common/model");
-const { asyncForEach } = require("../../../common/utils/asyncUtils");
+const { Formation, PsFormation } = require("../../../../common/model");
+const { asyncForEach } = require("../../../../common/utils/asyncUtils");
 
 /**
  * For a given RcoFormation, try to find some Formation published in catalogue which includes ids_action

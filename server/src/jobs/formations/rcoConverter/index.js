@@ -1,7 +1,7 @@
-const logger = require("../../common/logger");
+const logger = require("../../../common/logger");
 const converter = require("./converter/converter");
 
-const { runScript } = require("../scriptWrapper");
+const { runScript } = require("../../scriptWrapper");
 
 const rcoConverter = async (uuidReport = null) => {
   try {

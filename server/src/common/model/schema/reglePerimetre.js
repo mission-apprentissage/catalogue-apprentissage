@@ -1,5 +1,6 @@
 const reglePerimetre = {
   plateforme: {
+    index: true,
     type: String,
     enum: ["affelnet", "parcoursup"],
     default: "affelnet",
@@ -7,6 +8,7 @@ const reglePerimetre = {
     required: true,
   },
   niveau: {
+    index: true,
     type: String,
     enum: ["3 (CAP...)", "4 (BAC...)", "5 (BTS, DEUST...)", "6 (Licence, BUT...)", "7 (Master, titre ingénieur...)"],
     default: "3 (CAP...)",
@@ -14,12 +16,14 @@ const reglePerimetre = {
     required: true,
   },
   diplome: {
+    index: true,
     type: String,
     default: null,
     description: "Diplôme sur lequel s'applique la règle",
     required: true,
   },
   statut: {
+    index: true,
     type: String,
     enum: [
       "hors périmètre",
@@ -90,6 +94,7 @@ const reglePerimetre = {
     description: "Qui a réalisé la dernière modification",
   },
   is_deleted: {
+    index: true,
     type: Boolean,
     default: false,
     description: "True si la règle a été supprimée (soft delete)",

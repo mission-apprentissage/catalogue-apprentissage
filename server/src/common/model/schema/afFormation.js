@@ -6,6 +6,7 @@ const afFormationSchema = {
     description: "id mna temporaire",
   },
   uai: {
+    index: true,
     type: String,
     default: null,
     description: "uai de l'établissement de formation",
@@ -118,6 +119,7 @@ const afFormationSchema = {
     description: "libellé BAN de la formation",
   },
   code_cfd: {
+    index: true,
     type: String,
     default: null,
     description: "code formation diplôme de la formation",

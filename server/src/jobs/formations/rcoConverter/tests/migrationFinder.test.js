@@ -1,7 +1,7 @@
 const assert = require("assert");
-const { Formation } = require("../../../common/model/index");
-const { connectToMongoForTests, cleanAll } = require("../../../../tests/utils/testUtils.js");
-const { asyncForEach } = require("../../../common/utils/asyncUtils");
+const { Formation } = require("../../../../common/model/index");
+const { connectToMongoForTests, cleanAll } = require("../../../../../tests/utils/testUtils.js");
+const { asyncForEach } = require("../../../../common/utils/asyncUtils");
 const { findPreviousFormations } = require("../converter/migrationFinder");
 
 const sampleData = [
