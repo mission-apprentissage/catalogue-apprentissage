@@ -27,7 +27,6 @@ const stats = require("./routes/stats");
 const esSearch = require("./routes/esSearch");
 const esMultiSearchNoIndex = require("./routes/esMultiSearchNoIndex");
 const parcoursup = require("./routes/parcoursup");
-const pendingRcoFormation = require("./routes/pendingRcoFormation");
 const affelnet = require("./routes/affelnet");
 const etablissement = require("./routes/etablissement");
 const etablissementSecure = require("./routes/etablissementSecure");
@@ -122,7 +121,6 @@ module.exports = async (components, verbose = true) => {
   app.use("/api/v1/es/search", esSearch());
   app.use("/api/v1/search", esMultiSearchNoIndex());
   app.use("/api/v1/entity", formation());
-  app.use("/api/v1/entity", pendingRcoFormation());
   app.use("/api/v1/entity", report());
   app.use("/api/v1/entity", etablissement(components));
   app.use("/api/v1/rcoformation", rcoFormation());
@@ -154,7 +152,6 @@ module.exports = async (components, verbose = true) => {
   app.use("/api/es/search", esSearch());
   app.use("/api/search", esMultiSearchNoIndex());
   app.use("/api/entity", formation());
-  app.use("/api/entity", pendingRcoFormation());
   app.use("/api/entity", report());
   app.use("/api/rcoformation", rcoFormation());
   app.use("/api/entity", etablissement(components));
