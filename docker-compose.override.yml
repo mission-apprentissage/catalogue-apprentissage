@@ -37,6 +37,7 @@ services:
   mongodb:
     ports:
       - "127.0.0.1:27017:27017"
+    mem_limit: 3g
     volumes:
       - catalogue_apprentissage_mongodb_data:/data:z
 

@@ -1,5 +1,5 @@
-const logger = require("../../../common/logger");
-const { Etablissement } = require("../../../common/model/index");
+const logger = require("../../../../common/logger");
+const { Etablissement } = require("../../../../common/model/index");
 const { getEtablissementUpdates } = require("@mission-apprentissage/tco-service-node");
 
 const run = async (filter = {}, options = null) => {
@@ -26,14 +26,14 @@ const performUpdates = async (filter = {}, options = null) => {
 
       if (error) {
         etablissement.update_error = error;
-        await Etablissement.findOneAndUpdate({ _id: etablissement._id }, etablissement, { new: true });
+        await Etablissement.findByIdAndUpdate(etablissement._id, etablissement);
         logger.error(`${count}/${total}: Etablissement ${etablissement._id} errored`, error);
       } else if (!updates) {
         // Do nothing
         logger.info(`${count}/${total}: Etablissement ${etablissement._id} nothing to do`);
       } else {
         updatedEtablissement.last_update_at = Date.now();
-        await Etablissement.findOneAndUpdate({ _id: etablissement._id }, updatedEtablissement, { new: true });
+        await Etablissement.findByIdAndUpdate(etablissement._id, updatedEtablissement);
         logger.info(`${count}/${total}: Etablissement ${etablissement._id} updated`);
       }
     } catch (error) {

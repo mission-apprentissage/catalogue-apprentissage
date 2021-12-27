@@ -1,14 +1,13 @@
-const logger = require("../../../common/logger");
-const { mnaFormationUpdater } = require("../../../logic/updaters/mnaFormationUpdater");
-const { detectNewDiplomeGrandAge } = require("../../../logic/controller/diplomes-grand-age");
-const { paginator } = require("../../../common/utils/paginator");
-const { RcoFormation, Formation } = require("../../../common/model/index");
+const logger = require("../../../../common/logger");
+const { mnaFormationUpdater } = require("../../../../logic/updaters/mnaFormationUpdater");
+const { detectNewDiplomeGrandAge } = require("../../../../logic/controller/diplomes-grand-age");
+const { RcoFormation, Formation } = require("../../../../common/model/index");
 
-const run = async (filter = {}, withCodePostalUpdate = false, limit = 10, maxItems = 100, offset = 0) => {
-  return await performUpdates(filter, withCodePostalUpdate, limit, maxItems, offset);
+const run = async (filter = {}, withCodePostalUpdate = false) => {
+  return await performUpdates(filter, withCodePostalUpdate);
 };
 
-const performUpdates = async (filter = {}, withCodePostalUpdate = false, limit = 10, maxItems = 100, offset = 0) => {
+const performUpdates = async (filter = {}, withCodePostalUpdate = false) => {
   const invalidFormations = [];
   const updatedFormations = [];
   const noUpdatedFormations = [];
@@ -17,17 +16,25 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false, limit =
 
   Formation.pauseAllMongoosaticHooks();
 
-  await paginator(Formation, { filter, limit, maxItems, offset }, async (formation, index, total) => {
+  const sort = {
+    to_update: -1,
+  };
+  const cursor = Formation.find(filter).sort(sort).cursor();
+  const total = await Formation.countDocuments(filter);
+  let index = 0;
+
+  for await (const formation of cursor) {
     if (index % 100 === 0) {
       console.log(`updating formation ${index}/${total}`);
     }
+    index += 1;
 
     const cfdInfoCache = cfdInfosCache.get(formation._doc.cfd) || null;
     const { updates, formation: updatedFormation, error, serviceAvailable = true, cfdInfo } = await mnaFormationUpdater(
       formation._doc,
       {
         // no need to check cp info in trainingsUpdater since it was successfully done once at converter
-        withCodePostalUpdate,
+        withCodePostalUpdate: formation.to_update === true || withCodePostalUpdate,
         cfdInfo: cfdInfoCache,
       }
     );
@@ -64,7 +71,7 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false, limit =
         cfd: formation.cfd,
         error,
       });
-      return;
+      continue;
     }
 
     if (!updates) {
@@ -72,7 +79,7 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false, limit =
         id: formation._id,
         cle_ministere_educatif: formation.cle_ministere_educatif,
       });
-      return;
+      continue;
     }
 
     try {
@@ -89,7 +96,7 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false, limit =
     } catch (error) {
       logger.error(error);
     }
-  });
+  }
 
   return { invalidFormations, updatedFormations, noUpdatedFormations, formationsGrandAge };
 };

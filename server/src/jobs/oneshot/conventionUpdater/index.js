@@ -3,7 +3,7 @@ const logger = require("../../../common/logger");
 const { runScript } = require("../../scriptWrapper");
 const { rebuildEsIndex } = require("../../esIndex/esIndex");
 const { conventionFilesImporter } = require("@mission-apprentissage/tco-service-node");
-const { run } = require("../../EtablissementsUpdater/updater/updater");
+const { run } = require("../../etablissements/EtablissementsUpdater/updater/updater");
 
 const CONVENTION_FILES_DIR = path.join(__dirname, "../../conventionFilesImporter/assets");
 

@@ -10,8 +10,8 @@ const {
   deleted,
   reAdded,
 } = require("./fixtures");
-const { connectToMongoForTests, cleanAll } = require("../../../../tests/utils/testUtils.js");
-const { RcoFormation } = require("../../../common/model/index");
+const { connectToMongoForTests, cleanAll } = require("../../../../../tests/utils/testUtils.js");
+const { RcoFormation } = require("../../../../common/model/index");
 
 describe(__filename, () => {
   before(async () => {

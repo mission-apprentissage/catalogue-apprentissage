@@ -1,9 +1,9 @@
 const assert = require("assert");
 const fs = require("fs-extra");
 const path = require("path");
-const { connectToMongoForTests, cleanAll } = require("../../../../tests/utils/testUtils.js");
-const { Etablissement } = require("../../../common/model/index");
-const { asyncForEach } = require("../../../common/utils/asyncUtils");
+const { connectToMongoForTests, cleanAll } = require("../../../../../tests/utils/testUtils.js");
+const { Etablissement } = require("../../../../common/model/index");
+const { asyncForEach } = require("../../../../common/utils/asyncUtils");
 const rewiremock = require("rewiremock/node");
 
 const EtablissementsTest = fs.readJsonSync(path.resolve(__dirname, "../assets/sample.json"));

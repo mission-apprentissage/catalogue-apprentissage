@@ -1,6 +1,6 @@
-const logger = require("../../common/logger");
-const { runScript } = require("../scriptWrapper");
-const { Etablissement } = require("../../common/model/index");
+const logger = require("../../../common/logger");
+const { runScript } = require("../../scriptWrapper");
+const { Etablissement } = require("../../../common/model/index");
 
 const findAndUpdateSiegeSocial = async () => {
   logger.info(" -- Start of find and update siege social -- ");

@@ -2,11 +2,11 @@ const assert = require("assert");
 const fs = require("fs-extra");
 const path = require("path");
 const sinon = require("sinon");
-const { RcoFormation } = require("../../../common/model/index");
-const { connectToMongoForTests, cleanAll } = require("../../../../tests/utils/testUtils.js");
-const { asyncForEach } = require("../../../common/utils/asyncUtils");
+const { RcoFormation } = require("../../../../common/model/index");
+const { connectToMongoForTests, cleanAll } = require("../../../../../tests/utils/testUtils.js");
+const { asyncForEach } = require("../../../../common/utils/asyncUtils");
 const { performConversion } = require("../converter/converter.js");
-const catalogue = require("../../../common/components/catalogue");
+const catalogue = require("../../../../common/components/catalogue");
 const rcoSampleData = fs.readJsonSync(path.resolve(__dirname, "../assets/sample.json"));
 
 describe(__filename, () => {

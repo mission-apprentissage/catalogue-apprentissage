@@ -1,6 +1,6 @@
-const logger = require("../../common/logger");
+const logger = require("../../../common/logger");
 const importer = require("./importer/importer");
-const { runScript } = require("../scriptWrapper");
+const { runScript } = require("../../scriptWrapper");
 
 const rcoImporter = async (importDay = "") => {
   try {
