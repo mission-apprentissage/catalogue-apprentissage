@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  Alert,
   Box,
   Button,
   Center,
@@ -23,7 +22,6 @@ import Layout from "../layout/Layout";
 import useAuth from "../../common/hooks/useAuth";
 import { hasAccessTo, hasRightToEditFormation } from "../../common/utils/rolesUtils";
 import { StatusBadge } from "../../common/components/StatusBadge";
-import { ReactComponent as InfoIcon } from "../../theme/assets/info-circle.svg";
 import { PublishModal } from "../../common/components/formation/PublishModal";
 import { buildUpdatesHistory } from "../../common/utils/formationUtils";
 import InfoTooltip from "../../common/components/InfoTooltip";
@@ -43,33 +41,14 @@ const getLBAUrl = ({ _id = "" }) => {
   return `${endpointLBA}/recherche-apprentissage?&display=list&page=fiche&type=training&itemId=${_id}`;
 };
 
-const Formation = ({
-  formation,
-  edition,
-  onEdit,
-  handleChange,
-  handleSubmit,
-  values,
-  hasRightToEdit,
-  pendingFormation,
-}) => {
-  const displayedFormation = pendingFormation ?? formation;
-
+const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, values, hasRightToEdit }) => {
   const { isOpen: isComputedAdressOpen, onToggle: onComputedAdressToggle } = useDisclosure();
 
   return (
     <Box borderRadius={4}>
-      {pendingFormation && (
-        <Alert status="info" justifyContent="center">
-          <Box mr={1}>
-            <InfoIcon />
-          </Box>
-          Cette formation a été éditée et est en attente de traitement
-        </Alert>
-      )}
       <Grid templateColumns="repeat(12, 1fr)">
         <GridItem colSpan={[12, 12, 7]} bg="white" border="1px solid" borderColor="bluefrance">
-          <DescriptionBlock formation={formation} pendingFormation={pendingFormation} />
+          <DescriptionBlock formation={formation} />
         </GridItem>
         <GridItem colSpan={[12, 12, 5]} py={8}>
           <Box mb={16}>
@@ -96,20 +75,16 @@ const Formation = ({
                 hasRightToEdit={hasRightToEdit}
                 mb={4}
               />
-              <EditableField
-                fieldName={"lieu_formation_adresse"}
-                label={"Adresse"}
-                formation={displayedFormation}
-                edition={edition}
-                onEdit={onEdit}
-                values={values}
-                handleSubmit={handleSubmit}
-                handleChange={handleChange}
-                hasRightToEdit={hasRightToEdit}
-                mb={displayedFormation?.lieu_formation_adresse_computed ? 0 : 4}
-              />
 
-              {displayedFormation?.lieu_formation_adresse_computed && (
+              <Text mb={formation?.lieu_formation_adresse_computed ? 0 : 4}>
+                Adresse :{" "}
+                <Text as="span" variant="highlight">
+                  {formation.lieu_formation_adresse}
+                </Text>{" "}
+                <InfoTooltip description={helpText.formation.lieu_formation_adresse} />
+              </Text>
+
+              {formation?.lieu_formation_adresse_computed && (
                 <Box mb={4}>
                   <Button
                     onClick={onComputedAdressToggle}
@@ -124,7 +99,7 @@ const Formation = ({
                   <Collapse in={isComputedAdressOpen} animateOpacity>
                     <Text mb={4}>
                       <Text fontSize={"zeta"} color={"grey.600"} as="span">
-                        {displayedFormation.lieu_formation_adresse_computed}
+                        {formation.lieu_formation_adresse_computed}
                       </Text>{" "}
                       <InfoTooltip description={helpText.formation.lieu_formation_adresse_computed} />
                     </Text>
@@ -132,48 +107,39 @@ const Formation = ({
                 </Box>
               )}
 
-              <EditableField
-                fieldName={"code_postal"}
-                label={"Code postal"}
-                formation={displayedFormation}
-                edition={edition}
-                onEdit={onEdit}
-                values={values}
-                handleSubmit={handleSubmit}
-                handleChange={handleChange}
-                hasRightToEdit={hasRightToEdit}
-                mb={4}
-              />
+              <Text mb={4}>
+                Code postal :{" "}
+                <Text as="span" variant="highlight">
+                  {formation.code_postal}
+                </Text>{" "}
+                <InfoTooltip description={helpText.formation.code_postal} />
+              </Text>
+
               <Text mb={4}>
                 Commune :{" "}
                 <Text as="span" variant="highlight">
-                  {displayedFormation.localite}
+                  {formation.localite}
                 </Text>{" "}
                 <InfoTooltip description={helpText.formation.localite} />
               </Text>
-              <EditableField
-                fieldName={"code_commune_insee"}
-                label={"Code commune"}
-                formation={displayedFormation}
-                edition={edition}
-                onEdit={onEdit}
-                values={values}
-                handleSubmit={handleSubmit}
-                handleChange={handleChange}
-                hasRightToEdit={hasRightToEdit}
-                mb={4}
-              />
+              <Text mb={4}>
+                Code commune :{" "}
+                <Text as="span" variant="highlight">
+                  {formation.code_commune_insee}
+                </Text>{" "}
+                <InfoTooltip description={helpText.formation.code_commune_insee} />
+              </Text>
               <Text mb={8}>
                 Département :{" "}
                 <Text as="span" variant="highlight">
-                  {displayedFormation.nom_departement} ({displayedFormation.num_departement})
+                  {formation.nom_departement} ({formation.num_departement})
                 </Text>{" "}
                 <InfoTooltip description={helpText.formation.nom_departement} />
               </Text>
               <Text mb={4}>
                 Académie de rattachement :{" "}
                 <Text as="span" variant="highlight">
-                  {displayedFormation.nom_academie} ({displayedFormation.num_academie})
+                  {formation.nom_academie} ({formation.num_academie})
                 </Text>{" "}
                 <InfoTooltip description={helpText.formation.academie} />
               </Text>
@@ -191,7 +157,6 @@ const Formation = ({
 export default ({ match }) => {
   const toast = useToast();
   const [formation, setFormation] = useState();
-  const [pendingFormation, setPendingFormation] = useState();
 
   const [edition, setEdition] = useState(null);
   let history = useHistory();
@@ -203,28 +168,14 @@ export default ({ match }) => {
   const { values, handleSubmit, handleChange, setFieldValue, isSubmitting } = useFormik({
     initialValues: {
       uai_formation: "",
-      code_postal: "",
-      lieu_formation_adresse: "",
-      code_commune_insee: "",
     },
-    onSubmit: (values) => {
+    onSubmit: ({ uai_formation }) => {
       return new Promise(async (resolve) => {
         try {
-          const directChangeKeys = ["uai_formation"];
-          const directChangeValues = directChangeKeys.reduce((acc, key) => {
-            acc[key] = values[key] || null;
-            return acc;
-          }, {});
-          const actualDirectChangeKeys = directChangeKeys.filter((key) => directChangeValues[key] !== formation[key]);
-          const actualDirectChangeValues = actualDirectChangeKeys.reduce((acc, key) => {
-            acc[key] = directChangeValues[key];
-            return acc;
-          }, {});
-
-          if (actualDirectChangeKeys.length > 0) {
+          if (uai_formation !== formation["uai_formation"]) {
             const updatedFormation = await _post(`${endpointNewFront}/entity/formation2021/update`, {
               ...formation,
-              ...actualDirectChangeValues,
+              uai_formation,
               withCodePostalUpdate: false,
             });
 
@@ -232,56 +183,14 @@ export default ({ match }) => {
               ...updatedFormation,
               last_update_who: user.email,
               last_update_at: Date.now(),
-              editedFields: { ...formation?.editedFields, ...actualDirectChangeValues },
-              updates_history: buildUpdatesHistory(
-                formation,
-                { ...actualDirectChangeValues, last_update_who: user.email },
-                actualDirectChangeKeys
-              ),
+              editedFields: { ...formation?.editedFields, uai_formation },
+              updates_history: buildUpdatesHistory(formation, { uai_formation, last_update_who: user.email }, [
+                "uai_formation",
+              ]),
             });
             if (result) {
               setFormation(result);
               setFieldValue("uai_formation", result?.uai_formation ?? "");
-            }
-          }
-
-          const pendingChangeKeys = Object.keys(values).filter((key) => !directChangeKeys.includes(key));
-          const pendingChangeValues = pendingChangeKeys.reduce((acc, key) => {
-            acc[key] = values[key] || null;
-            return acc;
-          }, {});
-          const actualPendingChangeKeys = pendingChangeKeys.filter(
-            (key) => pendingChangeValues[key] !== (pendingFormation ?? formation)[key]
-          );
-          const actualPendingChangeValues = actualPendingChangeKeys.reduce((acc, key) => {
-            acc[key] = pendingChangeValues[key];
-            return acc;
-          }, {});
-
-          if (actualPendingChangeKeys.length > 0) {
-            const updatedFormation = await _post(`${endpointNewFront}/entity/formation2021/update`, {
-              ...formation,
-              ...pendingChangeValues,
-            });
-
-            let result = await _post(`${endpointNewFront}/entity/pendingRcoFormation`, {
-              ...updatedFormation,
-              last_update_who: user.email,
-              last_update_at: Date.now(),
-              updates_history: buildUpdatesHistory(
-                pendingFormation ?? formation,
-                { ...actualPendingChangeValues, last_update_who: user.email },
-                actualPendingChangeKeys
-              ),
-            });
-            if (result) {
-              setPendingFormation(result);
-              setFieldValue("code_postal", result?.code_postal ?? formation.code_postal ?? "");
-              setFieldValue(
-                "lieu_formation_adresse",
-                result?.lieu_formation_adresse ?? formation.lieu_formation_adresse ?? ""
-              );
-              setFieldValue("code_commune_insee", result?.code_commune_insee ?? formation.code_commune_insee ?? "");
             }
           }
         } catch (e) {
@@ -307,8 +216,6 @@ export default ({ match }) => {
   useEffect(() => {
     async function run() {
       try {
-        let pendingRCOFormation;
-
         const apiURL = `${endpointNewFront}/entity/formation2021/`;
         // FIXME select={"__v" :0} hack to get updates_history
         const form = await _get(`${apiURL}${match.params.id}?select={"__v":0}`, false);
@@ -319,27 +226,7 @@ export default ({ match }) => {
         }
 
         setFormation(form);
-
-        try {
-          pendingRCOFormation = await _get(
-            `${endpointNewFront}/entity/pendingRcoFormation/${form.id_rco_formation}`,
-            false
-          );
-          setPendingFormation(pendingRCOFormation);
-        } catch (err) {
-          // no pending formation, do nothing
-        }
-
-        // values from catalog data
         setFieldValue("uai_formation", form.uai_formation ?? "");
-
-        // values from pending rco data
-        setFieldValue("code_postal", pendingRCOFormation?.code_postal ?? form.code_postal ?? "");
-        setFieldValue(
-          "lieu_formation_adresse",
-          pendingRCOFormation?.lieu_formation_adresse ?? form.lieu_formation_adresse ?? ""
-        );
-        setFieldValue("code_commune_insee", pendingRCOFormation?.code_commune_insee ?? form.code_commune_insee ?? "");
       } catch (e) {
         history.push("/404");
       }
@@ -351,7 +238,7 @@ export default ({ match }) => {
     setEdition(fieldName);
   };
 
-  const title = `${pendingFormation?.intitule_long ?? formation?.intitule_long}`;
+  const title = `${formation?.intitule_long}`;
   setTitle(title);
 
   return (
@@ -428,7 +315,6 @@ export default ({ match }) => {
                 handleChange={handleChange}
                 hasRightToEdit={hasAccessTo(user, "page_formation/modifier_informations") && hasRightToEdit}
                 isSubmitting={isSubmitting}
-                pendingFormation={pendingFormation}
               />
             </>
           )}
