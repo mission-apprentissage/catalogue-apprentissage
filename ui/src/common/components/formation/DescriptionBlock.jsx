@@ -11,20 +11,18 @@ const DureeAnnee = ({ value }) => {
   if (!value) {
     return "N/A";
   }
-  return value === "9" ? "Sans objet (code BCN: 9)" : value;
+
+  const tmpValue = value === "X" ? "Information non collectée" : value;
+  return tmpValue === "9" ? "Sans objet (code BCN: 9)" : tmpValue;
 };
 
-export const DescriptionBlock = ({ formation, pendingFormation }) => {
-  const displayedFormation = pendingFormation ?? formation;
-
-  const filteredPartenaires = (displayedFormation.rncp_details?.partenaires ?? []).filter(({ Siret_Partenaire }) =>
+export const DescriptionBlock = ({ formation }) => {
+  const filteredPartenaires = (formation.rncp_details?.partenaires ?? []).filter(({ Siret_Partenaire }) =>
     [formation.etablissement_gestionnaire_siret, formation.etablissement_formateur_siret].includes(Siret_Partenaire)
   );
   const showPartenaires =
-    ["Titre", "TP"].includes(displayedFormation.rncp_details?.code_type_certif) &&
-    !(displayedFormation.rncp_details.certificateurs ?? []).some(({ certificateur }) =>
-      HABILITE_LIST.includes(certificateur)
-    );
+    ["Titre", "TP"].includes(formation.rncp_details?.code_type_certif) &&
+    !(formation.rncp_details.certificateurs ?? []).some(({ certificateur }) => HABILITE_LIST.includes(certificateur));
 
   return (
     <>
@@ -44,38 +42,38 @@ export const DescriptionBlock = ({ formation, pendingFormation }) => {
           <Text mb={4} mt={4}>
             Intitulé court de la formation :{" "}
             <Text as="span" variant="highlight">
-              {displayedFormation.intitule_court}
+              {formation.intitule_court}
             </Text>{" "}
             <InfoTooltip description={helpText.formation.intitule_court} />
           </Text>
           <Text mb={4} mt={4}>
             Intitulé éditorial :{" "}
             <Text as="span" variant="highlight">
-              {displayedFormation.onisep_intitule}
+              {formation.onisep_intitule}
             </Text>{" "}
             <InfoTooltip description={helpText.formation.onisep_intitule} />
           </Text>
           <Text mb={4}>
             Diplôme ou titre visé :{" "}
             <Text as="span" variant="highlight">
-              {displayedFormation.diplome}
+              {formation.diplome}
             </Text>{" "}
             <InfoTooltip description={helpText.formation.diplome} />
           </Text>
           <Text mb={4}>
             Niveau de la formation :{" "}
             <Text as="span" variant="highlight">
-              {displayedFormation.niveau}
+              {formation.niveau}
             </Text>{" "}
             <InfoTooltip description={helpText.formation.niveau} />
           </Text>
           <Text mb={4}>
             Code diplôme (Éducation Nationale) :{" "}
             <Text as="span" variant="highlight">
-              {displayedFormation.cfd}
+              {formation.cfd}
             </Text>{" "}
             <InfoTooltip description={helpText.formation.cfd} />
-            {displayedFormation.cfd_outdated && (
+            {formation.cfd_outdated && (
               <>
                 <br />
                 Ce diplôme a une date de fin antérieure au 31/08 de l'année en cours
@@ -85,16 +83,16 @@ export const DescriptionBlock = ({ formation, pendingFormation }) => {
           <Text mb={4}>
             Codes MEF 10 caractères :{" "}
             <Text as="span" variant="highlight">
-              {displayedFormation?.bcn_mefs_10?.map(({ mef10 }) => mef10).join(", ")}
+              {formation?.bcn_mefs_10?.map(({ mef10 }) => mef10).join(", ")}
             </Text>{" "}
             <InfoTooltip description={helpText.formation.mef} />
           </Text>
-          {displayedFormation?.affelnet_mefs_10?.length > 0 && (
+          {formation?.affelnet_mefs_10?.length > 0 && (
             <>
               <Text mb={4}>
                 Codes MEF 10 caractères dans le périmètre <i>Affelnet</i> :{" "}
                 <Text as="span" variant="highlight">
-                  {displayedFormation?.affelnet_mefs_10?.map(({ mef10 }) => mef10).join(", ")}
+                  {formation?.affelnet_mefs_10?.map(({ mef10 }) => mef10).join(", ")}
                 </Text>
               </Text>
               {formation?.affelnet_infos_offre && (
@@ -107,18 +105,17 @@ export const DescriptionBlock = ({ formation, pendingFormation }) => {
               )}
             </>
           )}
-          {displayedFormation?.parcoursup_mefs_10?.length > 0 && (
+          {formation?.parcoursup_mefs_10?.length > 0 && (
             <Text mb={4}>
               Codes MEF 10 caractères dans le périmètre <i>Parcoursup</i> :{" "}
               <Text as="span" variant="highlight">
-                {displayedFormation?.parcoursup_mefs_10?.map(({ mef10 }) => mef10).join(", ")}
+                {formation?.parcoursup_mefs_10?.map(({ mef10 }) => mef10).join(", ")}
               </Text>
             </Text>
           )}
           <Text mb={4}>
             Période d'inscription :
-            <FormationPeriode periode={displayedFormation.periode} />{" "}
-            <InfoTooltip description={helpText.formation.periode} />
+            <FormationPeriode periode={formation.periode} /> <InfoTooltip description={helpText.formation.periode} />
           </Text>
           <Text mb={4}>
             Capacite d'accueil :{" "}
@@ -130,39 +127,52 @@ export const DescriptionBlock = ({ formation, pendingFormation }) => {
           <Text mb={4}>
             Durée de la formation :{" "}
             <Text as="span" variant="highlight">
-              <DureeAnnee value={displayedFormation.duree} />
+              <DureeAnnee value={formation.duree} />
             </Text>{" "}
             <InfoTooltip description={helpText.formation.duree} />
           </Text>
-          <Text mb={4}>
-            Année :{" "}
-            <Text as="span" variant="highlight">
-              <DureeAnnee value={displayedFormation.annee} />
-            </Text>{" "}
-            <InfoTooltip description={helpText.formation.annee} />
-          </Text>
+          {formation.annee === "X" && (
+            <Box bg={"orangesoft.200"} p={4} mb={4} borderLeft={"4px solid"} borderColor={"orangesoft.500"} w={"full"}>
+              <Text>
+                Année d'entrée en apprentissage :{" "}
+                <Text as="span" variant="highlight" bg={"transparent"}>
+                  <DureeAnnee value={formation.annee} />
+                </Text>{" "}
+                <InfoTooltip description={helpText.formation.annee} />
+              </Text>
+            </Box>
+          )}
+          {formation.annee !== "X" && (
+            <Text mb={4}>
+              Année d'entrée en apprentissage :{" "}
+              <Text as="span" variant="highlight">
+                <DureeAnnee value={formation.annee} />
+              </Text>{" "}
+              <InfoTooltip description={helpText.formation.annee} />
+            </Text>
+          )}
           <Text mb={4}>
             Clé ministères éducatifs:
             <Text as="span" variant="highlight">
-              {displayedFormation.cle_ministere_educatif ?? "N/A"}
+              {formation.cle_ministere_educatif ?? "N/A"}
             </Text>
           </Text>
           <Text mb={4}>
             Identifiant formation Carif Oref:
             <Text as="span" variant="highlight">
-              {displayedFormation.id_formation ?? "N/A"}
+              {formation.id_formation ?? "N/A"}
             </Text>
           </Text>
           <Text mb={4}>
             Identifiant actions Carif Oref:
             <Text as="span" variant="highlight">
-              {displayedFormation.ids_action?.join(",") ?? "N/A"}
+              {formation.ids_action?.join(",") ?? "N/A"}
             </Text>
           </Text>
           <Text mb={4}>
             Code Certif Info:
             <Text as="span" variant="highlight">
-              {displayedFormation.id_certifinfo ?? "N/A"}
+              {formation.id_certifinfo ?? "N/A"}
             </Text>
           </Text>
         </Box>
@@ -171,11 +181,11 @@ export const DescriptionBlock = ({ formation, pendingFormation }) => {
         <Heading textStyle="h4" color="grey.800" mb={4} mt={6}>
           Informations RNCP et ROME
         </Heading>
-        {displayedFormation.rncp_code && (
+        {formation.rncp_code && (
           <Text mb={4}>
             Code RNCP :{" "}
             <Text as="span" variant="highlight">
-              {displayedFormation.rncp_code}
+              {formation.rncp_code}
             </Text>{" "}
             <InfoTooltip description={helpText.formation.rncp_code} />
           </Text>
@@ -183,34 +193,34 @@ export const DescriptionBlock = ({ formation, pendingFormation }) => {
         <Text mb={4}>
           Intitulé RNCP :{" "}
           <Text as="span" variant="highlight">
-            {displayedFormation.rncp_intitule}
+            {formation.rncp_intitule}
           </Text>{" "}
           <InfoTooltip description={helpText.formation.rncp_intitule} />
         </Text>
         <Text mb={4}>
           Codes ROME :{" "}
           <Text as="span" variant="highlight">
-            {displayedFormation.rome_codes.join(", ")}
+            {formation.rome_codes.join(", ")}
           </Text>{" "}
           <InfoTooltip description={helpText.formation.rome_codes} />
         </Text>
         <Box>
-          {displayedFormation.opcos && displayedFormation.opcos.length === 0 && <Text mb={4}>Aucun OPCO rattaché</Text>}
-          {displayedFormation.opcos && displayedFormation.opcos.length > 0 && (
+          {formation.opcos && formation.opcos.length === 0 && <Text mb={4}>Aucun OPCO rattaché</Text>}
+          {formation.opcos && formation.opcos.length > 0 && (
             <Text mb={4}>
               OPCOs liés à la formation :{" "}
               <Text as="span" variant="highlight">
-                {displayedFormation.opcos.join(", ")}
+                {formation.opcos.join(", ")}
               </Text>
             </Text>
           )}
         </Box>
-        {displayedFormation.rncp_details && (
+        {formation.rncp_details && (
           <>
             <Text mb={4}>
               Certificateurs :{" "}
               <Text as="span" variant="highlight">
-                {displayedFormation.rncp_details.certificateurs
+                {formation.rncp_details.certificateurs
                   ?.filter(({ certificateur }) => certificateur)
                   ?.map(({ certificateur }) => certificateur)
                   .join(", ")}
@@ -220,7 +230,7 @@ export const DescriptionBlock = ({ formation, pendingFormation }) => {
             <Text mb={4}>
               SIRET Certificateurs :{" "}
               <Text as="span" variant="highlight">
-                {displayedFormation.rncp_details.certificateurs
+                {formation.rncp_details.certificateurs
                   ?.filter(({ siret_certificateur }) => siret_certificateur)
                   ?.map(({ siret_certificateur }) => siret_certificateur)
                   .join(", ")}

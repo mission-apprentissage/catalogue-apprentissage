@@ -23,7 +23,6 @@ module.exports = {
   }),
   Report: createModel("report", schema.reportSchema),
   Log: createModel("log", schema.logSchema),
-  PendingRcoFormation: createModel("pendingrcoformation", schema.formationSchema),
   AfFormation: createModel("afformation", schema.afFormationSchema),
   AfReconciliation: createModel("afreconciliation", schema.afReconciliationSchema),
   Etablissement: createModel("etablissement", schema.etablissementSchema, {

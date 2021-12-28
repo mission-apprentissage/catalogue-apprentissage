@@ -1,10 +1,12 @@
 const afReconciliationSchema = {
   uai: {
+    index: true,
     type: String,
     default: null,
     description: "uai gestionnaire de la formation affelnet",
   },
   code_cfd: {
+    index: true,
     type: String,
     default: null,
     description: "code formation diplome de la formation affelnet",

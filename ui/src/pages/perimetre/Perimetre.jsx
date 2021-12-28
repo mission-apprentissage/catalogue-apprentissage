@@ -52,7 +52,7 @@ export default ({ plateforme }) => {
   const title = `Règles d'intégration des formations à la plateforme ${plateforme}`;
   setTitle(title);
 
-  const { data: niveauxData } = useNiveaux();
+  const { data: niveauxData } = useNiveaux({ plateforme });
 
   useEffect(() => {
     async function run() {
@@ -303,6 +303,7 @@ export default ({ plateforme }) => {
                 />
                 <Box py={4}>
                   <DiplomesAutosuggest
+                    plateforme={plateforme}
                     onSuggestionSelected={({ suggestion }) => {
                       const index = niveaux.findIndex(({ niveau }) => niveau.value === suggestion.niveau);
                       setSelectedNiveauIndex(index);

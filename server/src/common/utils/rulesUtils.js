@@ -1,4 +1,4 @@
-const { toBePublishedRules } = require("./referenceUtils");
+const { getPublishedRules } = require("./referenceUtils");
 
 const serialize = (obj) => {
   return JSON.stringify(obj, (key, value) => {
@@ -64,9 +64,9 @@ const titresRule = {
   ],
 };
 
-const getQueryFromRule = ({ niveau, diplome, regle_complementaire, duree, num_academie /*, annee*/ }) => {
+const getQueryFromRule = ({ plateforme, niveau, diplome, regle_complementaire, duree, num_academie /*, annee*/ }) => {
   const query = {
-    ...toBePublishedRules,
+    ...getPublishedRules(plateforme),
     niveau,
     ...(diplome && { diplome }),
     ...(regle_complementaire && deserialize(regle_complementaire)),

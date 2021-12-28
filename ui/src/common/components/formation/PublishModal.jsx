@@ -451,7 +451,20 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
               <Button
                 type="submit"
                 variant="primary"
-                onClick={handleSubmit}
+                onClick={(evt) => {
+                  if (values.parcoursup === "true" && formation.annee === "X") {
+                    const isUserSure = window.confirm(
+                      "L'année d'entrée en apprentissage n'a pas été collectée par le réseau des Carif-Oref. Nous avons besoin de votre confirmation pour l'exposition sur Parcoursup.\n\n" +
+                        "Confirmez-vous que cette formation est accessible en apprentissage en première année post-Bac ?\n\n" +
+                        "Si nécessaire, veuillez vérifier ce paramètre auprès de l'organisme."
+                    );
+                    if (isUserSure) {
+                      handleSubmit(evt);
+                    }
+                  } else {
+                    handleSubmit(evt);
+                  }
+                }}
                 isLoading={isSubmitting}
                 loadingText="Enregistrement des modifications"
               >
