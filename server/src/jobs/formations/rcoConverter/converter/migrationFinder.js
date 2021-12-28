@@ -47,6 +47,11 @@ const findPreviousFormations = async ({
   });
 };
 
+const copyEditedFields = (oldFormation, newFormation) => {
+  newFormation.editedFields = oldFormation.editedFields;
+  return newFormation;
+};
+
 const copyAffelnetFields = (oldFormation, newFormation) => {
   newFormation.affelnet_statut = oldFormation.affelnet_statut;
   newFormation.affelnet_statut_history = oldFormation.affelnet_statut_history;
@@ -129,4 +134,5 @@ module.exports = {
   extractFlatIdsAction,
   copyRapprochementFields,
   updateRapprochement,
+  copyEditedFields,
 };
