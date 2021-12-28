@@ -31,7 +31,6 @@ const createReport = async (
   uuidReport,
   noMail = false
 ) => {
-  console.log("Send report");
   const summary = {
     invalidCount: invalidFormations.length,
     updatedCount: updatedFormations.length,
@@ -85,7 +84,6 @@ const trainingsUpdater = async ({ withCodePostalUpdate, noUpdatesFilters, uuidRe
   const idFilter = { cle_ministere_educatif: { $nin: idsUnPublishedToSkip } };
   const activeFilterTmp = { ...filter, ...idFilter }; // warn:  won't work if filter contain cle_ministere_educatif key
 
-  console.log("Filters : ", activeFilterTmp);
   let allIds = await Formation.distinct("cle_ministere_educatif", activeFilterTmp);
   const activeFilter = { cle_ministere_educatif: { $in: allIds } }; // Avoid issues when the updater modifies a field which is in the filters
 

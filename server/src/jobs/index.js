@@ -19,25 +19,27 @@ runScript(async ({ db }) => {
     logger.info(`Start all jobs`);
 
     // TCO jobs
-    await tcoJobs(db, CONVENTION_FILES_DIR, KIT_LOCAL_PATH);
+    await tcoJobs(db, CONVENTION_FILES_DIR, KIT_LOCAL_PATH); // ~ 15 minutes // Import des tables de correspondance
     await sleep(30000);
 
     // Etablissements
-    await etablissementsJobs();
+    await etablissementsJobs(); // ~ 2h30 // mise à jour des établissements (api entreprise / qualiopi)
     await sleep(30000);
 
     // Formations
     Formation.pauseAllMongoosaticHooks();
-    await formationsJobs();
+    await formationsJobs(); // ~ 1h05 // màj des formations (import rco / qualiopi / bcn / rncp) & envoi des mails de rapports
     await sleep(30000);
 
     // Parcoursup & Affelnet
-    await parcoursupJobs();
-    await affelnetJobs();
+    await parcoursupJobs(); // ~ 10 minutes  // maj des rapprochements & étiquettes périmètre
+    await affelnetJobs(); // ~ 15 minutes  // maj des rapprochements & étiquettes périmètre
 
     // eS
     Formation.startAllMongoosaticHooks();
-    await rebuildEsIndex();
+    await rebuildEsIndex(); // ~ 5 minutes // maj elastic search (recherche des formations / établissements / rapprochements)
+
+    // total time for execution ~ 4h20
   } catch (error) {
     logger.error(error);
   }
