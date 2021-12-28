@@ -11,7 +11,9 @@ const DureeAnnee = ({ value }) => {
   if (!value) {
     return "N/A";
   }
-  return value === "9" ? "Sans objet (code BCN: 9)" : value;
+
+  const tmpValue = value === "X" ? "Information non collectée" : value;
+  return tmpValue === "9" ? "Sans objet (code BCN: 9)" : tmpValue;
 };
 
 export const DescriptionBlock = ({ formation }) => {
@@ -129,13 +131,26 @@ export const DescriptionBlock = ({ formation }) => {
             </Text>{" "}
             <InfoTooltip description={helpText.formation.duree} />
           </Text>
-          <Text mb={4}>
-            Année :{" "}
-            <Text as="span" variant="highlight">
-              <DureeAnnee value={formation.annee} />
-            </Text>{" "}
-            <InfoTooltip description={helpText.formation.annee} />
-          </Text>
+          {formation.annee === "X" && (
+            <Box bg={"orangesoft.200"} p={4} mb={4} borderLeft={"4px solid"} borderColor={"orangesoft.500"} w={"full"}>
+              <Text>
+                Année d'entrée en apprentissage :{" "}
+                <Text as="span" variant="highlight" bg={"transparent"}>
+                  <DureeAnnee value={formation.annee} />
+                </Text>{" "}
+                <InfoTooltip description={helpText.formation.annee} />
+              </Text>
+            </Box>
+          )}
+          {formation.annee !== "X" && (
+            <Text mb={4}>
+              Année d'entrée en apprentissage :{" "}
+              <Text as="span" variant="highlight">
+                <DureeAnnee value={formation.annee} />
+              </Text>{" "}
+              <InfoTooltip description={helpText.formation.annee} />
+            </Text>
+          )}
           <Text mb={4}>
             Clé ministères éducatifs:
             <Text as="span" variant="highlight">
