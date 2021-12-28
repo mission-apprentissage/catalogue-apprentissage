@@ -17,6 +17,9 @@ const performUpdates = async (filter = {}, options = null) => {
   let cursor = Etablissement.find(filter).cursor();
   for await (const etablissement of cursor) {
     try {
+      if (count % 1000 === 0) {
+        console.log(`updating etablissement ${count}/${total}`);
+      }
       const { updates, etablissement: updatedEtablissement, error } = await getEtablissementUpdates(
         etablissement._doc,
         etablissementServiceOptions
@@ -30,11 +33,11 @@ const performUpdates = async (filter = {}, options = null) => {
         logger.error(`${count}/${total}: Etablissement ${etablissement._id} errored`, error);
       } else if (!updates) {
         // Do nothing
-        logger.info(`${count}/${total}: Etablissement ${etablissement._id} nothing to do`);
+        // logger.info(`${count}/${total}: Etablissement ${etablissement._id} nothing to do`);
       } else {
         updatedEtablissement.last_update_at = Date.now();
         await Etablissement.findByIdAndUpdate(etablissement._id, updatedEtablissement);
-        logger.info(`${count}/${total}: Etablissement ${etablissement._id} updated`);
+        // logger.info(`${count}/${total}: Etablissement ${etablissement._id} updated`);
       }
     } catch (error) {
       logger.error(error);
