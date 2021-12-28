@@ -4,7 +4,7 @@ import { Link } from "@chakra-ui/react";
 const changelog = {
   list: [
     {
-      version: "5.3.0",
+      version: "5.4.0",
       date: "Prochainement",
       about: `<h4>À venir</h4>`,
       fixes: [],
@@ -12,12 +12,23 @@ const changelog = {
       improvements: [],
     },
     {
+      version: "5.3.0",
+      date: "Le 28 Décembre 2021",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [],
+      features: [
+        "Module de publication à l’usage des services académiques — Prise en compte des formations dont l’année d’entrée en apprentissage n’est pas collectée par le réseau des Carif-Oref : les services académiques peuvent repérer les formations concernées, et demander leur publication sur Parcoursup s’ils confirment la possibilité d’accès post-bac en apprentissage.",
+      ],
+      improvements: ["Amélioration des performances et de la stabilité des traitements nocturnes"],
+    },
+    {
       version: "5.2.1",
       date: "Le 23 Décembre 2021",
       about: `<h4>À propos de cette version</h4>
       Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: [
-        "    Module de rapprochement des formations Catalogue et Parcoursup, à l'usage des services académiques : correction d'une erreur qui ne mettait pas à jour les correspondances après une annulation de rapprochement rejeté ou validé (avec pour effet de diriger sur des pages introuvables).",
+        "Module de rapprochement des formations Catalogue et Parcoursup, à l'usage des services académiques : correction d'une erreur qui ne mettait pas à jour les correspondances après une annulation de rapprochement rejeté ou validé (avec pour effet de diriger sur des pages introuvables).",
       ],
       features: [],
       improvements: [],
