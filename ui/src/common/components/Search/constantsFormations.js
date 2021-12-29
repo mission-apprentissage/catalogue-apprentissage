@@ -481,6 +481,7 @@ const queryBuilderField = [
   { text: "Diplôme", value: "diplome.keyword" },
   { text: "Intitulé", value: "intitule_court.keyword" },
   { text: "Code RNCP", value: "rncp_code.keyword" },
+  { text: "Code diplôme", value: "cfd.keyword" },
   { text: "Commune du lieu de formation", value: "localite.keyword" },
   { text: "Identifiant Formation CO", value: "id_formation.keyword" },
   { text: "Identifiants Action CO", value: "ids_action.keyword" },
@@ -528,17 +529,6 @@ const facetDefinition = () => [
     selectAllLabel: "Tous",
     sortBy: "asc",
   },
-
-  {
-    componentId: `cfd`,
-    dataField: "cfd.keyword",
-    title: "Code diplôme",
-    filterLabel: "Code diplôme",
-    selectAllLabel: "Tous",
-    sortBy: "asc",
-    size: 5000,
-  },
-
   {
     componentId: `niveau`,
     dataField: "niveau.keyword",
@@ -546,16 +536,6 @@ const facetDefinition = () => [
     filterLabel: "Niveau de formation",
     selectAllLabel: "Tous les niveaux",
     sortBy: "count",
-  },
-
-  {
-    componentId: `rncp_code`,
-    dataField: "rncp_code.keyword",
-    title: "Code RNCP",
-    filterLabel: "Code RNCP",
-    selectAllLabel: "Tous",
-    sortBy: "count",
-    size: 5000,
   },
   {
     componentId: `tags`,
@@ -580,6 +560,8 @@ const dataSearch = {
   dataField: [
     "etablissement_gestionnaire_entreprise_raison_sociale",
     "intitule_long",
+    "cfd",
+    "rncp_code",
     "uai_formation",
     "etablissement_gestionnaire_uai",
     "etablissement_formateur_uai",
@@ -588,7 +570,7 @@ const dataSearch = {
     "cle_ministere_educatif",
   ],
   placeholder: "Saisissez une raison sociale, un intitulé de formation, un UAI, ou un numéro de Siret",
-  fieldWeights: [4, 3, 2, 2, 2, 1, 1, 1],
+  fieldWeights: [4, 3, 2, 2, 2, 2, 2, 1, 1, 1],
 };
 
 export default {
