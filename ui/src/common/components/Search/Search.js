@@ -203,18 +203,14 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                           <span className="summary-text">
                             {isBaseFormations &&
                               isCatalogueGeneral &&
-                              `${
-                                searchState.countCatalogueGeneral.filtered === null
-                                  ? stats.numberOfResults.toLocaleString("fr-FR")
-                                  : searchState.countCatalogueGeneral.filtered.toLocaleString("fr-FR")
-                              } formations sur ${countCatalogueGeneral.total.toLocaleString("fr-FR")}`}
+                              `${stats.numberOfResults.toLocaleString(
+                                "fr-FR"
+                              )} formations sur ${countCatalogueGeneral.total.toLocaleString("fr-FR")}`}
                             {isBaseFormations &&
                               !isCatalogueGeneral &&
-                              `${
-                                searchState.countCatalogueNonEligible.filtered === null
-                                  ? stats.numberOfResults.toLocaleString("fr-FR")
-                                  : searchState.countCatalogueNonEligible.filtered.toLocaleString("fr-FR")
-                              } formations sur ${countCatalogueNonEligible.total.toLocaleString("fr-FR")}`}
+                              `${stats.numberOfResults.toLocaleString(
+                                "fr-FR"
+                              )} formations sur ${countCatalogueNonEligible.total.toLocaleString("fr-FR")}`}
                             {!isBaseFormations &&
                               `${
                                 isBaseReconciliationPs
