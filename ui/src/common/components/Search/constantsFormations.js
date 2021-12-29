@@ -569,7 +569,7 @@ const facetDefinition = () => [
     componentId: `annee`,
     dataField: "annee.keyword",
     title: "Année d'entrée en apprentissage",
-    filterLabel: "Année",
+    filterLabel: "Année d'entrée en apprentissage",
     selectAllLabel: "Toutes",
     sortBy: "asc",
     isAuth: true, // hide for anonymous
