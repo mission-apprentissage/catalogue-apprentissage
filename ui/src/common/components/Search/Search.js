@@ -124,8 +124,10 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                 </Text>
                 {facetDefinition(context)
                   .filter(
-                    ({ acl, showCatalogEligibleOnly }) =>
-                      (!showCatalogEligibleOnly || isCatalogueGeneral) && (!acl || hasAccessTo(auth, acl))
+                    ({ acl, showCatalogEligibleOnly, isAuth }) =>
+                      (!showCatalogEligibleOnly || isCatalogueGeneral) &&
+                      (!acl || hasAccessTo(auth, acl)) &&
+                      (!isAuth || (isAuth && auth?.sub !== "anonymous"))
                   )
                   .map((fd, i) => {
                     return (

@@ -572,6 +572,7 @@ const facetDefinition = () => [
     filterLabel: "Année",
     selectAllLabel: "Toutes",
     sortBy: "asc",
+    isAuth: true, // hide for anonymous
   },
 ];
 
