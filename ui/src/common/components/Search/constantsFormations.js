@@ -569,7 +569,8 @@ const dataSearch = {
     "etablissement_gestionnaire_siret",
     "cle_ministere_educatif",
   ],
-  placeholder: "Saisissez une raison sociale, un intitulé de formation, un UAI, ou un numéro de Siret",
+  placeholder:
+    "Saisissez une raison sociale, un Siret, un intitulé de formation, un code RNCP ou CFD (code formation diplôme)",
   fieldWeights: [4, 3, 2, 2, 2, 2, 2, 1, 1, 1],
 };
 
