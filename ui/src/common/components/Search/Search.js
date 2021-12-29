@@ -93,6 +93,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                   showClear={true}
                   clearIcon={<CloseCircleLine boxSize={4} />}
                   icon={<SearchLine color={"bluefrance"} boxSize={5} />}
+                  debounce={500}
                 />
               </Box>
             )}
