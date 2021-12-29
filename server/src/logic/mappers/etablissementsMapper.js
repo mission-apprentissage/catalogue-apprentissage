@@ -49,7 +49,7 @@ const isHabiliteRncp = ({ partenaires = [], certificateurs = [] }, siret) => {
 const getEtablissementReference = ({ gestionnaire, formateur }, rncpInfo) => {
   // Check etablissement reference found
   if (!gestionnaire && !formateur) {
-    logger.error(`getEtablissementReference: both gestionnaire and formateur null`);
+    logger.debug(`getEtablissementReference: both gestionnaire and formateur null`);
     return null;
   }
 

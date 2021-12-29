@@ -30,7 +30,9 @@ const performUpdates = async (filter = {}, options = null) => {
       if (error) {
         etablissement.update_error = error;
         await Etablissement.findByIdAndUpdate(etablissement._id, etablissement);
-        logger.error(`${count}/${total}: Etablissement ${etablissement._id} errored`, error);
+        logger.error(
+          `${count}/${total}: Etablissement ${etablissement._id} (siret: ${etablissement?.siret}) errored: ${error}`
+        );
       } else if (!updates) {
         // Do nothing
         // logger.info(`${count}/${total}: Etablissement ${etablissement._id} nothing to do`);
