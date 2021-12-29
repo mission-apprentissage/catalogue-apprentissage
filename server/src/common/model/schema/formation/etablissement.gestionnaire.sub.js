@@ -5,6 +5,7 @@ const etablissementGestionnaireInfo = {
     description: "Identifiant établissement gestionnaire",
   },
   etablissement_gestionnaire_siret: {
+    index: true,
     type: String,
     default: null,
     description: "Numéro siret gestionnaire",
