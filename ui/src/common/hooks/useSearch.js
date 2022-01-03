@@ -22,23 +22,16 @@ const esQueryParser = async () => {
 
   const initialValue = JSON.parse(decodeURIComponent(s));
   const rules = withUniqueKey(initialValue);
-  const queries = mergedQueries(
+  return mergedQueries(
     rules.map((r) => ({ ...r, query: operators.find((o) => o.value === r.operator).query(r.field, r.value) }))
   );
-
-  return queries;
 };
 
 const getEsCount = async (queries) => {
   const countEsQuery = {
-    query: {
-      bool: {
-        ...queries,
-      },
-    },
+    query: { bool: { ...queries, ...(queries?.should?.length > 0 ? { minimum_should_match: 1 } : {}) } },
   };
-  const results = await _post("/api/es/search/formation/_count", countEsQuery);
-  return results;
+  return await _post("/api/es/search/formation/_count", countEsQuery);
 };
 
 const getCountEntities = async (base) => {
@@ -81,13 +74,23 @@ const getCountEntities = async (base) => {
       },
     });
 
-    const esQueryParameterCatalogueGeneral = { ...esQueryParameter, must: [...esQueryParameter.must] };
-    esQueryParameterCatalogueGeneral.must.push({ match: { etablissement_reference_catalogue_published: true } });
+    const esQueryParameterCatalogueGeneral = {
+      ...esQueryParameter,
+      must: [...esQueryParameter.must],
+    };
+    esQueryParameterCatalogueGeneral.must.push({
+      match: { etablissement_reference_catalogue_published: true },
+    });
     const { count: countEsCatalogueGeneral } = await getEsCount(esQueryParameterCatalogueGeneral);
     countCatalogueGeneral.filtered = countEsCatalogueGeneral;
 
-    const esQueryParameterCatalogueNonEligible = { ...esQueryParameter, must: [...esQueryParameter.must] };
-    esQueryParameterCatalogueNonEligible.must.push({ match: { etablissement_reference_catalogue_published: false } });
+    const esQueryParameterCatalogueNonEligible = {
+      ...esQueryParameter,
+      must: [...esQueryParameter.must],
+    };
+    esQueryParameterCatalogueNonEligible.must.push({
+      match: { etablissement_reference_catalogue_published: false },
+    });
     const { count: countEsCatalogueNonEligible } = await getEsCount(esQueryParameterCatalogueNonEligible);
     countCatalogueNonEligible.filtered = countEsCatalogueNonEligible;
   }

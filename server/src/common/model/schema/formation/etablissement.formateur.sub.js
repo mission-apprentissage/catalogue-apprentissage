@@ -5,6 +5,7 @@ const etablissementFormateurInfo = {
     description: "Identifiant établissement formateur",
   },
   etablissement_formateur_siret: {
+    index: true,
     type: String,
     default: null,
     description: "Numéro siret formateur",

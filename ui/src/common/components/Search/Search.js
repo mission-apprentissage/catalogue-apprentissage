@@ -93,6 +93,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                   showClear={true}
                   clearIcon={<CloseCircleLine boxSize={4} />}
                   icon={<SearchLine color={"bluefrance"} boxSize={5} />}
+                  debounce={500}
                 />
               </Box>
             )}
@@ -124,8 +125,10 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                 </Text>
                 {facetDefinition(context)
                   .filter(
-                    ({ acl, showCatalogEligibleOnly }) =>
-                      (!showCatalogEligibleOnly || isCatalogueGeneral) && (!acl || hasAccessTo(auth, acl))
+                    ({ acl, showCatalogEligibleOnly, isAuth }) =>
+                      (!showCatalogEligibleOnly || isCatalogueGeneral) &&
+                      (!acl || hasAccessTo(auth, acl)) &&
+                      (!isAuth || (isAuth && auth?.sub !== "anonymous"))
                   )
                   .map((fd, i) => {
                     return (
@@ -201,18 +204,14 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                           <span className="summary-text">
                             {isBaseFormations &&
                               isCatalogueGeneral &&
-                              `${
-                                searchState.countCatalogueGeneral.filtered === null
-                                  ? stats.numberOfResults.toLocaleString("fr-FR")
-                                  : searchState.countCatalogueGeneral.filtered.toLocaleString("fr-FR")
-                              } formations sur ${countCatalogueGeneral.total.toLocaleString("fr-FR")}`}
+                              `${stats.numberOfResults.toLocaleString(
+                                "fr-FR"
+                              )} formations sur ${countCatalogueGeneral.total.toLocaleString("fr-FR")}`}
                             {isBaseFormations &&
                               !isCatalogueGeneral &&
-                              `${
-                                searchState.countCatalogueNonEligible.filtered === null
-                                  ? stats.numberOfResults.toLocaleString("fr-FR")
-                                  : searchState.countCatalogueNonEligible.filtered.toLocaleString("fr-FR")
-                              } formations sur ${countCatalogueNonEligible.total.toLocaleString("fr-FR")}`}
+                              `${stats.numberOfResults.toLocaleString(
+                                "fr-FR"
+                              )} formations sur ${countCatalogueNonEligible.total.toLocaleString("fr-FR")}`}
                             {!isBaseFormations &&
                               `${
                                 isBaseReconciliationPs
