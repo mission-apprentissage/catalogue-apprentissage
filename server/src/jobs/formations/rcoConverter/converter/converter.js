@@ -64,6 +64,21 @@ const hasOnlyUpdatedNewFields = (rcoFormation) => {
   return updatedFields.length === newFields.length && updatedFields.every((field) => newFields.includes(field));
 };
 
+/**
+ * check last updates_history entry on RCOFormation and if contains an address field, to_update=true (to spare much time)
+ */
+const hasUpdatedAddress = (rcoFormation) => {
+  const addressFields = [
+    "etablissement_lieu_formation_adresse",
+    "etablissement_lieu_formation_code_postal",
+    "etablissement_lieu_formation_code_insee",
+    "etablissement_lieu_formation_geo_coordonnees",
+  ];
+
+  const updatedFields = Object.keys(rcoFormation?.updates_history[rcoFormation?.updates_history?.length - 1]?.to ?? {});
+  return updatedFields.some((field) => addressFields.includes(field));
+};
+
 const formatToMnaFormation = (rcoFormation) => {
   const periode =
     rcoFormation.periode && rcoFormation.periode.length > 0
@@ -174,7 +189,7 @@ const createFormation = async (
   rcoFormation.conversion_error = "success";
   await rcoFormation.save();
 
-  mnaFormattedRcoFormation.to_update = true;
+  mnaFormattedRcoFormation.to_update = false;
   // replace or insert new one
 
   const cF = await getOrCreateFormation(mnaFormattedRcoFormation);
@@ -359,7 +374,15 @@ const performConversion = async () => {
           return;
         }
 
-        await createFormation(rcoFormation, mnaFormattedRcoFormation, invalidRcoFormations, convertedRcoFormations);
+        const newFormation = await createFormation(
+          rcoFormation,
+          mnaFormattedRcoFormation,
+          invalidRcoFormations,
+          convertedRcoFormations
+        );
+        if (hasUpdatedAddress(mnaFormattedRcoFormation)) {
+          await Formation.findByIdAndUpdate(newFormation._id, { to_update: true });
+        }
       } catch (error) {
         console.log(error);
       }
