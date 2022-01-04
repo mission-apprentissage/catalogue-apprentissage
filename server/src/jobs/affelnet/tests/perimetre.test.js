@@ -46,6 +46,7 @@ describe(__filename, () => {
     // formations
     await Formation.create({
       published: false,
+      etablissement_gestionnaire_catalogue_published: true,
       etablissement_reference_catalogue_published: true,
       niveau: "4 (BAC...)",
       diplome: "MC",
@@ -53,6 +54,7 @@ describe(__filename, () => {
     });
     await Formation.create({
       published: true,
+      etablissement_gestionnaire_catalogue_published: true,
       etablissement_reference_catalogue_published: true,
       niveau: "4 (BAC...)",
       diplome: "MC",
@@ -60,6 +62,7 @@ describe(__filename, () => {
     });
     await Formation.create({
       published: true,
+      etablissement_gestionnaire_catalogue_published: true,
       etablissement_reference_catalogue_published: true,
       niveau: "4 (BAC...)",
       diplome: "MC Agri",
@@ -67,6 +70,7 @@ describe(__filename, () => {
     });
     await Formation.create({
       published: true,
+      etablissement_gestionnaire_catalogue_published: true,
       etablissement_reference_catalogue_published: true,
       niveau: "3 (CAP...)",
       diplome: "CAP",
@@ -74,6 +78,7 @@ describe(__filename, () => {
     });
     await Formation.create({
       published: true,
+      etablissement_gestionnaire_catalogue_published: true,
       etablissement_reference_catalogue_published: true,
       niveau: "4 (BAC...)",
       diplome: "BAC TECHNO",
@@ -82,6 +87,7 @@ describe(__filename, () => {
     });
     await Formation.create({
       published: true,
+      etablissement_gestionnaire_catalogue_published: true,
       etablissement_reference_catalogue_published: true,
       niveau: "4 (BAC...)",
       diplome: "BAC TECHNO",
@@ -90,6 +96,7 @@ describe(__filename, () => {
     });
     await Formation.create({
       published: true,
+      etablissement_gestionnaire_catalogue_published: true,
       etablissement_reference_catalogue_published: true,
       niveau: "4 (BAC...)",
       diplome: "BAC PRO",
@@ -98,6 +105,7 @@ describe(__filename, () => {
     });
     await Formation.create({
       published: true,
+      etablissement_gestionnaire_catalogue_published: true,
       etablissement_reference_catalogue_published: true,
       niveau: "4 (BAC...)",
       diplome: "BAC PRO",

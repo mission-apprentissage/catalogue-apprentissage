@@ -46,6 +46,7 @@ describe(__filename, () => {
     // formations
     await Formation.create({
       published: false,
+      etablissement_gestionnaire_catalogue_published: true,
       etablissement_reference_catalogue_published: true,
       niveau: "6 (Licence, BUT...)",
       diplome: "Licence",
@@ -54,6 +55,7 @@ describe(__filename, () => {
     });
     await Formation.create({
       published: true,
+      etablissement_gestionnaire_catalogue_published: true,
       etablissement_reference_catalogue_published: true,
       niveau: "6 (Licence, BUT...)",
       diplome: "Licence",
@@ -62,6 +64,7 @@ describe(__filename, () => {
     });
     await Formation.create({
       published: true,
+      etablissement_gestionnaire_catalogue_published: true,
       etablissement_reference_catalogue_published: true,
       niveau: "6 (Licence, BUT...)",
       diplome: "Licence Agri",
@@ -70,6 +73,7 @@ describe(__filename, () => {
     });
     await Formation.create({
       published: true,
+      etablissement_gestionnaire_catalogue_published: true,
       etablissement_reference_catalogue_published: true,
       niveau: "5 (BTS, DEUST...)",
       diplome: "BTS",
@@ -78,6 +82,7 @@ describe(__filename, () => {
     });
     await Formation.create({
       published: true,
+      etablissement_gestionnaire_catalogue_published: true,
       etablissement_reference_catalogue_published: true,
       niveau: "6 (Licence, BUT...)",
       diplome: "BUT",
@@ -87,6 +92,7 @@ describe(__filename, () => {
     });
     await Formation.create({
       published: true,
+      etablissement_gestionnaire_catalogue_published: true,
       etablissement_reference_catalogue_published: true,
       niveau: "6 (Licence, BUT...)",
       diplome: "BUT",
@@ -96,6 +102,7 @@ describe(__filename, () => {
     });
     await Formation.create({
       published: true,
+      etablissement_gestionnaire_catalogue_published: true,
       etablissement_reference_catalogue_published: true,
       niveau: "6 (Licence, BUT...)",
       diplome: "BUT",
@@ -105,6 +112,7 @@ describe(__filename, () => {
     });
     await Formation.create({
       published: true,
+      etablissement_gestionnaire_catalogue_published: true,
       etablissement_reference_catalogue_published: true,
       niveau: "7 (Master, titre ingénieur...)",
       diplome: "Master",

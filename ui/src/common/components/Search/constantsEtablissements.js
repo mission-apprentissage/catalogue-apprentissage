@@ -1,7 +1,7 @@
 import { escapeDiacritics } from "../../utils/downloadUtils";
 import helpText from "../../../locales/helpText.json";
 
-const FILTERS = () => [`QUERYBUILDER`, `SEARCH`, `num_departement`, `nom_academie`, `tags`, "published"];
+const FILTERS = () => [`QUERYBUILDER`, `SEARCH`, `num_departement`, `nom_academie`, `tags`, "published", "qualiopi"];
 
 const columnsDefinition = [
   {
@@ -325,6 +325,28 @@ const facetDefinition = () => [
     selectAllLabel: "Toutes",
     sortBy: "asc",
     helpTextSection: helpText.search.tags,
+  },
+  {
+    componentId: `qualiopi`,
+    dataField: "catalogue_published",
+    title: "Certifiés Qualiopi",
+    filterLabel: "Certifiés Qualiopi",
+    sortBy: "asc",
+    helpTextSection: helpText.search.qualiopi,
+    showSearch: false,
+    transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
+    customQuery: (values) => {
+      if (values.length === 1) {
+        return {
+          query: {
+            match: {
+              catalogue_published: values[0] === "Oui",
+            },
+          },
+        };
+      }
+      return {};
+    },
   },
 ];
 

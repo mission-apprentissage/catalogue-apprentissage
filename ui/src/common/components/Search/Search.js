@@ -156,6 +156,9 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                             : null
                         }
                         helpTextSection={fd.helpTextSection}
+                        transformData={fd.transformData}
+                        customQuery={fd.customQuery}
+                        showSearch={fd.showSearch}
                       />
                     );
                   })}

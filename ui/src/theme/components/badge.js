@@ -75,10 +75,15 @@ const Badge = {
     },
     year: {
       ...commonStatusBadgeStyle,
+      fontSize: "zeta",
       bg: "greenmedium.300",
       color: "grey.800",
       pl: "15px",
       pr: "15px",
+      mr: "10px",
+      py: 0,
+      mt: 3,
+      lineHeight: "1.5rem",
     },
   },
 };

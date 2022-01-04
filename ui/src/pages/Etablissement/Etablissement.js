@@ -32,6 +32,7 @@ import { ArrowRightLine, Edit2Fill, ExternalLinkLine, Tick } from "../../theme/c
 import { HowToFixModal } from "../../common/components/organisme/HowToFixModal";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
+import { QualiopiBadge } from "../../common/components/QualiopiBadge";
 
 const sleep = (m) => new Promise((r) => setTimeout(r, m));
 
@@ -453,10 +454,11 @@ export default ({ match }) => {
                     etablissement.tags
                       .sort((a, b) => a - b)
                       .map((tag, i) => (
-                        <Badge variant="year" mr="10px" mt={3} key={i}>
+                        <Badge variant="year" key={i}>
                           {tag}
                         </Badge>
                       ))}
+                  {etablissement.catalogue_published && <QualiopiBadge />}
                 </Box>
                 <Etablissement
                   etablissement={etablissement}

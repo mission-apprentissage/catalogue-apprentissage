@@ -124,10 +124,11 @@ const mapEtablissementKeys = (etablissement, prefix = "etablissement_gestionnair
 };
 
 const isInCatalogEligible = (gestionnaire, referenceEstablishment, rncpInfo) => {
+  // Put non-qualiopi in catalogue général (law change https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000044792191)
   // ensure gestionnaire is published = is qualiopi certified
-  if (!gestionnaire.catalogue_published) {
-    return false;
-  }
+  // if (!gestionnaire.catalogue_published) {
+  //   return false;
+  // }
 
   if (
     ["Titre", "TP"].includes(rncpInfo.code_type_certif) &&

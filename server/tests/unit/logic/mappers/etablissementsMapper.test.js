@@ -284,10 +284,11 @@ describe(__filename, () => {
   });
 
   describe("isInCatalogEligible", () => {
-    it("should return false if etablissement not published", () => {
-      const result = isInCatalogEligible({ siret: "1234" }, { siret: "1234" }, {});
-      assert.deepStrictEqual(result, false);
-    });
+    // Test disabled since currently we show non-qualiopi formations in catalogue général
+    // it("should return false if etablissement not published", () => {
+    //   const result = isInCatalogEligible({ siret: "1234" }, { siret: "1234" }, {});
+    //   assert.deepStrictEqual(result, false);
+    // });
 
     it("should return false if etablissement is not habilite and formation is a Titre or TP", () => {
       const result = isInCatalogEligible(

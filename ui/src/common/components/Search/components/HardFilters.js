@@ -1,5 +1,6 @@
 import React from "react";
 import { SingleList } from "@appbaseio/reactivesearch";
+import { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL } from "../../../../constants/catalogueLabels";
 
 const HardFilters = React.memo(({ filters, context, isBaseFormations, isBaseReconciliationPs }) => {
   const [statutReconciliation, setStatutReconciliation] = React.useState("AUTOMATIQUE");
@@ -46,12 +47,12 @@ const HardFilters = React.memo(({ filters, context, isBaseFormations, isBaseReco
           componentId="catalogue_published"
           dataField="etablissement_reference_catalogue_published"
           react={{ and: filters.filter((e) => e !== "catalogue_published") }}
-          value={context === "catalogue_general" ? "Catalogue général" : "Catalogue non-éligible"}
-          defaultValue={context === "catalogue_general" ? "Catalogue général" : "Catalogue non-éligible"}
+          value={context === "catalogue_general" ? CATALOGUE_GENERAL_LABEL : CATALOGUE_NON_ELIGIBLE_LABEL}
+          defaultValue={context === "catalogue_general" ? CATALOGUE_GENERAL_LABEL : CATALOGUE_NON_ELIGIBLE_LABEL}
           transformData={(data) => {
             return data.map((d) => ({
               ...d,
-              key: d.key === 1 ? "Catalogue général" : "Catalogue non-éligible",
+              key: d.key === 1 ? CATALOGUE_GENERAL_LABEL : CATALOGUE_NON_ELIGIBLE_LABEL,
             }));
           }}
           customQuery={(data) => {
@@ -61,9 +62,7 @@ const HardFilters = React.memo(({ filters, context, isBaseFormations, isBaseReco
                   query: {
                     bool: {
                       must: [
-                        { match: { etablissement_reference_catalogue_published: data === "Catalogue général" } },
-                        // { match: { rncp_etablissement_reference_habilite: data === "Catalogue général" } },
-                        // { match: { rncp_eligible_apprentissage: data === "Catalogue général" } },
+                        { match: { etablissement_reference_catalogue_published: data === CATALOGUE_GENERAL_LABEL } },
                       ],
                     },
                   },

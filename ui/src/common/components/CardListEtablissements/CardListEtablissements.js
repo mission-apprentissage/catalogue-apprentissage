@@ -2,6 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { Badge, Text, Flex, Box, Heading, Link } from "@chakra-ui/react";
 import { ArrowRightLine } from "../../../theme/components/icons";
+import { QualiopiBadge } from "../QualiopiBadge";
 
 const CardListEtablissements = ({ data, withoutLink }) => {
   const RenderCard = ({ withoutLink }) => {
@@ -24,20 +25,11 @@ const CardListEtablissements = ({ data, withoutLink }) => {
                   data.tags
                     .sort((a, b) => a - b)
                     .map((tag, i) => (
-                      <Badge
-                        variant="solid"
-                        bg="greenmedium.300"
-                        borderRadius="16px"
-                        color="grey.800"
-                        textStyle="sm"
-                        px="15px"
-                        mr="10px"
-                        mt={3}
-                        key={i}
-                      >
+                      <Badge variant="year" key={i}>
                         {tag}
                       </Badge>
                     ))}
+                {data.info_qualiopi_info === "OUI" && <QualiopiBadge />}
               </Flex>
               {!withoutLink && <ArrowRightLine alignSelf="center" color="bluefrance" boxSize={4} />}
             </Flex>
@@ -46,14 +38,14 @@ const CardListEtablissements = ({ data, withoutLink }) => {
       </>
     );
   };
-  return !withoutLink ? (
-    <Link as={NavLink} to={`/etablissement/${data._id}`} variant="card" mt={4} isExternal>
-      <RenderCard withoutLink />
-    </Link>
-  ) : (
+  return withoutLink ? (
     <Box p={8} bg="#F9F8F6">
-      <RenderCard />
+      <RenderCard withoutLink />
     </Box>
+  ) : (
+    <Link as={NavLink} to={`/etablissement/${data._id}`} variant="card" mt={4} isExternal>
+      <RenderCard />
+    </Link>
   );
 };
 
