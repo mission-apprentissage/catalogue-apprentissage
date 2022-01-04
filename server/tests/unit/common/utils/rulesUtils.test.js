@@ -84,6 +84,7 @@ describe(__filename, () => {
           $ne: true,
         },
         diplome: "BTS",
+        etablissement_gestionnaire_catalogue_published: true,
         etablissement_reference_catalogue_published: true,
         niveau: "4",
         num_academie: "10",

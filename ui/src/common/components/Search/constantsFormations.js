@@ -34,6 +34,7 @@ const FILTERS = () => [
   "diplome",
   "tags",
   "annee",
+  "qualiopi",
 ];
 
 const columnsDefinition = [
@@ -553,6 +554,28 @@ const facetDefinition = () => [
     selectAllLabel: "Toutes",
     sortBy: "asc",
     isAuth: true, // hide for anonymous
+  },
+  {
+    componentId: `qualiopi`,
+    dataField: "etablissement_gestionnaire_catalogue_published",
+    title: "Certifiés Qualiopi",
+    filterLabel: "Certifiés Qualiopi",
+    sortBy: "asc",
+    helpTextSection: helpText.search.qualiopi,
+    showSearch: false,
+    transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
+    customQuery: (values) => {
+      if (values.length === 1) {
+        return {
+          query: {
+            match: {
+              etablissement_gestionnaire_catalogue_published: values[0] === "Oui",
+            },
+          },
+        };
+      }
+      return {};
+    },
   },
 ];
 

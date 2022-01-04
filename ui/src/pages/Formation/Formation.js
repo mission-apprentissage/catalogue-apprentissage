@@ -32,6 +32,7 @@ import { setTitle } from "../../common/utils/pageUtils";
 import { EditableField } from "../../common/components/formation/EditableField";
 import { DescriptionBlock } from "../../common/components/formation/DescriptionBlock";
 import { OrganismesBlock } from "../../common/components/formation/OrganismesBlock";
+import { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL } from "../../constants/catalogueLabels";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -253,8 +254,8 @@ export default ({ match }) => {
                 ${
                   formation &&
                   (formation.etablissement_reference_catalogue_published
-                    ? " (Catalogue général)"
-                    : " (Catalogue non-éligible)")
+                    ? ` (${CATALOGUE_GENERAL_LABEL})`
+                    : ` (${CATALOGUE_NON_ELIGIBLE_LABEL})`)
                 }`,
                 to: "/recherche/formations",
               },

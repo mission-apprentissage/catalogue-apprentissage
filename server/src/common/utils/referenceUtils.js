@@ -3,6 +3,7 @@ const toBePublishedRulesParcousup = {
   published: true,
   etablissement_reference_catalogue_published: true,
   annee: { $in: ["1", "9", "X"] },
+  etablissement_gestionnaire_catalogue_published: true, // ensure gestionnaire is Qualiopi certified
 };
 
 const toBePublishedRulesAffelnet = {
@@ -10,6 +11,7 @@ const toBePublishedRulesAffelnet = {
   published: true,
   etablissement_reference_catalogue_published: true,
   annee: { $ne: "X" },
+  etablissement_gestionnaire_catalogue_published: true, // ensure gestionnaire is Qualiopi certified
 };
 
 const getPublishedRules = (plateforme) => {
