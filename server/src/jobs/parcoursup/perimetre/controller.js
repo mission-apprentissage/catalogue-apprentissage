@@ -20,6 +20,17 @@ const run = async () => {
     { $set: { parcoursup_statut: "hors périmètre" } }
   );
 
+  // set "publié"
+  await Formation.updateMany(
+    {
+      published: true,
+      etablissement_reference_catalogue_published: true,
+      parcoursup_id: { $ne: null },
+      parcoursup_statut: { $ne: "non publié" },
+    },
+    { $set: { parcoursup_statut: "publié" } }
+  );
+
   // set "à publier (vérifier accès direct postbac)" & "à publier (soumis à validation Recteur)" for trainings matching psup eligibility rules
   // reset "à publier" & "à publier (vérifier accès direct postbac)" & "à publier (soumis à validation Recteur)"
   await Formation.updateMany(
@@ -54,7 +65,12 @@ const run = async () => {
         ...filterHP,
         $or: aPublierHabilitationRules.map(getQueryFromRule),
       },
-      { $set: { last_update_at: Date.now(), parcoursup_statut: "à publier (sous condition habilitation)" } }
+      {
+        $set: {
+          last_update_at: Date.now(),
+          parcoursup_statut: "à publier (sous condition habilitation)",
+        },
+      }
     ));
 
   const aPublierVerifierAccesDirectPostBacRules = await ReglePerimetre.find({
@@ -69,7 +85,12 @@ const run = async () => {
         ...filterHP,
         $or: aPublierVerifierAccesDirectPostBacRules.map(getQueryFromRule),
       },
-      { $set: { last_update_at: Date.now(), parcoursup_statut: "à publier (vérifier accès direct postbac)" } }
+      {
+        $set: {
+          last_update_at: Date.now(),
+          parcoursup_statut: "à publier (vérifier accès direct postbac)",
+        },
+      }
     ));
 
   const aPublierValidationRecteurRules = await ReglePerimetre.find({
@@ -84,7 +105,12 @@ const run = async () => {
         ...filterHP,
         $or: aPublierValidationRecteurRules.map(getQueryFromRule),
       },
-      { $set: { last_update_at: Date.now(), parcoursup_statut: "à publier (soumis à validation Recteur)" } }
+      {
+        $set: {
+          last_update_at: Date.now(),
+          parcoursup_statut: "à publier (soumis à validation Recteur)",
+        },
+      }
     ));
 
   // 3 - set "à publier" for trainings matching psup eligibility rules
@@ -160,12 +186,18 @@ const run = async () => {
     published: true,
     parcoursup_statut: "à publier (soumis à validation Recteur)",
   });
-  const totalToCheck = await Formation.countDocuments({ published: true, parcoursup_statut: "à publier" });
+  const totalToCheck = await Formation.countDocuments({
+    published: true,
+    parcoursup_statut: "à publier",
+  });
   const totalPending = await Formation.countDocuments({
     published: true,
     parcoursup_statut: "en attente de publication",
   });
-  const totalPsPublished = await Formation.countDocuments({ published: true, parcoursup_statut: "publié" });
+  const totalPsPublished = await Formation.countDocuments({
+    published: true,
+    parcoursup_statut: "publié",
+  });
   const totalPsNotPublished = await Formation.countDocuments({
     published: true,
     parcoursup_statut: "non publié",
