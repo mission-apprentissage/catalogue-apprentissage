@@ -59,7 +59,9 @@ const hasOnlyUpdatedNewFields = (rcoFormation) => {
     "entree_apprentissage",
     "parcours",
   ];
-  const updatedFields = Object.keys(rcoFormation?.updates_history[rcoFormation?.updates_history?.length - 1]?.to ?? {});
+  const updatedFields = Object.keys(
+    rcoFormation?.updates_history?.[rcoFormation?.updates_history?.length - 1]?.to ?? {}
+  );
 
   return updatedFields.length === newFields.length && updatedFields.every((field) => newFields.includes(field));
 };
@@ -75,7 +77,9 @@ const hasUpdatedAddress = (rcoFormation) => {
     "etablissement_lieu_formation_geo_coordonnees",
   ];
 
-  const updatedFields = Object.keys(rcoFormation?.updates_history[rcoFormation?.updates_history?.length - 1]?.to ?? {});
+  const updatedFields = Object.keys(
+    rcoFormation?.updates_history?.[rcoFormation?.updates_history?.length - 1]?.to ?? {}
+  );
   return updatedFields.some((field) => addressFields.includes(field));
 };
 
