@@ -25,6 +25,7 @@ import { setTitle } from "../../common/utils/pageUtils";
 
 import useAuth from "../../common/hooks/useAuth";
 import { hasAccessTo } from "../../common/utils/rolesUtils";
+import { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL } from "../../constants/catalogueLabels";
 
 export default (props) => {
   let [auth] = useAuth();
@@ -53,14 +54,14 @@ export default (props) => {
                 <TabList bg="white" justifyContent="space-between">
                   <Flex>
                     <Tab>
-                      Catalogue général (
+                      {CATALOGUE_GENERAL_LABEL} (
                       {searchState.countCatalogueGeneral.filtered === null
                         ? searchState.countCatalogueGeneral.total.toLocaleString("fr-FR")
                         : searchState.countCatalogueGeneral.filtered.toLocaleString("fr-FR")}
                       )
                     </Tab>
                     <Tab>
-                      Catalogue non-éligible (
+                      {CATALOGUE_NON_ELIGIBLE_LABEL} (
                       {searchState.countCatalogueNonEligible.filtered === null
                         ? searchState.countCatalogueNonEligible.total.toLocaleString("fr-FR")
                         : searchState.countCatalogueNonEligible.filtered.toLocaleString("fr-FR")}
