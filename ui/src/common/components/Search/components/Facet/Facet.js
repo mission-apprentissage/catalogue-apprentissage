@@ -22,6 +22,7 @@ const Facet = ({
   transformData,
   customQuery,
   size,
+  showSearch = true,
 }) => {
   let [auth] = useAuth();
   let defaultValue = null;
@@ -96,7 +97,7 @@ const Facet = ({
                   checkbox: "search-checkbox",
                   label: "search-label",
                 }}
-                showSearch={true}
+                showSearch={showSearch}
                 placeholder="Filtrer"
                 showFilter={true}
                 URLParams={true}

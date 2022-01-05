@@ -3,6 +3,7 @@ import { Badge, Box, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
 import { ArrowRightLine } from "../../../theme/components/icons";
 import { getOrganisme } from "../../api/organisme";
+import { QualiopiBadge } from "../QualiopiBadge";
 
 export const OrganismesBlock = ({ formation }) => {
   const oneEstablishment = formation.etablissement_gestionnaire_siret === formation.etablissement_formateur_siret;
@@ -54,10 +55,11 @@ export const OrganismesBlock = ({ formation }) => {
                       tagsGestionnaire
                         .sort((a, b) => a - b)
                         .map((tag, i) => (
-                          <Badge data-testid={"tags-gestionnaire"} variant="year" mr="10px" mt={3} key={i}>
+                          <Badge data-testid={"tags-gestionnaire"} variant="year" key={i}>
                             {tag}
                           </Badge>
                         ))}
+                    {formation.etablissement_gestionnaire_catalogue_published && <QualiopiBadge />}
                   </Box>
                   <ArrowRightLine alignSelf="center" color="bluefrance" />
                 </Flex>
@@ -91,10 +93,11 @@ export const OrganismesBlock = ({ formation }) => {
                     tagsFormateur
                       .sort((a, b) => a - b)
                       .map((tag, i) => (
-                        <Badge variant="year" mr="10px" mt={3} key={i}>
+                        <Badge variant="year" mt={3} key={i}>
                           {tag}
                         </Badge>
                       ))}
+                  {formation.etablissement_formateur_catalogue_published && <QualiopiBadge />}
                 </Box>
                 <ArrowRightLine alignSelf="center" color="bluefrance" />
               </Flex>

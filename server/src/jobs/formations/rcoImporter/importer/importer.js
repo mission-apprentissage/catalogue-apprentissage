@@ -1,12 +1,14 @@
 const wsRCO = require("./wsRCO");
 const { RcoFormation } = require("../../../../common/model/index");
 const { diff } = require("deep-object-diff");
+const { pick } = require("lodash");
 const { asyncForEach, chunkedAsyncForEach } = require("../../../../common/utils/asyncUtils");
 const report = require("../../../../logic/reporter/report");
 const config = require("config");
 const { paginator } = require("../../../../common/utils/paginator");
 const { storeByChunks } = require("../../../../common/utils/reportUtils");
 const crypto = require("crypto");
+const { rcoFormationSchema } = require("../../../../common/model/schema");
 
 class Importer {
   constructor() {
@@ -421,7 +423,10 @@ class Importer {
       id_rco_formation,
       ...rcoFormation
     } = rcoFormationP;
-    const compare = diff(rcoFormation, formation);
+
+    // ensure to compare only with fields existing in model (if RCO add some fields, it won't trigger many updates)
+    const newFormation = pick(formation, Object.keys(rcoFormationSchema));
+    const compare = diff(rcoFormation, newFormation);
     const keys = Object.keys(compare);
 
     if (keys.length === 0) {
