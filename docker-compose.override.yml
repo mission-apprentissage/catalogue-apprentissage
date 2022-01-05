@@ -33,6 +33,7 @@ services:
     environment:
       - CATALOGUE_APPRENTISSAGE_ENV=dev
       - CATALOGUE_APPRENTISSAGE_LOG_LEVEL=debug
+      - TZ=Europe/Paris
 
   mongodb:
     ports:
