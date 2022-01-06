@@ -34,11 +34,7 @@ const getReportTitle = (reportType) => {
   }
 };
 
-function timeout(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-const getReport = async (reportType, date, uuidReport = null, page = 1, fullReport = null, range = false) => {
+const getReport = async (reportType, date, uuidReport = null, range = false) => {
   try {
     let response = null;
 
@@ -46,31 +42,27 @@ const getReport = async (reportType, date, uuidReport = null, page = 1, fullRepo
       const maxDate = new Date(parseInt(date));
       const minDate = new Date(new Date(parseInt(date)).setHours(0, 0, 0, 0));
       response = await _get(
-        `${REPORTS_URL}?type=${reportType}&minDate=${minDate.toISOString()}&maxDate=${maxDate.toISOString()}&page=${page}&uuidReport=${uuidReport}`
+        `${REPORTS_URL}?type=${reportType}&minDate=${minDate.toISOString()}&maxDate=${maxDate.toISOString()}&uuidReport=${uuidReport}`
       );
     } else {
-      response = await _get(`${REPORTS_URL}?type=${reportType}&date=${date}&page=${page}&uuidReport=${uuidReport}`);
+      response = await _get(`${REPORTS_URL}?type=${reportType}&date=${date}&uuidReport=${uuidReport}`);
     }
 
-    const { report, pagination } = response;
+    let fullReport;
 
-    if (!fullReport) {
-      fullReport = report;
-    } else {
+    response.forEach((report) => {
+      if (!fullReport) {
+        fullReport = report;
+      }
       Object.keys(report.data)
         .filter((key) => key !== "summary")
         .forEach((key) => {
           const prevData = fullReport?.data?.[key] ?? [];
           fullReport.data[key] = [...prevData, ...report.data[key]];
         });
-    }
+    });
 
-    if (page < pagination.nombre_de_page) {
-      await timeout(150);
-      return getReport(reportType, date, uuidReport, page + 1, fullReport, range);
-    } else {
-      return { report: fullReport };
-    }
+    return { report: fullReport };
   } catch (error) {
     console.error(error);
     return { error };
@@ -103,7 +95,7 @@ const ReportPage = () => {
           report.data.updated = report.data.updated ?? [];
         }
 
-        const convertReportResp = await getReport(REPORT_TYPE.RCO_CONVERSION, date, uuidReport, 1, null, true);
+        const convertReportResp = await getReport(REPORT_TYPE.RCO_CONVERSION, date, uuidReport, true);
         if (convertReportResp.report && convertReportResp.report.data) {
           const { converted, summary: convertSummary } = convertReportResp.report?.data;
           setConvertReport({
@@ -117,7 +109,7 @@ const ReportPage = () => {
       }
 
       if (reportType === REPORT_TYPE.RCO_CONVERSION || reportType === REPORT_TYPE.TRAININGS_UPDATE) {
-        const importReportResp = await getReport(REPORT_TYPE.RCO_IMPORT, date, uuidReport, 1, null, true);
+        const importReportResp = await getReport(REPORT_TYPE.RCO_IMPORT, date, uuidReport, true);
         if (importReportResp.report) {
           const { added, updated, deleted, summary } = importReportResp.report?.data;
           setImportReport({
