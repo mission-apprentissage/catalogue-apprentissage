@@ -4,10 +4,68 @@ import { Link } from "@chakra-ui/react";
 const changelog = {
   list: [
     {
-      version: "5.4.0",
+      version: "5.5.0",
       date: "Prochainement",
       about: `<h4>À venir</h4>`,
       fixes: [],
+      features: [],
+      improvements: [],
+    },
+    {
+      version: "5.4.0",
+      date: "Le 5 Janvier 2022",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [
+        'Interfaces à l’usage des services académiques – Restauration des étiquettes "Parcoursup - publié" lorsqu’une formation passe du catalogue non-éligible au catalogue général',
+      ],
+      features: [
+        <span>
+          Intégration provisoire (jusqu’au 31 mars 2022) des formations dont le gestionnaire n’est pas certifié Qualiopi
+          dans le catalogue général (suite au décret{" "}
+          <Link
+            href="https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000044591539"
+            textDecoration={"underline"}
+            isExternal
+          >
+            https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000044591539
+          </Link>{" "}
+          et arrêté{" "}
+          <Link
+            href="https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000044792191"
+            textDecoration={"underline"}
+            isExternal
+          >
+            https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000044792191
+          </Link>
+          ). Ces formations étaient précédemment placées dans la catégorie “non éligibles”. La catégorie “non éligibles”
+          a dans le même temps été renommée “Non habilités RNCP”.
+        </span>,
+      ],
+      improvements: [],
+    },
+    {
+      version: "5.3.2",
+      date: "Le 3 Janvier 2022",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [
+        "Pages de recherche : correction des compteurs de nombre de formations qui étaient incorrects pour certaines recherches ou filtrages",
+      ],
+      features: [],
+      improvements: [
+        "Fiche organisme: amélioration de la rapidité d’affichage du nombre de formations associées à un organisme",
+        "Interfaces à l’usage des services académiques – Les menus de filtrage sur les codes RNCP et CFD ont été supprimés pour améliorer la rapidité de chargement des pages. Ces mêmes codes peuvent maintenant être recherchés via le champ de recherche libre",
+      ],
+    },
+    {
+      version: "5.3.1",
+      date: "Le 28 Décembre 2021",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [
+        "Restauration de 671 uais édités sur les fiches formations, qui avaient été supprimés par erreur lors d’une précédente évolution du catalogue",
+      ],
       features: [],
       improvements: [],
     },

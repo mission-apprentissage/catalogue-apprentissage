@@ -33,6 +33,15 @@ const getEstablishmentAddress = (establishment) => {
   return [numero_voie, type_voie, nom_voie].filter((val) => val).join(" ");
 };
 
+/**
+ * Si la formation est un titre (code_type_certif = Titre ou TP)
+ * On regarde pour gestionnaire ou le formateur si l'un des deux est habilité RNCP
+ *
+ * Habilité :
+ *   - soit habilité par défaut (certificateur = ministère du travail)
+ *   - soit siret dans la liste des partenaires avec habilitation 'organiser et former' ou 'former'
+ *   - soit siret est dans la liste des certificateurs
+ */
 const isHabiliteRncp = ({ partenaires = [], certificateurs = [] }, siret) => {
   if ((certificateurs ?? []).some(({ certificateur }) => habiliteList.includes(certificateur))) {
     return true;
