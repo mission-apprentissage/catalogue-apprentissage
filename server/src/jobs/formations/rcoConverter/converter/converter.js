@@ -231,7 +231,11 @@ const performConversion = async () => {
   // if found keep data like statut, rapprochement ...
   await paginator(
     RcoFormation,
-    { filter: { published: true, converted_to_mna: { $ne: true } }, limit: 10, select: "+email" },
+    {
+      filter: { published: true, converted_to_mna: { $ne: true } },
+      limit: 10,
+      select: "+email +etablissement_gestionnaire_courriel +etablissement_formateur_courriel",
+    },
     async (rcoFormation) => {
       const oldFormations = await findPreviousFormations(rcoFormation);
 
@@ -342,7 +346,11 @@ const performConversion = async () => {
 
   await paginator(
     RcoFormation,
-    { filter: { converted_to_mna: { $ne: true } }, limit: 10, select: "+email" },
+    {
+      filter: { converted_to_mna: { $ne: true } },
+      limit: 10,
+      select: "+email +etablissement_gestionnaire_courriel +etablissement_formateur_courriel",
+    },
     async (rcoFormation) => {
       try {
         let mnaFormattedRcoFormation = formatToMnaFormation(rcoFormation._doc);
