@@ -303,18 +303,6 @@ const TrainingsUpdateTabs = ({ data, reportType, date, errors, importReport, con
         }
         // console.log("nb rest converted-> error", restConvertedErroredIds.length); // nb rest converted-> error
 
-        console.log({
-          updaterReport: {
-            ...data,
-            unpublished: unpublishedToday,
-          },
-          addedConvertedUpdatedIds,
-          addedConvertedErroredIds,
-          updatedConvertedUpdatedIds,
-          updatedConvertedErroredIds,
-          restConvertedUpdatedIds,
-          restConvertedErroredIds,
-        });
         setReportRelatedData({
           updaterReport: {
             ...data,
