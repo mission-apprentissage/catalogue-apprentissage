@@ -305,7 +305,12 @@ class Importer {
     // check if Some formations has been deleted
     await paginator(
       RcoFormation,
-      { filter: { published: true }, select: "+email", lean: true, showProgress: true },
+      {
+        filter: { published: true },
+        select: "+email +etablissement_gestionnaire_courriel +etablissement_formateur_courriel",
+        lean: true,
+        showProgress: true,
+      },
       async (pastFormation) => {
         const found = currentFormations.some((f) => {
           if (f.cle_ministere_educatif) {
@@ -341,7 +346,7 @@ class Importer {
         cle_ministere_educatif,
         ...(onlyPublished ? { published: true } : {}),
       })
-        .select("+email")
+        .select("+email +etablissement_gestionnaire_courriel +etablissement_formateur_courriel")
         .lean();
     }
 

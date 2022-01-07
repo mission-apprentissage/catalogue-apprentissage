@@ -58,7 +58,7 @@ const formatter = async ({
   rome_codes = [],
   updates_history = [],
 }) => {
-  const [{ mef10: mef } = { mef10: "" }] = parcoursup_mefs_10;
+  const [{ mef10: mef } = { mef10: "" }] = parcoursup_mefs_10 ?? [];
 
   return {
     user: await findPublishUser(updates_history),
