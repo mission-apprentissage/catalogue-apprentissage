@@ -21,6 +21,7 @@ const formationSchema = {
     description: "Lettre spécialité du code cfd",
   },
   cfd_outdated: {
+    index: true,
     type: Boolean,
     default: false,
     description: "BCN : cfd périmé (fermeture avant le 31 aout de l'année courante)",
@@ -52,6 +53,7 @@ const formationSchema = {
     description: "Nom de l'académie",
   },
   num_academie: {
+    index: true,
     type: String,
     default: 0,
     description: "Numéro de l'académie",
@@ -108,11 +110,13 @@ const formationSchema = {
     description: "Intitulé court de la formation normalisé BCN",
   },
   diplome: {
+    index: true,
     type: String,
     default: null,
     description: "Diplôme ou titre visé",
   },
   niveau: {
+    index: true,
     type: String,
     default: null,
     description: "Niveau de la formation",
@@ -273,6 +277,7 @@ const formationSchema = {
     description: "Durée de la formation en années",
   },
   annee: {
+    index: true,
     type: String,
     default: null,
     description: "Année de la formation (cursus)",

@@ -42,6 +42,7 @@ const etablissementGestionnaireInfo = {
     description: "Etablissement gestionnaire est publié",
   },
   etablissement_gestionnaire_catalogue_published: {
+    index: true,
     type: Boolean,
     default: false,
     description: "Etablissement gestionnaire entre dans le catalogue",
@@ -134,6 +135,8 @@ const etablissementGestionnaireInfo = {
     description: "Date de création de l'établissement",
   },
   etablissement_gestionnaire_courriel: {
+    select: false,
+    noIndex: true,
     type: String,
     default: null,
     description: "Adresse email de contact de l'établissement gestionnaire",
