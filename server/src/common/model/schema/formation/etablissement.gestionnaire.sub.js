@@ -42,6 +42,7 @@ const etablissementGestionnaireInfo = {
     description: "Etablissement gestionnaire est publié",
   },
   etablissement_gestionnaire_catalogue_published: {
+    index: true,
     type: Boolean,
     default: false,
     description: "Etablissement gestionnaire entre dans le catalogue",

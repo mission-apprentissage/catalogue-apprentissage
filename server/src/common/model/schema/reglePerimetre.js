@@ -41,6 +41,7 @@ const reglePerimetre = {
     required: true,
   },
   num_academie: {
+    index: true,
     type: Number,
     default: 0,
     description: "Académie pour laquelle la règle a été créé si il y en a une",
@@ -62,6 +63,7 @@ const reglePerimetre = {
     description: "La règle complémentaire, de type eS pour le rule builder",
   },
   nom_regle_complementaire: {
+    index: true,
     type: String,
     default: null,
     description: "Nom du sous-ensemble",
@@ -100,6 +102,7 @@ const reglePerimetre = {
     description: "True si la règle a été supprimée (soft delete)",
   },
   condition_integration: {
+    index: true,
     type: String,
     enum: ["doit intégrer", "peut intégrer", "ne doit pas intégrer"],
     default: "peut intégrer",
