@@ -94,6 +94,7 @@ describe(__filename, () => {
       parcoursup_error: "error ws",
       parcoursup_statut_history: [],
       cle_ministere_educatif: "12345-cle6",
+      last_update_at: Date.now(),
     });
 
     await Formation.create({
@@ -107,6 +108,7 @@ describe(__filename, () => {
       parcoursup_error: "error ws",
       parcoursup_statut_history: [],
       cle_ministere_educatif: "12345-cle7",
+      last_update_at: Date.now() - 2000,
     });
 
     await Formation.create({
@@ -166,10 +168,10 @@ describe(__filename, () => {
         assert.strictEqual(formation.cle_ministere_educatif, "12345-cle8");
       }
       if (index === 3) {
-        assert.strictEqual(formation.cle_ministere_educatif, "12345-cle6");
+        assert.strictEqual(formation.cle_ministere_educatif, "12345-cle7");
       }
       if (index === 4) {
-        assert.strictEqual(formation.cle_ministere_educatif, "12345-cle7");
+        assert.strictEqual(formation.cle_ministere_educatif, "12345-cle6");
       }
       index += 1;
     }
