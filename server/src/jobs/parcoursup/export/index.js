@@ -32,6 +32,7 @@ const select = {
 // Retry the ones with errors last
 const sort = {
   parcoursup_error: 1,
+  last_update_at: 1,
 };
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
