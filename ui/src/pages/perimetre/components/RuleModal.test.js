@@ -70,8 +70,8 @@ test("renders the modal in creation mode for psup", async () => {
   const deleteButton = queryByText(/^Supprimer$/i);
   expect(deleteButton).not.toBeInTheDocument();
 
-  const affelnetField = queryByText(/^Année d'inscription$/i);
-  expect(affelnetField).not.toBeInTheDocument();
+  const anneeField = queryByText(/^Année d'entrée en apprentissage$/i);
+  expect(anneeField).toBeInTheDocument();
 });
 
 test("renders the modal in creation mode for affelnet", async () => {
@@ -100,8 +100,8 @@ test("renders the modal in creation mode for affelnet", async () => {
   const deleteButton = queryByText(/^Supprimer$/i);
   expect(deleteButton).not.toBeInTheDocument();
 
-  const affelnetField = queryByText(/^Année d'inscription$/i);
-  expect(affelnetField).toBeInTheDocument();
+  const anneeField = queryByText(/^Année d'entrée en apprentissage$/i);
+  expect(anneeField).toBeInTheDocument();
 });
 
 test("renders the modal in update mode and can delete", async () => {

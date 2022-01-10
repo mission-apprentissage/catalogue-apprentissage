@@ -105,7 +105,7 @@ export const useNiveaux = ({ plateforme }) => {
   });
 };
 
-export const getCount = async ({ plateforme, niveau, diplome, regle_complementaire, academie }) => {
+export const getCount = async ({ plateforme, niveau, diplome, regle_complementaire, academie, duree, annee }) => {
   const countUrl = `${endpointNewFront}/v1/entity/perimetre/regle/count`;
   const params = new URLSearchParams({
     plateforme,
@@ -113,6 +113,8 @@ export const getCount = async ({ plateforme, niveau, diplome, regle_complementai
     diplome,
     ...(regle_complementaire && { regle_complementaire }),
     ...(academie && { num_academie: academie }),
+    ...(duree && { duree }),
+    ...(annee && { annee }),
   });
   return await _get(`${countUrl}?${params}`, false);
 };

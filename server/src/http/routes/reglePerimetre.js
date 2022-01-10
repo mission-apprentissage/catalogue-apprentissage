@@ -106,13 +106,15 @@ module.exports = () => {
       const diplome = req.query?.diplome;
       const regle_complementaire = req.query?.regle_complementaire;
       const num_academie = req.query?.num_academie === "null" ? null : req.query?.num_academie;
+      const duree = req.query?.duree;
+      const annee = req.query?.annee;
 
       if (!plateforme || !niveau) {
         throw Boom.badRequest();
       }
 
       const result = await Formation.countDocuments(
-        getQueryFromRule({ plateforme, niveau, diplome, regle_complementaire, num_academie })
+        getQueryFromRule({ plateforme, niveau, diplome, regle_complementaire, num_academie, duree, annee })
       );
       return res.json(result);
     })
