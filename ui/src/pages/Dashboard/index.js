@@ -25,18 +25,22 @@ export default () => {
     {
       title: "Collecte",
       iframeURL: getIframeUrl({ id: 2 }),
+      height: "170vh",
     },
     {
       title: "Consommation",
       iframeURL: getIframeUrl({ id: 3 }),
+      height: "220vh",
     },
     {
       title: "Acquisition",
       iframeURL: getIframeUrl({ id: 34 }),
+      height: "100vh",
     },
     {
       title: "Qualité de la donnée",
       iframeURL: getIframeUrl({ id: 35 }),
+      height: "360vh",
     },
   ];
 
@@ -59,13 +63,13 @@ export default () => {
               })}
             </TabList>
             <TabPanels>
-              {dashboards.map(({ iframeURL, title }) => {
+              {dashboards.map(({ iframeURL, title, height }) => {
                 return (
                   <TabPanel key={title}>
                     <iframe
                       src={iframeURL}
                       frameBorder="0"
-                      style={{ height: "250vh", width: "100%" }}
+                      style={{ height: height, width: "100%" }}
                       title={`Statistiques Metabase - ${title}`}
                       allowtransparency={"true"}
                     />
