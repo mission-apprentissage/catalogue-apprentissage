@@ -22,7 +22,6 @@
     "psup:prepare-2021": "standalone=true node src/jobs/parcoursup/prepare.js",
     "psup:import-2021": "standalone=true node src/jobs/parcoursup/importer.js",
     "psup:report": "standalone=true node src/jobs/parcoursup/reportRejected.js",
-    "psup:token": "node src/jobs/oneshot/generateParcoursupToken/index.js",
     "psup:export": "standalone=true node src/jobs/parcoursup/export/index.js",
     "affelnet:import": "standalone=true node src/jobs/oneshot/afFormation/index.js",
     "affelnet:missing-cfd": "standalone=true node src/jobs/oneshot/afFormation/missingCfd.js",
@@ -38,7 +37,10 @@
     "affelnet:jobs": "standaloneJobs=true node src/jobs/affelnet/index.js",
     "psup:jobs": "standaloneJobs=true node src/jobs/parcoursup/index.js",
     "es:index": "standalone=true node src/jobs/esIndex/index.js",
-    "generate:swaggerschema": "standalone=true node src/jobs/generateSwaggerSchema/index.js"
+    "generate:swaggerschema": "standalone=true node src/jobs/generateSwaggerSchema/index.js",
+    "migration:create": "migrate-mongo create",
+    "migration:up": "migrate-mongo up",
+    "migration:down": "migrate-mongo down"
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.6.1",
@@ -71,6 +73,7 @@
     "lodash": "4.17.15",
     "luxon": "^1.25.0",
     "match-sorter": "6.3.0",
+    "migrate-mongo": "8.2.3",
     "mjml": "^4.7.1",
     "moment": "2.26.0",
     "mongoose": "5.13.7",

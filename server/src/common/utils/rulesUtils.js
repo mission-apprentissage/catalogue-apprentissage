@@ -64,15 +64,16 @@ const titresRule = {
   ],
 };
 
-const getQueryFromRule = ({ plateforme, niveau, diplome, regle_complementaire, duree, num_academie /*, annee*/ }) => {
+const getQueryFromRule = ({ plateforme, niveau, diplome, regle_complementaire, duree, num_academie, annee }) => {
   const query = {
     ...getPublishedRules(plateforme),
     niveau,
     ...(diplome && { diplome }),
     ...(regle_complementaire && deserialize(regle_complementaire)),
-    ...(duree && getCfdExpireRule(duree)),
+    ...(Number(duree) && getCfdExpireRule(Number(duree))),
     ...(num_academie && { num_academie }),
-    // ...(annee && { annee }), // TODO when modalite will be available in RCO data
+    ...(duree && { duree: String(duree) }),
+    ...(annee && { annee: String(annee) }),
   };
   query["$and"] = [...(query["$and"] ?? []), ...titresRule["$and"]];
   return query;

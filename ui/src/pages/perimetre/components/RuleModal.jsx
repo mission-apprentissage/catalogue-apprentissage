@@ -15,11 +15,6 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
   Select,
   Tab,
   TabList,
@@ -62,7 +57,12 @@ const validationSchema = Yup.object().shape({
   condition: Yup.string().required("Veuillez choisir une condition d'intégration"),
   niveau: Yup.string().required("Veuillez choisir un niveau"),
   diplome: Yup.string().required("Veuillez choisir un diplôme"),
-  duration: Yup.number().nullable(),
+  duration: Yup.string()
+    .matches(/(1|2|3|9|X)/, "Les valeurs acceptées sont 1, 2, 3, 9 et X (non collectée)")
+    .nullable(),
+  registrationYear: Yup.string()
+    .matches(/(1|2|3|9|X)/, "Les valeurs acceptées sont 1, 2, 3, 9 et X (non collectée)")
+    .nullable(),
 });
 
 export const getDiplomesAllowedForSubRulesUrl = (plateforme) => {
@@ -147,8 +147,8 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
               regle_complementaire: regle,
               regle_complementaire_query: query,
               condition_integration: condition,
-              duree: duration ? Number(duration) : null,
-              annee: registrationYear ? Number(registrationYear) : null,
+              duree: duration ?? null,
+              annee: registrationYear ?? null,
             });
           } else {
             // update the status only for the selected academy
@@ -170,8 +170,8 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
               statut: status,
               regle_complementaire: regle,
               regle_complementaire_query: query,
-              duree: duration ? Number(duration) : null,
-              annee: registrationYear ? Number(registrationYear) : null,
+              duree: duration ?? null,
+              annee: registrationYear ?? null,
               statut_academies: statusAcademies,
             });
           }
@@ -193,8 +193,8 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
               regle_complementaire: regle,
               regle_complementaire_query: query,
               condition_integration: condition,
-              duree: duration ? Number(duration) : null,
-              annee: registrationYear ? Number(registrationYear) : null,
+              duree: duration ?? null,
+              annee: registrationYear ?? null,
             });
           } else {
             // create rule for an academy, that will be visible at national level
@@ -210,8 +210,8 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
               regle_complementaire: regle,
               regle_complementaire_query: query,
               condition_integration: condition,
-              duree: duration ? Number(duration) : null,
-              annee: registrationYear ? Number(registrationYear) : null,
+              duree: duration ?? null,
+              annee: registrationYear ?? null,
               num_academie: academie,
               statut_academies: {
                 [academie]: status,
@@ -256,9 +256,17 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
       []),
   ];
 
-  const linkFormations = `/recherche/formations?qb=${encodeURIComponent(
+  let linkFormations = `/recherche/formations?qb=${encodeURIComponent(
     JSON.stringify(linkQuery)
   )}&defaultMode="advanced"`;
+
+  if (values.registrationYear) {
+    linkFormations += `&annee=%5B${values.registrationYear}%5D`;
+  }
+
+  if (values.duration) {
+    linkFormations += `&duree=%5B${values.duration}%5D`;
+  }
 
   const [count, setCount] = useState(0);
 
@@ -270,7 +278,8 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
         diplome: values.diplome,
         regle_complementaire: values.regle,
         academie,
-        // TODO filter with annee & duree when modalites will be available in RCO data
+        duree: values.duration,
+        annee: values.registrationYear,
       });
       setCount(result);
     };
@@ -282,7 +291,16 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
         setCount(0);
       }
     }
-  }, [plateforme, values.niveau, values.diplome, values.regle, academie, isClosing]);
+  }, [
+    plateforme,
+    values.niveau,
+    values.diplome,
+    values.regle,
+    academie,
+    isClosing,
+    values.duration,
+    values.registrationYear,
+  ]);
 
   const { isOpen: isCriteriaOpen, onToggle: onCriteriaToggle } = useDisclosure();
 
@@ -426,64 +444,41 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                         </FormLabel>
                         <Text color={"gray.600"} fontSize={"omega"} mb={4}>
                           Indiquer la durée de la formation permet d'éviter des inscriptions sur une session de
-                          formation qui arrive à expiration
+                          formation qui arrive à expiration. Les valeurs acceptées sont 1, 2, 3, 9 et X (non collectée).
                         </Text>
-                        <NumberInput
+                        <Input
                           isDisabled={isDisabled}
                           id="duration"
                           name="duration"
                           size="md"
                           maxW={24}
                           value={values.duration}
-                          min={1}
-                          max={3}
-                          onChange={(value) => {
-                            // can't use handleChange since onChange receives directly value and not an Event
-                            setFieldValue("duration", value);
-                          }}
-                        >
-                          <NumberInputField />
-                          <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
-                          </NumberInputStepper>
-                        </NumberInput>
-
+                          onChange={handleChange}
+                        />
                         <FormErrorMessage>{errors.duration}</FormErrorMessage>
                       </Flex>
                     </FormControl>
 
-                    {plateforme === "affelnet" && (
-                      <FormControl isInvalid={errors.registrationYear && touched.registrationYear}>
-                        <Flex flexDirection={"column"} mt={8} alignItems={"flex-start"}>
-                          <FormLabel htmlFor={"registrationYear"} mb={1}>
-                            Année d'inscription
-                          </FormLabel>
-                          <NumberInput
-                            isDisabled={isDisabled}
-                            id="registrationYear"
-                            name="registrationYear"
-                            size="md"
-                            maxW={24}
-                            value={values.registrationYear}
-                            min={1}
-                            max={3}
-                            onChange={(value) => {
-                              // can't use handleChange since onChange receives directly value and not an Event
-                              setFieldValue("registrationYear", value);
-                            }}
-                          >
-                            <NumberInputField />
-                            <NumberInputStepper>
-                              <NumberIncrementStepper />
-                              <NumberDecrementStepper />
-                            </NumberInputStepper>
-                          </NumberInput>
-
-                          <FormErrorMessage>{errors.registrationYear}</FormErrorMessage>
-                        </Flex>
-                      </FormControl>
-                    )}
+                    <FormControl isInvalid={errors.registrationYear && touched.registrationYear}>
+                      <Flex flexDirection={"column"} mt={8} alignItems={"flex-start"}>
+                        <FormLabel htmlFor={"registrationYear"} mb={1}>
+                          Année d'entrée en apprentissage
+                        </FormLabel>
+                        <Text color={"gray.600"} fontSize={"omega"} mb={4}>
+                          Les valeurs acceptées sont 1, 2, 3, 9 et X (non collectée).
+                        </Text>
+                        <Input
+                          isDisabled={isDisabled}
+                          id="registrationYear"
+                          name="registrationYear"
+                          size="md"
+                          maxW={24}
+                          value={values.registrationYear}
+                          onChange={handleChange}
+                        />
+                        <FormErrorMessage>{errors.registrationYear}</FormErrorMessage>
+                      </Flex>
+                    </FormControl>
 
                     <Flex flexDirection={"column"} mt={8} alignItems={"flex-start"}>
                       <Button mb={1} onClick={onCriteriaToggle} variant={"unstyled"}>

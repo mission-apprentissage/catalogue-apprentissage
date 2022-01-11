@@ -272,6 +272,7 @@ const formationSchema = {
     description: "Capacité d'accueil",
   },
   duree: {
+    index: true,
     type: String,
     default: null,
     description: "Durée de la formation en années",

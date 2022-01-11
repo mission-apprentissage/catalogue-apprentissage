@@ -110,12 +110,14 @@ const reglePerimetre = {
     required: true,
   },
   duree: {
-    type: Number,
+    index: true,
+    type: String,
     default: null,
     description: "Durée en années pour matcher les formations",
   },
   annee: {
-    type: Number,
+    index: true,
+    type: String,
     default: null,
     description: "Année d'inscription de la formation",
   },

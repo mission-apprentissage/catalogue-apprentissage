@@ -35,6 +35,8 @@ export const Line = ({
     condition_integration,
     statut_academies,
     num_academie,
+    duree,
+    annee,
   } = rule;
 
   const isConditionChangeEnabled = !academie;
@@ -55,7 +57,7 @@ export const Line = ({
   useEffect(() => {
     async function run() {
       try {
-        const count = await getCount({ plateforme, niveau, diplome, regle_complementaire, academie });
+        const count = await getCount({ plateforme, niveau, diplome, regle_complementaire, academie, duree, annee });
         setLineCount(count ?? 0);
       } catch (e) {
         console.error(e);
@@ -66,7 +68,18 @@ export const Line = ({
     } else {
       setLineCount(count ?? 0);
     }
-  }, [plateforme, count, diplome, niveau, regle_complementaire, nom_regle_complementaire, shouldFetchCount, academie]);
+  }, [
+    plateforme,
+    count,
+    diplome,
+    niveau,
+    regle_complementaire,
+    nom_regle_complementaire,
+    shouldFetchCount,
+    academie,
+    duree,
+    annee,
+  ]);
 
   return (
     <Box
