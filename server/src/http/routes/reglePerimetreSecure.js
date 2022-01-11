@@ -39,8 +39,8 @@ const createSchema = Joi.object({
   regle_complementaire_query: Joi.string(),
   nom_regle_complementaire: Joi.string(),
   condition_integration: conditionSchema.required(),
-  duree: Joi.number().allow(null),
-  annee: Joi.number().allow(null),
+  duree: Joi.string().allow(null),
+  annee: Joi.string().allow(null),
   statut_academies: Joi.object().allow(null),
   num_academie: Joi.number().allow(null),
 }).unknown();
@@ -54,8 +54,8 @@ const updateSchema = Joi.object({
   regle_complementaire_query: Joi.string(),
   nom_regle_complementaire: Joi.string(),
   condition_integration: conditionSchema,
-  duree: Joi.number().allow(null),
-  annee: Joi.number().allow(null),
+  duree: Joi.string().allow(null),
+  annee: Joi.string().allow(null),
   statut_academies: Joi.object().allow(null),
 }).unknown();
 
