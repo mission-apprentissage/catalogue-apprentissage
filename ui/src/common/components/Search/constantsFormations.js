@@ -214,7 +214,7 @@ const columnsDefinition = [
     width: 200,
     exportable: true,
     editable: true,
-    formatter: (value) => value.map((x) => x.mef10).join(","),
+    formatter: (value) => value?.map((x) => x?.mef10)?.join(","),
   },
   {
     Header: "Liste MEF Affelnet",
@@ -222,7 +222,7 @@ const columnsDefinition = [
     width: 200,
     exportable: true,
     editable: false,
-    formatter: (value) => value.map((x) => x.mef10).join(","),
+    formatter: (value) => value?.map((x) => x?.mef10)?.join(","),
   },
   {
     Header: "Liste MEF Parcoursup",
@@ -230,7 +230,7 @@ const columnsDefinition = [
     width: 200,
     exportable: true,
     editable: false,
-    formatter: (value) => value.map((x) => x.mef10).join(","),
+    formatter: (value) => value?.map((x) => x?.mef10)?.join(","),
   },
   {
     Header: "Statut Affelnet",
