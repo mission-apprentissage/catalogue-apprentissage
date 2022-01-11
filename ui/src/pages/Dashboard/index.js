@@ -40,7 +40,7 @@ export default () => {
     {
       title: "Qualité de la donnée",
       iframeURL: getIframeUrl({ id: 35 }),
-      height: "360vh",
+      height: "410vh",
     },
   ];
 
