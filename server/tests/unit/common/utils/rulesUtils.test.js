@@ -62,6 +62,17 @@ describe(__filename, () => {
       const expected = {
         $and: [
           {
+            annee: {
+              $ne: "X",
+            },
+            cfd_outdated: {
+              $ne: true,
+            },
+            etablissement_gestionnaire_catalogue_published: true,
+            etablissement_reference_catalogue_published: true,
+            published: true,
+          },
+          {
             $or: [
               {
                 "rncp_details.active_inactive": "ACTIVE",
@@ -77,18 +88,9 @@ describe(__filename, () => {
             ],
           },
         ],
-        annee: {
-          $ne: "X",
-        },
-        cfd_outdated: {
-          $ne: true,
-        },
         diplome: "BTS",
-        etablissement_gestionnaire_catalogue_published: true,
-        etablissement_reference_catalogue_published: true,
         niveau: "4",
         num_academie: "10",
-        published: true,
       };
 
       let result = getQueryFromRule({ plateforme: "affelnet", niveau: "4", diplome: "BTS", num_academie: "10" });
