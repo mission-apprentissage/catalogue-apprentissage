@@ -21,10 +21,10 @@ export const CSV_SEPARATOR = ";";
 
 export const escapeDiacritics = (str) =>
   str
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/\s+/g, " ")
-    .replaceAll(";", ",");
+    ?.normalize("NFD")
+    ?.replace(/[\u0300-\u036f]/g, "")
+    ?.replace(/\s+/g, " ")
+    ?.replaceAll(";", ",");
 
 export const createCSV = ({ headers, rows }) => {
   const lines = rows.map((rowData) => {
