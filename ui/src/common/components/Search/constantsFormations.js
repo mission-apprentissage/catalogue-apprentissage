@@ -1,5 +1,6 @@
 import { escapeDiacritics } from "../../utils/downloadUtils";
 import helpText from "../../../locales/helpText.json";
+import constantsReglesPerimetre from "./constantsReglesPerimetre";
 
 const FILTERS = () => [
   `QUERYBUILDER`,
@@ -35,6 +36,7 @@ const FILTERS = () => [
   "tags",
   "annee",
   "qualiopi",
+  "duree",
 ];
 
 const columnsDefinition = [
@@ -489,6 +491,7 @@ const queryBuilderField = [
   { text: "Identifiant Certif Info", value: "id_certifinfo.keyword" },
   { text: "Nda gestionnaire", value: "etablissement_gestionnaire_nda.keyword" },
   { text: "Nda formateur", value: "etablissement_formateur_nda.keyword" },
+  ...constantsReglesPerimetre.queryBuilderField,
 ];
 
 const facetDefinition = () => [
@@ -551,6 +554,15 @@ const facetDefinition = () => [
     dataField: "annee.keyword",
     title: "Année d'entrée en apprentissage",
     filterLabel: "Année d'entrée en apprentissage",
+    selectAllLabel: "Toutes",
+    sortBy: "asc",
+    isAuth: true, // hide for anonymous
+  },
+  {
+    componentId: `duree`,
+    dataField: "duree.keyword",
+    title: "Durée",
+    filterLabel: "Durée",
     selectAllLabel: "Toutes",
     sortBy: "asc",
     isAuth: true, // hide for anonymous
