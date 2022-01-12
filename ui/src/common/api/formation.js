@@ -1,5 +1,5 @@
 import { _put } from "../httpClient";
-import { buildUpdatesHistory } from "../utils/formationUtils";
+import { buildUpdatesHistory } from "../utils/historyUtils";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 

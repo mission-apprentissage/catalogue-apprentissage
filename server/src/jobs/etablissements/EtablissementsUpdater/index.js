@@ -6,7 +6,6 @@ const { runScript } = require("../../scriptWrapper");
 
 const optionDefinitions = [
   { name: "filter", alias: "f", type: String, defaultValue: null },
-  { name: "withHistoryUpdate", alias: "h", type: Boolean, defaultValue: true },
   { name: "siret", alias: "s", type: Boolean, defaultValue: false },
   { name: "geoloc", alias: "g", type: Boolean, defaultValue: false },
   { name: "conventionnement", alias: "c", type: Boolean, defaultValue: false },
@@ -28,7 +27,6 @@ const EtablissementsUpdater = async () => {
     const filter = optionsCmd.filter ? JSON.parse(optionsCmd.filter) : { ferme: false };
 
     let options = {
-      withHistoryUpdate: optionsCmd.withHistoryUpdate,
       scope: all
         ? {
             siret: true,
