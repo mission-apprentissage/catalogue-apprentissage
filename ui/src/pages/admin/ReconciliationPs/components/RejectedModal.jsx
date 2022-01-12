@@ -18,8 +18,7 @@ import * as Yup from "yup";
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import { _post } from "../../../../common/httpClient";
-import { Close } from "../../../../theme/components/icons/Close";
-import { ArrowRightLine } from "../../../../theme/components/icons";
+import { ArrowRightLine, Close } from "../../../../theme/components/icons";
 
 const raisons = [
   "Codes diplômes différents",
@@ -107,6 +106,7 @@ const Rejected = ({ formation, onClose, onSubmitReject }) => {
               return (
                 <Checkbox
                   name="raisons"
+                  py={2}
                   key={i}
                   onChange={() => handleRaisonsChange(raison)}
                   value={raison}
