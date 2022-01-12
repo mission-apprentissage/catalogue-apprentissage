@@ -1,6 +1,5 @@
 import { escapeDiacritics } from "../../utils/downloadUtils";
 import helpText from "../../../locales/helpText.json";
-import constantsReglesPerimetre from "./constantsReglesPerimetre";
 
 const FILTERS = () => [
   `QUERYBUILDER`,
@@ -491,7 +490,6 @@ const queryBuilderField = [
   { text: "Identifiant Certif Info", value: "id_certifinfo.keyword" },
   { text: "Nda gestionnaire", value: "etablissement_gestionnaire_nda.keyword" },
   { text: "Nda formateur", value: "etablissement_formateur_nda.keyword" },
-  ...constantsReglesPerimetre.queryBuilderField,
 ];
 
 const facetDefinition = () => [
