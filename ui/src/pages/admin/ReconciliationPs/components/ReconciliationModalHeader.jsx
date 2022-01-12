@@ -18,7 +18,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { buildUpdatesHistory } from "../../../../common/utils/formationUtils";
+import { buildUpdatesHistory } from "../../../../common/utils/historyUtils";
 import { StatusBadge } from "../../../../common/components/StatusBadge";
 import React, { useCallback, useEffect, useState } from "react";
 import { useFormik } from "formik";

@@ -19,6 +19,7 @@ import {
   Spinner,
   Text,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import useAuth from "../../common/hooks/useAuth";
@@ -33,6 +34,7 @@ import { HowToFixModal } from "../../common/components/organisme/HowToFixModal";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
 import { QualiopiBadge } from "../../common/components/QualiopiBadge";
+import { buildUpdatesHistory } from "../../common/utils/historyUtils";
 
 const sleep = (m) => new Promise((r) => setTimeout(r, m));
 
@@ -42,9 +44,9 @@ const endpointTCO =
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
 const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSubmit, values, countFormations }) => {
-  const [auth] = useAuth();
+  const [user] = useAuth();
   const hasRightToEdit =
-    hasAccessTo(auth, "page_organisme/modifier_informations") && hasRightToEditEtablissement(etablissement, auth);
+    hasAccessTo(user, "page_organisme/modifier_informations") && hasRightToEditEtablissement(etablissement, user);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const query = [
@@ -329,7 +331,7 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
           </Box>
         </GridItem>
       </Grid>
-      {hasAccessTo(auth, "page_organisme/demandes_corretions") && (
+      {hasAccessTo(user, "page_organisme/demandes_corretions") && (
         <Box mt={8} mb={16}>
           <Button variant={"pill"} textStyle="rf-text" onClick={onOpen} whiteSpace="normal">
             <ArrowRightLine w="9px" h="9px" mr={2} /> Demander des corrections sur les données sur votre organisme
@@ -348,6 +350,8 @@ export default ({ match }) => {
   const [gatherData, setGatherData] = useState(0);
   const [modal, setModal] = useState(false);
   const [countFormations, setCountFormations] = useState(0);
+  const [user] = useAuth();
+  const toast = useToast();
 
   const { values, handleSubmit, handleChange, setFieldValue } = useFormik({
     initialValues: {
@@ -360,19 +364,33 @@ export default ({ match }) => {
           setModal(true);
           setGatherData(1);
           try {
-            const { etablissement: up, error } = await _post(`${endpointTCO}/services/etablissement`, {
-              ...etablissement,
-              uai,
-            });
+            const { etablissement: updatedEtablissement, error } = await _post(
+              `${endpointTCO}/services/etablissement`,
+              {
+                ...etablissement,
+                uai,
+              }
+            );
 
             if (error) {
-              console.error(error);
-              return;
+              throw new Error(error);
             }
 
-            result = await _put(`${endpointNewFront}/entity/etablissement/${match.params.id}`, up);
+            result = await _put(`${endpointNewFront}/entity/etablissement/${match.params.id}`, {
+              ...updatedEtablissement,
+              last_update_at: Date.now(),
+              updates_history: buildUpdatesHistory(etablissement, { uai, last_update_who: user.email }, ["uai"]),
+            });
           } catch (err) {
             console.error(err);
+            const response = await (err?.json ?? {});
+            const message = response?.message ?? err?.message;
+            toast({
+              title: "Error",
+              description: message,
+              status: "error",
+              duration: 10000,
+            });
           }
           setGatherData(2);
           await sleep(500);
