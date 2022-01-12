@@ -15,7 +15,6 @@ runScript(async ({ db }) => {
     const filter = { ferme: false };
 
     const options = {
-      withHistoryUpdate: true,
       scope: {
         siret: false,
         geoloc: false,
