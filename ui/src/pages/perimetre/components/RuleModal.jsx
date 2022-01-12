@@ -147,8 +147,8 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
               regle_complementaire: regle,
               regle_complementaire_query: query,
               condition_integration: condition,
-              duree: duration ?? null,
-              annee: registrationYear ?? null,
+              duree: duration || null,
+              annee: registrationYear || null,
             });
           } else {
             // update the status only for the selected academy
@@ -170,8 +170,8 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
               statut: status,
               regle_complementaire: regle,
               regle_complementaire_query: query,
-              duree: duration ?? null,
-              annee: registrationYear ?? null,
+              duree: duration || null,
+              annee: registrationYear || null,
               statut_academies: statusAcademies,
             });
           }
@@ -193,8 +193,8 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
               regle_complementaire: regle,
               regle_complementaire_query: query,
               condition_integration: condition,
-              duree: duration ?? null,
-              annee: registrationYear ?? null,
+              duree: duration || null,
+              annee: registrationYear || null,
             });
           } else {
             // create rule for an academy, that will be visible at national level
@@ -210,8 +210,8 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
               regle_complementaire: regle,
               regle_complementaire_query: query,
               condition_integration: condition,
-              duree: duration ?? null,
-              annee: registrationYear ?? null,
+              duree: duration || null,
+              annee: registrationYear || null,
               num_academie: academie,
               statut_academies: {
                 [academie]: status,
