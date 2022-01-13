@@ -34,7 +34,7 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false) => {
       formation._doc,
       {
         // no need to check cp info in trainingsUpdater since it was successfully done once at converter
-        withCodePostalUpdate: formation.to_update === true || !formation.localite || withCodePostalUpdate,
+        withCodePostalUpdate: formation.to_update === true || withCodePostalUpdate,
         cfdInfo: cfdInfoCache,
       }
     );

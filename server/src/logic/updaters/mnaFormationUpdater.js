@@ -165,9 +165,8 @@ const mnaFormationUpdater = async (
       rcoFormation?.etablissement_lieu_formation_code_postal ?? formation.code_postal
     );
 
-    const { result = {}, messages: cpMessages } = withCodePostalUpdate
-      ? await codePostalMapper(code_postal, code_commune_insee)
-      : {};
+    const { result = {}, messages: cpMessages } =
+      withCodePostalUpdate || !formation.localite ? await codePostalMapper(code_postal, code_commune_insee) : {};
     let cpMapping = result;
 
     error = parseErrors(cpMessages);
