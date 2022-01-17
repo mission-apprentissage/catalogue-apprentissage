@@ -19,11 +19,12 @@ const deserialize = (str) => {
 };
 
 /**
+ * Update du 17/01/2022
  * Suite aux discussions avec Christine Bourdin et Rachel Bourdon,
  * la règle est d'envoyer les formations aux plateformes pour le cfd qui n'expire pas :
- * du 01/10/N au 31/08/N + durée (-1)
+ * du 01/10/N au 31/08/N+1
  */
-const getCfdExpireRule = (duration, currentDate = new Date()) => {
+const getCfdExpireRule = (currentDate = new Date()) => {
   let durationShift = 1;
   const now = currentDate;
   const sessionStart = new Date(`${currentDate.getFullYear()}-10-01T00:00:00.000Z`);
@@ -35,7 +36,7 @@ const getCfdExpireRule = (duration, currentDate = new Date()) => {
     $or: [
       {
         cfd_date_fermeture: {
-          $gt: new Date(`${currentDate.getFullYear() + duration - durationShift}-08-31T00:00:00.000Z`),
+          $gt: new Date(`${currentDate.getFullYear() + 1 - durationShift}-08-31T00:00:00.000Z`),
         },
       },
       { cfd_date_fermeture: null },
@@ -70,7 +71,7 @@ const getQueryFromRule = ({ plateforme, niveau, diplome, regle_complementaire, d
     niveau,
     ...(diplome && { diplome }),
     ...(regle_complementaire && deserialize(regle_complementaire)),
-    ...(Number(duree) && getCfdExpireRule(Number(duree))),
+    ...getCfdExpireRule(),
     ...(num_academie && { num_academie }),
     ...(duree && { duree: String(duree) }),
     ...(annee && { annee: String(annee) }),

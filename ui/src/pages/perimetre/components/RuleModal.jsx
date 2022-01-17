@@ -443,8 +443,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                           Durée (en années)
                         </FormLabel>
                         <Text color={"gray.600"} fontSize={"omega"} mb={4}>
-                          Indiquer la durée de la formation permet d'éviter des inscriptions sur une session de
-                          formation qui arrive à expiration. Les valeurs acceptées sont 1, 2, 3, 9 et X (non collectée).
+                          Les valeurs acceptées sont 1, 2, 3, 9 et X (non collectée).
                         </Text>
                         <Input
                           isDisabled={isDisabled}
