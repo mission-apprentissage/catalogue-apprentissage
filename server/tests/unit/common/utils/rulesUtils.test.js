@@ -20,7 +20,7 @@ describe(__filename, () => {
         ],
       };
 
-      let result = getCfdExpireRule(1, new Date(`2021-05-01T00:00:00.000Z`));
+      let result = getCfdExpireRule(new Date(`2021-05-01T00:00:00.000Z`));
       assert.deepStrictEqual(result, expected);
     });
 
@@ -36,7 +36,7 @@ describe(__filename, () => {
         ],
       };
 
-      let result = getCfdExpireRule(1, new Date(`2021-10-01T00:00:00.000Z`));
+      let result = getCfdExpireRule(new Date(`2021-10-01T00:00:00.000Z`));
       assert.deepStrictEqual(result, expected);
     });
 
@@ -52,7 +52,7 @@ describe(__filename, () => {
         ],
       };
 
-      let result = getCfdExpireRule(1, new Date(`2021-11-01T00:00:00.000Z`));
+      let result = getCfdExpireRule(new Date(`2021-11-01T00:00:00.000Z`));
       assert.deepStrictEqual(result, expected);
     });
   });
@@ -91,6 +91,7 @@ describe(__filename, () => {
         diplome: "BTS",
         niveau: "4",
         num_academie: "10",
+        ...getCfdExpireRule(),
       };
 
       let result = getQueryFromRule({ plateforme: "affelnet", niveau: "4", diplome: "BTS", num_academie: "10" });
