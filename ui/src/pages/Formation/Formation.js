@@ -174,13 +174,13 @@ export default ({ match }) => {
       return new Promise(async (resolve) => {
         try {
           if (uai_formation !== formation["uai_formation"]) {
-            const updatedFormation = await _post(`${endpointNewFront}/entity/formation2021/update`, {
+            const updatedFormation = await _post(`${endpointNewFront}/entity/formation/update`, {
               ...formation,
               uai_formation,
               withCodePostalUpdate: false,
             });
 
-            const result = await _put(`${endpointNewFront}/entity/formations2021/${formation._id}`, {
+            const result = await _put(`${endpointNewFront}/entity/formations/${formation._id}`, {
               ...updatedFormation,
               last_update_who: user.email,
               last_update_at: Date.now(),
@@ -217,7 +217,7 @@ export default ({ match }) => {
   useEffect(() => {
     async function run() {
       try {
-        const apiURL = `${endpointNewFront}/entity/formation2021/`;
+        const apiURL = `${endpointNewFront}/entity/formation/`;
         // FIXME select={"__v" :0} hack to get updates_history
         const form = await _get(`${apiURL}${match.params.id}?select={"__v":0}`, false);
 

@@ -6,7 +6,7 @@ import Formation from "./Formation";
 import { waitFor } from "@testing-library/react";
 
 const server = setupServer(
-  rest.get(/\/api\/entity\/formation2021\/2/, (req, res, ctx) => {
+  rest.get(/\/api\/entity\/formation\/2/, (req, res, ctx) => {
     return res(
       ctx.json({
         _id: "5fc6166e712d48a988133449",

@@ -91,7 +91,7 @@ const ReconciliationModalHeader = React.memo(
             for (let index = 0; index < formationsARapprocher.length; index++) {
               const formationARapprocher = formationsARapprocher[index];
               if (Object.keys(body).length > 0) {
-                await _put(`/api/entity/formations2021/${formationARapprocher._id}`, {
+                await _put(`/api/entity/formations/${formationARapprocher._id}`, {
                   num_academie: formationARapprocher.num_academie,
                   ...body,
                   last_update_who: user.email,

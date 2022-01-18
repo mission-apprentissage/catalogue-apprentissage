@@ -15,10 +15,32 @@ const formationSchema = Joi.object({
 module.exports = () => {
   const router = express.Router();
 
+  const putFormation = tryCatch(async ({ body, user, params }, res) => {
+    await formationSchema.validateAsync(body, { abortEarly: false });
+
+    const itemId = params.id;
+
+    const formation = await Formation.findById(itemId);
+    let hasRightToEdit = user.isAdmin;
+    if (!hasRightToEdit) {
+      const listAcademie = user.academie.split(",").map((academieStr) => Number(academieStr));
+      hasRightToEdit = listAcademie.includes(-1) || listAcademie.includes(Number(formation.num_academie));
+    }
+    if (!hasRightToEdit) {
+      throw Boom.unauthorized();
+    }
+
+    logger.info("Updating new item: ", body);
+    const result = await Formation.findOneAndUpdate({ _id: itemId }, body, {
+      new: true,
+    });
+    res.json(result);
+  });
+
   /**
    * @swagger
    *
-   * /entity/formations2021/{id}:
+   * /entity/formations/{id}:
    *   put:
    *     summary: Mise à jour d'une formation.
    *     tags:
@@ -61,30 +83,8 @@ module.exports = () => {
    *              schema:
    *                   $ref: '#/components/schemas/formation'
    */
-  router.put(
-    "/formations2021/:id",
-    tryCatch(async ({ body, user, params }, res) => {
-      await formationSchema.validateAsync(body, { abortEarly: false });
-
-      const itemId = params.id;
-
-      const formation = await Formation.findById(itemId);
-      let hasRightToEdit = user.isAdmin;
-      if (!hasRightToEdit) {
-        const listAcademie = user.academie.split(",").map((academieStr) => Number(academieStr));
-        hasRightToEdit = listAcademie.includes(-1) || listAcademie.includes(Number(formation.num_academie));
-      }
-      if (!hasRightToEdit) {
-        throw Boom.unauthorized();
-      }
-
-      logger.info("Updating new item: ", body);
-      const result = await Formation.findOneAndUpdate({ _id: itemId }, body, {
-        new: true,
-      });
-      res.json(result);
-    })
-  );
+  router.put("/formations/:id", putFormation);
+  router.put("/formations2021/:id", putFormation);
 
   return router;
 };

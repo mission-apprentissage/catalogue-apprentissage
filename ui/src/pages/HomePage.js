@@ -44,7 +44,7 @@ export default () => {
         });
 
         const countEtablissement = await _get(`${endpointNewFront}/entity/etablissements/count?${params}`, false);
-        const count = await _get(`${endpointNewFront}/entity/formations2021/count?${params}`, false);
+        const count = await _get(`${endpointNewFront}/entity/formations/count?${params}`, false);
 
         if (mounted) {
           setCountEstablishments(countEtablissement);

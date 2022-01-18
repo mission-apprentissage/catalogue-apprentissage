@@ -9,7 +9,7 @@ import { waitFor } from "@testing-library/react";
 import * as search from "../../common/hooks/useSearch";
 
 const server = setupServer(
-  rest.get(/\/api\/entity\/formations2021\/count/, (req, res, ctx) => {
+  rest.get(/\/api\/entity\/formations\/count/, (req, res, ctx) => {
     return res(ctx.json(1000));
   }),
 

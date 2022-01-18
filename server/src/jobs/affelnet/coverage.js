@@ -1,6 +1,6 @@
 const { getAffelnetCoverage, getEtablissementCoverage } = require("../../logic/controller/coverage");
 const { paginator } = require("../../common/utils/paginator");
-const { AfFormation, Etablissement } = require("../../common/model");
+const { AfFormation } = require("../../common/model");
 const { runScript } = require("../scriptWrapper");
 const logger = require("../../common/logger");
 
@@ -29,13 +29,6 @@ const etablissement = async () => {
 
 const afCoverage = async () => {
   logger.info("Start Affelnet coverage");
-  let check = await Etablissement.countDocuments({});
-
-  if (check === 0) {
-    logger.error("No establishment found, please import collection first");
-
-    return;
-  }
 
   // reset matching first
   await AfFormation.updateMany(
