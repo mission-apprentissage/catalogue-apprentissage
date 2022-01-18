@@ -219,6 +219,7 @@ const afFormationSchema = {
     description: "tableau des matching des établissement catalogue",
   },
   matching_type: {
+    index: true,
     type: String,
     default: null,
     description: "force du matching",
