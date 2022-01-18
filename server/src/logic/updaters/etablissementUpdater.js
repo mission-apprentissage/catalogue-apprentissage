@@ -48,30 +48,17 @@ const createOrUpdateEtablissements = async (rcoFormation) => {
   ];
 
   const result = {
-    etablissement_gestionnaire: {
-      created: false,
-      updated: null,
-      error: null,
-      alreadyHandled: false,
-    },
-    etablissement_formateur: {
-      created: false,
-      updated: null,
-      error: null,
-      alreadyHandled: false,
-    },
-    errored: false,
+    errors: [],
   };
 
   await asyncForEach(etablissementTypes, async (type) => {
     const data = getEtablissementData(rcoFormation, type);
     if (!data.siret) {
-      result[type].error = "Aucun siret trouvé";
+      result.errors.push(`Aucun siret trouvé (${type})`);
       return;
     }
 
     if (handledSirets.includes(data.siret)) {
-      result[type].alreadyHandled = true;
       return;
     }
 
@@ -81,16 +68,15 @@ const createOrUpdateEtablissements = async (rcoFormation) => {
 
     if (!etablissement?._id) {
       if (tags.length === 0) {
-        result[type].error = "Aucune periodes pour cet établissement";
+        result.errors.push(`Aucune periode pour cet établissement (${type})`);
         return;
       }
 
       etablissement = await catalogue.createEtablissement({ ...data, tags });
       if (etablissement) {
         await Etablissement.create(etablissement);
-        result[type].created = true;
       } else {
-        result[type].error = "Échec de la création de cet établissement";
+        result.errors.push(`Échec de la création de cet établissement (${type})`);
       }
       return;
     }
@@ -112,11 +98,8 @@ const createOrUpdateEtablissements = async (rcoFormation) => {
 
     if (Object.keys(updates).length > 0) {
       await Etablissement.findOneAndUpdate({ siret: data.siret }, updates);
-      result[type].updated = updates;
     }
   });
-
-  result.errored = result.etablissement_gestionnaire.error || result.etablissement_formateur.error ? true : false;
 
   return result;
 };
