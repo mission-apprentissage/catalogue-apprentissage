@@ -421,10 +421,7 @@ export default ({ match }) => {
           $or: [{ etablissement_formateur_siret: eta.siret }, { etablissement_gestionnaire_siret: eta.siret }],
         };
 
-        const count = await _get(
-          `${endpointNewFront}/entity/formations2021/count?query=${JSON.stringify(query)}`,
-          false
-        );
+        const count = await _get(`${endpointNewFront}/entity/formations/count?query=${JSON.stringify(query)}`, false);
 
         setCountFormations(count);
       } catch (e) {

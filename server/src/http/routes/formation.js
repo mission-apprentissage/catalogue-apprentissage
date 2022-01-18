@@ -12,16 +12,215 @@ const { sendJsonStream } = require("../../common/utils/httpUtils");
 module.exports = () => {
   const router = express.Router();
 
+  const getFormations = tryCatch(async (req, res) => {
+    let qs = req.query;
+
+    // FIXME: ugly patch because request from Affelnet is not JSON valid
+    const strQuery = qs?.query ?? "";
+    const cleanedQuery = strQuery.replace(
+      /"num_academie" :(0.)/,
+      (found, capture) => `"num_academie":"${Number(capture)}"`
+    );
+    // end FIXME
+
+    const query = cleanedQuery ? JSON.parse(cleanedQuery) : {};
+
+    const { id_parcoursup, ...filter } = query;
+    // additional filtering for parcoursup
+    if (id_parcoursup) {
+      filter["parcoursup_id"] = id_parcoursup;
+    }
+
+    const page = qs && qs.page ? qs.page : 1;
+    const limit = qs && qs.limit ? parseInt(qs.limit, 10) : 10;
+    const select =
+      qs && qs.select
+        ? JSON.parse(qs.select)
+        : {
+            affelnet_statut_history: 0,
+            parcoursup_statut_history: 0,
+            updates_history: 0,
+            __v: 0,
+          };
+
+    let queryAsRegex = qs && qs.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
+    for (const prop in queryAsRegex) {
+      queryAsRegex[prop] = new RegExp(queryAsRegex[prop]);
+    }
+
+    const mQuery = {
+      ...filter,
+      ...queryAsRegex,
+    };
+
+    const allData = await Formation.paginate(mQuery, {
+      page,
+      limit: Math.min(limit, 1000),
+      lean: true,
+      select,
+    });
+    return res.json({
+      formations: allData.docs,
+      pagination: {
+        page: allData.page,
+        resultats_par_page: Math.min(limit, 1000),
+        nombre_de_page: allData.pages,
+        total: allData.total,
+      },
+    });
+  });
+
+  const postFormations = tryCatch(async (req, res) => {
+    let qs = req.body;
+    console.log(qs);
+
+    // FIXME: ugly patch because request from Affelnet is not JSON valid
+    const strQuery = qs?.query ?? "";
+    const cleanedQuery = strQuery.replace(
+      /"num_academie" :(0.)/,
+      (found, capture) => `"num_academie":"${Number(capture)}"`
+    );
+    // end FIXME
+
+    const query = cleanedQuery ? JSON.parse(cleanedQuery) : {};
+
+    const { id_parcoursup, ...filter } = query;
+    // additional filtering for parcoursup
+    if (id_parcoursup) {
+      filter["parcoursup_id"] = id_parcoursup;
+    }
+
+    const page = qs && qs.page ? qs.page : 1;
+    const limit = qs && qs.limit ? parseInt(qs.limit, 10) : 10;
+    const select = qs?.select
+      ? JSON.parse(qs.select)
+      : {
+          affelnet_statut_history: 0,
+          parcoursup_statut_history: 0,
+          updates_history: 0,
+          __v: 0,
+        };
+
+    let queryAsRegex = qs && qs.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
+    for (const prop in queryAsRegex) {
+      queryAsRegex[prop] = new RegExp(queryAsRegex[prop]);
+    }
+
+    const mQuery = {
+      ...filter,
+      ...queryAsRegex,
+    };
+
+    const allData = await Formation.paginate(mQuery, {
+      page,
+      limit: Math.min(limit, 1000),
+      lean: true,
+      select,
+    });
+    return res.json({
+      formations: allData.docs,
+      pagination: {
+        page: allData.page,
+        resultats_par_page: Math.min(limit, 1000),
+        nombre_de_page: allData.pages,
+        total: allData.total,
+      },
+    });
+  });
+
+  const countFormations = tryCatch(async (req, res) => {
+    let qs = req.query;
+    const query = qs && qs.query ? JSON.parse(qs.query) : {};
+    const count = await Formation.countDocuments(query);
+    return res.json(count);
+  });
+
+  const getFormation = tryCatch(async (req, res) => {
+    let qs = req.query;
+    const query = qs && qs.query ? JSON.parse(qs.query) : {};
+    const select =
+      qs && qs.select
+        ? JSON.parse(qs.select)
+        : {
+            affelnet_statut_history: 0,
+            parcoursup_statut_history: 0,
+            updates_history: 0,
+            __v: 0,
+          };
+    const retrievedData = await Formation.findOne(query, select).lean();
+    if (retrievedData) {
+      return res.json(retrievedData);
+    }
+    return res.status(404).send({ message: `Item doesn't exist` });
+  });
+
+  const getFormationById = tryCatch(async (req, res) => {
+    const itemId = req.params.id;
+    const qs = req.query;
+    const select =
+      qs && qs.select
+        ? JSON.parse(qs.select)
+        : {
+            affelnet_statut_history: 0,
+            parcoursup_statut_history: 0,
+            updates_history: 0,
+            __v: 0,
+          };
+    const retrievedData = await Formation.findById(itemId, select).lean();
+    if (retrievedData) {
+      return res.json(retrievedData);
+    }
+    return res.status(404).send({ message: `Item ${itemId} doesn't exist` });
+  });
+
+  const updateFormation = tryCatch(async (req, res) => {
+    const { withCodePostalUpdate = true, withHistoryUpdate = false, ...formation } = req.body;
+    const { formation: updatedFormation, error } = await mnaFormationUpdater(formation, {
+      withHistoryUpdate,
+      withCodePostalUpdate,
+    });
+
+    if (formation.uai_formation) {
+      updatedFormation.uai_formation = formation.uai_formation;
+    }
+
+    if (error) {
+      return res.status(500).send({ message: error });
+    }
+
+    return res.json(updatedFormation);
+  });
+
+  const getFormationsNdJson = tryCatch(async (req, res) => {
+    let { query, select, limit } = await Joi.object({
+      query: Joi.string().default("{}"),
+      select: Joi.string().default(
+        '{"affelnet_statut_history":0,"parcoursup_statut_history":0,"updates_history":0,"__v":0}'
+      ),
+      limit: Joi.number().default(10),
+    }).validateAsync(req.query, { abortEarly: false });
+
+    const filter = JSON.parse(query);
+    const selector = JSON.parse(select);
+
+    let stream = oleoduc(
+      Formation.find(filter, selector).limit(limit).cursor(),
+      transformData((formation) => `${JSON.stringify(formation)}\n`)
+    );
+
+    return sendJsonStream(stream, res);
+  });
+
   /**
    * @swagger
    *
-   * /entity/formations2021:
+   * /entity/formations:
    *   get:
-   *     summary: Permet de récupérer les formations 2021
+   *     summary: Permet de récupérer les formations
    *     tags:
    *       - Formations
    *     description: >
-   *       Permet, à l'aide de critères, de rechercher dans les formations en apprentissage 2021 <br/><br/>
+   *       Permet, à l'aide de critères, de rechercher dans les formations en apprentissage<br/><br/>
    *       Le champ Query est une query Mongo stringify<br/><br/>
    *       **Pour definir vos critères de recherche veuillez regarder le schéma formation (en bas de cette page)**<br/><br/>
    *       champ **select**: Selection du ou des champs retournés, nom_du_champ: 1 pour l'inclure dans le retour
@@ -92,138 +291,22 @@ module.exports = () => {
    *                      total:
    *                        type: number
    */
-  router.get(
-    "/formations2021",
-    tryCatch(async (req, res) => {
-      let qs = req.query;
+  router.get("/formations", getFormations);
+  router.get("/formations2021", getFormations);
 
-      // FIXME: ugly patch because request from Affelnet is not JSON valid
-      const strQuery = qs?.query ?? "";
-      const cleanedQuery = strQuery.replace(
-        /"num_academie" :(0.)/,
-        (found, capture) => `"num_academie":"${Number(capture)}"`
-      );
-      // end FIXME
-
-      const query = cleanedQuery ? JSON.parse(cleanedQuery) : {};
-
-      const { id_parcoursup, ...filter } = query;
-      // additional filtering for parcoursup
-      if (id_parcoursup) {
-        filter["parcoursup_id"] = id_parcoursup;
-      }
-
-      const page = qs && qs.page ? qs.page : 1;
-      const limit = qs && qs.limit ? parseInt(qs.limit, 10) : 10;
-      const select =
-        qs && qs.select
-          ? JSON.parse(qs.select)
-          : {
-              affelnet_statut_history: 0,
-              parcoursup_statut_history: 0,
-              updates_history: 0,
-              __v: 0,
-            };
-
-      let queryAsRegex = qs && qs.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
-      for (const prop in queryAsRegex) {
-        queryAsRegex[prop] = new RegExp(queryAsRegex[prop]);
-      }
-
-      const mQuery = {
-        ...filter,
-        ...queryAsRegex,
-      };
-
-      const allData = await Formation.paginate(mQuery, {
-        page,
-        limit: Math.min(limit, 1000),
-        lean: true,
-        select,
-      });
-      return res.json({
-        formations: allData.docs,
-        pagination: {
-          page: allData.page,
-          resultats_par_page: Math.min(limit, 1000),
-          nombre_de_page: allData.pages,
-          total: allData.total,
-        },
-      });
-    })
-  );
-
-  router.post(
-    "/formations2021",
-    tryCatch(async (req, res) => {
-      let qs = req.body;
-      console.log(qs);
-
-      // FIXME: ugly patch because request from Affelnet is not JSON valid
-      const strQuery = qs?.query ?? "";
-      const cleanedQuery = strQuery.replace(
-        /"num_academie" :(0.)/,
-        (found, capture) => `"num_academie":"${Number(capture)}"`
-      );
-      // end FIXME
-
-      const query = cleanedQuery ? JSON.parse(cleanedQuery) : {};
-
-      const { id_parcoursup, ...filter } = query;
-      // additional filtering for parcoursup
-      if (id_parcoursup) {
-        filter["parcoursup_id"] = id_parcoursup;
-      }
-
-      const page = qs && qs.page ? qs.page : 1;
-      const limit = qs && qs.limit ? parseInt(qs.limit, 10) : 10;
-      const select = qs?.select
-        ? JSON.parse(qs.select)
-        : {
-            affelnet_statut_history: 0,
-            parcoursup_statut_history: 0,
-            updates_history: 0,
-            __v: 0,
-          };
-
-      let queryAsRegex = qs && qs.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
-      for (const prop in queryAsRegex) {
-        queryAsRegex[prop] = new RegExp(queryAsRegex[prop]);
-      }
-
-      const mQuery = {
-        ...filter,
-        ...queryAsRegex,
-      };
-
-      const allData = await Formation.paginate(mQuery, {
-        page,
-        limit: Math.min(limit, 1000),
-        lean: true,
-        select,
-      });
-      return res.json({
-        formations: allData.docs,
-        pagination: {
-          page: allData.page,
-          resultats_par_page: Math.min(limit, 1000),
-          nombre_de_page: allData.pages,
-          total: allData.total,
-        },
-      });
-    })
-  );
+  router.post("/formations", postFormations);
+  router.post("/formations2021", postFormations);
 
   /**
    * @swagger
    *
-   * /entity/formations2021/count:
+   * /entity/formations/count:
    *   get:
-   *     summary: Permet de récupérer le nombre de formations 2021
+   *     summary: Permet de récupérer le nombre de formations
    *     tags:
    *       - Formations
    *     description: >
-   *       Permet, à l'aide de critères, de récupérer le nombre de formations en apprentissage 2021 <br/><br/>
+   *       Permet, à l'aide de critères, de récupérer le nombre de formations en apprentissage <br/><br/>
    *       Le champ Query est une query Mongo stringify<br/><br/>
    *       **Pour definir vos critères de recherche veuillez regarder le schéma formation (en bas de cette page)**
    *     parameters:
@@ -244,51 +327,25 @@ module.exports = () => {
    *       404:
    *         description: KO
    */
-  router.get(
-    "/formations2021/count",
-    tryCatch(async (req, res) => {
-      let qs = req.query;
-      const query = qs && qs.query ? JSON.parse(qs.query) : {};
-      const count = await Formation.countDocuments(query);
-      return res.json(count);
-    })
-  );
+  router.get("/formations/count", countFormations);
+  router.get("/formations2021/count", countFormations);
 
   /**
-   * Get one converted RCO formation by query /formation2021 GET
+   * Get one converted RCO formation by query /formation GET
    */
-  router.get(
-    "/formation2021",
-    tryCatch(async (req, res) => {
-      let qs = req.query;
-      const query = qs && qs.query ? JSON.parse(qs.query) : {};
-      const select =
-        qs && qs.select
-          ? JSON.parse(qs.select)
-          : {
-              affelnet_statut_history: 0,
-              parcoursup_statut_history: 0,
-              updates_history: 0,
-              __v: 0,
-            };
-      const retrievedData = await Formation.findOne(query, select).lean();
-      if (retrievedData) {
-        return res.json(retrievedData);
-      }
-      return res.status(404).send({ message: `Item doesn't exist` });
-    })
-  );
+  router.get("/formation", getFormation);
+  router.get("/formation2021", getFormation);
 
   /**
    * @swagger
    *
-   * /entity/formation2021/{id}:
+   * /entity/formation/{id}:
    *   get:
-   *     summary: Permet de récupérer une formation 2021 spécifique
+   *     summary: Permet de récupérer une formation spécifique
    *     tags:
    *       - Formations
    *     description: >
-   *       Permet, à l'aide de critères, de rechercher dans les formations en apprentissage 2021 <br/><br/>
+   *       Permet, à l'aide de critères, de rechercher dans les formations en apprentissage <br/><br/>
    *       Le champ Query est une query Mongo stringify<br/><br/>
    *       **Pour definir vos critères de recherche veuillez regarder le schéma formation (en bas de cette page)**
    *     parameters:
@@ -304,77 +361,20 @@ module.exports = () => {
    *       404:
    *         description: KO
    */
-  router.get(
-    "/formation2021/:id",
-    tryCatch(async (req, res) => {
-      const itemId = req.params.id;
-      const qs = req.query;
-      const select =
-        qs && qs.select
-          ? JSON.parse(qs.select)
-          : {
-              affelnet_statut_history: 0,
-              parcoursup_statut_history: 0,
-              updates_history: 0,
-              __v: 0,
-            };
-      const retrievedData = await Formation.findById(itemId, select).lean();
-      if (retrievedData) {
-        return res.json(retrievedData);
-      }
-      return res.status(404).send({ message: `Item ${itemId} doesn't exist` });
-    })
-  );
+  router.get("/formation/:id", getFormationById);
+  router.get("/formation2021/:id", getFormationById);
 
   /**
    * Get updated formation
    */
-  router.post(
-    "/formation2021/update",
-    tryCatch(async (req, res) => {
-      const { withCodePostalUpdate = true, withHistoryUpdate = false, ...formation } = req.body;
-      const { formation: updatedFormation, error } = await mnaFormationUpdater(formation, {
-        withHistoryUpdate,
-        withCodePostalUpdate,
-      });
-
-      if (formation.uai_formation) {
-        updatedFormation.uai_formation = formation.uai_formation;
-      }
-
-      if (error) {
-        return res.status(500).send({ message: error });
-      }
-
-      return res.json(updatedFormation);
-    })
-  );
+  router.post("/formation/update", updateFormation);
+  router.post("/formation2021/update", updateFormation);
 
   /**
    * Fetch formations as ndjson
    */
-  router.get(
-    "/formations2021.ndjson",
-    tryCatch(async (req, res) => {
-      let { query, select, limit } = await Joi.object({
-        query: Joi.string().default("{}"),
-        select: Joi.string().default(
-          '{"affelnet_statut_history":0,"parcoursup_statut_history":0,"updates_history":0,"__v":0}'
-        ),
-        limit: Joi.number().default(10),
-      }).validateAsync(req.query, { abortEarly: false });
-
-      const filter = JSON.parse(query);
-      const selector = JSON.parse(select);
-
-      let stream = oleoduc(
-        Formation.find(filter, selector).limit(limit).cursor(),
-        transformData((formation) => `${JSON.stringify(formation)}\n`)
-      );
-
-      return sendJsonStream(stream, res);
-    })
-  );
+  router.get("/formations.ndjson", getFormationsNdJson);
+  router.get("/formations2021.ndjson", getFormationsNdJson);
 
   return router;
 };

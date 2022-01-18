@@ -4,7 +4,7 @@ import { buildUpdatesHistory } from "../utils/historyUtils";
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
 export const updateFormation = async ({ formation, body, user }) => {
-  return await _put(`${endpointNewFront}/entity/formations2021/${formation._id}`, {
+  return await _put(`${endpointNewFront}/entity/formations/${formation._id}`, {
     num_academie: formation.num_academie,
     ...body,
     last_update_who: user.email,

@@ -10,7 +10,7 @@ const server = setupServer(
   rest.get(/\/api\/entity\/etablissements\/count/, (req, res, ctx) => {
     return res(ctx.json(150));
   }),
-  rest.get(/\/api\/entity\/formations2021\/count/, (req, res, ctx) => {
+  rest.get(/\/api\/entity\/formations\/count/, (req, res, ctx) => {
     return res(ctx.json(8900));
   }),
   rest.get(/\/api\/v1\/entity\/messageScript/, (req, res, ctx) => {
