@@ -15,12 +15,8 @@ const {
   updateRapprochement,
   copyEditedFields,
 } = require("./migrationFinder");
-const { extractFirstValue } = require("../../../../common/utils/rcoUtils");
+const { extractFirstValue, extractPeriodeArray } = require("../../../../common/utils/rcoUtils");
 const { asyncForEach } = require("../../../../common/utils/asyncUtils");
-
-const extractPeriodeArray = (arr) => {
-  return Array.from(new Set(arr.map((v) => v.split("##")).flat()));
-};
 
 const extractUsefulNewFields = (formation) => {
   const {

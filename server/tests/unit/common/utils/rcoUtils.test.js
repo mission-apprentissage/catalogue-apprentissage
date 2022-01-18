@@ -15,6 +15,14 @@ describe(__filename, () => {
     assert.deepStrictEqual(result, ["2021", "2022"]);
   });
 
+  it("should work even with ## separator", () => {
+    let result = getPeriodeTags(["2021-09##2022-09", "2021-12", "2021-01"]);
+    assert.deepStrictEqual(result, ["2021", "2022"]);
+
+    result = getPeriodeTags(["2021-09", "2021-12##2022-12", "2021-01##2023-07"]);
+    assert.deepStrictEqual(result, ["2021", "2022", "2023"]);
+  });
+
   it("should sort year tags", () => {
     let result = getPeriodeTags(["2023-01", "2021-12", "2021-01", "2022-01", "2022-05"]);
     assert.deepStrictEqual(result, ["2021", "2022", "2023"]);
