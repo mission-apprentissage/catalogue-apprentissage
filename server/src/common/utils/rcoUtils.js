@@ -2,7 +2,7 @@
  * extract array of years from array of string dates
  */
 const getPeriodeTags = (periode = []) => {
-  const tags = periode.reduce((acc, dateStr) => {
+  const tags = extractPeriodeArray(periode).reduce((acc, dateStr) => {
     const date = new Date(dateStr);
     const year = date.getFullYear();
     if (!year || acc.includes(year) || year < 2020) {
@@ -18,4 +18,8 @@ const extractFirstValue = (value) => {
   return value?.split("##")[0] ?? null;
 };
 
-module.exports = { getPeriodeTags, extractFirstValue };
+const extractPeriodeArray = (arr) => {
+  return Array.from(new Set(arr.map((v) => v.split("##")).flat()));
+};
+
+module.exports = { getPeriodeTags, extractFirstValue, extractPeriodeArray };
