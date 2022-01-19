@@ -4,12 +4,9 @@ import { Text } from "@chakra-ui/react";
 export const FormationPeriode = ({ periode }) => {
   let displayedPeriode = <strong>{periode}</strong>;
   try {
-    const periodeArr = JSON.parse(periode);
-
-    const periodeObj = periodeArr.reduce((acc, dateStr) => {
-      const date = new Date(dateStr);
+    const periodeObj = periode.reduce((acc, date) => {
       const formattedDate = date.toLocaleString("fr-FR", { month: "long" });
-      const displayedDate = formattedDate === "Invalid Date" ? dateStr : formattedDate;
+      const displayedDate = formattedDate === "Invalid Date" ? "Date invalide" : formattedDate;
       const year = isNaN(date.getFullYear()) ? "Période invalide" : date.getFullYear();
       acc[year] = acc[year] ?? [];
       acc[year] = [...acc[year], displayedDate];
