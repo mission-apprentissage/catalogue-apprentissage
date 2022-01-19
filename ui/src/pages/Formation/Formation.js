@@ -33,6 +33,7 @@ import { EditableField } from "../../common/components/formation/EditableField";
 import { DescriptionBlock } from "../../common/components/formation/DescriptionBlock";
 import { OrganismesBlock } from "../../common/components/formation/OrganismesBlock";
 import { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL } from "../../constants/catalogueLabels";
+import { COMMON_STATUS } from "../../constants/status";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -174,13 +175,13 @@ export default ({ match }) => {
       return new Promise(async (resolve) => {
         try {
           if (uai_formation !== formation["uai_formation"]) {
-            const updatedFormation = await _post(`${endpointNewFront}/entity/formation2021/update`, {
+            const updatedFormation = await _post(`${endpointNewFront}/entity/formation/update`, {
               ...formation,
               uai_formation,
               withCodePostalUpdate: false,
             });
 
-            const result = await _put(`${endpointNewFront}/entity/formations2021/${formation._id}`, {
+            const result = await _put(`${endpointNewFront}/entity/formations/${formation._id}`, {
               ...updatedFormation,
               last_update_who: user.email,
               last_update_at: Date.now(),
@@ -217,7 +218,7 @@ export default ({ match }) => {
   useEffect(() => {
     async function run() {
       try {
-        const apiURL = `${endpointNewFront}/entity/formation2021/`;
+        const apiURL = `${endpointNewFront}/entity/formation/`;
         // FIXME select={"__v" :0} hack to get updates_history
         const form = await _get(`${apiURL}${match.params.id}?select={"__v":0}`, false);
 
@@ -241,6 +242,27 @@ export default ({ match }) => {
 
   const title = `${formation?.intitule_long}`;
   setTitle(title);
+
+  const sendToParcoursup = async () => {
+    try {
+      const updated = await _post(`${endpointNewFront}/parcoursup/send-ws`, {
+        id: formation._id,
+      });
+      setFormation(updated);
+    } catch (e) {
+      console.error("Can't send to ws", e);
+
+      const response = await (e?.json ?? {});
+      const message = response?.message ?? e?.message;
+
+      toast({
+        title: "Error",
+        description: message,
+        status: "error",
+        duration: 10000,
+      });
+    }
+  };
 
   return (
     <Layout>
@@ -297,14 +319,24 @@ export default ({ match }) => {
                     )}
                 </Flex>
                 {formation.etablissement_reference_catalogue_published && (
-                  <Box mt={5}>
-                    {hasAccessTo(user, "page_formation/voir_status_publication_ps") && (
-                      <StatusBadge source="Parcoursup" status={formation.parcoursup_statut} mr={[0, 3]} />
-                    )}
-                    {hasAccessTo(user, "page_formation/voir_status_publication_aff") && (
-                      <StatusBadge source="Affelnet" status={formation.affelnet_statut} mt={[1, 0]} />
-                    )}
-                  </Box>
+                  <Flex justifyContent={"space-between"} flexDirection={["column", "column", "row"]}>
+                    <Box mt={5}>
+                      {hasAccessTo(user, "page_formation/voir_status_publication_ps") && (
+                        <StatusBadge source="Parcoursup" status={formation.parcoursup_statut} mr={[0, 3]} />
+                      )}
+                      {hasAccessTo(user, "page_formation/voir_status_publication_aff") && (
+                        <StatusBadge source="Affelnet" status={formation.affelnet_statut} mt={[1, 0]} />
+                      )}
+                    </Box>
+                    <Flex>
+                      {formation.parcoursup_statut === COMMON_STATUS.EN_ATTENTE &&
+                        hasAccessTo(user, "page_formation/envoi_parcoursup") && (
+                          <Button textStyle="sm" variant="secondary" px={8} mt={4} onClick={sendToParcoursup}>
+                            Forcer la publication Parcoursup
+                          </Button>
+                        )}
+                    </Flex>
+                  </Flex>
                 )}
               </Box>
               <Formation

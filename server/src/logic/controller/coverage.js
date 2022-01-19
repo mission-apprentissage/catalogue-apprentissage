@@ -193,13 +193,15 @@ async function getParcoursupCoverage(formation) {
 }
 
 /**
- * Matching avec les formations du catalogue (Affelnet vs RCO)
+ * Rapprochements des formations Affelnet avec les formations du catalogue (Affelnet vs RCO)
+ * On prend les matchs les plus forts dans l'ordre.
+ * Puis si on trouve 1 seul match & que la formation Affelnet a 1 uai, on met à "publié" toutes les formations avec le même cfd + siret formateur + siret gestionnaire
  *
- * m1 = cfd
- * m2 = cfd + departement
- * m3 = cfd + departement + uai
- * m4 = cfd + departement + code postal
  * m5 = cfd + departement + code postal + uai
+ * m4 = cfd + departement + code postal
+ * m3 = cfd + departement + uai
+ * m2 = cfd + departement
+ * m1 = cfd
  */
 async function getAffelnetCoverage({ code_postal: cp, code_cfd, uai }) {
   const dept = cp.substring(0, 2);

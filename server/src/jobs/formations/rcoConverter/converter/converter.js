@@ -164,10 +164,10 @@ const createFormation = async (
   invalidRcoFormations,
   convertedRcoFormations
 ) => {
-  const stateEtablissements = await createOrUpdateEtablissements(rcoFormation._doc);
+  const { errors } = await createOrUpdateEtablissements(rcoFormation._doc);
 
-  if (stateEtablissements.errored) {
-    const error = `${stateEtablissements.etablissement_gestionnaire.error} ${stateEtablissements.etablissement_formateur.error}`;
+  if (errors.length > 0) {
+    const error = errors.join(", ");
     rcoFormation.conversion_error = error;
     await rcoFormation.save();
 
@@ -203,7 +203,6 @@ const createFormation = async (
     cle_ministere_educatif: newCf.cle_ministere_educatif,
     cfd: newCf.cfd,
     updates: {},
-    // stateEtablissements, // TODO Keep for now
   });
 
   return newCf;

@@ -49,6 +49,10 @@ export default [
         feature: "Modifier les informations",
         ref: "page_formation/modifier_informations",
       },
+      {
+        feature: "Forcer la publication Parcoursup",
+        ref: "page_formation/envoi_parcoursup",
+      },
     ],
   },
   {

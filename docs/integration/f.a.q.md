@@ -25,7 +25,7 @@ Les critères de recherche sont très libre, avec l'aide d'un développeur vous 
 \
 Tester: 
 
-[https://catalogue.apprentissage.beta.gouv.fr/api/v1/docs/#/Formations/get_entity_formations2021](https://catalogue.apprentissage.beta.gouv.fr/api/v1/docs/#/Formations/get_entity_formations2021)
+[https://catalogue.apprentissage.beta.gouv.fr/api/v1/docs/#/Formations/get_entity_formations](https://catalogue.apprentissage.beta.gouv.fr/api/v1/docs/#/Formations/get_entity_formations)
 
 ![](<../../.gitbook/assets/image (8).png>)
 

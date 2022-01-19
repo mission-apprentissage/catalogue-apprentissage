@@ -9,6 +9,8 @@ const reportRejected = require("../../jobs/parcoursup/reportRejected");
 
 const { diffFormation, buildUpdatesHistory } = require("../../logic/common/utils/diffUtils");
 const { updateParcoursupCoverage } = require("../../logic/updaters/coverageUpdater");
+const Boom = require("boom");
+const { createFormation } = require("../../jobs/parcoursup/export");
 
 module.exports = () => {
   const router = express.Router();
@@ -442,6 +444,36 @@ module.exports = () => {
       await reportRejected();
 
       return res.json();
+    })
+  );
+
+  /**
+   * Send formation to the Parcoursup web service
+   */
+  router.post(
+    "/send-ws",
+    tryCatch(async (req, res) => {
+      let user = {};
+      if (req.user) {
+        user = req.session?.passport?.user;
+      }
+
+      const { id } = req.body;
+      const formation = await Formation.findById(id);
+
+      if (!formation) {
+        throw Boom.notFound();
+      }
+
+      if (!formation.parcoursup_statut === "en attente de publication") {
+        throw Boom.forbidden('La formation n\'est pas "en attente de publication"');
+      }
+
+      const formationUpdated = await createFormation(formation, user.email);
+      if (formationUpdated.parcoursup_error) {
+        return res.status(500).json({ message: formationUpdated.parcoursup_error });
+      }
+      return res.json(formationUpdated);
     })
   );
 
