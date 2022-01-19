@@ -77,7 +77,7 @@ const createCursor = (query = filter) => {
   return Formation.find(query, select).sort(sort).limit(limit).cursor();
 };
 
-const createFormation = async (formation) => {
+const createFormation = async (formation, email = null) => {
   let data;
   try {
     data = await formatter(formation);
@@ -94,12 +94,13 @@ const createFormation = async (formation) => {
     formation.parcoursup_id = response.g_ta_cod;
     formation.parcoursup_statut = STATUS.PUBLIE;
     formation.last_update_at = Date.now();
-    formation.last_update_who = "web service Parcoursup";
+    formation.last_update_who = `web service Parcoursup${email ? `, sent by ${email}` : ""}`;
     formation.parcoursup_statut_history.push({
       date: new Date(),
       parcoursup_statut: STATUS.PUBLIE,
-      last_update_who: "web service Parcoursup",
+      last_update_who: `web service Parcoursup${email ? `, sent by ${email}` : ""}`,
     });
+    formation.parcoursup_error = null;
     await formation.save();
   } catch (e) {
     logger.error("Parcoursup WS error", e?.response?.status, e?.response?.data ?? e, data);
@@ -108,6 +109,7 @@ const createFormation = async (formation) => {
     }`;
     await formation.save();
   }
+  return formation;
 };
 
 /**
