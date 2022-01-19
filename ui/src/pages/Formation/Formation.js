@@ -33,6 +33,7 @@ import { EditableField } from "../../common/components/formation/EditableField";
 import { DescriptionBlock } from "../../common/components/formation/DescriptionBlock";
 import { OrganismesBlock } from "../../common/components/formation/OrganismesBlock";
 import { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL } from "../../constants/catalogueLabels";
+import { COMMON_STATUS } from "../../constants/status";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -242,6 +243,27 @@ export default ({ match }) => {
   const title = `${formation?.intitule_long}`;
   setTitle(title);
 
+  const sendToParcoursup = async () => {
+    try {
+      const updated = await _post(`${endpointNewFront}/parcoursup/send-ws`, {
+        id: formation._id,
+      });
+      setFormation(updated);
+    } catch (e) {
+      console.error("Can't send to ws", e);
+
+      const response = await (e?.json ?? {});
+      const message = response?.message ?? e?.message;
+
+      toast({
+        title: "Error",
+        description: message,
+        status: "error",
+        duration: 10000,
+      });
+    }
+  };
+
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
@@ -297,14 +319,24 @@ export default ({ match }) => {
                     )}
                 </Flex>
                 {formation.etablissement_reference_catalogue_published && (
-                  <Box mt={5}>
-                    {hasAccessTo(user, "page_formation/voir_status_publication_ps") && (
-                      <StatusBadge source="Parcoursup" status={formation.parcoursup_statut} mr={[0, 3]} />
-                    )}
-                    {hasAccessTo(user, "page_formation/voir_status_publication_aff") && (
-                      <StatusBadge source="Affelnet" status={formation.affelnet_statut} mt={[1, 0]} />
-                    )}
-                  </Box>
+                  <Flex justifyContent={"space-between"} flexDirection={["column", "column", "row"]}>
+                    <Box mt={5}>
+                      {hasAccessTo(user, "page_formation/voir_status_publication_ps") && (
+                        <StatusBadge source="Parcoursup" status={formation.parcoursup_statut} mr={[0, 3]} />
+                      )}
+                      {hasAccessTo(user, "page_formation/voir_status_publication_aff") && (
+                        <StatusBadge source="Affelnet" status={formation.affelnet_statut} mt={[1, 0]} />
+                      )}
+                    </Box>
+                    <Flex>
+                      {formation.parcoursup_statut === COMMON_STATUS.EN_ATTENTE &&
+                        hasAccessTo(user, "page_formation/envoi_parcoursup") && (
+                          <Button textStyle="sm" variant="secondary" px={8} mt={4} onClick={sendToParcoursup}>
+                            Envoyer la formation à Parcoursup
+                          </Button>
+                        )}
+                    </Flex>
+                  </Flex>
                 )}
               </Box>
               <Formation
