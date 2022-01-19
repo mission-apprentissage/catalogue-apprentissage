@@ -50,7 +50,7 @@ export default [
         ref: "page_formation/modifier_informations",
       },
       {
-        feature: "Envoyer la formation à Parcoursup",
+        feature: "Forcer la publication Parcoursup",
         ref: "page_formation/envoi_parcoursup",
       },
     ],

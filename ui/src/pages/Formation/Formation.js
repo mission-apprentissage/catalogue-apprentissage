@@ -332,7 +332,7 @@ export default ({ match }) => {
                       {formation.parcoursup_statut === COMMON_STATUS.EN_ATTENTE &&
                         hasAccessTo(user, "page_formation/envoi_parcoursup") && (
                           <Button textStyle="sm" variant="secondary" px={8} mt={4} onClick={sendToParcoursup}>
-                            Envoyer la formation à Parcoursup
+                            Forcer la publication Parcoursup
                           </Button>
                         )}
                     </Flex>
