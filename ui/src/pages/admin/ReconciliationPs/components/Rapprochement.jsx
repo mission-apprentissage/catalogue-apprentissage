@@ -5,6 +5,7 @@ import { Section } from "./Section";
 
 import InfoTooltip from "../../../../common/components/InfoTooltip";
 import helpText from "../../../../locales/helpText.json";
+import { FormationPeriode } from "../../../../common/components/formation/FormationPeriode";
 
 const getEtablissementFields = (mnaFormation, type, diff, code_commune_insee) => {
   return {
@@ -107,8 +108,8 @@ const Rapprochement = React.memo(({ formation, currentMnaFormation }) => {
           </Box>
         }
         right={
-          <Box mb={4} mt={4}>
-            <Text>{mnaFormation.periode}</Text>
+          <Box mb={4}>
+            <FormationPeriode periode={mnaFormation.periode} />
           </Box>
         }
       />
