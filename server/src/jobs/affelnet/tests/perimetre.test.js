@@ -10,6 +10,12 @@ describe(__filename, () => {
     await ReglePerimetre.deleteMany({});
     await Formation.deleteMany({});
 
+    const currentDate = new Date();
+    const periode = [
+      new Date(`${currentDate.getFullYear()}-10-01T00:00:00.000Z`),
+      new Date(`${currentDate.getFullYear() + 1}-10-01T00:00:00.000Z`),
+    ];
+
     // insert sample data in DB
     // rules
     await ReglePerimetre.create({
@@ -51,6 +57,7 @@ describe(__filename, () => {
       niveau: "4 (BAC...)",
       diplome: "MC",
       affelnet_statut: "hors périmètre",
+      periode,
     });
     await Formation.create({
       published: true,
@@ -59,6 +66,7 @@ describe(__filename, () => {
       niveau: "4 (BAC...)",
       diplome: "MC",
       affelnet_statut: "hors périmètre",
+      periode,
     });
     await Formation.create({
       published: true,
@@ -67,6 +75,7 @@ describe(__filename, () => {
       niveau: "4 (BAC...)",
       diplome: "MC Agri",
       affelnet_statut: "à publier (soumis à validation)",
+      periode,
     });
     await Formation.create({
       published: true,
@@ -75,6 +84,7 @@ describe(__filename, () => {
       niveau: "3 (CAP...)",
       diplome: "CAP",
       affelnet_statut: "à publier (soumis à validation)",
+      periode,
     });
     await Formation.create({
       published: true,
@@ -84,6 +94,7 @@ describe(__filename, () => {
       diplome: "BAC TECHNO",
       num_academie: "12",
       affelnet_statut: "hors périmètre",
+      periode,
     });
     await Formation.create({
       published: true,
@@ -93,6 +104,7 @@ describe(__filename, () => {
       diplome: "BAC TECHNO",
       num_academie: "14",
       affelnet_statut: "hors périmètre",
+      periode,
     });
     await Formation.create({
       published: true,
@@ -102,6 +114,7 @@ describe(__filename, () => {
       diplome: "BAC PRO",
       num_academie: "14",
       affelnet_statut: "publié",
+      periode,
     });
     await Formation.create({
       published: true,
@@ -110,6 +123,16 @@ describe(__filename, () => {
       niveau: "4 (BAC...)",
       diplome: "BAC PRO",
       affelnet_statut: "en attente de publication",
+      periode,
+    });
+    await Formation.create({
+      published: true,
+      etablissement_gestionnaire_catalogue_published: true,
+      etablissement_reference_catalogue_published: true,
+      niveau: "4 (BAC...)",
+      diplome: "MC",
+      affelnet_statut: "hors périmètre",
+      periode: [new Date(`${currentDate.getFullYear()}-02-01T00:00:00.000Z`)],
     });
   });
 
@@ -119,7 +142,7 @@ describe(__filename, () => {
 
   it("should have inserted sample data", async () => {
     const countFormations = await Formation.countDocuments({});
-    assert.strictEqual(countFormations, 8);
+    assert.strictEqual(countFormations, 9);
 
     const countRules = await ReglePerimetre.countDocuments({});
     assert.strictEqual(countRules, 4);
@@ -131,7 +154,7 @@ describe(__filename, () => {
     const totalNotRelevant = await Formation.countDocuments({
       affelnet_statut: "hors périmètre",
     });
-    assert.strictEqual(totalNotRelevant, 3);
+    assert.strictEqual(totalNotRelevant, 4);
 
     const totalToValidate = await Formation.countDocuments({
       affelnet_statut: "à publier (soumis à validation)",
