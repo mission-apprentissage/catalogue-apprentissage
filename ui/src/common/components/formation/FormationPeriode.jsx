@@ -4,9 +4,7 @@ import { Text } from "@chakra-ui/react";
 export const FormationPeriode = ({ periode }) => {
   let displayedPeriode = <strong>{periode}</strong>;
   try {
-    const periodeArr = JSON.parse(periode);
-
-    const periodeObj = periodeArr.reduce((acc, dateStr) => {
+    const periodeObj = periode.reduce((acc, dateStr) => {
       const date = new Date(dateStr);
       const formattedDate = date.toLocaleString("fr-FR", { month: "long" });
       const displayedDate = formattedDate === "Invalid Date" ? dateStr : formattedDate;

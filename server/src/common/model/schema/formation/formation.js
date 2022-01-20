@@ -262,9 +262,9 @@ const formationSchema = {
     description: "Codes ROME",
   },
   periode: {
-    type: String,
+    type: [Date],
     default: null,
-    description: "Période d'inscription à la formation",
+    description: "Périodes d'inscription à la formation",
   },
   capacite: {
     type: String,

@@ -434,7 +434,7 @@ test("opens rapprochement modal", async () => {
           rncp_code: "RNCP35030",
           rncp_intitule: "Assistant ressources humaines",
           rncp_eligible_apprentissage: true,
-          periode: '["2021-10"]',
+          periode: ["2021-10"],
           capacite: null,
           duree: null,
           annee: null,
