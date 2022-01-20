@@ -277,8 +277,7 @@ const mnaFormationUpdater = async (
     // set tags
     let tags = [];
     try {
-      const periode = JSON.parse(formation.periode);
-      tags = getPeriodeTags(periode);
+      tags = getPeriodeTags(rcoFormation?.periode);
     } catch (e) {
       logger.error("unable to set tags", e);
     }
