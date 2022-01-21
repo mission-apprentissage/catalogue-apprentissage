@@ -36,6 +36,7 @@ const FILTERS = () => [
   "annee",
   "qualiopi",
   "duree",
+  "periode",
 ];
 
 const columnsDefinition = [
