@@ -94,7 +94,7 @@ describe(__filename, () => {
             etablissement_gestionnaire_catalogue_published: true,
             etablissement_reference_catalogue_published: true,
             published: true,
-            periode: { $gte: getPeriodeStartDate() },
+            // periode: { $gte: getPeriodeStartDate() },
           },
           {
             $or: [
