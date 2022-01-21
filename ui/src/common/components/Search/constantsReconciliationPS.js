@@ -19,7 +19,6 @@ const columnsDefinition = [
     Header: "Identifiant ParcourSup",
     accessor: "id_parcoursup",
     width: 200,
-    editable: false,
     exportable: true,
   },
   {
@@ -27,7 +26,6 @@ const columnsDefinition = [
     accessor: "nom_academie",
     width: 200,
     exportable: true,
-    editable: false,
     formatter: (value) => escapeDiacritics(value),
   },
   {
@@ -35,35 +33,30 @@ const columnsDefinition = [
     accessor: "codes_cfd_mna",
     width: 400,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Libelle de la formation",
     accessor: "libelle_formation",
     width: 400,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Libelle spécialité",
     accessor: "libelle_specialite",
     width: 400,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Code postal",
     accessor: "code_postal",
     width: 120,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Localite",
     accessor: "libelle_commune",
     width: 200,
     exportable: true,
-    editable: false,
     formatter: (value) => escapeDiacritics(value),
   },
   {
@@ -71,14 +64,12 @@ const columnsDefinition = [
     accessor: "matching_type",
     width: 120,
     exportable: false,
-    editable: false,
   },
   {
     Header: "match",
     accessor: "matching_mna_formation",
     width: 200,
     exportable: true,
-    editable: false,
     formatter: (values, formation) => {
       const result = [];
       for (let index = 0; index < values.length; index++) {
@@ -99,21 +90,18 @@ const columnsDefinition = [
     accessor: "matching_mna_parcoursup_statuts",
     width: 200,
     exportable: false,
-    editable: false,
   },
   {
     Header: "statut_reconciliation",
     accessor: "statut_reconciliation",
     width: 200,
     exportable: false,
-    editable: false,
   },
   {
     Header: "Raison(s) rejet",
     accessor: "rapprochement_rejete_raisons",
     width: 200,
     exportable: true,
-    editable: false,
     formatter: (values) => {
       return values.join(", ");
     },
@@ -123,70 +111,60 @@ const columnsDefinition = [
     accessor: "rapprochement_rejete_raison_autre",
     width: 200,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Uai Gestionnaire",
     accessor: "uai_gestionnaire",
     width: 120,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Uai Composante",
     accessor: "uai_composante",
     width: 120,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Uai Affilié",
     accessor: "uai_affilie",
     width: 120,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Siret sur Cerfa",
     accessor: "siret_cerfa",
     width: 120,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Nom établissement uai composante",
     accessor: "libelle_uai_composante",
     width: 120,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Adresse",
     accessor: "complement_adresse_1",
     width: 120,
     exportable: true,
-    editable: false,
   },
   {
     Header: "clé ministere educatif ",
     accessor: "cle_ministere_educatif",
     width: 200,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Force du rapprochement",
     accessor: "matching_type",
     width: 200,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Formation catalogue toujours publiée ?",
     accessor: "is_orphan",
     width: 200,
     exportable: true,
-    editable: false,
     formatter: (value) => {
       return value ? "Formation rapprochée absente du catalogue" : "OUI";
     },

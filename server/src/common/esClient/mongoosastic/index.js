@@ -75,6 +75,8 @@ function getMapping(schema, requireAsciiFolding = false) {
               fields: { keyword: { type: "keyword", ignore_above: 256 } },
               ...asciiFoldingParameters,
             };
+          } else if (schema.paths[key].caster.instance === "Date") {
+            properties[key] = { type: "date" };
           } else if (schema.paths[key].caster.instance === "Mixed") {
             properties[key] = { type: "nested" };
           }
