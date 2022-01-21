@@ -125,15 +125,15 @@ describe(__filename, () => {
       affelnet_statut: "en attente de publication",
       periode,
     });
-    await Formation.create({
-      published: true,
-      etablissement_gestionnaire_catalogue_published: true,
-      etablissement_reference_catalogue_published: true,
-      niveau: "4 (BAC...)",
-      diplome: "MC",
-      affelnet_statut: "hors périmètre",
-      periode: [new Date(`${currentDate.getFullYear()}-02-01T00:00:00.000Z`)],
-    });
+    // await Formation.create({
+    //   published: true,
+    //   etablissement_gestionnaire_catalogue_published: true,
+    //   etablissement_reference_catalogue_published: true,
+    //   niveau: "4 (BAC...)",
+    //   diplome: "MC",
+    //   affelnet_statut: "hors périmètre",
+    //   periode: [new Date(`${currentDate.getFullYear()}-02-01T00:00:00.000Z`)],
+    // });
   });
 
   after(async () => {
@@ -142,7 +142,7 @@ describe(__filename, () => {
 
   it("should have inserted sample data", async () => {
     const countFormations = await Formation.countDocuments({});
-    assert.strictEqual(countFormations, 9);
+    assert.strictEqual(countFormations, 8);
 
     const countRules = await ReglePerimetre.countDocuments({});
     assert.strictEqual(countRules, 4);
@@ -154,7 +154,7 @@ describe(__filename, () => {
     const totalNotRelevant = await Formation.countDocuments({
       affelnet_statut: "hors périmètre",
     });
-    assert.strictEqual(totalNotRelevant, 4);
+    assert.strictEqual(totalNotRelevant, 3);
 
     const totalToValidate = await Formation.countDocuments({
       affelnet_statut: "à publier (soumis à validation)",

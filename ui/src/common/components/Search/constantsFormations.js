@@ -36,6 +36,7 @@ const FILTERS = () => [
   "annee",
   "qualiopi",
   "duree",
+  "periode",
 ];
 
 const columnsDefinition = [
@@ -43,15 +44,12 @@ const columnsDefinition = [
     Header: "Numero academie",
     accessor: "num_academie",
     width: 200,
-    editorInput: "text",
-    editable: true,
     exportable: true,
   },
   {
     Header: "Nom academie",
     accessor: "nom_academie",
     width: 200,
-    editable: false,
     exportable: true,
     formatter: (value) => escapeDiacritics(value),
   },
@@ -60,7 +58,6 @@ const columnsDefinition = [
     accessor: "num_departement",
     width: 200,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Siret Responsable",
@@ -74,70 +71,60 @@ const columnsDefinition = [
     accessor: "etablissement_gestionnaire_uai",
     width: 200,
     exportable: true,
-    editorInput: "text",
   },
   {
     Header: "Enseigne Responsable",
     accessor: "etablissement_gestionnaire_enseigne",
     width: 200,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Siret Formateur",
     accessor: "etablissement_formateur_siret",
     width: 200,
     exportable: true,
-    editorInput: "text",
   },
   {
     Header: "Uai formateur",
     accessor: "etablissement_formateur_uai",
     width: 200,
     exportable: true,
-    editorInput: "text",
   },
   {
     Header: "Enseigne Formateur",
     accessor: "etablissement_formateur_enseigne",
     width: 200,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Raison sociale du siret formateur",
     accessor: "etablissement_gestionnaire_entreprise_raison_sociale",
     width: 200,
     exportable: true,
-    editable: false,
   },
   {
     Header: "CFA ou OFA ? ",
     accessor: "etablissement_reference_type",
     width: 200,
     exportable: true,
-    editable: false,
   },
   {
     Header: "CFA conventionne ? ",
     accessor: "etablissement_reference_conventionne",
     width: 200,
     exportable: true,
-    editable: false,
   },
   {
     Header: "CFA declare en prefecture ? ",
     accessor: "etablissement_reference_declare_prefecture",
     width: 200,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Gestionnaire certifié qualiopi ? ",
     accessor: "etablissement_gestionnaire_catalogue_published",
     width: 200,
     exportable: true,
-    editable: false,
     formatter: (value) => (value ? "OUI" : "NON"),
   },
   {
@@ -145,50 +132,42 @@ const columnsDefinition = [
     accessor: "diplome",
     width: 200,
     exportable: true,
-    editable: false,
-    editableEmpty: true,
   },
   {
     Header: "Intitule long de la formation",
     accessor: "intitule_long",
     width: 200,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Intitule court de la formation",
     accessor: "intitule_court",
     width: 200,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Organisme Habilite (RNCP)",
     accessor: "rncp_etablissement_gestionnaire_habilite",
     width: 200,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Eligible apprentissage (RNCP)",
     accessor: "rncp_eligible_apprentissage",
     width: 200,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Codes RNCP",
     accessor: "rncp_code",
     width: 200,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Intitule du code RNCP",
     accessor: "rncp_intitule",
     width: 200,
     exportable: true,
-    editable: false,
     formatter: (value) => escapeDiacritics(value),
   },
   {
@@ -196,23 +175,18 @@ const columnsDefinition = [
     accessor: "rome_codes",
     width: 200,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Code du diplome ou du titre suivant la nomenclature de l'Education nationale (CodeEN)",
     accessor: "cfd",
     width: 400,
-    editorInput: "text",
     exportable: true,
-    editable: false,
-    editableInvalid: true,
   },
   {
     Header: "Liste MEF rattaches",
     accessor: "bcn_mefs_10",
     width: 200,
     exportable: true,
-    editable: true,
     formatter: (value) => value?.map((x) => x?.mef10)?.join(","),
   },
   {
@@ -220,7 +194,6 @@ const columnsDefinition = [
     accessor: "affelnet_mefs_10",
     width: 200,
     exportable: true,
-    editable: false,
     formatter: (value) => value?.map((x) => x?.mef10)?.join(","),
   },
   {
@@ -228,7 +201,6 @@ const columnsDefinition = [
     accessor: "parcoursup_mefs_10",
     width: 200,
     exportable: true,
-    editable: false,
     formatter: (value) => value?.map((x) => x?.mef10)?.join(","),
   },
   {
@@ -236,7 +208,6 @@ const columnsDefinition = [
     accessor: "affelnet_statut",
     width: 200,
     exportable: true,
-    editable: true,
     formatter: (value) => escapeDiacritics(value),
   },
   {
@@ -244,7 +215,6 @@ const columnsDefinition = [
     accessor: "parcoursup_statut",
     width: 200,
     exportable: true,
-    editable: true,
     formatter: (value) => escapeDiacritics(value),
   },
   {
@@ -252,7 +222,6 @@ const columnsDefinition = [
     accessor: "niveau",
     width: 200,
     exportable: true,
-    editable: false,
     formatter: (value) => escapeDiacritics(value),
   },
   {
@@ -260,43 +229,44 @@ const columnsDefinition = [
     accessor: "periode",
     width: 200,
     exportable: true,
-    editorInput: "textarea",
-    editable: true,
+    formatter: (periode) => {
+      return periode
+        ?.map((dateStr) => {
+          const formattedDate = new Date(dateStr).toLocaleString("fr-FR", { month: "long", year: "numeric" });
+          return formattedDate === "Invalid Date" ? dateStr : formattedDate;
+        })
+        ?.join(", ");
+    },
   },
   {
     Header: "Capacite",
     accessor: "capacite",
     width: 200,
     exportable: true,
-    editable: true,
   },
   {
     Header: "Duree",
     accessor: "duree",
     width: 200,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Annee",
     accessor: "annee",
     width: 200,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Uai formation",
     accessor: "uai_formation",
     width: 200,
     exportable: true,
-    editable: true,
   },
   {
     Header: "Adresse formation",
     accessor: "lieu_formation_adresse",
     width: 200,
     exportable: true,
-    editable: true,
     formatter: (value) => escapeDiacritics(value),
   },
   {
@@ -304,14 +274,12 @@ const columnsDefinition = [
     accessor: "code_postal",
     width: 200,
     exportable: true,
-    editable: true,
   },
   {
     Header: "Ville",
     accessor: "localite",
     width: 200,
     exportable: true,
-    editable: true,
     formatter: (value) => escapeDiacritics(value),
   },
   {
@@ -319,56 +287,48 @@ const columnsDefinition = [
     accessor: "code_commune_insee",
     width: 200,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Geolocalisation",
     accessor: "lieu_formation_geo_coordonnees",
     width: 200,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Numero Academie Siege",
     accessor: "etablissement_gestionnaire_num_academie",
     width: 200,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Nom Academie Siege",
     accessor: "etablissement_gestionnaire_nom_academie",
     width: 200,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Url ONISEP",
     accessor: "onisep_url",
     width: 300,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Etablissement dans le catalogue eligible ? ",
     accessor: "etablissement_reference_catalogue_published",
     width: 200,
     exportable: true,
-    editable: false,
   },
   {
     Header: "clé ministere educatif ",
     accessor: "cle_ministere_educatif",
     width: 200,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Partenaires",
     accessor: "rncp_details.partenaires",
     width: 200,
     exportable: true,
-    editable: false,
     formatter: (value, formation) => {
       const filteredPartenaires = (value ?? []).filter(({ Siret_Partenaire }) =>
         [formation.etablissement_gestionnaire_siret, formation.etablissement_formateur_siret].includes(Siret_Partenaire)
@@ -386,42 +346,36 @@ const columnsDefinition = [
     accessor: "etablissement_formateur_adresse",
     width: 200,
     exportable: true,
-    editable: true,
   },
   {
     Header: "Code Postal OFA formateur",
     accessor: "etablissement_formateur_code_postal",
     width: 200,
     exportable: true,
-    editable: true,
   },
   {
     Header: "Ville OFA formateur",
     accessor: "etablissement_formateur_localite",
     width: 200,
     exportable: true,
-    editable: true,
   },
   {
     Header: "Code Commune Insee OFA formateur",
     accessor: "etablissement_formateur_code_commune_insee",
     width: 200,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Nda gestionnaire",
     accessor: "etablissement_gestionnaire_nda",
     width: 200,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Nda formateur",
     accessor: "etablissement_formateur_nda",
     width: 200,
     exportable: true,
-    editable: false,
   },
   {
     Header: "Id RCO Info",
@@ -467,7 +421,6 @@ const columnsDefinition = [
     accessor: "tags",
     width: 200,
     exportable: true,
-    editable: false,
     formatter: (tags) => tags?.sort((a, b) => a - b),
   },
 ];
