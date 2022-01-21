@@ -36,7 +36,18 @@ const areRCOFieldsEqual = (rcoFields, etablissement) => {
   return Object.entries(rcoFields).every(([key, value]) => etablissement[key] === value);
 };
 
-const handledSirets = [];
+const updateEtablissementTags = async ({ siret, tags }) => {
+  let etablissement = await Etablissement.findOne({ siret });
+  if (!etablissement) {
+    throw new Error(`Etablissement not found ${siret}`);
+  }
+
+  const tagsToAdd = tags.filter((tag) => !etablissement?.tags?.includes(tag));
+  if (tagsToAdd.length > 0) {
+    etablissement.tags = [...etablissement.tags, ...tagsToAdd];
+    await etablissement.save();
+  }
+};
 
 /**
  * Create or update etablissements
@@ -58,11 +69,6 @@ const createOrUpdateEtablissements = async (rcoFormation) => {
       return;
     }
 
-    if (handledSirets.includes(data.siret)) {
-      return;
-    }
-
-    handledSirets.push(data.siret);
     let etablissement = await Etablissement.findOne({ siret: data.siret });
     const tags = getPeriodeTags(rcoFormation.periode);
 
@@ -104,4 +110,4 @@ const createOrUpdateEtablissements = async (rcoFormation) => {
   return result;
 };
 
-module.exports = { createOrUpdateEtablissements };
+module.exports = { createOrUpdateEtablissements, updateEtablissementTags };
