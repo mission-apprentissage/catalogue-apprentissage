@@ -33,12 +33,21 @@ import { PARCOURSUP_STATUS } from "../../../../constants/status";
 import { CheckLine, Close, ErrorIcon, ValidateIcon } from "../../../../theme/components/icons";
 
 const ReconciliationModalHeader = React.memo(
-  ({ formation, onClose, step, onStepChanged, onValidationSubmit, onStepClicked, onMnaFormationSelected }) => {
+  ({
+    formation,
+    onClose,
+    step,
+    onStepChanged,
+    onValidationSubmit,
+    onStepClicked,
+    onMnaFormationSelected,
+    defaultIndex = 0,
+  }) => {
     const { isOpen: isOpenSubModal, onOpen: onOpenSubModal, onClose: onCloseSubM } = useDisclosure();
-    const [mnaFormation, setMnaFormation] = useState(formation.matching_mna_formation[0]);
+    const [mnaFormation, setMnaFormation] = useState(formation.matching_mna_formation[defaultIndex]);
     const [canSubmit, setCanSubmit] = useState(true);
     const [showRaison, setShowRaison] = useState(false);
-    const [currentMnaFormation, setCurrentMnaFormation] = useState(0);
+    const [currentMnaFormation, setCurrentMnaFormation] = useState(defaultIndex);
     const [selectedFormation, setSelectedFormation] = useState([]);
     const slidesCount = formation.matching_mna_formation.length;
     const [user] = useAuth();
@@ -51,8 +60,9 @@ const ReconciliationModalHeader = React.memo(
     };
 
     useEffect(() => {
-      setMnaFormation(formation.matching_mna_formation[0]);
-    }, [formation]);
+      setMnaFormation(formation.matching_mna_formation[defaultIndex]);
+      setCurrentMnaFormation(defaultIndex);
+    }, [formation, defaultIndex]);
 
     const { values, handleChange, handleSubmit: handleSave, errors, isSubmitting } = useFormik({
       initialValues: {
