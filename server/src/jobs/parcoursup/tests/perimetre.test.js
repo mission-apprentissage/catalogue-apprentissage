@@ -120,6 +120,7 @@ describe(__filename, () => {
       diplome: "BUT",
       num_academie: "14",
       parcoursup_statut: "publié",
+      parcoursup_id: "56789",
       annee: "1",
       periode,
     });
