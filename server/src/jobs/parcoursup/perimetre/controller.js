@@ -15,6 +15,7 @@ const run = async () => {
         { etablissement_reference_catalogue_published: false },
         { published: false },
         { cfd_outdated: true },
+        { parcoursup_id: null, parcoursup_statut: "publié" },
       ],
     },
     { $set: { parcoursup_statut: "hors périmètre" } }
