@@ -8,6 +8,7 @@ import { getResult } from "../../../../common/api/rapprochement";
 const ReconciliationModal = React.memo(({ isOpen, onClose: onCloseProp, data, onFormationUpdate, mnaFormation }) => {
   const [formation, setFormation] = useState();
   const [currentMnaFormation, setCurrentMnaFormation] = useState(0);
+  const [defaultIndex, setDefaultIndex] = useState(0);
   const [step, setStep] = useState(1);
 
   useEffect(() => {
@@ -16,7 +17,14 @@ const ReconciliationModal = React.memo(({ isOpen, onClose: onCloseProp, data, on
         const form = await getResult({ id: data._id });
         setFormation(form);
         setCurrentMnaFormation(0);
+
         if (form.statut_reconciliation === "VALIDE") {
+          // find selected index
+          const index =
+            form?.matching_mna_formation?.findIndex(({ _id }) => form?.validated_formation_ids?.includes(_id)) ?? 0;
+          setDefaultIndex(index);
+          setCurrentMnaFormation(index);
+
           setStep(3);
         }
       } catch (e) {
@@ -63,6 +71,7 @@ const ReconciliationModal = React.memo(({ isOpen, onClose: onCloseProp, data, on
             onMnaFormationSelected={(index) => {
               setCurrentMnaFormation(index);
             }}
+            defaultIndex={defaultIndex}
           />
           {formation && <Rapprochement formation={formation} currentMnaFormation={currentMnaFormation} />}
         </ModalBody>
