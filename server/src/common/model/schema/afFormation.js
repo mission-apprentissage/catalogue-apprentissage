@@ -1,9 +1,9 @@
 const afFormationSchema = {
-  // Etablissement
-  id_mna: {
+  cle_ministere_educatif: {
+    index: true,
     type: String,
     default: null,
-    description: "id mna temporaire",
+    description: "Clé unique de la formation (pour envoi aux ministères éducatifs)",
   },
   uai: {
     index: true,

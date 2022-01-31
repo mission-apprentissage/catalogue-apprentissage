@@ -116,6 +116,11 @@ const getCfdFromCatalogue = async (formation) => {
     formation.code_postal_modified = { code_postal: formation.code_postal };
   }
 
+  if (formation.cle_ministere_educatif) {
+    const result = await Formation.findOne({ cle_ministere_educatif: formation.cle_ministere_educatif }).lean();
+    return result.cfd ?? null;
+  }
+
   const dept = `${formation.code_postal_modified.code_postal.substring(0, 2)}`;
 
   const result = await Formation.find({
@@ -144,9 +149,7 @@ const getCfdFromCatalogue = async (formation) => {
     cfd = formationCatalogue[0].cfd;
   }
 
-  if (!cfd) return null;
-
-  return cfd;
+  return cfd ?? null;
 };
 
 const seed = async () => {
@@ -167,22 +170,29 @@ const seed = async () => {
   await asyncForEach(data, async (item) => {
     try {
       /*
-       * - En cas de mef = "AFFECTATION", récupération du cfd dans les données 2020 à partir de la combinaison [code postal + uai + code voie + code spécialité]
+       * - En cas de mef = "AFFECTATION", récupération du cfd dans les données précédentes à partir de la cle_ministere_educatif ou de la combinaison [code postal + uai + code voie + code spécialité]
        * - sinon depuis les tco / bcn si toujours pas de cfd
        */
 
       let code_cfd;
-      const code_mef = item["Code MEF"]?.trim();
+      const code_mef = item["CODE_MEF"]?.trim();
       const code_postal = item["CP"]?.trim();
       const uai = item["UAI"]?.trim();
-      const code_voie = item["Code voie"]?.trim();
-      const code_specialite = item["Code spécialité"]?.trim();
+      const code_voie = item["CODE_VOIE"]?.trim();
+      const code_specialite = item["CODE_SPECIALITE"]?.trim();
+      const cle_ministere_educatif = item["CLE_MINISTERE_EDUCATIF"]?.trim();
 
       if (code_mef === "AFFECTATION") {
-        const match = oldData.find(
-          ({ code_postal: cp, uai: u, code_voie: cv, code_specialite: cs }) =>
-            code_specialite === cs && code_postal === cp && uai === u && code_voie === cv
-        );
+        let match;
+        if (cle_ministere_educatif) {
+          match = oldData.find(({ cle_ministere_educatif: cle }) => cle_ministere_educatif === cle);
+        }
+        if (!match) {
+          match = oldData.find(
+            ({ code_postal: cp, uai: u, code_voie: cv, code_specialite: cs }) =>
+              code_specialite === cs && code_postal === cp && uai === u && code_voie === cv
+          );
+        }
         code_cfd = match?.code_cfd;
         if (code_cfd) {
           nbFoundAffectation += 1;
@@ -190,46 +200,46 @@ const seed = async () => {
       }
 
       await AfFormation.create({
-        // id_mna: item["ID_MNA"],
+        cle_ministere_educatif,
         code_cfd,
-        uai: item["UAI"]?.trim(),
-        libelle_type_etablissement: item["Libellé type établissement"]?.trim(),
-        libelle_etablissement: item["Libellé établissement"]?.trim(),
-        adresse: item["Adresse"]?.trim(),
-        code_postal: item["CP"]?.trim(),
-        commune: item["Commune"]?.trim(),
-        telephone: item["Téléphone"]?.trim(),
-        email: item["Mél"]?.trim(),
-        academie: item["Académie"]?.trim(),
-        ministere: item["Ministère"]?.trim(),
-        etablissement_type: item["Public / Privé"]?.trim() === "PR" ? "Privée" : "Public",
-        type_contrat: item["Type contrat"]?.trim(),
-        code_type_etablissement: item["Code type établissement"]?.trim(),
-        code_nature: item["Code nature"]?.trim(),
-        code_district: item["Code district"]?.trim(),
-        code_bassin: item["Code bassin"]?.trim(),
+        uai,
+        libelle_type_etablissement: item["LIBELLE_TYPE_ETABLISSEMENT"]?.trim(),
+        libelle_etablissement: item["LIBELLE_ETABLISSEMENT"]?.trim(),
+        adresse: item["ADRESSE"]?.trim(),
+        code_postal,
+        commune: item["COMMUNE"]?.trim(),
+        telephone: item["TELEPHONE"]?.trim(),
+        email: item["MEL"]?.trim(),
+        academie: item["ACADEMIE"]?.trim(),
+        ministere: item["MINISTERE"]?.trim(),
+        etablissement_type: item["PUBLIC_PRIVE"]?.trim() === "PR" ? "Privée" : "Public",
+        type_contrat: item["TYPE_CONTRAT"]?.trim(),
+        code_type_etablissement: item["CODE_TYPE_ETABLISSEMENT"]?.trim(),
+        code_nature: item["CODE_NATURE"]?.trim(),
+        code_district: item["CODE_DISTRICT"]?.trim(),
+        code_bassin: item["CODE_BASSIN"]?.trim(),
         cio: item["CIO"]?.trim(),
-        internat: item["Internat"] === "O" ? true : false,
-        reseau_ambition_reussite: item["Réseau ambition réussite"] === "O" ? true : false,
-        libelle_mnemonique: item["Mnémonique"]?.trim(),
-        code_specialite: item["Code spécialité"]?.trim(),
-        libelle_ban: item["Libellé BAN"]?.trim(),
-        code_mef: item["Code MEF"]?.trim(),
-        code_voie: item["Code voie"]?.trim(),
-        type_voie: item["Libellé voie"]?.trim(),
-        saisie_possible_3eme: item["Saisie possible 3me ?"] === "O" ? true : false,
-        saisie_reservee_segpa: item["Saisie réservée SEGPA ?"] === "O" ? true : false,
-        saisie_possible_2nde: item["Saisie possible 2de ?"] === "O" ? true : false,
-        visible_tsa: item["Visible TSA ?"] === "O" ? true : false,
-        libelle_formation: item["Libéllé formation"]?.trim(),
-        url_onisep_formation: item["URL ONISEP formation"]?.trim(),
-        libelle_etablissement_tsa: item["Libellé établissement_1"]?.trim(),
-        url_onisep_etablissement: item["URL ONISEP établissement"]?.trim(),
-        ville: item["Libellé ville"]?.trim(),
-        campus_metier: item["Campus métier ?"] === "O" ? true : false,
-        modalites: item["Modalités particulières ?"] === "O" ? true : false,
-        coordonnees_gps_latitude: item["Coordonnées GPS latitude"]?.trim(),
-        coordonnees_gps_longitude: item["Coordonnées GPS longitude"]?.trim(),
+        internat: item["INTERNAT"] === "O",
+        reseau_ambition_reussite: item["RESEAU_AMBITION_REUSSITE"] === "O",
+        libelle_mnemonique: item["MNEMONIQUE"]?.trim(),
+        code_specialite,
+        libelle_ban: item["LIBELLE_BAN"]?.trim(),
+        code_mef,
+        code_voie,
+        type_voie: item["LIBELLE_VOIE"]?.trim(),
+        saisie_possible_3eme: item["SAISIE_POSSIBLE_3EME"] === "O",
+        saisie_reservee_segpa: item["SAISIE_RESREVEE_SEGPA"] === "O",
+        saisie_possible_2nde: item["SAISIE_POSSIBLE_2DE"] === "O",
+        visible_tsa: item["VISIBLE_PORTAIL"] === "O",
+        libelle_formation: item["LIBELLE_FORMATION"]?.trim(),
+        url_onisep_formation: item["URL_ONISEP_FORMATION"]?.trim(),
+        libelle_etablissement_tsa: item["LIBELLE_ETABLISSEMENT"]?.trim(),
+        url_onisep_etablissement: item["URL_ONISEP_ETABLISSEMENT"]?.trim(),
+        ville: item["LIBELLE_VILLE"]?.trim(),
+        campus_metier: item["CAMPUS_METIER"] === "O",
+        modalites: item["MODALITES_PARTICULIERES"] === "O",
+        coordonnees_gps_latitude: item["COORDONNEES_GPS_LATITUDE"]?.trim(),
+        coordonnees_gps_longitude: item["COORDONNEES_GPS_LONGITUDE"]?.trim(),
       });
 
       count = count + 1;
