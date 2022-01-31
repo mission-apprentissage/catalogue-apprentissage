@@ -85,6 +85,7 @@ module.exports = async () => {
 
       const structure = {
         permissions,
+        isAdmin: !!permissions.isAdmin,
         sub: user.username,
         email: user.email,
         academie: user.academie,
