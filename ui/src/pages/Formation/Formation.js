@@ -39,8 +39,10 @@ const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
 const endpointLBA = process.env.REACT_APP_ENDPOINT_LBA || "https://labonnealternance.pole-emploi.fr";
 
-const getLBAUrl = ({ _id = "" }) => {
-  return `${endpointLBA}/recherche-apprentissage?&display=list&page=fiche&type=training&itemId=${_id}`;
+const getLBAUrl = ({ cle_ministere_educatif = "" }) => {
+  return `${endpointLBA}/recherche-apprentissage?&display=list&page=fiche&type=training&itemId=${encodeURIComponent(
+    cle_ministere_educatif
+  )}`;
 };
 
 const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, values, hasRightToEdit }) => {
