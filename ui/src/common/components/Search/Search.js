@@ -162,7 +162,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                       />
                     );
                   })}
-                {isBaseFormations && (
+                {isBaseFormations && auth?.sub !== "anonymous" && (
                   <DateRange
                     componentId="periode"
                     dataField="periode"
