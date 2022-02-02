@@ -51,9 +51,9 @@ const hasAcademy = ({ nom_academie }, academie) => nom_academie === academie;
  * m5'' = code postal + rncp + cfd + code insee
  * m5''' = code postal + (rncp ou cfd) + code insee
  * m3 = uai + (cfd ou rncp) + code insee
- * m3' = (cfd ou rncp) + code insee
  * m2 =  uai + (rncp ou cfd)
  * m2' = siret + (rncp ou cfd)
+ * m1 = (cfd ou rncp) + code insee
  */
 async function getParcoursupCoverage(formation) {
   const sirets = [formation.siret_cerfa ?? "", formation.siret_map ?? ""];
@@ -71,16 +71,18 @@ async function getParcoursupCoverage(formation) {
     published: true,
   });
 
+  // strength 1
+  const m1 = m0.filter((f) => hasInsee(f, formation.code_commune_insee)); // insee + (rncp ou cfd)
+
   // strength 2
-  const m1 = m0.filter((f) => hasSiret(f, sirets)); // siret + (rncp ou cfd)
-  const m2 = m0.filter((f) => hasUai(f, uais)); // uai + (rncp ou cfd)
+  const m2 = m0.filter((f) => hasSiret(f, sirets)); // siret + (rncp ou cfd)
+  const m3 = m0.filter((f) => hasUai(f, uais)); // uai + (rncp ou cfd)
 
   // strength 3
-  const m3 = m0.filter((f) => hasInsee(f, formation.code_commune_insee)); // insee + (rncp ou cfd)
-  const m4 = m3.filter((f) => hasUai(f, uais)); // insee + uai + (rncp ou cfd)
+  const m4 = m1.filter((f) => hasUai(f, uais)); // insee + uai + (rncp ou cfd)
 
   // strength 5
-  const m5 = m3.filter((f) => hasPostalCode(f, formation.code_postal)); // code postal + insee + (rncp ou cfd)
+  const m5 = m1.filter((f) => hasPostalCode(f, formation.code_postal)); // code postal + insee + (rncp ou cfd)
   const m6 = m5.filter((f) => hasRncp(f, formation.codes_rncp_mna) && hasCfd(f, formation.codes_cfd_mna)); // code postal + insee + rncp + cfd
   const m7 = m5.filter((f) => hasUai(f, uais)); // uai + code postal + insee + (rncp ou cfd)
   const m8 = m6.filter((f) => hasUai(f, uais)); // uai + code postal + insee + rncp + cfd
@@ -92,7 +94,7 @@ async function getParcoursupCoverage(formation) {
   const m12 = m8.filter((f) => hasAcademy(f, formation.nom_academie)); // academie + uai + code postal + insee + rncp + cfd
 
   // strength 7
-  const m13 = m1.filter((f) => hasInsee(f, formation.code_commune_insee) && hasAcademy(f, formation.nom_academie)); // insee + academie +siret + (rncp ou cfd)
+  const m13 = m2.filter((f) => hasInsee(f, formation.code_commune_insee) && hasAcademy(f, formation.nom_academie)); // insee + academie +siret + (rncp ou cfd)
   const m14 = m13.filter((f) => hasUai(f, uais)); // uai + insee + academie +siret + (rncp ou cfd)
 
   // strength 8
@@ -153,7 +155,7 @@ async function getParcoursupCoverage(formation) {
       result: m4,
     },
     {
-      strength: "3",
+      strength: "2",
       result: m3,
     },
     {
@@ -161,7 +163,7 @@ async function getParcoursupCoverage(formation) {
       result: m2,
     },
     {
-      strength: "2",
+      strength: "1",
       result: m1,
     },
   ];
