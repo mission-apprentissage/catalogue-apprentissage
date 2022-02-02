@@ -10,6 +10,12 @@ describe(__filename, () => {
     await ReglePerimetre.deleteMany({});
     await Formation.deleteMany({});
 
+    const currentDate = new Date();
+    const periode = [
+      new Date(`${currentDate.getFullYear()}-10-01T00:00:00.000Z`),
+      new Date(`${currentDate.getFullYear() + 1}-10-01T00:00:00.000Z`),
+    ];
+
     // insert sample data in DB
     // rules
     await ReglePerimetre.create({
@@ -52,6 +58,7 @@ describe(__filename, () => {
       diplome: "Licence",
       parcoursup_statut: "hors périmètre",
       annee: "1",
+      periode,
     });
     await Formation.create({
       published: true,
@@ -61,6 +68,7 @@ describe(__filename, () => {
       diplome: "Licence",
       parcoursup_statut: "hors périmètre",
       annee: "1",
+      periode,
     });
     await Formation.create({
       published: true,
@@ -70,6 +78,7 @@ describe(__filename, () => {
       diplome: "Licence Agri",
       parcoursup_statut: "à publier (vérifier accès direct postbac)",
       annee: "1",
+      periode,
     });
     await Formation.create({
       published: true,
@@ -79,6 +88,7 @@ describe(__filename, () => {
       diplome: "BTS",
       parcoursup_statut: "à publier (vérifier accès direct postbac)",
       annee: "1",
+      periode,
     });
     await Formation.create({
       published: true,
@@ -89,6 +99,7 @@ describe(__filename, () => {
       num_academie: "12",
       parcoursup_statut: "hors périmètre",
       annee: "1",
+      periode,
     });
     await Formation.create({
       published: true,
@@ -99,6 +110,7 @@ describe(__filename, () => {
       num_academie: "14",
       parcoursup_statut: "hors périmètre",
       annee: "1",
+      periode,
     });
     await Formation.create({
       published: true,
@@ -110,6 +122,7 @@ describe(__filename, () => {
       parcoursup_statut: "publié",
       parcoursup_id: "56789",
       annee: "1",
+      periode,
     });
     await Formation.create({
       published: true,
@@ -119,7 +132,18 @@ describe(__filename, () => {
       diplome: "Master",
       parcoursup_statut: "en attente de publication",
       annee: "1",
+      periode,
     });
+    // await Formation.create({
+    //   published: true,
+    //   etablissement_gestionnaire_catalogue_published: true,
+    //   etablissement_reference_catalogue_published: true,
+    //   niveau: "6 (Licence, BUT...)",
+    //   diplome: "Licence",
+    //   parcoursup_statut: "hors périmètre",
+    //   annee: "1",
+    //   periode: [new Date(`${currentDate.getFullYear()}-03-15T00:00:00.000Z`)],
+    // });
   });
 
   after(async () => {

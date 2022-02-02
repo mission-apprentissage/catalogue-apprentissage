@@ -82,7 +82,7 @@ const hasUpdatedAddress = (rcoFormation) => {
 const formatToMnaFormation = (rcoFormation) => {
   const periode =
     rcoFormation.periode && rcoFormation.periode.length > 0
-      ? `[${extractPeriodeArray(rcoFormation.periode).reduce((acc, e) => `${acc}${acc ? ", " : ""}"${e}"`, "")}]`
+      ? extractPeriodeArray(rcoFormation.periode).map((dateStr) => new Date(dateStr))
       : null;
 
   let niveau_entree_obligatoire = null;

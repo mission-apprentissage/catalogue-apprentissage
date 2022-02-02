@@ -5,6 +5,7 @@ const {
   serialize,
   deserialize,
 } = require("../../../../src/common/utils/rulesUtils");
+const { getPeriodeStartDate } = require("../../../../src/common/utils/referenceUtils");
 
 describe(__filename, () => {
   describe("getCfdExpireRule", () => {
@@ -57,6 +58,28 @@ describe(__filename, () => {
     });
   });
 
+  describe("getPeriodeStartDate", () => {
+    it("should get september of the same year if now is before september", () => {
+      const expected = new Date(`2022-09-01T00:00:00.000Z`);
+
+      let result = getPeriodeStartDate(new Date(`2022-03-01T00:00:00.000Z`));
+      assert.deepStrictEqual(result, expected);
+
+      result = getPeriodeStartDate(new Date(`2022-08-11T00:00:00.000Z`));
+      assert.deepStrictEqual(result, expected);
+    });
+
+    it("should get september of the next year if now is after september", () => {
+      const expected = new Date(`2023-09-01T00:00:00.000Z`);
+
+      let result = getPeriodeStartDate(new Date(`2022-09-01T00:00:00.000Z`));
+      assert.deepStrictEqual(result, expected);
+
+      result = getPeriodeStartDate(new Date(`2022-10-01T00:00:00.000Z`));
+      assert.deepStrictEqual(result, expected);
+    });
+  });
+
   describe("getQueryFromRule", () => {
     it("should build a query from a simple rule", () => {
       const expected = {
@@ -71,6 +94,7 @@ describe(__filename, () => {
             etablissement_gestionnaire_catalogue_published: true,
             etablissement_reference_catalogue_published: true,
             published: true,
+            // periode: { $gte: getPeriodeStartDate() },
           },
           {
             $or: [

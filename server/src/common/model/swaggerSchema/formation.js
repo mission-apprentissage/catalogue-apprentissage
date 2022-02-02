@@ -278,9 +278,13 @@ module.exports = {
         description: "Codes ROME",
       },
       periode: {
-        type: "string",
+        type: "array",
+        items: {
+          type: "string",
+          format: "date-time",
+        },
         default: "null",
-        description: "Période d'inscription à la formation",
+        description: "Périodes d'inscription à la formation",
       },
       capacite: {
         type: "string",
@@ -672,11 +676,6 @@ module.exports = {
         description: "Date de création de l'établissement",
         format: "date-time",
       },
-      etablissement_gestionnaire_courriel: {
-        type: "string",
-        default: "null",
-        description: "Adresse email de contact de l'établissement gestionnaire",
-      },
       etablissement_formateur_id: {
         type: "string",
         default: "null",
@@ -806,11 +805,6 @@ module.exports = {
         default: "null",
         description: "Date de création de l'établissement",
         format: "date-time",
-      },
-      etablissement_formateur_courriel: {
-        type: "string",
-        default: "null",
-        description: "Adresse email de contact de l'établissement formateur",
       },
       etablissement_reference: {
         type: "string",

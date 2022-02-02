@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { DataSearch, ReactiveBase, ReactiveList, SelectedFilters } from "@appbaseio/reactivesearch";
+import { DataSearch, DateRange, ReactiveBase, ReactiveList, SelectedFilters } from "@appbaseio/reactivesearch";
 import { Box, Container, Flex, FormLabel, Switch, Text } from "@chakra-ui/react";
 import useAuth from "../../hooks/useAuth";
 import { hasAccessTo } from "../../utils/rolesUtils";
@@ -162,6 +162,24 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                       />
                     );
                   })}
+                {isBaseFormations && auth?.sub !== "anonymous" && (
+                  <DateRange
+                    componentId="periode"
+                    dataField="periode"
+                    title="Période"
+                    placeholder={{
+                      start: "Date de début",
+                      end: "Date de fin",
+                    }}
+                    numberOfMonths={2}
+                    queryFormat="date"
+                    autoFocusEnd={true}
+                    showClear={true}
+                    showFilter={true}
+                    filterLabel="Période"
+                    URLParams={true}
+                  />
+                )}
               </Box>
               <div className="search-results">
                 <Box pt={2}>
@@ -241,11 +259,6 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                                   fieldName: def.accessor,
                                   formatter: def.formatter,
                                 }))}
-                              // defaultQuery={{
-                              //   match: {
-                              //     published: true,
-                              //   },
-                              // }}
                             />
                           )}
                           {extraButtons}

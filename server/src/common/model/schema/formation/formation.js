@@ -64,6 +64,7 @@ const formationSchema = {
     description: "Code postal",
   },
   code_commune_insee: {
+    index: true,
     type: String,
     default: null,
     description: "Code commune INSEE",
@@ -100,6 +101,7 @@ const formationSchema = {
     description: "Nom de la formation déclaratif",
   },
   intitule_long: {
+    index: true,
     type: String,
     default: null,
     description: "Intitulé long de la formation normalisé BCN",
@@ -257,14 +259,15 @@ const formationSchema = {
     description: "Détails RNCP (bloc de compétences etc..)",
   },
   rome_codes: {
+    index: true,
     type: [String],
     default: [],
     description: "Codes ROME",
   },
   periode: {
-    type: String,
+    type: [Date],
     default: null,
-    description: "Période d'inscription à la formation",
+    description: "Périodes d'inscription à la formation",
   },
   capacite: {
     type: String,
@@ -431,6 +434,7 @@ const formationSchema = {
     description: "Latitude et longitude du lieu de formation",
   },
   lieu_formation_adresse: {
+    index: true,
     type: String,
     default: null,
     description: "Adresse du lieu de formation",

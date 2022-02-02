@@ -13,6 +13,7 @@ const { SandboxFormation, RcoFormation } = require("../../common/model");
 const { getCoordinatesFromAddressData } = require("@mission-apprentissage/tco-service-node");
 const { distanceBetweenCoordinates } = require("../../common/utils/distanceUtils");
 const { findMefsForParcoursup } = require("../../common/utils/parcoursupUtils");
+const { updateEtablissementTags } = require("./etablissementUpdater");
 
 const formationSchema = Joi.object({
   cfd: Joi.string().required(),
@@ -277,8 +278,13 @@ const mnaFormationUpdater = async (
     // set tags
     let tags = [];
     try {
-      const periode = JSON.parse(formation.periode);
-      tags = getPeriodeTags(periode);
+      tags = getPeriodeTags(rcoFormation?.periode);
+
+      await updateEtablissementTags({ siret: formation.etablissement_gestionnaire_siret, tags });
+
+      if (formation.etablissement_gestionnaire_siret !== formation.etablissement_formateur_siret) {
+        await updateEtablissementTags({ siret: formation.etablissement_formateur_siret, tags });
+      }
     } catch (e) {
       logger.error("unable to set tags", e);
     }
