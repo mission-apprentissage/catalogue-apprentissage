@@ -1,56 +1,27 @@
-const { AfReconciliation, AfFormation, Formation } = require("../../common/model");
+const { Formation } = require("../../common/model");
 
-async function reconciliationAffelnet(formation, source = "MANUEL") {
-  let {
-    uai,
-    code_cfd,
-    _id,
-    code_nature,
-    etablissement_type,
-    code_mef,
-    matching_mna_formation,
-    libelle_mnemonique,
-  } = formation;
-
-  let { etablissement_formateur_siret, etablissement_gestionnaire_siret, _id: convertedId } = matching_mna_formation[0];
-
-  if (!uai) {
-    await AfFormation.findByIdAndUpdate(_id, {
-      no_uai: true,
-      etat_reconciliation: false,
-    });
-    return;
-  }
-
-  let payload = {
-    uai,
-    code_cfd,
-    siret_formateur: etablissement_formateur_siret,
-    siret_gestionnaire: etablissement_gestionnaire_siret,
-    source,
-  };
-
-  await AfReconciliation.findOneAndUpdate({ uai, code_cfd }, payload, { upsert: true });
-
-  await AfFormation.findByIdAndUpdate(_id, {
-    etat_reconciliation: true,
-    no_uai: false,
-  });
+async function reconciliationAffelnet(formationAffelnet) {
+  let { code_nature, etablissement_type, code_mef, matching_mna_formation, libelle_mnemonique } = formationAffelnet;
+  let { cle_ministere_educatif } = matching_mna_formation[0];
 
   // pass through some data for Affelnet
-  const converted = await Formation.findById(convertedId, {
-    affelnet_infos_offre: 1,
-    bcn_mefs_10: 1,
-  }).lean();
-  if (converted) {
+  const formation = await Formation.findOne(
+    { cle_ministere_educatif },
+    {
+      affelnet_infos_offre: 1,
+      bcn_mefs_10: 1,
+      affelnet_statut: 1,
+    }
+  ).lean();
+  if (formation) {
     const update = {};
     update.affelnet_code_nature = code_nature;
     update.affelnet_secteur = etablissement_type === "Public" ? "PU" : "PR";
 
     // pre-fill affelnet_infos_offre with data from affelnet import if empty (to not erase user change)
-    update.affelnet_infos_offre = converted.affelnet_infos_offre || libelle_mnemonique;
+    update.affelnet_infos_offre = formation.affelnet_infos_offre || libelle_mnemonique;
 
-    const affelnet_mefs_10 = converted.bcn_mefs_10 ?? [];
+    const affelnet_mefs_10 = formation.bcn_mefs_10 ?? [];
     const mef = affelnet_mefs_10.find(({ mef10 }) => mef10 === code_mef.substring(0, 10));
     if (mef) {
       update.affelnet_mefs_10 = [mef];
@@ -65,7 +36,12 @@ async function reconciliationAffelnet(formation, source = "MANUEL") {
         },
       ];
     }
-    await Formation.findByIdAndUpdate(convertedId, update);
+
+    if (formation.affelnet_statut !== "non publié") {
+      update.affelnet_statut = "publié";
+    }
+    update.last_update_at = Date.now();
+    await Formation.findOneAndUpdate({ cle_ministere_educatif }, update);
   }
 }
 
