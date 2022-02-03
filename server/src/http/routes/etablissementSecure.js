@@ -74,7 +74,15 @@ module.exports = () => {
       }
 
       logger.info("Updating new item: ", body);
-      const result = await Etablissement.findOneAndUpdate({ _id: itemId }, body, { new: true });
+
+      const result = await Etablissement.findOneAndUpdate(
+        { _id: itemId },
+        {
+          ...body,
+          ...(body.uai ? { uai: body.uai.trim() } : {}),
+        },
+        { new: true }
+      );
       res.json(result);
     })
   );
