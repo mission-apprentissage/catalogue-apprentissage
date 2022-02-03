@@ -175,7 +175,7 @@ export default ({ match }) => {
     },
     onSubmit: ({ uai_formation }) => {
       return new Promise(async (resolve) => {
-        const trimedUaiFormation = uai_formation?.rim();
+        const trimedUaiFormation = uai_formation?.trim();
 
         try {
           if (trimedUaiFormation !== formation["uai_formation"]) {
