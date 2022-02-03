@@ -360,7 +360,9 @@ export default ({ match }) => {
     onSubmit: ({ uai }) => {
       return new Promise(async (resolve) => {
         let result = null;
-        if (uai !== etablissement.uai) {
+        const trimedUai = uai.trim();
+
+        if (trimedUai !== etablissement.uai) {
           setModal(true);
           setGatherData(1);
           try {
@@ -368,7 +370,7 @@ export default ({ match }) => {
               `${endpointTCO}/services/etablissement`,
               {
                 ...etablissement,
-                uai,
+                uai: trimedUai,
               }
             );
 
@@ -379,7 +381,9 @@ export default ({ match }) => {
             result = await _put(`${endpointNewFront}/entity/etablissement/${match.params.id}`, {
               ...updatedEtablissement,
               last_update_at: Date.now(),
-              updates_history: buildUpdatesHistory(etablissement, { uai, last_update_who: user.email }, ["uai"]),
+              updates_history: buildUpdatesHistory(etablissement, { uai: trimedUai, last_update_who: user.email }, [
+                "uai",
+              ]),
             });
           } catch (err) {
             console.error(err);

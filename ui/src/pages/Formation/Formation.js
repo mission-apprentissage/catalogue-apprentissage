@@ -175,11 +175,12 @@ export default ({ match }) => {
     },
     onSubmit: ({ uai_formation }) => {
       return new Promise(async (resolve) => {
+        const trimedUaiFormation = uai_formation.trim();
         try {
-          if (uai_formation !== formation["uai_formation"]) {
+          if (trimedUaiFormation !== formation["uai_formation"]) {
             const updatedFormation = await _post(`${endpointNewFront}/entity/formation/update`, {
               ...formation,
-              uai_formation,
+              uai_formation: trimedUaiFormation,
               withCodePostalUpdate: false,
             });
 
@@ -187,10 +188,12 @@ export default ({ match }) => {
               ...updatedFormation,
               last_update_who: user.email,
               last_update_at: Date.now(),
-              editedFields: { ...formation?.editedFields, uai_formation },
-              updates_history: buildUpdatesHistory(formation, { uai_formation, last_update_who: user.email }, [
-                "uai_formation",
-              ]),
+              editedFields: { ...formation?.editedFields, uai_formation: trimedUaiFormation },
+              updates_history: buildUpdatesHistory(
+                formation,
+                { uai_formation: trimedUaiFormation, last_update_who: user.email },
+                ["uai_formation"]
+              ),
             });
             if (result) {
               setFormation(result);

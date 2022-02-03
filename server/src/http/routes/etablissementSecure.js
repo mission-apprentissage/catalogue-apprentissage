@@ -44,7 +44,10 @@ module.exports = () => {
 
       logger.info("Adding new etablissement: ", body);
 
-      const etablissement = new Etablissement(body);
+      const etablissement = new Etablissement({
+        ...body,
+        ...(body.uai ? { uai: body.uai.trim() } : {}),
+      });
       await etablissement.save();
 
       // return new etablissement

@@ -31,9 +31,16 @@ module.exports = () => {
     }
 
     logger.info("Updating new item: ", body);
-    const result = await Formation.findOneAndUpdate({ _id: itemId }, body, {
-      new: true,
-    });
+    const result = await Formation.findOneAndUpdate(
+      { _id: itemId },
+      {
+        ...body,
+        ...(body.uai_formation ? { uai_formation: body.uai_formation.trim() } : {}),
+      },
+      {
+        new: true,
+      }
+    );
     res.json(result);
   });
 
