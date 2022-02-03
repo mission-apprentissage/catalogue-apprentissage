@@ -1,4 +1,4 @@
-const { getAffelnetCoverage, getEtablissementCoverage } = require("../../logic/controller/coverage");
+const { getAffelnetCoverage } = require("../../logic/controller/coverage");
 const { paginator } = require("../../common/utils/paginator");
 const { AfFormation } = require("../../common/model");
 const { runScript } = require("../scriptWrapper");
@@ -16,17 +16,6 @@ const formation = async () => {
   });
 };
 
-const etablissement = async () => {
-  await paginator(AfFormation, { filter: { matching_type: { $ne: null } }, limit: 50 }, async (formation) => {
-    let match = await getEtablissementCoverage(formation.matching_mna_formation);
-
-    if (!match) return;
-
-    formation.matching_mna_etablissement = match;
-    await formation.save();
-  });
-};
-
 const afCoverage = async () => {
   logger.info("Start Affelnet coverage");
 
@@ -37,16 +26,12 @@ const afCoverage = async () => {
       $set: {
         matching_type: null,
         matching_mna_formation: [],
-        matching_mna_etablissement: [],
       },
     }
   );
 
   logger.info("Start formation coverage");
   await formation();
-
-  logger.info("Start etablissement coverage");
-  await etablissement();
 
   logger.info("End Affelnet coverage");
 };

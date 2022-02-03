@@ -213,11 +213,6 @@ const afFormationSchema = {
     default: [],
     description: "tableau des matching des formations catalogue",
   },
-  matching_mna_etablissement: {
-    type: Array,
-    default: [],
-    description: "tableau des matching des établissement catalogue",
-  },
   matching_type: {
     index: true,
     type: String,

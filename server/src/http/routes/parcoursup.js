@@ -1,5 +1,4 @@
 const { PsFormation, Formation, Etablissement } = require("../../common/model");
-// const combinate = require("../../logic/mappers/reconciliationMapper");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 const mongoose = require("mongoose");
@@ -14,31 +13,6 @@ const { createFormation } = require("../../jobs/parcoursup/export");
 
 module.exports = () => {
   const router = express.Router();
-
-  /**
-   * Get statistique
-   */
-
-  router.get(
-    "/statistique",
-    tryCatch(async (req, res) => {
-      let [w, x, y, z] = await Promise.all([
-        PsFormation.estimatedDocumentCount(),
-        PsFormation.countDocuments({ etat_reconciliation: true }),
-        PsFormation.countDocuments({ matching_type: { $ne: null }, etat_reconciliation: false }),
-        PsFormation.countDocuments({ matching_type: { $eq: null } }),
-      ]);
-
-      let percentageOnTotal = (value, total) => ((value / total) * 100).toFixed(2);
-
-      res.json({
-        total: w,
-        reconciled: [x, percentageOnTotal(x, w)],
-        covered: [y, percentageOnTotal(y, w)],
-        notFound: [z, percentageOnTotal(z, w)],
-      });
-    })
-  );
 
   router.get(
     "/:id",
