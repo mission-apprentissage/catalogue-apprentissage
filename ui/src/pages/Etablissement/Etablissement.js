@@ -360,7 +360,7 @@ export default ({ match }) => {
     onSubmit: ({ uai }) => {
       return new Promise(async (resolve) => {
         let result = null;
-        const trimedUai = uai.trim();
+        const trimedUai = uai?.trim();
 
         if (trimedUai !== etablissement.uai) {
           setModal(true);

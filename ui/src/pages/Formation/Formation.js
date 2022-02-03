@@ -175,7 +175,8 @@ export default ({ match }) => {
     },
     onSubmit: ({ uai_formation }) => {
       return new Promise(async (resolve) => {
-        const trimedUaiFormation = uai_formation.trim();
+        const trimedUaiFormation = uai_formation?.rim();
+
         try {
           if (trimedUaiFormation !== formation["uai_formation"]) {
             const updatedFormation = await _post(`${endpointNewFront}/entity/formation/update`, {
