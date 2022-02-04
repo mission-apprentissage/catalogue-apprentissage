@@ -340,7 +340,7 @@ describe(__filename, () => {
   describe("etablissementsMapper", () => {
     before(async () => {
       await Etablissement.deleteMany({});
-      await new Etablissement({ siret: "12345678", uai: "9999" }).save();
+      await new Etablissement({ siret: "12345678", uai: "0551031X" }).save();
       await new Etablissement({ siret: "123456789", ferme: true }).save();
     });
 
@@ -413,8 +413,8 @@ describe(__filename, () => {
     it("should get result when gestionnaire is found", async () => {
       const expected = {
         result: {
-          etablissement_formateur_uai: "9999",
-          etablissement_gestionnaire_uai: "9999",
+          etablissement_formateur_uai: "0551031X",
+          etablissement_gestionnaire_uai: "0551031X",
         },
       };
       const result = await etablissementsMapper("12345678", "12345678", {});

@@ -22,11 +22,13 @@ services:
     ports:
       - "127.0.0.1:9229:9229" # Allows remote debugging
     volumes:
-      - ./server/src:/app/src:z # Allows source folders to be watched
-      - ./server/config:/app/config:z
+      - ./server:/app:z # Allows source folders to be watched
+      - catalogue_apprentissage_server_node_modules:/app/node_modules:z
       - catalogue_apprentissage_server_data:/data:z
     env_file: ./server/.env
     build:
+      context: server
+      dockerfile: Dockerfile.dev
       args:
         - NPM_TOKEN=local
     environment:
@@ -66,3 +68,6 @@ volumes:
   catalogue_apprentissage_server_data:
     driver: local
     name: catalogue_apprentissage_server_data
+  catalogue_apprentissage_server_node_modules:
+    driver: local
+    name: catalogue_apprentissage_server_node_modules

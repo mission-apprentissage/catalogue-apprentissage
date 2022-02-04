@@ -255,7 +255,7 @@ const TrainingsUpdateTabs = ({ data, reportType, date, errors, importReport, con
         // console.log("nb add-> converted-> updated", addedConvertedUpdatedIds.length); // nb add-> converted-> updated
 
         const addedConvertedErroredIds = [];
-        const errorIds = errors.map(({ cle_ministere_educatif }) => cle_ministere_educatif);
+        const errorIds = errors?.map(({ cle_ministere_educatif }) => cle_ministere_educatif);
         for (let k = 0; k < metricsImportedConverted.addedConvertedIds.length; k++) {
           const id = metricsImportedConverted.addedConvertedIds[k];
           if (errorIds.includes(id)) {

@@ -9,8 +9,8 @@ module.exports = () => {
     if (rawError.isBoom) {
       error = rawError;
     } else if (rawError.name === "ValidationError") {
-      //This is a joi validation error
-      error = Boom.badRequest("Erreur de validation");
+      // This is a joi or mongoose schema validation error
+      error = Boom.badRequest(rawError.message ?? "Erreur de validation");
       error.output.payload.details = rawError.details;
     } else {
       error = Boom.boomify(rawError, {

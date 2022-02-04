@@ -72,7 +72,8 @@ httpTests(__filename, ({ startServer }) => {
     assert.deepStrictEqual(response.data, {
       statusCode: 400,
       error: "Bad Request",
-      message: "Erreur de validation",
+      message:
+        '"newPassword" with value "invalid" fails to match the required pattern: /^(?=.*\\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^\\w\\d\\s:])([^\\s]){8,}$/',
       details: [
         {
           message:
