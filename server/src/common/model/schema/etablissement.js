@@ -199,7 +199,7 @@ const etablissementSchema = {
     type: String,
     default: null,
     validate: {
-      validator: async (value) => await isValideUAI(value),
+      validator: async (value) => !value || (await isValideUAI(value)),
       message: (props) => `${props.value} n'est pas un code UAI valide.`,
     },
     description: "UAI de l'établissement",
