@@ -247,21 +247,6 @@ const etablissementSchema = {
     default: null,
     description: "L'établissement est présent ou pas dans le fichier qualiopi",
   },
-  computed_type: {
-    type: String,
-    default: null,
-    description: "Type de l'établissement CFA ou OF",
-  },
-  computed_declare_prefecture: {
-    type: String,
-    default: null,
-    description: "Etablissement est déclaré en prefecture",
-  },
-  computed_conventionne: {
-    type: String,
-    default: null,
-    description: "Etablissement est conventionné ou pas",
-  },
   api_entreprise_reference: {
     type: Boolean,
     default: false,

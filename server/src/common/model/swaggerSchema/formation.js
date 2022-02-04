@@ -566,21 +566,6 @@ module.exports = {
         default: "null",
         description: "UAI de l'etablissement gestionnaire",
       },
-      etablissement_gestionnaire_type: {
-        type: "string",
-        default: "null",
-        description: "Etablissement gestionnaire est un CFA ou un OF",
-      },
-      etablissement_gestionnaire_conventionne: {
-        type: "string",
-        default: "null",
-        description: "Etablissement gestionnaire est conventionné ou pas",
-      },
-      etablissement_gestionnaire_declare_prefecture: {
-        type: "string",
-        default: "null",
-        description: "Etablissement gestionnaire est déclaré en prefecture",
-      },
       etablissement_gestionnaire_published: {
         type: "boolean",
         default: false,
@@ -696,21 +681,6 @@ module.exports = {
         default: "null",
         description: "UAI de l'etablissement formateur",
       },
-      etablissement_formateur_type: {
-        type: "string",
-        default: "null",
-        description: "Etablissement formateur est un CFA ou un OF",
-      },
-      etablissement_formateur_conventionne: {
-        type: "string",
-        default: "null",
-        description: "Etablissement formateur est conventionné ou pas",
-      },
-      etablissement_formateur_declare_prefecture: {
-        type: "string",
-        default: "null",
-        description: "Etablissement formateur est déclaré en prefecture",
-      },
       etablissement_formateur_published: {
         type: "boolean",
         default: false,
@@ -810,21 +780,6 @@ module.exports = {
         type: "string",
         default: "null",
         description: "Etablissement reference  est soit formateur soit le gestionnaire",
-      },
-      etablissement_reference_type: {
-        type: "string",
-        default: "null",
-        description: "Etablissement reference est un CFA ou un OF",
-      },
-      etablissement_reference_conventionne: {
-        type: "string",
-        default: "null",
-        description: "Etablissement reference est conventionné ou pas",
-      },
-      etablissement_reference_declare_prefecture: {
-        type: "string",
-        default: "null",
-        description: "Etablissement reference est déclaré en prefecture",
       },
       etablissement_reference_published: {
         type: "boolean",

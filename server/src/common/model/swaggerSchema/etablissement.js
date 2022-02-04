@@ -241,21 +241,6 @@ module.exports = {
         default: "null",
         description: "L'établissement est présent ou pas dans le fichier qualiopi",
       },
-      computed_type: {
-        type: "string",
-        default: "null",
-        description: "Type de l'établissement CFA ou OF",
-      },
-      computed_declare_prefecture: {
-        type: "string",
-        default: "null",
-        description: "Etablissement est déclaré en prefecture",
-      },
-      computed_conventionne: {
-        type: "string",
-        default: "null",
-        description: "Etablissement est conventionné ou pas",
-      },
       api_entreprise_reference: {
         type: "boolean",
         default: false,

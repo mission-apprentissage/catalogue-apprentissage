@@ -21,21 +21,6 @@ const etablissementGestionnaireInfo = {
     default: null,
     description: "UAI de l'etablissement gestionnaire",
   },
-  etablissement_gestionnaire_type: {
-    type: String,
-    default: null,
-    description: "Etablissement gestionnaire est un CFA ou un OF",
-  },
-  etablissement_gestionnaire_conventionne: {
-    type: String,
-    default: null,
-    description: "Etablissement gestionnaire est conventionné ou pas",
-  },
-  etablissement_gestionnaire_declare_prefecture: {
-    type: String,
-    default: null,
-    description: "Etablissement gestionnaire est déclaré en prefecture",
-  },
   etablissement_gestionnaire_published: {
     type: Boolean,
     default: false,
