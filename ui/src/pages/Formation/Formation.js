@@ -179,14 +179,8 @@ export default ({ match }) => {
 
         try {
           if (trimedUaiFormation !== formation["uai_formation"]) {
-            const updatedFormation = await _post(`${endpointNewFront}/entity/formation/update`, {
-              ...formation,
-              uai_formation: trimedUaiFormation,
-              withCodePostalUpdate: false,
-            });
-
             const result = await _put(`${endpointNewFront}/entity/formations/${formation._id}`, {
-              ...updatedFormation,
+              uai_formation: trimedUaiFormation,
               last_update_who: user.email,
               last_update_at: Date.now(),
               editedFields: { ...formation?.editedFields, uai_formation: trimedUaiFormation },

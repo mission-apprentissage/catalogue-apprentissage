@@ -1,3 +1,4 @@
+const { isValideUAI } = require("@mission-apprentissage/tco-service-node");
 const etablissementFormateurInfo = require("./etablissement.formateur.sub");
 const etablissementGestionnaireInfo = require("./etablissement.gestionnaire.sub");
 const etablissementReferenceInfo = require("./etablissement.reference.sub");
@@ -94,6 +95,10 @@ const formationSchema = {
     type: String,
     default: null,
     description: "UAI du lieu de la formation",
+    validate: {
+      validator: async (value) => await isValideUAI(value),
+      message: (props) => `${props.value} n'est pas un code UAI valide.`,
+    },
   },
   nom: {
     type: String,

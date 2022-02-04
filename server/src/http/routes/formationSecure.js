@@ -1,23 +1,13 @@
 const express = require("express");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
-const Joi = require("joi");
 const { Formation } = require("../../common/model");
 const logger = require("../../common/logger");
 const Boom = require("boom");
-
-/**
- * Schema for validation
- */
-const formationSchema = Joi.object({
-  num_academie: Joi.string().required(),
-}).unknown();
 
 module.exports = () => {
   const router = express.Router();
 
   const putFormation = tryCatch(async ({ body, user, params }, res) => {
-    await formationSchema.validateAsync(body, { abortEarly: false });
-
     const itemId = params.id;
 
     const formation = await Formation.findById(itemId);
@@ -31,6 +21,7 @@ module.exports = () => {
     }
 
     logger.info("Updating new item: ", body);
+
     const result = await Formation.findOneAndUpdate(
       { _id: itemId },
       {
@@ -39,8 +30,10 @@ module.exports = () => {
       },
       {
         new: true,
+        runValidators: true,
       }
     );
+
     res.json(result);
   });
 

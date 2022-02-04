@@ -81,8 +81,12 @@ module.exports = () => {
           ...body,
           ...(body.uai ? { uai: body.uai.trim() } : {}),
         },
-        { new: true }
+        {
+          new: true,
+          runValidators: true,
+        }
       );
+
       res.json(result);
     })
   );
