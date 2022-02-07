@@ -207,8 +207,8 @@ async function getParcoursupCoverage(formation) {
  * m1 = mef
  */
 async function getAffelnetCoverage({ code_postal: cp, code_mef, uai }) {
-  const dept = cp.substring(0, 2);
-  const deptArr = dept === "20" ? ["2A", "2B"] : [dept]; // TODO @EPT departement 973 ?
+  const dept = cp.startsWith("97") ? cp.substring(0, 3) : cp.substring(0, 2);
+  const deptArr = dept === "20" ? ["2A", "2B"] : [dept];
 
   const m1 = await getMatch({
     "bcn_mefs_10.mef10": code_mef?.substring(0, 10),
