@@ -18,12 +18,10 @@ services:
       - FAST_REFRESH=false
 
   server:
-    command: ["yarn", "debug"]
     ports:
       - "127.0.0.1:9229:9229" # Allows remote debugging
     volumes:
       - ./server:/app:z # Allows source folders to be watched
-      - catalogue_apprentissage_server_node_modules:/app/node_modules:z
       - catalogue_apprentissage_server_data:/data:z
     env_file: ./server/.env
     build:
