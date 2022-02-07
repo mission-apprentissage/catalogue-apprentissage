@@ -39,10 +39,7 @@
     "code_insee_localite": "La donnée “Code commune” provient de l’INSEE puis est déduite du SIRET. Si cette information est erronée, merci de leur signaler.",
     "date_creation": "La donnée “Date de création” provient de l’INSEE puis est déduite du SIRET. Si cette information est erronée, merci de leur signaler.",
     "academie": "La donnée “Académie” est déduite du Code Académie qui est déduit du Code commune.",
-    "type": "La donnée “Type” est déduite de l’UAI",
     "uai": "La donnée “UAI” est collectée au niveau des Carif-Oref ou renseignée par la Mission apprentissage. Une modification de l’UAI peut donc entraîner un changement de statut des formations qui s’y rattachent, et ainsi les rendre éligibles.",
-    "conventionne": "La donnée “Conventionné” provient de la DEPP, elle est déduite de l’UAI.",
-    "declare_prefecture": "La donnée “Déclarée en préfecture” provient de la DGEFP.",
     "qualiopi": "La donnée “Certification qualité” provient d’une certification qualiopi."
   },
   "search": {

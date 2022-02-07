@@ -4,7 +4,7 @@ description: https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/do
 
 # API établissement
 
-## Définition 
+## Définition
 
 {% swagger baseUrl="https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/entity" path="/etablissements/siret-uai" method="get" summary="Recherche d' établissement par UAI, Siret ou adresse." %}
 {% swagger-description %}
@@ -14,12 +14,12 @@ Ce chemin vous permet de récupérer les informations établissement à partir  
 {% endswagger-description %}
 
 {% swagger-parameter in="query" name="query" type="object" %}
-Ce paramètre vous permet d’effectuer 
+Ce paramètre vous permet d’effectuer
 
 \
 
 
-votre recherche. 
+votre recherche.
 
 \
 
@@ -69,7 +69,7 @@ query={"adresse": "2915 RTE DES BARTHES 40180"}
 \
 
 
-La recherche peut contenir tous les champs du modèle établissement.  
+La recherche peut contenir tous les champs du modèle établissement.
 
 \
 
@@ -79,12 +79,12 @@ La recherche peut contenir tous les champs du modèle établissement.
 \
 
 
-⚠️ URL Encoded param 
+⚠️ URL Encoded param
 
 \
 
 
- 
+
 {% endswagger-parameter %}
 
 {% swagger-response status="200" description="Etablissements trouvés" %}
@@ -127,9 +127,6 @@ La recherche peut contenir tous les champs du modèle établissement.
             "0400918F",
             "0400898J"
             ],
-            "computed_type": "CFA",
-            "computed_declare_prefecture": "OUI",
-            "computed_conventionne": "OUI",
             "entreprise_siren": "194007506",
             "entreprise_procedure_collective": false,
             "entreprise_enseigne": null,
@@ -197,7 +194,7 @@ Devient
 
 Vous pouvez utiliser : [https://www.urlencoder.org/](https://www.urlencoder.org)
 
-## Exemples d'usages: 
+## Exemples d'usages:
 
 ### Recherche par Adresse
 
@@ -295,9 +292,6 @@ Tester ->
                 "0400918F",
                 "0400898J"
             ],
-            "computed_type": "CFA",
-            "computed_declare_prefecture": "OUI",
-            "computed_conventionne": "OUI",
             "entreprise_siren": "194007506",
             "entreprise_procedure_collective": false,
             "entreprise_enseigne": null,

@@ -13,4 +13,4 @@ WORKDIR /app
 
 VOLUME /data
 EXPOSE 5000
-CMD yarn install && yarn start
+CMD yarn install && yarn debug

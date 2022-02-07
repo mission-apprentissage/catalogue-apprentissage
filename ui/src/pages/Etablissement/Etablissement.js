@@ -246,32 +246,13 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
                   </>
                 )}
               </Text>
-              <Text mb={4}>
-                Type :{" "}
-                <Text as="span" variant="highlight">
-                  {etablissement.computed_type}
-                </Text>{" "}
-                <InfoTooltip description={helpText.etablissement.type} />
-              </Text>
+
               <Text mb={4}>
                 Académie :{" "}
                 <Text as="span" variant="highlight">
                   {etablissement.nom_academie} ({etablissement.num_academie})
                 </Text>{" "}
                 <InfoTooltip description={helpText.etablissement.academie} />
-              </Text>
-
-              <Text mb={4}>
-                Conventionné :{" "}
-                <Text as="span" variant="highlight">
-                  {" "}
-                  {etablissement.computed_conventionne}{" "}
-                </Text>{" "}
-                <InfoTooltip description={helpText.etablissement.conventionne} />
-              </Text>
-              <Text mb={4}>
-                Déclaré en préfecture : <strong> {etablissement.computed_declare_prefecture} </strong>{" "}
-                <InfoTooltip description={helpText.etablissement.declare_prefecture} />
               </Text>
 
               <Text mb={4}>
