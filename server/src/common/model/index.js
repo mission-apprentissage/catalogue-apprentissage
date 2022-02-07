@@ -3,6 +3,10 @@ const { mongoosastic, getElasticInstance } = require("../esClient");
 const schema = require("../model/schema");
 
 const createModel = (modelName, descriptor, options = {}) => {
+  if (mongoose.models[modelName]) {
+    return mongoose.models[modelName];
+  }
+
   const schema = new mongoose.Schema(descriptor);
   schema.plugin(require("mongoose-paginate"));
   if (options.esIndexName) {

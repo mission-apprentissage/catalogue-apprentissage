@@ -2,8 +2,8 @@ const { showProgressBar } = require("../src/common/utils/paginator");
 // mock TCO
 const rewiremock = require("rewiremock/node");
 const { mock } = require("@mission-apprentissage/tco-service-node");
-const { PsFormation, Etablissement, Formation } = require("../src/common/model");
 rewiremock("@mission-apprentissage/tco-service-node").with(mock);
+const { PsFormation, Etablissement, Formation } = require("../src/common/model");
 
 beforeEach(() => rewiremock.enable());
 afterEach(() => rewiremock.disable());

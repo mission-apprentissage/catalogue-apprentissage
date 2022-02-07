@@ -29,7 +29,6 @@
     "hydratecfdentree": "standalone=true node src/jobs/parcoursup/_hydrateCfdEntree.js",
     "migrateRaisonsRejet": "standalone=true node src/jobs/parcoursup/_migrationRaisonsRejet.js",
     "psup:updatemna": "standalone=true node src/jobs/parcoursup/_updateMatchInfo.js",
-    "migrateFillPsId": "standalone=true node src/jobs/parcoursup/_migrationFillParcourSupId.js",
     "etablissements:duplicate": "standalone=true node src/jobs/oneshot/mergeEtablissementDuplicates/index.js",
     "convention:updater": "standalone=true node src/jobs/oneshot/conventionUpdater/index.js",
     "etablissements:jobs": "standaloneJobs=true node src/jobs/etablissements/index.js",

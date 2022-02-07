@@ -23,7 +23,7 @@ httpTests(__filename, ({ startServer }) => {
       uai: "0010856A",
     });
     await insertEtablissement({
-      uai: "0010856X",
+      uai: "0551031X",
     });
 
     const response = await httpClient.get("/api/v1/entity/etablissements?page=1&limit=1");
@@ -41,7 +41,7 @@ httpTests(__filename, ({ startServer }) => {
       uai: "0010856A",
     });
     await insertEtablissement({
-      uai: "0010856X",
+      uai: "0551031X",
     });
 
     const response = await httpClient.get(`/api/v1/entity/etablissements?query={"uai":"0010856A"}`);
