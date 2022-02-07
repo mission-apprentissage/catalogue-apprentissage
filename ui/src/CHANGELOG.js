@@ -4,12 +4,172 @@ import { Link } from "@chakra-ui/react";
 const changelog = {
   list: [
     {
-      version: "5.5.0",
+      version: "5.7.0",
       date: "Prochainement",
       about: `<h4>À venir</h4>`,
       fixes: [],
       features: [],
       improvements: [],
+    },
+    {
+      version: "5.6.0",
+      date: "Le 7 Février 2022",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [
+        "Suppression des espaces dans les UAIs et ajout du contrôle lors de la saisie",
+        "Rapprochement Parcoursup : enregistrement de l’id Parcoursup sur les matchs validés",
+      ],
+      features: [],
+      improvements: [],
+    },
+    {
+      version: "5.5.0",
+      date: "Le 2 Février 2022",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: ["Mise à jour des années sur les organismes"],
+      features: ["Filtrage des formations par période pour les utilisateurs connectés"],
+      improvements: [],
+    },
+    {
+      version: "5.4.14",
+      date: "Le 31 Janvier 2022",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: ["Fiche formation lien vers la bonne alternance"],
+      features: [],
+      improvements: [],
+    },
+    {
+      version: "5.4.13",
+      date: "Le 31 Janvier 2022",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: ["Module de périmètre : correction de la gestion des permissions"],
+      features: [],
+      improvements: [],
+    },
+    {
+      version: "5.4.12",
+      date: "Le 21 Janvier 2022",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [
+        "Module de rapprochement des formations Catalogue et Parcoursup, à l'usage des services académiques : correction d’une erreur qui n’enlevait pas l’étiquette “publié” lors de l’annulation d’un rapprochement",
+      ],
+      features: [],
+      improvements: [],
+    },
+    {
+      version: "5.4.11",
+      date: "Le 19 Janvier 2022",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: ["Récupération des informations Qualiopi par siret depuis la liste des OFs"],
+      features: [],
+      improvements: [],
+    },
+    {
+      version: "5.4.10",
+      date: "Le 19 Janvier 2022",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [],
+      features: ["Bouton d’envoi manuel des formations “en attente de publication” vers Parcoursup"],
+      improvements: [],
+    },
+    {
+      version: "5.4.9",
+      date: "Le 18 Janvier 2022",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: ["Gestion des périodes fusionnées suite au nouveau flux RCO"],
+      features: [],
+      improvements: [],
+    },
+    {
+      version: "5.4.8",
+      date: "Le 17 Janvier 2022",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [
+        "Modification des règles d’intégration, pour exclure les codes diplômes qui expirent avant le 31 août de l’année scolaire en cours quelle que soit la durée de la formation",
+      ],
+      features: [],
+      improvements: [],
+    },
+    {
+      version: "5.4.7",
+      date: "Le 13 Janvier 2022",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: ["Remplissage des académies sur les fiches formations, pour permettre l’édition des UAIs"],
+      features: [],
+      improvements: [],
+    },
+    {
+      version: "5.4.6",
+      date: "Le 13 Janvier 2022",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [],
+      features: [],
+      improvements: [
+        "Données d’historisation des établissements : suppression des données de mise à jour automatiques, et ajout des données de mise à jour manuelles (uai)",
+      ],
+    },
+    {
+      version: "5.4.5",
+      date: "Le 12 Janvier 2022",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [],
+      features: [],
+      improvements: [
+        "Module de périmètre - interface de création de règles pour prendre en compte le code RNCP et intégration des diplômes d’état dans le périmètre Parcoursup",
+      ],
+    },
+    {
+      version: "5.4.4",
+      date: "Le 11 Janvier 2022",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: ["Affichage des codes mefs dans les exports csv"],
+      features: [],
+      improvements: [],
+    },
+    {
+      version: "5.4.3",
+      date: "Le 11 Janvier 2022",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [],
+      features: [],
+      improvements: [
+        "Module de périmètre - interface de création de règles pour prendre en compte les années d’entrée en apprentissage et durée non collectées, et intégration des BTS de durée non collectée dans le périmètre Parcoursup",
+      ],
+    },
+    {
+      version: "5.4.2",
+      date: "Le 10 Janvier 2022",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [],
+      features: [],
+      improvements: ["Envoi des formations “en attente de publication” au web service Parcoursup"],
+    },
+    {
+      version: "5.4.1",
+      date: "Le 7 Janvier 2022",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [],
+      features: [],
+      improvements: [
+        "Amélioration des performances des rapports",
+        "Amélioration des temps de chargement du module de périmètre",
+      ],
     },
     {
       version: "5.4.0",
