@@ -206,30 +206,10 @@ module.exports = {
         default: [],
         description: "UAIs potentiels de l'établissement",
       },
-      info_depp: {
-        type: "number",
-        default: 0,
-        description: "L'établissement est présent ou pas dans le fichier DEPP",
-      },
-      info_dgefp: {
-        type: "number",
-        default: 0,
-        description: "L'établissement est présent ou pas dans le fichier DGEFP",
-      },
       info_datagouv_ofs: {
         type: "number",
         default: 0,
         description: "L'établissement est présent ou pas dans le fichier datagouv",
-      },
-      info_depp_info: {
-        type: "string",
-        default: "null",
-        description: "L'établissement est présent ou pas dans le fichier DEPP",
-      },
-      info_dgefp_info: {
-        type: "string",
-        default: "null",
-        description: "L'établissement est présent ou pas dans le fichier DGEFP",
       },
       info_datagouv_ofs_info: {
         type: "string",

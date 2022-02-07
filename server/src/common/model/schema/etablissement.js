@@ -212,30 +212,10 @@ const etablissementSchema = {
   },
 
   //////////////
-  info_depp: {
-    type: Number,
-    default: 0,
-    description: "L'établissement est présent ou pas dans le fichier DEPP",
-  },
-  info_dgefp: {
-    type: Number,
-    default: 0,
-    description: "L'établissement est présent ou pas dans le fichier DGEFP",
-  },
   info_datagouv_ofs: {
     type: Number,
     default: 0,
     description: "L'établissement est présent ou pas dans le fichier datagouv",
-  },
-  info_depp_info: {
-    type: String,
-    default: null,
-    description: "L'établissement est présent ou pas dans le fichier DEPP",
-  },
-  info_dgefp_info: {
-    type: String,
-    default: null,
-    description: "L'établissement est présent ou pas dans le fichier DGEFP",
   },
   info_datagouv_ofs_info: {
     type: String,
