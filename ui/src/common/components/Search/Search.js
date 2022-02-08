@@ -242,9 +242,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                                     )}`
                                   : `${stats.numberOfResults.toLocaleString(
                                       "fr-FR"
-                                    )} organismes affichées sur ${countEtablissement.toLocaleString(
-                                      "fr-FR"
-                                    )} organismes`
+                                    )} organismes affichés sur ${countEtablissement.toLocaleString("fr-FR")} organismes`
                               }`}
                           </span>
                           {(hasAccessTo(auth, "page_catalogue/export_btn") ||
