@@ -26,7 +26,7 @@ const findPreviousFormations = async ({
     }
   }
 
-  const ids_action = extractIdsAction(id_action);
+  const ids_action = extractFlatIdsAction(id_action);
   const ids_formation = id_formation.split("##");
 
   const previousFormations = await Formation.find({
@@ -42,7 +42,7 @@ const findPreviousFormations = async ({
   return previousFormations.filter((prevFormation) => {
     return (
       prevFormation?.ids_action?.length > 0 &&
-      ids_action.some((actions) => prevFormation.ids_action.every((id_action) => actions.includes(id_action)))
+      prevFormation.ids_action.every((id_action) => ids_action.includes(id_action))
     );
   });
 };
