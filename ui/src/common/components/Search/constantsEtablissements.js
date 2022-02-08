@@ -159,37 +159,7 @@ const columnsDefinition = [
     Header: "A des formations de niveau 3",
     accessor: "formations_n3",
     width: 200,
-    exportable: false,
-  },
-  {
-    Header: "A des formations de niveau 4",
-    accessor: "formations_n4",
-    width: 200,
-    exportable: false,
-  },
-  {
-    Header: "A des formations de niveau 5",
-    accessor: "formations_n5",
-    width: 200,
-    exportable: false,
-  },
-  {
-    Header: "A des formations de niveau 6",
-    accessor: "formations_n6",
-    width: 200,
-    exportable: false,
-  },
-  {
-    Header: "A des formations de niveau 7",
-    accessor: "formations_n7",
-    width: 200,
-    exportable: false,
-  },
-  {
-    Header: "A des formations de niveau 3",
-    accessor: "formations_n3",
-    width: 200,
-    exportable: false,
+    exportable: true,
   },
   {
     Header: "A des formations de niveau 4",
