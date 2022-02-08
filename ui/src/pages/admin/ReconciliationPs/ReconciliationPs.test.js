@@ -14,7 +14,7 @@ import { rest } from "msw";
 import { setupServer } from "msw/node";
 
 const server = setupServer(
-  rest.post(/\/api\/es\/search\/psformations\/_msearch/, (req, res, ctx) => {
+  rest.post(/\/api\/es\/search\/parcoursupformations\/_msearch/, (req, res, ctx) => {
     return res(
       ctx.json({
         took: 73,
@@ -28,7 +28,7 @@ const server = setupServer(
               max_score: null,
               hits: [
                 {
-                  _index: "psformations",
+                  _index: "parcoursupformations",
                   _type: "_doc",
                   _id: "6138bad41e928101d8615201",
                   _score: null,
@@ -60,7 +60,7 @@ const server = setupServer(
                   sort: ["6138bad41e928101d8615201"],
                 },
                 {
-                  _index: "psformations",
+                  _index: "parcoursupformations",
                   _type: "_doc",
                   _id: "6138bad41e928101d8615205",
                   _score: null,
@@ -92,7 +92,7 @@ const server = setupServer(
                   sort: ["6138bad41e928101d8615205"],
                 },
                 {
-                  _index: "psformations",
+                  _index: "parcoursupformations",
                   _type: "_doc",
                   _id: "6138bad41e928101d861520d",
                   _score: null,
@@ -124,7 +124,7 @@ const server = setupServer(
                   sort: ["6138bad41e928101d861520d"],
                 },
                 {
-                  _index: "psformations",
+                  _index: "parcoursupformations",
                   _type: "_doc",
                   _id: "6138bad51e928101d8615215",
                   _score: null,
@@ -156,7 +156,7 @@ const server = setupServer(
                   sort: ["6138bad51e928101d8615215"],
                 },
                 {
-                  _index: "psformations",
+                  _index: "parcoursupformations",
                   _type: "_doc",
                   _id: "6138bad51e928101d8615221",
                   _score: null,
@@ -188,7 +188,7 @@ const server = setupServer(
                   sort: ["6138bad51e928101d8615221"],
                 },
                 {
-                  _index: "psformations",
+                  _index: "parcoursupformations",
                   _type: "_doc",
                   _id: "6138bad51e928101d8615225",
                   _score: null,
@@ -220,7 +220,7 @@ const server = setupServer(
                   sort: ["6138bad51e928101d8615225"],
                 },
                 {
-                  _index: "psformations",
+                  _index: "parcoursupformations",
                   _type: "_doc",
                   _id: "6138bad51e928101d8615229",
                   _score: null,
@@ -252,7 +252,7 @@ const server = setupServer(
                   sort: ["6138bad51e928101d8615229"],
                 },
                 {
-                  _index: "psformations",
+                  _index: "parcoursupformations",
                   _type: "_doc",
                   _id: "6138bad51e928101d861522d",
                   _score: null,
@@ -321,7 +321,7 @@ jest.setTimeout(50000);
 test("opens rapprochement modal", async () => {
   jest.spyOn(search, "useSearch").mockImplementation(() => ({
     loaded: true,
-    base: "psformations",
+    base: "parcoursupformations",
     isBaseFormations: false,
     isBaseReconciliationPs: true,
     endpoint: "http://localhost/api",
