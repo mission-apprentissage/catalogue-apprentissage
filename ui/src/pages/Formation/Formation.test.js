@@ -4,6 +4,7 @@ import { rest } from "msw";
 import { setupServer } from "msw/node";
 import Formation from "./Formation";
 import { waitFor } from "@testing-library/react";
+import { AFFELNET_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
 
 const server = setupServer(
   rest.get(/\/api\/entity\/formation\/2/, (req, res, ctx) => {
@@ -223,9 +224,9 @@ const server = setupServer(
         capacite: null,
         duree: "3",
         annee: "1",
-        parcoursup_statut: "hors périmètre",
+        parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
         parcoursup_statut_history: [],
-        affelnet_statut: "publié",
+        affelnet_statut: AFFELNET_STATUS.PUBLIE,
         affelnet_statut_history: [],
         source: "WS RCO",
         commentaires: null,

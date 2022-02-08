@@ -82,11 +82,11 @@ const ReconciliationModalHeader = React.memo(
               parcoursup_id: formation.id_parcoursup,
             };
             if (parcoursup_keep_publish === "true") {
-              body.parcoursup_statut = "publié";
+              body.parcoursup_statut = PARCOURSUP_STATUS.PUBLIE;
               body.parcoursup_raison_depublication = null;
             } else if (parcoursup_keep_publish === "false") {
               body.parcoursup_raison_depublication = parcoursup_raison_depublication;
-              body.parcoursup_statut = "non publié";
+              body.parcoursup_statut = PARCOURSUP_STATUS.NON_PUBLIE;
             }
 
             const formationsARapprocher = [];
@@ -490,8 +490,8 @@ const ReconciliationModalHeader = React.memo(
                       Paramétrée
                     </Box>
                     <Box flexGrow="1">
-                      {(mnaFormation.parcoursup_statut === "publié" ||
-                        mnaFormation.parcoursup_statut === "à publier") && (
+                      {(mnaFormation.parcoursup_statut === PARCOURSUP_STATUS.PUBLIE ||
+                        mnaFormation.parcoursup_statut === PARCOURSUP_STATUS.A_PUBLIER) && (
                         <Text
                           as="div"
                           variant="highlight"
@@ -576,7 +576,7 @@ const ReconciliationModalHeader = React.memo(
                               <Stack spacing={2} direction="column" h="150px">
                                 <FormLabel htmlFor="parcoursup_keep_publish" mb={3} fontSize="epsilon" fontWeight={400}>
                                   <Heading as="h3" fontSize="1.3rem" flexGrow="1">
-                                    {mnaFormation.parcoursup_statut === "publié"
+                                    {mnaFormation.parcoursup_statut === PARCOURSUP_STATUS.PUBLIE
                                       ? "Appliquer le statut de publication"
                                       : "Demander la publication"}{" "}
                                     <Text as="span" color="redmarianne">
@@ -596,7 +596,7 @@ const ReconciliationModalHeader = React.memo(
                                   isChecked
                                 >
                                   <Text as={"span"} fontSize="zeta">
-                                    <StatusBadge source="Parcoursup" status="publié" />
+                                    <StatusBadge source="Parcoursup" status={PARCOURSUP_STATUS.PUBLIE} />
                                   </Text>
                                 </Radio>
                                 <Radio
@@ -610,7 +610,7 @@ const ReconciliationModalHeader = React.memo(
                                   }}
                                 >
                                   <Text as={"span"} fontSize="zeta">
-                                    <StatusBadge source="Parcoursup" status="non publié" />
+                                    <StatusBadge source="Parcoursup" status={PARCOURSUP_STATUS.NON_PUBLIE} />
                                   </Text>
                                 </Radio>
                               </Stack>

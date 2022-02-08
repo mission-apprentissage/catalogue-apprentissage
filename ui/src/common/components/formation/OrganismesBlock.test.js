@@ -3,6 +3,7 @@ import { OrganismesBlock } from "./OrganismesBlock";
 import { renderWithRouter } from "../../utils/testUtils";
 import { getByText, waitFor } from "@testing-library/react";
 import * as api from "../../api/organisme";
+import { AFFELNET_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
 
 const formation = {
   _id: "5fc6166e712d48a988133449",
@@ -132,9 +133,9 @@ const formation = {
   capacite: null,
   duree: "3",
   annee: "1",
-  parcoursup_statut: "hors périmètre",
+  parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
   parcoursup_statut_history: [],
-  affelnet_statut: "publié",
+  affelnet_statut: AFFELNET_STATUS.PUBLIE,
   affelnet_statut_history: [],
   source: "WS RCO",
   commentaires: null,

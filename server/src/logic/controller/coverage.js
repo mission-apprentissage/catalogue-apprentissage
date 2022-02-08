@@ -196,6 +196,7 @@ async function getParcoursupCoverage(formation) {
 
 /**
  * Rapprochements des formations Affelnet avec les formations du catalogue (Affelnet vs RCO)
+ * On ne regarde que dans les formations niveau 3 et 4 du catalogue.
  * On prend les matchs les plus forts dans l'ordre.
  * Puis si on trouve 1 seul match & que la formation Affelnet a 1 uai, on met le match à "publié"
  *

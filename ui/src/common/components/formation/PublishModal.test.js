@@ -48,7 +48,7 @@ test("should compute submit body when publish affelnet", () => {
     body: {
       affelnet_infos_offre: "test info",
       affelnet_raison_depublication: null,
-      affelnet_statut: "en attente de publication",
+      affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
     },
     shouldRemovePsReconciliation: false,
     shouldRestorePsReconciliation: false,
@@ -81,7 +81,7 @@ test("should compute submit body when publish affelnet & restore reconciliation"
     body: {
       affelnet_infos_offre: "test info",
       affelnet_raison_depublication: null,
-      affelnet_statut: "en attente de publication",
+      affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
     },
     shouldRemovePsReconciliation: false,
     shouldRestorePsReconciliation: false,
@@ -176,7 +176,7 @@ test("should compute submit body when UNpublish affelnet", () => {
   expect(result).toEqual({
     body: {
       affelnet_raison_depublication: "not to be published",
-      affelnet_statut: "non publié",
+      affelnet_statut: AFFELNET_STATUS.NON_PUBLIE,
     },
     shouldRemovePsReconciliation: false,
     shouldRestorePsReconciliation: false,
@@ -236,7 +236,7 @@ test("should compute submit body when publish parcoursup", () => {
   expect(result).toEqual({
     body: {
       parcoursup_raison_depublication: null,
-      parcoursup_statut: "en attente de publication",
+      parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
     },
     shouldRemovePsReconciliation: false,
     shouldRestorePsReconciliation: false,
@@ -267,7 +267,7 @@ test("should compute submit body when publish parcoursup & restore reconciliatio
   expect(result).toEqual({
     body: {
       parcoursup_raison_depublication: null,
-      parcoursup_statut: "en attente de publication",
+      parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
     },
     shouldRemovePsReconciliation: false,
     shouldRestorePsReconciliation: true,
@@ -299,7 +299,7 @@ test("should compute submit body when UNpublish parcoursup", () => {
   expect(result).toEqual({
     body: {
       parcoursup_raison_depublication: "not to be published",
-      parcoursup_statut: "non publié",
+      parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIE,
     },
     shouldRemovePsReconciliation: true,
     shouldRestorePsReconciliation: false,

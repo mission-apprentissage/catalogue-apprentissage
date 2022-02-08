@@ -4,6 +4,7 @@ const { AffelnetFormation, Formation } = require("../../common/model");
 const { runScript } = require("../scriptWrapper");
 const logger = require("../../common/logger");
 const { reconciliationAffelnet } = require("../../logic/controller/reconciliation");
+const { AFFELNET_STATUS } = require("../../constants/status");
 
 const formation = async () => {
   await paginator(
@@ -40,7 +41,10 @@ const afCoverage = async () => {
   );
 
   // reset "publié" to "hors périmètre"
-  await Formation.updateMany({ affelnet_statut: "publié" }, { $set: { affelnet_statut: "hors périmètre" } });
+  await Formation.updateMany(
+    { affelnet_statut: AFFELNET_STATUS.PUBLIE },
+    { $set: { affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE } }
+  );
 
   logger.info("Start formation coverage");
   await formation();

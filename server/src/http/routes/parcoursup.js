@@ -10,6 +10,7 @@ const { diffFormation, buildUpdatesHistory } = require("../../logic/common/utils
 const { updateParcoursupCoverage } = require("../../logic/updaters/coverageUpdater");
 const Boom = require("boom");
 const { createFormation } = require("../../jobs/parcoursup/export");
+const { PARCOURSUP_STATUS } = require("../../constants/status");
 
 module.exports = () => {
   const router = express.Router();
@@ -254,7 +255,7 @@ module.exports = () => {
               mnaFormationU.parcoursup_id = null;
               for (let jndex = mnaFormationU.updates_history.length - 1; jndex > 0; jndex--) {
                 const { from, to } = mnaFormationU.updates_history[jndex];
-                if (to.parcoursup_statut === "publié") {
+                if (to.parcoursup_statut === PARCOURSUP_STATUS.PUBLIE) {
                   mnaFormationU.parcoursup_statut = from.parcoursup_statut;
                   mnaFormationU.parcoursup_raison_depublication = from.parcoursup_raison_depublication;
                   break;
@@ -439,7 +440,7 @@ module.exports = () => {
         throw Boom.notFound();
       }
 
-      if (!formation.parcoursup_statut === "en attente de publication") {
+      if (!formation.parcoursup_statut === PARCOURSUP_STATUS.EN_ATTENTE) {
         throw Boom.forbidden('La formation n\'est pas "en attente de publication"');
       }
 

@@ -1,4 +1,5 @@
 const { Formation } = require("../../common/model");
+const { AFFELNET_STATUS } = require("../../constants/status");
 
 async function reconciliationAffelnet(formationAffelnet) {
   let { code_nature, etablissement_type, code_mef, matching_mna_formation, libelle_mnemonique } = formationAffelnet;
@@ -37,8 +38,8 @@ async function reconciliationAffelnet(formationAffelnet) {
       ];
     }
 
-    if (formation.affelnet_statut !== "non publié") {
-      update.affelnet_statut = "publié";
+    if (formation.affelnet_statut !== AFFELNET_STATUS.NON_PUBLIE) {
+      update.affelnet_statut = AFFELNET_STATUS.PUBLIE;
     }
     update.last_update_at = Date.now();
     await Formation.findOneAndUpdate({ cle_ministere_educatif }, update);

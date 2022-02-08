@@ -4,6 +4,7 @@ import { setupServer } from "msw/node";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { getDiplomesAllowedForSubRulesUrl, RuleModal } from "./RuleModal";
 import { fireEvent, render } from "@testing-library/react";
+import { PARCOURSUP_STATUS } from "../../../constants/status";
 
 const server = setupServer(
   rest.get(/\/api\/v1\/entity\/perimetre\/niveau/, (req, res, ctx) => {
@@ -118,7 +119,7 @@ test("renders the modal in update mode and can delete", async () => {
     regle_complementaire: "",
     regle_complementaire_query: "",
     nom_regle_complementaire: "mon diplome de test",
-    statut: "à publier",
+    statut: PARCOURSUP_STATUS.A_PUBLIER,
     condition_integration: "peut intégrer",
     niveau: "4",
     duree: "1",
