@@ -34,8 +34,8 @@ module.exports = {
       schema.index({ adresse: "text" });
     },
   }),
-  PsFormation: createModel("psformations", schema.psFormationSchema, {
-    esIndexName: "psformations",
+  ParcoursupFormation: createModel("parcoursupformations", schema.parcoursupFormationSchema, {
+    esIndexName: "parcoursupformations",
   }),
   SandboxFormation: createModel("sandboxformation", schema.formationSchema),
   Statistique: createModel("statistique", schema.statistiqueSchema),

@@ -1,5 +1,5 @@
 const { rebuildIndex, deleteIndex } = require("../../common/utils/esUtils");
-const { Formation, PsFormation, Etablissement } = require("../../common/model/index");
+const { Formation, ParcoursupFormation, Etablissement } = require("../../common/model/index");
 
 const rebuildEsIndex = async (index, skipNotFound = false, filter = {}) => {
   switch (index) {
@@ -8,7 +8,7 @@ const rebuildEsIndex = async (index, skipNotFound = false, filter = {}) => {
       break;
 
     case "psformations":
-      await rebuildIndex("psformations", PsFormation, { skipNotFound, filter });
+      await rebuildIndex("psformations", ParcoursupFormation, { skipNotFound, filter });
       break;
 
     case "etablissements":
@@ -17,7 +17,7 @@ const rebuildEsIndex = async (index, skipNotFound = false, filter = {}) => {
 
     default:
       await rebuildIndex("formation", Formation, { skipNotFound: true, filter: { published: true } });
-      await rebuildIndex("psformations", PsFormation, { skipNotFound: true });
+      await rebuildIndex("psformations", ParcoursupFormation, { skipNotFound: true });
       await rebuildIndex("etablissements", Etablissement, { skipNotFound: true });
   }
 };

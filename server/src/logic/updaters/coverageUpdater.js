@@ -1,5 +1,5 @@
 const { diffFormation, buildUpdatesHistory } = require("../../logic/common/utils/diffUtils");
-const { PsFormation } = require("../../common/model");
+const { ParcoursupFormation } = require("../../common/model");
 const { getParcoursupCoverage } = require("../../logic/controller/coverage");
 
 const updateMatchedFormation = async ({ formation: previousFormation, match }) => {
@@ -38,7 +38,7 @@ const updateMatchedFormation = async ({ formation: previousFormation, match }) =
     updatedFormation.statuts_history = statuts_history;
   }
 
-  await PsFormation.findByIdAndUpdate(updatedFormation._id, updatedFormation, {
+  await ParcoursupFormation.findByIdAndUpdate(updatedFormation._id, updatedFormation, {
     overwrite: true,
     upsert: true,
     new: true,

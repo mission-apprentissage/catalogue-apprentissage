@@ -1,4 +1,4 @@
-const psFormationSchema = {
+const parcoursupFormationSchema = {
   uai_gestionnaire: {
     type: String,
     default: null,
@@ -296,4 +296,4 @@ const psFormationSchema = {
   },
 };
 
-module.exports = psFormationSchema;
+module.exports = parcoursupFormationSchema;

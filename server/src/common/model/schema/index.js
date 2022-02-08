@@ -6,7 +6,7 @@ const formationSchema = require("./formation/formation");
 const reportSchema = require("./report");
 const affelnetFormationSchema = require("./affelnetFormation");
 const etablissementSchema = require("./etablissement");
-const psFormationSchema = require("./psFormation");
+const parcoursupFormationSchema = require("./parcoursupFormation");
 const statistiqueSchema = require("./statistique");
 const messageScriptSchema = require("./messageScript");
 const reglePerimetreSchema = require("./reglePerimetre");
@@ -20,7 +20,7 @@ module.exports = {
   reportSchema,
   affelnetFormationSchema,
   etablissementSchema,
-  psFormationSchema,
+  parcoursupFormationSchema,
   statistiqueSchema,
   messageScriptSchema,
   reglePerimetreSchema,

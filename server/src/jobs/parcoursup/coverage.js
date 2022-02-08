@@ -1,11 +1,11 @@
 const { paginator } = require("../../common/utils/paginator");
-const { PsFormation, Formation } = require("../../common/model");
+const { ParcoursupFormation, Formation } = require("../../common/model");
 const { runScript } = require("../scriptWrapper");
 const logger = require("../../common/logger");
 const { updateParcoursupCoverage } = require("../../logic/updaters/coverageUpdater");
 
 const formationsCoverage = async (filter = {}, limit = 10) => {
-  await paginator(PsFormation, { filter, limit, lean: true }, async (formation) => {
+  await paginator(ParcoursupFormation, { filter, limit, lean: true }, async (formation) => {
     await updateParcoursupCoverage(formation);
   });
 };
@@ -14,7 +14,7 @@ const checkPublished = async (filter = {}, limit = 10) => {
   let countValideOrphans = 0;
   let countRejeteOrphans = 0;
 
-  await paginator(PsFormation, { filter, limit }, async (formation) => {
+  await paginator(ParcoursupFormation, { filter, limit }, async (formation) => {
     // case "VALIDE"
     // --> findById check published if yes do nothing, if no delete validated_formation_ids & change VALIDE to A_VERIFIER ?
     if (formation.statut_reconciliation === "VALIDE") {
@@ -52,21 +52,21 @@ const checkPublished = async (filter = {}, limit = 10) => {
 const psCoverage = async () => {
   logger.info("Start Parcoursup coverage");
 
-  PsFormation.pauseAllMongoosaticHooks();
+  ParcoursupFormation.pauseAllMongoosaticHooks();
 
   const filtersCheckPublished = { statut_reconciliation: { $in: ["VALIDE", "REJETE"] } };
-  const allIdsCheckPublished = await PsFormation.distinct("_id", { ...filtersCheckPublished });
+  const allIdsCheckPublished = await ParcoursupFormation.distinct("_id", { ...filtersCheckPublished });
   const activeFilterCheckPublished = { _id: { $in: allIdsCheckPublished } };
 
   await checkPublished(activeFilterCheckPublished);
 
   const filters = { statut_reconciliation: { $nin: ["VALIDE", "REJETE"] } };
-  const allIds = await PsFormation.distinct("_id", { ...filters });
+  const allIds = await ParcoursupFormation.distinct("_id", { ...filters });
   const activeFilter = { _id: { $in: allIds } };
 
   await formationsCoverage(activeFilter);
 
-  PsFormation.startAllMongoosaticHooks();
+  ParcoursupFormation.startAllMongoosaticHooks();
 };
 
 module.exports = { psCoverage };
