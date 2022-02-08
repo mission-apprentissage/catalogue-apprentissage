@@ -47,6 +47,17 @@ const sampleData = [
     id_certifinfo: "097",
     ids_action: ["666", "444"],
   },
+  {
+    cfd: "7",
+    cle_ministere_educatif: "094419P012X7842027560015078420275600150-92062#L01",
+    published: true,
+    annee: "X",
+    id_action: "14_SE_0000652184##14_SE_0000652185",
+    id_certifinfo: "94419",
+    id_formation: "14_AF_0000003848",
+    id_rco_formation: "14_AF_0000003848|14_SE_0000652184##14_SE_0000652185|94419",
+    ids_action: ["14_SE_0000652184", "14_SE_0000652185"],
+  },
 ];
 
 describe(__filename, () => {
@@ -65,7 +76,7 @@ describe(__filename, () => {
 
   it("should have inserted sample data", async () => {
     const count = await Formation.countDocuments({});
-    assert.strictEqual(count, 6);
+    assert.strictEqual(count, 7);
   });
 
   it("should find 1 Formation", async () => {
@@ -109,5 +120,18 @@ describe(__filename, () => {
     });
 
     assert.strictEqual(formations.length, 2);
+  });
+
+  it("should find 1 Formation", async () => {
+    const formations = await findPreviousFormations({
+      id_formation: "14_AF_0000003848",
+      id_action: "14_SE_0000652184##14_SE_0000652185",
+      id_certifinfo: "94419",
+      cle_ministere_educatif: "094419P01217842027560015078420275600150-92062#L01",
+      etablissement_formateur_code_insee: "92062",
+    });
+
+    assert.strictEqual(formations.length, 1);
+    assert.strictEqual(formations[0].cfd, "7");
   });
 });
