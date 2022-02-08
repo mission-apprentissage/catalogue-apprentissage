@@ -50,7 +50,7 @@ test("renders line & create rule", () => {
     niveau: "5 (BTS, DEUST...)",
     plateforme: "parcoursup",
     regle_complementaire: "{}",
-    statut: "à publier",
+    statut: PARCOURSUP_STATUS.A_PUBLIER,
   });
 });
 
@@ -198,7 +198,7 @@ test("Action select - should update rule & set hors périmètre", async () => {
     expect(onUpdateRule).toHaveBeenCalledWith({
       _id: "345",
       condition_integration: "ne doit pas intégrer",
-      statut: "hors périmètre",
+      statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
     });
   });
 });
@@ -245,7 +245,7 @@ test("Action select - should update rule & set à publier", async () => {
     expect(onUpdateRule).toHaveBeenCalledWith({
       _id: "345",
       condition_integration: "peut intégrer",
-      statut: "à publier",
+      statut: PARCOURSUP_STATUS.A_PUBLIER,
     });
   });
 });
@@ -291,7 +291,7 @@ test("Status select - should update status", async () => {
     userEvent.selectOptions(statusSelect, [PARCOURSUP_STATUS.A_PUBLIER]);
     expect(onUpdateRule).toHaveBeenCalledWith({
       _id: "345",
-      statut: "à publier",
+      statut: PARCOURSUP_STATUS.A_PUBLIER,
     });
   });
 });
@@ -339,7 +339,7 @@ test("Status select - should update status for academie", async () => {
     expect(onUpdateRule).toHaveBeenCalledWith({
       _id: "345",
       statut_academies: {
-        "14": "à publier",
+        "14": PARCOURSUP_STATUS.A_PUBLIER,
       },
     });
   });
@@ -358,7 +358,7 @@ test("Status select - should remove status for academie", async () => {
     _id: "345",
     regle_complementaire: "{}",
     condition_integration: CONDITIONS.PEUT_INTEGRER,
-    statut_academies: { "14": "à publier" },
+    statut_academies: { "14": PARCOURSUP_STATUS.A_PUBLIER },
     num_academie: 14,
     nom_regle_complementaire: "BTS Agri",
   };

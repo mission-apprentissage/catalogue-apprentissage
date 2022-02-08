@@ -196,24 +196,35 @@ async function getParcoursupCoverage(formation) {
 
 /**
  * Rapprochements des formations Affelnet avec les formations du catalogue (Affelnet vs RCO)
+ * On ne regarde que dans les formations niveau 3 et 4 du catalogue.
  * On prend les matchs les plus forts dans l'ordre.
- * Puis si on trouve 1 seul match & que la formation Affelnet a 1 uai, on met à "publié" toutes les formations avec le même cfd + siret formateur + siret gestionnaire
+ * Puis si on trouve 1 seul match & que la formation Affelnet a 1 uai, on met le match à "publié"
  *
- * m5 = cfd + departement + code postal + uai
- * m4 = cfd + departement + code postal
- * m3 = cfd + departement + uai
- * m2 = cfd + departement
- * m1 = cfd
+ * m5 = mef + departement + code postal + uai
+ * m4 = mef + departement + code postal
+ * m3 = mef + departement + uai
+ * m3' = mef + uai
+ * m2 = mef + departement
+ * m1 = mef
  */
-async function getAffelnetCoverage({ code_postal: cp, code_cfd, uai }) {
-  const dept = cp.substring(0, 2);
+async function getAffelnetCoverage({ code_postal: cp, code_mef, uai }) {
+  const dept = cp.startsWith("97") ? cp.substring(0, 3) : cp.substring(0, 2);
   const deptArr = dept === "20" ? ["2A", "2B"] : [dept];
 
-  const m1 = await getMatch({ cfd: code_cfd, published: true });
+  const m1 = await getMatch({
+    "bcn_mefs_10.mef10": code_mef?.substring(0, 10),
+    published: true,
+    niveau: { $in: ["3 (CAP...)", "4 (BAC...)"] },
+  });
 
   const m2 = m1.filter(({ num_departement }) => deptArr.includes(num_departement));
 
   const m3 = m2.filter(({ uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai }) => {
+    return [uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai].includes(uai);
+  });
+
+  // m3bis is alternative filtering than m3 (not based on m2 but m1)
+  const m3bis = m1.filter(({ uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai }) => {
     return [uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai].includes(uai);
   });
 
@@ -260,6 +271,13 @@ async function getAffelnetCoverage({ code_postal: cp, code_cfd, uai }) {
     return {
       strength: "3",
       matching: m3,
+    };
+  }
+
+  if (m3bis.length > 0) {
+    return {
+      strength: "3",
+      matching: m3bis,
     };
   }
 

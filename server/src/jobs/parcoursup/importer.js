@@ -1,7 +1,7 @@
 const path = require("path");
 const logger = require("../../common/logger");
 const { runScript } = require("../scriptWrapper");
-const { PsFormation } = require("../../common/model/index");
+const { ParcoursupFormation } = require("../../common/model/index");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 const { downloadAndSaveFileFromS3 } = require("../../common/utils/awsUtils");
 const { getJsonFromXlsxFile } = require("../../common/utils/fileUtils");
@@ -70,16 +70,16 @@ const run = async () => {
 
     await asyncForEach(data, async (formation) => {
       const mapped = mapping(formation);
-      const exist = await PsFormation.findOne({ id_parcoursup: mapped.id_parcoursup }).lean();
+      const exist = await ParcoursupFormation.findOne({ id_parcoursup: mapped.id_parcoursup }).lean();
 
       if (exist) {
-        await PsFormation.findOneAndUpdate({ id_parcoursup: mapped.id_parcoursup }, mapped, {
+        await ParcoursupFormation.findOneAndUpdate({ id_parcoursup: mapped.id_parcoursup }, mapped, {
           upsert: true,
           new: true,
         });
         stat.updated += 1;
       } else {
-        const psFormation = new PsFormation(mapped);
+        const psFormation = new ParcoursupFormation(mapped);
         await psFormation.save();
 
         stat.inserted += 1;

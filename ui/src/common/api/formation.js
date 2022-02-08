@@ -13,16 +13,6 @@ export const updateFormation = async ({ formation, body, user }) => {
   });
 };
 
-export const updateReconciliationAffelnet = async ({ formation, shouldRemoveAfReconciliation, user }) => {
-  return await _put(`${endpointNewFront}/affelnet/reconciliation`, {
-    uai_formation: formation.uai_formation,
-    uai_gestionnaire: formation.etablissement_gestionnaire_uai,
-    uai_formateur: formation.etablissement_formateur_uai,
-    cfd: formation.cfd,
-    email: shouldRemoveAfReconciliation ? user.email : null,
-  });
-};
-
 export const updateReconciliationParcoursup = async ({ formation, shouldRemovePsReconciliation, user }) => {
   return await _put(`${endpointNewFront}/parcoursup/reconciliation`, {
     uai_gestionnaire: formation.etablissement_gestionnaire_uai,

@@ -2,6 +2,7 @@ const assert = require("assert");
 const { ReglePerimetre, Formation } = require("../../../common/model/index");
 const { connectToMongoForTests, cleanAll } = require("../../../../tests/utils/testUtils.js");
 const { run } = require("../perimetre/controller.js");
+const { PARCOURSUP_STATUS } = require("../../../constants/status");
 
 describe(__filename, () => {
   before(async () => {
@@ -22,22 +23,22 @@ describe(__filename, () => {
       plateforme: "parcoursup",
       niveau: "6 (Licence, BUT...)",
       diplome: "Licence",
-      statut: "à publier",
+      statut: PARCOURSUP_STATUS.A_PUBLIER,
       condition_integration: "peut intégrer",
     });
     await ReglePerimetre.create({
       plateforme: "parcoursup",
       niveau: "6 (Licence, BUT...)",
       diplome: "BUT",
-      statut: "à publier (soumis à validation Recteur)",
+      statut: PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
       condition_integration: "peut intégrer",
-      statut_academies: { "14": "à publier" },
+      statut_academies: { "14": PARCOURSUP_STATUS.A_PUBLIER },
     });
     await ReglePerimetre.create({
       plateforme: "parcoursup",
       niveau: "5 (BTS, DEUST...)",
       diplome: "BTS",
-      statut: "à publier",
+      statut: PARCOURSUP_STATUS.A_PUBLIER,
       condition_integration: "peut intégrer",
       is_deleted: true,
     });
@@ -45,7 +46,7 @@ describe(__filename, () => {
       plateforme: "parcoursup",
       niveau: "7 (Master, titre ingénieur...)",
       diplome: "Master",
-      statut: "à publier (vérifier accès direct postbac)",
+      statut: PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
       condition_integration: "peut intégrer",
     });
 
@@ -56,7 +57,7 @@ describe(__filename, () => {
       etablissement_reference_catalogue_published: true,
       niveau: "6 (Licence, BUT...)",
       diplome: "Licence",
-      parcoursup_statut: "hors périmètre",
+      parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
       annee: "1",
       periode,
     });
@@ -66,7 +67,7 @@ describe(__filename, () => {
       etablissement_reference_catalogue_published: true,
       niveau: "6 (Licence, BUT...)",
       diplome: "Licence",
-      parcoursup_statut: "hors périmètre",
+      parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
       annee: "1",
       periode,
     });
@@ -76,7 +77,7 @@ describe(__filename, () => {
       etablissement_reference_catalogue_published: true,
       niveau: "6 (Licence, BUT...)",
       diplome: "Licence Agri",
-      parcoursup_statut: "à publier (vérifier accès direct postbac)",
+      parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
       annee: "1",
       periode,
     });
@@ -86,7 +87,7 @@ describe(__filename, () => {
       etablissement_reference_catalogue_published: true,
       niveau: "5 (BTS, DEUST...)",
       diplome: "BTS",
-      parcoursup_statut: "à publier (vérifier accès direct postbac)",
+      parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
       annee: "1",
       periode,
     });
@@ -97,7 +98,7 @@ describe(__filename, () => {
       niveau: "6 (Licence, BUT...)",
       diplome: "BUT",
       num_academie: "12",
-      parcoursup_statut: "hors périmètre",
+      parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
       annee: "1",
       periode,
     });
@@ -108,7 +109,7 @@ describe(__filename, () => {
       niveau: "6 (Licence, BUT...)",
       diplome: "BUT",
       num_academie: "14",
-      parcoursup_statut: "hors périmètre",
+      parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
       annee: "1",
       periode,
     });
@@ -119,7 +120,7 @@ describe(__filename, () => {
       niveau: "6 (Licence, BUT...)",
       diplome: "BUT",
       num_academie: "14",
-      parcoursup_statut: "publié",
+      parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
       parcoursup_id: "56789",
       annee: "1",
       periode,
@@ -130,7 +131,7 @@ describe(__filename, () => {
       etablissement_reference_catalogue_published: true,
       niveau: "7 (Master, titre ingénieur...)",
       diplome: "Master",
-      parcoursup_statut: "en attente de publication",
+      parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
       annee: "1",
       periode,
     });
@@ -162,33 +163,33 @@ describe(__filename, () => {
     await run();
 
     const totalNotRelevant = await Formation.countDocuments({
-      parcoursup_statut: "hors périmètre",
+      parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
     });
     assert.strictEqual(totalNotRelevant, 3);
 
     const totalToValidate = await Formation.countDocuments({
-      parcoursup_statut: "à publier (vérifier accès direct postbac)",
+      parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
     });
     assert.strictEqual(totalToValidate, 0);
 
     const totalToValidateRecteur = await Formation.countDocuments({
-      parcoursup_statut: "à publier (soumis à validation Recteur)",
+      parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
     });
     assert.strictEqual(totalToValidateRecteur, 1);
 
-    const totalToCheck = await Formation.countDocuments({ parcoursup_statut: "à publier" });
+    const totalToCheck = await Formation.countDocuments({ parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER });
     assert.strictEqual(totalToCheck, 2);
 
     const totalPending = await Formation.countDocuments({
-      parcoursup_statut: "en attente de publication",
+      parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
     });
     assert.strictEqual(totalPending, 1);
 
-    const totalPsPublished = await Formation.countDocuments({ parcoursup_statut: "publié" });
+    const totalPsPublished = await Formation.countDocuments({ parcoursup_statut: PARCOURSUP_STATUS.PUBLIE });
     assert.strictEqual(totalPsPublished, 1);
 
     const totalPsNotPublished = await Formation.countDocuments({
-      parcoursup_statut: "non publié",
+      parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIE,
     });
     assert.strictEqual(totalPsNotPublished, 0);
   });

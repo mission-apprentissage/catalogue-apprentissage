@@ -5,6 +5,7 @@ const { createCursor } = require("../export/index.js");
 const sinon = require("sinon");
 const parcoursupApi = require("../export/parcoursupApi");
 const { createFormation, formatter } = require("../export");
+const { PARCOURSUP_STATUS } = require("../../../constants/status");
 
 describe(__filename, () => {
   before(async () => {
@@ -25,7 +26,7 @@ describe(__filename, () => {
       uai_formation: "0551031X",
       parcoursup_mefs_10: [],
       rome_codes: ["rome-1", "rome-2"],
-      parcoursup_statut: "hors périmètre",
+      parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
       parcoursup_error: null,
       parcoursup_statut_history: [],
       cle_ministere_educatif: "12345-cle",
@@ -38,7 +39,7 @@ describe(__filename, () => {
       uai_formation: "0881529J",
       parcoursup_mefs_10: [],
       rome_codes: ["rome-1", "rome-2"],
-      parcoursup_statut: "en attente de publication",
+      parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
       parcoursup_error: null,
       parcoursup_statut_history: [],
       cle_ministere_educatif: "12345-cle2",
@@ -51,7 +52,7 @@ describe(__filename, () => {
       uai_formation: undefined,
       parcoursup_mefs_10: [],
       rome_codes: ["rome-1", "rome-2"],
-      parcoursup_statut: "en attente de publication",
+      parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
       parcoursup_error: null,
       parcoursup_statut_history: [],
       cle_ministere_educatif: "12345-cle3",
@@ -64,7 +65,7 @@ describe(__filename, () => {
       uai_formation: "0561732D",
       parcoursup_mefs_10: [{ mef10: "mef-41" }, { mef10: "mef-42" }, { mef10: "mef-43" }],
       rome_codes: ["rome-1", "rome-2"],
-      parcoursup_statut: "en attente de publication",
+      parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
       parcoursup_error: null,
       parcoursup_statut_history: [],
       cle_ministere_educatif: "12345-cle4",
@@ -77,7 +78,7 @@ describe(__filename, () => {
       uai_formation: "0280706R",
       parcoursup_mefs_10: [{ mef10: "mef-5" }],
       rome_codes: ["rome-50", "rome-51"],
-      parcoursup_statut: "en attente de publication",
+      parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
       parcoursup_error: null,
       parcoursup_statut_history: [],
       cle_ministere_educatif: "12345-cle5",
@@ -90,7 +91,7 @@ describe(__filename, () => {
       uai_formation: "0692514H",
       parcoursup_mefs_10: [{ mef10: "mef-6" }],
       rome_codes: ["rome-60", "rome-61"],
-      parcoursup_statut: "en attente de publication",
+      parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
       parcoursup_error: "error ws",
       parcoursup_statut_history: [],
       cle_ministere_educatif: "12345-cle6",
@@ -104,7 +105,7 @@ describe(__filename, () => {
       uai_formation: "0783706E",
       parcoursup_mefs_10: [{ mef10: "mef-7" }],
       rome_codes: ["rome-70", "rome-71"],
-      parcoursup_statut: "en attente de publication",
+      parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
       parcoursup_error: "error ws",
       parcoursup_statut_history: [],
       cle_ministere_educatif: "12345-cle7",
@@ -118,7 +119,7 @@ describe(__filename, () => {
       uai_formation: "0631904C",
       parcoursup_mefs_10: [{ mef10: "mef-8" }],
       rome_codes: ["rome-80", "rome-81"],
-      parcoursup_statut: "en attente de publication",
+      parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
       parcoursup_error: null,
       parcoursup_statut_history: [],
       cle_ministere_educatif: "12345-cle8",
@@ -188,7 +189,7 @@ describe(__filename, () => {
       uai_formation: "0320663X",
       parcoursup_mefs_10: [{ mef10: "mef-9" }],
       rome_codes: ["rome-90", "rome-91"],
-      parcoursup_statut: "en attente de publication",
+      parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
       parcoursup_error: null,
       parcoursup_statut_history: [],
       cle_ministere_educatif: "12345-cle9",
@@ -198,7 +199,7 @@ describe(__filename, () => {
 
     await createFormation(f);
 
-    assert.strictEqual(f.parcoursup_statut, "publié");
+    assert.strictEqual(f.parcoursup_statut, PARCOURSUP_STATUS.PUBLIE);
     assert.strictEqual(f.parcoursup_id, "id-ps-1");
   });
 
@@ -212,7 +213,7 @@ describe(__filename, () => {
       uai_formation: "0755331M",
       parcoursup_mefs_10: [{ mef10: "mef-10" }],
       rome_codes: ["rome-100", "rome-101"],
-      parcoursup_statut: "en attente de publication",
+      parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
       parcoursup_error: null,
       parcoursup_statut_history: [],
       cle_ministere_educatif: "12345-cle10",
@@ -222,7 +223,7 @@ describe(__filename, () => {
 
     await createFormation(f);
 
-    assert.strictEqual(f.parcoursup_statut, "en attente de publication");
+    assert.strictEqual(f.parcoursup_statut, PARCOURSUP_STATUS.EN_ATTENTE);
     assert.strictEqual(f.parcoursup_error, "400 erreur de création");
   });
 
@@ -234,13 +235,13 @@ describe(__filename, () => {
       uai_formation: "0330176M",
       parcoursup_mefs_10: [{ mef10: "mef-11" }],
       rome_codes: ["rome-110", "rome-111"],
-      parcoursup_statut: "en attente de publication",
+      parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
       parcoursup_error: null,
       parcoursup_statut_history: [],
       updates_history: [
         {
-          from: { parcoursup_statut: "à publier" },
-          to: { parcoursup_statut: "en attente de publication", last_update_who: "test@beta.gouv.fr" },
+          from: { parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER },
+          to: { parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE, last_update_who: "test@beta.gouv.fr" },
         },
         { from: {}, to: {} },
       ],
@@ -269,13 +270,13 @@ describe(__filename, () => {
       uai_formation: "0541370W",
       parcoursup_mefs_10: [{ mef10: "mef-12-1" }, { mef10: "mef-12-2" }],
       rome_codes: ["rome-120", "rome-121"],
-      parcoursup_statut: "en attente de publication",
+      parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
       parcoursup_error: null,
       parcoursup_statut_history: [],
       updates_history: [
         {
-          from: { parcoursup_statut: "à publier" },
-          to: { parcoursup_statut: "en attente de publication", last_update_who: "test@beta.gouv.fr" },
+          from: { parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER },
+          to: { parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE, last_update_who: "test@beta.gouv.fr" },
         },
         { from: {}, to: {} },
       ],

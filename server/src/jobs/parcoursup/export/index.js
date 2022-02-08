@@ -3,16 +3,12 @@ const logger = require("../../../common/logger");
 const { Formation, User } = require("../../../common/model");
 const parcoursupApi = require("./parcoursupApi");
 const { findLast } = require("lodash");
+const { PARCOURSUP_STATUS } = require("../../../constants/status");
 
 const limit = Number(process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_LIMIT || 50);
 
-const STATUS = {
-  PUBLIE: "publié",
-  EN_ATTENTE: "en attente de publication",
-};
-
 const filter = {
-  parcoursup_statut: STATUS.EN_ATTENTE,
+  parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
   uai_formation: { $ne: null },
   rncp_code: { $ne: null },
 };
@@ -39,7 +35,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const findPublishUser = async (updates_history) => {
   const modification = findLast(updates_history, ({ to }) => {
-    return to?.parcoursup_statut === STATUS.EN_ATTENTE;
+    return to?.parcoursup_statut === PARCOURSUP_STATUS.EN_ATTENTE;
   });
 
   if (modification?.to?.last_update_who) {
@@ -92,12 +88,12 @@ const createFormation = async (formation, email = null) => {
     }
 
     formation.parcoursup_id = response.g_ta_cod;
-    formation.parcoursup_statut = STATUS.PUBLIE;
+    formation.parcoursup_statut = PARCOURSUP_STATUS.PUBLIE;
     formation.last_update_at = Date.now();
     formation.last_update_who = `web service Parcoursup${email ? `, sent by ${email}` : ""}`;
     formation.parcoursup_statut_history.push({
       date: new Date(),
-      parcoursup_statut: STATUS.PUBLIE,
+      parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
       last_update_who: `web service Parcoursup${email ? `, sent by ${email}` : ""}`,
     });
     formation.parcoursup_error = null;

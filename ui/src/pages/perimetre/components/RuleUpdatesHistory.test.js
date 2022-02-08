@@ -1,6 +1,7 @@
 import React from "react";
 import { RuleUpdatesHistory } from "./RuleUpdatesHistory";
 import { render } from "@testing-library/react";
+import { PARCOURSUP_STATUS } from "../../../constants/status";
 
 test("should display the object value in a human friendly way", async () => {
   const ruleHistory = {
@@ -9,7 +10,7 @@ test("should display the object value in a human friendly way", async () => {
     nom_regle_complementaire: "ma regle de test",
     last_update_who: "mna",
     condition_integration: "peut intégrer",
-    statut: "à publier",
+    statut: PARCOURSUP_STATUS.A_PUBLIER,
     diplome: "CAP",
     niveau: "3 BAC",
     unknown_key: "hello",

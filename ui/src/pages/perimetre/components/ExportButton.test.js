@@ -2,6 +2,7 @@ import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import { downloadCSV } from "../../../common/utils/downloadUtils";
 import { ExportButton } from "./ExportButton";
+import { PARCOURSUP_STATUS } from "../../../constants/status";
 
 jest.mock("../../../common/utils/downloadUtils", () => {
   const originalModule = jest.requireActual("../../../common/utils/downloadUtils");
@@ -24,7 +25,7 @@ test("should call exportCSV on click", () => {
     {
       niveau: "3",
       diplome: "BTS",
-      statut: "à publier",
+      statut: PARCOURSUP_STATUS.A_PUBLIER,
       statut_academies: {
         1: "autre statut",
       },

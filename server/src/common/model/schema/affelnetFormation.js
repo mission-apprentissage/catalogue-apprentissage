@@ -1,9 +1,9 @@
-const afFormationSchema = {
-  // Etablissement
-  id_mna: {
+const affelnetFormationSchema = {
+  cle_ministere_educatif: {
+    index: true,
     type: String,
     default: null,
-    description: "id mna temporaire",
+    description: "Clé unique de la formation (pour envoi aux ministères éducatifs)",
   },
   uai: {
     index: true,
@@ -118,12 +118,6 @@ const afFormationSchema = {
     default: null,
     description: "libellé BAN de la formation",
   },
-  code_cfd: {
-    index: true,
-    type: String,
-    default: null,
-    description: "code formation diplôme de la formation",
-  },
   code_mef: {
     type: String,
     default: null,
@@ -213,27 +207,12 @@ const afFormationSchema = {
     default: [],
     description: "tableau des matching des formations catalogue",
   },
-  matching_mna_etablissement: {
-    type: Array,
-    default: [],
-    description: "tableau des matching des établissement catalogue",
-  },
   matching_type: {
     index: true,
     type: String,
     default: null,
     description: "force du matching",
   },
-  etat_reconciliation: {
-    type: Boolean,
-    default: false,
-    description: "Etat de la réconciliation de la formation",
-  },
-  no_uai: {
-    type: Boolean,
-    default: false,
-    description: "La formation catalogue n'a aucun uai renseigné",
-  },
 };
 
-module.exports = afFormationSchema;
+module.exports = affelnetFormationSchema;

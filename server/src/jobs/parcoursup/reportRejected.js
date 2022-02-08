@@ -3,7 +3,7 @@ const { runScript } = require("../scriptWrapper");
 
 const report = require("../../logic/reporter/report");
 const config = require("config");
-const { PsFormation } = require("../../common/model");
+const { ParcoursupFormation } = require("../../common/model");
 const { storeByChunks } = require("../../common/utils/reportUtils");
 
 const createRejectedReport = async (summary, rejetes) => {
@@ -27,12 +27,12 @@ const reportRejected = async () => {
   try {
     console.log(" -- Start of Repports reconciliation rejected -- ");
 
-    const countTotal = await PsFormation.countDocuments({});
-    const countAutomatique = await PsFormation.countDocuments({ statut_reconciliation: "AUTOMATIQUE" });
-    const countAVerifier = await PsFormation.countDocuments({ statut_reconciliation: "A_VERIFIER" });
-    const rejetes = await PsFormation.find({ statut_reconciliation: "REJETE" }).lean();
-    const countInconnu = await PsFormation.countDocuments({ statut_reconciliation: "INCONNU" });
-    const countValide = await PsFormation.countDocuments({ statut_reconciliation: "VALIDE" });
+    const countTotal = await ParcoursupFormation.countDocuments({});
+    const countAutomatique = await ParcoursupFormation.countDocuments({ statut_reconciliation: "AUTOMATIQUE" });
+    const countAVerifier = await ParcoursupFormation.countDocuments({ statut_reconciliation: "A_VERIFIER" });
+    const rejetes = await ParcoursupFormation.find({ statut_reconciliation: "REJETE" }).lean();
+    const countInconnu = await ParcoursupFormation.countDocuments({ statut_reconciliation: "INCONNU" });
+    const countValide = await ParcoursupFormation.countDocuments({ statut_reconciliation: "VALIDE" });
 
     const cleannedData = rejetes.map(
       ({

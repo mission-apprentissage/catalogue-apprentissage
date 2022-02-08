@@ -23,8 +23,6 @@
     "psup:import-2021": "standalone=true node src/jobs/parcoursup/importer.js",
     "psup:report": "standalone=true node src/jobs/parcoursup/reportRejected.js",
     "psup:export": "standalone=true node src/jobs/parcoursup/export/index.js",
-    "affelnet:import": "standalone=true node src/jobs/oneshot/afFormation/index.js",
-    "affelnet:missing-cfd": "standalone=true node src/jobs/oneshot/afFormation/missingCfd.js",
     "rcoFormation:duplicate": "standalone=true node src/jobs/oneshot/findRcoDuplicates/index.js",
     "hydratecfdentree": "standalone=true node src/jobs/parcoursup/_hydrateCfdEntree.js",
     "migrateRaisonsRejet": "standalone=true node src/jobs/parcoursup/_migrationRaisonsRejet.js",
@@ -89,7 +87,6 @@
     "passport-local": "1.0.0",
     "require-all": "3.0.0",
     "sha512crypt-node": "0.1.0",
-    "string-similarity": "4.0.4",
     "swagger-jsdoc": "6.0.1",
     "swagger-ui-express": "4.1.6",
     "xlsx": "0.16.9"
