@@ -21,21 +21,6 @@ const etablissementFormateurInfo = {
     default: null,
     description: "UAI de l'etablissement formateur",
   },
-  etablissement_formateur_type: {
-    type: String,
-    default: null,
-    description: "Etablissement formateur est un CFA ou un OF",
-  },
-  etablissement_formateur_conventionne: {
-    type: String,
-    default: null,
-    description: "Etablissement formateur est conventionné ou pas",
-  },
-  etablissement_formateur_declare_prefecture: {
-    type: String,
-    default: null,
-    description: "Etablissement formateur est déclaré en prefecture",
-  },
   etablissement_formateur_published: {
     type: Boolean,
     default: false,

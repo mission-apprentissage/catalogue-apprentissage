@@ -1,6 +1,5 @@
 const formation = {
   etablissement_reference: 1,
-  etablissement_reference_type: 1,
   etablissement_formateur_siret: 1,
   etablissement_formateur_enseigne: 1,
   etablissement_formateur_uai: 1,

@@ -1,10 +1,10 @@
 const { runScript } = require("../scriptWrapper");
-const { PsFormation } = require("../../common/model");
+const { ParcoursupFormation } = require("../../common/model");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 
 const run = async () => {
-  PsFormation.pauseAllMongoosaticHooks();
-  const dataset = await PsFormation.find(
+  ParcoursupFormation.pauseAllMongoosaticHooks();
+  const dataset = await ParcoursupFormation.find(
     {},
     { matching_rejete_raison: 1, rapprochement_rejete_raisons: 1, rapprochement_rejete_raison_autre: 1 }
   );

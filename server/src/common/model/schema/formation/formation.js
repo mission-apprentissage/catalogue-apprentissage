@@ -1,7 +1,21 @@
+const mongoose = require("mongoose");
 const { isValideUAI } = require("@mission-apprentissage/tco-service-node");
 const etablissementFormateurInfo = require("./etablissement.formateur.sub");
 const etablissementGestionnaireInfo = require("./etablissement.gestionnaire.sub");
 const etablissementReferenceInfo = require("./etablissement.reference.sub");
+
+const mefSchema = new mongoose.Schema({
+  mef10: {
+    index: true,
+    type: String,
+  },
+  modalite: {
+    type: new mongoose.Schema({
+      duree: String,
+      annee: String,
+    }),
+  },
+});
 
 const formationSchema = {
   cle_ministere_educatif: {
@@ -39,12 +53,12 @@ const formationSchema = {
     description: "Code formation diplome d'entrée (année 1 de l'apprentissage)",
   },
   affelnet_mefs_10: {
-    type: [Object],
+    type: [mefSchema],
     default: [],
     description: "Tableau de Code MEF 10 caractères et modalités (filtrés pour Affelnet si applicable)",
   },
   parcoursup_mefs_10: {
-    type: [Object],
+    type: [mefSchema],
     default: [],
     description: "Tableau de Code MEF 10 caractères et modalités (filtrés pour Parcoursup si applicable)",
   },
@@ -521,7 +535,7 @@ const formationSchema = {
     description: "Affelnet : raison de dépublication",
   },
   bcn_mefs_10: {
-    type: [Object],
+    type: [mefSchema],
     default: null,
     description: "BCN : Codes MEF 10 caractères",
   },

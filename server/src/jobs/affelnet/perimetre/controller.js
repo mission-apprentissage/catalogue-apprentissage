@@ -4,6 +4,7 @@ const { getQueryFromRule } = require("../../../common/utils/rulesUtils");
 const { ReglePerimetre } = require("../../../common/model");
 const { updateTagsHistory } = require("../../../logic/updaters/tagsHistoryUpdater");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
+const { AFFELNET_STATUS } = require("../../../constants/status");
 
 const run = async () => {
   // set "hors périmètre"
@@ -17,25 +18,25 @@ const run = async () => {
         { cfd_outdated: true },
       ],
     },
-    { $set: { affelnet_statut: "hors périmètre" } }
+    { $set: { affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE } }
   );
 
   // set "à publier (soumis à validation)" for trainings matching affelnet eligibility rules
   // reset "à publier" & "à publier (soumis à validation)"
   await Formation.updateMany(
     {
-      affelnet_statut: { $in: ["à publier (soumis à validation)", "à publier"] },
+      affelnet_statut: { $in: [AFFELNET_STATUS.A_PUBLIER_VALIDATION, AFFELNET_STATUS.A_PUBLIER] },
     },
-    { $set: { affelnet_statut: "hors périmètre" } }
+    { $set: { affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE } }
   );
 
   // run only on those 'hors périmètre' to not overwrite actions of users !
   const filterHP = {
-    affelnet_statut: "hors périmètre",
+    affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
   };
   const aPublierSoumisAValidationRules = await ReglePerimetre.find({
     plateforme: "affelnet",
-    statut: "à publier (soumis à validation)",
+    statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
     is_deleted: { $ne: true },
   }).lean();
 
@@ -44,18 +45,18 @@ const run = async () => {
       ...filterHP,
       $or: aPublierSoumisAValidationRules.map(getQueryFromRule),
     },
-    { $set: { last_update_at: Date.now(), affelnet_statut: "à publier (soumis à validation)" } }
+    { $set: { last_update_at: Date.now(), affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION } }
   );
 
   //  set "à publier" for trainings matching affelnet eligibility rules
   // run only on those "hors périmètre" & "à publier (soumis à validation)" to not overwrite actions of users !
   const filter = {
-    affelnet_statut: { $in: ["hors périmètre", "à publier (soumis à validation)"] },
+    affelnet_statut: { $in: [AFFELNET_STATUS.HORS_PERIMETRE, AFFELNET_STATUS.A_PUBLIER_VALIDATION] },
   };
 
   const aPublierRules = await ReglePerimetre.find({
     plateforme: "affelnet",
-    statut: "à publier",
+    statut: AFFELNET_STATUS.A_PUBLIER,
     is_deleted: { $ne: true },
   }).lean();
 
@@ -64,7 +65,7 @@ const run = async () => {
       ...filter,
       $or: aPublierRules.map(getQueryFromRule),
     },
-    { $set: { last_update_at: Date.now(), affelnet_statut: "à publier" } }
+    { $set: { last_update_at: Date.now(), affelnet_statut: AFFELNET_STATUS.A_PUBLIER } }
   );
 
   // apply academy rules
@@ -77,7 +78,7 @@ const run = async () => {
       await Formation.updateMany(
         {
           affelnet_statut: {
-            $in: ["hors périmètre", "à publier (soumis à validation)", "à publier"],
+            $in: [AFFELNET_STATUS.HORS_PERIMETRE, AFFELNET_STATUS.A_PUBLIER_VALIDATION, AFFELNET_STATUS.A_PUBLIER],
           },
           num_academie,
           ...getQueryFromRule(rule),
@@ -94,27 +95,27 @@ const run = async () => {
   const totalPublished = await Formation.countDocuments({ published: true });
   const totalNotRelevant = await Formation.countDocuments({
     published: true,
-    affelnet_statut: "hors périmètre",
+    affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
   });
   const totalToValidate = await Formation.countDocuments({
     published: true,
-    affelnet_statut: "à publier (soumis à validation)",
+    affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
   });
   const totalToCheck = await Formation.countDocuments({
     published: true,
-    affelnet_statut: "à publier",
+    affelnet_statut: AFFELNET_STATUS.A_PUBLIER,
   });
   const totalPending = await Formation.countDocuments({
     published: true,
-    affelnet_statut: "en attente de publication",
+    affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
   });
   const totalAfPublished = await Formation.countDocuments({
     published: true,
-    affelnet_statut: "publié",
+    affelnet_statut: AFFELNET_STATUS.PUBLIE,
   });
   const totalAfNotPublished = await Formation.countDocuments({
     published: true,
-    affelnet_statut: "non publié",
+    affelnet_statut: AFFELNET_STATUS.NON_PUBLIE,
   });
 
   logger.info(

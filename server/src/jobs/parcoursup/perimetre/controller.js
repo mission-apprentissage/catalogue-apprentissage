@@ -4,6 +4,7 @@ const { getQueryFromRule } = require("../../../common/utils/rulesUtils");
 const { ReglePerimetre } = require("../../../common/model");
 const { updateTagsHistory } = require("../../../logic/updaters/tagsHistoryUpdater");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
+const { PARCOURSUP_STATUS } = require("../../../constants/status");
 
 const run = async () => {
   // 1 - set "hors périmètre"
@@ -15,10 +16,10 @@ const run = async () => {
         { etablissement_reference_catalogue_published: false },
         { published: false },
         { cfd_outdated: true },
-        { parcoursup_id: null, parcoursup_statut: "publié" },
+        { parcoursup_id: null, parcoursup_statut: PARCOURSUP_STATUS.PUBLIE },
       ],
     },
-    { $set: { parcoursup_statut: "hors périmètre" } }
+    { $set: { parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE } }
   );
 
   // set "publié"
@@ -27,9 +28,9 @@ const run = async () => {
       published: true,
       etablissement_reference_catalogue_published: true,
       parcoursup_id: { $ne: null },
-      parcoursup_statut: { $ne: "non publié" },
+      parcoursup_statut: { $ne: PARCOURSUP_STATUS.NON_PUBLIE },
     },
-    { $set: { parcoursup_statut: "publié" } }
+    { $set: { parcoursup_statut: PARCOURSUP_STATUS.PUBLIE } }
   );
 
   // set "à publier (vérifier accès direct postbac)" & "à publier (soumis à validation Recteur)" for trainings matching psup eligibility rules
@@ -38,25 +39,24 @@ const run = async () => {
     {
       parcoursup_statut: {
         $in: [
-          "à publier (sous condition habilitation)",
-          "à publier (soumis à validation)",
-          "à publier (vérifier accès direct postbac)",
-          "à publier (soumis à validation Recteur)",
-          "à publier",
+          PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
+          PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
+          PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+          PARCOURSUP_STATUS.A_PUBLIER,
         ],
       },
     },
-    { $set: { parcoursup_statut: "hors périmètre" } }
+    { $set: { parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE } }
   );
 
   // run only on those 'hors périmètre' to not overwrite actions of users !
   const filterHP = {
-    parcoursup_statut: "hors périmètre",
+    parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
   };
 
   const aPublierHabilitationRules = await ReglePerimetre.find({
     plateforme: "parcoursup",
-    statut: "à publier (sous condition habilitation)",
+    statut: PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
     is_deleted: { $ne: true },
   }).lean();
 
@@ -69,14 +69,14 @@ const run = async () => {
       {
         $set: {
           last_update_at: Date.now(),
-          parcoursup_statut: "à publier (sous condition habilitation)",
+          parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
         },
       }
     ));
 
   const aPublierVerifierAccesDirectPostBacRules = await ReglePerimetre.find({
     plateforme: "parcoursup",
-    statut: "à publier (vérifier accès direct postbac)",
+    statut: PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
     is_deleted: { $ne: true },
   }).lean();
 
@@ -89,14 +89,14 @@ const run = async () => {
       {
         $set: {
           last_update_at: Date.now(),
-          parcoursup_statut: "à publier (vérifier accès direct postbac)",
+          parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
         },
       }
     ));
 
   const aPublierValidationRecteurRules = await ReglePerimetre.find({
     plateforme: "parcoursup",
-    statut: "à publier (soumis à validation Recteur)",
+    statut: PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
     is_deleted: { $ne: true },
   }).lean();
 
@@ -109,7 +109,7 @@ const run = async () => {
       {
         $set: {
           last_update_at: Date.now(),
-          parcoursup_statut: "à publier (soumis à validation Recteur)",
+          parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
         },
       }
     ));
@@ -118,13 +118,17 @@ const run = async () => {
   // run only on those 'hors périmètre' to not overwrite actions of users !
   const filter = {
     parcoursup_statut: {
-      $in: ["hors périmètre", "à publier (vérifier accès direct postbac)", "à publier (soumis à validation Recteur)"],
+      $in: [
+        PARCOURSUP_STATUS.HORS_PERIMETRE,
+        PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
+        PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+      ],
     },
   };
 
   const aPublierRules = await ReglePerimetre.find({
     plateforme: "parcoursup",
-    statut: "à publier",
+    statut: PARCOURSUP_STATUS.A_PUBLIER,
     is_deleted: { $ne: true },
   }).lean();
 
@@ -134,7 +138,7 @@ const run = async () => {
         ...filter,
         $or: aPublierRules.map(getQueryFromRule),
       },
-      { $set: { last_update_at: Date.now(), parcoursup_statut: "à publier" } }
+      { $set: { last_update_at: Date.now(), parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER } }
     ));
 
   // apply academy rules
@@ -151,11 +155,11 @@ const run = async () => {
         {
           parcoursup_statut: {
             $in: [
-              "hors périmètre",
-              "à publier (sous condition habilitation)",
-              "à publier (vérifier accès direct postbac)",
-              "à publier (soumis à validation Recteur)",
-              "à publier",
+              PARCOURSUP_STATUS.HORS_PERIMETRE,
+              PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
+              PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
+              PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+              PARCOURSUP_STATUS.A_PUBLIER,
             ],
           },
           num_academie,
@@ -173,35 +177,35 @@ const run = async () => {
   const totalPublished = await Formation.countDocuments({ published: true });
   const totalNotRelevant = await Formation.countDocuments({
     published: true,
-    parcoursup_statut: "hors périmètre",
+    parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
   });
   const totalToValidateHabilitation = await Formation.countDocuments({
     published: true,
-    parcoursup_statut: "à publier (sous condition habilitation)",
+    parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
   });
   const totalToValidate = await Formation.countDocuments({
     published: true,
-    parcoursup_statut: "à publier (vérifier accès direct postbac)",
+    parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
   });
   const totalToValidateRecteur = await Formation.countDocuments({
     published: true,
-    parcoursup_statut: "à publier (soumis à validation Recteur)",
+    parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
   });
   const totalToCheck = await Formation.countDocuments({
     published: true,
-    parcoursup_statut: "à publier",
+    parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER,
   });
   const totalPending = await Formation.countDocuments({
     published: true,
-    parcoursup_statut: "en attente de publication",
+    parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
   });
   const totalPsPublished = await Formation.countDocuments({
     published: true,
-    parcoursup_statut: "publié",
+    parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
   });
   const totalPsNotPublished = await Formation.countDocuments({
     published: true,
-    parcoursup_statut: "non publié",
+    parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIE,
   });
 
   logger.info(

@@ -4,21 +4,6 @@ const etablissementReferenceInfo = {
     default: null,
     description: "Etablissement reference  est soit formateur soit le gestionnaire",
   },
-  etablissement_reference_type: {
-    type: String,
-    default: null,
-    description: "Etablissement reference est un CFA ou un OF",
-  },
-  etablissement_reference_conventionne: {
-    type: String,
-    default: null,
-    description: "Etablissement reference est conventionné ou pas",
-  },
-  etablissement_reference_declare_prefecture: {
-    type: String,
-    default: null,
-    description: "Etablissement reference est déclaré en prefecture",
-  },
   etablissement_reference_published: {
     type: Boolean,
     default: false,

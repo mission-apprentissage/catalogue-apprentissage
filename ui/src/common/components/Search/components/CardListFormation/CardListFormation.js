@@ -11,7 +11,7 @@ export const CardListFormation = ({ data }) => {
   let [auth] = useAuth();
 
   return (
-    <Link as={NavLink} to={`/formation/${data._id}`} variant="card" mt={4} isExternal>
+    <Link as={NavLink} to={`/formation/${data._id}`} variant="card" mt={4}>
       <Flex display={["none", "flex"]} textStyle="xs" justifyContent="space-between">
         <Text>{data.etablissement_gestionnaire_entreprise_raison_sociale}</Text>
         <Text>CFD : {data.cfd}</Text>

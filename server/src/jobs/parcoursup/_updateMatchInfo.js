@@ -1,9 +1,9 @@
 const { runScript } = require("../scriptWrapper");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
-const { PsFormation, Formation } = require("../../common/model");
+const { ParcoursupFormation, Formation } = require("../../common/model");
 
 async function update() {
-  const dataset = await PsFormation.find({}).lean();
+  const dataset = await ParcoursupFormation.find({}).lean();
 
   await asyncForEach(dataset, async (psFormation) => {
     const { _id, matching_mna_formation } = psFormation;
@@ -21,7 +21,7 @@ async function update() {
       }
     });
 
-    await PsFormation.findOneAndUpdate(
+    await ParcoursupFormation.findOneAndUpdate(
       { _id },
       {
         matching_mna_formation: matchs,

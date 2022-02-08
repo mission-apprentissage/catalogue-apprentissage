@@ -24,7 +24,7 @@ import useAuth from "../../hooks/useAuth";
 import * as Yup from "yup";
 import { ArrowRightLine, Close } from "../../../theme/components/icons";
 import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
-import { updateFormation, updateReconciliationAffelnet, updateReconciliationParcoursup } from "../../api/formation";
+import { updateFormation, updateReconciliationParcoursup } from "../../api/formation";
 
 const getPublishRadioValue = (status) => {
   if ([COMMON_STATUS.PUBLIE, COMMON_STATUS.EN_ATTENTE].includes(status)) {
@@ -46,9 +46,7 @@ const getSubmitBody = ({
   parcoursup_raison_depublication,
 }) => {
   const body = {};
-  let shouldRemoveAfReconciliation = false;
   let shouldRemovePsReconciliation = false;
-  let shouldRestoreAfReconciliation = false;
   let shouldRestorePsReconciliation = false;
 
   // check if can edit depending on the status
@@ -61,7 +59,6 @@ const getSubmitBody = ({
       body.affelnet_statut = AFFELNET_STATUS.EN_ATTENTE;
       body.affelnet_infos_offre = affelnet_infos_offre;
       body.affelnet_raison_depublication = null;
-      shouldRestoreAfReconciliation = formation.affelnet_statut === AFFELNET_STATUS.NON_PUBLIE;
     } else if ([AFFELNET_STATUS.PUBLIE].includes(formation?.affelnet_statut)) {
       body.affelnet_infos_offre = affelnet_infos_offre;
     }
@@ -76,9 +73,6 @@ const getSubmitBody = ({
     ) {
       body.affelnet_raison_depublication = affelnet_raison_depublication;
       body.affelnet_statut = AFFELNET_STATUS.NON_PUBLIE;
-      shouldRemoveAfReconciliation = [AFFELNET_STATUS.EN_ATTENTE, AFFELNET_STATUS.PUBLIE].includes(
-        formation.affelnet_statut
-      );
     }
   }
 
@@ -116,32 +110,20 @@ const getSubmitBody = ({
   }
   return {
     body,
-    shouldRestoreAfReconciliation,
     shouldRestorePsReconciliation,
-    shouldRemoveAfReconciliation,
     shouldRemovePsReconciliation,
   };
 };
 
 const updateFormationAndReconciliation = async ({
   body,
-  shouldRestoreAfReconciliation,
   shouldRestorePsReconciliation,
-  shouldRemoveAfReconciliation,
   shouldRemovePsReconciliation,
   formation,
   user,
   onFormationUpdate,
 }) => {
   const updatedFormation = await updateFormation({ formation, body, user });
-
-  if (shouldRemoveAfReconciliation || shouldRestoreAfReconciliation) {
-    try {
-      await updateReconciliationAffelnet({ formation, shouldRemoveAfReconciliation, user });
-    } catch (e) {
-      // do nothing
-    }
-  }
 
   if (shouldRemovePsReconciliation || shouldRestorePsReconciliation) {
     try {
