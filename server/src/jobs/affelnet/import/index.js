@@ -1,7 +1,7 @@
 const logger = require("../../../common/logger");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { getJsonFromXlsxFile } = require("../../../common/utils/fileUtils");
-const { AfFormation } = require("../../../common/model");
+const { AffelnetFormation } = require("../../../common/model");
 
 const FILE_PATH = "/data/uploads/affelnet-import.xlsx";
 
@@ -11,7 +11,7 @@ const importAffelnetFormations = async () => {
 
   logger.info(`${data.length} formations récupérées du fichier excel, début de l'enregistrement...`);
 
-  await AfFormation.deleteMany({});
+  await AffelnetFormation.deleteMany({});
 
   await asyncForEach(data, async (item) => {
     try {
@@ -22,7 +22,7 @@ const importAffelnetFormations = async () => {
       const code_specialite = item["CODE_SPECIALITE"]?.trim();
       const cle_ministere_educatif = item["CLE_MINISTERE_EDUCATIF"]?.trim();
 
-      await AfFormation.create({
+      await AffelnetFormation.create({
         cle_ministere_educatif,
         uai,
         libelle_type_etablissement: item["LIBELLE_TYPE_ETABLISSEMENT"]?.trim(),

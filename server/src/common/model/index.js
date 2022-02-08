@@ -27,7 +27,7 @@ module.exports = {
   }),
   Report: createModel("report", schema.reportSchema),
   Log: createModel("log", schema.logSchema),
-  AfFormation: createModel("afformation", schema.afFormationSchema),
+  AffelnetFormation: createModel("affelnetformation", schema.affelnetFormationSchema),
   Etablissement: createModel("etablissement", schema.etablissementSchema, {
     esIndexName: "etablissements",
     createMongoDBIndexes: (schema) => {

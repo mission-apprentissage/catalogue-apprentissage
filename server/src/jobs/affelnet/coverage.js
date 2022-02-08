@@ -1,13 +1,13 @@
 const { getAffelnetCoverage } = require("../../logic/controller/coverage");
 const { paginator } = require("../../common/utils/paginator");
-const { AfFormation, Formation } = require("../../common/model");
+const { AffelnetFormation, Formation } = require("../../common/model");
 const { runScript } = require("../scriptWrapper");
 const logger = require("../../common/logger");
 const { reconciliationAffelnet } = require("../../logic/controller/reconciliation");
 
 const formation = async () => {
   await paginator(
-    AfFormation,
+    AffelnetFormation,
     { filter: { code_mef: { $nin: [null, "AFFECTATION"] }, uai: { $ne: null } }, limit: 100 },
     async (formation) => {
       let match = await getAffelnetCoverage(formation);
@@ -29,7 +29,7 @@ const afCoverage = async () => {
   logger.info("Start Affelnet coverage");
 
   // reset matching first
-  await AfFormation.updateMany(
+  await AffelnetFormation.updateMany(
     {},
     {
       $set: {

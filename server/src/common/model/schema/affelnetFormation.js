@@ -1,4 +1,4 @@
-const afFormationSchema = {
+const affelnetFormationSchema = {
   cle_ministere_educatif: {
     index: true,
     type: String,
@@ -215,4 +215,4 @@ const afFormationSchema = {
   },
 };
 
-module.exports = afFormationSchema;
+module.exports = affelnetFormationSchema;

@@ -1,4 +1,4 @@
-const { AfFormation } = require("../../../common/model");
+const { AffelnetFormation } = require("../../../common/model");
 const { runScript } = require("../../scriptWrapper");
 const logger = require("../../../common/logger");
 const XLSX = require("xlsx");
@@ -7,7 +7,7 @@ const path = require("path");
 runScript(async () => {
   logger.info(`Start affelnet export`);
 
-  const formations = await AfFormation.find({ code_cfd: { $eq: null } }).lean();
+  const formations = await AffelnetFormation.find({ code_cfd: { $eq: null } }).lean();
   console.log("formations.length", formations.length);
 
   const workbook = XLSX.utils.book_new();
