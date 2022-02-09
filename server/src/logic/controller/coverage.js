@@ -201,8 +201,8 @@ async function getParcoursupCoverage(formation) {
  * Puis si on trouve 1 seul match & que la formation Affelnet a 1 uai, on met le match à "publié"
  *
  * m5 = mef + departement + code postal + uai
- * m4 = mef + departement + code postal
- * m3 = mef + departement + uai
+ * m4 = mef + departement + uai
+ * m3 = mef + departement + code postal
  * m3' = mef + uai
  * m2 = mef + departement
  * m1 = mef
@@ -219,17 +219,7 @@ async function getAffelnetCoverage({ code_postal: cp, code_mef, uai }) {
 
   const m2 = m1.filter(({ num_departement }) => deptArr.includes(num_departement));
 
-  const m3 = m2.filter(({ uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai }) => {
-    return [uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai].includes(uai);
-  });
-
-  // m3bis is alternative filtering than m3 (not based on m2 but m1)
-  const m3bis = m1.filter(({ uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai }) => {
-    return [uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai].includes(uai);
-  });
-
-  // m4 is alternative filtering than m3 (not based on m3 but m2)
-  const m4 = m2.filter(
+  const m3 = m2.filter(
     ({
       etablissement_formateur_code_postal,
       etablissement_gestionnaire_code_postal,
@@ -249,7 +239,16 @@ async function getAffelnetCoverage({ code_postal: cp, code_mef, uai }) {
     }
   );
 
-  const m5 = m4.filter(({ uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai }) => {
+  // m3bis is alternative filtering than m3 (not based on m2 but m1)
+  const m3bis = m1.filter(({ uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai }) => {
+    return [uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai].includes(uai);
+  });
+
+  const m4 = m2.filter(({ uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai }) => {
+    return [uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai].includes(uai);
+  });
+
+  const m5 = m3.filter(({ uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai }) => {
     return [uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai].includes(uai);
   });
 
