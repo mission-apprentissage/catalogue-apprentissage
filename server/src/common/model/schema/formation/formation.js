@@ -4,18 +4,24 @@ const etablissementFormateurInfo = require("./etablissement.formateur.sub");
 const etablissementGestionnaireInfo = require("./etablissement.gestionnaire.sub");
 const etablissementReferenceInfo = require("./etablissement.reference.sub");
 
-const mefSchema = new mongoose.Schema({
-  mef10: {
-    index: true,
-    type: String,
+const mefSchema = new mongoose.Schema(
+  {
+    mef10: {
+      index: true,
+      type: String,
+    },
+    modalite: {
+      type: new mongoose.Schema(
+        {
+          duree: String,
+          annee: String,
+        },
+        { _id: false }
+      ),
+    },
   },
-  modalite: {
-    type: new mongoose.Schema({
-      duree: String,
-      annee: String,
-    }),
-  },
-});
+  { _id: false }
+);
 
 const formationSchema = {
   cle_ministere_educatif: {
