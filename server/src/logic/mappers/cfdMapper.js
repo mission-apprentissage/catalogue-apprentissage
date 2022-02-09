@@ -26,7 +26,6 @@ const cfdMapper = async (cfd = null, options = { onisep: true }) => {
     if (!cfdInfo) {
       return {
         result: null,
-        // serviceAvailable,
         messages: {
           error: `Unable to retrieve data from cfd ${cfd}`,
         },
@@ -135,14 +134,12 @@ const cfdMapper = async (cfd = null, options = { onisep: true }) => {
         libelle_court: result.libelle_court,
         niveau_formation_diplome: result.niveau_formation_diplome,
       },
-      // serviceAvailable,
       messages,
     };
   } catch (e) {
     logger.error(e);
     return {
       result: null,
-      // serviceAvailable: true,
       messages: {
         error: e.toString(),
       },

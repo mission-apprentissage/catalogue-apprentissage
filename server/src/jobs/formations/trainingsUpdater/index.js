@@ -8,26 +8,14 @@ const config = require("config");
 
 const managedUnPublishedRcoFormation = async () => {
   // if rco formation is not published, don't call mnaUpdater
-  // since we just want to hide the formation
+  // since we just want to delete the formation
 
   const rcoFormationNotPublishedIds = await RcoFormation.distinct("cle_ministere_educatif", { published: false });
-  await Formation.updateMany(
-    { cle_ministere_educatif: { $in: [...rcoFormationNotPublishedIds, null] } },
-    {
-      $set: {
-        published: false,
-        rco_published: false,
-        update_error: null,
-        to_update: false,
-      },
-    }
-  );
-
-  return [...rcoFormationNotPublishedIds, null];
+  await Formation.deleteMany({ cle_ministere_educatif: { $in: [...rcoFormationNotPublishedIds, null] } });
 };
 
 const createReport = async (
-  { invalidFormations, updatedFormations, noUpdatedFormations, unpublishedFormations },
+  { invalidFormations, updatedFormations, noUpdatedFormations },
   uuidReport,
   noMail = false
 ) => {
@@ -35,7 +23,6 @@ const createReport = async (
     invalidCount: invalidFormations.length,
     updatedCount: updatedFormations.length,
     notUpdatedCount: noUpdatedFormations.length,
-    unpublishedCount: unpublishedFormations.length,
   };
 
   // save report in db
@@ -44,7 +31,6 @@ const createReport = async (
 
   await storeByChunks(type, date, summary, "updated", updatedFormations, uuidReport);
   await storeByChunks(type, date, summary, "noupdated", noUpdatedFormations, uuidReport);
-  await storeByChunks(type, date, summary, "unpublished", unpublishedFormations, uuidReport);
   await storeByChunks(`${type}.error`, date, summary, "errors", invalidFormations, uuidReport);
 
   let link = `${config.publicUrl}/report?type=${type}&date=${date}`;
@@ -80,9 +66,8 @@ const trainingsUpdater = async ({ withCodePostalUpdate, noUpdatesFilters, uuidRe
         ],
       };
 
-  const idsUnPublishedToSkip = await managedUnPublishedRcoFormation();
-  const idFilter = { cle_ministere_educatif: { $nin: idsUnPublishedToSkip } };
-  const activeFilterTmp = { ...filter, ...idFilter }; // warn:  won't work if filter contain cle_ministere_educatif key
+  await managedUnPublishedRcoFormation();
+  const activeFilterTmp = { ...filter };
 
   let allIds = await Formation.distinct("cle_ministere_educatif", activeFilterTmp);
   const activeFilter = { cle_ministere_educatif: { $in: allIds } }; // Avoid issues when the updater modifies a field which is in the filters
@@ -95,7 +80,7 @@ const trainingsUpdater = async ({ withCodePostalUpdate, noUpdatesFilters, uuidRe
     `Results total, invalidFormations: ${result.invalidFormations.length}, updatedFormations: ${result.updatedFormations.length}, noUpdatedFormations: ${result.noUpdatedFormations.length}`
   );
 
-  await createReport({ ...result, unpublishedFormations: idsUnPublishedToSkip }, uuidReport, noMail);
+  await createReport(result, uuidReport, noMail);
   await createReportNewDiplomeGrandAge(result.formationsGrandAge, uuidReport, noMail);
 
   await SandboxFormation.deleteMany({});
