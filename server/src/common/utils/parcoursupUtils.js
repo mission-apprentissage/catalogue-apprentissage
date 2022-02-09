@@ -4,8 +4,13 @@ const FILE_PATH = "/data/uploads/mefs-parcoursup.csv";
 let mefsAllowedOnParcoursup = null;
 
 const loadMefsAllowedOnParcoursup = (jsonData = null) => {
-  const lines = jsonData ?? csvToJson.getJsonFromCsv(FILE_PATH);
-  mefsAllowedOnParcoursup = lines.map(({ MEF }) => MEF.trim());
+  try {
+    const lines = jsonData ?? csvToJson.getJsonFromCsv(FILE_PATH);
+    mefsAllowedOnParcoursup = lines.map(({ MEF }) => MEF.trim());
+  } catch (e) {
+    console.error(e);
+    mefsAllowedOnParcoursup = [];
+  }
 };
 
 const findMefsForParcoursup = ({ bcn_mefs_10 }) => {
