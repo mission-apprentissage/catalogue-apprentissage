@@ -55,24 +55,6 @@ const columnsDefinition = [
     exportable: true,
   },
   {
-    Header: "CFA ou OFA ? ",
-    accessor: "computed_type",
-    width: 200,
-    exportable: true,
-  },
-  {
-    Header: "CFA conventionne ? ",
-    accessor: "computed_conventionne",
-    width: 200,
-    exportable: true,
-  },
-  {
-    Header: "CFA declare en prefecture ? ",
-    accessor: "computed_declare_prefecture",
-    width: 200,
-    exportable: true,
-  },
-  {
     Header: "Qualiopi ?",
     accessor: "info_qualiopi_info",
     width: 200,
@@ -177,37 +159,7 @@ const columnsDefinition = [
     Header: "A des formations de niveau 3",
     accessor: "formations_n3",
     width: 200,
-    exportable: false,
-  },
-  {
-    Header: "A des formations de niveau 4",
-    accessor: "formations_n4",
-    width: 200,
-    exportable: false,
-  },
-  {
-    Header: "A des formations de niveau 5",
-    accessor: "formations_n5",
-    width: 200,
-    exportable: false,
-  },
-  {
-    Header: "A des formations de niveau 6",
-    accessor: "formations_n6",
-    width: 200,
-    exportable: false,
-  },
-  {
-    Header: "A des formations de niveau 7",
-    accessor: "formations_n7",
-    width: 200,
-    exportable: false,
-  },
-  {
-    Header: "A des formations de niveau 3",
-    accessor: "formations_n3",
-    width: 200,
-    exportable: false,
+    exportable: true,
   },
   {
     Header: "A des formations de niveau 4",
@@ -251,9 +203,6 @@ const columnsDefinition = [
 const queryBuilderField = [
   { text: "Raison sociale", value: "entreprise_raison_sociale.keyword" },
   { text: "Siret", value: "siret.keyword" },
-  { text: "Type d'organisme", value: "computed_type.keyword" },
-  { text: "Conventionné", value: "computed_conventionne.keyword" },
-  { text: "Déclaré en prefecture", value: "computed_declare_prefecture.keyword" },
   { text: "Certifié qualiopi", value: "info_qualiopi_info.keyword" },
   { text: "Uai", value: "uai.keyword" },
   { text: "Nda", value: "nda.keyword" },

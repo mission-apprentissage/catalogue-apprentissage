@@ -1,4 +1,4 @@
-const { Formation, PsFormation } = require("../../../../common/model");
+const { Formation, ParcoursupFormation } = require("../../../../common/model");
 const { asyncForEach } = require("../../../../common/utils/asyncUtils");
 
 /**
@@ -75,7 +75,7 @@ const copyRapprochementFields = (oldFormation, newFormation) => {
 };
 
 const updateRapprochement = async (oldFormation, newFormation) => {
-  const psFormations = await PsFormation.find({
+  const psFormations = await ParcoursupFormation.find({
     "matching_mna_formation.cle_ministere_educatif": oldFormation.cle_ministere_educatif,
   }).lean();
 
@@ -105,7 +105,7 @@ const updateRapprochement = async (oldFormation, newFormation) => {
       return id;
     });
 
-    await PsFormation.findOneAndUpdate(
+    await ParcoursupFormation.findOneAndUpdate(
       { _id: psFormation._id },
       {
         matching_mna_formation: matchs,

@@ -14,6 +14,7 @@ const { getCoordinatesFromAddressData } = require("@mission-apprentissage/tco-se
 const { distanceBetweenCoordinates } = require("../../common/utils/distanceUtils");
 const { findMefsForParcoursup } = require("../../common/utils/parcoursupUtils");
 const { updateEtablissementTags } = require("./etablissementUpdater");
+const { AFFELNET_STATUS } = require("../../constants/status");
 
 const formationSchema = Joi.object({
   cfd: Joi.string().required(),
@@ -83,13 +84,13 @@ const selectMefs = async (updatedFormation) => {
 
     const aPublierRules = await ReglePerimetre.find({
       plateforme: "affelnet",
-      statut: "à publier",
+      statut: AFFELNET_STATUS.A_PUBLIER,
       is_deleted: { $ne: true },
     }).lean();
 
     const aPublierSoumisAValidationRules = await ReglePerimetre.find({
       plateforme: "affelnet",
-      statut: "à publier (soumis à validation)",
+      statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
       is_deleted: { $ne: true },
     }).lean();
 

@@ -4,6 +4,7 @@ import { rest } from "msw";
 import { setupServer } from "msw/node";
 import Formation from "./Formation";
 import { waitFor } from "@testing-library/react";
+import { AFFELNET_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
 
 const server = setupServer(
   rest.get(/\/api\/entity\/formation\/2/, (req, res, ctx) => {
@@ -15,9 +16,6 @@ const server = setupServer(
         etablissement_gestionnaire_siret: "34958609900021",
         etablissement_gestionnaire_enseigne: "CFAI",
         etablissement_gestionnaire_uai: "0542221W",
-        etablissement_gestionnaire_type: "CFA",
-        etablissement_gestionnaire_conventionne: "OUI",
-        etablissement_gestionnaire_declare_prefecture: "OUI",
         etablissement_gestionnaire_published: true,
         etablissement_gestionnaire_catalogue_published: true,
         etablissement_gestionnaire_adresse: "10 RUE ALFRED KASTLER",
@@ -39,9 +37,6 @@ const server = setupServer(
         etablissement_formateur_siret: "34958609900021",
         etablissement_formateur_enseigne: "CFAI",
         etablissement_formateur_uai: "0542221W",
-        etablissement_formateur_type: "CFA",
-        etablissement_formateur_conventionne: "OUI",
-        etablissement_formateur_declare_prefecture: "OUI",
         etablissement_formateur_published: true,
         etablissement_formateur_catalogue_published: true,
         etablissement_formateur_adresse: "10 RUE ALFRED KASTLER",
@@ -60,9 +55,6 @@ const server = setupServer(
         etablissement_formateur_siren: "349586099",
         etablissement_formateur_date_creation: "1970-01-10T17:36:50.400Z",
         etablissement_reference: "gestionnaire",
-        etablissement_reference_type: "CFA",
-        etablissement_reference_conventionne: "OUI",
-        etablissement_reference_declare_prefecture: "OUI",
         etablissement_reference_published: true,
         etablissement_reference_catalogue_published: true,
         rncp_etablissement_reference_habilite: false,
@@ -232,9 +224,9 @@ const server = setupServer(
         capacite: null,
         duree: "3",
         annee: "1",
-        parcoursup_statut: "hors périmètre",
+        parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
         parcoursup_statut_history: [],
-        affelnet_statut: "publié",
+        affelnet_statut: AFFELNET_STATUS.PUBLIE,
         affelnet_statut_history: [],
         source: "WS RCO",
         commentaires: null,

@@ -212,30 +212,10 @@ const etablissementSchema = {
   },
 
   //////////////
-  info_depp: {
-    type: Number,
-    default: 0,
-    description: "L'établissement est présent ou pas dans le fichier DEPP",
-  },
-  info_dgefp: {
-    type: Number,
-    default: 0,
-    description: "L'établissement est présent ou pas dans le fichier DGEFP",
-  },
   info_datagouv_ofs: {
     type: Number,
     default: 0,
     description: "L'établissement est présent ou pas dans le fichier datagouv",
-  },
-  info_depp_info: {
-    type: String,
-    default: null,
-    description: "L'établissement est présent ou pas dans le fichier DEPP",
-  },
-  info_dgefp_info: {
-    type: String,
-    default: null,
-    description: "L'établissement est présent ou pas dans le fichier DGEFP",
   },
   info_datagouv_ofs_info: {
     type: String,
@@ -246,21 +226,6 @@ const etablissementSchema = {
     type: String,
     default: null,
     description: "L'établissement est présent ou pas dans le fichier qualiopi",
-  },
-  computed_type: {
-    type: String,
-    default: null,
-    description: "Type de l'établissement CFA ou OF",
-  },
-  computed_declare_prefecture: {
-    type: String,
-    default: null,
-    description: "Etablissement est déclaré en prefecture",
-  },
-  computed_conventionne: {
-    type: String,
-    default: null,
-    description: "Etablissement est conventionné ou pas",
   },
   api_entreprise_reference: {
     type: Boolean,

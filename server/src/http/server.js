@@ -27,7 +27,6 @@ const stats = require("./routes/stats");
 const esSearch = require("./routes/esSearch");
 const esMultiSearchNoIndex = require("./routes/esMultiSearchNoIndex");
 const parcoursup = require("./routes/parcoursup");
-const affelnet = require("./routes/affelnet");
 const etablissement = require("./routes/etablissement");
 const etablissementSecure = require("./routes/etablissementSecure");
 const upload = require("./routes/upload");
@@ -143,7 +142,6 @@ module.exports = async (components, verbose = true) => {
   );
   app.use("/api/v1/entity", apiKeyAuthMiddleware, formationSecure());
   app.use("/api/v1/stats", apiKeyAuthMiddleware, adminOnly, stats(components));
-  app.use("/api/v1/affelnet", affelnet(components));
   app.use("/api/v1/entity", apiKeyAuthMiddleware, etablissementSecure(components));
   app.use("/api/v1/upload", permissionsMiddleware({ isAdmin: true }, ["page_upload"]), upload());
   app.use("/api/v1/entity", apiKeyAuthMiddleware, reglePerimetreSecure());
@@ -172,7 +170,6 @@ module.exports = async (components, verbose = true) => {
   );
   app.use("/api/entity", authMiddleware, formationSecure());
   app.use("/api/stats", stats(components));
-  app.use("/api/affelnet", affelnet(components));
   app.use("/api/entity", authMiddleware, etablissementSecure(components));
   app.use("/api/entity", authMiddleware, reglePerimetreSecure());
 

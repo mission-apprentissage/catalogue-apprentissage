@@ -284,8 +284,6 @@ module.exports = () => {
         delete e.formations_n5;
         delete e.formations_n6;
         delete e.formations_n7;
-        delete e.info_depp;
-        delete e.info_dgefp;
         delete e.info_datagouv_ofs;
 
         delete e.api_entreprise_reference;

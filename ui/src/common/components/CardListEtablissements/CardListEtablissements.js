@@ -43,7 +43,7 @@ const CardListEtablissements = ({ data, withoutLink }) => {
       <RenderCard withoutLink />
     </Box>
   ) : (
-    <Link as={NavLink} to={`/etablissement/${data._id}`} variant="card" mt={4} isExternal>
+    <Link as={NavLink} to={`/etablissement/${data._id}`} variant="card" mt={4}>
       <RenderCard />
     </Link>
   );

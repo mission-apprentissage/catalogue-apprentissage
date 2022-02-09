@@ -12,9 +12,10 @@ import * as search from "../../../common/hooks/useSearch";
 
 import { rest } from "msw";
 import { setupServer } from "msw/node";
+import { PARCOURSUP_STATUS } from "../../../constants/status";
 
 const server = setupServer(
-  rest.post(/\/api\/es\/search\/psformations\/_msearch/, (req, res, ctx) => {
+  rest.post(/\/api\/es\/search\/parcoursupformations\/_msearch/, (req, res, ctx) => {
     return res(
       ctx.json({
         took: 73,
@@ -28,7 +29,7 @@ const server = setupServer(
               max_score: null,
               hits: [
                 {
-                  _index: "psformations",
+                  _index: "parcoursupformations",
                   _type: "_doc",
                   _id: "6138bad41e928101d8615201",
                   _score: null,
@@ -36,12 +37,12 @@ const server = setupServer(
                     code_postal: "45100",
                     matching_mna_formation: [
                       {
-                        parcoursup_statut: "à publier",
+                        parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER,
                         intitule_court: "MANAGEMENT COMMERC. OPERATIONNEL",
                         _id: "5fd2c73a5d44ea18bbe39425",
                       },
                     ],
-                    matching_mna_parcoursup_statuts: ["à publier"],
+                    matching_mna_parcoursup_statuts: [PARCOURSUP_STATUS.A_PUBLIER],
                     statut_reconciliation: "AUTOMATIQUE",
                     uai_composante: "0451551S",
                     nom_academie: "Orléans-Tours",
@@ -60,7 +61,7 @@ const server = setupServer(
                   sort: ["6138bad41e928101d8615201"],
                 },
                 {
-                  _index: "psformations",
+                  _index: "parcoursupformations",
                   _type: "_doc",
                   _id: "6138bad41e928101d8615205",
                   _score: null,
@@ -68,12 +69,12 @@ const server = setupServer(
                     code_postal: "45100",
                     matching_mna_formation: [
                       {
-                        parcoursup_statut: "à publier",
+                        parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER,
                         intitule_court: "NEGO. ET DIGITAL. RELATION CLIENT",
                         _id: "5fd24e7cc67da3c3e6bc3bb1",
                       },
                     ],
-                    matching_mna_parcoursup_statuts: ["à publier"],
+                    matching_mna_parcoursup_statuts: [PARCOURSUP_STATUS.A_PUBLIER],
                     statut_reconciliation: "AUTOMATIQUE",
                     uai_composante: "0451551S",
                     nom_academie: "Orléans-Tours",
@@ -92,7 +93,7 @@ const server = setupServer(
                   sort: ["6138bad41e928101d8615205"],
                 },
                 {
-                  _index: "psformations",
+                  _index: "parcoursupformations",
                   _type: "_doc",
                   _id: "6138bad41e928101d861520d",
                   _score: null,
@@ -100,12 +101,12 @@ const server = setupServer(
                     code_postal: "45100",
                     matching_mna_formation: [
                       {
-                        parcoursup_statut: "à publier",
+                        parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER,
                         intitule_court: "SUPPORT A L'ACTION MANAGERIALE",
                         _id: "5fd24e95c67da3c3e6bc3dd1",
                       },
                     ],
-                    matching_mna_parcoursup_statuts: ["à publier"],
+                    matching_mna_parcoursup_statuts: [PARCOURSUP_STATUS.A_PUBLIER],
                     statut_reconciliation: "AUTOMATIQUE",
                     uai_composante: "0451551S",
                     nom_academie: "Orléans-Tours",
@@ -124,7 +125,7 @@ const server = setupServer(
                   sort: ["6138bad41e928101d861520d"],
                 },
                 {
-                  _index: "psformations",
+                  _index: "parcoursupformations",
                   _type: "_doc",
                   _id: "6138bad51e928101d8615215",
                   _score: null,
@@ -132,12 +133,12 @@ const server = setupServer(
                     code_postal: "37000",
                     matching_mna_formation: [
                       {
-                        parcoursup_statut: "à publier",
+                        parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER,
                         intitule_court: "COMMUNICATION",
                         _id: "5fc62847712d48a988156c7a",
                       },
                     ],
-                    matching_mna_parcoursup_statuts: ["à publier"],
+                    matching_mna_parcoursup_statuts: [PARCOURSUP_STATUS.A_PUBLIER],
                     statut_reconciliation: "AUTOMATIQUE",
                     uai_composante: "0371495Z",
                     nom_academie: "Orléans-Tours",
@@ -156,7 +157,7 @@ const server = setupServer(
                   sort: ["6138bad51e928101d8615215"],
                 },
                 {
-                  _index: "psformations",
+                  _index: "parcoursupformations",
                   _type: "_doc",
                   _id: "6138bad51e928101d8615221",
                   _score: null,
@@ -164,12 +165,12 @@ const server = setupServer(
                     code_postal: "77420",
                     matching_mna_formation: [
                       {
-                        parcoursup_statut: "à publier",
+                        parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER,
                         intitule_court: "NEGO. ET DIGITAL. RELATION CLIENT",
                         _id: "60ca89081f12d18c038ee291",
                       },
                     ],
-                    matching_mna_parcoursup_statuts: ["à publier"],
+                    matching_mna_parcoursup_statuts: [PARCOURSUP_STATUS.A_PUBLIER],
                     statut_reconciliation: "AUTOMATIQUE",
                     uai_composante: "0772890Y",
                     nom_academie: "Créteil",
@@ -188,7 +189,7 @@ const server = setupServer(
                   sort: ["6138bad51e928101d8615221"],
                 },
                 {
-                  _index: "psformations",
+                  _index: "parcoursupformations",
                   _type: "_doc",
                   _id: "6138bad51e928101d8615225",
                   _score: null,
@@ -196,12 +197,12 @@ const server = setupServer(
                     code_postal: "42000",
                     matching_mna_formation: [
                       {
-                        parcoursup_statut: "hors périmètre",
+                        parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
                         intitule_court: "MAINTEN.SYST. OPT.A SYST.PRODUCT",
                         _id: "61315d178d0fa4e9373f1a83",
                       },
                     ],
-                    matching_mna_parcoursup_statuts: ["hors périmètre"],
+                    matching_mna_parcoursup_statuts: [PARCOURSUP_STATUS.HORS_PERIMETRE],
                     statut_reconciliation: "AUTOMATIQUE",
                     uai_composante: "0420976H",
                     nom_academie: "Lyon",
@@ -220,7 +221,7 @@ const server = setupServer(
                   sort: ["6138bad51e928101d8615225"],
                 },
                 {
-                  _index: "psformations",
+                  _index: "parcoursupformations",
                   _type: "_doc",
                   _id: "6138bad51e928101d8615229",
                   _score: null,
@@ -228,12 +229,12 @@ const server = setupServer(
                     code_postal: "69363",
                     matching_mna_formation: [
                       {
-                        parcoursup_statut: "à publier",
+                        parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER,
                         intitule_court: "GESTION DE LA PME",
                         _id: "608c910155952bac89d9cb76",
                       },
                     ],
-                    matching_mna_parcoursup_statuts: ["à publier"],
+                    matching_mna_parcoursup_statuts: [PARCOURSUP_STATUS.A_PUBLIER],
                     statut_reconciliation: "AUTOMATIQUE",
                     uai_composante: "0690651H",
                     nom_academie: "Lyon",
@@ -252,7 +253,7 @@ const server = setupServer(
                   sort: ["6138bad51e928101d8615229"],
                 },
                 {
-                  _index: "psformations",
+                  _index: "parcoursupformations",
                   _type: "_doc",
                   _id: "6138bad51e928101d861522d",
                   _score: null,
@@ -260,12 +261,12 @@ const server = setupServer(
                     code_postal: "69005",
                     matching_mna_formation: [
                       {
-                        parcoursup_statut: "à publier",
+                        parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER,
                         intitule_court: "BATIMENT",
                         _id: "5fd255dac67da3c3e6bd019b",
                       },
                     ],
-                    matching_mna_parcoursup_statuts: ["à publier"],
+                    matching_mna_parcoursup_statuts: [PARCOURSUP_STATUS.A_PUBLIER],
                     statut_reconciliation: "AUTOMATIQUE",
                     uai_composante: "0694179T",
                     nom_academie: "Lyon",
@@ -321,7 +322,7 @@ jest.setTimeout(50000);
 test("opens rapprochement modal", async () => {
   jest.spyOn(search, "useSearch").mockImplementation(() => ({
     loaded: true,
-    base: "psformations",
+    base: "parcoursupformations",
     isBaseFormations: false,
     isBaseReconciliationPs: true,
     endpoint: "http://localhost/api",
@@ -438,7 +439,7 @@ test("opens rapprochement modal", async () => {
           capacite: null,
           duree: null,
           annee: null,
-          parcoursup_statut: "à publier",
+          parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER,
           parcoursup_statut_history: [],
           lieu_formation_adresse: "44 boulevard Jean Moulin Immeuble Bellevue - Jean Moulin",
           lieu_formation_siret: null,
@@ -456,7 +457,7 @@ test("opens rapprochement modal", async () => {
         },
       ],
       matching_mna_etablissement: [],
-      matching_mna_parcoursup_statuts: ["à publier"],
+      matching_mna_parcoursup_statuts: [PARCOURSUP_STATUS.A_PUBLIER],
       etat_reconciliation: true,
       statut_reconciliation: "AUTOMATIQUE",
       matching_rejete_updated: false,

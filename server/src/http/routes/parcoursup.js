@@ -1,5 +1,4 @@
-const { PsFormation, Formation, Etablissement } = require("../../common/model");
-// const combinate = require("../../logic/mappers/reconciliationMapper");
+const { ParcoursupFormation, Formation, Etablissement } = require("../../common/model");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 const mongoose = require("mongoose");
@@ -11,34 +10,10 @@ const { diffFormation, buildUpdatesHistory } = require("../../logic/common/utils
 const { updateParcoursupCoverage } = require("../../logic/updaters/coverageUpdater");
 const Boom = require("boom");
 const { createFormation } = require("../../jobs/parcoursup/export");
+const { PARCOURSUP_STATUS } = require("../../constants/status");
 
 module.exports = () => {
   const router = express.Router();
-
-  /**
-   * Get statistique
-   */
-
-  router.get(
-    "/statistique",
-    tryCatch(async (req, res) => {
-      let [w, x, y, z] = await Promise.all([
-        PsFormation.estimatedDocumentCount(),
-        PsFormation.countDocuments({ etat_reconciliation: true }),
-        PsFormation.countDocuments({ matching_type: { $ne: null }, etat_reconciliation: false }),
-        PsFormation.countDocuments({ matching_type: { $eq: null } }),
-      ]);
-
-      let percentageOnTotal = (value, total) => ((value / total) * 100).toFixed(2);
-
-      res.json({
-        total: w,
-        reconciled: [x, percentageOnTotal(x, w)],
-        covered: [y, percentageOnTotal(y, w)],
-        notFound: [z, percentageOnTotal(z, w)],
-      });
-    })
-  );
 
   router.get(
     "/:id",
@@ -46,7 +21,7 @@ module.exports = () => {
       const itemId = req.params.id;
       const qs = req.query;
       const select = qs && qs.select ? JSON.parse(qs.select) : { __v: 0 };
-      const retrievedData = await PsFormation.findById(itemId, select).lean();
+      const retrievedData = await ParcoursupFormation.findById(itemId, select).lean();
       if (retrievedData) {
         return res.json(retrievedData);
       }
@@ -149,7 +124,7 @@ module.exports = () => {
       const psId = req.params.id;
       const qs = req.query;
       const select = qs && qs.select ? JSON.parse(qs.select) : { __v: 0, rncp_details: 0, affelnet_statut_history: 0 };
-      const retrievedData = await PsFormation.findById(psId, select).lean();
+      const retrievedData = await ParcoursupFormation.findById(psId, select).lean();
       if (retrievedData) {
         const diffFields = [];
         let matching_mna_formation = retrievedData.matching_mna_formation;
@@ -183,7 +158,7 @@ module.exports = () => {
     "/",
     tryCatch(async (req, res) => {
       const { id, ...rest } = req.body;
-      const response = await PsFormation.findByIdAndUpdate(id, { ...rest }, { new: true });
+      const response = await ParcoursupFormation.findByIdAndUpdate(id, { ...rest }, { new: true });
       return res.json(response);
     })
   );
@@ -204,7 +179,7 @@ module.exports = () => {
         mnaFormationId,
       } = req.body;
       if (reject) {
-        const previousFormation = await PsFormation.findById(id_formation).lean();
+        const previousFormation = await ParcoursupFormation.findById(id_formation).lean();
         let updatedFormation = {
           ...previousFormation,
           statut_reconciliation: "REJETE",
@@ -240,7 +215,7 @@ module.exports = () => {
           updatedFormation.statuts_history = statuts_history;
         }
 
-        const formation = await PsFormation.findOneAndUpdate({ _id: id_formation }, updatedFormation, {
+        const formation = await ParcoursupFormation.findOneAndUpdate({ _id: id_formation }, updatedFormation, {
           new: true,
         });
 
@@ -252,7 +227,7 @@ module.exports = () => {
         return res.json({});
       }
 
-      const psFormation = await PsFormation.findById(id_formation).lean();
+      const psFormation = await ParcoursupFormation.findById(id_formation).lean();
 
       let statut_reconciliation = "VALIDE";
       let etat_reconciliation = true;
@@ -280,7 +255,7 @@ module.exports = () => {
               mnaFormationU.parcoursup_id = null;
               for (let jndex = mnaFormationU.updates_history.length - 1; jndex > 0; jndex--) {
                 const { from, to } = mnaFormationU.updates_history[jndex];
-                if (to.parcoursup_statut === "publié") {
+                if (to.parcoursup_statut === PARCOURSUP_STATUS.PUBLIE) {
                   mnaFormationU.parcoursup_statut = from.parcoursup_statut;
                   mnaFormationU.parcoursup_raison_depublication = from.parcoursup_raison_depublication;
                   break;
@@ -308,7 +283,7 @@ module.exports = () => {
           updatedFormation.statuts_history = statuts_history;
         }
 
-        const formation = await PsFormation.findOneAndUpdate({ _id: id_formation }, updatedFormation, {
+        const formation = await ParcoursupFormation.findOneAndUpdate({ _id: id_formation }, updatedFormation, {
           new: true,
         });
 
@@ -339,7 +314,7 @@ module.exports = () => {
         updatedFormation.statuts_history = statuts_history;
       }
 
-      const formation = await PsFormation.findOneAndUpdate({ _id: id_formation }, updatedFormation, {
+      const formation = await ParcoursupFormation.findOneAndUpdate({ _id: id_formation }, updatedFormation, {
         new: true,
       });
 
@@ -355,12 +330,12 @@ module.exports = () => {
   router.get(
     "/reconciliation/count",
     tryCatch(async (req, res) => {
-      const countTotal = await PsFormation.countDocuments({});
-      const countAutomatique = await PsFormation.countDocuments({ statut_reconciliation: "AUTOMATIQUE" });
-      const countAVerifier = await PsFormation.countDocuments({ statut_reconciliation: "A_VERIFIER" });
-      const countRejete = await PsFormation.countDocuments({ statut_reconciliation: "REJETE" });
-      const countInconnu = await PsFormation.countDocuments({ statut_reconciliation: "INCONNU" });
-      const countValide = await PsFormation.countDocuments({ statut_reconciliation: "VALIDE" });
+      const countTotal = await ParcoursupFormation.countDocuments({});
+      const countAutomatique = await ParcoursupFormation.countDocuments({ statut_reconciliation: "AUTOMATIQUE" });
+      const countAVerifier = await ParcoursupFormation.countDocuments({ statut_reconciliation: "A_VERIFIER" });
+      const countRejete = await ParcoursupFormation.countDocuments({ statut_reconciliation: "REJETE" });
+      const countInconnu = await ParcoursupFormation.countDocuments({ statut_reconciliation: "INCONNU" });
+      const countValide = await ParcoursupFormation.countDocuments({ statut_reconciliation: "VALIDE" });
       return res.json({
         countTotal,
         countAutomatique,
@@ -379,7 +354,7 @@ module.exports = () => {
     "/",
     tryCatch(async (req, res) => {
       const { formation_id, etablissement } = req.body;
-      const response = await PsFormation.findByIdAndUpdate(
+      const response = await ParcoursupFormation.findByIdAndUpdate(
         formation_id,
         { $push: { matching_mna_etablissement: { ...etablissement, _id: new mongoose.Types.ObjectId() } } },
         { new: true }
@@ -416,14 +391,14 @@ module.exports = () => {
     "/etablissement",
     tryCatch(async (req, res) => {
       const { formation_id, etablissement_id, type } = req.body;
-      const update = await PsFormation.updateOne(
+      const update = await ParcoursupFormation.updateOne(
         { _id: formation_id },
         { $set: { "matching_mna_etablissement.$[elem].type": type } },
         { arrayFilters: [{ "elem._id": new mongoose.Types.ObjectId(etablissement_id) }] }
       );
       if (update) {
         if (update.nModified === 1) {
-          const response = await PsFormation.findById({ _id: formation_id });
+          const response = await ParcoursupFormation.findById({ _id: formation_id });
           return res.json(response);
         } else {
           return res.json(update);
@@ -465,7 +440,7 @@ module.exports = () => {
         throw Boom.notFound();
       }
 
-      if (!formation.parcoursup_statut === "en attente de publication") {
+      if (!formation.parcoursup_statut === PARCOURSUP_STATUS.EN_ATTENTE) {
         throw Boom.forbidden('La formation n\'est pas "en attente de publication"');
       }
 

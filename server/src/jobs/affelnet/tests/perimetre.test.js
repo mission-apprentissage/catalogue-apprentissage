@@ -2,6 +2,7 @@ const assert = require("assert");
 const { ReglePerimetre, Formation } = require("../../../common/model/index");
 const { connectToMongoForTests, cleanAll } = require("../../../../tests/utils/testUtils.js");
 const { run } = require("../perimetre/controller.js");
+const { AFFELNET_STATUS } = require("../../../constants/status");
 
 describe(__filename, () => {
   before(async () => {
@@ -22,22 +23,22 @@ describe(__filename, () => {
       plateforme: "affelnet",
       niveau: "4 (BAC...)",
       diplome: "MC",
-      statut: "à publier",
+      statut: AFFELNET_STATUS.A_PUBLIER,
       condition_integration: "peut intégrer",
     });
     await ReglePerimetre.create({
       plateforme: "affelnet",
       niveau: "4 (BAC...)",
       diplome: "BAC TECHNO",
-      statut: "à publier (soumis à validation)",
+      statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
       condition_integration: "peut intégrer",
-      statut_academies: { "14": "à publier" },
+      statut_academies: { "14": AFFELNET_STATUS.A_PUBLIER },
     });
     await ReglePerimetre.create({
       plateforme: "affelnet",
       niveau: "3 (CAP...)",
       diplome: "CAP",
-      statut: "à publier",
+      statut: AFFELNET_STATUS.A_PUBLIER,
       condition_integration: "peut intégrer",
       is_deleted: true,
     });
@@ -45,7 +46,7 @@ describe(__filename, () => {
       plateforme: "affelnet",
       niveau: "4 (BAC...)",
       diplome: "BAC PRO",
-      statut: "à publier (soumis à validation)",
+      statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
       condition_integration: "peut intégrer",
     });
 
@@ -56,7 +57,7 @@ describe(__filename, () => {
       etablissement_reference_catalogue_published: true,
       niveau: "4 (BAC...)",
       diplome: "MC",
-      affelnet_statut: "hors périmètre",
+      affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
       periode,
     });
     await Formation.create({
@@ -65,7 +66,7 @@ describe(__filename, () => {
       etablissement_reference_catalogue_published: true,
       niveau: "4 (BAC...)",
       diplome: "MC",
-      affelnet_statut: "hors périmètre",
+      affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
       periode,
     });
     await Formation.create({
@@ -74,7 +75,7 @@ describe(__filename, () => {
       etablissement_reference_catalogue_published: true,
       niveau: "4 (BAC...)",
       diplome: "MC Agri",
-      affelnet_statut: "à publier (soumis à validation)",
+      affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
       periode,
     });
     await Formation.create({
@@ -83,7 +84,7 @@ describe(__filename, () => {
       etablissement_reference_catalogue_published: true,
       niveau: "3 (CAP...)",
       diplome: "CAP",
-      affelnet_statut: "à publier (soumis à validation)",
+      affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
       periode,
     });
     await Formation.create({
@@ -93,7 +94,7 @@ describe(__filename, () => {
       niveau: "4 (BAC...)",
       diplome: "BAC TECHNO",
       num_academie: "12",
-      affelnet_statut: "hors périmètre",
+      affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
       periode,
     });
     await Formation.create({
@@ -103,7 +104,7 @@ describe(__filename, () => {
       niveau: "4 (BAC...)",
       diplome: "BAC TECHNO",
       num_academie: "14",
-      affelnet_statut: "hors périmètre",
+      affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
       periode,
     });
     await Formation.create({
@@ -113,7 +114,7 @@ describe(__filename, () => {
       niveau: "4 (BAC...)",
       diplome: "BAC PRO",
       num_academie: "14",
-      affelnet_statut: "publié",
+      affelnet_statut: AFFELNET_STATUS.PUBLIE,
       periode,
     });
     await Formation.create({
@@ -122,7 +123,7 @@ describe(__filename, () => {
       etablissement_reference_catalogue_published: true,
       niveau: "4 (BAC...)",
       diplome: "BAC PRO",
-      affelnet_statut: "en attente de publication",
+      affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
       periode,
     });
     // await Formation.create({
@@ -152,28 +153,28 @@ describe(__filename, () => {
     await run();
 
     const totalNotRelevant = await Formation.countDocuments({
-      affelnet_statut: "hors périmètre",
+      affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
     });
     assert.strictEqual(totalNotRelevant, 3);
 
     const totalToValidate = await Formation.countDocuments({
-      affelnet_statut: "à publier (soumis à validation)",
+      affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
     });
     assert.strictEqual(totalToValidate, 1);
 
-    const totalToCheck = await Formation.countDocuments({ affelnet_statut: "à publier" });
+    const totalToCheck = await Formation.countDocuments({ affelnet_statut: AFFELNET_STATUS.A_PUBLIER });
     assert.strictEqual(totalToCheck, 2);
 
     const totalPending = await Formation.countDocuments({
-      affelnet_statut: "en attente de publication",
+      affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
     });
     assert.strictEqual(totalPending, 1);
 
-    const totalAfPublished = await Formation.countDocuments({ affelnet_statut: "publié" });
+    const totalAfPublished = await Formation.countDocuments({ affelnet_statut: AFFELNET_STATUS.PUBLIE });
     assert.strictEqual(totalAfPublished, 1);
 
     const totalAfNotPublished = await Formation.countDocuments({
-      affelnet_statut: "non publié",
+      affelnet_statut: AFFELNET_STATUS.NON_PUBLIE,
     });
     assert.strictEqual(totalAfNotPublished, 0);
   });

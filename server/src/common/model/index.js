@@ -27,16 +27,15 @@ module.exports = {
   }),
   Report: createModel("report", schema.reportSchema),
   Log: createModel("log", schema.logSchema),
-  AfFormation: createModel("afformation", schema.afFormationSchema),
-  AfReconciliation: createModel("afreconciliation", schema.afReconciliationSchema),
+  AffelnetFormation: createModel("affelnetformation", schema.affelnetFormationSchema),
   Etablissement: createModel("etablissement", schema.etablissementSchema, {
     esIndexName: "etablissements",
     createMongoDBIndexes: (schema) => {
       schema.index({ adresse: "text" });
     },
   }),
-  PsFormation: createModel("psformations", schema.psFormationSchema, {
-    esIndexName: "psformations",
+  ParcoursupFormation: createModel("parcoursupformations", schema.parcoursupFormationSchema, {
+    esIndexName: "parcoursupformations",
   }),
   SandboxFormation: createModel("sandboxformation", schema.formationSchema),
   Statistique: createModel("statistique", schema.statistiqueSchema),
