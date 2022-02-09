@@ -267,12 +267,6 @@ const Summary = ({ data, reportType, errors, importReportRelatedData, onGoToClic
               {summary.notUpdatedCount} Formation(s) déjà à jour
             </>
           )}
-          {summary.unpublishedCount > 0 && (
-            <>
-              <br />
-              {summary.unpublishedCount} Formation(s) dépubliée(s)
-            </>
-          )}
           <br />
           {summary.invalidCount ?? errors?.length} Formation(s) en échec de mise à jour
           <br />

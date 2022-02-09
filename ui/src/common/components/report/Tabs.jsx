@@ -234,16 +234,6 @@ const TrainingsUpdateTabs = ({ data, reportType, date, errors, importReport, con
       if (data && data.updated) {
         const metricsImportedConverted = getConvertedMetricsFromImportReport(convertReport?.convertedIds, importReport);
 
-        // "Dummy check"
-        const unpublishedToday = [];
-        for (let k = 0; k < metricsImportedConverted.deletedConvertedIds.length; k++) {
-          const id = metricsImportedConverted.deletedConvertedIds[k];
-          if (data.unpublished.includes(id)) {
-            unpublishedToday.push(id);
-          }
-        }
-        // console.log("unpublishedToday", unpublishedToday.length); // unpublishedToday
-
         const addedConvertedUpdatedIds = [];
         const updatedIds = data.updated.map(({ cle_ministere_educatif }) => cle_ministere_educatif);
         for (let k = 0; k < metricsImportedConverted.addedConvertedIds.length; k++) {
@@ -306,11 +296,6 @@ const TrainingsUpdateTabs = ({ data, reportType, date, errors, importReport, con
         setReportRelatedData({
           updaterReport: {
             ...data,
-            summary: {
-              ...data.summary,
-              unpublishedCount: unpublishedToday.length,
-            },
-            unpublished: unpublishedToday,
           },
           addedConvertedUpdatedIds,
           addedConvertedErroredIds,

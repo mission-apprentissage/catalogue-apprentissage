@@ -358,19 +358,7 @@ const performConversion = async () => {
 
           const cF = await getOrCreateFormation(mnaFormattedRcoFormation);
 
-          await Formation.findOneAndUpdate(
-            { _id: cF._id },
-            {
-              published: false,
-              rco_published: false,
-              update_error: null,
-              to_update: false,
-            },
-            {
-              upsert: true,
-              new: true,
-            }
-          );
+          await Formation.findOneAndDelete({ _id: cF._id });
 
           convertedRcoFormations.push({
             _id: cF._id,
