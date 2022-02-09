@@ -248,7 +248,7 @@ const TrainingsUpdateTabs = ({ data, reportType, date, errors, importReport, con
         const errorIds = errors?.map(({ cle_ministere_educatif }) => cle_ministere_educatif);
         for (let k = 0; k < metricsImportedConverted.addedConvertedIds.length; k++) {
           const id = metricsImportedConverted.addedConvertedIds[k];
-          if (errorIds.includes(id)) {
+          if (errorIds?.includes(id)) {
             addedConvertedErroredIds.push(id);
           }
         }
@@ -266,7 +266,7 @@ const TrainingsUpdateTabs = ({ data, reportType, date, errors, importReport, con
         const updatedConvertedErroredIds = [];
         for (let k = 0; k < metricsImportedConverted.updatedConvertedIds.length; k++) {
           const id = metricsImportedConverted.updatedConvertedIds[k];
-          if (errorIds.includes(id)) {
+          if (errorIds?.includes(id)) {
             updatedConvertedErroredIds.push(id);
           }
         }
@@ -287,7 +287,7 @@ const TrainingsUpdateTabs = ({ data, reportType, date, errors, importReport, con
         const restConvertedErroredIds = [];
         for (let k = 0; k < restIds.length; k++) {
           const id = restIds[k];
-          if (errorIds.includes(id)) {
+          if (errorIds?.includes(id)) {
             restConvertedErroredIds.push(id);
           }
         }
