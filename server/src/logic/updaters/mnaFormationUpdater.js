@@ -79,7 +79,7 @@ const selectMefs = async (updatedFormation) => {
     //  filter bcn_mefs_10 to get affelnet_mefs_10 for affelnet
 
     // eslint-disable-next-line no-unused-vars
-    const { _id, ...rest } = updatedFormation;
+    const { _id, updates_history, ...rest } = updatedFormation;
 
     const aPublierRules = await ReglePerimetre.find({
       plateforme: "affelnet",
@@ -99,7 +99,7 @@ const selectMefs = async (updatedFormation) => {
       await new SandboxFormation({
         ...rest,
         bcn_mefs_10: [mefObj],
-      }).save();
+      }).save({ validateBeforeSave: false });
     });
 
     // apply perimetre filters against the tmp collection
