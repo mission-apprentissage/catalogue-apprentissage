@@ -37,7 +37,8 @@
     "generate:swaggerschema": "standalone=true node src/jobs/generateSwaggerSchema/index.js",
     "migration:create": "migrate-mongo create",
     "migration:up": "migrate-mongo up",
-    "migration:down": "migrate-mongo down"
+    "migration:down": "migrate-mongo down",
+    "bcn:jobs": "node src/jobs/bcn/index.js"
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.6.1",
