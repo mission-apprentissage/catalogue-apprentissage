@@ -24,7 +24,7 @@ const createEtablissement = async (payload) => {
     }
 
     logger.info("Create etablissement with data", etablissement);
-    const newEtablissement = new Etablissement(etablissement);
+    const newEtablissement = new Etablissement({ ...etablissement, uai_valide: true });
     await newEtablissement.save();
     return newEtablissement;
   } catch (error) {

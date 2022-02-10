@@ -48,6 +48,20 @@ const getLBAUrl = ({ cle_ministere_educatif = "" }) => {
 const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, values, hasRightToEdit }) => {
   const { isOpen: isComputedAdressOpen, onToggle: onComputedAdressToggle } = useDisclosure();
 
+  const UaiFormationContainer = formation.uai_formation_valide
+    ? React.Fragment
+    : (args) => (
+        <Box
+          bg={"orangesoft.200"}
+          p={4}
+          mb={4}
+          borderLeft={"4px solid"}
+          borderColor={"orangesoft.500"}
+          w={"full"}
+          {...args}
+        />
+      );
+
   return (
     <Box borderRadius={4}>
       <Grid templateColumns="repeat(12, 1fr)">
@@ -67,18 +81,20 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
             </Box>
 
             <Box px={8}>
-              <EditableField
-                fieldName={"uai_formation"}
-                label={"UAI du lieu de formation"}
-                formation={formation}
-                edition={edition}
-                onEdit={onEdit}
-                values={values}
-                handleSubmit={handleSubmit}
-                handleChange={handleChange}
-                hasRightToEdit={hasRightToEdit}
-                mb={4}
-              />
+              <UaiFormationContainer>
+                <EditableField
+                  fieldName={"uai_formation"}
+                  label={"UAI du lieu de formation"}
+                  formation={formation}
+                  edition={edition}
+                  onEdit={onEdit}
+                  values={values}
+                  handleSubmit={handleSubmit}
+                  handleChange={handleChange}
+                  hasRightToEdit={hasRightToEdit}
+                  mb={formation?.uai_formation_valide ? 4 : 0}
+                />
+              </UaiFormationContainer>
 
               <Text mb={formation?.lieu_formation_adresse_computed ? 0 : 4}>
                 Adresse :{" "}

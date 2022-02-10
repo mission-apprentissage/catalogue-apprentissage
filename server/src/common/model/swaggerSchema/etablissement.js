@@ -198,6 +198,11 @@ module.exports = {
         default: "null",
         description: "UAI de l'établissement",
       },
+      uai_valide: {
+        type: "boolean",
+        default: "null",
+        description: "L'UAI de l'établissement est il valide ?",
+      },
       uais_potentiels: {
         type: "array",
         items: {

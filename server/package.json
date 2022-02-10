@@ -24,6 +24,7 @@
     "psup:report": "standalone=true node src/jobs/parcoursup/reportRejected.js",
     "psup:export": "standalone=true node src/jobs/parcoursup/export/index.js",
     "rcoFormation:duplicate": "standalone=true node src/jobs/oneshot/findRcoDuplicates/index.js",
+    "uai:check": "standalone=true node src/jobs/oneshot/checkUai/index.js",
     "hydratecfdentree": "standalone=true node src/jobs/parcoursup/_hydrateCfdEntree.js",
     "migrateRaisonsRejet": "standalone=true node src/jobs/parcoursup/_migrationRaisonsRejet.js",
     "psup:updatemna": "standalone=true node src/jobs/parcoursup/_updateMatchInfo.js",

@@ -37,13 +37,14 @@ services:
   mongodb:
     ports:
       - "127.0.0.1:27017:27017"
-    mem_limit: 3g
+    mem_limit: 12g
     volumes:
       - catalogue_apprentissage_mongodb_data:/data:z
 
   elasticsearch:
     ports:
       - "127.0.0.1:9200:9200"
+    mem_limit: 4g
     volumes:
       - catalogue_apprentissage_data_elasticsearch:/usr/share/elasticsearch/data:z
 
