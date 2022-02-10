@@ -29,7 +29,7 @@ const updateUaiValidity = async (collection, uaiField, uaiValidityField) => {
   console.info(`Checking for UAI in collection: 🆗`);
 };
 
-const generateCsvData = (collection, entries, columns) => {
+const generateCsvData = (entries, columns) => {
   console.info(`Generating CSV data for invalid UAI...`);
   const headers = Object.keys(columns);
 
@@ -48,7 +48,7 @@ runScript(async ({ mailer }) => {
     const etablissementCsvData = await (async () => {
       await updateUaiValidity(Etablissement, "uai", "uai_valide");
 
-      return generateCsvData(Etablissement, await Etablissement.find({ uai_valide: false }), {
+      return generateCsvData(await Etablissement.find({ uai_valide: false }), {
         "UAI invalide": (etablissement) => etablissement.uai,
         SIRET: (etablissement) => etablissement.siret,
         Académie: (etablissement) => etablissement.nom_academie,
@@ -58,7 +58,7 @@ runScript(async ({ mailer }) => {
     const formationCsvData = await (async () => {
       await updateUaiValidity(Formation, "uai_formation", "uai_formation_valide");
 
-      return generateCsvData(Formation, await Formation.find({ uai_formation_valide: false }), {
+      return generateCsvData(await Formation.find({ uai_formation_valide: false }), {
         "UAI invalide": (formation) => formation.uai_formation,
         "Clé ministère éducatif": (formation) => formation.cle_ministere_educatif,
         Académie: (formation) => formation.nom_academie,

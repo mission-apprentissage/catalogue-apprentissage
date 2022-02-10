@@ -120,6 +120,11 @@ const formationSchema = {
       message: (props) => `${props.value} n'est pas un code UAI valide.`,
     },
   },
+  uai_formation_valide: {
+    type: Boolean,
+    default: null,
+    description: "L'UAI du lieu de formation est il valide ?",
+  },
   nom: {
     type: String,
     default: null,
