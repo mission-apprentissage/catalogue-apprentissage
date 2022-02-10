@@ -74,6 +74,20 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
     console.error("can't display creation date ", etablissement.date_creation);
   }
 
+  const UaiContainer = etablissement.uai_valide
+    ? React.Fragment
+    : (args) => (
+        <Box
+          bg={"orangesoft.200"}
+          p={4}
+          mb={4}
+          borderLeft={"4px solid"}
+          borderColor={"orangesoft.500"}
+          w={"full"}
+          {...args}
+        />
+      );
+
   return (
     <>
       <Grid templateColumns="repeat(12, 1fr)" mt={8}>
@@ -210,42 +224,41 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
             )}
 
             <Box textStyle="rf-text" px={8}>
-              <Text mb={4}>
-                {hasRightToEdit && !edition && (
-                  <Button onClick={onEdit} variant="unstyled" aria-label="Modifier l'UAI">
-                    <Edit2Fill w="16px" h="16px" color="bluefrance" mr="8px" mb="7px" />
-                  </Button>
-                )}
-                UAI rattaché au SIRET :{" "}
-                {!edition && (
-                  <>
-                    <Text as="span" variant="highlight">
-                      {etablissement.uai}
-                    </Text>{" "}
-                    <InfoTooltip description={helpText.etablissement.uai} />
-                  </>
-                )}
-                {edition && (
-                  <Input type="text" variant="edition" name="uai" onChange={handleChange} value={values.uai} />
-                )}
-                {edition && (
-                  <>
-                    <Button
-                      mt={2}
-                      mr={2}
-                      variant="secondary"
-                      onClick={() => {
-                        onEdit();
-                      }}
-                    >
-                      Annuler
+              <UaiContainer>
+                <Text mb={etablissement?.uai_valide ? 4 : 0}>
+                  {hasRightToEdit && !edition && (
+                    <Button onClick={onEdit} variant="unstyled" aria-label="Modifier l'UAI">
+                      <Edit2Fill w="16px" h="16px" color="bluefrance" mr="8px" mb="7px" />
                     </Button>
-                    <Button mt={2} variant="primary" onClick={handleSubmit}>
-                      Valider
-                    </Button>
-                  </>
-                )}
-              </Text>
+                  )}
+                  UAI rattaché au SIRET : {}
+                  {edition ? (
+                    <>
+                      <Input type="text" variant="edition" name="uai" onChange={handleChange} value={values.uai} />
+                      <Button
+                        mt={2}
+                        mr={2}
+                        variant="secondary"
+                        onClick={() => {
+                          onEdit();
+                        }}
+                      >
+                        Annuler
+                      </Button>
+                      <Button mt={2} variant="primary" onClick={handleSubmit}>
+                        Valider
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Text as="span" variant="highlight">
+                        {etablissement.uai}
+                      </Text>{" "}
+                      <InfoTooltip description={helpText.etablissement.uai} />
+                    </>
+                  )}
+                </Text>
+              </UaiContainer>
 
               <Text mb={4}>
                 Académie :{" "}

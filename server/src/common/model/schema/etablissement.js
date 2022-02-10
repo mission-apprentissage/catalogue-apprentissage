@@ -204,7 +204,11 @@ const etablissementSchema = {
     },
     description: "UAI de l'établissement",
   },
-
+  uai_valide: {
+    type: Boolean,
+    default: null,
+    description: "L'UAI de l'établissement est il valide ?",
+  },
   uais_potentiels: {
     type: [String],
     default: [],
