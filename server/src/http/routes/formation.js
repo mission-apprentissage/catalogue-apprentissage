@@ -174,9 +174,8 @@ module.exports = () => {
   });
 
   const updateFormation = tryCatch(async (req, res) => {
-    const { withCodePostalUpdate = true, withHistoryUpdate = false, ...formation } = req.body;
+    const { withCodePostalUpdate = true, ...formation } = req.body;
     const { formation: updatedFormation, error } = await mnaFormationUpdater(formation, {
-      withHistoryUpdate,
       withCodePostalUpdate,
     });
 

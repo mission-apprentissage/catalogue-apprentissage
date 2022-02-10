@@ -8,7 +8,7 @@ const { cfdMapper } = require("../mappers/cfdMapper");
 const { codePostalMapper } = require("../mappers/codePostalMapper");
 const { etablissementsMapper } = require("../mappers/etablissementsMapper");
 const { geoMapper } = require("../mappers/geoMapper");
-const { diffFormation, buildUpdatesHistory } = require("../common/utils/diffUtils");
+const { diffFormation } = require("../common/utils/diffUtils");
 const { SandboxFormation, RcoFormation } = require("../../common/model");
 const { getCoordinatesFromAddressData } = require("@mission-apprentissage/tco-service-node");
 const { distanceBetweenCoordinates } = require("../../common/utils/distanceUtils");
@@ -141,10 +141,7 @@ const selectMefs = async (updatedFormation) => {
   return { bcn_mefs_10, affelnet_mefs_10, affelnet_infos_offre, parcoursup_mefs_10 };
 };
 
-const mnaFormationUpdater = async (
-  formation,
-  { withHistoryUpdate = true, withCodePostalUpdate = true, cfdInfo = null } = {}
-) => {
+const mnaFormationUpdater = async (formation, { withCodePostalUpdate = true, cfdInfo = null } = {}) => {
   try {
     await formationSchema.validateAsync(formation, { abortEarly: false });
 
@@ -346,11 +343,8 @@ const mnaFormationUpdater = async (
       );
     }
 
-    const { updates, keys } = diffFormation(formation, updatedFormation);
+    const { updates } = diffFormation(formation, updatedFormation);
     if (updates) {
-      if (withHistoryUpdate) {
-        updatedFormation.updates_history = buildUpdatesHistory(formation, updates, keys);
-      }
       return { updates, formation: updatedFormation, cfdInfo: currentCfdInfo };
     }
 
