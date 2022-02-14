@@ -8,7 +8,7 @@ const { Etablissement, Formation } = require("../../../common/model");
 
 const updateUaiValidity = async (collection, uaiField, uaiValidityField) => {
   console.info(`Checking for UAI in collection...`);
-  const cursor = await collection.find({}).cursor();
+  const cursor = await collection.find({ published: true }).cursor();
   let count = 0;
 
   for await (const entry of cursor) {
@@ -48,21 +48,29 @@ runScript(async ({ mailer }) => {
     const etablissementCsvData = await (async () => {
       await updateUaiValidity(Etablissement, "uai", "uai_valide");
 
-      return generateCsvData(await Etablissement.find({ uai_valide: false }), {
-        "UAI invalide": (etablissement) => etablissement.uai,
-        SIRET: (etablissement) => etablissement.siret,
-        Académie: (etablissement) => etablissement.nom_academie,
-      });
+      return generateCsvData(
+        await Etablissement.find({ published: true, uai_valide: false }).sort({ nom_academie: 1 }),
+        {
+          "UAI invalide": (etablissement) => etablissement.uai,
+          SIRET: (etablissement) => etablissement.siret,
+          Académie: (etablissement) => etablissement.nom_academie,
+          "Lien vers fiche": (etablissement) => `${config.publicUrl}/etablissement/${etablissement._id}`,
+        }
+      );
     })();
 
     const formationCsvData = await (async () => {
       await updateUaiValidity(Formation, "uai_formation", "uai_formation_valide");
 
-      return generateCsvData(await Formation.find({ uai_formation_valide: false }), {
-        "UAI invalide": (formation) => formation.uai_formation,
-        "Clé ministère éducatif": (formation) => formation.cle_ministere_educatif,
-        Académie: (formation) => formation.nom_academie,
-      });
+      return generateCsvData(
+        await Formation.find({ published: true, uai_formation_valide: false }).sort({ nom_academie: 1 }),
+        {
+          "UAI invalide": (formation) => formation.uai_formation,
+          "Clé ministère éducatif": (formation) => formation.cle_ministere_educatif,
+          Académie: (formation) => formation.nom_academie,
+          "Lien vers fiche": (formation) => `${config.publicUrl}/formation/${formation._id}`,
+        }
+      );
     })();
 
     const date = DateTime.local().setLocale("fr").toFormat("yyyy-MM-dd");
