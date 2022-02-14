@@ -4,10 +4,51 @@ import { Link } from "@chakra-ui/react";
 const changelog = {
   list: [
     {
-      version: "5.7.0",
+      version: "5.9.0",
       date: "Prochainement",
       about: `<h4>À venir</h4>`,
       fixes: [],
+      features: [],
+      improvements: [],
+    },
+    {
+      version: "5.8.0",
+      date: "Le 14 Février 2022",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: ["Export des établissements et formations avec des UAIs invalides, et mise en évidence sur les pages"],
+      features: [],
+      improvements: [
+        "Amélioration des performances de l’api “/formations” via le nettoyage d’un grand volume de données (archives / historiques)",
+      ],
+    },
+    {
+      version: "5.7.0",
+      date: "Le 9 Février 2022",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [
+        "Suppression de champs obsolètes liés au conventionnement (fiche formation, exports, api…)",
+        "Le clic sur un élément de liste n’ouvre pas de nouvel onglet",
+      ],
+      features: ["Intégration des formations Affelnet 2021"],
+      improvements: ["Ajout de la colonne “a des formations de niveau 3” dans l'export des organismes"],
+    },
+    {
+      version: "5.6.2",
+      date: "Le 9 Février 2022",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: ["Application des étiquettes Affelnet même en cas d’UAI invalide sur la formation"],
+      features: [],
+      improvements: [],
+    },
+    {
+      version: "5.6.1",
+      date: "Le 8 Février 2022",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: ["Fusion des formations lors de la collecte de l’année dans le flux RCO"],
       features: [],
       improvements: [],
     },
