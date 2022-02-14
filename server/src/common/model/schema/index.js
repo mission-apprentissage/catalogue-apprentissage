@@ -10,6 +10,7 @@ const parcoursupFormationSchema = require("./parcoursupFormation");
 const statistiqueSchema = require("./statistique");
 const messageScriptSchema = require("./messageScript");
 const reglePerimetreSchema = require("./reglePerimetre");
+const consumptionSchema = require("./consumption");
 
 module.exports = {
   logSchema,
@@ -24,4 +25,5 @@ module.exports = {
   statistiqueSchema,
   messageScriptSchema,
   reglePerimetreSchema,
+  consumptionSchema,
 };
