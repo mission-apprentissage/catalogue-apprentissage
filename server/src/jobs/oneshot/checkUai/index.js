@@ -8,7 +8,7 @@ const { Etablissement, Formation } = require("../../../common/model");
 
 const updateUaiValidity = async (collection, uaiField, uaiValidityField) => {
   console.info(`Checking for UAI in collection...`);
-  const cursor = await collection.find({}).cursor();
+  const cursor = await collection.find({ published: true }).cursor();
   let count = 0;
 
   for await (const entry of cursor) {
