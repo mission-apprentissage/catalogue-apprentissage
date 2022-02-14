@@ -78,7 +78,7 @@ runScript(async ({ mailer }) => {
         contentType: "text/csv",
       },
     ];
-    const to = config.rco.reportMailingList.split(",");
+    const to = config.reportMailingList.split(",");
 
     console.info(`Sending mail with csv as attachments to ${to}...`);
 
