@@ -41,4 +41,5 @@ module.exports = {
   Statistique: createModel("statistique", schema.statistiqueSchema),
   MessageScript: createModel("messageScript", schema.messageScriptSchema),
   ReglePerimetre: createModel("regleperimetre", schema.reglePerimetreSchema),
+  Consumption: createModel("consumption", schema.consumptionSchema),
 };
