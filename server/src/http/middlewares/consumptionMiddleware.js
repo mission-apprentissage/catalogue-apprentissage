@@ -31,7 +31,7 @@ module.exports = () => {
         );
       }
     } catch (error) {
-      logger.error(error);
+      logger.error(error, "Error while collecting endpoint consumption.");
     }
 
     next();
