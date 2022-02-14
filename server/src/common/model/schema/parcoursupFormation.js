@@ -161,12 +161,6 @@ const parcoursupFormationSchema = {
     default: null,
     description: "Details raison autre rejet",
   },
-  statuts_history: {
-    type: [Object],
-    default: [],
-    description: "historique des statuts",
-    noIndex: true,
-  },
   id_parcoursup: {
     index: true,
     type: String,

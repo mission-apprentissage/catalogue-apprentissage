@@ -7,6 +7,7 @@ const logger = require("../common/logger");
 const bodyParser = require("body-parser");
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
+const consumptionMiddleware = require("./middlewares/consumptionMiddleware");
 const logMiddleware = require("./middlewares/logMiddleware");
 const errorMiddleware = require("./middlewares/errorMiddleware");
 const apiKeyAuthMiddleware = require("./middlewares/apiKeyAuthMiddleware");
@@ -87,6 +88,7 @@ module.exports = async (components, verbose = true) => {
 
   app.use(corsMiddleware());
   verbose && app.use(logMiddleware());
+  app.use(consumptionMiddleware());
 
   if (config.env != "dev") {
     app.set("trust proxy", 1);
