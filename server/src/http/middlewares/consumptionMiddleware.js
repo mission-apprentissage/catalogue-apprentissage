@@ -9,24 +9,30 @@ module.exports = () => {
 
       const existingRouteConsumption = await Consumption.findOne({ route });
 
-      console.log(existingRouteConsumption);
-
+      const newConsumer = { ip, callCount: 1 };
       if (!existingRouteConsumption) {
         await Consumption.create({
           route,
           globalCallCount: 1,
-          consumers: [{ ip, callCount: 1 }],
+          consumers: [newConsumer],
         });
       } else {
+        let found;
+        const consumers = existingRouteConsumption.consumers.reduce((acc, current, currentIndex, arr) => {
+          found = found || current.ip === ip;
+          acc[currentIndex] = current.ip === ip ? { ip, callCount: current.callCount++ } : current;
+
+          if (currentIndex === arr.length - 1 && !found) {
+            acc.push(newConsumer);
+          }
+          return acc;
+        }, []);
+
         await Consumption.findOneAndUpdate(
           { _id: existingRouteConsumption._id },
           {
-            ...existingRouteConsumption,
             globalCallCount: existingRouteConsumption.globalCallCount++,
-            consumers: [
-              ...existingRouteConsumption.consumers.filter((consumer) => consumer.ip !== ip),
-              { ip, callCount: existingRouteConsumption.consumers.find((consumer) => consumer.ip === ip).callCount++ },
-            ],
+            consumers,
           }
         );
       }
