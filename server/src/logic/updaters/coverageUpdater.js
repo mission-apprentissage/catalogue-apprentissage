@@ -1,4 +1,3 @@
-const { diffFormation, buildUpdatesHistory } = require("../../logic/common/utils/diffUtils");
 const { ParcoursupFormation } = require("../../common/model");
 const { getParcoursupCoverage } = require("../../logic/controller/coverage");
 
@@ -27,15 +26,6 @@ const updateMatchedFormation = async ({ formation: previousFormation, match }) =
 
   if (statut_reconciliation === "AUTOMATIQUE") {
     updatedFormation.etat_reconciliation = true;
-  }
-
-  // History
-  const { updates, keys } = diffFormation(previousFormation, updatedFormation);
-  if (updates) {
-    delete updates.matching_mna_formation;
-    const statuts_history = buildUpdatesHistory(previousFormation, updates, keys, null, true);
-
-    updatedFormation.statuts_history = statuts_history;
   }
 
   await ParcoursupFormation.findByIdAndUpdate(updatedFormation._id, updatedFormation, {

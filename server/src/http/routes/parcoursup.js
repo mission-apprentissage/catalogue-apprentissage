@@ -5,8 +5,7 @@ const mongoose = require("mongoose");
 const express = require("express");
 const { getEtablissementCoverage } = require("../../logic/controller/coverage");
 const reportRejected = require("../../jobs/parcoursup/reportRejected");
-
-const { diffFormation, buildUpdatesHistory } = require("../../logic/common/utils/diffUtils");
+const { buildUpdatesHistory } = require("../../logic/common/utils/diffUtils");
 const { updateParcoursupCoverage } = require("../../logic/updaters/coverageUpdater");
 const Boom = require("boom");
 const { createFormation } = require("../../jobs/parcoursup/export");
@@ -170,6 +169,11 @@ module.exports = () => {
   router.post(
     "/reconciliation",
     tryCatch(async (req, res) => {
+      let user = {};
+      if (req.user) {
+        user = req.session?.passport?.user;
+      }
+
       const {
         id_formation,
         reject,
@@ -194,9 +198,7 @@ module.exports = () => {
         if (matching_rejete_raison === "##USER_CANCEL##") {
           updatedFormation = {
             ...previousFormation,
-            statut_reconciliation:
-              previousFormation.statuts_history[previousFormation.statuts_history.length - 1]?.from
-                ?.statut_reconciliation || "A_VERIFIER",
+            statut_reconciliation: "A_VERIFIER",
             matching_rejete_raison: null,
             etat_reconciliation: false,
             matching_rejete_updated: true,
@@ -204,15 +206,6 @@ module.exports = () => {
             rapprochement_rejete_raison_autre: null,
             validated_formation_ids: [],
           };
-        }
-
-        // History
-        const { updates, keys } = diffFormation(previousFormation, updatedFormation);
-        if (updates) {
-          delete updates.matching_mna_formation;
-          const statuts_history = buildUpdatesHistory(previousFormation, updates, keys, null, true);
-
-          updatedFormation.statuts_history = statuts_history;
         }
 
         const formation = await ParcoursupFormation.findOneAndUpdate({ _id: id_formation }, updatedFormation, {
@@ -236,14 +229,6 @@ module.exports = () => {
       // Cancel a validated rapprochement
       if (matching_rejete_raison === "##USER_CANCEL##") {
         statut_reconciliation = "A_VERIFIER";
-        if (
-          ["AUTOMATIQUE", "INCONNU", "A_VERIFIER"].includes(
-            psFormation.statuts_history[psFormation.statuts_history.length - 1].from.statut_reconciliation
-          )
-        ) {
-          statut_reconciliation =
-            psFormation.statuts_history[psFormation.statuts_history.length - 1].from.statut_reconciliation;
-        }
 
         etat_reconciliation = false;
 
@@ -253,11 +238,26 @@ module.exports = () => {
             const mnaFormationU = await Formation.findById(mnaId);
             if (mnaFormationU) {
               mnaFormationU.parcoursup_id = null;
-              for (let jndex = mnaFormationU.updates_history.length - 1; jndex > 0; jndex--) {
+              for (let jndex = mnaFormationU.updates_history.length - 1; jndex >= 0; jndex--) {
                 const { from, to } = mnaFormationU.updates_history[jndex];
-                if (to.parcoursup_statut === PARCOURSUP_STATUS.PUBLIE) {
+                if (
+                  to.parcoursup_statut === PARCOURSUP_STATUS.PUBLIE &&
+                  from.parcoursup_statut !== PARCOURSUP_STATUS.PUBLIE
+                ) {
+                  // push this new state in history
+                  mnaFormationU.updates_history = buildUpdatesHistory(
+                    mnaFormationU,
+                    {
+                      parcoursup_statut: from.parcoursup_statut,
+                      parcoursup_raison_depublication: from.parcoursup_raison_depublication,
+                      last_update_who: user.email,
+                    },
+                    ["parcoursup_statut", "parcoursup_raison_depublication", "last_update_who"]
+                  );
+
                   mnaFormationU.parcoursup_statut = from.parcoursup_statut;
                   mnaFormationU.parcoursup_raison_depublication = from.parcoursup_raison_depublication;
+                  mnaFormationU.last_update_who = user.email;
                   break;
                 }
               }
@@ -273,15 +273,6 @@ module.exports = () => {
           matching_rejete_updated,
           validated_formation_ids: [],
         };
-
-        // History
-        const { updates, keys } = diffFormation(psFormation, updatedFormation);
-        if (updates) {
-          delete updates.matching_mna_formation;
-          const statuts_history = buildUpdatesHistory(psFormation, updates, keys, null, true);
-
-          updatedFormation.statuts_history = statuts_history;
-        }
 
         const formation = await ParcoursupFormation.findOneAndUpdate({ _id: id_formation }, updatedFormation, {
           new: true,
@@ -304,15 +295,6 @@ module.exports = () => {
           ? [...psFormation.validated_formation_ids, mnaFormationId]
           : [mnaFormationId],
       };
-
-      // History
-      const { updates, keys } = diffFormation(psFormation, updatedFormation);
-      if (updates) {
-        delete updates.matching_mna_formation;
-        const statuts_history = buildUpdatesHistory(psFormation, updates, keys, null, true);
-
-        updatedFormation.statuts_history = statuts_history;
-      }
 
       const formation = await ParcoursupFormation.findOneAndUpdate({ _id: id_formation }, updatedFormation, {
         new: true,
