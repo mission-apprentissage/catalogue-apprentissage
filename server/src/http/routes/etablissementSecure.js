@@ -46,7 +46,7 @@ module.exports = () => {
 
       const etablissement = new Etablissement({
         ...body,
-        ...(body.uai ? { uai: body.uai.trim() } : {}),
+        ...(body.uai ? { uai: body.uai.trim(), uai_valide: true } : {}),
       });
       await etablissement.save();
 
@@ -79,7 +79,7 @@ module.exports = () => {
         { _id: itemId },
         {
           ...body,
-          ...(body.uai ? { uai: body.uai.trim() } : {}),
+          ...(body.uai ? { uai: body.uai.trim(), uai_valide: true } : {}),
         },
         {
           new: true,

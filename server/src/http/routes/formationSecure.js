@@ -26,7 +26,7 @@ module.exports = () => {
       { _id: itemId },
       {
         ...body,
-        ...(body.uai_formation ? { uai_formation: body.uai_formation.trim() } : {}),
+        ...(body.uai_formation ? { uai_formation: body.uai_formation.trim(), uai_formation_valide: true } : {}),
       },
       {
         new: true,

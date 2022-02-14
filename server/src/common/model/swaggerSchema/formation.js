@@ -90,6 +90,11 @@ module.exports = {
         default: "null",
         description: "UAI du lieu de la formation",
       },
+      uai_formation_valide: {
+        type: "boolean",
+        default: "null",
+        description: "L'UAI du lieu de formation est il valide ?",
+      },
       nom: {
         type: "string",
         default: "null",

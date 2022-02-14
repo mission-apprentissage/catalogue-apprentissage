@@ -30,14 +30,11 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false) => {
     index += 1;
 
     const cfdInfoCache = cfdInfosCache.get(formation._doc.cfd) || null;
-    const { updates, formation: updatedFormation, error, serviceAvailable = true, cfdInfo } = await mnaFormationUpdater(
-      formation._doc,
-      {
-        // no need to check cp info in trainingsUpdater since it was successfully done once at converter
-        withCodePostalUpdate: formation.to_update === true || withCodePostalUpdate,
-        cfdInfo: cfdInfoCache,
-      }
-    );
+    const { updates, formation: updatedFormation, error, cfdInfo } = await mnaFormationUpdater(formation._doc, {
+      // no need to check cp info in trainingsUpdater since it was successfully done once at converter
+      withCodePostalUpdate: formation.to_update === true || withCodePostalUpdate,
+      cfdInfo: cfdInfoCache,
+    });
 
     if (cfdInfo && !cfdInfoCache) {
       cfdInfosCache.set(formation._doc.cfd, cfdInfo);
@@ -51,17 +48,14 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false) => {
     if (error) {
       formation.update_error = error;
 
-      if (serviceAvailable) {
-        // unpublish in case of errors
-        // but don't do it if service tco is unavailable
-        if (formation.published === true) {
-          formation.published = false;
-          // flag rco formation as not converted so that it retries during nightly jobs
-          await RcoFormation.findOneAndUpdate(
-            { cle_ministere_educatif: formation.cle_ministere_educatif },
-            { converted_to_mna: false }
-          );
-        }
+      // unpublish in case of errors
+      if (formation.published === true) {
+        formation.published = false;
+        // flag rco formation as not converted so that it retries during nightly jobs
+        await RcoFormation.findOneAndUpdate(
+          { cle_ministere_educatif: formation.cle_ministere_educatif },
+          { converted_to_mna: false }
+        );
       }
 
       await Formation.findOneAndUpdate({ _id: formation._id }, formation, { new: true });
