@@ -80,11 +80,6 @@ class Importer {
       } else if (updateInfo.published === false) {
         element.published = "Supprimée";
       }
-
-      // const rcoFormation = await RcoFormations.findById(element.mnaId);
-      // const updates_history = rcoFormation.updates_history[rcoFormation.updates_history.length - 1];
-      // element.from = JSON.stringify(updates_history.from);
-      // element.to = JSON.stringify(updates_history.to);
     });
 
     // eslint-disable-next-line no-unused-vars
@@ -297,6 +292,16 @@ class Importer {
         // Some formations has been updated
         if (keys.length !== 0) {
           updated.push(formation);
+        } else {
+          // set last update so that it resets expires for this document
+          await RcoFormation.findOneAndUpdate(
+            {
+              cle_ministere_educatif: formation.cle_ministere_educatif,
+            },
+            {
+              last_update_at: Date.now(),
+            }
+          );
         }
       }
     });
@@ -387,7 +392,7 @@ class Importer {
       {
         ...rcoFormation,
         ...updateInfo,
-        updates_history,
+        updates_history: updates_history.slice(-100), // keep only the last 100 elements
         last_update_at: Date.now(),
         converted_to_mna: false,
         conversion_error: null,
