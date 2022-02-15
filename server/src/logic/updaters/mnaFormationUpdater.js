@@ -315,7 +315,7 @@ const mnaFormationUpdater = async (formation, { withCodePostalUpdate = true, cfd
       tags,
       published,
       update_error,
-      uai_formation,
+      uai_formation: uai_formation?.trim(),
       ...formation?.editedFields,
     };
 
