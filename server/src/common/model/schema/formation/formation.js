@@ -374,16 +374,6 @@ const formationSchema = {
     description: "Affelnet : historique des statuts",
     noIndex: true,
   },
-  source: {
-    type: String,
-    default: null,
-    description: "Origine de la formation",
-  },
-  commentaires: {
-    type: String,
-    default: null,
-    description: "Commentaires",
-  },
   opcos: {
     type: [String],
     default: null,
@@ -409,11 +399,6 @@ const formationSchema = {
     type: Boolean,
     default: false,
     description: "Est publiée dans le flux rco",
-  },
-  draft: {
-    type: Boolean,
-    default: false,
-    description: "En cours de creation",
   },
   created_at: {
     type: Date,
