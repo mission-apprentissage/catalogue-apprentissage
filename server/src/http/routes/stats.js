@@ -11,20 +11,13 @@ module.exports = () => {
   router.post(
     "/",
     tryCatch(async (req, res) => {
-      const { source, id_rco_formation, cle_ministere_educatif } = req.body;
+      const { source } = req.body;
 
-      if (!source || !(id_rco_formation || cle_ministere_educatif)) {
-        return res.status(400).json({ error: "source and (id_rco_formation or cle_ministere_educatif) are mandatory" });
+      if (!source) {
+        return res.status(400).json({ error: "source is mandatory" });
       }
 
-      const payload = {
-        source,
-        id_rco_formation,
-        cle_ministere_educatif,
-        date: new Date(),
-      };
-
-      await Statistique.create(payload);
+      await Statistique.findOneAndUpdate({ source }, { $inc: { count: 1 } }, { upsert: true });
 
       return res.sendStatus(200);
     })

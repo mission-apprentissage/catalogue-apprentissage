@@ -1,20 +1,15 @@
 const statistiqueSchema = {
   source: {
+    index: true,
     type: String,
     default: null,
     description: "Source d'origine de la statistique",
+    required: true,
   },
-  id_rco_formation: {
-    type: String,
-    description: "Identifiant unique RCO de la formation",
-  },
-  date: {
-    type: Date,
-    description: "Date de l'évènement",
-  },
-  cle_ministere_educatif: {
-    type: String,
-    description: "Clé unique de la formation",
+  count: {
+    type: Number,
+    default: 0,
+    description: "Compteur",
   },
 };
 
