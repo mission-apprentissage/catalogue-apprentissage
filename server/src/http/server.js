@@ -80,7 +80,6 @@ swaggerSpecification.components = {
 module.exports = async (components, verbose = true) => {
   const { db } = components;
   const app = express();
-  const adminOnly = permissionsMiddleware({ isAdmin: true });
 
   app.use(bodyParser.json({ limit: "50mb" }));
   // Parse the ndjson as text for ES proxy
@@ -143,7 +142,7 @@ module.exports = async (components, verbose = true) => {
     role(components)
   );
   app.use("/api/v1/entity", apiKeyAuthMiddleware, formationSecure());
-  app.use("/api/v1/stats", apiKeyAuthMiddleware, adminOnly, stats(components));
+  app.use("/api/v1/stats", apiKeyAuthMiddleware, stats(components));
   app.use("/api/v1/entity", apiKeyAuthMiddleware, etablissementSecure(components));
   app.use("/api/v1/upload", permissionsMiddleware({ isAdmin: true }, ["page_upload"]), upload());
   app.use("/api/v1/entity", apiKeyAuthMiddleware, reglePerimetreSecure());
