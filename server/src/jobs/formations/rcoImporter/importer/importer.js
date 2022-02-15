@@ -392,7 +392,7 @@ class Importer {
       {
         ...rcoFormation,
         ...updateInfo,
-        updates_history,
+        updates_history: updates_history.slice(-100), // keep only the last 100 elements
         last_update_at: Date.now(),
         converted_to_mna: false,
         conversion_error: null,
