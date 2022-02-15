@@ -159,7 +159,8 @@ const rcoFormationsSchema = {
   last_update_at: {
     type: Date,
     default: Date.now,
-    description: "Date de dernières mise à jour",
+    description: "Date de dernière mise à jour",
+    expires: "1y", // mongo will remove the document 1 year after the last update
   },
   converted_to_mna: {
     index: true,
