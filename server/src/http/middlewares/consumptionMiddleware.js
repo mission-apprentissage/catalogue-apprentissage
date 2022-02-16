@@ -6,40 +6,39 @@ module.exports = () => {
     try {
       const ip = req.headers["x-forwarded-for"]?.split(",").shift() || req.socket?.remoteAddress;
       const route = req.url.split("?")[0];
+      const method = req.method;
 
-      const existingRouteConsumption = await Consumption.findOne({ route });
-
-      const newConsumer = { ip, callCount: 1 };
-      if (!existingRouteConsumption) {
-        await Consumption.create({
-          route,
-          globalCallCount: 1,
-          consumers: [newConsumer],
-        });
-      } else {
-        let found;
-        const consumers = existingRouteConsumption.consumers.reduce((acc, current, currentIndex, arr) => {
-          found = found || current.ip === ip;
-          acc[currentIndex] = current.ip === ip ? { ip, callCount: current.callCount++ } : current;
-
-          if (currentIndex === arr.length - 1 && !found) {
-            acc.push(newConsumer);
-          }
-          return acc;
-        }, []);
-
+      try {
         await Consumption.findOneAndUpdate(
-          { _id: existingRouteConsumption._id },
+          { route, method, "consumers.ip": ip },
           {
-            globalCallCount: existingRouteConsumption.globalCallCount++,
-            consumers,
+            $inc: { globalCallCount: 1, "consumers.$.callCount": 1 },
+          },
+          {
+            upsert: true,
+            new: false,
+          }
+        );
+      } catch (error) {
+        await Consumption.findOneAndUpdate(
+          {
+            route,
+            method,
+          },
+          {
+            $inc: { globalCallCount: 1 },
+            $push: { consumers: { ip, callCount: 1 } },
+          },
+          {
+            upsert: true,
           }
         );
       }
+
+      next();
     } catch (error) {
       logger.error(error, "Error while collecting endpoint consumption.");
+      next(error);
     }
-
-    next();
   };
 };
