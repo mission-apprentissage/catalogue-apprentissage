@@ -355,6 +355,11 @@ const formationSchema = {
     default: null,
     description: "ids ParcourSup",
   },
+  parcoursup_published_date: {
+    type: Date,
+    default: null,
+    description: 'Date de publication (passage au statut "publié")',
+  },
   affelnet_statut: {
     type: String,
     enum: [
@@ -373,6 +378,11 @@ const formationSchema = {
     default: [],
     description: "Affelnet : historique des statuts",
     noIndex: true,
+  },
+  affelnet_published_date: {
+    type: Date,
+    default: null,
+    description: 'Date de publication (passage au statut "publié")',
   },
   opcos: {
     type: [String],
