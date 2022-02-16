@@ -5,6 +5,12 @@ const consumptionSchema = {
     default: null,
     description: "Nom de la route",
   },
+  method: {
+    index: true,
+    type: String,
+    default: null,
+    description: "Method d'appel de la route",
+  },
   globalCallCount: {
     type: Number,
     default: 0,
