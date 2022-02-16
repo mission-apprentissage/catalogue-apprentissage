@@ -356,16 +356,6 @@ module.exports = {
         default: [],
         description: "Affelnet : historique des statuts",
       },
-      source: {
-        type: "string",
-        default: "null",
-        description: "Origine de la formation",
-      },
-      commentaires: {
-        type: "string",
-        default: "null",
-        description: "Commentaires",
-      },
       opcos: {
         type: "array",
         items: {
@@ -393,11 +383,6 @@ module.exports = {
         type: "boolean",
         default: false,
         description: "Est publiée dans le flux rco",
-      },
-      draft: {
-        type: "boolean",
-        default: false,
-        description: "En cours de creation",
       },
       created_at: {
         type: "string",

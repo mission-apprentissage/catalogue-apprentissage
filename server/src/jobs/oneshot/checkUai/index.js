@@ -8,7 +8,7 @@ const { Etablissement, Formation } = require("../../../common/model");
 
 const updateUaiValidity = async (collection, uaiField, uaiValidityField) => {
   console.info(`Checking for UAI in collection...`);
-  const cursor = await collection.find({ published: true }).cursor();
+  const cursor = await collection.find().cursor();
   let count = 0;
 
   for await (const entry of cursor) {
@@ -49,7 +49,12 @@ runScript(async ({ mailer }) => {
       await updateUaiValidity(Etablissement, "uai", "uai_valide");
 
       return generateCsvData(
-        await Etablissement.find({ published: true, uai_valide: false }).sort({ nom_academie: 1 }),
+        await Etablissement.find({
+          published: true,
+          uai_valide: false,
+          ferme: false,
+          formations_ids: { $exists: true, $not: { $size: 0 } },
+        }).sort({ nom_academie: 1 }),
         {
           "UAI invalide": (etablissement) => etablissement.uai,
           SIRET: (etablissement) => etablissement.siret,

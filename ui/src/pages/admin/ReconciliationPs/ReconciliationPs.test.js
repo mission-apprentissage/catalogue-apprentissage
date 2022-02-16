@@ -462,7 +462,6 @@ test("opens rapprochement modal", async () => {
       statut_reconciliation: "AUTOMATIQUE",
       matching_rejete_updated: false,
       matching_rejete_raison: null,
-      statuts_history: [],
       id_parcoursup: "33639",
       uai_cerfa: "0441975H",
       uai_insert_jeune: "0441975H",

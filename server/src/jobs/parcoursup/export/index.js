@@ -97,14 +97,14 @@ const createFormation = async (formation, email = null) => {
       last_update_who: `web service Parcoursup${email ? `, sent by ${email}` : ""}`,
     });
     formation.parcoursup_error = null;
-    await formation.save();
+    await formation.save({ validateBeforeSave: false });
   } catch (e) {
     logger.error("Parcoursup WS error", e?.response?.status, e?.response?.data ?? e, data);
     formation.parcoursup_error = `${e?.response?.status} ${
       e?.response?.data?.message ?? e?.response?.data ?? "erreur de création"
     }`;
     formation.last_update_who = `web service Parcoursup${email ? `, sent by ${email}` : ""}, received error`;
-    await formation.save();
+    await formation.save({ validateBeforeSave: false });
   }
   return formation;
 };

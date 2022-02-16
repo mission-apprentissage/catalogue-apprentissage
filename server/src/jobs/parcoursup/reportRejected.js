@@ -41,7 +41,6 @@ const reportRejected = async () => {
         etat_reconciliation,
         statut_reconciliation,
         matching_rejete_updated,
-        statuts_history,
         matching_type,
         __v,
         _id,
