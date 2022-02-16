@@ -115,7 +115,6 @@ const formatToMnaFormation = (rcoFormation) => {
     capacite: rcoFormation.capacite,
 
     email: rcoFormation.email,
-    source: "WS RCO",
     published: rcoFormation.published,
     rco_published: rcoFormation.published,
 
