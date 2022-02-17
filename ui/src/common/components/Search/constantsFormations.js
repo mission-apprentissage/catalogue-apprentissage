@@ -34,6 +34,8 @@ const FILTERS = () => [
   "qualiopi",
   "duree",
   "periode",
+  "parcoursup_published_date",
+  "affelnet_published_date",
 ];
 
 const columnsDefinition = [
