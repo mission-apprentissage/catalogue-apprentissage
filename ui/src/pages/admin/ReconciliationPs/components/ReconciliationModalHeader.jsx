@@ -84,9 +84,11 @@ const ReconciliationModalHeader = React.memo(
             if (parcoursup_keep_publish === "true") {
               body.parcoursup_statut = PARCOURSUP_STATUS.PUBLIE;
               body.parcoursup_raison_depublication = null;
+              body.parcoursup_published_date = Date.now();
             } else if (parcoursup_keep_publish === "false") {
               body.parcoursup_raison_depublication = parcoursup_raison_depublication;
               body.parcoursup_statut = PARCOURSUP_STATUS.NON_PUBLIE;
+              body.parcoursup_published_date = null;
             }
 
             const formationsARapprocher = [];
