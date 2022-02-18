@@ -52,6 +52,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
     ? React.Fragment
     : (args) => (
         <Box
+          data-testid={"uai-warning"}
           bg={"orangesoft.200"}
           p={4}
           mb={4}
