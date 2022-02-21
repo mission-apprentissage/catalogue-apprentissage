@@ -119,7 +119,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
             )}
             <Box borderTop="1px solid #E7E7E7" w="full" />
             <Flex className="search-row" flexDirection={["column", "column", "row"]}>
-              <Box className="search-sidebar">
+              <Box className="search-sidebar" px={[0, 0, 4]}>
                 <Text fontWeight="700" color="grey.800" mt={4} mb={4} textStyle="rf-text">
                   FILTRER
                 </Text>
@@ -223,7 +223,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                   </Flex>
                 )}
               </Box>
-              <div className="search-results">
+              <Box className="search-results" px={[0, 0, 4]}>
                 <Box pt={2}>
                   <SelectedFilters showClearAll={false} innerClass={{ button: "selected-filters-button" }} />
                 </Box>
@@ -308,7 +308,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                     react={{ and: filters }}
                   />
                 </Box>
-              </div>
+              </Box>
             </Flex>
           </Container>
         </Box>
