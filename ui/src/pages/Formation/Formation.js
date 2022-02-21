@@ -26,7 +26,13 @@ import { PublishModal } from "../../common/components/formation/PublishModal";
 import { buildUpdatesHistory } from "../../common/utils/historyUtils";
 import InfoTooltip from "../../common/components/InfoTooltip";
 import helpText from "../../locales/helpText.json";
-import { ArrowDownLine, ExternalLinkLine, MapPin2Fill, Parametre } from "../../theme/components/icons/";
+import {
+  ArrowDownLine,
+  ExclamationCircle,
+  ExternalLinkLine,
+  MapPin2Fill,
+  Parametre,
+} from "../../theme/components/icons/";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
 import { EditableField } from "../../common/components/formation/EditableField";
@@ -368,10 +374,14 @@ export default ({ match }) => {
                         <StatusBadge source="Parcoursup" status={formation.parcoursup_statut} mr={[0, 3]} />
                       )}
                       {hasAccessTo(user, "page_formation/voir_status_publication_aff") && (
-                        <StatusBadge source="Affelnet" status={formation.affelnet_statut} mt={[1, 0]} />
+                        <StatusBadge source="Affelnet" status={formation.affelnet_statut} mt={[2, 0]} />
                       )}
                     </Box>
-                    <Flex>
+                    <Flex
+                      alignItems="center"
+                      justifyContent={"space-between"}
+                      flexDirection={["column", "column", "row"]}
+                    >
                       {formation.parcoursup_statut === COMMON_STATUS.EN_ATTENTE &&
                         hasAccessTo(user, "page_formation/envoi_parcoursup") && (
                           <Button textStyle="sm" variant="secondary" px={8} mt={4} onClick={sendToParcoursup}>
@@ -380,6 +390,18 @@ export default ({ match }) => {
                         )}
                     </Flex>
                   </Flex>
+                )}
+
+                {formation.parcoursup_statut === COMMON_STATUS.EN_ATTENTE && formation.parcoursup_error && (
+                  <Box bg={"grey.100"} p={4} mt={4} borderLeft={"4px solid"} borderColor={"orangesoft.500"} w={"full"}>
+                    <Text>
+                      <ExclamationCircle color="orangesoft.500" mr={2} boxSize={6} mb={1} />
+                      Erreur de publication sur Parcoursup :{" "}
+                      <Text as="span" variant="highlight" bg={"transparent"}>
+                        {formation.parcoursup_error}
+                      </Text>
+                    </Text>
+                  </Box>
                 )}
               </Box>
               <Formation
