@@ -59,6 +59,7 @@ const copyAffelnetFields = (oldFormation, newFormation) => {
   newFormation.affelnet_code_nature = oldFormation.affelnet_code_nature;
   newFormation.affelnet_secteur = oldFormation.affelnet_secteur;
   newFormation.affelnet_raison_depublication = oldFormation.affelnet_raison_depublication;
+  newFormation.affelnet_published_date = oldFormation.affelnet_published_date;
   return newFormation;
 };
 
@@ -66,6 +67,7 @@ const copyParcoursupFields = (oldFormation, newFormation) => {
   newFormation.parcoursup_statut = oldFormation.parcoursup_statut;
   newFormation.parcoursup_statut_history = oldFormation.parcoursup_statut_history;
   newFormation.parcoursup_raison_depublication = oldFormation.parcoursup_raison_depublication;
+  newFormation.parcoursup_published_date = oldFormation.parcoursup_published_date;
   return newFormation;
 };
 

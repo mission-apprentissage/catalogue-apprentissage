@@ -35,13 +35,53 @@ module.exports = {
       },
       affelnet_mefs_10: {
         type: "array",
-        items: {},
+        items: {
+          title: "itemOf_affelnet_mefs_10",
+          type: "object",
+          properties: {
+            mef10: {
+              type: "string",
+            },
+            modalite: {
+              title: "modalite",
+              type: "object",
+              properties: {
+                duree: {
+                  type: "string",
+                },
+                annee: {
+                  type: "string",
+                },
+              },
+            },
+          },
+        },
         default: [],
         description: "Tableau de Code MEF 10 caractères et modalités (filtrés pour Affelnet si applicable)",
       },
       parcoursup_mefs_10: {
         type: "array",
-        items: {},
+        items: {
+          title: "itemOf_parcoursup_mefs_10",
+          type: "object",
+          properties: {
+            mef10: {
+              type: "string",
+            },
+            modalite: {
+              title: "modalite",
+              type: "object",
+              properties: {
+                duree: {
+                  type: "string",
+                },
+                annee: {
+                  type: "string",
+                },
+              },
+            },
+          },
+        },
         default: [],
         description: "Tableau de Code MEF 10 caractères et modalités (filtrés pour Parcoursup si applicable)",
       },
@@ -337,6 +377,12 @@ module.exports = {
         default: "null",
         description: "ids ParcourSup",
       },
+      parcoursup_published_date: {
+        type: "string",
+        default: "null",
+        description: 'Date de publication (passage au statut "publié")',
+        format: "date-time",
+      },
       affelnet_statut: {
         type: "string",
         enum: [
@@ -355,6 +401,12 @@ module.exports = {
         items: {},
         default: [],
         description: "Affelnet : historique des statuts",
+      },
+      affelnet_published_date: {
+        type: "string",
+        default: "null",
+        description: 'Date de publication (passage au statut "publié")',
+        format: "date-time",
       },
       opcos: {
         type: "array",
@@ -507,7 +559,27 @@ module.exports = {
       },
       bcn_mefs_10: {
         type: "array",
-        items: {},
+        items: {
+          title: "itemOf_bcn_mefs_10",
+          type: "object",
+          properties: {
+            mef10: {
+              type: "string",
+            },
+            modalite: {
+              title: "modalite",
+              type: "object",
+              properties: {
+                duree: {
+                  type: "string",
+                },
+                annee: {
+                  type: "string",
+                },
+              },
+            },
+          },
+        },
         default: "null",
         description: "BCN : Codes MEF 10 caractères",
       },
