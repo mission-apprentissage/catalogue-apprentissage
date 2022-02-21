@@ -3,13 +3,15 @@ const { Consumption } = require("../../common/model");
 
 module.exports = async (req) => {
   try {
-    const ip = req.headers["x-forwarded-for"]?.split(",").shift() || req.socket?.remoteAddress;
-    const route = req.route ? `${req.baseUrl}${req.route?.path}` : req.url.split("?")[0];
+    const caller =
+      req.headers["origin"] ?? (req.headers["x-forwarded-for"]?.split(",").shift() || req.socket?.remoteAddress);
+    const path = req.route ? `${req.baseUrl}${req.route?.path}` : req.url.split("?")[0];
     const method = req.method;
+    const date = new Date().toISOString().split("T")[0];
 
     try {
       await Consumption.findOneAndUpdate(
-        { route, method, "consumers.ip": ip },
+        { path, method, "consumers.caller": caller, "consumers.date": date },
         {
           $inc: { globalCallCount: 1, "consumers.$.callCount": 1 },
         },
@@ -21,12 +23,12 @@ module.exports = async (req) => {
     } catch (error) {
       await Consumption.findOneAndUpdate(
         {
-          route,
+          path,
           method,
         },
         {
           $inc: { globalCallCount: 1 },
-          $push: { consumers: { ip, callCount: 1 } },
+          $push: { consumers: { caller, date, callCount: 1 } },
         },
         {
           upsert: true,
