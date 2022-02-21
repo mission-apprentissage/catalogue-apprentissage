@@ -177,6 +177,7 @@ test("should compute submit body when UNpublish affelnet", () => {
     body: {
       affelnet_raison_depublication: "not to be published",
       affelnet_statut: AFFELNET_STATUS.NON_PUBLIE,
+      affelnet_published_date: null,
     },
     shouldRemovePsReconciliation: false,
     shouldRestorePsReconciliation: false,
@@ -298,6 +299,7 @@ test("should compute submit body when UNpublish parcoursup", () => {
 
   expect(result).toEqual({
     body: {
+      parcoursup_published_date: null,
       parcoursup_raison_depublication: "not to be published",
       parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIE,
     },

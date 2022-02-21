@@ -52,6 +52,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
     ? React.Fragment
     : (args) => (
         <Box
+          data-testid={"uai-warning"}
           bg={"orangesoft.200"}
           p={4}
           mb={4}
@@ -165,9 +166,34 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
               </Text>
             </Box>
           </Box>
-          <Box mb={[0, 0, 16]} px={8}>
+          <Box mb={16} px={8}>
             <OrganismesBlock formation={formation} />
           </Box>
+          {(formation?.affelnet_published_date ?? formation?.parcoursup_published_date) && (
+            <Box mb={16} px={8}>
+              <Heading textStyle="h4" color="grey.800" mb={4}>
+                Autres informations
+              </Heading>
+              {formation?.affelnet_published_date && (
+                <Text mb={4}>
+                  Date de publication sur Affelnet :{" "}
+                  <Text as="span" variant="highlight">
+                    {new Date(formation.affelnet_published_date).toLocaleDateString("fr-FR")}
+                  </Text>{" "}
+                  <InfoTooltip description={helpText.formation.affelnet_published_date} />
+                </Text>
+              )}
+              {formation?.parcoursup_published_date && (
+                <Text mb={4}>
+                  Date de publication sur Parcoursup :{" "}
+                  <Text as="span" variant="highlight">
+                    {new Date(formation.parcoursup_published_date).toLocaleDateString("fr-FR")}
+                  </Text>{" "}
+                  <InfoTooltip description={helpText.formation.parcoursup_published_date} />
+                </Text>
+              )}
+            </Box>
+          )}
         </GridItem>
       </Grid>
     </Box>
@@ -323,6 +349,7 @@ export default ({ match }) => {
                       <Button
                         textStyle="sm"
                         variant="primary"
+                        minW={null}
                         px={8}
                         mt={[8, 8, 0]}
                         onClick={() => {

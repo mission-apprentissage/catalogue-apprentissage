@@ -258,6 +258,7 @@ module.exports = () => {
                   mnaFormationU.parcoursup_statut = from.parcoursup_statut;
                   mnaFormationU.parcoursup_raison_depublication = from.parcoursup_raison_depublication;
                   mnaFormationU.last_update_who = user.email;
+                  mnaFormationU.parcoursup_published_date = null;
                   break;
                 }
               }

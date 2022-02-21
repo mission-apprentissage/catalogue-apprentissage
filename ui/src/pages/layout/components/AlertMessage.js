@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Alert, AlertIcon, AlertTitle, AlertDescription, CloseButton, Text } from "@chakra-ui/react";
+import { Box, Alert, AlertIcon, AlertTitle, AlertDescription, CloseButton, Text, Flex } from "@chakra-ui/react";
 import { _get, _delete } from "../../../common/httpClient";
 import useAuth from "../../../common/hooks/useAuth";
 import { hasAccessTo } from "../../../common/utils/rolesUtils";
@@ -43,11 +43,17 @@ const AlertMessage = () => {
   };
   if (messages.length === 0) return null;
   return (
-    <Box>
-      <Alert status="error">
-        <AlertIcon />
-        <AlertTitle mr={2}>Maintenance : </AlertTitle>
-        <AlertDescription>
+    <Box m={0} fontSize={["omega", "omega", "epsilon"]}>
+      <Alert status="error" flexDirection={["column", "column", "column", "row"]} m={0}>
+        <Flex m={0} p={0}>
+          <Flex m={0}>
+            <AlertIcon boxSize={6} />
+          </Flex>
+          <AlertTitle m={0} p={0}>
+            Maintenance&nbsp;:
+          </AlertTitle>
+        </Flex>
+        <AlertDescription m={0} pl={2}>
           {messages.map((element) => element.enabled && <Text key={element._id}>{element.msg}</Text>)}
         </AlertDescription>
         {auth && hasAccessTo(auth, "page_message_maintenance") && (

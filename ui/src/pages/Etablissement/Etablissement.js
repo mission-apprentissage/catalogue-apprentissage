@@ -69,7 +69,7 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
 
   let creationDate = "";
   try {
-    creationDate = new Date(etablissement.date_creation).toLocaleDateString();
+    creationDate = new Date(etablissement.date_creation).toLocaleDateString("fr-FR");
   } catch (e) {
     console.error("can't display creation date ", etablissement.date_creation);
   }
@@ -78,6 +78,7 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
     ? React.Fragment
     : (args) => (
         <Box
+          data-testid={"uai-warning"}
           bg={"orangesoft.200"}
           p={4}
           mb={4}
