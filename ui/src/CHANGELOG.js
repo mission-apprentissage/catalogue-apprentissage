@@ -4,10 +4,49 @@ import { Link } from "@chakra-ui/react";
 const changelog = {
   list: [
     {
-      version: "5.9.0",
+      version: "5.11.0",
       date: "Prochainement",
       about: `<h4>À venir</h4>`,
       fixes: [],
+      features: [],
+      improvements: [],
+    },
+    {
+      version: "5.10.0",
+      date: "Le 21 Février 2022",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [],
+      features: [
+        "Affichage et filtrage de la date de publication sur les plateformes",
+        "Affichage des erreurs de publication vers Parcoursup sur la fiche formation",
+      ],
+      improvements: [],
+    },
+    {
+      version: "5.9.1",
+      date: "Le 17 Février 2022",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [],
+      features: ["Suivi de la consommation de l'API du catalogue"],
+      improvements: [],
+    },
+    {
+      version: "5.9.0",
+      date: "Le 16 Février 2022",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [],
+      features: [],
+      improvements: ["Amélioration des performances de l’api via le nettoyage de données"],
+    },
+    {
+      version: "5.8.1",
+      date: "Le 14 Février 2022",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: ["Corrections sur l’export des établissements et formations avec des UAIs invalides"],
       features: [],
       improvements: [],
     },
