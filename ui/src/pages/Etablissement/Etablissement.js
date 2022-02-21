@@ -23,7 +23,7 @@ import {
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import useAuth from "../../common/hooks/useAuth";
-import { _get, _post, _put } from "../../common/httpClient";
+import { _get } from "../../common/httpClient";
 import Layout from "../layout/Layout";
 import { hasAccessTo, hasRightToEditEtablissement } from "../../common/utils/rolesUtils";
 import { NavLink } from "react-router-dom";
@@ -34,12 +34,9 @@ import { HowToFixModal } from "../../common/components/organisme/HowToFixModal";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
 import { QualiopiBadge } from "../../common/components/QualiopiBadge";
-import { buildUpdatesHistory } from "../../common/utils/historyUtils";
+import { etablissementService, updateUaiOrganisme } from "../../common/api/organisme";
 
 const sleep = (m) => new Promise((r) => setTimeout(r, m));
-
-const endpointTCO =
-  process.env.REACT_APP_ENDPOINT_TCO || "https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -228,14 +225,21 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
               <UaiContainer>
                 <Text mb={etablissement?.uai_valide ? 4 : 0}>
                   {hasRightToEdit && !edition && (
-                    <Button onClick={onEdit} variant="unstyled" aria-label="Modifier l'UAI">
+                    <Button data-testid="uai-edit" onClick={onEdit} variant="unstyled" aria-label="Modifier l'UAI">
                       <Edit2Fill w="16px" h="16px" color="bluefrance" mr="8px" mb="7px" />
                     </Button>
                   )}
                   UAI rattaché au SIRET : {}
                   {edition ? (
                     <>
-                      <Input type="text" variant="edition" name="uai" onChange={handleChange} value={values.uai} />
+                      <Input
+                        data-testid="uai-input"
+                        type="text"
+                        variant="edition"
+                        name="uai"
+                        onChange={handleChange}
+                        value={values.uai}
+                      />
                       <Button
                         mt={2}
                         mr={2}
@@ -361,24 +365,21 @@ export default ({ match }) => {
           setModal(true);
           setGatherData(1);
           try {
-            const { etablissement: updatedEtablissement, error } = await _post(
-              `${endpointTCO}/services/etablissement`,
-              {
-                ...etablissement,
-                uai: trimedUai,
-              }
-            );
+            const { etablissement: updatedEtablissement, error } = await etablissementService({
+              ...etablissement,
+              uai: trimedUai,
+            });
 
             if (error) {
               throw new Error(error);
             }
 
-            result = await _put(`${endpointNewFront}/entity/etablissement/${match.params.id}`, {
-              ...updatedEtablissement,
-              last_update_at: Date.now(),
-              updates_history: buildUpdatesHistory(etablissement, { uai: trimedUai, last_update_who: user.email }, [
-                "uai",
-              ]),
+            result = await updateUaiOrganisme({
+              id: match.params.id,
+              etablissement,
+              body: updatedEtablissement,
+              uai: trimedUai,
+              user,
             });
           } catch (err) {
             console.error(err);
