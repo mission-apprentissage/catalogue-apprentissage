@@ -78,6 +78,7 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
     ? React.Fragment
     : (args) => (
         <Box
+          data-testid={"uai-warning"}
           bg={"orangesoft.200"}
           p={4}
           mb={4}
