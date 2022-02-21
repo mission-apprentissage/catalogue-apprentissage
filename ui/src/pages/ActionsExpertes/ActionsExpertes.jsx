@@ -60,9 +60,9 @@ export default () => {
             {title}
           </Heading>
           {searchState.loaded && (
-            <Grid templateColumns="repeat(4, 1fr)" gap={4} minH="350px" my={4} data-testid={"grid"}>
+            <Grid templateColumns="repeat(3, 1fr)" gap={4} minH="350px" my={4} data-testid={"grid"}>
               {(isUserAdmin(auth) || hasAccessTo(auth, "page_reconciliation_ps")) && (
-                <GridItem>
+                <GridItem colSpan={[3, 3, 1]}>
                   <Card
                     info={`${(
                       (searchState.countReconciliationPs.countValide * 100) /
@@ -77,7 +77,7 @@ export default () => {
               )}
 
               {(isUserAdmin(auth) || hasAccessTo(auth, "page_perimetre_af")) && (
-                <GridItem>
+                <GridItem colSpan={[3, 3, 1]}>
                   <Card
                     linkTo="/perimetre-affelnet"
                     title="Règles d'intégration des formations à la plateforme Affelnet"
@@ -88,7 +88,7 @@ export default () => {
               )}
 
               {(isUserAdmin(auth) || hasAccessTo(auth, "page_perimetre_ps")) && (
-                <GridItem>
+                <GridItem colSpan={[3, 3, 1]}>
                   <Card
                     linkTo="/perimetre-parcoursup"
                     title="Règles d'intégration des formations à la plateforme Parcoursup"

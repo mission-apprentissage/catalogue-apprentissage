@@ -209,11 +209,11 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
         </GridItem>
         <GridItem colSpan={[12, 12, 5]} py={8}>
           <Box>
-            <Heading textStyle="h4" color="grey.800" px={8}>
+            <Heading textStyle="h4" color="grey.800" px={[4, 4, 8]}>
               Informations complémentaires
             </Heading>
             {countFormations > 0 ? (
-              <Box mt={2} mb={4} px={5}>
+              <Box mt={2} mb={4} px={[2, 2, 5]}>
                 <Link as={NavLink} to={linkFormations} variant={"pill"} textStyle="rf-text" isExternal>
                   Voir les {countFormations} formations associées à cet organisme <ArrowRightLine w="9px" h="9px" />
                 </Link>
@@ -224,7 +224,7 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
               </Box>
             )}
 
-            <Box textStyle="rf-text" px={8}>
+            <Box textStyle="rf-text" px={[4, 4, 8]}>
               <UaiContainer>
                 <Text mb={etablissement?.uai_valide ? 4 : 0}>
                   {hasRightToEdit && !edition && (

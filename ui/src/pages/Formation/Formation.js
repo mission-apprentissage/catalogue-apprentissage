@@ -77,7 +77,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
         </GridItem>
         <GridItem colSpan={[12, 12, 5]} py={8}>
           <Box mb={16}>
-            <Heading textStyle="h4" color="grey.800" px={8}>
+            <Heading textStyle="h4" color="grey.800" px={[4, 4, 8]}>
               <MapPin2Fill w="12px" h="15px" mr="5px" mb="5px" />
               Lieu de la formation
             </Heading>
@@ -172,11 +172,11 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
               </Text>
             </Box>
           </Box>
-          <Box mb={16} px={8}>
+          <Box mb={16} px={[4, 4, 8]}>
             <OrganismesBlock formation={formation} />
           </Box>
           {(formation?.affelnet_published_date ?? formation?.parcoursup_published_date) && (
-            <Box mb={16} px={8}>
+            <Box mb={[0, 0, 16]} px={[4, 4, 8]}>
               <Heading textStyle="h4" color="grey.800" mb={4}>
                 Autres informations
               </Heading>
