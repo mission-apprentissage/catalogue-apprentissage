@@ -1,6 +1,7 @@
 module.exports = {
   async up(db) {
-    const date = new Date().toISOString().split("T")[0];
+    const date = new Date();
+    date.setUTCHours(0, 0, 0, 0);
 
     const collection = db.collection("consumptions");
 

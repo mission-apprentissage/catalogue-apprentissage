@@ -4,7 +4,7 @@ const consumerSchema = new mongoose.Schema(
   {
     caller: String,
     callCount: Number,
-    date: String,
+    date: Date,
   },
   { _id: false }
 );

@@ -7,7 +7,7 @@ module.exports = async (req) => {
       req.headers["origin"] ?? (req.headers["x-forwarded-for"]?.split(",").shift() || req.socket?.remoteAddress);
     const path = req.route ? `${req.baseUrl}${req.route?.path}` : req.url.split("?")[0];
     const method = req.method;
-    const date = new Date().toISOString().split("T")[0];
+    const date = new Date().setUTCHours(0, 0, 0, 0);
 
     try {
       await Consumption.findOneAndUpdate(
