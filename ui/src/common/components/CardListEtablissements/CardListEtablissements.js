@@ -20,7 +20,7 @@ const CardListEtablissements = ({ data, withoutLink }) => {
           <Text textStyle="sm">Académie : {data.nom_academie}</Text>
           <Box>
             <Flex justifyContent="space-between">
-              <Flex>
+              <Flex flexWrap={"wrap"}>
                 {data.tags &&
                   data.tags
                     .sort((a, b) => a - b)
