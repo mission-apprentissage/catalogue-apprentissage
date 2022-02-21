@@ -40,6 +40,9 @@ async function reconciliationAffelnet(formationAffelnet) {
 
     if (formation.affelnet_statut !== AFFELNET_STATUS.NON_PUBLIE) {
       update.affelnet_statut = AFFELNET_STATUS.PUBLIE;
+      if (!formation.affelnet_published_date) {
+        formation.affelnet_published_date = Date.now();
+      }
     }
     update.last_update_at = Date.now();
     await Formation.findOneAndUpdate({ cle_ministere_educatif }, update);

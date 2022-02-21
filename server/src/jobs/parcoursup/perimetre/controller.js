@@ -170,6 +170,24 @@ const run = async () => {
     });
   });
 
+  // ensure published date is set
+  await Formation.updateMany(
+    {
+      parcoursup_published_date: null,
+      parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
+    },
+    { $set: { parcoursup_published_date: Date.now() } }
+  );
+
+  // ensure published date is not set
+  await Formation.updateMany(
+    {
+      parcoursup_published_date: { $ne: null },
+      parcoursup_statut: { $ne: PARCOURSUP_STATUS.PUBLIE },
+    },
+    { $set: { parcoursup_published_date: null } }
+  );
+
   // Push entry in tags history
   await updateTagsHistory("parcoursup_statut");
 

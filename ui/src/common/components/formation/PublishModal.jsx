@@ -73,6 +73,7 @@ const getSubmitBody = ({
     ) {
       body.affelnet_raison_depublication = affelnet_raison_depublication;
       body.affelnet_statut = AFFELNET_STATUS.NON_PUBLIE;
+      body.affelnet_published_date = null;
     }
   }
 
@@ -103,6 +104,7 @@ const getSubmitBody = ({
     ) {
       body.parcoursup_raison_depublication = parcoursup_raison_depublication;
       body.parcoursup_statut = PARCOURSUP_STATUS.NON_PUBLIE;
+      body.parcoursup_published_date = null;
       shouldRemovePsReconciliation = [PARCOURSUP_STATUS.EN_ATTENTE, PARCOURSUP_STATUS.PUBLIE].includes(
         formation.parcoursup_statut
       );

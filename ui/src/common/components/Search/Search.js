@@ -119,7 +119,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
             )}
             <Box borderTop="1px solid #E7E7E7" w="full" />
             <Flex className="search-row" flexDirection={["column", "column", "row"]}>
-              <Box className="search-sidebar">
+              <Box className="search-sidebar" px={[0, 0, 4]}>
                 <Text fontWeight="700" color="grey.800" mt={4} mb={4} textStyle="rf-text">
                   FILTRER
                 </Text>
@@ -163,25 +163,67 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                     );
                   })}
                 {isBaseFormations && auth?.sub !== "anonymous" && (
-                  <DateRange
-                    componentId="periode"
-                    dataField="periode"
-                    title="Période"
-                    placeholder={{
-                      start: "Date de début",
-                      end: "Date de fin",
-                    }}
-                    numberOfMonths={2}
-                    queryFormat="date"
-                    autoFocusEnd={true}
-                    showClear={true}
-                    showFilter={true}
-                    filterLabel="Période"
-                    URLParams={true}
-                  />
+                  <Flex pt={3}>
+                    <DateRange
+                      componentId="periode"
+                      dataField="periode"
+                      title="Période"
+                      placeholder={{
+                        start: "Date de début",
+                        end: "Date de fin",
+                      }}
+                      numberOfMonths={1}
+                      queryFormat="date"
+                      autoFocusEnd={true}
+                      showClear={true}
+                      showFilter={true}
+                      filterLabel="Période"
+                      URLParams={true}
+                    />
+                  </Flex>
+                )}
+                {isBaseFormations && auth?.sub !== "anonymous" && (
+                  <Flex pt={3}>
+                    <DateRange
+                      componentId="parcoursup_published_date"
+                      dataField="parcoursup_published_date"
+                      title="Date de publication sur Parcoursup"
+                      placeholder={{
+                        start: "Date de début",
+                        end: "Date de fin",
+                      }}
+                      numberOfMonths={1}
+                      queryFormat="date"
+                      autoFocusEnd={true}
+                      showClear={true}
+                      showFilter={true}
+                      filterLabel="Date de publication"
+                      URLParams={true}
+                    />
+                  </Flex>
+                )}
+                {isBaseFormations && auth?.sub !== "anonymous" && (
+                  <Flex pt={3}>
+                    <DateRange
+                      componentId="affelnet_published_date"
+                      dataField="affelnet_published_date"
+                      title="Date de publication sur Affelnet"
+                      placeholder={{
+                        start: "Date de début",
+                        end: "Date de fin",
+                      }}
+                      numberOfMonths={1}
+                      queryFormat="date"
+                      autoFocusEnd={true}
+                      showClear={true}
+                      showFilter={true}
+                      filterLabel="Date de publication"
+                      URLParams={true}
+                    />
+                  </Flex>
                 )}
               </Box>
-              <div className="search-results">
+              <Box className="search-results" px={[0, 0, 4]}>
                 <Box pt={2}>
                   <SelectedFilters showClearAll={false} innerClass={{ button: "selected-filters-button" }} />
                 </Box>
@@ -266,7 +308,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                     react={{ and: filters }}
                   />
                 </Box>
-              </div>
+              </Box>
             </Flex>
           </Container>
         </Box>

@@ -26,7 +26,13 @@ import { PublishModal } from "../../common/components/formation/PublishModal";
 import { buildUpdatesHistory } from "../../common/utils/historyUtils";
 import InfoTooltip from "../../common/components/InfoTooltip";
 import helpText from "../../locales/helpText.json";
-import { ArrowDownLine, ExternalLinkLine, MapPin2Fill, Parametre } from "../../theme/components/icons/";
+import {
+  ArrowDownLine,
+  ExclamationCircle,
+  ExternalLinkLine,
+  MapPin2Fill,
+  Parametre,
+} from "../../theme/components/icons/";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
 import { EditableField } from "../../common/components/formation/EditableField";
@@ -52,6 +58,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
     ? React.Fragment
     : (args) => (
         <Box
+          data-testid={"uai-warning"}
           bg={"orangesoft.200"}
           p={4}
           mb={4}
@@ -70,7 +77,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
         </GridItem>
         <GridItem colSpan={[12, 12, 5]} py={8}>
           <Box mb={16}>
-            <Heading textStyle="h4" color="grey.800" px={8}>
+            <Heading textStyle="h4" color="grey.800" px={[4, 4, 8]}>
               <MapPin2Fill w="12px" h="15px" mr="5px" mb="5px" />
               Lieu de la formation
             </Heading>
@@ -165,9 +172,34 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
               </Text>
             </Box>
           </Box>
-          <Box mb={[0, 0, 16]} px={8}>
+          <Box mb={16} px={[4, 4, 8]}>
             <OrganismesBlock formation={formation} />
           </Box>
+          {(formation?.affelnet_published_date ?? formation?.parcoursup_published_date) && (
+            <Box mb={[0, 0, 16]} px={[4, 4, 8]}>
+              <Heading textStyle="h4" color="grey.800" mb={4}>
+                Autres informations
+              </Heading>
+              {formation?.affelnet_published_date && (
+                <Text mb={4}>
+                  Date de publication sur Affelnet :{" "}
+                  <Text as="span" variant="highlight">
+                    {new Date(formation.affelnet_published_date).toLocaleDateString("fr-FR")}
+                  </Text>{" "}
+                  <InfoTooltip description={helpText.formation.affelnet_published_date} />
+                </Text>
+              )}
+              {formation?.parcoursup_published_date && (
+                <Text mb={4}>
+                  Date de publication sur Parcoursup :{" "}
+                  <Text as="span" variant="highlight">
+                    {new Date(formation.parcoursup_published_date).toLocaleDateString("fr-FR")}
+                  </Text>{" "}
+                  <InfoTooltip description={helpText.formation.parcoursup_published_date} />
+                </Text>
+              )}
+            </Box>
+          )}
         </GridItem>
       </Grid>
     </Box>
@@ -323,6 +355,7 @@ export default ({ match }) => {
                       <Button
                         textStyle="sm"
                         variant="primary"
+                        minW={null}
                         px={8}
                         mt={[8, 8, 0]}
                         onClick={() => {
@@ -341,10 +374,14 @@ export default ({ match }) => {
                         <StatusBadge source="Parcoursup" status={formation.parcoursup_statut} mr={[0, 3]} />
                       )}
                       {hasAccessTo(user, "page_formation/voir_status_publication_aff") && (
-                        <StatusBadge source="Affelnet" status={formation.affelnet_statut} mt={[1, 0]} />
+                        <StatusBadge source="Affelnet" status={formation.affelnet_statut} mt={[2, 0]} />
                       )}
                     </Box>
-                    <Flex>
+                    <Flex
+                      alignItems="center"
+                      justifyContent={"space-between"}
+                      flexDirection={["column", "column", "row"]}
+                    >
                       {formation.parcoursup_statut === COMMON_STATUS.EN_ATTENTE &&
                         hasAccessTo(user, "page_formation/envoi_parcoursup") && (
                           <Button textStyle="sm" variant="secondary" px={8} mt={4} onClick={sendToParcoursup}>
@@ -353,6 +390,18 @@ export default ({ match }) => {
                         )}
                     </Flex>
                   </Flex>
+                )}
+
+                {formation.parcoursup_statut === COMMON_STATUS.EN_ATTENTE && formation.parcoursup_error && (
+                  <Box bg={"grey.100"} p={4} mt={4} borderLeft={"4px solid"} borderColor={"orangesoft.500"} w={"full"}>
+                    <Text>
+                      <ExclamationCircle color="orangesoft.500" mr={2} boxSize={6} mb={1} />
+                      Erreur de publication sur Parcoursup :{" "}
+                      <Text as="span" variant="highlight" bg={"transparent"}>
+                        {formation.parcoursup_error}
+                      </Text>
+                    </Text>
+                  </Box>
                 )}
               </Box>
               <Formation

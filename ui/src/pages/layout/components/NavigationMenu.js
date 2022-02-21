@@ -11,7 +11,7 @@ const NavigationMenu = (props) => {
   const toggle = () => setIsOpen(!isOpen);
 
   return (
-    <NavBarContainer {...props}>
+    <NavBarContainer {...props} position={"relative"}>
       <NavToggle toggle={toggle} isOpen={isOpen} />
       <NavLinks isOpen={isOpen} />
     </NavBarContainer>
@@ -20,7 +20,13 @@ const NavigationMenu = (props) => {
 
 const NavToggle = ({ toggle, isOpen }) => {
   return (
-    <Box display={{ base: "block", md: "none" }} onClick={toggle} py={4}>
+    <Box
+      display={{ base: "block", md: "none" }}
+      onClick={toggle}
+      py={4}
+      position={isOpen ? "absolute" : "relative"}
+      top={0}
+    >
       {isOpen ? <Close boxSize={8} /> : <MenuFill boxSize={8} />}
     </Box>
   );
@@ -32,7 +38,7 @@ const NavItem = ({ children, to = "/", ...rest }) => {
 
   return (
     <Link
-      p={4}
+      p={3}
       as={NavLink}
       to={to}
       color={isActive ? "bluefrance" : "grey.800"}
@@ -53,9 +59,9 @@ const NavLinks = ({ isOpen }) => {
     <Box display={{ base: isOpen ? "block" : "none", md: "block" }} flexBasis={{ base: "100%", md: "auto" }}>
       <Flex
         align="center"
-        justify={["center", "space-between", "flex-end", "flex-end"]}
-        direction={["column", "row", "row", "row"]}
-        pb={[8, 0]}
+        justify={["center", "center", "flex-end", "flex-end"]}
+        direction={["column", "column", "row", "row"]}
+        py={2}
         textStyle="sm"
       >
         <NavItem to="/">Accueil</NavItem>
