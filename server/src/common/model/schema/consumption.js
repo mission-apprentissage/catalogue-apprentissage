@@ -1,15 +1,26 @@
+const mongoose = require("mongoose");
+
+const consumerSchema = new mongoose.Schema(
+  {
+    caller: String,
+    callCount: Number,
+    date: Date,
+  },
+  { _id: false }
+);
+
 const consumptionSchema = {
-  route: {
+  path: {
     index: true,
     type: String,
     default: null,
-    description: "Nom de la route",
+    description: "Chemin d'appel",
   },
   method: {
     index: true,
     type: String,
     default: null,
-    description: "Method d'appel de la route",
+    description: "Method d'appel",
   },
   globalCallCount: {
     type: Number,
@@ -17,7 +28,7 @@ const consumptionSchema = {
     description: "Nombre d'appels de la route",
   },
   consumers: {
-    type: [{ ip: String, callCount: Number }],
+    type: [consumerSchema],
     default: [],
     description: "Consommateur de l'api",
   },
