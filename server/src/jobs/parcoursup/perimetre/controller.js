@@ -12,7 +12,6 @@ const run = async () => {
     {
       $or: [
         { parcoursup_statut: null },
-        { etablissement_gestionnaire_catalogue_published: false },
         { etablissement_reference_catalogue_published: false },
         { published: false },
         { cfd_outdated: true },
