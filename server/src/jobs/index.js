@@ -8,7 +8,7 @@ const parcoursupJobs = require("./parcoursup");
 const affelnetJobs = require("./affelnet");
 const etablissementsJobs = require("./etablissements");
 const formationsJobs = require("./formations");
-const checkUai = require("./oneshot/checkUai");
+const checkUai = require("./checkUai");
 
 const KIT_LOCAL_PATH = "/data/uploads/CodeDiplome_RNCP_latest_kit.csv";
 const CONVENTION_FILES_DIR = path.join(__dirname, "conventionFilesImporter/assets");
