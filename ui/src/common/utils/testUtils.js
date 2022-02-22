@@ -10,8 +10,8 @@ export const renderWithRouter = (ui, { route = "/" } = {}) => {
   return render(ui, { wrapper: BrowserRouter });
 };
 
-export const grantAnonymousAccess = (...page) => {
+export const grantAnonymousAccess = ({ acl, academie }) => {
   jest
     .spyOn(useAuth, "default")
-    .mockImplementation(() => [{ username: "anonymous", roles: ["public"], acl: page }, () => {}]);
+    .mockImplementation(() => [{ username: "anonymous", roles: ["public"], acl, academie }, () => {}]);
 };

@@ -293,7 +293,7 @@ test("renders a training page", async () => {
 });
 
 test("display an error when uai is invalid", async () => {
-  grantAnonymousAccess("page_formation");
+  grantAnonymousAccess({ acl: ["page_formation"] });
 
   const { getByText, queryByText, queryByTestId } = renderWithRouter(<Formation match={{ params: { id: 2 } }} />);
 
@@ -307,7 +307,7 @@ test("display an error when uai is invalid", async () => {
 });
 
 test("don't display an error when uai is valid", async () => {
-  grantAnonymousAccess("page_formation");
+  grantAnonymousAccess({ acl: ["page_formation"] });
 
   const { getByText, queryByText, queryByTestId } = renderWithRouter(<Formation match={{ params: { id: 1 } }} />);
 
