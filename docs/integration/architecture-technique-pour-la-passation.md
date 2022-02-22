@@ -4,12 +4,12 @@
 
 Afin de transmettre aux parties prenantes les modules et les données qui leur sont spécifiques, il est apparu que le meilleur moyen est de scinder le catalogue actuel en deux :
 
-* un catalogue **"cœur"** qui va gérer la vérification et l'enrichissement des données, l'exposition par api, le contrôle de la qualité des données, etc. 
+* un catalogue **"cœur"** qui va gérer la vérification et l'enrichissement des données, l'exposition par api, le contrôle de la qualité des données, etc.&#x20;
 * un catalogue **"éducation"** dédié aux ministères éducatifs pour alimenter en formations en apprentissage Affelnet et Parcoursup. Cette application pourra être déployée de façon indépendante pour chacun des ministères éducatifs, ou mutualisée selon le besoin.
 
 ## Vue d'ensemble
 
-![Architecture cible pour la passation](../../.gitbook/assets/architecture-passation-octobre-2021-3-.png)
+![Architecture cible pour la passation (mise à jour du 22/02/2022](<../.gitbook/assets/Architecture passation - février 2022.png>)
 
 ## Métriques
 
