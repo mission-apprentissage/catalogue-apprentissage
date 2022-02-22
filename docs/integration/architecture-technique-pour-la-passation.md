@@ -13,9 +13,11 @@ Afin de transmettre aux parties prenantes les modules et les données qui leur s
 
 ## Métriques
 
-### Décompte des lignes de code du catalogue par module pour Parcoursup
+### Décompte des lignes de code du catalogue par module
 
-:mega: Nous n'avons pas encore supprimé les traitements de fiabilisation qui doivent être repris par RCO et le code spécifique pour les ministères éducatifs.
+{% hint style="info" %}
+Nous n'avons pas encore supprimé les traitements de fiabilisation qui doivent être repris par RCO
+{% endhint %}
 
 Il y a un bloc squelette à prendre côté backend (7500 lignes environ) et le tout le code du front (20K lignes environ) :
 
