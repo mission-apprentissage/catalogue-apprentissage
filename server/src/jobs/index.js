@@ -8,6 +8,7 @@ const parcoursupJobs = require("./parcoursup");
 const affelnetJobs = require("./affelnet");
 const etablissementsJobs = require("./etablissements");
 const formationsJobs = require("./formations");
+const checkUai = require("./checkUai");
 
 const KIT_LOCAL_PATH = "/data/uploads/CodeDiplome_RNCP_latest_kit.csv";
 const CONVENTION_FILES_DIR = path.join(__dirname, "conventionFilesImporter/assets");
@@ -34,6 +35,9 @@ runScript(async ({ db }) => {
     // Parcoursup & Affelnet
     await parcoursupJobs(); // ~ 10 minutes  // maj des rapprochements & étiquettes périmètre
     await affelnetJobs(); // ~ 15 minutes  // maj des rapprochements & étiquettes périmètre
+
+    await sleep(30000);
+    await checkUai(); // ~ 1 minutes //maj de la validité des UAIs pour établissements et formations
 
     // eS
     Formation.startAllMongoosaticHooks();

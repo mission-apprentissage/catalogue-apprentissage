@@ -4,7 +4,10 @@ import { rest } from "msw";
 import { setupServer } from "msw/node";
 import Etablissement from "./Etablissement";
 import { waitFor } from "@testing-library/react";
-import { AFFELNET_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
+import * as api from "../../common/api/organisme";
+import userEvent from "@testing-library/user-event";
+
+jest.setTimeout(20000);
 
 const etablissement = {
   _id: "5e8df88020ff3b2161267970",
@@ -172,14 +175,6 @@ const etablissement = {
   rco_geo_coordonnees: null,
 };
 
-// const query = {
-//   published: true,
-//   $or: [
-//     { etablissement_formateur_siret: etablissement.siret },
-//     { etablissement_gestionnaire_siret: etablissement.siret },
-//   ],
-// };
-
 const server = setupServer(
   rest.get(/\/api\/entity\/etablissement\/1/, (req, res, ctx) => {
     return res(ctx.json({ ...etablissement, uai_valide: true }));
@@ -188,7 +183,7 @@ const server = setupServer(
     return res(ctx.json({ ...etablissement, uai_valide: false }));
   }),
   rest.get(/\/api\/entity\/formations\/count/, (req, res, ctx) => {
-    return res(etablissement.formations_ids?.length ?? 0);
+    return res(ctx.json(etablissement.formations_ids?.length ?? 0));
   }),
   rest.get(/\/api\/v1\/entity\/messageScript/, (req, res, ctx) => {
     return res(ctx.json([]));
@@ -206,20 +201,22 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 test("renders a training page", async () => {
-  const { queryAllByText, getAllByText } = renderWithRouter(<Etablissement match={{ params: { id: 1 } }} />);
+  const { queryAllByText, getByText, getAllByText } = renderWithRouter(<Etablissement match={{ params: { id: 1 } }} />);
 
   await waitFor(() => getAllByText("MIDISUP"));
+  await waitFor(() => getByText(/Voir les 34 formations associées à cet organisme/));
 
   const title = queryAllByText("MIDISUP");
   expect(title.length).toBeGreaterThan(0);
 });
 
 test("display an error when uai is invalid", async () => {
-  grantAnonymousAccess("page_organisme");
+  grantAnonymousAccess({ acl: ["page_organisme"] });
 
   const { getByText, queryByText, queryByTestId } = renderWithRouter(<Etablissement match={{ params: { id: 2 } }} />);
 
   await waitFor(() => getByText(/UAI rattaché au SIRET/));
+  await waitFor(() => getByText(/Voir les 34 formations associées à cet organisme/));
 
   const uai = queryByText("0312755B");
   expect(uai).toBeInTheDocument();
@@ -229,15 +226,60 @@ test("display an error when uai is invalid", async () => {
 });
 
 test("don't display an error when uai is valid", async () => {
-  grantAnonymousAccess("page_organisme");
+  grantAnonymousAccess({ acl: ["page_organisme"] });
 
   const { getByText, queryByText, queryByTestId } = renderWithRouter(<Etablissement match={{ params: { id: 1 } }} />);
 
   await waitFor(() => getByText(/UAI rattaché au SIRET/));
+  await waitFor(() => getByText(/Voir les 34 formations associées à cet organisme/));
 
   const uai = queryByText("0312755B");
   expect(uai).toBeInTheDocument();
 
   const warning = queryByTestId("uai-warning");
   expect(warning).not.toBeInTheDocument();
+});
+
+test("Submit should call etablissement service API", async () => {
+  const updateUaiOrganisme = jest.fn();
+  const etablissementService = jest.fn(() => ({
+    etablissement: { id: 1, siret: "123" },
+    error: false,
+  }));
+
+  jest.spyOn(api, "updateUaiOrganisme").mockImplementation(updateUaiOrganisme);
+  jest.spyOn(api, "etablissementService").mockImplementation(etablissementService);
+
+  grantAnonymousAccess({ acl: ["page_organisme", "page_organisme/modifier_informations"], academie: "16" });
+
+  const { getByText, queryByText, getByTestId } = renderWithRouter(<Etablissement match={{ params: { id: 1 } }} />);
+
+  await waitFor(() => getByText(/UAI rattaché au SIRET/));
+  await waitFor(() => getByText(/Voir les 34 formations associées à cet organisme/));
+
+  const count = queryByText(/Voir les 34 formations associées à cet organisme/);
+  expect(count).toBeInTheDocument();
+
+  // click on edit
+  const editBtn = getByTestId("uai-edit");
+  expect(editBtn).toBeInTheDocument();
+  userEvent.click(editBtn);
+
+  // change value of UAI field
+  const input = getByTestId("uai-input");
+  expect(input).toBeInTheDocument();
+  userEvent.type(input, "0840110N");
+
+  // click on submit
+  const submitBtn = queryByText("Valider");
+  expect(submitBtn).toBeInTheDocument();
+  userEvent.click(submitBtn);
+
+  // check api functions are called
+  await waitFor(() => expect(updateUaiOrganisme).toBeCalled());
+
+  expect(etablissementService).toHaveBeenCalled();
+
+  updateUaiOrganisme.mockClear();
+  etablissementService.mockClear();
 });

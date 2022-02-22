@@ -14,15 +14,15 @@ _Vérification des données Diplôme Niveau Intitulé_
 
 ![](../../../.gitbook/assets/cfd.png)
 
-* Vérifier que le code formation diplôme existe dans l'une des tables BCN (Base Centrale des Nomenclatures) [N_FORMATION_DIPLOME](http://infocentre.pleiade.education.fr/bcn/workspace/viewTable/n/N_FORMATION_DIPLOME) ou [V_FORMATION_DIPLOME](http://infocentre.pleiade.education.fr/bcn/workspace/viewTable/n/V_FORMATION_DIPLOME)
-* Vérifier que le code formation diplôme est valide : 
+* Vérifier que le code formation diplôme existe dans l'une des tables BCN (Base Centrale des Nomenclatures) [N\_FORMATION\_DIPLOME](http://infocentre.pleiade.education.fr/bcn/workspace/viewTable/n/N\_FORMATION\_DIPLOME) ou [V\_FORMATION\_DIPLOME](http://infocentre.pleiade.education.fr/bcn/workspace/viewTable/n/V\_FORMATION\_DIPLOME)
+* Vérifier que le code formation diplôme est valide :&#x20;
   * Recherche de code formation diplôme plus récent et remplacer le cas échéant.
   * Encore actif sur la période affichage offre de formation - _**31 Août de l’année courante.**_
 * S'assurer que le niveau de formation est bien celui délivré par le diplôme/titre visé
 * S'assurer que la nomenclature européenne des niveaux est affichée
 * Récupérer les intitulés court et long normalisés du diplôme selon les nomenclatures utilisées par l'Éducation nationale et l'Enseignement supérieur
-* Recherche et récupération des codes MEFs 10 associés dans la table BCN [N_MEF](https://infocentre.pleiade.education.fr/bcn/workspace/viewTable/n/N_MEF)
-* Ajout des informations Onisep lié à ce code diplôme. [Détails Onisep plus bas dans cette page.](https://mission-apprentissage.gitbook.io/catalogue/traitements-scripts/traitements-lies-aux-formations#iii-4-onisep-descriptif-formation) 
+* Recherche et récupération des codes MEFs 10 associés dans la table BCN [N\_MEF](https://infocentre.pleiade.education.fr/bcn/workspace/viewTable/n/N\_MEF)
+* Ajout des informations Onisep lié à ce code diplôme. [Détails Onisep plus bas dans cette page.](https://mission-apprentissage.gitbook.io/catalogue/traitements-scripts/traitements-lies-aux-formations#iii-4-onisep-descriptif-formation)&#x20;
 * Ajout des informations RNCP lié à ce code diplôme.  [Détails RNCP plus bas dans cette page](https://mission-apprentissage.gitbook.io/catalogue/traitements-scripts/traitements-lies-aux-formations#iii-1-verifications-rncp-pour-une-formation).
 
 ### II.2 Vérifications et enrichissements via la géolocalisation et le code commune Insee
@@ -851,7 +851,7 @@ Les informations de géolocalisation (longitude / latitude) sont collectées par
 
 * Vérification de la cohérence des données entre le code Insee reçu des Carif-Oref et celui reçu du géocodage inverse
 
-**Fréquence de mise à jour : quotidienne **
+**Fréquence de mise à jour : quotidienne**&#x20;
 
 ### II.3 Rattachements basés sur les établissements collectés
 
@@ -862,9 +862,9 @@ Les informations de géolocalisation (longitude / latitude) sont collectées par
   \
   Cette étape est réalisée pour les établissements Gestionnaire et Formateur.\
 
-* SIRET correctement formaté 
+* SIRET correctement formaté&#x20;
 * Recherche et rattachement à l’établissement précédemment créé en base ([voir Traitements liés aux établissements](../etablissements.md))
-* Enrichissement des données : siège social (oui/non), n° SS, Siret, n°SIREN, code NAF, libellé code NAT, tranche salariale, date de création, date de dernière màj, informations diffusables (oui/non), nom d'enseigne, date de cessation activité, info cessation activité, procédure collective, enseigne, code effectif, code forme juridique, raison sociale, nom commercial, date de création, date de radiation, catégorie (PME, TPE, ..) 
+* Enrichissement des données : siège social (oui/non), n° SS, Siret, n°SIREN, code NAF, libellé code NAT, tranche salariale, date de création, date de dernière màj, informations diffusables (oui/non), nom d'enseigne, date de cessation activité, info cessation activité, procédure collective, enseigne, code effectif, code forme juridique, raison sociale, nom commercial, date de création, date de radiation, catégorie (PME, TPE, ..)&#x20;
 * Si l’établissement est fermé alors une erreur est remontée dans le flux des rapports
 * Vérification de la publication catalogue[ (Voir plus bas dans cette page)](https://mission-apprentissage.gitbook.io/catalogue/traitements-scripts/traitements-lies-aux-formations#iii-6-publication-catalogue-general-ou-non-eligible)
 * Vérification des habilitations RNCP [(Voir plus bas dans cette page)](https://mission-apprentissage.gitbook.io/catalogue/traitements-scripts/traitements-lies-aux-formations#iii-1-verifications-rncp-pour-une-formation)
@@ -892,9 +892,9 @@ Un mécanisme de sauvegarde est en place et effectue un backup quotidien de tout
 * vérifier que le titre RNCP est habilité à être délivré en apprentissage, c’est-à-dire : qu’il est présent dans la fiche RNCP correspondante consultable via Répertoire national des certifications professionnelles (RNCP) (hors Répertoire Spécifique) en tant que diplôme ou titre enregistré “de droit” ou en tant que diplôme ou titre enregistré “sur demande” et pouvant être dispensé par apprentissage.
 * vérifier le niveau de formation nomenclature européenne à partir du RNCP
 * déterminer les différents code ROME accessibles pour chaque fiche RNCP
-* distinguer dans le catalogue si la formation visée est un titre RNCP ou un Diplôme EN 
+* distinguer dans le catalogue si la formation visée est un titre RNCP ou un Diplôme EN&#x20;
 * mettre à jour le Code RNCP si le code Diplôme = Code RNCP
-* vérifier la validité d'un Code RNCP 
+* vérifier la validité d'un Code RNCP&#x20;
 * identifier les actions complémentaires à entreprendre s'il n'y a pas de correspondance Code RNCP - code Diplôme
 
 #### Permettre de rechercher une formation à partir d'une appellation du Rome, de son libellé ou du libellé du RNCP ou du Diplôme
@@ -941,14 +941,14 @@ Cette déduction du MEF éligible Affelnet est temporaire et sera retirée lorsq
 
 ![](../../../.gitbook/assets/onisepformation.png)
 
-Via une API privée mise à disposition de la mission par l'Onisep nous récupérerons les informations suivantes:  
+Via une API privée mise à disposition de la mission par l'Onisep nous récupérerons les informations suivantes: &#x20;
 
-* code_mef
-* libelle_formation_principal
-* libelle_poursuite
-* lien_site_onisepfr
+* code\_mef
+* libelle\_formation\_principal
+* libelle\_poursuite
+* lien\_site\_onisepfr
 * discipline
-* domaine_sousdomaine
+* domaine\_sousdomaine
 
 _Le taux de couverture reste néanmoins faible._
 

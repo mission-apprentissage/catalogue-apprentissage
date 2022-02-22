@@ -10,7 +10,7 @@
 
 Les différents traitements sur un établissement se font autour de la donnée pivot **SIRET**.
 
-1.  Vérifications et enrichissements basés sur le **SIRET**
+1. &#x20;Vérifications et enrichissements basés sur le **SIRET**
 2. Récupération des informations de géolocalisation sur l'adresse
 3. Vérifications et enrichissements **Conventionnement**
 4. Récupération des **informations Onisep** depuis l'UAI et nom académie
@@ -19,9 +19,9 @@ Les différents traitements sur un établissement se font autour de la donnée p
 
 ![](../../.gitbook/assets/e3.png)
 
-La consolidation des informations de l'entreprise se fait par l’intermédiaire de l'API entreprise [https://entreprise.api.gouv.fr/](https://entreprise.api.gouv.fr). 
+La consolidation des informations de l'entreprise se fait par l’intermédiaire de l'API entreprise [https://entreprise.api.gouv.fr/](https://entreprise.api.gouv.fr).&#x20;
 
-Si le SIRET existe dans l'api, nous retournons les informations suivantes : 
+Si le SIRET existe dans l'api, nous retournons les informations suivantes :&#x20;
 
 ```javascript
 {
@@ -198,10 +198,10 @@ retrouvez le code source de ce script sur : [https://github.com/mission-apprenti
 
 **Consolidation des données**
 
-* API Siren 
-* API Entreprise 
+* API Siren&#x20;
+* API Entreprise&#x20;
 
-_Vous pouvez retrouver les détails du traitement "Vérifications et enrichissements  **Conventionnement**" sur cette page section numéro 5. _
+_Vous pouvez retrouver les détails du traitement "Vérifications et enrichissements  **Conventionnement**" sur cette page section numéro 5._&#x20;
 
 ### 2. Récupération des informations de géolocalisation via geo.api.gouv.fr
 
@@ -240,16 +240,16 @@ Vérifier que l'établissement est habilité à délivrer des titres professionn
 
 **Identification des établissements principaux vs secondaires**
 
-* identifier les établissements secondaires 
-* identifier les liens établissements principaux - établissements secondaires sur les SIRET 
-* identifier les liens établissements sur les UAI CFA et UAI site 
+* identifier les établissements secondaires&#x20;
+* identifier les liens établissements principaux - établissements secondaires sur les SIRET&#x20;
+* identifier les liens établissements sur les UAI CFA et UAI site&#x20;
 * identifier les liens établissements sur les OF responsable, OF formateur
 
 **Conditions d'entrée d'un établissement sur les SI Affelnet et / ou Parcoursup**
 
 Besoins :
 
-* quand, je consulte le catalogue des offres de formation en Apprentissage  
+* quand, je consulte le catalogue des offres de formation en Apprentissage &#x20;
 * je veux, être assuré que l'établissement est “légitime” au sein de Parcoursup ou Affelnet afin de garantir la conformité de la formation et de l'organisme délivrant une certification en apprentissage et d’éviter des contrôles manuels chronophage
 
 Cette spécification répond au besoin de chargement des établissements en apprentissage pour les besoins de Parcoursup ou Affelnet afin d’améliorer le nombre de formations proposées en apprentissage au sein des choix de formations offertes par les SI de l'Education Nationale et de l'Enseignement Supérieur.
@@ -266,8 +266,8 @@ retrouvez le code source de ce script sur : [https://github.com/mission-apprenti
 
 **Consolidation des données**
 
-* API Enseignement Supérieur 
-* Fichiers de la DEPP 
+* API Enseignement Supérieur&#x20;
+* Fichiers de la DEPP&#x20;
 * Fichier DGER - Agriculture
 
 **Traitements réalisés en cascade au moment de l'import d'Offre Info**

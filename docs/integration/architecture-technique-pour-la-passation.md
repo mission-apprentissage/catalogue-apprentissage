@@ -4,18 +4,20 @@
 
 Afin de transmettre aux parties prenantes les modules et les données qui leur sont spécifiques, il est apparu que le meilleur moyen est de scinder le catalogue actuel en deux :
 
-* un catalogue **"cœur"** qui va gérer la vérification et l'enrichissement des données, l'exposition par api, le contrôle de la qualité des données, etc. 
+* Les traitements de fiabilisation de la donnée seront effectués par **RCO** : vérification et l'enrichissement des données, exposition par api, contrôle de la qualité des données, etc.&#x20;
 * un catalogue **"éducation"** dédié aux ministères éducatifs pour alimenter en formations en apprentissage Affelnet et Parcoursup. Cette application pourra être déployée de façon indépendante pour chacun des ministères éducatifs, ou mutualisée selon le besoin.
 
 ## Vue d'ensemble
 
-![Architecture cible pour la passation](../../.gitbook/assets/architecture-passation-octobre-2021-3-.png)
+![Architecture cible pour la passation (mise à jour du 22/02/2022)](<../.gitbook/assets/Architecture passation - février 2022.png>)
 
 ## Métriques
 
-### Décompte des lignes de code du catalogue par module pour Parcoursup
+### Décompte des lignes de code du catalogue par module
 
-Nous n'avons pas encore fait la séparation entre le code cœur du catalogue et le code spécifique pour les ministères éducatifs.
+{% hint style="info" %}
+Nous n'avons pas encore supprimé les traitements de fiabilisation qui doivent être repris par RCO
+{% endhint %}
 
 Il y a un bloc squelette à prendre côté backend (7500 lignes environ) et le tout le code du front (20K lignes environ) :
 
