@@ -140,43 +140,46 @@ describe(__filename, () => {
     assert.strictEqual(countFormations, 8);
   });
 
-  it("should filter only 5 formations", async () => {
+  it("should filter only 6 formations", async () => {
     let cursor = createCursor();
     let index = 0;
     while (await cursor.next()) {
       index += 1;
     }
-    assert.strictEqual(index, 5);
+    assert.strictEqual(index, 6);
   });
 
   it("should sort formations with errors at last", async () => {
     let cursor = createCursor();
     let index = 0;
     for await (const formation of cursor) {
-      if (index < 3) {
+      if (index < 4) {
         assert.strictEqual(formation.parcoursup_error, null);
       } else {
         assert.strictEqual(formation.parcoursup_error, "error ws");
       }
 
       if (index === 0) {
-        assert.strictEqual(formation.cle_ministere_educatif, "12345-cle4");
+        assert.strictEqual(formation.cle_ministere_educatif, "12345-cle2");
       }
       if (index === 1) {
-        assert.strictEqual(formation.cle_ministere_educatif, "12345-cle5");
+        assert.strictEqual(formation.cle_ministere_educatif, "12345-cle4");
       }
       if (index === 2) {
-        assert.strictEqual(formation.cle_ministere_educatif, "12345-cle8");
+        assert.strictEqual(formation.cle_ministere_educatif, "12345-cle5");
       }
       if (index === 3) {
-        assert.strictEqual(formation.cle_ministere_educatif, "12345-cle7");
+        assert.strictEqual(formation.cle_ministere_educatif, "12345-cle8");
       }
       if (index === 4) {
+        assert.strictEqual(formation.cle_ministere_educatif, "12345-cle7");
+      }
+      if (index === 5) {
         assert.strictEqual(formation.cle_ministere_educatif, "12345-cle6");
       }
       index += 1;
     }
-    assert.strictEqual(index, 5);
+    assert.strictEqual(index, 6);
   });
 
   it("should create 1 formation on ps side", async () => {

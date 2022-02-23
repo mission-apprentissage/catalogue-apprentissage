@@ -10,7 +10,6 @@ const limit = Number(process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_LIMIT || 50)
 const filter = {
   parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
   uai_formation: { $ne: null },
-  rncp_code: { $ne: null },
 };
 
 const select = {
@@ -60,7 +59,7 @@ const formatter = async ({
 
   return {
     user: await findPublishUser(updates_history),
-    rncp: [Number(rncp_code.replace("RNCP", ""))],
+    rncp: rncp_code ? [Number(rncp_code.replace("RNCP", ""))] : [],
     cfd: cfd_entree,
     uai: uai_formation,
     rco: cle_ministere_educatif,
