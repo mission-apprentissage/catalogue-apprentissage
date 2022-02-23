@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { DataSearch, DateRange, ReactiveBase, ReactiveList, SelectedFilters } from "@appbaseio/reactivesearch";
-import { Box, Container, Flex, FormLabel, Link, Switch, Text } from "@chakra-ui/react";
+import { Box, Container, Flex, FormLabel, Switch, Text } from "@chakra-ui/react";
 import useAuth from "../../hooks/useAuth";
 import { hasAccessTo } from "../../utils/rolesUtils";
 import {
@@ -20,6 +20,7 @@ import queryString from "query-string";
 import { useHistory } from "react-router-dom";
 import { CloseCircleLine } from "../../../theme/components/icons";
 import { SearchLine } from "../../../theme/components/icons/SearchLine";
+import { Pagination } from "./components/Pagination";
 
 export default React.memo(({ location, searchState, context, onReconciliationCardClicked, extraButtons = null }) => {
   const { defaultMode } = queryString.parse(location.search);
@@ -306,39 +307,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                       );
                     }}
                     react={{ and: filters }}
-                    renderPagination={({ totalPages, currentPage, setPage }) => {
-                      if (totalPages <= 1) {
-                        return <></>;
-                      }
-
-                      return (
-                        <Box className={"search-pagination"} textAlign={"center"} my={3} mx={1}>
-                          <Link onClick={() => setPage(Math.max(currentPage - 1, 0))}>Précédent</Link>
-
-                          {currentPage > 1 && <Link onClick={() => setPage(0)}>{1}</Link>}
-
-                          {currentPage - 2 > 0 && <span>...</span>}
-
-                          {currentPage > 0 && <Link onClick={() => setPage(currentPage - 1)}>{currentPage}</Link>}
-
-                          <Link onClick={() => setPage(currentPage)} className={"active"}>
-                            {currentPage + 1}
-                          </Link>
-
-                          {currentPage + 1 < totalPages - 1 && (
-                            <Link onClick={() => setPage(currentPage + 1)}>{currentPage + 2}</Link>
-                          )}
-
-                          {currentPage + 2 < totalPages - 1 && <span>...</span>}
-
-                          {currentPage < totalPages - 1 && (
-                            <Link onClick={() => setPage(totalPages - 1)}>{totalPages}</Link>
-                          )}
-
-                          <Link onClick={() => setPage(Math.min(currentPage + 1, totalPages - 1))}>Suivant</Link>
-                        </Box>
-                      );
-                    }}
+                    renderPagination={(props) => <Pagination {...props} />}
                   />
                 </Box>
               </Box>
