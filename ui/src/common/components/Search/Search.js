@@ -306,36 +306,102 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                       );
                     }}
                     react={{ and: filters }}
-                    renderPagination={({ totalPages, currentPage, setPage }) => {
+                    renderPagination={({ totalPages, currentPage, setPage, fragmentName }) => {
                       if (totalPages <= 1) {
                         return <></>;
                       }
 
                       return (
                         <Box className={"search-pagination"} textAlign={"center"} my={3} mx={1}>
-                          <Link onClick={() => setPage(Math.max(currentPage - 1, 0))}>Précédent</Link>
+                          <Link
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setPage(Math.max(currentPage - 1, 0));
+                            }}
+                            href={`?${fragmentName}=${Math.max(currentPage - 1, 1)}`}
+                            rel={"prev"}
+                          >
+                            Précédent
+                          </Link>
 
-                          {currentPage > 1 && <Link onClick={() => setPage(0)}>{1}</Link>}
+                          {currentPage > 1 && (
+                            <Link
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setPage(0);
+                              }}
+                              href={`?${fragmentName}=${1}`}
+                              alt={`Page 1`}
+                            >
+                              {1}
+                            </Link>
+                          )}
 
                           {currentPage - 2 > 0 && <span>...</span>}
 
-                          {currentPage > 0 && <Link onClick={() => setPage(currentPage - 1)}>{currentPage}</Link>}
+                          {currentPage > 0 && (
+                            <Link
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setPage(currentPage - 1);
+                              }}
+                              href={`?${fragmentName}=${currentPage}`}
+                              alt={`Page ${currentPage}`}
+                            >
+                              {currentPage}
+                            </Link>
+                          )}
 
-                          <Link onClick={() => setPage(currentPage)} className={"active"}>
+                          <Link
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setPage(currentPage);
+                            }}
+                            href={`?${fragmentName}=${currentPage + 1}`}
+                            alt={`Page ${currentPage + 1}`}
+                            className={"active"}
+                          >
                             {currentPage + 1}
                           </Link>
 
                           {currentPage + 1 < totalPages - 1 && (
-                            <Link onClick={() => setPage(currentPage + 1)}>{currentPage + 2}</Link>
+                            <Link
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setPage(currentPage + 1);
+                              }}
+                              href={`?${fragmentName}=${currentPage + 2}`}
+                              alt={`Page ${currentPage + 2}`}
+                            >
+                              {currentPage + 2}
+                            </Link>
                           )}
 
                           {currentPage + 2 < totalPages - 1 && <span>...</span>}
 
                           {currentPage < totalPages - 1 && (
-                            <Link onClick={() => setPage(totalPages - 1)}>{totalPages}</Link>
+                            <Link
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setPage(totalPages - 1);
+                              }}
+                              href={`?${fragmentName}=${totalPages}`}
+                              alt={`Page ${totalPages}`}
+                            >
+                              {totalPages}
+                            </Link>
                           )}
 
-                          <Link onClick={() => setPage(Math.min(currentPage + 1, totalPages - 1))}>Suivant</Link>
+                          <Link
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setPage(Math.min(currentPage + 1, totalPages - 1));
+                            }}
+                            href={`?${fragmentName}=${Math.min(currentPage + 1, totalPages)}`}
+                            rel={"next"}
+                          >
+                            Suivant
+                          </Link>
                         </Box>
                       );
                     }}
