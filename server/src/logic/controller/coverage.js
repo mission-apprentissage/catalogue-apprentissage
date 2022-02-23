@@ -398,4 +398,4 @@ async function getEtablissementCoverage(formations) {
   return etablissements;
 }
 
-module.exports = { getParcoursupCoverage, getAffelnetCoverage, getEtablissementCoverage };
+module.exports = { getParcoursupCoverage, getAffelnetCoverage, getEtablissementCoverage, getMatch };
