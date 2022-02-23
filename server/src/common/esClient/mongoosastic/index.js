@@ -123,6 +123,7 @@ function Mongoosastic(schema, options) {
                     },
                   },
                 },
+                max_result_window: 100000,
               },
             },
           }
