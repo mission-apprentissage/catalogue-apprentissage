@@ -38,8 +38,6 @@ const computeDistance = async () => {
       code_insee: formation.code_commune_insee,
     };
 
-    console.log(addressData);
-
     try {
       const { result: coordinates, messages } = await getCoordinatesFromAddressData(addressData);
 
@@ -47,14 +45,10 @@ const computeDistance = async () => {
       if (!geolocError && coordinates.geo_coordonnees) {
         const lieu_formation_geo_coordonnees_computed = coordinates.geo_coordonnees;
 
-        console.log(lieu_formation_geo_coordonnees_computed);
-
         const [lat1, lon1] = lieu_formation_geo_coordonnees_computed.split(",");
         const [lat2, lon2] = formation.lieu_formation_geo_coordonnees.split(",");
 
         const distance = await distanceBetweenCoordinates(lat1, lon1, lat2, lon2);
-
-        console.log(distance);
 
         await Formation.updateOne(
           { _id: formation._id },
@@ -66,7 +60,9 @@ const computeDistance = async () => {
           }
         );
       }
-      count++;
+      if (++count % 100 === 0) {
+        console.error(`${count} distance computed.`);
+      }
     } catch (error) {
       console.error(error);
     }
