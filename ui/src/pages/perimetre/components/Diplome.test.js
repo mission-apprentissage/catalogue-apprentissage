@@ -3,7 +3,6 @@ import { render, waitFor } from "@testing-library/react";
 import { Diplome } from "./Diplome";
 import * as api from "../../../common/api/perimetre";
 import { getCount } from "../../../common/api/perimetre";
-import { act } from "react-dom/test-utils";
 
 test("renders Diplome & sub rules", async () => {
   const scrollIntoView = jest.fn();

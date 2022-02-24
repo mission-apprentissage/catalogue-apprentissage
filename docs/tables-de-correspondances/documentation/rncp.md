@@ -6,7 +6,7 @@ description: RNCP - France Compétences
 
 ## En entrée ?
 
-Un code RNCP dont je recherche les informations détaillées. Défini comme ci-dessous 
+Un code RNCP dont je recherche les informations détaillées. Défini comme ci-dessous&#x20;
 
 * liste les formations professionnelles (adaptées au marché de l’emploi)
 * dépend du Ministère du travail / France compétence
@@ -20,39 +20,39 @@ Un code RNCP dont je recherche les informations détaillées. Défini comme ci-d
 
 ## En sortie ?
 
-Ce que je peux récupérer à partir RNCP. 
+Ce que je peux récupérer à partir RNCP.&#x20;
 
-| Nom du champ                     | Description                                                                                         | Type              |
-| -------------------------------- | --------------------------------------------------------------------------------------------------- | ----------------- |
-| code_rncp                        | La valeur du code RNCP recherché                                                                    | string            |
-| intitule_diplome                 | Intitulé fiche RNCP France Compétences                                                              | string            |
-| cfds                             | Liste des codes formation diplôme associés                                                          | \[string]         |
-| date_fin_validite_enregistrement | Date de fin de validité de la fiche                                                                 | string            |
-| active_inactive                  | <p>La fiche est-elle toujours en vigueur </p><p>ACTIVE / INACTIVE</p>                               | string            |
-| etat_fiche_rncp                  | <p>État de la fiche pour France compétences</p><p>Publiée ou pas </p>                               | string            |
-| niveau_europe                    | Niveau européen, exemple: _`niveau6`_                                                               | string            |
-| code_type_certif                 | Type de certification Abréviation  (valeurs en bas de cette page)                                   | string \| null    |
-| type_certif                      | Type de certification long                                                                          | string \| null    |
-| ancienne_fiche                   | Liste des anciennes fiches par codes                                                                | \[string] \| null |
-| nouvelle_fiche                   | Liste des nouvelles fiches par codes                                                                | \[string] \| null |
-| demande                          | <p>État de la demande auprès de France Compétences</p><p>0 ou 1 </p>                                | number            |
-| certificateurs                   | Liste des certificateurs avec  leur Nom et Siret                                                    | \[object]         |
-| nsf_code                         | Code NSF                                                                                            | string            |
-| nsf_libelle                      | Libellé NSF                                                                                         | string            |
-| romes                            | Liste des codes romes avec leurs libellés                                                           | \[object]         |
-| blocs_competences                | Liste des blocs de compétences                                                                      | \[object]         |
-| voix_acces                       | Liste des voix d'accès                                                                              | \[object]         |
-| partenaires                      | Liste des partenaires avec leur Nom et Siret                                                        | \[object]         |
-| type_enregistrement              | <p> // TODO</p><p><em><code>"Enregistrement de droit"</code></em></p>                               | string            |
-| si_jury_ca                       | <p>Décision du jury apprentissage </p><p><em><code>Oui</code></em> ou <em><code>Non</code></em></p> | string            |
-| eligible_apprentissage           | Vrai, Faux                                                                                          | boolean           |
-| releated                         | Information CFD, MEFS                                                                               | \[Object]         |
+| Nom du champ                        | Description                                                                                         | Type              |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------- | ----------------- |
+| code\_rncp                          | La valeur du code RNCP recherché                                                                    | string            |
+| intitule\_diplome                   | Intitulé fiche RNCP France Compétences                                                              | string            |
+| cfds                                | Liste des codes formation diplôme associés                                                          | \[string]         |
+| date\_fin\_validite\_enregistrement | Date de fin de validité de la fiche                                                                 | string            |
+| active\_inactive                    | <p>La fiche est-elle toujours en vigueur </p><p>ACTIVE / INACTIVE</p>                               | string            |
+| etat\_fiche\_rncp                   | <p>État de la fiche pour France compétences</p><p>Publiée ou pas </p>                               | string            |
+| niveau\_europe                      | Niveau européen, exemple: _`niveau6`_                                                               | string            |
+| code\_type\_certif                  | Type de certification Abréviation  (valeurs en bas de cette page)                                   | string \| null    |
+| type\_certif                        | Type de certification long                                                                          | string \| null    |
+| ancienne\_fiche                     | Liste des anciennes fiches par codes                                                                | \[string] \| null |
+| nouvelle\_fiche                     | Liste des nouvelles fiches par codes                                                                | \[string] \| null |
+| demande                             | <p>État de la demande auprès de France Compétences</p><p>0 ou 1 </p>                                | number            |
+| certificateurs                      | Liste des certificateurs avec  leur Nom et Siret                                                    | \[object]         |
+| nsf\_code                           | Code NSF                                                                                            | string            |
+| nsf\_libelle                        | Libellé NSF                                                                                         | string            |
+| romes                               | Liste des codes romes avec leurs libellés                                                           | \[object]         |
+| blocs\_competences                  | Liste des blocs de compétences                                                                      | \[object]         |
+| voix\_acces                         | Liste des voix d'accès                                                                              | \[object]         |
+| partenaires                         | Liste des partenaires avec leur Nom et Siret                                                        | \[object]         |
+| type\_enregistrement                | <p> // TODO</p><p><em><code>"Enregistrement de droit"</code></em></p>                               | string            |
+| si\_jury\_ca                        | <p>Décision du jury apprentissage </p><p><em><code>Oui</code></em> ou <em><code>Non</code></em></p> | string            |
+| eligible\_apprentissage             | Vrai, Faux                                                                                          | boolean           |
+| releated                            | Information CFD, MEFS                                                                               | \[Object]         |
 
-## Intégration ? 
+## Intégration ?&#x20;
 
 ### API
 
-Swagger: [https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_rncp](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_rncp)
+Swagger: [https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post\_rncp](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post\_rncp)
 
 {% swagger baseUrl="https://tables-correspondances.apprentissage.beta.gouv.fr/api" path="/v1/rncp" method="post" summary="Récupérer les informations liées à un RNCP " %}
 {% swagger-description %}
@@ -76,7 +76,7 @@ Appels sous-jacents aux données France Compétences, tables BCN V et N formatio
 
 #### Exemple:
 
-[https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_rncp](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_rncp)
+[https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post\_rncp](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post\_rncp)
 
 ![](<../../../.gitbook/assets/image (1).png>)
 
@@ -90,9 +90,9 @@ Appels sous-jacents aux données France Compétences, tables BCN V et N formatio
 
 
 
-**code_certif : ** BUT, DUT, Formation professionnelle,Formations  des écoles d'ingénieurs, Certificat de Spécialisation Agricole, BPJEPS, Sous-officier,Titre professionnel, Autre, MASTER,BP,BTS, Licence Professionnelle,Titre ingénieur,null,BAC PRO, LICENCE,BEPA,CAP,TP,BT,MC4,MC5,BEES,DIPLOVIS,BMA,BEP,DipViGrM,BTSA,DGE_GM,BAPAAT,DEUST,BTSMarit,DE,CS,CAPA,BPA,BTA,DOCTORAT,BEATEP,Grade_Master,DEAVS,DMA,DEDPAD,CAPD,CEAV,BTn,DSTS,CP,DNMADE,DEA,Grade_Licence,DEEA 
+**code\_certif :** BUT, DUT, Formation professionnelle,Formations  des écoles d'ingénieurs, Certificat de Spécialisation Agricole, BPJEPS, Sous-officier,Titre professionnel, Autre, MASTER,BP,BTS, Licence Professionnelle,Titre ingénieur,null,BAC PRO, LICENCE,BEPA,CAP,TP,BT,MC4,MC5,BEES,DIPLOVIS,BMA,BEP,DipViGrM,BTSA,DGE\_GM,BAPAAT,DEUST,BTSMarit,DE,CS,CAPA,BPA,BTA,DOCTORAT,BEATEP,Grade\_Master,DEAVS,DMA,DEDPAD,CAPD,CEAV,BTn,DSTS,CP,DNMADE,DEA,Grade\_Licence,DEEA&#x20;
 
-Exemple de** bloc de compétences **
+Exemple de **bloc de compétences**&#x20;
 
 ```javascript
 {

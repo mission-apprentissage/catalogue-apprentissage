@@ -20,6 +20,7 @@ import queryString from "query-string";
 import { useHistory } from "react-router-dom";
 import { CloseCircleLine } from "../../../theme/components/icons";
 import { SearchLine } from "../../../theme/components/icons/SearchLine";
+import { Pagination } from "./components/Pagination";
 
 export default React.memo(({ location, searchState, context, onReconciliationCardClicked, extraButtons = null }) => {
   const { defaultMode } = queryString.parse(location.search);
@@ -235,9 +236,9 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                     dataField="_id"
                     loader="Chargement des résultats.."
                     size={8}
-                    pagination={true}
                     innerClass={{ pagination: "search-pagination" }}
-                    showEndPage={true}
+                    pagination={true}
+                    URLParams={true}
                     showResultStats={true}
                     sortBy="asc"
                     defaultQuery={() => {
@@ -306,6 +307,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                       );
                     }}
                     react={{ and: filters }}
+                    renderPagination={(props) => <Pagination {...props} />}
                   />
                 </Box>
               </Box>

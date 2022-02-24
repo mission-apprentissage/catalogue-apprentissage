@@ -6,14 +6,14 @@ description: Code formation diplôme (CFD - code Éducation Nationale)
 
 ## En entrée ?
 
-Un code cfd dont je recherche les informations détaillées. Défini comme ci-dessous 
+Un code cfd dont je recherche les informations détaillées. Défini comme ci-dessous&#x20;
 
-| <p>CDF</p><p></p> | <p>50022427</p><p>(<a href="http://infocentre.pleiade.education.fr/bcn/workspace/viewTable/n/V_FORMATION_DIPLOME">table</a>)</p>                        | ARTS ET TECHNIQUES DU VERRE OPTION DECORATEUR (CAP)                                                   |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| 500               | Niveau formation diplôme ([table](http://infocentre.pleiade.education.fr/bcn/index.php/workspace/viewTable/n/N_NIVEAU_FORMATION_DIPLOME/nbElements/20)) | <p>CERTIFICAT D'APTITUDES PROFESSIONNELLES</p><p><em>! la table des niveaux n’est pas à jour</em></p> |
-| 224               | Groupe spécialité ou NSF ([table](http://infocentre.pleiade.education.fr/bcn/workspace/viewTable/n/N_GROUPE_SPECIALITE))                                | MATERIAUX DE CONSTRUCTION, VERRE, CERAM.                                                              |
-| 27                | Numéro d’ordre                                                                                                                                          |                                                                                                       |
-|                   | Lettre spécialité                                                                                                                                       | (Optionnel)                                                                                           |
+| <p>CDF</p><p></p> | <p>50022427</p><p>(<a href="http://infocentre.pleiade.education.fr/bcn/workspace/viewTable/n/V_FORMATION_DIPLOME">table</a>)</p>                           | ARTS ET TECHNIQUES DU VERRE OPTION DECORATEUR (CAP)                                                   |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| 500               | Niveau formation diplôme ([table](http://infocentre.pleiade.education.fr/bcn/index.php/workspace/viewTable/n/N\_NIVEAU\_FORMATION\_DIPLOME/nbElements/20)) | <p>CERTIFICAT D'APTITUDES PROFESSIONNELLES</p><p><em>! la table des niveaux n’est pas à jour</em></p> |
+| 224               | Groupe spécialité ou NSF ([table](http://infocentre.pleiade.education.fr/bcn/workspace/viewTable/n/N\_GROUPE\_SPECIALITE))                                 | MATERIAUX DE CONSTRUCTION, VERRE, CERAM.                                                              |
+| 27                | Numéro d’ordre                                                                                                                                             |                                                                                                       |
+|                   | Lettre spécialité                                                                                                                                          | (Optionnel)                                                                                           |
 
 **Exemple pour le CAP Arts et technique du verre - option décorateur :**
 
@@ -24,30 +24,30 @@ Un code cfd dont je recherche les informations détaillées. Défini comme ci-de
 
 ## En sortie ?
 
-Ce que je peux récupérer à partir CFD. 
+Ce que je peux récupérer à partir CFD.&#x20;
 
-| Nom du champ             | Description                                                                                                                                                                                                                                                                                   | Type           |
-| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
-| cfd                      | <p>La valeur du code formation diplôme <strong>Mise à jour </strong>⚠️</p><p>Peu importe le CFD recherché ce champ retournera le CFD le plus à jour possible basé sur les informations de la BCN.  Si le cfd est différent alors le champ cfd_outdated sera à <em><code>true</code></em>.</p> | string         |
-| cfd_outdated             | <p>Indique si le CFD recherché n'est plus à jour.</p><p>Si vrai alors la valeur de champ cfd est différente de celle recherchée.</p>                                                                                                                                                          | bolean         |
-| date_fermeture           | <p>Date à laquelle le code recherché a fermé.</p><p>Si la valeur est égale à <em><code>null</code></em> alors ce code est en vigueur. </p>                                                                                                                                                    | date \| null   |
-| specialite               | <p>Retourne l'information de spécialité du code recherché.<br>Cette information ne peut être trouvée que si le code recherché est sur 9 caractères. exemple: <em><code>26033206T</code></em>   </p>                                                                                           | object \| null |
-| niveau                   | <p>Niveau de la formation. </p><p>"3 (CAP...)", "4 (BAC...)", "5 (BTS, DEUST...)", "6 (Licence, BUT...)", "7 (Master, titre ingénieur...)", "8 (Doctorat...)",</p>                                                                                                                            | string         |
-| intitule_long            | Intitulé long BCN (N ou V)\_FORMATION_DIPLOME  LIBELLE_LONG\_200                                                                                                                                                                                                                              | string         |
-| intitule_court           | Intitulé court BCN (N ou V)\_FORMATION_DIPLOME  LIBELLE_STAT\_33                                                                                                                                                                                                                              | string         |
-| libelle_court            | Libelle court BCN (N ou V)\_FORMATION_DIPLOME LIBELLE_COURT                                                                                                                                                                                                                                   | string         |
-| diplome                  | Nom du diplôme BCN Table N_NIVEAU_FORMATION LIBELLE\_100                                                                                                                                                                                                                                      | string         |
-| niveau_formation_diplome | Code niveau diplôme BCN (N ou V)\_FORMATION_DIPLOME  NIVEAU_FORMATION_DIPLOME                                                                                                                                                                                                                 | string         |
-| rncp                     | _Plus de détails sur _[_la page RNCP_](rncp.md)__                                                                                                                                                                                                                                             | object         |
-| mefs                     | _Plus de détails sur _[_la page MEF_](mef.md)__                                                                                                                                                                                                                                               | object         |
-| onisep                   |                                                                                                                                                                                                                                                                                               | object         |
-| opcos                    |                                                                                                                                                                                                                                                                                               | \[string]      |
+| Nom du champ               | Description                                                                                                                                                                                                                                                                                   | Type           |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| cfd                        | <p>La valeur du code formation diplôme <strong>Mise à jour</strong> ⚠️</p><p>Peu importe le CFD recherché ce champ retournera le CFD le plus à jour possible basé sur les informations de la BCN.  Si le cfd est différent alors le champ cfd_outdated sera à <em><code>true</code></em>.</p> | string         |
+| cfd\_outdated              | <p>Indique si le CFD recherché n'est plus à jour.</p><p>Si vrai alors la valeur de champ cfd est différente de celle recherchée.</p>                                                                                                                                                          | bolean         |
+| date\_fermeture            | <p>Date à laquelle le code recherché a fermé.</p><p>Si la valeur est égale à <em><code>null</code></em> alors ce code est en vigueur. </p>                                                                                                                                                    | date \| null   |
+| specialite                 | <p>Retourne l'information de spécialité du code recherché.<br>Cette information ne peut être trouvée que si le code recherché est sur 9 caractères. exemple: <em><code>26033206T</code></em>   </p>                                                                                           | object \| null |
+| niveau                     | <p>Niveau de la formation. </p><p>"3 (CAP...)", "4 (BAC...)", "5 (BTS, DEUST...)", "6 (Licence, BUT...)", "7 (Master, titre ingénieur...)", "8 (Doctorat...)",</p>                                                                                                                            | string         |
+| intitule\_long             | Intitulé long BCN (N ou V)\_FORMATION\_DIPLOME  LIBELLE\_LONG\_200                                                                                                                                                                                                                            | string         |
+| intitule\_court            | Intitulé court BCN (N ou V)\_FORMATION\_DIPLOME  LIBELLE\_STAT\_33                                                                                                                                                                                                                            | string         |
+| libelle\_court             | Libelle court BCN (N ou V)\_FORMATION\_DIPLOME LIBELLE\_COURT                                                                                                                                                                                                                                 | string         |
+| diplome                    | Nom du diplôme BCN Table N\_NIVEAU\_FORMATION LIBELLE\_100                                                                                                                                                                                                                                    | string         |
+| niveau\_formation\_diplome | Code niveau diplôme BCN (N ou V)\_FORMATION\_DIPLOME  NIVEAU\_FORMATION\_DIPLOME                                                                                                                                                                                                              | string         |
+| rncp                       | _Plus de détails sur_ [_la page RNCP_](rncp.md)__                                                                                                                                                                                                                                             | object         |
+| mefs                       | _Plus de détails sur_ [_la page MEF_](mef.md)__                                                                                                                                                                                                                                               | object         |
+| onisep                     |                                                                                                                                                                                                                                                                                               | object         |
+| opcos                      |                                                                                                                                                                                                                                                                                               | \[string]      |
 
-## Intégration ? 
+## Intégration ?&#x20;
 
 ### API
 
-Swagger: [https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_cfd](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_cfd)
+Swagger: [https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post\_cfd](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post\_cfd)
 
 {% swagger baseUrl="https://tables-correspondances.apprentissage.beta.gouv.fr/api" path="/v1/cfd" method="post" summary="Récupérer les informations liées à un CFD " %}
 {% swagger-description %}
@@ -228,7 +228,7 @@ chaîne de 8 caractères (+ 1 optionnels correspondant à la spécialité)
 
 #### Exemple:
 
-[https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_cfd](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post_cfd)
+[https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post\_cfd](https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/#/Outils/post\_cfd)
 
 ![](../../../.gitbook/assets/image.png)
 

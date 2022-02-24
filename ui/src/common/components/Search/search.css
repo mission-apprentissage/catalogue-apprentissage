@@ -124,9 +124,12 @@
   border-radius: 20px;
   border-width: 0;
   color: #1e1e1e;
+  text-decoration: none;
+  margin: 0px 2px;
 }
 .search .search-pagination a:hover {
   background: #f0f0f0;
+  text-decoration: none;
 }
 .search .search-pagination a.active {
   background: #000091;
