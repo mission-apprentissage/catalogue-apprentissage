@@ -6,29 +6,33 @@ const { asyncForEach } = require("../../common/utils/asyncUtils");
 const getMatch = async (query) => Formation.find(query, formatFormation).lean();
 
 const hasSiret = ({ etablissement_formateur_siret, etablissement_gestionnaire_siret }, sirets) => {
-  return [etablissement_formateur_siret, etablissement_gestionnaire_siret].some((siret) => sirets.includes(siret));
+  return [etablissement_formateur_siret, etablissement_gestionnaire_siret]
+    .filter((value) => !!value)
+    .some((siret) => sirets.includes(siret));
 };
 
 const hasUai = ({ uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai }, uais) => {
-  return [uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai].some((uai) => uais.includes(uai));
+  return [uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai]
+    .filter((value) => !!value)
+    .some((uai) => uais.includes(uai));
 };
 
 const hasPostalCode = (
   { etablissement_gestionnaire_code_postal, etablissement_formateur_code_postal, code_postal },
   codePostal
 ) => {
-  return [etablissement_gestionnaire_code_postal, etablissement_formateur_code_postal, code_postal].includes(
-    codePostal
-  );
+  return [etablissement_gestionnaire_code_postal, etablissement_formateur_code_postal, code_postal]
+    .filter((value) => !!value)
+    .includes(codePostal);
 };
 
-const hasInsee = ({ code_commune_insee }, codeInsee) => code_commune_insee === codeInsee;
+const hasInsee = ({ code_commune_insee }, codeInsee) => code_commune_insee && code_commune_insee === codeInsee;
 
-const hasRncp = ({ rncp_code }, rncps) => rncps.includes(rncp_code);
+const hasRncp = ({ rncp_code }, rncps) => rncps.filter((value) => !!value).includes(rncp_code);
 
-const hasCfd = ({ cfd_entree }, cfds) => cfds.includes(cfd_entree);
+const hasCfd = ({ cfd_entree }, cfds) => cfds.filter((value) => !!value).includes(cfd_entree);
 
-const hasAcademy = ({ nom_academie }, academie) => nom_academie === academie;
+const hasAcademy = ({ nom_academie }, academie) => nom_academie && nom_academie === academie;
 
 /**
  * Rapprochements des formations Parcoursup avec les formations du catalogue (Parcoursup vs RCO)
@@ -398,4 +402,4 @@ async function getEtablissementCoverage(formations) {
   return etablissements;
 }
 
-module.exports = { getParcoursupCoverage, getAffelnetCoverage, getEtablissementCoverage };
+module.exports = { getParcoursupCoverage, getAffelnetCoverage, getEtablissementCoverage, getMatch };

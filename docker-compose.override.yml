@@ -2,10 +2,12 @@
 version: "2.4"
 services:
   reverse_proxy:
+    restart: "no"
     volumes:
       - catalogue_apprentissage_nginx_data:/data:z
 
   ui:
+    restart: "no"
     mem_limit: 1g
     stdin_open: true
     volumes:
@@ -18,6 +20,7 @@ services:
       - FAST_REFRESH=false
 
   server:
+    restart: "no"
     ports:
       - "127.0.0.1:9229:9229" # Allows remote debugging
     volumes:
@@ -35,6 +38,7 @@ services:
       - TZ=Europe/Paris
 
   mongodb:
+    restart: "no"
     ports:
       - "127.0.0.1:27017:27017"
     mem_limit: 12g
@@ -42,6 +46,7 @@ services:
       - catalogue_apprentissage_mongodb_data:/data:z
 
   elasticsearch:
+    restart: "no"
     ports:
       - "127.0.0.1:9200:9200"
     mem_limit: 4g
@@ -49,6 +54,7 @@ services:
       - catalogue_apprentissage_data_elasticsearch:/usr/share/elasticsearch/data:z
 
   kibana:
+    restart: "no"
     ports:
       - "127.0.0.1:5601:5601"
     volumes:
