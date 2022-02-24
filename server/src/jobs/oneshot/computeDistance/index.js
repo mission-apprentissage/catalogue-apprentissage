@@ -16,11 +16,11 @@ const computeDistance = async () => {
   let count = 0;
   const cursor = await Formation.find({
     published: true,
-    lieu_formation_geo_coordonnees: { $exists: true },
-    lieu_formation_adresse: { $exists: true },
-    localite: { $exists: true },
-    code_postal: { $exists: true },
-    code_commune_insee: { $exists: true },
+    lieu_formation_geo_coordonnees: { $ne: null },
+    lieu_formation_adresse: { $ne: null },
+    localite: { $ne: null },
+    code_postal: { $ne: null },
+    code_commune_insee: { $ne: null },
   }).cursor();
   for await (const formation of cursor) {
     const addressData = {
