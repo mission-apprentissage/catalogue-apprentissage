@@ -14,23 +14,15 @@ const parseErrors = (messages) => {
 
 const computeDistance = async () => {
   let count = 0;
-  const cursor = await Formation.find({ published: true }).cursor();
+  const cursor = await Formation.find({
+    published: true,
+    lieu_formation_geo_coordonnees: { $exists: true },
+    lieu_formation_adresse: { $exists: true },
+    localite: { $exists: true },
+    code_postal: { $exists: true },
+    code_commune_insee: { $exists: true },
+  }).cursor();
   for await (const formation of cursor) {
-    if (!formation.lieu_formation_geo_coordonnees) {
-      console.info(`La formation ${formation._id} n'a pas de coordonnées.`);
-      continue;
-    }
-
-    if (
-      !formation.lieu_formation_adresse ||
-      !formation.localite ||
-      !formation.code_postal ||
-      !formation.code_commune_insee
-    ) {
-      console.info(`La formation ${formation._id} n'a pas suffisament d'informations renseignées pour son adresse.`);
-      continue;
-    }
-
     const addressData = {
       nom_voie: formation.lieu_formation_adresse,
       localite: formation.localite,
