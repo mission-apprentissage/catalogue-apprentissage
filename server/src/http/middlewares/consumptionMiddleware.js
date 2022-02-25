@@ -9,8 +9,11 @@ module.exports = async (req) => {
     const method = req.method;
     const date = new Date().setUTCHours(0, 0, 0, 0);
 
+    console.log("======================================");
+    console.log(req);
+
     try {
-      await Consumption.findOneAndUpdate(
+      const consumption = await Consumption.findOneAndUpdate(
         { path, method, "consumers.caller": caller, "consumers.date": date },
         {
           $inc: { globalCallCount: 1, "consumers.$.callCount": 1 },
@@ -20,8 +23,9 @@ module.exports = async (req) => {
           new: false,
         }
       );
+      console.log(consumption);
     } catch (error) {
-      await Consumption.findOneAndUpdate(
+      const consumption = await Consumption.findOneAndUpdate(
         {
           path,
           method,
@@ -34,7 +38,9 @@ module.exports = async (req) => {
           upsert: true,
         }
       );
+      console.log(consumption);
     }
+    console.log("======================================");
   } catch (error) {
     logger.error(error, "Error while collecting endpoint consumption.");
   }
