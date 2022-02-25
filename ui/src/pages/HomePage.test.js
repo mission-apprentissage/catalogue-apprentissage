@@ -1,12 +1,10 @@
 import React from "react";
 import { waitForElementToBeRemoved } from "@testing-library/react";
 import HomePage from "./HomePage";
-import { renderWithRouter } from "../common/utils/testUtils";
-
+import { renderWithRouter, setupMswServer } from "../common/utils/testUtils";
 import { rest } from "msw";
-import { setupServer } from "msw/node";
 
-const server = setupServer(
+const server = setupMswServer(
   rest.get(/\/api\/entity\/etablissements\/count/, (req, res, ctx) => {
     return res(ctx.json(150));
   }),

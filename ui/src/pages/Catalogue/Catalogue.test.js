@@ -1,14 +1,12 @@
 import React from "react";
 import Catalogue from "./Catalogue";
-import { renderWithRouter } from "../../common/utils/testUtils";
-
+import { renderWithRouter, setupMswServer } from "../../common/utils/testUtils";
 import { rest } from "msw";
-import { setupServer } from "msw/node";
 import * as search from "../../common/hooks/useSearch";
 import * as useAuth from "../../common/hooks/useAuth";
 import { waitFor } from "@testing-library/react";
 
-const server = setupServer(
+const server = setupMswServer(
   rest.get(/\/api\/v1\/entity\/messageScript/, (req, res, ctx) => {
     return res(ctx.json([]));
   }),
@@ -667,16 +665,6 @@ const server = setupServer(
         ],
       })
     );
-  }),
-
-  rest.get(/\/*/, (req, res, ctx) => {
-    console.warn("GET Unhandled request : " + req.url.pathname);
-    return res(ctx.json({}));
-  }),
-
-  rest.post(/\/*/, (req, res, ctx) => {
-    console.warn("POST Unhandled request : " + req.url.pathname);
-    return res(ctx.json({}));
   })
 );
 
