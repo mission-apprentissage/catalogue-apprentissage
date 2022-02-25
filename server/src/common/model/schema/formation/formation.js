@@ -384,21 +384,6 @@ const formationSchema = {
     default: null,
     description: 'Date de publication (passage au statut "publié")',
   },
-  opcos: {
-    type: [String],
-    default: null,
-    description: "Liste des opcos de la formation",
-  },
-  info_opcos: {
-    type: Number,
-    default: 0,
-    description: "Code du statut de liaison avec un/des opcos",
-  },
-  info_opcos_intitule: {
-    type: String,
-    default: null,
-    description: "Intitule du statut de liaison avec un/des opcos",
-  },
   published: {
     index: true,
     type: Boolean,

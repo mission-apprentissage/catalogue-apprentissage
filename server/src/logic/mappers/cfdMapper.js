@@ -1,5 +1,4 @@
 const logger = require("../../common/logger");
-const { infosCodes, computeCodes } = require("../../constants/opco");
 const { getCfdInfo } = require("@mission-apprentissage/tco-service-node");
 
 const cfdEntreeMap = {
@@ -33,7 +32,7 @@ const cfdMapper = async (cfd = null, options = { onisep: true }) => {
     }
 
     const { result, messages } = cfdInfo;
-    const { rncp = {}, mefs = {}, onisep = {}, opcos = [] } = result;
+    const { rncp = {}, mefs = {}, onisep = {} } = result;
 
     const {
       date_fin_validite_enregistrement = null,
@@ -69,15 +68,6 @@ const cfdMapper = async (cfd = null, options = { onisep: true }) => {
       discipline: onisep_discipline = null,
       domaine_sousdomaine: onisep_domaine_sousdomaine = null,
     } = onisep;
-
-    let opcoNames = null;
-    let info_opcos = infosCodes.NotFound;
-    let info_opcos_intitule = computeCodes[infosCodes.NotFound];
-    if (opcos?.length > 0) {
-      opcoNames = opcos.map(({ operateur_de_competences }) => operateur_de_competences);
-      info_opcos = infosCodes.Found;
-      info_opcos_intitule = computeCodes[infosCodes.Found];
-    }
 
     const cfd_entree = getCfdEntree(result.cfd);
 
@@ -127,9 +117,6 @@ const cfdMapper = async (cfd = null, options = { onisep: true }) => {
           blocs_competences,
           voix_acces,
         },
-        opcos: opcoNames,
-        info_opcos,
-        info_opcos_intitule,
 
         libelle_court: result.libelle_court,
         niveau_formation_diplome: result.niveau_formation_diplome,

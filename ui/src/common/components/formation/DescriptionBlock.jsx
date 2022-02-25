@@ -204,17 +204,6 @@ export const DescriptionBlock = ({ formation }) => {
           </Text>{" "}
           <InfoTooltip description={helpText.formation.rome_codes} />
         </Text>
-        <Box>
-          {formation.opcos && formation.opcos.length === 0 && <Text mb={4}>Aucun OPCO rattaché</Text>}
-          {formation.opcos && formation.opcos.length > 0 && (
-            <Text mb={4}>
-              OPCOs liés à la formation :{" "}
-              <Text as="span" variant="highlight">
-                {formation.opcos.join(", ")}
-              </Text>
-            </Text>
-          )}
-        </Box>
         {formation.rncp_details && (
           <>
             <Text mb={4}>

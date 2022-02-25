@@ -195,8 +195,7 @@ chaîne de 8 caractères (+ 1 optionnels correspondant à la spécialité)
     },
     "onisep": {
       "url": null
-    },
-    "opcos": []
+    }
   },
   "messages": {
     "cfd": "Trouvé dans la BCN",
