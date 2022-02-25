@@ -13,13 +13,13 @@ module.exports = {
       console.log(etablissement);
     }
 
-    await collection.dropIndex("siret_1");
-    await collection.createIndex({ siret: 1 }, { unique: true });
+    // await collection.dropIndex("siret_1");
+    // await collection.createIndex({ siret: 1 }, { unique: true });
   },
 
-  async down(db) {
-    const collection = db.collection("etablissements");
-    await collection.dropIndex("siret_1");
-    await collection.createIndex({ siret: 1 });
+  async down() {
+    // const collection = db.collection("etablissements");
+    // await collection.dropIndex("siret_1");
+    // await collection.createIndex({ siret: 1 });
   },
 };
