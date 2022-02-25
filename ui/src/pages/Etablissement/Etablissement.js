@@ -366,8 +366,10 @@ export default ({ match }) => {
           setGatherData(1);
           try {
             const { etablissement: updatedEtablissement, error } = await etablissementService({
-              ...etablissement,
-              uai: trimedUai,
+              body: {
+                ...etablissement,
+                uai: trimedUai,
+              },
             });
 
             if (error) {
