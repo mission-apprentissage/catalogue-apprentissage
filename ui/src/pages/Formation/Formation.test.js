@@ -1,7 +1,6 @@
 import React from "react";
-import { renderWithRouter, grantAnonymousAccess } from "../../common/utils/testUtils";
+import { renderWithRouter, grantAnonymousAccess, setupMswServer } from "../../common/utils/testUtils";
 import { rest } from "msw";
-import { setupServer } from "msw/node";
 import Formation from "./Formation";
 import { waitFor } from "@testing-library/react";
 import { AFFELNET_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
@@ -267,7 +266,7 @@ const formation = {
   lieu_formation_adresse_computed: "57 Rue de la Paix, 57450 Henriville",
 };
 
-const server = setupServer(
+const server = setupMswServer(
   rest.get(/\/api\/entity\/formation\/2/, (req, res, ctx) => {
     return res(ctx.json({ ...formation, uai_formation_valide: false }));
   }),

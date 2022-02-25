@@ -1,15 +1,14 @@
 import React from "react";
 import Perimetre from "./Perimetre";
-import { renderWithRouter } from "../../common/utils/testUtils";
+import { renderWithRouter, setupMswServer } from "../../common/utils/testUtils";
 
 import { rest } from "msw";
-import { setupServer } from "msw/node";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { fireEvent, waitFor } from "@testing-library/react";
 
 jest.setTimeout(20000);
 
-const server = setupServer(
+const server = setupMswServer(
   rest.get(/\/api\/v1\/entity\/perimetre\/regles\/integration\/count/, (req, res, ctx) => {
     return res(ctx.json({ nbRules: 2, nbFormations: 100 }));
   }),
