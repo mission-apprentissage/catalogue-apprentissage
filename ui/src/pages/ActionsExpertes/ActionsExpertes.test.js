@@ -1,14 +1,13 @@
 import React from "react";
 import ActionsExpertes from "./ActionsExpertes";
-import { renderWithRouter } from "../../common/utils/testUtils";
+import { renderWithRouter, setupMswServer } from "../../common/utils/testUtils";
 
 import { rest } from "msw";
-import { setupServer } from "msw/node";
 import { setAuthState } from "../../common/auth";
 import { waitFor } from "@testing-library/react";
 import * as search from "../../common/hooks/useSearch";
 
-const server = setupServer(
+const server = setupMswServer(
   rest.get(/\/api\/entity\/formations\/count/, (req, res, ctx) => {
     return res(ctx.json(1000));
   }),

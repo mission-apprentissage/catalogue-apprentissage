@@ -1,11 +1,11 @@
 import React from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { renderHook } from "@testing-library/react-hooks";
-import { setupServer } from "msw/node";
 import { rest } from "msw";
 import { useNiveaux } from "./perimetre";
+import { setupMswServer } from "../utils/testUtils";
 
-const server = setupServer(
+const server = setupMswServer(
   rest.get(/\/api\/v1\/entity\/perimetre\/niveau/, (req, res, ctx) => {
     return res(
       ctx.json([
