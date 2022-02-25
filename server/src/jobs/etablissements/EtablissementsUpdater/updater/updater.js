@@ -1,6 +1,19 @@
 const logger = require("../../../../common/logger");
 const { Etablissement } = require("../../../../common/model/index");
 const { getEtablissementUpdates } = require("@mission-apprentissage/tco-service-node");
+const axios = require("axios");
+
+const isApiEntrepriseUp = async () => {
+  try {
+    const endpoints = ["apie_2_etablissements", "apie_2_entreprises"];
+    const { data } = await axios.get("https://entreprise.api.gouv.fr/watchdoge/dashboard/current_status");
+
+    return data?.results?.filter(({ uname }) => endpoints.includes(uname)).every(({ code }) => code === 200);
+  } catch (e) {
+    logger.error(e);
+    return false;
+  }
+};
 
 const run = async (filter = {}, options = null) => {
   await performUpdates(filter, options);
@@ -10,6 +23,11 @@ const performUpdates = async (filter = {}, options = null) => {
   let etablissementServiceOptions = options || {
     scope: { siret: true, geoloc: true, conventionnement: true, onisep: true },
   };
+
+  if (etablissementServiceOptions?.scope?.siret && !(await isApiEntrepriseUp())) {
+    logger.warn("API entreprise is down, no updates");
+    return;
+  }
 
   let count = 0;
   const total = await Etablissement.countDocuments(filter);
