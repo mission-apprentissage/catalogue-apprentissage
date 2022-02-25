@@ -18,6 +18,7 @@ const etablissementSchema = {
   },
   siret: {
     index: true,
+    unique: true,
     type: String,
     default: null,
     description: "Numéro siret",
