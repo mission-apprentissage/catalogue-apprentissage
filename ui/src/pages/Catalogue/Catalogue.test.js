@@ -672,6 +672,8 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
+jest.setTimeout(50000);
+
 test("renders basic tree", async () => {
   jest.spyOn(search, "useSearch").mockImplementation(() => ({
     loaded: true,
