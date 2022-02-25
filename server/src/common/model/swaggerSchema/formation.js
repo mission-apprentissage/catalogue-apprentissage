@@ -408,24 +408,6 @@ module.exports = {
         description: 'Date de publication (passage au statut "publié")',
         format: "date-time",
       },
-      opcos: {
-        type: "array",
-        items: {
-          type: "string",
-        },
-        default: "null",
-        description: "Liste des opcos de la formation",
-      },
-      info_opcos: {
-        type: "number",
-        default: 0,
-        description: "Code du statut de liaison avec un/des opcos",
-      },
-      info_opcos_intitule: {
-        type: "string",
-        default: "null",
-        description: "Intitule du statut de liaison avec un/des opcos",
-      },
       published: {
         type: "boolean",
         default: false,

@@ -77,27 +77,6 @@ describe(__filename, () => {
     assert.deepStrictEqual(result.rome_codes, expected.result.rome_codes);
   });
 
-  it("should handle opcos data", async () => {
-    rewiremock("@mission-apprentissage/tco-service-node").with({
-      getCfdInfo: () => ({ result: { opcos: [{ operateur_de_competences: "test-opco" }] }, messages: {} }),
-    });
-
-    const { cfdMapper } = require("../../../../src/logic/mappers/cfdMapper");
-
-    const expected = {
-      result: {
-        opcos: ["test-opco"],
-        info_opcos: 1,
-        info_opcos_intitule: "Trouvés",
-      },
-    };
-
-    const { result } = await cfdMapper("test");
-    assert.deepStrictEqual(result.opcos, expected.result.opcos);
-    assert.deepStrictEqual(result.info_opcos, expected.result.info_opcos);
-    assert.deepStrictEqual(result.info_opcos_intitule, expected.result.info_opcos_intitule);
-  });
-
   it("should return result if cfd provided", async () => {
     const { cfdMapper } = require("../../../../src/logic/mappers/cfdMapper");
 
