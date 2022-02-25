@@ -14,7 +14,7 @@ module.exports = async (req) => {
     const date = new Date().setUTCHours(0, 0, 0, 0);
 
     try {
-      console.log(`Existing consumer ${caller} for endpoint ${method} ${path}`);
+      logger.info(`Existing consumer <${caller}> for endpoint ${method} ${path}`);
       await Consumption.findOneAndUpdate(
         { path, method, "consumers.caller": caller, "consumers.date": date },
         {
@@ -26,7 +26,7 @@ module.exports = async (req) => {
         }
       );
     } catch (error) {
-      console.log(`New consumer ${caller} for endpoint ${method} ${path}`);
+      logger.info(`New consumer <${caller}> for endpoint ${method} ${path}`);
       await Consumption.findOneAndUpdate(
         {
           path,
