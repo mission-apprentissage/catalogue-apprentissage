@@ -14,6 +14,7 @@ const {
   copyRapprochementFields,
   updateRapprochement,
   copyEditedFields,
+  copyComputedFields,
 } = require("./migrationFinder");
 const { extractFirstValue, extractPeriodeArray } = require("../../../../common/utils/rcoUtils");
 const { asyncForEach } = require("../../../../common/utils/asyncUtils");
@@ -280,6 +281,7 @@ const performConversion = async () => {
         }
 
         copyEditedFields(oldFormations[0], newFormation);
+        copyComputedFields(oldFormations[0], newFormation);
         copyAffelnetFields(oldFormations[0], newFormation);
         copyParcoursupFields(oldFormations[0], newFormation);
         copyRapprochementFields(oldFormations[0], newFormation);
@@ -306,6 +308,11 @@ const performConversion = async () => {
         const editedUai = oldFormations[0]?.editedFields?.uai_formation;
         if (oldFormations.every((f) => f?.editedFields?.uai_formation === editedUai)) {
           copyEditedFields(oldFormations[0], newFormation);
+        }
+
+        const lieu_formation_adresse_computed = oldFormations[0]?.lieu_formation_adresse_computed;
+        if (oldFormations.every((f) => f?.lieu_formation_adresse_computed === lieu_formation_adresse_computed)) {
+          copyComputedFields(oldFormations[0], newFormation);
         }
 
         const affelnet_statut = oldFormations[0].affelnet_statut;
