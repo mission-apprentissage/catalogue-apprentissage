@@ -10,8 +10,8 @@
   "scripts": {
     "start": "nodemon --ignore tests/ src/index.js",
     "debug": "nodemon --inspect=0.0.0.0 --signal SIGINT --ignore tests/ src/index.js",
-    "test": "mocha --file tests/globalSetup.js --recursive --exit --timeout 60000 tests/ src/jobs/**/tests/",
-    "test:coverage": "nyc --reporter=lcov mocha --file tests/globalSetup.js --recursive --exit --timeout 60000 tests/ src/jobs/**/tests/",
+    "test": "mocha --file tests/globalSetup.js --recursive --exit --timeout 60000 tests/ src/**/*.test.js",
+    "test:coverage": "nyc --reporter=lcov mocha --file tests/globalSetup.js --recursive --exit --timeout 60000 tests/ src/**/*.test.js",
     "lint": "eslint src/ tests/",
     "docker:start": "docker-compose up -d --build --force-recreate",
     "docker:start-ci": "docker-compose up -d mongodb",
