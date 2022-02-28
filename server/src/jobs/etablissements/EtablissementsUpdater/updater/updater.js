@@ -1,6 +1,7 @@
 const logger = require("../../../../common/logger");
 const { Etablissement } = require("../../../../common/model/index");
 const { getEtablissementUpdates } = require("@mission-apprentissage/tco-service-node");
+const { isApiEntrepriseUp } = require("../../../../common/utils/apiUtils");
 
 const run = async (filter = {}, options = null) => {
   await performUpdates(filter, options);
@@ -10,6 +11,16 @@ const performUpdates = async (filter = {}, options = null) => {
   let etablissementServiceOptions = options || {
     scope: { siret: true, geoloc: true, conventionnement: true, onisep: true },
   };
+
+  if (
+    (!etablissementServiceOptions?.scope ||
+      Object.keys(etablissementServiceOptions?.scope).length === 0 ||
+      etablissementServiceOptions?.scope?.siret) &&
+    !(await isApiEntrepriseUp())
+  ) {
+    logger.warn("API entreprise is down, no updates");
+    return;
+  }
 
   let count = 0;
   const total = await Etablissement.countDocuments(filter);
