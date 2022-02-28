@@ -24,7 +24,7 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false) => {
   let index = 0;
 
   for await (const formation of cursor) {
-    if (index % 100 === 0) {
+    if (index % 5000 === 0) {
       console.log(`updating formation ${index}/${total}`);
     }
     index += 1;
