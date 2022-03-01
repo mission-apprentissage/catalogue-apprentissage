@@ -53,6 +53,7 @@ const getLBAUrl = ({ cle_ministere_educatif = "" }) => {
 
 const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, values, hasRightToEdit }) => {
   const { isOpen: isComputedAdressOpen, onToggle: onComputedAdressToggle } = useDisclosure();
+  const { isOpen: isComputedGeoCoordOpen, onToggle: onComputedGeoCoordToggle } = useDisclosure();
 
   const UaiFormationContainer = formation.uai_formation_valide
     ? React.Fragment
@@ -103,14 +104,57 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                 />
               </UaiFormationContainer>
 
-              <Text mb={formation?.lieu_formation_adresse_computed ? 0 : 4}>
+              <Text mb={4}>
                 Adresse :{" "}
                 <Text as="span" variant="highlight">
                   {formation.lieu_formation_adresse}
                 </Text>{" "}
                 <InfoTooltip description={helpText.formation.lieu_formation_adresse} />
               </Text>
+              <Text mb={4}>
+                Code postal :{" "}
+                <Text as="span" variant="highlight">
+                  {formation.code_postal}
+                </Text>{" "}
+                <InfoTooltip description={helpText.formation.code_postal} />
+              </Text>
+              <Text mb={formation?.lieu_formation_adresse_computed ? 0 : 4}>
+                Commune :{" "}
+                <Text as="span" variant="highlight">
+                  {formation.localite}
+                </Text>{" "}
+                <InfoTooltip description={helpText.formation.localite} />
+              </Text>
+              {formation?.lieu_formation_geo_coordonnees_computed && (
+                <Box mb={4}>
+                  <Button
+                    onClick={onComputedGeoCoordToggle}
+                    variant={"unstyled"}
+                    fontSize={"zeta"}
+                    fontStyle={"italic"}
+                    color={"grey.600"}
+                  >
+                    Géolocalisation calculée depuis l'adresse{" "}
+                    <ArrowDownLine boxSize={5} transform={isComputedGeoCoordOpen ? "rotate(180deg)" : "none"} />
+                  </Button>
+                  <Collapse in={isComputedGeoCoordOpen} animateOpacity>
+                    <Text mb={4}>
+                      <Text fontSize={"zeta"} color={"grey.600"} as="span">
+                        {formation.lieu_formation_geo_coordonnees_computed}
+                      </Text>{" "}
+                      <InfoTooltip description={helpText.formation.lieu_formation_geo_coordonnees_computed} />
+                    </Text>
+                  </Collapse>
+                </Box>
+              )}
 
+              <Text mb={formation?.lieu_formation_adresse_computed ? 0 : 4}>
+                Géolocalisation :{" "}
+                <Text as="span" variant="highlight">
+                  {formation.lieu_formation_geo_coordonnees}
+                </Text>{" "}
+                <InfoTooltip description={helpText.formation.lieu_formation_geo_coordonnees} />
+              </Text>
               {formation?.lieu_formation_adresse_computed && (
                 <Box mb={4}>
                   <Button
@@ -134,21 +178,6 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                 </Box>
               )}
 
-              <Text mb={4}>
-                Code postal :{" "}
-                <Text as="span" variant="highlight">
-                  {formation.code_postal}
-                </Text>{" "}
-                <InfoTooltip description={helpText.formation.code_postal} />
-              </Text>
-
-              <Text mb={4}>
-                Commune :{" "}
-                <Text as="span" variant="highlight">
-                  {formation.localite}
-                </Text>{" "}
-                <InfoTooltip description={helpText.formation.localite} />
-              </Text>
               <Text mb={4}>
                 Code commune :{" "}
                 <Text as="span" variant="highlight">

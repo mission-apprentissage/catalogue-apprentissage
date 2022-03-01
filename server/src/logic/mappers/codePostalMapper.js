@@ -42,7 +42,7 @@ const codePostalMapper = async (codePostal = null, codeInsee = null) => {
       messages,
     };
   } catch (e) {
-    logger.debug(e?.message);
+    logger.error(e?.message);
     return {
       result: null,
       messages: {
