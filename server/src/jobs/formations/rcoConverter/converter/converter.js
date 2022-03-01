@@ -310,8 +310,15 @@ const performConversion = async () => {
           copyEditedFields(oldFormations[0], newFormation);
         }
 
-        const lieu_formation_adresse_computed = oldFormations[0]?.lieu_formation_adresse_computed;
-        if (oldFormations.every((f) => f?.lieu_formation_adresse_computed === lieu_formation_adresse_computed)) {
+        const lieu_formation_geo_coordonnees = oldFormations[0]?.lieu_formation_geo_coordonnees;
+        const lieu_formation_adresse = oldFormations[0]?.lieu_formation_adresse;
+        if (
+          oldFormations.every(
+            (f) =>
+              f?.lieu_formation_geo_coordonnees === lieu_formation_geo_coordonnees &&
+              f?.lieu_formation_adresse === lieu_formation_adresse
+          )
+        ) {
           copyComputedFields(oldFormations[0], newFormation);
         }
 
