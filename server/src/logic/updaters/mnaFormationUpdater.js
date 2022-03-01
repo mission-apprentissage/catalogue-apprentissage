@@ -205,10 +205,10 @@ const mnaFormationUpdater = async (formation, { withCodePostalUpdate = true, cfd
         const [lat, lon] = geoCoords.split(",");
         const [computedLat, computedLon] = coordinates.geo_coordonnees.split(",");
         computedFields.distance = distanceBetweenCoordinates(lat, lon, computedLat, computedLon);
-        computedFields.lieu_formation_adresse_computed = coordinates.geo_coordonnees;
+        computedFields.lieu_formation_geo_coordonnees_computed = coordinates.geo_coordonnees;
       } else {
         computedFields.distance = null;
-        computedFields.lieu_formation_adresse_computed = null;
+        computedFields.lieu_formation_geo_coordonnees_computed = null;
       }
     }
 
