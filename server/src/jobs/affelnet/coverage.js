@@ -1,4 +1,4 @@
-const { getAffelnetCoverage } = require("../../logic/controller/coverage");
+const { getAffelnetCoverage, getMatch } = require("../../logic/controller/coverage");
 const { paginator } = require("../../common/utils/paginator");
 const { AffelnetFormation, Formation } = require("../../common/model");
 const { runScript } = require("../scriptWrapper");
@@ -9,9 +9,37 @@ const { AFFELNET_STATUS } = require("../../constants/status");
 const formation = async () => {
   await paginator(
     AffelnetFormation,
-    { filter: { code_mef: { $nin: [null, "AFFECTATION"] }, uai: { $ne: null } }, limit: 100 },
+    {
+      filter: {
+        $or: [{ code_mef: { $nin: [null, "AFFECTATION"] } }, { cle_ministere_educatif: { $ne: null } }],
+        uai: { $ne: null },
+      },
+      limit: 100,
+    },
     async (formation) => {
-      let match = await getAffelnetCoverage(formation);
+      let match;
+
+      // if we got a the key, just check if we still have it
+      if (formation.cle_ministere_educatif) {
+        const matchingFormation = await getMatch({
+          published: true,
+          cle_ministere_educatif: formation.cle_ministere_educatif,
+        });
+        if (matchingFormation && matchingFormation.length === 1) {
+          match = {
+            strength: "100",
+            matching: matchingFormation,
+          };
+        }
+      }
+
+      if (!match && (!formation.code_mef || formation.code_mef === "AFFECTATION")) {
+        return;
+      }
+
+      if (!match) {
+        match = await getAffelnetCoverage(formation);
+      }
 
       if (!match) return;
 

@@ -29,22 +29,24 @@ const findPreviousFormations = async ({
   const ids_action = extractFlatIdsAction(id_action);
   const ids_formation = id_formation.split("##");
 
-  const previousFormations = await Formation.find({
+  return await Formation.find({
     $or: [
       { cle_ministere_educatif: null }, // no key means it is a legacy formation
       { annee: "X" }, // X means it is not validated yet
     ],
     published: true,
     id_formation: { $in: ids_formation },
+    "ids_action.0": { $exists: true },
+    ids_action: { $not: { $elemMatch: { $nin: ids_action } } },
     id_certifinfo,
   }).lean();
+};
 
-  return previousFormations.filter((prevFormation) => {
-    return (
-      prevFormation?.ids_action?.length > 0 &&
-      prevFormation.ids_action.every((id_action) => ids_action.includes(id_action))
-    );
-  });
+const copyComputedFields = (oldFormation, newFormation) => {
+  newFormation.distance = oldFormation.distance;
+  newFormation.lieu_formation_geo_coordonnees_computed = oldFormation.lieu_formation_geo_coordonnees_computed;
+  newFormation.lieu_formation_adresse_computed = oldFormation.lieu_formation_adresse_computed;
+  return newFormation;
 };
 
 const copyEditedFields = (oldFormation, newFormation) => {
@@ -136,5 +138,6 @@ module.exports = {
   extractFlatIdsAction,
   copyRapprochementFields,
   updateRapprochement,
+  copyComputedFields,
   copyEditedFields,
 };

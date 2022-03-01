@@ -1,7 +1,6 @@
 import React from "react";
-import { renderWithRouter, grantAnonymousAccess } from "../../common/utils/testUtils";
+import { renderWithRouter, grantAnonymousAccess, setupMswServer } from "../../common/utils/testUtils";
 import { rest } from "msw";
-import { setupServer } from "msw/node";
 import Etablissement from "./Etablissement";
 import { waitFor } from "@testing-library/react";
 import * as api from "../../common/api/organisme";
@@ -175,7 +174,7 @@ const etablissement = {
   rco_geo_coordonnees: null,
 };
 
-const server = setupServer(
+const server = setupMswServer(
   rest.get(/\/api\/entity\/etablissement\/1/, (req, res, ctx) => {
     return res(ctx.json({ ...etablissement, uai_valide: true }));
   }),
@@ -187,12 +186,6 @@ const server = setupServer(
   }),
   rest.get(/\/api\/v1\/entity\/messageScript/, (req, res, ctx) => {
     return res(ctx.json([]));
-  }),
-  rest.get(/\/*/, (req, res, ctx) => {
-    console.warn(" ============== > * < =============");
-    console.warn(" Unhandled request : " + req.url.pathname);
-    console.warn(" ============== > * < =============");
-    return res(ctx.json());
   })
 );
 

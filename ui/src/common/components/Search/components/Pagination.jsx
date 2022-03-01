@@ -48,8 +48,30 @@ const NextLink = ({ currentPage, totalPages, fragmentName, setPage }) => {
 };
 
 export const Pagination = ({ totalPages, currentPage, setPage, fragmentName }) => {
-  if (totalPages <= 1) {
+  if (Number.isNaN(totalPages) || totalPages <= 1) {
     return <></>;
+  }
+
+  if (totalPages <= 5) {
+    return (
+      <Box className={"search-pagination"} textAlign={"center"} my={3} mx={1}>
+        <PreviousLink fragmentName={fragmentName} setPage={setPage} currentPage={currentPage} />
+        {Array(totalPages)
+          .fill(currentPage)
+          .map((_unusedValue, index) => {
+            return (
+              <PageLink
+                key={`fragmentName-${index}`}
+                pageNumber={index + 1}
+                setPage={setPage}
+                fragmentName={fragmentName}
+                isActive={index === currentPage}
+              />
+            );
+          })}
+        <NextLink currentPage={currentPage} setPage={setPage} fragmentName={fragmentName} totalPages={totalPages} />
+      </Box>
+    );
   }
 
   return (
@@ -60,12 +82,28 @@ export const Pagination = ({ totalPages, currentPage, setPage, fragmentName }) =
 
       {currentPage - 2 > 0 && <span>...</span>}
 
+      {currentPage > totalPages - 2 && (
+        <PageLink pageNumber={currentPage - 2} setPage={setPage} fragmentName={fragmentName} />
+      )}
+
+      {currentPage > totalPages - 3 && (
+        <PageLink pageNumber={currentPage - 1} setPage={setPage} fragmentName={fragmentName} />
+      )}
+
       {currentPage > 0 && <PageLink pageNumber={currentPage} setPage={setPage} fragmentName={fragmentName} />}
 
       <PageLink pageNumber={currentPage + 1} setPage={setPage} fragmentName={fragmentName} isActive={true} />
 
       {currentPage + 1 < totalPages - 1 && (
         <PageLink pageNumber={currentPage + 2} setPage={setPage} fragmentName={fragmentName} />
+      )}
+
+      {currentPage + 2 < totalPages - 1 && currentPage < 2 && (
+        <PageLink pageNumber={currentPage + 3} setPage={setPage} fragmentName={fragmentName} />
+      )}
+
+      {currentPage + 3 < totalPages - 1 && currentPage < 1 && (
+        <PageLink pageNumber={currentPage + 4} setPage={setPage} fragmentName={fragmentName} />
       )}
 
       {currentPage + 2 < totalPages - 1 && <span>...</span>}

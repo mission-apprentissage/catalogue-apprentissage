@@ -1,6 +1,6 @@
 import React from "react";
 import ReconciliationPs from "./ReconciliationPs";
-import { renderWithRouter } from "../../../common/utils/testUtils";
+import { renderWithRouter, setupMswServer } from "../../../common/utils/testUtils";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { waitFor } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
@@ -11,10 +11,9 @@ import * as useAuth from "../../../common/hooks/useAuth";
 import * as search from "../../../common/hooks/useSearch";
 
 import { rest } from "msw";
-import { setupServer } from "msw/node";
 import { PARCOURSUP_STATUS } from "../../../constants/status";
 
-const server = setupServer(
+const server = setupMswServer(
   rest.post(/\/api\/es\/search\/parcoursupformations\/_msearch/, (req, res, ctx) => {
     return res(
       ctx.json({

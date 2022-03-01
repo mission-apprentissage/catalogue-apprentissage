@@ -182,48 +182,33 @@ const mnaFormationUpdater = async (formation, { withCodePostalUpdate = true, cfd
     const geoCoords = extractFirstValue(
       rcoFormation?.etablissement_lieu_formation_geo_coordonnees ?? formation.lieu_formation_geo_coordonnees
     );
+
+    const computedFields = {};
+
     if (geoCoords) {
-      const { result = {}, messages: geoMessages } = withCodePostalUpdate
-        ? await geoMapper(geoCoords, code_commune_insee)
-        : {};
+      const { result = {} } = withCodePostalUpdate ? await geoMapper(geoCoords, code_commune_insee) : {};
 
       if (result?.adresse) {
         cpMapping.lieu_formation_adresse_computed = `${result.adresse}, ${result.code_postal} ${result.localite}`;
       }
 
-      error = parseErrors(geoMessages);
+      // Calculate distance between rco address search geoloc & rco geocoords
+      const { result: coordinates, messages: coordsMessages } = await getCoordinatesFromAddressData({
+        numero_voie: cpMapping.lieu_formation_adresse,
+        localite: cpMapping.localite,
+        code_postal: cpMapping.code_postal,
+        code_insee: cpMapping.code_commune_insee,
+      });
 
-      if (geoMessages?.errorType === "Insee") {
-        // on Insee inconsistency calculate distance between rco address search geoloc & rco geocoords
-        const { result: coordinates, messages: coordsMessages } = await getCoordinatesFromAddressData({
-          numero_voie: cpMapping.lieu_formation_adresse,
-          localite: cpMapping.localite,
-          code_postal: cpMapping.code_postal,
-          code_insee: cpMapping.code_commune_insee,
-        });
-
-        const geolocError = parseErrors(coordsMessages);
-        if (!geolocError && coordinates.geo_coordonnees) {
-          const [lat, lon] = geoCoords.split(",");
-          const [inconsistentLat, inconsistentLon] = coordinates.geo_coordonnees.split(",");
-          const distance = distanceBetweenCoordinates(lat, lon, inconsistentLat, inconsistentLon);
-
-          // limit to 5 km the error threshold
-          if (distance > 5000) {
-            error = `${error} Distance entre le lieu de formation et la géolocalisation de ce même lieu via l'adresse fournie par RCO: ${(
-              distance / 1000
-            ).toFixed(2)}km (coordonnées geoloc rco : ${geoCoords} / coordonnées via adresse rco : ${
-              coordinates.geo_coordonnees
-            })`;
-          } else {
-            // consider it's not an error if the distance gap is under 5km
-            error = null;
-          }
-        }
-      }
-
-      if (error) {
-        return { updates: null, formation, error, cfdInfo: currentCfdInfo };
+      const geolocError = parseErrors(coordsMessages);
+      if (!geolocError && coordinates.geo_coordonnees) {
+        const [lat, lon] = geoCoords.split(",");
+        const [computedLat, computedLon] = coordinates.geo_coordonnees.split(",");
+        computedFields.distance = distanceBetweenCoordinates(lat, lon, computedLat, computedLon);
+        computedFields.lieu_formation_adresse_computed = coordinates.geo_coordonnees;
+      } else {
+        computedFields.distance = null;
+        computedFields.lieu_formation_adresse_computed = null;
       }
     }
 
@@ -316,6 +301,7 @@ const mnaFormationUpdater = async (formation, { withCodePostalUpdate = true, cfd
       published,
       update_error,
       uai_formation: uai_formation?.trim(),
+      ...computedFields,
       ...formation?.editedFields,
     };
 

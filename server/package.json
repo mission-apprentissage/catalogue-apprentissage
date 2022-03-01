@@ -10,8 +10,8 @@
   "scripts": {
     "start": "nodemon --ignore tests/ src/index.js",
     "debug": "nodemon --inspect=0.0.0.0 --signal SIGINT --ignore tests/ src/index.js",
-    "test": "mocha --file tests/globalSetup.js --recursive --exit --timeout 60000 tests/ src/jobs/**/tests/",
-    "test:coverage": "nyc --reporter=lcov mocha --file tests/globalSetup.js --recursive --exit --timeout 60000 tests/ src/jobs/**/tests/",
+    "test": "mocha --file tests/globalSetup.js --recursive --exit --timeout 60000 tests/ src/**/*.test.js",
+    "test:coverage": "nyc --reporter=lcov mocha --file tests/globalSetup.js --recursive --exit --timeout 60000 tests/ src/**/*.test.js",
     "lint": "eslint src/ tests/",
     "docker:start": "docker-compose up -d --build --force-recreate",
     "docker:start-ci": "docker-compose up -d mongodb",
@@ -25,6 +25,7 @@
     "psup:export": "standalone=true node src/jobs/parcoursup/export/index.js",
     "rcoFormation:duplicate": "standalone=true node src/jobs/oneshot/findRcoDuplicates/index.js",
     "uai:check": "standalone=true node src/jobs/checkUai/index.js",
+    "compute:distance": "standalone=true node src/jobs/oneshot/computeDistance/index.js",
     "hydratecfdentree": "standalone=true node src/jobs/parcoursup/_hydrateCfdEntree.js",
     "migrateRaisonsRejet": "standalone=true node src/jobs/parcoursup/_migrationRaisonsRejet.js",
     "psup:updatemna": "standalone=true node src/jobs/parcoursup/_updateMatchInfo.js",
@@ -43,7 +44,7 @@
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.6.1",
-    "@mission-apprentissage/tco-service-node": "2.33.1",
+    "@mission-apprentissage/tco-service-node": "2.34.0",
     "aws-sdk": "2.785.0",
     "axios": "0.21.1",
     "body-parser": "1.19.0",

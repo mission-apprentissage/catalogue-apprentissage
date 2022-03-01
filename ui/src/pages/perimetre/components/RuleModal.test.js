@@ -1,12 +1,12 @@
 import React from "react";
 import { rest } from "msw";
-import { setupServer } from "msw/node";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { getDiplomesAllowedForSubRulesUrl, RuleModal } from "./RuleModal";
 import { fireEvent, render } from "@testing-library/react";
 import { PARCOURSUP_STATUS } from "../../../constants/status";
+import { setupMswServer } from "../../../common/utils/testUtils";
 
-const server = setupServer(
+const server = setupMswServer(
   rest.get(/\/api\/v1\/entity\/perimetre\/niveau/, (req, res, ctx) => {
     return res(ctx.json([{ niveau: { value: "1", count: 10 }, diplomes: [{ value: "bts" }] }]));
   }),

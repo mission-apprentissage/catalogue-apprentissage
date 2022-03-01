@@ -14,6 +14,7 @@ const {
   copyRapprochementFields,
   updateRapprochement,
   copyEditedFields,
+  copyComputedFields,
 } = require("./migrationFinder");
 const { extractFirstValue, extractPeriodeArray } = require("../../../../common/utils/rcoUtils");
 const { asyncForEach } = require("../../../../common/utils/asyncUtils");
@@ -280,6 +281,7 @@ const performConversion = async () => {
         }
 
         copyEditedFields(oldFormations[0], newFormation);
+        copyComputedFields(oldFormations[0], newFormation);
         copyAffelnetFields(oldFormations[0], newFormation);
         copyParcoursupFields(oldFormations[0], newFormation);
         copyRapprochementFields(oldFormations[0], newFormation);
@@ -306,6 +308,18 @@ const performConversion = async () => {
         const editedUai = oldFormations[0]?.editedFields?.uai_formation;
         if (oldFormations.every((f) => f?.editedFields?.uai_formation === editedUai)) {
           copyEditedFields(oldFormations[0], newFormation);
+        }
+
+        const lieu_formation_geo_coordonnees = oldFormations[0]?.lieu_formation_geo_coordonnees;
+        const lieu_formation_adresse = oldFormations[0]?.lieu_formation_adresse;
+        if (
+          oldFormations.every(
+            (f) =>
+              f?.lieu_formation_geo_coordonnees === lieu_formation_geo_coordonnees &&
+              f?.lieu_formation_adresse === lieu_formation_adresse
+          )
+        ) {
+          copyComputedFields(oldFormations[0], newFormation);
         }
 
         const affelnet_statut = oldFormations[0].affelnet_statut;

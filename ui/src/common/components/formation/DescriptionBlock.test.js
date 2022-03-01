@@ -135,9 +135,6 @@ const formation = {
   parcoursup_statut_history: [],
   affelnet_statut: AFFELNET_STATUS.PUBLIE,
   affelnet_statut_history: [],
-  opcos: null,
-  info_opcos: 0,
-  info_opcos_intitule: "Non trouvés",
   published: true,
   rco_published: true,
   updates_history: [],
@@ -190,9 +187,6 @@ test("renders the description block of the training", async () => {
 
   const partenaires = queryByText(/^Partenaires/i);
   expect(partenaires).not.toBeInTheDocument();
-
-  const opcos = queryByText(/opco Atlas, opco EP/i);
-  expect(opcos).not.toBeInTheDocument();
 
   const warn = queryByText(/Ce diplôme a une date de fin antérieure au 31\/08 de l'année en cours/i);
   expect(warn).not.toBeInTheDocument();
@@ -271,29 +265,4 @@ test("display a warning for cfd outdated", async () => {
 
   const warn = queryByText(/Ce diplôme a une date de fin antérieure au 31\/08 de l'année en cours/i);
   expect(warn).toBeInTheDocument();
-});
-
-test("display OPCOS", async () => {
-  const testFormation = {
-    ...formation,
-    opcos: ["opco Atlas", "opco EP"],
-  };
-  const { queryByText } = render(<DescriptionBlock formation={testFormation} />);
-
-  const opcos = queryByText(/opco Atlas, opco EP/i);
-  expect(opcos).toBeInTheDocument();
-});
-
-test("display no OPCOS", async () => {
-  const testFormation = {
-    ...formation,
-    opcos: [],
-  };
-  const { queryByText } = render(<DescriptionBlock formation={testFormation} />);
-
-  const opcos = queryByText(/opco Atlas, opco EP/i);
-  expect(opcos).not.toBeInTheDocument();
-
-  const noOpco = queryByText(/Aucun OPCO rattaché/i);
-  expect(noOpco).toBeInTheDocument();
 });

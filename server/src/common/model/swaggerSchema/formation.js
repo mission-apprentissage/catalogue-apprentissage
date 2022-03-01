@@ -408,24 +408,6 @@ module.exports = {
         description: 'Date de publication (passage au statut "publié")',
         format: "date-time",
       },
-      opcos: {
-        type: "array",
-        items: {
-          type: "string",
-        },
-        default: "null",
-        description: "Liste des opcos de la formation",
-      },
-      info_opcos: {
-        type: "number",
-        default: 0,
-        description: "Code du statut de liaison avec un/des opcos",
-      },
-      info_opcos_intitule: {
-        type: "string",
-        default: "null",
-        description: "Intitule du statut de liaison avec un/des opcos",
-      },
       published: {
         type: "boolean",
         default: false,
@@ -475,6 +457,15 @@ module.exports = {
         type: "string",
         description: "Latitude et longitude du lieu de formation",
       },
+      lieu_formation_geo_coordonnees_computed: {
+        type: "string",
+        description: "Latitude et longitude du lieu de formation déduit de l'adresse du flux RCO",
+      },
+      distance: {
+        type: "number",
+        default: "null",
+        description: "Distance entre les coordonnées transmises et déduites à partir de l'adresse",
+      },
       lieu_formation_adresse: {
         type: "string",
         default: "null",
@@ -483,7 +474,7 @@ module.exports = {
       lieu_formation_adresse_computed: {
         type: "string",
         default: "null",
-        description: "Adresse du lieu de formation déduit de la géolocalisation le flux RCO",
+        description: "Adresse du lieu de formation déduit de la géolocalisation du flux RCO",
       },
       lieu_formation_siret: {
         type: "string",
