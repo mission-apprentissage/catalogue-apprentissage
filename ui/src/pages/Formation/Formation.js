@@ -51,6 +51,11 @@ const getLBAUrl = ({ cle_ministere_educatif = "" }) => {
   )}`;
 };
 
+const getGeoPortailUrl = (coordinates) => {
+  const [lat, lon] = coordinates.split(",");
+  return `https://www.geoportail.gouv.fr/carte?c=${lon},${lat}&z=19&l0=ORTHOIMAGERY.ORTHOPHOTOS::GEOPORTAIL:OGC:WMTS(1)&permalink=yes`;
+};
+
 const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, values, hasRightToEdit }) => {
   const { isOpen: isComputedAdressOpen, onToggle: onComputedAdressToggle } = useDisclosure();
   const { isOpen: isComputedGeoCoordOpen, onToggle: onComputedGeoCoordToggle } = useDisclosure();
@@ -70,6 +75,22 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
         />
       );
 
+  const AdresseContainer =
+    0 >= formation.distance
+      ? React.Fragment
+      : (args) => (
+          <Box
+            data-testid={"uai-warning"}
+            bg={"orangesoft.200"}
+            p={4}
+            mb={4}
+            borderLeft={"4px solid"}
+            borderColor={"orangesoft.500"}
+            w={"full"}
+            {...args}
+          />
+        );
+
   return (
     <Box borderRadius={4}>
       <Grid templateColumns="repeat(12, 1fr)">
@@ -83,8 +104,8 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
               Lieu de la formation
             </Heading>
             <Box mt={2} mb={4} px={5}>
-              <Link href={getLBAUrl(formation)} textStyle="rf-text" variant="pill" isExternal>
-                voir sur un plan <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
+              <Link href={getLBAUrl(formation)} ttextStyle="rf-text" variant="pill" isExternal>
+                voir sur labonnealternance <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
               </Link>
             </Box>
 
@@ -104,79 +125,104 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                 />
               </UaiFormationContainer>
 
-              <Text mb={4}>
-                Adresse :{" "}
-                <Text as="span" variant="highlight">
-                  {formation.lieu_formation_adresse}
-                </Text>{" "}
-                <InfoTooltip description={helpText.formation.lieu_formation_adresse} />
-              </Text>
-              <Text mb={4}>
-                Code postal :{" "}
-                <Text as="span" variant="highlight">
-                  {formation.code_postal}
-                </Text>{" "}
-                <InfoTooltip description={helpText.formation.code_postal} />
-              </Text>
-              <Text mb={formation?.lieu_formation_adresse_computed ? 0 : 4}>
-                Commune :{" "}
-                <Text as="span" variant="highlight">
-                  {formation.localite}
-                </Text>{" "}
-                <InfoTooltip description={helpText.formation.localite} />
-              </Text>
-              {formation?.lieu_formation_geo_coordonnees_computed && (
-                <Box mb={4}>
-                  <Button
-                    onClick={onComputedGeoCoordToggle}
-                    variant={"unstyled"}
-                    fontSize={"zeta"}
-                    fontStyle={"italic"}
-                    color={"grey.600"}
-                  >
-                    Géolocalisation calculée depuis l'adresse{" "}
-                    <ArrowDownLine boxSize={5} transform={isComputedGeoCoordOpen ? "rotate(180deg)" : "none"} />
-                  </Button>
-                  <Collapse in={isComputedGeoCoordOpen} animateOpacity>
-                    <Text mb={4}>
-                      <Text fontSize={"zeta"} color={"grey.600"} as="span">
-                        {formation.lieu_formation_geo_coordonnees_computed}
-                      </Text>{" "}
-                      <InfoTooltip description={helpText.formation.lieu_formation_geo_coordonnees_computed} />
-                    </Text>
-                  </Collapse>
-                </Box>
-              )}
+              <AdresseContainer>
+                <Text mb={4}>
+                  Adresse :{" "}
+                  <Text as="span" variant="highlight">
+                    {formation.lieu_formation_adresse}
+                  </Text>{" "}
+                  <InfoTooltip description={helpText.formation.lieu_formation_adresse} />
+                </Text>
+                <Text mb={4}>
+                  Code postal :{" "}
+                  <Text as="span" variant="highlight">
+                    {formation.code_postal}
+                  </Text>{" "}
+                  <InfoTooltip description={helpText.formation.code_postal} />
+                </Text>
+                <Text mb={4}>
+                  Commune :{" "}
+                  <Text as="span" variant="highlight">
+                    {formation.localite}
+                  </Text>{" "}
+                  <InfoTooltip description={helpText.formation.localite} />
+                </Text>
+                <Text mb={formation?.lieu_formation_geo_coordonnees_computed ? 0 : 4}>
+                  Département :{" "}
+                  <Text as="span" variant="highlight">
+                    {formation.nom_departement} ({formation.num_departement})
+                  </Text>{" "}
+                  <InfoTooltip description={helpText.formation.nom_departement} />
+                </Text>
+                {formation?.lieu_formation_geo_coordonnees_computed && (
+                  <Box mb={6}>
+                    <Button
+                      onClick={onComputedGeoCoordToggle}
+                      variant={"unstyled"}
+                      fontSize={"zeta"}
+                      fontStyle={"italic"}
+                      color={"grey.600"}
+                    >
+                      Géolocalisation calculée depuis l'adresse{" "}
+                      <ArrowDownLine boxSize={5} transform={isComputedGeoCoordOpen ? "rotate(180deg)" : "none"} />
+                    </Button>
+                    <Collapse in={isComputedGeoCoordOpen} animateOpacity unmountOnExit={true}>
+                      <Text mb={2}>
+                        <Text fontSize={"zeta"} color={"grey.600"} as="span">
+                          <Link
+                            href={getGeoPortailUrl(formation.lieu_formation_geo_coordonnees_computed)}
+                            textStyle="rf-text"
+                            variant="pill"
+                            title="Voir sur GeoPortail"
+                            isExternal
+                          >
+                            {formation.lieu_formation_geo_coordonnees_computed}
+                          </Link>
+                        </Text>{" "}
+                        <InfoTooltip description={helpText.formation.lieu_formation_geo_coordonnees_computed} />
+                      </Text>
+                    </Collapse>
+                  </Box>
+                )}
 
-              <Text mb={formation?.lieu_formation_adresse_computed ? 0 : 4}>
-                Géolocalisation :{" "}
-                <Text as="span" variant="highlight">
-                  {formation.lieu_formation_geo_coordonnees}
-                </Text>{" "}
-                <InfoTooltip description={helpText.formation.lieu_formation_geo_coordonnees} />
-              </Text>
-              {formation?.lieu_formation_adresse_computed && (
-                <Box mb={4}>
-                  <Button
-                    onClick={onComputedAdressToggle}
-                    variant={"unstyled"}
-                    fontSize={"zeta"}
-                    fontStyle={"italic"}
-                    color={"grey.600"}
-                  >
-                    Adresse calculée depuis la géolocalisation{" "}
-                    <ArrowDownLine boxSize={5} transform={isComputedAdressOpen ? "rotate(180deg)" : "none"} />
-                  </Button>
-                  <Collapse in={isComputedAdressOpen} animateOpacity>
-                    <Text mb={4}>
-                      <Text fontSize={"zeta"} color={"grey.600"} as="span">
-                        {formation.lieu_formation_adresse_computed}
-                      </Text>{" "}
-                      <InfoTooltip description={helpText.formation.lieu_formation_adresse_computed} />
-                    </Text>
-                  </Collapse>
-                </Box>
-              )}
+                <Text mb={formation?.lieu_formation_adresse_computed ? 0 : 4}>
+                  Géolocalisation :{" "}
+                  <Text as="span" variant="highlight">
+                    {formation.lieu_formation_geo_coordonnees}
+                  </Text>{" "}
+                  <InfoTooltip description={helpText.formation.lieu_formation_geo_coordonnees} />
+                </Text>
+                {formation?.lieu_formation_adresse_computed && (
+                  <Box mb={4}>
+                    <Button
+                      onClick={onComputedAdressToggle}
+                      variant={"unstyled"}
+                      fontSize={"zeta"}
+                      fontStyle={"italic"}
+                      color={"grey.600"}
+                    >
+                      Adresse calculée depuis la géolocalisation{" "}
+                      <ArrowDownLine boxSize={5} transform={isComputedAdressOpen ? "rotate(180deg)" : "none"} />
+                    </Button>
+                    <Collapse in={isComputedAdressOpen} animateOpacity unmountOnExit={true}>
+                      <Text mb={2}>
+                        <Text fontSize={"zeta"} color={"grey.600"} as="span">
+                          <Link
+                            href={getGeoPortailUrl(formation.lieu_formation_geo_coordonnees)}
+                            textStyle="rf-text"
+                            variant="pill"
+                            title="Voir sur GeoPortail"
+                            isExternal
+                          >
+                            {formation.lieu_formation_adresse_computed}
+                          </Link>
+                        </Text>{" "}
+                        <InfoTooltip description={helpText.formation.lieu_formation_adresse_computed} />
+                      </Text>
+                    </Collapse>
+                  </Box>
+                )}
+              </AdresseContainer>
 
               <Text mb={4}>
                 Code commune :{" "}
@@ -185,13 +231,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                 </Text>{" "}
                 <InfoTooltip description={helpText.formation.code_commune_insee} />
               </Text>
-              <Text mb={8}>
-                Département :{" "}
-                <Text as="span" variant="highlight">
-                  {formation.nom_departement} ({formation.num_departement})
-                </Text>{" "}
-                <InfoTooltip description={helpText.formation.nom_departement} />
-              </Text>
+
               <Text mb={4}>
                 Académie de rattachement :{" "}
                 <Text as="span" variant="highlight">
