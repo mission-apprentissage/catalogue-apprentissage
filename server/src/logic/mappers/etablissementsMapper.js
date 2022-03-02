@@ -1,7 +1,22 @@
+// @ts-check
+
+/** @typedef {{Habilitation_Partenaire:string, Siret_Partenaire:string}} Partenaire */
+/** @typedef {{certificateur:string, siret_certificateur:string}} Certificateur */
+/** @typedef {{_id:string, siret: string, siren: string, nda:string, catalogue_published: boolean, published: boolean, ferme: boolean, uai: string, enseigne: string, numero_voie: string, type_voie: string, nom_voie: string, complement_adresse: string, cedex: string, geo_coordonnees: string, entreprise_raison_sociale: string, code_postal: string, code_insee_localite: string, num_departement: string, nom_departement: string, region_implantation_nom: string, nom_academie: string, num_academie: string, localite: string, date_creation: Date}} Etablissement */
+/** @typedef {{code_type_certif:string, rncp_eligible_apprentissage:boolean, partenaires: Partenaire[], certificateurs: Certificateur[]}} RNCPInfo */
+
 const logger = require("../../common/logger");
 const { habiliteList } = require("../../constants/certificateurs");
 const { Etablissement } = require("../../common/model");
 
+/**
+ * Retrieve establishments data from couple of sirets
+ *
+ * @param {string} etablissement_gestionnaire_siret
+ * @param {string} etablissement_formateur_siret
+ *
+ * @returns {Promise<{gestionnaire: Etablissement, formateur: Etablissement}>}
+ */
 const getAttachedEstablishments = async (etablissement_gestionnaire_siret, etablissement_formateur_siret) => {
   // Get establishment Gestionnaire
   const gestionnaire = await Etablissement.findOne({
@@ -24,6 +39,12 @@ const getAttachedEstablishments = async (etablissement_gestionnaire_siret, etabl
   };
 };
 
+/**
+ * Get address of an establishment on one line
+ *
+ * @param {Etablissement} establishment
+ * @returns {null|string}
+ */
 const getEstablishmentAddress = (establishment) => {
   if (!establishment) {
     return null;
@@ -34,6 +55,47 @@ const getEstablishmentAddress = (establishment) => {
 };
 
 /**
+ * Check if given siret is in partenaires
+ *
+ * @param {Partenaire[]} partenaires
+ * @param {string} siret
+ * @returns {boolean}
+ */
+const isPartenaire = (partenaires, siret) => {
+  return (partenaires ?? []).some(
+    ({ Siret_Partenaire, Habilitation_Partenaire }) =>
+      Siret_Partenaire === siret && ["HABILITATION_ORGA_FORM", "HABILITATION_FORMER"].includes(Habilitation_Partenaire)
+  );
+};
+
+/**
+ * Check if given siret is in certificateurs
+ *
+ * @param {Certificateur[]} certificateurs
+ * @param {string} siret
+ * @returns {boolean}
+ */
+const isCertificateur = (certificateurs, siret) => {
+  return siret && (certificateurs ?? []).some(({ siret_certificateur }) => siret_certificateur === siret);
+};
+
+/**
+ * Check if given siret is in certificateurs sirens
+ *
+ * @param {Certificateur[]} certificateurs
+ * @param {string} siret
+ * @returns {boolean}
+ */
+const isSirenCertificateur = (certificateurs, siret) => {
+  return (
+    siret &&
+    (certificateurs ?? []).some(
+      ({ siret_certificateur = "" }) => siret_certificateur?.substring(0, 9) === siret.substring(0, 9)
+    )
+  );
+};
+
+/**
  * Si la formation est un titre (code_type_certif = Titre ou TP)
  * On regarde pour gestionnaire ou le formateur si l'un des deux est habilité RNCP
  *
@@ -41,18 +103,21 @@ const getEstablishmentAddress = (establishment) => {
  *   - soit habilité par défaut (certificateur = ministère du travail)
  *   - soit siret dans la liste des partenaires avec habilitation 'organiser et former' ou 'former'
  *   - soit siret est dans la liste des certificateurs
+ *
+ * @param {RNCPInfo} rncpInfo
+ * @param {string} siret
+ * @param {boolean} [checkDefaultHabilitation=true]
+ * @returns {boolean}
  */
-const isHabiliteRncp = ({ partenaires = [], certificateurs = [] }, siret) => {
-  if ((certificateurs ?? []).some(({ certificateur }) => habiliteList.includes(certificateur))) {
+const isHabiliteRncp = ({ partenaires = [], certificateurs = [] }, siret, checkDefaultHabilitation = true) => {
+  if (
+    checkDefaultHabilitation &&
+    (certificateurs ?? []).some(({ certificateur }) => habiliteList.includes(certificateur))
+  ) {
     return true;
   }
 
-  const isPartenaire = (partenaires ?? []).some(
-    ({ Siret_Partenaire, Habilitation_Partenaire }) =>
-      Siret_Partenaire === siret && ["HABILITATION_ORGA_FORM", "HABILITATION_FORMER"].includes(Habilitation_Partenaire)
-  );
-  const isCertificateur = (certificateurs ?? []).some(({ siret_certificateur }) => siret_certificateur === siret);
-  return isPartenaire || isCertificateur;
+  return isPartenaire(partenaires, siret) || isCertificateur(certificateurs, siret);
 };
 
 const getEtablissementReference = ({ gestionnaire, formateur }, rncpInfo) => {
@@ -92,6 +157,9 @@ const getEtablissementReference = ({ gestionnaire, formateur }, rncpInfo) => {
   };
 };
 
+/**
+ * @param {{gestionnaire: Etablissement, formateur: Etablissement}} attachedEstablishments
+ */
 const getGeoloc = ({ gestionnaire, formateur }) => {
   const geo_coordonnees_etablissement_formateur = formateur?.geo_coordonnees ?? null;
   const geo_coordonnees_etablissement_gestionnaire = gestionnaire?.geo_coordonnees ?? null;
@@ -102,6 +170,12 @@ const getGeoloc = ({ gestionnaire, formateur }) => {
   };
 };
 
+/**
+ * Map etablissement keys for formation
+ *
+ * @param {Etablissement} etablissement
+ * @param {string} prefix
+ */
 const mapEtablissementKeys = (etablissement, prefix = "etablissement_gestionnaire") => {
   return {
     [`${prefix}_siren`]: etablissement.siren || null,
@@ -129,7 +203,16 @@ const mapEtablissementKeys = (etablissement, prefix = "etablissement_gestionnair
   };
 };
 
-const isInCatalogEligible = (gestionnaire, referenceEstablishment, rncpInfo) => {
+/**
+ * Check if formation should be in "catalogue général" or in "catalogue non-éligible"
+ *
+ * @param {Etablissement} gestionnaire
+ * @param {Etablissement} referenceEstablishment
+ * @param {RNCPInfo} rncpInfo
+ *
+ * @returns {boolean} true if formation should be in "catalogue général"
+ */
+const isInCatalogGeneral = (gestionnaire, referenceEstablishment, rncpInfo) => {
   // Put non-qualiopi in catalogue général (law change https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000044792191)
   // ensure gestionnaire is published = is qualiopi certified
   // if (!gestionnaire.catalogue_published) {
@@ -146,6 +229,38 @@ const isInCatalogEligible = (gestionnaire, referenceEstablishment, rncpInfo) => 
   return true;
 };
 
+/**
+ * Compute data for France Competence study
+ *
+ * @param {{gestionnaire: Etablissement, formateur: Etablissement}} attachedEstablishments
+ * @param {RNCPInfo} rncpInfo
+ */
+const getFranceCompetenceInfos = ({ gestionnaire, formateur }, rncpInfo) => {
+  const fc_is_habilite_rncp =
+    isHabiliteRncp(rncpInfo, gestionnaire?.siret, false) ?? isHabiliteRncp(rncpInfo, formateur?.siret, false);
+
+  const result = {
+    fc_is_catalog_general: fc_is_habilite_rncp && rncpInfo.rncp_eligible_apprentissage,
+    fc_is_habilite_rncp,
+    fc_is_certificateur:
+      isCertificateur(rncpInfo.certificateurs, gestionnaire?.siret) ??
+      isCertificateur(rncpInfo.certificateurs, formateur?.siret),
+    fc_is_certificateur_siren:
+      isSirenCertificateur(rncpInfo.certificateurs, gestionnaire?.siret) ??
+      isSirenCertificateur(rncpInfo.certificateurs, formateur?.siret),
+    fc_is_partenaire:
+      isPartenaire(rncpInfo.partenaires, gestionnaire?.siret) ?? isPartenaire(rncpInfo.partenaires, formateur?.siret),
+    fc_has_partenaire: rncpInfo.partenaires?.length > 0,
+  };
+
+  return result;
+};
+
+/**
+ * @param {string} etablissement_gestionnaire_siret
+ * @param {string} etablissement_formateur_siret
+ * @param {RNCPInfo} rncpInfo
+ */
 const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissement_formateur_siret, rncpInfo) => {
   try {
     if (!etablissement_gestionnaire_siret && !etablissement_formateur_siret) {
@@ -199,13 +314,15 @@ const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissem
 
     const geolocInfo = getGeoloc(attachedEstablishments);
 
+    const france_competence_infos = getFranceCompetenceInfos(attachedEstablishments, rncpInfo);
+
     return {
       result: {
         ...etablissementGestionnaire,
         ...etablissementFormateur,
 
         etablissement_reference,
-        etablissement_reference_catalogue_published: isInCatalogEligible(
+        etablissement_reference_catalogue_published: isInCatalogGeneral(
           attachedEstablishments?.gestionnaire,
           referenceEstablishment,
           rncpInfo
@@ -216,6 +333,8 @@ const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissem
         rncp_etablissement_formateur_habilite: isHabiliteRncp(rncpInfo, etablissement_formateur_siret),
 
         ...geolocInfo,
+
+        france_competence_infos,
       },
     };
   } catch (e) {
@@ -231,6 +350,6 @@ module.exports = {
   getEtablissementReference,
   getGeoloc,
   mapEtablissementKeys,
-  isInCatalogEligible,
+  isInCatalogGeneral,
   etablissementsMapper,
 };

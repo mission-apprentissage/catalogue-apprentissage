@@ -6,7 +6,7 @@ const {
   getEtablissementReference,
   getGeoloc,
   mapEtablissementKeys,
-  isInCatalogEligible,
+  isInCatalogGeneral,
   etablissementsMapper,
 } = require("../../../../src/logic/mappers/etablissementsMapper");
 const { connectToMongoForTests, cleanAll } = require("../../../../tests/utils/testUtils.js");
@@ -283,15 +283,15 @@ describe(__filename, () => {
     });
   });
 
-  describe("isInCatalogEligible", () => {
+  describe("isInCatalogGeneral", () => {
     // Test disabled since currently we show non-qualiopi formations in catalogue général
     // it("should return false if etablissement not published", () => {
-    //   const result = isInCatalogEligible({ siret: "1234" }, { siret: "1234" }, {});
+    //   const result = isInCatalogGeneral({ siret: "1234" }, { siret: "1234" }, {});
     //   assert.deepStrictEqual(result, false);
     // });
 
     it("should return false if etablissement is not habilite and formation is a Titre or TP", () => {
-      const result = isInCatalogEligible(
+      const result = isInCatalogGeneral(
         { siret: "1234", catalogue_published: true },
         { siret: "1234", catalogue_published: true },
         { code_type_certif: "TP", rncp_eligible_apprentissage: true }
@@ -300,7 +300,7 @@ describe(__filename, () => {
     });
 
     it("should return false if etablissement is not rncp_eligible_apprentissage and formation is a Titre or TP", () => {
-      const result = isInCatalogEligible(
+      const result = isInCatalogGeneral(
         { siret: "1234", catalogue_published: true },
         { siret: "1234", catalogue_published: true },
         {
@@ -314,7 +314,7 @@ describe(__filename, () => {
     });
 
     it("should return true if etablissement is habilite rncp and formation is a Titre or TP", () => {
-      const result = isInCatalogEligible(
+      const result = isInCatalogGeneral(
         { siret: "1234", catalogue_published: true },
         { siret: "1234", catalogue_published: true },
         {
@@ -328,7 +328,7 @@ describe(__filename, () => {
     });
 
     it("should return true if etablissement is published and formation is not Titre or TP", () => {
-      const result = isInCatalogEligible(
+      const result = isInCatalogGeneral(
         { siret: "1234", catalogue_published: true },
         { siret: "1234", catalogue_published: true },
         {}
