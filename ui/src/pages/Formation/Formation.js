@@ -80,7 +80,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
       ? React.Fragment
       : (args) => (
           <Box
-            data-testid={"uai-warning"}
+            data-testid={"adress-warning"}
             bg={"orangesoft.200"}
             p={4}
             mb={4}
@@ -104,7 +104,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
               Lieu de la formation
             </Heading>
             <Box mt={2} mb={4} px={5}>
-              <Link href={getLBAUrl(formation)} ttextStyle="rf-text" variant="pill" isExternal>
+              <Link href={getLBAUrl(formation)} textStyle="rf-text" variant="pill" isExternal>
                 voir sur labonnealternance <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
               </Link>
             </Box>
