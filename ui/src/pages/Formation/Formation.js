@@ -60,6 +60,9 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
   const { isOpen: isComputedAdressOpen, onToggle: onComputedAdressToggle } = useDisclosure();
   const { isOpen: isComputedGeoCoordOpen, onToggle: onComputedGeoCoordToggle } = useDisclosure();
 
+  // Distance tolérer entre l'adresse et les coordonnées transmise par RCO
+  const seuilDistance = 100;
+
   const UaiFormationContainer = formation.uai_formation_valide
     ? React.Fragment
     : (args) => (
@@ -76,7 +79,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
       );
 
   const AdresseContainer =
-    0 >= formation.distance
+    seuilDistance >= formation.distance
       ? React.Fragment
       : (args) => (
           <Box
