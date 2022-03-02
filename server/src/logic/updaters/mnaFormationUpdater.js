@@ -192,23 +192,25 @@ const mnaFormationUpdater = async (formation, { withCodePostalUpdate = true, cfd
         cpMapping.lieu_formation_adresse_computed = `${result.adresse}, ${result.code_postal} ${result.localite}`;
       }
 
-      // Calculate distance between rco address search geoloc & rco geocoords
-      const { result: coordinates, messages: coordsMessages } = await getCoordinatesFromAddressData({
-        numero_voie: cpMapping.lieu_formation_adresse,
-        localite: cpMapping.localite,
-        code_postal: cpMapping.code_postal,
-        code_insee: cpMapping.code_commune_insee,
-      });
+      if (withCodePostalUpdate || !formation.distance) {
+        // Calculate distance between rco address search geoloc & rco geocoords
+        const { result: coordinates, messages: coordsMessages } = await getCoordinatesFromAddressData({
+          numero_voie: cpMapping.lieu_formation_adresse,
+          localite: cpMapping.localite ?? formation.localite,
+          code_postal: cpMapping.code_postal ?? code_postal,
+          code_insee: cpMapping.code_commune_insee ?? code_commune_insee,
+        });
 
-      const geolocError = parseErrors(coordsMessages);
-      if (!geolocError && coordinates.geo_coordonnees) {
-        const [lat, lon] = geoCoords.split(",");
-        const [computedLat, computedLon] = coordinates.geo_coordonnees.split(",");
-        computedFields.distance = distanceBetweenCoordinates(lat, lon, computedLat, computedLon);
-        computedFields.lieu_formation_geo_coordonnees_computed = coordinates.geo_coordonnees;
-      } else {
-        computedFields.distance = null;
-        computedFields.lieu_formation_geo_coordonnees_computed = null;
+        const geolocError = parseErrors(coordsMessages);
+        if (!geolocError && coordinates.geo_coordonnees) {
+          const [lat, lon] = geoCoords.split(",");
+          const [computedLat, computedLon] = coordinates.geo_coordonnees.split(",");
+          computedFields.distance = distanceBetweenCoordinates(lat, lon, computedLat, computedLon);
+          computedFields.lieu_formation_geo_coordonnees_computed = coordinates.geo_coordonnees;
+        } else {
+          computedFields.distance = null;
+          computedFields.lieu_formation_geo_coordonnees_computed = null;
+        }
       }
     }
 
