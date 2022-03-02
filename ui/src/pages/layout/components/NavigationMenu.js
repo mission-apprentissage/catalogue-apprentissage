@@ -61,7 +61,8 @@ const NavLinks = ({ isOpen }) => {
         align="center"
         justify={["center", "center", "flex-end", "flex-end"]}
         direction={["column", "column", "row", "row"]}
-        py={2}
+        py={0}
+        px={2}
         textStyle="sm"
       >
         <NavItem to="/">Accueil</NavItem>
