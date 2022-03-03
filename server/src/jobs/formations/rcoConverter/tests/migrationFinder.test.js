@@ -2,7 +2,7 @@ const assert = require("assert");
 const { Formation } = require("../../../../common/model/index");
 const { connectToMongoForTests, cleanAll } = require("../../../../../tests/utils/testUtils.js");
 const { asyncForEach } = require("../../../../common/utils/asyncUtils");
-const { findPreviousFormations, copyComputedFields } = require("../converter/migrationFinder");
+const { findPreviousFormations, copyComputedFields, findNewFormations } = require("../converter/migrationFinder");
 
 const sampleData = [
   {
@@ -58,6 +58,24 @@ const sampleData = [
     id_rco_formation: "14_AF_0000003848|14_SE_0000652184##14_SE_0000652185|94419",
     ids_action: ["14_SE_0000652184", "14_SE_0000652185"],
   },
+  {
+    cfd: "8",
+    cle_ministere_educatif: "106401P01115010559410002250105594100022-57631#L01",
+    published: true,
+    annee: "1",
+  },
+  {
+    cfd: "9",
+    cle_ministere_educatif: "106101P01125010559410002250105594100022-76001#L01",
+    published: true,
+    annee: "2",
+  },
+  {
+    cfd: "10",
+    cle_ministere_educatif: "106101P01135010559410002250105594100022-76001#L01",
+    published: true,
+    annee: "3",
+  },
 ];
 
 describe(__filename, () => {
@@ -77,7 +95,7 @@ describe(__filename, () => {
 
     it("should have inserted sample data", async () => {
       const count = await Formation.countDocuments({});
-      assert.strictEqual(count, 7);
+      assert.strictEqual(count, 10);
     });
 
     it("should find 1 Formation", async () => {
@@ -153,6 +171,57 @@ describe(__filename, () => {
         newFormation.lieu_formation_geo_coordonnees_computed,
         oldFormation.lieu_formation_geo_coordonnees_computed
       );
+    });
+  });
+
+  describe("findNewFormations", () => {
+    before(async () => {
+      // Connection to test collection
+      await connectToMongoForTests();
+      await Formation.deleteMany({});
+
+      // insert sample data in DB
+      await asyncForEach(sampleData, async (training) => await new Formation(training).save());
+    });
+
+    after(async () => {
+      await cleanAll();
+    });
+
+    it("should find 0 Formation", async () => {
+      let formations = await findNewFormations({
+        cle_ministere_educatif: "106401P01115010559410002250105594100022",
+      });
+
+      assert.strictEqual(formations.length, 0);
+
+      formations = await findNewFormations({
+        cle_ministere_educatif: "106401P01115010559410002250105594100022-57631#L01",
+      });
+
+      assert.strictEqual(formations.length, 0);
+
+      formations = await findNewFormations({
+        cle_ministere_educatif: "187401P012X5010559410002250105594100090-93088#L02",
+      });
+
+      assert.strictEqual(formations.length, 0);
+    });
+
+    it("should find 1 Formation", async () => {
+      const formations = await findNewFormations({
+        cle_ministere_educatif: "106401P011X5010559410002250105594100022-57631#L01",
+      });
+
+      assert.strictEqual(formations.length, 1);
+    });
+
+    it("should find 2 Formations", async () => {
+      const formations = await findNewFormations({
+        cle_ministere_educatif: "106101P011X5010559410002250105594100022-76001#L01",
+      });
+
+      assert.strictEqual(formations.length, 2);
     });
   });
 });

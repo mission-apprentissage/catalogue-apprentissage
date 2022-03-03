@@ -11,6 +11,7 @@ const findPreviousFormations = async ({
   cle_ministere_educatif,
   etablissement_lieu_formation_code_insee,
 }) => {
+  // FIXME @EPT En pratique, la clé a une longueur fixe : elle fait toujours 49 caractères. Donc la fusion actuelle d’un mono-site qui devient un multi-sites ne fonctionne pas
   if (cle_ministere_educatif?.includes("-")) {
     // here merge multi-site / mono-site : check cle_ministere_educatif + code_insee
     const rootKey = cle_ministere_educatif?.split("-")[0];
@@ -131,6 +132,34 @@ const extractFlatIdsAction = (id_action) => {
   return extractIdsAction(id_action).flat();
 };
 
+/**
+ * For a given cle_ministere_educatif formation, try to find some Formation in catalogue (with updated cle_ministere_educatif)
+ *
+ * @param {{cle_ministere_educatif : string}} formation
+ */
+const findNewFormations = async ({ cle_ministere_educatif }) => {
+  // TODO @EPT here we can receive an old mono-site formations which is now a multi-site in catalog, what is the expected behaviour in that case ?
+
+  const wasCollectedYear = cle_ministere_educatif.substring(10, 11) !== "X";
+  if (wasCollectedYear) {
+    return [];
+  }
+
+  // try to find with a collected year in catalog
+  // TODO : values seems to be between 1 and 5 make sure of it
+  const potentialKeys = Array(5)
+    .fill(cle_ministere_educatif)
+    .map((_value, index) => {
+      const year = index + 1;
+      return `${cle_ministere_educatif.slice(0, 10)}${year}${cle_ministere_educatif.slice(11)}`;
+    });
+
+  return await Formation.find({
+    cle_ministere_educatif: { $in: potentialKeys },
+    published: true,
+  }).lean();
+};
+
 module.exports = {
   findPreviousFormations,
   copyAffelnetFields,
@@ -140,4 +169,5 @@ module.exports = {
   updateRapprochement,
   copyComputedFields,
   copyEditedFields,
+  findNewFormations,
 };
