@@ -19,7 +19,7 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false) => {
   const sort = {
     to_update: -1,
   };
-  const cursor = Formation.find(filter).sort(sort).cursor();
+  const cursor = Formation.find(filter).sort(sort).lean().cursor();
   const total = await Formation.countDocuments(filter);
   let index = 0;
 
@@ -29,18 +29,18 @@ const performUpdates = async (filter = {}, withCodePostalUpdate = false) => {
     }
     index += 1;
 
-    const cfdInfoCache = cfdInfosCache.get(formation._doc.cfd) || null;
-    const { updates, formation: updatedFormation, error, cfdInfo } = await mnaFormationUpdater(formation._doc, {
+    const cfdInfoCache = cfdInfosCache.get(formation.cfd) || null;
+    const { updates, formation: updatedFormation, error, cfdInfo } = await mnaFormationUpdater(formation, {
       // no need to check cp info in trainingsUpdater since it was successfully done once at converter
       withCodePostalUpdate: formation.to_update === true || withCodePostalUpdate,
       cfdInfo: cfdInfoCache,
     });
 
     if (cfdInfo && !cfdInfoCache) {
-      cfdInfosCache.set(formation._doc.cfd, cfdInfo);
+      cfdInfosCache.set(formation.cfd, cfdInfo);
     }
 
-    const resultGrandAge = detectNewDiplomeGrandAge(formation._doc);
+    const resultGrandAge = detectNewDiplomeGrandAge(formation);
     if (resultGrandAge) {
       formationsGrandAge.push(resultGrandAge);
     }
