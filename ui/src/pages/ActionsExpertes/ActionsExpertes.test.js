@@ -12,7 +12,7 @@ const server = setupMswServer(
     return res(ctx.json(1000));
   }),
 
-  rest.get(/\/api\/v1\/entity\/messageScript/, (req, res, ctx) => {
+  rest.get(/\/api\/v1\/entity\/alert/, (req, res, ctx) => {
     return res(ctx.json([]));
   })
 );

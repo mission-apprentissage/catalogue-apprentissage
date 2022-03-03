@@ -1,17 +1,17 @@
 const express = require("express");
-const { MessageScript } = require("../../common/model/index");
+const { Alert } = require("../../common/model/index");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 
 module.exports = () => {
   const router = express.Router();
 
-  router.get("/messageScript", async (req, res) => {
-    const result = await MessageScript.find({});
+  router.get("/alert", async (req, res) => {
+    const result = await Alert.find({});
     return res.json(result);
   });
 
   router.post(
-    "/messageScript",
+    "/alert",
     tryCatch(async ({ body }, res) => {
       const { msg, name, type, enabled } = body;
 
@@ -19,7 +19,7 @@ module.exports = () => {
         return res.status(400).send({ error: "Erreur avec le message ou avec le nom ou le type ou enabled" });
       }
 
-      const newMessageScript = new MessageScript({
+      const newAlert = new Alert({
         type,
         name,
         msg,
@@ -27,23 +27,22 @@ module.exports = () => {
         time: new Date(),
       });
 
-      newMessageScript.save();
+      newAlert.save();
 
-      return res.json(newMessageScript);
+      return res.json(newAlert);
     })
   );
 
   router.put(
-    "/messageScript/:id",
+    "/alert/:id",
     tryCatch(async ({ body, params }, res) => {
       const { msg, name, type } = body;
-      const itemId = params.id;
 
       if (!msg || !name || !type) {
         return res.status(400).send({ error: "Erreur avec le message ou avec le nom ou le type" });
       }
 
-      const result = await MessageScript.findOneAndUpdate({ _id: itemId }, body, {
+      const result = await Alert.findOneAndUpdate({ _id: params.id }, body, {
         new: true,
       });
 
@@ -51,10 +50,21 @@ module.exports = () => {
     })
   );
 
+  router.patch(
+    "/alert/:id",
+    tryCatch(async ({ body, params }, res) => {
+      const result = await Alert.findOneAndUpdate({ _id: params.id }, body, {
+        new: false,
+      });
+
+      return res.json(result);
+    })
+  );
+
   router.delete(
-    "/messageScript",
+    "/alert/:id",
     tryCatch(async (req, res) => {
-      const result = await MessageScript.deleteOne({ type: "manuel" });
+      const result = await Alert.deleteOne({ type: "manuel", _id: req.params.id });
       return res.json(result);
     })
   );

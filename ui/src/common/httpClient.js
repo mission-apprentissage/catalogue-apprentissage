@@ -81,6 +81,14 @@ export const _put = (path, body = {}, auth = true) => {
   }).then((res) => handleResponse(path, res));
 };
 
+export const _patch = (path, body = {}, auth = true) => {
+  return fetch(`${path}`, {
+    method: "PATCH",
+    headers: getHeaders(auth),
+    body: JSON.stringify(body),
+  }).then((res) => handleResponse(path, res));
+};
+
 export const _delete = (path, auth = true) => {
   return fetch(`${path}`, {
     method: "DELETE",
