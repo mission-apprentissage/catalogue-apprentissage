@@ -135,9 +135,10 @@ const extractFlatIdsAction = (id_action) => {
 /**
  * For a given cle_ministere_educatif formation, try to find some Formation in catalogue (with updated cle_ministere_educatif)
  *
- * @param {{cle_ministere_educatif : string}} formation
+ * @param {{cle_ministere_educatif: string}} formation
+ * @param {Object} [projection={}]
  */
-const findNewFormations = async ({ cle_ministere_educatif }) => {
+const findNewFormations = async ({ cle_ministere_educatif }, projection = {}) => {
   // TODO @EPT here we can receive an old mono-site formations which is now a multi-site in catalog, what is the expected behaviour in that case ?
 
   const wasCollectedYear = cle_ministere_educatif.substring(10, 11) !== "X";
@@ -146,8 +147,8 @@ const findNewFormations = async ({ cle_ministere_educatif }) => {
   }
 
   // try to find with a collected year in catalog
-  // TODO : values seems to be between 1 and 5 make sure of it
-  const potentialKeys = Array(5)
+  // Year values seems to be between 1 and 5, but create keys from 1 to 9 year to be sure
+  const potentialKeys = Array(9)
     .fill(cle_ministere_educatif)
     .map((_value, index) => {
       const year = index + 1;
@@ -157,7 +158,9 @@ const findNewFormations = async ({ cle_ministere_educatif }) => {
   return await Formation.find({
     cle_ministere_educatif: { $in: potentialKeys },
     published: true,
-  }).lean();
+  })
+    .select(projection)
+    .lean();
 };
 
 module.exports = {
