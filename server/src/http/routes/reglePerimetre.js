@@ -1,8 +1,7 @@
 const express = require("express");
 const Boom = require("boom");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
-const { getPublishedRules } = require("../../common/utils/referenceUtils");
-const { getQueryFromRule, titresRule } = require("../../common/utils/rulesUtils");
+const { getQueryFromRule, titresRule, getPublishedRules } = require("../../common/utils/rulesUtils");
 const { getNiveauxDiplomesTree } = require("@mission-apprentissage/tco-service-node");
 const { ReglePerimetre, Formation } = require("../../common/model");
 
