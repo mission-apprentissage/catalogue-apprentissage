@@ -1,4 +1,4 @@
-const messageScriptSchema = {
+const alertSchema = {
   msg: {
     type: String,
     required: true,
@@ -20,4 +20,4 @@ const messageScriptSchema = {
     default: false,
   },
 };
-module.exports = messageScriptSchema;
+module.exports = alertSchema;
