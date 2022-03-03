@@ -22,7 +22,7 @@ const Formation = lazy(() => import("./pages/Formation"));
 const Etablissement = lazy(() => import("./pages/Etablissement"));
 const Journal = lazy(() => import("./pages/Journal/Journal"));
 const UploadFiles = lazy(() => import("./pages/admin/UploadFiles"));
-const Message = lazy(() => import("./pages/admin/MessageScript"));
+const Alert = lazy(() => import("./pages/admin/Alert"));
 const Contact = lazy(() => import("./pages/legal/Contact"));
 const Cookies = lazy(() => import("./pages/legal/Cookies"));
 const DonneesPersonnelles = lazy(() => import("./pages/legal/DonneesPersonnelles"));
@@ -142,7 +142,7 @@ export default () => {
                 )}
 
                 {auth && hasAccessTo(auth, "page_message_maintenance") && (
-                  <PrivateRoute exact path="/admin/messagescript" component={Message} />
+                  <PrivateRoute exact path="/admin/alert" component={Alert} />
                 )}
 
                 {auth && hasAccessTo(auth, "page_upload") && (

@@ -28,7 +28,7 @@ const server = setupMswServer(
   rest.get(/\/api\/v1\/entity\/perimetre\/regles/, (req, res, ctx) => {
     return res(ctx.json([]));
   }),
-  rest.get(/\/api\/v1\/entity\/messageScript/, (req, res, ctx) => {
+  rest.get(/\/api\/v1\/entity\/alert/, (req, res, ctx) => {
     return res(ctx.json([]));
   }),
   rest.get(/\/api\/v1\/entity\/perimetre\/regle\/count/, (req, res, ctx) => {

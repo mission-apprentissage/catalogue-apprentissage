@@ -30,7 +30,7 @@ const parcoursup = require("./routes/parcoursup");
 const etablissement = require("./routes/etablissement");
 const etablissementSecure = require("./routes/etablissementSecure");
 const upload = require("./routes/upload");
-const messageScript = require("./routes/messageScript");
+const alert = require("./routes/alert");
 const reglePerimetre = require("./routes/reglePerimetre");
 const reglePerimetreSecure = require("./routes/reglePerimetreSecure");
 
@@ -125,7 +125,7 @@ module.exports = async (components, verbose = true) => {
   app.use("/api/v1/auth", auth(components));
   app.use("/api/v1/password", password(components));
   app.use("/api/v1/parcoursup", parcoursup(components));
-  app.use("/api/v1/entity", messageScript());
+  app.use("/api/v1/entity", alert());
   app.use("/api/v1/entity", reglePerimetre());
   app.use(
     "/api/v1/admin",
