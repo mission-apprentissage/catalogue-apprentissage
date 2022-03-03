@@ -39,7 +39,7 @@ module.exports = {
   }),
   SandboxFormation: createModel("sandboxformation", schema.formationSchema),
   Statistique: createModel("statistique", schema.statistiqueSchema),
-  MessageScript: createModel("messageScript", schema.messageScriptSchema),
+  Alert: createModel("alert", schema.alertSchema),
   ReglePerimetre: createModel("regleperimetre", schema.reglePerimetreSchema),
   Consumption: createModel("consumption", schema.consumptionSchema),
 };

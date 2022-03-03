@@ -54,13 +54,13 @@ const Alert = () => {
     onSubmit: ({ msg }, { setSubmitting }) => {
       return new Promise(async (resolve, reject) => {
         try {
-          const newMessageScript = {
+          const message = {
             type: "manuel",
             msg,
             name: user.email,
             enabled: true,
           };
-          const messagePosted = await _post("/api/v1/entity/alert", newMessageScript);
+          const messagePosted = await _post("/api/v1/entity/alert", message);
           if (messagePosted) {
             alert("Le message a bien été envoyé.");
           }
@@ -82,13 +82,13 @@ const Alert = () => {
     onSubmit: ({ msg }, { setSubmitting }) => {
       return new Promise(async (resolve, reject) => {
         try {
-          const newMessageScript = {
+          const message = {
             type: "automatique",
             msg,
             name: "auto",
             enabled: false,
           };
-          const messagePosted = await _put(`/api/v1/entity/alert/${messageAutomatique._id}`, newMessageScript);
+          const messagePosted = await _put(`/api/v1/entity/alert/${messageAutomatique._id}`, message);
           if (messagePosted) {
             alert("Le message a bien été mise à jour.");
           }
@@ -108,14 +108,14 @@ const Alert = () => {
       try {
         const data = await _get("/api/v1/entity/alert");
         if (data.length === 0) {
-          const newMessageScript = {
+          const message = {
             type: "automatique",
             msg:
               "Une mise à jour des données du catalogue est en cours, le service sera à nouveau opérationnel d'ici le XX/XX/21 à XXh.",
             name: "auto",
             enabled: false,
           };
-          await _post("/api/v1/entity/alert", newMessageScript);
+          await _post("/api/v1/entity/alert", message);
           window.location.reload();
         } else {
           const [a] = data.filter((d) => d.type === "automatique");
