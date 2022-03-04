@@ -31,7 +31,7 @@ const deserialize = (str) => {
 
 /**
  * Pour appliquer les étiquettes pour les plateformes PS & Affelnet
- * une formation doit avoir au moins une période d'inscription >= septembre de l'année scolaire suivante
+ * une formation doit avoir au moins une période de début de formation >= septembre de l'année scolaire suivante
  * eg: si on est en janvier 2022 --> septembre 2022, si on est le en octobre 2022 --> septembre 2023, etc.
  * Si ce n'est pas le cas la formation sera "hors périmètre".
  *

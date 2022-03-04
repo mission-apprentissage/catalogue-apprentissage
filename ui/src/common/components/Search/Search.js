@@ -168,7 +168,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                     <DateRange
                       componentId="periode"
                       dataField="periode"
-                      title="Période"
+                      title="Début de formation"
                       placeholder={{
                         start: "Date de début",
                         end: "Date de fin",
@@ -178,7 +178,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                       autoFocusEnd={true}
                       showClear={true}
                       showFilter={true}
-                      filterLabel="Période"
+                      filterLabel="Début de formation"
                       URLParams={true}
                     />
                   </Flex>
