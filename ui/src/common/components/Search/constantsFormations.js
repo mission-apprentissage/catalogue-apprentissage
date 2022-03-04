@@ -468,7 +468,7 @@ const facetDefinition = () => [
     title: "Niveau de formation",
     filterLabel: "Niveau de formation",
     selectAllLabel: "Tous les niveaux",
-    sortBy: "count",
+    sortBy: "asc",
   },
   {
     componentId: `tags`,
