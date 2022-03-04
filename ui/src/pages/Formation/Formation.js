@@ -57,11 +57,15 @@ const getGeoPortailUrl = (coordinates) => {
 };
 
 const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, values, hasRightToEdit }) => {
-  const { isOpen: isComputedAdressOpen, onToggle: onComputedAdressToggle } = useDisclosure();
-  const { isOpen: isComputedGeoCoordOpen, onToggle: onComputedGeoCoordToggle } = useDisclosure();
-
   // Distance tolérer entre l'adresse et les coordonnées transmise par RCO
   const seuilDistance = 100;
+
+  const { isOpen: isComputedAdressOpen, onToggle: onComputedAdressToggle } = useDisclosure(
+    formation.distance > seuilDistance
+  );
+  const { isOpen: isComputedGeoCoordOpen, onToggle: onComputedGeoCoordToggle } = useDisclosure(
+    formation.distance > seuilDistance
+  );
 
   const UaiFormationContainer = formation.uai_formation_valide
     ? React.Fragment
@@ -78,21 +82,21 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
         />
       );
 
-  const AdresseContainer =
-    seuilDistance >= formation.distance
-      ? React.Fragment
-      : (args) => (
-          <Box
-            data-testid={"adress-warning"}
-            bg={"orangesoft.200"}
-            p={4}
-            mb={4}
-            borderLeft={"4px solid"}
-            borderColor={"orangesoft.500"}
-            w={"full"}
-            {...args}
-          />
-        );
+  const AdresseContainer = React.Fragment;
+  // seuilDistance >= formation.distance
+  //   ? React.Fragment
+  //   : (args) => (
+  //       <Box
+  //         data-testid={"adress-warning"}
+  //         bg={"orangemedium.200"}
+  //         p={4}
+  //         mb={4}
+  //         borderLeft={"4px solid"}
+  //         borderColor={"orangemedium.500"}
+  //         w={"full"}
+  //         {...args}
+  //       />
+  //     );
 
   return (
     <Box borderRadius={4}>
@@ -158,7 +162,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                   <InfoTooltip description={helpText.formation.nom_departement} />
                 </Text>
                 {formation?.lieu_formation_geo_coordonnees_computed && (
-                  <Box mb={6}>
+                  <Box mb={4}>
                     <Button
                       onClick={onComputedGeoCoordToggle}
                       variant={"unstyled"}
@@ -170,7 +174,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                       <ArrowDownLine boxSize={5} transform={isComputedGeoCoordOpen ? "rotate(180deg)" : "none"} />
                     </Button>
                     <Collapse in={isComputedGeoCoordOpen} animateOpacity unmountOnExit={true}>
-                      <Text mb={2}>
+                      <Text>
                         <Text fontSize={"zeta"} color={"grey.600"} as="span">
                           <Link
                             href={getGeoPortailUrl(formation.lieu_formation_geo_coordonnees_computed)}
@@ -208,7 +212,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                       <ArrowDownLine boxSize={5} transform={isComputedAdressOpen ? "rotate(180deg)" : "none"} />
                     </Button>
                     <Collapse in={isComputedAdressOpen} animateOpacity unmountOnExit={true}>
-                      <Text mb={2}>
+                      <Text>
                         <Text fontSize={"zeta"} color={"grey.600"} as="span">
                           <Link
                             href={getGeoPortailUrl(formation.lieu_formation_geo_coordonnees)}
