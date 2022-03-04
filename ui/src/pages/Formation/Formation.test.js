@@ -316,24 +316,24 @@ test("display an error when uai is invalid", async () => {
   expect(warning).toBeInTheDocument();
 });
 
-test("don't display an error when adress is same as coordinates", async () => {
-  grantAnonymousAccess({ acl: ["page_formation"] });
+// test("don't display an error when adress is same as coordinates", async () => {
+//   grantAnonymousAccess({ acl: ["page_formation"] });
 
-  const { getByText, queryByTestId } = renderWithRouter(<Formation match={{ params: { id: 1 } }} />);
+//   const { getByText, queryByTestId } = renderWithRouter(<Formation match={{ params: { id: 1 } }} />);
 
-  await waitFor(() => getByText(/Adresse :/));
+//   await waitFor(() => getByText(/Adresse :/));
 
-  const warning = queryByTestId("adress-warning");
-  expect(warning).not.toBeInTheDocument();
-});
+//   const warning = queryByTestId("adress-warning");
+//   expect(warning).not.toBeInTheDocument();
+// });
 
-test("display an error when adress is not same as coordinates", async () => {
-  grantAnonymousAccess({ acl: ["page_formation"] });
+// test("display an error when adress is not same as coordinates", async () => {
+//   grantAnonymousAccess({ acl: ["page_formation"] });
 
-  const { getByText, queryByTestId } = renderWithRouter(<Formation match={{ params: { id: 2 } }} />);
+//   const { getByText, queryByTestId } = renderWithRouter(<Formation match={{ params: { id: 2 } }} />);
 
-  await waitFor(() => getByText(/Adresse :/));
+//   await waitFor(() => getByText(/Adresse :/));
 
-  const warning = queryByTestId("adress-warning");
-  expect(warning).toBeInTheDocument();
-});
+//   const warning = queryByTestId("adress-warning");
+//   expect(warning).toBeInTheDocument();
+// });
