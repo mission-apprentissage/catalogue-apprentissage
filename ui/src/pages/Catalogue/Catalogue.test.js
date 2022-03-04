@@ -712,9 +712,9 @@ test("renders basic tree", async () => {
   const match = getAllByText(/^Catalogue des formations en apprentissage$/i);
   expect(match).toHaveLength(3);
 
-  await waitFor(() => getByText("Période"));
+  await waitFor(() => getByText("Début de formation"));
 
-  const periode = getByText("Période");
+  const periode = getByText("Début de formation");
   expect(periode).toBeInTheDocument();
 
   const psDate = getByText("Date de publication sur Parcoursup");
