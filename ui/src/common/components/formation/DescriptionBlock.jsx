@@ -114,7 +114,7 @@ export const DescriptionBlock = ({ formation }) => {
             </Text>
           )}
           <Text mb={4}>
-            Période d'inscription :
+            Début de formation :
             <FormationPeriode periode={formation.periode} /> <InfoTooltip description={helpText.formation.periode} />
           </Text>
           <Text mb={4}>

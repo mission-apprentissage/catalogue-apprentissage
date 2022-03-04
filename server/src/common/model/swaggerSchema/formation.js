@@ -329,7 +329,7 @@ module.exports = {
           format: "date-time",
         },
         default: "null",
-        description: "Périodes d'inscription à la formation",
+        description: "Périodes de début de la formation",
       },
       capacite: {
         type: "string",

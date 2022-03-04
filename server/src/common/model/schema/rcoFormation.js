@@ -131,7 +131,7 @@ const rcoFormationsSchema = {
   periode: {
     type: [String],
     default: [],
-    description: "Période d'inscription à la formation",
+    description: "Périodes de début de la formation",
   },
   email: {
     type: String,

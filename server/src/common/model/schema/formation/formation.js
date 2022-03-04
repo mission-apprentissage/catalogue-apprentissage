@@ -297,7 +297,7 @@ const formationSchema = {
   periode: {
     type: [Date],
     default: null,
-    description: "Périodes d'inscription à la formation",
+    description: "Périodes de début de la formation",
   },
   capacite: {
     type: String,
