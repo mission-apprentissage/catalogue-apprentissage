@@ -317,7 +317,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                           queryFormat="date"
                           showClear={false}
                           showFilter={true}
-                          filterLabel="Publication Afflenet après"
+                          filterLabel="Publication Affelnet après"
                           URLParams={true}
                           customQuery={(value) => {
                             return value
@@ -343,7 +343,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                           queryFormat="date"
                           showClear={false}
                           showFilter={true}
-                          filterLabel="Publication Afflenet avant"
+                          filterLabel="Publication Affelnet avant"
                           URLParams={true}
                           customQuery={(value) => {
                             return value
