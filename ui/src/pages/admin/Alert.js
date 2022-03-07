@@ -219,7 +219,7 @@ const Alert = () => {
                   />
                   <Box mt="1rem" textAlign="right">
                     <Button textStyle="sm" variant="primary" disabled={!valuesM.msg?.length} onClick={handleSubmitM}>
-                      Enregistrer et activé
+                      Enregistrer et activer
                     </Button>
                   </Box>
                 </FormControl>
