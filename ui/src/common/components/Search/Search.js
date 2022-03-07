@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { DataSearch, DateRange, ReactiveBase, ReactiveList, SelectedFilters } from "@appbaseio/reactivesearch";
+import {
+  DataSearch,
+  DatePicker,
+  DateRange,
+  ReactiveBase,
+  ReactiveList,
+  SelectedFilters,
+} from "@appbaseio/reactivesearch";
 import { Box, Container, Flex, FormLabel, Switch, Text } from "@chakra-ui/react";
 import useAuth from "../../hooks/useAuth";
 import { hasAccessTo } from "../../utils/rolesUtils";
@@ -164,63 +171,196 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                     );
                   })}
                 {isBaseFormations && auth?.sub !== "anonymous" && (
-                  <Flex pt={3}>
-                    <DateRange
-                      componentId="periode"
-                      dataField="periode"
-                      title="Début de formation"
-                      placeholder={{
-                        start: "Date de début",
-                        end: "Date de fin",
-                      }}
-                      numberOfMonths={1}
-                      queryFormat="date"
-                      autoFocusEnd={true}
-                      showClear={true}
-                      showFilter={true}
-                      filterLabel="Début de formation"
-                      URLParams={true}
-                    />
+                  <Flex pt={3} direction="column">
+                    <Box>
+                      <Text mt={4} mb={4} textStyle="rf-text" width={"100%"}>
+                        Début de formation
+                      </Text>
+                    </Box>
+
+                    <Flex>
+                      <Box w="50%">
+                        <DatePicker
+                          componentId="periode_start"
+                          dataField="periode"
+                          placeholder={"A partir de"}
+                          numberOfMonths={1}
+                          queryFormat="date"
+                          showClear={false}
+                          showFilter={true}
+                          filterLabel="Début de formation après"
+                          URLParams={true}
+                          customQuery={(value) => {
+                            return value
+                              ? {
+                                  query: {
+                                    range: {
+                                      periode: {
+                                        gte: value,
+                                      },
+                                    },
+                                  },
+                                }
+                              : {};
+                          }}
+                        />
+                      </Box>
+                      <Box w="50%">
+                        <DatePicker
+                          componentId="periode_end"
+                          dataField="periode"
+                          placeholder={"Jusqu'au"}
+                          numberOfMonths={1}
+                          queryFormat="date"
+                          autoFocusEnd={true}
+                          showClear={false}
+                          showFilter={true}
+                          filterLabel="Début de formation avant"
+                          URLParams={true}
+                          customQuery={(value) => {
+                            return value
+                              ? {
+                                  query: {
+                                    range: {
+                                      periode: {
+                                        lte: value,
+                                      },
+                                    },
+                                  },
+                                }
+                              : {};
+                          }}
+                        />
+                      </Box>
+                    </Flex>
                   </Flex>
                 )}
                 {isBaseFormations && auth?.sub !== "anonymous" && (
-                  <Flex pt={3}>
-                    <DateRange
-                      componentId="parcoursup_published_date"
-                      dataField="parcoursup_published_date"
-                      title="Date de publication sur Parcoursup"
-                      placeholder={{
-                        start: "Date de début",
-                        end: "Date de fin",
-                      }}
-                      numberOfMonths={1}
-                      queryFormat="date"
-                      autoFocusEnd={true}
-                      showClear={true}
-                      showFilter={true}
-                      filterLabel="Date de publication"
-                      URLParams={true}
-                    />
+                  <Flex pt={3} direction="column">
+                    <Box>
+                      <Text mt={4} mb={4} textStyle="rf-text" width={"100%"}>
+                        Date de publication sur Parcoursup
+                      </Text>
+                    </Box>
+
+                    <Flex>
+                      <Box w="50%">
+                        <DatePicker
+                          componentId="parcoursup_published_date_start"
+                          dataField="parcoursup_published_date"
+                          placeholder={"A partir de"}
+                          numberOfMonths={1}
+                          queryFormat="date"
+                          showClear={false}
+                          showFilter={true}
+                          filterLabel="Publication Parcoursup après"
+                          URLParams={true}
+                          customQuery={(value) => {
+                            return value
+                              ? {
+                                  query: {
+                                    range: {
+                                      parcoursup_published_date: {
+                                        gte: value,
+                                      },
+                                    },
+                                  },
+                                }
+                              : {};
+                          }}
+                        />
+                      </Box>
+                      <Box w="50%">
+                        <DatePicker
+                          componentId="parcoursup_published_date_end"
+                          dataField="parcoursup_published_date"
+                          placeholder={"Jusqu'au"}
+                          numberOfMonths={1}
+                          queryFormat="date"
+                          showClear={false}
+                          showFilter={true}
+                          filterLabel="Publication Parcoursup avant"
+                          URLParams={true}
+                          customQuery={(value) => {
+                            return value
+                              ? {
+                                  query: {
+                                    range: {
+                                      parcoursup_published_date: {
+                                        lte: value,
+                                      },
+                                    },
+                                  },
+                                }
+                              : {};
+                          }}
+                        />
+                      </Box>
+                    </Flex>
                   </Flex>
                 )}
                 {isBaseFormations && auth?.sub !== "anonymous" && (
-                  <Flex pt={3}>
-                    <DateRange
-                      componentId="affelnet_published_date"
-                      dataField="affelnet_published_date"
-                      title="Date de publication sur Affelnet"
-                      placeholder={{
-                        start: "Date de début",
-                        end: "Date de fin",
-                      }}
-                      numberOfMonths={1}
-                      queryFormat="date"
-                      autoFocusEnd={true}
-                      showClear={true}
-                      showFilter={true}
-                      filterLabel="Date de publication"
-                      URLParams={true}
-                    />
+                  <Flex pt={3} direction="column">
+                    <Box>
+                      <Text mt={4} mb={4} textStyle="rf-text" width={"100%"}>
+                        Date de publication sur Affelnet
+                      </Text>
+                    </Box>
+
+                    <Flex>
+                      <Box w="50%">
+                        <DatePicker
+                          componentId="affelnet_published_date_start"
+                          dataField="affelnet_published_date"
+                          placeholder={"A partir de"}
+                          numberOfMonths={1}
+                          queryFormat="date"
+                          showClear={false}
+                          showFilter={true}
+                          filterLabel="Publication Afflenet après"
+                          URLParams={true}
+                          customQuery={(value) => {
+                            return value
+                              ? {
+                                  query: {
+                                    range: {
+                                      affelnet_published_date: {
+                                        lte: value,
+                                      },
+                                    },
+                                  },
+                                }
+                              : {};
+                          }}
+                        />
+                      </Box>
+                      <Box w="50%">
+                        <DatePicker
+                          componentId="affelnet_published_date_end"
+                          dataField="affelnet_published_date"
+                          placeholder={"Jusqu'au"}
+                          numberOfMonths={1}
+                          queryFormat="date"
+                          showClear={false}
+                          showFilter={true}
+                          filterLabel="Publication Afflenet avant"
+                          URLParams={true}
+                          customQuery={(value) => {
+                            return value
+                              ? {
+                                  query: {
+                                    range: {
+                                      affelnet_published_date: {
+                                        lte: value,
+                                      },
+                                    },
+                                  },
+                                }
+                              : {};
+                          }}
+                        />
+                      </Box>
+                    </Flex>
                   </Flex>
                 )}
               </Box>

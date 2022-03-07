@@ -33,9 +33,12 @@ const FILTERS = () => [
   "annee",
   "qualiopi",
   "duree",
-  "periode",
-  "parcoursup_published_date",
-  "affelnet_published_date",
+  "periode_start",
+  "periode_end",
+  "parcoursup_published_date_start",
+  "parcoursup_published_date_end",
+  "affelnet_published_date_start",
+  "affelnet_published_date_end",
 ];
 
 const columnsDefinition = [
@@ -206,17 +209,13 @@ const columnsDefinition = [
     formatter: (value) => escapeDiacritics(value),
   },
   {
-    Header: "Periode",
+    Header: "Debut de formation",
     accessor: "periode",
     width: 200,
     exportable: true,
-    formatter: (periode) => {
-      return periode
-        ?.map((dateStr) => {
-          const formattedDate = new Date(dateStr).toLocaleString("fr-FR", { month: "long", year: "numeric" });
-          return formattedDate === "Invalid Date" ? dateStr : formattedDate;
-        })
-        ?.join(", ");
+    formatter: (date) => {
+      const formattedDate = new Date(date).toLocaleString("fr-FR", { month: "long", year: "numeric" });
+      return formattedDate === "Invalid Date" ? date : formattedDate;
     },
   },
   {
