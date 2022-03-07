@@ -213,9 +213,13 @@ const columnsDefinition = [
     accessor: "periode",
     width: 200,
     exportable: true,
-    formatter: (date) => {
-      const formattedDate = new Date(date).toLocaleString("fr-FR", { month: "long", year: "numeric" });
-      return formattedDate === "Invalid Date" ? date : formattedDate;
+    formatter: (periode) => {
+      return periode
+        ?.map((dateStr) => {
+          const formattedDate = new Date(dateStr).toLocaleString("fr-FR", { month: "long", year: "numeric" });
+          return formattedDate === "Invalid Date" ? dateStr : formattedDate;
+        })
+        ?.join(", ");
     },
   },
   {
