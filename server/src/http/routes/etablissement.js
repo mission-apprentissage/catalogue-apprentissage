@@ -149,10 +149,9 @@ module.exports = () => {
       const query = qs && qs.query ? JSON.parse(qs.query) : {};
       const retrievedData = await Etablissement.findOne(query);
       if (retrievedData) {
-        res.json(retrievedData);
-      } else {
-        res.json({ message: `Etablissement doesn't exist` });
+        return res.json(retrievedData);
       }
+      return res.status(404).send({ message: `Etablissment doesn't exist` });
     })
   );
 
@@ -168,10 +167,10 @@ module.exports = () => {
         if (retrievedData) {
           res.json(retrievedData);
         } else {
-          res.json({ message: `Etablissement ${itemId} doesn't exist` });
+          res.status(404).json({ message: `Etablissement ${itemId} doesn't exist` });
         }
       } catch (e) {
-        res.json({ message: `Etablissement ${itemId} doesn't exist` });
+        res.status(404).json({ message: `Etablissement ${itemId} doesn't exist` });
       }
     })
   );

@@ -288,7 +288,7 @@ export default ({ match }) => {
   const [loading, setLoading] = useState(false);
 
   const [edition, setEdition] = useState(null);
-  let history = useHistory();
+  const history = useHistory();
   const { isOpen: isOpenPublishModal, onOpen: onOpenPublishModal, onClose: onClosePublishModal } = useDisclosure();
 
   const [user] = useAuth();
@@ -358,17 +358,16 @@ export default ({ match }) => {
         setFieldValue("uai_formation", form.uai_formation ?? "");
       } catch (e) {
         setLoading(false);
-        // history.push("/404");
       }
     }
     run();
-  }, [match, setFieldValue, history]);
+  }, [match, setFieldValue]);
 
   const onEdit = (fieldName = null) => {
     setEdition(fieldName);
   };
 
-  const title = `${formation?.intitule_long ?? "Formation non trouvée"}`;
+  const title = loading ? "" : `${formation?.intitule_long ?? "Formation inconnue"}`;
   setTitle(title);
 
   const sendToParcoursup = async () => {
@@ -402,14 +401,15 @@ export default ({ match }) => {
               {
                 title: `Catalogue des formations en apprentissage
                 ${
-                  formation &&
-                  (formation.etablissement_reference_catalogue_published
-                    ? ` (${CATALOGUE_GENERAL_LABEL})`
-                    : ` (${CATALOGUE_NON_ELIGIBLE_LABEL})`)
+                  !!formation
+                    ? formation.etablissement_reference_catalogue_published
+                      ? ` (${CATALOGUE_GENERAL_LABEL})`
+                      : ` (${CATALOGUE_NON_ELIGIBLE_LABEL})`
+                    : ""
                 }`,
                 to: "/recherche/formations",
               },
-              { title: title },
+              ...[loading ? [] : { title: title }],
             ]}
           />
         </Container>
@@ -497,15 +497,25 @@ export default ({ match }) => {
             </>
           )}
           {hasAccessTo(user, "page_formation") && !loading && !formation && (
-            <>
-              <Box mb={8}>
-                <Flex alignItems="center" justify="space-between" flexDirection={["column", "column", "row"]}>
-                  <Heading textStyle="h2" color="grey.800" pr={[0, 0, 8]}>
-                    {title} <InfoTooltip description={helpText.formation.intitule_long} />
-                  </Heading>
-                </Flex>
-              </Box>
-            </>
+            <Box mb={8}>
+              <Flex alignItems="center" justify="space-between" flexDirection={["column", "column", "row"]}>
+                <Heading textStyle="h2" color="grey.800" pr={[0, 0, 8]}>
+                  {title} <InfoTooltip description={helpText.formation.not_found} />
+                </Heading>
+                <Button
+                  textStyle="sm"
+                  variant="primary"
+                  minW={null}
+                  px={8}
+                  mt={[8, 8, 0]}
+                  onClick={() => {
+                    history.push("/recherche/formations");
+                  }}
+                >
+                  Retour à la recherche
+                </Button>
+              </Flex>
+            </Box>
           )}
         </Container>
       </Box>
