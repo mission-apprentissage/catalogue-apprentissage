@@ -249,78 +249,18 @@ module.exports = () => {
       let qs = req.query;
       const query = qs && qs.query ? JSON.parse(qs.query) : {};
       const page = qs && qs.page ? qs.page : 1;
-      const limit = qs && qs.limit ? parseInt(qs.limit, 3) : 3;
+      const limit = qs && qs.limit ? parseInt(qs.limit, 10) : 100000;
 
-      let results = { docs: [] };
-      if (query.adresse) {
-        await Etablissement.createIndexes();
-        let search = await Etablissement.find(
-          {
-            $text: {
-              $search: query.adresse,
-              $caseSensitive: false,
-            },
-          },
-          {
-            score: {
-              $meta: "textScore",
-            },
-          }
-        ).sort({ score: { $meta: "textScore" } });
-        search = search.slice(0, limit);
-        results.docs = search;
-        results.pages = 1;
-        results.page = 1;
-        results.total = limit;
-      } else {
-        results = await Etablissement.paginate(query, { page, limit });
-      }
-
-      const etablissements = results.docs.map((eta) => {
-        // eslint-disable-next-line no-underscore-dangle
-        const e = { ...eta._doc };
-        delete e.formations_attachees;
-        delete e.formations_ids;
-        delete e.formations_n3;
-        delete e.formations_n4;
-        delete e.formations_n5;
-        delete e.formations_n6;
-        delete e.formations_n7;
-        delete e.info_datagouv_ofs;
-
-        delete e.api_entreprise_reference;
-
-        delete e.ds_id_dossier;
-        delete e.ds_questions_siren;
-        delete e.ds_questions_nom;
-        delete e.ds_questions_email;
-        delete e.ds_questions_uai;
-        delete e.ds_questions_has_agrement_cfa;
-        delete e.ds_questions_has_certificaton_2015;
-        delete e.ds_questions_has_ask_for_certificaton;
-        delete e.ds_questions_ask_for_certificaton_date;
-        delete e.ds_questions_declaration_code;
-        delete e.ds_questions_has_2020_training;
-        delete e.catalogue_published;
-        delete e.published;
-        // eslint-disable-next-line no-underscore-dangle
-        delete e._id;
-        delete e.created_at;
-        delete e.last_update_at;
-        // eslint-disable-next-line no-underscore-dangle
-        delete e.__v;
-        delete e.etablissement_siege_id;
-        delete e.rco_adresse;
-        delete e.rco_code_insee_localite;
-        delete e.rco_code_postal;
-        delete e.rco_uai;
-        delete e.tags;
-
-        return e;
+      const results = await Etablissement.paginate(query, {
+        page,
+        ...(limit ? { limit } : {}),
+        select: { siret: 1, uai: 1 },
+        lean: true,
+        leanWithId: false,
       });
 
       return res.json({
-        etablissements: etablissements,
+        etablissements: results.docs,
         pagination: {
           page: results.page,
           resultats_par_page: limit,
