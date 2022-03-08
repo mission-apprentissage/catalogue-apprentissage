@@ -93,7 +93,7 @@ const Header = () => {
                       </MenuItem>
                     )}
                     {hasAccessTo(auth, "page_message_maintenance") && (
-                      <MenuItem as={NavLink} to="/admin/messagescript" icon={<InfoCircle boxSize={4} />}>
+                      <MenuItem as={NavLink} to="/admin/alert" icon={<InfoCircle boxSize={4} />}>
                         Message de maintenance
                       </MenuItem>
                     )}

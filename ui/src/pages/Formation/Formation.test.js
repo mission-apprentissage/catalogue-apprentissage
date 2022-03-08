@@ -264,13 +264,13 @@ const formation = {
 };
 
 const server = setupMswServer(
-  rest.get(/\/api\/entity\/formation\/2/, (req, res, ctx) => {
-    return res(ctx.json({ ...formation, uai_formation_valide: false }));
-  }),
   rest.get(/\/api\/entity\/formation\/1/, (req, res, ctx) => {
-    return res(ctx.json({ ...formation, uai_formation_valide: true }));
+    return res(ctx.json({ ...formation, uai_formation_valide: true, distance: 0 }));
   }),
-  rest.get(/\/api\/v1\/entity\/messageScript/, (req, res, ctx) => {
+  rest.get(/\/api\/entity\/formation\/2/, (req, res, ctx) => {
+    return res(ctx.json({ ...formation, uai_formation_valide: false, distance: 150 }));
+  }),
+  rest.get(/\/api\/v1\/entity\/alert/, (req, res, ctx) => {
     return res(ctx.json([]));
   })
 );
@@ -288,6 +288,20 @@ test("renders a training page", async () => {
   expect(title).toBeInTheDocument();
 });
 
+test("don't display an error when uai is valid", async () => {
+  grantAnonymousAccess({ acl: ["page_formation"] });
+
+  const { getByText, queryByText, queryByTestId } = renderWithRouter(<Formation match={{ params: { id: 1 } }} />);
+
+  await waitFor(() => getByText(/UAI du lieu de formation/));
+
+  const uai = queryByText("0573690B");
+  expect(uai).toBeInTheDocument();
+
+  const warning = queryByTestId("uai-warning");
+  expect(warning).not.toBeInTheDocument();
+});
+
 test("display an error when uai is invalid", async () => {
   grantAnonymousAccess({ acl: ["page_formation"] });
 
@@ -302,16 +316,24 @@ test("display an error when uai is invalid", async () => {
   expect(warning).toBeInTheDocument();
 });
 
-test("don't display an error when uai is valid", async () => {
-  grantAnonymousAccess({ acl: ["page_formation"] });
+// test("don't display an error when adress is same as coordinates", async () => {
+//   grantAnonymousAccess({ acl: ["page_formation"] });
 
-  const { getByText, queryByText, queryByTestId } = renderWithRouter(<Formation match={{ params: { id: 1 } }} />);
+//   const { getByText, queryByTestId } = renderWithRouter(<Formation match={{ params: { id: 1 } }} />);
 
-  await waitFor(() => getByText(/UAI du lieu de formation/));
+//   await waitFor(() => getByText(/Adresse :/));
 
-  const uai = queryByText("0573690B");
-  expect(uai).toBeInTheDocument();
+//   const warning = queryByTestId("adress-warning");
+//   expect(warning).not.toBeInTheDocument();
+// });
 
-  const warning = queryByTestId("uai-warning");
-  expect(warning).not.toBeInTheDocument();
-});
+// test("display an error when adress is not same as coordinates", async () => {
+//   grantAnonymousAccess({ acl: ["page_formation"] });
+
+//   const { getByText, queryByTestId } = renderWithRouter(<Formation match={{ params: { id: 2 } }} />);
+
+//   await waitFor(() => getByText(/Adresse :/));
+
+//   const warning = queryByTestId("adress-warning");
+//   expect(warning).toBeInTheDocument();
+// });

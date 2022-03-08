@@ -5,6 +5,8 @@ const { runScript } = require("../scriptWrapper");
 const logger = require("../../common/logger");
 const { reconciliationAffelnet } = require("../../logic/controller/reconciliation");
 const { AFFELNET_STATUS } = require("../../constants/status");
+const { findNewFormations } = require("../formations/rcoConverter/converter/migrationFinder");
+const { formation: formatFormation } = require("../../logic/controller/formater");
 
 const formation = async () => {
   await paginator(
@@ -30,6 +32,18 @@ const formation = async () => {
             strength: "100",
             matching: matchingFormation,
           };
+        } else {
+          // check if key has changed since last affelnet import
+          const newFormation = await findNewFormations(
+            { cle_ministere_educatif: formation.cle_ministere_educatif },
+            formatFormation
+          );
+          if (newFormation && newFormation.length === 1) {
+            match = {
+              strength: "100",
+              matching: newFormation,
+            };
+          }
         }
       }
 

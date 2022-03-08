@@ -4,8 +4,8 @@ const {
   getQueryFromRule,
   serialize,
   deserialize,
+  getPeriodeStartDate,
 } = require("../../../../src/common/utils/rulesUtils");
-const { getPeriodeStartDate } = require("../../../../src/common/utils/referenceUtils");
 
 describe(__filename, () => {
   describe("getCfdExpireRule", () => {

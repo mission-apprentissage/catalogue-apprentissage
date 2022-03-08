@@ -7,7 +7,7 @@ import * as useAuth from "../../common/hooks/useAuth";
 import { waitFor } from "@testing-library/react";
 
 const server = setupMswServer(
-  rest.get(/\/api\/v1\/entity\/messageScript/, (req, res, ctx) => {
+  rest.get(/\/api\/v1\/entity\/alert/, (req, res, ctx) => {
     return res(ctx.json([]));
   }),
 
@@ -712,9 +712,9 @@ test("renders basic tree", async () => {
   const match = getAllByText(/^Catalogue des formations en apprentissage$/i);
   expect(match).toHaveLength(3);
 
-  await waitFor(() => getByText("Période"));
+  await waitFor(() => getByText("Début de formation"));
 
-  const periode = getByText("Période");
+  const periode = getByText("Début de formation");
   expect(periode).toBeInTheDocument();
 
   const psDate = getByText("Date de publication sur Parcoursup");

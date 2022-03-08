@@ -297,7 +297,7 @@ const formationSchema = {
   periode: {
     type: [Date],
     default: null,
-    description: "Périodes d'inscription à la formation",
+    description: "Périodes de début de la formation",
   },
   capacite: {
     type: String,
@@ -565,6 +565,23 @@ const formationSchema = {
     default: false,
     description: "Renseigné si la formation peut être suivie entièrement à distance",
   },
+
+  france_competence_infos: {
+    type: new mongoose.Schema(
+      {
+        fc_is_catalog_general: Boolean,
+        fc_is_habilite_rncp: Boolean,
+        fc_is_certificateur: Boolean,
+        fc_is_certificateur_siren: Boolean,
+        fc_is_partenaire: Boolean,
+        fc_has_partenaire: Boolean,
+      },
+      { _id: false }
+    ),
+    default: null,
+    description: "Données pour étude France Compétence",
+  },
+
   ...etablissementGestionnaireInfo,
   ...etablissementFormateurInfo,
   ...etablissementReferenceInfo,

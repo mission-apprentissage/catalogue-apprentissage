@@ -35,6 +35,14 @@ const Button = {
       py: 1,
       _hover: { bg: "grey.200", textDecoration: "none" },
     },
+    outlined: {
+      ...commonButtonStyle,
+      color: "black",
+    },
+    danger: {
+      ...commonButtonStyle,
+      color: "redmarianne",
+    },
   },
 };
 

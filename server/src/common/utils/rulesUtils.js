@@ -1,5 +1,12 @@
-const { getPublishedRules } = require("./referenceUtils");
+// @ts-check
 
+/** @typedef {("affelnet"|"parcoursup")} Plateforme */
+/** @typedef {("3 (CAP...)"|"4 (BAC...)"|"5 (BTS, DEUST...)"|"6 (Licence, BUT...)"|"7 (Master, titre ingénieur...)")} Niveau */
+
+/**
+ * @param {Object} obj
+ * @returns {string}
+ */
 const serialize = (obj) => {
   return JSON.stringify(obj, (key, value) => {
     if (key === "$regex") {
@@ -9,6 +16,10 @@ const serialize = (obj) => {
   });
 };
 
+/**
+ * @param {string} str
+ * @returns {Object}
+ */
 const deserialize = (str) => {
   return JSON.parse(str, (key, value) => {
     if (key === "$regex") {
@@ -16,6 +27,67 @@ const deserialize = (str) => {
     }
     return value;
   });
+};
+
+/**
+ * Pour appliquer les étiquettes pour les plateformes PS & Affelnet
+ * une formation doit avoir au moins une période de début de formation >= septembre de l'année scolaire suivante
+ * eg: si on est en janvier 2022 --> septembre 2022, si on est le en octobre 2022 --> septembre 2023, etc.
+ * Si ce n'est pas le cas la formation sera "hors périmètre".
+ *
+ * @param {Date} [currentDate]
+ * @returns {Date}
+ */
+const getPeriodeStartDate = (currentDate = new Date()) => {
+  let durationShift = 0;
+  const now = currentDate;
+  const sessionStart = new Date(`${currentDate.getFullYear()}-09-01T00:00:00.000Z`);
+  if (now >= sessionStart) {
+    durationShift = 1;
+  }
+  return new Date(`${currentDate.getFullYear() + durationShift}-09-01T00:00:00.000Z`);
+};
+
+const commonRules = {
+  cfd_outdated: { $ne: true },
+  published: true,
+  etablissement_reference_catalogue_published: true,
+  etablissement_gestionnaire_catalogue_published: true, // ensure gestionnaire is Qualiopi certified
+  // periode: { $gte: getPeriodeStartDate() },
+};
+
+const toBePublishedRulesParcousup = {
+  $and: [
+    {
+      ...commonRules,
+      annee: { $in: ["1", "9", "X"] },
+    },
+  ],
+};
+
+const toBePublishedRulesAffelnet = {
+  $and: [
+    {
+      ...commonRules,
+      annee: { $ne: "X" },
+    },
+  ],
+};
+
+/**
+ * @param {Plateforme} plateforme
+ */
+const getPublishedRules = (plateforme) => {
+  switch (plateforme) {
+    case "affelnet":
+      return toBePublishedRulesAffelnet;
+
+    case "parcoursup":
+      return toBePublishedRulesParcousup;
+
+    default:
+      throw new Error(`Invalid plateforme : ${plateforme}`);
+  }
 };
 
 /**
@@ -65,6 +137,9 @@ const titresRule = {
   ],
 };
 
+/**
+ * @param {{plateforme: Plateforme, niveau: Niveau, diplome: string, regle_complementaire: string, duree: string, num_academie: number, annee: string}} rule
+ */
 const getQueryFromRule = ({ plateforme, niveau, diplome, regle_complementaire, duree, num_academie, annee }) => {
   const query = {
     ...getPublishedRules(plateforme),
@@ -80,4 +155,12 @@ const getQueryFromRule = ({ plateforme, niveau, diplome, regle_complementaire, d
   return query;
 };
 
-module.exports = { serialize, deserialize, getQueryFromRule, getCfdExpireRule, titresRule };
+module.exports = {
+  serialize,
+  deserialize,
+  getQueryFromRule,
+  getCfdExpireRule,
+  titresRule,
+  getPublishedRules,
+  getPeriodeStartDate,
+};
