@@ -285,6 +285,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
 export default ({ match }) => {
   const toast = useToast();
   const [formation, setFormation] = useState();
+  const [loading, setLoading] = useState(false);
 
   const [edition, setEdition] = useState(null);
   let history = useHistory();
@@ -342,6 +343,7 @@ export default ({ match }) => {
   useEffect(() => {
     async function run() {
       try {
+        setLoading(true);
         const apiURL = `${endpointNewFront}/entity/formation/`;
         // FIXME select={"__v" :0} hack to get updates_history
         const form = await _get(`${apiURL}${match.params.id}?select={"__v":0}`, false);
@@ -351,10 +353,12 @@ export default ({ match }) => {
           throw new Error("Cette formation n'est pas publiée dans le catalogue");
         }
 
+        setLoading(false);
         setFormation(form);
         setFieldValue("uai_formation", form.uai_formation ?? "");
       } catch (e) {
-        history.push("/404");
+        setLoading(false);
+        // history.push("/404");
       }
     }
     run();
@@ -364,7 +368,7 @@ export default ({ match }) => {
     setEdition(fieldName);
   };
 
-  const title = `${formation?.intitule_long}`;
+  const title = `${formation?.intitule_long ?? "Formation non trouvée"}`;
   setTitle(title);
 
   const sendToParcoursup = async () => {
@@ -412,13 +416,13 @@ export default ({ match }) => {
       </Box>
       <Box w="100%" py={[1, 8]} px={[1, 1, 12, 24]}>
         <Container maxW="xl">
-          {!formation && (
+          {loading && (
             <Center h="70vh">
               <Spinner />
             </Center>
           )}
 
-          {hasAccessTo(user, "page_formation") && formation && (
+          {hasAccessTo(user, "page_formation") && !loading && formation && (
             <>
               <Box mb={8}>
                 <Flex alignItems="center" justify="space-between" flexDirection={["column", "column", "row"]}>
@@ -490,6 +494,17 @@ export default ({ match }) => {
                 hasRightToEdit={hasAccessTo(user, "page_formation/modifier_informations") && hasRightToEdit}
                 isSubmitting={isSubmitting}
               />
+            </>
+          )}
+          {hasAccessTo(user, "page_formation") && !loading && !formation && (
+            <>
+              <Box mb={8}>
+                <Flex alignItems="center" justify="space-between" flexDirection={["column", "column", "row"]}>
+                  <Heading textStyle="h2" color="grey.800" pr={[0, 0, 8]}>
+                    {title} <InfoTooltip description={helpText.formation.intitule_long} />
+                  </Heading>
+                </Flex>
+              </Box>
             </>
           )}
         </Container>
