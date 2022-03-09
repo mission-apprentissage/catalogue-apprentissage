@@ -1,5 +1,6 @@
 {
   "formation": {
+    "not_found": "Nous n'avons pas trouvé la formation dans le catalogue.",
     "intitule_long": "La donnée “Intitulé long de la formation” est extraite de la BCN (Base Centrale des Nomenclatures), table V_FORMATION_DIPLOME",
     "intitule_court": "La donnée “Intitulé court de la formation” est déduite du Code formation diplôme",
     "onisep_intitule": "La donnée “Intitulé éditorial” provient de l’Onisep",
@@ -30,6 +31,7 @@
     "affelnet_published_date": "Date à laquelle la formation est passée à l'état \"Affelnet - publié\" dans le catalogue (rapprochement des bases Affelnet et Carif-Oref)"
   },
   "etablissement": {
+    "not_found": "Nous n'avons pas trouvé l'établissement dans le catalogue.",
     "raison_sociale": "La donnée “Raison sociale” provient de l’INSEE puis est déduite du SIREN. Si cette information est erronée, merci de leur signaler.",
     "enseigne": "La donnée “Enseigne” provient de l’INSEE puis est déduite du SIREN. Si cette information est erronée, merci de leur signaler.",
     "siret": "La donnée “SIRET Organisme”  provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
