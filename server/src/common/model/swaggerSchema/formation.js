@@ -599,6 +599,32 @@ module.exports = {
         default: false,
         description: "Renseigné si la formation peut être suivie entièrement à distance",
       },
+      france_competence_infos: {
+        title: "france_competence_infos",
+        type: "object",
+        properties: {
+          fc_is_catalog_general: {
+            type: "boolean",
+          },
+          fc_is_habilite_rncp: {
+            type: "boolean",
+          },
+          fc_is_certificateur: {
+            type: "boolean",
+          },
+          fc_is_certificateur_siren: {
+            type: "boolean",
+          },
+          fc_is_partenaire: {
+            type: "boolean",
+          },
+          fc_has_partenaire: {
+            type: "boolean",
+          },
+        },
+        default: "null",
+        description: "Données pour étude France Compétence",
+      },
       etablissement_gestionnaire_id: {
         type: "string",
         default: "null",
