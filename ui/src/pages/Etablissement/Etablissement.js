@@ -21,6 +21,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
+import { useHistory } from "react-router-dom";
 import { useFormik } from "formik";
 import useAuth from "../../common/hooks/useAuth";
 import { _get } from "../../common/httpClient";
@@ -344,13 +345,15 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
 };
 
 export default ({ match }) => {
-  const [etablissement, setEtablissement] = useState(null);
+  const [etablissement, setEtablissement] = useState(undefined);
+  const [loading, setLoading] = useState(false);
   const [edition, setEdition] = useState(false);
   const [gatherData, setGatherData] = useState(0);
   const [modal, setModal] = useState(false);
   const [countFormations, setCountFormations] = useState(0);
   const [user] = useAuth();
   const toast = useToast();
+  const history = useHistory();
 
   const { values, handleSubmit, handleChange, setFieldValue } = useFormik({
     initialValues: {
@@ -414,6 +417,7 @@ export default ({ match }) => {
   useEffect(() => {
     async function run() {
       try {
+        setLoading(true);
         const eta = await _get(`${endpointNewFront}/entity/etablissement/${match.params.id}`, false);
         setEtablissement(eta);
         setFieldValue("uai", eta.uai);
@@ -425,9 +429,12 @@ export default ({ match }) => {
 
         const count = await _get(`${endpointNewFront}/entity/formations/count?query=${JSON.stringify(query)}`, false);
 
+        setLoading(false);
         setCountFormations(count);
       } catch (e) {
-        // dispatch(push(routes.NOTFOUND));
+        setLoading(false);
+        setEtablissement(undefined);
+        setCountFormations(0);
       }
     }
     run();
@@ -437,7 +444,7 @@ export default ({ match }) => {
     setEdition(!edition);
   };
 
-  const title = `${etablissement?.entreprise_raison_sociale}`;
+  const title = loading ? "" : `${etablissement?.entreprise_raison_sociale ?? "Etablissement inconnu"}`;
   setTitle(title);
 
   return (
@@ -448,7 +455,7 @@ export default ({ match }) => {
             pages={[
               { title: "Accueil", to: "/" },
               { title: "Liste des organismes", to: "/recherche/etablissements" },
-              { title: title },
+              ...[loading ? [] : { title: title }],
             ]}
           />
         </Container>
@@ -456,12 +463,12 @@ export default ({ match }) => {
       <Box px={[1, 1, 12, 24]}>
         <Box>
           <Container maxW="xl">
-            {!etablissement && (
+            {loading && (
               <Center h="70vh">
                 <Spinner />
               </Center>
             )}
-            {etablissement && (
+            {!loading && !!etablissement && (
               <>
                 <Heading textStyle="h2" color="grey.800" mt={6}>
                   {title} <InfoTooltip description={helpText.etablissement.raison_sociale} />
@@ -503,6 +510,27 @@ export default ({ match }) => {
                   </ModalContent>
                 </Modal>
               </>
+            )}
+            {!loading && !etablissement && (
+              <Box mb={8}>
+                <Flex alignItems="center" justify="space-between" flexDirection={["column", "column", "row"]}>
+                  <Heading textStyle="h2" color="grey.800" pr={[0, 0, 8]}>
+                    {title} <InfoTooltip description={helpText.etablissement.not_found} />
+                  </Heading>
+                  <Button
+                    textStyle="sm"
+                    variant="primary"
+                    minW={null}
+                    px={8}
+                    mt={[8, 8, 0]}
+                    onClick={() => {
+                      history.push("/recherche/etablissements");
+                    }}
+                  >
+                    Retour à la recherche
+                  </Button>
+                </Flex>
+              </Box>
             )}
           </Container>
         </Box>

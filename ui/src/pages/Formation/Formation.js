@@ -285,9 +285,10 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
 export default ({ match }) => {
   const toast = useToast();
   const [formation, setFormation] = useState();
+  const [loading, setLoading] = useState(false);
 
   const [edition, setEdition] = useState(null);
-  let history = useHistory();
+  const history = useHistory();
   const { isOpen: isOpenPublishModal, onOpen: onOpenPublishModal, onClose: onClosePublishModal } = useDisclosure();
 
   const [user] = useAuth();
@@ -342,6 +343,7 @@ export default ({ match }) => {
   useEffect(() => {
     async function run() {
       try {
+        setLoading(true);
         const apiURL = `${endpointNewFront}/entity/formation/`;
         // FIXME select={"__v" :0} hack to get updates_history
         const form = await _get(`${apiURL}${match.params.id}?select={"__v":0}`, false);
@@ -351,20 +353,21 @@ export default ({ match }) => {
           throw new Error("Cette formation n'est pas publiée dans le catalogue");
         }
 
+        setLoading(false);
         setFormation(form);
         setFieldValue("uai_formation", form.uai_formation ?? "");
       } catch (e) {
-        history.push("/404");
+        setLoading(false);
       }
     }
     run();
-  }, [match, setFieldValue, history]);
+  }, [match, setFieldValue]);
 
   const onEdit = (fieldName = null) => {
     setEdition(fieldName);
   };
 
-  const title = `${formation?.intitule_long}`;
+  const title = loading ? "" : `${formation?.intitule_long ?? "Formation inconnue"}`;
   setTitle(title);
 
   const sendToParcoursup = async () => {
@@ -398,27 +401,28 @@ export default ({ match }) => {
               {
                 title: `Catalogue des formations en apprentissage
                 ${
-                  formation &&
-                  (formation.etablissement_reference_catalogue_published
-                    ? ` (${CATALOGUE_GENERAL_LABEL})`
-                    : ` (${CATALOGUE_NON_ELIGIBLE_LABEL})`)
+                  !!formation
+                    ? formation.etablissement_reference_catalogue_published
+                      ? ` (${CATALOGUE_GENERAL_LABEL})`
+                      : ` (${CATALOGUE_NON_ELIGIBLE_LABEL})`
+                    : ""
                 }`,
                 to: "/recherche/formations",
               },
-              { title: title },
+              ...[loading ? [] : { title: title }],
             ]}
           />
         </Container>
       </Box>
       <Box w="100%" py={[1, 8]} px={[1, 1, 12, 24]}>
         <Container maxW="xl">
-          {!formation && (
+          {loading && (
             <Center h="70vh">
               <Spinner />
             </Center>
           )}
 
-          {hasAccessTo(user, "page_formation") && formation && (
+          {hasAccessTo(user, "page_formation") && !loading && formation && (
             <>
               <Box mb={8}>
                 <Flex alignItems="center" justify="space-between" flexDirection={["column", "column", "row"]}>
@@ -491,6 +495,27 @@ export default ({ match }) => {
                 isSubmitting={isSubmitting}
               />
             </>
+          )}
+          {hasAccessTo(user, "page_formation") && !loading && !formation && (
+            <Box mb={8}>
+              <Flex alignItems="center" justify="space-between" flexDirection={["column", "column", "row"]}>
+                <Heading textStyle="h2" color="grey.800" pr={[0, 0, 8]}>
+                  {title} <InfoTooltip description={helpText.formation.not_found} />
+                </Heading>
+                <Button
+                  textStyle="sm"
+                  variant="primary"
+                  minW={null}
+                  px={8}
+                  mt={[8, 8, 0]}
+                  onClick={() => {
+                    history.push("/recherche/formations");
+                  }}
+                >
+                  Retour à la recherche
+                </Button>
+              </Flex>
+            </Box>
           )}
         </Container>
       </Box>
