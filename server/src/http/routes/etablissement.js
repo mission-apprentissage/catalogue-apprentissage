@@ -199,18 +199,8 @@ module.exports = () => {
    *             query:
    *               type: string
    *               example: '"{\"siret\": \"13001727000401\"}"'
-   *             page:
-   *               type: number
-   *               example: 1
-   *             limit:
-   *               type: number
-   *               example: 10
-   *         examples:
-   *           adresse:
-   *             value: { query: "{\"adresse\":\"2915 RtE DES BarTHES 40180\"}" }
-   *             summary: Recherche par adresse
    *           siret:
-   *             value: { query: "{\"siret\": \"13001727000401\"}", page: 1, limit: 10 }
+   *             value: { query: "{\"siret\": \"13001727000401\"}" }
    *             summary: Recherche par siret
    *           sireteUAI:
    *             value: { query: "{\"siret\": \"13001727000401\", \"uai\": \"0781981E\"}" }
@@ -230,42 +220,21 @@ module.exports = () => {
    *                    type: array
    *                    items:
    *                      $ref: '#/components/schemas/etablissement'
-   *                  pagination:
-   *                    type: object
-   *                    properties:
-   *                      page:
-   *                        type: string
-   *                      resultats_par_page:
-   *                        type: number
-   *                      nombre_de_page:
-   *                        type: number
-   *                      total:
-   *                        type: number
    */
   router.get(
     "/etablissements/siret-uai",
     tryCatch(async (req, res) => {
       let qs = req.query;
       const query = qs && qs.query ? JSON.parse(qs.query) : {};
-      const page = qs && qs.page ? qs.page : 1;
-      const limit = qs && qs.limit ? parseInt(qs.limit, 10) : 100000;
 
-      const results = await Etablissement.paginate(query, {
-        page,
-        ...(limit ? { limit } : {}),
-        select: { siret: 1, uai: 1 },
-        lean: true,
-        leanWithId: false,
-      });
+      const etablissements = await Etablissement.find(query, {
+        _id: 0,
+        siret: 1,
+        uai: 1,
+      }).lean();
 
       return res.json({
-        etablissements: results.docs,
-        pagination: {
-          page: results.page,
-          resultats_par_page: limit,
-          nombre_de_page: results.pages,
-          total: results.total,
-        },
+        etablissements,
       });
     })
   );
