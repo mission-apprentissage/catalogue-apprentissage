@@ -470,19 +470,19 @@ export default ({ match }) => {
             )}
             {!loading && !!etablissement && (
               <>
-                <Heading textStyle="h2" color="grey.800" mt={6}>
-                  {title} <InfoTooltip description={helpText.etablissement.raison_sociale} />
-                </Heading>
-                <Box mb={2}>
+                <Box mt={6} mb={2}>
+                  {etablissement.catalogue_published && <QualiopiBadge my={0} mx={0} />}
+                  <Heading textStyle="h2" color="grey.800" my={2}>
+                    {title} <InfoTooltip description={helpText.etablissement.raison_sociale} />
+                  </Heading>
                   {etablissement.tags &&
                     etablissement.tags
                       .sort((a, b) => a - b)
                       .map((tag, i) => (
-                        <Badge variant="year" key={i}>
+                        <Badge variant="year" key={i} my={0}>
                           {tag}
                         </Badge>
                       ))}
-                  {etablissement.catalogue_published && <QualiopiBadge />}
                 </Box>
                 <Etablissement
                   etablissement={etablissement}
@@ -512,10 +512,10 @@ export default ({ match }) => {
               </>
             )}
             {!loading && !etablissement && (
-              <Box mb={8}>
+              <Box mb={8} mt={6}>
                 <Flex alignItems="center" justify="space-between" flexDirection={["column", "column", "row"]}>
                   <Heading textStyle="h2" color="grey.800" pr={[0, 0, 8]}>
-                    {title} <InfoTooltip description={helpText.etablissement.not_found} />
+                    {title}
                   </Heading>
                   <Button
                     textStyle="sm"
@@ -530,6 +530,9 @@ export default ({ match }) => {
                     Retour à la recherche
                   </Button>
                 </Flex>
+                <Box mt={5} mb={8}>
+                  <Flex>{helpText.etablissement.not_found}</Flex>
+                </Box>
               </Box>
             )}
           </Container>
