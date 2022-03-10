@@ -500,7 +500,7 @@ export default ({ match }) => {
             <Box mb={8}>
               <Flex alignItems="center" justify="space-between" flexDirection={["column", "column", "row"]}>
                 <Heading textStyle="h2" color="grey.800" pr={[0, 0, 8]}>
-                  {title} <InfoTooltip description={helpText.formation.not_found} />
+                  {title}
                 </Heading>
                 <Button
                   textStyle="sm"
@@ -515,6 +515,9 @@ export default ({ match }) => {
                   Retour à la recherche
                 </Button>
               </Flex>
+              <Box mt={5} mb={8}>
+                <Flex>{helpText.formation.not_found}</Flex>
+              </Box>
             </Box>
           )}
         </Container>

@@ -512,7 +512,7 @@ export default ({ match }) => {
               </>
             )}
             {!loading && !etablissement && (
-              <Box mb={8}>
+              <Box mb={8} mt={6}>
                 <Flex alignItems="center" justify="space-between" flexDirection={["column", "column", "row"]}>
                   <Heading textStyle="h2" color="grey.800" pr={[0, 0, 8]}>
                     {title} <InfoTooltip description={helpText.etablissement.not_found} />
@@ -530,6 +530,9 @@ export default ({ match }) => {
                     Retour à la recherche
                   </Button>
                 </Flex>
+                <Box mt={5} mb={8}>
+                  <Flex>{helpText.etablissement.not_found}</Flex>
+                </Box>
               </Box>
             )}
           </Container>
