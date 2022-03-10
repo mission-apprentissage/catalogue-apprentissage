@@ -1,8 +1,8 @@
 // @ts-check
 
+/** @typedef {import("../../common/model/schema/etablissement").Etablissement} Etablissement */
 /** @typedef {{Habilitation_Partenaire:string, Siret_Partenaire:string}} Partenaire */
 /** @typedef {{certificateur:string, siret_certificateur:string}} Certificateur */
-/** @typedef {{_id:string, siret: string, siren: string, nda:string, catalogue_published: boolean, published: boolean, ferme: boolean, uai: string, enseigne: string, numero_voie: string, type_voie: string, nom_voie: string, complement_adresse: string, cedex: string, geo_coordonnees: string, entreprise_raison_sociale: string, code_postal: string, code_insee_localite: string, num_departement: string, nom_departement: string, region_implantation_nom: string, nom_academie: string, num_academie: string, localite: string, date_creation: Date}} Etablissement */
 /** @typedef {{code_type_certif:string, rncp_eligible_apprentissage:boolean, partenaires: Partenaire[], certificateurs: Certificateur[]}} RNCPInfo */
 
 const logger = require("../../common/logger");
