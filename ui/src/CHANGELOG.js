@@ -4,10 +4,34 @@ import { Link } from "@chakra-ui/react";
 const changelog = {
   list: [
     {
-      version: "5.11.0",
+      version: "5.13.0",
       date: "Prochainement",
       about: `<h4>À venir</h4>`,
       fixes: [],
+      features: [],
+      improvements: [],
+    },
+    {
+      version: "5.12.0",
+      date: "Le 8 Mars 2022",
+      about: `<h4>À propos de cette version</h4>
+  Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [
+        "Recherche : tri du filtre niveaux par niveau",
+        "Calcul de l’adresse depuis la géolocalisation pour toutes les fiches formations",
+      ],
+      features: [
+        "Admin - Gestion des utilisateurs : tri par nom et export",
+        "Gestion du flux retour Affelnet pour les étiquettes “publié”",
+      ],
+      improvements: [],
+    },
+    {
+      version: "5.11.0",
+      date: "Le 24 Février 2022",
+      about: `<h4>À propos de cette version</h4>
+  Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: ["Pagination en français"],
       features: [],
       improvements: [],
     },
