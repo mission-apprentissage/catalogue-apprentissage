@@ -153,6 +153,33 @@ describe(__filename, () => {
       assert.strictEqual(formations.length, 1);
       assert.strictEqual(formations[0].cfd, "7");
     });
+
+    it("Multisite - should find 0 Formation", async () => {
+      const formations = await findPreviousFormations({
+        cle_ministere_educatif: "106101P01135010559410002250105594100022-88001#L01",
+        id_formation: "",
+        id_certifinfo: "",
+        id_action: "",
+      });
+
+      assert.strictEqual(formations.length, 0);
+    });
+
+    it("Multisite - should find 1 Formation for L02", async () => {
+      const formations = await findPreviousFormations({
+        cle_ministere_educatif: "106101P01135010559410002250105594100022-76001#L02",
+      });
+
+      assert.strictEqual(formations.length, 1);
+    });
+
+    it("Multisite - should find 1 Formation for L03", async () => {
+      const formations = await findPreviousFormations({
+        cle_ministere_educatif: "106101P01135010559410002250105594100022-76001#L03",
+      });
+
+      assert.strictEqual(formations.length, 1);
+    });
   });
 
   describe("copyComputedFields", () => {
