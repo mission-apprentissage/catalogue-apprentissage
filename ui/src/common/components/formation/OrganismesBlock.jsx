@@ -43,10 +43,11 @@ export const OrganismesBlock = ({ formation }) => {
               <Text>Siret : {formation.etablissement_gestionnaire_siret}</Text>
               <Text>UAI : {formation.etablissement_gestionnaire_uai}</Text>
             </Flex>
-            <Heading textStyle="h6" color="grey.800" mt={2}>
+            <Box my={2}>{formation.etablissement_gestionnaire_catalogue_published && <QualiopiBadge m="0" />}</Box>
+            <Heading textStyle="h6" color="grey.800" my={1}>
               {formation.etablissement_gestionnaire_entreprise_raison_sociale}
             </Heading>
-            <Box>
+            <Box my={1}>
               <Text textStyle="sm">Académie : {formation.etablissement_gestionnaire_nom_academie}</Text>
               <Box>
                 <Flex justifyContent={"space-between"}>
@@ -59,7 +60,6 @@ export const OrganismesBlock = ({ formation }) => {
                             {tag}
                           </Badge>
                         ))}
-                    {formation.etablissement_gestionnaire_catalogue_published && <QualiopiBadge />}
                   </Box>
                   <ArrowRightLine alignSelf="center" color="bluefrance" />
                 </Flex>
@@ -81,7 +81,8 @@ export const OrganismesBlock = ({ formation }) => {
             <Text>Siret : {formation.etablissement_formateur_siret}</Text>
             <Text>UAI: {formation.etablissement_formateur_uai}</Text>
           </Flex>
-          <Heading textStyle="h6" color="grey.800" mt={2}>
+          <Box my={2}>{formation.etablissement_formateur_catalogue_published && <QualiopiBadge m="0" />}</Box>
+          <Heading textStyle="h6" color="grey.800" my={1}>
             {formation.etablissement_formateur_entreprise_raison_sociale}
           </Heading>
           <Box>
@@ -97,7 +98,6 @@ export const OrganismesBlock = ({ formation }) => {
                           {tag}
                         </Badge>
                       ))}
-                  {formation.etablissement_formateur_catalogue_published && <QualiopiBadge />}
                 </Box>
                 <ArrowRightLine alignSelf="center" color="bluefrance" />
               </Flex>

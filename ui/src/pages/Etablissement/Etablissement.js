@@ -470,19 +470,19 @@ export default ({ match }) => {
             )}
             {!loading && !!etablissement && (
               <>
-                <Heading textStyle="h2" color="grey.800" mt={6}>
-                  {title} <InfoTooltip description={helpText.etablissement.raison_sociale} />
-                </Heading>
-                <Box mb={2}>
+                <Box mt={6} mb={2}>
+                  {etablissement.catalogue_published && <QualiopiBadge my={0} mx={0} />}
+                  <Heading textStyle="h2" color="grey.800" my={2}>
+                    {title} <InfoTooltip description={helpText.etablissement.raison_sociale} />
+                  </Heading>
                   {etablissement.tags &&
                     etablissement.tags
                       .sort((a, b) => a - b)
                       .map((tag, i) => (
-                        <Badge variant="year" key={i}>
+                        <Badge variant="year" key={i} my={0}>
                           {tag}
                         </Badge>
                       ))}
-                  {etablissement.catalogue_published && <QualiopiBadge />}
                 </Box>
                 <Etablissement
                   etablissement={etablissement}
