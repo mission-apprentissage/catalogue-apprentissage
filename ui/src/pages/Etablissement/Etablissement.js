@@ -515,7 +515,7 @@ export default ({ match }) => {
               <Box mb={8} mt={6}>
                 <Flex alignItems="center" justify="space-between" flexDirection={["column", "column", "row"]}>
                   <Heading textStyle="h2" color="grey.800" pr={[0, 0, 8]}>
-                    {title} <InfoTooltip description={helpText.etablissement.not_found} />
+                    {title}
                   </Heading>
                   <Button
                     textStyle="sm"
