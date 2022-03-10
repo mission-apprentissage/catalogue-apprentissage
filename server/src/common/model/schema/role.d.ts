@@ -5,11 +5,14 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export interface AlertSchema {
-  msg: string;
-  type: string;
-  name: string;
-  time?: Date;
-  enabled?: boolean;
+export interface RoleSchema {
+  /**
+   * Nom du rôle
+   */
+  name?: string;
+  /**
+   * Access control level array
+   */
+  acl?: string & string[];
   _id?: string;
 }

@@ -5,11 +5,21 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export interface AlertSchema {
+export interface LogSchema {
   msg: string;
-  type: string;
+  level: number;
   name: string;
-  time?: Date;
-  enabled?: boolean;
+  time: Date;
+  request?: {
+    [k: string]: unknown;
+  };
+  response?: {
+    [k: string]: unknown;
+  };
+  error?: {
+    [k: string]: unknown;
+  };
+  type?: string;
+  elapsedTime?: number;
   _id?: string;
 }

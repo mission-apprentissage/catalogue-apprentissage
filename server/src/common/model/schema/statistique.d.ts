@@ -5,11 +5,14 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export interface AlertSchema {
-  msg: string;
-  type: string;
-  name: string;
-  time?: Date;
-  enabled?: boolean;
+export interface StatistiqueSchema {
+  /**
+   * Source d'origine de la statistique
+   */
+  source: string;
+  /**
+   * Compteur
+   */
+  count?: number;
   _id?: string;
 }
