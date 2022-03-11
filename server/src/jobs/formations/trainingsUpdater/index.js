@@ -3,7 +3,6 @@ const { runScript } = require("../../scriptWrapper");
 const { Formation, RcoFormation, SandboxFormation } = require("../../../common/model/index");
 const { storeByChunks } = require("../../../common/utils/reportUtils");
 const report = require("../../../logic/reporter/report");
-const { createReportNewDiplomeGrandAge } = require("../../../logic/controller/diplomes-grand-age");
 const config = require("config");
 
 const managedUnPublishedRcoFormation = async () => {
@@ -81,7 +80,6 @@ const trainingsUpdater = async ({ withCodePostalUpdate, noUpdatesFilters, uuidRe
   );
 
   await createReport(result, uuidReport, noMail);
-  await createReportNewDiplomeGrandAge(result.formationsGrandAge, uuidReport, noMail);
 
   await SandboxFormation.deleteMany({});
 };
