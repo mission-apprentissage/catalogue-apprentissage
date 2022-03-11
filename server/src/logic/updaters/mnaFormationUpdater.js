@@ -219,8 +219,6 @@ const mnaFormationUpdater = async (formation, { withCodePostalUpdate = true, cfd
           computedFields.lieu_formation_geo_coordonnees_computed = null;
         }
       }
-
-      console.log(computedFields);
     }
 
     const rncpInfo = {
