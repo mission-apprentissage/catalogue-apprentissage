@@ -17,7 +17,7 @@ const run = async () => {
         { cfd_outdated: true },
       ],
     },
-    { $set: { affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE } }
+    { $set: { affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE, last_statut_update_date: Date.now() } }
   );
 
   // set "à publier (soumis à validation)" for trainings matching affelnet eligibility rules
@@ -26,7 +26,7 @@ const run = async () => {
     {
       affelnet_statut: { $in: [AFFELNET_STATUS.A_PUBLIER_VALIDATION, AFFELNET_STATUS.A_PUBLIER] },
     },
-    { $set: { affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE } }
+    { $set: { affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE, last_statut_update_date: Date.now() } }
   );
 
   // run only on those 'hors périmètre' to not overwrite actions of users !
@@ -44,7 +44,13 @@ const run = async () => {
       ...filterHP,
       $or: aPublierSoumisAValidationRules.map(getQueryFromRule),
     },
-    { $set: { last_update_at: Date.now(), affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION } }
+    {
+      $set: {
+        last_update_at: Date.now(),
+        affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
+        last_statut_update_date: Date.now(),
+      },
+    }
   );
 
   //  set "à publier" for trainings matching affelnet eligibility rules
@@ -64,7 +70,13 @@ const run = async () => {
       ...filter,
       $or: aPublierRules.map(getQueryFromRule),
     },
-    { $set: { last_update_at: Date.now(), affelnet_statut: AFFELNET_STATUS.A_PUBLIER } }
+    {
+      $set: {
+        last_update_at: Date.now(),
+        affelnet_statut: AFFELNET_STATUS.A_PUBLIER,
+        last_statut_update_date: Date.now(),
+      },
+    }
   );
 
   // apply academy rules
@@ -82,7 +94,7 @@ const run = async () => {
           num_academie,
           ...getQueryFromRule(rule),
         },
-        { $set: { last_update_at: Date.now(), affelnet_statut: status } }
+        { $set: { last_update_at: Date.now(), affelnet_statut: status, last_statut_update_date: Date.now() } }
       );
     });
   });

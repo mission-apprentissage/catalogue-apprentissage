@@ -18,7 +18,7 @@ const run = async () => {
         { parcoursup_id: null, parcoursup_statut: PARCOURSUP_STATUS.PUBLIE },
       ],
     },
-    { $set: { parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE } }
+    { $set: { parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE, last_statut_update_date: Date.now() } }
   );
 
   // set "publié"
@@ -29,7 +29,7 @@ const run = async () => {
       parcoursup_id: { $ne: null },
       parcoursup_statut: { $ne: PARCOURSUP_STATUS.NON_PUBLIE },
     },
-    { $set: { parcoursup_statut: PARCOURSUP_STATUS.PUBLIE } }
+    { $set: { parcoursup_statut: PARCOURSUP_STATUS.PUBLIE, last_statut_update_date: Date.now() } }
   );
 
   // set "à publier (vérifier accès direct postbac)" & "à publier (soumis à validation Recteur)" for trainings matching psup eligibility rules
@@ -45,7 +45,7 @@ const run = async () => {
         ],
       },
     },
-    { $set: { parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE } }
+    { $set: { parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE, last_statut_update_date: Date.now() } }
   );
 
   // run only on those 'hors périmètre' to not overwrite actions of users !
@@ -69,6 +69,7 @@ const run = async () => {
         $set: {
           last_update_at: Date.now(),
           parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
+          last_statut_update_date: Date.now(),
         },
       }
     ));
@@ -89,6 +90,7 @@ const run = async () => {
         $set: {
           last_update_at: Date.now(),
           parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
+          last_statut_update_date: Date.now(),
         },
       }
     ));
@@ -109,6 +111,7 @@ const run = async () => {
         $set: {
           last_update_at: Date.now(),
           parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+          last_statut_update_date: Date.now(),
         },
       }
     ));
@@ -137,7 +140,13 @@ const run = async () => {
         ...filter,
         $or: aPublierRules.map(getQueryFromRule),
       },
-      { $set: { last_update_at: Date.now(), parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER } }
+      {
+        $set: {
+          last_update_at: Date.now(),
+          parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER,
+          last_statut_update_date: Date.now(),
+        },
+      }
     ));
 
   // apply academy rules
@@ -164,7 +173,7 @@ const run = async () => {
           num_academie,
           ...getQueryFromRule(rule),
         },
-        { $set: { last_update_at: Date.now(), parcoursup_statut: status } }
+        { $set: { last_update_at: Date.now(), parcoursup_statut: status, last_statut_update_date: Date.now() } }
       );
     });
   });
