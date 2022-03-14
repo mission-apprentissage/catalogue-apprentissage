@@ -131,29 +131,6 @@ const extractFlatIdsAction = (id_action) => {
  * @param {Object} [projection={}]
  */
 const findNewFormations = async ({ cle_ministere_educatif }, projection = {}) => {
-  // TODO @EPT : doit-on passer à "publié" toutes les formations d'un multi-site ?
-  // if (cle_ministere_educatif?.endsWith("#L01")) {
-  //   const rootKey = cle_ministere_educatif?.split("#")[0];
-
-  //   const potentialKeys = Array(8)
-  //     .fill(cle_ministere_educatif)
-  //     .map((_value, index) => {
-  //       const siteNumber = index + 2;
-  //       return `${rootKey}${"#L0"}${siteNumber}`;
-  //     });
-
-  //   const previousFormations = await Formation.find({
-  //     cle_ministere_educatif: { $in: potentialKeys },
-  //     published: true,
-  //   })
-  //     .select(projection)
-  //     .lean();
-
-  //   if (previousFormations.length > 0) {
-  //     return previousFormations;
-  //   }
-  // }
-
   const wasCollectedYear = cle_ministere_educatif.substring(10, 11) !== "X";
   if (wasCollectedYear) {
     return [];
@@ -176,6 +153,38 @@ const findNewFormations = async ({ cle_ministere_educatif }, projection = {}) =>
     .lean();
 };
 
+/**
+ * For a given cle_ministere_educatif formation, try to find some Formation in catalogue with different sites
+ *
+ * @param {{cle_ministere_educatif: string}} formation
+ * @param {Object} [projection={}]
+ */
+const findMultisiteFormations = async ({ cle_ministere_educatif }, projection = {}) => {
+  if (cle_ministere_educatif?.endsWith("#L01")) {
+    const rootKey = cle_ministere_educatif?.split("#")[0];
+
+    const potentialKeys = Array(8)
+      .fill(cle_ministere_educatif)
+      .map((_value, index) => {
+        const siteNumber = index + 2;
+        return `${rootKey}${"#L0"}${siteNumber}`;
+      });
+
+    const multisiteFormations = await Formation.find({
+      cle_ministere_educatif: { $in: potentialKeys },
+      published: true,
+    })
+      .select(projection)
+      .lean();
+
+    if (multisiteFormations.length > 0) {
+      return multisiteFormations;
+    }
+  }
+
+  return [];
+};
+
 module.exports = {
   findPreviousFormations,
   copyAffelnetFields,
@@ -186,4 +195,5 @@ module.exports = {
   copyComputedFields,
   copyEditedFields,
   findNewFormations,
+  findMultisiteFormations,
 };

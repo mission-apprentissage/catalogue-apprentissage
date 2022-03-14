@@ -5,8 +5,9 @@ const { runScript } = require("../scriptWrapper");
 const logger = require("../../common/logger");
 const { reconciliationAffelnet } = require("../../logic/controller/reconciliation");
 const { AFFELNET_STATUS } = require("../../constants/status");
-const { findNewFormations } = require("../formations/rcoConverter/converter/migrationFinder");
+const { findNewFormations, findMultisiteFormations } = require("../formations/rcoConverter/converter/migrationFinder");
 const { formation: formatFormation } = require("../../logic/controller/formater");
+const { asyncForEach } = require("../../common/utils/asyncUtils");
 
 const formation = async () => {
   await paginator(
@@ -27,11 +28,23 @@ const formation = async () => {
           published: true,
           cle_ministere_educatif: formation.cle_ministere_educatif,
         });
+
         if (matchingFormation && matchingFormation.length === 1) {
           match = {
             strength: "100",
             matching: matchingFormation,
           };
+
+          // passer à "publié" toutes les formations d'un multi-site
+          const multisiteFormations = await findMultisiteFormations(
+            { cle_ministere_educatif: formation.cle_ministere_educatif },
+            formatFormation
+          );
+          if (multisiteFormations.length > 0) {
+            await asyncForEach(multisiteFormations, async (multisiteFormation) => {
+              await reconciliationAffelnet(formation, multisiteFormation);
+            });
+          }
         } else {
           // check if key has changed since last affelnet import
           const newFormation = await findNewFormations(
@@ -62,7 +75,7 @@ const formation = async () => {
       await formation.save();
 
       if (formation.matching_mna_formation?.length === 1 && Number(formation.matching_type) >= 3) {
-        await reconciliationAffelnet(formation);
+        await reconciliationAffelnet(formation, formation.matching_mna_formation[0]);
       }
     }
   );
