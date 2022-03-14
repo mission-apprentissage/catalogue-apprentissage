@@ -85,7 +85,7 @@ const afCoverage = async () => {
   // reset "publié" to "hors périmètre"
   await Formation.updateMany(
     { affelnet_statut: AFFELNET_STATUS.PUBLIE },
-    { $set: { affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE, last_statut_update_date: Date.now() } }
+    { $set: { affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE } }
   );
 
   logger.info("Start formation coverage");
