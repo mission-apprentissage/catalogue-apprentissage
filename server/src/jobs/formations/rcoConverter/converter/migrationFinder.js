@@ -154,35 +154,32 @@ const findNewFormations = async ({ cle_ministere_educatif }, projection = {}) =>
 };
 
 /**
- * For a given cle_ministere_educatif formation, try to find some Formation in catalogue with different sites
+ * For a given formation corresponding to the first site (L01), try to find some Formation in catalogue with different sites
  *
  * @param {{cle_ministere_educatif: string}} formation
  * @param {Object} [projection={}]
  */
-const findMultisiteFormations = async ({ cle_ministere_educatif }, projection = {}) => {
-  if (cle_ministere_educatif?.endsWith("#L01")) {
-    const rootKey = cle_ministere_educatif?.split("#")[0];
-
-    const potentialKeys = Array(8)
-      .fill(cle_ministere_educatif)
-      .map((_value, index) => {
-        const siteNumber = index + 2;
-        return `${rootKey}${"#L0"}${siteNumber}`;
-      });
-
-    const multisiteFormations = await Formation.find({
-      cle_ministere_educatif: { $in: potentialKeys },
-      published: true,
-    })
-      .select(projection)
-      .lean();
-
-    if (multisiteFormations.length > 0) {
-      return multisiteFormations;
-    }
+const findMultisiteFormationsFromL01 = async ({ cle_ministere_educatif }, projection = {}) => {
+  if (!cle_ministere_educatif?.endsWith("#L01")) {
+    return [];
   }
 
-  return [];
+  const rootKey = cle_ministere_educatif?.split("#")[0];
+  const potentialKeys = Array(8)
+    .fill(cle_ministere_educatif)
+    .map((_value, index) => {
+      const siteNumber = index + 2;
+      return `${rootKey}${"#L0"}${siteNumber}`;
+    });
+
+  const multisiteFormations = await Formation.find({
+    cle_ministere_educatif: { $in: potentialKeys },
+    published: true,
+  })
+    .select(projection)
+    .lean();
+
+  return multisiteFormations;
 };
 
 module.exports = {
@@ -195,5 +192,5 @@ module.exports = {
   copyComputedFields,
   copyEditedFields,
   findNewFormations,
-  findMultisiteFormations,
+  findMultisiteFormationsFromL01,
 };

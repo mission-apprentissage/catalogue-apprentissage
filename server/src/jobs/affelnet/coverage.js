@@ -5,7 +5,10 @@ const { runScript } = require("../scriptWrapper");
 const logger = require("../../common/logger");
 const { reconciliationAffelnet } = require("../../logic/controller/reconciliation");
 const { AFFELNET_STATUS } = require("../../constants/status");
-const { findNewFormations, findMultisiteFormations } = require("../formations/rcoConverter/converter/migrationFinder");
+const {
+  findNewFormations,
+  findMultisiteFormationsFromL01,
+} = require("../formations/rcoConverter/converter/migrationFinder");
 const { formation: formatFormation } = require("../../logic/controller/formater");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 
@@ -35,8 +38,9 @@ const formation = async () => {
             matching: matchingFormation,
           };
 
-          // passer à "publié" toutes les formations d'un multi-site
-          const multisiteFormations = await findMultisiteFormations(
+          // dans le cas où on reçoit une clé en L01 de Affelnet
+          // on passe à "publié" toutes les formations de ce multi-site (si on trouve plusieurs sites)
+          const multisiteFormations = await findMultisiteFormationsFromL01(
             { cle_ministere_educatif: formation.cle_ministere_educatif },
             formatFormation
           );

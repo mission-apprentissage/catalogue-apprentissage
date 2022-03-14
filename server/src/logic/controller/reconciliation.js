@@ -2,8 +2,8 @@ const { Formation } = require("../../common/model");
 const { AFFELNET_STATUS } = require("../../constants/status");
 
 async function reconciliationAffelnet(formationAffelnet, match) {
-  let { code_nature, etablissement_type, code_mef, libelle_mnemonique } = formationAffelnet;
-  let { cle_ministere_educatif } = match;
+  const { code_nature, etablissement_type, code_mef, libelle_mnemonique } = formationAffelnet;
+  const { cle_ministere_educatif } = match;
 
   // pass through some data for Affelnet
   const formation = await Formation.findOne(
