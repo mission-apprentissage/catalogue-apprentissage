@@ -44,7 +44,12 @@ const run = async () => {
       ...filterHP,
       $or: aPublierSoumisAValidationRules.map(getQueryFromRule),
     },
-    { $set: { last_update_at: Date.now(), affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION } }
+    {
+      $set: {
+        last_update_at: Date.now(),
+        affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
+      },
+    }
   );
 
   //  set "à publier" for trainings matching affelnet eligibility rules
@@ -64,7 +69,12 @@ const run = async () => {
       ...filter,
       $or: aPublierRules.map(getQueryFromRule),
     },
-    { $set: { last_update_at: Date.now(), affelnet_statut: AFFELNET_STATUS.A_PUBLIER } }
+    {
+      $set: {
+        last_update_at: Date.now(),
+        affelnet_statut: AFFELNET_STATUS.A_PUBLIER,
+      },
+    }
   );
 
   // apply academy rules

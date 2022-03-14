@@ -325,7 +325,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                                   query: {
                                     range: {
                                       affelnet_published_date: {
-                                        lte: value,
+                                        gte: value,
                                       },
                                     },
                                   },
@@ -351,6 +351,70 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                                   query: {
                                     range: {
                                       affelnet_published_date: {
+                                        lte: value,
+                                      },
+                                    },
+                                  },
+                                }
+                              : {};
+                          }}
+                        />
+                      </Box>
+                    </Flex>
+                  </Flex>
+                )}
+                {isBaseFormations && auth?.sub !== "anonymous" && (
+                  <Flex pt={3} direction="column">
+                    <Box>
+                      <Text mt={4} mb={4} textStyle="rf-text" width={"100%"}>
+                        Dernière mise à jour du statut
+                      </Text>
+                    </Box>
+
+                    <Flex>
+                      <Box w="50%">
+                        <DatePicker
+                          componentId="last_statut_update_date_start"
+                          dataField="last_statut_update_date"
+                          placeholder={"A partir de"}
+                          numberOfMonths={1}
+                          queryFormat="date"
+                          showClear={false}
+                          showFilter={true}
+                          filterLabel="Statut modifié après"
+                          URLParams={true}
+                          customQuery={(value) => {
+                            return value
+                              ? {
+                                  query: {
+                                    range: {
+                                      last_statut_update_date: {
+                                        gte: value,
+                                      },
+                                    },
+                                  },
+                                }
+                              : {};
+                          }}
+                        />
+                      </Box>
+                      <Box w="50%">
+                        <DatePicker
+                          componentId="last_statut_update_date_end"
+                          dataField="last_statut_update_date"
+                          placeholder={"Jusqu'au"}
+                          numberOfMonths={1}
+                          queryFormat="date"
+                          showClear={false}
+                          showFilter={true}
+                          filterLabel="Statut modifié avant"
+                          URLParams={true}
+                          customQuery={(value) => {
+                            return value
+                              ? {
+                                  query: {
+                                    range: {
+                                      last_statut_update_date: {
                                         lte: value,
                                       },
                                     },

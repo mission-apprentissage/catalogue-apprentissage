@@ -384,6 +384,11 @@ const formationSchema = {
     default: null,
     description: 'Date de publication (passage au statut "publié")',
   },
+  last_statut_update_date: {
+    type: Date,
+    default: null,
+    description: "Date de dernière modification du statut Affelnet ou Parcoursup",
+  },
   published: {
     index: true,
     type: Boolean,
@@ -406,6 +411,7 @@ const formationSchema = {
     description: "Historique des mises à jours",
     noIndex: true,
   },
+
   last_update_at: {
     type: Date,
     default: Date.now,
