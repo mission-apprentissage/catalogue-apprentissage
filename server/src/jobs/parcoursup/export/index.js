@@ -89,6 +89,7 @@ const createFormation = async (formation, email = null) => {
     formation.parcoursup_id = response.g_ta_cod;
     formation.parcoursup_statut = PARCOURSUP_STATUS.PUBLIE;
     formation.parcoursup_published_date = Date.now();
+    formation.last_statut_update_date = Date.now();
     formation.last_update_at = Date.now();
     formation.last_update_who = `web service Parcoursup${email ? `, sent by ${email}` : ""}`;
     formation.parcoursup_statut_history.push({

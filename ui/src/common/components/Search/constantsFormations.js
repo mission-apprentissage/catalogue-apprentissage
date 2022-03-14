@@ -39,6 +39,8 @@ const FILTERS = () => [
   "parcoursup_published_date_end",
   "affelnet_published_date_start",
   "affelnet_published_date_end",
+  "last_statut_update_date_start",
+  "last_statut_update_date_end",
 ];
 
 const columnsDefinition = [
