@@ -367,7 +367,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                   <Flex pt={3} direction="column">
                     <Box>
                       <Text mt={4} mb={4} textStyle="rf-text" width={"100%"}>
-                        Dernier mise à jour du statut
+                        Dernière mise à jour du statut
                       </Text>
                     </Box>
 
