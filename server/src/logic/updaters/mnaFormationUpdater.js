@@ -183,30 +183,37 @@ const mnaFormationUpdater = async (formation, { withCodePostalUpdate = true, cfd
       rcoFormation?.etablissement_lieu_formation_geo_coordonnees ?? formation.lieu_formation_geo_coordonnees
     );
 
+    // Calcul des coordonnées et de l'adresse à partir des informations RCO. Permet de savoir si les données transmises sont cohérentes.
     const computedFields = {};
-
     if (geoCoords) {
-      const { result = {} } = withCodePostalUpdate ? await geoMapper(geoCoords, code_commune_insee) : {};
+      const [lat, lon] = geoCoords.split(",");
 
-      if (result?.adresse) {
-        cpMapping.lieu_formation_adresse_computed = `${result.adresse}, ${result.code_postal} ${result.localite}`;
+      if (withCodePostalUpdate || !formation.lieu_formation_adresse_computed) {
+        const { result: addressResults = {}, messages: addressMessages } = await geoMapper(
+          geoCoords,
+          cpMapping.code_commune_insee ?? code_commune_insee
+        );
+
+        if (!parseErrors(addressMessages) && addressResults?.adresse) {
+          computedFields.lieu_formation_adresse_computed = `${addressResults.adresse}, ${addressResults.code_postal} ${addressResults.localite}`;
+        } else {
+          computedFields.lieu_formation_adresse_computed = null;
+        }
       }
 
-      if (withCodePostalUpdate || !formation.distance) {
+      if (withCodePostalUpdate || !formation.distance || !formation.lieu_formation_geo_coordonnees_computed) {
         // Calculate distance between rco address search geoloc & rco geocoords
-        const { result: coordinates, messages: coordsMessages } = await getCoordinatesFromAddressData({
+        const { result: coordinatesResults, messages: coordinatesMessages } = await getCoordinatesFromAddressData({
           numero_voie: cpMapping.lieu_formation_adresse,
           localite: cpMapping.localite ?? formation.localite,
           code_postal: cpMapping.code_postal ?? code_postal,
           code_insee: cpMapping.code_commune_insee ?? code_commune_insee,
         });
 
-        const geolocError = parseErrors(coordsMessages);
-        if (!geolocError && coordinates.geo_coordonnees) {
-          const [lat, lon] = geoCoords.split(",");
-          const [computedLat, computedLon] = coordinates.geo_coordonnees.split(",");
+        if (!parseErrors(coordinatesMessages) && coordinatesResults.geo_coordonnees) {
+          const [computedLat, computedLon] = coordinatesResults.geo_coordonnees.split(",");
           computedFields.distance = distanceBetweenCoordinates(lat, lon, computedLat, computedLon);
-          computedFields.lieu_formation_geo_coordonnees_computed = coordinates.geo_coordonnees;
+          computedFields.lieu_formation_geo_coordonnees_computed = coordinatesResults.geo_coordonnees;
         } else {
           computedFields.distance = null;
           computedFields.lieu_formation_geo_coordonnees_computed = null;

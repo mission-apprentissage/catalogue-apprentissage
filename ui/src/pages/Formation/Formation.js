@@ -53,7 +53,7 @@ const getLBAUrl = ({ cle_ministere_educatif = "" }) => {
 
 const getGeoPortailUrl = (coordinates) => {
   const [lat, lon] = coordinates.split(",");
-  return `https://www.geoportail.gouv.fr/carte?c=${lon},${lat}&z=19&l0=ORTHOIMAGERY.ORTHOPHOTOS::GEOPORTAIL:OGC:WMTS(1)&permalink=yes`;
+  return `https://www.geoportail.gouv.fr/carte?c=${lon},${lat}&z=19&l0=OPEN_STREET_MAP::GEOPORTAIL:OGC:WMTS(1)&permalink=yes`;
 };
 
 const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, values, hasRightToEdit }) => {
