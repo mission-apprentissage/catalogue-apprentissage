@@ -387,7 +387,7 @@ const formationSchema = {
   last_statut_update_date: {
     type: Date,
     default: null,
-    description: "Date de dernière modification du statut Afflenet ou Parcoursup",
+    description: "Date de dernière modification du statut Affelnet ou Parcoursup",
   },
   published: {
     index: true,
