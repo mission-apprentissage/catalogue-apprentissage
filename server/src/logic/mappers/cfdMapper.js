@@ -54,6 +54,7 @@ const cfdMapper = async (cfd = null, options = { onisep: true }) => {
       code_rncp = null,
       intitule_diplome = null,
       eligible_apprentissage = false,
+      rncp_outdated = false,
     } = rncp;
 
     const rome_codes = (romes || []).map(({ rome }) => rome);
@@ -116,6 +117,7 @@ const cfdMapper = async (cfd = null, options = { onisep: true }) => {
           romes,
           blocs_competences,
           voix_acces,
+          rncp_outdated,
         },
 
         libelle_court: result.libelle_court,

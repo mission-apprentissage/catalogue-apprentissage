@@ -289,6 +289,11 @@ const formationSchema = {
         default: [],
         description: "partenaires",
       },
+      rncp_outdated: {
+        type: Boolean,
+        default: false,
+        description: "Code rncp périmé (date fin enregistrement avant le 31 aout de l'année courante)",
+      },
     },
     default: null,
     description: "Détails RNCP (bloc de compétences etc..)",

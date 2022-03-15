@@ -188,6 +188,12 @@ export const DescriptionBlock = ({ formation }) => {
               {formation.rncp_code}
             </Text>{" "}
             <InfoTooltip description={helpText.formation.rncp_code} />
+            {formation?.rncp_details?.rncp_outdated && (
+              <>
+                <br />
+                Ce code RNCP a une date de fin d'enregistrement antérieure au 31/08 de l'année en cours
+              </>
+            )}
           </Text>
         )}
         <Text mb={4}>

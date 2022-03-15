@@ -339,10 +339,10 @@
   resolved "https://registry.yarnpkg.com/@jsdevtools/ono/-/ono-7.1.3.tgz#9df03bbd7c696a5c58885c34aa06da41c8543796"
   integrity sha512-4JQNk+3mVzK3xh2rqd6RB4J46qUR19azEHBneZyTZM+c456qOrbbM/5xcR8huNCCcbVt7+UmizG6GuUvPvKUYg==
 
-"@mission-apprentissage/tco-service-node@2.34.0":
-  version "2.34.0"
-  resolved "https://npm.pkg.github.com/download/@mission-apprentissage/tco-service-node/2.34.0/c0d9fc50b6020d3e164ab6cd1389bc5108dc8f723685697e660ca4a1b39f3ee3#a3b4f4b6b48f465835bb812ed731d9db1e869bca"
-  integrity sha512-qQ1/95q9ilOgVVnJYtQE+jVAH/RYr4nntq9baGRE+lo9/wiym8asJapzXaZsx61B7me1XWhf+TcbGBJj4+9FSw==
+"@mission-apprentissage/tco-service-node@2.35.0":
+  version "2.35.0"
+  resolved "https://npm.pkg.github.com/download/@mission-apprentissage/tco-service-node/2.35.0/b83e506b899b4ef8a4354f265ab6944a4bca4d836f1a2e3e1369161a566f3d26#72b5038ae303b5b3112b79db175eb67ed1b38a92"
+  integrity sha512-LLVnyFpCuqReu3TPp/V5vfLs5zwJFowqZ0dTcw4mfcs/ZB47sC4iV7KJZedlZ7AVE+Ojr6kps49BJo6YTBs9jw==
   dependencies:
     aws-sdk "2.785.0"
     axios "0.21.1"
