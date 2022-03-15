@@ -49,6 +49,17 @@ const createReport = async (
   }
 };
 
+/**
+ * Mets à jour les formations catalogue à partir des données des formations rco.
+ *
+ * @param {{
+ * withCodePostalUpdate: boolean
+ * noUpdatesFilters: boolean
+ * uuidReport: string
+ * argFilters: string
+ * noMail: boolean
+ * }}
+ */
 const trainingsUpdater = async ({ withCodePostalUpdate, noUpdatesFilters, uuidReport, argFilters, noMail }) => {
   const filter = noUpdatesFilters
     ? argFilters

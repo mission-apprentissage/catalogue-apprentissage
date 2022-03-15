@@ -24,10 +24,10 @@ import AlertMessage from "./AlertMessage";
 import { AccountFill, DoubleArrows, DownloadLine, InfoCircle } from "../../../theme/components/icons";
 
 const Header = () => {
-  let [auth, setAuth] = useAuth();
-  let history = useHistory();
+  const [auth, setAuth] = useAuth();
+  const history = useHistory();
 
-  let logout = async () => {
+  const logout = async () => {
     const { loggedOut } = await _get("/api/auth/logout");
     if (loggedOut) {
       setAuth(null);
