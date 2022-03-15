@@ -13,13 +13,13 @@ const Breadcrumb = ({ pages }) => {
       {pages.map((page, index) => {
         if (index === pages.length - 1) {
           return (
-            <BreadcrumbItem key={page.title} isCurrentPage>
+            <BreadcrumbItem key={page.title ?? `page-${index}`} isCurrentPage>
               <BreadcrumbLink>{page.title}</BreadcrumbLink>
             </BreadcrumbItem>
           );
         } else {
           return (
-            <BreadcrumbItem key={page.title}>
+            <BreadcrumbItem key={page.title ?? `page-${index}`}>
               <BreadcrumbLink
                 as={NavLink}
                 to={page.to}

@@ -44,6 +44,7 @@ const getSubmitBody = ({
   affelnet_infos_offre,
   affelnet_raison_depublication,
   parcoursup_raison_depublication,
+  date = new Date(),
 }) => {
   const body = {};
   let shouldRemovePsReconciliation = false;
@@ -57,6 +58,7 @@ const getSubmitBody = ({
       )
     ) {
       body.affelnet_statut = AFFELNET_STATUS.EN_ATTENTE;
+      body.last_statut_update_date = date;
       body.affelnet_infos_offre = affelnet_infos_offre;
       body.affelnet_raison_depublication = null;
     } else if ([AFFELNET_STATUS.PUBLIE].includes(formation?.affelnet_statut)) {
@@ -73,6 +75,7 @@ const getSubmitBody = ({
     ) {
       body.affelnet_raison_depublication = affelnet_raison_depublication;
       body.affelnet_statut = AFFELNET_STATUS.NON_PUBLIE;
+      body.last_statut_update_date = date;
       body.affelnet_published_date = null;
     }
   }
@@ -88,6 +91,7 @@ const getSubmitBody = ({
       ].includes(formation?.parcoursup_statut)
     ) {
       body.parcoursup_statut = PARCOURSUP_STATUS.EN_ATTENTE;
+      body.last_statut_update_date = date;
       shouldRestorePsReconciliation = formation.parcoursup_statut === PARCOURSUP_STATUS.NON_PUBLIE;
       body.parcoursup_raison_depublication = null;
     }
@@ -104,6 +108,7 @@ const getSubmitBody = ({
     ) {
       body.parcoursup_raison_depublication = parcoursup_raison_depublication;
       body.parcoursup_statut = PARCOURSUP_STATUS.NON_PUBLIE;
+      body.last_statut_update_date = date;
       body.parcoursup_published_date = null;
       shouldRemovePsReconciliation = [PARCOURSUP_STATUS.EN_ATTENTE, PARCOURSUP_STATUS.PUBLIE].includes(
         formation.parcoursup_statut
