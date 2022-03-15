@@ -3,6 +3,49 @@ import { Box, Heading, Text } from "@chakra-ui/react";
 import useAuth from "../../hooks/useAuth";
 import { hasAccessTo } from "../../utils/rolesUtils";
 
+/**
+ * Retire les valeurs successives identiques dans un tableau
+ *
+ * @param {*} array the array to reduce
+ * @param {*} check a function to check equality between two successive values in the array
+ * @returns An array containing only the last items
+ */
+const reduceSameValues = (array, check) => {
+  return [...array].reduce((acc, curr, index, arr) => {
+    if (index === 1) {
+      return [...(check(curr, acc) ? [curr] : []), acc];
+    }
+
+    return [...(check(curr, arr[index - 1]) ? [curr] : []), ...acc];
+  });
+};
+
+const StatutHistorySubBlock = ({ history, title, statusField }) => {
+  return (
+    <>
+      <Text textStyle="rf-text" color="grey.700" fontWeight="700" my={3}>
+        {title}
+      </Text>
+      <Box ml={4}>
+        <ul>
+          {history.map((value) => {
+            return (
+              <li key={value.date}>
+                <span>{new Date(value.date).toLocaleDateString()}</span> : {value[statusField]}
+                {value.last_update_who && " - "}
+                {value.last_update_who}
+              </li>
+            );
+          })}
+        </ul>
+      </Box>
+    </>
+  );
+};
+
+/**
+ *  Display an history of statuses
+ */
 export const StatutHistoryBlock = ({ formation }) => {
   const [user] = useAuth();
 
@@ -10,20 +53,14 @@ export const StatutHistoryBlock = ({ formation }) => {
     return <></>;
   }
 
-  const affelnet_history = [...formation.affelnet_statut_history].reduce((acc, curr, index, arr) => {
-    if (index === 1) {
-      return [...(curr.affelnet_statut !== acc.affelnet_statut ? [curr] : []), acc];
-    }
-
-    return [...(curr.affelnet_statut !== arr[index - 1]?.affelnet_statut ? [curr] : []), ...acc];
-  });
-
-  const parcoursup_history = [...formation.parcoursup_statut_history].reduce((acc, curr, index, arr) => {
-    if (index === 1) {
-      return [...(curr.parcoursup_statut !== acc.parcoursup_statut ? [curr] : []), acc];
-    }
-    return [...(curr.parcoursup_statut !== arr[index - 1]?.parcoursup_statut ? [curr] : []), ...acc];
-  });
+  const affelnet_history = reduceSameValues(
+    formation.affelnet_statut_history,
+    (previous, current) => current.affelnet_statut !== previous?.affelnet_statut
+  );
+  const parcoursup_history = reduceSameValues(
+    formation.parcoursup_statut_history,
+    (previous, current) => current.parcoursup_statut !== previous?.parcoursup_statut
+  );
 
   return (
     (hasAccessTo(user, "page_formation/voir_status_publication_ps") ||
@@ -34,45 +71,11 @@ export const StatutHistoryBlock = ({ formation }) => {
         </Heading>
 
         {hasAccessTo(user, "page_formation/voir_status_publication_aff") && (
-          <>
-            <Text textStyle="rf-text" color="grey.700" fontWeight="700" my={3}>
-              Affelnet
-            </Text>
-            <Box ml={4}>
-              <ul>
-                {affelnet_history.map((value) => {
-                  return (
-                    <li key={value.date}>
-                      <span>{new Date(value.date).toLocaleDateString()}</span> : {value.affelnet_statut}
-                      {value.last_update_who && " - "}
-                      {value.last_update_who}
-                    </li>
-                  );
-                })}
-              </ul>
-            </Box>
-          </>
+          <StatutHistorySubBlock title="Affelnet" history={affelnet_history} statusField="affelnet_statut" />
         )}
 
         {hasAccessTo(user, "page_formation/voir_status_publication_ps") && (
-          <>
-            <Text textStyle="rf-text" color="grey.700" fontWeight="700" my={3}>
-              Parcoursup
-            </Text>
-            <Box ml={4}>
-              <ul>
-                {parcoursup_history.map((value) => {
-                  return (
-                    <li key={value.date}>
-                      <span>{new Date(value.date).toLocaleDateString()}</span> : {value.parcoursup_statut}
-                      {value.last_update_who && " - "}
-                      {value.last_update_who}
-                    </li>
-                  );
-                })}
-              </ul>
-            </Box>
-          </>
+          <StatutHistorySubBlock title="Parcoursup" history={parcoursup_history} statusField="parcoursup_statut" />
         )}
       </>
     )
