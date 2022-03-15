@@ -130,6 +130,12 @@ const formationSchema = {
     default: null,
     description: "Nom de la formation déclaratif",
   },
+  intitule_rco: {
+    index: true,
+    type: String,
+    default: null,
+    description: "Intitulé comme transmis par RCO",
+  },
   intitule_long: {
     index: true,
     type: String,

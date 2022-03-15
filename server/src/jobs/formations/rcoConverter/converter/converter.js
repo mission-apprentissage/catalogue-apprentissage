@@ -24,6 +24,7 @@ const extractUsefulNewFields = (formation) => {
     cle_ministere_educatif,
     etablissement_gestionnaire_courriel,
     etablissement_formateur_courriel,
+    intitule_formation,
     niveau_entree_obligatoire,
     entierement_a_distance,
     duree,
@@ -34,6 +35,7 @@ const extractUsefulNewFields = (formation) => {
     cle_ministere_educatif,
     etablissement_gestionnaire_courriel,
     etablissement_formateur_courriel,
+    intitule_formation,
     niveau_entree_obligatoire,
     entierement_a_distance,
     duree,
@@ -102,6 +104,7 @@ const formatToMnaFormation = (rcoFormation) => {
     ids_action: extractFlatIdsAction(rcoFormation.id_action),
     id_certifinfo: rcoFormation.id_certifinfo,
     cfd: rcoFormation.cfd,
+    intitule_rco: rcoFormation.intitule_formation,
 
     uai_formation: rcoFormation.etablissement_lieu_formation_uai,
     code_postal: extractFirstValue(rcoFormation.etablissement_lieu_formation_code_postal),
