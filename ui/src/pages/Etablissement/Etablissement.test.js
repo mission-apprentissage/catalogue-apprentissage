@@ -197,7 +197,7 @@ test("renders a training page", async () => {
   const { queryAllByText, getByText, getAllByText } = renderWithRouter(<Etablissement match={{ params: { id: 1 } }} />);
 
   await waitFor(() => getAllByText("MIDISUP"));
-  await waitFor(() => getByText(/Voir les 34 formations associées à cet organisme/));
+  await waitFor(() => getByText(/voir les 34 formations associées à cet organisme/));
 
   const title = queryAllByText("MIDISUP");
   expect(title.length).toBeGreaterThan(0);
@@ -209,7 +209,7 @@ test("display an error when uai is invalid", async () => {
   const { getByText, queryByText, queryByTestId } = renderWithRouter(<Etablissement match={{ params: { id: 2 } }} />);
 
   await waitFor(() => getByText(/UAI rattaché au SIRET/));
-  await waitFor(() => getByText(/Voir les 34 formations associées à cet organisme/));
+  await waitFor(() => getByText(/voir les 34 formations associées à cet organisme/));
 
   const uai = queryByText("0312755B");
   expect(uai).toBeInTheDocument();
@@ -224,7 +224,7 @@ test("don't display an error when uai is valid", async () => {
   const { getByText, queryByText, queryByTestId } = renderWithRouter(<Etablissement match={{ params: { id: 1 } }} />);
 
   await waitFor(() => getByText(/UAI rattaché au SIRET/));
-  await waitFor(() => getByText(/Voir les 34 formations associées à cet organisme/));
+  await waitFor(() => getByText(/voir les 34 formations associées à cet organisme/));
 
   const uai = queryByText("0312755B");
   expect(uai).toBeInTheDocument();
@@ -248,9 +248,9 @@ test("Submit should call etablissement service API", async () => {
   const { getByText, queryByText, getByTestId } = renderWithRouter(<Etablissement match={{ params: { id: 1 } }} />);
 
   await waitFor(() => getByText(/UAI rattaché au SIRET/));
-  await waitFor(() => getByText(/Voir les 34 formations associées à cet organisme/));
+  await waitFor(() => getByText(/voir les 34 formations associées à cet organisme/));
 
-  const count = queryByText(/Voir les 34 formations associées à cet organisme/);
+  const count = queryByText(/voir les 34 formations associées à cet organisme/);
   expect(count).toBeInTheDocument();
 
   // click on edit

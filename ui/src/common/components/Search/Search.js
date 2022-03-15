@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  DataSearch,
-  DatePicker,
-  DateRange,
-  ReactiveBase,
-  ReactiveList,
-  SelectedFilters,
-} from "@appbaseio/reactivesearch";
+import { DataSearch, DatePicker, ReactiveBase, ReactiveList, SelectedFilters } from "@appbaseio/reactivesearch";
 import { Box, Container, Flex, FormLabel, Switch, Text } from "@chakra-ui/react";
 import useAuth from "../../hooks/useAuth";
 import { hasAccessTo } from "../../utils/rolesUtils";
