@@ -426,9 +426,14 @@ export default ({ match }) => {
             <>
               <Box mb={8}>
                 <Flex alignItems="center" justify="space-between" flexDirection={["column", "column", "row"]}>
-                  <Heading textStyle="h2" color="grey.800" pr={[0, 0, 8]}>
-                    {title} <InfoTooltip description={helpText.formation.intitule_long} />
-                  </Heading>
+                  <Box>
+                    <Heading textStyle="h2" color="grey.800" pr={[0, 0, 8]} mb={4}>
+                      {title} <InfoTooltip description={helpText.formation.intitule_long} />
+                    </Heading>
+                    <Heading textStyle="h4" color="grey.600" pr={[0, 0, 8]}>
+                      {formation.intitule_rco} <InfoTooltip description={helpText.formation.intitule_rco} />
+                    </Heading>
+                  </Box>
                   {hasRightToEdit &&
                     formation.etablissement_reference_catalogue_published &&
                     hasAccessTo(user, "page_formation/gestion_publication") && (
