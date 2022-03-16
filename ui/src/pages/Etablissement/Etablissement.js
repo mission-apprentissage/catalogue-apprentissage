@@ -416,36 +416,34 @@ export default ({ match }) => {
 
   const mountedRef = useRef(true);
 
-  const run = async () => {
-    try {
-      setLoading(true);
-      const eta = await _get(`${endpointNewFront}/entity/etablissement/${match.params.id}`, false);
-      setEtablissement(eta);
-      setFieldValue("uai", eta.uai);
-
-      if (!mountedRef.current) return null;
-
-      const query = {
-        published: true,
-        $or: [{ etablissement_formateur_siret: eta.siret }, { etablissement_gestionnaire_siret: eta.siret }],
-      };
-
-      const count = await _get(`${endpointNewFront}/entity/formations/count?query=${JSON.stringify(query)}`, false);
-
-      if (!mountedRef.current) return null;
-
-      setLoading(false);
-      setCountFormations(count);
-    } catch (e) {
-      if (!mountedRef.current) return null;
-      setLoading(false);
-      setEtablissement(undefined);
-      setCountFormations(0);
-    }
-  };
-
   useEffect(() => {
-    run();
+    (async () => {
+      try {
+        setLoading(true);
+        const eta = await _get(`${endpointNewFront}/entity/etablissement/${match.params.id}`, false);
+        setEtablissement(eta);
+        setFieldValue("uai", eta.uai);
+
+        if (!mountedRef.current) return null;
+
+        const query = {
+          published: true,
+          $or: [{ etablissement_formateur_siret: eta.siret }, { etablissement_gestionnaire_siret: eta.siret }],
+        };
+
+        const count = await _get(`${endpointNewFront}/entity/formations/count?query=${JSON.stringify(query)}`, false);
+
+        if (!mountedRef.current) return null;
+
+        setLoading(false);
+        setCountFormations(count);
+      } catch (e) {
+        if (!mountedRef.current) return null;
+        setLoading(false);
+        setEtablissement(undefined);
+        setCountFormations(0);
+      }
+    })();
     return () => {
       mountedRef.current = false;
     };

@@ -350,30 +350,29 @@ export default ({ match }) => {
 
   const mountedRef = useRef(true);
 
-  const run = async () => {
-    try {
-      setLoading(true);
-      const apiURL = `${endpointNewFront}/entity/formation/`;
-      // FIXME select={"__v" :0} hack to get updates_history
-      const form = await _get(`${apiURL}${match.params.id}?select={"__v":0}`, false);
-
-      if (!mountedRef.current) return null;
-      // don't display archived formations
-      if (!form.published) {
-        throw new Error("Cette formation n'est pas publiée dans le catalogue");
-      }
-
-      setLoading(false);
-      setFormation(form);
-      setFieldValue("uai_formation", form.uai_formation ?? "");
-    } catch (e) {
-      if (!mountedRef.current) return null;
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    run();
+    (async () => {
+      try {
+        setLoading(true);
+        const apiURL = `${endpointNewFront}/entity/formation/`;
+        // FIXME select={"__v" :0} hack to get updates_history
+        const form = await _get(`${apiURL}${match.params.id}?select={"__v":0}`, false);
+
+        if (!mountedRef.current) return null;
+        // don't display archived formations
+        if (!form.published) {
+          throw new Error("Cette formation n'est pas publiée dans le catalogue");
+        }
+
+        setLoading(false);
+        setFormation(form);
+        setFieldValue("uai_formation", form.uai_formation ?? "");
+      } catch (e) {
+        if (!mountedRef.current) return null;
+        setLoading(false);
+      }
+    })();
+
     return () => {
       mountedRef.current = false;
     };
