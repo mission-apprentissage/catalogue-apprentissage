@@ -42,6 +42,7 @@ test("should compute submit body when publish affelnet", () => {
     affelnet: "true",
     parcoursup: "false",
     affelnet_infos_offre: "test info",
+    date: new Date("2021-10-14"),
   });
 
   expect(result).toEqual({
@@ -49,6 +50,7 @@ test("should compute submit body when publish affelnet", () => {
       affelnet_infos_offre: "test info",
       affelnet_raison_depublication: null,
       affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+      last_statut_update_date: new Date("2021-10-14"),
     },
     shouldRemovePsReconciliation: false,
     shouldRestorePsReconciliation: false,
@@ -75,6 +77,7 @@ test("should compute submit body when publish affelnet & restore reconciliation"
     formation,
     affelnet: "true",
     affelnet_infos_offre: "test info",
+    date: new Date("2021-10-14"),
   });
 
   expect(result).toEqual({
@@ -82,6 +85,7 @@ test("should compute submit body when publish affelnet & restore reconciliation"
       affelnet_infos_offre: "test info",
       affelnet_raison_depublication: null,
       affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+      last_statut_update_date: new Date("2021-10-14"),
     },
     shouldRemovePsReconciliation: false,
     shouldRestorePsReconciliation: false,
@@ -171,6 +175,7 @@ test("should compute submit body when UNpublish affelnet", () => {
     affelnet: "false",
     parcoursup: "false",
     affelnet_raison_depublication: "not to be published",
+    date: new Date("2021-10-14"),
   });
 
   expect(result).toEqual({
@@ -178,6 +183,7 @@ test("should compute submit body when UNpublish affelnet", () => {
       affelnet_raison_depublication: "not to be published",
       affelnet_statut: AFFELNET_STATUS.NON_PUBLIE,
       affelnet_published_date: null,
+      last_statut_update_date: new Date("2021-10-14"),
     },
     shouldRemovePsReconciliation: false,
     shouldRestorePsReconciliation: false,
@@ -232,12 +238,14 @@ test("should compute submit body when publish parcoursup", () => {
   const result = getSubmitBody({
     formation,
     parcoursup: "true",
+    date: new Date("2021-10-14"),
   });
 
   expect(result).toEqual({
     body: {
       parcoursup_raison_depublication: null,
       parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
+      last_statut_update_date: new Date("2021-10-14"),
     },
     shouldRemovePsReconciliation: false,
     shouldRestorePsReconciliation: false,
@@ -263,12 +271,14 @@ test("should compute submit body when publish parcoursup & restore reconciliatio
   const result = getSubmitBody({
     formation,
     parcoursup: "true",
+    date: new Date("2021-10-14"),
   });
 
   expect(result).toEqual({
     body: {
       parcoursup_raison_depublication: null,
       parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
+      last_statut_update_date: new Date("2021-10-14"),
     },
     shouldRemovePsReconciliation: false,
     shouldRestorePsReconciliation: true,
@@ -295,6 +305,7 @@ test("should compute submit body when UNpublish parcoursup", () => {
     formation,
     parcoursup: "false",
     parcoursup_raison_depublication: "not to be published",
+    date: new Date("2021-10-14"),
   });
 
   expect(result).toEqual({
@@ -302,6 +313,7 @@ test("should compute submit body when UNpublish parcoursup", () => {
       parcoursup_published_date: null,
       parcoursup_raison_depublication: "not to be published",
       parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIE,
+      last_statut_update_date: new Date("2021-10-14"),
     },
     shouldRemovePsReconciliation: true,
     shouldRestorePsReconciliation: false,
