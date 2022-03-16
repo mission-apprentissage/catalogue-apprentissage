@@ -24,7 +24,7 @@ const reduceSameValues = (array, check) => {
  *  Display an history for one status
  *
  * @param {object} config
- * @param {{date: string, last_update_who?: string, [statusField: string]: string }} config.history
+ * @param {{date: string, [statusField: string]: string }} config.history
  * @param {string} config.title
  * @param {string} config.statusField
  */
@@ -40,8 +40,6 @@ const StatutHistorySubBlock = ({ history, title, statusField }) => {
             return (
               <li key={value.date}>
                 <span>{new Date(value.date).toLocaleDateString()}</span> : {value[statusField]}
-                {value.last_update_who && " - "}
-                {value.last_update_who}
               </li>
             );
           })}
@@ -55,7 +53,7 @@ const StatutHistorySubBlock = ({ history, title, statusField }) => {
  *  Display an history of statuses
  *
  * @param {object} config
- * @param {object} config.formation
+ * @param {object} config.formation La formation dont on souhaite afficher l'historique des changements de statuts
  */
 export const StatutHistoryBlock = ({ formation }) => {
   const [user] = useAuth();
