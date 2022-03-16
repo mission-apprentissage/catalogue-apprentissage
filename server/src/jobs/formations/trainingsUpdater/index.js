@@ -52,12 +52,12 @@ const createReport = async (
 /**
  * Mets à jour les formations catalogue à partir des données des formations rco.
  *
- * @param {Object} args
- * @param {boolean} [args.withCodePostalUpdate] - Force update of adresse and geo_coordonnees related fields
- * @param {boolean} [args.noUpdatesFilters] - Force update of formations that doesn't contains {to_update: true}
- * @param {string} [args.uuidReport]
- * @param {string} [args.argFilters] - Specify a custom filter for formations to update
- * @param {boolean} [args.noMail] - Don't send report email
+ * @param {object} config
+ * @param {boolean} [config.withCodePostalUpdate] - Force update of adresse and geo_coordonnees related fields
+ * @param {boolean} [config.noUpdatesFilters] - Force update of formations that doesn't contains {to_update: true}
+ * @param {string} [config.uuidReport]
+ * @param {string} [config.argFilters] - Specify a custom filter for formations to update
+ * @param {boolean} [config.noMail] - Don't send report email
  *
  */
 const trainingsUpdater = async ({ withCodePostalUpdate, noUpdatesFilters, uuidReport, argFilters, noMail }) => {
