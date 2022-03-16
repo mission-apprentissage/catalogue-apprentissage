@@ -210,7 +210,7 @@ const formationSchema = {
   rncp_details: {
     type: {
       date_fin_validite_enregistrement: {
-        type: String,
+        type: Date,
         default: null,
         description: "Date de validité de la fiche",
       },

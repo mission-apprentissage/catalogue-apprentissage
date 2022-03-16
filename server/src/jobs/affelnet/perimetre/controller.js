@@ -14,7 +14,22 @@ const run = async () => {
         { affelnet_statut: null },
         { etablissement_reference_catalogue_published: false },
         { published: false },
-        { cfd_outdated: true }, // TODO $and not Titre / TP
+        {
+          $or: [
+            {
+              "rncp_details.code_type_certif": {
+                $in: ["Titre", "TP"],
+              },
+              "rncp_details.rncp_outdated": true,
+            },
+            {
+              "rncp_details.code_type_certif": {
+                $nin: ["Titre", "TP"],
+              },
+              cfd_outdated: true,
+            },
+          ],
+        },
       ],
     },
     { $set: { affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE } }

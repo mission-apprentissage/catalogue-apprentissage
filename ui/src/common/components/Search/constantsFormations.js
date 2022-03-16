@@ -400,7 +400,10 @@ const columnsDefinition = [
     accessor: "rncp_details",
     width: 200,
     exportable: true,
-    formatter: (value) => value.date_fin_validite_enregistrement ?? "",
+    formatter: (value) =>
+      value.date_fin_validite_enregistrement
+        ? new Date(value.date_fin_validite_enregistrement).toLocaleDateString()
+        : "",
   },
   {
     Header: "Tags",

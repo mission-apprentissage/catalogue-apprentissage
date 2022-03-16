@@ -86,7 +86,7 @@ const formation = {
   rncp_intitule: "Technicien en chaudronnerie industrielle",
   rncp_eligible_apprentissage: true,
   rncp_details: {
-    date_fin_validite_enregistrement: "01/01/2024",
+    date_fin_validite_enregistrement: new Date("01/01/2024"),
     active_inactive: "ACTIVE",
     etat_fiche_rncp: "Publiée",
     niveau_europe: "niveau4",
