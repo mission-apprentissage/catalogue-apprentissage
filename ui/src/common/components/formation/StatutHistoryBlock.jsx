@@ -20,6 +20,14 @@ const reduceSameValues = (array, check) => {
   });
 };
 
+/**
+ *  Display an history for one status
+ *
+ * @param {object} config
+ * @param {{date: string, last_update_who?: string, [statusField: string]: string }} config.history
+ * @param {string} config.title
+ * @param {string} config.statusField
+ */
 const StatutHistorySubBlock = ({ history, title, statusField }) => {
   return (
     <>
@@ -45,6 +53,9 @@ const StatutHistorySubBlock = ({ history, title, statusField }) => {
 
 /**
  *  Display an history of statuses
+ *
+ * @param {object} config
+ * @param {object} config.formation
  */
 export const StatutHistoryBlock = ({ formation }) => {
   const [user] = useAuth();

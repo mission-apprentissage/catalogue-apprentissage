@@ -35,6 +35,7 @@ import {
 } from "../../theme/components/icons/";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
+import { getOpenStreetMapUrl } from "../../common/utils/mapUtils";
 import { EditableField } from "../../common/components/formation/EditableField";
 import { StatutHistoryBlock } from "../../common/components/formation/StatutHistoryBlock";
 import { DescriptionBlock } from "../../common/components/formation/DescriptionBlock";
@@ -50,11 +51,6 @@ const getLBAUrl = ({ cle_ministere_educatif = "" }) => {
   return `${endpointLBA}/recherche-apprentissage?&display=list&page=fiche&type=training&itemId=${encodeURIComponent(
     cle_ministere_educatif
   )}`;
-};
-
-const getGeoPortailUrl = (coordinates) => {
-  const [lat, lon] = coordinates.split(",");
-  return `https://www.geoportail.gouv.fr/carte?c=${lon},${lat}&z=19&l0=OPEN_STREET_MAP::GEOPORTAIL:OGC:WMTS(1)&permalink=yes`;
 };
 
 const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, values, hasRightToEdit }) => {
@@ -180,7 +176,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                       <Text>
                         <Text fontSize={"zeta"} color={"grey.600"} as="span">
                           <Link
-                            href={getGeoPortailUrl(formation.lieu_formation_geo_coordonnees_computed)}
+                            href={getOpenStreetMapUrl(formation.lieu_formation_geo_coordonnees_computed)}
                             textStyle="rf-text"
                             variant="pill"
                             title="Voir sur GeoPortail"
@@ -218,7 +214,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                       <Text>
                         <Text fontSize={"zeta"} color={"grey.600"} as="span">
                           <Link
-                            href={getGeoPortailUrl(formation.lieu_formation_geo_coordonnees)}
+                            href={getOpenStreetMapUrl(formation.lieu_formation_geo_coordonnees)}
                             textStyle="rf-text"
                             variant="pill"
                             title="Voir sur GeoPortail"
