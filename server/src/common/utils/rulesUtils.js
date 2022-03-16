@@ -49,7 +49,7 @@ const getPeriodeStartDate = (currentDate = new Date()) => {
 };
 
 const commonRules = {
-  cfd_outdated: { $ne: true },
+  cfd_outdated: { $ne: true }, // TODO $or Titre / TP
   published: true,
   etablissement_reference_catalogue_published: true,
   etablissement_gestionnaire_catalogue_published: true, // ensure gestionnaire is Qualiopi certified
@@ -105,6 +105,7 @@ const getCfdExpireRule = (currentDate = new Date()) => {
   }
 
   return {
+    // TODO $or Titre / TP return empty obj ? or rncp expire rule {}
     $or: [
       {
         cfd_date_fermeture: {

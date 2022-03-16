@@ -14,7 +14,7 @@ const run = async () => {
         { parcoursup_statut: null },
         { etablissement_reference_catalogue_published: false },
         { published: false },
-        { cfd_outdated: true },
+        { cfd_outdated: true }, //  // TODO $and not Titre / TP
         { parcoursup_id: null, parcoursup_statut: PARCOURSUP_STATUS.PUBLIE },
       ],
     },

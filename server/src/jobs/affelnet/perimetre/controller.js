@@ -14,7 +14,7 @@ const run = async () => {
         { affelnet_statut: null },
         { etablissement_reference_catalogue_published: false },
         { published: false },
-        { cfd_outdated: true },
+        { cfd_outdated: true }, // TODO $and not Titre / TP
       ],
     },
     { $set: { affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE } }
