@@ -62,10 +62,11 @@ module.exports = ({ users }) => {
 
   router.get(
     "/logout",
-    tryCatch((req, res) => {
+    tryCatch(async (req, res) => {
       req.logOut();
       req.session.destroy();
-      return res.json({ loggedOut: true });
+      const payload = await users.structureUser({ username: "anonymous", roles: ["public"], acl: [] });
+      return res.json(payload);
     })
   );
 

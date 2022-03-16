@@ -4,7 +4,12 @@ const { getAddressFromCoordinates } = require("@mission-apprentissage/tco-servic
 const geoMapper = async (coordinates = "", codeInsee) => {
   try {
     if (!coordinates) {
-      throw new Error("geoMapper coordinates must be provided");
+      return {
+        result: null,
+        messages: {
+          error: `Unable to retrieve data without coordinates`,
+        },
+      };
     }
 
     const [latitude, longitude] = coordinates.split(",");

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Box,
   Button,
@@ -35,7 +35,9 @@ import {
 } from "../../theme/components/icons/";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
+import { getOpenStreetMapUrl } from "../../common/utils/mapUtils";
 import { EditableField } from "../../common/components/formation/EditableField";
+import { StatutHistoryBlock } from "../../common/components/formation/StatutHistoryBlock";
 import { DescriptionBlock } from "../../common/components/formation/DescriptionBlock";
 import { OrganismesBlock } from "../../common/components/formation/OrganismesBlock";
 import { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL } from "../../constants/catalogueLabels";
@@ -49,11 +51,6 @@ const getLBAUrl = ({ cle_ministere_educatif = "" }) => {
   return `${endpointLBA}/recherche-apprentissage?&display=list&page=fiche&type=training&itemId=${encodeURIComponent(
     cle_ministere_educatif
   )}`;
-};
-
-const getGeoPortailUrl = (coordinates) => {
-  const [lat, lon] = coordinates.split(",");
-  return `https://www.geoportail.gouv.fr/carte?c=${lon},${lat}&z=19&l0=OPEN_STREET_MAP::GEOPORTAIL:OGC:WMTS(1)&permalink=yes`;
 };
 
 const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, values, hasRightToEdit }) => {
@@ -101,22 +98,24 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
   return (
     <Box borderRadius={4}>
       <Grid templateColumns="repeat(12, 1fr)">
-        <GridItem colSpan={[12, 12, 7]} bg="white" border="1px solid" borderColor="bluefrance">
-          <DescriptionBlock formation={formation} />
+        <GridItem colSpan={[12, 12, 7]} bg="white">
+          <Box border="1px solid" borderColor="bluefrance">
+            <DescriptionBlock formation={formation} />
+          </Box>
         </GridItem>
-        <GridItem colSpan={[12, 12, 5]} py={8}>
+        <GridItem colSpan={[12, 12, 5]} py={8} px={[4, 4, 8]}>
           <Box mb={16}>
-            <Heading textStyle="h4" color="grey.800" px={[4, 4, 8]}>
+            <Heading textStyle="h4" color="grey.800">
               <MapPin2Fill w="12px" h="15px" mr="5px" mb="5px" />
               Lieu de la formation
             </Heading>
-            <Box mt={2} mb={4} px={5}>
+            <Box mt={2} mb={4} ml={[-2, -2, -3]}>
               <Link href={getLBAUrl(formation)} textStyle="rf-text" variant="pill" isExternal>
                 voir sur labonnealternance <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
               </Link>
             </Box>
 
-            <Box px={8}>
+            <Box>
               <UaiFormationContainer>
                 <EditableField
                   fieldName={"uai_formation"}
@@ -177,7 +176,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                       <Text>
                         <Text fontSize={"zeta"} color={"grey.600"} as="span">
                           <Link
-                            href={getGeoPortailUrl(formation.lieu_formation_geo_coordonnees_computed)}
+                            href={getOpenStreetMapUrl(formation.lieu_formation_geo_coordonnees_computed)}
                             textStyle="rf-text"
                             variant="pill"
                             title="Voir sur GeoPortail"
@@ -215,7 +214,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                       <Text>
                         <Text fontSize={"zeta"} color={"grey.600"} as="span">
                           <Link
-                            href={getGeoPortailUrl(formation.lieu_formation_geo_coordonnees)}
+                            href={getOpenStreetMapUrl(formation.lieu_formation_geo_coordonnees)}
                             textStyle="rf-text"
                             variant="pill"
                             title="Voir sur GeoPortail"
@@ -248,11 +247,11 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
               </Text>
             </Box>
           </Box>
-          <Box mb={16} px={[4, 4, 8]}>
+          <Box mb={16}>
             <OrganismesBlock formation={formation} />
           </Box>
           {(formation?.affelnet_published_date ?? formation?.parcoursup_published_date) && (
-            <Box mb={[0, 0, 16]} px={[4, 4, 8]}>
+            <Box mb={[0, 0, 16]}>
               <Heading textStyle="h4" color="grey.800" mb={4}>
                 Autres informations
               </Heading>
@@ -274,6 +273,11 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                   <InfoTooltip description={helpText.formation.parcoursup_published_date} />
                 </Text>
               )}
+            </Box>
+          )}
+          {(formation?.affelnet_statut_history?.length || formation?.parcoursup_statut_history?.length) && (
+            <Box mb={[0, 0, 16]}>
+              <StatutHistoryBlock formation={formation} />
             </Box>
           )}
         </GridItem>
@@ -340,14 +344,17 @@ export default ({ match }) => {
     },
   });
 
+  const mountedRef = useRef(true);
+
   useEffect(() => {
-    async function run() {
+    (async () => {
       try {
         setLoading(true);
         const apiURL = `${endpointNewFront}/entity/formation/`;
         // FIXME select={"__v" :0} hack to get updates_history
         const form = await _get(`${apiURL}${match.params.id}?select={"__v":0}`, false);
 
+        if (!mountedRef.current) return null;
         // don't display archived formations
         if (!form.published) {
           throw new Error("Cette formation n'est pas publiée dans le catalogue");
@@ -357,10 +364,14 @@ export default ({ match }) => {
         setFormation(form);
         setFieldValue("uai_formation", form.uai_formation ?? "");
       } catch (e) {
+        if (!mountedRef.current) return null;
         setLoading(false);
       }
-    }
-    run();
+    })();
+
+    return () => {
+      mountedRef.current = false;
+    };
   }, [match, setFieldValue]);
 
   const onEdit = (fieldName = null) => {
@@ -426,9 +437,14 @@ export default ({ match }) => {
             <>
               <Box mb={8}>
                 <Flex alignItems="center" justify="space-between" flexDirection={["column", "column", "row"]}>
-                  <Heading textStyle="h2" color="grey.800" pr={[0, 0, 8]}>
-                    {title} <InfoTooltip description={helpText.formation.intitule_long} />
-                  </Heading>
+                  <Box>
+                    <Heading textStyle="h2" color="grey.800" pr={[0, 0, 8]} mb={4}>
+                      {title} <InfoTooltip description={helpText.formation.intitule_long} />
+                    </Heading>
+                    <Heading textStyle="h4" color="grey.600" pr={[0, 0, 8]}>
+                      {formation.intitule_rco} <InfoTooltip description={helpText.formation.intitule_rco} />
+                    </Heading>
+                  </Box>
                   {hasRightToEdit &&
                     formation.etablissement_reference_catalogue_published &&
                     hasAccessTo(user, "page_formation/gestion_publication") && (
