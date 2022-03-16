@@ -1,9 +1,9 @@
 import { useAuthState, anonymous } from "../auth";
 
 export default function useAuth() {
-  let [auth, setAuth] = useAuthState();
+  const [auth, setAuth] = useAuthState();
 
-  let setAuthFromToken = (user) => {
+  const setAuthFromToken = (user) => {
     if (!user) {
       setAuth(anonymous);
     } else {
