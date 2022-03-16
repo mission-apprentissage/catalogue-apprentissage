@@ -325,7 +325,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                                   query: {
                                     range: {
                                       affelnet_published_date: {
-                                        lte: value,
+                                        gte: value,
                                       },
                                     },
                                   },
