@@ -12,9 +12,12 @@ const CardListEtablissements = ({ data, withoutLink }) => {
           <Text>Siret : {data.siret}</Text>
           <Text>Code UAI: {data.uai}</Text>
         </Flex>
-        <Heading textStyle="h6" color="grey.800" mt={2}>
-          {data.entreprise_raison_sociale}
-        </Heading>
+        <Flex w={"100%"} justifyContent="space-between" mb={2}>
+          <Heading textStyle="h6" color="grey.800" mt={2} w={"100%"}>
+            {data.entreprise_raison_sociale}
+          </Heading>
+          <Box>{data.info_qualiopi_info === "OUI" && <QualiopiBadge mr={0} ml={2} />}</Box>
+        </Flex>
         <Box>
           <Text textStyle="sm">{data.adresse}</Text>
           <Text textStyle="sm">Académie : {data.nom_academie}</Text>
@@ -29,7 +32,6 @@ const CardListEtablissements = ({ data, withoutLink }) => {
                         {tag}
                       </Badge>
                     ))}
-                {data.info_qualiopi_info === "OUI" && <QualiopiBadge />}
               </Flex>
               {!withoutLink && <ArrowRightLine alignSelf="center" color="bluefrance" boxSize={4} />}
             </Flex>
