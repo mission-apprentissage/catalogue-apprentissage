@@ -27,10 +27,10 @@ const Header = () => {
   const [auth, setAuth] = useAuth();
   const history = useHistory();
 
-  const logout = async () => {
-    const { loggedOut } = await _get("/api/auth/logout");
-    if (loggedOut) {
-      setAuth(null);
+  let logout = async () => {
+    const anonymous = await _get("/api/auth/logout");
+    if (anonymous) {
+      setAuth(anonymous);
       history.push("/");
     }
   };
