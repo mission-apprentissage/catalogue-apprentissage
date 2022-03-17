@@ -83,11 +83,13 @@ const ReconciliationModalHeader = React.memo(
             };
             if (parcoursup_keep_publish === "true") {
               body.parcoursup_statut = PARCOURSUP_STATUS.PUBLIE;
+              body.last_statut_update_date = new Date();
               body.parcoursup_raison_depublication = null;
               body.parcoursup_published_date = Date.now();
             } else if (parcoursup_keep_publish === "false") {
               body.parcoursup_raison_depublication = parcoursup_raison_depublication;
               body.parcoursup_statut = PARCOURSUP_STATUS.NON_PUBLIE;
+              body.last_statut_update_date = new Date();
               body.parcoursup_published_date = null;
             }
 

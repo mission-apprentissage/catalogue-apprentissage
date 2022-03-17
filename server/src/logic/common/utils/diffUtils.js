@@ -24,11 +24,7 @@ const diffFormation = (previousFormationP, nextFormationP) => {
   const compare = diff(previousFormation, nextFormation);
   const keys = Object.keys(compare);
 
-  if (keys.length === 0) {
-    return { updates: null, keys: [], length: 0 };
-  }
-
-  return { updates: compare, keys, length: keys.length };
+  return { updates: keys.length ? compare : null, keys, length: keys.length };
 };
 
 /*

@@ -3,7 +3,6 @@ const { runScript } = require("../../scriptWrapper");
 const { Formation, RcoFormation, SandboxFormation } = require("../../../common/model/index");
 const { storeByChunks } = require("../../../common/utils/reportUtils");
 const report = require("../../../logic/reporter/report");
-const { createReportNewDiplomeGrandAge } = require("../../../logic/controller/diplomes-grand-age");
 const config = require("config");
 
 const managedUnPublishedRcoFormation = async () => {
@@ -50,6 +49,17 @@ const createReport = async (
   }
 };
 
+/**
+ * Mets à jour les formations catalogue à partir des données des formations rco.
+ *
+ * @param {object} config
+ * @param {boolean} [config.withCodePostalUpdate] - Force update of adresse and geo_coordonnees related fields
+ * @param {boolean} [config.noUpdatesFilters] - Force update of formations that doesn't contains {to_update: true}
+ * @param {string} [config.uuidReport]
+ * @param {string} [config.argFilters] - Specify a custom filter for formations to update
+ * @param {boolean} [config.noMail] - Don't send report email
+ *
+ */
 const trainingsUpdater = async ({ withCodePostalUpdate, noUpdatesFilters, uuidReport, argFilters, noMail }) => {
   const filter = noUpdatesFilters
     ? argFilters
@@ -81,7 +91,6 @@ const trainingsUpdater = async ({ withCodePostalUpdate, noUpdatesFilters, uuidRe
   );
 
   await createReport(result, uuidReport, noMail);
-  await createReportNewDiplomeGrandAge(result.formationsGrandAge, uuidReport, noMail);
 
   await SandboxFormation.deleteMany({});
 };

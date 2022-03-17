@@ -24,13 +24,13 @@ import AlertMessage from "./AlertMessage";
 import { AccountFill, DoubleArrows, DownloadLine, InfoCircle } from "../../../theme/components/icons";
 
 const Header = () => {
-  let [auth, setAuth] = useAuth();
-  let history = useHistory();
+  const [auth, setAuth] = useAuth();
+  const history = useHistory();
 
   let logout = async () => {
-    const { loggedOut } = await _get("/api/auth/logout");
-    if (loggedOut) {
-      setAuth(null);
+    const anonymous = await _get("/api/auth/logout");
+    if (anonymous) {
+      setAuth(anonymous);
       history.push("/");
     }
   };
@@ -62,7 +62,7 @@ const Header = () => {
             )}
             {auth?.sub !== "anonymous" && (
               <Menu placement="bottom">
-                <MenuButton as={Button} variant="pill">
+                <MenuButton as={Button} variant="pill" aria-label={`compte de ${auth.sub}`}>
                   <Flex>
                     <AccountFill color={"bluefrance"} mt="0.3rem" boxSize={4} />
                     <Box display={["none", "none", "block"]} ml={2}>

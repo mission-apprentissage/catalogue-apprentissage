@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Badge,
   Box,
@@ -90,13 +90,13 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
   return (
     <>
       <Grid templateColumns="repeat(12, 1fr)" mt={8}>
-        <GridItem colSpan={[12, 12, 7]} border="1px solid" borderColor="bluefrance" py={8}>
-          <Box>
-            <Heading textStyle="h4" color="grey.800" px={8}>
+        <GridItem colSpan={[12, 12, 7]} bg="white">
+          <Box border="1px solid" borderColor="bluefrance" p={8} mb={4}>
+            <Heading textStyle="h4" color="grey.800">
               Caractéristiques de l’organisme
             </Heading>
             {etablissement.onisep_url !== "" && etablissement.onisep_url !== null && (
-              <Box mt={2} mb={4} px={5}>
+              <Box mt={2} mb={4} ml={-3}>
                 <Link
                   href={`https://${etablissement.onisep_url}`}
                   mt={3}
@@ -108,7 +108,7 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
                 </Link>
               </Box>
             )}
-            <Box textStyle="rf-text" px={8}>
+            <Box textStyle="rf-text">
               <Text mb={4} mt={4}>
                 Enseigne :{" "}
                 <Text as="span" variant="highlight">
@@ -205,24 +205,24 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
             </Box>
           </Box>
         </GridItem>
-        <GridItem colSpan={[12, 12, 5]} py={8}>
-          <Box>
-            <Heading textStyle="h4" color="grey.800" px={[4, 4, 8]}>
+        <GridItem colSpan={[12, 12, 5]}>
+          <Box py={8} px={[4, 4, 8]}>
+            <Heading textStyle="h4" color="grey.800">
               Informations complémentaires
             </Heading>
             {countFormations > 0 ? (
-              <Box mt={2} mb={4} px={[2, 2, 5]}>
+              <Box mt={2} mb={4} ml={[-2, -2, -3]}>
                 <Link as={NavLink} to={linkFormations} variant={"pill"} textStyle="rf-text" isExternal>
-                  Voir les {countFormations} formations associées à cet organisme <ArrowRightLine w="9px" h="9px" />
+                  voir les {countFormations} formations associées à cet organisme <ArrowRightLine w="9px" h="9px" />
                 </Link>
               </Box>
             ) : (
-              <Box mt={2} mb={4} px={8}>
+              <Box mt={2} mb={4}>
                 <Text>Aucune formation associée à cet organisme</Text>
               </Box>
             )}
 
-            <Box textStyle="rf-text" px={[4, 4, 8]}>
+            <Box textStyle="rf-text">
               <UaiContainer>
                 <Text mb={etablissement?.uai_valide ? 4 : 0}>
                   {hasRightToEdit && !edition && (
@@ -286,7 +286,7 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
             </Box>
 
             {!etablissement.siege_social && (
-              <Box px={8} pt={8}>
+              <Box pt={8}>
                 <Text textStyle="rf-text" color="grey.700" fontWeight="700" mb={3}>
                   Siège social
                 </Text>
@@ -414,13 +414,17 @@ export default ({ match }) => {
     },
   });
 
+  const mountedRef = useRef(true);
+
   useEffect(() => {
-    async function run() {
+    (async () => {
       try {
         setLoading(true);
         const eta = await _get(`${endpointNewFront}/entity/etablissement/${match.params.id}`, false);
         setEtablissement(eta);
         setFieldValue("uai", eta.uai);
+
+        if (!mountedRef.current) return null;
 
         const query = {
           published: true,
@@ -429,15 +433,20 @@ export default ({ match }) => {
 
         const count = await _get(`${endpointNewFront}/entity/formations/count?query=${JSON.stringify(query)}`, false);
 
+        if (!mountedRef.current) return null;
+
         setLoading(false);
         setCountFormations(count);
       } catch (e) {
+        if (!mountedRef.current) return null;
         setLoading(false);
         setEtablissement(undefined);
         setCountFormations(0);
       }
-    }
-    run();
+    })();
+    return () => {
+      mountedRef.current = false;
+    };
   }, [match, setFieldValue]);
 
   const onEdit = () => {
@@ -470,19 +479,19 @@ export default ({ match }) => {
             )}
             {!loading && !!etablissement && (
               <>
-                <Heading textStyle="h2" color="grey.800" mt={6}>
-                  {title} <InfoTooltip description={helpText.etablissement.raison_sociale} />
-                </Heading>
-                <Box mb={2}>
+                <Box mt={6} mb={2}>
+                  {etablissement.catalogue_published && <QualiopiBadge my={0} mx={0} />}
+                  <Heading textStyle="h2" color="grey.800" my={2}>
+                    {title} <InfoTooltip description={helpText.etablissement.raison_sociale} />
+                  </Heading>
                   {etablissement.tags &&
                     etablissement.tags
                       .sort((a, b) => a - b)
                       .map((tag, i) => (
-                        <Badge variant="year" key={i}>
+                        <Badge variant="year" key={i} my={0}>
                           {tag}
                         </Badge>
                       ))}
-                  {etablissement.catalogue_published && <QualiopiBadge />}
                 </Box>
                 <Etablissement
                   etablissement={etablissement}
@@ -512,10 +521,10 @@ export default ({ match }) => {
               </>
             )}
             {!loading && !etablissement && (
-              <Box mb={8}>
+              <Box mb={8} mt={6}>
                 <Flex alignItems="center" justify="space-between" flexDirection={["column", "column", "row"]}>
                   <Heading textStyle="h2" color="grey.800" pr={[0, 0, 8]}>
-                    {title} <InfoTooltip description={helpText.etablissement.not_found} />
+                    {title}
                   </Heading>
                   <Button
                     textStyle="sm"
@@ -530,6 +539,9 @@ export default ({ match }) => {
                     Retour à la recherche
                   </Button>
                 </Flex>
+                <Box mt={5} mb={8}>
+                  <Flex>{helpText.etablissement.not_found}</Flex>
+                </Box>
               </Box>
             )}
           </Container>

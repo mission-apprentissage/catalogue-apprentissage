@@ -26,19 +26,19 @@ export const DescriptionBlock = ({ formation }) => {
 
   return (
     <>
-      <Box mb={16} pt={8}>
-        <Heading textStyle="h4" color="grey.800" px={8}>
+      <Box p={8}>
+        <Heading textStyle="h4" color="grey.800">
           Description
         </Heading>
         {formation.onisep_url !== "" && formation.onisep_url !== null && (
-          <Box mt={2} mb={4} px={5}>
+          <Box mt={2} mb={4} ml={-3}>
             <Link href={formation.onisep_url} mt={3} variant="pill" textStyle="rf-text" isExternal>
               voir la fiche descriptive Onisep <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
             </Link>
           </Box>
         )}
 
-        <Box px={8}>
+        <Box>
           <Text mb={4} mt={4}>
             Intitulé court de la formation :{" "}
             <Text as="span" variant="highlight">
@@ -177,8 +177,8 @@ export const DescriptionBlock = ({ formation }) => {
           </Text>
         </Box>
       </Box>
-      <Box mb={16} px={8}>
-        <Heading textStyle="h4" color="grey.800" mb={4} mt={6}>
+      <Box p={8}>
+        <Heading textStyle="h4" color="grey.800" mb={4}>
           Informations RNCP et ROME
         </Heading>
         {formation.rncp_code && (

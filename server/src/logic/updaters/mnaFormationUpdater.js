@@ -153,6 +153,23 @@ const mnaFormationUpdater = async (formation, { withCodePostalUpdate = true, cfd
       return { updates: null, formation, error, cfdInfo: currentCfdInfo };
     }
 
+    const rncpInfo = {
+      rncp_code: cfdMapping?.rncp_code,
+      rncp_intitule: cfdMapping?.rncp_intitule,
+      rncp_eligible_apprentissage: cfdMapping?.rncp_eligible_apprentissage,
+      ...cfdMapping?.rncp_details,
+    };
+    const { result: etablissementsMapping, messages: etablissementsMessages } = await etablissementsMapper(
+      formation.etablissement_gestionnaire_siret,
+      formation.etablissement_formateur_siret,
+      rncpInfo
+    );
+
+    error = parseErrors(etablissementsMessages);
+    if (error) {
+      return { updates: null, formation, error, cfdInfo: currentCfdInfo };
+    }
+
     // Trust RCO for geocoords & insee
     const rcoFormation = await RcoFormation.findOne({
       cle_ministere_educatif: formation.cle_ministere_educatif,
@@ -164,9 +181,8 @@ const mnaFormationUpdater = async (formation, { withCodePostalUpdate = true, cfd
       rcoFormation?.etablissement_lieu_formation_code_postal ?? formation.code_postal
     );
 
-    const { result = {}, messages: cpMessages } =
+    const { result: cpMapping = {}, messages: cpMessages } =
       withCodePostalUpdate || !formation.localite ? await codePostalMapper(code_postal, code_commune_insee) : {};
-    let cpMapping = result;
 
     error = parseErrors(cpMessages);
     if (error) {
@@ -183,52 +199,51 @@ const mnaFormationUpdater = async (formation, { withCodePostalUpdate = true, cfd
       rcoFormation?.etablissement_lieu_formation_geo_coordonnees ?? formation.lieu_formation_geo_coordonnees
     );
 
+    // Calcul des coordonnées et de l'adresse à partir des informations RCO. Permet de savoir si les données transmises sont cohérentes.
     const computedFields = {};
 
-    if (geoCoords) {
-      const { result = {} } = withCodePostalUpdate ? await geoMapper(geoCoords, code_commune_insee) : {};
+    // Compute adress from rco etablissement_lieu_formation_geo_coordonnees
+    if (withCodePostalUpdate || !formation.lieu_formation_adresse_computed) {
+      const { result: addressResults = {}, messages: addressMessages } = await geoMapper(
+        geoCoords,
+        cpMapping.code_commune_insee ?? code_commune_insee
+      );
 
-      if (result?.adresse) {
-        cpMapping.lieu_formation_adresse_computed = `${result.adresse}, ${result.code_postal} ${result.localite}`;
-      }
-
-      if (withCodePostalUpdate || !formation.distance) {
-        // Calculate distance between rco address search geoloc & rco geocoords
-        const { result: coordinates, messages: coordsMessages } = await getCoordinatesFromAddressData({
-          numero_voie: cpMapping.lieu_formation_adresse,
-          localite: cpMapping.localite ?? formation.localite,
-          code_postal: cpMapping.code_postal ?? code_postal,
-          code_insee: cpMapping.code_commune_insee ?? code_commune_insee,
-        });
-
-        const geolocError = parseErrors(coordsMessages);
-        if (!geolocError && coordinates.geo_coordonnees) {
-          const [lat, lon] = geoCoords.split(",");
-          const [computedLat, computedLon] = coordinates.geo_coordonnees.split(",");
-          computedFields.distance = distanceBetweenCoordinates(lat, lon, computedLat, computedLon);
-          computedFields.lieu_formation_geo_coordonnees_computed = coordinates.geo_coordonnees;
-        } else {
-          computedFields.distance = null;
-          computedFields.lieu_formation_geo_coordonnees_computed = null;
-        }
+      if (!parseErrors(addressMessages) && addressResults?.adresse) {
+        computedFields.lieu_formation_adresse_computed = `${addressResults.adresse}, ${addressResults.code_postal} ${addressResults.localite}`;
+      } else {
+        computedFields.lieu_formation_adresse_computed = null;
       }
     }
 
-    const rncpInfo = {
-      rncp_code: cfdMapping?.rncp_code,
-      rncp_intitule: cfdMapping?.rncp_intitule,
-      rncp_eligible_apprentissage: cfdMapping?.rncp_eligible_apprentissage,
-      ...cfdMapping?.rncp_details,
-    };
-    const { result: etablissementsMapping, messages: etablissementsMessages } = await etablissementsMapper(
-      formation.etablissement_gestionnaire_siret,
-      formation.etablissement_formateur_siret,
-      rncpInfo
-    );
+    // Compute geo_coordonnees from rco etablissement_lieu_formation_adresse
+    if (withCodePostalUpdate || !formation.lieu_formation_geo_coordonnees_computed) {
+      const { result: coordinatesResults, messages: coordinatesMessages } = await getCoordinatesFromAddressData({
+        numero_voie: cpMapping.lieu_formation_adresse,
+        localite: cpMapping.localite ?? formation.localite,
+        code_postal: cpMapping.code_postal ?? code_postal,
+        code_insee: cpMapping.code_commune_insee ?? code_commune_insee,
+      });
 
-    error = parseErrors(etablissementsMessages);
-    if (error) {
-      return { updates: null, formation, error, cfdInfo: currentCfdInfo };
+      if (!parseErrors(coordinatesMessages) && coordinatesResults.geo_coordonnees) {
+        computedFields.lieu_formation_geo_coordonnees_computed = coordinatesResults.geo_coordonnees;
+      } else {
+        computedFields.lieu_formation_geo_coordonnees_computed = null;
+      }
+    }
+
+    // Compute distance between rco etablissement_lieu_formation_adresse & rco etablissement_lieu_formation_geo_coordonnees
+    if (withCodePostalUpdate || typeof formation.distance === "undefined" || formation.distance === null) {
+      const [lat, lon] = geoCoords?.split(",") ?? [];
+      const [computedLat, computedLon] =
+        computedFields.lieu_formation_geo_coordonnees_computed?.split(",") ??
+        formation.lieu_formation_geo_coordonnees_computed?.split(",") ??
+        [];
+      if (lat && lon && computedLat && computedLon) {
+        computedFields.distance = distanceBetweenCoordinates(lat, lon, computedLat, computedLon);
+      } else {
+        computedFields.distance = null;
+      }
     }
 
     let geoMapping = { idea_geo_coordonnees_etablissement: geoCoords };
@@ -302,7 +317,7 @@ const mnaFormationUpdater = async (formation, { withCodePostalUpdate = true, cfd
       tags,
       published,
       update_error,
-      uai_formation: uai_formation?.trim(),
+      ...(uai_formation ? { uai_formation: uai_formation?.trim() } : {}),
       ...computedFields,
       ...formation?.editedFields,
     };
@@ -332,6 +347,7 @@ const mnaFormationUpdater = async (formation, { withCodePostalUpdate = true, cfd
     }
 
     const { updates } = diffFormation(formation, updatedFormation);
+
     if (updates) {
       return { updates, formation: updatedFormation, cfdInfo: currentCfdInfo };
     }

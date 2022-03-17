@@ -1,4 +1,4 @@
-FROM node:14.15.1-stretch
+FROM node:16-stretch
 
 ARG REACT_APP_ENV
 ARG REACT_APP_BASE_URL

@@ -8,7 +8,7 @@ describe(__filename, () => {
     const expected = {
       result: null,
       messages: {
-        error: "Error: geoMapper coordinates must be provided",
+        error: "Unable to retrieve data without coordinates",
       },
     };
 

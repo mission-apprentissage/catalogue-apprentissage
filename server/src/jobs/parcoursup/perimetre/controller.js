@@ -137,7 +137,12 @@ const run = async () => {
         ...filter,
         $or: aPublierRules.map(getQueryFromRule),
       },
-      { $set: { last_update_at: Date.now(), parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER } }
+      {
+        $set: {
+          last_update_at: Date.now(),
+          parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER,
+        },
+      }
     ));
 
   // apply academy rules
