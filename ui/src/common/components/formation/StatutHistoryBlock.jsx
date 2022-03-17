@@ -39,7 +39,7 @@ const StatutHistorySubBlock = ({ history, title, statusField }) => {
           {history.map((value) => {
             return (
               <li key={value.date}>
-                <span>{new Date(value.date).toLocaleDateString()}</span> : {value[statusField]}
+                <span>{new Date(value.date).toLocaleDateString("fr-FR")}</span> : {value[statusField]}
               </li>
             );
           })}

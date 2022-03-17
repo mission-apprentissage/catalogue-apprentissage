@@ -158,11 +158,11 @@ test("display affelnet statut history", async () => {
 
   await waitFor(() => getByText(/Affelnet/));
 
-  expect(queryByText(new Date("2022-01-31T09:46:33.274Z").toLocaleDateString())).toBeInTheDocument();
-  expect(queryByText(new Date("2021-12-29T03:39:55.777Z").toLocaleDateString())).toBeInTheDocument();
-  expect(queryByText(new Date("2021-06-12T02:16:15.664Z").toLocaleDateString())).toBeInTheDocument();
+  expect(queryByText(new Date("2022-01-31T09:46:33.274Z").toLocaleDateString("fr-FR"))).toBeInTheDocument();
+  expect(queryByText(new Date("2021-12-29T03:39:55.777Z").toLocaleDateString("fr-FR"))).toBeInTheDocument();
+  expect(queryByText(new Date("2021-06-12T02:16:15.664Z").toLocaleDateString("fr-FR"))).toBeInTheDocument();
 
-  expect(queryByText(new Date("2022-03-05T05:52:22.501Z").toLocaleDateString())).not.toBeInTheDocument();
+  expect(queryByText(new Date("2022-03-05T05:52:22.501Z").toLocaleDateString("fr-FR"))).not.toBeInTheDocument();
 });
 
 test("display parcoursup statut history", async () => {
@@ -172,10 +172,10 @@ test("display parcoursup statut history", async () => {
 
   await waitFor(() => getByText(/Parcoursup/));
 
-  expect(queryByText(new Date("2022-01-24T05:17:57.784Z").toLocaleDateString())).toBeInTheDocument();
-  expect(queryByText(new Date("2021-12-10T04:19:37.114Z").toLocaleDateString())).toBeInTheDocument();
-  expect(queryByText(new Date("2021-09-27T00:56:33.397Z").toLocaleDateString())).toBeInTheDocument();
-  expect(queryByText(new Date("2021-07-19T02:11:01.285Z").toLocaleDateString())).toBeInTheDocument();
+  expect(queryByText(new Date("2022-01-24T05:17:57.784Z").toLocaleDateString("fr-FR"))).toBeInTheDocument();
+  expect(queryByText(new Date("2021-12-10T04:19:37.114Z").toLocaleDateString("fr-FR"))).toBeInTheDocument();
+  expect(queryByText(new Date("2021-09-27T00:56:33.397Z").toLocaleDateString("fr-FR"))).toBeInTheDocument();
+  expect(queryByText(new Date("2021-07-19T02:11:01.285Z").toLocaleDateString("fr-FR"))).toBeInTheDocument();
 
-  expect(queryByText(new Date("2022-03-05T05:52:22.501Z").toLocaleDateString())).not.toBeInTheDocument();
+  expect(queryByText(new Date("2022-03-05T05:52:22.501Z").toLocaleDateString("fr-FR"))).not.toBeInTheDocument();
 });
