@@ -145,9 +145,9 @@ test("renders a statut history block component", async () => {
 
   const { queryByText, getByText } = render(<StatutHistoryBlock formation={formation} />);
 
-  await waitFor(() => getByText("Historique des statuts"));
+  await waitFor(() => getByText("Historique des modifications"));
 
-  const title = queryByText("Historique des statuts");
+  const title = queryByText("Historique des modifications");
   expect(title).toBeInTheDocument();
 });
 
@@ -156,7 +156,7 @@ test("display affelnet statut history", async () => {
 
   const { getByText, queryByText } = render(<StatutHistoryBlock formation={formation} />);
 
-  await waitFor(() => getByText(/Affelnet/));
+  await waitFor(() => getByText(/Historique des modifications/));
 
   expect(queryByText(new Date("2022-01-31T09:46:33.274Z").toLocaleDateString("fr-FR"))).toBeInTheDocument();
   expect(queryByText(new Date("2021-12-29T03:39:55.777Z").toLocaleDateString("fr-FR"))).toBeInTheDocument();
@@ -170,7 +170,7 @@ test("display parcoursup statut history", async () => {
 
   const { getByText, queryByText } = render(<StatutHistoryBlock formation={formation} />);
 
-  await waitFor(() => getByText(/Parcoursup/));
+  await waitFor(() => getByText(/Historique des modifications/));
 
   expect(queryByText(new Date("2022-01-24T05:17:57.784Z").toLocaleDateString("fr-FR"))).toBeInTheDocument();
   expect(queryByText(new Date("2021-12-10T04:19:37.114Z").toLocaleDateString("fr-FR"))).toBeInTheDocument();
