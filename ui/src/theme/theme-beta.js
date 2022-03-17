@@ -170,6 +170,11 @@ const textStyles = {
     lineHeight: ["1.75rem", "2rem"],
     fontWeight: "700",
   },
+  h5: {
+    fontSize: ["1.25rem", "1.375rem"],
+    lineHeight: ["1.60rem", "1.85rem"],
+    fontWeight: "700",
+  },
   h6: {
     fontSize: ["1.125rem", "1.25rem"],
     lineHeight: ["1.5rem", "1.75rem"],

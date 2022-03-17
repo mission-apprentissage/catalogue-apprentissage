@@ -441,7 +441,7 @@ export default ({ match }) => {
                     <Heading textStyle="h2" color="grey.800" pr={[0, 0, 8]} mb={4}>
                       {title} <InfoTooltip description={helpText.formation.intitule_long} />
                     </Heading>
-                    <Heading textStyle="h4" color="grey.600" pr={[0, 0, 8]}>
+                    <Heading textStyle="h5" color="grey.600" pr={[0, 0, 8]}>
                       {formation.intitule_rco} <InfoTooltip description={helpText.formation.intitule_rco} />
                     </Heading>
                   </Box>
