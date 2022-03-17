@@ -62,7 +62,7 @@ const Header = () => {
             )}
             {auth?.sub !== "anonymous" && (
               <Menu placement="bottom">
-                <MenuButton as={Button} variant="pill">
+                <MenuButton as={Button} variant="pill" aria-label={`compte de ${auth.sub}`}>
                   <Flex>
                     <AccountFill color={"bluefrance"} mt="0.3rem" boxSize={4} />
                     <Box display={["none", "none", "block"]} ml={2}>
