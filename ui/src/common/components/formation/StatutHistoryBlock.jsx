@@ -112,7 +112,7 @@ export const StatutHistoryBlock = ({ formation }) => {
                 <li key={index}>
                   {value.status}
                   <Text display={"inline"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
-                    {value.user && ` par ${value.user}`} le {value.date.toLocaleDateString("fr-FR")}
+                    {value.user && ` par ${value.user}`} le <span>{value.date.toLocaleDateString("fr-FR")}</span>
                   </Text>
                 </li>
               );
