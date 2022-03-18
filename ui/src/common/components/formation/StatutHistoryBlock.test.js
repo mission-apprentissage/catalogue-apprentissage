@@ -145,7 +145,7 @@ const formation = {
       },
       to: {
         uai_formation: "0573690A",
-        last_update_who: "eric.plaquevent+admin@gmail.com",
+        last_update_who: "no-reply@beta.gouv.fr",
       },
       updated_at: 1643875591935,
     },
