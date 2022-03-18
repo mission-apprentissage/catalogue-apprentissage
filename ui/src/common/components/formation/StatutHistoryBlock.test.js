@@ -155,7 +155,7 @@ const formation = {
       },
       to: {
         uai_formation: "",
-        last_update_who: "quentin.petel@beta.gouv.fr",
+        last_update_who: "no-reply@beta.gouv.fr",
       },
       updated_at: 1643985528488,
     },
