@@ -138,6 +138,28 @@ const formation = {
       date: "2022-03-06T06:09:31.668Z",
     },
   ],
+  updates_history: [
+    {
+      from: {
+        uai_formation: "0573690B",
+      },
+      to: {
+        uai_formation: "0573690A",
+        last_update_who: "no-reply@beta.gouv.fr",
+      },
+      updated_at: 1643875591935,
+    },
+    {
+      from: {
+        uai_formation: "0573690B",
+      },
+      to: {
+        uai_formation: "",
+        last_update_who: "no-reply@beta.gouv.fr",
+      },
+      updated_at: 1643985528488,
+    },
+  ],
 };
 
 test("renders a statut history block component", async () => {
@@ -145,9 +167,9 @@ test("renders a statut history block component", async () => {
 
   const { queryByText, getByText } = render(<StatutHistoryBlock formation={formation} />);
 
-  await waitFor(() => getByText("Historique des statuts"));
+  await waitFor(() => getByText("Historique des modifications"));
 
-  const title = queryByText("Historique des statuts");
+  const title = queryByText("Historique des modifications");
   expect(title).toBeInTheDocument();
 });
 
@@ -156,7 +178,7 @@ test("display affelnet statut history", async () => {
 
   const { getByText, queryByText } = render(<StatutHistoryBlock formation={formation} />);
 
-  await waitFor(() => getByText(/Affelnet/));
+  await waitFor(() => getByText(/Historique des modifications/));
 
   expect(queryByText(new Date("2022-01-31T09:46:33.274Z").toLocaleDateString("fr-FR"))).toBeInTheDocument();
   expect(queryByText(new Date("2021-12-29T03:39:55.777Z").toLocaleDateString("fr-FR"))).toBeInTheDocument();
@@ -170,7 +192,7 @@ test("display parcoursup statut history", async () => {
 
   const { getByText, queryByText } = render(<StatutHistoryBlock formation={formation} />);
 
-  await waitFor(() => getByText(/Parcoursup/));
+  await waitFor(() => getByText(/Historique des modifications/));
 
   expect(queryByText(new Date("2022-01-24T05:17:57.784Z").toLocaleDateString("fr-FR"))).toBeInTheDocument();
   expect(queryByText(new Date("2021-12-10T04:19:37.114Z").toLocaleDateString("fr-FR"))).toBeInTheDocument();
@@ -178,4 +200,15 @@ test("display parcoursup statut history", async () => {
   expect(queryByText(new Date("2021-07-19T02:11:01.285Z").toLocaleDateString("fr-FR"))).toBeInTheDocument();
 
   expect(queryByText(new Date("2022-03-05T05:52:22.501Z").toLocaleDateString("fr-FR"))).not.toBeInTheDocument();
+});
+
+test("display update history", async () => {
+  grantAnonymousAccess({ acl: ["page_formation/gestion_publication", "page_formation/modifier_informations"] });
+
+  const { getByText, queryByText } = render(<StatutHistoryBlock formation={formation} />);
+
+  await waitFor(() => getByText(/Historique des modifications/));
+
+  expect(queryByText(new Date(1643875591935).toLocaleDateString("fr-FR"))).toBeInTheDocument();
+  expect(queryByText(new Date(1643985528488).toLocaleDateString("fr-FR"))).toBeInTheDocument();
 });
