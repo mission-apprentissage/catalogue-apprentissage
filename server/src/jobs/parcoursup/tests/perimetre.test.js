@@ -193,4 +193,214 @@ describe(__filename, () => {
     });
     assert.strictEqual(totalPsNotPublished, 0);
   });
+
+  describe("CFD & RNCP expiracy checks", () => {
+    beforeEach(async () => {
+      await Formation.deleteMany();
+    });
+
+    it("should stay hors périmètre when cfd is outdated and not a Titre or TP", async () => {
+      await Formation.create({
+        published: true,
+        cfd_outdated: true,
+        rncp_details: {
+          code_type_certif: "TH",
+          rncp_outdated: false,
+          active_inactive: "ACTIVE",
+        },
+        etablissement_gestionnaire_catalogue_published: true,
+        etablissement_reference_catalogue_published: true,
+        niveau: "6 (Licence, BUT...)",
+        diplome: "Licence",
+        parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+        annee: "1",
+      });
+
+      await run();
+      const totalNotRelevant = await Formation.countDocuments({
+        parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+      });
+      assert.strictEqual(totalNotRelevant, 1);
+
+      const totalToCheck = await Formation.countDocuments({ parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER });
+      assert.strictEqual(totalToCheck, 0);
+    });
+
+    it("should stay hors périmètre when rcnp is outdated and is a Titre or TP", async () => {
+      await Formation.create({
+        published: true,
+        cfd_outdated: false,
+        rncp_details: {
+          code_type_certif: "TP",
+          rncp_outdated: true,
+          active_inactive: "ACTIVE",
+        },
+        etablissement_gestionnaire_catalogue_published: true,
+        etablissement_reference_catalogue_published: true,
+        niveau: "6 (Licence, BUT...)",
+        diplome: "Licence",
+        parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+        annee: "1",
+      });
+
+      await run();
+      const totalNotRelevant = await Formation.countDocuments({
+        parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+      });
+      assert.strictEqual(totalNotRelevant, 1);
+
+      const totalToCheck = await Formation.countDocuments({ parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER });
+      assert.strictEqual(totalToCheck, 0);
+    });
+
+    it("should apply status when cfd is outdated but rncp not outdated and is a Titre or TP", async () => {
+      await Formation.create({
+        published: true,
+        cfd_outdated: true,
+        rncp_details: {
+          code_type_certif: "Titre",
+          rncp_outdated: false,
+          active_inactive: "ACTIVE",
+        },
+        etablissement_gestionnaire_catalogue_published: true,
+        etablissement_reference_catalogue_published: true,
+        niveau: "6 (Licence, BUT...)",
+        diplome: "Licence",
+        parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+        annee: "1",
+      });
+
+      await run();
+      const totalNotRelevant = await Formation.countDocuments({
+        parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+      });
+      assert.strictEqual(totalNotRelevant, 0);
+
+      const totalToCheck = await Formation.countDocuments({ parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER });
+      assert.strictEqual(totalToCheck, 1);
+    });
+
+    it("should apply status when rncp is outdated but is not a Titre or TP", async () => {
+      await Formation.create({
+        published: true,
+        cfd_outdated: false,
+        rncp_details: {
+          code_type_certif: "TH",
+          rncp_outdated: true,
+          active_inactive: "ACTIVE",
+        },
+        etablissement_gestionnaire_catalogue_published: true,
+        etablissement_reference_catalogue_published: true,
+        niveau: "6 (Licence, BUT...)",
+        diplome: "Licence",
+        parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+        annee: "1",
+      });
+
+      await run();
+      const totalNotRelevant = await Formation.countDocuments({
+        parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+      });
+      assert.strictEqual(totalNotRelevant, 0);
+
+      const totalToCheck = await Formation.countDocuments({ parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER });
+      assert.strictEqual(totalToCheck, 1);
+    });
+
+    it("should stay hors périmètre if date_fin_validite_enregistrement is not far enough", async () => {
+      const date_fin_validite_enregistrement = new Date();
+      date_fin_validite_enregistrement.setFullYear(new Date().getFullYear() - 1);
+
+      await Formation.create({
+        published: true,
+        cfd_outdated: true,
+        rncp_details: {
+          code_type_certif: "Titre",
+          rncp_outdated: false,
+          active_inactive: "ACTIVE",
+          date_fin_validite_enregistrement,
+        },
+        etablissement_gestionnaire_catalogue_published: true,
+        etablissement_reference_catalogue_published: true,
+        niveau: "6 (Licence, BUT...)",
+        diplome: "Licence",
+        parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+        annee: "1",
+      });
+
+      await Formation.create({
+        published: true,
+        cfd_outdated: false,
+        rncp_details: {
+          code_type_certif: "Titre",
+          rncp_outdated: false,
+          active_inactive: "ACTIVE",
+          date_fin_validite_enregistrement,
+        },
+        etablissement_gestionnaire_catalogue_published: true,
+        etablissement_reference_catalogue_published: true,
+        niveau: "6 (Licence, BUT...)",
+        diplome: "Licence",
+        parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+        annee: "1",
+      });
+
+      await run();
+      const totalNotRelevant = await Formation.countDocuments({
+        parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+      });
+      assert.strictEqual(totalNotRelevant, 2);
+
+      const totalToCheck = await Formation.countDocuments({ parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER });
+      assert.strictEqual(totalToCheck, 0);
+    });
+
+    it("should stay hors périmètre if cfd_date_fermeture is not far enough", async () => {
+      const cfd_date_fermeture = new Date();
+      cfd_date_fermeture.setFullYear(new Date().getFullYear() - 1);
+
+      await Formation.create({
+        published: true,
+        cfd_outdated: false,
+        cfd_date_fermeture,
+        rncp_details: {
+          code_type_certif: "TH",
+          rncp_outdated: false,
+          active_inactive: "ACTIVE",
+        },
+        etablissement_gestionnaire_catalogue_published: true,
+        etablissement_reference_catalogue_published: true,
+        niveau: "6 (Licence, BUT...)",
+        diplome: "Licence",
+        parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+        annee: "1",
+      });
+
+      await Formation.create({
+        published: true,
+        cfd_outdated: false,
+        cfd_date_fermeture,
+        rncp_details: {
+          code_type_certif: "TH",
+          rncp_outdated: true,
+          active_inactive: "ACTIVE",
+        },
+        etablissement_gestionnaire_catalogue_published: true,
+        etablissement_reference_catalogue_published: true,
+        niveau: "6 (Licence, BUT...)",
+        diplome: "Licence",
+        parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+        annee: "1",
+      });
+
+      await run();
+      const totalNotRelevant = await Formation.countDocuments({
+        parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+      });
+      assert.strictEqual(totalNotRelevant, 2);
+
+      const totalToCheck = await Formation.countDocuments({ parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER });
+      assert.strictEqual(totalToCheck, 0);
+    });
+  });
 });

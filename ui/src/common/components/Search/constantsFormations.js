@@ -393,14 +393,17 @@ const columnsDefinition = [
     accessor: "cfd_date_fermeture",
     width: 200,
     exportable: true,
-    formatter: (value) => new Date(value).toLocaleDateString(),
+    formatter: (value) => new Date(value).toLocaleDateString("fr-FR"),
   },
   {
     Header: "Date de fin de validite au RNCP",
     accessor: "rncp_details",
     width: 200,
     exportable: true,
-    formatter: (value) => value.date_fin_validite_enregistrement ?? "",
+    formatter: (value) =>
+      value.date_fin_validite_enregistrement
+        ? new Date(value.date_fin_validite_enregistrement).toLocaleDateString("fr-FR")
+        : "",
   },
   {
     Header: "Tags",
