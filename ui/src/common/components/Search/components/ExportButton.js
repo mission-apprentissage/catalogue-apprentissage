@@ -11,7 +11,7 @@ const serializeObject = (columns, obj) => {
   const res = [];
 
   columns.forEach((c) => {
-    let value = c.fieldName.split(".").reduce((acc, curr) => acc[curr], obj);
+    let value = c.fieldName.split(".").reduce((acc, curr) => acc?.[curr], obj);
     if (typeof c.formatter === "function") {
       value = c.formatter(value, obj);
     } else if (!value) {
