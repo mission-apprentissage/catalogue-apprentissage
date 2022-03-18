@@ -49,7 +49,20 @@ const getPeriodeStartDate = (currentDate = new Date()) => {
 };
 
 const commonRules = {
-  cfd_outdated: { $ne: true },
+  $or: [
+    {
+      "rncp_details.code_type_certif": {
+        $in: ["Titre", "TP"],
+      },
+      "rncp_details.rncp_outdated": { $ne: true },
+    },
+    {
+      "rncp_details.code_type_certif": {
+        $nin: ["Titre", "TP"],
+      },
+      cfd_outdated: { $ne: true },
+    },
+  ],
   published: true,
   etablissement_reference_catalogue_published: true,
   etablissement_gestionnaire_catalogue_published: true, // ensure gestionnaire is Qualiopi certified
@@ -93,10 +106,10 @@ const getPublishedRules = (plateforme) => {
 /**
  * Update du 17/01/2022
  * Suite aux discussions avec Christine Bourdin et Rachel Bourdon,
- * la règle est d'envoyer les formations aux plateformes pour le cfd qui n'expire pas :
+ * la règle est d'envoyer les formations aux plateformes pour le cfd ou le rncp qui n'expire pas :
  * du 01/10/N au 31/08/N+1
  */
-const getCfdExpireRule = (currentDate = new Date()) => {
+const getExpireRule = (currentDate = new Date()) => {
   let durationShift = 1;
   const now = currentDate;
   const sessionStart = new Date(`${currentDate.getFullYear()}-10-01T00:00:00.000Z`);
@@ -104,14 +117,36 @@ const getCfdExpireRule = (currentDate = new Date()) => {
     durationShift = 0;
   }
 
+  const thresholdDate = new Date(`${currentDate.getFullYear() + 1 - durationShift}-08-31T00:00:00.000Z`);
+
   return {
     $or: [
       {
-        cfd_date_fermeture: {
-          $gt: new Date(`${currentDate.getFullYear() + 1 - durationShift}-08-31T00:00:00.000Z`),
+        "rncp_details.code_type_certif": {
+          $nin: ["Titre", "TP"],
         },
+        $or: [
+          {
+            cfd_date_fermeture: {
+              $gt: thresholdDate,
+            },
+          },
+          { cfd_date_fermeture: null },
+        ],
       },
-      { cfd_date_fermeture: null },
+      {
+        "rncp_details.code_type_certif": {
+          $in: ["Titre", "TP"],
+        },
+        $or: [
+          {
+            "rncp_details.date_fin_validite_enregistrement": {
+              $gt: thresholdDate,
+            },
+          },
+          { "rncp_details.date_fin_validite_enregistrement": null },
+        ],
+      },
     ],
   };
 };
@@ -146,7 +181,7 @@ const getQueryFromRule = ({ plateforme, niveau, diplome, regle_complementaire, d
     niveau,
     ...(diplome && { diplome }),
     ...(regle_complementaire && deserialize(regle_complementaire)),
-    ...getCfdExpireRule(),
+    ...getExpireRule(),
     ...(num_academie && { num_academie }),
     ...(duree && { duree: String(duree) }),
     ...(annee && { annee: String(annee) }),
@@ -159,7 +194,7 @@ module.exports = {
   serialize,
   deserialize,
   getQueryFromRule,
-  getCfdExpireRule,
+  getExpireRule,
   titresRule,
   getPublishedRules,
   getPeriodeStartDate,

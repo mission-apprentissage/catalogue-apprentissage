@@ -1,5 +1,6 @@
 const logger = require("../../common/logger");
 const { getCfdInfo } = require("@mission-apprentissage/tco-service-node");
+const { DateTime } = require("luxon");
 
 const cfdEntreeMap = {
   32033422: ["32033423", "32033424", "32033425"],
@@ -54,6 +55,7 @@ const cfdMapper = async (cfd = null, options = { onisep: true }) => {
       code_rncp = null,
       intitule_diplome = null,
       eligible_apprentissage = false,
+      rncp_outdated = false,
     } = rncp;
 
     const rome_codes = (romes || []).map(({ rome }) => rome);
@@ -100,7 +102,9 @@ const cfdMapper = async (cfd = null, options = { onisep: true }) => {
         rncp_eligible_apprentissage: eligible_apprentissage,
         rome_codes,
         rncp_details: {
-          date_fin_validite_enregistrement,
+          date_fin_validite_enregistrement: date_fin_validite_enregistrement
+            ? DateTime.fromFormat(date_fin_validite_enregistrement, "dd/MM/yyyy").toJSDate()
+            : null,
           active_inactive,
           etat_fiche_rncp,
           niveau_europe,
@@ -116,6 +120,7 @@ const cfdMapper = async (cfd = null, options = { onisep: true }) => {
           romes,
           blocs_competences,
           voix_acces,
+          rncp_outdated,
         },
 
         libelle_court: result.libelle_court,

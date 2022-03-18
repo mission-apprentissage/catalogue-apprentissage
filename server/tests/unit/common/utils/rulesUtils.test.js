@@ -1,6 +1,6 @@
 const assert = require("assert");
 const {
-  getCfdExpireRule,
+  getExpireRule,
   getQueryFromRule,
   serialize,
   deserialize,
@@ -8,52 +8,115 @@ const {
 } = require("../../../../src/common/utils/rulesUtils");
 
 describe(__filename, () => {
-  describe("getCfdExpireRule", () => {
+  describe("getExpireRule", () => {
     it("should expire rule on 31/08 of current year if before 01/10", () => {
+      const thresholdDate = new Date(`2021-08-31T00:00:00.000Z`);
       const expected = {
         $or: [
           {
-            cfd_date_fermeture: {
-              $gt: new Date(`2021-08-31T00:00:00.000Z`),
+            "rncp_details.code_type_certif": {
+              $nin: ["Titre", "TP"],
             },
+            $or: [
+              {
+                cfd_date_fermeture: {
+                  $gt: thresholdDate,
+                },
+              },
+              { cfd_date_fermeture: null },
+            ],
           },
-          { cfd_date_fermeture: null },
+          {
+            "rncp_details.code_type_certif": {
+              $in: ["Titre", "TP"],
+            },
+            $or: [
+              {
+                "rncp_details.date_fin_validite_enregistrement": {
+                  $gt: thresholdDate,
+                },
+              },
+              { "rncp_details.date_fin_validite_enregistrement": null },
+            ],
+          },
         ],
       };
 
-      let result = getCfdExpireRule(new Date(`2021-05-01T00:00:00.000Z`));
+      let result = getExpireRule(new Date(`2021-05-01T00:00:00.000Z`));
       assert.deepStrictEqual(result, expected);
     });
 
     it("should expire rule on 31/08 of next year if equal 01/10", () => {
+      const thresholdDate = new Date(`2022-08-31T00:00:00.000Z`);
       const expected = {
         $or: [
           {
-            cfd_date_fermeture: {
-              $gt: new Date(`2022-08-31T00:00:00.000Z`),
+            "rncp_details.code_type_certif": {
+              $nin: ["Titre", "TP"],
             },
+            $or: [
+              {
+                cfd_date_fermeture: {
+                  $gt: thresholdDate,
+                },
+              },
+              { cfd_date_fermeture: null },
+            ],
           },
-          { cfd_date_fermeture: null },
+          {
+            "rncp_details.code_type_certif": {
+              $in: ["Titre", "TP"],
+            },
+            $or: [
+              {
+                "rncp_details.date_fin_validite_enregistrement": {
+                  $gt: thresholdDate,
+                },
+              },
+              { "rncp_details.date_fin_validite_enregistrement": null },
+            ],
+          },
         ],
       };
 
-      let result = getCfdExpireRule(new Date(`2021-10-01T00:00:00.000Z`));
+      let result = getExpireRule(new Date(`2021-10-01T00:00:00.000Z`));
       assert.deepStrictEqual(result, expected);
     });
 
     it("should expire rule on 31/08 of next year if after 01/10", () => {
+      const thresholdDate = new Date(`2022-08-31T00:00:00.000Z`);
       const expected = {
         $or: [
           {
-            cfd_date_fermeture: {
-              $gt: new Date(`2022-08-31T00:00:00.000Z`),
+            "rncp_details.code_type_certif": {
+              $nin: ["Titre", "TP"],
             },
+            $or: [
+              {
+                cfd_date_fermeture: {
+                  $gt: thresholdDate,
+                },
+              },
+              { cfd_date_fermeture: null },
+            ],
           },
-          { cfd_date_fermeture: null },
+          {
+            "rncp_details.code_type_certif": {
+              $in: ["Titre", "TP"],
+            },
+            $or: [
+              {
+                "rncp_details.date_fin_validite_enregistrement": {
+                  $gt: thresholdDate,
+                },
+              },
+              { "rncp_details.date_fin_validite_enregistrement": null },
+            ],
+          },
         ],
       };
 
-      let result = getCfdExpireRule(new Date(`2021-11-01T00:00:00.000Z`));
+      let result = getExpireRule(new Date(`2021-11-01T00:00:00.000Z`));
       assert.deepStrictEqual(result, expected);
     });
   });
@@ -88,9 +151,20 @@ describe(__filename, () => {
             annee: {
               $ne: "X",
             },
-            cfd_outdated: {
-              $ne: true,
-            },
+            $or: [
+              {
+                "rncp_details.code_type_certif": {
+                  $in: ["Titre", "TP"],
+                },
+                "rncp_details.rncp_outdated": { $ne: true },
+              },
+              {
+                "rncp_details.code_type_certif": {
+                  $nin: ["Titre", "TP"],
+                },
+                cfd_outdated: { $ne: true },
+              },
+            ],
             etablissement_gestionnaire_catalogue_published: true,
             etablissement_reference_catalogue_published: true,
             published: true,
@@ -115,7 +189,7 @@ describe(__filename, () => {
         diplome: "BTS",
         niveau: "4",
         num_academie: "10",
-        ...getCfdExpireRule(),
+        ...getExpireRule(),
       };
 
       let result = getQueryFromRule({ plateforme: "affelnet", niveau: "4", diplome: "BTS", num_academie: "10" });

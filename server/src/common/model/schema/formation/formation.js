@@ -210,7 +210,7 @@ const formationSchema = {
   rncp_details: {
     type: {
       date_fin_validite_enregistrement: {
-        type: String,
+        type: Date,
         default: null,
         description: "Date de validité de la fiche",
       },
@@ -288,6 +288,11 @@ const formationSchema = {
         type: [Object],
         default: [],
         description: "partenaires",
+      },
+      rncp_outdated: {
+        type: Boolean,
+        default: false,
+        description: "Code rncp périmé (date fin enregistrement avant le 31 aout de l'année courante)",
       },
     },
     default: null,

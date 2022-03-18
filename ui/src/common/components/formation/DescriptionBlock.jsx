@@ -20,8 +20,11 @@ export const DescriptionBlock = ({ formation }) => {
   const filteredPartenaires = (formation.rncp_details?.partenaires ?? []).filter(({ Siret_Partenaire }) =>
     [formation.etablissement_gestionnaire_siret, formation.etablissement_formateur_siret].includes(Siret_Partenaire)
   );
+
+  const isTitreRNCP = ["Titre", "TP"].includes(formation.rncp_details?.code_type_certif);
+
   const showPartenaires =
-    ["Titre", "TP"].includes(formation.rncp_details?.code_type_certif) &&
+    isTitreRNCP &&
     !(formation.rncp_details.certificateurs ?? []).some(({ certificateur }) => HABILITE_LIST.includes(certificateur));
 
   return (
@@ -73,7 +76,7 @@ export const DescriptionBlock = ({ formation }) => {
               {formation.cfd}
             </Text>{" "}
             <InfoTooltip description={helpText.formation.cfd} />
-            {formation.cfd_outdated && (
+            {!isTitreRNCP && formation.cfd_outdated && (
               <>
                 <br />
                 Ce diplôme a une date de fin antérieure au 31/08 de l'année en cours
@@ -188,6 +191,12 @@ export const DescriptionBlock = ({ formation }) => {
               {formation.rncp_code}
             </Text>{" "}
             <InfoTooltip description={helpText.formation.rncp_code} />
+            {isTitreRNCP && formation?.rncp_details?.rncp_outdated && (
+              <>
+                <br />
+                Ce code RNCP a une date de fin d'enregistrement antérieure au 31/08 de l'année en cours
+              </>
+            )}
           </Text>
         )}
         <Text mb={4}>

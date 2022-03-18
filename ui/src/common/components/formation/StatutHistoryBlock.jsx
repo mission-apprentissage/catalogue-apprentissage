@@ -20,33 +20,8 @@ const reduceSameValues = (array, check) => {
   });
 };
 
-/**
- *  Display an history for one status
- *
- * @param {object} config
- * @param {{date: string, [statusField: string]: string }} config.history
- * @param {string} config.title
- * @param {string} config.statusField
- */
-const StatutHistorySubBlock = ({ history, title, statusField }) => {
-  return (
-    <>
-      <Text textStyle="rf-text" color="grey.700" fontWeight="700" my={3}>
-        {title}
-      </Text>
-      <Box ml={4}>
-        <ul>
-          {history.map((value) => {
-            return (
-              <li key={value.date}>
-                <span>{new Date(value.date).toLocaleDateString("fr-FR")}</span> : {value[statusField]}
-              </li>
-            );
-          })}
-        </ul>
-      </Box>
-    </>
-  );
+const isUpdatedToStatus = (value, status) => {
+  return [value.to.affelnet_statut, value.to.parcoursup_statut].includes(status);
 };
 
 /**
@@ -62,30 +37,88 @@ export const StatutHistoryBlock = ({ formation }) => {
     return <></>;
   }
 
+  const updates_history = formation.updates_history ?? [];
+
+  const publication_history = updates_history
+    .filter(
+      (value) =>
+        isUpdatedToStatus(value, "publié") ||
+        isUpdatedToStatus(value, "en attente de publication") ||
+        isUpdatedToStatus(value, "non publié")
+    )
+    ?.map((value) => ({
+      status: (
+        <>
+          {isUpdatedToStatus(value, "publié") && "Publication forcée ou rapprochée"}
+          {isUpdatedToStatus(value, "en attente de publication") && "Publication demandée"}
+          {isUpdatedToStatus(value, "non publié") && "Publication retirée"}
+        </>
+      ),
+      user: value.to.last_update_who,
+      date: new Date(value.updated_at),
+    }));
+
+  const other_history = updates_history
+    .filter(
+      (value) =>
+        !(
+          isUpdatedToStatus(value, "publié") ||
+          isUpdatedToStatus(value, "en attente de publication") ||
+          isUpdatedToStatus(value, "non publié")
+        )
+    )
+    ?.map((value) => ({
+      status: <>Modification apportée</>,
+      user: value.to.last_update_who,
+      date: new Date(value.updated_at),
+    }));
+
   const affelnet_history = reduceSameValues(
     formation.affelnet_statut_history,
     (previous, current) => current.affelnet_statut !== previous?.affelnet_statut
-  );
+  ).map((value) => ({
+    status: <>Affelnet - {value.affelnet_statut}</>,
+    date: new Date(value.date),
+  }));
   const parcoursup_history = reduceSameValues(
     formation.parcoursup_statut_history,
     (previous, current) => current.parcoursup_statut !== previous?.parcoursup_statut
-  );
+  ).map((value) => ({
+    status: <>Parcoursup - {value.parcoursup_statut}</>,
+    date: new Date(value.date),
+  }));
+
+  const history = [
+    ...(hasAccessTo(user, "page_formation/gestion_publication") ? publication_history : []),
+    ...(hasAccessTo(user, "page_formation/modifier_informations") ? other_history : []),
+    ...(hasAccessTo(user, "page_formation/voir_status_publication_aff") ? affelnet_history : []),
+    ...(hasAccessTo(user, "page_formation/voir_status_publication_ps") ? parcoursup_history : []),
+  ].sort((a, b) => b.date - a.date);
 
   return (
-    (hasAccessTo(user, "page_formation/voir_status_publication_ps") ||
+    (hasAccessTo(user, "page_formation/gestion_publication") ||
+      hasAccessTo(user, "page_formation/modifier_informations") ||
+      hasAccessTo(user, "page_formation/voir_status_publication_ps") ||
       hasAccessTo(user, "page_formation/voir_status_publication_aff")) && (
       <>
         <Heading textStyle="h4" color="grey.800" mb={4}>
-          Historique des statuts
+          Historique des modifications
         </Heading>
 
-        {hasAccessTo(user, "page_formation/voir_status_publication_aff") && (
-          <StatutHistorySubBlock title="Affelnet" history={affelnet_history} statusField="affelnet_statut" />
-        )}
-
-        {hasAccessTo(user, "page_formation/voir_status_publication_ps") && (
-          <StatutHistorySubBlock title="Parcoursup" history={parcoursup_history} statusField="parcoursup_statut" />
-        )}
+        <Box ml={4}>
+          <ul>
+            {history.map((value, index) => {
+              return (
+                <li key={index}>
+                  {value.status}
+                  <Text display={"inline"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
+                    {value.user && ` par ${value.user}`} le <span>{value.date.toLocaleDateString("fr-FR")}</span>
+                  </Text>
+                </li>
+              );
+            })}
+          </ul>
+        </Box>
       </>
     )
   );
