@@ -165,15 +165,8 @@ const findMultisiteFormationsFromL01 = async ({ cle_ministere_educatif }, projec
   }
 
   const rootKey = cle_ministere_educatif?.split("#")[0];
-  const potentialKeys = Array(98)
-    .fill(cle_ministere_educatif)
-    .map((_value, index) => {
-      const siteNumber = index + 2;
-      return `${rootKey}${"#L"}${`${siteNumber}`.padStart(2, "0")}`;
-    });
-
   const multisiteFormations = await Formation.find({
-    cle_ministere_educatif: { $in: potentialKeys },
+    cle_ministere_educatif: { $ne: cle_ministere_educatif, $regex: new RegExp(`^${rootKey}#`) },
     published: true,
   })
     .select(projection)
