@@ -62,7 +62,7 @@ let getDataAsCSV = async (searchUrl, query, columns, setProgress) => {
   let data = [];
   let pushAll = (hits) => {
     let total = hits.total.value;
-    data = [...data, ...hits.hits.map((h) => h._source)];
+    data = [...data, ...hits.hits.map((h) => ({ ...h._source, _id: h._id }))];
     setProgress(Math.round((data.length * 100) / total));
   };
 
