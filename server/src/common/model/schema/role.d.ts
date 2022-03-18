@@ -6,11 +6,14 @@
  */
 const { Types } = require("mongoose");
 
-export interface Alert {
-  msg: string;
-  type: string;
-  name: string;
-  time?: Date;
-  enabled?: boolean;
+export interface Role {
+  /**
+   * Nom du rôle
+   */
+  name?: string;
+  /**
+   * Access control level array
+   */
+  acl?: string & string[];
   _id?: Types.ObjectId;
 }
