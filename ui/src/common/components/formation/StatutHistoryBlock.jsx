@@ -20,6 +20,10 @@ const reduceSameValues = (array, check) => {
   });
 };
 
+const isUpdatedToStatus = (value, status) => {
+  return [value.to.affelnet_statut, value.to.parcoursup_statut].includes(status);
+};
+
 /**
  *  Display an history of statuses
  *
@@ -36,15 +40,33 @@ export const StatutHistoryBlock = ({ formation }) => {
   const updates_history = formation.updates_history ?? [];
 
   const publication_history = updates_history
-    .filter((value) => value.to.parcoursup_statut === "publié" || value.to.affelnet_history === "publié")
+    .filter(
+      (value) =>
+        isUpdatedToStatus(value, "publié") ||
+        isUpdatedToStatus(value, "en attente de publication") ||
+        isUpdatedToStatus(value, "non publié")
+    )
     ?.map((value) => ({
-      status: <>Publication forcée</>,
+      status: (
+        <>
+          {isUpdatedToStatus(value, "publié") && "Publication forcée ou rapprochée"}
+          {isUpdatedToStatus(value, "en attente de publication") && "Publication demandée"}
+          {isUpdatedToStatus(value, "non publié") && "Publication retirée"}
+        </>
+      ),
       user: value.to.last_update_who,
       date: new Date(value.updated_at),
     }));
 
   const other_history = updates_history
-    .filter((value) => !(value.to.parcoursup_statut === "publié" || value.to.affelnet_history === "publié"))
+    .filter(
+      (value) =>
+        !(
+          isUpdatedToStatus(value, "publié") ||
+          isUpdatedToStatus(value, "en attente de publication") ||
+          isUpdatedToStatus(value, "non publié")
+        )
+    )
     ?.map((value) => ({
       status: <>Modification apportée</>,
       user: value.to.last_update_who,
@@ -90,8 +112,7 @@ export const StatutHistoryBlock = ({ formation }) => {
                 <li key={index}>
                   {value.status}
                   <Text display={"inline"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
-                    {value.user && ` par ${value.user}`} le{" "}
-                    <Text display={"inline"}>{value.date.toLocaleDateString("fr-FR")}</Text>
+                    {value.user && ` par ${value.user}`} le {value.date.toLocaleDateString("fr-FR")}
                   </Text>
                 </li>
               );
