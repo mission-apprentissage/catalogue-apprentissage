@@ -32,7 +32,7 @@ module.exports = {
           {
             $set: {
               "rncp_details.date_fin_validite_enregistrement": formation.rncp_details.date_fin_validite_enregistrement
-                ? new Date(formation.rncp_details.date_fin_validite_enregistrement).toLocaleDateString("fr")
+                ? new Date(formation.rncp_details.date_fin_validite_enregistrement).toLocaleDateString("fr-FR")
                 : null,
             },
           }
