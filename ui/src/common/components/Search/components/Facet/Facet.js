@@ -31,15 +31,11 @@ const Facet = ({
   if (hasOneOfRoles(auth, ["instructeur"])) {
     if (componentId.startsWith("nom_academie")) {
       const userAcademies = auth?.academie?.split(",") || [];
-      defaultIndex = [0];
       defaultValue = compact(
         userAcademies.map((ua) => {
           return academies[ua]?.nom_academie;
         })
       );
-    } else if (componentId.startsWith("affelnet_statut") || componentId.startsWith("parcoursup_statut")) {
-      defaultIndex = [0];
-      //defaultValue = ["à publier"];
     }
   }
 
