@@ -5,6 +5,11 @@ import { ETABLISSEMENTS_ES_INDEX, FORMATIONS_ES_INDEX, RECONCILIATION_PS_ES_INDE
 
 const CATALOGUE_API_ENDPOINT = `${process.env.REACT_APP_BASE_URL}/api`;
 
+/**
+ *
+ * @param {string} context
+ * @returns {ETABLISSEMENTS_ES_INDEX|RECONCILIATION_PS_ES_INDEX|FORMATIONS_ES_INDEX}
+ */
 const getEsBase = (context) => {
   if (context === "organismes") {
     return ETABLISSEMENTS_ES_INDEX;
@@ -112,7 +117,11 @@ const getCountEntities = async (base) => {
   };
 };
 
-// context: organismes |  catalogue
+/**
+ *
+ * @param {string} context
+ * @returns
+ */
 export function useSearch(context) {
   const base = getEsBase(context);
   const isBaseFormations = base === FORMATIONS_ES_INDEX;
