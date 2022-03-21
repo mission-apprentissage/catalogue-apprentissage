@@ -164,6 +164,17 @@ const columnsDefinition = [
     formatter: (value) => escapeDiacritics(value),
   },
   {
+    Header: "Certificateurs",
+    accessor: "rncp_details.certificateurs",
+    width: 200,
+    exportable: true,
+    formatter: (value) => {
+      return value
+        ?.map(({ certificateur, siret_certificateur }) => `${certificateur} (siret: ${siret_certificateur ?? "n/a"})`)
+        .join(", ");
+    },
+  },
+  {
     Header: "Codes ROME",
     accessor: "rome_codes",
     width: 200,
