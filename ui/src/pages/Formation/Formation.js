@@ -441,11 +441,6 @@ export default ({ match }) => {
                     <Heading textStyle="h2" color="grey.800" pr={[0, 0, 8]} mb={4}>
                       {title} <InfoTooltip description={helpText.formation.intitule_long} />
                     </Heading>
-                    {formation.intitule_rco && (
-                      <Heading textStyle="h5" color="grey.600" pr={[0, 0, 8]}>
-                        {formation.intitule_rco} <InfoTooltip description={helpText.formation.intitule_rco} />
-                      </Heading>
-                    )}
                   </Box>
                   {hasRightToEdit &&
                     formation.etablissement_reference_catalogue_published &&

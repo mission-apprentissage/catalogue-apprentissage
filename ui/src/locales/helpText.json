@@ -1,10 +1,9 @@
 {
   "formation": {
     "not_found": "Nous n'avons pas trouvé la formation dans le catalogue.",
-    "intitule_rco": "La donnée “Intitulé RCO” provient des bases du réseaux des Carif-Oref",
+    "intitule_rco": "Saisie libre de l'organisme lors de l'enregistrement de son offre auprès du Carif-Oref",
     "intitule_long": "La donnée “Intitulé long de la formation” est extraite de la BCN (Base Centrale des Nomenclatures), table V_FORMATION_DIPLOME",
     "intitule_court": "La donnée “Intitulé court de la formation” est déduite du Code formation diplôme",
-    "onisep_intitule": "La donnée “Intitulé éditorial” provient de l’Onisep",
     "diplome": "La donnée “Diplôme ou titre visé” est déduite du Code formation diplôme",
     "niveau": "La donnée “Niveau de la formation” est déduite du Code formation diplôme",
     "cfd": "La donnée “Code formation diplôme” provient de la Base Centrale des Nomenclatures (BCN). Si cette information est erronée, merci de leur signaler.",
