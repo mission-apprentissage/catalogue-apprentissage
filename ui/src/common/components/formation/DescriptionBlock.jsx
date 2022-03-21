@@ -49,12 +49,19 @@ export const DescriptionBlock = ({ formation }) => {
             </Text>{" "}
             <InfoTooltip description={helpText.formation.intitule_court} />
           </Text>
+
           <Text mb={4} mt={4}>
-            Intitulé éditorial :{" "}
+            Libellé Carif-Oref :{" "}
+            <Text as="span" variant="highlight">
+              {formation.intitule_rco}
+            </Text>{" "}
+            <InfoTooltip description={helpText.formation.intitule_rco} />
+          </Text>
+          <Text mb={4} mt={4}>
+            Intitulé Onisep :{" "}
             <Text as="span" variant="highlight">
               {formation.onisep_intitule}
-            </Text>{" "}
-            <InfoTooltip description={helpText.formation.onisep_intitule} />
+            </Text>
           </Text>
           <Text mb={4}>
             Diplôme ou titre visé :{" "}
