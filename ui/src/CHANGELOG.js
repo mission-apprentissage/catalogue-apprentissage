@@ -4,7 +4,7 @@ import { Link } from "@chakra-ui/react";
 const changelog = {
   list: [
     {
-      version: "5.13.0",
+      version: "5.14.0",
       date: "Prochainement",
       about: `<h4>À venir</h4>`,
       fixes: [],
@@ -12,19 +12,42 @@ const changelog = {
       improvements: [],
     },
     {
+      version: "5.13.0",
+      date: "Le 17 mars 2022",
+      about: `<h4>À propos de cette version</h4>
+  Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [
+        "Les adresses calculées depuis la géolocalisation transmise par les Carif-Oref n’étaient pas toujours affichées",
+      ],
+      features: [
+        "Page d'erreur spécifique en cas de formation / établissement non trouvé",
+        "Affichage de l’intitulé RCO des formations, en plus de l’intitulé extrait de la base centrale des nomenclatures",
+        "Utilisateurs connectés : recherche par date de dernière modification du statut",
+        "Utilisateurs connectés : historique des statuts de publication Affelnet et Parcoursup",
+      ],
+      improvements: [
+        "Modification du placement du badge Qualiopi pour éviter qu’ils soient associés aux badges d’années (ceux-ci correspondent aux périodes de formation)",
+        "Modification de l'url GéoPortail en un lien OpenStreetMap depuis les géolocalisation et adresses calculées",
+        "Amélioration de l’accessibilité du menu utilisateur pour les lecteurs d’écran",
+        "Utilisateurs connectés : amélioration des filtres par date, pour permettre de faire des recherche à partir d’une date donnée (sans limite de fin) ou avant une date donnée (sans limite de début)",
+      ],
+    },
+
+    {
       version: "5.12.0",
       date: "Le 8 Mars 2022",
       about: `<h4>À propos de cette version</h4>
   Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: [
-        "Recherche : tri du filtre niveaux par niveau",
-        "Calcul de l’adresse depuis la géolocalisation pour toutes les fiches formations",
+        "Utilisateurs connectés : le filtre par niveau de formation n’était pas trié par niveau",
+        "Utilisateurs connectés Affelnet : récupération des statuts de publication Affelnet pour affichage sur le catalogue, via des imports ponctuels (deux fois par campagne)",
       ],
       features: [
-        "Admin - Gestion des utilisateurs : tri par nom et export",
         "Gestion du flux retour Affelnet pour les étiquettes “publié”",
+        "Administrateurs : dans le module de gestion des utilisateurs, la liste est maintenant triée par nom",
+        "Super administrateurs : création d’un tableau de bord de suivi des écarts de distance entre les géolocalisation et les adresses postales transmises par le réseau des Carif-Oref",
       ],
-      improvements: [],
+      improvements: ["Message d'erreur spécifique si l'API entreprise est indisponible"],
     },
     {
       version: "5.11.0",

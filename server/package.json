@@ -1,6 +1,6 @@
 {
   "name": "mna-catalogue-apprentissage-server",
-  "version": "5.12.0",
+  "version": "5.13.0",
   "description": "[MNA] App catalogue apprentissage",
   "repository": "https://github.com/mission-apprentissage/catalogue-apprentissage.git",
   "private": false,
@@ -19,18 +19,13 @@
     "docker:down": "docker-compose down",
     "docker:clean": "docker-compose kill && docker system prune --force --volumes",
     "jobs": "node src/jobs/index.js",
-    "psup:prepare-2021": "standalone=true node src/jobs/parcoursup/prepare.js",
-    "psup:import-2021": "standalone=true node src/jobs/parcoursup/importer.js",
+    "psup:prepare": "standalone=true node src/jobs/parcoursup/prepare.js",
+    "psup:import": "standalone=true node src/jobs/parcoursup/importer.js",
     "psup:report": "standalone=true node src/jobs/parcoursup/reportRejected.js",
     "psup:export": "standalone=true node src/jobs/parcoursup/export/index.js",
     "rcoFormation:duplicate": "standalone=true node src/jobs/oneshot/findRcoDuplicates/index.js",
     "uai:check": "standalone=true node src/jobs/checkUai/index.js",
     "compute:distance": "standalone=true node src/jobs/oneshot/computeDistance/index.js",
-    "hydratecfdentree": "standalone=true node src/jobs/parcoursup/_hydrateCfdEntree.js",
-    "migrateRaisonsRejet": "standalone=true node src/jobs/parcoursup/_migrationRaisonsRejet.js",
-    "psup:updatemna": "standalone=true node src/jobs/parcoursup/_updateMatchInfo.js",
-    "etablissements:duplicate": "standalone=true node src/jobs/oneshot/mergeEtablissementDuplicates/index.js",
-    "convention:updater": "standalone=true node src/jobs/oneshot/conventionUpdater/index.js",
     "etablissements:jobs": "standaloneJobs=true node src/jobs/etablissements/index.js",
     "formations:jobs": "standaloneJobs=true node src/jobs/formations/index.js",
     "affelnet:jobs": "standaloneJobs=true node src/jobs/affelnet/index.js",
@@ -39,8 +34,7 @@
     "doc": "standalone=true node src/jobs/doc/index.js",
     "migration:create": "migrate-mongo create",
     "migration:up": "migrate-mongo up",
-    "migration:down": "migrate-mongo down",
-    "bcn:jobs": "node src/jobs/bcn/index.js"
+    "migration:down": "migrate-mongo down"
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.6.1",

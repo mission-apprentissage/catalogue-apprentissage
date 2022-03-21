@@ -11,7 +11,7 @@ const serializeObject = (columns, obj) => {
   const res = [];
 
   columns.forEach((c) => {
-    let value = c.fieldName.split(".").reduce((acc, curr) => acc[curr], obj);
+    let value = c.fieldName.split(".").reduce((acc, curr) => acc?.[curr], obj);
     if (typeof c.formatter === "function") {
       value = c.formatter(value, obj);
     } else if (!value) {
@@ -62,7 +62,7 @@ let getDataAsCSV = async (searchUrl, query, columns, setProgress) => {
   let data = [];
   let pushAll = (hits) => {
     let total = hits.total.value;
-    data = [...data, ...hits.hits.map((h) => h._source)];
+    data = [...data, ...hits.hits.map((h) => ({ ...h._source, _id: h._id }))];
     setProgress(Math.round((data.length * 100) / total));
   };
 

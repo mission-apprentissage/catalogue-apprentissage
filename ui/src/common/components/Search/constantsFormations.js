@@ -45,6 +45,13 @@ const FILTERS = () => [
 
 const columnsDefinition = [
   {
+    Header: "Fiche catalogue",
+    accessor: "_id",
+    width: 200,
+    exportable: true,
+    formatter: (value) => `${process.env.REACT_APP_BASE_URL}/formation/${value}`,
+  },
+  {
     Header: "Numero academie",
     accessor: "num_academie",
     width: 200,
@@ -368,7 +375,7 @@ const columnsDefinition = [
     accessor: "id_rco_formation",
     width: 200,
     exportable: true,
-    formatter: (value) => value.split("|").pop(),
+    formatter: (value) => value?.split("|")?.pop(),
   },
   {
     Header: "id RCO formation",
@@ -401,7 +408,7 @@ const columnsDefinition = [
     width: 200,
     exportable: true,
     formatter: (value) =>
-      value.date_fin_validite_enregistrement
+      value?.date_fin_validite_enregistrement
         ? new Date(value.date_fin_validite_enregistrement).toLocaleDateString("fr-FR")
         : "",
   },
