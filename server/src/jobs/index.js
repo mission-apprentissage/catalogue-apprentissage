@@ -9,6 +9,7 @@ const affelnetJobs = require("./affelnet");
 const etablissementsJobs = require("./etablissements");
 const formationsJobs = require("./formations");
 const checkUai = require("./checkUai");
+const afReinitStatus = require("./affelnet/reinitStatus");
 
 const KIT_LOCAL_PATH = "/data/uploads/CodeDiplome_RNCP_latest_kit.csv";
 const CONVENTION_FILES_DIR = path.join(__dirname, "conventionFilesImporter/assets");
@@ -18,6 +19,8 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 runScript(async ({ db }) => {
   try {
     logger.info(`Start all jobs`);
+
+    await afReinitStatus(); // Réinitialisation du statut Affelnet des formations 'en attente de publication' lors de la clôture des voeux (1 septembre)
 
     // TCO jobs
     await tcoJobs(db, CONVENTION_FILES_DIR, KIT_LOCAL_PATH); // ~ 15 minutes // Import des tables de correspondance
