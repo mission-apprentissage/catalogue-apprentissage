@@ -23,7 +23,7 @@ let transformObject = (transform, options = {}) => {
       }
 
       try {
-        let value = transform(chunk);
+        let value = await transform(chunk);
         promises.push(
           Promise.resolve(value)
             .then((res) => {
