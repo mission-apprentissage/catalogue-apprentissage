@@ -5,6 +5,13 @@ const FILTERS = () => [`QUERYBUILDER`, `SEARCH`, `num_departement`, `nom_academi
 
 const columnsDefinition = [
   {
+    Header: "Fiche catalogue",
+    accessor: "_id",
+    width: 200,
+    exportable: true,
+    formatter: (value) => `${process.env.REACT_APP_BASE_URL}/etablissement/${value}`,
+  },
+  {
     Header: "Siren",
     accessor: "siren",
     width: 200,

@@ -6,11 +6,21 @@
  */
 const { Types } = require("mongoose");
 
-export interface Alert {
+export interface Log {
   msg: string;
-  type: string;
+  level: number;
   name: string;
-  time?: Date;
-  enabled?: boolean;
+  time: Date;
+  request?: {
+    [k: string]: unknown;
+  };
+  response?: {
+    [k: string]: unknown;
+  };
+  error?: {
+    [k: string]: unknown;
+  };
+  type?: string;
+  elapsedTime?: number;
   _id?: Types.ObjectId;
 }

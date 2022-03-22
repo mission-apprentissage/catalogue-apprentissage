@@ -140,6 +140,11 @@ module.exports = {
         default: "null",
         description: "Nom de la formation déclaratif",
       },
+      intitule_rco: {
+        type: "string",
+        default: "null",
+        description: "Intitulé comme transmis par RCO",
+      },
       intitule_long: {
         type: "string",
         default: "null",
@@ -210,6 +215,7 @@ module.exports = {
         properties: {
           date_fin_validite_enregistrement: {
             type: ["string", "null"],
+            format: "date-time",
             default: null,
             description: "Date de validité de la fiche",
           },
@@ -309,6 +315,11 @@ module.exports = {
             default: [],
             description: "partenaires",
           },
+          rncp_outdated: {
+            type: "boolean",
+            default: false,
+            description: "Code rncp périmé (date fin enregistrement avant le 31 aout de l'année courante)",
+          },
         },
         title: "rncp_details",
         default: "null",
@@ -406,6 +417,12 @@ module.exports = {
         type: "string",
         default: "null",
         description: 'Date de publication (passage au statut "publié")',
+        format: "date-time",
+      },
+      last_statut_update_date: {
+        type: "string",
+        default: "null",
+        description: "Date de dernière modification du statut Affelnet ou Parcoursup",
         format: "date-time",
       },
       published: {

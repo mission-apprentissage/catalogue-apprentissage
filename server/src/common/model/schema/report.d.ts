@@ -6,27 +6,24 @@
  */
 const { Types } = require("mongoose");
 
-export interface Consumption {
+export interface Report {
   /**
-   * Chemin d'appel
+   * Type du rapport
    */
-  path?: string;
+  type?: string;
   /**
-   * Method d'appel
+   * Date du rapport
    */
-  method?: string;
-  /**
-   * Nombre d'appels de la route
-   */
-  globalCallCount?: number;
-  /**
-   * Consommateur de l'api
-   */
-  consumers?: ItemOfConsumers[];
-  _id?: Types.ObjectId;
-}
-export interface ItemOfConsumers {
-  caller?: string;
-  callCount?: number;
   date?: Date;
+  /**
+   * Données du rapport
+   */
+  data?: {
+    [k: string]: unknown;
+  };
+  /**
+   * uuid across report
+   */
+  uuid?: string;
+  _id?: Types.ObjectId;
 }

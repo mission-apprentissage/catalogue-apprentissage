@@ -2,7 +2,12 @@ const assert = require("assert");
 const { Formation } = require("../../../../common/model/index");
 const { connectToMongoForTests, cleanAll } = require("../../../../../tests/utils/testUtils.js");
 const { asyncForEach } = require("../../../../common/utils/asyncUtils");
-const { findPreviousFormations, copyComputedFields, findNewFormations } = require("../converter/migrationFinder");
+const {
+  findPreviousFormations,
+  copyComputedFields,
+  findNewFormations,
+  findMultisiteFormationsFromL01,
+} = require("../converter/migrationFinder");
 
 const sampleData = [
   {
@@ -76,6 +81,30 @@ const sampleData = [
     published: true,
     annee: "3",
   },
+  {
+    cfd: "11",
+    cle_ministere_educatif: "106401P01115010559410002250105594100022-57631#L02",
+    published: true,
+    annee: "1",
+  },
+  {
+    cfd: "12",
+    cle_ministere_educatif: "100357P01211886090770005518860907700055-17415#L01",
+    published: true,
+    annee: "1",
+  },
+  {
+    cfd: "13",
+    cle_ministere_educatif: "100357P01211886090770005518860907700055-17415#L02",
+    published: true,
+    annee: "1",
+  },
+  {
+    cfd: "14",
+    cle_ministere_educatif: "100357P01211886090770005518860907700055-17415#L03",
+    published: true,
+    annee: "1",
+  },
 ];
 
 describe(__filename, () => {
@@ -91,11 +120,6 @@ describe(__filename, () => {
 
     after(async () => {
       await cleanAll();
-    });
-
-    it("should have inserted sample data", async () => {
-      const count = await Formation.countDocuments({});
-      assert.strictEqual(count, 10);
     });
 
     it("should find 1 Formation", async () => {
@@ -152,6 +176,33 @@ describe(__filename, () => {
 
       assert.strictEqual(formations.length, 1);
       assert.strictEqual(formations[0].cfd, "7");
+    });
+
+    it("Multisite - should find 0 Formation", async () => {
+      const formations = await findPreviousFormations({
+        cle_ministere_educatif: "106101P01135010559410002250105594100022-88001#L01",
+        id_formation: "",
+        id_certifinfo: "",
+        id_action: "",
+      });
+
+      assert.strictEqual(formations.length, 0);
+    });
+
+    it("Multisite - should find 1 Formation for L02", async () => {
+      const formations = await findPreviousFormations({
+        cle_ministere_educatif: "106101P01135010559410002250105594100022-76001#L02",
+      });
+
+      assert.strictEqual(formations.length, 1);
+    });
+
+    it("Multisite - should find 1 Formation for L03", async () => {
+      const formations = await findPreviousFormations({
+        cle_ministere_educatif: "106101P01135010559410002250105594100022-76001#L03",
+      });
+
+      assert.strictEqual(formations.length, 1);
     });
   });
 
@@ -233,6 +284,51 @@ describe(__filename, () => {
       );
 
       assert.deepStrictEqual(formations, [{ cfd: "8" }]);
+    });
+  });
+
+  describe("findMultisiteFormationsFromL01", () => {
+    before(async () => {
+      // Connection to test collection
+      await connectToMongoForTests();
+      await Formation.deleteMany({});
+
+      // insert sample data in DB
+      await asyncForEach(sampleData, async (training) => await new Formation(training).save());
+    });
+
+    after(async () => {
+      await cleanAll();
+    });
+
+    it("should find 0 Formation", async () => {
+      let formations = await findMultisiteFormationsFromL01({
+        cle_ministere_educatif: "106401P01115010559410002250105594100022",
+      });
+
+      assert.strictEqual(formations.length, 0);
+
+      formations = await findMultisiteFormationsFromL01({
+        cle_ministere_educatif: "106401P01115010559410002250105594110022-57631#L01",
+      });
+
+      assert.strictEqual(formations.length, 0);
+    });
+
+    it("should find 1 Formation", async () => {
+      const formations = await findMultisiteFormationsFromL01({
+        cle_ministere_educatif: "106401P01115010559410002250105594100022-57631#L01",
+      });
+
+      assert.strictEqual(formations.length, 1);
+    });
+
+    it("should find 2 Formations", async () => {
+      const formations = await findMultisiteFormationsFromL01({
+        cle_ministere_educatif: "100357P01211886090770005518860907700055-17415#L01",
+      });
+
+      assert.strictEqual(formations.length, 2);
     });
   });
 });

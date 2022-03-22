@@ -6,11 +6,14 @@
  */
 const { Types } = require("mongoose");
 
-export interface Alert {
-  msg: string;
-  type: string;
-  name: string;
-  time?: Date;
-  enabled?: boolean;
+export interface Statistique {
+  /**
+   * Source d'origine de la statistique
+   */
+  source: string;
+  /**
+   * Compteur
+   */
+  count?: number;
   _id?: Types.ObjectId;
 }

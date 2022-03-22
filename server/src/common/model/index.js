@@ -30,9 +30,6 @@ module.exports = {
   AffelnetFormation: createModel("affelnetformation", schema.affelnetFormationSchema),
   Etablissement: createModel("etablissement", schema.etablissementSchema, {
     esIndexName: "etablissements",
-    createMongoDBIndexes: (schema) => {
-      schema.index({ adresse: "text" });
-    },
   }),
   ParcoursupFormation: createModel("parcoursupformations", schema.parcoursupFormationSchema, {
     esIndexName: "parcoursupformations",

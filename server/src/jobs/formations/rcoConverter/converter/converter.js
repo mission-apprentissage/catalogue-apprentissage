@@ -225,8 +225,6 @@ const performConversion = async () => {
   const convertedRcoFormations = [];
 
   // first loop only on published
-  // try to find englobing actions
-  // if found keep data like statut, rapprochement ...
   await paginator(
     RcoFormation,
     {
@@ -235,6 +233,16 @@ const performConversion = async () => {
       select: "+email +etablissement_gestionnaire_courriel +etablissement_formateur_courriel",
     },
     async (rcoFormation) => {
+      // no need to find previous formation if it was already done and created
+      const exists = await Formation.findOne({
+        cle_ministere_educatif: rcoFormation.cle_ministere_educatif,
+        published: true,
+      });
+      if (exists) {
+        return;
+      }
+
+      // try to find old corresponding trainings to retrieve some data
       const oldFormations = await findPreviousFormations(rcoFormation);
 
       // if 0 do nothing : just create as below

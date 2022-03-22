@@ -45,6 +45,13 @@ const FILTERS = () => [
 
 const columnsDefinition = [
   {
+    Header: "Fiche catalogue",
+    accessor: "_id",
+    width: 200,
+    exportable: true,
+    formatter: (value) => `${process.env.REACT_APP_BASE_URL}/formation/${value}`,
+  },
+  {
     Header: "Numero academie",
     accessor: "num_academie",
     width: 200,
@@ -155,6 +162,17 @@ const columnsDefinition = [
     width: 200,
     exportable: true,
     formatter: (value) => escapeDiacritics(value),
+  },
+  {
+    Header: "Certificateurs",
+    accessor: "rncp_details.certificateurs",
+    width: 200,
+    exportable: true,
+    formatter: (value) => {
+      return value
+        ?.map(({ certificateur, siret_certificateur }) => `${certificateur} (siret: ${siret_certificateur ?? "n/a"})`)
+        .join(", ");
+    },
   },
   {
     Header: "Codes ROME",
@@ -368,7 +386,7 @@ const columnsDefinition = [
     accessor: "id_rco_formation",
     width: 200,
     exportable: true,
-    formatter: (value) => value.split("|").pop(),
+    formatter: (value) => value?.split("|")?.pop(),
   },
   {
     Header: "id RCO formation",
@@ -393,14 +411,17 @@ const columnsDefinition = [
     accessor: "cfd_date_fermeture",
     width: 200,
     exportable: true,
-    formatter: (value) => new Date(value).toLocaleDateString(),
+    formatter: (value) => new Date(value).toLocaleDateString("fr-FR"),
   },
   {
     Header: "Date de fin de validite au RNCP",
     accessor: "rncp_details",
     width: 200,
     exportable: true,
-    formatter: (value) => value.date_fin_validite_enregistrement ?? "",
+    formatter: (value) =>
+      value?.date_fin_validite_enregistrement
+        ? new Date(value.date_fin_validite_enregistrement).toLocaleDateString("fr-FR")
+        : "",
   },
   {
     Header: "Tags",

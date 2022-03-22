@@ -4,21 +4,13 @@ const { asyncForEach } = require("../../../../common/utils/asyncUtils");
 /**
  * For a given RcoFormation, try to find some Formation published in catalogue which includes ids_action
  */
-const findPreviousFormations = async ({
-  id_formation,
-  id_certifinfo,
-  id_action,
-  cle_ministere_educatif,
-  etablissement_lieu_formation_code_insee,
-}) => {
-  // FIXME @EPT En pratique, la clé a une longueur fixe : elle fait toujours 49 caractères. Donc la fusion actuelle d’un mono-site qui devient un multi-sites ne fonctionne pas
-  if (cle_ministere_educatif?.includes("-")) {
-    // here merge multi-site / mono-site : check cle_ministere_educatif + code_insee
-    const rootKey = cle_ministere_educatif?.split("-")[0];
+const findPreviousFormations = async ({ id_formation, id_certifinfo, id_action, cle_ministere_educatif }) => {
+  if (!cle_ministere_educatif?.endsWith("#L01")) {
+    // here merge multi-site / mono-site : check cle_ministere_educatif
+    const originalSiteKey = `${cle_ministere_educatif?.split("#")[0]}#L01`;
 
     const previousFormation = await Formation.findOne({
-      cle_ministere_educatif: rootKey,
-      code_commune_insee: etablissement_lieu_formation_code_insee,
+      cle_ministere_educatif: originalSiteKey,
       published: true,
     }).lean();
 
@@ -139,8 +131,6 @@ const extractFlatIdsAction = (id_action) => {
  * @param {Object} [projection={}]
  */
 const findNewFormations = async ({ cle_ministere_educatif }, projection = {}) => {
-  // TODO @EPT here we can receive an old mono-site formations which is now a multi-site in catalog, what is the expected behaviour in that case ?
-
   const wasCollectedYear = cle_ministere_educatif.substring(10, 11) !== "X";
   if (wasCollectedYear) {
     return [];
@@ -163,6 +153,28 @@ const findNewFormations = async ({ cle_ministere_educatif }, projection = {}) =>
     .lean();
 };
 
+/**
+ * For a given formation corresponding to the first site (L01), try to find some Formation in catalogue with different sites
+ *
+ * @param {{cle_ministere_educatif: string}} formation
+ * @param {Object} [projection={}]
+ */
+const findMultisiteFormationsFromL01 = async ({ cle_ministere_educatif }, projection = {}) => {
+  if (!cle_ministere_educatif?.endsWith("#L01")) {
+    return [];
+  }
+
+  const rootKey = cle_ministere_educatif?.split("#")[0];
+  const multisiteFormations = await Formation.find({
+    cle_ministere_educatif: { $ne: cle_ministere_educatif, $regex: new RegExp(`^${rootKey}#`) },
+    published: true,
+  })
+    .select(projection)
+    .lean();
+
+  return multisiteFormations;
+};
+
 module.exports = {
   findPreviousFormations,
   copyAffelnetFields,
@@ -173,4 +185,5 @@ module.exports = {
   copyComputedFields,
   copyEditedFields,
   findNewFormations,
+  findMultisiteFormationsFromL01,
 };
