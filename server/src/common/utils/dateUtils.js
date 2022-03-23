@@ -6,8 +6,9 @@
  */
 const getLastMonth = (month) => {
   const today = new Date();
-  if (month < 1 || month > 12) return undefined;
-  const year = month <= today.getMonth() ? today.getFullYear() : today.getFullYear() - 1;
+
+  if (+month < 1 || +month > 12) return undefined;
+  const year = +month <= today.getMonth() + 1 ? today.getFullYear() : today.getFullYear() - 1;
   return new Date(`${year}-${month}-01`);
 };
 
