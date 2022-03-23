@@ -10,6 +10,7 @@ const optionDefinitions = [
   { name: "geoloc", alias: "g", type: Boolean, defaultValue: false },
   { name: "conventionnement", alias: "c", type: Boolean, defaultValue: false },
   { name: "onisep", alias: "o", type: Boolean, defaultValue: false },
+  { name: "cfadock", alias: "d", type: Boolean, defaultValue: false },
 ];
 
 // Usage
@@ -33,12 +34,14 @@ const EtablissementsUpdater = async () => {
             geoloc: true,
             conventionnement: true,
             onisep: true,
+            cfadock: true,
           }
         : {
             siret: optionsCmd.siret,
             geoloc: optionsCmd.geoloc,
             conventionnement: optionsCmd.conventionnement,
             onisep: optionsCmd.onisep,
+            cfadock: optionsCmd.cfadock,
           },
     };
     await updater.run(filter, options);
