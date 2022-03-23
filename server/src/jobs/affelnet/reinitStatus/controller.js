@@ -3,19 +3,16 @@ const logger = require("../../../common/logger");
 const { AFFELNET_STATUS } = require("../../../constants/status");
 
 /**
- * Si l'historique conteint des affelnet_statut différent de 'en attante de publication' après la date, cela signifie que la formation n'est pas 'en attente de publication' depuis la date spécifiée
+ * Si l'historique contient des affelnet_statut différents de 'en attente de publication' après la date, cela signifie que la formation n'est pas 'en attente de publication' depuis la date spécifiée
  *
  * @param {*} formation
  * @param {Date} date
  * @returns
  */
 const allHistoryIsEnAttenteAfterDate = (formation, date) => {
-  return (
-    formation.updates_history
-      ?.filter((history) => history.updated_at >= date.getTime())
-      ?.filter((history) => history.to?.affelnet_statut && history.to?.affelnet_statut !== AFFELNET_STATUS.EN_ATTENTE)
-      ?.length === 0
-  );
+  return formation.updates_history
+    ?.filter((history) => history.updated_at >= date.getTime())
+    ?.every((history) => !history.to?.affelnet_statut || history.to?.affelnet_statut === AFFELNET_STATUS.EN_ATTENTE);
 };
 
 /**
@@ -26,8 +23,10 @@ const allHistoryIsEnAttenteAfterDate = (formation, date) => {
  * @returns
  */
 const lastHistoryIsEnAttenteBeforeDate = (formation, date) =>
-  formation.updates_history?.filter((history) => history.updated_at < date.getTime())?.reverse()[0]?.to
-    ?.affelnet_statut === AFFELNET_STATUS.EN_ATTENTE;
+  formation.updates_history
+    ?.filter((history) => !!history.to.affelnet_statut)
+    ?.filter((history) => history.updated_at < date.getTime())
+    ?.reverse()[0]?.to.affelnet_statut === AFFELNET_STATUS.EN_ATTENTE;
 
 /**
  *
@@ -39,10 +38,6 @@ const run = async (date) => {
   const query = {
     published: true,
     affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
-    // affelnet_statut_history: {
-    //   $exists: true,
-    //   $ne: [],
-    // },
   };
 
   const totalBefore = await Formation.countDocuments(query);
