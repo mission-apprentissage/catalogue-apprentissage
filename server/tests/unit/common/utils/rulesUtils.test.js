@@ -148,43 +148,52 @@ describe(__filename, () => {
       const expected = {
         $and: [
           {
-            annee: {
-              $ne: "X",
-            },
-            $or: [
+            $and: [
               {
-                "rncp_details.code_type_certif": {
-                  $in: ["Titre", "TP"],
+                annee: {
+                  $ne: "X",
                 },
-                "rncp_details.rncp_outdated": { $ne: true },
-              },
-              {
-                "rncp_details.code_type_certif": {
-                  $nin: ["Titre", "TP"],
-                },
-                cfd_outdated: { $ne: true },
+                $or: [
+                  {
+                    "rncp_details.code_type_certif": {
+                      $in: ["Titre", "TP"],
+                    },
+                    "rncp_details.rncp_outdated": { $ne: true },
+                  },
+                  {
+                    "rncp_details.code_type_certif": {
+                      $nin: ["Titre", "TP"],
+                    },
+                    cfd_outdated: { $ne: true },
+                  },
+                ],
+                etablissement_gestionnaire_catalogue_published: true,
+                etablissement_reference_catalogue_published: true,
+                published: true,
+                // periode: { $gte: getPeriodeStartDate() },
               },
             ],
-            etablissement_gestionnaire_catalogue_published: true,
-            etablissement_reference_catalogue_published: true,
-            published: true,
-            // periode: { $gte: getPeriodeStartDate() },
           },
           {
-            $or: [
+            $and: [
               {
-                "rncp_details.active_inactive": "ACTIVE",
-                "rncp_details.code_type_certif": {
-                  $in: ["Titre", "TP"],
-                },
-              },
-              {
-                "rncp_details.code_type_certif": {
-                  $nin: ["Titre", "TP"],
-                },
+                $or: [
+                  {
+                    "rncp_details.active_inactive": "ACTIVE",
+                    "rncp_details.code_type_certif": {
+                      $in: ["Titre", "TP"],
+                    },
+                  },
+                  {
+                    "rncp_details.code_type_certif": {
+                      $nin: ["Titre", "TP"],
+                    },
+                  },
+                ],
               },
             ],
           },
+          { $and: [{ rncp_code: "RNCP34825" }] },
         ],
         diplome: "BTS",
         niveau: "4",
@@ -192,7 +201,13 @@ describe(__filename, () => {
         ...getExpireRule(),
       };
 
-      let result = getQueryFromRule({ plateforme: "affelnet", niveau: "4", diplome: "BTS", num_academie: "10" });
+      let result = getQueryFromRule({
+        plateforme: "affelnet",
+        niveau: "4",
+        diplome: "BTS",
+        num_academie: "10",
+        regle_complementaire: serialize({ $and: [{ rncp_code: "RNCP34825" }] }),
+      });
       assert.deepStrictEqual(result, expected);
     });
   });
