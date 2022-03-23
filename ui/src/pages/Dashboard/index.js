@@ -25,7 +25,7 @@ export default () => {
     {
       title: "Collecte",
       iframeURL: getIframeUrl({ id: 2 }),
-      height: "170vh",
+      height: "200vh",
     },
     {
       title: "Consommation",
