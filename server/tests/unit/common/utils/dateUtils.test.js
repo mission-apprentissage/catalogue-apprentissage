@@ -5,12 +5,15 @@ describe(__filename, () => {
   describe("getLastMonth", () => {
     it("should work as expected", () => {
       const now = new Date();
+      const month = "09";
+      const testSeptembre = getLastMonth(month);
 
-      const toTest = getLastMonth("09");
       const lastSeptembre =
-        now.getMonth() > 9 ? new Date(`${now.getFullYear()}-09-01`) : new Date(`${now.getFullYear() - 1}-09-01`);
+        now.getMonth() + 1 >= +month
+          ? new Date(`${now.getFullYear()}-09-01`)
+          : new Date(`${now.getFullYear() - 1}-09-01`);
 
-      assert.strictEqual(toTest.getTime(), lastSeptembre.getTime());
+      assert.strictEqual(testSeptembre.getTime(), lastSeptembre.getTime());
     });
   });
 
