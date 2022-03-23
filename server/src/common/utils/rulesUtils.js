@@ -177,16 +177,18 @@ const titresRule = {
  */
 const getQueryFromRule = ({ plateforme, niveau, diplome, regle_complementaire, duree, num_academie, annee }) => {
   const query = {
-    ...getPublishedRules(plateforme),
+    $and: [getPublishedRules(plateforme), titresRule],
     niveau,
     ...(diplome && { diplome }),
-    ...(regle_complementaire && deserialize(regle_complementaire)),
     ...getExpireRule(),
     ...(num_academie && { num_academie }),
     ...(duree && { duree: String(duree) }),
     ...(annee && { annee: String(annee) }),
   };
-  query["$and"] = [...(query["$and"] ?? []), ...titresRule["$and"]];
+
+  if (regle_complementaire) {
+    query["$and"] = [...query["$and"], deserialize(regle_complementaire)];
+  }
   return query;
 };
 
