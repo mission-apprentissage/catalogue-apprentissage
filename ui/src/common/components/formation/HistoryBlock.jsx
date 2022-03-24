@@ -7,11 +7,14 @@ import { hasAccessTo } from "../../utils/rolesUtils";
 /**
  * Retire les valeurs successives identiques dans un tableau
  *
- * @param {*} array the array to reduce
- * @param {*} check a function to check equality between two successive values in the array
- * @returns An array containing only the last items
+ * @param {any[]} array the array to reduce
+ * @param {(curr, acc) => boolean)} check a function to check equality between two successive values in the array
+ * @returns {any[]} An array containing only the last items
  */
 const reduceSameValues = (array, check) => {
+  if (array.length === 1) {
+    return [...array];
+  }
   return [...array].reduce((acc, curr, index, arr) => {
     if (index === 1) {
       return [...(check(curr, acc) ? [curr] : []), acc];
@@ -77,15 +80,15 @@ export const HistoryBlock = ({ formation }) => {
 
   const affelnet_history = reduceSameValues(
     formation.affelnet_statut_history,
-    (previous, current) => current.affelnet_statut !== previous?.affelnet_statut
-  ).map((value) => ({
+    (previous, current) => current?.affelnet_statut !== previous?.affelnet_statut
+  )?.map((value) => ({
     status: <>Affelnet - {value.affelnet_statut}</>,
     date: new Date(value.date),
   }));
   const parcoursup_history = reduceSameValues(
     formation.parcoursup_statut_history,
-    (previous, current) => current.parcoursup_statut !== previous?.parcoursup_statut
-  ).map((value) => ({
+    (previous, current) => current?.parcoursup_statut !== previous?.parcoursup_statut
+  )?.map((value) => ({
     status: <>Parcoursup - {value.parcoursup_statut}</>,
     date: new Date(value.date),
   }));
@@ -109,7 +112,7 @@ export const HistoryBlock = ({ formation }) => {
 
         <Box ml={4}>
           <ul>
-            {history.slice(0, 4).map((value, index) => {
+            {history.slice(0, 4)?.map((value, index) => {
               return (
                 <li key={index} style={{ marginBottom: "8px" }}>
                   {value.status}
@@ -128,7 +131,7 @@ export const HistoryBlock = ({ formation }) => {
               </Button>
               <Collapse in={isOpen} animateOpacity unmountOnExit={true} style={{ overflow: "unset" }}>
                 <ul>
-                  {history.slice(5).map((value, index) => {
+                  {history.slice(5)?.map((value, index) => {
                     return (
                       <li key={index} style={{ marginBottom: "8px" }}>
                         {value.status}
