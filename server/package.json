@@ -30,15 +30,16 @@
     "formations:jobs": "standaloneJobs=true node src/jobs/formations/index.js",
     "affelnet:jobs": "standaloneJobs=true node src/jobs/affelnet/index.js",
     "psup:jobs": "standaloneJobs=true node src/jobs/parcoursup/index.js",
+    "qualiopi": "node src/jobs/oneshot/qualiopi/index.js",
     "es:index": "standalone=true node src/jobs/esIndex/index.js",
-    "doc": "standalone=true node src/jobs/doc/index.js",
+    "doc": "node src/jobs/doc/index.js",
     "migration:create": "migrate-mongo create",
     "migration:up": "migrate-mongo up",
     "migration:down": "migrate-mongo down"
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.6.1",
-    "@mission-apprentissage/tco-service-node": "2.35.1",
+    "@mission-apprentissage/tco-service-node": "2.35.4",
     "aws-sdk": "2.785.0",
     "axios": "0.21.1",
     "body-parser": "1.19.0",
