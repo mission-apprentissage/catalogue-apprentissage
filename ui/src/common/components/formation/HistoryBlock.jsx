@@ -1,16 +1,20 @@
 import React from "react";
-import { Box, Heading, Text } from "@chakra-ui/react";
+import { Box, Button, Heading, Text, Collapse, useDisclosure } from "@chakra-ui/react";
+import { ArrowDownLine } from "../../../theme/components/icons/";
 import useAuth from "../../hooks/useAuth";
 import { hasAccessTo } from "../../utils/rolesUtils";
 
 /**
  * Retire les valeurs successives identiques dans un tableau
  *
- * @param {*} array the array to reduce
- * @param {*} check a function to check equality between two successive values in the array
- * @returns An array containing only the last items
+ * @param {any[]} array the array to reduce
+ * @param {(curr, acc) => boolean)} check a function to check equality between two successive values in the array
+ * @returns {any[]} An array containing only the last items
  */
 const reduceSameValues = (array, check) => {
+  if (array.length === 1) {
+    return [...array];
+  }
   return [...array].reduce((acc, curr, index, arr) => {
     if (index === 1) {
       return [...(check(curr, acc) ? [curr] : []), acc];
@@ -30,8 +34,9 @@ const isUpdatedToStatus = (value, status) => {
  * @param {object} config
  * @param {object} config.formation La formation dont on souhaite afficher l'historique des changements de statuts
  */
-export const StatutHistoryBlock = ({ formation }) => {
+export const HistoryBlock = ({ formation }) => {
   const [user] = useAuth();
+  const { isOpen, onToggle } = useDisclosure(false);
 
   if (!formation) {
     return <></>;
@@ -75,15 +80,15 @@ export const StatutHistoryBlock = ({ formation }) => {
 
   const affelnet_history = reduceSameValues(
     formation.affelnet_statut_history,
-    (previous, current) => current.affelnet_statut !== previous?.affelnet_statut
-  ).map((value) => ({
+    (previous, current) => current?.affelnet_statut !== previous?.affelnet_statut
+  )?.map((value) => ({
     status: <>Affelnet - {value.affelnet_statut}</>,
     date: new Date(value.date),
   }));
   const parcoursup_history = reduceSameValues(
     formation.parcoursup_statut_history,
-    (previous, current) => current.parcoursup_statut !== previous?.parcoursup_statut
-  ).map((value) => ({
+    (previous, current) => current?.parcoursup_statut !== previous?.parcoursup_statut
+  )?.map((value) => ({
     status: <>Parcoursup - {value.parcoursup_statut}</>,
     date: new Date(value.date),
   }));
@@ -107,9 +112,9 @@ export const StatutHistoryBlock = ({ formation }) => {
 
         <Box ml={4}>
           <ul>
-            {history.map((value, index) => {
+            {history.slice(0, 4)?.map((value, index) => {
               return (
-                <li key={index}>
+                <li key={index} style={{ marginBottom: "8px" }}>
                   {value.status}
                   <Text display={"inline"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
                     {value.user && ` par ${value.user}`} le <span>{value.date.toLocaleDateString("fr-FR")}</span>
@@ -118,6 +123,28 @@ export const StatutHistoryBlock = ({ formation }) => {
               );
             })}
           </ul>
+
+          {history.length > 5 && (
+            <>
+              <Button onClick={onToggle} variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
+                Voir plus <ArrowDownLine boxSize={5} transform={isOpen ? "rotate(180deg)" : "none"} />
+              </Button>
+              <Collapse in={isOpen} animateOpacity unmountOnExit={true} style={{ overflow: "unset" }}>
+                <ul>
+                  {history.slice(5)?.map((value, index) => {
+                    return (
+                      <li key={index} style={{ marginBottom: "8px" }}>
+                        {value.status}
+                        <Text display={"inline"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
+                          {value.user && ` par ${value.user}`} le <span>{value.date.toLocaleDateString("fr-FR")}</span>
+                        </Text>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </Collapse>
+            </>
+          )}
         </Box>
       </>
     )
