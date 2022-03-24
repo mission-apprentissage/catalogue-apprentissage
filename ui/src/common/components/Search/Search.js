@@ -20,6 +20,8 @@ import queryString from "query-string";
 import { useHistory } from "react-router-dom";
 import { CloseCircleLine } from "../../../theme/components/icons";
 import { SearchLine } from "../../../theme/components/icons/SearchLine";
+import InfoTooltip from "../../components/InfoTooltip";
+import helpText from "../../../locales/helpText.json";
 import { Pagination } from "./components/Pagination";
 
 export default React.memo(({ location, searchState, context, onReconciliationCardClicked, extraButtons = null }) => {
@@ -167,7 +169,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                   <Flex pt={3} direction="column">
                     <Box>
                       <Text mt={4} mb={4} textStyle="rf-text" width={"100%"}>
-                        Début de formation
+                        Début de formation <InfoTooltip description={helpText.search.periode} />
                       </Text>
                     </Box>
 
