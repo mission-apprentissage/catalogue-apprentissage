@@ -9,7 +9,7 @@ const run = async (filter = {}, options = null) => {
 
 const performUpdates = async (filter = {}, options = null) => {
   let etablissementServiceOptions = options || {
-    scope: { siret: true, geoloc: true, conventionnement: true, onisep: true },
+    scope: { siret: true, geoloc: true, conventionnement: true, onisep: true, cfadock: true },
   };
 
   if (

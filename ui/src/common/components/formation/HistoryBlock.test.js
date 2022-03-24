@@ -2,7 +2,7 @@ import React from "react";
 import { render } from "@testing-library/react";
 import { grantAnonymousAccess } from "../../utils/testUtils";
 import { waitFor } from "@testing-library/react";
-import { StatutHistoryBlock } from "./StatutHistoryBlock";
+import { HistoryBlock } from "./HistoryBlock";
 
 const formation = {
   parcoursup_statut: "en attente de publication",
@@ -165,7 +165,7 @@ const formation = {
 test("renders a statut history block component", async () => {
   grantAnonymousAccess({ acl: ["page_formation/voir_status_publication_aff"] });
 
-  const { queryByText, getByText } = render(<StatutHistoryBlock formation={formation} />);
+  const { queryByText, getByText } = render(<HistoryBlock formation={formation} />);
 
   await waitFor(() => getByText("Historique des modifications"));
 
@@ -176,7 +176,7 @@ test("renders a statut history block component", async () => {
 test("display affelnet statut history", async () => {
   grantAnonymousAccess({ acl: ["page_formation/voir_status_publication_aff"] });
 
-  const { getByText, queryByText } = render(<StatutHistoryBlock formation={formation} />);
+  const { getByText, queryByText } = render(<HistoryBlock formation={formation} />);
 
   await waitFor(() => getByText(/Historique des modifications/));
 
@@ -190,7 +190,7 @@ test("display affelnet statut history", async () => {
 test("display parcoursup statut history", async () => {
   grantAnonymousAccess({ acl: ["page_formation/voir_status_publication_ps"] });
 
-  const { getByText, queryByText } = render(<StatutHistoryBlock formation={formation} />);
+  const { getByText, queryByText } = render(<HistoryBlock formation={formation} />);
 
   await waitFor(() => getByText(/Historique des modifications/));
 
@@ -205,7 +205,7 @@ test("display parcoursup statut history", async () => {
 test("display update history", async () => {
   grantAnonymousAccess({ acl: ["page_formation/gestion_publication", "page_formation/modifier_informations"] });
 
-  const { getByText, queryByText } = render(<StatutHistoryBlock formation={formation} />);
+  const { getByText, queryByText } = render(<HistoryBlock formation={formation} />);
 
   await waitFor(() => getByText(/Historique des modifications/));
 

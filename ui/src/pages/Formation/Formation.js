@@ -37,7 +37,7 @@ import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
 import { getOpenStreetMapUrl } from "../../common/utils/mapUtils";
 import { EditableField } from "../../common/components/formation/EditableField";
-import { StatutHistoryBlock } from "../../common/components/formation/StatutHistoryBlock";
+import { HistoryBlock } from "../../common/components/formation/HistoryBlock";
 import { DescriptionBlock } from "../../common/components/formation/DescriptionBlock";
 import { OrganismesBlock } from "../../common/components/formation/OrganismesBlock";
 import { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL } from "../../constants/catalogueLabels";
@@ -277,7 +277,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
           )}
           {(formation?.affelnet_statut_history?.length || formation?.parcoursup_statut_history?.length) && (
             <Box mb={[0, 0, 16]}>
-              <StatutHistoryBlock formation={formation} />
+              <HistoryBlock formation={formation} />
             </Box>
           )}
         </GridItem>
