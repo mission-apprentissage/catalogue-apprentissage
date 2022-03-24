@@ -321,7 +321,6 @@ const formationSchema = {
     description: "Durée de la formation en années",
   },
   duree_incoherente: {
-    index: true,
     type: Boolean,
     default: null,
     description: "Durée incohérente avec les codes mefs",
@@ -333,7 +332,6 @@ const formationSchema = {
     description: "Année de la formation (cursus)",
   },
   annee_incoherente: {
-    index: true,
     type: Boolean,
     default: null,
     description: "Année incohérente avec les codes mefs",
