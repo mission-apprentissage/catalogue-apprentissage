@@ -21,6 +21,8 @@ import { _get, _post, _put } from "../../common/httpClient";
 import Layout from "../layout/Layout";
 import useAuth from "../../common/hooks/useAuth";
 import { hasAccessTo, hasRightToEditFormation } from "../../common/utils/rolesUtils";
+import { DangerBox } from "../../common/components/DangerBox";
+import { WarningBox } from "../../common/components/WarningBox";
 import { StatusBadge } from "../../common/components/StatusBadge";
 import { PublishModal } from "../../common/components/formation/PublishModal";
 import { buildUpdatesHistory } from "../../common/utils/historyUtils";
@@ -64,36 +66,14 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
     formation.distance > seuilDistance
   );
 
-  const UaiFormationContainer = formation.uai_formation_valide
-    ? React.Fragment
-    : (args) => (
-        <Box
-          data-testid={"uai-warning"}
-          bg={"orangesoft.200"}
-          p={4}
-          mb={4}
-          borderLeft={"4px solid"}
-          borderColor={"orangesoft.500"}
-          w={"full"}
-          {...args}
-        />
-      );
+  const UaiFormationContainer = !formation.uai_formation_valide
+    ? (args) => <DangerBox data-testid={"uai-warning"} {...args} />
+    : React.Fragment;
 
   const AdresseContainer = React.Fragment;
-  // seuilDistance >= formation.distance
-  //   ? React.Fragment
-  //   : (args) => (
-  //       <Box
-  //         data-testid={"adress-warning"}
-  //         bg={"orangemedium.200"}
-  //         p={4}
-  //         mb={4}
-  //         borderLeft={"4px solid"}
-  //         borderColor={"orangemedium.500"}
-  //         w={"full"}
-  //         {...args}
-  //       />
-  //     );
+  // formation.distance < seuilDistance
+  //   ? (args) => <WarningBox data-testid={"adress-warning"} {...args} />
+  //   : React.Fragment;
 
   return (
     <Box borderRadius={4}>
@@ -199,7 +179,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                   <InfoTooltip description={helpText.formation.lieu_formation_geo_coordonnees} />
                 </Text>
                 {formation?.lieu_formation_adresse_computed && (
-                  <Box mb={4}>
+                  <Box mb={formation.distance < seuilDistance ? 0 : 4}>
                     <Button
                       onClick={onComputedAdressToggle}
                       variant={"unstyled"}

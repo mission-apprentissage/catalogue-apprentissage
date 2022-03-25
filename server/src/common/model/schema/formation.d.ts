@@ -166,9 +166,17 @@ export interface Formation {
    */
   duree?: string;
   /**
+   * Durée incohérente avec les codes mefs
+   */
+  duree_incoherente?: boolean & string;
+  /**
    * Année de la formation (cursus)
    */
   annee?: string;
+  /**
+   * Année incohérente avec les codes mefs
+   */
+  annee_incoherente?: boolean & string;
   /**
    * Statut parcoursup
    */
