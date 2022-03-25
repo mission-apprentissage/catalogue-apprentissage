@@ -1,3 +1,4 @@
+const sinon = require("sinon");
 const assert = require("assert");
 const fs = require("fs-extra");
 const path = require("path");
@@ -5,10 +6,13 @@ const { connectToMongoForTests, cleanAll } = require("../../../../../tests/utils
 const { Etablissement } = require("../../../../common/model/index");
 const { asyncForEach } = require("../../../../common/utils/asyncUtils");
 const rewiremock = require("rewiremock/node");
+const apiUtils = require("../../../../common/utils/apiUtils");
 
 const EtablissementsTest = fs.readJsonSync(path.resolve(__dirname, "../assets/sample.json"));
 
 describe(__filename, () => {
+  let isApiEntrepriseUpStub;
+
   before(async () => {
     // Connection to test collection
     await connectToMongoForTests();
@@ -20,6 +24,14 @@ describe(__filename, () => {
 
   after(async () => {
     await cleanAll();
+  });
+
+  beforeEach(function () {
+    isApiEntrepriseUpStub = sinon.stub(apiUtils, "isApiEntrepriseUp");
+  });
+
+  afterEach(function () {
+    isApiEntrepriseUpStub.restore();
   });
 
   it("should have inserted sample data", async () => {
@@ -36,9 +48,17 @@ describe(__filename, () => {
       }),
     });
 
+    isApiEntrepriseUpStub.returns(Promise.resolve(true));
+
+    rewiremock("../../../../common/utils/apiUtils").with({
+      isApiEntrepriseUp: isApiEntrepriseUpStub,
+    });
+
     const { performUpdates } = require("../updater/updater.js");
 
     await performUpdates({}, {});
+
+    assert.equal(isApiEntrepriseUpStub.calledOnce, true);
 
     const etablissement = await Etablissement.findById("5fd2551ee7630d000905875e");
     // console.log(etablissement);

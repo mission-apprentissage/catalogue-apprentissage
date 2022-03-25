@@ -25,7 +25,7 @@ const EtablissementsUpdater = async () => {
 
     const all = !optionsCmd.siret && !optionsCmd.geoloc && !optionsCmd.conventionnement && !optionsCmd.onisep;
 
-    const filter = optionsCmd.filter ? JSON.parse(optionsCmd.filter) : { ferme: false };
+    const filter = optionsCmd.filter ? JSON.parse(optionsCmd.filter) : {};
 
     let options = {
       scope: all

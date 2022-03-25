@@ -17,7 +17,7 @@ runScript(async ({ db }) => {
   await conventionFilesImporter(db, CONVENTION_FILES_DIR);
 
   await etablissementUpdater.run(
-    { ferme: false },
+    {},
     {
       scope: {
         siret: false,
