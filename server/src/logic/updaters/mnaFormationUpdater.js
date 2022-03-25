@@ -70,19 +70,24 @@ const selectMefs = async (updatedFormation) => {
       return modalite.duree === duree;
     });
 
-    if (updatedFormation.bcn_mefs_10.length && !bcn_mefs_10.length) {
-      duree_incoherente = true;
-    }
+    duree_incoherente =
+      updatedFormation.bcn_mefs_10.length &&
+      updatedFormation.bcn_mefs_10.filter(({ modalite }) => {
+        return modalite.duree === duree;
+      }).length;
   }
+
   const annee = updatedFormation.annee;
   if (annee && annee !== "X") {
     bcn_mefs_10 = bcn_mefs_10?.filter(({ modalite }) => {
       return modalite.annee === annee;
     });
 
-    if (updatedFormation.bcn_mefs_10.length && !bcn_mefs_10.length) {
-      annee_incoherente = true;
-    }
+    annee_incoherente =
+      updatedFormation.bcn_mefs_10.length &&
+      updatedFormation.bcn_mefs_10.filter(({ modalite }) => {
+        return modalite.annee === annee;
+      }).length;
   }
 
   // try to fill mefs for Affelnet
