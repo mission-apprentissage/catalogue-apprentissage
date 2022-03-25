@@ -127,7 +127,8 @@ export const HistoryBlock = ({ formation }) => {
           {history.length > 5 && (
             <>
               <Button onClick={onToggle} variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
-                Voir plus <ArrowDownLine boxSize={5} transform={isOpen ? "rotate(180deg)" : "none"} />
+                {isOpen ? "Voir moins" : "Voir plus"}{" "}
+                <ArrowDownLine boxSize={5} transform={isOpen ? "rotate(180deg)" : "none"} />
               </Button>
               <Collapse in={isOpen} animateOpacity unmountOnExit={true} style={{ overflow: "unset" }}>
                 <ul>
