@@ -72,9 +72,9 @@ const selectMefs = async (updatedFormation) => {
 
     duree_incoherente =
       updatedFormation.bcn_mefs_10.length &&
-      !!updatedFormation.bcn_mefs_10.filter(({ modalite }) => {
+      updatedFormation.bcn_mefs_10.every(({ modalite }) => {
         return modalite.duree === duree;
-      }).length;
+      });
   }
 
   const annee = updatedFormation.annee;
@@ -85,9 +85,9 @@ const selectMefs = async (updatedFormation) => {
 
     annee_incoherente =
       updatedFormation.bcn_mefs_10.length &&
-      !!updatedFormation.bcn_mefs_10.filter(({ modalite }) => {
+      updatedFormation.bcn_mefs_10.every(({ modalite }) => {
         return modalite.annee === annee;
-      }).length;
+      });
   }
 
   // try to fill mefs for Affelnet
