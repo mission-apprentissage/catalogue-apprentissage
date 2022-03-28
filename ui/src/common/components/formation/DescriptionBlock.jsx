@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Heading, Link, ListItem, Text, UnorderedList } from "@chakra-ui/react";
 import { ExternalLinkLine } from "../../../theme/components/icons";
+import { DangerBox } from "../DangerBox";
 import InfoTooltip from "../InfoTooltip";
 import helpText from "../../../locales/helpText.json";
 import { FormationPeriode } from "./FormationPeriode";
@@ -26,6 +27,19 @@ export const DescriptionBlock = ({ formation }) => {
   const showPartenaires =
     isTitreRNCP &&
     !(formation.rncp_details.certificateurs ?? []).some(({ certificateur }) => HABILITE_LIST.includes(certificateur));
+
+  const MefContainer =
+    formation.duree_incoherente || formation.annee_incoherente
+      ? (args) => <DangerBox data-testid={"mef-warning"} {...args} />
+      : React.Fragment;
+
+  const DureeContainer = formation.duree_incoherente
+    ? (args) => <DangerBox data-testid={"duree-warning"} {...args} />
+    : React.Fragment;
+
+  const AnneeContainer = formation.annee_incoherente
+    ? (args) => <DangerBox data-testid={"annee-warning"} {...args} />
+    : React.Fragment;
 
   return (
     <>
@@ -90,13 +104,19 @@ export const DescriptionBlock = ({ formation }) => {
               </>
             )}
           </Text>
-          <Text mb={4}>
-            Codes MEF 10 caractères :{" "}
-            <Text as="span" variant="highlight">
-              {formation?.bcn_mefs_10?.map(({ mef10 }) => mef10).join(", ")}
-            </Text>{" "}
-            <InfoTooltip description={helpText.formation.mef} />
-          </Text>
+          <MefContainer>
+            <Text mb={formation.duree_incoherente || formation.annee_incoherente ? 0 : 4}>
+              Codes MEF 10 caractères :{" "}
+              <Text as="span" variant="highlight">
+                {formation?.bcn_mefs_10?.map(({ mef10 }) => mef10).join(", ")}
+              </Text>{" "}
+              <InfoTooltip description={helpText.formation.mef} />
+            </Text>
+            <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
+              {(formation.duree_incoherente || formation.annee_incoherente) &&
+                "Aucun code MEF ne correspond à la durée et à l'année de formation enregistrées auprès du Carif-Oref."}
+            </Text>
+          </MefContainer>
           {formation?.affelnet_mefs_10?.length > 0 && (
             <>
               <Text mb={4}>
@@ -134,15 +154,29 @@ export const DescriptionBlock = ({ formation }) => {
             </Text>{" "}
             <InfoTooltip ml="10px" description={helpText.formation.capacite} />
           </Text>
-          <Text mb={4}>
-            Durée de la formation :{" "}
-            <Text as="span" variant="highlight">
-              <DureeAnnee value={formation.duree} />
-            </Text>{" "}
-            <InfoTooltip description={helpText.formation.duree} />
-          </Text>
+          <DureeContainer>
+            <Text mb={formation.duree_incoherente ? 0 : 4}>
+              Durée de la formation :{" "}
+              <Text as="span" variant="highlight">
+                <DureeAnnee value={formation.duree} />
+              </Text>{" "}
+              <InfoTooltip description={helpText.formation.duree} />
+              <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
+                {formation.duree_incoherente &&
+                  "La durée de formation enregistrée auprès du Carif-Oref ne correspond pas à celle qui est déduite du code MEF correspondant à cette formation."}
+              </Text>
+            </Text>
+          </DureeContainer>
+
           {formation.annee === "X" && (
-            <Box bg={"orangesoft.200"} p={4} mb={4} borderLeft={"4px solid"} borderColor={"orangesoft.500"} w={"full"}>
+            <Box
+              bg={"orangesoft.200"}
+              p={4}
+              mb={formation.annee_incoherente ? 0 : 4}
+              borderLeft={"4px solid"}
+              borderColor={"orangesoft.500"}
+              w={"full"}
+            >
               <Text>
                 Année d'entrée en apprentissage :{" "}
                 <Text as="span" variant="highlight" bg={"transparent"}>
@@ -153,13 +187,19 @@ export const DescriptionBlock = ({ formation }) => {
             </Box>
           )}
           {formation.annee !== "X" && (
-            <Text mb={4}>
-              Année d'entrée en apprentissage :{" "}
-              <Text as="span" variant="highlight">
-                <DureeAnnee value={formation.annee} />
-              </Text>{" "}
-              <InfoTooltip description={helpText.formation.annee} />
-            </Text>
+            <AnneeContainer>
+              <Text mb={formation.annee_incoherente ? 0 : 4}>
+                Année d'entrée en apprentissage :{" "}
+                <Text as="span" variant="highlight">
+                  <DureeAnnee value={formation.annee} />
+                </Text>{" "}
+                <InfoTooltip description={helpText.formation.annee} />
+                <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
+                  {formation.annee_incoherente &&
+                    "L'année de formation enregistrée auprès du Carif-Oref ne correspond pas à celle qui est déduite du code MEF correspondant à cette formation."}
+                </Text>
+              </Text>
+            </AnneeContainer>
           )}
           <Text mb={4}>
             Clé ministères éducatifs:

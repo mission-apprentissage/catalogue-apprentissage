@@ -60,6 +60,8 @@ const selectMefs = async (updatedFormation) => {
   let affelnet_mefs_10 = null;
   let affelnet_infos_offre = updatedFormation.affelnet_infos_offre;
   let parcoursup_mefs_10 = null;
+  let duree_incoherente = false;
+  let annee_incoherente = false;
 
   // filter bcn_mefs_10 with data received from RCO
   const duree = updatedFormation.duree;
@@ -67,12 +69,25 @@ const selectMefs = async (updatedFormation) => {
     bcn_mefs_10 = bcn_mefs_10?.filter(({ modalite }) => {
       return modalite.duree === duree;
     });
+
+    duree_incoherente =
+      updatedFormation.bcn_mefs_10.length &&
+      updatedFormation.bcn_mefs_10.every(({ modalite }) => {
+        return modalite.duree !== duree;
+      });
   }
+
   const annee = updatedFormation.annee;
   if (annee && annee !== "X") {
     bcn_mefs_10 = bcn_mefs_10?.filter(({ modalite }) => {
       return modalite.annee === annee;
     });
+
+    annee_incoherente =
+      updatedFormation.bcn_mefs_10.length &&
+      updatedFormation.bcn_mefs_10.every(({ modalite }) => {
+        return modalite.annee !== annee;
+      });
   }
 
   // try to fill mefs for Affelnet
@@ -138,7 +153,14 @@ const selectMefs = async (updatedFormation) => {
     parcoursup_mefs_10 = findMefsForParcoursup(updatedFormation);
   }
 
-  return { bcn_mefs_10, affelnet_mefs_10, affelnet_infos_offre, parcoursup_mefs_10 };
+  return {
+    bcn_mefs_10,
+    affelnet_mefs_10,
+    affelnet_infos_offre,
+    parcoursup_mefs_10,
+    duree_incoherente,
+    annee_incoherente,
+  };
 };
 
 const mnaFormationUpdater = async (formation, { withCodePostalUpdate = true, cfdInfo = null } = {}) => {
@@ -326,13 +348,20 @@ const mnaFormationUpdater = async (formation, { withCodePostalUpdate = true, cfd
     updatedFormation.duree = rcoFormation?.duree ?? formation.duree;
     updatedFormation.annee = rcoFormation?.entree_apprentissage ?? formation.annee;
 
-    const { bcn_mefs_10, affelnet_mefs_10, affelnet_infos_offre, parcoursup_mefs_10 } = await selectMefs(
-      updatedFormation
-    );
+    const {
+      bcn_mefs_10,
+      affelnet_mefs_10,
+      affelnet_infos_offre,
+      parcoursup_mefs_10,
+      duree_incoherente,
+      annee_incoherente,
+    } = await selectMefs(updatedFormation);
     updatedFormation.bcn_mefs_10 = bcn_mefs_10;
     updatedFormation.affelnet_mefs_10 = affelnet_mefs_10;
     updatedFormation.affelnet_infos_offre = affelnet_infos_offre;
     updatedFormation.parcoursup_mefs_10 = parcoursup_mefs_10;
+    updatedFormation.duree_incoherente = duree_incoherente;
+    updatedFormation.annee_incoherente = annee_incoherente;
 
     // compute distance between lieu formation & etablissement formateur
     if (updatedFormation.lieu_formation_geo_coordonnees && updatedFormation.geo_coordonnees_etablissement_formateur) {
