@@ -2,7 +2,7 @@ const express = require("express");
 const multer = require("multer");
 const { mkdirp, move } = require("fs-extra");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
-const csvToJson = require("convert-csv-to-json-latin");
+const csvToJson = require("convert-csv-to-json");
 const path = require("path");
 const logger = require("../../common/logger");
 const upsertEtablissements = require("../../jobs/etablissements/uai");
@@ -52,15 +52,15 @@ module.exports = () => {
           case "CodeDiplome_RNCP_latest_kit.csv": {
             try {
               const tmpFile = csvToJson.getJsonFromCsv(src);
-              if (!hasCSVHeaders(tmpFile, "Code RNCP", "Code Diplome")) {
+              if (!hasCSVHeaders(tmpFile, "Code_RNCP", "Code_Diplome")) {
                 return res.status(400).json({
-                  error: `Le contenu du fichier est invalide, il doit contenir les colonnes suivantes : "Code RNCP;Code Diplome" (et cette première ligne d'en-tête)`,
+                  error: `Le contenu du fichier est invalide, il doit contenir les colonnes suivantes : "Code_RNCP;Code_Diplome" (et cette première ligne d'en-tête)`,
                 });
               }
             } catch (e) {
               logger.error(e);
               return res.status(400).json({
-                error: `Le contenu du fichier est invalide, il doit être au format CSV (;) et contenir les colonnes suivantes : "Code RNCP;Code Diplome" (et cette première ligne d'en-tête)`,
+                error: `Le contenu du fichier est invalide, il doit être au format CSV (;) et contenir les colonnes suivantes : "Code_RNCP;Code_Diplome" (et cette première ligne d'en-tête)`,
               });
             }
             break;

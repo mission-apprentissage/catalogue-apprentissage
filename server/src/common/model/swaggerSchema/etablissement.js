@@ -439,15 +439,10 @@ module.exports = {
         default: false,
         description: "Possède la certification Qualité",
       },
-      habilite_rncp: {
-        type: "boolean",
-        default: false,
-        description: "Possède l'habilitation RNCP",
-      },
       catalogue_published: {
         type: "boolean",
         default: false,
-        description: "Est publié dans le catalogue général (certifié Qualité & habilité RNCP)",
+        description: "Est publié dans le catalogue général (certifié Qualité)",
       },
       published: {
         type: "boolean",

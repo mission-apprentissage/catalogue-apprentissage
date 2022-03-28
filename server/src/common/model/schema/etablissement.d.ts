@@ -352,11 +352,7 @@ export interface Etablissement {
    */
   certifie_qualite?: boolean;
   /**
-   * Possède l'habilitation RNCP
-   */
-  habilite_rncp?: boolean;
-  /**
-   * Est publié dans le catalogue général (certifié Qualité & habilité RNCP)
+   * Est publié dans le catalogue général (certifié Qualité)
    */
   catalogue_published?: boolean;
   /**
