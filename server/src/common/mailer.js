@@ -19,7 +19,7 @@ module.exports = (config, transporter = createTransporter(config.smtp)) => {
     let buffer = await renderFile(template, {
       data,
     });
-    let { html } = mjml(buffer.toString(), { minify: true });
+    let { html } = mjml(buffer.toString());
     return html;
   };
 
