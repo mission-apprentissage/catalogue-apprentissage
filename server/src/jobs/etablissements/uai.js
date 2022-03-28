@@ -1,7 +1,7 @@
 const { runScript } = require("../scriptWrapper");
 const catalogue = require("../../common/components/catalogue");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
-const csvToJson = require("convert-csv-to-json-latin");
+const csvToJson = require("convert-csv-to-json");
 const logger = require("../../common/logger");
 const { Etablissement } = require("../../common/model");
 
