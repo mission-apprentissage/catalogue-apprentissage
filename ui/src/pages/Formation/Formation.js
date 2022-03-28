@@ -22,7 +22,6 @@ import Layout from "../layout/Layout";
 import useAuth from "../../common/hooks/useAuth";
 import { hasAccessTo, hasRightToEditFormation } from "../../common/utils/rolesUtils";
 import { DangerBox } from "../../common/components/DangerBox";
-import { WarningBox } from "../../common/components/WarningBox";
 import { StatusBadge } from "../../common/components/StatusBadge";
 import { PublishModal } from "../../common/components/formation/PublishModal";
 import { buildUpdatesHistory } from "../../common/utils/historyUtils";

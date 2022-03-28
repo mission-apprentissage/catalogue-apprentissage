@@ -21,7 +21,7 @@ import {
   EmojiFlat,
   Question,
   Tick,
-  RejectIcon,
+  Reject,
   // SentPaperPlane
 } from "../../../theme/components/icons";
 import Search from "../../../common/components/Search/Search";
@@ -100,7 +100,7 @@ export default (props) => {
                       {searchState.countReconciliationPs.countAVerifier.toLocaleString("fr-FR")} rapprochements faibles
                     </Tab>
                     <Tab mx={2}>
-                      <RejectIcon color="grey.700" mr="1" />
+                      <Reject color="grey.700" mr="1" />
                       {searchState.countReconciliationPs.countRejete.toLocaleString("fr-FR")} rejeté(s)
                     </Tab>
                     <Tab mx={2}>

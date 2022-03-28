@@ -434,10 +434,20 @@ module.exports = {
         default: "null",
         description: 'Réponse à la question "Proposez-vous des formations en 2020" dans Démarche Simplifiée',
       },
+      certifie_qualite: {
+        type: "boolean",
+        default: false,
+        description: "Possède la certification Qualité",
+      },
+      habilite_rncp: {
+        type: "boolean",
+        default: false,
+        description: "Possède l'habilitation RNCP",
+      },
       catalogue_published: {
         type: "boolean",
         default: false,
-        description: "Est publié dans le catalogue général",
+        description: "Est publié dans le catalogue général (certifié Qualité & habilité RNCP)",
       },
       published: {
         type: "boolean",

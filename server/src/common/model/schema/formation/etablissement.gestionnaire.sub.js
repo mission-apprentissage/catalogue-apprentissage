@@ -30,7 +30,17 @@ const etablissementGestionnaireInfo = {
     index: true,
     type: Boolean,
     default: false,
-    description: "Etablissement gestionnaire entre dans le catalogue",
+    description: "Etablissement gestionnaire entre dans le catalogue (certifié Qualité & habilité RNCP)",
+  },
+  etablissement_gestionnaire_habilite_rncp: {
+    type: Boolean,
+    default: false,
+    description: "Etablissement gestionnaire est habilité RNCP ou pas",
+  },
+  etablissement_gestionnaire_certifie_qualite: {
+    type: Boolean,
+    default: false,
+    description: "Etablissement gestionnaire est certifié Qualité",
   },
   etablissement_gestionnaire_adresse: {
     type: String,
@@ -72,12 +82,6 @@ const etablissementGestionnaireInfo = {
     implicit_type: "geo_point",
     description: "Latitude et longitude de l'établissement gestionnaire",
   },
-  rncp_etablissement_gestionnaire_habilite: {
-    type: Boolean,
-    default: false,
-    description: "Etablissement gestionnaire est habilité RNCP ou pas",
-  },
-
   etablissement_gestionnaire_region: {
     type: String,
     default: null,

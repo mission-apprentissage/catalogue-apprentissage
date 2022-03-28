@@ -2,7 +2,7 @@ const etablissementReferenceInfo = {
   etablissement_reference: {
     type: String,
     default: null,
-    description: "Etablissement reference  est soit formateur soit le gestionnaire",
+    description: "Etablissement reference est soit formateur soit le gestionnaire",
   },
   etablissement_reference_published: {
     type: Boolean,
@@ -13,12 +13,17 @@ const etablissementReferenceInfo = {
     index: true,
     type: Boolean,
     default: false,
-    description: "Etablissement reference entre dans le catalogue",
+    description: "Etablissement reference entre dans le catalogue (certifié Qualité & habilité RNCP)",
   },
-  rncp_etablissement_reference_habilite: {
+  etablissement_reference_habilite_rncp: {
     type: Boolean,
     default: false,
     description: "Etablissement reference est habilité RNCP ou pas",
+  },
+  etablissement_referebce_certifie_qualite: {
+    type: Boolean,
+    default: false,
+    description: "Etablissement referebce est certifié Qualité",
   },
   etablissement_reference_date_creation: {
     type: Date,

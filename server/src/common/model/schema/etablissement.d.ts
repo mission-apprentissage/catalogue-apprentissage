@@ -348,7 +348,15 @@ export interface Etablissement {
    */
   ds_questions_has_2020_training?: string;
   /**
-   * Est publié dans le catalogue général
+   * Possède la certification Qualité
+   */
+  certifie_qualite?: boolean;
+  /**
+   * Possède l'habilitation RNCP
+   */
+  habilite_rncp?: boolean;
+  /**
+   * Est publié dans le catalogue général (certifié Qualité & habilité RNCP)
    */
   catalogue_published?: boolean;
   /**

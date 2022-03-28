@@ -85,6 +85,24 @@ const Badge = {
       mt: 3,
       lineHeight: "1.5rem",
     },
+    ok: {
+      ...commonStatusBadgeStyle,
+      bg: "#00009114",
+      color: "bluefrance",
+    },
+    notOk: {
+      ...commonStatusBadgeStyle,
+      bg: "#00009114",
+      color: "redmarianne",
+    },
+    unknown: {
+      ...commonStatusBadgeStyle,
+      bg: "#00009114",
+      color: "black",
+    },
+    default: {
+      ...commonStatusBadgeStyle,
+    },
   },
 };
 

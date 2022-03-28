@@ -5,7 +5,8 @@ import useAuth from "../../../../hooks/useAuth";
 import { StatusBadge } from "../../../StatusBadge";
 import { Box, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { ArrowRightLine, InfoCircle } from "../../../../../theme/components/icons";
-import { QualiopiBadge } from "../../../QualiopiBadge";
+import { QualiteBadge } from "../../../QualiteBadge";
+import { HabiliteBadge } from "../../../HabiliteBadge";
 
 export const CardListFormation = ({ data }) => {
   let [auth] = useAuth();
@@ -34,7 +35,8 @@ export const CardListFormation = ({ data }) => {
                     <StatusBadge source="Affelnet" status={data.affelnet_statut} mt={[2, 0]} />
                   </Flex>
                 )}
-              {data.etablissement_gestionnaire_catalogue_published && <QualiopiBadge mt={[2, 0]} />}
+              <QualiteBadge value={data.etablissement_gestionnaire_certifie_qualite} mt={[2, 0]} />
+              <HabiliteBadge value={data.etablissement_gestionnaire_habilite_rncp} mt={[2, 0]} />
             </Flex>
             <ArrowRightLine alignSelf="center" color="bluefrance" boxSize={4} />
           </Flex>

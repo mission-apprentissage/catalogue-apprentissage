@@ -23,7 +23,7 @@ const FILTERS = () => [
   "intitule_long",
   "intitule_court",
   "rncp_eligible_apprentissage",
-  "rncp_etablissement_gestionnaire_habilite",
+  "etablissement_gestionnaire_habilite_rncp",
   "rome_codes",
   `rncp_code`,
   `parcoursup_statut`,
@@ -31,7 +31,7 @@ const FILTERS = () => [
   "diplome",
   "tags",
   "annee",
-  "qualiopi",
+  "qualite",
   "duree",
   "periode_start",
   "periode_end",
@@ -114,8 +114,8 @@ const columnsDefinition = [
     exportable: true,
   },
   {
-    Header: "Gestionnaire certifié qualiopi ? ",
-    accessor: "etablissement_gestionnaire_catalogue_published",
+    Header: "Gestionnaire certifié qualité ? ",
+    accessor: "etablissement_gestionnaire_certifie_qualite",
     width: 200,
     exportable: true,
     formatter: (value) => (value ? "OUI" : "NON"),
@@ -140,9 +140,10 @@ const columnsDefinition = [
   },
   {
     Header: "Organisme Habilite (RNCP)",
-    accessor: "rncp_etablissement_gestionnaire_habilite",
+    accessor: "etablissement_gestionnaire_habilite_rncp",
     width: 200,
     exportable: true,
+    formatter: (value) => (value ? "OUI" : "NON"),
   },
   {
     Header: "Eligible apprentissage (RNCP)",
@@ -523,12 +524,12 @@ const facetDefinition = () => [
     isAuth: true, // hide for anonymous
   },
   {
-    componentId: `qualiopi`,
-    dataField: "etablissement_gestionnaire_catalogue_published",
-    title: "Certifiés Qualiopi",
-    filterLabel: "Certifiés Qualiopi",
+    componentId: `qualite`,
+    dataField: "etablissement_gestionnaire_certifie_qualite",
+    title: "Certifiés Qualité",
+    filterLabel: "Certifiés Qualité",
     sortBy: "asc",
-    helpTextSection: helpText.search.qualiopi,
+    helpTextSection: helpText.search.qualite,
     showSearch: false,
     transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
     customQuery: (values) => {
@@ -536,7 +537,29 @@ const facetDefinition = () => [
         return {
           query: {
             match: {
-              etablissement_gestionnaire_catalogue_published: values[0] === "Oui",
+              etablissement_gestionnaire_certifie_qualite: values[0] === "Oui",
+            },
+          },
+        };
+      }
+      return {};
+    },
+  },
+  {
+    componentId: `habilite`,
+    dataField: "etablissement_gestionnaire_habilite_rncp",
+    title: "Habilité RNCP",
+    filterLabel: "Habilité RNCP",
+    sortBy: "asc",
+    helpTextSection: helpText.search.qualite,
+    showSearch: false,
+    transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
+    customQuery: (values) => {
+      if (values.length === 1) {
+        return {
+          query: {
+            match: {
+              etablissement_gestionnaire_habilite_rncp: values[0] === "Oui",
             },
           },
         };

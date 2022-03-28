@@ -461,10 +461,16 @@ const etablissementSchema = {
   },
   //////////////////
 
+  certifie_qualite: {
+    type: Boolean,
+    default: false,
+    description: "Possède la certification Qualité",
+  },
+
   catalogue_published: {
     type: Boolean,
     default: false,
-    description: "Est publié dans le catalogue général",
+    description: "Est publié dans le catalogue général (certifié Qualité)",
   },
 
   published: {

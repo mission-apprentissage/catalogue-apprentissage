@@ -29,7 +29,17 @@ const etablissementFormateurInfo = {
   etablissement_formateur_catalogue_published: {
     type: Boolean,
     default: false,
-    description: "Etablissement formateur entre dans le catalogue",
+    description: "Etablissement formateur entre dans le catalogue (certifié Qualité & habilité RNCP)",
+  },
+  etablissement_formateur_habilite_rncp: {
+    type: Boolean,
+    default: false,
+    description: "Etablissement formateur est habilité RNCP ou pas",
+  },
+  etablissement_formateur_certifie_qualite: {
+    type: Boolean,
+    default: false,
+    description: "Etablissement formateur est certifié Qualité",
   },
   etablissement_formateur_adresse: {
     type: String,
@@ -70,11 +80,6 @@ const etablissementFormateurInfo = {
     type: String,
     implicit_type: "geo_point",
     description: "Latitude et longitude de l'établissement formateur",
-  },
-  rncp_etablissement_formateur_habilite: {
-    type: Boolean,
-    default: false,
-    description: "Etablissement formateur est habilité RNCP ou pas",
   },
 
   etablissement_formateur_region: {

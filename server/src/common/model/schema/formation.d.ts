@@ -381,9 +381,17 @@ export interface Formation {
    */
   etablissement_gestionnaire_published?: boolean;
   /**
-   * Etablissement gestionnaire entre dans le catalogue
+   * Etablissement gestionnaire entre dans le catalogue (certifié Qualité & habilité RNCP)
    */
   etablissement_gestionnaire_catalogue_published?: boolean;
+  /**
+   * Etablissement gestionnaire est habilité RNCP ou pas
+   */
+  etablissement_gestionnaire_habilite_rncp?: boolean;
+  /**
+   * Etablissement gestionnaire est certifié Qualité
+   */
+  etablissement_gestionnaire_certifie_qualite?: boolean;
   /**
    * Numéro et rue établissement gestionnaire
    */
@@ -416,10 +424,6 @@ export interface Formation {
    * Latitude et longitude de l'établissement gestionnaire
    */
   geo_coordonnees_etablissement_gestionnaire?: string;
-  /**
-   * Etablissement gestionnaire est habilité RNCP ou pas
-   */
-  rncp_etablissement_gestionnaire_habilite?: boolean;
   /**
    * région gestionnaire
    */
@@ -473,9 +477,17 @@ export interface Formation {
    */
   etablissement_formateur_published?: boolean;
   /**
-   * Etablissement formateur entre dans le catalogue
+   * Etablissement formateur entre dans le catalogue (certifié Qualité & habilité RNCP)
    */
   etablissement_formateur_catalogue_published?: boolean;
+  /**
+   * Etablissement formateur est habilité RNCP ou pas
+   */
+  etablissement_formateur_habilite_rncp?: boolean;
+  /**
+   * Etablissement formateur est certifié Qualité
+   */
+  etablissement_formateur_certifie_qualite?: boolean;
   /**
    * Numéro et rue établissement formateur
    */
@@ -509,10 +521,6 @@ export interface Formation {
    */
   geo_coordonnees_etablissement_formateur?: string;
   /**
-   * Etablissement formateur est habilité RNCP ou pas
-   */
-  rncp_etablissement_formateur_habilite?: boolean;
-  /**
    * région formateur
    */
   etablissement_formateur_region?: string;
@@ -545,7 +553,7 @@ export interface Formation {
    */
   etablissement_formateur_date_creation?: Date;
   /**
-   * Etablissement reference  est soit formateur soit le gestionnaire
+   * Etablissement reference est soit formateur soit le gestionnaire
    */
   etablissement_reference?: string;
   /**
@@ -553,13 +561,17 @@ export interface Formation {
    */
   etablissement_reference_published?: boolean;
   /**
-   * Etablissement reference entre dans le catalogue
+   * Etablissement reference entre dans le catalogue (certifié Qualité & habilité RNCP)
    */
   etablissement_reference_catalogue_published?: boolean;
   /**
    * Etablissement reference est habilité RNCP ou pas
    */
-  rncp_etablissement_reference_habilite?: boolean;
+  etablissement_reference_habilite_rncp?: boolean;
+  /**
+   * Etablissement referebce est certifié Qualité
+   */
+  etablissement_referebce_certifie_qualite?: boolean;
   /**
    * Date de création de l'établissement
    */

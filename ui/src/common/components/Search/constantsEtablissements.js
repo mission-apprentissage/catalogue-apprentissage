@@ -62,7 +62,7 @@ const columnsDefinition = [
     exportable: true,
   },
   {
-    Header: "Qualiopi ?",
+    Header: "Certifié Qualité ?",
     accessor: "info_qualiopi_info",
     width: 200,
     exportable: true,
@@ -210,7 +210,7 @@ const columnsDefinition = [
 const queryBuilderField = [
   { text: "Raison sociale", value: "entreprise_raison_sociale.keyword" },
   { text: "Siret", value: "siret.keyword" },
-  { text: "Certifié qualiopi", value: "info_qualiopi_info.keyword" },
+  { text: "Certifié Qualité", value: "info_qualiopi_info.keyword" },
   { text: "Uai", value: "uai.keyword" },
   { text: "Nda", value: "nda.keyword" },
 ];
@@ -242,12 +242,12 @@ const facetDefinition = () => [
     helpTextSection: helpText.search.tags,
   },
   {
-    componentId: `qualiopi`,
+    componentId: `qualite`,
     dataField: "catalogue_published",
-    title: "Certifiés Qualiopi",
-    filterLabel: "Certifiés Qualiopi",
+    title: "Certifiés Qualité",
+    filterLabel: "Certifiés Qualité",
     sortBy: "asc",
-    helpTextSection: helpText.search.qualiopi,
+    helpTextSection: helpText.search.qualite,
     showSearch: false,
     transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
     customQuery: (values) => {
