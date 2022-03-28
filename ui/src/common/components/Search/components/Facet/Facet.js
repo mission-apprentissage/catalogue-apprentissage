@@ -3,7 +3,7 @@ import { MultiList } from "@appbaseio/reactivesearch";
 import { Accordion, AccordionButton, AccordionItem, AccordionPanel, Box, Flex, Text } from "@chakra-ui/react";
 import useAuth from "../../../../hooks/useAuth";
 import { hasOneOfRoles } from "../../../../utils/rolesUtils";
-import { compact } from "lodash";
+import compact from "lodash.compact";
 import { academies } from "../../../../../constants/academies";
 import "./facet.css";
 import { AddFill, SubtractLine } from "../../../../../theme/components/icons";

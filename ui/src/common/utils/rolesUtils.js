@@ -1,4 +1,4 @@
-import { intersection } from "lodash";
+import intersection from "lodash.intersection";
 
 export const isUserAdmin = (auth) => auth && auth.permissions && auth.permissions.isAdmin;
 
