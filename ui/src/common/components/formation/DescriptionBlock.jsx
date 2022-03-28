@@ -28,6 +28,11 @@ export const DescriptionBlock = ({ formation }) => {
     isTitreRNCP &&
     !(formation.rncp_details.certificateurs ?? []).some(({ certificateur }) => HABILITE_LIST.includes(certificateur));
 
+  const MefContainer =
+    formation.duree_incoherente || formation.annee_incoherente
+      ? (args) => <DangerBox data-testid={"mef-warning"} {...args} />
+      : React.Fragment;
+
   const DureeContainer = formation.duree_incoherente
     ? (args) => <DangerBox data-testid={"duree-warning"} {...args} />
     : React.Fragment;
@@ -99,13 +104,19 @@ export const DescriptionBlock = ({ formation }) => {
               </>
             )}
           </Text>
-          <Text mb={4}>
-            Codes MEF 10 caractères :{" "}
-            <Text as="span" variant="highlight">
-              {formation?.bcn_mefs_10?.map(({ mef10 }) => mef10).join(", ")}
-            </Text>{" "}
-            <InfoTooltip description={helpText.formation.mef} />
-          </Text>
+          <MefContainer>
+            <Text mb={formation.duree_incoherente || formation.annee_incoherente ? 0 : 4}>
+              Codes MEF 10 caractères :{" "}
+              <Text as="span" variant="highlight">
+                {formation?.bcn_mefs_10?.map(({ mef10 }) => mef10).join(", ")}
+              </Text>{" "}
+              <InfoTooltip description={helpText.formation.mef} />
+            </Text>
+            <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
+              {(formation.duree_incoherente || formation.annee_incoherente) &&
+                "Aucun code MEF ne correspond à la durée et à l'année de formation enregistrées auprès du Carif-Oref."}
+            </Text>
+          </MefContainer>
           {formation?.affelnet_mefs_10?.length > 0 && (
             <>
               <Text mb={4}>
