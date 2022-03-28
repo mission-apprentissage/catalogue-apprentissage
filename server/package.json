@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.6.1",
-    "@mission-apprentissage/tco-service-node": "2.35.7",
+    "@mission-apprentissage/tco-service-node": "2.35.8",
     "aws-sdk": "2.785.0",
     "axios": "0.21.1",
     "body-parser": "1.19.0",
@@ -69,7 +69,7 @@
     "luxon": "2.3.1",
     "migrate-mongo": "8.2.3",
     "mjml": "^4.7.1",
-    "mongoose": "5.13.7",
+    "mongoose": "5.13.14",
     "mongoose-paginate": "5.0.3",
     "mongoose-schema-jsonschema": "1.4.7",
     "multer": "1.4.2",
