@@ -18,7 +18,7 @@ export const QualiteBadge = ({ value, ...props }) => {
       break;
 
     default:
-      variant = "unknown";
+      variant = "default";
       Icon = Question;
       break;
   }

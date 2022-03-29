@@ -35,7 +35,6 @@ import { HowToFixModal } from "../../common/components/organisme/HowToFixModal";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
 import { QualiteBadge } from "../../common/components/QualiteBadge";
-import { HabiliteBadge } from "../../common/components/HabiliteBadge";
 import { etablissementService, updateUaiOrganisme } from "../../common/api/organisme";
 
 const sleep = (m) => new Promise((r) => setTimeout(r, m));

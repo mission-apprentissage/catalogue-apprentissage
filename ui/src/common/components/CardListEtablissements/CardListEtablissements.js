@@ -3,7 +3,6 @@ import { NavLink } from "react-router-dom";
 import { Badge, Text, Flex, Box, Heading, Link } from "@chakra-ui/react";
 import { ArrowRightLine } from "../../../theme/components/icons";
 import { QualiteBadge } from "../QualiteBadge";
-import { HabiliteBadge } from "../HabiliteBadge";
 
 const CardListEtablissements = ({ data, withoutLink }) => {
   const RenderCard = ({ withoutLink }) => {

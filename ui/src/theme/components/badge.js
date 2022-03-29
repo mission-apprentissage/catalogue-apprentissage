@@ -95,13 +95,10 @@ const Badge = {
       bg: "#00009114",
       color: "redmarianne",
     },
-    unknown: {
+    default: {
       ...commonStatusBadgeStyle,
       bg: "#00009114",
       color: "black",
-    },
-    default: {
-      ...commonStatusBadgeStyle,
     },
   },
 };
