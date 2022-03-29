@@ -467,7 +467,7 @@ const facetDefinition = () => [
     selectAllLabel: "Tous",
     sortBy: "count",
     acl: "page_catalogue/voir_status_publication_ps",
-    showCatalogEligibleOnly: true,
+    displayInContext: ["catalogue_general"],
     helpTextSection: helpText.search.parcoursup_statut,
   },
   {
@@ -478,7 +478,7 @@ const facetDefinition = () => [
     selectAllLabel: "Tous",
     sortBy: "count",
     acl: "page_catalogue/voir_status_publication_aff",
-    showCatalogEligibleOnly: true,
+    displayInContext: ["catalogue_general"],
     helpTextSection: helpText.search.affelnet_statut,
   },
   {
@@ -531,6 +531,7 @@ const facetDefinition = () => [
     sortBy: "asc",
     helpTextSection: helpText.search.qualite,
     showSearch: false,
+    displayInContext: ["catalogue_non_eligible"],
     transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
     customQuery: (values) => {
       if (values.length === 1) {
@@ -551,8 +552,9 @@ const facetDefinition = () => [
     title: "Habilité RNCP",
     filterLabel: "Habilité RNCP",
     sortBy: "asc",
-    helpTextSection: helpText.search.qualite,
+    helpTextSection: helpText.search.habilite,
     showSearch: false,
+    displayInContext: ["catalogue_non_eligible"],
     transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
     customQuery: (values) => {
       if (values.length === 1) {

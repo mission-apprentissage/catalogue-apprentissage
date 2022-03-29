@@ -27,16 +27,16 @@ export const CardListFormation = ({ data }) => {
         <Text textStyle="sm">Académie : {data.nom_academie}</Text>
         <Box>
           <Flex justifyContent="space-between">
-            <Flex mt={3} flexWrap={"wrap"}>
+            <Flex mt={1} flexWrap={"wrap"}>
               {hasAccessTo(auth, "page_catalogue/voir_status_publication") &&
                 data.etablissement_reference_catalogue_published && (
-                  <Flex flexWrap={"wrap"} mr={[0, 2]}>
-                    <StatusBadge source="Parcoursup" status={data.parcoursup_statut} mr={[0, 2]} />
-                    <StatusBadge source="Affelnet" status={data.affelnet_statut} mt={[2, 0]} />
-                  </Flex>
+                  <>
+                    <StatusBadge source="Parcoursup" status={data.parcoursup_statut} mt={2} mr={[0, 2]} />
+                    <StatusBadge source="Affelnet" status={data.affelnet_statut} mt={2} mr={[0, 2]} />
+                  </>
                 )}
-              <QualiteBadge value={data.etablissement_gestionnaire_certifie_qualite} mt={[2, 0]} />
-              <HabiliteBadge value={data.etablissement_gestionnaire_habilite_rncp} mt={[2, 0]} />
+              <QualiteBadge value={data.etablissement_gestionnaire_certifie_qualite} mt={2} mr={[0, 2]} />
+              <HabiliteBadge value={data.etablissement_gestionnaire_habilite_rncp} mt={2} mr={[0, 2]} />
             </Flex>
             <ArrowRightLine alignSelf="center" color="bluefrance" boxSize={4} />
           </Flex>

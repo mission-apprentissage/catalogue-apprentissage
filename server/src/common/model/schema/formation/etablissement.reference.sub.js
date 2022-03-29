@@ -20,7 +20,7 @@ const etablissementReferenceInfo = {
     default: false,
     description: "Etablissement reference est habilité RNCP ou pas",
   },
-  etablissement_referebce_certifie_qualite: {
+  etablissement_reference_certifie_qualite: {
     type: Boolean,
     default: false,
     description: "Etablissement referebce est certifié Qualité",

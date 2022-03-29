@@ -128,8 +128,8 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                 </Text>
                 {facetDefinition(context)
                   .filter(
-                    ({ acl, showCatalogEligibleOnly, isAuth }) =>
-                      (!showCatalogEligibleOnly || isCatalogueGeneral) &&
+                    ({ acl, displayInContext, isAuth }) =>
+                      (!displayInContext || displayInContext.includes(context)) &&
                       (!acl || hasAccessTo(auth, acl)) &&
                       (!isAuth || (isAuth && auth?.sub !== "anonymous"))
                   )
@@ -169,7 +169,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                   <Flex pt={3} direction="column">
                     <Box>
                       <Text mt={4} mb={4} textStyle="rf-text" width={"100%"}>
-                        Début de formation <InfoTooltip description={helpText.search.periode} />
+                        Début de formation <InfoTooltip description={helpText.search.periode.title} />
                       </Text>
                     </Box>
 

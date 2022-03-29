@@ -31,7 +31,7 @@ export const OrganismesBlock = ({ formation }) => {
   return (
     <>
       <Heading textStyle="h4" color="grey.800" mb={4}>
-        Organisme(s) associé(s)
+        {oneEstablishment ? "Organisme associé" : "Organismes associés"}
       </Heading>
 
       {!oneEstablishment && (
@@ -45,8 +45,10 @@ export const OrganismesBlock = ({ formation }) => {
               <Text>UAI : {formation.etablissement_gestionnaire_uai}</Text>
             </Flex>
             <Box my={2}>
-              <QualiteBadge value={formation.etablissement_gestionnaire_catalogue_published} m="0" />
-              <HabiliteBadge value={formation.etablissement_gestionnaire_habilite_rncp} m="0" />
+              <Flex>
+                <QualiteBadge value={formation.etablissement_gestionnaire_certifie_qualite} m="0" mr={[0, 2]} />
+                <HabiliteBadge value={formation.etablissement_gestionnaire_habilite_rncp} m="0" mr={[0, 2]} />
+              </Flex>
             </Box>
             <Heading textStyle="h6" color="grey.800" my={1}>
               {formation.etablissement_gestionnaire_entreprise_raison_sociale}
@@ -86,8 +88,10 @@ export const OrganismesBlock = ({ formation }) => {
             <Text>UAI: {formation.etablissement_formateur_uai}</Text>
           </Flex>
           <Box my={2}>
-            <QualiteBadge value={formation.etablissement_formateur_certifie_qualite} m="0" />
-            <HabiliteBadge value={formation.etablissement_formateur_habilite_rncp} m="0" />
+            <Flex>
+              <QualiteBadge value={formation.etablissement_formateur_certifie_qualite} m="0" mr={[0, 2]} />
+              <HabiliteBadge value={formation.etablissement_formateur_habilite_rncp} m="0" mr={[0, 2]} />
+            </Flex>
           </Box>
           <Heading textStyle="h6" color="grey.800" my={1}>
             {formation.etablissement_formateur_entreprise_raison_sociale}

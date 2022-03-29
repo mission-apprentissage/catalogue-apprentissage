@@ -571,7 +571,7 @@ export interface Formation {
   /**
    * Etablissement referebce est certifié Qualité
    */
-  etablissement_referebce_certifie_qualite?: boolean;
+  etablissement_reference_certifie_qualite?: boolean;
   /**
    * Date de création de l'établissement
    */

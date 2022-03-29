@@ -69,12 +69,17 @@
       "à publier": "offre et organisme de formation qui remplissent les conditions pour intégrer la plateforme Parcoursup. L’offre de formation peut faire l’objet d’une publication par un instructeur en académie",
       "en attente de publication": "offre de formation qui pourrait être intégrée automatiquement dans la plateforme Parcoursup via le module l’import"
     },
-    "periode": "Années au cours desquelles les débuts de formation sont proposés ou ont été proposés.",
+    "periode": {
+      "title": "Années au cours desquelles les débuts de formation sont proposés ou ont été proposés."
+    },
     "tags": {
       "title": "périodes d’inscriptions en formation ouvertes sur l’organisme"
     },
     "qualite": {
       "title": "Les données proviennent de la liste publique des organismes de formation (liste alimentée par les certificateurs qualité). Cette liste inclut les certifications Qualiopi, ainsi que les organismes réputés satisfaire à l’obligation de certification."
+    },
+    "habilite": {
+      "title": "."
     }
   },
   "rapprochement": {
