@@ -290,10 +290,10 @@ describe(__filename, () => {
     //   assert.deepStrictEqual(result, false);
     // });
 
-    it("should return false if etablissement is not habilite and formation is a Titre or TP", () => {
+    it("should return false if etablissement doesn't have quality certification and formation is a Titre or TP", () => {
       const result = isInCatalogGeneral(
-        { siret: "1234", catalogue_published: true },
-        { siret: "1234", catalogue_published: true },
+        { siret: "1234", info_qualiopi_info: "NON" },
+        { siret: "1234", info_qualiopi_info: "NON" },
         { code_type_certif: "TP", rncp_eligible_apprentissage: true }
       );
       assert.deepStrictEqual(result, false);
@@ -301,8 +301,8 @@ describe(__filename, () => {
 
     it("should return false if etablissement is not rncp_eligible_apprentissage and formation is a Titre or TP", () => {
       const result = isInCatalogGeneral(
-        { siret: "1234", catalogue_published: true },
-        { siret: "1234", catalogue_published: true },
+        { siret: "1234", info_qualiopi_info: "OUI" },
+        { siret: "1234", info_qualiopi_info: "OUI" },
         {
           code_type_certif: "TP",
           partenaires: [],
@@ -313,10 +313,10 @@ describe(__filename, () => {
       assert.deepStrictEqual(result, false);
     });
 
-    it("should return true if etablissement is habilite rncp and formation is a Titre or TP", () => {
+    it("should return true if etablissement has quality certification and formation is a Titre or TP", () => {
       const result = isInCatalogGeneral(
-        { siret: "1234", catalogue_published: true },
-        { siret: "1234", catalogue_published: true },
+        { siret: "1234", info_qualiopi_info: "OUI" },
+        { siret: "1234", info_qualiopi_info: "OUI" },
         {
           code_type_certif: "TP",
           partenaires: [],
@@ -329,8 +329,8 @@ describe(__filename, () => {
 
     it("should return true if etablissement is published and formation is not Titre or TP", () => {
       const result = isInCatalogGeneral(
-        { siret: "1234", catalogue_published: true },
-        { siret: "1234", catalogue_published: true },
+        { siret: "1234", info_qualiopi_info: "OUI" },
+        { siret: "1234", info_qualiopi_info: "OUI" },
         {}
       );
       assert.deepStrictEqual(result, true);
