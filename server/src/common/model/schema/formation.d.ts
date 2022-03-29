@@ -569,7 +569,7 @@ export interface Formation {
    */
   etablissement_reference_habilite_rncp?: boolean;
   /**
-   * Etablissement referebce est certifié Qualité
+   * Etablissement reference est certifié Qualité
    */
   etablissement_reference_certifie_qualite?: boolean;
   /**

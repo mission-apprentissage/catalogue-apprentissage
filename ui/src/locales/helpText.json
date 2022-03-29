@@ -77,9 +77,6 @@
     },
     "qualite": {
       "title": "Les données proviennent de la liste publique des organismes de formation (liste alimentée par les certificateurs qualité). Cette liste inclut les certifications Qualiopi, ainsi que les organismes réputés satisfaire à l’obligation de certification."
-    },
-    "habilite": {
-      "title": "."
     }
   },
   "rapprochement": {

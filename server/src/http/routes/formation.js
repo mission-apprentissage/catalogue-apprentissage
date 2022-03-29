@@ -31,6 +31,11 @@ module.exports = () => {
       filter["parcoursup_id"] = id_parcoursup;
     }
 
+    // Par défaut, ne retourne que le catalogue général.
+    if (!Array.from(filter).length) {
+      filter.etablissement_reference_catalogue_published = true;
+    }
+
     const page = qs && qs.page ? qs.page : 1;
     const limit = qs && qs.limit ? parseInt(qs.limit, 10) : 10;
     const select =

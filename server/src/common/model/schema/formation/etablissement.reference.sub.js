@@ -23,7 +23,7 @@ const etablissementReferenceInfo = {
   etablissement_reference_certifie_qualite: {
     type: Boolean,
     default: false,
-    description: "Etablissement referebce est certifié Qualité",
+    description: "Etablissement reference est certifié Qualité",
   },
   etablissement_reference_date_creation: {
     type: Date,

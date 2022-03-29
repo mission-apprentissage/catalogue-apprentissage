@@ -32,6 +32,7 @@ const FILTERS = () => [
   "tags",
   "annee",
   "qualite",
+  "habilite",
   "duree",
   "periode_start",
   "periode_end",
@@ -526,12 +527,12 @@ const facetDefinition = () => [
   {
     componentId: `qualite`,
     dataField: "etablissement_gestionnaire_certifie_qualite",
-    title: "Certifiés Qualité",
-    filterLabel: "Certifiés Qualité",
+    title: "Certifié Qualité",
+    filterLabel: "Certifié Qualité",
     sortBy: "asc",
     helpTextSection: helpText.search.qualite,
     showSearch: false,
-    displayInContext: ["catalogue_non_eligible"],
+    // displayInContext: ["catalogue_non_eligible"],
     transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
     customQuery: (values) => {
       if (values.length === 1) {
@@ -548,20 +549,19 @@ const facetDefinition = () => [
   },
   {
     componentId: `habilite`,
-    dataField: "etablissement_gestionnaire_habilite_rncp",
+    dataField: "etablissement_reference_habilite_rncp",
     title: "Habilité RNCP",
     filterLabel: "Habilité RNCP",
     sortBy: "asc",
-    helpTextSection: helpText.search.habilite,
     showSearch: false,
-    displayInContext: ["catalogue_non_eligible"],
+    // displayInContext: ["catalogue_non_eligible"],
     transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
     customQuery: (values) => {
       if (values.length === 1) {
         return {
           query: {
             match: {
-              etablissement_gestionnaire_habilite_rncp: values[0] === "Oui",
+              etablissement_reference_habilite_rncp: values[0] === "Oui",
             },
           },
         };

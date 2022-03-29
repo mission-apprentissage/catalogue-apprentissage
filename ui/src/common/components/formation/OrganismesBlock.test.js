@@ -182,7 +182,7 @@ test("should render the organismes block in one establishment mode", async () =>
 
   const { queryByText, getByText } = renderWithRouter(<OrganismesBlock formation={formation} />);
 
-  const title = queryByText("Organisme(s) associé(s)");
+  const title = queryByText("Organisme associé");
   expect(title).toBeInTheDocument();
 
   const formateurLabel = queryByText("Formateur");
@@ -204,7 +204,7 @@ test("should render the organismes block in 2 establishments mode", async () => 
   const form = { ...formation, etablissement_gestionnaire_siret: "test", etablissement_gestionnaire_id: "test" };
   const { queryByText, getByText, getAllByTestId } = renderWithRouter(<OrganismesBlock formation={form} />);
 
-  const title = queryByText("Organisme(s) associé(s)");
+  const title = queryByText("Organismes associés");
   expect(title).toBeInTheDocument();
 
   const formateurLabel = queryByText("Formateur");

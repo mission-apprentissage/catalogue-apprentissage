@@ -915,7 +915,7 @@ module.exports = {
       etablissement_reference_certifie_qualite: {
         type: "boolean",
         default: false,
-        description: "Etablissement referebce est certifié Qualité",
+        description: "Etablissement reference est certifié Qualité",
       },
       etablissement_reference_date_creation: {
         type: "string",

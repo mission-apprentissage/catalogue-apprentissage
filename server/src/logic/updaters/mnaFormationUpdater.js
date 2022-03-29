@@ -189,6 +189,7 @@ const mnaFormationUpdater = async (formation, { withCodePostalUpdate = true, cfd
 
     error = parseErrors(etablissementsMessages);
     if (error) {
+      console.error(error);
       return { updates: null, formation, error, cfdInfo: currentCfdInfo };
     }
 

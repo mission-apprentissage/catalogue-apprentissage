@@ -31,7 +31,7 @@ runScript(async ({ db }) => {
 
   // Formations
   Formation.pauseAllMongoosaticHooks();
-  await trainingsUpdater({ noUpdatesFilters: true, noMail: true });
+  await trainingsUpdater({ noMail: true });
 
   await parcoursupJobs();
   await affelnetJobs();

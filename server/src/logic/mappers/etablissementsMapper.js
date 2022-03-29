@@ -336,11 +336,11 @@ const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissem
       result: {
         ...etablissementGestionnaire,
         etablissement_gestionnaire_habilite_rncp: isHabiliteRncp(rncpInfo, etablissement_gestionnaire_siret),
-        etablissement_gestionnaire_certifie_qualite: isCertifieQualite(etablissementGestionnaire),
+        etablissement_gestionnaire_certifie_qualite: isCertifieQualite(attachedEstablishments.gestionnaire),
 
         ...etablissementFormateur,
         etablissement_formateur_habilite_rncp: isHabiliteRncp(rncpInfo, etablissement_formateur_siret),
-        etablissement_formateur_certifie_qualite: isCertifieQualite(etablissementFormateur),
+        etablissement_formateur_certifie_qualite: isCertifieQualite(attachedEstablishments.formateur),
 
         etablissement_reference,
         etablissement_reference_habilite_rncp: isHabiliteRncp(rncpInfo, referenceEstablishment.siret),

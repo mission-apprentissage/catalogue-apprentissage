@@ -2,6 +2,7 @@ const logger = require("../../../../common/logger");
 const { Etablissement } = require("../../../../common/model/index");
 const { getEtablissementUpdates } = require("@mission-apprentissage/tco-service-node");
 const { isApiEntrepriseUp } = require("../../../../common/utils/apiUtils");
+const { isCertifieQualite } = require("../../../../logic/mappers/etablissementsMapper");
 
 const run = async (filter = {}, options = null) => {
   await performUpdates(filter, options);
@@ -34,6 +35,8 @@ const performUpdates = async (filter = {}, options = null) => {
         etablissement._doc,
         etablissementServiceOptions
       );
+
+      updatedEtablissement.certifie_qualite = isCertifieQualite(updatedEtablissement);
 
       count++;
 
