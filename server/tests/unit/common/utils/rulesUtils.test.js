@@ -210,6 +210,96 @@ describe(__filename, () => {
       });
       assert.deepStrictEqual(result, expected);
     });
+
+    it("should build a query from an advanced rule", () => {
+      const expected = {
+        $and: [
+          {
+            $and: [
+              {
+                annee: {
+                  $ne: "X",
+                },
+                $or: [
+                  {
+                    "rncp_details.code_type_certif": {
+                      $in: ["Titre", "TP"],
+                    },
+                    "rncp_details.rncp_outdated": { $ne: true },
+                  },
+                  {
+                    "rncp_details.code_type_certif": {
+                      $nin: ["Titre", "TP"],
+                    },
+                    cfd_outdated: { $ne: true },
+                  },
+                ],
+                etablissement_gestionnaire_catalogue_published: true,
+                etablissement_reference_catalogue_published: true,
+                published: true,
+                // periode: { $gte: getPeriodeStartDate() },
+              },
+            ],
+          },
+          {
+            $and: [
+              {
+                $or: [
+                  {
+                    "rncp_details.active_inactive": "ACTIVE",
+                    "rncp_details.code_type_certif": {
+                      $in: ["Titre", "TP"],
+                    },
+                  },
+                  {
+                    "rncp_details.code_type_certif": {
+                      $nin: ["Titre", "TP"],
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            $and: [
+              {
+                "bcn_mefs_10.mef10": {
+                  $regex: /^254/,
+                },
+              },
+              {
+                "bcn_mefs_10.mef10": {
+                  $regex: /21$/,
+                },
+              },
+            ],
+          },
+        ],
+        diplome: "BREVET PROFESSIONNEL AGRICOLE DE NIVEAU V",
+        niveau: "3 (CAP...)",
+        duree: "2",
+        annee: "1",
+        ...getExpireRule(),
+      };
+
+      let result = getQueryFromRule({
+        plateforme: "affelnet",
+        niveau: "3 (CAP...)",
+        diplome: "BREVET PROFESSIONNEL AGRICOLE DE NIVEAU V",
+        statut: "à publier (soumis à validation)",
+        num_academie: 0,
+        regle_complementaire:
+          '{"$and":[{"bcn_mefs_10.mef10":{"$regex":"^254"}},{"bcn_mefs_10.mef10":{"$regex":"21$"}}]}',
+        regle_complementaire_query:
+          '[{"field":"bcn_mefs_10.mef10","operator":"===^","value":"254","combinator":"AND","index":0,"key":"62dc8404-81a6-43ad-8e20-e03cc78dc893"},{"field":"bcn_mefs_10.mef10","operator":"===$","value":"21","combinator":"AND","index":1,"key":"51a98b29-f205-4ccf-b969-a0c2cf95fcfa"}]',
+        nom_regle_complementaire: "Brevet Pro Agricole en 2 ans",
+        is_deleted: false,
+        condition_integration: "peut intégrer",
+        duree: "2",
+        annee: "1",
+      });
+      assert.deepStrictEqual(result, expected);
+    });
   });
 
   describe("serialize", () => {
