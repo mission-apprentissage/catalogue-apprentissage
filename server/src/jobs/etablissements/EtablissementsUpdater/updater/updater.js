@@ -25,22 +25,20 @@ const performUpdates = async (filter = {}, options = null) => {
 
   let count = 0;
   const total = await Etablissement.countDocuments(filter);
-  let cursor = Etablissement.find(filter).cursor();
+  let cursor = Etablissement.find(filter).lean().cursor();
   for await (const etablissement of cursor) {
     try {
       if (count % 1000 === 0) {
         console.log(`updating etablissement ${count}/${total}`);
       }
       const { updates, etablissement: updatedEtablissement, error } = await getEtablissementUpdates(
-        etablissement._doc,
+        etablissement,
         etablissementServiceOptions
       );
 
-      await Etablissement.findByIdAndUpdate(etablissement._id, {
-        certifie_qualite: isCertifieQualite(updatedEtablissement),
-      });
-
       count++;
+
+      const certifie_qualite = isCertifieQualite(updatedEtablissement);
 
       if (error) {
         etablissement.update_error = error;
@@ -48,13 +46,9 @@ const performUpdates = async (filter = {}, options = null) => {
         logger.error(
           `${count}/${total}: Etablissement ${etablissement._id} (siret: ${etablissement?.siret}) errored: ${error}`
         );
-      } else if (
-        updates ||
-        etablissement._doc.certifie_qualite === null ||
-        etablissement._doc.certifie_qualite !== updatedEtablissement.certifie_qualite
-      ) {
+      } else if (updates || etablissement.certifie_qualite !== certifie_qualite) {
         updatedEtablissement.last_update_at = Date.now();
-        await Etablissement.findByIdAndUpdate(etablissement._id, updatedEtablissement);
+        await Etablissement.findByIdAndUpdate(etablissement._id, { ...updatedEtablissement, certifie_qualite });
         console.log(`${count}/${total}: Etablissement ${etablissement._id} updated`);
         // logger.info(`${count}/${total}: Etablissement ${etablissement._id} updated`);
       }
