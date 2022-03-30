@@ -1,8 +1,52 @@
+const { diff } = require("deep-object-diff");
 const { DualControlFormation, DualControlReport } = require("../../../common/model/index");
 const { Formation } = require("../../../common/model/index");
 
 // Here list all the fields we want to compare
-const FIELDS_TO_COMPARE = ["cfd", "rncp_code", "etablissement_gestionnaire_siret"];
+const FIELDS_TO_COMPARE = [
+  "id_rco_formation",
+  "id_formation",
+  "id_action",
+  "id_certifinfo",
+  "periode",
+  "duree",
+  "capacite",
+  "annee",
+  "etablissement_gestionnaire_siret",
+  "etablissement_gestionnaire_uai",
+  "etablissement_formateur_siret",
+  "etablissement_formateur_uai",
+  "etablissement_formateur_siren",
+  "intitule_rco",
+  "cfd",
+  "cfd_outdated",
+  "rncp_code",
+  // "bcn_mefs_10",
+  "cfd_date_fermeture",
+  "cfd_specialite",
+  "niveau",
+  "intitule_court",
+  "intitule_long",
+  "diplome",
+];
+
+const isEqual = (dualControlFormation, formation, key) => {
+  let result = false;
+  switch (key) {
+    case "periode": {
+      const difference = diff(dualControlFormation[key], formation[key]);
+      const keys = Object.keys(difference);
+      result = keys.length === 0;
+      break;
+    }
+
+    default:
+      result = dualControlFormation[key] === formation[key];
+      break;
+  }
+
+  return result;
+};
 
 const compare = async (date = Date.now(), fieldsToCompare = FIELDS_TO_COMPARE) => {
   const results = {
@@ -30,7 +74,8 @@ const compare = async (date = Date.now(), fieldsToCompare = FIELDS_TO_COMPARE) =
       results.totalNotFound++;
     } else {
       fieldsToCompare.forEach((key) => {
-        if (dualControlFormation[key] !== formation[key]) {
+        if (!isEqual(dualControlFormation, formation, key)) {
+          // console.warn("wrong", key, dualControlFormation[key], "vs", formation[key]);
           results.fields[key]++;
         }
       });

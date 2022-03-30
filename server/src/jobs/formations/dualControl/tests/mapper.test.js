@@ -36,4 +36,15 @@ describe(__filename, () => {
     const expectedObj = { code_diplome: "1234", title: "Ingénieur du son", code_postal: "67110", num_academie: "15" };
     assert.deepStrictEqual(obj, expectedObj);
   });
+
+  it("should remove keys if excluded", async () => {
+    const obj = { code_diplome: "1234", title: "Ingénieur du son", code_postal: "67110", num_academie: "15" };
+    const newObj = mapper(obj, {
+      code_diplome: "cfd",
+      title: 0,
+    });
+
+    const expectedObj = { cfd: "1234", code_postal: "67110", num_academie: "15" };
+    assert.deepStrictEqual(newObj, expectedObj);
+  });
 });

@@ -18,8 +18,11 @@ const extractFirstValue = (value) => {
   return value?.split("##")[0] ?? null;
 };
 
+/**
+ * separators in RCO data can be "|" and "##"
+ */
 const extractPeriodeArray = (arr) => {
-  return Array.from(new Set(arr.map((v) => v.split("##")).flat()));
+  return Array.from(new Set(arr.map((v) => v.split(/##|\|/)).flat()));
 };
 
 module.exports = { getPeriodeTags, extractFirstValue, extractPeriodeArray };
