@@ -46,7 +46,7 @@ const performUpdates = async (filter = {}, options = null) => {
         logger.error(
           `${count}/${total}: Etablissement ${etablissement._id} (siret: ${etablissement?.siret}) errored: ${error}`
         );
-      } else if (!updates) {
+      } else if (!updates || etablissement.certifie_qualite === updatedEtablissement.certifie_qualite) {
         // Do nothing
         // logger.info(`${count}/${total}: Etablissement ${etablissement._id} nothing to do`);
       } else {

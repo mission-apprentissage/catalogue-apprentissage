@@ -16,7 +16,7 @@ const optionDefinitions = [
 // Usage
 // Only conventionnement -c
 // Only siret -s
-// Only geoloc lg
+// Only geoloc -g
 const EtablissementsUpdater = async () => {
   try {
     logger.info(" -- Start of etablissements updater -- ");
