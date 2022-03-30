@@ -36,7 +36,9 @@ const performUpdates = async (filter = {}, options = null) => {
         etablissementServiceOptions
       );
 
-      updatedEtablissement.certifie_qualite = isCertifieQualite(updatedEtablissement);
+      await Etablissement.findByIdAndUpdate(etablissement._id, {
+        certifie_qualite: isCertifieQualite(updatedEtablissement),
+      });
 
       count++;
 
@@ -46,12 +48,14 @@ const performUpdates = async (filter = {}, options = null) => {
         logger.error(
           `${count}/${total}: Etablissement ${etablissement._id} (siret: ${etablissement?.siret}) errored: ${error}`
         );
-      } else if (!updates || etablissement.certifie_qualite === updatedEtablissement.certifie_qualite) {
-        // Do nothing
-        // logger.info(`${count}/${total}: Etablissement ${etablissement._id} nothing to do`);
-      } else {
+      } else if (
+        updates ||
+        etablissement._doc.certifie_qualite === null ||
+        etablissement._doc.certifie_qualite !== updatedEtablissement.certifie_qualite
+      ) {
         updatedEtablissement.last_update_at = Date.now();
         await Etablissement.findByIdAndUpdate(etablissement._id, updatedEtablissement);
+        console.log(`${count}/${total}: Etablissement ${etablissement._id} updated`);
         // logger.info(`${count}/${total}: Etablissement ${etablissement._id} updated`);
       }
     } catch (error) {
