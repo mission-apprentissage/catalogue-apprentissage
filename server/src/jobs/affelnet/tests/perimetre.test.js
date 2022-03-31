@@ -32,7 +32,7 @@ describe(__filename, () => {
       diplome: "BAC TECHNO",
       statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
       condition_integration: "peut intégrer",
-      statut_academies: { "14": AFFELNET_STATUS.A_PUBLIER },
+      statut_academies: { 14: AFFELNET_STATUS.A_PUBLIER },
     });
     await ReglePerimetre.create({
       plateforme: "affelnet",
@@ -53,8 +53,7 @@ describe(__filename, () => {
     // formations
     await Formation.create({
       published: false,
-      etablissement_gestionnaire_catalogue_published: true,
-      etablissement_reference_catalogue_published: true,
+      catalogue_published: true,
       niveau: "4 (BAC...)",
       diplome: "MC",
       affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
@@ -62,8 +61,7 @@ describe(__filename, () => {
     });
     await Formation.create({
       published: true,
-      etablissement_gestionnaire_catalogue_published: true,
-      etablissement_reference_catalogue_published: true,
+      catalogue_published: true,
       niveau: "4 (BAC...)",
       diplome: "MC",
       affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
@@ -71,8 +69,7 @@ describe(__filename, () => {
     });
     await Formation.create({
       published: true,
-      etablissement_gestionnaire_catalogue_published: true,
-      etablissement_reference_catalogue_published: true,
+      catalogue_published: true,
       niveau: "4 (BAC...)",
       diplome: "MC Agri",
       affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
@@ -80,8 +77,7 @@ describe(__filename, () => {
     });
     await Formation.create({
       published: true,
-      etablissement_gestionnaire_catalogue_published: true,
-      etablissement_reference_catalogue_published: true,
+      catalogue_published: true,
       niveau: "3 (CAP...)",
       diplome: "CAP",
       affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
@@ -89,8 +85,7 @@ describe(__filename, () => {
     });
     await Formation.create({
       published: true,
-      etablissement_gestionnaire_catalogue_published: true,
-      etablissement_reference_catalogue_published: true,
+      catalogue_published: true,
       niveau: "4 (BAC...)",
       diplome: "BAC TECHNO",
       num_academie: "12",
@@ -99,8 +94,7 @@ describe(__filename, () => {
     });
     await Formation.create({
       published: true,
-      etablissement_gestionnaire_catalogue_published: true,
-      etablissement_reference_catalogue_published: true,
+      catalogue_published: true,
       niveau: "4 (BAC...)",
       diplome: "BAC TECHNO",
       num_academie: "14",
@@ -109,8 +103,7 @@ describe(__filename, () => {
     });
     await Formation.create({
       published: true,
-      etablissement_gestionnaire_catalogue_published: true,
-      etablissement_reference_catalogue_published: true,
+      catalogue_published: true,
       niveau: "4 (BAC...)",
       diplome: "BAC PRO",
       num_academie: "14",
@@ -119,8 +112,7 @@ describe(__filename, () => {
     });
     await Formation.create({
       published: true,
-      etablissement_gestionnaire_catalogue_published: true,
-      etablissement_reference_catalogue_published: true,
+      catalogue_published: true,
       niveau: "4 (BAC...)",
       diplome: "BAC PRO",
       affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
@@ -198,8 +190,7 @@ describe(__filename, () => {
 
     await Formation.create({
       published: true,
-      etablissement_gestionnaire_catalogue_published: true,
-      etablissement_reference_catalogue_published: true,
+      catalogue_published: true,
       niveau: "3 (CAP...)",
       diplome: "BREVET PROFESSIONNEL AGRICOLE DE NIVEAU V",
       affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,

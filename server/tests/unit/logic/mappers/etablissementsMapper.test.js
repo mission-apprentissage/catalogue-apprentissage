@@ -347,7 +347,7 @@ describe(__filename, () => {
     it("should return an error when no siret provided", async () => {
       const expected = {
         messages: {
-          error: "Error: etablissementsMapper gestionnaire_siret, formateur_siret  must be provided",
+          error: "Error: etablissementsMapper gestionnaire_siret, formateur_siret must be provided",
         },
         result: null,
       };
