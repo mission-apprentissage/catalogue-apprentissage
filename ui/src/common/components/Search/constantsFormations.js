@@ -532,7 +532,7 @@ const facetDefinition = () => [
     sortBy: "asc",
     helpTextSection: helpText.search.qualite,
     showSearch: false,
-    // displayInContext: ["catalogue_non_eligible"],
+    displayInContext: ["catalogue_non_eligible"],
     transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
     customQuery: (values) => {
       if (values.length === 1) {
@@ -554,7 +554,7 @@ const facetDefinition = () => [
     filterLabel: "Habilité RNCP",
     sortBy: "asc",
     showSearch: false,
-    // displayInContext: ["catalogue_non_eligible"],
+    displayInContext: ["catalogue_non_eligible"],
     transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
     customQuery: (values) => {
       if (values.length === 1) {
