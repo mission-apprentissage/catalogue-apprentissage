@@ -23,7 +23,7 @@ const FILTERS = () => [
   "intitule_long",
   "intitule_court",
   "rncp_eligible_apprentissage",
-  "etablissement_gestionnaire_habilite_rncp",
+  "etablissement_reference_habilite_rncp",
   "rome_codes",
   `rncp_code`,
   `parcoursup_statut`,
@@ -141,7 +141,7 @@ const columnsDefinition = [
   },
   {
     Header: "Organisme Habilite (RNCP)",
-    accessor: "etablissement_gestionnaire_habilite_rncp",
+    accessor: "etablissement_reference_habilite_rncp",
     width: 200,
     exportable: true,
     formatter: (value) => (value ? "OUI" : "NON"),
