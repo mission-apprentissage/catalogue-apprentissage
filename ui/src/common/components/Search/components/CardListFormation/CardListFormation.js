@@ -36,7 +36,7 @@ export const CardListFormation = ({ data }) => {
                   </>
                 )}
               <QualiteBadge value={data.etablissement_gestionnaire_certifie_qualite} mt={2} mr={[0, 2]} />
-              <HabiliteBadge value={data.etablissement_gestionnaire_habilite_rncp} mt={2} mr={[0, 2]} />
+              <HabiliteBadge value={data.etablissement_reference_habilite_rncp} mt={2} mr={[0, 2]} />
             </Flex>
             <ArrowRightLine alignSelf="center" color="bluefrance" boxSize={4} />
           </Flex>
