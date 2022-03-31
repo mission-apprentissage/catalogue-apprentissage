@@ -26,11 +26,6 @@ const etablissementFormateurInfo = {
     default: false,
     description: "Etablissement formateur est publié",
   },
-  etablissement_formateur_catalogue_published: {
-    type: Boolean,
-    default: false,
-    description: "Etablissement formateur entre dans le catalogue (certifié Qualité & habilité RNCP)",
-  },
   etablissement_formateur_habilite_rncp: {
     type: Boolean,
     default: false,

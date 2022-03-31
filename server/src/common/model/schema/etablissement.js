@@ -467,11 +467,11 @@ const etablissementSchema = {
     description: "Possède la certification Qualité",
   },
 
-  catalogue_published: {
-    type: Boolean,
-    default: false,
-    description: "Est publié dans le catalogue général (certifié Qualité)",
-  },
+  // catalogue_published: {
+  //   type: Boolean,
+  //   default: false,
+  //   description: "Est publié dans le catalogue général (certifié Qualité)",
+  // },
 
   published: {
     index: true,

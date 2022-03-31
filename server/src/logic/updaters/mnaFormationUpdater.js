@@ -165,16 +165,20 @@ const selectMefs = async (updatedFormation) => {
 
 const mnaFormationUpdater = async (formation, { withCodePostalUpdate = true, cfdInfo = null } = {}) => {
   try {
+    let error;
+
     await formationSchema.validateAsync(formation, { abortEarly: false });
 
+    // Retrouve les informations à partir du code formation diplôme
     const currentCfdInfo = cfdInfo || (await cfdMapper(formation.cfd, { onisep: true }));
     const { result: cfdMapping, messages: cfdMessages } = currentCfdInfo;
 
-    let error = parseErrors(cfdMessages);
+    error = parseErrors(cfdMessages);
     if (error) {
       return { updates: null, formation, error, cfdInfo: currentCfdInfo };
     }
 
+    // Retrouve les informations relatives aux établissements liés
     const rncpInfo = {
       rncp_code: cfdMapping?.rncp_code,
       rncp_intitule: cfdMapping?.rncp_intitule,

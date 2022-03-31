@@ -352,10 +352,6 @@ export interface Etablissement {
    */
   certifie_qualite?: boolean;
   /**
-   * Est publié dans le catalogue général (certifié Qualité)
-   */
-  catalogue_published?: boolean;
-  /**
    * Est publié
    */
   published?: boolean;

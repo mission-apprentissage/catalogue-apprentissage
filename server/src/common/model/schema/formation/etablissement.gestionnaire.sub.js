@@ -26,12 +26,6 @@ const etablissementGestionnaireInfo = {
     default: false,
     description: "Etablissement gestionnaire est publié",
   },
-  etablissement_gestionnaire_catalogue_published: {
-    index: true,
-    type: Boolean,
-    default: false,
-    description: "Etablissement gestionnaire entre dans le catalogue (certifié Qualité & habilité RNCP)",
-  },
   etablissement_gestionnaire_habilite_rncp: {
     type: Boolean,
     default: false,

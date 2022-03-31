@@ -361,6 +361,10 @@ export interface Formation {
   entierement_a_distance?: boolean;
   france_competence_infos?: FranceCompetenceInfos;
   /**
+   * Formation éligible au catalogue générale
+   */
+  catalogue_published?: boolean;
+  /**
    * Identifiant établissement gestionnaire
    */
   etablissement_gestionnaire_id?: string;
@@ -380,10 +384,6 @@ export interface Formation {
    * Etablissement gestionnaire est publié
    */
   etablissement_gestionnaire_published?: boolean;
-  /**
-   * Etablissement gestionnaire entre dans le catalogue (certifié Qualité & habilité RNCP)
-   */
-  etablissement_gestionnaire_catalogue_published?: boolean;
   /**
    * Etablissement gestionnaire est habilité RNCP ou pas
    */
@@ -477,10 +477,6 @@ export interface Formation {
    */
   etablissement_formateur_published?: boolean;
   /**
-   * Etablissement formateur entre dans le catalogue (certifié Qualité & habilité RNCP)
-   */
-  etablissement_formateur_catalogue_published?: boolean;
-  /**
    * Etablissement formateur est habilité RNCP ou pas
    */
   etablissement_formateur_habilite_rncp?: boolean;
@@ -560,10 +556,6 @@ export interface Formation {
    * Etablissement reference est publié
    */
   etablissement_reference_published?: boolean;
-  /**
-   * Etablissement reference entre dans le catalogue (certifié Qualité & habilité RNCP)
-   */
-  etablissement_reference_catalogue_published?: boolean;
   /**
    * Etablissement reference est habilité RNCP ou pas
    */

@@ -33,7 +33,7 @@ module.exports = () => {
 
     // Par défaut, ne retourne que le catalogue général.
     if (!Array.from(filter).length) {
-      filter.etablissement_reference_catalogue_published = true;
+      filter.catalogue_published = true;
     }
 
     const page = qs && qs.page ? qs.page : 1;

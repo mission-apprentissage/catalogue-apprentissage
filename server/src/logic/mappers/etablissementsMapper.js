@@ -142,13 +142,13 @@ const getEtablissementReference = ({ gestionnaire, formateur }, rncpInfo) => {
     return null;
   }
 
-  let referenceEstablishment = gestionnaire || formateur;
+  let referenceEstablishment = gestionnaire ?? formateur;
 
   let etablissement_reference =
     gestionnaire && referenceEstablishment._id === gestionnaire._id ? "gestionnaire" : "formateur";
 
-  // Check if etablissement responsable is conventionne if not take etablissement formateur
   if (formateur && gestionnaire) {
+    // Check if etablissement responsable is conventionne if not take etablissement formateur
     if (gestionnaire.computed_conventionne !== "OUI" && formateur.computed_conventionne === "OUI") {
       referenceEstablishment = formateur;
       etablissement_reference = "formateur";
@@ -196,9 +196,7 @@ const mapEtablissementKeys = (etablissement, prefix = "etablissement_gestionnair
     [`${prefix}_siren`]: etablissement.siren || null,
     [`${prefix}_nda`]: etablissement.nda || null,
     [`${prefix}_published`]: etablissement.published || false,
-    [`${prefix}_catalogue_published`]: etablissement.catalogue_published || false,
     [`${prefix}_certifie_qualite`]: etablissement.certifie_qualite || false,
-    [`${prefix}_habilite_rncp`]: etablissement.habilite_rncp || false,
     [`${prefix}_id`]: etablissement._id ? `${etablissement._id}` : null,
     [`${prefix}_uai`]: etablissement.uai || null,
     [`${prefix}_enseigne`]: etablissement.enseigne || null,
@@ -230,11 +228,16 @@ const mapEtablissementKeys = (etablissement, prefix = "etablissement_gestionnair
  * @returns {boolean} true if formation should be in "catalogue général"
  */
 const isInCatalogGeneral = (gestionnaire, referenceEstablishment, rncpInfo) => {
-  // Put non-qualiopi in Non réglementaire since 31 mars 2022 (law change https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000044792191)
+  /**
+   * Les formations dont l'établissement gestionnaire ne possède pas de certification Qualité
+   * n'apparraissent pas dans le Catalogue Général (mais dans Non réglementaire) depuis le 31
+   * mars 2022 (law change https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000044792191)
+   */
   if (!isCertifieQualite(gestionnaire)) {
     return false;
   }
 
+  // Si le code_type_certif est Titre ou TP, alors on procède à la vérification de l'habilitation RNCP.
   if (
     ["Titre", "TP"].includes(rncpInfo.code_type_certif) &&
     (!isHabiliteRncp(rncpInfo, referenceEstablishment.siret) || !rncpInfo.rncp_eligible_apprentissage)
@@ -280,7 +283,7 @@ const getFranceCompetenceInfos = ({ gestionnaire, formateur }, rncpInfo) => {
 const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissement_formateur_siret, rncpInfo) => {
   try {
     if (!etablissement_gestionnaire_siret && !etablissement_formateur_siret) {
-      throw new Error("etablissementsMapper gestionnaire_siret, formateur_siret  must be provided");
+      throw new Error("etablissementsMapper gestionnaire_siret, formateur_siret must be provided");
     }
 
     const attachedEstablishments = await getAttachedEstablishments(
@@ -310,7 +313,10 @@ const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissem
     }
 
     if (attachedEstablishments?.formateur?.ferme) {
-      return { result: null, messages: { error: `Établissement formateur fermé ${etablissement_formateur_siret}` } };
+      return {
+        result: null,
+        messages: { error: `Établissement formateur fermé ${etablissement_formateur_siret}` },
+      };
     }
     if (!attachedEstablishments?.formateur?._id) {
       return {
@@ -335,23 +341,19 @@ const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissem
     return {
       result: {
         ...etablissementGestionnaire,
-        etablissement_gestionnaire_habilite_rncp: isHabiliteRncp(rncpInfo, etablissement_gestionnaire_siret),
+        etablissement_gestionnaire_habilite_rncp: isHabiliteRncp(rncpInfo, etablissement_gestionnaire_siret, true),
         etablissement_gestionnaire_certifie_qualite: isCertifieQualite(attachedEstablishments.gestionnaire),
 
         ...etablissementFormateur,
-        etablissement_formateur_habilite_rncp: isHabiliteRncp(rncpInfo, etablissement_formateur_siret),
+        etablissement_formateur_habilite_rncp: isHabiliteRncp(rncpInfo, etablissement_formateur_siret, true),
         etablissement_formateur_certifie_qualite: isCertifieQualite(attachedEstablishments.formateur),
 
         etablissement_reference,
-        etablissement_reference_habilite_rncp: isHabiliteRncp(rncpInfo, referenceEstablishment.siret),
-        etablissement_reference_certifie_qualite: isCertifieQualite(referenceEstablishment),
         etablissement_reference_published: referenceEstablishment.published,
+        etablissement_reference_habilite_rncp: isHabiliteRncp(rncpInfo, referenceEstablishment.siret, true),
+        etablissement_reference_certifie_qualite: isCertifieQualite(referenceEstablishment),
 
-        etablissement_reference_catalogue_published: isInCatalogGeneral(
-          attachedEstablishments?.gestionnaire,
-          referenceEstablishment,
-          rncpInfo
-        ),
+        catalogue_published: isInCatalogGeneral(attachedEstablishments?.gestionnaire, referenceEstablishment, rncpInfo),
 
         ...geolocInfo,
 

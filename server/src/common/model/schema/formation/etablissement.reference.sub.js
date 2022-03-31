@@ -9,12 +9,6 @@ const etablissementReferenceInfo = {
     default: false,
     description: "Etablissement reference est publié",
   },
-  etablissement_reference_catalogue_published: {
-    index: true,
-    type: Boolean,
-    default: false,
-    description: "Etablissement reference entre dans le catalogue (certifié Qualité & habilité RNCP)",
-  },
   etablissement_reference_habilite_rncp: {
     type: Boolean,
     default: false,

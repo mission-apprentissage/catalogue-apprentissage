@@ -29,6 +29,7 @@ import { useSearch } from "../../../common/hooks/useSearch";
 import { ReconciliationModal } from "./components/ReconciliationModal";
 import { Breadcrumb } from "../../../common/components/Breadcrumb";
 import { setTitle } from "../../../common/utils/pageUtils";
+import { CONTEXT } from "../../../constants/context";
 // import { _post } from "../../../common/httpClient";
 
 // import useAuth from "../../../common/hooks/useAuth";
@@ -122,7 +123,7 @@ export default (props) => {
                     <Search
                       {...props}
                       searchState={searchState}
-                      context="reconciliation_ps_forts"
+                      context={CONTEXT.RECONCILIATION_PS_FORTS}
                       onReconciliationCardClicked={(data) => {
                         setPsFormation(data);
                         onOpenReconciliationPsModal();
@@ -133,7 +134,7 @@ export default (props) => {
                     <Search
                       {...props}
                       searchState={searchState}
-                      context="reconciliation_ps_faibles"
+                      context={CONTEXT.RECONCILIATION_PS_FAIBLES}
                       onReconciliationCardClicked={(data) => {
                         setPsFormation(data);
                         onOpenReconciliationPsModal();
@@ -144,7 +145,7 @@ export default (props) => {
                     <Search
                       {...props}
                       searchState={searchState}
-                      context="reconciliation_ps_rejetes"
+                      context={CONTEXT.RECONCILIATION_PS_REJETES}
                       onReconciliationCardClicked={(data) => {
                         setPsFormation(data);
                         onOpenReconciliationPsModal();
@@ -166,7 +167,7 @@ export default (props) => {
                     <Search
                       {...props}
                       searchState={searchState}
-                      context="reconciliation_ps_inconnus"
+                      context={CONTEXT.RECONCILIATION_PS_INCONNUS}
                       onReconciliationCardClicked={(data) => {
                         alert("Nous ne disposons pas de suffisamment d'éléments pour réaliser un rapprochement.");
                       }}
@@ -176,7 +177,7 @@ export default (props) => {
                     <Search
                       {...props}
                       searchState={searchState}
-                      context="reconciliation_ps_valides"
+                      context={CONTEXT.RECONCILIATION_PS_VALIDES}
                       onReconciliationCardClicked={(data) => {
                         setPsFormation(data);
                         onOpenReconciliationPsModal();

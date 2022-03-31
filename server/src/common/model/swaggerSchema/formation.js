@@ -652,6 +652,11 @@ module.exports = {
         default: "null",
         description: "Données pour étude France Compétence",
       },
+      catalogue_published: {
+        type: "boolean",
+        default: false,
+        description: "Formation éligible au catalogue générale",
+      },
       etablissement_gestionnaire_id: {
         type: "string",
         default: "null",
@@ -676,11 +681,6 @@ module.exports = {
         type: "boolean",
         default: false,
         description: "Etablissement gestionnaire est publié",
-      },
-      etablissement_gestionnaire_catalogue_published: {
-        type: "boolean",
-        default: false,
-        description: "Etablissement gestionnaire entre dans le catalogue (certifié Qualité & habilité RNCP)",
       },
       etablissement_gestionnaire_habilite_rncp: {
         type: "boolean",
@@ -797,11 +797,6 @@ module.exports = {
         default: false,
         description: "Etablissement formateur est publié",
       },
-      etablissement_formateur_catalogue_published: {
-        type: "boolean",
-        default: false,
-        description: "Etablissement formateur entre dans le catalogue (certifié Qualité & habilité RNCP)",
-      },
       etablissement_formateur_habilite_rncp: {
         type: "boolean",
         default: false,
@@ -901,11 +896,6 @@ module.exports = {
         type: "boolean",
         default: false,
         description: "Etablissement reference est publié",
-      },
-      etablissement_reference_catalogue_published: {
-        type: "boolean",
-        default: false,
-        description: "Etablissement reference entre dans le catalogue (certifié Qualité & habilité RNCP)",
       },
       etablissement_reference_habilite_rncp: {
         type: "boolean",

@@ -10,7 +10,8 @@ import { FormationPeriode } from "../../../../common/components/formation/Format
 const getEtablissementFields = (mnaFormation, type, diff, code_commune_insee) => {
   return {
     adresse: mnaFormation[`etablissement_${type}_adresse`],
-    catalogue_published: mnaFormation[`etablissement_${type}_catalogue_published`],
+    certifie_qualite: mnaFormation[`etablissement_${type}_certifie_qualite`],
+    habilite_rncp: mnaFormation[`etablissement_${type}_habilite_rncp`],
     cedex: mnaFormation[`etablissement_${type}_cedex`],
     code_commune_insee: mnaFormation[`etablissement_${type}_code_commune_insee`],
     code_postal: mnaFormation[`etablissement_${type}_code_postal`],

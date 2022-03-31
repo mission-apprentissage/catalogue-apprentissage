@@ -31,10 +31,13 @@ const performUpdates = async (filter = {}, options = null) => {
       if (count % 1000 === 0) {
         console.log(`updating etablissement ${count}/${total}`);
       }
-      const { updates, etablissement: updatedEtablissement, error } = await getEtablissementUpdates(
-        etablissement,
-        etablissementServiceOptions
-      );
+      const {
+        updates,
+        // TODO : replace catalogue_published by certifie_qualite from TCO (or remove completely)
+        // eslint-disable-next-line no-unused-vars
+        etablissement: { catalogue_published, ...updatedEtablissement },
+        error,
+      } = await getEtablissementUpdates(etablissement, etablissementServiceOptions);
 
       count++;
 

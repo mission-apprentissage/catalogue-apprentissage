@@ -7,8 +7,9 @@ import { Box, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { ArrowRightLine, InfoCircle } from "../../../../../theme/components/icons";
 import { QualiteBadge } from "../../../QualiteBadge";
 import { HabiliteBadge } from "../../../HabiliteBadge";
+import { CONTEXT } from "../../../../../constants/context";
 
-export const CardListFormation = ({ data }) => {
+export const CardListFormation = ({ data, context }) => {
   let [auth] = useAuth();
 
   return (
@@ -28,15 +29,16 @@ export const CardListFormation = ({ data }) => {
         <Box>
           <Flex justifyContent="space-between">
             <Flex mt={1} flexWrap={"wrap"}>
-              {hasAccessTo(auth, "page_catalogue/voir_status_publication") &&
-                data.etablissement_reference_catalogue_published && (
-                  <>
-                    <StatusBadge source="Parcoursup" status={data.parcoursup_statut} mt={2} mr={[0, 2]} />
-                    <StatusBadge source="Affelnet" status={data.affelnet_statut} mt={2} mr={[0, 2]} />
-                  </>
-                )}
+              {hasAccessTo(auth, "page_catalogue/voir_status_publication") && data.catalogue_published && (
+                <>
+                  <StatusBadge source="Parcoursup" status={data.parcoursup_statut} mt={2} mr={[0, 2]} />
+                  <StatusBadge source="Affelnet" status={data.affelnet_statut} mt={2} mr={[0, 2]} />
+                </>
+              )}
               <QualiteBadge value={data.etablissement_gestionnaire_certifie_qualite} mt={2} mr={[0, 2]} />
-              <HabiliteBadge value={data.etablissement_reference_habilite_rncp} mt={2} mr={[0, 2]} />
+              {context !== CONTEXT.CATALOGUE_GENERAL && (
+                <HabiliteBadge value={data.etablissement_reference_habilite_rncp} mt={2} mr={[0, 2]} />
+              )}
             </Flex>
             <ArrowRightLine alignSelf="center" color="bluefrance" boxSize={4} />
           </Flex>

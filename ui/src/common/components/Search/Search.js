@@ -23,11 +23,12 @@ import { SearchLine } from "../../../theme/components/icons/SearchLine";
 import InfoTooltip from "../../components/InfoTooltip";
 import helpText from "../../../locales/helpText.json";
 import { Pagination } from "./components/Pagination";
+import { CONTEXT } from "../../../constants/context";
 
 export default React.memo(({ location, searchState, context, onReconciliationCardClicked, extraButtons = null }) => {
   const { defaultMode } = queryString.parse(location.search);
   const [mode, setMode] = useState(defaultMode ?? "simple");
-  const isCatalogueGeneral = context === "catalogue_general";
+  const isCatalogueGeneral = context === CONTEXT.CATALOGUE_GENERAL;
   const {
     base,
     countEtablissement,
@@ -447,7 +448,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                     }}
                     renderItem={(data) =>
                       isBaseFormations ? (
-                        <CardListFormation data={data} key={data._id} />
+                        <CardListFormation data={data} key={data._id} context={context} />
                       ) : isBaseReconciliationPs ? (
                         <CardListPsFormations
                           data={data}

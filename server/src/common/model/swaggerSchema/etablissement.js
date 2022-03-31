@@ -439,11 +439,6 @@ module.exports = {
         default: false,
         description: "Possède la certification Qualité",
       },
-      catalogue_published: {
-        type: "boolean",
-        default: false,
-        description: "Est publié dans le catalogue général (certifié Qualité)",
-      },
       published: {
         type: "boolean",
         default: false,

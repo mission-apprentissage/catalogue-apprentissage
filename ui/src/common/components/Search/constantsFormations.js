@@ -1,5 +1,6 @@
 import { escapeDiacritics } from "../../utils/downloadUtils";
 import helpText from "../../../locales/helpText.json";
+import { CONTEXT } from "../../../constants/context";
 
 const FILTERS = () => [
   `QUERYBUILDER`,
@@ -319,13 +320,13 @@ const columnsDefinition = [
     exportable: true,
   },
   {
-    Header: "Etablissement dans le catalogue eligible ? ",
-    accessor: "etablissement_reference_catalogue_published",
+    Header: "Eligible au catalogue général ? ",
+    accessor: "catalogue_published",
     width: 200,
     exportable: true,
   },
   {
-    Header: "clé ministere educatif ",
+    Header: "Clé ministere educatif ",
     accessor: "cle_ministere_educatif",
     width: 200,
     exportable: true,
@@ -468,7 +469,7 @@ const facetDefinition = () => [
     selectAllLabel: "Tous",
     sortBy: "count",
     acl: "page_catalogue/voir_status_publication_ps",
-    displayInContext: ["catalogue_general"],
+    displayInContext: [CONTEXT.CATALOGUE_GENERAL],
     helpTextSection: helpText.search.parcoursup_statut,
   },
   {
@@ -479,7 +480,7 @@ const facetDefinition = () => [
     selectAllLabel: "Tous",
     sortBy: "count",
     acl: "page_catalogue/voir_status_publication_aff",
-    displayInContext: ["catalogue_general"],
+    displayInContext: [CONTEXT.CATALOGUE_GENERAL],
     helpTextSection: helpText.search.affelnet_statut,
   },
   {
@@ -532,7 +533,7 @@ const facetDefinition = () => [
     sortBy: "asc",
     helpTextSection: helpText.search.qualite,
     showSearch: false,
-    displayInContext: ["catalogue_non_eligible"],
+    displayInContext: [CONTEXT.CATALOGUE_NON_ELIGIBLE],
     transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
     customQuery: (values) => {
       if (values.length === 1) {
@@ -554,7 +555,7 @@ const facetDefinition = () => [
     filterLabel: "Habilité RNCP",
     sortBy: "asc",
     showSearch: false,
-    displayInContext: ["catalogue_non_eligible"],
+    displayInContext: [CONTEXT.CATALOGUE_NON_ELIGIBLE],
     transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
     customQuery: (values) => {
       if (values.length === 1) {

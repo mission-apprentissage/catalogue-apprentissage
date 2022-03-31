@@ -1,6 +1,7 @@
 import React from "react";
 import { SingleList } from "@appbaseio/reactivesearch";
 import { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL } from "../../../../constants/catalogueLabels";
+import { CONTEXT } from "../../../../constants/context";
 
 const HardFilters = React.memo(({ filters, context, isBaseFormations, isBaseReconciliationPs }) => {
   const [statutReconciliation, setStatutReconciliation] = React.useState("AUTOMATIQUE");
@@ -45,10 +46,10 @@ const HardFilters = React.memo(({ filters, context, isBaseFormations, isBaseReco
       {isBaseFormations && (
         <SingleList
           componentId="catalogue_published"
-          dataField="etablissement_reference_catalogue_published"
+          dataField="catalogue_published"
           react={{ and: filters.filter((e) => e !== "catalogue_published") }}
-          value={context === "catalogue_general" ? CATALOGUE_GENERAL_LABEL : CATALOGUE_NON_ELIGIBLE_LABEL}
-          defaultValue={context === "catalogue_general" ? CATALOGUE_GENERAL_LABEL : CATALOGUE_NON_ELIGIBLE_LABEL}
+          value={context === CONTEXT.CATALOGUE_GENERAL ? CATALOGUE_GENERAL_LABEL : CATALOGUE_NON_ELIGIBLE_LABEL}
+          defaultValue={context === CONTEXT.CATALOGUE_GENERAL ? CATALOGUE_GENERAL_LABEL : CATALOGUE_NON_ELIGIBLE_LABEL}
           transformData={(data) => {
             return data.map((d) => ({
               ...d,
@@ -61,9 +62,7 @@ const HardFilters = React.memo(({ filters, context, isBaseFormations, isBaseReco
               : {
                   query: {
                     bool: {
-                      must: [
-                        { match: { etablissement_reference_catalogue_published: data === CATALOGUE_GENERAL_LABEL } },
-                      ],
+                      must: [{ match: { catalogue_published: data === CATALOGUE_GENERAL_LABEL } }],
                     },
                   },
                 };

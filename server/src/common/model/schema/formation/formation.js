@@ -608,6 +608,13 @@ const formationSchema = {
     description: "Données pour étude France Compétence",
   },
 
+  catalogue_published: {
+    index: true,
+    type: Boolean,
+    default: false,
+    description: "Formation éligible au catalogue générale",
+  },
+
   ...etablissementGestionnaireInfo,
   ...etablissementFormateurInfo,
   ...etablissementReferenceInfo,
