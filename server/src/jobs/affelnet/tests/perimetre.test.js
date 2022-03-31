@@ -126,15 +126,6 @@ describe(__filename, () => {
       affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
       periode,
     });
-    // await Formation.create({
-    //   published: true,
-    //   etablissement_gestionnaire_catalogue_published: true,
-    //   etablissement_reference_catalogue_published: true,
-    //   niveau: "4 (BAC...)",
-    //   diplome: "MC",
-    //   affelnet_statut: "hors périmètre",
-    //   periode: [new Date(`${currentDate.getFullYear()}-02-01T00:00:00.000Z`)],
-    // });
   });
 
   after(async () => {
@@ -177,5 +168,57 @@ describe(__filename, () => {
       affelnet_statut: AFFELNET_STATUS.NON_PUBLIE,
     });
     assert.strictEqual(totalAfNotPublished, 0);
+  });
+
+  it("should not allow in affelnet", async () => {
+    const currentDate = new Date();
+    const periode = [
+      new Date(`${currentDate.getFullYear()}-10-01T00:00:00.000Z`),
+      new Date(`${currentDate.getFullYear() + 1}-10-01T00:00:00.000Z`),
+    ];
+
+    await Formation.deleteMany({});
+    await ReglePerimetre.deleteMany({});
+
+    await ReglePerimetre.create({
+      plateforme: "affelnet",
+      niveau: "3 (CAP...)",
+      diplome: "BREVET PROFESSIONNEL AGRICOLE DE NIVEAU V",
+      statut: "à publier (soumis à validation)",
+      num_academie: 0,
+      regle_complementaire: '{"$and":[{"bcn_mefs_10.mef10":{"$regex":"^254"}},{"bcn_mefs_10.mef10":{"$regex":"21$"}}]}',
+      regle_complementaire_query:
+        '[{"field":"bcn_mefs_10.mef10","operator":"===^","value":"254","combinator":"AND","index":0,"key":"62dc8404-81a6-43ad-8e20-e03cc78dc893"},{"field":"bcn_mefs_10.mef10","operator":"===$","value":"21","combinator":"AND","index":1,"key":"51a98b29-f205-4ccf-b969-a0c2cf95fcfa"}]',
+      nom_regle_complementaire: "Brevet Pro Agricole en 2 ans",
+      is_deleted: false,
+      condition_integration: "peut intégrer",
+      duree: "2",
+      annee: "1",
+    });
+
+    await Formation.create({
+      published: true,
+      etablissement_gestionnaire_catalogue_published: true,
+      etablissement_reference_catalogue_published: true,
+      niveau: "3 (CAP...)",
+      diplome: "BREVET PROFESSIONNEL AGRICOLE DE NIVEAU V",
+      affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
+      duree: "2",
+      annee: "1",
+      bcn_mefs_10: [],
+      periode,
+    });
+
+    await run();
+
+    const totalNotRelevant = await Formation.countDocuments({
+      affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
+    });
+    assert.strictEqual(totalNotRelevant, 1);
+
+    const totalToValidate = await Formation.countDocuments({
+      affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
+    });
+    assert.strictEqual(totalToValidate, 0);
   });
 });
