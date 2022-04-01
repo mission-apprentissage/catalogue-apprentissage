@@ -48,7 +48,7 @@ module.exports = () => {
             __v: 0,
           };
 
-    let queryAsRegex = qs && qs.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
+    let queryAsRegex = qs?.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
     for (const prop in queryAsRegex) {
       queryAsRegex[prop] = new RegExp(queryAsRegex[prop]);
     }
@@ -110,7 +110,7 @@ module.exports = () => {
           __v: 0,
         };
 
-    let queryAsRegex = qs && qs.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
+    let queryAsRegex = qs?.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
     for (const prop in queryAsRegex) {
       queryAsRegex[prop] = new RegExp(queryAsRegex[prop]);
     }
@@ -152,7 +152,7 @@ module.exports = () => {
       filter["parcoursup_id"] = id_parcoursup;
     }
 
-    let queryAsRegex = qs && qs.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
+    let queryAsRegex = qs?.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
     for (const prop in queryAsRegex) {
       queryAsRegex[prop] = new RegExp(queryAsRegex[prop]);
     }
