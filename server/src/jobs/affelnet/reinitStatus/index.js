@@ -16,7 +16,7 @@ const afReinitStatus = async (config) => {
     logger.info(" -- Start affelnet status reinitialisation -- ");
 
     let date;
-    if (config.date) {
+    if (config?.date) {
       date = new Date(config.date);
       logger.info(
         `La date ${date} a été passée en argument, les formations dont le statut est 'en attente de publication' depuis cette date vont voir celui-ci réinitialiser.`
@@ -24,7 +24,7 @@ const afReinitStatus = async (config) => {
     } else {
       date = getLastMonth("09");
 
-      if (!config.force && !isSameDate(new Date(), date)) {
+      if (!config?.force && !isSameDate(new Date(), date)) {
         logger.info(
           "Aucune date n'a été passée en argument, les formations dont le statut est 'en attente de publication' ne peuvent être réinitialisées automatiquement que le 1er septembre. Passer l'argument --force pour forcer la réinitialisation."
         );

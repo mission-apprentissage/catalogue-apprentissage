@@ -208,7 +208,7 @@ test("display an error when uai is invalid", async () => {
 
   const { getByText, queryByText, queryByTestId } = renderWithRouter(<Etablissement match={{ params: { id: 2 } }} />);
 
-  await waitFor(() => getByText(/UAI rattaché au SIRET/));
+  await waitFor(() => getByText(/UAI rattaché au SIRET/), { timeout: 10000 });
   await waitFor(() => getByText(/voir les 34 formations associées à cet organisme/));
 
   const uai = queryByText("0312755B");
@@ -223,7 +223,7 @@ test("don't display an error when uai is valid", async () => {
 
   const { getByText, queryByText, queryByTestId } = renderWithRouter(<Etablissement match={{ params: { id: 1 } }} />);
 
-  await waitFor(() => getByText(/UAI rattaché au SIRET/));
+  await waitFor(() => getByText(/UAI rattaché au SIRET/), { timeout: 10000 });
   await waitFor(() => getByText(/voir les 34 formations associées à cet organisme/));
 
   const uai = queryByText("0312755B");
@@ -247,7 +247,7 @@ test("Submit should call etablissement service API", async () => {
 
   const { getByText, queryByText, getByTestId } = renderWithRouter(<Etablissement match={{ params: { id: 1 } }} />);
 
-  await waitFor(() => getByText(/UAI rattaché au SIRET/));
+  await waitFor(() => getByText(/UAI rattaché au SIRET/), { timeout: 10000 });
   await waitFor(() => getByText(/voir les 34 formations associées à cet organisme/));
 
   const count = queryByText(/voir les 34 formations associées à cet organisme/);

@@ -4,12 +4,70 @@ import { Link } from "@chakra-ui/react";
 const changelog = {
   list: [
     {
-      version: "5.14.0",
+      version: "5.15.0",
       date: "Prochainement",
       about: `<h4>À venir</h4>`,
       fixes: [],
       features: [],
       improvements: [],
+    },
+    {
+      version: "5.14.4",
+      date: "Le 25 Mars 2022",
+      about: `<h4>À propos de cette version</h4>
+  Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [
+        "Mise à jour des données pour certains établissements qui étaient marqués fermés dans le catalogue suite à une indisponibilité de l’API entreprise",
+      ],
+      features: [],
+      improvements: [],
+    },
+    {
+      version: "5.14.3",
+      date: "Le 24 Mars 2022",
+      about: `<h4>À propos de cette version</h4>
+  Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [],
+      features: ["Utilisateurs connectés - Affichage de l'historique des changements de statut de publication"],
+      improvements: [],
+    },
+    {
+      version: "5.14.2",
+      date: "Le 23 Mars 2022",
+      about: `<h4>À propos de cette version</h4>
+  Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [],
+      features: [],
+      improvements: [
+        'Utilisateurs connectés - Réinitialisation des étiquettes "en attente de publication" à la clôture Affelnet en septembre de chaque année.',
+      ],
+    },
+    {
+      version: "5.14.1",
+      date: "Le 23 Mars 2022",
+      about: `<h4>À propos de cette version</h4>
+  Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [
+        "Utilisateurs connectés - Correction du mécanisme des étiquettes lorsque des règles avancées sont définies, pour bien appliquer l’étiquette “hors périmètre” pour les formations dont le gestionnaire n’a pas la certification Qualiopi",
+      ],
+      features: [],
+      improvements: [],
+    },
+    {
+      version: "5.14.0",
+      date: "Le 22 Mars 2022",
+      about: `<h4>À propos de cette version</h4>
+  Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: ["Page de recherche, filtres fermés par défaut"],
+      features: [
+        "Gestion des changements de sites lors de l’import des données des Carif-Oref (un site devient plusieurs sites et vice-versa)",
+      ],
+      improvements: [
+        "Ajout du libellé Carif-Oref sur les fiches formation",
+        "Utilisateurs connectés - Ajout des certificateurs dans les exports des formations",
+        " Utilisateurs connectés - Ajout des liens vers les pages catalogue dans les exports (formations et établissement)",
+        "Pour les Titres et Titre professionnels, utilisation de la date d’échéance RNCP plutôt que la date d’échéance du Code formation diplôme",
+      ],
     },
     {
       version: "5.13.0",

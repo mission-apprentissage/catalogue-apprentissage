@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { Badge, Text, Flex, Box, Heading, Link } from "@chakra-ui/react";
 import { ArrowRightLine } from "../../../theme/components/icons";
-import { QualiopiBadge } from "../QualiopiBadge";
+import { QualiteBadge } from "../QualiteBadge";
 
 const CardListEtablissements = ({ data, withoutLink }) => {
   const RenderCard = ({ withoutLink }) => {
@@ -10,13 +10,14 @@ const CardListEtablissements = ({ data, withoutLink }) => {
       <>
         <Flex display={["none", "flex"]} textStyle="xs" justifyContent="space-between">
           <Text>Siret : {data.siret}</Text>
+          <QualiteBadge value={data.certifie_qualite} mr={0} ml={2} />
           <Text>Code UAI: {data.uai}</Text>
         </Flex>
         <Flex w={"100%"} justifyContent="space-between" mb={2}>
           <Heading textStyle="h6" color="grey.800" mt={2} w={"100%"}>
             {data.entreprise_raison_sociale}
           </Heading>
-          <Box>{data.info_qualiopi_info === "OUI" && <QualiopiBadge mr={0} ml={2} />}</Box>
+          <Box></Box>
         </Flex>
         <Box>
           <Text textStyle="sm">{data.adresse}</Text>

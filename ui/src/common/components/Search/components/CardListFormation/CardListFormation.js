@@ -5,9 +5,11 @@ import useAuth from "../../../../hooks/useAuth";
 import { StatusBadge } from "../../../StatusBadge";
 import { Box, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { ArrowRightLine, InfoCircle } from "../../../../../theme/components/icons";
-import { QualiopiBadge } from "../../../QualiopiBadge";
+import { QualiteBadge } from "../../../QualiteBadge";
+import { HabiliteBadge } from "../../../HabiliteBadge";
+import { CONTEXT } from "../../../../../constants/context";
 
-export const CardListFormation = ({ data }) => {
+export const CardListFormation = ({ data, context }) => {
   let [auth] = useAuth();
 
   return (
@@ -26,15 +28,17 @@ export const CardListFormation = ({ data }) => {
         <Text textStyle="sm">Académie : {data.nom_academie}</Text>
         <Box>
           <Flex justifyContent="space-between">
-            <Flex mt={3} flexWrap={"wrap"}>
-              {hasAccessTo(auth, "page_catalogue/voir_status_publication") &&
-                data.etablissement_reference_catalogue_published && (
-                  <Flex flexWrap={"wrap"} mr={[0, 2]}>
-                    <StatusBadge source="Parcoursup" status={data.parcoursup_statut} mr={[0, 2]} />
-                    <StatusBadge source="Affelnet" status={data.affelnet_statut} mt={[2, 0]} />
-                  </Flex>
-                )}
-              {data.etablissement_gestionnaire_catalogue_published && <QualiopiBadge mt={[2, 0]} />}
+            <Flex mt={1} flexWrap={"wrap"}>
+              {hasAccessTo(auth, "page_catalogue/voir_status_publication") && data.catalogue_published && (
+                <>
+                  <StatusBadge source="Parcoursup" status={data.parcoursup_statut} mt={2} mr={[0, 2]} />
+                  <StatusBadge source="Affelnet" status={data.affelnet_statut} mt={2} mr={[0, 2]} />
+                </>
+              )}
+              <QualiteBadge value={data.etablissement_gestionnaire_certifie_qualite} mt={2} mr={[0, 2]} />
+              {context !== CONTEXT.CATALOGUE_GENERAL && (
+                <HabiliteBadge value={data.etablissement_reference_habilite_rncp} mt={2} mr={[0, 2]} />
+              )}
             </Flex>
             <ArrowRightLine alignSelf="center" color="bluefrance" boxSize={4} />
           </Flex>

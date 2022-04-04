@@ -434,10 +434,10 @@ module.exports = {
         default: "null",
         description: 'Réponse à la question "Proposez-vous des formations en 2020" dans Démarche Simplifiée',
       },
-      catalogue_published: {
+      certifie_qualite: {
         type: "boolean",
         default: false,
-        description: "Est publié dans le catalogue général",
+        description: "Possède la certification Qualité",
       },
       published: {
         type: "boolean",

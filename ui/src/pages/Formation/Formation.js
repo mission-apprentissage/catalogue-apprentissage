@@ -22,7 +22,6 @@ import Layout from "../layout/Layout";
 import useAuth from "../../common/hooks/useAuth";
 import { hasAccessTo, hasRightToEditFormation } from "../../common/utils/rolesUtils";
 import { DangerBox } from "../../common/components/DangerBox";
-import { WarningBox } from "../../common/components/WarningBox";
 import { StatusBadge } from "../../common/components/StatusBadge";
 import { PublishModal } from "../../common/components/formation/PublishModal";
 import { buildUpdatesHistory } from "../../common/utils/historyUtils";
@@ -393,7 +392,7 @@ export default ({ match }) => {
                 title: `Catalogue des formations en apprentissage
                 ${
                   !!formation
-                    ? formation.etablissement_reference_catalogue_published
+                    ? formation.catalogue_published
                       ? ` (${CATALOGUE_GENERAL_LABEL})`
                       : ` (${CATALOGUE_NON_ELIGIBLE_LABEL})`
                     : ""
@@ -423,7 +422,7 @@ export default ({ match }) => {
                     </Heading>
                   </Box>
                   {hasRightToEdit &&
-                    formation.etablissement_reference_catalogue_published &&
+                    formation.catalogue_published &&
                     hasAccessTo(user, "page_formation/gestion_publication") && (
                       <Button
                         textStyle="sm"
@@ -440,7 +439,7 @@ export default ({ match }) => {
                       </Button>
                     )}
                 </Flex>
-                {formation.etablissement_reference_catalogue_published && (
+                {formation.catalogue_published && (
                   <Flex justifyContent={"space-between"} flexDirection={["column", "column", "row"]}>
                     <Box mt={5}>
                       {hasAccessTo(user, "page_formation/voir_status_publication_ps") && (
