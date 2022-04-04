@@ -286,7 +286,7 @@ export const DescriptionBlock = ({ formation }) => {
               <Text as="div" mb={4}>
                 Partenaires : <br />
                 {filteredPartenaires.length > 0 ? (
-                  <>
+                  <Text variant="highlight">
                     <UnorderedList>
                       {filteredPartenaires.map(({ Nom_Partenaire, Siret_Partenaire, Habilitation_Partenaire }) => (
                         <ListItem key={Siret_Partenaire}>
@@ -297,20 +297,22 @@ export const DescriptionBlock = ({ formation }) => {
                         </ListItem>
                       ))}
                     </UnorderedList>
-                  </>
+                  </Text>
                 ) : (
                   <>
-                    <Box
-                      bg={"orangesoft.200"}
-                      p={4}
-                      mb={4}
-                      mt={4}
-                      borderLeft={"4px solid"}
-                      borderColor={"orangesoft.500"}
-                      w={"full"}
-                    >
-                      <Text>Aucune habilitation sur la fiche pour ce SIRET.</Text>
-                    </Box>
+                    {formation.etablissement_gestionnaire_siret !== formation.etablissement_formateur_siret && (
+                      <Box
+                        bg={"orangesoft.200"}
+                        p={4}
+                        mb={4}
+                        mt={4}
+                        borderLeft={"4px solid"}
+                        borderColor={"orangesoft.500"}
+                        w={"full"}
+                      >
+                        <Text>Aucune habilitation sur la fiche pour ce SIRET.</Text>
+                      </Box>
+                    )}
                     SIRET formateur : {formation.etablissement_formateur_siret}, SIRET gestionnaire :
                     {formation.etablissement_gestionnaire_siret}.
                   </>
