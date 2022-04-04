@@ -32,7 +32,7 @@ describe(__filename, () => {
       diplome: "BUT",
       statut: PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
       condition_integration: "peut intégrer",
-      statut_academies: { "14": PARCOURSUP_STATUS.A_PUBLIER },
+      statut_academies: { 14: PARCOURSUP_STATUS.A_PUBLIER },
     });
     await ReglePerimetre.create({
       plateforme: "parcoursup",
@@ -53,8 +53,7 @@ describe(__filename, () => {
     // formations
     await Formation.create({
       published: false,
-      etablissement_gestionnaire_catalogue_published: true,
-      etablissement_reference_catalogue_published: true,
+      catalogue_published: true,
       niveau: "6 (Licence, BUT...)",
       diplome: "Licence",
       parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
@@ -63,8 +62,7 @@ describe(__filename, () => {
     });
     await Formation.create({
       published: true,
-      etablissement_gestionnaire_catalogue_published: true,
-      etablissement_reference_catalogue_published: true,
+      catalogue_published: true,
       niveau: "6 (Licence, BUT...)",
       diplome: "Licence",
       parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
@@ -73,8 +71,7 @@ describe(__filename, () => {
     });
     await Formation.create({
       published: true,
-      etablissement_gestionnaire_catalogue_published: true,
-      etablissement_reference_catalogue_published: true,
+      catalogue_published: true,
       niveau: "6 (Licence, BUT...)",
       diplome: "Licence Agri",
       parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
@@ -83,8 +80,7 @@ describe(__filename, () => {
     });
     await Formation.create({
       published: true,
-      etablissement_gestionnaire_catalogue_published: true,
-      etablissement_reference_catalogue_published: true,
+      catalogue_published: true,
       niveau: "5 (BTS, DEUST...)",
       diplome: "BTS",
       parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
@@ -93,8 +89,7 @@ describe(__filename, () => {
     });
     await Formation.create({
       published: true,
-      etablissement_gestionnaire_catalogue_published: true,
-      etablissement_reference_catalogue_published: true,
+      catalogue_published: true,
       niveau: "6 (Licence, BUT...)",
       diplome: "BUT",
       num_academie: "12",
@@ -104,8 +99,7 @@ describe(__filename, () => {
     });
     await Formation.create({
       published: true,
-      etablissement_gestionnaire_catalogue_published: true,
-      etablissement_reference_catalogue_published: true,
+      catalogue_published: true,
       niveau: "6 (Licence, BUT...)",
       diplome: "BUT",
       num_academie: "14",
@@ -115,8 +109,7 @@ describe(__filename, () => {
     });
     await Formation.create({
       published: true,
-      etablissement_gestionnaire_catalogue_published: true,
-      etablissement_reference_catalogue_published: true,
+      catalogue_published: true,
       niveau: "6 (Licence, BUT...)",
       diplome: "BUT",
       num_academie: "14",
@@ -127,8 +120,7 @@ describe(__filename, () => {
     });
     await Formation.create({
       published: true,
-      etablissement_gestionnaire_catalogue_published: true,
-      etablissement_reference_catalogue_published: true,
+      catalogue_published: true,
       niveau: "7 (Master, titre ingénieur...)",
       diplome: "Master",
       parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
@@ -208,8 +200,7 @@ describe(__filename, () => {
           rncp_outdated: false,
           active_inactive: "ACTIVE",
         },
-        etablissement_gestionnaire_catalogue_published: true,
-        etablissement_reference_catalogue_published: true,
+        catalogue_published: true,
         niveau: "6 (Licence, BUT...)",
         diplome: "Licence",
         parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
@@ -235,8 +226,7 @@ describe(__filename, () => {
           rncp_outdated: true,
           active_inactive: "ACTIVE",
         },
-        etablissement_gestionnaire_catalogue_published: true,
-        etablissement_reference_catalogue_published: true,
+        catalogue_published: true,
         niveau: "6 (Licence, BUT...)",
         diplome: "Licence",
         parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
@@ -262,8 +252,7 @@ describe(__filename, () => {
           rncp_outdated: false,
           active_inactive: "ACTIVE",
         },
-        etablissement_gestionnaire_catalogue_published: true,
-        etablissement_reference_catalogue_published: true,
+        catalogue_published: true,
         niveau: "6 (Licence, BUT...)",
         diplome: "Licence",
         parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
@@ -289,8 +278,7 @@ describe(__filename, () => {
           rncp_outdated: true,
           active_inactive: "ACTIVE",
         },
-        etablissement_gestionnaire_catalogue_published: true,
-        etablissement_reference_catalogue_published: true,
+        catalogue_published: true,
         niveau: "6 (Licence, BUT...)",
         diplome: "Licence",
         parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
@@ -320,8 +308,7 @@ describe(__filename, () => {
           active_inactive: "ACTIVE",
           date_fin_validite_enregistrement,
         },
-        etablissement_gestionnaire_catalogue_published: true,
-        etablissement_reference_catalogue_published: true,
+        catalogue_published: true,
         niveau: "6 (Licence, BUT...)",
         diplome: "Licence",
         parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
@@ -337,8 +324,7 @@ describe(__filename, () => {
           active_inactive: "ACTIVE",
           date_fin_validite_enregistrement,
         },
-        etablissement_gestionnaire_catalogue_published: true,
-        etablissement_reference_catalogue_published: true,
+        catalogue_published: true,
         niveau: "6 (Licence, BUT...)",
         diplome: "Licence",
         parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
@@ -368,8 +354,7 @@ describe(__filename, () => {
           rncp_outdated: false,
           active_inactive: "ACTIVE",
         },
-        etablissement_gestionnaire_catalogue_published: true,
-        etablissement_reference_catalogue_published: true,
+        catalogue_published: true,
         niveau: "6 (Licence, BUT...)",
         diplome: "Licence",
         parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
@@ -385,8 +370,7 @@ describe(__filename, () => {
           rncp_outdated: true,
           active_inactive: "ACTIVE",
         },
-        etablissement_gestionnaire_catalogue_published: true,
-        etablissement_reference_catalogue_published: true,
+        catalogue_published: true,
         niveau: "6 (Licence, BUT...)",
         diplome: "Licence",
         parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,

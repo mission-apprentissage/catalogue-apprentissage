@@ -21,7 +21,7 @@ const formation = {
   etablissement_gestionnaire_complement_adresse: "SITE TECHNOLOGIQUE ST JACQUES II",
   etablissement_gestionnaire_cedex: null,
   etablissement_gestionnaire_entreprise_raison_sociale: "ASS APPRENTISSAGE INDUSTRIEL",
-  rncp_etablissement_gestionnaire_habilite: false,
+  etablissement_gestionnaire_habilite_rncp: false,
   etablissement_gestionnaire_region: "Grand Est",
   etablissement_gestionnaire_num_departement: "54",
   etablissement_gestionnaire_nom_departement: "Meurthe-et-Moselle",
@@ -42,7 +42,7 @@ const formation = {
   etablissement_formateur_complement_adresse: "SITE TECHNOLOGIQUE ST JACQUES II",
   etablissement_formateur_cedex: null,
   etablissement_formateur_entreprise_raison_sociale: "ASS APPRENTISSAGE INDUSTRIEL",
-  rncp_etablissement_formateur_habilite: false,
+  etablissement_formateur_habilite_rncp: false,
   etablissement_formateur_region: "Grand Est",
   etablissement_formateur_num_departement: "54",
   etablissement_formateur_nom_departement: "Meurthe-et-Moselle",
@@ -53,7 +53,7 @@ const formation = {
   etablissement_reference: "gestionnaire",
   etablissement_reference_published: true,
   etablissement_reference_catalogue_published: true,
-  rncp_etablissement_reference_habilite: false,
+  etablissement_reference_habilite_rncp: false,
   etablissement_reference_date_creation: null,
   cfd: "40025411",
   cfd_specialite: null,
@@ -182,7 +182,7 @@ test("should render the organismes block in one establishment mode", async () =>
 
   const { queryByText, getByText } = renderWithRouter(<OrganismesBlock formation={formation} />);
 
-  const title = queryByText("Organisme(s) associé(s)");
+  const title = queryByText("Organisme associé");
   expect(title).toBeInTheDocument();
 
   const formateurLabel = queryByText("Formateur");
@@ -204,7 +204,7 @@ test("should render the organismes block in 2 establishments mode", async () => 
   const form = { ...formation, etablissement_gestionnaire_siret: "test", etablissement_gestionnaire_id: "test" };
   const { queryByText, getByText, getAllByTestId } = renderWithRouter(<OrganismesBlock formation={form} />);
 
-  const title = queryByText("Organisme(s) associé(s)");
+  const title = queryByText("Organismes associés");
   expect(title).toBeInTheDocument();
 
   const formateurLabel = queryByText("Formateur");

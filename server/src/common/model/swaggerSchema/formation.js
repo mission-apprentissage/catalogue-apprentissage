@@ -652,6 +652,11 @@ module.exports = {
         default: "null",
         description: "Données pour étude France Compétence",
       },
+      catalogue_published: {
+        type: "boolean",
+        default: false,
+        description: "Formation éligible au catalogue générale",
+      },
       etablissement_gestionnaire_id: {
         type: "string",
         default: "null",
@@ -677,10 +682,15 @@ module.exports = {
         default: false,
         description: "Etablissement gestionnaire est publié",
       },
-      etablissement_gestionnaire_catalogue_published: {
+      etablissement_gestionnaire_habilite_rncp: {
         type: "boolean",
         default: false,
-        description: "Etablissement gestionnaire entre dans le catalogue",
+        description: "Etablissement gestionnaire est habilité RNCP ou pas",
+      },
+      etablissement_gestionnaire_certifie_qualite: {
+        type: "boolean",
+        default: false,
+        description: "Etablissement gestionnaire est certifié Qualité",
       },
       etablissement_gestionnaire_adresse: {
         type: "string",
@@ -720,11 +730,6 @@ module.exports = {
       geo_coordonnees_etablissement_gestionnaire: {
         type: "string",
         description: "Latitude et longitude de l'établissement gestionnaire",
-      },
-      rncp_etablissement_gestionnaire_habilite: {
-        type: "boolean",
-        default: false,
-        description: "Etablissement gestionnaire est habilité RNCP ou pas",
       },
       etablissement_gestionnaire_region: {
         type: "string",
@@ -792,10 +797,15 @@ module.exports = {
         default: false,
         description: "Etablissement formateur est publié",
       },
-      etablissement_formateur_catalogue_published: {
+      etablissement_formateur_habilite_rncp: {
         type: "boolean",
         default: false,
-        description: "Etablissement formateur entre dans le catalogue",
+        description: "Etablissement formateur est habilité RNCP ou pas",
+      },
+      etablissement_formateur_certifie_qualite: {
+        type: "boolean",
+        default: false,
+        description: "Etablissement formateur est certifié Qualité",
       },
       etablissement_formateur_adresse: {
         type: "string",
@@ -835,11 +845,6 @@ module.exports = {
       geo_coordonnees_etablissement_formateur: {
         type: "string",
         description: "Latitude et longitude de l'établissement formateur",
-      },
-      rncp_etablissement_formateur_habilite: {
-        type: "boolean",
-        default: false,
-        description: "Etablissement formateur est habilité RNCP ou pas",
       },
       etablissement_formateur_region: {
         type: "string",
@@ -885,22 +890,22 @@ module.exports = {
       etablissement_reference: {
         type: "string",
         default: "null",
-        description: "Etablissement reference  est soit formateur soit le gestionnaire",
+        description: "Etablissement reference est soit formateur soit le gestionnaire",
       },
       etablissement_reference_published: {
         type: "boolean",
         default: false,
         description: "Etablissement reference est publié",
       },
-      etablissement_reference_catalogue_published: {
-        type: "boolean",
-        default: false,
-        description: "Etablissement reference entre dans le catalogue",
-      },
-      rncp_etablissement_reference_habilite: {
+      etablissement_reference_habilite_rncp: {
         type: "boolean",
         default: false,
         description: "Etablissement reference est habilité RNCP ou pas",
+      },
+      etablissement_reference_certifie_qualite: {
+        type: "boolean",
+        default: false,
+        description: "Etablissement reference est certifié Qualité",
       },
       etablissement_reference_date_creation: {
         type: "string",

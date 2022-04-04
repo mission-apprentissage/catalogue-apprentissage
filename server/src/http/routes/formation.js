@@ -12,6 +12,11 @@ const { sendJsonStream } = require("../../common/utils/httpUtils");
 module.exports = () => {
   const router = express.Router();
 
+  const defaultFilter = {
+    catalogue_published: true,
+    published: true,
+  };
+
   const getFormations = tryCatch(async (req, res) => {
     let qs = req.query;
 
@@ -43,7 +48,7 @@ module.exports = () => {
             __v: 0,
           };
 
-    let queryAsRegex = qs && qs.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
+    let queryAsRegex = qs?.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
     for (const prop in queryAsRegex) {
       queryAsRegex[prop] = new RegExp(queryAsRegex[prop]);
     }
@@ -52,6 +57,11 @@ module.exports = () => {
       ...filter,
       ...queryAsRegex,
     };
+
+    // Par défaut, ne retourne que le catalogue général.
+    if (!qs?.query && !qs?.queryAsRegex) {
+      Object.assign(mQuery, defaultFilter);
+    }
 
     const allData = await Formation.paginate(mQuery, {
       page,
@@ -72,7 +82,6 @@ module.exports = () => {
 
   const postFormations = tryCatch(async (req, res) => {
     let qs = req.body;
-    console.log(qs);
 
     // FIXME: ugly patch because request from Affelnet is not JSON valid
     const strQuery = qs?.query ?? "";
@@ -101,7 +110,7 @@ module.exports = () => {
           __v: 0,
         };
 
-    let queryAsRegex = qs && qs.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
+    let queryAsRegex = qs?.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
     for (const prop in queryAsRegex) {
       queryAsRegex[prop] = new RegExp(queryAsRegex[prop]);
     }
@@ -110,6 +119,11 @@ module.exports = () => {
       ...filter,
       ...queryAsRegex,
     };
+
+    // Par défaut, ne retourne que le catalogue général.
+    if (!qs?.query && !qs?.queryAsRegex) {
+      Object.assign(mQuery, defaultFilter);
+    }
 
     const allData = await Formation.paginate(mQuery, {
       page,
@@ -131,7 +145,29 @@ module.exports = () => {
   const countFormations = tryCatch(async (req, res) => {
     let qs = req.query;
     const query = qs && qs.query ? JSON.parse(qs.query) : {};
-    const count = await Formation.countDocuments(query);
+
+    const { id_parcoursup, ...filter } = query;
+    // additional filtering for parcoursup
+    if (id_parcoursup) {
+      filter["parcoursup_id"] = id_parcoursup;
+    }
+
+    let queryAsRegex = qs?.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
+    for (const prop in queryAsRegex) {
+      queryAsRegex[prop] = new RegExp(queryAsRegex[prop]);
+    }
+
+    const mQuery = {
+      ...filter,
+      ...queryAsRegex,
+    };
+
+    // Par défaut, ne retourne que le catalogue général.
+    if (!qs?.query && !qs?.queryAsRegex) {
+      Object.assign(mQuery, defaultFilter);
+    }
+
+    const count = await Formation.countDocuments(mQuery);
     return res.json(count);
   });
 

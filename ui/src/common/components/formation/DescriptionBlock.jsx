@@ -161,10 +161,10 @@ export const DescriptionBlock = ({ formation }) => {
                 <DureeAnnee value={formation.duree} />
               </Text>{" "}
               <InfoTooltip description={helpText.formation.duree} />
-              <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
-                {formation.duree_incoherente &&
-                  "La durée de formation enregistrée auprès du Carif-Oref ne correspond pas à celle qui est déduite du code MEF correspondant à cette formation."}
-              </Text>
+            </Text>
+            <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
+              {formation.duree_incoherente &&
+                "La durée de formation enregistrée auprès du Carif-Oref ne correspond pas à celle qui est déduite du code MEF correspondant à cette formation."}
             </Text>
           </DureeContainer>
 
@@ -194,10 +194,10 @@ export const DescriptionBlock = ({ formation }) => {
                   <DureeAnnee value={formation.annee} />
                 </Text>{" "}
                 <InfoTooltip description={helpText.formation.annee} />
-                <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
-                  {formation.annee_incoherente &&
-                    "L'année de formation enregistrée auprès du Carif-Oref ne correspond pas à celle qui est déduite du code MEF correspondant à cette formation."}
-                </Text>
+              </Text>
+              <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
+                {formation.annee_incoherente &&
+                  "L'année de formation enregistrée auprès du Carif-Oref ne correspond pas à celle qui est déduite du code MEF correspondant à cette formation."}
               </Text>
             </AnneeContainer>
           )}

@@ -30,7 +30,7 @@ import * as Yup from "yup";
 import { _post, _put } from "../../../../common/httpClient";
 import { PARCOURSUP_STATUS } from "../../../../constants/status";
 
-import { CheckLine, Close, ErrorIcon, ValidateIcon } from "../../../../theme/components/icons";
+import { CheckLine, Close, Error, Validate } from "../../../../theme/components/icons";
 
 const ReconciliationModalHeader = React.memo(
   ({
@@ -330,7 +330,7 @@ const ReconciliationModalHeader = React.memo(
                       h="full"
                       w="55%"
                     >
-                      <ErrorIcon color="redmarianne" mr="2" mt="0.35rem" />
+                      <Error color="redmarianne" mr="2" mt="0.35rem" />
                       <Text fontWeight="normal">
                         {slidesCount} formations référencées dans le Catalogue (base Carif-Oref) peuvent être
                         rapprochées ensembles à la formation Parcoursup
@@ -447,7 +447,7 @@ const ReconciliationModalHeader = React.memo(
                       h="full"
                       w="55%"
                     >
-                      <ErrorIcon color="redmarianne" mr="2" mt="0.35rem" />
+                      <Error color="redmarianne" mr="2" mt="0.35rem" />
                       <Text fontWeight="normal">
                         {slidesCount} formations référencées dans le Catalogue (base Carif-Oref) peuvent être
                         rapprochées ensembles à la formation Parcoursup
@@ -509,7 +509,7 @@ const ReconciliationModalHeader = React.memo(
                           mb={5}
                           h="full"
                         >
-                          <ValidateIcon width="30px" height="30px" color="greensoft.500" mr="2" mt="0.35rem" />
+                          <Validate width="30px" height="30px" color="greensoft.500" mr="2" mt="0.35rem" />
                           <Text fontWeight="normal">
                             La formation paramétrée dans Parcoursup est conforme aux conditions d’intégrations définies
                             par le guide reglementaire
@@ -530,7 +530,7 @@ const ReconciliationModalHeader = React.memo(
                           mb={5}
                           h="full"
                         >
-                          <ErrorIcon color="redmarianne" mr="2" mt="0.35rem" />
+                          <Error color="redmarianne" mr="2" mt="0.35rem" />
                           <Text fontWeight="normal">
                             la formation paramétrée dans Parcoursup n’est pas conforme aux conditions d’intégrations
                             définies par le guide reglementaire
