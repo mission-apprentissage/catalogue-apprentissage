@@ -12,7 +12,7 @@ const run = async () => {
     {
       $or: [
         { parcoursup_statut: null },
-        { etablissement_reference_catalogue_published: false },
+        { catalogue_published: false },
         { published: false },
         {
           $or: [
@@ -40,7 +40,7 @@ const run = async () => {
   await Formation.updateMany(
     {
       published: true,
-      etablissement_reference_catalogue_published: true,
+      catalogue_published: true,
       parcoursup_id: { $ne: null },
       parcoursup_statut: { $ne: PARCOURSUP_STATUS.NON_PUBLIE },
     },

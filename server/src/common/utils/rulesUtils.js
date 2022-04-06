@@ -64,8 +64,8 @@ const commonRules = {
     },
   ],
   published: true,
-  etablissement_reference_catalogue_published: true,
-  etablissement_gestionnaire_catalogue_published: true, // ensure gestionnaire is Qualiopi certified
+  catalogue_published: true,
+  // etablissement_gestionnaire_catalogue_published: true, // ensure gestionnaire is Qualiopi certified
   // periode: { $gte: getPeriodeStartDate() },
 };
 

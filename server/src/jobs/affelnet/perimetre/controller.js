@@ -12,7 +12,7 @@ const run = async () => {
     {
       $or: [
         { affelnet_statut: null },
-        { etablissement_reference_catalogue_published: false },
+        { catalogue_published: false },
         { published: false },
         {
           $or: [
@@ -54,18 +54,20 @@ const run = async () => {
     is_deleted: { $ne: true },
   }).lean();
 
-  await Formation.updateMany(
-    {
-      ...filterHP,
-      $or: aPublierSoumisAValidationRules.map(getQueryFromRule),
-    },
-    {
-      $set: {
-        last_update_at: Date.now(),
-        affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
+  if (aPublierSoumisAValidationRules.length > 0) {
+    await Formation.updateMany(
+      {
+        ...filterHP,
+        $or: aPublierSoumisAValidationRules.map(getQueryFromRule),
       },
-    }
-  );
+      {
+        $set: {
+          last_update_at: Date.now(),
+          affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
+        },
+      }
+    );
+  }
 
   //  set "à publier" for trainings matching affelnet eligibility rules
   // run only on those "hors périmètre" & "à publier (soumis à validation)" to not overwrite actions of users !
@@ -79,18 +81,20 @@ const run = async () => {
     is_deleted: { $ne: true },
   }).lean();
 
-  await Formation.updateMany(
-    {
-      ...filter,
-      $or: aPublierRules.map(getQueryFromRule),
-    },
-    {
-      $set: {
-        last_update_at: Date.now(),
-        affelnet_statut: AFFELNET_STATUS.A_PUBLIER,
+  if (aPublierRules.length > 0) {
+    await Formation.updateMany(
+      {
+        ...filter,
+        $or: aPublierRules.map(getQueryFromRule),
       },
-    }
-  );
+      {
+        $set: {
+          last_update_at: Date.now(),
+          affelnet_statut: AFFELNET_STATUS.A_PUBLIER,
+        },
+      }
+    );
+  }
 
   // apply academy rules
   const academieRules = [...aPublierSoumisAValidationRules, ...aPublierRules].filter(

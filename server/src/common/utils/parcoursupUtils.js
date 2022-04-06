@@ -1,4 +1,4 @@
-const csvToJson = require("convert-csv-to-json-latin");
+const csvToJson = require("convert-csv-to-json");
 
 const FILE_PATH = "/data/uploads/mefs-parcoursup.csv";
 let mefsAllowedOnParcoursup = null;

@@ -348,9 +348,9 @@ export interface Etablissement {
    */
   ds_questions_has_2020_training?: string;
   /**
-   * Est publié dans le catalogue général
+   * Possède la certification Qualité
    */
-  catalogue_published?: boolean;
+  certifie_qualite?: boolean;
   /**
    * Est publié
    */

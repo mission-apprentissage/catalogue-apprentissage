@@ -8,6 +8,7 @@ import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
 import useAuth from "../../common/hooks/useAuth";
 import { hasAccessTo } from "../../common/utils/rolesUtils";
+import { CONTEXT } from "../../constants/context";
 
 export default (props) => {
   let [auth] = useAuth();
@@ -37,7 +38,7 @@ export default (props) => {
               </TabList>
               <TabPanels>
                 <TabPanel>
-                  <Search {...props} searchState={searchState} context="organismes" />
+                  <Search {...props} searchState={searchState} context={CONTEXT.ORGANISMES} />
                 </TabPanel>
                 {hasAccessTo(auth, "page_organismes/guide_reglementaire") && (
                   <TabPanel>

@@ -1,4 +1,4 @@
 const CATALOGUE_GENERAL_LABEL = "Catalogue général";
-const CATALOGUE_NON_ELIGIBLE_LABEL = "Non habilités RNCP";
+const CATALOGUE_NON_ELIGIBLE_LABEL = "Non réglementaire";
 
 export { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL };
