@@ -341,16 +341,22 @@ const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissem
     return {
       result: {
         ...etablissementGestionnaire,
-        etablissement_gestionnaire_habilite_rncp: isHabiliteRncp(rncpInfo, etablissement_gestionnaire_siret, true),
+        etablissement_gestionnaire_habilite_rncp: ["Titre", "TP"].includes(rncpInfo?.code_type_certif)
+          ? isHabiliteRncp(rncpInfo, etablissement_gestionnaire_siret, true)
+          : null,
         etablissement_gestionnaire_certifie_qualite: isCertifieQualite(attachedEstablishments.gestionnaire),
 
         ...etablissementFormateur,
-        etablissement_formateur_habilite_rncp: isHabiliteRncp(rncpInfo, etablissement_formateur_siret, true),
+        etablissement_formateur_habilite_rncp: ["Titre", "TP"].includes(rncpInfo?.code_type_certif)
+          ? isHabiliteRncp(rncpInfo, etablissement_formateur_siret, true)
+          : null,
         etablissement_formateur_certifie_qualite: isCertifieQualite(attachedEstablishments.formateur),
 
         etablissement_reference,
         etablissement_reference_published: referenceEstablishment.published,
-        etablissement_reference_habilite_rncp: isHabiliteRncp(rncpInfo, referenceEstablishment.siret, true),
+        etablissement_reference_habilite_rncp: ["Titre", "TP"].includes(rncpInfo?.code_type_certif)
+          ? isHabiliteRncp(rncpInfo, referenceEstablishment.siret, true)
+          : null,
         etablissement_reference_certifie_qualite: isCertifieQualite(referenceEstablishment),
 
         catalogue_published: isInCatalogGeneral(attachedEstablishments?.gestionnaire, referenceEstablishment, rncpInfo),
