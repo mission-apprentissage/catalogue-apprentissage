@@ -1,6 +1,8 @@
+import React from "react";
 import { escapeDiacritics } from "../../utils/downloadUtils";
 import helpText from "../../../locales/helpText.json";
 import { CONTEXT } from "../../../constants/context";
+import { departements } from "../../../constants/departements";
 
 const FILTERS = () => [
   `QUERYBUILDER`,
@@ -490,6 +492,14 @@ const facetDefinition = () => [
     filterLabel: "Département",
     selectAllLabel: "Tous",
     sortBy: "asc",
+    transformData: (data) => data.map((d) => ({ ...d, key: `${d.key} - ${departements[d.key]}` })),
+    customQuery: (values) => ({
+      query: {
+        terms: {
+          "num_departement.keyword": values?.map((value) => value.split(" - ")[0]),
+        },
+      },
+    }),
   },
   {
     componentId: `niveau`,
@@ -519,18 +529,26 @@ const facetDefinition = () => [
   {
     componentId: `duree`,
     dataField: "duree.keyword",
-    title: "Durée",
-    filterLabel: "Durée",
+    title: "Durée de la formation",
+    filterLabel: "Durée de la formation",
     selectAllLabel: "Toutes",
     sortBy: "asc",
     isAuth: true, // hide for anonymous
+    transformData: (data) => data.map((d) => ({ ...d, key: d.key <= 1 ? `${d.key} an` : `${d.key} ans` })),
+    customQuery: (values) => ({
+      query: {
+        terms: {
+          "duree.keyword": values?.map((value) => value.split(" ")[0]),
+        },
+      },
+    }),
   },
   {
     componentId: `qualite`,
     dataField: "etablissement_gestionnaire_certifie_qualite",
     title: "Certifié Qualité",
     filterLabel: "Certifié Qualité",
-    sortBy: "asc",
+    sortBy: "desc",
     helpTextSection: helpText.search.qualite,
     showSearch: false,
     displayInContext: [CONTEXT.CATALOGUE_NON_ELIGIBLE],
