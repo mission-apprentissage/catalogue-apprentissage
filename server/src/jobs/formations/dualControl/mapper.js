@@ -6,6 +6,14 @@ const KEYS_MAP = {
   intitule_long_bcn: "intitule_long",
   niveau_formation_diplome: "niveau",
 
+  etablissement_lieu_formation_adresse: "lieu_formation_adresse",
+  etablissement_lieu_formation_code_postal: "code_postal",
+  etablissement_lieu_formation_geo_coordonnees: "lieu_formation_geo_coordonnees",
+  etablissement_lieu_formation_code_insee: "code_commune_insee",
+  etablissement_lieu_formation_siret: "lieu_formation_siret",
+  etablissement_lieu_formation_adresse_computed: "lieu_formation_adresse_computed",
+  etablissement_lieu_formation_geo_coordonnees_computed: "lieu_formation_geo_coordonnees_computed",
+
   // To exclude keys, map it to 0
   // FIXME RCO sends a data that is impossible to parse -->  ask RCO
   bcn_mefs_10: 0,

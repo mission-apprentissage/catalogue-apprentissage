@@ -9,6 +9,7 @@ const TYPES_MAP = {
   capacite: "nullable",
   etablissement_gestionnaire_uai: "nullable",
   etablissement_formateur_uai: "nullable",
+  distance: "number",
 };
 
 const niveaux = {
@@ -47,6 +48,10 @@ const parser = (obj, typesMap = TYPES_MAP) => {
 
         case "nullable":
           parsedValue = value ? value : null;
+          break;
+
+        case "number":
+          parsedValue = value === "NAN" ? null : Number(value);
           break;
 
         default:

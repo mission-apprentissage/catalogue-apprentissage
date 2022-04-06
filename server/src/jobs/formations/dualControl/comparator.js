@@ -28,6 +28,20 @@ const FIELDS_TO_COMPARE = [
   "intitule_court",
   "intitule_long",
   "diplome",
+  "lieu_formation_adresse",
+  "code_postal",
+  "lieu_formation_geo_coordonnees",
+  "code_commune_insee",
+  "lieu_formation_siret",
+  "lieu_formation_adresse_computed",
+  "lieu_formation_geo_coordonnees_computed",
+  "distance",
+  "onisep_url",
+  "onisep_intitule",
+  "onisep_libelle_poursuite",
+  "onisep_lien_site_onisepfr",
+  "onisep_discipline",
+  "onisep_domaine_sousdomaine",
 ];
 
 const isEqual = (dualControlFormation, formation, key) => {
