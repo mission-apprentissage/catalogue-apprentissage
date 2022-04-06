@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Alert, AlertIcon, AlertTitle, AlertDescription, Text, Flex } from "@chakra-ui/react";
+import { Box, Alert, AlertIcon, AlertDescription, Text, Flex } from "@chakra-ui/react";
 import { _get } from "../../../common/httpClient";
 
 const AlertMessage = () => {
@@ -34,12 +34,9 @@ const AlertMessage = () => {
           <Flex m={0}>
             <AlertIcon boxSize={6} />
           </Flex>
-          <AlertTitle m={0} p={0}>
-            Maintenance&nbsp;:
-          </AlertTitle>
         </Flex>
         <AlertDescription m={0} pl={2}>
-          {messages.map((element) => element.enabled && <Text key={element._id}>{element.msg}</Text>)}
+          {messages.map((element) => element.enabled && <Text key={element._id}>• {element.msg}</Text>)}
         </AlertDescription>
       </Alert>
     </Box>

@@ -125,7 +125,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
             <Flex className="search-row" flexDirection={["column", "column", "row"]}>
               <Box className="search-sidebar" px={[0, 0, 4]}>
                 <Text fontWeight="700" color="grey.800" mt={4} mb={4} textStyle="rf-text">
-                  FILTRER
+                  FILTRER PAR
                 </Text>
                 {facetDefinition(context)
                   .filter(

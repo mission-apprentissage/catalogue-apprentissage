@@ -87,13 +87,13 @@ const Badge = {
     },
     ok: {
       ...commonStatusBadgeStyle,
-      bg: "#00009114",
-      color: "bluefrance",
+      bg: "#E3E3FD50", //bluefrance.925
+      color: "#000091", //blue-france-sun-113
     },
     notOk: {
       ...commonStatusBadgeStyle,
-      bg: "#00009114",
-      color: "redmarianne",
+      bg: "#EEEEEE", //red-marianne-925
+      color: "#161616", //red-marianne-425
     },
     default: {
       ...commonStatusBadgeStyle,

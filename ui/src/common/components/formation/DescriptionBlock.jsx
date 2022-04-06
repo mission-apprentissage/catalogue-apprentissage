@@ -202,25 +202,25 @@ export const DescriptionBlock = ({ formation }) => {
             </AnneeContainer>
           )}
           <Text mb={4}>
-            Clé ministères éducatifs:
+            Clé ministères éducatifs :{" "}
             <Text as="span" variant="highlight">
               {formation.cle_ministere_educatif ?? "N/A"}
             </Text>
           </Text>
           <Text mb={4}>
-            Identifiant formation Carif Oref:
+            Identifiant formation Carif Oref :{" "}
             <Text as="span" variant="highlight">
               {formation.id_formation ?? "N/A"}
             </Text>
           </Text>
           <Text mb={4}>
-            Identifiant actions Carif Oref:
+            Identifiant actions Carif Oref :{" "}
             <Text as="span" variant="highlight">
               {formation.ids_action?.join(",") ?? "N/A"}
             </Text>
           </Text>
           <Text mb={4}>
-            Code Certif Info:
+            Code Certif Info :{" "}
             <Text as="span" variant="highlight">
               {formation.id_certifinfo ?? "N/A"}
             </Text>
