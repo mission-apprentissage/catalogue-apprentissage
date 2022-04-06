@@ -6,9 +6,9 @@ import {
   Processing,
   ExclamationCircle,
   CloudSlashed,
-  RejectIcon,
+  Reject,
   Question,
-} from "../../theme/components/icons/index";
+} from "../../theme/components/icons";
 import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
 
 const Icon = ({ variant }) => {
@@ -24,9 +24,9 @@ const Icon = ({ variant }) => {
     case "toBePublished":
       return <ExclamationCircle />;
     case "reject":
-      return <RejectIcon />;
+      return <Reject />;
     case "nonConforme":
-      return <RejectIcon />;
+      return <Reject />;
     case "unknown":
       return <Question />;
     case "conforme":

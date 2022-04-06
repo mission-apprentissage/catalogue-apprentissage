@@ -1,3 +1,4 @@
+import { CONTEXT } from "../../../constants/context";
 import { escapeDiacritics } from "../../utils/downloadUtils";
 
 const FILTERS = () => {
@@ -223,7 +224,7 @@ const facetDefinition = (context) => {
     },
   ];
 
-  return context !== "reconciliation_ps_valides"
+  return context !== CONTEXT.RECONCILIATION_PS_VALIDES
     ? [
         ...base,
         {

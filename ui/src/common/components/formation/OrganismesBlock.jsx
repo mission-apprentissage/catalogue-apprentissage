@@ -3,7 +3,8 @@ import { Badge, Box, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
 import { ArrowRightLine } from "../../../theme/components/icons";
 import { getOrganisme } from "../../api/organisme";
-import { QualiopiBadge } from "../QualiopiBadge";
+import { QualiteBadge } from "../QualiteBadge";
+import { HabiliteBadge } from "../HabiliteBadge";
 
 export const OrganismesBlock = ({ formation }) => {
   const oneEstablishment = formation.etablissement_gestionnaire_siret === formation.etablissement_formateur_siret;
@@ -30,7 +31,7 @@ export const OrganismesBlock = ({ formation }) => {
   return (
     <>
       <Heading textStyle="h4" color="grey.800" mb={4}>
-        Organisme(s) associé(s)
+        {oneEstablishment ? "Organisme associé" : "Organismes associés"}
       </Heading>
 
       {!oneEstablishment && (
@@ -43,7 +44,14 @@ export const OrganismesBlock = ({ formation }) => {
               <Text>Siret : {formation.etablissement_gestionnaire_siret}</Text>
               <Text>UAI : {formation.etablissement_gestionnaire_uai}</Text>
             </Flex>
-            <Box my={2}>{formation.etablissement_gestionnaire_catalogue_published && <QualiopiBadge m="0" />}</Box>
+            <Box my={2}>
+              <Flex>
+                <QualiteBadge value={formation.etablissement_gestionnaire_certifie_qualite} m="0" mr={[0, 2]} />
+                {["Titre", "TP"].includes(formation.rncp_details?.code_type_certif) && (
+                  <HabiliteBadge value={formation.etablissement_gestionnaire_habilite_rncp} m="0" mr={[0, 2]} />
+                )}
+              </Flex>
+            </Box>
             <Heading textStyle="h6" color="grey.800" my={1}>
               {formation.etablissement_gestionnaire_entreprise_raison_sociale}
             </Heading>
@@ -81,7 +89,14 @@ export const OrganismesBlock = ({ formation }) => {
             <Text>Siret : {formation.etablissement_formateur_siret}</Text>
             <Text>UAI: {formation.etablissement_formateur_uai}</Text>
           </Flex>
-          <Box my={2}>{formation.etablissement_formateur_catalogue_published && <QualiopiBadge m="0" />}</Box>
+          <Box my={2}>
+            <Flex>
+              <QualiteBadge value={formation.etablissement_formateur_certifie_qualite} m="0" mr={[0, 2]} />
+              {["Titre", "TP"].includes(formation.rncp_details?.code_type_certif) && (
+                <HabiliteBadge value={formation.etablissement_formateur_habilite_rncp} m="0" mr={[0, 2]} />
+              )}
+            </Flex>
+          </Box>
           <Heading textStyle="h6" color="grey.800" my={1}>
             {formation.etablissement_formateur_entreprise_raison_sociale}
           </Heading>

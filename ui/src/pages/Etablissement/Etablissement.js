@@ -34,7 +34,7 @@ import { ArrowRightLine, Edit2Fill, ExternalLinkLine, Tick } from "../../theme/c
 import { HowToFixModal } from "../../common/components/organisme/HowToFixModal";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
-import { QualiopiBadge } from "../../common/components/QualiopiBadge";
+import { QualiteBadge } from "../../common/components/QualiteBadge";
 import { etablissementService, updateUaiOrganisme } from "../../common/api/organisme";
 
 const sleep = (m) => new Promise((r) => setTimeout(r, m));
@@ -281,7 +281,7 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
                   {etablissement.info_qualiopi_info === "OUI" && "qualiopi OUI"}
                   {etablissement.info_qualiopi_info === "NON" && "qualiopi NON"}
                 </Text>
-                <InfoTooltip description={helpText.etablissement.qualiopi} />
+                <InfoTooltip description={helpText.etablissement.qualite} />
               </Text>
             </Box>
 
@@ -480,7 +480,7 @@ export default ({ match }) => {
             {!loading && !!etablissement && (
               <>
                 <Box mt={6} mb={2}>
-                  {etablissement.catalogue_published && <QualiopiBadge my={0} mx={0} />}
+                  <QualiteBadge value={etablissement.certifie_qualite} my={0} mx={0} />
                   <Heading textStyle="h2" color="grey.800" my={2}>
                     {title} <InfoTooltip description={helpText.etablissement.raison_sociale} />
                   </Heading>

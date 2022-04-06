@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { _get, _post } from "../httpClient";
 import { mergedQueries, withUniqueKey, operators } from "../components/Search/components/QueryBuilder/utils";
 import { ETABLISSEMENTS_ES_INDEX, FORMATIONS_ES_INDEX, RECONCILIATION_PS_ES_INDEX } from "../../constants/es";
+import { CONTEXT } from "../../constants/context";
 
 const CATALOGUE_API_ENDPOINT = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -11,10 +12,10 @@ const CATALOGUE_API_ENDPOINT = `${process.env.REACT_APP_BASE_URL}/api`;
  * @returns {ETABLISSEMENTS_ES_INDEX|RECONCILIATION_PS_ES_INDEX|FORMATIONS_ES_INDEX}
  */
 const getEsBase = (context) => {
-  if (context === "organismes") {
+  if (context === CONTEXT.ORGANISMES) {
     return ETABLISSEMENTS_ES_INDEX;
   }
-  if (context === "reconciliation_ps") {
+  if (context === CONTEXT.RECONCILIATION_PS) {
     return RECONCILIATION_PS_ES_INDEX;
   }
   return FORMATIONS_ES_INDEX;
@@ -84,7 +85,7 @@ const getCountEntities = async (base) => {
       must: [...esQueryParameter.must],
     };
     esQueryParameterCatalogueGeneral.must.push({
-      match: { etablissement_reference_catalogue_published: true },
+      match: { catalogue_published: true },
     });
     const { count: countEsCatalogueGeneral } = await getEsCount(esQueryParameterCatalogueGeneral);
     countCatalogueGeneral.filtered = countEsCatalogueGeneral;
@@ -94,19 +95,19 @@ const getCountEntities = async (base) => {
       must: [...esQueryParameter.must],
     };
     esQueryParameterCatalogueNonEligible.must.push({
-      match: { etablissement_reference_catalogue_published: false },
+      match: { catalogue_published: false },
     });
     const { count: countEsCatalogueNonEligible } = await getEsCount(esQueryParameterCatalogueNonEligible);
     countCatalogueNonEligible.filtered = countEsCatalogueNonEligible;
   }
 
   const { count: countTotalCatalogueGeneral } = await getEsCount({
-    must: [{ match: { etablissement_reference_catalogue_published: true } }, { match: { published: true } }],
+    must: [{ match: { catalogue_published: true } }, { match: { published: true } }],
   });
   countCatalogueGeneral.total = countTotalCatalogueGeneral;
 
   const { count: countTotalCatalogueNonEligible } = await getEsCount({
-    must: [{ match: { etablissement_reference_catalogue_published: false } }, { match: { published: true } }],
+    must: [{ match: { catalogue_published: false } }, { match: { published: true } }],
   });
   countCatalogueNonEligible.total = countTotalCatalogueNonEligible;
 

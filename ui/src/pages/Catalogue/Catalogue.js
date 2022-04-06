@@ -26,6 +26,7 @@ import { setTitle } from "../../common/utils/pageUtils";
 import useAuth from "../../common/hooks/useAuth";
 import { hasAccessTo } from "../../common/utils/rolesUtils";
 import { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL } from "../../constants/catalogueLabels";
+import { CONTEXT } from "../../constants/context";
 
 export default (props) => {
   let [auth] = useAuth();
@@ -81,10 +82,10 @@ export default (props) => {
                 </TabList>
                 <TabPanels>
                   <TabPanel>
-                    <Search {...props} searchState={searchState} context="catalogue_general" />
+                    <Search {...props} searchState={searchState} context={CONTEXT.CATALOGUE_GENERAL} />
                   </TabPanel>
                   <TabPanel>
-                    <Search {...props} searchState={searchState} context="catalogue_non_eligible" />
+                    <Search {...props} searchState={searchState} context={CONTEXT.CATALOGUE_NON_ELIGIBLE} />
                   </TabPanel>
                   {hasAccessTo(auth, "page_catalogue/guide_reglementaire") && (
                     <TabPanel>

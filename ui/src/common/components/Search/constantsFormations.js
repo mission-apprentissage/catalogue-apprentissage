@@ -1,5 +1,6 @@
 import { escapeDiacritics } from "../../utils/downloadUtils";
 import helpText from "../../../locales/helpText.json";
+import { CONTEXT } from "../../../constants/context";
 
 const FILTERS = () => [
   `QUERYBUILDER`,
@@ -23,7 +24,7 @@ const FILTERS = () => [
   "intitule_long",
   "intitule_court",
   "rncp_eligible_apprentissage",
-  "rncp_etablissement_gestionnaire_habilite",
+  "etablissement_reference_habilite_rncp",
   "rome_codes",
   `rncp_code`,
   `parcoursup_statut`,
@@ -31,7 +32,8 @@ const FILTERS = () => [
   "diplome",
   "tags",
   "annee",
-  "qualiopi",
+  "qualite",
+  "habilite",
   "duree",
   "periode_start",
   "periode_end",
@@ -114,8 +116,8 @@ const columnsDefinition = [
     exportable: true,
   },
   {
-    Header: "Gestionnaire certifié qualiopi ? ",
-    accessor: "etablissement_gestionnaire_catalogue_published",
+    Header: "Gestionnaire certifié qualité ? ",
+    accessor: "etablissement_gestionnaire_certifie_qualite",
     width: 200,
     exportable: true,
     formatter: (value) => (value ? "OUI" : "NON"),
@@ -140,9 +142,10 @@ const columnsDefinition = [
   },
   {
     Header: "Organisme Habilite (RNCP)",
-    accessor: "rncp_etablissement_gestionnaire_habilite",
+    accessor: "etablissement_reference_habilite_rncp",
     width: 200,
     exportable: true,
+    formatter: (value) => (value ? "OUI" : "NON"),
   },
   {
     Header: "Eligible apprentissage (RNCP)",
@@ -317,13 +320,13 @@ const columnsDefinition = [
     exportable: true,
   },
   {
-    Header: "Etablissement dans le catalogue eligible ? ",
-    accessor: "etablissement_reference_catalogue_published",
+    Header: "Eligible au catalogue général ? ",
+    accessor: "catalogue_published",
     width: 200,
     exportable: true,
   },
   {
-    Header: "clé ministere educatif ",
+    Header: "Clé ministere educatif ",
     accessor: "cle_ministere_educatif",
     width: 200,
     exportable: true,
@@ -473,7 +476,7 @@ const facetDefinition = () => [
     selectAllLabel: "Tous",
     sortBy: "count",
     acl: "page_catalogue/voir_status_publication_ps",
-    showCatalogEligibleOnly: true,
+    displayInContext: [CONTEXT.CATALOGUE_GENERAL],
     helpTextSection: helpText.search.parcoursup_statut,
   },
   {
@@ -484,7 +487,7 @@ const facetDefinition = () => [
     selectAllLabel: "Tous",
     sortBy: "count",
     acl: "page_catalogue/voir_status_publication_aff",
-    showCatalogEligibleOnly: true,
+    displayInContext: [CONTEXT.CATALOGUE_GENERAL],
     helpTextSection: helpText.search.affelnet_statut,
   },
   {
@@ -530,20 +533,43 @@ const facetDefinition = () => [
     isAuth: true, // hide for anonymous
   },
   {
-    componentId: `qualiopi`,
-    dataField: "etablissement_gestionnaire_catalogue_published",
-    title: "Certifiés Qualiopi",
-    filterLabel: "Certifiés Qualiopi",
+    componentId: `qualite`,
+    dataField: "etablissement_gestionnaire_certifie_qualite",
+    title: "Certifié Qualité",
+    filterLabel: "Certifié Qualité",
     sortBy: "asc",
-    helpTextSection: helpText.search.qualiopi,
+    helpTextSection: helpText.search.qualite,
     showSearch: false,
+    displayInContext: [CONTEXT.CATALOGUE_NON_ELIGIBLE],
     transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
     customQuery: (values) => {
       if (values.length === 1) {
         return {
           query: {
             match: {
-              etablissement_gestionnaire_catalogue_published: values[0] === "Oui",
+              etablissement_gestionnaire_certifie_qualite: values[0] === "Oui",
+            },
+          },
+        };
+      }
+      return {};
+    },
+  },
+  {
+    componentId: `habilite`,
+    dataField: "etablissement_reference_habilite_rncp",
+    title: "Habilité RNCP",
+    filterLabel: "Habilité RNCP",
+    sortBy: "asc",
+    showSearch: false,
+    displayInContext: [CONTEXT.CATALOGUE_NON_ELIGIBLE],
+    transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
+    customQuery: (values) => {
+      if (values.length === 1) {
+        return {
+          query: {
+            match: {
+              etablissement_reference_habilite_rncp: values[0] === "Oui",
             },
           },
         };

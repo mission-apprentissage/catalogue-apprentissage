@@ -3,6 +3,7 @@ import { StatusBadge } from "../../../StatusBadge";
 import { Box, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { ArrowRightLine, DoubleArrows } from "../../../../../theme/components/icons";
 import { PARCOURSUP_STATUS } from "../../../../../constants/status";
+import { CONTEXT } from "../../../../../constants/context";
 
 export const CardListPsFormations = ({ data, onCardClicked, context }) => {
   const CardContent = () => (
@@ -19,7 +20,7 @@ export const CardListPsFormations = ({ data, onCardClicked, context }) => {
           <Box>
             <Flex justifyContent="space-between">
               <Box>
-                {context === "reconciliation_ps_inconnus" && (
+                {context === CONTEXT.RECONCILIATION_PS_INCONNUS && (
                   <Box mt={5} fontSize="sm">
                     {data.statut_reconciliation === "REJETE" ? (
                       <StatusBadge status="Rejeté" ml={0} mr={[0, 2]} />
@@ -30,8 +31,8 @@ export const CardListPsFormations = ({ data, onCardClicked, context }) => {
                     N.A
                   </Box>
                 )}
-                {context !== "reconciliation_ps_inconnus" &&
-                  context !== "reconciliation_ps_valides" &&
+                {context !== CONTEXT.RECONCILIATION_PS_INCONNUS &&
+                  context !== CONTEXT.RECONCILIATION_PS_VALIDES &&
                   data.matching_mna_formation.map((mnaF, i) => (
                     <Box mt={5} key={i} fontSize="sm">
                       <DoubleArrows width="12px" height="14px" color="grey.800" mr={5} />
@@ -57,7 +58,7 @@ export const CardListPsFormations = ({ data, onCardClicked, context }) => {
                       )}
                     </Box>
                   ))}
-                {context !== "reconciliation_ps_inconnus" && data.matching_mna_formation.length === 0 && (
+                {context !== CONTEXT.RECONCILIATION_PS_INCONNUS && data.matching_mna_formation.length === 0 && (
                   <Box mt={5} fontSize="sm">
                     <DoubleArrows width="12px" height="14px" color="grey.800" mr={5} />
                     N.A
@@ -79,7 +80,7 @@ export const CardListPsFormations = ({ data, onCardClicked, context }) => {
       >
         <Text textStyle="xs">CFD: {data.codes_cfd_mna.join(",")}</Text>
         <Flex justifyContent="flex-end">
-          {context !== "reconciliation_ps_inconnus" && (
+          {context !== CONTEXT.RECONCILIATION_PS_INCONNUS && (
             <ArrowRightLine alignSelf="center" color="bluefrance" boxSize={4} />
           )}
         </Flex>
@@ -87,7 +88,7 @@ export const CardListPsFormations = ({ data, onCardClicked, context }) => {
     </Flex>
   );
 
-  if (context === "reconciliation_ps_inconnus") {
+  if (context === CONTEXT.RECONCILIATION_PS_INCONNUS) {
     return (
       <Box p={8} bg={"#F9F8F6"} mt={4} onClick={onCardClicked} py={5}>
         <CardContent />

@@ -1,7 +1,7 @@
 import { escapeDiacritics } from "../../utils/downloadUtils";
 import helpText from "../../../locales/helpText.json";
 
-const FILTERS = () => [`QUERYBUILDER`, `SEARCH`, `num_departement`, `nom_academie`, `tags`, "published", "qualiopi"];
+const FILTERS = () => [`QUERYBUILDER`, `SEARCH`, `num_departement`, `nom_academie`, `tags`, "published", "qualite"];
 
 const columnsDefinition = [
   {
@@ -62,8 +62,8 @@ const columnsDefinition = [
     exportable: true,
   },
   {
-    Header: "Qualiopi ?",
-    accessor: "info_qualiopi_info",
+    Header: "Certifié Qualité ?",
+    accessor: "certifie_qualite",
     width: 200,
     exportable: true,
   },
@@ -210,7 +210,7 @@ const columnsDefinition = [
 const queryBuilderField = [
   { text: "Raison sociale", value: "entreprise_raison_sociale.keyword" },
   { text: "Siret", value: "siret.keyword" },
-  { text: "Certifié qualiopi", value: "info_qualiopi_info.keyword" },
+  { text: "Certifié Qualité", value: "certifie_qualite.keyword" },
   { text: "Uai", value: "uai.keyword" },
   { text: "Nda", value: "nda.keyword" },
 ];
@@ -242,12 +242,12 @@ const facetDefinition = () => [
     helpTextSection: helpText.search.tags,
   },
   {
-    componentId: `qualiopi`,
-    dataField: "catalogue_published",
-    title: "Certifiés Qualiopi",
-    filterLabel: "Certifiés Qualiopi",
+    componentId: `qualite`,
+    dataField: "certifie_qualite",
+    title: "Certifiés Qualité",
+    filterLabel: "Certifiés Qualité",
     sortBy: "asc",
-    helpTextSection: helpText.search.qualiopi,
+    helpTextSection: helpText.search.qualite,
     showSearch: false,
     transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
     customQuery: (values) => {
@@ -255,7 +255,7 @@ const facetDefinition = () => [
         return {
           query: {
             match: {
-              catalogue_published: values[0] === "Oui",
+              certifie_qualite: values[0] === "Oui",
             },
           },
         };
