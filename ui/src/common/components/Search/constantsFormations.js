@@ -427,6 +427,13 @@ const columnsDefinition = [
         : "",
   },
   {
+    Header: "Etat fiche RNCP",
+    accessor: "rncp_details",
+    width: 200,
+    exportable: true,
+    formatter: (value) => value?.active_inactive,
+  },
+  {
     Header: "Tags",
     accessor: "tags",
     width: 200,
