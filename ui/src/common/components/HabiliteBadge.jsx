@@ -1,6 +1,6 @@
 import React from "react";
 import { Badge, Flex, Text } from "@chakra-ui/react";
-import { CheckLine, CrossLine, Question } from "../../theme/components/icons";
+import { CheckLine, Question } from "../../theme/components/icons";
 
 export const HabiliteBadge = ({ value, ...props }) => {
   let variant;
@@ -14,7 +14,7 @@ export const HabiliteBadge = ({ value, ...props }) => {
 
     case false:
       variant = "notOk";
-      Icon = CrossLine;
+      Icon = null;
       break;
 
     default:
@@ -27,9 +27,9 @@ export const HabiliteBadge = ({ value, ...props }) => {
     <Badge variant={variant} {...props}>
       <Flex alignItems="center">
         <Text mx={1} as={"span"}>
-          Habilité RNCP
+          {value ? "Habilité RNCP" : "Non habilité RNCP"}
         </Text>
-        <Icon ml={1} />
+        {Icon && <Icon ml={1} />}
       </Flex>
     </Badge>
   );
