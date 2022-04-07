@@ -24,17 +24,13 @@ export const HabiliteBadge = ({ value, ...props }) => {
   }
 
   return (
-    <>
-      {value === null ?? (
-        <Badge variant={variant} {...props}>
-          <Flex alignItems="center">
-            <Text mx={1} as={"span"}>
-              Habilité RNCP
-            </Text>
-            <Icon ml={1} />
-          </Flex>
-        </Badge>
-      )}
-    </>
+    <Badge variant={variant} {...props}>
+      <Flex alignItems="center">
+        <Text mx={1} as={"span"}>
+          Habilité RNCP
+        </Text>
+        <Icon ml={1} />
+      </Flex>
+    </Badge>
   );
 };
