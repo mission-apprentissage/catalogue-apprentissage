@@ -448,7 +448,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                     }}
                     renderItem={(data) =>
                       isBaseFormations ? (
-                        <CardListFormation data={data} key={data._id} context={context} />
+                        <CardListFormation data={data} key={data._id} />
                       ) : isBaseReconciliationPs ? (
                         <CardListPsFormations
                           data={data}
