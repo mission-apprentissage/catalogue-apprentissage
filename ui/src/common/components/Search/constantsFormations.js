@@ -427,7 +427,7 @@ const columnsDefinition = [
         : "",
   },
   {
-    Header: "Active / Inactive",
+    Header: "Etat fiche RNCP",
     accessor: "rncp_details",
     width: 200,
     exportable: true,
