@@ -500,6 +500,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                                   fieldName: def.accessor,
                                   formatter: def.formatter,
                                 }))}
+                              context={context}
                             />
                           )}
                           {extraButtons}

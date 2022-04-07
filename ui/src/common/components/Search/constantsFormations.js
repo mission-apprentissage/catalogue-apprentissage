@@ -429,6 +429,13 @@ const columnsDefinition = [
         : "",
   },
   {
+    Header: "Etat fiche RNCP",
+    accessor: "rncp_details",
+    width: 200,
+    exportable: true,
+    formatter: (value) => value?.active_inactive,
+  },
+  {
     Header: "Tags",
     accessor: "tags",
     width: 200,
@@ -575,6 +582,32 @@ const facetDefinition = () => [
     },
   },
   {
+<<<<<<< HEAD
+=======
+    componentId: `qualite`,
+    dataField: "etablissement_gestionnaire_certifie_qualite",
+    title: "Certifié Qualité",
+    filterLabel: "Certifié Qualité",
+    sortBy: "asc",
+    helpTextSection: helpText.search.qualite,
+    showSearch: false,
+    displayInContext: [CONTEXT.CATALOGUE_NON_ELIGIBLE],
+    transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
+    customQuery: (values) => {
+      if (values.length === 1) {
+        return {
+          query: {
+            match: {
+              etablissement_gestionnaire_certifie_qualite: values[0] === "Oui",
+            },
+          },
+        };
+      }
+      return {};
+    },
+  },
+  {
+>>>>>>> d59684ee5c9e2126e5f17be3ebf11049e82b3b41
     componentId: `habilite`,
     dataField: "etablissement_reference_habilite_rncp",
     title: "Habilité RNCP",

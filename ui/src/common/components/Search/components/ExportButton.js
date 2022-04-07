@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ReactiveComponent } from "@appbaseio/reactivesearch";
 import { Button } from "@chakra-ui/react";
 import { DownloadLine } from "../../../../theme/components/icons";
@@ -32,7 +32,7 @@ const serializeObject = (columns, obj) => {
   return res.join(CSV_SEPARATOR);
 };
 
-let search = (index, query) => {
+const search = (index, query) => {
   return _post(
     `${endpointNewFront}/es/search/${index}/_search?scroll=5m`,
     {
@@ -43,7 +43,7 @@ let search = (index, query) => {
   );
 };
 
-let scroll = (index, scrollId) => {
+const scroll = (index, scrollId) => {
   return _post(
     `${endpointNewFront}/es/search/${index}/scroll?scroll=5m&scroll_id=${scrollId}`,
     {
@@ -58,7 +58,7 @@ let scroll = (index, scrollId) => {
   );
 };
 
-let getDataAsCSV = async (searchUrl, query, columns, setProgress) => {
+const getDataAsCSV = async (searchUrl, query, columns, setProgress) => {
   let data = [];
   let pushAll = (hits) => {
     let total = hits.total.value;
@@ -80,51 +80,39 @@ let getDataAsCSV = async (searchUrl, query, columns, setProgress) => {
   return `${headers}${lines}`;
 };
 
-//let countMount = 0;
-
-const ExportButton = ({ index, filters, columns, defaultQuery = { match_all: {} } }) => {
+const ExportButton = ({ index, filters, columns, context }) => {
   const [requestExport, setRequestExport] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [query, setQuery] = useState({ match_all: {} });
 
-  if (!requestExport) {
-    return (
-      <Button
-        variant="pill"
-        py={2}
-        onClick={async () => {
-          setRequestExport(true);
-          setExporting(true);
-        }}
-      >
-        <DownloadLine mx="0.5rem" w="0.75rem" h="0.75rem" />
-        Exporter
-      </Button>
-    );
-  }
-
-  const onQueryChange = async (prevQuery, nextQuery) => {
-    // if (countMount === 1) {
-    let csv = await getDataAsCSV(index, nextQuery, columns, setProgress);
-    let fileName = `${index}_${new Date().toJSON()}.csv`;
-    downloadCSV(fileName, csv);
-    setExporting(false);
-    setRequestExport(false);
-    setProgress(0);
-    //   countMount = 0;
-    // } else if (countMount === 0) {
-    //   countMount++;
-    // }
-  };
+  useEffect(() => {
+    async function download() {
+      try {
+        if (requestExport) {
+          let csv = await getDataAsCSV(index, query, columns, setProgress);
+          let fileName = `${index}_${new Date().toJSON()}.csv`;
+          downloadCSV(fileName, csv);
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setExporting(false);
+        setProgress(0);
+        setRequestExport(false);
+      }
+    }
+    download();
+  }, [index, requestExport, columns, query, setProgress, setExporting, setRequestExport]);
 
   return (
     <ReactiveComponent
-      componentId={`${index}-export`}
+      componentId={`${index}-${context}-export`}
       react={{ and: filters }}
-      onQueryChange={onQueryChange}
+      onQueryChange={(_prevQuery, nextQuery) => setQuery(nextQuery)}
       defaultQuery={() => {
         return {
-          query: defaultQuery,
+          query: { match_all: {} },
         };
       }}
       render={() => {
@@ -135,10 +123,27 @@ const ExportButton = ({ index, filters, columns, defaultQuery = { match_all: {} 
             </Button>
           );
         }
+
+        if (!requestExport) {
+          return (
+            <Button
+              variant="pill"
+              py={2}
+              onClick={() => {
+                setExporting(true);
+                setRequestExport(true);
+              }}
+            >
+              <DownloadLine mx="0.5rem" w="0.75rem" h="0.75rem" />
+              Exporter
+            </Button>
+          );
+        }
+
         return <div />;
       }}
     />
   );
 };
 
-export default React.memo(ExportButton);
+export default ExportButton;

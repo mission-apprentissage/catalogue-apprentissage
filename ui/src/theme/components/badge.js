@@ -87,6 +87,7 @@ const Badge = {
     },
     ok: {
       ...commonStatusBadgeStyle,
+<<<<<<< HEAD
       bg: "#E3E3FD50", //bluefrance.925
       color: "#000091", //blue-france-sun-113
     },
@@ -94,6 +95,15 @@ const Badge = {
       ...commonStatusBadgeStyle,
       bg: "#EEEEEE", //red-marianne-925
       color: "#161616", //red-marianne-425
+=======
+      bg: "#00009114",
+      color: "bluefrance",
+    },
+    notOk: {
+      ...commonStatusBadgeStyle,
+      bg: "#00009114",
+      color: "redmarianne",
+>>>>>>> d59684ee5c9e2126e5f17be3ebf11049e82b3b41
     },
     default: {
       ...commonStatusBadgeStyle,

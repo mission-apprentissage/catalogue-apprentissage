@@ -7,7 +7,10 @@ import { Box, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { ArrowRightLine, InfoCircle } from "../../../../../theme/components/icons";
 import { QualiteBadge } from "../../../QualiteBadge";
 import { HabiliteBadge } from "../../../HabiliteBadge";
+<<<<<<< HEAD
 import { CONTEXT } from "../../../../../constants/context";
+=======
+>>>>>>> d59684ee5c9e2126e5f17be3ebf11049e82b3b41
 
 export const CardListFormation = ({ data, context }) => {
   let [auth] = useAuth();
@@ -36,7 +39,7 @@ export const CardListFormation = ({ data, context }) => {
                 </>
               )}
               <QualiteBadge value={data.etablissement_gestionnaire_certifie_qualite} mt={2} mr={[0, 2]} />
-              {context !== CONTEXT.CATALOGUE_GENERAL && (
+              {!data.catalogue_published && (
                 <HabiliteBadge value={data.etablissement_reference_habilite_rncp} mt={2} mr={[0, 2]} />
               )}
             </Flex>
