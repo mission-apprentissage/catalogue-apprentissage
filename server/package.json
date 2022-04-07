@@ -83,7 +83,7 @@
     "sha512crypt-node": "0.1.0",
     "swagger-jsdoc": "6.0.1",
     "swagger-ui-express": "4.1.6",
-    "xlsx": "0.16.9"
+    "xlsx": "0.17.0"
   },
   "engines": {
     "node": ">=14.15.0"
