@@ -63,6 +63,10 @@
     "trailingComma": "es5"
   },
   "devDependencies": {
+    "@babel/node": "7.16.8",
+    "@babel/preset-env": "7.16.11",
+    "@babel/preset-react": "7.16.7",
+    "@babel/register": "7.17.7",
     "@testing-library/dom": "8.7.2",
     "@testing-library/jest-dom": "5.11.10",
     "@testing-library/react": "11.2.6",
@@ -70,11 +74,7 @@
     "@testing-library/user-event": "13.3.0",
     "@typescript-eslint/eslint-plugin": "5.18.0",
     "@typescript-eslint/parser": "5.18.0",
-    "babel-cli": "6.26.0",
     "babel-eslint": "10.1.0",
-    "babel-preset-es2015": "6.24.1",
-    "babel-preset-react": "6.24.1",
-    "babel-register": "6.26.0",
     "eslint-config-prettier": "6.11.0",
     "eslint-config-react-app": "6.0.0",
     "eslint-plugin-flowtype": "5.2.0",
