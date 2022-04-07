@@ -7,10 +7,6 @@ import { Box, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { ArrowRightLine, InfoCircle } from "../../../../../theme/components/icons";
 import { QualiteBadge } from "../../../QualiteBadge";
 import { HabiliteBadge } from "../../../HabiliteBadge";
-<<<<<<< HEAD
-import { CONTEXT } from "../../../../../constants/context";
-=======
->>>>>>> d59684ee5c9e2126e5f17be3ebf11049e82b3b41
 
 export const CardListFormation = ({ data, context }) => {
   let [auth] = useAuth();

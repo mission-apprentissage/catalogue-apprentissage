@@ -582,8 +582,6 @@ const facetDefinition = () => [
     },
   },
   {
-<<<<<<< HEAD
-=======
     componentId: `qualite`,
     dataField: "etablissement_gestionnaire_certifie_qualite",
     title: "Certifié Qualité",
@@ -607,7 +605,6 @@ const facetDefinition = () => [
     },
   },
   {
->>>>>>> d59684ee5c9e2126e5f17be3ebf11049e82b3b41
     componentId: `habilite`,
     dataField: "etablissement_reference_habilite_rncp",
     title: "Habilité RNCP",
