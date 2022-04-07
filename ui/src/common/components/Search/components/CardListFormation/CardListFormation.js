@@ -8,7 +8,7 @@ import { ArrowRightLine, InfoCircle } from "../../../../../theme/components/icon
 import { QualiteBadge } from "../../../QualiteBadge";
 import { HabiliteBadge } from "../../../HabiliteBadge";
 
-export const CardListFormation = ({ data }) => {
+export const CardListFormation = ({ data, context }) => {
   let [auth] = useAuth();
 
   return (

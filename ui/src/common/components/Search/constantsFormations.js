@@ -1,6 +1,8 @@
 import { escapeDiacritics } from "../../utils/downloadUtils";
 import helpText from "../../../locales/helpText.json";
 import { CONTEXT } from "../../../constants/context";
+import { departements } from "../../../constants/departements";
+import { annees } from "../../../constants/annees";
 
 const FILTERS = () => [
   `QUERYBUILDER`,
@@ -497,20 +499,28 @@ const facetDefinition = () => [
     filterLabel: "Département",
     selectAllLabel: "Tous",
     sortBy: "asc",
+    transformData: (data) => data.map((d) => ({ ...d, key: `${d.key} - ${departements[d.key]}` })),
+    customQuery: (values) => ({
+      query: values?.length && {
+        terms: {
+          "num_departement.keyword": values?.map((value) => value.split(" - ")[0]),
+        },
+      },
+    }),
   },
   {
     componentId: `niveau`,
     dataField: "niveau.keyword",
-    title: "Niveau de formation",
-    filterLabel: "Niveau de formation",
+    title: "Niveau visé",
+    filterLabel: "Niveau visé",
     selectAllLabel: "Tous les niveaux",
     sortBy: "asc",
   },
   {
     componentId: `tags`,
     dataField: "tags.keyword",
-    title: "Année(s)",
-    filterLabel: "Année(s)",
+    title: "Période de session",
+    filterLabel: "Période de session",
     selectAllLabel: "Toutes",
     sortBy: "asc",
   },
@@ -522,15 +532,54 @@ const facetDefinition = () => [
     selectAllLabel: "Toutes",
     sortBy: "asc",
     isAuth: true, // hide for anonymous
+    transformData: (data) => data.map((d) => ({ ...d, key: annees[d.key] })),
+    customQuery: (values) => ({
+      query: values?.length && {
+        terms: {
+          "annee.keyword": values?.map((value) => Object.keys(annees).find((annee) => annees[annee] === value)),
+        },
+      },
+    }),
   },
   {
     componentId: `duree`,
     dataField: "duree.keyword",
-    title: "Durée",
-    filterLabel: "Durée",
+    title: "Durée de la formation",
+    filterLabel: "Durée de la formation",
     selectAllLabel: "Toutes",
     sortBy: "asc",
     isAuth: true, // hide for anonymous
+    transformData: (data) => data.map((d) => ({ ...d, key: d.key <= 1 ? `${d.key} an` : `${d.key} ans` })),
+    customQuery: (values) => ({
+      query: values?.length && {
+        terms: {
+          "duree.keyword": values?.map((value) => value.split(" ")[0]),
+        },
+      },
+    }),
+  },
+  {
+    componentId: `qualite`,
+    dataField: "etablissement_gestionnaire_certifie_qualite",
+    title: "Certifié Qualité",
+    filterLabel: "Certifié Qualité",
+    sortBy: "desc",
+    helpTextSection: helpText.search.qualite,
+    showSearch: false,
+    displayInContext: [CONTEXT.CATALOGUE_NON_ELIGIBLE],
+    transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
+    customQuery: (values) => {
+      if (values.length === 1) {
+        return {
+          query: {
+            match: {
+              etablissement_gestionnaire_certifie_qualite: values[0] === "Oui",
+            },
+          },
+        };
+      }
+      return {};
+    },
   },
   {
     componentId: `qualite`,
