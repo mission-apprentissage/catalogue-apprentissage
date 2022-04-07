@@ -60,40 +60,48 @@ const exit = async (rawError) => {
 };
 
 module.exports = {
-  runScript: async (job) => {
+  /**
+   * @param {*} job
+   * @param {object} options
+   * @param {boolean} options.alert Display alert on front
+   */
+  runScript: async (job, options) => {
     try {
       const timer = createTimer();
       timer.start();
 
       await ensureOutputDirExists();
       const components = await createComponents();
-      await Alert.findOneAndUpdate(
-        { type: "automatique" },
-        { enabled: true },
-        {
-          new: true,
-          upsert: true,
-        }
-      );
+      options?.alert &&
+        (await Alert.findOneAndUpdate(
+          { type: "automatique" },
+          { enabled: true },
+          {
+            new: true,
+            upsert: true,
+          }
+        ));
       const results = await job(components);
       timer.stop(results);
 
-      await Alert.findOneAndUpdate(
-        { type: "automatique" },
-        { enabled: false },
-        {
-          new: true,
-        }
-      );
+      options?.alert &&
+        (await Alert.findOneAndUpdate(
+          { type: "automatique" },
+          { enabled: false },
+          {
+            new: true,
+          }
+        ));
       await exit();
     } catch (e) {
-      await Alert.findOneAndUpdate(
-        { type: "automatique" },
-        { enabled: false },
-        {
-          new: true,
-        }
-      );
+      options?.alert &&
+        (await Alert.findOneAndUpdate(
+          { type: "automatique" },
+          { enabled: false },
+          {
+            new: true,
+          }
+        ));
       await exit(e);
     }
   },

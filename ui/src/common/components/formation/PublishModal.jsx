@@ -217,7 +217,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
   const initialRef = React.useRef();
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="3xl" initialFocusRef={initialRef}>
+    <Modal isOpen={isOpen} onClose={onClose} size="6xl" initialFocusRef={initialRef}>
       <ModalOverlay />
       <ModalContent bg="white" color="primaryText" borderRadius="none" ref={initialRef}>
         <Button
@@ -236,7 +236,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
           </Text>
         </Button>
         <ModalHeader px={[4, 16]} pt={[3, 6]} pb={[3, 6]}>
-          <Heading as="h2" fontSize="2rem">
+          <Heading as="h4" fontSize="1.6rem">
             <Flex>
               <Text as={"span"}>
                 <ArrowRightLine boxSize={26} />
@@ -248,8 +248,8 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
           </Heading>
         </ModalHeader>
         <ModalBody p={0}>
-          <Box px={[4, 16]} pb={[4, 16]}>
-            <Box border="1px solid" borderColor="bluefrance" p={8}>
+          <Flex px={[4, 16]} pb={[4, 16]} flexDirection="row" justifyContent="space-between">
+            <Box border="1px solid" borderColor="bluefrance" p={8} flexBasis="48%">
               <Heading as="h3" fontSize="1.5rem" mb={3}>
                 {formation.intitule_long}
               </Heading>
@@ -342,7 +342,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                 </FormControl>
               </Flex>
             </Box>
-            <Box border="1px solid" borderColor="bluefrance" p={8} mt={8}>
+            <Box border="1px solid" borderColor="bluefrance" p={8} flexBasis="48%">
               <Heading as="h3" fontSize="1.5rem" mb={3}>
                 {formation.intitule_long}
               </Heading>
@@ -421,8 +421,8 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                 </FormControl>
               </Flex>
             </Box>
-          </Box>
-          <Box boxShadow={"0 -4px 16px 0 rgba(0, 0, 0, 0.08)"}>
+          </Flex>
+          <Box>
             <Flex flexDirection={["column", "row"]} p={[3, 8]} justifyContent="flex-end">
               <Button
                 variant="secondary"

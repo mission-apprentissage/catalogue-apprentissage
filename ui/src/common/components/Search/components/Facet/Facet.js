@@ -94,7 +94,7 @@ const Facet = ({
                   label: "search-label",
                 }}
                 showSearch={showSearch}
-                placeholder="Filtrer"
+                placeholder="Rechercher"
                 showFilter={true}
                 URLParams={true}
                 loader="Chargement"
