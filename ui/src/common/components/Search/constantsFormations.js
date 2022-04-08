@@ -162,6 +162,27 @@ const columnsDefinition = [
     exportable: true,
   },
   {
+    Header: "Etat fiche RNCP",
+    accessor: "rncp_details",
+    width: 200,
+    exportable: true,
+    formatter: (value) => value?.active_inactive,
+  },
+  {
+    Header: "code_type_certif",
+    accessor: "rncp_details",
+    width: 200,
+    exportable: true,
+    formatter: (value) => value?.code_type_certif,
+  },
+  {
+    Header: "type_certif",
+    accessor: "rncp_details",
+    width: 200,
+    exportable: true,
+    formatter: (value) => value?.type_certif,
+  },
+  {
     Header: "Intitule du code RNCP",
     accessor: "rncp_intitule",
     width: 200,
@@ -427,13 +448,6 @@ const columnsDefinition = [
       value?.date_fin_validite_enregistrement
         ? new Date(value.date_fin_validite_enregistrement).toLocaleDateString("fr-FR")
         : "",
-  },
-  {
-    Header: "Etat fiche RNCP",
-    accessor: "rncp_details",
-    width: 200,
-    exportable: true,
-    formatter: (value) => value?.active_inactive,
   },
   {
     Header: "Tags",
