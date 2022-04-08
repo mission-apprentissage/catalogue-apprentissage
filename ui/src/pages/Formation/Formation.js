@@ -89,9 +89,11 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
               Lieu de la formation
             </Heading>
             <Box mt={2} mb={4} ml={[-2, -2, -3]}>
-              <Link href={getLBAUrl(formation)} textStyle="rf-text" variant="pill" isExternal>
-                voir sur labonnealternance <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
-              </Link>
+              {formation.catalogue_published && (
+                <Link href={getLBAUrl(formation)} textStyle="rf-text" variant="pill" isExternal>
+                  voir sur labonnealternance <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
+                </Link>
+              )}
             </Box>
 
             <Box>
