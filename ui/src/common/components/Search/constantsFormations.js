@@ -519,8 +519,8 @@ const facetDefinition = () => [
   {
     componentId: `tags`,
     dataField: "tags.keyword",
-    title: "Période de session",
-    filterLabel: "Période de session",
+    title: "Début de formation",
+    filterLabel: "Début de formation",
     selectAllLabel: "Toutes",
     sortBy: "asc",
   },
