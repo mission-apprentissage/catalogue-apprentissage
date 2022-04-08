@@ -586,7 +586,7 @@ const facetDefinition = () => [
     dataField: "etablissement_reference_habilite_rncp",
     title: "Habilité RNCP",
     filterLabel: "Habilité RNCP",
-    sortBy: "asc",
+    sortBy: "desc",
     showSearch: false,
     displayInContext: [CONTEXT.CATALOGUE_NON_ELIGIBLE],
     transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
