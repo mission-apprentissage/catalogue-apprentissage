@@ -170,7 +170,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                   <Flex pt={3} direction="column">
                     <Box>
                       <Text mt={4} mb={4} textStyle="rf-text" width={"100%"}>
-                        Début de formation <InfoTooltip description={helpText.search.periode.title} />
+                        Date de début de formation <InfoTooltip description={helpText.search.periode.title} />
                       </Text>
                     </Box>
 
