@@ -582,29 +582,6 @@ const facetDefinition = () => [
     },
   },
   {
-    componentId: `qualite`,
-    dataField: "etablissement_gestionnaire_certifie_qualite",
-    title: "Certifié Qualité",
-    filterLabel: "Certifié Qualité",
-    sortBy: "asc",
-    helpTextSection: helpText.search.qualite,
-    showSearch: false,
-    displayInContext: [CONTEXT.CATALOGUE_NON_ELIGIBLE],
-    transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
-    customQuery: (values) => {
-      if (values.length === 1) {
-        return {
-          query: {
-            match: {
-              etablissement_gestionnaire_certifie_qualite: values[0] === "Oui",
-            },
-          },
-        };
-      }
-      return {};
-    },
-  },
-  {
     componentId: `habilite`,
     dataField: "etablissement_reference_habilite_rncp",
     title: "Habilité RNCP",
