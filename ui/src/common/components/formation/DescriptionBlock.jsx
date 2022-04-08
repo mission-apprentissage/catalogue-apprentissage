@@ -286,18 +286,18 @@ export const DescriptionBlock = ({ formation }) => {
               <Text as="div" mb={4}>
                 Partenaires : <br />
                 {filteredPartenaires.length > 0 ? (
-                  <Text variant="highlight">
-                    <UnorderedList>
-                      {filteredPartenaires.map(({ Nom_Partenaire, Siret_Partenaire, Habilitation_Partenaire }) => (
-                        <ListItem key={Siret_Partenaire}>
+                  <UnorderedList>
+                    {filteredPartenaires.map(({ Nom_Partenaire, Siret_Partenaire, Habilitation_Partenaire }) => (
+                      <ListItem key={Siret_Partenaire}>
+                        <Text variant="highlight">
                           <strong>
                             {Nom_Partenaire} (siret : {Siret_Partenaire ?? "n/a"}) :
-                          </strong>
+                          </strong>{" "}
                           <HabilitationPartenaire habilitation={Habilitation_Partenaire} />
-                        </ListItem>
-                      ))}
-                    </UnorderedList>
-                  </Text>
+                        </Text>
+                      </ListItem>
+                    ))}
+                  </UnorderedList>
                 ) : (
                   <>
                     {formation.etablissement_gestionnaire_siret !== formation.etablissement_formateur_siret && (
