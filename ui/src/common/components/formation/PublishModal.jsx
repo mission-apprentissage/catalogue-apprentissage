@@ -248,8 +248,14 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
           </Heading>
         </ModalHeader>
         <ModalBody p={0}>
-          <Flex px={[4, 16]} pb={[4, 16]} flexDirection="row" justifyContent="space-between">
-            <Box border="1px solid" borderColor="bluefrance" p={8} flexBasis="48%">
+          <Flex px={[4, 12]} pb={[4, 12]} flexDirection={{ base: "column", md: "row" }} justifyContent="space-between">
+            <Box
+              border="1px solid"
+              borderColor="bluefrance"
+              p={8}
+              flexBasis={{ base: "100%", md: "48%" }}
+              mb={{ base: 2, md: 0 }}
+            >
               <Heading as="h3" fontSize="1.5rem" mb={3}>
                 {formation.intitule_long}
               </Heading>
@@ -342,7 +348,13 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                 </FormControl>
               </Flex>
             </Box>
-            <Box border="1px solid" borderColor="bluefrance" p={8} flexBasis="48%">
+            <Box
+              border="1px solid"
+              borderColor="bluefrance"
+              p={8}
+              flexBasis={{ base: "100%", md: "48%" }}
+              mt={{ base: 2, md: 0 }}
+            >
               <Heading as="h3" fontSize="1.5rem" mb={3}>
                 {formation.intitule_long}
               </Heading>

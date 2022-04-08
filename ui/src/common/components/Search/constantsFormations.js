@@ -241,8 +241,22 @@ const columnsDefinition = [
     formatter: (value) => escapeDiacritics(value),
   },
   {
+    Header: "Motif de non publication Affelnet",
+    accessor: "affelnet_raison_depublication",
+    width: 200,
+    exportable: true,
+    formatter: (value) => escapeDiacritics(value),
+  },
+  {
     Header: "Statut Parcoursup",
     accessor: "parcoursup_statut",
+    width: 200,
+    exportable: true,
+    formatter: (value) => escapeDiacritics(value),
+  },
+  {
+    Header: "Motif de non publication Parcoursup",
+    accessor: "parcoursup_raison_depublication",
     width: 200,
     exportable: true,
     formatter: (value) => escapeDiacritics(value),

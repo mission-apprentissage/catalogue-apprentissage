@@ -475,6 +475,28 @@ export default ({ match }) => {
                     </Text>
                   </Box>
                 )}
+                {formation.parcoursup_raison_depublication && (
+                  <Box bg={"grey.100"} p={4} mt={4} borderLeft={"4px solid"} borderColor={"orangesoft.500"} w={"full"}>
+                    <Text>
+                      <ExclamationCircle color="orangesoft.500" mr={2} boxSize={6} mb={1} />
+                      Motif de non publication :{" "}
+                      <Text as="span" variant="highlight" bg={"transparent"}>
+                        {formation.parcoursup_raison_depublication}
+                      </Text>
+                    </Text>
+                  </Box>
+                )}
+                {formation.affelnet_raison_depublication && (
+                  <Box bg={"grey.100"} p={4} mt={4} borderLeft={"4px solid"} borderColor={"orangesoft.500"} w={"full"}>
+                    <Text>
+                      <ExclamationCircle color="orangesoft.500" mr={2} boxSize={6} mb={1} />
+                      Motif de non publication :{" "}
+                      <Text as="span" variant="highlight" bg={"transparent"}>
+                        {formation.affelnet_raison_depublication}
+                      </Text>
+                    </Text>
+                  </Box>
+                )}
               </Box>
               <Formation
                 formation={formation}
