@@ -94,7 +94,7 @@ export const departements = {
   "92": "Hauts-de-seine",
   "93": "Seine-Saint-Denis",
   "94": "Val-de-marne",
-  "95 ": "Val-d'Oise",
+  "95": "Val-d'Oise",
   "971": "Guadeloupe",
   "972": "Martinique",
   "973": "Guyane",
