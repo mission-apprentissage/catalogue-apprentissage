@@ -519,8 +519,8 @@ const facetDefinition = () => [
   {
     componentId: `tags`,
     dataField: "tags.keyword",
-    title: "Période de session",
-    filterLabel: "Période de session",
+    title: "Début de formation",
+    filterLabel: "Début de formation",
     selectAllLabel: "Toutes",
     sortBy: "asc",
   },
@@ -564,29 +564,6 @@ const facetDefinition = () => [
     title: "Certifié Qualité",
     filterLabel: "Certifié Qualité",
     sortBy: "desc",
-    helpTextSection: helpText.search.qualite,
-    showSearch: false,
-    displayInContext: [CONTEXT.CATALOGUE_NON_ELIGIBLE],
-    transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
-    customQuery: (values) => {
-      if (values.length === 1) {
-        return {
-          query: {
-            match: {
-              etablissement_gestionnaire_certifie_qualite: values[0] === "Oui",
-            },
-          },
-        };
-      }
-      return {};
-    },
-  },
-  {
-    componentId: `qualite`,
-    dataField: "etablissement_gestionnaire_certifie_qualite",
-    title: "Certifié Qualité",
-    filterLabel: "Certifié Qualité",
-    sortBy: "asc",
     helpTextSection: helpText.search.qualite,
     showSearch: false,
     displayInContext: [CONTEXT.CATALOGUE_NON_ELIGIBLE],
