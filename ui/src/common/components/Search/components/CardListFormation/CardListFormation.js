@@ -34,9 +34,13 @@ export const CardListFormation = ({ data, context }) => {
                   <StatusBadge source="Affelnet" status={data.affelnet_statut} mt={2} mr={[0, 2]} />
                 </>
               )}
-              <QualiteBadge value={data.etablissement_gestionnaire_certifie_qualite} mt={2} mr={[0, 2]} />
-              {["Titre", "TP"].includes(data.rncp_details?.code_type_certif) && (
-                <HabiliteBadge value={data.etablissement_reference_habilite_rncp} mt={2} mr={[0, 2]} />
+              {!data.catalogue_published && (
+                <>
+                  <QualiteBadge value={data.etablissement_gestionnaire_certifie_qualite} mt={2} mr={[0, 2]} />
+                  {["Titre", "TP"].includes(data.rncp_details?.code_type_certif) && (
+                    <HabiliteBadge value={data.etablissement_reference_habilite_rncp} mt={2} mr={[0, 2]} />
+                  )}
+                </>
               )}
             </Flex>
             <ArrowRightLine alignSelf="center" color="bluefrance" boxSize={4} />
