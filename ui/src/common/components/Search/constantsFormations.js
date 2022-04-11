@@ -357,14 +357,20 @@ const columnsDefinition = [
     exportable: true,
   },
   {
-    Header: "Eligible au catalogue général ? ",
+    Header: "Eligible au catalogue général ?",
     accessor: "catalogue_published",
     width: 200,
     exportable: true,
   },
   {
-    Header: "Clé ministere educatif ",
+    Header: "Clé ministere educatif",
     accessor: "cle_ministere_educatif",
+    width: 200,
+    exportable: true,
+  },
+  {
+    Header: "parcoursup_id (g_ta_cod)",
+    accessor: "parcoursup_id",
     width: 200,
     exportable: true,
   },

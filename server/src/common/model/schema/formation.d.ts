@@ -198,7 +198,7 @@ export interface Formation {
    */
   parcoursup_error?: string;
   /**
-   * ids ParcourSup
+   * identifiant Parcoursup de la formation (g_ta_cod)
    */
   parcoursup_id?: string;
   /**
