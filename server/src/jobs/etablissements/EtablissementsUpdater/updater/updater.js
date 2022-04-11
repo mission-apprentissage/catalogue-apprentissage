@@ -52,7 +52,7 @@ const performUpdates = async (filter = {}, options = null) => {
       } else if (updates || etablissement.certifie_qualite !== certifie_qualite) {
         updatedEtablissement.last_update_at = Date.now();
         await Etablissement.findByIdAndUpdate(etablissement._id, { ...updatedEtablissement, certifie_qualite });
-        console.log(`${count}/${total}: Etablissement ${etablissement._id} updated`);
+        // console.log(`${count}/${total}: Etablissement ${etablissement._id} updated`);
         // logger.info(`${count}/${total}: Etablissement ${etablissement._id} updated`);
       }
     } catch (error) {
