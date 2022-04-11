@@ -1,69 +1,41 @@
-const { oleoduc, readLineByLine, transformData, writeData } = require("oleoduc");
+const path = require("path");
+const { parser: streamParser } = require("stream-json");
+const { streamArray } = require("stream-json/streamers/StreamArray");
+const StreamZip = require("node-stream-zip");
+const { oleoduc, transformData, writeData } = require("oleoduc");
 const { mapper } = require("./mapper");
 const { parser } = require("./parser");
 const { DualControlFormation } = require("../../../common/model/index");
-const { asyncForEach } = require("../../../common/utils/asyncUtils");
-let Client = require("ssh2-sftp-client");
-const fs = require("fs");
-const config = require("config");
 
-const jsonData = require("./assets/_catalogue_mna_2022__20220406");
+// TODO download remote file once it exists and is not empty
+const importFromZip = async () => {
+  const zip = new StreamZip.async({ file: path.join(__dirname, "./assets/_catalogue_mna_2022__20220406.zip") });
+  const entriesCount = await zip.entriesCount;
 
-// // TODO remove limit => just for dev purpose
-// const RCO_NEW_STREAM_URL =
-//   "https://catalogue-recette.apprentissage.beta.gouv.fr/api/entity/formations.ndjson?limit=100";
+  if (entriesCount === 1) {
+    const entries = await zip.entries();
+    const entry = Object.values(entries)[0];
+    console.log(`Entry ${entry.name}: ${entry.size} bytes`);
 
-let client = new Client();
+    const stream = await zip.stream(entry.name);
 
-const importFromFtp = async () => {
-  try {
-    await client.connect({
-      host: config.rco.ftp.host,
-      port: config.rco.ftp.port,
-      username: config.rco.ftp.user,
-      // password: config.rco.ftp.password,
-      privateKey: fs.readFileSync(config.rco.ftp.privateKey),
-      passphrase: config.rco.ftp.passphrase,
-    });
-
-    const list = await client.list(config.rco.ftp.dir);
-    const file = list[0];
-
-    console.log("file found on ftp: ", file.name);
-
-    const stream = client.sftp.createReadStream(`${config.rco.ftp.dir}/${file.name}`);
-
-    // read stream line by line to spare memory
     await oleoduc(
       stream,
-      readLineByLine(),
-      transformData((line) => parser(mapper(JSON.parse(line)))),
+      streamParser(),
+      streamArray(),
+      transformData(({ value: line }) => parser(mapper(line))),
       writeData(async (json) => await DualControlFormation.create(json))
     );
-
-    await client.end();
-  } catch (err) {
-    console.log(err);
+  } else {
+    console.error("One and only one file required inside zip");
   }
-};
 
-// TODO remove : first file is in assets since RCO has not configured FTP yet
-const importFromLocalFile = async () => {
-  await asyncForEach(jsonData /*.slice(0, 100)*/, async (line, index) => {
-    if (index % 1000 === 0) {
-      console.log(`Importing data ${index}`);
-    }
-    const mappedData = mapper(line);
-    const parsedData = parser(mappedData);
-    await DualControlFormation.create(parsedData);
-  });
+  await zip.close();
 };
 
 const importer = async () => {
   await DualControlFormation.deleteMany({});
-
-  // await importFromFtp();
-  await importFromLocalFile();
+  await importFromZip();
 };
 
 module.exports = { importer };
