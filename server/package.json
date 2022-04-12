@@ -31,7 +31,7 @@
     "affelnet:jobs": "standaloneJobs=true node src/jobs/affelnet/index.js",
     "psup:jobs": "standaloneJobs=true node src/jobs/parcoursup/index.js",
     "qualiopi": "node src/jobs/oneshot/qualiopi/index.js",
-    "dualControl": "standalone=true node src/jobs/formations/dualControl/index.js",
+    "dualControl": "standaloneJobs=true node src/jobs/formations/dualControl/index.js",
     "es:index": "standalone=true node src/jobs/esIndex/index.js",
     "doc": "node src/jobs/doc/index.js",
     "migration:create": "migrate-mongo create",

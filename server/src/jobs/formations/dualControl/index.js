@@ -21,7 +21,7 @@ const dualControl = async () => {
 
 module.exports = dualControl;
 
-if (process.env.standalone) {
+if (process.env.standaloneJobs) {
   runScript(async () => {
     await dualControl();
   });

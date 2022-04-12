@@ -1,21 +1,34 @@
 const path = require("path");
+const fs = require("fs");
+const axios = require("axios");
 const { parser: streamParser } = require("stream-json");
 const { streamArray } = require("stream-json/streamers/StreamArray");
 const StreamZip = require("node-stream-zip");
 const { oleoduc, transformData, writeData } = require("oleoduc");
+const { DualControlFormation } = require("../../../common/model/index");
 const { mapper } = require("./mapper");
 const { parser } = require("./parser");
-const { DualControlFormation } = require("../../../common/model/index");
 
-// TODO download remote file once it exists and is not empty
+const RCO_ZIP_URL = "https://mnadownloader.intercariforef.org/";
+const RCO_ZIP_PATH = "./assets/rco.zip";
+
+const downloadZip = async () => {
+  const response = await axios({
+    method: "get",
+    url: RCO_ZIP_URL,
+    responseType: "stream",
+  });
+  await response.data.pipe(fs.createWriteStream(path.join(__dirname, RCO_ZIP_PATH)));
+};
+
 const importFromZip = async () => {
-  const zip = new StreamZip.async({ file: path.join(__dirname, "./assets/_catalogue_mna_2022__20220406.zip") });
+  const zip = new StreamZip.async({ file: path.join(__dirname, RCO_ZIP_PATH) });
   const entriesCount = await zip.entriesCount;
 
   if (entriesCount === 1) {
     const entries = await zip.entries();
     const entry = Object.values(entries)[0];
-    console.log(`Entry ${entry.name}: ${entry.size} bytes`);
+    console.log(`Fichier dans l'archive: ${entry.name} (${(entry.size / (1000 * 1000)).toFixed(2)} Mo)`);
 
     const stream = await zip.stream(entry.name);
 
@@ -35,6 +48,8 @@ const importFromZip = async () => {
 
 const importer = async () => {
   await DualControlFormation.deleteMany({});
+
+  await downloadZip();
   await importFromZip();
 };
 
