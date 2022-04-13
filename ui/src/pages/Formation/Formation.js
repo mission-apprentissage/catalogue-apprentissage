@@ -39,6 +39,7 @@ import { setTitle } from "../../common/utils/pageUtils";
 import { getOpenStreetMapUrl } from "../../common/utils/mapUtils";
 import { EditableField } from "../../common/components/formation/EditableField";
 import { HistoryBlock } from "../../common/components/formation/HistoryBlock";
+import { RejectionBlock } from "../../common/components/formation/RejectionBlock";
 import { DescriptionBlock } from "../../common/components/formation/DescriptionBlock";
 import { OrganismesBlock } from "../../common/components/formation/OrganismesBlock";
 import { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL } from "../../constants/catalogueLabels";
@@ -477,28 +478,45 @@ export default ({ match }) => {
                     </Text>
                   </Box>
                 )}
-                {formation.parcoursup_raison_depublication && (
-                  <Box bg={"grey.100"} p={4} mt={4} borderLeft={"4px solid"} borderColor={"orangesoft.500"} w={"full"}>
-                    <Text>
-                      <ExclamationCircle color="orangesoft.500" mr={2} boxSize={6} mb={1} />
-                      Motif de non publication :{" "}
-                      <Text as="span" variant="highlight" bg={"transparent"}>
-                        {formation.parcoursup_raison_depublication}
+                <RejectionBlock formation={formation} />
+                {hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
+                  formation.parcoursup_raison_depublication && (
+                    <Box
+                      bg={"grey.100"}
+                      p={4}
+                      mt={4}
+                      borderLeft={"4px solid"}
+                      borderColor={"orangesoft.500"}
+                      w={"full"}
+                    >
+                      <Text>
+                        <ExclamationCircle color="orangesoft.500" mr={2} boxSize={6} mb={1} />
+                        Motif de non publication :{" "}
+                        <Text as="span" variant="highlight" bg={"transparent"}>
+                          {formation.parcoursup_raison_depublication}
+                        </Text>
                       </Text>
-                    </Text>
-                  </Box>
-                )}
-                {formation.affelnet_raison_depublication && (
-                  <Box bg={"grey.100"} p={4} mt={4} borderLeft={"4px solid"} borderColor={"orangesoft.500"} w={"full"}>
-                    <Text>
-                      <ExclamationCircle color="orangesoft.500" mr={2} boxSize={6} mb={1} />
-                      Motif de non publication :{" "}
-                      <Text as="span" variant="highlight" bg={"transparent"}>
-                        {formation.affelnet_raison_depublication}
+                    </Box>
+                  )}
+                {hasAccessTo(user, "page_formation/voir_status_publication_af") &&
+                  formation.affelnet_raison_depublication && (
+                    <Box
+                      bg={"grey.100"}
+                      p={4}
+                      mt={4}
+                      borderLeft={"4px solid"}
+                      borderColor={"orangesoft.500"}
+                      w={"full"}
+                    >
+                      <Text>
+                        <ExclamationCircle color="orangesoft.500" mr={2} boxSize={6} mb={1} />
+                        Motif de non publication :{" "}
+                        <Text as="span" variant="highlight" bg={"transparent"}>
+                          {formation.affelnet_raison_depublication}
+                        </Text>
                       </Text>
-                    </Text>
-                  </Box>
-                )}
+                    </Box>
+                  )}
               </Box>
               <Formation
                 formation={formation}

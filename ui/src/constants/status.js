@@ -4,6 +4,7 @@ export const COMMON_STATUS = {
   NON_PUBLIE: "non publié",
   A_PUBLIER: "à publier",
   EN_ATTENTE: "en attente de publication",
+  REJETE: "rejet de publication",
 };
 
 export const PARCOURSUP_STATUS = {

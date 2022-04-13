@@ -10,6 +10,7 @@ export * from "./CloseCircleLine";
 export * from "./Cloud";
 export * from "./CloudSlashed";
 export * from "./CrossLine";
+export * from "./Danger";
 export * from "./DoubleArrows";
 export * from "./DownloadLine";
 export * from "./Edit2Fill";
