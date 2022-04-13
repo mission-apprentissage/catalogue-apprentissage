@@ -8,7 +8,7 @@ import { ArrowRightLine, InfoCircle } from "../../../../../theme/components/icon
 import { QualiteBadge } from "../../../QualiteBadge";
 import { HabiliteBadge } from "../../../HabiliteBadge";
 
-export const CardListFormation = ({ data }) => {
+export const CardListFormation = ({ data, context }) => {
   let [auth] = useAuth();
 
   return (
@@ -34,9 +34,13 @@ export const CardListFormation = ({ data }) => {
                   <StatusBadge source="Affelnet" status={data.affelnet_statut} mt={2} mr={[0, 2]} />
                 </>
               )}
-              <QualiteBadge value={data.etablissement_gestionnaire_certifie_qualite} mt={2} mr={[0, 2]} />
               {!data.catalogue_published && (
-                <HabiliteBadge value={data.etablissement_reference_habilite_rncp} mt={2} mr={[0, 2]} />
+                <>
+                  <QualiteBadge value={data.etablissement_gestionnaire_certifie_qualite} mt={2} mr={[0, 2]} />
+                  {["Titre", "TP"].includes(data.rncp_details?.code_type_certif) && (
+                    <HabiliteBadge value={data.etablissement_reference_habilite_rncp} mt={2} mr={[0, 2]} />
+                  )}
+                </>
               )}
             </Flex>
             <ArrowRightLine alignSelf="center" color="bluefrance" boxSize={4} />

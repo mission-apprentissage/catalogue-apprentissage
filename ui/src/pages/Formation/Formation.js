@@ -89,9 +89,11 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
               Lieu de la formation
             </Heading>
             <Box mt={2} mb={4} ml={[-2, -2, -3]}>
-              <Link href={getLBAUrl(formation)} textStyle="rf-text" variant="pill" isExternal>
-                voir sur labonnealternance <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
-              </Link>
+              {formation.catalogue_published && (
+                <Link href={getLBAUrl(formation)} textStyle="rf-text" variant="pill" isExternal>
+                  voir sur labonnealternance <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
+                </Link>
+              )}
             </Box>
 
             <Box>
@@ -475,6 +477,44 @@ export default ({ match }) => {
                     </Text>
                   </Box>
                 )}
+                {hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
+                  formation.parcoursup_raison_depublication && (
+                    <Box
+                      bg={"grey.100"}
+                      p={4}
+                      mt={4}
+                      borderLeft={"4px solid"}
+                      borderColor={"orangesoft.500"}
+                      w={"full"}
+                    >
+                      <Text>
+                        <ExclamationCircle color="orangesoft.500" mr={2} boxSize={6} mb={1} />
+                        Motif de non publication :{" "}
+                        <Text as="span" variant="highlight" bg={"transparent"}>
+                          {formation.parcoursup_raison_depublication}
+                        </Text>
+                      </Text>
+                    </Box>
+                  )}
+                {hasAccessTo(user, "page_formation/voir_status_publication_af") &&
+                  formation.affelnet_raison_depublication && (
+                    <Box
+                      bg={"grey.100"}
+                      p={4}
+                      mt={4}
+                      borderLeft={"4px solid"}
+                      borderColor={"orangesoft.500"}
+                      w={"full"}
+                    >
+                      <Text>
+                        <ExclamationCircle color="orangesoft.500" mr={2} boxSize={6} mb={1} />
+                        Motif de non publication :{" "}
+                        <Text as="span" variant="highlight" bg={"transparent"}>
+                          {formation.affelnet_raison_depublication}
+                        </Text>
+                      </Text>
+                    </Box>
+                  )}
               </Box>
               <Formation
                 formation={formation}

@@ -1,6 +1,6 @@
 import React from "react";
 import { DescriptionBlock } from "./DescriptionBlock";
-import { render, waitFor } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import { AFFELNET_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
 
 const formation = {

@@ -202,25 +202,25 @@ export const DescriptionBlock = ({ formation }) => {
             </AnneeContainer>
           )}
           <Text mb={4}>
-            Clé ministères éducatifs:
+            Clé ministères éducatifs :{" "}
             <Text as="span" variant="highlight">
               {formation.cle_ministere_educatif ?? "N/A"}
             </Text>
           </Text>
           <Text mb={4}>
-            Identifiant formation Carif Oref:
+            Identifiant formation Carif Oref :{" "}
             <Text as="span" variant="highlight">
               {formation.id_formation ?? "N/A"}
             </Text>
           </Text>
           <Text mb={4}>
-            Identifiant actions Carif Oref:
+            Identifiant actions Carif Oref :{" "}
             <Text as="span" variant="highlight">
               {formation.ids_action?.join(",") ?? "N/A"}
             </Text>
           </Text>
           <Text mb={4}>
-            Code Certif Info:
+            Code Certif Info :{" "}
             <Text as="span" variant="highlight">
               {formation.id_certifinfo ?? "N/A"}
             </Text>
@@ -286,18 +286,18 @@ export const DescriptionBlock = ({ formation }) => {
               <Text as="div" mb={4}>
                 Partenaires : <br />
                 {filteredPartenaires.length > 0 ? (
-                  <Text variant="highlight">
-                    <UnorderedList>
-                      {filteredPartenaires.map(({ Nom_Partenaire, Siret_Partenaire, Habilitation_Partenaire }) => (
-                        <ListItem key={Siret_Partenaire}>
+                  <UnorderedList>
+                    {filteredPartenaires.map(({ Nom_Partenaire, Siret_Partenaire, Habilitation_Partenaire }) => (
+                      <ListItem key={Siret_Partenaire}>
+                        <Text variant="highlight">
                           <strong>
                             {Nom_Partenaire} (siret : {Siret_Partenaire ?? "n/a"}) :
-                          </strong>
+                          </strong>{" "}
                           <HabilitationPartenaire habilitation={Habilitation_Partenaire} />
-                        </ListItem>
-                      ))}
-                    </UnorderedList>
-                  </Text>
+                        </Text>
+                      </ListItem>
+                    ))}
+                  </UnorderedList>
                 ) : (
                   <>
                     {formation.etablissement_gestionnaire_siret !== formation.etablissement_formateur_siret && (

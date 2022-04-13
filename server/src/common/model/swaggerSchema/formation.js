@@ -396,7 +396,7 @@ module.exports = {
       parcoursup_id: {
         type: "string",
         default: "null",
-        description: "ids ParcourSup",
+        description: "identifiant Parcoursup de la formation (g_ta_cod)",
       },
       parcoursup_published_date: {
         type: "string",

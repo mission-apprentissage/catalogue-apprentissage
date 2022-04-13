@@ -125,7 +125,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
             <Flex className="search-row" flexDirection={["column", "column", "row"]}>
               <Box className="search-sidebar" px={[0, 0, 4]}>
                 <Text fontWeight="700" color="grey.800" mt={4} mb={4} textStyle="rf-text">
-                  FILTRER
+                  FILTRER PAR
                 </Text>
                 {facetDefinition(context)
                   .filter(
@@ -170,7 +170,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                   <Flex pt={3} direction="column">
                     <Box>
                       <Text mt={4} mb={4} textStyle="rf-text" width={"100%"}>
-                        Début de formation <InfoTooltip description={helpText.search.periode.title} />
+                        Date de début de formation <InfoTooltip description={helpText.search.periode.title} />
                       </Text>
                     </Box>
 

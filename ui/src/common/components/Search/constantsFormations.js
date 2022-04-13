@@ -1,6 +1,8 @@
 import { escapeDiacritics } from "../../utils/downloadUtils";
 import helpText from "../../../locales/helpText.json";
 import { CONTEXT } from "../../../constants/context";
+import { departements } from "../../../constants/departements";
+import { annees } from "../../../constants/annees";
 
 const FILTERS = () => [
   `QUERYBUILDER`,
@@ -160,6 +162,27 @@ const columnsDefinition = [
     exportable: true,
   },
   {
+    Header: "Etat fiche RNCP",
+    accessor: "rncp_details",
+    width: 200,
+    exportable: true,
+    formatter: (value) => value?.active_inactive,
+  },
+  {
+    Header: "code_type_certif",
+    accessor: "rncp_details",
+    width: 200,
+    exportable: true,
+    formatter: (value) => value?.code_type_certif,
+  },
+  {
+    Header: "type_certif",
+    accessor: "rncp_details",
+    width: 200,
+    exportable: true,
+    formatter: (value) => value?.type_certif,
+  },
+  {
     Header: "Intitule du code RNCP",
     accessor: "rncp_intitule",
     width: 200,
@@ -218,8 +241,22 @@ const columnsDefinition = [
     formatter: (value) => escapeDiacritics(value),
   },
   {
+    Header: "Motif de non publication Affelnet",
+    accessor: "affelnet_raison_depublication",
+    width: 200,
+    exportable: true,
+    formatter: (value) => escapeDiacritics(value),
+  },
+  {
     Header: "Statut Parcoursup",
     accessor: "parcoursup_statut",
+    width: 200,
+    exportable: true,
+    formatter: (value) => escapeDiacritics(value),
+  },
+  {
+    Header: "Motif de non publication Parcoursup",
+    accessor: "parcoursup_raison_depublication",
     width: 200,
     exportable: true,
     formatter: (value) => escapeDiacritics(value),
@@ -320,14 +357,20 @@ const columnsDefinition = [
     exportable: true,
   },
   {
-    Header: "Eligible au catalogue général ? ",
+    Header: "Eligible au catalogue général ?",
     accessor: "catalogue_published",
     width: 200,
     exportable: true,
   },
   {
-    Header: "Clé ministere educatif ",
+    Header: "Clé ministere educatif",
     accessor: "cle_ministere_educatif",
+    width: 200,
+    exportable: true,
+  },
+  {
+    Header: "parcoursup_id (g_ta_cod)",
+    accessor: "parcoursup_id",
     width: 200,
     exportable: true,
   },
@@ -490,20 +533,28 @@ const facetDefinition = () => [
     filterLabel: "Département",
     selectAllLabel: "Tous",
     sortBy: "asc",
+    transformData: (data) => data.map((d) => ({ ...d, key: `${d.key} - ${departements[d.key]}` })),
+    customQuery: (values) => ({
+      query: values?.length && {
+        terms: {
+          "num_departement.keyword": values?.map((value) => value.split(" - ")[0]),
+        },
+      },
+    }),
   },
   {
     componentId: `niveau`,
     dataField: "niveau.keyword",
-    title: "Niveau de formation",
-    filterLabel: "Niveau de formation",
+    title: "Niveau visé",
+    filterLabel: "Niveau visé",
     selectAllLabel: "Tous les niveaux",
     sortBy: "asc",
   },
   {
     componentId: `tags`,
     dataField: "tags.keyword",
-    title: "Année(s)",
-    filterLabel: "Année(s)",
+    title: "Début de formation (année)",
+    filterLabel: "Début de formation (année)",
     selectAllLabel: "Toutes",
     sortBy: "asc",
   },
@@ -515,22 +566,38 @@ const facetDefinition = () => [
     selectAllLabel: "Toutes",
     sortBy: "asc",
     isAuth: true, // hide for anonymous
+    transformData: (data) => data.map((d) => ({ ...d, key: annees[d.key] })),
+    customQuery: (values) => ({
+      query: values?.length && {
+        terms: {
+          "annee.keyword": values?.map((value) => Object.keys(annees).find((annee) => annees[annee] === value)),
+        },
+      },
+    }),
   },
   {
     componentId: `duree`,
     dataField: "duree.keyword",
-    title: "Durée",
-    filterLabel: "Durée",
+    title: "Durée de la formation",
+    filterLabel: "Durée de la formation",
     selectAllLabel: "Toutes",
     sortBy: "asc",
     isAuth: true, // hide for anonymous
+    transformData: (data) => data.map((d) => ({ ...d, key: d.key <= 1 ? `${d.key} an` : `${d.key} ans` })),
+    customQuery: (values) => ({
+      query: values?.length && {
+        terms: {
+          "duree.keyword": values?.map((value) => value.split(" ")[0]),
+        },
+      },
+    }),
   },
   {
     componentId: `qualite`,
     dataField: "etablissement_gestionnaire_certifie_qualite",
     title: "Certifié Qualité",
     filterLabel: "Certifié Qualité",
-    sortBy: "asc",
+    sortBy: "desc",
     helpTextSection: helpText.search.qualite,
     showSearch: false,
     displayInContext: [CONTEXT.CATALOGUE_NON_ELIGIBLE],
@@ -553,7 +620,7 @@ const facetDefinition = () => [
     dataField: "etablissement_reference_habilite_rncp",
     title: "Habilité RNCP",
     filterLabel: "Habilité RNCP",
-    sortBy: "asc",
+    sortBy: "desc",
     showSearch: false,
     displayInContext: [CONTEXT.CATALOGUE_NON_ELIGIBLE],
     transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),

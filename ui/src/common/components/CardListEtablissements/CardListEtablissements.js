@@ -10,9 +10,9 @@ const CardListEtablissements = ({ data, withoutLink }) => {
       <>
         <Flex display={["none", "flex"]} textStyle="xs" justifyContent="space-between">
           <Text>Siret : {data.siret}</Text>
-          <QualiteBadge value={data.certifie_qualite} mr={0} ml={2} />
           <Text>Code UAI: {data.uai}</Text>
         </Flex>
+        <QualiteBadge value={data.certifie_qualite} mt={2} ml={0} />
         <Flex w={"100%"} justifyContent="space-between" mb={2}>
           <Heading textStyle="h6" color="grey.800" mt={2} w={"100%"}>
             {data.entreprise_raison_sociale}
