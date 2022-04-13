@@ -127,26 +127,6 @@ const run = async ({ siret }) => {
     });
   });
 
-  // ensure published date is set
-  await Formation.updateMany(
-    {
-      ...defaultQuery,
-      affelnet_published_date: null,
-      affelnet_statut: AFFELNET_STATUS.PUBLIE,
-    },
-    { $set: { affelnet_published_date: Date.now() } }
-  );
-
-  // ensure published date is not set
-  await Formation.updateMany(
-    {
-      ...defaultQuery,
-      affelnet_published_date: { $ne: null },
-      affelnet_statut: { $ne: AFFELNET_STATUS.PUBLIE },
-    },
-    { $set: { affelnet_published_date: null } }
-  );
-
   // Push entry in tags history
   await updateTagsHistory("affelnet_statut");
 
