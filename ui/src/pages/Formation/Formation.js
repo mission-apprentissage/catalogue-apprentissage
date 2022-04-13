@@ -477,28 +477,44 @@ export default ({ match }) => {
                     </Text>
                   </Box>
                 )}
-                {formation.parcoursup_raison_depublication && (
-                  <Box bg={"grey.100"} p={4} mt={4} borderLeft={"4px solid"} borderColor={"orangesoft.500"} w={"full"}>
-                    <Text>
-                      <ExclamationCircle color="orangesoft.500" mr={2} boxSize={6} mb={1} />
-                      Motif de non publication :{" "}
-                      <Text as="span" variant="highlight" bg={"transparent"}>
-                        {formation.parcoursup_raison_depublication}
+                {hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
+                  formation.parcoursup_raison_depublication && (
+                    <Box
+                      bg={"grey.100"}
+                      p={4}
+                      mt={4}
+                      borderLeft={"4px solid"}
+                      borderColor={"orangesoft.500"}
+                      w={"full"}
+                    >
+                      <Text>
+                        <ExclamationCircle color="orangesoft.500" mr={2} boxSize={6} mb={1} />
+                        Motif de non publication :{" "}
+                        <Text as="span" variant="highlight" bg={"transparent"}>
+                          {formation.parcoursup_raison_depublication}
+                        </Text>
                       </Text>
-                    </Text>
-                  </Box>
-                )}
-                {formation.affelnet_raison_depublication && (
-                  <Box bg={"grey.100"} p={4} mt={4} borderLeft={"4px solid"} borderColor={"orangesoft.500"} w={"full"}>
-                    <Text>
-                      <ExclamationCircle color="orangesoft.500" mr={2} boxSize={6} mb={1} />
-                      Motif de non publication :{" "}
-                      <Text as="span" variant="highlight" bg={"transparent"}>
-                        {formation.affelnet_raison_depublication}
+                    </Box>
+                  )}
+                {hasAccessTo(user, "page_formation/voir_status_publication_af") &&
+                  formation.affelnet_raison_depublication && (
+                    <Box
+                      bg={"grey.100"}
+                      p={4}
+                      mt={4}
+                      borderLeft={"4px solid"}
+                      borderColor={"orangesoft.500"}
+                      w={"full"}
+                    >
+                      <Text>
+                        <ExclamationCircle color="orangesoft.500" mr={2} boxSize={6} mb={1} />
+                        Motif de non publication :{" "}
+                        <Text as="span" variant="highlight" bg={"transparent"}>
+                          {formation.affelnet_raison_depublication}
+                        </Text>
                       </Text>
-                    </Text>
-                  </Box>
-                )}
+                    </Box>
+                  )}
               </Box>
               <Formation
                 formation={formation}
