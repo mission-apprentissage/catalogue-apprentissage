@@ -44,8 +44,10 @@ runScript(async ({ db }) => {
     Formation.startAllMongoosaticHooks();
     await rebuildEsIndex(); // ~ 5 minutes // maj elastic search (recherche des formations / établissements / rapprochements)
 
-    // double commande
-    await dualControl();
+    if (process.env.CATALOGUE_APPRENTISSAGE_RCO_DUAL_CONTROL_ENABLED === "true") {
+      // double commande
+      await dualControl();
+    }
 
     // total time for execution ~ 4h20
   } catch (error) {

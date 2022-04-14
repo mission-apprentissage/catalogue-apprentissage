@@ -18,7 +18,15 @@ const downloadZip = async () => {
     url: RCO_ZIP_URL,
     responseType: "stream",
   });
-  await response.data.pipe(fs.createWriteStream(path.join(__dirname, RCO_ZIP_PATH)));
+
+  const file = fs.createWriteStream(path.join(__dirname, RCO_ZIP_PATH));
+  return new Promise((resolve, reject) => {
+    response.data.pipe(file);
+    file.on("finish", () => {
+      file.close(() => resolve());
+    });
+    file.on("error", (err) => reject(err));
+  });
 };
 
 const importFromZip = async () => {
@@ -47,10 +55,17 @@ const importFromZip = async () => {
 };
 
 const importer = async () => {
-  await DualControlFormation.deleteMany({});
+  let error = null;
+  try {
+    await downloadZip();
+    await DualControlFormation.deleteMany({});
+    await importFromZip();
+  } catch (e) {
+    error = e;
+    console.error(e);
+  }
 
-  await downloadZip();
-  await importFromZip();
+  return error;
 };
 
 module.exports = { importer };

@@ -7,11 +7,14 @@ const dualControl = async () => {
   try {
     logger.info(" -- Start of dual control -- ");
 
-    await importer();
-    const results = await compare();
+    const importError = await importer();
 
-    logger.info("results of dual control : ", results);
-    console.log("results of dual control : ", results);
+    if (!importError) {
+      const results = await compare();
+
+      logger.info("results of dual control : ", results);
+      console.log("results of dual control : ", results);
+    }
 
     logger.info(" -- End of dual control -- ");
   } catch (err) {
