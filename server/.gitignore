@@ -7,3 +7,6 @@ coverage.lcov
 id_rsa*
 *.cert
 *.key
+
+# exclude tmp zip file 
+rco.zip

@@ -11,6 +11,7 @@ const statistiqueSchema = require("./statistique");
 const alertSchema = require("./alert");
 const reglePerimetreSchema = require("./reglePerimetre");
 const consumptionSchema = require("./consumption");
+const dualControlReportSchema = require("./dualControlReport");
 
 module.exports = {
   logSchema,
@@ -26,4 +27,5 @@ module.exports = {
   alertSchema,
   reglePerimetreSchema,
   consumptionSchema,
+  dualControlReportSchema,
 };
