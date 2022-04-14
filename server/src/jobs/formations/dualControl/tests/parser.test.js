@@ -34,7 +34,8 @@ describe(__filename, () => {
       cfd_date_fermeture: "2022-10",
       periode: "2022-09##2022-10|2023-01|2023-02",
       niveau: "3",
-      capacite: "",
+      capacite: "15",
+      distance: "987",
     };
 
     const newObj = parser(obj, {
@@ -43,6 +44,7 @@ describe(__filename, () => {
       periode: "periode",
       niveau: "niveau",
       capacite: "nullable",
+      distance: "number",
     });
 
     const expectedObj = {
@@ -51,7 +53,33 @@ describe(__filename, () => {
       cfd_date_fermeture: new Date("2022-10"),
       periode: [new Date("2022-09"), new Date("2022-10"), new Date("2023-01"), new Date("2023-02")],
       niveau: "3 (CAP...)",
+      capacite: "15",
+      distance: 987,
+    };
+    assert.deepStrictEqual(newObj, expectedObj);
+  });
+
+  it("should handle default transform, and fallbacks", async () => {
+    const obj = {
+      cfd: "1234",
+      cfd_outdated: 0,
+      cfd_date_fermeture: undefined,
+      periode: ["2022-09##2022-10|2023-01|2023-02"],
+      niveau: "3",
+      capacite: "",
+      distance: "NAN",
+    };
+
+    const newObj = parser(obj);
+
+    const expectedObj = {
+      cfd: "1234",
+      cfd_outdated: false,
+      cfd_date_fermeture: null,
+      periode: [new Date("2022-09"), new Date("2022-10"), new Date("2023-01"), new Date("2023-02")],
+      niveau: "3 (CAP...)",
       capacite: null,
+      distance: null,
     };
     assert.deepStrictEqual(newObj, expectedObj);
   });

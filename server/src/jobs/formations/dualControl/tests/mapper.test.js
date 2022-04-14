@@ -47,4 +47,16 @@ describe(__filename, () => {
     const expectedObj = { cfd: "1234", code_postal: "67110", num_academie: "15" };
     assert.deepStrictEqual(newObj, expectedObj);
   });
+
+  it("should handle defaults", async () => {
+    const obj = {
+      intitule_formation: "CAP Patisserie",
+      rco_cfd: "123456789",
+      etablissement_lieu_formation_code_insee: "93088",
+    };
+    const newObj = mapper(obj);
+
+    const expectedObj = { intitule_rco: "CAP Patisserie", code_commune_insee: "93088" };
+    assert.deepStrictEqual(newObj, expectedObj);
+  });
 });
