@@ -1,6 +1,11 @@
+// @ts-check
 const { extractPeriodeArray } = require("../../../common/utils/rcoUtils");
 
-// Some fields need to be parsed to be cast to the right type
+/** @typedef {import("../../../common/model/schema/formation").Formation} Formation */
+
+/**
+ *  @type {{ [key in keyof Formation]: "boolean"|"date"|"periode"|"niveau"|"nullable"|"number" }}
+ */
 const TYPES_MAP = {
   cfd_outdated: "boolean",
   cfd_date_fermeture: "date",
@@ -21,6 +26,7 @@ const niveaux = {
   8: "8 (Doctorat...)",
 };
 
+// Some fields need to be parsed to be cast to the right type
 const parser = (obj, typesMap = TYPES_MAP) => {
   return Object.fromEntries(
     Object.entries(obj).map(([key, value]) => {

@@ -1,5 +1,12 @@
-// here list the keys you want to rename to match model/schema/formation
+// @ts-check
+
+/** @typedef {import("../../../common/model/schema/formation").Formation} Formation */
+
+/**
+ *  @type {{ [key: string]:  keyof Formation | 0 }}
+ */
 const KEYS_MAP = {
+  // here list the keys you want to rename to match model/schema/formation
   // e.g: below if we receive "code_diplome" and want to rename to "cfd"
   // code_diplome: "cfd",
   intitule_formation: "intitule_rco",

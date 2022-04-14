@@ -1,9 +1,15 @@
+// @ts-check
 const { diff } = require("deep-object-diff");
 const { DualControlFormation, DualControlReport } = require("../../../common/model/index");
 const { Formation } = require("../../../common/model/index");
 
-// Here list all the fields we want to compare
+/** @typedef {import("../../../common/model/schema/formation").Formation} Formation */
+
+/**
+ *  @type {Array<keyof Formation>}}
+ */
 const FIELDS_TO_COMPARE = [
+  // Here list all the fields we want to compare
   "id_rco_formation",
   "id_formation",
   "id_action",
