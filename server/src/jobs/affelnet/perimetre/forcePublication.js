@@ -184,7 +184,7 @@ const run = async ({ siret }) => {
       published: true,
       affelnet_statut: { $nin: [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.NON_PUBLIE, AFFELNET_STATUS.HORS_PERIMETRE] },
     },
-    [{ $set: { affelnet_statut: AFFELNET_STATUS.EN_ATTENTE } }]
+    [{ $set: { affelnet_statut: AFFELNET_STATUS.EN_ATTENTE, forced_published: true } }]
   );
 
   const newTotalPending = await Formation.countDocuments({
