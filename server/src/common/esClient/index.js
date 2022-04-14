@@ -1,6 +1,4 @@
 const { Client } = require("@elastic/elasticsearch");
-const ElasticsearchScrollStream = require("elasticsearch-scroll-stream");
-const { transformObject, mergeStreams } = require("../utils/streamUtils");
 const mongoosastic = require("./mongoosastic");
 const config = require("config");
 
@@ -25,24 +23,6 @@ const createEsInstance = () => {
     requestTimeout: 60000,
   });
 
-  client.extend("searchDocumentsAsStream", () => {
-    return (options) => {
-      return mergeStreams(
-        new ElasticsearchScrollStream(
-          client,
-          {
-            scroll: "1m",
-            size: "50",
-            ...options,
-          },
-          ["_id"]
-        ),
-        transformObject((data) => {
-          return JSON.parse(Buffer.from(data).toString());
-        })
-      );
-    };
-  });
   return client;
 };
 const clientDefault = createEsInstance();
