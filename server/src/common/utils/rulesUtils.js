@@ -64,7 +64,6 @@ const commonRules = {
     },
   ],
   published: true,
-  catalogue_published: true,
   // etablissement_gestionnaire_catalogue_published: true, // ensure gestionnaire is Qualiopi certified
   // periode: { $gte: getPeriodeStartDate() },
 };
@@ -90,13 +89,13 @@ const toBePublishedRulesAffelnet = {
 /**
  * @param {Plateforme} plateforme
  */
-const getPublishedRules = (plateforme) => {
+const getPublishedRules = (plateforme, onlyCataloguePublished = true) => {
   switch (plateforme) {
     case "affelnet":
-      return toBePublishedRulesAffelnet;
+      return { ...toBePublishedRulesAffelnet, ...(onlyCataloguePublished ? { catalogue_published: true } : {}) };
 
     case "parcoursup":
-      return toBePublishedRulesParcousup;
+      return { ...toBePublishedRulesParcousup, ...(onlyCataloguePublished ? { catalogue_published: true } : {}) };
 
     default:
       throw new Error(`Invalid plateforme : ${plateforme}`);
@@ -175,9 +174,12 @@ const titresRule = {
 /**
  * @param {{plateforme: Plateforme, niveau: Niveau, diplome: string, regle_complementaire: string, duree: string, num_academie: number, annee: string}} rule
  */
-const getQueryFromRule = ({ plateforme, niveau, diplome, regle_complementaire, duree, num_academie, annee }) => {
+const getQueryFromRule = (
+  { plateforme, niveau, diplome, regle_complementaire, duree, num_academie, annee },
+  onlyCataloguePublished = true
+) => {
   const query = {
-    $and: [getPublishedRules(plateforme), titresRule],
+    $and: [getPublishedRules(plateforme, onlyCataloguePublished), titresRule],
     niveau,
     ...(diplome && { diplome }),
     ...getExpireRule(),

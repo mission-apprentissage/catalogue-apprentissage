@@ -67,7 +67,7 @@ const run = async ({ siret }) => {
       {
         ...defaultQuery,
         ...filterHP,
-        $or: aPublierSoumisAValidationRules.map(getQueryFromRule),
+        $or: aPublierSoumisAValidationRules.map((rule) => getQueryFromRule(rule, false)),
       },
       {
         $set: {
@@ -95,7 +95,7 @@ const run = async ({ siret }) => {
       {
         ...defaultQuery,
         ...filter,
-        $or: aPublierRules.map(getQueryFromRule),
+        $or: aPublierRules.map((rule) => getQueryFromRule(rule, false)),
       },
       {
         $set: {
@@ -120,7 +120,7 @@ const run = async ({ siret }) => {
             $in: [AFFELNET_STATUS.HORS_PERIMETRE, AFFELNET_STATUS.A_PUBLIER_VALIDATION, AFFELNET_STATUS.A_PUBLIER],
           },
           num_academie,
-          ...getQueryFromRule(rule),
+          ...getQueryFromRule(rule, false),
         },
         { $set: { last_update_at: Date.now(), affelnet_statut: status } }
       );
@@ -184,7 +184,7 @@ const run = async ({ siret }) => {
       published: true,
       affelnet_statut: { $nin: [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.NON_PUBLIE, AFFELNET_STATUS.HORS_PERIMETRE] },
     },
-    [{ $set: { affelnet_statut: AFFELNET_STATUS.EN_ATTENTE } }]
+    [{ $set: { affelnet_statut: AFFELNET_STATUS.EN_ATTENTE, forced_published: true } }]
   );
 
   const newTotalPending = await Formation.countDocuments({

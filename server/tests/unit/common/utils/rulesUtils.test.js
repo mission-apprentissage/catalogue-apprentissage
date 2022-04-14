@@ -167,11 +167,11 @@ describe(__filename, () => {
                     cfd_outdated: { $ne: true },
                   },
                 ],
-                catalogue_published: true,
                 published: true,
                 // periode: { $gte: getPeriodeStartDate() },
               },
             ],
+            catalogue_published: true,
           },
           {
             $and: [
@@ -233,11 +233,11 @@ describe(__filename, () => {
                     cfd_outdated: { $ne: true },
                   },
                 ],
-                catalogue_published: true,
                 published: true,
                 // periode: { $gte: getPeriodeStartDate() },
               },
             ],
+            catalogue_published: true,
           },
           {
             $and: [

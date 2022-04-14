@@ -420,6 +420,12 @@ const formationSchema = {
     default: false,
     description: "Est publiée dans le flux rco",
   },
+  forced_published: {
+    type: Boolean,
+    default: false,
+    description:
+      "La publication vers les plateformes est forcée (contournement catalogue non-éligible dans certains cas)",
+  },
   created_at: {
     type: Date,
     default: Date.now,

@@ -12,7 +12,7 @@ const run = async () => {
     {
       $or: [
         { affelnet_statut: null },
-        { catalogue_published: false },
+        { catalogue_published: false, forced_published: { $ne: true } },
         { published: false },
         {
           $or: [

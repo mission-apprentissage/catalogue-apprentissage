@@ -236,6 +236,10 @@ export interface Formation {
    */
   rco_published?: boolean;
   /**
+   * La publication vers les plateformes est forcée (contournement catalogue non-éligible dans certains cas)
+   */
+  forced_published?: boolean;
+  /**
    * Date d'ajout en base de données
    */
   created_at?: Date;
