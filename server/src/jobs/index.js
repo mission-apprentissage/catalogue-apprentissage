@@ -9,6 +9,7 @@ const affelnetJobs = require("./affelnet");
 const etablissementsJobs = require("./etablissements");
 const formationsJobs = require("./formations");
 const checkUai = require("./checkUai");
+const dualControl = require("./formations/dualControl");
 
 const KIT_LOCAL_PATH = "/data/uploads/CodeDiplome_RNCP_latest_kit.csv";
 const CONVENTION_FILES_DIR = path.join(__dirname, "conventionFilesImporter/assets");
@@ -42,6 +43,11 @@ runScript(async ({ db }) => {
     // eS
     Formation.startAllMongoosaticHooks();
     await rebuildEsIndex(); // ~ 5 minutes // maj elastic search (recherche des formations / établissements / rapprochements)
+
+    if (process.env.CATALOGUE_APPRENTISSAGE_RCO_DUAL_CONTROL_ENABLED === "true") {
+      // double commande
+      await dualControl();
+    }
 
     // total time for execution ~ 4h20
   } catch (error) {
