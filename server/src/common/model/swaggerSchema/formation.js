@@ -445,6 +445,12 @@ module.exports = {
         default: false,
         description: "Est publiée dans le flux rco",
       },
+      forced_published: {
+        type: "boolean",
+        default: false,
+        description:
+          "La publication vers les plateformes est forcée (contournement catalogue non-éligible dans certains cas)",
+      },
       created_at: {
         type: "string",
         description: "Date d'ajout en base de données",
