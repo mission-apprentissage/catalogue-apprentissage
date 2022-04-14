@@ -1,6 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 const { mkdirp, move } = require("fs-extra");
+const sanitize = require("sanitize-filename");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const csvToJson = require("convert-csv-to-json");
 const path = require("path");
@@ -26,7 +27,8 @@ module.exports = () => {
       mkdirp(UPLOAD_DIR, (err) => cb(err, UPLOAD_DIR));
     },
     filename: function (req, file, cb) {
-      cb(null, `tmp-${file.originalname}`);
+      const filename = sanitize(file.originalname);
+      cb(null, `tmp-${filename}`);
     },
   });
 
@@ -40,12 +42,14 @@ module.exports = () => {
           return res.status(500).json(err);
         }
 
-        const src = path.join(UPLOAD_DIR, `tmp-${req.file.originalname}`);
-        const dest = path.join(UPLOAD_DIR, req.file.originalname);
+        const filename = sanitize(req.file.originalname);
+
+        const src = path.join(UPLOAD_DIR, `tmp-${filename}`);
+        const dest = path.join(UPLOAD_DIR, filename);
 
         let callback;
 
-        switch (req.file.originalname) {
+        switch (filename) {
           case "affelnet-import.xlsx":
             callback = importAffelnetFormations;
             break;
