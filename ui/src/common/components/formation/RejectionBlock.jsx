@@ -3,17 +3,22 @@ import { Box, Button, Flex, Heading, Text, useToast } from "@chakra-ui/react";
 import { Alert } from "../Alert";
 import { handleRejection, unhandleRejection } from "../../api/formation";
 import useAuth from "../../hooks/useAuth";
+import { hasAcademyRight, hasAllAcademiesRight, hasOneOfRoles, isUserAdmin } from "../../utils/rolesUtils";
+
 import { SuccessLine } from "../../../theme/components/icons";
 
 export const RejectionBlock = ({ formation: baseFormation }) => {
   const [user] = useAuth();
   const toast = useToast();
   const [formation, setFormation] = useState(baseFormation);
-
-  // TODO : check par académie
-  const canHandleBusinessError = true;
+  console.log(user, hasOneOfRoles(user, ["moss", "instructeur"]));
+  const canHandleBusinessError =
+    user && (isUserAdmin(user) || hasAllAcademiesRight(user) || hasAcademyRight(user, formation.num_academie));
 
   const handleBusinessError = useCallback(async () => {
+    if (!canHandleBusinessError) {
+      return;
+    }
     try {
       const updateFormation = await handleRejection({ id: formation._id });
       setFormation(updateFormation);
@@ -32,9 +37,12 @@ export const RejectionBlock = ({ formation: baseFormation }) => {
         duration: 10000,
       });
     }
-  }, [formation]);
+  }, [canHandleBusinessError, formation, toast]);
 
   const unhandleBusinessError = useCallback(async () => {
+    if (!canHandleBusinessError) {
+      return;
+    }
     try {
       const updateFormation = await unhandleRejection({ id: formation._id });
       setFormation(updateFormation);
@@ -53,28 +61,27 @@ export const RejectionBlock = ({ formation: baseFormation }) => {
         duration: 10000,
       });
     }
-  }, [formation]);
+  }, [canHandleBusinessError, formation, toast]);
 
+  if (!hasOneOfRoles(user, ["admin", "moss", "instructeur"])) {
+    return null;
+  }
   if (!formation?.parcoursup_error) {
     return null;
   }
 
   const isBusinessError = formation?.parcoursup_error && formation?.rejection?.error;
 
-  const description = formation?.rejection?.description;
-  const error = formation?.rejection?.error ?? (
-    <>
-      Erreur technique : <b>{formation?.parcoursup_error}</b>
-    </>
-  );
+  const description = formation?.rejection?.description ?? <>Erreur technique</>;
+  const error = formation?.rejection?.error ?? formation?.parcoursup_error;
   const action = formation?.rejection?.action;
 
   return (
     <>
       <Box mt={4}>
         <Alert type={isBusinessError ? "warning" : "info"}>
-          <Flex>
-            <Box flexBasis={"70%"}>
+          <Flex w="100%">
+            <Box flexBasis={isBusinessError ? "70%" : "100%"}>
               {description && (
                 <Text mb={error || action ? 2 : 0}>
                   <b>{description}</b>
