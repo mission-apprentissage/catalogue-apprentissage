@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Text, useToast } from "@chakra-ui/react";
 import { Alert } from "../Alert";
 import { handleRejection, unhandleRejection } from "../../api/formation";
 import useAuth from "../../hooks/useAuth";
@@ -7,19 +7,52 @@ import { SuccessLine } from "../../../theme/components/icons";
 
 export const RejectionBlock = ({ formation: baseFormation }) => {
   const [user] = useAuth();
+  const toast = useToast();
   const [formation, setFormation] = useState(baseFormation);
 
   // TODO : check par académie
   const canHandleBusinessError = true;
 
   const handleBusinessError = useCallback(async () => {
-    const updateFormation = await handleRejection({ id: formation._id });
-    setFormation(updateFormation);
+    try {
+      const updateFormation = await handleRejection({ id: formation._id });
+      setFormation(updateFormation);
+      toast({
+        title: "Prise en charge confirmée",
+        description: "La prise en charge du rejet de la formation vous est affectée.",
+        status: "success",
+        duration: 10000,
+      });
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description:
+          "Une erreur est survenue lors de la tentative de prise en charge du rejet. Veuillez réessayer ultérieurement.",
+        status: "error",
+        duration: 10000,
+      });
+    }
   }, [formation]);
 
   const unhandleBusinessError = useCallback(async () => {
-    const updateFormation = await unhandleRejection({ id: formation._id });
-    setFormation(updateFormation);
+    try {
+      const updateFormation = await unhandleRejection({ id: formation._id });
+      setFormation(updateFormation);
+      toast({
+        title: "Prise en charge annulée",
+        description: "La prise en charge du rejet de la formation n'est plus affectée.",
+        status: "success",
+        duration: 10000,
+      });
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description:
+          "Une erreur est survenue lors de la tentative d'annulation de prise en charge du rejet. Veuillez réessayer ultérieurement.",
+        status: "error",
+        duration: 10000,
+      });
+    }
   }, [formation]);
 
   if (!formation?.parcoursup_error) {
