@@ -4,12 +4,54 @@ import { Link } from "@chakra-ui/react";
 const changelog = {
   list: [
     {
-      version: "5.15.0",
+      version: "5.17.0",
       date: "Prochainement",
       about: `<h4>À venir</h4>`,
       fixes: [],
       features: [],
       improvements: [],
+    },
+    {
+      version: "5.16.0",
+      date: "Le 13 Avril 2022",
+      about: `<h4>À propos de cette version</h4>
+  Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [
+        "Dans l’onglet des formations non réglementaires, suppression du lien « Voir sur la bonne alternance » (les formations non réglementaires n’y figurant pas).",
+      ],
+      features: [],
+      improvements: [
+        "Interventions diverses de sécurité",
+        "Utilisateurs connectés — Ajout des motifs de non publication par les services académiques sur les pages formation, et dans les exports csv.",
+        "Diverses améliorations sur les interfaces publiques : clarification de certaines formulations (libellés de certains filtres)",
+        "Utilisateurs connectés — Diverses améliorations des interface pour les utilisateurs connectés : placement des étiquettes mieux adapté au contexte (vues listes dans le catalogue général, clarification de certains filtres.",
+        "Utilisateurs connectés — Ajout d’informations dans les exports .csv : état de la fiche RNCP (active / inactive), ID Parcoursup",
+        "Décalage de l’heure de traitement quotidien de la liste publique des OF (fichier du ministère du Travail, permettant de récupérer les informations sur les certifications qualité), suite à plusieurs retraits de fichiers incomplets",
+      ],
+    },
+    {
+      version: "5.15.1",
+      date: "Le 7 Avril 2022",
+      about: `<h4>À propos de cette version</h4>
+  Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [
+        "Un message « Aucune habilitation sur la fiche pour ce Siret » apparaissait par erreur dans certains cas, alors que le formateur disposait bien de l’habilitation RNCP à former sur le titre. Cet affichage erroné était sans incidence sur les publications Parcoursup, Affelnet et autres.",
+        "Utilisateurs connectés — Correction d’une erreur qui provoquait dans certains cas des exports de données non sollicités.",
+      ],
+      features: [],
+      improvements: [],
+    },
+    {
+      version: "5.15.0",
+      date: "Le 5 Avril 2022",
+      about: `<h4>À propos de cette version</h4>
+  Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [],
+      features: [],
+      improvements: [
+        "Suite à l’échéance du 31 mars 2022 définie par décret pour obtenir les certifications qualité, les formations pour lesquelles le responsable n’est pas certifié qualité ont été basculées dans l’onglet « non réglementaire ». Cet onglet inclut les formations non habilitées pour l’apprentissage, les formations pour lesquelles le formateur n’a pas d’habilitation RNCP, et les formations pour lesquelles l’organisme responsable n’est pas certifié qualité.",
+        "Utilisateurs connectés — Mise en évidence des incohérences entre les durées de formation collectées et les durées issues des codes MEF, pour faciliter les expertises par les services académiques.",
+      ],
     },
     {
       version: "5.14.4",
