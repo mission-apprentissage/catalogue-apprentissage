@@ -37,6 +37,103 @@ module.exports = () => {
     res.json(result);
   });
 
+  const handleRejection = tryCatch(async ({ user, params }, res) => {
+    const itemId = params.id;
+
+    const formation = await Formation.findById(itemId);
+    let hasRightToEdit = user.isAdmin;
+    if (!hasRightToEdit) {
+      const listAcademie = user.academie.split(",").map((academieStr) => Number(academieStr));
+      hasRightToEdit =
+        (listAcademie.includes(-1) || listAcademie.includes(Number(formation.num_academie))) &&
+        !formation?.rejection?.handled_by;
+    }
+    if (!hasRightToEdit) {
+      throw Boom.unauthorized();
+    }
+
+    logger.info(`Prise en charge de la formation rejetée ${itemId} par ${user.email}`);
+
+    const result = await Formation.findOneAndUpdate(
+      { _id: itemId },
+      {
+        last_update_who: user.email,
+        "rejection.handled_by": user.email,
+        "rejection.handled_date": new Date(),
+        $push: {
+          updates_history: {
+            from: { rejection: { handled_by: null, handled_date: null } },
+            to: {
+              last_update_who: user.email,
+              rejection: {
+                handled_by: user.email,
+                handled_date: new Date(),
+              },
+            },
+            updated_at: new Date(),
+          },
+        },
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    res.json(result);
+  });
+
+  const unhandleRejection = tryCatch(async ({ user, params }, res) => {
+    const itemId = params.id;
+
+    const formation = await Formation.findById(itemId);
+    let hasRightToEdit = user.isAdmin;
+    if (!hasRightToEdit) {
+      const listAcademie = user.academie.split(",").map((academieStr) => Number(academieStr));
+      hasRightToEdit =
+        (listAcademie.includes(-1) || listAcademie.includes(Number(formation.num_academie))) &&
+        formation?.rejection?.handled_by === user.email;
+    }
+    if (!hasRightToEdit) {
+      throw Boom.unauthorized();
+    }
+
+    logger.info(`Annulation de la prise en charge de la formation rejetée ${itemId} par ${user.email}`);
+
+    const result = await Formation.findOneAndUpdate(
+      { _id: itemId },
+      {
+        last_update_who: user.email,
+        "rejection.handled_by": null,
+        "rejection.handled_date": null,
+        $push: {
+          updates_history: {
+            from: {
+              rejection: {
+                handled_by: formation?.rejection?.handled_by,
+                handled_date: formation?.rejection?.handled_date,
+              },
+            },
+            to: {
+              last_update_who: user.email,
+              rejection: {
+                handled_by: null,
+                handled_date: null,
+              },
+            },
+            updated_at: new Date(),
+          },
+        },
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    res.json(result);
+  });
+
   /**
    * @swagger
    *
@@ -85,6 +182,9 @@ module.exports = () => {
    */
   router.put("/formations/:id", putFormation);
   router.put("/formations2021/:id", putFormation);
+
+  router.post("/formations/:id/handle-rejection", handleRejection);
+  router.post("/formations/:id/unhandle-rejection", unhandleRejection);
 
   return router;
 };

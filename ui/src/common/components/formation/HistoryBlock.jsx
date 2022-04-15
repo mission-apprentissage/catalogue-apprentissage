@@ -63,10 +63,27 @@ export const HistoryBlock = ({ formation }) => {
       date: new Date(value.updated_at),
     }));
 
+  const handle_rejection_history = updates_history
+    .filter((value) => !value?.from?.rejection?.handled_by && !!value.to?.rejection?.handled_by)
+    ?.map((value) => ({
+      status: <>Prise en charge</>,
+      user: value.to.last_update_who,
+      date: new Date(value.updated_at),
+    }));
+
+  const unhandle_rejection_history = updates_history
+    .filter((value) => !!value?.from?.rejection?.handled_by && !value?.to?.rejection?.handled_by)
+    ?.map((value) => ({
+      status: <>Prise en charge annulée</>,
+      user: value.to.last_update_who,
+      date: new Date(value.updated_at),
+    }));
+
   const other_history = updates_history
     .filter(
       (value) =>
         !(
+          !!value.to?.rejection ||
           isUpdatedToStatus(value, "publié") ||
           isUpdatedToStatus(value, "en attente de publication") ||
           isUpdatedToStatus(value, "non publié")
@@ -97,7 +114,9 @@ export const HistoryBlock = ({ formation }) => {
     ...(hasAccessTo(user, "page_formation/gestion_publication") ? publication_history : []),
     ...(hasAccessTo(user, "page_formation/modifier_informations") ? other_history : []),
     ...(hasAccessTo(user, "page_formation/voir_status_publication_aff") ? affelnet_history : []),
-    ...(hasAccessTo(user, "page_formation/voir_status_publication_ps") ? parcoursup_history : []),
+    ...(hasAccessTo(user, "page_formation/voir_status_publication_ps")
+      ? [...parcoursup_history, ...handle_rejection_history, ...unhandle_rejection_history]
+      : []),
   ].sort((a, b) => b.date - a.date);
 
   return (

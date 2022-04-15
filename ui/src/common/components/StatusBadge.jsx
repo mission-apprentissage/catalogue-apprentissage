@@ -3,7 +3,7 @@ import { Badge, Text, Flex } from "@chakra-ui/react";
 import {
   Cloud,
   CloudSlashed,
-  Danger,
+  WarningLine,
   ExclamationCircle,
   InfoCircle,
   Processing,
@@ -33,7 +33,7 @@ const Icon = ({ variant }) => {
     case "conforme":
       return <InfoCircle />;
     case "error":
-      return <Danger />;
+      return <WarningLine />;
     default:
       return <InfoCircle />;
   }
@@ -49,7 +49,7 @@ export const StatusBadge = ({ source, status, text, ...badgeProps }) => {
     [PARCOURSUP_STATUS.A_PUBLIER_HABILITATION]: "toBePublished",
     [PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC]: "toBePublished",
     [PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR]: "toBePublished",
-    [COMMON_STATUS.REJETE]: "error",
+    [PARCOURSUP_STATUS.REJETE]: "error",
     [COMMON_STATUS.A_PUBLIER]: "toBePublished",
     [COMMON_STATUS.EN_ATTENTE]: "pending",
     Rejeté: "reject",

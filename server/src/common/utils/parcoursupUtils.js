@@ -1,3 +1,4 @@
+const { parcoursupErrors } = require("../../constants/parcoursupErrors");
 const csvToJson = require("convert-csv-to-json");
 
 const FILE_PATH = "/data/uploads/mefs-parcoursup.csv";
@@ -20,7 +21,24 @@ const findMefsForParcoursup = ({ bcn_mefs_10 }) => {
   return bcn_mefs_10.filter(({ mef10 }) => mefsAllowedOnParcoursup.includes(mef10));
 };
 
+const getParcoursupError = (formation) => {
+  const descriptor = parcoursupErrors.find((error) => formation.parcoursup_error.match(error.regexp));
+
+  return descriptor;
+};
+
+const getParcoursupErrorDescription = (formation) => {
+  return getParcoursupError(formation)?.description;
+};
+
+const getParcoursupErrorAction = (formation) => {
+  return getParcoursupError(formation)?.action;
+};
+
 module.exports = {
   findMefsForParcoursup,
   loadMefsAllowedOnParcoursup,
+  getParcoursupError,
+  getParcoursupErrorDescription,
+  getParcoursupErrorAction,
 };
