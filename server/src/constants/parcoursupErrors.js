@@ -21,7 +21,7 @@ const parcoursupErrors = [
     action: `Si c'est bien un IUT qui propose la formation, corriger l'UAI du lieu de formation pour qu'il corresponde à l'IUT déjà présent dans parcoursup. Puis signalez au SCN via contact pour déblocage de la création via webservice. Si ce n'est pas un IUT: modifier le statut de la fiche en "non publié" pour que cette formation ne soit plus dans le webservice. .`,
   },
   {
-    regexp: /400 La filière n'a pas pu être retrouvée. Le MEF : correspond à .* fillières Le CFD : .* correspond à .* fillières Le RNCP : .*, correspond à .* fillière(s)/,
+    regexp: /400 La filière n'a pas pu être retrouvée\. Le MEF : .* correspond à .* fillières\r\nLe CFD : .* correspond à .* fillières\r\nLe RNCP : .* ,/,
     description:
       "Aucune formation correspondant aux codes envoyés n'existe dans Parcoursup. En général il s'agit d'un CFD (code formation diplôme) ou d'un RNCP qui n'existe pas encore dans Parcoursup. .",
     action: `Adresser au SCN via contact le tableau excel contenant les indications nécessaires à la création (intitulé, code CFD, RNCP...).`,
