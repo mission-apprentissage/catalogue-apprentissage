@@ -1,3 +1,8 @@
+/**
+ * Erreurs métiers Parcoursup
+ *
+ * @type {{regexp: RegExp, description: string, action: string}[]}
+ */
 const parcoursupErrors = [
   {
     regexp: /400 Erreur lors de la creation : Ce type de formation est marqué "Fermé" dans la BCN. Vous ne pouvez donc pas créer une formation de ce type./,
