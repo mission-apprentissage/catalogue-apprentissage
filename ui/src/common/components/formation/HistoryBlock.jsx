@@ -34,7 +34,7 @@ const isUpdatedToStatus = (value, status) => {
  * @param {object} config
  * @param {object} config.formation La formation dont on souhaite afficher l'historique des changements de statuts
  */
-export const HistoryBlock = ({ formation }) => {
+export const HistoryBlock = ({ formation, limit = 5 }) => {
   const [user] = useAuth();
   const { isOpen, onToggle } = useDisclosure(false);
 
@@ -131,7 +131,7 @@ export const HistoryBlock = ({ formation }) => {
 
         <Box ml={4}>
           <ul>
-            {history.slice(0, 4)?.map((value, index) => {
+            {history.slice(0, limit - 1)?.map((value, index) => {
               return (
                 <li key={index} style={{ marginBottom: "8px" }}>
                   {value.status}
@@ -143,7 +143,7 @@ export const HistoryBlock = ({ formation }) => {
             })}
           </ul>
 
-          {history.length > 5 && (
+          {history.length > limit && (
             <>
               <Button onClick={onToggle} variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
                 {isOpen ? "Voir moins" : "Voir plus"}{" "}
@@ -151,7 +151,7 @@ export const HistoryBlock = ({ formation }) => {
               </Button>
               <Collapse in={isOpen} animateOpacity unmountOnExit={true} style={{ overflow: "unset" }}>
                 <ul>
-                  {history.slice(5)?.map((value, index) => {
+                  {history.slice(limit)?.map((value, index) => {
                     return (
                       <li key={index} style={{ marginBottom: "8px" }}>
                         {value.status}
