@@ -35,6 +35,7 @@ const reglePerimetre = require("./routes/reglePerimetre");
 const reglePerimetreSecure = require("./routes/reglePerimetreSecure");
 
 const swaggerSchema = require("../common/model/swaggerSchema");
+const mongoSanitize = require("express-mongo-sanitize");
 
 require("../common/passport-config");
 
@@ -86,6 +87,14 @@ module.exports = async (components, verbose = true) => {
 
   app.use(corsMiddleware());
   verbose && app.use(logMiddleware());
+
+  // By default, $ and . characters are removed completely from user-supplied input in the following places:
+  // - req.body
+  // - req.params
+  // - req.headers
+  // - req.query
+  // @see https://www.npmjs.com/package/express-mongo-sanitize
+  app.use(mongoSanitize());
 
   if (config.env != "dev") {
     app.set("trust proxy", 1);
