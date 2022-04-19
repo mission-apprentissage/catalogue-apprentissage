@@ -7,6 +7,7 @@ const { paginate } = require("../../common/utils/mongooseUtils");
 const { Etablissement } = require("../../common/model");
 const { getEtablissementUpdates } = require("@mission-apprentissage/tco-service-node");
 const { isApiEntrepriseUp } = require("../../common/utils/apiUtils");
+const mongoSanitize = require("express-mongo-sanitize");
 
 /**
  * Sample entity route module for GET
@@ -81,11 +82,13 @@ module.exports = () => {
   router.get(
     "/etablissements",
     tryCatch(async (req, res) => {
+      const sanitizedQuery = mongoSanitize.sanitize(req.query);
+
       let { query, page, limit } = await Joi.object({
         query: Joi.string().default("{}"),
         page: Joi.number().default(1),
         limit: Joi.number().default(10),
-      }).validateAsync(req.query, { abortEarly: false });
+      }).validateAsync(sanitizedQuery, { abortEarly: false });
 
       let json = JSON.parse(query);
       let { find, pagination } = await paginate(Etablissement, json, { page, limit });
@@ -106,10 +109,12 @@ module.exports = () => {
   router.get(
     "/etablissements.ndjson",
     tryCatch(async (req, res) => {
+      const sanitizedQuery = mongoSanitize.sanitize(req.query);
+
       let { query, limit } = await Joi.object({
         query: Joi.string().default("{}"),
         limit: Joi.number().default(10),
-      }).validateAsync(req.query, { abortEarly: false });
+      }).validateAsync(sanitizedQuery, { abortEarly: false });
 
       let json = JSON.parse(query);
 
@@ -128,7 +133,7 @@ module.exports = () => {
   router.get(
     "/etablissements/count",
     tryCatch(async (req, res) => {
-      let qs = req.query;
+      const qs = mongoSanitize.sanitize(req.query);
       const query = qs && qs.query ? JSON.parse(qs.query) : {};
       const retrievedData = await Etablissement.countDocuments(query);
       if (retrievedData) {
@@ -145,7 +150,7 @@ module.exports = () => {
   router.get(
     "/etablissement",
     tryCatch(async (req, res) => {
-      let qs = req.query;
+      const qs = mongoSanitize.sanitize(req.query);
       const query = qs && qs.query ? JSON.parse(qs.query) : {};
       const retrievedData = await Etablissement.findOne(query);
       if (retrievedData) {
@@ -161,7 +166,8 @@ module.exports = () => {
   router.get(
     "/etablissement/:id",
     tryCatch(async (req, res) => {
-      const itemId = req.params.id;
+      const sanitizedParams = mongoSanitize.sanitize(req.params);
+      const itemId = sanitizedParams.id;
       try {
         const retrievedData = await Etablissement.findById(itemId);
         if (retrievedData) {
@@ -224,7 +230,7 @@ module.exports = () => {
   router.get(
     "/etablissements/siret-uai",
     tryCatch(async (req, res) => {
-      let qs = req.query;
+      const qs = mongoSanitize.sanitize(req.query);
       const query = qs && qs.query ? JSON.parse(qs.query) : {};
 
       const etablissements = await Etablissement.find(query, {
@@ -242,14 +248,16 @@ module.exports = () => {
   router.post(
     "/etablissement/service",
     tryCatch(async (req, res) => {
+      const payload = mongoSanitize.sanitize(req.body);
+
       const serviceRequestSchema = Joi.object({
         siret: Joi.string().required(),
         scope: Joi.object().default(null),
       }).unknown();
 
-      await serviceRequestSchema.validateAsync(req.body, { abortEarly: false });
+      await serviceRequestSchema.validateAsync(payload, { abortEarly: false });
 
-      const { options = {}, ...item } = req.body;
+      const { options = {}, ...item } = payload;
 
       const scope = options.scope;
       const withHistoryUpdate = options.withHistoryUpdate ?? false;
