@@ -3,12 +3,16 @@ const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { Formation } = require("../../common/model");
 const logger = require("../../common/logger");
 const Boom = require("boom");
+const mongoSanitize = require("express-mongo-sanitize");
 
 module.exports = () => {
   const router = express.Router();
 
   const putFormation = tryCatch(async ({ body, user, params }, res) => {
-    const itemId = params.id;
+    const sanitizedParams = mongoSanitize.sanitize(params);
+    const payload = mongoSanitize.sanitize(body);
+
+    const itemId = sanitizedParams.id;
 
     const formation = await Formation.findById(itemId);
     let hasRightToEdit = user.isAdmin;
@@ -20,13 +24,13 @@ module.exports = () => {
       throw Boom.unauthorized();
     }
 
-    logger.info("Updating new item: ", body);
+    logger.info("Updating new item: ", payload);
 
     const result = await Formation.findOneAndUpdate(
       { _id: itemId },
       {
-        ...body,
-        ...(body.uai_formation ? { uai_formation: body.uai_formation.trim(), uai_formation_valide: true } : {}),
+        ...payload,
+        ...(payload.uai_formation ? { uai_formation: payload.uai_formation.trim(), uai_formation_valide: true } : {}),
       },
       {
         new: true,
@@ -38,7 +42,8 @@ module.exports = () => {
   });
 
   const handleRejection = tryCatch(async ({ user, params }, res) => {
-    const itemId = params.id;
+    const sanitizedParams = mongoSanitize.sanitize(params);
+    const itemId = sanitizedParams.id;
 
     const formation = await Formation.findById(itemId);
     let hasRightToEdit = user.isAdmin;
@@ -84,7 +89,8 @@ module.exports = () => {
   });
 
   const unhandleRejection = tryCatch(async ({ user, params }, res) => {
-    const itemId = params.id;
+    const sanitizedParams = mongoSanitize.sanitize(params);
+    const itemId = sanitizedParams.id;
 
     const formation = await Formation.findById(itemId);
     let hasRightToEdit = user.isAdmin;

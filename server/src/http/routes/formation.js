@@ -5,6 +5,7 @@ const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { Formation } = require("../../common/model");
 const { mnaFormationUpdater } = require("../../logic/updaters/mnaFormationUpdater");
 const { sendJsonStream } = require("../../common/utils/httpUtils");
+const mongoSanitize = require("express-mongo-sanitize");
 
 /**
  * Sample entity route module for GET
@@ -18,7 +19,7 @@ module.exports = () => {
   };
 
   const getFormations = tryCatch(async (req, res) => {
-    let qs = req.query;
+    const qs = mongoSanitize.sanitize(req.query);
 
     // FIXME: ugly patch because request from Affelnet is not JSON valid
     const strQuery = qs?.query ?? "";
@@ -81,7 +82,7 @@ module.exports = () => {
   });
 
   const postFormations = tryCatch(async (req, res) => {
-    let qs = req.body;
+    const qs = mongoSanitize.sanitize(req.body);
 
     // FIXME: ugly patch because request from Affelnet is not JSON valid
     const strQuery = qs?.query ?? "";
@@ -143,7 +144,7 @@ module.exports = () => {
   });
 
   const countFormations = tryCatch(async (req, res) => {
-    let qs = req.query;
+    const qs = mongoSanitize.sanitize(req.query);
     const query = qs && qs.query ? JSON.parse(qs.query) : {};
 
     const { id_parcoursup, ...filter } = query;
@@ -172,7 +173,8 @@ module.exports = () => {
   });
 
   const getFormation = tryCatch(async (req, res) => {
-    let qs = req.query;
+    const qs = mongoSanitize.sanitize(req.query);
+
     const query = qs && qs.query ? JSON.parse(qs.query) : {};
     const select =
       qs && qs.select
@@ -191,8 +193,10 @@ module.exports = () => {
   });
 
   const getFormationById = tryCatch(async (req, res) => {
-    const itemId = req.params.id;
-    const qs = req.query;
+    const qs = mongoSanitize.sanitize(req.query);
+    const sanitizedParams = mongoSanitize.sanitize(req.params);
+
+    const itemId = sanitizedParams.id;
     const select =
       qs && qs.select
         ? JSON.parse(qs.select)
@@ -210,7 +214,9 @@ module.exports = () => {
   });
 
   const updateFormation = tryCatch(async (req, res) => {
-    const { withCodePostalUpdate = true, ...formation } = req.body;
+    const payload = mongoSanitize.sanitize(req.body);
+
+    const { withCodePostalUpdate = true, ...formation } = payload;
     const { formation: updatedFormation, error } = await mnaFormationUpdater(formation, {
       withCodePostalUpdate,
     });
@@ -227,13 +233,15 @@ module.exports = () => {
   });
 
   const getFormationsNdJson = tryCatch(async (req, res) => {
+    const sanitizedQuery = mongoSanitize.sanitize(req.query);
+
     let { query, select, limit } = await Joi.object({
       query: Joi.string().default("{}"),
       select: Joi.string().default(
         '{"affelnet_statut_history":0,"parcoursup_statut_history":0,"updates_history":0,"__v":0}'
       ),
       limit: Joi.number().default(10),
-    }).validateAsync(req.query, { abortEarly: false });
+    }).validateAsync(sanitizedQuery, { abortEarly: false });
 
     const filter = JSON.parse(query);
     const selector = JSON.parse(select);
