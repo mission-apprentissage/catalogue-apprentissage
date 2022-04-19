@@ -11,7 +11,7 @@ export const RejectionBlock = ({ formation: baseFormation }) => {
   const [user] = useAuth();
   const toast = useToast();
   const [formation, setFormation] = useState(baseFormation);
-  console.log(user, hasOneOfRoles(user, ["moss", "instructeur"]));
+
   const canHandleBusinessError =
     user && (isUserAdmin(user) || hasAllAcademiesRight(user) || hasAcademyRight(user, formation.num_academie));
 
