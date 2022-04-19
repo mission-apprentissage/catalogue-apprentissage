@@ -4,6 +4,7 @@ const Joi = require("joi");
 const { Etablissement } = require("../../common/model");
 const logger = require("../../common/logger");
 const Boom = require("boom");
+const mongoSanitize = require("express-mongo-sanitize");
 
 /**
  * Schema for validation
@@ -24,29 +25,30 @@ module.exports = () => {
   router.post(
     "/etablissement",
     tryCatch(async ({ body, user }, res) => {
-      await etablissementSchema.validateAsync(body, { abortEarly: false });
+      const payload = mongoSanitize.sanitize(body);
+      await etablissementSchema.validateAsync(payload, { abortEarly: false });
 
       let hasRightToEdit = user.isAdmin;
       if (!hasRightToEdit) {
         const listAcademie = user.academie.split(",").map((academieStr) => Number(academieStr));
-        hasRightToEdit = listAcademie.includes(-1) || listAcademie.includes(Number(body.num_academie));
+        hasRightToEdit = listAcademie.includes(-1) || listAcademie.includes(Number(payload.num_academie));
       }
       if (!hasRightToEdit) {
         throw Boom.unauthorized();
       }
 
       const exist = await Etablissement.findOne({
-        siret: body.siret,
+        siret: payload.siret,
       });
       if (exist) {
         throw Boom.conflict("L'etablissement existe déjà");
       }
 
-      logger.info("Adding new etablissement: ", body);
+      logger.info("Adding new etablissement: ", payload);
 
       const etablissement = new Etablissement({
-        ...body,
-        ...(body.uai ? { uai: body.uai.trim(), uai_valide: true } : {}),
+        ...payload,
+        ...(payload.uai ? { uai: payload.uai.trim(), uai_valide: true } : {}),
       });
       await etablissement.save();
 
@@ -61,6 +63,7 @@ module.exports = () => {
   router.put(
     "/etablissement/:id",
     tryCatch(async ({ body, user, params }, res) => {
+      const payload = mongoSanitize.sanitize(body);
       const itemId = params.id;
 
       const etablissement = await Etablissement.findById(itemId);
@@ -73,13 +76,13 @@ module.exports = () => {
         throw Boom.unauthorized();
       }
 
-      logger.info("Updating new item: ", body);
+      logger.info("Updating new item: ", payload);
 
       const result = await Etablissement.findOneAndUpdate(
         { _id: itemId },
         {
-          ...body,
-          ...(body.uai ? { uai: body.uai.trim(), uai_valide: true } : {}),
+          ...payload,
+          ...(payload.uai ? { uai: payload.uai.trim(), uai_valide: true } : {}),
         },
         {
           new: true,
@@ -88,29 +91,6 @@ module.exports = () => {
       );
 
       res.json(result);
-    })
-  );
-
-  /**
-   * Delete an item by id deleteEtablissement etablissement/{id} DELETE
-   */
-  router.delete(
-    "/etablissement/:id",
-    tryCatch(async ({ user, params }, res) => {
-      const itemId = params.id;
-
-      const etablissement = await Etablissement.findById(itemId);
-      let hasRightToEdit = user.isAdmin;
-      if (!hasRightToEdit) {
-        const listAcademie = user.academie.split(",").map((academieStr) => Number(academieStr));
-        hasRightToEdit = listAcademie.includes(-1) || listAcademie.includes(Number(etablissement.num_academie));
-      }
-      if (!hasRightToEdit) {
-        throw Boom.unauthorized();
-      }
-
-      await Etablissement.deleteOne({ id: itemId });
-      res.json({ message: `Etablissement ${itemId} deleted !` });
     })
   );
 
