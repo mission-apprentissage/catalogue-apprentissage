@@ -1,7 +1,6 @@
-const { ParcoursupFormation, Formation, Etablissement } = require("../../common/model");
+const { ParcoursupFormation, Formation } = require("../../common/model");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
-const mongoose = require("mongoose");
 const express = require("express");
 const { getEtablissementCoverage } = require("../../logic/controller/coverage");
 const reportRejected = require("../../jobs/parcoursup/reportRejected");
@@ -10,23 +9,10 @@ const { updateParcoursupCoverage } = require("../../logic/updaters/coverageUpdat
 const Boom = require("boom");
 const { createFormation } = require("../../jobs/parcoursup/export");
 const { PARCOURSUP_STATUS } = require("../../constants/status");
+const mongoSanitize = require("express-mongo-sanitize");
 
 module.exports = () => {
   const router = express.Router();
-
-  router.get(
-    "/:id",
-    tryCatch(async (req, res) => {
-      const itemId = req.params.id;
-      const qs = req.query;
-      const select = qs && qs.select ? JSON.parse(qs.select) : { __v: 0 };
-      const retrievedData = await ParcoursupFormation.findById(itemId, select).lean();
-      if (retrievedData) {
-        return res.json(retrievedData);
-      }
-      return res.status(404).send({ message: `Item ${itemId} doesn't exist` });
-    })
-  );
 
   const buildDiff = async (psFormation, _id, select) => {
     const mnaFormation = await Formation.findById(_id, select).lean();
@@ -120,8 +106,11 @@ module.exports = () => {
   router.get(
     "/reconciliation/result/:id",
     tryCatch(async (req, res) => {
-      const psId = req.params.id;
-      const qs = req.query;
+      const sanitizedParams = mongoSanitize.sanitize(req.params);
+      const sanitizedQuery = mongoSanitize.sanitize(req.query);
+
+      const psId = sanitizedParams.id;
+      const qs = sanitizedQuery;
       const select = qs && qs.select ? JSON.parse(qs.select) : { __v: 0, rncp_details: 0, affelnet_statut_history: 0 };
       const retrievedData = await ParcoursupFormation.findById(psId, select).lean();
       if (retrievedData) {
@@ -151,24 +140,14 @@ module.exports = () => {
   );
 
   /**
-   * Update PsFormation with mapped establisment
-   */
-  router.post(
-    "/",
-    tryCatch(async (req, res) => {
-      const { id, ...rest } = req.body;
-      const response = await ParcoursupFormation.findByIdAndUpdate(id, { ...rest }, { new: true });
-      return res.json(response);
-    })
-  );
-
-  /**
    * Update
    */
 
   router.post(
     "/reconciliation",
     tryCatch(async (req, res) => {
+      const payload = mongoSanitize.sanitize(req.body);
+
       let user = {};
       if (req.user) {
         user = req.session?.passport?.user;
@@ -181,7 +160,7 @@ module.exports = () => {
         rapprochement_rejete_raisons,
         rapprochement_rejete_raison_autre,
         mnaFormationId,
-      } = req.body;
+      } = payload;
       if (reject) {
         const previousFormation = await ParcoursupFormation.findById(id_formation).lean();
         let updatedFormation = {
@@ -332,68 +311,6 @@ module.exports = () => {
   );
 
   /**
-   * Add one establishement to a psformation
-   */
-  router.put(
-    "/",
-    tryCatch(async (req, res) => {
-      const { formation_id, etablissement } = req.body;
-      const response = await ParcoursupFormation.findByIdAndUpdate(
-        formation_id,
-        { $push: { matching_mna_etablissement: { ...etablissement, _id: new mongoose.Types.ObjectId() } } },
-        { new: true }
-      );
-      return res.json(response);
-    })
-  );
-
-  /**
-   * Get establishment
-   */
-  router.post(
-    "/etablissement",
-    tryCatch(async (req, res) => {
-      const { uai, siret } = req.body;
-      if (!siret || !uai) {
-        return res.status(400).send({ error: "Missing siret or uai in request body" });
-      }
-
-      let etablissement = await Etablissement.findOne({ uai, siret });
-      let newEtablissement = false;
-      if (!etablissement) {
-        //TODO once we create etablissement = await catalogue.createEtablissement({ uai, siret });
-        newEtablissement = true;
-      }
-      return res.json({ ...etablissement, new: newEtablissement });
-    })
-  );
-
-  /**
-   * Update one establishment type in matching_mna_etablissement array
-   */
-  router.put(
-    "/etablissement",
-    tryCatch(async (req, res) => {
-      const { formation_id, etablissement_id, type } = req.body;
-      const update = await ParcoursupFormation.updateOne(
-        { _id: formation_id },
-        { $set: { "matching_mna_etablissement.$[elem].type": type } },
-        { arrayFilters: [{ "elem._id": new mongoose.Types.ObjectId(etablissement_id) }] }
-      );
-      if (update) {
-        if (update.nModified === 1) {
-          const response = await ParcoursupFormation.findById({ _id: formation_id });
-          return res.json(response);
-        } else {
-          return res.json(update);
-        }
-      } else {
-        return res.status(400).json([]);
-      }
-    })
-  );
-
-  /**
    * Send Reject report
    */
   router.post(
@@ -412,12 +329,14 @@ module.exports = () => {
   router.post(
     "/send-ws",
     tryCatch(async (req, res) => {
+      const payload = mongoSanitize.sanitize(req.body);
+
       let user = {};
       if (req.user) {
         user = req.session?.passport?.user;
       }
 
-      const { id } = req.body;
+      const { id } = payload;
       const formation = await Formation.findById(id);
 
       if (!formation) {
