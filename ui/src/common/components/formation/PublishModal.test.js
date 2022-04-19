@@ -246,6 +246,7 @@ test("should compute submit body when publish parcoursup", () => {
       parcoursup_raison_depublication: null,
       parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
       last_statut_update_date: new Date("2021-10-14"),
+      rejection: null,
     },
     shouldRemovePsReconciliation: false,
     shouldRestorePsReconciliation: false,
@@ -278,6 +279,7 @@ test("should compute submit body when publish parcoursup & restore reconciliatio
     body: {
       parcoursup_raison_depublication: null,
       parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
+      rejection: null,
       last_statut_update_date: new Date("2021-10-14"),
     },
     shouldRemovePsReconciliation: false,
