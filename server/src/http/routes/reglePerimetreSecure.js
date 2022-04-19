@@ -4,6 +4,7 @@ const tryCatch = require("../middlewares/tryCatchMiddleware");
 const Boom = require("boom");
 const { ReglePerimetre } = require("../../common/model");
 const { diffFormation, buildUpdatesHistory } = require("../../logic/common/utils/diffUtils");
+const mongoSanitize = require("express-mongo-sanitize");
 
 /**
  * Schema for validation
@@ -70,12 +71,12 @@ const hasPerimeterRights = (user = {}, plateforme) => {
   );
 };
 
-const hasAcademyRights = (user, { num_academie }, body) => {
+const hasAcademyRights = (user, { num_academie }, payload) => {
   const userAcademies = user.academie.split(",");
   const hasAllAcademies = user.isAdmin || userAcademies.includes("-1");
 
   if (!num_academie) {
-    const isEditingStatusOnly = body && Object.keys(body).length === 1 && !!body.statut_academies;
+    const isEditingStatusOnly = payload && Object.keys(payload).length === 1 && !!payload.statut_academies;
     return hasAllAcademies || isEditingStatusOnly;
   }
 
@@ -89,13 +90,14 @@ module.exports = () => {
   router.post(
     "/perimetre/regle",
     tryCatch(async (req, res) => {
-      const { body } = req;
+      const payload = mongoSanitize.sanitize(req.body);
+
       let user = {};
       if (req.user) {
         user = req.session?.passport?.user;
       }
 
-      await createSchema.validateAsync(body, { abortEarly: false });
+      await createSchema.validateAsync(payload, { abortEarly: false });
 
       const {
         plateforme,
@@ -110,7 +112,7 @@ module.exports = () => {
         annee,
         statut_academies,
         num_academie,
-      } = body;
+      } = payload;
 
       if (!hasPerimeterRights(user, plateforme)) {
         throw Boom.unauthorized();
@@ -140,19 +142,21 @@ module.exports = () => {
   router.put(
     "/perimetre/regle/:id",
     tryCatch(async (req, res) => {
-      const { params, body } = req;
+      const payload = mongoSanitize.sanitize(req.body);
+      const sanitizedParams = mongoSanitize.sanitize(req.params);
+
       let user = {};
       if (req.user) {
         user = req.session?.passport?.user;
       }
 
-      await updateSchema.validateAsync(body, { abortEarly: false });
-      const id = params.id;
+      await updateSchema.validateAsync(payload, { abortEarly: false });
+      const id = sanitizedParams.id;
       if (!id) {
         throw Boom.badRequest();
       }
 
-      const { plateforme } = body;
+      const { plateforme } = payload;
 
       if (plateforme && !hasPerimeterRights(user, plateforme)) {
         throw Boom.unauthorized();
@@ -163,13 +167,13 @@ module.exports = () => {
         throw Boom.notFound();
       }
 
-      if (!hasPerimeterRights(user, rule.plateforme) || !hasAcademyRights(user, rule, body)) {
+      if (!hasPerimeterRights(user, rule.plateforme) || !hasAcademyRights(user, rule, payload)) {
         throw Boom.unauthorized();
       }
 
       const updatedRule = {
         ...rule,
-        ...body,
+        ...payload,
         last_update_who: user.email,
         last_update_at: Date.now(),
       };
@@ -188,13 +192,14 @@ module.exports = () => {
   router.delete(
     "/perimetre/regle/:id",
     tryCatch(async (req, res) => {
-      const { params } = req;
+      const sanitizedParams = mongoSanitize.sanitize(req.params);
+
       let user = {};
       if (req.user) {
         user = req.session?.passport?.user;
       }
 
-      const id = params.id;
+      const id = sanitizedParams.id;
       if (!id) {
         throw Boom.badRequest();
       }
