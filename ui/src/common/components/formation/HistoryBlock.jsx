@@ -34,7 +34,7 @@ const isUpdatedToStatus = (value, status) => {
  * @param {object} config
  * @param {object} config.formation La formation dont on souhaite afficher l'historique des changements de statuts
  */
-export const HistoryBlock = ({ formation }) => {
+export const HistoryBlock = ({ formation, limit = 5 }) => {
   const [user] = useAuth();
   const { isOpen, onToggle } = useDisclosure(false);
 
@@ -63,10 +63,27 @@ export const HistoryBlock = ({ formation }) => {
       date: new Date(value.updated_at),
     }));
 
+  const handle_rejection_history = updates_history
+    .filter((value) => !value?.from?.rejection?.handled_by && !!value.to?.rejection?.handled_by)
+    ?.map((value) => ({
+      status: <>Prise en charge</>,
+      user: value.to.last_update_who,
+      date: new Date(value.updated_at),
+    }));
+
+  const unhandle_rejection_history = updates_history
+    .filter((value) => !!value?.from?.rejection?.handled_by && !value?.to?.rejection?.handled_by)
+    ?.map((value) => ({
+      status: <>Prise en charge annulée</>,
+      user: value.to.last_update_who,
+      date: new Date(value.updated_at),
+    }));
+
   const other_history = updates_history
     .filter(
       (value) =>
         !(
+          !!value.to?.rejection ||
           isUpdatedToStatus(value, "publié") ||
           isUpdatedToStatus(value, "en attente de publication") ||
           isUpdatedToStatus(value, "non publié")
@@ -97,7 +114,9 @@ export const HistoryBlock = ({ formation }) => {
     ...(hasAccessTo(user, "page_formation/gestion_publication") ? publication_history : []),
     ...(hasAccessTo(user, "page_formation/modifier_informations") ? other_history : []),
     ...(hasAccessTo(user, "page_formation/voir_status_publication_aff") ? affelnet_history : []),
-    ...(hasAccessTo(user, "page_formation/voir_status_publication_ps") ? parcoursup_history : []),
+    ...(hasAccessTo(user, "page_formation/voir_status_publication_ps")
+      ? [...parcoursup_history, ...handle_rejection_history, ...unhandle_rejection_history]
+      : []),
   ].sort((a, b) => b.date - a.date);
 
   return (
@@ -112,7 +131,7 @@ export const HistoryBlock = ({ formation }) => {
 
         <Box ml={4}>
           <ul>
-            {history.slice(0, 4)?.map((value, index) => {
+            {history.slice(0, limit - 1)?.map((value, index) => {
               return (
                 <li key={index} style={{ marginBottom: "8px" }}>
                   {value.status}
@@ -124,7 +143,7 @@ export const HistoryBlock = ({ formation }) => {
             })}
           </ul>
 
-          {history.length > 5 && (
+          {history.length > limit && (
             <>
               <Button onClick={onToggle} variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
                 {isOpen ? "Voir moins" : "Voir plus"}{" "}
@@ -132,7 +151,7 @@ export const HistoryBlock = ({ formation }) => {
               </Button>
               <Collapse in={isOpen} animateOpacity unmountOnExit={true} style={{ overflow: "unset" }}>
                 <ul>
-                  {history.slice(5)?.map((value, index) => {
+                  {history.slice(limit)?.map((value, index) => {
                     return (
                       <li key={index} style={{ marginBottom: "8px" }}>
                         {value.status}

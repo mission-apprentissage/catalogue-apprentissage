@@ -378,6 +378,7 @@ module.exports = {
           "à publier (soumis à validation Recteur)",
           "à publier",
           "en attente de publication",
+          "rejet de publication",
         ],
         default: "hors périmètre",
         description: "Statut parcoursup",
@@ -392,6 +393,40 @@ module.exports = {
         type: "string",
         default: "null",
         description: "Erreur lors de la création de la formation sur ParcourSup (via le WS)",
+      },
+      rejection: {
+        type: "object",
+        properties: {
+          error: {
+            type: ["string", "null"],
+            default: null,
+            description: "L'erreur telle que retournée par la plateforme",
+          },
+          description: {
+            type: ["string", "null"],
+            default: null,
+            description: "La description textuelle de l'erreur retournée",
+          },
+          action: {
+            type: ["string", "null"],
+            default: null,
+            description: "L'action à mener pour résoudre le rejet.",
+          },
+          handled_by: {
+            type: ["string", "null"],
+            default: null,
+            description: "Adresse email de la personne ayant pris en charge le rejet de publication",
+          },
+          handled_date: {
+            type: ["string", "null"],
+            format: "date-time",
+            default: null,
+            description: "Date à laquelle le rejet de publication a été pris en charge",
+          },
+        },
+        title: "rejection",
+        default: "null",
+        description: "Cause du rejet de publication",
       },
       parcoursup_id: {
         type: "string",

@@ -159,6 +159,61 @@ const formation = {
       },
       updated_at: 1643985528488,
     },
+    {
+      from: {
+        rejection: {
+          handled_by: null,
+          handled_date: null,
+        },
+      },
+      to: {
+        last_update_who: "quentin.petel@beta.gouv.fr",
+        rejection: {
+          handled_by: "quentin.petel@beta.gouv.fr",
+          handled_date: "2022-04-15T21:45:52.309Z",
+        },
+      },
+      updated_at: "2022-04-14T21:45:52.309Z",
+    },
+    {
+      from: {
+        parcoursup_statut: "rejet de publication",
+        rejection: {
+          error: "400 Impossible de créer : Établissement inconnu",
+          description: "L'établissement d'accueil n'existe pas encore dans Parcoursup.",
+          action:
+            "Créer l'établissement (profil établissement d'accueil) et accompagner le paramétrage dans Parcoursup; relancer la publication une fois que le paramétrage est validé.",
+          handled_by: null,
+          handled_date: null,
+        },
+        last_statut_update_date: "2022-02-09T04:35:22.638Z",
+        parcoursup_raison_depublication: "Session 2021 uniquement",
+      },
+      to: {
+        parcoursup_statut: "en attente de publication",
+        rejection: null,
+        last_statut_update_date: "2022-04-19T08:09:20.346Z",
+        parcoursup_raison_depublication: null,
+        last_update_who: "quentin.petel@beta.gouv.fr",
+      },
+      updated_at: 1650355760346.0,
+    },
+    {
+      from: {
+        rejection: {
+          handled_by: "quentin.petel@beta.gouv.fr",
+          handled_date: "2022-04-15T21:45:52.309Z",
+        },
+      },
+      to: {
+        last_update_who: "quentin.petel@beta.gouv.fr",
+        rejection: {
+          handled_by: null,
+          handled_date: null,
+        },
+      },
+      updated_at: "2022-04-16T21:45:53.118Z",
+    },
   ],
 };
 
@@ -190,7 +245,7 @@ test("display affelnet statut history", async () => {
 test("display parcoursup statut history", async () => {
   grantAnonymousAccess({ acl: ["page_formation/voir_status_publication_ps"] });
 
-  const { getByText, queryByText } = render(<HistoryBlock formation={formation} />);
+  const { getByText, queryByText } = render(<HistoryBlock formation={formation} limit={100} />);
 
   await waitFor(() => getByText(/Historique des modifications/));
 
@@ -205,10 +260,13 @@ test("display parcoursup statut history", async () => {
 test("display update history", async () => {
   grantAnonymousAccess({ acl: ["page_formation/gestion_publication", "page_formation/modifier_informations"] });
 
-  const { getByText, queryByText } = render(<HistoryBlock formation={formation} />);
+  const { getByText, queryByText } = render(<HistoryBlock formation={formation} limit={100} />);
 
   await waitFor(() => getByText(/Historique des modifications/));
 
   expect(queryByText(new Date(1643875591935).toLocaleDateString("fr-FR"))).toBeInTheDocument();
   expect(queryByText(new Date(1643985528488).toLocaleDateString("fr-FR"))).toBeInTheDocument();
+  // expect(queryByText(new Date("2022-04-14T21:45:52.309Z").toLocaleDateString("fr-FR"))).toBeInTheDocument();
+  // expect(queryByText(new Date("2022-04-16T21:45:53.118Z").toLocaleDateString("fr-FR"))).toBeInTheDocument();
+  expect(queryByText(new Date(1650355760346.0).toLocaleDateString("fr-FR"))).toBeInTheDocument();
 });

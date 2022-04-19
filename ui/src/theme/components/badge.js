@@ -66,6 +66,13 @@ const Badge = {
       border: "1px solid",
       borderColor: "#D5DBEF",
     },
+    error: {
+      ...commonStatusBadgeStyle,
+      bg: "#FCE5E7",
+      color: "grey.800",
+      border: "1px solid",
+      borderColor: "#FCE5E7",
+    },
     unknown: {
       ...commonStatusBadgeStyle,
       bg: "#D5DBEF",
