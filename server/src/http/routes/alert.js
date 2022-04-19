@@ -1,6 +1,7 @@
 const express = require("express");
 const { Alert } = require("../../common/model/index");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
+const mongoSanitize = require("express-mongo-sanitize");
 
 module.exports = () => {
   const router = express.Router();
@@ -42,7 +43,8 @@ module.exports = () => {
         return res.status(400).send({ error: "Erreur avec le message ou avec le nom ou le type" });
       }
 
-      const result = await Alert.findOneAndUpdate({ _id: params.id }, body, {
+      const payload = mongoSanitize.sanitize(body);
+      const result = await Alert.findOneAndUpdate({ _id: params.id }, payload, {
         new: true,
       });
 
@@ -53,7 +55,8 @@ module.exports = () => {
   router.patch(
     "/alert/:id",
     tryCatch(async ({ body, params }, res) => {
-      const result = await Alert.findOneAndUpdate({ _id: params.id }, body, {
+      const payload = mongoSanitize.sanitize(body);
+      const result = await Alert.findOneAndUpdate({ _id: params.id }, payload, {
         new: false,
       });
 

@@ -1,13 +1,14 @@
 import React from "react";
 import { Badge, Text, Flex } from "@chakra-ui/react";
 import {
-  InfoCircle,
   Cloud,
-  Processing,
-  ExclamationCircle,
   CloudSlashed,
-  Reject,
+  WarningLine,
+  ExclamationCircle,
+  InfoCircle,
+  Processing,
   Question,
+  Reject,
 } from "../../theme/components/icons";
 import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
 
@@ -31,6 +32,8 @@ const Icon = ({ variant }) => {
       return <Question />;
     case "conforme":
       return <InfoCircle />;
+    case "error":
+      return <WarningLine />;
     default:
       return <InfoCircle />;
   }
@@ -46,6 +49,7 @@ export const StatusBadge = ({ source, status, text, ...badgeProps }) => {
     [PARCOURSUP_STATUS.A_PUBLIER_HABILITATION]: "toBePublished",
     [PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC]: "toBePublished",
     [PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR]: "toBePublished",
+    [PARCOURSUP_STATUS.REJETE]: "error",
     [COMMON_STATUS.A_PUBLIER]: "toBePublished",
     [COMMON_STATUS.EN_ATTENTE]: "pending",
     Rejeté: "reject",

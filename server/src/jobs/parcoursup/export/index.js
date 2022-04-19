@@ -4,6 +4,13 @@ const { Formation, User } = require("../../../common/model");
 const parcoursupApi = require("./parcoursupApi");
 const { findLast } = require("lodash");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
+const {
+  getParcoursupError,
+  getParcoursupErrorAction,
+  getParcoursupErrorDescription,
+} = require("../../../common/utils/parcoursupUtils");
+
+/** @typedef {import("../../../common/model/schema/formation").Formation} Formation */
 
 const limit = Number(process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_LIMIT || 50);
 
@@ -72,6 +79,12 @@ const createCursor = (query = filter) => {
   return Formation.find(query, select).sort(sort).limit(limit).cursor();
 };
 
+/**
+ *
+ * @param {Formation} formation
+ * @param {string?} email
+ * @returns
+ */
 const createFormation = async (formation, email = null) => {
   let data;
   try {
@@ -101,10 +114,22 @@ const createFormation = async (formation, email = null) => {
     await formation.save({ validateBeforeSave: false });
   } catch (e) {
     logger.error("Parcoursup WS error", e?.response?.status, e?.response?.data ?? e, data);
+    formation.last_update_who = `web service Parcoursup${email ? `, sent by ${email}` : ""}, received error`;
     formation.parcoursup_error = `${e?.response?.status} ${
       e?.response?.data?.message ?? e?.response?.data ?? "erreur de création"
     }`;
-    formation.last_update_who = `web service Parcoursup${email ? `, sent by ${email}` : ""}, received error`;
+
+    if (getParcoursupError(formation)) {
+      formation.parcoursup_statut = PARCOURSUP_STATUS.REJETE;
+      formation.rejection = {
+        error: formation.parcoursup_error,
+        description: getParcoursupErrorDescription(formation),
+        action: getParcoursupErrorAction(formation),
+        handled_by: null,
+        handled_date: null,
+      };
+    }
+
     await formation.save({ validateBeforeSave: false });
   }
   return formation;

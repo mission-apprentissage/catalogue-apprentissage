@@ -88,9 +88,11 @@ const getSubmitBody = ({
         PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
         PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
         PARCOURSUP_STATUS.A_PUBLIER,
+        PARCOURSUP_STATUS.REJETE,
       ].includes(formation?.parcoursup_statut)
     ) {
       body.parcoursup_statut = PARCOURSUP_STATUS.EN_ATTENTE;
+      body.rejection = null;
       body.last_statut_update_date = date;
       shouldRestorePsReconciliation = formation.parcoursup_statut === PARCOURSUP_STATUS.NON_PUBLIE;
       body.parcoursup_raison_depublication = null;
