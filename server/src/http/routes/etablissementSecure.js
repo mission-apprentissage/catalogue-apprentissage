@@ -4,7 +4,7 @@ const Joi = require("joi");
 const { Etablissement } = require("../../common/model");
 const logger = require("../../common/logger");
 const Boom = require("boom");
-const mongoSanitize = require("express-mongo-sanitize");
+const { sanitize } = require("../../common/utils/sanitizeUtils");
 
 /**
  * Schema for validation
@@ -25,7 +25,7 @@ module.exports = () => {
   router.post(
     "/etablissement",
     tryCatch(async ({ body, user }, res) => {
-      const payload = mongoSanitize.sanitize(body);
+      const payload = sanitize(body);
       await etablissementSchema.validateAsync(payload, { abortEarly: false });
 
       let hasRightToEdit = user.isAdmin;
@@ -63,7 +63,7 @@ module.exports = () => {
   router.put(
     "/etablissement/:id",
     tryCatch(async ({ body, user, params }, res) => {
-      const payload = mongoSanitize.sanitize(body);
+      const payload = sanitize(body);
       const itemId = params.id;
 
       const etablissement = await Etablissement.findById(itemId);

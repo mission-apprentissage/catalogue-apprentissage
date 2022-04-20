@@ -4,6 +4,7 @@ const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { getQueryFromRule, titresRule, getPublishedRules } = require("../../common/utils/rulesUtils");
 const { getNiveauxDiplomesTree } = require("@mission-apprentissage/tco-service-node");
 const { ReglePerimetre, Formation } = require("../../common/model");
+const { sanitize } = require("../../common/utils/sanitizeUtils");
 
 module.exports = () => {
   const router = express.Router();
@@ -11,7 +12,9 @@ module.exports = () => {
   router.get(
     "/perimetre/niveau",
     tryCatch(async (req, res) => {
-      const plateforme = req.query?.plateforme;
+      const sanitizedQuery = sanitize(req.query);
+
+      const plateforme = sanitizedQuery?.plateforme;
       if (!plateforme) {
         throw Boom.badRequest();
       }
@@ -66,10 +69,12 @@ module.exports = () => {
   router.get(
     "/perimetre/regles",
     tryCatch(async (req, res) => {
-      const plateforme = req.query?.plateforme;
-      const condition_integration = req.query?.condition_integration;
-      const nom_regle_complementaire = req.query?.nom_regle_complementaire;
-      const statut = req.query?.statut;
+      const sanitizedQuery = sanitize(req.query);
+
+      const plateforme = sanitizedQuery?.plateforme;
+      const condition_integration = sanitizedQuery?.condition_integration;
+      const nom_regle_complementaire = sanitizedQuery?.nom_regle_complementaire;
+      const statut = sanitizedQuery?.statut;
 
       if (!plateforme) {
         throw Boom.badRequest();
@@ -100,13 +105,15 @@ module.exports = () => {
   router.get(
     "/perimetre/regle/count",
     tryCatch(async (req, res) => {
-      const plateforme = req.query?.plateforme;
-      const niveau = req.query?.niveau;
-      const diplome = req.query?.diplome;
-      const regle_complementaire = req.query?.regle_complementaire;
-      const num_academie = req.query?.num_academie === "null" ? null : req.query?.num_academie;
-      const duree = req.query?.duree;
-      const annee = req.query?.annee;
+      const sanitizedQuery = sanitize(req.query);
+
+      const plateforme = sanitizedQuery?.plateforme;
+      const niveau = sanitizedQuery?.niveau;
+      const diplome = sanitizedQuery?.diplome;
+      const regle_complementaire = sanitizedQuery?.regle_complementaire;
+      const num_academie = sanitizedQuery?.num_academie === "null" ? null : sanitizedQuery?.num_academie;
+      const duree = sanitizedQuery?.duree;
+      const annee = sanitizedQuery?.annee;
 
       if (!plateforme || !niveau) {
         throw Boom.badRequest();
@@ -122,9 +129,11 @@ module.exports = () => {
   router.get(
     "/perimetre/regles/integration/count",
     tryCatch(async (req, res) => {
-      const plateforme = req.query?.plateforme;
-      const num_academie = req.query?.num_academie;
-      const niveau = req.query?.niveau;
+      const sanitizedQuery = sanitize(req.query);
+
+      const plateforme = sanitizedQuery?.plateforme;
+      const num_academie = sanitizedQuery?.num_academie;
+      const niveau = sanitizedQuery?.niveau;
 
       if (!plateforme) {
         throw Boom.badRequest();

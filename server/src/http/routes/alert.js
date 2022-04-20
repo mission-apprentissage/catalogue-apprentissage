@@ -1,7 +1,7 @@
 const express = require("express");
 const { Alert } = require("../../common/model/index");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
-const mongoSanitize = require("express-mongo-sanitize");
+const { sanitize } = require("../../common/utils/sanitizeUtils");
 
 module.exports = () => {
   const router = express.Router();
@@ -14,7 +14,8 @@ module.exports = () => {
   router.post(
     "/alert",
     tryCatch(async ({ body }, res) => {
-      const { msg, name, type, enabled } = body;
+      const payload = sanitize(body);
+      const { msg, name, type, enabled } = payload;
 
       if (!msg || !name || !type || enabled === undefined) {
         return res.status(400).send({ error: "Erreur avec le message ou avec le nom ou le type ou enabled" });
@@ -37,13 +38,13 @@ module.exports = () => {
   router.put(
     "/alert/:id",
     tryCatch(async ({ body, params }, res) => {
-      const { msg, name, type } = body;
+      const payload = sanitize(body);
+      const { msg, name, type } = payload;
 
       if (!msg || !name || !type) {
         return res.status(400).send({ error: "Erreur avec le message ou avec le nom ou le type" });
       }
 
-      const payload = mongoSanitize.sanitize(body);
       const result = await Alert.findOneAndUpdate({ _id: params.id }, payload, {
         new: true,
       });
@@ -55,7 +56,7 @@ module.exports = () => {
   router.patch(
     "/alert/:id",
     tryCatch(async ({ body, params }, res) => {
-      const payload = mongoSanitize.sanitize(body);
+      const payload = sanitize(body);
       const result = await Alert.findOneAndUpdate({ _id: params.id }, payload, {
         new: false,
       });

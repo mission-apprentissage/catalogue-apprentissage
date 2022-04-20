@@ -18,7 +18,6 @@ const packageJson = require("../../package.json");
 const formation = require("./routes/formation");
 const formationSecure = require("./routes/formationSecure");
 const report = require("./routes/report");
-const rcoFormation = require("./routes/rcoFormation");
 const auth = require("./routes/auth");
 const user = require("./routes/user");
 const role = require("./routes/role");
@@ -121,7 +120,6 @@ module.exports = async (components, verbose = true) => {
   app.use("/api/v1/entity", formation());
   app.use("/api/v1/entity", report());
   app.use("/api/v1/entity", etablissement(components));
-  app.use("/api/v1/rcoformation", rcoFormation());
   app.use("/api/v1/auth", auth(components));
   app.use("/api/v1/password", password(components));
   app.use("/api/v1/parcoursup", parcoursup(components));
@@ -150,7 +148,6 @@ module.exports = async (components, verbose = true) => {
   app.use("/api/search", esMultiSearchNoIndex());
   app.use("/api/entity", formation());
   app.use("/api/entity", report());
-  app.use("/api/rcoformation", rcoFormation());
   app.use("/api/entity", etablissement(components));
   app.use("/api/auth", auth(components));
   app.use("/api/password", password(components));
