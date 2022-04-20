@@ -32,8 +32,8 @@ const upload = require("./routes/upload");
 const alert = require("./routes/alert");
 const reglePerimetre = require("./routes/reglePerimetre");
 const reglePerimetreSecure = require("./routes/reglePerimetreSecure");
-
 const swaggerSchema = require("../common/model/swaggerSchema");
+const rateLimit = require("express-rate-limit");
 
 require("../common/passport-config");
 
@@ -106,6 +106,12 @@ module.exports = async (components, verbose = true) => {
 
   app.use(passport.initialize());
   app.use(passport.session());
+
+  const apiLimiter = rateLimit({
+    windowMs: 1000, // 1 second
+    max: 10, // 10 calls per IP per second
+  });
+  app.use("/api", apiLimiter);
 
   app.use("/api/v1/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecification));
   app.get(
