@@ -4,7 +4,7 @@ const tryCatch = require("../middlewares/tryCatchMiddleware");
 const Boom = require("boom");
 const { ReglePerimetre } = require("../../common/model");
 const { diffFormation, buildUpdatesHistory } = require("../../logic/common/utils/diffUtils");
-const mongoSanitize = require("express-mongo-sanitize");
+const { sanitize } = require("../../common/utils/sanitizeUtils");
 
 /**
  * Schema for validation
@@ -90,7 +90,7 @@ module.exports = () => {
   router.post(
     "/perimetre/regle",
     tryCatch(async (req, res) => {
-      const payload = mongoSanitize.sanitize(req.body);
+      const payload = sanitize(req.body);
 
       let user = {};
       if (req.user) {
@@ -142,8 +142,8 @@ module.exports = () => {
   router.put(
     "/perimetre/regle/:id",
     tryCatch(async (req, res) => {
-      const payload = mongoSanitize.sanitize(req.body);
-      const sanitizedParams = mongoSanitize.sanitize(req.params);
+      const payload = sanitize(req.body);
+      const sanitizedParams = sanitize(req.params);
 
       let user = {};
       if (req.user) {
@@ -192,7 +192,7 @@ module.exports = () => {
   router.delete(
     "/perimetre/regle/:id",
     tryCatch(async (req, res) => {
-      const sanitizedParams = mongoSanitize.sanitize(req.params);
+      const sanitizedParams = sanitize(req.params);
 
       let user = {};
       if (req.user) {

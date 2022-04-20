@@ -2,7 +2,7 @@ const express = require("express");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const Joi = require("joi");
 const { Role } = require("../../common/model");
-const mongoSanitize = require("express-mongo-sanitize");
+const { sanitize } = require("../../common/utils/sanitizeUtils");
 
 const roleSchema = Joi.object({
   name: Joi.string().required(),
@@ -45,7 +45,7 @@ module.exports = ({ db: { db } }) => {
   router.post(
     "/role",
     tryCatch(async ({ body }, res) => {
-      const payload = mongoSanitize.sanitize(body);
+      const payload = sanitize(body);
 
       await roleSchema.validateAsync(payload, { abortEarly: false });
 
@@ -65,8 +65,8 @@ module.exports = ({ db: { db } }) => {
   router.put(
     "/role/:name",
     tryCatch(async ({ body, params }, res) => {
-      const payload = mongoSanitize.sanitize(body);
-      const sanitizedParams = mongoSanitize.sanitize(params);
+      const payload = sanitize(body);
+      const sanitizedParams = sanitize(params);
 
       const name = sanitizedParams.name;
 
@@ -92,7 +92,7 @@ module.exports = ({ db: { db } }) => {
   router.delete(
     "/role/:name",
     tryCatch(async ({ params }, res) => {
-      const sanitizedParams = mongoSanitize.sanitize(params);
+      const sanitizedParams = sanitize(params);
 
       const name = sanitizedParams.name;
 

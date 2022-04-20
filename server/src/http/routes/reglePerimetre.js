@@ -4,7 +4,7 @@ const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { getQueryFromRule, titresRule, getPublishedRules } = require("../../common/utils/rulesUtils");
 const { getNiveauxDiplomesTree } = require("@mission-apprentissage/tco-service-node");
 const { ReglePerimetre, Formation } = require("../../common/model");
-const mongoSanitize = require("express-mongo-sanitize");
+const { sanitize } = require("../../common/utils/sanitizeUtils");
 
 module.exports = () => {
   const router = express.Router();
@@ -12,7 +12,7 @@ module.exports = () => {
   router.get(
     "/perimetre/niveau",
     tryCatch(async (req, res) => {
-      const sanitizedQuery = mongoSanitize.sanitize(req.query);
+      const sanitizedQuery = sanitize(req.query);
 
       const plateforme = sanitizedQuery?.plateforme;
       if (!plateforme) {
@@ -69,7 +69,7 @@ module.exports = () => {
   router.get(
     "/perimetre/regles",
     tryCatch(async (req, res) => {
-      const sanitizedQuery = mongoSanitize.sanitize(req.query);
+      const sanitizedQuery = sanitize(req.query);
 
       const plateforme = sanitizedQuery?.plateforme;
       const condition_integration = sanitizedQuery?.condition_integration;
@@ -105,7 +105,7 @@ module.exports = () => {
   router.get(
     "/perimetre/regle/count",
     tryCatch(async (req, res) => {
-      const sanitizedQuery = mongoSanitize.sanitize(req.query);
+      const sanitizedQuery = sanitize(req.query);
 
       const plateforme = sanitizedQuery?.plateforme;
       const niveau = sanitizedQuery?.niveau;
@@ -129,7 +129,7 @@ module.exports = () => {
   router.get(
     "/perimetre/regles/integration/count",
     tryCatch(async (req, res) => {
-      const sanitizedQuery = mongoSanitize.sanitize(req.query);
+      const sanitizedQuery = sanitize(req.query);
 
       const plateforme = sanitizedQuery?.plateforme;
       const num_academie = sanitizedQuery?.num_academie;

@@ -7,7 +7,7 @@ const { paginate } = require("../../common/utils/mongooseUtils");
 const { Etablissement } = require("../../common/model");
 const { getEtablissementUpdates } = require("@mission-apprentissage/tco-service-node");
 const { isApiEntrepriseUp } = require("../../common/utils/apiUtils");
-const mongoSanitize = require("express-mongo-sanitize");
+const { sanitize } = require("../../common/utils/sanitizeUtils");
 
 /**
  * Sample entity route module for GET
@@ -82,7 +82,7 @@ module.exports = () => {
   router.get(
     "/etablissements",
     tryCatch(async (req, res) => {
-      const sanitizedQuery = mongoSanitize.sanitize(req.query);
+      const sanitizedQuery = sanitize(req.query);
 
       let { query, page, limit } = await Joi.object({
         query: Joi.string().default("{}"),
@@ -109,7 +109,7 @@ module.exports = () => {
   router.get(
     "/etablissements.ndjson",
     tryCatch(async (req, res) => {
-      const sanitizedQuery = mongoSanitize.sanitize(req.query);
+      const sanitizedQuery = sanitize(req.query);
 
       let { query, limit } = await Joi.object({
         query: Joi.string().default("{}"),
@@ -133,8 +133,10 @@ module.exports = () => {
   router.get(
     "/etablissements/count",
     tryCatch(async (req, res) => {
-      const qs = mongoSanitize.sanitize(req.query);
-      const query = qs && qs.query ? JSON.parse(qs.query) : {};
+      const qs = req.query;
+      let query = qs && qs.query ? JSON.parse(qs.query) : {};
+      query = sanitize(query, { allowSafeOperators: true });
+
       const retrievedData = await Etablissement.countDocuments(query);
       if (retrievedData) {
         res.json(retrievedData);
@@ -150,8 +152,10 @@ module.exports = () => {
   router.get(
     "/etablissement",
     tryCatch(async (req, res) => {
-      const qs = mongoSanitize.sanitize(req.query);
-      const query = qs && qs.query ? JSON.parse(qs.query) : {};
+      const qs = req.query;
+      let query = qs && qs.query ? JSON.parse(qs.query) : {};
+      query = sanitize(query, { allowSafeOperators: true });
+
       const retrievedData = await Etablissement.findOne(query);
       if (retrievedData) {
         return res.json(retrievedData);
@@ -166,7 +170,7 @@ module.exports = () => {
   router.get(
     "/etablissement/:id",
     tryCatch(async (req, res) => {
-      const sanitizedParams = mongoSanitize.sanitize(req.params);
+      const sanitizedParams = sanitize(req.params);
       const itemId = sanitizedParams.id;
       try {
         const retrievedData = await Etablissement.findById(itemId);
@@ -230,8 +234,9 @@ module.exports = () => {
   router.get(
     "/etablissements/siret-uai",
     tryCatch(async (req, res) => {
-      const qs = mongoSanitize.sanitize(req.query);
-      const query = qs && qs.query ? JSON.parse(qs.query) : {};
+      const qs = req.query;
+      let query = qs && qs.query ? JSON.parse(qs.query) : {};
+      query = sanitize(query, { allowSafeOperators: true });
 
       const etablissements = await Etablissement.find(query, {
         _id: 0,
@@ -248,7 +253,7 @@ module.exports = () => {
   router.post(
     "/etablissement/service",
     tryCatch(async (req, res) => {
-      const payload = mongoSanitize.sanitize(req.body);
+      const payload = sanitize(req.body);
 
       const serviceRequestSchema = Joi.object({
         siret: Joi.string().required(),

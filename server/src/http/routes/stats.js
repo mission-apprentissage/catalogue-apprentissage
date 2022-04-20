@@ -1,7 +1,7 @@
 const express = require("express");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { Statistique } = require("../../common/model");
-const mongoSanitize = require("express-mongo-sanitize");
+const { sanitize } = require("../../common/utils/sanitizeUtils");
 
 module.exports = () => {
   const router = express.Router();
@@ -12,7 +12,7 @@ module.exports = () => {
   router.post(
     "/",
     tryCatch(async (req, res) => {
-      const payload = mongoSanitize.sanitize(req.body);
+      const payload = sanitize(req.body);
 
       const { source } = payload;
 

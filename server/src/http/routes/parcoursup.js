@@ -9,7 +9,7 @@ const { updateParcoursupCoverage } = require("../../logic/updaters/coverageUpdat
 const Boom = require("boom");
 const { createFormation } = require("../../jobs/parcoursup/export");
 const { PARCOURSUP_STATUS } = require("../../constants/status");
-const mongoSanitize = require("express-mongo-sanitize");
+const { sanitize } = require("../../common/utils/sanitizeUtils");
 
 module.exports = () => {
   const router = express.Router();
@@ -106,8 +106,8 @@ module.exports = () => {
   router.get(
     "/reconciliation/result/:id",
     tryCatch(async (req, res) => {
-      const sanitizedParams = mongoSanitize.sanitize(req.params);
-      const sanitizedQuery = mongoSanitize.sanitize(req.query);
+      const sanitizedParams = sanitize(req.params);
+      const sanitizedQuery = sanitize(req.query);
 
       const psId = sanitizedParams.id;
       const qs = sanitizedQuery;
@@ -146,7 +146,7 @@ module.exports = () => {
   router.post(
     "/reconciliation",
     tryCatch(async (req, res) => {
-      const payload = mongoSanitize.sanitize(req.body);
+      const payload = sanitize(req.body);
 
       let user = {};
       if (req.user) {
@@ -329,7 +329,7 @@ module.exports = () => {
   router.post(
     "/send-ws",
     tryCatch(async (req, res) => {
-      const payload = mongoSanitize.sanitize(req.body);
+      const payload = sanitize(req.body);
 
       let user = {};
       if (req.user) {

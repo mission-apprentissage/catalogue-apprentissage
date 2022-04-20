@@ -3,14 +3,14 @@ const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { Formation } = require("../../common/model");
 const logger = require("../../common/logger");
 const Boom = require("boom");
-const mongoSanitize = require("express-mongo-sanitize");
+const { sanitize } = require("../../common/utils/sanitizeUtils");
 
 module.exports = () => {
   const router = express.Router();
 
   const putFormation = tryCatch(async ({ body, user, params }, res) => {
-    const sanitizedParams = mongoSanitize.sanitize(params);
-    const payload = mongoSanitize.sanitize(body);
+    const sanitizedParams = sanitize(params);
+    const payload = sanitize(body);
 
     const itemId = sanitizedParams.id;
 
@@ -42,7 +42,7 @@ module.exports = () => {
   });
 
   const handleRejection = tryCatch(async ({ user, params }, res) => {
-    const sanitizedParams = mongoSanitize.sanitize(params);
+    const sanitizedParams = sanitize(params);
     const itemId = sanitizedParams.id;
 
     const formation = await Formation.findById(itemId);
@@ -89,7 +89,7 @@ module.exports = () => {
   });
 
   const unhandleRejection = tryCatch(async ({ user, params }, res) => {
-    const sanitizedParams = mongoSanitize.sanitize(params);
+    const sanitizedParams = sanitize(params);
     const itemId = sanitizedParams.id;
 
     const formation = await Formation.findById(itemId);

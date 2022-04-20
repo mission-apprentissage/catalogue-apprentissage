@@ -3,7 +3,7 @@ const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { Report } = require("../../common/model");
 const { oleoduc, transformIntoJSON } = require("oleoduc");
 const { sendJsonStream } = require("../../common/utils/httpUtils");
-const mongoSanitize = require("express-mongo-sanitize");
+const { sanitize } = require("../../common/utils/sanitizeUtils");
 
 module.exports = () => {
   const router = express.Router();
@@ -14,7 +14,7 @@ module.exports = () => {
   router.get(
     "/reports",
     tryCatch(async (req, res) => {
-      const sanitizedQuery = mongoSanitize.sanitize(req.query);
+      const sanitizedQuery = sanitize(req.query);
 
       const { type, date, minDate, maxDate, uuidReport } = sanitizedQuery;
       let filter;

@@ -5,7 +5,7 @@ const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { Formation } = require("../../common/model");
 const { mnaFormationUpdater } = require("../../logic/updaters/mnaFormationUpdater");
 const { sendJsonStream } = require("../../common/utils/httpUtils");
-const mongoSanitize = require("express-mongo-sanitize");
+const { sanitize } = require("../../common/utils/sanitizeUtils");
 
 /**
  * Sample entity route module for GET
@@ -19,7 +19,7 @@ module.exports = () => {
   };
 
   const getFormations = tryCatch(async (req, res) => {
-    const qs = mongoSanitize.sanitize(req.query);
+    const qs = req.query;
 
     // FIXME: ugly patch because request from Affelnet is not JSON valid
     const strQuery = qs?.query ?? "";
@@ -29,7 +29,8 @@ module.exports = () => {
     );
     // end FIXME
 
-    const query = cleanedQuery ? JSON.parse(cleanedQuery) : {};
+    let query = cleanedQuery ? JSON.parse(cleanedQuery) : {};
+    query = sanitize(query, { allowSafeOperators: true });
 
     const { id_parcoursup, ...filter } = query;
     // additional filtering for parcoursup
@@ -50,6 +51,8 @@ module.exports = () => {
           };
 
     let queryAsRegex = qs?.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
+    queryAsRegex = sanitize(queryAsRegex, { allowSafeOperators: true });
+
     for (const prop in queryAsRegex) {
       queryAsRegex[prop] = new RegExp(queryAsRegex[prop]);
     }
@@ -82,7 +85,7 @@ module.exports = () => {
   });
 
   const postFormations = tryCatch(async (req, res) => {
-    const qs = mongoSanitize.sanitize(req.body);
+    const qs = req.body;
 
     // FIXME: ugly patch because request from Affelnet is not JSON valid
     const strQuery = qs?.query ?? "";
@@ -92,7 +95,8 @@ module.exports = () => {
     );
     // end FIXME
 
-    const query = cleanedQuery ? JSON.parse(cleanedQuery) : {};
+    let query = cleanedQuery ? JSON.parse(cleanedQuery) : {};
+    query = sanitize(query, { allowSafeOperators: true });
 
     const { id_parcoursup, ...filter } = query;
     // additional filtering for parcoursup
@@ -112,6 +116,8 @@ module.exports = () => {
         };
 
     let queryAsRegex = qs?.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
+    queryAsRegex = sanitize(queryAsRegex, { allowSafeOperators: true });
+
     for (const prop in queryAsRegex) {
       queryAsRegex[prop] = new RegExp(queryAsRegex[prop]);
     }
@@ -144,8 +150,9 @@ module.exports = () => {
   });
 
   const countFormations = tryCatch(async (req, res) => {
-    const qs = mongoSanitize.sanitize(req.query);
-    const query = qs && qs.query ? JSON.parse(qs.query) : {};
+    const qs = req.query;
+    let query = qs && qs.query ? JSON.parse(qs.query) : {};
+    query = sanitize(query, { allowSafeOperators: true });
 
     const { id_parcoursup, ...filter } = query;
     // additional filtering for parcoursup
@@ -154,6 +161,8 @@ module.exports = () => {
     }
 
     let queryAsRegex = qs?.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
+    queryAsRegex = sanitize(queryAsRegex, { allowSafeOperators: true });
+
     for (const prop in queryAsRegex) {
       queryAsRegex[prop] = new RegExp(queryAsRegex[prop]);
     }
@@ -173,9 +182,11 @@ module.exports = () => {
   });
 
   const getFormation = tryCatch(async (req, res) => {
-    const qs = mongoSanitize.sanitize(req.query);
+    const qs = req.query;
 
-    const query = qs && qs.query ? JSON.parse(qs.query) : {};
+    let query = qs && qs.query ? JSON.parse(qs.query) : {};
+    query = sanitize(query, { allowSafeOperators: true });
+
     const select =
       qs && qs.select
         ? JSON.parse(qs.select)
@@ -193,8 +204,8 @@ module.exports = () => {
   });
 
   const getFormationById = tryCatch(async (req, res) => {
-    const qs = mongoSanitize.sanitize(req.query);
-    const sanitizedParams = mongoSanitize.sanitize(req.params);
+    const qs = sanitize(req.query);
+    const sanitizedParams = sanitize(req.params);
 
     const itemId = sanitizedParams.id;
     const select =
@@ -214,7 +225,7 @@ module.exports = () => {
   });
 
   const updateFormation = tryCatch(async (req, res) => {
-    const payload = mongoSanitize.sanitize(req.body);
+    const payload = sanitize(req.body);
 
     const { withCodePostalUpdate = true, ...formation } = payload;
     const { formation: updatedFormation, error } = await mnaFormationUpdater(formation, {
@@ -233,17 +244,17 @@ module.exports = () => {
   });
 
   const getFormationsNdJson = tryCatch(async (req, res) => {
-    const sanitizedQuery = mongoSanitize.sanitize(req.query);
-
     let { query, select, limit } = await Joi.object({
       query: Joi.string().default("{}"),
       select: Joi.string().default(
         '{"affelnet_statut_history":0,"parcoursup_statut_history":0,"updates_history":0,"__v":0}'
       ),
       limit: Joi.number().default(10),
-    }).validateAsync(sanitizedQuery, { abortEarly: false });
+    }).validateAsync(req.query, { abortEarly: false });
 
-    const filter = JSON.parse(query);
+    let filter = JSON.parse(query);
+    filter = sanitize(filter, { allowSafeOperators: true });
+
     const selector = JSON.parse(select);
 
     let stream = oleoduc(
