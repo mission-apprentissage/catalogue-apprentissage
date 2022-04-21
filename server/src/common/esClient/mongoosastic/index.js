@@ -79,12 +79,20 @@ function getMapping(schema, requireAsciiFolding = false) {
             properties[key] = { type: "date" };
           } else if (schema.paths[key].caster.instance === "Mixed") {
             properties[key] = { type: "nested" };
+          } else if (schema.paths[key].caster.$isArraySubdocument) {
+            properties[key] = { type: "nested" };
+          } else {
+            console.warn("Not handling array of mongoose type for ", key);
           }
           break;
         case "Mixed":
           properties[key] = { type: "nested" };
           break;
+        case "Embedded":
+          properties[key] = { type: "nested" };
+          break;
         default:
+          console.warn("Not handling mongoose type : ", mongooseType, "for ", key);
           break;
       }
   }
