@@ -49,6 +49,8 @@ services:
     restart: "no"
     ports:
       - "127.0.0.1:9200:9200"
+    environment:
+      - ES_JAVA_OPTS=-Xmx1024m -Xms1024m -Dlog4j2.formatMsgNoLookups=true
     mem_limit: 4g
     volumes:
       - catalogue_apprentissage_data_elasticsearch:/usr/share/elasticsearch/data:z
