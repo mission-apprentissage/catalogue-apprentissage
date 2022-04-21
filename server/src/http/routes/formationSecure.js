@@ -48,6 +48,9 @@ module.exports = () => {
     const formation = await Formation.findById(itemId);
     let hasRightToEdit = user.isAdmin;
     if (!hasRightToEdit) {
+      hasRightToEdit = ["admin", "moss"].includes(user.roles);
+    }
+    if (!hasRightToEdit) {
       const listAcademie = user.academie.split(",").map((academieStr) => Number(academieStr));
       hasRightToEdit =
         (listAcademie.includes(-1) || listAcademie.includes(Number(formation.num_academie))) &&
@@ -94,6 +97,9 @@ module.exports = () => {
 
     const formation = await Formation.findById(itemId);
     let hasRightToEdit = user.isAdmin;
+    if (!hasRightToEdit) {
+      hasRightToEdit = ["admin", "moss"].includes(user.roles);
+    }
     if (!hasRightToEdit) {
       const listAcademie = user.academie.split(",").map((academieStr) => Number(academieStr));
       hasRightToEdit =

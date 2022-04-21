@@ -120,14 +120,15 @@ export const RejectionBlock = ({ formation: baseFormation }) => {
                       </Flex>
 
                       <Text variant="slight" my={2} mx="auto" textAlign={"center"}>
-                        {user.email === formation?.rejection?.handled_by ? (
+                        {`Par ${formation?.rejection?.handled_by} le ${new Date(
+                          formation?.rejection?.handled_date
+                        )?.toLocaleDateString("fr-FR")}`}
+                        <br />
+                        {(user.email === formation?.rejection?.handled_by ||
+                          hasOneOfRoles(user, ["admin", "moss"])) && (
                           <Button variant="slight" onClick={unhandleBusinessError}>
                             Annuler
                           </Button>
-                        ) : (
-                          `Par ${formation?.rejection?.handled_by} le ${new Date(
-                            formation?.rejection?.handled_date
-                          )?.toLocaleDateString("fr-FR")}`
                         )}
                       </Text>
                     </Flex>
