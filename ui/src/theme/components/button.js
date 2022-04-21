@@ -39,6 +39,14 @@ const Button = {
       ...commonButtonStyle,
       color: "black",
     },
+    slight: {
+      ...commonButtonStyle,
+      fontWeight: 400,
+      color: "#666666",
+      fontSize: "0.8rem",
+      fontStyle: "italic",
+      textDecoration: "underline",
+    },
     danger: {
       ...commonButtonStyle,
       color: "redmarianne",

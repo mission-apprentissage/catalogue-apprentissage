@@ -1,4 +1,4 @@
-import { _put } from "../httpClient";
+import { _put, _post } from "../httpClient";
 import { buildUpdatesHistory } from "../utils/historyUtils";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
@@ -20,4 +20,12 @@ export const updateReconciliationParcoursup = async ({ formation, shouldRemovePs
     cfd: formation.cfd,
     email: shouldRemovePsReconciliation ? user.email : null,
   });
+};
+
+export const handleRejection = async ({ id }) => {
+  return await _post(`${endpointNewFront}/entity/formations/${id}/handle-rejection`, {});
+};
+
+export const unhandleRejection = async ({ id }) => {
+  return await _post(`${endpointNewFront}/entity/formations/${id}/unhandle-rejection`, {});
 };

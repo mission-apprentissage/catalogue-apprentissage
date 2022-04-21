@@ -18,7 +18,6 @@ const packageJson = require("../../package.json");
 const formation = require("./routes/formation");
 const formationSecure = require("./routes/formationSecure");
 const report = require("./routes/report");
-const rcoFormation = require("./routes/rcoFormation");
 const auth = require("./routes/auth");
 const user = require("./routes/user");
 const role = require("./routes/role");
@@ -33,8 +32,8 @@ const upload = require("./routes/upload");
 const alert = require("./routes/alert");
 const reglePerimetre = require("./routes/reglePerimetre");
 const reglePerimetreSecure = require("./routes/reglePerimetreSecure");
-
 const swaggerSchema = require("../common/model/swaggerSchema");
+const rateLimit = require("express-rate-limit");
 
 require("../common/passport-config");
 
@@ -101,6 +100,7 @@ module.exports = async (components, verbose = true) => {
       cookie: {
         secure: config.env === "dev" ? false : true,
         maxAge: config.env === "dev" ? null : 30 * 24 * 60 * 60 * 1000,
+        sameSite: "strict", // prevent csrf attack @see https://auth0.com/blog/cross-site-request-forgery-csrf/
       },
     })
   );
@@ -108,72 +108,92 @@ module.exports = async (components, verbose = true) => {
   app.use(passport.initialize());
   app.use(passport.session());
 
-  app.use("/api/v1/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecification));
+  const apiLimiter = rateLimit({
+    windowMs: 1000, // 1 second
+    max: 10, // 10 calls per IP per second
+  });
+
+  const elasticLimiter = rateLimit({
+    windowMs: 1000, // 1 second
+    max: 100, // 100 calls per IP per second
+  });
+
+  const authLimiter = rateLimit({
+    windowMs: 60 * 1000, // 1 minute
+    max: 10, // Limit each IP to 10 calls per minute
+    message: "Too many calls from this IP, please try again after one minute",
+  });
+
+  app.use("/api/v1/docs", apiLimiter, swaggerUi.serve, swaggerUi.setup(swaggerSpecification));
   app.get(
     "/api/v1/schema.json",
+    apiLimiter,
     tryCatch(async (req, res) => {
       return res.json(swaggerSpecification);
     })
   );
 
-  app.use("/api/v1/es/search", esSearch());
-  app.use("/api/v1/search", esMultiSearchNoIndex());
-  app.use("/api/v1/entity", formation());
-  app.use("/api/v1/entity", report());
-  app.use("/api/v1/entity", etablissement(components));
-  app.use("/api/v1/rcoformation", rcoFormation());
-  app.use("/api/v1/auth", auth(components));
-  app.use("/api/v1/password", password(components));
-  app.use("/api/v1/parcoursup", parcoursup(components));
-  app.use("/api/v1/entity", alert());
-  app.use("/api/v1/entity", reglePerimetre());
+  app.use("/api/v1/es/search", elasticLimiter, esSearch());
+  app.use("/api/v1/search", elasticLimiter, esMultiSearchNoIndex());
+  app.use("/api/v1/entity", apiLimiter, formation());
+  app.use("/api/v1/entity", apiLimiter, report());
+  app.use("/api/v1/entity", apiLimiter, etablissement(components));
+  app.use("/api/v1/auth", authLimiter, auth(components));
+  app.use("/api/v1/password", authLimiter, password(components));
+  app.use("/api/v1/parcoursup", apiLimiter, parcoursup(components));
+  app.use("/api/v1/entity", apiLimiter, alert());
+  app.use("/api/v1/entity", apiLimiter, reglePerimetre());
   app.use(
     "/api/v1/admin",
+    apiLimiter,
     apiKeyAuthMiddleware,
     permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs"]),
     user(components)
   );
   app.use(
     "/api/v1/admin",
+    apiLimiter,
     apiKeyAuthMiddleware,
     permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs", "page_gestion_roles"]),
     role(components)
   );
-  app.use("/api/v1/entity", apiKeyAuthMiddleware, formationSecure());
-  app.use("/api/v1/stats", apiKeyAuthMiddleware, stats(components));
-  app.use("/api/v1/entity", apiKeyAuthMiddleware, etablissementSecure(components));
-  app.use("/api/v1/upload", permissionsMiddleware({ isAdmin: true }, ["page_upload"]), upload());
-  app.use("/api/v1/entity", apiKeyAuthMiddleware, reglePerimetreSecure());
+  app.use("/api/v1/entity", apiLimiter, apiKeyAuthMiddleware, formationSecure());
+  app.use("/api/v1/stats", apiLimiter, apiKeyAuthMiddleware, stats(components));
+  app.use("/api/v1/entity", apiLimiter, apiKeyAuthMiddleware, etablissementSecure(components));
+  app.use("/api/v1/upload", apiLimiter, permissionsMiddleware({ isAdmin: true }, ["page_upload"]), upload());
+  app.use("/api/v1/entity", apiLimiter, apiKeyAuthMiddleware, reglePerimetreSecure());
 
   /** DEPRECATED */
-  app.use("/api/es/search", esSearch());
-  app.use("/api/search", esMultiSearchNoIndex());
-  app.use("/api/entity", formation());
-  app.use("/api/entity", report());
-  app.use("/api/rcoformation", rcoFormation());
-  app.use("/api/entity", etablissement(components));
-  app.use("/api/auth", auth(components));
-  app.use("/api/password", password(components));
-  app.use("/api/parcoursup", parcoursup(components));
+  app.use("/api/es/search", elasticLimiter, esSearch());
+  app.use("/api/search", elasticLimiter, esMultiSearchNoIndex());
+  app.use("/api/entity", apiLimiter, formation());
+  app.use("/api/entity", apiLimiter, report());
+  app.use("/api/entity", apiLimiter, etablissement(components));
+  app.use("/api/auth", authLimiter, auth(components));
+  app.use("/api/password", authLimiter, password(components));
+  app.use("/api/parcoursup", apiLimiter, parcoursup(components));
   app.use(
     "/api/admin",
+    apiLimiter,
     authMiddleware,
     permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs"]),
     user(components)
   );
   app.use(
     "/api/admin",
+    apiLimiter,
     authMiddleware,
     permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs", "page_gestion_roles"]),
     role(components)
   );
-  app.use("/api/entity", authMiddleware, formationSecure());
-  app.use("/api/stats", stats(components));
-  app.use("/api/entity", authMiddleware, etablissementSecure(components));
-  app.use("/api/entity", authMiddleware, reglePerimetreSecure());
+  app.use("/api/entity", apiLimiter, authMiddleware, formationSecure());
+  app.use("/api/stats", apiLimiter, stats(components));
+  app.use("/api/entity", apiLimiter, authMiddleware, etablissementSecure(components));
+  app.use("/api/entity", apiLimiter, authMiddleware, reglePerimetreSecure());
 
   app.get(
     "/api",
+    apiLimiter,
     tryCatch(async (req, res) => {
       verbose && logger.info("/api called - healthcheck");
 

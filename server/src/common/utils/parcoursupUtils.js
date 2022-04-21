@@ -1,3 +1,6 @@
+/** @typedef {import("../model/schema/formation").Formation} Formation */
+
+const { parcoursupErrors } = require("../../constants/parcoursupErrors");
 const csvToJson = require("convert-csv-to-json");
 
 const FILE_PATH = "/data/uploads/mefs-parcoursup.csv";
@@ -20,7 +23,36 @@ const findMefsForParcoursup = ({ bcn_mefs_10 }) => {
   return bcn_mefs_10.filter(({ mef10 }) => mefsAllowedOnParcoursup.includes(mef10));
 };
 
+/**
+ * @param {Formation} formation
+ * @returns {{regexp: RegExp, description: string, action: string}}
+ */
+const getParcoursupError = (formation) => {
+  const descriptor = parcoursupErrors.find((error) => formation.parcoursup_error.match(error.regexp));
+
+  return descriptor;
+};
+
+/**
+ * @param {Formation} formation
+ * @returns {string}
+ */
+const getParcoursupErrorDescription = (formation) => {
+  return getParcoursupError(formation)?.description;
+};
+
+/**
+ * @param {Formation} formation
+ * @returns {string}
+ */
+const getParcoursupErrorAction = (formation) => {
+  return getParcoursupError(formation)?.action;
+};
+
 module.exports = {
   findMefsForParcoursup,
   loadMefsAllowedOnParcoursup,
+  getParcoursupError,
+  getParcoursupErrorDescription,
+  getParcoursupErrorAction,
 };

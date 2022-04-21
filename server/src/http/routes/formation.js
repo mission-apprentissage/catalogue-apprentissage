@@ -5,6 +5,7 @@ const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { Formation } = require("../../common/model");
 const { mnaFormationUpdater } = require("../../logic/updaters/mnaFormationUpdater");
 const { sendJsonStream } = require("../../common/utils/httpUtils");
+const { sanitize } = require("../../common/utils/sanitizeUtils");
 
 /**
  * Sample entity route module for GET
@@ -18,7 +19,7 @@ module.exports = () => {
   };
 
   const getFormations = tryCatch(async (req, res) => {
-    let qs = req.query;
+    const qs = req.query;
 
     // FIXME: ugly patch because request from Affelnet is not JSON valid
     const strQuery = qs?.query ?? "";
@@ -28,7 +29,8 @@ module.exports = () => {
     );
     // end FIXME
 
-    const query = cleanedQuery ? JSON.parse(cleanedQuery) : {};
+    let query = cleanedQuery ? JSON.parse(cleanedQuery) : {};
+    query = sanitize(query, { allowSafeOperators: true });
 
     const { id_parcoursup, ...filter } = query;
     // additional filtering for parcoursup
@@ -49,6 +51,8 @@ module.exports = () => {
           };
 
     let queryAsRegex = qs?.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
+    queryAsRegex = sanitize(queryAsRegex, { allowSafeOperators: true });
+
     for (const prop in queryAsRegex) {
       queryAsRegex[prop] = new RegExp(queryAsRegex[prop]);
     }
@@ -81,7 +85,7 @@ module.exports = () => {
   });
 
   const postFormations = tryCatch(async (req, res) => {
-    let qs = req.body;
+    const qs = req.body;
 
     // FIXME: ugly patch because request from Affelnet is not JSON valid
     const strQuery = qs?.query ?? "";
@@ -91,7 +95,8 @@ module.exports = () => {
     );
     // end FIXME
 
-    const query = cleanedQuery ? JSON.parse(cleanedQuery) : {};
+    let query = cleanedQuery ? JSON.parse(cleanedQuery) : {};
+    query = sanitize(query, { allowSafeOperators: true });
 
     const { id_parcoursup, ...filter } = query;
     // additional filtering for parcoursup
@@ -111,6 +116,8 @@ module.exports = () => {
         };
 
     let queryAsRegex = qs?.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
+    queryAsRegex = sanitize(queryAsRegex, { allowSafeOperators: true });
+
     for (const prop in queryAsRegex) {
       queryAsRegex[prop] = new RegExp(queryAsRegex[prop]);
     }
@@ -143,8 +150,9 @@ module.exports = () => {
   });
 
   const countFormations = tryCatch(async (req, res) => {
-    let qs = req.query;
-    const query = qs && qs.query ? JSON.parse(qs.query) : {};
+    const qs = req.query;
+    let query = qs && qs.query ? JSON.parse(qs.query) : {};
+    query = sanitize(query, { allowSafeOperators: true });
 
     const { id_parcoursup, ...filter } = query;
     // additional filtering for parcoursup
@@ -153,6 +161,8 @@ module.exports = () => {
     }
 
     let queryAsRegex = qs?.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
+    queryAsRegex = sanitize(queryAsRegex, { allowSafeOperators: true });
+
     for (const prop in queryAsRegex) {
       queryAsRegex[prop] = new RegExp(queryAsRegex[prop]);
     }
@@ -172,8 +182,11 @@ module.exports = () => {
   });
 
   const getFormation = tryCatch(async (req, res) => {
-    let qs = req.query;
-    const query = qs && qs.query ? JSON.parse(qs.query) : {};
+    const qs = req.query;
+
+    let query = qs && qs.query ? JSON.parse(qs.query) : {};
+    query = sanitize(query, { allowSafeOperators: true });
+
     const select =
       qs && qs.select
         ? JSON.parse(qs.select)
@@ -191,8 +204,10 @@ module.exports = () => {
   });
 
   const getFormationById = tryCatch(async (req, res) => {
-    const itemId = req.params.id;
-    const qs = req.query;
+    const qs = sanitize(req.query);
+    const sanitizedParams = sanitize(req.params);
+
+    const itemId = sanitizedParams.id;
     const select =
       qs && qs.select
         ? JSON.parse(qs.select)
@@ -210,7 +225,9 @@ module.exports = () => {
   });
 
   const updateFormation = tryCatch(async (req, res) => {
-    const { withCodePostalUpdate = true, ...formation } = req.body;
+    const payload = sanitize(req.body);
+
+    const { withCodePostalUpdate = true, ...formation } = payload;
     const { formation: updatedFormation, error } = await mnaFormationUpdater(formation, {
       withCodePostalUpdate,
     });
@@ -235,7 +252,9 @@ module.exports = () => {
       limit: Joi.number().default(10),
     }).validateAsync(req.query, { abortEarly: false });
 
-    const filter = JSON.parse(query);
+    let filter = JSON.parse(query);
+    filter = sanitize(filter, { allowSafeOperators: true });
+
     const selector = JSON.parse(select);
 
     let stream = oleoduc(

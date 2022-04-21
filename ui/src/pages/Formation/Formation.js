@@ -26,23 +26,20 @@ import { StatusBadge } from "../../common/components/StatusBadge";
 import { PublishModal } from "../../common/components/formation/PublishModal";
 import { buildUpdatesHistory } from "../../common/utils/historyUtils";
 import InfoTooltip from "../../common/components/InfoTooltip";
+import { Alert } from "../../common/components/Alert";
+
 import helpText from "../../locales/helpText.json";
-import {
-  ArrowDownLine,
-  ExclamationCircle,
-  ExternalLinkLine,
-  MapPin2Fill,
-  Parametre,
-} from "../../theme/components/icons/";
+import { ArrowDownLine, ExternalLinkLine, MapPin2Fill, Parametre } from "../../theme/components/icons/";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
 import { getOpenStreetMapUrl } from "../../common/utils/mapUtils";
 import { EditableField } from "../../common/components/formation/EditableField";
 import { HistoryBlock } from "../../common/components/formation/HistoryBlock";
+import { RejectionBlock } from "../../common/components/formation/RejectionBlock";
 import { DescriptionBlock } from "../../common/components/formation/DescriptionBlock";
 import { OrganismesBlock } from "../../common/components/formation/OrganismesBlock";
 import { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL } from "../../constants/catalogueLabels";
-import { COMMON_STATUS } from "../../constants/status";
+import { COMMON_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
 
 const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -180,7 +177,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                   <InfoTooltip description={helpText.formation.lieu_formation_geo_coordonnees} />
                 </Text>
                 {formation?.lieu_formation_adresse_computed && (
-                  <Box mb={formation.distance < seuilDistance ? 0 : 4}>
+                  <Box mb={4}>
                     <Button
                       onClick={onComputedAdressToggle}
                       variant={"unstyled"}
@@ -466,54 +463,21 @@ export default ({ match }) => {
                   </Flex>
                 )}
 
-                {formation.parcoursup_statut === COMMON_STATUS.EN_ATTENTE && formation.parcoursup_error && (
-                  <Box bg={"grey.100"} p={4} mt={4} borderLeft={"4px solid"} borderColor={"orangesoft.500"} w={"full"}>
-                    <Text>
-                      <ExclamationCircle color="orangesoft.500" mr={2} boxSize={6} mb={1} />
-                      Erreur de publication sur Parcoursup :{" "}
-                      <Text as="span" variant="highlight" bg={"transparent"}>
-                        {formation.parcoursup_error}
-                      </Text>
-                    </Text>
-                  </Box>
-                )}
+                {(formation.parcoursup_statut === COMMON_STATUS.EN_ATTENTE ||
+                  formation.parcoursup_statut === PARCOURSUP_STATUS.REJETE) &&
+                  formation.parcoursup_error && <RejectionBlock formation={formation} />}
+
                 {hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
                   formation.parcoursup_raison_depublication && (
-                    <Box
-                      bg={"grey.100"}
-                      p={4}
-                      mt={4}
-                      borderLeft={"4px solid"}
-                      borderColor={"orangesoft.500"}
-                      w={"full"}
-                    >
-                      <Text>
-                        <ExclamationCircle color="orangesoft.500" mr={2} boxSize={6} mb={1} />
-                        Motif de non publication :{" "}
-                        <Text as="span" variant="highlight" bg={"transparent"}>
-                          {formation.parcoursup_raison_depublication}
-                        </Text>
-                      </Text>
-                    </Box>
+                    <Alert mt={4} type={"warning"}>
+                      Motif de non publication : <b>{formation.parcoursup_raison_depublication}</b>
+                    </Alert>
                   )}
                 {hasAccessTo(user, "page_formation/voir_status_publication_af") &&
                   formation.affelnet_raison_depublication && (
-                    <Box
-                      bg={"grey.100"}
-                      p={4}
-                      mt={4}
-                      borderLeft={"4px solid"}
-                      borderColor={"orangesoft.500"}
-                      w={"full"}
-                    >
-                      <Text>
-                        <ExclamationCircle color="orangesoft.500" mr={2} boxSize={6} mb={1} />
-                        Motif de non publication :{" "}
-                        <Text as="span" variant="highlight" bg={"transparent"}>
-                          {formation.affelnet_raison_depublication}
-                        </Text>
-                      </Text>
-                    </Box>
+                    <Alert mt={4} type={"warning"}>
+                      Motif de non publication : <b>{formation.affelnet_raison_depublication}</b>
+                    </Alert>
                   )}
               </Box>
               <Formation

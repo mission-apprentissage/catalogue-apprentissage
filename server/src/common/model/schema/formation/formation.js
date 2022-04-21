@@ -23,6 +23,34 @@ const mefSchema = new mongoose.Schema(
   { _id: false }
 );
 
+const rejectionCauseSchema = {
+  error: {
+    type: String,
+    default: null,
+    description: "L'erreur telle que retournée par la plateforme",
+  },
+  description: {
+    type: String,
+    default: null,
+    description: "La description textuelle de l'erreur retournée",
+  },
+  action: {
+    type: String,
+    default: null,
+    description: "L'action à mener pour résoudre le rejet.",
+  },
+  handled_by: {
+    type: String,
+    default: null,
+    description: "Adresse email de la personne ayant pris en charge le rejet de publication",
+  },
+  handled_date: {
+    type: Date,
+    default: null,
+    description: "Date à laquelle le rejet de publication a été pris en charge",
+  },
+};
+
 const formationSchema = {
   cle_ministere_educatif: {
     index: true,
@@ -354,6 +382,7 @@ const formationSchema = {
       "à publier (soumis à validation Recteur)",
       "à publier",
       "en attente de publication",
+      "rejet de publication",
     ],
     default: "hors périmètre",
     description: "Statut parcoursup",
@@ -369,6 +398,12 @@ const formationSchema = {
     default: null,
     description: "Erreur lors de la création de la formation sur ParcourSup (via le WS)",
   },
+  rejection: {
+    type: rejectionCauseSchema,
+    default: null,
+    description: "Cause du rejet de publication",
+  },
+
   parcoursup_id: {
     index: true,
     type: String,

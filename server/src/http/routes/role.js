@@ -2,6 +2,7 @@ const express = require("express");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const Joi = require("joi");
 const { Role } = require("../../common/model");
+const { sanitize } = require("../../common/utils/sanitizeUtils");
 
 const roleSchema = Joi.object({
   name: Joi.string().required(),
@@ -44,9 +45,11 @@ module.exports = ({ db: { db } }) => {
   router.post(
     "/role",
     tryCatch(async ({ body }, res) => {
-      await roleSchema.validateAsync(body, { abortEarly: false });
+      const payload = sanitize(body);
 
-      const { name, acl } = body;
+      await roleSchema.validateAsync(payload, { abortEarly: false });
+
+      const { name, acl } = payload;
 
       const role = new Role({
         name,
@@ -62,7 +65,10 @@ module.exports = ({ db: { db } }) => {
   router.put(
     "/role/:name",
     tryCatch(async ({ body, params }, res) => {
-      const name = params.name;
+      const payload = sanitize(body);
+      const sanitizedParams = sanitize(params);
+
+      const name = sanitizedParams.name;
 
       let role = await Role.findOne({ name });
       if (!role) {
@@ -72,7 +78,7 @@ module.exports = ({ db: { db } }) => {
       await Role.findOneAndUpdate(
         { _id: role._id },
         {
-          acl: body.acl,
+          acl: payload.acl,
         },
         { new: true }
       );
@@ -86,7 +92,9 @@ module.exports = ({ db: { db } }) => {
   router.delete(
     "/role/:name",
     tryCatch(async ({ params }, res) => {
-      const name = params.name;
+      const sanitizedParams = sanitize(params);
+
+      const name = sanitizedParams.name;
 
       let role = await Role.findOne({ name });
       if (!role) {

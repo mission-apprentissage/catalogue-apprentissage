@@ -11,6 +11,10 @@ const { Types } = require("mongoose");
  */
 export type RncpDetails = string;
 /**
+ * Cause du rejet de publication
+ */
+export type Rejection = string;
+/**
  * Données pour étude France Compétence
  */
 export type FranceCompetenceInfos = string;
@@ -188,7 +192,8 @@ export interface Formation {
     | "à publier (vérifier accès direct postbac)"
     | "à publier (soumis à validation Recteur)"
     | "à publier"
-    | "en attente de publication";
+    | "en attente de publication"
+    | "rejet de publication";
   /**
    * Parcoursup : historique des statuts
    */
@@ -197,6 +202,7 @@ export interface Formation {
    * Erreur lors de la création de la formation sur ParcourSup (via le WS)
    */
   parcoursup_error?: string;
+  rejection?: Rejection;
   /**
    * identifiant Parcoursup de la formation (g_ta_cod)
    */
@@ -577,6 +583,7 @@ export interface Formation {
 export interface ItemOfAffelnetMefs_10 {
   mef10?: string;
   modalite?: Modalite;
+  _id?: Types.ObjectId;
 }
 export interface Modalite {
   duree?: string;
@@ -585,6 +592,7 @@ export interface Modalite {
 export interface ItemOfParcoursupMefs_10 {
   mef10?: string;
   modalite?: Modalite1;
+  _id?: Types.ObjectId;
 }
 export interface Modalite1 {
   duree?: string;
@@ -593,6 +601,7 @@ export interface Modalite1 {
 export interface ItemOfBcnMefs_10 {
   mef10?: string;
   modalite?: Modalite2;
+  _id?: Types.ObjectId;
 }
 export interface Modalite2 {
   duree?: string;

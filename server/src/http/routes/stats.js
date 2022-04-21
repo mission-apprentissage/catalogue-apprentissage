@@ -1,6 +1,7 @@
 const express = require("express");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { Statistique } = require("../../common/model");
+const { sanitize } = require("../../common/utils/sanitizeUtils");
 
 module.exports = () => {
   const router = express.Router();
@@ -11,7 +12,9 @@ module.exports = () => {
   router.post(
     "/",
     tryCatch(async (req, res) => {
-      const { source } = req.body;
+      const payload = sanitize(req.body);
+
+      const { source } = payload;
 
       if (!source) {
         return res.status(400).json({ error: "source is mandatory" });
