@@ -1,12 +1,5 @@
 const express = require("express");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
-const rateLimit = require("express-rate-limit");
-
-const authLimiter = rateLimit({
-  windowMs: 60 * 1000, // 1 minute
-  max: 10, // Limit each IP to 10 calls per minute
-  message: "Too many calls from this IP, please try again after one minute",
-});
 
 module.exports = ({ users }) => {
   const router = express.Router(); // eslint-disable-line new-cap
@@ -52,7 +45,6 @@ module.exports = ({ users }) => {
    */
   router.post(
     "/login",
-    authLimiter,
     tryCatch(async (req, res) => {
       const { username, password } = req.body;
       const user = await users.authenticate(username, password);
