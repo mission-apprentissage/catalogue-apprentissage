@@ -63,15 +63,15 @@ services:
       - catalogue_apprentissage_network
 
   kibana:
-    image: docker.elastic.co/kibana/kibana-oss:7.1.1
+    image: docker.elastic.co/kibana/kibana-oss:${DOCKER_ES_VERSION:-7.10.2}
     container_name: catalogue_apprentissage_kibana
     depends_on:
       - elasticsearch
     networks:
       - catalogue_apprentissage_network
-    mem_limit: 512m
-    environment:
-      - SERVER_BASEPATH=/kibana
+    mem_limit: 2g
+    # environment:
+    #   - SERVER_BASEPATH=/kibana
 
 networks:
   catalogue_apprentissage_network:

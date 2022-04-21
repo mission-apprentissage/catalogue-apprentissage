@@ -36,6 +36,7 @@ import { useQuery } from "react-query";
 import { _get } from "../../../common/httpClient";
 import * as Yup from "yup";
 import { academies } from "../../../constants/academies";
+import { annees } from "../../../constants/annees";
 import { isStatusChangeEnabled } from "../../../common/utils/rulesUtils";
 import { RuleUpdatesHistory } from "./RuleUpdatesHistory";
 import { NavLink } from "react-router-dom";
@@ -261,11 +262,14 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
   )}&defaultMode="advanced"`;
 
   if (values.registrationYear) {
-    linkFormations += `&annee=%5B${values.registrationYear}%5D`;
+    linkFormations += `&annee=%5B"${annees[values.registrationYear].replace(" ", "+")}"%5D`;
   }
 
   if (values.duration) {
-    linkFormations += `&duree=%5B${values.duration}%5D`;
+    linkFormations += `&duree=%5B"${(values.duration <= 1 ? `${values.duration} an` : `${values.duration} ans`).replace(
+      " ",
+      "+"
+    )}"%5D`;
   }
 
   const [count, setCount] = useState(0);

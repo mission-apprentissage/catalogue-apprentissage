@@ -3,6 +3,6 @@
 ## from https://github.com/elastic/kibana-docker/blob/master/build/kibana/config/kibana.yml
 #
 server.name: kibana
-server.host: "0"
-server.basePath: "/kibana"
+server.host: "0.0.0.0"
+# server.basePath: ""
 elasticsearch.hosts: "http://elasticsearch:9200"

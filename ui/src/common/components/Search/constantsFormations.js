@@ -29,6 +29,7 @@ const FILTERS = () => [
   "etablissement_reference_habilite_rncp",
   "rome_codes",
   `rncp_code`,
+  `bcn_mefs_10`,
   `parcoursup_statut`,
   `affelnet_statut`,
   "diplome",
@@ -217,7 +218,17 @@ const columnsDefinition = [
     accessor: "bcn_mefs_10",
     width: 200,
     exportable: true,
-    formatter: (value) => value?.map((x) => x?.mef10)?.join(","),
+    formatter: (value) => {
+      console.log(value);
+      return value?.map((x) => x?.mef10)?.join(",");
+    },
+  },
+  {
+    Header: "Liste MEF rattaches",
+    accessor: "bcn_mefs_10",
+    width: 200,
+    exportable: true,
+    formatter: (value) => JSON.stringify(value),
   },
   {
     Header: "Liste MEF Affelnet",
@@ -432,7 +443,7 @@ const columnsDefinition = [
     accessor: "id_rco_formation",
     width: 200,
     exportable: true,
-    formatter: (value) => value?.split("|")?.pop(),
+    formatter: (value) => (typeof value === "string" ? value?.split("|")?.pop() : value),
   },
   {
     Header: "id RCO formation",
@@ -493,6 +504,10 @@ const queryBuilderField = [
   { text: "Identifiant Certif Info", value: "id_certifinfo.keyword" },
   { text: "Nda gestionnaire", value: "etablissement_gestionnaire_nda.keyword" },
   { text: "Nda formateur", value: "etablissement_formateur_nda.keyword" },
+  { text: "Libelle court", value: "libelle_court.keyword" },
+  { text: "Niveau formation diplome", value: "niveau_formation_diplome.keyword" },
+  { text: "MEF 10", value: "bcn_mefs_10.$.mef10.keyword" },
+  { text: "Groupe Spécialité", value: "rncp_details.nsf_code.keyword" },
 ];
 
 const facetDefinition = () => [
@@ -537,7 +552,9 @@ const facetDefinition = () => [
     customQuery: (values) => ({
       query: values?.length && {
         terms: {
-          "num_departement.keyword": values?.map((value) => value.split(" - ")[0]),
+          "num_departement.keyword": values?.map((value) =>
+            typeof value === "string" ? value?.split(" - ")[0] : value
+          ),
         },
       },
     }),
@@ -587,7 +604,7 @@ const facetDefinition = () => [
     customQuery: (values) => ({
       query: values?.length && {
         terms: {
-          "duree.keyword": values?.map((value) => value.split(" ")[0]),
+          "duree.keyword": values?.map((value) => (typeof value === "string" ? value?.split(" ")[0] : value)),
         },
       },
     }),

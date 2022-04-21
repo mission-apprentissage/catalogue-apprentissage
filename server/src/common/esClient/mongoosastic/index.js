@@ -69,6 +69,7 @@ function getMapping(schema, requireAsciiFolding = false) {
           properties[key] = { type: "boolean" };
           break;
         case "Array":
+          console.log(key, schema.paths[key].caster.instance);
           if (schema.paths[key].caster.instance === "String") {
             properties[key] = {
               type: "text",
