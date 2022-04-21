@@ -18,7 +18,6 @@ const packageJson = require("../../package.json");
 const formation = require("./routes/formation");
 const formationSecure = require("./routes/formationSecure");
 const report = require("./routes/report");
-const rcoFormation = require("./routes/rcoFormation");
 const auth = require("./routes/auth");
 const user = require("./routes/user");
 const role = require("./routes/role");
@@ -33,8 +32,8 @@ const upload = require("./routes/upload");
 const alert = require("./routes/alert");
 const reglePerimetre = require("./routes/reglePerimetre");
 const reglePerimetreSecure = require("./routes/reglePerimetreSecure");
-
 const swaggerSchema = require("../common/model/swaggerSchema");
+const rateLimit = require("express-rate-limit");
 
 require("../common/passport-config");
 
@@ -108,6 +107,12 @@ module.exports = async (components, verbose = true) => {
   app.use(passport.initialize());
   app.use(passport.session());
 
+  const apiLimiter = rateLimit({
+    windowMs: 1000, // 1 second
+    max: 10, // 10 calls per IP per second
+  });
+  app.use("/api", apiLimiter);
+
   app.use("/api/v1/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecification));
   app.get(
     "/api/v1/schema.json",
@@ -121,7 +126,6 @@ module.exports = async (components, verbose = true) => {
   app.use("/api/v1/entity", formation());
   app.use("/api/v1/entity", report());
   app.use("/api/v1/entity", etablissement(components));
-  app.use("/api/v1/rcoformation", rcoFormation());
   app.use("/api/v1/auth", auth(components));
   app.use("/api/v1/password", password(components));
   app.use("/api/v1/parcoursup", parcoursup(components));
@@ -150,7 +154,6 @@ module.exports = async (components, verbose = true) => {
   app.use("/api/search", esMultiSearchNoIndex());
   app.use("/api/entity", formation());
   app.use("/api/entity", report());
-  app.use("/api/rcoformation", rcoFormation());
   app.use("/api/entity", etablissement(components));
   app.use("/api/auth", auth(components));
   app.use("/api/password", password(components));

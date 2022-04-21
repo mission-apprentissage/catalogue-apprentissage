@@ -16,8 +16,7 @@ httpTests(__filename, ({ startServer }) => {
   });
 
   it("Vérifie qu'on ne peut pas demander la réinitialisation du mot de passe pour un utilisateur inconnu", async () => {
-    const { httpClient, createAndLogUser } = await startServer();
-    await createAndLogUser("admin", "password", { permissions: { isAdmin: true } });
+    const { httpClient } = await startServer();
 
     const response = await httpClient.post("/api/password/forgotten-password?noEmail=true", {
       username: "inconnu",

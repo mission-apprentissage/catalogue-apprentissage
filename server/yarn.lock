@@ -2231,6 +2231,11 @@ express-mongo-sanitize@2.2.0:
   resolved "https://registry.yarnpkg.com/express-mongo-sanitize/-/express-mongo-sanitize-2.2.0.tgz#c8c2d45e137f213950f70bf586704e0db5cfe356"
   integrity sha512-PZBs5nwhD6ek9ZuP+W2xmpvcrHwXZxD5GdieX2dsjPbAbH4azOkrHbycBud2QRU+YQF1CT+pki/lZGedHgo/dQ==
 
+express-rate-limit@6.3.0:
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/express-rate-limit/-/express-rate-limit-6.3.0.tgz#253387ce4d36c9c2cc77c7c676068deb36cc0821"
+  integrity sha512-932Io1VGKjM3ppi7xW9sb1J5nVkEJSUiOtHw2oE+JyHks1e+AXuOBSXbJKM0mcXwEnW1TibJibQ455Ow1YFjfg==
+
 express-session@1.17.1:
   version "1.17.1"
   resolved "https://registry.yarnpkg.com/express-session/-/express-session-1.17.1.tgz#36ecbc7034566d38c8509885c044d461c11bf357"

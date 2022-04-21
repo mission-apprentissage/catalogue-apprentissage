@@ -8,6 +8,13 @@ const tryCatch = require("../middlewares/tryCatchMiddleware");
 const validators = require("../utils/validators");
 const { createPasswordToken } = require("../../common/utils/jwtUtils");
 const path = require("path");
+const rateLimit = require("express-rate-limit");
+
+const pwdLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 10, // Limit each IP to 10 calls per minute
+  message: "Too many calls from this IP, please try again after one minute",
+});
 
 const checkPasswordToken = (users) => {
   passport.use(
@@ -79,6 +86,7 @@ module.exports = ({ users, mailer }) => {
 
   router.post(
     "/reset-password",
+    pwdLimiter,
     checkPasswordToken(users),
     tryCatch(async (req, res) => {
       const user = req.user;
