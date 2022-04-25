@@ -586,6 +586,9 @@ export interface ItemOfAffelnetMefs_10 {
   _id?: Types.ObjectId;
 }
 export interface Modalite {
+  type?: Type;
+}
+export interface Type {
   duree?: string;
   annee?: string;
 }
@@ -595,6 +598,9 @@ export interface ItemOfParcoursupMefs_10 {
   _id?: Types.ObjectId;
 }
 export interface Modalite1 {
+  type?: Type1;
+}
+export interface Type1 {
   duree?: string;
   annee?: string;
 }
@@ -604,6 +610,9 @@ export interface ItemOfBcnMefs_10 {
   _id?: Types.ObjectId;
 }
 export interface Modalite2 {
+  type?: Type2;
+}
+export interface Type2 {
   duree?: string;
   annee?: string;
 }
