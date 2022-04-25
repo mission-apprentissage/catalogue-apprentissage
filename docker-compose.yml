@@ -58,7 +58,7 @@ services:
       - discovery.type=single-node
       - discovery.zen.minimum_master_nodes=1
       - network.host=0.0.0.0
-    mem_limit: 1g
+    mem_limit: 2g
     networks:
       - catalogue_apprentissage_network
 
@@ -69,9 +69,7 @@ services:
       - elasticsearch
     networks:
       - catalogue_apprentissage_network
-    mem_limit: 2g
-    # environment:
-    #   - SERVER_BASEPATH=/kibana
+    mem_limit: 512m
 
 networks:
   catalogue_apprentissage_network:
