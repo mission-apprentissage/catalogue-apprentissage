@@ -48,7 +48,7 @@ function getMapping(schema, requireAsciiFolding = false) {
     if (/geo_/.test(key)) {
       properties[key] = { type: "geo_point" };
       isMappingNeedingGeoPoint = true;
-    } else
+    } else {
       switch (mongooseType) {
         case "ObjectID":
         case "String": {
@@ -69,24 +69,36 @@ function getMapping(schema, requireAsciiFolding = false) {
           properties[key] = { type: "boolean" };
           break;
         case "Array":
-          if (schema.paths[key].caster.instance === "String") {
-            properties[key] = {
-              type: "text",
-              fields: { keyword: { type: "keyword", ignore_above: 256 } },
-              ...asciiFoldingParameters,
-            };
-          } else if (schema.paths[key].caster.instance === "Date") {
-            properties[key] = { type: "date" };
-          } else if (schema.paths[key].caster.instance === "Mixed") {
-            properties[key] = { type: "nested" };
+          switch (true) {
+            case schema.paths[key].caster.instance === "String":
+              properties[key] = {
+                type: "text",
+                fields: { keyword: { type: "keyword", ignore_above: 256 } },
+                ...asciiFoldingParameters,
+              };
+              break;
+            case schema.paths[key].caster.instance === "Date":
+              properties[key] = { type: "date" };
+              break;
+            case schema.paths[key].caster.instance === "Embedded":
+            case schema.paths[key].caster.instance === "Mixed":
+            case schema.paths[key].caster.$isArraySubdocument:
+              properties[key] = { type: "nested" };
+              break;
+            default:
+              console.warn("Not handling array of mongoose type for ", key);
+              break;
           }
           break;
+        case "Embedded":
         case "Mixed":
           properties[key] = { type: "nested" };
           break;
         default:
+          console.warn("Not handling mongoose type : ", mongooseType, "for ", key);
           break;
       }
+    }
   }
 
   return { properties };

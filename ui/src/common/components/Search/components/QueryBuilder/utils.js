@@ -60,12 +60,26 @@ function suggestionQuery(key, value) {
   };
 }
 
+function simpleOrNestedQuery(key, value, cb) {
+  if (key.split(".").length > 2) {
+    return {
+      nested: {
+        path: key.split(".")[0],
+        query: cb(key, value),
+      },
+    };
+  } else {
+    return cb(key, value);
+  }
+}
+
 function query(key, value, cb, shouldOrMust = "should") {
   if (Array.isArray(key)) {
-    console.log({ bool: { [shouldOrMust]: key.map((k) => cb(k, value)) } });
-    return { bool: { [shouldOrMust]: key.map((k) => cb(k, value)) } };
+    console.log({ bool: { [shouldOrMust]: key.map((k) => simpleOrNestedQuery(k, value)) } });
+    return { bool: { [shouldOrMust]: key.map((k) => simpleOrNestedQuery(k, value)) } };
   }
-  return cb(key, value);
+
+  return simpleOrNestedQuery(key, value, cb);
 }
 
 export const operators = [
