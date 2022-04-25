@@ -1,6 +1,6 @@
 const path = require("path");
 const { tcoJobs } = require("@mission-apprentissage/tco-service-node");
-const { runScript } = require("./scriptWrapper");
+const { runScript, enableAlertMessage, disableAlertMessage } = require("./scriptWrapper");
 const logger = require("../common/logger");
 const { Formation } = require("../common/model");
 const { rebuildEsIndex } = require("./esIndex/esIndex");
@@ -42,7 +42,9 @@ runScript(async ({ db }) => {
 
     // eS
     Formation.startAllMongoosaticHooks();
+    await enableAlertMessage();
     await rebuildEsIndex(); // ~ 5 minutes // maj elastic search (recherche des formations / établissements / rapprochements)
+    await disableAlertMessage();
 
     if (process.env.CATALOGUE_APPRENTISSAGE_RCO_DUAL_CONTROL_ENABLED === "true") {
       // double commande

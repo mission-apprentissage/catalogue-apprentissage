@@ -59,6 +59,17 @@ const exit = async (rawError) => {
   process.exitCode = error ? 1 : 0;
 };
 
+const enableAlertMessage = async () =>
+  await Alert.findOneAndUpdate(
+    { type: "automatique" },
+    { enabled: true },
+    {
+      upsert: true,
+    }
+  );
+
+const disableAlertMessage = async () => await Alert.findOneAndUpdate({ type: "automatique" }, { enabled: false });
+
 module.exports = {
   /**
    * @param {*} job
@@ -72,37 +83,18 @@ module.exports = {
 
       await ensureOutputDirExists();
       const components = await createComponents();
-      options?.alert &&
-        (await Alert.findOneAndUpdate(
-          { type: "automatique" },
-          { enabled: true },
-          {
-            new: true,
-            upsert: true,
-          }
-        ));
+      options?.alert && (await enableAlertMessage());
+
       const results = await job(components);
       timer.stop(results);
 
-      options?.alert &&
-        (await Alert.findOneAndUpdate(
-          { type: "automatique" },
-          { enabled: false },
-          {
-            new: true,
-          }
-        ));
+      options?.alert && (await disableAlertMessage());
       await exit();
     } catch (e) {
-      options?.alert &&
-        (await Alert.findOneAndUpdate(
-          { type: "automatique" },
-          { enabled: false },
-          {
-            new: true,
-          }
-        ));
+      options?.alert && (await disableAlertMessage());
       await exit(e);
     }
   },
+  enableAlertMessage,
+  disableAlertMessage,
 };
