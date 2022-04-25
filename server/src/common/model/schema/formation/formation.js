@@ -4,46 +4,55 @@ const etablissementFormateurInfo = require("./etablissement.formateur.sub");
 const etablissementGestionnaireInfo = require("./etablissement.gestionnaire.sub");
 const etablissementReferenceInfo = require("./etablissement.reference.sub");
 
-const mefSchema = {
-  mef10: {
-    index: true,
-    type: String,
+const mefSchema = new mongoose.Schema(
+  {
+    mef10: {
+      index: true,
+      type: String,
+    },
+    modalite: new mongoose.Schema(
+      {
+        type: {
+          duree: String,
+          annee: String,
+        },
+      },
+      { _id: false }
+    ),
   },
-  modalite: {
-    type: {
-      duree: String,
-      annee: String,
+  { _id: false }
+);
+
+const rejectionCauseSchema = new mongoose.Schema(
+  {
+    error: {
+      type: String,
+      default: null,
+      description: "L'erreur telle que retournée par la plateforme",
+    },
+    description: {
+      type: String,
+      default: null,
+      description: "La description textuelle de l'erreur retournée",
+    },
+    action: {
+      type: String,
+      default: null,
+      description: "L'action à mener pour résoudre le rejet.",
+    },
+    handled_by: {
+      type: String,
+      default: null,
+      description: "Adresse email de la personne ayant pris en charge le rejet de publication",
+    },
+    handled_date: {
+      type: Date,
+      default: null,
+      description: "Date à laquelle le rejet de publication a été pris en charge",
     },
   },
-};
-
-const rejectionCauseSchema = {
-  error: {
-    type: String,
-    default: null,
-    description: "L'erreur telle que retournée par la plateforme",
-  },
-  description: {
-    type: String,
-    default: null,
-    description: "La description textuelle de l'erreur retournée",
-  },
-  action: {
-    type: String,
-    default: null,
-    description: "L'action à mener pour résoudre le rejet.",
-  },
-  handled_by: {
-    type: String,
-    default: null,
-    description: "Adresse email de la personne ayant pris en charge le rejet de publication",
-  },
-  handled_date: {
-    type: Date,
-    default: null,
-    description: "Date à laquelle le rejet de publication a été pris en charge",
-  },
-};
+  { _id: false }
+);
 
 const formationSchema = {
   cle_ministere_educatif: {

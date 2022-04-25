@@ -43,16 +43,22 @@ module.exports = {
               type: "string",
             },
             modalite: {
+              title: "modalite",
               type: "object",
               properties: {
-                duree: {
-                  type: "string",
-                },
-                annee: {
-                  type: "string",
+                type: {
+                  title: "type",
+                  type: "object",
+                  properties: {
+                    duree: {
+                      type: "string",
+                    },
+                    annee: {
+                      type: "string",
+                    },
+                  },
                 },
               },
-              title: "modalite",
             },
           },
         },
@@ -69,16 +75,22 @@ module.exports = {
               type: "string",
             },
             modalite: {
+              title: "modalite",
               type: "object",
               properties: {
-                duree: {
-                  type: "string",
-                },
-                annee: {
-                  type: "string",
+                type: {
+                  title: "type",
+                  type: "object",
+                  properties: {
+                    duree: {
+                      type: "string",
+                    },
+                    annee: {
+                      type: "string",
+                    },
+                  },
                 },
               },
-              title: "modalite",
             },
           },
         },
@@ -626,16 +638,22 @@ module.exports = {
               type: "string",
             },
             modalite: {
+              title: "modalite",
               type: "object",
               properties: {
-                duree: {
-                  type: "string",
-                },
-                annee: {
-                  type: "string",
+                type: {
+                  title: "type",
+                  type: "object",
+                  properties: {
+                    duree: {
+                      type: "string",
+                    },
+                    annee: {
+                      type: "string",
+                    },
+                  },
                 },
               },
-              title: "modalite",
             },
           },
         },
