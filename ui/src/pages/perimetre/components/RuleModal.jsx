@@ -253,7 +253,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
     ...((values?.query &&
       JSON.parse(values?.query)
         ?.filter((q) => q.value)
-        .map((q) => ({ ...q, index: q.index + 1 }))) ??
+        .map((q) => ({ ...q, field: q.field + ".keyword", index: q.index + 1 }))) ??
       []),
   ];
 

@@ -218,17 +218,7 @@ const columnsDefinition = [
     accessor: "bcn_mefs_10",
     width: 200,
     exportable: true,
-    formatter: (value) => {
-      console.log(value);
-      return value?.map((x) => x?.mef10)?.join(",");
-    },
-  },
-  {
-    Header: "Liste MEF rattaches",
-    accessor: "bcn_mefs_10",
-    width: 200,
-    exportable: true,
-    formatter: (value) => JSON.stringify(value),
+    formatter: (value) => value?.map((x) => x?.mef10)?.join(","),
   },
   {
     Header: "Liste MEF Affelnet",
@@ -506,7 +496,7 @@ const queryBuilderField = [
   { text: "Nda formateur", value: "etablissement_formateur_nda.keyword" },
   { text: "Libelle court", value: "libelle_court.keyword" },
   { text: "Niveau formation diplome", value: "niveau_formation_diplome.keyword" },
-  { text: "MEF 10", value: "bcn_mefs_10.$.mef10.keyword" },
+  { text: "MEF 10", value: "bcn_mefs_10.mef10.keyword" },
   { text: "Groupe Spécialité", value: "rncp_details.nsf_code.keyword" },
 ];
 
