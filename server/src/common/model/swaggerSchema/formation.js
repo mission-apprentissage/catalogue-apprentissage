@@ -43,7 +43,6 @@ module.exports = {
               type: "string",
             },
             modalite: {
-              title: "modalite",
               type: "object",
               properties: {
                 duree: {
@@ -53,6 +52,7 @@ module.exports = {
                   type: "string",
                 },
               },
+              title: "modalite",
             },
           },
         },
@@ -69,7 +69,6 @@ module.exports = {
               type: "string",
             },
             modalite: {
-              title: "modalite",
               type: "object",
               properties: {
                 duree: {
@@ -79,6 +78,7 @@ module.exports = {
                   type: "string",
                 },
               },
+              title: "modalite",
             },
           },
         },
@@ -395,6 +395,7 @@ module.exports = {
         description: "Erreur lors de la création de la formation sur ParcourSup (via le WS)",
       },
       rejection: {
+        title: "rejection",
         type: "object",
         properties: {
           error: {
@@ -419,12 +420,11 @@ module.exports = {
           },
           handled_date: {
             type: ["string", "null"],
-            format: "date-time",
             default: null,
             description: "Date à laquelle le rejet de publication a été pris en charge",
+            format: "date-time",
           },
         },
-        title: "rejection",
         default: "null",
         description: "Cause du rejet de publication",
       },
@@ -626,7 +626,6 @@ module.exports = {
               type: "string",
             },
             modalite: {
-              title: "modalite",
               type: "object",
               properties: {
                 duree: {
@@ -636,6 +635,7 @@ module.exports = {
                   type: "string",
                 },
               },
+              title: "modalite",
             },
           },
         },

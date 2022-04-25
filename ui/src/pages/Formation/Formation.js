@@ -380,8 +380,6 @@ export default ({ match }) => {
     }
   };
 
-  console.log(user);
-
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
