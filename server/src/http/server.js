@@ -113,6 +113,11 @@ module.exports = async (components, verbose = true) => {
     max: 10, // 10 calls per IP per second
   });
 
+  const apiPerimetreLimiter = rateLimit({
+    windowMs: 1000, // 1 second
+    max: 100, // 100 calls per IP per second
+  });
+
   const elasticLimiter = rateLimit({
     windowMs: 1000, // 1 second
     max: 100, // 100 calls per IP per second
@@ -133,6 +138,7 @@ module.exports = async (components, verbose = true) => {
     })
   );
 
+  app.use("/api/v1/entity", apiPerimetreLimiter, reglePerimetre());
   app.use("/api/v1/es/search", elasticLimiter, esSearch());
   app.use("/api/v1/search", elasticLimiter, esMultiSearchNoIndex());
   app.use("/api/v1/entity", apiLimiter, formation());
@@ -142,7 +148,6 @@ module.exports = async (components, verbose = true) => {
   app.use("/api/v1/password", authLimiter, password(components));
   app.use("/api/v1/parcoursup", apiLimiter, parcoursup(components));
   app.use("/api/v1/entity", apiLimiter, alert());
-  app.use("/api/v1/entity", apiLimiter, reglePerimetre());
   app.use(
     "/api/v1/admin",
     apiLimiter,
