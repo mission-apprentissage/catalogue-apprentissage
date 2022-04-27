@@ -1,6 +1,6 @@
 const express = require("express");
 const Joi = require("joi");
-const { oleoduc, transformData } = require("oleoduc");
+const { oleoduc, transformIntoJSON } = require("oleoduc");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { Formation } = require("../../common/model");
 const { mnaFormationUpdater } = require("../../logic/updaters/mnaFormationUpdater");
@@ -257,11 +257,7 @@ module.exports = () => {
 
     const selector = JSON.parse(select);
 
-    let stream = oleoduc(
-      Formation.find(filter, selector).limit(limit).cursor(),
-      transformData((formation) => `${JSON.stringify(formation)}\n`)
-    );
-
+    const stream = oleoduc(Formation.find(filter, selector).limit(limit).cursor(), transformIntoJSON());
     return sendJsonStream(stream, res);
   });
 
