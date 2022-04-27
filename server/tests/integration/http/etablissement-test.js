@@ -68,8 +68,8 @@ httpTests(__filename, ({ startServer }) => {
     const response = await httpClient.get("/api/v1/entity/etablissements.ndjson?limit=2");
 
     strictEqual(response.status, 200);
-    let etablissements = response.data.split("\n").filter((e) => e);
+    const etablissements = response.data;
     strictEqual(etablissements.length, 2);
-    deepStrictEqual(JSON.parse(etablissements[0]).uai, "0010856A");
+    deepStrictEqual(etablissements[0].uai, "0010856A");
   });
 });
