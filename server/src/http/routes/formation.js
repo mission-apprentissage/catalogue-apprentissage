@@ -54,7 +54,7 @@ module.exports = () => {
     queryAsRegex = sanitize(queryAsRegex, { allowSafeOperators: true });
 
     for (const prop in queryAsRegex) {
-      queryAsRegex[prop] = new RegExp(queryAsRegex[prop]);
+      queryAsRegex[prop] = new RegExp(queryAsRegex[prop], "i");
     }
 
     const mQuery = {
@@ -119,7 +119,7 @@ module.exports = () => {
     queryAsRegex = sanitize(queryAsRegex, { allowSafeOperators: true });
 
     for (const prop in queryAsRegex) {
-      queryAsRegex[prop] = new RegExp(queryAsRegex[prop]);
+      queryAsRegex[prop] = new RegExp(queryAsRegex[prop], "i");
     }
 
     const mQuery = {
@@ -164,7 +164,7 @@ module.exports = () => {
     queryAsRegex = sanitize(queryAsRegex, { allowSafeOperators: true });
 
     for (const prop in queryAsRegex) {
-      queryAsRegex[prop] = new RegExp(queryAsRegex[prop]);
+      queryAsRegex[prop] = new RegExp(queryAsRegex[prop], "i");
     }
 
     const mQuery = {
