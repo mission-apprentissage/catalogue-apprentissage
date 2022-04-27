@@ -41,6 +41,7 @@ const etablissementTags = async () => {
       logger.error(error);
     }
   }
+
   logger.info(`Settings tags on 'etablissements' : 🆗 // ${updated} updated // ${deleted} deleted`);
 };
 
