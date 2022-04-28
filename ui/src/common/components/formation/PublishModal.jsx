@@ -106,6 +106,7 @@ const getSubmitBody = ({
         PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
         PARCOURSUP_STATUS.A_PUBLIER,
         PARCOURSUP_STATUS.PUBLIE,
+        PARCOURSUP_STATUS.REJETE,
       ].includes(formation?.parcoursup_statut)
     ) {
       body.parcoursup_raison_depublication = parcoursup_raison_depublication;
