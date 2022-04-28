@@ -9,7 +9,7 @@ module.exports = () => {
   const router = express.Router();
 
   /**
-   * Get Reports /reports.ndjson GET
+   * Get Reports /reports.json GET
    */
   router.get(
     "/reports",
