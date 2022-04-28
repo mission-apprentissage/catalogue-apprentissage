@@ -4,6 +4,7 @@ const { Formation } = require("../../common/model");
 const logger = require("../../common/logger");
 const Boom = require("boom");
 const { sanitize } = require("../../common/utils/sanitizeUtils");
+const { hasOneOfRoles } = require("../../common/utils/rolesUtils");
 
 module.exports = () => {
   const router = express.Router();
@@ -48,7 +49,7 @@ module.exports = () => {
     const formation = await Formation.findById(itemId);
     let hasRightToEdit = user.isAdmin;
     if (!hasRightToEdit) {
-      hasRightToEdit = ["admin", "moss"].includes(user.roles);
+      hasRightToEdit = hasOneOfRoles(user, ["admin", "moss"]);
     }
     if (!hasRightToEdit) {
       const listAcademie = user.academie.split(",").map((academieStr) => Number(academieStr));
@@ -98,7 +99,7 @@ module.exports = () => {
     const formation = await Formation.findById(itemId);
     let hasRightToEdit = user.isAdmin;
     if (!hasRightToEdit) {
-      hasRightToEdit = ["admin", "moss"].includes(user.roles);
+      hasRightToEdit = hasOneOfRoles(user, ["admin", "moss"]);
     }
     if (!hasRightToEdit) {
       const listAcademie = user.academie.split(",").map((academieStr) => Number(academieStr));
