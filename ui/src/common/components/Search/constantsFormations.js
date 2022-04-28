@@ -218,21 +218,21 @@ const columnsDefinition = [
     accessor: "bcn_mefs_10",
     width: 200,
     exportable: true,
-    formatter: (value) => value?.map((x) => x?.mef10)?.join(","),
+    formatter: (value) => value?.map((x) => x?.mef10)?.join(",") ?? "",
   },
   {
     Header: "Liste MEF Affelnet",
     accessor: "affelnet_mefs_10",
     width: 200,
     exportable: true,
-    formatter: (value) => value?.map((x) => x?.mef10)?.join(","),
+    formatter: (value) => value?.map((x) => x?.mef10)?.join(",") ?? "",
   },
   {
     Header: "Liste MEF Parcoursup",
     accessor: "parcoursup_mefs_10",
     width: 200,
     exportable: true,
-    formatter: (value) => value?.map((x) => x?.mef10)?.join(","),
+    formatter: (value) => value?.map((x) => x?.mef10)?.join(",") ?? "",
   },
   {
     Header: "Statut Affelnet",
@@ -258,6 +258,13 @@ const columnsDefinition = [
   {
     Header: "Motif de non publication Parcoursup",
     accessor: "parcoursup_raison_depublication",
+    width: 200,
+    exportable: true,
+    formatter: (value) => escapeDiacritics(value),
+  },
+  {
+    Header: "Motif de rejet Parcoursup",
+    accessor: "parcoursup_error",
     width: 200,
     exportable: true,
     formatter: (value) => escapeDiacritics(value),

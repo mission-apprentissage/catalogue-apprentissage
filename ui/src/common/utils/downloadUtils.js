@@ -24,7 +24,7 @@ export const escapeDiacritics = (str) =>
     ?.normalize("NFD")
     ?.replace(/[\u0300-\u036f]/g, "")
     ?.replace(/\s+/g, " ")
-    ?.replaceAll(";", ",");
+    ?.replaceAll(";", ",") ?? "";
 
 export const createCSV = ({ headers, rows }) => {
   const lines = rows.map((rowData) => {
