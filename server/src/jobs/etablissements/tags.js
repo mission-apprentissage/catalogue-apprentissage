@@ -12,16 +12,14 @@ const etablissementTags = async () => {
   for await (const etablissement of cursor) {
     (count++ + 1) % 100 === 0 && console.log(count);
     try {
-      const formations = await Formation.find({
+      const tags = await Formation.distinct("tags", {
         published: true,
         $or: [
           { etablissement_gestionnaire_id: etablissement._id },
           { etablissement_formateur_id: etablissement._id },
           { etablissement_responsable_id: etablissement._id },
         ],
-      }).select("tags");
-
-      const tags = [...new Set(formations.flatMap((formation) => formation.tags))].sort();
+      });
 
       const diff = tags
         .filter((tag) => !etablissement?.tags?.includes(tag))
