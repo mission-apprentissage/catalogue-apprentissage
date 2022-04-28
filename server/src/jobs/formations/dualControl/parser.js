@@ -4,7 +4,7 @@ const { extractPeriodeArray } = require("../../../common/utils/rcoUtils");
 /** @typedef {import("../../../common/model/schema/formation").Formation} Formation */
 
 /**
- *  @type {{ [key in keyof Formation]: "boolean"|"date"|"periode"|"niveau"|"nullable"|"number" }}
+ *  @type {{ [key in keyof Formation]: "boolean"|"date"|"periode"|"niveau"|"nullable"|"number"|"array" }}
  */
 const TYPES_MAP = {
   cfd_outdated: "boolean",
@@ -15,6 +15,9 @@ const TYPES_MAP = {
   etablissement_gestionnaire_uai: "nullable",
   etablissement_formateur_uai: "nullable",
   distance: "number",
+  rncp_eligible_apprentissage: "boolean",
+  catalogue_published: "boolean",
+  rome_codes: "array",
 };
 
 const niveaux = {
@@ -58,6 +61,10 @@ const parser = (obj, typesMap = TYPES_MAP) => {
 
         case "number":
           parsedValue = value === "NAN" ? null : Number(value);
+          break;
+
+        case "array":
+          parsedValue = value ? value.split(",") : [];
           break;
 
         default:
