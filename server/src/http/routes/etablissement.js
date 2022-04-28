@@ -15,6 +15,10 @@ const { sanitize } = require("../../common/utils/sanitizeUtils");
 module.exports = () => {
   const router = express.Router();
 
+  const defaultFilter = {
+    published: true,
+  };
+
   /**
    * @swagger
    *
@@ -91,6 +95,12 @@ module.exports = () => {
       }).validateAsync(sanitizedQuery, { abortEarly: false });
 
       let json = JSON.parse(query);
+
+      // Par défaut, ne retourne que les établissements published
+      if (!sanitizedQuery?.query) {
+        Object.assign(json, defaultFilter);
+      }
+
       let { find, pagination } = await paginate(Etablissement, json, { page, limit });
       let stream = oleoduc(
         find.cursor(),
@@ -118,6 +128,11 @@ module.exports = () => {
 
       let json = JSON.parse(query);
 
+      // Par défaut, ne retourne que les établissements published
+      if (!sanitizedQuery?.query) {
+        Object.assign(json, defaultFilter);
+      }
+
       const stream = oleoduc(Etablissement.find(json).limit(limit).cursor(), transformIntoJSON());
       return sendJsonStream(stream, res);
     })
@@ -132,6 +147,11 @@ module.exports = () => {
       const qs = req.query;
       let query = qs && qs.query ? JSON.parse(qs.query) : {};
       query = sanitize(query, { allowSafeOperators: true });
+
+      // Par défaut, ne retourne que les établissements published
+      if (!qs?.query) {
+        Object.assign(query, defaultFilter);
+      }
 
       const retrievedData = await Etablissement.countDocuments(query);
       if (retrievedData) {
@@ -151,6 +171,11 @@ module.exports = () => {
       const qs = req.query;
       let query = qs && qs.query ? JSON.parse(qs.query) : {};
       query = sanitize(query, { allowSafeOperators: true });
+
+      // Par défaut, ne retourne que les établissements published
+      if (!qs?.query) {
+        Object.assign(query, defaultFilter);
+      }
 
       const retrievedData = await Etablissement.findOne(query);
       if (retrievedData) {
@@ -233,6 +258,11 @@ module.exports = () => {
       const qs = req.query;
       let query = qs && qs.query ? JSON.parse(qs.query) : {};
       query = sanitize(query, { allowSafeOperators: true });
+
+      // Par défaut, ne retourne que les établissements published
+      if (!qs?.query) {
+        Object.assign(query, defaultFilter);
+      }
 
       const etablissements = await Etablissement.find(query, {
         _id: 0,

@@ -18,6 +18,7 @@ module.exports = {
 
           uai: "0010856A",
           tags: ["2020", "2021"],
+          published: true,
         },
         custom
       )
