@@ -19,8 +19,9 @@ const etablissementTags = async () => {
           { etablissement_formateur_id: etablissement._id },
           { etablissement_responsable_id: etablissement._id },
         ],
-      });
+      }).sort();
 
+      console.log(tags);
       const diff = tags
         .filter((tag) => !etablissement?.tags?.includes(tag))
         .concat(etablissement?.tags?.filter((tag) => !tags.includes(tag)));
