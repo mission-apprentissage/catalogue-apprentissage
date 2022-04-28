@@ -21,7 +21,6 @@ const etablissementTags = async () => {
         ],
       }).sort();
 
-      console.log(tags);
       const diff = tags
         .filter((tag) => !etablissement?.tags?.includes(tag))
         .concat(etablissement?.tags?.filter((tag) => !tags.includes(tag)));
