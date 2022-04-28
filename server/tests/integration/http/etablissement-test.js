@@ -65,7 +65,7 @@ httpTests(__filename, ({ startServer }) => {
       uai: "0751234J",
     });
 
-    const response = await httpClient.get("/api/v1/entity/etablissements.ndjson?limit=2");
+    const response = await httpClient.get("/api/v1/entity/etablissements.json?limit=2");
 
     strictEqual(response.status, 200);
     const etablissements = response.data;

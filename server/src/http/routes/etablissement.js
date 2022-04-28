@@ -117,7 +117,7 @@ module.exports = () => {
   );
 
   router.get(
-    "/etablissements.ndjson",
+    "/etablissements.json",
     tryCatch(async (req, res) => {
       const sanitizedQuery = sanitize(req.query);
 

@@ -4570,10 +4570,10 @@ object-inspect@^1.12.0:
   resolved "https://registry.yarnpkg.com/object-inspect/-/object-inspect-1.12.0.tgz#6e2c120e868fd1fd18cb4f18c31741d0d6e776f0"
   integrity sha512-Ho2z80bVIvJloH+YzRmpZVQe87+qASmBUKZDWgx9cu+KDrX2ZDH/3tMy+gXbZETVGs2M8YdxObOh7XAtim9Y0g==
 
-oleoduc@0.5.11:
-  version "0.5.11"
-  resolved "https://registry.yarnpkg.com/oleoduc/-/oleoduc-0.5.11.tgz#7773e3f649585fe92f54f0547cbe1818b808bfed"
-  integrity sha512-LwBp1vyaGhviQ//AqIKkpppwDQ5UiVI6EDGhPqlIv3utPcwymH3yhTb9m+98s+aAhP1KY5vnx1bPrS8IbV8Szw==
+oleoduc@0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/oleoduc/-/oleoduc-0.6.0.tgz#cdab4be5caae575b0cae5218a4a390a688603323"
+  integrity sha512-0jB/qzhhI+D1dYla2Wq9w9I6bOIGbjZbEfnLogG8tAZY3YwzYd5K06n05sqiESs50PHslhSm6RUAxIW+DJkSOw==
   dependencies:
     cyclist "1.0.1"
     duplexer3 "0.1.4"
