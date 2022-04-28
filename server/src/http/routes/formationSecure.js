@@ -96,7 +96,6 @@ module.exports = () => {
     const sanitizedParams = sanitize(params);
     const itemId = sanitizedParams.id;
 
-    console.warn(user.roles);
     const formation = await Formation.findById(itemId);
     let hasRightToEdit = user.isAdmin;
     if (!hasRightToEdit) {
