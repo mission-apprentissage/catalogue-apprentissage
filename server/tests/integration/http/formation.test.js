@@ -19,7 +19,7 @@ httpTests(__filename, ({ startServer }) => {
       cfd: "1234567",
     }).save();
 
-    const response = await httpClient.get("/api/v1/entity/formations.ndjson?limit=2");
+    const response = await httpClient.get("/api/v1/entity/formations.json?limit=2");
 
     assert.strictEqual(response.status, 200);
     const formations = response.data;

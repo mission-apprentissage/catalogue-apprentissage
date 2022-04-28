@@ -1,6 +1,6 @@
 const express = require("express");
 const Joi = require("joi");
-const { oleoduc, transformIntoJSON } = require("oleoduc");
+const { compose, transformIntoJSON } = require("oleoduc");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { Formation } = require("../../common/model");
 const { mnaFormationUpdater } = require("../../logic/updaters/mnaFormationUpdater");
@@ -243,7 +243,7 @@ module.exports = () => {
     return res.json(updatedFormation);
   });
 
-  const getFormationsNdJson = tryCatch(async (req, res) => {
+  const streamFormations = tryCatch(async (req, res) => {
     let { query, select, limit } = await Joi.object({
       query: Joi.string().default("{}"),
       select: Joi.string().default(
@@ -257,7 +257,7 @@ module.exports = () => {
 
     const selector = JSON.parse(select);
 
-    const stream = oleoduc(Formation.find(filter, selector).limit(limit).cursor(), transformIntoJSON());
+    const stream = compose(Formation.find(filter, selector).limit(limit).cursor(), transformIntoJSON());
     return sendJsonStream(stream, res);
   });
 
@@ -421,10 +421,10 @@ module.exports = () => {
   router.post("/formation2021/update", updateFormation);
 
   /**
-   * Fetch formations as ndjson
+   * Stream formations as json array
    */
-  router.get("/formations.ndjson", getFormationsNdJson);
-  router.get("/formations2021.ndjson", getFormationsNdJson);
+  router.get("/formations.json", streamFormations);
+  router.get("/formations2021.json", streamFormations);
 
   return router;
 };
