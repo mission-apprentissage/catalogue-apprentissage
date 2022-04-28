@@ -106,6 +106,7 @@ const getSubmitBody = ({
         PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
         PARCOURSUP_STATUS.A_PUBLIER,
         PARCOURSUP_STATUS.PUBLIE,
+        PARCOURSUP_STATUS.REJETE,
       ].includes(formation?.parcoursup_statut)
     ) {
       body.parcoursup_raison_depublication = parcoursup_raison_depublication;
@@ -182,6 +183,14 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
       affelnet_raison_depublication,
       parcoursup_raison_depublication,
     }) => {
+      console.log({
+        affelnet,
+        parcoursup,
+        affelnet_infos_offre,
+        affelnet_raison_depublication,
+        parcoursup_raison_depublication,
+      });
+
       return new Promise(async (resolve) => {
         const result = getSubmitBody({
           formation,
@@ -191,6 +200,8 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
           affelnet_raison_depublication,
           parcoursup_raison_depublication,
         });
+
+        console.log(result);
 
         if (Object.keys(result.body).length > 0) {
           const updatedFormation = await updateFormationAndReconciliation({
