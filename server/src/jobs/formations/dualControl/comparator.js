@@ -76,6 +76,7 @@ const FIELDS_TO_COMPARE = [
 const isEqual = (dualControlFormation, formation, key) => {
   let result = false;
   switch (key) {
+    case "bcn_mefs_10":
     case "rncp_details":
     case "periode": {
       const difference = diff(dualControlFormation[key], formation[key]) ?? {};
