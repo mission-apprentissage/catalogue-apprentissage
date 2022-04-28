@@ -27,7 +27,7 @@ const FIELDS_TO_COMPARE = [
   "cfd",
   "cfd_outdated",
   "rncp_code",
-  // "bcn_mefs_10",
+  "bcn_mefs_10",
   "cfd_date_fermeture",
   "cfd_specialite",
   "niveau",
@@ -48,13 +48,37 @@ const FIELDS_TO_COMPARE = [
   "onisep_lien_site_onisepfr",
   "onisep_discipline",
   "onisep_domaine_sousdomaine",
+
+  // below new fields batch of 28/04 :
+  "etablissement_gestionnaire_code_postal",
+  "etablissement_gestionnaire_code_commune_insee",
+  "etablissement_gestionnaire_region",
+  "etablissement_gestionnaire_num_departement",
+  "etablissement_gestionnaire_nom_departement",
+  "etablissement_gestionnaire_num_academie",
+  "etablissement_gestionnaire_nom_academie",
+  "etablissement_formateur_adresse",
+  "etablissement_formateur_code_postal",
+  "etablissement_formateur_code_commune_insee",
+  "etablissement_formateur_region",
+  "etablissement_formateur_num_departement",
+  "etablissement_formateur_nom_departement",
+  "etablissement_formateur_num_academie",
+  "etablissement_formateur_nom_academie",
+  "geo_coordonnees_etablissement_formateur",
+  "rncp_intitule",
+  "rncp_eligible_apprentissage",
+  "catalogue_published",
+  "rome_codes",
+  "rncp_details",
 ];
 
 const isEqual = (dualControlFormation, formation, key) => {
   let result = false;
   switch (key) {
+    case "rncp_details":
     case "periode": {
-      const difference = diff(dualControlFormation[key], formation[key]);
+      const difference = diff(dualControlFormation[key], formation[key]) ?? {};
       const keys = Object.keys(difference);
       result = keys.length === 0;
       break;
