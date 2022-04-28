@@ -38,7 +38,7 @@ const parser = (obj, typesMap = TYPES_MAP) => {
       const type = typesMap[key];
       switch (type) {
         case "boolean":
-          parsedValue = !!value;
+          parsedValue = ["0", "1"].includes(value) ? Boolean(Number(value)) : !!value;
           break;
 
         case "date":
