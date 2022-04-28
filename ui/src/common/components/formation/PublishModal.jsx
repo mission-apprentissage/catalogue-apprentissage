@@ -193,8 +193,6 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
           parcoursup_raison_depublication,
         });
 
-        console.log(result);
-
         if (Object.keys(result.body).length > 0) {
           const updatedFormation = await updateFormationAndReconciliation({
             ...result,
