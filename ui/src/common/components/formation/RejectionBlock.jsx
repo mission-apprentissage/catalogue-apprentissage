@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { Box, Button, Flex, Heading, Text, useToast } from "@chakra-ui/react";
+import { Box, Button, Flex, Text, useToast } from "@chakra-ui/react";
 import { Alert } from "../Alert";
 import { handleRejection, unhandleRejection } from "../../api/formation";
 import useAuth from "../../hooks/useAuth";

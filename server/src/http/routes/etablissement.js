@@ -1,6 +1,6 @@
 const express = require("express");
 const Joi = require("joi");
-const { oleoduc, transformIntoJSON, transformData } = require("oleoduc");
+const { oleoduc, transformIntoJSON } = require("oleoduc");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { sendJsonStream } = require("../../common/utils/httpUtils");
 const { paginate } = require("../../common/utils/mongooseUtils");
@@ -133,11 +133,7 @@ module.exports = () => {
         Object.assign(json, defaultFilter);
       }
 
-      let stream = oleoduc(
-        Etablissement.find(json).limit(limit).cursor(),
-        transformData((etablissement) => `${JSON.stringify(etablissement)}\n`)
-      );
-
+      const stream = oleoduc(Etablissement.find(json).limit(limit).cursor(), transformIntoJSON());
       return sendJsonStream(stream, res);
     })
   );
