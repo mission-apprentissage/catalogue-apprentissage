@@ -183,14 +183,6 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
       affelnet_raison_depublication,
       parcoursup_raison_depublication,
     }) => {
-      console.log({
-        affelnet,
-        parcoursup,
-        affelnet_infos_offre,
-        affelnet_raison_depublication,
-        parcoursup_raison_depublication,
-      });
-
       return new Promise(async (resolve) => {
         const result = getSubmitBody({
           formation,
