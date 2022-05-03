@@ -10,15 +10,15 @@ const mefSchema = new mongoose.Schema(
       index: true,
       type: String,
     },
-    modalite: new mongoose.Schema(
-      {
-        type: {
+    modalite: {
+      type: new mongoose.Schema(
+        {
           duree: String,
           annee: String,
         },
-      },
-      { _id: false }
-    ),
+        { _id: false }
+      ),
+    },
   },
   { _id: false }
 );
