@@ -51,9 +51,17 @@ const performUpdates = async (filter = {}, options = null) => {
         );
       } else if (updates || etablissement.certifie_qualite !== certifie_qualite) {
         updatedEtablissement.last_update_at = Date.now();
-        await Etablissement.findByIdAndUpdate(etablissement._id, { ...updatedEtablissement, certifie_qualite });
+        await Etablissement.findByIdAndUpdate(etablissement._id, {
+          ...updatedEtablissement,
+          certifie_qualite,
+          update_error: null,
+        });
         // console.log(`${count}/${total}: Etablissement ${etablissement._id} updated`);
         // logger.info(`${count}/${total}: Etablissement ${etablissement._id} updated`);
+      } else {
+        await Etablissement.findByIdAndUpdate(etablissement._id, {
+          update_error: null,
+        });
       }
     } catch (error) {
       logger.error(error);
