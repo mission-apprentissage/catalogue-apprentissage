@@ -67,7 +67,7 @@ const formationSchema = {
     index: true,
     type: String,
     default: null,
-    description: "Code formation diplome (education nationale)",
+    description: "Code formation diplôme (education nationale)",
   },
   cfd_specialite: {
     type: Object,
@@ -78,7 +78,7 @@ const formationSchema = {
     index: true,
     type: Boolean,
     default: false,
-    description: "BCN : cfd périmé (fermeture avant le 31 aout de l'année courante)",
+    description: "BCN : cfd périmé (fermeture avant le 31 août de l'année courante)",
   },
   cfd_date_fermeture: {
     type: Date,
@@ -89,7 +89,7 @@ const formationSchema = {
     index: true,
     type: String,
     default: null,
-    description: "Code formation diplome d'entrée (année 1 de l'apprentissage)",
+    description: "Code formation diplôme d'entrée (année 1 de l'apprentissage)",
   },
   affelnet_mefs_10: {
     type: [mefSchema],
@@ -126,17 +126,17 @@ const formationSchema = {
   num_departement: {
     type: String,
     default: null,
-    description: "Numéro de departement",
+    description: "Numéro de département",
   },
   nom_departement: {
     type: String,
     default: null,
-    description: "Nom du departement",
+    description: "Nom du département",
   },
   region: {
     type: String,
     default: null,
-    description: "Numéro de departement",
+    description: "Numéro de département",
   },
   localite: {
     type: String,
@@ -260,7 +260,7 @@ const formationSchema = {
       niveau_europe: {
         type: String,
         default: null,
-        description: "Niveau europeen ex: niveauu5",
+        description: "Niveau européen ex: niveauu5",
       },
       code_type_certif: {
         type: String,
@@ -270,7 +270,7 @@ const formationSchema = {
       type_certif: {
         type: String,
         default: null,
-        description: "Type de certification (ex: diplome d'etat)",
+        description: "Type de certification (ex: diplôme d'état)",
       },
       ancienne_fiche: {
         type: [String],
@@ -285,7 +285,7 @@ const formationSchema = {
       demande: {
         type: Number,
         default: 0,
-        description: "demande en cours de d'habilitation",
+        description: "Demande en cours de d'habilitation",
       },
       certificateurs: {
         type: [Object],
@@ -295,12 +295,12 @@ const formationSchema = {
       nsf_code: {
         type: String,
         default: null,
-        description: "code NSF",
+        description: "Code NSF",
       },
       nsf_libelle: {
         type: String,
         default: null,
-        description: "libéllé NSF",
+        description: "Libellé NSF",
       },
       romes: {
         type: [Object],
@@ -315,12 +315,12 @@ const formationSchema = {
       voix_acces: {
         type: [Object],
         default: [],
-        description: "voix d'accès",
+        description: "Voix d'accès",
       },
       partenaires: {
         type: [Object],
         default: [],
-        description: "partenaires",
+        description: "Partenaires",
       },
       rncp_outdated: {
         type: Boolean,
@@ -486,7 +486,7 @@ const formationSchema = {
   last_update_who: {
     type: String,
     default: null,
-    description: "Qui a réalisé la derniere modification",
+    description: "Qui a réalisé la dernière modification",
   },
 
   // Flags
@@ -557,19 +557,19 @@ const formationSchema = {
     index: true,
     type: String,
     default: null,
-    description: "Identifant des actions concaténés",
+    description: "Identifiant des actions concaténés",
   },
   ids_action: {
     index: true,
     type: [String],
     default: null,
-    description: "Identifant des actions concaténés",
+    description: "Identifiant des actions concaténés",
   },
   id_certifinfo: {
     index: true,
     type: String,
     default: null,
-    description: "Identifant certifInfo (unicité de la certification)",
+    description: "Identifiant certifInfo (unicité de la certification)",
   },
   tags: {
     type: [String],
@@ -584,7 +584,7 @@ const formationSchema = {
   niveau_formation_diplome: {
     type: String,
     default: null,
-    description: "BCN : niveau formation diplome",
+    description: "BCN : niveau formation diplôme",
   },
   affelnet_infos_offre: {
     type: String,
