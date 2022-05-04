@@ -4,13 +4,17 @@ const { Etablissement, Formation } = require("../../common/model");
 
 const etablissementTags = async () => {
   logger.info("Settings tags on 'etablissements'...");
+  const filter = {};
 
-  const cursor = Etablissement.find({}).cursor();
+  const total = await Etablissement.countDocuments(filter);
+
+  const cursor = Etablissement.find(filter).cursor();
   let count = 0,
     updated = 0,
-    deleted = 0;
+    republished = 0,
+    unpublished = 0;
   for await (const etablissement of cursor) {
-    (count++ + 1) % 100 === 0 && console.log(count);
+    (count++ + 1) % 100 === 0 && console.log(`${count} / ${total}`);
     try {
       const tags = await Formation.distinct("tags", {
         published: true,
@@ -25,16 +29,24 @@ const etablissementTags = async () => {
         .filter((tag) => !etablissement?.tags?.includes(tag))
         .concat(etablissement?.tags?.filter((tag) => !tags.includes(tag)));
 
-      if (!tags.length) {
-        deleted++;
-        await Etablissement.findOneAndUpdate({ _id: etablissement._id }, { published: false, tags });
-        console.warn(`Unpublishing ${etablissement._id}`);
-      }
+      const published = !!tags.length;
 
-      if (tags.length && diff.length) {
-        updated++;
-        await Etablissement.findOneAndUpdate({ _id: etablissement._id }, { tags });
-        console.info(`Updating ${etablissement._id}`);
+      if (etablissement.published !== published || diff.length) {
+        await Etablissement.findOneAndUpdate({ _id: etablissement._id }, { published, tags });
+
+        if (!published && diff.length) {
+          unpublished++;
+          console.warn(`Unpublishing ${etablissement._id}`);
+        }
+        if (published && diff.length) {
+          if (etablissement.published) {
+            updated++;
+            console.info(`Updating ${etablissement._id}`);
+          } else {
+            republished++;
+            console.info(`Republishing ${etablissement._id}`);
+          }
+        }
       }
     } catch (error) {
       logger.error(error);
@@ -42,7 +54,9 @@ const etablissementTags = async () => {
     }
   }
 
-  logger.info(`Settings tags on 'etablissements' : 🆗 // ${updated} updated // ${deleted} deleted`);
+  logger.info(
+    `Settings tags on 'etablissements' : 🆗 // ${updated} updated // ${republished} republished // ${unpublished} unpublished`
+  );
 };
 
 module.exports = etablissementTags;
