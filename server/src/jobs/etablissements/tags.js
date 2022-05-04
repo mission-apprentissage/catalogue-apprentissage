@@ -25,18 +25,20 @@ const etablissementTags = async () => {
         .filter((tag) => !etablissement?.tags?.includes(tag))
         .concat(etablissement?.tags?.filter((tag) => !tags.includes(tag)));
 
-      !tags.length &&
-        deleted++ &&
-        (await Etablissement.findOneAndUpdate({ _id: etablissement._id }, { published: false, tags })) &&
+      if (!tags.length) {
+        deleted++;
+        await Etablissement.findOneAndUpdate({ _id: etablissement._id }, { published: false, tags });
         console.warn(`Unpublishing ${etablissement._id}`);
+      }
 
-      tags.length &&
-        diff.length &&
-        updated++ &&
-        (await Etablissement.findOneAndUpdate({ _id: etablissement._id }, { tags })) &&
+      if (tags.length && diff.length) {
+        updated++;
+        await Etablissement.findOneAndUpdate({ _id: etablissement._id }, { tags });
         console.info(`Updating ${etablissement._id}`);
+      }
     } catch (error) {
       logger.error(error);
+      console.error(error);
     }
   }
 
