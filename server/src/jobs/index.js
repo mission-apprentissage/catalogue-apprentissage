@@ -9,7 +9,7 @@ const affelnetJobs = require("./affelnet");
 const etablissementsJobs = require("./etablissements");
 const formationsJobs = require("./formations");
 const checkUai = require("./checkUai");
-const dualControl = require("./formations/dualControl");
+// const dualControl = require("./formations/dualControl");
 const etablissementTags = require("./etablissements/tags");
 
 const KIT_LOCAL_PATH = "/data/uploads/CodeDiplome_RNCP_latest_kit.csv";
@@ -59,10 +59,10 @@ runScript(async ({ db }) => {
     await rebuildEsIndex("parcoursupformations"); // ~ 5 minutes // maj elastic search (recherche des rapprochements)
     await disableAlertMessage();
 
-    if (process.env.CATALOGUE_APPRENTISSAGE_RCO_DUAL_CONTROL_ENABLED === "true") {
-      // double commande
-      await dualControl();
-    }
+    // if (process.env.CATALOGUE_APPRENTISSAGE_RCO_DUAL_CONTROL_ENABLED === "true") {
+    //   // double commande
+    //   await dualControl();
+    // }
 
     // total time for execution ~ 4h20
   } catch (error) {
