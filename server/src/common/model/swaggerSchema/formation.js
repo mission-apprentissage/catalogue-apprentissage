@@ -10,7 +10,7 @@ module.exports = {
       cfd: {
         type: "string",
         default: "null",
-        description: "Code formation diplome (education nationale)",
+        description: "Code formation diplôme (education nationale)",
       },
       cfd_specialite: {
         type: "object",
@@ -20,7 +20,7 @@ module.exports = {
       cfd_outdated: {
         type: "boolean",
         default: false,
-        description: "BCN : cfd périmé (fermeture avant le 31 aout de l'année courante)",
+        description: "BCN : cfd périmé (fermeture avant le 31 août de l'année courante)",
       },
       cfd_date_fermeture: {
         type: "string",
@@ -31,7 +31,7 @@ module.exports = {
       cfd_entree: {
         type: "string",
         default: "null",
-        description: "Code formation diplome d'entrée (année 1 de l'apprentissage)",
+        description: "Code formation diplôme d'entrée (année 1 de l'apprentissage)",
       },
       affelnet_mefs_10: {
         type: "array",
@@ -45,17 +45,11 @@ module.exports = {
             modalite: {
               type: "object",
               properties: {
-                type: {
-                  title: "type",
-                  type: "object",
-                  properties: {
-                    duree: {
-                      type: "string",
-                    },
-                    annee: {
-                      type: "string",
-                    },
-                  },
+                duree: {
+                  type: "string",
+                },
+                annee: {
+                  type: "string",
                 },
               },
               title: "modalite",
@@ -81,17 +75,11 @@ module.exports = {
             modalite: {
               type: "object",
               properties: {
-                type: {
-                  title: "type",
-                  type: "object",
-                  properties: {
-                    duree: {
-                      type: "string",
-                    },
-                    annee: {
-                      type: "string",
-                    },
-                  },
+                duree: {
+                  type: "string",
+                },
+                annee: {
+                  type: "string",
                 },
               },
               title: "modalite",
@@ -128,17 +116,17 @@ module.exports = {
       num_departement: {
         type: "string",
         default: "null",
-        description: "Numéro de departement",
+        description: "Numéro de département",
       },
       nom_departement: {
         type: "string",
         default: "null",
-        description: "Nom du departement",
+        description: "Nom du département",
       },
       region: {
         type: "string",
         default: "null",
-        description: "Numéro de departement",
+        description: "Numéro de département",
       },
       localite: {
         type: "string",
@@ -252,7 +240,7 @@ module.exports = {
           niveau_europe: {
             type: ["string", "null"],
             default: null,
-            description: "Niveau europeen ex: niveauu5",
+            description: "Niveau européen ex: niveauu5",
           },
           code_type_certif: {
             type: ["string", "null"],
@@ -262,7 +250,7 @@ module.exports = {
           type_certif: {
             type: ["string", "null"],
             default: null,
-            description: "Type de certification (ex: diplome d'etat)",
+            description: "Type de certification (ex: diplôme d'état)",
           },
           ancienne_fiche: {
             type: ["array", "null"],
@@ -283,7 +271,7 @@ module.exports = {
           demande: {
             type: "number",
             default: 0,
-            description: "demande en cours de d'habilitation",
+            description: "Demande en cours de d'habilitation",
           },
           certificateurs: {
             type: "array",
@@ -296,12 +284,12 @@ module.exports = {
           nsf_code: {
             type: ["string", "null"],
             default: null,
-            description: "code NSF",
+            description: "Code NSF",
           },
           nsf_libelle: {
             type: ["string", "null"],
             default: null,
-            description: "libéllé NSF",
+            description: "Libellé NSF",
           },
           romes: {
             type: "array",
@@ -325,7 +313,7 @@ module.exports = {
               type: "object",
             },
             default: [],
-            description: "voix d'accès",
+            description: "Voix d'accès",
           },
           partenaires: {
             type: "array",
@@ -333,7 +321,7 @@ module.exports = {
               type: "object",
             },
             default: [],
-            description: "partenaires",
+            description: "Partenaires",
           },
           rncp_outdated: {
             type: "boolean",
@@ -525,7 +513,7 @@ module.exports = {
       last_update_who: {
         type: "string",
         default: "null",
-        description: "Qui a réalisé la derniere modification",
+        description: "Qui a réalisé la dernière modification",
       },
       to_update: {
         type: "boolean",
@@ -582,7 +570,7 @@ module.exports = {
       id_action: {
         type: "string",
         default: "null",
-        description: "Identifant des actions concaténés",
+        description: "Identifiant des actions concaténés",
       },
       ids_action: {
         type: "array",
@@ -590,12 +578,12 @@ module.exports = {
           type: "string",
         },
         default: "null",
-        description: "Identifant des actions concaténés",
+        description: "Identifiant des actions concaténés",
       },
       id_certifinfo: {
         type: "string",
         default: "null",
-        description: "Identifant certifInfo (unicité de la certification)",
+        description: "Identifiant certifInfo (unicité de la certification)",
       },
       tags: {
         type: "array",
@@ -613,7 +601,7 @@ module.exports = {
       niveau_formation_diplome: {
         type: "string",
         default: "null",
-        description: "BCN : niveau formation diplome",
+        description: "BCN : niveau formation diplôme",
       },
       affelnet_infos_offre: {
         type: "string",
@@ -648,17 +636,11 @@ module.exports = {
             modalite: {
               type: "object",
               properties: {
-                type: {
-                  title: "type",
-                  type: "object",
-                  properties: {
-                    duree: {
-                      type: "string",
-                    },
-                    annee: {
-                      type: "string",
-                    },
-                  },
+                duree: {
+                  type: "string",
+                },
+                annee: {
+                  type: "string",
                 },
               },
               title: "modalite",

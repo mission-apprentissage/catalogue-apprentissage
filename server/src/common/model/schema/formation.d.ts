@@ -25,7 +25,7 @@ export interface Formation {
    */
   cle_ministere_educatif?: string;
   /**
-   * Code formation diplome (education nationale)
+   * Code formation diplôme (education nationale)
    */
   cfd?: string;
   /**
@@ -33,7 +33,7 @@ export interface Formation {
    */
   cfd_specialite?: string;
   /**
-   * BCN : cfd périmé (fermeture avant le 31 aout de l'année courante)
+   * BCN : cfd périmé (fermeture avant le 31 août de l'année courante)
    */
   cfd_outdated?: boolean;
   /**
@@ -41,7 +41,7 @@ export interface Formation {
    */
   cfd_date_fermeture?: Date;
   /**
-   * Code formation diplome d'entrée (année 1 de l'apprentissage)
+   * Code formation diplôme d'entrée (année 1 de l'apprentissage)
    */
   cfd_entree?: string;
   /**
@@ -69,15 +69,15 @@ export interface Formation {
    */
   code_commune_insee?: string;
   /**
-   * Numéro de departement
+   * Numéro de département
    */
   num_departement?: string;
   /**
-   * Nom du departement
+   * Nom du département
    */
   nom_departement?: string;
   /**
-   * Numéro de departement
+   * Numéro de département
    */
   region?: string;
   /**
@@ -258,7 +258,7 @@ export interface Formation {
    */
   last_update_at?: Date;
   /**
-   * Qui a réalisé la derniere modification
+   * Qui a réalisé la dernière modification
    */
   last_update_who?: string;
   /**
@@ -306,15 +306,15 @@ export interface Formation {
    */
   id_formation?: string;
   /**
-   * Identifant des actions concaténés
+   * Identifiant des actions concaténés
    */
   id_action?: string;
   /**
-   * Identifant des actions concaténés
+   * Identifiant des actions concaténés
    */
   ids_action?: string & string[];
   /**
-   * Identifant certifInfo (unicité de la certification)
+   * Identifiant certifInfo (unicité de la certification)
    */
   id_certifinfo?: string;
   /**
@@ -326,7 +326,7 @@ export interface Formation {
    */
   libelle_court?: string;
   /**
-   * BCN : niveau formation diplome
+   * BCN : niveau formation diplôme
    */
   niveau_formation_diplome?: string;
   /**
@@ -586,9 +586,6 @@ export interface ItemOfAffelnetMefs_10 {
   _id?: Types.ObjectId;
 }
 export interface Modalite {
-  type?: Type;
-}
-export interface Type {
   duree?: string;
   annee?: string;
 }
@@ -598,9 +595,6 @@ export interface ItemOfParcoursupMefs_10 {
   _id?: Types.ObjectId;
 }
 export interface Modalite1 {
-  type?: Type1;
-}
-export interface Type1 {
   duree?: string;
   annee?: string;
 }
@@ -610,9 +604,6 @@ export interface ItemOfBcnMefs_10 {
   _id?: Types.ObjectId;
 }
 export interface Modalite2 {
-  type?: Type2;
-}
-export interface Type2 {
   duree?: string;
   annee?: string;
 }
