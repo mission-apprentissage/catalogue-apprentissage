@@ -4,6 +4,14 @@ const etablissementFormateurInfo = require("./etablissement.formateur.sub");
 const etablissementGestionnaireInfo = require("./etablissement.gestionnaire.sub");
 const etablissementReferenceInfo = require("./etablissement.reference.sub");
 
+const modaliteSchema = new mongoose.Schema(
+  {
+    duree: String,
+    annee: String,
+  },
+  { _id: false }
+);
+
 const mefSchema = new mongoose.Schema(
   {
     mef10: {
@@ -11,13 +19,7 @@ const mefSchema = new mongoose.Schema(
       type: String,
     },
     modalite: {
-      type: new mongoose.Schema(
-        {
-          duree: String,
-          annee: String,
-        },
-        { _id: false }
-      ),
+      type: modaliteSchema,
     },
   },
   { _id: false }

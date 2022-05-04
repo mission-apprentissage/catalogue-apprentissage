@@ -46,17 +46,11 @@ module.exports = {
               title: "modalite",
               type: "object",
               properties: {
-                type: {
-                  title: "type",
-                  type: "object",
-                  properties: {
-                    duree: {
-                      type: "string",
-                    },
-                    annee: {
-                      type: "string",
-                    },
-                  },
+                duree: {
+                  type: "string",
+                },
+                annee: {
+                  type: "string",
                 },
               },
             },
@@ -78,17 +72,11 @@ module.exports = {
               title: "modalite",
               type: "object",
               properties: {
-                type: {
-                  title: "type",
-                  type: "object",
-                  properties: {
-                    duree: {
-                      type: "string",
-                    },
-                    annee: {
-                      type: "string",
-                    },
-                  },
+                duree: {
+                  type: "string",
+                },
+                annee: {
+                  type: "string",
                 },
               },
             },
@@ -641,17 +629,11 @@ module.exports = {
               title: "modalite",
               type: "object",
               properties: {
-                type: {
-                  title: "type",
-                  type: "object",
-                  properties: {
-                    duree: {
-                      type: "string",
-                    },
-                    annee: {
-                      type: "string",
-                    },
-                  },
+                duree: {
+                  type: "string",
+                },
+                annee: {
+                  type: "string",
                 },
               },
             },
