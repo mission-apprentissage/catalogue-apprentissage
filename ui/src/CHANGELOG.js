@@ -4,12 +4,50 @@ import { Link } from "@chakra-ui/react";
 const changelog = {
   list: [
     {
-      version: "5.17.0",
+      version: "5.19.0",
       date: "Prochainement",
       about: `<h4>À venir</h4>`,
       fixes: [],
       features: [],
       improvements: [],
+    },
+    {
+      version: "5.18.0",
+      date: "Le 5 Mai 2022",
+      about: `<h4>À propos de cette version</h4>
+  Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [
+        `Administrateurs — Rétablissement de certaines données dans les fichiers échangés avec le service à compétence nationale Parcoursup.`,
+        `Utilisateurs connectés — Gestion des formations retournées en échec par le webservice Parcoursup : l’attribution du statut “ne pas publier” n’était pas prise en compte.`,
+        `Utilisateurs connectés — Gestion des formations retournées en échec par le webservice Parcoursup : l’annulation de prise en charge ne fonctionnait pas dans certains cas.`,
+        `Utilisateurs connectés — Depuis le module de périmètre, le lien vers les listes de formations correspondant à chaque type de certification ne remontait aucun résultat.`,
+        `Utilisateurs connectés — Rétablissement du MEF10 dans les exports csv.`,
+        `Utilisateurs connectés — Mise à jour des informations de publication Affelnet pour mise à jour des étiquettes à l’usage des services académiques.`,
+      ],
+      features: [],
+      improvements: [
+        `Dans l’onglet “Liste des organismes”, dépublication des établissements qui ne sont associés à aucune formation (ni directement, ni en tant que responsable d’organismes formateurs). Automatisation hebdomadaire de ces règles de dépublication. À l’inverse, la republication est instantanée si une offre de formation réapparaît.`,
+        `Utilisateurs connectés — Gestion des formations retournées en échec par le webservice Parcoursup : intégration du motif d’échec dans les exports csv.``Sur les fiches formation, masquage de l’étiquette non certifié qualité sur le formateur lorsque l’établissement responsable est certifié qualité.`,
+        `L’affichage du message automatique de maintenance lors de l’exécution des scripts nocturnes n’était pas toujours justifié. Il est maintenant  limité à certaines opérations de réindexation.`,
+        `Administrateurs — Mise en place d’un script pour récupérer les données éditées sur le site de production vers la recette (règles de périmètres et UAI).`,
+      ],
+    },
+
+    {
+      version: "5.17.0",
+      date: "Le 20 Avril 2022",
+      about: `<h4>À propos de cette version</h4>
+  Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [
+        `Correction d’une erreur sur des compteurs de formation dans les modules de périmètre Parcoursup et Affelnet.`,
+      ],
+      features: [
+        `Utilisateurs connectés — Gestion des formations renvoyés en échec par le webservice Parcoursup : intégration d’un statut spécifique (« rejet de publication »), avec possibilité de prise en charge par les services académiques pour nouvelle tentative de publication.`,
+      ],
+      improvements: [
+        `Rétablissement d’un opérateur $regex pour l’un des consommateurs de l’API catalogue.`,
+        `Correction de failles de sécurité`,
+      ],
     },
     {
       version: "5.16.0",

@@ -43,6 +43,7 @@ module.exports = {
               type: "string",
             },
             modalite: {
+              title: "modalite",
               type: "object",
               properties: {
                 duree: {
@@ -52,11 +53,6 @@ module.exports = {
                   type: "string",
                 },
               },
-              title: "modalite",
-            },
-            _id: {
-              type: "string",
-              pattern: "^[0-9a-fA-F]{24}$",
             },
           },
         },
@@ -73,6 +69,7 @@ module.exports = {
               type: "string",
             },
             modalite: {
+              title: "modalite",
               type: "object",
               properties: {
                 duree: {
@@ -82,11 +79,6 @@ module.exports = {
                   type: "string",
                 },
               },
-              title: "modalite",
-            },
-            _id: {
-              type: "string",
-              pattern: "^[0-9a-fA-F]{24}$",
             },
           },
         },
@@ -634,6 +626,7 @@ module.exports = {
               type: "string",
             },
             modalite: {
+              title: "modalite",
               type: "object",
               properties: {
                 duree: {
@@ -643,11 +636,6 @@ module.exports = {
                   type: "string",
                 },
               },
-              title: "modalite",
-            },
-            _id: {
-              type: "string",
-              pattern: "^[0-9a-fA-F]{24}$",
             },
           },
         },
