@@ -116,6 +116,39 @@ module.exports = () => {
     })
   );
 
+  router.post(
+    "/etablissements",
+    tryCatch(async (req, res) => {
+      const sanitizedQuery = sanitize(req.query);
+
+      let { query, page, limit } = await Joi.object({
+        query: Joi.string().default("{}"),
+        page: Joi.number().default(1),
+        limit: Joi.number().default(10),
+      }).validateAsync(sanitizedQuery, { abortEarly: false });
+
+      let json = JSON.parse(query);
+
+      // Par défaut, ne retourne que les établissements published
+      if (!sanitizedQuery?.query) {
+        Object.assign(json, defaultFilter);
+      }
+
+      let { find, pagination } = await paginate(Etablissement, json, { page, limit });
+      let stream = oleoduc(
+        find.cursor(),
+        transformIntoJSON({
+          arrayWrapper: {
+            pagination,
+          },
+          arrayPropertyName: "etablissements",
+        })
+      );
+
+      return sendJsonStream(stream, res);
+    })
+  );
+
   router.get(
     "/etablissements.json",
     tryCatch(async (req, res) => {
