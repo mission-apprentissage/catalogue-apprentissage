@@ -27,7 +27,8 @@ const changelog = {
       features: [],
       improvements: [
         `Dans l’onglet “Liste des organismes”, dépublication des établissements qui ne sont associés à aucune formation (ni directement, ni en tant que responsable d’organismes formateurs). Automatisation hebdomadaire de ces règles de dépublication. À l’inverse, la republication est instantanée si une offre de formation réapparaît.`,
-        `Utilisateurs connectés — Gestion des formations retournées en échec par le webservice Parcoursup : intégration du motif d’échec dans les exports csv.``Sur les fiches formation, masquage de l’étiquette non certifié qualité sur le formateur lorsque l’établissement responsable est certifié qualité.`,
+        `Utilisateurs connectés — Gestion des formations retournées en échec par le webservice Parcoursup : intégration du motif d’échec dans les exports csv.`,
+        `Sur les fiches formation, masquage de l’étiquette non certifié qualité sur le formateur lorsque l’établissement responsable est certifié qualité.`,
         `L’affichage du message automatique de maintenance lors de l’exécution des scripts nocturnes n’était pas toujours justifié. Il est maintenant  limité à certaines opérations de réindexation.`,
         `Administrateurs — Mise en place d’un script pour récupérer les données éditées sur le site de production vers la recette (règles de périmètres et UAI).`,
       ],
