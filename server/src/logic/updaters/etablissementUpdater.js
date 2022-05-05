@@ -100,6 +100,7 @@ const createOrUpdateEtablissements = async (rcoFormation) => {
     const tagsToAdd = tags.filter((tag) => !etablissement?.tags?.includes(tag));
     if (tagsToAdd.length > 0) {
       updates.tags = [...etablissement.tags, ...tagsToAdd];
+      updates.published = true;
     }
 
     if (Object.keys(updates).length > 0) {
