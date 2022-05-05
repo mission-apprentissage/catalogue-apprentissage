@@ -18,6 +18,8 @@ const CONVENTION_FILES_DIR = path.join(__dirname, "conventionFilesImporter/asset
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 runScript(async ({ db }) => {
+  const today = new Date();
+
   try {
     logger.info(`Start all jobs`);
 
@@ -37,7 +39,10 @@ runScript(async ({ db }) => {
     await sleep(30000);
 
     // Tags Etablissements
-    await etablissementTags(); // ~ 20 minutes // màj tags etablissements (étiquettes 2022 / 2023...)
+    if (!(today.getDay() % 6)) {
+      // Uniquement le samedi
+      await etablissementTags(); // ~ 1h // màj tags etablissements (étiquettes 2022 / 2023...)
+    }
 
     await enableAlertMessage();
     await rebuildEsIndex("etablissements"); // ~ 5 minutes // maj elastic search (recherche des établissements)
