@@ -18,7 +18,7 @@ const rebuildEsIndex = async (index, skipNotFound = false, filter = {}) => {
     default:
       await rebuildIndex("formation", Formation, { skipNotFound: true, filter: { published: true } });
       await rebuildIndex("parcoursupformations", ParcoursupFormation, { skipNotFound: true });
-      await rebuildIndex("etablissements", Etablissement, { skipNotFound: true });
+      await rebuildIndex("etablissements", Etablissement, { skipNotFound: true, filter: { published: true } });
   }
 };
 

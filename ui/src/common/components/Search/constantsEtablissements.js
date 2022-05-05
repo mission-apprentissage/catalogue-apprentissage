@@ -203,7 +203,7 @@ const columnsDefinition = [
     accessor: "tags",
     width: 200,
     exportable: true,
-    formatter: (tags) => tags?.sort((a, b) => a - b),
+    formatter: (tags) => tags?.sort((a, b) => a - b) ?? "",
   },
 ];
 

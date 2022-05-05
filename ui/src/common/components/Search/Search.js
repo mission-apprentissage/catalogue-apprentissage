@@ -54,7 +54,8 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
     setMode((prevValue) => {
       const newValue = prevValue === "simple" ? "advanced" : "simple";
 
-      let s = new URLSearchParams(location.search);
+      const s = new URLSearchParams(window.location.search);
+
       s.set("defaultMode", newValue);
       history.push(`?${s}`);
 

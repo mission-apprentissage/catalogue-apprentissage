@@ -19,11 +19,11 @@ httpTests(__filename, ({ startServer }) => {
       cfd: "1234567",
     }).save();
 
-    const response = await httpClient.get("/api/v1/entity/formations.ndjson?limit=2");
+    const response = await httpClient.get("/api/v1/entity/formations.json?limit=2");
 
     assert.strictEqual(response.status, 200);
-    let formations = response.data.split("\n").filter((e) => e);
+    const formations = response.data;
     assert.strictEqual(formations.length, 2);
-    assert.deepStrictEqual(JSON.parse(formations[0]).cfd, "123456789");
+    assert.deepStrictEqual(formations[0].cfd, "123456789");
   });
 });

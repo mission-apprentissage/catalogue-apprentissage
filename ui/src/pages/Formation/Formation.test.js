@@ -5,6 +5,8 @@ import Formation from "./Formation";
 import { waitFor } from "@testing-library/react";
 import { AFFELNET_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
 
+jest.setTimeout(20000);
+
 const formation = {
   _id: "5fc6166e712d48a988133449",
   cle_ministere_educatif: "cle_1",
@@ -293,7 +295,7 @@ test("don't display an error when uai is valid", async () => {
 
   const { getByText, queryByText, queryByTestId } = renderWithRouter(<Formation match={{ params: { id: 1 } }} />);
 
-  await waitFor(() => getByText(/UAI du lieu de formation/));
+  await waitFor(() => getByText(/UAI du lieu de formation/), { timeout: 10000 });
 
   const uai = queryByText("0573690B");
   expect(uai).toBeInTheDocument();
@@ -307,7 +309,7 @@ test("display an error when uai is invalid", async () => {
 
   const { getByText, queryByText, queryByTestId } = renderWithRouter(<Formation match={{ params: { id: 2 } }} />);
 
-  await waitFor(() => getByText(/UAI du lieu de formation/));
+  await waitFor(() => getByText(/UAI du lieu de formation/), { timeout: 10000 });
 
   const uai = queryByText("0573690B");
   expect(uai).toBeInTheDocument();

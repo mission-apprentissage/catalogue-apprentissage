@@ -110,7 +110,7 @@ module.exports = async (components, verbose = true) => {
 
   const apiLimiter = rateLimit({
     windowMs: 1000, // 1 second
-    max: 10, // 10 calls per IP per second
+    max: 25, // 25 calls per IP per second
   });
 
   const apiPerimetreLimiter = rateLimit({

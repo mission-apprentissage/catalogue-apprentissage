@@ -25,5 +25,5 @@ export const hasAllAcademiesRight = (auth) => {
 
 export const hasAcademyRight = (auth, num_academie) => {
   const listAcademies = auth?.academie?.split(",")?.map((academieStr) => Number(academieStr));
-  return isUserAdmin(auth) || listAcademies?.includes(-1) || listAcademies?.includes(Number(num_academie));
+  return hasAllAcademiesRight(auth) || listAcademies?.includes(Number(num_academie));
 };
