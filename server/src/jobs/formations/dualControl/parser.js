@@ -4,7 +4,7 @@ const { extractPeriodeArray } = require("../../../common/utils/rcoUtils");
 /** @typedef {import("../../../common/model/schema/formation").Formation} Formation */
 
 /**
- *  @type {{ [key in keyof Formation]: "boolean"|"date"|"periode"|"niveau"|"nullable"|"number"|"array" }}
+ *  @type {{ [key in keyof Formation]: "boolean"|"date"|"periode"|"niveau"|"nullable"|"nullable-boolean"|"number"|"array" }}
  */
 const TYPES_MAP = {
   cfd_outdated: "boolean",
@@ -17,6 +17,7 @@ const TYPES_MAP = {
   distance: "number",
   rncp_eligible_apprentissage: "boolean",
   catalogue_published: "boolean",
+  entierement_a_distance: "nullable-boolean",
   rome_codes: "array",
 };
 
@@ -37,6 +38,20 @@ const parser = (obj, typesMap = TYPES_MAP) => {
 
       const type = typesMap[key];
       switch (type) {
+        case "nullable-boolean":
+          switch (true) {
+            case ["0", "1"].includes(value):
+              parsedValue = Boolean(Number(value));
+              break;
+            case value === "":
+              parsedValue = null;
+              break;
+            default:
+              parsedValue = !!value;
+              break;
+          }
+          break;
+
         case "boolean":
           parsedValue = ["0", "1"].includes(value) ? Boolean(Number(value)) : !!value;
           break;
