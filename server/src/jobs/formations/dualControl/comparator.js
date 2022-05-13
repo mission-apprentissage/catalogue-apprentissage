@@ -79,8 +79,8 @@ const isEqual = (dualControlFormation, formation, key) => {
     case "bcn_mefs_10": {
       const difference =
         diff(
-          dualControlFormation[key].sort((a, b) => Number(a.mef10) - Number(b.mef10)),
-          formation[key].sort((a, b) => Number(a.mef10) - Number(b.mef10))
+          dualControlFormation[key]?.sort((a, b) => Number(a.mef10) - Number(b.mef10)),
+          formation[key]?.sort((a, b) => Number(a.mef10) - Number(b.mef10))
         ) ?? {};
       const keys = Object.keys(difference);
       result = keys.length === 0;
