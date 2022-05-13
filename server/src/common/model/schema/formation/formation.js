@@ -109,7 +109,7 @@ const formationSchema = {
   num_academie: {
     index: true,
     type: String,
-    default: 0,
+    default: "0",
     description: "Numéro de l'académie",
   },
   code_postal: {
@@ -339,7 +339,7 @@ const formationSchema = {
   },
   periode: {
     type: [Date],
-    default: null,
+    default: [],
     description: "Périodes de début de la formation",
   },
   capacite: {
@@ -562,7 +562,7 @@ const formationSchema = {
   ids_action: {
     index: true,
     type: [String],
-    default: null,
+    default: [],
     description: "Identifiant des actions concaténés",
   },
   id_certifinfo: {
@@ -609,7 +609,7 @@ const formationSchema = {
   },
   bcn_mefs_10: {
     type: [mefSchema],
-    default: null,
+    default: [],
     description: "BCN : Codes MEF 10 caractères",
   },
   editedFields: {

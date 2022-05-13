@@ -17,7 +17,19 @@ const disableAdditionalProperties = (node) => {
   }
 };
 
-const applyDateType = (node) => {
+const applyTypes = (node) => {
+  if (node.type === "boolean" && node.default === "null") {
+    node.tsType = "boolean | null";
+  }
+
+  if (node.type === "number" && node.default === "null") {
+    node.tsType = "number | null";
+  }
+
+  if (node.type === "object" && node.default === "null") {
+    delete node.default;
+  }
+
   if (node.format === "date-time") {
     node.tsType = "Date";
   }
@@ -25,12 +37,12 @@ const applyDateType = (node) => {
   if (node.properties) {
     for (const key of Object.keys(node.properties)) {
       const field = node.properties[key];
-      applyDateType(field);
+      applyTypes(field);
     }
   }
 
   if (node.items) {
-    applyDateType(node.items);
+    applyTypes(node.items);
   }
 };
 
@@ -55,7 +67,7 @@ const prepareJsonSchema = (jsonSchema) => {
   const schema = { ...jsonSchema };
 
   disableAdditionalProperties(schema);
-  applyDateType(schema);
+  applyTypes(schema);
   applyIdType(schema);
 
   return schema;

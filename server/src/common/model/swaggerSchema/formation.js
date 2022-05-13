@@ -92,7 +92,7 @@ module.exports = {
       },
       num_academie: {
         type: "string",
-        default: 0,
+        default: "0",
         description: "Numéro de l'académie",
       },
       code_postal: {
@@ -339,7 +339,7 @@ module.exports = {
           type: "string",
           format: "date-time",
         },
-        default: "null",
+        default: [],
         description: "Périodes de début de la formation",
       },
       capacite: {
@@ -569,7 +569,7 @@ module.exports = {
         items: {
           type: "string",
         },
-        default: "null",
+        default: [],
         description: "Identifiant des actions concaténés",
       },
       id_certifinfo: {
@@ -639,7 +639,7 @@ module.exports = {
             },
           },
         },
-        default: "null",
+        default: [],
         description: "BCN : Codes MEF 10 caractères",
       },
       editedFields: {
@@ -794,7 +794,7 @@ module.exports = {
       },
       etablissement_gestionnaire_num_academie: {
         type: "string",
-        default: 0,
+        default: "0",
         description: "Numéro de l'académie gestionnaire",
       },
       etablissement_gestionnaire_siren: {
@@ -909,7 +909,7 @@ module.exports = {
       },
       etablissement_formateur_num_academie: {
         type: "string",
-        default: 0,
+        default: "0",
         description: "Numéro de l'académie formateur",
       },
       etablissement_formateur_siren: {
