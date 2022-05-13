@@ -1,4 +1,5 @@
 // @ts-check
+const { DateTime } = require("luxon");
 const { extractPeriodeArray } = require("../../../common/utils/rcoUtils");
 
 /** @typedef {import("../../../common/model/schema/formation").Formation} Formation */
@@ -57,7 +58,7 @@ const parser = (obj, typesMap = TYPES_MAP) => {
           break;
 
         case "date":
-          parsedValue = value ? new Date(value) : null;
+          parsedValue = value ? DateTime.fromFormat(value, "yyyy-MM-dd", { zone: "Europe/Paris" }).toJSDate() : null;
           break;
 
         case "periode": {
