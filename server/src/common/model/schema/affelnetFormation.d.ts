@@ -82,11 +82,11 @@ export interface AffelnetFormation {
   /**
    * l'établissement propose un internat
    */
-  internat?: boolean & string;
+  internat?: boolean | null;
   /**
    * L'établissement fait partie du réseau ambition réussite
    */
-  reseau_ambition_reussite?: boolean & string;
+  reseau_ambition_reussite?: boolean | null;
   /**
    * libellé mnémonique de la formation
    */
@@ -114,19 +114,19 @@ export interface AffelnetFormation {
   /**
    * saisie possible depuis la 3ème année de collège
    */
-  saisie_possible_3eme?: boolean & string;
+  saisie_possible_3eme?: boolean | null;
   /**
    * saisie reservé au filière SEGPA
    */
-  saisie_reservee_segpa?: boolean & string;
+  saisie_reservee_segpa?: boolean | null;
   /**
    * saisie possible depuis la 2nde (1ère année de lycée)
    */
-  saisie_possible_2nde?: boolean & string;
+  saisie_possible_2nde?: boolean | null;
   /**
    * formation affiché dans le TSA
    */
-  visible_tsa?: boolean & string;
+  visible_tsa?: boolean | null;
   /**
    * libellé affiché dans le sa
    */
@@ -150,11 +150,11 @@ export interface AffelnetFormation {
   /**
    * campus métier
    */
-  campus_metier?: boolean & string;
+  campus_metier?: boolean | null;
   /**
    * condition particulière
    */
-  modalites?: boolean & string;
+  modalites?: boolean | null;
   /**
    * coordonnées latitude de l'établissement
    */

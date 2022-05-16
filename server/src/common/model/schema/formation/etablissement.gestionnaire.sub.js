@@ -99,7 +99,7 @@ const etablissementGestionnaireInfo = {
   },
   etablissement_gestionnaire_num_academie: {
     type: String,
-    default: 0,
+    default: "0",
     description: "Numéro de l'académie gestionnaire",
   },
   etablissement_gestionnaire_siren: {

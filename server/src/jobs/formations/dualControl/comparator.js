@@ -73,6 +73,15 @@ const FIELDS_TO_COMPARE = [
   "rncp_details",
 ];
 
+/**
+ * Check equality between between one property of two objects
+ *
+ * @param {Formation} dualControlFormation
+ * @param {Formation} formation
+ * @param {keyof Formation} key
+ *
+ * @returns {boolean}
+ */
 const isEqual = (dualControlFormation, formation, key) => {
   let result = false;
   switch (key) {
@@ -102,6 +111,14 @@ const isEqual = (dualControlFormation, formation, key) => {
   return result;
 };
 
+/**
+ * Compare all dualcontrol formations with formations, given the argument list of properties
+ *
+ * @param {number} date in ms
+ * @param {Array<keyof Formation>} fieldsToCompare
+ *
+ * @returns {Promise<{date: number; totalFormation: number; totalDualControlFormation: number; totalNotFound: number; fields?: { [k: keyof Formation]: number; };}>}
+ */
 const compare = async (date = Date.now(), fieldsToCompare = FIELDS_TO_COMPARE) => {
   const results = {
     date,
@@ -115,12 +132,18 @@ const compare = async (date = Date.now(), fieldsToCompare = FIELDS_TO_COMPARE) =
     return acc;
   }, {});
 
+  /**
+   * @type {import("mongoose").QueryCursor<Formation>}
+   */
   const dualCursor = DualControlFormation.find({})
     .select(["cle_ministere_educatif", ...fieldsToCompare])
     .lean()
     .cursor();
 
   for await (const dualControlFormation of dualCursor) {
+    /**
+     * @type {Formation}
+     */
     const formation = await Formation.findOne({ cle_ministere_educatif: dualControlFormation.cle_ministere_educatif })
       .select(fieldsToCompare)
       .lean();
