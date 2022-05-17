@@ -505,6 +505,7 @@ const queryBuilderField = [
   { text: "Niveau formation diplome", value: "niveau_formation_diplome.keyword" },
   { text: "MEF 10", value: "bcn_mefs_10.mef10.keyword" },
   { text: "Groupe Spécialité", value: "rncp_details.nsf_code.keyword" },
+  { text: "Certificateur", value: "rncp_details.certificateurs.certificateur.keyword" },
 ];
 
 const facetDefinition = () => [
