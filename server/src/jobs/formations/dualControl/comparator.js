@@ -103,6 +103,13 @@ const isEqual = (dualControlFormation, formation, key) => {
       break;
     }
 
+    case "lieu_formation_adresse":
+    case "lieu_formation_adresse_computed":
+    case "etablissement_formateur_adresse": {
+      result = `${dualControlFormation[key]}`.toLowerCase() === `${formation[key]}`.toLowerCase();
+      break;
+    }
+
     default:
       result = dualControlFormation[key] === formation[key];
       break;
