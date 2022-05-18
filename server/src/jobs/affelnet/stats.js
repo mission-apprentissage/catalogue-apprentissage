@@ -29,9 +29,9 @@ const stats = async () => {
       ...organismes_gestionnaires_avec_formations_publiees,
       ...organismes_formateurs_avec_formations_publiees,
     ]),
-  ];
+  ].length;
 
-  console.log(`Organismes avec formations publiées : ${organismes_avec_formations_publiees.length}`);
+  console.log(`Organismes avec formations publiées : ${organismes_avec_formations_publiees}`);
 
   const organismes_gestionnaires_avec_formations_integrables = await Formation.distinct(
     "etablissement_gestionnaire_id",
@@ -47,13 +47,12 @@ const stats = async () => {
       ...organismes_gestionnaires_avec_formations_integrables,
       ...organismes_formateurs_avec_formations_integrables,
     ]),
-  ];
+  ].length;
 
-  console.log(`Organismes avec formations intégrables : ${organismes_avec_formations_integrables.length}`);
+  console.log(`Organismes avec formations intégrables : ${organismes_avec_formations_integrables}`);
 
-  ConsoleStat.create({
-    perimetre: "affelnet",
-    date: new Date(),
+  await ConsoleStat.create({
+    plateforme: "affelnet",
     formations_publiees,
     formations_integrables,
     organismes_avec_formations_publiees,

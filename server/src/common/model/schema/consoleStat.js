@@ -1,5 +1,5 @@
 const consoleStatSchema = {
-  perimetre: {
+  plateforme: {
     type: String,
     enum: ["affelnet", "parcoursup"],
     description: "Plateforme de destination",

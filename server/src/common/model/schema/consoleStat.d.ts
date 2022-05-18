@@ -10,7 +10,7 @@ export interface ConsoleStat {
   /**
    * Plateforme de destination
    */
-  perimetre: "affelnet" | "parcoursup";
+  plateforme: "affelnet" | "parcoursup";
   /**
    * Date de la statistique
    */
