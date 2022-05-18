@@ -14,6 +14,7 @@ describe(__filename, () => {
     // insert sample data in DB
     await Formation.create({
       cle_ministere_educatif: "1",
+      lieu_formation_adresse: "20 avenue de SÉGUR",
       cfd: "1",
       rncp_code: "1",
       published: true,
@@ -26,6 +27,10 @@ describe(__filename, () => {
         new Date("2023-02-01T00:00:00.000Z"),
         new Date("2023-03-01T00:00:00.000Z"),
         new Date("2023-04-01T00:00:00.000Z"),
+      ],
+      bcn_mefs_10: [
+        { mef10: "3113121221", modalite: { duree: "2", annee: "1" } },
+        { mef10: "3113121222", modalite: { duree: "2", annee: "2" } },
       ],
     });
     await Formation.create({
@@ -49,6 +54,7 @@ describe(__filename, () => {
 
     await DualControlFormation.create({
       cle_ministere_educatif: "1",
+      lieu_formation_adresse: "20 AVENUE de Ségur",
       cfd: "1",
       rncp_code: "111",
       periode: [
@@ -60,6 +66,10 @@ describe(__filename, () => {
         new Date("2023-02-01T00:00:00.000Z"),
         new Date("2023-03-01T00:00:00.000Z"),
         new Date("2023-04-01T00:00:00.000Z"),
+      ],
+      bcn_mefs_10: [
+        { mef10: "3113121222", modalite: { duree: "2", annee: "2" } },
+        { mef10: "3113121221", modalite: { duree: "2", annee: "1" } },
       ],
     });
     await DualControlFormation.create({
@@ -147,6 +157,62 @@ describe(__filename, () => {
       totalNotFound: 1,
       fields: {
         periode: 0,
+      },
+    });
+  });
+
+  it("should match array of mefs whatever the order", async () => {
+    const date = Date.now();
+    const result = await compare(date, ["bcn_mefs_10"]);
+
+    assert.deepStrictEqual(result, {
+      date,
+      totalFormation: 4,
+      totalDualControlFormation: 3,
+      totalNotFound: 1,
+      fields: {
+        bcn_mefs_10: 0,
+      },
+    });
+
+    const countReports = await DualControlReport.countDocuments({});
+    assert.strictEqual(countReports, 1);
+    const report = await DualControlReport.findOne({ date }, { _id: 0, __v: 0 }).lean();
+    assert.deepStrictEqual(report, {
+      date: new Date(date),
+      totalFormation: 4,
+      totalDualControlFormation: 3,
+      totalNotFound: 1,
+      fields: {
+        bcn_mefs_10: 0,
+      },
+    });
+  });
+
+  it("should match address whatever the case", async () => {
+    const date = Date.now();
+    const result = await compare(date, ["lieu_formation_adresse"]);
+
+    assert.deepStrictEqual(result, {
+      date,
+      totalFormation: 4,
+      totalDualControlFormation: 3,
+      totalNotFound: 1,
+      fields: {
+        lieu_formation_adresse: 0,
+      },
+    });
+
+    const countReports = await DualControlReport.countDocuments({});
+    assert.strictEqual(countReports, 1);
+    const report = await DualControlReport.findOne({ date }, { _id: 0, __v: 0 }).lean();
+    assert.deepStrictEqual(report, {
+      date: new Date(date),
+      totalFormation: 4,
+      totalDualControlFormation: 3,
+      totalNotFound: 1,
+      fields: {
+        lieu_formation_adresse: 0,
       },
     });
   });

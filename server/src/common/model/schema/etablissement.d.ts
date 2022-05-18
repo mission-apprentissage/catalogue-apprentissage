@@ -168,7 +168,7 @@ export interface Etablissement {
   /**
    * L'UAI de l'établissement est il valide ?
    */
-  uai_valide?: boolean & string;
+  uai_valide?: boolean | null;
   /**
    * UAIs potentiels de l'établissement
    */
