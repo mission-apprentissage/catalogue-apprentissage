@@ -3,38 +3,61 @@ const { runScript } = require("../scriptWrapper");
 const { PARCOURSUP_STATUS } = require("../../constants/status");
 const { ConsoleStat, Formation } = require("../../common/model");
 
-// TODO :
-// - Evolution des organismes
-//   > Organismes ayant au moins une formation publiée
-//   > Organismes ayant au moins une formation intégrable
+const stats = async () => {
+  console.log(`--- Calcul des statistiques Parcoursup ---`);
 
-// - Evolution des formations
-//   > Formations publiées
-//   > Formations intégrables
-
-const stats = () => {
-  const formations_publiees = Formation.countDocuments({ parcoursup_statut: PARCOURSUP_STATUS.PUBLIE });
-  console.log(formations_publiees);
-  const formations_integrables = Formation.countDocuments({
+  const filterPublie = { parcoursup_statut: PARCOURSUP_STATUS.PUBLIE };
+  const filterIntegrable = {
     parcoursup_statut: { $ne: PARCOURSUP_STATUS.HORS_PERIMETRE },
-  });
-  console.log(formations_integrables);
+  };
+  const formations_publiees = await Formation.countDocuments(filterPublie);
+  console.log(`Formations publiées : ${formations_publiees}`);
+  const formations_integrables = await Formation.countDocuments(filterIntegrable);
+  console.log(`Formations intégrables : ${formations_integrables}`);
 
-  const organismes_avec_formations_publiees = Formation.distinct("etablissement_gestionnaire_id", {
-    parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
-  });
+  const organismes_gestionnaires_avec_formations_publiees = await Formation.distinct(
+    "etablissement_gestionnaire_id",
+    filterPublie
+  );
+  const organismes_formateurs_avec_formations_publiees = await Formation.distinct(
+    "etablissement_formateur_id",
+    filterPublie
+  );
 
-  console.log(organismes_avec_formations_publiees);
-  // const organismes_avec_formations_integrables =
-  // console.log(organismes_avec_formations_integrables);
+  const organismes_avec_formations_publiees = [
+    ...new Set([
+      ...organismes_gestionnaires_avec_formations_publiees,
+      ...organismes_formateurs_avec_formations_publiees,
+    ]),
+  ];
+
+  console.log(`Organismes avec formations publiées : ${organismes_avec_formations_publiees.length}`);
+
+  const organismes_gestionnaires_avec_formations_integrables = await Formation.distinct(
+    "etablissement_gestionnaire_id",
+    filterIntegrable
+  );
+  const organismes_formateurs_avec_formations_integrables = await Formation.distinct(
+    "etablissement_formateur_id",
+    filterIntegrable
+  );
+
+  const organismes_avec_formations_integrables = [
+    ...new Set([
+      ...organismes_gestionnaires_avec_formations_integrables,
+      ...organismes_formateurs_avec_formations_integrables,
+    ]),
+  ];
+
+  console.log(`Organismes avec formations intégrables : ${organismes_avec_formations_integrables.length}`);
 
   ConsoleStat.create({
     perimetre: "parcoursup",
     date: new Date(),
     formations_publiees,
     formations_integrables,
-    // organismes_avec_formations_publiees,
-    // organismes_avec_formations_integrables,
+    organismes_avec_formations_publiees,
+    organismes_avec_formations_integrables,
   });
 };
 
