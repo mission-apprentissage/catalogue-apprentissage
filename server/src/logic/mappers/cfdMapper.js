@@ -54,6 +54,23 @@ const getCfdSortie = (cfd) => {
 };
 
 /**
+ * Get MEF_STAT_11 list from a CFD
+ *
+ * @param {string} cfd
+ * @param {{[key:string]: string[]}} [mefs11Map={}]
+ * @returns {Promise<string[]>}
+ */
+const getMefs11 = async (cfd, mefs11Map = {}) => {
+  if (mefs11Map[cfd]) {
+    return mefs11Map[cfd];
+  }
+
+  const cfdInfo = await getCfdInfo(cfd, { onisep: false });
+  mefs11Map[cfd] = cfdInfo?.result?.mefs?.mefs11 ?? [];
+  return mefs11Map[cfd];
+};
+
+/**
  * Get cfd data
  *
  * @param {string|null} [cfd=null]
@@ -104,7 +121,7 @@ const cfdMapper = async (cfd = null, options = { onisep: true }) => {
 
     const rome_codes = (romes || []).map(({ rome }) => rome);
 
-    const { modalite = { duree: null, annee: null }, mefs10 = [] } = mefs;
+    const { modalite = { duree: null, annee: null }, mefs10 = [], mefs11 = [] } = mefs;
 
     const {
       url: onisep_url = null,
@@ -118,20 +135,32 @@ const cfdMapper = async (cfd = null, options = { onisep: true }) => {
     const cfd_entree = getCfdEntree(result.cfd);
     const cfd_sortie = getCfdSortie(result.cfd);
 
+    const mefs11Map = {
+      [result.cfd]: mefs11,
+    };
+
+    const mefs11_entree = await getMefs11(cfd_entree, mefs11Map);
+    const mefs11_sortie = await getMefs11(cfd_sortie, mefs11Map);
+
     return {
       result: {
         cfd: result.cfd,
+        cfd_entree,
+        cfd_sortie,
+
         cfd_specialite: result.specialite,
         cfd_outdated: result.cfd_outdated,
         cfd_date_fermeture: result?.date_fermeture && new Date(result.date_fermeture),
-        cfd_entree,
-        cfd_sortie,
+
         niveau: result.niveau,
         intitule_long: result.intitule_long,
         intitule_court: result.intitule_court,
         diplome: result.diplome,
 
         bcn_mefs_10: mefs10,
+        bcn_mefs_stat_11: mefs11,
+        bcn_mefs_stat_11_entree: mefs11_entree,
+        bcn_mefs_stat_11_sortie: mefs11_sortie,
 
         duree: modalite.duree,
         annee: modalite.annee,

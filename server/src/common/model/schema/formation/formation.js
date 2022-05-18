@@ -618,6 +618,21 @@ const formationSchema = {
     default: [],
     description: "BCN : Codes MEF 10 caractères",
   },
+  bcn_mefs_stat_11: {
+    type: [String],
+    default: [],
+    description: "BCN : Codes MEF_STAT_11",
+  },
+  bcn_mefs_stat_11_entree: {
+    type: [String],
+    default: [],
+    description: "BCN : Codes MEF_STAT_11 d'entrée (année 1 de l'apprentissage)",
+  },
+  bcn_mefs_stat_11_sortie: {
+    type: [String],
+    default: [],
+    description: "BCN : Codes MEF_STAT_11 de sortie (dernière année de l'apprentissage)",
+  },
   editedFields: {
     type: Object,
     default: null,
