@@ -34,6 +34,10 @@ export interface Formation {
    */
   cfd_entree?: string;
   /**
+   * Code formation diplôme de sortie (dernière année de l'apprentissage)
+   */
+  cfd_sortie?: string;
+  /**
    * Tableau de Code MEF 10 caractères et modalités (filtrés pour Affelnet si applicable)
    */
   affelnet_mefs_10?: ItemOfAffelnetMefs_10[];

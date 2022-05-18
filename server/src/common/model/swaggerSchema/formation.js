@@ -33,6 +33,11 @@ module.exports = {
         default: "null",
         description: "Code formation diplôme d'entrée (année 1 de l'apprentissage)",
       },
+      cfd_sortie: {
+        type: "string",
+        default: "null",
+        description: "Code formation diplôme de sortie (dernière année de l'apprentissage)",
+      },
       affelnet_mefs_10: {
         type: "array",
         items: {

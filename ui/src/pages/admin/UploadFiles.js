@@ -42,6 +42,10 @@ const DOCUMENTS = [
     filename: "mefs-parcoursup.csv",
     label: "Liste de MEFs fiabilisés sur Parcoursup",
   },
+  {
+    filename: "cfd-entree-sortie.csv",
+    label: "Correspondance de CFD avec CFD d'entrée et de sortie de parcours",
+  },
 ];
 
 export default () => {

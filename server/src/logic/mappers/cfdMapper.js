@@ -1,21 +1,65 @@
+// @ts-check
 const logger = require("../../common/logger");
 const { getCfdInfo } = require("@mission-apprentissage/tco-service-node");
 const { DateTime } = require("luxon");
+const csvToJson = require("convert-csv-to-json");
 
-const cfdEntreeMap = {
-  32033422: ["32033423", "32033424", "32033425"],
-  32022316: ["32022317", "32022318"],
-  32032209: ["32032210", "32032211"],
-  32033606: ["32033603", "32033604", "32033605"],
-  32032612: ["32032613", "32032614"],
-  32022310: ["32022311", "32022312"],
+const FILE_PATH = "/data/uploads/cfd-entree-sortie.csv";
+
+let cfdEntreeSortieMap = null;
+/**
+ * Compute a map from an uploaded CSV file
+ *
+ * @param {Array<{cfd: string, cfd_entree: string, cfd_sortie: string}>} [jsonData=null]
+ * @returns {{[key: string]: {cfd_entree: string, cfd_sortie: string}}}
+ */
+const loadCfdEntreeSortieMap = (jsonData = null) => {
+  try {
+    const lines = jsonData ?? csvToJson.getJsonFromCsv(FILE_PATH);
+    cfdEntreeSortieMap = lines.reduce((acc, { cfd, cfd_entree, cfd_sortie }) => {
+      acc[cfd.trim()] = { cfd_entree: cfd_entree.trim(), cfd_sortie: cfd_sortie.trim() };
+      return acc;
+    }, {});
+  } catch (e) {
+    console.error(e);
+    cfdEntreeSortieMap = {};
+  }
+  return cfdEntreeSortieMap;
 };
 
+/**
+ * Retrieve cfd entree from cfd (it may be the same value)
+ *
+ * @param {string} cfd
+ * @returns {string}
+ */
 const getCfdEntree = (cfd) => {
-  const entry = Object.entries(cfdEntreeMap).find(([, values]) => values.includes(cfd));
-  return entry ? entry[0] : cfd;
+  if (!cfdEntreeSortieMap) {
+    loadCfdEntreeSortieMap();
+  }
+  return cfdEntreeSortieMap[cfd]?.cfd_entree ?? cfd;
 };
 
+/**
+ * Retrieve cfd sortie from cfd (it may be the same value)
+ *
+ * @param {string} cfd
+ * @returns {string}
+ */
+const getCfdSortie = (cfd) => {
+  if (!cfdEntreeSortieMap) {
+    loadCfdEntreeSortieMap();
+  }
+  return cfdEntreeSortieMap[cfd]?.cfd_sortie ?? cfd;
+};
+
+/**
+ * Get cfd data
+ *
+ * @param {string|null} [cfd=null]
+ * @param {{onisep: boolean}} options
+ * @returns
+ */
 const cfdMapper = async (cfd = null, options = { onisep: true }) => {
   try {
     if (!cfd) {
@@ -72,6 +116,7 @@ const cfdMapper = async (cfd = null, options = { onisep: true }) => {
     } = onisep;
 
     const cfd_entree = getCfdEntree(result.cfd);
+    const cfd_sortie = getCfdSortie(result.cfd);
 
     return {
       result: {
@@ -80,6 +125,7 @@ const cfdMapper = async (cfd = null, options = { onisep: true }) => {
         cfd_outdated: result.cfd_outdated,
         cfd_date_fermeture: result?.date_fermeture && new Date(result.date_fermeture),
         cfd_entree,
+        cfd_sortie,
         niveau: result.niveau,
         intitule_long: result.intitule_long,
         intitule_court: result.intitule_court,
@@ -139,4 +185,4 @@ const cfdMapper = async (cfd = null, options = { onisep: true }) => {
   }
 };
 
-module.exports = { cfdMapper, getCfdEntree };
+module.exports = { cfdMapper, getCfdEntree, getCfdSortie, loadCfdEntreeSortieMap };
