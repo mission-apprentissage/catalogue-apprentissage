@@ -3,6 +3,7 @@ const { psCoverage } = require("./coverage");
 const parcoursupExport = require("./export");
 const { runScript } = require("../scriptWrapper");
 const logger = require("../../common/logger");
+const { stats } = require("./stats");
 
 const parcoursupJobs = async () => {
   try {
@@ -14,6 +15,8 @@ const parcoursupJobs = async () => {
     if (process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_EXPORT_ENABLED === "true") {
       await parcoursupExport.run();
     }
+
+    await stats();
 
     logger.info(`End Parcoursup jobs`);
   } catch (error) {

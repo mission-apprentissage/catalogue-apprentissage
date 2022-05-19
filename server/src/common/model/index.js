@@ -41,4 +41,5 @@ module.exports = {
   Consumption: createModel("consumption", schema.consumptionSchema),
   DualControlFormation: createModel("dualcontrolformation", schema.formationSchema),
   DualControlReport: createModel("dualcontrolreport", schema.dualControlReportSchema),
+  ConsoleStat: createModel("consolestat", schema.consoleStatSchema),
 };

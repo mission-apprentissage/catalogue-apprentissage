@@ -50,8 +50,8 @@ runScript(async ({ db }) => {
     Etablissement.startAllMongoosaticHooks();
 
     // Parcoursup & Affelnet
-    await parcoursupJobs(); // ~ 10 minutes  // maj des rapprochements & étiquettes périmètre
-    await affelnetJobs(); // ~ 15 minutes  // maj des rapprochements & étiquettes périmètre
+    await parcoursupJobs(); // ~ 10 minutes  // maj des rapprochements & étiquettes périmètre & calcul stats
+    await affelnetJobs(); // ~ 15 minutes  // maj des rapprochements & étiquettes périmètre & calcul stats
     await sleep(30000);
 
     await checkUai(); // ~ 1 minutes //maj de la validité des UAIs pour établissements et formations
