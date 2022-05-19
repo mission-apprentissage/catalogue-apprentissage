@@ -13,6 +13,7 @@ const reglePerimetreSchema = require("./reglePerimetre");
 const consumptionSchema = require("./consumption");
 const dualControlReportSchema = require("./dualControlReport");
 const consoleStatSchema = require("./consoleStat");
+const previousSeasonFormationSchema = require("./previousSeasonFormation");
 
 module.exports = {
   logSchema,
@@ -30,4 +31,5 @@ module.exports = {
   consumptionSchema,
   dualControlReportSchema,
   consoleStatSchema,
+  previousSeasonFormationSchema,
 };
