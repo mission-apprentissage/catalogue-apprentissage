@@ -6,19 +6,6 @@
  */
 const { Types } = require("mongoose");
 
-/**
- * Détails RNCP (bloc de compétences etc..)
- */
-export type RncpDetails = string;
-/**
- * Cause du rejet de publication
- */
-export type Rejection = string;
-/**
- * Données pour étude France Compétence
- */
-export type FranceCompetenceInfos = string;
-
 export interface Formation {
   /**
    * Clé unique de la formation (pour envoi aux ministères éducatifs)
@@ -31,7 +18,9 @@ export interface Formation {
   /**
    * Lettre spécialité du code cfd
    */
-  cfd_specialite?: string;
+  cfd_specialite?: {
+    [k: string]: unknown;
+  };
   /**
    * BCN : cfd périmé (fermeture avant le 31 août de l'année courante)
    */
@@ -59,7 +48,7 @@ export interface Formation {
   /**
    * Numéro de l'académie
    */
-  num_academie?: number & string;
+  num_academie?: string;
   /**
    * Code postal
    */
@@ -91,7 +80,7 @@ export interface Formation {
   /**
    * L'UAI du lieu de formation est il valide ?
    */
-  uai_formation_valide?: boolean & string;
+  uai_formation_valide?: boolean | null;
   /**
    * Nom de la formation déclaratif
    */
@@ -160,7 +149,7 @@ export interface Formation {
   /**
    * Périodes de début de la formation
    */
-  periode?: string & Date[];
+  periode?: Date[];
   /**
    * Capacité d'accueil
    */
@@ -172,7 +161,7 @@ export interface Formation {
   /**
    * Durée incohérente avec les codes mefs
    */
-  duree_incoherente?: boolean & string;
+  duree_incoherente?: boolean | null;
   /**
    * Année de la formation (cursus)
    */
@@ -180,7 +169,7 @@ export interface Formation {
   /**
    * Année incohérente avec les codes mefs
    */
-  annee_incoherente?: boolean & string;
+  annee_incoherente?: boolean | null;
   /**
    * Statut parcoursup
    */
@@ -284,7 +273,7 @@ export interface Formation {
   /**
    * Distance entre les coordonnées transmises et déduites à partir de l'adresse
    */
-  distance?: number & string;
+  distance?: number | null;
   /**
    * Adresse du lieu de formation
    */
@@ -312,7 +301,7 @@ export interface Formation {
   /**
    * Identifiant des actions concaténés
    */
-  ids_action?: string & string[];
+  ids_action?: string[];
   /**
    * Identifiant certifInfo (unicité de la certification)
    */
@@ -348,11 +337,13 @@ export interface Formation {
   /**
    * BCN : Codes MEF 10 caractères
    */
-  bcn_mefs_10?: string & ItemOfBcnMefs_10[];
+  bcn_mefs_10?: ItemOfBcnMefs_10[];
   /**
    * Champs édités par un utilisateur
    */
-  editedFields?: string;
+  editedFields?: {
+    [k: string]: unknown;
+  };
   /**
    * Parcoursup : raison de dépublication
    */
@@ -360,11 +351,11 @@ export interface Formation {
   /**
    * distance entre le Lieu de formation et l'établissement formateur
    */
-  distance_lieu_formation_etablissement_formateur?: number & string;
+  distance_lieu_formation_etablissement_formateur?: number | null;
   /**
    * Niveau d'entrée de l'apprenti minimum obligatoire pour cette formation
    */
-  niveau_entree_obligatoire?: number & string;
+  niveau_entree_obligatoire?: number | null;
   /**
    * Renseigné si la formation peut être suivie entièrement à distance
    */
@@ -453,7 +444,7 @@ export interface Formation {
   /**
    * Numéro de l'académie gestionnaire
    */
-  etablissement_gestionnaire_num_academie?: number & string;
+  etablissement_gestionnaire_num_academie?: string;
   /**
    * Numéro siren gestionnaire
    */
@@ -545,7 +536,7 @@ export interface Formation {
   /**
    * Numéro de l'académie formateur
    */
-  etablissement_formateur_num_academie?: number & string;
+  etablissement_formateur_num_academie?: string;
   /**
    * Numéro siren formateur
    */
@@ -596,6 +587,114 @@ export interface Modalite1 {
   duree?: string;
   annee?: string;
 }
+/**
+ * Détails RNCP (bloc de compétences etc..)
+ */
+export interface RncpDetails {
+  /**
+   * Date de validité de la fiche
+   */
+  date_fin_validite_enregistrement?: Date;
+  /**
+   * fiche active ou non
+   */
+  active_inactive?: string | null;
+  /**
+   * état fiche ex: Publiée
+   */
+  etat_fiche_rncp?: string | null;
+  /**
+   * Niveau européen ex: niveauu5
+   */
+  niveau_europe?: string | null;
+  /**
+   * Code type de certification (ex: DE)
+   */
+  code_type_certif?: string | null;
+  /**
+   * Type de certification (ex: diplôme d'état)
+   */
+  type_certif?: string | null;
+  /**
+   * Code rncp de l'ancienne fiche
+   */
+  ancienne_fiche?: string[] | null;
+  /**
+   * Code rncp de la nouvelle fiche
+   */
+  nouvelle_fiche?: string[] | null;
+  /**
+   * Demande en cours de d'habilitation
+   */
+  demande?: number;
+  /**
+   * Certificateurs
+   */
+  certificateurs?: {
+    [k: string]: unknown;
+  }[];
+  /**
+   * Code NSF
+   */
+  nsf_code?: string | null;
+  /**
+   * Libellé NSF
+   */
+  nsf_libelle?: string | null;
+  /**
+   * Romes
+   */
+  romes?: {
+    [k: string]: unknown;
+  }[];
+  /**
+   * Blocs de compétences
+   */
+  blocs_competences?: {
+    [k: string]: unknown;
+  }[];
+  /**
+   * Voix d'accès
+   */
+  voix_acces?: {
+    [k: string]: unknown;
+  }[];
+  /**
+   * Partenaires
+   */
+  partenaires?: {
+    [k: string]: unknown;
+  }[];
+  /**
+   * Code rncp périmé (date fin enregistrement avant le 31 aout de l'année courante)
+   */
+  rncp_outdated?: boolean;
+}
+/**
+ * Cause du rejet de publication
+ */
+export interface Rejection {
+  /**
+   * L'erreur telle que retournée par la plateforme
+   */
+  error?: string | null;
+  /**
+   * La description textuelle de l'erreur retournée
+   */
+  description?: string | null;
+  /**
+   * L'action à mener pour résoudre le rejet.
+   */
+  action?: string | null;
+  /**
+   * Adresse email de la personne ayant pris en charge le rejet de publication
+   */
+  handled_by?: string | null;
+  /**
+   * Date à laquelle le rejet de publication a été pris en charge
+   */
+  handled_date?: Date;
+}
 export interface ItemOfBcnMefs_10 {
   mef10?: string;
   modalite?: Modalite2;
@@ -603,4 +702,15 @@ export interface ItemOfBcnMefs_10 {
 export interface Modalite2 {
   duree?: string;
   annee?: string;
+}
+/**
+ * Données pour étude France Compétence
+ */
+export interface FranceCompetenceInfos {
+  fc_is_catalog_general?: boolean;
+  fc_is_habilite_rncp?: boolean;
+  fc_is_certificateur?: boolean;
+  fc_is_certificateur_siren?: boolean;
+  fc_is_partenaire?: boolean;
+  fc_has_partenaire?: boolean;
 }
