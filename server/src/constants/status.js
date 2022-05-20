@@ -1,7 +1,7 @@
 // @ts-check
-/** @typedef {import("./status").CommonStatus} CommonStatus*/
-/** @typedef {import("./status").AffelnetStatus} AffelnetStatus*/
-/** @typedef {import("./status").ParcoursupStatus} ParcoursupStatus*/
+/** @typedef {"hors périmètre" | "publié" | "non publié" | "à publier" | "en attente de publication"} CommonStatus */
+/** @typedef {CommonStatus | "à publier (vérifier accès direct postbac)" | "à publier (soumis à validation Recteur)" | "à publier (sous condition habilitation)" | "rejet de publication"} ParcoursupStatus */
+/** @typedef {CommonStatus|  "à publier (soumis à validation)"} AffelnetStatus */
 
 const COMMON_STATUS = {
   HORS_PERIMETRE: /** @type {CommonStatus} */ ("hors périmètre"),

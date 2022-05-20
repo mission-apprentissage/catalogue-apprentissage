@@ -14,6 +14,7 @@ const consumptionSchema = require("./consumption");
 const dualControlReportSchema = require("./dualControlReport");
 const consoleStatSchema = require("./consoleStat");
 const previousSeasonFormationSchema = require("./previousSeasonFormation");
+const previousSeasonFormationStatSchema = require("./previousSeasonFormationStat");
 
 module.exports = {
   logSchema,
@@ -32,4 +33,5 @@ module.exports = {
   dualControlReportSchema,
   consoleStatSchema,
   previousSeasonFormationSchema,
+  previousSeasonFormationStatSchema,
 };
