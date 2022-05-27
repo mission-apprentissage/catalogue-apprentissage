@@ -1,5 +1,6 @@
 // @ts-check
-const { diff } = require("deep-object-diff");
+const { diff: objectDiff } = require("deep-object-diff");
+const { diff: arrayDiff } = require("../../../common/utils/arrayUtils");
 const { DualControlFormation, DualControlReport } = require("../../../common/model/index");
 const { Formation } = require("../../../common/model/index");
 
@@ -87,7 +88,7 @@ const isEqual = (dualControlFormation, formation, key) => {
   switch (key) {
     case "bcn_mefs_10": {
       const difference =
-        diff(
+        objectDiff(
           dualControlFormation[key]?.sort((a, b) => Number(a.mef10) - Number(b.mef10)),
           formation[key]?.sort((a, b) => Number(a.mef10) - Number(b.mef10))
         ) ?? {};
@@ -97,7 +98,7 @@ const isEqual = (dualControlFormation, formation, key) => {
     }
     case "rncp_details":
     case "periode": {
-      const difference = diff(dualControlFormation[key], formation[key]) ?? {};
+      const difference = objectDiff(dualControlFormation[key], formation[key]) ?? {};
       const keys = Object.keys(difference);
       result = keys.length === 0;
       break;
@@ -107,6 +108,11 @@ const isEqual = (dualControlFormation, formation, key) => {
     case "lieu_formation_adresse_computed":
     case "etablissement_formateur_adresse": {
       result = `${dualControlFormation[key]}`.toLowerCase() === `${formation[key]}`.toLowerCase();
+      break;
+    }
+
+    case "rome_codes": {
+      result = arrayDiff(dualControlFormation[key], formation[key]).length === 0;
       break;
     }
 
