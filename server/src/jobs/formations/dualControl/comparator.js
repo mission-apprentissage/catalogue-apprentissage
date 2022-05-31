@@ -87,13 +87,28 @@ const isEqual = (dualControlFormation, formation, key) => {
   let result = false;
   switch (key) {
     case "bcn_mefs_10": {
-      const difference =
-        objectDiff(
-          dualControlFormation[key]?.sort((a, b) => Number(a.mef10) - Number(b.mef10)),
-          formation[key]?.sort((a, b) => Number(a.mef10) - Number(b.mef10))
-        ) ?? {};
-      const keys = Object.keys(difference);
-      result = keys.length === 0;
+      result =
+        [
+          ...(dualControlFormation.bcn_mefs_10?.filter(
+            (dcfMef10) =>
+              !formation.bcn_mefs_10?.filter(
+                (fMef10) =>
+                  fMef10.mef10 === dcfMef10.mef10 &&
+                  fMef10.modalite?.duree === dcfMef10.modalite?.duree &&
+                  fMef10.modalite?.annee === dcfMef10.modalite?.annee
+              ).length
+          ) ?? []),
+          ...(formation.bcn_mefs_10?.filter(
+            (fMef10) =>
+              !dualControlFormation.bcn_mefs_10?.filter(
+                (dcfMef10) =>
+                  fMef10.mef10 === dcfMef10.mef10 &&
+                  fMef10.modalite?.duree === dcfMef10.modalite?.duree &&
+                  fMef10.modalite?.annee === dcfMef10.modalite?.annee
+              ).length
+          ) ?? []),
+        ].length === 0;
+
       break;
     }
     case "rncp_details":

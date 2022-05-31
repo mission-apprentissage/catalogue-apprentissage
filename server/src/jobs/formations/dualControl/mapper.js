@@ -25,7 +25,6 @@ const KEYS_MAP = {
   etablissement_formateur_code_insee: "etablissement_formateur_code_commune_insee",
   etablissement_formateur_geo_coordonnees: "geo_coordonnees_etablissement_formateur",
   catalogue_general: "catalogue_published",
-  rome_code: "rome_codes",
 
   // To exclude keys, map it to 0
   // TODO useless data received ? -->  ask RCO
