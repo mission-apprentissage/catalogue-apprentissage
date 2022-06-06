@@ -309,10 +309,10 @@
   resolved "https://registry.yarnpkg.com/@jsdevtools/ono/-/ono-7.1.3.tgz#9df03bbd7c696a5c58885c34aa06da41c8543796"
   integrity sha512-4JQNk+3mVzK3xh2rqd6RB4J46qUR19azEHBneZyTZM+c456qOrbbM/5xcR8huNCCcbVt7+UmizG6GuUvPvKUYg==
 
-"@mission-apprentissage/tco-service-node@2.37.2":
-  version "2.37.2"
-  resolved "https://npm.pkg.github.com/download/@mission-apprentissage/tco-service-node/2.37.2/8b2ede18974a6fbdb7626f7b0968f9f1ec297a3e948d6e248195b914cd55bbf1#67c5fa0183e0af851d438f774bf39dbc1f365a9f"
-  integrity sha512-EJiapQoE+N18gvlmEQ7/thnZXrb1KANRiBKDx8avuLZMXoI1oBAgy+XPuDOuYnmF3IzoOehtPWXxuuo/u/KD6g==
+"@mission-apprentissage/tco-service-node@2.37.3":
+  version "2.37.3"
+  resolved "https://npm.pkg.github.com/download/@mission-apprentissage/tco-service-node/2.37.3/40897f361c33bcacb1832f45c9e5ba5ed11633103de8a75053d8facae91fa4dc#27d70326b2aea5a3f66caa5f7769eaf6a6ac322e"
+  integrity sha512-ARcmHpAmfIY3MfTxf/Qpiz+GsWalrZQoIsdZNCjevlIpMEIs2vroXt2JGKFBKlWvTo7aBQ4vaso9OTs8B2c57A==
   dependencies:
     axios "0.21.4"
     body-parser "1.19.0"
