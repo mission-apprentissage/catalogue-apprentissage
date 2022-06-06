@@ -31,4 +31,12 @@ const isSameDate = (date1, date2) => {
   return false;
 };
 
-module.exports = { isSameDate, getLastMonth };
+const isSunday = (date) => {
+  if (!date) {
+    date = new Date();
+  }
+
+  return date.getDay() === 6;
+};
+
+module.exports = { isSameDate, isSunday, getLastMonth };

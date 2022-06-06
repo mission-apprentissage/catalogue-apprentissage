@@ -4,13 +4,27 @@ import { Link } from "@chakra-ui/react";
 const changelog = {
   list: [
     {
-      version: "5.19.0",
+      version: "5.20.0",
       date: "Prochainement",
       about: `<h4>À venir</h4>`,
       fixes: [],
       features: [],
       improvements: [],
     },
+    {
+      version: "5.19.0",
+      date: "Le 3 Juin 2022",
+
+      about: `<h4>À propos de cette version</h4>
+  Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+      fixes: [],
+      features: [`Consoles de pilotage : début d’implémentation des consoles de pilotage Dgesco et Dgsip`],
+      improvements: [
+        `Cleaning : mise à jour de la librairie de table de correspondance pour récupérer l’information sur la certification qualité`,
+        `Dans la recherche avancée, ajout d’une possibilité de recherche par nom de certificateur`,
+      ],
+    },
+
     {
       version: "5.18.0",
       date: "Le 5 Mai 2022",

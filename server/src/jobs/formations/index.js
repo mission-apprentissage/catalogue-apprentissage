@@ -4,6 +4,7 @@ const { runScript } = require("../scriptWrapper");
 const rcoImporter = require("./rcoImporter");
 const rcoConverter = require("./rcoConverter");
 const trainingsUpdater = require("./trainingsUpdater");
+const { isSunday } = require("../../common/utils/dateUtils");
 
 const formationsJobs = async () => {
   try {
@@ -28,7 +29,7 @@ const formationsJobs = async () => {
       uuidReport = crypto.randomBytes(16).toString("hex");
     }
 
-    await trainingsUpdater({ uuidReport, noUpdatesFilters: true });
+    await trainingsUpdater({ uuidReport, noUpdatesFilters: true, withCodePostalUpdate: isSunday() });
 
     logger.info(`End Formations jobs`);
   } catch (error) {
