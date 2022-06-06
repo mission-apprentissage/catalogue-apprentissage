@@ -72,8 +72,8 @@ const disableAlertMessage = async () => await Alert.findOneAndUpdate({ type: "au
 
 module.exports = {
   /**
-   * @param {*} job
-   * @param {object} options
+   * @param {() => void} job
+   * @param {object} [options]
    * @param {boolean} options.alert Display alert on front
    */
   runScript: async (job, options) => {
