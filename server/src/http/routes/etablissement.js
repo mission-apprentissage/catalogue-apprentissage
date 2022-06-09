@@ -119,23 +119,17 @@ module.exports = () => {
   router.post(
     "/etablissements",
     tryCatch(async (req, res) => {
-      const sanitizedQuery = sanitize(req.query);
+      const sanitizedQuery = sanitize(req.body, { allowSafeOperators: true });
 
-      let { query, page, limit } = await Joi.object({
-        query: Joi.string().default("{}"),
+      let { query, page, limit, select } = await Joi.object({
+        query: Joi.object().default(defaultFilter),
         page: Joi.number().default(1),
         limit: Joi.number().default(10),
+        select: Joi.optional(),
       }).validateAsync(sanitizedQuery, { abortEarly: false });
 
-      let json = JSON.parse(query);
-
-      // Par défaut, ne retourne que les établissements published
-      if (!sanitizedQuery?.query) {
-        Object.assign(json, defaultFilter);
-      }
-
-      let { find, pagination } = await paginate(Etablissement, json, { page, limit });
-      let stream = oleoduc(
+      const { find, pagination } = await paginate(Etablissement, query, { page, limit, select });
+      const stream = oleoduc(
         find.cursor(),
         transformIntoJSON({
           arrayWrapper: {
