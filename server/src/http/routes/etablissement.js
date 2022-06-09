@@ -119,7 +119,7 @@ module.exports = () => {
   router.post(
     "/etablissements",
     tryCatch(async (req, res) => {
-      const sanitizedQuery = sanitize(req.body);
+      const sanitizedQuery = sanitize(req.body, { allowSafeOperators: true });
 
       let { query, page, limit, select } = await Joi.object({
         query: Joi.object().default(defaultFilter),
