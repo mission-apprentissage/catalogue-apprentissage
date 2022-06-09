@@ -275,7 +275,7 @@ describe(__filename, () => {
       assert.strictEqual(formations.length, 2);
     });
 
-    it("should select fields if projection is given", async () => {
+    it("should select fields if select is given", async () => {
       const formations = await findNewFormations(
         {
           cle_ministere_educatif: "106401P011X5010559410002250105594100022-57631#L01",

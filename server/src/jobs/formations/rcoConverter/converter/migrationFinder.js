@@ -128,9 +128,9 @@ const extractFlatIdsAction = (id_action) => {
  * For a given cle_ministere_educatif formation, try to find some Formation in catalogue (with updated cle_ministere_educatif)
  *
  * @param {{cle_ministere_educatif: string}} formation
- * @param {Object} [projection={}]
+ * @param {Object} [select={}]
  */
-const findNewFormations = async ({ cle_ministere_educatif }, projection = {}) => {
+const findNewFormations = async ({ cle_ministere_educatif }, select = {}) => {
   const wasCollectedYear = cle_ministere_educatif.substring(10, 11) !== "X";
   if (wasCollectedYear) {
     return [];
@@ -149,7 +149,7 @@ const findNewFormations = async ({ cle_ministere_educatif }, projection = {}) =>
     cle_ministere_educatif: { $in: potentialKeys },
     published: true,
   })
-    .select(projection)
+    .select(select)
     .lean();
 };
 
@@ -157,9 +157,9 @@ const findNewFormations = async ({ cle_ministere_educatif }, projection = {}) =>
  * For a given formation corresponding to the first site (L01), try to find some Formation in catalogue with different sites
  *
  * @param {{cle_ministere_educatif: string}} formation
- * @param {Object} [projection={}]
+ * @param {Object} [select={}]
  */
-const findMultisiteFormationsFromL01 = async ({ cle_ministere_educatif }, projection = {}) => {
+const findMultisiteFormationsFromL01 = async ({ cle_ministere_educatif }, select = {}) => {
   if (!cle_ministere_educatif?.endsWith("#L01")) {
     return [];
   }
@@ -169,7 +169,7 @@ const findMultisiteFormationsFromL01 = async ({ cle_ministere_educatif }, projec
     cle_ministere_educatif: { $ne: cle_ministere_educatif, $regex: new RegExp(`^${rootKey}#`) },
     published: true,
   })
-    .select(projection)
+    .select(select)
     .lean();
 
   return multisiteFormations;
