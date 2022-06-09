@@ -128,8 +128,8 @@ module.exports = () => {
         select: Joi.optional(),
       }).validateAsync(sanitizedQuery, { abortEarly: false });
 
-      let { find, pagination } = await paginate(Etablissement, query, { page, limit, select });
-      let stream = oleoduc(
+      const { find, pagination } = await paginate(Etablissement, query, { page, limit, select });
+      const stream = oleoduc(
         find.cursor(),
         transformIntoJSON({
           arrayWrapper: {

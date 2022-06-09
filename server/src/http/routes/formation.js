@@ -116,8 +116,8 @@ module.exports = () => {
       Object.assign(query, defaultFilter);
     }
 
-    let { find, pagination } = await paginate(Formation, query, { page, limit, select });
-    let stream = oleoduc(
+    const { find, pagination } = await paginate(Formation, query, { page, limit, select });
+    const stream = oleoduc(
       find.cursor(),
       transformIntoJSON({
         arrayWrapper: {
