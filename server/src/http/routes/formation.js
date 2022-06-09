@@ -92,7 +92,12 @@ module.exports = () => {
       query: Joi.optional().default({}),
       page: Joi.number().default(1),
       limit: Joi.number().max(1000).default(10),
-      select: Joi.optional(),
+      select: Joi.optional().default({
+        affelnet_statut_history: 0,
+        parcoursup_statut_history: 0,
+        updates_history: 0,
+        __v: 0,
+      }),
       queryAsRegex: Joi.optional().default({}),
     }).validateAsync(sanitizedQuery, { abortEarly: false });
 
