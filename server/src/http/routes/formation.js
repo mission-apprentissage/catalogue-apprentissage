@@ -1,11 +1,12 @@
 const express = require("express");
 const Joi = require("joi");
-const { compose, transformIntoJSON } = require("oleoduc");
+const { oleoduc, compose, transformIntoJSON } = require("oleoduc");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { Formation } = require("../../common/model");
 const { mnaFormationUpdater } = require("../../logic/updaters/mnaFormationUpdater");
 const { sendJsonStream } = require("../../common/utils/httpUtils");
 const { sanitize } = require("../../common/utils/sanitizeUtils");
+const { paginate } = require("../../common/utils/mongooseUtils");
 
 /**
  * Sample entity route module for GET
@@ -85,18 +86,15 @@ module.exports = () => {
   });
 
   const postFormations = tryCatch(async (req, res) => {
-    const qs = req.body;
+    const sanitizedQuery = sanitize(req.body, { allowSafeOperators: true });
 
-    // FIXME: ugly patch because request from Affelnet is not JSON valid
-    const strQuery = qs?.query ?? "";
-    const cleanedQuery = strQuery.replace(
-      /"num_academie" :(0.)/,
-      (found, capture) => `"num_academie":"${Number(capture)}"`
-    );
-    // end FIXME
-
-    let query = cleanedQuery ? JSON.parse(cleanedQuery) : {};
-    query = sanitize(query, { allowSafeOperators: true });
+    let { query, page, limit, select, queryAsRegex } = await Joi.object({
+      query: Joi.optional().default({}),
+      page: Joi.number().default(1),
+      limit: Joi.number().max(1000).default(10),
+      select: Joi.optional(),
+      queryAsRegex: Joi.optional().default({}),
+    }).validateAsync(sanitizedQuery, { abortEarly: false });
 
     const { id_parcoursup, ...filter } = query;
     // additional filtering for parcoursup
@@ -104,49 +102,32 @@ module.exports = () => {
       filter["parcoursup_id"] = id_parcoursup;
     }
 
-    const page = qs && qs.page ? qs.page : 1;
-    const limit = qs && qs.limit ? parseInt(qs.limit, 10) : 10;
-    const select = qs?.select
-      ? JSON.parse(qs.select)
-      : {
-          affelnet_statut_history: 0,
-          parcoursup_statut_history: 0,
-          updates_history: 0,
-          __v: 0,
-        };
-
-    let queryAsRegex = qs?.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
-    queryAsRegex = sanitize(queryAsRegex, { allowSafeOperators: true });
-
     for (const prop in queryAsRegex) {
       queryAsRegex[prop] = new RegExp(queryAsRegex[prop], "i");
     }
 
-    const mQuery = {
+    query = {
       ...filter,
       ...queryAsRegex,
     };
 
     // Par défaut, ne retourne que le catalogue général.
-    if (!qs?.query && !qs?.queryAsRegex) {
-      Object.assign(mQuery, defaultFilter);
+    if (!sanitizedQuery?.query && !sanitizedQuery?.queryAsRegex) {
+      Object.assign(query, defaultFilter);
     }
 
-    const allData = await Formation.paginate(mQuery, {
-      page,
-      limit: Math.min(limit, 1000),
-      lean: true,
-      select,
-    });
-    return res.json({
-      formations: allData.docs,
-      pagination: {
-        page: allData.page,
-        resultats_par_page: Math.min(limit, 1000),
-        nombre_de_page: allData.pages,
-        total: allData.total,
-      },
-    });
+    let { find, pagination } = await paginate(Formation, query, { page, limit, select });
+    let stream = oleoduc(
+      find.cursor(),
+      transformIntoJSON({
+        arrayWrapper: {
+          pagination,
+        },
+        arrayPropertyName: "formations",
+      })
+    );
+
+    return sendJsonStream(stream, res);
   });
 
   const countFormations = tryCatch(async (req, res) => {
