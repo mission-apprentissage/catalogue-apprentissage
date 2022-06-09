@@ -19,6 +19,7 @@ const SAFE_OPERATORS = [
   "$size",
   "$regex",
   "$options",
+  "$exists",
 ];
 
 const deepRenameKeys = (obj, keysMap) =>

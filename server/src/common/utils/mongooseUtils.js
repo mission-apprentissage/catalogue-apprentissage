@@ -5,7 +5,7 @@ const paginate = async (Model, query, options = {}) => {
   let skip = (page - 1) * limit;
 
   return {
-    find: Model.find(query, options.projection || {})
+    find: Model.find(query, options.select || {})
       .sort(options.sort || {})
       .skip(skip)
       .limit(limit)
