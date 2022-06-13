@@ -20,6 +20,18 @@ export interface DualControlReport {
    */
   totalDualControlFormation: number;
   /**
+   * Nombre total de formations dans le catalogue, incluant les non-publiées
+   */
+  totalFormationWithUnpublished: number;
+  /**
+   * Nombre total de formations dans le nouveau flux, incluant les non-publiées
+   */
+  totalDualControlFormationWithUnpublished: number;
+  /**
+   * NNombre de formations envoyées par RCO dans le flux de production
+   */
+  totalRcoFormation: number;
+  /**
    * Nombre de formations dans le nouveau flux qui n'existe pas dans le catalogue
    */
   totalNotFound?: number;

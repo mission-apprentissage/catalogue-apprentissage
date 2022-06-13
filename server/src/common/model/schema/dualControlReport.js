@@ -19,6 +19,24 @@ const dualControlReportSchema = {
     description: "Nombre total de formations dans le nouveau flux",
     required: true,
   },
+  totalFormationWithUnpublished: {
+    type: Number,
+    default: 0,
+    description: "Nombre total de formations dans le catalogue, incluant les non-publiées",
+    required: true,
+  },
+  totalDualControlFormationWithUnpublished: {
+    type: Number,
+    default: 0,
+    description: "Nombre total de formations dans le nouveau flux, incluant les non-publiées",
+    required: true,
+  },
+  totalRcoFormation: {
+    type: Number,
+    default: 0,
+    description: "NNombre de formations envoyées par RCO dans le flux de production",
+    required: true,
+  },
   totalNotFound: {
     type: Number,
     default: 0,

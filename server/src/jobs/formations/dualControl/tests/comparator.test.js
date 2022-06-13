@@ -236,6 +236,7 @@ describe(__filename, () => {
     const countReports = await DualControlReport.countDocuments({});
     assert.strictEqual(countReports, 1);
     const report = await DualControlReport.findOne({ date }, { _id: 0, __v: 0 }).lean();
+
     assert.deepStrictEqual(report, {
       date: new Date(date),
       totalFormation: 4,
