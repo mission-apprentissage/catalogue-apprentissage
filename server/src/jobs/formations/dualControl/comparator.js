@@ -185,8 +185,10 @@ const compare = async (date = Date.now(), fieldsToCompare = FIELDS_TO_COMPARE) =
   const results = {
     date,
     totalFormation: await Formation.countDocuments({ published: true }),
-    totalFormationRco: await RcoFormation.countDocuments(),
-    totalDualControlFormation: await DualControlFormation.countDocuments({}),
+    totalFormationWithUnpublished: await Formation.countDocuments(),
+    totalRcoFormation: await RcoFormation.countDocuments(),
+    totalDualControlFormation: await DualControlFormation.countDocuments({ published: true }),
+    totalDualControlFormationWithUnpublished: await DualControlFormation.countDocuments(),
     totalNotFound: 0,
   };
 

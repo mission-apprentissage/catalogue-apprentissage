@@ -53,6 +53,7 @@ describe(__filename, () => {
     });
 
     await DualControlFormation.create({
+      published: true,
       cle_ministere_educatif: "1",
       lieu_formation_adresse: "20 AVENUE de Ségur",
       cfd: "1",
@@ -73,14 +74,22 @@ describe(__filename, () => {
       ],
     });
     await DualControlFormation.create({
+      published: true,
       cle_ministere_educatif: "2",
       cfd: "222",
       rncp_code: "222",
     });
     await DualControlFormation.create({
+      published: true,
       cle_ministere_educatif: "5",
       cfd: "5",
       rncp_code: "5",
+    });
+    await DualControlFormation.create({
+      published: false,
+      cle_ministere_educatif: "4",
+      cfd: "4",
+      rncp_code: "4",
     });
   });
 
@@ -97,7 +106,7 @@ describe(__filename, () => {
     assert.strictEqual(countF, 4);
 
     const countDF = await DualControlFormation.countDocuments({});
-    assert.strictEqual(countDF, 3);
+    assert.strictEqual(countDF, 4);
 
     const countReports = await DualControlReport.countDocuments({});
     assert.strictEqual(countReports, 0);
@@ -110,7 +119,10 @@ describe(__filename, () => {
     assert.deepStrictEqual(result, {
       date,
       totalFormation: 4,
+      totalFormationWithUnpublished: 4,
       totalDualControlFormation: 3,
+      totalDualControlFormationWithUnpublished: 4,
+      totalRcoFormation: 0,
       totalNotFound: 1,
       fields: {
         rncp_code: 2,
@@ -124,7 +136,10 @@ describe(__filename, () => {
     assert.deepStrictEqual(report, {
       date: new Date(date),
       totalFormation: 4,
+      totalFormationWithUnpublished: 4,
       totalDualControlFormation: 3,
+      totalDualControlFormationWithUnpublished: 4,
+      totalRcoFormation: 0,
       totalNotFound: 1,
       fields: {
         rncp_code: 2,
@@ -140,7 +155,10 @@ describe(__filename, () => {
     assert.deepStrictEqual(result, {
       date,
       totalFormation: 4,
+      totalFormationWithUnpublished: 4,
       totalDualControlFormation: 3,
+      totalDualControlFormationWithUnpublished: 4,
+      totalRcoFormation: 0,
       totalNotFound: 1,
       fields: {
         periode: 0,
@@ -153,7 +171,10 @@ describe(__filename, () => {
     assert.deepStrictEqual(report, {
       date: new Date(date),
       totalFormation: 4,
+      totalFormationWithUnpublished: 4,
       totalDualControlFormation: 3,
+      totalDualControlFormationWithUnpublished: 4,
+      totalRcoFormation: 0,
       totalNotFound: 1,
       fields: {
         periode: 0,
@@ -168,7 +189,10 @@ describe(__filename, () => {
     assert.deepStrictEqual(result, {
       date,
       totalFormation: 4,
+      totalFormationWithUnpublished: 4,
       totalDualControlFormation: 3,
+      totalDualControlFormationWithUnpublished: 4,
+      totalRcoFormation: 0,
       totalNotFound: 1,
       fields: {
         bcn_mefs_10: 0,
@@ -181,7 +205,10 @@ describe(__filename, () => {
     assert.deepStrictEqual(report, {
       date: new Date(date),
       totalFormation: 4,
+      totalFormationWithUnpublished: 4,
+      totalRcoFormation: 0,
       totalDualControlFormation: 3,
+      totalDualControlFormationWithUnpublished: 4,
       totalNotFound: 1,
       fields: {
         bcn_mefs_10: 0,
@@ -196,7 +223,10 @@ describe(__filename, () => {
     assert.deepStrictEqual(result, {
       date,
       totalFormation: 4,
+      totalFormationWithUnpublished: 4,
       totalDualControlFormation: 3,
+      totalDualControlFormationWithUnpublished: 4,
+      totalRcoFormation: 0,
       totalNotFound: 1,
       fields: {
         lieu_formation_adresse: 0,
@@ -209,7 +239,10 @@ describe(__filename, () => {
     assert.deepStrictEqual(report, {
       date: new Date(date),
       totalFormation: 4,
+      totalFormationWithUnpublished: 4,
       totalDualControlFormation: 3,
+      totalDualControlFormationWithUnpublished: 4,
+      totalRcoFormation: 0,
       totalNotFound: 1,
       fields: {
         lieu_formation_adresse: 0,
