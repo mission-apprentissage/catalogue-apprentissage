@@ -2,7 +2,7 @@
 const { diff: objectDiff } = require("deep-object-diff");
 const { diff: arrayDiff } = require("../../../common/utils/arrayUtils");
 const { DualControlFormation, DualControlReport } = require("../../../common/model/index");
-const { Formation } = require("../../../common/model/index");
+const { Formation, RcoFormation } = require("../../../common/model/index");
 
 /** @typedef {import("../../../common/model/schema/formation").Formation} Formation */
 
@@ -73,39 +73,39 @@ const FIELDS_TO_COMPARE = [
   "rome_codes",
 
   // New fields
-  "distance_lieu_formation_etablissement_formateur",
-  "etablissement_formateur_cedex",
-  "etablissement_formateur_certifie_qualite",
-  "etablissement_formateur_complement_adresse",
-  "etablissement_formateur_date_creation",
-  "etablissement_formateur_enseigne",
-  "etablissement_formateur_entreprise_raison_sociale",
-  "etablissement_formateur_habilite_rncp",
-  "etablissement_formateur_localite",
-  "etablissement_gestionnaire_certifie_qualite",
-  "etablissement_gestionnaire_date_creation",
-  "etablissement_gestionnaire_enseigne",
-  "etablissement_gestionnaire_entreprise_raison_sociale",
-  "etablissement_gestionnaire_habilite_rncp",
-  "etablissement_gestionnaire_localite",
-  "etablissement_gestionnaire_siren",
-  "etablissement_reference_certifie_qualite",
-  "etablissement_reference_habilite_rncp",
-  "etablissement_reference_published",
-  "etablissement_reference",
-  "geo_coordonnees_etablissement_gestionnaire",
-  "ids_action",
-  "libelle_court",
-  "localite",
-  "niveau_entree_obligatoire",
-  "niveau_formation_diplome",
-  "nom_academie",
-  "nom_departement",
-  "nom",
-  "num_academie",
-  "num_departement",
-  "region",
-  "tags",
+  "published",
+  // "etablissement_formateur_cedex",
+  // "etablissement_formateur_certifie_qualite",
+  // "etablissement_formateur_complement_adresse",
+  // "etablissement_formateur_date_creation",
+  // "etablissement_formateur_enseigne",
+  // "etablissement_formateur_entreprise_raison_sociale",
+  // "etablissement_formateur_habilite_rncp",
+  // "etablissement_formateur_localite",
+  // "etablissement_gestionnaire_certifie_qualite",
+  // "etablissement_gestionnaire_date_creation",
+  // "etablissement_gestionnaire_enseigne",
+  // "etablissement_gestionnaire_entreprise_raison_sociale",
+  // "etablissement_gestionnaire_habilite_rncp",
+  // "etablissement_gestionnaire_localite",
+  // "etablissement_gestionnaire_siren",
+  // "etablissement_reference_certifie_qualite",
+  // "etablissement_reference_habilite_rncp",
+  // "etablissement_reference_published",
+  // "etablissement_reference",
+  // "geo_coordonnees_etablissement_gestionnaire",
+  // "ids_action",
+  // "libelle_court",
+  // "localite",
+  // "niveau_entree_obligatoire",
+  // "niveau_formation_diplome",
+  // "nom_academie",
+  // "nom_departement",
+  // "nom",
+  // "num_academie",
+  // "num_departement",
+  // "region",
+  // "tags",
 ];
 
 /**
@@ -185,6 +185,7 @@ const compare = async (date = Date.now(), fieldsToCompare = FIELDS_TO_COMPARE) =
   const results = {
     date,
     totalFormation: await Formation.countDocuments({ published: true }),
+    totalFormationRco: await RcoFormation.countDocuments(),
     totalDualControlFormation: await DualControlFormation.countDocuments({}),
     totalNotFound: 0,
   };
