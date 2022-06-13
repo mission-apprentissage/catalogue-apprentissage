@@ -122,7 +122,7 @@ class Importer {
 
     const data = { added, updated: this.updated, summary, link };
     const title = "[Webservice RCO] Rapport d'importation";
-    const to = config.rco.reportMailingList.split(",");
+    const to = config.reportMailingList.split(",");
     await report.generate(data, title, to, "rcoReport");
     return uuid;
   }

@@ -87,7 +87,7 @@ runScript(async ({ mailer }) => {
   const attachments = [
     { filename: `rco-duplicates-${date}.csv`, content: Buffer.from(data, "latin1"), contentType: "text/csv" },
   ];
-  const to = config.rco.reportMailingList.split(",");
+  const to = config.reportMailingList.split(",");
 
   await mailer.sendEmail(
     to,

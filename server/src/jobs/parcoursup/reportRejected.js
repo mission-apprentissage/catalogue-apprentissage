@@ -19,7 +19,7 @@ const createRejectedReport = async (summary, rejetes) => {
 
   // Send mail
   const title = "[ParcourSup/Carif-Oref] Rapport de rapprochements";
-  const to = config.rco.reportMailingList.split(",");
+  const to = config.reportMailingList.split(",");
   await report.generate(data, title, to, "rejectedReport");
 };
 

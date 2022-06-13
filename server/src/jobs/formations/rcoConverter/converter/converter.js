@@ -441,7 +441,7 @@ const createConversionReport = async ({ invalidRcoFormations, convertedRcoFormat
 
   // Send mail
   const title = "[RCO Formations] Rapport de conversion";
-  const to = config.rco.reportMailingList.split(",");
+  const to = config.reportMailingList.split(",");
   await report.generate(data, title, to, "rcoConversionReport");
 };
 
