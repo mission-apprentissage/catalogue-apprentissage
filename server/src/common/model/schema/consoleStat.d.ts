@@ -15,6 +15,10 @@ export interface ConsoleStat {
    * Date de la statistique
    */
   date: Date;
+  /**
+   * Statistiques propre à chaque académie, ainsi qu'à toute la France
+   */
+  stats?: ItemOfStats[];
   "Toute la France"?: TouteLaFrance;
   Lyon?: Lyon;
   Montpellier?: Montpellier;
@@ -48,10 +52,19 @@ export interface ConsoleStat {
   Lille?: Lille;
   _id?: Types.ObjectId;
 }
-/**
- * Statistique propre à une académie, ou globale si la clé est "Toute la France"
- */
+export interface ItemOfStats {
+  academie?: string;
+  formations_publiees?: number;
+  formations_integrables?: number;
+  organismes_avec_formations_publiees?: number;
+  organismes_avec_formations_integrables?: number;
+  details?: {
+    [k: string]: unknown;
+  };
+  _id?: Types.ObjectId;
+}
 export interface TouteLaFrance {
+  academie?: string;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;
@@ -59,11 +72,10 @@ export interface TouteLaFrance {
   details?: {
     [k: string]: unknown;
   };
+  _id?: Types.ObjectId;
 }
-/**
- * Statistique propre à une académie, ou globale si la clé est "Toute la France"
- */
 export interface Lyon {
+  academie?: string;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;
@@ -71,11 +83,10 @@ export interface Lyon {
   details?: {
     [k: string]: unknown;
   };
+  _id?: Types.ObjectId;
 }
-/**
- * Statistique propre à une académie, ou globale si la clé est "Toute la France"
- */
 export interface Montpellier {
+  academie?: string;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;
@@ -83,11 +94,10 @@ export interface Montpellier {
   details?: {
     [k: string]: unknown;
   };
+  _id?: Types.ObjectId;
 }
-/**
- * Statistique propre à une académie, ou globale si la clé est "Toute la France"
- */
 export interface NancyMetz {
+  academie?: string;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;
@@ -95,11 +105,10 @@ export interface NancyMetz {
   details?: {
     [k: string]: unknown;
   };
+  _id?: Types.ObjectId;
 }
-/**
- * Statistique propre à une académie, ou globale si la clé est "Toute la France"
- */
 export interface Poitiers {
+  academie?: string;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;
@@ -107,11 +116,10 @@ export interface Poitiers {
   details?: {
     [k: string]: unknown;
   };
+  _id?: Types.ObjectId;
 }
-/**
- * Statistique propre à une académie, ou globale si la clé est "Toute la France"
- */
 export interface Rennes {
+  academie?: string;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;
@@ -119,11 +127,10 @@ export interface Rennes {
   details?: {
     [k: string]: unknown;
   };
+  _id?: Types.ObjectId;
 }
-/**
- * Statistique propre à une académie, ou globale si la clé est "Toute la France"
- */
 export interface Strasbourg {
+  academie?: string;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;
@@ -131,11 +138,10 @@ export interface Strasbourg {
   details?: {
     [k: string]: unknown;
   };
+  _id?: Types.ObjectId;
 }
-/**
- * Statistique propre à une académie, ou globale si la clé est "Toute la France"
- */
 export interface Toulouse {
+  academie?: string;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;
@@ -143,11 +149,10 @@ export interface Toulouse {
   details?: {
     [k: string]: unknown;
   };
+  _id?: Types.ObjectId;
 }
-/**
- * Statistique propre à une académie, ou globale si la clé est "Toute la France"
- */
 export interface Nantes {
+  academie?: string;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;
@@ -155,11 +160,10 @@ export interface Nantes {
   details?: {
     [k: string]: unknown;
   };
+  _id?: Types.ObjectId;
 }
-/**
- * Statistique propre à une académie, ou globale si la clé est "Toute la France"
- */
 export interface OrleansTours {
+  academie?: string;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;
@@ -167,11 +171,10 @@ export interface OrleansTours {
   details?: {
     [k: string]: unknown;
   };
+  _id?: Types.ObjectId;
 }
-/**
- * Statistique propre à une académie, ou globale si la clé est "Toute la France"
- */
 export interface Reims {
+  academie?: string;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;
@@ -179,11 +182,10 @@ export interface Reims {
   details?: {
     [k: string]: unknown;
   };
+  _id?: Types.ObjectId;
 }
-/**
- * Statistique propre à une académie, ou globale si la clé est "Toute la France"
- */
 export interface Amiens {
+  academie?: string;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;
@@ -191,11 +193,10 @@ export interface Amiens {
   details?: {
     [k: string]: unknown;
   };
+  _id?: Types.ObjectId;
 }
-/**
- * Statistique propre à une académie, ou globale si la clé est "Toute la France"
- */
 export interface Limoges {
+  academie?: string;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;
@@ -203,11 +204,10 @@ export interface Limoges {
   details?: {
     [k: string]: unknown;
   };
+  _id?: Types.ObjectId;
 }
-/**
- * Statistique propre à une académie, ou globale si la clé est "Toute la France"
- */
 export interface Nice {
+  academie?: string;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;
@@ -215,11 +215,10 @@ export interface Nice {
   details?: {
     [k: string]: unknown;
   };
+  _id?: Types.ObjectId;
 }
-/**
- * Statistique propre à une académie, ou globale si la clé est "Toute la France"
- */
 export interface Creteil {
+  academie?: string;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;
@@ -227,11 +226,10 @@ export interface Creteil {
   details?: {
     [k: string]: unknown;
   };
+  _id?: Types.ObjectId;
 }
-/**
- * Statistique propre à une académie, ou globale si la clé est "Toute la France"
- */
 export interface Versailles {
+  academie?: string;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;
@@ -239,11 +237,10 @@ export interface Versailles {
   details?: {
     [k: string]: unknown;
   };
+  _id?: Types.ObjectId;
 }
-/**
- * Statistique propre à une académie, ou globale si la clé est "Toute la France"
- */
 export interface Corse {
+  academie?: string;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;
@@ -251,11 +248,10 @@ export interface Corse {
   details?: {
     [k: string]: unknown;
   };
+  _id?: Types.ObjectId;
 }
-/**
- * Statistique propre à une académie, ou globale si la clé est "Toute la France"
- */
 export interface LaReunion {
+  academie?: string;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;
@@ -263,11 +259,10 @@ export interface LaReunion {
   details?: {
     [k: string]: unknown;
   };
+  _id?: Types.ObjectId;
 }
-/**
- * Statistique propre à une académie, ou globale si la clé est "Toute la France"
- */
 export interface Martinique {
+  academie?: string;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;
@@ -275,11 +270,10 @@ export interface Martinique {
   details?: {
     [k: string]: unknown;
   };
+  _id?: Types.ObjectId;
 }
-/**
- * Statistique propre à une académie, ou globale si la clé est "Toute la France"
- */
 export interface Guadeloupe {
+  academie?: string;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;
@@ -287,11 +281,10 @@ export interface Guadeloupe {
   details?: {
     [k: string]: unknown;
   };
+  _id?: Types.ObjectId;
 }
-/**
- * Statistique propre à une académie, ou globale si la clé est "Toute la France"
- */
 export interface Guyane {
+  academie?: string;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;
@@ -299,11 +292,10 @@ export interface Guyane {
   details?: {
     [k: string]: unknown;
   };
+  _id?: Types.ObjectId;
 }
-/**
- * Statistique propre à une académie, ou globale si la clé est "Toute la France"
- */
 export interface Mayotte {
+  academie?: string;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;
@@ -311,11 +303,10 @@ export interface Mayotte {
   details?: {
     [k: string]: unknown;
   };
+  _id?: Types.ObjectId;
 }
-/**
- * Statistique propre à une académie, ou globale si la clé est "Toute la France"
- */
 export interface Normandie {
+  academie?: string;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;
@@ -323,11 +314,10 @@ export interface Normandie {
   details?: {
     [k: string]: unknown;
   };
+  _id?: Types.ObjectId;
 }
-/**
- * Statistique propre à une académie, ou globale si la clé est "Toute la France"
- */
 export interface Paris {
+  academie?: string;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;
@@ -335,11 +325,10 @@ export interface Paris {
   details?: {
     [k: string]: unknown;
   };
+  _id?: Types.ObjectId;
 }
-/**
- * Statistique propre à une académie, ou globale si la clé est "Toute la France"
- */
 export interface AixMarseille {
+  academie?: string;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;
@@ -347,11 +336,10 @@ export interface AixMarseille {
   details?: {
     [k: string]: unknown;
   };
+  _id?: Types.ObjectId;
 }
-/**
- * Statistique propre à une académie, ou globale si la clé est "Toute la France"
- */
 export interface Besancon {
+  academie?: string;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;
@@ -359,11 +347,10 @@ export interface Besancon {
   details?: {
     [k: string]: unknown;
   };
+  _id?: Types.ObjectId;
 }
-/**
- * Statistique propre à une académie, ou globale si la clé est "Toute la France"
- */
 export interface Bordeaux {
+  academie?: string;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;
@@ -371,11 +358,10 @@ export interface Bordeaux {
   details?: {
     [k: string]: unknown;
   };
+  _id?: Types.ObjectId;
 }
-/**
- * Statistique propre à une académie, ou globale si la clé est "Toute la France"
- */
 export interface ClermontFerrand {
+  academie?: string;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;
@@ -383,11 +369,10 @@ export interface ClermontFerrand {
   details?: {
     [k: string]: unknown;
   };
+  _id?: Types.ObjectId;
 }
-/**
- * Statistique propre à une académie, ou globale si la clé est "Toute la France"
- */
 export interface Dijon {
+  academie?: string;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;
@@ -395,11 +380,10 @@ export interface Dijon {
   details?: {
     [k: string]: unknown;
   };
+  _id?: Types.ObjectId;
 }
-/**
- * Statistique propre à une académie, ou globale si la clé est "Toute la France"
- */
 export interface Grenoble {
+  academie?: string;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;
@@ -407,11 +391,10 @@ export interface Grenoble {
   details?: {
     [k: string]: unknown;
   };
+  _id?: Types.ObjectId;
 }
-/**
- * Statistique propre à une académie, ou globale si la clé est "Toute la France"
- */
 export interface Lille {
+  academie?: string;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;
@@ -419,4 +402,5 @@ export interface Lille {
   details?: {
     [k: string]: unknown;
   };
+  _id?: Types.ObjectId;
 }

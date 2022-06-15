@@ -5,8 +5,8 @@ const { ConsoleStat, Formation } = require("../../common/model");
 const { academies } = require("../../constants/academies");
 
 const computeStats = async (academie = undefined) => {
-  const scopeFilter = academie !== undefined ? { nom_academie: academie } : {};
-  // const scopeLog = academie !== undefined ? `[${academie}]` : `[global]`;
+  const scopeFilter = academie ? { nom_academie: academie } : {};
+  // const scopeLog = academie ? `[${academie}]` : `[global]`;
 
   const filterPublie = {
     affelnet_statut: AFFELNET_STATUS.PUBLIE,
@@ -61,7 +61,7 @@ const computeStats = async (academie = undefined) => {
   const details = (
     await Promise.all(
       Object.values(AFFELNET_STATUS).flatMap(async (value) => ({
-        [value]: await Formation.countDocuments({ affelnet_statut: value }),
+        [value]: await Formation.countDocuments({ affelnet_statut: value, ...scopeFilter }),
       }))
     )
   ).reduce(function (result, current) {
@@ -69,6 +69,7 @@ const computeStats = async (academie = undefined) => {
   }, {});
 
   return {
+    academie,
     formations_publiees,
     formations_integrables,
     organismes_avec_formations_publiees,
@@ -82,16 +83,10 @@ const stats = async () => {
 
   const stat = {
     plateforme: "affelnet",
-    ...[
-      ...(await Promise.all([
-        { "Toute la France": await computeStats() },
-        ...Object.values(academies).map(async (academie) => ({
-          [academie.nom_academie]: await computeStats(academie.nom_academie),
-        })),
-      ])),
-    ].reduce(function (result, current) {
-      return Object.assign(result, current);
-    }, {}),
+    stats: await Promise.all([
+      { stats: await computeStats(), academie: "Toute la France" },
+      ...Object.values(academies).map(async (academie) => await computeStats(academie.nom_academie)),
+    ]),
   };
 
   return await ConsoleStat.create(stat);
