@@ -4,7 +4,7 @@ const { AFFELNET_STATUS } = require("../../constants/status");
 const { ConsoleStat, Formation } = require("../../common/model");
 const { academies } = require("../../constants/academies");
 
-const computeStats = async (academie = undefined) => {
+const computeStats = async (academie = null) => {
   const scopeFilter = academie ? { nom_academie: academie } : {};
   // const scopeLog = academie ? `[${academie}]` : `[global]`;
 
@@ -80,16 +80,24 @@ const computeStats = async (academie = undefined) => {
 
 const stats = async () => {
   console.log(`--- Calcul des statistiques Affelnet ---`);
+  const date = new Date();
 
-  const stat = {
-    plateforme: "affelnet",
-    stats: await Promise.all([
-      { stats: await computeStats(), academie: "Toute la France" },
-      ...Object.values(academies).map(async (academie) => await computeStats(academie.nom_academie)),
-    ]),
-  };
+  await Promise.all(
+    [null, ...Object.values(academies).map((academie) => academie.nom_academie)].map(async (academie) => {
+      const stats = await computeStats(academie);
+      return await ConsoleStat.create({ plateforme: "affelnet", date, ...stats });
+    })
+  );
 
-  return await ConsoleStat.create(stat);
+  // const stat = {
+  //   plateforme: "affelnet",
+  //   stats: await Promise.all([
+  //     { stats: await computeStats(), academie: "Toute la France" },
+  //     ...Object.values(academies).map(async (academie) => await computeStats(academie.nom_academie)),
+  //   ]),
+  // };
+
+  // return await ConsoleStat.create(stat);
 };
 
 module.exports = { stats };
