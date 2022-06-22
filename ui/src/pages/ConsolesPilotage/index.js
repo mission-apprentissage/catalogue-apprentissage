@@ -9,28 +9,18 @@ import { getIframeUrl } from "../../common/utils/metabaseUtils";
 export default () => {
   const dashboards = [
     {
-      title: "Collecte",
-      iframeURL: getIframeUrl({ id: 2 }),
-      height: "200vh",
-    },
-    {
-      title: "Consommation",
-      iframeURL: getIframeUrl({ id: 3 }),
+      title: "Console de pilotage DEGESCO",
+      iframeURL: getIframeUrl({ id: 201 }),
       height: "220vh",
     },
     {
-      title: "Acquisition",
-      iframeURL: getIframeUrl({ id: 34 }),
-      height: "100vh",
-    },
-    {
-      title: "Qualité de la donnée",
-      iframeURL: getIframeUrl({ id: 35 }),
-      height: "410vh",
+      title: "Console de pilotage DGESIP",
+      iframeURL: getIframeUrl({ id: 200 }),
+      height: "220vh",
     },
   ];
 
-  const title = "Statistiques du catalogue";
+  const title = "Consoles de pilotage";
   setTitle(title);
 
   return (

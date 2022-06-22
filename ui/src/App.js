@@ -31,6 +31,8 @@ const Accessibilite = lazy(() => import("./pages/legal/Accessibilite"));
 const ReconciliationPs = lazy(() => import("./pages/admin/ReconciliationPs/ReconciliationPs"));
 const ActionsExpertes = lazy(() => import("./pages/ActionsExpertes/ActionsExpertes"));
 const Perimetre = lazy(() => import("./pages/perimetre/Perimetre"));
+const ConsolePilotageAffelnet = lazy(() => import("./pages/ConsolesPilotage/Affelnet"));
+const ConsolePilotageParcoursup = lazy(() => import("./pages/ConsolesPilotage/Parcoursup"));
 
 function PrivateRoute({ component, ...rest }) {
   let [auth] = useAuth();
@@ -139,6 +141,12 @@ export default () => {
 
                 {auth && hasAccessTo(auth, "page_actions_expertes") && (
                   <PrivateRoute exact path="/mes-actions" component={ActionsExpertes} />
+                )}
+                {auth && hasAccessTo(auth, "page_actions_expertes") && (
+                  <PrivateRoute exact path="/console-pilotage/parcoursup" component={ConsolePilotageParcoursup} />
+                )}
+                {auth && hasAccessTo(auth, "page_actions_expertes") && (
+                  <PrivateRoute exact path="/console-pilotage/affelnet" component={ConsolePilotageAffelnet} />
                 )}
 
                 {auth && hasAccessTo(auth, "page_message_maintenance") && (

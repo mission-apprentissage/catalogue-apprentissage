@@ -59,46 +59,73 @@ export default () => {
           <Heading textStyle="h2" color="grey.800" mt={5} mb={5}>
             {title}
           </Heading>
-          {searchState.loaded && (
-            <Grid templateColumns="repeat(3, 1fr)" gap={4} minH="350px" my={4} data-testid={"grid"}>
-              {(isUserAdmin(auth) || hasAccessTo(auth, "page_reconciliation_ps")) && (
-                <GridItem colSpan={[3, 3, 1]}>
-                  <Card
-                    info={`${(
-                      (searchState.countReconciliationPs.countValide * 100) /
-                      (searchState.countReconciliationPs.countTotal || 1)
-                    ).toFixed(2)}% de validées`}
-                    linkTo="/couverture-ps"
-                    title="Rapprochement des bases Carif-Oref et Parcoursup"
-                    body="Valider la correspondance des données entre la base Parcoursup et le Catalogue des offres de formations en apprentissage (base Carif-Oref)"
-                    isDisabled={!hasAccessTo(auth, "page_reconciliation_ps")}
-                  />
-                </GridItem>
-              )}
 
-              {(isUserAdmin(auth) || hasAccessTo(auth, "page_perimetre_af")) && (
+          <Flex my={4} mb={8} alignItems="flex-start">
+            <Box border="2px" p="24px" borderColor="gray.200" mr={4}>
+              <Heading textStyle="h4" color="grey.800" mt={2} mb={5}>
+                Parcoursup
+              </Heading>
+
+              <Grid gap={4}>
                 <GridItem colSpan={[3, 3, 1]}>
                   <Card
-                    linkTo="/perimetre-affelnet"
-                    title="Règles d'intégration des formations à la plateforme Affelnet"
-                    body="Déterminer les conditions d'intégrations des formations en apprentissage du Catalogue (Carif-Oref) sur la plateforme Affelnet"
+                    linkTo="/console-pilotage/parcoursup"
+                    title="Ma console de pilotage Parcoursup"
                     isDisabled={!hasAccessTo(auth, "page_perimetre_af")}
                   />
                 </GridItem>
-              )}
+                {searchState.loaded && (
+                  <GridItem colSpan={[3, 3, 1]}>
+                    <Card
+                      info={`${(
+                        (searchState.countReconciliationPs.countValide * 100) /
+                        (searchState.countReconciliationPs.countTotal || 1)
+                      ).toFixed(2)}% de validées`}
+                      linkTo="/couverture-ps"
+                      title="Rapprochement des bases Carif-Oref et Parcoursup"
+                      body="Valider la correspondance des données entre la base Parcoursup et le Catalogue des offres de formations en apprentissage (base Carif-Oref)"
+                      isDisabled={!hasAccessTo(auth, "page_reconciliation_ps")}
+                    />
+                  </GridItem>
+                )}
+                {(isUserAdmin(auth) || hasAccessTo(auth, "page_perimetre_ps")) && (
+                  <GridItem colSpan={[3, 3, 1]}>
+                    <Card
+                      linkTo="/perimetre-parcoursup"
+                      title="Règles d'intégration des formations à la plateforme Parcoursup"
+                      body="Déterminer les conditions d'intégrations des formations en apprentissage du Catalogue (Carif-Oref) sur la plateforme Parcoursup"
+                      isDisabled={!hasAccessTo(auth, "page_perimetre_ps")}
+                    />
+                  </GridItem>
+                )}
+              </Grid>
+            </Box>
 
-              {(isUserAdmin(auth) || hasAccessTo(auth, "page_perimetre_ps")) && (
+            <Box style={{ border: "2px solid #E2E8F0", padding: "24px" }} ml={4}>
+              <Heading textStyle="h4" color="grey.800" mt={2} mb={5}>
+                Affelnet
+              </Heading>
+              <Grid gap={4}>
                 <GridItem colSpan={[3, 3, 1]}>
                   <Card
-                    linkTo="/perimetre-parcoursup"
-                    title="Règles d'intégration des formations à la plateforme Parcoursup"
-                    body="Déterminer les conditions d'intégrations des formations en apprentissage du Catalogue (Carif-Oref) sur la plateforme Parcoursup"
-                    isDisabled={!hasAccessTo(auth, "page_perimetre_ps")}
+                    linkTo="/console-pilotage/affelnet"
+                    title="Ma console de pilotage Affelnet"
+                    isDisabled={!hasAccessTo(auth, "page_perimetre_af")}
                   />
                 </GridItem>
-              )}
-            </Grid>
-          )}
+                {(isUserAdmin(auth) || hasAccessTo(auth, "page_perimetre_af")) && (
+                  <GridItem colSpan={[3, 3, 1]}>
+                    <Card
+                      linkTo="/perimetre-affelnet"
+                      title="Règles d'intégration des formations à la plateforme Affelnet"
+                      body="Déterminer les conditions d'intégrations des formations en apprentissage du Catalogue (Carif-Oref) sur la plateforme Affelnet"
+                      isDisabled={!hasAccessTo(auth, "page_perimetre_af")}
+                    />
+                  </GridItem>
+                )}
+              </Grid>
+            </Box>
+          </Flex>
         </Container>
       </Box>
     </Layout>
