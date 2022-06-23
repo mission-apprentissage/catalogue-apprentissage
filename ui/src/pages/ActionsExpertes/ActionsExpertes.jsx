@@ -23,7 +23,7 @@ export default () => {
             {title}
           </Heading>
 
-          <Flex my={4} mb={8} alignItems="flex-start">
+          <Flex my={4} mb={8} alignItems="flex-start" data-testId="grid">
             <Box border="2px" p="24px" borderColor="gray.200" mr={4}>
               <Heading textStyle="h4" color="grey.800" mt={2} mb={5}>
                 Parcoursup
@@ -37,7 +37,7 @@ export default () => {
                     isDisabled={!hasAccessTo(auth, "page_perimetre_af")}
                   />
                 </GridItem>
-                {searchState.loaded && (
+                {(isUserAdmin(auth) || hasAccessTo(auth, "page_reconciliation_ps")) && searchState.loaded && (
                   <GridItem colSpan={[3, 3, 1]}>
                     <Card
                       info={`${(
