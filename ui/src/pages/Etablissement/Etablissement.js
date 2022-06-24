@@ -39,7 +39,7 @@ import { etablissementService, updateUaiOrganisme } from "../../common/api/organ
 
 const sleep = (m) => new Promise((r) => setTimeout(r, m));
 
-const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
+const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
 const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSubmit, values, countFormations }) => {
   const [user] = useAuth();
@@ -420,7 +420,7 @@ export default ({ match }) => {
     (async () => {
       try {
         setLoading(true);
-        const eta = await _get(`${endpointNewFront}/entity/etablissement/${match.params.id}`, false);
+        const eta = await _get(`${CATALOGUE_API}/entity/etablissement/${match.params.id}`, false);
         setEtablissement(eta);
         setFieldValue("uai", eta.uai);
 
@@ -431,7 +431,7 @@ export default ({ match }) => {
           $or: [{ etablissement_formateur_siret: eta.siret }, { etablissement_gestionnaire_siret: eta.siret }],
         };
 
-        const count = await _get(`${endpointNewFront}/entity/formations/count?query=${JSON.stringify(query)}`, false);
+        const count = await _get(`${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify(query)}`, false);
 
         if (!mountedRef.current) return null;
 

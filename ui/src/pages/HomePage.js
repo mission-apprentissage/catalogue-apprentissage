@@ -27,7 +27,7 @@ import { ArrowRightLine, ExternalLinkLine } from "../theme/components/icons";
 import { Breadcrumb } from "../common/components/Breadcrumb";
 import { setTitle } from "../common/utils/pageUtils";
 
-const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
+const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
 export default () => {
   const [loading, setLoading] = useState(true);
@@ -43,8 +43,8 @@ export default () => {
           query: JSON.stringify({ published: true }),
         });
 
-        const countEtablissement = await _get(`${endpointNewFront}/entity/etablissements/count?${params}`, false);
-        const count = await _get(`${endpointNewFront}/entity/formations/count?${params}`, false);
+        const countEtablissement = await _get(`${CATALOGUE_API}/entity/etablissements/count?${params}`, false);
+        const count = await _get(`${CATALOGUE_API}/entity/formations/count?${params}`, false);
 
         if (mounted) {
           setCountEstablishments(countEtablissement);

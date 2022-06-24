@@ -6,7 +6,7 @@ import { _postFile } from "../../common/httpClient";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
 
-const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
+const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
 const baseStyle = {
   flex: 1,
@@ -86,7 +86,7 @@ export default () => {
       const renamedAcceptedFiles = acceptedFiles.map((file) => new File([file], filename, { type: file.type }));
       const data = new FormData();
       data.append("file", renamedAcceptedFiles[0]);
-      await _postFile(`${endpointNewFront}/v1/upload`, data);
+      await _postFile(`${CATALOGUE_API}/v1/upload`, data);
       setUploadSuccess(`Merci, le fichier a bien été déposé sur le serveur :)`);
     } catch (e) {
       const messages = await e?.json;

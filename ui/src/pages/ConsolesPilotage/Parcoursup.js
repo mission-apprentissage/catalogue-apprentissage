@@ -8,7 +8,7 @@ import { Card } from "../../common/components/Card";
 import { _get } from "../../common/httpClient";
 import { PARCOURSUP_STATUS } from "../../constants/status";
 
-const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
+const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
 const Indicators = () => {
   const [formationCount, setFormationCount] = useState(undefined);
@@ -23,13 +23,16 @@ const Indicators = () => {
   useEffect(() => {
     (async () => {
       try {
-        setFormationCount(await _get(`${endpointNewFront}/entity/formations/count?query=${JSON.stringify({})}`, false));
-        // setFormationARapprochee(
-        //   await _get(`${endpointNewFront}/entity/formations/count?query=${JSON.stringify({})}`, false)
-        // );
+        setFormationCount(await _get(`${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({})}`, false));
+        setFormationARapprochee(
+          await (async () => {
+            const response = await _get(`${CATALOGUE_API}/parcoursup/reconciliation/count`, false);
+            return response.countAutomatique + response.countAVerifier;
+          })()
+        );
         setFormationAValider(
           await _get(
-            `${endpointNewFront}/entity/formations/count?query=${JSON.stringify({
+            `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
               parcoursup_statut: {
                 $in: [
                   PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
@@ -43,7 +46,7 @@ const Indicators = () => {
         );
         setFormationTraitees(
           await _get(
-            `${endpointNewFront}/entity/formations/count?query=${JSON.stringify({
+            `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
               parcoursup_statut: {
                 $in: [PARCOURSUP_STATUS.EN_ATTENTE, PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.NON_PUBLIE],
               },
@@ -53,7 +56,7 @@ const Indicators = () => {
         );
         setFormationRejetees(
           await _get(
-            `${endpointNewFront}/entity/formations/count?query=${JSON.stringify({
+            `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
               parcoursup_statut: PARCOURSUP_STATUS.REJETE,
             })}`,
             false
@@ -61,7 +64,7 @@ const Indicators = () => {
         );
         setFormationEnAttenteDePublication(
           await _get(
-            `${endpointNewFront}/entity/formations/count?query=${JSON.stringify({
+            `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
               parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
             })}`,
             false
@@ -69,7 +72,7 @@ const Indicators = () => {
         );
         setFormationPubliees(
           await _get(
-            `${endpointNewFront}/entity/formations/count?query=${JSON.stringify({
+            `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
               parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
             })}`,
             false
@@ -77,7 +80,7 @@ const Indicators = () => {
         );
         setFormationNonPubliees(
           await _get(
-            `${endpointNewFront}/entity/formations/count?query=${JSON.stringify({
+            `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
               parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIE,
             })}`,
             false
@@ -102,9 +105,7 @@ const Indicators = () => {
       color: "yellow.100",
       title: <>{formationARapprochee}</>,
       body: <>Formations à rapprocher</>,
-      // TODO
-      linkTo: `/recherche/formations?parcoursup_statut=${encodeURIComponent(JSON.stringify([]))}`,
-      isDisabled: true,
+      linkTo: `/couverture-ps`,
     },
     {
       color: "orange.100",

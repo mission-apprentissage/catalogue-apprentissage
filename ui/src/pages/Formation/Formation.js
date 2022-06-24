@@ -41,7 +41,7 @@ import { OrganismesBlock } from "../../common/components/formation/OrganismesBlo
 import { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL } from "../../constants/catalogueLabels";
 import { COMMON_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
 
-const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
+const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
 const endpointLBA = process.env.REACT_APP_ENDPOINT_LBA || "https://labonnealternance.pole-emploi.fr";
 
@@ -286,7 +286,7 @@ export default ({ match }) => {
 
         try {
           if (trimedUaiFormation !== formation["uai_formation"]) {
-            const result = await _put(`${endpointNewFront}/entity/formations/${formation._id}`, {
+            const result = await _put(`${CATALOGUE_API}/entity/formations/${formation._id}`, {
               uai_formation: trimedUaiFormation,
               last_update_who: user.email,
               last_update_at: Date.now(),
@@ -328,7 +328,7 @@ export default ({ match }) => {
     (async () => {
       try {
         setLoading(true);
-        const apiURL = `${endpointNewFront}/entity/formation/`;
+        const apiURL = `${CATALOGUE_API}/entity/formation/`;
         // FIXME select={"__v" :0} hack to get updates_history
         const form = await _get(`${apiURL}${match.params.id}?select={"__v":0}`, false);
 
@@ -361,7 +361,7 @@ export default ({ match }) => {
 
   const sendToParcoursup = async () => {
     try {
-      const updated = await _post(`${endpointNewFront}/parcoursup/send-ws`, {
+      const updated = await _post(`${CATALOGUE_API}/parcoursup/send-ws`, {
         id: formation._id,
       });
       setFormation(updated);

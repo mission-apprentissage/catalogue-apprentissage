@@ -8,7 +8,7 @@ import { Card } from "../../common/components/Card";
 import { _get } from "../../common/httpClient";
 import { AFFELNET_STATUS } from "../../constants/status";
 
-const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
+const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
 const Indicators = () => {
   const [formationCount, setFormationCount] = useState(undefined);
@@ -22,14 +22,14 @@ const Indicators = () => {
   useEffect(() => {
     (async () => {
       try {
-        setFormationCount(await _get(`${endpointNewFront}/entity/formations/count?query=${JSON.stringify({})}`, false));
+        setFormationCount(await _get(`${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({})}`, false));
         // TODO
         // setFormationAutomatiquementRapprochee(
-        //   await _get(`${endpointNewFront}/entity/formations/count?query=${JSON.stringify({})}`, false)
+        //   await _get(`${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({})}`, false)
         // );
         setFormationAValider(
           await _get(
-            `${endpointNewFront}/entity/formations/count?query=${JSON.stringify({
+            `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
               affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
             })}`,
             false
@@ -37,7 +37,7 @@ const Indicators = () => {
         );
         setFormationTraitees(
           await _get(
-            `${endpointNewFront}/entity/formations/count?query=${JSON.stringify({
+            `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
               affelnet_statut: {
                 $in: [AFFELNET_STATUS.EN_ATTENTE, AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.NON_PUBLIE],
               },
@@ -47,7 +47,7 @@ const Indicators = () => {
         );
         setFormationEnAttenteDePublication(
           await _get(
-            `${endpointNewFront}/entity/formations/count?query=${JSON.stringify({
+            `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
               affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
             })}`,
             false
@@ -55,7 +55,7 @@ const Indicators = () => {
         );
         setFormationPubliees(
           await _get(
-            `${endpointNewFront}/entity/formations/count?query=${JSON.stringify({
+            `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
               affelnet_statut: AFFELNET_STATUS.PUBLIE,
             })}`,
             false
@@ -63,7 +63,7 @@ const Indicators = () => {
         );
         setFormationNonPubliees(
           await _get(
-            `${endpointNewFront}/entity/formations/count?query=${JSON.stringify({
+            `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
               affelnet_statut: AFFELNET_STATUS.NON_PUBLIE,
             })}`,
             false
