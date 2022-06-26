@@ -12,7 +12,7 @@ const parcoursupJobs = async () => {
     await psPerimetre();
     await psCoverage();
 
-    if (process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_EXPORT_ENABLED === "true") {
+    if (process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_EXPORT_ENABLED) {
       await parcoursupExport.run();
     }
 

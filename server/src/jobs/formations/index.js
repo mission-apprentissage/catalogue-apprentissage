@@ -12,7 +12,7 @@ const formationsJobs = async () => {
 
     // Import RCO
     let uuidReport;
-    if (process.env.CATALOGUE_APPRENTISSAGE_RCO_IMPORT_ENABLED === "true") {
+    if (process.env.CATALOGUE_APPRENTISSAGE_RCO_IMPORT_ENABLED) {
       // rco
       console.log("Import RCO enabled, starting...");
       uuidReport = await rcoImporter();

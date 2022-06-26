@@ -65,7 +65,7 @@ runScript(async ({ db }) => {
     await rebuildEsIndex("parcoursupformations"); // ~ 5 minutes // maj elastic search (recherche des rapprochements)
     await disableAlertMessage();
 
-    // if (process.env.CATALOGUE_APPRENTISSAGE_RCO_DUAL_CONTROL_ENABLED === "true") {
+    // if (process.env.CATALOGUE_APPRENTISSAGE_RCO_DUAL_CONTROL_ENABLED) {
     //   // double commande
     //   await dualControl();
     // }
