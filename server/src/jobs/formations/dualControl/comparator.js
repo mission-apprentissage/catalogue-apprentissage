@@ -2,118 +2,24 @@
 const { diff: objectDiff } = require("deep-object-diff");
 const { diff: arrayDiff } = require("../../../common/utils/arrayUtils");
 const { DualControlFormation, DualControlReport } = require("../../../common/model/index");
-const { Formation, RcoFormation } = require("../../../common/model/index");
+const { Formation } = require("../../../common/model/index");
 
 /** @typedef {import("../../../common/model/schema/formation").Formation} Formation */
 
-/**
- *  @type {Array<keyof Formation>}}
- */
-const FIELDS_TO_COMPARE = [
-  // Here list all the fields we want to compare
-  "annee",
-  "bcn_mefs_10",
-  "capacite",
-  "catalogue_published",
-  "cfd_date_fermeture",
-  "cfd_outdated",
-  "cfd_specialite",
-  "cfd",
-  "code_commune_insee",
-  "code_postal",
-  "diplome",
-  "distance",
-  "duree",
-  "etablissement_formateur_adresse",
-  "etablissement_formateur_code_commune_insee",
-  "etablissement_formateur_code_postal",
-  "etablissement_formateur_nom_academie",
-  "etablissement_formateur_nom_departement",
-  "etablissement_formateur_num_academie",
-  "etablissement_formateur_num_departement",
-  "etablissement_formateur_region",
-  "etablissement_formateur_siren",
-  "etablissement_formateur_siret",
-  "etablissement_formateur_uai",
-  "etablissement_gestionnaire_code_commune_insee",
-  "etablissement_gestionnaire_code_postal",
-  "etablissement_gestionnaire_nom_academie",
-  "etablissement_gestionnaire_nom_departement",
-  "etablissement_gestionnaire_num_academie",
-  "etablissement_gestionnaire_num_departement",
-  "etablissement_gestionnaire_region",
-  "etablissement_gestionnaire_siren",
-  "etablissement_gestionnaire_siret",
-  "etablissement_gestionnaire_uai",
-  "geo_coordonnees_etablissement_formateur",
-  "id_action",
-  "id_certifinfo",
-  "id_formation",
-  "id_rco_formation",
-  "intitule_court",
-  "intitule_long",
-  "intitule_rco",
-  "lieu_formation_adresse_computed",
-  "lieu_formation_adresse",
-  "lieu_formation_geo_coordonnees_computed",
-  "lieu_formation_geo_coordonnees",
-  "lieu_formation_siret",
-  "niveau",
-  "onisep_discipline",
-  "onisep_domaine_sousdomaine",
-  "onisep_intitule",
-  "onisep_libelle_poursuite",
-  "onisep_lien_site_onisepfr",
-  "onisep_url",
-  "periode",
-  "rncp_code",
-  "rncp_details",
-  "rncp_eligible_apprentissage",
-  "rncp_intitule",
-  "rome_codes",
-
-  // New fields
-  "published",
-  "etablissement_formateur_cedex",
-  "etablissement_formateur_certifie_qualite",
-  "etablissement_formateur_complement_adresse",
-  "etablissement_formateur_date_creation",
-  "etablissement_formateur_enseigne",
-  "etablissement_formateur_entreprise_raison_sociale",
-  "etablissement_formateur_habilite_rncp",
-  "etablissement_formateur_localite",
-  "etablissement_gestionnaire_certifie_qualite",
-  "etablissement_gestionnaire_date_creation",
-  "etablissement_gestionnaire_enseigne",
-  "etablissement_gestionnaire_entreprise_raison_sociale",
-  "etablissement_gestionnaire_habilite_rncp",
-  "etablissement_gestionnaire_localite",
-  "etablissement_gestionnaire_siren",
-  "etablissement_reference_certifie_qualite",
-  "etablissement_reference_habilite_rncp",
-  "etablissement_reference_published",
-  "etablissement_reference",
-  "geo_coordonnees_etablissement_gestionnaire",
-  "ids_action",
-  "libelle_court",
-  "localite",
-  "niveau_entree_obligatoire",
-  "niveau_formation_diplome",
-  "nom_academie",
-  "nom_departement",
-  "nom",
-  "num_academie",
-  "num_departement",
-  "region",
-  "tags",
-];
+const get = (data, key) => {
+  if (key.split(/\.(.+)/).length > 1) {
+    return get(data[key.split(/\.(.+)/)[0]], key.split(/\.(.+)/)[1]);
+  } else {
+    return data ? data[key] : undefined;
+  }
+};
 
 /**
  * Check equality between between one property of two objects
  *
  * @param {Formation} dualControlFormation
  * @param {Formation} formation
- * @param {keyof Formation} key
+ * @param  {string} key //  {keyof Formation} key
  *
  * @returns {boolean}
  */
@@ -166,7 +72,7 @@ const isEqual = (dualControlFormation, formation, key) => {
     }
 
     default:
-      result = dualControlFormation[key] === formation[key];
+      result = get(dualControlFormation, key) === get(formation, key);
       break;
   }
 
@@ -177,23 +83,23 @@ const isEqual = (dualControlFormation, formation, key) => {
  * Compare all dualcontrol formations with formations, given the argument list of properties
  *
  * @param {number} date in ms
- * @param {Array<keyof Formation>} fieldsToCompare
+ * @param  {Array<string>} fieldsToCompare // {Array<keyof Formation>} fieldsToCompare
  *
  * @returns {Promise<{date: number; totalFormation: number; totalDualControlFormation: number; totalNotFound: number; fields?: { [k: keyof Formation]: number; };}>}
  */
-const compare = async (date = Date.now(), fieldsToCompare = FIELDS_TO_COMPARE) => {
+const compare = async (date = Date.now(), fieldsToCompare = [], discriminator = undefined) => {
   const results = {
+    discriminator,
     date,
     totalFormation: await Formation.countDocuments({ published: true }),
     totalFormationWithUnpublished: await Formation.countDocuments(),
-    totalRcoFormation: await RcoFormation.countDocuments(),
     totalDualControlFormation: await DualControlFormation.countDocuments({ published: true }),
     totalDualControlFormationWithUnpublished: await DualControlFormation.countDocuments(),
     totalNotFound: 0,
   };
 
   results.fields = fieldsToCompare.reduce((acc, key) => {
-    acc[key] = 0;
+    acc[key.replace(".", "#")] = 0;
     return acc;
   }, {});
 
@@ -219,13 +125,13 @@ const compare = async (date = Date.now(), fieldsToCompare = FIELDS_TO_COMPARE) =
       fieldsToCompare.forEach((key) => {
         if (!isEqual(dualControlFormation, formation, key)) {
           // console.warn("wrong", key, dualControlFormation[key], "vs", formation[key]);
-          results.fields[key]++;
+          results.fields[key.replace(".", "#")]++;
         }
       });
     }
   }
 
-  await DualControlReport.create(results);
+  await DualControlReport.create(results, { checkKeys: false });
 
   return results;
 };

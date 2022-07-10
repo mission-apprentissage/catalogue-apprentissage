@@ -1,4 +1,9 @@
 const dualControlReportSchema = {
+  discriminator: {
+    type: String,
+    default: undefined,
+    description: "Un discriminant à des fin de filtrage des rapports",
+  },
   date: {
     index: true,
     type: Date,
@@ -29,12 +34,6 @@ const dualControlReportSchema = {
     type: Number,
     default: 0,
     description: "Nombre total de formations dans le nouveau flux, incluant les non-publiées",
-    required: true,
-  },
-  totalRcoFormation: {
-    type: Number,
-    default: 0,
-    description: "NNombre de formations envoyées par RCO dans le flux de production",
     required: true,
   },
   totalNotFound: {

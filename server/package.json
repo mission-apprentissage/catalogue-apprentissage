@@ -39,7 +39,12 @@
     "doc": "node src/jobs/doc/index.js",
     "migration:create": "migrate-mongo create",
     "migration:up": "migrate-mongo up",
-    "migration:down": "migrate-mongo down"
+    "migration:down": "migrate-mongo down",
+    "tco:jobs": "node node_modules/@mission-apprentissage/tco-service-node/lib/jobs/index.js",
+    "bcn:jobs": "run=true node node_modules/@mission-apprentissage/tco-service-node/lib/jobs/bcnDownloader/index.js; run=true node node_modules/@mission-apprentissage/tco-service-node/lib/jobs/bcnImporter/index.js ",
+    "onisep:jobs": "run=true node node_modules/@mission-apprentissage/tco-service-node/lib/jobs/onisepImporter/index.js",
+    "conventionFiles:jobs": "run=true node node_modules/@mission-apprentissage/tco-service-node/lib/jobs/conventionFilesImporter/index.js",
+    "rncp:jobs": "run=true node node_modules/@mission-apprentissage/tco-service-node/lib/jobs/rncpImporter/index.js"
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.6.1",

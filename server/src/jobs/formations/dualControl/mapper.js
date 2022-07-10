@@ -47,6 +47,8 @@ const mapper = (obj, keysMap = KEYS_MAP) => {
     Object.entries(obj)
       .filter(([key]) => keysMap[key] !== 0)
       .map(([key, value]) => {
+        // if (key === "cfd_date_fermeture") console.log(value);
+
         return [keysMap[key] ?? key, value];
       })
   );

@@ -8,6 +8,10 @@ const { Types } = require("mongoose");
 
 export interface DualControlReport {
   /**
+   * Un discriminant à des fin de filtrage des rapports
+   */
+  discriminator?: string;
+  /**
    * Date du rapport
    */
   date: Date;
@@ -27,10 +31,6 @@ export interface DualControlReport {
    * Nombre total de formations dans le nouveau flux, incluant les non-publiées
    */
   totalDualControlFormationWithUnpublished: number;
-  /**
-   * NNombre de formations envoyées par RCO dans le flux de production
-   */
-  totalRcoFormation: number;
   /**
    * Nombre de formations dans le nouveau flux qui n'existe pas dans le catalogue
    */
