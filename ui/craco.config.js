@@ -1,19 +1,8 @@
-const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
-const path = require("path");
-
 module.exports = {
-  reactScriptsVersion: "react-scripts" /* (default value) */,
+  reactScriptsVersion: "react-scripts",
   webpack: {
-    alias: {},
-    // plugins: {
-    //   add: [
-    //     new NodePolyfillPlugin({
-    //       root: "./",
-    //     }),
-    //   ] /* An array of plugins */,
-    // },
     configure: (webpackConfig) => {
-      // webpackConfig.resolve.modules.push("node_modules", path.resolve(__dirname, "src"));
+      // Dependencies from node-polyfill-webpack-plugin
       webpackConfig.resolve.fallback = {
         assert: require.resolve("assert"),
         buffer: require.resolve("buffer"),
