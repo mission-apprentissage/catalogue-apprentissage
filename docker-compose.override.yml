@@ -18,6 +18,7 @@ services:
     env_file: ./ui/.env
     environment:
       - FAST_REFRESH=false
+      - WDS_SOCKET_PORT=0
 
   server:
     restart: "no"
