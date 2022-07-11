@@ -10,7 +10,7 @@ export interface DualControlReport {
   /**
    * Un discriminant à des fin de filtrage des rapports
    */
-  discriminator: string;
+  discriminator?: string;
   /**
    * Date du rapport
    */
