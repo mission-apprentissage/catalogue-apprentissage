@@ -117,12 +117,12 @@ describe(__filename, () => {
     const result = await compare(date, ["cfd", "rncp_code"]);
 
     assert.deepStrictEqual(result, {
+      discriminator: null,
       date,
       totalFormation: 4,
       totalFormationWithUnpublished: 4,
       totalDualControlFormation: 3,
       totalDualControlFormationWithUnpublished: 4,
-      totalRcoFormation: 0,
       totalNotFound: 1,
       fields: {
         rncp_code: 2,
@@ -131,15 +131,15 @@ describe(__filename, () => {
     });
 
     const countReports = await DualControlReport.countDocuments({});
-    assert.strictEqual(countReports, 1);
-    const report = await DualControlReport.findOne({ date }, { _id: 0, __v: 0 }).lean();
+    assert.strictEqual(countReports, 2);
+    const report = await DualControlReport.findOne({ date, discriminator: null }, { _id: 0, __v: 0 }).lean();
     assert.deepStrictEqual(report, {
+      discriminator: null,
       date: new Date(date),
       totalFormation: 4,
       totalFormationWithUnpublished: 4,
       totalDualControlFormation: 3,
       totalDualControlFormationWithUnpublished: 4,
-      totalRcoFormation: 0,
       totalNotFound: 1,
       fields: {
         rncp_code: 2,
@@ -153,12 +153,12 @@ describe(__filename, () => {
     const result = await compare(date, ["periode"]);
 
     assert.deepStrictEqual(result, {
+      discriminator: null,
       date,
       totalFormation: 4,
       totalFormationWithUnpublished: 4,
       totalDualControlFormation: 3,
       totalDualControlFormationWithUnpublished: 4,
-      totalRcoFormation: 0,
       totalNotFound: 1,
       fields: {
         periode: 0,
@@ -166,15 +166,16 @@ describe(__filename, () => {
     });
 
     const countReports = await DualControlReport.countDocuments({});
-    assert.strictEqual(countReports, 1);
-    const report = await DualControlReport.findOne({ date }, { _id: 0, __v: 0 }).lean();
+    assert.strictEqual(countReports, 2);
+
+    const report = await DualControlReport.findOne({ date, discriminator: null }, { _id: 0, __v: 0 }).lean();
     assert.deepStrictEqual(report, {
+      discriminator: null,
       date: new Date(date),
       totalFormation: 4,
       totalFormationWithUnpublished: 4,
       totalDualControlFormation: 3,
       totalDualControlFormationWithUnpublished: 4,
-      totalRcoFormation: 0,
       totalNotFound: 1,
       fields: {
         periode: 0,
@@ -187,12 +188,12 @@ describe(__filename, () => {
     const result = await compare(date, ["bcn_mefs_10"]);
 
     assert.deepStrictEqual(result, {
+      discriminator: null,
       date,
       totalFormation: 4,
       totalFormationWithUnpublished: 4,
       totalDualControlFormation: 3,
       totalDualControlFormationWithUnpublished: 4,
-      totalRcoFormation: 0,
       totalNotFound: 1,
       fields: {
         bcn_mefs_10: 0,
@@ -200,13 +201,14 @@ describe(__filename, () => {
     });
 
     const countReports = await DualControlReport.countDocuments({});
-    assert.strictEqual(countReports, 1);
-    const report = await DualControlReport.findOne({ date }, { _id: 0, __v: 0 }).lean();
+    assert.strictEqual(countReports, 2);
+
+    const report = await DualControlReport.findOne({ date, discriminator: null }, { _id: 0, __v: 0 }).lean();
     assert.deepStrictEqual(report, {
+      discriminator: null,
       date: new Date(date),
       totalFormation: 4,
       totalFormationWithUnpublished: 4,
-      totalRcoFormation: 0,
       totalDualControlFormation: 3,
       totalDualControlFormationWithUnpublished: 4,
       totalNotFound: 1,
@@ -221,12 +223,12 @@ describe(__filename, () => {
     const result = await compare(date, ["lieu_formation_adresse"]);
 
     assert.deepStrictEqual(result, {
+      discriminator: null,
       date,
       totalFormation: 4,
       totalFormationWithUnpublished: 4,
       totalDualControlFormation: 3,
       totalDualControlFormationWithUnpublished: 4,
-      totalRcoFormation: 0,
       totalNotFound: 1,
       fields: {
         lieu_formation_adresse: 0,
@@ -234,19 +236,54 @@ describe(__filename, () => {
     });
 
     const countReports = await DualControlReport.countDocuments({});
-    assert.strictEqual(countReports, 1);
-    const report = await DualControlReport.findOne({ date }, { _id: 0, __v: 0 }).lean();
+    assert.strictEqual(countReports, 2);
 
+    const report = await DualControlReport.findOne({ date, discriminator: null }, { _id: 0, __v: 0 }).lean();
     assert.deepStrictEqual(report, {
+      discriminator: null,
       date: new Date(date),
       totalFormation: 4,
       totalFormationWithUnpublished: 4,
       totalDualControlFormation: 3,
       totalDualControlFormationWithUnpublished: 4,
-      totalRcoFormation: 0,
       totalNotFound: 1,
       fields: {
         lieu_formation_adresse: 0,
+      },
+    });
+  });
+
+  it("should add a discriminator when provided", async () => {
+    const date = Date.now();
+    const result = await compare(date, ["rncp_details.rncp_outdated"], "rncp");
+
+    assert.deepStrictEqual(result, {
+      discriminator: "rncp",
+      date,
+      totalFormation: 4,
+      totalFormationWithUnpublished: 4,
+      totalDualControlFormation: 3,
+      totalDualControlFormationWithUnpublished: 4,
+      totalNotFound: 1,
+      fields: {
+        "rncp_details#rncp_outdated": 0,
+      },
+    });
+
+    const countReports = await DualControlReport.countDocuments({});
+    assert.strictEqual(countReports, 2);
+
+    const report = await DualControlReport.findOne({ date, discriminator: "rncp" }, { _id: 0, __v: 0 }).lean();
+    assert.deepStrictEqual(report, {
+      discriminator: "rncp",
+      date: new Date(date),
+      totalFormation: 4,
+      totalFormationWithUnpublished: 4,
+      totalDualControlFormation: 3,
+      totalDualControlFormationWithUnpublished: 4,
+      totalNotFound: 1,
+      fields: {
+        "rncp_details#rncp_outdated": 0,
       },
     });
   });

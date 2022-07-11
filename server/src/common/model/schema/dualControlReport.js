@@ -1,7 +1,7 @@
 const dualControlReportSchema = {
   discriminator: {
     type: String,
-    default: undefined,
+    default: null,
     description: "Un discriminant à des fin de filtrage des rapports",
   },
   date: {

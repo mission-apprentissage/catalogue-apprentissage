@@ -87,7 +87,7 @@ const isEqual = (dualControlFormation, formation, key) => {
  *
  * @returns {Promise<{date: number; totalFormation: number; totalDualControlFormation: number; totalNotFound: number; fields?: { [k: keyof Formation]: number; };}>}
  */
-const compare = async (date = Date.now(), fieldsToCompare = [], discriminator = undefined) => {
+const compare = async (date = Date.now(), fieldsToCompare = [], discriminator = null) => {
   const results = {
     discriminator,
     date,
