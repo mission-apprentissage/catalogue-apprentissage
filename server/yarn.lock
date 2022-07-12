@@ -309,10 +309,10 @@
   resolved "https://registry.yarnpkg.com/@jsdevtools/ono/-/ono-7.1.3.tgz#9df03bbd7c696a5c58885c34aa06da41c8543796"
   integrity sha512-4JQNk+3mVzK3xh2rqd6RB4J46qUR19azEHBneZyTZM+c456qOrbbM/5xcR8huNCCcbVt7+UmizG6GuUvPvKUYg==
 
-"@mission-apprentissage/tco-service-node@2.37.3":
-  version "2.37.3"
-  resolved "https://npm.pkg.github.com/download/@mission-apprentissage/tco-service-node/2.37.3/40897f361c33bcacb1832f45c9e5ba5ed11633103de8a75053d8facae91fa4dc#27d70326b2aea5a3f66caa5f7769eaf6a6ac322e"
-  integrity sha512-ARcmHpAmfIY3MfTxf/Qpiz+GsWalrZQoIsdZNCjevlIpMEIs2vroXt2JGKFBKlWvTo7aBQ4vaso9OTs8B2c57A==
+"@mission-apprentissage/tco-service-node@2.38.3":
+  version "2.38.3"
+  resolved "https://npm.pkg.github.com/download/@mission-apprentissage/tco-service-node/2.38.3/64b499cd0d296d570f16a75e67e95d42629ed7ca53e861dac668c3291ed9a0e2#d54a020a5c735cec0ab3d0f96615f3ad73607585"
+  integrity sha512-IOj/HMW8rvZaoq+2INEYavbo64Tst3LAia8oOSFb/L9VcuSkMzHLhq0Jzmo26ZydOTk6m/aUGc97iPATLKTG7g==
   dependencies:
     axios "0.21.4"
     body-parser "1.19.0"
@@ -336,7 +336,7 @@
     jsonwebtoken "8.5.1"
     lodash "4.17.21"
     migrate-mongo "8.2.3"
-    moment "2.29.2"
+    moment "^2.29.4"
     mongoose "5.13.14"
     mongoose-paginate "5.0.3"
     mongoose-schema-jsonschema "1.4.7"
@@ -4192,10 +4192,15 @@ mocha@9.2.2:
     yargs-parser "20.2.4"
     yargs-unparser "2.0.0"
 
-moment@2.29.2, moment@^2.10.6:
+moment@^2.10.6:
   version "2.29.2"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.2.tgz#00910c60b20843bcba52d37d58c628b47b1f20e4"
   integrity sha512-UgzG4rvxYpN15jgCmVJwac49h9ly9NurikMWGPdVxm8GZD6XjkKPxDTjQQ43gtGgnV3X0cAyWDdP2Wexoquifg==
+
+moment@^2.29.4:
+  version "2.29.4"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.4.tgz#3dbe052889fe7c1b2ed966fcb3a77328964ef108"
+  integrity sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==
 
 mongodb-connection-string-url@^2.5.2:
   version "2.5.2"
