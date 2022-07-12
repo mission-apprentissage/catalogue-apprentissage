@@ -11,7 +11,6 @@ const KEYS_MAP = {
   // code_diplome: "cfd",
   intitule_formation: "intitule_rco",
   intitule_long_bcn: "intitule_long",
-  niveau_formation_diplome: "niveau",
 
   etablissement_lieu_formation_adresse: "lieu_formation_adresse",
   etablissement_lieu_formation_code_postal: "code_postal",
