@@ -26,7 +26,7 @@ describe(__filename, () => {
     const expected = {
       result: null,
       messages: {
-        error: `Unable to retrieve data from cfd test`,
+        error: `Error: Unable to retrieve data from cfd test`,
       },
     };
 

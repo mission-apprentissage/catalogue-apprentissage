@@ -26,7 +26,7 @@ describe(__filename, () => {
     const expected = {
       result: null,
       messages: {
-        error: `Unable to retrieve data from codePostal 999999 `,
+        error: `Error: Unable to retrieve data from codePostal 999999 `,
       },
     };
 
@@ -45,7 +45,7 @@ describe(__filename, () => {
     const expected = {
       result: null,
       messages: {
-        error: `Unable to retrieve data from codePostal 999999 (88888) `,
+        error: `Error: Unable to retrieve data from codePostal 999999 (88888) `,
       },
     };
 
@@ -64,7 +64,7 @@ describe(__filename, () => {
     const expected = {
       result: null,
       messages: {
-        error: `Unable to retrieve data from codePostal 999999 nope`,
+        error: `Error: Unable to retrieve data from codePostal 999999 nope`,
       },
     };
 

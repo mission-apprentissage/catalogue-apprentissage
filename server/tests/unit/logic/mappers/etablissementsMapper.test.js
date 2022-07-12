@@ -358,7 +358,7 @@ describe(__filename, () => {
     it("should return an error when gestionnaire and formateur are not found", async () => {
       const expected = {
         messages: {
-          error: "Unable to retrieve neither gestionnaire and formateur, both are null",
+          error: "Error: Unable to retrieve neither gestionnaire and formateur, both are null",
         },
         result: null,
       };
@@ -369,7 +369,7 @@ describe(__filename, () => {
     it("should return an error when gestionnaire not found", async () => {
       const expected = {
         messages: {
-          error: "Établissement gestionnaire introuvable 12345678",
+          error: "Error: Établissement gestionnaire introuvable 12345678",
         },
         result: null,
       };
@@ -380,7 +380,7 @@ describe(__filename, () => {
     it("should return an error when formateur not found", async () => {
       const expected = {
         messages: {
-          error: "Établissement formateur introuvable 12345",
+          error: "Error: Établissement formateur introuvable 12345",
         },
         result: null,
       };
@@ -391,7 +391,7 @@ describe(__filename, () => {
     it("should return an error when gestionnaire is closed", async () => {
       const expected = {
         messages: {
-          error: "Établissement gestionnaire fermé 123456789",
+          error: "Error: Établissement gestionnaire fermé 123456789",
         },
         result: null,
       };
@@ -402,7 +402,7 @@ describe(__filename, () => {
     it("should return an error when formateur is closed", async () => {
       const expected = {
         messages: {
-          error: "Établissement formateur fermé 123456789",
+          error: "Error: Établissement formateur fermé 123456789",
         },
         result: null,
       };
