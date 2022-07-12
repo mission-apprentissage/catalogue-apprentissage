@@ -47,7 +47,11 @@ const Alert = () => {
     };
   }, []);
 
-  const { values: valuesM, handleSubmit: handleSubmitM, handleChange: handleChangeM } = useFormik({
+  const {
+    values: valuesM,
+    handleSubmit: handleSubmitM,
+    handleChange: handleChangeM,
+  } = useFormik({
     initialValues: {
       msg: "",
     },
@@ -75,7 +79,12 @@ const Alert = () => {
     },
   });
 
-  const { values: valuesA, handleSubmit: handleSubmitA, handleChange: handleChangeA, setFieldValue } = useFormik({
+  const {
+    values: valuesA,
+    handleSubmit: handleSubmitA,
+    handleChange: handleChangeA,
+    setFieldValue,
+  } = useFormik({
     initialValues: {
       msg: "",
     },
@@ -110,8 +119,7 @@ const Alert = () => {
         if (data.length === 0) {
           const message = {
             type: "automatique",
-            msg:
-              "Une mise à jour des données du catalogue est en cours, le service sera à nouveau opérationnel d'ici le XX/XX/21 à XXh.",
+            msg: "Une mise à jour des données du catalogue est en cours, le service sera à nouveau opérationnel d'ici le XX/XX/21 à XXh.",
             name: "auto",
             enabled: false,
           };
