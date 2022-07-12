@@ -44,7 +44,8 @@
     "test": "craco test",
     "test:coverage": "craco test --watchAll=false --coverage",
     "eject": "craco eject",
-    "sitemap": "babel-node src/scripts/sitemap-generator.js"
+    "sitemap": "babel-node src/scripts/sitemap-generator.js",
+    "lint": "prettier --write **/*.js **/*.jsx"
   },
   "eslintConfig": {
     "extends": "react-app"

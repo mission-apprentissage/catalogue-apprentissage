@@ -24,12 +24,7 @@ const cfdMapper = async (cfd = null, options = { onisep: true }) => {
 
     const cfdInfo = await getCfdInfo(cfd, options);
     if (!cfdInfo) {
-      return {
-        result: null,
-        messages: {
-          error: `Unable to retrieve data from cfd ${cfd}`,
-        },
-      };
+      throw new Error(`Unable to retrieve data from cfd ${cfd}`);
     }
 
     const { result, messages } = cfdInfo;

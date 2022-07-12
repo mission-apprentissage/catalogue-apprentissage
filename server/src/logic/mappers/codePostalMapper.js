@@ -9,14 +9,11 @@ const codePostalMapper = async (codePostal = null, codeInsee = null) => {
 
     const cpInfo = await getCpInfo(codePostal, codeInsee);
     if (!cpInfo || cpInfo?.messages?.error) {
-      return {
-        result: null,
-        messages: {
-          error: `Unable to retrieve data from codePostal ${codePostal}${codeInsee ? ` (${codeInsee})` : ""} ${
-            cpInfo?.messages?.error ?? ""
-          }`,
-        },
-      };
+      throw new Error(
+        `Unable to retrieve data from codePostal ${codePostal}${codeInsee ? ` (${codeInsee})` : ""} ${
+          cpInfo?.messages?.error ?? ""
+        }`
+      );
     }
 
     const { result, messages } = cpInfo;

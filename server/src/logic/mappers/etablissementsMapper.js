@@ -293,36 +293,21 @@ const etablissementsMapper = async (etablissement_gestionnaire_siret, etablissem
 
     const etablissementReference = getEtablissementReference(attachedEstablishments, rncpInfo);
     if (!etablissementReference) {
-      return {
-        result: null,
-        messages: { error: "Unable to retrieve neither gestionnaire and formateur, both are null" },
-      };
+      throw new Error("Unable to retrieve neither gestionnaire and formateur, both are null");
     }
 
     if (attachedEstablishments?.gestionnaire?.ferme) {
-      return {
-        result: null,
-        messages: { error: `Établissement gestionnaire fermé ${etablissement_gestionnaire_siret}` },
-      };
+      throw new Error(`Établissement gestionnaire fermé ${etablissement_gestionnaire_siret}`);
     }
     if (!attachedEstablishments?.gestionnaire?._id) {
-      return {
-        result: null,
-        messages: { error: `Établissement gestionnaire introuvable ${etablissement_formateur_siret}` },
-      };
+      throw new Error(`Établissement gestionnaire introuvable ${etablissement_formateur_siret}`);
     }
 
     if (attachedEstablishments?.formateur?.ferme) {
-      return {
-        result: null,
-        messages: { error: `Établissement formateur fermé ${etablissement_formateur_siret}` },
-      };
+      throw new Error(`Établissement formateur fermé ${etablissement_formateur_siret}`);
     }
     if (!attachedEstablishments?.formateur?._id) {
-      return {
-        result: null,
-        messages: { error: `Établissement formateur introuvable ${etablissement_formateur_siret}` },
-      };
+      throw new Error(`Établissement formateur introuvable ${etablissement_formateur_siret}`);
     }
 
     const { referenceEstablishment, etablissement_reference } = etablissementReference;

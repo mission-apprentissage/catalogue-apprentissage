@@ -64,7 +64,13 @@ const ReconciliationModalHeader = React.memo(
       setCurrentMnaFormation(defaultIndex);
     }, [formation, defaultIndex]);
 
-    const { values, handleChange, handleSubmit: handleSave, errors, isSubmitting } = useFormik({
+    const {
+      values,
+      handleChange,
+      handleSubmit: handleSave,
+      errors,
+      isSubmitting,
+    } = useFormik({
       initialValues: {
         parcoursup_keep_publish: "true",
         parcoursup_raison_depublication: "",
