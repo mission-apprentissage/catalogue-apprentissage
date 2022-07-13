@@ -70,7 +70,7 @@ const FIELDS_TO_COMPARE = [
 
   "rome_codes",
 
-  // // New fields
+  // New fields
   "published",
   "etablissement_formateur_cedex",
   "etablissement_formateur_certifie_qualite",
