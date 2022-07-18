@@ -34,7 +34,7 @@ services:
     tty: true
     build:
       context: server
-    mem_limit: 3g
+    mem_limit: 4g
     restart: unless-stopped
     networks:
       - catalogue_apprentissage_network
