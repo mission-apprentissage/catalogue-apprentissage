@@ -34,6 +34,7 @@ module.exports = {
   ParcoursupFormation: createModel("parcoursupformations", schema.parcoursupFormationSchema, {
     esIndexName: "parcoursupformations",
   }),
+  ParcoursupFormationCheck: createModel("parcoursupformationchecks", schema.parcoursupFormationCheckSchema),
   SandboxFormation: createModel("sandboxformation", schema.formationSchema),
   Statistique: createModel("statistique", schema.statistiqueSchema),
   Alert: createModel("alert", schema.alertSchema),

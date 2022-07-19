@@ -131,7 +131,7 @@ const compare = async (date = Date.now(), fieldsToCompare = [], discriminator = 
     }
   }
 
-  await DualControlReport.create(results, { checkKeys: false });
+  await DualControlReport.create(results);
 
   return results;
 };
