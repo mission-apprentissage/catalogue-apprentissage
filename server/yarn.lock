@@ -1602,6 +1602,11 @@ css-what@^6.0.1:
   resolved "https://registry.yarnpkg.com/css-what/-/css-what-6.1.0.tgz#fb5effcf76f1ddea2c81bdfaa4de44e79bac70f4"
   integrity sha512-HTUrgRJ7r4dsZKU6GjmpfRK1O76h97Z8MfS1G0FozR+oF2kG6Vfe8JE6zwrkbxigziPHinCJ+gCPjA9EaBDtRw==
 
+csv-parse@5.3.0:
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/csv-parse/-/csv-parse-5.3.0.tgz#85cc02fc9d1c89bd1b02e69069c960f8b8064322"
+  integrity sha512-UXJCGwvJ2fep39purtAn27OUYmxB1JQto+zhZ4QlJpzsirtSFbzLvip1aIgziqNdZp/TptvsKEV5BZSxe10/DQ==
+
 cyclist@1.0.1, cyclist@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-1.0.1.tgz#596e9698fd0c80e12038c2b82d6eb1b35b6224d9"
@@ -1861,7 +1866,7 @@ dtrace-provider@~0.8:
   dependencies:
     nan "^2.14.0"
 
-duplexer3@0.1.4, duplexer3@^0.1.4:
+duplexer3@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/duplexer3/-/duplexer3-0.1.4.tgz#ee01dd1cac0ed3cbc7fdbea37dc0a8f1ce002ce2"
   integrity sha1-7gHdHKwO08vH/b6jfcCo8c4ALOI=
@@ -2538,6 +2543,11 @@ fs.realpath@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
   integrity sha1-FQStJSMVjKpA20onh8sBQRmU6k8=
+
+fs@0.0.1-security:
+  version "0.0.1-security"
+  resolved "https://registry.yarnpkg.com/fs/-/fs-0.0.1-security.tgz#8a7bd37186b6dddf3813f23858b57ecaaf5e41d4"
+  integrity sha512-3XY9e1pP0CVEUCdj5BmfIZxRBTSDycnbqhIOGec9QYtmVH2fbLpj86CFWkrNOkt/Fvty4KZG5lTglL9j/gJ87w==
 
 fsevents@~2.3.2:
   version "2.3.2"
@@ -4575,13 +4585,12 @@ object-inspect@^1.12.0:
   resolved "https://registry.yarnpkg.com/object-inspect/-/object-inspect-1.12.0.tgz#6e2c120e868fd1fd18cb4f18c31741d0d6e776f0"
   integrity sha512-Ho2z80bVIvJloH+YzRmpZVQe87+qASmBUKZDWgx9cu+KDrX2ZDH/3tMy+gXbZETVGs2M8YdxObOh7XAtim9Y0g==
 
-oleoduc@0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/oleoduc/-/oleoduc-0.6.0.tgz#cdab4be5caae575b0cae5218a4a390a688603323"
-  integrity sha512-0jB/qzhhI+D1dYla2Wq9w9I6bOIGbjZbEfnLogG8tAZY3YwzYd5K06n05sqiESs50PHslhSm6RUAxIW+DJkSOw==
+oleoduc@0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/oleoduc/-/oleoduc-0.7.0.tgz#1b55f98126297dd6a30dac691c60bb10403f2198"
+  integrity sha512-PL2tbPkwptK5KOKZVq58cmbRTnH0kkuY2DPqr+zt/CIJeMM7AGDAefx5thAjUGeI/rvXm0/BURhyM3XRVqyLNA==
   dependencies:
     cyclist "1.0.1"
-    duplexer3 "0.1.4"
     parallel-transform "1.2.0"
 
 on-finished@^2.3.0:

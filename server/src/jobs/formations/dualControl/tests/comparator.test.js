@@ -131,7 +131,7 @@ describe(__filename, () => {
     });
 
     const countReports = await DualControlReport.countDocuments({});
-    assert.strictEqual(countReports, 2);
+    assert.strictEqual(countReports, 1);
     const report = await DualControlReport.findOne({ date, discriminator: null }, { _id: 0, __v: 0 }).lean();
     assert.deepStrictEqual(report, {
       discriminator: null,
@@ -166,7 +166,7 @@ describe(__filename, () => {
     });
 
     const countReports = await DualControlReport.countDocuments({});
-    assert.strictEqual(countReports, 2);
+    assert.strictEqual(countReports, 1);
 
     const report = await DualControlReport.findOne({ date, discriminator: null }, { _id: 0, __v: 0 }).lean();
     assert.deepStrictEqual(report, {
@@ -201,7 +201,7 @@ describe(__filename, () => {
     });
 
     const countReports = await DualControlReport.countDocuments({});
-    assert.strictEqual(countReports, 2);
+    assert.strictEqual(countReports, 1);
 
     const report = await DualControlReport.findOne({ date, discriminator: null }, { _id: 0, __v: 0 }).lean();
     assert.deepStrictEqual(report, {
@@ -236,7 +236,7 @@ describe(__filename, () => {
     });
 
     const countReports = await DualControlReport.countDocuments({});
-    assert.strictEqual(countReports, 2);
+    assert.strictEqual(countReports, 1);
 
     const report = await DualControlReport.findOne({ date, discriminator: null }, { _id: 0, __v: 0 }).lean();
     assert.deepStrictEqual(report, {
@@ -271,7 +271,7 @@ describe(__filename, () => {
     });
 
     const countReports = await DualControlReport.countDocuments({});
-    assert.strictEqual(countReports, 2);
+    assert.strictEqual(countReports, 1);
 
     const report = await DualControlReport.findOne({ date, discriminator: "rncp" }, { _id: 0, __v: 0 }).lean();
     assert.deepStrictEqual(report, {
