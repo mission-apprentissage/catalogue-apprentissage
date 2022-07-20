@@ -7,7 +7,7 @@ const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { AFFELNET_STATUS } = require("../../../constants/status");
 
 const run = async () => {
-  await DualControlFormation.updateMany({}, { $set: { catalogue_published: true, published: true } });
+  // await DualControlFormation.updateMany({}, { $set: { catalogue_published: true, published: true } });
 
   // set "hors périmètre"
   await DualControlFormation.updateMany(
@@ -166,15 +166,19 @@ const run = async () => {
     affelnet_statut: AFFELNET_STATUS.NON_PUBLIE,
   });
 
-  logger.info(
+  const toLog =
     `Total formations publiées dans le catalogue : ${totalPublished}\n` +
-      `Total formations hors périmètre : ${totalNotRelevant}/${totalPublished}\n` +
-      `Total formations à publier (soumis à validation) : ${totalToValidate}/${totalPublished}\n` +
-      `Total formations à publier : ${totalToCheck}/${totalPublished}\n` +
-      `Total formations en attente de publication : ${totalPending}/${totalPublished}\n` +
-      `Total formations publiées sur Affelnet : ${totalAfPublished}/${totalPublished}\n` +
-      `Total formations NON publiées sur Affelnet : ${totalAfNotPublished}/${totalPublished}`
-  );
+    `Total formations hors périmètre : ${totalNotRelevant}/${totalPublished}\n` +
+    `Total formations à publier (soumis à validation) : ${totalToValidate}/${totalPublished}\n` +
+    `Total formations à publier : ${totalToCheck}/${totalPublished}\n` +
+    `Total formations en attente de publication : ${totalPending}/${totalPublished}\n` +
+    `Total formations publiées sur Affelnet : ${totalAfPublished}/${totalPublished}\n` +
+    `Total formations NON publiées sur Affelnet : ${totalAfNotPublished}/${totalPublished}`;
+
+  console.log(toLog);
+  logger.info(toLog);
+
+  logger.info();
 };
 
 module.exports = { run };

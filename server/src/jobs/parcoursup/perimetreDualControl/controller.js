@@ -7,7 +7,7 @@ const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
 
 const run = async () => {
-  await DualControlFormation.updateMany({}, { $set: { catalogue_published: true, published: true } });
+  // await DualControlFormation.updateMany({}, { $set: { catalogue_published: true, published: true } });
 
   // 1 - set "hors périmètre"
   await DualControlFormation.updateMany(
@@ -315,18 +315,20 @@ const run = async () => {
     parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIE,
   });
 
-  logger.info(
+  const toLog =
     `Total formations publiées dans le catalogue : ${totalPublished}\n` +
-      `Total formations hors périmètre : ${totalNotRelevant}/${totalPublished}\n` +
-      `Total formations à publier (sous condition habilitation)" : ${totalToValidateHabilitation}/${totalPublished}\n` +
-      `Total formations à publier (vérifier accès direct postbac)" : ${totalToValidate}/${totalPublished}\n` +
-      `Total formations à publier (soumis à validation Recteur)" : ${totalToValidateRecteur}/${totalPublished}\n` +
-      `Total formations à publier : ${totalToCheck}/${totalPublished}\n` +
-      `Total formations en attente de publication : ${totalPending}/${totalPublished}\n` +
-      `Total formations publiées sur ParcourSup : ${totalPsPublished}/${totalPublished}\n` +
-      `Total formations rejetée par ParcourSup : ${totalRejected}/${totalPublished}\n` +
-      `Total formations NON publiées sur ParcourSup : ${totalPsNotPublished}/${totalPublished}`
-  );
+    `Total formations hors périmètre : ${totalNotRelevant}/${totalPublished}\n` +
+    `Total formations à publier (sous condition habilitation)" : ${totalToValidateHabilitation}/${totalPublished}\n` +
+    `Total formations à publier (vérifier accès direct postbac)" : ${totalToValidate}/${totalPublished}\n` +
+    `Total formations à publier (soumis à validation Recteur)" : ${totalToValidateRecteur}/${totalPublished}\n` +
+    `Total formations à publier : ${totalToCheck}/${totalPublished}\n` +
+    `Total formations en attente de publication : ${totalPending}/${totalPublished}\n` +
+    `Total formations publiées sur ParcourSup : ${totalPsPublished}/${totalPublished}\n` +
+    `Total formations rejetée par ParcourSup : ${totalRejected}/${totalPublished}\n` +
+    `Total formations NON publiées sur ParcourSup : ${totalPsNotPublished}/${totalPublished}`;
+
+  console.log(toLog);
+  logger.info(toLog);
 };
 
 module.exports = { run };
