@@ -66,6 +66,8 @@ const isEqual = (dualControlFormation, formation, key) => {
       break;
     }
 
+    case "ids_action":
+    case "tags":
     case "rome_codes": {
       result = arrayDiff(dualControlFormation[key], formation[key]).length === 0;
       break;
@@ -124,7 +126,9 @@ const compare = async (date = Date.now(), fieldsToCompare = [], discriminator = 
     } else {
       fieldsToCompare.forEach((key) => {
         if (!isEqual(dualControlFormation, formation, key)) {
-          // console.warn("wrong", key, dualControlFormation[key], "vs", formation[key]);
+          if (key === "ids_action") {
+            console.warn("wrong", key, dualControlFormation[key], "vs", formation[key]);
+          }
           results.fields[key.replace(".", "#")]++;
         }
       });
