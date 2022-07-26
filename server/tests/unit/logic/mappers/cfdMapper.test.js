@@ -95,7 +95,6 @@ describe(__filename, () => {
 
     const { result, messages } = await cfdMapper("test");
 
-    console.error({ result, messages });
     assert.deepStrictEqual(messages.cfd, expected.messages.cfd);
     assert.deepStrictEqual(result.cfd, expected.result.cfd);
     assert.deepStrictEqual(result.diplome, expected.result.diplome);

@@ -28,12 +28,7 @@ const cfdMapper = async (cfd = null, options = { onisep: true }) => {
     }
 
     const { result, messages } = cfdInfo;
-    console.log(("cfdMapper", result));
-    const { rncps = [], mefs = {}, onisep = {} } = result;
-
-    if (rncps.length > 1) {
-      throw new Error(`Multiple rncp code returned for cfd ${cfd}`);
-    }
+    const { rncp = {}, rncps = [], mefs = {}, onisep = {} } = result;
 
     const {
       date_fin_validite_enregistrement = null,
@@ -56,7 +51,7 @@ const cfdMapper = async (cfd = null, options = { onisep: true }) => {
       intitule_diplome = null,
       eligible_apprentissage = false,
       rncp_outdated = false,
-    } = rncps[0] ?? {};
+    } = rncps?.length ? rncps[0] : rncp;
 
     const rome_codes = (romes || []).map(({ rome }) => rome);
 
