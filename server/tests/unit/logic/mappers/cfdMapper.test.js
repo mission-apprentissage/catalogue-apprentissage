@@ -62,7 +62,7 @@ describe(__filename, () => {
 
   it("should ensure romes are an array", async () => {
     rewiremock("@mission-apprentissage/tco-service-node").with({
-      getCfdInfo: () => ({ result: { rncp: { romes: false } }, messages: {} }),
+      getCfdInfo: () => ({ result: { rncps: [{ romes: false }] }, messages: {} }),
     });
 
     const { cfdMapper } = require("../../../../src/logic/mappers/cfdMapper");
@@ -94,6 +94,7 @@ describe(__filename, () => {
     };
 
     const { result, messages } = await cfdMapper("test");
+
     assert.deepStrictEqual(messages.cfd, expected.messages.cfd);
     assert.deepStrictEqual(result.cfd, expected.result.cfd);
     assert.deepStrictEqual(result.diplome, expected.result.diplome);
