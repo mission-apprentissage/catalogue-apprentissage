@@ -1,7 +1,7 @@
 const path = require("path");
 const fs = require("fs");
 const axios = require("axios");
-const https = require("https");
+// const https = require("https");
 const { parser: streamParser } = require("stream-json");
 const { streamArray } = require("stream-json/streamers/StreamArray");
 const StreamZip = require("node-stream-zip");
@@ -10,20 +10,20 @@ const { DualControlFormation } = require("../../../common/model/index");
 const { mapper } = require("./mapper");
 const { parser } = require("./parser");
 
-const RCO_ZIP_URL = "http://mnadownloader-preprod.intercariforef.org/";
+const RCO_ZIP_URL = "https://mnadownloader.intercariforef.org/";
 const RCO_ZIP_PATH = "./assets/rco.zip";
 
 const downloadZip = async () => {
   // FIXME : Remove when ssl certificate for intercariforef.org is renewed
-  const agent = new https.Agent({
-    rejectUnauthorized: false,
-  });
+  // const agent = new https.Agent({
+  //   rejectUnauthorized: false,
+  // });
 
   const response = await axios({
     method: "get",
     url: RCO_ZIP_URL,
     responseType: "stream",
-    httpsAgent: agent,
+    // httpsAgent: agent,
   });
 
   const file = fs.createWriteStream(path.join(__dirname, RCO_ZIP_PATH));
