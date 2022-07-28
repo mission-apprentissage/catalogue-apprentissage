@@ -126,7 +126,7 @@ const compare = async (date = Date.now(), fieldsToCompare = [], discriminator = 
     } else {
       fieldsToCompare.forEach((key) => {
         if (!isEqual(dualControlFormation, formation, key)) {
-          if (key === "ids_action") {
+          if (key === "rncp_details.code_type_certif") {
             console.warn("wrong", key, dualControlFormation[key], "vs", formation[key]);
           }
           results.fields[key.replace(".", "#")]++;
