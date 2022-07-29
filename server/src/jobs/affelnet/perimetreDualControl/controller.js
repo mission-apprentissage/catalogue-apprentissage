@@ -142,27 +142,27 @@ const run = async () => {
   // stats
   const totalPublished = await DualControlFormation.countDocuments({ published: true });
   const totalNotRelevant = await DualControlFormation.countDocuments({
-    // published: true,
+    published: true,
     affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
   });
   const totalToValidate = await DualControlFormation.countDocuments({
-    // published: true,
+    published: true,
     affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
   });
   const totalToCheck = await DualControlFormation.countDocuments({
-    // published: true,
+    published: true,
     affelnet_statut: AFFELNET_STATUS.A_PUBLIER,
   });
   const totalPending = await DualControlFormation.countDocuments({
-    // published: true,
+    published: true,
     affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
   });
   const totalAfPublished = await DualControlFormation.countDocuments({
-    // published: true,
+    published: true,
     affelnet_statut: AFFELNET_STATUS.PUBLIE,
   });
   const totalAfNotPublished = await DualControlFormation.countDocuments({
-    // published: true,
+    published: true,
     affelnet_statut: AFFELNET_STATUS.NON_PUBLIE,
   });
 
