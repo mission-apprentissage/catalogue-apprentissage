@@ -2,7 +2,8 @@ const logger = require("../../../common/logger");
 const { runScript } = require("../../scriptWrapper");
 const { importer } = require("./importer");
 const { compare } = require("./comparator");
-
+const { afPerimetre } = require("../../affelnet/perimetreDualControl");
+const { psPerimetre } = require("../../parcoursup/perimetreDualControl");
 /**
  *  @type Array<string> // {Array<keyof Formation>}}
  */
@@ -143,6 +144,10 @@ const dualControl = async () => {
       logger.info("results of dual control for rncp fields : ", resultsRncp);
       console.log("results of dual control for rncp fields : ", resultsRncp);
     }
+
+    logger.info(" -- Checking perimeters -- ");
+    await afPerimetre();
+    await psPerimetre();
 
     logger.info(" -- End of dual control -- ");
   } catch (err) {
