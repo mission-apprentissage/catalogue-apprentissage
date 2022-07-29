@@ -1,4 +1,4 @@
-const { DualControlFormation } = require("../../../common/model");
+const { DualControlFormation, DualControlPerimeterReport } = require("../../../common/model");
 const logger = require("../../../common/logger");
 const { getQueryFromRule } = require("../../../common/utils/rulesUtils");
 const { ReglePerimetre } = require("../../../common/model");
@@ -178,7 +178,18 @@ const run = async () => {
   console.log(toLog);
   logger.info(toLog);
 
-  logger.info();
+  return await DualControlPerimeterReport.create({
+    plateforme: "affelnet",
+    statuts: {
+      totalPublished,
+      totalNotRelevant,
+      totalToValidate,
+      totalToCheck,
+      totalPending,
+      totalAfPublished,
+      totalAfNotPublished,
+    },
+  });
 };
 
 module.exports = { run };

@@ -42,6 +42,7 @@ module.exports = {
   Consumption: createModel("consumption", schema.consumptionSchema),
   DualControlFormation: createModel("dualcontrolformation", schema.formationSchema),
   DualControlReport: createModel("dualcontrolreport", schema.dualControlReportSchema),
+  DualControlPerimeterReport: createModel("dualcontrolperimeterreport", schema.dualControlPerimeterReportSchema),
   ConsoleStat: createModel("consolestat", schema.consoleStatSchema),
   PreviousSeasonFormation: createModel("previousSeasonFormation", schema.previousSeasonFormationSchema),
   PreviousSeasonFormationStat: createModel("previousSeasonFormationStat", schema.previousSeasonFormationStatSchema),

@@ -7,15 +7,17 @@ const psPerimetre = async () => {
   try {
     logger.info(" -- Start psup perimetre -- ");
 
-    await controller.run();
+    const results = await controller.run();
 
     logger.info(" -- End of psup perimetre -- ");
+
+    return results;
   } catch (err) {
     logger.error(err);
   }
 };
 
-module.exports = psPerimetre;
+module.exports = { psPerimetre };
 
 if (process.env.standalone) {
   runScript(async () => {

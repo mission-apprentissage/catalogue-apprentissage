@@ -1,7 +1,7 @@
 const { DualControlFormation } = require("../../../common/model");
 const logger = require("../../../common/logger");
 const { getQueryFromRule } = require("../../../common/utils/rulesUtils");
-const { ReglePerimetre } = require("../../../common/model");
+const { ReglePerimetre, DualControlPerimeterReport } = require("../../../common/model");
 const { updateTagsHistory } = require("../../../logic/updaters/tagsHistoryUpdater");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
@@ -329,6 +329,22 @@ const run = async () => {
 
   console.log(toLog);
   logger.info(toLog);
+
+  return await DualControlPerimeterReport.create({
+    plateforme: "parcoursup",
+    statuts: {
+      totalPublished,
+      totalNotRelevant,
+      totalToValidateHabilitation,
+      totalToValidate,
+      totalToValidateRecteur,
+      totalToCheck,
+      totalPending,
+      totalPsPublished,
+      totalRejected,
+      totalPsNotPublished,
+    },
+  });
 };
 
 module.exports = { run };
