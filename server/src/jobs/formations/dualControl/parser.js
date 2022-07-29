@@ -85,7 +85,7 @@ const parser = (obj, typesMap = TYPES_MAP) => {
           break;
 
         case "rncp_details":
-          parsedValue = value?.length !== undefined ? value[0] : value;
+          parsedValue = value?.length !== undefined ? value[0] : value && value !== "" ? value : null;
           break;
 
         default:

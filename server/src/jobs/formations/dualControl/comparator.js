@@ -125,12 +125,35 @@ const compare = async (date = Date.now(), fieldsToCompare = [], discriminator = 
       results.totalNotFound++;
     } else {
       fieldsToCompare.forEach((key) => {
+        // if (key === "rncp_details.code_type_certif") {
+        // if (
+        //   [
+        //     "rncp_details.date_fin_validite_enregistrement",
+        //     "rncp_details.active_inactive",
+        //     "rncp_details.etat_fiche_rncp",
+        //     "rncp_details.niveau_europe",
+        //     "rncp_details.code_type_certif",
+        //     "rncp_details.type_certif",
+        //     "rncp_details.ancienne_fiche",
+        //     "rncp_details.nouvelle_fiche",
+        //     "rncp_details.demande",
+        //     "rncp_details.certificateurs",
+        //     "rncp_details.nsf_code",
+        //     "rncp_details.nsf_libelle",
+        //     "rncp_details.partenaires",
+        //     "rncp_details.romes",
+        //     "rncp_details.blocs_competences",
+        //     "rncp_details.voix_acces",
+        //     "rncp_details.rncp_outdated",
+        //   ].includes(key)
+        // ) {
         if (!isEqual(dualControlFormation, formation, key)) {
-          if (key === "rncp_details.code_type_certif") {
-            console.warn("wrong", key, dualControlFormation[key], "vs", formation[key]);
-          }
+          // console.warn("wrong", key, get(dualControlFormation, key), "vs", get(formation, key));
           results.fields[key.replace(".", "#")]++;
+        } else {
+          // console.warn("ok", key, get(dualControlFormation, key), "vs", get(formation, key));
         }
+        // }
       });
     }
   }
