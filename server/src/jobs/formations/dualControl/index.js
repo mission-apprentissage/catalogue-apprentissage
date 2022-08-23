@@ -4,6 +4,8 @@ const { importer } = require("./importer");
 const { compare } = require("./comparator");
 const { afPerimetre } = require("../../affelnet/perimetreDualControl");
 const { psPerimetre } = require("../../parcoursup/perimetreDualControl");
+const { DualControlFormation } = require("../../../common/model/index");
+
 /**
  *  @type Array<string> // {Array<keyof Formation>}}
  */
@@ -127,23 +129,33 @@ const RNCP_FIELDS_TO_COMPARE = [
   "rncp_details.rncp_outdated",
 ];
 
-const dualControl = async () => {
+const dualControl = async (options) => {
   try {
     logger.info(" -- Start of dual control -- ");
 
-    const importError = await importer();
+    let importError;
 
-    if (!importError) {
-      const results = await compare(Date.now(), FIELDS_TO_COMPARE);
+    if (!options.noImport) {
+      logger.info(" -- Importing dual control formations -- ");
+      importError = await importer();
+      logger.info(`${await DualControlFormation.countDocuments()} formations importées`);
 
-      logger.info("results of dual control : ", results);
-      console.log("results of dual control : ", results);
-
-      const resultsRncp = await compare(Date.now(), RNCP_FIELDS_TO_COMPARE, "rncp");
-
-      logger.info("results of dual control for rncp fields : ", resultsRncp);
-      console.log("results of dual control for rncp fields : ", resultsRncp);
+      if (importError) {
+        return;
+      }
     }
+
+    logger.info(" -- Comparing fields -- ");
+
+    const results = await compare(Date.now(), FIELDS_TO_COMPARE);
+
+    logger.info("results of dual control : ", results);
+
+    logger.info(" -- Comparing rncp fields -- ");
+
+    const resultsRncp = await compare(Date.now(), RNCP_FIELDS_TO_COMPARE, "rncp");
+
+    logger.info("results of dual control for rncp fields : ", resultsRncp);
 
     logger.info(" -- Checking perimeters -- ");
     await afPerimetre();
@@ -159,6 +171,8 @@ module.exports = dualControl;
 
 if (process.env.standaloneJobs) {
   runScript(async () => {
-    await dualControl();
+    const args = process.argv.slice(2);
+    const noImport = args.includes("--noImport");
+    await dualControl({ noImport });
   });
 }
