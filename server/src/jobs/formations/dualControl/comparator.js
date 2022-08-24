@@ -3,6 +3,7 @@ const { diff: objectDiff } = require("deep-object-diff");
 const { diff: arrayDiff } = require("../../../common/utils/arrayUtils");
 const { DualControlFormation, DualControlReport } = require("../../../common/model/index");
 const { Formation } = require("../../../common/model/index");
+const { DateTime } = require("luxon");
 
 /** @typedef {import("../../../common/model/schema/formation").Formation} Formation */
 
@@ -72,6 +73,20 @@ const isEqual = (dualControlFormation, formation, key) => {
       result = arrayDiff(dualControlFormation[key], formation[key]).length === 0;
       break;
     }
+
+    case "cfd_date_fermeture":
+    case "etablissement_gestionnaire_date_creation":
+    case "etablissement_formateur_date_creation":
+    case "rncp_details.date_fin_validite_enregistrement":
+      // console.log(
+      //   get(dualControlFormation, key),
+      //   get(formation, key),
+      //   DateTime.fromJSDate(get(dualControlFormation, key)).toISO() === DateTime.fromJSDate(get(formation, key)).toISO()
+      // );
+      result =
+        DateTime.fromJSDate(get(dualControlFormation, key)).toISO() ===
+        DateTime.fromJSDate(get(formation, key)).toISO();
+      break;
 
     default:
       result = get(dualControlFormation, key) === get(formation, key);

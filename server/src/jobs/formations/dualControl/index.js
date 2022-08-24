@@ -146,15 +146,11 @@ const dualControl = async (options) => {
     }
 
     logger.info(" -- Comparing fields -- ");
-
     const results = await compare(Date.now(), FIELDS_TO_COMPARE);
-
     logger.info("results of dual control : ", results);
 
     logger.info(" -- Comparing rncp fields -- ");
-
     const resultsRncp = await compare(Date.now(), RNCP_FIELDS_TO_COMPARE, "rncp");
-
     logger.info("results of dual control for rncp fields : ", resultsRncp);
 
     logger.info(" -- Checking perimeters -- ");
