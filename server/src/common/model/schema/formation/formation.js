@@ -91,6 +91,12 @@ const formationSchema = {
     default: null,
     description: "Code formation diplôme d'entrée (année 1 de l'apprentissage)",
   },
+  cfd_sortie: {
+    index: true,
+    type: String,
+    default: null,
+    description: "Code formation diplôme de sortie (dernière année de l'apprentissage)",
+  },
   affelnet_mefs_10: {
     type: [mefSchema],
     default: [],
@@ -611,6 +617,21 @@ const formationSchema = {
     type: [mefSchema],
     default: [],
     description: "BCN : Codes MEF 10 caractères",
+  },
+  bcn_mefs_stat_11: {
+    type: [String],
+    default: [],
+    description: "BCN : Codes MEF_STAT_11",
+  },
+  bcn_mefs_stat_11_entree: {
+    type: [String],
+    default: [],
+    description: "BCN : Codes MEF_STAT_11 d'entrée (année 1 de l'apprentissage)",
+  },
+  bcn_mefs_stat_11_sortie: {
+    type: [String],
+    default: [],
+    description: "BCN : Codes MEF_STAT_11 de sortie (dernière année de l'apprentissage)",
   },
   editedFields: {
     type: Object,

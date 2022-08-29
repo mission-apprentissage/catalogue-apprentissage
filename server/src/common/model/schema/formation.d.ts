@@ -34,6 +34,10 @@ export interface Formation {
    */
   cfd_entree?: string;
   /**
+   * Code formation diplôme de sortie (dernière année de l'apprentissage)
+   */
+  cfd_sortie?: string;
+  /**
    * Tableau de Code MEF 10 caractères et modalités (filtrés pour Affelnet si applicable)
    */
   affelnet_mefs_10?: ItemOfAffelnetMefs_10[];
@@ -338,6 +342,18 @@ export interface Formation {
    * BCN : Codes MEF 10 caractères
    */
   bcn_mefs_10?: ItemOfBcnMefs_10[];
+  /**
+   * BCN : Codes MEF_STAT_11
+   */
+  bcn_mefs_stat_11?: string[];
+  /**
+   * BCN : Codes MEF_STAT_11 d'entrée (année 1 de l'apprentissage)
+   */
+  bcn_mefs_stat_11_entree?: string[];
+  /**
+   * BCN : Codes MEF_STAT_11 de sortie (dernière année de l'apprentissage)
+   */
+  bcn_mefs_stat_11_sortie?: string[];
   /**
    * Champs édités par un utilisateur
    */

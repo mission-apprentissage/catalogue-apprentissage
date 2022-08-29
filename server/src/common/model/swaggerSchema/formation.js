@@ -33,6 +33,11 @@ module.exports = {
         default: "null",
         description: "Code formation diplôme d'entrée (année 1 de l'apprentissage)",
       },
+      cfd_sortie: {
+        type: "string",
+        default: "null",
+        description: "Code formation diplôme de sortie (dernière année de l'apprentissage)",
+      },
       affelnet_mefs_10: {
         type: "array",
         items: {
@@ -641,6 +646,30 @@ module.exports = {
         },
         default: [],
         description: "BCN : Codes MEF 10 caractères",
+      },
+      bcn_mefs_stat_11: {
+        type: "array",
+        items: {
+          type: "string",
+        },
+        default: [],
+        description: "BCN : Codes MEF_STAT_11",
+      },
+      bcn_mefs_stat_11_entree: {
+        type: "array",
+        items: {
+          type: "string",
+        },
+        default: [],
+        description: "BCN : Codes MEF_STAT_11 d'entrée (année 1 de l'apprentissage)",
+      },
+      bcn_mefs_stat_11_sortie: {
+        type: "array",
+        items: {
+          type: "string",
+        },
+        default: [],
+        description: "BCN : Codes MEF_STAT_11 de sortie (dernière année de l'apprentissage)",
       },
       editedFields: {
         type: "object",
