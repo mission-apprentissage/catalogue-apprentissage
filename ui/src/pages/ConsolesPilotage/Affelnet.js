@@ -93,9 +93,7 @@ const Indicators = () => {
       color: "yellow.100",
       title: <>{formationAutomatiquementRapprochee}</>,
       body: <>Formations rapprochées automatiquement</>,
-      // TODO
-      linkTo: `/recherche/formations?affelnet_statut=${encodeURIComponent(JSON.stringify([]))}`,
-      isDisabled: true,
+      linkTo: `/recherche/formations?affelnet_statut=${encodeURIComponent(JSON.stringify(AFFELNET_STATUS.PUBLIE))}`,
     },
     {
       color: "orange.100",
