@@ -23,10 +23,16 @@ const Indicators = () => {
     (async () => {
       try {
         setFormationCount(await _get(`${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({})}`, false));
-        // TODO
-        // setFormationAutomatiquementRapprochee(
-        //   await _get(`${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({})}`, false)
-        // );
+
+        setFormationAutomatiquementRapprochee(
+          await _get(
+            `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
+              affelnet_statut: AFFELNET_STATUS.PUBLIE,
+              forced_published: { $ne: true },
+            })}`,
+            false
+          )
+        );
         setFormationAValider(
           await _get(
             `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
