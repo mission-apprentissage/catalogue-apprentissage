@@ -171,6 +171,10 @@ export interface Formation {
    */
   annee_incoherente?: boolean | null;
   /**
+   * Dans le périmètre parcoursup
+   */
+  parcoursup_perimetre?: boolean;
+  /**
    * Statut parcoursup
    */
   parcoursup_statut?:
@@ -200,6 +204,10 @@ export interface Formation {
    * Date de publication (passage au statut "publié")
    */
   parcoursup_published_date?: Date;
+  /**
+   * Dans le périmètre affelnet
+   */
+  affelnet_perimetre?: boolean;
   /**
    * Statut affelnet
    */
