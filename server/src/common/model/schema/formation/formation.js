@@ -376,6 +376,11 @@ const formationSchema = {
     noIndex: true,
     description: "Email du contact pour cette formation",
   },
+  parcoursup_perimetre: {
+    type: Boolean,
+    default: false,
+    description: "Dans le périmètre parcoursup",
+  },
   parcoursup_statut: {
     type: String,
     enum: [
@@ -419,6 +424,11 @@ const formationSchema = {
     type: Date,
     default: null,
     description: 'Date de publication (passage au statut "publié")',
+  },
+  affelnet_perimetre: {
+    type: Boolean,
+    default: false,
+    description: "Dans le périmètre affelnet",
   },
   affelnet_statut: {
     type: String,

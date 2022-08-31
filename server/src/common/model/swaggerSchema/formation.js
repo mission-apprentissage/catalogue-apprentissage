@@ -367,6 +367,11 @@ module.exports = {
         default: "null",
         description: "Année incohérente avec les codes mefs",
       },
+      parcoursup_perimetre: {
+        type: "boolean",
+        default: false,
+        description: "Dans le périmètre parcoursup",
+      },
       parcoursup_statut: {
         type: "string",
         enum: [
@@ -438,6 +443,11 @@ module.exports = {
         default: "null",
         description: 'Date de publication (passage au statut "publié")',
         format: "date-time",
+      },
+      affelnet_perimetre: {
+        type: "boolean",
+        default: false,
+        description: "Dans le périmètre affelnet",
       },
       affelnet_statut: {
         type: "string",
