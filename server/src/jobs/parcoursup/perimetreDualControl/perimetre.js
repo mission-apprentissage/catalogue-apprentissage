@@ -4,7 +4,6 @@ const { getQueryFromRule } = require("../../../common/utils/rulesUtils");
 const { ReglePerimetre } = require("../../../common/model");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
-const { runScript } = require("../../scriptWrapper");
 
 const run = async () => {
   await DualControlFormation.updateMany(
@@ -143,9 +142,3 @@ const run = async () => {
 };
 
 module.exports = { run };
-
-if (process.env.standaloneJobs) {
-  runScript(async () => {
-    await run();
-  });
-}
