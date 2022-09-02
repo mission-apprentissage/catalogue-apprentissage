@@ -10,7 +10,7 @@ const { DualControlFormation } = require("../../../common/model/index");
 const { mapper } = require("./mapper");
 const { parser } = require("./parser");
 
-const RCO_ZIP_URL = "https://mnadownloader.intercariforef.org/";
+const RCO_ZIP_URL = "https://mnadownloader-preprod.intercariforef.org/";
 const RCO_ZIP_PATH = "./assets/rco.zip";
 
 const downloadZip = async () => {
