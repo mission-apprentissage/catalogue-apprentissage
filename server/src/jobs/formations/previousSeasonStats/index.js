@@ -91,12 +91,14 @@ const comparePreviousSeasonFormations = async (plateforme) => {
       }
     ).lean());
 
+    const academyCause = academyCauses.get(academyName) ?? { closed: 0, qualiopi_lost: 0, not_updated: 0, other: 0 };
+
     // Si la formation existe toujours et est dans le périmètre, ok on continue.
     if (found && isInScope(found, plateforme)) {
+      academyCauses.set(academyName, academyCause);
       continue;
     }
 
-    const academyCause = academyCauses.get(academyName) ?? { closed: 0, qualiopi_lost: 0, not_updated: 0, other: 0 };
     // Si la formation n'existe plus (on ne la retouve pas): on incrémente le compteur "closed" par académie.
     if (!found) {
       academyCause.closed = academyCause.closed + 1;
