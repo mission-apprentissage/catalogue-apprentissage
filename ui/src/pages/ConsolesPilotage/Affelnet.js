@@ -151,7 +151,7 @@ export default () => {
         <iframe
           src="https://catalogue.apprentissage.beta.gouv.fr/metabase/public/dashboard/50b6d168-d303-4f91-b898-945f6b9f11f4"
           frameBorder="0"
-          style={{ height: "170vh", width: "100%" }}
+          style={{ height: "226vh", width: "100%" }}
           title={`Console de pilotage Affelnet - Statistiques`}
           allowtransparency={"true"}
         />
