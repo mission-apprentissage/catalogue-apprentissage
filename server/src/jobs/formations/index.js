@@ -1,9 +1,9 @@
 const crypto = require("crypto");
 const logger = require("../../common/logger");
 const { runScript } = require("../scriptWrapper");
-const rcoImporter = require("./rcoImporter");
-const rcoConverter = require("./rcoConverter");
-const trainingsUpdater = require("./trainingsUpdater");
+const { rcoImporter } = require("./rcoImporter");
+const { rcoConverter } = require("./rcoConverter");
+const { trainingsUpdater } = require("./trainingsUpdater");
 const { isSunday } = require("../../common/utils/dateUtils");
 
 const formationsJobs = async () => {

@@ -10,7 +10,7 @@ const etablissementsJobs = require("./etablissements");
 const formationsJobs = require("./formations");
 const checkUai = require("./checkUai");
 const etablissementTags = require("./etablissements/tags");
-const collectPreviousSeasonStats = require("./formations/previousSeasonStats");
+const { collectPreviousSeasonStats } = require("./formations/previousSeasonStats");
 
 const KIT_LOCAL_PATH = "/data/uploads/CodeDiplome_RNCP_latest_kit.csv";
 const CONVENTION_FILES_DIR = path.join(__dirname, "conventionFilesImporter/assets");

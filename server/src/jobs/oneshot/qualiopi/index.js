@@ -7,7 +7,7 @@ const { Formation } = require("../../../common/model");
 const { rebuildEsIndex } = require("../../esIndex/esIndex");
 const parcoursupJobs = require("../../parcoursup");
 const affelnetJobs = require("../../affelnet");
-const trainingsUpdater = require("../../formations/trainingsUpdater");
+const { trainingsUpdater } = require("../../formations/trainingsUpdater");
 
 const CONVENTION_FILES_DIR = path.join(__dirname, "../../conventionFilesImporter/assets");
 

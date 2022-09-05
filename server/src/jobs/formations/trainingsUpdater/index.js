@@ -95,7 +95,7 @@ const trainingsUpdater = async ({ withCodePostalUpdate, noUpdatesFilters, uuidRe
   await SandboxFormation.deleteMany({});
 };
 
-module.exports = trainingsUpdater;
+module.exports = { trainingsUpdater };
 
 if (process.env.standalone) {
   runScript(async () => {

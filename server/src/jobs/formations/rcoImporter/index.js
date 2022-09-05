@@ -16,7 +16,7 @@ const rcoImporter = async (importDay = "") => {
   }
 };
 
-module.exports = rcoImporter;
+module.exports = { rcoImporter };
 
 if (process.env.standalone) {
   runScript(async () => {

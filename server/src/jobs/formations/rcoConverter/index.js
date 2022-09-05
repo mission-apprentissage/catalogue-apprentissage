@@ -15,7 +15,7 @@ const rcoConverter = async (uuidReport = null) => {
   }
 };
 
-module.exports = rcoConverter;
+module.exports = { rcoConverter };
 
 if (process.env.standalone) {
   runScript(async () => {

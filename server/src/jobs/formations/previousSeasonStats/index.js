@@ -183,7 +183,7 @@ const collectPreviousSeasonStats = async ({ month = 7, date = 31 } = { month: 7,
   }
 };
 
-module.exports = collectPreviousSeasonStats;
+module.exports = { collectPreviousSeasonStats };
 
 if (process.env.standaloneJobs) {
   /**
