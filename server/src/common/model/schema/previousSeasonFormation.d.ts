@@ -16,8 +16,35 @@ export interface PreviousSeasonFormation {
    */
   num_academie: string;
   /**
-   * Plateforme pour laquelle la formation était dans le périmètre
+   * Dans le périmètre parcoursup
    */
-  plateforme: "affelnet" | "parcoursup";
+  parcoursup_perimetre?: boolean;
+  /**
+   * Statut parcoursup
+   */
+  parcoursup_statut?:
+    | "hors périmètre"
+    | "publié"
+    | "non publié"
+    | "à publier (sous condition habilitation)"
+    | "à publier (vérifier accès direct postbac)"
+    | "à publier (soumis à validation Recteur)"
+    | "à publier"
+    | "en attente de publication"
+    | "rejet de publication";
+  /**
+   * Dans le périmètre affelnet
+   */
+  affelnet_perimetre?: boolean;
+  /**
+   * Statut affelnet
+   */
+  affelnet_statut?:
+    | "hors périmètre"
+    | "publié"
+    | "non publié"
+    | "à publier (soumis à validation)"
+    | "à publier"
+    | "en attente de publication";
   _id?: Types.ObjectId;
 }
