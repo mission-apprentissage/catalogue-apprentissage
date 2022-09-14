@@ -86,6 +86,16 @@ const parser = (obj, typesMap = TYPES_MAP) => {
 
         case "rncp_details":
           parsedValue = value?.length !== undefined ? value[0] : value && value !== "" ? value : null;
+          // console.log("before: ", parsedValue?.date_fin_validite_enregistrement);
+
+          parsedValue = {
+            ...parsedValue,
+            date_fin_validite_enregistrement: parsedValue?.date_fin_validite_enregistrement
+              ? DateTime.fromISO(parsedValue.date_fin_validite_enregistrement).toJSDate()
+              : undefined,
+          };
+
+          // console.log("after: ", parsedValue?.date_fin_validite_enregistrement);
           break;
 
         default:
