@@ -242,6 +242,13 @@ const columnsDefinition = [
     formatter: (value) => escapeDiacritics(value),
   },
   {
+    Header: "Information Affelnet",
+    accessor: "affelnet_infos_offre",
+    width: 400,
+    exportable: true,
+    formatter: (value) => escapeDiacritics(value),
+  },
+  {
     Header: "Motif de non publication Affelnet",
     accessor: "affelnet_raison_depublication",
     width: 200,
