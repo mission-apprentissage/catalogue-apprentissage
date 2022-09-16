@@ -1,7 +1,7 @@
 const { Formation } = require("../../common/model/index");
 
 // keep 200 days in history (a bit more than 6 month)
-const KEEP_HISTORY_DAYS_LIMIT = 200;
+const KEEP_HISTORY_DAYS_LIMIT = 365;
 
 const updateTagsHistory = async (scope) => {
   await Formation.updateMany(
