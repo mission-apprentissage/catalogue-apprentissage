@@ -208,7 +208,7 @@ module.exports = () => {
       if (retrievedData) {
         return res.json(retrievedData);
       }
-      return res.status(404).send({ message: `Etablissment doesn't exist` });
+      return res.status(404).send({ message: `Etablissement doesn't exist` });
     })
   );
 

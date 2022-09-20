@@ -30,13 +30,15 @@ export default () => {
               </Heading>
 
               <Grid gap={4}>
-                <GridItem colSpan={[3, 3, 1]}>
-                  <Card
-                    linkTo="/console-pilotage/parcoursup"
-                    title="Ma console de pilotage Parcoursup"
-                    isDisabled={!hasAccessTo(auth, "page_perimetre_af")}
-                  />
-                </GridItem>
+                {isUserAdmin(auth) && (
+                  <GridItem colSpan={[3, 3, 1]}>
+                    <Card
+                      linkTo="/console-pilotage/parcoursup"
+                      title="Ma console de pilotage Parcoursup"
+                      isDisabled={!hasAccessTo(auth, "page_perimetre_ps")}
+                    />
+                  </GridItem>
+                )}
                 {(isUserAdmin(auth) || hasAccessTo(auth, "page_reconciliation_ps")) && searchState.loaded && (
                   <GridItem colSpan={[3, 3, 1]}>
                     <Card
@@ -69,13 +71,15 @@ export default () => {
                 Affelnet
               </Heading>
               <Grid gap={4}>
-                <GridItem colSpan={[3, 3, 1]}>
-                  <Card
-                    linkTo="/console-pilotage/affelnet"
-                    title="Ma console de pilotage Affelnet"
-                    isDisabled={!hasAccessTo(auth, "page_perimetre_af")}
-                  />
-                </GridItem>
+                {isUserAdmin(auth) && (
+                  <GridItem colSpan={[3, 3, 1]}>
+                    <Card
+                      linkTo="/console-pilotage/affelnet"
+                      title="Ma console de pilotage Affelnet"
+                      isDisabled={!hasAccessTo(auth, "page_perimetre_af")}
+                    />
+                  </GridItem>
+                )}
                 {(isUserAdmin(auth) || hasAccessTo(auth, "page_perimetre_af")) && (
                   <GridItem colSpan={[3, 3, 1]}>
                     <Card
