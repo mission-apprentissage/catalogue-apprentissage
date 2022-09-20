@@ -106,8 +106,8 @@ const FIELDS_TO_COMPARE = [
 
   // NEW FIELDS
   "email",
-  "etablissement_formateur_nom_academie",
-  "etablissement_gestionnaire_num_academie",
+  "etablissement_formateur_courriel",
+  "etablissement_gestionnaire_courriel",
 ];
 
 const RNCP_FIELDS_TO_COMPARE = [
