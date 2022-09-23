@@ -36,7 +36,7 @@ const downloadZip = async () => {
   });
 };
 
-const importFromZip = async () => {
+const extractFromZip = async () => {
   const zip = new StreamZip.async({ file: path.join(__dirname, RCO_ZIP_PATH) });
   const entriesCount = await zip.entriesCount;
 
@@ -61,12 +61,12 @@ const importFromZip = async () => {
   await zip.close();
 };
 
-const importer = async () => {
+const downloader = async () => {
   let error = null;
   try {
     await downloadZip();
     await DualControlFormation.deleteMany({});
-    await importFromZip();
+    await extractFromZip();
   } catch (e) {
     error = e;
     console.error(e);
@@ -75,4 +75,4 @@ const importer = async () => {
   return error;
 };
 
-module.exports = { importer };
+module.exports = { downloader };
