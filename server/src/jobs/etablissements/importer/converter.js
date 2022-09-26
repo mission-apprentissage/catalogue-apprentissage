@@ -14,8 +14,6 @@ const removeFields = (entity, fields) => {
 };
 
 const unpublishOthers = async () => {
-  // console.log(`before: ${await Etablissement.countDocuments({ published: true })}`);
-
   const result = await Etablissement.updateMany(
     {
       siret: { $in: await DualControlEtablissement.distinct("siret") },
@@ -24,8 +22,6 @@ const unpublishOthers = async () => {
       $set: { published: false },
     }
   );
-
-  // console.log(`after: ${await Etablissement.countDocuments({ published: true })}`);
 
   return { removed: result.nModified };
 };
@@ -36,7 +32,7 @@ const applyConversion = async () => {
     updated = 0;
 
   await cursor(
-    DualControlEtablissement.find().sort().limit(1),
+    DualControlEtablissement.find().sort(),
 
     async ({ siret }) => {
       const dcEtablissement = await DualControlEtablissement.findOne({ siret }).lean();
@@ -46,7 +42,7 @@ const applyConversion = async () => {
       // console.log({ etablissement, dcEtablissement });
       // console.log("================================");
 
-      // Si la'établissement existe
+      // Si l'établissement existe
       if (etablissement) {
         const toRestore = [];
 
@@ -57,14 +53,6 @@ const applyConversion = async () => {
 
         const notToCompare = ["_id", "__v", "created_at", "last_update_at", ...toDelete, ...toRestore, ...toRecompute];
 
-        // const result = await Etablissement.updateOne(
-        //   { siret },
-        //   { $set: { ...removeFields({ ...dcEtablissement }, notToCompare) } }
-        // );
-        // console.log(result);
-
-        // result.nModified ? updated++ : notUpdated++;
-
         const difference = diff(
           removeFields({ ...etablissement }, notToCompare),
           removeFields({ ...dcEtablissement }, notToCompare)
@@ -72,19 +60,19 @@ const applyConversion = async () => {
 
         console.log(difference);
 
-        // if (!difference || !Object.keys(difference).length) {
-        //   notUpdated++;
-        //   return;
-        // }
+        const result = await Etablissement.updateOne(
+          { siret },
+          { $set: { ...removeFields({ ...dcEtablissement }, notToCompare) } }
+        );
 
-        // updated++;
-
-        // TODO : Recalcule des champs à recalculer
+        result.nModified ? updated++ : notUpdated++;
       }
       // Si l'établissement n'existe pas
       else {
         console.warn(`${dcEtablissement.siret} not found`);
         added++;
+
+        // TODO : Recalcule des champs à recalculer
         await Etablissement.create(dcEtablissement);
       }
     }

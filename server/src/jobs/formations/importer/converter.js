@@ -14,8 +14,6 @@ const removeFields = (entity, fields) => {
 };
 
 const unpublishOthers = async () => {
-  // console.log(`before: ${await Formation.countDocuments({ published: true })}`);
-
   const result = await Formation.updateMany(
     {
       cle_ministere_educatif: { $in: await DualControlFormation.distinct("cle_ministere_educatif") },
@@ -24,8 +22,6 @@ const unpublishOthers = async () => {
       $set: { published: false },
     }
   );
-
-  // console.log(`after: ${await Formation.countDocuments({ published: true })}`);
 
   return { removed: result.nModified };
 };
@@ -45,8 +41,6 @@ const applyConversion = async () => {
       // console.log("================================");
       // console.log({ formation, dcFormation });
       // console.log("================================");
-
-      let toSave;
 
       // Si la formation existe
       if (formation) {
@@ -107,15 +101,9 @@ const applyConversion = async () => {
         console.warn(`${dcFormation.cle_ministere_educatif} not found`);
         added++;
 
-        toSave = new Formation(dcFormation);
-        // Recalcule des champs à recalculer
-
-        toSave.save();
+        // TODO : Recalcule des champs à recalculer
+        await Formation.create(dcFormation);
       }
-
-      // Sauvegarde de la formation
-      // console.log({ toSave });
-      // toSave.save();
     }
   );
 

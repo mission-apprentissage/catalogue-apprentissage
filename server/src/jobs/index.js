@@ -1,5 +1,3 @@
-const path = require("path");
-const { tcoJobs } = require("@mission-apprentissage/tco-service-node");
 const { runScript, enableAlertMessage, disableAlertMessage } = require("./scriptWrapper");
 const logger = require("../common/logger");
 const { Formation, Etablissement } = require("../common/model");
@@ -12,20 +10,13 @@ const checkUai = require("./checkUai");
 const etablissementTags = require("./etablissements/tags");
 const { collectPreviousSeasonStats } = require("./formations/previousSeasonStats");
 
-const KIT_LOCAL_PATH = "/data/uploads/CodeDiplome_RNCP_latest_kit.csv";
-const CONVENTION_FILES_DIR = path.join(__dirname, "conventionFilesImporter/assets");
-
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-runScript(async ({ db }) => {
+runScript(async () => {
   const today = new Date();
 
   try {
     logger.info(`Start all jobs`);
-
-    // TCO jobs
-    await tcoJobs(db, CONVENTION_FILES_DIR, KIT_LOCAL_PATH); // ~ 15 minutes // Import des tables de correspondance
-    await sleep(30000);
 
     Etablissement.pauseAllMongoosaticHooks();
 
@@ -64,11 +55,6 @@ runScript(async ({ db }) => {
     await rebuildEsIndex("formations"); // ~ 5 minutes // maj elastic search (recherche des formations)
     await rebuildEsIndex("parcoursupformations"); // ~ 5 minutes // maj elastic search (recherche des rapprochements)
     await disableAlertMessage();
-
-    // if (process.env.CATALOGUE_APPRENTISSAGE_RCO_DUAL_CONTROL_ENABLED) {
-    //   // double commande
-    //   await dualControl();
-    // }
 
     // total time for execution ~ 4h20
   } catch (error) {
