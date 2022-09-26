@@ -23,15 +23,6 @@ const TYPES_MAP = {
   rncp_details: "rncp_details",
 };
 
-const niveaux = {
-  3: "3 (CAP...)",
-  4: "4 (BAC...)",
-  5: "5 (BTS, DEUST...)",
-  6: "6 (Licence, BUT...)",
-  7: "7 (Master, titre ingénieur...)",
-  8: "8 (Doctorat...)",
-};
-
 // Some fields need to be parsed to be cast to the right type
 const parser = (obj, typesMap = TYPES_MAP) => {
   return Object.fromEntries(
@@ -40,26 +31,29 @@ const parser = (obj, typesMap = TYPES_MAP) => {
 
       const type = typesMap[key];
       switch (type) {
-        case "nullable-boolean":
-          switch (true) {
-            case ["0", "1"].includes(value):
-              parsedValue = Boolean(Number(value));
-              break;
-            case value === "":
-              parsedValue = null;
-              break;
-            default:
-              parsedValue = !!value;
-              break;
-          }
-          break;
+        // case "nullable-boolean":
+        //   switch (true) {
+        //     case ["0", "1"].includes(value):
+        //       parsedValue = Boolean(Number(value));
+        //       break;
+        //     case value === "":
+        //       parsedValue = null;
+        //       break;
+        //     default:
+        //       parsedValue = !!value;
+        //       break;
+        //   }
+        //   break;
 
-        case "boolean":
-          parsedValue = ["0", "1"].includes(value) ? Boolean(Number(value)) : !!value;
-          break;
+        // case "boolean":
+        //   parsedValue = ["0", "1"].includes(value) ? Boolean(Number(value)) : !!value;
+        //   break;
 
         case "date":
-          parsedValue = value ? DateTime.fromFormat(value, "yyyy-MM-dd", { zone: "Europe/Paris" }).toJSDate() : null;
+          parsedValue =
+            value && value !== "0000-00-00"
+              ? DateTime.fromFormat(value, "yyyy-MM-dd", { zone: "Europe/Paris" }).toJSDate()
+              : null;
           break;
 
         case "periode": {
@@ -68,35 +62,35 @@ const parser = (obj, typesMap = TYPES_MAP) => {
           break;
         }
 
-        case "niveau":
-          parsedValue = niveaux[value];
-          break;
+        // case "niveau":
+        //   parsedValue = niveaux[value];
+        //   break;
 
-        case "nullable":
-          parsedValue = value ? value : null;
-          break;
+        // case "nullable":
+        //   parsedValue = value ? value : null;
+        //   break;
 
-        case "number":
-          parsedValue = value === "NAN" ? null : Number(value);
-          break;
+        // case "number":
+        //   parsedValue = value === "NAN" ? null : Number(value);
+        //   break;
 
-        case "array":
-          parsedValue = value ? value.split(",") : [];
-          break;
+        // case "array":
+        //   parsedValue = value ? value.split(",") : [];
+        //   break;
 
-        case "rncp_details":
-          parsedValue = value?.length !== undefined ? value[0] : value && value !== "" ? value : null;
-          // console.log("before: ", parsedValue?.date_fin_validite_enregistrement);
+        // case "rncp_details":
+        //   parsedValue = value?.length !== undefined ? value[0] : value && value !== "" ? value : null;
+        //   // console.log("before: ", parsedValue?.date_fin_validite_enregistrement);
 
-          parsedValue = {
-            ...parsedValue,
-            date_fin_validite_enregistrement: parsedValue?.date_fin_validite_enregistrement
-              ? DateTime.fromISO(parsedValue.date_fin_validite_enregistrement).toJSDate()
-              : undefined,
-          };
+        //   parsedValue = {
+        //     ...parsedValue,
+        //     date_fin_validite_enregistrement: parsedValue?.date_fin_validite_enregistrement
+        //       ? DateTime.fromISO(parsedValue.date_fin_validite_enregistrement).toJSDate()
+        //       : undefined,
+        //   };
 
-          // console.log("after: ", parsedValue?.date_fin_validite_enregistrement);
-          break;
+        // console.log("after: ", parsedValue?.date_fin_validite_enregistrement);
+        // break;
 
         default:
           parsedValue = value;
