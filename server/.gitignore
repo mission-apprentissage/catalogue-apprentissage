@@ -8,5 +8,5 @@ id_rsa*
 *.cert
 *.key
 
-# exclude tmp zip file 
+# exclude tmp zip file
 rco.zip

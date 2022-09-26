@@ -28,6 +28,7 @@ module.exports = {
   Report: createModel("report", schema.reportSchema),
   Log: createModel("log", schema.logSchema),
   AffelnetFormation: createModel("affelnetformation", schema.affelnetFormationSchema),
+  DualControlEtablissement: createModel("dualcontroletablissement", schema.etablissementSchema),
   Etablissement: createModel("etablissement", schema.etablissementSchema, {
     esIndexName: "etablissements",
   }),

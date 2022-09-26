@@ -1,14 +1,15 @@
 const logger = require("../../common/logger");
 const { runScript } = require("../scriptWrapper");
-const { EtablissementsUpdater } = require("./EtablissementsUpdater");
-const { findAndUpdateSiegeSocial } = require("./EtablissementsUpdater/orphans");
+// const { EtablissementsUpdater } = require("./EtablissementsUpdater");
+// const { findAndUpdateSiegeSocial } = require("./EtablissementsUpdater/orphans");
+const importer = require("./importer");
+// const { findAndUpdateSiegeSocial } = require("./EtablissementsUpdater/orphans");
 
 const etablissementsJobs = async () => {
   try {
     logger.info(`Start Etablissements jobs`);
 
-    await EtablissementsUpdater();
-    await findAndUpdateSiegeSocial();
+    await importer();
 
     logger.info(`End Etablissements jobs`);
   } catch (error) {

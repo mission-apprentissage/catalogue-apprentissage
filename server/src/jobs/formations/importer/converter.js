@@ -20,7 +20,7 @@ const unpublishOthers = async () => {
       cle_ministere_educatif: { $in: await DualControlFormation.distinct("cle_ministere_educatif") },
     },
     {
-      $set: { rco_published: false },
+      $set: { published: false },
     }
   );
 
@@ -38,8 +38,6 @@ const applyConversion = async () => {
     DualControlFormation.find().sort(),
 
     async ({ cle_ministere_educatif }) => {
-      // console.log(dcFormation.cle_ministere_educatif);
-      // await setTimeout(() => {}, 1000);
       const dcFormation = await DualControlFormation.findOne({ cle_ministere_educatif }).lean();
       const formation = await Formation.findOne({ cle_ministere_educatif }).lean();
 
