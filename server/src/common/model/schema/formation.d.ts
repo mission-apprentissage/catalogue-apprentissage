@@ -235,10 +235,6 @@ export interface Formation {
    */
   published?: boolean;
   /**
-   * Est publiée dans le flux rco
-   */
-  rco_published?: boolean;
-  /**
    * La publication vers les plateformes est forcée (contournement catalogue non-éligible dans certains cas)
    */
   forced_published?: boolean;

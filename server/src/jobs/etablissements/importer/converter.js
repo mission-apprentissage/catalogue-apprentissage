@@ -14,7 +14,7 @@ const removeFields = (entity, fields) => {
 };
 
 const unpublishOthers = async () => {
-  // console.log(`before: ${await Etablissement.countDocuments({ rco_published: true })}`);
+  // console.log(`before: ${await Etablissement.countDocuments({ published: true })}`);
 
   const result = await Etablissement.updateMany(
     {
@@ -25,7 +25,7 @@ const unpublishOthers = async () => {
     }
   );
 
-  // console.log(`after: ${await Etablissement.countDocuments({ rco_published: true })}`);
+  // console.log(`after: ${await Etablissement.countDocuments({ published: true })}`);
 
   return { removed: result.nModified };
 };
@@ -46,7 +46,7 @@ const applyConversion = async () => {
       // console.log({ etablissement, dcEtablissement });
       // console.log("================================");
 
-      // Si la etablissement existe
+      // Si la'établissement existe
       if (etablissement) {
         const toRestore = [];
 
@@ -64,24 +64,24 @@ const applyConversion = async () => {
         // console.log(result);
 
         // result.nModified ? updated++ : notUpdated++;
+
         const difference = diff(
           removeFields({ ...etablissement }, notToCompare),
           removeFields({ ...dcEtablissement }, notToCompare)
         );
+
+        console.log(difference);
+
         // if (!difference || !Object.keys(difference).length) {
         //   notUpdated++;
         //   return;
         // }
 
-        console.log(difference);
         // updated++;
 
-        // // Recalcule des champs à recalculer
-
-        // const result = await Etablissement.updateOne({ siret }, { $set: { ...difference } });
-        // console.log(result);
+        // TODO : Recalcule des champs à recalculer
       }
-      // Si la etablissement n'existe pas
+      // Si l'établissement n'existe pas
       else {
         console.warn(`${dcEtablissement.siret} not found`);
         added++;

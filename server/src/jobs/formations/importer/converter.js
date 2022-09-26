@@ -1,5 +1,6 @@
 const { Formation, DualControlFormation } = require("../../../common/model/index");
 const { cursor } = require("../../../common/utils/cursor");
+const { diff } = require("deep-object-diff");
 
 /**
  *
@@ -13,7 +14,7 @@ const removeFields = (entity, fields) => {
 };
 
 const unpublishOthers = async () => {
-  // console.log(`before: ${await Formation.countDocuments({ rco_published: true })}`);
+  // console.log(`before: ${await Formation.countDocuments({ published: true })}`);
 
   const result = await Formation.updateMany(
     {
@@ -24,7 +25,7 @@ const unpublishOthers = async () => {
     }
   );
 
-  // console.log(`after: ${await Formation.countDocuments({ rco_published: true })}`);
+  // console.log(`after: ${await Formation.countDocuments({ published: true })}`);
 
   return { removed: result.nModified };
 };
@@ -87,29 +88,19 @@ const applyConversion = async () => {
 
         const notToCompare = ["_id", "__v", "created_at", "last_update_at", ...toDelete, ...toRestore, ...toRecompute];
 
+        const difference = diff(
+          removeFields({ ...formation }, notToCompare),
+          removeFields({ ...dcFormation }, notToCompare)
+        );
+
+        console.log({ difference });
+
         const result = await Formation.updateOne(
           { cle_ministere_educatif },
           { $set: { ...removeFields({ ...dcFormation }, notToCompare) } }
         );
-        console.log(result);
 
         result.nModified ? updated++ : notUpdated++;
-        // const difference = diff(
-        //   removeFields({ ...formation }, notToCompare),
-        //   removeFields({ ...dcFormation }, notToCompare)
-        // );
-        // if (!difference || !Object.keys(difference).length) {
-        //   notUpdated++;
-        //   return;
-        // }
-
-        // updated++;
-
-        // // Recalcule des champs à recalculer
-        // console.log(difference);
-
-        // const result = await Formation.updateOne({ cle_ministere_educatif }, { $set: { ...difference } });
-        // console.log(result);
       }
       // Si la formation n'existe pas
       else {
