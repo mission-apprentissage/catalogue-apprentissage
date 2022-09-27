@@ -2,8 +2,8 @@ const logger = require("../../../common/logger");
 const { runScript } = require("../../scriptWrapper");
 const { downloader } = require("./downloader");
 const { compare } = require("./comparator");
-// const { converter } = require("./converter");
-const { DualControlFormation } = require("../../../common/model/index");
+const { converter } = require("./converter");
+const { DualControlEtablissement } = require("../../../common/model/index");
 
 const importer = async (options) => {
   try {
@@ -13,9 +13,9 @@ const importer = async (options) => {
     let downloadError;
 
     if (!options.noDownload) {
-      logger.info(" -- Downloading formations -- ");
+      logger.info(" -- Downloading etablissements -- ");
       downloadError = await downloader();
-      logger.info(`${await DualControlFormation.countDocuments()} formations téléchargées`);
+      logger.info(`${await DualControlEtablissement.countDocuments()} etablissements téléchargés`);
 
       if (downloadError) {
         return;
@@ -121,7 +121,7 @@ const importer = async (options) => {
     ]);
 
     // STEP 2 : Convert etablissements
-    // await converter();
+    await converter();
 
     logger.info(" -- End of importer -- ");
   } catch (err) {

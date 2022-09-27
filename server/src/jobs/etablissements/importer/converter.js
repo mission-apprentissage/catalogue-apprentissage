@@ -49,7 +49,7 @@ const applyConversion = async () => {
         const toRecompute = [];
 
         // TODO : to Remove before first conversion
-        const toDelete = ["rco_geo_coordonnees"];
+        const toDelete = [];
 
         const notToCompare = ["_id", "__v", "created_at", "last_update_at", ...toDelete, ...toRestore, ...toRecompute];
 
