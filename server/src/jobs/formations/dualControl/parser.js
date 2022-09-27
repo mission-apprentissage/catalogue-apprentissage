@@ -1,6 +1,6 @@
 // @ts-check
 const { DateTime } = require("luxon");
-const { extractPeriodeArray } = require("../../../common/utils/rcoUtils");
+// const { extractPeriodeArray } = require("../../../common/utils/rcoUtils");
 
 /** @typedef {import("../../../common/model/schema/formation").Formation} Formation */
 
@@ -57,8 +57,12 @@ const parser = (obj, typesMap = TYPES_MAP) => {
           break;
 
         case "periode": {
-          const tmpValue = Array.isArray(value) ? value : [value];
-          parsedValue = extractPeriodeArray(tmpValue).map((str) => new Date(str));
+          // console.log(value);
+          // const tmpValue = Array.isArray(value) ? value : [value];
+          // parsedValue = extractPeriodeArray(tmpValue)
+          //   .filter((value) => !!value)
+          //   .map((str) => new Date(str));
+          parsedValue = undefined;
           break;
         }
 
