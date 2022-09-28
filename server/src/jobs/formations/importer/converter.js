@@ -138,6 +138,7 @@ const applyConversion = async () => {
           "affelnet_infos_offre",
           "affelnet_perimetre",
           "affelnet_published_date",
+          "affelnet_raison_depublication",
           "affelnet_secteur",
           "affelnet_statut_history",
           "affelnet_statut",
@@ -145,11 +146,14 @@ const applyConversion = async () => {
           "last_status",
           "last_statut_update_date",
           "last_update_who",
-          "parcoursup_perimetre",
-          "parcoursup_statut_history",
           "parcoursup_statut",
+          "parcoursup_statut_history",
+          "parcoursup_raison_depublication",
+          "parcoursup_published_date",
+          "parcoursup_id",
           "rejection",
           "updates_history",
+          "editedFields",
         ];
 
         const toRecompute = [
@@ -164,6 +168,9 @@ const applyConversion = async () => {
           "idea_geo_coordonnees_etablissement",
           "parcoursup_mefs_10",
           "uai_formation_valide",
+          "distance",
+          "lieu_formation_geo_coordonnees_computed",
+          "lieu_formation_adresse_computed",
         ];
 
         // TODO : to Remove before first conversion
@@ -171,22 +178,12 @@ const applyConversion = async () => {
 
         const notToCompare = ["_id", "__v", "created_at", "last_update_at", ...toDelete, ...toRestore, ...toRecompute];
 
-        // const difference = diff(
-        //   removeFields({ ...formation }, notToCompare),
-        //   removeFields({ ...dcFormation }, notToCompare)
-        // );
-
-        // console.log({ difference });
-
         await Formation.updateOne(
           { cle_ministere_educatif },
           { $set: { ...(await recomputeFields(removeFields({ ...dcFormation }, notToCompare))) } }
         );
 
         const newFormation = await Formation.findById(formation._id).lean();
-
-        // console.log(newFormation);
-        // console.log(diff(formation, newFormation));
 
         Object.keys(diff(formation, newFormation)).length ? updated++ : notUpdated++;
       }
