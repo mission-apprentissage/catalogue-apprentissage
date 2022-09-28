@@ -40,6 +40,7 @@ module.exports = {
   Alert: createModel("alert", schema.alertSchema),
   ReglePerimetre: createModel("regleperimetre", schema.reglePerimetreSchema),
   Consumption: createModel("consumption", schema.consumptionSchema),
+  DualControlEtablissement: createModel("dualcontroletablissement", schema.etablissementSchema),
   DualControlFormation: createModel("dualcontrolformation", schema.formationSchema),
   DualControlReport: createModel("dualcontrolreport", schema.dualControlReportSchema),
   DualControlPerimeterReport: createModel("dualcontrolperimeterreport", schema.dualControlPerimeterReportSchema),
