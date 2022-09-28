@@ -56,15 +56,15 @@ const parser = (obj, typesMap = TYPES_MAP) => {
               : null;
           break;
 
-        case "periode": {
-          // console.log(value);
-          // const tmpValue = Array.isArray(value) ? value : [value];
-          // parsedValue = extractPeriodeArray(tmpValue)
-          //   .filter((value) => !!value)
-          //   .map((str) => new Date(str));
-          parsedValue = undefined;
-          break;
-        }
+        // case "periode": {
+        //   // console.log(value);
+        //   // const tmpValue = Array.isArray(value) ? value : [value];
+        //   // parsedValue = extractPeriodeArray(tmpValue)
+        //   //   .filter((value) => !!value)
+        //   //   .map((str) => new Date(str));
+        //   parsedValue = undefined;
+        //   break;
+        // }
 
         // case "niveau":
         //   parsedValue = niveaux[value];
