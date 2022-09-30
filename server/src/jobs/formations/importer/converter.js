@@ -4,19 +4,9 @@ const { diff } = require("deep-object-diff");
 const { isValideUAI } = require("@mission-apprentissage/tco-service-node");
 const { distanceBetweenCoordinates } = require("../../../common/utils/distanceUtils");
 
-const recomputeFields = async ({
-  etablissement_gestionnaire_siret,
-  etablissement_formateur_siret,
-  uai_formation,
-  geo_coordonnees_etablissement_formateur,
-  lieu_formation_geo_coordonnees,
-  duree,
-  annee,
-  bcn_mefs_10,
-  ...fields
-}) => {
-  const etablissementGestionnaire = await Etablissement.find({ siret: etablissement_gestionnaire_siret });
-  const etablissementFormateur = await Etablissement.find({ siret: etablissement_formateur_siret });
+const recomputeFields = async (fields) => {
+  const etablissementGestionnaire = await Etablissement.find({ siret: fields.etablissement_gestionnaire_siret });
+  const etablissementFormateur = await Etablissement.find({ siret: fields.etablissement_formateur_siret });
 
   const etablissement_gestionnaire_id = etablissementGestionnaire.id;
   const etablissement_formateur_id = etablissementFormateur.id;
@@ -29,43 +19,43 @@ const recomputeFields = async ({
   let annee_incoherente;
   let duree_incoherente;
 
-  if (duree && duree !== "X") {
-    bcn_mefs_10 = bcn_mefs_10?.filter(({ modalite }) => {
-      return modalite.duree === duree;
+  if (fields.duree && fields.duree !== "X") {
+    fields.bcn_mefs_10 = fields.bcn_mefs_10?.filter(({ modalite }) => {
+      return modalite.duree === fields.duree;
     });
 
     duree_incoherente =
-      !!bcn_mefs_10.length &&
-      bcn_mefs_10.every(({ modalite }) => {
-        return modalite.duree !== duree;
+      !!fields.bcn_mefs_10.length &&
+      fields.bcn_mefs_10.every(({ modalite }) => {
+        return modalite.duree !== fields.duree;
       });
   }
 
-  if (annee && annee !== "X") {
-    bcn_mefs_10 = bcn_mefs_10?.filter(({ modalite }) => {
-      return modalite.annee === annee;
+  if (fields.annee && fields.annee !== "X") {
+    fields.bcn_mefs_10 = fields.bcn_mefs_10?.filter(({ modalite }) => {
+      return modalite.annee === fields.annee;
     });
 
     annee_incoherente =
-      !!bcn_mefs_10.length &&
-      bcn_mefs_10.every(({ modalite }) => {
-        return modalite.annee !== annee;
+      !!fields.bcn_mefs_10.length &&
+      fields.bcn_mefs_10.every(({ modalite }) => {
+        return modalite.annee !== fields.annee;
       });
   }
 
   const distance_lieu_formation_etablissement_formateur =
-    geo_coordonnees_etablissement_formateur &&
-    lieu_formation_geo_coordonnees &&
+    fields.geo_coordonnees_etablissement_formateur &&
+    fields.lieu_formation_geo_coordonnees &&
     distanceBetweenCoordinates(
-      Number(geo_coordonnees_etablissement_formateur.split(",")[0]),
-      Number(geo_coordonnees_etablissement_formateur.split(",")[1]),
-      Number(lieu_formation_geo_coordonnees.split(",")[0]),
-      Number(lieu_formation_geo_coordonnees.split(",")[1])
+      Number(fields.geo_coordonnees_etablissement_formateur.split(",")[0]),
+      Number(fields.geo_coordonnees_etablissement_formateur.split(",")[1]),
+      Number(fields.lieu_formation_geo_coordonnees.split(",")[0]),
+      Number(fields.lieu_formation_geo_coordonnees.split(",")[1])
     );
 
   // const idea_geo_coordonnees_etablissement =
 
-  const uai_formation_valide = !uai_formation || (await isValideUAI(uai_formation));
+  const uai_formation_valide = !fields.uai_formation || (await isValideUAI(fields.uai_formation));
 
   return {
     etablissement_gestionnaire_id,
@@ -79,14 +69,6 @@ const recomputeFields = async ({
     distance_lieu_formation_etablissement_formateur,
     // idea_geo_coordonnees_etablissement,
     uai_formation_valide,
-    etablissement_gestionnaire_siret,
-    etablissement_formateur_siret,
-    uai_formation,
-    geo_coordonnees_etablissement_formateur,
-    lieu_formation_geo_coordonnees,
-    duree,
-    annee,
-    bcn_mefs_10,
     ...fields,
   };
 };

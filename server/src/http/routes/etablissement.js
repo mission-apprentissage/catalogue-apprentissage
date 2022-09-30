@@ -5,8 +5,8 @@ const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { sendJsonStream } = require("../../common/utils/httpUtils");
 const { paginate } = require("../../common/utils/mongooseUtils");
 const { Etablissement } = require("../../common/model");
-const { getEtablissementUpdates } = require("@mission-apprentissage/tco-service-node");
-const { isApiEntrepriseUp } = require("../../common/utils/apiUtils");
+// const { getEtablissementUpdates } = require("@mission-apprentissage/tco-service-node");
+// const { isApiEntrepriseUp } = require("../../common/utils/apiUtils");
 const { sanitize } = require("../../common/utils/sanitizeUtils");
 
 /**
@@ -303,32 +303,33 @@ module.exports = () => {
     })
   );
 
-  router.post(
-    "/etablissement/service",
-    tryCatch(async (req, res) => {
-      const payload = sanitize(req.body);
+  // FIXME : TO KEEP OR TO REMOVE ?
+  // router.post(
+  //   "/etablissement/service",
+  //   tryCatch(async (req, res) => {
+  //     const payload = sanitize(req.body);
 
-      const serviceRequestSchema = Joi.object({
-        siret: Joi.string().required(),
-        scope: Joi.object().default(null),
-      }).unknown();
+  //     const serviceRequestSchema = Joi.object({
+  //       siret: Joi.string().required(),
+  //       scope: Joi.object().default(null),
+  //     }).unknown();
 
-      await serviceRequestSchema.validateAsync(payload, { abortEarly: false });
+  //     await serviceRequestSchema.validateAsync(payload, { abortEarly: false });
 
-      const { options = {}, ...item } = payload;
+  //     const { options = {}, ...item } = payload;
 
-      const scope = options.scope;
-      const withHistoryUpdate = options.withHistoryUpdate ?? false;
+  //     const scope = options.scope;
+  //     const withHistoryUpdate = options.withHistoryUpdate ?? false;
 
-      if ((!scope || Object.keys(scope).length === 0 || scope?.siret) && !(await isApiEntrepriseUp())) {
-        res.json({ error: "L'API entreprise ne répond pas, mise à jour impossible" });
-        return;
-      }
+  //     if ((!scope || Object.keys(scope).length === 0 || scope?.siret) && !(await isApiEntrepriseUp())) {
+  //       res.json({ error: "L'API entreprise ne répond pas, mise à jour impossible" });
+  //       return;
+  //     }
 
-      const result = await getEtablissementUpdates(item, { withHistoryUpdate, scope });
-      return res.json(result);
-    })
-  );
+  //     const result = await getEtablissementUpdates(item, { withHistoryUpdate, scope });
+  //     return res.json(result);
+  //   })
+  // );
 
   return router;
 };
