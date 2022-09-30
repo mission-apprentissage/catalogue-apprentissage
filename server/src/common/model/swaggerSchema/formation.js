@@ -211,13 +211,14 @@ module.exports = {
         description: "Le titre RNCP est éligible en apprentissage",
       },
       rncp_details: {
+        title: "rncp_details",
         type: "object",
         properties: {
           date_fin_validite_enregistrement: {
             type: ["string", "null"],
-            format: "date-time",
             default: null,
             description: "Date de validité de la fiche",
+            format: "date-time",
           },
           active_inactive: {
             type: ["string", "null"],
@@ -267,9 +268,7 @@ module.exports = {
           },
           certificateurs: {
             type: "array",
-            items: {
-              type: "object",
-            },
+            items: {},
             default: [],
             description: "Certificateurs",
           },
@@ -285,33 +284,25 @@ module.exports = {
           },
           romes: {
             type: "array",
-            items: {
-              type: "object",
-            },
+            items: {},
             default: [],
             description: "Romes",
           },
           blocs_competences: {
             type: "array",
-            items: {
-              type: "object",
-            },
+            items: {},
             default: [],
             description: "Blocs de compétences",
           },
           voix_acces: {
             type: "array",
-            items: {
-              type: "object",
-            },
+            items: {},
             default: [],
             description: "Voix d'accès",
           },
           partenaires: {
             type: "array",
-            items: {
-              type: "object",
-            },
+            items: {},
             default: [],
             description: "Partenaires",
           },
@@ -321,7 +312,6 @@ module.exports = {
             description: "Code rncp périmé (date fin enregistrement avant le 31 aout de l'année courante)",
           },
         },
-        title: "rncp_details",
         default: "null",
         description: "Détails RNCP (bloc de compétences etc..)",
       },
