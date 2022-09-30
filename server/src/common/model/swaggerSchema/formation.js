@@ -512,19 +512,9 @@ module.exports = {
         default: "null",
         description: "Qui a réalisé la dernière modification",
       },
-      to_update: {
-        type: "boolean",
-        default: false,
-        description: "Formation à mette à jour lors du script d'enrichissement",
-      },
       idea_geo_coordonnees_etablissement: {
         type: "string",
         description: "Latitude et longitude de l'établissement recherchable dans Idea",
-      },
-      update_error: {
-        type: "string",
-        default: "null",
-        description: "Erreur lors de la mise à jour de la formation",
       },
       lieu_formation_geo_coordonnees: {
         type: "string",
