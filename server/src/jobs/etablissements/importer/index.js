@@ -12,7 +12,7 @@ const importer = async (options) => {
     // STEP 1 : Download etablissements from RCO
     let downloadError;
 
-    if (!options.noDownload) {
+    if (!options?.noDownload) {
       logger.info(" -- Downloading etablissements -- ");
       downloadError = await downloader();
       logger.info(`${await DualControlEtablissement.countDocuments()} etablissements téléchargés`);

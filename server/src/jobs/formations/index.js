@@ -1,7 +1,7 @@
 const logger = require("../../common/logger");
 const { runScript } = require("../scriptWrapper");
 
-const { importer } = require("./importer");
+const importer = require("./importer");
 
 const formationsJobs = async () => {
   try {

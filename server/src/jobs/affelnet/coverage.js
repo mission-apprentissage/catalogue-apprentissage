@@ -5,10 +5,7 @@ const { runScript } = require("../scriptWrapper");
 const logger = require("../../common/logger");
 const { reconciliationAffelnet } = require("../../logic/controller/reconciliation");
 const { AFFELNET_STATUS } = require("../../constants/status");
-const {
-  findNewFormations,
-  findMultisiteFormationsFromL01,
-} = require("../formations/rcoConverter/converter/migrationFinder");
+const { findNewFormations, findMultisiteFormationsFromL01 } = require("../../logic/finder/migrationFinder");
 const { formation: formatFormation } = require("../../logic/controller/formater");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 
