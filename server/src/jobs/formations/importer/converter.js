@@ -1,7 +1,7 @@
 const { Formation, DualControlFormation, Etablissement } = require("../../../common/model/index");
 const { cursor } = require("../../../common/utils/cursor");
 const { diff } = require("deep-object-diff");
-const { isValideUAI } = require("@mission-apprentissage/tco-service-node");
+const { isValideUAI, getCoordinatesFromAddressData } = require("@mission-apprentissage/tco-service-node");
 const { distanceBetweenCoordinates } = require("../../../common/utils/distanceUtils");
 
 const recomputeFields = async (fields) => {
@@ -53,22 +53,52 @@ const recomputeFields = async (fields) => {
       Number(fields.lieu_formation_geo_coordonnees.split(",")[1])
     );
 
-  // const idea_geo_coordonnees_etablissement =
-
   const uai_formation_valide = !fields.uai_formation || (await isValideUAI(fields.uai_formation));
+
+  const addressData = {
+    nom_voie: fields.lieu_formation_adresse,
+    localite: fields.localite,
+    code_postal: fields.code_postal,
+    code_insee: fields.code_commune_insee,
+  };
+
+  let lieu_formation_geo_coordonnees_computed;
+  let lieu_formation_adresse_computed;
+  let distance;
+
+  try {
+    const { result } = await getCoordinatesFromAddressData(addressData);
+    lieu_formation_adresse_computed = result.geo_coordonnees;
+
+    const [lat1, lon1] = lieu_formation_geo_coordonnees_computed.split(",");
+    const [lat2, lon2] = fields.lieu_formation_geo_coordonnees.split(",");
+
+    distance = await distanceBetweenCoordinates(lat1, lon1, lat2, lon2);
+
+    lieu_formation_geo_coordonnees_computed.split(",");
+  } catch (e) {
+    console.error(e);
+  }
 
   return {
     etablissement_gestionnaire_id,
     etablissement_formateur_id,
     etablissement_gestionnaire_published,
     etablissement_formateur_published,
-    // affelnet_mefs_10,
-    // parcoursup_mefs_10,
+
     annee_incoherente,
     duree_incoherente,
     distance_lieu_formation_etablissement_formateur,
-    // idea_geo_coordonnees_etablissement,
     uai_formation_valide,
+
+    distance,
+    lieu_formation_geo_coordonnees_computed,
+    lieu_formation_adresse_computed,
+
+    // TODO :
+    // affelnet_mefs_10,
+    // parcoursup_mefs_10,
+
     ...fields,
   };
 };
@@ -147,7 +177,6 @@ const applyConversion = async () => {
           "etablissement_formateur_published",
           "etablissement_gestionnaire_id",
           "etablissement_gestionnaire_published",
-          "idea_geo_coordonnees_etablissement",
           "parcoursup_mefs_10",
           "uai_formation_valide",
           "distance",
@@ -175,7 +204,7 @@ const applyConversion = async () => {
         console.warn(`${dcFormation.cle_ministere_educatif} not found`);
         added++;
 
-        await Formation.create(...(await recomputeFields(dcFormation)));
+        await Formation.create(await recomputeFields(dcFormation));
       }
     }
   );

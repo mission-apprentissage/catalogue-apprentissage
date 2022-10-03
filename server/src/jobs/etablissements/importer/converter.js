@@ -1,6 +1,33 @@
-const { Etablissement, DualControlEtablissement } = require("../../../common/model/index");
+const { Etablissement, Formation, DualControlEtablissement } = require("../../../common/model/index");
 const { diff } = require("deep-object-diff");
+const { isValideUAI } = require("@mission-apprentissage/tco-service-node");
 const { cursor } = require("../../../common/utils/cursor");
+
+const recomputeFields = async (fields) => {
+  const uai_valide = !fields.uai || (await isValideUAI(fields.uai));
+  const etablissement_siege_id = (await Etablissement.find({ siret: fields.etablissement_siege_siret }))?.id;
+
+  const formations = await Formation.find({
+    $or: [{ etablissement_gestionnaire_siret: fields.siret }, { etablissement_formateur_siret: fields.siret }],
+  });
+
+  const formation_ids = formations?.map((formation) => formation._id) ?? [];
+  const formation_uais = formations?.map((formation) => formation.uai_formation) ?? [];
+
+  const published = !fields.ferme && fields.api_etablissement_reference;
+
+  return {
+    uai_valide,
+
+    // TODO :
+    etablissement_siege_id,
+    formation_ids,
+    formation_uais,
+    published,
+
+    ...fields,
+  };
+};
 
 /**
  *
@@ -46,34 +73,29 @@ const applyConversion = async () => {
       if (etablissement) {
         const toRestore = [];
 
-        const toRecompute = [];
+        const toRecompute = ["etablissement_ids", "etablissement_uais", "uai_valide"];
 
         // TODO : to Remove before first conversion
         const toDelete = [];
 
         const notToCompare = ["_id", "__v", "created_at", "last_update_at", ...toDelete, ...toRestore, ...toRecompute];
 
-        const difference = diff(
-          removeFields({ ...etablissement }, notToCompare),
-          removeFields({ ...dcEtablissement }, notToCompare)
-        );
-
-        console.log(difference);
-
-        const result = await Etablissement.updateOne(
+        await Etablissement.updateOne(
           { siret },
-          { $set: { ...removeFields({ ...dcEtablissement }, notToCompare) } }
+          { $set: { ...(await recomputeFields(removeFields({ ...dcEtablissement }, notToCompare))) } }
         );
 
-        result.nModified ? updated++ : notUpdated++;
+        const newEtablissement = await Etablissement.findById(etablissement._id).lean();
+
+        Object.keys(diff(etablissement, newEtablissement)).length ? updated++ : notUpdated++;
       }
+
       // Si l'établissement n'existe pas
       else {
         console.warn(`${dcEtablissement.siret} not found`);
         added++;
 
-        // TODO : Recalcule des champs à recalculer
-        await Etablissement.create(dcEtablissement);
+        await Etablissement.create(await recomputeFields({ ...dcEtablissement }));
       }
     }
   );
