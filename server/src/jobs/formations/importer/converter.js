@@ -117,7 +117,7 @@ const removeFields = (entity, fields) => {
 const unpublishOthers = async () => {
   const result = await Formation.updateMany(
     {
-      cle_ministere_educatif: { $in: await DualControlFormation.distinct("cle_ministere_educatif") },
+      cle_ministere_educatif: { $nin: await DualControlFormation.distinct("cle_ministere_educatif") },
     },
     {
       $set: { published: false },

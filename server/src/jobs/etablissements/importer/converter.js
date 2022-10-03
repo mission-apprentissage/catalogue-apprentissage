@@ -14,16 +14,12 @@ const recomputeFields = async (fields) => {
   const formation_ids = formations?.map((formation) => formation._id) ?? [];
   const formation_uais = formations?.map((formation) => formation.uai_formation) ?? [];
 
-  const published = !fields.ferme && fields.api_etablissement_reference;
-
   return {
     uai_valide,
 
-    // TODO :
     etablissement_siege_id,
     formation_ids,
     formation_uais,
-    published,
 
     ...fields,
   };
@@ -43,7 +39,7 @@ const removeFields = (entity, fields) => {
 const unpublishOthers = async () => {
   const result = await Etablissement.updateMany(
     {
-      siret: { $in: await DualControlEtablissement.distinct("siret") },
+      siret: { $nin: await DualControlEtablissement.distinct("siret") },
     },
     {
       $set: { published: false },
