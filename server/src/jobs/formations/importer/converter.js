@@ -4,7 +4,7 @@ const { diff } = require("deep-object-diff");
 const { isValideUAI, getCoordinatesFromAddressData } = require("@mission-apprentissage/tco-service-node");
 const { distanceBetweenCoordinates } = require("../../../common/utils/distanceUtils");
 
-const recomputeFields = async (fields) => {
+const computeRelationFields = async (fields) => {
   const etablissementGestionnaire = await Etablissement.find({ siret: fields.etablissement_gestionnaire_siret });
   const etablissementFormateur = await Etablissement.find({ siret: fields.etablissement_formateur_siret });
 
@@ -13,6 +13,17 @@ const recomputeFields = async (fields) => {
   const etablissement_gestionnaire_published = etablissementGestionnaire.published;
   const etablissement_formateur_published = etablissementFormateur.published;
 
+  return {
+    etablissement_gestionnaire_id,
+    etablissement_formateur_id,
+    etablissement_gestionnaire_published,
+    etablissement_formateur_published,
+
+    ...fields,
+  };
+};
+
+const recomputeFields = async (fields) => {
   // let affelnet_mefs_10
   // let parcoursup_mefs_10
 
@@ -69,9 +80,9 @@ const recomputeFields = async (fields) => {
   try {
     const { result } = await getCoordinatesFromAddressData(addressData);
     lieu_formation_adresse_computed = result.geo_coordonnees;
-
-    const [lat1, lon1] = lieu_formation_geo_coordonnees_computed.split(",");
-    const [lat2, lon2] = fields.lieu_formation_geo_coordonnees.split(",");
+    console.log({ addressData, result });
+    const [lat1, lon1] = lieu_formation_geo_coordonnees_computed?.split(",");
+    const [lat2, lon2] = fields.lieu_formation_geo_coordonnees?.split(",");
 
     distance = await distanceBetweenCoordinates(lat1, lon1, lat2, lon2);
 
@@ -81,11 +92,6 @@ const recomputeFields = async (fields) => {
   }
 
   return {
-    etablissement_gestionnaire_id,
-    etablissement_formateur_id,
-    etablissement_gestionnaire_published,
-    etablissement_formateur_published,
-
     annee_incoherente,
     duree_incoherente,
     distance_lieu_formation_etablissement_formateur,
@@ -94,6 +100,8 @@ const recomputeFields = async (fields) => {
     distance,
     lieu_formation_geo_coordonnees_computed,
     lieu_formation_adresse_computed,
+
+    ...(await computeRelationFields(fields)),
 
     // TODO :
     // affelnet_mefs_10,

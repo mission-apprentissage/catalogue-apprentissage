@@ -3,8 +3,7 @@ const { diff } = require("deep-object-diff");
 const { isValideUAI } = require("@mission-apprentissage/tco-service-node");
 const { cursor } = require("../../../common/utils/cursor");
 
-const recomputeFields = async (fields) => {
-  const uai_valide = !fields.uai || (await isValideUAI(fields.uai));
+const computeRelationFields = async (fields) => {
   const etablissement_siege_id = (await Etablissement.find({ siret: fields.etablissement_siege_siret }))?.id;
 
   const formations = await Formation.find({
@@ -15,11 +14,21 @@ const recomputeFields = async (fields) => {
   const formation_uais = formations?.map((formation) => formation.uai_formation) ?? [];
 
   return {
-    uai_valide,
-
     etablissement_siege_id,
     formation_ids,
     formation_uais,
+
+    ...fields,
+  };
+};
+
+const recomputeFields = async (fields) => {
+  const uai_valide = !fields.uai || (await isValideUAI(fields.uai));
+
+  return {
+    uai_valide,
+
+    ...(await computeRelationFields(fields)),
 
     ...fields,
   };

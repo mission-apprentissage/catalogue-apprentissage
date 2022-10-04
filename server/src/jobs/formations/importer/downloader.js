@@ -50,7 +50,9 @@ const extractFromZip = async () => {
       stream,
       streamParser(),
       streamArray(),
-      transformData((line) => parser(line)),
+      transformData(({ value: line }) => {
+        return parser(line);
+      }),
       writeData(async (json) => await DualControlFormation.create(json))
     );
   } else {
