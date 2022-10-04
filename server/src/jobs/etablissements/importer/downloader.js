@@ -51,10 +51,7 @@ const extractFromZip = async () => {
       streamParser(),
       pick({ filter: "__catalogue_etablissement_apprentissage_tmp" }),
       streamArray(),
-      transformData(({ value: line }) => {
-        // console.log(line);
-        return line;
-      }),
+      transformData(({ value: line }) => line),
       writeData(async (json) => await DualControlEtablissement.create(json))
     );
   } else {

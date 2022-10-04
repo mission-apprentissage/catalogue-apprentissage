@@ -23,7 +23,7 @@ const computeRelationFields = async (fields) => {
   };
 };
 
-const recomputeFields = async (fields) => {
+const recomputeFields = async (fields, oldFields) => {
   // let affelnet_mefs_10
   // let parcoursup_mefs_10
 
@@ -54,41 +54,58 @@ const recomputeFields = async (fields) => {
       });
   }
 
-  const distance_lieu_formation_etablissement_formateur =
-    fields.geo_coordonnees_etablissement_formateur &&
-    fields.lieu_formation_geo_coordonnees &&
-    distanceBetweenCoordinates(
-      Number(fields.geo_coordonnees_etablissement_formateur.split(",")[0]),
-      Number(fields.geo_coordonnees_etablissement_formateur.split(",")[1]),
-      Number(fields.lieu_formation_geo_coordonnees.split(",")[0]),
-      Number(fields.lieu_formation_geo_coordonnees.split(",")[1])
-    );
+  let distance_lieu_formation_etablissement_formateur = oldFields?.distance_lieu_formation_etablissement_formateur;
+
+  if (
+    fields.geo_coordonnees_etablissement_formateur !== oldFields?.geo_coordonnees_etablissement_formateur ||
+    fields.lieu_formation_geo_coordonnees !== oldFields?.lieu_formation_geo_coordonnee
+  ) {
+    if (!!fields.geo_coordonnees_etablissement_formateur && !!fields.lieu_formation_geo_coordonnees) {
+      distance_lieu_formation_etablissement_formateur =
+        fields.geo_coordonnees_etablissement_formateur &&
+        fields.lieu_formation_geo_coordonnees &&
+        distanceBetweenCoordinates(
+          Number(fields.geo_coordonnees_etablissement_formateur?.split("##")[0]?.split(",")[0]),
+          Number(fields.geo_coordonnees_etablissement_formateur?.split("##")[0]?.split(",")[1]),
+          Number(fields.lieu_formation_geo_coordonnees?.split("##")[0]?.split(",")[0]),
+          Number(fields.lieu_formation_geo_coordonnees?.split("##")[0]?.split(",")[1])
+        );
+    } else {
+      distance_lieu_formation_etablissement_formateur = undefined;
+    }
+  }
 
   const uai_formation_valide = !fields.uai_formation || (await isValideUAI(fields.uai_formation));
 
-  const addressData = {
-    nom_voie: fields.lieu_formation_adresse,
-    localite: fields.localite,
-    code_postal: fields.code_postal,
-    code_insee: fields.code_commune_insee,
-  };
+  let lieu_formation_geo_coordonnees_computed = oldFields?.lieu_formation_geo_coordonnees_computed;
+  let lieu_formation_adresse_computed = oldFields?.lieu_formation_adresse_computed;
+  let distance = oldFields?.distance;
 
-  let lieu_formation_geo_coordonnees_computed;
-  let lieu_formation_adresse_computed;
-  let distance;
+  if (fields.lieu_formation_geo_coordonnees !== oldFields?.lieu_formation_geo_coordonnees) {
+    const addressData = {
+      nom_voie: fields.lieu_formation_adresse,
+      localite: fields.localite,
+      code_postal: fields.code_postal,
+      code_insee: fields.code_commune_insee,
+    };
 
-  try {
-    const { result } = await getCoordinatesFromAddressData(addressData);
-    lieu_formation_adresse_computed = result.geo_coordonnees;
-    console.log({ addressData, result });
-    const [lat1, lon1] = lieu_formation_geo_coordonnees_computed?.split(",");
-    const [lat2, lon2] = fields.lieu_formation_geo_coordonnees?.split(",");
+    try {
+      const { result } = await getCoordinatesFromAddressData(addressData);
+      lieu_formation_geo_coordonnees_computed = result.geo_coordonnees;
 
-    distance = await distanceBetweenCoordinates(lat1, lon1, lat2, lon2);
+      if (!!lieu_formation_geo_coordonnees_computed && !!fields.lieu_formation_geo_coordonnees) {
+        const [lat1, lon1] = lieu_formation_geo_coordonnees_computed?.split("##")[0]?.split(",") ?? [];
+        const [lat2, lon2] = fields.lieu_formation_geo_coordonnees?.split("##")[0]?.split(",") ?? [];
 
-    lieu_formation_geo_coordonnees_computed.split(",");
-  } catch (e) {
-    console.error(e);
+        distance = await distanceBetweenCoordinates(lat1, lon1, lat2, lon2);
+        console.log({ addressData, result, lat1, lat2, lon1, lon2, distance });
+      }
+    } catch (e) {
+      console.error(e);
+      lieu_formation_geo_coordonnees_computed = undefined;
+      lieu_formation_adresse_computed = undefined;
+      distance = undefined;
+    }
   }
 
   return {
@@ -199,7 +216,7 @@ const applyConversion = async () => {
 
         await Formation.updateOne(
           { cle_ministere_educatif },
-          { $set: { ...(await recomputeFields(removeFields({ ...dcFormation }, notToCompare))) } }
+          { $set: { ...(await recomputeFields(removeFields({ ...dcFormation }, notToCompare), formation)) } }
         );
 
         const newFormation = await Formation.findById(formation._id).lean();

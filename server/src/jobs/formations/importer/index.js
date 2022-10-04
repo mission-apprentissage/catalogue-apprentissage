@@ -26,6 +26,8 @@ const importer = async (options) => {
     // STEP 2 : Convert formations
     await converter();
 
+    // TODO : recompute relation fields for etablissements
+
     // logger.info(" -- Checking perimeters -- ");
     // await afPerimetre();
     // await psPerimetre();
