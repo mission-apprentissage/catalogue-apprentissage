@@ -22,6 +22,7 @@
     "lodash.intersection": "4.4.0",
     "match-sorter": "6.3.1",
     "node-polyfill-webpack-plugin": "2.0.0",
+    "process": "0.11.10",
     "query-string": "6.13.1",
     "react": "16.13.1",
     "react-autosuggest": "10.1.0",
@@ -94,10 +95,6 @@
     "msw": "0.39.2",
     "prettier": "2.7.1",
     "react-router-sitemap": "1.2.0"
-  },
-  "resolutions": {
-    "//": "See https://github.com/facebook/create-react-app/issues/11773",
-    "react-error-overlay": "6.0.9"
   },
   "husky": {
     "hooks": {
