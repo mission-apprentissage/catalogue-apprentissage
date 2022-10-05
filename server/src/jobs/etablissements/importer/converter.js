@@ -2,6 +2,20 @@ const { Etablissement, Formation, DualControlEtablissement } = require("../../..
 const { diff } = require("deep-object-diff");
 const { isValideUAI } = require("@mission-apprentissage/tco-service-node");
 const { cursor } = require("../../../common/utils/cursor");
+const logger = require("../../../common/logger");
+
+const updateRelationFields = async () => {
+  logger.info(" == Updating relations for etablissements == ");
+
+  await cursor(Etablissement.find({}).sort(), async (etablissement) => {
+    await Etablissement.updateOne(
+      { _id: etablissement._id },
+      { $set: { ...(await computeRelationFields(etablissement)) } }
+    );
+  });
+
+  logger.info(" == Updating relations for etablissements: DONE == ");
+};
 
 const computeRelationFields = async (fields) => {
   const etablissement_siege_id = (await Etablissement.find({ siret: fields.etablissement_siege_siret }))?.id;
@@ -28,7 +42,7 @@ const recomputeFields = async (fields) => {
   return {
     uai_valide,
 
-    ...(await computeRelationFields(fields)),
+    // ...(await computeRelationFields(fields)),
 
     ...fields,
   };
@@ -80,7 +94,6 @@ const applyConversion = async () => {
 
         const toRecompute = ["etablissement_ids", "etablissement_uais", "uai_valide"];
 
-        // TODO : to Remove before first conversion
         const toDelete = [];
 
         const notToCompare = ["_id", "__v", "created_at", "last_update_at", ...toDelete, ...toRestore, ...toRecompute];
@@ -124,4 +137,4 @@ const converter = async () => {
   return error;
 };
 
-module.exports = { converter };
+module.exports = { converter, updateRelationFields };

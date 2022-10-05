@@ -5,6 +5,8 @@ const { converter } = require("./converter");
 // const { afPerimetre } = require("../../affelnet/perimetreDualControl");
 // const { psPerimetre } = require("../../parcoursup/perimetreDualControl");
 const { DualControlFormation } = require("../../../common/model/index");
+const { updateRelationFields: updateEtablissementRelationFields } = require("../../etablissements/importer/converter");
+const { updateRelationFields: updateFormationRelationFields } = require("./converter");
 
 const importer = async (options) => {
   try {
@@ -13,7 +15,7 @@ const importer = async (options) => {
     // STEP 1 : Download formations from RCO
     let downloadError;
 
-    if (!options.noDownload) {
+    if (!options?.noDownload) {
       logger.info(" -- Downloading formations -- ");
       downloadError = await downloader();
       logger.info(`${await DualControlFormation.countDocuments()} formations téléchargées`);
@@ -26,11 +28,9 @@ const importer = async (options) => {
     // STEP 2 : Convert formations
     await converter();
 
-    // TODO : recompute relation fields for etablissements
-
-    // logger.info(" -- Checking perimeters -- ");
-    // await afPerimetre();
-    // await psPerimetre();
+    // STEP 3 : Rebuild relations between etablissements and formations
+    await updateEtablissementRelationFields();
+    await updateFormationRelationFields();
 
     logger.info(" -- End of importer -- ");
   } catch (err) {

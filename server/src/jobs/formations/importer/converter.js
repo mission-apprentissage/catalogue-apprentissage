@@ -3,15 +3,26 @@ const { cursor } = require("../../../common/utils/cursor");
 const { diff } = require("deep-object-diff");
 const { isValideUAI, getCoordinatesFromAddressData } = require("@mission-apprentissage/tco-service-node");
 const { distanceBetweenCoordinates } = require("../../../common/utils/distanceUtils");
+const logger = require("../../../common/logger");
+
+const updateRelationFields = async () => {
+  logger.info(" == Updating relations for formations == ");
+
+  await cursor(Formation.find({}).sort(), async (formation) => {
+    await Formation.updateOne({ _id: formation._id }, { $set: { ...(await computeRelationFields(formation)) } });
+  });
+
+  logger.info(" == Updating relations for formations: DONE == ");
+};
 
 const computeRelationFields = async (fields) => {
   const etablissementGestionnaire = await Etablissement.find({ siret: fields.etablissement_gestionnaire_siret });
   const etablissementFormateur = await Etablissement.find({ siret: fields.etablissement_formateur_siret });
 
-  const etablissement_gestionnaire_id = etablissementGestionnaire.id;
-  const etablissement_formateur_id = etablissementFormateur.id;
-  const etablissement_gestionnaire_published = etablissementGestionnaire.published;
-  const etablissement_formateur_published = etablissementFormateur.published;
+  const etablissement_gestionnaire_id = etablissementGestionnaire?.id;
+  const etablissement_formateur_id = etablissementFormateur?.id;
+  const etablissement_gestionnaire_published = etablissementGestionnaire?.published;
+  const etablissement_formateur_published = etablissementFormateur?.published;
 
   return {
     etablissement_gestionnaire_id,
@@ -98,7 +109,6 @@ const recomputeFields = async (fields, oldFields) => {
         const [lat2, lon2] = fields.lieu_formation_geo_coordonnees?.split("##")[0]?.split(",") ?? [];
 
         distance = await distanceBetweenCoordinates(lat1, lon1, lat2, lon2);
-        console.log({ addressData, result, lat1, lat2, lon1, lon2, distance });
       }
     } catch (e) {
       console.error(e);
@@ -118,7 +128,7 @@ const recomputeFields = async (fields, oldFields) => {
     lieu_formation_geo_coordonnees_computed,
     lieu_formation_adresse_computed,
 
-    ...(await computeRelationFields(fields)),
+    // ...(await computeRelationFields(fields)),
 
     // TODO :
     // affelnet_mefs_10,
@@ -209,8 +219,7 @@ const applyConversion = async () => {
           "lieu_formation_adresse_computed",
         ];
 
-        // TODO : to Remove before first conversion
-        const toDelete = ["rco_published"];
+        const toDelete = [];
 
         const notToCompare = ["_id", "__v", "created_at", "last_update_at", ...toDelete, ...toRestore, ...toRecompute];
 
@@ -253,4 +262,4 @@ const converter = async () => {
   return error;
 };
 
-module.exports = { converter };
+module.exports = { converter, updateRelationFields };
