@@ -49,7 +49,7 @@ const extractFromZip = async () => {
     await oleoduc(
       stream,
       streamParser(),
-      pick({ filter: "__catalogue_etablissement_apprentissage_tmp" }),
+      pick({ filter: "__catalogue_etablissement_apprentissage_mna_recette" }),
       streamArray(),
       transformData(({ value: line }) => line),
       writeData(async (json) => await DualControlEtablissement.create(json))
