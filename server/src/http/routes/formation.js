@@ -210,26 +210,6 @@ module.exports = () => {
     return res.status(404).send({ message: `Item ${itemId} doesn't exist` });
   });
 
-  // FIXME : TO KEEP OR TO REMOVE ?
-  // const updateFormation = tryCatch(async (req, res) => {
-  //   const payload = sanitize(req.body);
-
-  //   const { withCodePostalUpdate = true, ...formation } = payload;
-  //   const { formation: updatedFormation, error } = await mnaFormationUpdater(formation, {
-  //     withCodePostalUpdate,
-  //   });
-
-  //   if (formation.uai_formation) {
-  //     updatedFormation.uai_formation = formation.uai_formation;
-  //   }
-
-  //   if (error) {
-  //     return res.status(500).send({ message: error });
-  //   }
-
-  //   return res.json(updatedFormation);
-  // });
-
   const streamFormations = tryCatch(async (req, res) => {
     let { query, select, limit } = await Joi.object({
       query: Joi.string().default("{}"),
@@ -400,13 +380,6 @@ module.exports = () => {
    */
   router.get("/formation/:id", getFormationById);
   router.get("/formation2021/:id", getFormationById);
-
-  // FIXME : TO KEEP OR TO REMOVE ?
-  /**
-   * Get updated formation
-   */
-  // router.post("/formation/update", updateFormation);
-  // router.post("/formation2021/update", updateFormation);
 
   /**
    * Stream formations as json array

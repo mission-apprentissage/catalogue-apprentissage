@@ -1,3 +1,5 @@
+const path = require("path");
+const { tcoJobs } = require("@mission-apprentissage/tco-service-node");
 const { runScript, enableAlertMessage, disableAlertMessage } = require("./scriptWrapper");
 const logger = require("../common/logger");
 const { Formation, Etablissement } = require("../common/model");
@@ -10,9 +12,16 @@ const { collectPreviousSeasonStats } = require("./formations/previousSeasonStats
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-runScript(async () => {
+const KIT_LOCAL_PATH = "/data/uploads/CodeDiplome_RNCP_latest_kit.csv";
+const CONVENTION_FILES_DIR = path.join(__dirname, "conventionFilesImporter/assets");
+
+runScript(async (db) => {
   try {
     logger.info(`Start all jobs`);
+
+    // TCO jobs
+    await tcoJobs(db, CONVENTION_FILES_DIR, KIT_LOCAL_PATH); // ~ 15 minutes // Import des tables de correspondance
+    await sleep(30000);
 
     Etablissement.pauseAllMongoosaticHooks();
 
