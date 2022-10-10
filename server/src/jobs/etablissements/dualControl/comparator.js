@@ -1,6 +1,8 @@
 // @ts-check
 const { DualControlEtablissement, DualControlReport } = require("../../../common/model/index");
 const { Etablissement } = require("../../../common/model/index");
+const { diff: arrayDiff } = require("../../../common/utils/arrayUtils");
+const { diff: objectDiff } = require("deep-object-diff");
 
 /** @typedef {import("../../../common/model/schema/Etablissement").Etablissement} Etablissement */
 
@@ -16,18 +18,39 @@ const get = (data, key) => {
  * Check equality between between one property of two objects
  *
  * @param {Etablissement} dualControlEtablissement
- * @param {Etablissement} Etablissement
+ * @param {Etablissement} etablissement
  * @param  {keyof Etablissement} key
  *
  * @returns {boolean}
  */
-const isEqual = (dualControlEtablissement, Etablissement, key) => {
+const isEqual = (dualControlEtablissement, etablissement, key) => {
   let result = false;
-  switch (key) {
+
+  if (typeof get(dualControlEtablissement, key) !== typeof get(etablissement, key)) {
+    return false;
+  }
+
+  switch (true) {
+    case get(dualControlEtablissement, key) === null:
+      result = get(etablissement, key) === null;
+      break;
+    case Array.isArray(get(dualControlEtablissement, key)):
+      result = !arrayDiff(get(dualControlEtablissement, key), get(etablissement, key)).length;
+      break;
+    case typeof get(dualControlEtablissement, key) === "object":
+      result = !Object.keys(objectDiff(get(dualControlEtablissement, key), get(etablissement, key))).length;
+      break;
     default:
-      result = get(dualControlEtablissement, key) === get(Etablissement, key);
+      result = get(dualControlEtablissement, key) === get(etablissement, key);
+
       break;
   }
+
+  // console.log({
+  //   dcValue: get(dualControlEtablissement, key),
+  //   value: get(etablissement, key),
+  //   result,
+  // });
 
   return result;
 };
