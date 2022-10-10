@@ -4,6 +4,7 @@ const { diff } = require("deep-object-diff");
 const { isValideUAI, getCoordinatesFromAddressData } = require("@mission-apprentissage/tco-service-node");
 const { distanceBetweenCoordinates } = require("../../../common/utils/distanceUtils");
 const logger = require("../../../common/logger");
+const { computeMefs } = require("../../../logic/finder/mefsFinder");
 
 const updateRelationFields = async () => {
   logger.info(" == Updating relations for formations == ");
@@ -35,35 +36,13 @@ const computeRelationFields = async (fields) => {
 };
 
 const recomputeFields = async (fields, oldFields) => {
-  // let affelnet_mefs_10
-  // let parcoursup_mefs_10
-
-  let annee_incoherente;
-  let duree_incoherente;
-
-  if (fields.duree && fields.duree !== "X") {
-    fields.bcn_mefs_10 = fields.bcn_mefs_10?.filter(({ modalite }) => {
-      return modalite.duree === fields.duree;
-    });
-
-    duree_incoherente =
-      !!fields.bcn_mefs_10.length &&
-      fields.bcn_mefs_10.every(({ modalite }) => {
-        return modalite.duree !== fields.duree;
-      });
-  }
-
-  if (fields.annee && fields.annee !== "X") {
-    fields.bcn_mefs_10 = fields.bcn_mefs_10?.filter(({ modalite }) => {
-      return modalite.annee === fields.annee;
-    });
-
-    annee_incoherente =
-      !!fields.bcn_mefs_10.length &&
-      fields.bcn_mefs_10.every(({ modalite }) => {
-        return modalite.annee !== fields.annee;
-      });
-  }
+  let {
+    affelnet_mefs_10,
+    affelnet_infos_offre,
+    parcoursup_mefs_10,
+    duree_incoherente,
+    annee_incoherente,
+  } = await computeMefs(fields);
 
   let distance_lieu_formation_etablissement_formateur = oldFields?.distance_lieu_formation_etablissement_formateur;
 
@@ -119,8 +98,11 @@ const recomputeFields = async (fields, oldFields) => {
   }
 
   return {
-    annee_incoherente,
+    affelnet_mefs_10,
+    affelnet_infos_offre,
+    parcoursup_mefs_10,
     duree_incoherente,
+    annee_incoherente,
     distance_lieu_formation_etablissement_formateur,
     uai_formation_valide,
 

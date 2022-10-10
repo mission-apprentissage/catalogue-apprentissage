@@ -9,7 +9,6 @@ module.exports = {
     await db.collection("bcnnniveauformationdiplomes").drop();
     await db.collection("ficherncps").drop();
     await db.collection("oniseps").drop();
-    await db.collection("sandboxformations").drop();
 
     const formations = db.collection("formations");
     await formations.updateMany({}, [
