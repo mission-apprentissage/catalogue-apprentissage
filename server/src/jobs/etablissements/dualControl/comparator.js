@@ -38,7 +38,7 @@ const isEqual = (dualControlEtablissement, etablissement, key) => {
       result = !arrayDiff(get(dualControlEtablissement, key), get(etablissement, key)).length;
       break;
     case typeof get(dualControlEtablissement, key) === "object":
-      result = !Object.keys(objectDiff(get(dualControlEtablissement, key), get(etablissement, key))).length;
+      result = !Object.keys(objectDiff(get(dualControlEtablissement, key), get(etablissement, key)) ?? {}).length;
       break;
     default:
       result = get(dualControlEtablissement, key) === get(etablissement, key);
