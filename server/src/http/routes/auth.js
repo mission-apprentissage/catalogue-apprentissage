@@ -7,14 +7,14 @@ module.exports = ({ users }) => {
   /**
    * @swagger
    *
-   * /auth:
+   * /auth/login:
    *   post:
    *     summary: Authentification
    *     tags:
    *       - Authentification
    *     description: >
-   *       Cette api vous permet d'authentifier l'utilisateur<br/><br />
-   *       Vous devez posséder des credentials. Veuillez contacter catalogue@apprentissage.beta.gouv.fr pour en obtenir<br /><br />
+   *       Cette api vous permet d'authentifier l'utilisateur.<br/><br />
+   *       Vous devez posséder des credentials. Veuillez contacter catalogue@apprentissage.beta.gouv.fr pour en obtenir.<br /><br />
    *     requestBody:
    *       description: L'objet JSON **doit** contenir les clés **username** et **password**.
    *       required: true
@@ -38,10 +38,23 @@ module.exports = ({ users }) => {
    *         content:
    *            application/json:
    *              schema:
+   *                $ref: '#/components/schemas/session'
+   *         headers:
+   *           Set-Cookie:
+   *             schema:
+   *               type: string
+   *               example: connect.sid=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX Path=/; HttpOnly; SameSite=Strict
+   *       401:
+   *         description: Unauthorized
+   *         content:
+   *            application/json:
+   *              schema:
    *                type: object
    *                properties:
-   *                  user:
-   *                    type: object
+   *                  message:
+   *                    type: string
+   *                    example: "Utilisateur non trouvé"
+   *
    */
   router.post(
     "/login",
@@ -60,6 +73,24 @@ module.exports = ({ users }) => {
     })
   );
 
+  /**
+   * @swagger
+   *
+   * /auth/logout:
+   *   get:
+   *     summary: Déconnexion
+   *     tags:
+   *       - Authentification
+   *     description: >
+   *       Cette api vous permet de déconnecter l'utilisateur.<br/><br />
+   *     responses:
+   *       200:
+   *         description: OK
+   *         content:
+   *            application/json:
+   *              schema:
+   *                $ref: '#/components/schemas/session'
+   */
   router.get(
     "/logout",
     tryCatch(async (req, res) => {
@@ -70,6 +101,25 @@ module.exports = ({ users }) => {
     })
   );
 
+  /**
+   * @swagger
+   *
+   * /auth/current-session:
+   *   get:
+   *     summary: Session courante
+   *     tags:
+   *       - Authentification
+   *     description: >
+   *       Cette api vous permet de récupérer la session actuelle.<br/><br />
+   *       La session actuelle peut être liée à un utilisateur existant, ou être anonyme.<br /><br />
+   *     responses:
+   *       200:
+   *         description: OK
+   *         content:
+   *            application/json:
+   *              schema:
+   *                $ref: '#/components/schemas/session'
+   */
   router.get(
     "/current-session",
     tryCatch(async (req, res) => {
