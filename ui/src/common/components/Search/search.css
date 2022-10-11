@@ -37,6 +37,10 @@
   width: 100%;
   min-height: 1px;
 }
+.search-page .search .search-results .selected-filters-button > span:first-of-type {
+  white-space: pre-wrap;
+}
+
 .search-page .search .search-container {
   background-color: #fff;
   /* padding: 15px; */
