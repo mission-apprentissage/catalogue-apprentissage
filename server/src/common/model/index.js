@@ -27,7 +27,6 @@ module.exports = {
   Report: createModel("report", schema.reportSchema),
   Log: createModel("log", schema.logSchema),
   AffelnetFormation: createModel("affelnetformation", schema.affelnetFormationSchema),
-  DualControlEtablissement: createModel("dualcontroletablissement", schema.etablissementSchema),
   Etablissement: createModel("etablissement", schema.etablissementSchema, {
     esIndexName: "etablissements",
   }),
@@ -40,6 +39,7 @@ module.exports = {
   Alert: createModel("alert", schema.alertSchema),
   ReglePerimetre: createModel("regleperimetre", schema.reglePerimetreSchema),
   Consumption: createModel("consumption", schema.consumptionSchema),
+  DualControlEtablissement: createModel("dualcontroletablissement", schema.etablissementSchema),
   DualControlFormation: createModel("dualcontrolformation", schema.formationSchema),
   DualControlReport: createModel("dualcontrolreport", schema.dualControlReportSchema),
   DualControlPerimeterReport: createModel("dualcontrolperimeterreport", schema.dualControlPerimeterReportSchema),

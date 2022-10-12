@@ -7,7 +7,6 @@ const { streamArray } = require("stream-json/streamers/StreamArray");
 const StreamZip = require("node-stream-zip");
 const { oleoduc, writeData, transformData } = require("oleoduc");
 const { DualControlFormation } = require("../../../common/model/index");
-const { parser } = require("./parser");
 
 const RCO_ZIP_URL = "https://mnadownloader-preprod.intercariforef.org/";
 const RCO_ZIP_PATH = "./assets/rco.zip";
@@ -50,7 +49,7 @@ const extractFromZip = async () => {
       stream,
       streamParser(),
       streamArray(),
-      transformData(({ value: line }) => parser(line)),
+      transformData(({ value: line }) => line),
       writeData(async (json) => await DualControlFormation.create(json))
     );
   } else {

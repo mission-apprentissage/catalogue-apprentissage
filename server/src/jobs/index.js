@@ -15,7 +15,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const KIT_LOCAL_PATH = "/data/uploads/CodeDiplome_RNCP_latest_kit.csv";
 const CONVENTION_FILES_DIR = path.join(__dirname, "conventionFilesImporter/assets");
 
-runScript(async (db) => {
+runScript(async ({ db }) => {
   try {
     logger.info(`Start all jobs`);
 
