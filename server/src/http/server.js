@@ -67,10 +67,10 @@ const swaggerSpecification = swaggerJsdoc(options);
 swaggerSpecification.components = {
   schemas: swaggerSchema,
   securitySchemes: {
-    bearerAuth: {
-      type: "http",
-      scheme: "bearer",
-      bearerFormat: "JWT",
+    cookieAuth: {
+      type: "apiKey",
+      in: "cookie",
+      name: "connect.sid",
     },
   },
 };
