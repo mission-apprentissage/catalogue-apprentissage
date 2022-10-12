@@ -1,6 +1,6 @@
 const path = require("path");
-// const fs = require("fs");
-// const axios = require("axios");
+const fs = require("fs");
+const axios = require("axios");
 const { parser: streamParser } = require("stream-json");
 const { streamArray } = require("stream-json/streamers/StreamArray");
 const { pick } = require("stream-json/filters/Pick");
@@ -9,31 +9,31 @@ const { oleoduc, transformData, writeData } = require("oleoduc");
 const { DualControlEtablissement } = require("../../../common/model/index");
 const logger = require("../../../common/logger");
 
-// const RCO_ZIP_URL = "https://mnadownloader-preprod.intercariforef.org/";
+const RCO_ZIP_URL = "https://mnadownloader-preprod.intercariforef.org/etablissements.php";
 const RCO_ZIP_PATH = "./assets/rco.zip";
 
-// const downloadZip = async () => {
-//   // FIXME : Remove when ssl certificate for intercariforef.org is renewed
-//   // const agent = new https.Agent({
-//   //   rejectUnauthorized: false,
-//   // });
+const downloadZip = async () => {
+  // FIXME : Remove when ssl certificate for intercariforef.org is renewed
+  // const agent = new https.Agent({
+  //   rejectUnauthorized: false,
+  // });
 
-//   const response = await axios({
-//     method: "get",
-//     url: RCO_ZIP_URL,
-//     responseType: "stream",
-//     // httpsAgent: agent,
-//   });
+  const response = await axios({
+    method: "get",
+    url: RCO_ZIP_URL,
+    responseType: "stream",
+    // httpsAgent: agent,
+  });
 
-//   const file = fs.createWriteStream(path.join(__dirname, RCO_ZIP_PATH));
-//   return new Promise((resolve, reject) => {
-//     response.data.pipe(file);
-//     file.on("finish", () => {
-//       file.close(() => resolve());
-//     });
-//     file.on("error", (err) => reject(err));
-//   });
-// };
+  const file = fs.createWriteStream(path.join(__dirname, RCO_ZIP_PATH));
+  return new Promise((resolve, reject) => {
+    response.data.pipe(file);
+    file.on("finish", () => {
+      file.close(() => resolve());
+    });
+    file.on("error", (err) => reject(err));
+  });
+};
 
 const extractFromZip = async () => {
   const zip = new StreamZip.async({ file: path.join(__dirname, RCO_ZIP_PATH) });
@@ -66,7 +66,7 @@ const extractFromZip = async () => {
 const downloader = async () => {
   let error = null;
   try {
-    // await downloadZip();
+    await downloadZip();
     await DualControlEtablissement.deleteMany({});
     await extractFromZip();
   } catch (e) {
