@@ -626,9 +626,7 @@ export interface RncpDetails {
   /**
    * Certificateurs
    */
-  certificateurs?: {
-    [k: string]: unknown;
-  }[];
+  certificateurs?: unknown[];
   /**
    * Code NSF
    */
@@ -640,27 +638,19 @@ export interface RncpDetails {
   /**
    * Romes
    */
-  romes?: {
-    [k: string]: unknown;
-  }[];
+  romes?: unknown[];
   /**
    * Blocs de compétences
    */
-  blocs_competences?: {
-    [k: string]: unknown;
-  }[];
+  blocs_competences?: unknown[];
   /**
    * Voix d'accès
    */
-  voix_acces?: {
-    [k: string]: unknown;
-  }[];
+  voix_acces?: unknown[];
   /**
    * Partenaires
    */
-  partenaires?: {
-    [k: string]: unknown;
-  }[];
+  partenaires?: unknown[];
   /**
    * Code rncp périmé (date fin enregistrement avant le 31 aout de l'année courante)
    */
