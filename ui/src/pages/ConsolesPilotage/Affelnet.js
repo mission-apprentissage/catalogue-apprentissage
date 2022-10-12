@@ -93,13 +93,15 @@ const Indicators = () => {
       color: "yellow.100",
       title: <>{formationAutomatiquementRapprochee}</>,
       body: <>Formations rapprochées automatiquement</>,
-      linkTo: `/recherche/formations?affelnet_statut=${encodeURIComponent(JSON.stringify(AFFELNET_STATUS.PUBLIE))}`,
+      linkTo: `/recherche/formations?affelnet_statut=${encodeURIComponent(JSON.stringify([AFFELNET_STATUS.PUBLIE]))}`,
     },
     {
       color: "orange.100",
       title: <>{formationAValider}</>,
       body: <>Formations à valider avant publication</>,
-      linkTo: `/recherche/formations?affelnet_statut=${encodeURIComponent(JSON.stringify([AFFELNET_STATUS.REJETE]))}`,
+      linkTo: `/recherche/formations?affelnet_statut=${encodeURIComponent(
+        JSON.stringify([AFFELNET_STATUS.A_PUBLIER_VALIDATION])
+      )}`,
     },
     {
       color: "green.100",
