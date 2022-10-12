@@ -470,11 +470,6 @@ const formationSchema = {
     default: false,
     description: "Est publiée, la formation est éligible pour le catalogue",
   },
-  rco_published: {
-    type: Boolean,
-    default: false,
-    description: "Est publiée dans le flux rco",
-  },
   forced_published: {
     type: Boolean,
     default: false,
@@ -504,25 +499,11 @@ const formationSchema = {
     description: "Qui a réalisé la dernière modification",
   },
 
-  // Flags
-  to_update: {
-    index: true,
-    type: Boolean,
-    default: false,
-    description: "Formation à mette à jour lors du script d'enrichissement",
-  },
-
   // Product specific
   idea_geo_coordonnees_etablissement: {
     type: String,
     implicit_type: "geo_point",
     description: "Latitude et longitude de l'établissement recherchable dans Idea",
-  },
-
-  update_error: {
-    type: String,
-    default: null,
-    description: "Erreur lors de la mise à jour de la formation",
   },
 
   lieu_formation_geo_coordonnees: {

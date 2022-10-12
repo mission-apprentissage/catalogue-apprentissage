@@ -235,10 +235,6 @@ export interface Formation {
    */
   published?: boolean;
   /**
-   * Est publiée dans le flux rco
-   */
-  rco_published?: boolean;
-  /**
    * La publication vers les plateformes est forcée (contournement catalogue non-éligible dans certains cas)
    */
   forced_published?: boolean;
@@ -259,17 +255,9 @@ export interface Formation {
    */
   last_update_who?: string;
   /**
-   * Formation à mette à jour lors du script d'enrichissement
-   */
-  to_update?: boolean;
-  /**
    * Latitude et longitude de l'établissement recherchable dans Idea
    */
   idea_geo_coordonnees_etablissement?: string;
-  /**
-   * Erreur lors de la mise à jour de la formation
-   */
-  update_error?: string;
   /**
    * Latitude et longitude du lieu de formation
    */

@@ -59,7 +59,7 @@ const exit = async (rawError) => {
   process.exitCode = error ? 1 : 0;
 };
 
-const enableAlertMessage = async () =>
+const enableAlertMessage = async () => {
   await Alert.findOneAndUpdate(
     { type: "automatique" },
     { enabled: true },
@@ -67,8 +67,13 @@ const enableAlertMessage = async () =>
       upsert: true,
     }
   );
+  console.log("Alert message enabled");
+};
 
-const disableAlertMessage = async () => await Alert.findOneAndUpdate({ type: "automatique" }, { enabled: false });
+const disableAlertMessage = async () => {
+  await Alert.findOneAndUpdate({ type: "automatique" }, { enabled: false });
+  console.log("Alert message disabled");
+};
 
 module.exports = {
   /**

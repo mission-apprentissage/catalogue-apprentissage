@@ -34,7 +34,6 @@
     "psup:jobs": "standaloneJobs=true node src/jobs/parcoursup/index.js",
     "psup:stats": "standalone=true node src/jobs/parcoursup/stats.js",
     "qualiopi": "node src/jobs/oneshot/qualiopi/index.js",
-    "dualControl": "standaloneJobs=true node src/jobs/formations/dualControl/index.js",
     "es:index": "standalone=true node src/jobs/esIndex/index.js",
     "doc": "node src/jobs/doc/index.js",
     "migration:create": "migrate-mongo create",
@@ -48,7 +47,7 @@
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.6.1",
-    "@mission-apprentissage/tco-service-node": "2.42.0",
+    "@mission-apprentissage/tco-service-node": "2.42.5",
     "aws-sdk": "2.1109.0",
     "axios": "0.21.4",
     "body-parser": "1.19.0",
