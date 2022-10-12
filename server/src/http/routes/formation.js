@@ -3,7 +3,6 @@ const Joi = require("joi");
 const { oleoduc, compose, transformIntoJSON } = require("oleoduc");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { Formation } = require("../../common/model");
-// const { mnaFormationUpdater } = require("../../logic/updaters/mnaFormationUpdater");
 const { sendJsonStream } = require("../../common/utils/httpUtils");
 const { sanitize } = require("../../common/utils/sanitizeUtils");
 const { paginate } = require("../../common/utils/mongooseUtils");

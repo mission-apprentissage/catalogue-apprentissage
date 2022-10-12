@@ -114,10 +114,6 @@ const recomputeFields = async (fields, oldFields) => {
 
     // ...(await computeRelationFields(fields)),
 
-    // TODO :
-    // affelnet_mefs_10,
-    // parcoursup_mefs_10,
-
     ...fields,
   };
 };
