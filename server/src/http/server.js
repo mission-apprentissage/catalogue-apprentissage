@@ -16,7 +16,6 @@ const authMiddleware = require("./middlewares/authMiddleware");
 const permissionsMiddleware = require("./middlewares/permissionsMiddleware");
 const packageJson = require("../../package.json");
 const formation = require("./routes/formation");
-const formationSecure = require("./routes/formationSecure");
 const report = require("./routes/report");
 const auth = require("./routes/auth");
 const user = require("./routes/user");
@@ -25,13 +24,9 @@ const password = require("./routes/password");
 const stats = require("./routes/stats");
 const esSearch = require("./routes/esSearch");
 const esMultiSearchNoIndex = require("./routes/esMultiSearchNoIndex");
-const parcoursup = require("./routes/parcoursup");
 const etablissement = require("./routes/etablissement");
-const etablissementSecure = require("./routes/etablissementSecure");
 const upload = require("./routes/upload");
 const alert = require("./routes/alert");
-const reglePerimetre = require("./routes/reglePerimetre");
-const reglePerimetreSecure = require("./routes/reglePerimetreSecure");
 const swaggerSchema = require("../common/model/swaggerSchema");
 const rateLimit = require("express-rate-limit");
 
@@ -138,7 +133,6 @@ module.exports = async (components, verbose = true) => {
     })
   );
 
-  app.use("/api/v1/entity", apiPerimetreLimiter, reglePerimetre());
   app.use("/api/v1/es/search", elasticLimiter, esSearch());
   app.use("/api/v1/search", elasticLimiter, esMultiSearchNoIndex());
   app.use("/api/v1/entity", apiLimiter, formation());
@@ -146,7 +140,6 @@ module.exports = async (components, verbose = true) => {
   app.use("/api/v1/entity", apiLimiter, etablissement(components));
   app.use("/api/v1/auth", authLimiter, auth(components));
   app.use("/api/v1/password", authLimiter, password(components));
-  app.use("/api/v1/parcoursup", apiLimiter, parcoursup(components));
   app.use("/api/v1/entity", apiLimiter, alert());
   app.use(
     "/api/v1/admin",
@@ -162,11 +155,8 @@ module.exports = async (components, verbose = true) => {
     permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs", "page_gestion_roles"]),
     role(components)
   );
-  app.use("/api/v1/entity", apiLimiter, apiKeyAuthMiddleware, formationSecure());
   app.use("/api/v1/stats", apiLimiter, apiKeyAuthMiddleware, stats(components));
-  app.use("/api/v1/entity", apiLimiter, apiKeyAuthMiddleware, etablissementSecure(components));
   app.use("/api/v1/upload", apiLimiter, permissionsMiddleware({ isAdmin: true }, ["page_upload"]), upload());
-  app.use("/api/v1/entity", apiLimiter, apiKeyAuthMiddleware, reglePerimetreSecure());
 
   /** DEPRECATED */
   app.use("/api/es/search", elasticLimiter, esSearch());
@@ -176,7 +166,6 @@ module.exports = async (components, verbose = true) => {
   app.use("/api/entity", apiLimiter, etablissement(components));
   app.use("/api/auth", authLimiter, auth(components));
   app.use("/api/password", authLimiter, password(components));
-  app.use("/api/parcoursup", apiLimiter, parcoursup(components));
   app.use(
     "/api/admin",
     apiLimiter,
@@ -191,10 +180,7 @@ module.exports = async (components, verbose = true) => {
     permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs", "page_gestion_roles"]),
     role(components)
   );
-  app.use("/api/entity", apiLimiter, authMiddleware, formationSecure());
   app.use("/api/stats", apiLimiter, stats(components));
-  app.use("/api/entity", apiLimiter, authMiddleware, etablissementSecure(components));
-  app.use("/api/entity", apiLimiter, authMiddleware, reglePerimetreSecure());
 
   app.get(
     "/api",

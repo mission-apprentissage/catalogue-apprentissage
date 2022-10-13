@@ -30,14 +30,6 @@ const DOCUMENTS = [
     filename: "CodeDiplome_RNCP_latest_kit.csv",
     label: "Kit code diplome - rncp",
   },
-  {
-    filename: "affelnet-import.xlsx",
-    label: "Import Affelnet",
-  },
-  {
-    filename: "mefs-parcoursup.csv",
-    label: "Liste de MEFs fiabilisés sur Parcoursup",
-  },
 ];
 
 export default () => {

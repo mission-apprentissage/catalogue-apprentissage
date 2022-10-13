@@ -16,30 +16,22 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
-import { useFormik } from "formik";
 import { _get, _post, _put } from "../../common/httpClient";
 import Layout from "../layout/Layout";
 import useAuth from "../../common/hooks/useAuth";
 import { hasAccessTo, hasRightToEditFormation } from "../../common/utils/rolesUtils";
 import { DangerBox } from "../../common/components/DangerBox";
-import { StatusBadge } from "../../common/components/StatusBadge";
-import { PublishModal } from "../../common/components/formation/PublishModal";
-import { buildUpdatesHistory } from "../../common/utils/historyUtils";
 import InfoTooltip from "../../common/components/InfoTooltip";
-import { Alert } from "../../common/components/Alert";
 
 import helpText from "../../locales/helpText.json";
 import { ArrowDownLine, ExternalLinkLine, MapPin2Fill, Parametre } from "../../theme/components/icons/";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
 import { getOpenStreetMapUrl } from "../../common/utils/mapUtils";
-import { EditableField } from "../../common/components/formation/EditableField";
 import { HistoryBlock } from "../../common/components/formation/HistoryBlock";
-import { RejectionBlock } from "../../common/components/formation/RejectionBlock";
 import { DescriptionBlock } from "../../common/components/formation/DescriptionBlock";
 import { OrganismesBlock } from "../../common/components/formation/OrganismesBlock";
 import { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL } from "../../constants/catalogueLabels";
-import { COMMON_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -51,7 +43,7 @@ const getLBAUrl = ({ cle_ministere_educatif = "" }) => {
   )}`;
 };
 
-const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, values, hasRightToEdit }) => {
+const Formation = ({ formation }) => {
   // Distance tolérer entre l'adresse et les coordonnées transmise par RCO
   const seuilDistance = 100;
 
@@ -95,18 +87,12 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
 
             <Box>
               <UaiFormationContainer>
-                <EditableField
-                  fieldName={"uai_formation"}
-                  label={"UAI du lieu de formation"}
-                  formation={formation}
-                  edition={edition}
-                  onEdit={onEdit}
-                  values={values}
-                  handleSubmit={handleSubmit}
-                  handleChange={handleChange}
-                  hasRightToEdit={hasRightToEdit}
-                  mb={formation?.uai_formation_valide ? 4 : 0}
-                />
+                <Text mb={formation?.uai_formation_valide ? 4 : 0}>
+                  UAI du lieu de formation :{" "}
+                  <Text as="span" variant="highlight">
+                    {formation.uai_formation}
+                  </Text>
+                </Text>
               </UaiFormationContainer>
 
               <AdresseContainer>
@@ -276,52 +262,6 @@ export default ({ match }) => {
   const [user] = useAuth();
   const hasRightToEdit = hasRightToEditFormation(formation, user);
 
-  const { values, handleSubmit, handleChange, setFieldValue, isSubmitting } = useFormik({
-    initialValues: {
-      uai_formation: "",
-    },
-    onSubmit: ({ uai_formation }) => {
-      return new Promise(async (resolve) => {
-        const trimedUaiFormation = uai_formation?.trim();
-
-        try {
-          if (trimedUaiFormation !== formation["uai_formation"]) {
-            const result = await _put(`${CATALOGUE_API}/entity/formations/${formation._id}`, {
-              uai_formation: trimedUaiFormation,
-              last_update_who: user.email,
-              last_update_at: Date.now(),
-              editedFields: { ...formation?.editedFields, uai_formation: trimedUaiFormation },
-              updates_history: buildUpdatesHistory(
-                formation,
-                { uai_formation: trimedUaiFormation, last_update_who: user.email },
-                ["uai_formation"]
-              ),
-            });
-            if (result) {
-              setFormation(result);
-              setFieldValue("uai_formation", result?.uai_formation ?? "");
-            }
-          }
-        } catch (e) {
-          console.error("Can't perform update", e);
-
-          const response = await (e?.json ?? {});
-          const message = response?.message ?? e?.message;
-
-          toast({
-            title: "Error",
-            description: message,
-            status: "error",
-            duration: 10000,
-          });
-        } finally {
-          setEdition(null);
-          resolve("onSubmitHandler complete");
-        }
-      });
-    },
-  });
-
   const mountedRef = useRef(true);
 
   useEffect(() => {
@@ -340,7 +280,6 @@ export default ({ match }) => {
 
         setLoading(false);
         setFormation(form);
-        setFieldValue("uai_formation", form.uai_formation ?? "");
       } catch (e) {
         if (!mountedRef.current) return null;
         setLoading(false);
@@ -350,35 +289,10 @@ export default ({ match }) => {
     return () => {
       mountedRef.current = false;
     };
-  }, [match, setFieldValue]);
-
-  const onEdit = (fieldName = null) => {
-    setEdition(fieldName);
-  };
+  }, [match]);
 
   const title = loading ? "" : `${formation?.intitule_long ?? "Formation inconnue"}`;
   setTitle(title);
-
-  const sendToParcoursup = async () => {
-    try {
-      const updated = await _post(`${CATALOGUE_API}/parcoursup/send-ws`, {
-        id: formation._id,
-      });
-      setFormation(updated);
-    } catch (e) {
-      console.error("Can't send to ws", e);
-
-      const response = await (e?.json ?? {});
-      const message = response?.message ?? e?.message;
-
-      toast({
-        title: "Error",
-        description: message,
-        status: "error",
-        duration: 10000,
-      });
-    }
-  };
 
   return (
     <Layout>
@@ -420,76 +334,9 @@ export default ({ match }) => {
                       {title} <InfoTooltip description={helpText.formation.intitule_long} />
                     </Heading>
                   </Box>
-                  {hasRightToEdit &&
-                    formation.catalogue_published &&
-                    hasAccessTo(user, "page_formation/gestion_publication") && (
-                      <Button
-                        textStyle="sm"
-                        variant="primary"
-                        minW={null}
-                        px={8}
-                        mt={[8, 8, 0]}
-                        onClick={() => {
-                          onOpenPublishModal();
-                        }}
-                      >
-                        <Parametre mr={2} />
-                        Gérer les publications
-                      </Button>
-                    )}
                 </Flex>
-                {formation.catalogue_published && (
-                  <Flex justifyContent={"space-between"} flexDirection={["column", "column", "row"]}>
-                    <Box mt={5}>
-                      {hasAccessTo(user, "page_formation/voir_status_publication_ps") && (
-                        <StatusBadge source="Parcoursup" status={formation.parcoursup_statut} mr={[0, 3]} />
-                      )}
-                      {hasAccessTo(user, "page_formation/voir_status_publication_aff") && (
-                        <StatusBadge source="Affelnet" status={formation.affelnet_statut} mt={[2, 0]} />
-                      )}
-                    </Box>
-                    <Flex
-                      alignItems="center"
-                      justifyContent={"space-between"}
-                      flexDirection={["column", "column", "row"]}
-                    >
-                      {formation.parcoursup_statut === COMMON_STATUS.EN_ATTENTE &&
-                        hasAccessTo(user, "page_formation/envoi_parcoursup") && (
-                          <Button textStyle="sm" variant="secondary" px={8} mt={4} onClick={sendToParcoursup}>
-                            Forcer la publication Parcoursup
-                          </Button>
-                        )}
-                    </Flex>
-                  </Flex>
-                )}
-
-                {(formation.parcoursup_statut === COMMON_STATUS.EN_ATTENTE ||
-                  formation.parcoursup_statut === PARCOURSUP_STATUS.REJETE) &&
-                  formation.parcoursup_error && <RejectionBlock formation={formation} />}
-
-                {hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
-                  formation.parcoursup_raison_depublication && (
-                    <Alert mt={4} type={"warning"}>
-                      Motif de non publication : <b>{formation.parcoursup_raison_depublication}</b>
-                    </Alert>
-                  )}
-                {hasAccessTo(user, "page_formation/voir_status_publication_af") &&
-                  formation.affelnet_raison_depublication && (
-                    <Alert mt={4} type={"warning"}>
-                      Motif de non publication : <b>{formation.affelnet_raison_depublication}</b>
-                    </Alert>
-                  )}
               </Box>
-              <Formation
-                formation={formation}
-                edition={edition}
-                onEdit={onEdit}
-                values={values}
-                handleSubmit={handleSubmit}
-                handleChange={handleChange}
-                hasRightToEdit={hasAccessTo(user, "page_formation/modifier_informations") && hasRightToEdit}
-                isSubmitting={isSubmitting}
-              />
+              <Formation formation={formation} />
             </>
           )}
           {hasAccessTo(user, "page_formation") && !loading && !formation && (
@@ -518,16 +365,6 @@ export default ({ match }) => {
           )}
         </Container>
       </Box>
-      {hasAccessTo(user, "page_formation/gestion_publication") && formation && (
-        <PublishModal
-          isOpen={isOpenPublishModal}
-          onClose={onClosePublishModal}
-          formation={formation}
-          onFormationUpdate={(updatedFormation) => {
-            setFormation(updatedFormation);
-          }}
-        />
-      )}
     </Layout>
   );
 };
