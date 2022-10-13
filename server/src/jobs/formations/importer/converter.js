@@ -36,13 +36,7 @@ const computeRelationFields = async (fields) => {
 };
 
 const recomputeFields = async (fields, oldFields) => {
-  let {
-    affelnet_mefs_10,
-    affelnet_infos_offre,
-    parcoursup_mefs_10,
-    duree_incoherente,
-    annee_incoherente,
-  } = await computeMefs(fields);
+  let { duree_incoherente, annee_incoherente } = await computeMefs(fields);
 
   let distance_lieu_formation_etablissement_formateur = oldFields?.distance_lieu_formation_etablissement_formateur;
 
@@ -100,9 +94,6 @@ const recomputeFields = async (fields, oldFields) => {
   }
 
   return {
-    affelnet_mefs_10,
-    affelnet_infos_offre,
-    parcoursup_mefs_10,
     duree_incoherente,
     annee_incoherente,
     distance_lieu_formation_etablissement_formateur,

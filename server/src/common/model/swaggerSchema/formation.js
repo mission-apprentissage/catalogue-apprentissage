@@ -33,58 +33,6 @@ module.exports = {
         default: "null",
         description: "Code formation diplôme d'entrée (année 1 de l'apprentissage)",
       },
-      affelnet_mefs_10: {
-        type: "array",
-        items: {
-          title: "itemOf_affelnet_mefs_10",
-          type: "object",
-          properties: {
-            mef10: {
-              type: "string",
-            },
-            modalite: {
-              title: "modalite",
-              type: "object",
-              properties: {
-                duree: {
-                  type: "string",
-                },
-                annee: {
-                  type: "string",
-                },
-              },
-            },
-          },
-        },
-        default: [],
-        description: "Tableau de Code MEF 10 caractères et modalités (filtrés pour Affelnet si applicable)",
-      },
-      parcoursup_mefs_10: {
-        type: "array",
-        items: {
-          title: "itemOf_parcoursup_mefs_10",
-          type: "object",
-          properties: {
-            mef10: {
-              type: "string",
-            },
-            modalite: {
-              title: "modalite",
-              type: "object",
-              properties: {
-                duree: {
-                  type: "string",
-                },
-                annee: {
-                  type: "string",
-                },
-              },
-            },
-          },
-        },
-        default: [],
-        description: "Tableau de Code MEF 10 caractères et modalités (filtrés pour Parcoursup si applicable)",
-      },
       nom_academie: {
         type: "string",
         default: "null",

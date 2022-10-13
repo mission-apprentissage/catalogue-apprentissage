@@ -34,14 +34,6 @@ export interface Formation {
    */
   cfd_entree?: string;
   /**
-   * Tableau de Code MEF 10 caractères et modalités (filtrés pour Affelnet si applicable)
-   */
-  affelnet_mefs_10?: ItemOfAffelnetMefs_10[];
-  /**
-   * Tableau de Code MEF 10 caractères et modalités (filtrés pour Parcoursup si applicable)
-   */
-  parcoursup_mefs_10?: ItemOfParcoursupMefs_10[];
-  /**
    * Nom de l'académie
    */
   nom_academie?: string;
@@ -487,22 +479,6 @@ export interface Formation {
   etablissement_reference_date_creation?: Date;
   _id?: Types.ObjectId;
 }
-export interface ItemOfAffelnetMefs_10 {
-  mef10?: string;
-  modalite?: Modalite;
-}
-export interface Modalite {
-  duree?: string;
-  annee?: string;
-}
-export interface ItemOfParcoursupMefs_10 {
-  mef10?: string;
-  modalite?: Modalite1;
-}
-export interface Modalite1 {
-  duree?: string;
-  annee?: string;
-}
 /**
  * Détails RNCP (bloc de compétences etc..)
  */
@@ -578,9 +554,9 @@ export interface RncpDetails {
 }
 export interface ItemOfBcnMefs_10 {
   mef10?: string;
-  modalite?: Modalite2;
+  modalite?: Modalite;
 }
-export interface Modalite2 {
+export interface Modalite {
   duree?: string;
   annee?: string;
 }

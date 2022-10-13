@@ -32,20 +32,12 @@ module.exports = () => {
     let query = cleanedQuery ? JSON.parse(cleanedQuery) : {};
     query = sanitize(query, { allowSafeOperators: true });
 
-    const { id_parcoursup, ...filter } = query;
-    // additional filtering for parcoursup
-    if (id_parcoursup) {
-      filter["parcoursup_id"] = id_parcoursup;
-    }
-
     const page = qs && qs.page ? qs.page : 1;
     const limit = qs && qs.limit ? parseInt(qs.limit, 10) : 10;
     const select =
       qs && qs.select
         ? JSON.parse(qs.select)
         : {
-            affelnet_statut_history: 0,
-            parcoursup_statut_history: 0,
             updates_history: 0,
             __v: 0,
           };
@@ -58,7 +50,7 @@ module.exports = () => {
     }
 
     const mQuery = {
-      ...filter,
+      ...query,
       ...queryAsRegex,
     };
 
@@ -92,26 +84,18 @@ module.exports = () => {
       page: Joi.number().default(1),
       limit: Joi.number().max(1000).default(10),
       select: Joi.optional().default({
-        affelnet_statut_history: 0,
-        parcoursup_statut_history: 0,
         updates_history: 0,
         __v: 0,
       }),
       queryAsRegex: Joi.optional().default({}),
     }).validateAsync(sanitizedQuery, { abortEarly: false });
 
-    const { id_parcoursup, ...filter } = query;
-    // additional filtering for parcoursup
-    if (id_parcoursup) {
-      filter["parcoursup_id"] = id_parcoursup;
-    }
-
     for (const prop in queryAsRegex) {
       queryAsRegex[prop] = new RegExp(queryAsRegex[prop], "i");
     }
 
     query = {
-      ...filter,
+      ...query,
       ...queryAsRegex,
     };
 
@@ -139,12 +123,6 @@ module.exports = () => {
     let query = qs && qs.query ? JSON.parse(qs.query) : {};
     query = sanitize(query, { allowSafeOperators: true });
 
-    const { id_parcoursup, ...filter } = query;
-    // additional filtering for parcoursup
-    if (id_parcoursup) {
-      filter["parcoursup_id"] = id_parcoursup;
-    }
-
     let queryAsRegex = qs?.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
     queryAsRegex = sanitize(queryAsRegex, { allowSafeOperators: true });
 
@@ -153,7 +131,7 @@ module.exports = () => {
     }
 
     const mQuery = {
-      ...filter,
+      ...query,
       ...queryAsRegex,
     };
 
@@ -176,8 +154,6 @@ module.exports = () => {
       qs && qs.select
         ? JSON.parse(qs.select)
         : {
-            affelnet_statut_history: 0,
-            parcoursup_statut_history: 0,
             updates_history: 0,
             __v: 0,
           };
@@ -197,8 +173,6 @@ module.exports = () => {
       qs && qs.select
         ? JSON.parse(qs.select)
         : {
-            affelnet_statut_history: 0,
-            parcoursup_statut_history: 0,
             updates_history: 0,
             __v: 0,
           };
@@ -212,9 +186,7 @@ module.exports = () => {
   const streamFormations = tryCatch(async (req, res) => {
     let { query, select, limit } = await Joi.object({
       query: Joi.string().default("{}"),
-      select: Joi.string().default(
-        '{"affelnet_statut_history":0,"parcoursup_statut_history":0,"updates_history":0,"__v":0}'
-      ),
+      select: Joi.string().default('{"__v":0}'),
       limit: Joi.number().default(10),
     }).validateAsync(req.query, { abortEarly: false });
 

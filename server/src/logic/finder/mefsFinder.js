@@ -1,30 +1,5 @@
-const { ReglePerimetre, SandboxFormation } = require("../../common/model");
-const { asyncForEach } = require("../../common/utils/asyncUtils");
-const { findMefsForParcoursup } = require("../../common/utils/parcoursupUtils");
-const { getQueryFromRule } = require("../../common/utils/rulesUtils");
-const { AFFELNET_STATUS } = require("../../constants/status");
-
-const getInfosOffreLabel = (formation, mef) => {
-  return `${formation.libelle_court} en ${mef.modalite.duree} an${Number(mef.modalite.duree) > 1 ? "s" : ""}`;
-};
-
-const findMefsForAffelnet = async (rules) => {
-  const results = await SandboxFormation.find({ ...rules }, { bcn_mefs_10: 1 }).lean();
-
-  if (results && results.length > 0) {
-    return results.reduce((acc, { bcn_mefs_10 }) => {
-      return [...acc, ...bcn_mefs_10];
-    }, []);
-  }
-
-  return null;
-};
-
 const computeMefs = async (fields) => {
   let bcn_mefs_10 = fields.bcn_mefs_10;
-  let affelnet_mefs_10 = null;
-  let affelnet_infos_offre = fields.affelnet_infos_offre;
-  let parcoursup_mefs_10 = null;
   let duree_incoherente = false;
   let annee_incoherente = false;
 
@@ -55,74 +30,8 @@ const computeMefs = async (fields) => {
       });
   }
 
-  // try to fill mefs for Affelnet
-  if (bcn_mefs_10?.length > 0) {
-    //  filter bcn_mefs_10 to get affelnet_mefs_10 for affelnet
-
-    // eslint-disable-next-line no-unused-vars
-    const { _id, updates_history, ...rest } = fields;
-
-    const aPublierRules = await ReglePerimetre.find({
-      plateforme: "affelnet",
-      statut: AFFELNET_STATUS.A_PUBLIER,
-      is_deleted: { $ne: true },
-    }).lean();
-
-    const aPublierSoumisAValidationRules = await ReglePerimetre.find({
-      plateforme: "affelnet",
-      statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
-      is_deleted: { $ne: true },
-    }).lean();
-
-    // Split formation into N formation with 1 mef each
-    // & insert theses into a tmp collection
-    await asyncForEach(bcn_mefs_10, async (mefObj) => {
-      await new SandboxFormation({
-        ...rest,
-        bcn_mefs_10: [mefObj],
-      }).save({ validateBeforeSave: false });
-    });
-
-    // apply perimetre filters against the tmp collection
-    // check "à publier" first to have less mefs
-    // Add current cle_ministere_educatif to ensure no concurrent access in db
-    let filtered_affelnet_mefs_10 = await findMefsForAffelnet({
-      cle_ministere_educatif: rest.cle_ministere_educatif,
-      $or: aPublierRules.map(getQueryFromRule),
-    });
-
-    if (!filtered_affelnet_mefs_10) {
-      filtered_affelnet_mefs_10 = await findMefsForAffelnet({
-        cle_ministere_educatif: rest.cle_ministere_educatif,
-        $or: aPublierSoumisAValidationRules.map(getQueryFromRule),
-      });
-    }
-
-    if (filtered_affelnet_mefs_10) {
-      // keep the successful mefs in affelnet field
-      affelnet_mefs_10 = filtered_affelnet_mefs_10;
-
-      if (
-        affelnet_mefs_10.length === 1 &&
-        (!affelnet_infos_offre || affelnet_infos_offre.match(`${fields.libelle_court} en . an.?$`))
-      ) {
-        affelnet_infos_offre = getInfosOffreLabel(fields, affelnet_mefs_10[0]);
-      }
-    }
-
-    await SandboxFormation.deleteMany({ cle_ministere_educatif: rest.cle_ministere_educatif });
-  }
-
-  // try to fill mefs for Parcoursup
-  if (bcn_mefs_10?.length > 0) {
-    parcoursup_mefs_10 = findMefsForParcoursup(fields);
-  }
-
   return {
     bcn_mefs_10,
-    affelnet_mefs_10,
-    affelnet_infos_offre,
-    parcoursup_mefs_10,
     duree_incoherente,
     annee_incoherente,
   };
