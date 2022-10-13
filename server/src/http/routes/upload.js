@@ -6,7 +6,6 @@ const tryCatch = require("../middlewares/tryCatchMiddleware");
 const csvToJson = require("convert-csv-to-json");
 const path = require("path");
 const logger = require("../../common/logger");
-const { importAffelnetFormations } = require("../../jobs/affelnet/import");
 
 /**
  * check CSV file headers
