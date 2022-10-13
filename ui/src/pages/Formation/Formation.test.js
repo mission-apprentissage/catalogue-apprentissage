@@ -3,7 +3,6 @@ import { renderWithRouter, grantAnonymousAccess, setupMswServer } from "../../co
 import { rest } from "msw";
 import Formation from "./Formation";
 import { waitFor } from "@testing-library/react";
-import { AFFELNET_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
 
 jest.setTimeout(20000);
 
@@ -61,7 +60,6 @@ const formation = {
   cfd_specialite: null,
   cfd_outdated: false,
   cfd_date_fermeture: null,
-  affelnet_mefs_10: [{ mef10: "2472541131", modalite: { duree: "3", annee: "1" } }],
   nom_academie: "Nancy-Metz",
   num_academie: "12",
   code_postal: "57450",
@@ -243,7 +241,6 @@ const formation = {
     { mef10: "2472541132", modalite: { duree: "3", annee: "2" } },
   ],
   editedFields: { uai_formation: "0573690B" },
-  parcoursup_raison_depublication: null,
   lieu_formation_geo_coordonnees: "49.103334,6.855078",
   geo_coordonnees_etablissement_gestionnaire: "48.705054,6.12883",
   geo_coordonnees_etablissement_formateur: "48.705054,6.12883",

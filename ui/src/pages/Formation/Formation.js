@@ -13,18 +13,17 @@ import {
   Spinner,
   Text,
   useDisclosure,
-  useToast,
 } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
-import { _get, _post, _put } from "../../common/httpClient";
+import { _get } from "../../common/httpClient";
 import Layout from "../layout/Layout";
 import useAuth from "../../common/hooks/useAuth";
-import { hasAccessTo, hasRightToEditFormation } from "../../common/utils/rolesUtils";
+import { hasAccessTo } from "../../common/utils/rolesUtils";
 import { DangerBox } from "../../common/components/DangerBox";
 import InfoTooltip from "../../common/components/InfoTooltip";
 
 import helpText from "../../locales/helpText.json";
-import { ArrowDownLine, ExternalLinkLine, MapPin2Fill, Parametre } from "../../theme/components/icons/";
+import { ArrowDownLine, ExternalLinkLine, MapPin2Fill } from "../../theme/components/icons/";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
 import { getOpenStreetMapUrl } from "../../common/utils/mapUtils";
@@ -214,32 +213,7 @@ const Formation = ({ formation }) => {
           <Box mb={16}>
             <OrganismesBlock formation={formation} />
           </Box>
-          {(formation?.affelnet_published_date ?? formation?.parcoursup_published_date) && (
-            <Box mb={[0, 0, 16]}>
-              <Heading textStyle="h4" color="grey.800" mb={4}>
-                Autres informations
-              </Heading>
-              {formation?.affelnet_published_date && (
-                <Text mb={4}>
-                  Date de publication sur Affelnet :{" "}
-                  <Text as="span" variant="highlight">
-                    {new Date(formation.affelnet_published_date).toLocaleDateString("fr-FR")}
-                  </Text>{" "}
-                  <InfoTooltip description={helpText.formation.affelnet_published_date} />
-                </Text>
-              )}
-              {formation?.parcoursup_published_date && (
-                <Text mb={4}>
-                  Date de publication sur Parcoursup :{" "}
-                  <Text as="span" variant="highlight">
-                    {new Date(formation.parcoursup_published_date).toLocaleDateString("fr-FR")}
-                  </Text>{" "}
-                  <InfoTooltip description={helpText.formation.parcoursup_published_date} />
-                </Text>
-              )}
-            </Box>
-          )}
-          {(formation?.affelnet_statut_history?.length || formation?.parcoursup_statut_history?.length) && (
+          {!!formation?.updates_history?.length && (
             <Box mb={[0, 0, 16]}>
               <HistoryBlock formation={formation} />
             </Box>
@@ -251,17 +225,10 @@ const Formation = ({ formation }) => {
 };
 
 export default ({ match }) => {
-  const toast = useToast();
   const [formation, setFormation] = useState();
   const [loading, setLoading] = useState(false);
-
-  const [edition, setEdition] = useState(null);
   const history = useHistory();
-  const { isOpen: isOpenPublishModal, onOpen: onOpenPublishModal, onClose: onClosePublishModal } = useDisclosure();
-
   const [user] = useAuth();
-  const hasRightToEdit = hasRightToEditFormation(formation, user);
-
   const mountedRef = useRef(true);
 
   useEffect(() => {
