@@ -458,6 +458,11 @@ module.exports = {
         default: [],
         description: "Affelnet : historique des statuts",
       },
+      affelnet_id: {
+        type: "string",
+        default: "null",
+        description: "identifiant Affelnet de la formation (code vœu)",
+      },
       affelnet_published_date: {
         type: "string",
         default: "null",

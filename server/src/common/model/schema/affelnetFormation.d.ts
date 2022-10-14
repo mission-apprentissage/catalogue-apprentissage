@@ -12,6 +12,10 @@ export interface AffelnetFormation {
    */
   cle_ministere_educatif?: string;
   /**
+   * code côté affelnet, unique par académie, de la formation
+   */
+  code_offre?: string;
+  /**
    * uai de l'établissement de formation
    */
   uai?: string;

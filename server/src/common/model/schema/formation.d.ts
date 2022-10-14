@@ -223,6 +223,10 @@ export interface Formation {
    */
   affelnet_statut_history?: unknown[];
   /**
+   * identifiant Affelnet de la formation (code vœu)
+   */
+  affelnet_id?: string;
+  /**
    * Date de publication (passage au statut "publié")
    */
   affelnet_published_date?: Date;
