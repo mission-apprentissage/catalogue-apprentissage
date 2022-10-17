@@ -6,7 +6,7 @@
 # Catalogue des offres de formations en apprentissage
 
 ## Pré-requis
- 
+  
 Ce Projet est basé sur le template de la mission apprentissage: https://github.com/mission-apprentissage/template-apprentissage
 
 Les pré-requis sont les mêmes :
