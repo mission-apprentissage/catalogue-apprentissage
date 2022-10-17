@@ -35,7 +35,6 @@ const formation = {
   cfd_entree: 1,
   rncp_code: 1,
   rncp_intitule: 1,
-  parcoursup_statut: 1,
   _id: 1,
   etablissement_formateur_id: 1,
   etablissement_gestionnaire_id: 1,
