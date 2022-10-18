@@ -37,6 +37,11 @@ module.exports = {
         ],
       },
     ]);
+
+    const users = db.collection("users");
+    await users.deleteMany({
+      isAdmin: false,
+    });
   },
 
   async down() {

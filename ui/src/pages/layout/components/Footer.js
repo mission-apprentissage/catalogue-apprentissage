@@ -101,7 +101,7 @@ const Footer = () => {
                 </Link>
               </ListItem>
               <ListItem>
-                <Link href="https://github.com/mission-apprentissage/catalogue-apprentissage" isExternal>
+                <Link href="https://github.com/Reseau-des-Carif-Oref/catalogue-apprentissage/" isExternal>
                   Code source
                 </Link>
               </ListItem>
