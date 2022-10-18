@@ -19,6 +19,7 @@ const Footer = () => {
                 textDecoration={"underline"}
                 isExternal
               >
+                
                 Le Décret du 22 juin 2021
               </Link>{" "}
               a confié la mission de collecte des informations relatives à l'offre de formation en apprentissage aux
