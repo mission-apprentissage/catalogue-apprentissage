@@ -13,17 +13,24 @@ const Footer = () => {
           </Link>
           <Box alignSelf="center" flex="1">
             <Text>
-              Mandatée par les ministres en charge de l’éducation nationale, de l’enseignement supérieur, du travail et
-              de la transformation publique, la{" "}
+              {" "}
               <Link
-                href={"https://beta.gouv.fr/startups/?incubateur=mission-apprentissage"}
+                href={"https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000043688656"}
                 textDecoration={"underline"}
                 isExternal
               >
-                Mission interministérielle pour l'apprentissage
+                
+                Le Décret du 22 juin 2021
               </Link>{" "}
-              développe plusieurs services destinés à faciliter les entrées en apprentissage.
+              a confié la mission de collecte des informations relatives à l'offre de formation en apprentissage aux
+              centres d'animation, de ressources et d'information sur la formation et aux observatoires régionaux de
+              l'emploi et de la formation (Carif-Oref). Le{" "}
+              <Link href={"https://reseau.intercariforef.org/"} textDecoration={"underline"} isExternal>
+                Réseau des Carif-Oref (RCO)
+              </Link>{" "}
+              doit les consolider au niveau national et les mettre à disposition.
             </Text>
+
             <br />
             <List textStyle="sm" fontWeight="700" flexDirection={"row"} flexWrap={"wrap"} mb={[3, 3, 0]} display="flex">
               <ListItem>
