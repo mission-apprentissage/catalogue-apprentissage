@@ -323,6 +323,18 @@ export interface Formation {
    */
   affelnet_infos_offre?: string;
   /**
+   * Affelnet : Libellé ressource complémentaire
+   */
+  affelnet_url_infos_offre?: string;
+  /**
+   * Affelnet : Modalités particulières
+   */
+  affelnet_modalites_offre?: string;
+  /**
+   * Affelnet : Lien vers la ressource
+   */
+  affelnet_url_modalites_offre?: string;
+  /**
    * Affelnet : code nature de l'établissement de formation
    */
   affelnet_code_nature?: string;

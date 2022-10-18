@@ -590,6 +590,21 @@ module.exports = {
         default: "null",
         description: "Affelnet : Informations offre de formation",
       },
+      affelnet_url_infos_offre: {
+        type: "string",
+        default: "null",
+        description: "Affelnet : Libellé ressource complémentaire",
+      },
+      affelnet_modalites_offre: {
+        type: "string",
+        default: "null",
+        description: "Affelnet : Modalités particulières",
+      },
+      affelnet_url_modalites_offre: {
+        type: "string",
+        default: "null",
+        description: "Affelnet : Lien vers la ressource",
+      },
       affelnet_code_nature: {
         type: "string",
         default: "null",
