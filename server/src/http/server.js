@@ -108,11 +108,6 @@ module.exports = async (components, verbose = true) => {
     max: 25, // 25 calls per IP per second
   });
 
-  const apiPerimetreLimiter = rateLimit({
-    windowMs: 1000, // 1 second
-    max: 100, // 100 calls per IP per second
-  });
-
   const elasticLimiter = rateLimit({
     windowMs: 1000, // 1 second
     max: 100, // 100 calls per IP per second
