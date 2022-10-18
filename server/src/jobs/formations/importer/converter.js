@@ -65,9 +65,8 @@ const recomputeFields = async (fields, oldFields) => {
     }
   }
 
-  const uai_formation =
-    oldFields?.editedFields?.uai_formation ?? fields.uai_formation ?? fields.etablissement_gestionnnaire_uai;
-  const uai_formation_valide = !fields.uai_formation || (await isValideUAI(uai_formation));
+  const uai_formation = fields.uai_formation ?? oldFields?.uai_formation;
+  const uai_formation_valide = !uai_formation || (await isValideUAI(uai_formation));
 
   let lieu_formation_geo_coordonnees_computed = oldFields?.lieu_formation_geo_coordonnees_computed;
   let lieu_formation_adresse_computed = oldFields?.lieu_formation_adresse_computed;
@@ -193,6 +192,7 @@ const applyConversion = async () => {
           "etablissement_gestionnaire_id",
           "etablissement_gestionnaire_published",
           "parcoursup_mefs_10",
+          "uai_formation",
           "uai_formation_valide",
           "distance",
           "lieu_formation_geo_coordonnees_computed",
