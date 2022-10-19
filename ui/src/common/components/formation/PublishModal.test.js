@@ -4,6 +4,7 @@ import { getPublishRadioValue, getSubmitBody, PublishModal, updateFormationAndRe
 import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
 import * as api from "../../api/formation";
 import userEvent from "@testing-library/user-event";
+import { act } from "react-dom/test-utils";
 
 jest.setTimeout(20000);
 
@@ -505,12 +506,16 @@ test("should toggle the affelnet forms", async () => {
   expect(afUnPublishForm).not.toBeVisible();
 
   const radioYes = getByTestId("af-radio-yes");
-  userEvent.click(radioYes);
+  act(() => {
+    userEvent.click(radioYes);
+  });
   await waitFor(() => expect(afPublishFormLabel).toBeVisible(), { timeout: 10000 });
   expect(afUnPublishForm).not.toBeVisible();
 
   const radioNo = getByTestId("af-radio-no");
-  userEvent.click(radioNo);
+  act(() => {
+    userEvent.click(radioNo);
+  });
   await waitFor(() => expect(afUnPublishForm).toBeVisible(), { timeout: 10000 });
   expect(afPublishFormLabel).not.toBeVisible();
 });
@@ -545,12 +550,16 @@ test("should toggle the parcoursup forms", async () => {
   expect(psUnPublishForm).not.toBeVisible();
 
   const radioYes = getByTestId("ps-radio-yes");
-  userEvent.click(radioYes);
+  act(() => {
+    userEvent.click(radioYes);
+  });
   expect(afPublishFormLabel).not.toBeVisible();
   expect(psUnPublishForm).not.toBeVisible();
 
   const radioNo = getByTestId("ps-radio-no");
-  userEvent.click(radioNo);
+  act(() => {
+    userEvent.click(radioNo);
+  });
   await waitFor(() => expect(psUnPublishForm).toBeVisible(), { timeout: 10000 });
   expect(afPublishFormLabel).not.toBeVisible();
 });
@@ -585,11 +594,15 @@ test("should submit", async () => {
   );
 
   const radioYes = getByTestId("ps-radio-yes");
-  userEvent.click(radioYes);
+  act(() => {
+    userEvent.click(radioYes);
+  });
 
   const submitBtn = queryByText("Enregistrer les modifications");
   expect(submitBtn).toBeInTheDocument();
-  userEvent.click(submitBtn);
+  act(() => {
+    userEvent.click(submitBtn);
+  });
 
   await waitFor(() => expect(onClose).toBeCalled());
   expect(onFormationUpdate).toHaveBeenCalled();
@@ -626,7 +639,9 @@ test("should submit but no update", async () => {
 
   const submitBtn = queryByText("Enregistrer les modifications");
   expect(submitBtn).toBeInTheDocument();
-  userEvent.click(submitBtn);
+  act(() => {
+    userEvent.click(submitBtn);
+  });
 
   await waitFor(() => expect(onClose).toBeCalled());
   expect(onFormationUpdate).not.toHaveBeenCalled();
@@ -657,6 +672,8 @@ test("should close", async () => {
 
   const submitBtn = queryByText("Annuler");
   expect(submitBtn).toBeInTheDocument();
-  userEvent.click(submitBtn);
+  act(() => {
+    userEvent.click(submitBtn);
+  });
   await waitFor(() => expect(onClose).toBeCalled());
 });
