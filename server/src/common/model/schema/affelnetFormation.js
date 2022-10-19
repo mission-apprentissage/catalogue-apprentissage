@@ -207,6 +207,12 @@ const affelnetFormationSchema = {
     description: "coordonnées longitude de l'établissement",
   },
 
+  informations: {
+    type: String,
+    default: null,
+    description: "Informations de la formation",
+  },
+
   // Coverage
   matching_mna_formation: {
     type: Array,

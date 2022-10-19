@@ -168,6 +168,10 @@ export interface AffelnetFormation {
    */
   coordonnees_gps_longitude?: string;
   /**
+   * Informations de la formation
+   */
+  informations?: string;
+  /**
    * tableau des matching des formations catalogue
    */
   matching_mna_formation?: unknown[];
