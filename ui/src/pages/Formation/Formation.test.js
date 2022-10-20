@@ -255,10 +255,10 @@ const formation = {
 };
 
 const server = setupMswServer(
-  rest.get(/\/api\/entity\/formation\/1/, (req, res, ctx) => {
+  rest.get(/\/api\/v1\/entity\/formation\/1/, (req, res, ctx) => {
     return res(ctx.json({ ...formation, uai_formation_valide: true, distance: 0 }));
   }),
-  rest.get(/\/api\/entity\/formation\/2/, (req, res, ctx) => {
+  rest.get(/\/api\/v1\/entity\/formation\/2/, (req, res, ctx) => {
     return res(ctx.json({ ...formation, uai_formation_valide: false, distance: 150 }));
   }),
   rest.get(/\/api\/v1\/entity\/alert/, (req, res, ctx) => {

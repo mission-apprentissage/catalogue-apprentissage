@@ -19,7 +19,7 @@ const ResetPasswordPage = () => {
 
   const changePassword = async (values, { setStatus }) => {
     try {
-      const user = await _post("/api/password/reset-password", { ...values, passwordToken });
+      const user = await _post("/api/v1/password/reset-password", { ...values, passwordToken });
       setAuth(user);
       history.push("/");
     } catch (e) {

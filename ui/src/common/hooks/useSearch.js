@@ -42,7 +42,7 @@ const getCountEntities = async (base) => {
     const params = new window.URLSearchParams({
       query: JSON.stringify({ published: true }),
     });
-    const countEtablissement = await _get(`${CATALOGUE_API}/entity/etablissements/count?${params}`, false);
+    const countEtablissement = await _get(`/api/v1/entity/etablissements/count?${params}`, false);
     return {
       countEtablissement,
       countCatalogueGeneral: null,

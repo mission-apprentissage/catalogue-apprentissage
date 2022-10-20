@@ -32,8 +32,6 @@ import { DescriptionBlock } from "../../common/components/formation/DescriptionB
 import { OrganismesBlock } from "../../common/components/formation/OrganismesBlock";
 import { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL } from "../../constants/catalogueLabels";
 
-const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
-
 const endpointLBA = process.env.REACT_APP_ENDPOINT_LBA || "https://labonnealternance.pole-emploi.fr";
 
 const getLBAUrl = ({ cle_ministere_educatif = "" }) => {
@@ -235,7 +233,7 @@ export default ({ match }) => {
     (async () => {
       try {
         setLoading(true);
-        const apiURL = `${CATALOGUE_API}/entity/formation/`;
+        const apiURL = `/api/v1/entity/formation/`;
         // FIXME select={"__v" :0} hack to get updates_history
         const form = await _get(`${apiURL}${match.params.id}?select={"__v":0}`, false);
 

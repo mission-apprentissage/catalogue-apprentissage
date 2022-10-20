@@ -11,11 +11,11 @@ const server = setupMswServer(
     return res(ctx.json([]));
   }),
 
-  rest.post(/\/api\/es\/search\/formation\/_count/, (req, res, ctx) => {
+  rest.post(/\/api\/v1\/es\/search\/formation\/_count/, (req, res, ctx) => {
     return res(ctx.json([]));
   }),
 
-  rest.post(/\/api\/es\/search\/formations\/_msearch/, (req, res, ctx) => {
+  rest.post(/\/api\/v1\/es\/search\/formations\/_msearch/, (req, res, ctx) => {
     return res(
       ctx.json({
         took: 40,

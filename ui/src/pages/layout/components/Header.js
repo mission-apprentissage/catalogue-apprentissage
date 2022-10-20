@@ -28,7 +28,7 @@ const Header = () => {
   const history = useHistory();
 
   let logout = async () => {
-    const anonymous = await _get("/api/auth/logout");
+    const anonymous = await _get("/api/v1/auth/logout");
     if (anonymous) {
       setAuth(anonymous);
       history.push("/");

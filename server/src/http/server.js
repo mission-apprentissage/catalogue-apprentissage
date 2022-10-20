@@ -9,10 +9,8 @@ const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const logMiddleware = require("./middlewares/logMiddleware");
 const errorMiddleware = require("./middlewares/errorMiddleware");
-const apiKeyAuthMiddleware = require("./middlewares/apiKeyAuthMiddleware");
 const tryCatch = require("./middlewares/tryCatchMiddleware");
 const corsMiddleware = require("./middlewares/corsMiddleware");
-const authMiddleware = require("./middlewares/authMiddleware");
 const permissionsMiddleware = require("./middlewares/permissionsMiddleware");
 const packageJson = require("../../package.json");
 const formation = require("./routes/formation");
@@ -29,6 +27,7 @@ const upload = require("./routes/upload");
 const alert = require("./routes/alert");
 const swaggerSchema = require("../common/model/swaggerSchema");
 const rateLimit = require("express-rate-limit");
+const authMiddleware = require("./middlewares/authMiddleware");
 
 require("../common/passport-config");
 
@@ -119,63 +118,53 @@ module.exports = async (components, verbose = true) => {
     message: "Too many calls from this IP, please try again after one minute",
   });
 
-  app.use("/api/v1/docs", apiLimiter, swaggerUi.serve, swaggerUi.setup(swaggerSpecification));
-  app.get(
-    "/api/v1/schema.json",
-    apiLimiter,
-    tryCatch(async (req, res) => {
-      return res.json(swaggerSpecification);
-    })
-  );
+  const prefixes = ["/api", "/api/v1"];
 
-  app.use("/api/v1/es/search", elasticLimiter, esSearch());
-  app.use("/api/v1/search", elasticLimiter, esMultiSearchNoIndex());
-  app.use("/api/v1/entity", apiLimiter, formation());
-  app.use("/api/v1/entity", apiLimiter, report());
-  app.use("/api/v1/entity", apiLimiter, etablissement(components));
-  app.use("/api/v1/auth", authLimiter, auth(components));
-  app.use("/api/v1/password", authLimiter, password(components));
-  app.use("/api/v1/entity", apiLimiter, alert());
-  app.use(
-    "/api/v1/admin",
-    apiLimiter,
-    apiKeyAuthMiddleware,
-    permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs"]),
-    user(components)
-  );
-  app.use(
-    "/api/v1/admin",
-    apiLimiter,
-    apiKeyAuthMiddleware,
-    permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs", "page_gestion_roles"]),
-    role(components)
-  );
-  app.use("/api/v1/stats", apiLimiter, apiKeyAuthMiddleware, stats(components));
-  app.use("/api/v1/upload", apiLimiter, permissionsMiddleware({ isAdmin: true }, ["page_upload"]), upload());
+  const routes = [
+    ["/docs", apiLimiter, swaggerUi.serve, swaggerUi.setup(swaggerSpecification)],
+    [
+      "/schema.json",
+      apiLimiter,
+      tryCatch(async (req, res) => {
+        return res.json(swaggerSpecification);
+      }),
+    ],
+    ["/auth", authLimiter, auth(components)],
+    ["/password", authLimiter, password(components)],
 
-  /** DEPRECATED */
-  app.use("/api/es/search", elasticLimiter, esSearch());
-  app.use("/api/search", elasticLimiter, esMultiSearchNoIndex());
-  app.use("/api/entity", apiLimiter, formation());
-  app.use("/api/entity", apiLimiter, report());
-  app.use("/api/entity", apiLimiter, etablissement(components));
-  app.use("/api/auth", authLimiter, auth(components));
-  app.use("/api/password", authLimiter, password(components));
-  app.use(
-    "/api/admin",
-    apiLimiter,
-    authMiddleware,
-    permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs"]),
-    user(components)
-  );
-  app.use(
-    "/api/admin",
-    apiLimiter,
-    authMiddleware,
-    permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs", "page_gestion_roles"]),
-    role(components)
-  );
-  app.use("/api/stats", apiLimiter, stats(components));
+    ["/es/search", elasticLimiter, esSearch()],
+    ["/search", elasticLimiter, esMultiSearchNoIndex()],
+    ["/entity", apiLimiter, formation()],
+    ["/entity", apiLimiter, report()],
+    ["/entity", apiLimiter, etablissement(components)],
+    ["/entity", apiLimiter, alert()],
+    ["/stats", apiLimiter, stats(components)],
+  ];
+
+  const securedRoutes = [
+    [
+      "/admin",
+      apiLimiter,
+      authMiddleware,
+      permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs"]),
+      user(components),
+    ],
+    [
+      "/admin",
+      apiLimiter,
+      authMiddleware,
+      permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs", "page_gestion_roles"]),
+      role(components),
+    ],
+    ["/upload", apiLimiter, authMiddleware, permissionsMiddleware({ isAdmin: true }, ["page_upload"]), upload()],
+  ];
+
+  prefixes.map((prefix) => {
+    [...routes, ...securedRoutes].map((route) => {
+      const [path, ...rest] = route;
+      app.use(`${prefix}${path}`, ...rest);
+    });
+  });
 
   app.get(
     "/api",

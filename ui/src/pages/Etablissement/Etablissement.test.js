@@ -175,13 +175,13 @@ const etablissement = {
 };
 
 const server = setupMswServer(
-  rest.get(/\/api\/entity\/etablissement\/1/, (req, res, ctx) => {
+  rest.get(/\/api\/v1\/entity\/etablissement\/1/, (req, res, ctx) => {
     return res(ctx.json({ ...etablissement, uai_valide: true }));
   }),
-  rest.get(/\/api\/entity\/etablissement\/2/, (req, res, ctx) => {
+  rest.get(/\/api\/v1\/entity\/etablissement\/2/, (req, res, ctx) => {
     return res(ctx.json({ ...etablissement, uai_valide: false }));
   }),
-  rest.get(/\/api\/entity\/formations\/count/, (req, res, ctx) => {
+  rest.get(/\/api\/v1\/entity\/formations\/count/, (req, res, ctx) => {
     return res(ctx.json(etablissement.formations_ids?.length ?? 0));
   }),
   rest.get(/\/api\/v1\/entity\/alert/, (req, res, ctx) => {

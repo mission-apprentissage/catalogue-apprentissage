@@ -54,7 +54,7 @@ const ResetPasswordWrapper = ({ children }) => {
     async function run() {
       if (auth.sub !== "anonymous") {
         if (auth.account_status === "FORCE_RESET_PASSWORD") {
-          let { token } = await _post("/api/password/forgotten-password?noEmail=true", { username: auth.sub });
+          let { token } = await _post("/api/v1/password/forgotten-password?noEmail=true", { username: auth.sub });
           history.push(`/reset-password?passwordToken=${token}`);
         }
       }
@@ -74,7 +74,7 @@ export default () => {
   useEffect(() => {
     async function getUser() {
       try {
-        let user = await _get("/api/auth/current-session");
+        let user = await _get("/api/v1/auth/current-session");
 
         if (user) {
           setAuth(user);

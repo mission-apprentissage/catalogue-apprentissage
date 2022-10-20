@@ -26,7 +26,7 @@ const LoginPage = () => {
 
   const login = async (values, { setStatus }) => {
     try {
-      const user = await _post("/api/auth/login", values);
+      const user = await _post("/api/v1/auth/login", values);
       setAuth(user);
       history.push("/");
     } catch (e) {
