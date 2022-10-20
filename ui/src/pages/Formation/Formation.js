@@ -19,7 +19,6 @@ import { _get } from "../../common/httpClient";
 import Layout from "../layout/Layout";
 import useAuth from "../../common/hooks/useAuth";
 import { hasAccessTo } from "../../common/utils/rolesUtils";
-import { DangerBox } from "../../common/components/DangerBox";
 import InfoTooltip from "../../common/components/InfoTooltip";
 
 import helpText from "../../locales/helpText.json";
@@ -27,7 +26,6 @@ import { ArrowDownLine, ExternalLinkLine, MapPin2Fill } from "../../theme/compon
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
 import { getOpenStreetMapUrl } from "../../common/utils/mapUtils";
-import { HistoryBlock } from "../../common/components/formation/HistoryBlock";
 import { DescriptionBlock } from "../../common/components/formation/DescriptionBlock";
 import { OrganismesBlock } from "../../common/components/formation/OrganismesBlock";
 import { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL } from "../../constants/catalogueLabels";
@@ -50,10 +48,6 @@ const Formation = ({ formation }) => {
   const { isOpen: isComputedGeoCoordOpen, onToggle: onComputedGeoCoordToggle } = useDisclosure(
     formation.distance > seuilDistance
   );
-
-  const UaiFormationContainer = !formation.uai_formation_valide
-    ? (args) => <DangerBox data-testid={"uai-warning"} {...args} />
-    : React.Fragment;
 
   const AdresseContainer = React.Fragment;
   // formation.distance < seuilDistance
@@ -83,15 +77,6 @@ const Formation = ({ formation }) => {
             </Box>
 
             <Box>
-              <UaiFormationContainer>
-                <Text mb={formation?.uai_formation_valide ? 4 : 0}>
-                  UAI du lieu de formation :{" "}
-                  <Text as="span" variant="highlight">
-                    {formation.uai_formation}
-                  </Text>
-                </Text>
-              </UaiFormationContainer>
-
               <AdresseContainer>
                 <Text mb={4}>
                   Adresse :{" "}
@@ -211,11 +196,6 @@ const Formation = ({ formation }) => {
           <Box mb={16}>
             <OrganismesBlock formation={formation} />
           </Box>
-          {!!formation?.updates_history?.length && (
-            <Box mb={[0, 0, 16]}>
-              <HistoryBlock formation={formation} />
-            </Box>
-          )}
         </GridItem>
       </Grid>
     </Box>

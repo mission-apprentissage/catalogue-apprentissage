@@ -66,14 +66,6 @@ export interface Formation {
    */
   localite?: string;
   /**
-   * UAI du lieu de la formation
-   */
-  uai_formation?: string;
-  /**
-   * L'UAI du lieu de formation est il valide ?
-   */
-  uai_formation_valide?: boolean | null;
-  /**
    * Nom de la formation déclaratif
    */
   nom?: string;
@@ -175,17 +167,9 @@ export interface Formation {
    */
   created_at?: Date;
   /**
-   * Historique des mises à jours
-   */
-  updates_history?: unknown[];
-  /**
    * Date de dernières mise à jour
    */
   last_update_at?: Date;
-  /**
-   * Qui a réalisé la dernière modification
-   */
-  last_update_who?: string;
   /**
    * Latitude et longitude de l'établissement recherchable dans Idea
    */
@@ -250,12 +234,6 @@ export interface Formation {
    * BCN : Codes MEF 10 caractères
    */
   bcn_mefs_10?: ItemOfBcnMefs_10[];
-  /**
-   * Champs édités par un utilisateur
-   */
-  editedFields?: {
-    [k: string]: unknown;
-  };
   /**
    * distance entre le Lieu de formation et l'établissement formateur
    */

@@ -675,7 +675,7 @@ test("renders basic tree", async () => {
     count: 100,
     isBaseFormations: true,
     isBaseReconciliationPs: false,
-    endpoint: "http://localhost/api",
+    endpoint: "http://localhost/api/v1",
   }));
 
   jest.spyOn(useAuth, "default").mockImplementation(() => [

@@ -38,7 +38,6 @@ module.exports = () => {
       qs && qs.select
         ? JSON.parse(qs.select)
         : {
-            updates_history: 0,
             __v: 0,
           };
 
@@ -84,7 +83,6 @@ module.exports = () => {
       page: Joi.number().default(1),
       limit: Joi.number().max(1000).default(10),
       select: Joi.optional().default({
-        updates_history: 0,
         __v: 0,
       }),
       queryAsRegex: Joi.optional().default({}),
@@ -154,7 +152,6 @@ module.exports = () => {
       qs && qs.select
         ? JSON.parse(qs.select)
         : {
-            updates_history: 0,
             __v: 0,
           };
     const retrievedData = await Formation.findOne(query, select).lean();
@@ -173,7 +170,6 @@ module.exports = () => {
       qs && qs.select
         ? JSON.parse(qs.select)
         : {
-            updates_history: 0,
             __v: 0,
           };
     const retrievedData = await Formation.findById(itemId, select).lean();

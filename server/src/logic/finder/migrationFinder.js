@@ -41,11 +41,6 @@ const copyComputedFields = (oldFormation, newFormation) => {
   return newFormation;
 };
 
-const copyEditedFields = (oldFormation, newFormation) => {
-  newFormation.editedFields = oldFormation.editedFields;
-  return newFormation;
-};
-
 const extractIdsAction = (id_action) => {
   const ids_action_arr = id_action.split("##");
   return ids_action_arr.map((actions) => actions.split("|"));
@@ -110,7 +105,6 @@ module.exports = {
   findPreviousFormations,
   extractFlatIdsAction,
   copyComputedFields,
-  copyEditedFields,
   findNewFormations,
   findMultisiteFormationsFromL01,
 };

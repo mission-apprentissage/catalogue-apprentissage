@@ -193,21 +193,6 @@ const formationSchema = {
     default: null,
     description: "Localité",
   },
-  uai_formation: {
-    index: true,
-    type: String,
-    default: null,
-    description: "UAI du lieu de la formation",
-    validate: {
-      validator: async (value) => !value || (await isValideUAI(value)),
-      message: (props) => `${props.value} n'est pas un code UAI valide.`,
-    },
-  },
-  uai_formation_valide: {
-    type: Boolean,
-    default: null,
-    description: "L'UAI du lieu de formation est il valide ?",
-  },
   nom: {
     type: String,
     default: null,
@@ -357,22 +342,11 @@ const formationSchema = {
     default: Date.now,
     description: "Date d'ajout en base de données",
   },
-  updates_history: {
-    type: [Object],
-    default: [],
-    description: "Historique des mises à jours",
-    noIndex: true,
-  },
 
   last_update_at: {
     type: Date,
     default: Date.now,
     description: "Date de dernières mise à jour",
-  },
-  last_update_who: {
-    type: String,
-    default: null,
-    description: "Qui a réalisé la dernière modification",
   },
 
   // Product specific
@@ -462,11 +436,6 @@ const formationSchema = {
     type: [mefSchema],
     default: [],
     description: "BCN : Codes MEF 10 caractères",
-  },
-  editedFields: {
-    type: Object,
-    default: null,
-    description: "Champs édités par un utilisateur",
   },
   distance_lieu_formation_etablissement_formateur: {
     type: Number,

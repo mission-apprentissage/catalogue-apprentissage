@@ -222,8 +222,6 @@ const formation = {
   annee: "1",
   published: true,
   rco_published: true,
-  updates_history: [],
-  last_update_who: null,
   update_error: null,
   lieu_formation_adresse: "Zone Megazone de Moselle Est Parc d'Activités du district de Freyming-Merlebach",
   lieu_formation_siret: null,
@@ -240,7 +238,6 @@ const formation = {
     { mef10: "2472541133", modalite: { duree: "3", annee: "3" } },
     { mef10: "2472541132", modalite: { duree: "3", annee: "2" } },
   ],
-  editedFields: { uai_formation: "0573690B" },
   lieu_formation_geo_coordonnees: "49.103334,6.855078",
   geo_coordonnees_etablissement_gestionnaire: "48.705054,6.12883",
   geo_coordonnees_etablissement_formateur: "48.705054,6.12883",
@@ -256,10 +253,10 @@ const formation = {
 
 const server = setupMswServer(
   rest.get(/\/api\/v1\/entity\/formation\/1/, (req, res, ctx) => {
-    return res(ctx.json({ ...formation, uai_formation_valide: true, distance: 0 }));
+    return res(ctx.json({ ...formation, distance: 0 }));
   }),
   rest.get(/\/api\/v1\/entity\/formation\/2/, (req, res, ctx) => {
-    return res(ctx.json({ ...formation, uai_formation_valide: false, distance: 150 }));
+    return res(ctx.json({ ...formation, distance: 150 }));
   }),
   rest.get(/\/api\/v1\/entity\/alert/, (req, res, ctx) => {
     return res(ctx.json([]));
@@ -277,34 +274,6 @@ test("renders a training page", async () => {
 
   const title = queryByText("TECHNICIEN EN CHAUDRONNERIE INDUSTRIELLE (BAC PRO)");
   expect(title).toBeInTheDocument();
-});
-
-test("don't display an error when uai is valid", async () => {
-  grantAnonymousAccess({ acl: ["page_formation"] });
-
-  const { getByText, queryByText, queryByTestId } = renderWithRouter(<Formation match={{ params: { id: 1 } }} />);
-
-  await waitFor(() => getByText(/UAI du lieu de formation/), { timeout: 10000 });
-
-  const uai = queryByText("0573690B");
-  expect(uai).toBeInTheDocument();
-
-  const warning = queryByTestId("uai-warning");
-  expect(warning).not.toBeInTheDocument();
-});
-
-test("display an error when uai is invalid", async () => {
-  grantAnonymousAccess({ acl: ["page_formation"] });
-
-  const { getByText, queryByText, queryByTestId } = renderWithRouter(<Formation match={{ params: { id: 2 } }} />);
-
-  await waitFor(() => getByText(/UAI du lieu de formation/), { timeout: 10000 });
-
-  const uai = queryByText("0573690B");
-  expect(uai).toBeInTheDocument();
-
-  const warning = queryByTestId("uai-warning");
-  expect(warning).toBeInTheDocument();
 });
 
 // test("don't display an error when adress is same as coordinates", async () => {

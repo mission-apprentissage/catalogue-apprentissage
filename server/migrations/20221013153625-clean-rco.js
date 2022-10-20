@@ -34,6 +34,11 @@ module.exports = {
           "parcoursup_statut_history",
           "parcoursup_statut",
           "rejection",
+          "uai_formation",
+          "uai_formation_valide",
+          "editedFields",
+          "updates_history",
+          "last_update_who",
         ],
       },
     ]);

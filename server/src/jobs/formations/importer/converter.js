@@ -59,10 +59,6 @@ const recomputeFields = async (fields, oldFields) => {
     }
   }
 
-  const uai_formation =
-    oldFields?.editedFields?.uai_formation ?? fields.uai_formation ?? fields.etablissement_gestionnnaire_uai;
-  const uai_formation_valide = !fields.uai_formation || (await isValideUAI(uai_formation));
-
   let lieu_formation_geo_coordonnees_computed = oldFields?.lieu_formation_geo_coordonnees_computed;
   let lieu_formation_adresse_computed = oldFields?.lieu_formation_adresse_computed;
   let distance = oldFields?.distance;
@@ -97,7 +93,6 @@ const recomputeFields = async (fields, oldFields) => {
     duree_incoherente,
     annee_incoherente,
     distance_lieu_formation_etablissement_formateur,
-    uai_formation_valide,
 
     distance,
     lieu_formation_geo_coordonnees_computed,
@@ -151,7 +146,7 @@ const applyConversion = async () => {
 
       // Si la formation existe
       if (formation) {
-        const toRestore = ["last_update_who", "updates_history", "editedFields"];
+        const toRestore = [];
 
         const toRecompute = [
           "annee_incoherente",
@@ -161,7 +156,6 @@ const applyConversion = async () => {
           "etablissement_formateur_published",
           "etablissement_gestionnaire_id",
           "etablissement_gestionnaire_published",
-          "uai_formation_valide",
           "distance",
           "lieu_formation_geo_coordonnees_computed",
           "lieu_formation_adresse_computed",

@@ -1,6 +1,6 @@
 const { isValideUAI } = require("@mission-apprentissage/tco-service-node");
 const { runScript } = require("../scriptWrapper");
-const { Etablissement, Formation } = require("../../common/model");
+const { Etablissement } = require("../../common/model");
 
 const updateUaiValidity = async (collection, uaiField, uaiValidityField) => {
   console.info(`Checking for UAI in collection...`);
@@ -29,7 +29,6 @@ const updateUaiValidity = async (collection, uaiField, uaiValidityField) => {
 const checkUai = async () => {
   try {
     await updateUaiValidity(Etablissement, "uai", "uai_valide");
-    await updateUaiValidity(Formation, "uai_formation", "uai_formation_valide");
   } catch (error) {
     console.error(error);
   }

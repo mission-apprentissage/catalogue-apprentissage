@@ -73,16 +73,6 @@ module.exports = {
         default: "null",
         description: "Localité",
       },
-      uai_formation: {
-        type: "string",
-        default: "null",
-        description: "UAI du lieu de la formation",
-      },
-      uai_formation_valide: {
-        type: "boolean",
-        default: "null",
-        description: "L'UAI du lieu de formation est il valide ?",
-      },
       nom: {
         type: "string",
         default: "null",
@@ -321,21 +311,10 @@ module.exports = {
         description: "Date d'ajout en base de données",
         format: "date-time",
       },
-      updates_history: {
-        type: "array",
-        items: {},
-        default: [],
-        description: "Historique des mises à jours",
-      },
       last_update_at: {
         type: "string",
         description: "Date de dernières mise à jour",
         format: "date-time",
-      },
-      last_update_who: {
-        type: "string",
-        default: "null",
-        description: "Qui a réalisé la dernière modification",
       },
       idea_geo_coordonnees_etablissement: {
         type: "string",
@@ -440,11 +419,6 @@ module.exports = {
         },
         default: [],
         description: "BCN : Codes MEF 10 caractères",
-      },
-      editedFields: {
-        type: "object",
-        default: "null",
-        description: "Champs édités par un utilisateur",
       },
       distance_lieu_formation_etablissement_formateur: {
         type: "number",

@@ -4,7 +4,7 @@ import { mergedQueries, withUniqueKey, operators } from "../components/Search/co
 import { ETABLISSEMENTS_ES_INDEX, FORMATIONS_ES_INDEX } from "../../constants/es";
 import { CONTEXT } from "../../constants/context";
 
-const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
+const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api/v1`;
 
 /**
  *
@@ -34,7 +34,7 @@ const getEsCount = async (queries) => {
   const countEsQuery = {
     query: { bool: { ...queries, ...(queries?.should?.length > 0 ? { minimum_should_match: 1 } : {}) } },
   };
-  return await _post("/api/es/search/formation/_count", countEsQuery);
+  return await _post("/api/v1/es/search/formation/_count", countEsQuery);
 };
 
 const getCountEntities = async (base) => {
