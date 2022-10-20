@@ -23,7 +23,7 @@ export default () => {
             {title}
           </Heading>
 
-          <Flex my={4} mb={8} alignItems="flex-start" data-testId="grid">
+          <Flex my={4} mb={8} alignItems="flex-start" data-testid="grid">
             {(isUserAdmin(auth) ||
               hasAccessTo(auth, "page_perimetre_ps") ||
               hasAccessTo(auth, "page_reconciliation_ps")) && (

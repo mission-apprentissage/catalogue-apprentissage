@@ -9,7 +9,7 @@ const AlertMessage = () => {
     let mounted = true;
     const run = async () => {
       try {
-        const data = await _get("/api/v1/entity/alert");
+        const data = await _get("/api/entity/alert");
         const hasMessages = data.reduce((acc, item) => acc || item.enabled, false);
         if (hasMessages && mounted) {
           setMessages(data);
