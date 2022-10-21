@@ -352,81 +352,72 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
 
                 <Box style={{ display: isAffelnetFormOpen ? "block" : "none" }}>
                   <br />
+                  <Heading as="h5" fontSize="1.5rem" mb={3}>
+                    Informations sur l'offre de formation (facultatif) :
+                  </Heading>
+                  <FormHelperText>
+                    Ces informations seront intégrées dans Affelnet pour être visibles sur le service en ligne
+                    Affectation.
+                  </FormHelperText>
+
                   <FormControl isInvalid={errors.affelnet_infos_offre}>
-                    <FormLabel htmlFor="affelnet_infos_offre" mb={3} fontSize="epsilon" fontWeight={400}>
-                      Informations offre de formation (facultatif) :
-                    </FormLabel>
-                    <FormHelperText>
-                      Précisez ici les informations complémentaires que vous souhaitez voir figurer sur la fiche de la
-                      formation sur Affelnet, ex : démarches sur obtention contrat apprentissage, modalités inscription,
-                      rythme alternance, date entrée formation...
-                    </FormHelperText>
+                    <FormLabel htmlFor="affelnet_infos_offre" mb={3} fontSize="epsilon"></FormLabel>
 
                     <Textarea
                       name="affelnet_infos_offre"
                       value={values.affelnet_infos_offre}
                       onChange={handleChange}
-                      placeholder=""
-                      rows={2}
+                      placeholder="Exemple :
+                      BAC PRO en 3 ans"
+                      rows={5}
                     />
                     <FormErrorMessage>{errors.affelnet_infos_offre}</FormErrorMessage>
                   </FormControl>
                   <br />
-                  <br />
-
-                  <FormControl isInvalid={errors.affelnet_modalites_offre}>
-                    <FormLabel htmlFor="affelnet_modalites_offre" mb={3} fontSize="epsilon" fontWeight={400}>
-                      Description de la modalité particulière s’appliquant à cette formation :
-                    </FormLabel>
-                    <FormHelperText>
-                      Indiquez ici les éventuelles modalités particulières qui s’appliquent pour formuler un vœu sur
-                      cette formation. Cette zone sera affichée sur le service en ligne affectation.
-                    </FormHelperText>
-
-                    <Textarea
-                      name="affelnet_modalites_offre"
-                      value={values.affelnet_modalites_offre}
-                      onChange={handleChange}
-                      placeholder="Exemple :
-                        L'inscription dans une formation en apprentissage est soumise à la signature d'un contrat d'apprentissage avec un employeur.
-                        La saisie d'un vœu sous statut d'apprenti ne génère aucune affectation ; il est saisi à titre d'information et de recensement. Il permet aux partenaires de l'apprentissage (CFA, Chambres consulaires, Développeurs de l'apprentissage, Région, CIO, Missions locales, Services rectoraux, DRAAF, DIRRECTE) de disposer de vos coordonnées afin de pouvoir vous accompagner dans vos démarches et recherche d'entreprise."
-                      rows={4}
-                    />
-                    <FormErrorMessage>{errors.affelnet_modalites_offre}</FormErrorMessage>
-                  </FormControl>
-                  <br />
-                  <br />
-
                   <FormControl isInvalid={errors.affelnet_url_infos_offre}>
-                    <FormLabel htmlFor="affelnet_url_infos_offre" mb={3} fontSize="epsilon" fontWeight={400}>
-                      Libellé de la ressource externe complémentaire (facultatif)
+                    <FormLabel htmlFor="affelnet_url_infos_offre" mb={3} fontSize="epsilon">
+                      Lien vers la page complémentaire (facultatif) :
                     </FormLabel>
-                    <FormHelperText>
-                      Si un lien vers une ressource complémentaire est utile, indiquez ici une très brève description.
-                    </FormHelperText>
 
                     <Textarea
                       name="affelnet_url_infos_offre"
                       value={values.affelnet_url_infos_offre}
                       onChange={handleChange}
                       placeholder="Exemple :
-                        “Pour vous aider, vous pouvez consulter le mode d’emploi de la région académique
-                        Auvergne-Rhône-Alpes pour candidater en CAP ou Bac pro”"
-                      rows={4}
+                      http://saio.ac-lyon.fr/spip/IMG/pdf/document_3eme_vers_apprentissage.pdf"
+                      rows={2}
                     />
                     <FormErrorMessage>{errors.affelnet_url_infos_offre}</FormErrorMessage>
                   </FormControl>
                   <br />
                   <br />
 
+                  <Heading as="h5" fontSize="1.5rem" mb={3}>
+                    Modalités particulières (facultatif) :
+                  </Heading>
+                  <FormHelperText>
+                    Ces informations seront intégrées dans Affelnet pour être visibles sur le service en ligne
+                    Affectation.
+                  </FormHelperText>
+
+                  <FormControl isInvalid={errors.affelnet_modalites_offre}>
+                    <FormLabel htmlFor="affelnet_modalites_offre" mb={3} fontSize="epsilon"></FormLabel>
+                    <Textarea
+                      name="affelnet_modalites_offre"
+                      value={values.affelnet_modalites_offre}
+                      onChange={handleChange}
+                      placeholder="Exemple :
+                      L'inscription dans une formation en apprentissage est soumise à la signature d'un contrat d'apprentissage avec un employeur.
+                      La saisie d'un vœu sous statut d'apprenti ne génère aucune affectation ; il est saisi à titre d'information et de recensement. Il permet aux partenaires de l'apprentissage (CFA, Chambres consulaires, Développeurs de l'apprentissage, Région, CIO, Missions locales, Services rectoraux, DRAAF, DIRRECTE) de disposer de vos coordonnées afin de pouvoir vous accompagner dans vos démarches et recherche d'entreprise."
+                      rows={5}
+                    />
+                    <FormErrorMessage>{errors.affelnet_modalites_offre}</FormErrorMessage>
+                  </FormControl>
+                  <br />
                   <FormControl isInvalid={errors.affelnet_url_modalites_offre}>
-                    <FormLabel htmlFor="affelnet_url_modalites_offre" mb={3} fontSize="epsilon" fontWeight={400}>
-                      URL de la ressource externe complémentaire (facultatif) :
+                    <FormLabel htmlFor="affelnet_url_modalites_offre" mb={3} fontSize="epsilon">
+                      Lien vers la page complémentaire (facultatif) :
                     </FormLabel>
-                    <FormHelperText>
-                      Collez ici le lien vers la ressource. Assurez-vous qu’elle est accessible publiquement (pas de
-                      connexion nécessaire) et pérenne.
-                    </FormHelperText>
 
                     <Textarea
                       name="affelnet_url_modalites_offre"
@@ -434,7 +425,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                       onChange={handleChange}
                       placeholder="Exemple :
                         http://saio.ac-lyon.fr/spip/IMG/pdf/document_3eme_vers_apprentissage.pdf"
-                      rows={4}
+                      rows={2}
                     />
                     <FormErrorMessage>{errors.affelnet_url_modalites_offre}</FormErrorMessage>
                   </FormControl>

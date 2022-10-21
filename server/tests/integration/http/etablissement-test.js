@@ -3,6 +3,14 @@ const httpTests = require("../../utils/httpTests");
 const { insertEtablissement } = require("../../utils/fixtures");
 
 httpTests(__filename, ({ startServer }) => {
+  it("Should return a 401 if not logged in", async () => {
+    const { httpClient } = await startServer();
+
+    const response = await httpClient.get("/api/v1/entity/etablissements");
+
+    strictEqual(response.status, 401);
+  });
+
   it("Vérifie qu'on peut lister des établissements", async () => {
     const { httpClient } = await startServer();
     await insertEtablissement({
@@ -53,7 +61,7 @@ httpTests(__filename, ({ startServer }) => {
     deepStrictEqual(etablissements[0].uai, "0010856A");
   });
 
-  it("Vérifie qu'on peut lister des établissements en ndjson", async () => {
+  it("Vérifie qu'on peut lister des établissements en json", async () => {
     const { httpClient } = await startServer();
     await insertEtablissement({
       uai: "0010856A",
