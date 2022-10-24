@@ -88,16 +88,6 @@ const stats = async () => {
       return await ConsoleStat.create({ plateforme: "affelnet", date, ...stats });
     })
   );
-
-  // const stat = {
-  //   plateforme: "affelnet",
-  //   stats: await Promise.all([
-  //     { stats: await computeStats(), academie: "Toute la France" },
-  //     ...Object.values(academies).map(async (academie) => await computeStats(academie.nom_academie)),
-  //   ]),
-  // };
-
-  // return await ConsoleStat.create(stat);
 };
 
 module.exports = { stats };

@@ -55,5 +55,5 @@ test("renders alerts", async () => {
   expect(alert2).not.toBeInTheDocument();
 
   const alert3 = queryByTestId("alert3");
-  expect(alert2).not.toBeInTheDocument();
+  expect(alert3).toBeInTheDocument();
 });

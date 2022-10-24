@@ -472,7 +472,7 @@ test("should render the publish modal", () => {
   const afForm = getByTestId("affelnet-form");
   expect(afForm).toHaveAttribute("aria-disabled", "false");
 
-  const afPublishFormLabel = queryByText("Informations offre de formation (facultatif) :");
+  const afPublishFormLabel = queryByText("Informations sur l'offre de formation (facultatif) :");
   expect(afPublishFormLabel).not.toBeVisible();
 });
 
@@ -499,7 +499,7 @@ test("should toggle the affelnet forms", async () => {
     <PublishModal isOpen={true} onClose={onClose} onFormationUpdate={onFormationUpdate} formation={formation} />
   );
 
-  const afPublishFormLabel = queryByText("Informations offre de formation (facultatif) :");
+  const afPublishFormLabel = queryByText("Informations sur l'offre de formation (facultatif) :");
   expect(afPublishFormLabel).not.toBeVisible();
 
   const afUnPublishForm = getByTestId("af-unpublish-form");
@@ -543,7 +543,7 @@ test("should toggle the parcoursup forms", async () => {
     <PublishModal isOpen={true} onClose={onClose} onFormationUpdate={onFormationUpdate} formation={formation} />
   );
 
-  const afPublishFormLabel = queryByText("Informations offre de formation (facultatif) :");
+  const afPublishFormLabel = queryByText("Informations sur l'offre de formation (facultatif) :");
   expect(afPublishFormLabel).not.toBeVisible();
 
   const psUnPublishForm = getByTestId("ps-unpublish-form");
