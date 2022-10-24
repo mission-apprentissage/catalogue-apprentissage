@@ -65,6 +65,20 @@ const recomputeFields = async (fields, oldFields) => {
     }
   }
 
+  console.log({
+    "oldFields?.editedFields?.uai_formation": oldFields?.editedFields?.uai_formation,
+    "fields?.uai_formation": fields?.uai_formation,
+    "oldFields?.uai_formation": oldFields?.uai_formation,
+    "fields?.etablissement_formateur_uai": fields?.etablissement_formateur_uai,
+    "oldFields?.etablissement_formateur_uai": oldFields?.etablissement_formateur_uai,
+
+    results:
+      oldFields?.editedFields?.uai_formation ??
+      fields?.uai_formation ??
+      oldFields?.uai_formation ??
+      fields?.etablissement_formateur_uai ??
+      oldFields?.etablissement_formateur_uai,
+  });
   const uai_formation =
     oldFields?.editedFields?.uai_formation ??
     fields?.uai_formation ??
@@ -110,6 +124,7 @@ const recomputeFields = async (fields, oldFields) => {
     duree_incoherente,
     annee_incoherente,
     distance_lieu_formation_etablissement_formateur,
+    uai_formation,
     uai_formation_valide,
 
     distance,
@@ -197,6 +212,7 @@ const applyConversion = async () => {
           "etablissement_gestionnaire_id",
           "etablissement_gestionnaire_published",
           "parcoursup_mefs_10",
+          "uai_formation",
           "uai_formation_valide",
           "distance",
           "lieu_formation_geo_coordonnees_computed",
