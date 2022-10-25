@@ -168,6 +168,9 @@ const applyConversion = async () => {
         const toRestore = [
           "affelnet_code_nature",
           "affelnet_infos_offre",
+          "affelnet_url_infos_offre",
+          "affelnet_modalites_offre",
+          "affelnet_url_modalites_offre",
           "affelnet_perimetre",
           "affelnet_published_date",
           "affelnet_raison_depublication",
