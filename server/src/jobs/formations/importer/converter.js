@@ -1,7 +1,7 @@
 const { Formation, DualControlFormation, Etablissement } = require("../../../common/model/index");
 const { cursor } = require("../../../common/utils/cursor");
 const { diff } = require("deep-object-diff");
-const { isValideUAI, getCoordinatesFromAddressData } = require("@mission-apprentissage/tco-service-node");
+const { getCoordinatesFromAddressData } = require("@mission-apprentissage/tco-service-node");
 const { distanceBetweenCoordinates } = require("../../../common/utils/distanceUtils");
 const logger = require("../../../common/logger");
 const { computeMefs } = require("../../../logic/finder/mefsFinder");
