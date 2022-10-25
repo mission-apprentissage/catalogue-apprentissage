@@ -6,6 +6,19 @@ import { CONTEXT } from "../../../../constants/context";
 const HardFilters = React.memo(({ filters, context, isBaseFormations }) => {
   return (
     <>
+      <SingleList
+        componentId="published"
+        dataField="published"
+        react={{ and: filters }}
+        value={"true"}
+        defaultValue={"true"}
+        showFilter={false}
+        showSearch={false}
+        showCount={false}
+        render={() => {
+          return <div />;
+        }}
+      />
       {isBaseFormations && (
         <SingleList
           componentId="catalogue_published"
