@@ -65,20 +65,6 @@ const recomputeFields = async (fields, oldFields) => {
     }
   }
 
-  console.log({
-    "oldFields?.editedFields?.uai_formation": oldFields?.editedFields?.uai_formation,
-    "fields?.uai_formation": fields?.uai_formation,
-    "oldFields?.uai_formation": oldFields?.uai_formation,
-    "fields?.etablissement_formateur_uai": fields?.etablissement_formateur_uai,
-    "oldFields?.etablissement_formateur_uai": oldFields?.etablissement_formateur_uai,
-
-    results:
-      oldFields?.editedFields?.uai_formation ??
-      fields?.uai_formation ??
-      oldFields?.uai_formation ??
-      fields?.etablissement_formateur_uai ??
-      oldFields?.etablissement_formateur_uai,
-  });
   const uai_formation =
     oldFields?.editedFields?.uai_formation ??
     fields?.uai_formation ??
@@ -235,7 +221,7 @@ const applyConversion = async () => {
 
       // Si la formation n'existe pas
       else {
-        console.warn(`${dcFormation.cle_ministere_educatif} not found`);
+        // console.warn(`${dcFormation.cle_ministere_educatif} not found`);
         added++;
 
         await Formation.create(await recomputeFields(dcFormation));

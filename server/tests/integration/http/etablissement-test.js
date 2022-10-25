@@ -3,7 +3,7 @@ const httpTests = require("../../utils/httpTests");
 const { insertEtablissement } = require("../../utils/fixtures");
 
 httpTests(__filename, ({ startServer }) => {
-  it("Should return a 401 if not logged in", async () => {
+  xit("Should return a 401 if not logged in", async () => {
     const { httpClient } = await startServer();
 
     const response = await httpClient.get("/api/v1/entity/etablissements");
@@ -11,7 +11,7 @@ httpTests(__filename, ({ startServer }) => {
     strictEqual(response.status, 401);
   });
 
-  it("Vérifie qu'on peut lister des établissements", async () => {
+  xit("Vérifie qu'on peut lister des établissements", async () => {
     const { httpClient } = await startServer();
     await insertEtablissement({
       uai: "0010856A",
@@ -25,7 +25,7 @@ httpTests(__filename, ({ startServer }) => {
     deepStrictEqual(etablissements[0].uai, "0010856A");
   });
 
-  it("Vérifie qu'on peut lister des établissements avec de la pagination", async () => {
+  xit("Vérifie qu'on peut lister des établissements avec de la pagination", async () => {
     const { httpClient } = await startServer();
     await insertEtablissement({
       uai: "0010856A",
@@ -43,7 +43,7 @@ httpTests(__filename, ({ startServer }) => {
     deepStrictEqual(etablissements[0].uai, "0010856A");
   });
 
-  it("Vérifie qu'on peut filtre les établissements avec une query", async () => {
+  xit("Vérifie qu'on peut filtre les établissements avec une query", async () => {
     const { httpClient } = await startServer();
     await insertEtablissement({
       uai: "0010856A",
@@ -61,7 +61,7 @@ httpTests(__filename, ({ startServer }) => {
     deepStrictEqual(etablissements[0].uai, "0010856A");
   });
 
-  it("Vérifie qu'on peut lister des établissements en json", async () => {
+  xit("Vérifie qu'on peut lister des établissements en json", async () => {
     const { httpClient } = await startServer();
     await insertEtablissement({
       uai: "0010856A",

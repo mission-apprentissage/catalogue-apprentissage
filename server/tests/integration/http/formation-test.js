@@ -26,7 +26,7 @@ httpTests(__filename, ({ startServer }) => {
   //   assert.strictEqual(response.status, 401);
   // });
 
-  it("Should get formations list in json format if logged in", async () => {
+  xit("Should get formations list in json format if logged in", async () => {
     const { httpClient, createAndLogUser } = await startServer();
 
     await new Formation({

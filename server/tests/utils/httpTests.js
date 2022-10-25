@@ -1,4 +1,4 @@
-const axios = require("axios");
+// const axios = require("axios");
 const axiosist = require("axiosist");
 
 const createComponents = require("../../src/common/components/components");
@@ -9,15 +9,15 @@ const startServer = async () => {
   const { db } = await connectToMongoForTests();
   const components = await createComponents({ db });
   const app = await server(components, false);
-  const httpClient = axios.create({
-    adapter: axiosist.createAdapter(app),
-    withCredentials: true,
-    headers: {
-      Origin: "https://localhost",
-      "Content-type": "application/json",
-    },
-  });
-  // const httpClient = axiosist(app);
+  // const httpClient = axios.create({
+  //   adapter: axiosist.createAdapter(app),
+  //   withCredentials: true,
+  //   headers: {
+  //     Origin: "https://localhost",
+  //     "Content-type": "application/json",
+  //   },
+  // });
+  const httpClient = axiosist(app);
 
   return {
     httpClient,
