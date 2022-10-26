@@ -4,7 +4,7 @@ const { diff } = require("deep-object-diff");
 const { isValideUAI, getCoordinatesFromAddressData } = require("@mission-apprentissage/tco-service-node");
 const { distanceBetweenCoordinates } = require("../../../common/utils/distanceUtils");
 const logger = require("../../../common/logger");
-const { computeMefs } = require("../../../logic/finder/mefsFinder");
+const { computeMefs } = require("../../../logic/finder/mefFinder");
 
 const updateRelationFields = async () => {
   logger.info(" == Updating relations for formations == ");
@@ -36,13 +36,7 @@ const computeRelationFields = async (fields) => {
 };
 
 const recomputeFields = async (fields, oldFields) => {
-  let {
-    affelnet_mefs_10,
-    affelnet_infos_offre,
-    parcoursup_mefs_10,
-    duree_incoherente,
-    annee_incoherente,
-  } = await computeMefs(fields);
+  let { affelnet_mefs_10, parcoursup_mefs_10, duree_incoherente, annee_incoherente } = await computeMefs(fields);
 
   let distance_lieu_formation_etablissement_formateur = oldFields?.distance_lieu_formation_etablissement_formateur;
 
@@ -105,7 +99,6 @@ const recomputeFields = async (fields, oldFields) => {
 
   return {
     affelnet_mefs_10,
-    affelnet_infos_offre,
     parcoursup_mefs_10,
     duree_incoherente,
     annee_incoherente,
