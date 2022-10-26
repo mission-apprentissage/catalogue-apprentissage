@@ -35,7 +35,6 @@ const startServer = async () => {
         { withCredentials: true }
       );
 
-      console.warn(response);
       if (response.headers["set-cookie"]) {
         console.warn("COOKIE");
         const [cookie] = response.headers["set-cookie"]; // getting cookie from request
