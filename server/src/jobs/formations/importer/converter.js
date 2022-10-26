@@ -4,7 +4,7 @@ const { diff } = require("deep-object-diff");
 const { isValideUAI, getCoordinatesFromAddressData } = require("@mission-apprentissage/tco-service-node");
 const { distanceBetweenCoordinates } = require("../../../common/utils/distanceUtils");
 const logger = require("../../../common/logger");
-const { computeMefs } = require("../../../logic/finder/mefFinder");
+const { computeMefs } = require("../../../logic/finder/mefsFinder");
 
 const updateRelationFields = async () => {
   logger.info(" == Updating relations for formations == ");
@@ -36,7 +36,13 @@ const computeRelationFields = async (fields) => {
 };
 
 const recomputeFields = async (fields, oldFields) => {
-  let { affelnet_mefs_10, parcoursup_mefs_10, duree_incoherente, annee_incoherente } = await computeMefs(fields);
+  let {
+    affelnet_mefs_10,
+    affelnet_infos_offre,
+    parcoursup_mefs_10,
+    duree_incoherente,
+    annee_incoherente,
+  } = await computeMefs(fields, oldFields);
 
   let distance_lieu_formation_etablissement_formateur = oldFields?.distance_lieu_formation_etablissement_formateur;
 
@@ -99,6 +105,7 @@ const recomputeFields = async (fields, oldFields) => {
 
   return {
     affelnet_mefs_10,
+    affelnet_infos_offre,
     parcoursup_mefs_10,
     duree_incoherente,
     annee_incoherente,
@@ -146,9 +153,15 @@ const applyConversion = async () => {
     updated = 0;
 
   await cursor(
-    DualControlFormation.find().sort(),
+    DualControlFormation.find({}).sort(),
 
     async ({ cle_ministere_educatif }) => {
+      if (cle_ministere_educatif === "088281P01313885594860007038855948600070-68224#L01") {
+        console.log("---------------------");
+        console.log(cle_ministere_educatif);
+        console.log("---------------------");
+      }
+
       const dcFormation = await DualControlFormation.findOne({ cle_ministere_educatif }).lean();
       const formation = await Formation.findOne({ cle_ministere_educatif }).lean();
 
@@ -160,7 +173,6 @@ const applyConversion = async () => {
       if (formation) {
         const toRestore = [
           "affelnet_code_nature",
-          "affelnet_infos_offre",
           "affelnet_url_infos_offre",
           "affelnet_modalites_offre",
           "affelnet_url_modalites_offre",
@@ -186,6 +198,7 @@ const applyConversion = async () => {
 
         const toRecompute = [
           "affelnet_mefs_10",
+          "affelnet_infos_offre",
           "annee_incoherente",
           "distance_lieu_formation_etablissement_formateur",
           "duree_incoherente",

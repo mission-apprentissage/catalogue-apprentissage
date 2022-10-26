@@ -4,6 +4,10 @@ const { findMefsForParcoursup } = require("../../common/utils/parcoursupUtils");
 const { getQueryFromRule } = require("../../common/utils/rulesUtils");
 const { AFFELNET_STATUS } = require("../../constants/status");
 
+const getInfosOffreLabel = (formation, mef) => {
+  return `${formation.libelle_court} en ${mef.modalite.duree} an${Number(mef.modalite.duree) > 1 ? "s" : ""}`;
+};
+
 const findMefsForAffelnet = async (rules) => {
   const results = await SandboxFormation.find({ ...rules }, { bcn_mefs_10: 1 }).lean();
 
@@ -16,9 +20,10 @@ const findMefsForAffelnet = async (rules) => {
   return null;
 };
 
-const computeMefs = async (fields) => {
+const computeMefs = async (fields, oldFields) => {
   let bcn_mefs_10 = fields.bcn_mefs_10;
   let affelnet_mefs_10 = null;
+  let affelnet_infos_offre = oldFields?.affelnet_infos_offre;
   let parcoursup_mefs_10 = null;
   let duree_incoherente = false;
   let annee_incoherente = false;
@@ -96,6 +101,10 @@ const computeMefs = async (fields) => {
     if (filtered_affelnet_mefs_10) {
       // keep the successful mefs in affelnet field
       affelnet_mefs_10 = filtered_affelnet_mefs_10;
+
+      if (affelnet_mefs_10.length === 1 && !affelnet_infos_offre) {
+        affelnet_infos_offre = getInfosOffreLabel(fields, affelnet_mefs_10[0]);
+      }
     }
 
     await SandboxFormation.deleteMany({ cle_ministere_educatif: rest.cle_ministere_educatif });
@@ -109,6 +118,7 @@ const computeMefs = async (fields) => {
   return {
     bcn_mefs_10,
     affelnet_mefs_10,
+    affelnet_infos_offre,
     parcoursup_mefs_10,
     duree_incoherente,
     annee_incoherente,
