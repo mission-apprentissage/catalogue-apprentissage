@@ -47,7 +47,7 @@
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.6.1",
-    "@mission-apprentissage/tco-service-node": "2.42.5",
+    "@mission-apprentissage/tco-service-node": "2.42.6",
     "aws-sdk": "2.1109.0",
     "axios": "0.21.4",
     "body-parser": "1.19.0",
