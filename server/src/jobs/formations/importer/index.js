@@ -18,10 +18,12 @@ const importer = async (options) => {
     if (!options?.noDownload) {
       logger.info(" -- Downloading formations -- ");
       downloadError = await downloader();
-      logger.info(`${await DualControlFormation.countDocuments()} formations téléchargées`);
 
       if (downloadError) {
+        logger.error(downloadError);
         return;
+      } else {
+        logger.info(`${await DualControlFormation.countDocuments()} formations téléchargées`);
       }
     }
 
