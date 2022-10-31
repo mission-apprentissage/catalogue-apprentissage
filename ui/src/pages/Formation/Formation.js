@@ -112,7 +112,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                   hasRightToEdit={hasRightToEdit}
                   mb={!formation?.editedFields?.uai_formation ? 4 : 0}
                 />
-                {formation.editedFields.uai_formation && (
+                {formation.editedFields?.uai_formation && (
                   <Text fontSize={"zeta"} color={"grey.600"} as="span">
                     UAI lieu édité{" "}
                     {uai_updated_history[0] && (
