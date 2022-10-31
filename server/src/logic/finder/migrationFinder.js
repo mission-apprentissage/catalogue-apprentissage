@@ -35,42 +35,6 @@ const findPreviousFormations = async ({ id_formation, id_certifinfo, id_action, 
   }).lean();
 };
 
-const copyComputedFields = (oldFormation, newFormation) => {
-  newFormation.distance = oldFormation.distance;
-  newFormation.lieu_formation_geo_coordonnees_computed = oldFormation.lieu_formation_geo_coordonnees_computed;
-  newFormation.lieu_formation_adresse_computed = oldFormation.lieu_formation_adresse_computed;
-  return newFormation;
-};
-
-const copyEditedFields = (oldFormation, newFormation) => {
-  newFormation.editedFields = oldFormation.editedFields;
-  return newFormation;
-};
-
-const copyAffelnetFields = (oldFormation, newFormation) => {
-  newFormation.affelnet_statut = oldFormation.affelnet_statut;
-  newFormation.affelnet_statut_history = oldFormation.affelnet_statut_history;
-  newFormation.affelnet_infos_offre = oldFormation.affelnet_infos_offre;
-  newFormation.affelnet_code_nature = oldFormation.affelnet_code_nature;
-  newFormation.affelnet_secteur = oldFormation.affelnet_secteur;
-  newFormation.affelnet_raison_depublication = oldFormation.affelnet_raison_depublication;
-  newFormation.affelnet_published_date = oldFormation.affelnet_published_date;
-  return newFormation;
-};
-
-const copyParcoursupFields = (oldFormation, newFormation) => {
-  newFormation.parcoursup_statut = oldFormation.parcoursup_statut;
-  newFormation.parcoursup_statut_history = oldFormation.parcoursup_statut_history;
-  newFormation.parcoursup_raison_depublication = oldFormation.parcoursup_raison_depublication;
-  newFormation.parcoursup_published_date = oldFormation.parcoursup_published_date;
-  return newFormation;
-};
-
-const copyRapprochementFields = (oldFormation, newFormation) => {
-  newFormation.parcoursup_id = oldFormation.parcoursup_id;
-  return newFormation;
-};
-
 const updateRapprochement = async (oldFormation, newFormation) => {
   const psFormations = await ParcoursupFormation.find({
     "matching_mna_formation.cle_ministere_educatif": oldFormation.cle_ministere_educatif,
@@ -177,13 +141,8 @@ const findMultisiteFormationsFromL01 = async ({ cle_ministere_educatif }, select
 
 module.exports = {
   findPreviousFormations,
-  copyAffelnetFields,
-  copyParcoursupFields,
   extractFlatIdsAction,
-  copyRapprochementFields,
   updateRapprochement,
-  copyComputedFields,
-  copyEditedFields,
   findNewFormations,
   findMultisiteFormationsFromL01,
 };

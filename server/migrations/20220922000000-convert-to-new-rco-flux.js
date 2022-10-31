@@ -43,6 +43,8 @@ module.exports = {
         ],
       },
     ]);
+
+    await db.collection("reports").drop();
   },
 
   async down() {

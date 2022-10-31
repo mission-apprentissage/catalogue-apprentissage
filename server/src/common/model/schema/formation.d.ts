@@ -223,6 +223,10 @@ export interface Formation {
    */
   affelnet_statut_history?: unknown[];
   /**
+   * identifiant Affelnet de la formation (code vœu)
+   */
+  affelnet_id?: string;
+  /**
    * Date de publication (passage au statut "publié")
    */
   affelnet_published_date?: Date;
@@ -318,6 +322,18 @@ export interface Formation {
    * Affelnet : Informations offre de formation
    */
   affelnet_infos_offre?: string;
+  /**
+   * Affelnet : Libellé ressource complémentaire
+   */
+  affelnet_url_infos_offre?: string;
+  /**
+   * Affelnet : Modalités particulières
+   */
+  affelnet_modalites_offre?: string;
+  /**
+   * Affelnet : Lien vers la ressource
+   */
+  affelnet_url_modalites_offre?: string;
   /**
    * Affelnet : code nature de l'établissement de formation
    */

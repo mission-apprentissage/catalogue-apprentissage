@@ -207,6 +207,22 @@ export const DescriptionBlock = ({ formation }) => {
               {formation.cle_ministere_educatif ?? "N/A"}
             </Text>
           </Text>
+          {formation.parcoursup_id && (
+            <Text mb={4}>
+              Identifiant Parcoursup (G_ta_code) :{" "}
+              <Text as="span" variant="highlight">
+                {formation.parcoursup_id}
+              </Text>
+            </Text>
+          )}
+          {formation.affelnet_id && (
+            <Text mb={4}>
+              Identifiant Affelnet (Code vœux) :{" "}
+              <Text as="span" variant="highlight">
+                {formation.affelnet_id}
+              </Text>
+            </Text>
+          )}
           <Text mb={4}>
             Identifiant formation Carif Oref :{" "}
             <Text as="span" variant="highlight">

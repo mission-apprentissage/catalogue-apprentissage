@@ -33,6 +33,7 @@ const importAffelnetFormations = async () => {
         telephone: item["TELEPHONE"]?.trim(),
         email: item["MEL"]?.trim(),
         academie: item["ACADEMIE"]?.trim(),
+        code_offre: item["CODE_OFFRE"]?.trim(),
         ministere: item["MINISTERE"]?.trim(),
         etablissement_type: item["PUBLIC_PRIVE"]?.trim() === "PR" ? "Privée" : "Public",
         type_contrat: item["TYPE_CONTRAT"]?.trim(),
@@ -60,6 +61,7 @@ const importAffelnetFormations = async () => {
         ville: item["LIBELLE_VILLE"]?.trim(),
         campus_metier: item["CAMPUS_METIER"] === "O",
         modalites: item["MODALITES_PARTICULIERES"] === "O",
+        informations: item["INFORMATIONS"],
         coordonnees_gps_latitude: item["COORDONNEES_GPS_LATITUDE"]?.trim(),
         coordonnees_gps_longitude: item["COORDONNEES_GPS_LONGITUDE"]?.trim(),
       });

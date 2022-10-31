@@ -42,7 +42,7 @@ const recomputeFields = async (fields, oldFields) => {
     parcoursup_mefs_10,
     duree_incoherente,
     annee_incoherente,
-  } = await computeMefs(fields);
+  } = await computeMefs(fields, oldFields);
 
   let distance_lieu_formation_etablissement_formateur = oldFields?.distance_lieu_formation_etablissement_formateur;
 
@@ -66,7 +66,11 @@ const recomputeFields = async (fields, oldFields) => {
   }
 
   const uai_formation =
-    oldFields?.editedFields?.uai_formation ?? fields.uai_formation ?? fields.etablissement_gestionnnaire_uai;
+    oldFields?.editedFields?.uai_formation ??
+    fields?.uai_formation ??
+    oldFields?.uai_formation ??
+    fields?.etablissement_formateur_uai ??
+    oldFields?.etablissement_formateur_uai;
   const uai_formation_valide = !fields.uai_formation || (await isValideUAI(uai_formation));
 
   let lieu_formation_geo_coordonnees_computed = oldFields?.lieu_formation_geo_coordonnees_computed;
@@ -106,6 +110,7 @@ const recomputeFields = async (fields, oldFields) => {
     duree_incoherente,
     annee_incoherente,
     distance_lieu_formation_etablissement_formateur,
+    uai_formation,
     uai_formation_valide,
 
     distance,
@@ -148,9 +153,15 @@ const applyConversion = async () => {
     updated = 0;
 
   await cursor(
-    DualControlFormation.find().sort(),
+    DualControlFormation.find({}).sort(),
 
     async ({ cle_ministere_educatif }) => {
+      if (cle_ministere_educatif === "088281P01313885594860007038855948600070-68224#L01") {
+        console.log("---------------------");
+        console.log(cle_ministere_educatif);
+        console.log("---------------------");
+      }
+
       const dcFormation = await DualControlFormation.findOne({ cle_ministere_educatif }).lean();
       const formation = await Formation.findOne({ cle_ministere_educatif }).lean();
 
@@ -162,7 +173,9 @@ const applyConversion = async () => {
       if (formation) {
         const toRestore = [
           "affelnet_code_nature",
-          "affelnet_infos_offre",
+          "affelnet_url_infos_offre",
+          "affelnet_modalites_offre",
+          "affelnet_url_modalites_offre",
           "affelnet_perimetre",
           "affelnet_published_date",
           "affelnet_raison_depublication",
@@ -185,6 +198,7 @@ const applyConversion = async () => {
 
         const toRecompute = [
           "affelnet_mefs_10",
+          "affelnet_infos_offre",
           "annee_incoherente",
           "distance_lieu_formation_etablissement_formateur",
           "duree_incoherente",
@@ -193,6 +207,7 @@ const applyConversion = async () => {
           "etablissement_gestionnaire_id",
           "etablissement_gestionnaire_published",
           "parcoursup_mefs_10",
+          "uai_formation",
           "uai_formation_valide",
           "distance",
           "lieu_formation_geo_coordonnees_computed",
@@ -215,7 +230,7 @@ const applyConversion = async () => {
 
       // Si la formation n'existe pas
       else {
-        console.warn(`${dcFormation.cle_ministere_educatif} not found`);
+        // console.warn(`${dcFormation.cle_ministere_educatif} not found`);
         added++;
 
         await Formation.create(await recomputeFields(dcFormation));

@@ -458,6 +458,11 @@ module.exports = {
         default: [],
         description: "Affelnet : historique des statuts",
       },
+      affelnet_id: {
+        type: "string",
+        default: "null",
+        description: "identifiant Affelnet de la formation (code vœu)",
+      },
       affelnet_published_date: {
         type: "string",
         default: "null",
@@ -584,6 +589,21 @@ module.exports = {
         type: "string",
         default: "null",
         description: "Affelnet : Informations offre de formation",
+      },
+      affelnet_url_infos_offre: {
+        type: "string",
+        default: "null",
+        description: "Affelnet : Libellé ressource complémentaire",
+      },
+      affelnet_modalites_offre: {
+        type: "string",
+        default: "null",
+        description: "Affelnet : Modalités particulières",
+      },
+      affelnet_url_modalites_offre: {
+        type: "string",
+        default: "null",
+        description: "Affelnet : Lien vers la ressource",
       },
       affelnet_code_nature: {
         type: "string",

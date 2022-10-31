@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const passport = require("passport");
@@ -11,7 +12,7 @@ const logMiddleware = require("./middlewares/logMiddleware");
 const errorMiddleware = require("./middlewares/errorMiddleware");
 const anyAuthMiddleware = require("./middlewares/anyAuthMiddleware");
 const tryCatch = require("./middlewares/tryCatchMiddleware");
-const corsMiddleware = require("./middlewares/corsMiddleware");
+// const corsMiddleware = require("./middlewares/corsMiddleware");
 const permissionsMiddleware = require("./middlewares/permissionsMiddleware");
 const packageJson = require("../../package.json");
 const formation = require("./routes/formation");
@@ -82,7 +83,8 @@ module.exports = async (components, verbose = true) => {
   // Parse the ndjson as text for ES proxy
   app.use(bodyParser.text({ type: "application/x-ndjson" }));
 
-  app.use(corsMiddleware());
+  app.use(cors({ credentials: true }));
+  // app.use(corsMiddleware());
   verbose && app.use(logMiddleware());
 
   if (config.env != "dev") {
@@ -99,7 +101,7 @@ module.exports = async (components, verbose = true) => {
       cookie: {
         secure: config.env === "dev" ? false : true,
         maxAge: config.env === "dev" ? null : 30 * 24 * 60 * 60 * 1000,
-        sameSite: "strict", // prevent csrf attack @see https://auth0.com/blog/cross-site-request-forgery-csrf/
+        sameSite: config.env === "dev" ? "none" : "strict", // prevent csrf attack @see https://auth0.com/blog/cross-site-request-forgery-csrf/
       },
     })
   );
