@@ -491,7 +491,6 @@ const formationSchema = {
     type: [Object],
     default: [],
     description: "Historique des mises à jours",
-    noIndex: true,
   },
 
   last_update_at: {

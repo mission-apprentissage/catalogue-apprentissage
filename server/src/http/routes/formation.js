@@ -46,7 +46,7 @@ module.exports = () => {
         : {
             affelnet_statut_history: 0,
             parcoursup_statut_history: 0,
-            updates_history: 0,
+            // updates_history: 0,
             __v: 0,
           };
 

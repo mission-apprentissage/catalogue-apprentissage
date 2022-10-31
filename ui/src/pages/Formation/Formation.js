@@ -24,7 +24,7 @@ import { hasAccessTo, hasRightToEditFormation } from "../../common/utils/rolesUt
 import { DangerBox } from "../../common/components/DangerBox";
 import { StatusBadge } from "../../common/components/StatusBadge";
 import { PublishModal } from "../../common/components/formation/PublishModal";
-import { buildUpdatesHistory } from "../../common/utils/historyUtils";
+import { buildUpdatesHistory, sortDescending } from "../../common/utils/historyUtils";
 import InfoTooltip from "../../common/components/InfoTooltip";
 import { Alert } from "../../common/components/Alert";
 
@@ -40,6 +40,7 @@ import { DescriptionBlock } from "../../common/components/formation/DescriptionB
 import { OrganismesBlock } from "../../common/components/formation/OrganismesBlock";
 import { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL } from "../../constants/catalogueLabels";
 import { COMMON_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
+import { DateTime } from "luxon";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -64,12 +65,16 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
 
   const UaiFormationContainer = !formation.uai_formation_valide
     ? (args) => <DangerBox data-testid={"uai-warning"} {...args} />
-    : React.Fragment;
+    : (args) => <Box {...args} />;
 
-  const AdresseContainer = React.Fragment;
   // formation.distance < seuilDistance
+  const AdresseContainer = React.Fragment;
   //   ? (args) => <WarningBox data-testid={"adress-warning"} {...args} />
   //   : React.Fragment;
+
+  const uai_updated_history = formation.updates_history
+    .filter((value) => !!value.to?.uai_formation)
+    ?.sort(sortDescending);
 
   return (
     <Box borderRadius={4}>
@@ -94,7 +99,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
             </Box>
 
             <Box>
-              <UaiFormationContainer>
+              <UaiFormationContainer mb={4}>
                 <EditableField
                   fieldName={"uai_formation"}
                   label={"UAI du lieu de formation"}
@@ -105,8 +110,19 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                   handleSubmit={handleSubmit}
                   handleChange={handleChange}
                   hasRightToEdit={hasRightToEdit}
-                  mb={formation?.uai_formation_valide ? 4 : 0}
+                  mb={!formation?.editedFields?.uai_formation ? 4 : 0}
                 />
+                {formation.editedFields.uai_formation && (
+                  <Text fontSize={"zeta"} color={"grey.600"} as="span">
+                    UAI lieu édité{" "}
+                    {uai_updated_history[0] && (
+                      <>
+                        le {new Date(uai_updated_history[0]?.updated_at).toLocaleDateString("fr-FR")} par{" "}
+                        {uai_updated_history[0]?.to.last_update_who}
+                      </>
+                    )}
+                  </Text>
+                )}
               </UaiFormationContainer>
 
               <AdresseContainer>
@@ -253,7 +269,9 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
               )}
             </Box>
           )}
-          {(formation?.affelnet_statut_history?.length || formation?.parcoursup_statut_history?.length) && (
+          {(formation?.affelnet_statut_history?.length ||
+            formation?.parcoursup_statut_history?.length ||
+            formation?.updates_history) && (
             <Box mb={[0, 0, 16]}>
               <HistoryBlock formation={formation} />
             </Box>
