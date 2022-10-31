@@ -1,0 +1,19 @@
+const config = require("config");
+
+module.exports = (req, res, next) => {
+  switch (true) {
+    case !!req.user:
+      next();
+      break;
+    case !!req.get("API-Key"):
+      if (config.apiKey === req.get("API-Key")) {
+        next();
+      } else {
+        res.status(401).json({ error: "Unauthorized API Key" });
+      }
+      break;
+    default:
+      res.status(401).json({ message: "Accès non autorisé" });
+      break;
+  }
+};
