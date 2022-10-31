@@ -5,8 +5,6 @@ import { DownloadLine } from "../../../../theme/components/icons";
 import { _post } from "../../../httpClient";
 import { downloadCSV, CSV_SEPARATOR } from "../../../utils/downloadUtils";
 
-const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
-
 const serializeObject = (columns, obj) => {
   const res = [];
 
@@ -34,7 +32,7 @@ const serializeObject = (columns, obj) => {
 
 const search = (index, query) => {
   return _post(
-    `${CATALOGUE_API}/es/search/${index}/_search?scroll=5m`,
+    `/api/v1/es/search/${index}/_search?scroll=5m`,
     {
       size: 1000,
       query: query.query,
@@ -45,7 +43,7 @@ const search = (index, query) => {
 
 const scroll = (index, scrollId) => {
   return _post(
-    `${CATALOGUE_API}/es/search/${index}/scroll?scroll=5m&scroll_id=${scrollId}`,
+    `/api/v1/es/search/${index}/scroll?scroll=5m&scroll_id=${scrollId}`,
     {
       scroll: true,
       scroll_id: scrollId,

@@ -9,7 +9,7 @@ import Layout from "./layout/Layout";
 import { Breadcrumb } from "../common/components/Breadcrumb";
 import { setTitle } from "../common/utils/pageUtils";
 
-const REPORTS_URL = "/api/entity/reports";
+const REPORTS_URL = "/api/v1/entity/reports";
 
 const getReportTitle = (reportType) => {
   switch (reportType) {

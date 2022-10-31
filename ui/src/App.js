@@ -28,11 +28,6 @@ const Cookies = lazy(() => import("./pages/legal/Cookies"));
 const DonneesPersonnelles = lazy(() => import("./pages/legal/DonneesPersonnelles"));
 const MentionsLegales = lazy(() => import("./pages/legal/MentionsLegales"));
 const Accessibilite = lazy(() => import("./pages/legal/Accessibilite"));
-const ReconciliationPs = lazy(() => import("./pages/admin/ReconciliationPs/ReconciliationPs"));
-const ActionsExpertes = lazy(() => import("./pages/ActionsExpertes/ActionsExpertes"));
-const Perimetre = lazy(() => import("./pages/perimetre/Perimetre"));
-const ConsolePilotageAffelnet = lazy(() => import("./pages/ConsolesPilotage/Affelnet"));
-const ConsolePilotageParcoursup = lazy(() => import("./pages/ConsolesPilotage/Parcoursup"));
 
 function PrivateRoute({ component, ...rest }) {
   let [auth] = useAuth();
@@ -59,7 +54,7 @@ const ResetPasswordWrapper = ({ children }) => {
     async function run() {
       if (auth.sub !== "anonymous") {
         if (auth.account_status === "FORCE_RESET_PASSWORD") {
-          let { token } = await _post("/api/password/forgotten-password?noEmail=true", { username: auth.sub });
+          let { token } = await _post("/api/v1/password/forgotten-password?noEmail=true", { username: auth.sub });
           history.push(`/reset-password?passwordToken=${token}`);
         }
       }
@@ -79,7 +74,7 @@ export default () => {
   useEffect(() => {
     async function getUser() {
       try {
-        let user = await _get("/api/auth/current-session");
+        let user = await _get("/api/v1/auth/current-session");
 
         if (user) {
           setAuth(user);
@@ -113,10 +108,6 @@ export default () => {
                   <PrivateRoute exact path="/admin/roles" component={Roles} />
                 )}
 
-                {auth && hasAccessTo(auth, "page_reconciliation_ps") && (
-                  <PrivateRoute exact path="/couverture-ps" component={ReconciliationPs} />
-                )}
-
                 <Route exact path="/" component={HomePage} />
                 <Route exact path="/recherche/formations" component={Catalogue} />
                 <Route exact path="/guide-reglementaire">
@@ -139,16 +130,6 @@ export default () => {
                 <Route exact path="/mentions-legales" component={MentionsLegales} />
                 <Route exact path="/accessibilite" component={Accessibilite} />
 
-                {auth && hasAccessTo(auth, "page_actions_expertes") && (
-                  <PrivateRoute exact path="/mes-actions" component={ActionsExpertes} />
-                )}
-                {auth && hasAccessTo(auth, "page_actions_expertes") && (
-                  <PrivateRoute exact path="/console-pilotage/parcoursup" component={ConsolePilotageParcoursup} />
-                )}
-                {auth && hasAccessTo(auth, "page_actions_expertes") && (
-                  <PrivateRoute exact path="/console-pilotage/affelnet" component={ConsolePilotageAffelnet} />
-                )}
-
                 {auth && hasAccessTo(auth, "page_message_maintenance") && (
                   <PrivateRoute exact path="/admin/alert" component={Alert} />
                 )}
@@ -157,22 +138,6 @@ export default () => {
                   <PrivateRoute exact path="/admin/upload">
                     <UploadFiles />
                   </PrivateRoute>
-                )}
-
-                {auth && hasAccessTo(auth, "page_perimetre_ps") && (
-                  <Route
-                    exact
-                    path="/perimetre-parcoursup"
-                    render={(props) => <Perimetre {...props} plateforme="parcoursup" />}
-                  />
-                )}
-
-                {auth && hasAccessTo(auth, "page_perimetre_af") && (
-                  <Route
-                    exact
-                    path="/perimetre-affelnet"
-                    render={(props) => <Perimetre {...props} plateforme="affelnet" />}
-                  />
                 )}
 
                 <Route component={NotFoundPage} />

@@ -19,7 +19,6 @@ const Footer = () => {
                 textDecoration={"underline"}
                 isExternal
               >
-                
                 Le Décret du 22 juin 2021
               </Link>{" "}
               a confié la mission de collecte des informations relatives à l'offre de formation en apprentissage aux
@@ -102,7 +101,7 @@ const Footer = () => {
                 </Link>
               </ListItem>
               <ListItem>
-                <Link href="https://github.com/mission-apprentissage/catalogue-apprentissage" isExternal>
+                <Link href="https://github.com/Reseau-des-Carif-Oref/catalogue-apprentissage/" isExternal>
                   Code source
                 </Link>
               </ListItem>

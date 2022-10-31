@@ -3,7 +3,7 @@ const { showProgressBar } = require("../src/common/utils/paginator");
 const rewiremock = require("rewiremock/node");
 const { mock } = require("@mission-apprentissage/tco-service-node");
 rewiremock("@mission-apprentissage/tco-service-node").with(mock);
-const { ParcoursupFormation, Etablissement, Formation } = require("../src/common/model");
+const { Etablissement, Formation } = require("../src/common/model");
 
 beforeEach(() => rewiremock.enable());
 afterEach(() => rewiremock.disable());
@@ -14,7 +14,6 @@ before(async () => {
 
   showProgressBar(false);
 
-  ParcoursupFormation.pauseAllMongoosaticHooks();
   Formation.pauseAllMongoosaticHooks();
   Etablissement.pauseAllMongoosaticHooks();
 });

@@ -18,7 +18,6 @@ import {
   Spinner,
   Text,
   useDisclosure,
-  useToast,
 } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
 import useAuth from "../../common/hooks/useAuth";
@@ -34,9 +33,7 @@ import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
 import { QualiteBadge } from "../../common/components/QualiteBadge";
 
-const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
-
-const Etablissement = ({ etablissement, edition, onEdit, countFormations }) => {
+const Etablissement = ({ etablissement, countFormations }) => {
   const [user] = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -308,11 +305,9 @@ export default ({ match }) => {
   const [etablissement, setEtablissement] = useState(undefined);
   const [loading, setLoading] = useState(false);
   const [edition, setEdition] = useState(false);
-  const [gatherData, setGatherData] = useState(0);
-  const [modal, setModal] = useState(false);
+  const [gatherData] = useState(0);
+  const [modal] = useState(false);
   const [countFormations, setCountFormations] = useState(0);
-  const [user] = useAuth();
-  const toast = useToast();
   const history = useHistory();
 
   const mountedRef = useRef(true);
@@ -321,7 +316,7 @@ export default ({ match }) => {
     (async () => {
       try {
         setLoading(true);
-        const eta = await _get(`${CATALOGUE_API}/entity/etablissement/${match.params.id}`, false);
+        const eta = await _get(`/api/v1/entity/etablissement/${match.params.id}`, false);
         setEtablissement(eta);
 
         if (!mountedRef.current) return null;
@@ -331,7 +326,7 @@ export default ({ match }) => {
           $or: [{ etablissement_formateur_siret: eta.siret }, { etablissement_gestionnaire_siret: eta.siret }],
         };
 
-        const count = await _get(`${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify(query)}`, false);
+        const count = await _get(`/api/v1/entity/formations/count?query=${JSON.stringify(query)}`, false);
 
         if (!mountedRef.current) return null;
 

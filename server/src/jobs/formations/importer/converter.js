@@ -1,7 +1,7 @@
 const { Formation, DualControlFormation, Etablissement } = require("../../../common/model/index");
 const { cursor } = require("../../../common/utils/cursor");
 const { diff } = require("deep-object-diff");
-const { isValideUAI, getCoordinatesFromAddressData } = require("@mission-apprentissage/tco-service-node");
+const { getCoordinatesFromAddressData } = require("@mission-apprentissage/tco-service-node");
 const { distanceBetweenCoordinates } = require("../../../common/utils/distanceUtils");
 const logger = require("../../../common/logger");
 const { computeMefs } = require("../../../logic/finder/mefsFinder");
@@ -36,13 +36,7 @@ const computeRelationFields = async (fields) => {
 };
 
 const recomputeFields = async (fields, oldFields) => {
-  let {
-    affelnet_mefs_10,
-    affelnet_infos_offre,
-    parcoursup_mefs_10,
-    duree_incoherente,
-    annee_incoherente,
-  } = await computeMefs(fields);
+  let { duree_incoherente, annee_incoherente } = await computeMefs(fields);
 
   let distance_lieu_formation_etablissement_formateur = oldFields?.distance_lieu_formation_etablissement_formateur;
 
@@ -64,10 +58,6 @@ const recomputeFields = async (fields, oldFields) => {
       distance_lieu_formation_etablissement_formateur = undefined;
     }
   }
-
-  const uai_formation =
-    oldFields?.editedFields?.uai_formation ?? fields.uai_formation ?? fields.etablissement_gestionnnaire_uai;
-  const uai_formation_valide = !fields.uai_formation || (await isValideUAI(uai_formation));
 
   let lieu_formation_geo_coordonnees_computed = oldFields?.lieu_formation_geo_coordonnees_computed;
   let lieu_formation_adresse_computed = oldFields?.lieu_formation_adresse_computed;
@@ -100,13 +90,9 @@ const recomputeFields = async (fields, oldFields) => {
   }
 
   return {
-    affelnet_mefs_10,
-    affelnet_infos_offre,
-    parcoursup_mefs_10,
     duree_incoherente,
     annee_incoherente,
     distance_lieu_formation_etablissement_formateur,
-    uai_formation_valide,
 
     distance,
     lieu_formation_geo_coordonnees_computed,
@@ -160,31 +146,9 @@ const applyConversion = async () => {
 
       // Si la formation existe
       if (formation) {
-        const toRestore = [
-          "affelnet_code_nature",
-          "affelnet_infos_offre",
-          "affelnet_perimetre",
-          "affelnet_published_date",
-          "affelnet_raison_depublication",
-          "affelnet_secteur",
-          "affelnet_statut_history",
-          "affelnet_statut",
-          "forced_published",
-          "last_status",
-          "last_statut_update_date",
-          "last_update_who",
-          "parcoursup_statut",
-          "parcoursup_statut_history",
-          "parcoursup_raison_depublication",
-          "parcoursup_published_date",
-          "parcoursup_id",
-          "rejection",
-          "updates_history",
-          "editedFields",
-        ];
+        const toRestore = [];
 
         const toRecompute = [
-          "affelnet_mefs_10",
           "annee_incoherente",
           "distance_lieu_formation_etablissement_formateur",
           "duree_incoherente",
@@ -192,8 +156,6 @@ const applyConversion = async () => {
           "etablissement_formateur_published",
           "etablissement_gestionnaire_id",
           "etablissement_gestionnaire_published",
-          "parcoursup_mefs_10",
-          "uai_formation_valide",
           "distance",
           "lieu_formation_geo_coordonnees_computed",
           "lieu_formation_adresse_computed",

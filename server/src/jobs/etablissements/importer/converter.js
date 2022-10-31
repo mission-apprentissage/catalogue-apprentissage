@@ -25,12 +25,10 @@ const computeRelationFields = async (fields) => {
   });
 
   const formation_ids = formations?.map((formation) => formation._id) ?? [];
-  const formation_uais = formations?.map((formation) => formation.uai_formation) ?? [];
 
   return {
     etablissement_siege_id,
     formation_ids,
-    formation_uais,
 
     ...fields,
   };
