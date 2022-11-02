@@ -8,7 +8,7 @@ const StreamZip = require("node-stream-zip");
 const { oleoduc, writeData, transformData } = require("oleoduc");
 const { DualControlFormation } = require("../../../common/model/index");
 
-const RCO_ZIP_URL = "https://mnadownloader-preprod.intercariforef.org/";
+const RCO_ZIP_URL = "https://mnadownloader.intercariforef.org/";
 const RCO_ZIP_PATH = "./assets/rco.zip";
 
 const downloadZip = async () => {
