@@ -5,4 +5,4 @@ require("@babel/register")({
 const router = require("./sitemap-routes").default;
 const Sitemap = require("react-router-sitemap").default;
 
-new Sitemap(router).build("https://catalogue.apprentissage.beta.gouv.fr").save("./public/sitemap.xml");
+new Sitemap(router).build("https://catalogue-apprentissage.intercariforef.fr").save("./public/sitemap.xml");

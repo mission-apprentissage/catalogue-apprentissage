@@ -44,7 +44,7 @@ const options = {
       contact: {
         name: "Mission Nationale Apprentissage",
         url: "https://mission-apprentissage.gitbook.io/general/",
-        email: "catalogue@apprentissage.beta.gouv.fr",
+        email: "pole-apprentissage@intercariforef.org",
       },
     },
     servers: [

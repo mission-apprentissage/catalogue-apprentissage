@@ -14,7 +14,7 @@ module.exports = ({ users }) => {
    *       - Authentification
    *     description: >
    *       Cette api vous permet d'authentifier l'utilisateur.<br/><br />
-   *       Vous devez posséder des credentials. Veuillez contacter catalogue@apprentissage.beta.gouv.fr pour en obtenir.<br /><br />
+   *       Vous devez posséder des credentials. Veuillez contacter pole-apprentissage@intercariforef.org pour en obtenir.<br /><br />
    *     requestBody:
    *       description: L'objet JSON **doit** contenir les clés **username** et **password**.
    *       required: true

@@ -60,8 +60,12 @@ export default () => {
                 </Heading>
                 <Text>
                   Le Catalogue de l’offre de formation en apprentissage diffusé sur le site{" "}
-                  <Link href={"https://catalogue.apprentissage.beta.gouv.fr"} textDecoration={"underline"} isExternal>
-                    https://catalogue.apprentissage.beta.gouv.fr
+                  <Link
+                    href={"https://catalogue-apprentissage.intercariforef.fr"}
+                    textDecoration={"underline"}
+                    isExternal
+                  >
+                    https://catalogue-apprentissage.intercariforef.fr
                   </Link>{" "}
                   est réputé fiable, mais le site ne garantit pas qu’il soit exempt de défauts, d’erreurs ou
                   d’omissions.
@@ -69,8 +73,12 @@ export default () => {
                   Les informations communiquées sont présentées à titre indicatif et général, sans valeur contractuelle.
                   Malgré des mises à jour régulières, le Catalogue de l’offre de formation en apprentissage diffusé sur
                   le site{" "}
-                  <Link href={"https://catalogue.apprentissage.beta.gouv.fr"} textDecoration={"underline"} isExternal>
-                    https://catalogue.apprentissage.beta.gouv.fr
+                  <Link
+                    href={"https://catalogue-apprentissage.intercariforef.fr"}
+                    textDecoration={"underline"}
+                    isExternal
+                  >
+                    https://catalogue-apprentissage.intercariforef.fr
                   </Link>{" "}
                   ne peut être tenu responsable de la modification des dispositions administratives et juridiques
                   survenant après la publication. De même, il ne peut être tenu responsable de l’utilisation et de
@@ -85,8 +93,12 @@ export default () => {
                 <Text>
                   Des liens hypertextes peuvent être présents dans le Catalogue de l’offre de formation en apprentissage
                   diffusé sur le site. L’utilisateur est informé qu’en cliquant sur ces liens, il sortira du site e{" "}
-                  <Link href={"https://catalogue.apprentissage.beta.gouv.fr"} textDecoration={"underline"} isExternal>
-                    https://catalogue.apprentissage.beta.gouv.fr
+                  <Link
+                    href={"https://catalogue-apprentissage.intercariforef.fr"}
+                    textDecoration={"underline"}
+                    isExternal
+                  >
+                    https://catalogue-apprentissage.intercariforef.fr
                   </Link>{" "}
                   . Ce dernier n’a pas de contrôle sur les pages web sur lesquelles aboutissent ces liens et ne saurait,
                   en aucun cas, être responsable de leur contenu.

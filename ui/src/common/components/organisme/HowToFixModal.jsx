@@ -58,8 +58,8 @@ const HowToFixModal = ({ isOpen, onClose }) => {
             </Heading>
             <Text as={"p"} mt={2}>
               Merci de signaler votre nouvel UAI à cette adresse :{" "}
-              <Link href="mailto:catalogue@apprentissage.beta.gouv.fr" textDecoration="underline">
-                catalogue@apprentissage.beta.gouv.fr
+              <Link href="mailto:pole-apprentissage@intercariforef.org" textDecoration="underline">
+                pole-apprentissage@intercariforef.org
               </Link>
             </Text>
           </Box>

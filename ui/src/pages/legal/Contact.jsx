@@ -19,7 +19,7 @@ export default () => {
           <Box mt={4}>
             <Text>
               Une remarque, un avis, une suggestion d’amélioration ?{" "}
-              <Link href="mailto:catalogue@apprentissage.beta.gouv.fr" textDecoration={"underline"}>
+              <Link href="mailto:pole-apprentissage@intercariforef.org" textDecoration={"underline"}>
                 Contactez-nous !
               </Link>
             </Text>
