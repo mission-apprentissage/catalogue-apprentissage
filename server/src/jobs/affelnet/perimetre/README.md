@@ -34,7 +34,7 @@ Les formations sont ensuite importées automatiquement par Affelnet, via l'API d
 Affelnet étant un logiciel installé séparément par académie, voici un exemple de requête pour l'académie de Toulouse :
 
 ```
-https://catalogue.apprentissage.beta.gouv.fr/api/entity/formations?query={"affelnet_statut":{"$in":["publié","en attente de publication"]},"num_academie" :16}
+https://catalogue.apprentissage.education.gouv.fr/api/entity/formations?query={"affelnet_statut":{"$in":["publié","en attente de publication"]},"num_academie" :16}
 ```
 
 ## Déduction du mef Affelnet & modalités

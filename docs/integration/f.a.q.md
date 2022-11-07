@@ -9,13 +9,13 @@ __Sous la forme :
 ```
 updates_history: [
     {
-        from: { 
+        from: {
             // Liste des champs et leurs anciennes valeurs
         },
-        to: { 
+        to: {
             // Liste des champs et leurs nouvelles valeurs
         },
-        updated_at: Date à laquelle cette mise à jour a été réalisée 
+        updated_at: Date à laquelle cette mise à jour a été réalisée
     },
     // ... Toutes les mises à jour
 ]
@@ -23,13 +23,13 @@ updates_history: [
 
 Les critères de recherche sont très libre, avec l'aide d'un développeur vous pouvez rechercher via une requête sous forme MongoDB. \
 \
-Tester: 
+Tester:
 
-[https://catalogue.apprentissage.beta.gouv.fr/api/v1/docs/#/Formations/get_entity_formations](https://catalogue.apprentissage.beta.gouv.fr/api/v1/docs/#/Formations/get_entity_formations)
+[https://catalogue.apprentissage.education.gouv.fr/api/v1/docs/#/Formations/get_entity_formations](https://catalogue.apprentissage.education.gouv.fr/api/v1/docs/#/Formations/get_entity_formations)
 
 ![](<../../.gitbook/assets/image (8).png>)
 
-Exemple de retour (toutes les mises à jour des informations): 
+Exemple de retour (toutes les mises à jour des informations):
 
 ```javascript
  {
@@ -272,12 +272,12 @@ Exemple de retour (toutes les mises à jour des informations):
 }
 ```
 
-Via appels directs dans votre navigateur : 
+Via appels directs dans votre navigateur :
 
 ```
 https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/entity/etablissements?select={"updates_history":1}&query={MA_REQUETE_MONGO}
 ```
 
-## Question ? 
+## Question ?
 
 Réponse
