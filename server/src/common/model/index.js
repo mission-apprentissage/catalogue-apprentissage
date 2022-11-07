@@ -21,30 +21,20 @@ const createModel = (modelName, descriptor, options = {}) => {
 module.exports = {
   User: createModel("user", schema.userSchema),
   Role: createModel("role", schema.roleSchema),
-  RcoFormation: createModel("rcoformation", schema.rcoFormationSchema),
   Formation: createModel("formation", schema.formationSchema, {
     esIndexName: "formation",
   }),
   Report: createModel("report", schema.reportSchema),
   Log: createModel("log", schema.logSchema),
-  AffelnetFormation: createModel("affelnetformation", schema.affelnetFormationSchema),
   Etablissement: createModel("etablissement", schema.etablissementSchema, {
     esIndexName: "etablissements",
   }),
-  ParcoursupFormation: createModel("parcoursupformations", schema.parcoursupFormationSchema, {
-    esIndexName: "parcoursupformations",
-  }),
-  ParcoursupFormationCheck: createModel("parcoursupformationchecks", schema.parcoursupFormationCheckSchema),
   SandboxFormation: createModel("sandboxformation", schema.formationSchema),
   Statistique: createModel("statistique", schema.statistiqueSchema),
   Alert: createModel("alert", schema.alertSchema),
-  ReglePerimetre: createModel("regleperimetre", schema.reglePerimetreSchema),
   Consumption: createModel("consumption", schema.consumptionSchema),
   DualControlEtablissement: createModel("dualcontroletablissement", schema.etablissementSchema),
   DualControlFormation: createModel("dualcontrolformation", schema.formationSchema),
   DualControlReport: createModel("dualcontrolreport", schema.dualControlReportSchema),
   DualControlPerimeterReport: createModel("dualcontrolperimeterreport", schema.dualControlPerimeterReportSchema),
-  ConsoleStat: createModel("consolestat", schema.consoleStatSchema),
-  PreviousSeasonFormation: createModel("previousSeasonFormation", schema.previousSeasonFormationSchema),
-  PreviousSeasonFormationStat: createModel("previousSeasonFormationStat", schema.previousSeasonFormationStatSchema),
 };

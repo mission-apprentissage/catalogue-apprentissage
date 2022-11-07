@@ -16,12 +16,9 @@ export default (
     <Route exact path="/reset-password" />
     <Route exact path="/forgotten-password" />
     <Route exact path="/report" />
-    <Route exact path="/couverture-ps" />
     <Route exact path="/changelog" />
 
     <Route exact path="/mes-actions" />
-    <Route exact path="/perimetre-parcoursup" />
-    <Route exact path="/perimetre-affelnet" />
 
     <Route exact path="/contact" />
     <Route exact path="/cookies" />

@@ -175,13 +175,13 @@ const etablissement = {
 };
 
 const server = setupMswServer(
-  rest.get(/\/api\/entity\/etablissement\/1/, (req, res, ctx) => {
+  rest.get(/\/api\/v1\/entity\/etablissement\/1/, (req, res, ctx) => {
     return res(ctx.json({ ...etablissement, uai_valide: true }));
   }),
-  rest.get(/\/api\/entity\/etablissement\/2/, (req, res, ctx) => {
+  rest.get(/\/api\/v1\/entity\/etablissement\/2/, (req, res, ctx) => {
     return res(ctx.json({ ...etablissement, uai_valide: false }));
   }),
-  rest.get(/\/api\/entity\/formations\/count/, (req, res, ctx) => {
+  rest.get(/\/api\/v1\/entity\/formations\/count/, (req, res, ctx) => {
     return res(ctx.json(etablissement.formations_ids?.length ?? 0));
   }),
   rest.get(/\/api\/v1\/entity\/alert/, (req, res, ctx) => {
@@ -231,48 +231,4 @@ test("don't display an error when uai is valid", async () => {
 
   const warning = queryByTestId("uai-warning");
   expect(warning).not.toBeInTheDocument();
-});
-
-test("Submit should call etablissement service API", async () => {
-  const updateUaiOrganisme = jest.fn();
-  const etablissementService = jest.fn(() => ({
-    etablissement: { id: 1, siret: "123" },
-    error: false,
-  }));
-
-  jest.spyOn(api, "updateUaiOrganisme").mockImplementation(updateUaiOrganisme);
-  jest.spyOn(api, "etablissementService").mockImplementation(etablissementService);
-
-  grantAnonymousAccess({ acl: ["page_organisme", "page_organisme/modifier_informations"], academie: "16" });
-
-  const { getByText, queryByText, getByTestId } = renderWithRouter(<Etablissement match={{ params: { id: 1 } }} />);
-
-  await waitFor(() => getByText(/UAI rattaché au SIRET/), { timeout: 10000 });
-  await waitFor(() => getByText(/voir les 34 formations associées à cet organisme/));
-
-  const count = queryByText(/voir les 34 formations associées à cet organisme/);
-  expect(count).toBeInTheDocument();
-
-  // click on edit
-  const editBtn = getByTestId("uai-edit");
-  expect(editBtn).toBeInTheDocument();
-  userEvent.click(editBtn);
-
-  // change value of UAI field
-  const input = getByTestId("uai-input");
-  expect(input).toBeInTheDocument();
-  userEvent.type(input, "0840110N");
-
-  // click on submit
-  const submitBtn = queryByText("Valider");
-  expect(submitBtn).toBeInTheDocument();
-  userEvent.click(submitBtn);
-
-  // check api functions are called
-  await waitFor(() => expect(updateUaiOrganisme).toBeCalled());
-
-  expect(etablissementService).toHaveBeenCalled();
-
-  updateUaiOrganisme.mockClear();
-  etablissementService.mockClear();
 });

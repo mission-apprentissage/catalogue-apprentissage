@@ -9,7 +9,7 @@ httpTests(__filename, ({ startServer }) => {
     await components.users.createUser("user", "password", { hash: hash("password", 1001) });
     const previous = await User.findOne({ username: "user" });
 
-    const response = await httpClient.post("/api/auth/login", {
+    const response = await httpClient.post("/api/v1/auth/login", {
       username: "user",
       password: "password",
     });
@@ -28,7 +28,7 @@ httpTests(__filename, ({ startServer }) => {
     await components.users.createUser("user", "password", { hash: hash("password", 1001) });
     const previous = await User.findOne({ username: "user" });
 
-    const response = await httpClient.post("/api/auth/login", {
+    const response = await httpClient.post("/api/v1/auth/login", {
       username: "user",
       password: "invalid",
     });
@@ -41,7 +41,7 @@ httpTests(__filename, ({ startServer }) => {
   it("Vérifie qu'un login invalide est rejeté", async () => {
     const { httpClient } = await startServer();
 
-    const response = await httpClient.post("/api/auth/login", {
+    const response = await httpClient.post("/api/v1/auth/login", {
       username: "INVALID",
       password: "INVALID",
     });
@@ -53,7 +53,7 @@ httpTests(__filename, ({ startServer }) => {
     const { httpClient, components } = await startServer();
     await components.users.createUser("user", "password", { hash: hash("password", 1000) });
 
-    let response = await httpClient.post("/api/auth/login", {
+    let response = await httpClient.post("/api/v1/auth/login", {
       username: "user",
       password: "password",
     });
@@ -62,7 +62,7 @@ httpTests(__filename, ({ startServer }) => {
     const found = await User.findOne({ username: "user" });
     assert.strictEqual(found.password.startsWith("$6$rounds=1001"), true);
 
-    response = await httpClient.post("/api/auth/login", {
+    response = await httpClient.post("/api/v1/auth/login", {
       username: "user",
       password: "password",
     });

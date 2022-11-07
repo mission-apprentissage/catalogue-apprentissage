@@ -7,7 +7,7 @@ httpTests(__filename, ({ startServer }) => {
     const { httpClient, createAndLogUser } = await startServer();
     await createAndLogUser("user", "password", { permissions: { isAdmin: true } });
 
-    const response = await httpClient.post("/api/password/forgotten-password?noEmail=true", {
+    const response = await httpClient.post("/api/v1/password/forgotten-password?noEmail=true", {
       username: "user",
     });
 
@@ -18,7 +18,7 @@ httpTests(__filename, ({ startServer }) => {
   it("Vérifie qu'on ne peut pas demander la réinitialisation du mot de passe pour un utilisateur inconnu", async () => {
     const { httpClient } = await startServer();
 
-    const response = await httpClient.post("/api/password/forgotten-password?noEmail=true", {
+    const response = await httpClient.post("/api/v1/password/forgotten-password?noEmail=true", {
       username: "inconnu",
     });
 
@@ -29,7 +29,7 @@ httpTests(__filename, ({ startServer }) => {
     const { httpClient, createAndLogUser } = await startServer();
     await createAndLogUser("user123", "password");
 
-    const response = await httpClient.post("/api/password/forgotten-password?noEmail=true", {
+    const response = await httpClient.post("/api/v1/password/forgotten-password?noEmail=true", {
       type: "cfa",
       username: "user123456",
     });
@@ -41,13 +41,13 @@ httpTests(__filename, ({ startServer }) => {
     const { httpClient, createAndLogUser } = await startServer();
     await createAndLogUser("admin", "password", { permissions: { isAdmin: true } });
 
-    const response = await httpClient.post("/api/password/reset-password", {
+    const response = await httpClient.post("/api/v1/password/reset-password", {
       passwordToken: createPasswordToken("admin"),
       newPassword: "Password!123456",
     });
 
     assert.strictEqual(response.status, 200);
-    const responseLogin = await httpClient.post("/api/auth/login", {
+    const responseLogin = await httpClient.post("/api/v1/auth/login", {
       username: "admin",
       password: "Password!123456",
     });
@@ -62,7 +62,7 @@ httpTests(__filename, ({ startServer }) => {
     const { httpClient, createAndLogUser } = await startServer();
     await createAndLogUser("admin", "password", { permissions: { isAdmin: true } });
 
-    const response = await httpClient.post("/api/password/reset-password", {
+    const response = await httpClient.post("/api/v1/password/reset-password", {
       passwordToken: createPasswordToken("admin"),
       newPassword: "invalid",
     });

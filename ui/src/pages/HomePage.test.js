@@ -5,10 +5,10 @@ import { renderWithRouter, setupMswServer } from "../common/utils/testUtils";
 import { rest } from "msw";
 
 const server = setupMswServer(
-  rest.get(/\/api\/entity\/etablissements\/count/, (req, res, ctx) => {
+  rest.get(/\/api\/v1\/entity\/etablissements\/count/, (req, res, ctx) => {
     return res(ctx.json(150));
   }),
-  rest.get(/\/api\/entity\/formations\/count/, (req, res, ctx) => {
+  rest.get(/\/api\/v1\/entity\/formations\/count/, (req, res, ctx) => {
     return res(ctx.json(8900));
   }),
   rest.get(/\/api\/v1\/entity\/alert/, (req, res, ctx) => {

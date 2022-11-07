@@ -350,7 +350,7 @@ const Summary = ({ data, reportType, errors, importReportRelatedData, onGoToClic
           <Link
             color="pinklight.400"
             fontStyle="italic"
-            href="https://catalogue.apprentissage.beta.gouv.fr/metabase/public/question/3ca6e33a-1720-4465-b6f4-acf7c25236c0"
+            href="https://catalogue-apprentissage.intercariforef.fr/metabase/public/question/3ca6e33a-1720-4465-b6f4-acf7c25236c0"
             isExternal
           >
             Voir l'ensemble des formations
@@ -358,7 +358,7 @@ const Summary = ({ data, reportType, errors, importReportRelatedData, onGoToClic
           <Link
             color="pinklight.400"
             fontStyle="italic"
-            href="https://catalogue.apprentissage.beta.gouv.fr/metabase/public/question/c0bf84e2-66f4-4640-833f-ef70cda69805"
+            href="https://catalogue-apprentissage.intercariforef.fr/metabase/public/question/c0bf84e2-66f4-4640-833f-ef70cda69805"
             isExternal
           >
             Voir l'ensemble des organismes

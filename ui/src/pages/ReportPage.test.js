@@ -48,7 +48,7 @@ const importReportDeleted = {
 };
 
 const server = setupMswServer(
-  rest.get(/\/api\/entity\/reports/, (req, res, ctx) => {
+  rest.get(/\/api\/v1\/entity\/reports/, (req, res, ctx) => {
     return res(ctx.json([importReportAdded, importReportUpdated, importReportDeleted]));
   }),
   rest.get(/\/api\/v1\/entity\/alert/, (req, res, ctx) => {
@@ -82,7 +82,7 @@ describe("", () => {
   });
 
   it("should mock api /reports ", async () => {
-    const response = await _get("/api/entity/reports");
+    const response = await _get("/api/v1/entity/reports");
     expect(response).toEqual([importReportAdded, importReportUpdated, importReportDeleted]);
   });
 

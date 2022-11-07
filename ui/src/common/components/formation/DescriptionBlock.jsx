@@ -117,32 +117,6 @@ export const DescriptionBlock = ({ formation }) => {
                 "Aucun code MEF ne correspond à la durée et à l'année de formation enregistrées auprès du Carif-Oref."}
             </Text>
           </MefContainer>
-          {formation?.affelnet_mefs_10?.length > 0 && (
-            <>
-              <Text mb={4}>
-                Codes MEF 10 caractères dans le périmètre <i>Affelnet</i> :{" "}
-                <Text as="span" variant="highlight">
-                  {formation?.affelnet_mefs_10?.map(({ mef10 }) => mef10).join(", ")}
-                </Text>
-              </Text>
-              {formation?.affelnet_infos_offre && (
-                <Text mb={4}>
-                  Informations offre de formation <i>Affelnet</i> :{" "}
-                  <Text as="span" variant="highlight">
-                    {formation?.affelnet_infos_offre}
-                  </Text>
-                </Text>
-              )}
-            </>
-          )}
-          {formation?.parcoursup_mefs_10?.length > 0 && (
-            <Text mb={4}>
-              Codes MEF 10 caractères dans le périmètre <i>Parcoursup</i> :{" "}
-              <Text as="span" variant="highlight">
-                {formation?.parcoursup_mefs_10?.map(({ mef10 }) => mef10).join(", ")}
-              </Text>
-            </Text>
-          )}
           <Text mb={4}>
             Début de formation :
             <FormationPeriode periode={formation.periode} /> <InfoTooltip description={helpText.formation.periode} />

@@ -116,37 +116,6 @@ const rncpDetailsSchema = new mongoose.Schema(
   { _id: false }
 );
 
-const rejectionCauseSchema = new mongoose.Schema(
-  {
-    error: {
-      type: String,
-      default: null,
-      description: "L'erreur telle que retournée par la plateforme",
-    },
-    description: {
-      type: String,
-      default: null,
-      description: "La description textuelle de l'erreur retournée",
-    },
-    action: {
-      type: String,
-      default: null,
-      description: "L'action à mener pour résoudre le rejet.",
-    },
-    handled_by: {
-      type: String,
-      default: null,
-      description: "Adresse email de la personne ayant pris en charge le rejet de publication",
-    },
-    handled_date: {
-      type: Date,
-      default: null,
-      description: "Date à laquelle le rejet de publication a été pris en charge",
-    },
-  },
-  { _id: false }
-);
-
 const formationSchema = {
   cle_ministere_educatif: {
     index: true,
@@ -181,16 +150,6 @@ const formationSchema = {
     type: String,
     default: null,
     description: "Code formation diplôme d'entrée (année 1 de l'apprentissage)",
-  },
-  affelnet_mefs_10: {
-    type: [mefSchema],
-    default: [],
-    description: "Tableau de Code MEF 10 caractères et modalités (filtrés pour Affelnet si applicable)",
-  },
-  parcoursup_mefs_10: {
-    type: [mefSchema],
-    default: [],
-    description: "Tableau de Code MEF 10 caractères et modalités (filtrés pour Parcoursup si applicable)",
   },
   nom_academie: {
     type: String,
@@ -233,21 +192,6 @@ const formationSchema = {
     type: String,
     default: null,
     description: "Localité",
-  },
-  uai_formation: {
-    index: true,
-    type: String,
-    default: null,
-    description: "UAI du lieu de la formation",
-    validate: {
-      validator: async (value) => !value || (await isValideUAI(value)),
-      message: (props) => `${props.value} n'est pas un code UAI valide.`,
-    },
-  },
-  uai_formation_valide: {
-    type: Boolean,
-    default: null,
-    description: "L'UAI du lieu de formation est il valide ?",
   },
   nom: {
     type: String,
@@ -381,99 +325,11 @@ const formationSchema = {
     noIndex: true,
     description: "Email du contact pour cette formation",
   },
-  parcoursup_perimetre: {
-    type: Boolean,
-    default: false,
-    description: "Dans le périmètre parcoursup",
-  },
-  parcoursup_statut: {
-    type: String,
-    enum: [
-      "hors périmètre",
-      "publié",
-      "non publié",
-      "à publier (sous condition habilitation)",
-      "à publier (vérifier accès direct postbac)",
-      "à publier (soumis à validation Recteur)",
-      "à publier",
-      "en attente de publication",
-      "rejet de publication",
-    ],
-    default: "hors périmètre",
-    description: "Statut parcoursup",
-  },
-  parcoursup_statut_history: {
-    type: [Object],
-    default: [],
-    description: "Parcoursup : historique des statuts",
-    noIndex: true,
-  },
-  parcoursup_error: {
-    type: String,
-    default: null,
-    description: "Erreur lors de la création de la formation sur ParcourSup (via le WS)",
-  },
-  rejection: {
-    type: rejectionCauseSchema,
-    default: null,
-    description: "Cause du rejet de publication",
-  },
-
-  parcoursup_id: {
-    index: true,
-    type: String,
-    default: null,
-    description: "identifiant Parcoursup de la formation (g_ta_cod)",
-  },
-  parcoursup_published_date: {
-    type: Date,
-    default: null,
-    description: 'Date de publication (passage au statut "publié")',
-  },
-  affelnet_perimetre: {
-    type: Boolean,
-    default: false,
-    description: "Dans le périmètre affelnet",
-  },
-  affelnet_statut: {
-    type: String,
-    enum: [
-      "hors périmètre",
-      "publié",
-      "non publié",
-      "à publier (soumis à validation)",
-      "à publier",
-      "en attente de publication",
-    ],
-    default: "hors périmètre",
-    description: "Statut affelnet",
-  },
-  affelnet_statut_history: {
-    type: [Object],
-    default: [],
-    description: "Affelnet : historique des statuts",
-    noIndex: true,
-  },
-  affelnet_published_date: {
-    type: Date,
-    default: null,
-    description: 'Date de publication (passage au statut "publié")',
-  },
-  last_statut_update_date: {
-    type: Date,
-    default: null,
-    description: "Date de dernière modification du statut Affelnet ou Parcoursup",
-  },
   published: {
     index: true,
     type: Boolean,
     default: false,
     description: "Est publiée, la formation est éligible pour le catalogue",
-  },
-  rco_published: {
-    type: Boolean,
-    default: false,
-    description: "Est publiée dans le flux rco",
   },
   forced_published: {
     type: Boolean,
@@ -486,30 +342,11 @@ const formationSchema = {
     default: Date.now,
     description: "Date d'ajout en base de données",
   },
-  updates_history: {
-    type: [Object],
-    default: [],
-    description: "Historique des mises à jours",
-    noIndex: true,
-  },
 
   last_update_at: {
     type: Date,
     default: Date.now,
     description: "Date de dernières mise à jour",
-  },
-  last_update_who: {
-    type: String,
-    default: null,
-    description: "Qui a réalisé la dernière modification",
-  },
-
-  // Flags
-  to_update: {
-    index: true,
-    type: Boolean,
-    default: false,
-    description: "Formation à mette à jour lors du script d'enrichissement",
   },
 
   // Product specific
@@ -517,12 +354,6 @@ const formationSchema = {
     type: String,
     implicit_type: "geo_point",
     description: "Latitude et longitude de l'établissement recherchable dans Idea",
-  },
-
-  update_error: {
-    type: String,
-    default: null,
-    description: "Erreur lors de la mise à jour de la formation",
   },
 
   lieu_formation_geo_coordonnees: {
@@ -601,41 +432,10 @@ const formationSchema = {
     default: null,
     description: "BCN : niveau formation diplôme",
   },
-  affelnet_infos_offre: {
-    type: String,
-    default: null,
-    description: "Affelnet : Informations offre de formation",
-  },
-  affelnet_code_nature: {
-    type: String,
-    default: null,
-    description: "Affelnet : code nature de l'établissement de formation",
-  },
-  affelnet_secteur: {
-    type: String,
-    enum: ["PR", "PU", null],
-    default: null,
-    description: "Affelnet : type d'établissement (PR: Privé / PU: Public)",
-  },
-  affelnet_raison_depublication: {
-    type: String,
-    default: null,
-    description: "Affelnet : raison de dépublication",
-  },
   bcn_mefs_10: {
     type: [mefSchema],
     default: [],
     description: "BCN : Codes MEF 10 caractères",
-  },
-  editedFields: {
-    type: Object,
-    default: null,
-    description: "Champs édités par un utilisateur",
-  },
-  parcoursup_raison_depublication: {
-    type: String,
-    default: null,
-    description: "Parcoursup : raison de dépublication",
   },
   distance_lieu_formation_etablissement_formateur: {
     type: Number,

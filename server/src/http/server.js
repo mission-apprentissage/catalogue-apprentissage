@@ -9,14 +9,11 @@ const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const logMiddleware = require("./middlewares/logMiddleware");
 const errorMiddleware = require("./middlewares/errorMiddleware");
-const apiKeyAuthMiddleware = require("./middlewares/apiKeyAuthMiddleware");
 const tryCatch = require("./middlewares/tryCatchMiddleware");
 const corsMiddleware = require("./middlewares/corsMiddleware");
-const authMiddleware = require("./middlewares/authMiddleware");
 const permissionsMiddleware = require("./middlewares/permissionsMiddleware");
 const packageJson = require("../../package.json");
 const formation = require("./routes/formation");
-const formationSecure = require("./routes/formationSecure");
 const report = require("./routes/report");
 const auth = require("./routes/auth");
 const user = require("./routes/user");
@@ -25,15 +22,12 @@ const password = require("./routes/password");
 const stats = require("./routes/stats");
 const esSearch = require("./routes/esSearch");
 const esMultiSearchNoIndex = require("./routes/esMultiSearchNoIndex");
-const parcoursup = require("./routes/parcoursup");
 const etablissement = require("./routes/etablissement");
-const etablissementSecure = require("./routes/etablissementSecure");
 const upload = require("./routes/upload");
 const alert = require("./routes/alert");
-const reglePerimetre = require("./routes/reglePerimetre");
-const reglePerimetreSecure = require("./routes/reglePerimetreSecure");
 const swaggerSchema = require("../common/model/swaggerSchema");
 const rateLimit = require("express-rate-limit");
+const authMiddleware = require("./middlewares/authMiddleware");
 
 require("../common/passport-config");
 
@@ -50,7 +44,7 @@ const options = {
       contact: {
         name: "Mission Nationale Apprentissage",
         url: "https://mission-apprentissage.gitbook.io/general/",
-        email: "catalogue@apprentissage.beta.gouv.fr",
+        email: "pole-apprentissage@intercariforef.org",
       },
     },
     servers: [
@@ -67,10 +61,10 @@ const swaggerSpecification = swaggerJsdoc(options);
 swaggerSpecification.components = {
   schemas: swaggerSchema,
   securitySchemes: {
-    bearerAuth: {
-      type: "http",
-      scheme: "bearer",
-      bearerFormat: "JWT",
+    cookieAuth: {
+      type: "apiKey",
+      in: "cookie",
+      name: "connect.sid",
     },
   },
 };
@@ -113,11 +107,6 @@ module.exports = async (components, verbose = true) => {
     max: 25, // 25 calls per IP per second
   });
 
-  const apiPerimetreLimiter = rateLimit({
-    windowMs: 1000, // 1 second
-    max: 100, // 100 calls per IP per second
-  });
-
   const elasticLimiter = rateLimit({
     windowMs: 1000, // 1 second
     max: 100, // 100 calls per IP per second
@@ -129,72 +118,53 @@ module.exports = async (components, verbose = true) => {
     message: "Too many calls from this IP, please try again after one minute",
   });
 
-  app.use("/api/v1/docs", apiLimiter, swaggerUi.serve, swaggerUi.setup(swaggerSpecification));
-  app.get(
-    "/api/v1/schema.json",
-    apiLimiter,
-    tryCatch(async (req, res) => {
-      return res.json(swaggerSpecification);
-    })
-  );
+  const prefixes = ["/api", "/api/v1"];
 
-  app.use("/api/v1/entity", apiPerimetreLimiter, reglePerimetre());
-  app.use("/api/v1/es/search", elasticLimiter, esSearch());
-  app.use("/api/v1/search", elasticLimiter, esMultiSearchNoIndex());
-  app.use("/api/v1/entity", apiLimiter, formation());
-  app.use("/api/v1/entity", apiLimiter, report());
-  app.use("/api/v1/entity", apiLimiter, etablissement(components));
-  app.use("/api/v1/auth", authLimiter, auth(components));
-  app.use("/api/v1/password", authLimiter, password(components));
-  app.use("/api/v1/parcoursup", apiLimiter, parcoursup(components));
-  app.use("/api/v1/entity", apiLimiter, alert());
-  app.use(
-    "/api/v1/admin",
-    apiLimiter,
-    apiKeyAuthMiddleware,
-    permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs"]),
-    user(components)
-  );
-  app.use(
-    "/api/v1/admin",
-    apiLimiter,
-    apiKeyAuthMiddleware,
-    permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs", "page_gestion_roles"]),
-    role(components)
-  );
-  app.use("/api/v1/entity", apiLimiter, apiKeyAuthMiddleware, formationSecure());
-  app.use("/api/v1/stats", apiLimiter, apiKeyAuthMiddleware, stats(components));
-  app.use("/api/v1/entity", apiLimiter, apiKeyAuthMiddleware, etablissementSecure(components));
-  app.use("/api/v1/upload", apiLimiter, permissionsMiddleware({ isAdmin: true }, ["page_upload"]), upload());
-  app.use("/api/v1/entity", apiLimiter, apiKeyAuthMiddleware, reglePerimetreSecure());
+  const routes = [
+    ["/docs", apiLimiter, swaggerUi.serve, swaggerUi.setup(swaggerSpecification)],
+    [
+      "/schema.json",
+      apiLimiter,
+      tryCatch(async (req, res) => {
+        return res.json(swaggerSpecification);
+      }),
+    ],
+    ["/auth", authLimiter, auth(components)],
+    ["/password", authLimiter, password(components)],
 
-  /** DEPRECATED */
-  app.use("/api/es/search", elasticLimiter, esSearch());
-  app.use("/api/search", elasticLimiter, esMultiSearchNoIndex());
-  app.use("/api/entity", apiLimiter, formation());
-  app.use("/api/entity", apiLimiter, report());
-  app.use("/api/entity", apiLimiter, etablissement(components));
-  app.use("/api/auth", authLimiter, auth(components));
-  app.use("/api/password", authLimiter, password(components));
-  app.use("/api/parcoursup", apiLimiter, parcoursup(components));
-  app.use(
-    "/api/admin",
-    apiLimiter,
-    authMiddleware,
-    permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs"]),
-    user(components)
-  );
-  app.use(
-    "/api/admin",
-    apiLimiter,
-    authMiddleware,
-    permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs", "page_gestion_roles"]),
-    role(components)
-  );
-  app.use("/api/entity", apiLimiter, authMiddleware, formationSecure());
-  app.use("/api/stats", apiLimiter, stats(components));
-  app.use("/api/entity", apiLimiter, authMiddleware, etablissementSecure(components));
-  app.use("/api/entity", apiLimiter, authMiddleware, reglePerimetreSecure());
+    ["/es/search", elasticLimiter, esSearch()],
+    ["/search", elasticLimiter, esMultiSearchNoIndex()],
+    ["/entity", apiLimiter, formation()],
+    ["/entity", apiLimiter, report()],
+    ["/entity", apiLimiter, etablissement(components)],
+    ["/entity", apiLimiter, alert()],
+    ["/stats", apiLimiter, stats(components)],
+  ];
+
+  const securedRoutes = [
+    [
+      "/admin",
+      apiLimiter,
+      authMiddleware,
+      permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs"]),
+      user(components),
+    ],
+    [
+      "/admin",
+      apiLimiter,
+      authMiddleware,
+      permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs", "page_gestion_roles"]),
+      role(components),
+    ],
+    ["/upload", apiLimiter, authMiddleware, permissionsMiddleware({ isAdmin: true }, ["page_upload"]), upload()],
+  ];
+
+  prefixes.map((prefix) => {
+    [...routes, ...securedRoutes].map((route) => {
+      const [path, ...rest] = route;
+      app.use(`${prefix}${path}`, ...rest);
+    });
+  });
 
   app.get(
     "/api",

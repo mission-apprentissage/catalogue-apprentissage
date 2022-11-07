@@ -11,11 +11,11 @@ const server = setupMswServer(
     return res(ctx.json([]));
   }),
 
-  rest.post(/\/api\/es\/search\/formation\/_count/, (req, res, ctx) => {
+  rest.post(/\/api\/v1\/es\/search\/formation\/_count/, (req, res, ctx) => {
     return res(ctx.json([]));
   }),
 
-  rest.post(/\/api\/es\/search\/formations\/_msearch/, (req, res, ctx) => {
+  rest.post(/\/api\/v1\/es\/search\/formations\/_msearch/, (req, res, ctx) => {
     return res(
       ctx.json({
         took: 40,
@@ -34,7 +34,6 @@ const server = setupMswServer(
                   _id: "5fc6166e712d48a988133449",
                   _score: null,
                   _source: {
-                    affelnet_statut: "hors périmètre",
                     localite: "Henriville",
                     cfd_date_fermeture: null,
                     etablissement_formateur_code_postal: "54320",
@@ -77,7 +76,6 @@ const server = setupMswServer(
                     num_academie: "12",
                     rncp_eligible_apprentissage: true,
                     ids_action: ["01_GE506980"],
-                    parcoursup_statut: "hors périmètre",
                     etablissement_formateur_nda: "44540379354",
                     etablissement_formateur_uai: null,
                     lieu_formation_geo_coordonnees: "49.103334,6.855078",
@@ -112,7 +110,6 @@ const server = setupMswServer(
                   _id: "5fc6166e712d48a98813344b",
                   _score: null,
                   _source: {
-                    affelnet_statut: "hors périmètre",
                     localite: "Bar-le-Duc",
                     cfd_date_fermeture: null,
                     etablissement_formateur_code_postal: "54320",
@@ -155,7 +152,6 @@ const server = setupMswServer(
                     num_academie: "12",
                     rncp_eligible_apprentissage: true,
                     ids_action: ["01_GE506876"],
-                    parcoursup_statut: "hors périmètre",
                     etablissement_formateur_nda: "44540379354",
                     etablissement_formateur_uai: null,
                     lieu_formation_geo_coordonnees: "48.77439,5.166015",
@@ -189,7 +185,6 @@ const server = setupMswServer(
                   _id: "5fc6166f712d48a9881334b1",
                   _score: null,
                   _source: {
-                    affelnet_statut: "hors périmètre",
                     localite: "Marseille 15e Arrondissement",
                     cfd_date_fermeture: null,
                     etablissement_formateur_code_postal: "13015",
@@ -234,7 +229,6 @@ const server = setupMswServer(
                     num_academie: "2",
                     rncp_eligible_apprentissage: true,
                     ids_action: ["24_1461105"],
-                    parcoursup_statut: "hors périmètre",
                     etablissement_formateur_nda: "93131641013",
                     etablissement_formateur_uai: null,
                     lieu_formation_geo_coordonnees: "43.3628,5.31611",
@@ -268,7 +262,6 @@ const server = setupMswServer(
                   _id: "5fc61670712d48a9881334b3",
                   _score: null,
                   _source: {
-                    affelnet_statut: "hors périmètre",
                     localite: "Marseille 15e Arrondissement",
                     cfd_date_fermeture: null,
                     etablissement_formateur_code_postal: "13015",
@@ -312,7 +305,6 @@ const server = setupMswServer(
                     num_academie: "2",
                     rncp_eligible_apprentissage: true,
                     ids_action: ["24_1461108"],
-                    parcoursup_statut: "hors périmètre",
                     etablissement_formateur_nda: "93131641013",
                     etablissement_formateur_uai: null,
                     lieu_formation_geo_coordonnees: "43.3628,5.31611",
@@ -346,7 +338,6 @@ const server = setupMswServer(
                   _id: "5fc61670712d48a9881334bd",
                   _score: null,
                   _source: {
-                    affelnet_statut: "hors périmètre",
                     localite: "Avignon",
                     cfd_date_fermeture: null,
                     etablissement_formateur_code_postal: null,
@@ -390,7 +381,6 @@ const server = setupMswServer(
                     num_academie: "2",
                     rncp_eligible_apprentissage: true,
                     ids_action: ["24_1461627"],
-                    parcoursup_statut: "publié",
                     etablissement_formateur_nda: null,
                     etablissement_formateur_uai: null,
                     lieu_formation_geo_coordonnees: "43.9281,4.88697",
@@ -424,7 +414,6 @@ const server = setupMswServer(
                   _id: "5fc61670712d48a9881334bf",
                   _score: null,
                   _source: {
-                    affelnet_statut: "hors périmètre",
                     localite: "Mandelieu-la-Napoule",
                     cfd_date_fermeture: "2025-08-30T22:00:00.000Z",
                     etablissement_formateur_code_postal: null,
@@ -467,7 +456,6 @@ const server = setupMswServer(
                     num_academie: "23",
                     rncp_eligible_apprentissage: true,
                     ids_action: ["24_1461150"],
-                    parcoursup_statut: "hors périmètre",
                     etablissement_formateur_nda: "93060290006",
                     etablissement_formateur_uai: null,
                     lieu_formation_geo_coordonnees: "43.5339,6.91782",
@@ -501,7 +489,6 @@ const server = setupMswServer(
                   _id: "5fc61670712d48a9881334c5",
                   _score: null,
                   _source: {
-                    affelnet_statut: "hors périmètre",
                     localite: "Le Chaffaut-Saint-Jurson",
                     cfd_date_fermeture: null,
                     etablissement_formateur_code_postal: null,
@@ -545,7 +532,6 @@ const server = setupMswServer(
                     num_academie: "2",
                     rncp_eligible_apprentissage: true,
                     ids_action: ["24_1461630"],
-                    parcoursup_statut: "publié",
                     etablissement_formateur_nda: "9304P001004",
                     etablissement_formateur_uai: null,
                     lieu_formation_geo_coordonnees: "44.0383,6.15034",
@@ -579,7 +565,6 @@ const server = setupMswServer(
                   _id: "5fc61672712d48a9881334fe",
                   _score: null,
                   _source: {
-                    affelnet_statut: "hors périmètre",
                     localite: "Antibes",
                     cfd_date_fermeture: null,
                     etablissement_formateur_code_postal: "06600",
@@ -623,7 +608,6 @@ const server = setupMswServer(
                     num_academie: "23",
                     rncp_eligible_apprentissage: true,
                     ids_action: ["24_1461635"],
-                    parcoursup_statut: "hors périmètre",
                     etablissement_formateur_nda: "9306P002806",
                     etablissement_formateur_uai: "0061603K",
                     lieu_formation_geo_coordonnees: "43.5656,7.111",
@@ -691,7 +675,7 @@ test("renders basic tree", async () => {
     count: 100,
     isBaseFormations: true,
     isBaseReconciliationPs: false,
-    endpoint: "http://localhost/api",
+    endpoint: "http://localhost/api/v1",
   }));
 
   jest.spyOn(useAuth, "default").mockImplementation(() => [
@@ -716,15 +700,6 @@ test("renders basic tree", async () => {
 
   const periode = getByText("Date de début de formation");
   expect(periode).toBeInTheDocument();
-
-  const psDate = getByText("Date de publication sur Parcoursup");
-  expect(psDate).toBeInTheDocument();
-
-  const afDate = getByText("Date de publication sur Affelnet");
-  expect(afDate).toBeInTheDocument();
-
-  const statusDate = getByText("Dernière mise à jour du statut");
-  expect(statusDate).toBeInTheDocument();
 
   await waitFor(() => getByText(/Exporter/i));
 

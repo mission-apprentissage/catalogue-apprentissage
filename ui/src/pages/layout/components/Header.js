@@ -21,14 +21,14 @@ import { _get } from "../../../common/httpClient";
 import { LockFill } from "../../../theme/components/icons/LockFill";
 import { Logo } from "./Logo";
 import AlertMessage from "./AlertMessage";
-import { AccountFill, DoubleArrows, DownloadLine, InfoCircle } from "../../../theme/components/icons";
+import { AccountFill, DownloadLine, InfoCircle } from "../../../theme/components/icons";
 
 const Header = () => {
   const [auth, setAuth] = useAuth();
   const history = useHistory();
 
   let logout = async () => {
-    const anonymous = await _get("/api/auth/logout");
+    const anonymous = await _get("/api/v1/auth/logout");
     if (anonymous) {
       setAuth(anonymous);
       history.push("/");
@@ -95,14 +95,6 @@ const Header = () => {
                     {hasAccessTo(auth, "page_message_maintenance") && (
                       <MenuItem as={NavLink} to="/admin/alert" icon={<InfoCircle boxSize={4} />}>
                         Message de maintenance
-                      </MenuItem>
-                    )}
-                  </MenuGroup>
-                  <MenuDivider />
-                  <MenuGroup title="Réconciliation">
-                    {hasAccessTo(auth, "page_reconciliation_ps") && (
-                      <MenuItem as={NavLink} to="/couverture-ps" icon={<DoubleArrows boxSize={4} />}>
-                        Réconciliation Parcoursup
                       </MenuItem>
                     )}
                   </MenuGroup>

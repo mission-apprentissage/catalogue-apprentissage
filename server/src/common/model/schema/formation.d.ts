@@ -34,14 +34,6 @@ export interface Formation {
    */
   cfd_entree?: string;
   /**
-   * Tableau de Code MEF 10 caractères et modalités (filtrés pour Affelnet si applicable)
-   */
-  affelnet_mefs_10?: ItemOfAffelnetMefs_10[];
-  /**
-   * Tableau de Code MEF 10 caractères et modalités (filtrés pour Parcoursup si applicable)
-   */
-  parcoursup_mefs_10?: ItemOfParcoursupMefs_10[];
-  /**
    * Nom de l'académie
    */
   nom_academie?: string;
@@ -73,14 +65,6 @@ export interface Formation {
    * Localité
    */
   localite?: string;
-  /**
-   * UAI du lieu de la formation
-   */
-  uai_formation?: string;
-  /**
-   * L'UAI du lieu de formation est il valide ?
-   */
-  uai_formation_valide?: boolean | null;
   /**
    * Nom de la formation déclaratif
    */
@@ -171,73 +155,9 @@ export interface Formation {
    */
   annee_incoherente?: boolean | null;
   /**
-   * Dans le périmètre parcoursup
-   */
-  parcoursup_perimetre?: boolean;
-  /**
-   * Statut parcoursup
-   */
-  parcoursup_statut?:
-    | "hors périmètre"
-    | "publié"
-    | "non publié"
-    | "à publier (sous condition habilitation)"
-    | "à publier (vérifier accès direct postbac)"
-    | "à publier (soumis à validation Recteur)"
-    | "à publier"
-    | "en attente de publication"
-    | "rejet de publication";
-  /**
-   * Parcoursup : historique des statuts
-   */
-  parcoursup_statut_history?: unknown[];
-  /**
-   * Erreur lors de la création de la formation sur ParcourSup (via le WS)
-   */
-  parcoursup_error?: string;
-  rejection?: Rejection;
-  /**
-   * identifiant Parcoursup de la formation (g_ta_cod)
-   */
-  parcoursup_id?: string;
-  /**
-   * Date de publication (passage au statut "publié")
-   */
-  parcoursup_published_date?: Date;
-  /**
-   * Dans le périmètre affelnet
-   */
-  affelnet_perimetre?: boolean;
-  /**
-   * Statut affelnet
-   */
-  affelnet_statut?:
-    | "hors périmètre"
-    | "publié"
-    | "non publié"
-    | "à publier (soumis à validation)"
-    | "à publier"
-    | "en attente de publication";
-  /**
-   * Affelnet : historique des statuts
-   */
-  affelnet_statut_history?: unknown[];
-  /**
-   * Date de publication (passage au statut "publié")
-   */
-  affelnet_published_date?: Date;
-  /**
-   * Date de dernière modification du statut Affelnet ou Parcoursup
-   */
-  last_statut_update_date?: Date;
-  /**
    * Est publiée, la formation est éligible pour le catalogue
    */
   published?: boolean;
-  /**
-   * Est publiée dans le flux rco
-   */
-  rco_published?: boolean;
   /**
    * La publication vers les plateformes est forcée (contournement catalogue non-éligible dans certains cas)
    */
@@ -247,29 +167,13 @@ export interface Formation {
    */
   created_at?: Date;
   /**
-   * Historique des mises à jours
-   */
-  updates_history?: unknown[];
-  /**
    * Date de dernières mise à jour
    */
   last_update_at?: Date;
   /**
-   * Qui a réalisé la dernière modification
-   */
-  last_update_who?: string;
-  /**
-   * Formation à mette à jour lors du script d'enrichissement
-   */
-  to_update?: boolean;
-  /**
    * Latitude et longitude de l'établissement recherchable dans Idea
    */
   idea_geo_coordonnees_etablissement?: string;
-  /**
-   * Erreur lors de la mise à jour de la formation
-   */
-  update_error?: string;
   /**
    * Latitude et longitude du lieu de formation
    */
@@ -327,35 +231,9 @@ export interface Formation {
    */
   niveau_formation_diplome?: string;
   /**
-   * Affelnet : Informations offre de formation
-   */
-  affelnet_infos_offre?: string;
-  /**
-   * Affelnet : code nature de l'établissement de formation
-   */
-  affelnet_code_nature?: string;
-  /**
-   * Affelnet : type d'établissement (PR: Privé / PU: Public)
-   */
-  affelnet_secteur?: "PR" | "PU" | null;
-  /**
-   * Affelnet : raison de dépublication
-   */
-  affelnet_raison_depublication?: string;
-  /**
    * BCN : Codes MEF 10 caractères
    */
   bcn_mefs_10?: ItemOfBcnMefs_10[];
-  /**
-   * Champs édités par un utilisateur
-   */
-  editedFields?: {
-    [k: string]: unknown;
-  };
-  /**
-   * Parcoursup : raison de dépublication
-   */
-  parcoursup_raison_depublication?: string;
   /**
    * distance entre le Lieu de formation et l'établissement formateur
    */
@@ -579,22 +457,6 @@ export interface Formation {
   etablissement_reference_date_creation?: Date;
   _id?: Types.ObjectId;
 }
-export interface ItemOfAffelnetMefs_10 {
-  mef10?: string;
-  modalite?: Modalite;
-}
-export interface Modalite {
-  duree?: string;
-  annee?: string;
-}
-export interface ItemOfParcoursupMefs_10 {
-  mef10?: string;
-  modalite?: Modalite1;
-}
-export interface Modalite1 {
-  duree?: string;
-  annee?: string;
-}
 /**
  * Détails RNCP (bloc de compétences etc..)
  */
@@ -668,36 +530,11 @@ export interface RncpDetails {
    */
   rncp_outdated?: boolean;
 }
-/**
- * Cause du rejet de publication
- */
-export interface Rejection {
-  /**
-   * L'erreur telle que retournée par la plateforme
-   */
-  error?: string | null;
-  /**
-   * La description textuelle de l'erreur retournée
-   */
-  description?: string | null;
-  /**
-   * L'action à mener pour résoudre le rejet.
-   */
-  action?: string | null;
-  /**
-   * Adresse email de la personne ayant pris en charge le rejet de publication
-   */
-  handled_by?: string | null;
-  /**
-   * Date à laquelle le rejet de publication a été pris en charge
-   */
-  handled_date?: Date;
-}
 export interface ItemOfBcnMefs_10 {
   mef10?: string;
-  modalite?: Modalite2;
+  modalite?: Modalite;
 }
-export interface Modalite2 {
+export interface Modalite {
   duree?: string;
   annee?: string;
 }

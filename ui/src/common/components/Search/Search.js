@@ -6,7 +6,6 @@ import { hasAccessTo } from "../../utils/rolesUtils";
 import {
   CardListEtablissements,
   CardListFormation,
-  CardListPsFormations,
   ExportButton,
   Facet,
   HardFilters,
@@ -14,7 +13,6 @@ import {
 } from "./components";
 import constantsFormations from "./constantsFormations";
 import constantsEtablissements from "./constantsEtablissements";
-import constantsReconciliationPS from "./constantsReconciliationPS";
 import "./search.css";
 import queryString from "query-string";
 import { useHistory } from "react-router-dom";
@@ -25,27 +23,18 @@ import helpText from "../../../locales/helpText.json";
 import { Pagination } from "./components/Pagination";
 import { CONTEXT } from "../../../constants/context";
 
-export default React.memo(({ location, searchState, context, onReconciliationCardClicked, extraButtons = null }) => {
+export default React.memo(({ location, searchState, context, extraButtons = null }) => {
   const { defaultMode } = queryString.parse(location.search);
   const [mode, setMode] = useState(defaultMode ?? "simple");
   const isCatalogueGeneral = context === CONTEXT.CATALOGUE_GENERAL;
-  const {
-    base,
-    countEtablissement,
-    countCatalogueGeneral,
-    countCatalogueNonEligible,
-    isBaseFormations,
-    isBaseReconciliationPs,
-    endpoint,
-  } = searchState;
+  const { base, countEtablissement, countCatalogueGeneral, countCatalogueNonEligible, isBaseFormations, endpoint } =
+    searchState;
 
   let [auth] = useAuth();
   const history = useHistory();
 
   const { FILTERS, facetDefinition, queryBuilderField, dataSearch, columnsDefinition } = isBaseFormations
     ? constantsFormations
-    : isBaseReconciliationPs
-    ? constantsReconciliationPS
     : constantsEtablissements;
 
   const filters = FILTERS(context);
@@ -74,12 +63,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
           },
         }}
       >
-        <HardFilters
-          filters={filters}
-          context={context}
-          isBaseFormations={isBaseFormations}
-          isBaseReconciliationPs={isBaseReconciliationPs}
-        />
+        <HardFilters filters={filters} context={context} isBaseFormations={isBaseFormations} />
         <Box className="search" maxW="full">
           <Container maxW="xl" p={0}>
             {mode === "simple" && (
@@ -147,19 +131,15 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                         filters={filters}
                         sortBy={fd.sortBy}
                         size={fd.size}
-                        defaultQuery={
-                          !isBaseReconciliationPs
-                            ? () => {
-                                return {
-                                  query: {
-                                    match: {
-                                      published: true,
-                                    },
-                                  },
-                                };
-                              }
-                            : null
-                        }
+                        defaultQuery={() => {
+                          return {
+                            query: {
+                              match: {
+                                published: true,
+                              },
+                            },
+                          };
+                        }}
                         helpTextSection={fd.helpTextSection}
                         transformData={fd.transformData}
                         customQuery={fd.customQuery}
@@ -232,198 +212,6 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                     </Flex>
                   </Flex>
                 )}
-                {isBaseFormations && auth?.sub !== "anonymous" && (
-                  <Flex pt={3} direction="column">
-                    <Box>
-                      <Text mt={4} mb={4} textStyle="rf-text" width={"100%"}>
-                        Date de publication sur Parcoursup
-                      </Text>
-                    </Box>
-
-                    <Flex>
-                      <Box w="50%">
-                        <DatePicker
-                          componentId="parcoursup_published_date_start"
-                          dataField="parcoursup_published_date"
-                          placeholder={"A partir de"}
-                          numberOfMonths={1}
-                          queryFormat="date"
-                          showClear={false}
-                          showFilter={true}
-                          filterLabel="Publication Parcoursup après"
-                          URLParams={true}
-                          customQuery={(value) => {
-                            return value
-                              ? {
-                                  query: {
-                                    range: {
-                                      parcoursup_published_date: {
-                                        gte: value,
-                                      },
-                                    },
-                                  },
-                                }
-                              : {};
-                          }}
-                        />
-                      </Box>
-                      <Box w="50%">
-                        <DatePicker
-                          componentId="parcoursup_published_date_end"
-                          dataField="parcoursup_published_date"
-                          placeholder={"Jusqu'au"}
-                          numberOfMonths={1}
-                          queryFormat="date"
-                          showClear={false}
-                          showFilter={true}
-                          filterLabel="Publication Parcoursup avant"
-                          URLParams={true}
-                          customQuery={(value) => {
-                            return value
-                              ? {
-                                  query: {
-                                    range: {
-                                      parcoursup_published_date: {
-                                        lte: value,
-                                      },
-                                    },
-                                  },
-                                }
-                              : {};
-                          }}
-                        />
-                      </Box>
-                    </Flex>
-                  </Flex>
-                )}
-                {isBaseFormations && auth?.sub !== "anonymous" && (
-                  <Flex pt={3} direction="column">
-                    <Box>
-                      <Text mt={4} mb={4} textStyle="rf-text" width={"100%"}>
-                        Date de publication sur Affelnet
-                      </Text>
-                    </Box>
-
-                    <Flex>
-                      <Box w="50%">
-                        <DatePicker
-                          componentId="affelnet_published_date_start"
-                          dataField="affelnet_published_date"
-                          placeholder={"A partir de"}
-                          numberOfMonths={1}
-                          queryFormat="date"
-                          showClear={false}
-                          showFilter={true}
-                          filterLabel="Publication Affelnet après"
-                          URLParams={true}
-                          customQuery={(value) => {
-                            return value
-                              ? {
-                                  query: {
-                                    range: {
-                                      affelnet_published_date: {
-                                        gte: value,
-                                      },
-                                    },
-                                  },
-                                }
-                              : {};
-                          }}
-                        />
-                      </Box>
-                      <Box w="50%">
-                        <DatePicker
-                          componentId="affelnet_published_date_end"
-                          dataField="affelnet_published_date"
-                          placeholder={"Jusqu'au"}
-                          numberOfMonths={1}
-                          queryFormat="date"
-                          showClear={false}
-                          showFilter={true}
-                          filterLabel="Publication Affelnet avant"
-                          URLParams={true}
-                          customQuery={(value) => {
-                            return value
-                              ? {
-                                  query: {
-                                    range: {
-                                      affelnet_published_date: {
-                                        lte: value,
-                                      },
-                                    },
-                                  },
-                                }
-                              : {};
-                          }}
-                        />
-                      </Box>
-                    </Flex>
-                  </Flex>
-                )}
-                {isBaseFormations && auth?.sub !== "anonymous" && (
-                  <Flex pt={3} direction="column">
-                    <Box>
-                      <Text mt={4} mb={4} textStyle="rf-text" width={"100%"}>
-                        Dernière mise à jour du statut
-                      </Text>
-                    </Box>
-
-                    <Flex>
-                      <Box w="50%">
-                        <DatePicker
-                          componentId="last_statut_update_date_start"
-                          dataField="last_statut_update_date"
-                          placeholder={"A partir de"}
-                          numberOfMonths={1}
-                          queryFormat="date"
-                          showClear={false}
-                          showFilter={true}
-                          filterLabel="Statut modifié après"
-                          URLParams={true}
-                          customQuery={(value) => {
-                            return value
-                              ? {
-                                  query: {
-                                    range: {
-                                      last_statut_update_date: {
-                                        gte: value,
-                                      },
-                                    },
-                                  },
-                                }
-                              : {};
-                          }}
-                        />
-                      </Box>
-                      <Box w="50%">
-                        <DatePicker
-                          componentId="last_statut_update_date_end"
-                          dataField="last_statut_update_date"
-                          placeholder={"Jusqu'au"}
-                          numberOfMonths={1}
-                          queryFormat="date"
-                          showClear={false}
-                          showFilter={true}
-                          filterLabel="Statut modifié avant"
-                          URLParams={true}
-                          customQuery={(value) => {
-                            return value
-                              ? {
-                                  query: {
-                                    range: {
-                                      last_statut_update_date: {
-                                        lte: value,
-                                      },
-                                    },
-                                  },
-                                }
-                              : {};
-                          }}
-                        />
-                      </Box>
-                    </Flex>
-                  </Flex>
-                )}
               </Box>
               <Box className="search-results" px={[0, 0, 4]}>
                 <Box pt={2}>
@@ -450,15 +238,6 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                     renderItem={(data) =>
                       isBaseFormations ? (
                         <CardListFormation data={data} key={data._id} />
-                      ) : isBaseReconciliationPs ? (
-                        <CardListPsFormations
-                          data={data}
-                          key={data._id}
-                          onCardClicked={() => {
-                            onReconciliationCardClicked(data);
-                          }}
-                          context={context}
-                        />
                       ) : (
                         <CardListEtablissements data={data} key={data._id} />
                       )
@@ -478,16 +257,9 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                                 "fr-FR"
                               )} formations sur ${countCatalogueNonEligible.total.toLocaleString("fr-FR")}`}
                             {!isBaseFormations &&
-                              `${
-                                isBaseReconciliationPs
-                                  ? `${stats.numberOfResults.toLocaleString("fr-FR")} rapprochements ${context.replace(
-                                      "reconciliation_ps_",
-                                      ""
-                                    )}`
-                                  : `${stats.numberOfResults.toLocaleString(
-                                      "fr-FR"
-                                    )} organismes affichés sur ${countEtablissement.toLocaleString("fr-FR")} organismes`
-                              }`}
+                              `${stats.numberOfResults.toLocaleString(
+                                "fr-FR"
+                              )} organismes affichés sur ${countEtablissement.toLocaleString("fr-FR")} organismes`}
                           </span>
                           {(hasAccessTo(auth, "page_catalogue/export_btn") ||
                             hasAccessTo(auth, "page_organismes/export_btn")) && (

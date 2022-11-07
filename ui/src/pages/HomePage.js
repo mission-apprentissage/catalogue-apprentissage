@@ -27,8 +27,6 @@ import { ArrowRightLine, ExternalLinkLine } from "../theme/components/icons";
 import { Breadcrumb } from "../common/components/Breadcrumb";
 import { setTitle } from "../common/utils/pageUtils";
 
-const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
-
 export default () => {
   const [loading, setLoading] = useState(true);
   const [countEstablishments, setCountEstablishments] = useState(0);
@@ -43,8 +41,8 @@ export default () => {
           query: JSON.stringify({ published: true }),
         });
 
-        const countEtablissement = await _get(`${CATALOGUE_API}/entity/etablissements/count?${params}`, false);
-        const count = await _get(`${CATALOGUE_API}/entity/formations/count?${params}`, false);
+        const countEtablissement = await _get(`/api/v1/entity/etablissements/count?${params}`, false);
+        const count = await _get(`/api/v1/entity/formations/count?${params}`, false);
 
         if (mounted) {
           setCountEstablishments(countEtablissement);
@@ -70,22 +68,6 @@ export default () => {
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]} color="#1E1E1E">
         <Container maxW="xl">
-          {/*<Box bg="#F8F8F8" color="pinksoft.500" borderLeft="4px" role="none" p={5}>*/}
-          {/*  <Flex>*/}
-          {/*    <Box>*/}
-          {/*      <InformationLine />*/}
-          {/*    </Box>*/}
-          {/*    <Text color="black" textStyle="sm" px={2}>*/}
-          {/*      Grâce à vos retours une anomalie a été détectée dans le code qui testait la présence d'un SIRET sur un*/}
-          {/*      titre. Un correctif va être effectué très prochainement.*/}
-          {/*      <br />*/}
-          {/*      <Text fontWeight="700" as="span">*/}
-          {/*        En attendant, les formations à des titres en apprentissage sont toutes affichées en « hors périmètre*/}
-          {/*        ». Nous vous informerons dès que le correctif sera appliqué.*/}
-          {/*      </Text>*/}
-          {/*    </Text>*/}
-          {/*  </Flex>*/}
-          {/*</Box>*/}
           <Breadcrumb pages={[{ title: title }]} />
         </Container>
       </Box>

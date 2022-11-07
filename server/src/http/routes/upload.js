@@ -6,8 +6,6 @@ const tryCatch = require("../middlewares/tryCatchMiddleware");
 const csvToJson = require("convert-csv-to-json");
 const path = require("path");
 const logger = require("../../common/logger");
-const upsertEtablissements = require("../../jobs/etablissements/uai");
-const { importAffelnetFormations } = require("../../jobs/affelnet/import");
 
 /**
  * check CSV file headers
@@ -50,9 +48,6 @@ module.exports = () => {
         let callback;
 
         switch (filename) {
-          case "affelnet-import.xlsx":
-            callback = importAffelnetFormations;
-            break;
           case "CodeDiplome_RNCP_latest_kit.csv": {
             try {
               const tmpFile = csvToJson.getJsonFromCsv(src);
@@ -65,39 +60,6 @@ module.exports = () => {
               logger.error(e);
               return res.status(400).json({
                 error: `Le contenu du fichier est invalide, il doit être au format CSV (;) et contenir les colonnes suivantes : "Code_RNCP;Code_Diplome" (et cette première ligne d'en-tête)`,
-              });
-            }
-            break;
-          }
-          case "uai-siret.csv": {
-            try {
-              const tmpFile = csvToJson.getJsonFromCsv(src);
-              if (!hasCSVHeaders(tmpFile, "Uai", "Siret")) {
-                return res.status(400).json({
-                  error: `Le contenu du fichier est invalide, il doit contenir les colonnes suivantes : "Uai;Siret" (et cette première ligne d'en-tête)`,
-                });
-              }
-              callback = upsertEtablissements;
-            } catch (e) {
-              logger.error(e);
-              return res.status(400).json({
-                error: `Le contenu du fichier est invalide, il doit être au format CSV (;) et contenir les colonnes suivantes : "Uai;Siret" (et cette première ligne d'en-tête)`,
-              });
-            }
-            break;
-          }
-          case "mefs-parcoursup.csv": {
-            try {
-              const tmpFile = csvToJson.getJsonFromCsv(src);
-              if (!hasCSVHeaders(tmpFile, "MEF")) {
-                return res.status(400).json({
-                  error: `Le contenu du fichier est invalide, il doit contenir la colonne suivante : "MEF" (et cette première ligne d'en-tête)`,
-                });
-              }
-            } catch (e) {
-              logger.error(e);
-              return res.status(400).json({
-                error: `Le contenu du fichier est invalide, il doit être au format CSV (;) et contenir la colonne suivante : "MEF" (et cette première ligne d'en-tête)`,
               });
             }
             break;

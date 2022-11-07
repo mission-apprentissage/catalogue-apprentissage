@@ -6,8 +6,6 @@ import { _postFile } from "../../common/httpClient";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
 
-const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
-
 const baseStyle = {
   flex: 1,
   display: "flex",
@@ -29,18 +27,6 @@ const DOCUMENTS = [
   {
     filename: "CodeDiplome_RNCP_latest_kit.csv",
     label: "Kit code diplome - rncp",
-  },
-  {
-    filename: "affelnet-import.xlsx",
-    label: "Import Affelnet",
-  },
-  {
-    filename: "uai-siret.csv",
-    label: "Import couples Uai-Siret",
-  },
-  {
-    filename: "mefs-parcoursup.csv",
-    label: "Liste de MEFs fiabilisés sur Parcoursup",
   },
 ];
 
@@ -86,7 +72,7 @@ export default () => {
       const renamedAcceptedFiles = acceptedFiles.map((file) => new File([file], filename, { type: file.type }));
       const data = new FormData();
       data.append("file", renamedAcceptedFiles[0]);
-      await _postFile(`${CATALOGUE_API}/v1/upload`, data);
+      await _postFile(`/api/v1/upload`, data);
       setUploadSuccess(`Merci, le fichier a bien été déposé sur le serveur :)`);
     } catch (e) {
       const messages = await e?.json;
