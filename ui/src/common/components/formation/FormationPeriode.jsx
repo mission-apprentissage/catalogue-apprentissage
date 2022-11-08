@@ -14,10 +14,10 @@ export const FormationPeriode = ({ periode }) => {
       return acc;
     }, {});
 
-    displayedPeriode = Object.entries(periodeObj).map(([key, value]) => {
+    displayedPeriode = Object.entries(periodeObj).map(([key, value], index) => {
       return (
         <Fragment key={key}>
-          <br />
+          {!!index && <br />}
           <Text as="span">
             <strong>
               {key} : {value.join(", ")}
@@ -30,5 +30,9 @@ export const FormationPeriode = ({ periode }) => {
     console.error("unable to parse periode field", periode, e);
   }
 
-  return <>{displayedPeriode}</>;
+  return (
+    <Text variant="highlight" as="span">
+      {displayedPeriode}
+    </Text>
+  );
 };

@@ -7,6 +7,7 @@ import helpText from "../../../locales/helpText.json";
 import { FormationPeriode } from "./FormationPeriode";
 import { HabilitationPartenaire } from "./HabilitationPartenaire";
 import { HABILITE_LIST } from "../../../constants/certificateurs";
+import { EllipsisText } from "../EllipsisText";
 
 const DureeAnnee = ({ value }) => {
   if (!value) {
@@ -128,8 +129,32 @@ export const DescriptionBlock = ({ formation }) => {
               {formation?.affelnet_infos_offre && (
                 <Text mb={4}>
                   Informations offre de formation <i>Affelnet</i> :{" "}
-                  <Text as="span" variant="highlight">
+                  <EllipsisText as="span" variant="highlight">
                     {formation?.affelnet_infos_offre}
+                  </EllipsisText>
+                </Text>
+              )}
+              {formation?.affelnet_url_infos_offre && (
+                <Text mb={4}>
+                  Lien vers la page complémentaire <i>Affelnet</i> :{" "}
+                  <Text as="span" variant="highlight">
+                    {formation?.affelnet_url_infos_offre}
+                  </Text>
+                </Text>
+              )}
+              {formation?.affelnet_modalites_offre && (
+                <Text mb={4}>
+                  Modalités particulières <i>Affelnet</i> :{" "}
+                  <EllipsisText as="span" variant="highlight">
+                    {formation?.affelnet_modalites_offre}
+                  </EllipsisText>
+                </Text>
+              )}
+              {formation?.affelnet_url_modalites_offre && (
+                <Text mb={4}>
+                  Lien vers la page complémentaire <i>Affelnet</i> :{" "}
+                  <Text as="span" variant="highlight">
+                    {formation?.affelnet_url_modalites_offre}
                   </Text>
                 </Text>
               )}
@@ -144,8 +169,8 @@ export const DescriptionBlock = ({ formation }) => {
             </Text>
           )}
           <Text mb={4}>
-            Début de formation :
-            <FormationPeriode periode={formation.periode} /> <InfoTooltip description={helpText.formation.periode} />
+            Début de formation : <FormationPeriode periode={formation.periode} />{" "}
+            <InfoTooltip description={helpText.formation.periode} />
           </Text>
           <Text mb={4}>
             Capacite d'accueil :{" "}
@@ -209,7 +234,7 @@ export const DescriptionBlock = ({ formation }) => {
           </Text>
           {formation.parcoursup_id && (
             <Text mb={4}>
-              Identifiant Parcoursup (G_ta_code) :{" "}
+              Code Parcoursup :{" "}
               <Text as="span" variant="highlight">
                 {formation.parcoursup_id}
               </Text>

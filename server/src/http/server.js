@@ -101,7 +101,7 @@ module.exports = async (components, verbose = true) => {
       cookie: {
         secure: config.env === "dev" ? false : true,
         maxAge: config.env === "dev" ? null : 30 * 24 * 60 * 60 * 1000,
-        sameSite: config.env === "dev" ? "none" : "strict", // prevent csrf attack @see https://auth0.com/blog/cross-site-request-forgery-csrf/
+        sameSite: config.env === "dev" ? "lax" : "strict", // prevent csrf attack @see https://auth0.com/blog/cross-site-request-forgery-csrf/
       },
     })
   );

@@ -40,7 +40,6 @@ import { DescriptionBlock } from "../../common/components/formation/DescriptionB
 import { OrganismesBlock } from "../../common/components/formation/OrganismesBlock";
 import { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL } from "../../constants/catalogueLabels";
 import { COMMON_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
-import { DateTime } from "luxon";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 

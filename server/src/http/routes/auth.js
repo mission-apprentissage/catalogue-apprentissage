@@ -43,7 +43,7 @@ module.exports = ({ users }) => {
    *           Set-Cookie:
    *             schema:
    *               type: string
-   *               example: connect.sid=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX Path=/; HttpOnly; SameSite=Strict
+   *               example: connect.sid=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX Path=/; HttpOnly; SameSite=Strict; Secure
    *       401:
    *         description: Unauthorized
    *         content:
