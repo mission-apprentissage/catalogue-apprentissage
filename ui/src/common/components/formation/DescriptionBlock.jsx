@@ -242,7 +242,7 @@ export const DescriptionBlock = ({ formation }) => {
           )}
           {formation.affelnet_id && (
             <Text mb={4}>
-              Identifiant Affelnet (Code vœux) :{" "}
+              Code Affelnet :{" "}
               <Text as="span" variant="highlight">
                 {formation.affelnet_id}
               </Text>
