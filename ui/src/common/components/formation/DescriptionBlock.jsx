@@ -138,7 +138,9 @@ export const DescriptionBlock = ({ formation }) => {
                 <Text mb={4}>
                   Lien vers la page complémentaire <i>Affelnet</i> :{" "}
                   <Text as="span" variant="highlight">
-                    {formation?.affelnet_url_infos_offre}
+                    <Link rel="noreferrer noopener" target="_blank" href={formation?.affelnet_url_infos_offre}>
+                      {formation?.affelnet_url_infos_offre}
+                    </Link>
                   </Text>
                 </Text>
               )}
@@ -154,7 +156,9 @@ export const DescriptionBlock = ({ formation }) => {
                 <Text mb={4}>
                   Lien vers la page complémentaire <i>Affelnet</i> :{" "}
                   <Text as="span" variant="highlight">
-                    {formation?.affelnet_url_modalites_offre}
+                    <Link rel="noreferrer noopener" target="_blank" href={formation?.affelnet_url_modalites_offre}>
+                      {formation?.affelnet_url_modalites_offre}
+                    </Link>
                   </Text>
                 </Text>
               )}
