@@ -4,6 +4,7 @@ import {
   Button,
   Flex,
   FormControl,
+  FormHelperText,
   FormErrorMessage,
   FormLabel,
   Heading,
@@ -40,9 +41,12 @@ const getPublishRadioValue = (status) => {
 const getSubmitBody = ({
   formation,
   affelnet,
-  parcoursup,
   affelnet_infos_offre,
+  affelnet_url_infos_offre,
+  affelnet_modalites_offre,
+  affelnet_url_modalites_offre,
   affelnet_raison_depublication,
+  parcoursup,
   parcoursup_raison_depublication,
   date = new Date(),
 }) => {
@@ -60,9 +64,15 @@ const getSubmitBody = ({
       body.affelnet_statut = AFFELNET_STATUS.EN_ATTENTE;
       body.last_statut_update_date = date;
       body.affelnet_infos_offre = affelnet_infos_offre;
+      body.affelnet_url_infos_offre = affelnet_url_infos_offre;
+      body.affelnet_modalites_offre = affelnet_modalites_offre;
+      body.affelnet_url_modalites_offre = affelnet_url_modalites_offre;
       body.affelnet_raison_depublication = null;
     } else if ([AFFELNET_STATUS.PUBLIE].includes(formation?.affelnet_statut)) {
       body.affelnet_infos_offre = affelnet_infos_offre;
+      body.affelnet_url_infos_offre = affelnet_url_infos_offre;
+      body.affelnet_modalites_offre = affelnet_modalites_offre;
+      body.affelnet_url_modalites_offre = affelnet_url_modalites_offre;
     }
   } else if (affelnet === "false") {
     if (
@@ -163,12 +173,28 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
   const { values, handleChange, handleSubmit, isSubmitting, setFieldValue, errors } = useFormik({
     initialValues: {
       affelnet: getPublishRadioValue(formation?.affelnet_statut),
-      parcoursup: getPublishRadioValue(formation?.parcoursup_statut),
       affelnet_infos_offre: formation?.affelnet_infos_offre ?? "",
+      affelnet_url_infos_offre: formation?.affelnet_url_infos_offre ?? "",
+      affelnet_modalites_offre: formation?.affelnet_modalites_offre ?? "",
+      affelnet_url_modalites_offre: formation?.affelnet_url_modalites_offre ?? "",
       affelnet_raison_depublication: formation?.affelnet_raison_depublication ?? "",
+      parcoursup: getPublishRadioValue(formation?.parcoursup_statut),
       parcoursup_raison_depublication: formation?.parcoursup_raison_depublication ?? "",
     },
     validationSchema: Yup.object().shape({
+      affelnet_infos_offre: isAffelnetFormOpen
+        ? Yup.string().nullable().max(1000, "Le champ ne doit pas dépasser 1000 caractères")
+        : Yup.string().nullable(),
+      affelnet_url_infos_offre: isAffelnetFormOpen
+        ? Yup.string().nullable().max(250, "Le champ ne doit pas dépasser 250 caractères")
+        : Yup.string().nullable(),
+      affelnet_modalites_offre: isAffelnetFormOpen
+        ? Yup.string().nullable().max(1000, "Le champ ne doit pas dépasser 1000 caractères")
+        : Yup.string().nullable(),
+      affelnet_url_modalites_offre: isAffelnetFormOpen
+        ? Yup.string().nullable().max(250, "Le champ ne doit pas dépasser 250 caractères")
+        : Yup.string().nullable(),
+
       affelnet_raison_depublication: isAffelnetUnpublishFormOpen
         ? Yup.string().nullable().required("Veuillez saisir la raison")
         : Yup.string().nullable(),
@@ -180,6 +206,9 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
       affelnet,
       parcoursup,
       affelnet_infos_offre,
+      affelnet_url_infos_offre,
+      affelnet_modalites_offre,
+      affelnet_url_modalites_offre,
       affelnet_raison_depublication,
       parcoursup_raison_depublication,
     }) => {
@@ -187,9 +216,12 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
         const result = getSubmitBody({
           formation,
           affelnet,
-          parcoursup,
           affelnet_infos_offre,
+          affelnet_url_infos_offre,
+          affelnet_modalites_offre,
+          affelnet_url_modalites_offre,
           affelnet_raison_depublication,
+          parcoursup,
           parcoursup_raison_depublication,
         });
 
@@ -204,6 +236,9 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
           setFieldValue("affelnet", getPublishRadioValue(updatedFormation?.affelnet_statut));
           setFieldValue("parcoursup", getPublishRadioValue(updatedFormation?.parcoursup_statut));
           setFieldValue("affelnet_infos_offre", updatedFormation?.affelnet_infos_offre);
+          setFieldValue("affelnet_url_infos_offre", updatedFormation?.affelnet_url_infos_offre);
+          setFieldValue("affelnet_modalites_offre", updatedFormation?.affelnet_modalites_offre);
+          setFieldValue("affelnet_url_modalites_offre", updatedFormation?.affelnet_url_modalites_offre);
           setFieldValue("affelnet_raison_depublication", updatedFormation?.affelnet_raison_depublication);
           setFieldValue("parcoursup_raison_depublication", updatedFormation?.parcoursup_raison_depublication);
         }
@@ -314,30 +349,100 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                     </Stack>
                   </RadioGroup>
                 </FormControl>
-                <FormControl display={isAffelnetFormOpen ? "flex" : "none"} flexDirection="column" w="auto" mt={6}>
-                  <FormLabel htmlFor="affelnet_infos_offre" mb={3} fontSize="epsilon" fontWeight={400}>
-                    Informations offre de formation (facultatif) :
-                  </FormLabel>
-                  <Textarea
-                    name="affelnet_infos_offre"
-                    value={values.affelnet_infos_offre}
-                    onChange={handleChange}
-                    placeholder="Précisez ici les informations complémentaires que vous souhaitez voir figurer sur la fiche de la formation sur Affelnet, ex : démarches sur obtention contrat apprentissage, modalités inscription, rythme alternance, date entrée formation..."
-                    rows={2}
-                  />
-                </FormControl>
-                <FormControl
-                  isRequired
-                  isInvalid={errors.affelnet_raison_depublication}
-                  display={isAffelnetUnpublishFormOpen ? "flex" : "none"}
-                  flexDirection="column"
-                  w="auto"
-                  mt={6}
-                >
-                  <FormLabel htmlFor="affelnet_raison_depublication" mb={3} fontSize="epsilon" fontWeight={400}>
-                    Raison de non publication:
-                  </FormLabel>
-                  <Flex flexDirection="column" w="100%">
+
+                <Box style={{ display: isAffelnetFormOpen ? "block" : "none" }}>
+                  <br />
+                  <Heading as="h5" fontSize="1.5rem" mb={3}>
+                    Informations sur l'offre de formation (facultatif) :
+                  </Heading>
+                  <FormHelperText>
+                    Ces informations seront intégrées dans Affelnet pour être visibles sur le service en ligne
+                    Affectation.
+                  </FormHelperText>
+
+                  <FormControl isInvalid={errors.affelnet_infos_offre}>
+                    <FormLabel htmlFor="affelnet_infos_offre" mb={3} fontSize="epsilon"></FormLabel>
+
+                    <Textarea
+                      name="affelnet_infos_offre"
+                      value={values.affelnet_infos_offre}
+                      onChange={handleChange}
+                      placeholder="Exemple :
+                      BAC PRO en 3 ans"
+                      rows={5}
+                    />
+                    <FormErrorMessage>{errors.affelnet_infos_offre}</FormErrorMessage>
+                  </FormControl>
+                  <br />
+                  <FormControl isInvalid={errors.affelnet_url_infos_offre}>
+                    <FormLabel htmlFor="affelnet_url_infos_offre" mb={3} fontSize="epsilon">
+                      Lien vers la page complémentaire (facultatif) :
+                    </FormLabel>
+
+                    <Textarea
+                      name="affelnet_url_infos_offre"
+                      value={values.affelnet_url_infos_offre}
+                      onChange={handleChange}
+                      placeholder="Exemple :
+                      http://saio.ac-lyon.fr/spip/IMG/pdf/document_3eme_vers_apprentissage.pdf"
+                      rows={2}
+                    />
+                    <FormErrorMessage>{errors.affelnet_url_infos_offre}</FormErrorMessage>
+                  </FormControl>
+                  <br />
+                  <br />
+
+                  <Heading as="h5" fontSize="1.5rem" mb={3}>
+                    Modalités particulières (facultatif) :
+                  </Heading>
+                  <FormHelperText>
+                    Ces informations seront intégrées dans Affelnet pour être visibles sur le service en ligne
+                    Affectation.
+                  </FormHelperText>
+
+                  <FormControl isInvalid={errors.affelnet_modalites_offre}>
+                    <FormLabel htmlFor="affelnet_modalites_offre" mb={3} fontSize="epsilon"></FormLabel>
+                    <Textarea
+                      name="affelnet_modalites_offre"
+                      value={values.affelnet_modalites_offre}
+                      onChange={handleChange}
+                      placeholder="Exemple :
+                      L'inscription dans une formation en apprentissage est soumise à la signature d'un contrat d'apprentissage avec un employeur.
+                      La saisie d'un vœu sous statut d'apprenti ne génère aucune affectation ; il est saisi à titre d'information et de recensement. Il permet aux partenaires de l'apprentissage (CFA, Chambres consulaires, Développeurs de l'apprentissage, Région, CIO, Missions locales, Services rectoraux, DRAAF, DIRRECTE) de disposer de vos coordonnées afin de pouvoir vous accompagner dans vos démarches et recherche d'entreprise."
+                      rows={5}
+                    />
+                    <FormErrorMessage>{errors.affelnet_modalites_offre}</FormErrorMessage>
+                  </FormControl>
+                  <br />
+                  <FormControl isInvalid={errors.affelnet_url_modalites_offre}>
+                    <FormLabel htmlFor="affelnet_url_modalites_offre" mb={3} fontSize="epsilon">
+                      Lien vers la page complémentaire (facultatif) :
+                    </FormLabel>
+
+                    <Textarea
+                      name="affelnet_url_modalites_offre"
+                      value={values.affelnet_url_modalites_offre}
+                      onChange={handleChange}
+                      placeholder="Exemple :
+                        http://saio.ac-lyon.fr/spip/IMG/pdf/document_3eme_vers_apprentissage.pdf"
+                      rows={2}
+                    />
+                    <FormErrorMessage>{errors.affelnet_url_modalites_offre}</FormErrorMessage>
+                  </FormControl>
+                </Box>
+
+                <Box style={{ display: isAffelnetUnpublishFormOpen ? "block" : "none" }}>
+                  <FormControl
+                    isRequired
+                    isInvalid={errors.affelnet_raison_depublication}
+                    flexDirection="column"
+                    w="auto"
+                    mt={6}
+                  >
+                    <FormLabel htmlFor="affelnet_raison_depublication" mb={3} fontSize="epsilon" fontWeight={400}>
+                      Raison de non publication:
+                    </FormLabel>
+
                     <Textarea
                       data-testid={"af-unpublish-form"}
                       name="affelnet_raison_depublication"
@@ -347,8 +452,8 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                       rows={2}
                     />
                     <FormErrorMessage>{errors.affelnet_raison_depublication}</FormErrorMessage>
-                  </Flex>
-                </FormControl>
+                  </FormControl>
+                </Box>
               </Flex>
             </Box>
             <Box

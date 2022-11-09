@@ -48,7 +48,6 @@ export const RuleBuilder = ({ regle_complementaire_query, regle_complementaire, 
     [fields]
   );
 
-  console.log(regle_complementaire);
   const initialValue = regle_complementaire_query ? JSON.parse(regle_complementaire_query) : null;
   const [rules, setRules] = useState(withUniqueKey(initialValue || [templateRule]));
 

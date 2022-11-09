@@ -454,6 +454,12 @@ const formationSchema = {
     description: "Affelnet : historique des statuts",
     noIndex: true,
   },
+  affelnet_id: {
+    index: true,
+    type: String,
+    default: null,
+    description: "identifiant Affelnet de la formation (code vœu)",
+  },
   affelnet_published_date: {
     type: Date,
     default: null,
@@ -470,11 +476,6 @@ const formationSchema = {
     default: false,
     description: "Est publiée, la formation est éligible pour le catalogue",
   },
-  rco_published: {
-    type: Boolean,
-    default: false,
-    description: "Est publiée dans le flux rco",
-  },
   forced_published: {
     type: Boolean,
     default: false,
@@ -490,7 +491,6 @@ const formationSchema = {
     type: [Object],
     default: [],
     description: "Historique des mises à jours",
-    noIndex: true,
   },
 
   last_update_at: {
@@ -504,25 +504,11 @@ const formationSchema = {
     description: "Qui a réalisé la dernière modification",
   },
 
-  // Flags
-  to_update: {
-    index: true,
-    type: Boolean,
-    default: false,
-    description: "Formation à mette à jour lors du script d'enrichissement",
-  },
-
   // Product specific
   idea_geo_coordonnees_etablissement: {
     type: String,
     implicit_type: "geo_point",
     description: "Latitude et longitude de l'établissement recherchable dans Idea",
-  },
-
-  update_error: {
-    type: String,
-    default: null,
-    description: "Erreur lors de la mise à jour de la formation",
   },
 
   lieu_formation_geo_coordonnees: {
@@ -605,6 +591,21 @@ const formationSchema = {
     type: String,
     default: null,
     description: "Affelnet : Informations offre de formation",
+  },
+  affelnet_url_infos_offre: {
+    type: String,
+    default: null,
+    description: "Affelnet : Libellé ressource complémentaire",
+  },
+  affelnet_modalites_offre: {
+    type: String,
+    default: null,
+    description: "Affelnet : Modalités particulières",
+  },
+  affelnet_url_modalites_offre: {
+    type: String,
+    default: null,
+    description: "Affelnet : Lien vers la ressource",
   },
   affelnet_code_nature: {
     type: String,

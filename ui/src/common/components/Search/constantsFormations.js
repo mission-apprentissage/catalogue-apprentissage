@@ -3,6 +3,7 @@ import helpText from "../../../locales/helpText.json";
 import { CONTEXT } from "../../../constants/context";
 import { departements } from "../../../constants/departements";
 import { annees } from "../../../constants/annees";
+import { sortDescending } from "../../utils/historyUtils";
 
 const FILTERS = () => [
   `QUERYBUILDER`,
@@ -320,6 +321,30 @@ const columnsDefinition = [
     accessor: "uai_formation",
     width: 200,
     exportable: true,
+  },
+  {
+    Header: "Date d’édition de l’UAI lieu",
+    accessor: "updates_history",
+    width: 200,
+    exportable: true,
+    formatter: (value) => {
+      const uai_updated_history = value?.filter((value) => !!value.to?.uai_formation)?.sort(sortDescending);
+
+      return uai_updated_history?.length
+        ? new Date(uai_updated_history[0]?.updated_at).toLocaleDateString("fr-FR")
+        : "";
+    },
+  },
+  {
+    Header: "Modification de l’UAI lieu par",
+    accessor: "updates_history",
+    width: 200,
+    exportable: true,
+    formatter: (value) => {
+      const uai_updated_history = value?.filter((value) => !!value.to?.uai_formation)?.sort(sortDescending);
+
+      return uai_updated_history?.length ? uai_updated_history[0]?.to.last_update_who : "";
+    },
   },
   {
     Header: "Adresse formation",

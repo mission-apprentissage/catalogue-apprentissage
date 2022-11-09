@@ -81,7 +81,7 @@ describe(__filename, () => {
     });
     assert.strictEqual(totalPublishedBeforeRun, 0);
 
-    await afCoverage();
+    await afCoverage({});
 
     const totalPublished = await Formation.countDocuments({
       affelnet_statut: AFFELNET_STATUS.PUBLIE,
@@ -109,7 +109,7 @@ describe(__filename, () => {
       code_postal: "93100",
     });
 
-    await afCoverage();
+    await afCoverage({});
 
     const totalPublished = await Formation.countDocuments({
       affelnet_statut: AFFELNET_STATUS.PUBLIE,
@@ -137,7 +137,7 @@ describe(__filename, () => {
       code_postal: "93700",
     });
 
-    await afCoverage();
+    await afCoverage({});
 
     const totalPublished = await Formation.countDocuments({
       affelnet_statut: AFFELNET_STATUS.PUBLIE,
@@ -165,7 +165,7 @@ describe(__filename, () => {
       code_postal: "93100",
     });
 
-    await afCoverage();
+    await afCoverage({});
 
     const totalPublished = await Formation.countDocuments({
       affelnet_statut: AFFELNET_STATUS.PUBLIE,
@@ -193,7 +193,7 @@ describe(__filename, () => {
       code_postal: "75008",
     });
 
-    await afCoverage();
+    await afCoverage({});
 
     const totalPublished = await Formation.countDocuments({
       affelnet_statut: AFFELNET_STATUS.PUBLIE,
@@ -221,7 +221,7 @@ describe(__filename, () => {
       code_postal: "93700",
     });
 
-    await afCoverage();
+    await afCoverage({});
 
     const totalPublished = await Formation.countDocuments({
       affelnet_statut: AFFELNET_STATUS.PUBLIE,
@@ -244,7 +244,7 @@ describe(__filename, () => {
       code_postal: "75008",
     });
 
-    await afCoverage();
+    await afCoverage({});
 
     const totalPublished = await Formation.countDocuments({
       affelnet_statut: AFFELNET_STATUS.PUBLIE,

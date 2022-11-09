@@ -3,7 +3,6 @@ const Joi = require("joi");
 const { oleoduc, compose, transformIntoJSON } = require("oleoduc");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { Formation } = require("../../common/model");
-const { mnaFormationUpdater } = require("../../logic/updaters/mnaFormationUpdater");
 const { sendJsonStream } = require("../../common/utils/httpUtils");
 const { sanitize } = require("../../common/utils/sanitizeUtils");
 const { paginate } = require("../../common/utils/mongooseUtils");
@@ -47,7 +46,7 @@ module.exports = () => {
         : {
             affelnet_statut_history: 0,
             parcoursup_statut_history: 0,
-            updates_history: 0,
+            // updates_history: 0,
             __v: 0,
           };
 
@@ -208,25 +207,6 @@ module.exports = () => {
       return res.json(retrievedData);
     }
     return res.status(404).send({ message: `Item ${itemId} doesn't exist` });
-  });
-
-  const updateFormation = tryCatch(async (req, res) => {
-    const payload = sanitize(req.body);
-
-    const { withCodePostalUpdate = true, ...formation } = payload;
-    const { formation: updatedFormation, error } = await mnaFormationUpdater(formation, {
-      withCodePostalUpdate,
-    });
-
-    if (formation.uai_formation) {
-      updatedFormation.uai_formation = formation.uai_formation;
-    }
-
-    if (error) {
-      return res.status(500).send({ message: error });
-    }
-
-    return res.json(updatedFormation);
   });
 
   const streamFormations = tryCatch(async (req, res) => {
@@ -399,12 +379,6 @@ module.exports = () => {
    */
   router.get("/formation/:id", getFormationById);
   router.get("/formation2021/:id", getFormationById);
-
-  /**
-   * Get updated formation
-   */
-  router.post("/formation/update", updateFormation);
-  router.post("/formation2021/update", updateFormation);
 
   /**
    * Stream formations as json array

@@ -175,7 +175,7 @@ export default () => {
       title: "Statistiques",
       component: (
         <iframe
-          src="https://catalogue.apprentissage.beta.gouv.fr/metabase/public/dashboard/4e36e6e9-df1d-4444-bb76-cce85e662f47"
+          src="https://catalogue.apprentissage.education.gouv.fr/metabase/public/dashboard/4e36e6e9-df1d-4444-bb76-cce85e662f47"
           frameBorder="0"
           style={{ height: "226vh", width: "100%" }}
           title={`Console de pilotage Parcoursup - Statistiques`}

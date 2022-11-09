@@ -17,10 +17,10 @@ L'api catalogue est une API au format REST.
 
 ## Détails et documentation
 
-### Vous trouverez la documentation détaillée ici: [ API swagger](https://catalogue.apprentissage.beta.gouv.fr/api/v1/docs/)
+### Vous trouverez la documentation détaillée ici: [ API swagger](https://catalogue.apprentissage.education.gouv.fr/api/v1/docs/)
 
-### [https://catalogue.apprentissage.beta.gouv.fr/api/v1/docs/](https://catalogue.apprentissage.beta.gouv.fr/api/v1/docs/)
+### [https://catalogue.apprentissage.education.gouv.fr/api/v1/docs/](https://catalogue.apprentissage.education.gouv.fr/api/v1/docs/)
 
 ###
 
-{% embed url="https://catalogue.apprentissage.beta.gouv.fr/api/v1/schema.json" %}
+{% embed url="https://catalogue.apprentissage.education.gouv.fr/api/v1/schema.json" %}

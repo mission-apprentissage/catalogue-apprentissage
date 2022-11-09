@@ -5,6 +5,12 @@ const affelnetFormationSchema = {
     default: null,
     description: "Clé unique de la formation (pour envoi aux ministères éducatifs)",
   },
+  code_offre: {
+    index: true,
+    type: String,
+    default: null,
+    description: "code côté affelnet, unique par académie, de la formation",
+  },
   uai: {
     index: true,
     type: String,
@@ -199,6 +205,12 @@ const affelnetFormationSchema = {
     type: String,
     default: null,
     description: "coordonnées longitude de l'établissement",
+  },
+
+  informations: {
+    type: String,
+    default: null,
+    description: "Informations de la formation",
   },
 
   // Coverage

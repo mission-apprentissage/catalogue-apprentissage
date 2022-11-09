@@ -25,7 +25,7 @@ const createRejectedReport = async (summary, rejetes) => {
 
 const reportRejected = async () => {
   try {
-    console.log(" -- Start of Repports reconciliation rejected -- ");
+    console.log(" -- Start of Reports reconciliation rejected -- ");
 
     const countTotal = await ParcoursupFormation.countDocuments({});
     const countAutomatique = await ParcoursupFormation.countDocuments({ statut_reconciliation: "AUTOMATIQUE" });
@@ -92,7 +92,7 @@ const reportRejected = async () => {
       reportData
     );
 
-    console.log(" -- End of Repports reconciliation rejected -- ");
+    console.log(" -- End of Reports reconciliation rejected -- ");
   } catch (err) {
     console.error(err);
   }

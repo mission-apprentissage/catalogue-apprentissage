@@ -11,7 +11,6 @@ const parcoursupFormationCheckSchema = require("./parcoursupFormationCheck");
 const parcoursupFormationSchema = require("./parcoursupFormation");
 const previousSeasonFormationSchema = require("./previousSeasonFormation");
 const previousSeasonFormationStatSchema = require("./previousSeasonFormationStat");
-const rcoFormationSchema = require("./rcoFormation");
 const reglePerimetreSchema = require("./reglePerimetre");
 const reportSchema = require("./report");
 const roleSchema = require("./role");
@@ -32,7 +31,6 @@ module.exports = {
   parcoursupFormationSchema,
   previousSeasonFormationSchema,
   previousSeasonFormationStatSchema,
-  rcoFormationSchema,
   reglePerimetreSchema,
   reportSchema,
   roleSchema,

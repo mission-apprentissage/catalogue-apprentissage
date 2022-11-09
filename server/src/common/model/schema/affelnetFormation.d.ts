@@ -12,6 +12,10 @@ export interface AffelnetFormation {
    */
   cle_ministere_educatif?: string;
   /**
+   * code côté affelnet, unique par académie, de la formation
+   */
+  code_offre?: string;
+  /**
    * uai de l'établissement de formation
    */
   uai?: string;
@@ -163,6 +167,10 @@ export interface AffelnetFormation {
    * coordonnées longitude de l'établissement
    */
   coordonnees_gps_longitude?: string;
+  /**
+   * Informations de la formation
+   */
+  informations?: string;
   /**
    * tableau des matching des formations catalogue
    */

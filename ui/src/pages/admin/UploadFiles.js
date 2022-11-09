@@ -35,10 +35,6 @@ const DOCUMENTS = [
     label: "Import Affelnet",
   },
   {
-    filename: "uai-siret.csv",
-    label: "Import couples Uai-Siret",
-  },
-  {
     filename: "mefs-parcoursup.csv",
     label: "Liste de MEFs fiabilisés sur Parcoursup",
   },

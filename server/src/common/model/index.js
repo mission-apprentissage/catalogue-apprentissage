@@ -21,7 +21,6 @@ const createModel = (modelName, descriptor, options = {}) => {
 module.exports = {
   User: createModel("user", schema.userSchema),
   Role: createModel("role", schema.roleSchema),
-  RcoFormation: createModel("rcoformation", schema.rcoFormationSchema),
   Formation: createModel("formation", schema.formationSchema, {
     esIndexName: "formation",
   }),

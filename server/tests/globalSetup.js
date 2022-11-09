@@ -10,7 +10,7 @@ afterEach(() => rewiremock.disable());
 
 before(async () => {
   // mute console logs
-  console.log = () => {};
+  // console.log = () => {};
 
   showProgressBar(false);
 
