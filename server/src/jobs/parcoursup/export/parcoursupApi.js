@@ -10,12 +10,19 @@ const id = process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_CERTIFICATE_ID;
  * POST a formation to Parcoursup WS
  */
 const postFormation = async (data) => {
+  console.log({ endpoint, privateKey, pwd, id });
+
   const token = createParcoursupToken({ data, privateKey, pwd, id });
 
-  const { data: responseData } = await axios.post(endpoint, data, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return responseData;
+  try {
+    const { data: responseData } = await axios.post(endpoint, data, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return responseData;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 };
 
 module.exports = {
