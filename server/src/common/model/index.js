@@ -21,7 +21,6 @@ const createModel = (modelName, descriptor, options = {}) => {
 module.exports = {
   User: createModel("user", schema.userSchema),
   Role: createModel("role", schema.roleSchema),
-  RcoFormation: createModel("rcoformation", schema.rcoFormationSchema),
   Formation: createModel("formation", schema.formationSchema, {
     esIndexName: "formation",
   }),
@@ -40,8 +39,10 @@ module.exports = {
   Alert: createModel("alert", schema.alertSchema),
   ReglePerimetre: createModel("regleperimetre", schema.reglePerimetreSchema),
   Consumption: createModel("consumption", schema.consumptionSchema),
+  DualControlEtablissement: createModel("dualcontroletablissement", schema.etablissementSchema),
   DualControlFormation: createModel("dualcontrolformation", schema.formationSchema),
   DualControlReport: createModel("dualcontrolreport", schema.dualControlReportSchema),
+  DualControlPerimeterReport: createModel("dualcontrolperimeterreport", schema.dualControlPerimeterReportSchema),
   ConsoleStat: createModel("consolestat", schema.consoleStatSchema),
   PreviousSeasonFormation: createModel("previousSeasonFormation", schema.previousSeasonFormationSchema),
   PreviousSeasonFormationStat: createModel("previousSeasonFormationStat", schema.previousSeasonFormationStatSchema),

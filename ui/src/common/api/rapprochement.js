@@ -1,8 +1,8 @@
 import { _get } from "../httpClient";
 
-const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
+const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
 export const getResult = async ({ id }) => {
-  const apiURL = `${endpointNewFront}/parcoursup/reconciliation/result`;
+  const apiURL = `${CATALOGUE_API}/parcoursup/reconciliation/result`;
   return await _get(`${apiURL}/${id}`, false);
 };

@@ -211,13 +211,14 @@ module.exports = {
         description: "Le titre RNCP est éligible en apprentissage",
       },
       rncp_details: {
+        title: "rncp_details",
         type: "object",
         properties: {
           date_fin_validite_enregistrement: {
             type: ["string", "null"],
-            format: "date-time",
             default: null,
             description: "Date de validité de la fiche",
+            format: "date-time",
           },
           active_inactive: {
             type: ["string", "null"],
@@ -267,9 +268,7 @@ module.exports = {
           },
           certificateurs: {
             type: "array",
-            items: {
-              type: "object",
-            },
+            items: {},
             default: [],
             description: "Certificateurs",
           },
@@ -285,33 +284,25 @@ module.exports = {
           },
           romes: {
             type: "array",
-            items: {
-              type: "object",
-            },
+            items: {},
             default: [],
             description: "Romes",
           },
           blocs_competences: {
             type: "array",
-            items: {
-              type: "object",
-            },
+            items: {},
             default: [],
             description: "Blocs de compétences",
           },
           voix_acces: {
             type: "array",
-            items: {
-              type: "object",
-            },
+            items: {},
             default: [],
             description: "Voix d'accès",
           },
           partenaires: {
             type: "array",
-            items: {
-              type: "object",
-            },
+            items: {},
             default: [],
             description: "Partenaires",
           },
@@ -321,7 +312,6 @@ module.exports = {
             description: "Code rncp périmé (date fin enregistrement avant le 31 aout de l'année courante)",
           },
         },
-        title: "rncp_details",
         default: "null",
         description: "Détails RNCP (bloc de compétences etc..)",
       },
@@ -366,6 +356,11 @@ module.exports = {
         type: "boolean",
         default: "null",
         description: "Année incohérente avec les codes mefs",
+      },
+      parcoursup_perimetre: {
+        type: "boolean",
+        default: false,
+        description: "Dans le périmètre parcoursup",
       },
       parcoursup_statut: {
         type: "string",
@@ -439,6 +434,11 @@ module.exports = {
         description: 'Date de publication (passage au statut "publié")',
         format: "date-time",
       },
+      affelnet_perimetre: {
+        type: "boolean",
+        default: false,
+        description: "Dans le périmètre affelnet",
+      },
       affelnet_statut: {
         type: "string",
         enum: [
@@ -458,6 +458,11 @@ module.exports = {
         default: [],
         description: "Affelnet : historique des statuts",
       },
+      affelnet_id: {
+        type: "string",
+        default: "null",
+        description: "identifiant Affelnet de la formation (code vœu)",
+      },
       affelnet_published_date: {
         type: "string",
         default: "null",
@@ -474,11 +479,6 @@ module.exports = {
         type: "boolean",
         default: false,
         description: "Est publiée, la formation est éligible pour le catalogue",
-      },
-      rco_published: {
-        type: "boolean",
-        default: false,
-        description: "Est publiée dans le flux rco",
       },
       forced_published: {
         type: "boolean",
@@ -507,19 +507,9 @@ module.exports = {
         default: "null",
         description: "Qui a réalisé la dernière modification",
       },
-      to_update: {
-        type: "boolean",
-        default: false,
-        description: "Formation à mette à jour lors du script d'enrichissement",
-      },
       idea_geo_coordonnees_etablissement: {
         type: "string",
         description: "Latitude et longitude de l'établissement recherchable dans Idea",
-      },
-      update_error: {
-        type: "string",
-        default: "null",
-        description: "Erreur lors de la mise à jour de la formation",
       },
       lieu_formation_geo_coordonnees: {
         type: "string",
@@ -599,6 +589,21 @@ module.exports = {
         type: "string",
         default: "null",
         description: "Affelnet : Informations offre de formation",
+      },
+      affelnet_url_infos_offre: {
+        type: "string",
+        default: "null",
+        description: "Affelnet : Libellé ressource complémentaire",
+      },
+      affelnet_modalites_offre: {
+        type: "string",
+        default: "null",
+        description: "Affelnet : Modalités particulières",
+      },
+      affelnet_url_modalites_offre: {
+        type: "string",
+        default: "null",
+        description: "Affelnet : Lien vers la ressource",
       },
       affelnet_code_nature: {
         type: "string",

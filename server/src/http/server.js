@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const passport = require("passport");
@@ -9,10 +10,9 @@ const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const logMiddleware = require("./middlewares/logMiddleware");
 const errorMiddleware = require("./middlewares/errorMiddleware");
-const apiKeyAuthMiddleware = require("./middlewares/apiKeyAuthMiddleware");
+const anyAuthMiddleware = require("./middlewares/anyAuthMiddleware");
 const tryCatch = require("./middlewares/tryCatchMiddleware");
-const corsMiddleware = require("./middlewares/corsMiddleware");
-const authMiddleware = require("./middlewares/authMiddleware");
+// const corsMiddleware = require("./middlewares/corsMiddleware");
 const permissionsMiddleware = require("./middlewares/permissionsMiddleware");
 const packageJson = require("../../package.json");
 const formation = require("./routes/formation");
@@ -67,10 +67,10 @@ const swaggerSpecification = swaggerJsdoc(options);
 swaggerSpecification.components = {
   schemas: swaggerSchema,
   securitySchemes: {
-    bearerAuth: {
-      type: "http",
-      scheme: "bearer",
-      bearerFormat: "JWT",
+    cookieAuth: {
+      type: "apiKey",
+      in: "cookie",
+      name: "connect.sid",
     },
   },
 };
@@ -83,7 +83,8 @@ module.exports = async (components, verbose = true) => {
   // Parse the ndjson as text for ES proxy
   app.use(bodyParser.text({ type: "application/x-ndjson" }));
 
-  app.use(corsMiddleware());
+  app.use(cors({ credentials: true }));
+  // app.use(corsMiddleware());
   verbose && app.use(logMiddleware());
 
   if (config.env != "dev") {
@@ -100,7 +101,7 @@ module.exports = async (components, verbose = true) => {
       cookie: {
         secure: config.env === "dev" ? false : true,
         maxAge: config.env === "dev" ? null : 30 * 24 * 60 * 60 * 1000,
-        sameSite: "strict", // prevent csrf attack @see https://auth0.com/blog/cross-site-request-forgery-csrf/
+        sameSite: config.env === "dev" ? "lax" : "strict", // prevent csrf attack @see https://auth0.com/blog/cross-site-request-forgery-csrf/
       },
     })
   );
@@ -129,72 +130,57 @@ module.exports = async (components, verbose = true) => {
     message: "Too many calls from this IP, please try again after one minute",
   });
 
-  app.use("/api/v1/docs", apiLimiter, swaggerUi.serve, swaggerUi.setup(swaggerSpecification));
-  app.get(
-    "/api/v1/schema.json",
-    apiLimiter,
-    tryCatch(async (req, res) => {
-      return res.json(swaggerSpecification);
-    })
-  );
+  const prefixes = ["/api", "/api/v1"];
 
-  app.use("/api/v1/entity", apiPerimetreLimiter, reglePerimetre());
-  app.use("/api/v1/es/search", elasticLimiter, esSearch());
-  app.use("/api/v1/search", elasticLimiter, esMultiSearchNoIndex());
-  app.use("/api/v1/entity", apiLimiter, formation());
-  app.use("/api/v1/entity", apiLimiter, report());
-  app.use("/api/v1/entity", apiLimiter, etablissement(components));
-  app.use("/api/v1/auth", authLimiter, auth(components));
-  app.use("/api/v1/password", authLimiter, password(components));
-  app.use("/api/v1/parcoursup", apiLimiter, parcoursup(components));
-  app.use("/api/v1/entity", apiLimiter, alert());
-  app.use(
-    "/api/v1/admin",
-    apiLimiter,
-    apiKeyAuthMiddleware,
-    permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs"]),
-    user(components)
-  );
-  app.use(
-    "/api/v1/admin",
-    apiLimiter,
-    apiKeyAuthMiddleware,
-    permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs", "page_gestion_roles"]),
-    role(components)
-  );
-  app.use("/api/v1/entity", apiLimiter, apiKeyAuthMiddleware, formationSecure());
-  app.use("/api/v1/stats", apiLimiter, apiKeyAuthMiddleware, stats(components));
-  app.use("/api/v1/entity", apiLimiter, apiKeyAuthMiddleware, etablissementSecure(components));
-  app.use("/api/v1/upload", apiLimiter, permissionsMiddleware({ isAdmin: true }, ["page_upload"]), upload());
-  app.use("/api/v1/entity", apiLimiter, apiKeyAuthMiddleware, reglePerimetreSecure());
+  const routes = [
+    ["/docs", apiLimiter, swaggerUi.serve, swaggerUi.setup(swaggerSpecification)],
+    [
+      "/schema.json",
+      apiLimiter,
+      tryCatch(async (req, res) => {
+        return res.json(swaggerSpecification);
+      }),
+    ],
+    ["/auth", authLimiter, auth(components)],
+    ["/password", authLimiter, password(components)],
+  ];
 
-  /** DEPRECATED */
-  app.use("/api/es/search", elasticLimiter, esSearch());
-  app.use("/api/search", elasticLimiter, esMultiSearchNoIndex());
-  app.use("/api/entity", apiLimiter, formation());
-  app.use("/api/entity", apiLimiter, report());
-  app.use("/api/entity", apiLimiter, etablissement(components));
-  app.use("/api/auth", authLimiter, auth(components));
-  app.use("/api/password", authLimiter, password(components));
-  app.use("/api/parcoursup", apiLimiter, parcoursup(components));
-  app.use(
-    "/api/admin",
-    apiLimiter,
-    authMiddleware,
-    permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs"]),
-    user(components)
-  );
-  app.use(
-    "/api/admin",
-    apiLimiter,
-    authMiddleware,
-    permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs", "page_gestion_roles"]),
-    role(components)
-  );
-  app.use("/api/entity", apiLimiter, authMiddleware, formationSecure());
-  app.use("/api/stats", apiLimiter, stats(components));
-  app.use("/api/entity", apiLimiter, authMiddleware, etablissementSecure(components));
-  app.use("/api/entity", apiLimiter, authMiddleware, reglePerimetreSecure());
+  const securedRoutes = [
+    ["/entity", apiPerimetreLimiter, anyAuthMiddleware, reglePerimetre()],
+    ["/es/search", elasticLimiter, anyAuthMiddleware, esSearch()],
+    ["/search", elasticLimiter, anyAuthMiddleware, esMultiSearchNoIndex()],
+    ["/entity", apiLimiter, anyAuthMiddleware, formation()],
+    ["/entity", apiLimiter, anyAuthMiddleware, report()],
+    ["/entity", apiLimiter, anyAuthMiddleware, etablissement(components)],
+    ["/parcoursup", apiLimiter, anyAuthMiddleware, parcoursup(components)],
+    ["/entity", apiLimiter, anyAuthMiddleware, alert()],
+    [
+      "/admin",
+      apiLimiter,
+      anyAuthMiddleware,
+      permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs"]),
+      user(components),
+    ],
+    [
+      "/admin",
+      apiLimiter,
+      anyAuthMiddleware,
+      permissionsMiddleware({ isAdmin: true }, ["page_gestion_utilisateurs", "page_gestion_roles"]),
+      role(components),
+    ],
+    ["/entity", apiLimiter, anyAuthMiddleware, formationSecure()],
+    ["/stats", apiLimiter, anyAuthMiddleware, stats(components)],
+    ["/entity", apiLimiter, anyAuthMiddleware, etablissementSecure(components)],
+    ["/upload", apiLimiter, permissionsMiddleware({ isAdmin: true }, ["page_upload"]), upload()],
+    ["/entity", apiLimiter, anyAuthMiddleware, reglePerimetreSecure()],
+  ];
+
+  prefixes.map((prefix) => {
+    [...routes, ...securedRoutes].map((route) => {
+      const [path, ...rest] = route;
+      app.use(`${prefix}${path}`, ...rest);
+    });
+  });
 
   app.get(
     "/api",
@@ -204,7 +190,7 @@ module.exports = async (components, verbose = true) => {
 
       let mongodbStatus;
       try {
-        await db.collection("rcoformation").stats();
+        await db.collection("formation").stats();
         mongodbStatus = true;
       } catch (e) {
         mongodbStatus = false;

@@ -10,7 +10,7 @@ const affelnetJobs = async () => {
     logger.info(`Start Affelnet jobs`);
 
     await afReinitStatus(); // Réinitialisation du statut Affelnet des formations 'en attente de publication' lors de la clôture des voeux (1 septembre)
-    await afCoverage();
+    await afCoverage({});
     await afPerimetre();
     await stats();
 

@@ -77,7 +77,7 @@ const columnsDefinition = [
         const { _id, intitule_court } = values[index];
         result.push(
           JSON.stringify({
-            url_mna: `http://catalogue.apprentissage.beta.gouv.fr/formation/${_id}`,
+            url_mna: `http://catalogue.apprentissage.education.gouv.fr/formation/${_id}`,
             intitule_court,
           })
         );

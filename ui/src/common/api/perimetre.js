@@ -1,7 +1,7 @@
 import { _delete, _get, _post, _put } from "../httpClient";
 import { useQuery } from "react-query";
 
-const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
+const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
 export const createRule = async ({
   plateforme,
@@ -17,7 +17,7 @@ export const createRule = async ({
   statut_academies,
   num_academie,
 }) => {
-  return await _post(`${endpointNewFront}/entity/perimetre/regle`, {
+  return await _post(`${CATALOGUE_API}/entity/perimetre/regle`, {
     plateforme,
     niveau,
     diplome,
@@ -47,7 +47,7 @@ export const updateRule = async ({
   annee,
   statut_academies,
 }) => {
-  return await _put(`${endpointNewFront}/entity/perimetre/regle/${_id}`, {
+  return await _put(`${CATALOGUE_API}/entity/perimetre/regle/${_id}`, {
     plateforme,
     niveau,
     diplome,
@@ -63,12 +63,12 @@ export const updateRule = async ({
 };
 
 export const deleteRule = async ({ _id }) => {
-  return await _delete(`${endpointNewFront}/entity/perimetre/regle/${_id}`);
+  return await _delete(`${CATALOGUE_API}/entity/perimetre/regle/${_id}`);
 };
 
 export const getIntegrationCount = async ({ plateforme, niveau, academie }) => {
   try {
-    const countUrl = `${endpointNewFront}/v1/entity/perimetre/regles/integration/count`;
+    const countUrl = `${CATALOGUE_API}/v1/entity/perimetre/regles/integration/count`;
     const params = new URLSearchParams({
       plateforme: plateforme,
       num_academie: academie,
@@ -89,12 +89,12 @@ export const useIntegrationCount = ({ plateforme, academie }) => {
 };
 
 export const getRules = async ({ plateforme }) => {
-  const reglesUrl = `${endpointNewFront}/v1/entity/perimetre/regles`;
+  const reglesUrl = `${CATALOGUE_API}/v1/entity/perimetre/regles`;
   return await _get(`${reglesUrl}?plateforme=${plateforme}`, false);
 };
 
 export const getNiveaux = async ({ plateforme }) => {
-  const niveauxURL = `${endpointNewFront}/v1/entity/perimetre/niveau?plateforme=${plateforme}`;
+  const niveauxURL = `${CATALOGUE_API}/v1/entity/perimetre/niveau?plateforme=${plateforme}`;
   return await _get(niveauxURL, false);
 };
 
@@ -106,7 +106,7 @@ export const useNiveaux = ({ plateforme }) => {
 };
 
 export const getCount = async ({ plateforme, niveau, diplome, regle_complementaire, academie, duree, annee }) => {
-  const countUrl = `${endpointNewFront}/v1/entity/perimetre/regle/count`;
+  const countUrl = `${CATALOGUE_API}/v1/entity/perimetre/regle/count`;
   const params = new URLSearchParams({
     plateforme,
     niveau,

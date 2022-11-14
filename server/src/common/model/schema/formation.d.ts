@@ -171,6 +171,10 @@ export interface Formation {
    */
   annee_incoherente?: boolean | null;
   /**
+   * Dans le périmètre parcoursup
+   */
+  parcoursup_perimetre?: boolean;
+  /**
    * Statut parcoursup
    */
   parcoursup_statut?:
@@ -201,6 +205,10 @@ export interface Formation {
    */
   parcoursup_published_date?: Date;
   /**
+   * Dans le périmètre affelnet
+   */
+  affelnet_perimetre?: boolean;
+  /**
    * Statut affelnet
    */
   affelnet_statut?:
@@ -215,6 +223,10 @@ export interface Formation {
    */
   affelnet_statut_history?: unknown[];
   /**
+   * identifiant Affelnet de la formation (code vœu)
+   */
+  affelnet_id?: string;
+  /**
    * Date de publication (passage au statut "publié")
    */
   affelnet_published_date?: Date;
@@ -226,10 +238,6 @@ export interface Formation {
    * Est publiée, la formation est éligible pour le catalogue
    */
   published?: boolean;
-  /**
-   * Est publiée dans le flux rco
-   */
-  rco_published?: boolean;
   /**
    * La publication vers les plateformes est forcée (contournement catalogue non-éligible dans certains cas)
    */
@@ -251,17 +259,9 @@ export interface Formation {
    */
   last_update_who?: string;
   /**
-   * Formation à mette à jour lors du script d'enrichissement
-   */
-  to_update?: boolean;
-  /**
    * Latitude et longitude de l'établissement recherchable dans Idea
    */
   idea_geo_coordonnees_etablissement?: string;
-  /**
-   * Erreur lors de la mise à jour de la formation
-   */
-  update_error?: string;
   /**
    * Latitude et longitude du lieu de formation
    */
@@ -322,6 +322,18 @@ export interface Formation {
    * Affelnet : Informations offre de formation
    */
   affelnet_infos_offre?: string;
+  /**
+   * Affelnet : Libellé ressource complémentaire
+   */
+  affelnet_url_infos_offre?: string;
+  /**
+   * Affelnet : Modalités particulières
+   */
+  affelnet_modalites_offre?: string;
+  /**
+   * Affelnet : Lien vers la ressource
+   */
+  affelnet_url_modalites_offre?: string;
   /**
    * Affelnet : code nature de l'établissement de formation
    */
@@ -630,9 +642,7 @@ export interface RncpDetails {
   /**
    * Certificateurs
    */
-  certificateurs?: {
-    [k: string]: unknown;
-  }[];
+  certificateurs?: unknown[];
   /**
    * Code NSF
    */
@@ -644,27 +654,19 @@ export interface RncpDetails {
   /**
    * Romes
    */
-  romes?: {
-    [k: string]: unknown;
-  }[];
+  romes?: unknown[];
   /**
    * Blocs de compétences
    */
-  blocs_competences?: {
-    [k: string]: unknown;
-  }[];
+  blocs_competences?: unknown[];
   /**
    * Voix d'accès
    */
-  voix_acces?: {
-    [k: string]: unknown;
-  }[];
+  voix_acces?: unknown[];
   /**
    * Partenaires
    */
-  partenaires?: {
-    [k: string]: unknown;
-  }[];
+  partenaires?: unknown[];
   /**
    * Code rncp périmé (date fin enregistrement avant le 31 aout de l'année courante)
    */

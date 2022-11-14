@@ -9,7 +9,6 @@ import {
   Grid,
   GridItem,
   Heading,
-  Input,
   Link,
   Modal,
   ModalBody,
@@ -22,29 +21,23 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
-import { useFormik } from "formik";
 import useAuth from "../../common/hooks/useAuth";
 import { _get } from "../../common/httpClient";
 import Layout from "../layout/Layout";
-import { hasAccessTo, hasRightToEditEtablissement } from "../../common/utils/rolesUtils";
+import { hasAccessTo } from "../../common/utils/rolesUtils";
 import { NavLink } from "react-router-dom";
 import InfoTooltip from "../../common/components/InfoTooltip";
 import helpText from "../../locales/helpText.json";
-import { ArrowRightLine, Edit2Fill, ExternalLinkLine, Tick } from "../../theme/components/icons/";
+import { ArrowRightLine, ExternalLinkLine, Tick } from "../../theme/components/icons/";
 import { HowToFixModal } from "../../common/components/organisme/HowToFixModal";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
 import { QualiteBadge } from "../../common/components/QualiteBadge";
-import { etablissementService, updateUaiOrganisme } from "../../common/api/organisme";
 
-const sleep = (m) => new Promise((r) => setTimeout(r, m));
+const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
-const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
-
-const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSubmit, values, countFormations }) => {
+const Etablissement = ({ etablissement, edition, onEdit, countFormations }) => {
   const [user] = useAuth();
-  const hasRightToEdit =
-    hasAccessTo(user, "page_organisme/modifier_informations") && hasRightToEditEtablissement(etablissement, user);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const query = [
@@ -225,44 +218,11 @@ const Etablissement = ({ etablissement, edition, onEdit, handleChange, handleSub
             <Box textStyle="rf-text">
               <UaiContainer>
                 <Text mb={etablissement?.uai_valide ? 4 : 0}>
-                  {hasRightToEdit && !edition && (
-                    <Button data-testid="uai-edit" onClick={onEdit} variant="unstyled" aria-label="Modifier l'UAI">
-                      <Edit2Fill w="16px" h="16px" color="bluefrance" mr="8px" mb="7px" />
-                    </Button>
-                  )}
-                  UAI rattaché au SIRET : {}
-                  {edition ? (
-                    <>
-                      <Input
-                        data-testid="uai-input"
-                        type="text"
-                        variant="edition"
-                        name="uai"
-                        onChange={handleChange}
-                        value={values.uai}
-                      />
-                      <Button
-                        mt={2}
-                        mr={2}
-                        variant="secondary"
-                        onClick={() => {
-                          onEdit();
-                        }}
-                      >
-                        Annuler
-                      </Button>
-                      <Button mt={2} variant="primary" onClick={handleSubmit}>
-                        Valider
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <Text as="span" variant="highlight">
-                        {etablissement.uai}
-                      </Text>{" "}
-                      <InfoTooltip description={helpText.etablissement.uai} />
-                    </>
-                  )}
+                  UAI rattaché au SIRET :{" "}
+                  <Text as="span" variant="highlight">
+                    {etablissement.uai}
+                  </Text>{" "}
+                  <InfoTooltip description={helpText.etablissement.uai} />
                 </Text>
               </UaiContainer>
 
@@ -355,74 +315,14 @@ export default ({ match }) => {
   const toast = useToast();
   const history = useHistory();
 
-  const { values, handleSubmit, handleChange, setFieldValue } = useFormik({
-    initialValues: {
-      uai: "",
-    },
-    onSubmit: ({ uai }) => {
-      return new Promise(async (resolve) => {
-        let result = null;
-        const trimedUai = uai?.trim();
-
-        if (trimedUai !== etablissement.uai) {
-          setModal(true);
-          setGatherData(1);
-          try {
-            const { etablissement: updatedEtablissement, error } = await etablissementService({
-              body: {
-                ...etablissement,
-                uai: trimedUai,
-              },
-            });
-
-            if (error) {
-              throw new Error(error);
-            }
-
-            result = await updateUaiOrganisme({
-              id: match.params.id,
-              etablissement,
-              body: updatedEtablissement,
-              uai: trimedUai,
-              user,
-            });
-          } catch (err) {
-            console.error(err);
-            const response = await (err?.json ?? {});
-            const message = response?.message ?? err?.message;
-            toast({
-              title: "Error",
-              description: message,
-              status: "error",
-              duration: 10000,
-            });
-          }
-          setGatherData(2);
-          await sleep(500);
-
-          setModal(false);
-        }
-
-        if (result) {
-          setEtablissement(result);
-          setFieldValue("uai", result.uai);
-        }
-
-        setEdition(false);
-        resolve("onSubmitHandler complete");
-      });
-    },
-  });
-
   const mountedRef = useRef(true);
 
   useEffect(() => {
     (async () => {
       try {
         setLoading(true);
-        const eta = await _get(`${endpointNewFront}/entity/etablissement/${match.params.id}`, false);
+        const eta = await _get(`${CATALOGUE_API}/entity/etablissement/${match.params.id}`, false);
         setEtablissement(eta);
-        setFieldValue("uai", eta.uai);
 
         if (!mountedRef.current) return null;
 
@@ -431,7 +331,7 @@ export default ({ match }) => {
           $or: [{ etablissement_formateur_siret: eta.siret }, { etablissement_gestionnaire_siret: eta.siret }],
         };
 
-        const count = await _get(`${endpointNewFront}/entity/formations/count?query=${JSON.stringify(query)}`, false);
+        const count = await _get(`${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify(query)}`, false);
 
         if (!mountedRef.current) return null;
 
@@ -447,7 +347,7 @@ export default ({ match }) => {
     return () => {
       mountedRef.current = false;
     };
-  }, [match, setFieldValue]);
+  }, [match]);
 
   const onEdit = () => {
     setEdition(!edition);
@@ -497,9 +397,6 @@ export default ({ match }) => {
                   etablissement={etablissement}
                   edition={edition}
                   onEdit={onEdit}
-                  values={values}
-                  handleSubmit={handleSubmit}
-                  handleChange={handleChange}
                   countFormations={countFormations}
                 />
                 <Modal isOpen={modal}>

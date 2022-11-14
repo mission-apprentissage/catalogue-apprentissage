@@ -1,39 +1,39 @@
-const logSchema = require("./log");
-const userSchema = require("./user");
-const roleSchema = require("./role");
-const rcoFormationSchema = require("./rcoFormation");
-const formationSchema = require("./formation/formation");
-const reportSchema = require("./report");
 const affelnetFormationSchema = require("./affelnetFormation");
-const etablissementSchema = require("./etablissement");
-const parcoursupFormationSchema = require("./parcoursupFormation");
-const parcoursupFormationCheckSchema = require("./parcoursupFormationCheck");
-const statistiqueSchema = require("./statistique");
 const alertSchema = require("./alert");
-const reglePerimetreSchema = require("./reglePerimetre");
-const consumptionSchema = require("./consumption");
-const dualControlReportSchema = require("./dualControlReport");
 const consoleStatSchema = require("./consoleStat");
+const consumptionSchema = require("./consumption");
+const dualControlPerimeterReportSchema = require("./dualControlPerimeterReport");
+const dualControlReportSchema = require("./dualControlReport");
+const etablissementSchema = require("./etablissement");
+const formationSchema = require("./formation/formation");
+const logSchema = require("./log");
+const parcoursupFormationCheckSchema = require("./parcoursupFormationCheck");
+const parcoursupFormationSchema = require("./parcoursupFormation");
 const previousSeasonFormationSchema = require("./previousSeasonFormation");
 const previousSeasonFormationStatSchema = require("./previousSeasonFormationStat");
+const reglePerimetreSchema = require("./reglePerimetre");
+const reportSchema = require("./report");
+const roleSchema = require("./role");
+const statistiqueSchema = require("./statistique");
+const userSchema = require("./user");
 
 module.exports = {
-  logSchema,
-  userSchema,
-  roleSchema,
-  rcoFormationSchema,
-  formationSchema,
-  reportSchema,
   affelnetFormationSchema,
-  etablissementSchema,
-  parcoursupFormationSchema,
-  parcoursupFormationCheckSchema,
-  statistiqueSchema,
   alertSchema,
-  reglePerimetreSchema,
-  consumptionSchema,
-  dualControlReportSchema,
   consoleStatSchema,
+  consumptionSchema,
+  dualControlPerimeterReportSchema,
+  dualControlReportSchema,
+  etablissementSchema,
+  formationSchema,
+  logSchema,
+  parcoursupFormationCheckSchema,
+  parcoursupFormationSchema,
   previousSeasonFormationSchema,
   previousSeasonFormationStatSchema,
+  reglePerimetreSchema,
+  reportSchema,
+  roleSchema,
+  statistiqueSchema,
+  userSchema,
 };

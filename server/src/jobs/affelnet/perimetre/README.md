@@ -34,14 +34,14 @@ Les formations sont ensuite importées automatiquement par Affelnet, via l'API d
 Affelnet étant un logiciel installé séparément par académie, voici un exemple de requête pour l'académie de Toulouse :
 
 ```
-https://catalogue.apprentissage.beta.gouv.fr/api/entity/formations?query={"affelnet_statut":{"$in":["publié","en attente de publication"]},"num_academie" :16}
+https://catalogue.apprentissage.education.gouv.fr/api/entity/formations?query={"affelnet_statut":{"$in":["publié","en attente de publication"]},"num_academie" :16}
 ```
 
 ## Déduction du mef Affelnet & modalités
 
 Les règles de périmètre ont également une autre utilité, celle de déterminer le mef de la formation et d'en extraire les modalités (durée et année d'inscription).
 En effet les formations ont un tableau de mefs (correspondant à tous les mefs existants pour le cfd de la formation), on applique alors les règles de périmètre sur chaque formation, et si la formation est eligible via une des règles, on lui donne le mef correspondant et on en déduit les modalités.
-Cette déduction est effectuée dans le code dans le fichier `mnaFormationUpdater.js`.
+Cette déduction est effectuée dans le code dans le fichier `mefsFinder.js`.
 
 **/!\ Ce mef est indispensable pour l'import automatique par Affelnet**
 

@@ -5,14 +5,11 @@ const { runScript } = require("../scriptWrapper");
 const logger = require("../../common/logger");
 const { reconciliationAffelnet } = require("../../logic/controller/reconciliation");
 const { AFFELNET_STATUS } = require("../../constants/status");
-const {
-  findNewFormations,
-  findMultisiteFormationsFromL01,
-} = require("../formations/rcoConverter/converter/migrationFinder");
+const { findNewFormations, findMultisiteFormationsFromL01 } = require("../../logic/finder/migrationFinder");
 const { formation: formatFormation } = require("../../logic/controller/formater");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 
-const formation = async () => {
+const formation = async ({ eraseInfo }) => {
   await paginator(
     AffelnetFormation,
     {
@@ -46,7 +43,7 @@ const formation = async () => {
           );
           if (multisiteFormations.length > 0) {
             await asyncForEach(multisiteFormations, async (multisiteFormation) => {
-              await reconciliationAffelnet(formation, multisiteFormation);
+              await reconciliationAffelnet(formation, multisiteFormation, eraseInfo);
             });
           }
         } else {
@@ -79,13 +76,13 @@ const formation = async () => {
       await formation.save();
 
       if (formation.matching_mna_formation?.length === 1 && Number(formation.matching_type) >= 3) {
-        await reconciliationAffelnet(formation, formation.matching_mna_formation[0]);
+        await reconciliationAffelnet(formation, formation.matching_mna_formation[0], eraseInfo);
       }
     }
   );
 };
 
-const afCoverage = async () => {
+const afCoverage = async ({ eraseInfo }) => {
   logger.info("Start Affelnet coverage");
 
   // reset matching first
@@ -102,11 +99,11 @@ const afCoverage = async () => {
   // reset "publié" to "hors périmètre"
   await Formation.updateMany(
     { affelnet_statut: AFFELNET_STATUS.PUBLIE },
-    { $set: { affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE } }
+    { $set: { affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE, affelnet_id: null } }
   );
 
   logger.info("Start formation coverage");
-  await formation();
+  await formation({ eraseInfo });
 
   logger.info("End Affelnet coverage");
 };
@@ -115,6 +112,8 @@ module.exports = afCoverage;
 
 if (process.env.standalone) {
   runScript(async () => {
-    await afCoverage();
+    const args = process.argv.slice(2);
+    const eraseInfo = args.includes("--eraseInfo");
+    await afCoverage({ eraseInfo });
   });
 }

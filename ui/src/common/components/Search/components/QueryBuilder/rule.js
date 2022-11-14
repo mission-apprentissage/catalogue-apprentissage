@@ -3,7 +3,7 @@ import Autosuggest from "react-autosuggest";
 import { Input, Button, Select, Flex, InputGroup, InputRightElement } from "@chakra-ui/react";
 import { Trash, CloseCircleLine } from "../../../../../theme/components/icons";
 
-const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
+const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
 const esQuery = (queries) => {
   let query = "";
@@ -11,7 +11,7 @@ const esQuery = (queries) => {
     query += `${JSON.stringify(queries[i])}\n`;
   }
 
-  return fetch(`${endpointNewFront}/search/_msearch`, {
+  return fetch(`${CATALOGUE_API}/search/_msearch`, {
     mode: "cors",
     method: "POST",
     redirect: "follow",

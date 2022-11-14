@@ -11,12 +11,44 @@ const previousSeasonFormationSchema = {
     description: "Numéro de l'académie",
     required: true,
   },
-  plateforme: {
-    index: true,
+  parcoursup_perimetre: {
+    type: Boolean,
+    default: false,
+    description: "Dans le périmètre parcoursup",
+  },
+  parcoursup_statut: {
     type: String,
-    enum: ["affelnet", "parcoursup"],
-    description: "Plateforme pour laquelle la formation était dans le périmètre",
-    required: true,
+    enum: [
+      "hors périmètre",
+      "publié",
+      "non publié",
+      "à publier (sous condition habilitation)",
+      "à publier (vérifier accès direct postbac)",
+      "à publier (soumis à validation Recteur)",
+      "à publier",
+      "en attente de publication",
+      "rejet de publication",
+    ],
+    default: "hors périmètre",
+    description: "Statut parcoursup",
+  },
+  affelnet_perimetre: {
+    type: Boolean,
+    default: false,
+    description: "Dans le périmètre affelnet",
+  },
+  affelnet_statut: {
+    type: String,
+    enum: [
+      "hors périmètre",
+      "publié",
+      "non publié",
+      "à publier (soumis à validation)",
+      "à publier",
+      "en attente de publication",
+    ],
+    default: "hors périmètre",
+    description: "Statut affelnet",
   },
 };
 

@@ -31,6 +31,8 @@ const Accessibilite = lazy(() => import("./pages/legal/Accessibilite"));
 const ReconciliationPs = lazy(() => import("./pages/admin/ReconciliationPs/ReconciliationPs"));
 const ActionsExpertes = lazy(() => import("./pages/ActionsExpertes/ActionsExpertes"));
 const Perimetre = lazy(() => import("./pages/perimetre/Perimetre"));
+const ConsolePilotageAffelnet = lazy(() => import("./pages/ConsolesPilotage/Affelnet"));
+const ConsolePilotageParcoursup = lazy(() => import("./pages/ConsolesPilotage/Parcoursup"));
 
 function PrivateRoute({ component, ...rest }) {
   let [auth] = useAuth();
@@ -102,7 +104,11 @@ export default () => {
             <ResetPasswordWrapper>
               <ScrollToTop />
               <Switch>
-                <Route exact path="/stats" component={DashboardPage} />
+                <Route exact path="/login" component={LoginPage} />
+                <Route exact path="/reset-password" component={ResetPasswordPage} />
+                <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
+
+                <PrivateRoute exact path="/stats" component={DashboardPage} />
 
                 {auth && hasAccessTo(auth, "page_gestion_utilisateurs") && (
                   <PrivateRoute exact path="/admin/users" component={Users} />
@@ -115,30 +121,33 @@ export default () => {
                   <PrivateRoute exact path="/couverture-ps" component={ReconciliationPs} />
                 )}
 
-                <Route exact path="/" component={HomePage} />
-                <Route exact path="/recherche/formations" component={Catalogue} />
-                <Route exact path="/guide-reglementaire">
+                <PrivateRoute exact path="/" component={HomePage} />
+                <PrivateRoute exact path="/recherche/formations" component={Catalogue} />
+                <PrivateRoute exact path="/guide-reglementaire">
                   <Catalogue guide />
-                </Route>
+                </PrivateRoute>
 
-                <Route exact path="/recherche/etablissements" component={Organismes} />
-                <Route exact path={`/formation/:id`} component={Formation} />
-                <Route exact path={`/etablissement/:id`} component={Etablissement} />
+                <PrivateRoute exact path="/recherche/etablissements" component={Organismes} />
+                <PrivateRoute exact path={`/formation/:id`} component={Formation} />
+                <PrivateRoute exact path={`/etablissement/:id`} component={Etablissement} />
 
-                <Route exact path="/login" component={LoginPage} />
-                <Route exact path="/reset-password" component={ResetPasswordPage} />
-                <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
-                <Route exact path="/report" component={ReportPage} />
+                <PrivateRoute exact path="/report" component={ReportPage} />
 
-                <Route exact path="/changelog" component={Journal} />
-                <Route exact path="/contact" component={Contact} />
-                <Route exact path="/cookies" component={Cookies} />
-                <Route exact path="/donnees-personnelles" component={DonneesPersonnelles} />
-                <Route exact path="/mentions-legales" component={MentionsLegales} />
-                <Route exact path="/accessibilite" component={Accessibilite} />
+                <PrivateRoute exact path="/changelog" component={Journal} />
+                <PrivateRoute exact path="/contact" component={Contact} />
+                <PrivateRoute exact path="/cookies" component={Cookies} />
+                <PrivateRoute exact path="/donnees-personnelles" component={DonneesPersonnelles} />
+                <PrivateRoute exact path="/mentions-legales" component={MentionsLegales} />
+                <PrivateRoute exact path="/accessibilite" component={Accessibilite} />
 
                 {auth && hasAccessTo(auth, "page_actions_expertes") && (
                   <PrivateRoute exact path="/mes-actions" component={ActionsExpertes} />
+                )}
+                {auth && hasAccessTo(auth, "page_actions_expertes") && (
+                  <PrivateRoute exact path="/console-pilotage/parcoursup" component={ConsolePilotageParcoursup} />
+                )}
+                {auth && hasAccessTo(auth, "page_actions_expertes") && (
+                  <PrivateRoute exact path="/console-pilotage/affelnet" component={ConsolePilotageAffelnet} />
                 )}
 
                 {auth && hasAccessTo(auth, "page_message_maintenance") && (
@@ -152,7 +161,7 @@ export default () => {
                 )}
 
                 {auth && hasAccessTo(auth, "page_perimetre_ps") && (
-                  <Route
+                  <PrivateRoute
                     exact
                     path="/perimetre-parcoursup"
                     render={(props) => <Perimetre {...props} plateforme="parcoursup" />}
@@ -160,14 +169,14 @@ export default () => {
                 )}
 
                 {auth && hasAccessTo(auth, "page_perimetre_af") && (
-                  <Route
+                  <PrivateRoute
                     exact
                     path="/perimetre-affelnet"
                     render={(props) => <Perimetre {...props} plateforme="affelnet" />}
                   />
                 )}
 
-                <Route component={NotFoundPage} />
+                <PrivateRoute component={NotFoundPage} />
               </Switch>
             </ResetPasswordWrapper>
           </Suspense>

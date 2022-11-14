@@ -25,6 +25,97 @@ const mefSchema = new mongoose.Schema(
   { _id: false }
 );
 
+const rncpDetailsSchema = new mongoose.Schema(
+  {
+    date_fin_validite_enregistrement: {
+      type: Date,
+      default: null,
+      description: "Date de validité de la fiche",
+    },
+    active_inactive: {
+      type: String,
+      default: null,
+      description: "fiche active ou non",
+    },
+    etat_fiche_rncp: {
+      type: String,
+      default: null,
+      description: "état fiche ex: Publiée",
+    },
+    niveau_europe: {
+      type: String,
+      default: null,
+      description: "Niveau européen ex: niveauu5",
+    },
+    code_type_certif: {
+      type: String,
+      default: null,
+      description: "Code type de certification (ex: DE)",
+    },
+    type_certif: {
+      type: String,
+      default: null,
+      description: "Type de certification (ex: diplôme d'état)",
+    },
+    ancienne_fiche: {
+      type: [String],
+      default: null,
+      description: "Code rncp de l'ancienne fiche",
+    },
+    nouvelle_fiche: {
+      type: [String],
+      default: null,
+      description: "Code rncp de la nouvelle fiche",
+    },
+    demande: {
+      type: Number,
+      default: 0,
+      description: "Demande en cours de d'habilitation",
+    },
+    certificateurs: {
+      type: [Object],
+      default: [],
+      description: "Certificateurs",
+    },
+    nsf_code: {
+      type: String,
+      default: null,
+      description: "Code NSF",
+    },
+    nsf_libelle: {
+      type: String,
+      default: null,
+      description: "Libellé NSF",
+    },
+    romes: {
+      type: [Object],
+      default: [],
+      description: "Romes",
+    },
+    blocs_competences: {
+      type: [Object],
+      default: [],
+      description: "Blocs de compétences",
+    },
+    voix_acces: {
+      type: [Object],
+      default: [],
+      description: "Voix d'accès",
+    },
+    partenaires: {
+      type: [Object],
+      default: [],
+      description: "Partenaires",
+    },
+    rncp_outdated: {
+      type: Boolean,
+      default: false,
+      description: "Code rncp périmé (date fin enregistrement avant le 31 aout de l'année courante)",
+    },
+  },
+  { _id: false }
+);
+
 const rejectionCauseSchema = new mongoose.Schema(
   {
     error: {
@@ -241,93 +332,7 @@ const formationSchema = {
     description: "Le titre RNCP est éligible en apprentissage",
   },
   rncp_details: {
-    type: {
-      date_fin_validite_enregistrement: {
-        type: Date,
-        default: null,
-        description: "Date de validité de la fiche",
-      },
-      active_inactive: {
-        type: String,
-        default: null,
-        description: "fiche active ou non",
-      },
-      etat_fiche_rncp: {
-        type: String,
-        default: null,
-        description: "état fiche ex: Publiée",
-      },
-      niveau_europe: {
-        type: String,
-        default: null,
-        description: "Niveau européen ex: niveauu5",
-      },
-      code_type_certif: {
-        type: String,
-        default: null,
-        description: "Code type de certification (ex: DE)",
-      },
-      type_certif: {
-        type: String,
-        default: null,
-        description: "Type de certification (ex: diplôme d'état)",
-      },
-      ancienne_fiche: {
-        type: [String],
-        default: null,
-        description: "Code rncp de l'ancienne fiche",
-      },
-      nouvelle_fiche: {
-        type: [String],
-        default: null,
-        description: "Code rncp de la nouvelle fiche",
-      },
-      demande: {
-        type: Number,
-        default: 0,
-        description: "Demande en cours de d'habilitation",
-      },
-      certificateurs: {
-        type: [Object],
-        default: [],
-        description: "Certificateurs",
-      },
-      nsf_code: {
-        type: String,
-        default: null,
-        description: "Code NSF",
-      },
-      nsf_libelle: {
-        type: String,
-        default: null,
-        description: "Libellé NSF",
-      },
-      romes: {
-        type: [Object],
-        default: [],
-        description: "Romes",
-      },
-      blocs_competences: {
-        type: [Object],
-        default: [],
-        description: "Blocs de compétences",
-      },
-      voix_acces: {
-        type: [Object],
-        default: [],
-        description: "Voix d'accès",
-      },
-      partenaires: {
-        type: [Object],
-        default: [],
-        description: "Partenaires",
-      },
-      rncp_outdated: {
-        type: Boolean,
-        default: false,
-        description: "Code rncp périmé (date fin enregistrement avant le 31 aout de l'année courante)",
-      },
-    },
+    type: rncpDetailsSchema,
     default: null,
     description: "Détails RNCP (bloc de compétences etc..)",
   },
@@ -376,6 +381,11 @@ const formationSchema = {
     noIndex: true,
     description: "Email du contact pour cette formation",
   },
+  parcoursup_perimetre: {
+    type: Boolean,
+    default: false,
+    description: "Dans le périmètre parcoursup",
+  },
   parcoursup_statut: {
     type: String,
     enum: [
@@ -420,6 +430,11 @@ const formationSchema = {
     default: null,
     description: 'Date de publication (passage au statut "publié")',
   },
+  affelnet_perimetre: {
+    type: Boolean,
+    default: false,
+    description: "Dans le périmètre affelnet",
+  },
   affelnet_statut: {
     type: String,
     enum: [
@@ -439,6 +454,12 @@ const formationSchema = {
     description: "Affelnet : historique des statuts",
     noIndex: true,
   },
+  affelnet_id: {
+    index: true,
+    type: String,
+    default: null,
+    description: "identifiant Affelnet de la formation (code vœu)",
+  },
   affelnet_published_date: {
     type: Date,
     default: null,
@@ -455,11 +476,6 @@ const formationSchema = {
     default: false,
     description: "Est publiée, la formation est éligible pour le catalogue",
   },
-  rco_published: {
-    type: Boolean,
-    default: false,
-    description: "Est publiée dans le flux rco",
-  },
   forced_published: {
     type: Boolean,
     default: false,
@@ -475,7 +491,6 @@ const formationSchema = {
     type: [Object],
     default: [],
     description: "Historique des mises à jours",
-    noIndex: true,
   },
 
   last_update_at: {
@@ -489,25 +504,11 @@ const formationSchema = {
     description: "Qui a réalisé la dernière modification",
   },
 
-  // Flags
-  to_update: {
-    index: true,
-    type: Boolean,
-    default: false,
-    description: "Formation à mette à jour lors du script d'enrichissement",
-  },
-
   // Product specific
   idea_geo_coordonnees_etablissement: {
     type: String,
     implicit_type: "geo_point",
     description: "Latitude et longitude de l'établissement recherchable dans Idea",
-  },
-
-  update_error: {
-    type: String,
-    default: null,
-    description: "Erreur lors de la mise à jour de la formation",
   },
 
   lieu_formation_geo_coordonnees: {
@@ -590,6 +591,21 @@ const formationSchema = {
     type: String,
     default: null,
     description: "Affelnet : Informations offre de formation",
+  },
+  affelnet_url_infos_offre: {
+    type: String,
+    default: null,
+    description: "Affelnet : Libellé ressource complémentaire",
+  },
+  affelnet_modalites_offre: {
+    type: String,
+    default: null,
+    description: "Affelnet : Modalités particulières",
+  },
+  affelnet_url_modalites_offre: {
+    type: String,
+    default: null,
+    description: "Affelnet : Lien vers la ressource",
   },
   affelnet_code_nature: {
     type: String,

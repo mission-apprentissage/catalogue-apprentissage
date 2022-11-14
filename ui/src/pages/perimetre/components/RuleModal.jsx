@@ -42,7 +42,7 @@ import { RuleUpdatesHistory } from "./RuleUpdatesHistory";
 import { NavLink } from "react-router-dom";
 import { getCount, useNiveaux } from "../../../common/api/perimetre";
 
-const endpointNewFront = `${process.env.REACT_APP_BASE_URL}/api`;
+const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
 const formatDate = (date) => {
   return new Date(date).toLocaleDateString("fr-FR", {
@@ -79,7 +79,7 @@ export const getDiplomesAllowedForSubRulesUrl = (plateforme) => {
   }
 
   const params = new URLSearchParams(filters);
-  return `${endpointNewFront}/v1/entity/perimetre/regles?${params}`;
+  return `${CATALOGUE_API}/v1/entity/perimetre/regles?${params}`;
 };
 
 const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreateRule, plateforme, academie }) => {

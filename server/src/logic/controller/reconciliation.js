@@ -1,8 +1,8 @@
 const { Formation } = require("../../common/model");
 const { AFFELNET_STATUS } = require("../../constants/status");
 
-async function reconciliationAffelnet(formationAffelnet, match) {
-  const { code_nature, etablissement_type, code_mef, libelle_mnemonique } = formationAffelnet;
+async function reconciliationAffelnet(formationAffelnet, match, eraseInformations = false) {
+  const { code_nature, etablissement_type, code_mef, informations, code_offre, academie } = formationAffelnet;
   const { cle_ministere_educatif } = match;
 
   // pass through some data for Affelnet
@@ -16,11 +16,12 @@ async function reconciliationAffelnet(formationAffelnet, match) {
   ).lean();
   if (formation) {
     const update = {};
+    update.affelnet_id = `${academie}/${code_offre}`;
     update.affelnet_code_nature = code_nature;
     update.affelnet_secteur = etablissement_type === "Public" ? "PU" : "PR";
 
     // pre-fill affelnet_infos_offre with data from affelnet import if empty (to not erase user change)
-    update.affelnet_infos_offre = formation.affelnet_infos_offre || libelle_mnemonique;
+    update.affelnet_infos_offre = eraseInformations ? informations : formation.affelnet_infos_offre || informations;
 
     const affelnet_mefs_10 = formation.bcn_mefs_10 ?? [];
     const mef = affelnet_mefs_10.find(({ mef10 }) => mef10 === code_mef.substring(0, 10));

@@ -159,7 +159,7 @@ module.exports = () => {
    *       Cette route vous permet de mettre à jour les informations d'une formation donnée.<br/><br/>
    *       **Seulement sur les champs statut**
    *     security:
-   *       - bearerAuth: []
+   *       - cookieAuth: []
    *     parameters:
    *       - in: path
    *         name: id

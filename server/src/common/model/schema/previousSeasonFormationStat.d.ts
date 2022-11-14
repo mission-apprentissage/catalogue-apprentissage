@@ -15,11 +15,10 @@ export interface PreviousSeasonFormationStat {
    * Date de la statistique
    */
   date: Date;
-  /**
-   * Causes de disparition du périmètre par académie
-   */
-  vanishing_scope_causes: {
-    [k: string]: unknown;
-  };
+  academie?: string;
+  closed?: number;
+  qualiopi_lost?: number;
+  not_updated?: number;
+  other?: number;
   _id?: Types.ObjectId;
 }

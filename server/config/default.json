@@ -1,6 +1,6 @@
 {
   "appName": "Catalogue apprentissage App",
-  "env": "local",
+  "env": "dev",
   "publicUrl": "http://localhost",
   "mongodb": {
     "uri": "mongodb://127.0.0.1:27017/catalogue-apprentissage?retryWrites=true&w=majority"

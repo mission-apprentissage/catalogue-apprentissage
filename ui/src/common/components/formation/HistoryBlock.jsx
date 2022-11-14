@@ -12,6 +12,9 @@ import { hasAccessTo } from "../../utils/rolesUtils";
  * @returns {any[]} An array containing only the last items
  */
 const reduceSameValues = (array, check) => {
+  if (array.length === 0) {
+    return [];
+  }
   if (array.length === 1) {
     return [...array];
   }

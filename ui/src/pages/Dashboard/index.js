@@ -1,24 +1,10 @@
 import React from "react";
-import jwt from "jsonwebtoken";
 import { Box, Container, Heading, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 
 import Layout from "../layout/Layout";
 import { setTitle } from "../../common/utils/pageUtils";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
-
-const METABASE_SITE_URL = `${process.env.REACT_APP_METABASE_URL ?? process.env.REACT_APP_BASE_URL}/metabase`;
-const METABASE_SECRET_KEY = process.env.REACT_APP_METABASE_SECRET_KEY;
-
-const getIframeUrl = ({ id }) => {
-  const payload = {
-    resource: { dashboard: id },
-    params: {},
-    exp: Math.round(Date.now() / 1000) + 10 * 60, // 10 minutes
-  };
-
-  const token = jwt.sign(payload, METABASE_SECRET_KEY);
-  return METABASE_SITE_URL + "/embed/dashboard/" + token + "#bordered=false&titled=false";
-};
+import { getIframeUrl } from "../../common/utils/metabaseUtils";
 
 export default () => {
   const dashboards = [

@@ -1,4 +1,4 @@
-const { DualControlFormation } = require("../../../common/model");
+const { DualControlFormation, DualControlPerimeterReport } = require("../../../common/model");
 const logger = require("../../../common/logger");
 const { getQueryFromRule } = require("../../../common/utils/rulesUtils");
 const { ReglePerimetre } = require("../../../common/model");
@@ -7,7 +7,7 @@ const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { AFFELNET_STATUS } = require("../../../constants/status");
 
 const run = async () => {
-  await DualControlFormation.updateMany({}, { $set: { catalogue_published: true, published: true } });
+  // await DualControlFormation.updateMany({}, { $set: { catalogue_published: true, published: true } });
 
   // set "hors périmètre"
   await DualControlFormation.updateMany(
@@ -142,39 +142,54 @@ const run = async () => {
   // stats
   const totalPublished = await DualControlFormation.countDocuments({ published: true });
   const totalNotRelevant = await DualControlFormation.countDocuments({
-    // published: true,
+    published: true,
     affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
   });
   const totalToValidate = await DualControlFormation.countDocuments({
-    // published: true,
+    published: true,
     affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
   });
   const totalToCheck = await DualControlFormation.countDocuments({
-    // published: true,
+    published: true,
     affelnet_statut: AFFELNET_STATUS.A_PUBLIER,
   });
   const totalPending = await DualControlFormation.countDocuments({
-    // published: true,
+    published: true,
     affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
   });
   const totalAfPublished = await DualControlFormation.countDocuments({
-    // published: true,
+    published: true,
     affelnet_statut: AFFELNET_STATUS.PUBLIE,
   });
   const totalAfNotPublished = await DualControlFormation.countDocuments({
-    // published: true,
+    published: true,
     affelnet_statut: AFFELNET_STATUS.NON_PUBLIE,
   });
 
-  logger.info(
+  const toLog =
     `Total formations publiées dans le catalogue : ${totalPublished}\n` +
-      `Total formations hors périmètre : ${totalNotRelevant}/${totalPublished}\n` +
-      `Total formations à publier (soumis à validation) : ${totalToValidate}/${totalPublished}\n` +
-      `Total formations à publier : ${totalToCheck}/${totalPublished}\n` +
-      `Total formations en attente de publication : ${totalPending}/${totalPublished}\n` +
-      `Total formations publiées sur Affelnet : ${totalAfPublished}/${totalPublished}\n` +
-      `Total formations NON publiées sur Affelnet : ${totalAfNotPublished}/${totalPublished}`
-  );
+    `Total formations hors périmètre : ${totalNotRelevant}/${totalPublished}\n` +
+    `Total formations à publier (soumis à validation) : ${totalToValidate}/${totalPublished}\n` +
+    `Total formations à publier : ${totalToCheck}/${totalPublished}\n` +
+    `Total formations en attente de publication : ${totalPending}/${totalPublished}\n` +
+    `Total formations publiées sur Affelnet : ${totalAfPublished}/${totalPublished}\n` +
+    `Total formations NON publiées sur Affelnet : ${totalAfNotPublished}/${totalPublished}`;
+
+  console.log(toLog);
+  logger.info(toLog);
+
+  return await DualControlPerimeterReport.create({
+    plateforme: "affelnet",
+    statuts: {
+      totalPublished,
+      totalNotRelevant,
+      totalToValidate,
+      totalToCheck,
+      totalPending,
+      totalAfPublished,
+      totalAfNotPublished,
+    },
+  });
 };
 
 module.exports = { run };
