@@ -26,7 +26,7 @@
     "secret": "mission-apprentissage"
   },
   "log": {
-    "type": "stdout",
+    "type": "console",
     "level": "info"
   },
   "slackWebhookUrl": null,
