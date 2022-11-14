@@ -1,8 +1,8 @@
 const express = require("express");
 const Joi = require("joi");
-const { oleoduc, transformIntoJSON } = require("oleoduc");
+const { oleoduc, transformIntoJSON, transformIntoCSV } = require("oleoduc");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
-const { sendJsonStream } = require("../../common/utils/httpUtils");
+const { sendJsonStream, sendCsvStream } = require("../../common/utils/httpUtils");
 const { paginate } = require("../../common/utils/mongooseUtils");
 const { Etablissement } = require("../../common/model");
 const { sanitize } = require("../../common/utils/sanitizeUtils");
@@ -160,6 +160,31 @@ module.exports = () => {
 
       const stream = oleoduc(Etablissement.find(json).limit(limit).cursor(), transformIntoJSON());
       return sendJsonStream(stream, res);
+    })
+  );
+
+  router.get(
+    "/etablissements.csv",
+    tryCatch(async (req, res) => {
+      const sanitizedQuery = sanitize(req.query);
+
+      let { query, limit } = await Joi.object({
+        query: Joi.string().default("{}"),
+        limit: Joi.number().default(10),
+      }).validateAsync(sanitizedQuery, { abortEarly: false });
+
+      let json = JSON.parse(query);
+
+      // Par défaut, ne retourne que les établissements published
+      if (!sanitizedQuery?.query) {
+        Object.assign(json, defaultFilter);
+      }
+
+      const stream = oleoduc(
+        Etablissement.find(json).limit(limit).lean().cursor(),
+        transformIntoCSV({ mapper: (v) => `"${v || ""}"` })
+      );
+      return sendCsvStream(stream, res);
     })
   );
 
