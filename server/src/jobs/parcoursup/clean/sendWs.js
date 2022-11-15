@@ -3,7 +3,7 @@ const logger = require("../../../common/logger");
 const { runScript } = require("../../scriptWrapper");
 const { cursor } = require("../../../common/utils/cursor");
 const { delay } = require("../../../common/utils/asyncUtils");
-const { postFormation } = require("../export/parcoursupApi");
+const { updateFormation } = require("../export/parcoursupApi");
 
 const run = async () => {
   try {
@@ -11,7 +11,7 @@ const run = async () => {
       Formation.find({ parcoursup_id: { $ne: undefined } }),
       async ({ cle_ministere_educatif, parcoursup_id }) => {
         console.log({ cle_ministere_educatif, parcoursup_id });
-        await postFormation({ cle_ministere_educatif, parcoursup_id });
+        await updateFormation({ cle_ministere_educatif, parcoursup_id });
         await delay(500);
       }
     );
