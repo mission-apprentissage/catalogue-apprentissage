@@ -1,9 +1,9 @@
 const express = require("express");
 const Joi = require("joi");
-const { oleoduc, compose, transformIntoJSON } = require("oleoduc");
+const { oleoduc, compose, transformIntoJSON, transformIntoCSV } = require("oleoduc");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { Formation } = require("../../common/model");
-const { sendJsonStream } = require("../../common/utils/httpUtils");
+const { sendJsonStream, sendCsvStream } = require("../../common/utils/httpUtils");
 const { sanitize } = require("../../common/utils/sanitizeUtils");
 const { paginate } = require("../../common/utils/mongooseUtils");
 
@@ -209,7 +209,7 @@ module.exports = () => {
     return res.status(404).send({ message: `Item ${itemId} doesn't exist` });
   });
 
-  const streamFormations = tryCatch(async (req, res) => {
+  const streamFormationsJSON = tryCatch(async (req, res) => {
     let { query, select, limit } = await Joi.object({
       query: Joi.string().default("{}"),
       select: Joi.string().default(
@@ -225,6 +225,27 @@ module.exports = () => {
 
     const stream = compose(Formation.find(filter, selector).limit(limit).cursor(), transformIntoJSON());
     return sendJsonStream(stream, res);
+  });
+
+  const streamFormationsCSV = tryCatch(async (req, res) => {
+    let { query, select, limit } = await Joi.object({
+      query: Joi.string().default("{}"),
+      select: Joi.string().default(
+        '{"affelnet_statut_history":0,"parcoursup_statut_history":0,"updates_history":0,"__v":0}'
+      ),
+      limit: Joi.number().default(10),
+    }).validateAsync(req.query, { abortEarly: false });
+
+    let filter = JSON.parse(query);
+    filter = sanitize(filter, { allowSafeOperators: true });
+
+    const selector = JSON.parse(select);
+
+    const stream = compose(
+      Formation.find(filter, selector).limit(limit).lean().cursor(),
+      transformIntoCSV({ mapper: (v) => `"${v || ""}"` })
+    );
+    return sendCsvStream(stream, res);
   });
 
   /**
@@ -308,9 +329,11 @@ module.exports = () => {
    *                        type: number
    */
   router.get("/formations", getFormations);
+  /** @deprecated */
   router.get("/formations2021", getFormations);
 
   router.post("/formations", postFormations);
+  /** @deprecated */
   router.post("/formations2021", postFormations);
 
   /**
@@ -344,12 +367,14 @@ module.exports = () => {
    *         description: KO
    */
   router.get("/formations/count", countFormations);
+  /** @deprecated */
   router.get("/formations2021/count", countFormations);
 
   /**
    * Get one converted RCO formation by query /formation GET
    */
   router.get("/formation", getFormation);
+  /** @deprecated */
   router.get("/formation2021", getFormation);
 
   /**
@@ -378,13 +403,17 @@ module.exports = () => {
    *         description: KO
    */
   router.get("/formation/:id", getFormationById);
+  /** @deprecated */
   router.get("/formation2021/:id", getFormationById);
 
   /**
    * Stream formations as json array
    */
-  router.get("/formations.json", streamFormations);
-  router.get("/formations2021.json", streamFormations);
+  router.get("/formations.json", streamFormationsJSON);
+  /** @deprecated */
+  router.get("/formations2021.json", streamFormationsJSON);
+
+  router.get("/formations.csv", streamFormationsCSV);
 
   return router;
 };
