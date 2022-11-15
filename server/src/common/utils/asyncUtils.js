@@ -17,4 +17,8 @@ const chunkedAsyncForEach = async (array, callback, chunkSize = 10) => {
   });
 };
 
-module.exports = { asyncForEach, chunkedAsyncForEach };
+const delay = (time) => {
+  return new Promise((resolve) => setTimeout(resolve, time));
+};
+
+module.exports = { asyncForEach, chunkedAsyncForEach, delay };
