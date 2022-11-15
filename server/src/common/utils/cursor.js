@@ -24,6 +24,8 @@ const cursor = async (request, callback) => {
 
     progressBar?.update(index);
   }
+
+  progressBar?.stop();
 };
 
 module.exports = { cursor };
