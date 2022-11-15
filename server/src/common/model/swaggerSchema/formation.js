@@ -466,6 +466,29 @@ module.exports = {
         default: false,
         description: "Formation éligible au catalogue générale",
       },
+      date_debut: {
+        type: "array",
+        items: {
+          type: "string",
+          format: "date-time",
+        },
+        default: [],
+        description: "Formation éligible au catalogue générale",
+      },
+      date_fin: {
+        type: "array",
+        items: {
+          type: "string",
+          format: "date-time",
+        },
+        default: [],
+        description: "Formation éligible au catalogue générale",
+      },
+      id_RCO: {
+        type: "string",
+        default: "null",
+        description: "Identifiant RCO",
+      },
       etablissement_gestionnaire_id: {
         type: "string",
         default: "null",

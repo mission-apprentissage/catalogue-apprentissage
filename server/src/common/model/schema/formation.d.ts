@@ -252,6 +252,18 @@ export interface Formation {
    */
   catalogue_published?: boolean;
   /**
+   * Formation éligible au catalogue générale
+   */
+  date_debut?: Date[];
+  /**
+   * Formation éligible au catalogue générale
+   */
+  date_fin?: Date[];
+  /**
+   * Identifiant RCO
+   */
+  id_RCO?: string;
+  /**
    * Identifiant établissement gestionnaire
    */
   etablissement_gestionnaire_id?: string;
