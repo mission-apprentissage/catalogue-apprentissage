@@ -1,3 +1,7 @@
+/**
+ * See https://test2.parcoursup.fr/ApiFormation/public/swagger-ui/index.html?configUrl=/ApiFormation/public/api-docs/swagger-config#/acces-formations-controller-rest/majFormation
+ */
+
 const axios = require("axios");
 const logger = require("../../../common/logger");
 const { createParcoursupToken } = require("../../../common/utils/jwtUtils");
@@ -17,6 +21,7 @@ const postFormation = async (data) => {
     const { data: responseData } = await axios.post(endpoint, data, {
       headers: { Authorization: `Bearer ${token}` },
     });
+
     return responseData;
   } catch (err) {
     logger.error(err);
@@ -32,12 +37,13 @@ const updateFormation = async (data) => {
 
   try {
     const { data: responseData } = await axios.post(
-      "http://test2.parcoursup.fr/ApiFormation/api/formations/majFormation",
+      "https://test2.parcoursup.fr/ApiFormation/api/formations/majFormation",
       data,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
     );
+
     return responseData;
   } catch (err) {
     logger.error(err);
