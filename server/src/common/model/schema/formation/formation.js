@@ -677,6 +677,24 @@ const formationSchema = {
     description: "Formation éligible au catalogue générale",
   },
 
+  date_debut: {
+    type: [Date],
+    default: [],
+    description: "Formation éligible au catalogue générale",
+  },
+
+  date_fin: {
+    type: [Date],
+    default: [],
+    description: "Formation éligible au catalogue générale",
+  },
+
+  id_RCO: {
+    type: String,
+    default: null,
+    description: "Identifiant RCO",
+  },
+
   ...etablissementGestionnaireInfo,
   ...etablissementFormateurInfo,
   ...etablissementReferenceInfo,

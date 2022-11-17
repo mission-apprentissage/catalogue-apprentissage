@@ -5,11 +5,13 @@ const { cursor } = require("../../../common/utils/cursor");
 // const { delay } = require("../../../common/utils/asyncUtils");
 const { updateFormation } = require("../export/parcoursupApi");
 
-const run = async () => {
+const run = async ({ limit, skip } = { limit: 0, skip: 0 }) => {
   const results = [];
   try {
     await cursor(
-      Formation.find({ parcoursup_id: { $ne: undefined } }).limit(10),
+      Formation.find({ parcoursup_id: { $ne: undefined } })
+        .limit(limit)
+        .skip(skip),
       async ({ cle_ministere_educatif, parcoursup_id, parcoursup_mefs_10, rncp_code, cfd_entree, uai_formation }) => {
         const [{ mef10: mef } = { mef10: null }] = parcoursup_mefs_10 ?? [];
 
@@ -50,8 +52,11 @@ const run = async () => {
 if (process.env.standalone) {
   runScript(async () => {
     logger.info(" -- Start formation parcoursup_id sendWs -- ");
+    const args = process.argv.slice(2);
+    const limit = args.find((arg) => arg.startsWith("--limit"))?.split("=")?.[1];
+    const skip = args.find((arg) => arg.startsWith("--skip"))?.split("=")?.[1];
 
-    await run();
+    await run({ limit: limit ? Number(limit) : 0, skip: skip ? Number(skip) : 0 });
 
     logger.info(" -- End formation parcoursup_id sendWs -- ");
   });

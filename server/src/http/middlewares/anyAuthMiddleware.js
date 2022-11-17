@@ -1,7 +1,6 @@
 const config = require("config");
 
 module.exports = (req, res, next) => {
-  // console.log(req.user);
   switch (true) {
     // Auth via passport (cookie)
     case !!req.user:
