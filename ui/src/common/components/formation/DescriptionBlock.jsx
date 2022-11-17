@@ -118,8 +118,8 @@ export const DescriptionBlock = ({ formation }) => {
             </Text>
           </MefContainer>
           <Text mb={4}>
-            Début de formation :
-            <FormationPeriode periode={formation.periode} /> <InfoTooltip description={helpText.formation.periode} />
+            Début de formation : <FormationPeriode periode={formation.periode} />{" "}
+            <InfoTooltip description={helpText.formation.periode} />
           </Text>
           <Text mb={4}>
             Capacite d'accueil :{" "}

@@ -18,7 +18,7 @@ const updateRelationFields = async () => {
 };
 
 const computeRelationFields = async (fields) => {
-  const etablissement_siege_id = (await Etablissement.find({ siret: fields.etablissement_siege_siret }))?.id;
+  const etablissement_siege_id = (await Etablissement.findOne({ siret: fields.etablissement_siege_siret }))?.id;
 
   const formations = await Formation.find({
     $or: [{ etablissement_gestionnaire_siret: fields.siret }, { etablissement_formateur_siret: fields.siret }],
@@ -29,8 +29,6 @@ const computeRelationFields = async (fields) => {
   return {
     etablissement_siege_id,
     formation_ids,
-
-    ...fields,
   };
 };
 
