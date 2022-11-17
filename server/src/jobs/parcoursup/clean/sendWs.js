@@ -4,6 +4,7 @@ const { runScript } = require("../../scriptWrapper");
 const { cursor } = require("../../../common/utils/cursor");
 // const { delay } = require("../../../common/utils/asyncUtils");
 const { updateFormation } = require("../export/parcoursupApi");
+const ObjectsToCsv = require("objects-to-csv");
 
 const run = async ({ limit, skip } = { limit: 0, skip: 0 }) => {
   const results = [];
@@ -47,12 +48,23 @@ const run = async ({ limit, skip } = { limit: 0, skip: 0 }) => {
   }
 
   logger.info(results);
+
+  (async () => {
+    const csv = new ObjectsToCsv(results);
+
+    // Save to file:
+    await csv.toDisk("./test.csv");
+
+    // Return the CSV file as string:
+    console.log(await csv.toString());
+  })();
 };
 
 if (process.env.standalone) {
   runScript(async () => {
     logger.info(" -- Start formation parcoursup_id sendWs -- ");
     const args = process.argv.slice(2);
+
     const limit = args.find((arg) => arg.startsWith("--limit"))?.split("=")?.[1];
     const skip = args.find((arg) => arg.startsWith("--skip"))?.split("=")?.[1];
 
