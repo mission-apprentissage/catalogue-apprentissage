@@ -23,37 +23,11 @@ const run = async () => {
           mef: mef ? Number(mef) : null,
         };
 
-        // console.log(toSend);
-
-        // const toSend =
-        // {
-        //   user: null,
-        //   g_ta_cod: 10112,
-        //   rncp: [35386, 35387, 35388, 35389],
-        //   cfd: null,
-        //   uai: "0790024X",
-        //   rco: "110741P01211886090770005518860907700055-79191#L01",
-        //   mef: null,
-        // };
-
-        // {
-        //   rncp: [35460],
-        //   cfd: 32025215,
-        //   mef: 3112521521,
-        //   uai: "0021906L",
-        //   rco: "087941P012X5001380290002950013802900029-02173#L01",
-        //   g_ta_cod: 34513,
-        // };
-
         try {
-          const response = await updateFormation(toSend);
+          await updateFormation(toSend);
           results[results.length] = {
             response: "OK",
             ...toSend,
-            success: {
-              msg: response.data,
-              status: response.status,
-            },
           };
         } catch (err) {
           console.info(err);
