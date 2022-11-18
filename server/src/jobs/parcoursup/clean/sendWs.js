@@ -31,6 +31,7 @@ const run = async ({ limit, skip, file } = { limit: 0, skip: 0 }) => {
           results[results.length] = {
             response: "OK",
             ...toSend,
+            error: null,
           };
         } catch (err) {
           console.info(err);
