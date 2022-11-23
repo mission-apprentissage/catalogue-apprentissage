@@ -26,22 +26,24 @@ const run = async ({ limit, skip, file } = { limit: 0, skip: 0 }) => {
           mef: mef ? Number(mef) : null,
         };
 
+        const index = results.length;
+
         try {
           await updateFormation(toSend);
-          results[results.length] = {
+          results[index] = {
             response: "OK",
             ...toSend,
             error: null,
           };
         } catch (err) {
-          console.info(err);
-          console.error({ ...toSend, error: err.response });
-          results[results.length] = {
+          results[index] = {
             response: "KO",
             ...toSend,
             error: { msg: err.response.data, status: err.response.status },
           };
         }
+
+        console.log(results[index]);
       }
     );
   } catch (err) {
