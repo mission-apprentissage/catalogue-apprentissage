@@ -182,16 +182,6 @@ const formationSchema = {
     default: null,
     description: "Code formation diplôme d'entrée (année 1 de l'apprentissage)",
   },
-  affelnet_mefs_10: {
-    type: [mefSchema],
-    default: [],
-    description: "Tableau de Code MEF 10 caractères et modalités (filtrés pour Affelnet si applicable)",
-  },
-  parcoursup_mefs_10: {
-    type: [mefSchema],
-    default: [],
-    description: "Tableau de Code MEF 10 caractères et modalités (filtrés pour Parcoursup si applicable)",
-  },
   nom_academie: {
     type: String,
     default: null,
@@ -381,89 +371,10 @@ const formationSchema = {
     noIndex: true,
     description: "Email du contact pour cette formation",
   },
-  parcoursup_perimetre: {
-    type: Boolean,
-    default: false,
-    description: "Dans le périmètre parcoursup",
-  },
-  parcoursup_statut: {
-    type: String,
-    enum: [
-      "hors périmètre",
-      "publié",
-      "non publié",
-      "à publier (sous condition habilitation)",
-      "à publier (vérifier accès direct postbac)",
-      "à publier (soumis à validation Recteur)",
-      "à publier",
-      "en attente de publication",
-      "rejet de publication",
-    ],
-    default: "hors périmètre",
-    description: "Statut parcoursup",
-  },
-  parcoursup_statut_history: {
-    type: [Object],
-    default: [],
-    description: "Parcoursup : historique des statuts",
-    noIndex: true,
-  },
-  parcoursup_error: {
-    type: String,
-    default: null,
-    description: "Erreur lors de la création de la formation sur ParcourSup (via le WS)",
-  },
   rejection: {
     type: rejectionCauseSchema,
     default: null,
     description: "Cause du rejet de publication",
-  },
-
-  parcoursup_id: {
-    index: true,
-    type: String,
-    default: null,
-    description: "identifiant Parcoursup de la formation (g_ta_cod)",
-  },
-  parcoursup_published_date: {
-    type: Date,
-    default: null,
-    description: 'Date de publication (passage au statut "publié")',
-  },
-  affelnet_perimetre: {
-    type: Boolean,
-    default: false,
-    description: "Dans le périmètre affelnet",
-  },
-  affelnet_statut: {
-    type: String,
-    enum: [
-      "hors périmètre",
-      "publié",
-      "non publié",
-      "à publier (soumis à validation)",
-      "à publier",
-      "en attente de publication",
-    ],
-    default: "hors périmètre",
-    description: "Statut affelnet",
-  },
-  affelnet_statut_history: {
-    type: [Object],
-    default: [],
-    description: "Affelnet : historique des statuts",
-    noIndex: true,
-  },
-  affelnet_id: {
-    index: true,
-    type: String,
-    default: null,
-    description: "identifiant Affelnet de la formation (code vœu)",
-  },
-  affelnet_published_date: {
-    type: Date,
-    default: null,
-    description: 'Date de publication (passage au statut "publié")',
   },
   last_statut_update_date: {
     type: Date,
@@ -504,7 +415,6 @@ const formationSchema = {
     description: "Qui a réalisé la dernière modification",
   },
 
-  // Product specific
   idea_geo_coordonnees_etablissement: {
     type: String,
     implicit_type: "geo_point",
@@ -587,42 +497,6 @@ const formationSchema = {
     default: null,
     description: "BCN : niveau formation diplôme",
   },
-  affelnet_infos_offre: {
-    type: String,
-    default: null,
-    description: "Affelnet : Informations offre de formation",
-  },
-  affelnet_url_infos_offre: {
-    type: String,
-    default: null,
-    description: "Affelnet : Libellé ressource complémentaire",
-  },
-  affelnet_modalites_offre: {
-    type: String,
-    default: null,
-    description: "Affelnet : Modalités particulières",
-  },
-  affelnet_url_modalites_offre: {
-    type: String,
-    default: null,
-    description: "Affelnet : Lien vers la ressource",
-  },
-  affelnet_code_nature: {
-    type: String,
-    default: null,
-    description: "Affelnet : code nature de l'établissement de formation",
-  },
-  affelnet_secteur: {
-    type: String,
-    enum: ["PR", "PU", null],
-    default: null,
-    description: "Affelnet : type d'établissement (PR: Privé / PU: Public)",
-  },
-  affelnet_raison_depublication: {
-    type: String,
-    default: null,
-    description: "Affelnet : raison de dépublication",
-  },
   bcn_mefs_10: {
     type: [mefSchema],
     default: [],
@@ -632,11 +506,6 @@ const formationSchema = {
     type: Object,
     default: null,
     description: "Champs édités par un utilisateur",
-  },
-  parcoursup_raison_depublication: {
-    type: String,
-    default: null,
-    description: "Parcoursup : raison de dépublication",
   },
   distance_lieu_formation_etablissement_formateur: {
     type: Number,
@@ -695,9 +564,144 @@ const formationSchema = {
     description: "Identifiant RCO",
   },
 
+  // Etablissements
   ...etablissementGestionnaireInfo,
   ...etablissementFormateurInfo,
   ...etablissementReferenceInfo,
+
+  // PARCOURSUP
+
+  parcoursup_perimetre: {
+    type: Boolean,
+    default: false,
+    description: "Dans le périmètre parcoursup",
+  },
+  parcoursup_statut: {
+    type: String,
+    enum: [
+      "hors périmètre",
+      "publié",
+      "non publié",
+      "à publier (sous condition habilitation)",
+      "à publier (vérifier accès direct postbac)",
+      "à publier (soumis à validation Recteur)",
+      "à publier",
+      "en attente de publication",
+      "rejet de publication",
+    ],
+    default: "hors périmètre",
+    description: "Statut parcoursup",
+  },
+  parcoursup_statut_history: {
+    type: [Object],
+    default: [],
+    description: "Parcoursup : historique des statuts",
+    noIndex: true,
+  },
+  parcoursup_error: {
+    type: String,
+    default: null,
+    description: "Erreur lors de la création de la formation sur ParcourSup (via le WS)",
+  },
+  parcoursup_id: {
+    index: true,
+    type: String,
+    default: null,
+    description: "identifiant Parcoursup de la formation (g_ta_cod)",
+  },
+  parcoursup_published_date: {
+    type: Date,
+    default: null,
+    description: 'Date de publication (passage au statut "publié")',
+  },
+  parcoursup_raison_depublication: {
+    type: String,
+    default: null,
+    description: "Parcoursup : raison de dépublication",
+  },
+  parcoursup_mefs_10: {
+    type: [mefSchema],
+    default: [],
+    description: "Tableau de Code MEF 10 caractères et modalités (filtrés pour Parcoursup si applicable)",
+  },
+
+  // AFFELNET
+  affelnet_perimetre: {
+    type: Boolean,
+    default: false,
+    description: "Dans le périmètre affelnet",
+  },
+  affelnet_statut: {
+    type: String,
+    enum: [
+      "hors périmètre",
+      "publié",
+      "non publié",
+      "à publier (soumis à validation)",
+      "à publier",
+      "en attente de publication",
+    ],
+    default: "hors périmètre",
+    description: "Statut affelnet",
+  },
+  affelnet_statut_history: {
+    type: [Object],
+    default: [],
+    description: "Affelnet : historique des statuts",
+    noIndex: true,
+  },
+  affelnet_id: {
+    index: true,
+    type: String,
+    default: null,
+    description: "identifiant Affelnet de la formation (code vœu)",
+  },
+  affelnet_published_date: {
+    type: Date,
+    default: null,
+    description: 'Date de publication (passage au statut "publié")',
+  },
+  affelnet_infos_offre: {
+    type: String,
+    default: null,
+    description: "Affelnet : Informations offre de formation",
+  },
+  affelnet_url_infos_offre: {
+    type: String,
+    default: null,
+    description: "Affelnet : Libellé ressource complémentaire",
+  },
+  affelnet_modalites_offre: {
+    type: String,
+    default: null,
+    description: "Affelnet : Modalités particulières",
+  },
+  affelnet_url_modalites_offre: {
+    type: String,
+    default: null,
+    description: "Affelnet : Lien vers la ressource",
+  },
+  affelnet_code_nature: {
+    type: String,
+    default: null,
+    description: "Affelnet : code nature de l'établissement de formation",
+  },
+  affelnet_secteur: {
+    type: String,
+    enum: ["PR", "PU", null],
+    default: null,
+    description: "Affelnet : type d'établissement (PR: Privé / PU: Public)",
+  },
+  affelnet_raison_depublication: {
+    type: String,
+    default: null,
+    description: "Affelnet : raison de dépublication",
+  },
+  affelnet_mefs_10: {
+    type: [mefSchema],
+    default: [],
+    description: "Tableau de Code MEF 10 caractères et modalités (filtrés pour Affelnet si applicable)",
+  },
 };
 
 module.exports = formationSchema;

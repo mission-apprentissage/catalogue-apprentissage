@@ -7,8 +7,9 @@ const { transformData, compose, writeData, oleoduc, filterData } = require("oleo
 const { omitEmpty } = require("../../../common/utils/objectUtils");
 
 const transformStream = (data) => {
+  console.log(data);
   return {
-    cle_ministere_educatif: data["Clé_ME"],
+    cle_ministere_educatif: data["cle_ministere_educatif"],
     parcoursup_id: data["parcoursup_id"],
   };
 };
@@ -18,6 +19,7 @@ const run = async (csv) => {
     const stream = compose(
       csv,
       parseCsv({
+        delimiter: ",",
         on_record: (record) => omitEmpty(record),
       }),
       transformData(transformStream),
