@@ -24,9 +24,9 @@ const createParcoursupToken = ({ ttl = 20000, id, data, privateKey, pwd }) => {
   const dataStr = JSON.stringify(data);
   const hash = crypto.createHash("sha512").update(dataStr, "utf-8").digest("hex");
 
-  console.log("expire :", expire, "->", new Date(expire));
-  console.log("data:", dataStr);
-  console.log("hash:", hash);
+  // console.log("expire :", expire, "->", new Date(expire));
+  // console.log("data:", dataStr);
+  // console.log("hash:", hash);
 
   return jwt.sign(
     {
