@@ -5,11 +5,12 @@ const { cursor } = require("../../../common/utils/cursor");
 const { updateFormation } = require("../export/parcoursupApi");
 const ObjectsToCsv = require("objects-to-csv");
 
-const run = async ({ limit, skip, file, clean } = { limit: 0, skip: 0, clean: false }) => {
+const run = async ({ filter, limit, skip, file, clean } = { limit: 0, skip: 0, clean: false }) => {
+  console.log(filter);
   const results = [];
   try {
     await cursor(
-      Formation.find({ parcoursup_id: { $ne: undefined } })
+      Formation.find({ parcoursup_id: { $ne: undefined }, ...filter })
         .limit(limit)
         .skip(skip),
       async ({ cle_ministere_educatif, parcoursup_id, parcoursup_mefs_10, rncp_code, cfd, uai_formation }) => {
@@ -72,16 +73,26 @@ if (process.env.standalone) {
     logger.info(" -- Start formation parcoursup_id sendWs -- ");
     const args = process.argv.slice(2);
 
-    // Limite de formation envoyée sur le WS de maj Parcoursup
+    // Filtre appliquée aux formations envoyées
+    const filter = args.find((arg) => arg.startsWith("--filter"))?.split("=")?.[1];
+    // Limite de formations envoyées sur le WS de maj Parcoursup
     const limit = args.find((arg) => arg.startsWith("--limit"))?.split("=")?.[1];
-    // Nombre de formation à skip avant d'appliquer la limite
+    // Nombre de formations à skip avant d'appliquer la limite
     const skip = args.find((arg) => arg.startsWith("--skip"))?.split("=")?.[1];
     // Nom du fichier csv dans lequel on écrira les résultats
     const file = args.find((arg) => arg.startsWith("--file"))?.split("=")?.[1];
     // Option pour dés-associer les parcoursup_id en cas d'erreur du WS (à n'utiliser qu'une fois les cas d'erreur analysés)
     const clean = !!args.find((arg) => arg.startsWith("--clean"));
 
-    await run({ limit: limit ? Number(limit) : 0, skip: skip ? Number(skip) : 0, file, clean });
+    console.log(filter);
+
+    await run({
+      filter: JSON.parse(filter),
+      limit: limit ? Number(limit) : 0,
+      skip: skip ? Number(skip) : 0,
+      file,
+      clean,
+    });
 
     logger.info(" -- End formation parcoursup_id sendWs -- ");
   });

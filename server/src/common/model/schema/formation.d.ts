@@ -34,14 +34,6 @@ export interface Formation {
    */
   cfd_entree?: string;
   /**
-   * Tableau de Code MEF 10 caractères et modalités (filtrés pour Affelnet si applicable)
-   */
-  affelnet_mefs_10?: ItemOfAffelnetMefs_10[];
-  /**
-   * Tableau de Code MEF 10 caractères et modalités (filtrés pour Parcoursup si applicable)
-   */
-  parcoursup_mefs_10?: ItemOfParcoursupMefs_10[];
-  /**
    * Nom de l'académie
    */
   nom_academie?: string;
@@ -170,66 +162,7 @@ export interface Formation {
    * Année incohérente avec les codes mefs
    */
   annee_incoherente?: boolean | null;
-  /**
-   * Dans le périmètre parcoursup
-   */
-  parcoursup_perimetre?: boolean;
-  /**
-   * Statut parcoursup
-   */
-  parcoursup_statut?:
-    | "hors périmètre"
-    | "publié"
-    | "non publié"
-    | "à publier (sous condition habilitation)"
-    | "à publier (vérifier accès direct postbac)"
-    | "à publier (soumis à validation Recteur)"
-    | "à publier"
-    | "en attente de publication"
-    | "rejet de publication";
-  /**
-   * Parcoursup : historique des statuts
-   */
-  parcoursup_statut_history?: unknown[];
-  /**
-   * Erreur lors de la création de la formation sur ParcourSup (via le WS)
-   */
-  parcoursup_error?: string;
   rejection?: Rejection;
-  /**
-   * identifiant Parcoursup de la formation (g_ta_cod)
-   */
-  parcoursup_id?: string;
-  /**
-   * Date de publication (passage au statut "publié")
-   */
-  parcoursup_published_date?: Date;
-  /**
-   * Dans le périmètre affelnet
-   */
-  affelnet_perimetre?: boolean;
-  /**
-   * Statut affelnet
-   */
-  affelnet_statut?:
-    | "hors périmètre"
-    | "publié"
-    | "non publié"
-    | "à publier (soumis à validation)"
-    | "à publier"
-    | "en attente de publication";
-  /**
-   * Affelnet : historique des statuts
-   */
-  affelnet_statut_history?: unknown[];
-  /**
-   * identifiant Affelnet de la formation (code vœu)
-   */
-  affelnet_id?: string;
-  /**
-   * Date de publication (passage au statut "publié")
-   */
-  affelnet_published_date?: Date;
   /**
    * Date de dernière modification du statut Affelnet ou Parcoursup
    */
@@ -319,34 +252,6 @@ export interface Formation {
    */
   niveau_formation_diplome?: string;
   /**
-   * Affelnet : Informations offre de formation
-   */
-  affelnet_infos_offre?: string;
-  /**
-   * Affelnet : Libellé ressource complémentaire
-   */
-  affelnet_url_infos_offre?: string;
-  /**
-   * Affelnet : Modalités particulières
-   */
-  affelnet_modalites_offre?: string;
-  /**
-   * Affelnet : Lien vers la ressource
-   */
-  affelnet_url_modalites_offre?: string;
-  /**
-   * Affelnet : code nature de l'établissement de formation
-   */
-  affelnet_code_nature?: string;
-  /**
-   * Affelnet : type d'établissement (PR: Privé / PU: Public)
-   */
-  affelnet_secteur?: "PR" | "PU" | null;
-  /**
-   * Affelnet : raison de dépublication
-   */
-  affelnet_raison_depublication?: string;
-  /**
    * BCN : Codes MEF 10 caractères
    */
   bcn_mefs_10?: ItemOfBcnMefs_10[];
@@ -356,10 +261,6 @@ export interface Formation {
   editedFields?: {
     [k: string]: unknown;
   };
-  /**
-   * Parcoursup : raison de dépublication
-   */
-  parcoursup_raison_depublication?: string;
   /**
    * distance entre le Lieu de formation et l'établissement formateur
    */
@@ -593,23 +494,106 @@ export interface Formation {
    * Date de création de l'établissement
    */
   etablissement_reference_date_creation?: Date;
+  /**
+   * Dans le périmètre parcoursup
+   */
+  parcoursup_perimetre?: boolean;
+  /**
+   * Statut parcoursup
+   */
+  parcoursup_statut?:
+    | "hors périmètre"
+    | "publié"
+    | "non publié"
+    | "à publier (sous condition habilitation)"
+    | "à publier (vérifier accès direct postbac)"
+    | "à publier (soumis à validation Recteur)"
+    | "à publier"
+    | "en attente de publication"
+    | "rejet de publication";
+  /**
+   * Parcoursup : historique des statuts
+   */
+  parcoursup_statut_history?: unknown[];
+  /**
+   * Erreur lors de la création de la formation sur ParcourSup (via le WS)
+   */
+  parcoursup_error?: string;
+  /**
+   * identifiant Parcoursup de la formation (g_ta_cod)
+   */
+  parcoursup_id?: string;
+  /**
+   * Date de publication (passage au statut "publié")
+   */
+  parcoursup_published_date?: Date;
+  /**
+   * Parcoursup : raison de dépublication
+   */
+  parcoursup_raison_depublication?: string;
+  /**
+   * Tableau de Code MEF 10 caractères et modalités (filtrés pour Parcoursup si applicable)
+   */
+  parcoursup_mefs_10?: ItemOfParcoursupMefs_10[];
+  /**
+   * Dans le périmètre affelnet
+   */
+  affelnet_perimetre?: boolean;
+  /**
+   * Statut affelnet
+   */
+  affelnet_statut?:
+    | "hors périmètre"
+    | "publié"
+    | "non publié"
+    | "à publier (soumis à validation)"
+    | "à publier"
+    | "en attente de publication";
+  /**
+   * Affelnet : historique des statuts
+   */
+  affelnet_statut_history?: unknown[];
+  /**
+   * identifiant Affelnet de la formation (code vœu)
+   */
+  affelnet_id?: string;
+  /**
+   * Date de publication (passage au statut "publié")
+   */
+  affelnet_published_date?: Date;
+  /**
+   * Affelnet : Informations offre de formation
+   */
+  affelnet_infos_offre?: string;
+  /**
+   * Affelnet : Libellé ressource complémentaire
+   */
+  affelnet_url_infos_offre?: string;
+  /**
+   * Affelnet : Modalités particulières
+   */
+  affelnet_modalites_offre?: string;
+  /**
+   * Affelnet : Lien vers la ressource
+   */
+  affelnet_url_modalites_offre?: string;
+  /**
+   * Affelnet : code nature de l'établissement de formation
+   */
+  affelnet_code_nature?: string;
+  /**
+   * Affelnet : type d'établissement (PR: Privé / PU: Public)
+   */
+  affelnet_secteur?: "PR" | "PU" | null;
+  /**
+   * Affelnet : raison de dépublication
+   */
+  affelnet_raison_depublication?: string;
+  /**
+   * Tableau de Code MEF 10 caractères et modalités (filtrés pour Affelnet si applicable)
+   */
+  affelnet_mefs_10?: ItemOfAffelnetMefs_10[];
   _id?: Types.ObjectId;
-}
-export interface ItemOfAffelnetMefs_10 {
-  mef10?: string;
-  modalite?: Modalite;
-}
-export interface Modalite {
-  duree?: string;
-  annee?: string;
-}
-export interface ItemOfParcoursupMefs_10 {
-  mef10?: string;
-  modalite?: Modalite1;
-}
-export interface Modalite1 {
-  duree?: string;
-  annee?: string;
 }
 /**
  * Détails RNCP (bloc de compétences etc..)
@@ -711,9 +695,9 @@ export interface Rejection {
 }
 export interface ItemOfBcnMefs_10 {
   mef10?: string;
-  modalite?: Modalite2;
+  modalite?: Modalite;
 }
-export interface Modalite2 {
+export interface Modalite {
   duree?: string;
   annee?: string;
 }
@@ -727,4 +711,20 @@ export interface FranceCompetenceInfos {
   fc_is_certificateur_siren?: boolean;
   fc_is_partenaire?: boolean;
   fc_has_partenaire?: boolean;
+}
+export interface ItemOfParcoursupMefs_10 {
+  mef10?: string;
+  modalite?: Modalite1;
+}
+export interface Modalite1 {
+  duree?: string;
+  annee?: string;
+}
+export interface ItemOfAffelnetMefs_10 {
+  mef10?: string;
+  modalite?: Modalite2;
+}
+export interface Modalite2 {
+  duree?: string;
+  annee?: string;
 }
