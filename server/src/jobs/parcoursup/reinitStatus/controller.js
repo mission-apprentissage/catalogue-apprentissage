@@ -8,8 +8,8 @@ const { isBetween } = require("../../../common/utils/dateUtils");
  */
 const run = async () => {
   let updated = 0;
-  const next_campagne_debut = new Date("2022/08/01");
-  const next_campagne_end = new Date("2023/07/31");
+  const next_campagne_debut = new Date("2023/08/01");
+  const next_campagne_end = new Date("2024/07/31");
 
   console.log({ next_campagne_debut, next_campagne_end });
 
