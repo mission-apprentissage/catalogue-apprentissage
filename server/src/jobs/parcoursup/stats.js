@@ -5,14 +5,17 @@ const { ConsoleStat, Formation } = require("../../common/model");
 const { academies } = require("../../constants/academies");
 
 const computeStats = async (academie = null) => {
+  const globalFilter = { published: true };
   const scopeFilter = academie ? { nom_academie: academie } : {};
   // const scopeLog = academie ? `[${academie}]` : `[global]`;
 
   const filterPublie = {
+    ...globalFilter,
     parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
     ...scopeFilter,
   };
   const filterIntegrable = {
+    ...globalFilter,
     parcoursup_statut: { $ne: PARCOURSUP_STATUS.HORS_PERIMETRE },
     ...scopeFilter,
   };
@@ -61,7 +64,7 @@ const computeStats = async (academie = null) => {
   const details = (
     await Promise.all(
       Object.values(PARCOURSUP_STATUS).flatMap(async (value) => ({
-        [value]: await Formation.countDocuments({ parcoursup_statut: value, ...scopeFilter }),
+        [value]: await Formation.countDocuments({ ...globalFilter, parcoursup_statut: value, ...scopeFilter }),
       }))
     )
   ).reduce(function (result, current) {
