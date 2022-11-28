@@ -27,6 +27,7 @@ const run = async () => {
           { _id: _id },
           {
             parcoursup_statut: next_parcoursup_statut,
+            parcoursup_published_date: null,
             parcoursup_statut_history: [
               ...parcoursup_statut_history,
               {
