@@ -7,11 +7,22 @@ const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
 
 const run = async () => {
+  const next_campagne_debut = new Date("2023/08/01");
+  const next_campagne_end = new Date("2024/07/31");
+
+  const campagneDateFilter = {
+    date_debut: { $gte: next_campagne_debut, $lt: next_campagne_end },
+  };
+
+  const campagneCount = await Formation.countDocuments(campagneDateFilter);
+
+  console.log(`${campagneCount} formations possèdent des dates de début pour la campagne en cours.`);
+
   // 1 - set "hors périmètre"
   await Formation.updateMany(
     {
-      parcoursup_statut: { $ne: PARCOURSUP_STATUS.REJETE },
       $or: [
+        { parcoursup_statut: { $nin: [PARCOURSUP_STATUS.REJETE, PARCOURSUP_STATUS.PUBLIE] } },
         { parcoursup_statut: null },
         { catalogue_published: false },
         { published: false },
@@ -37,32 +48,11 @@ const run = async () => {
     { $set: { parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE } }
   );
 
-  // set "publié"
-  await Formation.updateMany(
-    {
-      $and: [
-        {
-          parcoursup_statut: { $ne: PARCOURSUP_STATUS.REJETE },
-        },
-        {
-          published: true,
-          catalogue_published: true,
-          parcoursup_id: { $ne: null },
-          parcoursup_statut: { $ne: PARCOURSUP_STATUS.NON_PUBLIE },
-        },
-      ],
-    },
-    { $set: { parcoursup_statut: PARCOURSUP_STATUS.PUBLIE } }
-  );
-
   // set "à publier (vérifier accès direct postbac)" & "à publier (soumis à validation Recteur)" for trainings matching psup eligibility rules
   // reset "à publier" & "à publier (vérifier accès direct postbac)" & "à publier (soumis à validation Recteur)"
   await Formation.updateMany(
     {
       $and: [
-        {
-          parcoursup_statut: { $ne: PARCOURSUP_STATUS.REJETE },
-        },
         {
           parcoursup_statut: {
             $in: [
@@ -93,21 +83,29 @@ const run = async () => {
     (await Formation.updateMany(
       {
         $and: [
+          campagneDateFilter,
+          filterHP,
           {
-            parcoursup_statut: { $ne: PARCOURSUP_STATUS.REJETE },
-          },
-          {
-            ...filterHP,
             $or: aPublierHabilitationRules.map(getQueryFromRule),
           },
         ],
       },
-      {
-        $set: {
-          last_update_at: Date.now(),
-          parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
+      [
+        {
+          $set: {
+            last_update_at: Date.now(),
+            parcoursup_statut: {
+              $cond: {
+                if: {
+                  $eq: ["$parcoursup_id", null],
+                },
+                then: PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
+                else: PARCOURSUP_STATUS.EN_ATTENTE,
+              },
+            },
+          },
         },
-      }
+      ]
     ));
 
   const aPublierVerifierAccesDirectPostBacRules = await ReglePerimetre.find({
@@ -120,21 +118,29 @@ const run = async () => {
     (await Formation.updateMany(
       {
         $and: [
+          campagneDateFilter,
+          filterHP,
           {
-            parcoursup_statut: { $ne: PARCOURSUP_STATUS.REJETE },
-          },
-          {
-            ...filterHP,
             $or: aPublierVerifierAccesDirectPostBacRules.map(getQueryFromRule),
           },
         ],
       },
-      {
-        $set: {
-          last_update_at: Date.now(),
-          parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
+      [
+        {
+          $set: {
+            last_update_at: Date.now(),
+            parcoursup_statut: {
+              $cond: {
+                if: {
+                  $eq: ["$parcoursup_id", null],
+                },
+                then: PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
+                else: PARCOURSUP_STATUS.EN_ATTENTE,
+              },
+            },
+          },
         },
-      }
+      ]
     ));
 
   const aPublierValidationRecteurRules = await ReglePerimetre.find({
@@ -147,21 +153,29 @@ const run = async () => {
     (await Formation.updateMany(
       {
         $and: [
+          campagneDateFilter,
+          filterHP,
           {
-            parcoursup_statut: { $ne: PARCOURSUP_STATUS.REJETE },
-          },
-          {
-            ...filterHP,
             $or: aPublierValidationRecteurRules.map(getQueryFromRule),
           },
         ],
       },
-      {
-        $set: {
-          last_update_at: Date.now(),
-          parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+      [
+        {
+          $set: {
+            last_update_at: Date.now(),
+            parcoursup_statut: {
+              $cond: {
+                if: {
+                  $eq: ["$parcoursup_id", null],
+                },
+                then: PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+                else: PARCOURSUP_STATUS.EN_ATTENTE,
+              },
+            },
+          },
         },
-      }
+      ]
     ));
 
   // 3 - set "à publier" for trainings matching psup eligibility rules
@@ -186,21 +200,29 @@ const run = async () => {
     (await Formation.updateMany(
       {
         $and: [
+          campagneDateFilter,
+          filter,
           {
-            parcoursup_statut: { $ne: PARCOURSUP_STATUS.REJETE },
-          },
-          {
-            ...filter,
             $or: aPublierRules.map(getQueryFromRule),
           },
         ],
       },
-      {
-        $set: {
-          last_update_at: Date.now(),
-          parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER,
+      [
+        {
+          $set: {
+            last_update_at: Date.now(),
+            parcoursup_statut: {
+              $cond: {
+                if: {
+                  $eq: ["$parcoursup_id", null],
+                },
+                then: PARCOURSUP_STATUS.A_PUBLIER,
+                else: PARCOURSUP_STATUS.EN_ATTENTE,
+              },
+            },
+          },
         },
-      }
+      ]
     ));
 
   // apply academy rules
@@ -213,12 +235,11 @@ const run = async () => {
 
   await asyncForEach(academieRules, async (rule) => {
     await asyncForEach(Object.entries(rule.statut_academies), async ([num_academie, status]) => {
+      console.log(status);
       await Formation.updateMany(
         {
           $and: [
-            {
-              parcoursup_statut: { $ne: PARCOURSUP_STATUS.REJETE },
-            },
+            campagneDateFilter,
             {
               parcoursup_statut: {
                 $in: [
@@ -229,12 +250,32 @@ const run = async () => {
                   PARCOURSUP_STATUS.A_PUBLIER,
                 ],
               },
+            },
+            {
               num_academie,
               ...getQueryFromRule(rule),
             },
           ],
         },
-        { $set: { last_update_at: Date.now(), parcoursup_statut: status } }
+        [
+          {
+            $set: {
+              last_update_at: Date.now(),
+              parcoursup_statut: {
+                $cond: {
+                  if: {
+                    $eq: ["$parcoursup_id", null],
+                  },
+                  then: status,
+                  else:
+                    status === PARCOURSUP_STATUS.HORS_PERIMETRE
+                      ? PARCOURSUP_STATUS.HORS_PERIMETRE
+                      : PARCOURSUP_STATUS.EN_ATTENTE,
+                },
+              },
+            },
+          },
+        ]
       );
     });
   });
@@ -316,9 +357,9 @@ const run = async () => {
   logger.info(
     `Total formations publiées dans le catalogue : ${totalPublished}\n` +
       `Total formations hors périmètre : ${totalNotRelevant}/${totalPublished}\n` +
-      `Total formations à publier (sous condition habilitation)" : ${totalToValidateHabilitation}/${totalPublished}\n` +
-      `Total formations à publier (vérifier accès direct postbac)" : ${totalToValidate}/${totalPublished}\n` +
-      `Total formations à publier (soumis à validation Recteur)" : ${totalToValidateRecteur}/${totalPublished}\n` +
+      `Total formations à publier (sous condition habilitation) : ${totalToValidateHabilitation}/${totalPublished}\n` +
+      `Total formations à publier (vérifier accès direct postbac) : ${totalToValidate}/${totalPublished}\n` +
+      `Total formations à publier (soumis à validation Recteur) : ${totalToValidateRecteur}/${totalPublished}\n` +
       `Total formations à publier : ${totalToCheck}/${totalPublished}\n` +
       `Total formations en attente de publication : ${totalPending}/${totalPublished}\n` +
       `Total formations publiées sur ParcourSup : ${totalPsPublished}/${totalPublished}\n` +
