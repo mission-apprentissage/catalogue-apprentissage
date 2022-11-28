@@ -43,6 +43,9 @@ const run = async () => {
           { _id: _id },
           {
             parcoursup_statut: next_parcoursup_statut,
+            rejection: null,
+            parcoursup_error: null,
+            parcoursup_raison_depublication: null,
             parcoursup_statut_history: [
               ...parcoursup_statut_history,
               {
