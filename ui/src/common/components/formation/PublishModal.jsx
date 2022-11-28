@@ -25,7 +25,7 @@ import useAuth from "../../hooks/useAuth";
 import * as Yup from "yup";
 import { ArrowRightLine, Close } from "../../../theme/components/icons";
 import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
-import { updateFormation, updateReconciliationParcoursup } from "../../api/formation";
+import { updateFormation } from "../../api/formation";
 
 const getPublishRadioValue = (status) => {
   if ([COMMON_STATUS.PUBLIE, COMMON_STATUS.EN_ATTENTE].includes(status)) {
@@ -51,8 +51,6 @@ const getSubmitBody = ({
   date = new Date(),
 }) => {
   const body = {};
-  let shouldRemovePsReconciliation = false;
-  let shouldRestorePsReconciliation = false;
 
   // check if can edit depending on the status
   if (affelnet === "true") {
@@ -104,7 +102,6 @@ const getSubmitBody = ({
       body.parcoursup_statut = PARCOURSUP_STATUS.EN_ATTENTE;
       body.rejection = null;
       body.last_statut_update_date = date;
-      shouldRestorePsReconciliation = formation.parcoursup_statut === PARCOURSUP_STATUS.NON_PUBLIE;
       body.parcoursup_raison_depublication = null;
     }
   } else if (parcoursup === "false") {
@@ -123,35 +120,15 @@ const getSubmitBody = ({
       body.parcoursup_statut = PARCOURSUP_STATUS.NON_PUBLIE;
       body.last_statut_update_date = date;
       body.parcoursup_published_date = null;
-      shouldRemovePsReconciliation = [PARCOURSUP_STATUS.EN_ATTENTE, PARCOURSUP_STATUS.PUBLIE].includes(
-        formation.parcoursup_statut
-      );
     }
   }
   return {
     body,
-    shouldRestorePsReconciliation,
-    shouldRemovePsReconciliation,
   };
 };
 
-const updateFormationAndReconciliation = async ({
-  body,
-  shouldRestorePsReconciliation,
-  shouldRemovePsReconciliation,
-  formation,
-  user,
-  onFormationUpdate,
-}) => {
+const updateFormationWithCallback = async ({ body, formation, user, onFormationUpdate }) => {
   const updatedFormation = await updateFormation({ formation, body, user });
-
-  if (shouldRemovePsReconciliation || shouldRestorePsReconciliation) {
-    try {
-      await updateReconciliationParcoursup({ formation, shouldRemovePsReconciliation, user });
-    } catch (e) {
-      // do nothing
-    }
-  }
 
   onFormationUpdate(updatedFormation);
   return updatedFormation;
@@ -226,7 +203,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
         });
 
         if (Object.keys(result.body).length > 0) {
-          const updatedFormation = await updateFormationAndReconciliation({
+          const updatedFormation = await updateFormationWithCallback({
             ...result,
             formation,
             user,
@@ -587,4 +564,4 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
   );
 };
 
-export { PublishModal, getPublishRadioValue, getSubmitBody, updateFormationAndReconciliation };
+export { PublishModal, getPublishRadioValue, getSubmitBody, updateFormationWithCallback };

@@ -3,13 +3,11 @@ import { Box, Container, Flex, Grid, GridItem, Heading } from "@chakra-ui/react"
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import Layout from "../layout/Layout";
 import { setTitle } from "../../common/utils/pageUtils";
-import { useSearch } from "../../common/hooks/useSearch";
 import { hasAccessTo, isUserAdmin } from "../../common/utils/rolesUtils";
 import useAuth from "../../common/hooks/useAuth";
 import { Card } from "../../common/components/Card";
 
 export default () => {
-  let searchState = useSearch("reconciliation_ps");
   const title = "Mes actions expertes";
   setTitle(title);
   let [auth] = useAuth();
@@ -24,9 +22,7 @@ export default () => {
           </Heading>
 
           <Flex my={4} mb={8} alignItems="flex-start" data-testid="grid">
-            {(isUserAdmin(auth) ||
-              hasAccessTo(auth, "page_perimetre_ps") ||
-              hasAccessTo(auth, "page_reconciliation_ps")) && (
+            {(isUserAdmin(auth) || hasAccessTo(auth, "page_perimetre_ps")) && (
               <Box border="2px" p="24px" borderColor="gray.200" mr={4}>
                 <Heading textStyle="h4" color="grey.800" mt={2} mb={5}>
                   Parcoursup
@@ -40,20 +36,6 @@ export default () => {
                       isDisabled={!hasAccessTo(auth, "page_perimetre_ps")}
                     />
                   </GridItem>
-                  {(isUserAdmin(auth) || hasAccessTo(auth, "page_reconciliation_ps")) && searchState.loaded && (
-                    <GridItem colSpan={[3, 3, 1]}>
-                      <Card
-                        info={`${(
-                          (searchState.countReconciliationPs.countValide * 100) /
-                          (searchState.countReconciliationPs.countTotal || 1)
-                        ).toFixed(2)}% de validées`}
-                        linkTo="/couverture-ps"
-                        title="Rapprochement des bases Carif-Oref et Parcoursup"
-                        body="Valider la correspondance des données entre la base Parcoursup et le Catalogue des offres de formations en apprentissage (base Carif-Oref)"
-                        isDisabled={!hasAccessTo(auth, "page_reconciliation_ps")}
-                      />
-                    </GridItem>
-                  )}
                   {(isUserAdmin(auth) || hasAccessTo(auth, "page_perimetre_ps")) && (
                     <GridItem colSpan={[3, 3, 1]}>
                       <Card

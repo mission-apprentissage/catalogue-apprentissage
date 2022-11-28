@@ -99,15 +99,6 @@ const Header = () => {
                     )}
                   </MenuGroup>
                   <MenuDivider />
-                  <MenuGroup title="Réconciliation">
-                    {hasAccessTo(auth, "page_reconciliation_ps") && (
-                      <MenuItem as={NavLink} to="/couverture-ps" icon={<DoubleArrows boxSize={4} />}>
-                        Réconciliation Parcoursup
-                      </MenuItem>
-                    )}
-                  </MenuGroup>
-
-                  <MenuDivider />
                   <MenuItem onClick={logout}>Déconnexion</MenuItem>
                 </MenuList>
               </Menu>

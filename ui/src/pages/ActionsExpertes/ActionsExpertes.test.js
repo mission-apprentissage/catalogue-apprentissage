@@ -22,25 +22,11 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 test("renders all actions for admin", async () => {
-  jest.spyOn(search, "useSearch").mockImplementation(() => ({
-    loaded: true,
-    countReconciliationPs: {
-      countValide: 10,
-      countTotal: 100,
-    },
-  }));
-
   setAuthState({ permissions: { isAdmin: true } });
 
   const { getByText, getByTestId } = renderWithRouter(<ActionsExpertes />);
 
   await waitFor(() => getByTestId("grid"));
-
-  const reconciliationPsLink = getByText(/^Rapprochement des bases Carif-Oref et Parcoursup$/i);
-  expect(reconciliationPsLink).toBeInTheDocument();
-
-  const percentageLink = getByText(/^10\.00% de validées$/i);
-  expect(percentageLink).toBeInTheDocument();
 
   const perimetrePsLink = getByText(/^Règles d'intégration des formations à la plateforme Parcoursup$/i);
   expect(perimetrePsLink).toBeInTheDocument();
@@ -50,28 +36,11 @@ test("renders all actions for admin", async () => {
 });
 
 test("renders ps actions for acl ps", async () => {
-  jest.spyOn(search, "useSearch").mockImplementation(() => ({
-    loaded: true,
-    countReconciliationPs: {
-      countValide: 10,
-      countTotal: 100,
-    },
-  }));
-
-  setAuthState({ permissions: { isAdmin: false }, acl: ["page_perimetre_ps", "page_reconciliation_ps"] });
+  setAuthState({ permissions: { isAdmin: false }, acl: ["page_perimetre_ps"] });
 
   const { queryByText, getByTestId } = renderWithRouter(<ActionsExpertes />);
 
   await waitFor(() => getByTestId("grid"));
-
-  const reconciliationPsLink = queryByText(/^Rapprochement des bases Carif-Oref et Parcoursup$/i);
-  expect(reconciliationPsLink).toBeInTheDocument();
-
-  const percentageLink = queryByText(/^10\.00% de validées$/i);
-  expect(percentageLink).toBeInTheDocument();
-
-  const reconciliationAfLink = queryByText(/^Rapprochement des bases Carif-Oref et Affelnet$/i);
-  expect(reconciliationAfLink).not.toBeInTheDocument();
 
   const perimetrePsLink = queryByText(/^Règles d'intégration des formations à la plateforme Parcoursup$/i);
   expect(perimetrePsLink).toBeInTheDocument();
@@ -81,25 +50,11 @@ test("renders ps actions for acl ps", async () => {
 });
 
 test("renders af actions for acl af", async () => {
-  jest.spyOn(search, "useSearch").mockImplementation(() => ({
-    loaded: true,
-    countReconciliationPs: {
-      countValide: 10,
-      countTotal: 100,
-    },
-  }));
-
   setAuthState({ permissions: { isAdmin: false }, acl: ["page_perimetre_af"] });
 
   const { queryByText, getByTestId } = renderWithRouter(<ActionsExpertes />);
 
   await waitFor(() => getByTestId("grid"));
-
-  const reconciliationPsLink = queryByText(/^Rapprochement des bases Carif-Oref et Parcoursup$/i);
-  expect(reconciliationPsLink).not.toBeInTheDocument();
-
-  const percentageLink = queryByText(/^10\.00% de validées$/i);
-  expect(percentageLink).not.toBeInTheDocument();
 
   const perimetrePsLink = queryByText(/^Règles d'intégration des formations à la plateforme Parcoursup$/i);
   expect(perimetrePsLink).not.toBeInTheDocument();

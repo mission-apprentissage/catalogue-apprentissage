@@ -1,6 +1,6 @@
 import React from "react";
 import { render, waitFor } from "@testing-library/react";
-import { getPublishRadioValue, getSubmitBody, PublishModal, updateFormationAndReconciliation } from "./PublishModal";
+import { getPublishRadioValue, getSubmitBody, PublishModal, updateFormationWithCallback } from "./PublishModal";
 import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
 import * as api from "../../api/formation";
 import userEvent from "@testing-library/user-event";
@@ -53,12 +53,10 @@ test("should compute submit body when publish affelnet", () => {
       affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
       last_statut_update_date: new Date("2021-10-14"),
     },
-    shouldRemovePsReconciliation: false,
-    shouldRestorePsReconciliation: false,
   });
 });
 
-test("should compute submit body when publish affelnet & restore reconciliation", () => {
+test("should compute submit body when publish affelnet ", () => {
   const formation = {
     _id: "id",
     affelnet_statut: AFFELNET_STATUS.NON_PUBLIE,
@@ -88,8 +86,6 @@ test("should compute submit body when publish affelnet & restore reconciliation"
       affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
       last_statut_update_date: new Date("2021-10-14"),
     },
-    shouldRemovePsReconciliation: false,
-    shouldRestorePsReconciliation: false,
   });
 });
 
@@ -120,8 +116,6 @@ test("should update info when publish affelnet", () => {
     body: {
       affelnet_infos_offre: "Hello info",
     },
-    shouldRemovePsReconciliation: false,
-    shouldRestorePsReconciliation: false,
   });
 });
 
@@ -150,8 +144,6 @@ test("should do nothing when publish affelnet on unknown status", () => {
 
   expect(result).toEqual({
     body: {},
-    shouldRemovePsReconciliation: false,
-    shouldRestorePsReconciliation: false,
   });
 });
 
@@ -186,8 +178,6 @@ test("should compute submit body when UNpublish affelnet", () => {
       affelnet_published_date: null,
       last_statut_update_date: new Date("2021-10-14"),
     },
-    shouldRemovePsReconciliation: false,
-    shouldRestorePsReconciliation: false,
   });
 });
 
@@ -215,8 +205,6 @@ test("should do nothing when UNpublish affelnet for a status already not publish
 
   expect(result).toEqual({
     body: {},
-    shouldRemovePsReconciliation: false,
-    shouldRestorePsReconciliation: false,
   });
 });
 
@@ -249,12 +237,10 @@ test("should compute submit body when publish parcoursup", () => {
       last_statut_update_date: new Date("2021-10-14"),
       rejection: null,
     },
-    shouldRemovePsReconciliation: false,
-    shouldRestorePsReconciliation: false,
   });
 });
 
-test("should compute submit body when publish parcoursup & restore reconciliation", () => {
+test("should compute submit body when publish parcoursup", () => {
   const formation = {
     _id: "id",
     affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
@@ -283,8 +269,6 @@ test("should compute submit body when publish parcoursup & restore reconciliatio
       rejection: null,
       last_statut_update_date: new Date("2021-10-14"),
     },
-    shouldRemovePsReconciliation: false,
-    shouldRestorePsReconciliation: true,
   });
 });
 
@@ -318,8 +302,6 @@ test("should compute submit body when UNpublish parcoursup", () => {
       parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIE,
       last_statut_update_date: new Date("2021-10-14"),
     },
-    shouldRemovePsReconciliation: true,
-    shouldRestorePsReconciliation: false,
   });
 });
 
@@ -346,55 +328,16 @@ test("should do nothing when publish parcoursup on unknown status", () => {
 
   expect(result).toEqual({
     body: {},
-    shouldRemovePsReconciliation: false,
-    shouldRestorePsReconciliation: false,
   });
-});
-
-test("should update formation and reconciliation affelnet", async () => {
-  const updateFormation = jest.fn();
-  const updateReconciliationParcoursup = jest.fn();
-
-  jest.spyOn(api, "updateFormation").mockImplementation(updateFormation);
-  jest.spyOn(api, "updateReconciliationParcoursup").mockImplementation(updateReconciliationParcoursup);
-
-  const onFormationUpdate = jest.fn();
-  await updateFormationAndReconciliation({
-    body: {},
-    formation: {},
-    user: {},
-    onFormationUpdate,
-  });
-
-  expect(updateFormation).toHaveBeenCalled();
-  expect(onFormationUpdate).toHaveBeenCalled();
-  expect(updateReconciliationParcoursup).not.toHaveBeenCalled();
-
-  updateFormation.mockClear();
-  onFormationUpdate.mockClear();
-  updateReconciliationParcoursup.mockClear();
-
-  await updateFormationAndReconciliation({
-    body: {},
-    formation: {},
-    user: {},
-    onFormationUpdate,
-  });
-
-  expect(updateFormation).toHaveBeenCalled();
-  expect(onFormationUpdate).toHaveBeenCalled();
-  expect(updateReconciliationParcoursup).not.toHaveBeenCalled();
 });
 
 test("should update formation", async () => {
   const updateFormation = jest.fn();
-  const updateReconciliationParcoursup = jest.fn();
 
   jest.spyOn(api, "updateFormation").mockImplementation(updateFormation);
-  jest.spyOn(api, "updateReconciliationParcoursup").mockImplementation(updateReconciliationParcoursup);
 
   const onFormationUpdate = jest.fn();
-  await updateFormationAndReconciliation({
+  await updateFormationWithCallback({
     body: {},
     formation: {},
     user: {},
@@ -403,36 +346,12 @@ test("should update formation", async () => {
 
   expect(updateFormation).toHaveBeenCalled();
   expect(onFormationUpdate).toHaveBeenCalled();
-  expect(updateReconciliationParcoursup).not.toHaveBeenCalled();
-});
-
-test("should update formation and reconciliation parcoursup", async () => {
-  const updateFormation = jest.fn();
-  const updateReconciliationParcoursup = jest.fn();
-
-  jest.spyOn(api, "updateFormation").mockImplementation(updateFormation);
-  jest.spyOn(api, "updateReconciliationParcoursup").mockImplementation(updateReconciliationParcoursup);
-
-  const onFormationUpdate = jest.fn();
-  await updateFormationAndReconciliation({
-    body: {},
-    shouldRemovePsReconciliation: true,
-    formation: {},
-    user: {},
-    onFormationUpdate,
-  });
-
-  expect(updateFormation).toHaveBeenCalled();
-  expect(onFormationUpdate).toHaveBeenCalled();
-  expect(updateReconciliationParcoursup).toHaveBeenCalled();
 
   updateFormation.mockClear();
   onFormationUpdate.mockClear();
-  updateReconciliationParcoursup.mockClear();
 
-  await updateFormationAndReconciliation({
+  await updateFormationWithCallback({
     body: {},
-    shouldRestorePsReconciliation: true,
     formation: {},
     user: {},
     onFormationUpdate,
@@ -440,7 +359,23 @@ test("should update formation and reconciliation parcoursup", async () => {
 
   expect(updateFormation).toHaveBeenCalled();
   expect(onFormationUpdate).toHaveBeenCalled();
-  expect(updateReconciliationParcoursup).toHaveBeenCalled();
+});
+
+test("should update formation", async () => {
+  const updateFormation = jest.fn();
+
+  jest.spyOn(api, "updateFormation").mockImplementation(updateFormation);
+
+  const onFormationUpdate = jest.fn();
+  await updateFormationWithCallback({
+    body: {},
+    formation: {},
+    user: {},
+    onFormationUpdate,
+  });
+
+  expect(updateFormation).toHaveBeenCalled();
+  expect(onFormationUpdate).toHaveBeenCalled();
 });
 
 test("should render the publish modal", () => {
@@ -566,10 +501,8 @@ test("should toggle the parcoursup forms", async () => {
 
 test("should submit", async () => {
   const updateFormation = jest.fn();
-  const updateReconciliationParcoursup = jest.fn();
 
   jest.spyOn(api, "updateFormation").mockImplementation(updateFormation);
-  jest.spyOn(api, "updateReconciliationParcoursup").mockImplementation(updateReconciliationParcoursup);
 
   const onClose = jest.fn();
   const onFormationUpdate = jest.fn();
@@ -610,10 +543,8 @@ test("should submit", async () => {
 
 test("should submit but no update", async () => {
   const updateFormation = jest.fn();
-  const updateReconciliationParcoursup = jest.fn();
 
   jest.spyOn(api, "updateFormation").mockImplementation(updateFormation);
-  jest.spyOn(api, "updateReconciliationParcoursup").mockImplementation(updateReconciliationParcoursup);
 
   const onClose = jest.fn();
   const onFormationUpdate = jest.fn();
