@@ -109,6 +109,8 @@ const createFormation = async (formation, email = null) => {
   let data;
   try {
     data = await formatter(formation);
+    console.log(data);
+
     const response = await parcoursupApi.postFormation(data);
 
     logger.info(`Parcoursup WS response: g_ta_cod=${response.g_ta_cod} dejaEnvoye=${response.dejaEnvoye}`);
