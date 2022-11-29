@@ -28,6 +28,7 @@ const select = {
   rome_codes: 1,
   parcoursup_statut_history: 1,
   parcoursup_error: 1,
+  parcoursup_id: 1,
   updates_history: 1,
   cle_ministere_educatif: 1,
 };
@@ -68,6 +69,7 @@ const getCfdEntree = (cfd) => {
 };
 
 const formatter = async ({
+  parcoursup_id,
   rncp_code,
   // cfd_entree,
   cfd,
@@ -81,6 +83,7 @@ const formatter = async ({
   const [{ mef10: mef } = { mef10: "" }] = mefs10;
 
   return {
+    g_ta_cod: parcoursup_id ? Number(parcoursup_id) : null,
     user: await findPublishUser(updates_history),
     rncp: rncp_code ? [Number(rncp_code.replace("RNCP", ""))] : [],
     // cfd: cfd_entree,
