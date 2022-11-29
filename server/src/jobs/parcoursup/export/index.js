@@ -76,7 +76,6 @@ const formatter = async ({
   uai_formation,
   cle_ministere_educatif,
   parcoursup_mefs_10 = [],
-  rome_codes = [],
   updates_history = [],
 }) => {
   const mefs10 = parcoursup_mefs_10 ?? [];
@@ -91,7 +90,6 @@ const formatter = async ({
     uai: uai_formation,
     rco: cle_ministere_educatif,
     mef: mefs10.length <= 1 ? mef : "",
-    rome: rome_codes,
   };
 };
 
@@ -169,7 +167,7 @@ const run = async () => {
   let cursor = createCursor(query);
   for await (const formation of cursor) {
     await createFormation(formation);
-    await sleep(10000);
+    await sleep(2000);
   }
 };
 
