@@ -13,14 +13,14 @@ const run = async ({ filter, limit, skip, file, clean } = { limit: 0, skip: 0, c
       Formation.find({ parcoursup_id: { $ne: null }, ...filter })
         .limit(limit)
         .skip(skip),
-      async ({ cle_ministere_educatif, parcoursup_id, parcoursup_mefs_10, rncp_code, cfd, uai_formation }) => {
+      async ({ cle_ministere_educatif, parcoursup_id, parcoursup_mefs_10, rncp_code, cfd_entree, uai_formation }) => {
         const [{ mef10: mef } = { mef10: null }] = parcoursup_mefs_10 ?? [];
 
         const toSend = {
           user: null,
           g_ta_cod: Number(parcoursup_id),
           rncp: rncp_code ? [Number(rncp_code.replace("RNCP", ""))] : [],
-          cfd,
+          cfd: cfd_entree,
           uai: uai_formation,
           rco: cle_ministere_educatif,
           mef: mef ? Number(mef) : null,
