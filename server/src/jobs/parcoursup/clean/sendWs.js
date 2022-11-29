@@ -10,7 +10,7 @@ const run = async ({ filter, limit, skip, file, clean } = { limit: 0, skip: 0, c
   const results = [];
   try {
     await cursor(
-      Formation.find({ parcoursup_id: { $ne: undefined }, ...filter })
+      Formation.find({ parcoursup_id: { $ne: null }, ...filter })
         .limit(limit)
         .skip(skip),
       async ({ cle_ministere_educatif, parcoursup_id, parcoursup_mefs_10, rncp_code, cfd, uai_formation }) => {
