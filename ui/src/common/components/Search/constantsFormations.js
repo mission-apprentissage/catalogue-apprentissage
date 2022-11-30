@@ -698,10 +698,12 @@ const dataSearch = {
     "etablissement_formateur_siret",
     "etablissement_gestionnaire_siret",
     "cle_ministere_educatif",
+    "parcoursup_id",
+    "affelnet_id",
   ],
   placeholder:
-    "Saisissez une raison sociale, un Siret, un intitulé de formation, un code RNCP ou CFD (code formation diplôme)",
-  fieldWeights: [4, 3, 2, 2, 2, 2, 2, 1, 1, 1],
+    "Saisissez une raison sociale, un Siret, un intitulé de formation, un code RNCP ou CFD (code formation diplôme), un identifiant Parcoursup ou Affelnet",
+  fieldWeights: [4, 3, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1],
 };
 
 export default {
