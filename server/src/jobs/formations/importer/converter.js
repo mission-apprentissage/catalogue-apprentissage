@@ -188,6 +188,7 @@ const applyConversion = async () => {
           "last_status",
           "last_statut_update_date",
           "last_update_who",
+          "parcoursup_error",
           "parcoursup_statut",
           "parcoursup_statut_history",
           "parcoursup_raison_depublication",
