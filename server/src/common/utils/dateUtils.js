@@ -39,4 +39,8 @@ const isSunday = (date) => {
   return date.getDay() === 6;
 };
 
-module.exports = { isSameDate, isSunday, getLastMonth };
+const isBetween = (start, toCheck, end) => {
+  return (start <= toCheck && toCheck <= end) || (end <= toCheck && toCheck <= start);
+};
+
+module.exports = { isSameDate, isSunday, getLastMonth, isBetween };

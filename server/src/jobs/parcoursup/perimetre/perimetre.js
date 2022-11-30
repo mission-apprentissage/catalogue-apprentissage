@@ -6,6 +6,13 @@ const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
 
 const run = async () => {
+  const next_campagne_debut = new Date("2023/08/01");
+  const next_campagne_end = new Date("2024/07/31");
+
+  const campagneDateFilter = {
+    date_debut: { $gte: next_campagne_debut, $lt: next_campagne_end },
+  };
+
   await Formation.updateMany(
     {},
     {
@@ -25,6 +32,7 @@ const run = async () => {
     (await Formation.updateMany(
       {
         $and: [
+          campagneDateFilter,
           {
             $or: aPublierHabilitationRules.map(getQueryFromRule),
           },
@@ -47,6 +55,7 @@ const run = async () => {
     (await Formation.updateMany(
       {
         $and: [
+          campagneDateFilter,
           {
             $or: aPublierVerifierAccesDirectPostBacRules.map(getQueryFromRule),
           },
@@ -69,6 +78,7 @@ const run = async () => {
     (await Formation.updateMany(
       {
         $and: [
+          campagneDateFilter,
           {
             $or: aPublierValidationRecteurRules.map(getQueryFromRule),
           },
@@ -91,6 +101,7 @@ const run = async () => {
     (await Formation.updateMany(
       {
         $and: [
+          campagneDateFilter,
           {
             $or: aPublierRules.map(getQueryFromRule),
           },
@@ -116,6 +127,7 @@ const run = async () => {
       await Formation.updateMany(
         {
           $and: [
+            campagneDateFilter,
             {
               num_academie,
               ...getQueryFromRule(rule),
