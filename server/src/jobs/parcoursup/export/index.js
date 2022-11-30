@@ -21,8 +21,7 @@ const filter = {
 
 const select = {
   rncp_code: 1,
-  // cfd_entree: 1,
-  cfd: 1,
+  cfd_entree: 1,
   uai_formation: 1,
   parcoursup_mefs_10: 1,
   rome_codes: 1,
@@ -54,25 +53,10 @@ const findPublishUser = async (updates_history) => {
   return "";
 };
 
-const cfdEntreeMap = {
-  32033422: ["32033423", "32033424", "32033425"],
-  32022316: ["32022317", "32022318"],
-  32032209: ["32032210", "32032211"],
-  32033606: ["32033603", "32033604", "32033605"],
-  32032612: ["32032613", "32032614"],
-  32022310: ["32022311", "32022312"],
-};
-
-const getCfdEntree = (cfd) => {
-  const entry = Object.entries(cfdEntreeMap).find(([, values]) => values.includes(cfd));
-  return entry ? entry[0] : cfd;
-};
-
 const formatter = async ({
   parcoursup_id,
   rncp_code,
-  // cfd_entree,
-  cfd,
+  cfd_entree,
   uai_formation,
   cle_ministere_educatif,
   parcoursup_mefs_10 = [],
@@ -85,8 +69,7 @@ const formatter = async ({
     g_ta_cod: parcoursup_id ? Number(parcoursup_id) : null,
     user: await findPublishUser(updates_history),
     rncp: rncp_code ? [Number(rncp_code.replace("RNCP", ""))] : [],
-    // cfd: cfd_entree,
-    cfd: getCfdEntree(cfd),
+    cfd: cfd_entree,
     uai: uai_formation,
     rco: cle_ministere_educatif,
     mef: mefs10.length <= 1 ? mef : "",
