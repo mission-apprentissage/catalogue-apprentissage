@@ -5,6 +5,7 @@ const { isValideUAI, getCoordinatesFromAddressData } = require("@mission-apprent
 const { distanceBetweenCoordinates } = require("../../../common/utils/distanceUtils");
 const logger = require("../../../common/logger");
 const { computeMefs } = require("../../../logic/finder/mefsFinder");
+const { getCfdEntree } = require("../../../logic/finder/cfdEntreeFinder");
 
 const updateRelationFields = async () => {
   logger.info(" == Updating relations for formations == ");
@@ -101,6 +102,8 @@ const recomputeFields = async (fields, oldFields) => {
     }
   }
 
+  const cfd_entree = getCfdEntree(fields.cfd);
+
   return {
     affelnet_mefs_10,
     affelnet_infos_offre,
@@ -115,6 +118,7 @@ const recomputeFields = async (fields, oldFields) => {
     lieu_formation_geo_coordonnees_computed,
     lieu_formation_adresse_computed,
 
+    cfd_entree,
     // ...(await computeRelationFields(fields)),
 
     ...fields,
@@ -210,6 +214,7 @@ const applyConversion = async () => {
           "distance",
           "lieu_formation_geo_coordonnees_computed",
           "lieu_formation_adresse_computed",
+          "cfd_entree",
         ];
 
         const toDelete = [];
