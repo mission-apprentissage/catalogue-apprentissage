@@ -6,6 +6,7 @@ const sinon = require("sinon");
 const parcoursupApi = require("../export/parcoursupApi");
 const { createFormation, formatter } = require("../export");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
+const cfdEntreeFinder = require("../../../logic/finder/cfdEntreeFinder");
 
 describe(__filename, () => {
   before(async () => {
@@ -25,7 +26,6 @@ describe(__filename, () => {
       cfd_entree: "1212",
       uai_formation: "0551031X",
       parcoursup_mefs_10: [],
-      rome_codes: ["rome-1", "rome-2"],
       parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
       parcoursup_error: null,
       parcoursup_statut_history: [],
@@ -38,7 +38,6 @@ describe(__filename, () => {
       cfd_entree: "1212",
       uai_formation: "0881529J",
       parcoursup_mefs_10: [],
-      rome_codes: ["rome-1", "rome-2"],
       parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
       parcoursup_error: null,
       parcoursup_statut_history: [],
@@ -51,7 +50,6 @@ describe(__filename, () => {
       cfd_entree: "1212",
       uai_formation: undefined,
       parcoursup_mefs_10: [],
-      rome_codes: ["rome-1", "rome-2"],
       parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
       parcoursup_error: null,
       parcoursup_statut_history: [],
@@ -64,7 +62,6 @@ describe(__filename, () => {
       cfd_entree: "1212",
       uai_formation: "0561732D",
       parcoursup_mefs_10: [{ mef10: "mef-41" }, { mef10: "mef-42" }, { mef10: "mef-43" }],
-      rome_codes: ["rome-1", "rome-2"],
       parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
       parcoursup_error: null,
       parcoursup_statut_history: [],
@@ -77,7 +74,6 @@ describe(__filename, () => {
       cfd_entree: "1212",
       uai_formation: "0280706R",
       parcoursup_mefs_10: [{ mef10: "mef-5" }],
-      rome_codes: ["rome-50", "rome-51"],
       parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
       parcoursup_error: null,
       parcoursup_statut_history: [],
@@ -90,7 +86,6 @@ describe(__filename, () => {
       cfd_entree: "1212",
       uai_formation: "0692514H",
       parcoursup_mefs_10: [{ mef10: "mef-6" }],
-      rome_codes: ["rome-60", "rome-61"],
       parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
       parcoursup_error: "error ws",
       parcoursup_statut_history: [],
@@ -104,7 +99,6 @@ describe(__filename, () => {
       cfd_entree: "1212",
       uai_formation: "0783706E",
       parcoursup_mefs_10: [{ mef10: "mef-7" }],
-      rome_codes: ["rome-70", "rome-71"],
       parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
       parcoursup_error: "error ws",
       parcoursup_statut_history: [],
@@ -118,7 +112,6 @@ describe(__filename, () => {
       cfd_entree: "1212",
       uai_formation: "0631904C",
       parcoursup_mefs_10: [{ mef10: "mef-8" }],
-      rome_codes: ["rome-80", "rome-81"],
       parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
       parcoursup_error: null,
       parcoursup_statut_history: [],
@@ -184,6 +177,7 @@ describe(__filename, () => {
 
   it("should create 1 formation on ps side", async () => {
     sinon.stub(parcoursupApi, "postFormation").returns({ g_ta_cod: "id-ps-1" });
+    sinon.stub(cfdEntreeFinder, "getCfdEntree").returns("1212");
 
     const f = new Formation({
       rncp_code: "RNCP1234",
@@ -191,7 +185,6 @@ describe(__filename, () => {
       cfd_entree: "1212",
       uai_formation: "0320663X",
       parcoursup_mefs_10: [{ mef10: "mef-9" }],
-      rome_codes: ["rome-90", "rome-91"],
       parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
       parcoursup_error: null,
       parcoursup_statut_history: [],
@@ -215,7 +208,6 @@ describe(__filename, () => {
       cfd_entree: "1212",
       uai_formation: "0755331M",
       parcoursup_mefs_10: [{ mef10: "mef-10" }],
-      rome_codes: ["rome-100", "rome-101"],
       parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
       parcoursup_error: null,
       parcoursup_statut_history: [],
@@ -231,15 +223,17 @@ describe(__filename, () => {
   });
 
   it("should format properly", async () => {
+    sinon.stub(cfdEntreeFinder, "getCfdEntree").returns("123134");
+
     const formatted = await formatter({
       rncp_code: "RNCP1234",
       cfd: "6789",
       cfd_entree: "123134",
       uai_formation: "0330176M",
       parcoursup_mefs_10: [{ mef10: "mef-11" }],
-      rome_codes: ["rome-110", "rome-111"],
       parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
       parcoursup_error: null,
+      parcoursup_id: "1234567",
       parcoursup_statut_history: [],
       updates_history: [
         {
@@ -256,23 +250,24 @@ describe(__filename, () => {
     const expected = {
       user: user._id,
       cfd: "123134",
+      g_ta_cod: 1234567,
       mef: "mef-11",
       rco: "12345-cle11",
       rncp: [1234],
-      rome: ["rome-110", "rome-111"],
       uai: "0330176M",
     };
     assert.deepStrictEqual(formatted, expected);
   });
 
   it("should exclude mef from format if multiple are found", async () => {
+    sinon.stub(cfdEntreeFinder, "getCfdEntree").returns("123134");
+
     const formatted = await formatter({
       rncp_code: "RNCP1234",
       cfd: "6789",
       cfd_entree: "123134",
       uai_formation: "0541370W",
       parcoursup_mefs_10: [{ mef10: "mef-12-1" }, { mef10: "mef-12-2" }],
-      rome_codes: ["rome-120", "rome-121"],
       parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
       parcoursup_error: null,
       parcoursup_statut_history: [],
@@ -291,10 +286,10 @@ describe(__filename, () => {
     const expected = {
       user: user._id,
       cfd: "123134",
+      g_ta_cod: null,
       mef: "",
       rco: "12345-cle12",
       rncp: [1234],
-      rome: ["rome-120", "rome-121"],
       uai: "0541370W",
     };
     assert.deepStrictEqual(formatted, expected);
