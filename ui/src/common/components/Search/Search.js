@@ -6,7 +6,6 @@ import { hasAccessTo } from "../../utils/rolesUtils";
 import {
   CardListEtablissements,
   CardListFormation,
-  CardListPsFormations,
   ExportButton,
   Facet,
   HardFilters,
@@ -14,7 +13,6 @@ import {
 } from "./components";
 import constantsFormations from "./constantsFormations";
 import constantsEtablissements from "./constantsEtablissements";
-import constantsReconciliationPS from "./constantsReconciliationPS";
 import "./search.css";
 import queryString from "query-string";
 import { useHistory } from "react-router-dom";
@@ -25,27 +23,18 @@ import helpText from "../../../locales/helpText.json";
 import { Pagination } from "./components/Pagination";
 import { CONTEXT } from "../../../constants/context";
 
-export default React.memo(({ location, searchState, context, onReconciliationCardClicked, extraButtons = null }) => {
+export default React.memo(({ location, searchState, context, extraButtons = null }) => {
   const { defaultMode } = queryString.parse(location.search);
   const [mode, setMode] = useState(defaultMode ?? "simple");
   const isCatalogueGeneral = context === CONTEXT.CATALOGUE_GENERAL;
-  const {
-    base,
-    countEtablissement,
-    countCatalogueGeneral,
-    countCatalogueNonEligible,
-    isBaseFormations,
-    isBaseReconciliationPs,
-    endpoint,
-  } = searchState;
+  const { base, countEtablissement, countCatalogueGeneral, countCatalogueNonEligible, isBaseFormations, endpoint } =
+    searchState;
 
   let [auth] = useAuth();
   const history = useHistory();
 
   const { FILTERS, facetDefinition, queryBuilderField, dataSearch, columnsDefinition } = isBaseFormations
     ? constantsFormations
-    : isBaseReconciliationPs
-    ? constantsReconciliationPS
     : constantsEtablissements;
 
   const filters = FILTERS(context);
@@ -74,12 +63,7 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
           },
         }}
       >
-        <HardFilters
-          filters={filters}
-          context={context}
-          isBaseFormations={isBaseFormations}
-          isBaseReconciliationPs={isBaseReconciliationPs}
-        />
+        <HardFilters filters={filters} context={context} isBaseFormations={isBaseFormations} />
         <Box className="search" maxW="full">
           <Container maxW="xl" p={0}>
             {mode === "simple" && (
@@ -147,19 +131,15 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                         filters={filters}
                         sortBy={fd.sortBy}
                         size={fd.size}
-                        defaultQuery={
-                          !isBaseReconciliationPs
-                            ? () => {
-                                return {
-                                  query: {
-                                    match: {
-                                      published: true,
-                                    },
-                                  },
-                                };
-                              }
-                            : null
-                        }
+                        defaultQuery={() => {
+                          return {
+                            query: {
+                              match: {
+                                published: true,
+                              },
+                            },
+                          };
+                        }}
                         helpTextSection={fd.helpTextSection}
                         transformData={fd.transformData}
                         customQuery={fd.customQuery}
@@ -450,15 +430,6 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                     renderItem={(data) =>
                       isBaseFormations ? (
                         <CardListFormation data={data} key={data._id} />
-                      ) : isBaseReconciliationPs ? (
-                        <CardListPsFormations
-                          data={data}
-                          key={data._id}
-                          onCardClicked={() => {
-                            onReconciliationCardClicked(data);
-                          }}
-                          context={context}
-                        />
                       ) : (
                         <CardListEtablissements data={data} key={data._id} />
                       )
@@ -478,16 +449,9 @@ export default React.memo(({ location, searchState, context, onReconciliationCar
                                 "fr-FR"
                               )} formations sur ${countCatalogueNonEligible.total.toLocaleString("fr-FR")}`}
                             {!isBaseFormations &&
-                              `${
-                                isBaseReconciliationPs
-                                  ? `${stats.numberOfResults.toLocaleString("fr-FR")} rapprochements ${context.replace(
-                                      "reconciliation_ps_",
-                                      ""
-                                    )}`
-                                  : `${stats.numberOfResults.toLocaleString(
-                                      "fr-FR"
-                                    )} organismes affichés sur ${countEtablissement.toLocaleString("fr-FR")} organismes`
-                              }`}
+                              `${stats.numberOfResults.toLocaleString(
+                                "fr-FR"
+                              )} organismes affichés sur ${countEtablissement.toLocaleString("fr-FR")} organismes`}
                           </span>
                           {(hasAccessTo(auth, "page_catalogue/export_btn") ||
                             hasAccessTo(auth, "page_organismes/export_btn")) && (

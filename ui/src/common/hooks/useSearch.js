@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { _get, _post } from "../httpClient";
 import { mergedQueries, withUniqueKey, operators } from "../components/Search/components/QueryBuilder/utils";
-import { ETABLISSEMENTS_ES_INDEX, FORMATIONS_ES_INDEX, RECONCILIATION_PS_ES_INDEX } from "../../constants/es";
+import { ETABLISSEMENTS_ES_INDEX, FORMATIONS_ES_INDEX } from "../../constants/es";
 import { CONTEXT } from "../../constants/context";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
@@ -9,14 +9,11 @@ const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 /**
  *
  * @param {string} context
- * @returns {ETABLISSEMENTS_ES_INDEX|RECONCILIATION_PS_ES_INDEX|FORMATIONS_ES_INDEX}
+ * @returns {ETABLISSEMENTS_ES_INDEX|FORMATIONS_ES_INDEX}
  */
 const getEsBase = (context) => {
   if (context === CONTEXT.ORGANISMES) {
     return ETABLISSEMENTS_ES_INDEX;
-  }
-  if (context === CONTEXT.RECONCILIATION_PS) {
-    return RECONCILIATION_PS_ES_INDEX;
   }
   return FORMATIONS_ES_INDEX;
 };
@@ -48,16 +45,6 @@ const getCountEntities = async (base) => {
     const countEtablissement = await _get(`${CATALOGUE_API}/entity/etablissements/count?${params}`, false);
     return {
       countEtablissement,
-      countCatalogueGeneral: null,
-      countCatalogueNonEligible: null,
-    };
-  }
-
-  if (base === RECONCILIATION_PS_ES_INDEX) {
-    const countReconciliationPs = await _get(`${CATALOGUE_API}/parcoursup/reconciliation/count`, false);
-    return {
-      countReconciliationPs,
-      countEtablissement: 0,
       countCatalogueGeneral: null,
       countCatalogueNonEligible: null,
     };
@@ -126,14 +113,12 @@ const getCountEntities = async (base) => {
 export function useSearch(context) {
   const base = getEsBase(context);
   const isBaseFormations = base === FORMATIONS_ES_INDEX;
-  const isBaseReconciliationPs = base === RECONCILIATION_PS_ES_INDEX;
   const endpoint = CATALOGUE_API;
   const [searchState, setSearchState] = useState({
     loaded: false,
     base,
     count: 0,
     isBaseFormations,
-    isBaseReconciliationPs,
     endpoint,
   });
 
@@ -148,7 +133,6 @@ export function useSearch(context) {
             loaded: true,
             base,
             isBaseFormations,
-            isBaseReconciliationPs,
             endpoint,
             ...resultCount,
           });
@@ -162,7 +146,7 @@ export function useSearch(context) {
     return () => {
       abortController.abort();
     };
-  }, [base, endpoint, isBaseFormations, isBaseReconciliationPs]);
+  }, [base, endpoint, isBaseFormations]);
 
   if (error !== null) {
     throw error;

@@ -18,6 +18,9 @@ const run = async () => {
 
   console.log(`${campagneCount} formations possèdent des dates de début pour la campagne en cours.`);
 
+  // 0 - If parcoursup_id doesn't exists, set it to null to use in $cond.
+  await Formation.updateMany({ parcoursup_id: { $exists: false } }, { $set: { parcoursup_id: null } });
+
   // 1 - set "hors périmètre"
   await Formation.updateMany(
     {

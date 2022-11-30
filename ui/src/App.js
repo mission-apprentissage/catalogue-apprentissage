@@ -28,7 +28,6 @@ const Cookies = lazy(() => import("./pages/legal/Cookies"));
 const DonneesPersonnelles = lazy(() => import("./pages/legal/DonneesPersonnelles"));
 const MentionsLegales = lazy(() => import("./pages/legal/MentionsLegales"));
 const Accessibilite = lazy(() => import("./pages/legal/Accessibilite"));
-const ReconciliationPs = lazy(() => import("./pages/admin/ReconciliationPs/ReconciliationPs"));
 const ActionsExpertes = lazy(() => import("./pages/ActionsExpertes/ActionsExpertes"));
 const Perimetre = lazy(() => import("./pages/perimetre/Perimetre"));
 const ConsolePilotageAffelnet = lazy(() => import("./pages/ConsolesPilotage/Affelnet"));
@@ -115,10 +114,6 @@ export default () => {
                 )}
                 {auth && hasAccessTo(auth, "page_gestion_roles") && (
                   <PrivateRoute exact path="/admin/roles" component={Roles} />
-                )}
-
-                {auth && hasAccessTo(auth, "page_reconciliation_ps") && (
-                  <PrivateRoute exact path="/couverture-ps" component={ReconciliationPs} />
                 )}
 
                 <PrivateRoute exact path="/" component={HomePage} />
