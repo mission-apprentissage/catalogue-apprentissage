@@ -1,5 +1,5 @@
 const psPerimetre = require("./perimetre");
-const { psCoverage } = require("./coverage");
+// const { psCoverage } = require("./coverage");
 const parcoursupExport = require("./export");
 const { runScript } = require("../scriptWrapper");
 const logger = require("../../common/logger");
@@ -10,7 +10,7 @@ const parcoursupJobs = async () => {
     logger.info(`Start Parcoursup jobs`);
 
     await psPerimetre();
-    await psCoverage();
+    // await psCoverage();
 
     if (process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_EXPORT_ENABLED) {
       await parcoursupExport.run();

@@ -13,15 +13,6 @@ export const updateFormation = async ({ formation, body, user }) => {
   });
 };
 
-export const updateReconciliationParcoursup = async ({ formation, shouldRemovePsReconciliation, user }) => {
-  return await _put(`${CATALOGUE_API}/parcoursup/reconciliation`, {
-    uai_gestionnaire: formation.etablissement_gestionnaire_uai,
-    uai_affilie: formation.etablissement_formateur_uai,
-    cfd: formation.cfd,
-    email: shouldRemovePsReconciliation ? user.email : null,
-  });
-};
-
 export const handleRejection = async ({ id }) => {
   return await _post(`${CATALOGUE_API}/entity/formations/${id}/handle-rejection`, {});
 };

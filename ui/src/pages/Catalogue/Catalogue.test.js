@@ -690,7 +690,6 @@ test("renders basic tree", async () => {
     base: "formations",
     count: 100,
     isBaseFormations: true,
-    isBaseReconciliationPs: false,
     endpoint: "http://localhost/api",
   }));
 

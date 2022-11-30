@@ -5,14 +5,13 @@
 <url> <loc>https://catalogue.apprentissage.education.gouv.fr/</loc> </url>
 <url> <loc>https://catalogue.apprentissage.education.gouv.fr/recherche/formations</loc> </url>
 <url> <loc>https://catalogue.apprentissage.education.gouv.fr/guide-reglementaire</loc> </url>
-<url> <loc>https://catalogue.apprentissage.education.gouv.fr/recherche/etablissements</loc> </url>
 <url> <loc>https://catalogue.apprentissage.education.gouv.fr/formation/:id</loc> </url>
+<url> <loc>https://catalogue.apprentissage.education.gouv.fr/recherche/etablissements</loc> </url>
 <url> <loc>https://catalogue.apprentissage.education.gouv.fr/etablissement/:id</loc> </url>
 <url> <loc>https://catalogue.apprentissage.education.gouv.fr/login</loc> </url>
 <url> <loc>https://catalogue.apprentissage.education.gouv.fr/reset-password</loc> </url>
 <url> <loc>https://catalogue.apprentissage.education.gouv.fr/forgotten-password</loc> </url>
 <url> <loc>https://catalogue.apprentissage.education.gouv.fr/report</loc> </url>
-<url> <loc>https://catalogue.apprentissage.education.gouv.fr/couverture-ps</loc> </url>
 <url> <loc>https://catalogue.apprentissage.education.gouv.fr/changelog</loc> </url>
 <url> <loc>https://catalogue.apprentissage.education.gouv.fr/mes-actions</loc> </url>
 <url> <loc>https://catalogue.apprentissage.education.gouv.fr/perimetre-parcoursup</loc> </url>

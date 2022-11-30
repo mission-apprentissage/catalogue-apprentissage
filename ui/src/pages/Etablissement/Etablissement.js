@@ -308,11 +308,7 @@ export default ({ match }) => {
   const [etablissement, setEtablissement] = useState(undefined);
   const [loading, setLoading] = useState(false);
   const [edition, setEdition] = useState(false);
-  const [gatherData, setGatherData] = useState(0);
-  const [modal, setModal] = useState(false);
   const [countFormations, setCountFormations] = useState(0);
-  const [user] = useAuth();
-  const toast = useToast();
   const history = useHistory();
 
   const mountedRef = useRef(true);
@@ -399,22 +395,6 @@ export default ({ match }) => {
                   onEdit={onEdit}
                   countFormations={countFormations}
                 />
-                <Modal isOpen={modal}>
-                  <ModalOverlay />
-                  <ModalContent>
-                    <ModalHeader>Merci ne pas fermer cette page</ModalHeader>
-                    <ModalBody>
-                      {gatherData !== 0 && (
-                        <Box>
-                          <Box>
-                            Mise à jour des informations {gatherData === 1 && <Spinner />}
-                            {gatherData > 1 && <Tick color={"success"} boxSize={5} />}
-                          </Box>
-                        </Box>
-                      )}
-                    </ModalBody>
-                  </ModalContent>
-                </Modal>
               </>
             )}
             {!loading && !etablissement && (
