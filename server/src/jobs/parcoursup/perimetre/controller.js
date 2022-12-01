@@ -18,60 +18,67 @@ const run = async () => {
 
   console.log(`${campagneCount} formations possèdent des dates de début pour la campagne en cours.`);
 
-  // 0 - If parcoursup_id doesn't exists, set it to null to use in $cond.
+  // 0. On initialise parcoursup_id à null si l'information n'existe pas sur la formation
   await Formation.updateMany({ parcoursup_id: { $exists: false } }, { $set: { parcoursup_id: null } });
 
-  // 1 - set "hors périmètre"
+  // const filterAllowedToReset = {
+  //   parcoursup_statut: { $nin: [PARCOURSUP_STATUS.REJETE, PARCOURSUP_STATUS.NON_PUBLIE, PARCOURSUP_STATUS.PUBLIE] },
+  // };
+
+  // // 1 - set "hors périmètre"
+  // await Formation.updateMany(
+  //   {
+  //     $or : [
+  //       filterAllowedToReset,
+  //       { parcoursup_statut: PARCOURSUP_STATUS.PUBLIE, parcoursup_id: null },
+  //     ],
+  //     $and: [
+  //       {
+  //         $or: [
+  //           { parcoursup_statut: { $nin: [PARCOURSUP_STATUS.REJETE, PARCOURSUP_STATUS.PUBLIE] } },
+  //           { parcoursup_statut: null },
+  //           { catalogue_published: false },
+  //           { published: false },
+  //           {
+  //             $or: [
+  //               {
+  //                 "rncp_details.code_type_certif": {
+  //                   $in: ["Titre", "TP"],
+  //                 },
+  //                 "rncp_details.rncp_outdated": true,
+  //               },
+  //               {
+  //                 "rncp_details.code_type_certif": {
+  //                   $nin: ["Titre", "TP"],
+  //                 },
+  //                 cfd_outdated: true,
+  //               },
+  //             ],
+  //           },
+  //           { parcoursup_statut: PARCOURSUP_STATUS.PUBLIE, parcoursup_id: null },
+  //         ],
+  //       },
+  //     ],
+  //   },
+  //   { $set: { parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE } }
+  // );
+
+  // 1. On réinitialise les formations "à publier ..." à "hors périmètre" pour permettre le recalcule du périmètre
   await Formation.updateMany(
     {
-      $or: [
-        { parcoursup_statut: { $nin: [PARCOURSUP_STATUS.REJETE, PARCOURSUP_STATUS.PUBLIE] } },
-        { parcoursup_statut: null },
-        { catalogue_published: false },
-        { published: false },
-        {
-          $or: [
-            {
-              "rncp_details.code_type_certif": {
-                $in: ["Titre", "TP"],
-              },
-              "rncp_details.rncp_outdated": true,
-            },
-            {
-              "rncp_details.code_type_certif": {
-                $nin: ["Titre", "TP"],
-              },
-              cfd_outdated: true,
-            },
-          ],
-        },
-        { parcoursup_id: null, parcoursup_statut: PARCOURSUP_STATUS.PUBLIE },
-      ],
+      parcoursup_statut: {
+        $in: [
+          PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
+          PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
+          PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+          PARCOURSUP_STATUS.A_PUBLIER,
+        ],
+      },
     },
     { $set: { parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE } }
   );
 
-  // set "à publier (vérifier accès direct postbac)" & "à publier (soumis à validation Recteur)" for trainings matching psup eligibility rules
-  // reset "à publier" & "à publier (vérifier accès direct postbac)" & "à publier (soumis à validation Recteur)"
-  await Formation.updateMany(
-    {
-      $and: [
-        {
-          parcoursup_statut: {
-            $in: [
-              PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
-              PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
-              PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
-              PARCOURSUP_STATUS.A_PUBLIER,
-            ],
-          },
-        },
-      ],
-    },
-    { $set: { parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE } }
-  );
-
-  // run only on those 'hors périmètre' to not overwrite actions of users !
+  // 2. On applique les règles de périmètres uniquement sur les formations "hors périmètre" pour ne pas écraser les actions menées par les utilisateurs
   const filterHP = {
     parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
   };
