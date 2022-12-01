@@ -4,7 +4,7 @@ const { runScript } = require("../../scriptWrapper");
 
 const run = async () => {
   try {
-    await Formation.updateMany({}, { $unset: { parcoursup_id: "" } });
+    await Formation.updateMany({}, { $set: { parcoursup_id: null } });
   } catch (err) {
     logger.error(err);
   }

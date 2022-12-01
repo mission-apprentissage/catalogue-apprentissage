@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Text } from "@chakra-ui/react";
+import { Text } from "@chakra-ui/react";
 import { ZoomIn, ZoomOut } from "../../theme/components/icons";
 
 export const EllipsisText = ({ maxLength = 250, children, ...args }) => {

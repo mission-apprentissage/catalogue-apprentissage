@@ -12,7 +12,6 @@ const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
 const Indicators = () => {
   const [formationCount, setFormationCount] = useState(undefined);
-  const [formationARapprochee, setFormationARapprochee] = useState(undefined);
   const [formationAValider, setFormationAValider] = useState(undefined);
   const [formationRejetees, setFormationRejetees] = useState(undefined);
   const [formationTraitees, setFormationTraitees] = useState(undefined);
@@ -24,12 +23,6 @@ const Indicators = () => {
     (async () => {
       try {
         setFormationCount(await _get(`${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({})}`, false));
-        setFormationARapprochee(
-          await (async () => {
-            const response = await _get(`${CATALOGUE_API}/parcoursup/reconciliation/count`, false);
-            return response.countAutomatique + response.countAVerifier;
-          })()
-        );
         setFormationAValider(
           await _get(
             `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
@@ -89,7 +82,6 @@ const Indicators = () => {
       } catch (e) {
         console.error(e);
         setFormationCount(0);
-        setFormationARapprochee(0);
         setFormationAValider(0);
         setFormationTraitees(0);
         setFormationRejetees(0);
@@ -101,12 +93,6 @@ const Indicators = () => {
   }, []);
 
   const cards = [
-    {
-      color: "yellow.100",
-      title: <>{formationARapprochee}</>,
-      body: <>Formations à rapprocher</>,
-      linkTo: `/couverture-ps`,
-    },
     {
       color: "orange.100",
       title: <>{formationAValider}</>,
