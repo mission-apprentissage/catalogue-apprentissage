@@ -5,7 +5,6 @@ import { Box, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { ArrowRightLine, InfoCircle } from "../../../../../theme/components/icons";
 import { QualiteBadge } from "../../../QualiteBadge";
 import { HabiliteBadge } from "../../../HabiliteBadge";
-import { AnneeBadge } from "../../../AnneeBadge";
 
 export const CardListFormation = ({ data, context }) => {
   let [auth] = useAuth();
@@ -54,11 +53,11 @@ export const CardListFormation = ({ data, context }) => {
             )}
             {auth?.sub !== "anonymous" && data.annee === "Y" && (
               <Flex textStyle="xs" mt={4} alignItems="center">
-                  <InfoCircle />
-                <Text as={"span"} ml={1}>
-                  Année d'entrée en apprentissage à Y
-                </Text>
-              </Flex>
+              <InfoCircle />
+              <Text as={"span"} ml={1}>
+                Année d'entrée en apprentissage à pour valeur Y
+              </Text>
+            </Flex>
             )}
           </Flex>
         </Box>
