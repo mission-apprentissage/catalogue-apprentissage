@@ -5,7 +5,6 @@ import { Box, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { ArrowRightLine, InfoCircle } from "../../../../../theme/components/icons";
 import { QualiteBadge } from "../../../QualiteBadge";
 import { HabiliteBadge } from "../../../HabiliteBadge";
-import { AnneeBadge } from "../../../AnneeBadge";
 
 export const CardListFormation = ({ data, context }) => {
   let [auth] = useAuth();
