@@ -51,14 +51,6 @@ export const CardListFormation = ({ data, context }) => {
                 </Text>
               </Flex>
             )}
-            {auth?.sub !== "anonymous" && data.annee === "Y" && (
-              <Flex textStyle="xs" mt={4} alignItems="center">
-              <InfoCircle />
-              <Text as={"span"} ml={1}>
-                Année d'entrée en apprentissage à pour valeur Y
-              </Text>
-            </Flex>
-            )}
           </Flex>
         </Box>
       </Box>
