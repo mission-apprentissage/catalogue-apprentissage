@@ -5,7 +5,6 @@ import { DangerBox } from "../DangerBox";
 import InfoTooltip from "../InfoTooltip";
 import helpText from "../../../locales/helpText.json";
 import { FormationPeriode } from "./FormationPeriode";
-import { Date } from "./Date";
 import { HabilitationPartenaire } from "./HabilitationPartenaire";
 import { HABILITE_LIST } from "../../../constants/certificateurs";
 
