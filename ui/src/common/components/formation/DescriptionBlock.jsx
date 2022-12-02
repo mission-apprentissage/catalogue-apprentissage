@@ -5,6 +5,7 @@ import { DangerBox } from "../DangerBox";
 import InfoTooltip from "../InfoTooltip";
 import helpText from "../../../locales/helpText.json";
 import { FormationPeriode } from "./FormationPeriode";
+import { Date } from "./Date";
 import { HabilitationPartenaire } from "./HabilitationPartenaire";
 import { HABILITE_LIST } from "../../../constants/certificateurs";
 
@@ -200,10 +201,7 @@ export const DescriptionBlock = ({ formation }) => {
             </Text>
           </Text>
           <Text mb={4}>
-            Date début :{" "}
-            <Text as="span" variant="highlight">
-              {formation.date_debut ?? "N/A"}
-            </Text>
+            Date début : <FormationPeriode date={formation.date_debut} />{" "}
           </Text>
           <Text mb={4}>
             Date fin :{" "}
