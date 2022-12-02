@@ -150,7 +150,7 @@ export const DescriptionBlock = ({ formation }) => {
             </Text>
           </DureeContainer>
 
-          {formation.annee === "Y" && (
+          {formation.annee === "X" && (
             <Box
               bg={"orangesoft.200"}
               p={4}
