@@ -160,6 +160,24 @@ export const DescriptionBlock = ({ formation }) => {
               </Text>
             </Box>
           )}
+           {formation.annee === "Y" && (
+            <Box
+              bg={"orangesoft.200"}
+              p={4}
+              mb={formation.annee_incoherente ? 0 : 4}
+              borderLeft={"4px solid"}
+              borderColor={"orangesoft.500"}
+              w={"full"}
+            >
+              <Text>
+                Année d'entrée en apprentissage :{" "}
+                <Text as="span" variant="highlight" bg={"transparent"}>
+                  <DureeAnnee value={formation.annee} />
+                </Text>{" "}
+                <InfoTooltip description={helpText.formation.annee} />
+              </Text>
+            </Box>
+          )}
           {formation.annee !== "X" && (
             <AnneeContainer>
               <Text mb={formation.annee_incoherente ? 0 : 4}>

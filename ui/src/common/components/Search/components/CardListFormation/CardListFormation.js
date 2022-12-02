@@ -50,7 +50,12 @@ export const CardListFormation = ({ data, context }) => {
                   Année d'entrée en apprentissage non collectée
                 </Text>
               </Flex>
-            )}
+            )
+            
+            
+            }
+
+            
           </Flex>
         </Box>
       </Box>
