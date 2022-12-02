@@ -199,6 +199,18 @@ export const DescriptionBlock = ({ formation }) => {
               {formation.id_certifinfo ?? "N/A"}
             </Text>
           </Text>
+          <Text mb={4}>
+            Date début :{" "}
+            <Text as="span" variant="highlight">
+              {formation.date_debut ?? "N/A"}
+            </Text>
+          </Text>
+          <Text mb={4}>
+            Date fin :{" "}
+            <Text as="span" variant="highlight">
+              {formation.date_fin ?? "N/A"}
+            </Text>
+          </Text>
         </Box>
       </Box>
       <Box p={8}>
