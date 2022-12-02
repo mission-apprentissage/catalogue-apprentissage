@@ -200,10 +200,6 @@ export const DescriptionBlock = ({ formation }) => {
             </Text>
           </Text>
           <Text mb={4}>
-            <FormationPeriode periode={formation.date_debut} />{" "}
-            <InfoTooltip description={helpText.formation.periode} />
-          </Text>
-          <Text mb={4}>
             Date fin :{" "}
             <Text as="span" variant="highlight">
               {formation.date_fin ?? "N/A"}
