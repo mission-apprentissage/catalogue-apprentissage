@@ -126,6 +126,10 @@ export const DescriptionBlock = ({ formation }) => {
             <InfoTooltip description={helpText.formation.periode} />
           </Text>
           <Text mb={4}>
+            Date de fin : <FormationPeriode periode={formation.date_fin} />{" "}
+            <InfoTooltip description={helpText.formation.periode} />
+          </Text>
+          <Text mb={4}>
             Capacite d'accueil :{" "}
             <Text as="span" variant="highlight">
               {formation.capacite ?? "N/A"}
@@ -201,12 +205,6 @@ export const DescriptionBlock = ({ formation }) => {
             Code Certif Info :{" "}
             <Text as="span" variant="highlight">
               {formation.id_certifinfo ?? "N/A"}
-            </Text>
-          </Text>
-          <Text mb={4}>
-            Date fin :{" "}
-            <Text as="span" variant="highlight">
-              {formation.date_fin ?? "N/A"}
             </Text>
           </Text>
         </Box>
