@@ -8,7 +8,7 @@ export const Date = ({ date }) => {
       const date = new Date(dateStr);
       const formattedDate = date.toLocaleString("fr-FR", { month: "long" });
       const displayedDate = formattedDate === "Invalid Date" ? dateStr : formattedDate;
-      const year = isNaN(date.getFullYear()) ? "Période invalide" : date.getFullYear();
+      const year = isNaN(date.getFullYear()) ? "Date invalide" : date.getFullYear();
       acc[year] = acc[year] ?? [];
       acc[year] = [...acc[year], displayedDate];
       return acc;

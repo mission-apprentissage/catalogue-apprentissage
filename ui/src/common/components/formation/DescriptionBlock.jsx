@@ -201,7 +201,8 @@ export const DescriptionBlock = ({ formation }) => {
             </Text>
           </Text>
           <Text mb={4}>
-            Date début : <Date date={formation.date_debut} />{" "}
+            <FormationPeriode periode={formation.date_debut} />{" "}
+            <InfoTooltip description={helpText.formation.periode} />
           </Text>
           <Text mb={4}>
             Date fin :{" "}
