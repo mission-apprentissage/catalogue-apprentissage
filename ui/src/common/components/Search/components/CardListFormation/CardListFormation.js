@@ -51,6 +51,11 @@ export const CardListFormation = ({ data, context }) => {
                 </Text>
               </Flex>
             )}
+            {auth?.sub !== "anonymous" && data.annee === "Y" && (
+              <Flex textStyle="xs" mt={4} alignItems="center">
+               <AnneeBadge value={data.annee} mt={2} mr={[0, 2]} />
+              </Flex>
+            )}
           </Flex>
         </Box>
       </Box>
