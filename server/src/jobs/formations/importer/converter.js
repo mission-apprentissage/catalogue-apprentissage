@@ -173,54 +173,7 @@ const applyConversion = async () => {
 
       // Si la formation existe
       if (formation) {
-        const toRestore = [
-          "affelnet_code_nature",
-          "affelnet_url_infos_offre",
-          "affelnet_modalites_offre",
-          "affelnet_url_modalites_offre",
-          "affelnet_perimetre",
-          "affelnet_published_date",
-          "affelnet_raison_depublication",
-          "affelnet_secteur",
-          "affelnet_statut_history",
-          "affelnet_statut",
-          "forced_published",
-          "last_status",
-          "last_statut_update_date",
-          "last_update_who",
-          "parcoursup_error",
-          "parcoursup_statut",
-          "parcoursup_statut_history",
-          "parcoursup_raison_depublication",
-          "parcoursup_published_date",
-          "parcoursup_id",
-          "rejection",
-          "updates_history",
-          "editedFields",
-        ];
-
-        const toRecompute = [
-          "affelnet_mefs_10",
-          "affelnet_infos_offre",
-          "annee_incoherente",
-          "distance_lieu_formation_etablissement_formateur",
-          "duree_incoherente",
-          "etablissement_formateur_id",
-          "etablissement_formateur_published",
-          "etablissement_gestionnaire_id",
-          "etablissement_gestionnaire_published",
-          "parcoursup_mefs_10",
-          "uai_formation",
-          "uai_formation_valide",
-          "distance",
-          "lieu_formation_geo_coordonnees_computed",
-          "lieu_formation_adresse_computed",
-          "cfd_entree",
-        ];
-
-        const toDelete = [];
-
-        const notToCompare = ["_id", "__v", "created_at", "last_update_at", ...toDelete, ...toRestore, ...toRecompute];
+        const notToCompare = ["_id", "__v"];
 
         await Formation.updateOne(
           { cle_ministere_educatif },

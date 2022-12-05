@@ -2,6 +2,7 @@ const affelnetFormationSchema = require("./affelnetFormation");
 const alertSchema = require("./alert");
 const consoleStatSchema = require("./consoleStat");
 const consumptionSchema = require("./consumption");
+const dualControlFormationSchema = require("./formation/dualControlFormation");
 const dualControlPerimeterReportSchema = require("./dualControlPerimeterReport");
 const dualControlReportSchema = require("./dualControlReport");
 const etablissementSchema = require("./etablissement");
@@ -22,6 +23,7 @@ module.exports = {
   alertSchema,
   consoleStatSchema,
   consumptionSchema,
+  dualControlFormationSchema,
   dualControlPerimeterReportSchema,
   dualControlReportSchema,
   etablissementSchema,

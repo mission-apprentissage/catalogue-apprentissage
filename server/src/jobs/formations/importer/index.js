@@ -25,6 +25,10 @@ const importer = async (options) => {
       }
     }
 
+    if (!(await DualControlFormation.countDocuments())) {
+      return;
+    }
+
     // STEP 2 : Convert formations
     await converter();
 
