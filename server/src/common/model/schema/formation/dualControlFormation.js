@@ -1,6 +1,18 @@
 const mongoose = require("mongoose");
-const etablissementFormateurInfo = require("./etablissement.formateur.sub");
-const etablissementGestionnaireInfo = require("./etablissement.gestionnaire.sub");
+const {
+  // eslint-disable-next-line no-unused-vars
+  etablissement_formateur_id,
+  // eslint-disable-next-line no-unused-vars
+  etablissement_formateur_published,
+  ...etablissementFormateurInfo
+} = require("./etablissement.formateur.sub");
+const {
+  // eslint-disable-next-line no-unused-vars
+  etablissement_gestionnaire_id,
+  // eslint-disable-next-line no-unused-vars
+  etablissement_gestionnaire_published,
+  ...etablissementGestionnaireInfo
+} = require("./etablissement.gestionnaire.sub");
 const etablissementReferenceInfo = require("./etablissement.reference.sub");
 
 const modaliteSchema = new mongoose.Schema(
@@ -122,6 +134,8 @@ const formationSchema = {
     default: null,
     description: "Clé unique de la formation (pour envoi aux ministères éducatifs)",
   },
+
+  // CFD
   cfd: {
     index: true,
     type: String,
@@ -144,12 +158,8 @@ const formationSchema = {
     default: null,
     description: "Date de fermeture du cfd",
   },
-  cfd_entree: {
-    index: true,
-    type: String,
-    default: null,
-    description: "Code formation diplôme d'entrée (année 1 de l'apprentissage)",
-  },
+
+  // ADRESSE
   nom_academie: {
     type: String,
     default: null,
@@ -192,6 +202,8 @@ const formationSchema = {
     default: null,
     description: "Localité",
   },
+
+  // IDENTIFICATION
   nom: {
     type: String,
     default: null,
@@ -225,18 +237,47 @@ const formationSchema = {
     default: null,
     description: "Niveau de la formation",
   },
+  periode: {
+    type: [Date],
+    default: [],
+    description: "Périodes de début de la formation",
+  },
+  capacite: {
+    type: String,
+    default: null,
+    description: "Capacité d'accueil",
+  },
+  duree: {
+    index: true,
+    type: String,
+    default: null,
+    description: "Durée de la formation en années",
+  },
+  annee: {
+    index: true,
+    type: String,
+    default: null,
+    description: "Année de la formation (cursus)",
+  },
+  email: {
+    type: String,
+    default: null,
+    select: false,
+    noIndex: true,
+    description: "Email du contact pour cette formation",
+  },
+
+  // ONISEP
   onisep_url: {
     type: String,
     default: null,
     description: "Url de redirection vers le site de l'ONISEP",
   },
-
   onisep_intitule: {
     type: String,
     default: null,
     description: "Intitulé éditorial l'ONISEP",
   },
-
   onisep_libelle_poursuite: {
     type: String,
     default: null,
@@ -258,6 +299,7 @@ const formationSchema = {
     description: "Domaine et sous domaine ONISEP (séparateur ;)",
   },
 
+  // RNCP
   rncp_code: {
     index: true,
     type: String,
@@ -285,70 +327,14 @@ const formationSchema = {
     default: [],
     description: "Codes ROME",
   },
-  periode: {
-    type: [Date],
-    default: [],
-    description: "Périodes de début de la formation",
-  },
-  capacite: {
-    type: String,
-    default: null,
-    description: "Capacité d'accueil",
-  },
-  duree: {
-    index: true,
-    type: String,
-    default: null,
-    description: "Durée de la formation en années",
-  },
-  duree_incoherente: {
-    type: Boolean,
-    default: null,
-    description: "Durée incohérente avec les codes mefs",
-  },
-  annee: {
-    index: true,
-    type: String,
-    default: null,
-    description: "Année de la formation (cursus)",
-  },
-  annee_incoherente: {
-    type: Boolean,
-    default: null,
-    description: "Année incohérente avec les codes mefs",
-  },
-  email: {
-    type: String,
-    default: null,
-    select: false,
-    noIndex: true,
-    description: "Email du contact pour cette formation",
-  },
+
   published: {
     index: true,
     type: Boolean,
     default: false,
     description: "Est publiée, la formation est éligible pour le catalogue",
   },
-  forced_published: {
-    type: Boolean,
-    default: false,
-    description:
-      "La publication vers les plateformes est forcée (contournement catalogue non-éligible dans certains cas)",
-  },
-  created_at: {
-    type: Date,
-    default: Date.now,
-    description: "Date d'ajout en base de données",
-  },
 
-  last_update_at: {
-    type: Date,
-    default: Date.now,
-    description: "Date de dernières mise à jour",
-  },
-
-  // Product specific
   idea_geo_coordonnees_etablissement: {
     type: String,
     implicit_type: "geo_point",
@@ -365,21 +351,11 @@ const formationSchema = {
     implicit_type: "geo_point",
     description: "Latitude et longitude du lieu de formation déduit de l'adresse du flux RCO",
   },
-  distance: {
-    type: Number,
-    default: null,
-    description: "Distance entre les coordonnées transmises et déduites à partir de l'adresse",
-  },
   lieu_formation_adresse: {
     index: true,
     type: String,
     default: null,
     description: "Adresse du lieu de formation",
-  },
-  lieu_formation_adresse_computed: {
-    type: String,
-    default: null,
-    description: "Adresse du lieu de formation déduit de la géolocalisation du flux RCO",
   },
   lieu_formation_siret: {
     type: String,
@@ -493,6 +469,7 @@ const formationSchema = {
     description: "Identifiant RCO",
   },
 
+  // Etablissements
   ...etablissementGestionnaireInfo,
   ...etablissementFormateurInfo,
   ...etablissementReferenceInfo,
