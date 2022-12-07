@@ -144,24 +144,7 @@ const applyConversion = async () => {
 
       // Si la formation existe
       if (formation) {
-        const toRestore = [];
-
-        const toRecompute = [
-          "annee_incoherente",
-          "distance_lieu_formation_etablissement_formateur",
-          "duree_incoherente",
-          "etablissement_formateur_id",
-          "etablissement_formateur_published",
-          "etablissement_gestionnaire_id",
-          "etablissement_gestionnaire_published",
-          "distance",
-          "lieu_formation_geo_coordonnees_computed",
-          "lieu_formation_adresse_computed",
-        ];
-
-        const toDelete = [];
-
-        const notToCompare = ["_id", "__v", "created_at", "last_update_at", ...toDelete, ...toRestore, ...toRecompute];
+        const notToCompare = ["_id", "__v"];
 
         await Formation.updateOne(
           { cle_ministere_educatif },
