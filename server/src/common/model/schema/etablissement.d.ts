@@ -288,26 +288,6 @@ export interface Etablissement {
    */
   formations_uais?: string[];
   /**
-   * l'établissement a des formations de niveau 3
-   */
-  formations_n3?: boolean;
-  /**
-   * l'établissement a des formations de niveau 4
-   */
-  formations_n4?: boolean;
-  /**
-   * l'établissement a des formations de niveau 5
-   */
-  formations_n5?: boolean;
-  /**
-   * l'établissement a des formations de niveau 6
-   */
-  formations_n6?: boolean;
-  /**
-   * l'établissement a des formations de niveau 7
-   */
-  formations_n7?: boolean;
-  /**
    * Numéro de dossier Démarche Simplifiée
    */
   ds_id_dossier?: string;
