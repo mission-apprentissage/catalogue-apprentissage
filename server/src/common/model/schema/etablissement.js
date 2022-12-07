@@ -357,31 +357,6 @@ const etablissementSchema = {
     default: [],
     description: "UAIs des formations rattachées à l'établissement",
   },
-  formations_n3: {
-    type: Boolean,
-    default: false,
-    description: "l'établissement a des formations de niveau 3",
-  },
-  formations_n4: {
-    type: Boolean,
-    default: false,
-    description: "l'établissement a des formations de niveau 4",
-  },
-  formations_n5: {
-    type: Boolean,
-    default: false,
-    description: "l'établissement a des formations de niveau 5",
-  },
-  formations_n6: {
-    type: Boolean,
-    default: false,
-    description: "l'établissement a des formations de niveau 6",
-  },
-  formations_n7: {
-    type: Boolean,
-    default: false,
-    description: "l'établissement a des formations de niveau 7",
-  },
   // formations_responsable_ids: {
   //   type: [Object],
   //   default: [],
