@@ -31,7 +31,9 @@ const LoginPage = () => {
       history.push("/");
     } catch (e) {
       console.error(e);
-      setStatus({ error: e.prettyMessage });
+      e.statusCode === 429
+        ? setStatus({ error: "Trop de tentatives infructueuses, veuillez essayer de nouveau dans une minute." })
+        : setStatus({ error: e.prettyMessage });
     }
   };
 
