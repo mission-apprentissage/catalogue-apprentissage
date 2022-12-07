@@ -36,7 +36,7 @@ const buildUpdatesHistory = (formation, updates, keys) => {
     return acc;
   }, {});
 
-  return [...formation.updates_history, { from, to: { ...updates }, updated_at: Date.now() }];
+  return [...formation.updates_history, { from, to: { ...updates }, updated_at: new Date() }];
 };
 
 module.exports = { diffFormation, buildUpdatesHistory };

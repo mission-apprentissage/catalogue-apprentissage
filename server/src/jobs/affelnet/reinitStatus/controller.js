@@ -11,7 +11,7 @@ const { AFFELNET_STATUS } = require("../../../constants/status");
  */
 const allHistoryIsEnAttenteAfterDate = (formation, date) => {
   return formation.updates_history
-    ?.filter((history) => history.updated_at >= date.getTime())
+    ?.filter((history) => new Date(history.updated_at) >= new Date(date))
     ?.every((history) => !history.to?.affelnet_statut || history.to?.affelnet_statut === AFFELNET_STATUS.EN_ATTENTE);
 };
 
@@ -25,7 +25,7 @@ const allHistoryIsEnAttenteAfterDate = (formation, date) => {
 const lastHistoryIsEnAttenteBeforeDate = (formation, date) =>
   formation.updates_history
     ?.filter((history) => !!history.to.affelnet_statut)
-    ?.filter((history) => history.updated_at < date.getTime())
+    ?.filter((history) => new Date(history.updated_at) < new Date(date))
     ?.reverse()[0]?.to.affelnet_statut === AFFELNET_STATUS.EN_ATTENTE;
 
 /**
