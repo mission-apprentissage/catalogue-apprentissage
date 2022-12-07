@@ -19,6 +19,7 @@ const formation = require("./routes/formation");
 const formationSecure = require("./routes/formationSecure");
 const report = require("./routes/report");
 const auth = require("./routes/auth");
+const authSecure = require("./routes/authSecure");
 const user = require("./routes/user");
 const role = require("./routes/role");
 const password = require("./routes/password");
@@ -141,7 +142,8 @@ module.exports = async (components, verbose = true) => {
         return res.json(swaggerSpecification);
       }),
     ],
-    ["/auth", authLimiter, auth(components)],
+    ["/auth", authLimiter, authSecure(components)],
+    ["/auth", apiLimiter, auth(components)],
     ["/password", authLimiter, password(components)],
   ];
 
