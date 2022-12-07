@@ -38,6 +38,49 @@ const getPublishRadioValue = (status) => {
   return undefined;
 };
 
+/**
+ * Regexp pour validation des urls à destination d'Affelnet.
+ *
+ *
+ * Avec pour académie :
+ *
+ * paris|aix-marseille|besancon|bordeaux|caen|clermont-ferrand|dijon|grenoble|lille|lyon|montpellier|nancy-metz|poitiers|rennes|strasbourg|toulouse|nantes|orleans-tours|reims|amiens|rouen|limoges|nice|creteil|versailles|corse|reunion|martinique|guadeloupe|guyane|noumea|mayotte|normandie|polynesie|spm
+ *
+ * Régions académiques :
+ *
+ * auvergne-rhone-alpes|auvergnerhonealpes|bourgogne-franche-compte|bretagne|centre-val-de-loire|corse|grand-est|guadeloupe|guyane|hauts-de-france|ile-de-france|reunion|martinique|mayotte|normandie|nouvelle-aquitaine|occitanie|pays-de-la-loire|provence-alpes-cote-azur
+ *
+ *
+ * (https?)
+ * (
+ *   (.+\.ac-<académie>\.(fr|net|eu|nc|pf|pm|wf))|
+ *   https://test.ac-aix-marseille.fr/tst
+ *
+ *   (.+\.ent\.<académie/region-academique>\.(fr|net|eu|nc|pf|pm|wf))|
+ *   https://test.ent.aix-marseille.net/tst
+ *   https://test.ent.centre-val-de-loire.net/tst
+ *
+ *   (.+\.region-academique-<region-academique>\.fr)|
+ *   https://test.region-academique-bourgogne-franche-compte.fr/test1/test2?test3
+ *
+ *   (.+\.monbureaunumerique\.fr)|
+ *   https://test1.monbureaunumerique.fr/test
+ *
+ *   (.+\.index-education\.(com|net))|
+ *   http://test.index-education.com/test1?test2
+ *
+ *   (onisep\.fr)
+ *   https://onisep.fr/test1/test2
+ *
+ * )
+ * .*
+ *
+ * https://test.test.net/test
+ *
+ */
+const urlRegex =
+  /(https?:\/\/)((.+\.ac-(paris|aix-marseille|besancon|bordeaux|caen|clermont-ferrand|dijon|grenoble|lille|lyon|montpellier|nancy-metz|poitiers|rennes|strasbourg|toulouse|nantes|orleans-tours|reims|amiens|rouen|limoges|nice|creteil|versailles|corse|reunion|martinique|guadeloupe|guyane|noumea|mayotte|normandie|polynesie|spm)\.(fr|net|eu|nc|pf|pm|wf))|(.+\.ent\.((paris|aix-marseille|besancon|bordeaux|caen|clermont-ferrand|dijon|grenoble|lille|lyon|montpellier|nancy-metz|poitiers|rennes|strasbourg|toulouse|nantes|orleans-tours|reims|amiens|rouen|limoges|nice|creteil|versailles|corse|reunion|martinique|guadeloupe|guyane|noumea|mayotte|normandie|polynesie|spm)|(auvergne-rhone-alpes|auvergnerhonealpes|bourgogne-franche-compte|bretagne|centre-val-de-loire|corse|grand-est|guadeloupe|guyane|hauts-de-france|ile-de-france|reunion|martinique|mayotte|normandie|nouvelle-aquitaine|occitanie|pays-de-la-loire|provence-alpes-cote-azur))\.(fr|net|eu|nc|pf|pm|wf))|(.+\.region-academique-(auvergne-rhone-alpes|auvergnerhonealpes|bourgogne-franche-compte|bretagne|centre-val-de-loire|corse|grand-est|guadeloupe|guyane|hauts-de-france|ile-de-france|reunion|martinique|mayotte|normandie|nouvelle-aquitaine|occitanie|pays-de-la-loire|provence-alpes-cote-azur)\.fr)|(.+\.monbureaunumerique\.fr)|(.+\.index-education\.(com|net))|(onisep\.fr)).*/;
+
 const getSubmitBody = ({
   formation,
   affelnet,
@@ -163,13 +206,21 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
         ? Yup.string().nullable().max(1000, "Le champ ne doit pas dépasser 1000 caractères")
         : Yup.string().nullable(),
       affelnet_url_infos_offre: isAffelnetFormOpen
-        ? Yup.string().nullable().max(250, "Le champ ne doit pas dépasser 250 caractères")
+        ? Yup.string()
+            .url("La valeur saisie doit être une url valide")
+            .nullable()
+            .matches(urlRegex, { message: "L'url n'est pas autorisée", excludeEmptyString: true })
+            .max(250, "Le champ ne doit pas dépasser 250 caractères")
         : Yup.string().nullable(),
       affelnet_modalites_offre: isAffelnetFormOpen
         ? Yup.string().nullable().max(1000, "Le champ ne doit pas dépasser 1000 caractères")
         : Yup.string().nullable(),
       affelnet_url_modalites_offre: isAffelnetFormOpen
-        ? Yup.string().nullable().max(250, "Le champ ne doit pas dépasser 250 caractères")
+        ? Yup.string()
+            .url("La valeur saisie doit être une url valide")
+            .nullable()
+            .matches(urlRegex, { message: "L'url n'est pas autorisée", excludeEmptyString: true })
+            .max(250, "Le champ ne doit pas dépasser 250 caractères")
         : Yup.string().nullable(),
 
       affelnet_raison_depublication: isAffelnetUnpublishFormOpen
