@@ -473,7 +473,7 @@ module.exports = {
           format: "date-time",
         },
         default: [],
-        description: "Formation éligible au catalogue générale",
+        description: "Dates de début de session",
       },
       date_fin: {
         type: "array",
@@ -482,7 +482,15 @@ module.exports = {
           format: "date-time",
         },
         default: [],
-        description: "Formation éligible au catalogue générale",
+        description: "Dates de fin de session",
+      },
+      modalites_entrees_sorties: {
+        type: "array",
+        items: {
+          type: "boolean",
+        },
+        default: [],
+        description: "Session en entrée / sortie permanente",
       },
       id_RCO: {
         type: "string",
