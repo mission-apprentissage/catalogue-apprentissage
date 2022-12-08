@@ -4,7 +4,8 @@ import { ExternalLinkLine } from "../../../theme/components/icons";
 import { DangerBox } from "../DangerBox";
 import InfoTooltip from "../InfoTooltip";
 import helpText from "../../../locales/helpText.json";
-import { FormationPeriode } from "./FormationPeriode";
+// import { FormationPeriode } from "./FormationPeriode";
+import { FormationDate } from "./FormationDate";
 import { HabilitationPartenaire } from "./HabilitationPartenaire";
 import { HABILITE_LIST } from "../../../constants/certificateurs";
 import { EllipsisText } from "../EllipsisText";
@@ -172,9 +173,13 @@ export const DescriptionBlock = ({ formation }) => {
               </Text>
             </Text>
           )}
-          <Text mb={4}>
-            Début de formation : <FormationPeriode periode={formation.periode} />{" "}
+          {/* <Text mb={4}>
+            Période d'inscription : <FormationPeriode periode={formation.periode} />{" "}
             <InfoTooltip description={helpText.formation.periode} />
+          </Text> */}
+          <Text mb={4}>
+            Dates de formation : <FormationDate formation={formation} />{" "}
+            <InfoTooltip description={helpText.formation.dates} />
           </Text>
           <Text mb={4}>
             Capacite d'accueil :{" "}

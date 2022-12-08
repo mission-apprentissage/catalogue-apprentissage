@@ -10,15 +10,9 @@ import {
   GridItem,
   Heading,
   Link,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
   Spinner,
   Text,
   useDisclosure,
-  useToast,
 } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
 import useAuth from "../../common/hooks/useAuth";

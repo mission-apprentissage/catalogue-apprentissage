@@ -279,13 +279,17 @@ export interface Formation {
    */
   catalogue_published?: boolean;
   /**
-   * Formation éligible au catalogue générale
+   * Dates de début de session
    */
   date_debut?: Date[];
   /**
-   * Formation éligible au catalogue générale
+   * Dates de fin de session
    */
   date_fin?: Date[];
+  /**
+   * Session en entrée / sortie permanente
+   */
+  modalites_entrees_sorties?: boolean[];
   /**
    * Identifiant RCO
    */

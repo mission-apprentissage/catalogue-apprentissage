@@ -228,6 +228,10 @@ export interface DualControlFormation {
    */
   date_fin?: Date[];
   /**
+   * Session en entrée / sortie permanente
+   */
+  modalites_entrees_sorties?: boolean[];
+  /**
    * Identifiant RCO
    */
   id_RCO?: string;
