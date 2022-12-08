@@ -549,13 +549,19 @@ const formationSchema = {
   date_debut: {
     type: [Date],
     default: [],
-    description: "Formation éligible au catalogue générale",
+    description: "Dates de début de session",
   },
 
   date_fin: {
     type: [Date],
     default: [],
-    description: "Formation éligible au catalogue générale",
+    description: "Dates de fin de session",
+  },
+
+  modalites_entrees_sorties: {
+    type: [Boolean],
+    default: [],
+    description: "Session en entrée / sortie permanente",
   },
 
   id_RCO: {
