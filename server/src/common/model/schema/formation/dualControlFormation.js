@@ -463,6 +463,12 @@ const formationSchema = {
     description: "Formation éligible au catalogue générale",
   },
 
+  modalites_entrees_sorties: {
+    type: [Boolean],
+    default: [],
+    description: "Session en entrée / sortie permanente",
+  },
+
   id_RCO: {
     type: String,
     default: null,
