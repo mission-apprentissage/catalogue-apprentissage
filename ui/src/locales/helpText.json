@@ -9,6 +9,7 @@
     "cfd": "La donnée “Code formation diplôme” provient de la Base Centrale des Nomenclatures (BCN). Si cette information est erronée, merci de leur signaler.",
     "mef": "La donnée “MEF” est déduite du Code formation diplôme",
     "periode": "La donnée “période d’inscription” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
+    "dates": "La donnée “Dates de formation” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
     "capacite": "La donnée “Capacité d’accueil” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
     "duree": "La donnée “Durée de la formation” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
     "annee": "La donnée “Année” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
