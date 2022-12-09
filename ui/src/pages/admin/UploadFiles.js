@@ -125,6 +125,7 @@ export default () => {
                 </option>
               ))}
             </Select>
+
             <Box {...getRootProps({ style })} mb={8}>
               <Input {...getInputProps()} />
               {isDragActive ? (
@@ -152,6 +153,30 @@ export default () => {
                 </UnorderedList>
               </Box>
             )}
+
+            {filename === "CodeDiplome_RNCP_latest_kit.csv" && (
+              <Box>
+                Mode d’emploi :
+                <br />
+                <ul style={{ marginLeft: "24px" }}>
+                  <li>
+                    Le fichier Excel VF_Kit apprentissage et RNCP v.x.x est communiqué périodiquement par email par Inès
+                    Jacqot (France Compétences)
+                  </li>
+                  <li>
+                    Onglet CodeDiplome_RNCPvx.x : renommer les colonnes Code diplôme => Code_Diplome ; RNCP => Code_RNCP
+                  </li>
+                  <li>Exporter cet onglet en csv via LibreOffice (séparateur point-virgule)</li>
+                  <li>Upload à faire sur les catalogues (public, ME, recette + prod)</li>
+                  <li>
+                    Sur les tables de correspondances, faire une PR pour remplacer le fichier
+                    server/src/jobs/rncpImporter/assets/CodeDiplome_RNCP_latest_kit.csv
+                  </li>
+                </ul>
+                <br />
+              </Box>
+            )}
+
             <Button
               type="submit"
               variant="primary"
