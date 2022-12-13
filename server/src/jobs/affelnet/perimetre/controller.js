@@ -122,7 +122,7 @@ const run = async () => {
       affelnet_published_date: null,
       affelnet_statut: AFFELNET_STATUS.PUBLIE,
     },
-    { $set: { affelnet_published_date: Date.now() } }
+    { $set: { affelnet_published_date: new Date() } }
   );
 
   // ensure published date is not set
