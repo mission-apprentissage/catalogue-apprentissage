@@ -8,7 +8,8 @@
     "niveau": "La donnée “Niveau de la formation” est déduite du Code formation diplôme",
     "cfd": "La donnée “Code formation diplôme” provient de la Base Centrale des Nomenclatures (BCN). Si cette information est erronée, merci de leur signaler.",
     "mef": "La donnée “MEF” est déduite du Code formation diplôme",
-    "periode": "La donnée “période d’inscription”   “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
+    "periode": "La donnée “période d’inscription” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
+    "dates": "La donnée “Dates de formation” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
     "capacite": "La donnée “Capacité d’accueil” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
     "duree": "La donnée “Durée de la formation” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
     "annee": "La donnée “Année” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
@@ -29,7 +30,6 @@
     "lieu_formation_geo_coordonnees_computed": "Les coordonnées sont calculées à partir de l'adresse transmise. Rapprochez vous de votre Carif-Oref afin qu'elles permettent aux jeunes d'identifier où se situe le lieu de formation.",
     "date_debut": "La donnée “Date début” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
     "date_fin": "La donnée “Date fin” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région."
-
   },
   "etablissement": {
     "not_found": "Nous n'avons pas trouvé l'établissement dans le catalogue.",

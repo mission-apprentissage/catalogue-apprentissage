@@ -4,7 +4,8 @@ import { ExternalLinkLine } from "../../../theme/components/icons";
 import { DangerBox } from "../DangerBox";
 import InfoTooltip from "../InfoTooltip";
 import helpText from "../../../locales/helpText.json";
-import { FormationPeriode } from "./FormationPeriode";
+// import { FormationPeriode } from "./FormationPeriode";
+import { FormationDate } from "./FormationDate";
 import { HabilitationPartenaire } from "./HabilitationPartenaire";
 import { HABILITE_LIST } from "../../../constants/certificateurs";
 
@@ -117,17 +118,13 @@ export const DescriptionBlock = ({ formation }) => {
                 "Aucun code MEF ne correspond à la durée et à l'année de formation enregistrées auprès du Carif-Oref."}
             </Text>
           </MefContainer>
-          <Text mb={4}>
-            Début de formation : <FormationPeriode periode={formation.periode} />{" "}
+          {/* <Text mb={4}>
+            Période d'inscription : <FormationPeriode periode={formation.periode} />{" "}
             <InfoTooltip description={helpText.formation.periode} />
-          </Text>
+          </Text> */}
           <Text mb={4}>
-            Date de début : <FormationPeriode periode={formation.date_debut} />{" "}
-            <InfoTooltip description={helpText.formation.date_debut} />
-          </Text>
-          <Text mb={4}>
-            Date de fin : <FormationPeriode periode={formation.date_fin} />{" "}
-            <InfoTooltip description={helpText.formation.date_fin} />
+            Dates de formation : <FormationDate formation={formation} />{" "}
+            <InfoTooltip description={helpText.formation.dates} />
           </Text>
           <Text mb={4}>
             Capacite d'accueil :{" "}
