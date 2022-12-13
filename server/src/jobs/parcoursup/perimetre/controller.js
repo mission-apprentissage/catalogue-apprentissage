@@ -303,7 +303,7 @@ const run = async () => {
         },
       ],
     },
-    { $set: { parcoursup_published_date: Date.now() } }
+    { $set: { parcoursup_published_date: new Date() } }
   );
 
   // ensure published date is not set

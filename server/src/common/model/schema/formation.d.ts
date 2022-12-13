@@ -532,6 +532,10 @@ export interface Formation {
    */
   parcoursup_published_date?: Date;
   /**
+   * Date de la dernière tentative d'export vers Parcoursup
+   */
+  parcoursup_export_date?: Date;
+  /**
    * Parcoursup : raison de dépublication
    */
   parcoursup_raison_depublication?: string;

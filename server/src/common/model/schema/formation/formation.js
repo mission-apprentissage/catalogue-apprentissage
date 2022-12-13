@@ -620,6 +620,11 @@ const formationSchema = {
     default: null,
     description: 'Date de publication (passage au statut "publié")',
   },
+  parcoursup_export_date: {
+    type: Date,
+    default: null,
+    description: "Date de la dernière tentative d'export vers Parcoursup",
+  },
   parcoursup_raison_depublication: {
     type: String,
     default: null,
