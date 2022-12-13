@@ -2181,6 +2181,11 @@ eslint-plugin-es@^3.0.0:
     eslint-utils "^2.0.0"
     regexpp "^3.0.0"
 
+eslint-plugin-immutable@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-immutable/-/eslint-plugin-immutable-1.0.0.tgz#4fe5839836be9809e08bac00cb7ce10e4b8e4821"
+  integrity sha512-ybjqMiL+hgrkgdHfkZjhgJS+Pkwb/iVmPNzbgsMbb2EZKNp3LOYfyce70w0P69LPy6UZgMq3j9kCTQk2hu6/fw==
+
 eslint-plugin-node@11.1.0:
   version "11.1.0"
   resolved "https://registry.npmjs.org/eslint-plugin-node/-/eslint-plugin-node-11.1.0.tgz"

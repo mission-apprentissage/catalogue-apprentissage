@@ -6477,6 +6477,11 @@ eslint-plugin-flowtype@8.0.3, eslint-plugin-flowtype@^8.0.3:
     lodash "^4.17.21"
     string-natural-compare "^3.0.1"
 
+eslint-plugin-immutable@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-immutable/-/eslint-plugin-immutable-1.0.0.tgz#4fe5839836be9809e08bac00cb7ce10e4b8e4821"
+  integrity sha512-ybjqMiL+hgrkgdHfkZjhgJS+Pkwb/iVmPNzbgsMbb2EZKNp3LOYfyce70w0P69LPy6UZgMq3j9kCTQk2hu6/fw==
+
 eslint-plugin-import@2.26.0, eslint-plugin-import@^2.25.3:
   version "2.26.0"
   resolved "https://registry.npmjs.org/eslint-plugin-import/-/eslint-plugin-import-2.26.0.tgz"
