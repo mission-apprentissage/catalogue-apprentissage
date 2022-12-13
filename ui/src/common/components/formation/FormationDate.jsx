@@ -10,12 +10,12 @@ export const FormationDate = ({ formation }) => {
 
   return (
     <Text variant="highlight" as="span">
-      {dates?.map(({ date_debut, date_fin, modalites_entrees_sorties }) => (
-        <>
+      {dates?.map(({ date_debut, date_fin, modalites_entrees_sorties }, index) => (
+        <Fragment key={index}>
           Du {new Date(date_debut).toLocaleDateString("fr-FR")} au {new Date(date_fin).toLocaleDateString("fr-FR")}.{" "}
           {modalites_entrees_sorties && "Entrée-sortie permanente."}
           <br />
-        </>
+        </Fragment>
       ))}
     </Text>
   );
