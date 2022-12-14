@@ -862,6 +862,12 @@ module.exports = {
         description: 'Date de publication (passage au statut "publié")',
         format: "date-time",
       },
+      parcoursup_export_date: {
+        type: "string",
+        default: "null",
+        description: "Date de la dernière tentative d'export vers Parcoursup",
+        format: "date-time",
+      },
       parcoursup_raison_depublication: {
         type: "string",
         default: "null",

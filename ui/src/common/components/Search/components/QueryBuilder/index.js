@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { ReactiveComponent } from "@appbaseio/reactivesearch";
 import { useHistory } from "react-router-dom";
+import { ReactiveComponent } from "@appbaseio/reactivesearch";
 
 import {
   mergedQueries,
@@ -11,7 +11,7 @@ import {
 } from "./utils";
 import Rule from "./rule";
 
-function QueryBuilder({
+const QueryBuilder = ({
   fields,
   operators = defaultOperators,
   combinators = defaultCombinators,
@@ -20,7 +20,7 @@ function QueryBuilder({
   onQuery,
   autoComplete,
   collection,
-}) {
+}) => {
   const history = useHistory();
 
   templateRule = templateRule || {
@@ -30,7 +30,9 @@ function QueryBuilder({
     combinator: "AND",
     index: 0,
   };
+
   const [rules, setRules] = useState(withUniqueKey(initialValue || [templateRule]));
+  const [filteredCombinators, setFilteredCombinators] = useState(combinators);
 
   useEffect(() => {
     const queries = mergedQueries(
@@ -45,12 +47,23 @@ function QueryBuilder({
 
     history.push(`?${s}`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rules]);
 
-  const onAdd = useCallback(
-    () => setRules((prevRules) => [...prevRules, { ...templateRule, index: prevRules.length, key: uuidv4() }]),
-    [templateRule]
-  );
+    setFilteredCombinators(
+      rules[2] ? combinators.filter((combinator) => combinator.value === rules[1].combinator) : combinators
+    );
+  }, [rules, rules.length]);
+
+  const onAdd = useCallback(() => {
+    setRules((prevRules) => [
+      ...prevRules,
+      {
+        ...templateRule,
+        combinator: prevRules[prevRules.length - 1].combinator,
+        index: prevRules.length,
+        key: uuidv4(),
+      },
+    ]);
+  }, [templateRule]);
   const onDelete = useCallback((index) => {
     setRules((prevRules) =>
       prevRules
@@ -75,7 +88,7 @@ function QueryBuilder({
           value={rule.value}
           fields={fields}
           operators={operators}
-          combinators={combinators}
+          combinators={filteredCombinators}
           key={rule.key}
           collection={collection}
           index={rule.index}
@@ -87,18 +100,6 @@ function QueryBuilder({
         />
       ))}
     </div>
-  );
-}
-
-export default ({ react, fields, collection }) => {
-  return (
-    <ReactiveComponent
-      componentId={`QUERYBUILDER`}
-      react={react}
-      URLParams={true}
-      value={"qb"}
-      render={(data) => <SubComponent collection={collection} fields={fields} {...data} />}
-    />
   );
 };
 
@@ -140,5 +141,17 @@ const SubComponent = ({ setQuery, fields, collection }) => {
         }}
       />
     </div>
+  );
+};
+
+export default ({ react, fields, collection }) => {
+  return (
+    <ReactiveComponent
+      componentId={`QUERYBUILDER`}
+      react={react}
+      URLParams={true}
+      value={"qb"}
+      render={(data) => <SubComponent collection={collection} fields={fields} {...data} />}
+    />
   );
 };

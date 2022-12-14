@@ -264,6 +264,13 @@ const columnsDefinition = [
     formatter: (value) => escapeDiacritics(value),
   },
   {
+    Header: "Date du dernier envoi vers Parcoursup",
+    accessor: "parcoursup_export_date",
+    width: 200,
+    exportable: true,
+    formatter: (value) => (value ? new Date(value).toLocaleDateString("fr-FR") : ""),
+  },
+  {
     Header: "Motif de non publication Parcoursup",
     accessor: "parcoursup_raison_depublication",
     width: 200,
@@ -277,6 +284,7 @@ const columnsDefinition = [
     exportable: true,
     formatter: (value) => escapeDiacritics(value),
   },
+
   {
     Header: "Niveau de la formation",
     accessor: "niveau",

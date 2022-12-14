@@ -8,7 +8,7 @@ const reportSchema = {
   date: {
     index: true,
     type: Date,
-    default: Date.now,
+    default: new Date(),
     expires: "15d", // mongo will auto-remove data after 15 days
     description: "Date du rapport",
   },

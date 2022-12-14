@@ -243,7 +243,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
           <Box mb={16}>
             <OrganismesBlock formation={formation} />
           </Box>
-          {(formation?.affelnet_published_date ?? formation?.parcoursup_published_date) && (
+          {(formation?.affelnet_published_date || formation?.parcoursup_published_date) && (
             <Box mb={[0, 0, 16]}>
               <Heading textStyle="h4" color="grey.800" mb={4}>
                 Autres informations

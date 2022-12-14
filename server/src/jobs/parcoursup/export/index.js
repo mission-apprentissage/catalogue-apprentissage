@@ -88,6 +88,9 @@ const createCursor = (query = filter) => {
  */
 const createFormation = async (formation, email = null) => {
   let data;
+
+  formation.parcoursup_export_date = new Date();
+
   try {
     data = await formatter(formation);
     console.log(data);
@@ -104,8 +107,8 @@ const createFormation = async (formation, email = null) => {
 
     formation.parcoursup_id = response.g_ta_cod;
     formation.parcoursup_statut = PARCOURSUP_STATUS.PUBLIE;
-    formation.parcoursup_published_date = Date.now();
-    formation.last_statut_update_date = Date.now();
+    formation.parcoursup_published_date = new Date();
+    formation.last_statut_update_date = new Date();
     formation.last_update_at = Date.now();
     formation.last_update_who = `web service Parcoursup${email ? `, sent by ${email}` : ""}`;
     formation.parcoursup_statut_history.push({

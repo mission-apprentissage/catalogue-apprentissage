@@ -7,7 +7,7 @@ const dualControlReportSchema = {
   date: {
     index: true,
     type: Date,
-    default: Date.now,
+    default: new Date(),
     expires: "1y", // mongo will auto-remove data after 1 year
     description: "Date du rapport",
     required: true,
