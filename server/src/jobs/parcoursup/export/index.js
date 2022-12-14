@@ -15,6 +15,8 @@ const {
 const limit = Number(process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_LIMIT || 50);
 
 const filter = {
+  catalogue_published: true,
+  published: true,
   parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
   uai_formation: { $ne: null },
 };
