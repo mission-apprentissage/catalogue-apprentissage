@@ -10,60 +10,57 @@ const run = async () => {
   const next_campagne_debut = new Date("2023/08/01");
   const next_campagne_end = new Date("2024/07/31");
 
-  const campagneDateFilter = {
+  const filterDateCampagne = {
     date_debut: { $gte: next_campagne_debut, $lt: next_campagne_end },
   };
 
-  const campagneCount = await Formation.countDocuments(campagneDateFilter);
+  const filterReglement = {
+    catalogue_published: true,
+    published: true,
+  };
+
+  const campagneCount = await Formation.countDocuments(filterDateCampagne);
 
   console.log(`${campagneCount} formations possèdent des dates de début pour la campagne en cours.`);
 
   // 0. On initialise parcoursup_id à null si l'information n'existe pas sur la formation
+  console.log("Etape 0.");
   await Formation.updateMany({ parcoursup_id: { $exists: false } }, { $set: { parcoursup_id: null } });
 
-  // const filterAllowedToReset = {
-  //   parcoursup_statut: { $nin: [PARCOURSUP_STATUS.REJETE, PARCOURSUP_STATUS.NON_PUBLIE, PARCOURSUP_STATUS.PUBLIE] },
-  // };
+  // 1. Application de la réglementation : réinitialisation des étiquettes pour les formations qui sortent du périmètre (sauf publié pour le moment)
+  console.log("Etape 1.");
+  await Formation.updateMany(
+    {
+      $or: [
+        {
+          parcoursup_statut: { $ne: PARCOURSUP_STATUS.PUBLIE },
+          $or: [
+            {
+              catalogue_published: false,
+            },
+            { published: false },
+            {
+              "rncp_details.code_type_certif": {
+                $in: ["Titre", "TP"],
+              },
+              "rncp_details.rncp_outdated": true,
+            },
+            {
+              "rncp_details.code_type_certif": {
+                $nin: ["Titre", "TP"],
+              },
+              cfd_outdated: true,
+            },
+          ],
+        },
+        // { parcoursup_statut: PARCOURSUP_STATUS.PUBLIE, parcoursup_id: null },
+      ],
+    },
+    { $set: { parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE } }
+  );
 
-  // // 1 - set "hors périmètre"
-  // await Formation.updateMany(
-  //   {
-  //     $or : [
-  //       filterAllowedToReset,
-  //       { parcoursup_statut: PARCOURSUP_STATUS.PUBLIE, parcoursup_id: null },
-  //     ],
-  //     $and: [
-  //       {
-  //         $or: [
-  //           { parcoursup_statut: { $nin: [PARCOURSUP_STATUS.REJETE, PARCOURSUP_STATUS.PUBLIE] } },
-  //           { parcoursup_statut: null },
-  //           { catalogue_published: false },
-  //           { published: false },
-  //           {
-  //             $or: [
-  //               {
-  //                 "rncp_details.code_type_certif": {
-  //                   $in: ["Titre", "TP"],
-  //                 },
-  //                 "rncp_details.rncp_outdated": true,
-  //               },
-  //               {
-  //                 "rncp_details.code_type_certif": {
-  //                   $nin: ["Titre", "TP"],
-  //                 },
-  //                 cfd_outdated: true,
-  //               },
-  //             ],
-  //           },
-  //           { parcoursup_statut: PARCOURSUP_STATUS.PUBLIE, parcoursup_id: null },
-  //         ],
-  //       },
-  //     ],
-  //   },
-  //   { $set: { parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE } }
-  // );
-
-  // 1. On réinitialise les formations "à publier ..." à "hors périmètre" pour permettre le recalcule du périmètre
+  // 2. On réinitialise les formations "à publier ..." à "hors périmètre" pour permettre le recalcule du périmètre
+  console.log("Etape 2.");
   await Formation.updateMany(
     {
       parcoursup_statut: {
@@ -78,7 +75,8 @@ const run = async () => {
     { $set: { parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE } }
   );
 
-  // 2. On applique les règles de périmètres uniquement sur les formations "hors périmètre" pour ne pas écraser les actions menées par les utilisateurs
+  // 3. On applique les règles de périmètres pour statut "à publier avec action attendue" uniquement sur les formations "hors périmètre" pour ne pas écraser les actions menées par les utilisateurs
+  console.log("Etape 3.");
   const filterHP = {
     parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
   };
@@ -92,13 +90,10 @@ const run = async () => {
   aPublierHabilitationRules.length > 0 &&
     (await Formation.updateMany(
       {
-        $and: [
-          campagneDateFilter,
-          filterHP,
-          {
-            $or: aPublierHabilitationRules.map(getQueryFromRule),
-          },
-        ],
+        ...filterReglement,
+        ...filterDateCampagne,
+        ...filterHP,
+        $or: aPublierHabilitationRules.map(getQueryFromRule),
       },
       [
         {
@@ -127,13 +122,10 @@ const run = async () => {
   aPublierVerifierAccesDirectPostBacRules.length > 0 &&
     (await Formation.updateMany(
       {
-        $and: [
-          campagneDateFilter,
-          filterHP,
-          {
-            $or: aPublierVerifierAccesDirectPostBacRules.map(getQueryFromRule),
-          },
-        ],
+        ...filterReglement,
+        ...filterDateCampagne,
+        ...filterHP,
+        $or: aPublierVerifierAccesDirectPostBacRules.map(getQueryFromRule),
       },
       [
         {
@@ -162,13 +154,11 @@ const run = async () => {
   aPublierValidationRecteurRules.length > 0 &&
     (await Formation.updateMany(
       {
-        $and: [
-          campagneDateFilter,
-          filterHP,
-          {
-            $or: aPublierValidationRecteurRules.map(getQueryFromRule),
-          },
-        ],
+        ...filterReglement,
+        ...filterDateCampagne,
+        ...filterHP,
+
+        $or: aPublierValidationRecteurRules.map(getQueryFromRule),
       },
       [
         {
@@ -188,8 +178,8 @@ const run = async () => {
       ]
     ));
 
-  // 3 - set "à publier" for trainings matching psup eligibility rules
-  // run only on those 'hors périmètre' to not overwrite actions of users !
+  // 4. On applique les règles de périmètre pour statut "à publier" pour les formations répondant aux règles de publication sur Parcoursup.
+  console.log("Etape 4.");
   const filter = {
     parcoursup_statut: {
       $in: [
@@ -209,13 +199,11 @@ const run = async () => {
   aPublierRules.length > 0 &&
     (await Formation.updateMany(
       {
-        $and: [
-          campagneDateFilter,
-          filter,
-          {
-            $or: aPublierRules.map(getQueryFromRule),
-          },
-        ],
+        ...filterReglement,
+        ...filterDateCampagne,
+        ...filter,
+
+        $or: aPublierRules.map(getQueryFromRule),
       },
       [
         {
@@ -235,7 +223,8 @@ const run = async () => {
       ]
     ));
 
-  // apply academy rules
+  // 5. On applique les règles des académies
+  console.log("Etape 5.");
   const academieRules = [
     ...aPublierHabilitationRules,
     ...aPublierVerifierAccesDirectPostBacRules,
@@ -248,24 +237,21 @@ const run = async () => {
       console.log(status);
       await Formation.updateMany(
         {
-          $and: [
-            campagneDateFilter,
-            {
-              parcoursup_statut: {
-                $in: [
-                  PARCOURSUP_STATUS.HORS_PERIMETRE,
-                  PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
-                  PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
-                  PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
-                  PARCOURSUP_STATUS.A_PUBLIER,
-                ],
-              },
-            },
-            {
-              num_academie,
-              ...getQueryFromRule(rule),
-            },
-          ],
+          ...filterReglement,
+          ...filterDateCampagne,
+
+          parcoursup_statut: {
+            $in: [
+              PARCOURSUP_STATUS.HORS_PERIMETRE,
+              PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
+              PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
+              PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+              PARCOURSUP_STATUS.A_PUBLIER,
+            ],
+          },
+
+          num_academie,
+          ...getQueryFromRule(rule),
         },
         [
           {
@@ -290,42 +276,31 @@ const run = async () => {
     });
   });
 
-  // ensure published date is set
+  console.log("Etape 6.");
+  // 6a. On s'assure que les dates de publication sont définies pour les formations publiées
   await Formation.updateMany(
     {
-      $and: [
-        {
-          parcoursup_statut: { $ne: PARCOURSUP_STATUS.REJETE },
-        },
-        {
-          parcoursup_published_date: null,
-          parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
-        },
-      ],
+      parcoursup_published_date: null,
+      parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
     },
     { $set: { parcoursup_published_date: new Date() } }
   );
 
-  // ensure published date is not set
+  // 6b. On s'assure que les dates de publication ne sont pas définies pour les formations non publiées
   await Formation.updateMany(
     {
-      $and: [
-        {
-          parcoursup_statut: { $ne: PARCOURSUP_STATUS.REJETE },
-        },
-        {
-          parcoursup_published_date: { $ne: null },
-          parcoursup_statut: { $ne: PARCOURSUP_STATUS.PUBLIE },
-        },
-      ],
+      parcoursup_published_date: { $ne: null },
+      parcoursup_statut: { $ne: PARCOURSUP_STATUS.PUBLIE },
     },
     { $set: { parcoursup_published_date: null } }
   );
 
-  // Push entry in tags history
+  // 7. On met à jour l'historique des statuts.
+  console.log("Etape 7.");
   await updateTagsHistory("parcoursup_statut");
 
-  // stats
+  console.log("Calcul des statistiques.");
+  // End. Calcul de statistiques liées à l'application des règles de périmètres
   const totalPublished = await Formation.countDocuments({ published: true });
   const totalNotRelevant = await Formation.countDocuments({
     published: true,

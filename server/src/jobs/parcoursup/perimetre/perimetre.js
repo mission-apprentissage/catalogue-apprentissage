@@ -9,8 +9,13 @@ const run = async () => {
   const next_campagne_debut = new Date("2023/08/01");
   const next_campagne_end = new Date("2024/07/31");
 
-  const campagneDateFilter = {
+  const filterDateCampagne = {
     date_debut: { $gte: next_campagne_debut, $lt: next_campagne_end },
+  };
+
+  const filterReglement = {
+    catalogue_published: true,
+    published: true,
   };
 
   await Formation.updateMany(
@@ -31,12 +36,10 @@ const run = async () => {
   aPublierHabilitationRules.length > 0 &&
     (await Formation.updateMany(
       {
-        $and: [
-          campagneDateFilter,
-          {
-            $or: aPublierHabilitationRules.map(getQueryFromRule),
-          },
-        ],
+        ...filterReglement,
+        ...filterDateCampagne,
+
+        $or: aPublierHabilitationRules.map(getQueryFromRule),
       },
       {
         $set: {
@@ -54,12 +57,10 @@ const run = async () => {
   aPublierVerifierAccesDirectPostBacRules.length > 0 &&
     (await Formation.updateMany(
       {
-        $and: [
-          campagneDateFilter,
-          {
-            $or: aPublierVerifierAccesDirectPostBacRules.map(getQueryFromRule),
-          },
-        ],
+        ...filterReglement,
+        ...filterDateCampagne,
+
+        $or: aPublierVerifierAccesDirectPostBacRules.map(getQueryFromRule),
       },
       {
         $set: {
@@ -77,12 +78,9 @@ const run = async () => {
   aPublierValidationRecteurRules.length > 0 &&
     (await Formation.updateMany(
       {
-        $and: [
-          campagneDateFilter,
-          {
-            $or: aPublierValidationRecteurRules.map(getQueryFromRule),
-          },
-        ],
+        ...filterReglement,
+        ...filterDateCampagne,
+        $or: aPublierValidationRecteurRules.map(getQueryFromRule),
       },
       {
         $set: {
@@ -100,12 +98,9 @@ const run = async () => {
   aPublierRules.length > 0 &&
     (await Formation.updateMany(
       {
-        $and: [
-          campagneDateFilter,
-          {
-            $or: aPublierRules.map(getQueryFromRule),
-          },
-        ],
+        ...filterReglement,
+        ...filterDateCampagne,
+        $or: aPublierRules.map(getQueryFromRule),
       },
       {
         $set: {
@@ -126,13 +121,10 @@ const run = async () => {
     await asyncForEach(Object.entries(rule.statut_academies), async ([num_academie, status]) => {
       await Formation.updateMany(
         {
-          $and: [
-            campagneDateFilter,
-            {
-              num_academie,
-              ...getQueryFromRule(rule),
-            },
-          ],
+          ...filterReglement,
+          ...filterDateCampagne,
+          num_academie,
+          ...getQueryFromRule(rule),
         },
         {
           $set: {
