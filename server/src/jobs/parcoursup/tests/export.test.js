@@ -21,6 +21,8 @@ describe(__filename, () => {
 
     // formations
     await Formation.create({
+      catalogue_published: true,
+      published: true,
       rncp_code: "RNCP1234",
       cfd: "6789",
       cfd_entree: "1212",
@@ -33,6 +35,8 @@ describe(__filename, () => {
     });
 
     await Formation.create({
+      catalogue_published: true,
+      published: true,
       rncp_code: null,
       cfd: "6789",
       cfd_entree: "1212",
@@ -45,6 +49,8 @@ describe(__filename, () => {
     });
 
     await Formation.create({
+      catalogue_published: true,
+      published: true,
       rncp_code: "RNCP1234",
       cfd: "6789",
       cfd_entree: "1212",
@@ -57,6 +63,8 @@ describe(__filename, () => {
     });
 
     await Formation.create({
+      catalogue_published: true,
+      published: true,
       rncp_code: "RNCP1234",
       cfd: "6789",
       cfd_entree: "1212",
@@ -69,6 +77,8 @@ describe(__filename, () => {
     });
 
     await Formation.create({
+      catalogue_published: true,
+      published: true,
       rncp_code: "RNCP1234",
       cfd: "6789",
       cfd_entree: "1212",
@@ -81,6 +91,8 @@ describe(__filename, () => {
     });
 
     await Formation.create({
+      catalogue_published: true,
+      published: true,
       rncp_code: "RNCP1234",
       cfd: "6789",
       cfd_entree: "1212",
@@ -94,6 +106,8 @@ describe(__filename, () => {
     });
 
     await Formation.create({
+      catalogue_published: true,
+      published: true,
       rncp_code: "RNCP1234",
       cfd: "6789",
       cfd_entree: "1212",
@@ -107,6 +121,8 @@ describe(__filename, () => {
     });
 
     await Formation.create({
+      catalogue_published: true,
+      published: true,
       rncp_code: "RNCP1234",
       cfd: "6789",
       cfd_entree: "1212",
@@ -180,6 +196,8 @@ describe(__filename, () => {
     sinon.stub(cfdEntreeFinder, "getCfdEntree").returns("1212");
 
     const f = new Formation({
+      catalogue_published: true,
+      published: true,
       rncp_code: "RNCP1234",
       cfd: "6789",
       cfd_entree: "1212",
@@ -203,6 +221,8 @@ describe(__filename, () => {
     sinon.stub(parcoursupApi, "postFormation").throws({ response: { status: 400 } });
 
     const f = new Formation({
+      catalogue_published: true,
+      published: true,
       rncp_code: "RNCP1234",
       cfd: "6789",
       cfd_entree: "1212",
@@ -226,6 +246,8 @@ describe(__filename, () => {
     sinon.stub(cfdEntreeFinder, "getCfdEntree").returns("123134");
 
     const formatted = await formatter({
+      catalogue_published: true,
+      published: true,
       rncp_code: "RNCP1234",
       cfd: "6789",
       cfd_entree: "123134",
