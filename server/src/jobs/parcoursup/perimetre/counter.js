@@ -4,8 +4,11 @@ const { PARCOURSUP_STATUS } = require("../../../constants/status");
 
 const run = async () => {
   console.log("Calcul des statistiques.");
-  // End. Calcul de statistiques liées à l'application des règles de périmètres
-  const totalPublished = await Formation.countDocuments({ published: true });
+
+  const total = await Formation.countDocuments({});
+
+  const totalReglement = await Formation.countDocuments({ catalogue_published: true, published: true });
+
   const totalNotRelevant = await Formation.countDocuments({
     parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
   });
@@ -35,16 +38,17 @@ const run = async () => {
   });
 
   logger.info(
-    `Total formations publiées dans le catalogue : ${totalPublished}\n` +
-      `Total formations hors périmètre : ${totalNotRelevant}/${totalPublished}\n` +
-      `Total formations à publier (sous condition habilitation) : ${totalToValidateHabilitation}/${totalPublished}\n` +
-      `Total formations à publier (vérifier accès direct postbac) : ${totalToValidate}/${totalPublished}\n` +
-      `Total formations à publier (soumis à validation Recteur) : ${totalToValidateRecteur}/${totalPublished}\n` +
-      `Total formations à publier : ${totalToCheck}/${totalPublished}\n` +
-      `Total formations en attente de publication : ${totalPending}/${totalPublished}\n` +
-      `Total formations publiées sur ParcourSup : ${totalPsPublished}/${totalPublished}\n` +
-      `Total formations rejetée par ParcourSup : ${totalRejected}/${totalPublished}\n` +
-      `Total formations NON publiées sur ParcourSup : ${totalPsNotPublished}/${totalPublished}`
+    `Compteurs des formations dans le catalogue sur un total de ${total} (${totalReglement} dans le catalogue général) :\n` +
+      `- publiées dans le catalogue général : ${totalReglement}\n` +
+      `- statut "hors périmètre" : ${totalNotRelevant}\n` +
+      `- statut "à publier (sous condition habilitation)" : ${totalToValidateHabilitation}\n` +
+      `- statut "à publier (vérifier accès direct postbac)" : ${totalToValidate}\n` +
+      `- statut "à publier (soumis à validation Recteur)" : ${totalToValidateRecteur}\n` +
+      `- statut "à publier" : ${totalToCheck}\n` +
+      `- statut "en attente de publication" : ${totalPending}\n` +
+      `- statut "publié" sur ParcourSup : ${totalPsPublished}\n` +
+      `- statut "rejeté" par ParcourSup : ${totalRejected}\n` +
+      `- statut "NON publié" sur ParcourSup : ${totalPsNotPublished}`
   );
 
   const totalPérimètre = await Formation.countDocuments({ parcoursup_perimetre: true });
