@@ -21,7 +21,7 @@ export const QualiteBadge = ({ value, ...props }) => {
       break;
 
     default:
-      text = "Certification inconnue";
+      text = "Certification qualité non recherchée";
       variant = "default";
       Icon = Question;
       break;

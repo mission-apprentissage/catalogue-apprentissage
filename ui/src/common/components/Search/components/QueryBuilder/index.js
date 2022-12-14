@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { ReactiveComponent } from "@appbaseio/reactivesearch";
 import { useHistory } from "react-router-dom";
+import { ReactiveComponent } from "@appbaseio/reactivesearch";
 
 import {
   mergedQueries,
@@ -11,7 +11,7 @@ import {
 } from "./utils";
 import Rule from "./rule";
 
-function QueryBuilder({
+const QueryBuilder = ({
   fields,
   operators = defaultOperators,
   combinators = defaultCombinators,
@@ -20,7 +20,7 @@ function QueryBuilder({
   onQuery,
   autoComplete,
   collection,
-}) {
+}) => {
   const history = useHistory();
 
   templateRule = templateRule || {
@@ -88,18 +88,6 @@ function QueryBuilder({
       ))}
     </div>
   );
-}
-
-export default ({ react, fields, collection }) => {
-  return (
-    <ReactiveComponent
-      componentId={`QUERYBUILDER`}
-      react={react}
-      URLParams={true}
-      value={"qb"}
-      render={(data) => <SubComponent collection={collection} fields={fields} {...data} />}
-    />
-  );
 };
 
 const SubComponent = ({ setQuery, fields, collection }) => {
@@ -140,5 +128,17 @@ const SubComponent = ({ setQuery, fields, collection }) => {
         }}
       />
     </div>
+  );
+};
+
+export default ({ react, fields, collection }) => {
+  return (
+    <ReactiveComponent
+      componentId={`QUERYBUILDER`}
+      react={react}
+      URLParams={true}
+      value={"qb"}
+      render={(data) => <SubComponent collection={collection} fields={fields} {...data} />}
+    />
   );
 };
