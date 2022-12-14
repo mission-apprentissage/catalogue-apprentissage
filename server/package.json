@@ -78,7 +78,7 @@
     "nodemailer": "^6.4.14",
     "nodemailer-html-to-text": "^3.1.0",
     "oleoduc": "0.7.0",
-    "passport": "0.4.1",
+    "passport": "0.6.0",
     "passport-jwt": "4.0.0",
     "prettier": "2.0.5",
     "require-all": "3.0.0",
