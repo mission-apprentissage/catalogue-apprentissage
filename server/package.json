@@ -94,7 +94,7 @@
     "prettier": "2.0.5",
     "require-all": "3.0.0",
     "sanitize-filename": "1.6.3",
-    "sha512crypt-node": "0.1.0",
+    "sha512crypt-node": "1.0.2",
     "stream-json": "1.7.4",
     "swagger-jsdoc": "6.2.0",
     "swagger-ui-express": "4.3.0",

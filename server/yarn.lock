@@ -4379,7 +4379,7 @@ mkdirp@^1.0.4:
   resolved "https://registry.npmjs.org/mkdirp/-/mkdirp-1.0.4.tgz"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
-mocha@9.2.2:
+mocha@9.2.2, mocha@^9.1.3:
   version "9.2.2"
   resolved "https://registry.npmjs.org/mocha/-/mocha-9.2.2.tgz"
   integrity sha512-L6XC3EdwT6YrIk0yXpavvLkn8h+EU+Y5UcCHKECyMbdUIxyMuZj4bX4U9e1nvnvUUvQVsV2VHQr5zLdcUkhW/g==
@@ -5856,6 +5856,13 @@ sha512crypt-node@0.1.0:
   version "0.1.0"
   resolved "https://registry.npmjs.org/sha512crypt-node/-/sha512crypt-node-0.1.0.tgz"
   integrity sha1-ao5GlK/wY2dlTNIKeQiYzIVbSsQ=
+
+sha512crypt-node@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/sha512crypt-node/-/sha512crypt-node-1.0.2.tgz#9f528a03c8d59cc77c4027378267a6e6fefbb44e"
+  integrity sha512-SmZnsrnp3T/+h/nd+/uAe4CKz2KgPBG0enskKE2qoEjzUUUM/1MYAPgBZRAHWAq6XEQl3XzSpS+bzl2rWWABnA==
+  dependencies:
+    mocha "^9.1.3"
 
 shebang-command@^2.0.0:
   version "2.0.0"
