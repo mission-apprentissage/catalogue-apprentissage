@@ -1,5 +1,4 @@
 const { Formation } = require("../../../common/model");
-const logger = require("../../../common/logger");
 const { getQueryFromRule } = require("../../../common/utils/rulesUtils");
 const { ReglePerimetre } = require("../../../common/model");
 const { updateTagsHistory } = require("../../../logic/updaters/tagsHistoryUpdater");
@@ -17,6 +16,24 @@ const run = async () => {
   const filterReglement = {
     catalogue_published: true,
     published: true,
+    $or: [
+      {
+        catalogue_published: false,
+      },
+      { published: false },
+      {
+        "rncp_details.code_type_certif": {
+          $in: ["Titre", "TP"],
+        },
+        "rncp_details.rncp_outdated": false,
+      },
+      {
+        "rncp_details.code_type_certif": {
+          $nin: ["Titre", "TP"],
+        },
+        cfd_outdated: false,
+      },
+    ],
   };
 
   const campagneCount = await Formation.countDocuments(filterDateCampagne);
@@ -27,7 +44,7 @@ const run = async () => {
   console.log("Etape 0.");
   await Formation.updateMany({ parcoursup_id: { $exists: false } }, { $set: { parcoursup_id: null } });
 
-  // 1. Application de la réglementation : réinitialisation des étiquettes pour les formations qui sortent du périmètre (sauf publié pour le moment)
+  // 1. Application de la réglementation : réinitialisation des étiquettes pour les formations qui sortent du périmètre quelque soit le statut (sauf publié pour le moment)
   console.log("Etape 1.");
   await Formation.updateMany(
     {
@@ -298,59 +315,6 @@ const run = async () => {
   // 7. On met à jour l'historique des statuts.
   console.log("Etape 7.");
   await updateTagsHistory("parcoursup_statut");
-
-  console.log("Calcul des statistiques.");
-  // End. Calcul de statistiques liées à l'application des règles de périmètres
-  const totalPublished = await Formation.countDocuments({ published: true });
-  const totalNotRelevant = await Formation.countDocuments({
-    published: true,
-    parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
-  });
-  const totalToValidateHabilitation = await Formation.countDocuments({
-    published: true,
-    parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
-  });
-  const totalToValidate = await Formation.countDocuments({
-    published: true,
-    parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
-  });
-  const totalToValidateRecteur = await Formation.countDocuments({
-    published: true,
-    parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
-  });
-  const totalToCheck = await Formation.countDocuments({
-    published: true,
-    parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER,
-  });
-  const totalPending = await Formation.countDocuments({
-    published: true,
-    parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
-  });
-  const totalRejected = await Formation.countDocuments({
-    published: true,
-    parcoursup_statut: PARCOURSUP_STATUS.REJETE,
-  });
-  const totalPsPublished = await Formation.countDocuments({
-    published: true,
-    parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
-  });
-  const totalPsNotPublished = await Formation.countDocuments({
-    published: true,
-    parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIE,
-  });
-
-  logger.info(
-    `Total formations publiées dans le catalogue : ${totalPublished}\n` +
-      `Total formations hors périmètre : ${totalNotRelevant}/${totalPublished}\n` +
-      `Total formations à publier (sous condition habilitation) : ${totalToValidateHabilitation}/${totalPublished}\n` +
-      `Total formations à publier (vérifier accès direct postbac) : ${totalToValidate}/${totalPublished}\n` +
-      `Total formations à publier (soumis à validation Recteur) : ${totalToValidateRecteur}/${totalPublished}\n` +
-      `Total formations à publier : ${totalToCheck}/${totalPublished}\n` +
-      `Total formations en attente de publication : ${totalPending}/${totalPublished}\n` +
-      `Total formations publiées sur ParcourSup : ${totalPsPublished}/${totalPublished}\n` +
-      `Total formations rejetée par ParcourSup : ${totalRejected}/${totalPublished}\n` +
-      `Total formations NON publiées sur ParcourSup : ${totalPsNotPublished}/${totalPublished}`
-  );
 };
 
 module.exports = { run };

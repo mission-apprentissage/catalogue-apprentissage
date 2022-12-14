@@ -1,5 +1,6 @@
 const logger = require("../../../common/logger");
 const controller = require("./controller");
+const counter = require("./counter");
 const perimetre = require("./perimetre");
 
 const { runScript } = require("../../scriptWrapper");
@@ -8,13 +9,17 @@ const psPerimetre = async () => {
   try {
     logger.info(" -- Start psup perimetre -- ");
 
-    const results = await controller.run();
+    console.log("Compteurs avant :");
+    await counter.run();
+
+    await controller.run();
 
     await perimetre.run();
 
-    logger.info(" -- End of psup perimetre -- ");
+    console.log("Compteurs après :");
+    await counter.run();
 
-    return results;
+    logger.info(" -- End of psup perimetre -- ");
   } catch (err) {
     logger.error(err);
   }
