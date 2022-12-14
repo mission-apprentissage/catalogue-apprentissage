@@ -42,7 +42,7 @@
     "@mission-apprentissage/tco-service-node": "2.42.5",
     "aws-sdk": "2.1109.0",
     "axios": "0.21.4",
-    "body-parser": "1.19.0",
+    "body-parser": "1.20.1",
     "boom": "7.3.0",
     "bunyan": "1.8.12",
     "bunyan-mongodb-stream": "0.0.3",
