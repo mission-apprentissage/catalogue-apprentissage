@@ -3,6 +3,7 @@ const { ReglePerimetre, Formation } = require("../../../common/model/index");
 const { connectToMongoForTests, cleanAll } = require("../../../../tests/utils/testUtils.js");
 const { run } = require("../perimetre/controller.js");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
+const { setupBefore, setupAfter, setupAfterEach, setupBeforeEach } = require("../../../../tests/helpers/setup");
 
 const currentDate = new Date();
 
@@ -16,8 +17,21 @@ const date_debut = [
   new Date(`${currentDate.getFullYear() + 1}-10-01T00:00:00.000Z`),
 ];
 
-describe(__filename, () => {
+const formationReglementaireOk = {
+  published: true,
+  catalogue_published: true,
+};
+
+const formationCampagneOk = {
+  ...formationReglementaireOk,
+  periode,
+  date_debut,
+};
+
+describe(`${__filename} - Test global (deprecated)`, () => {
   before(async () => {
+    setupBefore();
+
     // Connection to test collection
     await connectToMongoForTests();
     await ReglePerimetre.deleteMany({});
@@ -68,78 +82,57 @@ describe(__filename, () => {
       date_debut,
     });
     await Formation.create({
-      published: true,
-      catalogue_published: true,
+      ...formationCampagneOk,
       niveau: "6 (Licence, BUT...)",
       diplome: "Licence",
       parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
       annee: "1",
-      periode,
-      date_debut,
     });
     await Formation.create({
-      published: true,
-      catalogue_published: true,
+      ...formationCampagneOk,
       niveau: "6 (Licence, BUT...)",
       diplome: "Licence Agri",
       parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
       annee: "1",
-      periode,
-      date_debut,
     });
     await Formation.create({
-      published: true,
-      catalogue_published: true,
+      ...formationCampagneOk,
       niveau: "5 (BTS, DEUST...)",
       diplome: "BTS",
       parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
       annee: "1",
-      periode,
-      date_debut,
     });
     await Formation.create({
-      published: true,
-      catalogue_published: true,
+      ...formationCampagneOk,
       niveau: "6 (Licence, BUT...)",
       diplome: "BUT",
       num_academie: "12",
       parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
       annee: "1",
-      periode,
-      date_debut,
     });
     await Formation.create({
-      published: true,
-      catalogue_published: true,
+      ...formationCampagneOk,
       niveau: "6 (Licence, BUT...)",
       diplome: "BUT",
       num_academie: "14",
       parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
       annee: "1",
-      periode,
-      date_debut,
     });
     await Formation.create({
-      published: true,
-      catalogue_published: true,
+      ...formationCampagneOk,
       niveau: "6 (Licence, BUT...)",
       diplome: "BUT",
       num_academie: "14",
       parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
       parcoursup_id: "56789",
       annee: "1",
-      periode,
-      date_debut,
     });
     await Formation.create({
-      published: true,
-      catalogue_published: true,
+      ...formationCampagneOk,
       niveau: "7 (Master, titre ingénieur...)",
       diplome: "Master",
       parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
       annee: "1",
-      periode,
-      date_debut,
     });
     // await Formation.create({
     //   published: true,
@@ -154,6 +147,7 @@ describe(__filename, () => {
   });
 
   after(async () => {
+    setupAfter();
     await cleanAll();
   });
 
@@ -167,256 +161,140 @@ describe(__filename, () => {
 
   // Redévelopper en faisant intégrant qu'une seule formation pour chaque test afin de vérifier une seule règle.
 
-  // it("should apply parcoursup status", async () => {
-  //   await run();
+  it("should apply parcoursup status", async () => {
+    await run();
 
-  //   const totalNotRelevant = await Formation.countDocuments({
-  //     parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
-  //   });
-  //   assert.strictEqual(totalNotRelevant, 3);
-
-  //   const totalToValidate = await Formation.countDocuments({
-  //     parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
-  //   });
-  //   assert.strictEqual(totalToValidate, 0);
-
-  //   const totalToValidateRecteur = await Formation.countDocuments({
-  //     parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
-  //   });
-  //   assert.strictEqual(totalToValidateRecteur, 1);
-
-  //   const totalToCheck = await Formation.countDocuments({ parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER });
-  //   assert.strictEqual(totalToCheck, 2);
-
-  //   const totalPending = await Formation.countDocuments({
-  //     parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
-  //   });
-  //   assert.strictEqual(totalPending, 1);
-
-  //   const totalPsPublished = await Formation.countDocuments({ parcoursup_statut: PARCOURSUP_STATUS.PUBLIE });
-  //   assert.strictEqual(totalPsPublished, 1);
-
-  //   const totalPsNotPublished = await Formation.countDocuments({
-  //     parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIE,
-  //   });
-  //   assert.strictEqual(totalPsNotPublished, 0);
-  // });
-
-  describe("CFD & RNCP expiracy checks", () => {
-    beforeEach(async () => {
-      await Formation.deleteMany();
+    const totalNotRelevant = await Formation.countDocuments({
+      parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
     });
+    assert.strictEqual(totalNotRelevant, 3);
 
-    it("should stay hors périmètre when cfd is outdated and not a Titre or TP", async () => {
-      await Formation.create({
-        published: true,
-        cfd_outdated: true,
-        rncp_details: {
-          code_type_certif: "TH",
-          rncp_outdated: false,
-          active_inactive: "ACTIVE",
-        },
-        catalogue_published: true,
-        niveau: "6 (Licence, BUT...)",
-        diplome: "Licence",
-        parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
-        annee: "1",
-        periode,
-        date_debut,
-      });
-
-      await run();
-      const totalNotRelevant = await Formation.countDocuments({
-        parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
-      });
-      assert.strictEqual(totalNotRelevant, 1);
-
-      const totalToCheck = await Formation.countDocuments({ parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER });
-      assert.strictEqual(totalToCheck, 0);
+    const totalToValidate = await Formation.countDocuments({
+      parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
     });
+    assert.strictEqual(totalToValidate, 0);
 
-    it("should stay hors périmètre when rcnp is outdated and is a Titre or TP", async () => {
-      await Formation.create({
-        published: true,
-        cfd_outdated: false,
-        rncp_details: {
-          code_type_certif: "TP",
-          rncp_outdated: true,
-          active_inactive: "ACTIVE",
-        },
-        catalogue_published: true,
-        niveau: "6 (Licence, BUT...)",
-        diplome: "Licence",
-        parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
-        annee: "1",
-        periode,
-        date_debut,
-      });
-
-      await run();
-      const totalNotRelevant = await Formation.countDocuments({
-        parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
-      });
-      assert.strictEqual(totalNotRelevant, 1);
-
-      const totalToCheck = await Formation.countDocuments({ parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER });
-      assert.strictEqual(totalToCheck, 0);
+    const totalToValidateRecteur = await Formation.countDocuments({
+      parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
     });
+    assert.strictEqual(totalToValidateRecteur, 1);
 
-    it("should apply status when cfd is outdated but rncp not outdated and is a Titre or TP", async () => {
-      await Formation.create({
-        published: true,
-        cfd_outdated: true,
-        rncp_details: {
-          code_type_certif: "Titre",
-          rncp_outdated: false,
-          active_inactive: "ACTIVE",
-        },
-        catalogue_published: true,
-        niveau: "6 (Licence, BUT...)",
-        diplome: "Licence",
-        parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
-        annee: "1",
-        periode,
-        date_debut,
-      });
+    const totalToCheck = await Formation.countDocuments({ parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER });
+    assert.strictEqual(totalToCheck, 2);
 
-      await run();
-      const totalNotRelevant = await Formation.countDocuments({
-        parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
-      });
-      assert.strictEqual(totalNotRelevant, 0);
-
-      const totalToCheck = await Formation.countDocuments({ parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER });
-      assert.strictEqual(totalToCheck, 1);
+    const totalPending = await Formation.countDocuments({
+      parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
     });
+    assert.strictEqual(totalPending, 1);
 
-    it("should apply status when rncp is outdated but is not a Titre or TP", async () => {
-      await Formation.create({
-        published: true,
-        cfd_outdated: false,
-        rncp_details: {
-          code_type_certif: "TH",
-          rncp_outdated: true,
-          active_inactive: "ACTIVE",
-        },
-        catalogue_published: true,
-        niveau: "6 (Licence, BUT...)",
-        diplome: "Licence",
-        parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
-        annee: "1",
-        periode,
-        date_debut,
-      });
+    const totalPsPublished = await Formation.countDocuments({ parcoursup_statut: PARCOURSUP_STATUS.PUBLIE });
+    assert.strictEqual(totalPsPublished, 1);
 
-      await run();
-      const totalNotRelevant = await Formation.countDocuments({
-        parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
-      });
-      assert.strictEqual(totalNotRelevant, 0);
-
-      const totalToCheck = await Formation.countDocuments({ parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER });
-      assert.strictEqual(totalToCheck, 1);
+    const totalPsNotPublished = await Formation.countDocuments({
+      parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIE,
     });
-
-    it("should stay hors périmètre if date_fin_validite_enregistrement is not far enough", async () => {
-      const date_fin_validite_enregistrement = new Date();
-      date_fin_validite_enregistrement.setFullYear(new Date().getFullYear() - 1);
-
-      await Formation.create({
-        published: true,
-        cfd_outdated: true,
-        rncp_details: {
-          code_type_certif: "Titre",
-          rncp_outdated: false,
-          active_inactive: "ACTIVE",
-          date_fin_validite_enregistrement,
-        },
-        catalogue_published: true,
-        niveau: "6 (Licence, BUT...)",
-        diplome: "Licence",
-        parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
-        annee: "1",
-        periode,
-        date_debut,
-      });
-
-      await Formation.create({
-        published: true,
-        cfd_outdated: false,
-        rncp_details: {
-          code_type_certif: "Titre",
-          rncp_outdated: false,
-          active_inactive: "ACTIVE",
-          date_fin_validite_enregistrement,
-        },
-        catalogue_published: true,
-        niveau: "6 (Licence, BUT...)",
-        diplome: "Licence",
-        parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
-        annee: "1",
-        periode,
-        date_debut,
-      });
-
-      await run();
-      const totalNotRelevant = await Formation.countDocuments({
-        parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
-      });
-      assert.strictEqual(totalNotRelevant, 2);
-
-      const totalToCheck = await Formation.countDocuments({ parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER });
-      assert.strictEqual(totalToCheck, 0);
-    });
-
-    it("should stay hors périmètre if cfd_date_fermeture is not far enough", async () => {
-      const cfd_date_fermeture = new Date();
-      cfd_date_fermeture.setFullYear(new Date().getFullYear() - 1);
-
-      await Formation.create({
-        published: true,
-        cfd_outdated: false,
-        cfd_date_fermeture,
-        rncp_details: {
-          code_type_certif: "TH",
-          rncp_outdated: false,
-          active_inactive: "ACTIVE",
-        },
-        catalogue_published: true,
-        niveau: "6 (Licence, BUT...)",
-        diplome: "Licence",
-        parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
-        annee: "1",
-        periode,
-        date_debut,
-      });
-
-      await Formation.create({
-        published: true,
-        cfd_outdated: false,
-        cfd_date_fermeture,
-        rncp_details: {
-          code_type_certif: "TH",
-          rncp_outdated: true,
-          active_inactive: "ACTIVE",
-        },
-        catalogue_published: true,
-        niveau: "6 (Licence, BUT...)",
-        diplome: "Licence",
-        parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
-        annee: "1",
-        periode,
-        date_debut,
-      });
-
-      await run();
-      const totalNotRelevant = await Formation.countDocuments({
-        parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
-      });
-      assert.strictEqual(totalNotRelevant, 2);
-
-      const totalToCheck = await Formation.countDocuments({ parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER });
-      assert.strictEqual(totalToCheck, 0);
-    });
+    assert.strictEqual(totalPsNotPublished, 0);
   });
+});
+
+describe(`${__filename} - Gestion de la disparition du périmètre`, async () => {
+  const formationOk = {
+    ...formationCampagneOk,
+    rncp_details: {
+      code_type_certif: "TH",
+      rncp_outdated: false,
+      active_inactive: "ACTIVE",
+    },
+    cfd_outdated: false,
+    annee: "1",
+    niveau: "6 (Licence, BUT...)",
+    diplome: "BUT",
+  };
+
+  const perimeterWithdrawalMotives = {
+    "catalogue_published: false": { catalogue_published: false },
+    "published: false": { published: false },
+    "rncp_details: { code_type_certif: 'TP', rncp_outdated: true }": {
+      rncp_details: { code_type_certif: "TP", rncp_outdated: true },
+    },
+    "rncp_details: { code_type_certif: 'Titre', rncp_outdated: true }": {
+      rncp_details: { code_type_certif: "Titre", rncp_outdated: true },
+    },
+    "rncp_details: {  code_type_certif: 'Other' }, cfd_outdated: true": {
+      rncp_details: { code_type_certif: "Other" },
+      cfd_outdated: true,
+    },
+  };
+
+  (async () => {
+    await Object.entries(perimeterWithdrawalMotives).map(async ([keyMotif, valueMotif]) => {
+      describe(`handle motif (${keyMotif})`, async () => {
+        beforeEach(async () => {
+          setupBeforeEach();
+          await ReglePerimetre.create({
+            plateforme: "parcoursup",
+            niveau: "6 (Licence, BUT...)",
+            diplome: "BUT",
+            statut: PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+            condition_integration: "peut intégrer",
+            statut_academies: { 14: PARCOURSUP_STATUS.A_PUBLIER },
+          });
+        });
+        afterEach(async () => {
+          setupAfterEach();
+          await cleanAll();
+        });
+
+        it("should have status different from 'hors périmètre' if no motif for disparition", async () => {
+          await Formation.create(formationOk);
+
+          await run();
+
+          const totalPublished = await Formation.countDocuments({
+            parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+          });
+          assert.strictEqual(totalPublished, 1);
+          const totalOtherStatus = await Formation.countDocuments({
+            parcoursup_statut: { $nin: [PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR] },
+          });
+          assert.strictEqual(totalOtherStatus, 0);
+        });
+
+        it("should keep status 'publié' if not in perimeter anymore, but already published", async () => {
+          await Formation.create({ ...formationOk, ...valueMotif, parcoursup_statut: PARCOURSUP_STATUS.PUBLIE });
+
+          await run();
+
+          const totalPublished = await Formation.countDocuments({
+            parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
+          });
+          assert.strictEqual(totalPublished, 1);
+          const totalOtherStatus = await Formation.countDocuments({
+            parcoursup_statut: { $nin: [PARCOURSUP_STATUS.PUBLIE] },
+          });
+          assert.strictEqual(totalOtherStatus, 0);
+        });
+
+        await Object.values(PARCOURSUP_STATUS)
+          .filter((status) => status !== PARCOURSUP_STATUS.PUBLIE)
+          .map(async (status) => {
+            await it(`should apply status 'hors périmètre' if not in perimeter anymore, and if status was '${status}'`, async () => {
+              await Formation.create({ ...formationOk, ...valueMotif, parcoursup_statut: status });
+
+              await run();
+
+              const totalHorsPérimètre = await Formation.countDocuments({
+                parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+              });
+              assert.strictEqual(totalHorsPérimètre, 1);
+
+              const totalOtherStatus = await Formation.countDocuments({
+                parcoursup_statut: { $nin: [PARCOURSUP_STATUS.HORS_PERIMETRE] },
+              });
+              assert.strictEqual(totalOtherStatus, 0);
+            });
+          });
+      });
+    });
+  })();
 });

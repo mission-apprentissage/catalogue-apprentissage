@@ -3,9 +3,11 @@ const { ParcoursupFormation, Formation } = require("../../../common/model/index"
 const { connectToMongoForTests, cleanAll } = require("../../../../tests/utils/testUtils.js");
 const { psCoverage } = require("../coverage");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
+const { setupBefore, setupAfter } = require("../../../../tests/helpers/setup");
 
 describe(__filename, () => {
   before(async () => {
+    setupBefore();
     // Connection to test collection
     await connectToMongoForTests();
     await Formation.deleteMany({});
@@ -72,6 +74,7 @@ describe(__filename, () => {
   });
 
   after(async () => {
+    setupAfter();
     await cleanAll();
   });
 

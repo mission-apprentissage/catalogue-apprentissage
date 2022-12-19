@@ -7,9 +7,11 @@ const parcoursupApi = require("../export/parcoursupApi");
 const { createFormation, formatter } = require("../export");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
 const cfdEntreeFinder = require("../../../logic/finder/cfdEntreeFinder");
+const { setupBefore, setupAfter, setupAfterEach } = require("../../../../tests/helpers/setup");
 
 describe(__filename, () => {
   before(async () => {
+    setupBefore();
     // Connection to test collection
     await connectToMongoForTests();
     await User.deleteMany({});
@@ -136,10 +138,12 @@ describe(__filename, () => {
   });
 
   after(async () => {
+    setupAfter();
     await cleanAll();
   });
 
   afterEach(() => {
+    setupAfterEach();
     // clean mocks
     sinon.restore();
   });
