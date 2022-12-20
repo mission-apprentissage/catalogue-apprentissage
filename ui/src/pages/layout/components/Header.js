@@ -21,7 +21,7 @@ import { _get } from "../../../common/httpClient";
 import { LockFill } from "../../../theme/components/icons/LockFill";
 import { Logo } from "./Logo";
 import AlertMessage from "./AlertMessage";
-import { AccountFill, DoubleArrows, DownloadLine, InfoCircle } from "../../../theme/components/icons";
+import { AccountFill, DownloadLine, InfoCircle } from "../../../theme/components/icons";
 
 const Header = () => {
   const [auth, setAuth] = useAuth();

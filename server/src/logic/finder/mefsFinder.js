@@ -102,7 +102,11 @@ const computeMefs = async (fields, oldFields) => {
       // keep the successful mefs in affelnet field
       affelnet_mefs_10 = filtered_affelnet_mefs_10;
 
-      if (affelnet_mefs_10.length === 1 && !affelnet_infos_offre) {
+      if (
+        affelnet_mefs_10.length === 1 &&
+        !affelnet_infos_offre &&
+        !oldFields.updates_history.filter((uh) => uh.to?.affelnet_infos_offre !== "").length
+      ) {
         affelnet_infos_offre = getInfosOffreLabel(fields, affelnet_mefs_10[0]);
       }
     }
