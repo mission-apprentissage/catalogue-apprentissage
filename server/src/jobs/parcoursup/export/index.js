@@ -95,7 +95,6 @@ const createFormation = async (formation, email = null) => {
 
   try {
     data = await formatter(formation);
-    console.log(data);
 
     const response = await parcoursupApi.postFormation(data);
 
