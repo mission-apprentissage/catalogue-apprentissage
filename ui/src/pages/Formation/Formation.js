@@ -39,7 +39,7 @@ import { RejectionBlock } from "../../common/components/formation/RejectionBlock
 import { DescriptionBlock } from "../../common/components/formation/DescriptionBlock";
 import { OrganismesBlock } from "../../common/components/formation/OrganismesBlock";
 import { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL } from "../../constants/catalogueLabels";
-import { COMMON_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
+import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -439,6 +439,10 @@ export default ({ match }) => {
                   </Box>
                   {hasRightToEdit &&
                     formation.catalogue_published &&
+                    (![PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.HORS_PERIMETRE].includes(
+                      formation.parcoursup_statut
+                    ) ||
+                      ![AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.HORS_PERIMETRE].includes(formation.affelnet_statut)) &&
                     hasAccessTo(user, "page_formation/gestion_publication") && (
                       <Button
                         textStyle="sm"
@@ -480,9 +484,8 @@ export default ({ match }) => {
                   </Flex>
                 )}
 
-                {(formation.parcoursup_statut === COMMON_STATUS.EN_ATTENTE ||
-                  formation.parcoursup_statut === PARCOURSUP_STATUS.REJETE) &&
-                  formation.parcoursup_error && <RejectionBlock formation={formation} />}
+                {[PARCOURSUP_STATUS.EN_ATTENTE, PARCOURSUP_STATUS.REJETE].includes(formation.parcoursup_statut) &&
+                  !!formation.parcoursup_error && <RejectionBlock formation={formation} />}
 
                 {hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
                   formation.parcoursup_raison_depublication && (
