@@ -19,15 +19,21 @@ const Indicators = () => {
   const [formationPubliees, setFormationPubliees] = useState(undefined);
   const [formationNonPubliees, setFormationNonPubliees] = useState(undefined);
 
+  const defaultQuery = { published: true };
+
   useEffect(() => {
     (async () => {
       try {
-        setFormationCount(await _get(`${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({})}`, false));
+        setFormationCount(
+          await _get(`${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({ published: true })}`, false)
+        );
         setFormationAValider(
           await _get(
             `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
+              ...defaultQuery,
               parcoursup_statut: {
                 $in: [
+                  PARCOURSUP_STATUS.A_PUBLIER,
                   PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
                   PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
                   PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
@@ -40,6 +46,7 @@ const Indicators = () => {
         setFormationTraitees(
           await _get(
             `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
+              ...defaultQuery,
               parcoursup_statut: {
                 $in: [PARCOURSUP_STATUS.EN_ATTENTE, PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.NON_PUBLIE],
               },
@@ -50,6 +57,7 @@ const Indicators = () => {
         setFormationRejetees(
           await _get(
             `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
+              ...defaultQuery,
               parcoursup_statut: PARCOURSUP_STATUS.REJETE,
             })}`,
             false
@@ -58,6 +66,7 @@ const Indicators = () => {
         setFormationEnAttenteDePublication(
           await _get(
             `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
+              ...defaultQuery,
               parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
             })}`,
             false
@@ -66,6 +75,7 @@ const Indicators = () => {
         setFormationPubliees(
           await _get(
             `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
+              ...defaultQuery,
               parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
             })}`,
             false
@@ -74,6 +84,7 @@ const Indicators = () => {
         setFormationNonPubliees(
           await _get(
             `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
+              ...defaultQuery,
               parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIE,
             })}`,
             false
@@ -99,6 +110,7 @@ const Indicators = () => {
       body: <>Formations à valider avant publication</>,
       linkTo: `/recherche/formations?parcoursup_statut=${encodeURIComponent(
         JSON.stringify([
+          PARCOURSUP_STATUS.A_PUBLIER,
           PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
           PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
           PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
@@ -140,7 +152,7 @@ const Indicators = () => {
       Sur une base de {formationCount} formations collectées par Carif-Oref :
       <br />
       <br />
-      <Grid templateColumns="repeat(4, 1fr)" gap={4}>
+      <Grid templateColumns="repeat(3, 1fr)" gap={4}>
         {cards?.map((card, index) => (
           <GridItem colSpan={[3, 3, 1]} key={index}>
             <Card {...card}></Card>
@@ -162,8 +174,8 @@ export default () => {
       component: (
         <iframe
           src="https://catalogue.apprentissage.education.gouv.fr/metabase/public/dashboard/4e36e6e9-df1d-4444-bb76-cce85e662f47"
-          frameBorder="0"
-          style={{ height: "226vh", width: "100%" }}
+          seamless
+          style={{ height: "228vh", width: "100%", border: 0 }}
           title={`Console de pilotage Parcoursup - Statistiques`}
           allowtransparency={"true"}
         />
