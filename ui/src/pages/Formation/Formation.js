@@ -108,19 +108,38 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                   values={values}
                   handleSubmit={handleSubmit}
                   handleChange={handleChange}
-                  hasRightToEdit={hasRightToEdit}
+                  hasRightToEdit={
+                    hasRightToEdit &&
+                    ![PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut) &&
+                    ![AFFELNET_STATUS.PUBLIE].includes(formation.affelnet_statut)
+                  }
                   mb={!formation?.editedFields?.uai_formation ? 4 : 0}
                 />
                 {formation.editedFields?.uai_formation && (
                   <Text fontSize={"zeta"} color={"grey.600"} as="span">
-                    UAI lieu édité{" "}
+                    - UAI lieu édité
                     {uai_updated_history[0] && (
                       <>
+                        {" "}
                         le {new Date(uai_updated_history[0]?.updated_at).toLocaleDateString("fr-FR")} par{" "}
                         {uai_updated_history[0]?.to.last_update_who}
                       </>
                     )}
+                    .
                   </Text>
+                )}
+                {([PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut) ||
+                  [AFFELNET_STATUS.PUBLIE].includes(formation.affelnet_statut)) && (
+                  <>
+                    <br />
+                    <Text fontSize={"zeta"} color={"grey.600"} as="span">
+                      - L’UAI n’est plus modifiable car la formation est déjà publiée sur{" "}
+                      {[PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut) && <>Parcoursup</>}
+                      {[AFFELNET_STATUS.PUBLIE].includes(formation.affelnet_statut) && <>Affelnet</>}. Si l’UAI doit
+                      être modifiée, inviter l’organisme à créer la formation avec la nouvelle adresse via le
+                      Carif-Oref.
+                    </Text>
+                  </>
                 )}
               </UaiFormationContainer>
 
