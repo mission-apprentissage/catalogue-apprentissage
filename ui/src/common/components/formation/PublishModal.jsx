@@ -416,7 +416,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                   <br />
                   <FormControl isInvalid={errors.affelnet_url_infos_offre}>
                     <FormLabel htmlFor="affelnet_url_infos_offre" mb={3} fontSize="epsilon">
-                      Lien vers la page complémentaire (facultatif) :
+                      Information offre de formation (lien) (facultatif) :
                     </FormLabel>
 
                     <Textarea
@@ -456,7 +456,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                   <br />
                   <FormControl isInvalid={errors.affelnet_url_modalites_offre}>
                     <FormLabel htmlFor="affelnet_url_modalites_offre" mb={3} fontSize="epsilon">
-                      Lien vers la page complémentaire (facultatif) :
+                      Modalités particulières (lien) (facultatif) :
                     </FormLabel>
 
                     <Textarea
