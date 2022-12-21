@@ -8,14 +8,13 @@ const esIndex = async () => {
     logger.info(" -- Start esIndex -- ");
 
     const args = process.argv.slice(2);
-    const skipNotFound = args?.[1] === "--skipNotFound" || args?.[2] === "--skipNotFound";
-    const onlyPublished = args?.[1] === "--onlyPublished" || args?.[2] === "--onlyPublished";
+    const shouldSkipFound = args?.includes("--skipFound");
     const shouldDelete = args.includes("--delete");
 
     if (shouldDelete) {
       await deleteIndex(args?.[0]);
     } else {
-      await rebuildEsIndex(args?.[0], skipNotFound, onlyPublished ? { published: true } : {});
+      await rebuildEsIndex(args?.[0], shouldSkipFound);
     }
 
     logger.info(" -- End of esIndex -- ");

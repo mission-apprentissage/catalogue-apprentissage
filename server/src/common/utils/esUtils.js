@@ -1,11 +1,12 @@
 const logger = require("../logger");
+
 const { getElasticInstance } = require("../esClient");
 
-const rebuildIndex = async (index, schema, { skipNotFound, filter } = { skipNotFound: false, filter: {} }) => {
+const rebuildIndex = async (index, schema, { filter, skipFound } = { skipFound: false, filter: {} }) => {
   let client = getElasticInstance();
 
   const { body: hasIndex } = await client.indices.exists({ index });
-  if (hasIndex || !skipNotFound) {
+  if (hasIndex && !skipFound) {
     logger.info(`Removing '${index}' index...`);
     await client.indices.delete({ index });
   }

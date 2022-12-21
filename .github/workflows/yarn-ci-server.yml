@@ -10,7 +10,7 @@ jobs:
 
     steps:
       # Checks-out the repository
-      - uses: actions/checkout@v3.1.0
+      - uses: actions/checkout@v3.2.0
 
       # setup npmrc
       - run: echo -e "//npm.pkg.github.com/:_authToken=$NPM_TOKEN\n@mission-apprentissage:registry=https://npm.pkg.github.com" > server/.npmrc
