@@ -113,26 +113,30 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                     ![PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut) &&
                     ![AFFELNET_STATUS.PUBLIE].includes(formation.affelnet_statut)
                   }
-                  mb={!formation?.editedFields?.uai_formation ? 4 : 0}
+                  mb={2}
                 />
-                {formation.editedFields?.uai_formation && (
-                  <Text fontSize={"zeta"} color={"grey.600"} as="span">
-                    - UAI lieu édité
-                    {uai_updated_history[0] && (
-                      <>
-                        {" "}
-                        le {new Date(uai_updated_history[0]?.updated_at).toLocaleDateString("fr-FR")} par{" "}
-                        {uai_updated_history[0]?.to.last_update_who}
-                      </>
-                    )}
-                    .
-                  </Text>
-                )}
-                {([PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut) ||
-                  [AFFELNET_STATUS.PUBLIE].includes(formation.affelnet_statut)) && (
+                <Text fontSize={"zeta"} color={"grey.600"} mb={2}>
+                  {formation.editedFields?.uai_formation ? (
+                    <>
+                      - UAI lieu édité
+                      {uai_updated_history[0] && (
+                        <>
+                          {" "}
+                          le {new Date(uai_updated_history[0]?.updated_at).toLocaleDateString("fr-FR")} par{" "}
+                          {uai_updated_history[0]?.to.last_update_who}
+                        </>
+                      )}
+                      .
+                    </>
+                  ) : (
+                    <>- Cet UAI a été repris automatiquement de l’UAI formateur.</>
+                  )}
+                </Text>
+
+                {[PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut) ||
+                [AFFELNET_STATUS.PUBLIE].includes(formation.affelnet_statut) ? (
                   <>
-                    <br />
-                    <Text fontSize={"zeta"} color={"grey.600"} as="span">
+                    <Text fontSize={"zeta"} color={"grey.600"}>
                       - L’UAI n’est plus modifiable car la formation est déjà publiée sur{" "}
                       {[PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut) && <>Parcoursup</>}
                       {[AFFELNET_STATUS.PUBLIE].includes(formation.affelnet_statut) && <>Affelnet</>}. Si l’UAI doit
@@ -140,6 +144,8 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                       Carif-Oref.
                     </Text>
                   </>
+                ) : (
+                  <>- Si le lieu de réalisation est différent du lieu du formateur, modifiez l’UAI (picto crayon).</>
                 )}
               </UaiFormationContainer>
 
