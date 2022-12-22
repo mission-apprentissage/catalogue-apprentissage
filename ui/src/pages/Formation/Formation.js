@@ -133,20 +133,20 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                   )}
                 </Text>
 
-                {[PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut) ||
-                [AFFELNET_STATUS.PUBLIE].includes(formation.affelnet_statut) ? (
-                  <>
-                    <Text fontSize={"zeta"} color={"grey.600"}>
+                <Text fontSize={"zeta"} color={"grey.600"}>
+                  {[PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut) ||
+                  [AFFELNET_STATUS.PUBLIE].includes(formation.affelnet_statut) ? (
+                    <>
                       - L’UAI n’est plus modifiable car la formation est déjà publiée sur{" "}
                       {[PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut) && <>Parcoursup</>}
                       {[AFFELNET_STATUS.PUBLIE].includes(formation.affelnet_statut) && <>Affelnet</>}. Si l’UAI doit
                       être modifiée, inviter l’organisme à créer la formation avec la nouvelle adresse via le
                       Carif-Oref.
-                    </Text>
-                  </>
-                ) : (
-                  <>- Si le lieu de réalisation est différent du lieu du formateur, modifiez l’UAI (picto crayon).</>
-                )}
+                    </>
+                  ) : (
+                    <>- Si le lieu de réalisation est différent du lieu du formateur, modifiez l’UAI (picto crayon).</>
+                  )}
+                </Text>
               </UaiFormationContainer>
 
               <AdresseContainer>
