@@ -223,9 +223,15 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
         : Yup.string().nullable(),
       affelnet_url_modalites_offre: isAffelnetFormOpen
         ? Yup.string()
-            .url("La valeur saisie doit être une url valide")
+            .url(
+              "La valeur saisie doit être une URL valide : débutant par http:// ou https:// (en minuscules), avec ou sans www, se terminant .fr, .com, .eu, .nc, etc. Méthode recommandée pour l’enregistrement de cette URL : accédez à la page cible souhaitée, et copiez-coller l’adresse de la page."
+            )
             .nullable()
-            .matches(urlRegex, { message: "L'url n'est pas autorisée", excludeEmptyString: true })
+            .matches(urlRegex, {
+              message:
+                "L’URL n’est pas autorisée. Les URL autorisées : sites des académies, régions académiques, monbureaunumerique.fr, index-education (.com ou .fr), onisep.fr.",
+              excludeEmptyString: true,
+            })
             .max(250, "Le champ ne doit pas dépasser 250 caractères")
         : Yup.string().nullable(),
 
@@ -410,7 +416,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                   <br />
                   <FormControl isInvalid={errors.affelnet_url_infos_offre}>
                     <FormLabel htmlFor="affelnet_url_infos_offre" mb={3} fontSize="epsilon">
-                      Lien vers la page complémentaire (facultatif) :
+                      Information offre de formation (lien) (facultatif) :
                     </FormLabel>
 
                     <Textarea
@@ -450,7 +456,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                   <br />
                   <FormControl isInvalid={errors.affelnet_url_modalites_offre}>
                     <FormLabel htmlFor="affelnet_url_modalites_offre" mb={3} fontSize="epsilon">
-                      Lien vers la page complémentaire (facultatif) :
+                      Modalités particulières (lien) (facultatif) :
                     </FormLabel>
 
                     <Textarea

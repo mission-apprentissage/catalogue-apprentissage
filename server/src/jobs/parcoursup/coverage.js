@@ -52,8 +52,6 @@ const checkPublished = async (filter = {}, limit = 10) => {
 const psCoverage = async () => {
   logger.info("Start Parcoursup coverage");
 
-  ParcoursupFormation.pauseAllMongoosaticHooks();
-
   const filtersCheckPublished = { statut_reconciliation: { $in: ["VALIDE", "REJETE"] } };
   const allIdsCheckPublished = await ParcoursupFormation.distinct("_id", { ...filtersCheckPublished });
   const activeFilterCheckPublished = { _id: { $in: allIdsCheckPublished } };
@@ -65,8 +63,6 @@ const psCoverage = async () => {
   const activeFilter = { _id: { $in: allIds } };
 
   await formationsCoverage(activeFilter);
-
-  ParcoursupFormation.startAllMongoosaticHooks();
 };
 
 module.exports = { psCoverage };

@@ -12,23 +12,22 @@ const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
 const Indicators = () => {
   const [formationCount, setFormationCount] = useState(undefined);
-  const [formationAutomatiquementRapprochee, setFormationAutomatiquementRapprochee] = useState(undefined);
-  const [formationAValider, setFormationAValider] = useState(undefined);
-  const [formationTraitees, setFormationTraitees] = useState(undefined);
-  const [formationEnAttenteDePublication, setFormationEnAttenteDePublication] = useState(undefined);
   const [formationPubliees, setFormationPubliees] = useState(undefined);
+  const [formationAValider, setFormationAValider] = useState(undefined);
+  const [formationEnAttenteDePublication, setFormationEnAttenteDePublication] = useState(undefined);
   const [formationNonPubliees, setFormationNonPubliees] = useState(undefined);
+
+  const defaultQuery = { published: true };
 
   useEffect(() => {
     (async () => {
       try {
         setFormationCount(await _get(`${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({})}`, false));
-
-        setFormationAutomatiquementRapprochee(
+        setFormationPubliees(
           await _get(
             `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
+              ...defaultQuery,
               affelnet_statut: AFFELNET_STATUS.PUBLIE,
-              forced_published: { $ne: true },
             })}`,
             false
           )
@@ -36,16 +35,9 @@ const Indicators = () => {
         setFormationAValider(
           await _get(
             `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
-              affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
-            })}`,
-            false
-          )
-        );
-        setFormationTraitees(
-          await _get(
-            `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
+              ...defaultQuery,
               affelnet_statut: {
-                $in: [AFFELNET_STATUS.EN_ATTENTE, AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.NON_PUBLIE],
+                $in: [AFFELNET_STATUS.A_PUBLIER_VALIDATION, AFFELNET_STATUS.A_PUBLIER],
               },
             })}`,
             false
@@ -54,15 +46,8 @@ const Indicators = () => {
         setFormationEnAttenteDePublication(
           await _get(
             `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
+              ...defaultQuery,
               affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
-            })}`,
-            false
-          )
-        );
-        setFormationPubliees(
-          await _get(
-            `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
-              affelnet_statut: AFFELNET_STATUS.PUBLIE,
             })}`,
             false
           )
@@ -70,6 +55,7 @@ const Indicators = () => {
         setFormationNonPubliees(
           await _get(
             `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
+              ...defaultQuery,
               affelnet_statut: AFFELNET_STATUS.NON_PUBLIE,
             })}`,
             false
@@ -78,11 +64,9 @@ const Indicators = () => {
       } catch (e) {
         console.error(e);
         setFormationCount(0);
-        setFormationAutomatiquementRapprochee(0);
-        setFormationAValider(0);
-        setFormationTraitees(0);
-        setFormationEnAttenteDePublication(0);
         setFormationPubliees(0);
+        setFormationAValider(0);
+        setFormationEnAttenteDePublication(0);
         setFormationNonPubliees(0);
       }
     })();
@@ -90,38 +74,35 @@ const Indicators = () => {
 
   const cards = [
     {
-      color: "yellow.100",
-      title: <>{formationAutomatiquementRapprochee}</>,
-      body: <>Formations rapprochées automatiquement</>,
-      linkTo: `/recherche/formations?affelnet_statut=${encodeURIComponent(JSON.stringify([AFFELNET_STATUS.PUBLIE]))}`,
-    },
-    {
       color: "orange.100",
       title: <>{formationAValider}</>,
       body: <>Formations à valider avant publication</>,
       linkTo: `/recherche/formations?affelnet_statut=${encodeURIComponent(
-        JSON.stringify([AFFELNET_STATUS.A_PUBLIER_VALIDATION])
+        JSON.stringify([AFFELNET_STATUS.A_PUBLIER, AFFELNET_STATUS.A_PUBLIER_VALIDATION])
+      )}`,
+    },
+    {
+      color: "yellow.100",
+      title: <>{formationEnAttenteDePublication}</>,
+      body: <>Formations en attente de publication</>,
+      linkTo: `/recherche/formations?affelnet_statut=${encodeURIComponent(
+        JSON.stringify([AFFELNET_STATUS.EN_ATTENTE])
+      )}`,
+    },
+
+    {
+      color: "red.100",
+      title: <>{formationNonPubliees}</>,
+      body: <>Formations non publiées</>,
+      linkTo: `/recherche/formations?affelnet_statut=${encodeURIComponent(
+        JSON.stringify([AFFELNET_STATUS.NON_PUBLIE])
       )}`,
     },
     {
       color: "green.100",
-      title: <>{formationTraitees}</>,
-      body: (
-        <>
-          Formations traitées
-          <br />
-          <br />
-          <br />
-          <b>{formationEnAttenteDePublication}</b> en attente de publication
-          <br />
-          <b>{formationPubliees}</b> publiées
-          <br />
-          <b>{formationNonPubliees}</b> non publiées
-        </>
-      ),
-      linkTo: `/recherche/formations?affelnet_statut=${encodeURIComponent(
-        JSON.stringify([AFFELNET_STATUS.EN_ATTENTE, AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.NON_PUBLIE])
-      )}`,
+      title: <>{formationPubliees}</>,
+      body: <>Formations publiées</>,
+      linkTo: `/recherche/formations?affelnet_statut=${encodeURIComponent(JSON.stringify([AFFELNET_STATUS.PUBLIE]))}`,
     },
   ];
 
@@ -130,7 +111,7 @@ const Indicators = () => {
       Sur une base de {formationCount} formations collectées par Carif-Oref :
       <br />
       <br />
-      <Grid templateColumns="repeat(3, 1fr)" gap={4}>
+      <Grid templateColumns="repeat(4, 1fr)" gap={4}>
         {cards?.map((card, index) => (
           <GridItem colSpan={[3, 3, 1]} key={index}>
             <Card {...card}></Card>
@@ -152,8 +133,8 @@ export default () => {
       component: (
         <iframe
           src="https://catalogue.apprentissage.education.gouv.fr/metabase/public/dashboard/50b6d168-d303-4f91-b898-945f6b9f11f4"
-          frameBorder="0"
-          style={{ height: "226vh", width: "100%" }}
+          seamless
+          style={{ height: "228vh", width: "100%", border: 0 }}
           title={`Console de pilotage Affelnet - Statistiques`}
           allowtransparency={"true"}
         />

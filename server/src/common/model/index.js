@@ -10,11 +10,12 @@ const createModel = (modelName, descriptor, options = {}) => {
   const schema = new mongoose.Schema(descriptor);
   schema.plugin(require("mongoose-paginate"));
   if (options.esIndexName) {
-    schema.plugin(mongoosastic, { esClient: getElasticInstance(), index: options.esIndexName });
+    schema.plugin(mongoosastic, { esClient: getElasticInstance(), index: options.esIndexName, filter: options.filter });
   }
   if (options.createMongoDBIndexes) {
     options.createMongoDBIndexes(schema);
   }
+
   return mongoose.model(modelName, schema, options.collectionName);
 };
 
@@ -23,16 +24,20 @@ module.exports = {
   Role: createModel("role", schema.roleSchema),
   Formation: createModel("formation", schema.formationSchema, {
     esIndexName: "formation",
+    filter: (doc) => {
+      return !doc.published;
+    },
   }),
   Report: createModel("report", schema.reportSchema),
   Log: createModel("log", schema.logSchema),
   AffelnetFormation: createModel("affelnetformation", schema.affelnetFormationSchema),
   Etablissement: createModel("etablissement", schema.etablissementSchema, {
     esIndexName: "etablissements",
+    filter: (doc) => {
+      return !doc.published;
+    },
   }),
-  ParcoursupFormation: createModel("parcoursupformations", schema.parcoursupFormationSchema, {
-    esIndexName: "parcoursupformations",
-  }),
+  ParcoursupFormation: createModel("parcoursupformations", schema.parcoursupFormationSchema),
   ParcoursupFormationCheck: createModel("parcoursupformationchecks", schema.parcoursupFormationCheckSchema),
   SandboxFormation: createModel("sandboxformation", schema.formationSchema),
   Statistique: createModel("statistique", schema.statistiqueSchema),

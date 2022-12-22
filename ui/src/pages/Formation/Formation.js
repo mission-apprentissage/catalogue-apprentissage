@@ -39,7 +39,7 @@ import { RejectionBlock } from "../../common/components/formation/RejectionBlock
 import { DescriptionBlock } from "../../common/components/formation/DescriptionBlock";
 import { OrganismesBlock } from "../../common/components/formation/OrganismesBlock";
 import { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL } from "../../constants/catalogueLabels";
-import { COMMON_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
+import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -108,20 +108,45 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                   values={values}
                   handleSubmit={handleSubmit}
                   handleChange={handleChange}
-                  hasRightToEdit={hasRightToEdit}
-                  mb={!formation?.editedFields?.uai_formation ? 4 : 0}
+                  hasRightToEdit={
+                    hasRightToEdit &&
+                    ![PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut) &&
+                    ![AFFELNET_STATUS.PUBLIE].includes(formation.affelnet_statut)
+                  }
+                  mb={2}
                 />
-                {formation.editedFields?.uai_formation && (
-                  <Text fontSize={"zeta"} color={"grey.600"} as="span">
-                    UAI lieu édité{" "}
-                    {uai_updated_history[0] && (
-                      <>
-                        le {new Date(uai_updated_history[0]?.updated_at).toLocaleDateString("fr-FR")} par{" "}
-                        {uai_updated_history[0]?.to.last_update_who}
-                      </>
-                    )}
-                  </Text>
-                )}
+                <Text fontSize={"zeta"} color={"grey.600"} mb={2}>
+                  {formation.editedFields?.uai_formation ? (
+                    <>
+                      - UAI lieu édité
+                      {uai_updated_history[0] && (
+                        <>
+                          {" "}
+                          le {new Date(uai_updated_history[0]?.updated_at).toLocaleDateString("fr-FR")} par{" "}
+                          {uai_updated_history[0]?.to.last_update_who}
+                        </>
+                      )}
+                      .
+                    </>
+                  ) : (
+                    <>- Cet UAI a été repris automatiquement de l’UAI formateur.</>
+                  )}
+                </Text>
+
+                <Text fontSize={"zeta"} color={"grey.600"}>
+                  {[PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut) ||
+                  [AFFELNET_STATUS.PUBLIE].includes(formation.affelnet_statut) ? (
+                    <>
+                      - L’UAI n’est plus modifiable car la formation est déjà publiée sur{" "}
+                      {[PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut) && <>Parcoursup</>}
+                      {[AFFELNET_STATUS.PUBLIE].includes(formation.affelnet_statut) && <>Affelnet</>}. Si l’UAI doit
+                      être modifiée, inviter l’organisme à créer la formation avec la nouvelle adresse via le
+                      Carif-Oref.
+                    </>
+                  ) : (
+                    <>- Si le lieu de réalisation est différent du lieu du formateur, modifiez l’UAI (picto crayon).</>
+                  )}
+                </Text>
               </UaiFormationContainer>
 
               <AdresseContainer>
@@ -439,6 +464,10 @@ export default ({ match }) => {
                   </Box>
                   {hasRightToEdit &&
                     formation.catalogue_published &&
+                    (![PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.HORS_PERIMETRE].includes(
+                      formation.parcoursup_statut
+                    ) ||
+                      ![AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.HORS_PERIMETRE].includes(formation.affelnet_statut)) &&
                     hasAccessTo(user, "page_formation/gestion_publication") && (
                       <Button
                         textStyle="sm"
@@ -480,9 +509,8 @@ export default ({ match }) => {
                   </Flex>
                 )}
 
-                {(formation.parcoursup_statut === COMMON_STATUS.EN_ATTENTE ||
-                  formation.parcoursup_statut === PARCOURSUP_STATUS.REJETE) &&
-                  formation.parcoursup_error && <RejectionBlock formation={formation} />}
+                {[PARCOURSUP_STATUS.EN_ATTENTE, PARCOURSUP_STATUS.REJETE].includes(formation.parcoursup_statut) &&
+                  !!formation.parcoursup_error && <RejectionBlock formation={formation} />}
 
                 {hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
                   formation.parcoursup_raison_depublication && (
