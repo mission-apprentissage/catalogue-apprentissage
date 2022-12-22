@@ -215,6 +215,12 @@ const columnsDefinition = [
     exportable: true,
   },
   {
+    Header: "Code du diplome de l'année d'entrée",
+    accessor: "cfd_entree",
+    width: 400,
+    exportable: true,
+  },
+  {
     Header: "Liste MEF rattaches",
     accessor: "bcn_mefs_10",
     width: 200,
