@@ -5558,10 +5558,10 @@ retry@^0.12.0:
   resolved "https://registry.npmjs.org/retry/-/retry-0.12.0.tgz"
   integrity sha512-9LkiTwjUh6rT555DtE9rTX+BKByPfrMzEAtnlEtdEwr3Nkffwiihqe2bWADg+OQRjt9gl6ICdmB/ZFDCGAtSow==
 
-rewiremock@3.14.3:
-  version "3.14.3"
-  resolved "https://registry.npmjs.org/rewiremock/-/rewiremock-3.14.3.tgz"
-  integrity sha512-6BaUGfp7NtxBjisxcGN73nNiA2fS2AwhEk/9DMUqxfv5v0aDM1wpOYpj5GSArqsJi07YCfLhkD8C74LAN7+FkQ==
+rewiremock@3.14.4:
+  version "3.14.4"
+  resolved "https://registry.yarnpkg.com/rewiremock/-/rewiremock-3.14.4.tgz#aa8507012b0affa74510b3891daded809414e6b5"
+  integrity sha512-4oRzslkj0Qm0ErfFdGrD4ziW9cOcx/DW6RRDmUP82z3AC2C4C5eczsYjpTo6rOyIIDcCciXZBYKcAm2atGRggw==
   dependencies:
     babel-runtime "^6.26.0"
     compare-module-exports "^2.1.0"
