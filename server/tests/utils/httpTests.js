@@ -14,10 +14,22 @@ const startServer = async () => {
     components,
     createAndLogUser: async (username, password, options) => {
       await components.users.createUser(username, password, options);
-      await httpClient.post("/api/v1/auth/login", {
-        username: username,
-        password: password,
-      });
+
+      // Authentication
+      const response = await httpClient.post(
+        "/api/v1/auth/login",
+        {
+          username: username,
+          password: password,
+        },
+        { withCredentials: true }
+      );
+
+      // Set Authentication cookie for subsequent requests
+      if (response.headers["set-cookie"]) {
+        const [cookie] = response.headers["set-cookie"]; // getting cookie from request
+        httpClient.defaults.headers.Cookie = cookie; // attaching cookie to axiosInstance for future requests
+      }
     },
   };
 };
