@@ -5,7 +5,7 @@ const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { sendJsonStream, sendCsvStream } = require("../../common/utils/httpUtils");
 const { paginate } = require("../../common/utils/mongooseUtils");
 const { Etablissement } = require("../../common/model");
-const { sanitize } = require("../../common/utils/sanitizeUtils");
+const { sanitize, SAFE_FIND_OPERATORS } = require("../../common/utils/sanitizeUtils");
 
 /**
  * Sample entity route module for GET
@@ -117,7 +117,7 @@ module.exports = () => {
   router.post(
     "/etablissements",
     tryCatch(async (req, res) => {
-      const sanitizedQuery = sanitize(req.body, { allowSafeOperators: true });
+      const sanitizedQuery = sanitize(req.body, SAFE_FIND_OPERATORS);
 
       let { query, page, limit, select } = await Joi.object({
         query: Joi.object().default(defaultFilter),
@@ -196,7 +196,7 @@ module.exports = () => {
     tryCatch(async (req, res) => {
       const qs = req.query;
       let query = qs && qs.query ? JSON.parse(qs.query) : {};
-      query = sanitize(query, { allowSafeOperators: true });
+      query = sanitize(query, SAFE_FIND_OPERATORS);
 
       // Par défaut, ne retourne que les établissements published
       if (!qs?.query) {
@@ -220,7 +220,7 @@ module.exports = () => {
     tryCatch(async (req, res) => {
       const qs = req.query;
       let query = qs && qs.query ? JSON.parse(qs.query) : {};
-      query = sanitize(query, { allowSafeOperators: true });
+      query = sanitize(query, SAFE_FIND_OPERATORS);
 
       // Par défaut, ne retourne que les établissements published
       if (!qs?.query) {
@@ -307,7 +307,7 @@ module.exports = () => {
     tryCatch(async (req, res) => {
       const qs = req.query;
       let query = qs && qs.query ? JSON.parse(qs.query) : {};
-      query = sanitize(query, { allowSafeOperators: true });
+      query = sanitize(query, SAFE_FIND_OPERATORS);
 
       // Par défaut, ne retourne que les établissements published
       if (!qs?.query) {

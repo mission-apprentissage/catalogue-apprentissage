@@ -4,7 +4,7 @@ const { oleoduc, compose, transformIntoJSON, transformIntoCSV } = require("oleod
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { Formation } = require("../../common/model");
 const { sendJsonStream, sendCsvStream } = require("../../common/utils/httpUtils");
-const { sanitize } = require("../../common/utils/sanitizeUtils");
+const { sanitize, SAFE_FIND_OPERATORS } = require("../../common/utils/sanitizeUtils");
 const { paginate } = require("../../common/utils/mongooseUtils");
 
 /**
@@ -30,7 +30,7 @@ module.exports = () => {
     // end FIXME
 
     let query = cleanedQuery ? JSON.parse(cleanedQuery) : {};
-    query = sanitize(query, { allowSafeOperators: true });
+    query = sanitize(query, SAFE_FIND_OPERATORS);
 
     const { id_parcoursup, ...filter } = query;
     // additional filtering for parcoursup
@@ -51,7 +51,7 @@ module.exports = () => {
           };
 
     let queryAsRegex = qs?.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
-    queryAsRegex = sanitize(queryAsRegex, { allowSafeOperators: true });
+    queryAsRegex = sanitize(queryAsRegex, SAFE_FIND_OPERATORS);
 
     for (const prop in queryAsRegex) {
       queryAsRegex[prop] = new RegExp(queryAsRegex[prop], "i");
@@ -85,7 +85,7 @@ module.exports = () => {
   });
 
   const postFormations = tryCatch(async (req, res) => {
-    const sanitizedQuery = sanitize(req.body, { allowSafeOperators: true });
+    const sanitizedQuery = sanitize(req.body, SAFE_FIND_OPERATORS);
 
     let { query, page, limit, select, queryAsRegex } = await Joi.object({
       query: Joi.optional().default({}),
@@ -137,7 +137,7 @@ module.exports = () => {
   const countFormations = tryCatch(async (req, res) => {
     const qs = req.query;
     let query = qs && qs.query ? JSON.parse(qs.query) : {};
-    query = sanitize(query, { allowSafeOperators: true });
+    query = sanitize(query, SAFE_FIND_OPERATORS);
 
     const { id_parcoursup, ...filter } = query;
     // additional filtering for parcoursup
@@ -146,7 +146,7 @@ module.exports = () => {
     }
 
     let queryAsRegex = qs?.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
-    queryAsRegex = sanitize(queryAsRegex, { allowSafeOperators: true });
+    queryAsRegex = sanitize(queryAsRegex, SAFE_FIND_OPERATORS);
 
     for (const prop in queryAsRegex) {
       queryAsRegex[prop] = new RegExp(queryAsRegex[prop], "i");
@@ -170,7 +170,7 @@ module.exports = () => {
     const qs = req.query;
 
     let query = qs && qs.query ? JSON.parse(qs.query) : {};
-    query = sanitize(query, { allowSafeOperators: true });
+    query = sanitize(query, SAFE_FIND_OPERATORS);
 
     const select =
       qs && qs.select
@@ -219,7 +219,7 @@ module.exports = () => {
     }).validateAsync(req.query, { abortEarly: false });
 
     let filter = JSON.parse(query);
-    filter = sanitize(filter, { allowSafeOperators: true });
+    filter = sanitize(filter, SAFE_FIND_OPERATORS);
 
     const selector = JSON.parse(select);
 
@@ -237,7 +237,7 @@ module.exports = () => {
     }).validateAsync(req.query, { abortEarly: false });
 
     let filter = JSON.parse(query);
-    filter = sanitize(filter, { allowSafeOperators: true });
+    filter = sanitize(filter, SAFE_FIND_OPERATORS);
 
     const selector = JSON.parse(select);
 

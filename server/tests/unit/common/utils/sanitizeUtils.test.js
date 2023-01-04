@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { sanitize } = require("../../../../src/common/utils/sanitizeUtils");
+const { sanitize, SAFE_FIND_OPERATORS, SAFE_UPDATE_OPERATORS } = require("../../../../src/common/utils/sanitizeUtils");
 
 describe(__filename, () => {
   it("checks that query is sanitized", () => {
@@ -13,8 +13,16 @@ describe(__filename, () => {
     assert.deepStrictEqual(sanitized, { field_nested: { _in: ["hello", "test"] } });
   });
 
-  it("checks that query is sanitized & allow some mongo operators", () => {
-    let sanitized = sanitize({ $where: "hello", name: { $in: ["bob", "alice"] } }, { allowSafeOperators: true });
+  it("checks that find query is sanitized & allow some mongo operators", () => {
+    let sanitized = sanitize({ $where: "hello", name: { $in: ["bob", "alice"] } }, SAFE_FIND_OPERATORS);
     assert.deepStrictEqual(sanitized, { _where: "hello", name: { $in: ["bob", "alice"] } });
+  });
+
+  it("checks that find query is sanitized & allow some mongo operators", () => {
+    let sanitized = sanitize(
+      { $where: "hello", name: { $in: ["bob", "alice"] }, $push: { test: "test" } },
+      SAFE_UPDATE_OPERATORS
+    );
+    assert.deepStrictEqual(sanitized, { _where: "hello", name: { _in: ["bob", "alice"] }, $push: { test: "test" } });
   });
 });

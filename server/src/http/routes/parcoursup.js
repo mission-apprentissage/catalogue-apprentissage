@@ -37,7 +37,7 @@ module.exports = () => {
       if (formationUpdated.parcoursup_error) {
         return res.status(500).json({ message: formationUpdated.parcoursup_error });
       }
-      return res.json(formationUpdated);
+      return res.status(200).json({ message: "La formation a été envoyé avec succès au webservice Parcoursup" });
     })
   );
 
