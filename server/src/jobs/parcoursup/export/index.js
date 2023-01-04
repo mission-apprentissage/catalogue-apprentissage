@@ -135,6 +135,10 @@ const createFormation = async (formation, email = null) => {
         handled_by: null,
         handled_date: null,
       };
+      formation.parcoursup_statut_history.push({
+        date: new Date(),
+        parcoursup_statut: PARCOURSUP_STATUS.REJETE,
+      });
     }
 
     await formation.save({ validateBeforeSave: false });
