@@ -9,7 +9,9 @@ export const updateFormation = async ({ formation, body, user }) => {
     ...body,
     last_update_who: user.email,
     last_update_at: Date.now(),
-    updates_history: buildUpdatesHistory(formation, { ...body, last_update_who: user.email }, Object.keys(body)),
+    $push: {
+      updates_history: buildUpdatesHistory(formation, { ...body, last_update_who: user.email }, Object.keys(body)),
+    },
   });
 };
 

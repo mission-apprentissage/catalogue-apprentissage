@@ -8,7 +8,7 @@ import { hasAccessTo } from "../../utils/rolesUtils";
  * Retire les valeurs successives identiques dans un tableau
  *
  * @param {any[]} array the array to reduce
- * @param {(curr, acc) => boolean)} check a function to check equality between two successive values in the array
+ * @param {(curr, acc) => boolean} check a function to check equality between two successive values in the array
  * @returns {any[]} An array containing only the last items
  */
 const reduceSameValues = (array, check) => {
@@ -67,7 +67,7 @@ export const HistoryBlock = ({ formation, limit = 5 }) => {
     }));
 
   const handle_rejection_history = updates_history
-    .filter((value) => !value?.from?.rejection?.handled_by && !!value.to?.rejection?.handled_by)
+    .filter((value) => value?.from?.rejection?.handled_by === null && !!value.to?.rejection?.handled_by)
     ?.map((value) => ({
       status: <>Prise en charge</>,
       user: value.to.last_update_who,
@@ -75,7 +75,7 @@ export const HistoryBlock = ({ formation, limit = 5 }) => {
     }));
 
   const unhandle_rejection_history = updates_history
-    .filter((value) => !!value?.from?.rejection?.handled_by && !value?.to?.rejection?.handled_by)
+    .filter((value) => !!value?.from?.rejection?.handled_by && value?.to?.rejection?.handled_by === null)
     ?.map((value) => ({
       status: <>Prise en charge annulée</>,
       user: value.to.last_update_who,

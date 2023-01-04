@@ -333,11 +333,13 @@ export default ({ match }) => {
               last_update_who: user.email,
               last_update_at: Date.now(),
               editedFields: { ...formation?.editedFields, uai_formation: trimedUaiFormation },
-              updates_history: buildUpdatesHistory(
-                formation,
-                { uai_formation: trimedUaiFormation, last_update_who: user.email },
-                ["uai_formation"]
-              ),
+              $push: {
+                updates_history: buildUpdatesHistory(
+                  formation,
+                  { uai_formation: trimedUaiFormation, last_update_who: user.email },
+                  ["uai_formation"]
+                ),
+              },
             });
             if (result) {
               setFormation(result);
@@ -370,19 +372,18 @@ export default ({ match }) => {
     (async () => {
       try {
         setLoading(true);
-        const apiURL = `${CATALOGUE_API}/entity/formation/`;
         // FIXME select={"__v" :0} hack to get updates_history
-        const form = await _get(`${apiURL}${match.params.id}?select={"__v":0}`, false);
+        const formation = await _get(`${CATALOGUE_API}/entity/formation/${match.params.id}?select={"__v":0}`);
 
         if (!mountedRef.current) return null;
         // don't display archived formations
-        if (!form.published) {
+        if (!formation.published) {
           throw new Error("Cette formation n'est pas publiée dans le catalogue");
         }
 
         setLoading(false);
-        setFormation(form);
-        setFieldValue("uai_formation", form.uai_formation ?? "");
+        setFormation(formation);
+        setFieldValue("uai_formation", formation.uai_formation ?? "");
       } catch (e) {
         if (!mountedRef.current) return null;
         setLoading(false);
@@ -403,10 +404,17 @@ export default ({ match }) => {
 
   const sendToParcoursup = async () => {
     try {
-      const updated = await _post(`${CATALOGUE_API}/parcoursup/send-ws`, {
+      const response = await _post(`${CATALOGUE_API}/parcoursup/send-ws`, {
         id: formation._id,
       });
-      setFormation(updated);
+      const message = response?.message;
+
+      toast({
+        title: "Succès",
+        description: message,
+        status: "success",
+        duration: 10000,
+      });
     } catch (e) {
       console.error("Can't send to ws", e);
 
@@ -420,6 +428,9 @@ export default ({ match }) => {
         duration: 10000,
       });
     }
+
+    const response = await _get(`${CATALOGUE_API}/entity/formation/${match.params.id}?select={"__v":0}`);
+    setFormation(response);
   };
 
   return (

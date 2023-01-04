@@ -3,7 +3,7 @@ export const buildUpdatesHistory = (origin, updates, keys) => {
     acc[key] = origin[key];
     return acc;
   }, {});
-  return [...(origin.updates_history ?? []), { from, to: { ...updates }, updated_at: new Date() }];
+  return [{ from, to: { ...updates }, updated_at: new Date() }];
 };
 
 export function sortDescending(a, b) {

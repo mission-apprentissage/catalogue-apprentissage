@@ -143,6 +143,7 @@ const getSubmitBody = ({
       ].includes(formation?.parcoursup_statut)
     ) {
       body.parcoursup_statut = PARCOURSUP_STATUS.EN_ATTENTE;
+      body.parcoursup_error = null;
       body.rejection = null;
       body.last_statut_update_date = date;
       body.parcoursup_raison_depublication = null;

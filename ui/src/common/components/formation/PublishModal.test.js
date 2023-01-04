@@ -233,6 +233,7 @@ test("should compute submit body when publish parcoursup", () => {
   expect(result).toEqual({
     body: {
       parcoursup_raison_depublication: null,
+      parcoursup_error: null,
       parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
       last_statut_update_date: new Date("2021-10-14"),
       rejection: null,
@@ -265,6 +266,7 @@ test("should compute submit body when publish parcoursup", () => {
   expect(result).toEqual({
     body: {
       parcoursup_raison_depublication: null,
+      parcoursup_error: null,
       parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
       rejection: null,
       last_statut_update_date: new Date("2021-10-14"),
