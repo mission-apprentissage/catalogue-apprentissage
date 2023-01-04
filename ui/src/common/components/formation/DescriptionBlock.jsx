@@ -4,7 +4,6 @@ import { ExternalLinkLine } from "../../../theme/components/icons";
 import { DangerBox } from "../DangerBox";
 import InfoTooltip from "../InfoTooltip";
 import helpText from "../../../locales/helpText.json";
-// import { FormationPeriode } from "./FormationPeriode";
 import { FormationDate } from "./FormationDate";
 import { HabilitationPartenaire } from "./HabilitationPartenaire";
 import { HABILITE_LIST } from "../../../constants/certificateurs";

@@ -23,6 +23,22 @@ httpTests(__filename, ({ startServer }) => {
     assert.strictEqual(previous.password, found.password);
   });
 
+  it("Vérifie qu'on peut se déconnecter", async () => {
+    const { httpClient, components } = await startServer();
+    await components.users.createUser("user", "password", { hash: hash("password", 1001) });
+
+    const loginResponse = await httpClient.post("/api/v1/auth/login", {
+      username: "user",
+      password: "password",
+    });
+
+    assert.strictEqual(loginResponse.status, 200);
+
+    const logoutResponse = await httpClient.get("/api/v1/auth/logout");
+
+    assert.strictEqual(logoutResponse.status, 200);
+  });
+
   it("Vérifie qu'un mot de passe invalide est rejeté & que le mot de passe n'est pas rehashé si invalide", async () => {
     const { httpClient, components } = await startServer();
     await components.users.createUser("user", "password", { hash: hash("password", 1001) });
