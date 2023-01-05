@@ -1,9 +1,9 @@
-export const buildUpdatesHistory = (origin, updates, keys) => {
+export const buildUpdatesHistory = (origin, updates, keys, date = new Date()) => {
   const from = keys.reduce((acc, key) => {
     acc[key] = origin[key];
     return acc;
   }, {});
-  return [{ from, to: { ...updates }, updated_at: new Date() }];
+  return [{ from, to: { ...updates }, updated_at: date }];
 };
 
 export function sortDescending(a, b) {
