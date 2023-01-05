@@ -56,17 +56,6 @@ Exemple de retour (toutes les mises à jour des informations):
         },
         {
           "from": {
-            "niveau": "4 (Bac...)",
-            "idea_geo_coordonnees_etablissement": null
-          },
-          "to": {
-            "niveau": "4 (BAC...)",
-            "idea_geo_coordonnees_etablissement": "48.525558,7.731116"
-          },
-          "updated_at": 1620124029367
-        },
-        {
-          "from": {
             "rncp_details": {
               "date_fin_validite_enregistrement": "1/1/24",
               "active_inactive": "ACTIVE",

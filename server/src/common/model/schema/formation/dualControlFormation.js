@@ -335,12 +335,6 @@ const formationSchema = {
     description: "Est publiée, la formation est éligible pour le catalogue",
   },
 
-  idea_geo_coordonnees_etablissement: {
-    type: String,
-    implicit_type: "geo_point",
-    description: "Latitude et longitude de l'établissement recherchable dans Idea",
-  },
-
   lieu_formation_geo_coordonnees: {
     type: String,
     implicit_type: "geo_point",

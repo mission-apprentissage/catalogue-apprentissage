@@ -377,10 +377,6 @@ module.exports = {
         default: "null",
         description: "Qui a réalisé la dernière modification",
       },
-      idea_geo_coordonnees_etablissement: {
-        type: "string",
-        description: "Latitude et longitude de l'établissement recherchable dans Idea",
-      },
       lieu_formation_geo_coordonnees: {
         type: "string",
         description: "Latitude et longitude du lieu de formation",

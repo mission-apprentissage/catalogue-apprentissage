@@ -192,10 +192,6 @@ export interface Formation {
    */
   last_update_who?: string;
   /**
-   * Latitude et longitude de l'établissement recherchable dans Idea
-   */
-  idea_geo_coordonnees_etablissement?: string;
-  /**
    * Latitude et longitude du lieu de formation
    */
   lieu_formation_geo_coordonnees?: string;
