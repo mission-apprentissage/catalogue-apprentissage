@@ -3,15 +3,15 @@ const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { Formation } = require("../../common/model");
 const logger = require("../../common/logger");
 const Boom = require("boom");
-const { sanitize } = require("../../common/utils/sanitizeUtils");
+const { sanitize, SAFE_UPDATE_OPERATORS } = require("../../common/utils/sanitizeUtils");
 const { hasOneOfRoles } = require("../../common/utils/rolesUtils");
 
 module.exports = () => {
   const router = express.Router();
 
   const putFormation = tryCatch(async ({ body, user, params }, res) => {
-    const sanitizedParams = sanitize(params);
-    const payload = sanitize(body);
+    const sanitizedParams = sanitize(params, SAFE_UPDATE_OPERATORS);
+    const payload = sanitize(body, SAFE_UPDATE_OPERATORS);
 
     const itemId = sanitizedParams.id;
 

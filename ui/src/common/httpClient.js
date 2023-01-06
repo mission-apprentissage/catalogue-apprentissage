@@ -38,15 +38,15 @@ const handleResponse = (path, response) => {
 };
 
 const getHeaders = (authorization = true, contentType = "application/json") => {
-  let auth = getAuth();
+  // let auth = getAuth();
   let result = {
     Accept: "application/json",
-    ...(auth.sub !== "anonymous" ? { Authorization: `Bearer ${auth.token}` } : {}),
+    // ...(auth.sub !== "anonymous" ? { Authorization: `Bearer ${auth.token}` } : {}),
     ...(contentType ? { "Content-Type": contentType } : {}),
   };
-  if (!authorization) {
-    delete result.Authorization;
-  }
+  // if (!authorization) {
+  //   delete result.Authorization;
+  // }
   return result;
 };
 

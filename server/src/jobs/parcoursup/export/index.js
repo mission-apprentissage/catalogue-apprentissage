@@ -121,12 +121,14 @@ const createFormation = async (formation, email = null) => {
     await formation.save({ validateBeforeSave: false });
   } catch (e) {
     logger.error("Parcoursup WS error", e?.response?.status, e?.response?.data ?? e, data);
+    formation.last_update_at = Date.now();
     formation.last_update_who = `web service Parcoursup${email ? `, sent by ${email}` : ""}, received error`;
     formation.parcoursup_error = `${e?.response?.status} ${
       e?.response?.data?.message ?? e?.response?.data ?? "erreur de création"
     }`;
 
     if (getParcoursupError(formation)) {
+      formation.last_statut_update_date = new Date();
       formation.parcoursup_statut = PARCOURSUP_STATUS.REJETE;
       formation.rejection = {
         error: formation.parcoursup_error,
@@ -135,6 +137,10 @@ const createFormation = async (formation, email = null) => {
         handled_by: null,
         handled_date: null,
       };
+      formation.parcoursup_statut_history.push({
+        date: new Date(),
+        parcoursup_statut: PARCOURSUP_STATUS.REJETE,
+      });
     }
 
     await formation.save({ validateBeforeSave: false });
