@@ -70,7 +70,8 @@ const run = async () => {
             },
           ],
         },
-        // { parcoursup_statut: PARCOURSUP_STATUS.PUBLIE, parcoursup_id: null },
+        // Reset du statut si l'on supprime parcoursup_id
+        { parcoursup_statut: PARCOURSUP_STATUS.PUBLIE, parcoursup_id: null },
       ],
     },
     { $set: { parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE } }
