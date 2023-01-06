@@ -478,7 +478,7 @@ export default ({ match }) => {
                     (![PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.HORS_PERIMETRE].includes(
                       formation.parcoursup_statut
                     ) ||
-                      ![AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.HORS_PERIMETRE].includes(formation.affelnet_statut)) &&
+                      ![AFFELNET_STATUS.HORS_PERIMETRE].includes(formation.affelnet_statut)) &&
                     hasAccessTo(user, "page_formation/gestion_publication") && (
                       <Button
                         textStyle="sm"
