@@ -43,6 +43,15 @@ export const DescriptionBlock = ({ formation }) => {
     ? (args) => <DangerBox data-testid={"annee-warning"} {...args} />
     : React.Fragment;
 
+  const siretCertificateurs =
+    formation.rncp_details.certificateurs?.map(({ siret_certificateur }) => siret_certificateur) ?? [];
+
+  // Problème d'habilitation si le siret formateur ou gestionnaire n'est pas dans la liste des sirets certificateurs
+  const noHabilitation = !(
+    siretCertificateurs.includes(formation.etablissement_formateur_siret) ||
+    siretCertificateurs.includes(formation.etablissement_gestionnaire_siret)
+  );
+
   return (
     <>
       <Box p={8}>
@@ -356,7 +365,7 @@ export const DescriptionBlock = ({ formation }) => {
                   </UnorderedList>
                 ) : (
                   <>
-                    {formation.etablissement_gestionnaire_siret !== formation.etablissement_formateur_siret && (
+                    {noHabilitation && (
                       <Box
                         bg={"orangesoft.200"}
                         p={4}
@@ -366,10 +375,16 @@ export const DescriptionBlock = ({ formation }) => {
                         borderColor={"orangesoft.500"}
                         w={"full"}
                       >
-                        <Text>Aucune habilitation sur la fiche pour ce SIRET.</Text>
+                        <Text mb={2}>Aucune habilitation sur la fiche pour ce SIRET.</Text>
+                        <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"}>
+                          Le Siret du formateur ne figure pas dans le liste des partenaires habilités enregistrés auprès
+                          de France compétences. S’il s’agit d’une erreur, inviter le certificateur à faire modifier les
+                          enregistrements auprès de France compétences. La modification prendra effet sur le catalogue à
+                          J+1.
+                        </Text>
                       </Box>
                     )}
-                    SIRET formateur : {formation.etablissement_formateur_siret}, SIRET gestionnaire :
+                    SIRET formateur : {formation.etablissement_formateur_siret}, SIRET gestionnaire :{" "}
                     {formation.etablissement_gestionnaire_siret}.
                   </>
                 )}
