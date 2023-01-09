@@ -5,7 +5,7 @@ const { AffelnetFormation } = require("../../../common/model");
 
 const FILE_PATH = "/data/uploads/affelnet-import.xlsx";
 
-const importAffelnetFormations = async () => {
+const afImportFormations = async () => {
   const data = getJsonFromXlsxFile(FILE_PATH);
   let count = 0;
 
@@ -75,4 +75,4 @@ const importAffelnetFormations = async () => {
   logger.info(`${count} formations importées !`);
 };
 
-module.exports = { importAffelnetFormations };
+module.exports = { afImportFormations };

@@ -1,10 +1,13 @@
-const afCoverage = require("./coverage");
-const afPerimetre = require("./perimetre");
-const afReinitStatus = require("./reinitStatus");
 const logger = require("../../common/logger");
 const { runScript } = require("../scriptWrapper");
-const { stats } = require("./stats");
+const { afCoverage } = require("./coverage");
+const { afPerimetre } = require("./perimetre");
+const { afReinitStatus } = require("./reinitStatus");
+const { afConsoleStats } = require("./stats");
 
+/**
+ * Run Affelnet Jobs
+ */
 const affelnetJobs = async () => {
   try {
     logger.info(`Start Affelnet jobs`);
@@ -12,7 +15,7 @@ const affelnetJobs = async () => {
     await afReinitStatus(); // Réinitialisation du statut Affelnet des formations 'en attente de publication' lors de la clôture des voeux (1 septembre)
     await afCoverage({});
     await afPerimetre();
-    await stats();
+    await afConsoleStats();
 
     logger.info(`End Affelnet jobs`);
   } catch (error) {

@@ -1,9 +1,8 @@
-const { Formation } = require("../../../common/model");
-const { getQueryFromRule } = require("../../../common/utils/rulesUtils");
-const { ReglePerimetre } = require("../../../common/model");
-const { updateTagsHistory } = require("../../../logic/updaters/tagsHistoryUpdater");
+const { Formation, ReglePerimetre } = require("../../../common/model");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
+const { getQueryFromRule } = require("../../../common/utils/rulesUtils");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
+const { updateTagsHistory } = require("../../../logic/updaters/tagsHistoryUpdater");
 
 const run = async () => {
   const next_campagne_debut = new Date("2023/08/01");
@@ -14,24 +13,28 @@ const run = async () => {
   };
 
   const filterReglement = {
-    catalogue_published: true,
-    published: true,
-    $or: [
+    $and: [
       {
-        catalogue_published: false,
-      },
-      { published: false },
-      {
-        "rncp_details.code_type_certif": {
-          $in: ["Titre", "TP"],
-        },
-        "rncp_details.rncp_outdated": false,
+        published: true,
       },
       {
-        "rncp_details.code_type_certif": {
-          $nin: ["Titre", "TP"],
-        },
-        cfd_outdated: false,
+        $or: [{ catalogue_published: true }, { force_published: true }],
+      },
+      {
+        $or: [
+          {
+            "rncp_details.code_type_certif": {
+              $in: ["Titre", "TP"],
+            },
+            "rncp_details.rncp_outdated": false,
+          },
+          {
+            "rncp_details.code_type_certif": {
+              $nin: ["Titre", "TP"],
+            },
+            cfd_outdated: false,
+          },
+        ],
       },
     ],
   };
@@ -52,9 +55,7 @@ const run = async () => {
         {
           parcoursup_statut: { $ne: PARCOURSUP_STATUS.PUBLIE },
           $or: [
-            {
-              catalogue_published: false,
-            },
+            { catalogue_published: false, forced_published: { $ne: true } },
             { published: false },
             {
               "rncp_details.code_type_certif": {
@@ -72,6 +73,8 @@ const run = async () => {
         },
         // Reset du statut si l'on supprime parcoursup_id
         { parcoursup_statut: PARCOURSUP_STATUS.PUBLIE, parcoursup_id: null },
+        // Initialisation du statut si non existant
+        { parcoursup_statut: null },
       ],
     },
     { $set: { parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE } }

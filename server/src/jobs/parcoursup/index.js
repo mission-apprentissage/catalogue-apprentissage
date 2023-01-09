@@ -1,10 +1,13 @@
-const psPerimetre = require("./perimetre");
+const logger = require("../../common/logger");
+const { runScript } = require("../scriptWrapper");
+const { psPerimetre } = require("./perimetre");
 // const { psCoverage } = require("./coverage");
 const parcoursupExport = require("./export");
-const { runScript } = require("../scriptWrapper");
-const logger = require("../../common/logger");
-const { stats } = require("./stats");
+const { psConsoleStats } = require("./stats");
 
+/**
+ * Run Parcoursup Jobs
+ */
 const parcoursupJobs = async () => {
   try {
     logger.info(`Start Parcoursup jobs`);
@@ -16,7 +19,7 @@ const parcoursupJobs = async () => {
       await parcoursupExport.run();
     }
 
-    await stats();
+    await psConsoleStats();
 
     logger.info(`End Parcoursup jobs`);
   } catch (error) {

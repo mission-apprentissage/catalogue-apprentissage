@@ -81,7 +81,10 @@ const computeStats = async (academie = null) => {
   };
 };
 
-const stats = async () => {
+/**
+ * Calcul des statistiques Affelnet à destination des consoles de pilotages
+ */
+const afConsoleStats = async () => {
   console.log(`--- Calcul des statistiques Affelnet ---`);
   const date = new Date();
 
@@ -93,10 +96,10 @@ const stats = async () => {
   );
 };
 
-module.exports = { stats };
+module.exports = { afConsoleStats };
 
 if (process.env.standalone) {
   runScript(async () => {
-    await stats();
+    await afConsoleStats();
   });
 }

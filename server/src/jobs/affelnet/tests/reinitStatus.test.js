@@ -1,7 +1,7 @@
 const assert = require("assert");
 const { Formation } = require("../../../common/model/index");
 const { connectToMongoForTests, cleanAll } = require("../../../../tests/utils/testUtils.js");
-const afReinitStatus = require("../reinitStatus");
+const { afReinitStatus } = require("../reinitStatus");
 const { run, allHistoryIsEnAttenteAfterDate, lastHistoryIsEnAttenteBeforeDate } = require("../reinitStatus/controller");
 const { AFFELNET_STATUS } = require("../../../constants/status");
 
