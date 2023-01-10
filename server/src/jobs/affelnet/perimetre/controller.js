@@ -43,9 +43,9 @@ const run = async () => {
 
   console.log(`${campagneCount} formations possèdent des dates de début pour la campagne en cours.`);
 
-  // 0. On initialise parcoursup_id à null si l'information n'existe pas sur la formation
+  // 0. On initialise affelnet_id à null si l'information n'existe pas sur la formation
   console.log("Etape 0.");
-  await Formation.updateMany({ parcoursup_id: { $exists: false } }, { $set: { parcoursup_id: null } });
+  await Formation.updateMany({ affelnet_id: { $exists: false } }, { $set: { affelnet_id: null } });
 
   // 1. Application de la réglementation : réinitialisation des étiquettes pour les formations qui sortent du périmètre quelque soit le statut (sauf publié pour le moment)
   console.log("Etape 1.");

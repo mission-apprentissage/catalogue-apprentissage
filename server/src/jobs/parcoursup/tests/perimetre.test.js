@@ -281,7 +281,12 @@ describe(`${__filename} - Gestion de la disparition du périmètre`, async () =>
         });
 
         it("should not keep status 'publié' if not in perimeter anymore, but already published without a parcoursup_id", async () => {
-          await Formation.create({ ...formationOk, ...valueMotif, parcoursup_statut: PARCOURSUP_STATUS.PUBLIE });
+          await Formation.create({
+            ...formationOk,
+            ...valueMotif,
+            parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
+            parcoursup_id: null,
+          });
 
           await run();
 

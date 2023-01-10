@@ -3,19 +3,37 @@ const { ReglePerimetre, Formation } = require("../../../common/model/index");
 const { connectToMongoForTests, cleanAll } = require("../../../../tests/utils/testUtils.js");
 const { run } = require("../perimetre/controller.js");
 const { AFFELNET_STATUS } = require("../../../constants/status");
+const { setupAfter, setupBefore, setupBeforeEach, setupAfterEach } = require("../../../../tests/helpers/setup");
 
-describe(__filename, () => {
+const currentDate = new Date();
+const periode = [
+  new Date(`${currentDate.getFullYear()}-10-01T00:00:00.000Z`),
+  new Date(`${currentDate.getFullYear() + 1}-10-01T00:00:00.000Z`),
+];
+const date_debut = [
+  new Date(`${currentDate.getFullYear()}-10-01T00:00:00.000Z`),
+  new Date(`${currentDate.getFullYear() + 1}-10-01T00:00:00.000Z`),
+];
+
+const formationReglementaireOk = {
+  published: true,
+  catalogue_published: true,
+};
+
+const formationCampagneOk = {
+  ...formationReglementaireOk,
+  periode,
+  date_debut,
+};
+
+describe(`${__filename} - Test global (deprecated)`, () => {
   before(async () => {
+    setupBefore();
+
     // Connection to test collection
     await connectToMongoForTests();
     await ReglePerimetre.deleteMany({});
     await Formation.deleteMany({});
-
-    const currentDate = new Date();
-    const periode = [
-      new Date(`${currentDate.getFullYear()}-10-01T00:00:00.000Z`),
-      new Date(`${currentDate.getFullYear() + 1}-10-01T00:00:00.000Z`),
-    ];
 
     // insert sample data in DB
     // rules
@@ -58,69 +76,64 @@ describe(__filename, () => {
       diplome: "MC",
       affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
       periode,
+      date_debut,
     });
     await Formation.create({
-      published: true,
-      catalogue_published: true,
+      ...formationCampagneOk,
       niveau: "4 (BAC...)",
       diplome: "MC",
       affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
-      periode,
     });
     await Formation.create({
-      published: true,
-      catalogue_published: true,
+      ...formationCampagneOk,
+
       niveau: "4 (BAC...)",
       diplome: "MC Agri",
       affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
-      periode,
     });
     await Formation.create({
-      published: true,
-      catalogue_published: true,
+      ...formationCampagneOk,
+
       niveau: "3 (CAP...)",
       diplome: "CAP",
       affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
-      periode,
     });
     await Formation.create({
-      published: true,
-      catalogue_published: true,
+      ...formationCampagneOk,
+
       niveau: "4 (BAC...)",
       diplome: "BAC TECHNO",
       num_academie: "12",
       affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
-      periode,
     });
     await Formation.create({
-      published: true,
-      catalogue_published: true,
+      ...formationCampagneOk,
+
       niveau: "4 (BAC...)",
       diplome: "BAC TECHNO",
       num_academie: "14",
       affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
-      periode,
     });
     await Formation.create({
-      published: true,
-      catalogue_published: true,
+      ...formationCampagneOk,
+
       niveau: "4 (BAC...)",
       diplome: "BAC PRO",
       num_academie: "14",
       affelnet_statut: AFFELNET_STATUS.PUBLIE,
-      periode,
+      affelnet_id: "PARIS / abcdef",
     });
     await Formation.create({
-      published: true,
-      catalogue_published: true,
+      ...formationCampagneOk,
+
       niveau: "4 (BAC...)",
       diplome: "BAC PRO",
       affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
-      periode,
     });
   });
 
   after(async () => {
+    setupAfter();
     await cleanAll();
   });
 
@@ -163,12 +176,6 @@ describe(__filename, () => {
   });
 
   it("should not allow in affelnet", async () => {
-    const currentDate = new Date();
-    const periode = [
-      new Date(`${currentDate.getFullYear()}-10-01T00:00:00.000Z`),
-      new Date(`${currentDate.getFullYear() + 1}-10-01T00:00:00.000Z`),
-    ];
-
     await Formation.deleteMany({});
     await ReglePerimetre.deleteMany({});
 
@@ -189,15 +196,14 @@ describe(__filename, () => {
     });
 
     await Formation.create({
-      published: true,
-      catalogue_published: true,
+      ...formationCampagneOk,
+
       niveau: "3 (CAP...)",
       diplome: "BREVET PROFESSIONNEL AGRICOLE DE NIVEAU V",
       affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
       duree: "2",
       annee: "1",
       bcn_mefs_10: [],
-      periode,
     });
 
     await run();
@@ -212,4 +218,131 @@ describe(__filename, () => {
     });
     assert.strictEqual(totalToValidate, 0);
   });
+});
+
+describe(`${__filename} - Gestion de la disparition du périmètre`, async () => {
+  const formationOk = {
+    ...formationCampagneOk,
+    rncp_details: {
+      code_type_certif: "TH",
+      rncp_outdated: false,
+      active_inactive: "ACTIVE",
+    },
+    cfd_outdated: false,
+    annee: "1",
+    niveau: "3 (CAP...)",
+    diplome: "BREVET PROFESSIONNEL AGRICOLE DE NIVEAU V",
+  };
+
+  const perimeterWithdrawalMotives = {
+    "catalogue_published: false": { catalogue_published: false },
+    "published: false": { published: false },
+    "rncp_details: { code_type_certif: 'TP', rncp_outdated: true }": {
+      rncp_details: { code_type_certif: "TP", rncp_outdated: true },
+    },
+    "rncp_details: { code_type_certif: 'Titre', rncp_outdated: true }": {
+      rncp_details: { code_type_certif: "Titre", rncp_outdated: true },
+    },
+    "rncp_details: {  code_type_certif: 'Other' }, cfd_outdated: true": {
+      rncp_details: { code_type_certif: "Other" },
+      cfd_outdated: true,
+    },
+  };
+
+  (async () => {
+    await Object.entries(perimeterWithdrawalMotives).map(async ([keyMotif, valueMotif]) => {
+      describe(`handle motif (${keyMotif})`, async () => {
+        beforeEach(async () => {
+          setupBeforeEach();
+          await ReglePerimetre.create({
+            plateforme: "affelnet",
+            niveau: "3 (CAP...)",
+            diplome: "BREVET PROFESSIONNEL AGRICOLE DE NIVEAU V",
+            statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
+            condition_integration: "peut intégrer",
+            statut_academies: { 14: AFFELNET_STATUS.A_PUBLIER },
+          });
+        });
+        afterEach(async () => {
+          setupAfterEach();
+          await cleanAll();
+        });
+
+        it("should have status different from 'hors périmètre' if no motif for disparition", async () => {
+          await Formation.create(formationOk);
+
+          await run();
+
+          const totalPublished = await Formation.countDocuments({
+            affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
+          });
+          assert.strictEqual(totalPublished, 1);
+          const totalOtherStatus = await Formation.countDocuments({
+            affelnet_statut: { $nin: [AFFELNET_STATUS.A_PUBLIER_VALIDATION] },
+          });
+          assert.strictEqual(totalOtherStatus, 0);
+        });
+
+        it("should keep status 'publié' if not in perimeter anymore, but already published with a affelnet_id", async () => {
+          await Formation.create({
+            ...formationOk,
+            ...valueMotif,
+            affelnet_statut: AFFELNET_STATUS.PUBLIE,
+            affelnet_id: "test",
+          });
+
+          await run();
+
+          const totalPublished = await Formation.countDocuments({
+            affelnet_statut: AFFELNET_STATUS.PUBLIE,
+          });
+          assert.strictEqual(totalPublished, 1);
+          const totalOtherStatus = await Formation.countDocuments({
+            affelnet_statut: { $nin: [AFFELNET_STATUS.PUBLIE] },
+          });
+          assert.strictEqual(totalOtherStatus, 0);
+        });
+
+        it("should not keep status 'publié' if not in perimeter anymore, but already published without a affelnet_id", async () => {
+          await Formation.create({
+            ...formationOk,
+            ...valueMotif,
+            affelnet_statut: AFFELNET_STATUS.PUBLIE,
+            affelnet_id: null,
+          });
+
+          await run();
+
+          const totalPublished = await Formation.countDocuments({
+            affelnet_statut: AFFELNET_STATUS.PUBLIE,
+          });
+          assert.strictEqual(totalPublished, 0);
+          const totalOtherStatus = await Formation.countDocuments({
+            affelnet_statut: { $nin: [AFFELNET_STATUS.PUBLIE] },
+          });
+          assert.strictEqual(totalOtherStatus, 1);
+        });
+
+        await Object.values(AFFELNET_STATUS)
+          .filter((status) => status !== AFFELNET_STATUS.PUBLIE)
+          .map(async (status) => {
+            await it(`should apply status 'hors périmètre' if not in perimeter anymore, and if status was '${status}'`, async () => {
+              await Formation.create({ ...formationOk, ...valueMotif, affelnet_statut: status });
+
+              await run();
+
+              const totalHorsPérimètre = await Formation.countDocuments({
+                affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
+              });
+              assert.strictEqual(totalHorsPérimètre, 1);
+
+              const totalOtherStatus = await Formation.countDocuments({
+                affelnet_statut: { $nin: [AFFELNET_STATUS.HORS_PERIMETRE] },
+              });
+              assert.strictEqual(totalOtherStatus, 0);
+            });
+          });
+      });
+    });
+  })();
 });

@@ -1,8 +1,8 @@
 const logger = require("../../common/logger");
 const { runScript } = require("../scriptWrapper");
+const { afReinitStatus } = require("./reinitStatus");
 const { afCoverage } = require("./coverage");
 const { afPerimetre } = require("./perimetre");
-const { afReinitStatus } = require("./reinitStatus");
 const { afConsoleStats } = require("./stats");
 
 /**
