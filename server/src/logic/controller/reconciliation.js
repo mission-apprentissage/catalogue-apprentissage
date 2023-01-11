@@ -1,10 +1,17 @@
 const { Formation } = require("../../common/model");
 const { AFFELNET_STATUS } = require("../../constants/status");
 
-async function reconciliationAffelnet(formationAffelnet, match, eraseInformations = false) {
-  const { code_nature, etablissement_type, code_mef, informations, code_offre, academie } = formationAffelnet;
-  const { cle_ministere_educatif } = match;
-
+/**
+ *
+ * @param {Object} formationAffelnet
+ * @param {Object} match
+ * @param {boolean} eraseInformations
+ */
+async function reconciliationAffelnet(
+  { code_nature, etablissement_type, code_mef, informations, code_offre, academie },
+  { cle_ministere_educatif },
+  eraseInformations = false
+) {
   // pass through some data for Affelnet
   const formation = await Formation.findOne(
     { cle_ministere_educatif },

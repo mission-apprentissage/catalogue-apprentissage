@@ -134,16 +134,6 @@ describe(`${__filename} - Test global (deprecated)`, () => {
       parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
       annee: "1",
     });
-    // await Formation.create({
-    //   published: true,
-    //   etablissement_gestionnaire_catalogue_published: true,
-    //   etablissement_reference_catalogue_published: true,
-    //   niveau: "6 (Licence, BUT...)",
-    //   diplome: "Licence",
-    //   parcoursup_statut: "hors périmètre",
-    //   annee: "1",
-    //   periode: [new Date(`${currentDate.getFullYear()}-03-15T00:00:00.000Z`)],
-    // });
   });
 
   after(async () => {
@@ -159,7 +149,7 @@ describe(`${__filename} - Test global (deprecated)`, () => {
     assert.strictEqual(countRules, 4);
   });
 
-  // Redévelopper en faisant intégrant qu'une seule formation pour chaque test afin de vérifier une seule règle.
+  // TODO : Redévelopper en faisant intégrant qu'une seule formation pour chaque test afin de vérifier une seule règle.
 
   it("should apply parcoursup status", async () => {
     await run();
@@ -260,8 +250,13 @@ describe(`${__filename} - Gestion de la disparition du périmètre`, async () =>
           assert.strictEqual(totalOtherStatus, 0);
         });
 
-        it("should keep status 'publié' if not in perimeter anymore, but already published", async () => {
-          await Formation.create({ ...formationOk, ...valueMotif, parcoursup_statut: PARCOURSUP_STATUS.PUBLIE });
+        it("should keep status 'publié' if not in perimeter anymore, but already published with a parcoursup_id", async () => {
+          await Formation.create({
+            ...formationOk,
+            ...valueMotif,
+            parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
+            parcoursup_id: "test",
+          });
 
           await run();
 
@@ -273,6 +268,26 @@ describe(`${__filename} - Gestion de la disparition du périmètre`, async () =>
             parcoursup_statut: { $nin: [PARCOURSUP_STATUS.PUBLIE] },
           });
           assert.strictEqual(totalOtherStatus, 0);
+        });
+
+        it("should not keep status 'publié' if not in perimeter anymore, but already published without a parcoursup_id", async () => {
+          await Formation.create({
+            ...formationOk,
+            ...valueMotif,
+            parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
+            parcoursup_id: null,
+          });
+
+          await run();
+
+          const totalPublished = await Formation.countDocuments({
+            parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
+          });
+          assert.strictEqual(totalPublished, 0);
+          const totalOtherStatus = await Formation.countDocuments({
+            parcoursup_statut: { $nin: [PARCOURSUP_STATUS.PUBLIE] },
+          });
+          assert.strictEqual(totalOtherStatus, 1);
         });
 
         await Object.values(PARCOURSUP_STATUS)

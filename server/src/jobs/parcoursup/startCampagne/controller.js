@@ -14,7 +14,7 @@ const run = async () => {
   console.log({ next_campagne_debut, next_campagne_end });
 
   await cursor(
-    Formation.find(),
+    Formation.find({ parcoursup_statut: { $ne: PARCOURSUP_STATUS.HORS_PERIMETRE } }),
     async ({ _id, parcoursup_id, parcoursup_statut, parcoursup_statut_history, date_debut }) => {
       let next_parcoursup_statut;
 
@@ -38,7 +38,7 @@ const run = async () => {
           }
         );
         updated++;
-      } else if (parcoursup_statut !== PARCOURSUP_STATUS.HORS_PERIMETRE) {
+      } else {
         next_parcoursup_statut = PARCOURSUP_STATUS.HORS_PERIMETRE;
         await Formation.updateOne(
           { _id: _id },

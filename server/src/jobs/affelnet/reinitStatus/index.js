@@ -7,9 +7,9 @@ const { isSameDate, getLastMonth } = require("../../../common/utils/dateUtils");
 /**
  *
  *
- * @param {{date: string, force: boolean}} config Un objet de configuration pour le job
+ * @param {Object} config Un objet de configuration pour le job
  * @param {string} config.date Une date sous la forme 'YYYY-MM-DD'.
- * @param {string} config.force Un booléen pour force la réinitialisation du statut, même si la date ne le permet pas.
+ * @param {boolean} config.force Un booléen pour force la réinitialisation du statut, même si la date ne le permet pas.
  */
 const afReinitStatus = async (config) => {
   try {
@@ -46,7 +46,7 @@ const afReinitStatus = async (config) => {
   }
 };
 
-module.exports = afReinitStatus;
+module.exports = { afReinitStatus };
 
 if (process.env.standalone) {
   runScript(async () => {

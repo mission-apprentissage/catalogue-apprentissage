@@ -6,6 +6,40 @@ const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { AFFELNET_STATUS } = require("../../../constants/status");
 
 const run = async () => {
+  const next_campagne_debut = new Date("2023/08/01");
+  const next_campagne_end = new Date("2024/07/31");
+
+  const filterDateCampagne = {
+    date_debut: { $gte: next_campagne_debut, $lt: next_campagne_end },
+  };
+
+  const filterReglement = {
+    $and: [
+      {
+        published: true,
+      },
+      {
+        $or: [{ catalogue_published: true }, { force_published: true }],
+      },
+      {
+        $or: [
+          {
+            "rncp_details.code_type_certif": {
+              $in: ["Titre", "TP"],
+            },
+            "rncp_details.rncp_outdated": false,
+          },
+          {
+            "rncp_details.code_type_certif": {
+              $nin: ["Titre", "TP"],
+            },
+            cfd_outdated: false,
+          },
+        ],
+      },
+    ],
+  };
+
   await Formation.updateMany({}, { $set: { affelnet_perimetre: false } });
 
   const aPublierSoumisAValidationRules = await ReglePerimetre.find({
@@ -17,6 +51,9 @@ const run = async () => {
   if (aPublierSoumisAValidationRules.length > 0) {
     await Formation.updateMany(
       {
+        ...filterReglement,
+        ...filterDateCampagne,
+
         $or: aPublierSoumisAValidationRules.map(getQueryFromRule),
       },
       {
@@ -36,6 +73,9 @@ const run = async () => {
   if (aPublierRules.length > 0) {
     await Formation.updateMany(
       {
+        ...filterReglement,
+        ...filterDateCampagne,
+
         $or: aPublierRules.map(getQueryFromRule),
       },
       {
@@ -55,6 +95,9 @@ const run = async () => {
     await asyncForEach(Object.entries(rule.statut_academies), async ([num_academie, status]) => {
       await Formation.updateMany(
         {
+          ...filterReglement,
+          ...filterDateCampagne,
+
           num_academie,
           ...getQueryFromRule(rule),
         },

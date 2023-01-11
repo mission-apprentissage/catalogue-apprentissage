@@ -81,7 +81,10 @@ const computeStats = async (academie = null) => {
   };
 };
 
-const stats = async () => {
+/**
+ * Calcul des statistiques Parcoursup à destination des consoles de pilotages
+ */
+const psConsoleStats = async () => {
   console.log(`--- Calcul des statistiques Parcoursup ---`);
   const date = new Date();
 
@@ -93,10 +96,10 @@ const stats = async () => {
   );
 };
 
-module.exports = { stats };
+module.exports = { psConsoleStats };
 
 if (process.env.standalone) {
   runScript(async () => {
-    await stats();
+    await psConsoleStats();
   });
 }

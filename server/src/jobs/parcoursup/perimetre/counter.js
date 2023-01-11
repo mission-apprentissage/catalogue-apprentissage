@@ -102,7 +102,8 @@ const run = async () => {
 
   logger.info(
     `Compteurs des formations dans le catalogue (règlementaire / total):\n` +
-      `- total : ${totalReglement} / ${total}\n\n` +
+      `- total : ${totalReglement} / ${total}\n` +
+      `\n` +
       `- statut "hors périmètre" : ${totalReglementNotRelevant} / ${totalNotRelevant}\n` +
       `- statut "à publier (sous condition habilitation)" : ${totalReglementToValidateHabilitation} / ${totalToValidateHabilitation}\n` +
       `- statut "à publier (vérifier accès direct postbac)" : ${totalReglementToValidate} / ${totalToValidate}\n` +
@@ -111,9 +112,10 @@ const run = async () => {
       `- statut "en attente de publication" : ${totalReglementPending} / ${totalPending}\n` +
       `- statut "publié" sur ParcourSup : ${totalReglementPsPublished} / ${totalPsPublished}\n` +
       `- statut "rejeté" par ParcourSup : ${totalReglementRejected} / ${totalRejected}\n` +
-      `- statut "NON publié" sur ParcourSup : ${totalReglementPsNotPublished} / ${totalPsNotPublished}\n\n` +
+      `- statut "NON publié" sur ParcourSup : ${totalReglementPsNotPublished} / ${totalPsNotPublished}\n` +
+      `\n` +
       `- dans le périmètre: ${totalReglementPérimètre} / ${totalPérimètre}\n` +
-      `- hors périmètre : ${totalReglementHorsPérimètre} / ${totalHorsPérimètre}`
+      `- hors périmètre : ${totalReglementHorsPérimètre} / ${totalHorsPérimètre}\n`
   );
 
   logger.info();

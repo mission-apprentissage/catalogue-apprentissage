@@ -25,7 +25,7 @@ const psPerimetre = async () => {
   }
 };
 
-module.exports = psPerimetre;
+module.exports = { psPerimetre };
 
 if (process.env.standalone) {
   runScript(async () => {
