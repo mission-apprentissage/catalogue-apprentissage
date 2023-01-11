@@ -82,7 +82,7 @@ const run = async () => {
       `- statut "à publier" : ${totalReglementToCheck} / ${totalToCheck}\n` +
       `- statut "en attente de publication" : ${totalReglementPending} / ${totalPending}\n` +
       `- statut "publié" sur Affelnet : ${totalReglementPsPublished} / ${totalPsPublished}\n` +
-      `- statut "NON publié" sur Affelnet : ${totalReglementPsNotPublished} / ${totalPsNotPublished}\n\n` +
+      `- statut "NON publié" sur Affelnet : ${totalReglementPsNotPublished} / ${totalPsNotPublished}\n` +
       `\n` +
       `- dans le périmètre: ${totalReglementPérimètre} / ${totalPérimètre}\n` +
       `- hors périmètre : ${totalReglementHorsPérimètre} / ${totalHorsPérimètre}\n`

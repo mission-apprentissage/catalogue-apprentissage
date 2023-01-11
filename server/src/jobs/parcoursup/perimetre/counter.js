@@ -112,7 +112,7 @@ const run = async () => {
       `- statut "en attente de publication" : ${totalReglementPending} / ${totalPending}\n` +
       `- statut "publié" sur ParcourSup : ${totalReglementPsPublished} / ${totalPsPublished}\n` +
       `- statut "rejeté" par ParcourSup : ${totalReglementRejected} / ${totalRejected}\n` +
-      `- statut "NON publié" sur ParcourSup : ${totalReglementPsNotPublished} / ${totalPsNotPublished}\n\n` +
+      `- statut "NON publié" sur ParcourSup : ${totalReglementPsNotPublished} / ${totalPsNotPublished}\n` +
       `\n` +
       `- dans le périmètre: ${totalReglementPérimètre} / ${totalPérimètre}\n` +
       `- hors périmètre : ${totalReglementHorsPérimètre} / ${totalHorsPérimètre}\n`

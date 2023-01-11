@@ -111,12 +111,22 @@ const run = async () => {
         ...filterHP,
         $or: aPublierSoumisAValidationRules.map(getQueryFromRule),
       },
-      {
-        $set: {
-          last_update_at: Date.now(),
-          affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
+      [
+        {
+          $set: {
+            last_update_at: Date.now(),
+            affelnet_statut: {
+              $cond: {
+                if: {
+                  $eq: ["$affelnet_id", null],
+                },
+                then: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
+                else: AFFELNET_STATUS.EN_ATTENTE,
+              },
+            },
+          },
         },
-      }
+      ]
     );
   }
 
@@ -141,12 +151,22 @@ const run = async () => {
         ...filter,
         $or: aPublierRules.map(getQueryFromRule),
       },
-      {
-        $set: {
-          last_update_at: Date.now(),
-          affelnet_statut: AFFELNET_STATUS.A_PUBLIER,
+      [
+        {
+          $set: {
+            last_update_at: Date.now(),
+            affelnet_statut: {
+              $cond: {
+                if: {
+                  $eq: ["$affelnet_id", null],
+                },
+                then: AFFELNET_STATUS.A_PUBLIER,
+                else: AFFELNET_STATUS.EN_ATTENTE,
+              },
+            },
+          },
         },
-      }
+      ]
     );
   }
 
@@ -171,7 +191,25 @@ const run = async () => {
           num_academie,
           ...getQueryFromRule(rule),
         },
-        { $set: { last_update_at: Date.now(), affelnet_statut: status } }
+        [
+          {
+            $set: {
+              last_update_at: Date.now(),
+              affelnet_statut: {
+                $cond: {
+                  if: {
+                    $eq: ["$affelnet_id", null],
+                  },
+                  then: status,
+                  else:
+                    status === AFFELNET_STATUS.HORS_PERIMETRE
+                      ? AFFELNET_STATUS.HORS_PERIMETRE
+                      : AFFELNET_STATUS.EN_ATTENTE,
+                },
+              },
+            },
+          },
+        ]
       );
     });
   });

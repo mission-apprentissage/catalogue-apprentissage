@@ -145,6 +145,8 @@ describe(`${__filename} - Test global (deprecated)`, () => {
     assert.strictEqual(countRules, 4);
   });
 
+  // TODO : Redévelopper en faisant intégrant qu'une seule formation pour chaque test afin de vérifier une seule règle.
+
   it("should apply affelnet status", async () => {
     await run();
 

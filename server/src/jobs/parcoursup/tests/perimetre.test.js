@@ -134,16 +134,6 @@ describe(`${__filename} - Test global (deprecated)`, () => {
       parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
       annee: "1",
     });
-    // await Formation.create({
-    //   published: true,
-    //   etablissement_gestionnaire_catalogue_published: true,
-    //   etablissement_reference_catalogue_published: true,
-    //   niveau: "6 (Licence, BUT...)",
-    //   diplome: "Licence",
-    //   parcoursup_statut: "hors périmètre",
-    //   annee: "1",
-    //   periode: [new Date(`${currentDate.getFullYear()}-03-15T00:00:00.000Z`)],
-    // });
   });
 
   after(async () => {
@@ -159,7 +149,7 @@ describe(`${__filename} - Test global (deprecated)`, () => {
     assert.strictEqual(countRules, 4);
   });
 
-  // Redévelopper en faisant intégrant qu'une seule formation pour chaque test afin de vérifier une seule règle.
+  // TODO : Redévelopper en faisant intégrant qu'une seule formation pour chaque test afin de vérifier une seule règle.
 
   it("should apply parcoursup status", async () => {
     await run();

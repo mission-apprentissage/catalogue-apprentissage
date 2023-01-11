@@ -27,7 +27,6 @@ const run = async () => {
           { _id: _id },
           {
             affelnet_statut: next_affelnet_statut,
-            affelnet_id: null,
             affelnet_published_date: null,
             affelnet_statut_history: [
               ...affelnet_statut_history,

@@ -7,6 +7,7 @@ const csvToJson = require("convert-csv-to-json");
 const path = require("path");
 const logger = require("../../common/logger");
 const { afImportFormations } = require("../../jobs/affelnet/import");
+const { afCoverage } = require("../../jobs/affelnet/coverage");
 
 /**
  * check CSV file headers
@@ -50,7 +51,10 @@ module.exports = () => {
 
         switch (filename) {
           case "affelnet-import.xlsx":
-            callback = afImportFormations;
+            callback = () => {
+              afImportFormations();
+              afCoverage();
+            };
             break;
           case "CodeDiplome_RNCP_latest_kit.csv": {
             try {
