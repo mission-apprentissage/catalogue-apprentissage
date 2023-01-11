@@ -429,6 +429,12 @@ const columnsDefinition = [
     exportable: true,
   },
   {
+    Header: "affelnet_id (code vœu)",
+    accessor: "affelnet_id",
+    width: 200,
+    exportable: true,
+  },
+  {
     Header: "Partenaires",
     accessor: "rncp_details.partenaires",
     width: 200,
