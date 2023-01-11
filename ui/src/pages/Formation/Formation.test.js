@@ -255,7 +255,6 @@ const formation = {
   lieu_formation_geo_coordonnees: "49.103334,6.855078",
   geo_coordonnees_etablissement_gestionnaire: "48.705054,6.12883",
   geo_coordonnees_etablissement_formateur: "48.705054,6.12883",
-  idea_geo_coordonnees_etablissement: "49.103334,6.855078",
   created_at: "2021-08-06T23:49:25.696Z",
   last_update_at: "2021-10-08T00:22:45.551Z",
   distance_lieu_formation_etablissement_formateur: 69130,
