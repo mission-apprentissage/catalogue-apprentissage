@@ -1,5 +1,4 @@
 const { Formation } = require("../../../common/model");
-const logger = require("../../../common/logger");
 const { getQueryFromRule } = require("../../../common/utils/rulesUtils");
 const { ReglePerimetre } = require("../../../common/model");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
@@ -109,15 +108,6 @@ const run = async () => {
       );
     });
   });
-
-  // stats
-  const totalPérimètre = await Formation.countDocuments({ affelnet_perimetre: true });
-  const totalHorsPérimètre = await Formation.countDocuments({ affelnet_perimetre: false });
-
-  logger.info(
-    `Total formations dans le périmètre: ${totalPérimètre}\n` +
-      `Total formations hors périmètre : ${totalHorsPérimètre}`
-  );
 };
 
 module.exports = { run };

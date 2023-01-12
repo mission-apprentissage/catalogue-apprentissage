@@ -18,7 +18,7 @@ const run = async () => {
   // Mise à jour des formations
   await cursor(
     Formation.find({ affelnet_statut: { $ne: AFFELNET_STATUS.HORS_PERIMETRE } }),
-    async ({ _id, affelnet_id, affelnet_statut, affelnet_statut_history, date_debut }) => {
+    async ({ _id, affelnet_statut }) => {
       let next_affelnet_statut;
 
       if (![AFFELNET_STATUS.EN_ATTENTE].includes(affelnet_statut)) {
@@ -28,25 +28,10 @@ const run = async () => {
           {
             affelnet_statut: next_affelnet_statut,
             affelnet_published_date: null,
-            affelnet_statut_history: [
-              ...affelnet_statut_history,
-              {
-                date: new Date(),
-                affelnet_statut: next_affelnet_statut,
-              },
-            ],
           }
         );
         updated++;
       }
-
-      console.log({
-        _id,
-        affelnet_id,
-        affelnet_statut,
-        date_debut,
-        next_affelnet_statut,
-      });
     }
   );
 

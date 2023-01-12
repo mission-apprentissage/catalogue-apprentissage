@@ -1,7 +1,7 @@
 const logger = require("../../../common/logger");
 const controller = require("./controller");
-const counter = require("./counter");
 const perimetre = require("./perimetre");
+const counter = require("./counter");
 
 const { runScript } = require("../../scriptWrapper");
 
