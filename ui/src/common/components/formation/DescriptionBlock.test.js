@@ -262,6 +262,6 @@ test("display a warning for cfd outdated", async () => {
   };
   const { queryByText } = render(<DescriptionBlock formation={testFormation} />);
 
-  const warn = queryByText(/Ce diplôme a une date de fin antérieure au 31\/08 de l'année en cours/i);
+  const warn = queryByText(/Ce code formation diplôme est expiré/i);
   expect(warn).toBeInTheDocument();
 });
