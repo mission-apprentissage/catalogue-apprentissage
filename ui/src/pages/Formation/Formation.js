@@ -24,7 +24,7 @@ import { hasAccessTo, hasRightToEditFormation } from "../../common/utils/rolesUt
 import { DangerBox } from "../../common/components/DangerBox";
 import { StatusBadge } from "../../common/components/StatusBadge";
 import { PublishModal } from "../../common/components/formation/PublishModal";
-import { buildUpdatesHistory, sortDescending } from "../../common/utils/historyUtils";
+import { buildUpdatesHistory, sortDescending, sortAscending } from "../../common/utils/historyUtils";
 import InfoTooltip from "../../common/components/InfoTooltip";
 import { Alert } from "../../common/components/Alert";
 
@@ -434,10 +434,10 @@ export default ({ match }) => {
   };
 
   const parcoursup_date_depublication = formation?.updates_history
-    .sort((a, b) => sortDescending(a.updated_at, b.updated_at))
+    .sort(sortDescending)
     .filter((h) => h.to?.parcoursup_raison_depublication)[0]?.updated_at;
   const affelnet_date_depublication = formation?.updates_history
-    .sort((a, b) => sortDescending(a.updated_at, b.updated_at))
+    .sort(sortDescending)
     .filter((h) => h.to?.affelnet_raison_depublication)[0]?.updated_at;
 
   return (
