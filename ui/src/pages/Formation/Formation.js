@@ -433,6 +433,13 @@ export default ({ match }) => {
     setFormation(response);
   };
 
+  const parcoursup_date_depublication = formation?.updates_history
+    .sort((a, b) => sortDescending(a.updated_at, b.updated_at))
+    .filter((h) => h.to?.parcoursup_raison_depublication)[0]?.updated_at;
+  const affelnet_date_depublication = formation?.updates_history
+    .sort((a, b) => sortDescending(a.updated_at, b.updated_at))
+    .filter((h) => h.to?.affelnet_raison_depublication)[0]?.updated_at;
+
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
@@ -526,13 +533,21 @@ export default ({ match }) => {
                 {hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
                   formation.parcoursup_raison_depublication && (
                     <Alert mt={4} type={"warning"}>
-                      Motif de non publication : <b>{formation.parcoursup_raison_depublication}</b>
+                      Motif de non publication
+                      {!!parcoursup_date_depublication && (
+                        <> ({new Date(parcoursup_date_depublication).toLocaleDateString("fr-FR")})</>
+                      )}{" "}
+                      : <b>{formation.parcoursup_raison_depublication}</b>
                     </Alert>
                   )}
                 {hasAccessTo(user, "page_formation/voir_status_publication_af") &&
                   formation.affelnet_raison_depublication && (
                     <Alert mt={4} type={"warning"}>
-                      Motif de non publication : <b>{formation.affelnet_raison_depublication}</b>
+                      Motif de non publication
+                      {!!affelnet_date_depublication && (
+                        <> ({new Date(affelnet_date_depublication).toLocaleDateString("fr-FR")})</>
+                      )}{" "}
+                      : <b>{formation.affelnet_raison_depublication}</b>
                     </Alert>
                   )}
               </Box>
