@@ -10,22 +10,25 @@ export const EllipsisText = ({ maxLength = 250, children, ...args }) => {
     return <>{children}</>;
   }
 
+  const needsEllipsis = children.length > maxLength;
   const ellipsisText = children.slice(0, maxLength);
 
   return (
     <>
-      <Text {...args}>{showMore ? children : `${ellipsisText}...`}</Text>{" "}
-      <Text
-        onClick={() => setShowMore(!showMore)}
-        fontSize={"zeta"}
-        fontStyle={"italic"}
-        display="inline"
-        cursor={"pointer"}
-        color={"grey.600"}
-        title={!showMore ? "voir plus" : "voir moins"}
-      >
-        {!showMore ? <ZoomIn /> : <ZoomOut />}
-      </Text>
+      <Text {...args}>{!needsEllipsis || showMore ? children : `${ellipsisText}...`}</Text>{" "}
+      {needsEllipsis && (
+        <Text
+          onClick={() => setShowMore(!showMore)}
+          fontSize={"zeta"}
+          fontStyle={"italic"}
+          display="inline"
+          cursor={"pointer"}
+          color={"grey.600"}
+          title={!showMore ? "voir plus" : "voir moins"}
+        >
+          {!showMore ? <ZoomIn /> : <ZoomOut />}
+        </Text>
+      )}
     </>
   );
 };
