@@ -62,9 +62,10 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
     formation.distance > seuilDistance
   );
 
-  const UaiFormationContainer = !formation.uai_formation_valide
-    ? (args) => <DangerBox data-testid={"uai-warning"} {...args} />
-    : (args) => <Box {...args} />;
+  const UaiFormationContainer =
+    !formation.uai_formation || !formation.uai_formation_valide
+      ? (args) => <DangerBox data-testid={"uai-warning"} {...args} />
+      : (args) => <Box {...args} />;
 
   // formation.distance < seuilDistance
   const AdresseContainer = React.Fragment;
@@ -72,7 +73,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
   //   : React.Fragment;
 
   const uai_updated_history = formation.updates_history
-    .filter((value) => !!value.to?.uai_formation)
+    .filter((value) => typeof value.to?.uai_formation !== "undefined")
     ?.sort(sortDescending);
 
   return (
@@ -115,8 +116,8 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                   }
                   mb={2}
                 />
-                <Text fontSize={"zeta"} color={"grey.600"} mb={2}>
-                  {formation.editedFields?.uai_formation ? (
+                <Text fontSize={"zeta"} color={"grey.600"}>
+                  {typeof formation.editedFields?.uai_formation !== "undefined" ? (
                     <>
                       - UAI lieu édité
                       {uai_updated_history[0] && (
@@ -133,7 +134,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                   )}
                 </Text>
 
-                <Text fontSize={"zeta"} color={"grey.600"}>
+                <Text fontSize={"zeta"} color={"grey.600"} mt={2}>
                   {[PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut) ||
                   [AFFELNET_STATUS.PUBLIE].includes(formation.affelnet_statut) ? (
                     <>
@@ -147,6 +148,11 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                     <>- Si le lieu de réalisation est différent du lieu du formateur, modifiez l’UAI (picto crayon).</>
                   )}
                 </Text>
+                {!formation.uai_formation && (
+                  <Text fontSize={"zeta"} color={"grey.600"} mt={2}>
+                    - L’UAI du lieu de formation doit obligatoirement être édité pour permettre l’envoi à Parcoursup
+                  </Text>
+                )}
               </UaiFormationContainer>
 
               <AdresseContainer>
