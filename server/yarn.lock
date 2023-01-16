@@ -4721,10 +4721,10 @@ nodemailer-html-to-text@^3.1.0:
   dependencies:
     html-to-text "7.1.1"
 
-nodemailer@^6.4.14:
-  version "6.7.3"
-  resolved "https://registry.npmjs.org/nodemailer/-/nodemailer-6.7.3.tgz"
-  integrity sha512-KUdDsspqx89sD4UUyUKzdlUOper3hRkDVkrKh/89G+d9WKsU5ox51NWS4tB1XR5dPUdR4SP0E3molyEfOvSa3g==
+nodemailer@^6.9.0:
+  version "6.9.0"
+  resolved "https://registry.yarnpkg.com/nodemailer/-/nodemailer-6.9.0.tgz#a17488ff470ff9edf1bb31d9ec23079bc94f7dd3"
+  integrity sha512-jFaCEGTeT3E/m/5R2MHWiyQH3pSARECRUDM+1hokOYc3lQAAG7ASuy+2jIsYVf+RVa9zePopSQwKNVFH8DKUpA==
 
 nodemon@2.0.15:
   version "2.0.15"
