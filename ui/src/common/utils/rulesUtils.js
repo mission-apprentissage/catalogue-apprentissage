@@ -30,3 +30,64 @@ export const isStatusChangeEnabled = ({ plateforme, academie, num_academie, stat
     ? (!num_academie || String(num_academie) === academie) && condition_integration === CONDITIONS.PEUT_INTEGRER
     : true;
 };
+
+/**
+ * Pour appliquer les étiquettes pour les plateformes PS & Affelnet
+ * une formation doit avoir au moins une date de début de formation >= début septembre de l'année scolaire suivante
+ * eg: si on est en janvier 2022 --> [septembre 2022] - août 2023, si on est le en octobre 2022 --> [septembre 2023] - août 2024, etc.
+ * Si ce n'est pas le cas la formation sera "hors périmètre".
+ *
+ * @param {Date} [currentDate]
+ * @returns {Date}
+ */
+export const getCampagneStartDate = (currentDate = new Date()) => {
+  let durationShift = 0;
+  const now = currentDate;
+  const sessionStart = new Date(`${currentDate.getFullYear()}-09-01T00:00:00.000Z`);
+  if (now >= sessionStart) {
+    durationShift = 1;
+  }
+
+  const startDate = new Date(`${currentDate.getFullYear() + durationShift}-09-01T00:00:00.000Z`);
+  // console.error({ now, sessionStart, startDate });
+  return startDate;
+};
+
+/**
+ * Pour appliquer les étiquettes pour les plateformes PS & Affelnet
+ * une formation doit avoir au moins une date de début de formation < fin aout de l'année scolaire suivante
+ * eg: si on est en janvier 2022 --> septembre 2022 - [août 2023], si on est le en octobre 2022 --> septembre 2023 - [août 2024], etc.
+ * Si ce n'est pas le cas la formation sera "hors périmètre".
+ *
+ * @param {Date} [currentDate]
+ * @returns {Date}
+ */
+export const getCampagneEndDate = (currentDate = new Date()) => {
+  let durationShift = 0;
+  const now = currentDate;
+  const sessionStart = new Date(`${currentDate.getFullYear()}-09-01T00:00:00.000Z`);
+  if (now >= sessionStart) {
+    durationShift = 1;
+  }
+
+  const endDate = new Date(`${currentDate.getFullYear() + 1 + durationShift}-08-31T23:59:59.999Z`);
+  // console.error({ now, sessionStart, endDate });
+  return endDate;
+};
+
+/**
+ * Renvoie la date d'expiration autorisée pour validité d'enregistrement des codes cfd et rncp
+ *
+ * @param {Date} [currentDate]
+ * @returns {Date}
+ */
+export const getExpirationDate = (currentDate = new Date()) => {
+  let durationShift = 1;
+  const now = currentDate;
+  const sessionStart = new Date(`${currentDate.getFullYear()}-10-01T00:00:00.000Z`);
+  if (now >= sessionStart) {
+    durationShift = 0;
+  }
+
+  return new Date(`${currentDate.getFullYear() + 1 - durationShift}-08-31T23:59:59.999Z`);
+};

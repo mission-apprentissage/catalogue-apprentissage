@@ -4,13 +4,31 @@ const {
   getQueryFromRule,
   serialize,
   deserialize,
-  getPeriodeStartDate,
+  getExpirationDate,
+  getCampagneStartDate,
+  getCampagneEndDate,
 } = require("../../../../src/common/utils/rulesUtils");
 
 describe(__filename, () => {
+  describe("getExpirationDate", () => {
+    it("should give the 31/08 of current year if before 01/10", () => {
+      const expected = new Date(`2021-08-31T23:59:59.999Z`);
+      let result = getExpirationDate(new Date(`2021-05-01T00:00:00.000Z`));
+
+      assert.deepStrictEqual(result, expected);
+    });
+
+    it("should give the 31/08 of next year if after 01/10", () => {
+      const expected = new Date(`2022-08-31T23:59:59.999Z`);
+      let result = getExpirationDate(new Date(`2021-10-01T00:00:00.000Z`));
+
+      assert.deepStrictEqual(result, expected);
+    });
+  });
+
   describe("getExpireRule", () => {
     it("should expire rule on 31/08 of current year if before 01/10", () => {
-      const thresholdDate = new Date(`2021-08-31T00:00:00.000Z`);
+      const thresholdDate = new Date(`2021-08-31T23:59:59.999Z`);
       const expected = {
         $or: [
           {
@@ -47,7 +65,7 @@ describe(__filename, () => {
     });
 
     it("should expire rule on 31/08 of next year if equal 01/10", () => {
-      const thresholdDate = new Date(`2022-08-31T00:00:00.000Z`);
+      const thresholdDate = new Date(`2022-08-31T23:59:59.999Z`);
       const expected = {
         $or: [
           {
@@ -84,7 +102,7 @@ describe(__filename, () => {
     });
 
     it("should expire rule on 31/08 of next year if after 01/10", () => {
-      const thresholdDate = new Date(`2022-08-31T00:00:00.000Z`);
+      const thresholdDate = new Date(`2022-08-31T23:59:59.999Z`);
       const expected = {
         $or: [
           {
@@ -121,24 +139,46 @@ describe(__filename, () => {
     });
   });
 
-  describe("getPeriodeStartDate", () => {
+  describe("getCampagneStartDate", () => {
     it("should get september of the same year if now is before september", () => {
       const expected = new Date(`2022-09-01T00:00:00.000Z`);
 
-      let result = getPeriodeStartDate(new Date(`2022-03-01T00:00:00.000Z`));
+      let result = getCampagneStartDate(new Date(`2022-03-01T00:00:00.000Z`));
       assert.deepStrictEqual(result, expected);
 
-      result = getPeriodeStartDate(new Date(`2022-08-11T00:00:00.000Z`));
+      result = getCampagneStartDate(new Date(`2022-08-11T00:00:00.000Z`));
       assert.deepStrictEqual(result, expected);
     });
 
     it("should get september of the next year if now is after september", () => {
       const expected = new Date(`2023-09-01T00:00:00.000Z`);
 
-      let result = getPeriodeStartDate(new Date(`2022-09-01T00:00:00.000Z`));
+      let result = getCampagneStartDate(new Date(`2022-09-01T00:00:00.000Z`));
       assert.deepStrictEqual(result, expected);
 
-      result = getPeriodeStartDate(new Date(`2022-10-01T00:00:00.000Z`));
+      result = getCampagneStartDate(new Date(`2022-10-01T00:00:00.000Z`));
+      assert.deepStrictEqual(result, expected);
+    });
+  });
+
+  describe("getCampagneEndDate", () => {
+    it("should get august of the next year if now is before september", () => {
+      const expected = new Date(`2023-08-31T23:59:59.999Z`);
+
+      let result = getCampagneEndDate(new Date(`2022-03-01T00:00:00.000Z`));
+      assert.deepStrictEqual(result, expected);
+
+      result = getCampagneEndDate(new Date(`2022-08-11T00:00:00.000Z`));
+      assert.deepStrictEqual(result, expected);
+    });
+
+    it("should get september of the next year + 1 if now is after september", () => {
+      const expected = new Date(`2024-08-31T23:59:59.999Z`);
+
+      let result = getCampagneEndDate(new Date(`2022-09-01T00:00:00.000Z`));
+      assert.deepStrictEqual(result, expected);
+
+      result = getCampagneEndDate(new Date(`2022-10-01T00:00:00.000Z`));
       assert.deepStrictEqual(result, expected);
     });
   });
@@ -168,7 +208,7 @@ describe(__filename, () => {
                   },
                 ],
                 published: true,
-                // periode: { $gte: getPeriodeStartDate() },
+                // periode: { $gte: getCampagneStartDate() },
               },
             ],
             catalogue_published: true,
@@ -234,7 +274,7 @@ describe(__filename, () => {
                   },
                 ],
                 published: true,
-                // periode: { $gte: getPeriodeStartDate() },
+                // periode: { $gte: getCampagneStartDate() },
               },
             ],
             catalogue_published: true,

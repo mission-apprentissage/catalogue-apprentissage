@@ -3,15 +3,15 @@ const logger = require("../../../common/logger");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
 const { cursor } = require("../../../common/utils/cursor");
 const { isBetween } = require("../../../common/utils/dateUtils");
+const { getCampagneStartDate, getCampagneEndDate } = require("../../../common/utils/rulesUtils");
 
 /**
+ * TODO : Voir s'il n'est pas plutôt possible de tout repasser à hors périmètre (sans mise à jour de l'historique) et se baser sur la présence ou non d'un parcoursup_id dans les scripts de périmètre pour passage automatique à "en attente".
  */
 const run = async () => {
   let updated = 0;
-  const next_campagne_debut = new Date("2023/08/01");
-  const next_campagne_end = new Date("2024/07/31");
-
-  console.log({ next_campagne_debut, next_campagne_end });
+  const next_campagne_debut = getCampagneStartDate();
+  const next_campagne_end = getCampagneEndDate();
 
   await cursor(
     Formation.find({ parcoursup_statut: { $ne: PARCOURSUP_STATUS.HORS_PERIMETRE } }),
