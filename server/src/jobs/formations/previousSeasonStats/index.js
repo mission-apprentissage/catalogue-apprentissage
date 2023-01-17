@@ -65,10 +65,6 @@ const storePreviousSeasonFormations = async () => {
  * @param {"affelnet"|"parcoursup"} plateforme
  */
 const comparePreviousSeasonFormations = async (plateforme) => {
-  /**
-   * @type {import("mongoose").QueryCursor<PreviousSeasonFormation>}
-   */
-
   const filter = plateforme === "affelnet" ? { affelnet_perimetre: true } : { parcoursup_perimetre: true };
 
   const cursor = PreviousSeasonFormation.find(filter).lean().cursor();
