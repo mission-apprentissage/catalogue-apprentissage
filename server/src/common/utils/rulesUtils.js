@@ -31,21 +31,46 @@ const deserialize = (str) => {
 
 /**
  * Pour appliquer les étiquettes pour les plateformes PS & Affelnet
- * une formation doit avoir au moins une période de début de formation >= septembre de l'année scolaire suivante
- * eg: si on est en janvier 2022 --> septembre 2022, si on est le en octobre 2022 --> septembre 2023, etc.
+ * une formation doit avoir au moins une date de début de formation >= début septembre de l'année scolaire suivante
+ * eg: si on est en janvier 2022 --> [septembre 2022] - août 2023, si on est le en octobre 2022 --> [septembre 2023] - août 2024, etc.
  * Si ce n'est pas le cas la formation sera "hors périmètre".
  *
  * @param {Date} [currentDate]
  * @returns {Date}
  */
-const getPeriodeStartDate = (currentDate = new Date()) => {
+const getCampagneStartDate = (currentDate = new Date()) => {
   let durationShift = 0;
   const now = currentDate;
   const sessionStart = new Date(`${currentDate.getFullYear()}-09-01T00:00:00.000Z`);
   if (now >= sessionStart) {
     durationShift = 1;
   }
-  return new Date(`${currentDate.getFullYear() + durationShift}-09-01T00:00:00.000Z`);
+
+  const startDate = new Date(`${currentDate.getFullYear() + durationShift}-09-01T00:00:00.000Z`);
+  // console.error({ now, sessionStart, startDate });
+  return startDate;
+};
+
+/**
+ * Pour appliquer les étiquettes pour les plateformes PS & Affelnet
+ * une formation doit avoir au moins une date de début de formation < fin aout de l'année scolaire suivante
+ * eg: si on est en janvier 2022 --> septembre 2022 - [août 2023], si on est le en octobre 2022 --> septembre 2023 - [août 2024], etc.
+ * Si ce n'est pas le cas la formation sera "hors périmètre".
+ *
+ * @param {Date} [currentDate]
+ * @returns {Date}
+ */
+const getCampagneEndDate = (currentDate = new Date()) => {
+  let durationShift = 0;
+  const now = currentDate;
+  const sessionStart = new Date(`${currentDate.getFullYear()}-09-01T00:00:00.000Z`);
+  if (now >= sessionStart) {
+    durationShift = 1;
+  }
+
+  const endDate = new Date(`${currentDate.getFullYear() + 1 + durationShift}-08-31T23:59:59.999Z`);
+  // console.error({ now, sessionStart, endDate });
+  return endDate;
 };
 
 const commonRules = {
@@ -103,12 +128,14 @@ const getPublishedRules = (plateforme, onlyCataloguePublished = true) => {
 };
 
 /**
+ * Renvoie la date d'expiration autorisée pour validité d'enregistrement des codes cfd et rncp
+ *
  * Update du 17/01/2022
  * Suite aux discussions avec Christine Bourdin et Rachel Bourdon,
  * la règle est d'envoyer les formations aux plateformes pour le cfd ou le rncp qui n'expire pas :
  * du 01/10/N au 31/08/N+1
  */
-const getExpireRule = (currentDate = new Date()) => {
+const getExpirationDate = (currentDate = new Date()) => {
   let durationShift = 1;
   const now = currentDate;
   const sessionStart = new Date(`${currentDate.getFullYear()}-10-01T00:00:00.000Z`);
@@ -116,7 +143,11 @@ const getExpireRule = (currentDate = new Date()) => {
     durationShift = 0;
   }
 
-  const thresholdDate = new Date(`${currentDate.getFullYear() + 1 - durationShift}-08-31T00:00:00.000Z`);
+  return new Date(`${currentDate.getFullYear() + 1 - durationShift}-08-31T23:59:59.999Z`);
+};
+
+const getExpireRule = (currentDate = new Date()) => {
+  const thresholdDate = getExpirationDate(currentDate);
 
   return {
     $or: [
@@ -201,5 +232,7 @@ module.exports = {
   getExpireRule,
   titresRule,
   getPublishedRules,
-  getPeriodeStartDate,
+  getExpirationDate,
+  getCampagneStartDate,
+  getCampagneEndDate,
 };

@@ -2,7 +2,7 @@ const { Formation } = require("../../../common/model");
 const logger = require("../../../common/logger");
 const { runScript } = require("../../scriptWrapper");
 const { cursor } = require("../../../common/utils/cursor");
-const { updateFormation } = require("../export/parcoursupApi");
+const { updateFormation } = require("../parcoursupApi");
 const ObjectsToCsv = require("objects-to-csv");
 
 const run = async ({ filter, limit, skip, file, clean } = { limit: 0, skip: 0, clean: false }) => {

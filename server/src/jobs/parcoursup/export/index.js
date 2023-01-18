@@ -1,7 +1,7 @@
 const { runScript } = require("../../scriptWrapper");
 const logger = require("../../../common/logger");
 const { Formation, User } = require("../../../common/model");
-const parcoursupApi = require("./parcoursupApi");
+const parcoursupApi = require("../parcoursupApi");
 const { findLast } = require("lodash");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
 const {

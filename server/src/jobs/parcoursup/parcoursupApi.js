@@ -3,8 +3,8 @@
  */
 
 const axios = require("axios");
-const logger = require("../../../common/logger");
-const { createParcoursupToken } = require("../../../common/utils/jwtUtils");
+const logger = require("../../common/logger");
+const { createParcoursupToken } = require("../../common/utils/jwtUtils");
 
 const privateKey = (process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_PRIVATE_KEY ?? "").replace(/\n */gm, "\n");
 const pwd = process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_PRIVATE_KEY_PWD;
@@ -30,7 +30,7 @@ const postFormation = async (data) => {
 };
 
 /**
- * POST a formation to Parcoursup WS
+ * PUT a formation to Parcoursup WS
  */
 const updateFormation = async (data) => {
   const endpoint =
@@ -49,7 +49,28 @@ const updateFormation = async (data) => {
   }
 };
 
+/**
+ * GET formations from Parcoursup WS
+ */
+const getFormations = async (data) => {
+  const endpoint =
+    process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_ENDPOINT + "/ApiFormation/api/formations/publications/affectation";
+  const token = createParcoursupToken({ data, privateKey, pwd, id });
+
+  try {
+    const { data: responseData } = await axios.get(endpoint, data, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return responseData;
+  } catch (err) {
+    logger.error(err);
+    throw err;
+  }
+};
+
 module.exports = {
   postFormation,
   updateFormation,
+  getFormations,
 };
