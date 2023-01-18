@@ -159,12 +159,6 @@ const applyConversion = async () => {
     DualControlFormation.find({}).sort(),
 
     async ({ cle_ministere_educatif }) => {
-      if (cle_ministere_educatif === "088281P01313885594860007038855948600070-68224#L01") {
-        console.log("---------------------");
-        console.log(cle_ministere_educatif);
-        console.log("---------------------");
-      }
-
       const dcFormation = await DualControlFormation.findOne({ cle_ministere_educatif }).lean();
       const formation = await Formation.findOne({ cle_ministere_educatif }).lean();
 
