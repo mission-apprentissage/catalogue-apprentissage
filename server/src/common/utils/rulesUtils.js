@@ -31,8 +31,8 @@ const deserialize = (str) => {
 
 /**
  * Pour appliquer les étiquettes pour les plateformes PS & Affelnet
- * une formation doit avoir au moins une date de début de formation >= début septembre de l'année scolaire suivante
- * eg: si on est en janvier 2022 --> [septembre 2022] - août 2023, si on est le en octobre 2022 --> [septembre 2023] - août 2024, etc.
+ * une formation doit avoir au moins une date de début de formation >= début août de l'année scolaire suivante
+ * eg: si on est en janvier 2022 --> [01 août 2022] - 31 juillet 2023, si on est le en octobre 2022 --> [01 août 2023] - 31 juillet 2024, etc.
  * Si ce n'est pas le cas la formation sera "hors périmètre".
  *
  * @param {Date} [currentDate]
@@ -41,20 +41,20 @@ const deserialize = (str) => {
 const getCampagneStartDate = (currentDate = new Date()) => {
   let durationShift = 0;
   const now = currentDate;
-  const sessionStart = new Date(`${currentDate.getFullYear()}-09-01T00:00:00.000Z`);
+  const sessionStart = new Date(`${currentDate.getFullYear()}-08-01T00:00:00.000Z`);
   if (now >= sessionStart) {
     durationShift = 1;
   }
 
-  const startDate = new Date(`${currentDate.getFullYear() + durationShift}-09-01T00:00:00.000Z`);
+  const startDate = new Date(`${currentDate.getFullYear() + durationShift}-08-01T00:00:00.000Z`);
   // console.error({ now, sessionStart, startDate });
   return startDate;
 };
 
 /**
  * Pour appliquer les étiquettes pour les plateformes PS & Affelnet
- * une formation doit avoir au moins une date de début de formation < fin aout de l'année scolaire suivante
- * eg: si on est en janvier 2022 --> septembre 2022 - [août 2023], si on est le en octobre 2022 --> septembre 2023 - [août 2024], etc.
+ * une formation doit avoir au moins une date de début de formation < fin juillet de l'année scolaire suivante
+ * eg: si on est en janvier 2022 --> 01 août 2022 - [juillet 2023], si on est le en octobre 2022 --> 01 août 2023 - [31 juillet 2024], etc.
  * Si ce n'est pas le cas la formation sera "hors périmètre".
  *
  * @param {Date} [currentDate]
@@ -63,12 +63,12 @@ const getCampagneStartDate = (currentDate = new Date()) => {
 const getCampagneEndDate = (currentDate = new Date()) => {
   let durationShift = 0;
   const now = currentDate;
-  const sessionStart = new Date(`${currentDate.getFullYear()}-09-01T00:00:00.000Z`);
+  const sessionStart = new Date(`${currentDate.getFullYear()}-08-01T00:00:00.000Z`);
   if (now >= sessionStart) {
     durationShift = 1;
   }
 
-  const endDate = new Date(`${currentDate.getFullYear() + 1 + durationShift}-08-31T23:59:59.999Z`);
+  const endDate = new Date(`${currentDate.getFullYear() + 1 + durationShift}-07-31T23:59:59.999Z`);
   // console.error({ now, sessionStart, endDate });
   return endDate;
 };

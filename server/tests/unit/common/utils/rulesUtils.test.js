@@ -140,18 +140,18 @@ describe(__filename, () => {
   });
 
   describe("getCampagneStartDate", () => {
-    it("should get september of the same year if now is before september", () => {
-      const expected = new Date(`2022-09-01T00:00:00.000Z`);
+    it("should get 01 aout of the same year if now is before aout", () => {
+      const expected = new Date(`2022-08-01T00:00:00.000Z`);
 
       let result = getCampagneStartDate(new Date(`2022-03-01T00:00:00.000Z`));
       assert.deepStrictEqual(result, expected);
 
-      result = getCampagneStartDate(new Date(`2022-08-11T00:00:00.000Z`));
+      result = getCampagneStartDate(new Date(`2022-07-11T00:00:00.000Z`));
       assert.deepStrictEqual(result, expected);
     });
 
     it("should get september of the next year if now is after september", () => {
-      const expected = new Date(`2023-09-01T00:00:00.000Z`);
+      const expected = new Date(`2023-08-01T00:00:00.000Z`);
 
       let result = getCampagneStartDate(new Date(`2022-09-01T00:00:00.000Z`));
       assert.deepStrictEqual(result, expected);
@@ -163,17 +163,17 @@ describe(__filename, () => {
 
   describe("getCampagneEndDate", () => {
     it("should get august of the next year if now is before september", () => {
-      const expected = new Date(`2023-08-31T23:59:59.999Z`);
+      const expected = new Date(`2023-07-31T23:59:59.999Z`);
 
       let result = getCampagneEndDate(new Date(`2022-03-01T00:00:00.000Z`));
       assert.deepStrictEqual(result, expected);
 
-      result = getCampagneEndDate(new Date(`2022-08-11T00:00:00.000Z`));
+      result = getCampagneEndDate(new Date(`2022-06-11T00:00:00.000Z`));
       assert.deepStrictEqual(result, expected);
     });
 
     it("should get september of the next year + 1 if now is after september", () => {
-      const expected = new Date(`2024-08-31T23:59:59.999Z`);
+      const expected = new Date(`2024-07-31T23:59:59.999Z`);
 
       let result = getCampagneEndDate(new Date(`2022-09-01T00:00:00.000Z`));
       assert.deepStrictEqual(result, expected);
