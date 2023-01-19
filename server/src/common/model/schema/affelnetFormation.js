@@ -213,6 +213,17 @@ const affelnetFormationSchema = {
     description: "Informations de la formation",
   },
 
+  siret_uai_gestionnaire: {
+    type: String,
+    default: null,
+    description: "Siret du gestionnaire",
+  },
+  integree_catalogue: {
+    type: Boolean,
+    default: null,
+    description: "Est-ce que la formation a été intégrée dans Affelnet via le catalogue ou manuellement",
+  },
+
   // Coverage
   matching_mna_formation: {
     type: Array,
