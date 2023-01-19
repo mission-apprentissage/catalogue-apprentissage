@@ -9,7 +9,7 @@ const { findNewFormations, findMultisiteFormationsFromL01 } = require("../../log
 const { formation: formatFormation } = require("../../logic/controller/formater");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 
-const formationCoverage = async ({ eraseInfo }) => {
+const formationCoverage = async ({ eraseInfo } = {}) => {
   await paginator(
     AffelnetFormation,
     {
@@ -82,7 +82,7 @@ const formationCoverage = async ({ eraseInfo }) => {
   );
 };
 
-const afCoverage = async ({ eraseInfo }) => {
+const afCoverage = async ({ eraseInfo } = {}) => {
   logger.info("Start Affelnet coverage");
 
   // reset matching first

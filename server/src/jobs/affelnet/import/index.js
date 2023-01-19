@@ -62,11 +62,13 @@ const afImportFormations = async () => {
         campus_metier: item["CAMPUS_METIER"] === "O",
         modalites: item["MODALITES_PARTICULIERES"] === "O",
         informations: item["INFORMATIONS"],
+        siret_uai_gestionnaire: item["SIRET_UAI_GESTIONNAIRE"],
+        integree_catalogue: item["INTEGREE_CATALOGUE"] === "O",
         coordonnees_gps_latitude: item["COORDONNEES_GPS_LATITUDE"]?.trim(),
         coordonnees_gps_longitude: item["COORDONNEES_GPS_LONGITUDE"]?.trim(),
       });
 
-      count = count + 1;
+      count++;
     } catch (error) {
       logger.error(error);
     }
