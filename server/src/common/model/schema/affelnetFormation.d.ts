@@ -172,15 +172,6 @@ export interface AffelnetFormation {
    */
   informations?: string;
   /**
-   * Siret du gestionnaire
-   */
-  siret_uai_gestionnaire?: string;
-  /**
-   * Est-ce que la formation a été reçu du catalogue ou intégrée manuellement à Affelnet
-   */
-  integree_catalogue?: string;
-
-  /**
    * tableau des matching des formations catalogue
    */
   matching_mna_formation?: unknown[];
