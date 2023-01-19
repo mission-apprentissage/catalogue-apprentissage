@@ -51,9 +51,9 @@ module.exports = () => {
 
         switch (filename) {
           case "affelnet-import.xlsx":
-            callback = () => {
-              afImportFormations();
-              afCoverage();
+            callback = async () => {
+              await afImportFormations();
+              await afCoverage();
             };
             break;
           case "CodeDiplome_RNCP_latest_kit.csv": {
@@ -93,11 +93,11 @@ module.exports = () => {
         }
 
         // success, move the file
-        await move(src, dest, { overwrite: true }, (err) => {
+        await move(src, dest, { overwrite: true }, async (err) => {
           if (err) return logger.error(err);
 
           // launch cb if any
-          callback?.();
+          await callback?.();
         });
 
         return res.status(200).send(req.file);
