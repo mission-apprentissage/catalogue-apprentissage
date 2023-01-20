@@ -321,25 +321,56 @@ export default ({ match }) => {
   const hasRightToEdit = hasRightToEditFormation(formation, user);
 
   const { values, handleSubmit, handleChange, setFieldValue, isSubmitting } = useFormik({
+    enableReinitialize: true,
     initialValues: {
       uai_formation: "",
+      affelnet_statut: formation?.affelnet_statut,
     },
-    onSubmit: ({ uai_formation }) => {
+    onSubmit: ({ uai_formation, affelnet_statut }) => {
       return new Promise(async (resolve) => {
         const trimedUaiFormation = uai_formation?.trim();
 
+        console.log(affelnet_statut);
         try {
           if (trimedUaiFormation !== formation["uai_formation"]) {
-            const result = await _put(`${CATALOGUE_API}/entity/formations/${formation._id}`, {
+            console.log({
               uai_formation: trimedUaiFormation,
+              ...(affelnet_statut === AFFELNET_STATUS.PUBLIE ? { affelnet_statut: AFFELNET_STATUS.EN_ATTENTE } : {}),
               last_update_who: user.email,
               last_update_at: Date.now(),
               editedFields: { ...formation?.editedFields, uai_formation: trimedUaiFormation },
               $push: {
                 updates_history: buildUpdatesHistory(
                   formation,
-                  { uai_formation: trimedUaiFormation, last_update_who: user.email },
-                  ["uai_formation"]
+                  {
+                    uai_formation: trimedUaiFormation,
+                    ...(affelnet_statut === AFFELNET_STATUS.PUBLIE
+                      ? { affelnet_statut: AFFELNET_STATUS.EN_ATTENTE }
+                      : {}),
+                    last_update_who: user.email,
+                  },
+                  ["uai_formation", ...(affelnet_statut === AFFELNET_STATUS.PUBLIE ? ["affelnet_statut"] : [])]
+                ),
+              },
+            });
+
+            const result = await _put(`${CATALOGUE_API}/entity/formations/${formation._id}`, {
+              uai_formation: trimedUaiFormation,
+              ...(affelnet_statut === AFFELNET_STATUS.PUBLIE ? { affelnet_statut: AFFELNET_STATUS.EN_ATTENTE } : {}),
+              last_update_who: user.email,
+              last_update_at: Date.now(),
+              editedFields: { ...formation?.editedFields, uai_formation: trimedUaiFormation },
+              $push: {
+                updates_history: buildUpdatesHistory(
+                  formation,
+                  {
+                    uai_formation: trimedUaiFormation,
+                    ...(affelnet_statut === AFFELNET_STATUS.PUBLIE
+                      ? { affelnet_statut: AFFELNET_STATUS.EN_ATTENTE }
+                      : {}),
+                    last_update_who: user.email,
+                  },
+                  ["uai_formation", ...(affelnet_statut === AFFELNET_STATUS.PUBLIE ? ["affelnet_statut"] : [])]
                 ),
               },
             });
