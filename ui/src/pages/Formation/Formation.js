@@ -54,6 +54,7 @@ const getLBAUrl = ({ cle_ministere_educatif = "" }) => {
 const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, values, hasRightToEdit }) => {
   // Distance tolérer entre l'adresse et les coordonnées transmise par RCO
   const seuilDistance = 100;
+  const [isEditingUai, setIsEditingUai] = useState(false);
 
   const { isOpen: isComputedAdressOpen, onToggle: onComputedAdressToggle } = useDisclosure(
     formation.distance > seuilDistance
@@ -63,7 +64,9 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
   );
 
   const UaiFormationContainer =
-    !formation.uai_formation || !formation.uai_formation_valide
+    !formation.uai_formation ||
+    !formation.uai_formation_valide ||
+    (isEditingUai && formation?.affelnet_statut === AFFELNET_STATUS.PUBLIE)
       ? (args) => <DangerBox data-testid={"uai-warning"} {...args} />
       : (args) => <Box {...args} />;
 
@@ -75,6 +78,16 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
   const uai_updated_history = formation.updates_history
     .filter((value) => typeof value.to?.uai_formation !== "undefined")
     ?.sort(sortDescending);
+
+  const onEditOverride = async (...args) => {
+    setIsEditingUai(!isEditingUai);
+    await onEdit(...args);
+  };
+
+  const handleSubmitOverride = async (...args) => {
+    setIsEditingUai(false);
+    await handleSubmit(...args);
+  };
 
   return (
     <Box borderRadius={4}>
@@ -105,13 +118,21 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                   label={"UAI du lieu de formation"}
                   formation={formation}
                   edition={edition}
-                  onEdit={onEdit}
+                  onEdit={onEditOverride}
                   values={values}
-                  handleSubmit={handleSubmit}
+                  handleSubmit={handleSubmitOverride}
                   handleChange={handleChange}
                   hasRightToEdit={hasRightToEdit && ![PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut)}
                   mb={2}
                 />
+                {isEditingUai && formation.affelnet_statut === AFFELNET_STATUS.PUBLIE && (
+                  <Text fontSize={"zeta"} color={"grey.600"} mb={2}>
+                    - Si l’UAI lieu est modifiée, la formation devra à nouveau être importée dans Affelnet. Son état
+                    basculera de “Publié” à “En attente de publication”, jusqu'à ce que vous procédiez à l’import depuis
+                    Affelnet.
+                  </Text>
+                )}
+
                 <Text fontSize={"zeta"} color={"grey.600"}>
                   {typeof formation.editedFields?.uai_formation !== "undefined" ? (
                     <>
@@ -134,11 +155,11 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                   {[PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut) ? (
                     <>
                       - L’UAI n’est plus modifiable car la formation est déjà publiée sur Parcoursup. Si l’UAI doit être
-                      modifiée, faire un message au SCN via la messagerie Parcoursup, pour demander la suppression de la
-                      certification (sous réserve qu'aucun jeune n'y ait formulé ses vœux). Suite à intervention du SCN,
-                      la formation sera réinitialisé sur le catalogue, pour vous permettre de modifier l'UAI lieu et de
-                      redemander la publication. Si l'adresse postale du lieu doit être modifiée, demander au CFA d'en
-                      faire le signalement au Carif-Oref pour modification à la source.
+                      modifiée, faire un message au SCN via la messagerie Parcoursup pour signaler que vous n’avez pas
+                      envoyé la formation sur le bon UAI. Suite à intervention du SCN, la formation sera réinitialisés
+                      sur le catalogue, pour vous permettre de modifier l'UAI lieu et de redemander la publication. Si
+                      l'adresse postale du lieu doit être modifiée, demander au CFA d'en faire le signalement au
+                      Carif-Oref pour modification à la source.
                     </>
                   ) : (
                     <>- Si le lieu de réalisation est différent du lieu du formateur, modifiez l’UAI (picto crayon).</>
