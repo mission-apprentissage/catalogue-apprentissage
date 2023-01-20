@@ -109,11 +109,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                   values={values}
                   handleSubmit={handleSubmit}
                   handleChange={handleChange}
-                  hasRightToEdit={
-                    hasRightToEdit &&
-                    ![PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut) &&
-                    ![AFFELNET_STATUS.PUBLIE].includes(formation.affelnet_statut)
-                  }
+                  hasRightToEdit={hasRightToEdit && ![PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut)}
                   mb={2}
                 />
                 <Text fontSize={"zeta"} color={"grey.600"}>
@@ -135,20 +131,20 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                 </Text>
 
                 <Text fontSize={"zeta"} color={"grey.600"} mt={2}>
-                  {[PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut) ||
-                  [AFFELNET_STATUS.PUBLIE].includes(formation.affelnet_statut) ? (
+                  {[PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut) ? (
                     <>
-                      - L’UAI n’est plus modifiable car la formation est déjà publiée sur{" "}
-                      {[PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut) && <>Parcoursup</>}
-                      {[AFFELNET_STATUS.PUBLIE].includes(formation.affelnet_statut) && <>Affelnet</>}. Si l’UAI doit
-                      être modifiée, inviter l’organisme à créer la formation avec la nouvelle adresse via le
-                      Carif-Oref.
+                      - L’UAI n’est plus modifiable car la formation est déjà publiée sur Parcoursup. Si l’UAI doit être
+                      modifiée, faire un message au SCN via la messagerie Parcoursup, pour demander la suppression de la
+                      certification (sous réserve qu'aucun jeune n'y ait formulé ses vœux). Suite à intervention du SCN,
+                      la formation sera réinitialisé sur le catalogue, pour vous permettre de modifier l'UAI lieu et de
+                      redemander la publication. Si l'adresse postale du lieu doit être modifiée, demander au CFA d'en
+                      faire le signalement au Carif-Oref pour modification à la source.
                     </>
                   ) : (
                     <>- Si le lieu de réalisation est différent du lieu du formateur, modifiez l’UAI (picto crayon).</>
                   )}
                 </Text>
-                {!formation.uai_formation && (
+                {!formation.uai_formation && formation.parcoursup_perimetre && (
                   <Text fontSize={"zeta"} color={"grey.600"} mt={2}>
                     - L’UAI du lieu de formation doit obligatoirement être édité pour permettre l’envoi à Parcoursup
                   </Text>
