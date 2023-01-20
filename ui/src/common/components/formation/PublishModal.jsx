@@ -26,6 +26,7 @@ import * as Yup from "yup";
 import { ArrowRightLine, Close } from "../../../theme/components/icons";
 import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
 import { updateFormation } from "../../api/formation";
+import { DangerBox } from "../DangerBox";
 
 const getPublishRadioValue = (status) => {
   if ([COMMON_STATUS.PUBLIE, COMMON_STATUS.EN_ATTENTE].includes(status)) {
@@ -182,6 +183,10 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
   const [user] = useAuth();
   const [isAffelnetFormOpen, setAffelnetFormOpen] = useState(
     [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.EN_ATTENTE].includes(formation?.affelnet_statut)
+  );
+
+  const [isParcoursupFormOpen, setParcoursupFormOpen] = useState(
+    [PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.EN_ATTENTE].includes(formation?.parcoursup_statut)
   );
 
   const [isAffelnetUnpublishFormOpen, setAffelnetUnpublishFormOpen] = useState(
@@ -530,6 +535,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                         value="true"
                         isDisabled={isParcoursupPublishDisabled}
                         onChange={(evt) => {
+                          setParcoursupFormOpen(true);
                           setParcoursupUnpublishFormOpen(false);
                           handleChange(evt);
                         }}
@@ -545,6 +551,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                         value="false"
                         isDisabled={isParcoursupPublishDisabled}
                         onChange={(evt) => {
+                          setParcoursupFormOpen(false);
                           setParcoursupUnpublishFormOpen(true);
                           handleChange(evt);
                         }}
@@ -557,6 +564,18 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                     </Stack>
                   </RadioGroup>
                 </FormControl>
+
+                <Box style={{ display: isParcoursupFormOpen ? "block" : "none" }}>
+                  <br />
+                  {(!formation?.uai_formation ||
+                    formation?.uai_formation === "" ||
+                    !formation?.uai_formation_valide) && (
+                    <DangerBox data-testid={"uai-warning"}>
+                      L’UAI du lieu de formation doit obligatoirement être édité pour permettre l’envoi à Parcoursup
+                    </DangerBox>
+                  )}
+                </Box>
+
                 <FormControl
                   isRequired
                   isInvalid={errors.parcoursup_raison_depublication}
