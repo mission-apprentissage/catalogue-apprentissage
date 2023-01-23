@@ -48,7 +48,7 @@ const parcoursupErrors = [
   {
     regexp: /400 L'UAI ne correspond pas à un IUT alors que le type de formation correspond à un BUT/,
     description: "Les BUT en apprentissage ne peuvent pas être proposés par un CFA qui n'est pas un IUT.",
-    action: `Si c'est bien un IUT qui propose la formation, corriger l'UAI du lieu de formation pour qu'il corresponde à l'IUT déjà présent dans parcoursup. Puis signalez au SCN via contact pour déblocage de la création via webservice. Si ce n'est pas un IUT: modifier le statut de la fiche en "non publié" pour que cette formation ne soit plus dans le webservice. .`,
+    action: `Si c'est bien un IUT qui propose la formation, corriger l'UAI du lieu de formation pour qu'il corresponde à l'IUT déjà présent dans parcoursup. Puis signalez au SCN via contact pour déblocage de la création via webservice. Si ce n'est pas un IUT: modifier le statut de la fiche en "non publié" pour que cette formation ne soit plus dans le webservice.`,
   },
   {
     regexp: /400 La filière n'a pas pu être retrouvée\. Le MEF : .*correspond à .* fillières\r\nLe CFD : .*correspond à .* fillières\r\nLe RNCP : .*/,

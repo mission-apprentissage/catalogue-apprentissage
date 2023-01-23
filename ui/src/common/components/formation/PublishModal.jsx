@@ -244,6 +244,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
       affelnet_raison_depublication: isAffelnetUnpublishFormOpen
         ? Yup.string().nullable().required("Veuillez saisir la raison")
         : Yup.string().nullable(),
+      parcoursup_id: isParcoursupFormOpen ? Yup.string().nullable().required() : Yup.string().nullable(),
       parcoursup_raison_depublication: isParcoursupUnpublishFormOpen
         ? Yup.string().nullable().required("Veuillez saisir la raison")
         : Yup.string().nullable(),
@@ -570,35 +571,37 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                   {(!formation?.uai_formation ||
                     formation?.uai_formation === "" ||
                     !formation?.uai_formation_valide) && (
-                    <DangerBox data-testid={"uai-warning"}>
+                    <DangerBox mb={1}>
                       L’UAI du lieu de formation doit obligatoirement être édité pour permettre l’envoi à Parcoursup
                     </DangerBox>
                   )}
                 </Box>
 
-                <FormControl
-                  isRequired
-                  isInvalid={errors.parcoursup_raison_depublication}
-                  display={isParcoursupUnpublishFormOpen ? "flex" : "none"}
-                  flexDirection="column"
-                  w="auto"
-                  mt={3}
-                >
-                  <FormLabel htmlFor="parcoursup_raison_depublication" mb={3} fontSize="epsilon" fontWeight={400}>
-                    Raison de non publication:
-                  </FormLabel>
-                  <Flex flexDirection="column" w="100%">
-                    <Textarea
-                      data-testid={"ps-unpublish-form"}
-                      name="parcoursup_raison_depublication"
-                      value={values.parcoursup_raison_depublication}
-                      onChange={handleChange}
-                      placeholder="Précisez ici la raison pour laquelle vous ne souhaitez pas publier la formation sur Parcoursup"
-                      rows={2}
-                    />
-                    <FormErrorMessage>{errors.parcoursup_raison_depublication}</FormErrorMessage>
-                  </Flex>
-                </FormControl>
+                <Box style={{ display: isParcoursupUnpublishFormOpen ? "block" : "none" }}>
+                  <FormControl
+                    isRequired
+                    isInvalid={errors.parcoursup_raison_depublication}
+                    display="flex"
+                    flexDirection="column"
+                    w="auto"
+                    mt={3}
+                  >
+                    <FormLabel htmlFor="parcoursup_raison_depublication" mb={3} fontSize="epsilon" fontWeight={400}>
+                      Raison de non publication:
+                    </FormLabel>
+                    <Flex flexDirection="column" w="100%">
+                      <Textarea
+                        data-testid={"ps-unpublish-form"}
+                        name="parcoursup_raison_depublication"
+                        value={values.parcoursup_raison_depublication}
+                        onChange={handleChange}
+                        placeholder="Précisez ici la raison pour laquelle vous ne souhaitez pas publier la formation sur Parcoursup"
+                        rows={2}
+                      />
+                      <FormErrorMessage>{errors.parcoursup_raison_depublication}</FormErrorMessage>
+                    </Flex>
+                  </FormControl>
+                </Box>
               </Flex>
             </Box>
           </Flex>
