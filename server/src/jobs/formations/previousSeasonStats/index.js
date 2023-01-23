@@ -1,8 +1,14 @@
 // @ts-check
 const logger = require("../../../common/logger");
 const { runScript } = require("../../scriptWrapper");
+const {
+  PreviousSeasonFormation,
+  Formation,
+  PreviousSeasonFormationStat,
+  ReglePerimetre,
+} = require("../../../common/model");
 const { isSameDate } = require("../../../common/utils/dateUtils");
-const { PreviousSeasonFormation, Formation, PreviousSeasonFormationStat } = require("../../../common/model");
+const { isInCampagne } = require("../../../common/utils/rulesUtils");
 const { academies } = require("../../../constants/academies");
 
 /** @typedef {import("../../../common/model/schema/formation").Formation} Formation */
@@ -65,6 +71,7 @@ const storePreviousSeasonFormations = async () => {
  * @param {"affelnet"|"parcoursup"} plateforme
  */
 const comparePreviousSeasonFormations = async (plateforme) => {
+  const initialValues = { closed: 0, qualiopi_lost: 0, not_updated: 0, diplome: 0, other: 0 };
   const filter = plateforme === "affelnet" ? { affelnet_perimetre: true } : { parcoursup_perimetre: true };
 
   const cursor = PreviousSeasonFormation.find(filter).lean().cursor();
@@ -81,37 +88,64 @@ const comparePreviousSeasonFormations = async (plateforme) => {
         affelnet_statut: 1,
         parcoursup_statut: 1,
         etablissement_gestionnaire_certifie_qualite: 1,
-        periode: 1,
+        date_debut: 1,
         affelnet_perimetre: 1,
         parcoursup_perimetre: 1,
+        niveau: 1,
+        diplome: 1,
+        num_academie: 1,
       }
     ).lean());
 
-    const academyCause = academyCauses.get(academyName) ?? { closed: 0, qualiopi_lost: 0, not_updated: 0, other: 0 };
+    const academyCause = academyCauses.get(academyName) ?? { ...initialValues };
 
-    // Si la formation existe toujours et est dans le périmètre, ok on continue.
+    // Si la formation existe toujours et est dans le périmètre : ok on continue.
     if (found && isInScope(found, plateforme)) {
       academyCauses.set(academyName, academyCause);
       continue;
     }
 
-    // Si la formation n'existe plus (on ne la retouve pas): on incrémente le compteur "closed" par académie.
+    // Si la formation n'existe plus (on ne la retrouve pas) : on incrémente le compteur "closed" par académie.
     if (!found) {
       academyCause.closed = academyCause.closed + 1;
       academyCauses.set(academyName, academyCause);
       continue;
     }
 
-    // Si la formation existe mais n'est plus qualiopi on incrémente "qualiopi_lost".
+    // Si la formation existe mais n'est plus qualiopi : on incrémente "qualiopi_lost".
     if (!found.etablissement_gestionnaire_certifie_qualite) {
       academyCause.qualiopi_lost = academyCause.qualiopi_lost + 1;
       academyCauses.set(academyName, academyCause);
       continue;
     }
-    // Si la formation existe, mais la période n'est pas à jour on incrémente "not_updated".
-    const lastPeriode = found.periode?.pop();
-    if (!lastPeriode || today > new Date(lastPeriode)) {
+
+    // Si la formation existe, mais la période n'est pas à jour : on incrémente "not_updated".
+    if (!isInCampagne(found)) {
       academyCause.not_updated = academyCause.not_updated + 1;
+      academyCauses.set(academyName, academyCause);
+      continue;
+    }
+
+    // Si la formation existe, mais le diplome ne correspond plus aux règles de périmètre : on incrémente "diplome".
+    const rulesOk = await ReglePerimetre.find({
+      plateforme,
+      niveau: found.niveau,
+      diplome: found.diplome,
+      num_academie: { $in: [0, found.num_academie] },
+      is_deleted: false,
+      condition_integration: { $in: ["peut intégrer", "doit intégrer"] },
+    });
+    const rulesNotOk = await ReglePerimetre.find({
+      plateforme,
+      niveau: found.niveau,
+      diplome: found.diplome,
+      num_academie: { $in: [0, found.num_academie] },
+      is_deleted: false,
+      condition_integration: { $in: ["ne doit pas intégrer"] },
+    });
+
+    if (!rulesOk.length || !!rulesNotOk.length) {
+      academyCause.diplome = academyCause.diplome + 1;
       academyCauses.set(academyName, academyCause);
       continue;
     }
@@ -121,13 +155,14 @@ const comparePreviousSeasonFormations = async (plateforme) => {
     academyCauses.set(academyName, academyCause);
   }
 
-  const global = { closed: 0, qualiopi_lost: 0, not_updated: 0, other: 0 };
+  const global = { ...initialValues };
 
   const results = await Promise.all(
     [...academyCauses.entries()].map(async ([academie, cause]) => {
       global.closed = global.closed + cause.closed;
       global.qualiopi_lost = global.qualiopi_lost + cause.qualiopi_lost;
       global.not_updated = global.not_updated + cause.not_updated;
+      global.diplome = global.diplome + cause.diplome;
       global.other = global.other + cause.other;
 
       return await PreviousSeasonFormationStat.create({
@@ -153,10 +188,10 @@ const comparePreviousSeasonFormations = async (plateforme) => {
 
 /**
  * @param {object} options
- * @param {number} [options.month=7] default is 7 (August)
+ * @param {number} [options.month=6] default is 6 (July). Starts from 0 for January
  * @param {number} [options.date=31] default is 31
  */
-const collectPreviousSeasonStats = async ({ month = 7, date = 31 } = { month: 7, date: 31 }) => {
+const collectPreviousSeasonStats = async ({ month = 6, date = 31 } = { month: 6, date: 31 }) => {
   try {
     logger.info(`previous season stats jobs`);
 

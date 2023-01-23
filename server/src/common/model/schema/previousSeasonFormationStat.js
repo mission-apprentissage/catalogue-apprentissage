@@ -33,6 +33,10 @@ const previousSeasonFormationStatSchema = {
     type: Number,
     default: 0,
   },
+  diplome: {
+    type: Number,
+    default: 0,
+  },
   other: {
     type: Number,
     default: 0,

@@ -1,5 +1,6 @@
 // @ts-check
 
+/** @typedef {import("../model/schema/formation").Formation} Formation */
 /** @typedef {("affelnet"|"parcoursup")} Plateforme */
 /** @typedef {("3 (CAP...)"|"4 (BAC...)"|"5 (BTS, DEUST...)"|"6 (Licence, BUT...)"|"7 (Master, titre ingénieur...)")} Niveau */
 
@@ -71,6 +72,18 @@ const getCampagneEndDate = (currentDate = new Date()) => {
   const endDate = new Date(`${currentDate.getFullYear() + 1 + durationShift}-07-31T23:59:59.999Z`);
   // console.error({ now, sessionStart, endDate });
   return endDate;
+};
+
+/**
+ *
+ * @param {Formation} formation
+ * @returns {boolean}
+ */
+const isInCampagne = ({ date_debut } = { date_debut: [] }) => {
+  const datesInCampagne = date_debut?.filter((date) => date >= getCampagneStartDate() && date <= getCampagneEndDate());
+  const result = datesInCampagne?.length > 0;
+
+  return result;
 };
 
 const commonRules = {
@@ -235,4 +248,5 @@ module.exports = {
   getExpirationDate,
   getCampagneStartDate,
   getCampagneEndDate,
+  isInCampagne,
 };
