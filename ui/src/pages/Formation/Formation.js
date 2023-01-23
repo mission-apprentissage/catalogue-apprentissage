@@ -156,7 +156,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                     <>
                       - L’UAI n’est plus modifiable car la formation est déjà publiée sur Parcoursup. Si l’UAI doit être
                       modifiée, faire un message au SCN via la messagerie Parcoursup pour signaler que vous n’avez pas
-                      envoyé la formation sur le bon UAI. Suite à intervention du SCN, la formation sera réinitialisés
+                      envoyé la formation sur le bon UAI. Suite à intervention du SCN, la formation sera réinitialisée
                       sur le catalogue, pour vous permettre de modifier l'UAI lieu et de redemander la publication. Si
                       l'adresse postale du lieu doit être modifiée, demander au CFA d'en faire le signalement au
                       Carif-Oref pour modification à la source.
