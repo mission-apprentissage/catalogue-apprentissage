@@ -15,6 +15,7 @@ import {
   ModalOverlay,
   Radio,
   RadioGroup,
+  Input,
   Stack,
   Text,
   Textarea,
@@ -197,6 +198,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
   );
 
   const { values, handleChange, handleSubmit, isSubmitting, setFieldValue, errors } = useFormik({
+    enableReinitialize: true,
     initialValues: {
       affelnet: getPublishRadioValue(formation?.affelnet_statut),
       affelnet_infos_offre: formation?.affelnet_infos_offre ?? "",
@@ -206,6 +208,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
       affelnet_raison_depublication: formation?.affelnet_raison_depublication ?? "",
       parcoursup: getPublishRadioValue(formation?.parcoursup_statut),
       parcoursup_raison_depublication: formation?.parcoursup_raison_depublication ?? "",
+      uai_formation: formation?.uai_formation ?? "",
     },
     validationSchema: Yup.object().shape({
       affelnet_infos_offre: isAffelnetFormOpen
@@ -244,7 +247,12 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
       affelnet_raison_depublication: isAffelnetUnpublishFormOpen
         ? Yup.string().nullable().required("Veuillez saisir la raison")
         : Yup.string().nullable(),
-      parcoursup_id: isParcoursupFormOpen ? Yup.string().nullable().required() : Yup.string().nullable(),
+      uai_formation: isParcoursupFormOpen
+        ? Yup.string()
+            .min(8)
+            .max(8)
+            .required("L’UAI du lieu de formation doit obligatoirement être édité pour permettre l’envoi à Parcoursup")
+        : Yup.string().nullable(),
       parcoursup_raison_depublication: isParcoursupUnpublishFormOpen
         ? Yup.string().nullable().required("Veuillez saisir la raison")
         : Yup.string().nullable(),
@@ -567,14 +575,26 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                 </FormControl>
 
                 <Box style={{ display: isParcoursupFormOpen ? "block" : "none" }}>
-                  <br />
-                  {(!formation?.uai_formation ||
-                    formation?.uai_formation === "" ||
-                    !formation?.uai_formation_valide) && (
-                    <DangerBox mb={1}>
-                      L’UAI du lieu de formation doit obligatoirement être édité pour permettre l’envoi à Parcoursup
-                    </DangerBox>
-                  )}
+                  <FormControl
+                    isRequired
+                    isInvalid={errors.uai_formation}
+                    display="flex"
+                    flexDirection="column"
+                    w="auto"
+                    mt={3}
+                  >
+                    {/* <br />
+                    {(!formation?.uai_formation ||
+                      formation?.uai_formation === "" ||
+                      !formation?.uai_formation_valide) && (
+                      <DangerBox mb={1}>
+                        L’UAI du lieu de formation doit obligatoirement être édité pour permettre l’envoi à Parcoursup
+                      </DangerBox>
+                    )} */}
+
+                    <Input type="hidden" name="uai_formation" value={values.uai_formation} />
+                    <FormErrorMessage>{errors.uai_formation}</FormErrorMessage>
+                  </FormControl>
                 </Box>
 
                 <Box style={{ display: isParcoursupUnpublishFormOpen ? "block" : "none" }}>
