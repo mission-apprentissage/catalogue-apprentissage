@@ -287,7 +287,7 @@ export const DescriptionBlock = ({ formation }) => {
                   </UnorderedList>
                 ) : (
                   <>
-                    {noHabilitation && (
+                    {!formation.etablissement_reference_habilite_rncp && noHabilitation && (
                       <Box
                         bg={"orangesoft.200"}
                         p={4}
