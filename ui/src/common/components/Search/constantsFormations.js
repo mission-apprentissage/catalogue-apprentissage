@@ -127,6 +127,13 @@ const columnsDefinition = [
     formatter: (value) => (value ? "OUI" : "NON"),
   },
   {
+    Header: "Formateur certifié qualité ? ",
+    accessor: "etablissement_formateur_certifie_qualite",
+    width: 200,
+    exportable: true,
+    formatter: (value) => (value ? "OUI" : "NON"),
+  },
+  {
     Header: "Diplome",
     accessor: "diplome",
     width: 200,
