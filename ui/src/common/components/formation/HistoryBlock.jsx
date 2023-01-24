@@ -134,7 +134,7 @@ export const HistoryBlock = ({ formation, limit = 5 }) => {
 
         <Box ml={4}>
           <ul>
-            {history.slice(0, limit - 1)?.map((value, index) => {
+            {history.slice(0, limit)?.map((value, index) => {
               return (
                 <li key={index} style={{ marginBottom: "8px" }}>
                   {value.status}
