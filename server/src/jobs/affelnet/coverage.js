@@ -98,10 +98,13 @@ const afCoverage = async ({ eraseInfo } = {}) => {
     }
   );
 
+  // reset du code affelnet
+  await Formation.updateMany({}, { $set: { affelnet_id: null } });
+
   // reset "publié" to "hors périmètre"
   await Formation.updateMany(
     { affelnet_statut: AFFELNET_STATUS.PUBLIE },
-    { $set: { affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE, affelnet_id: null } }
+    { $set: { affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE } }
   );
 
   logger.info("Start formation coverage");

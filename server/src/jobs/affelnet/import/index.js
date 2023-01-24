@@ -21,6 +21,10 @@ const afImportFormations = async () => {
       const code_voie = item["CODE_VOIE"]?.trim();
       const code_specialite = item["CODE_SPECIALITE"]?.trim();
       const cle_ministere_educatif = item["CLE_MINISTERE_EDUCATIF"]?.trim();
+      const academie = item["ACADEMIE"]?.trim();
+      const code_offre = item["CODE_OFFRE"]?.trim();
+
+      console.log(`${academie}/${code_offre}`);
 
       await AffelnetFormation.create({
         cle_ministere_educatif,
@@ -32,8 +36,8 @@ const afImportFormations = async () => {
         commune: item["COMMUNE"]?.trim(),
         telephone: item["TELEPHONE"]?.trim(),
         email: item["MEL"]?.trim(),
-        academie: item["ACADEMIE"]?.trim(),
-        code_offre: item["CODE_OFFRE"]?.trim(),
+        academie,
+        code_offre,
         ministere: item["MINISTERE"]?.trim(),
         etablissement_type: item["PUBLIC_PRIVE"]?.trim() === "PR" ? "Privée" : "Public",
         type_contrat: item["TYPE_CONTRAT"]?.trim(),
