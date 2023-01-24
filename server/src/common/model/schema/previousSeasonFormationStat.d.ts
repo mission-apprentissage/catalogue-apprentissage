@@ -19,7 +19,6 @@ export interface PreviousSeasonFormationStat {
   closed?: number;
   qualiopi_lost?: number;
   not_updated?: number;
-  diplome?: number;
   other?: number;
   _id?: Types.ObjectId;
 }

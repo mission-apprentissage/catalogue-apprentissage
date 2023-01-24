@@ -1,12 +1,7 @@
 // @ts-check
 const logger = require("../../../common/logger");
 const { runScript } = require("../../scriptWrapper");
-const {
-  PreviousSeasonFormation,
-  Formation,
-  PreviousSeasonFormationStat,
-  ReglePerimetre,
-} = require("../../../common/model");
+const { PreviousSeasonFormation, Formation, PreviousSeasonFormationStat } = require("../../../common/model");
 const { isSameDate } = require("../../../common/utils/dateUtils");
 const { isInCampagne } = require("../../../common/utils/rulesUtils");
 const { academies } = require("../../../constants/academies");
@@ -71,7 +66,7 @@ const storePreviousSeasonFormations = async () => {
  * @param {"affelnet"|"parcoursup"} plateforme
  */
 const comparePreviousSeasonFormations = async (plateforme) => {
-  const initialValues = { closed: 0, qualiopi_lost: 0, not_updated: 0, diplome: 0, other: 0 };
+  const initialValues = { closed: 0, qualiopi_lost: 0, not_updated: 0, /*diplome: 0,*/ other: 0 };
   const filter = plateforme === "affelnet" ? { affelnet_perimetre: true } : { parcoursup_perimetre: true };
 
   const cursor = PreviousSeasonFormation.find(filter).lean().cursor();
@@ -126,29 +121,29 @@ const comparePreviousSeasonFormations = async (plateforme) => {
       continue;
     }
 
-    // Si la formation existe, mais le diplome ne correspond plus aux règles de périmètre : on incrémente "diplome".
-    const rulesOk = await ReglePerimetre.find({
-      plateforme,
-      niveau: found.niveau,
-      diplome: found.diplome,
-      num_academie: { $in: [0, found.num_academie] },
-      is_deleted: false,
-      condition_integration: { $in: ["peut intégrer", "doit intégrer"] },
-    });
-    const rulesNotOk = await ReglePerimetre.find({
-      plateforme,
-      niveau: found.niveau,
-      diplome: found.diplome,
-      num_academie: { $in: [0, found.num_academie] },
-      is_deleted: false,
-      condition_integration: { $in: ["ne doit pas intégrer"] },
-    });
+    // // Si la formation existe, mais le diplome ne correspond plus aux règles de périmètre : on incrémente "diplome".
+    // const rulesOk = await ReglePerimetre.find({
+    //   plateforme,
+    //   niveau: found.niveau,
+    //   diplome: found.diplome,
+    //   num_academie: { $in: [0, found.num_academie] },
+    //   is_deleted: false,
+    //   condition_integration: { $in: ["peut intégrer", "doit intégrer"] },
+    // });
+    // const rulesNotOk = await ReglePerimetre.find({
+    //   plateforme,
+    //   niveau: found.niveau,
+    //   diplome: found.diplome,
+    //   num_academie: { $in: [0, found.num_academie] },
+    //   is_deleted: false,
+    //   condition_integration: { $in: ["ne doit pas intégrer"] },
+    // });
 
-    if (!rulesOk.length || !!rulesNotOk.length) {
-      academyCause.diplome = academyCause.diplome + 1;
-      academyCauses.set(academyName, academyCause);
-      continue;
-    }
+    // if (!rulesOk.length || !!rulesNotOk.length) {
+    //   academyCause.diplome = academyCause.diplome + 1;
+    //   academyCauses.set(academyName, academyCause);
+    //   continue;
+    // }
 
     // Sinon on incrémente "other".
     academyCause.other = academyCause.other + 1;
@@ -162,7 +157,7 @@ const comparePreviousSeasonFormations = async (plateforme) => {
       global.closed = global.closed + cause.closed;
       global.qualiopi_lost = global.qualiopi_lost + cause.qualiopi_lost;
       global.not_updated = global.not_updated + cause.not_updated;
-      global.diplome = global.diplome + cause.diplome;
+      // global.diplome = global.diplome + cause.diplome;
       global.other = global.other + cause.other;
 
       return await PreviousSeasonFormationStat.create({
