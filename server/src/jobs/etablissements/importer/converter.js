@@ -79,6 +79,7 @@ const applyConversion = async () => {
     DualControlEtablissement.find().sort(),
 
     async ({ siret }) => {
+      // console.debug(siret);
       const dcEtablissement = await DualControlEtablissement.findOne({ siret }).lean();
       const etablissement = await Etablissement.findOne({ siret }).lean();
 
@@ -88,22 +89,23 @@ const applyConversion = async () => {
 
       // Si l'établissement existe
       if (etablissement) {
-        const toRestore = [];
-
-        const toRecompute = ["etablissement_ids", "etablissement_uais", "uai_valide"];
-
-        const toDelete = [];
-
-        const notToCompare = ["_id", "__v", "created_at", "last_update_at", ...toDelete, ...toRestore, ...toRecompute];
+        const notToCompare = ["_id", "__v", "created_at", "updated_at", "last_updated_at"];
 
         await Etablissement.updateOne(
           { siret },
-          { $set: { ...(await recomputeFields(removeFields({ ...dcEtablissement }, notToCompare))) } }
+          { $set: { ...(await recomputeFields(removeFields({ ...dcEtablissement }, notToCompare))) } },
+          { timestamps: false }
         );
 
         const newEtablissement = await Etablissement.findById(etablissement._id).lean();
 
-        Object.keys(diff(etablissement, newEtablissement)).length ? updated++ : notUpdated++;
+        const differences = Object.entries(diff(etablissement, newEtablissement));
+        // console.debug(differences);
+        differences.length ? updated++ : notUpdated++;
+
+        if (differences.length) {
+          await Etablissement.updateOne({ siret }, { $set: { updated_at: new Date() } });
+        }
       }
 
       // Si l'établissement n'existe pas

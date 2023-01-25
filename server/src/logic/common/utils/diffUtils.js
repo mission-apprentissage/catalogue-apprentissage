@@ -7,6 +7,7 @@ const diffFormation = (previousFormationP, nextFormationP) => {
     __v: __v1,
     updates_history: updates_history1,
     created_at: created_at1,
+    updated_at: updated_at1,
     last_update_at: last_update_at1,
     distance_lieu_formation_etablissement_formateur: distance_1,
     ...previousFormation
@@ -16,6 +17,7 @@ const diffFormation = (previousFormationP, nextFormationP) => {
     __v: __v2,
     updates_history: updates_history2,
     created_at: created_at2,
+    updated_at: updated_at2,
     last_update_at: last_update_at2,
     distance_lieu_formation_etablissement_formateur: distance_2,
     ...nextFormation

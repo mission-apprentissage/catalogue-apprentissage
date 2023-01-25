@@ -6,15 +6,11 @@
  */
 const { Types } = require("mongoose");
 
-export interface Etablissement {
+export interface DualControlEtablissement {
   /**
    * Cet établissement est le siége sociale
    */
   siege_social?: boolean;
-  /**
-   * Identifiant établissement siége
-   */
-  etablissement_siege_id?: string;
   /**
    * Numéro siret du siége sociale
    */
@@ -166,10 +162,6 @@ export interface Etablissement {
    */
   uai?: string;
   /**
-   * L'UAI de l'établissement est il valide ?
-   */
-  uai_valide?: boolean | null;
-  /**
    * UAIs potentiels de l'établissement
    */
   uais_potentiels?: string[];
@@ -276,14 +268,6 @@ export interface Etablissement {
     [k: string]: unknown;
   };
   /**
-   * Id des formations rattachées
-   */
-  formations_ids?: string[];
-  /**
-   * UAIs des formations rattachées à l'établissement
-   */
-  formations_uais?: string[];
-  /**
    * Numéro de dossier Démarche Simplifiée
    */
   ds_id_dossier?: string;
@@ -332,18 +316,6 @@ export interface Etablissement {
    */
   published?: boolean;
   /**
-   * Date de dernières mise à jour
-   */
-  last_update_at?: Date;
-  /**
-   * Historique des mises à jours
-   */
-  updates_history?: unknown[];
-  /**
-   * Erreur lors de la mise à jour de la formation
-   */
-  update_error?: string;
-  /**
    * Tableau de tags (2020, 2021, RCO, etc.)
    */
   tags?: string[];
@@ -380,6 +352,4 @@ export interface Etablissement {
    */
   opco_siren?: string;
   _id?: Types.ObjectId;
-  updated_at?: Date;
-  created_at?: Date;
 }

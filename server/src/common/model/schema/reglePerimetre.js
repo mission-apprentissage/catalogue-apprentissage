@@ -75,11 +75,6 @@ const reglePerimetre = {
       "En cas d'égalité sur la plateforme, niveau et diplome, priorité de la règle pour savoir laquelle est la plus forte",
   },
   // history
-  created_at: {
-    type: Date,
-    default: Date.now,
-    description: "Date d'ajout en base de données",
-  },
   updates_history: {
     type: [Object],
     default: [],

@@ -2,6 +2,7 @@ const affelnetFormationSchema = require("./affelnetFormation");
 const alertSchema = require("./alert");
 const consoleStatSchema = require("./consoleStat");
 const consumptionSchema = require("./consumption");
+const dualControlEtablissementSchema = require("./dualControlEtablissement");
 const dualControlFormationSchema = require("./formation/dualControlFormation");
 const dualControlPerimeterReportSchema = require("./dualControlPerimeterReport");
 const dualControlReportSchema = require("./dualControlReport");
@@ -18,24 +19,31 @@ const roleSchema = require("./role");
 const statistiqueSchema = require("./statistique");
 const userSchema = require("./user");
 
-module.exports = {
-  affelnetFormationSchema,
-  alertSchema,
-  consoleStatSchema,
-  consumptionSchema,
-  dualControlFormationSchema,
-  dualControlPerimeterReportSchema,
-  dualControlReportSchema,
-  etablissementSchema,
-  formationSchema,
-  logSchema,
-  parcoursupFormationCheckSchema,
-  parcoursupFormationSchema,
-  previousSeasonFormationSchema,
-  previousSeasonFormationStatSchema,
-  reglePerimetreSchema,
-  reportSchema,
-  roleSchema,
-  statistiqueSchema,
-  userSchema,
-};
+const timestamps = { createdAt: "created_at", updatedAt: "updated_at" };
+
+const schemasMap = new Map(
+  Object.entries({
+    affelnetFormation: [affelnetFormationSchema, { timestamps }],
+    alert: [alertSchema, { timestamps }],
+    consoleStat: [consoleStatSchema, {}],
+    consumption: [consumptionSchema, {}],
+    dualControlPerimeterReport: [dualControlPerimeterReportSchema, {}],
+    dualControlReport: [dualControlReportSchema, {}],
+    etablissement: [etablissementSchema, { timestamps }],
+    dualControlEtablissement: [dualControlEtablissementSchema, {}],
+    formation: [formationSchema, { timestamps }],
+    dualControlFormation: [dualControlFormationSchema, {}],
+    log: [logSchema, {}],
+    parcoursupFormationCheck: [parcoursupFormationCheckSchema, {}],
+    parcoursupFormation: [parcoursupFormationSchema, { timestamps }],
+    previousSeasonFormation: [previousSeasonFormationSchema, {}],
+    previousSeasonFormationStat: [previousSeasonFormationStatSchema, {}],
+    reglePerimetre: [reglePerimetreSchema, { timestamps }],
+    report: [reportSchema, {}],
+    role: [roleSchema, { timestamps }],
+    statistique: [statistiqueSchema, { timestamps }],
+    user: [userSchema, { timestamps }],
+  })
+);
+
+module.exports = schemasMap;

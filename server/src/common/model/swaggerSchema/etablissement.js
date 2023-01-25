@@ -337,11 +337,6 @@ module.exports = {
         type: "object",
         description: "Tranche salarié",
       },
-      formations_attachees: {
-        type: "boolean",
-        default: false,
-        description: "l'établissement a des formations",
-      },
       formations_ids: {
         type: "array",
         items: {
@@ -419,11 +414,6 @@ module.exports = {
         default: false,
         description: "Est publié",
       },
-      created_at: {
-        type: "string",
-        description: "Date d'ajout en base de données",
-        format: "date-time",
-      },
       last_update_at: {
         type: "string",
         description: "Date de dernières mise à jour",
@@ -490,6 +480,14 @@ module.exports = {
       _id: {
         type: "string",
         pattern: "^[0-9a-fA-F]{24}$",
+      },
+      updated_at: {
+        type: "string",
+        format: "date-time",
+      },
+      created_at: {
+        type: "string",
+        format: "date-time",
       },
     },
   },

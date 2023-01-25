@@ -74,13 +74,12 @@ const prepareJsonSchema = (jsonSchema) => {
 };
 
 const generateTypes = () => {
-  Object.keys(schemas).forEach((schemaName) => {
-    const schema = schemas[schemaName];
-    const baseFilename = schemaName.replace("Schema", "");
-    const eJsonSchema = getJsonFromMongooseSchema(schema);
+  Array.from(schemas.keys()).forEach((schemaName) => {
+    const [schemaDescriptor, schemaOptions] = schemas.get(schemaName);
+    const eJsonSchema = getJsonFromMongooseSchema(schemaDescriptor, schemaOptions);
     const jsonSchema = prepareJsonSchema(eJsonSchema);
 
-    compile(jsonSchema, baseFilename, {
+    compile(jsonSchema, schemaName, {
       bannerComment: `
         /* tslint:disable */
         /**
@@ -91,7 +90,7 @@ const generateTypes = () => {
          const { Types } = require("mongoose");
         `,
       style: packageJson.prettier,
-    }).then((ts) => fs.writeFileSync(path.resolve(__dirname, `../../common/model/schema/${baseFilename}.d.ts`), ts));
+    }).then((ts) => fs.writeFileSync(path.resolve(__dirname, `../../common/model/schema/${schemaName}.d.ts`), ts));
   });
 };
 

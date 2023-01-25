@@ -17,8 +17,8 @@ const cleanMongooseSchema = (mongooseSchema) => {
   return obj;
 };
 
-const getJsonFromMongooseSchema = (schema) => {
-  const eSchema = new Schema(cleanMongooseSchema(schema));
+const getJsonFromMongooseSchema = (schema, options) => {
+  const eSchema = new Schema(cleanMongooseSchema(schema), options);
   const eJsonSchema = eSchema.jsonSchema();
   return eJsonSchema;
 };
