@@ -69,22 +69,31 @@ const run = async () => {
     parcoursup_statut: PARCOURSUP_STATUS.REJETE,
   });
 
-  const totalPsPublished = await Formation.countDocuments({
+  const totalPublished = await Formation.countDocuments({
     parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
   });
-  const totalReglementPsPublished = await Formation.countDocuments({
+  const totalReglementPublished = await Formation.countDocuments({
     catalogue_published: true,
     published: true,
     parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
   });
 
-  const totalPsNotPublished = await Formation.countDocuments({
+  const totalNotPublished = await Formation.countDocuments({
     parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIE,
   });
-  const totalReglementPsNotPublished = await Formation.countDocuments({
+  const totalReglementNotPublished = await Formation.countDocuments({
     catalogue_published: true,
     published: true,
     parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIE,
+  });
+
+  const totalClosed = await Formation.countDocuments({
+    parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
+  });
+  const totalReglementClosed = await Formation.countDocuments({
+    catalogue_published: true,
+    published: true,
+    parcoursup_statut: PARCOURSUP_STATUS.FERME,
   });
 
   const totalPérimètre = await Formation.countDocuments({ parcoursup_perimetre: true });
@@ -110,9 +119,10 @@ const run = async () => {
       `- statut "à publier (soumis à validation Recteur)" : ${totalReglementToValidateRecteur} / ${totalToValidateRecteur}\n` +
       `- statut "à publier" : ${totalReglementToCheck} / ${totalToCheck}\n` +
       `- statut "en attente de publication" : ${totalReglementPending} / ${totalPending}\n` +
-      `- statut "publié" sur ParcourSup : ${totalReglementPsPublished} / ${totalPsPublished}\n` +
+      `- statut "publié" sur ParcourSup : ${totalReglementPublished} / ${totalPublished}\n` +
       `- statut "rejeté" par ParcourSup : ${totalReglementRejected} / ${totalRejected}\n` +
-      `- statut "NON publié" sur ParcourSup : ${totalReglementPsNotPublished} / ${totalPsNotPublished}\n` +
+      `- statut "NON publié" sur ParcourSup : ${totalReglementNotPublished} / ${totalNotPublished}\n` +
+      `- statut "fermé" sur ParcourSup : ${totalReglementClosed} / ${totalClosed}\n` +
       `\n` +
       `- dans le périmètre: ${totalReglementPérimètre} / ${totalPérimètre}\n` +
       `- hors périmètre : ${totalReglementHorsPérimètre} / ${totalHorsPérimètre}\n`

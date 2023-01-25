@@ -17,6 +17,7 @@ const PARCOURSUP_STATUS = {
   A_PUBLIER_VALIDATION_RECTEUR: /** @type {ParcoursupStatus} */ ("à publier (soumis à validation Recteur)"),
   A_PUBLIER_HABILITATION: /** @type {ParcoursupStatus} */ ("à publier (sous condition habilitation)"),
   REJETE: /** @type {ParcoursupStatus} */ ("rejet de publication"),
+  FERME: /** @type {ParcoursupStatus} */ ("fermé"),
 };
 
 const AFFELNET_STATUS = {

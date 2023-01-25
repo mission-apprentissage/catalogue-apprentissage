@@ -69,7 +69,8 @@
       "à publier (vérifier accès direct postbac)": "offre et organisme de formation qui remplissent les conditions pour intégrer le service Parcoursup. L’accessibilité de l’offre de formation aux bacheliers doit être vérifiée par un instructeur en académie",
       "à publier (soumis à validation Recteur)": "offre et organisme de formation qui remplissent les conditions pour intégrer la plateforme Parcoursup. Une commission rectorale statue sur l’intégration potentielle de ces offres dans la plateforme Parcoursup",
       "à publier": "offre et organisme de formation qui remplissent les conditions pour intégrer la plateforme Parcoursup. L’offre de formation peut faire l’objet d’une publication par un instructeur en académie",
-      "en attente de publication": "offre de formation qui pourrait être intégrée automatiquement dans la plateforme Parcoursup via le module l’import"
+      "en attente de publication": "offre de formation qui pourrait être intégrée automatiquement dans la plateforme Parcoursup via le module l’import",
+      "fermé": "Cette formation a été supprimée dans Parcoursup, mais elle figure encore dans les enregistrements Carif-Oref. Le Carif-Oref est informé de cette suppression pour rectification. Après mise à jour au niveau du Carif-Oref, la formation disparaîtra du catalogue."
     },
     "periode": {
       "title": "Années au cours desquelles les débuts de formation sont proposés ou ont été proposés."
