@@ -59,10 +59,6 @@ export interface ReglePerimetre {
    */
   priorite?: number;
   /**
-   * Date d'ajout en base de données
-   */
-  created_at?: Date;
-  /**
    * Historique des mises à jours
    */
   updates_history?: unknown[];
@@ -91,4 +87,6 @@ export interface ReglePerimetre {
    */
   annee?: string;
   _id?: Types.ObjectId;
+  updated_at?: Date;
+  created_at?: Date;
 }

@@ -213,7 +213,7 @@ const collectPreviousSeasonStats = async ({ month = 6, date = 31 } = { month: 6,
 
 module.exports = { collectPreviousSeasonStats };
 
-if (process.env.standaloneJobs) {
+if (process.env.standalone) {
   /**
    * call script with cli arg `--date=31/05` for 31 May for instance
    */

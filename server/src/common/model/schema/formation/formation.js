@@ -25,6 +25,27 @@ const mefSchema = new mongoose.Schema(
   { _id: false }
 );
 
+const updateHistorySchema = new mongoose.Schema(
+  {
+    from: {
+      type: Object,
+      default: {},
+      description: "Valeurs avant mise à jour",
+    },
+    to: {
+      type: Object,
+      default: {},
+      description: "Valeurs après mise à jour",
+    },
+    updated_at: {
+      type: Date,
+      default: new Date(),
+      description: "Date de la mise à jour",
+    },
+  },
+  { _id: false }
+);
+
 const rncpDetailsSchema = new mongoose.Schema(
   {
     date_fin_validite_enregistrement: {
@@ -393,13 +414,9 @@ const formationSchema = {
     description:
       "La publication vers les plateformes est forcée (contournement catalogue non-éligible dans certains cas)",
   },
-  created_at: {
-    type: Date,
-    default: Date.now,
-    description: "Date d'ajout en base de données",
-  },
+
   updates_history: {
-    type: [Object],
+    type: [updateHistorySchema],
     default: [],
     description: "Historique des mises à jours",
   },

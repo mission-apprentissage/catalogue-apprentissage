@@ -46,7 +46,7 @@ const importer = async (
 
 module.exports = importer;
 
-if (process.env.standaloneJobs) {
+if (process.env.standalone) {
   runScript(async () => {
     const args = process.argv.slice(2);
     const noDownload = args.includes("--noDownload");

@@ -47,9 +47,7 @@ export interface User {
    * Historique des dates de connexion
    */
   connection_history?: string & Date[];
-  /**
-   * Date de création du compte
-   */
-  created_at?: Date;
   _id?: Types.ObjectId;
+  updated_at?: Date;
+  created_at?: Date;
 }

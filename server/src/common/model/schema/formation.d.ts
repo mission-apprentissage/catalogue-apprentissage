@@ -176,13 +176,9 @@ export interface Formation {
    */
   forced_published?: boolean;
   /**
-   * Date d'ajout en base de données
-   */
-  created_at?: Date;
-  /**
    * Historique des mises à jours
    */
-  updates_history?: unknown[];
+  updates_history?: ItemOfUpdatesHistory[];
   /**
    * Date de dernières mise à jour
    */
@@ -599,6 +595,8 @@ export interface Formation {
    */
   affelnet_mefs_10?: ItemOfAffelnetMefs_10[];
   _id?: Types.ObjectId;
+  updated_at?: Date;
+  created_at?: Date;
 }
 /**
  * Détails RNCP (bloc de compétences etc..)
@@ -697,6 +695,24 @@ export interface Rejection {
    * Date à laquelle le rejet de publication a été pris en charge
    */
   handled_date?: Date;
+}
+export interface ItemOfUpdatesHistory {
+  /**
+   * Valeurs avant mise à jour
+   */
+  from?: {
+    [k: string]: unknown;
+  };
+  /**
+   * Valeurs après mise à jour
+   */
+  to?: {
+    [k: string]: unknown;
+  };
+  /**
+   * Date de la mise à jour
+   */
+  updated_at?: Date;
 }
 export interface ItemOfBcnMefs_10 {
   mef10?: string;
