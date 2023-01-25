@@ -14,7 +14,7 @@ const STATUS = {
 /**
  * Import quotidien des formations PSUP pour comparaison des bases
  */
-const run = async () => {
+const psImport = async () => {
   try {
     const results = await getFormations();
 
@@ -75,12 +75,12 @@ if (process.env.standalone) {
   runScript(async () => {
     logger.info(" -- Start psup import -- ");
 
-    await run();
+    await psImport();
 
     logger.info(" -- End psup import -- ");
   });
 }
 
 module.exports = {
-  run,
+  psImport,
 };

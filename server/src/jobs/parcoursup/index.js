@@ -1,5 +1,6 @@
 const logger = require("../../common/logger");
 const { runScript } = require("../scriptWrapper");
+const { psImport } = require("./import");
 const { psPerimetre } = require("./perimetre");
 // const { psCoverage } = require("./coverage");
 const parcoursupExport = require("./export");
@@ -12,6 +13,7 @@ const parcoursupJobs = async () => {
   try {
     logger.info(`Start Parcoursup jobs`);
 
+    await psImport();
     await psPerimetre();
     // await psCoverage();
 
