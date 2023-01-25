@@ -6,14 +6,16 @@ const { DualControlFormation } = require("../../../common/model/index");
 const { updateRelationFields: updateEtablissementRelationFields } = require("../../etablissements/importer/converter");
 const { updateRelationFields: updateFormationRelationFields } = require("./converter");
 
-const importer = async (options) => {
+const importer = async (
+  { noDownload = false, forceRecompute = false } = { noDownload: false, forceRecompute: false }
+) => {
   try {
     logger.info(" -- Start of importer -- ");
 
     // STEP 1 : Download formations from RCO
     let downloadError;
 
-    if (!options?.noDownload) {
+    if (!noDownload) {
       logger.info(" -- Downloading formations -- ");
       downloadError = await downloader();
 
@@ -30,7 +32,7 @@ const importer = async (options) => {
     }
 
     // STEP 2 : Convert formations
-    await converter();
+    await converter({ forceRecompute });
 
     // STEP 3 : Rebuild relations between etablissements and formations
     await updateEtablissementRelationFields();
@@ -48,6 +50,7 @@ if (process.env.standaloneJobs) {
   runScript(async () => {
     const args = process.argv.slice(2);
     const noDownload = args.includes("--noDownload");
-    await importer({ noDownload });
+    const forceRecompute = args.includes("--forceRecompute");
+    await importer({ noDownload, forceRecompute });
   });
 }

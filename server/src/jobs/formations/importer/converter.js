@@ -1,7 +1,11 @@
+const {
+  isValideUAI,
+  getCoordinatesFromAddressData,
+  getAddressFromCoordinates,
+} = require("@mission-apprentissage/tco-service-node");
+const { diff } = require("deep-object-diff");
 const { Formation, DualControlFormation, Etablissement } = require("../../../common/model/index");
 const { cursor } = require("../../../common/utils/cursor");
-const { diff } = require("deep-object-diff");
-const { isValideUAI, getCoordinatesFromAddressData } = require("@mission-apprentissage/tco-service-node");
 const { distanceBetweenCoordinates } = require("../../../common/utils/distanceUtils");
 const logger = require("../../../common/logger");
 const { computeMefs } = require("../../../logic/finder/mefsFinder");
@@ -34,7 +38,7 @@ const computeRelationFields = async (fields) => {
   };
 };
 
-const recomputeFields = async (fields, oldFields) => {
+const recomputeFields = async (fields, oldFields, { forceRecompute = false } = { forceRecompute: false }) => {
   let {
     affelnet_mefs_10,
     affelnet_infos_offre,
@@ -46,6 +50,7 @@ const recomputeFields = async (fields, oldFields) => {
   let distance_lieu_formation_etablissement_formateur = oldFields?.distance_lieu_formation_etablissement_formateur;
 
   if (
+    forceRecompute ||
     fields.geo_coordonnees_etablissement_formateur !== oldFields?.geo_coordonnees_etablissement_formateur ||
     fields.lieu_formation_geo_coordonnees !== oldFields?.lieu_formation_geo_coordonnee
   ) {
@@ -77,7 +82,34 @@ const recomputeFields = async (fields, oldFields) => {
   let lieu_formation_adresse_computed = oldFields?.lieu_formation_adresse_computed;
   let distance = oldFields?.distance;
 
-  if (fields.lieu_formation_geo_coordonnees !== oldFields?.lieu_formation_geo_coordonnees) {
+  if (
+    fields.lieu_formation_geo_coordonnees &&
+    (forceRecompute || fields.lieu_formation_geo_coordonnees !== oldFields?.lieu_formation_geo_coordonnees)
+  ) {
+    try {
+      const [latitude, longitude] = fields.lieu_formation_geo_coordonnees.split("##")[0]?.split(",");
+      const { result } = (await getAddressFromCoordinates({ latitude, longitude })) ?? {};
+
+      lieu_formation_adresse_computed = result?.adresse
+        ? `${result.adresse.numero_voie} ${result.adresse.type_voie} ${result.adresse.nom_voie} ${result.adresse.code_postal} ${result.adresse.commune}`
+        : undefined;
+    } catch (e) {
+      console.error(e);
+      lieu_formation_adresse_computed = undefined;
+    }
+  }
+
+  if (
+    fields.lieu_formation_adresse &&
+    fields.localite &&
+    fields.code_postal &&
+    fields.code_commune_insee &&
+    (forceRecompute ||
+      fields.lieu_formation_adresse !== oldFields.lieu_formation_adresse ||
+      fields.localite !== oldFields.localite ||
+      fields.code_postal !== oldFields.code_postal ||
+      fields.code_commune_insee !== oldFields.code_commune_insee)
+  ) {
     const addressData = {
       nom_voie: fields.lieu_formation_adresse,
       localite: fields.localite,
@@ -86,21 +118,21 @@ const recomputeFields = async (fields, oldFields) => {
     };
 
     try {
-      const { result } = await getCoordinatesFromAddressData(addressData);
-      lieu_formation_geo_coordonnees_computed = result.geo_coordonnees;
-
-      if (!!lieu_formation_geo_coordonnees_computed && !!fields.lieu_formation_geo_coordonnees) {
-        const [lat1, lon1] = lieu_formation_geo_coordonnees_computed?.split("##")[0]?.split(",") ?? [];
-        const [lat2, lon2] = fields.lieu_formation_geo_coordonnees?.split("##")[0]?.split(",") ?? [];
-
-        distance = await distanceBetweenCoordinates(lat1, lon1, lat2, lon2);
-      }
+      const { result } = (await getCoordinatesFromAddressData(addressData)) ?? {};
+      lieu_formation_geo_coordonnees_computed = result?.geo_coordonnees;
     } catch (e) {
       console.error(e);
       lieu_formation_geo_coordonnees_computed = undefined;
-      lieu_formation_adresse_computed = undefined;
-      distance = undefined;
     }
+  }
+
+  if (!!lieu_formation_geo_coordonnees_computed && !!fields.lieu_formation_geo_coordonnees) {
+    const [lat1, lon1] = lieu_formation_geo_coordonnees_computed?.split("##")[0]?.split(",") ?? [];
+    const [lat2, lon2] = fields.lieu_formation_geo_coordonnees?.split("##")[0]?.split(",") ?? [];
+
+    distance = await distanceBetweenCoordinates(lat1, lon1, lat2, lon2);
+  } else {
+    distance = undefined;
   }
 
   const cfd_entree = getCfdEntree(fields.cfd);
@@ -150,7 +182,7 @@ const unpublishOthers = async () => {
   return { removed: result.nModified };
 };
 
-const applyConversion = async () => {
+const applyConversion = async ({ forceRecompute = false } = { forceRecompute: false }) => {
   let added = 0,
     notUpdated = 0,
     updated = 0;
@@ -172,7 +204,11 @@ const applyConversion = async () => {
 
         await Formation.updateOne(
           { cle_ministere_educatif },
-          { $set: { ...(await recomputeFields(removeFields({ ...dcFormation }, notToCompare), formation)) } }
+          {
+            $set: {
+              ...(await recomputeFields(removeFields({ ...dcFormation }, notToCompare), formation, { forceRecompute })),
+            },
+          }
         );
 
         const newFormation = await Formation.findById(formation._id).lean();
@@ -185,7 +221,7 @@ const applyConversion = async () => {
         // console.warn(`${dcFormation.cle_ministere_educatif} not found`);
         added++;
 
-        await Formation.create(await recomputeFields(dcFormation));
+        await Formation.create(await recomputeFields(dcFormation, null, { forceRecompute }));
       }
     }
   );
@@ -193,10 +229,10 @@ const applyConversion = async () => {
   return { added, updated, notUpdated };
 };
 
-const converter = async () => {
+const converter = async ({ forceRecompute = false } = { forceRecompute: false }) => {
   let error = null;
   try {
-    const { added, updated, notUpdated } = await applyConversion();
+    const { added, updated, notUpdated } = await applyConversion({ forceRecompute });
 
     const { removed } = await unpublishOthers();
 
