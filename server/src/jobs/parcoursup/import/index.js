@@ -18,6 +18,15 @@ const psImport = async () => {
   try {
     const results = await getFormations();
 
+    logger.info(
+      results
+        .filter(({ status }) => status === STATUS.NEW_LINK)
+        .map(({ g_ta_cod: parcoursup_id, status, rco: cle_ministere_educatif }) => ({
+          parcoursup_id,
+          status,
+          cle_ministere_educatif,
+        }))
+    );
     const statusesCount = results.reduce(function (prev, cur) {
       prev[cur.status] = (prev[cur.status] || 0) + 1;
       return prev;
@@ -30,11 +39,12 @@ const psImport = async () => {
     console.log(statusesCount);
 
     for (const { g_ta_cod: parcoursup_id, status, rco: cle_ministere_educatif } of results) {
+      // logger.info({ parcoursup_id, status, cle_ministere_educatif });
       switch (status) {
         case STATUS.CANCELED_PUBLICATION:
           (
             await Formation.updateOne(
-              { cle_ministere_educatif, parcoursup_id: { $ne: null } },
+              { $or: [{ cle_ministere_educatif }, { parcoursup_id }], parcoursup_id: { $ne: null } },
               { $set: { parcoursup_id: null } }
             )
           ).nModified === 1 && canceled++;
@@ -48,12 +58,17 @@ const psImport = async () => {
           ).nModified === 1 && linked++;
           break;
         case STATUS.CLOSED:
-          console.log(parcoursup_id);
           (
             await Formation.updateOne(
               {
-                cle_ministere_educatif,
-                $or: [{ PARCOURSUP_STATUS: { $ne: PARCOURSUP_STATUS.FERME } }, { parcoursup_id: { $ne: null } }],
+                $and: [
+                  {
+                    $or: [{ cle_ministere_educatif }, { parcoursup_id }],
+                  },
+                  {
+                    $or: [{ parcoursup_statut: { $nin: [PARCOURSUP_STATUS.FERME] } }, { parcoursup_id: { $ne: null } }],
+                  },
+                ],
               },
               { $set: { parcoursup_id: null, parcoursup_statut: PARCOURSUP_STATUS.FERME, last_update_at: Date.now() } }
             )
