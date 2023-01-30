@@ -132,7 +132,6 @@ src/**/*.css.map
 setEnv.sh
 **/.vagrant/
 **/node_modules/
-**/.yarn/
 yarn-error.log
 
 # Builds
