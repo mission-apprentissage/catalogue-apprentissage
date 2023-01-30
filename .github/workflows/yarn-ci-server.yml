@@ -15,10 +15,22 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16'
-          cache: 'yarn'
-          cache-dependency-path: server/yarn.lock
 
-      - run: corepack enable
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+        shell: bash
+        working-directory: server
+
+      - name: Restore yarn cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: yarn-cache-folder-${{ hashFiles('**/yarn.lock', '.yarnrc.yml') }}
+          restore-keys: |
+            yarn-cache-folder-
+
+      # - run: corepack enable
 
       # setup .yarnrc.yml
       - run: cp server/.yarnrc.yml.template server/.yarnrc.yml; sed -i "s/xxxxxxxxxx/$NPM_TOKEN/g" server/.yarnrc.yml; cat server/.yarnrc.yml
