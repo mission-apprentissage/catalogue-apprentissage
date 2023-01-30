@@ -7,4 +7,4 @@ npmScopes:
     npmRegistryServer: "https://npm.pkg.github.com"
     npmPublishRegistry: "https://npm.pkg.github.com"
     npmAlwaysAuth: true
-    npmAuthToken: 4c9ab3f4a7dea852c88e3ae3f030549a7a65a226
+    npmAuthToken: xxxxxxxxxx

@@ -18,66 +18,50 @@ jobs:
           cache: 'yarn'
           cache-dependency-path: server
 
+      - name: Change directory to Server
+        run: cd server/
+
       # setup .yarnrc.yml
-      - run: cp server/.yarnrc.yml.template server/.yarnrc.yml; sed -i "s/xxxxxxxxxx/$NPM_TOKEN/g" server/.yarnrc.yml; cat server/.yarnrc.yml
+      - run: cp .yarnrc.yml.template .yarnrc.yml; sed -i "s/xxxxxxxxxx/$NPM_TOKEN/g" .yarnrc.yml; cat .yarnrc.yml
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-
       # Install dependencies
       - name: Run Yarn Install
-        uses: borales/actions-yarn@v4
-        with:
-          cmd: install --immutable
-          dir: server
+        run: yarn install --immutable
 
       # Lint
       - name: Run Lint
-        uses: borales/actions-yarn@v4
-        with:
-          cmd: lint
-          dir: server
+        run: yarn lint
 
       # Yarn test
       - name: Run test in sub-folder
-        uses: borales/actions-yarn@v4
-        with:
-          cmd: test
-          dir: server
-
-      - name: Create .env
-        run: |
-          cd ui
-          cp .env.example .env
-          cd ../server
-          cp .env.example .env
+        run: yarn test
 
       # Start docker container for tests (e.g: mongodb)
       - name: Start Docker
-        uses: borales/actions-yarn@v4
-        with:
-          cmd: docker:start-ci
-          dir: server
+        run: |
+          cd ../ui
+          cp .env.example .env
+          cd ../server
+          cp .env.example .env
+          yarn docker:start-ci
+
 
       # Run mocha tests
       - name: Run Tests
-        uses: borales/actions-yarn@v4
-        with:
-          cmd: test:coverage
-          dir: server
+        run: yarn test:coverage
 
       # codecov
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          directory: ./server/coverage
+          directory: ./coverage
           name: codecov-server
           verbose: true
 
       # Teardown
       - name: Teardown
-        uses: borales/actions-yarn@v4
-        with:
-          cmd: docker:down
-          dir: server
+        run: yarn docker:down
+
