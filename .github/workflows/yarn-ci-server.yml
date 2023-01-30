@@ -53,9 +53,6 @@ jobs:
       # Install dependencies
       - name: Run Yarn Install
         run: |
-          pwd
-          ls -la
-          yarn --version
           yarn install --immutable
 
       # Lint
@@ -71,12 +68,9 @@ jobs:
       # Start docker container for tests (e.g: mongodb)
       - name: Start Docker
         run: |
-          cd ui/
-          cp .env.example .env
-          cd ../server/
+          cp ../ui/.env.example ../ui/.env
           cp .env.example .env
           yarn docker:start-ci
-
 
       # Run mocha tests
       - name: Run Tests
