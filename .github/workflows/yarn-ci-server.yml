@@ -35,12 +35,20 @@ jobs:
 
       # setup .yarnrc.yml
       - name: Create .yarnrc.yml
-        run: |
-          cp ./.yarnrc.yml.template ./.yarnrc.yml; sed -i "s/xxxxxxxxxx/$NPM_TOKEN/g" ./.yarnrc.yml; cat ./.yarnrc.yml
-          pwd
-          ls -la
+        # run: |
+        #   cp ./.yarnrc.yml.template ./.yarnrc.yml; sed -i "s/xxxxxxxxxx/$NPM_TOKEN/g" ./.yarnrc.yml; cat ./.yarnrc.yml
+        #   pwd
+        #   ls -la
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          yarn config set yarnPath .yarn/releases/yarn-3.3.1.cjs
+          yarn config set nodeLinker node-modules
+          yarn config set defaultSemverRangePrefix ""
+          yarn config set npmScopes.mission-apprentissage.npmRegistryServer "https://npm.pkg.github.com"
+          yarn config set npmScopes.mission-apprentissage.npmPublishRegistry "https://npm.pkg.github.com"
+          yarn config set npmScopes.mission-apprentissage.npmAlwaysAuth true
+          yarn config set npmScopes.mission-apprentissage.npmAuthToken $NPM_TOKEN
 
       # Install dependencies
       - name: Run Yarn Install
