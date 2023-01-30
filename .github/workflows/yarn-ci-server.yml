@@ -29,21 +29,21 @@ jobs:
         uses: borales/actions-yarn@v4
         with:
           cmd: install --immutable
-          dir: 'server'
+          dir: server
 
       # Lint
       - name: Run Lint
         uses: borales/actions-yarn@v4
         with:
           cmd: lint
-          dir: 'server'
+          dir: server
 
       # Yarn test
       - name: Run test in sub-folder
         uses: borales/actions-yarn@v4
         with:
           cmd: test
-          dir: 'server'
+          dir: server
 
       - name: Create .env
         run: |
@@ -57,14 +57,14 @@ jobs:
         uses: borales/actions-yarn@v4
         with:
           cmd: docker:start-ci
-          dir: 'server'
+          dir: server
 
       # Run mocha tests
       - name: Run Tests
         uses: borales/actions-yarn@v4
         with:
           cmd: test:coverage
-          dir: 'server'
+          dir: server
 
       # codecov
       - name: Upload coverage to Codecov
@@ -80,4 +80,4 @@ jobs:
         uses: borales/actions-yarn@v4
         with:
           cmd: docker:down
-          dir: 'server'
+          dir: server
