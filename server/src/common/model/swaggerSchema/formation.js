@@ -356,14 +356,28 @@ module.exports = {
         description:
           "La publication vers les plateformes est forcée (contournement catalogue non-éligible dans certains cas)",
       },
-      created_at: {
-        type: "string",
-        description: "Date d'ajout en base de données",
-        format: "date-time",
-      },
       updates_history: {
         type: "array",
-        items: {},
+        items: {
+          title: "itemOf_updates_history",
+          type: "object",
+          properties: {
+            from: {
+              type: "object",
+              description: "Valeurs avant mise à jour",
+            },
+            to: {
+              type: "object",
+              description: "Valeurs après mise à jour",
+            },
+            updated_at: {
+              type: "string",
+              default: "2023-01-25T16:11:00.558Z",
+              description: "Date de la mise à jour",
+              format: "date-time",
+            },
+          },
+        },
         default: [],
         description: "Historique des mises à jours",
       },
@@ -996,6 +1010,14 @@ module.exports = {
       _id: {
         type: "string",
         pattern: "^[0-9a-fA-F]{24}$",
+      },
+      updated_at: {
+        type: "string",
+        format: "date-time",
+      },
+      created_at: {
+        type: "string",
+        format: "date-time",
       },
     },
   },

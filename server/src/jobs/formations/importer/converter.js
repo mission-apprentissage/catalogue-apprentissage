@@ -105,10 +105,10 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
     fields.code_postal &&
     fields.code_commune_insee &&
     (forceRecompute ||
-      fields.lieu_formation_adresse !== oldFields.lieu_formation_adresse ||
-      fields.localite !== oldFields.localite ||
-      fields.code_postal !== oldFields.code_postal ||
-      fields.code_commune_insee !== oldFields.code_commune_insee)
+      fields.lieu_formation_adresse !== oldFields?.lieu_formation_adresse ||
+      fields.localite !== oldFields?.localite ||
+      fields.code_postal !== oldFields?.code_postal ||
+      fields.code_commune_insee !== oldFields?.code_commune_insee)
   ) {
     const addressData = {
       nom_voie: fields.lieu_formation_adresse,
@@ -191,6 +191,7 @@ const applyConversion = async ({ forceRecompute = false } = { forceRecompute: fa
     DualControlFormation.find({}).sort(),
 
     async ({ cle_ministere_educatif }) => {
+      // console.debug(cle_ministere_educatif);
       const dcFormation = await DualControlFormation.findOne({ cle_ministere_educatif }).lean();
       const formation = await Formation.findOne({ cle_ministere_educatif }).lean();
 
@@ -200,7 +201,7 @@ const applyConversion = async ({ forceRecompute = false } = { forceRecompute: fa
 
       // Si la formation existe
       if (formation) {
-        const notToCompare = ["_id", "__v"];
+        const notToCompare = ["_id", "__v", "created_at", "updated_at", "last_updated_at"];
 
         await Formation.updateOne(
           { cle_ministere_educatif },
@@ -208,12 +209,19 @@ const applyConversion = async ({ forceRecompute = false } = { forceRecompute: fa
             $set: {
               ...(await recomputeFields(removeFields({ ...dcFormation }, notToCompare), formation, { forceRecompute })),
             },
-          }
+          },
+          { timestamps: false }
         );
 
         const newFormation = await Formation.findById(formation._id).lean();
 
-        Object.keys(diff(formation, newFormation)).length ? updated++ : notUpdated++;
+        const differences = Object.entries(diff(formation, newFormation));
+        // console.debug(differences);
+        differences.length ? updated++ : notUpdated++;
+
+        if (differences.length) {
+          await Formation.updateOne({ cle_ministere_educatif }, { $set: {} });
+        }
       }
 
       // Si la formation n'existe pas

@@ -6,11 +6,11 @@ const prettier = require("prettier");
 const packageJson = require("../../../package.json");
 
 const generateSwaggerSchema = () => {
-  Object.keys(schemas).forEach((schemaName) => {
-    if (["formationSchema", "etablissementSchema"].includes(schemaName)) {
-      const schema = schemas[schemaName];
-      const baseFilename = schemaName.replace("Schema", "");
-      const eJsonSchema = getJsonFromMongooseSchema(schema);
+  Array.from(schemas.keys()).forEach((schemaName) => {
+    const [schemaDescriptor, schemaOptions] = schemas.get(schemaName);
+    if (["formation", "etablissement"].includes(schemaName)) {
+      const baseFilename = schemaName;
+      const eJsonSchema = getJsonFromMongooseSchema(schemaDescriptor, schemaOptions);
 
       let sout = {};
       sout[baseFilename] = eJsonSchema;

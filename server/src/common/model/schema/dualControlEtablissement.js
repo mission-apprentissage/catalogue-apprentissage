@@ -1,15 +1,10 @@
 const { isValideUAI } = require("@mission-apprentissage/tco-service-node");
 
-const etablissementSchema = {
+const dualControlEtablissementSchema = {
   siege_social: {
     type: Boolean,
     default: false,
     description: "Cet établissement est le siége sociale",
-  },
-  etablissement_siege_id: {
-    type: String,
-    default: null,
-    description: "Identifiant établissement siége",
   },
   etablissement_siege_siret: {
     type: String,
@@ -204,11 +199,7 @@ const etablissementSchema = {
     },
     description: "UAI de l'établissement",
   },
-  uai_valide: {
-    type: Boolean,
-    default: null,
-    description: "L'UAI de l'établissement est il valide ?",
-  },
+
   uais_potentiels: {
     type: [String],
     default: [],
@@ -342,17 +333,6 @@ const etablissementSchema = {
     description: "Tranche salarié",
   },
 
-  formations_ids: {
-    type: [String],
-    default: [],
-    description: "Id des formations rattachées",
-  },
-  formations_uais: {
-    type: [String],
-    default: [],
-    description: "UAIs des formations rattachées à l'établissement",
-  },
-
   ds_id_dossier: {
     type: String,
     default: null,
@@ -430,22 +410,6 @@ const etablissementSchema = {
     default: false,
     description: "Est publié",
   },
-  last_update_at: {
-    type: Date,
-    default: Date.now,
-    description: "Date de dernières mise à jour",
-  },
-  updates_history: {
-    noIndex: true,
-    type: [Object],
-    default: [],
-    description: "Historique des mises à jours",
-  },
-  update_error: {
-    type: String,
-    default: null,
-    description: "Erreur lors de la mise à jour de la formation",
-  },
 
   tags: {
     type: [String],
@@ -496,4 +460,4 @@ const etablissementSchema = {
   },
 };
 
-module.exports = etablissementSchema;
+module.exports = dualControlEtablissementSchema;
