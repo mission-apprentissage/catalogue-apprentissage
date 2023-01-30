@@ -12,17 +12,16 @@ jobs:
       # Checks-out the repository
       - uses: actions/checkout@v3.2.0
 
-      - name: Change directory to UI
-        run: cd ui/
-
       # Install dependencies
       - name: Run Yarn Install
         run: |
+          cd ui/
           yarn install
 
       # Run tests
       - name: Run Tests
         run: |
+          cd ui/
           yarn test:coverage
 
       # codecov
@@ -30,6 +29,6 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          directory: ./coverage
+          directory: ./ui/coverage
           name: codecov-ui
           verbose: true

@@ -18,50 +18,60 @@ jobs:
           cache: 'yarn'
           cache-dependency-path: server
 
-      - name: Change directory to Server
-        run: cd server/
-
       # setup .yarnrc.yml
-      - run: cp .yarnrc.yml.template .yarnrc.yml; sed -i "s/xxxxxxxxxx/$NPM_TOKEN/g" .yarnrc.yml; cat .yarnrc.yml
+      - name: Create .yarnrc.yml
+        run: |
+          cd server/
+          cp .yarnrc.yml.template .yarnrc.yml; sed -i "s/xxxxxxxxxx/$NPM_TOKEN/g" .yarnrc.yml; cat .yarnrc.yml
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       # Install dependencies
       - name: Run Yarn Install
-        run: yarn install --immutable
+        run: |
+          cd server/
+          yarn install --immutable
 
       # Lint
       - name: Run Lint
-        run: yarn lint
+        run: |
+          cd server/
+          yarn lint
 
       # Yarn test
       - name: Run test in sub-folder
-        run: yarn test
+        run: |
+          cd server/
+          yarn test
 
       # Start docker container for tests (e.g: mongodb)
       - name: Start Docker
         run: |
-          cd ../ui
+          cd ui/
           cp .env.example .env
-          cd ../server
+          cd ../server/
           cp .env.example .env
           yarn docker:start-ci
 
 
       # Run mocha tests
       - name: Run Tests
-        run: yarn test:coverage
+        run: |
+          cd server/
+          yarn test:coverage
 
       # codecov
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          directory: ./coverage
+          directory: ./server/coverage
           name: codecov-server
           verbose: true
 
       # Teardown
       - name: Teardown
-        run: yarn docker:down
+        run: |
+          cd server/
+          yarn docker:down
 
