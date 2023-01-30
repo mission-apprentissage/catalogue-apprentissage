@@ -29,6 +29,8 @@ jobs:
         with:
           cmd: install --immutable
           dir: 'server'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       # Lint
       - name: Run Lint
