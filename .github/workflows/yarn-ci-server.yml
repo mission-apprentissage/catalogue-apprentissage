@@ -16,50 +16,54 @@ jobs:
         with:
           node-version: '16'
 
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
-        shell: bash
-        working-directory: server
-
-      - name: Restore yarn cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: yarn-cache-folder-${{ hashFiles('**/yarn.lock', '.yarnrc.yml') }}
-          restore-keys: |
-            yarn-cache-folder-
-
-      # - run: corepack enable
 
       # setup .yarnrc.yml
       - run: cp server/.yarnrc.yml.template server/.yarnrc.yml; sed -i "s/xxxxxxxxxx/$NPM_TOKEN/g" server/.yarnrc.yml; cat server/.yarnrc.yml
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+
       # Install dependencies
       - name: Run Yarn Install
-        run: |
-          yarn --cwd server install --immutable
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: install --immutable
+          dir: 'server'
 
       # Lint
       - name: Run Lint
-        run: |
-          yarn --cwd server lint
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: lint
+          dir: 'server'
 
-      # Start docker container for tests (e.g: mongodb)
-      - name: Start Docker
+      # Yarn test
+      - name: Run test in sub-folder
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: test
+          dir: 'server'
+
+      - name: Create .env
         run: |
           cd ui
           cp .env.example .env
           cd ../server
           cp .env.example .env
-          yarn --cwd server docker:start-ci
+
+      # Start docker container for tests (e.g: mongodb)
+      - name: Start Docker
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: docker:start-ci
+          dir: 'server'
 
       # Run mocha tests
       - name: Run Tests
-        run: |
-          yarn --cwd server test:coverage
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: test:coverage
+          dir: 'server'
 
       # codecov
       - name: Upload coverage to Codecov
@@ -72,5 +76,7 @@ jobs:
 
       # Teardown
       - name: Teardown
-        run: |
-          yarn --cwd server docker:down
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: docker:down
+          dir: 'server'
