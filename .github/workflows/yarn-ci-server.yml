@@ -8,6 +8,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: 'server'
+
     steps:
       # Checks-out the repository
       - uses: actions/checkout@v3.2.0
@@ -16,12 +20,11 @@ jobs:
         with:
           node-version: '16'
           cache: 'yarn'
-          cache-dependency-path: server
+          # cache-dependency-path: server
 
       # # setup .yarnrc.yml
       # - name: Create .yarnrc.yml
       #   run: |
-      #     cd server/
       #     cp .yarnrc.yml.template .yarnrc.yml; sed -i "s/xxxxxxxxxx/$NPM_TOKEN/g" .yarnrc.yml; cat .yarnrc.yml
       #   env:
       #     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -29,7 +32,6 @@ jobs:
       # Install dependencies
       - name: Run Yarn Install
         run: |
-          cd server/
           cp .yarnrc.yml.template .yarnrc.yml; sed -i "s/xxxxxxxxxx/$NPM_TOKEN/g" .yarnrc.yml; cat .yarnrc.yml
           yarn install --immutable
         env:
@@ -38,13 +40,11 @@ jobs:
       # Lint
       - name: Run Lint
         run: |
-          cd server/
           yarn lint
 
       # Yarn test
       - name: Run test in sub-folder
         run: |
-          cd server/
           yarn test
 
       # Start docker container for tests (e.g: mongodb)
@@ -60,7 +60,6 @@ jobs:
       # Run mocha tests
       - name: Run Tests
         run: |
-          cd server/
           yarn test:coverage
 
       # codecov
@@ -68,13 +67,12 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          directory: ./server/coverage
+          directory: ./coverage
           name: codecov-server
           verbose: true
 
       # Teardown
       - name: Teardown
         run: |
-          cd server/
           yarn docker:down
 
