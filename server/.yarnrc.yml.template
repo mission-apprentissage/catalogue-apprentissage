@@ -1,0 +1,10 @@
+yarnPath: .yarn/releases/yarn-3.3.1.cjs
+nodeLinker: node-modules
+defaultSemverRangePrefix: ""
+
+npmScopes:
+  mission-apprentissage:
+    npmRegistryServer: "https://npm.pkg.github.com"
+    npmPublishRegistry: "https://npm.pkg.github.com"
+    npmAlwaysAuth: true
+    npmAuthToken: 4c9ab3f4a7dea852c88e3ae3f030549a7a65a226

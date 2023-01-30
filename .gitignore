@@ -132,14 +132,15 @@ src/**/*.css.map
 setEnv.sh
 **/.vagrant/
 **/node_modules/
+**/.yarn/
 yarn-error.log
-
 
 # Builds
 dist
 build
 sdk/lib
 .npmrc
+.yarnrc.yml
 
 # Local History for Visual Studio Code
 .history/
