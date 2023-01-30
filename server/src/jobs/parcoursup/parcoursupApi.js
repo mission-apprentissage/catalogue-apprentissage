@@ -52,13 +52,13 @@ const updateFormation = async (data) => {
 /**
  * GET formations from Parcoursup WS
  */
-const getFormations = async (data) => {
+const getFormations = async () => {
   const endpoint =
     process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_ENDPOINT + "/ApiFormation/api/formations/publications/affectation";
-  const token = createParcoursupToken({ data, privateKey, pwd, id });
+  const token = createParcoursupToken({ data: null, privateKey, pwd, id });
 
   try {
-    const { data: responseData } = await axios.get(endpoint, data, {
+    const { data: responseData } = await axios.get(endpoint, {
       headers: { Authorization: `Bearer ${token}` },
     });
 

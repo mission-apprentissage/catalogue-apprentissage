@@ -12,6 +12,7 @@ export const PARCOURSUP_STATUS = {
   A_PUBLIER_VALIDATION_RECTEUR: "à publier (soumis à validation Recteur)",
   A_PUBLIER_HABILITATION: "à publier (sous condition habilitation)",
   REJETE: "rejet de publication",
+  FERME: "fermé",
 };
 
 export const AFFELNET_STATUS = {

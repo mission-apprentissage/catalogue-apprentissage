@@ -291,7 +291,7 @@ describe(`${__filename} - Gestion de la disparition du périmètre`, async () =>
         });
 
         await Object.values(PARCOURSUP_STATUS)
-          .filter((status) => status !== PARCOURSUP_STATUS.PUBLIE)
+          .filter((status) => ![PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.FERME].includes(status))
           .map(async (status) => {
             await it(`should apply status 'hors périmètre' if not in perimeter anymore, and if status was '${status}'`, async () => {
               await Formation.create({ ...formationOk, ...valueMotif, parcoursup_statut: status });

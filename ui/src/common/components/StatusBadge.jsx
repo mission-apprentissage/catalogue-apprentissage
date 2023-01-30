@@ -50,6 +50,7 @@ export const StatusBadge = ({ source, status, text, ...badgeProps }) => {
     [PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC]: "toBePublished",
     [PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR]: "toBePublished",
     [PARCOURSUP_STATUS.REJETE]: "error",
+    [PARCOURSUP_STATUS.FERME]: "error",
     [COMMON_STATUS.A_PUBLIER]: "toBePublished",
     [COMMON_STATUS.EN_ATTENTE]: "pending",
     Rejeté: "reject",

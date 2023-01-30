@@ -588,6 +588,7 @@ const formationSchema = {
       "à publier",
       "en attente de publication",
       "rejet de publication",
+      "fermé",
     ],
     default: "hors périmètre",
     description: "Statut parcoursup",

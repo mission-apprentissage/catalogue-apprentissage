@@ -53,7 +53,7 @@ const run = async () => {
     {
       $or: [
         {
-          parcoursup_statut: { $ne: PARCOURSUP_STATUS.PUBLIE },
+          parcoursup_statut: { $nin: [PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.FERME] },
           $or: [
             { catalogue_published: false, forced_published: { $ne: true } },
             { published: false },

@@ -510,7 +510,8 @@ export interface Formation {
     | "à publier (soumis à validation Recteur)"
     | "à publier"
     | "en attente de publication"
-    | "rejet de publication";
+    | "rejet de publication"
+    | "fermé";
   /**
    * Parcoursup : historique des statuts
    */
