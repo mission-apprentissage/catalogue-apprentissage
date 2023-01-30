@@ -117,8 +117,11 @@
     "rewiremock": "3.14.4",
     "sinon": "11.1.2"
   },
+  "resolutions": {
+    "omit-deep": "https://github.com/izigibran/omit-deep"
+  },
   "engines": {
-    "node": ">=14.15.0"
+    "node": ">=16.19.0"
   },
   "prettier": {
     "printWidth": 120,
