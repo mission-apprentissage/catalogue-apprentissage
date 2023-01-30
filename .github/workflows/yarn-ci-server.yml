@@ -15,7 +15,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16'
-
+          cache: 'yarn'
+          cache-dependency-path: server
 
       # setup .yarnrc.yml
       - run: cp server/.yarnrc.yml.template server/.yarnrc.yml; sed -i "s/xxxxxxxxxx/$NPM_TOKEN/g" server/.yarnrc.yml; cat server/.yarnrc.yml
@@ -29,8 +30,6 @@ jobs:
         with:
           cmd: install --immutable
           dir: 'server'
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       # Lint
       - name: Run Lint
