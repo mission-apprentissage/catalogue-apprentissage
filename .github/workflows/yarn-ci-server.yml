@@ -20,19 +20,18 @@ jobs:
         with:
           node-version: '16'
           cache: 'yarn'
-          # cache-dependency-path: server
+          cache-dependency-path: '**/yarn.lock'
 
-      # # setup .yarnrc.yml
-      # - name: Create .yarnrc.yml
-      #   run: |
-      #     cp .yarnrc.yml.template .yarnrc.yml; sed -i "s/xxxxxxxxxx/$NPM_TOKEN/g" .yarnrc.yml; cat .yarnrc.yml
-      #   env:
-      #     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # setup .yarnrc.yml
+      - name: Create .yarnrc.yml
+        run: |
+          cp .yarnrc.yml.template .yarnrc.yml; sed -i "s/xxxxxxxxxx/$NPM_TOKEN/g" .yarnrc.yml; cat .yarnrc.yml
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       # Install dependencies
       - name: Run Yarn Install
         run: |
-          cp .yarnrc.yml.template .yarnrc.yml; sed -i "s/xxxxxxxxxx/$NPM_TOKEN/g" .yarnrc.yml; cat .yarnrc.yml
           yarn install --immutable
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
