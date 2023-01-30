@@ -18,19 +18,22 @@ jobs:
           cache: 'yarn'
           cache-dependency-path: server
 
-      # setup .yarnrc.yml
-      - name: Create .yarnrc.yml
-        run: |
-          cd server/
-          cp .yarnrc.yml.template .yarnrc.yml; sed -i "s/xxxxxxxxxx/$NPM_TOKEN/g" .yarnrc.yml; cat .yarnrc.yml
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # # setup .yarnrc.yml
+      # - name: Create .yarnrc.yml
+      #   run: |
+      #     cd server/
+      #     cp .yarnrc.yml.template .yarnrc.yml; sed -i "s/xxxxxxxxxx/$NPM_TOKEN/g" .yarnrc.yml; cat .yarnrc.yml
+      #   env:
+      #     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       # Install dependencies
       - name: Run Yarn Install
         run: |
           cd server/
+          cp .yarnrc.yml.template .yarnrc.yml; sed -i "s/xxxxxxxxxx/$NPM_TOKEN/g" .yarnrc.yml; cat .yarnrc.yml
           yarn install --immutable
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       # Lint
       - name: Run Lint
