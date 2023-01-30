@@ -12,9 +12,8 @@ jobs:
       # Checks-out the repository
       - uses: actions/checkout@v3.2.0
 
-      # setup npmrc
-      # - run: echo -e "//npm.pkg.github.com/:_authToken=$NPM_TOKEN\n@mission-apprentissage:registry=https://npm.pkg.github.com" > server/.npmrc
-      - run: cp server/.yarnrc.yml.template server/.yarnrc.yml; sed -i "s/xxxxxxxxxx/$NPM_TOKEN/g" server/.yarnrc.yml;
+      # setup .yarnrc.yml
+      - run: cp server/.yarnrc.yml.template server/.yarnrc.yml; sed -i "s/xxxxxxxxxx/$NPM_TOKEN/g" server/.yarnrc.yml; cat server/.yarnrc.yml
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
