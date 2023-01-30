@@ -20,7 +20,7 @@ jobs:
       # Install dependencies
       - name: Run Yarn Install
         run: |
-          yarn --cwd server install
+          yarn --cwd server install --immutable
 
       # Lint
       - name: Run Lint
