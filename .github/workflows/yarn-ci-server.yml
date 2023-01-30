@@ -60,11 +60,6 @@ jobs:
         run: |
           yarn lint
 
-      # Yarn test
-      - name: Run test in sub-folder
-        run: |
-          yarn test
-
       # Start docker container for tests (e.g: mongodb)
       - name: Start Docker
         run: |
