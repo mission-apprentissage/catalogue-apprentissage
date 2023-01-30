@@ -372,7 +372,7 @@ module.exports = {
             },
             updated_at: {
               type: "string",
-              default: "2023-01-30T14:26:43.668Z",
+              default: "2023-01-30T14:28:25.691Z",
               description: "Date de la mise à jour",
               format: "date-time",
             },

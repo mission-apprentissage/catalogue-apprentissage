@@ -38,6 +38,7 @@ jobs:
         run: |
           pwd
           cp .yarnrc.yml.template .yarnrc.yml; sed -i "s/xxxxxxxxxx/$NPM_TOKEN/g" .yarnrc.yml; cat .yarnrc.yml
+          ls
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -45,6 +46,8 @@ jobs:
       - name: Run Yarn Install
         run: |
           pwd
+          yarn --version
+          ls
           yarn install --immutable
 
       # Lint
