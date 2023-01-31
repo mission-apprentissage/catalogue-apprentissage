@@ -6,7 +6,7 @@ COPY .yarnrc.yml* /
 RUN if [ "$NPM_TOKEN" != "local" ] ; then \
     echo -e "yarnPath: .yarn/releases/yarn-3.3.1.cjs\n\
 nodeLinker: node-modules\n\
-defaultSemverRangePrefix: ""\n\
+defaultSemverRangePrefix: ''\n\
 \n\
 npmScopes:\n\
   mission-apprentissage:\n\
