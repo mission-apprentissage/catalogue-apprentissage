@@ -81,6 +81,7 @@
     "migrate-mongo": "8.2.3",
     "mjml": "4.12.0",
     "mongoose": "5.13.14",
+    "mongoose-diff-history": "2.1.0",
     "mongoose-paginate": "5.0.3",
     "mongoose-schema-jsonschema": "1.4.7",
     "multer": "1.4.2",
@@ -89,6 +90,7 @@
     "nodemailer-html-to-text": "^3.1.0",
     "objects-to-csv": "1.3.6",
     "oleoduc": "0.7.0",
+    "omit-deep": "https://github.com/izigibran/omit-deep",
     "passport": "0.6.0",
     "passport-jwt": "4.0.0",
     "prettier": "2.0.5",
@@ -99,14 +101,6 @@
     "swagger-jsdoc": "6.2.0",
     "swagger-ui-express": "4.3.0",
     "xlsx": "0.18.5"
-  },
-  "engines": {
-    "node": ">=14.15.0"
-  },
-  "prettier": {
-    "printWidth": 120,
-    "bracketSpacing": true,
-    "trailingComma": "es5"
   },
   "devDependencies": {
     "axiosist": "0.10.0",
@@ -122,6 +116,17 @@
     "nyc": "15.1.0",
     "rewiremock": "3.14.4",
     "sinon": "11.1.2"
+  },
+  "resolutions": {
+    "omit-deep": "https://github.com/izigibran/omit-deep"
+  },
+  "engines": {
+    "node": ">=16.19.0"
+  },
+  "prettier": {
+    "printWidth": 120,
+    "bracketSpacing": true,
+    "trailingComma": "es5"
   },
   "husky": {
     "hooks": {
