@@ -7,6 +7,7 @@ import helpText from "../../../locales/helpText.json";
 import { FormationDate } from "./FormationDate";
 import { HabilitationPartenaire } from "./HabilitationPartenaire";
 import { HABILITE_LIST } from "../../../constants/certificateurs";
+import { getExpirationDate } from "../../utils/rulesUtils";
 
 const DureeAnnee = ({ value }) => {
   if (!value) {
@@ -22,7 +23,7 @@ export const DescriptionBlock = ({ formation }) => {
     [formation.etablissement_gestionnaire_siret, formation.etablissement_formateur_siret].includes(Siret_Partenaire)
   );
 
-  const isTitreRNCP = ["Titre", "TP"].includes(formation.rncp_details?.code_type_certif);
+  const isTitreRNCP = formation.etablissement_reference_habilite_rncp !== null;
 
   const showPartenaires =
     isTitreRNCP &&
@@ -40,6 +41,25 @@ export const DescriptionBlock = ({ formation }) => {
   const AnneeContainer = formation.annee_incoherente
     ? (args) => <DangerBox data-testid={"annee-warning"} {...args} />
     : React.Fragment;
+
+  const isCfdExpired =
+    formation.cfd_outdated ||
+    (formation.cfd_date_fermeture && new Date(formation.cfd_date_fermeture) <= getExpirationDate());
+
+  const CfdContainer =
+    !isTitreRNCP &&
+    (formation.cfd_outdated ||
+      (formation.cfd_date_fermeture && new Date(formation.cfd_date_fermeture) <= getExpirationDate()))
+      ? (args) => <DangerBox data-testid={"cfd-warning"} {...args} />
+      : React.Fragment;
+
+  const isRncpExpired =
+    formation.rncp_details?.rncp_outdated ||
+    (formation.rncp_details?.date_fin_validite_enregistrement &&
+      new Date(formation.rncp_details?.date_fin_validite_enregistrement) <= getExpirationDate());
+
+  const RncpContainer =
+    isTitreRNCP && isRncpExpired ? (args) => <DangerBox data-testid={"rncp-warning"} {...args} /> : React.Fragment;
 
   const siretCertificateurs =
     formation.rncp_details.certificateurs?.map(({ siret_certificateur }) => siret_certificateur) ?? [];
@@ -100,19 +120,27 @@ export const DescriptionBlock = ({ formation }) => {
             </Text>{" "}
             <InfoTooltip description={helpText.formation.niveau} />
           </Text>
-          <Text mb={4}>
-            Code diplôme (Éducation Nationale) :{" "}
-            <Text as="span" variant="highlight">
-              {formation.cfd}
-            </Text>{" "}
-            <InfoTooltip description={helpText.formation.cfd} />
-            {!isTitreRNCP && formation.cfd_outdated && (
-              <>
-                <br />
-                Ce diplôme a une date de fin antérieure au 31/08 de l'année en cours
-              </>
+          <CfdContainer>
+            <Text mb={!isTitreRNCP && isCfdExpired ? 0 : 4}>
+              Code diplôme (Éducation Nationale) :{" "}
+              <Text as="span" variant="highlight">
+                {formation.cfd}
+              </Text>{" "}
+              <InfoTooltip description={helpText.formation.cfd} />
+            </Text>
+            {!isTitreRNCP && isCfdExpired && (
+              <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
+                {formation?.cfd_date_fermeture ? (
+                  <>
+                    Ce code formation diplôme expire le{" "}
+                    {new Date(formation?.cfd_date_fermeture).toLocaleDateString("fr-FR")}
+                  </>
+                ) : (
+                  <>Ce code formation diplôme est expiré</>
+                )}
+              </Text>
             )}
-          </Text>
+          </CfdContainer>
           <MefContainer>
             <Text mb={formation.duree_incoherente || formation.annee_incoherente ? 0 : 4}>
               Codes MEF 10 caractères :{" "}
@@ -219,19 +247,27 @@ export const DescriptionBlock = ({ formation }) => {
           Informations RNCP et ROME
         </Heading>
         {formation.rncp_code && (
-          <Text mb={4}>
-            Code RNCP :{" "}
-            <Text as="span" variant="highlight">
-              {formation.rncp_code}
-            </Text>{" "}
-            <InfoTooltip description={helpText.formation.rncp_code} />
-            {isTitreRNCP && formation?.rncp_details?.rncp_outdated && (
-              <>
-                <br />
-                Ce code RNCP a une date de fin d'enregistrement antérieure au 31/08 de l'année en cours
-              </>
+          <RncpContainer>
+            <Text mb={isTitreRNCP && isRncpExpired ? 0 : 4}>
+              Code RNCP :{" "}
+              <Text as="span" variant="highlight">
+                {formation.rncp_code}
+              </Text>{" "}
+              <InfoTooltip description={helpText.formation.rncp_code} />
+            </Text>
+            {isTitreRNCP && isRncpExpired && (
+              <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
+                {formation?.rncp_details?.date_fin_validite_enregistrement ? (
+                  <>
+                    Ce RNCP expire le{" "}
+                    {new Date(formation?.rncp_details?.date_fin_validite_enregistrement).toLocaleDateString("fr-FR")}
+                  </>
+                ) : (
+                  <>Ce RNCP est expiré</>
+                )}
+              </Text>
             )}
-          </Text>
+          </RncpContainer>
         )}
         <Text mb={4}>
           Intitulé RNCP :{" "}
@@ -287,7 +323,7 @@ export const DescriptionBlock = ({ formation }) => {
                   </UnorderedList>
                 ) : (
                   <>
-                    {!formation.etablissement_reference_habilite_rncp && noHabilitation && (
+                    {formation.etablissement_reference_habilite_rncp === false && noHabilitation && (
                       <Box
                         bg={"orangesoft.200"}
                         p={4}
