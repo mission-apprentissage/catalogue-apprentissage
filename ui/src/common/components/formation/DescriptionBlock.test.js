@@ -173,7 +173,9 @@ const formation = {
 };
 
 test("renders the description block of the training", async () => {
-  const { queryByText } = render(<DescriptionBlock formation={formation} />);
+  const { queryByText } = render(
+    <DescriptionBlock formation={{ ...formation, etablissement_reference_habilite_rncp: null }} />
+  );
 
   const title = queryByText("Description");
   expect(title).toBeInTheDocument();
@@ -194,6 +196,7 @@ test("renders the description block of the training", async () => {
 test("show partenaires for titre or tp", async () => {
   const tpFormation = {
     ...formation,
+    etablissement_reference_habilite_rncp: true,
     rncp_details: {
       ...formation.rncp_details,
       code_type_certif: "TP",
@@ -234,6 +237,7 @@ test("dont show partenaires if certificateur is ministere EN for titre or tp", a
 test("show partenaires", async () => {
   const tpFormation = {
     ...formation,
+    etablissement_reference_habilite_rncp: true,
     rncp_details: {
       ...formation.rncp_details,
       code_type_certif: "TP",
@@ -258,6 +262,7 @@ test("show partenaires", async () => {
 test("display a warning for cfd outdated", async () => {
   const testFormation = {
     ...formation,
+    etablissement_reference_habilite_rncp: null,
     cfd_outdated: true,
   };
   const { queryByText } = render(<DescriptionBlock formation={testFormation} />);
