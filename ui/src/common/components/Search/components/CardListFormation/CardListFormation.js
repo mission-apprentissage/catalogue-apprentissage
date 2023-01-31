@@ -37,7 +37,7 @@ export const CardListFormation = ({ data, context }) => {
               {!data.catalogue_published && (
                 <>
                   <QualiteBadge value={data.etablissement_gestionnaire_certifie_qualite} mt={2} mr={[0, 2]} />
-                  {["Titre", "TP"].includes(data.rncp_details?.code_type_certif) && (
+                  {data.etablissement_reference_habilite_rncp !== null && (
                     <HabiliteBadge value={data.etablissement_reference_habilite_rncp} mt={2} mr={[0, 2]} />
                   )}
                 </>
