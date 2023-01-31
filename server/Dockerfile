@@ -3,19 +3,18 @@ FROM node:16-alpine
 # handle .npmrc : copy local one for dev, create one using NPM_TOKEN arg for production & recette
 ARG NPM_TOKEN
 COPY .yarnrc.yml* /tmp/
-COPY .yarn/ /tmp/.yarn/
 RUN if [ "$NPM_TOKEN" != "local" ] ; then \
-    echo $'yarnPath: .yarn/releases/yarn-3.3.1.cjs\n\
+    echo -e "yarnPath: .yarn/releases/yarn-3.3.1.cjs\n\
 nodeLinker: node-modules\n\
 defaultSemverRangePrefix: ""\n\
 \n\
 npmScopes:\n\
   mission-apprentissage:\n\
-    npmRegistryServer: "https://npm.pkg.github.com"\n\
-    npmPublishRegistry: "https://npm.pkg.github.com"\n\
+    npmRegistryServer: https://npm.pkg.github.com\n\
+    npmPublishRegistry: https://npm.pkg.github.com\n\
     npmAlwaysAuth: true\n\
     npmAuthToken: $NPM_TOKEN\n\
-' > /tmp/.yarnrc.yml ; \
+" > /tmp/.yarnrc.yml ; \
 fi
 
 #Install and cache node_modules
