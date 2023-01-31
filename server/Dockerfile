@@ -24,6 +24,7 @@ RUN cd /tmp && \
     yarn install --immutable && \
     mkdir -p /app && \
     mv /tmp/node_modules /app/ && \
+    mv /tmp/.yarn /app/  && \
     rm -f .yarnrc.yml
 
 COPY ./ /app
