@@ -26,7 +26,6 @@ RUN cd /tmp && \
     mv /tmp/node_modules /app/ && \
     rm -f .yarnrc.yml
 
-
 COPY ./ /app
 WORKDIR /app
 RUN echo -e "yarnPath: .yarn/releases/yarn-3.3.1.cjs\n\
@@ -34,6 +33,7 @@ nodeLinker: node-modules\n\
 defaultSemverRangePrefix: ''\n\
 " > /app/.yarnrc.yml ; \
 fi
+RUN yarn set version berry
 
 VOLUME /data
 EXPOSE 5000
