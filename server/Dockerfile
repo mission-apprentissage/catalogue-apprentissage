@@ -19,6 +19,7 @@ fi
 
 #Install and cache node_modules
 COPY package.json yarn.lock /tmp/
+COPY .yarn/ /tmp/.yarn/
 RUN cd /tmp && \
     yarn install --immutable && \
     mkdir -p /app && \
