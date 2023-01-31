@@ -25,7 +25,7 @@ export const DescriptionBlock = ({ formation }) => {
     [formation.etablissement_gestionnaire_siret, formation.etablissement_formateur_siret].includes(Siret_Partenaire)
   );
 
-  const isTitreRNCP = ["Titre", "TP"].includes(formation.rncp_details?.code_type_certif);
+  const isTitreRNCP = formation.etablissement_reference_habilite_rncp !== null;
 
   const showPartenaires =
     isTitreRNCP &&
@@ -401,7 +401,7 @@ export const DescriptionBlock = ({ formation }) => {
                   </UnorderedList>
                 ) : (
                   <>
-                    {!formation.etablissement_reference_habilite_rncp && noHabilitation && (
+                    {formation.etablissement_reference_habilite_rncp === false && noHabilitation && (
                       <Box
                         bg={"orangesoft.200"}
                         p={4}
