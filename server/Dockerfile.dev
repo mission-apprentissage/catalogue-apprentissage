@@ -2,7 +2,7 @@ FROM node:16-stretch
 
 # handle .npmrc : copy local one for dev, create one using NPM_TOKEN arg for production & recette
 ARG NPM_TOKEN
-COPY .yarnrc.yml* /tmp/
+COPY .yarnrc.yml* /
 RUN if [ "$NPM_TOKEN" != "local" ] ; then \
     echo 'yarnPath: .yarn/releases/yarn-3.3.1.cjs\
 nodeLinker: node-modules\
@@ -13,7 +13,7 @@ npmScopes:\
     npmRegistryServer: "https://npm.pkg.github.com"\
     npmPublishRegistry: "https://npm.pkg.github.com"\
     npmAlwaysAuth: true\
-    npmAuthToken: $NPM_TOKEN' > /tmp/.yarnrc.yml ; \
+    npmAuthToken: $NPM_TOKEN' > /.yarnrc.yml ; \
 fi
 
 WORKDIR /app
