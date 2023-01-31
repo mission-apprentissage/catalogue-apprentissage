@@ -31,9 +31,7 @@ WORKDIR /app
 RUN echo -e "yarnPath: .yarn/releases/yarn-3.3.1.cjs\n\
 nodeLinker: node-modules\n\
 defaultSemverRangePrefix: ''\n\
-" > /app/.yarnrc.yml ; \
-fi
-RUN yarn set version berry
+" > /app/.yarnrc.yml ;
 
 VOLUME /data
 EXPOSE 5000
