@@ -1,6 +1,7 @@
-FROM node:16-alpine
+# STAGE 1 : BUILDER
+FROM node:16-alpine as builder
 
-# handle .npmrc : copy local one for dev, create one using NPM_TOKEN arg for production & recette
+# handle .yarnrc.yml : copy local one for dev, create one using NPM_TOKEN arg for production & recette
 ARG NPM_TOKEN
 COPY .yarnrc.yml* /tmp/
 RUN if [ "$NPM_TOKEN" != "local" ] ; then \
@@ -22,17 +23,22 @@ COPY package.json yarn.lock /tmp/
 COPY .yarn/ /tmp/.yarn/
 RUN cd /tmp && \
     yarn install --immutable && \
-    mkdir -p /app && \
-    mv /tmp/node_modules /app/ && \
     rm -f .yarnrc.yml
 
-COPY ./ /app
+# STAGE 2 : RUNNER
+FROM node:16-alpine as runner
+
 WORKDIR /app
+VOLUME /data
+EXPOSE 5000
+
+# Add .yarnrc.yml without secret
 RUN echo -e "yarnPath: .yarn/releases/yarn-3.3.1.cjs\n\
 nodeLinker: node-modules\n\
 defaultSemverRangePrefix: ''\n\
 " > /app/.yarnrc.yml ;
 
-VOLUME /data
-EXPOSE 5000
+COPY ./ /app
+COPY --from=builder /tmp/node_modules /app/node_modules
+
 CMD ["yarn", "start"]
