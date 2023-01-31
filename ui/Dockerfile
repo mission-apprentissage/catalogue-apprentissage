@@ -23,10 +23,5 @@ WORKDIR /app
 COPY ./ /app
 RUN yarn build
 
-FROM node:16-alpine as runner
-
-WORKDIR /app
-COPY --from=builder /app/build /app/build
-
 EXPOSE 3000
 CMD yarn serve
