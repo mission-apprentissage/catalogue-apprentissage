@@ -3,7 +3,7 @@ FROM node:16-alpine
 # handle .npmrc : copy local one for dev, create one using NPM_TOKEN arg for production & recette
 ARG NPM_TOKEN
 COPY .yarnrc.yml* /tmp/
-COPY .yarn/ /tmp/
+COPY .yarn/ /tmp/.yarn/
 RUN if [ "$NPM_TOKEN" != "local" ] ; then \
     echo $'yarnPath: .yarn/releases/yarn-3.3.1.cjs\n\
 nodeLinker: node-modules\n\
