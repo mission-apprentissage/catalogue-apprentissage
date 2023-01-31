@@ -24,11 +24,16 @@ RUN cd /tmp && \
     yarn install --immutable && \
     mkdir -p /app && \
     mv /tmp/node_modules /app/ && \
-    mv /tmp/.yarn /app/  && \
     rm -f .yarnrc.yml
+
 
 COPY ./ /app
 WORKDIR /app
+RUN echo -e "yarnPath: .yarn/releases/yarn-3.3.1.cjs\n\
+nodeLinker: node-modules\n\
+defaultSemverRangePrefix: ''\n\
+" > /app/.yarnrc.yml ; \
+fi
 
 VOLUME /data
 EXPOSE 5000
