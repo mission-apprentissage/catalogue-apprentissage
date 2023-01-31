@@ -4,16 +4,17 @@ FROM node:16-alpine
 ARG NPM_TOKEN
 COPY .yarnrc.yml* /tmp/
 RUN if [ "$NPM_TOKEN" != "local" ] ; then \
-    echo 'yarnPath: .yarn/releases/yarn-3.3.1.cjs\
-nodeLinker: node-modules\
-defaultSemverRangePrefix: ""\
-\
-npmScopes:\
-  mission-apprentissage:\
-    npmRegistryServer: "https://npm.pkg.github.com"\
-    npmPublishRegistry: "https://npm.pkg.github.com"\
-    npmAlwaysAuth: true\
-    npmAuthToken: $NPM_TOKEN' > /tmp/.yarnrc.yml ; \
+    echo $'yarnPath: .yarn/releases/yarn-3.3.1.cjs\n\
+nodeLinker: node-modules\n\
+defaultSemverRangePrefix: ""\n\
+\n\
+npmScopes:\n\
+  mission-apprentissage:\n\
+    npmRegistryServer: "https://npm.pkg.github.com"\n\
+    npmPublishRegistry: "https://npm.pkg.github.com"\n\
+    npmAlwaysAuth: true\n\
+    npmAuthToken: $NPM_TOKEN\n\
+' > /tmp/.yarnrc.yml ; \
 fi
 
 #Install and cache node_modules
