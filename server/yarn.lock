@@ -4634,6 +4634,26 @@ mongoose@5.13.14:
     sift "13.5.2"
     sliced "1.0.1"
 
+mongoose@5.13.15:
+  version "5.13.15"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.13.15.tgz#ba2cd0f22c1a5dd9ae15aaf6b10f03c59a4202dd"
+  integrity sha512-cxp1Gbb8yUWkaEbajdhspSaKzAvsIvOtRlYD87GN/P2QEUhpd6bIvebi36T6M0tIVAMauNaK9SPA055N3PwF8Q==
+  dependencies:
+    "@types/bson" "1.x || 4.0.x"
+    "@types/mongodb" "^3.5.27"
+    bson "^1.1.4"
+    kareem "2.3.2"
+    mongodb "3.7.3"
+    mongoose-legacy-pluralize "1.0.2"
+    mpath "0.8.4"
+    mquery "3.2.5"
+    ms "2.1.2"
+    optional-require "1.0.x"
+    regexp-clone "1.0.0"
+    safe-buffer "5.2.1"
+    sift "13.5.2"
+    sliced "1.0.1"
+
 mpath@0.8.4:
   version "0.8.4"
   resolved "https://registry.npmjs.org/mpath/-/mpath-0.8.4.tgz"
@@ -4965,15 +4985,7 @@ oleoduc@0.7.0:
     cyclist "1.0.1"
     parallel-transform "1.2.0"
 
-"omit-deep@git://github.com/izigibran/omit-deep.git#0.4.0":
-  version "0.3.0"
-  uid "3727e48ecdbd58cb50a2a8aba1911f8d2c9fdde9"
-  resolved "git://github.com/izigibran/omit-deep.git#3727e48ecdbd58cb50a2a8aba1911f8d2c9fdde9"
-  dependencies:
-    is-plain-object "^2.0.1"
-    unset-value "^0.1.1"
-
-"omit-deep@https://github.com/izigibran/omit-deep":
+"omit-deep@git://github.com/izigibran/omit-deep.git#0.4.0", "omit-deep@https://github.com/izigibran/omit-deep":
   version "0.3.0"
   resolved "https://github.com/izigibran/omit-deep#3727e48ecdbd58cb50a2a8aba1911f8d2c9fdde9"
   dependencies:
