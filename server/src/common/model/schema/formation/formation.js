@@ -37,13 +37,14 @@ const updateHistorySchema = new mongoose.Schema(
       default: {},
       description: "Valeurs après mise à jour",
     },
-    updated_at: {
-      type: Date,
-      default: new Date(),
-      description: "Date de la mise à jour",
-    },
   },
-  { _id: false }
+  {
+    _id: false,
+    timestamps: {
+      createdAt: false,
+      updatedAt: "updated_at",
+    },
+  }
 );
 
 const rncpDetailsSchema = new mongoose.Schema(

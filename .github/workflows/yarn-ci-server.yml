@@ -8,49 +8,81 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: 'server'
+
     steps:
       # Checks-out the repository
       - uses: actions/checkout@v3.3.0
 
-      # setup npmrc
-      - run: echo -e "//npm.pkg.github.com/:_authToken=$NPM_TOKEN\n@mission-apprentissage:registry=https://npm.pkg.github.com" > server/.npmrc
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: Restore yarn cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: yarn-cache-folder-${{ hashFiles('**/yarn.lock', '.yarnrc.yml') }}
+          restore-keys: |
+            yarn-cache-folder-
+
+      # setup .yarnrc.yml
+      - name: Create .yarnrc.yml
+        # run: |
+        #   cp ./.yarnrc.yml.template ./.yarnrc.yml; sed -i "s/xxxxxxxxxx/$NPM_TOKEN/g" ./.yarnrc.yml; cat ./.yarnrc.yml
+        #   pwd
+        #   ls -la
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          yarn config set yarnPath .yarn/releases/yarn-3.3.1.cjs
+          yarn config set nodeLinker node-modules
+          yarn config set defaultSemverRangePrefix ""
+          yarn config set npmScopes.mission-apprentissage.npmRegistryServer "https://npm.pkg.github.com"
+          yarn config set npmScopes.mission-apprentissage.npmPublishRegistry "https://npm.pkg.github.com"
+          yarn config set npmScopes.mission-apprentissage.npmAlwaysAuth true
+          yarn config set npmScopes.mission-apprentissage.npmAuthToken $NPM_TOKEN
 
       # Install dependencies
       - name: Run Yarn Install
         run: |
-          yarn --cwd server install
+          yarn install --immutable
 
       # Lint
       - name: Run Lint
         run: |
-          yarn --cwd server lint
+          yarn lint
 
       # Start docker container for tests (e.g: mongodb)
       - name: Start Docker
         run: |
-          cd ui
+          cp ../ui/.env.example ../ui/.env
           cp .env.example .env
-          cd ../server
-          cp .env.example .env
-          yarn --cwd server docker:start-ci
+          yarn docker:start-ci
 
       # Run mocha tests
       - name: Run Tests
         run: |
-          yarn --cwd server test:coverage
+          yarn test:coverage
 
       # codecov
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          directory: ./server/coverage
+          directory: ./coverage
           name: codecov-server
           verbose: true
 
       # Teardown
       - name: Teardown
         run: |
-          yarn --cwd server docker:down
+          yarn docker:down
+

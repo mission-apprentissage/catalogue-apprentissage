@@ -1,15 +1,24 @@
 FROM node:16-alpine
 
-# handle .npmrc : copy local one for dev, create one using NPM_TOKEN arg for production & recette
+# handle .yarnrc.yml : copy local one for dev, create one using NPM_TOKEN arg for production & recette
 ARG NPM_TOKEN
-COPY .npmrc* /
+COPY .yarnrc.yml* /
 RUN if [ "$NPM_TOKEN" != "local" ] ; then \
-    echo "//npm.pkg.github.com/:_authToken=$NPM_TOKEN\n@mission-apprentissage:registry=https://npm.pkg.github.com" > /.npmrc ; \
+    echo -e "yarnPath: .yarn/releases/yarn-3.3.1.cjs\n\
+nodeLinker: node-modules\n\
+defaultSemverRangePrefix: ''\n\
+\n\
+npmScopes:\n\
+  mission-apprentissage:\n\
+    npmRegistryServer: https://npm.pkg.github.com\n\
+    npmPublishRegistry: https://npm.pkg.github.com\n\
+    npmAlwaysAuth: true\n\
+    npmAuthToken: $NPM_TOKEN\n\
+" > /.yarnrc.yml ; \
 fi
-
 
 WORKDIR /app
 
 VOLUME /data
 EXPOSE 5000
-CMD yarn install && yarn debug
+CMD yarn install --immutable && yarn debug

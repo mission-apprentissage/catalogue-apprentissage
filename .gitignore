@@ -134,12 +134,12 @@ setEnv.sh
 **/node_modules/
 yarn-error.log
 
-
 # Builds
 dist
 build
 sdk/lib
 .npmrc
+.yarnrc.yml
 
 # Local History for Visual Studio Code
 .history/

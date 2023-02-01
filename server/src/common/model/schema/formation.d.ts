@@ -709,9 +709,6 @@ export interface ItemOfUpdatesHistory {
   to?: {
     [k: string]: unknown;
   };
-  /**
-   * Date de la mise à jour
-   */
   updated_at?: Date;
 }
 export interface ItemOfBcnMefs_10 {

@@ -1,4 +1,4 @@
-FROM node:16-alpine
+FROM node:16-alpine as builder
 
 ARG REACT_APP_ENV
 ARG REACT_APP_BASE_URL
@@ -21,7 +21,6 @@ RUN cd /tmp && \
 
 WORKDIR /app
 COPY ./ /app
-
 RUN yarn build
 
 EXPOSE 3000
