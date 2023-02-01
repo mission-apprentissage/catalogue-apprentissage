@@ -6328,7 +6328,7 @@ __metadata:
     mongoose-schema-jsonschema: 1.4.7
     multer: 1.4.2
     node-stream-zip: 1.15.0
-    nodemailer: ^6.4.14
+    nodemailer: ^6.9.1
     nodemailer-html-to-text: ^3.1.0
     nodemon: 2.0.15
     nyc: 15.1.0
@@ -6860,10 +6860,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nodemailer@npm:^6.4.14":
-  version: 6.7.3
-  resolution: "nodemailer@npm:6.7.3"
-  checksum: b94d099f00f25666fc96a7cb498045e7428045b8cc0245ce10522190fd513b586d6e31305afd019f6878f1540d14d169d0dbe2e1f77385795c7054912d822ec0
+"nodemailer@npm:^6.9.1":
+  version: 6.9.1
+  resolution: "nodemailer@npm:6.9.1"
+  checksum: b1b9670afc170b4454665abae3fc9acd7e781adb9f579d1c2cd991bf75c647ebe345593f8a057e48d7bf9e4c9a9218869f87db8fb7171c614f557000ab654572
   languageName: node
   linkType: hard
 
