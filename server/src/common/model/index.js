@@ -33,7 +33,7 @@ module.exports = {
       return !doc.published;
     },
     diff: {
-      omit: ["updates_history", "updated_at"],
+      omit: ["updates_history", "updated_at", "affelnet_statut_history", "parcoursup_statut_history"],
     },
   }),
   Report: createModel("report", schemas.get("report")),
