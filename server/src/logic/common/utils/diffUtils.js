@@ -32,13 +32,12 @@ const diffFormation = (previousFormationP, nextFormationP) => {
 /*
  * Build updates history
  */
-const buildUpdatesHistory = (formation, updates, keys) => {
+const buildUpdatesHistory = (origin, updates, keys, date = new Date()) => {
   const from = keys.reduce((acc, key) => {
-    acc[key] = formation[key];
+    acc[key] = origin[key];
     return acc;
   }, {});
-
-  return [...formation.updates_history, { from, to: { ...updates }, updated_at: new Date() }];
+  return [{ from, to: { ...updates }, updated_at: date }];
 };
 
 module.exports = { diffFormation, buildUpdatesHistory };
