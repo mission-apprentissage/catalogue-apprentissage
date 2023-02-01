@@ -21,7 +21,7 @@
     "local-web-server": "5.2.0",
     "lodash.compact": "3.0.1",
     "lodash.intersection": "4.4.0",
-    "luxon": "3.2.0",
+    "luxon": "3.2.1",
     "match-sorter": "6.3.1",
     "node-polyfill-webpack-plugin": "2.0.0",
     "process": "0.11.10",
