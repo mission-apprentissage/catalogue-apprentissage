@@ -1,6 +1,7 @@
 const logger = require("../../../common/logger");
 const { Formation } = require("../../../common/model");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
+const { buildUpdatesHistory } = require("../../../logic/common/utils/diffUtils");
 const { runScript } = require("../../scriptWrapper");
 const { getFormations } = require("../parcoursupApi");
 
@@ -39,41 +40,122 @@ const psImport = async () => {
     console.log(statusesCount);
 
     for (const { g_ta_cod: parcoursup_id, status, rco: cle_ministere_educatif } of results) {
-      // logger.info({ parcoursup_id, status, cle_ministere_educatif });
+      const date = new Date();
+
       switch (status) {
-        case STATUS.CANCELED_PUBLICATION:
-          (
-            await Formation.updateOne(
-              { $or: [{ cle_ministere_educatif }, { parcoursup_id }], parcoursup_id: { $ne: null } },
-              { $set: { parcoursup_id: null } }
-            )
-          ).nModified === 1 && canceled++;
+        case STATUS.CANCELED_PUBLICATION: {
+          const canceledFormations = await Formation.find({
+            $or: [{ cle_ministere_educatif }, { parcoursup_id }],
+            parcoursup_id: { $ne: null },
+          });
+          const update = { parcoursup_id: null, last_update_at: date, last_update_who: "Parcoursup" };
+
+          canceledFormations.forEach(async (canceledFormation) => {
+            console.log(`canceled : ${canceledFormation.cle_ministere_educatif}`);
+            canceledFormation &&
+              (canceled += (
+                await Formation.updateOne(
+                  { cle_ministere_educatif: canceledFormation.cle_ministere_educatif },
+                  {
+                    ...update,
+                    $push: {
+                      updates_history: buildUpdatesHistory(canceledFormation, update, [
+                        "last_update_at",
+                        "last_update_who",
+                        "parcoursup_id",
+                      ]),
+                    },
+                  }
+                )
+              ).nModified);
+          });
+
           break;
-        case STATUS.NEW_LINK:
-          (
-            await Formation.updateOne(
-              { cle_ministere_educatif, parcoursup_id: { $ne: parcoursup_id } },
-              { $set: { parcoursup_id } }
-            )
-          ).nModified === 1 && linked++;
+        }
+
+        case STATUS.NEW_LINK: {
+          const newLinkFormations = await Formation.find({
+            cle_ministere_educatif,
+            parcoursup_id: { $ne: parcoursup_id },
+          });
+          const update = {
+            parcoursup_id,
+            parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
+            last_update_at: date,
+            last_update_who: "Parcoursup",
+            "rejection.handled_by": null,
+            "rejection.handled_date": null,
+          };
+
+          newLinkFormations.forEach(async (newLinkFormation) => {
+            console.log(`newLink : ${newLinkFormation.cle_ministere_educatif}`);
+
+            newLinkFormation &&
+              (linked += (
+                await Formation.updateOne(
+                  { cle_ministere_educatif: newLinkFormation.cle_ministere_educatif },
+                  {
+                    ...update,
+                    $push: {
+                      updates_history: buildUpdatesHistory(newLinkFormation, update, [
+                        "last_update_at",
+                        "last_update_who",
+                        "rejection.handled_by",
+                        "rejection.handled_date",
+                        "parcoursup_statut",
+                        "parcoursup_id",
+                      ]),
+                    },
+                  }
+                )
+              ).nModified);
+          });
           break;
-        case STATUS.CLOSED:
-          (
-            await Formation.updateOne(
+        }
+
+        case STATUS.CLOSED: {
+          const closedFormations = await Formation.find({
+            $and: [
               {
-                $and: [
-                  {
-                    $or: [{ cle_ministere_educatif }, { parcoursup_id }],
-                  },
-                  {
-                    $or: [{ parcoursup_statut: { $nin: [PARCOURSUP_STATUS.FERME] } }, { parcoursup_id: { $ne: null } }],
-                  },
-                ],
+                $or: [{ cle_ministere_educatif }, { parcoursup_id }],
               },
-              { $set: { parcoursup_id: null, parcoursup_statut: PARCOURSUP_STATUS.FERME, last_update_at: Date.now() } }
-            )
-          ).nModified === 1 && closed++;
+              {
+                $or: [{ parcoursup_statut: { $nin: [PARCOURSUP_STATUS.FERME] } }, { parcoursup_id: { $ne: null } }],
+              },
+            ],
+          });
+          const update = {
+            parcoursup_id: null,
+            parcoursup_statut: PARCOURSUP_STATUS.FERME,
+            last_update_at: date,
+            last_update_who: "Parcoursup",
+          };
+
+          closedFormations.forEach(async (closedFormation) => {
+            console.log(`closed : ${closedFormation.cle_ministere_educatif}`);
+
+            closedFormation &&
+              (closed += (
+                await Formation.updateOne(
+                  { cle_ministere_educatif: closedFormation.cle_ministere_educatif },
+                  {
+                    ...update,
+                    $push: {
+                      updates_history: buildUpdatesHistory(closedFormation, update, [
+                        "last_update_at",
+                        "last_update_who",
+                        "parcoursup_statut",
+                        "parcoursup_id",
+                      ]),
+                    },
+                  }
+                )
+              ).nModified);
+          });
+
           break;
+        }
+
         case STATUS.NOTHING_TODO:
         default:
           break;
