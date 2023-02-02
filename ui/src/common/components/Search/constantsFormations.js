@@ -584,7 +584,7 @@ const facetDefinition = () => [
     selectAllLabel: "Tous",
     sortBy: "count",
     acl: "page_catalogue/voir_status_publication_ps",
-    displayInContext: [CONTEXT.CATALOGUE_GENERAL],
+    // displayInContext: [CONTEXT.CATALOGUE_GENERAL],
     helpTextSection: helpText.search.parcoursup_statut,
   },
   {
@@ -595,7 +595,7 @@ const facetDefinition = () => [
     selectAllLabel: "Tous",
     sortBy: "count",
     acl: "page_catalogue/voir_status_publication_aff",
-    displayInContext: [CONTEXT.CATALOGUE_GENERAL],
+    // displayInContext: [CONTEXT.CATALOGUE_GENERAL],
     helpTextSection: helpText.search.affelnet_statut,
   },
   {
