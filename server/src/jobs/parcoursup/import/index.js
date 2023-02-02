@@ -19,7 +19,7 @@ const psImport = async () => {
   try {
     const results = await getFormations();
 
-    logger.info(
+    console.log(
       results
         .filter(({ status }) => status === STATUS.NEW_LINK)
         .map(({ g_ta_cod: parcoursup_id, status, rco: cle_ministere_educatif }) => ({
@@ -28,6 +28,7 @@ const psImport = async () => {
           cle_ministere_educatif,
         }))
     );
+
     const statusesCount = results.reduce(function (prev, cur) {
       prev[cur.status] = (prev[cur.status] || 0) + 1;
       return prev;
@@ -52,6 +53,7 @@ const psImport = async () => {
 
           canceledFormations.forEach(async (canceledFormation) => {
             console.log(`canceled : ${canceledFormation.cle_ministere_educatif}`);
+
             canceledFormation &&
               (canceled += (
                 await Formation.updateOne(
@@ -83,8 +85,10 @@ const psImport = async () => {
             parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
             last_update_at: date,
             last_update_who: "Parcoursup",
-            "rejection.handled_by": null,
-            "rejection.handled_date": null,
+            rejection: {
+              handled_by: null,
+              handled_date: null,
+            },
           };
 
           newLinkFormations.forEach(async (newLinkFormation) => {
