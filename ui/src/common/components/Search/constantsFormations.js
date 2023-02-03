@@ -152,6 +152,12 @@ const columnsDefinition = [
     exportable: true,
   },
   {
+    Header: "Intitule Carif-Oref",
+    accessor: "intitule_rco",
+    width: 200,
+    exportable: true,
+  },
+  {
     Header: "Organisme Habilite (RNCP)",
     accessor: "etablissement_reference_habilite_rncp",
     width: 200,
