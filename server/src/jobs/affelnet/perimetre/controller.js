@@ -55,8 +55,11 @@ const run = async () => {
         {
           affelnet_statut: { $ne: AFFELNET_STATUS.PUBLIE },
           $or: [
-            { catalogue_published: false, forced_published: { $ne: true } },
+            // Plus dans le flux
             { published: false },
+            // Plus dans le catalogue général
+            { catalogue_published: false, forced_published: { $ne: true } },
+            // Diplôme périmé
             {
               "rncp_details.code_type_certif": {
                 $in: ["Titre", "TP"],
@@ -69,6 +72,8 @@ const run = async () => {
               },
               cfd_outdated: true,
             },
+            // Date de début hors campagne en cours.
+            { date_debut: { $not: { $gte: next_campagne_debut, $lt: next_campagne_end } } },
           ],
         },
         // Reset du statut si l'on supprime affelnet_id
