@@ -5109,7 +5109,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsonwebtoken@npm:9.0.0":
+"jsonwebtoken@npm:9.0.0, jsonwebtoken@npm:^9.0.0":
   version: 9.0.0
   resolution: "jsonwebtoken@npm:9.0.0"
   dependencies:
@@ -6336,7 +6336,7 @@ __metadata:
     oleoduc: 0.7.0
     omit-deep: "https://github.com/izigibran/omit-deep.git"
     passport: 0.6.0
-    passport-jwt: 4.0.0
+    passport-jwt: 4.0.1
     prettier: 2.0.5
     require-all: 3.0.0
     rewiremock: 3.14.4
@@ -7361,6 +7361,16 @@ __metadata:
     jsonwebtoken: ^8.2.0
     passport-strategy: ^1.0.0
   checksum: d0499ebb819c714d885a9c03a6c5d6dfae916c1a81ccb62357136d5bf477529327e9b8fc658f61f97c565651d2bd78eccec4543474a08e944132f0e2ec47cc3d
+  languageName: node
+  linkType: hard
+
+"passport-jwt@npm:4.0.1":
+  version: 4.0.1
+  resolution: "passport-jwt@npm:4.0.1"
+  dependencies:
+    jsonwebtoken: ^9.0.0
+    passport-strategy: ^1.0.0
+  checksum: 0669d5bf8fc18ee57eb39601491c59ac084acfa6c972e0a3289e9d88a3ee6fab9e9fb279f359eee81939fedb66904c4a74423004480b60c54621af0d7b2ee0d5
   languageName: node
   linkType: hard
 
