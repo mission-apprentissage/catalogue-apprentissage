@@ -53,7 +53,9 @@ const run = async () => {
     {
       $or: [
         {
-          parcoursup_statut: { $nin: [PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.FERME] },
+          parcoursup_statut: {
+            $nin: [PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.FERME, PARCOURSUP_STATUS.NON_PUBLIE],
+          },
           $or: [
             // Plus dans le flux
             { published: false },

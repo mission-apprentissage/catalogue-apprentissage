@@ -53,7 +53,7 @@ const run = async () => {
     {
       $or: [
         {
-          affelnet_statut: { $ne: AFFELNET_STATUS.PUBLIE },
+          affelnet_statut: { $nin: [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.NON_PUBLIE] },
           $or: [
             // Plus dans le flux
             { published: false },
