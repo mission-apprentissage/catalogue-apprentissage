@@ -52,7 +52,7 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
   if (
     forceRecompute ||
     fields.geo_coordonnees_etablissement_formateur !== oldFields?.geo_coordonnees_etablissement_formateur ||
-    fields.lieu_formation_geo_coordonnees !== oldFields?.lieu_formation_geo_coordonnee
+    fields.lieu_formation_geo_coordonnees !== oldFields?.lieu_formation_geo_coordonnees
   ) {
     if (!!fields.geo_coordonnees_etablissement_formateur && !!fields.lieu_formation_geo_coordonnees) {
       distance_lieu_formation_etablissement_formateur =
