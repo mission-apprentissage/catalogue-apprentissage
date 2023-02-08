@@ -1,10 +1,12 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Layout from "../layout/Layout";
 import { Box, Button, Container, Heading, Input, ListItem, Select, Text, UnorderedList } from "@chakra-ui/react";
 import { useDropzone } from "react-dropzone";
 import { _postFile } from "../../common/httpClient";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
+import useAuth from "../../common/hooks/useAuth";
 import { setTitle } from "../../common/utils/pageUtils";
+import { hasAccessTo } from "../../common/utils/rolesUtils";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -29,20 +31,24 @@ const DOCUMENTS = [
   {
     filename: "CodeDiplome_RNCP_latest_kit.csv",
     label: "Kit code diplome - rncp",
+    acl: "page_upload/kit-apprentissage",
   },
   {
     filename: "affelnet-import.xlsx",
     label: "Import Affelnet",
+    acl: "page_upload/affelnet-formations",
   },
   {
     filename: "mefs-parcoursup.csv",
     label: "Liste de MEFs fiabilisés sur Parcoursup",
+    acl: "page_upload/parcoursup-mefs",
   },
 ];
 
 export default () => {
+  const [auth] = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [filename, setFilename] = useState(DOCUMENTS[0].filename);
+  const [filename, setFilename] = useState(null);
   const [uploadError, setUploadError] = useState(null);
   const [uploadSuccess, setUploadSuccess] = useState(null);
 
@@ -94,6 +100,10 @@ export default () => {
     }
   };
 
+  useEffect(() => {
+    setFilename([...DOCUMENTS.filter((doc) => auth && hasAccessTo(auth, doc.acl))][0]?.filename);
+  }, [auth]);
+
   const title = "Formulaire d'upload de fichiers";
   setTitle(title);
 
@@ -119,7 +129,7 @@ export default () => {
                 setFilename(e.target.value);
               }}
             >
-              {DOCUMENTS.map(({ filename, label }) => (
+              {[...DOCUMENTS.filter((doc) => auth && hasAccessTo(auth, doc.acl))].map(({ filename, label }) => (
                 <option value={filename} key={filename}>
                   {label}
                 </option>

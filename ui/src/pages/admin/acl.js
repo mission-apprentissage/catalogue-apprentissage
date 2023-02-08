@@ -110,6 +110,20 @@ export default [
   {
     feature: "Upload de fichiers source",
     ref: "page_upload",
+    subFeatures: [
+      {
+        feature: "Kit code diplome - rncp",
+        ref: "page_upload/kit-apprentissage",
+      },
+      {
+        feature: "Import Affelnet",
+        ref: "page_upload/affelnet-formations",
+      },
+      {
+        feature: "Liste de MEFs fiabilisés sur Parcoursup",
+        ref: "page_upload/parcoursup-mefs",
+      },
+    ],
   },
   {
     feature: "Message de maintenance",
