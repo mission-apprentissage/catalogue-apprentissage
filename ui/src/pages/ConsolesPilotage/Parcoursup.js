@@ -175,7 +175,7 @@ export default () => {
         <iframe
           src="https://catalogue.apprentissage.education.gouv.fr/metabase/public/dashboard/4e36e6e9-df1d-4444-bb76-cce85e662f47#bordered=false"
           seamless
-          style={{ height: "275vh", width: "100%", border: 0 }}
+          style={{ height: "330vh", width: "100%", border: 0 }}
           title={`Console de pilotage Parcoursup - Statistiques`}
           allowtransparency={"true"}
         />
