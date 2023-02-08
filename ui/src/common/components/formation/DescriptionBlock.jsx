@@ -9,7 +9,7 @@ import { FormationDate } from "./FormationDate";
 import { HabilitationPartenaire } from "./HabilitationPartenaire";
 import { HABILITE_LIST } from "../../../constants/certificateurs";
 import { EllipsisText } from "../EllipsisText";
-import { getExpirationDate } from "../../utils/rulesUtils";
+import { getExpirationDate, isInCampagne } from "../../utils/rulesUtils";
 
 const DureeAnnee = ({ value }) => {
   if (!value) {
@@ -71,6 +71,10 @@ export const DescriptionBlock = ({ formation }) => {
     siretCertificateurs.includes(formation.etablissement_formateur_siret) ||
     siretCertificateurs.includes(formation.etablissement_gestionnaire_siret)
   );
+
+  const DateSessionContainer = !isInCampagne(formation)
+    ? (args) => <DangerBox data-testid={"rncp-warning"} {...args} />
+    : React.Fragment;
 
   return (
     <>
@@ -216,14 +220,18 @@ export const DescriptionBlock = ({ formation }) => {
               </Text>
             </Text>
           )}
-          {/* <Text mb={4}>
-            Période d'inscription : <FormationPeriode periode={formation.periode} />{" "}
-            <InfoTooltip description={helpText.formation.periode} />
-          </Text> */}
-          <Text mb={4}>
-            Dates de formation : <FormationDate formation={formation} />{" "}
-            <InfoTooltip description={helpText.formation.dates} />
-          </Text>
+          <DateSessionContainer>
+            <Text mb={4}>
+              Dates de formation : <FormationDate formation={formation} />{" "}
+              <InfoTooltip description={helpText.formation.dates} />
+            </Text>
+            {!isInCampagne(formation) && (
+              <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
+                Les dates de session ne correspondent pas aux règles de périmètre pour la prochaine campagne Affelnet ou
+                Parcoursup. Faire le signalement au Carif-Oref pour que la prochaine session soit enregistrée.{" "}
+              </Text>
+            )}
+          </DateSessionContainer>
           <Text mb={4}>
             Capacite d'accueil :{" "}
             <Text as="span" variant="highlight">

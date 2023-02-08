@@ -76,6 +76,18 @@ export const getCampagneEndDate = (currentDate = new Date()) => {
 };
 
 /**
+ *
+ * @param {Formation} formation
+ * @returns {boolean}
+ */
+export const isInCampagne = ({ date_debut } = { date_debut: [] }) => {
+  const datesInCampagne = date_debut?.filter((date) => date >= getCampagneStartDate() && date <= getCampagneEndDate());
+  const result = datesInCampagne?.length > 0;
+
+  return result;
+};
+
+/**
  * Renvoie la date d'expiration autorisée pour validité d'enregistrement des codes cfd et rncp
  *
  * @param {Date} [currentDate]
