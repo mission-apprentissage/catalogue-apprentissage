@@ -3,6 +3,7 @@ const { getQueryFromRule, getCampagneStartDate, getCampagneEndDate } = require("
 const { ReglePerimetre } = require("../../../common/model");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { AFFELNET_STATUS } = require("../../../constants/status");
+const { cursor } = require("../../../common/utils/cursor");
 
 const run = async () => {
   const next_campagne_debut = getCampagneStartDate();
@@ -39,7 +40,8 @@ const run = async () => {
     ],
   };
 
-  await Formation.updateMany({}, { $set: { affelnet_perimetre: false } });
+  const formationsInPerimetre = new Set();
+  const formationsNotInPerimetre = new Set();
 
   const aPublierSoumisAValidationRules = await ReglePerimetre.find({
     plateforme: "affelnet",
@@ -48,19 +50,14 @@ const run = async () => {
   }).lean();
 
   if (aPublierSoumisAValidationRules.length > 0) {
-    await Formation.updateMany(
-      {
+    (
+      await Formation.find({
         ...filterReglement,
         ...filterDateCampagne,
 
         $or: aPublierSoumisAValidationRules.map(getQueryFromRule),
-      },
-      {
-        $set: {
-          affelnet_perimetre: true,
-        },
-      }
-    );
+      }).select({ cle_ministere_educatif: 1 })
+    ).forEach(({ cle_ministere_educatif }) => formationsInPerimetre.add(cle_ministere_educatif));
   }
 
   const aPublierRules = await ReglePerimetre.find({
@@ -70,19 +67,14 @@ const run = async () => {
   }).lean();
 
   if (aPublierRules.length > 0) {
-    await Formation.updateMany(
-      {
+    (
+      await Formation.find({
         ...filterReglement,
         ...filterDateCampagne,
 
         $or: aPublierRules.map(getQueryFromRule),
-      },
-      {
-        $set: {
-          affelnet_perimetre: true,
-        },
-      }
-    );
+      }).select({ cle_ministere_educatif: 1 })
+    ).forEach(({ cle_ministere_educatif }) => formationsInPerimetre.add(cle_ministere_educatif));
   }
 
   // apply academy rules
@@ -92,22 +84,46 @@ const run = async () => {
 
   await asyncForEach(academieRules, async (rule) => {
     await asyncForEach(Object.entries(rule.statut_academies), async ([num_academie, status]) => {
-      await Formation.updateMany(
-        {
+      (
+        await Formation.find({
           ...filterReglement,
           ...filterDateCampagne,
 
           num_academie,
           ...getQueryFromRule(rule),
-        },
-        {
-          $set: {
-            affelnet_perimetre: status === "hors périmètre" ? false : true,
-          },
-        }
+        }).select({ cle_ministere_educatif: 1 })
+      ).forEach(({ cle_ministere_educatif }) =>
+        status === AFFELNET_STATUS.HORS_PERIMETRE
+          ? formationsNotInPerimetre.add(cle_ministere_educatif)
+          : formationsInPerimetre.add(cle_ministere_educatif)
       );
     });
   });
+
+  // console.log({ formationsInPerimetre });
+  // console.log({ formationsNotInPerimetre });
+
+  await cursor(
+    Formation.find({
+      cle_ministere_educatif: { $in: [...formationsInPerimetre] },
+      affelnet_perimetre: { $ne: true },
+    }).select({
+      cle_ministere_educatif: 1,
+    }),
+    async ({ cle_ministere_educatif }) =>
+      await Formation.updateOne({ cle_ministere_educatif }, { affelnet_perimetre: true })
+  );
+
+  await cursor(
+    Formation.find({
+      cle_ministere_educatif: { $nin: [...formationsInPerimetre] },
+      affelnet_perimetre: { $ne: false },
+    }).select({
+      cle_ministere_educatif: 1,
+    }),
+    async ({ cle_ministere_educatif }) =>
+      await Formation.updateOne({ cle_ministere_educatif }, { affelnet_perimetre: false })
+  );
 };
 
 module.exports = { run };

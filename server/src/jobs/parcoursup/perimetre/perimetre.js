@@ -3,6 +3,7 @@ const { getQueryFromRule, getCampagneStartDate, getCampagneEndDate } = require("
 const { ReglePerimetre } = require("../../../common/model");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
+const { cursor } = require("../../../common/utils/cursor");
 
 const run = async () => {
   const next_campagne_debut = getCampagneStartDate();
@@ -17,14 +18,8 @@ const run = async () => {
     published: true,
   };
 
-  await Formation.updateMany(
-    {},
-    {
-      $set: {
-        parcoursup_perimetre: false,
-      },
-    }
-  );
+  const formationsInPerimetre = new Set();
+  const formationsNotInPerimetre = new Set();
 
   const aPublierHabilitationRules = await ReglePerimetre.find({
     plateforme: "parcoursup",
@@ -33,19 +28,14 @@ const run = async () => {
   }).lean();
 
   aPublierHabilitationRules.length > 0 &&
-    (await Formation.updateMany(
-      {
+    (
+      await Formation.find({
         ...filterReglement,
         ...filterDateCampagne,
 
         $or: aPublierHabilitationRules.map(getQueryFromRule),
-      },
-      {
-        $set: {
-          parcoursup_perimetre: true,
-        },
-      }
-    ));
+      }).select({ cle_ministere_educatif: 1 })
+    ).forEach(({ cle_ministere_educatif }) => formationsInPerimetre.add(cle_ministere_educatif));
 
   const aPublierVerifierAccesDirectPostBacRules = await ReglePerimetre.find({
     plateforme: "parcoursup",
@@ -54,19 +44,14 @@ const run = async () => {
   }).lean();
 
   aPublierVerifierAccesDirectPostBacRules.length > 0 &&
-    (await Formation.updateMany(
-      {
+    (
+      await Formation.find({
         ...filterReglement,
         ...filterDateCampagne,
 
         $or: aPublierVerifierAccesDirectPostBacRules.map(getQueryFromRule),
-      },
-      {
-        $set: {
-          parcoursup_perimetre: true,
-        },
-      }
-    ));
+      }).select({ cle_ministere_educatif: 1 })
+    ).forEach(({ cle_ministere_educatif }) => formationsInPerimetre.add(cle_ministere_educatif));
 
   const aPublierValidationRecteurRules = await ReglePerimetre.find({
     plateforme: "parcoursup",
@@ -75,18 +60,13 @@ const run = async () => {
   }).lean();
 
   aPublierValidationRecteurRules.length > 0 &&
-    (await Formation.updateMany(
-      {
+    (
+      await Formation.find({
         ...filterReglement,
         ...filterDateCampagne,
         $or: aPublierValidationRecteurRules.map(getQueryFromRule),
-      },
-      {
-        $set: {
-          parcoursup_perimetre: true,
-        },
-      }
-    ));
+      }).select({ cle_ministere_educatif: 1 })
+    ).forEach(({ cle_ministere_educatif }) => formationsInPerimetre.add(cle_ministere_educatif));
 
   const aPublierRules = await ReglePerimetre.find({
     plateforme: "parcoursup",
@@ -95,18 +75,13 @@ const run = async () => {
   }).lean();
 
   aPublierRules.length > 0 &&
-    (await Formation.updateMany(
-      {
+    (
+      await Formation.find({
         ...filterReglement,
         ...filterDateCampagne,
         $or: aPublierRules.map(getQueryFromRule),
-      },
-      {
-        $set: {
-          parcoursup_perimetre: true,
-        },
-      }
-    ));
+      }).select({ cle_ministere_educatif: 1 })
+    ).forEach(({ cle_ministere_educatif }) => formationsInPerimetre.add(cle_ministere_educatif));
 
   // apply academy rules
   const academieRules = [
@@ -118,21 +93,45 @@ const run = async () => {
 
   await asyncForEach(academieRules, async (rule) => {
     await asyncForEach(Object.entries(rule.statut_academies), async ([num_academie, status]) => {
-      await Formation.updateMany(
-        {
+      (
+        await Formation.find({
           ...filterReglement,
           ...filterDateCampagne,
           num_academie,
           ...getQueryFromRule(rule),
-        },
-        {
-          $set: {
-            parcoursup_perimetre: status === "hors périmètre" ? false : true,
-          },
-        }
+        }).select({ cle_ministere_educatif: 1 })
+      ).forEach(({ cle_ministere_educatif }) =>
+        status === PARCOURSUP_STATUS.HORS_PERIMETRE
+          ? formationsNotInPerimetre.add(cle_ministere_educatif)
+          : formationsInPerimetre.add(cle_ministere_educatif)
       );
     });
   });
+
+  // console.log({ formationsInPerimetre });
+  // console.log({ formationsNotInPerimetre });
+
+  await cursor(
+    Formation.find({
+      cle_ministere_educatif: { $in: [...formationsInPerimetre] },
+      parcoursup_perimetre: { $ne: true },
+    }).select({
+      cle_ministere_educatif: 1,
+    }),
+    async ({ cle_ministere_educatif }) =>
+      await Formation.updateOne({ cle_ministere_educatif }, { parcoursup_perimetre: true })
+  );
+
+  await cursor(
+    Formation.find({
+      cle_ministere_educatif: { $nin: [...formationsInPerimetre] },
+      parcoursup_perimetre: { $ne: false },
+    }).select({
+      cle_ministere_educatif: 1,
+    }),
+    async ({ cle_ministere_educatif }) =>
+      await Formation.updateOne({ cle_ministere_educatif }, { parcoursup_perimetre: false })
+  );
 };
 
 module.exports = { run };

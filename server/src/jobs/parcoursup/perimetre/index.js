@@ -9,14 +9,18 @@ const psPerimetre = async () => {
   try {
     logger.info(" -- Start psup perimetre -- ");
 
-    console.log("Compteurs avant :");
+    console.log("\nCompteurs avant :\n");
     await counter.run();
+
+    console.log("\nApplication des règles de périmètre :\n");
 
     await controller.run();
 
+    console.log("\nVérification du périmètre :\n");
+
     await perimetre.run();
 
-    console.log("Compteurs après :");
+    console.log("\nCompteurs après :\n");
     await counter.run();
 
     logger.info(" -- End of psup perimetre -- ");

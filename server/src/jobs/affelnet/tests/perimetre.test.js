@@ -326,7 +326,7 @@ describe(`${__filename} - Gestion de la disparition du périmètre`, async () =>
         });
 
         await Object.values(AFFELNET_STATUS)
-          .filter((status) => status !== AFFELNET_STATUS.PUBLIE)
+          .filter((status) => ![AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.NON_PUBLIE].includes(status))
           .map(async (status) => {
             await it(`should apply status 'hors périmètre' if not in perimeter anymore, and if status was '${status}'`, async () => {
               await Formation.create({ ...formationOk, ...valueMotif, affelnet_statut: status });
