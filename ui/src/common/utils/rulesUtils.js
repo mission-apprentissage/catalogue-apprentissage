@@ -81,8 +81,11 @@ export const getCampagneEndDate = (currentDate = new Date()) => {
  * @returns {boolean}
  */
 export const isInCampagne = ({ date_debut } = { date_debut: [] }) => {
-  const datesInCampagne = date_debut?.filter((date) => date >= getCampagneStartDate() && date <= getCampagneEndDate());
+  const datesInCampagne = date_debut?.filter(
+    (date) => new Date(date) >= getCampagneStartDate() && new Date(date) <= getCampagneEndDate()
+  );
   const result = datesInCampagne?.length > 0;
+  console.log({ date_debut, datesInCampagne, result });
 
   return result;
 };
