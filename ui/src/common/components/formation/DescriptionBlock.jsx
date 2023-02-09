@@ -228,7 +228,8 @@ export const DescriptionBlock = ({ formation }) => {
             {!isInCampagne(formation) && (
               <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
                 Les dates de session ne correspondent pas aux règles de périmètre pour la prochaine campagne Affelnet ou
-                Parcoursup. Faire le signalement au Carif-Oref pour que la prochaine session soit enregistrée.{" "}
+                Parcoursup. Si le CFA a prévu de proposer une session en 2023, il doit faire l’enregistrement auprès du
+                Carif-Oref.{" "}
               </Text>
             )}
           </DateSessionContainer>
