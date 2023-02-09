@@ -36,7 +36,7 @@ test("renders all actions for admin", async () => {
 });
 
 test("renders ps actions for acl ps", async () => {
-  setAuthState({ permissions: { isAdmin: false }, acl: ["page_perimetre_ps"] });
+  setAuthState({ permissions: { isAdmin: false }, acl: ["page_perimetre/parcoursup"] });
 
   const { queryByText, getByTestId } = renderWithRouter(<ActionsExpertes />);
 
@@ -50,7 +50,7 @@ test("renders ps actions for acl ps", async () => {
 });
 
 test("renders af actions for acl af", async () => {
-  setAuthState({ permissions: { isAdmin: false }, acl: ["page_perimetre_af"] });
+  setAuthState({ permissions: { isAdmin: false }, acl: ["page_perimetre/affelnet"] });
 
   const { queryByText, getByTestId } = renderWithRouter(<ActionsExpertes />);
 

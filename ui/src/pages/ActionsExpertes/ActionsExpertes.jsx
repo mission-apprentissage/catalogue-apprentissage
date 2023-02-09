@@ -22,7 +22,7 @@ export default () => {
           </Heading>
 
           <Flex my={4} mb={8} alignItems="flex-start" data-testid="grid">
-            {(isUserAdmin(auth) || hasAccessTo(auth, "page_perimetre_ps")) && (
+            {(isUserAdmin(auth) || hasAccessTo(auth, "page_perimetre/parcoursup")) && (
               <Box border="2px" p="24px" borderColor="gray.200" mr={4}>
                 <Heading textStyle="h4" color="grey.800" mt={2} mb={5}>
                   Parcoursup
@@ -31,26 +31,17 @@ export default () => {
                 <Grid gap={4}>
                   <GridItem colSpan={[3, 3, 1]}>
                     <Card
-                      linkTo="/console-pilotage/parcoursup"
-                      title="Ma console de pilotage Parcoursup"
-                      isDisabled={!hasAccessTo(auth, "page_perimetre_ps")}
+                      linkTo="/perimetre-parcoursup"
+                      title="Règles d'intégration des formations à la plateforme Parcoursup"
+                      body="Déterminer les conditions d'intégrations des formations en apprentissage du Catalogue (Carif-Oref) sur la plateforme Parcoursup"
+                      isDisabled={!hasAccessTo(auth, "page_perimetre/parcoursup")}
                     />
                   </GridItem>
-                  {(isUserAdmin(auth) || hasAccessTo(auth, "page_perimetre_ps")) && (
-                    <GridItem colSpan={[3, 3, 1]}>
-                      <Card
-                        linkTo="/perimetre-parcoursup"
-                        title="Règles d'intégration des formations à la plateforme Parcoursup"
-                        body="Déterminer les conditions d'intégrations des formations en apprentissage du Catalogue (Carif-Oref) sur la plateforme Parcoursup"
-                        isDisabled={!hasAccessTo(auth, "page_perimetre_ps")}
-                      />
-                    </GridItem>
-                  )}
                 </Grid>
               </Box>
             )}
 
-            {(isUserAdmin(auth) || hasAccessTo(auth, "page_perimetre_af")) && (
+            {(isUserAdmin(auth) || hasAccessTo(auth, "page_perimetre/affelnet")) && (
               <Box style={{ border: "2px solid #E2E8F0", padding: "24px" }} ml={4}>
                 <Heading textStyle="h4" color="grey.800" mt={2} mb={5}>
                   Affelnet
@@ -58,21 +49,12 @@ export default () => {
                 <Grid gap={4}>
                   <GridItem colSpan={[3, 3, 1]}>
                     <Card
-                      linkTo="/console-pilotage/affelnet"
-                      title="Ma console de pilotage Affelnet"
-                      isDisabled={!hasAccessTo(auth, "page_perimetre_af")}
+                      linkTo="/perimetre-affelnet"
+                      title="Règles d'intégration des formations à la plateforme Affelnet"
+                      body="Déterminer les conditions d'intégrations des formations en apprentissage du Catalogue (Carif-Oref) sur la plateforme Affelnet"
+                      isDisabled={!hasAccessTo(auth, "page_perimetre/affelnet")}
                     />
                   </GridItem>
-                  {(isUserAdmin(auth) || hasAccessTo(auth, "page_perimetre_af")) && (
-                    <GridItem colSpan={[3, 3, 1]}>
-                      <Card
-                        linkTo="/perimetre-affelnet"
-                        title="Règles d'intégration des formations à la plateforme Affelnet"
-                        body="Déterminer les conditions d'intégrations des formations en apprentissage du Catalogue (Carif-Oref) sur la plateforme Affelnet"
-                        isDisabled={!hasAccessTo(auth, "page_perimetre_af")}
-                      />
-                    </GridItem>
-                  )}
                 </Grid>
               </Box>
             )}

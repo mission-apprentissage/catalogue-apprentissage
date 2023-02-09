@@ -129,12 +129,34 @@ export default [
     feature: "Message de maintenance",
     ref: "page_message_maintenance",
   },
+
   {
-    feature: "Réglage des périmètres Parcoursup",
-    ref: "page_perimetre_ps",
+    feature: "Consoles de pilotage",
+    ref: "page_console",
+    subFeatures: [
+      {
+        feature: "Affelnet",
+        ref: "page_console/affelnet",
+      },
+      {
+        feature: "Parcoursup",
+        ref: "page_console/parcoursup",
+      },
+    ],
   },
+
   {
-    feature: "Réglage des périmètres Affelnet",
-    ref: "page_perimetre_af",
+    feature: "Réglage des périmètres",
+    ref: "page_perimetre",
+    subFeatures: [
+      {
+        feature: "Affelnet",
+        ref: "page_perimetre/affelnet",
+      },
+      {
+        feature: "Parcoursup",
+        ref: "page_perimetre/parcoursup",
+      },
+    ],
   },
 ];

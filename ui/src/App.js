@@ -30,6 +30,7 @@ const MentionsLegales = lazy(() => import("./pages/legal/MentionsLegales"));
 const Accessibilite = lazy(() => import("./pages/legal/Accessibilite"));
 const ActionsExpertes = lazy(() => import("./pages/ActionsExpertes/ActionsExpertes"));
 const Perimetre = lazy(() => import("./pages/perimetre/Perimetre"));
+const ConsolesPilotage = lazy(() => import("./pages/ConsolesPilotage"));
 const ConsolePilotageAffelnet = lazy(() => import("./pages/ConsolesPilotage/Affelnet"));
 const ConsolePilotageParcoursup = lazy(() => import("./pages/ConsolesPilotage/Parcoursup"));
 
@@ -155,7 +156,27 @@ export default () => {
                   </PrivateRoute>
                 )}
 
-                {auth && hasAccessTo(auth, "page_perimetre_ps") && (
+                {auth && hasAccessTo(auth, "page_console") && (
+                  <PrivateRoute exact path="/consoles-pilotage" render={(props) => <ConsolesPilotage {...props} />} />
+                )}
+
+                {auth && hasAccessTo(auth, "page_console/parcoursup") && (
+                  <PrivateRoute
+                    exact
+                    path="/consoles-pilotage/parcoursup"
+                    render={(props) => <ConsolePilotageParcoursup {...props} />}
+                  />
+                )}
+
+                {auth && hasAccessTo(auth, "page_console/affelnet") && (
+                  <PrivateRoute
+                    exact
+                    path="/consoles-pilotage/affelnet"
+                    render={(props) => <ConsolePilotageAffelnet {...props} />}
+                  />
+                )}
+
+                {auth && hasAccessTo(auth, "page_perimetre/parcoursup") && (
                   <PrivateRoute
                     exact
                     path="/perimetre-parcoursup"
@@ -163,7 +184,7 @@ export default () => {
                   />
                 )}
 
-                {auth && hasAccessTo(auth, "page_perimetre_af") && (
+                {auth && hasAccessTo(auth, "page_perimetre/affelnet") && (
                   <PrivateRoute
                     exact
                     path="/perimetre-affelnet"

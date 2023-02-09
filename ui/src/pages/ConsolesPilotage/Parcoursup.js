@@ -183,7 +183,7 @@ export default () => {
     },
   ];
 
-  const title = "Consoles de pilotage Parcoursup";
+  const title = "Console de pilotage Parcoursup";
   setTitle(title);
 
   return (
@@ -193,7 +193,7 @@ export default () => {
           <Breadcrumb
             pages={[
               { title: "Accueil", to: "/" },
-              { title: "Mes actions expertes", to: "/mes-actions" },
+              { title: "Consoles de pilotage", to: "/consoles-pilotage" },
               { title: title },
             ]}
           />
