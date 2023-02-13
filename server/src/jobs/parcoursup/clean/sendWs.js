@@ -51,11 +51,11 @@ const run = async ({ filter, limit, skip, file, clean } = { limit: 0, skip: 0, c
         console.log(results[index]);
       }
     );
-  } catch (err) {
-    logger.error(err);
+  } catch (error) {
+    logger.error({ type: "job" }, error);
   }
 
-  logger.info(results);
+  // logger.info(results);
 
   const csv = new ObjectsToCsv(results);
 
@@ -70,7 +70,7 @@ const run = async ({ filter, limit, skip, file, clean } = { limit: 0, skip: 0, c
 
 if (process.env.standalone) {
   runScript(async () => {
-    logger.info(" -- Start formation parcoursup_id sendWs -- ");
+    logger.info({ type: "job" }, " -- Start formation parcoursup_id sendWs -- ");
     const args = process.argv.slice(2);
 
     // Filtre appliquée aux formations envoyées
@@ -94,6 +94,6 @@ if (process.env.standalone) {
       clean,
     });
 
-    logger.info(" -- End formation parcoursup_id sendWs -- ");
+    logger.info({ type: "job" }, " -- End formation parcoursup_id sendWs -- ");
   });
 }

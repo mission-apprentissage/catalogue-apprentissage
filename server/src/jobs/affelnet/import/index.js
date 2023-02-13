@@ -9,7 +9,7 @@ const afImportFormations = async () => {
   const data = getJsonFromXlsxFile(FILE_PATH);
   let count = 0;
 
-  logger.info(`${data.length} formations récupérées du fichier excel, début de l'enregistrement...`);
+  logger.info({ type: "job" }, `${data.length} formations récupérées du fichier excel, début de l'enregistrement...`);
 
   await AffelnetFormation.deleteMany({});
 
@@ -74,11 +74,16 @@ const afImportFormations = async () => {
 
       count++;
     } catch (error) {
-      logger.error(error);
+      logger.error(
+        {
+          type: "job",
+        },
+        error
+      );
     }
   });
 
-  logger.info(`${count} formations importées !`);
+  logger.info({ type: "job" }, `${count} formations importées !`);
 };
 
 module.exports = { afImportFormations };

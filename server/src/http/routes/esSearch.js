@@ -12,7 +12,7 @@ module.exports = () => {
     "/:index/_search",
     tryCatch(async (req, res) => {
       const { index } = req.params;
-      logger.info(`Es search ${index}`);
+      logger.info({ type: "http" }, `Es search ${index}`);
       const result = await esClient.search({ index, ...req.query, body: req.body });
 
       return res.json(result.body);
@@ -38,7 +38,7 @@ module.exports = () => {
     "/:index/_msearch",
     tryCatch(async (req, res) => {
       const { index } = req.params;
-      logger.info(`Es Multi search ${index}`);
+      logger.info({ type: "http" }, `Es Multi search ${index}`);
       const result = await esClient.msearch({ index, ...req.query, body: req.body, rest_total_hits_as_int: true });
 
       return res.json(result.body);
@@ -49,7 +49,7 @@ module.exports = () => {
     "/:index/scroll",
     tryCatch(async (req, res) => {
       const { index } = req.params;
-      logger.info(`Es scrool search ${index}`);
+      logger.info({ type: "http" }, `Es scroll search ${index}`);
 
       let qs = req.query;
 

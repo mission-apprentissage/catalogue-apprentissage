@@ -43,7 +43,7 @@ const ensureOutputDirExists = async () => {
 const exit = async (rawError) => {
   let error = rawError;
   if (rawError) {
-    logger.error(rawError.constructor.name === "EnvVarError" ? rawError.message : rawError);
+    logger.error({ type: "job" }, rawError.constructor.name === "EnvVarError" ? rawError.message : rawError);
   }
 
   //Waiting logger to flush all logs (MongoDB)

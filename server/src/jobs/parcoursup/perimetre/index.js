@@ -7,7 +7,7 @@ const { runScript } = require("../../scriptWrapper");
 
 const psPerimetre = async () => {
   try {
-    logger.info(" -- Start psup perimetre -- ");
+    logger.info({ type: "job" }, " -- Start psup perimetre -- ");
 
     console.log("\nCompteurs avant :\n");
     await counter.run();
@@ -23,9 +23,9 @@ const psPerimetre = async () => {
     console.log("\nCompteurs après :\n");
     await counter.run();
 
-    logger.info(" -- End of psup perimetre -- ");
-  } catch (err) {
-    logger.error(err);
+    logger.info({ type: "job" }, " -- End of psup perimetre -- ");
+  } catch (error) {
+    logger.error({ type: "job" }, error);
   }
 };
 

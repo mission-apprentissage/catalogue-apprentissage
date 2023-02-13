@@ -23,9 +23,9 @@ const postFormation = async (data) => {
     });
 
     return responseData;
-  } catch (err) {
-    logger.error(err);
-    throw err;
+  } catch (error) {
+    logger.error({ type: "job" }, error);
+    throw error;
   }
 };
 
@@ -43,9 +43,9 @@ const updateFormation = async (data) => {
     });
 
     return responseData;
-  } catch (err) {
-    logger.error(err);
-    throw err;
+  } catch (error) {
+    logger.error({ type: "job" }, error);
+    throw error;
   }
 };
 
@@ -63,9 +63,9 @@ const getFormations = async () => {
     });
 
     return responseData;
-  } catch (err) {
-    logger.error(err);
-    throw err;
+  } catch (error) {
+    logger.error({ type: "job" }, error);
+    throw error;
   }
 };
 

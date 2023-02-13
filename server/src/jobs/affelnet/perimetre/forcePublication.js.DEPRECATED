@@ -203,8 +203,8 @@ const afForcePublication = async ({ siret }) => {
     await run({ siret });
 
     logger.info(" -- End of affelnet force publication -- ");
-  } catch (err) {
-    logger.error(err);
+  } catch (error) {
+    logger.error({ type: "job" }, error);
   }
 };
 

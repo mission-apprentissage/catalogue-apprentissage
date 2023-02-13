@@ -110,6 +110,7 @@ const run = async () => {
   });
 
   logger.info(
+    { type: "job" },
     `Compteurs des formations dans le catalogue (règlementaire / total):\n` +
       `- total : ${totalReglement} / ${total}\n` +
       `\n` +
@@ -127,7 +128,5 @@ const run = async () => {
       `- dans le périmètre: ${totalReglementPérimètre} / ${totalPérimètre}\n` +
       `- hors périmètre : ${totalReglementHorsPérimètre} / ${totalHorsPérimètre}\n`
   );
-
-  logger.info();
 };
 module.exports = { run };

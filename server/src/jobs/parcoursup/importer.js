@@ -86,17 +86,17 @@ const run = async () => {
       }
     });
     console.log({ stat });
-  } catch (err) {
-    logger.error(err);
+  } catch (error) {
+    logger.error({ type: "job" }, error);
   }
 };
 
 if (process.env.standalone) {
   runScript(async () => {
-    logger.info(" -- Start database import -- ");
+    logger.info({ type: "job" }, " -- Start database import -- ");
 
     await run();
 
-    logger.info(" -- End database import -- ");
+    logger.info({ type: "job" }, " -- End database import -- ");
   });
 }

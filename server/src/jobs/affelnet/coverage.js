@@ -85,7 +85,7 @@ const formationCoverage = async ({ eraseInfo } = {}) => {
 };
 
 const afCoverage = async ({ eraseInfo } = {}) => {
-  logger.info("Start Affelnet coverage");
+  logger.info({ type: "job" }, "Start Affelnet coverage");
 
   // reset matching first
   await AffelnetFormation.updateMany(
@@ -107,10 +107,10 @@ const afCoverage = async ({ eraseInfo } = {}) => {
     { $set: { affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE } }
   );
 
-  logger.info("Start formation coverage");
+  logger.info({ type: "job" }, "Start formation coverage");
   await formationCoverage({ eraseInfo });
 
-  logger.info("End Affelnet coverage");
+  logger.info({ type: "job" }, "End Affelnet coverage");
 };
 
 module.exports = { afCoverage };

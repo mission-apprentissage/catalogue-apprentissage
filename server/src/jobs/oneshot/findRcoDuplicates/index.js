@@ -19,7 +19,7 @@ const { uniq } = require("lodash");
  */
 
 runScript(async ({ mailer }) => {
-  logger.info(`Start find RCO duplicates`);
+  logger.info({ type: "job" }, `Start find RCO duplicates`);
 
   const result = await Formation.aggregate([
     {
@@ -100,5 +100,5 @@ runScript(async ({ mailer }) => {
     attachments
   );
 
-  logger.info(`End find RCO duplicates`);
+  logger.info({ type: "job" }, `End find RCO duplicates`);
 });

@@ -11,7 +11,7 @@ const { psConsoleStats } = require("./stats");
  */
 const parcoursupJobs = async () => {
   try {
-    logger.info(`Start Parcoursup jobs`);
+    logger.info({ type: "job" }, `Start Parcoursup jobs`);
 
     await psImport();
     await psPerimetre();
@@ -23,9 +23,14 @@ const parcoursupJobs = async () => {
 
     await psConsoleStats();
 
-    logger.info(`End Parcoursup jobs`);
+    logger.info({ type: "job" }, `End Parcoursup jobs`);
   } catch (error) {
-    logger.error(error);
+    logger.error(
+      {
+        type: "job",
+      },
+      error
+    );
   }
 };
 

@@ -98,7 +98,10 @@ const createFormation = async (formation, email = null) => {
 
     const response = await parcoursupApi.postFormation(data);
 
-    logger.info(`Parcoursup WS response: g_ta_cod=${response.g_ta_cod} dejaEnvoye=${response.dejaEnvoye}`);
+    logger.info(
+      { type: "job" },
+      `Parcoursup WS response: g_ta_cod=${response.g_ta_cod} dejaEnvoye=${response.dejaEnvoye}`
+    );
 
     if (!response.g_ta_cod) {
       const e = new Error("Missing g_ta_cod");
@@ -119,12 +122,12 @@ const createFormation = async (formation, email = null) => {
     });
     formation.parcoursup_error = null;
     await formation.save({ validateBeforeSave: false });
-  } catch (e) {
-    logger.error("Parcoursup WS error", e?.response?.status, e?.response?.data ?? e, data);
+  } catch (error) {
+    logger.error({ type: "job" }, "Parcoursup WS error", error?.response?.status, error?.response?.data ?? error, data);
     formation.last_update_at = Date.now();
     formation.last_update_who = `web service Parcoursup${email ? `, sent by ${email}` : ""}, received error`;
-    formation.parcoursup_error = `${e?.response?.status} ${
-      e?.response?.data?.message ?? e?.response?.data ?? "erreur de création"
+    formation.parcoursup_error = `${error?.response?.status} ${
+      error?.response?.data?.message ?? error?.response?.data ?? "erreur de création"
     }`;
 
     if (getParcoursupError(formation)) {
@@ -166,11 +169,11 @@ const run = async () => {
 
 if (process.env.standalone) {
   runScript(async () => {
-    logger.info(" -- Start psup export -- ");
+    logger.info({ type: "job" }, " -- Start psup export -- ");
 
     await run();
 
-    logger.info(" -- End psup export -- ");
+    logger.info({ type: "job" }, " -- End psup export -- ");
   });
 }
 

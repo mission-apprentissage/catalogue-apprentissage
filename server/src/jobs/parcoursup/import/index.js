@@ -167,18 +167,18 @@ const psImport = async () => {
     }
 
     console.log({ closed, linked, canceled });
-  } catch (e) {
-    logger.error("Parcoursup WS error", e?.response?.status, e?.response?.data ?? e);
+  } catch (error) {
+    logger.error({ type: "job" }, "Parcoursup WS error", error?.response?.status, error?.response?.data ?? error);
   }
 };
 
 if (process.env.standalone) {
   runScript(async () => {
-    logger.info(" -- Start psup import -- ");
+    logger.info({ type: "job" }, " -- Start psup import -- ");
 
     await psImport();
 
-    logger.info(" -- End psup import -- ");
+    logger.info({ type: "job" }, " -- End psup import -- ");
   });
 }
 

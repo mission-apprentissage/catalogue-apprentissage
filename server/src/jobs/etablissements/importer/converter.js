@@ -5,7 +5,7 @@ const { cursor } = require("../../../common/utils/cursor");
 const logger = require("../../../common/logger");
 
 const updateRelationFields = async () => {
-  logger.info(" == Updating relations for etablissements == ");
+  logger.info({ type: "job" }, " == Updating relations for etablissements == ");
 
   await cursor(Etablissement.find({}).sort(), async (etablissement) => {
     await Etablissement.updateOne(
@@ -14,7 +14,7 @@ const updateRelationFields = async () => {
     );
   });
 
-  logger.info(" == Updating relations for etablissements: DONE == ");
+  logger.info({ type: "job" }, " == Updating relations for etablissements: DONE == ");
 };
 
 const computeRelationFields = async (fields) => {
@@ -131,7 +131,12 @@ const converter = async () => {
     console.log({ added, updated, notUpdated, removed });
   } catch (e) {
     error = e;
-    logger.error(e);
+    logger.error(
+      {
+        type: "http",
+      },
+      e
+    );
   }
 
   return error;

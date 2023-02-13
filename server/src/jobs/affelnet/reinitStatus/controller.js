@@ -80,7 +80,7 @@ const run = async (date) => {
 
   const totalAfter = await Formation.countDocuments(query);
 
-  logger.info(`Total formations réinitialisées dans le catalogue : ${totalAfter}/${totalBefore}\n`);
+  logger.info({ type: "job" }, `Total formations réinitialisées dans le catalogue : ${totalAfter}/${totalBefore}\n`);
 };
 
 module.exports = {

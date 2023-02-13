@@ -75,7 +75,12 @@ const downloader = async () => {
     await extractFromZip();
   } catch (e) {
     error = e;
-    logger.error(error);
+    logger.error(
+      {
+        type: "job",
+      },
+      error
+    );
   }
 
   return error;

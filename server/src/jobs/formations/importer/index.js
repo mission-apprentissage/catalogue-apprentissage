@@ -10,20 +10,20 @@ const importer = async (
   { noDownload = false, forceRecompute = false } = { noDownload: false, forceRecompute: false }
 ) => {
   try {
-    logger.info(" -- Start of importer -- ");
+    logger.info({ type: "job" }, " -- Start of importer -- ");
 
     // STEP 1 : Download formations from RCO
     let downloadError;
 
     if (!noDownload) {
-      logger.info(" -- Downloading formations -- ");
+      logger.info({ type: "job" }, " -- Downloading formations -- ");
       downloadError = await downloader();
 
       if (downloadError) {
-        logger.error(downloadError);
+        logger.error({ type: "job" }, downloadError);
         return;
       } else {
-        logger.info(`${await DualControlFormation.countDocuments()} formations téléchargées`);
+        logger.info({ type: "job" }, `${await DualControlFormation.countDocuments()} formations téléchargées`);
       }
     }
 
@@ -32,16 +32,16 @@ const importer = async (
     }
 
     // STEP 2 : Convert formations
-    logger.info(" -- Converting formations -- ");
+    logger.info({ type: "job" }, " -- Converting formations -- ");
     await converter({ forceRecompute });
 
     // STEP 3 : Rebuild relations between etablissements and formations
     await updateEtablissementRelationFields();
     await updateFormationRelationFields();
 
-    logger.info(" -- End of importer -- ");
-  } catch (err) {
-    logger.error(err);
+    logger.info({ type: "job" }, " -- End of importer -- ");
+  } catch (error) {
+    logger.error({ type: "job" }, error);
   }
 };
 

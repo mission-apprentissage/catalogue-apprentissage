@@ -12,13 +12,13 @@ const { runScript } = require("../../scriptWrapper");
  */
 const psReinitStatus = async () => {
   try {
-    logger.info(" -- Start affelnet status reinitialisation -- ");
+    logger.info({ type: "job" }, " -- Start affelnet status reinitialisation -- ");
 
     await controller.run();
 
-    logger.info(" -- End of affelnet status reinitialisation -- ");
-  } catch (err) {
-    logger.error(err);
+    logger.info({ type: "job" }, " -- End of affelnet status reinitialisation -- ");
+  } catch (error) {
+    logger.error({ type: "job" }, error);
   }
 };
 

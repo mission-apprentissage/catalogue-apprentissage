@@ -69,7 +69,7 @@ const run = async () => {
     }
   );
 
-  logger.info(`Total formations réinitialisées pour Parcoursup : ${updated}\n`);
+  logger.info({ type: "job" }, `Total formations réinitialisées pour Parcoursup : ${updated}\n`);
 };
 
 module.exports = {

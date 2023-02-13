@@ -6,8 +6,13 @@ const isApiEntrepriseUp = async () => {
     const endpoints = ["apie_2_etablissements", "apie_2_entreprises"];
     const { data } = await axios.get("https://entreprise.api.gouv.fr/watchdoge/dashboard/current_status");
     return data?.results?.filter(({ uname }) => endpoints.includes(uname)).every(({ code }) => code === 200);
-  } catch (e) {
-    logger.error(e);
+  } catch (error) {
+    logger.error(
+      {
+        type: "utils",
+      },
+      error
+    );
     return false;
   }
 };

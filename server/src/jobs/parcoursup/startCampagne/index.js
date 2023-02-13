@@ -12,11 +12,11 @@ const { runScript } = require("../../scriptWrapper");
  */
 const psReinitStatus = async () => {
   try {
-    logger.info(" -- Start parcoursup status reinitialisation -- ");
+    logger.info({ type: "job" }, " -- Start parcoursup status reinitialisation -- ");
 
     await controller.run();
 
-    logger.info(" -- End of parcoursup status reinitialisation -- ");
+    logger.info({ type: "job" }, " -- End of parcoursup status reinitialisation -- ");
   } catch (err) {
     logger.error(err);
   }

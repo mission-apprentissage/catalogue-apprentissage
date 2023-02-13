@@ -7,7 +7,7 @@ const { runScript } = require("../../scriptWrapper");
 
 const afPerimetre = async () => {
   try {
-    logger.info(" -- Start affelnet perimetre -- ");
+    logger.info({ type: "job" }, " -- Start affelnet perimetre -- ");
 
     console.log("\nCompteurs avant :\n");
     await counter.run();
@@ -23,9 +23,9 @@ const afPerimetre = async () => {
     console.log("\nCompteurs après :\n");
     await counter.run();
 
-    logger.info(" -- End of affelnet perimetre -- ");
-  } catch (err) {
-    logger.error(err);
+    logger.info({ type: "job" }, " -- End of affelnet perimetre -- ");
+  } catch (error) {
+    logger.error({ type: "job" }, error);
   }
 };
 

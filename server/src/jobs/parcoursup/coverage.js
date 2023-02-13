@@ -45,12 +45,12 @@ const checkPublished = async (filter = {}, limit = 10) => {
     }
   });
 
-  logger.info(`VALIDE without parent : ${countValideOrphans}`);
-  logger.info(`REJETE without parent : ${countRejeteOrphans}`);
+  logger.info({ type: "job" }, `VALIDE without parent : ${countValideOrphans}`);
+  logger.info({ type: "job" }, `REJETE without parent : ${countRejeteOrphans}`);
 };
 
 const psCoverage = async () => {
-  logger.info("Start Parcoursup coverage");
+  logger.info({ type: "job" }, "Start Parcoursup coverage");
 
   const filtersCheckPublished = { statut_reconciliation: { $in: ["VALIDE", "REJETE"] } };
   const allIdsCheckPublished = await ParcoursupFormation.distinct("_id", { ...filtersCheckPublished });

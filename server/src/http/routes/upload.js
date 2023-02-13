@@ -91,8 +91,13 @@ module.exports = () => {
                     error: `Le contenu du fichier est invalide, il doit contenir les colonnes suivantes : "Code_RNCP;Code_Diplome" (et cette première ligne d'en-tête)`,
                   });
                 }
-              } catch (e) {
-                logger.error(e);
+              } catch (error) {
+                logger.error(
+                  {
+                    type: "http",
+                  },
+                  error
+                );
                 return res.status(400).json({
                   error: `Le contenu du fichier est invalide, il doit être au format CSV (;) et contenir les colonnes suivantes : "Code_RNCP;Code_Diplome" (et cette première ligne d'en-tête)`,
                 });
@@ -108,8 +113,13 @@ module.exports = () => {
                     error: `Le contenu du fichier est invalide, il doit contenir la colonne suivante : "MEF" (et cette première ligne d'en-tête)`,
                   });
                 }
-              } catch (e) {
-                logger.error(e);
+              } catch (error) {
+                logger.error(
+                  {
+                    type: "http",
+                  },
+                  error
+                );
                 return res.status(400).json({
                   error: `Le contenu du fichier est invalide, il doit être au format CSV (;) et contenir la colonne suivante : "MEF" (et cette première ligne d'en-tête)`,
                 });
@@ -121,8 +131,8 @@ module.exports = () => {
         }
 
         // success, move the file
-        await move(src, dest, { overwrite: true }, async (err) => {
-          if (err) return logger.error(err);
+        await move(src, dest, { overwrite: true }, async (error) => {
+          if (error) return logger.error({ type: "http" }, error);
 
           // launch cb if any
           await callback?.();

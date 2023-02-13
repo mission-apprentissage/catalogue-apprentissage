@@ -58,7 +58,7 @@ const extractFromZip = async () => {
     console.error("One and only one file required inside zip");
   }
 
-  logger.info(`${await DualControlEtablissement.countDocuments()} établissements reçus.`);
+  logger.info({ type: "job" }, `${await DualControlEtablissement.countDocuments()} établissements reçus.`);
 
   await zip.close();
 };
@@ -71,7 +71,12 @@ const downloader = async () => {
     await extractFromZip();
   } catch (e) {
     error = e;
-    logger.error(e);
+    logger.error(
+      {
+        type: "job",
+      },
+      e
+    );
   }
 
   return error;

@@ -13,12 +13,13 @@ const { isSameDate, getLastMonth } = require("../../../common/utils/dateUtils");
  */
 const afReinitStatus = async (config) => {
   try {
-    logger.info(" -- Start affelnet status reinitialisation -- ");
+    logger.info({ type: "job" }, " -- Start affelnet status reinitialisation -- ");
 
     let date;
     if (config?.date) {
       date = new Date(config.date);
       logger.info(
+        { type: "job" },
         `La date ${date} a été passée en argument, les formations dont le statut est 'en attente de publication' depuis cette date vont voir celui-ci réinitialiser.`
       );
     } else {
@@ -26,11 +27,13 @@ const afReinitStatus = async (config) => {
 
       if (!config?.force && !isSameDate(new Date(), date)) {
         logger.info(
+          { type: "job" },
           "Aucune date n'a été passée en argument, les formations dont le statut est 'en attente de publication' ne peuvent être réinitialisées automatiquement que le 1er septembre. Passer l'argument --force pour forcer la réinitialisation."
         );
         return;
       } else {
         logger.info(
+          { type: "job" },
           "Aucune date n'a été passée en argument. Etant le 1er septembre, les formations étant 'en attente de publication' sur Affelnet vont être réinitialisées."
         );
       }
@@ -40,9 +43,9 @@ const afReinitStatus = async (config) => {
 
     await controller.run(date);
 
-    logger.info(" -- End of affelnet status reinitialisation -- ");
-  } catch (err) {
-    logger.error(err);
+    logger.info({ type: "job" }, " -- End of affelnet status reinitialisation -- ");
+  } catch (error) {
+    logger.error({ type: "job" }, error);
   }
 };
 

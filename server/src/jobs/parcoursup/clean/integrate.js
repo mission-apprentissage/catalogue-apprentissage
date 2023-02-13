@@ -41,14 +41,14 @@ const run = async (csv) => {
         { parallel: 10 }
       )
     );
-  } catch (err) {
-    logger.error(err);
+  } catch (error) {
+    logger.error({ type: "job" }, error);
   }
 };
 
 if (process.env.standalone) {
   runScript(async () => {
-    logger.info(" -- Start formation parcoursup_id integration -- ");
+    logger.info({ type: "job" }, " -- Start formation parcoursup_id integration -- ");
     const args = process.argv.slice(2);
     const csv = args[0];
     if (!csv) {
@@ -56,6 +56,6 @@ if (process.env.standalone) {
     }
     await run(createReadStream(csv));
 
-    logger.info(" -- End formation parcoursup_id integration -- ");
+    logger.info({ type: "job" }, " -- End formation parcoursup_id integration -- ");
   });
 }

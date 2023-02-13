@@ -35,7 +35,7 @@ const run = async () => {
     }
   );
 
-  logger.info(`Total formations réinitialisées pour Affelnet : ${updated}\n`);
+  logger.info({ type: "job" }, `Total formations réinitialisées pour Affelnet : ${updated}\n`);
 };
 
 module.exports = {

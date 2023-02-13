@@ -188,7 +188,7 @@ module.exports = async (components, verbose = true) => {
     "/api",
     apiLimiter,
     tryCatch(async (req, res) => {
-      verbose && logger.info("/api called - healthcheck");
+      verbose && logger.info({ type: "http" }, "/api called - healthcheck");
 
       let mongodbStatus;
       try {
@@ -196,7 +196,7 @@ module.exports = async (components, verbose = true) => {
         mongodbStatus = true;
       } catch (e) {
         mongodbStatus = false;
-        logger.error("Healthcheck failed", e);
+        logger.error({ type: "http" }, "Healthcheck failed", e);
       }
 
       return res.json({

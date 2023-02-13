@@ -188,16 +188,17 @@ const comparePreviousSeasonFormations = async (plateforme) => {
  */
 const collectPreviousSeasonStats = async ({ month = 6, date = 31 } = { month: 6, date: 31 }) => {
   try {
-    logger.info(`previous season stats jobs`);
+    logger.info({ type: "job" }, `previous season stats jobs`);
 
     const storageDate = new Date();
     storageDate.setMonth(month, date);
     logger.info(
+      { type: "job" },
       `Storage date is : ${storageDate.toLocaleString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}`
     );
 
     if (isSameDate(new Date(), storageDate)) {
-      logger.info(`Storage date is today, let's store !`);
+      logger.info({ type: "job" }, `Storage date is today, let's store !`);
       await storePreviousSeasonFormations();
       return;
     }
@@ -205,9 +206,14 @@ const collectPreviousSeasonStats = async ({ month = 6, date = 31 } = { month: 6,
     await comparePreviousSeasonFormations("affelnet");
     await comparePreviousSeasonFormations("parcoursup");
 
-    logger.info(`End previous season stats jobs`);
+    logger.info({ type: "job" }, `End previous season stats jobs`);
   } catch (error) {
-    logger.error(error);
+    logger.error(
+      {
+        type: "job",
+      },
+      error
+    );
   }
 };
 

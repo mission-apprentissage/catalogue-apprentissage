@@ -12,13 +12,13 @@ const { computeMefs } = require("../../../logic/finder/mefsFinder");
 const { getCfdEntree } = require("../../../logic/finder/cfdEntreeFinder");
 
 const updateRelationFields = async () => {
-  logger.info(" == Updating relations for formations == ");
+  logger.info({ type: "job" }, " == Updating relations for formations == ");
 
   await cursor(Formation.find({}).sort(), async (formation) => {
     await Formation.updateOne({ _id: formation._id }, { $set: { ...(await computeRelationFields(formation)) } });
   });
 
-  logger.info(" == Updating relations for formations: DONE == ");
+  logger.info({ type: "job" }, " == Updating relations for formations: DONE == ");
 };
 
 const computeRelationFields = async (fields) => {
@@ -247,7 +247,12 @@ const converter = async ({ forceRecompute = false } = { forceRecompute: false })
     console.log({ added, updated, notUpdated, removed });
   } catch (e) {
     error = e;
-    logger.error(error);
+    logger.error(
+      {
+        type: "job",
+      },
+      error
+    );
   }
 
   return error;

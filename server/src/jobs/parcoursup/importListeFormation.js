@@ -89,7 +89,7 @@ async function importListeFormation(csv) {
           console.info(`Ligne ${res._id} créée`);
         } catch (e) {
           stats.failed++;
-          logger.error(`Impossible de traiter la ligne : \n${data}`, e);
+          logger.error({ type: "job" }, `Impossible de traiter la ligne : \n${data}`, e);
         }
       },
       { parallel: 10 }
@@ -107,10 +107,10 @@ if (process.env.standalone) {
       throw Error("No csv file specified");
     }
 
-    logger.info(" -- Start database import -- ");
+    logger.info({ type: "job" }, " -- Start database import -- ");
 
     await importListeFormation(createReadStream(csv));
 
-    logger.info(" -- End database import -- ");
+    logger.info({ type: "job" }, " -- End database import -- ");
   });
 }

@@ -74,6 +74,7 @@ const run = async () => {
   });
 
   logger.info(
+    { type: "job" },
     `Compteurs des formations dans le catalogue (règlementaire / total):\n` +
       `- total : ${totalReglement} / ${total}\n` +
       `\n` +

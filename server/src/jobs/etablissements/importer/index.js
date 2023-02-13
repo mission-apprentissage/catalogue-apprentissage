@@ -6,20 +6,20 @@ const { DualControlEtablissement } = require("../../../common/model/index");
 
 const importer = async (options) => {
   try {
-    logger.info(" -- Start of importer -- ");
+    logger.info({ type: "job" }, " -- Start of importer -- ");
 
     // STEP 1 : Download etablissements from RCO
     let downloadError;
 
     if (!options?.noDownload) {
-      logger.info(" -- Downloading etablissements -- ");
+      logger.info({ type: "job" }, " -- Downloading etablissements -- ");
       downloadError = await downloader();
 
       if (downloadError) {
-        logger.error(downloadError);
+        logger.error({ type: "job" }, downloadError);
         return;
       } else {
-        logger.info(`${await DualControlEtablissement.countDocuments()} établissements téléchargés`);
+        logger.info({ type: "job" }, `${await DualControlEtablissement.countDocuments()} établissements téléchargés`);
       }
     }
 
@@ -28,12 +28,12 @@ const importer = async (options) => {
     }
 
     // STEP 2 : Convert etablissements
-    logger.info(" -- Converting etablissements -- ");
+    logger.info({ type: "job" }, " -- Converting etablissements -- ");
     await converter();
 
-    logger.info(" -- End of importer -- ");
-  } catch (err) {
-    logger.error(err);
+    logger.info({ type: "job" }, " -- End of importer -- ");
+  } catch (error) {
+    logger.error({ type: "job" }, error);
   }
 };
 

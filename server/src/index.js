@@ -3,8 +3,8 @@ const logger = require("./common/logger");
 const config = require("config");
 const createComponents = require("./common/components/components");
 
-process.on("unhandledRejection", (e) => logger.error("An unexpected error occurred", e));
-process.on("uncaughtException", (e) => logger.error("An unexpected error occurred", e));
+process.on("unhandledRejection", (e) => logger.error({ type: "core" }, "An unexpected error occurred", e));
+process.on("uncaughtException", (e) => logger.error({ type: "core" }, "An unexpected error occurred", e));
 
 (async function () {
   const components = await createComponents();
