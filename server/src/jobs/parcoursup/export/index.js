@@ -160,7 +160,7 @@ const run = async () => {
   let cursor = createCursor(query);
   for await (const formation of cursor) {
     await createFormation(formation);
-    await sleep(2000);
+    await sleep(1000);
   }
 };
 

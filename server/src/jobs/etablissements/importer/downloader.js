@@ -71,7 +71,7 @@ const downloader = async () => {
     await extractFromZip();
   } catch (e) {
     error = e;
-    console.error(e);
+    logger.error(e);
   }
 
   return error;

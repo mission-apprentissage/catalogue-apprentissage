@@ -14,14 +14,21 @@ const importer = async (options) => {
     if (!options?.noDownload) {
       logger.info(" -- Downloading etablissements -- ");
       downloadError = await downloader();
-      logger.info(`${await DualControlEtablissement.countDocuments()} etablissements téléchargés`);
 
       if (downloadError) {
+        logger.error(downloadError);
         return;
+      } else {
+        logger.info(`${await DualControlEtablissement.countDocuments()} établissements téléchargés`);
       }
     }
 
+    if (!(await DualControlEtablissement.countDocuments())) {
+      return;
+    }
+
     // STEP 2 : Convert etablissements
+    logger.info(" -- Converting etablissements -- ");
     await converter();
 
     logger.info(" -- End of importer -- ");

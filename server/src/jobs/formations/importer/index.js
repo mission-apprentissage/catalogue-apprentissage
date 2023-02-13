@@ -32,6 +32,7 @@ const importer = async (
     }
 
     // STEP 2 : Convert formations
+    logger.info(" -- Converting formations -- ");
     await converter({ forceRecompute });
 
     // STEP 3 : Rebuild relations between etablissements and formations

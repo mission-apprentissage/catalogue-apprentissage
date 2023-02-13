@@ -131,7 +131,7 @@ const converter = async () => {
     console.log({ added, updated, notUpdated, removed });
   } catch (e) {
     error = e;
-    console.error(e);
+    logger.error(e);
   }
 
   return error;

@@ -7,6 +7,7 @@ const { streamArray } = require("stream-json/streamers/StreamArray");
 const StreamZip = require("node-stream-zip");
 const { oleoduc, writeData, transformData } = require("oleoduc");
 const { DualControlFormation } = require("../../../common/model/index");
+const logger = require("../../../common/logger");
 
 const RCO_ZIP_URL = "https://mnadownloader.intercariforef.org/";
 const RCO_ZIP_PATH = "./assets/rco.zip";
@@ -74,7 +75,7 @@ const downloader = async () => {
     await extractFromZip();
   } catch (e) {
     error = e;
-    console.error(e);
+    logger.error(error);
   }
 
   return error;

@@ -247,7 +247,7 @@ const converter = async ({ forceRecompute = false } = { forceRecompute: false })
     console.log({ added, updated, notUpdated, removed });
   } catch (e) {
     error = e;
-    console.error(e);
+    logger.error(error);
   }
 
   return error;
