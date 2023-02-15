@@ -345,12 +345,23 @@ const formationSchema = {
     implicit_type: "geo_point",
     description: "Latitude et longitude du lieu de formation déduit de l'adresse du flux RCO",
   },
+  // distance: {
+  //   type: Number,
+  //   default: null,
+  //   description: "Distance entre les coordonnées transmises et déduites à partir de l'adresse",
+  // },
   lieu_formation_adresse: {
     index: true,
     type: String,
     default: null,
     description: "Adresse du lieu de formation",
   },
+  lieu_formation_adresse_computed: {
+    type: String,
+    default: null,
+    description: "Adresse du lieu de formation déduit de la géolocalisation du flux RCO",
+  },
+
   lieu_formation_siret: {
     type: String,
     default: null,
