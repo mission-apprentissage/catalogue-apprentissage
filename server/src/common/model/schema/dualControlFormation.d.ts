@@ -159,6 +159,10 @@ export interface DualControlFormation {
    */
   lieu_formation_adresse?: string;
   /**
+   * Adresse du lieu de formation déduit de la géolocalisation du flux RCO
+   */
+  lieu_formation_adresse_computed?: string;
+  /**
    * Siret du lieu de formation
    */
   lieu_formation_siret?: string;

@@ -86,6 +86,17 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
     fields.lieu_formation_geo_coordonnees &&
     (forceRecompute || fields.lieu_formation_geo_coordonnees !== oldFields?.lieu_formation_geo_coordonnees)
   ) {
+    console.debug({
+      cle_ministere_educatif: fields?.cle_ministere_educatif,
+
+      fields: {
+        lieu_formation_geo_coordonnees: fields?.lieu_formation_geo_coordonnees,
+      },
+      oldFields: {
+        lieu_formation_geo_coordonnees: oldFields?.lieu_formation_geo_coordonnees,
+      },
+    });
+
     try {
       const [latitude, longitude] = fields.lieu_formation_geo_coordonnees.split("##")[0]?.split(",");
       const { result } = (await getAddressFromCoordinates({ latitude, longitude })) ?? {};
@@ -110,6 +121,23 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
       fields.code_postal !== oldFields?.code_postal ||
       fields.code_commune_insee !== oldFields?.code_commune_insee)
   ) {
+    console.debug({
+      cle_ministere_educatif: fields?.cle_ministere_educatif,
+
+      fields: {
+        lieu_formation_adresse: fields?.lieu_formation_adresse,
+        localite: fields?.localite,
+        code_postal: fields?.code_postal,
+        code_commune_insee: fields?.code_commune_insee,
+      },
+      oldFields: {
+        lieu_formation_adresse: oldFields?.lieu_formation_adresse,
+        localite: oldFields?.localite,
+        code_postal: oldFields?.code_postal,
+        code_commune_insee: oldFields?.code_commune_insee,
+      },
+    });
+
     const addressData = {
       nom_voie: fields.lieu_formation_adresse,
       localite: fields.localite,
@@ -126,13 +154,26 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
     }
   }
 
-  if (!!lieu_formation_geo_coordonnees_computed && !!fields.lieu_formation_geo_coordonnees) {
-    const [lat1, lon1] = lieu_formation_geo_coordonnees_computed?.split("##")[0]?.split(",") ?? [];
-    const [lat2, lon2] = fields.lieu_formation_geo_coordonnees?.split("##")[0]?.split(",") ?? [];
+  if (
+    forceRecompute ||
+    fields.lieu_formation_geo_coordonnees !== oldFields?.lieu_formation_geo_coordonnees ||
+    lieu_formation_geo_coordonnees_computed !== oldFields?.lieu_formation_geo_coordonnees_computed
+  ) {
+    console.debug({
+      cle_ministere_educatif: fields?.cle_ministere_educatif,
 
-    distance = await distanceBetweenCoordinates(lat1, lon1, lat2, lon2);
-  } else {
-    distance = undefined;
+      lieu_formation_geo_coordonnees: fields.lieu_formation_geo_coordonnees,
+      lieu_formation_geo_coordonnees_computed: lieu_formation_geo_coordonnees_computed,
+    });
+
+    try {
+      const [lat1, lon1] = lieu_formation_geo_coordonnees_computed?.split("##")[0]?.split(",") ?? [];
+      const [lat2, lon2] = fields.lieu_formation_geo_coordonnees?.split("##")[0]?.split(",") ?? [];
+
+      distance = await distanceBetweenCoordinates(lat1, lon1, lat2, lon2);
+    } catch (error) {
+      distance = undefined;
+    }
   }
 
   const cfd_entree = getCfdEntree(fields.cfd);
@@ -201,7 +242,15 @@ const applyConversion = async ({ forceRecompute = false } = { forceRecompute: fa
 
       // Si la formation existe
       if (formation) {
-        const notToCompare = ["_id", "__v", "created_at", "updated_at", "last_updated_at"];
+        const notToCompare = [
+          "_id",
+          "__v",
+          "created_at",
+          "updated_at",
+          "last_updated_at",
+          "lieu_formation_adresse_computed",
+          "lieu_formation_geo_coordonnees_computed",
+        ];
 
         await Formation.updateOne(
           { cle_ministere_educatif },
@@ -216,7 +265,7 @@ const applyConversion = async ({ forceRecompute = false } = { forceRecompute: fa
         const newFormation = await Formation.findById(formation._id).lean();
 
         const differences = Object.entries(diff(formation, newFormation));
-        // console.debug(differences);
+        console.debug(differences);
         differences.length ? updated++ : notUpdated++;
 
         if (differences.length) {
