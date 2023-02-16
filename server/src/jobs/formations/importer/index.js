@@ -7,7 +7,7 @@ const { updateRelationFields: updateEtablissementRelationFields } = require("../
 const { updateRelationFields: updateFormationRelationFields } = require("./converter");
 
 const importer = async (
-  { noDownload = false, forceRecompute = false } = { noDownload: false, forceRecompute: false }
+  { noDownload = false, forceRecompute = false, skip = 0 } = { noDownload: false, forceRecompute: false, skip: 0 }
 ) => {
   try {
     logger.info({ type: "job" }, " -- Start of importer -- ");
@@ -33,7 +33,7 @@ const importer = async (
 
     // STEP 2 : Convert formations
     logger.info({ type: "job" }, " -- Converting formations -- ");
-    await converter({ forceRecompute });
+    await converter({ forceRecompute, skip });
 
     // STEP 3 : Rebuild relations between etablissements and formations
     await updateEtablissementRelationFields();
@@ -52,6 +52,7 @@ if (process.env.standalone) {
     const args = process.argv.slice(2);
     const noDownload = args.includes("--noDownload");
     const forceRecompute = args.includes("--forceRecompute");
-    await importer({ noDownload, forceRecompute });
+    const skip = +(args.find((arg) => arg.startsWith("--skip"))?.split("=")?.[1] ?? 0);
+    await importer({ noDownload, forceRecompute, skip });
   });
 }

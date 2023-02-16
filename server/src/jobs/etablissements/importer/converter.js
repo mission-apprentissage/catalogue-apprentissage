@@ -1,3 +1,4 @@
+const config = require("config");
 const { Etablissement, Formation, DualControlEtablissement } = require("../../../common/model/index");
 const { diff } = require("deep-object-diff");
 const { isValideUAI } = require("@mission-apprentissage/tco-service-node");
@@ -91,20 +92,24 @@ const applyConversion = async () => {
       if (etablissement) {
         const notToCompare = ["_id", "__v", "created_at", "updated_at", "last_updated_at"];
 
-        await Etablissement.updateOne(
+        const result = await Etablissement.updateOne(
           { siret },
           { $set: { ...(await recomputeFields(removeFields({ ...dcEtablissement }, notToCompare))) } },
           { timestamps: false }
         );
 
-        const newEtablissement = await Etablissement.findById(etablissement._id).lean();
+        if (result.nModified) {
+          updated++;
 
-        const differences = Object.entries(diff(etablissement, newEtablissement));
-        // console.debug(differences);
-        differences.length ? updated++ : notUpdated++;
+          if (config.log?.level === "debug") {
+            const newEtablissement = await Etablissement.findById(etablissement._id).lean();
+            const differences = Object.entries(diff(etablissement, newEtablissement));
+            console.debug({ siret, differences });
+          }
 
-        if (differences.length) {
           await Etablissement.updateOne({ siret }, { $set: { updated_at: new Date() } });
+        } else {
+          notUpdated++;
         }
       }
 
