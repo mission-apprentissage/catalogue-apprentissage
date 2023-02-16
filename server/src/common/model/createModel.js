@@ -1,4 +1,4 @@
-const diffHistory = require("mongoose-diff-history/diffHistory");
+// const diffHistory = require("mongoose-diff-history/diffHistory");
 const { mongoose } = require("../mongodb");
 const { mongoosastic, getElasticInstance } = require("../esClient");
 
@@ -17,9 +17,9 @@ const createModel = (modelName, [schemaDescriptor, schemaOptions], options = {})
     options.createMongoDBIndexes(schema);
   }
 
-  if (options.diff) {
-    schema.plugin(diffHistory.plugin, options.diff);
-  }
+  // if (options.diff) {
+  //   schema.plugin(diffHistory.plugin, options.diff);
+  // }
 
   return mongoose.model(modelName, schema, options.collectionName);
 };
