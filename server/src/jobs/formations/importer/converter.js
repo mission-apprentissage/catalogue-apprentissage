@@ -223,12 +223,12 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
     fields.lieu_formation_geo_coordonnees !== oldFields?.lieu_formation_geo_coordonnees ||
     lieu_formation_geo_coordonnees_computed !== oldFields?.lieu_formation_geo_coordonnees_computed
   ) {
-    try {
+    if (!!lieu_formation_geo_coordonnees_computed && !!fields.lieu_formation_geo_coordonnees) {
       const [lat1, lon1] = lieu_formation_geo_coordonnees_computed?.split("##")[0]?.split(",") ?? [];
       const [lat2, lon2] = fields.lieu_formation_geo_coordonnees?.split("##")[0]?.split(",") ?? [];
 
       distance = await distanceBetweenCoordinates(lat1, lon1, lat2, lon2);
-    } catch (error) {
+    } else {
       distance = undefined;
     }
 
