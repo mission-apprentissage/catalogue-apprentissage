@@ -20,13 +20,13 @@ runScript(async ({ db }) => {
     logger.info({ type: "job" }, `Start all jobs`);
 
     // TCO jobs
-    await tcoJobs(db, CONVENTION_FILES_DIR, KIT_LOCAL_PATH); // ~ 15 minutes // Import des tables de correspondance
+    await tcoJobs(db, CONVENTION_FILES_DIR, KIT_LOCAL_PATH); // ~ 10 minutes // Import des tables de correspondance
     await sleep(30000);
 
     Etablissement.pauseAllMongoosaticHooks();
 
     // Etablissements
-    await etablissementsJobs();
+    await etablissementsJobs(); // ~ 20 minutes
     await sleep(10000);
 
     // Formations

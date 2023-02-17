@@ -166,7 +166,6 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
   }
 
   // GEOCOORDONNEES
-
   if (
     fields.lieu_formation_adresse &&
     fields.localite &&
@@ -178,6 +177,21 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
       fields.code_postal !== oldFields?.code_postal ||
       fields.code_commune_insee !== oldFields?.code_commune_insee)
   ) {
+    const addressData = {
+      nom_voie: fields.lieu_formation_adresse,
+      localite: fields.localite,
+      code_postal: fields.code_postal,
+      code_insee: fields.code_commune_insee,
+    };
+
+    try {
+      const { result } = (await getCoordinatesFromAddressData(addressData)) ?? {};
+      lieu_formation_geo_coordonnees_computed = result?.geo_coordonnees;
+    } catch (e) {
+      console.error(e);
+      lieu_formation_geo_coordonnees_computed = undefined;
+    }
+
     console.log("Compute geocoordonnees", {
       cle_ministere_educatif: fields?.cle_ministere_educatif,
 
@@ -199,21 +213,6 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
         lieu_formation_geo_coordonnees_computed,
       },
     });
-
-    const addressData = {
-      nom_voie: fields.lieu_formation_adresse,
-      localite: fields.localite,
-      code_postal: fields.code_postal,
-      code_insee: fields.code_commune_insee,
-    };
-
-    try {
-      const { result } = (await getCoordinatesFromAddressData(addressData)) ?? {};
-      lieu_formation_geo_coordonnees_computed = result?.geo_coordonnees;
-    } catch (e) {
-      console.error(e);
-      lieu_formation_geo_coordonnees_computed = undefined;
-    }
   }
 
   // DISTANCE

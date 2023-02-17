@@ -23,7 +23,8 @@ services:
   server:
     restart: "no"
     ports:
-      - "127.0.0.1:9229:9229" # Allows remote debugging
+      - "127.0.0.1:9229:9229" # Allows for remote debugging of "yarn serve" script
+      - "127.0.0.1:9230:9230" # Allows for remote debugging of manually run scripts (ex: "node --inspect=0.0.0.0:9230 path/to/script.js")
     volumes:
       - ./server:/app:z # Allows source folders to be watched
       - catalogue_apprentissage_server_data:/data:z
