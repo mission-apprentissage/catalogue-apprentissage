@@ -306,12 +306,11 @@ const applyConversion = async ({ forceRecompute = false, skip = 0 } = { forceRec
     DualControlFormation.find({}).sort().skip(skip),
 
     async ({ cle_ministere_educatif }) => {
-      // console.log(cle_ministere_educatif);
       const dcFormation = await DualControlFormation.findOne({ cle_ministere_educatif }).lean();
       const formation = await Formation.findOne({ cle_ministere_educatif }).lean();
 
       // console.log("================================");
-      // console.log({ formation, dcFormation });
+      // console.log({ cle_ministere_educatif, formation, dcFormation });
       // console.log("================================");
 
       // Si la formation existe
@@ -353,7 +352,7 @@ const applyConversion = async ({ forceRecompute = false, skip = 0 } = { forceRec
 
       // Si la formation n'existe pas
       else {
-        // console.warn(`${dcFormation.cle_ministere_educatif} not found`);
+        // console.info(`${dcFormation.cle_ministere_educatif} not found`);
         added++;
 
         await Formation.create(await recomputeFields(dcFormation, null, { forceRecompute }));

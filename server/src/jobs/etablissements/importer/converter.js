@@ -80,12 +80,11 @@ const applyConversion = async () => {
     DualControlEtablissement.find().sort(),
 
     async ({ siret }) => {
-      // console.debug(siret);
       const dcEtablissement = await DualControlEtablissement.findOne({ siret }).lean();
       const etablissement = await Etablissement.findOne({ siret }).lean();
 
       // console.log("================================");
-      // console.log({ etablissement, dcEtablissement });
+      // console.log({ siret, etablissement, dcEtablissement });
       // console.log("================================");
 
       // Si l'établissement existe
@@ -138,7 +137,7 @@ const converter = async () => {
     error = e;
     logger.error(
       {
-        type: "http",
+        type: "job",
       },
       e
     );

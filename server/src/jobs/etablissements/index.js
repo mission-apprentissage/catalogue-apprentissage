@@ -17,7 +17,7 @@ const etablissementsJobs = async () => {
   } catch (error) {
     logger.error(
       {
-        type: "http",
+        type: "job",
       },
       error
     );
