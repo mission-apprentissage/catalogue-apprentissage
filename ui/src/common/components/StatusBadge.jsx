@@ -46,6 +46,7 @@ export const StatusBadge = ({ source, status, text, ...badgeProps }) => {
     [COMMON_STATUS.PUBLIE]: "published",
     [COMMON_STATUS.NON_PUBLIE]: "notPublished",
     [AFFELNET_STATUS.A_PUBLIER_VALIDATION]: "toBePublished",
+    [AFFELNET_STATUS.A_PUBLIER_RESERVE_BAC_PRO_3_ANS_EN_2_ANS]: "toBePublished",
     [PARCOURSUP_STATUS.A_PUBLIER_HABILITATION]: "toBePublished",
     [PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC]: "toBePublished",
     [PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR]: "toBePublished",

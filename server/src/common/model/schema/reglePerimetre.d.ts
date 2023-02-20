@@ -30,6 +30,7 @@ export interface ReglePerimetre {
     | "à publier (vérifier accès direct postbac)"
     | "à publier (soumis à validation Recteur)"
     | "à publier (soumis à validation)"
+    | "à publier sous réserve (Bac pro de 3 ans en 2 ans)"
     | "à publier"
     | "en attente de publication";
   /**

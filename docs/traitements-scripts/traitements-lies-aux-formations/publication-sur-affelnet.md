@@ -18,6 +18,7 @@ La liste des statuts possibles est la suivante :
 - **"publié"** : la formation est déjà publiée sur Affelnet
 - **"non publié"** : la formation a été manuellement sortie du périmètre Affelnet, via une action instructeur dans le module de publication
 - **"à publier \(soumis à validation\)"** : la formation est éligible à Affelnet mais doit être validée en académie avant
+- **"à publier sous réserve \(Bac pro de 3 ans en 2 ans\)"** : la formation est éligible à Affelnet sous réserve
 - **"à publier"** : la formation est éligible à Affelnet, un instructeur doit utiliser le module de publication pour la faire passer à "en attente de publication"
 - **"en attente de publication"** : la formation est éligible et un instructeur l'a publiée depuis le module de publication
 

@@ -24,6 +24,16 @@ const run = async () => {
     affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
   });
 
+  const totalToValidateBacPro = await Formation.countDocuments({
+    affelnet_statut:
+      AFFELNET_STATUS.A_PUBLIER_A_PUBLIER_RESERVE_BAC_PRO_3_ANS_EN_2_ANSVA_PUBLIER_RESERVE_BAC_PRO_3_ANS_EN_2_ANSALIDATION,
+  });
+  const totalReglementToValidateBacPro = await Formation.countDocuments({
+    catalogue_published: true,
+    published: true,
+    affelnet_statut: AFFELNET_STATUS.A_PUBLIER_RESERVE_BAC_PRO_3_ANS_EN_2_ANS,
+  });
+
   const totalToCheck = await Formation.countDocuments({
     affelnet_statut: AFFELNET_STATUS.A_PUBLIER,
   });
@@ -80,6 +90,7 @@ const run = async () => {
       `\n` +
       `- statut "hors périmètre" : ${totalReglementNotRelevant} / ${totalNotRelevant}\n` +
       `- statut "à publier (soumis à validation)" : ${totalReglementToValidate} / ${totalToValidate}\n` +
+      `- statut "à publier sous réserve (Bac pro de 3 ans en 2 ans)" : ${totalReglementToValidateBacPro} / ${totalToValidateBacPro}\n` +
       `- statut "à publier" : ${totalReglementToCheck} / ${totalToCheck}\n` +
       `- statut "en attente de publication" : ${totalReglementPending} / ${totalPending}\n` +
       `- statut "publié" sur Affelnet : ${totalReglementPsPublished} / ${totalPsPublished}\n` +

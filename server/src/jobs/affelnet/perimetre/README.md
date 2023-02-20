@@ -12,12 +12,13 @@ La liste des statuts possibles est la suivante :
 - **"publié"** : la formation est déjà publiée sur Affelnet
 - **"non publié"** : la formation a été manuellement sortie du périmètre Affelnet, via une action instructeur dans le module de publication
 - **"à publier (soumis à validation)"** : la formation est éligible à Affelnet mais doit être validée en académie avant
+- **"à publier sous réserve (Bac pro de 3 ans en 2 ans)"** : la formation est éligible à Affelnet sous réserve
 - **"à publier"** : la formation est éligible à Affelnet, un instructeur doit utiliser le module de publication pour la faire passer à "en attente de publication"
 - **"en attente de publication"** : la formation est éligible et un instructeur l'a publiée depuis le module de publication
 
 Après action utilisateur on ne change plus le statut de la formation, donc le statut **"non publié"** ne bouge pas, et le statut **"en attente de publication"** peut passer à "publié" uniquement.
 
-En revanche pour les statuts "hors périmètre", "à publier (soumis à validation)" et "à publier" on recalcule chaque soir. À noter que ces statuts on la priorité suivante : `"à publier" > "à publier (soumis à validation)" > "hors périmètre"`.
+En revanche pour les statuts "hors périmètre", "à publier (soumis à validation)", ""à publier sous réserve (Bac pro de 3 ans en 2 ans)" et "à publier" on recalcule chaque soir. À noter que ces statuts on la priorité suivante : `"à publier" > "à publier (soumis à validation)" || "à publier sous réserve (Bac pro de 3 ans en 2 ans) > "hors périmètre"`.
 
 ## Règles de périmètre
 

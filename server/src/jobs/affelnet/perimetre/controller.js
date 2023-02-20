@@ -87,11 +87,17 @@ const run = async () => {
   );
 
   // set "à publier (soumis à validation)" for trainings matching affelnet eligibility rules
-  // reset "à publier" & "à publier (soumis à validation)"
+  // reset "à publier", "à publier sous réserve (Bac pro de 3 ans en 2 ans)" & "à publier (soumis à validation)"
   console.log("Etape 2.");
   await Formation.updateMany(
     {
-      affelnet_statut: { $in: [AFFELNET_STATUS.A_PUBLIER_VALIDATION, AFFELNET_STATUS.A_PUBLIER] },
+      affelnet_statut: {
+        $in: [
+          AFFELNET_STATUS.A_PUBLIER_VALIDATION,
+          AFFELNET_STATUS.A_PUBLIER_RESERVE_BAC_PRO_3_ANS_EN_2_ANS,
+          AFFELNET_STATUS.A_PUBLIER,
+        ],
+      },
     },
     { $set: { affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE } }
   );
@@ -135,11 +141,50 @@ const run = async () => {
     );
   }
 
+  const aPublierSousReserveBacPro3AnsEn2Ans = await ReglePerimetre.find({
+    plateforme: "affelnet",
+    statut: AFFELNET_STATUS.A_PUBLIER_RESERVE_BAC_PRO_3_ANS_EN_2_ANS,
+    is_deleted: { $ne: true },
+  }).lean();
+
+  if (aPublierSousReserveBacPro3AnsEn2Ans.length > 0) {
+    await Formation.updateMany(
+      {
+        ...filterReglement,
+        ...filterDateCampagne,
+        ...filterHP,
+        $or: aPublierSousReserveBacPro3AnsEn2Ans.map(getQueryFromRule),
+      },
+      [
+        {
+          $set: {
+            last_update_at: Date.now(),
+            affelnet_statut: {
+              $cond: {
+                if: {
+                  $eq: ["$affelnet_id", null],
+                },
+                then: AFFELNET_STATUS.A_PUBLIER_RESERVE_BAC_PRO_3_ANS_EN_2_ANS,
+                else: AFFELNET_STATUS.EN_ATTENTE,
+              },
+            },
+          },
+        },
+      ]
+    );
+  }
+
   // 4. On applique les règles de périmètre pour statut "à publier" pour les formations répondant aux règles de publication sur Parcoursup.
   console.log("Etape 4.");
 
   const filter = {
-    affelnet_statut: { $in: [AFFELNET_STATUS.HORS_PERIMETRE, AFFELNET_STATUS.A_PUBLIER_VALIDATION] },
+    affelnet_statut: {
+      $in: [
+        AFFELNET_STATUS.HORS_PERIMETRE,
+        AFFELNET_STATUS.A_PUBLIER_VALIDATION,
+        AFFELNET_STATUS.A_PUBLIER_RESERVE_BAC_PRO_3_ANS_EN_2_ANS,
+      ],
+    },
   };
 
   const aPublierRules = await ReglePerimetre.find({
@@ -178,9 +223,11 @@ const run = async () => {
   // 5. On applique les règles des académies
   console.log("Etape 5.");
 
-  const academieRules = [...aPublierSoumisAValidationRules, ...aPublierRules].filter(
-    ({ statut_academies }) => statut_academies && Object.keys(statut_academies).length > 0
-  );
+  const academieRules = [
+    ...aPublierSoumisAValidationRules,
+    ...aPublierSousReserveBacPro3AnsEn2Ans,
+    ...aPublierRules,
+  ].filter(({ statut_academies }) => statut_academies && Object.keys(statut_academies).length > 0);
 
   await asyncForEach(academieRules, async (rule) => {
     await asyncForEach(Object.entries(rule.statut_academies), async ([num_academie, status]) => {
@@ -190,7 +237,12 @@ const run = async () => {
           ...filterDateCampagne,
 
           affelnet_statut: {
-            $in: [AFFELNET_STATUS.HORS_PERIMETRE, AFFELNET_STATUS.A_PUBLIER_VALIDATION, AFFELNET_STATUS.A_PUBLIER],
+            $in: [
+              AFFELNET_STATUS.HORS_PERIMETRE,
+              AFFELNET_STATUS.A_PUBLIER_VALIDATION,
+              AFFELNET_STATUS.A_PUBLIER_RESERVE_BAC_PRO_3_ANS_EN_2_ANS,
+              AFFELNET_STATUS.A_PUBLIER,
+            ],
           },
 
           num_academie,

@@ -1,7 +1,7 @@
 // @ts-check
 /** @typedef {"hors périmètre" | "publié" | "non publié" | "à publier" | "en attente de publication"} CommonStatus */
 /** @typedef {CommonStatus | "à publier (vérifier accès direct postbac)" | "à publier (soumis à validation Recteur)" | "à publier (sous condition habilitation)" | "rejet de publication"} ParcoursupStatus */
-/** @typedef {CommonStatus|  "à publier (soumis à validation)"} AffelnetStatus */
+/** @typedef {CommonStatus | "à publier (soumis à validation)" | "à publier sous réserve (Bac pro de 3 ans en 2 ans)"} AffelnetStatus */
 
 const COMMON_STATUS = {
   HORS_PERIMETRE: /** @type {CommonStatus} */ ("hors périmètre"),
@@ -23,6 +23,7 @@ const PARCOURSUP_STATUS = {
 const AFFELNET_STATUS = {
   ...COMMON_STATUS,
   A_PUBLIER_VALIDATION: /** @type {AffelnetStatus} */ ("à publier (soumis à validation)"),
+  A_PUBLIER_RESERVE_BAC_PRO_3_ANS_EN_2_ANS: /** @type {AffelnetStatus} */ ("à publier sous réserve (Bac pro de 3 ans en 2 ans)"),
 };
 
 module.exports = {

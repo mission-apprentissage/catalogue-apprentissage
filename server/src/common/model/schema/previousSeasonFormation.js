@@ -44,6 +44,7 @@ const previousSeasonFormationSchema = {
       "publié",
       "non publié",
       "à publier (soumis à validation)",
+      "à publier sous réserve (Bac pro de 3 ans en 2 ans)",
       "à publier",
       "en attente de publication",
     ],

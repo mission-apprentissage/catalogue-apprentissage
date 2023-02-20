@@ -27,7 +27,6 @@ import * as Yup from "yup";
 import { ArrowRightLine, Close } from "../../../theme/components/icons";
 import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
 import { updateFormation } from "../../api/formation";
-import { DangerBox } from "../DangerBox";
 
 const getPublishRadioValue = (status) => {
   if ([COMMON_STATUS.PUBLIE, COMMON_STATUS.EN_ATTENTE].includes(status)) {
@@ -100,9 +99,12 @@ const getSubmitBody = ({
   // check if can edit depending on the status
   if (affelnet === "true") {
     if (
-      [AFFELNET_STATUS.NON_PUBLIE, AFFELNET_STATUS.A_PUBLIER_VALIDATION, AFFELNET_STATUS.A_PUBLIER].includes(
-        formation?.affelnet_statut
-      )
+      [
+        AFFELNET_STATUS.NON_PUBLIE,
+        AFFELNET_STATUS.A_PUBLIER_VALIDATION,
+        AFFELNET_STATUS.A_PUBLIER_RESERVE_BAC_PRO_3_ANS_EN_2_ANS,
+        AFFELNET_STATUS.A_PUBLIER,
+      ].includes(formation?.affelnet_statut)
     ) {
       body.affelnet_statut = AFFELNET_STATUS.EN_ATTENTE;
       body.last_statut_update_date = date;
@@ -122,6 +124,7 @@ const getSubmitBody = ({
       [
         AFFELNET_STATUS.EN_ATTENTE,
         AFFELNET_STATUS.A_PUBLIER_VALIDATION,
+        AFFELNET_STATUS.A_PUBLIER_RESERVE_BAC_PRO_3_ANS_EN_2_ANS,
         AFFELNET_STATUS.A_PUBLIER,
         AFFELNET_STATUS.PUBLIE,
       ].includes(formation?.affelnet_statut)

@@ -18,4 +18,5 @@ export const PARCOURSUP_STATUS = {
 export const AFFELNET_STATUS = {
   ...COMMON_STATUS,
   A_PUBLIER_VALIDATION: "à publier (soumis à validation)",
+  A_PUBLIER_RESERVE_BAC_PRO_3_ANS_EN_2_ANS: "à publier sous réserve (Bac pro de 3 ans en 2 ans)",
 };
