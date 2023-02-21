@@ -311,18 +311,44 @@ const columnsDefinition = [
     exportable: true,
     formatter: (value) => escapeDiacritics(value),
   },
+  // {
+  //   Header: "Debut de formation",
+  //   accessor: "periode",
+  //   width: 200,
+  //   exportable: true,
+  //   formatter: (periode) => {
+  //     return periode
+  //       ?.map((dateStr) => {
+  //         const formattedDate = new Date(dateStr).toLocaleString("fr-FR", { month: "long", year: "numeric" });
+  //         return formattedDate === "Invalid Date" ? dateStr : formattedDate;
+  //       })
+  //       ?.join(", ");
+  //   },
+  // },
   {
-    Header: "Debut de formation",
-    accessor: "periode",
+    Header: "Dates de formation",
+    accessor: "date_debut",
     width: 200,
     exportable: true,
-    formatter: (periode) => {
-      return periode
-        ?.map((dateStr) => {
-          const formattedDate = new Date(dateStr).toLocaleString("fr-FR", { month: "long", year: "numeric" });
-          return formattedDate === "Invalid Date" ? dateStr : formattedDate;
-        })
-        ?.join(", ");
+    formatter: (date_debut, formation) => {
+      const dates = formation.date_debut
+        ?.map((date_debut, index) => ({
+          date_debut,
+          date_fin: formation.date_fin ? formation.date_fin[index] : null,
+          modalites_entrees_sorties: formation.modalites_entrees_sorties
+            ? formation.modalites_entrees_sorties[index]
+            : null,
+        }))
+        .sort((a, b) => new Date(a.date_debut) - new Date(b.date_debut));
+
+      return dates
+        ?.map(
+          ({ date_debut, date_fin, modalites_entrees_sorties }) =>
+            `Du ${new Date(date_debut).toLocaleDateString("fr-FR")} au ${new Date(date_fin).toLocaleDateString(
+              "fr-FR"
+            )}${modalites_entrees_sorties ? " en entrée-sortie permanente." : "."}`
+        )
+        ?.join(" ");
     },
   },
   {
