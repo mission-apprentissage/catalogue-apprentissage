@@ -45,7 +45,7 @@
     "rncp:jobs": "run=true node node_modules/@mission-apprentissage/tco-service-node/lib/jobs/rncpImporter/index.js"
   },
   "dependencies": {
-    "@elastic/elasticsearch": "7.6.1",
+    "@elastic/elasticsearch": "8.6.0",
     "@mission-apprentissage/tco-service-node": "2.43.2",
     "aws-sdk": "2.1109.0",
     "axios": "1.1.3",
