@@ -428,9 +428,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mission-apprentissage/tco-service-node@npm:2.42.6":
-  version: 2.42.6
-  resolution: "@mission-apprentissage/tco-service-node@npm:2.42.6::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40mission-apprentissage%2Ftco-service-node%2F2.42.6%2F6b345e2b6e741f315d9cb3524360bcbfa67c58fb"
+"@mission-apprentissage/tco-service-node@npm:2.43.2":
+  version: 2.43.2
+  resolution: "@mission-apprentissage/tco-service-node@npm:2.43.2::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40mission-apprentissage%2Ftco-service-node%2F2.43.2%2F24a909d3fb6f71e4d45184b8a46b7ffe15bba308"
   dependencies:
     axios: 0.21.4
     body-parser: 1.19.0
@@ -470,7 +470,7 @@ __metadata:
     swagger-ui-express: 4.3.0
     title-case: 3.0.2
     xml2js: 0.4.23
-  checksum: 2ebfa8f173aa2b87fb902e638b4f0f4752adda1adf1e4a071a9b0d2d22b20537d35fcb001d692fe83bb931a6e1fd00511db4cb378b798e74ab04b1c372bd1de7
+  checksum: df8dede94c97ddec4cee293e1e85e278f0392091dd1558fd35a56b9b627c446697da6795081c59dec87a432b97200edc6ef79272d0884da21f851834e55cc1be
   languageName: node
   linkType: hard
 
@@ -6280,7 +6280,7 @@ __metadata:
   resolution: "mna-catalogue-apprentissage-server@workspace:."
   dependencies:
     "@elastic/elasticsearch": 7.6.1
-    "@mission-apprentissage/tco-service-node": 2.42.6
+    "@mission-apprentissage/tco-service-node": 2.43.2
     aws-sdk: 2.1109.0
     axios: 1.1.3
     axiosist: 0.10.0

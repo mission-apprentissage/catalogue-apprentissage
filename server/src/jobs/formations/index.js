@@ -1,4 +1,5 @@
 const logger = require("../../common/logger");
+const { isSunday } = require("../../common/utils/dateUtils");
 const { runScript } = require("../scriptWrapper");
 
 const importer = require("./importer");
@@ -10,7 +11,7 @@ const formationsJobs = async () => {
     // Import RCO
     if (process.env.CATALOGUE_APPRENTISSAGE_RCO_IMPORT_ENABLED) {
       console.log("Import RCO enabled, starting...");
-      await importer();
+      await importer({ forceRecompute: isSunday() });
     } else {
       console.log("Import RCO disabled, skipping...");
     }

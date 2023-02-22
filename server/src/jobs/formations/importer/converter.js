@@ -42,9 +42,9 @@ const computeRelationFields = async (fields) => {
 const recomputeFields = async (fields, oldFields, { forceRecompute = false } = { forceRecompute: false }) => {
   // MEFS & PLATEFORMES
 
-  let affelnet_mefs_10 = oldFields?.affelnet_mefs_10,
+  let affelnet_mefs_10 = oldFields?.affelnet_mefs_10 ?? [],
     affelnet_infos_offre = oldFields?.affelnet_infos_offre,
-    parcoursup_mefs_10 = oldFields?.parcoursup_mefs_10,
+    parcoursup_mefs_10 = oldFields?.parcoursup_mefs_10 ?? [],
     duree_incoherente = oldFields?.duree_incoherente,
     annee_incoherente = oldFields?.annee_incoherente;
 
