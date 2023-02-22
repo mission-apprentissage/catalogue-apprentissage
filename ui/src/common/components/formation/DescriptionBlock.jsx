@@ -40,9 +40,15 @@ export const DescriptionBlock = ({ formation }) => {
     ? (args) => <DangerBox data-testid={"duree-warning"} {...args} />
     : React.Fragment;
 
-  const AnneeContainer = formation.annee_incoherente
-    ? (args) => <DangerBox data-testid={"annee-warning"} {...args} />
-    : React.Fragment;
+  const isBacPro3AnsEn2Ans = !!formation.affelnet_mefs_10?.filter(
+    ({ mef10 }) =>
+      (mef10.startsWith("247") && mef10.endsWith("32")) || (mef10.startsWith("276") && mef10.endsWith("32"))
+  ).length;
+
+  const AnneeContainer =
+    formation.annee_incoherente || (formation.affelnet_perimetre && isBacPro3AnsEn2Ans)
+      ? (args) => <DangerBox data-testid={"annee-warning"} {...args} />
+      : React.Fragment;
 
   const isCfdExpired =
     formation.cfd_outdated ||
@@ -284,6 +290,17 @@ export const DescriptionBlock = ({ formation }) => {
               <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
                 {formation.annee_incoherente &&
                   "L'année de formation enregistrée auprès du Carif-Oref ne correspond pas à celle qui est déduite du code MEF correspondant à cette formation."}
+
+                {formation.affelnet_perimetre && isBacPro3AnsEn2Ans && (
+                  <>
+                    <Text as="b">1ère PRO, BAC PRO en 3 ans</Text>
+                    <br />
+                    Ces formations doivent permettre aux élèves une entrée en seconde année de baccalauréat
+                    professionnel. Avant intégration dans Affelnet il convient de vérifier auprès des CFA les modalités
+                    d'accès à ces formations. Il convient notamment de vérifier si la formation est accessible à des
+                    élèves n'ayant pas suivi une première année de baccalauréat dans la spécialité.
+                  </>
+                )}
               </Text>
             </AnneeContainer>
           )}

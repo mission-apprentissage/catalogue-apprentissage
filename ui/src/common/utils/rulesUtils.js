@@ -85,7 +85,7 @@ export const isInCampagne = ({ date_debut } = { date_debut: [] }) => {
     (date) => new Date(date) >= getCampagneStartDate() && new Date(date) <= getCampagneEndDate()
   );
   const result = datesInCampagne?.length > 0;
-  console.log({ date_debut, datesInCampagne, result });
+  // console.log({ date_debut, datesInCampagne, result });
 
   return result;
 };
