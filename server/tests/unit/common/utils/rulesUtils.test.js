@@ -7,6 +7,7 @@ const {
   getExpirationDate,
   getCampagneStartDate,
   getCampagneEndDate,
+  getCampagneDateRules,
 } = require("../../../../src/common/utils/rulesUtils");
 
 describe(__filename, () => {
@@ -208,7 +209,6 @@ describe(__filename, () => {
                   },
                 ],
                 published: true,
-                // periode: { $gte: getCampagneStartDate() },
               },
             ],
             catalogue_published: true,
@@ -238,6 +238,7 @@ describe(__filename, () => {
         niveau: "4",
         num_academie: "10",
         ...getExpireRule(),
+        ...getCampagneDateRules(),
       };
 
       let result = getQueryFromRule({
@@ -318,6 +319,7 @@ describe(__filename, () => {
         duree: "2",
         annee: "1",
         ...getExpireRule(),
+        ...getCampagneDateRules(),
       };
 
       let result = getQueryFromRule({
