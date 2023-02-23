@@ -1,21 +1,38 @@
 const { Formation } = require("../../../common/model");
-const { getQueryFromRule, getCampagneStartDate, getCampagneEndDate } = require("../../../common/utils/rulesUtils");
+const { getQueryFromRule, getCampagneDateRules } = require("../../../common/utils/rulesUtils");
 const { ReglePerimetre } = require("../../../common/model");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
 const { cursor } = require("../../../common/utils/cursor");
 
 const run = async () => {
-  const next_campagne_debut = getCampagneStartDate();
-  const next_campagne_end = getCampagneEndDate();
-
-  const filterDateCampagne = {
-    date_debut: { $gte: next_campagne_debut, $lt: next_campagne_end },
-  };
+  const filterDateCampagne = getCampagneDateRules();
 
   const filterReglement = {
-    catalogue_published: true,
-    published: true,
+    $and: [
+      {
+        published: true,
+      },
+      {
+        $or: [{ catalogue_published: true }, { force_published: true }],
+      },
+      {
+        $or: [
+          {
+            "rncp_details.code_type_certif": {
+              $in: ["Titre", "TP"],
+            },
+            "rncp_details.rncp_outdated": false,
+          },
+          {
+            "rncp_details.code_type_certif": {
+              $nin: ["Titre", "TP"],
+            },
+            cfd_outdated: false,
+          },
+        ],
+      },
+    ],
   };
 
   const formationsInPerimetre = new Set();

@@ -1,17 +1,12 @@
 const { Formation } = require("../../../common/model");
-const { getQueryFromRule, getCampagneStartDate, getCampagneEndDate } = require("../../../common/utils/rulesUtils");
+const { getQueryFromRule, getCampagneDateRules } = require("../../../common/utils/rulesUtils");
 const { ReglePerimetre } = require("../../../common/model");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { AFFELNET_STATUS } = require("../../../constants/status");
 const { cursor } = require("../../../common/utils/cursor");
 
 const run = async () => {
-  const next_campagne_debut = getCampagneStartDate();
-  const next_campagne_end = getCampagneEndDate();
-
-  const filterDateCampagne = {
-    date_debut: { $gte: next_campagne_debut, $lt: next_campagne_end },
-  };
+  const filterDateCampagne = getCampagneDateRules();
 
   const filterReglement = {
     $and: [

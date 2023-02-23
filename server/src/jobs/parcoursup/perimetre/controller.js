@@ -1,16 +1,18 @@
 const { Formation, ReglePerimetre } = require("../../../common/model");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
-const { getQueryFromRule, getCampagneStartDate, getCampagneEndDate } = require("../../../common/utils/rulesUtils");
+const {
+  getQueryFromRule,
+  getCampagneStartDate,
+  getCampagneEndDate,
+  getCampagneDateRules,
+} = require("../../../common/utils/rulesUtils");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
 const { updateTagsHistory } = require("../../../logic/updaters/tagsHistoryUpdater");
 
 const run = async () => {
   const next_campagne_debut = getCampagneStartDate();
   const next_campagne_end = getCampagneEndDate();
-
-  const filterDateCampagne = {
-    date_debut: { $gte: next_campagne_debut, $lt: next_campagne_end },
-  };
+  const filterDateCampagne = getCampagneDateRules();
 
   const filterReglement = {
     $and: [

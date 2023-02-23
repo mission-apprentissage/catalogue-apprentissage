@@ -88,6 +88,10 @@ const isInCampagne = ({ date_debut } = { date_debut: [] }) => {
   return result;
 };
 
+const getCampagneDateRules = (currentDate = new Date()) => ({
+  date_debut: { $gte: getCampagneStartDate(currentDate), $lt: getCampagneEndDate(currentDate) },
+});
+
 const commonRules = {
   $or: [
     {
@@ -232,6 +236,7 @@ const getQueryFromRule = (
     ...(num_academie && { num_academie }),
     ...(duree && { duree: String(duree) }),
     ...(annee && { annee: String(annee) }),
+    ...getCampagneDateRules(),
   };
 
   if (regle_complementaire) {
@@ -251,4 +256,5 @@ module.exports = {
   getCampagneStartDate,
   getCampagneEndDate,
   isInCampagne,
+  getCampagneDateRules,
 };

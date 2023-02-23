@@ -166,6 +166,7 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
   }
 
   // GEOCOORDONNEES
+
   if (
     fields.lieu_formation_adresse &&
     fields.localite &&
