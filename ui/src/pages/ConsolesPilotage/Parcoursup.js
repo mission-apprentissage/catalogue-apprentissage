@@ -1,16 +1,32 @@
-import React, { useState, useEffect } from "react";
-import { Box, Container, Heading, Tab, TabList, TabPanel, TabPanels, Tabs, Grid, GridItem } from "@chakra-ui/react";
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  Box,
+  Container,
+  Heading,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Grid,
+  GridItem,
+  Flex,
+  FormLabel,
+} from "@chakra-ui/react";
 
 import Layout from "../layout/Layout";
 import { setTitle } from "../../common/utils/pageUtils";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { Card } from "../../common/components/Card";
 import { _get } from "../../common/httpClient";
+import useAuth from "../../common/hooks/useAuth";
 import { PARCOURSUP_STATUS } from "../../constants/status";
+import { AcademiesSelect } from "../perimetre/components/AcademiesSelect";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
 const Indicators = () => {
+  const [user] = useAuth();
   const [formationCount, setFormationCount] = useState(undefined);
   const [formationAValider, setFormationAValider] = useState(undefined);
   const [formationRejetees, setFormationRejetees] = useState(undefined);
@@ -18,90 +34,128 @@ const Indicators = () => {
   const [formationEnAttenteDePublication, setFormationEnAttenteDePublication] = useState(undefined);
   const [formationPubliees, setFormationPubliees] = useState(undefined);
   const [formationNonPubliees, setFormationNonPubliees] = useState(undefined);
+  const [currentAcademie, setCurrentAcademie] = useState(undefined);
+
+  const onAcademieChange = useCallback(
+    (academie) => (academie !== -1 ? setCurrentAcademie(academie) : setCurrentAcademie(undefined)),
+    []
+  );
 
   const defaultQuery = { published: true };
 
   useEffect(() => {
+    console.log({ currentAcademie });
+
+    let isCancelled = false;
     (async () => {
       try {
-        setFormationCount(
-          await _get(`${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({ published: true })}`, false)
+        const formationCount = await _get(
+          `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
+            ...defaultQuery,
+            ...(currentAcademie ? { num_academie: currentAcademie } : {}),
+          })}`,
+          false
         );
-        setFormationAValider(
-          await _get(
-            `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
-              ...defaultQuery,
-              parcoursup_statut: {
-                $in: [
-                  PARCOURSUP_STATUS.A_PUBLIER,
-                  PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
-                  PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
-                  PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
-                ],
-              },
-            })}`,
-            false
-          )
+
+        if (!isCancelled) setFormationCount(formationCount);
+
+        const formationAValiderCount = await _get(
+          `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
+            ...defaultQuery,
+            ...(currentAcademie ? { num_academie: currentAcademie } : {}),
+            parcoursup_statut: {
+              $in: [
+                PARCOURSUP_STATUS.A_PUBLIER,
+                PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
+                PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
+                PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+              ],
+            },
+          })}`,
+          false
         );
-        setFormationTraitees(
-          await _get(
-            `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
-              ...defaultQuery,
-              parcoursup_statut: {
-                $in: [PARCOURSUP_STATUS.EN_ATTENTE, PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.NON_PUBLIE],
-              },
-            })}`,
-            false
-          )
+
+        if (!isCancelled) setFormationAValider(formationAValiderCount);
+
+        const formationTraitees = await _get(
+          `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
+            ...defaultQuery,
+            ...(currentAcademie ? { num_academie: currentAcademie } : {}),
+            parcoursup_statut: {
+              $in: [PARCOURSUP_STATUS.EN_ATTENTE, PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.NON_PUBLIE],
+            },
+          })}`,
+          false
         );
-        setFormationRejetees(
-          await _get(
-            `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
-              ...defaultQuery,
-              parcoursup_statut: PARCOURSUP_STATUS.REJETE,
-            })}`,
-            false
-          )
+
+        if (!isCancelled) setFormationTraitees(formationTraitees);
+
+        const formationRejetees = await _get(
+          `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
+            ...defaultQuery,
+            ...(currentAcademie ? { num_academie: currentAcademie } : {}),
+            parcoursup_statut: PARCOURSUP_STATUS.REJETE,
+          })}`,
+          false
         );
-        setFormationEnAttenteDePublication(
-          await _get(
-            `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
-              ...defaultQuery,
-              parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
-            })}`,
-            false
-          )
+
+        if (!isCancelled) setFormationRejetees(formationRejetees);
+
+        const formationEnAttenteDePublication = await _get(
+          `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
+            ...defaultQuery,
+            ...(currentAcademie ? { num_academie: currentAcademie } : {}),
+            parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
+          })}`,
+          false
         );
-        setFormationPubliees(
-          await _get(
-            `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
-              ...defaultQuery,
-              parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
-            })}`,
-            false
-          )
+
+        if (!isCancelled) setFormationEnAttenteDePublication(formationEnAttenteDePublication);
+
+        const formationPubliees = await _get(
+          `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
+            ...defaultQuery,
+            ...(currentAcademie ? { num_academie: currentAcademie } : {}),
+            parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
+          })}`,
+          false
         );
-        setFormationNonPubliees(
-          await _get(
-            `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
-              ...defaultQuery,
-              parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIE,
-            })}`,
-            false
-          )
+
+        if (!isCancelled) setFormationPubliees(formationPubliees);
+
+        const formationNonPubliees = await _get(
+          `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
+            ...defaultQuery,
+            ...(currentAcademie ? { num_academie: currentAcademie } : {}),
+            parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIE,
+          })}`,
+          false
         );
+
+        if (!isCancelled) setFormationNonPubliees(formationNonPubliees);
       } catch (e) {
         console.error(e);
-        setFormationCount(0);
-        setFormationAValider(0);
-        setFormationTraitees(0);
-        setFormationRejetees(0);
-        setFormationEnAttenteDePublication(0);
-        setFormationPubliees(0);
-        setFormationNonPubliees(0);
+        if (!isCancelled) {
+          setFormationCount(0);
+          setFormationAValider(0);
+          setFormationTraitees(0);
+          setFormationRejetees(0);
+          setFormationEnAttenteDePublication(0);
+          setFormationPubliees(0);
+          setFormationNonPubliees(0);
+        }
       }
     })();
-  }, []);
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [user, currentAcademie]);
+
+  useEffect(() => {
+    const [firstAcademy] = user?.academie?.split(",")?.map((academieStr) => Number(academieStr)) ?? [];
+    onAcademieChange(firstAcademy);
+  }, [user]);
 
   const cards = [
     {
@@ -149,7 +203,11 @@ const Indicators = () => {
 
   return (
     <Box my={4}>
-      Sur une base de {formationCount} formations collectées par Carif-Oref :
+      Sur une base de {formationCount} formations collectées par Carif-Oref{" "}
+      <Flex display="inline-flex">
+        <AcademiesSelect id={"academie"} name={"academie"} w={"auto"} onChange={onAcademieChange} user={user} />
+      </Flex>{" "}
+      :
       <br />
       <br />
       <Grid templateColumns="repeat(3, 1fr)" gap={4}>
