@@ -78,7 +78,6 @@ const psImport = async () => {
         case STATUS.NEW_LINK: {
           const newLinkFormations = await Formation.find({
             cle_ministere_educatif,
-            parcoursup_id: { $ne: parcoursup_id },
           });
           const update = {
             parcoursup_id,
