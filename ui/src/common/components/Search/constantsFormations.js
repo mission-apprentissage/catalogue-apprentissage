@@ -269,6 +269,27 @@ const columnsDefinition = [
     formatter: (value) => escapeDiacritics(value),
   },
   {
+    Header: "Information Affelnet (url)",
+    accessor: "affelnet_url_infos_offre",
+    width: 400,
+    exportable: true,
+    formatter: (value) => escapeDiacritics(value),
+  },
+  {
+    Header: "Modalités particulières",
+    accessor: "affelnet_modalites_offre",
+    width: 400,
+    exportable: true,
+    formatter: (value) => escapeDiacritics(value),
+  },
+  {
+    Header: "Modalités particulières (url)",
+    accessor: "affelnet_url_modalites_offre",
+    width: 400,
+    exportable: true,
+    formatter: (value) => escapeDiacritics(value),
+  },
+  {
     Header: "Motif de non publication Affelnet",
     accessor: "affelnet_raison_depublication",
     width: 200,
