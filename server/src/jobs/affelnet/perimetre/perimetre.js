@@ -98,6 +98,7 @@ const run = async () => {
   // console.log({ formationsInPerimetre });
   // console.log({ formationsNotInPerimetre });
 
+  console.log("Intégration du périmètre");
   await cursor(
     Formation.find({
       cle_ministere_educatif: { $in: [...formationsInPerimetre] },
@@ -109,6 +110,7 @@ const run = async () => {
       await Formation.updateOne({ cle_ministere_educatif }, { affelnet_perimetre: true })
   );
 
+  console.log("Sortie du périmètre");
   await cursor(
     Formation.find({
       cle_ministere_educatif: { $nin: [...formationsInPerimetre] },
