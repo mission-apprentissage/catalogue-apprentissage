@@ -6,8 +6,8 @@ const tryCatch = require("../middlewares/tryCatchMiddleware");
 const csvToJson = require("convert-csv-to-json");
 const path = require("path");
 const logger = require("../../common/logger");
-const { afImportFormations } = require("../../jobs/affelnet/import");
-const { afCoverage } = require("../../jobs/affelnet/coverage");
+// const { afImportFormations } = require("../../jobs/affelnet/import");
+// const { afCoverage } = require("../../jobs/affelnet/coverage");
 const { hasAccessTo } = require("../../common/utils/rolesUtils");
 
 const DOCUMENTS = new Map([
@@ -75,13 +75,13 @@ module.exports = () => {
         let callback;
 
         switch (filename) {
-          case DOCUMENTS.get("affelnet-formations").filename:
-            if (!hasAccessTo(req.user, DOCUMENTS.get("affelnet-formations").acl))
-              callback = async () => {
-                await afImportFormations();
-                await afCoverage();
-              };
-            break;
+          // case DOCUMENTS.get("affelnet-formations").filename:
+          //   if (!hasAccessTo(req.user, DOCUMENTS.get("affelnet-formations").acl))
+          //     callback = async () => {
+          //       await afImportFormations();
+          //       await afCoverage();
+          //     };
+          //   break;
           case DOCUMENTS.get("kit-apprentissage").filename: {
             if (!hasAccessTo(req.user, DOCUMENTS.get("kit-apprentissage").acl))
               try {
