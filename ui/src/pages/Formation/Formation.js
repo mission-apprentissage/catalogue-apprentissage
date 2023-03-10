@@ -497,16 +497,11 @@ export default ({ match }) => {
     .filter((h) => h.to?.affelnet_raison_depublication)[0]?.updated_at;
 
   const isBacPro32 =
-    formation?.diplome === "BAC PROFESSIONNEL" &&
     formation?.bcn_mefs_10?.filter(
       ({ mef10 }) => (`${mef10}`.startsWith("247") || `${mef10}`?.startsWith("276")) && `${mef10}`?.endsWith("32")
-    ).length &&
-    isInCampagne(formation);
+    ).length && isInCampagne(formation);
 
-  const isBacProAgri32 =
-    formation?.diplome === "BAC PROFESSIONNEL AGRICOLE" &&
-    formation?.niveau === "5 (BTS, DEUST...)" &&
-    isInCampagne(formation);
+  const isBrevetNiv5 = formation?.diplome === "BREVET PROFESSIONNEL AGRICOLE DE NIVEAU V" && isInCampagne(formation);
 
   return (
     <Layout>
@@ -634,7 +629,7 @@ export default ({ match }) => {
                   </Alert>
                 )}
 
-                {isBacProAgri32 && (
+                {isBrevetNiv5 && (
                   <Alert mt={4} type={"warning"}>
                     Pour des raisons techniques, cette formation ne peut pas intégrer le périmètre Affelnet pour la
                     campagne 2023. Elle doit être créée manuellement dans Affelnet.
