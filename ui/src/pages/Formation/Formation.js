@@ -17,29 +17,31 @@ import {
 } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
 import { useFormik } from "formik";
-import { _get, _post, _put } from "../../common/httpClient";
+
 import Layout from "../layout/Layout";
-import useAuth from "../../common/hooks/useAuth";
+import helpText from "../../locales/helpText.json";
+import { ArrowDownLine, ExternalLinkLine, MapPin2Fill, Parametre } from "../../theme/components/icons/";
+import { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL } from "../../constants/catalogueLabels";
+import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
+
+import { _get, _post, _put } from "../../common/httpClient";
+import { useAuth } from "../../common/hooks/useAuth";
 import { hasAccessTo, hasRightToEditFormation } from "../../common/utils/rolesUtils";
+import { buildUpdatesHistory, sortDescending } from "../../common/utils/historyUtils";
+import { isInCampagne } from "../../common/utils/rulesUtils";
+import { setTitle } from "../../common/utils/pageUtils";
+import { getOpenStreetMapUrl } from "../../common/utils/mapUtils";
 import { DangerBox } from "../../common/components/DangerBox";
 import { StatusBadge } from "../../common/components/StatusBadge";
 import { PublishModal } from "../../common/components/formation/PublishModal";
-import { buildUpdatesHistory, sortDescending, sortAscending } from "../../common/utils/historyUtils";
-import InfoTooltip from "../../common/components/InfoTooltip";
+import { InfoTooltip } from "../../common/components/InfoTooltip";
 import { Alert } from "../../common/components/Alert";
-
-import helpText from "../../locales/helpText.json";
-import { ArrowDownLine, ExternalLinkLine, MapPin2Fill, Parametre } from "../../theme/components/icons/";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
-import { setTitle } from "../../common/utils/pageUtils";
-import { getOpenStreetMapUrl } from "../../common/utils/mapUtils";
 import { EditableField } from "../../common/components/formation/EditableField";
 import { HistoryBlock } from "../../common/components/formation/HistoryBlock";
 import { RejectionBlock } from "../../common/components/formation/RejectionBlock";
 import { DescriptionBlock } from "../../common/components/formation/DescriptionBlock";
 import { OrganismesBlock } from "../../common/components/formation/OrganismesBlock";
-import { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL } from "../../constants/catalogueLabels";
-import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -494,6 +496,18 @@ export default ({ match }) => {
     .sort(sortDescending)
     .filter((h) => h.to?.affelnet_raison_depublication)[0]?.updated_at;
 
+  const isBacPro32 =
+    formation?.diplome === "BAC PROFESSIONNEL" &&
+    formation?.bcn_mefs_10?.filter(
+      ({ mef10 }) => (`${mef10}`.startsWith("247") || `${mef10}`?.startsWith("276")) && `${mef10}`?.endsWith("32")
+    ).length &&
+    isInCampagne(formation);
+
+  const isBacProAgri32 =
+    formation?.diplome === "BAC PROFESSIONNEL AGRICOLE" &&
+    formation?.niveau === "5 (BTS, DEUST...)" &&
+    isInCampagne(formation);
+
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
@@ -604,6 +618,28 @@ export default ({ match }) => {
                       : <b>{formation.affelnet_raison_depublication}</b>
                     </Alert>
                   )}
+
+                {isBacPro32 && (
+                  <Alert mt={4} type={"warning"}>
+                    Cette formation est potentiellement dans le périmètre Affelnet (voir détail dans l'encadré sur
+                    l'année d'entrée en apprentissage), mais pour des raisons techniques, elle ne pourra pas être
+                    importée dans Affelnet.
+                    <br />
+                    Vous pouvez, pour des raisons de lisibilité, procéder à la demande de publication (dans quel cas la
+                    formation restera en statut "En attente de publication", même après vos imports Affelnet) ou à la
+                    non publication.
+                    <br />
+                    Vous pouvez également si vous le souhaitez ignorer cette formation et la laisser en statut "à
+                    publier (soumis à validation)".
+                  </Alert>
+                )}
+
+                {isBacProAgri32 && (
+                  <Alert mt={4} type={"warning"}>
+                    Pour des raisons techniques, cette formation ne peut pas intégrer le périmètre Affelnet pour la
+                    campagne 2023. Elle doit être créée manuellement dans Affelnet.
+                  </Alert>
+                )}
               </Box>
               <Formation
                 formation={formation}

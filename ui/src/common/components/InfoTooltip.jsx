@@ -10,7 +10,7 @@ const TooltipIcon = (props) => (
   </Icon>
 );
 
-const InfoTooltip = ({ description }) => {
+export const InfoTooltip = ({ description }) => {
   return (
     <Tooltip
       label={

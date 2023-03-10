@@ -1,6 +1,6 @@
 import { useAuthState, anonymous } from "../auth";
 
-export default function useAuth() {
+export const useAuth = () => {
   const [auth, setAuth] = useAuthState();
 
   const setAuthFromToken = (user) => {
@@ -12,4 +12,6 @@ export default function useAuth() {
   };
 
   return [auth, setAuthFromToken];
-}
+};
+
+export default useAuth;
