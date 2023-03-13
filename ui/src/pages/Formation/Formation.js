@@ -497,7 +497,7 @@ export default ({ match }) => {
     .filter((h) => h.to?.affelnet_raison_depublication)[0]?.updated_at;
 
   const isBacPro32 =
-    formation?.bcn_mefs_10?.filter(
+    !!formation?.bcn_mefs_10?.filter(
       ({ mef10 }) => (`${mef10}`.startsWith("247") || `${mef10}`?.startsWith("276")) && `${mef10}`?.endsWith("32")
     ).length && isInCampagne(formation);
 
