@@ -165,7 +165,7 @@ export default React.memo(({ location, searchState, context, extraButtons = null
                           queryFormat="date"
                           showClear={false}
                           showFilter={true}
-                          filterLabel="Début de formation après"
+                          filterLabel="Début de formation à partir du"
                           URLParams={true}
                           customQuery={(value) => {
                             return value
@@ -192,7 +192,7 @@ export default React.memo(({ location, searchState, context, extraButtons = null
                           autoFocusEnd={true}
                           showClear={false}
                           showFilter={true}
-                          filterLabel="Début de formation avant"
+                          filterLabel="Début de formation jusqu'au"
                           URLParams={true}
                           customQuery={(value) => {
                             return value
@@ -230,7 +230,7 @@ export default React.memo(({ location, searchState, context, extraButtons = null
                           queryFormat="date"
                           showClear={false}
                           showFilter={true}
-                          filterLabel="Publication Parcoursup après"
+                          filterLabel="Publication Parcoursup à partir du"
                           URLParams={true}
                           customQuery={(value) => {
                             return value
@@ -256,7 +256,7 @@ export default React.memo(({ location, searchState, context, extraButtons = null
                           queryFormat="date"
                           showClear={false}
                           showFilter={true}
-                          filterLabel="Publication Parcoursup avant"
+                          filterLabel="Publication Parcoursup jusqu'au"
                           URLParams={true}
                           customQuery={(value) => {
                             return value
@@ -294,7 +294,7 @@ export default React.memo(({ location, searchState, context, extraButtons = null
                           queryFormat="date"
                           showClear={false}
                           showFilter={true}
-                          filterLabel="Publication Affelnet après"
+                          filterLabel="Publication Affelnet à partir du"
                           URLParams={true}
                           customQuery={(value) => {
                             return value
@@ -320,7 +320,7 @@ export default React.memo(({ location, searchState, context, extraButtons = null
                           queryFormat="date"
                           showClear={false}
                           showFilter={true}
-                          filterLabel="Publication Affelnet avant"
+                          filterLabel="Publication Affelnet jusqu'au"
                           URLParams={true}
                           customQuery={(value) => {
                             return value
@@ -358,7 +358,7 @@ export default React.memo(({ location, searchState, context, extraButtons = null
                           queryFormat="date"
                           showClear={false}
                           showFilter={true}
-                          filterLabel="Statut modifié après"
+                          filterLabel="Statut modifié à partir du"
                           URLParams={true}
                           customQuery={(value) => {
                             return value
@@ -384,7 +384,7 @@ export default React.memo(({ location, searchState, context, extraButtons = null
                           queryFormat="date"
                           showClear={false}
                           showFilter={true}
-                          filterLabel="Statut modifié avant"
+                          filterLabel="Statut modifié jusqu'au"
                           URLParams={true}
                           customQuery={(value) => {
                             return value
