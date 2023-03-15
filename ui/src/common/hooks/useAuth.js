@@ -1,6 +1,6 @@
 import { useAuthState, anonymous } from "../auth";
 
-export const useAuth = () => {
+const useAuth = () => {
   const [auth, setAuth] = useAuthState();
 
   const setAuthFromToken = (user) => {

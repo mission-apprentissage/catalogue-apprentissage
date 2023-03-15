@@ -74,16 +74,23 @@ module.exports = () => {
 
         let callback;
 
+        console.log({ filename, user: req.user });
+
         switch (filename) {
           // case DOCUMENTS.get("affelnet-formations").filename:
-          //   if (!hasAccessTo(req.user, DOCUMENTS.get("affelnet-formations").acl))
+          //   if (hasAccessTo(req.user, DOCUMENTS.get("affelnet-formations").acl)) {
           //     callback = async () => {
           //       await afImportFormations();
           //       await afCoverage();
           //     };
+          //   } else {
+          //     return res.status(403).json({
+          //       error: `Vous ne disposez pas des droits nécessaires pour déposer ce fichier`,
+          //     });
+          //   }
           //   break;
           case DOCUMENTS.get("kit-apprentissage").filename: {
-            if (!hasAccessTo(req.user, DOCUMENTS.get("kit-apprentissage").acl))
+            if (hasAccessTo(req.user, DOCUMENTS.get("kit-apprentissage").acl)) {
               try {
                 const tmpFile = csvToJson.getJsonFromCsv(src);
                 if (!hasCSVHeaders(tmpFile, "Code_RNCP", "Code_Diplome")) {
@@ -102,10 +109,15 @@ module.exports = () => {
                   error: `Le contenu du fichier est invalide, il doit être au format CSV (;) et contenir les colonnes suivantes : "Code_RNCP;Code_Diplome" (et cette première ligne d'en-tête)`,
                 });
               }
+            } else {
+              return res.status(403).json({
+                error: `Vous ne disposez pas des droits nécessaires pour déposer ce fichier`,
+              });
+            }
             break;
           }
           case DOCUMENTS.get("parcoursup-mefs").filename: {
-            if (!hasAccessTo(req.user, DOCUMENTS.get("parcoursup-mefs").acl))
+            if (hasAccessTo(req.user, DOCUMENTS.get("parcoursup-mefs").acl)) {
               try {
                 const tmpFile = csvToJson.getJsonFromCsv(src);
                 if (!hasCSVHeaders(tmpFile, "MEF")) {
@@ -124,6 +136,11 @@ module.exports = () => {
                   error: `Le contenu du fichier est invalide, il doit être au format CSV (;) et contenir la colonne suivante : "MEF" (et cette première ligne d'en-tête)`,
                 });
               }
+            } else {
+              return res.status(403).json({
+                error: `Vous ne disposez pas des droits nécessaires pour déposer ce fichier`,
+              });
+            }
             break;
           }
           default:
