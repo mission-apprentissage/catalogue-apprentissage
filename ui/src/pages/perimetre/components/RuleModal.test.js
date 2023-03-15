@@ -2,7 +2,7 @@ import React from "react";
 import { rest } from "msw";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { getDiplomesAllowedForSubRulesUrl, RuleModal } from "./RuleModal";
-import { fireEvent, render } from "@testing-library/react";
+import { fireEvent, render, act } from "@testing-library/react";
 import { PARCOURSUP_STATUS } from "../../../constants/status";
 import { setupMswServer } from "../../../common/utils/testUtils";
 
@@ -147,13 +147,15 @@ test("renders the modal in update mode and can delete", async () => {
   const deleteButton = queryByText(/^Supprimer$/i);
   expect(deleteButton).toBeInTheDocument();
 
-  fireEvent(
-    deleteButton,
-    new MouseEvent("click", {
-      bubbles: true,
-      cancelable: true,
-    })
-  );
+  act(() => {
+    fireEvent(
+      deleteButton,
+      new MouseEvent("click", {
+        bubbles: true,
+        cancelable: true,
+      })
+    );
+  });
 
   expect(window.confirm).toBeCalled();
   expect(onDeleteRule).toBeCalledWith({ _id: "999" });

@@ -4,7 +4,7 @@ import { renderWithRouter, setupMswServer } from "../../common/utils/testUtils";
 
 import { rest } from "msw";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { fireEvent, waitFor } from "@testing-library/react";
+import { act, fireEvent, waitFor } from "@testing-library/react";
 
 jest.setTimeout(20000);
 
@@ -92,13 +92,15 @@ test("opens rule modal to add a diploma", async () => {
   let diplomaLabel = queryByText(/^Nom du diplôme ou titre$/i);
   expect(diplomaLabel).not.toBeInTheDocument();
 
-  fireEvent(
-    modalButton,
-    new MouseEvent("click", {
-      bubbles: true,
-      cancelable: true,
-    })
-  );
+  act(() => {
+    fireEvent(
+      modalButton,
+      new MouseEvent("click", {
+        bubbles: true,
+        cancelable: true,
+      })
+    );
+  });
 
   diplomaLabel = queryByText(/^Nom du diplôme ou titre$/i);
   expect(diplomaLabel).toBeInTheDocument();
@@ -106,13 +108,15 @@ test("opens rule modal to add a diploma", async () => {
   const closeButton = getByText(/^fermer$/i);
   expect(closeButton).toBeInTheDocument();
 
-  fireEvent(
-    closeButton,
-    new MouseEvent("click", {
-      bubbles: true,
-      cancelable: true,
-    })
-  );
+  act(() => {
+    fireEvent(
+      closeButton,
+      new MouseEvent("click", {
+        bubbles: true,
+        cancelable: true,
+      })
+    );
+  });
 
   diplomaLabel = queryByText(/^Nom du diplôme ou titre$/i);
   expect(diplomaLabel).not.toBeVisible();

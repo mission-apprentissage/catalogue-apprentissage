@@ -5,7 +5,9 @@ import { ZoomIn, ZoomOut } from "../../theme/components/icons";
 export const EllipsisText = ({ maxLength = 250, children, ...args }) => {
   const [showMore, setShowMore] = useState(false);
 
-  if (typeof children !== "string") {
+  if (!children) return <></>;
+
+  if (children && typeof children !== "string") {
     console.warn("Children is not a 'string'");
     return <>{children}</>;
   }

@@ -292,28 +292,28 @@ test("renders a training page", async () => {
 test("don't display an error when uai is valid", async () => {
   grantAnonymousAccess({ acl: ["page_formation"] });
 
-  const { getByText, queryByText, queryByTestId } = renderWithRouter(<Formation match={{ params: { id: 1 } }} />);
+  const { queryByText, getByTestId } = renderWithRouter(<Formation match={{ params: { id: 1 } }} />);
 
-  await waitFor(() => getByText(/UAI du lieu de formation/), { timeout: 10000 });
+  await waitFor(() => getByTestId("formation-content"));
 
   const uai = queryByText("0573690B");
   expect(uai).toBeInTheDocument();
 
-  const warning = queryByTestId("uai-warning");
-  expect(warning).not.toBeInTheDocument();
+  const ok = getByTestId("uai-ok");
+  expect(ok).toBeInTheDocument();
 });
 
 test("display an error when uai is invalid", async () => {
   grantAnonymousAccess({ acl: ["page_formation"] });
 
-  const { getByText, queryByText, queryByTestId } = renderWithRouter(<Formation match={{ params: { id: 2 } }} />);
+  const { queryByText, getByTestId } = renderWithRouter(<Formation match={{ params: { id: 2 } }} />);
 
-  await waitFor(() => getByText(/UAI du lieu de formation/), { timeout: 10000 });
+  await waitFor(() => getByTestId("formation-content"));
 
   const uai = queryByText("0573690B");
   expect(uai).toBeInTheDocument();
 
-  const warning = queryByTestId("uai-warning");
+  const warning = getByTestId("uai-warning");
   expect(warning).toBeInTheDocument();
 });
 

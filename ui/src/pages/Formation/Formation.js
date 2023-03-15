@@ -25,7 +25,7 @@ import { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL } from "../../con
 import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
 
 import { _get, _post, _put } from "../../common/httpClient";
-import { useAuth } from "../../common/hooks/useAuth";
+import useAuth from "../../common/hooks/useAuth";
 import { hasAccessTo, hasRightToEditFormation } from "../../common/utils/rolesUtils";
 import { buildUpdatesHistory, sortDescending } from "../../common/utils/historyUtils";
 import { isInCampagne } from "../../common/utils/rulesUtils";
@@ -70,7 +70,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
     !formation.uai_formation_valide ||
     (isEditingUai && formation?.affelnet_statut === AFFELNET_STATUS.PUBLIE)
       ? (args) => <DangerBox data-testid={"uai-warning"} {...args} />
-      : (args) => <Box {...args} />;
+      : (args) => <Box data-testid={"uai-ok"} {...args} />;
 
   // formation.distance < seuilDistance
   const AdresseContainer = React.Fragment;
@@ -536,7 +536,7 @@ export default ({ match }) => {
 
           {hasAccessTo(user, "page_formation") && !loading && formation && (
             <>
-              <Box mb={8}>
+              <Box mb={8} data-testid={"formation-content"}>
                 <Flex alignItems="center" justify="space-between" flexDirection={["column", "column", "row"]}>
                   <Box>
                     <Heading textStyle="h2" color="grey.800" pr={[0, 0, 8]} mb={4}>
