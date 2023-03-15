@@ -175,46 +175,41 @@ export const DescriptionBlock = ({ formation }) => {
                 </Text>
               </Text>
 
-              {formation?.affelnet_infos_offre && (
-                <Text mb={4}>
-                  Informations offre de formation <i>Affelnet</i> :{" "}
-                  <EllipsisText as="span" variant="highlight">
-                    {formation?.affelnet_infos_offre}
-                  </EllipsisText>{" "}
-                  <InfoTooltip description={helpText.formation.affelnet_publish_fields} />
-                </Text>
-              )}
-              {formation?.affelnet_url_infos_offre && (
-                <Text mb={4}>
-                  Informations offre de formation <i>Affelnet</i> (lien) :{" "}
-                  <Text as="span" variant="highlight">
-                    <Link rel="noreferrer noopener" target="_blank" href={formation?.affelnet_url_infos_offre}>
-                      {formation?.affelnet_url_infos_offre}
-                    </Link>
-                  </Text>{" "}
-                  <InfoTooltip description={helpText.formation.affelnet_publish_fields} />
-                </Text>
-              )}
-              {formation?.affelnet_modalites_offre && (
-                <Text mb={4}>
-                  Modalités particulières <i>Affelnet</i> :{" "}
-                  <EllipsisText as="span" variant="highlight">
-                    {formation?.affelnet_modalites_offre}
-                  </EllipsisText>{" "}
-                  <InfoTooltip description={helpText.formation.affelnet_publish_fields} />
-                </Text>
-              )}
-              {formation?.affelnet_url_modalites_offre && (
-                <Text mb={4}>
-                  Modalités particulières <i>Affelnet</i> (lien) :{" "}
-                  <Text as="span" variant="highlight">
-                    <Link rel="noreferrer noopener" target="_blank" href={formation?.affelnet_url_modalites_offre}>
-                      {formation?.affelnet_url_modalites_offre}
-                    </Link>
-                  </Text>{" "}
-                  <InfoTooltip description={helpText.formation.affelnet_publish_fields} />
-                </Text>
-              )}
+              <Text mb={4}>
+                Informations offre de formation <i>Affelnet</i> :{" "}
+                <EllipsisText as="span" variant="highlight">
+                  {formation?.affelnet_infos_offre}
+                </EllipsisText>{" "}
+                <InfoTooltip description={helpText.formation.affelnet_publish_fields} />
+              </Text>
+
+              <Text mb={4}>
+                Informations offre de formation <i>Affelnet</i> (lien) :{" "}
+                <Text as="span" variant="highlight">
+                  <Link rel="noreferrer noopener" target="_blank" href={formation?.affelnet_url_infos_offre}>
+                    {formation?.affelnet_url_infos_offre}
+                  </Link>
+                </Text>{" "}
+                <InfoTooltip description={helpText.formation.affelnet_publish_fields} />
+              </Text>
+
+              <Text mb={4}>
+                Modalités particulières <i>Affelnet</i> :{" "}
+                <EllipsisText as="span" variant="highlight">
+                  {formation?.affelnet_modalites_offre}
+                </EllipsisText>{" "}
+                <InfoTooltip description={helpText.formation.affelnet_publish_fields} />
+              </Text>
+
+              <Text mb={4}>
+                Modalités particulières <i>Affelnet</i> (lien) :{" "}
+                <Text as="span" variant="highlight">
+                  <Link rel="noreferrer noopener" target="_blank" href={formation?.affelnet_url_modalites_offre}>
+                    {formation?.affelnet_url_modalites_offre}
+                  </Link>
+                </Text>{" "}
+                <InfoTooltip description={helpText.formation.affelnet_publish_fields} />
+              </Text>
             </>
           )}
 
