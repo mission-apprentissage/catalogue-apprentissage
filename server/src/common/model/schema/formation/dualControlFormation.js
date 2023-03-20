@@ -493,4 +493,5 @@ const formationSchema = {
   ...etablissementReferenceInfo,
 };
 
+
 module.exports = formationSchema;
