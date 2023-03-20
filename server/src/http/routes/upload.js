@@ -8,7 +8,9 @@ const path = require("path");
 const logger = require("../../common/logger");
 const { afImportFormations } = require("../../jobs/affelnet/import");
 const { afCoverage } = require("../../jobs/affelnet/coverage");
+const { rebuildEsIndex } = require("../../jobs/esIndex/esIndex");
 const { hasAccessTo } = require("../../common/utils/rolesUtils");
+const { AFFELNET_STATUS } = require("../../constants/status");
 
 const DOCUMENTS = new Map([
   [
@@ -82,6 +84,7 @@ module.exports = () => {
               callback = async () => {
                 await afImportFormations();
                 await afCoverage();
+                await rebuildEsIndex("formation", false, { affelnet_statut: AFFELNET_STATUS.PUBLIE });
               };
             } else {
               return res.status(403).json({
