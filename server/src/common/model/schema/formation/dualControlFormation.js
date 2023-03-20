@@ -487,9 +487,6 @@ const formationSchema = {
     description: "Identifiant (LBA)",
   },
 
-
-
-
   // Etablissements
   ...etablissementGestionnaireInfo,
   ...etablissementFormateurInfo,
