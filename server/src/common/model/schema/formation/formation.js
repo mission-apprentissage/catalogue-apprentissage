@@ -511,7 +511,6 @@ const formationSchema = {
     description: "Identifiant de la formation",
   },
 
-
   ...etablissementGestionnaireInfo,
   ...etablissementFormateurInfo,
   ...etablissementReferenceInfo,

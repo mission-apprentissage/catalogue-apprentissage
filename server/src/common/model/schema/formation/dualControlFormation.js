@@ -474,7 +474,7 @@ const formationSchema = {
     default: null,
     description: "Identifiant RCO",
   },
-  
+
   objectif: {
     type: String,
     default: null,
@@ -492,5 +492,6 @@ const formationSchema = {
   ...etablissementFormateurInfo,
   ...etablissementReferenceInfo,
 };
+
 
 module.exports = formationSchema;
