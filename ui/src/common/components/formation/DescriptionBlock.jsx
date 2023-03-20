@@ -40,7 +40,7 @@ export const DescriptionBlock = ({ formation }) => {
     ? (args) => <DangerBox data-testid={"duree-warning"} {...args} />
     : React.Fragment;
 
-  const isBacPro3AnsEn2Ans = !!formation.affelnet_mefs_10?.filter(
+  const isBacPro3AnsEn2Ans = !!formation.bcn_mefs_10?.filter(
     ({ mef10 }) =>
       (mef10.startsWith("247") && mef10.endsWith("32")) || (mef10.startsWith("276") && mef10.endsWith("32"))
   ).length;
