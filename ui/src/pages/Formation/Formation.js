@@ -218,15 +218,19 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                     <Collapse in={isComputedGeoCoordOpen} animateOpacity unmountOnExit={true}>
                       <Text>
                         <Text fontSize={"zeta"} color={"grey.600"} as="span">
-                          <Link
-                            href={getOpenStreetMapUrl(formation.lieu_formation_geo_coordonnees_computed)}
-                            textStyle="rf-text"
-                            variant="pill"
-                            title="Voir sur GeoPortail"
-                            isExternal
-                          >
-                            {formation.lieu_formation_geo_coordonnees_computed}
-                          </Link>
+                          {getOpenStreetMapUrl(formation.lieu_formation_geo_coordonnees_computed) ? (
+                            <Link
+                              href={getOpenStreetMapUrl(formation.lieu_formation_geo_coordonnees_computed)}
+                              textStyle="rf-text"
+                              variant="pill"
+                              title="Voir sur GeoPortail"
+                              isExternal
+                            >
+                              {formation.lieu_formation_geo_coordonnees_computed}
+                            </Link>
+                          ) : (
+                            <>{formation.lieu_formation_geo_coordonnees_computed}</>
+                          )}
                         </Text>{" "}
                         <InfoTooltip description={helpText.formation.lieu_formation_geo_coordonnees_computed} />
                       </Text>
@@ -256,15 +260,19 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                     <Collapse in={isComputedAdressOpen} animateOpacity unmountOnExit={true}>
                       <Text>
                         <Text fontSize={"zeta"} color={"grey.600"} as="span">
-                          <Link
-                            href={getOpenStreetMapUrl(formation.lieu_formation_geo_coordonnees)}
-                            textStyle="rf-text"
-                            variant="pill"
-                            title="Voir sur GeoPortail"
-                            isExternal
-                          >
-                            {formation.lieu_formation_adresse_computed}
-                          </Link>
+                          {getOpenStreetMapUrl(formation.lieu_formation_geo_coordonnees) ? (
+                            <Link
+                              href={getOpenStreetMapUrl(formation.lieu_formation_geo_coordonnees)}
+                              textStyle="rf-text"
+                              variant="pill"
+                              title="Voir sur GeoPortail"
+                              isExternal
+                            >
+                              {formation.lieu_formation_adresse_computed}
+                            </Link>
+                          ) : (
+                            <>{formation.lieu_formation_adresse_computed}</>
+                          )}
                         </Text>{" "}
                         <InfoTooltip description={helpText.formation.lieu_formation_adresse_computed} />
                       </Text>
