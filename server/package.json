@@ -91,7 +91,7 @@
     "oleoduc": "0.7.0",
     "omit-deep": "https://github.com/izigibran/omit-deep.git",
     "passport": "0.6.0",
-    "passport-jwt": "4.0.0",
+    "passport-jwt": "4.0.1",
     "prettier": "2.0.5",
     "require-all": "3.0.0",
     "sanitize-filename": "1.6.3",
