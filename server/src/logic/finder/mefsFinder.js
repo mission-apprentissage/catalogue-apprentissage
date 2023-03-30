@@ -22,9 +22,9 @@ const findMefsForAffelnet = async (rules) => {
 
 const computeMefs = async (fields, oldFields) => {
   let bcn_mefs_10 = fields.bcn_mefs_10;
-  let affelnet_mefs_10 = null;
+  let affelnet_mefs_10 = [];
   let affelnet_infos_offre = oldFields?.affelnet_infos_offre;
-  let parcoursup_mefs_10 = null;
+  let parcoursup_mefs_10 = [];
   let duree_incoherente = false;
   let annee_incoherente = false;
 
