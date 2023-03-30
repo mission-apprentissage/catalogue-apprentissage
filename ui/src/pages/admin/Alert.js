@@ -19,33 +19,41 @@ import Layout from "../layout/Layout";
 import { NavLink } from "react-router-dom";
 import { ArrowDropRightLine } from "../../theme/components/icons";
 import useAuth from "../../common/hooks/useAuth";
+import { useRef } from "react";
+import { useCallback } from "react";
 
 const Alert = () => {
   const [messageAutomatique, setMessageAutomatique] = useState([]);
   const [messagesManuels, setMessagesManuels] = useState([]);
 
   const [user] = useAuth();
+  const mountedRef = useRef(false);
+
+  const getMessagesManuels = useCallback(async () => {
+    try {
+      const data = await _get("/api/v1/entity/alert");
+      // const hasMessages = data.reduce((acc, item) => acc || item.enabled, false);
+      // if (hasMessages) {
+      setMessagesManuels(data.filter((message) => message.type === "manuel"));
+      // }
+    } catch (e) {
+      console.error(e);
+    }
+  }, [setMessagesManuels]);
 
   useEffect(() => {
-    let mounted = true;
     const run = async () => {
-      try {
-        const data = await _get("/api/v1/entity/alert");
-        const hasMessages = data.reduce((acc, item) => acc || item.enabled, false);
-        if (hasMessages && mounted) {
-          setMessagesManuels(data.filter((message) => message.type === "manuel"));
-        }
-      } catch (e) {
-        console.error(e);
+      if (!mountedRef.current) {
+        mountedRef.current = true;
+        await getMessagesManuels();
       }
     };
     run();
 
     return () => {
-      // cleanup hook
-      mounted = false;
+      mountedRef.current = false;
     };
-  }, []);
+  }, [getMessagesManuels]);
 
   const {
     values: valuesM,
