@@ -3087,15 +3087,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-prettier@npm:3.1.3":
-  version: 3.1.3
-  resolution: "eslint-plugin-prettier@npm:3.1.3"
+"eslint-plugin-prettier@npm:3.4.1":
+  version: 3.4.1
+  resolution: "eslint-plugin-prettier@npm:3.4.1"
   dependencies:
     prettier-linter-helpers: ^1.0.0
   peerDependencies:
-    eslint: ">= 5.0.0"
-    prettier: ">= 1.13.0"
-  checksum: ffa7807150fef7e66f489f824a3b9d2b73714ce2660d72c5234b9ecd30a7a142f8f2e4e5d1285a736c8f28912d7ac016101df418cd411c8f989ebdbdbd807e7a
+    eslint: ">=5.0.0"
+    prettier: ">=1.13.0"
+  peerDependenciesMeta:
+    eslint-config-prettier:
+      optional: true
+  checksum: fa6a89f0d7cba1cc87064352f5a4a68dc3739448dd279bec2bced1bfa3b704467e603d13b69dcec853f8fa30b286b8b715912898e9da776e1b016cf0ee48bd99
   languageName: node
   linkType: hard
 
@@ -6303,7 +6306,7 @@ __metadata:
     eslint-config-prettier: 8.5.0
     eslint-plugin-immutable: 1.0.0
     eslint-plugin-node: 11.1.0
-    eslint-plugin-prettier: 3.1.3
+    eslint-plugin-prettier: 3.4.1
     express: 4.18.2
     express-mongo-sanitize: 2.2.0
     express-rate-limit: 6.7.0
