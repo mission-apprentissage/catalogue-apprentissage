@@ -38,15 +38,13 @@ const Indicators = () => {
 
   const onAcademieChange = useCallback(
     (academie) => (academie !== -1 ? setCurrentAcademie(academie) : setCurrentAcademie(undefined)),
-    []
+    [setCurrentAcademie]
   );
 
-  const defaultQuery = { published: true };
-
   useEffect(() => {
-    console.log({ currentAcademie });
-
+    const defaultQuery = { published: true };
     let isCancelled = false;
+
     (async () => {
       try {
         const formationCount = await _get(
@@ -150,12 +148,12 @@ const Indicators = () => {
     return () => {
       isCancelled = true;
     };
-  }, [user, currentAcademie]);
+  }, [user, currentAcademie, onAcademieChange]);
 
   useEffect(() => {
     const [firstAcademy] = user?.academie?.split(",")?.map((academieStr) => Number(academieStr)) ?? [];
     onAcademieChange(firstAcademy);
-  }, [user]);
+  }, [user, onAcademieChange]);
 
   const cards = [
     {
