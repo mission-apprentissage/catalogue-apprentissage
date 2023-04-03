@@ -2091,12 +2091,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"config@npm:3.3.8":
-  version: 3.3.8
-  resolution: "config@npm:3.3.8"
+"config@npm:3.3.9":
+  version: 3.3.9
+  resolution: "config@npm:3.3.9"
   dependencies:
-    json5: ^2.2.1
-  checksum: 8ae3b1a073eb32b8b8e8079f4f8874d170bed291df6e3d50d0333ef1524714e6fe051593298de565daa603dc11abda21dd480c9134dbf977caddb9821816c439
+    json5: ^2.2.3
+  checksum: 2c29e40be22274462769670a4b69fcbcad2d3049eb15030073e410d32c892ef29e0c879a3d68ef92ddd572c516e4f65a11bb6458f680a44ceb0f051bcd3d97ff
   languageName: node
   linkType: hard
 
@@ -5061,7 +5061,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"json5@npm:^2.1.1, json5@npm:^2.2.1":
+"json5@npm:^2.1.1, json5@npm:^2.2.1, json5@npm:^2.2.3":
   version: 2.2.3
   resolution: "json5@npm:2.2.3"
   bin:
@@ -6295,7 +6295,7 @@ __metadata:
     bunyan-slack: 0.0.10
     cli-progress: 3.8.2
     command-line-args: 5.2.0
-    config: 3.3.8
+    config: 3.3.9
     connect-mongo: 4.6.0
     convert-csv-to-json: 1.3.3
     cors: 2.8.5
