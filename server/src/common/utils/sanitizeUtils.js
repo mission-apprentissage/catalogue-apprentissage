@@ -1,4 +1,5 @@
 const mongoSanitize = require("express-mongo-sanitize");
+const logger = require("../../common/logger");
 const { isObject, transform } = require("lodash");
 
 const SAFE_FIND_OPERATORS = [
@@ -30,13 +31,15 @@ const deepRenameKeys = (obj, keysMap) =>
   });
 
 const sanitize = (obj, SAFE_OPERATORS = []) => {
-  let sanitizedObj = mongoSanitize.sanitize(obj, { replaceWith: "_" });
+  let sanitizedObj = mongoSanitize.sanitize(obj, { replaceWith: "_", allowDots: true });
 
   const keysMap = SAFE_OPERATORS.reduce((acc, curr) => {
     acc[curr.replaceAll("$", "_")] = curr;
     return acc;
   }, {});
   sanitizedObj = deepRenameKeys(sanitizedObj, keysMap);
+
+  logger.info("", JSON.stringify(sanitizedObj));
 
   return sanitizedObj;
 };
