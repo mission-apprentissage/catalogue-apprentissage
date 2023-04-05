@@ -7,7 +7,12 @@ const { updateRelationFields: updateEtablissementRelationFields } = require("../
 const { updateRelationFields: updateFormationRelationFields } = require("./converter");
 
 const importer = async (
-  { noDownload = false, forceRecompute = false, skip = 0 } = { noDownload: false, forceRecompute: false, skip: 0 }
+  { noDownload = false, forceRecompute = false, skip = 0, filter = {} } = {
+    noDownload: false,
+    forceRecompute: false,
+    skip: 0,
+    filter: {},
+  }
 ) => {
   try {
     logger.info({ type: "job" }, " -- Start of importer -- ");
@@ -33,11 +38,11 @@ const importer = async (
 
     // STEP 2 : Convert formations
     logger.info({ type: "job" }, " -- Converting formations -- ");
-    await converter({ forceRecompute, skip });
+    await converter({ forceRecompute, skip, filter });
 
     // STEP 3 : Rebuild relations between etablissements and formations
     await updateEtablissementRelationFields();
-    await updateFormationRelationFields();
+    await updateFormationRelationFields({ filter });
 
     logger.info({ type: "job" }, " -- End of importer -- ");
   } catch (error) {
@@ -52,7 +57,21 @@ if (process.env.standalone) {
     const args = process.argv.slice(2);
     const noDownload = args.includes("--noDownload");
     const forceRecompute = args.includes("--forceRecompute");
+
     const skip = +(args.find((arg) => arg.startsWith("--skip"))?.split("=")?.[1] ?? 0);
-    await importer({ noDownload, forceRecompute, skip });
+    // const filter = JSON.parse(args.find((arg) => arg.startsWith("--filter"))?.split("=")?.[1] ?? "{}");
+
+    await importer({
+      noDownload,
+      forceRecompute,
+      skip,
+      // filter,
+      filter: {
+        published: true,
+        affelnet_statut: { $ne: "hors périmètre" },
+        affelnet_mefs_10: { $in: [null, []] },
+        bcn_mefs_10: { $ne: [] },
+      },
+    });
   });
 }

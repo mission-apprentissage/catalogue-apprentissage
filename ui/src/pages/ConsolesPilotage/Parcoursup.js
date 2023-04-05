@@ -11,7 +11,6 @@ import {
   Grid,
   GridItem,
   Flex,
-  FormLabel,
 } from "@chakra-ui/react";
 
 import Layout from "../layout/Layout";
