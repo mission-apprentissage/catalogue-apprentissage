@@ -43,18 +43,23 @@ const createStreams = () => {
         customFormatter: (record, levelName) => {
           if (record.type === "http") {
             record = {
+              type: "http",
               url: record.request.url.relative,
               statusCode: record.response.statusCode,
               ...(record.error ? { message: record.error.message } : {}),
             };
           }
           return {
-            text: util.format(`[%s][${envName}] %O`, levelName.toUpperCase(), record),
+            text: util.format(
+              `[${envName}] [%s]${record.type ? " (" + record.type + ")" : ""} %O`,
+              levelName.toUpperCase(),
+              record
+            ),
           };
         },
       },
       (error) => {
-        console.log("Unable to send log to slack", error);
+        console.error("Unable to send log to slack", error);
       }
     );
 
