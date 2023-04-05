@@ -27,7 +27,7 @@ const formationCoverage = async ({ eraseInfo } = {}) => {
       // if we got a the key, just check if we still have it
       if (formation.cle_ministere_educatif) {
         const matchingFormation = await getMatch({
-          published: true,
+          // published: true,
           cle_ministere_educatif: formation.cle_ministere_educatif,
         });
 
