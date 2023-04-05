@@ -54,6 +54,12 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
     Object.entries(objectDiff(fields?.bcn_mefs_10, oldFields?.bcn_mefs_10) ?? {}).length ||
     fields?.duree !== oldFields?.duree ||
     fields?.annee !== oldFields?.annee ||
+    fields?.diplome !== oldFields?.diplome ||
+    fields?.num_academie !== oldFields?.num_academie ||
+    fields?.rncp_details?.code_type_certif !== oldFields?.rncp_details?.code_type_certif ||
+    fields?.rncp_details?.date_fin_validite_enregistrement !==
+      oldFields?.rncp_details?.date_fin_validite_enregistrement ||
+    fields?.cfd_date_fermeture !== oldFields?.cfd_date_fermeture ||
     arrayDiff(fields?.date_debut, oldFields?.date_debut).length
   ) {
     ({
@@ -71,18 +77,29 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
         bcn_mefs_10: fields?.bcn_mefs_10,
         duree: fields?.duree,
         annee: fields?.annee,
+        diplome: fields?.diplome,
+        num_academie: fields?.num_academie,
+        code_type_certif: fields?.rncp_details?.code_type_certif,
+        date_fin_validite_enregistrement: oldFields?.rncp_details?.date_fin_validite_enregistrement,
+        cfd_date_fermeture: fields?.cfd_date_fermeture,
         date_debut: fields?.date_debut,
       },
       oldFields: {
         bcn_mefs_10: oldFields?.bcn_mefs_10,
         duree: oldFields?.duree,
         annee: oldFields?.annee,
+        diplome: oldFields?.diplome,
+        num_academie: oldFields?.num_academie,
+        code_type_certif: oldFields?.rncp_details?.code_type_certif,
+        date_fin_validite_enregistrement: oldFields?.rncp_details?.date_fin_validite_enregistrement,
+        cfd_date_fermeture: oldFields?.cfd_date_fermeture,
+        date_debut: oldFields?.date_debut,
+
         affelnet_mefs_10: oldFields?.affelnet_mefs_10,
         affelnet_infos_offre: oldFields?.affelnet_infos_offre,
         parcoursup_mefs_10: oldFields?.parcoursup_mefs_10,
         duree_incoherente: oldFields?.duree_incoherente,
         annee_incoherente: oldFields?.annee_incoherente,
-        date_debut: oldFields?.date_debut,
       },
 
       computed: {

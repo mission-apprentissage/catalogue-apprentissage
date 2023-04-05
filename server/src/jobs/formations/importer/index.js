@@ -66,12 +66,12 @@ if (process.env.standalone) {
       forceRecompute,
       skip,
       // filter,
-      // filter: {
-      //   published: true,
-      //   affelnet_statut: { $ne: "hors périmètre" },
-      //   affelnet_mefs_10: { $in: [null, []] },
-      //   bcn_mefs_10: { $ne: [] },
-      // },
+      filter: {
+        published: true,
+        affelnet_statut: { $ne: "hors périmètre" },
+        affelnet_mefs_10: { $in: [null, []] },
+        bcn_mefs_10: { $ne: [] },
+      },
     });
   });
 }
