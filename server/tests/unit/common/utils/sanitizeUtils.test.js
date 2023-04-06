@@ -10,7 +10,7 @@ describe(__filename, () => {
     assert.deepStrictEqual(sanitized, { query: { _where: "hello" } });
 
     sanitized = sanitize({ "field.nested": { $in: ["hello", "test"] } });
-    assert.deepStrictEqual(sanitized, { field_nested: { _in: ["hello", "test"] } });
+    assert.deepStrictEqual(sanitized, { "field.nested": { _in: ["hello", "test"] } });
   });
 
   it("checks that find query is sanitized & allow some mongo operators", () => {
