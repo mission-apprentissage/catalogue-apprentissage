@@ -5,7 +5,6 @@ const config = require("config");
 const path = require("path");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { DateTime } = require("luxon");
-const { uniq } = require("lodash");
 
 /*
  * Some formations received from RCO have the same properties.
@@ -68,7 +67,7 @@ runScript(async ({ mailer }) => {
     const row = [];
 
     row.push(entry.count);
-    row.push(uniq(entry.nom_academie.map((e) => e.nom_academie)).join(","));
+    row.push([...new Set(entry.nom_academie.map((e) => e.nom_academie))].join(","));
     row.push(`="${entry._id.cfd}"`);
     row.push(`="${entry._id.code_postal}"`);
     row.push(`="${entry._id.etablissement_formateur_siret}"`);

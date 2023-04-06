@@ -50,6 +50,8 @@ runScript(async ({ db }) => {
     await rebuildEsIndex("formations"); // ~ 5 minutes // maj elastic search (recherche des formations)
     await disableAlertMessage();
     Formation.startAllMongoosaticHooks();
+
+    logger.info(`Finish all jobs`);
   } catch (error) {
     logger.error(
       {
