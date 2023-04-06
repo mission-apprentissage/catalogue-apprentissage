@@ -51,7 +51,7 @@ runScript(async ({ db }) => {
     await disableAlertMessage();
     Formation.startAllMongoosaticHooks();
 
-    logger.info(`Finish all jobs`);
+    logger.info({ type: "job" }, `Finish all jobs`);
   } catch (error) {
     logger.error(
       {
