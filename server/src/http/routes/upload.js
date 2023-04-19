@@ -11,6 +11,7 @@ const { afCoverage } = require("../../jobs/affelnet/coverage");
 const { rebuildEsIndex } = require("../../jobs/esIndex/esIndex");
 const { hasAccessTo } = require("../../common/utils/rolesUtils");
 const { AFFELNET_STATUS } = require("../../constants/status");
+const { Formation } = require("../../common/model");
 
 const DOCUMENTS = new Map([
   [
@@ -83,7 +84,9 @@ module.exports = () => {
             if (hasAccessTo(req.user, DOCUMENTS.get("affelnet-formations").acl)) {
               callback = async () => {
                 await afImportFormations();
+                Formation.pauseAllMongoosaticHooks();
                 await afCoverage();
+                Formation.startAllMongoosaticHooks();
                 await rebuildEsIndex("formation", false, { affelnet_statut: AFFELNET_STATUS.PUBLIE });
               };
             } else {
