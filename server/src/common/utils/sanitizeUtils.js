@@ -28,7 +28,7 @@ const deepRenameKeys = (obj, keysMap) =>
   });
 
 const sanitize = (obj, { allowSafeOperators } = { allowSafeOperators: false }) => {
-  let sanitizedObj = mongoSanitize.sanitize(obj, { replaceWith: "_" });
+  let sanitizedObj = mongoSanitize.sanitize(obj, { replaceWith: "_", allowDots: true });
 
   if (allowSafeOperators) {
     const keysMap = SAFE_OPERATORS.reduce((acc, curr) => {
