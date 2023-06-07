@@ -761,7 +761,7 @@ module.exports = {
       contenu: {
         type: "string",
         default: "null",
-        description: "Contenu",
+        description: "Contenu de la formation",
       },
       _id: {
         type: "string",
