@@ -474,7 +474,7 @@ const formationSchema = {
     default: null,
     description: "Identifiant RCO",
   },
-  
+
   objectif: {
     type: String,
     default: null,
@@ -486,7 +486,6 @@ const formationSchema = {
     default: null,
     description: "Identifiant (LBA)",
   },
-
   // Etablissements
   ...etablissementGestionnaireInfo,
   ...etablissementFormateurInfo,
