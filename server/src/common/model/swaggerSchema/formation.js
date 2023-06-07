@@ -753,6 +753,16 @@ module.exports = {
         description: "Date de création de l'établissement",
         format: "date-time",
       },
+      objectif: {
+        type: "string",
+        default: "null",
+        description: "Objectif de la formation",
+      },
+      contenu: {
+        type: "string",
+        default: "null",
+        description: "Contenu",
+      },
       _id: {
         type: "string",
         pattern: "^[0-9a-fA-F]{24}$",
