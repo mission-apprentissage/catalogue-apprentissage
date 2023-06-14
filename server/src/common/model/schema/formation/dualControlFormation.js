@@ -175,7 +175,6 @@ const formationSchema = {
     default: [],
     description: "Libelle formacode",
   },
-  
   // ADRESSE
   nom_academie: {
     type: String,
