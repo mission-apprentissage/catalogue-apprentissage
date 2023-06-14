@@ -33,6 +33,22 @@ module.exports = {
         default: "null",
         description: "Code formation diplôme d'entrée (année 1 de l'apprentissage)",
       },
+      code_formacode: {
+        type: "array",
+        items: {
+          type: "string",
+        },
+        default: [],
+        description: "Code formacode",
+      },
+      libelle_formacode: {
+        type: "array",
+        items: {
+          type: "string",
+        },
+        default: [],
+        description: "Libelle formacode",
+      },
       nom_academie: {
         type: "string",
         default: "null",
