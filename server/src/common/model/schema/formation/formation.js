@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { isValideUAI } = require("@mission-apprentissage/tco-service-node");
+//const { isValideUAI } = require("@mission-apprentissage/tco-service-node");
 const etablissementFormateurInfo = require("./etablissement.formateur.sub");
 const etablissementGestionnaireInfo = require("./etablissement.gestionnaire.sub");
 const etablissementReferenceInfo = require("./etablissement.reference.sub");
