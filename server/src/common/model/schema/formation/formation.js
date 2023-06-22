@@ -321,7 +321,7 @@ const formationSchema = {
   email: {
     type: String,
     default: null,
-    select: false,
+    //select: false,
     noIndex: true,
     description: "Email du contact pour cette formation",
   },
