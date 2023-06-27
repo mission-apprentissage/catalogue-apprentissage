@@ -35,10 +35,10 @@ module.exports = () => {
     const page = qs && qs.page ? qs.page : 1;
     const limit = qs && qs.limit ? parseInt(qs.limit, 10) : 10;
     const sort = qs && qs.sort ? JSON.parse(qs.sort) : {};
-    const select = qs && qs.select ? JSON.parse(qs.select) : { __v: 0 }; 
+    const select = qs && qs.select ? JSON.parse(qs.select) : { __v: 0};
     let queryAsRegex = qs?.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
     queryAsRegex = sanitize(queryAsRegex, { allowSafeOperators: true });
-    
+
     for (const prop in queryAsRegex) {
       queryAsRegex[prop] = new RegExp(queryAsRegex[prop], "i");
     }
