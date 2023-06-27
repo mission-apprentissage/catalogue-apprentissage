@@ -40,8 +40,7 @@ module.exports = () => {
         ? JSON.parse(qs.select)
         : {
             __v: 0,
-          };
-        
+          }; 
     let queryAsRegex = qs?.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
     queryAsRegex = sanitize(queryAsRegex, { allowSafeOperators: true });
 
