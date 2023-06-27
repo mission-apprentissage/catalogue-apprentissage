@@ -78,7 +78,7 @@ module.exports = () => {
   const postFormations = tryCatch(async (req, res) => {
     const sanitizedQuery = sanitize(req.body, { allowSafeOperators: true });
 
-    let { query, page, limit, select, queryAsRegex } = await Joi.object({
+    let { query, page, limit, select, sort, queryAsRegex } = await Joi.object({
       query: Joi.optional().default({}),
       page: Joi.number().default(1),
       limit: Joi.number().max(1000).default(10),
