@@ -34,12 +34,14 @@ module.exports = () => {
 
     const page = qs && qs.page ? qs.page : 1;
     const limit = qs && qs.limit ? parseInt(qs.limit, 10) : 10;
+    const sort = qs && qs.sort ? JSON.parse(qs.sort) : {};
     const select =
       qs && qs.select
         ? JSON.parse(qs.select)
         : {
             __v: 0,
           };
+        
 
     let queryAsRegex = qs?.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
     queryAsRegex = sanitize(queryAsRegex, { allowSafeOperators: true });
@@ -63,6 +65,7 @@ module.exports = () => {
       limit: Math.min(limit, 1000),
       lean: true,
       select,
+      sort,
     });
     return res.json({
       formations: allData.docs,
