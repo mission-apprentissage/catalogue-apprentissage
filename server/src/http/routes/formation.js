@@ -82,6 +82,7 @@ module.exports = () => {
       query: Joi.optional().default({}),
       page: Joi.number().default(1),
       limit: Joi.number().max(1000).default(10),
+      sort: Joi.optional().default({}),
       select: Joi.optional().default({
         __v: 0,
       }),
@@ -102,7 +103,7 @@ module.exports = () => {
       Object.assign(query, defaultFilter);
     }
 
-    const { find, pagination } = await paginate(Formation, query, { page, limit, select });
+    const { find, pagination } = await paginate(Formation, query, { page, limit, select, sort });
     const stream = oleoduc(
       find.cursor(),
       transformIntoJSON({
