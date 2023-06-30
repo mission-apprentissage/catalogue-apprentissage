@@ -40,6 +40,7 @@ module.exports = () => {
 
     const page = qs && qs.page ? qs.page : 1;
     const limit = qs && qs.limit ? parseInt(qs.limit, 10) : 10;
+    const sort = qs && qs.sort ? JSON.parse(qs.sort) : {};
     const select =
       qs && qs.select
         ? JSON.parse(qs.select)
@@ -72,6 +73,7 @@ module.exports = () => {
       limit: Math.min(limit, 1000),
       lean: true,
       select,
+      sort,
     });
     return res.json({
       formations: allData.docs,
@@ -82,12 +84,25 @@ module.exports = () => {
         total: allData.total,
       },
     });
+
+    // const { find, pagination } = await paginate(Formation, query, { page, limit, select, sort });
+    // const stream = oleoduc(
+    //   find.cursor(),
+    //   transformIntoJSON({
+    //     arrayWrapper: {
+    //       pagination,
+    //     },
+    //     arrayPropertyName: "formations",
+    //   })
+    // );
+
+    // return sendJsonStream(stream, res);
   });
 
   const postFormations = tryCatch(async (req, res) => {
     const sanitizedQuery = sanitize(req.body, SAFE_FIND_OPERATORS);
 
-    let { query, page, limit, select, queryAsRegex } = await Joi.object({
+    let { query, page, limit, sort, select, queryAsRegex } = await Joi.object({
       query: Joi.optional().default({}),
       page: Joi.number().default(1),
       limit: Joi.number().max(1000).default(10),
@@ -97,6 +112,7 @@ module.exports = () => {
         updates_history: 0,
         __v: 0,
       }),
+      sort: Joi.optional().default({}),
       queryAsRegex: Joi.optional().default({}),
     }).validateAsync(sanitizedQuery, { abortEarly: false });
 
@@ -120,7 +136,7 @@ module.exports = () => {
       Object.assign(query, defaultFilter);
     }
 
-    const { find, pagination } = await paginate(Formation, query, { page, limit, select });
+    const { find, pagination } = await paginate(Formation, query, { page, limit, select, sort });
     const stream = oleoduc(
       find.cursor(),
       transformIntoJSON({
@@ -210,39 +226,40 @@ module.exports = () => {
   });
 
   const streamFormationsJSON = tryCatch(async (req, res) => {
-    let { query, select, limit } = await Joi.object({
+    let { query, select, limit, sort } = await Joi.object({
       query: Joi.string().default("{}"),
       select: Joi.string().default(
         '{"affelnet_statut_history":0,"parcoursup_statut_history":0,"updates_history":0,"__v":0}'
       ),
       limit: Joi.number().default(10),
+      sort: Joi.string().default("{}"),
     }).validateAsync(req.query, { abortEarly: false });
 
     let filter = JSON.parse(query);
     filter = sanitize(filter, SAFE_FIND_OPERATORS);
 
-    const selector = JSON.parse(select);
-
-    const stream = compose(Formation.find(filter, selector).limit(limit).cursor(), transformIntoJSON());
+    const stream = compose(
+      Formation.find(filter, JSON.parse(select)).sort(JSON.parse(sort)).limit(limit).cursor(),
+      transformIntoJSON()
+    );
     return sendJsonStream(stream, res);
   });
 
   const streamFormationsCSV = tryCatch(async (req, res) => {
-    let { query, select, limit } = await Joi.object({
+    let { query, select, limit, sort } = await Joi.object({
       query: Joi.string().default("{}"),
       select: Joi.string().default(
         '{"affelnet_statut_history":0,"parcoursup_statut_history":0,"updates_history":0,"__v":0}'
       ),
       limit: Joi.number().default(10),
+      sort: Joi.string().default("{}"),
     }).validateAsync(req.query, { abortEarly: false });
 
     let filter = JSON.parse(query);
     filter = sanitize(filter, SAFE_FIND_OPERATORS);
 
-    const selector = JSON.parse(select);
-
     const stream = compose(
-      Formation.find(filter, selector).limit(limit).lean().cursor(),
+      Formation.find(filter, JSON.parse(select)).sort(JSON.parse(sort)).limit(limit).lean().cursor(),
       transformIntoCSV({ mapper: (v) => `"${v || ""}"` })
     );
     return sendCsvStream(stream, res);
