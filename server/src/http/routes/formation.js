@@ -13,7 +13,7 @@ const { paginate } = require("../../common/utils/mongooseUtils");
 module.exports = () => {
   const router = express.Router();
 
-  // const defaultFilter = {
+  const defaultFilter = {
     catalogue_published: true,
     published: true,
   };
