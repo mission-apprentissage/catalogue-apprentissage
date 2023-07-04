@@ -374,5 +374,8 @@ module.exports = () => {
   router.get("/formations.json", streamFormations);
   router.get("/formations2021.json", streamFormations);
 
+  router.get("/formations.csv", streamFormationsCSV);
+
+
   return router;
 };
