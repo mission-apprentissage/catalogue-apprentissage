@@ -1,4 +1,5 @@
 const express = require("express");
+const compression = require("compression");
 const cors = require("cors");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
@@ -80,6 +81,7 @@ module.exports = async (components, verbose = true) => {
   const { db } = components;
   const app = express();
 
+  app.use(compression());
   app.use(bodyParser.json({ limit: "50mb" }));
   // Parse the ndjson as text for ES proxy
   app.use(bodyParser.text({ type: "application/x-ndjson" }));
