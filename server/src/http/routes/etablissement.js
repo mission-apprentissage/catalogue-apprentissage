@@ -146,31 +146,11 @@ module.exports = () => {
     tryCatch(async (req, res) => {
       const sanitizedQuery = sanitize(req.query);
 
-      let { query, limit } = await Joi.object({
+      let { query, limit, sort, skip } = await Joi.object({
         query: Joi.string().default("{}"),
         limit: Joi.number().default(10),
-      }).validateAsync(sanitizedQuery, { abortEarly: false });
-
-      let json = JSON.parse(query);
-
-      // Par défaut, ne retourne que les établissements published
-      if (!sanitizedQuery?.query) {
-        Object.assign(json, defaultFilter);
-      }
-
-      const stream = oleoduc(Etablissement.find(json).limit(limit).cursor(), transformIntoJSON());
-      return sendJsonStream(stream, res);
-    })
-  );
-
-  router.get(
-    "/etablissements.csv",
-    tryCatch(async (req, res) => {
-      const sanitizedQuery = sanitize(req.query);
-
-      let { query, limit } = await Joi.object({
-        query: Joi.string().default("{}"),
-        limit: Joi.number().default(10),
+        sort: Joi.string().default("{}"),
+        skip: Joi.number().default(0),
       }).validateAsync(sanitizedQuery, { abortEarly: false });
 
       let json = JSON.parse(query);
@@ -181,7 +161,34 @@ module.exports = () => {
       }
 
       const stream = oleoduc(
-        Etablissement.find(json).limit(limit).lean().cursor(),
+        Etablissement.find(json).sort(JSON.parse(sort)).limit(limit).skip(skip).cursor(),
+        transformIntoJSON()
+      );
+      return sendJsonStream(stream, res);
+    })
+  );
+
+  router.get(
+    "/etablissements.csv",
+    tryCatch(async (req, res) => {
+      const sanitizedQuery = sanitize(req.query);
+
+      let { query, limit, sort, skip } = await Joi.object({
+        query: Joi.string().default("{}"),
+        limit: Joi.number().default(10),
+        sort: Joi.string().default("{}"),
+        skip: Joi.number().default(0),
+      }).validateAsync(sanitizedQuery, { abortEarly: false });
+
+      let json = JSON.parse(query);
+
+      // Par défaut, ne retourne que les établissements published
+      if (!sanitizedQuery?.query) {
+        Object.assign(json, defaultFilter);
+      }
+
+      const stream = oleoduc(
+        Etablissement.find(json).sort(JSON.parse(sort)).limit(limit).lean().skip(skip).cursor(),
         transformIntoCSV({ mapper: (v) => `"${v || ""}"` })
       );
       return sendCsvStream(stream, res);
