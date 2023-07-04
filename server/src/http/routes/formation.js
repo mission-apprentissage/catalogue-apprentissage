@@ -13,7 +13,7 @@ const { paginate } = require("../../common/utils/mongooseUtils");
 module.exports = () => {
   const router = express.Router();
 
-  //const defaultFilter = {
+  // const defaultFilter = {
     catalogue_published: true,
     published: true,
   };
@@ -47,18 +47,19 @@ module.exports = () => {
         : {
             affelnet_statut_history: 0,
             parcoursup_statut_history: 0,
+            // updates_history: 0,
             __v: 0,
           };
 
     let queryAsRegex = qs?.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
-    queryAsRegex = sanitize(queryAsRegex, { allowSafeOperators: true });
+    queryAsRegex = sanitize(queryAsRegex, SAFE_FIND_OPERATORS);
 
     for (const prop in queryAsRegex) {
       queryAsRegex[prop] = new RegExp(queryAsRegex[prop], "i");
     }
 
     const mQuery = {
-      ...query,
+      ...filter,
       ...queryAsRegex,
     };
 
@@ -72,6 +73,7 @@ module.exports = () => {
       limit: Math.min(limit, 1000),
       lean: true,
       select,
+      sort,
     });
     return res.json({
       formations: allData.docs,
@@ -82,6 +84,19 @@ module.exports = () => {
         total: allData.total,
       },
     });
+
+    // const { find, pagination } = await paginate(Formation, query, { page, limit, select, sort });
+    // const stream = oleoduc(
+    //   find.cursor(),
+    //   transformIntoJSON({
+    //     arrayWrapper: {
+    //       pagination,
+    //     },
+    //     arrayPropertyName: "formations",
+    //   })
+    // );
+
+    // return sendJsonStream(stream, res);
   });
 
   const postFormations = tryCatch(async (req, res) => {
@@ -92,17 +107,27 @@ module.exports = () => {
       page: Joi.number().default(1),
       limit: Joi.number().max(1000).default(10),
       select: Joi.optional().default({
+        affelnet_statut_history: 0,
+        parcoursup_statut_history: 0,
+        updates_history: 0,
         __v: 0,
       }),
+      sort: Joi.optional().default({}),
       queryAsRegex: Joi.optional().default({}),
     }).validateAsync(sanitizedQuery, { abortEarly: false });
+
+    const { id_parcoursup, ...filter } = query;
+    // additional filtering for parcoursup
+    if (id_parcoursup) {
+      filter["parcoursup_id"] = id_parcoursup;
+    }
 
     for (const prop in queryAsRegex) {
       queryAsRegex[prop] = new RegExp(queryAsRegex[prop], "i");
     }
 
     query = {
-      ...query,
+      ...filter,
       ...queryAsRegex,
     };
 
@@ -111,7 +136,7 @@ module.exports = () => {
       Object.assign(query, defaultFilter);
     }
 
-    const { find, pagination } = await paginate(Formation, query, { page, limit, select });
+    const { find, pagination } = await paginate(Formation, query, { page, limit, select, sort });
     const stream = oleoduc(
       find.cursor(),
       transformIntoJSON({
@@ -128,17 +153,23 @@ module.exports = () => {
   const countFormations = tryCatch(async (req, res) => {
     const qs = req.query;
     let query = qs && qs.query ? JSON.parse(qs.query) : {};
-    query = sanitize(query, { allowSafeOperators: true });
+    query = sanitize(query, SAFE_FIND_OPERATORS);
+
+    const { id_parcoursup, ...filter } = query;
+    // additional filtering for parcoursup
+    if (id_parcoursup) {
+      filter["parcoursup_id"] = id_parcoursup;
+    }
 
     let queryAsRegex = qs?.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
-    queryAsRegex = sanitize(queryAsRegex, { allowSafeOperators: true });
+    queryAsRegex = sanitize(queryAsRegex, SAFE_FIND_OPERATORS);
 
     for (const prop in queryAsRegex) {
       queryAsRegex[prop] = new RegExp(queryAsRegex[prop], "i");
     }
 
     const mQuery = {
-      ...query,
+      ...filter,
       ...queryAsRegex,
     };
 
@@ -155,12 +186,15 @@ module.exports = () => {
     const qs = req.query;
 
     let query = qs && qs.query ? JSON.parse(qs.query) : {};
-    query = sanitize(query, { allowSafeOperators: true });
+    query = sanitize(query, SAFE_FIND_OPERATORS);
 
     const select =
       qs && qs.select
         ? JSON.parse(qs.select)
         : {
+            affelnet_statut_history: 0,
+            parcoursup_statut_history: 0,
+            updates_history: 0,
             __v: 0,
           };
     const retrievedData = await Formation.findOne(query, select).lean();
@@ -179,6 +213,9 @@ module.exports = () => {
       qs && qs.select
         ? JSON.parse(qs.select)
         : {
+            affelnet_statut_history: 0,
+            parcoursup_statut_history: 0,
+            updates_history: 0,
             __v: 0,
           };
     const retrievedData = await Formation.findById(itemId, select).lean();
@@ -188,19 +225,23 @@ module.exports = () => {
     return res.status(404).send({ message: `Item ${itemId} doesn't exist` });
   });
 
-  const streamFormations = tryCatch(async (req, res) => {
-    let { query, select, limit } = await Joi.object({
+  const streamFormationsJSON = tryCatch(async (req, res) => {
+    let { query, select, limit, sort } = await Joi.object({
       query: Joi.string().default("{}"),
-      select: Joi.string().default('{"__v":0}'),
+      select: Joi.string().default(
+        '{"affelnet_statut_history":0,"parcoursup_statut_history":0,"updates_history":0,"__v":0}'
+      ),
       limit: Joi.number().default(10),
+      sort: Joi.string().default("{}"),
     }).validateAsync(req.query, { abortEarly: false });
 
     let filter = JSON.parse(query);
-    filter = sanitize(filter, { allowSafeOperators: true });
+    filter = sanitize(filter, SAFE_FIND_OPERATORS);
 
-    const selector = JSON.parse(select);
-
-    const stream = compose(Formation.find(filter, selector).limit(limit).cursor(), transformIntoJSON());
+    const stream = compose(
+      Formation.find(filter, JSON.parse(select)).sort(JSON.parse(sort)).limit(limit).cursor(),
+      transformIntoJSON()
+    );
     return sendJsonStream(stream, res);
   });
 
@@ -305,9 +346,11 @@ module.exports = () => {
    *                        type: number
    */
   router.get("/formations", getFormations);
+  /** @deprecated */
   router.get("/formations2021", getFormations);
 
   router.post("/formations", postFormations);
+  /** @deprecated */
   router.post("/formations2021", postFormations);
 
   /**
@@ -341,12 +384,14 @@ module.exports = () => {
    *         description: KO
    */
   router.get("/formations/count", countFormations);
+  /** @deprecated */
   router.get("/formations2021/count", countFormations);
 
   /**
    * Get one converted RCO formation by query /formation GET
    */
   router.get("/formation", getFormation);
+  /** @deprecated */
   router.get("/formation2021", getFormation);
 
   /**
@@ -375,13 +420,15 @@ module.exports = () => {
    *         description: KO
    */
   router.get("/formation/:id", getFormationById);
+  /** @deprecated */
   router.get("/formation2021/:id", getFormationById);
 
   /**
    * Stream formations as json array
    */
-  router.get("/formations.json", streamFormations);
-  router.get("/formations2021.json", streamFormations);
+  router.get("/formations.json", streamFormationsJSON);
+  /** @deprecated */
+  router.get("/formations2021.json", streamFormationsJSON);
 
   router.get("/formations.csv", streamFormationsCSV);
 
