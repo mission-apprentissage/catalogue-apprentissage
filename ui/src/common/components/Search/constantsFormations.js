@@ -39,8 +39,8 @@ const FILTERS = () => [
   "qualite",
   "habilite",
   "duree",
-  "periode_start",
-  "periode_end",
+  "date_debut_start",
+  "date_debut_end",
   "parcoursup_published_date_start",
   "parcoursup_published_date_end",
   "affelnet_published_date_start",
@@ -332,20 +332,6 @@ const columnsDefinition = [
     exportable: true,
     formatter: (value) => escapeDiacritics(value),
   },
-  // {
-  //   Header: "Debut de formation",
-  //   accessor: "periode",
-  //   width: 200,
-  //   exportable: true,
-  //   formatter: (periode) => {
-  //     return periode
-  //       ?.map((dateStr) => {
-  //         const formattedDate = new Date(dateStr).toLocaleString("fr-FR", { month: "long", year: "numeric" });
-  //         return formattedDate === "Invalid Date" ? dateStr : formattedDate;
-  //       })
-  //       ?.join(", ");
-  //   },
-  // },
   {
     Header: "Dates de formation",
     accessor: "date_debut",

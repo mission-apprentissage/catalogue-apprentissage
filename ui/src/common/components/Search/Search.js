@@ -158,8 +158,8 @@ export default React.memo(({ location, searchState, context, extraButtons = null
                     <Flex>
                       <Box w="50%">
                         <DatePicker
-                          componentId="periode_start"
-                          dataField="periode"
+                          componentId="date_debut_start"
+                          dataField="date_debut"
                           placeholder={"A partir de"}
                           numberOfMonths={1}
                           queryFormat="date"
@@ -172,7 +172,7 @@ export default React.memo(({ location, searchState, context, extraButtons = null
                               ? {
                                   query: {
                                     range: {
-                                      periode: {
+                                      date_debut: {
                                         gte: value,
                                       },
                                     },
@@ -184,8 +184,8 @@ export default React.memo(({ location, searchState, context, extraButtons = null
                       </Box>
                       <Box w="50%">
                         <DatePicker
-                          componentId="periode_end"
-                          dataField="periode"
+                          componentId="date_debut_end"
+                          dataField="date_debut"
                           placeholder={"Jusqu'au"}
                           numberOfMonths={1}
                           queryFormat="date"
@@ -199,7 +199,7 @@ export default React.memo(({ location, searchState, context, extraButtons = null
                               ? {
                                   query: {
                                     range: {
-                                      periode: {
+                                      date_debut: {
                                         lte: value,
                                       },
                                     },
@@ -212,6 +212,7 @@ export default React.memo(({ location, searchState, context, extraButtons = null
                     </Flex>
                   </Flex>
                 )}
+
                 {isBaseFormations && auth?.sub !== "anonymous" && (
                   <Flex pt={3} direction="column">
                     <Box>
