@@ -686,6 +686,11 @@ module.exports = {
         description: "Date de création de l'établissement",
         format: "date-time",
       },
+      etablissement_gestionnaire_courriel: {
+        type: "string",
+        default: "null",
+        description: "Adresse email de contact de l'établissement gestionnaire",
+      },
       etablissement_formateur_id: {
         type: "string",
         default: "null",
@@ -800,6 +805,11 @@ module.exports = {
         default: "null",
         description: "Date de création de l'établissement",
         format: "date-time",
+      },
+      etablissement_formateur_courriel: {
+        type: "string",
+        default: "null",
+        description: "Adresse email de contact de l'établissement formateur",
       },
       etablissement_reference: {
         type: "string",
