@@ -70,46 +70,46 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
       annee_incoherente,
     } = await computeMefs(fields, oldFields));
 
-    console.debug("Compute mefs", {
-      cle_ministere_educatif: fields?.cle_ministere_educatif,
+    // console.debug("Compute mefs", {
+    //   cle_ministere_educatif: fields?.cle_ministere_educatif,
 
-      fields: {
-        bcn_mefs_10: fields?.bcn_mefs_10,
-        duree: fields?.duree,
-        annee: fields?.annee,
-        diplome: fields?.diplome,
-        num_academie: fields?.num_academie,
-        code_type_certif: fields?.rncp_details?.code_type_certif,
-        date_fin_validite_enregistrement: oldFields?.rncp_details?.date_fin_validite_enregistrement,
-        cfd_date_fermeture: fields?.cfd_date_fermeture,
-        date_debut: fields?.date_debut,
-      },
-      oldFields: {
-        bcn_mefs_10: oldFields?.bcn_mefs_10,
-        duree: oldFields?.duree,
-        annee: oldFields?.annee,
-        diplome: oldFields?.diplome,
-        num_academie: oldFields?.num_academie,
-        code_type_certif: oldFields?.rncp_details?.code_type_certif,
-        date_fin_validite_enregistrement: oldFields?.rncp_details?.date_fin_validite_enregistrement,
-        cfd_date_fermeture: oldFields?.cfd_date_fermeture,
-        date_debut: oldFields?.date_debut,
+    //   fields: {
+    //     bcn_mefs_10: fields?.bcn_mefs_10,
+    //     duree: fields?.duree,
+    //     annee: fields?.annee,
+    //     diplome: fields?.diplome,
+    //     num_academie: fields?.num_academie,
+    //     code_type_certif: fields?.rncp_details?.code_type_certif,
+    //     date_fin_validite_enregistrement: oldFields?.rncp_details?.date_fin_validite_enregistrement,
+    //     cfd_date_fermeture: fields?.cfd_date_fermeture,
+    //     date_debut: fields?.date_debut,
+    //   },
+    //   oldFields: {
+    //     bcn_mefs_10: oldFields?.bcn_mefs_10,
+    //     duree: oldFields?.duree,
+    //     annee: oldFields?.annee,
+    //     diplome: oldFields?.diplome,
+    //     num_academie: oldFields?.num_academie,
+    //     code_type_certif: oldFields?.rncp_details?.code_type_certif,
+    //     date_fin_validite_enregistrement: oldFields?.rncp_details?.date_fin_validite_enregistrement,
+    //     cfd_date_fermeture: oldFields?.cfd_date_fermeture,
+    //     date_debut: oldFields?.date_debut,
 
-        affelnet_mefs_10: oldFields?.affelnet_mefs_10,
-        affelnet_infos_offre: oldFields?.affelnet_infos_offre,
-        parcoursup_mefs_10: oldFields?.parcoursup_mefs_10,
-        duree_incoherente: oldFields?.duree_incoherente,
-        annee_incoherente: oldFields?.annee_incoherente,
-      },
+    //     affelnet_mefs_10: oldFields?.affelnet_mefs_10,
+    //     affelnet_infos_offre: oldFields?.affelnet_infos_offre,
+    //     parcoursup_mefs_10: oldFields?.parcoursup_mefs_10,
+    //     duree_incoherente: oldFields?.duree_incoherente,
+    //     annee_incoherente: oldFields?.annee_incoherente,
+    //   },
 
-      computed: {
-        affelnet_mefs_10,
-        affelnet_infos_offre,
-        parcoursup_mefs_10,
-        duree_incoherente,
-        annee_incoherente,
-      },
-    });
+    //   computed: {
+    //     affelnet_mefs_10,
+    //     affelnet_infos_offre,
+    //     parcoursup_mefs_10,
+    //     duree_incoherente,
+    //     annee_incoherente,
+    //   },
+    // });
   }
 
   // DISTANCE_LIEU_FORMATION_ETABLISSEMENT_FORMATEUR
@@ -169,21 +169,21 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
       lieu_formation_adresse_computed = undefined;
     }
 
-    console.debug("Compute adresse", {
-      cle_ministere_educatif: fields?.cle_ministere_educatif,
+    // console.debug("Compute adresse", {
+    //   cle_ministere_educatif: fields?.cle_ministere_educatif,
 
-      fields: {
-        lieu_formation_geo_coordonnees: fields?.lieu_formation_geo_coordonnees,
-        lieu_formation_adresse_computed: fields?.lieu_formation_adresse_computed,
-      },
-      oldFields: {
-        lieu_formation_geo_coordonnees: oldFields?.lieu_formation_geo_coordonnees,
-        lieu_formation_adresse_computed: oldFields?.lieu_formation_adresse_computed,
-      },
-      computed: {
-        lieu_formation_adresse_computed,
-      },
-    });
+    //   fields: {
+    //     lieu_formation_geo_coordonnees: fields?.lieu_formation_geo_coordonnees,
+    //     lieu_formation_adresse_computed: fields?.lieu_formation_adresse_computed,
+    //   },
+    //   oldFields: {
+    //     lieu_formation_geo_coordonnees: oldFields?.lieu_formation_geo_coordonnees,
+    //     lieu_formation_adresse_computed: oldFields?.lieu_formation_adresse_computed,
+    //   },
+    //   computed: {
+    //     lieu_formation_adresse_computed,
+    //   },
+    // });
   }
 
   // GEOCOORDONNEES
@@ -214,27 +214,27 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
       lieu_formation_geo_coordonnees_computed = undefined;
     }
 
-    console.debug("Compute geocoordonnees", {
-      cle_ministere_educatif: fields?.cle_ministere_educatif,
+    // console.debug("Compute geocoordonnees", {
+    //   cle_ministere_educatif: fields?.cle_ministere_educatif,
 
-      fields: {
-        lieu_formation_adresse: fields?.lieu_formation_adresse,
-        localite: fields?.localite,
-        code_postal: fields?.code_postal,
-        code_commune_insee: fields?.code_commune_insee,
-        lieu_formation_geo_coordonnees_computed: fields?.lieu_formation_geo_coordonnees_computed,
-      },
-      oldFields: {
-        lieu_formation_adresse: oldFields?.lieu_formation_adresse,
-        localite: oldFields?.localite,
-        code_postal: oldFields?.code_postal,
-        code_commune_insee: oldFields?.code_commune_insee,
-        lieu_formation_geo_coordonnees_computed: oldFields?.lieu_formation_geo_coordonnees_computed,
-      },
-      computed: {
-        lieu_formation_geo_coordonnees_computed,
-      },
-    });
+    //   fields: {
+    //     lieu_formation_adresse: fields?.lieu_formation_adresse,
+    //     localite: fields?.localite,
+    //     code_postal: fields?.code_postal,
+    //     code_commune_insee: fields?.code_commune_insee,
+    //     lieu_formation_geo_coordonnees_computed: fields?.lieu_formation_geo_coordonnees_computed,
+    //   },
+    //   oldFields: {
+    //     lieu_formation_adresse: oldFields?.lieu_formation_adresse,
+    //     localite: oldFields?.localite,
+    //     code_postal: oldFields?.code_postal,
+    //     code_commune_insee: oldFields?.code_commune_insee,
+    //     lieu_formation_geo_coordonnees_computed: oldFields?.lieu_formation_geo_coordonnees_computed,
+    //   },
+    //   computed: {
+    //     lieu_formation_geo_coordonnees_computed,
+    //   },
+    // });
   }
 
   // DISTANCE
@@ -253,23 +253,23 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
       distance = undefined;
     }
 
-    console.log("Compute distance", {
-      cle_ministere_educatif: fields?.cle_ministere_educatif,
+    // console.debug("Compute distance", {
+    //   cle_ministere_educatif: fields?.cle_ministere_educatif,
 
-      fields: {
-        lieu_formation_geo_coordonnees: fields.lieu_formation_geo_coordonnees,
-        distance: fields.distance,
-        lieu_formation_geo_coordonnees_computed: lieu_formation_geo_coordonnees_computed,
-      },
-      oldFields: {
-        lieu_formation_geo_coordonnees: oldFields?.lieu_formation_geo_coordonnees,
-        distance: oldFields?.distance,
-        lieu_formation_geo_coordonnees_computed: oldFields?.lieu_formation_geo_coordonnees_computed,
-      },
-      computed: {
-        distance,
-      },
-    });
+    //   fields: {
+    //     lieu_formation_geo_coordonnees: fields.lieu_formation_geo_coordonnees,
+    //     distance: fields.distance,
+    //     lieu_formation_geo_coordonnees_computed: lieu_formation_geo_coordonnees_computed,
+    //   },
+    //   oldFields: {
+    //     lieu_formation_geo_coordonnees: oldFields?.lieu_formation_geo_coordonnees,
+    //     distance: oldFields?.distance,
+    //     lieu_formation_geo_coordonnees_computed: oldFields?.lieu_formation_geo_coordonnees_computed,
+    //   },
+    //   computed: {
+    //     distance,
+    //   },
+    // });
   }
 
   const cfd_entree = getCfdEntree(fields.cfd);

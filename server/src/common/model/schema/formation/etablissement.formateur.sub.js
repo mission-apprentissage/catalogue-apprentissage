@@ -119,7 +119,6 @@ const etablissementFormateurInfo = {
     description: "Date de création de l'établissement",
   },
   etablissement_formateur_courriel: {
-    select: false,
     noIndex: true,
     type: String,
     default: null,
