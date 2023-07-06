@@ -320,6 +320,10 @@ export interface DualControlFormation {
    */
   etablissement_gestionnaire_date_creation?: Date;
   /**
+   * Adresse email de contact de l'établissement gestionnaire
+   */
+  etablissement_gestionnaire_courriel?: string;
+  /**
    * Numéro siret formateur
    */
   etablissement_formateur_siret?: string;
@@ -403,6 +407,10 @@ export interface DualControlFormation {
    * Date de création de l'établissement
    */
   etablissement_formateur_date_creation?: Date;
+  /**
+   * Adresse email de contact de l'établissement formateur
+   */
+  etablissement_formateur_courriel?: string;
   /**
    * Etablissement reference est soit formateur soit le gestionnaire
    */

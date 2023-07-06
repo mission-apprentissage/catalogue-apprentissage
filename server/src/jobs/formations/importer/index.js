@@ -59,19 +59,19 @@ if (process.env.standalone) {
     const forceRecompute = args.includes("--forceRecompute");
 
     const skip = +(args.find((arg) => arg.startsWith("--skip"))?.split("=")?.[1] ?? 0);
-    // const filter = JSON.parse(args.find((arg) => arg.startsWith("--filter"))?.split("=")?.[1] ?? "{}");
+    const filter = JSON.parse(args.find((arg) => arg.startsWith("--filter"))?.split("=")?.[1] ?? "{}");
 
     await importer({
       noDownload,
       forceRecompute,
       skip,
-      // filter,
-      filter: {
-        published: true,
-        affelnet_statut: { $ne: "hors périmètre" },
-        affelnet_mefs_10: { $in: [null, []] },
-        bcn_mefs_10: { $ne: [] },
-      },
+      filter,
+      // filter: {
+      //   published: true,
+      //   // affelnet_statut: { $ne: "hors périmètre" },
+      //   // affelnet_mefs_10: { $in: [null, []] },
+      //   // bcn_mefs_10: { $ne: [] },
+      // },
     });
   });
 }
