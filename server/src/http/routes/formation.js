@@ -1,10 +1,10 @@
 const express = require("express");
 const Joi = require("joi");
-const { oleoduc, compose, transformIntoJSON, transformIntoCSV } = require("oleoduc");
+const { oleoduc, compose, transformIntoJSON } = require("oleoduc");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { Formation } = require("../../common/model");
-const { sendJsonStream, sendCsvStream } = require("../../common/utils/httpUtils");
-const { sanitize, SAFE_FIND_OPERATORS } = require("../../common/utils/sanitizeUtils");
+const { sendJsonStream } = require("../../common/utils/httpUtils");
+const { sanitize } = require("../../common/utils/sanitizeUtils");
 const { paginate } = require("../../common/utils/mongooseUtils");
 
 /**
@@ -30,13 +30,7 @@ module.exports = () => {
     // end FIXME
 
     let query = cleanedQuery ? JSON.parse(cleanedQuery) : {};
-    query = sanitize(query, SAFE_FIND_OPERATORS);
-
-    const { id_parcoursup, ...filter } = query;
-    // additional filtering for parcoursup
-    if (id_parcoursup) {
-      filter["parcoursup_id"] = id_parcoursup;
-    }
+    query = sanitize(query, { allowSafeOperators: true });
 
     const page = qs && qs.page ? qs.page : 1;
     const limit = qs && qs.limit ? parseInt(qs.limit, 10) : 10;
@@ -45,21 +39,18 @@ module.exports = () => {
       qs && qs.select
         ? JSON.parse(qs.select)
         : {
-            affelnet_statut_history: 0,
-            parcoursup_statut_history: 0,
-            // updates_history: 0,
             __v: 0,
           };
 
     let queryAsRegex = qs?.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
-    queryAsRegex = sanitize(queryAsRegex, SAFE_FIND_OPERATORS);
+    queryAsRegex = sanitize(queryAsRegex, { allowSafeOperators: true });
 
     for (const prop in queryAsRegex) {
       queryAsRegex[prop] = new RegExp(queryAsRegex[prop], "i");
     }
 
     const mQuery = {
-      ...filter,
+      ...query,
       ...queryAsRegex,
     };
 
@@ -84,50 +75,28 @@ module.exports = () => {
         total: allData.total,
       },
     });
-
-    // const { find, pagination } = await paginate(Formation, query, { page, limit, select, sort });
-    // const stream = oleoduc(
-    //   find.cursor(),
-    //   transformIntoJSON({
-    //     arrayWrapper: {
-    //       pagination,
-    //     },
-    //     arrayPropertyName: "formations",
-    //   })
-    // );
-
-    // return sendJsonStream(stream, res);
   });
 
   const postFormations = tryCatch(async (req, res) => {
-    const sanitizedQuery = sanitize(req.body, SAFE_FIND_OPERATORS);
+    const sanitizedQuery = sanitize(req.body, { allowSafeOperators: true });
 
-    let { query, page, limit, sort, select, queryAsRegex } = await Joi.object({
+    let { query, page, limit, select, queryAsRegex, sort } = await Joi.object({
       query: Joi.optional().default({}),
       page: Joi.number().default(1),
       limit: Joi.number().max(1000).default(10),
       select: Joi.optional().default({
-        affelnet_statut_history: 0,
-        parcoursup_statut_history: 0,
-        updates_history: 0,
         __v: 0,
       }),
-      sort: Joi.optional().default({}),
       queryAsRegex: Joi.optional().default({}),
+      sort: Joi.optional().default({}),
     }).validateAsync(sanitizedQuery, { abortEarly: false });
-
-    const { id_parcoursup, ...filter } = query;
-    // additional filtering for parcoursup
-    if (id_parcoursup) {
-      filter["parcoursup_id"] = id_parcoursup;
-    }
 
     for (const prop in queryAsRegex) {
       queryAsRegex[prop] = new RegExp(queryAsRegex[prop], "i");
     }
 
     query = {
-      ...filter,
+      ...query,
       ...queryAsRegex,
     };
 
@@ -153,23 +122,17 @@ module.exports = () => {
   const countFormations = tryCatch(async (req, res) => {
     const qs = req.query;
     let query = qs && qs.query ? JSON.parse(qs.query) : {};
-    query = sanitize(query, SAFE_FIND_OPERATORS);
-
-    const { id_parcoursup, ...filter } = query;
-    // additional filtering for parcoursup
-    if (id_parcoursup) {
-      filter["parcoursup_id"] = id_parcoursup;
-    }
+    query = sanitize(query, { allowSafeOperators: true });
 
     let queryAsRegex = qs?.queryAsRegex ? JSON.parse(qs.queryAsRegex) : {};
-    queryAsRegex = sanitize(queryAsRegex, SAFE_FIND_OPERATORS);
+    queryAsRegex = sanitize(queryAsRegex, { allowSafeOperators: true });
 
     for (const prop in queryAsRegex) {
       queryAsRegex[prop] = new RegExp(queryAsRegex[prop], "i");
     }
 
     const mQuery = {
-      ...filter,
+      ...query,
       ...queryAsRegex,
     };
 
@@ -186,15 +149,12 @@ module.exports = () => {
     const qs = req.query;
 
     let query = qs && qs.query ? JSON.parse(qs.query) : {};
-    query = sanitize(query, SAFE_FIND_OPERATORS);
+    query = sanitize(query, { allowSafeOperators: true });
 
     const select =
       qs && qs.select
         ? JSON.parse(qs.select)
         : {
-            affelnet_statut_history: 0,
-            parcoursup_statut_history: 0,
-            updates_history: 0,
             __v: 0,
           };
     const retrievedData = await Formation.findOne(query, select).lean();
@@ -213,9 +173,6 @@ module.exports = () => {
       qs && qs.select
         ? JSON.parse(qs.select)
         : {
-            affelnet_statut_history: 0,
-            parcoursup_statut_history: 0,
-            updates_history: 0,
             __v: 0,
           };
     const retrievedData = await Formation.findById(itemId, select).lean();
@@ -225,44 +182,20 @@ module.exports = () => {
     return res.status(404).send({ message: `Item ${itemId} doesn't exist` });
   });
 
-  const streamFormationsJSON = tryCatch(async (req, res) => {
-    let { query, select, limit, sort } = await Joi.object({
+  const streamFormations = tryCatch(async (req, res) => {
+    let { query, select, limit } = await Joi.object({
       query: Joi.string().default("{}"),
-      select: Joi.string().default(
-        '{"affelnet_statut_history":0,"parcoursup_statut_history":0,"updates_history":0,"__v":0}'
-      ),
+      select: Joi.string().default('{"__v":0}'),
       limit: Joi.number().default(10),
-      sort: Joi.string().default("{}"),
     }).validateAsync(req.query, { abortEarly: false });
 
     let filter = JSON.parse(query);
-    filter = sanitize(filter, SAFE_FIND_OPERATORS);
+    filter = sanitize(filter, { allowSafeOperators: true });
 
-    const stream = compose(
-      Formation.find(filter, JSON.parse(select)).sort(JSON.parse(sort)).limit(limit).cursor(),
-      transformIntoJSON()
-    );
+    const selector = JSON.parse(select);
+
+    const stream = compose(Formation.find(filter, selector).limit(limit).cursor(), transformIntoJSON());
     return sendJsonStream(stream, res);
-  });
-
-  const streamFormationsCSV = tryCatch(async (req, res) => {
-    let { query, select, limit, sort } = await Joi.object({
-      query: Joi.string().default("{}"),
-      select: Joi.string().default(
-        '{"affelnet_statut_history":0,"parcoursup_statut_history":0,"updates_history":0,"__v":0}'
-      ),
-      limit: Joi.number().default(10),
-      sort: Joi.string().default("{}"),
-    }).validateAsync(req.query, { abortEarly: false });
-
-    let filter = JSON.parse(query);
-    filter = sanitize(filter, SAFE_FIND_OPERATORS);
-
-    const stream = compose(
-      Formation.find(filter, JSON.parse(select)).sort(JSON.parse(sort)).limit(limit).lean().cursor(),
-      transformIntoCSV({ mapper: (v) => `"${v || ""}"` })
-    );
-    return sendCsvStream(stream, res);
   });
 
   /**
@@ -346,11 +279,9 @@ module.exports = () => {
    *                        type: number
    */
   router.get("/formations", getFormations);
-  /** @deprecated */
   router.get("/formations2021", getFormations);
 
   router.post("/formations", postFormations);
-  /** @deprecated */
   router.post("/formations2021", postFormations);
 
   /**
@@ -384,14 +315,12 @@ module.exports = () => {
    *         description: KO
    */
   router.get("/formations/count", countFormations);
-  /** @deprecated */
   router.get("/formations2021/count", countFormations);
 
   /**
    * Get one converted RCO formation by query /formation GET
    */
   router.get("/formation", getFormation);
-  /** @deprecated */
   router.get("/formation2021", getFormation);
 
   /**
@@ -420,17 +349,13 @@ module.exports = () => {
    *         description: KO
    */
   router.get("/formation/:id", getFormationById);
-  /** @deprecated */
   router.get("/formation2021/:id", getFormationById);
 
   /**
    * Stream formations as json array
    */
-  router.get("/formations.json", streamFormationsJSON);
-  /** @deprecated */
-  router.get("/formations2021.json", streamFormationsJSON);
-
-  router.get("/formations.csv", streamFormationsCSV);
+  router.get("/formations.json", streamFormations);
+  router.get("/formations2021.json", streamFormations);
 
   return router;
 };
