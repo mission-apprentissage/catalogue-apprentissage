@@ -14,7 +14,7 @@ const rebuildIndex = async (index, schema, { skipNotFound, filter } = { skipNotF
   let requireAsciiFolding = true;
   await schema.createMapping(requireAsciiFolding); // this explicit call of createMapping insures that the geo points fields will be treated accordingly during indexing
 
-  logger.info(`Synching '${index}' index ...`);
+  logger.info(`Syncing '${index}' index ...`);
   await schema.synchronize(filter);
 };
 

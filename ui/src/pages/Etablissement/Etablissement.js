@@ -10,11 +10,6 @@ import {
   GridItem,
   Heading,
   Link,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
   Spinner,
   Text,
   useDisclosure,
@@ -27,7 +22,7 @@ import { hasAccessTo } from "../../common/utils/rolesUtils";
 import { NavLink } from "react-router-dom";
 import InfoTooltip from "../../common/components/InfoTooltip";
 import helpText from "../../locales/helpText.json";
-import { ArrowRightLine, ExternalLinkLine, Tick } from "../../theme/components/icons/";
+import { ArrowRightLine, ExternalLinkLine } from "../../theme/components/icons/";
 import { HowToFixModal } from "../../common/components/organisme/HowToFixModal";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
@@ -305,8 +300,6 @@ export default ({ match }) => {
   const [etablissement, setEtablissement] = useState(undefined);
   const [loading, setLoading] = useState(false);
   const [edition, setEdition] = useState(false);
-  const [gatherData] = useState(0);
-  const [modal] = useState(false);
   const [countFormations, setCountFormations] = useState(0);
   const history = useHistory();
 
@@ -394,22 +387,6 @@ export default ({ match }) => {
                   onEdit={onEdit}
                   countFormations={countFormations}
                 />
-                <Modal isOpen={modal}>
-                  <ModalOverlay />
-                  <ModalContent>
-                    <ModalHeader>Merci ne pas fermer cette page</ModalHeader>
-                    <ModalBody>
-                      {gatherData !== 0 && (
-                        <Box>
-                          <Box>
-                            Mise à jour des informations {gatherData === 1 && <Spinner />}
-                            {gatherData > 1 && <Tick color={"success"} boxSize={5} />}
-                          </Box>
-                        </Box>
-                      )}
-                    </ModalBody>
-                  </ModalContent>
-                </Modal>
               </>
             )}
             {!loading && !etablissement && (

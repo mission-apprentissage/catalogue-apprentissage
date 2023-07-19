@@ -149,7 +149,6 @@ const formation = {
   lieu_formation_geo_coordonnees: "49.103334,6.855078",
   geo_coordonnees_etablissement_gestionnaire: "48.705054,6.12883",
   geo_coordonnees_etablissement_formateur: "48.705054,6.12883",
-  idea_geo_coordonnees_etablissement: "49.103334,6.855078",
   created_at: "2021-08-06T23:49:25.696Z",
   last_update_at: "2021-10-08T00:22:45.551Z",
   distance_lieu_formation_etablissement_formateur: 69130,
@@ -160,8 +159,9 @@ const formation = {
 };
 
 test("renders the description block of the training", async () => {
-  const { queryByText } = render(<DescriptionBlock formation={formation} />);
-
+  const { queryByText } = render(
+    <DescriptionBlock formation={{ ...formation, etablissement_reference_habilite_rncp: null }} />
+  );
   const title = queryByText("Description");
   expect(title).toBeInTheDocument();
 
@@ -181,6 +181,7 @@ test("renders the description block of the training", async () => {
 test("show partenaires for titre or tp", async () => {
   const tpFormation = {
     ...formation,
+    etablissement_reference_habilite_rncp: true,
     rncp_details: {
       ...formation.rncp_details,
       code_type_certif: "TP",
@@ -221,6 +222,7 @@ test("dont show partenaires if certificateur is ministere EN for titre or tp", a
 test("show partenaires", async () => {
   const tpFormation = {
     ...formation,
+    etablissement_reference_habilite_rncp: true,
     rncp_details: {
       ...formation.rncp_details,
       code_type_certif: "TP",
@@ -245,10 +247,11 @@ test("show partenaires", async () => {
 test("display a warning for cfd outdated", async () => {
   const testFormation = {
     ...formation,
+    etablissement_reference_habilite_rncp: null,
     cfd_outdated: true,
   };
   const { queryByText } = render(<DescriptionBlock formation={testFormation} />);
 
-  const warn = queryByText(/Ce diplôme a une date de fin antérieure au 31\/08 de l'année en cours/i);
+  const warn = queryByText(/Ce code formation diplôme est expiré/i);
   expect(warn).toBeInTheDocument();
 });

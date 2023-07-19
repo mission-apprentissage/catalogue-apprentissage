@@ -33,6 +33,22 @@ module.exports = {
         default: "null",
         description: "Code formation diplôme d'entrée (année 1 de l'apprentissage)",
       },
+      code_formacode: {
+        type: "array",
+        items: {
+          type: "string",
+        },
+        default: [],
+        description: "Code formacode",
+      },
+      libelle_formacode: {
+        type: "array",
+        items: {
+          type: "string",
+        },
+        default: [],
+        description: "Libelle formacode",
+      },
       nom_academie: {
         type: "string",
         default: "null",
@@ -473,7 +489,7 @@ module.exports = {
           format: "date-time",
         },
         default: [],
-        description: "Formation éligible au catalogue générale",
+        description: "Dates de début de session",
       },
       date_fin: {
         type: "array",
@@ -482,7 +498,15 @@ module.exports = {
           format: "date-time",
         },
         default: [],
-        description: "Formation éligible au catalogue générale",
+        description: "Dates de fin de session",
+      },
+      modalites_entrees_sorties: {
+        type: "array",
+        items: {
+          type: "boolean",
+        },
+        default: [],
+        description: "Session en entrée / sortie permanente",
       },
       id_RCO: {
         type: "string",
@@ -744,6 +768,16 @@ module.exports = {
         default: "null",
         description: "Date de création de l'établissement",
         format: "date-time",
+      },
+      objectif: {
+        type: "string",
+        default: "null",
+        description: "Objectif de la formation",
+      },
+      contenu: {
+        type: "string",
+        default: "null",
+        description: "Contenu de la formation",
       },
       _id: {
         type: "string",

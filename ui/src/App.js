@@ -9,7 +9,7 @@ import { hasAccessTo } from "./common/utils/rolesUtils";
 // Route-based code splitting @see https://reactjs.org/docs/code-splitting.html#route-based-code-splitting
 const HomePage = lazy(() => import("./pages/HomePage"));
 const LoginPage = lazy(() => import("./pages/LoginPage"));
-const DashboardPage = lazy(() => import("./pages/Dashboard"));
+// const DashboardPage = lazy(() => import("./pages/Dashboard"));
 const ResetPasswordPage = lazy(() => import("./pages/password/ResetPasswordPage"));
 const ForgottenPasswordPage = lazy(() => import("./pages/password/ForgottenPasswordPage"));
 const Users = lazy(() => import("./pages/admin/Users"));
@@ -99,7 +99,7 @@ export default () => {
             <ResetPasswordWrapper>
               <ScrollToTop />
               <Switch>
-                <Route exact path="/stats" component={DashboardPage} />
+                {/* <Route exact path="/stats" component={DashboardPage} /> */}
 
                 {auth && hasAccessTo(auth, "page_gestion_utilisateurs") && (
                   <PrivateRoute exact path="/admin/users" component={Users} />

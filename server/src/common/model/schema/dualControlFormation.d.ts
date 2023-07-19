@@ -6,7 +6,7 @@
  */
 const { Types } = require("mongoose");
 
-export interface Formation {
+export interface DualControlFormation {
   /**
    * Clé unique de la formation (pour envoi aux ministères éducatifs)
    */
@@ -29,10 +29,6 @@ export interface Formation {
    * Date de fermeture du cfd
    */
   cfd_date_fermeture?: Date;
-  /**
-   * Code formation diplôme d'entrée (année 1 de l'apprentissage)
-   */
-  cfd_entree?: string;
   /**
    * Nom de l'académie
    */
@@ -90,6 +86,22 @@ export interface Formation {
    */
   niveau?: string;
   /**
+   * Périodes de début de la formation
+   */
+  periode?: Date[];
+  /**
+   * Capacité d'accueil
+   */
+  capacite?: string;
+  /**
+   * Durée de la formation en années
+   */
+  duree?: string;
+  /**
+   * Année de la formation (cursus)
+   */
+  annee?: string;
+  /**
    * Url de redirection vers le site de l'ONISEP
    */
   onisep_url?: string;
@@ -131,45 +143,9 @@ export interface Formation {
    */
   rome_codes?: string[];
   /**
-   * Périodes de début de la formation
-   */
-  periode?: Date[];
-  /**
-   * Capacité d'accueil
-   */
-  capacite?: string;
-  /**
-   * Durée de la formation en années
-   */
-  duree?: string;
-  /**
-   * Durée incohérente avec les codes mefs
-   */
-  duree_incoherente?: boolean | null;
-  /**
-   * Année de la formation (cursus)
-   */
-  annee?: string;
-  /**
-   * Année incohérente avec les codes mefs
-   */
-  annee_incoherente?: boolean | null;
-  /**
    * Est publiée, la formation est éligible pour le catalogue
    */
   published?: boolean;
-  /**
-   * La publication vers les plateformes est forcée (contournement catalogue non-éligible dans certains cas)
-   */
-  forced_published?: boolean;
-  /**
-   * Date d'ajout en base de données
-   */
-  created_at?: Date;
-  /**
-   * Date de dernières mise à jour
-   */
-  last_update_at?: Date;
   /**
    * Latitude et longitude de l'établissement recherchable dans Idea
    */
@@ -183,17 +159,9 @@ export interface Formation {
    */
   lieu_formation_geo_coordonnees_computed?: string;
   /**
-   * Distance entre les coordonnées transmises et déduites à partir de l'adresse
-   */
-  distance?: number | null;
-  /**
    * Adresse du lieu de formation
    */
   lieu_formation_adresse?: string;
-  /**
-   * Adresse du lieu de formation déduit de la géolocalisation du flux RCO
-   */
-  lieu_formation_adresse_computed?: string;
   /**
    * Siret du lieu de formation
    */
@@ -252,11 +220,11 @@ export interface Formation {
    */
   catalogue_published?: boolean;
   /**
-   * Dates de début de session
+   * Formation éligible au catalogue générale
    */
   date_debut?: Date[];
   /**
-   * Dates de fin de session
+   * Formation éligible au catalogue générale
    */
   date_fin?: Date[];
   /**
@@ -267,10 +235,6 @@ export interface Formation {
    * Identifiant RCO
    */
   id_RCO?: string;
-  /**
-   * Identifiant établissement gestionnaire
-   */
-  etablissement_gestionnaire_id?: string;
   /**
    * Numéro siret gestionnaire
    */
@@ -283,10 +247,6 @@ export interface Formation {
    * UAI de l'etablissement gestionnaire
    */
   etablissement_gestionnaire_uai?: string;
-  /**
-   * Etablissement gestionnaire est publié
-   */
-  etablissement_gestionnaire_published?: boolean;
   /**
    * Etablissement gestionnaire est habilité RNCP ou pas
    */
@@ -360,10 +320,6 @@ export interface Formation {
    */
   etablissement_gestionnaire_date_creation?: Date;
   /**
-   * Identifiant établissement formateur
-   */
-  etablissement_formateur_id?: string;
-  /**
    * Numéro siret formateur
    */
   etablissement_formateur_siret?: string;
@@ -375,10 +331,6 @@ export interface Formation {
    * UAI de l'etablissement formateur
    */
   etablissement_formateur_uai?: string;
-  /**
-   * Etablissement formateur est publié
-   */
-  etablissement_formateur_published?: boolean;
   /**
    * Etablissement formateur est habilité RNCP ou pas
    */

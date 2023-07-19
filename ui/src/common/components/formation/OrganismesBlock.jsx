@@ -47,9 +47,10 @@ export const OrganismesBlock = ({ formation }) => {
             <Box my={2}>
               <Flex>
                 <QualiteBadge value={formation.etablissement_gestionnaire_certifie_qualite} m="0" mr={[0, 2]} />
-                {!formation.catalogue_published && (
-                  <HabiliteBadge value={formation.etablissement_gestionnaire_habilite_rncp} m="0" mr={[0, 2]} />
-                )}
+                {!formation.catalogue_published &&
+                  ["Titre", "TP"].includes(formation.rncp_details?.code_type_certif) && (
+                    <HabiliteBadge value={formation.etablissement_gestionnaire_habilite_rncp} m="0" mr={[0, 2]} />
+                  )}
               </Flex>
             </Box>
             <Heading textStyle="h6" color="grey.800" my={1}>
@@ -95,7 +96,7 @@ export const OrganismesBlock = ({ formation }) => {
                 formation.etablissement_gestionnaire_certifie_qualite &&
                 !formation.etablissement_formateur_certifie_qualite
               ) && <QualiteBadge value={formation.etablissement_formateur_certifie_qualite} m="0" mr={[0, 2]} />}
-              {["Titre", "TP"].includes(formation.rncp_details?.code_type_certif) && (
+              {!formation.catalogue_published && ["Titre", "TP"].includes(formation.rncp_details?.code_type_certif) && (
                 <HabiliteBadge value={formation.etablissement_formateur_habilite_rncp} m="0" mr={[0, 2]} />
               )}
             </Flex>

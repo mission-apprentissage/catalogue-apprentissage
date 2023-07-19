@@ -118,9 +118,8 @@ const etablissementGestionnaireInfo = {
     description: "Date de création de l'établissement",
   },
   etablissement_gestionnaire_courriel: {
-    //select: false,
     noIndex: true,
-    type: String,
+      type: String,
     default: null,
     description: "Adresse email de contact de l'établissement gestionnaire",
   },
