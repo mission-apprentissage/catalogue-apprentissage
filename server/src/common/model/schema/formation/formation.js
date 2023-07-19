@@ -150,6 +150,18 @@ const formationSchema = {
     default: null,
     description: "Code formation diplôme d'entrée (année 1 de l'apprentissage)",
   },
+  code_formacode: {
+    index: true,
+    type: [String],
+    default: [],
+    description: "Code formacode",
+  },
+  libelle_formacode: {
+    index: true,
+    type: [String],
+    default: [],
+    description: "Libelle formacode",
+  },
   nom_academie: {
     type: String,
     default: null,

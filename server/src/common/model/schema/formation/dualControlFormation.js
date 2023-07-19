@@ -159,6 +159,22 @@ const formationSchema = {
     description: "Date de fermeture du cfd",
   },
 
+  code_formacode: {
+    type: "array",
+    items: {
+      type: "string",
+    },
+    default: [],
+    description: "Code formacode",
+  },
+  libelle_formacode: {
+    type: "array",
+    items: {
+      type: "string",
+    },
+    default: [],
+    description: "Libelle formacode",
+  },
   // ADRESSE
   nom_academie: {
     type: String,
