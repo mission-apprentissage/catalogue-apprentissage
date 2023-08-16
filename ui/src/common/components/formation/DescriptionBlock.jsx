@@ -9,7 +9,7 @@ import { FormationDate } from "./FormationDate";
 import { HabilitationPartenaire } from "./HabilitationPartenaire";
 import { HABILITE_LIST } from "../../../constants/certificateurs";
 import { EllipsisText } from "../EllipsisText";
-import { getExpirationDate, isInCampagne } from "../../utils/rulesUtils";
+import { getCampagneStartDate, getExpirationDate, isInCampagne } from "../../utils/rulesUtils";
 
 const DureeAnnee = ({ value }) => {
   if (!value) {
@@ -81,6 +81,8 @@ export const DescriptionBlock = ({ formation }) => {
   const DateSessionContainer = !isInCampagne(formation)
     ? (args) => <DangerBox data-testid={"rncp-warning"} {...args} />
     : React.Fragment;
+
+  const yearCampagne = getCampagneStartDate().getFullYear();
 
   return (
     <>
@@ -229,8 +231,8 @@ export const DescriptionBlock = ({ formation }) => {
             {!isInCampagne(formation) && (
               <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
                 Les dates de session ne correspondent pas aux règles de périmètre pour la prochaine campagne Affelnet ou
-                Parcoursup. Si le CFA a prévu de proposer une session en 2023, il doit faire l’enregistrement auprès du
-                Carif-Oref.{" "}
+                Parcoursup. Si le CFA a prévu de proposer une session en {yearCampagne}, il doit faire l’enregistrement
+                auprès du Carif-Oref.{" "}
               </Text>
             )}
           </DateSessionContainer>
