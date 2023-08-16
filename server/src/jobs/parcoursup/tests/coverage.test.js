@@ -26,7 +26,7 @@ describe(__filename, () => {
       etablissement_gestionnaire_uai: "uai_1",
       etablissement_formateur_uai: "uai_1",
       etablissement_formateur_siret: "siret_1",
-      rncp_code: "rncp_1",
+      rncp_code: "RNCP0001",
       nom_academie: "Montpellier",
     });
 
@@ -210,7 +210,7 @@ describe(__filename, () => {
 
     await ParcoursupFormation.create({
       codes_cfd_mna: ["111111"],
-      codes_rncp_mna: ["rncp_1"],
+      codes_rncp_mna: ["RNCP0001"],
       id_parcoursup: "g_ta_1",
       code_commune_insee: "93048",
       code_postal: "93100",
