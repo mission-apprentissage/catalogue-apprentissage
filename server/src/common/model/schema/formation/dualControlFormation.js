@@ -14,6 +14,7 @@ const {
   ...etablissementGestionnaireInfo
 } = require("./etablissement.gestionnaire.sub");
 const etablissementReferenceInfo = require("./etablissement.reference.sub");
+const { rncpFormat } = require("../../format");
 
 const modaliteSchema = new mongoose.Schema(
   {
@@ -305,6 +306,11 @@ const formationSchema = {
     type: String,
     default: null,
     description: "Code RNCP",
+    // validate: rncpFormat,
+    validate: {
+      validator: (value) => !value || rncpFormat.test(value),
+      message: (props) => `${props.value} n'est pas un code RNCP valide.`,
+    },
   },
   rncp_intitule: {
     type: String,
