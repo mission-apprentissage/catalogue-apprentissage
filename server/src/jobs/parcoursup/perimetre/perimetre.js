@@ -1,12 +1,12 @@
 const { Formation } = require("../../../common/model");
-const { getQueryFromRule, getCampagneDateRules } = require("../../../common/utils/rulesUtils");
+const { getQueryFromRule, getSessionDateRules } = require("../../../common/utils/rulesUtils");
 const { ReglePerimetre } = require("../../../common/model");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
 const { cursor } = require("../../../common/utils/cursor");
 
 const run = async () => {
-  const filterDateCampagne = getCampagneDateRules();
+  const filterSessionDate = getSessionDateRules();
 
   const filterReglement = {
     $and: [
@@ -48,7 +48,7 @@ const run = async () => {
     (
       await Formation.find({
         ...filterReglement,
-        ...filterDateCampagne,
+        ...filterSessionDate,
 
         $or: aPublierHabilitationRules.map(getQueryFromRule),
       }).select({ cle_ministere_educatif: 1 })
@@ -64,7 +64,7 @@ const run = async () => {
     (
       await Formation.find({
         ...filterReglement,
-        ...filterDateCampagne,
+        ...filterSessionDate,
 
         $or: aPublierVerifierAccesDirectPostBacRules.map(getQueryFromRule),
       }).select({ cle_ministere_educatif: 1 })
@@ -80,7 +80,7 @@ const run = async () => {
     (
       await Formation.find({
         ...filterReglement,
-        ...filterDateCampagne,
+        ...filterSessionDate,
         $or: aPublierValidationRecteurRules.map(getQueryFromRule),
       }).select({ cle_ministere_educatif: 1 })
     ).forEach(({ cle_ministere_educatif }) => formationsInPerimetre.add(cle_ministere_educatif));
@@ -95,7 +95,7 @@ const run = async () => {
     (
       await Formation.find({
         ...filterReglement,
-        ...filterDateCampagne,
+        ...filterSessionDate,
         $or: aPublierRules.map(getQueryFromRule),
       }).select({ cle_ministere_educatif: 1 })
     ).forEach(({ cle_ministere_educatif }) => formationsInPerimetre.add(cle_ministere_educatif));
@@ -113,7 +113,7 @@ const run = async () => {
       (
         await Formation.find({
           ...filterReglement,
-          ...filterDateCampagne,
+          ...filterSessionDate,
           num_academie,
           ...getQueryFromRule(rule),
         }).select({ cle_ministere_educatif: 1 })

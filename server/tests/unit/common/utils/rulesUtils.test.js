@@ -5,9 +5,9 @@ const {
   serialize,
   deserialize,
   getExpirationDate,
-  getCampagneStartDate,
-  getCampagneEndDate,
-  getCampagneDateRules,
+  getSessionStartDate,
+  getSessionEndDate,
+  getSessionDateRules,
 } = require("../../../../src/common/utils/rulesUtils");
 
 describe(__filename, () => {
@@ -140,46 +140,46 @@ describe(__filename, () => {
     });
   });
 
-  describe("getCampagneStartDate", () => {
-    it("should get 01 aout of the same year if now is before aout", () => {
+  describe("getSessionStartDate", () => {
+    it("should get a date of the same year if now is before the start of the session", () => {
       const expected = new Date(`2022-08-01T00:00:00.000Z`);
 
-      let result = getCampagneStartDate(new Date(`2022-03-01T00:00:00.000Z`));
+      let result = getSessionStartDate(new Date(`2022-03-01T00:00:00.000Z`));
       assert.deepStrictEqual(result, expected);
 
-      result = getCampagneStartDate(new Date(`2022-07-11T00:00:00.000Z`));
+      result = getSessionStartDate(new Date(`2022-07-11T00:00:00.000Z`));
       assert.deepStrictEqual(result, expected);
     });
 
-    it("should get september of the next year if now is after september", () => {
+    it("should get a date of the next year if now is after the start of the session", () => {
       const expected = new Date(`2023-08-01T00:00:00.000Z`);
 
-      let result = getCampagneStartDate(new Date(`2022-09-01T00:00:00.000Z`));
+      let result = getSessionStartDate(new Date(`2022-11-01T00:00:00.000Z`));
       assert.deepStrictEqual(result, expected);
 
-      result = getCampagneStartDate(new Date(`2022-10-01T00:00:00.000Z`));
+      result = getSessionStartDate(new Date(`2022-12-01T00:00:00.000Z`));
       assert.deepStrictEqual(result, expected);
     });
   });
 
-  describe("getCampagneEndDate", () => {
-    it("should get august of the next year if now is before september", () => {
+  describe("getSessionEndDate", () => {
+    it("should get a date of the next year if now is before the end of the session", () => {
       const expected = new Date(`2023-07-31T23:59:59.999Z`);
 
-      let result = getCampagneEndDate(new Date(`2022-03-01T00:00:00.000Z`));
+      let result = getSessionEndDate(new Date(`2022-03-01T00:00:00.000Z`));
       assert.deepStrictEqual(result, expected);
 
-      result = getCampagneEndDate(new Date(`2022-06-11T00:00:00.000Z`));
+      result = getSessionEndDate(new Date(`2022-06-11T00:00:00.000Z`));
       assert.deepStrictEqual(result, expected);
     });
 
-    it("should get september of the next year + 1 if now is after september", () => {
+    it("should get a date of the next year + 1 if now is after the end of the session", () => {
       const expected = new Date(`2024-07-31T23:59:59.999Z`);
 
-      let result = getCampagneEndDate(new Date(`2022-09-01T00:00:00.000Z`));
+      let result = getSessionEndDate(new Date(`2022-10-01T00:00:00.000Z`));
       assert.deepStrictEqual(result, expected);
 
-      result = getCampagneEndDate(new Date(`2022-10-01T00:00:00.000Z`));
+      result = getSessionEndDate(new Date(`2022-11-01T00:00:00.000Z`));
       assert.deepStrictEqual(result, expected);
     });
   });
@@ -238,7 +238,7 @@ describe(__filename, () => {
         niveau: "4",
         num_academie: "10",
         ...getExpireRule(),
-        ...getCampagneDateRules(),
+        ...getSessionDateRules(),
       };
 
       let result = getQueryFromRule({
@@ -275,7 +275,7 @@ describe(__filename, () => {
                   },
                 ],
                 published: true,
-                // periode: { $gte: getCampagneStartDate() },
+                // periode: { $gte: getSessionStartDate() },
               },
             ],
             catalogue_published: true,
@@ -319,7 +319,7 @@ describe(__filename, () => {
         duree: "2",
         annee: "1",
         ...getExpireRule(),
-        ...getCampagneDateRules(),
+        ...getSessionDateRules(),
       };
 
       let result = getQueryFromRule({

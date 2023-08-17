@@ -3,15 +3,15 @@ const logger = require("../../../common/logger");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
 const { cursor } = require("../../../common/utils/cursor");
 const { isBetween } = require("../../../common/utils/dateUtils");
-const { getCampagneStartDate, getCampagneEndDate } = require("../../../common/utils/rulesUtils");
+const { getSessionStartDate, getSessionEndDate } = require("../../../common/utils/rulesUtils");
 
 /**
  * TODO : Voir s'il n'est pas plutôt possible de tout repasser à hors périmètre (sans mise à jour de l'historique) et se baser sur la présence ou non d'un parcoursup_id dans les scripts de périmètre pour passage automatique à "en attente".
  */
 const run = async () => {
   let updated = 0;
-  const next_campagne_debut = getCampagneStartDate();
-  const next_campagne_end = getCampagneEndDate();
+  const sessionStartDate = getSessionStartDate();
+  const sessionEndDate = getSessionEndDate();
 
   await cursor(
     Formation.find({ parcoursup_statut: { $ne: PARCOURSUP_STATUS.HORS_PERIMETRE } }),
@@ -19,7 +19,7 @@ const run = async () => {
       let next_parcoursup_statut;
 
       const in_next_campagne = date_debut?.filter((toCheck) =>
-        isBetween(next_campagne_debut, new Date(toCheck), next_campagne_end)
+        isBetween(sessionStartDate, new Date(toCheck), sessionEndDate)
       );
       if (parcoursup_id && parcoursup_statut === PARCOURSUP_STATUS.PUBLIE && in_next_campagne) {
         next_parcoursup_statut = PARCOURSUP_STATUS.EN_ATTENTE;

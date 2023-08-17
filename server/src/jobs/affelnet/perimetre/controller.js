@@ -2,17 +2,17 @@ const { Formation, ReglePerimetre } = require("../../../common/model");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const {
   getQueryFromRule,
-  getCampagneStartDate,
-  getCampagneEndDate,
-  getCampagneDateRules,
+  getSessionStartDate,
+  getSessionEndDate,
+  getSessionDateRules,
 } = require("../../../common/utils/rulesUtils");
 const { AFFELNET_STATUS } = require("../../../constants/status");
 const { updateTagsHistory } = require("../../../logic/updaters/tagsHistoryUpdater");
 
 const run = async () => {
-  const next_campagne_debut = getCampagneStartDate();
-  const next_campagne_end = getCampagneEndDate();
-  const filterDateCampagne = getCampagneDateRules();
+  const sessionStartDate = getSessionStartDate();
+  const sessionEndDate = getSessionEndDate();
+  const filterSessionDate = getSessionDateRules();
 
   const filterReglement = {
     $and: [
@@ -41,7 +41,7 @@ const run = async () => {
     ],
   };
 
-  const campagneCount = await Formation.countDocuments(filterDateCampagne);
+  const campagneCount = await Formation.countDocuments(filterSessionDate);
 
   console.log(`${campagneCount} formations possèdent des dates de début pour la campagne en cours.`);
 
@@ -75,7 +75,7 @@ const run = async () => {
               cfd_outdated: true,
             },
             // Date de début hors campagne en cours.
-            { date_debut: { $not: { $gte: next_campagne_debut, $lt: next_campagne_end } } },
+            { date_debut: { $not: { $gte: sessionStartDate, $lt: sessionEndDate } } },
           ],
         },
         // Reset du statut si l'on supprime affelnet_id
@@ -114,7 +114,7 @@ const run = async () => {
     await Formation.updateMany(
       {
         ...filterReglement,
-        ...filterDateCampagne,
+        ...filterSessionDate,
         ...filterHP,
         $or: aPublierSoumisAValidationRules.map(getQueryFromRule),
       },
@@ -154,7 +154,7 @@ const run = async () => {
     await Formation.updateMany(
       {
         ...filterReglement,
-        ...filterDateCampagne,
+        ...filterSessionDate,
         ...filter,
         $or: aPublierRules.map(getQueryFromRule),
       },
@@ -189,7 +189,7 @@ const run = async () => {
       await Formation.updateMany(
         {
           ...filterReglement,
-          ...filterDateCampagne,
+          ...filterSessionDate,
 
           affelnet_statut: {
             $in: [AFFELNET_STATUS.HORS_PERIMETRE, AFFELNET_STATUS.A_PUBLIER_VALIDATION, AFFELNET_STATUS.A_PUBLIER],

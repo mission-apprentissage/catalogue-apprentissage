@@ -28,7 +28,7 @@ import { _get, _post, _put } from "../../common/httpClient";
 import useAuth from "../../common/hooks/useAuth";
 import { hasAccessTo, hasRightToEditFormation } from "../../common/utils/rolesUtils";
 import { buildUpdatesHistory, sortDescending } from "../../common/utils/historyUtils";
-import { isInCampagne } from "../../common/utils/rulesUtils";
+import { isInSession } from "../../common/utils/rulesUtils";
 import { setTitle } from "../../common/utils/pageUtils";
 import { getOpenStreetMapUrl } from "../../common/utils/mapUtils";
 import { DangerBox } from "../../common/components/DangerBox";
@@ -507,9 +507,9 @@ export default ({ match }) => {
   const isBacPro32 =
     !!formation?.bcn_mefs_10?.filter(
       ({ mef10 }) => (`${mef10}`.startsWith("247") || `${mef10}`?.startsWith("276")) && `${mef10}`?.endsWith("32")
-    ).length && isInCampagne(formation);
+    ).length && isInSession(formation);
 
-  const isBrevetNiv5 = formation?.diplome === "BREVET PROFESSIONNEL AGRICOLE DE NIVEAU V" && isInCampagne(formation);
+  const isBrevetNiv5 = formation?.diplome === "BREVET PROFESSIONNEL AGRICOLE DE NIVEAU V" && isInSession(formation);
 
   return (
     <Layout>

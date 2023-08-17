@@ -30,19 +30,26 @@ const deserialize = (str) => {
   });
 };
 
+const getCampagneStartDate = (currentDate = new Date()) => {
+  const campagneStart = new Date(`${currentDate.getFullYear()}-09-13T00:00:00.000Z`);
+
+  return campagneStart;
+};
+
 /**
  * Pour appliquer les étiquettes pour les plateformes PS & Affelnet
  * une formation doit avoir au moins une date de début de formation >= début août de l'année scolaire suivante
- * eg: si on est en janvier 2022 --> [01 août 2022] - 31 juillet 2023, si on est le en octobre 2022 --> [01 août 2023] - 31 juillet 2024, etc.
+ * eg: si on est en janvier 2022 --> [01 août 2022] - 31 juillet 2023, si on est en octobre 2022 --> [01 août 2023] - 31 juillet 2024, etc.
  * Si ce n'est pas le cas la formation sera "hors périmètre".
  *
  * @param {Date} [currentDate]
  * @returns {Date}
  */
-const getCampagneStartDate = (currentDate = new Date()) => {
+const getSessionStartDate = (currentDate = new Date()) => {
   let durationShift = 0;
   const now = currentDate;
-  const sessionStart = new Date(`${currentDate.getFullYear()}-08-01T00:00:00.000Z`);
+  const sessionStart = getCampagneStartDate(currentDate);
+
   if (now >= sessionStart) {
     durationShift = 1;
   }
@@ -55,16 +62,17 @@ const getCampagneStartDate = (currentDate = new Date()) => {
 /**
  * Pour appliquer les étiquettes pour les plateformes PS & Affelnet
  * une formation doit avoir au moins une date de début de formation < fin juillet de l'année scolaire suivante
- * eg: si on est en janvier 2022 --> 01 août 2022 - [juillet 2023], si on est le en octobre 2022 --> 01 août 2023 - [31 juillet 2024], etc.
+ * eg: si on est en janvier 2022 --> 01 août 2022 - [juillet 2023], si on est en octobre 2022 --> 01 août 2023 - [31 juillet 2024], etc.
  * Si ce n'est pas le cas la formation sera "hors périmètre".
  *
  * @param {Date} [currentDate]
  * @returns {Date}
  */
-const getCampagneEndDate = (currentDate = new Date()) => {
+const getSessionEndDate = (currentDate = new Date()) => {
   let durationShift = 0;
   const now = currentDate;
-  const sessionStart = new Date(`${currentDate.getFullYear()}-08-01T00:00:00.000Z`);
+  const sessionStart = getCampagneStartDate(currentDate);
+
   if (now >= sessionStart) {
     durationShift = 1;
   }
@@ -79,17 +87,17 @@ const getCampagneEndDate = (currentDate = new Date()) => {
  * @param {Formation} formation
  * @returns {boolean}
  */
-const isInCampagne = ({ date_debut } = { date_debut: [] }) => {
+const isInSession = ({ date_debut } = { date_debut: [] }) => {
   const datesInCampagne = date_debut?.filter(
-    (date) => new Date(date) >= getCampagneStartDate() && new Date(date) <= getCampagneEndDate()
+    (date) => new Date(date) >= getSessionStartDate() && new Date(date) <= getSessionEndDate()
   );
   const result = datesInCampagne?.length > 0;
 
   return result;
 };
 
-const getCampagneDateRules = (currentDate = new Date()) => ({
-  date_debut: { $gte: getCampagneStartDate(currentDate), $lt: getCampagneEndDate(currentDate) },
+const getSessionDateRules = (currentDate = new Date()) => ({
+  date_debut: { $gte: getSessionStartDate(currentDate), $lt: getSessionEndDate(currentDate) },
 });
 
 const commonRules = {
@@ -236,7 +244,7 @@ const getQueryFromRule = (
     ...(num_academie && { num_academie }),
     ...(duree && { duree: String(duree) }),
     ...(annee && { annee: String(annee) }),
-    ...getCampagneDateRules(),
+    ...getSessionDateRules(),
   };
 
   if (regle_complementaire) {
@@ -253,8 +261,8 @@ module.exports = {
   titresRule,
   getPublishedRules,
   getExpirationDate,
-  getCampagneStartDate,
-  getCampagneEndDate,
-  isInCampagne,
-  getCampagneDateRules,
+  getSessionStartDate,
+  getSessionEndDate,
+  isInSession,
+  getSessionDateRules,
 };

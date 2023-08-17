@@ -3,7 +3,7 @@ const logger = require("../../../common/logger");
 const { runScript } = require("../../scriptWrapper");
 const { PreviousSeasonFormation, Formation, PreviousSeasonFormationStat } = require("../../../common/model");
 const { isSameDate } = require("../../../common/utils/dateUtils");
-const { isInCampagne } = require("../../../common/utils/rulesUtils");
+const { isInSession } = require("../../../common/utils/rulesUtils");
 const { academies } = require("../../../constants/academies");
 
 /** @typedef {import("../../../common/model/schema/formation").Formation} Formation */
@@ -115,7 +115,7 @@ const comparePreviousSeasonFormations = async (plateforme) => {
     }
 
     // Si la formation existe, mais la période n'est pas à jour : on incrémente "not_updated".
-    if (!isInCampagne(found)) {
+    if (!isInSession(found)) {
       academyCause.not_updated = academyCause.not_updated + 1;
       academyCauses.set(academyName, academyCause);
       continue;
