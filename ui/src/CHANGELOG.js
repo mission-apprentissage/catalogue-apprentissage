@@ -4,23 +4,231 @@ import { Link } from "@chakra-ui/react";
 const changelog = {
   list: [
     {
-      version: "5.20.0",
+      version: "6.8.0",
       date: "Prochainement",
       about: `<h4>À venir</h4>`,
       fixes: [],
       features: [],
       improvements: [],
     },
+
+    {
+      version: "6.7.0",
+      date: "Juillet 2023",
+      about: `<h4>À propos de cette version</h4>
+  Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+
+      fixes: [
+        `API – Correction d’un problème empêchant la synchronisation de certaines informations avec le flux RCO`,
+        `Utilisateurs connectés – Correction d’un filtre sur la recherche des formations non fonctionnel`,
+      ],
+      features: [],
+      improvements: [
+        `API – Activation de la compression gzip sur les réponses de l’API`,
+        `API – Ajout des paramètres sort et skip pour parcourir et trier les réponses d’API sur les routes en .json et .csv`,
+      ],
+    },
+
+    {
+      version: "6.6.0",
+      date: "Juin 2023",
+      about: `<h4>À propos de cette version</h4>
+  Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+
+      fixes: [],
+      features: [`Infrastructure – Changement de serveur NAS pour la sauvegarde des données`],
+      improvements: [],
+    },
+
+    {
+      version: "6.5.0",
+      date: "Avril - Mai 2023",
+      about: `<h4>À propos de cette version</h4>
+  Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+
+      fixes: [`Infrastructure – Interventions correctives liées à l’optimisation de l’espace de stockage`],
+      features: [],
+      improvements: [],
+    },
+
+    {
+      version: "6.4.0",
+      date: "Mars 2023",
+      about: `<h4>À propos de cette version</h4>
+  Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+
+      fixes: [
+        `Administrateur – Correction d’un problème empêchant l’affichage des messages d’alertes sur la partie d’administration lorsqu’aucun message n’était activé`,
+        `Utilisateurs connectés – Correction d’un problème prévenant la mise à jour des codes MEFS_10 à destination d’Affelnet`,
+        `Utilisateurs connectés – Correction d’un problème de page blanche dû à une erreur lors de la génération d’un lien vers geoportail en cas de géo-coordonnées manquantes`,
+        `Utilisateurs connectés – Correction du problème de droit pour l'upload de fichier des offres Affelnet`,
+      ],
+      features: [],
+      improvements: [
+        `Utilisateurs connectés – Mise en cohérence des intitulés de filtre sur la recherche`,
+        `Utilisateurs connectés – Ajout des colonnes affelnet aux exports csv`,
+        `Global – Mise à jour des dépendances applicatives`,
+      ],
+    },
+
+    {
+      version: "6.3.0",
+      date: "Février 2023",
+      about: `<h4>À propos de cette version</h4>
+  Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+
+      fixes: [
+        `API – Correction d’un problème de mise à jour des données de la BCN`,
+        `API – Optimisation et correction des scripts de synchro aux flux RCO`,
+      ],
+      features: [
+        `Utilisateurs connectés – Prise en compte des dates de campagne pour les compteurs affichés sur le module de périmètre`,
+        `Utilisateurs connectés – Ajout d’un warning à destination des instructeurs pour les bac pro en 3 ans accessibles en 2eme année`,
+        `Utilisateurs connectés – Ajout d’un menu spécifique pour les consoles de pilotage, et définition du droit de consultation associé`,
+        `Utilisateurs connectés – Ajout d’un droit fin pour l’upload des fichiers`,
+        `Utilisateurs connectés – Ajout des filtres de statut de publication sur la liste des formations non réglementaires, pour repérage des formations publiées Parcoursup qui ont basculé en non réglementaire`,
+        `Utilisateurs connectés – Apparition dans l'historique des modifications effectuées par import Parcoursup et mise 'en attente' des formations avec clé ajoutée chez eux`,
+      ],
+      improvements: [
+        `Utilisateurs connectés – Ajout d’une colonne “Dates de formation” sur les exports csv des formations`,
+        `Utilisateurs connectés – Ajout d’une colonne “Intitulé Carif-Oref” sur les exports csv des formations`,
+        `Utilisateurs connectés – Mise en place d’un persistance des actions de non publication pour les cas où les formations disparaissent momentanément du flux RCO`,
+        `API – Débogage et optimisation de la sauvegarde de l’historique des modifications`,
+        `API – Amélioration des informations loguées en base lors de l’exécution de différents scripts`,
+      ],
+    },
+
+    {
+      version: "6.2.0",
+      date: "Janvier 2023",
+      about: `<h4>À propos de cette version</h4>
+      Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+
+      fixes: [
+        `API – Correction d’un problème empêchant le recalcul de l’adresse calculée à partir des coordonnées transmises par RCO`,
+        `API – Correction d’un problème empêchant le recalcul des coordonnées calculées à partir de l’adresse transmise par RCO`,
+        `Global – Mise à niveau de la stack technique`,
+        `Global – Mises à jour de sécurité des dépendances applicatives`,
+      ],
+      features: [
+        `Administrateur – Ajout d’un historique global des modifications pour formations et établissements pour suivi des évolutions de la donnée`,
+        `Modification du script de périmètre AFFELNET pour prise en compte des dates de la nouvelle campagne et développement du script de réinitialisation des statuts en début de campagne`,
+        `Utilisateurs connectés – Autorisation de la dépublication des formations publiées sur Affelnet`,
+        `Utilisateurs connectés – Ajout des rejets de publication dans l’historique des statuts Parcoursup`,
+        `Parcoursup – Gestion des retours du webservice pour actions`,
+      ],
+      improvements: [
+        `Utilisateurs connectés – Modification des conditions d’affichage des badges et warning liés à l’habilitation RNCP`,
+        `Utilisateurs connectés – Améliorations et mise à jour des consoles de pilotages`,
+        `Utilisateurs connectés – Mise en place d’un rechargement automatique des données lors d’une action de mise à jour des informations d’une formation depuis la page détail d’une formation`,
+        `API – Application du même principe de fonctionnement pour la synchronisation avec le flux RCO des établissements que pour les formations`,
+        `API – Ajout des timestamps pour les entités sauvegardées en base et mise à jour des outils de génération de schémas (typescript et doc swagger)`,
+        `API – Suppression du champ obsolète idea_geo_coordonnees_etablissement`,
+      ],
+    },
+
+    {
+      version: "6.1.0",
+      date: "Décembre 2022",
+      about: `<h4>À propos de cette version</h4>
+  Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+
+      fixes: [`Correction d’un problème sur la recherche avancée.`],
+      features: [
+        `Utilisateurs connectés – Ajout d’information autour de l’obtention et modification des règles d’édition des UAIs lieu de formation.`,
+        `Utilisateurs connectés – Affichage des dates de sessions et tri par ordre de date de début croissant.`,
+      ],
+      improvements: [
+        `Global – Diverses mises à jour de sécurité concernant les dépendances applicatives du projet.`,
+        `Utilisateurs connectés – Actualisation des consoles de pilotage.`,
+        `Utilisateurs connectés – Modification des règles permettant la demande de publication, consolidation des scripts d’application des règles de périmètre et d’envoi vers les plateformes éducatives.`,
+        `API – Amélioration du script de synchro au flux RCO.`,
+        `API – Gestion des nouvelles erreurs métiers retournées par Parcoursup.`,
+        `Global – Suppression de code obsolète.`,
+      ],
+    },
+
+    {
+      version: "6.0.0",
+      date: "Novembre 2022",
+      about: `<h4>À propos de cette version</h4>
+  Cette version voit la séparation des catalogues publique géré par le Réseau des CARIF-OREF et de celui à destination des ministères éducatifs ainsi que quelques améliorations et fonctionnalités décrites ci après.`,
+
+      fixes: [],
+      features: [
+        `Global – Séparation des catalogue publique géré par le Réseau des CARIF-OREF et de celui à destination des ministères éducatifs.`,
+        `Utilisateurs connectés – Ajout d’informations pour identifier les UAI lieux édités par les services académiques.`,
+        `Global – Mise en place de tableaux metabase pour analyse de l’état des liaisons catalogue/Parcoursup.`,
+        `API – Développement des scripts pour nettoyage des correspondances entre les bases catalogue et Parcoursup`,
+        `Global – Réinitialisation des étiquettes de publication Parcoursup en amont de la phase de paramétrage des formations 2023`,
+        `Global – Suppression de la fonctionnalité de rapprochement des formations Parcoursup (fonctionnalité à l’usage des services académiques, rendue caduque du fait des opérations de nettoyage massifs).`,
+        `Utilisateurs connectés – Ajout des identifiants Parcoursup et Affelnet sur les fiches formation.`,
+      ],
+      improvements: [
+        `Utilisateurs connectés Corrections diverses sur les consoles de pilotage Parcoursup et Affelnet.`,
+        `Global – Prise en compte des nouveaux champs envoyés par RCO dans le flux des formations (dates de début, de fin, etc..)`,
+      ],
+    },
+
+    {
+      version: "5.21.0",
+      date: "Octobre 2022",
+      about: `<h4>À propos de cette version</h4>
+  Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+
+      fixes: [],
+      features: [`Développement des nouveaux champs pour la campagne Affelnet 2023.`],
+      improvements: [
+        `Utilisateurs connectés – UAI lieux : ajout d’informations (front et exports CSV), pour permettre de distinguer les UAI lieux édités par les services académiques et les UAI non édités.`,
+        `API – Correction du fonctionnement et de la documentation de l’API pour utilisation par Omogen API pour intégration par Affelnet`,
+      ],
+    },
+
+    // Sept 22 / CSF
+
+    // [passation RCO] Support à RCO pour les aspects d’infrastructure et de déploiement du projet. Mise en place de leur serveur de recette.
+    // [passation RCO] Modification sur les indicateurs d’écarts sur les périmètres Parcoursup et Affelnet, contrôles de qualité
+    // [passation RCO] Mise en place d’indicateurs de suivi sur les écarts champs par champs dans le cadre de la consommation de l’API catalogue par La bonne alternance.
+    // [passation RCO] Assistance RCO pour le suivi de la double commande : contrôle d’écarts non liés à des champs pivots, exclusion d’écarts liés aux passage à Lhéo 2.3 sur le flux de production mais pas sur le flux de test
+
+    // Août 22 / CSF
+
+    // Double commande Catalogue/RCO :  dans l’outil de suivi de l’impact Parcoursup et Affelnet, ajout de tableaux détaillés de comparaison, par formation.
+
+    // Juillet 22 / CSF
+
+    // Double commande Catalogue/RCO : implémentation du système de suivi de l’impact Parcoursup et Affelnet
+    // Double commande Catalogue/RCO : divers correctifs sur le système de suivi des écarts
+    // Double commande Catalogue/RCO : modification des paramètres de suivi du champ RNCP_detail
+    // Double commande Catalogue/RCO : correctif pour le suivi des champs issus de la BCN, dans le cas de la disparition d’IDs de la table BCN
+    // Exclusion des RNCP inactifs lorsqu’on a plusieurs RNCP pour un même CFD
+
+    {
+      version: "5.20.0",
+      date: "Juillet - Septembre 2022",
+      about: `<h4>À propos de cette version</h4>
+  Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+
+      fixes: [
+        `Réparation de la page de réinitialisation de mot de passe qui n’était plus fonctionnelle (page blanche)`,
+      ],
+      features: [],
+      improvements: [
+        `Infrastructure – Augmentation de la capacité du serveur de production`,
+        `API – Exclusion des RNCP inactifs lorsqu’on a plusieurs RNCP pour un même CFD`,
+      ],
+    },
+
     {
       version: "5.19.0",
       date: "Le 3 Juin 2022",
-
       about: `<h4>À propos de cette version</h4>
   Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+
       fixes: [],
-      features: [`Consoles de pilotage : début d’implémentation des consoles de pilotage Dgesco et Dgsip`],
+      features: [`Utilisateurs connectés — début d’implémentation des consoles de pilotage Dgesco et Dgsip`],
       improvements: [
-        `Cleaning : mise à jour de la librairie de table de correspondance pour récupérer l’information sur la certification qualité`,
+        `API – Mise à jour de la librairie de table de correspondance pour récupérer l’information sur la certification qualité`,
         `Dans la recherche avancée, ajout d’une possibilité de recherche par nom de certificateur`,
       ],
     },
@@ -30,6 +238,7 @@ const changelog = {
       date: "Le 5 Mai 2022",
       about: `<h4>À propos de cette version</h4>
   Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+
       fixes: [
         `Administrateurs — Rétablissement de certaines données dans les fichiers échangés avec le service à compétence nationale Parcoursup.`,
         `Utilisateurs connectés — Gestion des formations retournées en échec par le webservice Parcoursup : l’attribution du statut “ne pas publier” n’était pas prise en compte.`,
@@ -53,15 +262,16 @@ const changelog = {
       date: "Le 20 Avril 2022",
       about: `<h4>À propos de cette version</h4>
   Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+
       fixes: [
-        `Correction d’une erreur sur des compteurs de formation dans les modules de périmètre Parcoursup et Affelnet.`,
+        `Utilisateurs connectés — Correction d’une erreur sur des compteurs de formation dans les modules de périmètre Parcoursup et Affelnet.`,
       ],
       features: [
         `Utilisateurs connectés — Gestion des formations renvoyés en échec par le webservice Parcoursup : intégration d’un statut spécifique (« rejet de publication »), avec possibilité de prise en charge par les services académiques pour nouvelle tentative de publication.`,
       ],
       improvements: [
-        `Rétablissement d’un opérateur $regex pour l’un des consommateurs de l’API catalogue.`,
-        `Correction de failles de sécurité`,
+        `API – Rétablissement d’un opérateur $regex pour l’un des consommateurs de l’API catalogue.`,
+        `Global – Correction de failles de sécurité`,
       ],
     },
     {
@@ -69,17 +279,18 @@ const changelog = {
       date: "Le 13 Avril 2022",
       about: `<h4>À propos de cette version</h4>
   Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+
       fixes: [
         "Dans l’onglet des formations non réglementaires, suppression du lien « Voir sur la bonne alternance » (les formations non réglementaires n’y figurant pas).",
       ],
       features: [],
       improvements: [
-        "Interventions diverses de sécurité",
+        "Global – Interventions diverses de sécurité",
         "Utilisateurs connectés — Ajout des motifs de non publication par les services académiques sur les pages formation, et dans les exports csv.",
-        "Diverses améliorations sur les interfaces publiques : clarification de certaines formulations (libellés de certains filtres)",
+        "Utilisateurs connectés — Diverses améliorations sur les interfaces publiques : clarification de certaines formulations (libellés de certains filtres)",
         "Utilisateurs connectés — Diverses améliorations des interface pour les utilisateurs connectés : placement des étiquettes mieux adapté au contexte (vues listes dans le catalogue général, clarification de certains filtres.",
         "Utilisateurs connectés — Ajout d’informations dans les exports .csv : état de la fiche RNCP (active / inactive), ID Parcoursup",
-        "Décalage de l’heure de traitement quotidien de la liste publique des OF (fichier du ministère du Travail, permettant de récupérer les informations sur les certifications qualité), suite à plusieurs retraits de fichiers incomplets",
+        "API – Décalage de l’heure de traitement quotidien de la liste publique des OF (fichier du ministère du Travail, permettant de récupérer les informations sur les certifications qualité), suite à plusieurs retraits de fichiers incomplets",
       ],
     },
     {
@@ -87,6 +298,7 @@ const changelog = {
       date: "Le 7 Avril 2022",
       about: `<h4>À propos de cette version</h4>
   Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+
       fixes: [
         "Un message « Aucune habilitation sur la fiche pour ce Siret » apparaissait par erreur dans certains cas, alors que le formateur disposait bien de l’habilitation RNCP à former sur le titre. Cet affichage erroné était sans incidence sur les publications Parcoursup, Affelnet et autres.",
         "Utilisateurs connectés — Correction d’une erreur qui provoquait dans certains cas des exports de données non sollicités.",
@@ -99,6 +311,7 @@ const changelog = {
       date: "Le 5 Avril 2022",
       about: `<h4>À propos de cette version</h4>
   Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+
       fixes: [],
       features: [],
       improvements: [
@@ -111,6 +324,7 @@ const changelog = {
       date: "Le 25 Mars 2022",
       about: `<h4>À propos de cette version</h4>
   Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+
       fixes: [
         "Mise à jour des données pour certains établissements qui étaient marqués fermés dans le catalogue suite à une indisponibilité de l’API entreprise",
       ],
