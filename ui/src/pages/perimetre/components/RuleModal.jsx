@@ -37,7 +37,7 @@ import { _get } from "../../../common/httpClient";
 import * as Yup from "yup";
 import { academies } from "../../../constants/academies";
 import { annees } from "../../../constants/annees";
-import { isStatusChangeEnabled } from "../../../common/utils/rulesUtils";
+import { getSessionEndDate, getSessionStartDate, isStatusChangeEnabled } from "../../../common/utils/rulesUtils";
 import { RuleUpdatesHistory } from "./RuleUpdatesHistory";
 import { NavLink } from "react-router-dom";
 import { getCount, useNiveaux } from "../../../common/api/perimetre";
@@ -261,6 +261,10 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
     JSON.stringify(linkQuery)
   )}&defaultMode="advanced"`;
 
+  if (values.niveau) {
+    linkFormations += `&niveau=%5B"${values.niveau.replace(" ", "+")}"%5D`;
+  }
+
   if (values.registrationYear) {
     linkFormations += `&annee=%5B"${annees[values.registrationYear].replace(" ", "+")}"%5D`;
   }
@@ -271,6 +275,10 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
       "+"
     )}"%5D`;
   }
+
+  linkFormations += `&date_debut_start=%22${getSessionStartDate().toLocaleDateString(
+    "en-CA"
+  )}%22&date_debut_end=%22${getSessionEndDate().toLocaleDateString("en-CA")}%22`;
 
   const [count, setCount] = useState(0);
 
