@@ -11,7 +11,7 @@ module.exports = () => {
   router.post(
     "/_msearch",
     tryCatch(async (req, res) => {
-      logger.info({ type: "http" }, `Es Multi search no index ${req.body}`);
+      logger.debug({ type: "http" }, `Es Multi search no index ${req.body}`);
       const result = await esClient.msearch({ body: [req.body] });
 
       return res.json(result.body);

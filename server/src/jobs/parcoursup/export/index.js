@@ -123,7 +123,13 @@ const createFormation = async (formation, email = null) => {
     formation.parcoursup_error = null;
     await formation.save({ validateBeforeSave: false });
   } catch (error) {
-    logger.error({ type: "job" }, "Parcoursup WS error", error?.response?.status, error?.response?.data ?? error, data);
+    // logger.error(
+    //   { type: "job" },
+    //   "Parcoursup WS error",
+    //   error?.response?.status,
+    //   error?.response?.data?.message ?? error?.response?.data ?? "erreur de création",
+    //   data
+    // );
     formation.last_update_at = Date.now();
     formation.last_update_who = `web service Parcoursup${email ? `, sent by ${email}` : ""}, received error`;
     formation.parcoursup_error = `${error?.response?.status} ${

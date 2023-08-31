@@ -29,7 +29,7 @@ const downloadAndSaveFileFromS3 = (from, to) => {
         re();
       })
       .on("error", (e) => {
-        logger.info({ type: "utils" }, `Download errored...`, e);
+        logger.error({ type: "utils" }, `Download errored...`, e);
         rj(e);
       });
   });
