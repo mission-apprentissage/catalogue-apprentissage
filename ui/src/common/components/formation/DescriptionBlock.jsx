@@ -25,7 +25,7 @@ export const DescriptionBlock = ({ formation }) => {
     [formation.etablissement_gestionnaire_siret, formation.etablissement_formateur_siret].includes(Siret_Partenaire)
   );
 
-  const isTitreRNCP = formation.etablissement_reference_habilite_rncp !== null;
+  const isTitreRNCP = ["Titre", "TP"].includes(formation.rncp_details?.code_type_certif); // formation.etablissement_reference_habilite_rncp !== null;
 
   const showPartenaires =
     isTitreRNCP &&
@@ -55,11 +55,7 @@ export const DescriptionBlock = ({ formation }) => {
     (formation.cfd_date_fermeture && new Date(formation.cfd_date_fermeture) <= getExpirationDate());
 
   const CfdContainer =
-    !isTitreRNCP &&
-    (formation.cfd_outdated ||
-      (formation.cfd_date_fermeture && new Date(formation.cfd_date_fermeture) <= getExpirationDate()))
-      ? (args) => <DangerBox data-testid={"cfd-warning"} {...args} />
-      : React.Fragment;
+    !isTitreRNCP && isCfdExpired ? (args) => <DangerBox data-testid={"cfd-warning"} {...args} /> : React.Fragment;
 
   const isRncpExpired =
     formation.rncp_details?.rncp_outdated ||
@@ -146,12 +142,32 @@ export const DescriptionBlock = ({ formation }) => {
               <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
                 {formation?.cfd_date_fermeture ? (
                   <>
-                    Ce code formation diplôme expire le{" "}
+                    Ce code formation diplôme{" "}
+                    {new Date().getTime() > new Date(formation?.cfd_date_fermeture).getTime()
+                      ? "est expiré depuis le"
+                      : "expire le "}{" "}
                     {new Date(formation?.cfd_date_fermeture).toLocaleDateString("fr-FR")}
                   </>
                 ) : (
                   <>Ce code formation diplôme est expiré</>
-                )}
+                )}{" "}
+                (source BCN,{" "}
+                <Link
+                  href="http://infocentre.pleiade.education.fr/bcn/workspace/viewTable/n/N_FORMATION_DIPLOME"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  N_formation_diplome
+                </Link>{" "}
+                ou{" "}
+                <Link
+                  href="http://infocentre.pleiade.education.fr/bcn/workspace/viewTable/n/V_FORMATION_DIPLOME"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  V_formation_diplome
+                </Link>
+                ).
               </Text>
             )}
           </CfdContainer>
@@ -344,7 +360,7 @@ export const DescriptionBlock = ({ formation }) => {
         </Box>
       </Box>
       <Box p={8}>
-        <Heading textStyle="h4" color="grey.800" mb={4}>
+        <Heading textStyle="h4" colorc="grey.800" mb={4}>
           Informations RNCP et ROME
         </Heading>
         {formation.rncp_code && (
@@ -360,12 +376,25 @@ export const DescriptionBlock = ({ formation }) => {
               <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
                 {formation?.rncp_details?.date_fin_validite_enregistrement ? (
                   <>
-                    Ce RNCP expire le{" "}
+                    Ce RNCP{" "}
+                    {new Date().getTime() >
+                    new Date(formation?.rncp_details?.date_fin_validite_enregistrement).getTime()
+                      ? "est expiré depuis le"
+                      : "expire le "}{" "}
                     {new Date(formation?.rncp_details?.date_fin_validite_enregistrement).toLocaleDateString("fr-FR")}
                   </>
                 ) : (
                   <>Ce RNCP est expiré</>
-                )}
+                )}{" "}
+                (source{" "}
+                <Link
+                  href={`https://www.francecompetences.fr/recherche/rncp/${formation.rncp_code}`}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  https://www.francecompetences.fr/recherche/rncp/{formation.rncp_code}
+                </Link>
+                ).
               </Text>
             )}
           </RncpContainer>
