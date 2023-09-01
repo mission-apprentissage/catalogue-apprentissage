@@ -53,7 +53,7 @@ const createStreams = () => {
             text: util.format(
               `[${envName}] [%s]${record.type ? " (" + record.type + ")" : ""} %O`,
               levelName.toUpperCase(),
-              record
+              record.msg
             ),
           };
         },
