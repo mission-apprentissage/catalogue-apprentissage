@@ -51,7 +51,7 @@ module.exports = () => {
               }),
         };
 
-        const level = error || (statusCode >= 400 && statusCode < 600) ? "error" : "info";
+        const level = error || (statusCode >= 400 && statusCode < 600) ? "error" : "debug";
 
         logger[level](data, `Http Request ${level === "error" ? "KO" : "OK"}`);
       } finally {

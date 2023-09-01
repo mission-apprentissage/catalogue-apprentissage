@@ -65,7 +65,7 @@ const createStreams = () => {
 
     return {
       name: "slack",
-      level: "info",
+      level,
       stream,
     };
   };

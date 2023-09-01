@@ -25,7 +25,7 @@ module.exports = () => {
       throw Boom.unauthorized();
     }
 
-    logger.info({ type: "http" }, "Updating new item: ", payload);
+    logger.debug({ type: "http" }, "Updating new item: ", payload);
 
     const result = await Formation.findOneAndUpdate(
       { _id: itemId },
@@ -61,7 +61,7 @@ module.exports = () => {
       throw Boom.unauthorized();
     }
 
-    logger.info({ type: "http" }, `Prise en charge de la formation rejetée ${itemId} par ${user.email}`);
+    logger.debug({ type: "http" }, `Prise en charge de la formation rejetée ${itemId} par ${user.email}`);
 
     const result = await Formation.findOneAndUpdate(
       { _id: itemId },
@@ -111,7 +111,7 @@ module.exports = () => {
       throw Boom.unauthorized();
     }
 
-    logger.info(
+    logger.debug(
       { type: "http" },
       `Annulation de la prise en charge de la formation rejetée ${itemId} par ${user.email}`
     );
