@@ -3,7 +3,7 @@
  */
 
 const axios = require("axios");
-const logger = require("../../common/logger");
+// const logger = require("../../common/logger");
 const { createParcoursupToken } = require("../../common/utils/jwtUtils");
 
 const privateKey = (process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_PRIVATE_KEY ?? "").replace(/\n */gm, "\n");
@@ -17,6 +17,7 @@ const postFormation = async (data) => {
   const endpoint = process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_ENDPOINT + "/ApiFormation/api/formations";
   const token = createParcoursupToken({ data, privateKey, pwd, id });
 
+  // eslint-disable-next-line no-useless-catch
   try {
     const { data: responseData } = await axios.post(endpoint, data, {
       headers: { Authorization: `Bearer ${token}` },
@@ -24,7 +25,7 @@ const postFormation = async (data) => {
 
     return responseData;
   } catch (error) {
-    logger.error({ type: "job" }, error);
+    // logger.error({ type: "job" }, error);
     throw error;
   }
 };
@@ -37,6 +38,7 @@ const updateFormation = async (data) => {
     process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_ENDPOINT + "/ApiFormation/api/formations/majFormation";
   const token = createParcoursupToken({ data, privateKey, pwd, id });
 
+  // eslint-disable-next-line no-useless-catch
   try {
     const { data: responseData } = await axios.post(endpoint, data, {
       headers: { Authorization: `Bearer ${token}` },
@@ -44,7 +46,7 @@ const updateFormation = async (data) => {
 
     return responseData;
   } catch (error) {
-    logger.error({ type: "job" }, error);
+    // logger.error({ type: "job" }, error);
     throw error;
   }
 };
@@ -57,6 +59,7 @@ const getFormations = async () => {
     process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_ENDPOINT + "/ApiFormation/api/formations/publications/affectation";
   const token = createParcoursupToken({ data: null, privateKey, pwd, id });
 
+  // eslint-disable-next-line no-useless-catch
   try {
     const { data: responseData } = await axios.get(endpoint, {
       headers: { Authorization: `Bearer ${token}` },
@@ -64,7 +67,7 @@ const getFormations = async () => {
 
     return responseData;
   } catch (error) {
-    logger.error({ type: "job" }, error);
+    // logger.error({ type: "job" }, error);
     throw error;
   }
 };

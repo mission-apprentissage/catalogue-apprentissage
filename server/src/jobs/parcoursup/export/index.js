@@ -98,7 +98,7 @@ const createFormation = async (formation, email = null) => {
 
     const response = await parcoursupApi.postFormation(data);
 
-    logger.info(
+    logger.debug(
       { type: "job" },
       `Parcoursup WS response: g_ta_cod=${response.g_ta_cod} dejaEnvoye=${response.dejaEnvoye}`
     );
@@ -150,6 +150,8 @@ const createFormation = async (formation, email = null) => {
         date: new Date(),
         parcoursup_statut: PARCOURSUP_STATUS.REJETE,
       });
+    } else {
+      logger.error({ type: "job" }, `Erreur Parcoursup non gérée : ${formation.parcoursup_error}`);
     }
 
     await formation.save({ validateBeforeSave: false });
