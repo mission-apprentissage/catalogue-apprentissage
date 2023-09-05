@@ -32,7 +32,9 @@ export const DescriptionBlock = ({ formation }) => {
     !(formation.rncp_details.certificateurs ?? []).some(({ certificateur }) => HABILITE_LIST.includes(certificateur));
 
   const MefContainer =
-    formation.duree_incoherente || formation.annee_incoherente
+    formation.duree_incoherente ||
+    formation.annee_incoherente ||
+    !!formation.bcn_mefs_10.filter((mef) => mef?.mef10?.endsWith("99")).length
       ? (args) => <DangerBox data-testid={"mef-warning"} {...args} />
       : React.Fragment;
 
@@ -172,7 +174,15 @@ export const DescriptionBlock = ({ formation }) => {
             )}
           </CfdContainer>
           <MefContainer>
-            <Text mb={formation.duree_incoherente || formation.annee_incoherente ? 0 : 4}>
+            <Text
+              mb={
+                formation.duree_incoherente ||
+                formation.annee_incoherente ||
+                !!formation.bcn_mefs_10.filter((mef) => mef?.mef10?.endsWith("99")).length
+                  ? 0
+                  : 4
+              }
+            >
               Codes MEF 10 caractères :{" "}
               <Text as="span" variant="highlight">
                 {formation?.bcn_mefs_10?.map(({ mef10 }) => mef10).join(", ")}
@@ -182,6 +192,8 @@ export const DescriptionBlock = ({ formation }) => {
             <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
               {(formation.duree_incoherente || formation.annee_incoherente) &&
                 "Aucun code MEF ne correspond à la durée et à l'année de formation enregistrées auprès du Carif-Oref."}
+              {!!formation.bcn_mefs_10.filter((mef) => mef?.mef10?.endsWith("99")).length &&
+                "Le code MEF se termine par 99. Ce code MEF ne porte pas d'informations liées à la durée et à l'année."}
             </Text>
           </MefContainer>
           {formation?.affelnet_mefs_10?.length > 0 && (
