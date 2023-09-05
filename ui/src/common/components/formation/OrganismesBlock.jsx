@@ -31,7 +31,7 @@ export const OrganismesBlock = ({ formation }) => {
   return (
     <>
       <Heading textStyle="h4" color="grey.800" mb={4}>
-        {oneEstablishment ? "Organisme associé" : "Organismes associés"}
+        {oneEstablishment ? "" : "Organismes associés"}
       </Heading>
 
       {!oneEstablishment && (
