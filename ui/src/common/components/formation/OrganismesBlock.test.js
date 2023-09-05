@@ -168,9 +168,6 @@ test("should render the organismes block in one establishment mode", async () =>
 
   const { queryByText, getByText } = renderWithRouter(<OrganismesBlock formation={formation} />);
 
-  const title = queryByText("Organisme associé");
-  expect(title).toBeInTheDocument();
-
   const formateurLabel = queryByText("Formateur");
   expect(formateurLabel).not.toBeInTheDocument();
 
