@@ -75,18 +75,18 @@ const run = async () => {
 
   logger.info(
     { type: "job" },
-    `Compteurs des formations dans le catalogue (règlementaire / total):\n` +
-      `- total : ${totalReglement} / ${total}\n` +
-      `\n` +
-      `- statut "hors périmètre" : ${totalReglementNotRelevant} / ${totalNotRelevant}\n` +
-      `- statut "à publier (soumis à validation)" : ${totalReglementToValidate} / ${totalToValidate}\n` +
-      `- statut "à publier" : ${totalReglementToCheck} / ${totalToCheck}\n` +
-      `- statut "en attente de publication" : ${totalReglementPending} / ${totalPending}\n` +
-      `- statut "publié" sur Affelnet : ${totalReglementPsPublished} / ${totalPsPublished}\n` +
-      `- statut "NON publié" sur Affelnet : ${totalReglementPsNotPublished} / ${totalPsNotPublished}\n` +
-      `\n` +
-      `- dans le périmètre: ${totalReglementPérimètre} / ${totalPérimètre}\n` +
-      `- hors périmètre : ${totalReglementHorsPérimètre} / ${totalHorsPérimètre}\n`
+    `Compteurs des formations dans le catalogue (règlementaire / total):
+      - total : ${totalReglement} / ${total}
+
+      - statut "hors périmètre" : ${totalReglementNotRelevant} / ${totalNotRelevant}
+      - statut "à publier (soumis à validation)" : ${totalReglementToValidate} / ${totalToValidate}
+      - statut "à publier" : ${totalReglementToCheck} / ${totalToCheck}
+      - statut "en attente de publication" : ${totalReglementPending} / ${totalPending}
+      - statut "publié" sur Affelnet : ${totalReglementPsPublished} / ${totalPsPublished}
+      - statut "NON publié" sur Affelnet : ${totalReglementPsNotPublished} / ${totalPsNotPublished}
+
+      - dans le périmètre: ${totalReglementPérimètre} / ${totalPérimètre}
+      - hors périmètre : ${totalReglementHorsPérimètre} / ${totalHorsPérimètre}`
   );
 };
 module.exports = { run };

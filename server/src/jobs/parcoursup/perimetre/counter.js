@@ -111,22 +111,22 @@ const run = async () => {
 
   logger.info(
     { type: "job" },
-    `Compteurs des formations dans le catalogue (règlementaire / total):\n` +
-      `- total : ${totalReglement} / ${total}\n` +
-      `\n` +
-      `- statut "hors périmètre" : ${totalReglementNotRelevant} / ${totalNotRelevant}\n` +
-      `- statut "à publier (sous condition habilitation)" : ${totalReglementToValidateHabilitation} / ${totalToValidateHabilitation}\n` +
-      `- statut "à publier (vérifier accès direct postbac)" : ${totalReglementToValidate} / ${totalToValidate}\n` +
-      `- statut "à publier (soumis à validation Recteur)" : ${totalReglementToValidateRecteur} / ${totalToValidateRecteur}\n` +
-      `- statut "à publier" : ${totalReglementToCheck} / ${totalToCheck}\n` +
-      `- statut "en attente de publication" : ${totalReglementPending} / ${totalPending}\n` +
-      `- statut "publié" sur ParcourSup : ${totalReglementPublished} / ${totalPublished}\n` +
-      `- statut "rejeté" par ParcourSup : ${totalReglementRejected} / ${totalRejected}\n` +
-      `- statut "NON publié" sur ParcourSup : ${totalReglementNotPublished} / ${totalNotPublished}\n` +
-      `- statut "fermé" sur ParcourSup : ${totalReglementClosed} / ${totalClosed}\n` +
-      `\n` +
-      `- dans le périmètre: ${totalReglementPérimètre} / ${totalPérimètre}\n` +
-      `- hors périmètre : ${totalReglementHorsPérimètre} / ${totalHorsPérimètre}\n`
+    `Compteurs des formations dans le catalogue (règlementaire / total):
+      - total : ${totalReglement} / ${total}
+
+      - statut "hors périmètre" : ${totalReglementNotRelevant} / ${totalNotRelevant}
+      - statut "à publier (sous condition habilitation)" : ${totalReglementToValidateHabilitation} / ${totalToValidateHabilitation}
+      - statut "à publier (vérifier accès direct postbac)" : ${totalReglementToValidate} / ${totalToValidate}
+      - statut "à publier (soumis à validation Recteur)" : ${totalReglementToValidateRecteur} / ${totalToValidateRecteur}
+      - statut "à publier" : ${totalReglementToCheck} / ${totalToCheck}
+      - statut "en attente de publication" : ${totalReglementPending} / ${totalPending}
+      - statut "publié" sur ParcourSup : ${totalReglementPublished} / ${totalPublished}
+      - statut "rejeté" par ParcourSup : ${totalReglementRejected} / ${totalRejected}
+      - statut "NON publié" sur ParcourSup : ${totalReglementNotPublished} / ${totalNotPublished}
+      - statut "fermé" sur ParcourSup : ${totalReglementClosed} / ${totalClosed}
+
+      - dans le périmètre: ${totalReglementPérimètre} / ${totalPérimètre}
+      - hors périmètre : ${totalReglementHorsPérimètre} / ${totalHorsPérimètre}`
   );
 };
 module.exports = { run };

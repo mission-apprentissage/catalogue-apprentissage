@@ -3,6 +3,7 @@ const { runScript } = require("../scriptWrapper");
 const { AFFELNET_STATUS } = require("../../constants/status");
 const { ConsoleStat, Formation } = require("../../common/model");
 const { academies } = require("../../constants/academies");
+const logger = require("../../common/logger");
 
 const computeStats = async (academie = null) => {
   const globalFilter = { published: true };
@@ -85,7 +86,7 @@ const computeStats = async (academie = null) => {
  * Calcul des statistiques Affelnet à destination des consoles de pilotages
  */
 const afConsoleStats = async () => {
-  console.log(`--- Calcul des statistiques Affelnet ---`);
+  logger.info({ type: "job" }, " -- AFFELNET STATISTIQUES : ⏳ -- ");
   const date = new Date();
 
   await Promise.all(
@@ -94,6 +95,8 @@ const afConsoleStats = async () => {
       return await ConsoleStat.create({ plateforme: "affelnet", date, ...stats });
     })
   );
+
+  logger.info({ type: "job" }, " -- AFFELNET STATISTIQUES : ✅  -- ");
 };
 
 module.exports = { afConsoleStats };

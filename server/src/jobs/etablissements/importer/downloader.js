@@ -69,14 +69,8 @@ const downloader = async () => {
     await downloadZip();
     await DualControlEtablissement.deleteMany({});
     await extractFromZip();
-  } catch (e) {
-    error = e;
-    logger.error(
-      {
-        type: "job",
-      },
-      e
-    );
+  } catch (error) {
+    logger.error({ type: "job" }, error);
   }
 
   return error;

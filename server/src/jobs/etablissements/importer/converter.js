@@ -133,14 +133,8 @@ const converter = async () => {
     const { removed } = await unpublishOthers();
 
     console.log({ added, updated, notUpdated, removed });
-  } catch (e) {
-    error = e;
-    logger.error(
-      {
-        type: "job",
-      },
-      e
-    );
+  } catch (error) {
+    logger.error({ type: "job" }, error);
   }
 
   return error;

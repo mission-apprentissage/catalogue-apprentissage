@@ -15,7 +15,7 @@ const importer = async (
   }
 ) => {
   try {
-    logger.info({ type: "job" }, " -- Start of importer -- ");
+    logger.info({ type: "job" }, " -- FORMATIONS IMPORTER : ⏳ -- ");
 
     // STEP 1 : Download formations from RCO
     let downloadError;
@@ -44,9 +44,10 @@ const importer = async (
     await updateEtablissementRelationFields();
     await updateFormationRelationFields({ filter });
 
-    logger.info({ type: "job" }, " -- End of importer -- ");
+    logger.info({ type: "job" }, " -- FORMATIONS IMPORTER : ✅ -- ");
   } catch (error) {
     logger.error({ type: "job" }, error);
+    logger.error({ type: "job" }, " -- FORMATIONS IMPORTER : ❌ -- ");
   }
 };
 

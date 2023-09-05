@@ -50,8 +50,7 @@ const checkPublished = async (filter = {}, limit = 10) => {
 };
 
 const psCoverage = async () => {
-  logger.info({ type: "job" }, "Start Parcoursup coverage");
-
+  logger.info({ type: "job" }, " -- PARCOURSUP COVERAGE : ⏳  -- ");
   const filtersCheckPublished = { statut_reconciliation: { $in: ["VALIDE", "REJETE"] } };
   const allIdsCheckPublished = await ParcoursupFormation.distinct("_id", { ...filtersCheckPublished });
   const activeFilterCheckPublished = { _id: { $in: allIdsCheckPublished } };
@@ -63,6 +62,7 @@ const psCoverage = async () => {
   const activeFilter = { _id: { $in: allIds } };
 
   await formationsCoverage(activeFilter);
+  logger.info({ type: "job" }, " -- PARCOURSUP COVERAGE : ✅  -- ");
 };
 
 module.exports = { psCoverage };

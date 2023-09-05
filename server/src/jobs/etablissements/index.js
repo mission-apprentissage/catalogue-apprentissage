@@ -4,7 +4,7 @@ const importer = require("./importer");
 
 const etablissementsJobs = async () => {
   try {
-    logger.info({ type: "job" }, `Start Etablissements jobs`);
+    logger.info({ type: "job" }, `ETABLISSEMENTS JOBS ⏳`);
 
     // Import RCO
     if (process.env.CATALOGUE_APPRENTISSAGE_RCO_IMPORT_ENABLED) {
@@ -13,14 +13,10 @@ const etablissementsJobs = async () => {
     } else {
       console.log("Import RCO disabled, skipping...");
     }
-    logger.info({ type: "job" }, `End Etablissements jobs`);
+    logger.info({ type: "job" }, `ETABLISSEMENTS JOBS ✅`);
   } catch (error) {
-    logger.error(
-      {
-        type: "job",
-      },
-      error
-    );
+    logger.error({ type: "job" }, error);
+    logger.error({ type: "job" }, `ETABLISSEMENTS JOBS ❌`);
   }
 };
 

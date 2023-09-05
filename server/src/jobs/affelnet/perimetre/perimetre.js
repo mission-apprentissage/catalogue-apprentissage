@@ -4,6 +4,7 @@ const { ReglePerimetre } = require("../../../common/model");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { AFFELNET_STATUS } = require("../../../constants/status");
 const { cursor } = require("../../../common/utils/cursor");
+const logger = require("../../../common/logger");
 
 const run = async () => {
   const filterSessionDate = getSessionDateRules();
@@ -98,7 +99,7 @@ const run = async () => {
   // console.log({ formationsInPerimetre });
   // console.log({ formationsNotInPerimetre });
 
-  console.log("Intégration du périmètre");
+  logger.debug("- Intégration du périmètre");
   await cursor(
     Formation.find({
       cle_ministere_educatif: { $in: [...formationsInPerimetre] },
@@ -110,7 +111,7 @@ const run = async () => {
       await Formation.updateOne({ cle_ministere_educatif }, { affelnet_perimetre: true })
   );
 
-  console.log("Sortie du périmètre");
+  logger.debug("- Sortie du périmètre");
   await cursor(
     Formation.find({
       cle_ministere_educatif: { $nin: [...formationsInPerimetre] },

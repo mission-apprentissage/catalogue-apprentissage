@@ -6,24 +6,20 @@ const importer = require("./importer");
 
 const formationsJobs = async () => {
   try {
-    logger.info({ type: "job" }, `Start Formations jobs`);
+    logger.info({ type: "job" }, "FORMATIONS JOBS : ⏳");
 
     // Import RCO
     if (process.env.CATALOGUE_APPRENTISSAGE_RCO_IMPORT_ENABLED) {
-      console.log("Import RCO enabled, starting...");
+      logger.debug("Import RCO enabled, starting...");
       await importer({ forceRecompute: isSunday() });
     } else {
       console.log("Import RCO disabled, skipping...");
     }
 
-    logger.info({ type: "job" }, `End Formations jobs`);
+    logger.info({ type: "job" }, "FORMATIONS JOBS : ✅");
   } catch (error) {
-    logger.error(
-      {
-        type: "job",
-      },
-      error
-    );
+    logger.error({ type: "job" }, error);
+    logger.error({ type: "job" }, "FORMATIONS JOBS : ❌");
   }
 };
 

@@ -3,6 +3,7 @@ const { runScript } = require("../scriptWrapper");
 const { PARCOURSUP_STATUS } = require("../../constants/status");
 const { ConsoleStat, Formation } = require("../../common/model");
 const { academies } = require("../../constants/academies");
+const logger = require("../../common/logger");
 
 const computeStats = async (academie = null) => {
   const globalFilter = { published: true };
@@ -85,7 +86,7 @@ const computeStats = async (academie = null) => {
  * Calcul des statistiques Parcoursup à destination des consoles de pilotages
  */
 const psConsoleStats = async () => {
-  console.log(`--- Calcul des statistiques Parcoursup ---`);
+  logger.info({ type: "job" }, " -- PARCOURSUP STATISTIQUES : ⏳  -- ");
   const date = new Date();
 
   await Promise.all(
@@ -94,6 +95,7 @@ const psConsoleStats = async () => {
       return await ConsoleStat.create({ plateforme: "parcoursup", date, ...stats });
     })
   );
+  logger.info({ type: "job" }, " -- PARCOURSUP STATISTIQUES : ✅  -- ");
 };
 
 module.exports = { psConsoleStats };

@@ -1,3 +1,4 @@
+const logger = require("../../../common/logger");
 const { Formation, ReglePerimetre } = require("../../../common/model");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const {
@@ -43,14 +44,14 @@ const run = async () => {
 
   const campagneCount = await Formation.countDocuments(filterSessionDate);
 
-  console.log(`${campagneCount} formations possèdent des dates de début pour la campagne en cours.`);
+  logger.debug({ type: "job" }, `${campagneCount} formations possèdent des dates de début pour la campagne en cours.`);
 
   // 0. On initialise parcoursup_id à null si l'information n'existe pas sur la formation
-  console.log("Etape 0.");
+  logger.debug({ type: "job" }, "Etape 0.");
   await Formation.updateMany({ parcoursup_id: { $exists: false } }, { $set: { parcoursup_id: null } });
 
   // 1. Application de la réglementation : réinitialisation des étiquettes pour les formations qui sortent du périmètre quelque soit le statut (sauf publié pour le moment)
-  console.log("Etape 1.");
+  logger.debug({ type: "job" }, "Etape 1.");
   await Formation.updateMany(
     {
       $or: [
@@ -90,7 +91,7 @@ const run = async () => {
   );
 
   // 2. On réinitialise les formations "à publier ..." à "hors périmètre" pour permettre le recalcule du périmètre
-  console.log("Etape 2.");
+  logger.debug({ type: "job" }, "Etape 2.");
   await Formation.updateMany(
     {
       parcoursup_statut: {
@@ -106,7 +107,7 @@ const run = async () => {
   );
 
   // 3. On applique les règles de périmètres pour statut "à publier avec action attendue" uniquement sur les formations "hors périmètre" pour ne pas écraser les actions menées par les utilisateurs
-  console.log("Etape 3.");
+  logger.debug({ type: "job" }, "Etape 3.");
   const filterHP = {
     parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
   };
@@ -209,7 +210,7 @@ const run = async () => {
     ));
 
   // 4. On applique les règles de périmètre pour statut "à publier" pour les formations répondant aux règles de publication sur Parcoursup.
-  console.log("Etape 4.");
+  logger.debug({ type: "job" }, "Etape 4.");
   const filter = {
     parcoursup_statut: {
       $in: [
@@ -254,7 +255,7 @@ const run = async () => {
     ));
 
   // 5. On applique les règles des académies
-  console.log("Etape 5.");
+  logger.debug({ type: "job" }, "Etape 5.");
   const academieRules = [
     ...aPublierHabilitationRules,
     ...aPublierVerifierAccesDirectPostBacRules,
@@ -264,7 +265,7 @@ const run = async () => {
 
   await asyncForEach(academieRules, async (rule) => {
     await asyncForEach(Object.entries(rule.statut_academies), async ([num_academie, status]) => {
-      console.log(status);
+      logger.debug({ type: "job" }, status);
       await Formation.updateMany(
         {
           ...filterReglement,
@@ -306,7 +307,7 @@ const run = async () => {
     });
   });
 
-  console.log("Etape 6.");
+  logger.debug({ type: "job" }, "Etape 6.");
   // 6a. On s'assure que les dates de publication sont définies pour les formations publiées
   await Formation.updateMany(
     {
@@ -326,7 +327,7 @@ const run = async () => {
   );
 
   // 7. On met à jour l'historique des statuts.
-  console.log("Etape 7.");
+  logger.debug({ type: "job" }, "Etape 7.");
   await updateTagsHistory("parcoursup_statut");
 };
 

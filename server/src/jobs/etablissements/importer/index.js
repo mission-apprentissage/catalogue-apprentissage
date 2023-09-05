@@ -6,7 +6,7 @@ const { DualControlEtablissement } = require("../../../common/model/index");
 
 const importer = async (options) => {
   try {
-    logger.info({ type: "job" }, " -- Start of importer -- ");
+    logger.info({ type: "job" }, " -- ETABLISSEMENTS IMPORTER : ⏳ -- ");
 
     // STEP 1 : Download etablissements from RCO
     let downloadError;
@@ -31,9 +31,10 @@ const importer = async (options) => {
     logger.info({ type: "job" }, " -- Converting etablissements -- ");
     await converter();
 
-    logger.info({ type: "job" }, " -- End of importer -- ");
+    logger.info({ type: "job" }, " -- ETABLISSEMENTS IMPORTER : ✅ -- ");
   } catch (error) {
     logger.error({ type: "job" }, error);
+    logger.error({ type: "job" }, " -- ETABLISSEMENTS IMPORTER : ❌ -- ");
   }
 };
 

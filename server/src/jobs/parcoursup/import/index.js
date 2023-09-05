@@ -16,6 +16,8 @@ const STATUS = {
  * Import quotidien des formations PSUP pour comparaison des bases
  */
 const psImport = async () => {
+  logger.info({ type: "job" }, " -- PARCOURSUP IMPORT : ⏳  -- ");
+
   try {
     const results = await getFormations();
 
@@ -165,19 +167,18 @@ const psImport = async () => {
       }
     }
 
-    console.log({ closed, linked, canceled });
+    logger.debug({ closed, linked, canceled });
+
+    logger.info({ type: "job" }, " -- PARCOURSUP IMPORT : ✅  -- ");
   } catch (error) {
     logger.error({ type: "job" }, "Parcoursup WS error", error?.response?.status, error?.response?.data ?? error);
+    logger.error({ type: "job" }, " -- PARCOURSUP IMPORT : ❌  -- ");
   }
 };
 
 if (process.env.standalone) {
   runScript(async () => {
-    logger.info({ type: "job" }, " -- Start psup import -- ");
-
     await psImport();
-
-    logger.info({ type: "job" }, " -- End psup import -- ");
   });
 }
 

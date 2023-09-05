@@ -4,6 +4,7 @@ const { ReglePerimetre } = require("../../../common/model");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
 const { cursor } = require("../../../common/utils/cursor");
+const logger = require("../../../common/logger");
 
 const run = async () => {
   const filterSessionDate = getSessionDateRules();
@@ -127,7 +128,7 @@ const run = async () => {
 
   // console.log({ formationsInPerimetre });
   // console.log({ formationsNotInPerimetre });
-  console.log("Intégration du périmètre");
+  logger.debug({ type: "job" }, "- Intégration du périmètre");
   await cursor(
     Formation.find({
       cle_ministere_educatif: { $in: [...formationsInPerimetre] },
@@ -139,7 +140,7 @@ const run = async () => {
       await Formation.updateOne({ cle_ministere_educatif }, { parcoursup_perimetre: true })
   );
 
-  console.log("Sortie du périmètre");
+  logger.debug({ type: "job" }, "- Sortie du périmètre");
   await cursor(
     Formation.find({
       cle_ministere_educatif: { $nin: [...formationsInPerimetre] },

@@ -10,24 +10,25 @@ const { runScript } = require("../../scriptWrapper");
  * @param {string} config.date Une date sous la forme 'YYYY-MM-DD'.
  * @param {string} config.force Un booléen pour force la réinitialisation du statut, même si la date ne le permet pas.
  */
-const psReinitStatus = async () => {
+const psStartCampagne = async () => {
   try {
-    logger.info({ type: "job" }, " -- Start parcoursup status reinitialisation -- ");
+    logger.info({ type: "job" }, " -- PARCOURSUP START CAMPAGNE : ⏳  -- ");
 
     await controller.run();
 
-    logger.info({ type: "job" }, " -- End of parcoursup status reinitialisation -- ");
-  } catch (err) {
-    logger.error(err);
+    logger.info({ type: "job" }, " -- PARCOURSUP START CAMPAGNE : ✅  -- ");
+  } catch (error) {
+    logger.error({ type: "job" }, error);
+    logger.error({ type: "job" }, " -- PARCOURSUP START CAMPAGNE : ❌  -- ");
   }
 };
 
-module.exports = psReinitStatus;
+module.exports = { psStartCampagne };
 
 if (process.env.standalone) {
   runScript(async () => {
     // const args = process.argv.slice(2);
 
-    await psReinitStatus({});
+    await psStartCampagne({});
   });
 }

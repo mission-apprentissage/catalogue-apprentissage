@@ -17,7 +17,7 @@ const CONVENTION_FILES_DIR = path.join(__dirname, "conventionFilesImporter/asset
 
 runScript(async ({ db }) => {
   try {
-    logger.info({ type: "job" }, `Start all jobs ⏳`);
+    logger.info({ type: "job" }, `ALL JOBS ⏳`);
 
     // TCO jobs
     await tcoJobs(db, CONVENTION_FILES_DIR, KIT_LOCAL_PATH); // ~ 10 minutes // Import des tables de correspondance
@@ -51,13 +51,9 @@ runScript(async ({ db }) => {
     await disableAlertMessage();
     Formation.startAllMongoosaticHooks();
 
-    logger.info({ type: "job" }, `Finish all jobs successfully ✅`);
+    logger.info({ type: "job" }, `ALL JOBS ✅`);
   } catch (error) {
-    logger.error(
-      {
-        type: "job",
-      },
-      error
-    );
+    logger.error({ type: "job" }, error);
+    logger.error({ type: "job" }, `ALL JOBS ❌`);
   }
 });

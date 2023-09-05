@@ -2,7 +2,6 @@ const logger = require("../../common/logger");
 const { runScript } = require("../scriptWrapper");
 const { psImport } = require("./import");
 const { psPerimetre } = require("./perimetre");
-// const { psCoverage } = require("./coverage");
 const parcoursupExport = require("./export");
 const { psConsoleStats } = require("./stats");
 
@@ -11,11 +10,10 @@ const { psConsoleStats } = require("./stats");
  */
 const parcoursupJobs = async () => {
   try {
-    logger.info({ type: "job" }, `Start Parcoursup jobs`);
+    logger.info({ type: "job" }, `PARCOURSUP JOBS ⏳`);
 
     await psImport();
     await psPerimetre();
-    // await psCoverage();
 
     if (process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_EXPORT_ENABLED) {
       await parcoursupExport.run();
@@ -23,14 +21,10 @@ const parcoursupJobs = async () => {
 
     await psConsoleStats();
 
-    logger.info({ type: "job" }, `End Parcoursup jobs`);
+    logger.info({ type: "job" }, `PARCOURSUP JOBS ✅`);
   } catch (error) {
-    logger.error(
-      {
-        type: "job",
-      },
-      error
-    );
+    logger.error({ type: "job" }, error);
+    logger.error({ type: "job" }, `PARCOURSUP JOBS ❌`);
   }
 };
 

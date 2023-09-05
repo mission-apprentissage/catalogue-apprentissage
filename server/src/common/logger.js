@@ -7,7 +7,7 @@ const BunyanMongodbStream = require("bunyan-mongodb-stream");
 const { Log } = require("./model/index");
 
 const createStreams = () => {
-  const { type, level } = config.log;
+  const { type = "stdout", level = "info" } = config?.log ?? {};
   const envName = config.env;
 
   const jsonStream = () => {
@@ -18,9 +18,9 @@ const createStreams = () => {
     };
   };
 
-  const consoleStream = () => {
+  const consoleStream = (type) => {
     const pretty = new PrettyStream();
-    pretty.pipe(process.stdout);
+    pretty.pipe(process[type]);
     return {
       name: "console",
       level,
@@ -40,6 +40,7 @@ const createStreams = () => {
     const stream = new BunyanSlack(
       {
         webhook_url: config.slackWebhookUrl,
+        iconUrl: "https://catalogue.apprentissage.education.gouv.fr/favicon.ico",
         customFormatter: (record, levelName) => {
           if (record.type === "http") {
             record = {
@@ -51,9 +52,10 @@ const createStreams = () => {
           }
           return {
             text: util.format(
-              `[${envName}] [%s]${record.type ? " (" + record.type + ")" : ""} %O`,
+              `[${envName}] [%s]${record.type ? " (" + record.type + ")" : ""} %s
+              \`\`\`${record.msg}\`\`\``,
               levelName.toUpperCase(),
-              record.msg
+              new Date().toLocaleTimeString("fr-FR")
             ),
           };
         },
@@ -65,12 +67,12 @@ const createStreams = () => {
 
     return {
       name: "slack",
-      level,
+      level: "info",
       stream,
     };
   };
 
-  const streams = [type === "console" ? consoleStream() : jsonStream(), mongoDBStream()];
+  const streams = [type === "json" ? jsonStream() : consoleStream(type), mongoDBStream()];
   if (config.slackWebhookUrl) {
     streams.push(slackStream());
   }

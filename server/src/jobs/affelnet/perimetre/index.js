@@ -7,25 +7,24 @@ const { runScript } = require("../../scriptWrapper");
 
 const afPerimetre = async () => {
   try {
-    logger.info({ type: "job" }, " -- Start affelnet perimetre -- ");
+    logger.info({ type: "job" }, " -- AFFELNET PERIMETRE : ⏳ -- ");
 
-    console.log("\nCompteurs avant :\n");
+    logger.info({ type: "job" }, "Compteurs avant :");
     await counter.run();
 
-    console.log("\nApplication des règles de périmètre :\n");
-
+    logger.info({ type: "job" }, "Application des règles de périmètre :");
     await controller.run();
 
-    console.log("\nVérification du périmètre :\n");
-
+    logger.info({ type: "job" }, "Vérification du périmètre :");
     await perimetre.run();
 
-    console.log("\nCompteurs après :\n");
+    logger.info({ type: "job" }, "Compteurs après :");
     await counter.run();
 
-    logger.info({ type: "job" }, " -- End of affelnet perimetre -- ");
+    logger.info({ type: "job" }, " -- AFFELNET PERIMETRE : ✅ -- ");
   } catch (error) {
     logger.error({ type: "job" }, error);
+    logger.error({ type: "job" }, " -- AFFELNET PERIMETRE : ❌ -- ");
   }
 };
 
