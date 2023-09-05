@@ -52,10 +52,10 @@ const createStreams = () => {
           }
           return {
             text: util.format(
-              `[${envName}] [%s]${record.type ? " (" + record.type + ")" : ""} %s
+              `[${envName}] [%s]${record.type ? " (" + record.type + ")" : ""}   %s\
               \`\`\`${record.msg}\`\`\``,
               levelName.toUpperCase(),
-              new Date().toLocaleTimeString("fr-FR")
+              new Date().toLocaleString("fr-FR")
             ),
           };
         },
