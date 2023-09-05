@@ -31,13 +31,13 @@ export const OrganismesBlock = ({ formation }) => {
   return (
     <>
       <Heading textStyle="h4" color="grey.800" mb={4}>
-        {oneEstablishment ? "Organisme responsable et formateur (1 bloc siret)" : ""}
+        {oneEstablishment ? "Organisme responsable et formateur" : ""}
       </Heading>
 
       {!oneEstablishment && (
         <>
           <Text textStyle="rf-text" color="grey.700" fontWeight="700" mb={3}>
-            Gestionnaire
+            Organisme responsable
           </Text>
           <Link as={NavLink} to={`/etablissement/${formation.etablissement_gestionnaire_id}`} variant="card">
             <Flex display={["none", "flex"]} textStyle="xs" justifyContent="space-between">
@@ -80,7 +80,7 @@ export const OrganismesBlock = ({ formation }) => {
 
       {!oneEstablishment && formation.etablissement_formateur_id && (
         <Text textStyle="rf-text" color="grey.700" fontWeight="700" my={5}>
-          Formateur
+          Organisme formateur
         </Text>
       )}
 
