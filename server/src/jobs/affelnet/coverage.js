@@ -20,7 +20,7 @@ const formationCoverage = async ({ eraseInfo } = {}) => {
       limit: 100,
     },
     async (formation) => {
-      console.log(formation.cle_ministere_educatif);
+      logger.debug(formation.cle_ministere_educatif);
 
       let match;
 

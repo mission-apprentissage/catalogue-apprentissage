@@ -216,6 +216,7 @@ async function getAffelnetCoverage({ code_postal: cp, code_mef, uai }) {
   const deptArr = dept === "20" ? ["2A", "2B"] : [dept];
 
   const m1 = await getMatch({
+    affelnet_perimetre: true,
     "bcn_mefs_10.mef10": code_mef?.substring(0, 10),
     published: true,
     niveau: { $in: ["3 (CAP...)", "4 (BAC...)"] },
