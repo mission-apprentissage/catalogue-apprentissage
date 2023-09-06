@@ -5,7 +5,7 @@ const { runScript } = require("../scriptWrapper");
 
 const esIndex = async () => {
   try {
-    logger.info({ type: "job" }, " -- Start esIndex -- ");
+    logger.info({ type: "job" }, `ES INDEX ⏳`);
 
     const args = process.argv.slice(2);
     const shouldSkipFound = args?.includes("--skipFound");
@@ -17,9 +17,10 @@ const esIndex = async () => {
       await rebuildEsIndex(args?.[0], shouldSkipFound);
     }
 
-    logger.info({ type: "job" }, " -- End of esIndex -- ");
+    logger.info({ type: "job" }, `ES INDEX ✅`);
   } catch (error) {
     logger.error({ type: "job" }, error);
+    logger.error({ type: "job" }, `ES INDEX ❌`);
   }
 };
 

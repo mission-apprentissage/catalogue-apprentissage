@@ -3,6 +3,7 @@ const logger = require("../logger");
 const { getElasticInstance } = require("../esClient");
 
 const rebuildIndex = async (index, schema, { filter, skipFound } = { skipFound: false, filter: {} }) => {
+  logger.info(`-- REBULDING ${index} INDEX ⏳`);
   let client = getElasticInstance();
 
   const { body: hasIndex } = await client.indices.exists({ index });
@@ -17,9 +18,12 @@ const rebuildIndex = async (index, schema, { filter, skipFound } = { skipFound: 
 
   logger.debug({ type: "utils" }, `Syncing '${index}' index ...`);
   await schema.synchronize(filter);
+  logger.info(`-- REBULDING ${index} INDEX ✅`);
 };
 
 const deleteIndex = async (index) => {
+  logger.info(`-- DELETING ${index} INDEX ⏳`);
+
   let client = getElasticInstance();
 
   const { body: hasIndex } = await client.indices.exists({ index });
@@ -29,6 +33,7 @@ const deleteIndex = async (index) => {
   } else {
     logger.debug({ type: "utils" }, `'${index}' index doesn't exist...`);
   }
+  logger.info(`-- DELETING ${index} INDEX ✅`);
 };
 
 module.exports = { rebuildIndex, deleteIndex };
