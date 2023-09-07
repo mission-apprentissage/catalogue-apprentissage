@@ -156,8 +156,15 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                       )}
                       .
                     </>
-                  ) : (
+                  ) : formation.uai_formation ? (
                     <>- Cet UAI a été repris automatiquement de l’UAI formateur.</>
+                  ) : (
+                    <>
+                      - Le code Insee du lieu de formation {formation.code_commune_insee} est différent de celui du
+                      formateur {formation.etablissement_formateur_code_commune_insee}, l'UAI du lieu doit donc être
+                      édité. Si vous pensez qu'il s'agit d'une erreur d'enregistrement, veuillez vous rapprocher de
+                      l'organisme ou du Carif-Oref."
+                    </>
                   )}
                 </Text>
 
@@ -171,15 +178,16 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                       l'adresse postale du lieu doit être modifiée, demander au CFA d'en faire le signalement au
                       Carif-Oref pour modification à la source.
                     </>
+                  ) : (!formation.uai_formation ||
+                      formation.code_commune_insee === formation.etablissement_formateur_code_commune_insee) &&
+                    formation.parcoursup_perimetre ? (
+                    <>
+                      - L’UAI du lieu de formation doit obligatoirement être édité pour permettre l’envoi à Parcoursup.
+                    </>
                   ) : (
                     <>- Si le lieu de réalisation est différent du lieu du formateur, modifiez l’UAI (picto crayon).</>
                   )}
                 </Text>
-                {!formation.uai_formation && formation.parcoursup_perimetre && (
-                  <Text fontSize={"zeta"} color={"grey.600"} mt={2}>
-                    - L’UAI du lieu de formation doit obligatoirement être édité pour permettre l’envoi à Parcoursup
-                  </Text>
-                )}
               </UaiFormationContainer>
 
               <AdresseContainer>
