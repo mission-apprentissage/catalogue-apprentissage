@@ -18,6 +18,7 @@ describe(__filename, () => {
       affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
       cle_ministere_educatif: "cle_1",
       intitule_court: "formation 1",
+      affelnet_perimetre: true,
     });
 
     await Formation.create({
@@ -31,6 +32,7 @@ describe(__filename, () => {
       num_departement: "93",
       code_postal: "93100",
       etablissement_gestionnaire_uai: "uai_4",
+      affelnet_perimetre: true,
     });
 
     await Formation.create({
@@ -39,6 +41,7 @@ describe(__filename, () => {
       affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
       cle_ministere_educatif: "cle_3",
       intitule_court: "formation 3",
+      affelnet_perimetre: true,
     });
 
     // formations affelnet
