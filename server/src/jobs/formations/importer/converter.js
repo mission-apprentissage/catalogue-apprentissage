@@ -276,7 +276,7 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
   if (
     fields.etablissement_formateur_siret &&
     fields.etablissement_gestionnaire_siret &&
-    fields.rncp_details.partenaires &&
+    fields.rncp_details?.partenaires &&
     (forceRecompute ||
       fields?.etablissement_formateur_siret !== oldFields?.etablissement_formateur_siret ||
       fields?.etablissement_gestionnaire_siret !== oldFields?.etablissement_gestionnaire_siret ||
