@@ -571,6 +571,12 @@ module.exports = {
         default: "null",
         description: "Identifiant RCO",
       },
+      partenaires: {
+        type: "array",
+        items: {},
+        default: [],
+        description: "Partenaires",
+      },
       etablissement_gestionnaire_id: {
         type: "string",
         default: "null",

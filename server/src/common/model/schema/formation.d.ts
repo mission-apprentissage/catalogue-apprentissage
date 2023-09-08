@@ -287,6 +287,10 @@ export interface Formation {
    */
   id_RCO?: string;
   /**
+   * Partenaires
+   */
+  partenaires?: unknown[];
+  /**
    * Identifiant établissement gestionnaire
    */
   etablissement_gestionnaire_id?: string;
