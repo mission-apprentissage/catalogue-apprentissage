@@ -170,6 +170,7 @@ const formation = {
   etablissement_gestionnaire_nda: "44540379354",
   to_update: false,
   lieu_formation_adresse_computed: "57 Rue de la Paix, 57450 Henriville",
+  partenaires: null,
 };
 
 test("renders the description block of the training", async () => {
@@ -235,20 +236,22 @@ test("dont show partenaires if certificateur is ministere EN for titre or tp", a
 });
 
 test("show partenaires", async () => {
+  const partenairesData = [
+    {
+      Siret_Partenaire: "34958609900021",
+      Nom_Partenaire: "Hello Corp",
+      Habilitation_Partenaire: "HABILITATION_ORGA_FORM",
+    },
+  ];
   const tpFormation = {
     ...formation,
     etablissement_reference_habilite_rncp: true,
     rncp_details: {
       ...formation.rncp_details,
       code_type_certif: "TP",
-      partenaires: [
-        {
-          Siret_Partenaire: "34958609900021",
-          Nom_Partenaire: "Hello Corp",
-          Habilitation_Partenaire: "HABILITATION_ORGA_FORM",
-        },
-      ],
+      partenaires: partenairesData,
     },
+    partenaires: partenairesData,
   };
   const { queryByText } = render(<DescriptionBlock formation={tpFormation} />);
 

@@ -446,9 +446,9 @@ export const DescriptionBlock = ({ formation }) => {
             {showPartenaires && (
               <Text as="div" mb={4}>
                 Partenaires : <br />
-                {formation.partenaires.length > 0 ? (
+                {formation.partenaires?.length > 0 ? (
                   <UnorderedList>
-                    {formation.partenaires.map(({ Nom_Partenaire, Siret_Partenaire, Habilitation_Partenaire }) => (
+                    {formation.partenaires?.map(({ Nom_Partenaire, Siret_Partenaire, Habilitation_Partenaire }) => (
                       <ListItem key={Siret_Partenaire}>
                         <Text variant="highlight">
                           <strong>
