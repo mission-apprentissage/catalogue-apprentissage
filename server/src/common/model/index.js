@@ -32,6 +32,7 @@ module.exports = {
         "rncp_details.romes",
         "rncp_details.blocs_competences",
         "rncp_details.voix_acces",
+        "rncp_details.partenaires",
 
         // Champs rncp_details conservés
         // "rncp_details.niveau_europe",
@@ -40,7 +41,6 @@ module.exports = {
         // "rncp_details.etat_fiche_rncp",
         // "rncp_details.active_inactive",
         // "rncp_details.certificateurs",
-        // "rncp_details.partenaires",
         // "rncp_details.date_fin_validite_enregistrement",
         // "rncp_details.type_certif",
         // "rncp_details.code_type_certif",

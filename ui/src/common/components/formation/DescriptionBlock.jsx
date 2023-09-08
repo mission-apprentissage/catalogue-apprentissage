@@ -21,10 +21,6 @@ const DureeAnnee = ({ value }) => {
 };
 
 export const DescriptionBlock = ({ formation }) => {
-  const filteredPartenaires = (formation.rncp_details?.partenaires ?? []).filter(({ Siret_Partenaire }) =>
-    [formation.etablissement_gestionnaire_siret, formation.etablissement_formateur_siret].includes(Siret_Partenaire)
-  );
-
   const isTitreRNCP = ["Titre", "TP"].includes(formation.rncp_details?.code_type_certif); // formation.etablissement_reference_habilite_rncp !== null;
 
   const showPartenaires =
@@ -450,9 +446,9 @@ export const DescriptionBlock = ({ formation }) => {
             {showPartenaires && (
               <Text as="div" mb={4}>
                 Partenaires : <br />
-                {filteredPartenaires.length > 0 ? (
+                {formation.partenaires.length > 0 ? (
                   <UnorderedList>
-                    {filteredPartenaires.map(({ Nom_Partenaire, Siret_Partenaire, Habilitation_Partenaire }) => (
+                    {formation.partenaires.map(({ Nom_Partenaire, Siret_Partenaire, Habilitation_Partenaire }) => (
                       <ListItem key={Siret_Partenaire}>
                         <Text variant="highlight">
                           <strong>

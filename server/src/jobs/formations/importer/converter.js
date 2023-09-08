@@ -272,6 +272,21 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
     // });
   }
 
+  let partenaires = [];
+  if (
+    fields.etablissement_formateur_siret &&
+    fields.etablissement_gestionnaire_siret &&
+    fields.rncp_details.partenaires &&
+    (forceRecompute ||
+      fields?.etablissement_formateur_siret !== oldFields?.etablissement_formateur_siret ||
+      fields?.etablissement_gestionnaire_siret !== oldFields?.etablissement_gestionnaire_siret ||
+      fields?.rncp_details?.partenaires !== oldFields?.rncp_details?.partenaires)
+  ) {
+    partenaires = (fields?.rncp_details?.partenaires ?? []).filter(({ Siret_Partenaire }) =>
+      [fields?.etablissement_gestionnaire_siret, fields?.etablissement_formateur_siret].includes(Siret_Partenaire)
+    );
+  }
+
   const cfd_entree = getCfdEntree(fields.cfd);
 
   return {
@@ -290,6 +305,8 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
 
     cfd_entree,
     // ...(await computeRelationFields(fields)),
+
+    partenaires,
 
     ...fields,
   };

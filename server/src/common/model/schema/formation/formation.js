@@ -588,6 +588,12 @@ const formationSchema = {
     description: "Identifiant RCO",
   },
 
+  partenaires: {
+    type: [Object],
+    default: [],
+    description: "Partenaires",
+  },
+
   // Etablissements
   ...etablissementGestionnaireInfo,
   ...etablissementFormateurInfo,

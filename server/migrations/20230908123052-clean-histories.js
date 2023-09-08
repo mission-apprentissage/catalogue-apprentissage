@@ -24,11 +24,23 @@ module.exports = {
           "diff.rncp_details.romes",
           "diff.rncp_details.blocs_competences",
           "diff.rncp_details.voix_acces",
+          "diff.rncp_details.partenaires",
         ],
       },
     ]);
 
+    await histories.updateMany({ collectionName: "formation", "diff.rncp_details": { $eq: {} } }, [
+      {
+        $unset: ["diff.rncp_details"],
+      },
+    ]);
+
     await histories.deleteMany({ collectionName: "formation", diff: { $eq: {} } });
+
+    // Run following command to compact collection
+    // await db.runCommand({
+    //   compact: "histories",
+    // });
   },
 
   async down() {
