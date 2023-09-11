@@ -142,52 +142,55 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                     Affelnet.
                   </Text>
                 )}
+                {typeof formation.editedFields?.uai_formation !== "undefined" && (
+                  <Text fontSize={"zeta"} color={"grey.600"}>
+                    - UAI lieu édité
+                    {uai_updated_history[0] && (
+                      <>
+                        {" "}
+                        le {new Date(uai_updated_history[0]?.updated_at).toLocaleDateString("fr-FR")} par{" "}
+                        {uai_updated_history[0]?.to.last_update_who}
+                      </>
+                    )}
+                    .
+                  </Text>
+                )}
 
-                <Text fontSize={"zeta"} color={"grey.600"}>
-                  {typeof formation.editedFields?.uai_formation !== "undefined" ? (
-                    <>
-                      - UAI lieu édité
-                      {uai_updated_history[0] && (
-                        <>
-                          {" "}
-                          le {new Date(uai_updated_history[0]?.updated_at).toLocaleDateString("fr-FR")} par{" "}
-                          {uai_updated_history[0]?.to.last_update_who}
-                        </>
-                      )}
-                      .
-                    </>
-                  ) : formation.uai_formation ? (
-                    <>- Cet UAI a été repris automatiquement de l’UAI formateur.</>
-                  ) : (
-                    <>
-                      - Le code Insee du lieu de formation {formation.code_commune_insee} est différent de celui du
-                      formateur {formation.etablissement_formateur_code_commune_insee}, l'UAI du lieu doit donc être
-                      édité. Si vous pensez qu'il s'agit d'une erreur d'enregistrement, veuillez vous rapprocher de
-                      l'organisme ou du Carif-Oref."
-                    </>
-                  )}
-                </Text>
+                {formation.uai_formation && (
+                  <>
+                    {formation.uai_formation === formation.etablissement_formateur_uai && (
+                      <Text fontSize={"zeta"} color={"grey.600"} mt={2}>
+                        - Cet UAI a été repris automatiquement de l’UAI formateur.
+                      </Text>
+                    )}
 
-                <Text fontSize={"zeta"} color={"grey.600"} mt={2}>
-                  {[PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut) ? (
-                    <>
-                      - L’UAI n’est plus modifiable car la formation est déjà publiée sur Parcoursup. Si l’UAI doit être
-                      modifiée, faire un message au SCN via la messagerie Parcoursup pour signaler que vous n’avez pas
-                      envoyé la formation sur le bon UAI. Suite à intervention du SCN, la formation sera réinitialisée
-                      sur le catalogue, pour vous permettre de modifier l'UAI lieu et de redemander la publication. Si
-                      l'adresse postale du lieu doit être modifiée, demander au CFA d'en faire le signalement au
-                      Carif-Oref pour modification à la source.
-                    </>
-                  ) : (!formation.uai_formation ||
-                      formation.code_commune_insee === formation.etablissement_formateur_code_commune_insee) &&
-                    formation.parcoursup_perimetre ? (
-                    <>
-                      - L’UAI du lieu de formation doit obligatoirement être édité pour permettre l’envoi à Parcoursup.
-                    </>
-                  ) : (
-                    <>- Si le lieu de réalisation est différent du lieu du formateur, modifiez l’UAI (picto crayon).</>
-                  )}
-                </Text>
+                    {[PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut) && (
+                      <Text fontSize={"zeta"} color={"grey.600"} mt={2}>
+                        - L’UAI n’est plus modifiable car la formation est déjà publiée sur Parcoursup. Si l’UAI doit
+                        être modifiée, faire un message au SCN via la messagerie Parcoursup pour signaler que vous
+                        n’avez pas envoyé la formation sur le bon UAI. Suite à intervention du SCN, la formation sera
+                        réinitialisée sur le catalogue, pour vous permettre de modifier l'UAI lieu et de redemander la
+                        publication. Si l'adresse postale du lieu doit être modifiée, demander au CFA d'en faire le
+                        signalement au Carif-Oref pour modification à la source.
+                      </Text>
+                    )}
+                  </>
+                )}
+
+                {!formation.uai_formation && (
+                  <>
+                    {formation.code_commune_insee !== formation.etablissement_formateur_code_commune_insee && (
+                      <Text fontSize={"zeta"} color={"grey.600"} mt={2}>
+                        - Le code commune Insee du lieu de formation ({formation.code_commune_insee},{" "}
+                        {formation.localite}) est différent de celui du formateur (
+                        {formation.etablissement_formateur_code_commune_insee},{" "}
+                        {formation.etablissement_formateur_localite}) l'UAI du lieu doit donc être édité. Si vous pensez
+                        qu'il s'agit d'une erreur d'enregistrement, veuillez vous rapprocher de l'organisme ou du
+                        Carif-Oref.
+                      </Text>
+                    )}
+                  </>
+                )}
               </UaiFormationContainer>
 
               <AdresseContainer>
@@ -409,7 +412,7 @@ export default ({ match }) => {
           const message = response?.message ?? e?.message;
 
           toast({
-            title: "Error",
+            title: "Erreur",
             description: message,
             status: "error",
             duration: 10000,
@@ -478,7 +481,7 @@ export default ({ match }) => {
       const message = response?.message ?? e?.message;
 
       toast({
-        title: "Error",
+        title: "Erreur",
         description: message,
         status: "error",
         duration: 10000,
