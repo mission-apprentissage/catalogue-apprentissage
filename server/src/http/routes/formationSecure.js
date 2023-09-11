@@ -5,6 +5,7 @@ const logger = require("../../common/logger");
 const Boom = require("boom");
 const { sanitize, SAFE_UPDATE_OPERATORS } = require("../../common/utils/sanitizeUtils");
 const { hasOneOfRoles } = require("../../common/utils/rolesUtils");
+const { isValideUAI } = require("@mission-apprentissage/tco-service-node");
 
 module.exports = () => {
   const router = express.Router();
@@ -25,7 +26,27 @@ module.exports = () => {
       throw Boom.unauthorized();
     }
 
-    logger.debug({ type: "http" }, "Updating new item: ", payload);
+    logger.info({ type: "http" }, "Updating new item: ", payload);
+
+    if (payload.uai_formation) {
+      logger.info(
+        { type: "http" },
+        `Updating uai_formation ${formation.uai_formation} to ${payload.uai_formation} for ${formation.cle_ministere_educatif}`
+      );
+
+      if (!(await isValideUAI(payload.uai_formation))) {
+        throw Boom.badRequest(`${payload.uai_formation} n'est pas un code UAI valide.`);
+      }
+
+      if (
+        formation.etablissement_formateur_code_commune_insee !== formation.code_commune_insee &&
+        payload.uai_formation.trim() === formation.etablissement_formateur_uai
+      ) {
+        throw Boom.badRequest(
+          `Le code commune Insee du lieu de formation (${formation.code_commune_insee}, ${formation.localite}) est différent de celui du formateur (${formation.etablissement_formateur_code_commune_insee}, ${formation.etablissement_formateur_localite}). L'UAI du lieu de formation doit donc être différent de celui du formateur. Si vous pensez qu'il s'agit d'une erreur d'enregistrement, veuillez vous rapprocher de l'organisme ou du Carif-Oref.`
+        );
+      }
+    }
 
     const result = await Formation.findOneAndUpdate(
       { _id: itemId },
