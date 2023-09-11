@@ -118,7 +118,7 @@ const UserLine = ({ user, roles }) => {
           const message = response?.message ?? e?.message;
 
           toast({
-            title: "Error",
+            title: "Erreur",
             description: message,
             status: "error",
             duration: 10000,
