@@ -25,6 +25,7 @@ module.exports = {
         "france_competence_infos",
         "onisep_lien_site_onisepfr",
         "onisep_url",
+        "rome_codes",
 
         "rncp_details.demande",
         "rncp_details.nsf_code",
