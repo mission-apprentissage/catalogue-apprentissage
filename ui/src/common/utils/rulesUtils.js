@@ -32,7 +32,7 @@ export const isStatusChangeEnabled = ({ plateforme, academie, num_academie, stat
 };
 
 const getCampagneStartDate = (currentDate = new Date()) => {
-  const campagneStart = new Date(`${currentDate.getFullYear()}-09-13T00:00:00.000Z`);
+  const campagneStart = new Date(`${currentDate.getFullYear()}-09-18T00:00:00.000Z`);
 
   return campagneStart;
 };
