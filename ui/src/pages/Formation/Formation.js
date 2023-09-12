@@ -359,26 +359,26 @@ export default ({ match }) => {
         console.log(affelnet_statut);
         try {
           if (trimedUaiFormation !== formation["uai_formation"]) {
-            console.log({
-              uai_formation: trimedUaiFormation,
-              ...(affelnet_statut === AFFELNET_STATUS.PUBLIE ? { affelnet_statut: AFFELNET_STATUS.EN_ATTENTE } : {}),
-              last_update_who: user.email,
-              last_update_at: Date.now(),
-              editedFields: { ...formation?.editedFields, uai_formation: trimedUaiFormation },
-              $push: {
-                updates_history: buildUpdatesHistory(
-                  formation,
-                  {
-                    uai_formation: trimedUaiFormation,
-                    ...(affelnet_statut === AFFELNET_STATUS.PUBLIE
-                      ? { affelnet_statut: AFFELNET_STATUS.EN_ATTENTE }
-                      : {}),
-                    last_update_who: user.email,
-                  },
-                  ["uai_formation", ...(affelnet_statut === AFFELNET_STATUS.PUBLIE ? ["affelnet_statut"] : [])]
-                ),
-              },
-            });
+            // console.log({
+            //   uai_formation: trimedUaiFormation,
+            //   ...(affelnet_statut === AFFELNET_STATUS.PUBLIE ? { affelnet_statut: AFFELNET_STATUS.EN_ATTENTE } : {}),
+            //   last_update_who: user.email,
+            //   last_update_at: Date.now(),
+            //   editedFields: { ...formation?.editedFields, uai_formation: trimedUaiFormation },
+            //   $push: {
+            //     updates_history: buildUpdatesHistory(
+            //       formation,
+            //       {
+            //         uai_formation: trimedUaiFormation,
+            //         ...(affelnet_statut === AFFELNET_STATUS.PUBLIE
+            //           ? { affelnet_statut: AFFELNET_STATUS.EN_ATTENTE }
+            //           : {}),
+            //         last_update_who: user.email,
+            //       },
+            //       ["uai_formation", ...(affelnet_statut === AFFELNET_STATUS.PUBLIE ? ["affelnet_statut"] : [])]
+            //     ),
+            //   },
+            // });
 
             const result = await _put(`${CATALOGUE_API}/entity/formations/${formation._id}`, {
               uai_formation: trimedUaiFormation,
