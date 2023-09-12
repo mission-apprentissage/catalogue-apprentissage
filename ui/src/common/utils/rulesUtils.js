@@ -93,7 +93,7 @@ export const isInSession = ({ date_debut } = { date_debut: [] }) => {
     (date) => new Date(date) >= getSessionStartDate() && new Date(date) <= getSessionEndDate()
   );
   const result = datesInCampagne?.length > 0;
-  console.log({ date_debut, datesInCampagne, result });
+  // console.log({ date_debut, datesInCampagne, result });
 
   return result;
 };
