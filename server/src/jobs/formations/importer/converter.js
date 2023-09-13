@@ -126,8 +126,8 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
         fields.geo_coordonnees_etablissement_formateur &&
         fields.lieu_formation_geo_coordonnees &&
         distanceBetweenCoordinates(
-          Number(fields.geo_coordonnees_etablissement_formateur?.split("##")[0]?.split(",")[0]),
           Number(fields.geo_coordonnees_etablissement_formateur?.split("##")[0]?.split(",")[1]),
+          Number(fields.geo_coordonnees_etablissement_formateur?.split("##")[0]?.split(",")[0]),
           Number(fields.lieu_formation_geo_coordonnees?.split("##")[0]?.split(",")[0]),
           Number(fields.lieu_formation_geo_coordonnees?.split("##")[0]?.split(",")[1])
         );
