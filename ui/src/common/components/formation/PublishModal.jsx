@@ -215,7 +215,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
     },
     validationSchema: Yup.object().shape({
       affelnet_infos_offre: isAffelnetFormOpen
-        ? Yup.string().nullable().max(1000, "Le champ ne doit pas dépasser 1000 caractères")
+        ? Yup.string().nullable().max(1000, "Le champ ne doit pas dépasser 1000 caractères.")
         : Yup.string().nullable(),
       affelnet_url_infos_offre: isAffelnetFormOpen
         ? Yup.string()
@@ -228,10 +228,10 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                 "L’URL n’est pas autorisée. Les URL autorisées : sites des académies, régions académiques, monbureaunumerique.fr, index-education (.com ou .fr), onisep.fr.",
               excludeEmptyString: true,
             })
-            .max(250, "Le champ ne doit pas dépasser 250 caractères")
+            .max(250, "Le champ ne doit pas dépasser 250 caractères.")
         : Yup.string().nullable(),
       affelnet_modalites_offre: isAffelnetFormOpen
-        ? Yup.string().nullable().max(1000, "Le champ ne doit pas dépasser 1000 caractères")
+        ? Yup.string().nullable().max(1000, "Le champ ne doit pas dépasser 1000 caractères.")
         : Yup.string().nullable(),
       affelnet_url_modalites_offre: isAffelnetFormOpen
         ? Yup.string()
@@ -244,20 +244,18 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                 "L’URL n’est pas autorisée. Les URL autorisées : sites des académies, régions académiques, monbureaunumerique.fr, index-education (.com ou .fr), onisep.fr.",
               excludeEmptyString: true,
             })
-            .max(250, "Le champ ne doit pas dépasser 250 caractères")
+            .max(250, "Le champ ne doit pas dépasser 250 caractères.")
         : Yup.string().nullable(),
 
       affelnet_raison_depublication: isAffelnetUnpublishFormOpen
-        ? Yup.string().nullable().required("Veuillez saisir la raison")
+        ? Yup.string().nullable().required("Veuillez saisir la raison.")
         : Yup.string().nullable(),
-      uai_formation: isParcoursupFormOpen
-        ? Yup.string()
-            .min(8)
-            .max(8)
-            .required("L’UAI du lieu de formation doit obligatoirement être édité pour permettre l’envoi à Parcoursup")
-        : Yup.string().nullable(),
+      uai_formation: Yup.string()
+        .min(8)
+        .max(8)
+        .required("L’UAI du lieu de formation doit obligatoirement être édité pour permettre la publication."),
       parcoursup_raison_depublication: isParcoursupUnpublishFormOpen
-        ? Yup.string().nullable().required("Veuillez saisir la raison")
+        ? Yup.string().nullable().required("Veuillez saisir la raison.")
         : Yup.string().nullable(),
     }),
     onSubmit: ({
@@ -486,6 +484,29 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                       rows={2}
                     />
                     <FormErrorMessage>{errors.affelnet_url_modalites_offre}</FormErrorMessage>
+                  </FormControl>
+                </Box>
+
+                <Box style={{ display: isAffelnetFormOpen ? "block" : "none" }}>
+                  <FormControl
+                    isRequired
+                    isInvalid={errors.uai_formation}
+                    display="flex"
+                    flexDirection="column"
+                    w="auto"
+                    mt={3}
+                  >
+                    {/* <br />
+                    {(!formation?.uai_formation ||
+                      formation?.uai_formation === "" ||
+                      !formation?.uai_formation_valide) && (
+                      <DangerBox mb={1}>
+                        L’UAI du lieu de formation doit obligatoirement être édité pour permettre l’envoi à Parcoursup
+                      </DangerBox>
+                    )} */}
+
+                    <Input type="hidden" name="uai_formation" value={values.uai_formation} />
+                    <FormErrorMessage>{errors.uai_formation}</FormErrorMessage>
                   </FormControl>
                 </Box>
 
