@@ -309,31 +309,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
           <Box mb={16}>
             <OrganismesBlock formation={formation} />
           </Box>
-          {(formation?.affelnet_published_date || formation?.parcoursup_published_date) && (
-            <Box mb={[0, 0, 16]}>
-              <Heading textStyle="h4" color="grey.800" mb={4}>
-                Autres informations
-              </Heading>
-              {formation?.affelnet_published_date && (
-                <Text mb={4}>
-                  Date de publication sur Affelnet :{" "}
-                  <Text as="span" variant="highlight">
-                    {new Date(formation.affelnet_published_date).toLocaleDateString("fr-FR")}
-                  </Text>{" "}
-                  <InfoTooltip description={helpText.formation.affelnet_published_date} />
-                </Text>
-              )}
-              {formation?.parcoursup_published_date && (
-                <Text mb={4}>
-                  Date de publication sur Parcoursup :{" "}
-                  <Text as="span" variant="highlight">
-                    {new Date(formation.parcoursup_published_date).toLocaleDateString("fr-FR")}
-                  </Text>{" "}
-                  <InfoTooltip description={helpText.formation.parcoursup_published_date} />
-                </Text>
-              )}
-            </Box>
-          )}
+
           {(formation?.affelnet_statut_history?.length ||
             formation?.parcoursup_statut_history?.length ||
             formation?.updates_history) && (
