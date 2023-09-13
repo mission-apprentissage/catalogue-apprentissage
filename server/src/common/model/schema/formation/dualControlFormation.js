@@ -423,11 +423,11 @@ const formationSchema = {
     default: [],
     description: "BCN : Codes MEF 10 caractères",
   },
-  distance_lieu_formation_etablissement_formateur: {
-    type: Number,
-    default: null,
-    description: "distance entre le Lieu de formation et l'établissement formateur",
-  },
+  // distance_lieu_formation_etablissement_formateur: {
+  //   type: Number,
+  //   default: null,
+  //   description: "distance entre le Lieu de formation et l'établissement formateur",
+  // },
   niveau_entree_obligatoire: {
     type: Number,
     default: null,

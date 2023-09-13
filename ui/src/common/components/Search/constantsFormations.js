@@ -439,6 +439,12 @@ const columnsDefinition = [
     exportable: true,
   },
   {
+    Header: "Distance entre le lieu de formation et l'établissement formateur",
+    accessor: "distance_lieu_formation_etablissement_formateur",
+    width: 200,
+    exportable: true,
+  },
+  {
     Header: "Numero Academie Siege",
     accessor: "etablissement_gestionnaire_num_academie",
     width: 200,

@@ -203,10 +203,6 @@ export interface DualControlFormation {
    */
   bcn_mefs_10?: ItemOfBcnMefs_10[];
   /**
-   * distance entre le Lieu de formation et l'établissement formateur
-   */
-  distance_lieu_formation_etablissement_formateur?: number | null;
-  /**
    * Niveau d'entrée de l'apprenti minimum obligatoire pour cette formation
    */
   niveau_entree_obligatoire?: number | null;

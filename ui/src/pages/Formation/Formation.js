@@ -92,8 +92,8 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
   };
 
   const now = new Date();
-  // si date du jour < septembre : nous afficherons les formations ayant des tag sur année -1, année en cours et année + 1
-  // si date du jour >= septembre : année en cours et année + 1, année +2
+  // si date du jour < septembre : les formations ayant des tag sur année -1, année en cours et année + 1 seront affichées sur LBA
+  // si date du jour >= septembre : année en cours et année + 1, année +2 seront affichées sur LBA
   const tagsForLBA =
     now.getMonth() >= 8
       ? [now.getFullYear(), now.getFullYear() + 1, now.getFullYear() + 2]
