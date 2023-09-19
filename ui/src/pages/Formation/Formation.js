@@ -562,6 +562,14 @@ export default ({ match }) => {
                         onClick={() => {
                           onOpenPublishModal();
                         }}
+                        disabled={
+                          !formation.uai_formation || !formation.uai_formation.length || !formation.uai_formation_valide
+                        }
+                        title={
+                          !formation.uai_formation || !formation.uai_formation.length || !formation.uai_formation_valide
+                            ? "Vous devez éditer l'UAI du lieu de la formation avant de pouvoir accéder à la gestion des publications"
+                            : "Gérer les publications"
+                        }
                       >
                         <Parametre mr={2} />
                         Gérer les publications
