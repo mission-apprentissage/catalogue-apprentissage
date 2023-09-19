@@ -10,158 +10,158 @@ export interface ParcoursupFormationCheck {
   /**
    * UAI_GES
    */
-  uai_ges?: string;
+  uai_ges?: string | null;
   /**
    * UAI_COMPOSANTE
    */
-  uai_composante?: string;
+  uai_composante?: string | null;
   /**
    * LIB_COMPOSANTE
    */
-  lib_composante?: string;
+  lib_composante?: string | null;
   /**
    * LIB_INS
    */
-  lib_ins?: string;
+  lib_ins?: string | null;
   /**
    * UAI_AFF
    */
-  uai_aff?: string;
+  uai_aff?: string | null;
   /**
    * LIB_AFF
    */
-  lib_aff?: string;
+  lib_aff?: string | null;
   /**
    * CODECOMMUNE
    */
-  codecommune?: string;
+  codecommune?: string | null;
   /**
    * LIBCOMMUNE
    */
-  libcommune?: string;
+  libcommune?: string | null;
   /**
    * CODEPOSTAL
    */
-  codepostal?: string;
+  codepostal?: string | null;
   /**
    * ACADÉMIE
    */
-  académie?: string;
+  académie?: string | null;
   /**
    * MINISTERETUTELLE
    */
-  ministeretutelle?: string;
+  ministeretutelle?: string | null;
   /**
    * LIBMINISTERE
    */
-  libministere?: string;
+  libministere?: string | null;
   /**
    * TYPEETA
    */
-  typeeta?: string;
+  typeeta?: string | null;
   /**
    * CODEFORMATION
    */
-  codeformation?: string;
+  codeformation?: string | null;
   /**
    * LIBFORMATION
    */
-  libformation?: string;
+  libformation?: string | null;
   /**
    * CODESPÉCIALITÉ
    */
-  codespécialité?: string;
+  codespécialité?: string | null;
   /**
    * LIBSPÉCIALITÉ
    */
-  libspécialité?: string;
+  libspécialité?: string | null;
   /**
    * CODESPÉFORMATIONINITIALE
    */
-  codespéformationinitiale?: string;
+  codespéformationinitiale?: string | null;
   /**
    * CODEMEF
    */
-  codemef?: string;
+  codemef?: string | null;
   /**
    * UAI_INSERT
    */
-  uai_insert?: string;
+  uai_insert?: string | null;
   /**
    * UAI_CERFA
    */
-  uai_cerfa?: string;
+  uai_cerfa?: string | null;
   /**
    * SIRET_CERFA
    */
-  siret_cerfa?: string;
+  siret_cerfa?: string | null;
   /**
    * UAI_MAP
    */
-  uai_map?: string;
+  uai_map?: string | null;
   /**
    * SIRET_MAP
    */
-  siret_map?: string;
+  siret_map?: string | null;
   /**
    * CODEDIPLOME_MAP
    */
-  codediplome_map?: string;
+  codediplome_map?: string | null;
   /**
    * CODEFORMATIONINSCRIPTION (id_parcoursup)
    */
-  codeformationinscription?: string;
+  codeformationinscription?: string | null;
   /**
    * CODEFORMATIONACCUEIL
    */
-  codeformationaccueil?: string;
+  codeformationaccueil?: string | null;
   /**
    * LATITUDE
    */
-  latitude?: string;
+  latitude?: string | null;
   /**
    * LONGITUDE
    */
-  longitude?: string;
+  longitude?: string | null;
   /**
    * COMPLEMENTADRESSE
    */
-  complementadresse?: string;
+  complementadresse?: string | null;
   /**
    * COMPLEMENTADRESSE1
    */
-  complementadresse1?: string;
+  complementadresse1?: string | null;
   /**
    * COMPLEMENTADRESSE2
    */
-  complementadresse2?: string;
+  complementadresse2?: string | null;
   /**
    * COMPLEMENTCODEPOSTAL
    */
-  complementcodepostal?: string;
+  complementcodepostal?: string | null;
   /**
    * COMPLEMENTCOMMUNE
    */
-  complementcommune?: string;
+  complementcommune?: string | null;
   /**
    * COMPLEMENTCEDEX
    */
-  complementcedex?: string;
+  complementcedex?: string | null;
   /**
    * PREMIERELIGNEADRESSEETAB
    */
-  premiereligneadresseetab?: string;
+  premiereligneadresseetab?: string | null;
   /**
    * SECONDELIGNEADRESSEETAB
    */
-  secondeligneadresseetab?: string;
+  secondeligneadresseetab?: string | null;
   /**
    * ID_RCO (cle_ministere_educatif)
    */
-  id_rco?: string;
+  id_rco?: string | null;
   /**
    * FLAG_CERTIF
    */
-  flag_certif?: string;
+  flag_certif?: string | null;
   _id?: Types.ObjectId;
 }

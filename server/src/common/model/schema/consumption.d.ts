@@ -10,11 +10,11 @@ export interface Consumption {
   /**
    * Chemin d'appel
    */
-  path?: string;
+  path?: string | null;
   /**
    * Method d'appel
    */
-  method?: string;
+  method?: string | null;
   /**
    * Nombre d'appels de la route
    */
@@ -29,4 +29,5 @@ export interface ItemOfConsumers {
   caller?: string;
   callCount?: number;
   date?: Date;
+  _id?: Types.ObjectId;
 }

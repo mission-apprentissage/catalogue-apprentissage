@@ -1,19 +1,23 @@
 const fs = require("fs");
 const path = require("path");
 const schemas = require("../../common/model/schema");
-const { getJsonFromMongooseSchema } = require("./mongooseUtils");
 const prettier = require("prettier");
 const packageJson = require("../../../package.json");
+const m2s = require("mongoose-to-swagger");
+const { createModel } = require("../../common/model/createModel");
+const { cleanMongooseSchema } = require("./mongooseUtils");
 
 const generateSwaggerSchema = () => {
   Array.from(schemas.keys()).forEach((schemaName) => {
-    const [schemaDescriptor, schemaOptions] = schemas.get(schemaName);
     if (["formation", "etablissement"].includes(schemaName)) {
+      const [schemaDescriptor, schemaOptions] = schemas.get(schemaName);
       const baseFilename = schemaName;
-      const eJsonSchema = getJsonFromMongooseSchema(schemaDescriptor, schemaOptions);
+      const swaggerSchema = m2s(
+        createModel(schemaName.toLowerCase(), [cleanMongooseSchema(schemaDescriptor), schemaOptions])
+      );
 
       let sout = {};
-      sout[baseFilename] = eJsonSchema;
+      sout[baseFilename] = swaggerSchema;
       const edata = JSON.stringify(sout, null, 2);
       const content = prettier.format(`module.exports = ${edata};`, { ...packageJson.prettier, parser: "babel" });
 

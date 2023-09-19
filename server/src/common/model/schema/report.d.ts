@@ -10,7 +10,7 @@ export interface Report {
   /**
    * Type du rapport
    */
-  type?: string;
+  type?: string | null;
   /**
    * Date du rapport
    */
@@ -24,6 +24,6 @@ export interface Report {
   /**
    * uuid across report
    */
-  uuid?: string;
+  uuid?: string | null;
   _id?: Types.ObjectId;
 }

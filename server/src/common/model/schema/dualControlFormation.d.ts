@@ -6,433 +6,10 @@
  */
 const { Types } = require("mongoose");
 
-export interface DualControlFormation {
-  /**
-   * Clé unique de la formation (pour envoi aux ministères éducatifs)
-   */
-  cle_ministere_educatif?: string;
-  /**
-   * Code formation diplôme (education nationale)
-   */
-  cfd?: string;
-  /**
-   * Lettre spécialité du code cfd
-   */
-  cfd_specialite?: {
-    [k: string]: unknown;
-  };
-  /**
-   * BCN : cfd périmé (fermeture avant le 31 août de l'année courante)
-   */
-  cfd_outdated?: boolean;
-  /**
-   * Date de fermeture du cfd
-   */
-  cfd_date_fermeture?: Date;
-  /**
-   * Nom de l'académie
-   */
-  nom_academie?: string;
-  /**
-   * Numéro de l'académie
-   */
-  num_academie?: string;
-  /**
-   * Code postal
-   */
-  code_postal?: string;
-  /**
-   * Code commune INSEE
-   */
-  code_commune_insee?: string;
-  /**
-   * Numéro de département
-   */
-  num_departement?: string;
-  /**
-   * Nom du département
-   */
-  nom_departement?: string;
-  /**
-   * Numéro de département
-   */
-  region?: string;
-  /**
-   * Localité
-   */
-  localite?: string;
-  /**
-   * Nom de la formation déclaratif
-   */
-  nom?: string;
-  /**
-   * Intitulé comme transmis par RCO
-   */
-  intitule_rco?: string;
-  /**
-   * Intitulé long de la formation normalisé BCN
-   */
-  intitule_long?: string;
-  /**
-   * Intitulé court de la formation normalisé BCN
-   */
-  intitule_court?: string;
-  /**
-   * Diplôme ou titre visé
-   */
-  diplome?: string;
-  /**
-   * Niveau de la formation
-   */
-  niveau?: string;
-  /**
-   * Périodes de début de la formation
-   */
-  periode?: Date[];
-  /**
-   * Capacité d'accueil
-   */
-  capacite?: string;
-  /**
-   * Durée de la formation en années
-   */
-  duree?: string;
-  /**
-   * Année de la formation (cursus)
-   */
-  annee?: string;
-  /**
-   * Url de redirection vers le site de l'ONISEP
-   */
-  onisep_url?: string;
-  /**
-   * Intitulé éditorial l'ONISEP
-   */
-  onisep_intitule?: string;
-  /**
-   * Libellé poursuite étude l'ONISEP (séparateur ;)
-   */
-  onisep_libelle_poursuite?: string;
-  /**
-   * Lien vers site de l'ONISEP api
-   */
-  onisep_lien_site_onisepfr?: string;
-  /**
-   * Disciplines ONISEP (séparateur ;)
-   */
-  onisep_discipline?: string;
-  /**
-   * Domaine et sous domaine ONISEP (séparateur ;)
-   */
-  onisep_domaine_sousdomaine?: string;
-  /**
-   * Code RNCP
-   */
-  rncp_code?: string;
-  /**
-   * Intitulé du code RNCP
-   */
-  rncp_intitule?: string;
-  /**
-   * Le titre RNCP est éligible en apprentissage
-   */
-  rncp_eligible_apprentissage?: boolean;
-  rncp_details?: RncpDetails;
-  /**
-   * Codes ROME
-   */
-  rome_codes?: string[];
-  /**
-   * Est publiée, la formation est éligible pour le catalogue
-   */
-  published?: boolean;
-  /**
-   * Latitude et longitude du lieu de formation
-   */
-  lieu_formation_geo_coordonnees?: string;
-  /**
-   * Latitude et longitude du lieu de formation déduit de l'adresse du flux RCO
-   */
-  lieu_formation_geo_coordonnees_computed?: string;
-  /**
-   * Adresse du lieu de formation
-   */
-  lieu_formation_adresse?: string;
-  /**
-   * Adresse du lieu de formation déduit de la géolocalisation du flux RCO
-   */
-  lieu_formation_adresse_computed?: string;
-  /**
-   * Siret du lieu de formation
-   */
-  lieu_formation_siret?: string;
-  /**
-   * **[DEPRECATED]** Id de formation RCO (id_formation + id_action + id_certifinfo)
-   */
-  id_rco_formation?: string;
-  /**
-   * Identifiant de la formation
-   */
-  id_formation?: string;
-  /**
-   * Identifiant des actions concaténés
-   */
-  id_action?: string;
-  /**
-   * Identifiant des actions concaténés
-   */
-  ids_action?: string[];
-  /**
-   * Identifiant certifInfo (unicité de la certification)
-   */
-  id_certifinfo?: string;
-  /**
-   * Tableau de tags (2020, 2021, etc.)
-   */
-  tags?: string[];
-  /**
-   * BCN : libelle court fusion table n_formation_diplome ou v_formation_diplome
-   */
-  libelle_court?: string;
-  /**
-   * BCN : niveau formation diplôme
-   */
-  niveau_formation_diplome?: string;
-  /**
-   * BCN : Codes MEF 10 caractères
-   */
-  bcn_mefs_10?: ItemOfBcnMefs_10[];
-  /**
-   * Niveau d'entrée de l'apprenti minimum obligatoire pour cette formation
-   */
-  niveau_entree_obligatoire?: number | null;
-  /**
-   * Renseigné si la formation peut être suivie entièrement à distance
-   */
-  entierement_a_distance?: boolean;
-  france_competence_infos?: FranceCompetenceInfos;
-  /**
-   * Formation éligible au catalogue générale
-   */
-  catalogue_published?: boolean;
-  /**
-   * Formation éligible au catalogue générale
-   */
-  date_debut?: Date[];
-  /**
-   * Formation éligible au catalogue générale
-   */
-  date_fin?: Date[];
-  /**
-   * Session en entrée / sortie permanente
-   */
-  modalites_entrees_sorties?: boolean[];
-  /**
-   * Identifiant RCO
-   */
-  id_RCO?: string;
-  /**
-   * Numéro siret gestionnaire
-   */
-  etablissement_gestionnaire_siret?: string;
-  /**
-   * Enseigne établissement gestionnaire
-   */
-  etablissement_gestionnaire_enseigne?: string;
-  /**
-   * UAI de l'etablissement gestionnaire
-   */
-  etablissement_gestionnaire_uai?: string;
-  /**
-   * Etablissement gestionnaire est habilité RNCP ou pas
-   */
-  etablissement_gestionnaire_habilite_rncp?: boolean;
-  /**
-   * Etablissement gestionnaire est certifié Qualité
-   */
-  etablissement_gestionnaire_certifie_qualite?: boolean;
-  /**
-   * Numéro et rue établissement gestionnaire
-   */
-  etablissement_gestionnaire_adresse?: string;
-  /**
-   * Code postal établissement gestionnaire
-   */
-  etablissement_gestionnaire_code_postal?: string;
-  /**
-   * Code commune insee établissement gestionnaire
-   */
-  etablissement_gestionnaire_code_commune_insee?: string;
-  /**
-   * Localité établissement gestionnaire
-   */
-  etablissement_gestionnaire_localite?: string;
-  /**
-   * Complément d'adresse de l'établissement gestionnaire
-   */
-  etablissement_gestionnaire_complement_adresse?: string;
-  /**
-   * Cedex
-   */
-  etablissement_gestionnaire_cedex?: string;
-  /**
-   * Raison sociale établissement gestionnaire
-   */
-  etablissement_gestionnaire_entreprise_raison_sociale?: string;
-  /**
-   * Latitude et longitude de l'établissement gestionnaire
-   */
-  geo_coordonnees_etablissement_gestionnaire?: string;
-  /**
-   * région gestionnaire
-   */
-  etablissement_gestionnaire_region?: string;
-  /**
-   * Numéro de departement gestionnaire
-   */
-  etablissement_gestionnaire_num_departement?: string;
-  /**
-   * Nom du departement gestionnaire
-   */
-  etablissement_gestionnaire_nom_departement?: string;
-  /**
-   * Nom de l'académie gestionnaire
-   */
-  etablissement_gestionnaire_nom_academie?: string;
-  /**
-   * Numéro de l'académie gestionnaire
-   */
-  etablissement_gestionnaire_num_academie?: string;
-  /**
-   * Numéro siren gestionnaire
-   */
-  etablissement_gestionnaire_siren?: string;
-  /**
-   * Numéro Déclaration gestionnaire
-   */
-  etablissement_gestionnaire_nda?: string;
-  /**
-   * Date de création de l'établissement
-   */
-  etablissement_gestionnaire_date_creation?: Date;
-  /**
-   * Adresse email de contact de l'établissement gestionnaire
-   */
-  etablissement_gestionnaire_courriel?: string;
-  /**
-   * Numéro siret formateur
-   */
-  etablissement_formateur_siret?: string;
-  /**
-   * Enseigne établissement formateur
-   */
-  etablissement_formateur_enseigne?: string;
-  /**
-   * UAI de l'etablissement formateur
-   */
-  etablissement_formateur_uai?: string;
-  /**
-   * Etablissement formateur est habilité RNCP ou pas
-   */
-  etablissement_formateur_habilite_rncp?: boolean;
-  /**
-   * Etablissement formateur est certifié Qualité
-   */
-  etablissement_formateur_certifie_qualite?: boolean;
-  /**
-   * Numéro et rue établissement formateur
-   */
-  etablissement_formateur_adresse?: string;
-  /**
-   * Code postal établissement formateur
-   */
-  etablissement_formateur_code_postal?: string;
-  /**
-   * Code commune insee établissement formateur
-   */
-  etablissement_formateur_code_commune_insee?: string;
-  /**
-   * Localité établissement formateur
-   */
-  etablissement_formateur_localite?: string;
-  /**
-   * Complément d'adresse de l'établissement
-   */
-  etablissement_formateur_complement_adresse?: string;
-  /**
-   * Cedex
-   */
-  etablissement_formateur_cedex?: string;
-  /**
-   * Raison sociale établissement formateur
-   */
-  etablissement_formateur_entreprise_raison_sociale?: string;
-  /**
-   * Latitude et longitude de l'établissement formateur
-   */
-  geo_coordonnees_etablissement_formateur?: string;
-  /**
-   * région formateur
-   */
-  etablissement_formateur_region?: string;
-  /**
-   * Numéro de departement formateur
-   */
-  etablissement_formateur_num_departement?: string;
-  /**
-   * Nom du departement formateur
-   */
-  etablissement_formateur_nom_departement?: string;
-  /**
-   * Nom de l'académie formateur
-   */
-  etablissement_formateur_nom_academie?: string;
-  /**
-   * Numéro de l'académie formateur
-   */
-  etablissement_formateur_num_academie?: string;
-  /**
-   * Numéro siren formateur
-   */
-  etablissement_formateur_siren?: string;
-  /**
-   * Numéro Déclaration formateur
-   */
-  etablissement_formateur_nda?: string;
-  /**
-   * Date de création de l'établissement
-   */
-  etablissement_formateur_date_creation?: Date;
-  /**
-   * Adresse email de contact de l'établissement formateur
-   */
-  etablissement_formateur_courriel?: string;
-  /**
-   * Etablissement reference est soit formateur soit le gestionnaire
-   */
-  etablissement_reference?: string;
-  /**
-   * Etablissement reference est publié
-   */
-  etablissement_reference_published?: boolean;
-  /**
-   * Etablissement reference est habilité RNCP ou pas
-   */
-  etablissement_reference_habilite_rncp?: boolean;
-  /**
-   * Etablissement reference est certifié Qualité
-   */
-  etablissement_reference_certifie_qualite?: boolean;
-  /**
-   * Date de création de l'établissement
-   */
-  etablissement_reference_date_creation?: Date;
-  _id?: Types.ObjectId;
-}
 /**
  * Détails RNCP (bloc de compétences etc..)
  */
-export interface RncpDetails {
+export type RncpDetails = {
   /**
    * Date de validité de la fiche
    */
@@ -472,7 +49,9 @@ export interface RncpDetails {
   /**
    * Certificateurs
    */
-  certificateurs?: unknown[];
+  certificateurs?: {
+    [k: string]: unknown;
+  }[];
   /**
    * Code NSF
    */
@@ -484,40 +63,473 @@ export interface RncpDetails {
   /**
    * Romes
    */
-  romes?: unknown[];
+  romes?: {
+    [k: string]: unknown;
+  }[];
   /**
    * Blocs de compétences
    */
-  blocs_competences?: unknown[];
+  blocs_competences?: {
+    [k: string]: unknown;
+  }[];
   /**
    * Voix d'accès
    */
-  voix_acces?: unknown[];
+  voix_acces?: {
+    [k: string]: unknown;
+  }[];
   /**
    * Partenaires
    */
-  partenaires?: unknown[];
+  partenaires?: {
+    [k: string]: unknown;
+  }[];
   /**
    * Code rncp périmé (date fin enregistrement avant le 31 aout de l'année courante)
    */
   rncp_outdated?: boolean;
-}
-export interface ItemOfBcnMefs_10 {
-  mef10?: string;
-  modalite?: Modalite;
-}
-export interface Modalite {
-  duree?: string;
-  annee?: string;
-}
+} | null;
 /**
  * Données pour étude France Compétence
  */
-export interface FranceCompetenceInfos {
+export type FranceCompetenceInfos = {
   fc_is_catalog_general?: boolean;
   fc_is_habilite_rncp?: boolean;
   fc_is_certificateur?: boolean;
   fc_is_certificateur_siren?: boolean;
   fc_is_partenaire?: boolean;
   fc_has_partenaire?: boolean;
+} | null;
+
+export interface DualControlFormation {
+  /**
+   * Clé unique de la formation (pour envoi aux ministères éducatifs)
+   */
+  cle_ministere_educatif?: string | null;
+  /**
+   * Code formation diplôme (education nationale)
+   */
+  cfd?: string | null;
+  /**
+   * Lettre spécialité du code cfd
+   */
+  cfd_specialite?: {
+    [k: string]: unknown;
+  } | null;
+  /**
+   * BCN : cfd périmé (fermeture avant le 31 août de l'année courante)
+   */
+  cfd_outdated?: boolean;
+  /**
+   * Date de fermeture du cfd
+   */
+  cfd_date_fermeture?: Date;
+  /**
+   * Nom de l'académie
+   */
+  nom_academie?: string | null;
+  /**
+   * Numéro de l'académie
+   */
+  num_academie?: string;
+  /**
+   * Code postal
+   */
+  code_postal?: string | null;
+  /**
+   * Code commune INSEE
+   */
+  code_commune_insee?: string | null;
+  /**
+   * Numéro de département
+   */
+  num_departement?: string | null;
+  /**
+   * Nom du département
+   */
+  nom_departement?: string | null;
+  /**
+   * Numéro de département
+   */
+  region?: string | null;
+  /**
+   * Localité
+   */
+  localite?: string | null;
+  /**
+   * Nom de la formation déclaratif
+   */
+  nom?: string | null;
+  /**
+   * Intitulé comme transmis par RCO
+   */
+  intitule_rco?: string | null;
+  /**
+   * Intitulé long de la formation normalisé BCN
+   */
+  intitule_long?: string | null;
+  /**
+   * Intitulé court de la formation normalisé BCN
+   */
+  intitule_court?: string | null;
+  /**
+   * Diplôme ou titre visé
+   */
+  diplome?: string | null;
+  /**
+   * Niveau de la formation
+   */
+  niveau?: string | null;
+  /**
+   * Périodes de début de la formation
+   */
+  periode?: Date[];
+  /**
+   * Capacité d'accueil
+   */
+  capacite?: string | null;
+  /**
+   * Durée de la formation en années
+   */
+  duree?: string | null;
+  /**
+   * Année de la formation (cursus)
+   */
+  annee?: string | null;
+  /**
+   * Url de redirection vers le site de l'ONISEP
+   */
+  onisep_url?: string | null;
+  /**
+   * Intitulé éditorial l'ONISEP
+   */
+  onisep_intitule?: string | null;
+  /**
+   * Libellé poursuite étude l'ONISEP (séparateur ;)
+   */
+  onisep_libelle_poursuite?: string | null;
+  /**
+   * Lien vers site de l'ONISEP api
+   */
+  onisep_lien_site_onisepfr?: string | null;
+  /**
+   * Disciplines ONISEP (séparateur ;)
+   */
+  onisep_discipline?: string | null;
+  /**
+   * Domaine et sous domaine ONISEP (séparateur ;)
+   */
+  onisep_domaine_sousdomaine?: string | null;
+  /**
+   * Code RNCP
+   */
+  rncp_code?: string | null;
+  /**
+   * Intitulé du code RNCP
+   */
+  rncp_intitule?: string | null;
+  /**
+   * Le titre RNCP est éligible en apprentissage
+   */
+  rncp_eligible_apprentissage?: boolean;
+  rncp_details?: RncpDetails;
+  /**
+   * Codes ROME
+   */
+  rome_codes?: string[];
+  /**
+   * Est publiée, la formation est éligible pour le catalogue
+   */
+  published?: boolean;
+  /**
+   * Latitude et longitude du lieu de formation
+   */
+  lieu_formation_geo_coordonnees?: string;
+  /**
+   * Latitude et longitude du lieu de formation déduit de l'adresse du flux RCO
+   */
+  lieu_formation_geo_coordonnees_computed?: string;
+  /**
+   * Adresse du lieu de formation
+   */
+  lieu_formation_adresse?: string | null;
+  /**
+   * Adresse du lieu de formation déduit de la géolocalisation du flux RCO
+   */
+  lieu_formation_adresse_computed?: string | null;
+  /**
+   * Siret du lieu de formation
+   */
+  lieu_formation_siret?: string | null;
+  /**
+   * **[DEPRECATED]** Id de formation RCO (id_formation + id_action + id_certifinfo)
+   */
+  id_rco_formation?: string | null;
+  /**
+   * Identifiant de la formation
+   */
+  id_formation?: string | null;
+  /**
+   * Identifiant des actions concaténés
+   */
+  id_action?: string | null;
+  /**
+   * Identifiant des actions concaténés
+   */
+  ids_action?: string[];
+  /**
+   * Identifiant certifInfo (unicité de la certification)
+   */
+  id_certifinfo?: string | null;
+  /**
+   * Tableau de tags (2020, 2021, etc.)
+   */
+  tags?: string[];
+  /**
+   * BCN : libelle court fusion table n_formation_diplome ou v_formation_diplome
+   */
+  libelle_court?: string | null;
+  /**
+   * BCN : niveau formation diplôme
+   */
+  niveau_formation_diplome?: string | null;
+  /**
+   * BCN : Codes MEF 10 caractères
+   */
+  bcn_mefs_10?: ItemOfBcnMefs_10[];
+  /**
+   * Niveau d'entrée de l'apprenti minimum obligatoire pour cette formation
+   */
+  niveau_entree_obligatoire?: number | null;
+  /**
+   * Renseigné si la formation peut être suivie entièrement à distance
+   */
+  entierement_a_distance?: boolean;
+  france_competence_infos?: FranceCompetenceInfos;
+  /**
+   * Formation éligible au catalogue générale
+   */
+  catalogue_published?: boolean;
+  /**
+   * Formation éligible au catalogue générale
+   */
+  date_debut?: Date[];
+  /**
+   * Formation éligible au catalogue générale
+   */
+  date_fin?: Date[];
+  /**
+   * Session en entrée / sortie permanente
+   */
+  modalites_entrees_sorties?: boolean[];
+  /**
+   * Identifiant RCO
+   */
+  id_RCO?: string | null;
+  /**
+   * Numéro siret gestionnaire
+   */
+  etablissement_gestionnaire_siret?: string | null;
+  /**
+   * Enseigne établissement gestionnaire
+   */
+  etablissement_gestionnaire_enseigne?: string | null;
+  /**
+   * UAI de l'etablissement gestionnaire
+   */
+  etablissement_gestionnaire_uai?: string | null;
+  /**
+   * Etablissement gestionnaire est habilité RNCP ou pas
+   */
+  etablissement_gestionnaire_habilite_rncp?: boolean;
+  /**
+   * Etablissement gestionnaire est certifié Qualité
+   */
+  etablissement_gestionnaire_certifie_qualite?: boolean;
+  /**
+   * Numéro et rue établissement gestionnaire
+   */
+  etablissement_gestionnaire_adresse?: string | null;
+  /**
+   * Code postal établissement gestionnaire
+   */
+  etablissement_gestionnaire_code_postal?: string | null;
+  /**
+   * Code commune insee établissement gestionnaire
+   */
+  etablissement_gestionnaire_code_commune_insee?: string | null;
+  /**
+   * Localité établissement gestionnaire
+   */
+  etablissement_gestionnaire_localite?: string | null;
+  /**
+   * Complément d'adresse de l'établissement gestionnaire
+   */
+  etablissement_gestionnaire_complement_adresse?: string | null;
+  /**
+   * Cedex
+   */
+  etablissement_gestionnaire_cedex?: string | null;
+  /**
+   * Raison sociale établissement gestionnaire
+   */
+  etablissement_gestionnaire_entreprise_raison_sociale?: string | null;
+  /**
+   * Latitude et longitude de l'établissement gestionnaire
+   */
+  geo_coordonnees_etablissement_gestionnaire?: string;
+  /**
+   * région gestionnaire
+   */
+  etablissement_gestionnaire_region?: string | null;
+  /**
+   * Numéro de departement gestionnaire
+   */
+  etablissement_gestionnaire_num_departement?: string | null;
+  /**
+   * Nom du departement gestionnaire
+   */
+  etablissement_gestionnaire_nom_departement?: string | null;
+  /**
+   * Nom de l'académie gestionnaire
+   */
+  etablissement_gestionnaire_nom_academie?: string | null;
+  /**
+   * Numéro de l'académie gestionnaire
+   */
+  etablissement_gestionnaire_num_academie?: string;
+  /**
+   * Numéro siren gestionnaire
+   */
+  etablissement_gestionnaire_siren?: string | null;
+  /**
+   * Numéro Déclaration gestionnaire
+   */
+  etablissement_gestionnaire_nda?: string | null;
+  /**
+   * Date de création de l'établissement
+   */
+  etablissement_gestionnaire_date_creation?: Date;
+  /**
+   * Adresse email de contact de l'établissement gestionnaire
+   */
+  etablissement_gestionnaire_courriel?: string | null;
+  /**
+   * Numéro siret formateur
+   */
+  etablissement_formateur_siret?: string | null;
+  /**
+   * Enseigne établissement formateur
+   */
+  etablissement_formateur_enseigne?: string | null;
+  /**
+   * UAI de l'etablissement formateur
+   */
+  etablissement_formateur_uai?: string | null;
+  /**
+   * Etablissement formateur est habilité RNCP ou pas
+   */
+  etablissement_formateur_habilite_rncp?: boolean;
+  /**
+   * Etablissement formateur est certifié Qualité
+   */
+  etablissement_formateur_certifie_qualite?: boolean;
+  /**
+   * Numéro et rue établissement formateur
+   */
+  etablissement_formateur_adresse?: string | null;
+  /**
+   * Code postal établissement formateur
+   */
+  etablissement_formateur_code_postal?: string | null;
+  /**
+   * Code commune insee établissement formateur
+   */
+  etablissement_formateur_code_commune_insee?: string | null;
+  /**
+   * Localité établissement formateur
+   */
+  etablissement_formateur_localite?: string | null;
+  /**
+   * Complément d'adresse de l'établissement
+   */
+  etablissement_formateur_complement_adresse?: string | null;
+  /**
+   * Cedex
+   */
+  etablissement_formateur_cedex?: string | null;
+  /**
+   * Raison sociale établissement formateur
+   */
+  etablissement_formateur_entreprise_raison_sociale?: string | null;
+  /**
+   * Latitude et longitude de l'établissement formateur
+   */
+  geo_coordonnees_etablissement_formateur?: string;
+  /**
+   * région formateur
+   */
+  etablissement_formateur_region?: string | null;
+  /**
+   * Numéro de departement formateur
+   */
+  etablissement_formateur_num_departement?: string | null;
+  /**
+   * Nom du departement formateur
+   */
+  etablissement_formateur_nom_departement?: string | null;
+  /**
+   * Nom de l'académie formateur
+   */
+  etablissement_formateur_nom_academie?: string | null;
+  /**
+   * Numéro de l'académie formateur
+   */
+  etablissement_formateur_num_academie?: string;
+  /**
+   * Numéro siren formateur
+   */
+  etablissement_formateur_siren?: string | null;
+  /**
+   * Numéro Déclaration formateur
+   */
+  etablissement_formateur_nda?: string | null;
+  /**
+   * Date de création de l'établissement
+   */
+  etablissement_formateur_date_creation?: Date;
+  /**
+   * Adresse email de contact de l'établissement formateur
+   */
+  etablissement_formateur_courriel?: string | null;
+  /**
+   * Etablissement reference est soit formateur soit le gestionnaire
+   */
+  etablissement_reference?: string | null;
+  /**
+   * Etablissement reference est publié
+   */
+  etablissement_reference_published?: boolean;
+  /**
+   * Etablissement reference est habilité RNCP ou pas
+   */
+  etablissement_reference_habilite_rncp?: boolean;
+  /**
+   * Etablissement reference est certifié Qualité
+   */
+  etablissement_reference_certifie_qualite?: boolean;
+  /**
+   * Date de création de l'établissement
+   */
+  etablissement_reference_date_creation?: Date;
+  _id?: Types.ObjectId;
+}
+export interface ItemOfBcnMefs_10 {
+  mef10?: string;
+  modalite?: Modalite;
+  _id?: Types.ObjectId;
+}
+export interface Modalite {
+  duree?: string;
+  annee?: string;
 }

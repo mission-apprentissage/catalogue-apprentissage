@@ -10,11 +10,11 @@ export interface User {
   /**
    * Le nom de l'utilisateur
    */
-  username?: string;
+  username?: string | null;
   /**
    * Le mot de passe hashé
    */
-  password?: string;
+  password?: string | null;
   /**
    * true si l'utilisateur est administrateur
    */
@@ -22,11 +22,11 @@ export interface User {
   /**
    * Email
    */
-  email?: string;
+  email?: string | null;
   /**
    * Academie coma separated
    */
-  academie?: string;
+  academie?: string | null;
   /**
    * Account status
    */
@@ -38,7 +38,7 @@ export interface User {
   /**
    * Access control level array
    */
-  acl?: string & string[];
+  acl?: string[] | null;
   /**
    * Date de dernière connexion
    */
@@ -46,7 +46,7 @@ export interface User {
   /**
    * Historique des dates de connexion
    */
-  connection_history?: string & Date[];
+  connection_history?: Date[] | null;
   _id?: Types.ObjectId;
   updated_at?: Date;
   created_at?: Date;

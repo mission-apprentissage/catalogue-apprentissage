@@ -286,14 +286,14 @@ module.exports = () => {
    *           properties:
    *             query:
    *               type: string
-   *               example: '"{\"siret\": \"13001727000401\"}"'
-   *           siret:
+   *         examples:
+   *           "Recherche par siret":
    *             value: { query: "{\"siret\": \"13001727000401\"}" }
    *             summary: Recherche par siret
-   *           sireteUAI:
+   *           "Recherche par Siret et UAI":
    *             value: { query: "{\"siret\": \"13001727000401\", \"uai\": \"0781981E\"}" }
    *             summary: Recherche par siret et Uai
-   *           siretoUai:
+   *           "Recherche par Siret ou UAI":
    *             value: { query: "{\"$or\":[{\"siret\":\"13001727000310\"},{\"uai\":\"0781981E\"}]}" }
    *             summary: Recherche par siret **OU** par Uai
    *     responses:

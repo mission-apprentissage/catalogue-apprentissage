@@ -18,7 +18,7 @@ export interface ReglePerimetre {
   /**
    * Diplôme sur lequel s'applique la règle
    */
-  diplome: string;
+  diplome: string | null;
   /**
    * Statut appliqué quand la formation matche la règle
    */
@@ -45,15 +45,15 @@ export interface ReglePerimetre {
   /**
    * La règle pour matcher les formations (i.e: query mongo) qui s'ajoute au niveau + diplome (stringified)
    */
-  regle_complementaire?: string;
+  regle_complementaire?: string | null;
   /**
    * La règle complémentaire, de type eS pour le rule builder
    */
-  regle_complementaire_query?: string;
+  regle_complementaire_query?: string | null;
   /**
    * Nom du sous-ensemble
    */
-  nom_regle_complementaire?: string;
+  nom_regle_complementaire?: string | null;
   /**
    * En cas d'égalité sur la plateforme, niveau et diplome, priorité de la règle pour savoir laquelle est la plus forte
    */
@@ -69,7 +69,7 @@ export interface ReglePerimetre {
   /**
    * Qui a réalisé la dernière modification
    */
-  last_update_who?: string;
+  last_update_who?: string | null;
   /**
    * True si la règle a été supprimée (soft delete)
    */
@@ -81,11 +81,11 @@ export interface ReglePerimetre {
   /**
    * Durée en années pour matcher les formations
    */
-  duree?: string;
+  duree?: string | null;
   /**
    * Année d'inscription de la formation
    */
-  annee?: string;
+  annee?: string | null;
   _id?: Types.ObjectId;
   updated_at?: Date;
   created_at?: Date;

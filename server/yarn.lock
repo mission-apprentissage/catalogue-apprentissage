@@ -56,6 +56,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@apidevtools/swagger-parser@npm:10.0.3":
+  version: 10.0.3
+  resolution: "@apidevtools/swagger-parser@npm:10.0.3"
+  dependencies:
+    "@apidevtools/json-schema-ref-parser": ^9.0.6
+    "@apidevtools/openapi-schemas": ^2.0.4
+    "@apidevtools/swagger-methods": ^3.0.2
+    "@jsdevtools/ono": ^7.1.3
+    call-me-maybe: ^1.0.1
+    z-schema: ^5.0.1
+  peerDependencies:
+    openapi-types: ">=7"
+  checksum: 580a86d4c2a667e825dae80d2ed115c282e6210e3cb0ffc39b3bf5fc5b4fcb576cce3fc3d0519b6c4de8fa617ab0dbee1adeac134d0c1364e0a0f7d394b28796
+  languageName: node
+  linkType: hard
+
 "@babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.16.7":
   version: 7.16.7
   resolution: "@babel/code-frame@npm:7.16.7"
@@ -2177,6 +2193,13 @@ __metadata:
   version: 8.3.0
   resolution: "commander@npm:8.3.0"
   checksum: 0f82321821fc27b83bd409510bb9deeebcfa799ff0bf5d102128b500b7af22872c0c92cb6a0ebc5a4cf19c6b550fba9cedfa7329d18c6442a625f851377bacf0
+  languageName: node
+  linkType: hard
+
+"commander@npm:^9.4.1":
+  version: 9.5.0
+  resolution: "commander@npm:9.5.0"
+  checksum: c7a3e27aa59e913b54a1bafd366b88650bc41d6651f0cbe258d4ff09d43d6a7394232a4dadd0bf518b3e696fdf595db1028a0d82c785b88bd61f8a440cecfade
   languageName: node
   linkType: hard
 
@@ -6707,7 +6730,8 @@ __metadata:
     mongoose: 5.13.15
     mongoose-diff-history: 2.1.0
     mongoose-paginate: 5.0.3
-    mongoose-schema-jsonschema: 1.4.7
+    mongoose-schema-jsonschema: 2.1.0
+    mongoose-to-swagger: 1.5.1
     multer: 1.4.2
     node-stream-zip: 1.15.0
     nodemailer: ^6.9.1
@@ -6726,7 +6750,7 @@ __metadata:
     sha512crypt-node: 1.0.2
     sinon: 11.1.2
     stream-json: 1.7.4
-    swagger-jsdoc: 6.2.0
+    swagger-jsdoc: 6.2.8
     swagger-ui-express: 4.3.0
     xlsx: 0.18.5
   languageName: unknown
@@ -6917,6 +6941,24 @@ __metadata:
   peerDependencies:
     mongoose: ^5.0.0
   checksum: 8875754142b3377027c6b2baea97d6f400cbd14282ddb9ffe69b33228b4ad45534deec305d04a6aad5b831463e645dad6f0bd64fed7208156e61cb9e7dd30022
+  languageName: node
+  linkType: hard
+
+"mongoose-schema-jsonschema@npm:2.1.0":
+  version: 2.1.0
+  resolution: "mongoose-schema-jsonschema@npm:2.1.0"
+  dependencies:
+    pluralize: ^8.0.0
+  peerDependencies:
+    mongoose: ^5.0.0 || ^6.0.0 || ^7.0.0
+  checksum: 4b7956f166ed46bf367a434011cddd01543dc934e4a58f0c452092b8e336d6ef9f02bf7fad894e45878c2aa0385e3304b9a6e5ed0d04a65e1f910d702b8dbc95
+  languageName: node
+  linkType: hard
+
+"mongoose-to-swagger@npm:1.5.1":
+  version: 1.5.1
+  resolution: "mongoose-to-swagger@npm:1.5.1"
+  checksum: 7cbd425333aa2a7e999019bb1f20e3fad960826dc6b78c5f438ea42d0673c6708a4f1d2c85b1cdcf258be41e6888980b37f0a5865797f0067eefd773fcab7fef
   languageName: node
   linkType: hard
 
@@ -9557,12 +9599,37 @@ __metadata:
   languageName: node
   linkType: hard
 
+"swagger-jsdoc@npm:6.2.8":
+  version: 6.2.8
+  resolution: "swagger-jsdoc@npm:6.2.8"
+  dependencies:
+    commander: 6.2.0
+    doctrine: 3.0.0
+    glob: 7.1.6
+    lodash.mergewith: ^4.6.2
+    swagger-parser: ^10.0.3
+    yaml: 2.0.0-1
+  bin:
+    swagger-jsdoc: bin/swagger-jsdoc.js
+  checksum: 465c7798f962c7f9eb532d6f886902ac50dab32f7d427bba1315a985e7b679e232a2917b1a8f7eef35f0fa3369dfba38176192b743f68cf417c1aecf0c0d7bf9
+  languageName: node
+  linkType: hard
+
 "swagger-parser@npm:10.0.2":
   version: 10.0.2
   resolution: "swagger-parser@npm:10.0.2"
   dependencies:
     "@apidevtools/swagger-parser": 10.0.2
   checksum: 02aa7d6caa5dde20fe93f00928a7803b11099a7cffa70c1750b89add23e8dfb220ee5354d3f691dce91300f25dd155060be9a28ed7772d6aa4ff4ab3f5a36db0
+  languageName: node
+  linkType: hard
+
+"swagger-parser@npm:^10.0.3":
+  version: 10.0.3
+  resolution: "swagger-parser@npm:10.0.3"
+  dependencies:
+    "@apidevtools/swagger-parser": 10.0.3
+  checksum: bd99d94543b9bdc6bf062ea211f70d4fa004e6e8ce97ee47a388a046f3cc2839e7349970e8a0b11136b55a674e1cc7b0bbdfbe4fb40adf0c68bc70736eedb8b7
   languageName: node
   linkType: hard
 
@@ -10181,6 +10248,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"validator@npm:^13.7.0":
+  version: 13.11.0
+  resolution: "validator@npm:13.11.0"
+  checksum: d1e0c27022681420756da25bc03eb08d5f0c66fb008f8ff02ebc95812b77c6be6e03d3bd05cf80ca702e23eeb73dadd66b4b3683173ea2a0bc7cc72820bee131
+  languageName: node
+  linkType: hard
+
 "vary@npm:^1, vary@npm:~1.1.2":
   version: 1.1.2
   resolution: "vary@npm:1.1.2"
@@ -10645,5 +10719,22 @@ __metadata:
   bin:
     z-schema: bin/z-schema
   checksum: 9afc0b8d4f75122fbbac8835b0398fc6ab3cfa3f68792e4e86edcd9be1e9ae9d982368a8ae25a4eeea6aad3ab35a24379b76e1525b105c23169c4f93b3185004
+  languageName: node
+  linkType: hard
+
+"z-schema@npm:^5.0.1":
+  version: 5.0.5
+  resolution: "z-schema@npm:5.0.5"
+  dependencies:
+    commander: ^9.4.1
+    lodash.get: ^4.4.2
+    lodash.isequal: ^4.5.0
+    validator: ^13.7.0
+  dependenciesMeta:
+    commander:
+      optional: true
+  bin:
+    z-schema: bin/z-schema
+  checksum: 8a1d66817ae4384dc3f63311f0cccaadd95cc9640eaade5fd3fbf91aa80d6bb82fb95d9b9171fa82ac371a0155b32b7f5f77bbe84dabaca611b66f74c628f0b8
   languageName: node
   linkType: hard

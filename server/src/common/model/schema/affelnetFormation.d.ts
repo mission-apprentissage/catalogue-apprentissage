@@ -10,79 +10,79 @@ export interface AffelnetFormation {
   /**
    * Clé unique de la formation (pour envoi aux ministères éducatifs)
    */
-  cle_ministere_educatif?: string;
+  cle_ministere_educatif?: string | null;
   /**
    * code côté affelnet, unique par académie, de la formation
    */
-  code_offre?: string;
+  code_offre?: string | null;
   /**
    * uai de l'établissement de formation
    */
-  uai?: string;
+  uai?: string | null;
   /**
    * libellé du type de l'établissement (centre de formation d'apprentis, lycée, etc..) de formation
    */
-  libelle_type_etablissement?: string;
+  libelle_type_etablissement?: string | null;
   /**
    * libellé nom de l'établissement de formation
    */
-  libelle_etablissement?: string;
+  libelle_etablissement?: string | null;
   /**
    * numéro et adresse de l'établissement de formation
    */
-  adresse?: string;
+  adresse?: string | null;
   /**
    * code postal de l'établissement de formation
    */
-  code_postal?: string;
+  code_postal?: string | null;
   /**
    * commune de l'établissement de formation
    */
-  commune?: string;
+  commune?: string | null;
   /**
    * Téléphone de l'établissement de formation
    */
-  telephone?: string;
+  telephone?: string | null;
   /**
    * email de l'établissement de formation
    */
-  email?: string;
+  email?: string | null;
   /**
    * nom de l'academie de l'établissement de formation
    */
-  academie?: string;
+  academie?: string | null;
   /**
    * ministère auquel est rattaché l'établissement de formation
    */
-  ministere?: string;
+  ministere?: string | null;
   /**
    * type d'établissement (Privée / Public)
    */
-  etablissement_type?: string;
+  etablissement_type?: string | null;
   /**
    * type de contrat pris en charge par l'établissement de formation
    */
-  type_contrat?: string;
+  type_contrat?: string | null;
   /**
    * code du type de l'établissement de formation
    */
-  code_type_etablissement?: string;
+  code_type_etablissement?: string | null;
   /**
    * code nature de l'établissement de formation
    */
-  code_nature?: string;
+  code_nature?: string | null;
   /**
    * code district de l'établissement de formation
    */
-  code_district?: string;
+  code_district?: string | null;
   /**
    * code bassin de l'établissement de formation
    */
-  code_bassin?: string;
+  code_bassin?: string | null;
   /**
    * code cio
    */
-  cio?: string;
+  cio?: string | null;
   /**
    * l'établissement propose un internat
    */
@@ -94,27 +94,27 @@ export interface AffelnetFormation {
   /**
    * libellé mnémonique de la formation
    */
-  libelle_mnemonique?: string;
+  libelle_mnemonique?: string | null;
   /**
    * code spécialité de la formation
    */
-  code_specialite?: string;
+  code_specialite?: string | null;
   /**
    * libellé BAN de la formation
    */
-  libelle_ban?: string;
+  libelle_ban?: string | null;
   /**
    * code MEF de la formation
    */
-  code_mef?: string;
+  code_mef?: string | null;
   /**
    * code voie de la formation
    */
-  code_voie?: string;
+  code_voie?: string | null;
   /**
    * type de voie de la formation
    */
-  type_voie?: string;
+  type_voie?: string | null;
   /**
    * saisie possible depuis la 3ème année de collège
    */
@@ -134,23 +134,23 @@ export interface AffelnetFormation {
   /**
    * libellé affiché dans le sa
    */
-  libelle_formation?: string;
+  libelle_formation?: string | null;
   /**
    * url description formation onisep
    */
-  url_onisep_formation?: string;
+  url_onisep_formation?: string | null;
   /**
    * Libellé long de l'établissement délivrant la formation
    */
-  libelle_etablissement_tsa?: string;
+  libelle_etablissement_tsa?: string | null;
   /**
    * url description établissement onisep
    */
-  url_onisep_etablissement?: string;
+  url_onisep_etablissement?: string | null;
   /**
    * ville de l'établissement
    */
-  ville?: string;
+  ville?: string | null;
   /**
    * campus métier
    */
@@ -162,19 +162,19 @@ export interface AffelnetFormation {
   /**
    * coordonnées latitude de l'établissement
    */
-  coordonnees_gps_latitude?: string;
+  coordonnees_gps_latitude?: string | null;
   /**
    * coordonnées longitude de l'établissement
    */
-  coordonnees_gps_longitude?: string;
+  coordonnees_gps_longitude?: string | null;
   /**
    * Informations de la formation
    */
-  informations?: string;
+  informations?: string | null;
   /**
    * Siret du gestionnaire
    */
-  siret_uai_gestionnaire?: string;
+  siret_uai_gestionnaire?: string | null;
   /**
    * Est-ce que la formation a été intégrée dans Affelnet via le catalogue ou manuellement
    */
@@ -186,7 +186,7 @@ export interface AffelnetFormation {
   /**
    * force du matching
    */
-  matching_type?: string;
+  matching_type?: string | null;
   _id?: Types.ObjectId;
   updated_at?: Date;
   created_at?: Date;

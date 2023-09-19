@@ -10,99 +10,99 @@ export interface ParcoursupFormation {
   /**
    * Uai gestionnaire de l'établissement
    */
-  uai_gestionnaire?: string;
+  uai_gestionnaire?: string | null;
   /**
    * Uai composante de l'établissement
    */
-  uai_composante?: string;
+  uai_composante?: string | null;
   /**
    * Uai affilié de l'établissement
    */
-  uai_affilie?: string;
+  uai_affilie?: string | null;
   /**
    * Libellé de l'uai composante
    */
-  libelle_uai_composante?: string;
+  libelle_uai_composante?: string | null;
   /**
    * Libellé de l'uai affilié
    */
-  libelle_uai_affilie?: string;
+  libelle_uai_affilie?: string | null;
   /**
    * Code commune  de l'établissement
    */
-  code_commune_insee?: string;
+  code_commune_insee?: string | null;
   /**
    * Libellé de la commune
    */
-  libelle_commune?: string;
+  libelle_commune?: string | null;
   /**
    * Code postal de l'établissement
    */
-  code_postal?: string;
+  code_postal?: string | null;
   /**
    * Nom de l'académie référente de l'établissement
    */
-  nom_academie?: string;
+  nom_academie?: string | null;
   /**
    * Code du ministère responsable rattaché à l'établissement
    */
-  code_ministere?: string;
+  code_ministere?: string | null;
   /**
    * Code du ministère responsable rattaché à l'établissement
    */
-  libelle_ministere?: string;
+  libelle_ministere?: string | null;
   /**
    * Type d'établissement délivrant la formation
    */
-  type_etablissement?: string;
+  type_etablissement?: string | null;
   /**
    * Code de la formation
    */
-  code_formation?: string;
+  code_formation?: string | null;
   /**
    * Libelle de la formation
    */
-  libelle_formation?: string;
+  libelle_formation?: string | null;
   /**
    * Code de la spécialité
    */
-  code_specialite?: string;
+  code_specialite?: string | null;
   /**
    * Libelle de la spécialité
    */
-  libelle_specialite?: string;
+  libelle_specialite?: string | null;
   /**
    * Code de la formation à laquelle la spécialité est rattaché
    */
-  code_formation_initiale?: string;
+  code_formation_initiale?: string | null;
   /**
    * Code MEF de la formation
    */
-  code_mef_10?: string;
+  code_mef_10?: string | null;
   /**
    * Code formation diplome de la formation
    */
-  code_cfd?: string;
+  code_cfd?: string | null;
   /**
    * Code formation diplome extra de la formation
    */
-  code_cfd_2?: string;
+  code_cfd_2?: string | null;
   /**
    * Code formation diplome extra de la formation
    */
-  code_cfd_3?: string;
+  code_cfd_3?: string | null;
   /**
    * Force du matching avec le catalogue des formations
    */
-  matching_type?: string;
+  matching_type?: string | null;
   /**
    * Formations du catalogue matchant la formation parcoursup
    */
-  matching_mna_formation?: string & unknown[];
+  matching_mna_formation?: unknown[] | null;
   /**
    * Etablissement du catalogue matchant les formation présente dans matching_mna_formation
    */
-  matching_mna_etablissement?: string & unknown[];
+  matching_mna_etablissement?: unknown[] | null;
   /**
    * Statuts ParcourSup MNA module de perimetre
    */
@@ -126,7 +126,7 @@ export interface ParcoursupFormation {
   /**
    *  raison de dépublication
    */
-  matching_rejete_raison?: string;
+  matching_rejete_raison?: string | null;
   /**
    * Tableau des raisons de rejet
    */
@@ -134,103 +134,103 @@ export interface ParcoursupFormation {
   /**
    * Details raison autre rejet
    */
-  rapprochement_rejete_raison_autre?: string;
+  rapprochement_rejete_raison_autre?: string | null;
   /**
    * identifiant unique de la formation côté parcoursup (CODEFORMATIONINSCRIPTION)
    */
-  id_parcoursup?: string;
+  id_parcoursup?: string | null;
   /**
    * uai renseigné sur la fiche CERFA
    */
-  uai_cerfa?: string;
+  uai_cerfa?: string | null;
   /**
    * uai insert jeune
    */
-  uai_insert_jeune?: string;
+  uai_insert_jeune?: string | null;
   /**
    * uai
    */
-  uai_map?: string;
+  uai_map?: string | null;
   /**
    * siret renseigné sur la fiche CERFA
    */
-  siret_cerfa?: string;
+  siret_cerfa?: string | null;
   /**
    * siret
    */
-  siret_map?: string;
+  siret_map?: string | null;
   /**
    * cfd map
    */
-  codediplome_map?: string;
+  codediplome_map?: string | null;
   /**
    * CODEFORMATIONINSCRIPTION
    */
-  code_formation_inscription?: string;
+  code_formation_inscription?: string | null;
   /**
    * CODEFORMATIONACCUEIL
    */
-  code_formation_accueil?: string;
+  code_formation_accueil?: string | null;
   /**
    * LATITUDE
    */
-  latitude?: string;
+  latitude?: string | null;
   /**
    * LONGITUDE
    */
-  longitude?: string;
+  longitude?: string | null;
   /**
    * COMPLEMENTADRESSE
    */
-  complement_adresse?: string;
+  complement_adresse?: string | null;
   /**
    * COMPLEMENTADRESSE1
    */
-  complement_adresse_1?: string;
+  complement_adresse_1?: string | null;
   /**
    * COMPLEMENTADRESSE2
    */
-  complement_adresse_2?: string;
+  complement_adresse_2?: string | null;
   /**
    * COMPLEMENTCODEPOSTAL
    */
-  complement_code_postal?: string;
+  complement_code_postal?: string | null;
   /**
    * COMPLEMENTCOMMUNE
    */
-  complement_commune?: string;
+  complement_commune?: string | null;
   /**
    * LIB_INS
    */
-  libelle_insert_jeune?: string;
+  libelle_insert_jeune?: string | null;
   /**
    * COMPLEMENTCEDEX
    */
-  complement_cedex?: string;
+  complement_cedex?: string | null;
   /**
    * PREMIERELIGNEADRESSEETAB
    */
-  adresse_etablissement_l1?: string;
+  adresse_etablissement_l1?: string | null;
   /**
    * SECONDELIGNEADRESSEETAB
    */
-  adresse_etablissement_l2?: string;
+  adresse_etablissement_l2?: string | null;
   /**
    * CODE_CFD_MNA
    */
-  codes_cfd_mna?: string & string[];
+  codes_cfd_mna?: string[] | null;
   /**
    * CODE_RNCP_MNA
    */
-  codes_rncp_mna?: string & string[];
+  codes_rncp_mna?: string[] | null;
   /**
    * CODE_ROMES_MNA
    */
-  codes_romes_mna?: string & string[];
+  codes_romes_mna?: string[] | null;
   /**
    * TYPE_RAPPROCHEMENT_MNA
    */
-  type_rapprochement_mna?: string;
+  type_rapprochement_mna?: string | null;
   /**
    * vaut true si aucune formation publiée dans le catalogue ne correspond (utile pour les VALIDE & REJETE)
    */

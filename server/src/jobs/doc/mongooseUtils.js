@@ -6,14 +6,19 @@ const { Schema } = mongoose;
 const cleanMongooseSchema = (mongooseSchema) => {
   const obj = { ...mongooseSchema };
   for (const key of Object.keys(obj)) {
-    if (obj[key]?.default === null) {
-      obj[key].default = "null";
-    }
-
     if (obj[key].select === false) {
       delete obj[key];
     }
+
+    if (obj[key]?.type instanceof mongoose.Schema) {
+      obj[key].type = cleanMongooseSchema(obj[key].type.obj);
+    }
+
+    if (Array.isArray(obj[key]?.type) && obj[key]?.type[0] instanceof mongoose.Schema) {
+      obj[key].type = obj[key].type.map((type) => cleanMongooseSchema(type.obj));
+    }
   }
+
   return obj;
 };
 
@@ -23,4 +28,4 @@ const getJsonFromMongooseSchema = (schema, options) => {
   return eJsonSchema;
 };
 
-module.exports = { getJsonFromMongooseSchema };
+module.exports = { cleanMongooseSchema, getJsonFromMongooseSchema };

@@ -15,7 +15,7 @@ export interface ConsoleStat {
    * Date de la statistique
    */
   date: Date;
-  academie?: string;
+  academie?: string | null;
   formations_publiees?: number;
   formations_integrables?: number;
   organismes_avec_formations_publiees?: number;

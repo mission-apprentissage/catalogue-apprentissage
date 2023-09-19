@@ -10,11 +10,11 @@ export interface Role {
   /**
    * Nom du rôle
    */
-  name?: string;
+  name?: string | null;
   /**
    * Access control level array
    */
-  acl?: string & string[];
+  acl?: string[] | null;
   _id?: Types.ObjectId;
   updated_at?: Date;
   created_at?: Date;

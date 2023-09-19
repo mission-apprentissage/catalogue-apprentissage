@@ -14,27 +14,27 @@ export interface DualControlEtablissement {
   /**
    * Numéro siret du siége sociale
    */
-  etablissement_siege_siret?: string;
+  etablissement_siege_siret?: string | null;
   /**
    * Numéro siret
    */
-  siret?: string;
+  siret?: string | null;
   /**
    * Numéro siren de l'entreprise
    */
-  siren?: string;
+  siren?: string | null;
   /**
    * Numéro Déclaration
    */
-  nda?: string;
+  nda?: string | null;
   /**
    * Code NAF
    */
-  naf_code?: string;
+  naf_code?: string | null;
   /**
    * Libellé du code NAT (ex: Enseignement secondaire technique ou professionnel)
    */
-  naf_libelle?: string;
+  naf_libelle?: string | null;
   /**
    * Tranche salariale
    */
@@ -56,63 +56,63 @@ export interface DualControlEtablissement {
   /**
    * Enseigne
    */
-  enseigne?: string;
+  enseigne?: string | null;
   /**
    * Nom de l'etablissement Onisep
    */
-  onisep_nom?: string;
+  onisep_nom?: string | null;
   /**
    * Url Onisep de la fiche etablissement
    */
-  onisep_url?: string;
+  onisep_url?: string | null;
   /**
    * Code postal Onisep
    */
-  onisep_code_postal?: string;
+  onisep_code_postal?: string | null;
   /**
    * Adresse de l'établissement
    */
-  adresse?: string;
+  adresse?: string | null;
   /**
    * Numéro de la voie
    */
-  numero_voie?: string;
+  numero_voie?: string | null;
   /**
    * Type de voie (ex: rue, avenue)
    */
-  type_voie?: string;
+  type_voie?: string | null;
   /**
    * Nom de la voie
    */
-  nom_voie?: string;
+  nom_voie?: string | null;
   /**
    * Complément d'adresse de l'établissement
    */
-  complement_adresse?: string;
+  complement_adresse?: string | null;
   /**
    * Code postal
    */
-  code_postal?: string;
+  code_postal?: string | null;
   /**
    * Numéro de département
    */
-  num_departement?: string;
+  num_departement?: string | null;
   /**
    * Nom du departement
    */
-  nom_departement?: string;
+  nom_departement?: string | null;
   /**
    * Localité
    */
-  localite?: string;
+  localite?: string | null;
   /**
    * Code Insee localité
    */
-  code_insee_localite?: string;
+  code_insee_localite?: string | null;
   /**
    * Cedex
    */
-  cedex?: string;
+  cedex?: string | null;
   /**
    * Latitude et longitude de l'établissement
    */
@@ -128,27 +128,27 @@ export interface DualControlEtablissement {
   /**
    * Code région
    */
-  region_implantation_code?: string;
+  region_implantation_code?: string | null;
   /**
    * Nom de la région
    */
-  region_implantation_nom?: string;
+  region_implantation_nom?: string | null;
   /**
    * Code commune
    */
-  commune_implantation_code?: string;
+  commune_implantation_code?: string | null;
   /**
    * Nom de la commune
    */
-  commune_implantation_nom?: string;
+  commune_implantation_nom?: string | null;
   /**
    * Code pays
    */
-  pays_implantation_code?: string;
+  pays_implantation_code?: string | null;
   /**
    * Nom du pays
    */
-  pays_implantation_nom?: string;
+  pays_implantation_nom?: string | null;
   /**
    * Numéro de l'académie
    */
@@ -156,11 +156,11 @@ export interface DualControlEtablissement {
   /**
    * Nom de l'académie
    */
-  nom_academie?: string;
+  nom_academie?: string | null;
   /**
    * UAI de l'établissement
    */
-  uai?: string;
+  uai?: string | null;
   /**
    * UAIs potentiels de l'établissement
    */
@@ -172,11 +172,11 @@ export interface DualControlEtablissement {
   /**
    * L'établissement est présent ou pas dans le fichier datagouv
    */
-  info_datagouv_ofs_info?: string;
+  info_datagouv_ofs_info?: string | null;
   /**
    * L'établissement est présent ou pas dans le fichier qualiopi
    */
-  info_qualiopi_info?: string;
+  info_qualiopi_info?: string | null;
   /**
    * L'établissement est trouvé via l'API Entreprise
    */
@@ -184,7 +184,7 @@ export interface DualControlEtablissement {
   /**
    * Numéro siren
    */
-  entreprise_siren?: string;
+  entreprise_siren?: string | null;
   /**
    * Procédure collective
    */
@@ -192,35 +192,35 @@ export interface DualControlEtablissement {
   /**
    * Enseigne
    */
-  entreprise_enseigne?: string;
+  entreprise_enseigne?: string | null;
   /**
    * Numéro de TVA intracommunautaire
    */
-  entreprise_numero_tva_intracommunautaire?: string;
+  entreprise_numero_tva_intracommunautaire?: string | null;
   /**
    * Code éffectf
    */
-  entreprise_code_effectif_entreprise?: string;
+  entreprise_code_effectif_entreprise?: string | null;
   /**
    * Code forme juridique
    */
-  entreprise_forme_juridique_code?: string;
+  entreprise_forme_juridique_code?: string | null;
   /**
    * Forme juridique (ex: Établissement public local d'enseignement)
    */
-  entreprise_forme_juridique?: string;
+  entreprise_forme_juridique?: string | null;
   /**
    * Raison sociale
    */
-  entreprise_raison_sociale?: string;
+  entreprise_raison_sociale?: string | null;
   /**
    * Nom commercial
    */
-  entreprise_nom_commercial?: string;
+  entreprise_nom_commercial?: string | null;
   /**
    * Capital social
    */
-  entreprise_capital_social?: string;
+  entreprise_capital_social?: string | null;
   /**
    * Date de création
    */
@@ -228,15 +228,15 @@ export interface DualControlEtablissement {
   /**
    * Date de radiation
    */
-  entreprise_date_radiation?: string;
+  entreprise_date_radiation?: string | null;
   /**
    * Code NAF
    */
-  entreprise_naf_code?: string;
+  entreprise_naf_code?: string | null;
   /**
    * Libellé du code NAT (ex: Enseignement secondaire technique ou professionnel)
    */
-  entreprise_naf_libelle?: string;
+  entreprise_naf_libelle?: string | null;
   /**
    * Date de cessation d'activité
    */
@@ -248,19 +248,19 @@ export interface DualControlEtablissement {
   /**
    * Numéro siret du siége sociale
    */
-  entreprise_siret_siege_social?: string;
+  entreprise_siret_siege_social?: string | null;
   /**
    * Nom du contact
    */
-  entreprise_nom?: string;
+  entreprise_nom?: string | null;
   /**
    * Prénom du contact
    */
-  entreprise_prenom?: string;
+  entreprise_prenom?: string | null;
   /**
    * Catégorie (PME, TPE, etc..)
    */
-  entreprise_categorie?: string;
+  entreprise_categorie?: string | null;
   /**
    * Tranche salarié
    */
@@ -270,31 +270,31 @@ export interface DualControlEtablissement {
   /**
    * Numéro de dossier Démarche Simplifiée
    */
-  ds_id_dossier?: string;
+  ds_id_dossier?: string | null;
   /**
    * Numéro SIREN saisi dans Démarche Simplifiée
    */
-  ds_questions_siren?: string;
+  ds_questions_siren?: string | null;
   /**
    * Nom du contact saisi dans Démarche Simplifiée
    */
-  ds_questions_nom?: string;
+  ds_questions_nom?: string | null;
   /**
    * UAI saisi dans Démarche Simplifiée
    */
-  ds_questions_uai?: string;
+  ds_questions_uai?: string | null;
   /**
    * Réponse à la question "Avez vous l'agrément CFA" dans Démarche Simplifiée
    */
-  ds_questions_has_agrement_cfa?: string;
+  ds_questions_has_agrement_cfa?: string | null;
   /**
    * Réponse à la question "Avez vous la certification 2015" dans Démarche Simplifiée
    */
-  ds_questions_has_certificaton_2015?: string;
+  ds_questions_has_certificaton_2015?: string | null;
   /**
    * Réponse à la question "Avez vous demandé la certification" dans Démarche Simplifiée
    */
-  ds_questions_has_ask_for_certificaton?: string;
+  ds_questions_has_ask_for_certificaton?: string | null;
   /**
    * Réponse à la question "Date de votre demande de certification" dans Démarche Simplifiée
    */
@@ -302,11 +302,11 @@ export interface DualControlEtablissement {
   /**
    * Réponse à la question "Numéro de votre déclaration" dans Démarche Simplifiée
    */
-  ds_questions_declaration_code?: string;
+  ds_questions_declaration_code?: string | null;
   /**
    * Réponse à la question "Proposez-vous des formations en 2020" dans Démarche Simplifiée
    */
-  ds_questions_has_2020_training?: string;
+  ds_questions_has_2020_training?: string | null;
   /**
    * Possède la certification Qualité
    */
@@ -322,19 +322,19 @@ export interface DualControlEtablissement {
   /**
    * UAI de l'établissement RCO
    */
-  rco_uai?: string;
+  rco_uai?: string | null;
   /**
    * Adresse de l'établissement RCO
    */
-  rco_adresse?: string;
+  rco_adresse?: string | null;
   /**
    * Code postal
    */
-  rco_code_postal?: string;
+  rco_code_postal?: string | null;
   /**
    * Code Insee localité RCO
    */
-  rco_code_insee_localite?: string;
+  rco_code_insee_localite?: string | null;
   /**
    * Latitude et longitude de l'établissement RCO
    */
@@ -346,10 +346,10 @@ export interface DualControlEtablissement {
   /**
    * Nom de l'opérateur de compétence
    */
-  opco_nom?: string;
+  opco_nom?: string | null;
   /**
    * Siren de l'opérateur de compétence
    */
-  opco_siren?: string;
+  opco_siren?: string | null;
   _id?: Types.ObjectId;
 }

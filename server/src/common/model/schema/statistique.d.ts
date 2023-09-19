@@ -10,7 +10,7 @@ export interface Statistique {
   /**
    * Source d'origine de la statistique
    */
-  source: string;
+  source: string | null;
   /**
    * Compteur
    */

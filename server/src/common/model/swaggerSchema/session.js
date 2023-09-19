@@ -22,9 +22,15 @@ module.exports = {
       },
       roles: {
         type: "array",
+        items: {
+          type: "string",
+        },
       },
       acl: {
         type: "array",
+        items: {
+          type: "string",
+        },
       },
     },
   },

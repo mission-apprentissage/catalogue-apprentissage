@@ -6,21 +6,141 @@
  */
 const { Types } = require("mongoose");
 
+/**
+ * Détails RNCP (bloc de compétences etc..)
+ */
+export type RncpDetails = {
+  /**
+   * Date de validité de la fiche
+   */
+  date_fin_validite_enregistrement?: Date;
+  /**
+   * fiche active ou non
+   */
+  active_inactive?: string | null;
+  /**
+   * état fiche ex: Publiée
+   */
+  etat_fiche_rncp?: string | null;
+  /**
+   * Niveau européen ex: niveauu5
+   */
+  niveau_europe?: string | null;
+  /**
+   * Code type de certification (ex: DE)
+   */
+  code_type_certif?: string | null;
+  /**
+   * Type de certification (ex: diplôme d'état)
+   */
+  type_certif?: string | null;
+  /**
+   * Code rncp de l'ancienne fiche
+   */
+  ancienne_fiche?: string[] | null;
+  /**
+   * Code rncp de la nouvelle fiche
+   */
+  nouvelle_fiche?: string[] | null;
+  /**
+   * Demande en cours de d'habilitation
+   */
+  demande?: number;
+  /**
+   * Certificateurs
+   */
+  certificateurs?: {
+    [k: string]: unknown;
+  }[];
+  /**
+   * Code NSF
+   */
+  nsf_code?: string | null;
+  /**
+   * Libellé NSF
+   */
+  nsf_libelle?: string | null;
+  /**
+   * Romes
+   */
+  romes?: {
+    [k: string]: unknown;
+  }[];
+  /**
+   * Blocs de compétences
+   */
+  blocs_competences?: {
+    [k: string]: unknown;
+  }[];
+  /**
+   * Voix d'accès
+   */
+  voix_acces?: {
+    [k: string]: unknown;
+  }[];
+  /**
+   * Partenaires
+   */
+  partenaires?: {
+    [k: string]: unknown;
+  }[];
+  /**
+   * Code rncp périmé (date fin enregistrement avant le 31 aout de l'année courante)
+   */
+  rncp_outdated?: boolean;
+} | null;
+/**
+ * Cause du rejet de publication
+ */
+export type Rejection = {
+  /**
+   * L'erreur telle que retournée par la plateforme
+   */
+  error?: string | null;
+  /**
+   * La description textuelle de l'erreur retournée
+   */
+  description?: string | null;
+  /**
+   * L'action à mener pour résoudre le rejet.
+   */
+  action?: string | null;
+  /**
+   * Adresse email de la personne ayant pris en charge le rejet de publication
+   */
+  handled_by?: string | null;
+  /**
+   * Date à laquelle le rejet de publication a été pris en charge
+   */
+  handled_date?: Date;
+} | null;
+/**
+ * Données pour étude France Compétence
+ */
+export type FranceCompetenceInfos = {
+  fc_is_catalog_general?: boolean;
+  fc_is_habilite_rncp?: boolean;
+  fc_is_certificateur?: boolean;
+  fc_is_certificateur_siren?: boolean;
+  fc_is_partenaire?: boolean;
+  fc_has_partenaire?: boolean;
+} | null;
+
 export interface Formation {
   /**
    * Clé unique de la formation (pour envoi aux ministères éducatifs)
    */
-  cle_ministere_educatif?: string;
+  cle_ministere_educatif?: string | null;
   /**
    * Code formation diplôme (education nationale)
    */
-  cfd?: string;
+  cfd?: string | null;
   /**
    * Lettre spécialité du code cfd
    */
   cfd_specialite?: {
     [k: string]: unknown;
-  };
+  } | null;
   /**
    * BCN : cfd périmé (fermeture avant le 31 août de l'année courante)
    */
@@ -32,11 +152,11 @@ export interface Formation {
   /**
    * Code formation diplôme d'entrée (année 1 de l'apprentissage)
    */
-  cfd_entree?: string;
+  cfd_entree?: string | null;
   /**
    * Nom de l'académie
    */
-  nom_academie?: string;
+  nom_academie?: string | null;
   /**
    * Numéro de l'académie
    */
@@ -44,31 +164,31 @@ export interface Formation {
   /**
    * Code postal
    */
-  code_postal?: string;
+  code_postal?: string | null;
   /**
    * Code commune INSEE
    */
-  code_commune_insee?: string;
+  code_commune_insee?: string | null;
   /**
    * Numéro de département
    */
-  num_departement?: string;
+  num_departement?: string | null;
   /**
    * Nom du département
    */
-  nom_departement?: string;
+  nom_departement?: string | null;
   /**
    * Numéro de département
    */
-  region?: string;
+  region?: string | null;
   /**
    * Localité
    */
-  localite?: string;
+  localite?: string | null;
   /**
    * UAI du lieu de la formation
    */
-  uai_formation?: string;
+  uai_formation?: string | null;
   /**
    * L'UAI du lieu de formation est il valide ?
    */
@@ -76,59 +196,59 @@ export interface Formation {
   /**
    * Nom de la formation déclaratif
    */
-  nom?: string;
+  nom?: string | null;
   /**
    * Intitulé comme transmis par RCO
    */
-  intitule_rco?: string;
+  intitule_rco?: string | null;
   /**
    * Intitulé long de la formation normalisé BCN
    */
-  intitule_long?: string;
+  intitule_long?: string | null;
   /**
    * Intitulé court de la formation normalisé BCN
    */
-  intitule_court?: string;
+  intitule_court?: string | null;
   /**
    * Diplôme ou titre visé
    */
-  diplome?: string;
+  diplome?: string | null;
   /**
    * Niveau de la formation
    */
-  niveau?: string;
+  niveau?: string | null;
   /**
    * Url de redirection vers le site de l'ONISEP
    */
-  onisep_url?: string;
+  onisep_url?: string | null;
   /**
    * Intitulé éditorial l'ONISEP
    */
-  onisep_intitule?: string;
+  onisep_intitule?: string | null;
   /**
    * Libellé poursuite étude l'ONISEP (séparateur ;)
    */
-  onisep_libelle_poursuite?: string;
+  onisep_libelle_poursuite?: string | null;
   /**
    * Lien vers site de l'ONISEP api
    */
-  onisep_lien_site_onisepfr?: string;
+  onisep_lien_site_onisepfr?: string | null;
   /**
    * Disciplines ONISEP (séparateur ;)
    */
-  onisep_discipline?: string;
+  onisep_discipline?: string | null;
   /**
    * Domaine et sous domaine ONISEP (séparateur ;)
    */
-  onisep_domaine_sousdomaine?: string;
+  onisep_domaine_sousdomaine?: string | null;
   /**
    * Code RNCP
    */
-  rncp_code?: string;
+  rncp_code?: string | null;
   /**
    * Intitulé du code RNCP
    */
-  rncp_intitule?: string;
+  rncp_intitule?: string | null;
   /**
    * Le titre RNCP est éligible en apprentissage
    */
@@ -145,11 +265,11 @@ export interface Formation {
   /**
    * Capacité d'accueil
    */
-  capacite?: string;
+  capacite?: string | null;
   /**
    * Durée de la formation en années
    */
-  duree?: string;
+  duree?: string | null;
   /**
    * Durée incohérente avec les codes mefs
    */
@@ -157,7 +277,7 @@ export interface Formation {
   /**
    * Année de la formation (cursus)
    */
-  annee?: string;
+  annee?: string | null;
   /**
    * Année incohérente avec les codes mefs
    */
@@ -186,7 +306,7 @@ export interface Formation {
   /**
    * Qui a réalisé la dernière modification
    */
-  last_update_who?: string;
+  last_update_who?: string | null;
   /**
    * Latitude et longitude du lieu de formation
    */
@@ -202,27 +322,27 @@ export interface Formation {
   /**
    * Adresse du lieu de formation
    */
-  lieu_formation_adresse?: string;
+  lieu_formation_adresse?: string | null;
   /**
    * Adresse du lieu de formation déduit de la géolocalisation du flux RCO
    */
-  lieu_formation_adresse_computed?: string;
+  lieu_formation_adresse_computed?: string | null;
   /**
    * Siret du lieu de formation
    */
-  lieu_formation_siret?: string;
+  lieu_formation_siret?: string | null;
   /**
    * **[DEPRECATED]** Id de formation RCO (id_formation + id_action + id_certifinfo)
    */
-  id_rco_formation?: string;
+  id_rco_formation?: string | null;
   /**
    * Identifiant de la formation
    */
-  id_formation?: string;
+  id_formation?: string | null;
   /**
    * Identifiant des actions concaténés
    */
-  id_action?: string;
+  id_action?: string | null;
   /**
    * Identifiant des actions concaténés
    */
@@ -230,7 +350,7 @@ export interface Formation {
   /**
    * Identifiant certifInfo (unicité de la certification)
    */
-  id_certifinfo?: string;
+  id_certifinfo?: string | null;
   /**
    * Tableau de tags (2020, 2021, etc.)
    */
@@ -238,11 +358,11 @@ export interface Formation {
   /**
    * BCN : libelle court fusion table n_formation_diplome ou v_formation_diplome
    */
-  libelle_court?: string;
+  libelle_court?: string | null;
   /**
    * BCN : niveau formation diplôme
    */
-  niveau_formation_diplome?: string;
+  niveau_formation_diplome?: string | null;
   /**
    * BCN : Codes MEF 10 caractères
    */
@@ -252,7 +372,7 @@ export interface Formation {
    */
   editedFields?: {
     [k: string]: unknown;
-  };
+  } | null;
   /**
    * distance entre le Lieu de formation et l'établissement formateur
    */
@@ -285,7 +405,7 @@ export interface Formation {
   /**
    * Identifiant RCO
    */
-  id_RCO?: string;
+  id_RCO?: string | null;
   /**
    * Partenaires
    */
@@ -293,19 +413,19 @@ export interface Formation {
   /**
    * Identifiant établissement gestionnaire
    */
-  etablissement_gestionnaire_id?: string;
+  etablissement_gestionnaire_id?: string | null;
   /**
    * Numéro siret gestionnaire
    */
-  etablissement_gestionnaire_siret?: string;
+  etablissement_gestionnaire_siret?: string | null;
   /**
    * Enseigne établissement gestionnaire
    */
-  etablissement_gestionnaire_enseigne?: string;
+  etablissement_gestionnaire_enseigne?: string | null;
   /**
    * UAI de l'etablissement gestionnaire
    */
-  etablissement_gestionnaire_uai?: string;
+  etablissement_gestionnaire_uai?: string | null;
   /**
    * Etablissement gestionnaire est publié
    */
@@ -321,31 +441,31 @@ export interface Formation {
   /**
    * Numéro et rue établissement gestionnaire
    */
-  etablissement_gestionnaire_adresse?: string;
+  etablissement_gestionnaire_adresse?: string | null;
   /**
    * Code postal établissement gestionnaire
    */
-  etablissement_gestionnaire_code_postal?: string;
+  etablissement_gestionnaire_code_postal?: string | null;
   /**
    * Code commune insee établissement gestionnaire
    */
-  etablissement_gestionnaire_code_commune_insee?: string;
+  etablissement_gestionnaire_code_commune_insee?: string | null;
   /**
    * Localité établissement gestionnaire
    */
-  etablissement_gestionnaire_localite?: string;
+  etablissement_gestionnaire_localite?: string | null;
   /**
    * Complément d'adresse de l'établissement gestionnaire
    */
-  etablissement_gestionnaire_complement_adresse?: string;
+  etablissement_gestionnaire_complement_adresse?: string | null;
   /**
    * Cedex
    */
-  etablissement_gestionnaire_cedex?: string;
+  etablissement_gestionnaire_cedex?: string | null;
   /**
    * Raison sociale établissement gestionnaire
    */
-  etablissement_gestionnaire_entreprise_raison_sociale?: string;
+  etablissement_gestionnaire_entreprise_raison_sociale?: string | null;
   /**
    * Latitude et longitude de l'établissement gestionnaire
    */
@@ -353,19 +473,19 @@ export interface Formation {
   /**
    * région gestionnaire
    */
-  etablissement_gestionnaire_region?: string;
+  etablissement_gestionnaire_region?: string | null;
   /**
    * Numéro de departement gestionnaire
    */
-  etablissement_gestionnaire_num_departement?: string;
+  etablissement_gestionnaire_num_departement?: string | null;
   /**
    * Nom du departement gestionnaire
    */
-  etablissement_gestionnaire_nom_departement?: string;
+  etablissement_gestionnaire_nom_departement?: string | null;
   /**
    * Nom de l'académie gestionnaire
    */
-  etablissement_gestionnaire_nom_academie?: string;
+  etablissement_gestionnaire_nom_academie?: string | null;
   /**
    * Numéro de l'académie gestionnaire
    */
@@ -373,11 +493,11 @@ export interface Formation {
   /**
    * Numéro siren gestionnaire
    */
-  etablissement_gestionnaire_siren?: string;
+  etablissement_gestionnaire_siren?: string | null;
   /**
    * Numéro Déclaration gestionnaire
    */
-  etablissement_gestionnaire_nda?: string;
+  etablissement_gestionnaire_nda?: string | null;
   /**
    * Date de création de l'établissement
    */
@@ -385,23 +505,23 @@ export interface Formation {
   /**
    * Adresse email de contact de l'établissement gestionnaire
    */
-  etablissement_gestionnaire_courriel?: string;
+  etablissement_gestionnaire_courriel?: string | null;
   /**
    * Identifiant établissement formateur
    */
-  etablissement_formateur_id?: string;
+  etablissement_formateur_id?: string | null;
   /**
    * Numéro siret formateur
    */
-  etablissement_formateur_siret?: string;
+  etablissement_formateur_siret?: string | null;
   /**
    * Enseigne établissement formateur
    */
-  etablissement_formateur_enseigne?: string;
+  etablissement_formateur_enseigne?: string | null;
   /**
    * UAI de l'etablissement formateur
    */
-  etablissement_formateur_uai?: string;
+  etablissement_formateur_uai?: string | null;
   /**
    * Etablissement formateur est publié
    */
@@ -417,31 +537,31 @@ export interface Formation {
   /**
    * Numéro et rue établissement formateur
    */
-  etablissement_formateur_adresse?: string;
+  etablissement_formateur_adresse?: string | null;
   /**
    * Code postal établissement formateur
    */
-  etablissement_formateur_code_postal?: string;
+  etablissement_formateur_code_postal?: string | null;
   /**
    * Code commune insee établissement formateur
    */
-  etablissement_formateur_code_commune_insee?: string;
+  etablissement_formateur_code_commune_insee?: string | null;
   /**
    * Localité établissement formateur
    */
-  etablissement_formateur_localite?: string;
+  etablissement_formateur_localite?: string | null;
   /**
    * Complément d'adresse de l'établissement
    */
-  etablissement_formateur_complement_adresse?: string;
+  etablissement_formateur_complement_adresse?: string | null;
   /**
    * Cedex
    */
-  etablissement_formateur_cedex?: string;
+  etablissement_formateur_cedex?: string | null;
   /**
    * Raison sociale établissement formateur
    */
-  etablissement_formateur_entreprise_raison_sociale?: string;
+  etablissement_formateur_entreprise_raison_sociale?: string | null;
   /**
    * Latitude et longitude de l'établissement formateur
    */
@@ -449,19 +569,19 @@ export interface Formation {
   /**
    * région formateur
    */
-  etablissement_formateur_region?: string;
+  etablissement_formateur_region?: string | null;
   /**
    * Numéro de departement formateur
    */
-  etablissement_formateur_num_departement?: string;
+  etablissement_formateur_num_departement?: string | null;
   /**
    * Nom du departement formateur
    */
-  etablissement_formateur_nom_departement?: string;
+  etablissement_formateur_nom_departement?: string | null;
   /**
    * Nom de l'académie formateur
    */
-  etablissement_formateur_nom_academie?: string;
+  etablissement_formateur_nom_academie?: string | null;
   /**
    * Numéro de l'académie formateur
    */
@@ -469,11 +589,11 @@ export interface Formation {
   /**
    * Numéro siren formateur
    */
-  etablissement_formateur_siren?: string;
+  etablissement_formateur_siren?: string | null;
   /**
    * Numéro Déclaration formateur
    */
-  etablissement_formateur_nda?: string;
+  etablissement_formateur_nda?: string | null;
   /**
    * Date de création de l'établissement
    */
@@ -481,11 +601,11 @@ export interface Formation {
   /**
    * Adresse email de contact de l'établissement formateur
    */
-  etablissement_formateur_courriel?: string;
+  etablissement_formateur_courriel?: string | null;
   /**
    * Etablissement reference est soit formateur soit le gestionnaire
    */
-  etablissement_reference?: string;
+  etablissement_reference?: string | null;
   /**
    * Etablissement reference est publié
    */
@@ -527,11 +647,11 @@ export interface Formation {
   /**
    * Erreur lors de la création de la formation sur ParcourSup (via le WS)
    */
-  parcoursup_error?: string;
+  parcoursup_error?: string | null;
   /**
    * identifiant Parcoursup de la formation (g_ta_cod)
    */
-  parcoursup_id?: string;
+  parcoursup_id?: string | null;
   /**
    * Date de publication (passage au statut "publié")
    */
@@ -543,7 +663,7 @@ export interface Formation {
   /**
    * Parcoursup : raison de dépublication
    */
-  parcoursup_raison_depublication?: string;
+  parcoursup_raison_depublication?: string | null;
   /**
    * Tableau de Code MEF 10 caractères et modalités (filtrés pour Parcoursup si applicable)
    */
@@ -569,7 +689,7 @@ export interface Formation {
   /**
    * identifiant Affelnet de la formation (code vœu)
    */
-  affelnet_id?: string;
+  affelnet_id?: string | null;
   /**
    * Date de publication (passage au statut "publié")
    */
@@ -577,23 +697,23 @@ export interface Formation {
   /**
    * Affelnet : Informations offre de formation
    */
-  affelnet_infos_offre?: string;
+  affelnet_infos_offre?: string | null;
   /**
    * Affelnet : Libellé ressource complémentaire
    */
-  affelnet_url_infos_offre?: string;
+  affelnet_url_infos_offre?: string | null;
   /**
    * Affelnet : Modalités particulières
    */
-  affelnet_modalites_offre?: string;
+  affelnet_modalites_offre?: string | null;
   /**
    * Affelnet : Lien vers la ressource
    */
-  affelnet_url_modalites_offre?: string;
+  affelnet_url_modalites_offre?: string | null;
   /**
    * Affelnet : code nature de l'établissement de formation
    */
-  affelnet_code_nature?: string;
+  affelnet_code_nature?: string | null;
   /**
    * Affelnet : type d'établissement (PR: Privé / PU: Public)
    */
@@ -601,7 +721,7 @@ export interface Formation {
   /**
    * Affelnet : raison de dépublication
    */
-  affelnet_raison_depublication?: string;
+  affelnet_raison_depublication?: string | null;
   /**
    * Tableau de Code MEF 10 caractères et modalités (filtrés pour Affelnet si applicable)
    */
@@ -609,104 +729,6 @@ export interface Formation {
   _id?: Types.ObjectId;
   updated_at?: Date;
   created_at?: Date;
-}
-/**
- * Détails RNCP (bloc de compétences etc..)
- */
-export interface RncpDetails {
-  /**
-   * Date de validité de la fiche
-   */
-  date_fin_validite_enregistrement?: Date;
-  /**
-   * fiche active ou non
-   */
-  active_inactive?: string | null;
-  /**
-   * état fiche ex: Publiée
-   */
-  etat_fiche_rncp?: string | null;
-  /**
-   * Niveau européen ex: niveauu5
-   */
-  niveau_europe?: string | null;
-  /**
-   * Code type de certification (ex: DE)
-   */
-  code_type_certif?: string | null;
-  /**
-   * Type de certification (ex: diplôme d'état)
-   */
-  type_certif?: string | null;
-  /**
-   * Code rncp de l'ancienne fiche
-   */
-  ancienne_fiche?: string[] | null;
-  /**
-   * Code rncp de la nouvelle fiche
-   */
-  nouvelle_fiche?: string[] | null;
-  /**
-   * Demande en cours de d'habilitation
-   */
-  demande?: number;
-  /**
-   * Certificateurs
-   */
-  certificateurs?: unknown[];
-  /**
-   * Code NSF
-   */
-  nsf_code?: string | null;
-  /**
-   * Libellé NSF
-   */
-  nsf_libelle?: string | null;
-  /**
-   * Romes
-   */
-  romes?: unknown[];
-  /**
-   * Blocs de compétences
-   */
-  blocs_competences?: unknown[];
-  /**
-   * Voix d'accès
-   */
-  voix_acces?: unknown[];
-  /**
-   * Partenaires
-   */
-  partenaires?: unknown[];
-  /**
-   * Code rncp périmé (date fin enregistrement avant le 31 aout de l'année courante)
-   */
-  rncp_outdated?: boolean;
-}
-/**
- * Cause du rejet de publication
- */
-export interface Rejection {
-  /**
-   * L'erreur telle que retournée par la plateforme
-   */
-  error?: string | null;
-  /**
-   * La description textuelle de l'erreur retournée
-   */
-  description?: string | null;
-  /**
-   * L'action à mener pour résoudre le rejet.
-   */
-  action?: string | null;
-  /**
-   * Adresse email de la personne ayant pris en charge le rejet de publication
-   */
-  handled_by?: string | null;
-  /**
-   * Date à laquelle le rejet de publication a été pris en charge
-   */
-  handled_date?: Date;
 }
 export interface ItemOfUpdatesHistory {
   /**
@@ -721,30 +743,21 @@ export interface ItemOfUpdatesHistory {
   to?: {
     [k: string]: unknown;
   };
-  updated_at?: Date;
+  _id?: Types.ObjectId;
 }
 export interface ItemOfBcnMefs_10 {
   mef10?: string;
   modalite?: Modalite;
+  _id?: Types.ObjectId;
 }
 export interface Modalite {
   duree?: string;
   annee?: string;
 }
-/**
- * Données pour étude France Compétence
- */
-export interface FranceCompetenceInfos {
-  fc_is_catalog_general?: boolean;
-  fc_is_habilite_rncp?: boolean;
-  fc_is_certificateur?: boolean;
-  fc_is_certificateur_siren?: boolean;
-  fc_is_partenaire?: boolean;
-  fc_has_partenaire?: boolean;
-}
 export interface ItemOfParcoursupMefs_10 {
   mef10?: string;
   modalite?: Modalite1;
+  _id?: Types.ObjectId;
 }
 export interface Modalite1 {
   duree?: string;
@@ -753,6 +766,7 @@ export interface Modalite1 {
 export interface ItemOfAffelnetMefs_10 {
   mef10?: string;
   modalite?: Modalite2;
+  _id?: Types.ObjectId;
 }
 export interface Modalite2 {
   duree?: string;

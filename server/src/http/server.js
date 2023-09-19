@@ -49,11 +49,16 @@ const options = {
       <h3><strong>${config.publicUrl}/api/v1</strong></h3><br/>
       Contact:
       `,
+
       contact: {
         name: "Mission Nationale Apprentissage",
         url: "https://mission-apprentissage.gitbook.io/general/",
         email: "catalogue@apprentissage.beta.gouv.fr",
       },
+    },
+    externalDocs: {
+      description: "Télécharger la spécification au format JSON",
+      url: `${config.publicUrl}/api/v1/schema.json`,
     },
     servers: [
       {

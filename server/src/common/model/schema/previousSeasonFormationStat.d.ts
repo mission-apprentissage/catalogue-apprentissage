@@ -15,7 +15,7 @@ export interface PreviousSeasonFormationStat {
    * Date de la statistique
    */
   date: Date;
-  academie?: string;
+  academie?: string | null;
   closed?: number;
   qualiopi_lost?: number;
   not_updated?: number;
