@@ -42,6 +42,7 @@ import { HistoryBlock } from "../../common/components/formation/HistoryBlock";
 import { RejectionBlock } from "../../common/components/formation/RejectionBlock";
 import { DescriptionBlock } from "../../common/components/formation/DescriptionBlock";
 import { OrganismesBlock } from "../../common/components/formation/OrganismesBlock";
+import { UaiHistoryModal } from "./UaiHistoryModal";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -58,12 +59,22 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
   const seuilDistance = 100;
   const [isEditingUai, setIsEditingUai] = useState(false);
 
+  const uai_updated_history = formation.updates_history
+    .filter((value) => typeof value.to?.uai_formation !== "undefined")
+    ?.sort(sortDescending);
+
   const { isOpen: isComputedAdressOpen, onToggle: onComputedAdressToggle } = useDisclosure(
     formation.distance > seuilDistance
   );
   const { isOpen: isComputedGeoCoordOpen, onToggle: onComputedGeoCoordToggle } = useDisclosure(
     formation.distance > seuilDistance
   );
+
+  const {
+    isOpen: isUaiHistoryModalOpen,
+    onClose: onUaiHistoryModalClose,
+    onOpen: onUaiHistoryModalOpen,
+  } = useDisclosure();
 
   const UaiFormationContainer =
     !formation.uai_formation ||
@@ -76,10 +87,6 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
   const AdresseContainer = React.Fragment;
   //   ? (args) => <WarningBox data-testid={"adress-warning"} {...args} />
   //   : React.Fragment;
-
-  const uai_updated_history = formation.updates_history
-    .filter((value) => typeof value.to?.uai_formation !== "undefined")
-    ?.sort(sortDescending);
 
   const onEditOverride = async (...args) => {
     setIsEditingUai(!isEditingUai);
@@ -135,6 +142,18 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                   hasRightToEdit={hasRightToEdit && ![PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut)}
                   mb={2}
                 />
+
+                <Text mb={2}>
+                  <Link
+                    fontSize={"zeta"}
+                    color={"grey.600"}
+                    textDecoration={"underline"}
+                    onClick={onUaiHistoryModalOpen}
+                  >
+                    Voir l'historique
+                  </Link>
+                </Text>
+
                 {isEditingUai && formation.affelnet_statut === AFFELNET_STATUS.PUBLIE && (
                   <Text fontSize={"zeta"} color={"grey.600"} mb={2}>
                     - Si l’UAI lieu est modifiée, la formation devra à nouveau être importée dans Affelnet. Son état
@@ -330,6 +349,8 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
           )}
         </GridItem>
       </Grid>
+
+      <UaiHistoryModal isOpen={isUaiHistoryModalOpen} onClose={onUaiHistoryModalClose} formation={formation} />
     </Box>
   );
 };
