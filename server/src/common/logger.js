@@ -47,15 +47,16 @@ const createStreams = () => {
               type: "http",
               url: record.request.url.relative,
               statusCode: record.response.statusCode,
-              ...(record.error ? { msg: record.error.message } : {}),
+              ...(record.error ? { message: record.error.message } : {}),
             };
           }
           return {
             text: util.format(
-              `[${envName}] [%s]${record.type ? " (" + record.type + ")" : ""}   %s\
-              \`\`\`${record.msg}\`\`\``,
+              `[${envName}] [%s]${record.type ? " (" + record.type + ")" : ""}  %s\
+              ${record.msg ? `\`\`\`${record.msg}\`\`\`` : ""}`,
               levelName.toUpperCase(),
-              new Date().toLocaleString("fr-FR")
+              new Date().toLocaleString("fr-FR"),
+              ...(record.msg ? [] : [record])
             ),
           };
         },
