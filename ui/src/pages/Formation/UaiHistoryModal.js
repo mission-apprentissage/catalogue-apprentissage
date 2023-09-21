@@ -55,40 +55,40 @@ const UaiHistoryModal = ({ onOpen, onClose, isOpen, formation }) => {
             </ListItem>
             {uai_updated_history?.map((history, index) => (
               <ListItem key={index} mb="8px">
-                {history.from.uai_formation.length > 0 && history.to.uai_formation.length > 0 && (
+                {history.from?.uai_formation?.length > 0 && history.to?.uai_formation?.length > 0 && (
                   <>
                     Modification de l'UAI
                     <Text as="span" variant="highlight" mx="0.5rem">
-                      {history.from.uai_formation ?? ""}
+                      {history.from?.uai_formation ?? ""}
                     </Text>
                     à
                     <Text as="span" variant="highlight" mx="0.5rem">
-                      {history.to.uai_formation ?? ""}
+                      {history.to?.uai_formation ?? ""}
                     </Text>
                   </>
                 )}
 
-                {history.from.uai_formation.length > 0 && history.to.uai_formation.length === 0 && (
+                {history.from?.uai_formation?.length > 0 && history.to?.uai_formation?.length === 0 && (
                   <>
                     Suppression de l'UAI
                     <Text as="span" variant="highlight" mx="0.5rem">
-                      {history.from.uai_formation ?? ""}
+                      {history.from?.uai_formation ?? ""}
                     </Text>
                   </>
                 )}
 
-                {history.from.uai_formation.length === 0 && history.to.uai_formation.length > 0 && (
+                {history.from?.uai_formation?.length === 0 && history.to?.uai_formation?.length > 0 && (
                   <>
                     Definition de l'UAI à
                     <Text as="span" variant="highlight" mx="0.5rem">
-                      {history.to.uai_formation ?? ""}
+                      {history.to?.uai_formation ?? ""}
                     </Text>
                   </>
                 )}
 
                 <Text as="span" variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
                   le {new Date(history.updated_at).toLocaleDateString()} à{" "}
-                  {new Date(history.updated_at).toLocaleTimeString()} par {history.to.last_update_who}
+                  {new Date(history.updated_at).toLocaleTimeString()} par {history.to?.last_update_who}
                 </Text>
               </ListItem>
             ))}
