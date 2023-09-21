@@ -42,9 +42,11 @@ const createStreams = () => {
         webhook_url: config.slackWebhookUrl,
         iconUrl: "https://catalogue.apprentissage.education.gouv.fr/favicon.ico",
         customFormatter: (record, levelName) => {
-          if (record.type === "http") {
+          let type = record.type;
+          let ip;
+          if (type === "http") {
+            ip = record.request?.headers?.["x-forwarded-for"];
             record = {
-              type: "http",
               url: record.request.url.relative,
               statusCode: record.response.statusCode,
               ...(record.error ? { message: record.error.message } : {}),
@@ -52,11 +54,11 @@ const createStreams = () => {
           }
           return {
             text: util.format(
-              `[${envName}] [%s]${record.type ? " (" + record.type + ")" : ""}  %s\
-              ${record.msg ? `\`\`\`${record.msg}\`\`\`` : ""}`,
+              `[${envName}] [%s]${type ? " (" + type + ")" : ""}${type === "http" ? ` [${ip}]` : ""} _%s_\
+              ${`\`\`\`${record.msg ?? util.format(record)}\`\`\``}
+              `,
               levelName.toUpperCase(),
-              new Date().toLocaleString("fr-FR"),
-              ...(record.msg ? [] : [record])
+              new Date().toLocaleString("fr-FR")
             ),
           };
         },
