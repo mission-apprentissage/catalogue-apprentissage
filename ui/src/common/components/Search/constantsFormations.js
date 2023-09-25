@@ -90,6 +90,13 @@ const columnsDefinition = [
     exportable: true,
   },
   {
+    Header: "Raison sociale de l'organisme responsable",
+    accessor: "etablissement_gestionnaire_entreprise_raison_sociale",
+    width: 200,
+    exportable: true,
+    formatter: (value) => escapeDiacritics(value),
+  },
+  {
     Header: "Enseigne Responsable",
     accessor: "etablissement_gestionnaire_enseigne",
     width: 200,
