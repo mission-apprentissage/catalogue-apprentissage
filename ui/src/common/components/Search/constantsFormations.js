@@ -122,7 +122,7 @@ const columnsDefinition = [
   },
   {
     Header: "Raison sociale du siret formateur",
-    accessor: "etablissement_gestionnaire_entreprise_raison_sociale",
+    accessor: "etablissement_formateur_entreprise_raison_sociale",
     width: 200,
     exportable: true,
   },
