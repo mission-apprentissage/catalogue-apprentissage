@@ -200,12 +200,13 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                   <>
                     {formation.code_commune_insee !== formation.etablissement_formateur_code_commune_insee && (
                       <Text fontSize={"zeta"} color={"grey.600"} mt={2}>
-                        - Le code commune Insee du lieu de formation ({formation.code_commune_insee},{" "}
+                        - Le code commune (Insee) du lieu de formation ({formation.code_commune_insee},{" "}
                         {formation.localite}) est différent de celui du formateur (
                         {formation.etablissement_formateur_code_commune_insee},{" "}
-                        {formation.etablissement_formateur_localite}) l'UAI du lieu doit donc être édité. Si vous pensez
-                        qu'il s'agit d'une erreur d'enregistrement, veuillez vous rapprocher de l'organisme ou du
-                        Carif-Oref.
+                        {formation.etablissement_formateur_localite}), l'UAI du lieu doit donc être saisi. Il vous
+                        appartient de vérifier auprès de l'OFA que le lieu de formation est correct et de saisir l'UAI
+                        correspondant. Si vous pensez qu’il y a une erreur sur l’une de ces données, veuillez vous
+                        rapprocher du Carif-Oref.
                       </Text>
                     )}
                   </>
@@ -320,7 +321,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
               </AdresseContainer>
 
               <Text mb={4}>
-                Code commune :{" "}
+                Code commune (Insee) :{" "}
                 <Text as="span" variant="highlight">
                   {formation.code_commune_insee}
                 </Text>{" "}
@@ -436,7 +437,7 @@ export default ({ match }) => {
             title: "Erreur",
             description: message,
             status: "error",
-            duration: 10000,
+            duration: 20000,
           });
         } finally {
           setEdition(null);
