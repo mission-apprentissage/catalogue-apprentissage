@@ -43,7 +43,9 @@ module.exports = () => {
         payload.uai_formation.trim() === formation.etablissement_formateur_uai
       ) {
         throw Boom.badRequest(
-          `Le code commune Insee du lieu de formation (${formation.code_commune_insee}, ${formation.localite}) est différent de celui du formateur (${formation.etablissement_formateur_code_commune_insee}, ${formation.etablissement_formateur_localite}). L'UAI du lieu de formation doit donc être différent de celui du formateur. Si vous pensez qu'il s'agit d'une erreur d'enregistrement, veuillez vous rapprocher de l'organisme ou du Carif-Oref.`
+          `Le code commune Insee du lieu de formation (${formation.code_commune_insee}, ${formation.localite}) est différent de celui du formateur (${formation.etablissement_formateur_code_commune_insee}, ${formation.etablissement_formateur_localite}). \
+L'UAI du lieu de formation doit donc être différent de celui du formateur. Il vous appartient de vérifier auprès de l'OFA que le lieu de formation est correct et de saisir l'UAI correspondant. \
+Si vous pensez qu’il y a une erreur sur l’une de ces données, veuillez vous rapprocher du Carif-Oref.`
         );
       }
     }
