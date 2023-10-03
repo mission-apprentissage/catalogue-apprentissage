@@ -180,7 +180,14 @@ module.exports = {
             description: "Certificateurs",
             items: {
               type: "object",
-              properties: {},
+              properties: {
+                certificateur: {
+                  type: "string",
+                },
+                siret_certificateur: {
+                  type: "string",
+                },
+              },
               required: [],
             },
           },
@@ -197,7 +204,14 @@ module.exports = {
             description: "Romes",
             items: {
               type: "object",
-              properties: {},
+              properties: {
+                rome: {
+                  type: "string",
+                },
+                libelle: {
+                  type: "string",
+                },
+              },
               required: [],
             },
           },
@@ -224,7 +238,17 @@ module.exports = {
             description: "Partenaires",
             items: {
               type: "object",
-              properties: {},
+              properties: {
+                Nom_Partenaire: {
+                  type: "string",
+                },
+                Siret_Partenaire: {
+                  type: "string",
+                },
+                Habilitation_Partenaire: {
+                  type: "string",
+                },
+              },
               required: [],
             },
           },

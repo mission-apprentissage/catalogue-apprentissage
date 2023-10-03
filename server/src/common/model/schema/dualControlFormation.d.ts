@@ -49,9 +49,7 @@ export type RncpDetails = {
   /**
    * Certificateurs
    */
-  certificateurs?: {
-    [k: string]: unknown;
-  }[];
+  certificateurs?: ItemOfCertificateurs[];
   /**
    * Code NSF
    */
@@ -63,9 +61,7 @@ export type RncpDetails = {
   /**
    * Romes
    */
-  romes?: {
-    [k: string]: unknown;
-  }[];
+  romes?: ItemOfRomes[];
   /**
    * Blocs de compétences
    */
@@ -81,9 +77,7 @@ export type RncpDetails = {
   /**
    * Partenaires
    */
-  partenaires?: {
-    [k: string]: unknown;
-  }[];
+  partenaires?: ItemOfPartenaires[];
   /**
    * Code rncp périmé (date fin enregistrement avant le 31 aout de l'année courante)
    */
@@ -523,6 +517,19 @@ export interface DualControlFormation {
    */
   etablissement_reference_date_creation?: Date;
   _id?: Types.ObjectId;
+}
+export interface ItemOfCertificateurs {
+  certificateur?: string;
+  siret_certificateur?: string;
+}
+export interface ItemOfRomes {
+  rome?: string;
+  libelle?: string;
+}
+export interface ItemOfPartenaires {
+  Nom_Partenaire?: string;
+  Siret_Partenaire?: string;
+  Habilitation_Partenaire?: string;
 }
 export interface ItemOfBcnMefs_10 {
   mef10?: string;
