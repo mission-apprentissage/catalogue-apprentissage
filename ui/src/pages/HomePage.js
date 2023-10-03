@@ -150,6 +150,16 @@ export default () => {
                 <br />
                 <br />
                 <Box textStyle="rf-text">
+                  <Text textStyle="rf-text">
+                    Consulter le vademecum :{" "}
+                    <Link href="/vademecum.pdf" download>
+                      ici
+                    </Link>
+                    .
+                  </Text>
+                </Box>
+                <br />
+                <Box textStyle="rf-text">
                   <Heading as="h2" textStyle="h4" id="mise-a-jour" tabIndex="-1">
                     Mise à jour des données
                   </Heading>
