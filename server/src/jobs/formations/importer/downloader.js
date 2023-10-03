@@ -67,7 +67,7 @@ const extractFromZip = async () => {
     logger.error({ type: "job" }, "One and only one file required inside zip");
   }
 
-  logger.info({ type: "job" }, `${await DualControlFormation.countDocuments()} établissements reçus.`);
+  logger.info({ type: "job" }, `${await DualControlFormation.countDocuments()} formations téléchargées.`);
 
   await zip.close();
 };

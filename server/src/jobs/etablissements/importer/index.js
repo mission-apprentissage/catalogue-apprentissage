@@ -16,16 +16,12 @@ const importer = async (options) => {
       downloadError = await downloader();
 
       if (downloadError) {
-        logger.error({ type: "job" }, downloadError);
-        return;
-      } else {
-        logger.info({ type: "job" }, `${await DualControlEtablissement.countDocuments()} établissements téléchargés`);
+        throw new Error(downloadError);
       }
     }
 
     if (!(await DualControlEtablissement.countDocuments())) {
-      logger.warn({ type: "job" }, "Aucune établissement à convertir.");
-      return;
+      throw new Error("Aucune établissement à convertir.");
     }
 
     // STEP 2 : Convert etablissements
@@ -39,7 +35,7 @@ const importer = async (options) => {
   }
 };
 
-module.exports = importer;
+module.exports = { importer };
 
 if (process.env.standalone) {
   runScript(async () => {

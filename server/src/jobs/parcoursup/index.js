@@ -28,7 +28,7 @@ const parcoursupJobs = async () => {
   }
 };
 
-module.exports = parcoursupJobs;
+module.exports = { parcoursupJobs };
 
 if (process.env.standaloneJobs) {
   runScript(async () => {

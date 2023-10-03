@@ -24,7 +24,7 @@ const affelnetJobs = async () => {
   }
 };
 
-module.exports = affelnetJobs;
+module.exports = { affelnetJobs };
 
 if (process.env.standaloneJobs) {
   runScript(async () => {

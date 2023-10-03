@@ -1,6 +1,6 @@
 const logger = require("../../common/logger");
 const { runScript } = require("../scriptWrapper");
-const importer = require("./importer");
+const { importer } = require("./importer");
 
 const etablissementsJobs = async () => {
   try {
@@ -20,7 +20,7 @@ const etablissementsJobs = async () => {
   }
 };
 
-module.exports = etablissementsJobs;
+module.exports = { etablissementsJobs };
 
 if (process.env.standaloneJobs) {
   runScript(async () => {

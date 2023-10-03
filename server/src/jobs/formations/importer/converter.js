@@ -401,7 +401,7 @@ const applyConversion = async (
           if (config.log?.level === "debug") {
             const newFormation = await Formation.findById(formation._id).lean();
             const differences = objectDiff(formation, newFormation);
-            console.debug({ cle_ministere_educatif, differences });
+            logger.debug({ type: "job" }, { cle_ministere_educatif, differences });
           }
 
           await Formation.updateOne({ cle_ministere_educatif }, { $set: {} });

@@ -2,7 +2,7 @@ const logger = require("../../common/logger");
 const { isSunday } = require("../../common/utils/dateUtils");
 const { runScript } = require("../scriptWrapper");
 
-const importer = require("./importer");
+const { importer } = require("./importer");
 
 const formationsJobs = async () => {
   try {
@@ -23,7 +23,7 @@ const formationsJobs = async () => {
   }
 };
 
-module.exports = formationsJobs;
+module.exports = { formationsJobs };
 
 if (process.env.standaloneJobs) {
   runScript(async () => {

@@ -25,16 +25,12 @@ const importer = async (
       downloadError = await downloader();
 
       if (downloadError) {
-        logger.error({ type: "job" }, downloadError);
-        return;
-      } else {
-        logger.info({ type: "job" }, `${await DualControlFormation.countDocuments()} formations téléchargées`);
+        throw new Error(downloadError);
       }
     }
 
     if (!(await DualControlFormation.countDocuments())) {
-      logger.warn({ type: "job" }, "Aucune formation à convertir.");
-      return;
+      throw new Error("Aucune formation à convertir.");
     }
 
     // STEP 2 : Convert formations
@@ -52,7 +48,7 @@ const importer = async (
   }
 };
 
-module.exports = importer;
+module.exports = { importer };
 
 if (process.env.standalone) {
   runScript(async () => {

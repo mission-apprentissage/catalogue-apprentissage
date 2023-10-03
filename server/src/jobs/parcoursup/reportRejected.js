@@ -98,7 +98,7 @@ const reportRejected = async () => {
   }
 };
 
-module.exports = reportRejected;
+module.exports = { reportRejected };
 
 if (process.env.standalone) {
   runScript(async () => {

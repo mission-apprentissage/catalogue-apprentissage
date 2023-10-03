@@ -4,10 +4,10 @@ const { runScript, enableAlertMessage, disableAlertMessage } = require("./script
 const logger = require("../common/logger");
 const { Formation, Etablissement } = require("../common/model");
 const { rebuildEsIndex } = require("./esIndex/esIndex");
-const parcoursupJobs = require("./parcoursup");
-const affelnetJobs = require("./affelnet");
-const etablissementsJobs = require("./etablissements");
-const formationsJobs = require("./formations");
+const { parcoursupJobs } = require("./parcoursup");
+const { affelnetJobs } = require("./affelnet");
+const { etablissementsJobs } = require("./etablissements");
+const { formationsJobs } = require("./formations");
 const { collectPreviousSeasonStats } = require("./formations/previousSeasonStats");
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));

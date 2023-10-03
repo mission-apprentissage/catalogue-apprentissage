@@ -103,7 +103,7 @@ const applyConversion = async () => {
           if (config.log?.level === "debug") {
             const newEtablissement = await Etablissement.findById(etablissement._id).lean();
             const differences = Object.entries(diff(etablissement, newEtablissement));
-            console.debug({ siret, differences });
+            logger.debug({ type: "job" }, { siret, differences });
           }
 
           await Etablissement.updateOne({ siret }, { $set: { updated_at: new Date() } });
