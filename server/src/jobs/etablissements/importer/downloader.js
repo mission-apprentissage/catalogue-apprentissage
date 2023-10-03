@@ -42,7 +42,10 @@ const extractFromZip = async () => {
   if (entriesCount === 1) {
     const entries = await zip.entries();
     const entry = Object.values(entries)[0];
-    console.log(`Fichier dans l'archive: ${entry.name} (${(entry.size / (1000 * 1000)).toFixed(2)} Mo)`);
+    logger.info(
+      { type: "job" },
+      `Fichier dans l'archive: ${entry.name} (${(entry.size / (1000 * 1000)).toFixed(2)} Mo)`
+    );
 
     const stream = await zip.stream(entry.name);
 
@@ -55,7 +58,7 @@ const extractFromZip = async () => {
       writeData(async (json) => await DualControlEtablissement.create(json))
     );
   } else {
-    console.error("One and only one file required inside zip");
+    logger.error({ type: "job" }, "One and only one file required inside zip");
   }
 
   logger.info({ type: "job" }, `${await DualControlEtablissement.countDocuments()} établissements reçus.`);

@@ -24,6 +24,7 @@ const importer = async (options) => {
     }
 
     if (!(await DualControlEtablissement.countDocuments())) {
+      logger.warn({ type: "job" }, "Aucune établissement à convertir.");
       return;
     }
 

@@ -33,6 +33,7 @@ const importer = async (
     }
 
     if (!(await DualControlFormation.countDocuments())) {
+      logger.warn({ type: "job" }, "Aucune formation à convertir.");
       return;
     }
 
