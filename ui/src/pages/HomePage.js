@@ -150,13 +150,13 @@ export default () => {
                 <br />
                 <br />
                 <Box textStyle="rf-text">
-                  <Text textStyle="rf-text">
+                  <Heading as="h2" textStyle="h4" mb={3} tabIndex="-1">
                     Consulter le vademecum :{" "}
                     <Link href="/vademecum.pdf" download>
                       ici
                     </Link>
                     .
-                  </Text>
+                  </Heading>
                 </Box>
                 <br />
                 <Box textStyle="rf-text">
