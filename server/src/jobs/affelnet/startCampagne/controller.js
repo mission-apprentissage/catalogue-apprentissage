@@ -2,10 +2,11 @@ const { Formation, AffelnetFormation } = require("../../../common/model");
 const logger = require("../../../common/logger");
 const { AFFELNET_STATUS } = require("../../../constants/status");
 const { cursor } = require("../../../common/utils/cursor");
+const { isValideUAI } = require("@mission-apprentissage/tco-service-node");
 
 /**
  * Permet de réinitialiser les statuts de publication Affelnet en début de campagne.
- * Ici seul les formations en attente de publication sont passées à hors périmètre, les
+ * Ici seul les formations non 'en attente de publication' sont passées à hors périmètre, les
  * autres statuts sont gérés par le processus classique du script d'application des règles
  * de périmètre.
  */
@@ -18,18 +19,47 @@ const run = async () => {
   // Mise à jour des formations
   await cursor(
     Formation.find({ affelnet_statut: { $ne: AFFELNET_STATUS.HORS_PERIMETRE } }),
-    async ({ _id, affelnet_statut }) => {
+    async ({
+      _id,
+      affelnet_statut,
+      etablissement_formateur_code_commune_insee,
+      code_commune_insee,
+      uai_formation,
+      etablissement_formateur_uai,
+    }) => {
       let next_affelnet_statut;
+      let update;
 
       if (![AFFELNET_STATUS.EN_ATTENTE].includes(affelnet_statut)) {
         next_affelnet_statut = AFFELNET_STATUS.HORS_PERIMETRE;
-        await Formation.updateOne(
-          { _id: _id },
-          {
-            affelnet_statut: next_affelnet_statut,
-            affelnet_published_date: null,
-          }
-        );
+
+        update = {
+          affelnet_statut: next_affelnet_statut,
+          affelnet_published_date: null,
+        };
+      }
+
+      // Si l'UAI du lieu de formation n'est pas valide
+      if (
+        (etablissement_formateur_code_commune_insee !== code_commune_insee &&
+          uai_formation === etablissement_formateur_uai) ||
+        !uai_formation ||
+        !uai_formation.length ||
+        !isValideUAI(uai_formation)
+      ) {
+        next_affelnet_statut = AFFELNET_STATUS.HORS_PERIMETRE;
+
+        update = {
+          affelnet_statut: next_affelnet_statut,
+          affelnet_published_date: null,
+          affelnet_id: null,
+        };
+
+        console.log("Reinit affelnet_id", { _id, uai_formation });
+      }
+
+      if (update) {
+        await Formation.updateOne({ _id }, update);
         updated++;
       }
     }
