@@ -249,7 +249,7 @@ export default ({ plateforme }) => {
           <Breadcrumb
             pages={[
               { title: "Accueil", to: "/" },
-              { title: "Mes actions expertes", to: "/mes-actions" },
+              { title: "Règles de périmètre", to: "/regles-perimetre" },
               { title: title },
             ]}
           />

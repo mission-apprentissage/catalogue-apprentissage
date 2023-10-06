@@ -6,21 +6,24 @@ export default (
     <Route exact path="/stats" />
 
     <Route exact path="/" />
-    <Route exact path="/recherche/formations" />
     <Route exact path="/guide-reglementaire" />
-    <Route exact path="/recherche/etablissements" />
+    <Route exact path="/recherche/formations" />
     <Route exact path={`/formation/:id`} />
+    <Route exact path="/recherche/etablissements" />
     <Route exact path={`/etablissement/:id`} />
 
     <Route exact path="/login" />
     <Route exact path="/reset-password" />
     <Route exact path="/forgotten-password" />
-    <Route exact path="/report" />
     <Route exact path="/changelog" />
 
-    <Route exact path="/mes-actions" />
-    <Route exact path="/perimetre-parcoursup" />
-    <Route exact path="/perimetre-affelnet" />
+    <Route exact path="/consoles-pilotage" />
+    <Route exact path="/consoles-pilotage/parcoursup" />
+    <Route exact path="/consoles-pilotage/affelnet" />
+
+    <Route exact path="/regles-perimetre" />
+    <Route exact path="/regles-perimetre/parcoursup" />
+    <Route exact path="/regles-perimetre/affelnet" />
 
     <Route exact path="/contact" />
     <Route exact path="/cookies" />

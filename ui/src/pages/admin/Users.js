@@ -248,8 +248,12 @@ const UserLine = ({ user, roles }) => {
                         name="acl"
                         onChange={handleChange}
                         value={item.ref}
-                        isChecked={values.acl.includes(item.ref) || rolesAcl.includes(item.ref)}
-                        isDisabled={rolesAcl.includes(item.ref)}
+                        isChecked={
+                          values.acl.includes(item.ref) ||
+                          rolesAcl.includes(item.ref) ||
+                          values?.accessAllCheckbox?.includes("on")
+                        }
+                        isDisabled={rolesAcl.includes(item.ref) || values?.accessAllCheckbox?.includes("on")}
                         fontWeight="bold"
                       >
                         {item.feature}
@@ -263,8 +267,12 @@ const UserLine = ({ user, roles }) => {
                               name="acl"
                               onChange={handleChange}
                               value={subitem.ref}
-                              isChecked={values.acl.includes(subitem.ref) || rolesAcl.includes(subitem.ref)}
-                              isDisabled={rolesAcl.includes(subitem.ref)}
+                              isChecked={
+                                values.acl.includes(subitem.ref) ||
+                                rolesAcl.includes(subitem.ref) ||
+                                values?.accessAllCheckbox?.includes("on")
+                              }
+                              isDisabled={rolesAcl.includes(subitem.ref) || values?.accessAllCheckbox?.includes("on")}
                             >
                               {subitem.feature}
                             </Checkbox>

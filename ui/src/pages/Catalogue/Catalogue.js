@@ -33,7 +33,7 @@ export default (props) => {
   const searchState = useSearch("catalogue");
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const title = "Catalogue des formations en apprentissage";
+  const title = "Catalogue";
   setTitle(title);
 
   return (
@@ -68,7 +68,7 @@ export default (props) => {
                         : searchState.countCatalogueNonEligible.filtered.toLocaleString("fr-FR")}
                       )
                     </Tab>
-                    {hasAccessTo(auth, "page_catalogue/guide_reglementaire") && <Tab>Guide réglementaire</Tab>}
+                    <Tab>Guide réglementaire</Tab>
                   </Flex>
                   <Button
                     variant="pill"
@@ -87,23 +87,18 @@ export default (props) => {
                   <TabPanel>
                     <Search {...props} searchState={searchState} context={CONTEXT.CATALOGUE_NON_ELIGIBLE} />
                   </TabPanel>
-                  {hasAccessTo(auth, "page_catalogue/guide_reglementaire") && (
-                    <TabPanel>
-                      <HowToReglement />
-                    </TabPanel>
-                  )}
+                  <TabPanel>
+                    <HowToReglement />
+                  </TabPanel>
                 </TabPanels>
               </Tabs>
-              {hasAccessTo(auth, "page_catalogue/demande_ajout") && (
-                <>
-                  <Box mb={8} px={8} display={["block", "block", "block", "block", "none"]}>
-                    <Button variant="pill" onClick={onOpen} textStyle="rf-text" whiteSpace="normal">
-                      <ArrowRightLine w="9px" h="9px" mr={2} /> Demander l'ajout d'une formation
-                    </Button>
-                  </Box>
-                  <HowToAddModal isOpen={isOpen} onClose={onClose} />
-                </>
-              )}
+
+              <Box mb={8} px={8} display={["block", "block", "block", "block", "none"]}>
+                <Button variant="pill" onClick={onOpen} textStyle="rf-text" whiteSpace="normal">
+                  <ArrowRightLine w="9px" h="9px" mr={2} /> Demander l'ajout d'une formation
+                </Button>
+              </Box>
+              <HowToAddModal isOpen={isOpen} onClose={onClose} />
             </>
           )}
         </Container>

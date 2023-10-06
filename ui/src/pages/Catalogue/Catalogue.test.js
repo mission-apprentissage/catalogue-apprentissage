@@ -708,7 +708,7 @@ test("renders basic tree", async () => {
   const { getAllByText, getByText, getAllByTestId } = renderWithRouter(
     <Catalogue location={{ search: { defaultMode: "simple" } }} />
   );
-  const match = getAllByText(/^Catalogue des formations en apprentissage$/i);
+  const match = getAllByText(/^Catalogue$/i);
   expect(match).toHaveLength(3);
 
   await waitFor(() => getByText("Date de début de formation"));

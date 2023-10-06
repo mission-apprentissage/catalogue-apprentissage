@@ -1,11 +1,11 @@
 import React from "react";
-import ActionsExpertes from "./ActionsExpertes";
-import { renderWithRouter, setupMswServer } from "../../common/utils/testUtils";
-
-import { rest } from "msw";
-import { setAuthState } from "../../common/auth";
 import { waitFor } from "@testing-library/react";
-import * as search from "../../common/hooks/useSearch";
+import { rest } from "msw";
+
+import { renderWithRouter, setupMswServer } from "../../common/utils/testUtils";
+import { setAuthState } from "../../common/auth";
+
+import ReglesPerimetre from "./ReglesPerimetre";
 
 const server = setupMswServer(
   rest.get(/\/api\/entity\/formations\/count/, (req, res, ctx) => {
@@ -24,7 +24,7 @@ afterAll(() => server.close());
 test("renders all actions for admin", async () => {
   setAuthState({ permissions: { isAdmin: true } });
 
-  const { getByText, getByTestId } = renderWithRouter(<ActionsExpertes />);
+  const { getByText, getByTestId } = renderWithRouter(<ReglesPerimetre />);
 
   await waitFor(() => getByTestId("grid"));
 
@@ -38,7 +38,7 @@ test("renders all actions for admin", async () => {
 test("renders ps actions for acl ps", async () => {
   setAuthState({ permissions: { isAdmin: false }, acl: ["page_perimetre/parcoursup"] });
 
-  const { queryByText, getByTestId } = renderWithRouter(<ActionsExpertes />);
+  const { queryByText, getByTestId } = renderWithRouter(<ReglesPerimetre />);
 
   await waitFor(() => getByTestId("grid"));
 
@@ -52,7 +52,7 @@ test("renders ps actions for acl ps", async () => {
 test("renders af actions for acl af", async () => {
   setAuthState({ permissions: { isAdmin: false }, acl: ["page_perimetre/affelnet"] });
 
-  const { queryByText, getByTestId } = renderWithRouter(<ActionsExpertes />);
+  const { queryByText, getByTestId } = renderWithRouter(<ReglesPerimetre />);
 
   await waitFor(() => getByTestId("grid"));
 

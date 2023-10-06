@@ -32,9 +32,9 @@ const NavToggle = ({ toggle, isOpen }) => {
   );
 };
 
-const NavItem = ({ children, to = "/", ...rest }) => {
+const NavItem = ({ children, to = "/", exact, ...rest }) => {
   const { pathname } = useLocation();
-  const isActive = pathname === to;
+  const isActive = exact ? pathname === to : pathname.includes(to);
 
   return (
     <Link
@@ -65,12 +65,14 @@ const NavLinks = ({ isOpen }) => {
         px={2}
         textStyle="sm"
       >
-        <NavItem to="/">Accueil</NavItem>
-        {hasAccessTo(auth, "page_actions_expertes") && <NavItem to="/mes-actions">Mes actions expertes</NavItem>}
-        <NavItem to="/recherche/formations">Catalogue des formations en apprentissage</NavItem>
-        <NavItem to="/recherche/etablissements">Liste des organismes</NavItem>
+        <NavItem to="/" exact>
+          Accueil
+        </NavItem>
+        {hasAccessTo(auth, "page_perimetre") && <NavItem to="/regles-perimetre">Règles de périmètre</NavItem>}
+        <NavItem to="/recherche/formations">Catalogue</NavItem>
+        <NavItem to="/recherche/etablissements">Organismes</NavItem>
         {hasAccessTo(auth, "page_console") && <NavItem to="/consoles-pilotage">Consoles de pilotage</NavItem>}
-        <NavItem to="/changelog">Journal des modifications</NavItem>
+        <NavItem to="/changelog">Journal</NavItem>
       </Flex>
     </Box>
   );

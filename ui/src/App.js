@@ -1,9 +1,9 @@
-import React, { useEffect, useState, lazy, Suspense } from "react";
-import { BrowserRouter as Router, Switch, Route, Redirect, useHistory } from "react-router-dom";
-import useAuth from "./common/hooks/useAuth";
-import { _post, _get } from "./common/httpClient";
-import ScrollToTop from "./common/components/ScrollToTop";
+import React, { Suspense, lazy, useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { Redirect, Route, BrowserRouter as Router, Switch, useHistory } from "react-router-dom";
+import ScrollToTop from "./common/components/ScrollToTop";
+import useAuth from "./common/hooks/useAuth";
+import { _get, _post } from "./common/httpClient";
 import { hasAccessTo } from "./common/utils/rolesUtils";
 
 // Route-based code splitting @see https://reactjs.org/docs/code-splitting.html#route-based-code-splitting
@@ -14,7 +14,6 @@ const ResetPasswordPage = lazy(() => import("./pages/password/ResetPasswordPage"
 const ForgottenPasswordPage = lazy(() => import("./pages/password/ForgottenPasswordPage"));
 const Users = lazy(() => import("./pages/admin/Users"));
 const Roles = lazy(() => import("./pages/admin/Roles"));
-const ReportPage = lazy(() => import("./pages/ReportPage"));
 const NotFoundPage = lazy(() => import("./pages/404"));
 const Catalogue = lazy(() => import("./pages/Catalogue/Catalogue"));
 const Organismes = lazy(() => import("./pages/Organismes/Organismes"));
@@ -28,11 +27,11 @@ const Cookies = lazy(() => import("./pages/legal/Cookies"));
 const DonneesPersonnelles = lazy(() => import("./pages/legal/DonneesPersonnelles"));
 const MentionsLegales = lazy(() => import("./pages/legal/MentionsLegales"));
 const Accessibilite = lazy(() => import("./pages/legal/Accessibilite"));
-const ActionsExpertes = lazy(() => import("./pages/ActionsExpertes/ActionsExpertes"));
-const Perimetre = lazy(() => import("./pages/perimetre/Perimetre"));
+const ReglesPerimetre = lazy(() => import("./pages/ReglesPerimetre/ReglesPerimetre"));
+const ReglesPerimetrePlateforme = lazy(() => import("./pages/ReglesPerimetre/Plateforme"));
 const ConsolesPilotage = lazy(() => import("./pages/ConsolesPilotage"));
-const ConsolePilotageAffelnet = lazy(() => import("./pages/ConsolesPilotage/Affelnet"));
-const ConsolePilotageParcoursup = lazy(() => import("./pages/ConsolesPilotage/Parcoursup"));
+const ConsolesPilotageAffelnet = lazy(() => import("./pages/ConsolesPilotage/Affelnet"));
+const ConsolesPilotageParcoursup = lazy(() => import("./pages/ConsolesPilotage/Parcoursup"));
 
 function PrivateRoute({ component, ...rest }) {
   let [auth] = useAuth();
@@ -104,48 +103,18 @@ export default () => {
             <ResetPasswordWrapper>
               <ScrollToTop />
               <Switch>
+                {/* Authentification */}
                 <Route exact path="/login" component={LoginPage} />
                 <Route exact path="/reset-password" component={ResetPasswordPage} />
                 <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
 
-                {/* <PrivateRoute exact path="/stats" component={DashboardPage} /> */}
-
+                {/* Administration */}
                 {auth && hasAccessTo(auth, "page_gestion_utilisateurs") && (
                   <PrivateRoute exact path="/admin/users" component={Users} />
                 )}
                 {auth && hasAccessTo(auth, "page_gestion_roles") && (
                   <PrivateRoute exact path="/admin/roles" component={Roles} />
                 )}
-
-                <PrivateRoute exact path="/" component={HomePage} />
-                <PrivateRoute exact path="/recherche/formations" component={Catalogue} />
-                <PrivateRoute exact path="/guide-reglementaire">
-                  <Catalogue guide />
-                </PrivateRoute>
-
-                <PrivateRoute exact path="/recherche/etablissements" component={Organismes} />
-                <PrivateRoute exact path={`/formation/:id`} component={Formation} />
-                <PrivateRoute exact path={`/etablissement/:id`} component={Etablissement} />
-
-                <PrivateRoute exact path="/report" component={ReportPage} />
-
-                <PrivateRoute exact path="/changelog" component={Journal} />
-                <PrivateRoute exact path="/contact" component={Contact} />
-                <PrivateRoute exact path="/cookies" component={Cookies} />
-                <PrivateRoute exact path="/donnees-personnelles" component={DonneesPersonnelles} />
-                <PrivateRoute exact path="/mentions-legales" component={MentionsLegales} />
-                <PrivateRoute exact path="/accessibilite" component={Accessibilite} />
-
-                {auth && hasAccessTo(auth, "page_actions_expertes") && (
-                  <PrivateRoute exact path="/mes-actions" component={ActionsExpertes} />
-                )}
-                {auth && hasAccessTo(auth, "page_actions_expertes") && (
-                  <PrivateRoute exact path="/console-pilotage/parcoursup" component={ConsolePilotageParcoursup} />
-                )}
-                {auth && hasAccessTo(auth, "page_actions_expertes") && (
-                  <PrivateRoute exact path="/console-pilotage/affelnet" component={ConsolePilotageAffelnet} />
-                )}
-
                 {auth && hasAccessTo(auth, "page_message_maintenance") && (
                   <PrivateRoute exact path="/admin/alert" component={Alert} />
                 )}
@@ -156,42 +125,70 @@ export default () => {
                   </PrivateRoute>
                 )}
 
-                {auth && hasAccessTo(auth, "page_console") && (
-                  <PrivateRoute exact path="/consoles-pilotage" render={(props) => <ConsolesPilotage {...props} />} />
-                )}
+                {/* Formations */}
+                <PrivateRoute exact path="/" component={HomePage} />
+                <PrivateRoute exact path="/recherche/formations" component={Catalogue} />
+                <PrivateRoute exact path={`/formation/:id`} component={Formation} />
+
+                {/* Organismes */}
+                <PrivateRoute exact path="/recherche/etablissements" component={Organismes} />
+                <PrivateRoute exact path={`/etablissement/:id`} component={Etablissement} />
+
+                {/* Consoles de pilotage */}
+                {auth &&
+                  (hasAccessTo(auth, "page_console") ||
+                    hasAccessTo(auth, "page_console/parcoursup") ||
+                    hasAccessTo(auth, "page_console/affelnet")) && (
+                    <PrivateRoute exact path="/consoles-pilotage" component={ConsolesPilotage} />
+                  )}
 
                 {auth && hasAccessTo(auth, "page_console/parcoursup") && (
-                  <PrivateRoute
-                    exact
-                    path="/consoles-pilotage/parcoursup"
-                    render={(props) => <ConsolePilotageParcoursup {...props} />}
-                  />
+                  <PrivateRoute exact path="/consoles-pilotage/parcoursup" component={ConsolesPilotageParcoursup} />
                 )}
 
                 {auth && hasAccessTo(auth, "page_console/affelnet") && (
-                  <PrivateRoute
-                    exact
-                    path="/consoles-pilotage/affelnet"
-                    render={(props) => <ConsolePilotageAffelnet {...props} />}
-                  />
+                  <PrivateRoute exact path="/consoles-pilotage/affelnet" component={ConsolesPilotageAffelnet} />
                 )}
+
+                {/* Règles de périmètre */}
+                {auth &&
+                  (hasAccessTo(auth, "page_perimetre") ||
+                    hasAccessTo(auth, "page_perimetre/parcoursup") ||
+                    hasAccessTo(auth, "page_perimetre/affelnet")) && (
+                    <PrivateRoute exact path="/regles-perimetre" component={ReglesPerimetre} />
+                  )}
 
                 {auth && hasAccessTo(auth, "page_perimetre/parcoursup") && (
                   <PrivateRoute
                     exact
-                    path="/perimetre-parcoursup"
-                    render={(props) => <Perimetre {...props} plateforme="parcoursup" />}
+                    path="/regles-perimetre/parcoursup"
+                    render={(props) => <ReglesPerimetrePlateforme {...props} plateforme="parcoursup" />}
                   />
                 )}
 
                 {auth && hasAccessTo(auth, "page_perimetre/affelnet") && (
                   <PrivateRoute
                     exact
-                    path="/perimetre-affelnet"
-                    render={(props) => <Perimetre {...props} plateforme="affelnet" />}
+                    path="/regles-perimetre/affelnet"
+                    render={(props) => <ReglesPerimetrePlateforme {...props} plateforme="affelnet" />}
                   />
                 )}
 
+                {/* Statistiques */}
+                {/* <PrivateRoute exact path="/stats" component={DashboardPage} /> */}
+
+                {/* Autres pages */}
+                <PrivateRoute exact path="/guide-reglementaire">
+                  <Catalogue guide />
+                </PrivateRoute>
+                <PrivateRoute exact path="/changelog" component={Journal} />
+                <PrivateRoute exact path="/contact" component={Contact} />
+                <PrivateRoute exact path="/cookies" component={Cookies} />
+                <PrivateRoute exact path="/donnees-personnelles" component={DonneesPersonnelles} />
+                <PrivateRoute exact path="/mentions-legales" component={MentionsLegales} />
+                <PrivateRoute exact path="/accessibilite" component={Accessibilite} />
+
+                {/* Erreur */}
                 <PrivateRoute component={NotFoundPage} />
               </Switch>
             </ResetPasswordWrapper>

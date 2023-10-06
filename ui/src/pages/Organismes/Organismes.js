@@ -13,7 +13,7 @@ import { CONTEXT } from "../../constants/context";
 export default (props) => {
   let [auth] = useAuth();
   const searchState = useSearch("organismes");
-  const title = "Liste des organismes";
+  const title = "Organismes";
   setTitle(title);
 
   return (
@@ -34,17 +34,16 @@ export default (props) => {
             <Tabs variant="search" mt={5} isLazy>
               <TabList bg="white">
                 <Tab>Liste</Tab>
-                {hasAccessTo(auth, "page_organismes/guide_reglementaire") && <Tab>Guide réglementaire</Tab>}
+                <Tab>Guide réglementaire</Tab>
               </TabList>
               <TabPanels>
                 <TabPanel>
                   <Search {...props} searchState={searchState} context={CONTEXT.ORGANISMES} />
                 </TabPanel>
-                {hasAccessTo(auth, "page_organismes/guide_reglementaire") && (
-                  <TabPanel>
-                    <HowToReglement />
-                  </TabPanel>
-                )}
+
+                <TabPanel>
+                  <HowToReglement />
+                </TabPanel>
               </TabPanels>
             </Tabs>
           )}

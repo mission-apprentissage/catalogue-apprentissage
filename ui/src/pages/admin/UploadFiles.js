@@ -174,7 +174,8 @@ export default () => {
                     Jacqot (France Compétences)
                   </li>
                   <li>
-                    Onglet CodeDiplome_RNCPvx.x : renommer les colonnes Code diplôme => Code_Diplome ; RNCP => Code_RNCP
+                    Onglet CodeDiplome_RNCPvx.x : renommer les colonnes Code diplôme =&gt; Code_Diplome ; RNCP =&gt;
+                    Code_RNCP
                   </li>
                   <li>Exporter cet onglet en csv via LibreOffice (séparateur point-virgule)</li>
                   <li>Upload à faire sur les catalogues (public, ME, recette + prod)</li>

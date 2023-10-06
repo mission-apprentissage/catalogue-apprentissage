@@ -1,5 +1,5 @@
 import React from "react";
-import Perimetre from "./Perimetre";
+import Plateforme from "./Plateforme";
 import { renderWithRouter, setupMswServer } from "../../common/utils/testUtils";
 
 import { rest } from "msw";
@@ -52,7 +52,7 @@ afterAll(() => server.close());
 test("renders basic tree", async () => {
   const { getAllByText, getByText, getAllByTestId } = renderWithRouter(
     <QueryClientProvider client={queryClient}>
-      <Perimetre plateforme={"parcoursup"} />
+      <Plateforme plateforme={"parcoursup"} />
     </QueryClientProvider>
   );
   const match = getAllByText(/^Règles d'intégration des formations à la plateforme parcoursup$/i);
@@ -80,7 +80,7 @@ test("renders basic tree", async () => {
 test("opens rule modal to add a diploma", async () => {
   const { getByText, queryByText } = renderWithRouter(
     <QueryClientProvider client={queryClient}>
-      <Perimetre plateforme={"parcoursup"} />
+      <Plateforme plateforme={"parcoursup"} />
     </QueryClientProvider>
   );
 

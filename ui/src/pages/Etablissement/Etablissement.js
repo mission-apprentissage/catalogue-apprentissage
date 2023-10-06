@@ -285,13 +285,12 @@ const Etablissement = ({ etablissement, edition, onEdit, countFormations }) => {
           </Box>
         </GridItem>
       </Grid>
-      {hasAccessTo(user, "page_organisme/demandes_corretions") && (
-        <Box mt={8} mb={16}>
-          <Button variant={"pill"} textStyle="rf-text" onClick={onOpen} whiteSpace="normal">
-            <ArrowRightLine w="9px" h="9px" mr={2} /> Demander des corrections sur les données sur votre organisme
-          </Button>
-        </Box>
-      )}
+
+      <Box mt={8} mb={16}>
+        <Button variant={"pill"} textStyle="rf-text" onClick={onOpen} whiteSpace="normal">
+          <ArrowRightLine w="9px" h="9px" mr={2} /> Demander des corrections sur les données sur votre organisme
+        </Button>
+      </Box>
 
       <HowToFixModal isOpen={isOpen} onClose={onClose} />
     </>
