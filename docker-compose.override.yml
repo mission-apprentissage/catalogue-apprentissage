@@ -8,7 +8,7 @@ services:
 
   ui:
     restart: "no"
-    mem_limit: 1g
+    mem_limit: 2g
     stdin_open: true
     volumes:
       - ./ui:/app:z #Allows source folders to be watched

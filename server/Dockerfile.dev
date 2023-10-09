@@ -1,4 +1,4 @@
-FROM node:16-alpine
+FROM node:18-alpine
 
 # handle .yarnrc.yml : copy local one for dev, create one using NPM_TOKEN arg for production & recette
 ARG NPM_TOKEN

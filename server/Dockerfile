@@ -1,5 +1,5 @@
 # STAGE 1 : BUILDER
-FROM node:16-alpine as builder
+FROM node:18-alpine as builder
 
 # handle .yarnrc.yml : copy local one for dev, create one using NPM_TOKEN arg for production & recette
 ARG NPM_TOKEN
@@ -26,7 +26,7 @@ RUN cd /tmp && \
     rm -f .yarnrc.yml
 
 # STAGE 2 : RUNNER
-FROM node:16-alpine as runner
+FROM node:18-alpine as runner
 
 WORKDIR /app
 VOLUME /data
