@@ -4,12 +4,57 @@ import { Link } from "@chakra-ui/react";
 const changelog = {
   list: [
     {
-      version: "6.8.0",
+      version: "6.10.0",
       date: "Prochainement",
       about: `<h4>À venir</h4>`,
       fixes: [],
       features: [],
       improvements: [],
+    },
+
+    {
+      version: "6.9.0",
+      date: "Septembre 2023",
+      about: `<h4>À propos de cette version</h4>
+  Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+
+      fixes: [
+        `Correction d'un problème lors du calcul de distance_lieu_formation_etablissement_formateur lié à une différence de format entre les coordonnées`,
+        `Mise en place de l'obligation d'avoir un uai renseigné pour les publications vers Affelnet`,
+        `Correction de la colonne 'Raison sociale du formateur' dans l'export CSV qui n'affichait pas la bonne valeur`,
+      ],
+      features: [
+        `Ajout de la colonne 'Raison sociale de l'organisme responsable' dans l'export csv des formations`,
+        `Ajout de la colonne 'Distance entre lieu de formation et organisme formateur' dans l'export csv des formations`,
+        `Définition de règle d'affichage pour le lien menant à LaBonneAlternance`,
+      ],
+      improvements: [
+        `Modification de la date de fin de campagne au 18 septembre`,
+        `Suppression du bloc 'Autres informations' obsolète sur les fiches des formations`,
+        `API — Amélioration des outils de génération de documentation OpenApi`,
+        `API — Resolution d'une faille de sécurité dans l'ORM utilisé`,
+      ],
+    },
+
+    {
+      version: "6.8.0",
+      date: "Aout 2023",
+      about: `<h4>À propos de cette version</h4>
+  Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+
+      fixes: [
+        `Correction du nombre de formations correspondantes affiché sur la modale d'édition des règles de périmètre `,
+        `Correction du script de rapprochement des bases Affelnet et catalogue en ignorant les formations hors périmètre Affelnet`,
+        `Correction d'un problème lors de la conversion des formations provenant du flux RCO`,
+      ],
+      features: [
+        `Affichage d'un encadré d'avertissement lorsque le code MEF se termine par 99`,
+        `Modification des règles d'affichage de l'encadré d'avertissement lorsque les codes RNCP ou CFD sont dépassés`,
+      ],
+      improvements: [
+        `Exploitation - Refonte du système de gestion des logs`,
+        `Modification des paramètres d'historisation des modifications apportées aux formations`,
+      ],
     },
 
     {
