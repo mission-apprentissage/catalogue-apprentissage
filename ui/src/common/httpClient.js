@@ -6,7 +6,7 @@ class AuthError extends Error {
     super(`Request rejected with status code ${statusCode}`);
     this.json = json;
     this.statusCode = statusCode;
-    this.prettyMessage = "Identifiant ou mot de passe invalide";
+    this.prettyMessage = json?.message ?? "Identifiant ou mot de passe invalide";
   }
 }
 
@@ -19,22 +19,20 @@ class HTTPError extends Error {
   }
 }
 
-const handleResponse = (path, response) => {
+const handleResponse = async (path, response) => {
   let statusCode = response.status;
+  const json = await response.json();
   if (statusCode >= 400 && statusCode < 600) {
     emitter.emit("http:error", response);
 
     if (statusCode === 401 || statusCode === 403) {
-      throw new AuthError(response.json(), statusCode);
+      throw new AuthError(json, statusCode);
     } else {
-      throw new HTTPError(
-        `Server returned ${statusCode} when requesting resource ${path}`,
-        response.json(),
-        statusCode
-      );
+      throw new HTTPError(`Server returned ${statusCode} when requesting resource ${path}`, json, statusCode);
     }
   }
-  return response.json();
+
+  return json;
 };
 
 const getHeaders = (authorization = true, contentType = "application/json") => {

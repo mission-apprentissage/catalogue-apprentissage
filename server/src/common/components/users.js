@@ -1,6 +1,6 @@
 const { User, Role } = require("../model/index");
 const sha512Utils = require("../utils/sha512Utils");
-const { pick, uniq } = require("lodash");
+const { pick, uniq, escapeRegExp } = require("lodash");
 
 const rehashPassword = (user, password) => {
   user.password = sha512Utils.hash(password);
@@ -10,10 +10,19 @@ const rehashPassword = (user, password) => {
 module.exports = async () => {
   return {
     authenticate: async (username, password) => {
-      const user = await User.findOne({ username });
+      console.log({ username, password, regexp: new RegExp(`/^${escapeRegExp(username.toLowerCase())}$/i`) });
+
+      const user = await User.findOne({
+        $or: [
+          { username: new RegExp(`^${escapeRegExp(username.toLowerCase())}$`, "i") },
+          { email: new RegExp(`^${escapeRegExp(username.toLowerCase())}$`, "i") },
+        ],
+      });
       if (!user) {
         return null;
       }
+
+      console.log({ user });
 
       const current = user.password;
       if (sha512Utils.compare(password, current)) {
