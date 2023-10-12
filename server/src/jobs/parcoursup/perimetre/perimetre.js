@@ -1,5 +1,5 @@
 const { Formation } = require("../../../common/model");
-const { getQueryFromRule, getSessionDateRules } = require("../../../common/utils/rulesUtils");
+const { getQueryFromRule } = require("../../../common/utils/rulesUtils");
 const { ReglePerimetre } = require("../../../common/model");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
@@ -7,8 +7,6 @@ const { cursor } = require("../../../common/utils/cursor");
 const logger = require("../../../common/logger");
 
 const run = async () => {
-  const filterSessionDate = getSessionDateRules();
-
   const filterReglement = {
     $and: [
       {
@@ -49,7 +47,6 @@ const run = async () => {
     (
       await Formation.find({
         ...filterReglement,
-        ...filterSessionDate,
 
         $or: aPublierHabilitationRules.map(getQueryFromRule),
       }).select({ cle_ministere_educatif: 1 })
@@ -65,7 +62,6 @@ const run = async () => {
     (
       await Formation.find({
         ...filterReglement,
-        ...filterSessionDate,
 
         $or: aPublierVerifierAccesDirectPostBacRules.map(getQueryFromRule),
       }).select({ cle_ministere_educatif: 1 })
@@ -81,7 +77,7 @@ const run = async () => {
     (
       await Formation.find({
         ...filterReglement,
-        ...filterSessionDate,
+        // ...filterSessionDate,
         $or: aPublierValidationRecteurRules.map(getQueryFromRule),
       }).select({ cle_ministere_educatif: 1 })
     ).forEach(({ cle_ministere_educatif }) => formationsInPerimetre.add(cle_ministere_educatif));
@@ -96,7 +92,6 @@ const run = async () => {
     (
       await Formation.find({
         ...filterReglement,
-        ...filterSessionDate,
         $or: aPublierRules.map(getQueryFromRule),
       }).select({ cle_ministere_educatif: 1 })
     ).forEach(({ cle_ministere_educatif }) => formationsInPerimetre.add(cle_ministere_educatif));
@@ -114,7 +109,6 @@ const run = async () => {
       (
         await Formation.find({
           ...filterReglement,
-          ...filterSessionDate,
           num_academie,
           ...getQueryFromRule(rule),
         }).select({ cle_ministere_educatif: 1 })
@@ -126,8 +120,6 @@ const run = async () => {
     });
   });
 
-  // console.log({ formationsInPerimetre });
-  // console.log({ formationsNotInPerimetre });
   logger.debug({ type: "job" }, "- Intégration du périmètre");
   await cursor(
     Formation.find({

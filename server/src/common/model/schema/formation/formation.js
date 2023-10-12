@@ -496,6 +496,16 @@ const formationSchema = {
     default: false,
     description: "Dans le périmètre parcoursup",
   },
+  parcoursup_session: {
+    type: Boolean,
+    default: false,
+    description: "Possède une date de début durant la prochaine session Parcoursup",
+  },
+  parcoursup_previous_session: {
+    type: Boolean,
+    default: false,
+    description: "Possède une date de début durant la précédente session Parcoursup",
+  },
   parcoursup_statut: {
     type: String,
     enum: [
@@ -555,7 +565,17 @@ const formationSchema = {
   affelnet_perimetre: {
     type: Boolean,
     default: false,
-    description: "Dans le périmètre affelnet",
+    description: "Dans le périmètre Affelnet",
+  },
+  affelnet_session: {
+    type: Boolean,
+    default: false,
+    description: "Possède une date de début durant la prochaine session Affelnet",
+  },
+  affelnet_previous_session: {
+    type: Boolean,
+    default: false,
+    description: "Possède une date de début durant la précédente session Affelnet",
   },
   affelnet_statut: {
     type: String,

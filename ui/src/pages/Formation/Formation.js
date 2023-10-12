@@ -582,6 +582,20 @@ export default ({ match }) => {
                   </Flex>
                 )}
 
+                {((formation.parcoursup_perimetre &&
+                  formation.parcoursup_previous_session &&
+                  !formation.parcoursup_session) ||
+                  (formation.affelnet_perimetre &&
+                    formation.affelnet_previous_session &&
+                    !formation.affelnet_session)) && (
+                  <Alert mt={4} type={"warning"}>
+                    La formation pourrait être dans le périmètre{" "}
+                    {formation.parcoursup_perimetre ? "Parcoursup" : "Affelnet"}, mais ne possède pas de date de début
+                    sur la session à venir. S'il s'agit d'un problème de collecte, veuillez faire le signalement auprès
+                    du Carif-Oref.
+                  </Alert>
+                )}
+
                 {[PARCOURSUP_STATUS.EN_ATTENTE, PARCOURSUP_STATUS.REJETE].includes(formation.parcoursup_statut) &&
                   !!formation.parcoursup_error && <RejectionBlock formation={formation} />}
 

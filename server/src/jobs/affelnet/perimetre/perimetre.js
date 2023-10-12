@@ -1,5 +1,5 @@
 const { Formation } = require("../../../common/model");
-const { getQueryFromRule, getSessionDateRules } = require("../../../common/utils/rulesUtils");
+const { getQueryFromRule } = require("../../../common/utils/rulesUtils");
 const { ReglePerimetre } = require("../../../common/model");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { AFFELNET_STATUS } = require("../../../constants/status");
@@ -7,8 +7,6 @@ const { cursor } = require("../../../common/utils/cursor");
 const logger = require("../../../common/logger");
 
 const run = async () => {
-  const filterSessionDate = getSessionDateRules();
-
   const filterReglement = {
     $and: [
       {
@@ -49,7 +47,6 @@ const run = async () => {
     (
       await Formation.find({
         ...filterReglement,
-        ...filterSessionDate,
 
         $or: aPublierSoumisAValidationRules.map(getQueryFromRule),
       }).select({ cle_ministere_educatif: 1 })
@@ -66,7 +63,6 @@ const run = async () => {
     (
       await Formation.find({
         ...filterReglement,
-        ...filterSessionDate,
 
         $or: aPublierRules.map(getQueryFromRule),
       }).select({ cle_ministere_educatif: 1 })
@@ -83,7 +79,6 @@ const run = async () => {
       (
         await Formation.find({
           ...filterReglement,
-          ...filterSessionDate,
 
           num_academie,
           ...getQueryFromRule(rule),
@@ -95,9 +90,6 @@ const run = async () => {
       );
     });
   });
-
-  // console.log({ formationsInPerimetre });
-  // console.log({ formationsNotInPerimetre });
 
   logger.debug("- Intégration du périmètre");
   await cursor(

@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { DataSearch, DatePicker, ReactiveBase, ReactiveList, SelectedFilters } from "@appbaseio/reactivesearch";
-import { Box, Container, Flex, FormLabel, Switch, Text } from "@chakra-ui/react";
+import queryString from "query-string";
+import { useHistory } from "react-router-dom";
+import { Box, Container, Flex, FormLabel, Switch, Text, Button } from "@chakra-ui/react";
+
 import useAuth from "../../hooks/useAuth";
 import { hasAccessTo } from "../../utils/rolesUtils";
 import {
@@ -13,9 +16,6 @@ import {
 } from "./components";
 import constantsFormations from "./constantsFormations";
 import constantsEtablissements from "./constantsEtablissements";
-import "./search.css";
-import queryString from "query-string";
-import { useHistory } from "react-router-dom";
 import { CloseCircleLine } from "../../../theme/components/icons";
 import { SearchLine } from "../../../theme/components/icons/SearchLine";
 import InfoTooltip from "../../components/InfoTooltip";
@@ -23,9 +23,12 @@ import helpText from "../../../locales/helpText.json";
 import { Pagination } from "./components/Pagination";
 import { CONTEXT } from "../../../constants/context";
 
+import "./search.css";
+
 export default React.memo(({ location, searchState, context, extraButtons = null }) => {
   const { defaultMode } = queryString.parse(location?.search);
   const [mode, setMode] = useState(defaultMode ?? "simple");
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const isCatalogueGeneral = context === CONTEXT.CATALOGUE_GENERAL;
   const { base, countEtablissement, countCatalogueGeneral, countCatalogueNonEligible, isBaseFormations, endpoint } =
     searchState;
@@ -114,10 +117,11 @@ export default React.memo(({ location, searchState, context, extraButtons = null
                 </Text>
                 {facetDefinition(context)
                   .filter(
-                    ({ acl, displayInContext, isAuth }) =>
+                    ({ acl, displayInContext, isAuth, advanced }) =>
                       (!displayInContext || displayInContext.includes(context)) &&
                       (!acl || hasAccessTo(auth, acl)) &&
-                      (!isAuth || (isAuth && auth?.sub !== "anonymous"))
+                      (!isAuth || (isAuth && auth?.sub !== "anonymous")) /*&&
+                      !advanced*/
                   )
                   .map((fd, i) => {
                     return (
@@ -147,6 +151,7 @@ export default React.memo(({ location, searchState, context, extraButtons = null
                       />
                     );
                   })}
+
                 {isBaseFormations && auth?.sub !== "anonymous" && (
                   <Flex pt={3} direction="column">
                     <Box>
@@ -405,7 +410,53 @@ export default React.memo(({ location, searchState, context, extraButtons = null
                     </Flex>
                   </Flex>
                 )}
+                {/*
+                <Button variant="link" my={8} onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}>
+                  Voir {!showAdvancedFilters ? "plus" : "moins"} de filtres
+                </Button>
+
+                {showAdvancedFilters && (
+                  <Box>
+                    {facetDefinition(context)
+                      .filter(
+                        ({ acl, displayInContext, isAuth, advanced }) =>
+                          (!displayInContext || displayInContext.includes(context)) &&
+                          (!acl || hasAccessTo(auth, acl)) &&
+                          (!isAuth || (isAuth && auth?.sub !== "anonymous")) &&
+                          advanced
+                      )
+                      .map((fd, i) => {
+                        return (
+                          <Facet
+                            key={i}
+                            componentId={fd.componentId}
+                            dataField={fd.dataField}
+                            title={fd.title}
+                            filterLabel={fd.filterLabel}
+                            selectAllLabel={fd.selectAllLabel}
+                            filters={filters}
+                            sortBy={fd.sortBy}
+                            size={fd.size}
+                            defaultQuery={() => {
+                              return {
+                                query: {
+                                  match: {
+                                    published: true,
+                                  },
+                                },
+                              };
+                            }}
+                            helpTextSection={fd.helpTextSection}
+                            transformData={fd.transformData}
+                            customQuery={fd.customQuery}
+                            showSearch={fd.showSearch}
+                          />
+                        );
+                      })}
+                  </Box>
+                )} */}
               </Box>
+
               <Box className="search-results" px={[0, 0, 4]}>
                 <Box pt={2}>
                   <SelectedFilters showClearAll={false} innerClass={{ button: "selected-filters-button" }} />

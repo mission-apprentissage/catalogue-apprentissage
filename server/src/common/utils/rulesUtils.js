@@ -50,7 +50,7 @@ const getSessionStartDate = (currentDate = new Date()) => {
   const now = currentDate;
   const sessionStart = getCampagneStartDate(currentDate);
 
-  if (now >= sessionStart) {
+  if (now.getTime() >= sessionStart.getTime()) {
     durationShift = 1;
   }
 
@@ -73,32 +73,78 @@ const getSessionEndDate = (currentDate = new Date()) => {
   const now = currentDate;
   const sessionStart = getCampagneStartDate(currentDate);
 
-  if (now >= sessionStart) {
+  if (now.getTime() >= sessionStart.getTime()) {
     durationShift = 1;
   }
 
   const endDate = new Date(`${currentDate.getFullYear() + 1 + durationShift}-07-31T23:59:59.999Z`);
-  // console.error({ now, sessionStart, endDate });
+
   return endDate;
 };
 
 /**
+ * Renvoi l'information permettant de savoir si la formation possède au moins une date de début sur la session en cours
  *
  * @param {Formation} formation
  * @returns {boolean}
  */
 const isInSession = ({ date_debut } = { date_debut: [] }) => {
+  const startDate = getSessionStartDate();
+  const endDate = getSessionEndDate();
+
   const datesInCampagne = date_debut?.filter(
-    (date) => new Date(date) >= getSessionStartDate() && new Date(date) <= getSessionEndDate()
+    (date) => new Date(date).getTime() >= startDate.getTime() && new Date(date).getTime() <= endDate.getTime()
   );
   const result = datesInCampagne?.length > 0;
 
   return result;
 };
 
+/**
+ * Renvoi l'information permettant de savoir si la formation possède au moins une date de début sur la session en cours
+ *
+ * @param {Formation} formation
+ * @returns {boolean}
+ */
+const isInPreviousSession = ({ date_debut } = { date_debut: [] }) => {
+  const startDate = getSessionStartDate();
+  const endDate = getSessionEndDate();
+
+  startDate.setFullYear(startDate.getFullYear() - 1);
+  endDate.setFullYear(endDate.getFullYear() - 1);
+
+  const datesInCampagne = date_debut?.filter(
+    (date) => new Date(date).getTime() >= startDate.getTime() && new Date(date).getTime() <= endDate.getTime()
+  );
+  const result = datesInCampagne?.length > 0;
+
+  return result;
+};
+
+/**
+ * Obtient la règle permettant de vérifier si la formation possède au moins une date de début sur la session en cours
+ *
+ */
 const getSessionDateRules = (currentDate = new Date()) => ({
   date_debut: { $gte: getSessionStartDate(currentDate), $lt: getSessionEndDate(currentDate) },
 });
+
+/**
+ * Obtient la règle permettant de vérifier si la formation possède au moins une date de début sur la session précédente
+ *
+ */
+const getPreviousSessionDateRules = (currentDate = new Date()) => {
+  const date = currentDate;
+
+  date.setFullYear(date.getFullYear() - 1);
+
+  return {
+    date_debut: {
+      $gte: getSessionStartDate(date),
+      $lt: getSessionEndDate(date),
+    },
+  };
+};
 
 const commonRules = {
   $or: [
@@ -244,7 +290,7 @@ const getQueryFromRule = (
     ...(num_academie && { num_academie }),
     ...(duree && { duree: String(duree) }),
     ...(annee && { annee: String(annee) }),
-    ...getSessionDateRules(),
+    // ...getSessionDateRules(),
   };
 
   if (regle_complementaire) {
@@ -264,5 +310,7 @@ module.exports = {
   getSessionStartDate,
   getSessionEndDate,
   isInSession,
+  isInPreviousSession,
   getSessionDateRules,
+  getPreviousSessionDateRules,
 };

@@ -2,6 +2,8 @@ const logger = require("../../../common/logger");
 const controller = require("./controller");
 const counter = require("./counter");
 const perimetre = require("./perimetre");
+const session = require("./session");
+const previousSession = require("./previousSession");
 
 const { runScript } = require("../../scriptWrapper");
 
@@ -17,6 +19,10 @@ const psPerimetre = async () => {
 
     logger.info({ type: "job" }, "Vérification du périmètre :");
     await perimetre.run();
+
+    logger.info({ type: "job" }, "Vérification des dates de session :");
+    await session.run();
+    await previousSession.run();
 
     logger.info({ type: "job" }, "Compteurs après :");
     await counter.run();

@@ -32,7 +32,13 @@ const FILTERS = () => [
   `rncp_code`,
   `bcn_mefs_10`,
   `parcoursup_statut`,
+  `parcoursup_perimetre`,
+  `parcoursup_session`,
+  `parcoursup_previous_session`,
   `affelnet_statut`,
+  `affelnet_perimetre`,
+  `affelnet_session`,
+  `affelnet_previous_session`,
   "diplome",
   "tags",
   "annee",
@@ -636,9 +642,80 @@ const facetDefinition = () => [
     selectAllLabel: "Tous",
     sortBy: "count",
     acl: "page_catalogue/voir_status_publication_ps",
-    // displayInContext: [CONTEXT.CATALOGUE_GENERAL],
     helpTextSection: helpText.search.parcoursup_statut,
   },
+  {
+    componentId: `parcoursup_perimetre`,
+    dataField: "parcoursup_perimetre",
+    title: "Dans le périmètre Parcoursup",
+    filterLabel: "Dans le périmètre Parcoursup",
+    selectAllLabel: "Tous",
+    sortBy: "desc",
+    displayInContext: [CONTEXT.CATALOGUE_GENERAL],
+    helpTextSection: helpText.search.parcoursup_perimetre,
+    transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
+    customQuery: (values) => {
+      if (values.length === 1 && values[0] !== "Tous") {
+        return {
+          query: {
+            match: {
+              parcoursup_perimetre: values[0] === "Oui",
+            },
+          },
+        };
+      }
+      return {};
+    },
+  },
+
+  {
+    componentId: `parcoursup_session`,
+    dataField: "parcoursup_session",
+    title: "Session sur la prochaine campagne Parcoursup",
+    filterLabel: "Session sur la prochaine campagne Parcoursup",
+    selectAllLabel: "Tous",
+    sortBy: "desc",
+    displayInContext: [CONTEXT.CATALOGUE_GENERAL],
+    helpTextSection: helpText.search.parcoursup_session,
+    transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
+    customQuery: (values) => {
+      if (values.length === 1 && values[0] !== "Tous") {
+        return {
+          query: {
+            match: {
+              parcoursup_session: values[0] === "Oui",
+            },
+          },
+        };
+      }
+      return {};
+    },
+  },
+
+  {
+    componentId: `parcoursup_previous_session`,
+    dataField: "parcoursup_previous_session",
+    title: "Session sur la précédente campagne Parcoursup",
+    filterLabel: "Session sur la précédente campagne Parcoursup",
+    selectAllLabel: "Tous",
+    sortBy: "desc",
+    displayInContext: [CONTEXT.CATALOGUE_GENERAL],
+    helpTextSection: helpText.search.parcoursup_previous_session,
+    transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
+    customQuery: (values) => {
+      if (values.length === 1 && values[0] !== "Tous") {
+        return {
+          query: {
+            match: {
+              parcoursup_previous_session: values[0] === "Oui",
+            },
+          },
+        };
+      }
+      return {};
+    },
+  },
+
   {
     componentId: `affelnet_statut`,
     dataField: "affelnet_statut.keyword",
@@ -647,9 +724,81 @@ const facetDefinition = () => [
     selectAllLabel: "Tous",
     sortBy: "count",
     acl: "page_catalogue/voir_status_publication_aff",
-    // displayInContext: [CONTEXT.CATALOGUE_GENERAL],
     helpTextSection: helpText.search.affelnet_statut,
   },
+
+  {
+    componentId: `affelnet_perimetre`,
+    dataField: "affelnet_perimetre",
+    title: "Dans le périmètre Affelnet",
+    filterLabel: "Dans le périmètre Affelnet",
+    selectAllLabel: "Tous",
+    sortBy: "desc",
+    displayInContext: [CONTEXT.CATALOGUE_GENERAL],
+    helpTextSection: helpText.search.affelnet_perimetre,
+    transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
+    customQuery: (values) => {
+      if (values.length === 1 && values[0] !== "Tous") {
+        return {
+          query: {
+            match: {
+              affelnet_perimetre: values[0] === "Oui",
+            },
+          },
+        };
+      }
+      return {};
+    },
+  },
+
+  {
+    componentId: `affelnet_session`,
+    dataField: "affelnet_session",
+    title: "Session sur la prochaine campagne Affelnet",
+    filterLabel: "Session sur la prochaine campagne Affelnet",
+    selectAllLabel: "Tous",
+    sortBy: "desc",
+    displayInContext: [CONTEXT.CATALOGUE_GENERAL],
+    helpTextSection: helpText.search.affelnet_session,
+    transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
+    customQuery: (values) => {
+      if (values.length === 1 && values[0] !== "Tous") {
+        return {
+          query: {
+            match: {
+              affelnet_session: values[0] === "Oui",
+            },
+          },
+        };
+      }
+      return {};
+    },
+  },
+
+  {
+    componentId: `affelnet_previous_session`,
+    dataField: "affelnet_previous_session",
+    title: "Session sur la précédente campagne Affelnet",
+    filterLabel: "Session sur la précédente campagne Affelnet",
+    selectAllLabel: "Tous",
+    sortBy: "desc",
+    displayInContext: [CONTEXT.CATALOGUE_GENERAL],
+    helpTextSection: helpText.search.affelnet_previous_session,
+    transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
+    customQuery: (values) => {
+      if (values.length === 1 && values[0] !== "Tous") {
+        return {
+          query: {
+            match: {
+              affelnet_previous_session: values[0] === "Oui",
+            },
+          },
+        };
+      }
+      return {};
+    },
+  },
+
   {
     componentId: `num_departement`,
     dataField: "num_departement.keyword",
@@ -729,7 +878,7 @@ const facetDefinition = () => [
     displayInContext: [CONTEXT.CATALOGUE_NON_ELIGIBLE],
     transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
     customQuery: (values) => {
-      if (values.length === 1) {
+      if (values.length === 1 && values[0] !== "Tous") {
         return {
           query: {
             match: {
@@ -751,7 +900,7 @@ const facetDefinition = () => [
     displayInContext: [CONTEXT.CATALOGUE_NON_ELIGIBLE],
     transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
     customQuery: (values) => {
-      if (values.length === 1) {
+      if (values.length === 1 && values[0] !== "Tous") {
         return {
           query: {
             match: {
