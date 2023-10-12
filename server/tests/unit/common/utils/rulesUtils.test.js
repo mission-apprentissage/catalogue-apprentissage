@@ -7,7 +7,6 @@ const {
   getExpirationDate,
   getSessionStartDate,
   getSessionEndDate,
-  getSessionDateRules,
 } = require("../../../../src/common/utils/rulesUtils");
 
 describe(__filename, () => {
@@ -238,7 +237,6 @@ describe(__filename, () => {
         niveau: "4",
         num_academie: "10",
         ...getExpireRule(),
-        ...getSessionDateRules(),
       };
 
       let result = getQueryFromRule({
@@ -275,7 +273,6 @@ describe(__filename, () => {
                   },
                 ],
                 published: true,
-                // periode: { $gte: getSessionStartDate() },
               },
             ],
             catalogue_published: true,
@@ -319,7 +316,6 @@ describe(__filename, () => {
         duree: "2",
         annee: "1",
         ...getExpireRule(),
-        ...getSessionDateRules(),
       };
 
       let result = getQueryFromRule({

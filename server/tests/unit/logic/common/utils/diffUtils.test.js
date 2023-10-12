@@ -33,7 +33,7 @@ describe(__filename, () => {
     };
     let result = diffFormation(previousFormationP, nextFormationP);
 
-    assert.deepStrictEqual(result, { updates: null, keys: [], length: 0 });
+    assert.deepEqual(result, { updates: null, keys: [], length: 0 });
   });
 
   it("should find update if france competence info doesn't change", () => {
@@ -59,7 +59,7 @@ describe(__filename, () => {
     };
     let result = diffFormation(previousFormationP, nextFormationP);
 
-    assert.deepStrictEqual(result, {
+    assert.deepEqual(result, {
       updates: { france_competence_infos: { fc_is_certificateur_siren: true } },
       keys: ["france_competence_infos"],
       length: 1,

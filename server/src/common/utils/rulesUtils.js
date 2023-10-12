@@ -290,7 +290,6 @@ const getQueryFromRule = (
     ...(num_academie && { num_academie }),
     ...(duree && { duree: String(duree) }),
     ...(annee && { annee: String(annee) }),
-    // ...getSessionDateRules(),
   };
 
   if (regle_complementaire) {
