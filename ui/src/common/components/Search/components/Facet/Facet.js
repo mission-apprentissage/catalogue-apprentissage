@@ -62,7 +62,7 @@ const Facet = ({
         {({ isExpanded }) => (
           <>
             <h2>
-              <AccordionButton>
+              <AccordionButton height={"auto"} minHeight={"3.5rem"}>
                 <Box flex="1" textAlign="left">
                   {title} {helpTextSection?.title && <InfoTooltip description={helpTextSection.title} />}
                 </Box>
