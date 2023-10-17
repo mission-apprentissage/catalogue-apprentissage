@@ -120,8 +120,7 @@ export default React.memo(({ location, searchState, context, extraButtons = null
                     ({ acl, displayInContext, isAuth, advanced }) =>
                       (!displayInContext || displayInContext.includes(context)) &&
                       (!acl || hasAccessTo(auth, acl)) &&
-                      (!isAuth || (isAuth && auth?.sub !== "anonymous")) /*&&
-                      !advanced*/
+                      (!isAuth || (isAuth && auth?.sub !== "anonymous"))
                   )
                   .map((fd, i) => {
                     return (

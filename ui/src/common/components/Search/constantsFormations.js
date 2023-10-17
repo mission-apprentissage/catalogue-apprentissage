@@ -268,11 +268,39 @@ const columnsDefinition = [
     formatter: (value) => value?.map((x) => x?.mef10)?.join(",") ?? "",
   },
   {
+    Header: "Périmètre Affelnet",
+    accessor: "affelnet_perimetre",
+    width: 200,
+    exportable: true,
+    formatter: (value) => (value ? "OUI" : "NON"),
+  },
+  {
     Header: "Statut Affelnet",
     accessor: "affelnet_statut",
     width: 200,
     exportable: true,
     formatter: (value) => escapeDiacritics(value),
+  },
+  {
+    Header: "Statut sur la précédente campagne Affelnet",
+    accessor: "affelnet_previous_statut",
+    width: 200,
+    exportable: true,
+    formatter: (value) => escapeDiacritics(value),
+  },
+  {
+    Header: "Session sur la campagne Affelnet",
+    accessor: "affelnet_session",
+    width: 200,
+    exportable: true,
+    formatter: (value) => (value ? "OUI" : "NON"),
+  },
+  {
+    Header: "Session sur la précédente campagne Affelnet",
+    accessor: "affelnet_previous_session",
+    width: 200,
+    exportable: true,
+    formatter: (value) => (value ? "OUI" : "NON"),
   },
   {
     Header: "Information Affelnet",
@@ -310,11 +338,39 @@ const columnsDefinition = [
     formatter: (value) => escapeDiacritics(value),
   },
   {
+    Header: "Périmètre Parcoursup",
+    accessor: "parcoursup_perimetre",
+    width: 200,
+    exportable: true,
+    formatter: (value) => (value ? "OUI" : "NON"),
+  },
+  {
     Header: "Statut Parcoursup",
     accessor: "parcoursup_statut",
     width: 200,
     exportable: true,
     formatter: (value) => escapeDiacritics(value),
+  },
+  {
+    Header: "Statut sur la précédente campagne Parcoursup",
+    accessor: "parcoursup_previous_statut",
+    width: 200,
+    exportable: true,
+    formatter: (value) => escapeDiacritics(value),
+  },
+  {
+    Header: "Session sur la campagne Parcoursup",
+    accessor: "parcoursup_session",
+    width: 200,
+    exportable: true,
+    formatter: (value) => (value ? "OUI" : "NON"),
+  },
+  {
+    Header: "Session sur la précédente campagne Parcoursup",
+    accessor: "parcoursup_previous_session",
+    width: 200,
+    exportable: true,
+    formatter: (value) => (value ? "OUI" : "NON"),
   },
   {
     Header: "Date du dernier envoi vers Parcoursup",
@@ -634,16 +690,7 @@ const facetDefinition = () => [
     selectAllLabel: "Toutes les académies",
     sortBy: "asc",
   },
-  {
-    componentId: `parcoursup_statut`,
-    dataField: "parcoursup_statut.keyword",
-    title: "Statut Parcoursup",
-    filterLabel: "Statut Parcoursup",
-    selectAllLabel: "Tous",
-    sortBy: "count",
-    acl: "page_catalogue/voir_status_publication_ps",
-    helpTextSection: helpText.search.parcoursup_statut,
-  },
+
   {
     componentId: `parcoursup_perimetre`,
     dataField: "parcoursup_perimetre",
@@ -669,10 +716,32 @@ const facetDefinition = () => [
   },
 
   {
+    componentId: `parcoursup_statut`,
+    dataField: "parcoursup_statut.keyword",
+    title: "Statut Parcoursup",
+    filterLabel: "Statut Parcoursup",
+    selectAllLabel: "Tous",
+    sortBy: "count",
+    acl: "page_catalogue/voir_status_publication_ps",
+    helpTextSection: helpText.search.parcoursup_statut,
+  },
+
+  {
+    componentId: `parcoursup_previous_statut`,
+    dataField: "parcoursup_previous_statut.keyword",
+    title: "Statut sur la précédente campagne Parcoursup ",
+    filterLabel: "Statut sur la précédente campagne Parcoursup ",
+    selectAllLabel: "Tous",
+    sortBy: "count",
+    acl: "page_catalogue/voir_status_publication_ps",
+    helpTextSection: helpText.search.parcoursup_previous_statut,
+  },
+
+  {
     componentId: `parcoursup_session`,
     dataField: "parcoursup_session",
-    title: "Session sur la prochaine campagne Parcoursup",
-    filterLabel: "Session sur la prochaine campagne Parcoursup",
+    title: "Session sur la campagne Parcoursup",
+    filterLabel: "Session sur la campagne Parcoursup",
     selectAllLabel: "Tous",
     sortBy: "desc",
     displayInContext: [CONTEXT.CATALOGUE_GENERAL],
@@ -717,17 +786,6 @@ const facetDefinition = () => [
   },
 
   {
-    componentId: `affelnet_statut`,
-    dataField: "affelnet_statut.keyword",
-    title: "Statut Affelnet",
-    filterLabel: "Statut Affelnet",
-    selectAllLabel: "Tous",
-    sortBy: "count",
-    acl: "page_catalogue/voir_status_publication_aff",
-    helpTextSection: helpText.search.affelnet_statut,
-  },
-
-  {
     componentId: `affelnet_perimetre`,
     dataField: "affelnet_perimetre",
     title: "Dans le périmètre Affelnet",
@@ -752,10 +810,32 @@ const facetDefinition = () => [
   },
 
   {
+    componentId: `affelnet_statut`,
+    dataField: "affelnet_statut.keyword",
+    title: "Statut Affelnet",
+    filterLabel: "Statut Affelnet",
+    selectAllLabel: "Tous",
+    sortBy: "count",
+    acl: "page_catalogue/voir_status_publication_aff",
+    helpTextSection: helpText.search.affelnet_statut,
+  },
+
+  {
+    componentId: `affelnet_previous_statut`,
+    dataField: "affelnet_previous_statut.keyword",
+    title: "Statut sur la précédente campagne Affelnet",
+    filterLabel: "Statut sur la précédente campagne Affelnet",
+    selectAllLabel: "Tous",
+    sortBy: "count",
+    acl: "page_catalogue/voir_status_publication_aff",
+    helpTextSection: helpText.search.affelnet_previous_statut,
+  },
+
+  {
     componentId: `affelnet_session`,
     dataField: "affelnet_session",
-    title: "Session sur la prochaine campagne Affelnet",
-    filterLabel: "Session sur la prochaine campagne Affelnet",
+    title: "Session sur la campagne Affelnet",
+    filterLabel: "Session sur la campagne Affelnet",
     selectAllLabel: "Tous",
     sortBy: "desc",
     displayInContext: [CONTEXT.CATALOGUE_GENERAL],
