@@ -523,6 +523,23 @@ const formationSchema = {
     default: "hors périmètre",
     description: "Statut parcoursup",
   },
+  parcoursup_previous_statut: {
+    type: String,
+    enum: [
+      "hors périmètre",
+      "publié",
+      "non publié",
+      "à publier (sous condition habilitation)",
+      "à publier (vérifier accès direct postbac)",
+      "à publier (soumis à validation Recteur)",
+      "à publier",
+      "en attente de publication",
+      "rejet de publication",
+      "fermé",
+    ],
+    default: "hors périmètre",
+    description: "Statut parcoursup à la fin de la précédente campagne",
+  },
   parcoursup_statut_history: {
     type: [Object],
     default: [],
@@ -589,6 +606,19 @@ const formationSchema = {
     ],
     default: "hors périmètre",
     description: "Statut affelnet",
+  },
+  affelnet_previous_statut: {
+    type: String,
+    enum: [
+      "hors périmètre",
+      "publié",
+      "non publié",
+      "à publier (soumis à validation)",
+      "à publier",
+      "en attente de publication",
+    ],
+    default: "hors périmètre",
+    description: "Statut affelnet à la fin de la précédente campagne",
   },
   affelnet_statut_history: {
     type: [Object],

@@ -1,5 +1,6 @@
 const logger = require("../../../common/logger");
 const controller = require("./controller");
+const previousStatus = require("./previousStatus");
 
 const { runScript } = require("../../scriptWrapper");
 
@@ -14,6 +15,10 @@ const afStartCampagne = async () => {
   try {
     logger.info({ type: "job" }, " -- AFFELNET START CAMPAGNE : ⏳ -- ");
 
+    logger.info({ type: "job" }, "Sauvegarde du statut en fin de campagne  -- ");
+    await previousStatus.run();
+
+    logger.info({ type: "job" }, "Réinitialisation des statuts  -- ");
     await controller.run();
 
     logger.info({ type: "job" }, " -- AFFELNET START CAMPAGNE : ✅  -- ");
