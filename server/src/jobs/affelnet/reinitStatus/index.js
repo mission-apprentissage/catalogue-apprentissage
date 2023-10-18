@@ -13,7 +13,7 @@ const { isSameDate, getLastMonth } = require("../../../common/utils/dateUtils");
  */
 const afReinitStatus = async (config) => {
   try {
-    logger.info({ type: "job" }, " -- AFFELNET STATUS REINITIALISATION : ⏳ -- ");
+    logger.info({ type: "job" }, " -- AFFELNET | STATUS REINITIALISATION : ⏳ -- ");
 
     let date;
     if (config?.date) {
@@ -43,10 +43,10 @@ const afReinitStatus = async (config) => {
 
     await controller.run(date);
 
-    logger.info({ type: "job" }, " -- AFFELNET STATUS REINITIALISATION : ✅  -- ");
+    logger.info({ type: "job" }, " -- AFFELNET | STATUS REINITIALISATION : ✅  -- ");
   } catch (error) {
     logger.error({ type: "job" }, error);
-    logger.error({ type: "job" }, " -- AFFELNET STATUS REINITIALISATION : ❌  -- ");
+    logger.error({ type: "job" }, " -- AFFELNET | STATUS REINITIALISATION : ❌  -- ");
   }
 };
 
