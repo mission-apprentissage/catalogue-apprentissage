@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { DataSearch, DatePicker, ReactiveBase, ReactiveList, SelectedFilters } from "@appbaseio/reactivesearch";
 import queryString from "query-string";
 import { useHistory } from "react-router-dom";
-import { Box, Container, Flex, FormLabel, Switch, Text, Button } from "@chakra-ui/react";
+import { Box, Container, Flex, FormLabel, Switch, Text } from "@chakra-ui/react";
 
 import useAuth from "../../hooks/useAuth";
 import { hasAccessTo } from "../../utils/rolesUtils";
@@ -28,7 +28,6 @@ import "./search.css";
 export default React.memo(({ location, searchState, context, extraButtons = null }) => {
   const { defaultMode } = queryString.parse(location?.search);
   const [mode, setMode] = useState(defaultMode ?? "simple");
-  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const isCatalogueGeneral = context === CONTEXT.CATALOGUE_GENERAL;
   const { base, countEtablissement, countCatalogueGeneral, countCatalogueNonEligible, isBaseFormations, endpoint } =
     searchState;
@@ -409,51 +408,6 @@ export default React.memo(({ location, searchState, context, extraButtons = null
                     </Flex>
                   </Flex>
                 )}
-                {/*
-                <Button variant="link" my={8} onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}>
-                  Voir {!showAdvancedFilters ? "plus" : "moins"} de filtres
-                </Button>
-
-                {showAdvancedFilters && (
-                  <Box>
-                    {facetDefinition(context)
-                      .filter(
-                        ({ acl, displayInContext, isAuth, advanced }) =>
-                          (!displayInContext || displayInContext.includes(context)) &&
-                          (!acl || hasAccessTo(auth, acl)) &&
-                          (!isAuth || (isAuth && auth?.sub !== "anonymous")) &&
-                          advanced
-                      )
-                      .map((fd, i) => {
-                        return (
-                          <Facet
-                            key={i}
-                            componentId={fd.componentId}
-                            dataField={fd.dataField}
-                            title={fd.title}
-                            filterLabel={fd.filterLabel}
-                            selectAllLabel={fd.selectAllLabel}
-                            filters={filters}
-                            sortBy={fd.sortBy}
-                            size={fd.size}
-                            defaultQuery={() => {
-                              return {
-                                query: {
-                                  match: {
-                                    published: true,
-                                  },
-                                },
-                              };
-                            }}
-                            helpTextSection={fd.helpTextSection}
-                            transformData={fd.transformData}
-                            customQuery={fd.customQuery}
-                            showSearch={fd.showSearch}
-                          />
-                        );
-                      })}
-                  </Box>
-                )} */}
               </Box>
 
               <Box className="search-results" px={[0, 0, 4]}>

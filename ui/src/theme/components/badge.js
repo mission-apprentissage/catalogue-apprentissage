@@ -2,8 +2,7 @@ const commonStatusBadgeStyle = {
   fontSize: "omega",
   fontWeight: 400,
   borderRadius: 20,
-  pl: 1,
-  pr: 3,
+  px: 2,
   py: 1,
   textTransform: "none",
 };
@@ -94,12 +93,16 @@ const Badge = {
     },
     ok: {
       ...commonStatusBadgeStyle,
+      border: "1px solid ",
       bg: "#E3E3FD50",
+      borderColor: "#E3E3FD50",
       color: "#000091",
     },
     notOk: {
       ...commonStatusBadgeStyle,
+      border: "1px solid ",
       bg: "#EEEEEE",
+      borderColor: "#EEEEEE",
       color: "#161616",
     },
     default: {

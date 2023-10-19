@@ -32,7 +32,7 @@ import { isInSession } from "../../common/utils/rulesUtils";
 import { setTitle } from "../../common/utils/pageUtils";
 import { getOpenStreetMapUrl } from "../../common/utils/mapUtils";
 import { DangerBox } from "../../common/components/DangerBox";
-import { StatusBadge } from "../../common/components/StatusBadge";
+import { PreviousStatusBadge, StatusBadge } from "../../common/components/StatusBadge";
 import { PublishModal } from "../../common/components/formation/PublishModal";
 import { InfoTooltip } from "../../common/components/InfoTooltip";
 import { Alert } from "../../common/components/Alert";
@@ -378,7 +378,6 @@ export default ({ match }) => {
       return new Promise(async (resolve) => {
         const trimedUaiFormation = uai_formation?.trim();
 
-        console.log(affelnet_statut);
         try {
           if (trimedUaiFormation !== formation["uai_formation"]) {
             // console.log({
@@ -604,8 +603,22 @@ export default ({ match }) => {
                       {hasAccessTo(user, "page_formation/voir_status_publication_ps") && (
                         <StatusBadge source="Parcoursup" status={formation.parcoursup_statut} mr={[0, 3]} />
                       )}
+                      {hasAccessTo(user, "page_formation/voir_status_publication_ps") && (
+                        <PreviousStatusBadge
+                          source="Parcoursup"
+                          status={formation.parcoursup_previous_statut}
+                          mr={[0, 3]}
+                        />
+                      )}
                       {hasAccessTo(user, "page_formation/voir_status_publication_aff") && (
-                        <StatusBadge source="Affelnet" status={formation.affelnet_statut} mt={[2, 0]} />
+                        <StatusBadge source="Affelnet" status={formation.affelnet_statut} mr={[0, 3]} />
+                      )}
+                      {hasAccessTo(user, "page_formation/voir_status_publication_aff") && (
+                        <PreviousStatusBadge
+                          source="Affelnet"
+                          status={formation.affelnet_previous_statut}
+                          mr={[0, 3]}
+                        />
                       )}
                     </Box>
                     <Flex
