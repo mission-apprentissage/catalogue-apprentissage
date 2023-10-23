@@ -4,6 +4,7 @@ import useAuth from "../../../../hooks/useAuth";
 import { Box, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { ArrowRightLine, InfoCircle } from "../../../../../theme/components/icons";
 import { QualiteBadge } from "../../../QualiteBadge";
+import { ActifBadge } from "../../../ActifBadge";
 import { HabiliteBadge } from "../../../HabiliteBadge";
 
 export const CardListFormation = ({ data, context }) => {
@@ -28,10 +29,9 @@ export const CardListFormation = ({ data, context }) => {
             <Flex mt={1} flexWrap={"wrap"}>
               {!data.catalogue_published && (
                 <>
+                  <ActifBadge value={data.etablissement_gestionnaire_actif} mt={2} mr={[0, 2]} />
                   <QualiteBadge value={data.etablissement_gestionnaire_certifie_qualite} mt={2} mr={[0, 2]} />
-                  {["Titre", "TP"].includes(data.rncp_details?.code_type_certif) && (
-                    <HabiliteBadge value={data.etablissement_reference_habilite_rncp} mt={2} mr={[0, 2]} />
-                  )}
+                  <HabiliteBadge value={data.etablissement_reference_habilite_rncp} mt={2} mr={[0, 2]} />
                 </>
               )}
             </Flex>
