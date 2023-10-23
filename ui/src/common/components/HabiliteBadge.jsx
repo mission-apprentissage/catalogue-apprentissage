@@ -9,13 +9,13 @@ export const HabiliteBadge = ({ value, ...props }) => {
 
   switch (value) {
     case true:
-      text = "Habilité RCNP";
+      text = "Habilité RNCP";
       variant = "ok";
       Icon = CheckLine;
       break;
 
     case false:
-      text = "Non habilité RCNP";
+      text = "Non habilité RNCP";
       variant = "notOk";
       Icon = null;
       break;
