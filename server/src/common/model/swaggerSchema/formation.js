@@ -779,6 +779,16 @@ module.exports = {
         default: "null",
         description: "Contenu de la formation",
       },
+      etablissement_gestionnaire_actif: {
+        type: String,
+        default: null,
+        description: "SIRET actif ou inactif",
+      },
+      etablissement_formateur_actif: {
+        type: String,
+        default: null,
+        description: "SIRET actif ou inactif",
+      },
       _id: {
         type: "string",
         pattern: "^[0-9a-fA-F]{24}$",

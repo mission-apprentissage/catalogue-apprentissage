@@ -502,6 +502,19 @@ const formationSchema = {
     default: null,
     description: "Identifiant (LBA)",
   },
+
+  etablissement_gestionnaire_actif: {
+    type: String,
+    default: null,
+    description: "SIRET actif ou inactif",
+  },
+
+  etablissement_formateur_actif: {
+    type: String,
+    default: null,
+    description: "SIRET actif ou inactif",
+  },
+
   // Etablissements
   ...etablissementGestionnaireInfo,
   ...etablissementFormateurInfo,
