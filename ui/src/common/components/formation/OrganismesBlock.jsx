@@ -5,6 +5,7 @@ import { ArrowRightLine } from "../../../theme/components/icons";
 import { getOrganisme } from "../../api/organisme";
 import { QualiteBadge } from "../QualiteBadge";
 import { HabiliteBadge } from "../HabiliteBadge";
+import { ActifBadge } from "../ActifBadge";
 
 export const OrganismesBlock = ({ formation }) => {
   const oneEstablishment = formation.etablissement_gestionnaire_siret === formation.etablissement_formateur_siret;
@@ -99,6 +100,7 @@ export const OrganismesBlock = ({ formation }) => {
               {!formation.catalogue_published && ["Titre", "TP"].includes(formation.rncp_details?.code_type_certif) && (
                 <HabiliteBadge value={formation.etablissement_formateur_habilite_rncp} m="0" mr={[0, 2]} />
               )}
+              <ActifBadge value={formation.etablissement_gestionnaire_actif} m="0" mr={[0, 2]} />
             </Flex>
           </Box>
           <Heading textStyle="h6" color="grey.800" my={1}>
