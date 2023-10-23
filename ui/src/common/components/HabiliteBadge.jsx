@@ -21,7 +21,7 @@ export const HabiliteBadge = ({ value, ...props }) => {
       break;
 
     default:
-      text = "Habilitation RNCP non recherchée";
+      text = "Habilitation RNCP non concernée";
       variant = "default";
       Icon = Question;
       break;
