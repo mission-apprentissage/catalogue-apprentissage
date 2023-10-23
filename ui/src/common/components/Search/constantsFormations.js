@@ -33,6 +33,7 @@ const FILTERS = () => [
   "diplome",
   "tags",
   "annee",
+  "etablissement_gestionnaire_actif",
   "qualite",
   "habilite",
   "duree",
@@ -421,6 +422,12 @@ const columnsDefinition = [
     exportable: true,
     formatter: (tags) => tags?.sort((a, b) => a - b),
   },
+  {
+    Header: "Etablissement gestionnaire actif",
+    accessor: "etablissement_gestionnaire_actif",
+    width: 200,
+    exportable: true,
+  },
 ];
 
 const queryBuilderField = [
@@ -443,6 +450,7 @@ const queryBuilderField = [
   { text: "MEF 10", value: "bcn_mefs_10.mef10.keyword" },
   { text: "Groupe Spécialité", value: "rncp_details.nsf_code.keyword" },
   { text: "Certificateur", value: "rncp_details.certificateurs.certificateur.keyword" },
+  { text: "Statut du SIRET", value: "etablissement_gestionnaire_actif.keyword" },
 ];
 
 const facetDefinition = () => [
@@ -486,6 +494,15 @@ const facetDefinition = () => [
     title: "Début de formation (année)",
     filterLabel: "Début de formation (année)",
     selectAllLabel: "Toutes",
+    sortBy: "asc",
+  },
+  {
+    componentId: `etablissement_gestionnaire_actif`,
+    dataField: "etablissement_gestionnaire_actif.keyword",
+    title: "Statut du SIRET",
+    filterLabel: "Statut du SIRET",
+    displayInContext: [CONTEXT.CATALOGUE_NON_ELIGIBLE],
+    selectAllLabel: "Tous les statuts",
     sortBy: "asc",
   },
   {
