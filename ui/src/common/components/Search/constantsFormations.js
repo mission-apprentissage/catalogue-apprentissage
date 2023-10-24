@@ -451,15 +451,16 @@ const queryBuilderField = [
   { text: "Groupe Spécialité", value: "rncp_details.nsf_code.keyword" },
   { text: "Certificateur", value: "rncp_details.certificateurs.certificateur.keyword" },
   { text: "Statut du SIRET", value: "etablissement_gestionnaire_actif.keyword" },
+  { text: "Région", value: "region.keyword" },
 ];
 
 const facetDefinition = () => [
   {
-    componentId: `nom_academie`,
-    dataField: "nom_academie.keyword",
-    title: "Académie",
-    filterLabel: "Académie",
-    selectAllLabel: "Toutes les académies",
+    componentId: `region`,
+    dataField: "region.keyword",
+    title: "Région",
+    filterLabel: "Région",
+    selectAllLabel: "Toutes les régions",
     sortBy: "asc",
   },
   {
