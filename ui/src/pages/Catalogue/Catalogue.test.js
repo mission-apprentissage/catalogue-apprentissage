@@ -689,7 +689,6 @@ test("renders basic tree", async () => {
 
     base: "formations",
     count: 100,
-    isBaseFormations: true,
     endpoint: "http://localhost/api",
   }));
 

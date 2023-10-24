@@ -16,20 +16,17 @@ import {
 } from "@chakra-ui/react";
 import Layout from "../layout/Layout";
 import { ArrowRightLine } from "../../theme/components/icons";
-import Search from "../../common/components/Search/Search";
 import { useSearch } from "../../common/hooks/useSearch";
 import { HowToReglement } from "../../common/components/HowToReglement/HowToReglement";
 import { HowToAddModal } from "../../common/components/formation/HowToAddModal";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
 
-import useAuth from "../../common/hooks/useAuth";
-import { hasAccessTo } from "../../common/utils/rolesUtils";
 import { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL } from "../../constants/catalogueLabels";
 import { CONTEXT } from "../../constants/context";
+import SearchFormation from "../../common/components/Search/SearchFormation";
 
 export default (props) => {
-  let [auth] = useAuth();
   const searchState = useSearch("catalogue");
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -82,10 +79,10 @@ export default (props) => {
                 </TabList>
                 <TabPanels>
                   <TabPanel>
-                    <Search {...props} searchState={searchState} context={CONTEXT.CATALOGUE_GENERAL} />
+                    <SearchFormation {...props} searchState={searchState} context={CONTEXT.CATALOGUE_GENERAL} />
                   </TabPanel>
                   <TabPanel>
-                    <Search {...props} searchState={searchState} context={CONTEXT.CATALOGUE_NON_ELIGIBLE} />
+                    <SearchFormation {...props} searchState={searchState} context={CONTEXT.CATALOGUE_NON_ELIGIBLE} />
                   </TabPanel>
                   <TabPanel>
                     <HowToReglement />

@@ -3,13 +3,13 @@ import { SingleList } from "@appbaseio/reactivesearch";
 import { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL } from "../../../../constants/catalogueLabels";
 import { CONTEXT } from "../../../../constants/context";
 
-const HardFilters = React.memo(({ filters, context, isBaseFormations }) => {
+const HardFilters = React.memo(({ allowedFilters, context, isBaseFormations }) => {
   return (
     <>
       <SingleList
         componentId="published"
         dataField="published"
-        react={{ and: filters }}
+        react={{ and: allowedFilters }}
         value={"true"}
         defaultValue={"true"}
         showFilter={false}
@@ -24,7 +24,7 @@ const HardFilters = React.memo(({ filters, context, isBaseFormations }) => {
         <SingleList
           componentId="catalogue_published"
           dataField="catalogue_published"
-          react={{ and: filters.filter((e) => e !== "catalogue_published") }}
+          react={{ and: allowedFilters.filter((e) => e !== "catalogue_published") }}
           value={context === CONTEXT.CATALOGUE_GENERAL ? CATALOGUE_GENERAL_LABEL : CATALOGUE_NON_ELIGIBLE_LABEL}
           defaultValue={context === CONTEXT.CATALOGUE_GENERAL ? CATALOGUE_GENERAL_LABEL : CATALOGUE_NON_ELIGIBLE_LABEL}
           transformData={(data) => {

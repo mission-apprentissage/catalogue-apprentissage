@@ -1,9 +1,12 @@
 import { escapeDiacritics } from "../../utils/downloadUtils";
 import helpText from "../../../locales/helpText.json";
 
-const FILTERS = () => [`QUERYBUILDER`, `SEARCH`, `num_departement`, `nom_academie`, `tags`, "published", "qualite"];
+const allowedFilters = [`QUERYBUILDER`, `SEARCH`, `num_departement`, `nom_academie`, `tags`, "published", "qualite"];
 
-const columnsDefinition = [
+/**
+ * Colonnes inclues dans l'export CSV
+ */
+export const columnsDefinition = [
   {
     Header: "Fiche catalogue",
     accessor: "_id",
@@ -177,7 +180,10 @@ const columnsDefinition = [
   },
 ];
 
-const queryBuilderField = [
+/**
+ * Champs de la recherche avancée
+ */
+export const queryBuilderField = [
   { text: "Raison sociale", value: "entreprise_raison_sociale.keyword" },
   { text: "Siret", value: "siret.keyword" },
   { text: "Certifié Qualité", value: "certifie_qualite.keyword" },
@@ -185,9 +191,10 @@ const queryBuilderField = [
   { text: "Nda", value: "nda.keyword" },
 ];
 
-const facetDefinition = () => [
+export const filtersDefinition = [
   {
     componentId: `nom_academie`,
+    type: "facet",
     dataField: "nom_academie.keyword",
     title: "Académie",
     filterLabel: "Académie",
@@ -196,6 +203,7 @@ const facetDefinition = () => [
   },
   {
     componentId: `num_departement`,
+    type: "facet",
     dataField: "num_departement.keyword",
     title: "Département",
     filterLabel: "Département",
@@ -204,6 +212,7 @@ const facetDefinition = () => [
   },
   {
     componentId: `tags`,
+    type: "facet",
     dataField: "tags.keyword",
     title: "Année(s)",
     filterLabel: "Année(s)",
@@ -213,6 +222,7 @@ const facetDefinition = () => [
   },
   {
     componentId: `qualite`,
+    type: "facet",
     dataField: "certifie_qualite",
     title: "Certifiés Qualité",
     filterLabel: "Certifiés Qualité",
@@ -235,16 +245,16 @@ const facetDefinition = () => [
   },
 ];
 
-const dataSearch = {
+export const dataSearch = {
   dataField: ["entreprise_raison_sociale", "uai", "siret"],
   placeholder: "Saisissez une raison sociale, un UAI, ou un numéro de Siret",
   fieldWeights: [3, 2, 1],
 };
 
 export default {
-  FILTERS,
+  allowedFilters,
   columnsDefinition,
-  facetDefinition,
+  filtersDefinition,
   queryBuilderField,
   dataSearch,
 };

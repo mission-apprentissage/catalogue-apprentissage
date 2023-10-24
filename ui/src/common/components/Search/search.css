@@ -143,6 +143,21 @@
   box-shadow: 0 0 0 3px #2a7ffe;
 }
 
+.search-page .search .search-sidebar .DayPickerInput > input {
+  border: none;
+  border-radius: 0;
+  border-bottom: 2px solid #000091;
+  background: #f0f0f0;
+}
+
+.search-page .search .search-sidebar .DayPickerInput > input::placeholder {
+  font-style: italic;
+  color: #6a6a6a;
+}
+
+.search-page .search-sidebar .chakra-collapse[style*="height: auto"] { overflow: initial !important }
+
+
 @media screen and (max-width: 767px) {
   .search .filter_mobile_menu {
     display: flex;
@@ -175,4 +190,6 @@
     flex: 0 0 100%;
     max-width: 100%;
   }
+
+
 }

@@ -4,7 +4,7 @@ import { Badge, Text, Flex, Box, Heading, Link } from "@chakra-ui/react";
 import { ArrowRightLine } from "../../../theme/components/icons";
 import { QualiteBadge } from "../QualiteBadge";
 
-const CardListEtablissements = ({ data, withoutLink }) => {
+const CardListEtablissement = ({ data, withoutLink }) => {
   const RenderCard = ({ withoutLink }) => {
     return (
       <>
@@ -52,4 +52,4 @@ const CardListEtablissements = ({ data, withoutLink }) => {
   );
 };
 
-export default CardListEtablissements;
+export default CardListEtablissement;

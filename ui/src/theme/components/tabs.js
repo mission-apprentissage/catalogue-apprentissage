@@ -45,6 +45,10 @@ const Tabs = {
         fontSize: "zeta",
         position: "relative",
         bottom: "-1px",
+        borderTop: "2px solid transparent",
+        borderBottom: "1px solid #e7e7e7",
+        borderLeft: "1px solid transparent",
+        borderRight: "1px solid transparent",
         _hover: {
           bg: "#B6B6FF",
         },
@@ -52,6 +56,7 @@ const Tabs = {
           bg: "white",
           color: "bluefrance",
           borderTop: "2px solid #000091",
+          borderBottom: "1px solid transparent",
           borderLeft: "1px solid #e7e7e7",
           borderRight: "1px solid #e7e7e7",
         },
