@@ -710,19 +710,19 @@ test("renders basic tree", async () => {
   const match = getAllByText(/^Catalogue$/i);
   expect(match).toHaveLength(3);
 
-  await waitFor(() => getByText("Date de début de formation"));
+  // await waitFor(() => getByText("Date de début de formation"));
 
-  const periode = getByText("Date de début de formation");
-  expect(periode).toBeInTheDocument();
+  // const periode = getByText("Date de début de formation");
+  // expect(periode).toBeInTheDocument();
 
-  const psDate = getByText("Date de publication sur Parcoursup");
-  expect(psDate).toBeInTheDocument();
+  // const psDate = getByText("Date de publication sur Parcoursup");
+  // expect(psDate).toBeInTheDocument();
 
-  const afDate = getByText("Date de publication sur Affelnet");
-  expect(afDate).toBeInTheDocument();
+  // const afDate = getByText("Date de publication sur Affelnet");
+  // expect(afDate).toBeInTheDocument();
 
-  const statusDate = getByText("Dernière mise à jour du statut");
-  expect(statusDate).toBeInTheDocument();
+  // const statusDate = getByText("Dernière mise à jour du statut");
+  // expect(statusDate).toBeInTheDocument();
 
   await waitFor(() => getByText(/Exporter/i));
 

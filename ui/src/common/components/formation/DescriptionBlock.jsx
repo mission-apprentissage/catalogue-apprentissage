@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Heading, Link, ListItem, Text, UnorderedList } from "@chakra-ui/react";
 import { ExternalLinkLine } from "../../../theme/components/icons";
 import { DangerBox } from "../DangerBox";
-import InfoTooltip from "../InfoTooltip";
+import { InfoTooltip } from "../InfoTooltip";
 import helpText from "../../../locales/helpText.json";
 // import { FormationPeriode } from "./FormationPeriode";
 import { FormationDate } from "./FormationDate";

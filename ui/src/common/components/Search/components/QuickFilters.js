@@ -12,7 +12,7 @@ import { AddFill, SubtractLine } from "../../../../theme/components/icons";
 import Facet from "./Facet";
 import { allowedFilters } from "../constantsFormations";
 import useAuth from "../../../hooks/useAuth";
-import InfoTooltip from "../../InfoTooltip";
+import { InfoTooltip } from "../../InfoTooltip";
 import { DatePicker } from "@appbaseio/reactivesearch";
 import React, { useState } from "react";
 

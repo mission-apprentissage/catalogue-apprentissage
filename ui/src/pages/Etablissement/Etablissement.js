@@ -15,12 +15,10 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
-import useAuth from "../../common/hooks/useAuth";
 import { _get } from "../../common/httpClient";
 import Layout from "../layout/Layout";
-import { hasAccessTo } from "../../common/utils/rolesUtils";
 import { NavLink } from "react-router-dom";
-import InfoTooltip from "../../common/components/InfoTooltip";
+import { InfoTooltip } from "../../common/components/InfoTooltip";
 import helpText from "../../locales/helpText.json";
 import { ArrowRightLine, ExternalLinkLine } from "../../theme/components/icons/";
 import { HowToFixModal } from "../../common/components/organisme/HowToFixModal";
@@ -30,8 +28,7 @@ import { QualiteBadge } from "../../common/components/QualiteBadge";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
-const Etablissement = ({ etablissement, edition, onEdit, countFormations }) => {
-  const [user] = useAuth();
+const Etablissement = ({ etablissement, countFormations }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const query = [

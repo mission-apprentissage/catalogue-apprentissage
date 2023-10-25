@@ -6,7 +6,7 @@ import { ActionsSelect } from "./ActionsSelect";
 import { CONDITIONS } from "../../../constants/conditionsIntegration";
 import { COMMON_STATUS } from "../../../constants/status";
 import { academies } from "../../../constants/academies";
-import InfoTooltip from "../../../common/components/InfoTooltip";
+import { InfoTooltip } from "../../../common/components/InfoTooltip";
 import { isStatusChangeEnabled } from "../../../common/utils/rulesUtils";
 import { getCount } from "../../../common/api/perimetre";
 

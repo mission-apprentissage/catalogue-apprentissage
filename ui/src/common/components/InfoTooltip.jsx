@@ -29,5 +29,3 @@ export const InfoTooltip = ({ description }) => {
     </Tooltip>
   );
 };
-
-export default InfoTooltip;

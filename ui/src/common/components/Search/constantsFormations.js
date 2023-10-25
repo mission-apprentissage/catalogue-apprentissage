@@ -4,7 +4,6 @@ import { CONTEXT } from "../../../constants/context";
 import { departements } from "../../../constants/departements";
 import { annees } from "../../../constants/annees";
 import { sortDescending } from "../../utils/historyUtils";
-import { PARCOURSUP_STATUS } from "../../../constants/status";
 
 export const allowedFilters = [
   `QUERYBUILDER`,
@@ -688,6 +687,8 @@ export const queryBuilderField = [
   { text: "MEF 10", value: "bcn_mefs_10.mef10.keyword" },
   { text: "Groupe Spécialité", value: "rncp_details.nsf_code.keyword" },
   { text: "Certificateur", value: "rncp_details.certificateurs.certificateur.keyword" },
+  { text: "Identifiant Affelnet (code voeu)", value: "affelnet_id.keyword" },
+  { text: "Identifiant Parcoursup (GTA)", value: "parcoursup_id.keyword" },
 ];
 
 export const filtersDefinition = [
@@ -1096,7 +1097,6 @@ export const filtersDefinition = [
         dataField: "last_statut_update_date",
         title: "Dernière mise à jour du statut",
         filterLabel: "Statut modifié",
-        // helpTextSection: helpText.search.last_statut_update_date.title,
       },
     ],
   },
@@ -1114,11 +1114,9 @@ export const dataSearch = {
     "etablissement_formateur_siret",
     "etablissement_gestionnaire_siret",
     "cle_ministere_educatif",
-    "parcoursup_id",
-    "affelnet_id",
   ],
   placeholder:
-    "Saisissez une raison sociale, un Siret, un intitulé de formation, un code RNCP ou CFD (code formation diplôme), un identifiant Parcoursup ou Affelnet",
+    "Saisissez une raison sociale, un Siret, un intitulé de formation, un code RNCP ou CFD (code formation diplôme)",
   fieldWeights: [4, 3, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1],
 };
 

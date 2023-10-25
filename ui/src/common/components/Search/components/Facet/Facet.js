@@ -1,14 +1,14 @@
 import React, { useCallback } from "react";
 import { MultiList } from "@appbaseio/reactivesearch";
-import { Accordion, AccordionButton, AccordionItem, AccordionPanel, Box, Flex, Text } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 import useAuth from "../../../../hooks/useAuth";
 import { hasOneOfRoles } from "../../../../utils/rolesUtils";
 import compact from "lodash.compact";
 import { academies } from "../../../../../constants/academies";
-import "./facet.css";
-import { AddFill, SubtractLine } from "../../../../../theme/components/icons";
-import InfoTooltip from "../../../InfoTooltip";
+import { InfoTooltip } from "../../../InfoTooltip";
 import { QuickFilterItem } from "../QuickFilters";
+
+import "./facet.css";
 
 const Facet = ({
   componentId,
@@ -27,7 +27,6 @@ const Facet = ({
 }) => {
   let [auth] = useAuth();
   let defaultValue = null;
-  let defaultIndex = [];
 
   if (hasOneOfRoles(auth, ["instructeur"])) {
     if (componentId.startsWith("nom_academie")) {
