@@ -1,10 +1,12 @@
-import React, { Suspense, lazy, useEffect, useState } from "react";
+import React, { useEffect, useState, lazy, Suspense, useRef } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Route, Routes, useNavigate, Navigate, RouterProvider, createBrowserRouter } from "react-router-dom";
 import ScrollToTop from "./common/components/ScrollToTop";
 import useAuth from "./common/hooks/useAuth";
 import { _get, _post } from "./common/httpClient";
+
 import { hasAccessTo } from "./common/utils/rolesUtils";
+import MaintenancePage from "./pages/MaintenancePage";
 
 // Route-based code splitting @see https://reactjs.org/docs/code-splitting.html#route-based-code-splitting
 const HomePage = lazy(() => import("./pages/HomePage"));
@@ -63,7 +65,10 @@ const queryClient = new QueryClient();
 
 const Root = () => {
   const [auth, setAuth] = useAuth();
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const mountedRef = useRef(false);
+
+  const MAINTENANCE = false; //process.env.REACT_APP_MAINTENANCE;
 
   useEffect(() => {
     async function getUser() {
@@ -76,13 +81,22 @@ const Root = () => {
       } catch (error) {
         console.error(error);
       }
-      setIsLoading(false);
-    }
-    getUser();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (isLoading) {
-    return <div />;
+      setLoading(false);
+    }
+
+    if (!mountedRef.current) {
+      mountedRef.current = true;
+      getUser();
+    }
+  }, [setAuth]);
+
+  if (MAINTENANCE) {
+    return <MaintenancePage />;
+  }
+
+  if (loading) {
+    return <div>Chargement</div>;
   }
 
   return (
