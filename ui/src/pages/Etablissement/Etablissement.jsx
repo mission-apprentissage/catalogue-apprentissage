@@ -20,7 +20,7 @@ import Layout from "../layout/Layout";
 import { NavLink } from "react-router-dom";
 import { InfoTooltip } from "../../common/components/InfoTooltip";
 import helpText from "../../locales/helpText.json";
-import { ArrowRightLine, ExternalLinkLine } from "../../theme/components/icons/";
+import { ArrowRightLine, ExternalLinkLine } from "../../theme/components/icons";
 import { HowToFixModal } from "../../common/components/organisme/HowToFixModal";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";

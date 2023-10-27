@@ -1,9 +1,147 @@
+import React, { useEffect, useRef, useState } from "react";
 import { escapeDiacritics } from "../../utils/downloadUtils";
 import helpText from "../../../locales/helpText.json";
 import { CONTEXT } from "../../../constants/context";
 import { departements } from "../../../constants/departements";
 import { annees } from "../../../constants/annees";
 import { sortDescending } from "../../utils/historyUtils";
+import { AFFELNET_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
+import { Box, Flex, Link } from "@chakra-ui/react";
+import { _get } from "../../httpClient";
+import { NavLink } from "react-router-dom";
+import { InfoIcon } from "@chakra-ui/icons";
+
+const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
+
+export const AffelnetMissingSession = () => {
+  const [count, setCount] = useState(0);
+  const [countPublishedLastSession, setCountPublishedLastSession] = useState(0);
+  const mountedRef = useRef(false);
+
+  useEffect(() => {
+    async function run() {
+      mountedRef.current = true;
+      try {
+        const count = await _get(
+          `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
+            affelnet_perimetre: true,
+            affelnet_session: false,
+            affelnet_previous_session: true,
+            affelnet_previous_statut: AFFELNET_STATUS.PUBLIE,
+          })}`,
+          false
+        );
+
+        const countPublishedLastSession = await _get(
+          `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
+            affelnet_previous_statut: AFFELNET_STATUS.PUBLIE,
+          })}`,
+          false
+        );
+
+        setCount(count);
+        setCountPublishedLastSession(countPublishedLastSession);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    if (!mountedRef.current) {
+      run();
+    }
+
+    return () => {
+      // cleanup hook
+      mountedRef.current = false;
+    };
+  }, []);
+
+  const link = `/recherche/formations?affelnet_perimetre=${encodeURIComponent(
+    JSON.stringify(["Oui"])
+  )}&affelnet_session=${encodeURIComponent(JSON.stringify(["Non"]))}&affelnet_previous_session=${encodeURIComponent(
+    JSON.stringify(["Oui"])
+  )}&affelnet_previous_statut=${encodeURIComponent(JSON.stringify([AFFELNET_STATUS.PUBLIE]))}`;
+
+  return (
+    <Flex style={{ background: "#E2E8F0" }} padding={4}>
+      <Flex alignContent={"center"} mr={4}>
+        <InfoIcon margin={"auto"} />
+      </Flex>
+      <Box>
+        {count} offres publiées en 2023 n'ont pas été renouvelées pour 2024 (
+        {Math.round((count * 100) / countPublishedLastSession)}% des formations publiées en 2023). <br />
+        <Link as={NavLink} variant="unstyled" fontStyle={"italic"} textDecoration={"underline"} to={link}>
+          Voir la liste
+        </Link>
+      </Box>
+    </Flex>
+  );
+};
+
+export const ParcoursupMissingSession = () => {
+  const [count, setCount] = useState(0);
+  const [countPublishedLastSession, setCountPublishedLastSession] = useState(0);
+  const mountedRef = useRef(false);
+
+  useEffect(() => {
+    async function run() {
+      mountedRef.current = true;
+      try {
+        const count = await _get(
+          `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
+            parcoursup_perimetre: true,
+            parcoursup_session: false,
+            parcoursup_previous_session: true,
+            parcoursup_previous_statut: PARCOURSUP_STATUS.PUBLIE,
+          })}`,
+          false
+        );
+
+        const countPublishedLastSession = await _get(
+          `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
+            parcoursup_previous_statut: PARCOURSUP_STATUS.PUBLIE,
+          })}`,
+          false
+        );
+
+        setCount(count);
+        setCountPublishedLastSession(countPublishedLastSession);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    if (!mountedRef.current) {
+      run();
+    }
+
+    return () => {
+      // cleanup hook
+      mountedRef.current = false;
+    };
+  }, []);
+
+  const link = `/recherche/formations?parcoursup_perimetre=${encodeURIComponent(
+    JSON.stringify(["Oui"])
+  )}&parcoursup_session=${encodeURIComponent(JSON.stringify(["Non"]))}&parcoursup_previous_session=${encodeURIComponent(
+    JSON.stringify(["Oui"])
+  )}&parcoursup_previous_statut=${encodeURIComponent(JSON.stringify([PARCOURSUP_STATUS.PUBLIE]))}`;
+
+  return (
+    <Flex style={{ background: "#E2E8F0" }} padding={4}>
+      <Flex alignContent={"center"} mr={4}>
+        <InfoIcon margin={"auto"} />
+      </Flex>
+      <Box>
+        {count} offres publiées en 2023 n'ont pas été renouvelées pour 2024 (
+        {Math.round((count * 100) / countPublishedLastSession)}% des formations publiées en 2023). <br />
+        <Link as={NavLink} variant="unstyled" fontStyle={"italic"} textDecoration={"underline"} to={link}>
+          Voir la liste
+        </Link>
+      </Box>
+    </Flex>
+  );
+};
 
 export const allowedFilters = [
   `QUERYBUILDER`,
@@ -742,6 +880,12 @@ export const filtersDefinition = [
   },
 
   {
+    componentId: `parcoursup_session_manquante`,
+    type: "component",
+    component: <ParcoursupMissingSession />,
+  },
+
+  {
     type: "advanced",
     openText: "Voir moins de filtres Parcoursup",
     closeText: "Voir plus de filtres Parcoursup",
@@ -857,6 +1001,12 @@ export const filtersDefinition = [
     sortBy: "count",
     acl: "page_catalogue/voir_status_publication_aff",
     helpTextSection: helpText.search.affelnet_statut,
+  },
+
+  {
+    componentId: `affelnet_session_manquante`,
+    type: "component",
+    component: <AffelnetMissingSession />,
   },
 
   // {

@@ -169,11 +169,10 @@ const AdvancedFilter = ({ filter }) => {
       >
         {isOpen ? filter.openText : filter.closeText}
       </Button>
-      {isOpen && (
-        <Box mt={2}>
-          <QuickFilters filters={filter.filters} />{" "}
-        </Box>
-      )}
+
+      <Box mt={2} display={isOpen ? "block" : "none"}>
+        <QuickFilters filters={filter.filters} />{" "}
+      </Box>
     </Box>
   );
 };
@@ -205,6 +204,10 @@ export const QuickFilters = ({ filters }) => {
                 <AdvancedFilter filter={filter} />
               </React.Fragment>
             );
+          }
+
+          case "component": {
+            return <React.Fragment key={index}>{filter.component}</React.Fragment>;
           }
 
           case "divider": {

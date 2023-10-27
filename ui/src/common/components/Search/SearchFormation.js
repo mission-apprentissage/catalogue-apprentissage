@@ -18,9 +18,9 @@ import { CloseCircleLine } from "../../../theme/components/icons";
 import { SearchLine } from "../../../theme/components/icons/SearchLine";
 import { Pagination } from "./components/Pagination";
 import { CONTEXT } from "../../../constants/context";
+import { QuickFilters } from "./components/QuickFilters";
 
 import "./search.css";
-import { QuickFilters } from "./components/QuickFilters";
 
 export default React.memo(({ location, searchState, context, extraButtons = null }) => {
   const { defaultMode } = queryString.parse(location?.search);
