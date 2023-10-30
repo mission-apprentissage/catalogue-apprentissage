@@ -14,7 +14,7 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useHistory } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { _get } from "../../common/httpClient";
 import Layout from "../layout/Layout";
 import { NavLink } from "react-router-dom";
@@ -294,12 +294,13 @@ const Etablissement = ({ etablissement, countFormations }) => {
   );
 };
 
-export default ({ match }) => {
+export default () => {
+  const { id } = useParams();
   const [etablissement, setEtablissement] = useState(undefined);
   const [loading, setLoading] = useState(false);
   const [edition, setEdition] = useState(false);
   const [countFormations, setCountFormations] = useState(0);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const mountedRef = useRef(true);
 
@@ -307,7 +308,7 @@ export default ({ match }) => {
     (async () => {
       try {
         setLoading(true);
-        const eta = await _get(`${CATALOGUE_API}/entity/etablissement/${match.params.id}`, false);
+        const eta = await _get(`${CATALOGUE_API}/entity/etablissement/${id}`, false);
         setEtablissement(eta);
 
         if (!mountedRef.current) return null;
@@ -333,7 +334,7 @@ export default ({ match }) => {
     return () => {
       mountedRef.current = false;
     };
-  }, [match]);
+  }, [id]);
 
   const onEdit = () => {
     setEdition(!edition);
@@ -400,7 +401,7 @@ export default ({ match }) => {
                     px={8}
                     mt={[8, 8, 0]}
                     onClick={() => {
-                      history.push("/recherche/etablissements");
+                      navigate("/recherche/etablissements");
                     }}
                   >
                     Retour à la recherche

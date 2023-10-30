@@ -1,5 +1,5 @@
-import React from "react";
-import { NavLink, useHistory } from "react-router-dom";
+import React, { useCallback } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
@@ -25,15 +25,15 @@ import { AccountFill, DownloadLine, InfoCircle } from "../../../theme/components
 
 const Header = () => {
   const [auth, setAuth] = useAuth();
-  const history = useHistory();
+  const navigate = useNavigate();
 
-  let logout = async () => {
+  const logout = useCallback(async () => {
     const anonymous = await _get("/api/auth/logout");
     if (anonymous) {
       setAuth(anonymous);
-      history.push("/");
+      navigate("/");
     }
-  };
+  }, [setAuth, navigate]);
 
   return (
     <>

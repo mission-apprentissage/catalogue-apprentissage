@@ -1,19 +1,19 @@
 import { Box, Button, Center, FormControl, FormErrorMessage, FormLabel, Heading, Input, Text } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { _post } from "../../common/httpClient";
 import { setTitle } from "../../common/utils/pageUtils";
 
 const ForgottenPasswordPage = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const resetPassword = async (values, { setStatus }) => {
     try {
       await _post("/api/password/forgotten-password", { ...values });
       setStatus({ message: "Un email vous a été envoyé." });
-      setTimeout(() => history.push("/"), 1500);
+      setTimeout(() => navigate("/"), 1500);
     } catch (e) {
       console.error(e);
       setStatus({ error: e.prettyMessage });

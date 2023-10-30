@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ReactiveComponent } from "@appbaseio/reactivesearch";
 
 import {
@@ -21,7 +21,7 @@ const QueryBuilder = ({
   autoComplete,
   collection,
 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   templateRule = templateRule || {
     field: fields[0].value,
@@ -45,7 +45,7 @@ const QueryBuilder = ({
     let s = new URLSearchParams(window.location.search);
     s.set("qb", str);
 
-    history.push(`?${s}`);
+    navigate(`?${s}`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
 
     setFilteredCombinators(

@@ -2,7 +2,7 @@ import { Box, Button, Center, FormControl, FormErrorMessage, FormLabel, Heading,
 import { Field, Form, Formik } from "formik";
 import queryString from "query-string";
 import React from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import * as Yup from "yup";
 
 import useAuth from "../../common/hooks/useAuth";
@@ -12,7 +12,7 @@ import { setTitle } from "../../common/utils/pageUtils";
 
 const ResetPasswordPage = () => {
   const [, setAuth] = useAuth();
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const { passwordToken } = queryString.parse(location.search);
   const username = decodeJWT(passwordToken).sub;
@@ -21,7 +21,7 @@ const ResetPasswordPage = () => {
     try {
       const user = await _post("/api/password/reset-password", { ...values, passwordToken });
       setAuth(user);
-      history.push("/");
+      navigate("/");
     } catch (e) {
       console.error(e);
       setStatus({

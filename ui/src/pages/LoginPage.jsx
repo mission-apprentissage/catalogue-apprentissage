@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import React from "react";
-import { NavLink, useHistory } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 
 import useAuth from "../common/hooks/useAuth";
@@ -22,13 +22,13 @@ import { setTitle } from "../common/utils/pageUtils";
 
 const LoginPage = () => {
   const [, setAuth] = useAuth();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const login = async (values, { setStatus }) => {
     try {
       const user = await _post("/api/auth/login", values);
       setAuth(user);
-      history.push("/");
+      navigate("/");
     } catch (e) {
       console.error(e);
       e.statusCode === 429

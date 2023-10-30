@@ -189,7 +189,10 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 test("renders a training page", async () => {
-  const { queryAllByText, getByText, getAllByText } = renderWithRouter(<Etablissement match={{ params: { id: 1 } }} />);
+  const { queryAllByText, getByText, getAllByText } = renderWithRouter(<Etablissement />, {
+    route: "/etablissements/1",
+    path: "/etablissements/:id",
+  });
 
   await waitFor(() => getAllByText("MIDISUP"));
   await waitFor(() => getByText(/voir les 34 formations associées à cet organisme/));
@@ -201,7 +204,10 @@ test("renders a training page", async () => {
 test("display an error when uai is invalid", async () => {
   grantAnonymousAccess({ acl: ["page_organisme"] });
 
-  const { getByText, queryByText, queryByTestId } = renderWithRouter(<Etablissement match={{ params: { id: 2 } }} />);
+  const { getByText, queryByText, queryByTestId } = renderWithRouter(<Etablissement />, {
+    route: "/etablissements/2",
+    path: "/etablissements/:id",
+  });
 
   await waitFor(() => getByText(/UAI rattaché au SIRET/), { timeout: 10000 });
   await waitFor(() => getByText(/voir les 34 formations associées à cet organisme/));
@@ -216,7 +222,10 @@ test("display an error when uai is invalid", async () => {
 test("don't display an error when uai is valid", async () => {
   grantAnonymousAccess({ acl: ["page_organisme"] });
 
-  const { getByText, queryByText, queryByTestId } = renderWithRouter(<Etablissement match={{ params: { id: 1 } }} />);
+  const { getByText, queryByText, queryByTestId } = renderWithRouter(<Etablissement />, {
+    route: "/etablissements/1",
+    path: "/etablissements/:id",
+  });
 
   await waitFor(() => getByText(/UAI rattaché au SIRET/), { timeout: 10000 });
   await waitFor(() => getByText(/voir les 34 formations associées à cet organisme/));

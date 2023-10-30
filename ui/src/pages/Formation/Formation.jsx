@@ -15,7 +15,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useHistory } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 
 import Layout from "../layout/Layout";
@@ -356,13 +356,14 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
   );
 };
 
-export default ({ match }) => {
+export default () => {
+  const { id } = useParams();
   const toast = useToast();
   const [formation, setFormation] = useState();
   const [loading, setLoading] = useState(false);
 
   const [edition, setEdition] = useState(null);
-  const history = useHistory();
+  const navigate = useNavigate();
   const { isOpen: isOpenPublishModal, onOpen: onOpenPublishModal, onClose: onClosePublishModal } = useDisclosure();
 
   const [user] = useAuth();
@@ -453,7 +454,7 @@ export default ({ match }) => {
       try {
         setLoading(true);
         // FIXME select={"__v" :0} hack to get updates_history
-        const formation = await _get(`${CATALOGUE_API}/entity/formation/${match.params.id}?select={"__v":0}`);
+        const formation = await _get(`${CATALOGUE_API}/entity/formation/${id}?select={"__v":0}`);
 
         if (!mountedRef.current) return null;
         // don't display archived formations
@@ -473,7 +474,7 @@ export default ({ match }) => {
     return () => {
       mountedRef.current = false;
     };
-  }, [match, setFieldValue]);
+  }, [id, setFieldValue]);
 
   const onEdit = (fieldName = null) => {
     setEdition(fieldName);
@@ -509,7 +510,7 @@ export default ({ match }) => {
       });
     }
 
-    const response = await _get(`${CATALOGUE_API}/entity/formation/${match.params.id}?select={"__v":0}`);
+    const response = await _get(`${CATALOGUE_API}/entity/formation/${id}?select={"__v":0}`);
     setFormation(response);
   };
 
@@ -721,7 +722,7 @@ export default ({ match }) => {
                   px={8}
                   mt={[8, 8, 0]}
                   onClick={() => {
-                    history.push("/recherche/formations");
+                    navigate("/recherche/formations");
                   }}
                 >
                   Retour à la recherche

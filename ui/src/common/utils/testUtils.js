@@ -1,16 +1,20 @@
-import { BrowserRouter } from "react-router-dom";
-import { act, render } from "@testing-library/react";
+import React from "react";
+import { Routes, MemoryRouter, Route } from "react-router-dom";
+import { render } from "@testing-library/react";
 import { setupServer } from "msw/node";
 import * as useAuth from "../hooks/useAuth";
 import { rest } from "msw";
 
-// test utils file
-export const renderWithRouter = (ui, { route = "/" } = {}) => {
-  act(() => {
-    window.history.pushState({}, "Test page", route);
-  });
-
-  return render(ui, { wrapper: BrowserRouter });
+export const renderWithRouter = (ui, { route = "/", path = "/" } = { route: "/", path: "/" }) => {
+  return {
+    ...render(
+      <MemoryRouter initialEntries={[route]}>
+        <Routes>
+          <Route path={path} element={ui} />
+        </Routes>
+      </MemoryRouter>
+    ),
+  };
 };
 
 export const grantAnonymousAccess = ({ acl, academie }) => {

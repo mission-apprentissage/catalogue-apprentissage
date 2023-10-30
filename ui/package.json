@@ -32,7 +32,7 @@
     "react-dropzone": "14.2.3",
     "react-hooks-global-state": "2.1.0",
     "react-query": "3.2.0",
-    "react-router-dom": "5.2.0",
+    "react-router-dom": "6.17.0",
     "react-scripts": "5.0.1",
     "react-syntax-highlighter": "15.5.0",
     "react-table": "7.7.0",

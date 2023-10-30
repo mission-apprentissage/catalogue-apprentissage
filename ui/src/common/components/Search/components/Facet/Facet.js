@@ -1,4 +1,5 @@
 import React, { useCallback } from "react";
+import { createSearchParams, useSearchParams } from "react-router-dom";
 import { MultiList } from "@appbaseio/reactivesearch";
 import { Flex, Text } from "@chakra-ui/react";
 import useAuth from "../../../../hooks/useAuth";
@@ -27,6 +28,7 @@ const Facet = ({
 }) => {
   let [auth] = useAuth();
   let defaultValue = null;
+  const [searchParams, setSearchParams] = useSearchParams();
 
   if (hasOneOfRoles(auth, ["instructeur"])) {
     if (componentId.startsWith("nom_academie")) {
@@ -38,6 +40,31 @@ const Facet = ({
       );
     }
   }
+
+  const onValueChange = useCallback(
+    (value) => {
+      setSearchParams((prevSearchParams) => {
+        console.log("value", value);
+        console.log(
+          "prevSearchParams",
+          [...prevSearchParams].map(([key, value]) => ({ [key]: value }))
+        );
+        //   console.log([...prevSearchParams.keys()].map((key) => ({ [key]: prevSearchParams.get(key) })));
+        //   console.log(value?.length ? { [componentId]: JSON.stringify(value) } : {});
+        console.log(
+          "results",
+          JSON.stringify({
+            ...[...prevSearchParams].flatMap(([key, value]) => ({ [key]: value })),
+            ...(value?.length ? { [componentId]: JSON.stringify(value) } : {}),
+          })
+        );
+
+        prevSearchParams.set(componentId, JSON.stringify(value));
+        return prevSearchParams;
+      });
+    },
+    [componentId, setSearchParams]
+  );
 
   const renderItem = useCallback(
     (label, count) => (
@@ -93,6 +120,7 @@ const Facet = ({
           customQuery={customQuery}
           sortBy={sortBy}
           renderItem={helpTextSection ? renderItem : null}
+          onValueChange={onValueChange}
         />
       }
     />

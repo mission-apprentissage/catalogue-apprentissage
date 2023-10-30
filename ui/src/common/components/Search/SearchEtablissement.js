@@ -1,13 +1,19 @@
 import React, { useState } from "react";
-import { DataSearch, DatePicker, ReactiveBase, ReactiveList, SelectedFilters } from "@appbaseio/reactivesearch";
+import { DataSearch, ReactiveBase, ReactiveList, SelectedFilters } from "@appbaseio/reactivesearch";
 import queryString from "query-string";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Box, Container, Flex, FormLabel, Switch, Text } from "@chakra-ui/react";
 
 import useAuth from "../../hooks/useAuth";
 import { hasAccessTo } from "../../utils/rolesUtils";
 import { CardListEtablissement, ExportButton, Facet, HardFilters, QueryBuilder } from "./components";
-import constantsEtablissements from "./constantsEtablissements";
+import {
+  allowedFilters,
+  filtersDefinition,
+  queryBuilderField,
+  dataSearch,
+  columnsDefinition,
+} from "./constantsEtablissements";
 import { CloseCircleLine } from "../../../theme/components/icons";
 import { SearchLine } from "../../../theme/components/icons/SearchLine";
 import { Pagination } from "./components/Pagination";
@@ -20,10 +26,10 @@ export default React.memo(({ location, searchState, context, extraButtons = null
   const { base, countEtablissement, endpoint } = searchState;
 
   let [auth] = useAuth();
-  const history = useHistory();
+  const navigate = useNavigate();
 
-  const { allowedFilters, filtersDefinition, queryBuilderField, dataSearch, columnsDefinition } =
-    constantsEtablissements;
+  // const { allowedFilters, filtersDefinition, queryBuilderField, dataSearch, columnsDefinition } =
+  //   constantsEtablissements;
 
   const handleSearchSwitchChange = () => {
     setMode((prevValue) => {
@@ -32,7 +38,7 @@ export default React.memo(({ location, searchState, context, extraButtons = null
       const s = new URLSearchParams(window.location.search);
 
       s.set("defaultMode", newValue);
-      history.push(`?${s}`);
+      navigate(`?${s}`);
 
       return newValue;
     });

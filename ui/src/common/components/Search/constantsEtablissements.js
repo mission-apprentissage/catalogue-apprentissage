@@ -1,7 +1,15 @@
 import { escapeDiacritics } from "../../utils/downloadUtils";
 import helpText from "../../../locales/helpText.json";
 
-const allowedFilters = [`QUERYBUILDER`, `SEARCH`, `num_departement`, `nom_academie`, `tags`, "published", "qualite"];
+export const allowedFilters = [
+  `QUERYBUILDER`,
+  `SEARCH`,
+  `num_departement`,
+  `nom_academie`,
+  `tags`,
+  "published",
+  "qualite",
+];
 
 /**
  * Colonnes inclues dans l'export CSV
