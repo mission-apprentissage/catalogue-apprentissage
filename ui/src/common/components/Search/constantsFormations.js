@@ -10,6 +10,7 @@ import { sortDescending } from "../../utils/historyUtils";
 import { AFFELNET_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
 import { Box, Flex, Link } from "@chakra-ui/react";
 import { _get } from "../../httpClient";
+import { InfoTooltip } from "../InfoTooltip";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -68,17 +69,19 @@ export const AffelnetMissingSession = () => {
 
   return (
     <Flex style={{ background: "#E2E8F0" }} padding={4}>
-      <Flex alignContent={"center"} mr={4}>
-        <InfoIcon margin={"auto"} />
-      </Flex>
       <Box>
-        {Math.round((count * 100) / countPublishedLastSession)}% des formations publiées en 2023 n’ont pas été
-        renouvelées pour 2024.
-        <br />
+        <Box mb={2}>
+          {Math.round((count * 100) / countPublishedLastSession)}% des formations publiées en 2023 n’ont pas été
+          renouvelées pour 2024.
+        </Box>
+
         <Link as={NavLink} variant="unstyled" fontStyle={"italic"} textDecoration={"underline"} to={link}>
           Voir la liste
         </Link>
       </Box>
+      <Flex alignContent={"center"} m={"auto"} ml={4}>
+        <InfoTooltip description={helpText.search.affelnet_session_manquante} />
+      </Flex>
     </Flex>
   );
 };
@@ -138,16 +141,18 @@ export const ParcoursupMissingSession = () => {
 
   return (
     <Flex style={{ background: "#E2E8F0" }} padding={4}>
-      <Flex alignContent={"center"} mr={4}>
-        <InfoIcon margin={"auto"} />
-      </Flex>
       <Box>
-        {Math.round((count * 100) / countPublishedLastSession)}% des formations publiées en 2023 n’ont pas été
-        renouvelées pour 2024. <br />
+        <Box mb={2}>
+          {Math.round((count * 100) / countPublishedLastSession)}% des formations publiées en 2023 n’ont pas été
+          renouvelées pour 2024.
+        </Box>
         <Link as={NavLink} variant="unstyled" fontStyle={"italic"} textDecoration={"underline"} to={link}>
           Voir la liste
         </Link>
       </Box>
+      <Flex alignContent={"center"} m={"auto"} ml={4}>
+        <InfoTooltip description={helpText.search.parcoursup_session_manquante} />
+      </Flex>
     </Flex>
   );
 };

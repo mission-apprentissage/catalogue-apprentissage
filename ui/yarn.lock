@@ -38,29 +38,30 @@
   dependencies:
     cross-fetch "^3.0.4"
 
-"@appbaseio/reactivecore@9.14.33":
-  version "9.14.33"
-  resolved "https://registry.yarnpkg.com/@appbaseio/reactivecore/-/reactivecore-9.14.33.tgz#24af820c718d5281adf53837f9aceaf4b44209a1"
-  integrity sha512-nEP1YdNd3hcReSoSw1G5in70AnqHUz/qFaLXs6uYNo8u/vPgE2JxhKblYoX/xolSLHmtdTGJzrJdk9ZuRaXIdQ==
+"@appbaseio/reactivecore@9.15.1":
+  version "9.15.1"
+  resolved "https://registry.yarnpkg.com/@appbaseio/reactivecore/-/reactivecore-9.15.1.tgz#283dff65f5cb15db58a48702b8238bdf38940850"
+  integrity sha512-p21u1DfTfd2C8sE4M0fnN98AahRaQQ4FKYv+3SdKT8l/WtNAuffIr1JtE7/jCualkBbJwlzuEoXmwuAfd59b+g==
   dependencies:
     cross-fetch "^3.0.4"
+    dayjs "^1.11.7"
     prop-types "^15.6.0"
     redux "^4.0.0"
     redux-thunk "^2.3.0"
-    xdate "^0.8.2"
 
-"@appbaseio/reactivesearch@3.43.6":
-  version "3.43.6"
-  resolved "https://registry.yarnpkg.com/@appbaseio/reactivesearch/-/reactivesearch-3.43.6.tgz#c7f6b892bd200b6ed84b47d2edf4377ca8a8534d"
-  integrity sha512-bFinH+q+wSAyBS39Uu/3ZG9usmsIQ0Sh7JKV0bUc9QcPLL1hDalUgS9cZXTQ9GQOD8ppoQ4v3t0RLw4GkSTdZw==
+"@appbaseio/reactivesearch@3.45.0":
+  version "3.45.0"
+  resolved "https://registry.yarnpkg.com/@appbaseio/reactivesearch/-/reactivesearch-3.45.0.tgz#cc39018bf3f0e30588041e63910c9cae99814322"
+  integrity sha512-rhZ+H5eucyx/TNW87HebTw0m0nutEDOXIo1zqLVI8PIEHosQltJisCpOcN7D3SOHgkX2e9rL1vZbDouxpnnVyw==
   dependencies:
     "@appbaseio/analytics" "^1.1.1"
-    "@appbaseio/reactivecore" "9.14.33"
-    "@appbaseio/rheostat" "^1.0.0-alpha.2"
+    "@appbaseio/reactivecore" "9.15.1"
+    "@appbaseio/rheostat" "^1.0.0-alpha.15"
     "@emotion/core" "^10.0.28"
     "@emotion/styled" "^10.0.27"
-    appbase-js "^5.2.0"
+    appbase-js "^5.3.4"
     cross-env "^5.2.0"
+    dayjs "^1.11.7"
     downshift "^1.31.2"
     echarts "^5.3.3"
     echarts-for-react "^3.0.2"
@@ -72,13 +73,12 @@
     react-day-picker "^7.0.5"
     react-redux "^6.0.1"
     url-search-params-polyfill "^7.0.0"
-    xdate "^0.8.2"
     xss "^1.0.11"
 
-"@appbaseio/rheostat@^1.0.0-alpha.2":
-  version "1.0.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@appbaseio/rheostat/-/rheostat-1.0.0-alpha.2.tgz#f2e00549a3f72c6d7ec9cb34c13808fe9c431d58"
-  integrity sha512-00FqByMxBAk0fxZnHiLVSA1vsQyPcPdfSSVZbmFfaZBh4QsectBnN05X4zLp3PkY4uB3azneCtSNeKFICGHf4w==
+"@appbaseio/rheostat@^1.0.0-alpha.15":
+  version "1.0.0-alpha.15"
+  resolved "https://registry.yarnpkg.com/@appbaseio/rheostat/-/rheostat-1.0.0-alpha.15.tgz#c4db000c7e0adf973aaf95951ab9b4e90d806b26"
+  integrity sha512-dFDWv8SGGLRv5yGcQ5/3zYhVRDq2iIYmmU5v6s4/R0XRj2zCwld5O9DWi8WBZiDQJWQ7/7YUWTzqEgtxbYMOJA==
   dependencies:
     object.assign "^4.0.4"
     prop-types "^15.5.10"
@@ -4253,10 +4253,10 @@ anymatch@^3.0.3, anymatch@~3.1.2:
     normalize-path "^3.0.0"
     picomatch "^2.0.4"
 
-appbase-js@^5.2.0:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/appbase-js/-/appbase-js-5.2.0.tgz#990da7227ae89cd0a002fdfc85428a001306ac27"
-  integrity sha512-4B/xXivn7i6CATxcRZauDplCL3m9imOmbLH7j+cW4xwkqSN3aHDtj/OuvJDQqaMG0Awon8HUiiuwdh0+yY9DAw==
+appbase-js@^5.3.4:
+  version "5.3.4"
+  resolved "https://registry.yarnpkg.com/appbase-js/-/appbase-js-5.3.4.tgz#c30add29133fcfd7cc938a710a347cb89377670e"
+  integrity sha512-rbjCC7jmcPh1cjnW3W7TjTugQpLOB8SrPIdnkKwrNDdsl8d0nzPTJH4/082UTnkvlMkjm4WYY2HYCRl2vpDlpw==
   dependencies:
     cross-fetch "^3.1.5"
     querystring "^0.2.0"
@@ -5840,6 +5840,11 @@ data-urls@^2.0.0:
     abab "^2.0.3"
     whatwg-mimetype "^2.3.0"
     whatwg-url "^8.0.0"
+
+dayjs@^1.11.7:
+  version "1.11.10"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.10.tgz#68acea85317a6e164457d6d6947564029a6a16a0"
+  integrity sha512-vjAczensTgRcqDERK0SR2XMwsF/tSvnvlv6VcF2GIhg6Sx4yOIt/irsr1RDJsKiIyBzJDpCoXiWWq28MqH2cnQ==
 
 debug@*, debug@4, debug@4.3.4, debug@^4.1.0, debug@^4.1.1, debug@^4.3.2, debug@^4.3.3, debug@^4.3.4:
   version "4.3.4"
@@ -13718,11 +13723,6 @@ ws@^8.4.2:
   version "8.8.0"
   resolved "https://registry.npmjs.org/ws/-/ws-8.8.0.tgz"
   integrity sha512-JDAgSYQ1ksuwqfChJusw1LSJ8BizJ2e/vVu5Lxjq3YvNJNlROv1ui4i+c/kUUrPheBvQl4c5UbERhTwKa6QBJQ==
-
-xdate@^0.8.2:
-  version "0.8.2"
-  resolved "https://registry.npmjs.org/xdate/-/xdate-0.8.2.tgz"
-  integrity sha1-17AzwASF0CaVuvAET06s2j/JYaM=
 
 xml-name-validator@^3.0.0:
   version "3.0.0"

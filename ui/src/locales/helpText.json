@@ -51,6 +51,7 @@
     "qualite": "La donnée “Certification qualité” provient d’une certification qualiopi."
   },
   "search": {
+    "affelnet_session_manquante": "Cette liste vous est proposée à titre indicatif. Les formations non renouvelées peuvent être liées à des formations qui ne sont effectivement plus proposées pour 2024, mais également à un retard d’enregistrement au Carif-Oref par les OFA ou à des mises en attente par les Carif-Oref. Elles peuvent également être consécutives à des changements de paramètre (modification de Siret, modification de code RNCP, MEF ou CFD) ayant entraîné une modification de clé ministère éducatif.",
     "affelnet_statut": {
       "title": "Statut Affelnet : information concernant la publication de l’offre de formation dans le service Affelnet",
       "hors périmètre": "offre et organisme de formation qui ne remplissent pas les conditions pour intégrer le service Affelnet",
@@ -60,6 +61,7 @@
       "à publier": "offre ou organisme de formation qui remplissent les conditions pour intégrer le service Affelnet. L’offre de formation peut faire l’objet d’une publication par un instructeur en académie",
       "en attente de publication": "offre de formation qui sera intégrée automatiquement dans le service Affelnet via le module l’import"
     },
+    "parcoursup_session_manquante": "Cette liste vous est proposée à titre indicatif. Les formations non renouvelées peuvent être liées à des formations qui ne sont effectivement plus proposées pour 2024, mais également à un retard d’enregistrement au Carif-Oref par les OFA ou à des mises en attente par les Carif-Oref. Elles peuvent également être consécutives à des changements de paramètre (modification de Siret, modification de code RNCP, MEF ou CFD) ayant entraîné une modification de clé ministère éducatif.",
     "parcoursup_statut": {
       "title": "Statut Parcoursup : information concernant la publication de l’offre de formation dans la plateforme Parcoursup",
       "hors périmètre": "offre et organisme de formation qui ne remplissent pas les conditions pour intégrer la plateforme Parcoursup",
