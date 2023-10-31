@@ -39,6 +39,7 @@ const FILTERS = () => [
   "duree",
   "periode_start",
   "periode_end",
+  "region",
 ];
 
 const columnsDefinition = [
@@ -425,6 +426,12 @@ const columnsDefinition = [
   {
     Header: "Etablissement gestionnaire actif",
     accessor: "etablissement_gestionnaire_actif",
+    width: 200,
+    exportable: true,
+  },
+  {
+    Header: "Region",
+    accessor: "region",
     width: 200,
     exportable: true,
   },
