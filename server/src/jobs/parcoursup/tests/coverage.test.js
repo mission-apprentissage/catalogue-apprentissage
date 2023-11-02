@@ -17,7 +17,7 @@ describe(__filename, () => {
     await Formation.create({
       published: true,
       etablissement_reference_catalogue_published: true,
-      affelnet_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+      affelnet_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
       cle_ministere_educatif: "cle_1",
       intitule_court: "formation 1",
       cfd_entree: "111111",
@@ -33,7 +33,7 @@ describe(__filename, () => {
     await Formation.create({
       published: true,
       etablissement_reference_catalogue_published: true,
-      affelnet_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+      affelnet_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
       cle_ministere_educatif: "cle_2",
       intitule_court: "formation 2",
       bcn_mefs_10: [{ mef10: "4444444444" }],
@@ -46,7 +46,7 @@ describe(__filename, () => {
     await Formation.create({
       published: true,
       etablissement_reference_catalogue_published: true,
-      affelnet_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+      affelnet_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
       cle_ministere_educatif: "cle_3",
       intitule_court: "formation 3",
     });

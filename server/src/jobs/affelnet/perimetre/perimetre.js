@@ -84,7 +84,7 @@ const run = async () => {
           ...getQueryFromRule(rule),
         }).select({ cle_ministere_educatif: 1 })
       ).forEach(({ cle_ministere_educatif }) =>
-        status === AFFELNET_STATUS.HORS_PERIMETRE
+        status === AFFELNET_STATUS.NON_INTEGRABLE
           ? formationsNotInPerimetre.add(cle_ministere_educatif)
           : formationsInPerimetre.add(cle_ministere_educatif)
       );

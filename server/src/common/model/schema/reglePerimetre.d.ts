@@ -23,15 +23,15 @@ export interface ReglePerimetre {
    * Statut appliqué quand la formation matche la règle
    */
   statut:
-    | "hors périmètre"
+    | "non intégrable"
     | "publié"
     | "non publié"
-    | "à publier (sous condition habilitation)"
+    | "à publier"
+    | "en attente de publication"
     | "à publier (vérifier accès direct postbac)"
     | "à publier (soumis à validation Recteur)"
-    | "à publier (soumis à validation)"
-    | "à publier"
-    | "en attente de publication";
+    | "à publier (sous condition habilitation)"
+    | "à publier (soumis à validation)";
   /**
    * Académie pour laquelle la règle a été créé si il y en a une
    */

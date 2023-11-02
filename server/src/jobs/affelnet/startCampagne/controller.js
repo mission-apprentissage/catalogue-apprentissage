@@ -5,7 +5,7 @@ const { cursor } = require("../../../common/utils/cursor");
 
 /**
  * Permet de réinitialiser les statuts de publication Affelnet en début de campagne.
- * Ici seul les formations non 'en attente de publication' sont passées à hors périmètre, les
+ * Ici seul les formations non "en attente de publication" sont passées à "non intégrable", les
  * autres statuts sont gérés par le processus classique du script d'application des règles
  * de périmètre.
  */
@@ -17,13 +17,13 @@ const run = async () => {
 
   // Mise à jour des formations
   await cursor(
-    Formation.find({ affelnet_statut: { $ne: AFFELNET_STATUS.HORS_PERIMETRE } }),
+    Formation.find({ affelnet_statut: { $ne: AFFELNET_STATUS.NON_INTEGRABLE } }),
     async ({ _id, affelnet_statut }) => {
       let next_affelnet_statut;
       let update;
 
       if (![AFFELNET_STATUS.EN_ATTENTE].includes(affelnet_statut)) {
-        next_affelnet_statut = AFFELNET_STATUS.HORS_PERIMETRE;
+        next_affelnet_statut = AFFELNET_STATUS.NON_INTEGRABLE;
 
         update = {
           affelnet_statut: next_affelnet_statut,

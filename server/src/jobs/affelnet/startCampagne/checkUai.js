@@ -3,9 +3,6 @@ const logger = require("../../../common/logger");
 const { cursor } = require("../../../common/utils/cursor");
 const { isValideUAI } = require("@mission-apprentissage/tco-service-node");
 
-/**
- * TODO : Voir s'il n'est pas plutôt possible de tout repasser à hors périmètre (sans mise à jour de l'historique) et se baser sur la présence ou non d'un affelnet_id dans les scripts de périmètre pour passage automatique à "en attente".
- */
 const run = async () => {
   let updated = 0;
 
@@ -26,7 +23,7 @@ const run = async () => {
         !isValideUAI(uai_formation)
       ) {
         await Formation.updateOne(
-          { _id: _id },
+          { _id },
           {
             affelnet_id: null,
           }

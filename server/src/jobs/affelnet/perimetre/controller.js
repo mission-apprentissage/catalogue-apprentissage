@@ -86,7 +86,7 @@ const run = async () => {
       ],
     },
 
-    { $set: { affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE } }
+    { $set: { affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE } }
   );
 
   // set "à publier (soumis à validation)" for trainings matching affelnet eligibility rules
@@ -96,13 +96,13 @@ const run = async () => {
     {
       affelnet_statut: { $in: [AFFELNET_STATUS.A_PUBLIER_VALIDATION, AFFELNET_STATUS.A_PUBLIER] },
     },
-    { $set: { affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE } }
+    { $set: { affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE } }
   );
-  // 3. On applique les règles de périmètres pour statut "à publier avec action attendue" uniquement sur les formations "hors périmètre" pour ne pas écraser les actions menées par les utilisateurs
+  // 3. On applique les règles de périmètres pour statut "à publier avec action attendue" uniquement sur les formations "non intégrable" pour ne pas écraser les actions menées par les utilisateurs
   logger.debug({ type: "job" }, "Etape 3.");
 
   const filterHP = {
-    affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
+    affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
   };
 
   const aPublierSoumisAValidationRules = await ReglePerimetre.find({
@@ -142,7 +142,7 @@ const run = async () => {
   logger.debug({ type: "job" }, "Etape 4.");
 
   const filter = {
-    affelnet_statut: { $in: [AFFELNET_STATUS.HORS_PERIMETRE, AFFELNET_STATUS.A_PUBLIER_VALIDATION] },
+    affelnet_statut: { $in: [AFFELNET_STATUS.NON_INTEGRABLE, AFFELNET_STATUS.A_PUBLIER_VALIDATION] },
   };
 
   const aPublierRules = await ReglePerimetre.find({
@@ -193,7 +193,7 @@ const run = async () => {
           ...filterSessionDate,
 
           affelnet_statut: {
-            $in: [AFFELNET_STATUS.HORS_PERIMETRE, AFFELNET_STATUS.A_PUBLIER_VALIDATION, AFFELNET_STATUS.A_PUBLIER],
+            $in: [AFFELNET_STATUS.NON_INTEGRABLE, AFFELNET_STATUS.A_PUBLIER_VALIDATION, AFFELNET_STATUS.A_PUBLIER],
           },
 
           num_academie,
@@ -210,8 +210,8 @@ const run = async () => {
                   },
                   then: status,
                   else:
-                    status === AFFELNET_STATUS.HORS_PERIMETRE
-                      ? AFFELNET_STATUS.HORS_PERIMETRE
+                    status === AFFELNET_STATUS.NON_INTEGRABLE
+                      ? AFFELNET_STATUS.NON_INTEGRABLE
                       : AFFELNET_STATUS.EN_ATTENTE,
                 },
               },

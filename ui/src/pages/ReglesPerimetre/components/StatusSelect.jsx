@@ -18,8 +18,8 @@ const STATUS_LIST = {
     affelnet: [AFFELNET_STATUS.A_PUBLIER],
   },
   [CONDITIONS.NE_DOIT_PAS_INTEGRER]: {
-    parcoursup: [PARCOURSUP_STATUS.HORS_PERIMETRE],
-    affelnet: [AFFELNET_STATUS.HORS_PERIMETRE],
+    parcoursup: [PARCOURSUP_STATUS.NON_INTEGRABLE],
+    affelnet: [AFFELNET_STATUS.NON_INTEGRABLE],
   },
 };
 
@@ -29,7 +29,7 @@ export const StatusSelect = ({ plateforme, currentStatus, condition, onChange, s
     <Select
       {...rest}
       isDisabled={isDisabled || (statusList?.length <= 1 && !rest.placeholder)}
-      bg={currentStatus && currentStatus !== COMMON_STATUS.HORS_PERIMETRE ? "orangemedium.200" : "greendark.200"}
+      bg={currentStatus && currentStatus !== COMMON_STATUS.NON_INTEGRABLE ? "orangemedium.200" : "greendark.200"}
       size={size}
       onClick={(e) => {
         e.stopPropagation();

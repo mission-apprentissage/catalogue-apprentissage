@@ -17,7 +17,7 @@ const computeStats = async (academie = null) => {
   };
   const filterIntegrable = {
     ...globalFilter,
-    parcoursup_statut: { $ne: PARCOURSUP_STATUS.HORS_PERIMETRE },
+    parcoursup_statut: { $ne: PARCOURSUP_STATUS.NON_INTEGRABLE },
     ...scopeFilter,
   };
 

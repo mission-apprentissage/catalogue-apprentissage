@@ -41,7 +41,7 @@ const getCampagneStartDate = (currentDate = new Date()) => {
  * Pour appliquer les étiquettes pour les plateformes PS & Affelnet
  * une formation doit avoir au moins une date de début de formation >= début août de l'année scolaire suivante
  * eg: si on est en janvier 2022 --> [01 août 2022] - 31 juillet 2023, si on est en octobre 2022 --> [01 août 2023] - 31 juillet 2024, etc.
- * Si ce n'est pas le cas la formation sera "hors périmètre".
+ * Si ce n'est pas le cas la formation sera "non intégrable".
  *
  * @param {Date} [currentDate]
  * @returns {Date}
@@ -64,7 +64,7 @@ export const getSessionStartDate = (currentDate = new Date()) => {
  * Pour appliquer les étiquettes pour les plateformes PS & Affelnet
  * une formation doit avoir au moins une date de début de formation < fin juillet de l'année scolaire suivante
  * eg: si on est en janvier 2022 --> 01 août 2022 - [juillet 2023], si on est en octobre 2022 --> 01 août 2023 - [31 juillet 2024], etc.
- * Si ce n'est pas le cas la formation sera "hors périmètre".
+ * Si ce n'est pas le cas la formation sera "non intégrable".
  *
  * @param {Date} [currentDate]
  * @returns {Date}

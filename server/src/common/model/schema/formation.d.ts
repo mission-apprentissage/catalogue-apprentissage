@@ -621,17 +621,39 @@ export interface Formation {
    */
   parcoursup_perimetre?: boolean;
   /**
+   * Possède une date de début durant la prochaine session Parcoursup
+   */
+  parcoursup_session?: boolean;
+  /**
+   * Possède une date de début durant la précédente session Parcoursup
+   */
+  parcoursup_previous_session?: boolean;
+  /**
    * Statut parcoursup
    */
   parcoursup_statut?:
-    | "hors périmètre"
+    | "non intégrable"
     | "publié"
     | "non publié"
-    | "à publier (sous condition habilitation)"
-    | "à publier (vérifier accès direct postbac)"
-    | "à publier (soumis à validation Recteur)"
     | "à publier"
     | "en attente de publication"
+    | "à publier (vérifier accès direct postbac)"
+    | "à publier (soumis à validation Recteur)"
+    | "à publier (sous condition habilitation)"
+    | "rejet de publication"
+    | "fermé";
+  /**
+   * Statut parcoursup à la fin de la précédente campagne
+   */
+  parcoursup_previous_statut?:
+    | "non intégrable"
+    | "publié"
+    | "non publié"
+    | "à publier"
+    | "en attente de publication"
+    | "à publier (vérifier accès direct postbac)"
+    | "à publier (soumis à validation Recteur)"
+    | "à publier (sous condition habilitation)"
     | "rejet de publication"
     | "fermé";
   /**
@@ -663,19 +685,37 @@ export interface Formation {
    */
   parcoursup_mefs_10?: ItemOfParcoursupMefs_10[];
   /**
-   * Dans le périmètre affelnet
+   * Dans le périmètre Affelnet
    */
   affelnet_perimetre?: boolean;
+  /**
+   * Possède une date de début durant la prochaine session Affelnet
+   */
+  affelnet_session?: boolean;
+  /**
+   * Possède une date de début durant la précédente session Affelnet
+   */
+  affelnet_previous_session?: boolean;
   /**
    * Statut affelnet
    */
   affelnet_statut?:
-    | "hors périmètre"
+    | "non intégrable"
     | "publié"
     | "non publié"
-    | "à publier (soumis à validation)"
     | "à publier"
-    | "en attente de publication";
+    | "en attente de publication"
+    | "à publier (soumis à validation)";
+  /**
+   * Statut affelnet à la fin de la précédente campagne
+   */
+  affelnet_previous_statut?:
+    | "non intégrable"
+    | "publié"
+    | "non publié"
+    | "à publier"
+    | "en attente de publication"
+    | "à publier (soumis à validation)";
   /**
    * Affelnet : historique des statuts
    */

@@ -118,7 +118,7 @@ export const Line = ({
                       await onUpdateRule({
                         _id: idRule,
                         condition_integration: e.target.value,
-                        statut: COMMON_STATUS.HORS_PERIMETRE,
+                        statut: COMMON_STATUS.NON_INTEGRABLE,
                       });
                     } else {
                       await onDeleteRule({ _id: idRule });

@@ -1,161 +1,15 @@
-import React, { useEffect, useRef, useState } from "react";
-import { NavLink, useSearchParams } from "react-router-dom";
-import { InfoIcon } from "@chakra-ui/icons";
+import React from "react";
+
 import { escapeDiacritics } from "../../utils/downloadUtils";
 import helpText from "../../../locales/helpText.json";
 import { CONTEXT } from "../../../constants/context";
 import { departements } from "../../../constants/departements";
 import { annees } from "../../../constants/annees";
 import { sortDescending } from "../../utils/historyUtils";
-import { AFFELNET_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
-import { Box, Flex, Link } from "@chakra-ui/react";
-import { _get } from "../../httpClient";
-import { InfoTooltip } from "../InfoTooltip";
+import { AffelnetMissingSession } from "./components/AffelnetMissingSession";
+import { ParcoursupMissingSession } from "./components/ParcoursupMissingSession";
 
-const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
-
-export const AffelnetMissingSession = () => {
-  const [count, setCount] = useState(0);
-  const [countPublishedLastSession, setCountPublishedLastSession] = useState(0);
-  const mountedRef = useRef(undefined);
-  const [searchParams] = useSearchParams();
-  const nom_academie = JSON.parse(searchParams.get("nom_academie"));
-  const link = `/recherche/formations?affelnet_perimetre=${encodeURIComponent(
-    JSON.stringify(["Oui"])
-  )}&affelnet_session=${encodeURIComponent(JSON.stringify(["Non"]))}&affelnet_previous_session=${encodeURIComponent(
-    JSON.stringify(["Oui"])
-  )}&affelnet_previous_statut=${encodeURIComponent(JSON.stringify([AFFELNET_STATUS.PUBLIE]))}${
-    nom_academie ? "&nom_academie=" + encodeURIComponent(JSON.stringify(nom_academie)) : ""
-  }`;
-
-  useEffect(() => {
-    async function run() {
-      try {
-        const count = await _get(
-          `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
-            ...(nom_academie?.length ? { nom_academie: { $in: nom_academie } } : {}),
-            affelnet_perimetre: true,
-            affelnet_session: false,
-            affelnet_previous_session: true,
-            affelnet_previous_statut: AFFELNET_STATUS.PUBLIE,
-          })}`,
-          false
-        );
-
-        const countPublishedLastSession = await _get(
-          `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
-            ...(nom_academie?.length ? { nom_academie: { $in: nom_academie } } : {}),
-            affelnet_previous_statut: AFFELNET_STATUS.PUBLIE,
-          })}`,
-          false
-        );
-
-        setCount(count);
-        setCountPublishedLastSession(countPublishedLastSession);
-      } catch (e) {
-        console.error(e);
-      }
-    }
-
-    if (mountedRef.current !== nom_academie) {
-      mountedRef.current = nom_academie;
-      run();
-    }
-
-    return () => {
-      mountedRef.current = undefined;
-    };
-  }, [searchParams, nom_academie]);
-
-  return (
-    <Flex style={{ background: "#E2E8F0" }} padding={4}>
-      <Box>
-        <Box mb={2}>
-          {Math.round((count * 100) / countPublishedLastSession)}% des formations publiées en 2023 n’ont pas été
-          renouvelées pour 2024.
-        </Box>
-
-        <Link as={NavLink} variant="unstyled" fontStyle={"italic"} textDecoration={"underline"} to={link}>
-          Voir la liste
-        </Link>
-      </Box>
-      <Flex alignContent={"center"} m={"auto"} ml={4}>
-        <InfoTooltip description={helpText.search.affelnet_session_manquante} />
-      </Flex>
-    </Flex>
-  );
-};
-
-export const ParcoursupMissingSession = () => {
-  const [count, setCount] = useState(0);
-  const [countPublishedLastSession, setCountPublishedLastSession] = useState(0);
-  const mountedRef = useRef(undefined);
-  const [searchParams] = useSearchParams();
-  const nom_academie = JSON.parse(searchParams.get("nom_academie"));
-  const link = `/recherche/formations?parcoursup_perimetre=${encodeURIComponent(
-    JSON.stringify(["Oui"])
-  )}&parcoursup_session=${encodeURIComponent(JSON.stringify(["Non"]))}&parcoursup_previous_session=${encodeURIComponent(
-    JSON.stringify(["Oui"])
-  )}&parcoursup_previous_statut=${encodeURIComponent(JSON.stringify([AFFELNET_STATUS.PUBLIE]))}${
-    nom_academie ? "&nom_academie=" + encodeURIComponent(JSON.stringify(nom_academie)) : ""
-  }`;
-
-  useEffect(() => {
-    async function run() {
-      try {
-        const count = await _get(
-          `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
-            ...(nom_academie?.length ? { nom_academie: { $in: nom_academie } } : {}),
-            parcoursup_perimetre: true,
-            parcoursup_session: false,
-            parcoursup_previous_session: true,
-            parcoursup_previous_statut: PARCOURSUP_STATUS.PUBLIE,
-          })}`,
-          false
-        );
-
-        const countPublishedLastSession = await _get(
-          `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
-            ...(nom_academie?.length ? { nom_academie: { $in: nom_academie } } : {}),
-            parcoursup_previous_statut: PARCOURSUP_STATUS.PUBLIE,
-          })}`,
-          false
-        );
-
-        setCount(count);
-        setCountPublishedLastSession(countPublishedLastSession);
-      } catch (e) {
-        console.error(e);
-      }
-    }
-
-    if (mountedRef.current !== nom_academie) {
-      mountedRef.current = nom_academie;
-      run();
-    }
-
-    return () => {
-      mountedRef.current = undefined;
-    };
-  }, [searchParams, nom_academie]);
-
-  return (
-    <Flex style={{ background: "#E2E8F0" }} padding={4}>
-      <Box>
-        <Box mb={2}>
-          {Math.round((count * 100) / countPublishedLastSession)}% des formations publiées en 2023 n’ont pas été
-          renouvelées pour 2024.
-        </Box>
-        <Link as={NavLink} variant="unstyled" fontStyle={"italic"} textDecoration={"underline"} to={link}>
-          Voir la liste
-        </Link>
-      </Box>
-      <Flex alignContent={"center"} m={"auto"} ml={4}>
-        <InfoTooltip description={helpText.search.parcoursup_session_manquante} />
-      </Flex>
-    </Flex>
-  );
-};
+export const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
 export const allowedFilters = [
   `QUERYBUILDER`,
@@ -231,7 +85,7 @@ export const columnsDefinition = [
     accessor: "nom_academie",
     width: 200,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Numero departement",
@@ -257,7 +111,7 @@ export const columnsDefinition = [
     accessor: "etablissement_gestionnaire_entreprise_raison_sociale",
     width: 200,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Enseigne Responsable",
@@ -372,7 +226,7 @@ export const columnsDefinition = [
     accessor: "rncp_intitule",
     width: 200,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Certificateurs",
@@ -436,14 +290,14 @@ export const columnsDefinition = [
     accessor: "affelnet_statut",
     width: 200,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Statut sur la précédente campagne Affelnet",
     accessor: "affelnet_previous_statut",
     width: 200,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Session sur la campagne Affelnet",
@@ -464,35 +318,35 @@ export const columnsDefinition = [
     accessor: "affelnet_infos_offre",
     width: 400,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Information Affelnet (url)",
     accessor: "affelnet_url_infos_offre",
     width: 400,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Modalités particulières",
     accessor: "affelnet_modalites_offre",
     width: 400,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Modalités particulières (url)",
     accessor: "affelnet_url_modalites_offre",
     width: 400,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Motif de non publication Affelnet",
     accessor: "affelnet_raison_depublication",
     width: 200,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Périmètre Parcoursup",
@@ -506,14 +360,14 @@ export const columnsDefinition = [
     accessor: "parcoursup_statut",
     width: 200,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Statut sur la précédente campagne Parcoursup",
     accessor: "parcoursup_previous_statut",
     width: 200,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Session sur la campagne Parcoursup",
@@ -541,14 +395,14 @@ export const columnsDefinition = [
     accessor: "parcoursup_raison_depublication",
     width: 200,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Motif de rejet Parcoursup",
     accessor: "parcoursup_error",
     width: 200,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
 
   {
@@ -556,7 +410,7 @@ export const columnsDefinition = [
     accessor: "niveau",
     width: 200,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Dates de formation",
@@ -637,7 +491,7 @@ export const columnsDefinition = [
     accessor: "lieu_formation_adresse",
     width: 200,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Code Postal",
@@ -650,7 +504,7 @@ export const columnsDefinition = [
     accessor: "localite",
     width: 200,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Code Commune Insee",
@@ -891,6 +745,34 @@ export const filtersDefinition = [
     sortBy: "count",
     acl: "page_catalogue/voir_status_publication_ps",
     helpTextSection: helpText.search.parcoursup_statut,
+    // transformData: (data) => {
+    //   const labelTransformations = {
+    //     [COMMON_STATUS.NON_INTEGRABLE]: "non intégrable",
+    //   };
+
+    //   return data.map((d) => ({
+    //     ...d,
+    //     key: labelTransformations[d.key] ?? d.key,
+    //   }));
+    // },
+
+    // customQuery: (values) => {
+    //   const labelTransformations = {
+    //     "non intégrable": COMMON_STATUS.NON_INTEGRABLE,
+    //   };
+
+    //   if (!values.includes("Tous")) {
+    //     return {
+    //       query: {
+    //         terms: {
+    //           "parcoursup_statut.keyword": values.map((value) => labelTransformations[value] ?? value),
+    //         },
+    //       },
+    //     };
+    //   }
+
+    //   return {};
+    // },
   },
 
   {

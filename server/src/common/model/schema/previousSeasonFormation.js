@@ -1,3 +1,5 @@
+const { PARCOURSUP_STATUS, AFFELNET_STATUS } = require("../../../constants/status");
+
 const previousSeasonFormationSchema = {
   cle_ministere_educatif: {
     index: true,
@@ -18,18 +20,8 @@ const previousSeasonFormationSchema = {
   },
   parcoursup_statut: {
     type: String,
-    enum: [
-      "hors périmètre",
-      "publié",
-      "non publié",
-      "à publier (sous condition habilitation)",
-      "à publier (vérifier accès direct postbac)",
-      "à publier (soumis à validation Recteur)",
-      "à publier",
-      "en attente de publication",
-      "rejet de publication",
-    ],
-    default: "hors périmètre",
+    enum: Object.values(PARCOURSUP_STATUS),
+    default: PARCOURSUP_STATUS.NON_INTEGRABLE,
     description: "Statut parcoursup",
   },
   affelnet_perimetre: {
@@ -39,15 +31,8 @@ const previousSeasonFormationSchema = {
   },
   affelnet_statut: {
     type: String,
-    enum: [
-      "hors périmètre",
-      "publié",
-      "non publié",
-      "à publier (soumis à validation)",
-      "à publier",
-      "en attente de publication",
-    ],
-    default: "hors périmètre",
+    enum: Object.values(AFFELNET_STATUS),
+    default: AFFELNET_STATUS.NON_INTEGRABLE,
     description: "Statut affelnet",
   },
 };

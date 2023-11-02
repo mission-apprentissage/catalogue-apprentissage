@@ -14,7 +14,7 @@ const run = async ({ siret }) => {
 
   const defaultQuery = { etablissement_gestionnaire_siret: siret };
 
-  // set "hors périmètre"
+  // set "non intégrable"
   await Formation.updateMany(
     {
       ...defaultQuery,
@@ -39,7 +39,7 @@ const run = async ({ siret }) => {
         },
       ],
     },
-    { $set: { affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE } }
+    { $set: { affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE } }
   );
 
   // set "à publier (soumis à validation)" for trainings matching affelnet eligibility rules
@@ -49,12 +49,12 @@ const run = async ({ siret }) => {
       ...defaultQuery,
       affelnet_statut: { $in: [AFFELNET_STATUS.A_PUBLIER_VALIDATION, AFFELNET_STATUS.A_PUBLIER] },
     },
-    { $set: { affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE } }
+    { $set: { affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE } }
   );
 
-  // run only on those 'hors périmètre' to not overwrite actions of users !
+  // run only on those "non intégrable" to not overwrite actions of users !
   const filterHP = {
-    affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
+    affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
   };
   const aPublierSoumisAValidationRules = await ReglePerimetre.find({
     plateforme: "affelnet",
@@ -79,9 +79,9 @@ const run = async ({ siret }) => {
   }
 
   //  set "à publier" for trainings matching affelnet eligibility rules
-  // run only on those "hors périmètre" & "à publier (soumis à validation)" to not overwrite actions of users !
+  // run only on those "non intégrable" & "à publier (soumis à validation)" to not overwrite actions of users !
   const filter = {
-    affelnet_statut: { $in: [AFFELNET_STATUS.HORS_PERIMETRE, AFFELNET_STATUS.A_PUBLIER_VALIDATION] },
+    affelnet_statut: { $in: [AFFELNET_STATUS.NON_INTEGRABLE, AFFELNET_STATUS.A_PUBLIER_VALIDATION] },
   };
 
   const aPublierRules = await ReglePerimetre.find({
@@ -117,7 +117,7 @@ const run = async ({ siret }) => {
         {
           ...defaultQuery,
           affelnet_statut: {
-            $in: [AFFELNET_STATUS.HORS_PERIMETRE, AFFELNET_STATUS.A_PUBLIER_VALIDATION, AFFELNET_STATUS.A_PUBLIER],
+            $in: [AFFELNET_STATUS.NON_INTEGRABLE, AFFELNET_STATUS.A_PUBLIER_VALIDATION, AFFELNET_STATUS.A_PUBLIER],
           },
           num_academie,
           ...getQueryFromRule(rule, false),
@@ -138,7 +138,7 @@ const run = async ({ siret }) => {
   const totalNotRelevant = await Formation.countDocuments({
     ...defaultQuery,
     published: true,
-    affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
+    affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
   });
   const totalToValidate = await Formation.countDocuments({
     ...defaultQuery,
@@ -168,7 +168,7 @@ const run = async ({ siret }) => {
 
   logger.info(
     `Total formations publiées dans le catalogue : ${totalPublished}\n` +
-      `Total formations hors périmètre : ${totalNotRelevant}/${totalPublished}\n` +
+      `Total formations non intégrable : ${totalNotRelevant}/${totalPublished}\n` +
       `Total formations à publier (soumis à validation) : ${totalToValidate}/${totalPublished}\n` +
       `Total formations à publier : ${totalToCheck}/${totalPublished}\n` +
       `Total formations en attente de publication : ${totalPending}/${totalPublished}\n` +
@@ -182,7 +182,7 @@ const run = async ({ siret }) => {
     {
       ...defaultQuery,
       published: true,
-      affelnet_statut: { $nin: [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.NON_PUBLIE, AFFELNET_STATUS.HORS_PERIMETRE] },
+      affelnet_statut: { $nin: [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.NON_PUBLIE, AFFELNET_STATUS.NON_INTEGRABLE] },
     },
     [{ $set: { affelnet_statut: AFFELNET_STATUS.EN_ATTENTE, forced_published: true } }]
   );

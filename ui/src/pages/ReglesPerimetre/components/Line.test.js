@@ -156,7 +156,7 @@ test("Action select - should delete rule", async () => {
   });
 });
 
-test("Action select - should update rule & set hors périmètre", async () => {
+test("Action select - should update rule & set non intégrable", async () => {
   jest.spyOn(api, "getCount").mockImplementation(() => 123);
 
   const onShowRule = jest.fn();
@@ -198,7 +198,7 @@ test("Action select - should update rule & set hors périmètre", async () => {
     expect(onUpdateRule).toHaveBeenCalledWith({
       _id: "345",
       condition_integration: "ne doit pas intégrer",
-      statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+      statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
     });
   });
 });
@@ -259,7 +259,7 @@ test("Status select - should update status", async () => {
   const onDeleteRule = jest.fn();
 
   const rule = {
-    statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+    statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
     _id: "345",
     regle_complementaire: "{}",
     condition_integration: CONDITIONS.PEUT_INTEGRER,
@@ -339,7 +339,7 @@ test("Status select - should update status for academie", async () => {
     expect(onUpdateRule).toHaveBeenCalledWith({
       _id: "345",
       statut_academies: {
-        "14": PARCOURSUP_STATUS.A_PUBLIER,
+        14: PARCOURSUP_STATUS.A_PUBLIER,
       },
     });
   });
@@ -358,7 +358,7 @@ test("Status select - should remove status for academie", async () => {
     _id: "345",
     regle_complementaire: "{}",
     condition_integration: CONDITIONS.PEUT_INTEGRER,
-    statut_academies: { "14": PARCOURSUP_STATUS.A_PUBLIER },
+    statut_academies: { 14: PARCOURSUP_STATUS.A_PUBLIER },
     num_academie: 14,
     nom_regle_complementaire: "BTS Agri",
   };

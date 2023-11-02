@@ -45,14 +45,14 @@ export const columnsDefinition = [
     accessor: "enseigne",
     width: 200,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Raison sociale de l'entreprise",
     accessor: "entreprise_raison_sociale",
     width: 200,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Code NAF",
@@ -95,7 +95,7 @@ export const columnsDefinition = [
     accessor: "adresse",
     width: 200,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Numero de voie",
@@ -120,7 +120,7 @@ export const columnsDefinition = [
     accessor: "complement_adresse",
     width: 200,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Code postal",
@@ -139,7 +139,7 @@ export const columnsDefinition = [
     accessor: "localite",
     width: 200,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Code commune INSEE",
@@ -158,7 +158,7 @@ export const columnsDefinition = [
     accessor: "region_implantation_nom",
     width: 200,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Numero academie",
@@ -171,7 +171,7 @@ export const columnsDefinition = [
     accessor: "nom_academie",
     width: 200,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Email",

@@ -113,7 +113,7 @@ const run = async () => {
           ...getQueryFromRule(rule),
         }).select({ cle_ministere_educatif: 1 })
       ).forEach(({ cle_ministere_educatif }) =>
-        status === PARCOURSUP_STATUS.HORS_PERIMETRE
+        status === PARCOURSUP_STATUS.NON_INTEGRABLE
           ? formationsNotInPerimetre.add(cle_ministere_educatif)
           : formationsInPerimetre.add(cle_ministere_educatif)
       );

@@ -66,7 +66,7 @@ if (process.env.standalone) {
       filter,
       // filter: {
       //   published: true,
-      //   // affelnet_statut: { $ne: "hors périmètre" },
+      //   // affelnet_statut: { $ne: "non intégrable" },
       //   // affelnet_mefs_10: { $in: [null, []] },
       //   // bcn_mefs_10: { $ne: [] },
       // },

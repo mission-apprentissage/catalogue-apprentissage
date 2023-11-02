@@ -7,12 +7,12 @@ const run = async () => {
   const totalReglement = await Formation.countDocuments({ catalogue_published: true, published: true });
 
   const totalNotRelevant = await Formation.countDocuments({
-    affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
+    affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
   });
   const totalReglementNotRelevant = await Formation.countDocuments({
     catalogue_published: true,
     published: true,
-    affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
+    affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
   });
 
   const totalToValidate = await Formation.countDocuments({
@@ -78,7 +78,7 @@ const run = async () => {
     `Compteurs des formations dans le catalogue (règlementaire / total):
       - total : ${totalReglement} / ${total}
 
-      - statut "hors périmètre" : ${totalReglementNotRelevant} / ${totalNotRelevant}
+      - statut "non intégrable" : ${totalReglementNotRelevant} / ${totalNotRelevant}
       - statut "à publier (soumis à validation)" : ${totalReglementToValidate} / ${totalToValidate}
       - statut "à publier" : ${totalReglementToCheck} / ${totalToCheck}
       - statut "en attente de publication" : ${totalReglementPending} / ${totalPending}

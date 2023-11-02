@@ -54,11 +54,11 @@ module.exports = () => {
 
         if (
           (new Date().getTime() < parcoursupAllowSameUaiDate.getTime() &&
-            formation.parcoursup_statut !== PARCOURSUP_STATUS.HORS_PERIMETRE) ||
+            formation.parcoursup_statut !== PARCOURSUP_STATUS.NON_INTEGRABLE) ||
           (new Date().getTime() < affelnetAllowSameUaiDate.getTime() &&
-            formation.affelnet_statut !== AFFELNET_STATUS.HORS_PERIMETRE) ||
-          (formation.affelnet_statut === AFFELNET_STATUS.HORS_PERIMETRE &&
-            formation.parcoursup_statut === PARCOURSUP_STATUS.HORS_PERIMETRE)
+            formation.affelnet_statut !== AFFELNET_STATUS.NON_INTEGRABLE) ||
+          (formation.affelnet_statut === AFFELNET_STATUS.NON_INTEGRABLE &&
+            formation.parcoursup_statut === PARCOURSUP_STATUS.NON_INTEGRABLE)
         ) {
           throw Boom.badRequest(
             `Le code commune Insee du lieu de formation (${formation.code_commune_insee}, ${formation.localite}) est différent de celui du formateur (${formation.etablissement_formateur_code_commune_insee}, ${formation.etablissement_formateur_localite}). \
@@ -226,10 +226,10 @@ module.exports = () => {
    *                 type: string
    *               affelnet_statut:
    *                 type: string
-   *                 enum: ["hors périmètre", "publié", "non publié", "à publier (soumis à validation)", "à publier", "en attente de publication"]
+   *                 enum: ["non intégrable", "publié", "non publié", "à publier (soumis à validation)", "à publier", "en attente de publication"]
    *               parcoursup_statut:
    *                 type: string
-   *                 enum: ["hors périmètre", "publié", "non publié", "à publier (sous condition habilitation)", "à publier (vérifier accès direct postbac)", "à publier (soumis à validation Recteur)", "à publier", "en attente de publication"]
+   *                 enum: ["non intégrable", "publié", "non publié", "à publier (sous condition habilitation)", "à publier (vérifier accès direct postbac)", "à publier (soumis à validation Recteur)", "à publier", "en attente de publication"]
    *     responses:
    *       200:
    *         description: OK, retourne la formation mise à jour

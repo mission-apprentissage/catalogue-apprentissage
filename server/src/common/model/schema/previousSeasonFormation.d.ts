@@ -23,15 +23,16 @@ export interface PreviousSeasonFormation {
    * Statut parcoursup
    */
   parcoursup_statut?:
-    | "hors périmètre"
+    | "non intégrable"
     | "publié"
     | "non publié"
-    | "à publier (sous condition habilitation)"
-    | "à publier (vérifier accès direct postbac)"
-    | "à publier (soumis à validation Recteur)"
     | "à publier"
     | "en attente de publication"
-    | "rejet de publication";
+    | "à publier (vérifier accès direct postbac)"
+    | "à publier (soumis à validation Recteur)"
+    | "à publier (sous condition habilitation)"
+    | "rejet de publication"
+    | "fermé";
   /**
    * Dans le périmètre affelnet
    */
@@ -40,11 +41,11 @@ export interface PreviousSeasonFormation {
    * Statut affelnet
    */
   affelnet_statut?:
-    | "hors périmètre"
+    | "non intégrable"
     | "publié"
     | "non publié"
-    | "à publier (soumis à validation)"
     | "à publier"
-    | "en attente de publication";
+    | "en attente de publication"
+    | "à publier (soumis à validation)";
   _id?: Types.ObjectId;
 }

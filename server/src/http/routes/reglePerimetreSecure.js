@@ -18,7 +18,7 @@ const niveauSchema = Joi.string().valid(
   "7 (Master, titre ingénieur...)"
 );
 const statutSchema = Joi.string().valid(
-  "hors périmètre",
+  "non intégrable",
   "publié",
   "non publié",
   "à publier (sous condition habilitation)",

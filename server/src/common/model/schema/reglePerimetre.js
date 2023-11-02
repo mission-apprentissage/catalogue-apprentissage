@@ -1,3 +1,5 @@
+const { COMMON_STATUS, PARCOURSUP_STATUS, AFFELNET_STATUS } = require("../../../constants/status");
+
 const reglePerimetre = {
   plateforme: {
     index: true,
@@ -26,17 +28,14 @@ const reglePerimetre = {
     index: true,
     type: String,
     enum: [
-      "hors périmètre",
-      "publié",
-      "non publié",
-      "à publier (sous condition habilitation)",
-      "à publier (vérifier accès direct postbac)",
-      "à publier (soumis à validation Recteur)",
-      "à publier (soumis à validation)",
-      "à publier",
-      "en attente de publication",
+      ...new Set([
+        ...Object.values(PARCOURSUP_STATUS).filter(
+          (value) => ![PARCOURSUP_STATUS.FERME, PARCOURSUP_STATUS.REJETE].includes(value)
+        ),
+        ...Object.values(AFFELNET_STATUS),
+      ]),
     ],
-    default: "hors périmètre",
+    default: COMMON_STATUS.NON_INTEGRABLE,
     description: "Statut appliqué quand la formation matche la règle",
     required: true,
   },

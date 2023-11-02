@@ -533,7 +533,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                           value={values.condition}
                           onChange={(e) => {
                             if (e.target.value === CONDITIONS.NE_DOIT_PAS_INTEGRER) {
-                              setFieldValue("status", COMMON_STATUS.HORS_PERIMETRE);
+                              setFieldValue("status", COMMON_STATUS.NON_INTEGRABLE);
                             } else {
                               setFieldValue("status", "");
                             }

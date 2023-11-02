@@ -42,7 +42,7 @@ const Icon = ({ variant }) => {
 export const StatusBadge = ({ source, status, text, ...badgeProps }) => {
   const defaultVariant = "notRelevant";
   const variantsMap = {
-    [COMMON_STATUS.HORS_PERIMETRE]: "notRelevant",
+    [COMMON_STATUS.NON_INTEGRABLE]: "notRelevant",
     [COMMON_STATUS.PUBLIE]: "published",
     [COMMON_STATUS.NON_PUBLIE]: "notPublished",
     [AFFELNET_STATUS.A_PUBLIER_VALIDATION]: "toBePublished",

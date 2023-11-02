@@ -30,7 +30,7 @@ describe(__filename, () => {
       cfd_entree: "1212",
       uai_formation: "0551031X",
       parcoursup_mefs_10: [],
-      parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+      parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
       parcoursup_error: null,
       parcoursup_statut_history: [],
       cle_ministere_educatif: "12345-cle",
