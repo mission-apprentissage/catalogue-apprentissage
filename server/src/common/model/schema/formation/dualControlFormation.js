@@ -515,6 +515,12 @@ const formationSchema = {
     description: "SIRET actif ou inactif",
   },
 
+  num_tel: {
+    type: String,
+    default: null,
+    description: "Numéros de téléphone",
+  },
+
   // Etablissements
   ...etablissementGestionnaireInfo,
   ...etablissementFormateurInfo,

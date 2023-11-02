@@ -789,6 +789,11 @@ module.exports = {
         default: null,
         description: "SIRET actif ou inactif",
       },
+      num_tel: {
+        type: String,
+        default: null,
+        description: "Numéros de téléphone",
+      },
       _id: {
         type: "string",
         pattern: "^[0-9a-fA-F]{24}$",
