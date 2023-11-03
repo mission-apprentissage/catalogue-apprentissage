@@ -78,6 +78,8 @@ export const DescriptionBlock = ({ formation }) => {
 
   const campagneStartYear = getSessionStartDate().getFullYear();
 
+  const rncpCode = formation?.rncp_code?.split("RNCP")[1];
+
   return (
     <>
       <Box p={8}>
@@ -396,11 +398,11 @@ export const DescriptionBlock = ({ formation }) => {
                 )}{" "}
                 (source{" "}
                 <Link
-                  href={`https://www.francecompetences.fr/recherche/rncp/${formation.rncp_code}`}
+                  href={`https://www.francecompetences.fr/recherche/rncp/${rncpCode}`}
                   target="_blank"
                   rel="noreferrer noopener"
                 >
-                  https://www.francecompetences.fr/recherche/rncp/{formation.rncp_code}
+                  https://www.francecompetences.fr/recherche/rncp/{rncpCode}
                 </Link>
                 ).
               </Text>
