@@ -4,12 +4,61 @@ import { Link } from "@chakra-ui/react";
 const changelog = {
   list: [
     {
-      version: "6.8.0",
+      version: "6.10.0",
       date: "Prochainement",
       about: `<h4>À venir</h4>`,
       fixes: [],
       features: [],
       improvements: [],
+    },
+
+    {
+      version: "6.9.0",
+      date: "Octobre 2023",
+      about: `<h4>À propos de cette version</h4>
+  Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+
+      fixes: [],
+      features: [],
+      improvements: [
+        `Migration du serveur de production vers un serveur temporaire en attendant la mise à disposition d’une machine par la DNE`,
+        `Définition des sous-schémas des formations afin que les outils de génération de documentation puissent les afficher`,
+        `Utilisation du logger lors de la vérification des conditions de la conversion des formations et des établissements`,
+      ],
+    },
+
+    {
+      version: "6.8.0",
+      date: "Septembre 2023",
+      about: `<h4>À propos de cette version</h4>
+  Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+
+      fixes: [
+        `Pas de rapprochement pour les formations hors périmètre Affelnet`,
+        `Correction des jeux de tests pour script de couverture Affelnet`,
+        `Correction des tests pour les modifications liés aux partenaires`,
+        `Correction d’un problème lors de la conversion des formations provenant du flux RCO`,
+        `Correction du calcul de distance_lieu_formation_etablissement_formateur lié à une différence de format entre les coordonnées`,
+        `Obligation d’avoir un UAI renseigné pour les publications vers Affelnet`,
+        `Amélioration des outils de génération de la documentation OpenAPI`,
+        `Resolution d’une faille de sécurité dans mongoose par une mise à jour des dépendances`,
+        `Correction d’un problème de format de log envoyé à slack concernant les appels http`,
+      ],
+      features: [
+        `Affichage d’un message de warning lorsque les codes MEF se terminent par 99`,
+        `Suppression du champs rome_codes de l’historique`,
+        `Modification de la date de début de campagne au 18 septembre`,
+        `Ajout de la colonne ‘Distance entre lieu de formation et organisme formateur’ dans l’export csv`,
+      ],
+      improvements: [
+        `Modification des règles d’affichages du warning RNCP / CFD outdated`,
+        `Modification du niveau des logs envoyés à Slack`,
+        `Amélioration des logs liés à la synchronisation ElasticSearch`,
+        `Amélioration des logs lors des interactions avec l’API Parcoursup`,
+        `Modification des règles d’affichage du lien vers LaBonneAlternance`,
+        `Suppression du bloc ‘Autres informations’ obsolète sur les fiches des formations`,
+        `Modification des paramètres d’historisation des modifications apportées aux formations`,
+      ],
     },
 
     {
