@@ -780,17 +780,17 @@ module.exports = {
         description: "Contenu de la formation",
       },
       etablissement_gestionnaire_actif: {
-        type: String,
+        type: "string",
         default: null,
         description: "SIRET actif ou inactif",
       },
       etablissement_formateur_actif: {
-        type: String,
+        type: "string",
         default: null,
         description: "SIRET actif ou inactif",
       },
       num_tel: {
-        type: String,
+        type: "string",
         default: null,
         description: "Numéros de téléphone",
       },
