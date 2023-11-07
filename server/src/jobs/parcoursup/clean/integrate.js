@@ -9,7 +9,7 @@ const { omitEmpty } = require("../../../common/utils/objectUtils");
 const transformStream = (data) => {
   console.log(data);
   return {
-    cle_ministere_educatif: data["cle_ministere_educatif"],
+    cles_ministere_educatif: data["cles_ministere_educatif"].split(","),
     parcoursup_id: data["parcoursup_id"],
   };
 };
@@ -19,21 +19,21 @@ const run = async (csv) => {
     const stream = compose(
       csv,
       parseCsv({
-        delimiter: ",",
+        delimiter: ";",
         on_record: (record) => omitEmpty(record),
       }),
       transformData(transformStream),
-      filterData(({ cle_ministere_educatif }) => !!cle_ministere_educatif)
+      filterData(({ cles_ministere_educatif }) => !!cles_ministere_educatif && !!cles_ministere_educatif.length)
     );
 
     await oleoduc(
       stream,
       writeData(
-        async ({ cle_ministere_educatif, parcoursup_id }) => {
+        async ({ cles_ministere_educatif, parcoursup_id }) => {
           try {
-            console.log({ cle_ministere_educatif, parcoursup_id });
+            console.log({ cles_ministere_educatif, parcoursup_id });
 
-            await Formation.updateOne({ cle_ministere_educatif }, { parcoursup_id });
+            await Formation.updateMany({ cle_ministere_educatif: { $in: cles_ministere_educatif } }, { parcoursup_id });
           } catch (err) {
             console.error(err);
           }

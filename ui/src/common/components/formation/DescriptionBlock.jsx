@@ -50,7 +50,7 @@ export const DescriptionBlock = ({ formation }) => {
 
   const isCfdExpired =
     formation.cfd_outdated ||
-    (formation.cfd_date_fermeture && new Date(formation.cfd_date_fermeture) <= getExpirationDate());
+    (formation.cfd_date_fermeture && new Date(formation.cfd_date_fermeture).getTime() <= getExpirationDate().getTime());
 
   const CfdContainer =
     !isTitreRNCP && isCfdExpired ? (args) => <DangerBox data-testid={"cfd-warning"} {...args} /> : React.Fragment;
@@ -58,7 +58,7 @@ export const DescriptionBlock = ({ formation }) => {
   const isRncpExpired =
     formation.rncp_details?.rncp_outdated ||
     (formation.rncp_details?.date_fin_validite_enregistrement &&
-      new Date(formation.rncp_details?.date_fin_validite_enregistrement) <= getExpirationDate());
+      new Date(formation.rncp_details?.date_fin_validite_enregistrement).getTime() <= getExpirationDate().getTime());
 
   const RncpContainer =
     isTitreRNCP && isRncpExpired ? (args) => <DangerBox data-testid={"rncp-warning"} {...args} /> : React.Fragment;
