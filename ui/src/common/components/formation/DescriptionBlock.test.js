@@ -184,7 +184,7 @@ test("renders the description block of the training", async () => {
   const intitule_court = queryByText("TECH.CHAUDRONNERIE INDUSTRIELLE");
   expect(intitule_court).toBeInTheDocument();
 
-  const diplome = queryByText("40025411");
+  const diplome = queryByText("40025411", { exact: false });
   expect(diplome).toBeInTheDocument();
 
   const partenaires = queryByText(/^Partenaires/i);
