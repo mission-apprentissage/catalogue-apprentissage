@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Box, Container, Flex, FormLabel, Switch, Text } from "@chakra-ui/react";
 
 import useAuth from "../../hooks/useAuth";
-import { hasAccessTo } from "../../utils/rolesUtils";
+import { hasAccessTo, hasOneOfRoles } from "../../utils/rolesUtils";
 import { CardListFormation, ExportButton, HardFilters, QueryBuilder } from "./components";
 import {
   allowedFilters,
@@ -32,9 +32,10 @@ export default React.memo(({ location, searchState, context, extraButtons = null
   const navigate = useNavigate();
 
   const filters = filtersDefinition.filter(
-    ({ acl, displayInContext, isAuth }) =>
+    ({ acl, roles, displayInContext, isAuth }) =>
       (!displayInContext || displayInContext.includes(context)) &&
       (!acl || hasAccessTo(auth, acl)) &&
+      (!roles || hasOneOfRoles(auth, roles)) &&
       (!isAuth || (isAuth && auth?.sub !== "anonymous"))
   );
 

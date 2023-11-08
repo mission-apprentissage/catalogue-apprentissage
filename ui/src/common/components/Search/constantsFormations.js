@@ -765,46 +765,20 @@ export const filtersDefinition = [
     sortBy: "count",
     acl: "page_catalogue/voir_status_publication_ps",
     helpTextSection: helpText.search.parcoursup_statut,
-    // transformData: (data) => {
-    //   const labelTransformations = {
-    //     [COMMON_STATUS.NON_INTEGRABLE]: "non intégrable",
-    //   };
-
-    //   return data.map((d) => ({
-    //     ...d,
-    //     key: labelTransformations[d.key] ?? d.key,
-    //   }));
-    // },
-
-    // customQuery: (values) => {
-    //   const labelTransformations = {
-    //     "non intégrable": COMMON_STATUS.NON_INTEGRABLE,
-    //   };
-
-    //   if (!values.includes("Tous")) {
-    //     return {
-    //       query: {
-    //         terms: {
-    //           "parcoursup_statut.keyword": values.map((value) => labelTransformations[value] ?? value),
-    //         },
-    //       },
-    //     };
-    //   }
-
-    //   return {};
-    // },
   },
 
   {
     componentId: `parcoursup_session_manquante`,
     type: "component",
     component: <ParcoursupMissingSession />,
+    roles: ["moss", "admin"],
   },
 
   {
     type: "advanced",
     openText: "Voir moins de filtres Parcoursup",
     closeText: "Voir plus de filtres Parcoursup",
+    roles: ["moss", "admin"],
     filters: [
       {
         componentId: `parcoursup_previous_statut`,
@@ -924,22 +898,6 @@ export const filtersDefinition = [
     type: "component",
     component: <AffelnetMissingSession />,
   },
-
-  // {
-  //   type: "component",
-  //   component: async () => {
-  //     const formationTraitees = await _get(
-  //       `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
-  //         ...(currentAcademie ? { num_academie: currentAcademie } : {}),
-  //         parcoursup_session: false,
-  //         parcoursup_previous_statut: PARCOURSUP_STATUS.PUBLIE,
-  //       })}`,
-  //       false
-  //     );
-
-  //     return <>x offres publiées en 2023 n'ont pas été renouvelées pour 2024 (x% des offres publiées en 2023)</>;
-  //   },
-  // },
 
   {
     type: "advanced",
