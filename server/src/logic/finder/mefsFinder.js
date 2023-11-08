@@ -80,7 +80,6 @@ const computeMefs = async (fields, oldFields) => {
   if (bcn_mefs_10?.length > 0) {
     //  filter bcn_mefs_10 to get affelnet_mefs_10 for affelnet
 
-    // eslint-disable-next-line no-unused-vars
     const { _id, updates_history, ...rest } = fields;
 
     const aPublierRules = await ReglePerimetre.find({

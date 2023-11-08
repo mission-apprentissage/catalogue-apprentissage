@@ -54,6 +54,7 @@
     "affelnet_session_manquante": "Cette liste vous est proposée à titre indicatif. Les formations non renouvelées peuvent être liées à des formations qui ne sont effectivement plus proposées pour 2024, mais également à un retard d’enregistrement au Carif-Oref par les OFA ou à des mises en attente par les Carif-Oref. Elles peuvent également être consécutives à des changements de paramètre (modification de Siret, modification de code RNCP, MEF ou CFD) ayant entraîné une modification de clé ministère éducatif.",
     "affelnet_statut": {
       "title": "Statut Affelnet : information concernant la publication de l’offre de formation dans le service Affelnet",
+      "non intégrable": "offres qui ne correspondent pas aux règles d’intégration pour la prochaine campagne (type de diplôme et/ou dates non concordantes)",
       "hors périmètre": "offres qui ne remplissent pas les conditions pour intégrer le service en ligne affectation et/ou dont la date de début ne correspond pas à la session à venir.",
       "publié": "offres de formation identifiées comme ayant été publiées sur le service Affelnet l’année précédente et qui a fait l’objet d’un rapprochement automatique par la Mission apprentissage",
       "non publié": "offres de formation qui ont été non-publiées par un instructeur en académie",
@@ -64,6 +65,7 @@
     "parcoursup_session_manquante": "Cette liste vous est proposée à titre indicatif. Les formations non renouvelées peuvent être liées à des formations qui ne sont effectivement plus proposées pour 2024, mais également à un retard d’enregistrement au Carif-Oref par les OFA ou à des mises en attente par les Carif-Oref. Elles peuvent également être consécutives à des changements de paramètre (modification de Siret, modification de code RNCP, MEF ou CFD) ayant entraîné une modification de clé ministère éducatif.",
     "parcoursup_statut": {
       "title": "Statut Parcoursup : information concernant la publication de l’offre de formation dans la plateforme Parcoursup",
+      "non intégrable": "offres qui ne correspondent pas aux règles d’intégration pour la prochaine campagne (type de diplôme et/ou dates non concordantes)",
       "hors périmètre": "offres qui ne remplissent pas les conditions pour intégrer Parcoursup et/ou dont la date de début ne correspond pas à la session à venir.",
       "publié": "offres de formation identifiées comme déjà publiées sur la plateforme Parcoursup et qui ont fait l’objet d’un rapprochement automatique par la Mission apprentissage",
       "non publié": "offres de formation qui ont été non-publiées par un instructeur en académie",

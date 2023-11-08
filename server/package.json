@@ -11,7 +11,7 @@
     "debug": "nodemon --inspect=0.0.0.0 --signal SIGINT --ignore tests/ src/index.js",
     "test": "mocha --file tests/globalSetup.js --recursive --exit --timeout 60000 tests/ src/**/*.test.js",
     "test:coverage": "nyc --reporter=lcov mocha --file tests/globalSetup.js --recursive --exit --timeout 60000 tests/ src/**/*.test.js",
-    "lint": "eslint src/ tests/",
+    "lint": "prettier --write **/*.js ",
     "docker:start": "docker-compose up -d --build --force-recreate",
     "docker:start-ci": "docker-compose up -d mongodb",
     "docker:stop": "docker-compose stop",

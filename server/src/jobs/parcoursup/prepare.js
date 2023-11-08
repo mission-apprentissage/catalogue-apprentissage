@@ -198,7 +198,6 @@ const findByCodeCfd = async (cfd) => {
   };
 };
 
-// eslint-disable-next-line no-unused-vars
 const findByIntituleInRNCP = async (formationPsRawData) => {
   const [firstSubLib, ...restSubLib] = extractSubLibSpecialite(formationPsRawData["LIBSPÉCIALITÉ"], false);
 

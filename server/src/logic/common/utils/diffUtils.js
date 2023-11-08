@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 const { diff } = require("deep-object-diff");
 
 const diffFormation = (previousFormationP, nextFormationP) => {
