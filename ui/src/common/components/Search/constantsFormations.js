@@ -63,6 +63,19 @@ export const allowedFilters = [
   "last_statut_update_date_end",
 ];
 
+const mefsFormatter = (mefs) => {
+  return (
+    mefs
+      ?.map(
+        (mef) =>
+          `${mef.mef10}${
+            mef.date_fermeture ? ` (expire le ${new Date(mef.date_fermeture).toLocaleDateString("fr-FR")})` : ""
+          }`
+      )
+      .join(", ") ?? ""
+  );
+};
+
 /**
  * Colonnes inclues dans l'export CSV
  */
@@ -262,21 +275,21 @@ export const columnsDefinition = [
     accessor: "bcn_mefs_10",
     width: 200,
     exportable: true,
-    formatter: (value) => value?.map((x) => x?.mef10)?.join(",") ?? "",
+    formatter: mefsFormatter,
   },
   {
     Header: "Liste MEF Affelnet",
     accessor: "affelnet_mefs_10",
     width: 200,
     exportable: true,
-    formatter: (value) => value?.map((x) => x?.mef10)?.join(",") ?? "",
+    formatter: mefsFormatter,
   },
   {
     Header: "Liste MEF Parcoursup",
     accessor: "parcoursup_mefs_10",
     width: 200,
     exportable: true,
-    formatter: (value) => value?.map((x) => x?.mef10)?.join(",") ?? "",
+    formatter: mefsFormatter,
   },
   {
     Header: "Périmètre Affelnet",
@@ -647,6 +660,13 @@ export const columnsDefinition = [
   {
     Header: "Date de fermeture du CFD",
     accessor: "cfd_date_fermeture",
+    width: 200,
+    exportable: true,
+    formatter: (value) => (value ? new Date(value).toLocaleDateString("fr-FR") : ""),
+  },
+  {
+    Header: "Date de fermeture du CFD de l'année d'entrée",
+    accessor: "cfd_entree_date_fermeture",
     width: 200,
     exportable: true,
     formatter: (value) => (value ? new Date(value).toLocaleDateString("fr-FR") : ""),

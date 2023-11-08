@@ -534,6 +534,7 @@ export interface ItemOfPartenaires {
 export interface ItemOfBcnMefs_10 {
   mef10?: string;
   modalite?: Modalite;
+  date_fermeture?: Date;
   _id?: Types.ObjectId;
 }
 export interface Modalite {

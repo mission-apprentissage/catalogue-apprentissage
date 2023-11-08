@@ -134,7 +134,10 @@ export const DescriptionBlock = ({ formation }) => {
             <Text mb={!isTitreRNCP && isCfdExpired ? 0 : 4}>
               Code diplôme (Éducation Nationale) :{" "}
               <Text as="span" variant="highlight">
-                {formation.cfd}
+                {formation.cfd}{" "}
+                {formation.cfd_date_fermeture
+                  ? `(expire le ${new Date(formation.cfd_date_fermeture).toLocaleDateString("fr-FR")})`
+                  : "(expiration : non renseigné)"}
               </Text>{" "}
               <InfoTooltip description={helpText.formation.cfd} />
             </Text>
@@ -183,7 +186,16 @@ export const DescriptionBlock = ({ formation }) => {
             >
               Codes MEF 10 caractères :{" "}
               <Text as="span" variant="highlight">
-                {formation?.bcn_mefs_10?.map(({ mef10 }) => mef10).join(", ")}
+                {formation?.bcn_mefs_10
+                  ?.map(
+                    ({ mef10, date_fermeture }) =>
+                      `${mef10} ${
+                        date_fermeture
+                          ? `(expire le ${new Date(date_fermeture).toLocaleDateString("fr-FR")})`
+                          : "(expiration : non renseigné)"
+                      }`
+                  )
+                  .join(", ")}
               </Text>{" "}
               <InfoTooltip description={helpText.formation.mef} />
             </Text>
@@ -199,7 +211,16 @@ export const DescriptionBlock = ({ formation }) => {
               <Text mb={4}>
                 Codes MEF 10 caractères dans le périmètre <i>Affelnet</i> :{" "}
                 <Text as="span" variant="highlight">
-                  {formation?.affelnet_mefs_10?.map(({ mef10 }) => mef10).join(", ")}
+                  {formation?.affelnet_mefs_10
+                    ?.map(
+                      ({ mef10, date_fermeture }) =>
+                        `${mef10} ${
+                          date_fermeture
+                            ? `(expire le ${new Date(date_fermeture).toLocaleDateString("fr-FR")})`
+                            : "(expiration : non renseigné)"
+                        }`
+                    )
+                    .join(", ")}
                 </Text>
               </Text>
 
@@ -245,7 +266,16 @@ export const DescriptionBlock = ({ formation }) => {
             <Text mb={4}>
               Codes MEF 10 caractères dans le périmètre <i>Parcoursup</i> :{" "}
               <Text as="span" variant="highlight">
-                {formation?.parcoursup_mefs_10?.map(({ mef10 }) => mef10).join(", ")}
+                {formation?.parcoursup_mefs_10
+                  ?.map(
+                    ({ mef10, date_fermeture }) =>
+                      `${mef10} ${
+                        date_fermeture
+                          ? `(expire le ${new Date(date_fermeture).toLocaleDateString("fr-FR")})`
+                          : "(expiration : non renseigné)"
+                      }`
+                  )
+                  .join(", ")}
               </Text>
             </Text>
           )}
@@ -378,7 +408,12 @@ export const DescriptionBlock = ({ formation }) => {
             <Text mb={isTitreRNCP && isRncpExpired ? 0 : 4}>
               Code RNCP :{" "}
               <Text as="span" variant="highlight">
-                {formation.rncp_code}
+                {formation.rncp_code}{" "}
+                {formation?.rncp_details?.date_fin_validite_enregistrement
+                  ? `(expire le ${new Date(
+                      formation?.rncp_details?.date_fin_validite_enregistrement
+                    ).toLocaleDateString("fr-FR")})`
+                  : "(expiration : non renseigné)"}
               </Text>{" "}
               <InfoTooltip description={helpText.formation.rncp_code} />
             </Text>

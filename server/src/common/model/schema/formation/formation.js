@@ -96,6 +96,11 @@ const formationSchema = {
     default: null,
     description: "Code formation diplôme d'entrée (année 1 de l'apprentissage)",
   },
+  cfd_entree_date_fermeture: {
+    type: Date,
+    default: null,
+    description: "Date de fermeture du cfd",
+  },
   nom_academie: {
     type: String,
     default: null,

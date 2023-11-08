@@ -10,6 +10,10 @@ const mefSchema = new mongoose.Schema(
     modalite: {
       type: modaliteSchema,
     },
+    date_fermeture: {
+      type: Date,
+      default: null,
+    },
   },
   { _id: false }
 );

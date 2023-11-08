@@ -148,6 +148,10 @@ export interface Formation {
    */
   cfd_entree?: string | null;
   /**
+   * Date de fermeture du cfd
+   */
+  cfd_entree_date_fermeture?: Date;
+  /**
    * Nom de l'académie
    */
   nom_academie?: string | null;
@@ -795,6 +799,7 @@ export interface ItemOfUpdatesHistory {
 export interface ItemOfBcnMefs_10 {
   mef10?: string;
   modalite?: Modalite;
+  date_fermeture?: Date;
   _id?: Types.ObjectId;
 }
 export interface Modalite {
@@ -804,6 +809,7 @@ export interface Modalite {
 export interface ItemOfParcoursupMefs_10 {
   mef10?: string;
   modalite?: Modalite1;
+  date_fermeture?: Date;
   _id?: Types.ObjectId;
 }
 export interface Modalite1 {
@@ -813,6 +819,7 @@ export interface Modalite1 {
 export interface ItemOfAffelnetMefs_10 {
   mef10?: string;
   modalite?: Modalite2;
+  date_fermeture?: Date;
   _id?: Types.ObjectId;
 }
 export interface Modalite2 {

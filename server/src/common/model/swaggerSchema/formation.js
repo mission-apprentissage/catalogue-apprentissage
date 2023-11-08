@@ -28,6 +28,11 @@ module.exports = {
         type: "string",
         description: "Code formation diplôme d'entrée (année 1 de l'apprentissage)",
       },
+      cfd_entree_date_fermeture: {
+        type: "string",
+        description: "Date de fermeture du cfd",
+        format: "date-time",
+      },
       nom_academie: {
         type: "string",
         description: "Nom de l'académie",
@@ -445,6 +450,10 @@ module.exports = {
                 },
               },
             },
+            date_fermeture: {
+              type: "string",
+              format: "date-time",
+            },
           },
           required: [],
         },
@@ -840,6 +849,10 @@ module.exports = {
                 },
               },
             },
+            date_fermeture: {
+              type: "string",
+              format: "date-time",
+            },
           },
           required: [],
         },
@@ -946,6 +959,10 @@ module.exports = {
                   type: "string",
                 },
               },
+            },
+            date_fermeture: {
+              type: "string",
+              format: "date-time",
             },
           },
           required: [],
