@@ -771,14 +771,14 @@ export const filtersDefinition = [
     componentId: `parcoursup_session_manquante`,
     type: "component",
     component: <ParcoursupMissingSession />,
-    roles: ["moss", "admin"],
+    acl: "page_catalogue/voir_filtres_avances_ps",
   },
 
   {
     type: "advanced",
     openText: "Voir moins de filtres Parcoursup",
     closeText: "Voir plus de filtres Parcoursup",
-    roles: ["moss", "admin"],
+    acl: "page_catalogue/voir_filtres_avances_ps",
     filters: [
       {
         componentId: `parcoursup_previous_statut`,
@@ -888,7 +888,7 @@ export const filtersDefinition = [
     title: "Statut Affelnet",
     filterLabel: "Statut Affelnet",
     selectAllLabel: "Tous",
-    sortBy: "count",
+    sortBy: "desc",
     acl: "page_catalogue/voir_status_publication_aff",
     helpTextSection: helpText.search.affelnet_statut,
   },
@@ -897,12 +897,14 @@ export const filtersDefinition = [
     componentId: `affelnet_session_manquante`,
     type: "component",
     component: <AffelnetMissingSession />,
+    acl: "page_catalogue/voir_filtres_avances_aff",
   },
 
   {
     type: "advanced",
     openText: "Voir moins de filtres Affelnet",
     closeText: "Voir plus de filtres Affelnet",
+    acl: "page_catalogue/voir_filtres_avances_aff",
     filters: [
       {
         componentId: `affelnet_previous_statut`,
