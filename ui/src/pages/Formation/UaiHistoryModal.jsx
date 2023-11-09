@@ -14,7 +14,7 @@ import {
 import { Close } from "../../theme/components/icons";
 import { sortDescending } from "../../common/utils/historyUtils";
 
-const UaiHistoryModal = ({ onOpen, onClose, isOpen, formation }) => {
+const UaiHistoryModal = ({ onClose, isOpen, formation }) => {
   const initialRef = useRef();
 
   const uai_updated_history = formation.updates_history

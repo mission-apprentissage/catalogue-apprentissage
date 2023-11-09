@@ -2,7 +2,6 @@
   "name": "mna-catalogue-apprentissage-ui",
   "description": "[MNA] App catalogue apprentissage",
   "version": "6.7.0",
-  "private": false,
   "author": "MNA",
   "license": "MIT",
   "dependencies": {
@@ -104,5 +103,6 @@
       "eslint --cache --fix",
       "prettier --write"
     ]
-  }
+  },
+  "packageManager": "yarn@3.3.1"
 }

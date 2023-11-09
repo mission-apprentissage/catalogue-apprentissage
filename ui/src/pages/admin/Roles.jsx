@@ -31,7 +31,7 @@ const RoleLine = ({ role }) => {
       newAcl: role?.acl || [],
     },
     onSubmit: ({ newAcl, newName }, { setSubmitting }) => {
-      return new Promise(async (resolve, reject) => {
+      return new Promise(async (resolve) => {
         try {
           if (role) {
             const body = {

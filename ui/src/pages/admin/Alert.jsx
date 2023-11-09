@@ -64,7 +64,7 @@ const Alert = () => {
       msg: "",
     },
     onSubmit: ({ msg }, { setSubmitting }) => {
-      return new Promise(async (resolve, reject) => {
+      return new Promise(async (resolve) => {
         try {
           const message = {
             type: "manuel",
@@ -97,7 +97,7 @@ const Alert = () => {
       msg: "",
     },
     onSubmit: ({ msg }, { setSubmitting }) => {
-      return new Promise(async (resolve, reject) => {
+      return new Promise(async (resolve) => {
         try {
           const message = {
             type: "automatique",

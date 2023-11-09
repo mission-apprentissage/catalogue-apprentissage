@@ -1,13 +1,8 @@
 {
   "root": true,
-  "extends": [
-    "react-app",
-    "plugin:prettier/recommended"
-  ],
+  "extends": ["react-app", "plugin:prettier/recommended"],
   "rules": {
-    "import/no-anonymous-default-export": [
-      0
-    ],
-    "no-unused-vars": ["error", { "ignoreRestSiblings": true }]
+    "import/no-anonymous-default-export": [0],
+    "no-unused-vars": ["warn", { "ignoreRestSiblings": true }]
   }
 }

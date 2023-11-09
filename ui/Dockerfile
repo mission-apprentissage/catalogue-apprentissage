@@ -12,10 +12,9 @@ ENV REACT_APP_ENDPOINT_LBA=$REACT_APP_ENDPOINT_LBA
 ENV REACT_APP_METABASE_URL=$REACT_APP_METABASE_URL
 ENV REACT_APP_METABASE_SECRET_KEY=$REACT_APP_METABASE_SECRET_KEY
 
-#Install and cache node_modules
-COPY package.json yarn.lock /tmp/
+COPY package.json yarn.lock .yarn/  /tmp/
 RUN cd /tmp && \
-    yarn install --frozen-lockfile && \
+    yarn install --immutable && \
     mkdir -p /app && \
     mv /tmp/node_modules /app/
 

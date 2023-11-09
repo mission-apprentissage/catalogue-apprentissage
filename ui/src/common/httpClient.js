@@ -35,6 +35,7 @@ const handleResponse = async (path, response) => {
   return json;
 };
 
+// eslint-disable-next-line no-unused-vars
 const getHeaders = (authorization = true, contentType = "application/json") => {
   // let auth = getAuth();
   let result = {

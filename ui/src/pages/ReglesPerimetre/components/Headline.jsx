@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Flex, Text } from "@chakra-ui/react";
 
-export const Headline = ({ plateforme }) => {
+export const Headline = () => {
   return (
     <Box>
       <Box bg="galt">
