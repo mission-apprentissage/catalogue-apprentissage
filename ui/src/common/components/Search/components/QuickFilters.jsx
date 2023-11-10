@@ -66,6 +66,8 @@ const FacetFilter = ({ filter }) => {
           },
         };
       }}
+      URLParams={true}
+      react={{ and: allowedFilters.filter((e) => e !== filter.componentId) }}
       helpTextSection={filter.helpTextSection}
       transformData={filter.transformData}
       customQuery={filter.customQuery}

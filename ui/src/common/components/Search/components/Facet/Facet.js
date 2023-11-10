@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { useSearchParams } from "react-router-dom";
+// import { useSearchParams } from "react-router-dom";
 import { MultiList } from "@appbaseio/reactivesearch";
 import { Flex, Text } from "@chakra-ui/react";
 import useAuth from "../../../../hooks/useAuth";
@@ -15,7 +15,7 @@ const Facet = ({
   componentId,
   dataField,
   filterLabel,
-  filters,
+  // filters,
   title,
   selectAllLabel,
   sortBy,
@@ -24,11 +24,12 @@ const Facet = ({
   transformData,
   customQuery,
   size,
+  react,
   showSearch = true,
 }) => {
   let [auth] = useAuth();
   let defaultValue = null;
-  const [, setSearchParams] = useSearchParams();
+  // const [searchParams, setSearchParams] = useSearchParams();
 
   if (hasOneOfRoles(auth, ["instructeur"])) {
     if (componentId.startsWith("nom_academie")) {
@@ -41,15 +42,15 @@ const Facet = ({
     }
   }
 
-  const onValueChange = useCallback(
-    (value) => {
-      setSearchParams((prevSearchParams) => {
-        prevSearchParams.set(componentId, JSON.stringify(value));
-        return prevSearchParams;
-      });
-    },
-    [componentId, setSearchParams]
-  );
+  // const onValueChange = useCallback(
+  //   (value) => {
+  //     setSearchParams((prevSearchParams) => {
+  //       prevSearchParams.set(componentId, JSON.stringify(value));
+  //       return prevSearchParams;
+  //     });
+  //   },
+  //   [componentId, setSearchParams]
+  // );
 
   const renderItem = useCallback(
     (label, count) => (
@@ -81,7 +82,7 @@ const Facet = ({
           componentId={componentId}
           dataField={dataField}
           filterLabel={filterLabel}
-          react={{ and: filters.filter((e) => e !== componentId) }}
+          react={react}
           defaultValue={defaultValue}
           showCount={true}
           queryFormat="or"
@@ -105,7 +106,7 @@ const Facet = ({
           customQuery={customQuery}
           sortBy={sortBy}
           renderItem={helpTextSection ? renderItem : null}
-          onValueChange={onValueChange}
+          // onValueChange={onValueChange}
         />
       }
     />

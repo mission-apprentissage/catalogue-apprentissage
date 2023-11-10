@@ -9,7 +9,7 @@ import { hasAccessTo, hasOneOfRoles } from "../../utils/rolesUtils";
 import { CardListFormation, ExportButton, HardFilters, QueryBuilder } from "./components";
 import {
   allowedFilters,
-  filtersDefinition,
+  quickFiltersDefinition,
   queryBuilderField,
   dataSearch,
   columnsDefinition,
@@ -31,7 +31,7 @@ export default React.memo(({ location, searchState, context, extraButtons = null
 
   const navigate = useNavigate();
 
-  const filters = filtersDefinition.filter(
+  const filters = quickFiltersDefinition.filter(
     ({ acl, roles, displayInContext, isAuth }) =>
       (!displayInContext || displayInContext.includes(context)) &&
       (!acl || hasAccessTo(auth, acl)) &&

@@ -717,7 +717,7 @@ export const queryBuilderField = [
   { text: "Identifiant Parcoursup (GTA)", value: "parcoursup_id.keyword" },
 ];
 
-export const filtersDefinition = [
+export const quickFiltersDefinition = [
   {
     componentId: `nom_academie`,
     type: "facet",
@@ -1149,7 +1149,7 @@ export const dataSearch = {
 export default {
   allowedFilters,
   columnsDefinition,
-  filtersDefinition,
+  quickFiltersDefinition,
   queryBuilderField,
   dataSearch,
 };

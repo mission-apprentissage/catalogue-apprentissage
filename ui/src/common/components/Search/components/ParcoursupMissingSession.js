@@ -58,7 +58,7 @@ export const ParcoursupMissingSession = () => {
     return () => {
       mountedRef.current = undefined;
     };
-  }, [searchParams, nom_academie]);
+  }, [nom_academie]);
 
   return (
     <Flex style={{ background: "#E2E8F0" }} padding={4}>

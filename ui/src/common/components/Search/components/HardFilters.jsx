@@ -9,7 +9,7 @@ const HardFilters = React.memo(({ allowedFilters, context, isBaseFormations }) =
       <SingleList
         componentId="published"
         dataField="published"
-        react={{ and: allowedFilters }}
+        react={{ and: allowedFilters.filter((e) => e !== "published") }}
         value={"true"}
         defaultValue={"true"}
         showFilter={false}
@@ -46,7 +46,7 @@ const HardFilters = React.memo(({ allowedFilters, context, isBaseFormations }) =
           }}
           showFilter={false}
           showSearch={false}
-          showCount={true}
+          showCount={false}
           render={() => {
             return <div />;
           }}

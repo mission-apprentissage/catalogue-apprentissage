@@ -9,7 +9,7 @@ import { hasAccessTo } from "../../utils/rolesUtils";
 import { CardListEtablissement, ExportButton, Facet, HardFilters, QueryBuilder } from "./components";
 import {
   allowedFilters,
-  filtersDefinition,
+  quickFiltersDefinition,
   queryBuilderField,
   dataSearch,
   columnsDefinition,
@@ -28,7 +28,7 @@ export default React.memo(({ location, searchState, context, extraButtons = null
   let [auth] = useAuth();
   const navigate = useNavigate();
 
-  // const { allowedFilters, filtersDefinition, queryBuilderField, dataSearch, columnsDefinition } =
+  // const { allowedFilters, quickFiltersDefinition, queryBuilderField, dataSearch, columnsDefinition } =
   //   constantsEtablissements;
 
   const handleSearchSwitchChange = () => {
@@ -104,7 +104,7 @@ export default React.memo(({ location, searchState, context, extraButtons = null
                 <Text fontWeight="700" color="grey.800" mt={4} mb={4} textStyle="rf-text">
                   FILTRER PAR
                 </Text>
-                {filtersDefinition
+                {quickFiltersDefinition
                   .filter(
                     ({ acl, displayInContext, isAuth }) =>
                       (!displayInContext || displayInContext.includes(context)) &&
@@ -132,6 +132,7 @@ export default React.memo(({ location, searchState, context, extraButtons = null
                             },
                           };
                         }}
+                        react={{ and: allowedFilters.filter((e) => e !== fd.componentId) }}
                         helpTextSection={fd.helpTextSection}
                         transformData={fd.transformData}
                         customQuery={fd.customQuery}
