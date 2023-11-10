@@ -762,7 +762,7 @@ export const filtersDefinition = [
     title: "Statut Parcoursup",
     filterLabel: "Statut Parcoursup",
     selectAllLabel: "Tous",
-    sortBy: "count",
+    sortBy: "desc",
     acl: "page_catalogue/voir_status_publication_ps",
     helpTextSection: helpText.search.parcoursup_statut,
   },
