@@ -305,8 +305,8 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
     },
   });
 
-  const isParcoursupPublishDisabled = [PARCOURSUP_STATUS.NON_INTEGRABLE].includes(formation?.parcoursup_statut);
-  const isAffelnetPublishDisabled = [AFFELNET_STATUS.NON_INTEGRABLE].includes(formation?.affelnet_statut);
+  const isParcoursupPublishDisabled = [PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT].includes(formation?.parcoursup_statut);
+  const isAffelnetPublishDisabled = [AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT].includes(formation?.affelnet_statut);
 
   const initialRef = React.useRef();
 

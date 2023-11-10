@@ -26,7 +26,7 @@ test("should compute submit body when publish affelnet", () => {
   const formation = {
     _id: "id",
     affelnet_statut: AFFELNET_STATUS.A_PUBLIER,
-    parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
+    parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
     affelnet_infos_offre: "",
     affelnet_raison_depublication: "",
     parcoursup_raison_depublication: "",
@@ -60,7 +60,7 @@ test("should compute submit body when publish affelnet ", () => {
   const formation = {
     _id: "id",
     affelnet_statut: AFFELNET_STATUS.NON_PUBLIE,
-    parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
+    parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
     affelnet_infos_offre: "",
     affelnet_raison_depublication: "",
     parcoursup_raison_depublication: "",
@@ -93,7 +93,7 @@ test("should update info when publish affelnet", () => {
   const formation = {
     _id: "id",
     affelnet_statut: AFFELNET_STATUS.PUBLIE,
-    parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
+    parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
     affelnet_infos_offre: "hello",
     affelnet_raison_depublication: "",
     parcoursup_raison_depublication: "",
@@ -123,7 +123,7 @@ test("should do nothing when publish affelnet on unknown status", () => {
   const formation = {
     _id: "id",
     affelnet_statut: "unknown",
-    parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
+    parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
     affelnet_infos_offre: "hello",
     affelnet_raison_depublication: "",
     parcoursup_raison_depublication: "",
@@ -151,7 +151,7 @@ test("should compute submit body when UNpublish affelnet", () => {
   const formation = {
     _id: "id",
     affelnet_statut: AFFELNET_STATUS.PUBLIE,
-    parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
+    parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
     affelnet_infos_offre: "",
     affelnet_raison_depublication: "",
     parcoursup_raison_depublication: "",
@@ -185,7 +185,7 @@ test("should do nothing when UNpublish affelnet for a status already not publish
   const formation = {
     _id: "id",
     affelnet_statut: AFFELNET_STATUS.NON_PUBLIE,
-    parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
+    parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
     affelnet_infos_offre: "",
     affelnet_raison_depublication: "",
     parcoursup_raison_depublication: "",
@@ -211,7 +211,7 @@ test("should do nothing when UNpublish affelnet for a status already not publish
 test("should compute submit body when publish parcoursup", () => {
   const formation = {
     _id: "id",
-    affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
+    affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
     parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER,
     affelnet_infos_offre: "",
     affelnet_raison_depublication: "",
@@ -244,7 +244,7 @@ test("should compute submit body when publish parcoursup", () => {
 test("should compute submit body when publish parcoursup", () => {
   const formation = {
     _id: "id",
-    affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
+    affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
     parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIE,
     affelnet_infos_offre: "",
     affelnet_raison_depublication: "",
@@ -277,7 +277,7 @@ test("should compute submit body when publish parcoursup", () => {
 test("should compute submit body when UNpublish parcoursup", () => {
   const formation = {
     _id: "id",
-    affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
+    affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
     parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
     affelnet_infos_offre: "",
     affelnet_raison_depublication: "",
@@ -310,7 +310,7 @@ test("should compute submit body when UNpublish parcoursup", () => {
 test("should do nothing when publish parcoursup on unknown status", () => {
   const formation = {
     _id: "id",
-    affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
+    affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
     parcoursup_statut: "unknown",
     affelnet_infos_offre: "",
     affelnet_raison_depublication: "",
@@ -387,7 +387,7 @@ test("should render the publish modal", () => {
   const formation = {
     _id: "id",
     affelnet_statut: AFFELNET_STATUS.A_PUBLIER,
-    parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
+    parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
     affelnet_infos_offre: "",
     affelnet_raison_depublication: "",
     parcoursup_raison_depublication: "",
@@ -420,7 +420,7 @@ test("should toggle the affelnet forms", async () => {
   const formation = {
     _id: "id",
     affelnet_statut: AFFELNET_STATUS.A_PUBLIER,
-    parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
+    parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
     affelnet_infos_offre: "",
     affelnet_raison_depublication: "",
     parcoursup_raison_depublication: "",
@@ -463,7 +463,7 @@ test("should toggle the parcoursup forms", async () => {
 
   const formation = {
     _id: "id",
-    affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
+    affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
     parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER,
     affelnet_infos_offre: "",
     affelnet_raison_depublication: "",
@@ -511,7 +511,7 @@ test("should submit", async () => {
 
   const formation = {
     _id: "id",
-    affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
+    affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
     parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER,
     affelnet_infos_offre: "",
     affelnet_raison_depublication: "",
@@ -554,7 +554,7 @@ test("should submit but no update", async () => {
 
   const formation = {
     _id: "id",
-    affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
+    affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
     parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER,
     affelnet_infos_offre: "",
     affelnet_raison_depublication: "",
@@ -587,7 +587,7 @@ test("should close", async () => {
 
   const formation = {
     _id: "id",
-    affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
+    affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
     parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER,
     affelnet_infos_offre: "",
     affelnet_raison_depublication: "",

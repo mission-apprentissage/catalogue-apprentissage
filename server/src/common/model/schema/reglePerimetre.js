@@ -35,7 +35,7 @@ const reglePerimetre = {
         ...Object.values(AFFELNET_STATUS),
       ]),
     ],
-    default: COMMON_STATUS.NON_INTEGRABLE,
+    default: COMMON_STATUS.NON_PUBLIABLE_EN_LETAT,
     description: "Statut appliqué quand la formation matche la règle",
     required: true,
   },

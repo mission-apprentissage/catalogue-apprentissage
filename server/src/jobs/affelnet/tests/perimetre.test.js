@@ -74,7 +74,7 @@ describe(`${__filename} - Test global (deprecated)`, () => {
       catalogue_published: true,
       niveau: "4 (BAC...)",
       diplome: "MC",
-      affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
+      affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
       periode,
       date_debut,
     });
@@ -82,7 +82,7 @@ describe(`${__filename} - Test global (deprecated)`, () => {
       ...formationCampagneOk,
       niveau: "4 (BAC...)",
       diplome: "MC",
-      affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
+      affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
     });
     await Formation.create({
       ...formationCampagneOk,
@@ -104,7 +104,7 @@ describe(`${__filename} - Test global (deprecated)`, () => {
       niveau: "4 (BAC...)",
       diplome: "BAC TECHNO",
       num_academie: "12",
-      affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
+      affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
     });
     await Formation.create({
       ...formationCampagneOk,
@@ -112,7 +112,7 @@ describe(`${__filename} - Test global (deprecated)`, () => {
       niveau: "4 (BAC...)",
       diplome: "BAC TECHNO",
       num_academie: "14",
-      affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
+      affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
     });
     await Formation.create({
       ...formationCampagneOk,
@@ -151,7 +151,7 @@ describe(`${__filename} - Test global (deprecated)`, () => {
     await run();
 
     const totalNotRelevant = await Formation.countDocuments({
-      affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
+      affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
     });
     assert.strictEqual(totalNotRelevant, 3);
 
@@ -202,7 +202,7 @@ describe(`${__filename} - Test global (deprecated)`, () => {
 
       niveau: "3 (CAP...)",
       diplome: "BREVET PROFESSIONNEL AGRICOLE DE NIVEAU V",
-      affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
+      affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
       duree: "2",
       annee: "1",
       bcn_mefs_10: [],
@@ -211,7 +211,7 @@ describe(`${__filename} - Test global (deprecated)`, () => {
     await run();
 
     const totalNotRelevant = await Formation.countDocuments({
-      affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
+      affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
     });
     assert.strictEqual(totalNotRelevant, 1);
 
@@ -270,7 +270,7 @@ describe(`${__filename} - Gestion de la disparition du périmètre`, async () =>
           await cleanAll();
         });
 
-        it("should have status different from 'non intégrable' if no motif for disparition", async () => {
+        it(`should have status different from "non publiable en l'état" if no motif for disparition`, async () => {
           await Formation.create(formationOk);
 
           await run();
@@ -328,18 +328,18 @@ describe(`${__filename} - Gestion de la disparition du périmètre`, async () =>
         await Object.values(AFFELNET_STATUS)
           .filter((status) => ![AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.NON_PUBLIE].includes(status))
           .map(async (status) => {
-            await it(`should apply status 'non intégrable' if not in perimeter anymore, and if status was '${status}'`, async () => {
+            await it(`should apply status "non publiable en l'état" if not in perimeter anymore, and if status was '${status}'`, async () => {
               await Formation.create({ ...formationOk, ...valueMotif, affelnet_statut: status });
 
               await run();
 
               const totalHorsPérimètre = await Formation.countDocuments({
-                affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
+                affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
               });
               assert.strictEqual(totalHorsPérimètre, 1);
 
               const totalOtherStatus = await Formation.countDocuments({
-                affelnet_statut: { $nin: [AFFELNET_STATUS.NON_INTEGRABLE] },
+                affelnet_statut: { $nin: [AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT] },
               });
               assert.strictEqual(totalOtherStatus, 0);
             });

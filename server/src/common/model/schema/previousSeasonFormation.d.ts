@@ -23,7 +23,7 @@ export interface PreviousSeasonFormation {
    * Statut parcoursup
    */
   parcoursup_statut?:
-    | "non intégrable"
+    | "non publiable en l'état"
     | "publié"
     | "non publié"
     | "à publier"
@@ -41,7 +41,7 @@ export interface PreviousSeasonFormation {
    * Statut affelnet
    */
   affelnet_statut?:
-    | "non intégrable"
+    | "non publiable en l'état"
     | "publié"
     | "non publié"
     | "à publier"

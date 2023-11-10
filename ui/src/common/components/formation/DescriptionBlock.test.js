@@ -131,7 +131,7 @@ const formation = {
   capacite: null,
   duree: "3",
   annee: "1",
-  parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
+  parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
   parcoursup_statut_history: [],
   affelnet_statut: AFFELNET_STATUS.PUBLIE,
   affelnet_statut_history: [],

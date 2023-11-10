@@ -11,7 +11,7 @@ const run = async () => {
   const sessionEndDate = getSessionEndDate();
 
   await cursor(
-    Formation.find({ parcoursup_statut: { $ne: PARCOURSUP_STATUS.NON_INTEGRABLE } }),
+    Formation.find({ parcoursup_statut: { $ne: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT } }),
     async ({ _id, parcoursup_id, parcoursup_statut, parcoursup_statut_history, date_debut }) => {
       let next_parcoursup_statut;
 
@@ -36,7 +36,7 @@ const run = async () => {
         );
         updated++;
       } else {
-        next_parcoursup_statut = PARCOURSUP_STATUS.NON_INTEGRABLE;
+        next_parcoursup_statut = PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT;
         await Formation.updateOne(
           { _id: _id },
           {

@@ -101,10 +101,10 @@ const afCoverage = async ({ eraseInfo } = {}) => {
   // reset du code affelnet
   await Formation.updateMany({}, { $set: { affelnet_id: null } });
 
-  // reset "publié" to "non intégrable"
+  // reset "publié" to "non publiable en l'état"
   await Formation.updateMany(
     { affelnet_statut: AFFELNET_STATUS.PUBLIE },
-    { $set: { affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE } }
+    { $set: { affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT } }
   );
 
   await formationCoverage({ eraseInfo });

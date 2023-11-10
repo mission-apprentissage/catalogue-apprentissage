@@ -21,7 +21,7 @@ const previousSeasonFormationSchema = {
   parcoursup_statut: {
     type: String,
     enum: Object.values(PARCOURSUP_STATUS),
-    default: PARCOURSUP_STATUS.NON_INTEGRABLE,
+    default: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
     description: "Statut parcoursup",
   },
   affelnet_perimetre: {
@@ -32,7 +32,7 @@ const previousSeasonFormationSchema = {
   affelnet_statut: {
     type: String,
     enum: Object.values(AFFELNET_STATUS),
-    default: AFFELNET_STATUS.NON_INTEGRABLE,
+    default: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
     description: "Statut affelnet",
   },
 };

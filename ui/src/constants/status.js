@@ -1,5 +1,5 @@
 export const COMMON_STATUS = {
-  NON_INTEGRABLE: "non intégrable",
+  NON_PUBLIABLE_EN_LETAT: "non publiable en l'état",
   PUBLIE: "publié",
   NON_PUBLIE: "non publié",
   A_PUBLIER: "à publier",

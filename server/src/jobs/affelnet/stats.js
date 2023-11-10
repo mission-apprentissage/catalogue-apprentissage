@@ -17,7 +17,7 @@ const computeStats = async (academie = null) => {
   };
   const filterIntegrable = {
     ...globalFilter,
-    affelnet_statut: { $ne: AFFELNET_STATUS.NON_INTEGRABLE },
+    affelnet_statut: { $ne: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT },
     ...scopeFilter,
   };
 

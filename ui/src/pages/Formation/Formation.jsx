@@ -570,10 +570,10 @@ export default () => {
                   </Box>
                   {hasRightToEdit &&
                     formation.catalogue_published &&
-                    (![PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.NON_INTEGRABLE].includes(
+                    (![PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT].includes(
                       formation.parcoursup_statut
                     ) ||
-                      ![AFFELNET_STATUS.NON_INTEGRABLE].includes(formation.affelnet_statut)) &&
+                      ![AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT].includes(formation.affelnet_statut)) &&
                     hasAccessTo(user, "page_formation/gestion_publication") && (
                       <Button
                         textStyle="sm"

@@ -14,7 +14,7 @@ Le script de périmètre est exécuté chaque nuit, après l'import RCO qui peut
 
 La liste des statuts possibles est la suivante :
 
-- **"non intégrable"** : la formation n'est pas éligible à Affelnet
+- **"non publiable en l'état"** : la formation n'est pas éligible à Affelnet
 - **"publié"** : la formation est déjà publiée sur Affelnet
 - **"non publié"** : la formation a été manuellement sortie du périmètre Affelnet, via une action instructeur dans le module de publication
 - **"à publier \(soumis à validation\)"** : la formation est éligible à Affelnet mais doit être validée en académie avant
@@ -23,7 +23,7 @@ La liste des statuts possibles est la suivante :
 
 Après action utilisateur on ne change plus le statut de la formation, donc le statut **"non publié"** ne bouge pas, et le statut **"en attente de publication"** peut passer à "publié" uniquement.
 
-En revanche pour les statuts "non intégrable", "à publier \(soumis à validation\)" et "à publier" on recalcule chaque soir. À noter que ces statuts on la priorité suivante : `"à publier" > "à publier (soumis à validation)" > "non intégrable"`.
+En revanche pour les statuts "non publiable en l'état", "à publier \(soumis à validation\)" et "à publier" on recalcule chaque soir. À noter que ces statuts on la priorité suivante : `"à publier" > "à publier (soumis à validation)" > "non publiable en l'état"`.
 
 ## Règles de périmètre
 

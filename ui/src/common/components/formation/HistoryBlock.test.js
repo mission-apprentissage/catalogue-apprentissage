@@ -3,6 +3,7 @@ import { render } from "@testing-library/react";
 import { grantAnonymousAccess } from "../../utils/testUtils";
 import { waitFor } from "@testing-library/react";
 import { HistoryBlock } from "./HistoryBlock";
+import { COMMON_STATUS } from "../../../constants/status";
 
 const formation = {
   parcoursup_statut: "en attente de publication",
@@ -24,27 +25,27 @@ const formation = {
       date: "2021-09-26T00:49:31.693Z",
     },
     {
-      parcoursup_statut: "non intégrable",
+      parcoursup_statut: COMMON_STATUS.NON_PUBLIABLE_EN_LETAT,
       date: "2021-09-27T00:56:33.397Z",
     },
     {
-      parcoursup_statut: "non intégrable",
+      parcoursup_statut: COMMON_STATUS.NON_PUBLIABLE_EN_LETAT,
       date: "2021-09-28T00:32:33.364Z",
     },
     {
-      parcoursup_statut: "non intégrable",
+      parcoursup_statut: COMMON_STATUS.NON_PUBLIABLE_EN_LETAT,
       date: "2021-10-14T00:28:18.624Z",
     },
     {
-      parcoursup_statut: "non intégrable",
+      parcoursup_statut: COMMON_STATUS.NON_PUBLIABLE_EN_LETAT,
       date: "2021-12-07T04:43:01.496Z",
     },
     {
-      parcoursup_statut: "non intégrable",
+      parcoursup_statut: COMMON_STATUS.NON_PUBLIABLE_EN_LETAT,
       date: "2021-12-08T02:12:24.372Z",
     },
     {
-      parcoursup_statut: "non intégrable",
+      parcoursup_statut: COMMON_STATUS.NON_PUBLIABLE_EN_LETAT,
       date: "2021-12-09T04:12:39.572Z",
     },
     {
@@ -86,23 +87,23 @@ const formation = {
       date: "2022-03-06T06:02:25.304Z",
     },
   ],
-  affelnet_statut: "non intégrable",
+  affelnet_statut: COMMON_STATUS.NON_PUBLIABLE_EN_LETAT,
   affelnet_statut_history: [
     {
-      affelnet_statut: "non intégrable",
+      affelnet_statut: COMMON_STATUS.NON_PUBLIABLE_EN_LETAT,
       date: "2021-06-12T02:16:15.664Z",
     },
     {
-      affelnet_statut: "non intégrable",
+      affelnet_statut: COMMON_STATUS.NON_PUBLIABLE_EN_LETAT,
       date: "2021-06-15T02:21:31.163Z",
     },
 
     {
-      affelnet_statut: "non intégrable",
+      affelnet_statut: COMMON_STATUS.NON_PUBLIABLE_EN_LETAT,
       date: "2021-12-27T07:48:50.236Z",
     },
     {
-      affelnet_statut: "non intégrable",
+      affelnet_statut: COMMON_STATUS.NON_PUBLIABLE_EN_LETAT,
       date: "2021-12-28T03:42:59.871Z",
     },
     {
@@ -122,19 +123,19 @@ const formation = {
       date: "2022-01-31T05:44:01.116Z",
     },
     {
-      affelnet_statut: "non intégrable",
+      affelnet_statut: COMMON_STATUS.NON_PUBLIABLE_EN_LETAT,
       date: "2022-01-31T09:46:33.274Z",
     },
     {
-      affelnet_statut: "non intégrable",
+      affelnet_statut: COMMON_STATUS.NON_PUBLIABLE_EN_LETAT,
       date: "2022-02-01T05:43:53.308Z",
     },
     {
-      affelnet_statut: "non intégrable",
+      affelnet_statut: COMMON_STATUS.NON_PUBLIABLE_EN_LETAT,
       date: "2022-03-05T05:52:22.501Z",
     },
     {
-      affelnet_statut: "non intégrable",
+      affelnet_statut: COMMON_STATUS.NON_PUBLIABLE_EN_LETAT,
       date: "2022-03-06T06:09:31.668Z",
     },
   ],

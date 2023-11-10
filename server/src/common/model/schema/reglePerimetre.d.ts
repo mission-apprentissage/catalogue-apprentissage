@@ -23,7 +23,7 @@ export interface ReglePerimetre {
    * Statut appliqué quand la formation matche la règle
    */
   statut:
-    | "non intégrable"
+    | "non publiable en l'état"
     | "publié"
     | "non publié"
     | "à publier"

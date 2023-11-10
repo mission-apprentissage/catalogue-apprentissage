@@ -156,7 +156,7 @@ test("Action select - should delete rule", async () => {
   });
 });
 
-test("Action select - should update rule & set non intégrable", async () => {
+test(`Action select - should update rule & set "non publiable en l'état"`, async () => {
   jest.spyOn(api, "getCount").mockImplementation(() => 123);
 
   const onShowRule = jest.fn();
@@ -198,7 +198,7 @@ test("Action select - should update rule & set non intégrable", async () => {
     expect(onUpdateRule).toHaveBeenCalledWith({
       _id: "345",
       condition_integration: "ne doit pas intégrer",
-      statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
+      statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
     });
   });
 });
@@ -259,7 +259,7 @@ test("Status select - should update status", async () => {
   const onDeleteRule = jest.fn();
 
   const rule = {
-    statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
+    statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
     _id: "345",
     regle_complementaire: "{}",
     condition_integration: CONDITIONS.PEUT_INTEGRER,

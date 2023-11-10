@@ -515,13 +515,13 @@ const formationSchema = {
   parcoursup_statut: {
     type: String,
     enum: Object.values(PARCOURSUP_STATUS),
-    default: PARCOURSUP_STATUS.NON_INTEGRABLE,
+    default: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
     description: "Statut parcoursup",
   },
   parcoursup_previous_statut: {
     type: String,
     enum: Object.values(PARCOURSUP_STATUS),
-    default: PARCOURSUP_STATUS.NON_INTEGRABLE,
+    default: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
     description: "Statut parcoursup à la fin de la précédente campagne",
   },
   parcoursup_statut_history: {
@@ -581,13 +581,13 @@ const formationSchema = {
   affelnet_statut: {
     type: String,
     enum: Object.values(AFFELNET_STATUS),
-    default: AFFELNET_STATUS.NON_INTEGRABLE,
+    default: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
     description: "Statut affelnet",
   },
   affelnet_previous_statut: {
     type: String,
     enum: Object.values(AFFELNET_STATUS),
-    default: AFFELNET_STATUS.NON_INTEGRABLE,
+    default: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
     description: "Statut affelnet à la fin de la précédente campagne",
   },
   affelnet_statut_history: {

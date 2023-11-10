@@ -87,10 +87,10 @@ const run = async () => {
         { parcoursup_statut: null },
       ],
     },
-    { $set: { parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE } }
+    { $set: { parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT } }
   );
 
-  // 2. On réinitialise les formations "à publier ..." à "non intégrable" pour permettre le recalcule du périmètre
+  // 2. On réinitialise les formations "à publier ..." à "non publiable en l'état" pour permettre le recalcule du périmètre
   logger.debug({ type: "job" }, "Etape 2.");
   await Formation.updateMany(
     {
@@ -103,13 +103,13 @@ const run = async () => {
         ],
       },
     },
-    { $set: { parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE } }
+    { $set: { parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT } }
   );
 
-  // 3. On applique les règles de périmètres pour statut "à publier avec action attendue" uniquement sur les formations "non intégrable" pour ne pas écraser les actions menées par les utilisateurs
+  // 3. On applique les règles de périmètres pour statut "à publier avec action attendue" uniquement sur les formations "non publiable en l'état" pour ne pas écraser les actions menées par les utilisateurs
   logger.debug({ type: "job" }, "Etape 3.");
   const filterHP = {
-    parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
+    parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
   };
 
   const aPublierHabilitationRules = await ReglePerimetre.find({
@@ -214,7 +214,7 @@ const run = async () => {
   const filter = {
     parcoursup_statut: {
       $in: [
-        PARCOURSUP_STATUS.NON_INTEGRABLE,
+        PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
         PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
         PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
       ],
@@ -273,7 +273,7 @@ const run = async () => {
 
           parcoursup_statut: {
             $in: [
-              PARCOURSUP_STATUS.NON_INTEGRABLE,
+              PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
               PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
               PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
               PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
@@ -295,8 +295,8 @@ const run = async () => {
                   },
                   then: status,
                   else:
-                    status === PARCOURSUP_STATUS.NON_INTEGRABLE
-                      ? PARCOURSUP_STATUS.NON_INTEGRABLE
+                    status === PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT
+                      ? PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT
                       : PARCOURSUP_STATUS.EN_ATTENTE,
                 },
               },

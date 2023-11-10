@@ -17,7 +17,7 @@ const computeStats = async (academie = null) => {
   };
   const filterIntegrable = {
     ...globalFilter,
-    parcoursup_statut: { $ne: PARCOURSUP_STATUS.NON_INTEGRABLE },
+    parcoursup_statut: { $ne: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT },
     ...scopeFilter,
   };
 

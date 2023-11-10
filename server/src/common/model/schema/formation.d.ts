@@ -636,7 +636,7 @@ export interface Formation {
    * Statut parcoursup
    */
   parcoursup_statut?:
-    | "non intégrable"
+    | "non publiable en l'état"
     | "publié"
     | "non publié"
     | "à publier"
@@ -650,7 +650,7 @@ export interface Formation {
    * Statut parcoursup à la fin de la précédente campagne
    */
   parcoursup_previous_statut?:
-    | "non intégrable"
+    | "non publiable en l'état"
     | "publié"
     | "non publié"
     | "à publier"
@@ -704,7 +704,7 @@ export interface Formation {
    * Statut affelnet
    */
   affelnet_statut?:
-    | "non intégrable"
+    | "non publiable en l'état"
     | "publié"
     | "non publié"
     | "à publier"
@@ -714,7 +714,7 @@ export interface Formation {
    * Statut affelnet à la fin de la précédente campagne
    */
   affelnet_previous_statut?:
-    | "non intégrable"
+    | "non publiable en l'état"
     | "publié"
     | "non publié"
     | "à publier"

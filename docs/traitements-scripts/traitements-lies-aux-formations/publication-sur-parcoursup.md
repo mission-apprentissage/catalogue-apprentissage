@@ -25,7 +25,7 @@ La liste des statuts possibles est la suivante :
 
 Après action utilisateur on ne change plus le statut de la formation, donc le statut **"non publié"** ne bouge pas, et le statut **"en attente de publication"** peut passer à "publié" uniquement.
 
-En revanche pour les statuts "non intégrable", "à publier (...)" et "à publier" on recalcule chaque soir. À noter que ces statuts on la priorité suivante : `"à publier" > "à publier (soumis à validation Recteur)" > "à publier (vérifier accès direct postbac)" > "à publier (sous condition habilitation)" > "non intégrable"`
+En revanche pour les statuts "non publiable en l'état", "à publier (...)" et "à publier" on recalcule chaque soir. À noter que ces statuts on la priorité suivante : `"à publier" > "à publier (soumis à validation Recteur)" > "à publier (vérifier accès direct postbac)" > "à publier (sous condition habilitation)" > "non publiable en l'état"`
 
 ## Règles d'intégration
 

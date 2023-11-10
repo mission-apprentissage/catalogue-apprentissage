@@ -80,7 +80,7 @@ export default () => {
           {/*      titre. Un correctif va être effectué très prochainement.*/}
           {/*      <br />*/}
           {/*      <Text fontWeight="700" as="span">*/}
-          {/*        En attendant, les formations à des titres en apprentissage sont toutes affichées en « non intégrable*/}
+          {/*        En attendant, les formations à des titres en apprentissage sont toutes affichées en « non publiable en l'état*/}
           {/*        ». Nous vous informerons dès que le correctif sera appliqué.*/}
           {/*      </Text>*/}
           {/*    </Text>*/}

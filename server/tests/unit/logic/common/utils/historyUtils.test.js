@@ -7,7 +7,7 @@ const { PARCOURSUP_STATUS, AFFELNET_STATUS } = require("../../../../../src/const
 
 describe(__filename, () => {
   const formation = {
-    parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
+    parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
     parcoursup_statut_history: [
       {
         parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER,
@@ -18,31 +18,31 @@ describe(__filename, () => {
         date: "2022-03-06T05:38:10.003Z",
       },
       {
-        parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
+        parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
         date: "2022-03-05T05:48:44.313Z",
       },
       {
-        parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
+        parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
         date: "2022-03-06T05:38:10.003Z",
       },
       {
-        parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
+        parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
         date: "2022-03-07T06:06:51.574Z",
       },
       {
-        parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
+        parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
         date: "2022-03-08T07:16:46.845Z",
       },
       {
-        parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
+        parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
         date: "2022-03-08T13:41:55.179Z",
       },
       {
-        parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
+        parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
         date: "2022-03-09T05:15:47.034Z",
       },
       {
-        parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
+        parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
         date: "2022-03-10T06:19:09.312Z",
       },
     ],

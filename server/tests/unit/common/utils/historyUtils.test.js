@@ -54,7 +54,7 @@ describe(__filename, () => {
       affelnet_statut: AFFELNET_STATUS.PUBLIE,
       affelnet_statut_history: [
         {
-          affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
+          affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
           date: new Date("2022-02-01T04:53:04.743Z"),
         },
         {
@@ -77,7 +77,7 @@ describe(__filename, () => {
       affelnet_statut: AFFELNET_STATUS.PUBLIE,
       affelnet_statut_history: [
         {
-          affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
+          affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
           date: new Date("2022-02-01T04:53:04.743Z"),
         },
         {
@@ -108,7 +108,7 @@ describe(__filename, () => {
       affelnet_statut: AFFELNET_STATUS.PUBLIE,
       affelnet_statut_history: [
         {
-          affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
+          affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
           date: new Date("2022-02-01T04:53:04.743Z"),
         },
         {
@@ -128,15 +128,15 @@ describe(__filename, () => {
           date: new Date("2022-02-05T06:04:16.935Z"),
         },
         {
-          affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
+          affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
           date: new Date("2022-02-06T05:34:39.230Z"),
         },
         {
-          affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
+          affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
           date: new Date("2022-02-07T06:09:25.820Z"),
         },
         {
-          affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
+          affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
           date: new Date("2022-02-07T16:48:08.954Z"),
         },
         {

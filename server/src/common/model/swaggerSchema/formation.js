@@ -769,7 +769,7 @@ module.exports = {
       parcoursup_statut: {
         type: "string",
         enum: [
-          "non intégrable",
+          "non publiable en l'état",
           "publié",
           "non publié",
           "à publier",
@@ -785,7 +785,7 @@ module.exports = {
       parcoursup_previous_statut: {
         type: "string",
         enum: [
-          "non intégrable",
+          "non publiable en l'état",
           "publié",
           "non publié",
           "à publier",
@@ -872,7 +872,7 @@ module.exports = {
       affelnet_statut: {
         type: "string",
         enum: [
-          "non intégrable",
+          "non publiable en l'état",
           "publié",
           "non publié",
           "à publier",
@@ -884,7 +884,7 @@ module.exports = {
       affelnet_previous_statut: {
         type: "string",
         enum: [
-          "non intégrable",
+          "non publiable en l'état",
           "publié",
           "non publié",
           "à publier",

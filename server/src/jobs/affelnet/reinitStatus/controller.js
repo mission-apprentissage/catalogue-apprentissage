@@ -30,7 +30,7 @@ const lastHistoryIsEnAttenteBeforeDate = (formation, date) =>
 
 /**
  *
- * @param {Date} date La date à partir de laquelle les formations ayant été passées au statut Affelnet "en attente de publication" vont repassé à "non intégrable".
+ * @param {Date} date La date à partir de laquelle les formations ayant été passées au statut Affelnet "en attente de publication" vont repassé à "non publiable en l'état".
  */
 const run = async (date) => {
   let count = 0;
@@ -54,13 +54,13 @@ const run = async (date) => {
           { _id: formation._id },
           {
             $set: {
-              affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
+              affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
             },
             $push: {
-              affelnet_statut_history: { affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE, date: new Date() },
+              affelnet_statut_history: { affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT, date: new Date() },
               updates_history: {
                 from: { affelnet_statut: formation.affelnet_statut },
-                to: { affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE },
+                to: { affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT },
                 updated_at: new Date(),
               },
             },
