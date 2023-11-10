@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 const { runScript } = require("../scriptWrapper");
 
 const report = require("../../logic/reporter/report");

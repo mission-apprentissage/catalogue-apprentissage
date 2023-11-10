@@ -10,7 +10,7 @@ const TooltipIcon = (props) => (
   </Icon>
 );
 
-export const InfoTooltip = ({ description }) => {
+export const InfoTooltip = ({ description, ...rest }) => {
   return (
     <Tooltip
       label={
@@ -22,6 +22,7 @@ export const InfoTooltip = ({ description }) => {
       bg="white"
       color="grey.800"
       placement="right"
+      {...rest}
     >
       <Text as={"span"} _hover={{ cursor: "pointer" }}>
         <TooltipIcon color={"grey.500"} h={4} w={4} />
@@ -29,5 +30,3 @@ export const InfoTooltip = ({ description }) => {
     </Tooltip>
   );
 };
-
-export default InfoTooltip;

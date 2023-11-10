@@ -1,5 +1,5 @@
 export const COMMON_STATUS = {
-  HORS_PERIMETRE: "hors périmètre",
+  NON_INTEGRABLE: "non intégrable",
   PUBLIE: "publié",
   NON_PUBLIE: "non publié",
   A_PUBLIER: "à publier",

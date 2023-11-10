@@ -64,7 +64,7 @@ describe(__filename, () => {
         },
         {
           to: {
-            affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
+            affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
           },
           updated_at: new Date("2022-09-15"),
         },
@@ -87,13 +87,13 @@ describe(__filename, () => {
       updates_history: [
         {
           to: {
-            affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
+            affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
           },
           updated_at: new Date("2022-08-15"),
         },
         {
           to: {
-            affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
+            affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
           },
           updated_at: new Date("2022-09-15"),
         },
@@ -110,7 +110,7 @@ describe(__filename, () => {
     // lastHistoryIsEnAttenteBeforeDate YES
     await Formation.create({
       published: true,
-      affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
+      affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
       cle_ministere_educatif: "cle_4",
       intitule_court: "formation 4",
       updates_history: [
@@ -128,7 +128,7 @@ describe(__filename, () => {
         },
         {
           to: {
-            affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
+            affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
           },
           updated_at: new Date("2022-10-15"),
         },

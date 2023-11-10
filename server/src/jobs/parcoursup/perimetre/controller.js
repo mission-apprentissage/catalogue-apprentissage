@@ -87,10 +87,10 @@ const run = async () => {
         { parcoursup_statut: null },
       ],
     },
-    { $set: { parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE } }
+    { $set: { parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE } }
   );
 
-  // 2. On réinitialise les formations "à publier ..." à "hors périmètre" pour permettre le recalcule du périmètre
+  // 2. On réinitialise les formations "à publier ..." à "non intégrable" pour permettre le recalcule du périmètre
   logger.debug({ type: "job" }, "Etape 2.");
   await Formation.updateMany(
     {
@@ -103,13 +103,13 @@ const run = async () => {
         ],
       },
     },
-    { $set: { parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE } }
+    { $set: { parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE } }
   );
 
-  // 3. On applique les règles de périmètres pour statut "à publier avec action attendue" uniquement sur les formations "hors périmètre" pour ne pas écraser les actions menées par les utilisateurs
+  // 3. On applique les règles de périmètres pour statut "à publier avec action attendue" uniquement sur les formations "non intégrable" pour ne pas écraser les actions menées par les utilisateurs
   logger.debug({ type: "job" }, "Etape 3.");
   const filterHP = {
-    parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+    parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
   };
 
   const aPublierHabilitationRules = await ReglePerimetre.find({
@@ -214,7 +214,7 @@ const run = async () => {
   const filter = {
     parcoursup_statut: {
       $in: [
-        PARCOURSUP_STATUS.HORS_PERIMETRE,
+        PARCOURSUP_STATUS.NON_INTEGRABLE,
         PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
         PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
       ],
@@ -273,7 +273,7 @@ const run = async () => {
 
           parcoursup_statut: {
             $in: [
-              PARCOURSUP_STATUS.HORS_PERIMETRE,
+              PARCOURSUP_STATUS.NON_INTEGRABLE,
               PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
               PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
               PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
@@ -295,8 +295,8 @@ const run = async () => {
                   },
                   then: status,
                   else:
-                    status === PARCOURSUP_STATUS.HORS_PERIMETRE
-                      ? PARCOURSUP_STATUS.HORS_PERIMETRE
+                    status === PARCOURSUP_STATUS.NON_INTEGRABLE
+                      ? PARCOURSUP_STATUS.NON_INTEGRABLE
                       : PARCOURSUP_STATUS.EN_ATTENTE,
                 },
               },

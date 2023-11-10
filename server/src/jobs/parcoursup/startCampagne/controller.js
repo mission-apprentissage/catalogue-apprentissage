@@ -5,23 +5,20 @@ const { cursor } = require("../../../common/utils/cursor");
 const { isBetween } = require("../../../common/utils/dateUtils");
 const { getSessionStartDate, getSessionEndDate } = require("../../../common/utils/rulesUtils");
 
-/**
- * TODO : Voir s'il n'est pas plutôt possible de tout repasser à hors périmètre (sans mise à jour de l'historique) et se baser sur la présence ou non d'un parcoursup_id dans les scripts de périmètre pour passage automatique à "en attente".
- */
 const run = async () => {
   let updated = 0;
   const sessionStartDate = getSessionStartDate();
   const sessionEndDate = getSessionEndDate();
 
   await cursor(
-    Formation.find({ parcoursup_statut: { $ne: PARCOURSUP_STATUS.HORS_PERIMETRE } }),
+    Formation.find({ parcoursup_statut: { $ne: PARCOURSUP_STATUS.NON_INTEGRABLE } }),
     async ({ _id, parcoursup_id, parcoursup_statut, parcoursup_statut_history, date_debut }) => {
       let next_parcoursup_statut;
 
-      const in_next_campagne = date_debut?.filter((toCheck) =>
-        isBetween(sessionStartDate, new Date(toCheck), sessionEndDate)
-      );
-      if (parcoursup_id && parcoursup_statut === PARCOURSUP_STATUS.PUBLIE && in_next_campagne) {
+      const in_next_session =
+        date_debut?.filter((toCheck) => isBetween(sessionStartDate, new Date(toCheck), sessionEndDate))?.length > 0;
+
+      if (parcoursup_id && parcoursup_statut === PARCOURSUP_STATUS.PUBLIE && in_next_session) {
         next_parcoursup_statut = PARCOURSUP_STATUS.EN_ATTENTE;
         await Formation.updateOne(
           { _id: _id },
@@ -39,7 +36,7 @@ const run = async () => {
         );
         updated++;
       } else {
-        next_parcoursup_statut = PARCOURSUP_STATUS.HORS_PERIMETRE;
+        next_parcoursup_statut = PARCOURSUP_STATUS.NON_INTEGRABLE;
         await Formation.updateOne(
           { _id: _id },
           {
@@ -59,13 +56,13 @@ const run = async () => {
         updated++;
       }
 
-      console.log({
-        _id,
-        parcoursup_id,
-        parcoursup_statut,
-        date_debut,
-        next_parcoursup_statut,
-      });
+      // console.log({
+      //   _id,
+      //   parcoursup_id,
+      //   parcoursup_statut,
+      //   date_debut,
+      //   next_parcoursup_statut,
+      // });
     }
   );
 

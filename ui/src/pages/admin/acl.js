@@ -1,31 +1,23 @@
 export default [
   {
-    feature: "Voir la page Catalogue formation",
+    feature: "Voir la page Catalogue",
     ref: "page_catalogue",
     subFeatures: [
       {
-        feature: "Exporter les formations",
-        ref: "page_catalogue/export_btn",
-      },
-      {
-        feature: "Consulter le guide réglementaire",
-        ref: "page_catalogue/guide_reglementaire",
-      },
-      {
-        feature: "Demande d'ajout de formation",
-        ref: "page_catalogue/demande_ajout",
-      },
-      {
-        feature: "Voir tous les statuts de publication",
-        ref: "page_catalogue/voir_status_publication",
-      },
-      {
-        feature: "Voir les statuts de publication parcourSup",
+        feature: "Voir les statuts de publication Parcoursup",
         ref: "page_catalogue/voir_status_publication_ps",
       },
       {
-        feature: "Voir les statuts de publication affelnet",
+        feature: "Voir les statuts de publication Affelnet",
         ref: "page_catalogue/voir_status_publication_aff",
+      },
+      {
+        feature: "Voir les filtres avancés Parcoursup",
+        ref: "page_catalogue/voir_filtres_avances_ps",
+      },
+      {
+        feature: "Voir les filtres avancés Affelnet",
+        ref: "page_catalogue/voir_filtres_avances_aff",
       },
     ],
   },
@@ -34,11 +26,11 @@ export default [
     ref: "page_formation",
     subFeatures: [
       {
-        feature: "Voir les statuts de publication ParcourSup",
+        feature: "Voir les statuts de publication Parcoursup",
         ref: "page_formation/voir_status_publication_ps",
       },
       {
-        feature: "Voir les statuts de publication affelnet",
+        feature: "Voir les statuts de publication Affelnet",
         ref: "page_formation/voir_status_publication_aff",
       },
       {
@@ -46,7 +38,7 @@ export default [
         ref: "page_formation/gestion_publication",
       },
       {
-        feature: "Modifier les informations",
+        feature: "Modifier les UAI lieux",
         ref: "page_formation/modifier_informations",
       },
       {
@@ -56,55 +48,19 @@ export default [
     ],
   },
   {
-    feature: "Voir la page des organismes",
+    feature: "Voir la page Organismes",
     ref: "page_organismes",
-    subFeatures: [
-      {
-        feature: "Exporter les organismes",
-        ref: "page_organismes/export_btn",
-      },
-      {
-        feature: "Consulter le guide réglementaire",
-        ref: "page_organismes/guide_reglementaire",
-      },
-    ],
   },
   {
     feature: "Voir la page détails d'un organisme",
     ref: "page_organisme",
-    subFeatures: [
-      {
-        feature: "Modifier les informations",
-        ref: "page_organisme/modifier_informations",
-      },
-      {
-        feature: "Demander des corrections",
-        ref: "page_organisme/demandes_corretions",
-      },
-    ],
-  },
-  // {
-  //   feature: "Voir le journal des modifications",
-  //   ref: "page_journal",
-  // },
-  {
-    feature: "Actions expertes",
-    ref: "page_actions_expertes",
-  },
-  {
-    feature: "Rapports de conversion",
-    ref: "rapports_conversion",
-  },
-  {
-    feature: "Rapports d'importation",
-    ref: "rapports_importation",
   },
   {
     feature: "Gestion des utilisateurs",
     ref: "page_gestion_utilisateurs",
   },
   {
-    feature: "Gestion des Rôles",
+    feature: "Gestion des rôles",
     ref: "page_gestion_roles",
   },
   {
@@ -129,7 +85,6 @@ export default [
     feature: "Message de maintenance",
     ref: "page_message_maintenance",
   },
-
   {
     feature: "Consoles de pilotage",
     ref: "page_console",
@@ -144,7 +99,6 @@ export default [
       },
     ],
   },
-
   {
     feature: "Réglage des périmètres",
     ref: "page_perimetre",

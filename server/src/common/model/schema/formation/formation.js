@@ -6,6 +6,7 @@ const etablissementReferenceInfo = require("./etablissement.reference.sub");
 const { rncpFormat } = require("../../format");
 const { rncpDetailsSchema } = require("./rncpDetails/rncpDetails");
 const { mefSchema } = require("./mef");
+const { PARCOURSUP_STATUS, AFFELNET_STATUS } = require("../../../../constants/status");
 
 const updateHistorySchema = new mongoose.Schema(
   {
@@ -94,6 +95,11 @@ const formationSchema = {
     type: String,
     default: null,
     description: "Code formation diplôme d'entrée (année 1 de l'apprentissage)",
+  },
+  cfd_entree_date_fermeture: {
+    type: Date,
+    default: null,
+    description: "Date de fermeture du cfd",
   },
   nom_academie: {
     type: String,
@@ -496,22 +502,27 @@ const formationSchema = {
     default: false,
     description: "Dans le périmètre parcoursup",
   },
+  parcoursup_session: {
+    type: Boolean,
+    default: false,
+    description: "Possède une date de début durant la prochaine session Parcoursup",
+  },
+  parcoursup_previous_session: {
+    type: Boolean,
+    default: false,
+    description: "Possède une date de début durant la précédente session Parcoursup",
+  },
   parcoursup_statut: {
     type: String,
-    enum: [
-      "hors périmètre",
-      "publié",
-      "non publié",
-      "à publier (sous condition habilitation)",
-      "à publier (vérifier accès direct postbac)",
-      "à publier (soumis à validation Recteur)",
-      "à publier",
-      "en attente de publication",
-      "rejet de publication",
-      "fermé",
-    ],
-    default: "hors périmètre",
+    enum: Object.values(PARCOURSUP_STATUS),
+    default: PARCOURSUP_STATUS.NON_INTEGRABLE,
     description: "Statut parcoursup",
+  },
+  parcoursup_previous_statut: {
+    type: String,
+    enum: Object.values(PARCOURSUP_STATUS),
+    default: PARCOURSUP_STATUS.NON_INTEGRABLE,
+    description: "Statut parcoursup à la fin de la précédente campagne",
   },
   parcoursup_statut_history: {
     type: [Object],
@@ -555,20 +566,29 @@ const formationSchema = {
   affelnet_perimetre: {
     type: Boolean,
     default: false,
-    description: "Dans le périmètre affelnet",
+    description: "Dans le périmètre Affelnet",
+  },
+  affelnet_session: {
+    type: Boolean,
+    default: false,
+    description: "Possède une date de début durant la prochaine session Affelnet",
+  },
+  affelnet_previous_session: {
+    type: Boolean,
+    default: false,
+    description: "Possède une date de début durant la précédente session Affelnet",
   },
   affelnet_statut: {
     type: String,
-    enum: [
-      "hors périmètre",
-      "publié",
-      "non publié",
-      "à publier (soumis à validation)",
-      "à publier",
-      "en attente de publication",
-    ],
-    default: "hors périmètre",
+    enum: Object.values(AFFELNET_STATUS),
+    default: AFFELNET_STATUS.NON_INTEGRABLE,
     description: "Statut affelnet",
+  },
+  affelnet_previous_statut: {
+    type: String,
+    enum: Object.values(AFFELNET_STATUS),
+    default: AFFELNET_STATUS.NON_INTEGRABLE,
+    description: "Statut affelnet à la fin de la précédente campagne",
   },
   affelnet_statut_history: {
     type: [Object],

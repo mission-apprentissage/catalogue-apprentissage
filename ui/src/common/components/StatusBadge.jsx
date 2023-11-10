@@ -42,7 +42,7 @@ const Icon = ({ variant }) => {
 export const StatusBadge = ({ source, status, text, ...badgeProps }) => {
   const defaultVariant = "notRelevant";
   const variantsMap = {
-    [COMMON_STATUS.HORS_PERIMETRE]: "notRelevant",
+    [COMMON_STATUS.NON_INTEGRABLE]: "notRelevant",
     [COMMON_STATUS.PUBLIE]: "published",
     [COMMON_STATUS.NON_PUBLIE]: "notPublished",
     [AFFELNET_STATUS.A_PUBLIER_VALIDATION]: "toBePublished",
@@ -62,11 +62,28 @@ export const StatusBadge = ({ source, status, text, ...badgeProps }) => {
   const variant = variantsMap[status] ?? defaultVariant;
 
   return (
-    <Badge variant={variant} {...badgeProps}>
-      <Flex alignItems="center">
+    <Badge variant={variant} {...badgeProps} minHeight={"28px"}>
+      <Flex alignItems="center" mx={2}>
         <Icon variant={variant} />
         <Text ml={1} as={"span"} whiteSpace={"break-spaces"}>
           {text ? `${text}` : source ? `${source} - ${status}` : `${status}`}
+        </Text>
+      </Flex>
+    </Badge>
+  );
+};
+
+export const PreviousStatusBadge = ({ source, status, text, ...badgeProps }) => {
+  const defaultVariant = "ok";
+
+  const variant = defaultVariant;
+
+  return (
+    <Badge variant={variant} {...badgeProps} minHeight={"28px"}>
+      <Flex alignItems="center" mx={2}>
+        {/* <Icon variant={variant} /> */}
+        <Text as={"span"} whiteSpace={"break-spaces"}>
+          {text ? `${text} N-1` : source ? `${source} N-1 - ${status}` : `${status}`}
         </Text>
       </Flex>
     </Badge>

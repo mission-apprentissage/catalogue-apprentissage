@@ -1,15 +1,11 @@
 const mongoose = require("mongoose");
 const {
-  // eslint-disable-next-line no-unused-vars
   etablissement_formateur_id,
-  // eslint-disable-next-line no-unused-vars
   etablissement_formateur_published,
   ...etablissementFormateurInfo
 } = require("./etablissement.formateur.sub");
 const {
-  // eslint-disable-next-line no-unused-vars
   etablissement_gestionnaire_id,
-  // eslint-disable-next-line no-unused-vars
   etablissement_gestionnaire_published,
   ...etablissementGestionnaireInfo
 } = require("./etablissement.gestionnaire.sub");

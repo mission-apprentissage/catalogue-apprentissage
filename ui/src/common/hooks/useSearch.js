@@ -112,13 +112,13 @@ const getCountEntities = async (base) => {
  */
 export function useSearch(context) {
   const base = getEsBase(context);
-  const isBaseFormations = base === FORMATIONS_ES_INDEX;
+
   const endpoint = CATALOGUE_API;
   const [searchState, setSearchState] = useState({
     loaded: false,
     base,
     count: 0,
-    isBaseFormations,
+
     endpoint,
   });
 
@@ -132,7 +132,7 @@ export function useSearch(context) {
           setSearchState({
             loaded: true,
             base,
-            isBaseFormations,
+
             endpoint,
             ...resultCount,
           });
@@ -146,7 +146,7 @@ export function useSearch(context) {
     return () => {
       abortController.abort();
     };
-  }, [base, endpoint, isBaseFormations]);
+  }, [base, endpoint]);
 
   if (error !== null) {
     throw error;

@@ -44,14 +44,14 @@ const run = async () => {
 
   const campagneCount = await Formation.countDocuments(filterSessionDate);
 
-  logger.debug(`${campagneCount} formations possèdent des dates de début pour la campagne en cours.`);
+  logger.debug({ type: "job" }, `${campagneCount} formations possèdent des dates de début pour la campagne en cours.`);
 
   // 0. On initialise affelnet_id à null si l'information n'existe pas sur la formation
-  logger.debug("Etape 0.");
+  logger.debug({ type: "job" }, "Etape 0.");
   await Formation.updateMany({ affelnet_id: { $exists: false } }, { $set: { affelnet_id: null } });
 
   // 1. Application de la réglementation : réinitialisation des étiquettes pour les formations qui sortent du périmètre quelque soit le statut (sauf publié pour le moment)
-  logger.debug("Etape 1.");
+  logger.debug({ type: "job" }, "Etape 1.");
   await Formation.updateMany(
     {
       $or: [
@@ -86,23 +86,23 @@ const run = async () => {
       ],
     },
 
-    { $set: { affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE } }
+    { $set: { affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE } }
   );
 
   // set "à publier (soumis à validation)" for trainings matching affelnet eligibility rules
   // reset "à publier" & "à publier (soumis à validation)"
-  logger.debug("Etape 2.");
+  logger.debug({ type: "job" }, "Etape 2.");
   await Formation.updateMany(
     {
       affelnet_statut: { $in: [AFFELNET_STATUS.A_PUBLIER_VALIDATION, AFFELNET_STATUS.A_PUBLIER] },
     },
-    { $set: { affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE } }
+    { $set: { affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE } }
   );
-  // 3. On applique les règles de périmètres pour statut "à publier avec action attendue" uniquement sur les formations "hors périmètre" pour ne pas écraser les actions menées par les utilisateurs
-  logger.debug("Etape 3.");
+  // 3. On applique les règles de périmètres pour statut "à publier avec action attendue" uniquement sur les formations "non intégrable" pour ne pas écraser les actions menées par les utilisateurs
+  logger.debug({ type: "job" }, "Etape 3.");
 
   const filterHP = {
-    affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
+    affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
   };
 
   const aPublierSoumisAValidationRules = await ReglePerimetre.find({
@@ -139,10 +139,10 @@ const run = async () => {
   }
 
   // 4. On applique les règles de périmètre pour statut "à publier" pour les formations répondant aux règles de publication sur Parcoursup.
-  logger.debug("Etape 4.");
+  logger.debug({ type: "job" }, "Etape 4.");
 
   const filter = {
-    affelnet_statut: { $in: [AFFELNET_STATUS.HORS_PERIMETRE, AFFELNET_STATUS.A_PUBLIER_VALIDATION] },
+    affelnet_statut: { $in: [AFFELNET_STATUS.NON_INTEGRABLE, AFFELNET_STATUS.A_PUBLIER_VALIDATION] },
   };
 
   const aPublierRules = await ReglePerimetre.find({
@@ -179,7 +179,7 @@ const run = async () => {
   }
 
   // 5. On applique les règles des académies
-  logger.debug("Etape 5.");
+  logger.debug({ type: "job" }, "Etape 5.");
 
   const academieRules = [...aPublierSoumisAValidationRules, ...aPublierRules].filter(
     ({ statut_academies }) => statut_academies && Object.keys(statut_academies).length > 0
@@ -193,7 +193,7 @@ const run = async () => {
           ...filterSessionDate,
 
           affelnet_statut: {
-            $in: [AFFELNET_STATUS.HORS_PERIMETRE, AFFELNET_STATUS.A_PUBLIER_VALIDATION, AFFELNET_STATUS.A_PUBLIER],
+            $in: [AFFELNET_STATUS.NON_INTEGRABLE, AFFELNET_STATUS.A_PUBLIER_VALIDATION, AFFELNET_STATUS.A_PUBLIER],
           },
 
           num_academie,
@@ -210,8 +210,8 @@ const run = async () => {
                   },
                   then: status,
                   else:
-                    status === AFFELNET_STATUS.HORS_PERIMETRE
-                      ? AFFELNET_STATUS.HORS_PERIMETRE
+                    status === AFFELNET_STATUS.NON_INTEGRABLE
+                      ? AFFELNET_STATUS.NON_INTEGRABLE
                       : AFFELNET_STATUS.EN_ATTENTE,
                 },
               },
@@ -222,7 +222,7 @@ const run = async () => {
     });
   });
 
-  logger.debug("Etape 6.");
+  logger.debug({ type: "job" }, "Etape 6.");
   // 6a. On s'assure que les dates de publication sont définies pour les formations publiées
   await Formation.updateMany(
     {
@@ -242,7 +242,7 @@ const run = async () => {
   );
 
   // 7. On met à jour l'historique des statuts.
-  logger.debug("Etape 7.");
+  logger.debug({ type: "job" }, "Etape 7.");
   await updateTagsHistory("affelnet_statut");
 };
 

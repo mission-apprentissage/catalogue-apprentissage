@@ -1,11 +1,17 @@
+import React from "react";
+
 import { escapeDiacritics } from "../../utils/downloadUtils";
 import helpText from "../../../locales/helpText.json";
 import { CONTEXT } from "../../../constants/context";
 import { departements } from "../../../constants/departements";
 import { annees } from "../../../constants/annees";
 import { sortDescending } from "../../utils/historyUtils";
+import { AffelnetMissingSession } from "./components/AffelnetMissingSession";
+import { ParcoursupMissingSession } from "./components/ParcoursupMissingSession";
 
-const FILTERS = () => [
+export const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
+
+export const allowedFilters = [
   `QUERYBUILDER`,
   `SEARCH`,
   "etablissement_formateur_siret",
@@ -31,8 +37,16 @@ const FILTERS = () => [
   "rome_codes",
   `rncp_code`,
   `bcn_mefs_10`,
+  `parcoursup_perimetre`,
   `parcoursup_statut`,
+  `parcoursup_previous_statut`,
+  `parcoursup_session`,
+  `parcoursup_previous_session`,
+  `affelnet_perimetre`,
   `affelnet_statut`,
+  `affelnet_previous_statut`,
+  `affelnet_session`,
+  `affelnet_previous_session`,
   "diplome",
   "tags",
   "annee",
@@ -49,7 +63,23 @@ const FILTERS = () => [
   "last_statut_update_date_end",
 ];
 
-const columnsDefinition = [
+const mefsFormatter = (mefs) => {
+  return (
+    mefs
+      ?.map(
+        (mef) =>
+          `${mef.mef10}${
+            mef.date_fermeture ? ` (expire le ${new Date(mef.date_fermeture).toLocaleDateString("fr-FR")})` : ""
+          }`
+      )
+      .join(", ") ?? ""
+  );
+};
+
+/**
+ * Colonnes inclues dans l'export CSV
+ */
+export const columnsDefinition = [
   {
     Header: "Fiche catalogue",
     accessor: "_id",
@@ -68,7 +98,7 @@ const columnsDefinition = [
     accessor: "nom_academie",
     width: 200,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Numero departement",
@@ -94,7 +124,7 @@ const columnsDefinition = [
     accessor: "etablissement_gestionnaire_entreprise_raison_sociale",
     width: 200,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Enseigne Responsable",
@@ -209,7 +239,7 @@ const columnsDefinition = [
     accessor: "rncp_intitule",
     width: 200,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Certificateurs",
@@ -245,70 +275,126 @@ const columnsDefinition = [
     accessor: "bcn_mefs_10",
     width: 200,
     exportable: true,
-    formatter: (value) => value?.map((x) => x?.mef10)?.join(",") ?? "",
+    formatter: mefsFormatter,
   },
   {
     Header: "Liste MEF Affelnet",
     accessor: "affelnet_mefs_10",
     width: 200,
     exportable: true,
-    formatter: (value) => value?.map((x) => x?.mef10)?.join(",") ?? "",
+    formatter: mefsFormatter,
   },
   {
     Header: "Liste MEF Parcoursup",
     accessor: "parcoursup_mefs_10",
     width: 200,
     exportable: true,
-    formatter: (value) => value?.map((x) => x?.mef10)?.join(",") ?? "",
+    formatter: mefsFormatter,
+  },
+  {
+    Header: "Périmètre Affelnet",
+    accessor: "affelnet_perimetre",
+    width: 200,
+    exportable: true,
+    formatter: (value) => (value ? "OUI" : "NON"),
   },
   {
     Header: "Statut Affelnet",
     accessor: "affelnet_statut",
     width: 200,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
+  },
+  {
+    Header: "Statut sur la précédente campagne Affelnet",
+    accessor: "affelnet_previous_statut",
+    width: 200,
+    exportable: true,
+    formatter: escapeDiacritics,
+  },
+  {
+    Header: "Session sur la campagne Affelnet",
+    accessor: "affelnet_session",
+    width: 200,
+    exportable: true,
+    formatter: (value) => (value ? "OUI" : "NON"),
+  },
+  {
+    Header: "Session sur la précédente campagne Affelnet",
+    accessor: "affelnet_previous_session",
+    width: 200,
+    exportable: true,
+    formatter: (value) => (value ? "OUI" : "NON"),
   },
   {
     Header: "Information Affelnet",
     accessor: "affelnet_infos_offre",
     width: 400,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Information Affelnet (url)",
     accessor: "affelnet_url_infos_offre",
     width: 400,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Modalités particulières",
     accessor: "affelnet_modalites_offre",
     width: 400,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Modalités particulières (url)",
     accessor: "affelnet_url_modalites_offre",
     width: 400,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Motif de non publication Affelnet",
     accessor: "affelnet_raison_depublication",
     width: 200,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
+  },
+  {
+    Header: "Périmètre Parcoursup",
+    accessor: "parcoursup_perimetre",
+    width: 200,
+    exportable: true,
+    formatter: (value) => (value ? "OUI" : "NON"),
   },
   {
     Header: "Statut Parcoursup",
     accessor: "parcoursup_statut",
     width: 200,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
+  },
+  {
+    Header: "Statut sur la précédente campagne Parcoursup",
+    accessor: "parcoursup_previous_statut",
+    width: 200,
+    exportable: true,
+    formatter: escapeDiacritics,
+  },
+  {
+    Header: "Session sur la campagne Parcoursup",
+    accessor: "parcoursup_session",
+    width: 200,
+    exportable: true,
+    formatter: (value) => (value ? "OUI" : "NON"),
+  },
+  {
+    Header: "Session sur la précédente campagne Parcoursup",
+    accessor: "parcoursup_previous_session",
+    width: 200,
+    exportable: true,
+    formatter: (value) => (value ? "OUI" : "NON"),
   },
   {
     Header: "Date du dernier envoi vers Parcoursup",
@@ -322,14 +408,14 @@ const columnsDefinition = [
     accessor: "parcoursup_raison_depublication",
     width: 200,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Motif de rejet Parcoursup",
     accessor: "parcoursup_error",
     width: 200,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
 
   {
@@ -337,7 +423,7 @@ const columnsDefinition = [
     accessor: "niveau",
     width: 200,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Dates de formation",
@@ -418,7 +504,7 @@ const columnsDefinition = [
     accessor: "lieu_formation_adresse",
     width: 200,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Code Postal",
@@ -431,7 +517,7 @@ const columnsDefinition = [
     accessor: "localite",
     width: 200,
     exportable: true,
-    formatter: (value) => escapeDiacritics(value),
+    formatter: escapeDiacritics,
   },
   {
     Header: "Code Commune Insee",
@@ -579,6 +665,13 @@ const columnsDefinition = [
     formatter: (value) => (value ? new Date(value).toLocaleDateString("fr-FR") : ""),
   },
   {
+    Header: "Date de fermeture du CFD de l'année d'entrée",
+    accessor: "cfd_entree_date_fermeture",
+    width: 200,
+    exportable: true,
+    formatter: (value) => (value ? new Date(value).toLocaleDateString("fr-FR") : ""),
+  },
+  {
     Header: "Date de fin de validite au RNCP",
     accessor: "rncp_details",
     width: 200,
@@ -597,7 +690,10 @@ const columnsDefinition = [
   },
 ];
 
-const queryBuilderField = [
+/**
+ * Champs de la recherche avancée
+ */
+export const queryBuilderField = [
   { text: "Raison sociale", value: "etablissement_gestionnaire_entreprise_raison_sociale.keyword" },
   { text: "Siret formateur", value: "etablissement_formateur_siret.keyword" },
   { text: "Siret gestionnaire", value: "etablissement_gestionnaire_siret.keyword" },
@@ -617,155 +713,422 @@ const queryBuilderField = [
   { text: "MEF 10", value: "bcn_mefs_10.mef10.keyword" },
   { text: "Groupe Spécialité", value: "rncp_details.nsf_code.keyword" },
   { text: "Certificateur", value: "rncp_details.certificateurs.certificateur.keyword" },
+  { text: "Identifiant Affelnet (code voeu)", value: "affelnet_id.keyword" },
+  { text: "Identifiant Parcoursup (GTA)", value: "parcoursup_id.keyword" },
 ];
 
-const facetDefinition = () => [
+export const filtersDefinition = [
   {
     componentId: `nom_academie`,
+    type: "facet",
     dataField: "nom_academie.keyword",
     title: "Académie",
     filterLabel: "Académie",
     selectAllLabel: "Toutes les académies",
     sortBy: "asc",
   },
+
+  { type: "divider" },
+
+  {
+    componentId: `parcoursup_perimetre`,
+    type: "facet",
+    dataField: "parcoursup_perimetre",
+    title: "Dans le périmètre Parcoursup",
+    filterLabel: "Dans le périmètre Parcoursup",
+    selectAllLabel: "Tous",
+    sortBy: "desc",
+    displayInContext: [CONTEXT.CATALOGUE_GENERAL],
+    helpTextSection: helpText.search.parcoursup_perimetre,
+    transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
+    customQuery: (values) => {
+      if (values.length === 1 && values[0] !== "Tous") {
+        return {
+          query: {
+            match: {
+              parcoursup_perimetre: values[0] === "Oui",
+            },
+          },
+        };
+      }
+      return {};
+    },
+  },
+
   {
     componentId: `parcoursup_statut`,
+    type: "facet",
     dataField: "parcoursup_statut.keyword",
     title: "Statut Parcoursup",
     filterLabel: "Statut Parcoursup",
     selectAllLabel: "Tous",
-    sortBy: "count",
+    sortBy: "desc",
     acl: "page_catalogue/voir_status_publication_ps",
-    // displayInContext: [CONTEXT.CATALOGUE_GENERAL],
     helpTextSection: helpText.search.parcoursup_statut,
   },
+
+  {
+    componentId: `parcoursup_session_manquante`,
+    type: "component",
+    component: <ParcoursupMissingSession />,
+    acl: "page_catalogue/voir_filtres_avances_ps",
+  },
+
+  {
+    type: "advanced",
+    openText: "Voir moins de filtres Parcoursup",
+    closeText: "Voir plus de filtres Parcoursup",
+    acl: "page_catalogue/voir_filtres_avances_ps",
+    filters: [
+      {
+        componentId: `parcoursup_previous_statut`,
+        type: "facet",
+        dataField: "parcoursup_previous_statut.keyword",
+        title: "Statut sur la précédente campagne Parcoursup ",
+        filterLabel: "Statut sur la précédente campagne Parcoursup ",
+        selectAllLabel: "Tous",
+        sortBy: "count",
+        acl: "page_catalogue/voir_status_publication_ps",
+        helpTextSection: helpText.search.parcoursup_previous_statut,
+      },
+
+      {
+        componentId: `parcoursup_session`,
+        type: "facet",
+        dataField: "parcoursup_session",
+        title: "Session sur la campagne Parcoursup",
+        filterLabel: "Session sur la campagne Parcoursup",
+        selectAllLabel: "Tous",
+        sortBy: "desc",
+        displayInContext: [CONTEXT.CATALOGUE_GENERAL],
+        helpTextSection: helpText.search.parcoursup_session,
+
+        transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
+        customQuery: (values) => {
+          if (values.length === 1 && values[0] !== "Tous") {
+            return {
+              query: {
+                match: {
+                  parcoursup_session: values[0] === "Oui",
+                },
+              },
+            };
+          }
+          return {};
+        },
+      },
+
+      {
+        componentId: `parcoursup_previous_session`,
+        type: "facet",
+        dataField: "parcoursup_previous_session",
+        title: "Session sur la précédente campagne Parcoursup",
+        filterLabel: "Session sur la précédente campagne Parcoursup",
+        selectAllLabel: "Tous",
+        sortBy: "desc",
+        displayInContext: [CONTEXT.CATALOGUE_GENERAL],
+        helpTextSection: helpText.search.parcoursup_previous_session,
+
+        transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
+        customQuery: (values) => {
+          if (values.length === 1 && values[0] !== "Tous") {
+            return {
+              query: {
+                match: {
+                  parcoursup_previous_session: values[0] === "Oui",
+                },
+              },
+            };
+          }
+          return {};
+        },
+      },
+
+      {
+        componentId: `parcoursup_published_date`,
+        type: "date-range",
+        dataField: "parcoursup_published_date",
+        title: "Date de publication sur Parcoursup",
+        filterLabel: "Publication Parcoursup",
+      },
+    ],
+  },
+
+  { type: "divider" },
+
+  {
+    componentId: `affelnet_perimetre`,
+    type: "facet",
+    dataField: "affelnet_perimetre",
+    title: "Dans le périmètre Affelnet",
+    filterLabel: "Dans le périmètre Affelnet",
+    selectAllLabel: "Tous",
+    sortBy: "desc",
+    displayInContext: [CONTEXT.CATALOGUE_GENERAL],
+    helpTextSection: helpText.search.affelnet_perimetre,
+    transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
+    customQuery: (values) => {
+      if (values.length === 1 && values[0] !== "Tous") {
+        return {
+          query: {
+            match: {
+              affelnet_perimetre: values[0] === "Oui",
+            },
+          },
+        };
+      }
+      return {};
+    },
+  },
+
   {
     componentId: `affelnet_statut`,
+    type: "facet",
     dataField: "affelnet_statut.keyword",
     title: "Statut Affelnet",
     filterLabel: "Statut Affelnet",
     selectAllLabel: "Tous",
-    sortBy: "count",
+    sortBy: "desc",
     acl: "page_catalogue/voir_status_publication_aff",
-    // displayInContext: [CONTEXT.CATALOGUE_GENERAL],
     helpTextSection: helpText.search.affelnet_statut,
   },
+
   {
-    componentId: `num_departement`,
-    dataField: "num_departement.keyword",
-    title: "Département",
-    filterLabel: "Département",
-    selectAllLabel: "Tous",
-    sortBy: "asc",
-    transformData: (data) => data.map((d) => ({ ...d, key: `${d.key} - ${departements[d.key]}` })),
-    customQuery: (values) => ({
-      query: values?.length && {
-        terms: {
-          "num_departement.keyword": values?.map((value) =>
-            typeof value === "string" ? value?.split(" - ")[0] : value
-          ),
+    componentId: `affelnet_session_manquante`,
+    type: "component",
+    component: <AffelnetMissingSession />,
+    acl: "page_catalogue/voir_filtres_avances_aff",
+  },
+
+  {
+    type: "advanced",
+    openText: "Voir moins de filtres Affelnet",
+    closeText: "Voir plus de filtres Affelnet",
+    acl: "page_catalogue/voir_filtres_avances_aff",
+    filters: [
+      {
+        componentId: `affelnet_previous_statut`,
+        type: "facet",
+        dataField: "affelnet_previous_statut.keyword",
+        title: "Statut sur la précédente campagne Affelnet",
+        filterLabel: "Statut sur la précédente campagne Affelnet",
+        selectAllLabel: "Tous",
+        sortBy: "count",
+        acl: "page_catalogue/voir_status_publication_aff",
+        helpTextSection: helpText.search.affelnet_previous_statut,
+      },
+
+      {
+        componentId: `affelnet_session`,
+        type: "facet",
+        dataField: "affelnet_session",
+        title: "Session sur la campagne Affelnet",
+        filterLabel: "Session sur la campagne Affelnet",
+        selectAllLabel: "Tous",
+        sortBy: "desc",
+        displayInContext: [CONTEXT.CATALOGUE_GENERAL],
+        helpTextSection: helpText.search.affelnet_session,
+
+        transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
+        customQuery: (values) => {
+          if (values.length === 1 && values[0] !== "Tous") {
+            return {
+              query: {
+                match: {
+                  affelnet_session: values[0] === "Oui",
+                },
+              },
+            };
+          }
+          return {};
         },
       },
-    }),
-  },
-  {
-    componentId: `niveau`,
-    dataField: "niveau.keyword",
-    title: "Niveau visé",
-    filterLabel: "Niveau visé",
-    selectAllLabel: "Tous les niveaux",
-    sortBy: "asc",
-  },
-  {
-    componentId: `tags`,
-    dataField: "tags.keyword",
-    title: "Début de formation (année)",
-    filterLabel: "Début de formation (année)",
-    selectAllLabel: "Toutes",
-    sortBy: "asc",
-  },
-  {
-    componentId: `annee`,
-    dataField: "annee.keyword",
-    title: "Année d'entrée en apprentissage",
-    filterLabel: "Année d'entrée en apprentissage",
-    selectAllLabel: "Toutes",
-    sortBy: "asc",
-    isAuth: true, // hide for anonymous
-    transformData: (data) => data.map((d) => ({ ...d, key: annees[d.key] })),
-    customQuery: (values) => ({
-      query: values?.length && {
-        terms: {
-          "annee.keyword": values?.map((value) => Object.keys(annees).find((annee) => annees[annee] === value)),
+
+      {
+        componentId: `affelnet_previous_session`,
+        type: "facet",
+        dataField: "affelnet_previous_session",
+        title: "Session sur la précédente campagne Affelnet",
+        filterLabel: "Session sur la précédente campagne Affelnet",
+        selectAllLabel: "Tous",
+        sortBy: "desc",
+        displayInContext: [CONTEXT.CATALOGUE_GENERAL],
+        helpTextSection: helpText.search.affelnet_previous_session,
+
+        transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
+        customQuery: (values) => {
+          if (values.length === 1 && values[0] !== "Tous") {
+            return {
+              query: {
+                match: {
+                  affelnet_previous_session: values[0] === "Oui",
+                },
+              },
+            };
+          }
+          return {};
         },
       },
-    }),
-  },
-  {
-    componentId: `duree`,
-    dataField: "duree.keyword",
-    title: "Durée de la formation",
-    filterLabel: "Durée de la formation",
-    selectAllLabel: "Toutes",
-    sortBy: "asc",
-    isAuth: true, // hide for anonymous
-    transformData: (data) => data.map((d) => ({ ...d, key: d.key <= 1 ? `${d.key} an` : `${d.key} ans` })),
-    customQuery: (values) => ({
-      query: values?.length && {
-        terms: {
-          "duree.keyword": values?.map((value) => (typeof value === "string" ? value?.split(" ")[0] : value)),
-        },
+
+      {
+        componentId: `affelnet_published_date`,
+        type: "date-range",
+        dataField: "affelnet_published_date",
+        title: "Date de publication sur Affelnet",
+        filterLabel: "Publication Affelnet",
       },
-    }),
+    ],
   },
+
+  { type: "divider" },
+
   {
-    componentId: `qualite`,
-    dataField: "etablissement_gestionnaire_certifie_qualite",
-    title: "Certifié Qualité",
-    filterLabel: "Certifié Qualité",
-    sortBy: "desc",
-    helpTextSection: helpText.search.qualite,
-    showSearch: false,
-    displayInContext: [CONTEXT.CATALOGUE_NON_ELIGIBLE],
-    transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
-    customQuery: (values) => {
-      if (values.length === 1) {
-        return {
-          query: {
-            match: {
-              etablissement_gestionnaire_certifie_qualite: values[0] === "Oui",
+    type: "advanced",
+    openText: "Masquer les filtres avancés (niveau, durée, dates...)",
+    closeText: "Filtres avancés (niveau, durée, dates...)",
+    filters: [
+      {
+        componentId: `date_debut`,
+        type: "date-range",
+        dataField: "date_debut",
+        title: "Date de début de formation",
+        filterLabel: "Début de formation",
+        helpTextSection: helpText.search.periode.title,
+      },
+
+      {
+        componentId: `num_departement`,
+        type: "facet",
+        dataField: "num_departement.keyword",
+        title: "Département",
+        filterLabel: "Département",
+        selectAllLabel: "Tous",
+        sortBy: "asc",
+        transformData: (data) => data.map((d) => ({ ...d, key: `${d.key} - ${departements[d.key]}` })),
+        customQuery: (values) => ({
+          query: values?.length && {
+            terms: {
+              "num_departement.keyword": values?.map((value) =>
+                typeof value === "string" ? value?.split(" - ")[0] : value
+              ),
             },
           },
-        };
-      }
-      return {};
-    },
-  },
-  {
-    componentId: `habilite`,
-    dataField: "etablissement_reference_habilite_rncp",
-    title: "Habilité RNCP",
-    filterLabel: "Habilité RNCP",
-    sortBy: "desc",
-    showSearch: false,
-    displayInContext: [CONTEXT.CATALOGUE_NON_ELIGIBLE],
-    transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
-    customQuery: (values) => {
-      if (values.length === 1) {
-        return {
-          query: {
-            match: {
-              etablissement_reference_habilite_rncp: values[0] === "Oui",
+        }),
+      },
+      {
+        componentId: `niveau`,
+        type: "facet",
+        dataField: "niveau.keyword",
+        title: "Niveau visé",
+        filterLabel: "Niveau visé",
+        selectAllLabel: "Tous les niveaux",
+        sortBy: "asc",
+      },
+      {
+        componentId: `tags`,
+        type: "facet",
+        dataField: "tags.keyword",
+        title: "Début de formation (année)",
+        filterLabel: "Début de formation (année)",
+        selectAllLabel: "Toutes",
+        sortBy: "asc",
+      },
+      {
+        componentId: `annee`,
+        type: "facet",
+        dataField: "annee.keyword",
+        title: "Année d'entrée en apprentissage",
+        filterLabel: "Année d'entrée en apprentissage",
+        selectAllLabel: "Toutes",
+        sortBy: "asc",
+        isAuth: true, // hide for anonymous
+        transformData: (data) => data.map((d) => ({ ...d, key: annees[d.key] })),
+        customQuery: (values) => ({
+          query: values?.length && {
+            terms: {
+              "annee.keyword": values?.map((value) => Object.keys(annees).find((annee) => annees[annee] === value)),
             },
           },
-        };
-      }
-      return {};
-    },
+        }),
+      },
+      {
+        componentId: `duree`,
+        type: "facet",
+        dataField: "duree.keyword",
+        title: "Durée de la formation",
+        filterLabel: "Durée de la formation",
+        selectAllLabel: "Toutes",
+        sortBy: "asc",
+        isAuth: true, // hide for anonymous
+        transformData: (data) => data.map((d) => ({ ...d, key: d.key <= 1 ? `${d.key} an` : `${d.key} ans` })),
+        customQuery: (values) => ({
+          query: values?.length && {
+            terms: {
+              "duree.keyword": values?.map((value) => (typeof value === "string" ? value?.split(" ")[0] : value)),
+            },
+          },
+        }),
+      },
+      {
+        componentId: `qualite`,
+        type: "facet",
+        dataField: "etablissement_gestionnaire_certifie_qualite",
+        title: "Certifié Qualité",
+        filterLabel: "Certifié Qualité",
+        sortBy: "desc",
+        helpTextSection: helpText.search.qualite,
+        showSearch: false,
+        displayInContext: [CONTEXT.CATALOGUE_NON_ELIGIBLE],
+        transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
+        customQuery: (values) => {
+          if (values.length === 1 && values[0] !== "Tous") {
+            return {
+              query: {
+                match: {
+                  etablissement_gestionnaire_certifie_qualite: values[0] === "Oui",
+                },
+              },
+            };
+          }
+          return {};
+        },
+      },
+      {
+        componentId: `habilite`,
+        type: "facet",
+        dataField: "etablissement_reference_habilite_rncp",
+        title: "Habilité RNCP",
+        filterLabel: "Habilité RNCP",
+        sortBy: "desc",
+        showSearch: false,
+        displayInContext: [CONTEXT.CATALOGUE_NON_ELIGIBLE],
+        transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
+        customQuery: (values) => {
+          if (values.length === 1 && values[0] !== "Tous") {
+            return {
+              query: {
+                match: {
+                  etablissement_reference_habilite_rncp: values[0] === "Oui",
+                },
+              },
+            };
+          }
+          return {};
+        },
+      },
+
+      {
+        componentId: `last_statut_update_date`,
+        type: "date-range",
+        dataField: "last_statut_update_date",
+        title: "Dernière mise à jour du statut",
+        filterLabel: "Statut modifié",
+      },
+    ],
   },
 ];
 
-const dataSearch = {
+export const dataSearch = {
   dataField: [
     "etablissement_gestionnaire_entreprise_raison_sociale",
     "intitule_long",
@@ -777,18 +1140,16 @@ const dataSearch = {
     "etablissement_formateur_siret",
     "etablissement_gestionnaire_siret",
     "cle_ministere_educatif",
-    "parcoursup_id",
-    "affelnet_id",
   ],
   placeholder:
-    "Saisissez une raison sociale, un Siret, un intitulé de formation, un code RNCP ou CFD (code formation diplôme), un identifiant Parcoursup ou Affelnet",
+    "Saisissez une raison sociale, un Siret, un intitulé de formation, un code RNCP ou CFD (code formation diplôme)",
   fieldWeights: [4, 3, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1],
 };
 
 export default {
-  FILTERS,
+  allowedFilters,
   columnsDefinition,
-  facetDefinition,
+  filtersDefinition,
   queryBuilderField,
   dataSearch,
 };

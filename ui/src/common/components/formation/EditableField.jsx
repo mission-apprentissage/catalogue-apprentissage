@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Input, Text } from "@chakra-ui/react";
 import { Edit2Fill } from "../../../theme/components/icons";
-import InfoTooltip from "../InfoTooltip";
+import { InfoTooltip } from "../InfoTooltip";
 import helpText from "../../../locales/helpText.json";
 
 export const EditableField = ({

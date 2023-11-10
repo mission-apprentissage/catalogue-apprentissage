@@ -20,7 +20,7 @@ import { Card } from "../../common/components/Card";
 import { _get } from "../../common/httpClient";
 import useAuth from "../../common/hooks/useAuth";
 import { PARCOURSUP_STATUS } from "../../constants/status";
-import { AcademiesSelect } from "../perimetre/components/AcademiesSelect";
+import { AcademiesSelect } from "../ReglesPerimetre/components/AcademiesSelect";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 

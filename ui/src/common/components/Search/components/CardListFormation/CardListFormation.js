@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { hasAccessTo } from "../../../../utils/rolesUtils";
 import useAuth from "../../../../hooks/useAuth";
-import { StatusBadge } from "../../../StatusBadge";
+import { PreviousStatusBadge, StatusBadge } from "../../../StatusBadge";
 import { Box, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { ArrowRightLine, InfoCircle } from "../../../../../theme/components/icons";
 import { QualiteBadge } from "../../../QualiteBadge";
@@ -28,12 +28,14 @@ export const CardListFormation = ({ data, context }) => {
         <Box>
           <Flex justifyContent="space-between">
             <Flex mt={1} flexWrap={"wrap"}>
-              {hasAccessTo(auth, "page_catalogue/voir_status_publication") && data.catalogue_published && (
-                <>
-                  <StatusBadge source="Parcoursup" status={data.parcoursup_statut} mt={2} mr={[0, 2]} />
-                  <StatusBadge source="Affelnet" status={data.affelnet_statut} mt={2} mr={[0, 2]} />
-                </>
-              )}
+              {(hasAccessTo(auth, "page_catalogue/voir_status_publication_ps") ||
+                hasAccessTo(auth, "page_catalogue/voir_status_publication_aff")) &&
+                data.catalogue_published && (
+                  <>
+                    <StatusBadge source="Parcoursup" status={data.parcoursup_statut} mt={2} mr={[0, 2]} />
+                    <StatusBadge source="Affelnet" status={data.affelnet_statut} mt={2} mr={[0, 2]} />
+                  </>
+                )}
               {!data.catalogue_published && (
                 <>
                   <QualiteBadge value={data.etablissement_gestionnaire_certifie_qualite} mt={2} mr={[0, 2]} />

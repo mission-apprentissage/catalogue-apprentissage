@@ -1,20 +1,18 @@
-import React, { useEffect, useState, lazy, Suspense } from "react";
-import { BrowserRouter as Router, Switch, Route, Redirect, useHistory } from "react-router-dom";
-import useAuth from "./common/hooks/useAuth";
-import { _post, _get } from "./common/httpClient";
-import ScrollToTop from "./common/components/ScrollToTop";
+import React, { Suspense, lazy, useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { Route, Routes, useNavigate, Navigate, RouterProvider, createBrowserRouter } from "react-router-dom";
+import ScrollToTop from "./common/components/ScrollToTop";
+import useAuth from "./common/hooks/useAuth";
+import { _get, _post } from "./common/httpClient";
 import { hasAccessTo } from "./common/utils/rolesUtils";
 
 // Route-based code splitting @see https://reactjs.org/docs/code-splitting.html#route-based-code-splitting
 const HomePage = lazy(() => import("./pages/HomePage"));
 const LoginPage = lazy(() => import("./pages/LoginPage"));
-// const DashboardPage = lazy(() => import("./pages/Dashboard"));
 const ResetPasswordPage = lazy(() => import("./pages/password/ResetPasswordPage"));
 const ForgottenPasswordPage = lazy(() => import("./pages/password/ForgottenPasswordPage"));
 const Users = lazy(() => import("./pages/admin/Users"));
 const Roles = lazy(() => import("./pages/admin/Roles"));
-const ReportPage = lazy(() => import("./pages/ReportPage"));
 const NotFoundPage = lazy(() => import("./pages/404"));
 const Catalogue = lazy(() => import("./pages/Catalogue/Catalogue"));
 const Organismes = lazy(() => import("./pages/Organismes/Organismes"));
@@ -28,52 +26,43 @@ const Cookies = lazy(() => import("./pages/legal/Cookies"));
 const DonneesPersonnelles = lazy(() => import("./pages/legal/DonneesPersonnelles"));
 const MentionsLegales = lazy(() => import("./pages/legal/MentionsLegales"));
 const Accessibilite = lazy(() => import("./pages/legal/Accessibilite"));
-const ActionsExpertes = lazy(() => import("./pages/ActionsExpertes/ActionsExpertes"));
-const Perimetre = lazy(() => import("./pages/perimetre/Perimetre"));
+const ReglesPerimetre = lazy(() => import("./pages/ReglesPerimetre/ReglesPerimetre"));
+const ReglesPerimetrePlateforme = lazy(() => import("./pages/ReglesPerimetre/Plateforme"));
 const ConsolesPilotage = lazy(() => import("./pages/ConsolesPilotage"));
-const ConsolePilotageAffelnet = lazy(() => import("./pages/ConsolesPilotage/Affelnet"));
-const ConsolePilotageParcoursup = lazy(() => import("./pages/ConsolesPilotage/Parcoursup"));
+const ConsolesPilotageAffelnet = lazy(() => import("./pages/ConsolesPilotage/Affelnet"));
+const ConsolesPilotageParcoursup = lazy(() => import("./pages/ConsolesPilotage/Parcoursup"));
 
-function PrivateRoute({ component, ...rest }) {
+function RequireAuth({ children }) {
   let [auth] = useAuth();
 
-  if (auth.sub !== "anonymous") {
-    return <Route {...rest} component={component} />;
-  }
+  const isAuthenticated = auth && auth.sub !== "anonymous";
 
-  return (
-    <Route
-      {...rest}
-      render={() => {
-        return <Redirect to="/login" />;
-      }}
-    />
-  );
+  return isAuthenticated ? children : <Navigate to={"/login"} />;
 }
 
 const ResetPasswordWrapper = ({ children }) => {
-  let [auth] = useAuth();
-  let history = useHistory();
+  const [auth] = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function run() {
       if (auth.sub !== "anonymous") {
         if (auth.account_status === "FORCE_RESET_PASSWORD") {
           let { token } = await _post("/api/password/forgotten-password?noEmail=true", { username: auth.sub });
-          history.push(`/reset-password?passwordToken=${token}`);
+          navigate(`/reset-password?passwordToken=${token}`);
         }
       }
     }
     run();
-  }, [auth, history]);
+  }, [auth, navigate]);
 
   return <>{children}</>;
 };
 
 const queryClient = new QueryClient();
 
-export default () => {
-  let [auth, setAuth] = useAuth();
+const Root = () => {
+  const [auth, setAuth] = useAuth();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -97,106 +86,286 @@ export default () => {
   }
 
   return (
+    <Suspense fallback={<div></div>}>
+      <ResetPasswordWrapper>
+        <ScrollToTop />
+        <Routes>
+          {/* Authentification */}
+          <Route path="/login" element={<LoginPage />} />
+
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+
+          <Route path="/forgotten-password" element={<ForgottenPasswordPage />} />
+
+          {/* Administration */}
+          {auth && hasAccessTo(auth, "page_gestion_utilisateurs") ? (
+            <Route
+              path="/admin/users"
+              element={
+                <RequireAuth>
+                  <Users />
+                </RequireAuth>
+              }
+            ></Route>
+          ) : (
+            <React.Fragment />
+          )}
+
+          {auth && hasAccessTo(auth, "page_gestion_roles") ? (
+            <Route
+              path="/admin/roles"
+              element={
+                <RequireAuth>
+                  <Roles />
+                </RequireAuth>
+              }
+            />
+          ) : (
+            <React.Fragment />
+          )}
+
+          {auth && hasAccessTo(auth, "page_message_maintenance") ? (
+            <Route
+              path="/admin/alert"
+              element={
+                <RequireAuth>
+                  <Alert />
+                </RequireAuth>
+              }
+            />
+          ) : (
+            <React.Fragment />
+          )}
+
+          {auth && hasAccessTo(auth, "page_upload") ? (
+            <Route
+              path="/admin/upload"
+              element={
+                <RequireAuth>
+                  <UploadFiles />
+                </RequireAuth>
+              }
+            />
+          ) : (
+            <React.Fragment />
+          )}
+
+          {/* Formations */}
+          <Route
+            path="/"
+            element={
+              <RequireAuth>
+                <HomePage />
+              </RequireAuth>
+            }
+          />
+
+          <Route
+            path="/recherche/formations"
+            element={
+              <RequireAuth>
+                <Catalogue />
+              </RequireAuth>
+            }
+          />
+
+          <Route
+            path={`/formation/:id`}
+            element={
+              <RequireAuth>
+                <Formation />
+              </RequireAuth>
+            }
+          />
+
+          {/* Organismes */}
+          <Route
+            path="/recherche/etablissements"
+            element={
+              <RequireAuth>
+                <Organismes />
+              </RequireAuth>
+            }
+          />
+
+          <Route
+            path={`/etablissement/:id`}
+            element={
+              <RequireAuth>
+                <Etablissement />
+              </RequireAuth>
+            }
+          />
+
+          {/* Consoles de pilotage */}
+          {auth &&
+          (hasAccessTo(auth, "page_console") ||
+            hasAccessTo(auth, "page_console/parcoursup") ||
+            hasAccessTo(auth, "page_console/affelnet")) ? (
+            <Route
+              path="/consoles-pilotage"
+              element={
+                <RequireAuth>
+                  <ConsolesPilotage />
+                </RequireAuth>
+              }
+            />
+          ) : (
+            <React.Fragment />
+          )}
+
+          {auth && hasAccessTo(auth, "page_console/parcoursup") ? (
+            <Route
+              path="/consoles-pilotage/parcoursup"
+              element={
+                <RequireAuth>
+                  <ConsolesPilotageParcoursup />
+                </RequireAuth>
+              }
+            />
+          ) : (
+            <React.Fragment />
+          )}
+
+          {auth && hasAccessTo(auth, "page_console/affelnet") ? (
+            <Route
+              path="/consoles-pilotage/affelnet"
+              element={
+                <RequireAuth>
+                  <ConsolesPilotageAffelnet />
+                </RequireAuth>
+              }
+            />
+          ) : (
+            <React.Fragment />
+          )}
+
+          {/* Règles de périmètre */}
+          {auth &&
+          (hasAccessTo(auth, "page_perimetre") ||
+            hasAccessTo(auth, "page_perimetre/parcoursup") ||
+            hasAccessTo(auth, "page_perimetre/affelnet")) ? (
+            <Route
+              path="/regles-perimetre"
+              element={
+                <RequireAuth>
+                  <ReglesPerimetre />
+                </RequireAuth>
+              }
+            />
+          ) : (
+            <React.Fragment />
+          )}
+
+          {auth && hasAccessTo(auth, "page_perimetre/parcoursup") ? (
+            <Route
+              path="/regles-perimetre/parcoursup"
+              element={
+                <RequireAuth>
+                  <ReglesPerimetrePlateforme plateforme="parcoursup" />
+                </RequireAuth>
+              }
+            />
+          ) : (
+            <React.Fragment />
+          )}
+
+          {auth && hasAccessTo(auth, "page_perimetre/affelnet") ? (
+            <Route
+              path="/regles-perimetre/affelnet"
+              element={
+                <RequireAuth>
+                  <ReglesPerimetrePlateforme plateforme="affelnet" />
+                </RequireAuth>
+              }
+            />
+          ) : (
+            <React.Fragment />
+          )}
+
+          {/* Statistiques */}
+          {/* <Route  path="/stats"><DashboardPage /></Route> */}
+
+          {/* Autres pages */}
+          <Route
+            path="/guide-reglementaire"
+            element={
+              <RequireAuth>
+                <Catalogue guide />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/changelog"
+            element={
+              <RequireAuth>
+                <Journal />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/contact"
+            element={
+              <RequireAuth>
+                <Contact />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/cookies"
+            element={
+              <RequireAuth>
+                <Cookies />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/donnees-personnelles"
+            element={
+              <RequireAuth>
+                <DonneesPersonnelles />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/mentions-legales"
+            element={
+              <RequireAuth>
+                <MentionsLegales />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/accessibilite"
+            element={
+              <RequireAuth>
+                <Accessibilite />
+              </RequireAuth>
+            }
+          />
+
+          {/* Erreur */}
+          <Route
+            path="/*"
+            element={
+              <RequireAuth>
+                <NotFoundPage />
+              </RequireAuth>
+            }
+          />
+        </Routes>
+      </ResetPasswordWrapper>
+    </Suspense>
+  );
+};
+
+const router = createBrowserRouter([{ path: "*", Component: Root }]);
+
+export default () => {
+  return (
     <QueryClientProvider client={queryClient}>
       <div className="App">
-        <Router>
-          <Suspense fallback={<div></div>}>
-            <ResetPasswordWrapper>
-              <ScrollToTop />
-              <Switch>
-                <Route exact path="/login" component={LoginPage} />
-                <Route exact path="/reset-password" component={ResetPasswordPage} />
-                <Route exact path="/forgotten-password" component={ForgottenPasswordPage} />
-
-                {/* <PrivateRoute exact path="/stats" component={DashboardPage} /> */}
-
-                {auth && hasAccessTo(auth, "page_gestion_utilisateurs") && (
-                  <PrivateRoute exact path="/admin/users" component={Users} />
-                )}
-                {auth && hasAccessTo(auth, "page_gestion_roles") && (
-                  <PrivateRoute exact path="/admin/roles" component={Roles} />
-                )}
-
-                <PrivateRoute exact path="/" component={HomePage} />
-                <PrivateRoute exact path="/recherche/formations" component={Catalogue} />
-                <PrivateRoute exact path="/guide-reglementaire">
-                  <Catalogue guide />
-                </PrivateRoute>
-
-                <PrivateRoute exact path="/recherche/etablissements" component={Organismes} />
-                <PrivateRoute exact path={`/formation/:id`} component={Formation} />
-                <PrivateRoute exact path={`/etablissement/:id`} component={Etablissement} />
-
-                <PrivateRoute exact path="/report" component={ReportPage} />
-
-                <PrivateRoute exact path="/changelog" component={Journal} />
-                <PrivateRoute exact path="/contact" component={Contact} />
-                <PrivateRoute exact path="/cookies" component={Cookies} />
-                <PrivateRoute exact path="/donnees-personnelles" component={DonneesPersonnelles} />
-                <PrivateRoute exact path="/mentions-legales" component={MentionsLegales} />
-                <PrivateRoute exact path="/accessibilite" component={Accessibilite} />
-
-                {auth && hasAccessTo(auth, "page_actions_expertes") && (
-                  <PrivateRoute exact path="/mes-actions" component={ActionsExpertes} />
-                )}
-                {auth && hasAccessTo(auth, "page_actions_expertes") && (
-                  <PrivateRoute exact path="/console-pilotage/parcoursup" component={ConsolePilotageParcoursup} />
-                )}
-                {auth && hasAccessTo(auth, "page_actions_expertes") && (
-                  <PrivateRoute exact path="/console-pilotage/affelnet" component={ConsolePilotageAffelnet} />
-                )}
-
-                {auth && hasAccessTo(auth, "page_message_maintenance") && (
-                  <PrivateRoute exact path="/admin/alert" component={Alert} />
-                )}
-
-                {auth && hasAccessTo(auth, "page_upload") && (
-                  <PrivateRoute exact path="/admin/upload">
-                    <UploadFiles />
-                  </PrivateRoute>
-                )}
-
-                {auth && hasAccessTo(auth, "page_console") && (
-                  <PrivateRoute exact path="/consoles-pilotage" render={(props) => <ConsolesPilotage {...props} />} />
-                )}
-
-                {auth && hasAccessTo(auth, "page_console/parcoursup") && (
-                  <PrivateRoute
-                    exact
-                    path="/consoles-pilotage/parcoursup"
-                    render={(props) => <ConsolePilotageParcoursup {...props} />}
-                  />
-                )}
-
-                {auth && hasAccessTo(auth, "page_console/affelnet") && (
-                  <PrivateRoute
-                    exact
-                    path="/consoles-pilotage/affelnet"
-                    render={(props) => <ConsolePilotageAffelnet {...props} />}
-                  />
-                )}
-
-                {auth && hasAccessTo(auth, "page_perimetre/parcoursup") && (
-                  <PrivateRoute
-                    exact
-                    path="/perimetre-parcoursup"
-                    render={(props) => <Perimetre {...props} plateforme="parcoursup" />}
-                  />
-                )}
-
-                {auth && hasAccessTo(auth, "page_perimetre/affelnet") && (
-                  <PrivateRoute
-                    exact
-                    path="/perimetre-affelnet"
-                    render={(props) => <Perimetre {...props} plateforme="affelnet" />}
-                  />
-                )}
-
-                <PrivateRoute component={NotFoundPage} />
-              </Switch>
-            </ResetPasswordWrapper>
-          </Suspense>
-        </Router>
+        <RouterProvider router={router} />
       </div>
     </QueryClientProvider>
   );

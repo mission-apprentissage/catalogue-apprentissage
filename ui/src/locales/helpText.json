@@ -51,25 +51,29 @@
     "qualite": "La donnée “Certification qualité” provient d’une certification qualiopi."
   },
   "search": {
+    "affelnet_session_manquante": "Cette liste vous est proposée à titre indicatif. Les formations non renouvelées peuvent être liées à des formations qui ne sont effectivement plus proposées pour 2024, mais également à un retard d’enregistrement au Carif-Oref par les OFA ou à des mises en attente par les Carif-Oref. Elles peuvent également être consécutives à des changements de paramètre (modification de Siret, modification de code RNCP, MEF ou CFD) ayant entraîné une modification de clé ministère éducatif.",
     "affelnet_statut": {
       "title": "Statut Affelnet : information concernant la publication de l’offre de formation dans le service Affelnet",
-      "hors périmètre": "offre et organisme de formation qui ne remplissent pas les conditions pour intégrer le service Affelnet",
-      "publié": "offre de formation identifiée comme ayant été publiée sur le service Affelnet l’année précédente et qui a fait l’objet d’un rapprochement automatique par la Mission apprentissage",
-      "non publié": "offre de formation qui a été non-publiée par un instructeur en académie",
-      "à publier (soumis à validation)": "offre ou organisme de formation qui remplissent les conditions pour intégrer le service Affelnet. Une décision du recteur statue sur l’intégration potentielle de ces offres dans le service Affelnet",
-      "à publier": "offre ou organisme de formation qui remplissent les conditions pour intégrer le service Affelnet. L’offre de formation peut faire l’objet d’une publication par un instructeur en académie",
-      "en attente de publication": "offre de formation qui sera intégrée automatiquement dans le service Affelnet via le module l’import"
+      "non intégrable": "offres qui ne correspondent pas aux règles d’intégration pour la prochaine campagne (type de diplôme et/ou dates non concordantes)",
+      "hors périmètre": "offres qui ne remplissent pas les conditions pour intégrer le service en ligne affectation et/ou dont la date de début ne correspond pas à la session à venir.",
+      "publié": "offres de formation identifiées comme ayant été publiées sur le service Affelnet l’année précédente et qui a fait l’objet d’un rapprochement automatique par la Mission apprentissage",
+      "non publié": "offres de formation qui ont été non-publiées par un instructeur en académie",
+      "à publier (soumis à validation)": "offres ou organismes de formation qui remplissent les conditions pour intégrer le service Affelnet. Une décision du recteur statue sur l’intégration potentielle de ces offres dans le service Affelnet",
+      "à publier": "offres ou organismes de formation qui remplissent les conditions pour intégrer le service Affelnet. L’offre de formation peut faire l’objet d’une publication par un instructeur en académie",
+      "en attente de publication": "offres de formation qui seront intégrées automatiquement dans le service Affelnet via le module d’import"
     },
+    "parcoursup_session_manquante": "Cette liste vous est proposée à titre indicatif. Les formations non renouvelées peuvent être liées à des formations qui ne sont effectivement plus proposées pour 2024, mais également à un retard d’enregistrement au Carif-Oref par les OFA ou à des mises en attente par les Carif-Oref. Elles peuvent également être consécutives à des changements de paramètre (modification de Siret, modification de code RNCP, MEF ou CFD) ayant entraîné une modification de clé ministère éducatif.",
     "parcoursup_statut": {
       "title": "Statut Parcoursup : information concernant la publication de l’offre de formation dans la plateforme Parcoursup",
-      "hors périmètre": "offre et organisme de formation qui ne remplissent pas les conditions pour intégrer la plateforme Parcoursup",
-      "publié": "offre de formation identifiée comme déjà publiée sur la plateforme Parcoursup et qui a fait l’objet d’un rapprochement automatique par la Mission apprentissage",
-      "non publié": "offre de formation qui a été non-publiée par un instructeur en académie",
-      "à publier (sous condition habilitation)": "offre et organisme de formation qui remplissent les conditions pour intégrer le service Parcoursup. L’habilitation de l'organisme formateur doit être vérifiée par un instructeur en académie",
-      "à publier (vérifier accès direct postbac)": "offre et organisme de formation qui remplissent les conditions pour intégrer le service Parcoursup. L’accessibilité de l’offre de formation aux bacheliers doit être vérifiée par un instructeur en académie",
-      "à publier (soumis à validation Recteur)": "offre et organisme de formation qui remplissent les conditions pour intégrer la plateforme Parcoursup. Une commission rectorale statue sur l’intégration potentielle de ces offres dans la plateforme Parcoursup",
-      "à publier": "offre et organisme de formation qui remplissent les conditions pour intégrer la plateforme Parcoursup. L’offre de formation peut faire l’objet d’une publication par un instructeur en académie",
-      "en attente de publication": "offre de formation qui pourrait être intégrée automatiquement dans la plateforme Parcoursup via le module l’import",
+      "non intégrable": "offres qui ne correspondent pas aux règles d’intégration pour la prochaine campagne (type de diplôme et/ou dates non concordantes)",
+      "hors périmètre": "offres qui ne remplissent pas les conditions pour intégrer Parcoursup et/ou dont la date de début ne correspond pas à la session à venir.",
+      "publié": "offres de formation identifiées comme déjà publiées sur la plateforme Parcoursup et qui ont fait l’objet d’un rapprochement automatique par la Mission apprentissage",
+      "non publié": "offres de formation qui ont été non-publiées par un instructeur en académie",
+      "à publier (sous condition habilitation)": "offres et organismes de formation qui remplissent les conditions pour intégrer le service Parcoursup. L’habilitation de l'organisme formateur doit être vérifiée par un instructeur en académie",
+      "à publier (vérifier accès direct postbac)": "offres et organismes de formation qui remplissent les conditions pour intégrer le service Parcoursup. L’accessibilité de l’offre de formation aux bacheliers doit être vérifiée par un instructeur en académie",
+      "à publier (soumis à validation Recteur)": "offres et organismes de formation qui remplissent les conditions pour intégrer la plateforme Parcoursup. Une commission rectorale statue sur l’intégration potentielle de ces offres dans la plateforme Parcoursup",
+      "à publier": "offres et organismes de formation qui remplissent les conditions pour intégrer la plateforme Parcoursup. L’offre de formation peut faire l’objet d’une publication par un instructeur en académie",
+      "en attente de publication": "offres de formation qui pourraient être intégrées automatiquement dans la plateforme Parcoursup via le module d’import",
       "fermé": "Cette formation a été supprimée dans Parcoursup, mais elle figure encore dans les enregistrements Carif-Oref. Le Carif-Oref est informé de cette suppression pour rectification. Après mise à jour au niveau du Carif-Oref, la formation disparaîtra du catalogue."
     },
     "periode": {

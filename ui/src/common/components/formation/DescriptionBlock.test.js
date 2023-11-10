@@ -131,7 +131,7 @@ const formation = {
   capacite: null,
   duree: "3",
   annee: "1",
-  parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+  parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
   parcoursup_statut_history: [],
   affelnet_statut: AFFELNET_STATUS.PUBLIE,
   affelnet_statut_history: [],
@@ -184,7 +184,7 @@ test("renders the description block of the training", async () => {
   const intitule_court = queryByText("TECH.CHAUDRONNERIE INDUSTRIELLE");
   expect(intitule_court).toBeInTheDocument();
 
-  const diplome = queryByText("40025411");
+  const diplome = queryByText("40025411", { exact: false });
   expect(diplome).toBeInTheDocument();
 
   const partenaires = queryByText(/^Partenaires/i);

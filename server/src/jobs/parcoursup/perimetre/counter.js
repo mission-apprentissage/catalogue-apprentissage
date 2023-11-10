@@ -7,12 +7,12 @@ const run = async () => {
   const totalReglement = await Formation.countDocuments({ catalogue_published: true, published: true });
 
   const totalNotRelevant = await Formation.countDocuments({
-    parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+    parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
   });
   const totalReglementNotRelevant = await Formation.countDocuments({
     catalogue_published: true,
     published: true,
-    parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+    parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
   });
 
   const totalToValidateHabilitation = await Formation.countDocuments({
@@ -114,7 +114,7 @@ const run = async () => {
     `Compteurs des formations dans le catalogue (règlementaire / total):
       - total : ${totalReglement} / ${total}
 
-      - statut "hors périmètre" : ${totalReglementNotRelevant} / ${totalNotRelevant}
+      - statut "non intégrable" : ${totalReglementNotRelevant} / ${totalNotRelevant}
       - statut "à publier (sous condition habilitation)" : ${totalReglementToValidateHabilitation} / ${totalToValidateHabilitation}
       - statut "à publier (vérifier accès direct postbac)" : ${totalReglementToValidate} / ${totalToValidate}
       - statut "à publier (soumis à validation Recteur)" : ${totalReglementToValidateRecteur} / ${totalToValidateRecteur}

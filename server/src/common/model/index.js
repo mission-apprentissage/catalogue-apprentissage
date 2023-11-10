@@ -49,7 +49,6 @@ module.exports = {
       ],
     },
   }),
-  Report: createModel("report", schemas.get("report")),
   Log: createModel("log", schemas.get("log")),
   AffelnetFormation: createModel("affelnetformation", schemas.get("affelnetFormation")),
   Etablissement: createModel("etablissement", schemas.get("etablissement"), {
@@ -72,8 +71,6 @@ module.exports = {
   Consumption: createModel("consumption", schemas.get("consumption")),
   DualControlEtablissement: createModel("dualcontroletablissement", schemas.get("dualControlEtablissement")),
   DualControlFormation: createModel("dualcontrolformation", schemas.get("dualControlFormation")),
-  DualControlReport: createModel("dualcontrolreport", schemas.get("dualControlReport")),
-  DualControlPerimeterReport: createModel("dualcontrolperimeterreport", schemas.get("dualControlPerimeterReport")),
   ConsoleStat: createModel("consolestat", schemas.get("consoleStat")),
   PreviousSeasonFormation: createModel("previousSeasonFormation", schemas.get("previousSeasonFormation")),
   PreviousSeasonFormationStat: createModel("previousSeasonFormationStat", schemas.get("previousSeasonFormationStat")),

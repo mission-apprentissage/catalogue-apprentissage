@@ -41,7 +41,7 @@ const getCampagneStartDate = (currentDate = new Date()) => {
  * Pour appliquer les étiquettes pour les plateformes PS & Affelnet
  * une formation doit avoir au moins une date de début de formation >= début août de l'année scolaire suivante
  * eg: si on est en janvier 2022 --> [01 août 2022] - 31 juillet 2023, si on est en octobre 2022 --> [01 août 2023] - 31 juillet 2024, etc.
- * Si ce n'est pas le cas la formation sera "hors périmètre".
+ * Si ce n'est pas le cas la formation sera "non intégrable".
  *
  * @param {Date} [currentDate]
  * @returns {Date}
@@ -51,7 +51,7 @@ export const getSessionStartDate = (currentDate = new Date()) => {
   const now = currentDate;
   const sessionStart = getCampagneStartDate(currentDate);
 
-  if (now >= sessionStart) {
+  if (now.getTime() >= sessionStart.getTime()) {
     durationShift = 1;
   }
 
@@ -64,7 +64,7 @@ export const getSessionStartDate = (currentDate = new Date()) => {
  * Pour appliquer les étiquettes pour les plateformes PS & Affelnet
  * une formation doit avoir au moins une date de début de formation < fin juillet de l'année scolaire suivante
  * eg: si on est en janvier 2022 --> 01 août 2022 - [juillet 2023], si on est en octobre 2022 --> 01 août 2023 - [31 juillet 2024], etc.
- * Si ce n'est pas le cas la formation sera "hors périmètre".
+ * Si ce n'est pas le cas la formation sera "non intégrable".
  *
  * @param {Date} [currentDate]
  * @returns {Date}
@@ -74,7 +74,7 @@ export const getSessionEndDate = (currentDate = new Date()) => {
   const now = currentDate;
   const sessionStart = getCampagneStartDate(currentDate);
 
-  if (now >= sessionStart) {
+  if (now.getTime() >= sessionStart.getTime()) {
     durationShift = 1;
   }
 
@@ -84,16 +84,40 @@ export const getSessionEndDate = (currentDate = new Date()) => {
 };
 
 /**
+ * Renvoi l'information permettant de savoir si la formation possède au moins une date de début sur la session en cours
  *
  * @param {Formation} formation
  * @returns {boolean}
  */
 export const isInSession = ({ date_debut } = { date_debut: [] }) => {
+  const startDate = getSessionStartDate();
+  const endDate = getSessionEndDate();
+
   const datesInCampagne = date_debut?.filter(
-    (date) => new Date(date) >= getSessionStartDate() && new Date(date) <= getSessionEndDate()
+    (date) => new Date(date).getTime() >= startDate.getTime() && new Date(date).getTime() <= endDate.getTime()
   );
   const result = datesInCampagne?.length > 0;
-  console.log({ date_debut, datesInCampagne, result });
+
+  return result;
+};
+
+/**
+ * Renvoi l'information permettant de savoir si la formation possède au moins une date de début sur la session en cours
+ *
+ * @param {Formation} formation
+ * @returns {boolean}
+ */
+export const isInPreviousSession = ({ date_debut } = { date_debut: [] }) => {
+  const startDate = getSessionStartDate();
+  const endDate = getSessionEndDate();
+
+  startDate.setFullYear(startDate.getFullYear() - 1);
+  endDate.setFullYear(endDate.getFullYear() - 1);
+
+  const datesInCampagne = date_debut?.filter(
+    (date) => new Date(date).getTime() >= startDate.getTime() && new Date(date).getTime() <= endDate.getTime()
+  );
+  const result = datesInCampagne?.length > 0;
 
   return result;
 };

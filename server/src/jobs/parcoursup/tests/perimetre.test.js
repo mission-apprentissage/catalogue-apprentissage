@@ -76,7 +76,7 @@ describe(`${__filename} - Test global (deprecated)`, () => {
       catalogue_published: true,
       niveau: "6 (Licence, BUT...)",
       diplome: "Licence",
-      parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+      parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
       annee: "1",
       periode,
       date_debut,
@@ -85,7 +85,7 @@ describe(`${__filename} - Test global (deprecated)`, () => {
       ...formationCampagneOk,
       niveau: "6 (Licence, BUT...)",
       diplome: "Licence",
-      parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+      parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
       annee: "1",
     });
     await Formation.create({
@@ -107,7 +107,7 @@ describe(`${__filename} - Test global (deprecated)`, () => {
       niveau: "6 (Licence, BUT...)",
       diplome: "BUT",
       num_academie: "12",
-      parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+      parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
       annee: "1",
     });
     await Formation.create({
@@ -115,7 +115,7 @@ describe(`${__filename} - Test global (deprecated)`, () => {
       niveau: "6 (Licence, BUT...)",
       diplome: "BUT",
       num_academie: "14",
-      parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+      parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
       annee: "1",
     });
     await Formation.create({
@@ -155,7 +155,7 @@ describe(`${__filename} - Test global (deprecated)`, () => {
     await run();
 
     const totalNotRelevant = await Formation.countDocuments({
-      parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+      parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
     });
     assert.strictEqual(totalNotRelevant, 3);
 
@@ -235,7 +235,7 @@ describe(`${__filename} - Gestion de la disparition du périmètre`, async () =>
           await cleanAll();
         });
 
-        it("should have status different from 'hors périmètre' if no motif for disparition", async () => {
+        it("should have status different from 'non intégrable' if no motif for disparition", async () => {
           await Formation.create(formationOk);
 
           await run();
@@ -296,18 +296,18 @@ describe(`${__filename} - Gestion de la disparition du périmètre`, async () =>
               ![PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.FERME, PARCOURSUP_STATUS.NON_PUBLIE].includes(status)
           )
           .map(async (status) => {
-            await it(`should apply status 'hors périmètre' if not in perimeter anymore, and if status was '${status}'`, async () => {
+            await it(`should apply status 'non intégrable' if not in perimeter anymore, and if status was '${status}'`, async () => {
               await Formation.create({ ...formationOk, ...valueMotif, parcoursup_statut: status });
 
               await run();
 
               const totalHorsPérimètre = await Formation.countDocuments({
-                parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+                parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
               });
               assert.strictEqual(totalHorsPérimètre, 1);
 
               const totalOtherStatus = await Formation.countDocuments({
-                parcoursup_statut: { $nin: [PARCOURSUP_STATUS.HORS_PERIMETRE] },
+                parcoursup_statut: { $nin: [PARCOURSUP_STATUS.NON_INTEGRABLE] },
               });
               assert.strictEqual(totalOtherStatus, 0);
             });

@@ -1,10 +1,10 @@
 // @ts-check
-/** @typedef {"hors périmètre" | "publié" | "non publié" | "à publier" | "en attente de publication"} CommonStatus */
+/** @typedef {"non intégrable" | "publié" | "non publié" | "à publier" | "en attente de publication"} CommonStatus */
 /** @typedef {CommonStatus | "à publier (vérifier accès direct postbac)" | "à publier (soumis à validation Recteur)" | "à publier (sous condition habilitation)" | "rejet de publication"} ParcoursupStatus */
 /** @typedef {CommonStatus|  "à publier (soumis à validation)"} AffelnetStatus */
 
 const COMMON_STATUS = {
-  HORS_PERIMETRE: /** @type {CommonStatus} */ ("hors périmètre"),
+  NON_INTEGRABLE: /** @type {CommonStatus} */ ("non intégrable"),
   PUBLIE: /** @type {CommonStatus} */ ("publié"),
   NON_PUBLIE: /** @type {CommonStatus} */ ("non publié"),
   A_PUBLIER: /** @type {CommonStatus} */ ("à publier"),

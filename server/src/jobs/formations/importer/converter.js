@@ -11,7 +11,7 @@ const { cursor } = require("../../../common/utils/cursor");
 const { distanceBetweenCoordinates } = require("../../../common/utils/distanceUtils");
 const logger = require("../../../common/logger");
 const { computeMefs } = require("../../../logic/finder/mefsFinder");
-const { getCfdEntree } = require("../../../logic/finder/cfdEntreeFinder");
+const { getCfdEntree, getCfdEntreeDateFermeture } = require("../../../logic/finder/cfdEntreeFinder");
 
 const updateRelationFields = async ({ filter = {} }) => {
   logger.info({ type: "job" }, " == Updating relations for formations == ");
@@ -43,7 +43,8 @@ const computeRelationFields = async (fields) => {
 const recomputeFields = async (fields, oldFields, { forceRecompute = false } = { forceRecompute: false }) => {
   // MEFS & PLATEFORMES
 
-  let affelnet_mefs_10 = oldFields?.affelnet_mefs_10 ?? [],
+  let bcn_mefs_10 = fields?.bcn_mefs_10 ?? [],
+    affelnet_mefs_10 = oldFields?.affelnet_mefs_10 ?? [],
     affelnet_infos_offre = oldFields?.affelnet_infos_offre,
     parcoursup_mefs_10 = oldFields?.parcoursup_mefs_10 ?? [],
     duree_incoherente = oldFields?.duree_incoherente,
@@ -51,18 +52,24 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
 
   if (
     forceRecompute ||
-    Object.entries(objectDiff(fields?.bcn_mefs_10, oldFields?.bcn_mefs_10) ?? {}).length ||
+    Object.entries(
+      objectDiff(
+        fields?.bcn_mefs_10.map(({ date_fermeture, ...mef }) => mef),
+        oldFields?.bcn_mefs_10.map(({ date_fermeture, ...mef }) => mef)
+      ) ?? {}
+    ).length ||
     fields?.duree !== oldFields?.duree ||
     fields?.annee !== oldFields?.annee ||
     fields?.diplome !== oldFields?.diplome ||
     fields?.num_academie !== oldFields?.num_academie ||
     fields?.rncp_details?.code_type_certif !== oldFields?.rncp_details?.code_type_certif ||
-    fields?.rncp_details?.date_fin_validite_enregistrement !==
-      oldFields?.rncp_details?.date_fin_validite_enregistrement ||
-    fields?.cfd_date_fermeture !== oldFields?.cfd_date_fermeture ||
+    new Date(fields?.rncp_details?.date_fin_validite_enregistrement).getTime() !==
+      new Date(oldFields?.rncp_details?.date_fin_validite_enregistrement).getTime() ||
+    new Date(fields?.cfd_date_fermeture).getTime() !== new Date(oldFields?.cfd_date_fermeture).getTime() ||
     arrayDiff(fields?.date_debut, oldFields?.date_debut).length
   ) {
     ({
+      bcn_mefs_10,
       affelnet_mefs_10,
       affelnet_infos_offre,
       parcoursup_mefs_10,
@@ -103,6 +110,7 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
     //   },
 
     //   computed: {
+    //     bcn_mefs_10,
     //     affelnet_mefs_10,
     //     affelnet_infos_offre,
     //     parcoursup_mefs_10,
@@ -141,11 +149,10 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
   const uai_formation =
     oldFields?.editedFields?.uai_formation ??
     fields?.uai_formation ??
-    fields?.etablissement_formateur_uai ??
-    oldFields?.uai_formation ??
-    oldFields?.etablissement_formateur_uai;
-
-  const uai_formation_valide = !fields.uai_formation || (await isValideUAI(uai_formation));
+    (fields?.code_commune_insee === fields?.etablissement_formateur_code_commune_insee
+      ? fields?.etablissement_formateur_uai ?? oldFields?.uai_formation ?? oldFields?.etablissement_formateur_uai
+      : undefined);
+  const uai_formation_valide = !!uai_formation && (await isValideUAI(uai_formation));
 
   let lieu_formation_geo_coordonnees_computed = oldFields?.lieu_formation_geo_coordonnees_computed;
   let lieu_formation_adresse_computed = oldFields?.lieu_formation_adresse_computed;
@@ -288,8 +295,12 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
   }
 
   const cfd_entree = getCfdEntree(fields.cfd);
+  const cfd_entree_date_fermeture = await getCfdEntreeDateFermeture(fields.cfd);
 
   return {
+    ...fields,
+
+    bcn_mefs_10,
     affelnet_mefs_10,
     affelnet_infos_offre,
     parcoursup_mefs_10,
@@ -304,11 +315,10 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
     lieu_formation_adresse_computed,
 
     cfd_entree,
+    cfd_entree_date_fermeture,
     // ...(await computeRelationFields(fields)),
 
     partenaires,
-
-    ...fields,
   };
 };
 

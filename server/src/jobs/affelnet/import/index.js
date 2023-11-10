@@ -6,7 +6,7 @@ const { AffelnetFormation } = require("../../../common/model");
 const FILE_PATH = "/data/uploads/affelnet-import.xlsx";
 
 const afImportFormations = async () => {
-  logger.info({ type: "job" }, " -- AFFELNET IMPORT : ⏳ -- ");
+  logger.info({ type: "job" }, " -- AFFELNET | IMPORT : ⏳ -- ");
 
   try {
     const data = getJsonFromXlsxFile(FILE_PATH);
@@ -82,9 +82,9 @@ const afImportFormations = async () => {
     });
 
     logger.info({ type: "job" }, `${count} formations importées !`);
-    logger.info({ type: "job" }, " -- AFFELNET IMPORT : ✅ -- ");
+    logger.info({ type: "job" }, " -- AFFELNET | IMPORT : ✅ -- ");
   } catch (error) {
-    logger.error({ type: "job" }, " -- AFFELNET IMPORT : ❌ -- ");
+    logger.error({ type: "job" }, " -- AFFELNET | IMPORT : ❌ -- ");
   }
 };
 

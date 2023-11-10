@@ -4,8 +4,6 @@ const consoleStatSchema = require("./consoleStat");
 const consumptionSchema = require("./consumption");
 const dualControlEtablissementSchema = require("./dualControlEtablissement");
 const dualControlFormationSchema = require("./formation/dualControlFormation");
-const dualControlPerimeterReportSchema = require("./dualControlPerimeterReport");
-const dualControlReportSchema = require("./dualControlReport");
 const etablissementSchema = require("./etablissement");
 const formationSchema = require("./formation/formation");
 const logSchema = require("./log");
@@ -14,7 +12,6 @@ const parcoursupFormationSchema = require("./parcoursupFormation");
 const previousSeasonFormationSchema = require("./previousSeasonFormation");
 const previousSeasonFormationStatSchema = require("./previousSeasonFormationStat");
 const reglePerimetreSchema = require("./reglePerimetre");
-const reportSchema = require("./report");
 const roleSchema = require("./role");
 const statistiqueSchema = require("./statistique");
 const userSchema = require("./user");
@@ -29,8 +26,6 @@ const schemasMap = new Map(
     consumption: [consumptionSchema, {}],
     dualControlEtablissement: [dualControlEtablissementSchema, {}],
     dualControlFormation: [dualControlFormationSchema, {}],
-    dualControlPerimeterReport: [dualControlPerimeterReportSchema, {}],
-    dualControlReport: [dualControlReportSchema, {}],
     etablissement: [etablissementSchema, { timestamps }],
     formation: [formationSchema, { timestamps }],
     log: [logSchema, {}],
@@ -39,7 +34,6 @@ const schemasMap = new Map(
     previousSeasonFormation: [previousSeasonFormationSchema, {}],
     previousSeasonFormationStat: [previousSeasonFormationStatSchema, {}],
     reglePerimetre: [reglePerimetreSchema, { timestamps }],
-    report: [reportSchema, {}],
     role: [roleSchema, { timestamps }],
     statistique: [statistiqueSchema, { timestamps }],
     user: [userSchema, { timestamps }],

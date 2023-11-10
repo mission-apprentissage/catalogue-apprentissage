@@ -5,6 +5,8 @@ const logger = require("../../common/logger");
 const Boom = require("boom");
 const { sanitize, SAFE_UPDATE_OPERATORS } = require("../../common/utils/sanitizeUtils");
 const { hasOneOfRoles } = require("../../common/utils/rolesUtils");
+const { isValideUAI } = require("@mission-apprentissage/tco-service-node");
+const { AFFELNET_STATUS, PARCOURSUP_STATUS } = require("../../constants/status");
 
 module.exports = () => {
   const router = express.Router();
@@ -25,7 +27,47 @@ module.exports = () => {
       throw Boom.unauthorized();
     }
 
-    logger.debug({ type: "http" }, "Updating new item: ", payload);
+    logger.info({ type: "http" }, "Updating new item: ", payload);
+
+    if (payload.uai_formation) {
+      logger.info(
+        { type: "http" },
+        `Updating uai_formation ${formation.uai_formation} to ${payload.uai_formation} for ${formation.cle_ministere_educatif}`
+      );
+
+      if (!(await isValideUAI(payload.uai_formation))) {
+        throw Boom.badRequest(`${payload.uai_formation} n'est pas un code UAI valide.`);
+      }
+
+      if (
+        formation.etablissement_formateur_code_commune_insee !== formation.code_commune_insee &&
+        payload.uai_formation.trim() === formation.etablissement_formateur_uai
+      ) {
+        /**
+         * NOTE:
+         * On autorise les instructeurs à saisir le même UAI que pour le formateur même si le code_commune_insee est différent à partir d'une certaine date.
+         * Date à modifier chaque année.
+         */
+        const parcoursupAllowSameUaiDate = new Date("2023-12-15T00:00:00.000Z");
+        // TODO : Pour AFFELNET, date en attente de confirmation par la DGESCO.
+        const affelnetAllowSameUaiDate = new Date("2024-03-14T00:00:00.000Z");
+
+        if (
+          (new Date().getTime() < parcoursupAllowSameUaiDate.getTime() &&
+            formation.parcoursup_statut !== PARCOURSUP_STATUS.NON_INTEGRABLE) ||
+          (new Date().getTime() < affelnetAllowSameUaiDate.getTime() &&
+            formation.affelnet_statut !== AFFELNET_STATUS.NON_INTEGRABLE) ||
+          (formation.affelnet_statut === AFFELNET_STATUS.NON_INTEGRABLE &&
+            formation.parcoursup_statut === PARCOURSUP_STATUS.NON_INTEGRABLE)
+        ) {
+          throw Boom.badRequest(
+            `Le code commune Insee du lieu de formation (${formation.code_commune_insee}, ${formation.localite}) est différent de celui du formateur (${formation.etablissement_formateur_code_commune_insee}, ${formation.etablissement_formateur_localite}). \
+  L'UAI du lieu de formation doit donc être différent de celui du formateur. Il vous appartient de vérifier auprès de l'OFA que le lieu de formation est correct et de saisir l'UAI correspondant. \
+  Si vous pensez qu’il y a une erreur sur l’une de ces données, veuillez vous rapprocher du Carif-Oref.`
+          );
+        }
+      }
+    }
 
     const result = await Formation.findOneAndUpdate(
       { _id: itemId },
@@ -184,10 +226,10 @@ module.exports = () => {
    *                 type: string
    *               affelnet_statut:
    *                 type: string
-   *                 enum: ["hors périmètre", "publié", "non publié", "à publier (soumis à validation)", "à publier", "en attente de publication"]
+   *                 enum: ["non intégrable", "publié", "non publié", "à publier (soumis à validation)", "à publier", "en attente de publication"]
    *               parcoursup_statut:
    *                 type: string
-   *                 enum: ["hors périmètre", "publié", "non publié", "à publier (sous condition habilitation)", "à publier (vérifier accès direct postbac)", "à publier (soumis à validation Recteur)", "à publier", "en attente de publication"]
+   *                 enum: ["non intégrable", "publié", "non publié", "à publier (sous condition habilitation)", "à publier (vérifier accès direct postbac)", "à publier (soumis à validation Recteur)", "à publier", "en attente de publication"]
    *     responses:
    *       200:
    *         description: OK, retourne la formation mise à jour

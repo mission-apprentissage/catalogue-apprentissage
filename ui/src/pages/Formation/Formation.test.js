@@ -4,6 +4,7 @@ import { rest } from "msw";
 import Formation from "./Formation";
 import { waitFor } from "@testing-library/react";
 import { AFFELNET_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
+import { MemoryRouter, Route } from "react-router-dom";
 
 jest.setTimeout(20000);
 
@@ -222,7 +223,7 @@ const formation = {
   capacite: null,
   duree: "3",
   annee: "1",
-  parcoursup_statut: PARCOURSUP_STATUS.HORS_PERIMETRE,
+  parcoursup_statut: PARCOURSUP_STATUS.NON_INTEGRABLE,
   parcoursup_statut_history: [],
   affelnet_statut: AFFELNET_STATUS.PUBLIE,
   affelnet_statut_history: [],
@@ -281,7 +282,10 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 test("renders a training page", async () => {
-  const { queryByText, getByText } = renderWithRouter(<Formation match={{ params: { id: 1 } }} />);
+  const { queryByText, getByText } = renderWithRouter(<Formation />, {
+    route: "/formation/1",
+    path: "/formation/:id",
+  });
 
   await waitFor(() => getByText("TECHNICIEN EN CHAUDRONNERIE INDUSTRIELLE (BAC PRO)"));
 
@@ -292,7 +296,10 @@ test("renders a training page", async () => {
 test("don't display an error when uai is valid", async () => {
   grantAnonymousAccess({ acl: ["page_formation"] });
 
-  const { queryByText, getByTestId } = renderWithRouter(<Formation match={{ params: { id: 1 } }} />);
+  const { queryByText, getByTestId } = renderWithRouter(<Formation />, {
+    route: "/formation/1",
+    path: "/formation/:id",
+  });
 
   await waitFor(() => getByTestId("formation-content"));
 
@@ -306,7 +313,10 @@ test("don't display an error when uai is valid", async () => {
 test("display an error when uai is invalid", async () => {
   grantAnonymousAccess({ acl: ["page_formation"] });
 
-  const { queryByText, getByTestId } = renderWithRouter(<Formation match={{ params: { id: 2 } }} />);
+  const { queryByText, getByTestId } = renderWithRouter(<Formation />, {
+    route: "/formation/2",
+    path: "/formation/:id",
+  });
 
   await waitFor(() => getByTestId("formation-content"));
 

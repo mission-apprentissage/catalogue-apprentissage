@@ -164,7 +164,7 @@ const createFormation = async (formation, email = null) => {
  * pour création sur Parcoursup via le Web Service dédié
  */
 const run = async () => {
-  logger.info({ type: "job" }, " -- PARCOURSUP EXPORT : ⏳  -- ");
+  logger.info({ type: "job" }, " -- PARCOURSUP | EXPORT : ⏳  -- ");
   const args = process.argv.slice(2);
   const id = args.find((arg) => arg.startsWith("--id"))?.split("=")?.[1];
   const query = id ? { _id: id } : filter;
@@ -174,7 +174,7 @@ const run = async () => {
     await createFormation(formation);
     await sleep(1000);
   }
-  logger.info({ type: "job" }, " -- PARCOURSUP EXPORT : ✅  -- ");
+  logger.info({ type: "job" }, " -- PARCOURSUP | EXPORT : ✅  -- ");
 };
 
 if (process.env.standalone) {

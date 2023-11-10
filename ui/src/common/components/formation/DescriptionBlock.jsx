@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Heading, Link, ListItem, Text, UnorderedList } from "@chakra-ui/react";
 import { ExternalLinkLine } from "../../../theme/components/icons";
 import { DangerBox } from "../DangerBox";
-import InfoTooltip from "../InfoTooltip";
+import { InfoTooltip } from "../InfoTooltip";
 import helpText from "../../../locales/helpText.json";
 // import { FormationPeriode } from "./FormationPeriode";
 import { FormationDate } from "./FormationDate";
@@ -50,7 +50,7 @@ export const DescriptionBlock = ({ formation }) => {
 
   const isCfdExpired =
     formation.cfd_outdated ||
-    (formation.cfd_date_fermeture && new Date(formation.cfd_date_fermeture) <= getExpirationDate());
+    (formation.cfd_date_fermeture && new Date(formation.cfd_date_fermeture).getTime() <= getExpirationDate().getTime());
 
   const CfdContainer =
     !isTitreRNCP && isCfdExpired ? (args) => <DangerBox data-testid={"cfd-warning"} {...args} /> : React.Fragment;
@@ -58,7 +58,7 @@ export const DescriptionBlock = ({ formation }) => {
   const isRncpExpired =
     formation.rncp_details?.rncp_outdated ||
     (formation.rncp_details?.date_fin_validite_enregistrement &&
-      new Date(formation.rncp_details?.date_fin_validite_enregistrement) <= getExpirationDate());
+      new Date(formation.rncp_details?.date_fin_validite_enregistrement).getTime() <= getExpirationDate().getTime());
 
   const RncpContainer =
     isTitreRNCP && isRncpExpired ? (args) => <DangerBox data-testid={"rncp-warning"} {...args} /> : React.Fragment;
@@ -77,6 +77,8 @@ export const DescriptionBlock = ({ formation }) => {
     : React.Fragment;
 
   const campagneStartYear = getSessionStartDate().getFullYear();
+
+  const rncpCode = formation?.rncp_code?.split("RNCP")[1];
 
   return (
     <>
@@ -132,7 +134,10 @@ export const DescriptionBlock = ({ formation }) => {
             <Text mb={!isTitreRNCP && isCfdExpired ? 0 : 4}>
               Code diplôme (Éducation Nationale) :{" "}
               <Text as="span" variant="highlight">
-                {formation.cfd}
+                {formation.cfd}{" "}
+                {formation.cfd_date_fermeture
+                  ? `(expire le ${new Date(formation.cfd_date_fermeture).toLocaleDateString("fr-FR")})`
+                  : "(expiration : non renseigné)"}
               </Text>{" "}
               <InfoTooltip description={helpText.formation.cfd} />
             </Text>
@@ -181,7 +186,16 @@ export const DescriptionBlock = ({ formation }) => {
             >
               Codes MEF 10 caractères :{" "}
               <Text as="span" variant="highlight">
-                {formation?.bcn_mefs_10?.map(({ mef10 }) => mef10).join(", ")}
+                {formation?.bcn_mefs_10
+                  ?.map(
+                    ({ mef10, date_fermeture }) =>
+                      `${mef10} ${
+                        date_fermeture
+                          ? `(expire le ${new Date(date_fermeture).toLocaleDateString("fr-FR")})`
+                          : "(expiration : non renseigné)"
+                      }`
+                  )
+                  .join(", ")}
               </Text>{" "}
               <InfoTooltip description={helpText.formation.mef} />
             </Text>
@@ -197,7 +211,16 @@ export const DescriptionBlock = ({ formation }) => {
               <Text mb={4}>
                 Codes MEF 10 caractères dans le périmètre <i>Affelnet</i> :{" "}
                 <Text as="span" variant="highlight">
-                  {formation?.affelnet_mefs_10?.map(({ mef10 }) => mef10).join(", ")}
+                  {formation?.affelnet_mefs_10
+                    ?.map(
+                      ({ mef10, date_fermeture }) =>
+                        `${mef10} ${
+                          date_fermeture
+                            ? `(expire le ${new Date(date_fermeture).toLocaleDateString("fr-FR")})`
+                            : "(expiration : non renseigné)"
+                        }`
+                    )
+                    .join(", ")}
                 </Text>
               </Text>
 
@@ -243,7 +266,16 @@ export const DescriptionBlock = ({ formation }) => {
             <Text mb={4}>
               Codes MEF 10 caractères dans le périmètre <i>Parcoursup</i> :{" "}
               <Text as="span" variant="highlight">
-                {formation?.parcoursup_mefs_10?.map(({ mef10 }) => mef10).join(", ")}
+                {formation?.parcoursup_mefs_10
+                  ?.map(
+                    ({ mef10, date_fermeture }) =>
+                      `${mef10} ${
+                        date_fermeture
+                          ? `(expire le ${new Date(date_fermeture).toLocaleDateString("fr-FR")})`
+                          : "(expiration : non renseigné)"
+                      }`
+                  )
+                  .join(", ")}
               </Text>
             </Text>
           )}
@@ -376,7 +408,12 @@ export const DescriptionBlock = ({ formation }) => {
             <Text mb={isTitreRNCP && isRncpExpired ? 0 : 4}>
               Code RNCP :{" "}
               <Text as="span" variant="highlight">
-                {formation.rncp_code}
+                {formation.rncp_code}{" "}
+                {formation?.rncp_details?.date_fin_validite_enregistrement
+                  ? `(expire le ${new Date(
+                      formation?.rncp_details?.date_fin_validite_enregistrement
+                    ).toLocaleDateString("fr-FR")})`
+                  : "(expiration : non renseigné)"}
               </Text>{" "}
               <InfoTooltip description={helpText.formation.rncp_code} />
             </Text>
@@ -396,11 +433,11 @@ export const DescriptionBlock = ({ formation }) => {
                 )}{" "}
                 (source{" "}
                 <Link
-                  href={`https://www.francecompetences.fr/recherche/rncp/${formation.rncp_code}`}
+                  href={`https://www.francecompetences.fr/recherche/rncp/${rncpCode}`}
                   target="_blank"
                   rel="noreferrer noopener"
                 >
-                  https://www.francecompetences.fr/recherche/rncp/{formation.rncp_code}
+                  https://www.francecompetences.fr/recherche/rncp/{rncpCode}
                 </Link>
                 ).
               </Text>

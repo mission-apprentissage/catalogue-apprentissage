@@ -6,6 +6,9 @@
     "es6": true,
     "mocha": true
   },
+  "rules": {
+    "no-unused-vars": ["error", { "ignoreRestSiblings": true }]
+  },
   "parserOptions": {
     "ecmaVersion": 2020
   },

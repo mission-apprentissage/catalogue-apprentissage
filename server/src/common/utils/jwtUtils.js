@@ -28,7 +28,7 @@ const createParcoursupToken = ({ ttl = 20000, id, data, privateKey, pwd }) => {
   // console.log("data:", dataStr);
   // console.log("hash:", hash);
 
-  return jwt.sign(
+  const token = jwt.sign(
     {
       id,
       expire,
@@ -41,6 +41,8 @@ const createParcoursupToken = ({ ttl = 20000, id, data, privateKey, pwd }) => {
       // keyid: "devKey", // no keyid yet
     }
   );
+
+  return token;
 };
 
 module.exports = {

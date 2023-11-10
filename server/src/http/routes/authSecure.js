@@ -62,7 +62,12 @@ module.exports = ({ users }) => {
       const { username, password } = req.body;
       const user = await users.authenticate(username, password);
 
-      if (!user) return res.status(401).json({ message: "Utilisateur non trouvé" });
+      if (!user)
+        return res.status(401).json({
+          message: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(username.toLowerCase())
+            ? "Cet email est inconnu. Vous pouvez essayer en saisissant l'email de la région académique (par ex. thomas.dupont@region-academique-hauts-de-france.fr). Sinon, contactez l'équipe technique catalogue catalogue@apprentissage.beta.gouv.fr"
+            : "Cet identifiant est inconnu. Vous pouvez essayer en saisissant votre email. Sinon, contactez l'équipe technique catalogue catalogue@apprentissage.beta.gouv.fr",
+        });
 
       const payload = await users.structureUser(user);
 

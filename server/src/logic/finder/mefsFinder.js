@@ -1,3 +1,4 @@
+const { getModels } = require("@mission-apprentissage/tco-service-node");
 const { ReglePerimetre, SandboxFormation } = require("../../common/model");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 const { findMefsForParcoursup } = require("../../common/utils/parcoursupUtils");
@@ -6,6 +7,26 @@ const { AFFELNET_STATUS } = require("../../constants/status");
 
 const getInfosOffreLabel = (formation, mef) => {
   return `${formation.libelle_court} en ${mef.modalite.duree} an${Number(mef.modalite.duree) > 1 ? "s" : ""}`;
+};
+
+const completeDateFermetureMefs = async (mefs) => {
+  const Models = await getModels();
+  return await Promise.all(
+    mefs.map(async (mef) => {
+      const { DATE_FERMETURE } = await Models.BcnNMef.findOne({ MEF: mef.mef10 });
+
+      const dateParts = DATE_FERMETURE?.split("/");
+
+      console.log({
+        ...mef,
+        date_fermeture: DATE_FERMETURE ? new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]) : null,
+      });
+      return {
+        ...mef,
+        date_fermeture: DATE_FERMETURE ? new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]) : null,
+      };
+    })
+  );
 };
 
 const findMefsForAffelnet = async (rules) => {
@@ -59,7 +80,6 @@ const computeMefs = async (fields, oldFields) => {
   if (bcn_mefs_10?.length > 0) {
     //  filter bcn_mefs_10 to get affelnet_mefs_10 for affelnet
 
-    // eslint-disable-next-line no-unused-vars
     const { _id, updates_history, ...rest } = fields;
 
     const aPublierRules = await ReglePerimetre.find({
@@ -118,6 +138,10 @@ const computeMefs = async (fields, oldFields) => {
   if (bcn_mefs_10?.length > 0) {
     parcoursup_mefs_10 = findMefsForParcoursup(fields);
   }
+
+  bcn_mefs_10 = await completeDateFermetureMefs(bcn_mefs_10);
+  affelnet_mefs_10 = await completeDateFermetureMefs(affelnet_mefs_10);
+  parcoursup_mefs_10 = await completeDateFermetureMefs(parcoursup_mefs_10);
 
   return {
     bcn_mefs_10,

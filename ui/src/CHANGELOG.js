@@ -4,7 +4,7 @@ import { Link } from "@chakra-ui/react";
 const changelog = {
   list: [
     {
-      version: "6.10.0",
+      version: "6.11.0",
       date: "Prochainement",
       about: `<h4>À venir</h4>`,
       fixes: [],
@@ -13,7 +13,7 @@ const changelog = {
     },
 
     {
-      version: "6.9.0",
+      version: "6.10.0",
       date: "Octobre 2023",
       about: `<h4>À propos de cette version</h4>
   Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
@@ -28,7 +28,7 @@ const changelog = {
     },
 
     {
-      version: "6.8.0",
+      version: "6.9.0",
       date: "Septembre 2023",
       about: `<h4>À propos de cette version</h4>
   Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
@@ -40,15 +40,19 @@ const changelog = {
         `Correction d’un problème lors de la conversion des formations provenant du flux RCO`,
         `Correction du calcul de distance_lieu_formation_etablissement_formateur lié à une différence de format entre les coordonnées`,
         `Obligation d’avoir un UAI renseigné pour les publications vers Affelnet`,
-        `Amélioration des outils de génération de la documentation OpenAPI`,
-        `Resolution d’une faille de sécurité dans mongoose par une mise à jour des dépendances`,
+        `API — Amélioration des outils de génération de documentation OpenApi`,
         `Correction d’un problème de format de log envoyé à slack concernant les appels http`,
+        `Correction d'un problème lors du calcul de distance_lieu_formation_etablissement_formateur lié à une différence de format entre les coordonnées`,
+        `Mise en place de l'obligation d'avoir un uai renseigné pour les publications vers Affelnet`,
+        `Correction de la colonne 'Raison sociale du formateur' dans l'export CSV qui n'affichait pas la bonne valeur`,
+        `API — Resolution d'une faille de sécurité dans l'ORM utilisé`,
       ],
       features: [
         `Affichage d’un message de warning lorsque les codes MEF se terminent par 99`,
         `Suppression du champs rome_codes de l’historique`,
-        `Modification de la date de début de campagne au 18 septembre`,
         `Ajout de la colonne ‘Distance entre lieu de formation et organisme formateur’ dans l’export csv`,
+        `Ajout de la colonne 'Raison sociale de l'organisme responsable' dans l'export csv des formations`,
+        `Ajout de la colonne 'Distance entre lieu de formation et organisme formateur' dans l'export csv des formations`,
       ],
       improvements: [
         `Modification des règles d’affichages du warning RNCP / CFD outdated`,
@@ -58,6 +62,29 @@ const changelog = {
         `Modification des règles d’affichage du lien vers LaBonneAlternance`,
         `Suppression du bloc ‘Autres informations’ obsolète sur les fiches des formations`,
         `Modification des paramètres d’historisation des modifications apportées aux formations`,
+        `Modification de la date de fin de campagne au 18 septembre`,
+        `Suppression du bloc 'Autres informations' obsolète sur les fiches des formations`,
+      ],
+    },
+
+    {
+      version: "6.8.0",
+      date: "Aout 2023",
+      about: `<h4>À propos de cette version</h4>
+  Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
+
+      fixes: [
+        `Correction du nombre de formations correspondantes affiché sur la modale d'édition des règles de périmètre `,
+        `Correction du script de rapprochement des bases Affelnet et catalogue en ignorant les formations hors périmètre Affelnet`,
+        `Correction d'un problème lors de la conversion des formations provenant du flux RCO`,
+      ],
+      features: [
+        `Affichage d'un encadré d'avertissement lorsque le code MEF se termine par 99`,
+        `Modification des règles d'affichage de l'encadré d'avertissement lorsque les codes RNCP ou CFD sont dépassés`,
+      ],
+      improvements: [
+        `Exploitation - Refonte du système de gestion des logs`,
+        `Modification des paramètres d'historisation des modifications apportées aux formations`,
       ],
     },
 

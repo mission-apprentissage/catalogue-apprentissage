@@ -3,7 +3,7 @@ const logger = require("../../../common/logger");
 const { AFFELNET_STATUS } = require("../../../constants/status");
 
 /**
- * Si l'historique contient des affelnet_statut différents de 'en attente de publication' après la date, cela signifie que la formation n'est pas 'en attente de publication' depuis la date spécifiée
+ * Si l'historique contient des affelnet_statut différents de "en attente de publication" après la date, cela signifie que la formation n'est pas "en attente de publication" depuis la date spécifiée
  *
  * @param {*} formation
  * @param {Date} date
@@ -16,7 +16,7 @@ const allHistoryIsEnAttenteAfterDate = (formation, date) => {
 };
 
 /**
- * Si l'historique contenant une modification de affelnet_statut juste avant la date est différente de 'en attente de publication', cela signifie qu'il y a eu un changement de status après la date spécifiée
+ * Si l'historique contenant une modification de affelnet_statut juste avant la date est différente de "en attente de publication", cela signifie qu'il y a eu un changement de status après la date spécifiée
  *
  * @param {*} formation
  * @param {Date} date
@@ -30,7 +30,7 @@ const lastHistoryIsEnAttenteBeforeDate = (formation, date) =>
 
 /**
  *
- * @param {Date} date La date à partir de laquelle les formations ayant été passées au statut Affelnet 'en attente de publication' vont repassé à hors périmètre.
+ * @param {Date} date La date à partir de laquelle les formations ayant été passées au statut Affelnet "en attente de publication" vont repassé à "non intégrable".
  */
 const run = async (date) => {
   let count = 0;
@@ -54,13 +54,13 @@ const run = async (date) => {
           { _id: formation._id },
           {
             $set: {
-              affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE,
+              affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE,
             },
             $push: {
-              affelnet_statut_history: { affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE, date: new Date() },
+              affelnet_statut_history: { affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE, date: new Date() },
               updates_history: {
                 from: { affelnet_statut: formation.affelnet_statut },
-                to: { affelnet_statut: AFFELNET_STATUS.HORS_PERIMETRE },
+                to: { affelnet_statut: AFFELNET_STATUS.NON_INTEGRABLE },
                 updated_at: new Date(),
               },
             },
