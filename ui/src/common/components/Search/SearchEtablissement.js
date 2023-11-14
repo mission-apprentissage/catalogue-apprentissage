@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { DataSearch, ReactiveBase, ReactiveList, SelectedFilters } from "@appbaseio/reactivesearch";
 import queryString from "query-string";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Box, Container, Flex, FormLabel, Switch, Text } from "@chakra-ui/react";
 
 import useAuth from "../../hooks/useAuth";
@@ -20,9 +20,10 @@ import { Pagination } from "./components/Pagination";
 
 import "./search.css";
 
-export default React.memo(({ location, searchState, context, extraButtons = null }) => {
-  const { defaultMode } = queryString.parse(location?.search);
-  const [mode, setMode] = useState(defaultMode ?? "simple");
+export default React.memo(({ searchState, context, extraButtons = null }) => {
+  const [searchParams] = useSearchParams();
+
+  const [mode, setMode] = useState(searchParams.get("defaultMode") ?? "simple");
   const { base, countEtablissement, endpoint } = searchState;
 
   let [auth] = useAuth();
