@@ -64,13 +64,16 @@ export const allowedFilters = [
 ];
 
 const mefsFormatter = (mefs) => {
+  return mefs?.map((mef) => `${mef.mef10}`).join(", ") ?? "";
+};
+
+const mefsExpirationFormatter = (mefs) => {
   return (
     mefs
-      ?.map(
-        (mef) =>
-          `${mef.mef10}${
-            mef.date_fermeture ? ` (expire le ${new Date(mef.date_fermeture).toLocaleDateString("fr-FR")})` : ""
-          }`
+      ?.map((mef) =>
+        mef.date_fermeture
+          ? `expire le ${new Date(mef.date_fermeture).toLocaleDateString("fr-FR")}`
+          : "pas de date d'expiration"
       )
       .join(", ") ?? ""
   );
@@ -278,6 +281,13 @@ export const columnsDefinition = [
     formatter: mefsFormatter,
   },
   {
+    Header: "Dates d'expiration MEF rattaches",
+    accessor: "bcn_mefs_10",
+    width: 200,
+    exportable: true,
+    formatter: mefsExpirationFormatter,
+  },
+  {
     Header: "Liste MEF Affelnet",
     accessor: "affelnet_mefs_10",
     width: 200,
@@ -285,11 +295,25 @@ export const columnsDefinition = [
     formatter: mefsFormatter,
   },
   {
+    Header: "Dates d'expiration MEF Affelnet",
+    accessor: "affelnet_mefs_10",
+    width: 200,
+    exportable: true,
+    formatter: mefsExpirationFormatter,
+  },
+  {
     Header: "Liste MEF Parcoursup",
     accessor: "parcoursup_mefs_10",
     width: 200,
     exportable: true,
     formatter: mefsFormatter,
+  },
+  {
+    Header: "Dates d'expiration MEF Parcoursup",
+    accessor: "parcoursup_mefs_10",
+    width: 200,
+    exportable: true,
+    formatter: mefsExpirationFormatter,
   },
   {
     Header: "Périmètre Affelnet",

@@ -2,7 +2,6 @@
   "name": "mna-catalogue-apprentissage-ui",
   "description": "[MNA] App catalogue apprentissage",
   "version": "6.10.0",
-  "private": false,
   "author": "MNA",
   "license": "MIT",
   "dependencies": {
