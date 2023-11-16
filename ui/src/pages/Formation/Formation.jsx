@@ -177,11 +177,12 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
 
                 {formation.uai_formation && (
                   <>
-                    {formation.uai_formation === formation.etablissement_formateur_uai && (
-                      <Text fontSize={"zeta"} color={"grey.600"} mt={2}>
-                        - Cet UAI a été repris automatiquement de l’UAI formateur.
-                      </Text>
-                    )}
+                    {formation.uai_formation === formation.etablissement_formateur_uai &&
+                      !formation.editedFields?.uai_formation && (
+                        <Text fontSize={"zeta"} color={"grey.600"} mt={2}>
+                          - Cet UAI a été repris automatiquement de l’UAI formateur.
+                        </Text>
+                      )}
 
                     {[PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut) && (
                       <Text fontSize={"zeta"} color={"grey.600"} mt={2}>
