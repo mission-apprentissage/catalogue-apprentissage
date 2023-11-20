@@ -602,26 +602,47 @@ export default () => {
                 {formation.catalogue_published && (
                   <Flex justifyContent={"space-between"} flexDirection={["column", "column", "row"]}>
                     <Box mt={5}>
-                      {hasAccessTo(user, "page_formation/voir_status_publication_ps") && (
-                        <StatusBadge source="Parcoursup" status={formation.parcoursup_statut} mr={[0, 3]} />
-                      )}
-                      {hasAccessTo(user, "page_formation/voir_status_publication_ps") && (
-                        <PreviousStatusBadge
-                          source="Parcoursup"
-                          status={formation.parcoursup_previous_statut}
-                          mr={[0, 3]}
-                        />
-                      )}
-                      {hasAccessTo(user, "page_formation/voir_status_publication_aff") && (
-                        <StatusBadge source="Affelnet" status={formation.affelnet_statut} mr={[0, 3]} />
-                      )}
-                      {hasAccessTo(user, "page_formation/voir_status_publication_aff") && (
-                        <PreviousStatusBadge
-                          source="Affelnet"
-                          status={formation.affelnet_previous_statut}
-                          mr={[0, 3]}
-                        />
-                      )}
+                      {hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
+                        (formation.parcoursup_perimetre ||
+                          formation.parcoursup_statut !== PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT) && (
+                          <>
+                            <StatusBadge source="Parcoursup" status={formation.parcoursup_statut} mr={[0, 3]} />
+
+                            <PreviousStatusBadge
+                              source="Parcoursup"
+                              status={formation.parcoursup_previous_statut}
+                              mr={[0, 3]}
+                            />
+                          </>
+                        )}
+                      {hasAccessTo(user, "page_formation/voir_status_publication_aff") &&
+                        (formation.affelnet_perimetre ||
+                          formation.affelnet_statut !== AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT) && (
+                          <>
+                            <StatusBadge source="Affelnet" status={formation.affelnet_statut} mr={[0, 3]} />
+
+                            <PreviousStatusBadge
+                              source="Affelnet"
+                              status={formation.affelnet_previous_statut}
+                              mr={[0, 3]}
+                            />
+                          </>
+                        )}
+
+                      {!formation.affelnet_perimetre &&
+                        !formation.parcoursup_perimetre &&
+                        formation.affelnet_statut === AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT &&
+                        formation.parcoursup_statut === PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT && (
+                          <>
+                            {hasAccessTo(user, "page_formation/voir_status_publication_aff") && (
+                              <StatusBadge mr={[0, 3]} text={"Affelnet - hors périmètre"} />
+                            )}
+
+                            {hasAccessTo(user, "page_formation/voir_status_publication_ps") && (
+                              <StatusBadge mr={[0, 3]} text={"Parcoursup - hors périmètre"} />
+                            )}
+                          </>
+                        )}
                     </Box>
                     <Flex
                       alignItems="center"

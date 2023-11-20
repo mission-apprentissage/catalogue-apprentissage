@@ -7,9 +7,10 @@ import { Box, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { ArrowRightLine, InfoCircle } from "../../../../../theme/components/icons";
 import { QualiteBadge } from "../../../QualiteBadge";
 import { HabiliteBadge } from "../../../HabiliteBadge";
+import { AFFELNET_STATUS, PARCOURSUP_STATUS } from "../../../../../constants/status";
 
 export const CardListFormation = ({ data, context }) => {
-  let [auth] = useAuth();
+  const [user] = useAuth();
 
   return (
     <Link as={NavLink} to={`/formation/${data._id}`} variant="card" mt={4} data-testid={"card_formation"}>
@@ -28,14 +29,38 @@ export const CardListFormation = ({ data, context }) => {
         <Box>
           <Flex justifyContent="space-between">
             <Flex mt={1} flexWrap={"wrap"}>
-              {(hasAccessTo(auth, "page_catalogue/voir_status_publication_ps") ||
-                hasAccessTo(auth, "page_catalogue/voir_status_publication_aff")) &&
-                data.catalogue_published && (
-                  <>
-                    <StatusBadge source="Parcoursup" status={data.parcoursup_statut} mt={2} mr={[0, 2]} />
-                    <StatusBadge source="Affelnet" status={data.affelnet_statut} mt={2} mr={[0, 2]} />
-                  </>
-                )}
+              {data.catalogue_published && (
+                <>
+                  {hasAccessTo(user, "page_catalogue/voir_status_publication_ps") &&
+                    (data.parcoursup_perimetre ||
+                      data.parcoursup_statut !== PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT) && (
+                      <>
+                        <StatusBadge source="Parcoursup" status={data.parcoursup_statut} mr={[0, 3]} />
+                      </>
+                    )}
+                  {hasAccessTo(user, "page_catalogue/voir_status_publication_aff") &&
+                    (data.affelnet_perimetre || data.affelnet_statut !== AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT) && (
+                      <>
+                        <StatusBadge source="Affelnet" status={data.affelnet_statut} mr={[0, 3]} />
+                      </>
+                    )}
+
+                  {!data.affelnet_perimetre &&
+                    !data.parcoursup_perimetre &&
+                    data.affelnet_statut === AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT &&
+                    data.parcoursup_statut === PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT && (
+                      <>
+                        {hasAccessTo(user, "page_formation/voir_status_publication_aff") && (
+                          <StatusBadge mr={[0, 3]} text={"Affelnet - hors périmètre"} />
+                        )}
+
+                        {hasAccessTo(user, "page_formation/voir_status_publication_ps") && (
+                          <StatusBadge mr={[0, 3]} text={"Parcoursup - hors périmètre"} />
+                        )}
+                      </>
+                    )}
+                </>
+              )}
               {!data.catalogue_published && (
                 <>
                   <QualiteBadge value={data.etablissement_gestionnaire_certifie_qualite} mt={2} mr={[0, 2]} />
@@ -53,7 +78,7 @@ export const CardListFormation = ({ data, context }) => {
                 identifiant actions Carif Oref: {data.ids_action.join(",")}
               </Text>
             )}
-            {auth?.sub !== "anonymous" && data.annee === "X" && (
+            {user?.sub !== "anonymous" && data.annee === "X" && (
               <Flex textStyle="xs" mt={4} alignItems="center">
                 <InfoCircle />
                 <Text as={"span"} ml={1}>
