@@ -14,6 +14,12 @@ ENV REACT_APP_METABASE_SECRET_KEY=$REACT_APP_METABASE_SECRET_KEY
 
 WORKDIR /app
 
+RUN corepack enable &&\
+  corepack prepare yarn@stable --activate && \
+  yarn set version 3.3.1  && \
+  yarn config set nodeLinker node-modules && \
+  yarn config set defaultSemverRangePrefix ''
+
 EXPOSE 3000
 
 CMD NODE_OPTIONS="--max-old-space-size=2048" yarn install && yarn start

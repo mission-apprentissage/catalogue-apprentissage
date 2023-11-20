@@ -14,12 +14,13 @@ ENV REACT_APP_METABASE_URL=$REACT_APP_METABASE_URL
 ENV REACT_APP_METABASE_SECRET_KEY=$REACT_APP_METABASE_SECRET_KEY
 
 WORKDIR /app
-COPY .yarn  ./.yarn
+RUN corepack enable &&\
+  corepack prepare yarn@stable --activate && \
+  yarn set version 3.3.1 && \
+  yarn config set nodeLinker node-modules && \
+  yarn config set defaultSemverRangePrefix ''
+
 COPY package.json yarn.lock*  ./
-RUN echo -e "yarnPath: .yarn/releases/yarn-3.3.1.cjs\n\
-nodeLinker: node-modules\n\
-defaultSemverRangePrefix: ''\n\
-" > /app/.yarnrc.yml ;
 
 ## DEPS
 FROM base as deps
@@ -33,7 +34,7 @@ RUN yarn build
 
 ## RUN
 FROM base as runner
-
+COPY --from=deps /app/node_modules/  ./node_modules/
 COPY --from=builder /app/build  ./build/
 EXPOSE 3000
 CMD yarn serve
