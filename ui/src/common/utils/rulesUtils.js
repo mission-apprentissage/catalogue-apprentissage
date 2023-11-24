@@ -96,6 +96,7 @@ export const isInSession = ({ date_debut } = { date_debut: [] }) => {
   const datesInCampagne = date_debut?.filter(
     (date) => new Date(date).getTime() >= startDate.getTime() && new Date(date).getTime() <= endDate.getTime()
   );
+
   const result = datesInCampagne?.length > 0;
 
   return result;

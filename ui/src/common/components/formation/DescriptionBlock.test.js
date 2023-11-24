@@ -114,20 +114,10 @@ const formation = {
     voix_acces: null,
   },
   rome_codes: ["H2902", "I1606", "H2914", "H2913"],
-  periode: [
-    "2021-09",
-    "2021-10",
-    "2021-11",
-    "2021-12",
-    "2022-01",
-    "2022-02",
-    "2022-03",
-    "2022-04",
-    "2022-05",
-    "2022-06",
-    "2022-07",
-    "2022-08",
-  ],
+  periode: ["2023-09", "2024-09"],
+  date_debut: ["2023-09-18T00:00:00.000Z", "2024-09-09T00:00:00.000Z"],
+  date_fin: ["2024-09-13T00:00:00.000Z", "2025-09-05T00:00:00.000Z"],
+  modalites_entrees_sorties: [false, false],
   capacite: null,
   duree: "3",
   annee: "1",
@@ -271,5 +261,21 @@ test("display a warning for cfd outdated", async () => {
   const { queryByText } = render(<DescriptionBlock formation={testFormation} />);
 
   const warn = queryByText(/Ce code formation diplôme est expiré/i);
+  expect(warn).toBeInTheDocument();
+});
+
+test("display a warning for missing session", async () => {
+  const testFormation = {
+    ...formation,
+    periode: ["2023-09"],
+    date_debut: ["2023-09-18T00:00:00.000Z"],
+    date_fin: ["2024-09-13T00:00:00.000Z"],
+    modalites_entrees_sorties: [false],
+  };
+  const { queryByText } = render(<DescriptionBlock formation={testFormation} />);
+
+  const warn = queryByText(
+    /Les dates de session ne correspondent pas aux règles de périmètre pour la prochaine campagne/i
+  );
   expect(warn).toBeInTheDocument();
 });

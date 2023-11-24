@@ -22,8 +22,6 @@ module.exports = async () => {
         return null;
       }
 
-      console.log({ user });
-
       const current = user.password;
       if (sha512Utils.compare(password, current)) {
         if (sha512Utils.isTooWeak(current)) {

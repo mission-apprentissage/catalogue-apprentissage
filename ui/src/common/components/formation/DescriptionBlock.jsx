@@ -73,7 +73,7 @@ export const DescriptionBlock = ({ formation }) => {
   );
 
   const DateSessionContainer = !isInSession(formation)
-    ? (args) => <DangerBox data-testid={"rncp-warning"} {...args} />
+    ? (args) => <DangerBox data-testid={"session-warning"} {...args} />
     : React.Fragment;
 
   const campagneStartYear = getSessionStartDate().getFullYear();

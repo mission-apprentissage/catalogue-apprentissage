@@ -4,14 +4,14 @@ const date1 = new Date("2022-09-01T00:00:00.000Z");
 const date2 = new Date("2022-09-02T00:00:00.000Z");
 
 const string1 = date1.toISOString();
-console.log(`${new Date(string1)} :  ${string1}`);
+// console.log(`${new Date(string1)} :  ${string1}`);
 const string2 = date2.toISOString();
-console.log(`${new Date(string2)} :  ${string2}`);
+// console.log(`${new Date(string2)} :  ${string2}`);
 
 const number1 = date1.getTime();
-console.log(`${new Date(number1)} : ${number1}`);
+// console.log(`${new Date(number1)} : ${number1}`);
 const number2 = date2.getTime();
-console.log(`${new Date(number2)} : ${number2}`);
+// console.log(`${new Date(number2)} : ${number2}`);
 
 const ascDate = [{ updated_at: date1 }, { updated_at: date2 }];
 
