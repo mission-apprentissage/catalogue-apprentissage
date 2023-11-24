@@ -9,6 +9,7 @@ const {
   getParcoursupErrorAction,
   getParcoursupErrorDescription,
 } = require("../../../common/utils/parcoursupUtils");
+const { getExpirationDate } = require("../../../common/utils/rulesUtils");
 
 /** @typedef {import("../../../common/model/schema/formation").Formation} Formation */
 
@@ -19,6 +20,14 @@ const filter = {
   published: true,
   parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
   uai_formation: { $ne: null },
+  $or: [
+    {
+      "rncp_details.date_fin_validite_enregistrement": {
+        $gt: getExpirationDate(),
+      },
+    },
+    { "rncp_details.date_fin_validite_enregistrement": null },
+  ],
 };
 
 const select = {
@@ -79,7 +88,7 @@ const formatter = async ({
 };
 
 const createCursor = (query = filter) => {
-  return Formation.find(query, select).sort(sort).limit(limit).cursor();
+  return Formation.find(query, select, { allowDiskUse: true }).sort(sort).limit(limit).cursor();
 };
 
 /**
