@@ -10,6 +10,8 @@ const cursor = async (request, callback) => {
   const total = await request.countDocuments();
   const cursor = await request.cursor();
 
+  cursor.addCursorFlag("noCursorTimeout", true);
+
   let index = 0;
 
   // create a new progress bar instance and use shades_classic theme
