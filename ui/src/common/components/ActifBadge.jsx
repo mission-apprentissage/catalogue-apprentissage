@@ -2,7 +2,7 @@ import React from "react";
 import { Badge, Flex, Text } from "@chakra-ui/react";
 import { CheckLine, Question } from "../../theme/components/icons";
 
-export const ActifBadge = ({ value, ...props }) => {
+export const ActifBadge = ({ values, ...props }) => {
   let text;
   let variant;
   let Icon;
