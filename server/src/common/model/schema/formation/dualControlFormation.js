@@ -515,6 +515,12 @@ const formationSchema = {
     description: "SIRET actif ou inactif",
   },
 
+  siret_actif: {
+    type: String,
+    default: null,
+    description: "Badge siret actif/inactif",
+  },
+
   num_tel: {
     type: String,
     default: null,

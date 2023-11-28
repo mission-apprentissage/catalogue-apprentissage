@@ -789,6 +789,11 @@ module.exports = {
         default: null,
         description: "SIRET actif ou inactif",
       },
+      siret_actif: {
+        type: "string",
+        default: null,
+        description: "Badge siret actif/inactif",
+      },
       num_tel: {
         type: "string",
         default: null,
