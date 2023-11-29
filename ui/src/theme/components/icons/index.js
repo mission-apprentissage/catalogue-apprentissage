@@ -22,6 +22,8 @@ export * from "./ErrorFill";
 export * from "./ErrorLine";
 export * from "./ExclamationCircle";
 export * from "./ExternalLinkLine";
+export * from "./EyeFill";
+export * from "./EyeOffFill";
 export * from "./FolderLine";
 export * from "./FolderOpenLine";
 export * from "./InfoCircle";

@@ -9,6 +9,7 @@ import useAuth from "../../common/hooks/useAuth";
 import { _post } from "../../common/httpClient";
 import decodeJWT from "../../common/utils/decodeJWT";
 import { setTitle } from "../../common/utils/pageUtils";
+import { PasswordInput } from "../../common/components/PasswordInput";
 
 const ResetPasswordPage = () => {
   const [, setAuth] = useAuth();
@@ -68,7 +69,7 @@ const ResetPasswordPage = () => {
                     return (
                       <FormControl isRequired isInvalid={meta.error && meta.touched} marginBottom="2w">
                         <FormLabel>Nouveau mot de passe</FormLabel>
-                        <Input {...field} id={field.name} type="password" placeholder="Votre nouveau mot de passe..." />
+                        <PasswordInput {...field} id={field.name} placeholder="Votre nouveau mot de passe..." />
                         <FormErrorMessage>{meta.error}</FormErrorMessage>
                       </FormControl>
                     );

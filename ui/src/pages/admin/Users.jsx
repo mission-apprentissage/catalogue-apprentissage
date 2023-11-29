@@ -28,6 +28,7 @@ import ACL from "./acl";
 import generator from "generate-password-browser";
 import { useQuery } from "react-query";
 import { academies } from "../../constants/academies";
+import { PasswordInput } from "../../common/components/PasswordInput";
 
 const ACADEMIES = Object.keys(academies).sort((a, b) => Number(a) - Number(b));
 
@@ -187,8 +188,7 @@ const UserLine = ({ user, roles }) => {
       {!user && (
         <FormControl py={2}>
           <FormLabel>Mot de passe temporaire</FormLabel>
-          <Input
-            type="text"
+          <PasswordInput
             id="newTmpPassword"
             name="newTmpPassword"
             value={values.newTmpPassword}

@@ -19,6 +19,7 @@ import * as Yup from "yup";
 import useAuth from "../common/hooks/useAuth";
 import { _post } from "../common/httpClient";
 import { setTitle } from "../common/utils/pageUtils";
+import { PasswordInput } from "../common/components/PasswordInput";
 
 const LoginPage = () => {
   const [, setAuth] = useAuth();
@@ -73,7 +74,7 @@ const LoginPage = () => {
                         return (
                           <FormControl isRequired isInvalid={meta.error && meta.touched} marginBottom="2w">
                             <FormLabel>Mot de passe</FormLabel>
-                            <Input {...field} id={field.name} type="password" placeholder="Votre mot de passe..." />
+                            <PasswordInput {...field} id={field.name} placeholder="Votre mot de passe..." />
                             <FormErrorMessage>{meta.error}</FormErrorMessage>
                           </FormControl>
                         );
