@@ -74,7 +74,12 @@ const LoginPage = () => {
                         return (
                           <FormControl isRequired isInvalid={meta.error && meta.touched} marginBottom="2w">
                             <FormLabel>Mot de passe</FormLabel>
-                            <PasswordInput {...field} id={field.name} placeholder="Votre mot de passe..." />
+                            <PasswordInput
+                              {...field}
+                              id={field.name}
+                              placeholder="Votre mot de passe..."
+                              autocomplete="current-password"
+                            />
                             <FormErrorMessage>{meta.error}</FormErrorMessage>
                           </FormControl>
                         );

@@ -69,7 +69,12 @@ const ResetPasswordPage = () => {
                     return (
                       <FormControl isRequired isInvalid={meta.error && meta.touched} marginBottom="2w">
                         <FormLabel>Nouveau mot de passe</FormLabel>
-                        <PasswordInput {...field} id={field.name} placeholder="Votre nouveau mot de passe..." />
+                        <PasswordInput
+                          {...field}
+                          id={field.name}
+                          placeholder="Votre nouveau mot de passe..."
+                          autocomplete="new-password"
+                        />
                         <FormErrorMessage>{meta.error}</FormErrorMessage>
                       </FormControl>
                     );
