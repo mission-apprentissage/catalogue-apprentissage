@@ -61,11 +61,19 @@ const consoleStatSchema = {
     type: Number,
     default: 0,
   },
+  formations_perimetre: {
+    type: Number,
+    default: 0,
+  },
   organismes_avec_formations_publiees: {
     type: Number,
     default: 0,
   },
   organismes_avec_formations_integrables: {
+    type: Number,
+    default: 0,
+  },
+  organismes_avec_formations_perimetre: {
     type: Number,
     default: 0,
   },

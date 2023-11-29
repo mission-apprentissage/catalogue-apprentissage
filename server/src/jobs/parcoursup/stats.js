@@ -20,11 +20,18 @@ const computeStats = async (academie = null) => {
     parcoursup_statut: { $ne: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT },
     ...scopeFilter,
   };
+  const filterPerimetre = {
+    ...globalFilter,
+    parcoursup_perimetre: true,
+    ...scopeFilter,
+  };
 
   const formations_publiees = await Formation.countDocuments(filterPublie);
   // console.log(`${scopeLog} Formations publiées : ${formations_publiees}`);
   const formations_integrables = await Formation.countDocuments(filterIntegrable);
   // console.log(`${scopeLog} Formations intégrables : ${formations_integrables}`);
+  const formations_perimetre = await Formation.countDocuments(filterPerimetre);
+  // console.log(`${scopeLog} Formations dans le périmètre : ${formations_integrables}`);
 
   const organismes_gestionnaires_avec_formations_publiees = await Formation.distinct(
     "etablissement_gestionnaire_id",
@@ -62,6 +69,24 @@ const computeStats = async (academie = null) => {
 
   // console.log(`${scopeLog} Organismes avec formations intégrables : ${organismes_avec_formations_integrables}`);
 
+  const organismes_gestionnaires_avec_formations_perimetre = await Formation.distinct(
+    "etablissement_gestionnaire_id",
+    filterPerimetre
+  );
+  const organismes_formateurs_avec_formations_perimetre = await Formation.distinct(
+    "etablissement_formateur_id",
+    filterPerimetre
+  );
+
+  const organismes_avec_formations_perimetre = [
+    ...new Set([
+      ...organismes_gestionnaires_avec_formations_perimetre,
+      ...organismes_formateurs_avec_formations_perimetre,
+    ]),
+  ].length;
+
+  // console.log(`${scopeLog} Organismes avec formations dans le périmètre : ${organismes_avec_formations_perimetre}`);
+
   const details = (
     await Promise.all(
       Object.values(PARCOURSUP_STATUS).flatMap(async (value) => ({
@@ -76,8 +101,10 @@ const computeStats = async (academie = null) => {
     academie,
     formations_publiees,
     formations_integrables,
+    formations_perimetre,
     organismes_avec_formations_publiees,
     organismes_avec_formations_integrables,
+    organismes_avec_formations_perimetre,
     details,
   };
 };
@@ -86,7 +113,7 @@ const computeStats = async (academie = null) => {
  * Calcul des statistiques Parcoursup à destination des consoles de pilotages
  */
 const psConsoleStats = async () => {
-  logger.info({ type: "job" }, " -- PARCOURSUP STATISTIQUES : ⏳  -- ");
+  logger.info({ type: "job" }, " -- PARCOURSUP STATISTIQUES : ⏳ -- ");
   const date = new Date();
 
   await Promise.all(
@@ -95,7 +122,7 @@ const psConsoleStats = async () => {
       return await ConsoleStat.create({ plateforme: "parcoursup", date, ...stats });
     })
   );
-  logger.info({ type: "job" }, " -- PARCOURSUP STATISTIQUES : ✅  -- ");
+  logger.info({ type: "job" }, " -- PARCOURSUP STATISTIQUES : ✅ -- ");
 };
 
 module.exports = { psConsoleStats };

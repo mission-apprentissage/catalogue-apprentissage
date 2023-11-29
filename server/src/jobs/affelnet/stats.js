@@ -20,11 +20,18 @@ const computeStats = async (academie = null) => {
     affelnet_statut: { $ne: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT },
     ...scopeFilter,
   };
+  const filterPerimetre = {
+    ...globalFilter,
+    affelnet_perimetre: true,
+    ...scopeFilter,
+  };
 
   const formations_publiees = await Formation.countDocuments(filterPublie);
   // console.log(`${scopeLog} Formations publiées : ${formations_publiees}`);
   const formations_integrables = await Formation.countDocuments(filterIntegrable);
   // console.log(`${scopeLog} Formations intégrables : ${formations_integrables}`);
+  const formations_perimetre = await Formation.countDocuments(filterPerimetre);
+  // console.log(`${scopeLog} Formations dans le périmètre : ${formations_integrables}`);
 
   const organismes_gestionnaires_avec_formations_publiees = await Formation.distinct(
     "etablissement_gestionnaire_id",
@@ -62,6 +69,24 @@ const computeStats = async (academie = null) => {
 
   // console.log(`${scopeLog} Organismes avec formations intégrables : ${organismes_avec_formations_integrables}`);
 
+  const organismes_gestionnaires_avec_formations_perimetre = await Formation.distinct(
+    "etablissement_gestionnaire_id",
+    filterPerimetre
+  );
+  const organismes_formateurs_avec_formations_perimetre = await Formation.distinct(
+    "etablissement_formateur_id",
+    filterPerimetre
+  );
+
+  const organismes_avec_formations_perimetre = [
+    ...new Set([
+      ...organismes_gestionnaires_avec_formations_perimetre,
+      ...organismes_formateurs_avec_formations_perimetre,
+    ]),
+  ].length;
+
+  // console.log(`${scopeLog} Organismes avec formations dans le périmètre : ${organismes_avec_formations_perimetre}`);
+
   const details = (
     await Promise.all(
       Object.values(AFFELNET_STATUS).flatMap(async (value) => ({
@@ -76,8 +101,10 @@ const computeStats = async (academie = null) => {
     academie,
     formations_publiees,
     formations_integrables,
+    formations_perimetre,
     organismes_avec_formations_publiees,
     organismes_avec_formations_integrables,
+    organismes_avec_formations_perimetre,
     details,
   };
 };
@@ -95,8 +122,7 @@ const afConsoleStats = async () => {
       return await ConsoleStat.create({ plateforme: "affelnet", date, ...stats });
     })
   );
-
-  logger.info({ type: "job" }, " -- AFFELNET STATISTIQUES : ✅  -- ");
+  logger.info({ type: "job" }, " -- AFFELNET STATISTIQUES : ✅ -- ");
 };
 
 module.exports = { afConsoleStats };
