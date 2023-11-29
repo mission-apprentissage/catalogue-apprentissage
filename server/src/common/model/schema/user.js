@@ -15,6 +15,16 @@ const usersSchema = {
     default: false,
     description: "true si l'utilisateur est administrateur",
   },
+  tag: {
+    type: String,
+    default: null,
+    description: "Tag libre",
+  },
+  // tags: {
+  //   type: [String],
+  //   default: [],
+  //   description: "Liste de tags libre",
+  // },
   email: {
     type: String,
     default: null,

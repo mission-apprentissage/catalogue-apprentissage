@@ -103,6 +103,7 @@ module.exports = ({ users, mailer, db: { db } }) => {
         email: body.options.email,
         academie: body.options.academie,
         username: body.username,
+        tag: body.options.tag,
         roles: body.options.roles,
         acl: body.options.acl,
       });
@@ -123,6 +124,28 @@ module.exports = ({ users, mailer, db: { db } }) => {
       await closeSessionsOfThisUser(db, username);
 
       res.json({ message: `User ${username} deleted !` });
+    })
+  );
+
+  router.post(
+    "/user/:username/tags",
+    tryCatch(async ({ body, params }, res) => {
+      const username = params.username;
+
+      await users.addTag(username, body.tag);
+
+      res.json({ message: `User ${username} updated !` });
+    })
+  );
+
+  router.delete(
+    "/user/:username/tags",
+    tryCatch(async ({ body, params }, res) => {
+      const username = params.username;
+
+      await users.removeTag(username, body.tag);
+
+      res.json({ message: `User ${username} updated !` });
     })
   );
 

@@ -20,6 +20,7 @@ import {
   Stack,
   Flex,
   useToast,
+  Tag,
 } from "@chakra-ui/react";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
@@ -70,10 +71,11 @@ const UserLine = ({ user, roles }) => {
       accessAcademieList: user ? user.academie.split(",") : ["-1"],
       newUsername: user?.username || "",
       newEmail: user?.email || "",
+      newTag: user?.tag || "",
       newTmpPassword,
     },
     onSubmit: (
-      { apiKey, accessAllCheckbox, accessAcademieList, newUsername, newEmail, newTmpPassword, roles, acl },
+      { apiKey, accessAllCheckbox, accessAcademieList, newUsername, newEmail, newTmpPassword, newTag, roles, acl },
       { setSubmitting }
     ) => {
       return new Promise(async (resolve) => {
@@ -86,6 +88,7 @@ const UserLine = ({ user, roles }) => {
               options: {
                 academie: accessAcademie,
                 email: newEmail,
+                tag: newTag,
                 roles,
                 acl,
                 permissions: {
@@ -102,6 +105,7 @@ const UserLine = ({ user, roles }) => {
               options: {
                 academie: accessAcademie,
                 email: newEmail,
+                tag: newTag,
                 roles,
                 acl,
                 permissions: {
@@ -192,6 +196,11 @@ const UserLine = ({ user, roles }) => {
           />
         </FormControl>
       )}
+
+      <FormControl py={2}>
+        <FormLabel>Tag</FormLabel>
+        <Input type="tag" id="newTag" name="newTag" value={values.newTag} onChange={handleChange} />
+      </FormControl>
 
       <FormControl py={2} mt={3}>
         <Checkbox
@@ -389,7 +398,7 @@ export default () => {
                             borderColor={"bluefrance"}
                           >
                             <Box flex="1" textAlign="left" fontSize="gamma">
-                              {user.username}
+                              {user.username} {user.tag && <Tag>{user.tag}</Tag>}
                             </Box>
                             <AccordionIcon />
                           </AccordionButton>

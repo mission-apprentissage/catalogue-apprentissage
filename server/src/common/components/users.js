@@ -45,6 +45,7 @@ module.exports = async () => {
         email: options.email || "",
         academie: options.academie || "0",
         roles: options.roles || ["user"],
+        tag: options.tag,
         acl: options.acl || [],
       });
 
@@ -95,6 +96,7 @@ module.exports = async () => {
         isAdmin: !!permissions.isAdmin,
         sub: user.username,
         email: user.email,
+        tag: user.tag,
         academie: user.academie,
         account_status: user.account_status,
         roles: permissions.isAdmin ? ["admin", ...user.roles] : user.roles,
@@ -104,5 +106,15 @@ module.exports = async () => {
     },
     registerUser: (email) =>
       User.findOneAndUpdate({ email }, { last_connection: new Date(), $push: { connection_history: new Date() } }),
+    // addTag: async (username, tag) => {
+    //   const user = await User.findOne({ username });
+    //   user.tags = uniq([...user.tags, tag]);
+    //   return await user.save();
+    // },
+    // removeTag: async (username, tag) => {
+    //   const user = await User.findOne({ username });
+    //   user.tags = user.tags.filter((t) => t !== tag);
+    //   return await user.save();
+    // },
   };
 };
