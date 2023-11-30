@@ -145,6 +145,29 @@ const UserLine = ({ user, roles }) => {
     }
   };
 
+  const handleAcademieChange = (academie) => {
+    console.log({ accessAcademieList: values.accessAcademieList, academie });
+
+    let newAcademieList = [];
+    if (academie !== "-1") {
+      if (values.accessAcademieList.includes(academie)) {
+        newAcademieList = values.accessAcademieList.filter((a) => a !== academie);
+      } else {
+        newAcademieList = [...values.accessAcademieList.filter((academie) => academie !== "-1"), academie];
+      }
+
+      setFieldValue("accessAcademieList", newAcademieList);
+    } else {
+      if (values.accessAcademieList.includes(academie)) {
+        newAcademieList = [];
+      } else {
+        newAcademieList = ["-1"];
+      }
+    }
+
+    setFieldValue("accessAcademieList", newAcademieList);
+  };
+
   const handleRoleChange = (roleName) => {
     let oldRolesAcl = [];
     oldRolesAcl = buildRolesAcl(values.roles, roles);
@@ -302,7 +325,7 @@ const UserLine = ({ user, roles }) => {
         <HStack wrap="wrap" spacing={5}>
           <Checkbox
             name="accessAcademieList"
-            onChange={handleChange}
+            onChange={(event) => handleAcademieChange(event.target.value)}
             value={"-1"}
             isChecked={values.accessAcademieList.includes("-1")}
             mb={3}
@@ -315,7 +338,7 @@ const UserLine = ({ user, roles }) => {
               <Checkbox
                 key={i}
                 name="accessAcademieList"
-                onChange={handleChange}
+                onChange={(event) => handleAcademieChange(event.target.value)}
                 value={num}
                 isChecked={values.accessAcademieList.includes(num)}
                 mb={3}
