@@ -68,7 +68,7 @@ const Root = () => {
   const [loading, setLoading] = useState(true);
   const mountedRef = useRef(false);
 
-  const MAINTENANCE = false; //process.env.REACT_APP_MAINTENANCE;
+  const MAINTENANCE = true; //process.env.REACT_APP_MAINTENANCE;
 
   useEffect(() => {
     async function getUser() {
