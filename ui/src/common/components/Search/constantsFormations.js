@@ -117,7 +117,7 @@ export const columnsDefinition = [
     editorInput: "text",
   },
   {
-    Header: "Uai Responsable",
+    Header: "UAI Responsable",
     accessor: "etablissement_gestionnaire_uai",
     width: 200,
     exportable: true,
@@ -142,7 +142,7 @@ export const columnsDefinition = [
     exportable: true,
   },
   {
-    Header: "Uai formateur",
+    Header: "UAI formateur",
     accessor: "etablissement_formateur_uai",
     width: 200,
     exportable: true,
@@ -494,10 +494,17 @@ export const columnsDefinition = [
     exportable: true,
   },
   {
-    Header: "Uai formation",
+    Header: "UAI formation",
     accessor: "uai_formation",
     width: 200,
     exportable: true,
+  },
+  {
+    Header: "Edition de l'UAI formation",
+    accessor: "editedFields.uai_formation",
+    width: 200,
+    exportable: true,
+    formatter: (value) => (value ? "Oui" : "Non"),
   },
   {
     Header: "Date d’édition de l’UAI lieu",
@@ -721,7 +728,7 @@ export const queryBuilderField = [
   { text: "Raison sociale", value: "etablissement_gestionnaire_entreprise_raison_sociale.keyword" },
   { text: "Siret formateur", value: "etablissement_formateur_siret.keyword" },
   { text: "Siret gestionnaire", value: "etablissement_gestionnaire_siret.keyword" },
-  { text: "Uai du lieu de formation", value: "uai_formation.keyword" },
+  { text: "UAI du lieu de formation", value: "uai_formation.keyword" },
   { text: "Diplôme", value: "diplome.keyword" },
   { text: "Intitulé", value: "intitule_court.keyword" },
   { text: "Code RNCP", value: "rncp_code.keyword" },
