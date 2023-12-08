@@ -9,7 +9,7 @@ const {
   getParcoursupErrorAction,
   getParcoursupErrorDescription,
 } = require("../../../common/utils/parcoursupUtils");
-const { getExpirationDate } = require("../../../common/utils/rulesUtils");
+// const { getExpirationDate } = require("../../../common/utils/rulesUtils");
 
 /** @typedef {import("../../../common/model/schema/formation").Formation} Formation */
 
@@ -20,14 +20,14 @@ const filter = {
   published: true,
   parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
   uai_formation: { $ne: null },
-  $or: [
-    {
-      "rncp_details.date_fin_validite_enregistrement": {
-        $gt: getExpirationDate(),
-      },
-    },
-    { "rncp_details.date_fin_validite_enregistrement": null },
-  ],
+  // $or: [
+  //   {
+  //     "rncp_details.date_fin_validite_enregistrement": {
+  //       $gt: getExpirationDate(),
+  //     },
+  //   },
+  //   { "rncp_details.date_fin_validite_enregistrement": null },
+  // ],
 };
 
 const select = {
