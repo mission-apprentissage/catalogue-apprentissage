@@ -4,7 +4,6 @@ import { rest } from "msw";
 import Formation from "./Formation";
 import { waitFor } from "@testing-library/react";
 import { AFFELNET_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
-import { MemoryRouter, Route } from "react-router-dom";
 
 jest.setTimeout(20000);
 
@@ -229,7 +228,7 @@ const formation = {
   affelnet_statut_history: [],
   published: true,
   rco_published: true,
-  updates_history: [],
+  updates_history: [{ from: { uai_formation: "" }, to: { uai_formation: "0573690B" } }],
   last_update_who: null,
   update_error: null,
   lieu_formation_adresse: "Zone Megazone de Moselle Est Parc d'Activités du district de Freyming-Merlebach",

@@ -81,7 +81,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
     !formation.uai_formation_valide ||
     (isEditingUai && formation?.affelnet_statut === AFFELNET_STATUS.PUBLIE) ||
     (formation.uai_formation === formation.editedFields?.uai_formation &&
-      !formation.updates_history.includes((history) => history.to?.uai_formation === formation.uai_formation) &&
+      !formation.updates_history.filter((history) => history.to?.uai_formation === formation.uai_formation).length &&
       ![PARCOURSUP_STATUS.EN_ATTENTE, PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut))
       ? (args) => <DangerBox data-testid={"uai-warning"} {...args} />
       : (args) => <Box data-testid={"uai-ok"} {...args} />;
@@ -212,9 +212,8 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                 )}
 
                 {formation.uai_formation === formation.editedFields?.uai_formation &&
-                  !formation.updates_history.includes(
-                    (history) => history.to?.uai_formation === formation.uai_formation
-                  ) && (
+                  !formation.updates_history.filter((history) => history.to?.uai_formation === formation.uai_formation)
+                    .length && (
                     <Text fontSize={"zeta"} color={"grey.600"} mt={2}>
                       - L’UAI renseigné est le même pour l’organisme formateur et le lieu de formation alors que les
                       adresses sont différentes. Vérifiez l’adresse et l’UAI du lieu de formation et corrigez si
