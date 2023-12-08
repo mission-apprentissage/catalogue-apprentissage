@@ -79,7 +79,10 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
   const UaiFormationContainer =
     !formation.uai_formation ||
     !formation.uai_formation_valide ||
-    (isEditingUai && formation?.affelnet_statut === AFFELNET_STATUS.PUBLIE)
+    (isEditingUai && formation?.affelnet_statut === AFFELNET_STATUS.PUBLIE) ||
+    (formation.uai_formation === formation.editedFields?.uai_formation &&
+      !formation.updates_history.includes((history) => history.to?.uai_formation === formation.uai_formation) &&
+      ![PARCOURSUP_STATUS.EN_ATTENTE, PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut))
       ? (args) => <DangerBox data-testid={"uai-warning"} {...args} />
       : (args) => <Box data-testid={"uai-ok"} {...args} />;
 
@@ -201,17 +204,23 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                   <>
                     {formation.code_commune_insee !== formation.etablissement_formateur_code_commune_insee && (
                       <Text fontSize={"zeta"} color={"grey.600"} mt={2}>
-                        - Le code commune (Insee) du lieu de formation ({formation.code_commune_insee},{" "}
-                        {formation.localite}) est différent de celui du formateur (
-                        {formation.etablissement_formateur_code_commune_insee},{" "}
-                        {formation.etablissement_formateur_localite}), l'UAI du lieu doit donc être saisi. Il vous
-                        appartient de vérifier auprès de l'OFA que le lieu de formation est correct et de saisir l'UAI
-                        correspondant. Si vous pensez qu’il y a une erreur sur l’une de ces données, veuillez vous
-                        rapprocher du Carif-Oref.
+                        - L’UAI du lieu de formation doit être renseigné en cohérence avec l’adresse du lieu de
+                        formation.
                       </Text>
                     )}
                   </>
                 )}
+
+                {formation.uai_formation === formation.editedFields?.uai_formation &&
+                  !formation.updates_history.includes(
+                    (history) => history.to?.uai_formation === formation.uai_formation
+                  ) && (
+                    <Text fontSize={"zeta"} color={"grey.600"} mt={2}>
+                      - L’UAI renseigné est le même pour l’organisme formateur et le lieu de formation alors que les
+                      adresses sont différentes. Vérifiez l’adresse et l’UAI du lieu de formation et corrigez si
+                      nécessaire.
+                    </Text>
+                  )}
               </UaiFormationContainer>
 
               <AdresseContainer>
