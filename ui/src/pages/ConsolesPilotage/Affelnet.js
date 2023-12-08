@@ -12,6 +12,7 @@ import {
   GridItem,
   Flex,
 } from "@chakra-ui/react";
+import IframeResizer from "iframe-resizer-react";
 
 import Layout from "../layout/Layout";
 import { setTitle } from "../../common/utils/pageUtils";
@@ -181,10 +182,10 @@ export default () => {
     {
       title: "Statistiques",
       component: (
-        <iframe
+        <IframeResizer
           src="https://catalogue.apprentissage.education.gouv.fr/metabase/public/dashboard/50b6d168-d303-4f91-b898-945f6b9f11f4#bordered=false"
           seamless
-          style={{ height: "330vh", width: "100%", border: 0 }}
+          style={{ width: "100%", border: 0 }}
           title={`Console de pilotage Affelnet - Statistiques`}
           allowtransparency={"true"}
         />

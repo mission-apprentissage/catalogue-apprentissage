@@ -16,6 +16,7 @@
     "formik": "2.2.9",
     "framer-motion": "2.9.5",
     "generate-password-browser": "1.1.0",
+    "iframe-resizer-react": "1.1.0",
     "jsonwebtoken": "9.0.0",
     "local-web-server": "5.2.0",
     "lodash.compact": "3.0.1",

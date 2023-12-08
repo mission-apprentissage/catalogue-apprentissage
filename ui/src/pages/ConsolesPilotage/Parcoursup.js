@@ -12,6 +12,7 @@ import {
   GridItem,
   Flex,
 } from "@chakra-ui/react";
+import IframeResizer from "iframe-resizer-react";
 
 import Layout from "../layout/Layout";
 import { setTitle } from "../../common/utils/pageUtils";
@@ -227,10 +228,10 @@ export default () => {
     {
       title: "Statistiques",
       component: (
-        <iframe
+        <IframeResizer
           src="https://catalogue.apprentissage.education.gouv.fr/metabase/public/dashboard/4e36e6e9-df1d-4444-bb76-cce85e662f47#bordered=false"
           seamless
-          style={{ height: "330vh", width: "100%", border: 0 }}
+          style={{ width: "100%", border: 0 }}
           title={`Console de pilotage Parcoursup - Statistiques`}
           allowtransparency={"true"}
         />

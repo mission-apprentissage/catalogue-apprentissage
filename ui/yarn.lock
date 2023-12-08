@@ -10916,6 +10916,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"iframe-resizer-react@npm:1.1.0":
+  version: 1.1.0
+  resolution: "iframe-resizer-react@npm:1.1.0"
+  dependencies:
+    iframe-resizer: ^4.3.0
+    warning: ^4.0.3
+  peerDependencies:
+    prop-types: ">=15.7.2"
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+  checksum: 64ddf99d0246da71c5ef34fd6a9b35d14e9346bda0ff0e9f0f011041822eb99f477b8b8167a82126efdfc3a84eb428262518f9ade7601f0f208b69d4cdadb9f7
+  languageName: node
+  linkType: hard
+
+"iframe-resizer@npm:^4.3.0":
+  version: 4.3.9
+  resolution: "iframe-resizer@npm:4.3.9"
+  checksum: 8f40a6e9bf27bf60682d9a80f12c60d96a3b724f5e9ef5bdbcf5f2ac58b1b17f6924e34cfc54210a0a065d305380e77d79e28c551f54bd3b1dac1da2624a2144
+  languageName: node
+  linkType: hard
+
 "ignore@npm:^5.2.0":
   version: 5.2.0
   resolution: "ignore@npm:5.2.0"
@@ -13585,6 +13606,7 @@ __metadata:
     framer-motion: 2.9.5
     generate-password-browser: 1.1.0
     husky: ^8.0.0
+    iframe-resizer-react: 1.1.0
     jsonwebtoken: 9.0.0
     lint-staged: 14.0.1
     local-web-server: 5.2.0
