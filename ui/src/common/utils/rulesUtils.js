@@ -31,7 +31,7 @@ export const isStatusChangeEnabled = ({ plateforme, academie, num_academie, stat
     : true;
 };
 
-const getCampagneStartDate = (currentDate = new Date()) => {
+export const getCampagneStartDate = (currentDate = new Date()) => {
   const campagneStart = new Date(`${currentDate.getFullYear()}-09-18T00:00:00.000Z`);
 
   return campagneStart;
