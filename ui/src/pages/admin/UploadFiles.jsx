@@ -188,6 +188,28 @@ export default () => {
               </Box>
             )}
 
+            {filename === "mefs-parcoursup.csv" && (
+              <Box>
+                Mode d’emploi :
+                <br />
+                <ul style={{ marginLeft: "24px" }}>
+                  <li>
+                    Extraction de la table bcn_n_mef réalisée par la Moss, pour identifier les MEF enregistrés dans
+                    Parcoursup.
+                  </li>
+                  <li>
+                    Permet au catalogue de contrôler que le MEF transmis par RCO existe dans le référentiel Parcoursup,
+                    ou, lorsqu’il y a plusieurs MEF, de sélectionner le MEF correspondant au périmètre Parcoursup.
+                  </li>
+                  <li>
+                    Format de fichier à déposer : fichier .csv, exporté de préférence via Open Office, paramètres UTF-8,
+                    séparateur point-virgule, toutes autres options décochées.
+                  </li>
+                </ul>
+                <br />
+              </Box>
+            )}
+
             <Button
               type="submit"
               variant="primary"
