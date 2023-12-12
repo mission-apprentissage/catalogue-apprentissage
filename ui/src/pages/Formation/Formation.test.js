@@ -228,7 +228,7 @@ const formation = {
   affelnet_statut_history: [],
   published: true,
   rco_published: true,
-  updates_history: [{ from: { uai_formation: "" }, to: { uai_formation: "0573690B" } }],
+  updates_history: [{ from: { uai_formation: "" }, to: { uai_formation: "0573690B" }, updated_at: new Date() }],
   last_update_who: null,
   update_error: null,
   lieu_formation_adresse: "Zone Megazone de Moselle Est Parc d'Activités du district de Freyming-Merlebach",
