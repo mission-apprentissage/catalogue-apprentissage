@@ -11,6 +11,7 @@ import {
   Reject,
 } from "../../theme/components/icons";
 import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
+import { getCampagneStartDate } from "../utils/rulesUtils";
 
 const Icon = ({ variant }) => {
   switch (variant) {
@@ -73,10 +74,19 @@ export const StatusBadge = ({ source, status, text, ...badgeProps }) => {
   );
 };
 
-export const PreviousStatusBadge = ({ source, status, text, ...badgeProps }) => {
+export const PreviousStatusBadge = ({ source, status, created_at, text, ...badgeProps }) => {
   const defaultVariant = "ok";
 
   const variant = defaultVariant;
+  if (created_at && new Date(created_at).getTime() > getCampagneStartDate().getTime() - 365 * 24 * 60 * 60 * 1000) {
+    return (
+      <Badge variant={"conforme"} {...badgeProps} minHeight={"28px"}>
+        <Text as={"span"} whiteSpace={"break-spaces"}>
+          Nouvelle fiche
+        </Text>
+      </Badge>
+    );
+  }
 
   return (
     <Badge variant={variant} {...badgeProps} minHeight={"28px"}>

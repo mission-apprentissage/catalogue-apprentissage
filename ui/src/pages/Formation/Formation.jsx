@@ -626,6 +626,7 @@ export default () => {
                             <PreviousStatusBadge
                               source="Parcoursup"
                               status={formation.parcoursup_previous_statut}
+                              created_at={formation.created_at}
                               mr={[0, 3]}
                             />
                           </>
@@ -639,6 +640,7 @@ export default () => {
                             <PreviousStatusBadge
                               source="Affelnet"
                               status={formation.affelnet_previous_statut}
+                              created_at={formation.created_at}
                               mr={[0, 3]}
                             />
                           </>

@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { hasAccessTo } from "../../../../utils/rolesUtils";
 import useAuth from "../../../../hooks/useAuth";
-import { PreviousStatusBadge, StatusBadge } from "../../../StatusBadge";
+import { StatusBadge } from "../../../StatusBadge";
 import { Box, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { ArrowRightLine, InfoCircle } from "../../../../../theme/components/icons";
 import { QualiteBadge } from "../../../QualiteBadge";
@@ -75,7 +75,7 @@ export const CardListFormation = ({ data, context }) => {
           <Flex justifyContent="space-between">
             {data.ids_action?.length > 0 && (
               <Text textStyle="xs" mt={4}>
-                identifiant actions Carif Oref: {data.ids_action.join(",")}
+                identifiant actions Carif-Oref: {data.ids_action.join(",")}
               </Text>
             )}
             {user?.sub !== "anonymous" && data.annee === "X" && (
