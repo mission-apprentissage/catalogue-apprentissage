@@ -410,29 +410,31 @@ export default () => {
               )}
 
               {roles &&
-                users?.map((user) => {
-                  return (
-                    <AccordionItem key={user.username}>
-                      {({ isExpanded }) => (
-                        <>
-                          <AccordionButton
-                            _expanded={{ bg: "grey.200" }}
-                            border={"1px solid"}
-                            borderColor={"bluefrance"}
-                          >
-                            <Box flex="1" textAlign="left" fontSize="gamma">
-                              {user.username} {user.tag && <Tag>{user.tag}</Tag>}
-                            </Box>
-                            <AccordionIcon />
-                          </AccordionButton>
-                          <AccordionPanel pb={4} border={"1px solid"} borderTop={0} borderColor={"bluefrance"}>
-                            {isExpanded && <UserLine user={user} roles={roles} />}
-                          </AccordionPanel>
-                        </>
-                      )}
-                    </AccordionItem>
-                  );
-                })}
+                users
+                  ?.sort((a, b) => a.username.localeCompare(b.username))
+                  ?.map((user) => {
+                    return (
+                      <AccordionItem key={user.username}>
+                        {({ isExpanded }) => (
+                          <>
+                            <AccordionButton
+                              _expanded={{ bg: "grey.200" }}
+                              border={"1px solid"}
+                              borderColor={"bluefrance"}
+                            >
+                              <Box flex="1" textAlign="left" fontSize="gamma">
+                                {user.username} {user.tag && <Tag>{user.tag}</Tag>}
+                              </Box>
+                              <AccordionIcon />
+                            </AccordionButton>
+                            <AccordionPanel pb={4} border={"1px solid"} borderTop={0} borderColor={"bluefrance"}>
+                              {isExpanded && <UserLine user={user} roles={roles} />}
+                            </AccordionPanel>
+                          </>
+                        )}
+                      </AccordionItem>
+                    );
+                  })}
             </Accordion>
           </Stack>
         </Container>
