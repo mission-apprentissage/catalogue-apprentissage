@@ -3085,14 +3085,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ejs@npm:3.1.7":
-  version: 3.1.7
-  resolution: "ejs@npm:3.1.7"
+"ejs@npm:3.1.9":
+  version: 3.1.9
+  resolution: "ejs@npm:3.1.9"
   dependencies:
     jake: ^10.8.5
   bin:
     ejs: bin/cli.js
-  checksum: fe40764af39955ce8f8b116716fc8b911959946698edb49ecab85df597746c07aa65d5b74ead28a1e2ffa75b0f92d9bedd752f1c29437da6137b3518271e988c
+  checksum: af6f10eb815885ff8a8cfacc42c6b6cf87daf97a4884f87a30e0c3271fedd85d76a3a297d9c33a70e735b97ee632887f85e32854b9cdd3a2d97edf931519a35f
   languageName: node
   linkType: hard
 
@@ -6667,7 +6667,7 @@ __metadata:
     cors: 2.8.5
     csv-parse: 5.3.2
     deep-object-diff: ^1.1.0
-    ejs: 3.1.7
+    ejs: 3.1.9
     eslint: 7.1.0
     eslint-config-prettier: 8.5.0
     eslint-plugin-immutable: 1.0.0
