@@ -146,8 +146,13 @@ const createFormation = async (formation, email = null) => {
     }`;
 
     if (getParcoursupError(formation)) {
+      const next_parcoursup_statut = formation.parcoursup_error.match(
+        /400 Formation déclarée fermée dans Parcoursup : g_ta_cod = +/
+      )
+        ? PARCOURSUP_STATUS.FERME
+        : PARCOURSUP_STATUS.REJETE;
       formation.last_statut_update_date = new Date();
-      formation.parcoursup_statut = PARCOURSUP_STATUS.REJETE;
+      formation.parcoursup_statut = next_parcoursup_statut;
       formation.rejection = {
         error: formation.parcoursup_error,
         description: getParcoursupErrorDescription(formation),
@@ -157,7 +162,7 @@ const createFormation = async (formation, email = null) => {
       };
       formation.parcoursup_statut_history.push({
         date: new Date(),
-        parcoursup_statut: PARCOURSUP_STATUS.REJETE,
+        parcoursup_statut: next_parcoursup_statut,
       });
     } else {
       logger.error({ type: "job" }, `Erreur Parcoursup non gérée : ${formation.parcoursup_error}`);

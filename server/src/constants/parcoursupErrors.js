@@ -78,19 +78,22 @@ const parcoursupErrors = [
     description: "L'UAI renseigné en tant que lieu de formation est fermé dans la BCE.",
     action: `Vous devez faire le point avec l'établissement, afin de confirmer l'UAI lieu de formation.`,
   },
-
   {
     regexp: /400 Mise à jour Impossible : Cette formation n'est plus sur l'UAI .+, mais sur l'UAI .+/,
     description:
       "La mise à jour de la formation est actuellement impossible car cette formation est rattachée dans Parcoursup à un autre UAI.",
     action: `Vous devez vous assurer du lieu de formation et si nécessaire mettre à jour l'UAI.`,
   },
-
   {
     regexp: /400 Mise à jour impossible : Code Établissement inconnu ou non renseigné.+/,
     description:
       "L'UAI renseigné en tant que lieu de formation est fermé dans la BCE, ou n'a pas encore crée dans Parcoursup.",
-    action: `Vous devez faire le point avec l'établissement, afin de confirmer l'UAI lieu de formation. Si l'établissement n'existe pas encore dans Parcoursup, vous devez procéder à sa création dans Parcoursup. `,
+    action: `Vous devez faire le point avec l'établissement, afin de confirmer l'UAI lieu de formation. Si l'établissement n'existe pas encore dans Parcoursup, vous devez procéder à sa création dans Parcoursup.`,
+  },
+  {
+    regexp: /400 Formation déclarée fermée dans Parcoursup : g_ta_cod = +/,
+    description: "Formation déclarée fermée dans Parcoursup”",
+    action: ``,
   },
 ];
 
