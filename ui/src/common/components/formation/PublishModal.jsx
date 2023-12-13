@@ -27,7 +27,6 @@ import * as Yup from "yup";
 import { ArrowRightLine, Close } from "../../../theme/components/icons";
 import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
 import { updateFormation } from "../../api/formation";
-import { DangerBox } from "../DangerBox";
 
 const getPublishRadioValue = (status) => {
   if ([COMMON_STATUS.PUBLIE, COMMON_STATUS.EN_ATTENTE].includes(status)) {
@@ -145,6 +144,7 @@ const getSubmitBody = ({
         PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
         PARCOURSUP_STATUS.A_PUBLIER,
         PARCOURSUP_STATUS.REJETE,
+        PARCOURSUP_STATUS.FERME,
       ].includes(formation?.parcoursup_statut)
     ) {
       body.parcoursup_statut = PARCOURSUP_STATUS.EN_ATTENTE;
@@ -163,6 +163,7 @@ const getSubmitBody = ({
         PARCOURSUP_STATUS.A_PUBLIER,
         PARCOURSUP_STATUS.PUBLIE,
         PARCOURSUP_STATUS.REJETE,
+        PARCOURSUP_STATUS.FERME,
       ].includes(formation?.parcoursup_statut)
     ) {
       body.parcoursup_raison_depublication = parcoursup_raison_depublication;
