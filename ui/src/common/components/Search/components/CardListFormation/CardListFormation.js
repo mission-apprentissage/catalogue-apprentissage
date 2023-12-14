@@ -29,9 +29,9 @@ export const CardListFormation = ({ data, context }) => {
             <Flex mt={1} flexWrap={"wrap"}>
               {!data.catalogue_published && (
                 <>
-                  <ActifBadge value={data.siret_actif} mt={2} mr={[0, 2]} />
                   <QualiteBadge value={data.etablissement_gestionnaire_certifie_qualite} mt={2} mr={[0, 2]} />
                   <HabiliteBadge value={data.etablissement_reference_habilite_rncp} mt={2} mr={[0, 2]} />
+                  <ActifBadge value={data.siret_actif} mt={2} mr={[0, 2]} />
                 </>
               )}
             </Flex>
