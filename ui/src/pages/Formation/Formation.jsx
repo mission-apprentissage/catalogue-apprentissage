@@ -666,13 +666,13 @@ export default () => {
                       justifyContent={"space-between"}
                       flexDirection={["column", "column", "row"]}
                     >
-                      {formation.parcoursup_statut === COMMON_STATUS.EN_ATTENTE ||
-                        (formation.parcoursup_statut === PARCOURSUP_STATUS.FERME &&
-                          hasAccessTo(user, "page_formation/envoi_parcoursup") && (
-                            <Button textStyle="sm" variant="secondary" px={8} mt={4} onClick={sendToParcoursup}>
-                              Forcer la publication Parcoursup
-                            </Button>
-                          ))}
+                      {(formation.parcoursup_statut === COMMON_STATUS.EN_ATTENTE ||
+                        formation.parcoursup_statut === PARCOURSUP_STATUS.FERME) &&
+                        hasAccessTo(user, "page_formation/envoi_parcoursup") && (
+                          <Button textStyle="sm" variant="secondary" px={8} mt={4} onClick={sendToParcoursup}>
+                            Forcer la publication Parcoursup
+                          </Button>
+                        )}
                     </Flex>
                   </Flex>
                 )}

@@ -92,7 +92,7 @@ const parcoursupErrors = [
   },
   {
     regexp: /400 Formation déclarée fermée dans Parcoursup : g_ta_cod = +/,
-    description: "Formation déclarée fermée dans Parcoursup”",
+    description: "Formation déclarée fermée dans Parcoursup",
     action: ``,
   },
 ];
