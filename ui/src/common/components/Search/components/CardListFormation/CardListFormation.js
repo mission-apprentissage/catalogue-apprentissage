@@ -6,6 +6,7 @@ import { ArrowRightLine, InfoCircle } from "../../../../../theme/components/icon
 import { QualiteBadge } from "../../../QualiteBadge";
 import { ActifBadge } from "../../../ActifBadge";
 import { HabiliteBadge } from "../../../HabiliteBadge";
+import { DureeBadge } from "../../../DureeBadge";
 
 export const CardListFormation = ({ data, context }) => {
   let [auth] = useAuth();
@@ -32,6 +33,7 @@ export const CardListFormation = ({ data, context }) => {
                   <QualiteBadge value={data.etablissement_gestionnaire_certifie_qualite} mt={2} mr={[0, 2]} />
                   <HabiliteBadge value={data.etablissement_reference_habilite_rncp} mt={2} mr={[0, 2]} />
                   <ActifBadge value={data.siret_actif} mt={2} mr={[0, 2]} />
+                  <DureeBadge value={data.duree} mt={2} mr={[0, 2]} />
                 </>
               )}
             </Flex>
