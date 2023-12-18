@@ -7,7 +7,7 @@ import { QualiteBadge } from "../../../QualiteBadge";
 import { ActifBadge } from "../../../ActifBadge";
 import { HabiliteBadge } from "../../../HabiliteBadge";
 import { DureeBadge } from "../../../DureeBadge";
-import { DureeBadge } from "../../../AnneeBadge";
+import { AnneeBadge } from "../../../AnneeBadge";
 
 export const CardListFormation = ({ data, context }) => {
   let [auth] = useAuth();
