@@ -435,6 +435,12 @@ const columnsDefinition = [
     width: 200,
     exportable: true,
   },
+  {
+    Header: "Siret Actif",
+    accessor: "siret_actif",
+    width: 200,
+    exportable: true,
+  },
 ];
 
 const queryBuilderField = [
