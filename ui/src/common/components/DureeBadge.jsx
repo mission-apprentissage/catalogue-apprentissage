@@ -10,7 +10,7 @@ export const DureeBadge = ({ value, ...props }) => {
   if (value === "D") {
     text = "Dur\u00e9e non renseign\u00e9e";
     variant = "ok";
-    Icon = null;
+    Icon = Question;
   }
 
   return (

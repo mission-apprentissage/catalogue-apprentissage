@@ -10,7 +10,7 @@ export const AnneeBadge = ({ value, ...props }) => {
   if (value === "Y") {
     text = "Ann\u00e9e non renseign\u00e9e";
     variant = "ok";
-    Icon = null;
+    Icon = Question;
   }
 
   return (
