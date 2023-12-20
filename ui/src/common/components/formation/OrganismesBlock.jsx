@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Badge, Box, Flex, Heading, Link, Text } from "@chakra-ui/react";
+import { Badge, Box, Flex, Link, Text } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
 import { ArrowRightLine } from "../../../theme/components/icons";
 import { getOrganisme } from "../../api/organisme";
@@ -30,9 +30,9 @@ export const OrganismesBlock = ({ formation }) => {
 
   return (
     <>
-      <Heading textStyle="h4" color="grey.800" mb={4}>
+      <Text textStyle="h4" color="grey.800" mb={4}>
         {oneEstablishment ? "Organisme associé" : "Organismes associés"}
-      </Heading>
+      </Text>
 
       {!oneEstablishment && (
         <>
@@ -52,9 +52,9 @@ export const OrganismesBlock = ({ formation }) => {
                 )}
               </Flex>
             </Box>
-            <Heading textStyle="h6" color="grey.800" my={1}>
+            <Box textStyle="h6" color="grey.800" my={1}>
               {formation.etablissement_gestionnaire_entreprise_raison_sociale}
-            </Heading>
+            </Box>
             <Box my={1}>
               <Text textStyle="sm">Académie : {formation.etablissement_gestionnaire_nom_academie}</Text>
               <Box>
@@ -100,9 +100,9 @@ export const OrganismesBlock = ({ formation }) => {
               )}
             </Flex>
           </Box>
-          <Heading textStyle="h6" color="grey.800" my={1}>
+          <Text textStyle="h6" color="grey.800" my={1}>
             {formation.etablissement_formateur_entreprise_raison_sociale}
-          </Heading>
+          </Text>
           <Box>
             <Text textStyle="sm">Académie : {formation.etablissement_formateur_nom_academie}</Text>
             <Box>

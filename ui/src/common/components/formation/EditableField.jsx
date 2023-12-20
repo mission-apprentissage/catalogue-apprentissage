@@ -16,6 +16,7 @@ export const EditableField = ({
   label,
   ...props
 }) => {
+  console.log(values);
   return (
     <Text {...props}>
       {hasRightToEdit && edition !== fieldName && (

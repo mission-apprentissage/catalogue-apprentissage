@@ -3,13 +3,13 @@ import { NavLink } from "react-router-dom";
 import { hasAccessTo } from "../../../../utils/rolesUtils";
 import useAuth from "../../../../hooks/useAuth";
 import { StatusBadge } from "../../../StatusBadge";
-import { Box, Flex, Heading, Link, Text } from "@chakra-ui/react";
+import { Box, Flex, Link, Text } from "@chakra-ui/react";
 import { ArrowRightLine, InfoCircle } from "../../../../../theme/components/icons";
 import { QualiteBadge } from "../../../QualiteBadge";
 import { HabiliteBadge } from "../../../HabiliteBadge";
 import { AFFELNET_STATUS, PARCOURSUP_STATUS } from "../../../../../constants/status";
 
-export const CardListFormation = ({ data, context }) => {
+export const CardListFormation = ({ data }) => {
   const [user] = useAuth();
 
   return (
@@ -18,9 +18,9 @@ export const CardListFormation = ({ data, context }) => {
         <Text>{data.etablissement_gestionnaire_entreprise_raison_sociale}</Text>
         <Text>CFD : {data.cfd}</Text>
       </Flex>
-      <Heading textStyle="h6" color="grey.800" mt={2}>
+      <Text textStyle="h6" color="grey.800" mt={2}>
         {data.intitule_long}
-      </Heading>
+      </Text>
       <Box>
         <Text textStyle="sm">
           {data.lieu_formation_adresse}, {data.code_postal} {data.localite}

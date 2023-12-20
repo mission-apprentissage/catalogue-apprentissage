@@ -8,7 +8,6 @@ import {
   Flex,
   Grid,
   GridItem,
-  Heading,
   Link,
   Spinner,
   Text,
@@ -76,9 +75,9 @@ const Etablissement = ({ etablissement, countFormations }) => {
       <Grid templateColumns="repeat(12, 1fr)" mt={8}>
         <GridItem colSpan={[12, 12, 7]} bg="white">
           <Box border="1px solid" borderColor="bluefrance" p={8} mb={4}>
-            <Heading textStyle="h4" color="grey.800">
+            <Text textStyle="h4" color="grey.800">
               Caractéristiques de l’organisme
-            </Heading>
+            </Text>
             {etablissement.onisep_url !== "" && etablissement.onisep_url !== null && (
               <Box mt={2} mb={4} ml={-3}>
                 <Link
@@ -191,9 +190,9 @@ const Etablissement = ({ etablissement, countFormations }) => {
         </GridItem>
         <GridItem colSpan={[12, 12, 5]}>
           <Box py={8} px={[4, 4, 8]}>
-            <Heading textStyle="h4" color="grey.800">
+            <Text textStyle="h4" color="grey.800">
               Informations complémentaires
-            </Heading>
+            </Text>
             {countFormations > 0 ? (
               <Box mt={2} mb={4} ml={[-2, -2, -3]}>
                 <Link as={NavLink} to={linkFormations} variant={"pill"} textStyle="rf-text" isExternal>
@@ -346,7 +345,7 @@ export default () => {
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
-        <Container maxW="xl">
+        <Container maxW="7xl">
           <Breadcrumb
             pages={[
               { title: "Accueil", to: "/" },
@@ -358,7 +357,7 @@ export default () => {
       </Box>
       <Box px={[1, 1, 12, 24]}>
         <Box>
-          <Container maxW="xl">
+          <Container maxW="7xl">
             {loading && (
               <Center h="70vh">
                 <Spinner />
@@ -368,9 +367,9 @@ export default () => {
               <>
                 <Box mt={6} mb={2}>
                   <QualiteBadge value={etablissement.certifie_qualite} my={0} mx={0} />
-                  <Heading textStyle="h2" color="grey.800" my={2}>
+                  <Text textStyle="h2" color="grey.800" my={2}>
                     {title} <InfoTooltip description={helpText.etablissement.raison_sociale} />
-                  </Heading>
+                  </Text>
                   {etablissement.tags &&
                     etablissement.tags
                       .sort((a, b) => a - b)
@@ -391,9 +390,9 @@ export default () => {
             {!loading && !etablissement && (
               <Box mb={8} mt={6}>
                 <Flex alignItems="center" justify="space-between" flexDirection={["column", "column", "row"]}>
-                  <Heading textStyle="h2" color="grey.800" pr={[0, 0, 8]}>
+                  <Text textStyle="h2" color="grey.800" pr={[0, 0, 8]}>
                     {title}
-                  </Heading>
+                  </Text>
                   <Button
                     textStyle="sm"
                     variant="primary"

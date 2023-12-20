@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Container, Heading, Link, ListItem, Text, UnorderedList } from "@chakra-ui/react";
+import { Box, Container, Link, ListItem, Text, UnorderedList } from "@chakra-ui/react";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import Layout from "../layout/Layout";
 import { setTitle } from "../../common/utils/pageUtils";
@@ -12,11 +12,11 @@ export default () => {
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
-        <Container maxW="xl">
+        <Container maxW="7xl">
           <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: title }]} />
-          <Heading textStyle="h2" mt={5}>
+          <Text textStyle="h2" mt={5}>
             {title}
-          </Heading>
+          </Text>
           <Box pt={4} pb={16}>
             <Box>
               <Text>
@@ -57,9 +57,9 @@ export default () => {
               </Text>
             </Box>
             <Box mt={4}>
-              <Heading as={"h3"} textStyle="h6" mb={2}>
+              <Text as={"h3"} textStyle="h6" mb={2}>
                 Nos engagements
-              </Heading>
+              </Text>
               <Text>
                 Audit de mise en conformité (en cours) pour nous aider à détecter les potentiels oublis d'accessibilité.
                 <br />
@@ -89,9 +89,9 @@ export default () => {
               </Text>
             </Box>
             <Box mt={4}>
-              <Heading as={"h3"} textStyle="h6" mb={2}>
+              <Text as={"h3"} textStyle="h6" mb={2}>
                 Voie de recours
-              </Heading>
+              </Text>
               <Text>
                 Cette procédure est à utiliser dans le cas suivant : vous avez signalé au responsable du site internet
                 un défaut d’accessibilité qui vous empêche d’accéder à un contenu ou à un des services du portail et

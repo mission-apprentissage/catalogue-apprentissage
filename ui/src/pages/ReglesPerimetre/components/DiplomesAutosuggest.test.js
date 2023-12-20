@@ -1,8 +1,7 @@
 import React from "react";
-import { getByTestId, render, waitFor } from "@testing-library/react";
+import { render, waitFor } from "@testing-library/react";
 import { DiplomesAutosuggest } from "./DiplomesAutosuggest";
 import * as api from "../../../common/api/perimetre";
-import { useNiveaux } from "../../../common/api/perimetre";
 import userEvent from "@testing-library/user-event";
 
 test("display bts diploma", async () => {
@@ -27,7 +26,7 @@ test("display bts diploma", async () => {
   await waitFor(() => getByPlaceholderText(/^Recherchez un diplôme$/i));
   const input = getByPlaceholderText(/^Recherchez un diplôme$/i);
 
-  userEvent.type(input, "b");
+  await userEvent.type(input, "b");
   expect(input.value).toEqual("b");
 
   await waitFor(() => getByText("bts"));
@@ -38,13 +37,13 @@ test("display bts diploma", async () => {
   const capOption = queryByText(/^cap$/i);
   expect(capOption).not.toBeInTheDocument();
 
-  userEvent.click(btsOption);
+  await userEvent.click(btsOption);
   expect(onSuggestionSelected).toHaveBeenCalledWith({ suggestion: { count: 8, niveau: "1", value: "bts" } });
 
   const clearBtn = getByTestId("clear-btn");
   expect(clearBtn).toBeInTheDocument();
 
-  userEvent.click(clearBtn);
+  await userEvent.click(clearBtn);
   expect(btsOption).not.toBeInTheDocument();
   expect(input.value).toEqual("");
 });

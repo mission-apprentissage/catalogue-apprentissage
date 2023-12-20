@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Container, Heading, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
+import { Box, Container, Text, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 
 import Layout from "../layout/Layout";
 import { setTitle } from "../../common/utils/pageUtils";
@@ -36,11 +36,11 @@ export default () => {
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
-        <Container maxW="xl">
+        <Container maxW="7xl">
           <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: title }]} />
-          <Heading textStyle="h2" color="grey.800" mt={5}>
+          <Text textStyle="h2" color="grey.800" mt={5}>
             {title}
-          </Heading>
+          </Text>
 
           <Tabs variant={"search"} mt={5} isLazy>
             <TabList bg="white">

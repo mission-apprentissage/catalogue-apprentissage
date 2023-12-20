@@ -7,7 +7,6 @@ import {
   FormHelperText,
   FormErrorMessage,
   FormLabel,
-  Heading,
   Modal,
   ModalBody,
   ModalContent,
@@ -331,7 +330,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
           </Text>
         </Button>
         <ModalHeader px={[4, 16]} pt={[3, 6]} pb={[3, 6]}>
-          <Heading as="h4" fontSize="1.6rem">
+          <Text as="h4" textStyle="h4" fontSize="1.6rem">
             <Flex>
               <Text as={"span"}>
                 <ArrowRightLine boxSize={26} />
@@ -340,7 +339,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                 Gérer les publications
               </Text>
             </Flex>
-          </Heading>
+          </Text>
         </ModalHeader>
         <ModalBody p={0}>
           <Flex px={[4, 12]} pb={[4, 12]} flexDirection={{ base: "column", md: "row" }} justifyContent="space-between">
@@ -351,9 +350,9 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
               flexBasis={{ base: "100%", md: "48%" }}
               mb={{ base: 2, md: 0 }}
             >
-              <Heading as="h3" fontSize="1.5rem" mb={3}>
+              <Text as="h3" textStyle="h3" fontSize="1.5rem" mb={3}>
                 {formation.intitule_long}
-              </Heading>
+              </Text>
               <Flex flexDirection="column">
                 <Box mb={3}>
                   <StatusBadge source="Affelnet" status={formation?.affelnet_statut} />
@@ -407,15 +406,15 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                   </RadioGroup>
                 </FormControl>
 
-                <Box style={{ display: isAffelnetFormOpen ? "block" : "none" }}>
+                <Box data-testid={"af-publish-form"} style={{ display: isAffelnetFormOpen ? "block" : "none" }}>
                   <br />
-                  <Heading as="h5" fontSize="1.5rem" mb={3}>
+                  <Text as="h5" textStyle="h5" fontSize="1.5rem" mb={3}>
                     Informations sur l'offre de formation (facultatif) :
-                  </Heading>
-                  <FormHelperText>
+                  </Text>
+                  <Text>
                     Ces informations seront intégrées dans Affelnet pour être visibles sur le service en ligne
                     Affectation.
-                  </FormHelperText>
+                  </Text>
 
                   <FormControl isInvalid={errors.affelnet_infos_offre}>
                     <FormLabel htmlFor="affelnet_infos_offre" mb={3} fontSize="epsilon"></FormLabel>
@@ -449,13 +448,13 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                   <br />
                   <br />
 
-                  <Heading as="h5" fontSize="1.5rem" mb={3}>
+                  <Text as="h5" textStyle="h5" fontSize="1.5rem" mb={3}>
                     Modalités particulières (facultatif) :
-                  </Heading>
-                  <FormHelperText>
+                  </Text>
+                  <Text>
                     Ces informations seront intégrées dans Affelnet pour être visibles sur le service en ligne
                     Affectation.
-                  </FormHelperText>
+                  </Text>
 
                   <FormControl isInvalid={errors.affelnet_modalites_offre}>
                     <FormLabel htmlFor="affelnet_modalites_offre" mb={3} fontSize="epsilon"></FormLabel>
@@ -511,7 +510,10 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                   </FormControl>
                 </Box>
 
-                <Box style={{ display: isAffelnetUnpublishFormOpen ? "block" : "none" }}>
+                <Box
+                  data-testid={"af-unpublish-form"}
+                  style={{ display: isAffelnetUnpublishFormOpen ? "block" : "none" }}
+                >
                   <FormControl
                     isRequired
                     isInvalid={errors.affelnet_raison_depublication}
@@ -524,7 +526,6 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                     </FormLabel>
 
                     <Textarea
-                      data-testid={"af-unpublish-form"}
                       name="affelnet_raison_depublication"
                       value={values.affelnet_raison_depublication}
                       onChange={handleChange}
@@ -536,6 +537,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                 </Box>
               </Flex>
             </Box>
+
             <Box
               border="1px solid"
               borderColor="bluefrance"
@@ -543,9 +545,9 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
               flexBasis={{ base: "100%", md: "48%" }}
               mt={{ base: 2, md: 0 }}
             >
-              <Heading as="h3" fontSize="1.5rem" mb={3}>
+              <Text as="h3" textStyle="h3" fontSize="1.5rem" mb={3}>
                 {formation.intitule_long}
-              </Heading>
+              </Text>
               <Flex flexDirection="column">
                 <Box mb={3}>
                   <StatusBadge source="Parcoursup" status={formation?.parcoursup_statut} />
@@ -599,7 +601,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                   </RadioGroup>
                 </FormControl>
 
-                <Box style={{ display: isParcoursupFormOpen ? "block" : "none" }}>
+                <Box data-testid={"ps-publish-form"} style={{ display: isParcoursupFormOpen ? "block" : "none" }}>
                   <FormControl
                     isRequired
                     isInvalid={errors.uai_formation}
@@ -622,7 +624,10 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                   </FormControl>
                 </Box>
 
-                <Box style={{ display: isParcoursupUnpublishFormOpen ? "block" : "none" }}>
+                <Box
+                  data-testid={"ps-unpublish-form"}
+                  style={{ display: isParcoursupUnpublishFormOpen ? "block" : "none" }}
+                >
                   <FormControl
                     isRequired
                     isInvalid={errors.parcoursup_raison_depublication}
@@ -636,7 +641,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                     </FormLabel>
                     <Flex flexDirection="column" w="100%">
                       <Textarea
-                        data-testid={"ps-unpublish-form"}
+                        data-testid="ps-depublication"
                         name="parcoursup_raison_depublication"
                         value={values.parcoursup_raison_depublication}
                         onChange={handleChange}

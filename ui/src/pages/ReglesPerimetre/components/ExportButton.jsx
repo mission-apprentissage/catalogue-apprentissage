@@ -37,13 +37,29 @@ const exportRules = (plateforme, rules) => {
     {
       key: "statut_academies",
       label: "Statuts spécifiques en académies",
-      formatter(value) {
+      formatter: (value) => {
         const statuses = Object.entries(value).reduce((acc, [key, statut]) => {
           const nom_academie = academies[key.padStart(2, "0")].nom_academie;
           return [...acc, `${nom_academie}:${statut}`];
         }, []);
 
         return `="${statuses.join(", ")}"`;
+      },
+    },
+    {
+      key: "regle_complementaire_query",
+      label: "Règles complémentaires",
+
+      formatter: (value) => {
+        const regles = JSON.parse(value).map(({ field, operator, value, combinator, index }) => ({
+          field,
+          operator,
+          value,
+          combinator,
+          index,
+        }));
+
+        return JSON.stringify(regles);
       },
     },
   ];

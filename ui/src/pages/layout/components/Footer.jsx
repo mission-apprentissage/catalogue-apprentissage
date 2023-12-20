@@ -6,7 +6,7 @@ import { Logo } from "./Logo";
 const Footer = () => {
   return (
     <Box borderTop="1px solid" borderColor="bluefrance" color="#1E1E1E" fontSize="zeta" w="full">
-      <Container maxW="xl">
+      <Container maxW="7xl">
         <Flex flexDirection={["column", "column", "row"]}>
           <Link as={NavLink} to="/" py={4} w={["100%", "100%", "50%"]}>
             <Logo size={"xl"} />
@@ -51,7 +51,7 @@ const Footer = () => {
         </Flex>
       </Container>
       <Box borderTop="1px solid" borderColor="#CECECE" color="#6A6A6A">
-        <Container maxW="xl" py={[3, 3, 5]}>
+        <Container maxW="7xl" py={[3, 3, 5]}>
           <Flex flexDirection={["column", "column", "row"]}>
             <List
               textStyle="xs"

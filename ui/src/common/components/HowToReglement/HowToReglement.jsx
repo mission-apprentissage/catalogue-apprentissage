@@ -6,7 +6,6 @@ import {
   AccordionPanel,
   Box,
   Container,
-  Heading,
   Link,
   ListItem,
   OrderedList,
@@ -18,14 +17,14 @@ import { AddFill, ExternalLinkLine, SubtractLine } from "../../../theme/componen
 
 const HowToReglement = () => {
   return (
-    <Container maxW={"xl"}>
+    <Container maxW="7xl">
       <Box color={"grey.800"} py={12}>
-        <Heading as="h1" fontSize="beta" mb={8}>
+        <Text as="h1" fontSize="beta" mb={8}>
           Guide réglementaire
-        </Heading>
-        <Heading as="h3" fontSize="gamma">
+        </Text>
+        <Text as="h3" fontSize="gamma">
           Conditions d’intégration de l’offre de formation en Apprentissage sur Parcoursup et Affelnet
-        </Heading>
+        </Text>
         <h4>
           (
           <Link
@@ -54,9 +53,9 @@ const HowToReglement = () => {
           En brun, les traitements automatisés pour faciliter les travaux de référencement
         </Text>
         <div>
-          <Heading as="h4" fontSize="epsilon" mb={4} mt={8}>
+          <Text as="h4" fontSize="epsilon" mb={4} mt={8}>
             Conditions d’éligibilité de l’organisme et de l’offre de formation
-          </Heading>
+          </Text>
           <Accordion allowMultiple bg="#F9F8F6">
             <AccordionItem border="none" id="conditions-etablissement">
               {({ isExpanded }) => (
@@ -85,7 +84,7 @@ const HowToReglement = () => {
                           </ListItem>
                           <ListItem>
                             <Text as="span" color="#7d4e5b">
-                              => traitement automatisé
+                              {"=>"} traitement automatisé
                             </Text>
                           </ListItem>
                         </UnorderedList>
@@ -115,7 +114,7 @@ const HowToReglement = () => {
                               </ListItem>
                               <ListItem>
                                 <Text as="span" color="#7d4e5b">
-                                  => traitement automatisé
+                                  {"=>"} traitement automatisé
                                 </Text>
                               </ListItem>
                             </UnorderedList>
@@ -126,7 +125,9 @@ const HowToReglement = () => {
                             <UnorderedList styleType="square">
                               <ListItem>cette vérification est réalisée par les référents en académie</ListItem>
                               <ListItem>
-                                <strong>=> vérification à réaliser</strong>
+                                <Text as="strong"> {"=>"} vérification à réaliser</Text>
+
+                                {/* <strong>=> vérification à réaliser</strong> */}
                               </ListItem>
                             </UnorderedList>
                           </ListItem>
@@ -173,7 +174,7 @@ const HowToReglement = () => {
                         <UnorderedList styleType="circle">
                           <ListItem>
                             <Text as="span" color="#7d4e5b">
-                              => Recherche données de France Compétences
+                              {"=>"} Recherche données de France Compétences
                             </Text>
                           </ListItem>
                         </UnorderedList>
@@ -187,9 +188,9 @@ const HowToReglement = () => {
             </AccordionItem>
           </Accordion>
 
-          <Heading as="h4" fontSize="epsilon" mb={4} mt={8}>
+          <Text as="h4" fontSize="epsilon" mb={4} mt={8}>
             Conditions d’intégration sur les plateformes Parcoursup et Affelnet
-          </Heading>
+          </Text>
           <Accordion allowMultiple bg="#F9F8F6">
             <AccordionItem border="none">
               {({ isExpanded }) => (
@@ -268,7 +269,7 @@ const HowToReglement = () => {
                           </ListItem>
                           <ListItem>
                             <Text as="span" color="#7d4e5b">
-                              => traitement automatisé
+                              {"=>"} traitement automatisé
                             </Text>
                           </ListItem>
                         </UnorderedList>
@@ -318,9 +319,9 @@ const HowToReglement = () => {
           </Accordion>
         </div>
 
-        <Heading as="h4" fontSize="epsilon" mb={4} mt={8} id="informations-complementaires" tabIndex="-1">
+        <Text as="h4" fontSize="epsilon" mb={4} mt={8} id="informations-complementaires" tabIndex="-1">
           Informations complémentaires
-        </Heading>
+        </Text>
         <Accordion allowMultiple bg="#F9F8F6">
           <AccordionItem border="none">
             {({ isExpanded }) => (

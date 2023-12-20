@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   Box,
   Center,
-  Heading,
   Button,
   FormControl,
   FormLabel,
@@ -10,6 +9,7 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  Text,
   Textarea,
   VStack,
 } from "@chakra-ui/react";
@@ -175,7 +175,7 @@ const Alert = () => {
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
-        <Container maxW="xl">
+        <Container maxW="7xl">
           <Breadcrumb separator={<ArrowDropRightLine color="grey.600" />} textStyle="xs">
             <BreadcrumbItem>
               <BreadcrumbLink as={NavLink} to="/" color="grey.600" textDecoration="underline">
@@ -187,16 +187,16 @@ const Alert = () => {
             </BreadcrumbItem>
           </Breadcrumb>
         </Container>
-        <Container maxW="xl">
+        <Container maxW="7xl">
           <Center verticalAlign="center">
             <Box mt={10} width={["auto", "50rem"]}>
-              <Heading textStyle="h2" marginBottom="2w">
+              <Text textStyle="h2" marginBottom="2w">
                 Message de maintenance
-              </Heading>
+              </Text>
               <Box>
-                <Heading textStyle="h4" marginBottom="2w">
+                <Text textStyle="h4" marginBottom="2w">
                   Message manuel
-                </Heading>
+                </Text>
 
                 <FormControl as="fieldset">
                   <FormLabel as="legend">Liste des messages manuels: </FormLabel>
@@ -242,9 +242,9 @@ const Alert = () => {
               </Box>
 
               <Box mt={10}>
-                <Heading textStyle="h4" marginBottom="2w">
+                <Text textStyle="h4" marginBottom="2w">
                   Message automatique
-                </Heading>
+                </Text>
 
                 <FormControl as="fieldset" mt={5}>
                   <FormLabel as="legend">Modifier le message automatique : </FormLabel>

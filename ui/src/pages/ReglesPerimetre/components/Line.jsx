@@ -83,7 +83,7 @@ export const Line = ({
 
   return (
     <Box
-      data-testid={"line"}
+      data-testid="line"
       borderBottom={"1px solid"}
       borderColor={"grey.300"}
       _hover={{
@@ -146,7 +146,7 @@ export const Line = ({
             </Flex>
             <Flex alignItems="center">
               <StatusSelect
-                data-testid={"status-select"}
+                data-testid="status-select"
                 aria-disabled={isStatusChangeDisabled}
                 isDisabled={isStatusChangeDisabled}
                 plateforme={plateforme}

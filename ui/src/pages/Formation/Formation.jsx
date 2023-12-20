@@ -8,7 +8,6 @@ import {
   Flex,
   Grid,
   GridItem,
-  Heading,
   Link,
   Spinner,
   Text,
@@ -123,10 +122,10 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
         </GridItem>
         <GridItem colSpan={[12, 12, 5]} py={8} px={[4, 4, 8]}>
           <Box mb={16}>
-            <Heading textStyle="h4" color="grey.800">
+            <Text textStyle="h4" color="grey.800">
               <MapPin2Fill w="12px" h="15px" mr="5px" mb="5px" />
               Lieu de la formation
-            </Heading>
+            </Text>
             <Box mt={2} mb={4} ml={[-2, -2, -3]}>
               {formation.catalogue_published && formation.tags.some((tag) => tagsForLBA.includes(+tag)) && (
                 <Link href={getLBAUrl(formation)} textStyle="rf-text" variant="pill" isExternal>
@@ -547,7 +546,7 @@ export default () => {
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
-        <Container maxW="xl">
+        <Container maxW="7xl">
           <Breadcrumb
             pages={[
               { title: "Accueil", to: "/" },
@@ -568,7 +567,7 @@ export default () => {
         </Container>
       </Box>
       <Box w="100%" py={[1, 8]} px={[1, 1, 12, 24]}>
-        <Container maxW="xl">
+        <Container maxW="7xl">
           {loading && (
             <Center h="70vh">
               <Spinner />
@@ -580,9 +579,9 @@ export default () => {
               <Box mb={8} data-testid={"formation-content"}>
                 <Flex alignItems="center" justify="space-between" flexDirection={["column", "column", "row"]}>
                   <Box>
-                    <Heading textStyle="h2" color="grey.800" pr={[0, 0, 8]} mb={4}>
+                    <Text textStyle="h2" color="grey.800" pr={[0, 0, 8]} mb={4}>
                       {title} <InfoTooltip description={helpText.formation.intitule_long} />
-                    </Heading>
+                    </Text>
                   </Box>
                   {hasRightToEdit &&
                     formation.catalogue_published &&
@@ -753,9 +752,9 @@ export default () => {
           {hasAccessTo(user, "page_formation") && !loading && !formation && (
             <Box mb={8}>
               <Flex alignItems="center" justify="space-between" flexDirection={["column", "column", "row"]}>
-                <Heading textStyle="h2" color="grey.800" pr={[0, 0, 8]}>
+                <Text textStyle="h2" color="grey.800" pr={[0, 0, 8]}>
                   {title}
-                </Heading>
+                </Text>
                 <Button
                   textStyle="sm"
                   variant="primary"

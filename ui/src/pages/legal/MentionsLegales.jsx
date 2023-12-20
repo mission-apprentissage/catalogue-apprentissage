@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Container, Heading, Text, Link } from "@chakra-ui/react";
+import { Box, Container, Text, Link } from "@chakra-ui/react";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import Layout from "../layout/Layout";
 import { setTitle } from "../../common/utils/pageUtils";
@@ -13,18 +13,18 @@ export default () => {
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
-        <Container maxW="xl">
+        <Container maxW="7xl">
           <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: title }]} />
-          <Heading textStyle="h2" color="grey.800" mt={5}>
+          <Text textStyle="h2" color="grey.800" mt={5}>
             {title}
-          </Heading>
+          </Text>
           <Box pt={1} pb={16}>
             <Box>
               <Text>Dernière mise à jour le : 02/06/2021</Text>
               <Box mt={4}>
-                <Heading as={"h3"} textStyle="h6" mb={2}>
+                <Text as={"h3"} textStyle="h6" mb={2}>
                   Éditeur du site
-                </Heading>
+                </Text>
                 <Text>
                   Le Catalogue de l’offre de formation en apprentissage est édité par La Mission interministérielle pour
                   l'apprentissage, située à l'adresse:
@@ -37,15 +37,15 @@ export default () => {
                 </Text>
               </Box>
               <Box mt={4}>
-                <Heading as={"h3"} textStyle="h6" mb={2}>
+                <Text as={"h3"} textStyle="h6" mb={2}>
                   Directeur de la publication
-                </Heading>
+                </Text>
                 <Text>Monsieur Guillaume Houzel.</Text>
               </Box>
               <Box mt={4}>
-                <Heading as={"h3"} textStyle="h6" mb={2}>
+                <Text as={"h3"} textStyle="h6" mb={2}>
                   Hébergement du site
-                </Heading>
+                </Text>
                 <Text>
                   Ce site est hébergé par OVH :
                   <br />
@@ -57,9 +57,9 @@ export default () => {
                 </Text>
               </Box>
               <Box mt={4}>
-                <Heading as={"h3"} textStyle="h6" mb={2}>
+                <Text as={"h3"} textStyle="h6" mb={2}>
                   Amélioration et contact
-                </Heading>
+                </Text>
                 <Text>
                   L'équipe du Catalogue de l’offre de formation en apprentissage reste à votre écoute et entière
                   disposition, si vous souhaitez nous signaler le moindre défaut de conception.
@@ -83,9 +83,9 @@ export default () => {
                 </Text>
               </Box>
               <Box mt={4}>
-                <Heading as={"h3"} textStyle="h6" mb={2}>
+                <Text as={"h3"} textStyle="h6" mb={2}>
                   Sécurité
-                </Heading>
+                </Text>
                 <Text>
                   Le site est protégé par un certificat électronique, matérialisé pour la grande majorité des
                   navigateurs par un cadenas. Cette protection participe à la confidentialité des échanges.

@@ -1,7 +1,7 @@
 import React from "react";
 import { OrganismesBlock } from "./OrganismesBlock";
 import { renderWithRouter } from "../../utils/testUtils";
-import { getByText, waitFor } from "@testing-library/react";
+import { waitFor } from "@testing-library/react";
 import * as api from "../../api/organisme";
 import { AFFELNET_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
 
@@ -201,7 +201,7 @@ test("should render the organismes block in 2 establishments mode", async () => 
   }));
 
   const form = { ...formation, etablissement_gestionnaire_siret: "test", etablissement_gestionnaire_id: "test" };
-  const { queryByText, getByText, getAllByTestId } = renderWithRouter(<OrganismesBlock formation={form} />);
+  const { queryByText, getAllByText, getAllByTestId } = renderWithRouter(<OrganismesBlock formation={form} />);
 
   const title = queryByText("Organismes associés");
   expect(title).toBeInTheDocument();
@@ -212,7 +212,7 @@ test("should render the organismes block in 2 establishments mode", async () => 
   const gestionnaireLabel = queryByText("Gestionnaire");
   expect(gestionnaireLabel).toBeInTheDocument();
 
-  await waitFor(() => getByText("2023"));
+  await waitFor(() => getAllByText("2023"));
 
   const tagsSorted = ["2021", "2022", "2023"];
   const tagNodes = getAllByTestId("tags-gestionnaire");

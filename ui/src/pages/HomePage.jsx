@@ -7,7 +7,6 @@ import {
   Button,
   Container,
   Flex,
-  Heading,
   Link,
   List,
   ListItem,
@@ -69,7 +68,7 @@ export default () => {
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]} color="#1E1E1E">
-        <Container maxW="xl">
+        <Container maxW="7xl">
           {/*<Box bg="#F8F8F8" color="pinksoft.500" borderLeft="4px" role="none" p={5}>*/}
           {/*  <Flex>*/}
           {/*    <Box>*/}
@@ -90,13 +89,13 @@ export default () => {
         </Container>
       </Box>
       <Box w="100%" py={[4, 8]} px={[1, 1, 12, 24]} color="#1E1E1E">
-        <Container maxW="xl">
+        <Container maxW="7xl">
           <Flex flexDirection={["column", "column", "column", "column", "row"]}>
             <Box minW="250px">
               <Box bg="#F9F8F6" p={3}>
-                <Heading textStyle="rf-text" fontWeight="700" p={2}>
+                <Text textStyle="rf-text" fontWeight="700" p={2}>
                   SOMMAIRE
-                </Heading>
+                </Text>
                 <List stylePosition="inside">
                   <ListItem py={1}>
                     <Link href={"#mise-a-jour"} variant="summary">
@@ -122,9 +121,9 @@ export default () => {
               </Box>
             </Box>
             <Box px={[1, 5]} mt={[4, 4, 4, 0]}>
-              <Heading as="h1" textStyle={"h2"}>
+              <Text as="h1" textStyle={"h2"}>
                 Le catalogue des offres de formations en apprentissage recense aujourd’hui :
-              </Heading>
+              </Text>
               <Box>
                 <br /> &nbsp;
                 {loading && <Text>chargement...</Text>}
@@ -151,9 +150,9 @@ export default () => {
                       mx={[0, 0, 0, 5]}
                       mt={[5, 5, 5, 0]}
                     >
-                      <Heading fontWeight="700" textStyle="h6">
+                      <Text fontWeight="700" textStyle="h6">
                         {countEstablishments.toLocaleString("fr-FR")} organismes
-                      </Heading>
+                      </Text>
                       <Flex>
                         <Text flex="1" textStyle="sm">
                           de formation
@@ -168,9 +167,9 @@ export default () => {
                 <br />
                 <br />
                 <Box textStyle="rf-text">
-                  <Heading as="h2" textStyle="h4" id="mise-a-jour" tabIndex="-1">
+                  <Text as="h2" textStyle="h4" id="mise-a-jour" tabIndex="-1">
                     Mise à jour des données
-                  </Heading>
+                  </Text>
                   <br />
                   <Text textStyle="rf-text">
                     Les référencements et mises à jour effectués dans les bases “Offre des Carif-Oref” de chaque région
@@ -180,9 +179,9 @@ export default () => {
                 </Box>
                 <br /> <br />
                 <Box>
-                  <Heading as="h2" textStyle="h4" id="organisme-de-formation" tabIndex="-1">
+                  <Text as="h2" textStyle="h4" id="organisme-de-formation" tabIndex="-1">
                     Vous êtes organisme de formation
-                  </Heading>
+                  </Text>
                   <br />
                   <Text textStyle="rf-text">
                     <strong>
@@ -208,9 +207,9 @@ export default () => {
                 <br />
                 <br />
                 <Box>
-                  <Heading as="h2" textStyle="h4" id="en-academie" tabIndex="-1">
+                  <Text as="h2" textStyle="h4" id="en-academie" tabIndex="-1">
                     Vous travaillez en académie
-                  </Heading>
+                  </Text>
                   {/*<br />*/}
                   {/*<Link color="bluefrance" textDecoration="underline">*/}
                   {/*  <strong>Accéder à vos actions expertes</strong>*/}
@@ -224,9 +223,9 @@ export default () => {
                 </Box>
               </Box>
               <Box flexDirection="column" mt={12}>
-                <Heading as="h2" textStyle="h4" mb={3} id="journal" tabIndex="-1">
+                <Text as="h2" textStyle="h4" mb={3} id="journal" tabIndex="-1">
                   Journal des modifications
-                </Heading>
+                </Text>
                 <br />
                 <Box>
                   <Tabs variant="search">

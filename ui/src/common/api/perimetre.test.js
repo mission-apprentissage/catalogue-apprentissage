@@ -1,12 +1,12 @@
 import React from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { renderHook } from "@testing-library/react-hooks";
+import { renderHook, waitFor } from "@testing-library/react";
 import { rest } from "msw";
 import { useNiveaux } from "./perimetre";
 import { setupMswServer } from "../utils/testUtils";
 
 const server = setupMswServer(
-  rest.get(/\/api\/v1\/entity\/perimetre\/niveau/, (req, res, ctx) => {
+  rest.get(/\/api\/v1\/entity\/perimetre\/niveau.*/, (req, res, ctx) => {
     return res(
       ctx.json([
         {
@@ -37,9 +37,9 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 test("test custom hook", async () => {
-  const { result, waitFor } = renderHook(() => useNiveaux({ plateforme: "parcoursup" }), { wrapper });
+  const { result } = renderHook(() => useNiveaux({ plateforme: "parcoursup" }), { wrapper });
 
-  await waitFor(() => result.current.isSuccess);
+  await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
   expect(result.current.data).toEqual([
     {

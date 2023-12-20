@@ -10,7 +10,6 @@ import {
   Container,
   Flex,
   FormLabel,
-  Heading,
   Spinner,
   Text,
   useDisclosure,
@@ -245,7 +244,7 @@ export default ({ plateforme }) => {
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
-        <Container maxW="xl">
+        <Container maxW="7xl">
           <Breadcrumb
             pages={[
               { title: "Accueil", to: "/" },
@@ -253,9 +252,9 @@ export default ({ plateforme }) => {
               { title: title },
             ]}
           />
-          <Heading textStyle="h2" color="grey.800" mt={5} pb={4}>
+          <Text textStyle="h2" color="grey.800" mt={5} pb={4}>
             {title}
-          </Heading>
+          </Text>
           <Text fontWeight={700} pb={4}>
             Déterminer les conditions d'intégrations des formations en apprentissage du Catalogue (Carif-Oref) sur la
             plateforme {plateforme}

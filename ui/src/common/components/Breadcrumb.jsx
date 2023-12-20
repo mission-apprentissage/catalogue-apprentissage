@@ -6,7 +6,7 @@ import { NavLink } from "react-router-dom";
 const Breadcrumb = ({ pages }) => {
   return (
     <ChakraBreadcrumb
-      separator={<ArrowDropRightLine color="grey.600" boxSize={3} mb={1} />}
+      separator={<ArrowDropRightLine verticalAlign="middle" color="grey.600" boxSize={3} marginBottom={1} />}
       textStyle="xs"
       color="grey.800"
     >

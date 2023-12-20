@@ -7,7 +7,6 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Heading,
   Input,
   Link,
   Modal,
@@ -99,6 +98,8 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
     num_academie,
   } = rule ?? {};
 
+  console.log("render", { rule });
+
   let isClosing = false;
   const isCreating = !rule;
   const initialRef = React.useRef();
@@ -126,7 +127,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
     initialValues: {
       name: nom_regle_complementaire,
       status: statut_academies?.[academie] ?? statut,
-      regle: regle_complementaire,
+      regle: regle_complementaire ?? "{}",
       query: regle_complementaire_query,
       condition: initialCondition,
       niveau: niveau,
@@ -241,7 +242,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
     onClose();
   };
 
-  // create link with  diplome / regle_complementaire
+  // create link with diplome / regle_complementaire
   const linkQuery = [
     {
       field: "diplome.keyword",
@@ -314,7 +315,9 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
     values.registrationYear,
   ]);
 
-  const { isOpen: isCriteriaOpen, onToggle: onCriteriaToggle } = useDisclosure();
+  const { isOpen: isCriteriaOpen, onToggle: onCriteriaToggle } = useDisclosure({
+    defaultIsOpen: regle_complementaire_query && !!JSON.parse(regle_complementaire_query).length,
+  });
 
   return (
     <Modal isOpen={isOpen} onClose={close} size="6xl" initialFocusRef={initialRef}>
@@ -336,7 +339,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
           </Text>
         </Button>
         <ModalHeader px={[4, 16]} pt={[3, 6]} pb={[3, 6]}>
-          <Heading as="h2" fontSize="2rem">
+          <Text as="h2" fontSize="2rem">
             <Flex>
               <Text as={"span"}>
                 <ArrowRightLine boxSize={26} />
@@ -359,7 +362,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                 )}
               </Flex>
             </Flex>
-          </Heading>
+          </Text>
         </ModalHeader>
         <ModalBody px={[4, 16]} pb={[4, 16]}>
           <Tabs variant="search">
@@ -571,13 +574,14 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                 <Flex justifyContent={isCreating ? "flex-end" : "space-between"} mt={8}>
                   {!isCreating && (
                     <Button
+                      data-testid="delete-button"
                       isDisabled={isDisabled}
                       variant="outline"
                       colorScheme="red"
                       borderRadius="none"
                       onClick={async () => {
-                        const isUserSure = window.confirm("Voulez vous vraiment supprimer ce diplôme ?");
-                        if (isUserSure) {
+                        const userValidation = window.confirm("Voulez vous vraiment supprimer ce diplôme ?");
+                        if (userValidation) {
                           await onDeleteRule({
                             _id: idRule,
                           });

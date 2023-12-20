@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, Heading, Text, Collapse, useDisclosure } from "@chakra-ui/react";
+import { Box, Button, Text, Collapse, useDisclosure } from "@chakra-ui/react";
 import { ArrowDownLine } from "../../../theme/components/icons/";
 import useAuth from "../../hooks/useAuth";
 import { hasAccessTo } from "../../utils/rolesUtils";
@@ -128,9 +128,9 @@ export const HistoryBlock = ({ formation, limit = 5 }) => {
       hasAccessTo(user, "page_formation/voir_status_publication_ps") ||
       hasAccessTo(user, "page_formation/voir_status_publication_aff")) && (
       <>
-        <Heading textStyle="h4" color="grey.800" mb={4}>
+        <Text textStyle="h4" color="grey.800" mb={4}>
           Historique des modifications
-        </Heading>
+        </Text>
 
         <Box ml={4}>
           <ul>

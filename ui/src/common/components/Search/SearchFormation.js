@@ -66,7 +66,7 @@ export default React.memo(({ searchState, context, extraButtons = null }) => {
       >
         <HardFilters allowedFilters={allowedFilters} context={context} isBaseFormations={true} />
         <Box className="search" maxW="full">
-          <Container maxW="xl" p={0}>
+          <Container maxW="7xl" p={0}>
             {mode === "simple" && (
               <Box className={`search-container search-container-${mode}`}>
                 <DataSearch
@@ -93,7 +93,7 @@ export default React.memo(({ searchState, context, extraButtons = null }) => {
                 "*, *:after, *:before": { boxSizing: "content-box !important" },
               }}
             >
-              <Switch onChange={handleSearchSwitchChange} defaultIsChecked={mode !== "simple"} id={`search-mode`} />
+              <Switch onChange={handleSearchSwitchChange} isChecked={mode !== "simple"} id={`search-mode`} />
               <FormLabel display="inline" htmlFor={`search-mode`} textStyle="sm" px={2}>
                 Recherche avancée
               </FormLabel>

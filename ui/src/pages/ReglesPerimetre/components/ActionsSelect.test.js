@@ -16,7 +16,13 @@ test("renders all conditions", () => {
 
   option = getByText(/^ne doit pas intégrer$/i);
   expect(option).toBeInTheDocument();
+});
 
-  userEvent.selectOptions(getByTestId("actions-select"), ["peut intégrer"]);
+test("calls onChange", async () => {
+  const onChange = jest.fn();
+
+  const { getByTestId } = render(<ActionsSelect onChange={onChange} />);
+
+  await userEvent.selectOptions(getByTestId("actions-select"), ["peut intégrer"]);
   expect(onChange).toHaveBeenCalled();
 });

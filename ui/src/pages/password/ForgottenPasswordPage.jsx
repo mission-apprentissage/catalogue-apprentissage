@@ -1,4 +1,4 @@
-import { Box, Button, Center, FormControl, FormErrorMessage, FormLabel, Heading, Input, Text } from "@chakra-ui/react";
+import { Box, Button, Center, FormControl, FormErrorMessage, FormLabel, Input, Text } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import React from "react";
 import { useNavigate } from "react-router-dom";
@@ -26,9 +26,9 @@ const ForgottenPasswordPage = () => {
   return (
     <Center height="100vh" verticalAlign="center">
       <Box width={["auto", "28rem"]}>
-        <Heading fontFamily="Marianne" fontWeight="700" marginBottom="2w">
+        <Text fontFamily="Marianne" fontWeight="700" marginBottom="2w">
           {title}
-        </Heading>
+        </Text>
         <Formik
           initialValues={{
             username: "",

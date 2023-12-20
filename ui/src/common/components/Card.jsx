@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Flex, Heading, Link, Text } from "@chakra-ui/react";
+import { Box, Flex, Link, Text } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
 import { ArrowRightLine } from "../../theme/components/icons";
 
@@ -10,9 +10,9 @@ export const Card = ({ info, linkTo, title, body, isDisabled, color }) => {
         <Flex display={["none", "flex"]} textStyle="md">
           <Text color={!isDisabled ? "bluefrance" : "grey.600"}>{info}</Text>
         </Flex>
-        <Heading textStyle="h6" color={!isDisabled ? "grey.800" : "grey.600"} mt={2} mb={2}>
+        <Text textStyle="h6" color={!isDisabled ? "grey.800" : "grey.600"} mt={2} mb={2}>
           {title}
-        </Heading>
+        </Text>
       </Box>
       <Flex flexDirection="column" flexGrow="1">
         <Text textStyle="md" color="grey.600">

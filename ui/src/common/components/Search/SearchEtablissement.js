@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { DataSearch, ReactiveBase, ReactiveList, SelectedFilters } from "@appbaseio/reactivesearch";
-import queryString from "query-string";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Box, Container, Flex, FormLabel, Switch, Text } from "@chakra-ui/react";
 
 import useAuth from "../../hooks/useAuth";
@@ -26,11 +25,8 @@ export default React.memo(({ searchState, context, extraButtons = null }) => {
   const [mode, setMode] = useState(searchParams.get("defaultMode") ?? "simple");
   const { base, countEtablissement, endpoint } = searchState;
 
-  let [auth] = useAuth();
+  const [auth] = useAuth();
   const navigate = useNavigate();
-
-  // const { allowedFilters, quickFiltersDefinition, queryBuilderField, dataSearch, columnsDefinition } =
-  //   constantsEtablissements;
 
   const handleSearchSwitchChange = () => {
     setMode((prevValue) => {
@@ -58,7 +54,7 @@ export default React.memo(({ searchState, context, extraButtons = null }) => {
       >
         <HardFilters allowedFilters={allowedFilters} context={context} />
         <Box className="search" maxW="full">
-          <Container maxW="xl" p={0}>
+          <Container maxW="7xl" p={0}>
             {mode === "simple" && (
               <Box className={`search-container search-container-${mode}`}>
                 <DataSearch
@@ -85,7 +81,7 @@ export default React.memo(({ searchState, context, extraButtons = null }) => {
                 "*, *:after, *:before": { boxSizing: "content-box !important" },
               }}
             >
-              <Switch onChange={handleSearchSwitchChange} defaultIsChecked={mode !== "simple"} id={`search-mode`} />
+              <Switch onChange={handleSearchSwitchChange} isChecked={mode !== "simple"} id={`search-mode`} />
               <FormLabel display="inline" htmlFor={`search-mode`} textStyle="sm" px={2}>
                 Recherche avancée
               </FormLabel>

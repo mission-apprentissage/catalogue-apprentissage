@@ -3,7 +3,7 @@ import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { HowToAddModal } from "./HowToAddModal";
 
-test("should render the informative modal", () => {
+test("should render the informative modal", async () => {
   const onClose = jest.fn();
   const { queryByText } = render(<HowToAddModal isOpen={true} onClose={onClose} />);
 
@@ -12,6 +12,6 @@ test("should render the informative modal", () => {
 
   const closeBtn = queryByText(/fermer/i);
   expect(closeBtn).toBeInTheDocument();
-  userEvent.click(closeBtn);
+  await userEvent.click(closeBtn);
   expect(onClose).toHaveBeenCalled();
 });

@@ -5,6 +5,7 @@ import { getDiplomesAllowedForSubRulesUrl, RuleModal } from "./RuleModal";
 import { fireEvent, render, act } from "@testing-library/react";
 import { PARCOURSUP_STATUS } from "../../../constants/status";
 import { setupMswServer } from "../../../common/utils/testUtils";
+import { userEvent } from "@testing-library/user-event";
 
 const server = setupMswServer(
   rest.get(/\/api\/v1\/entity\/perimetre\/niveau/, (req, res, ctx) => {
@@ -51,7 +52,7 @@ test("renders the modal in creation mode for psup", async () => {
   const onDeleteRule = jest.fn();
   const onCreateRule = jest.fn();
 
-  const { queryByText } = render(
+  const { queryByText, queryByTestId } = render(
     <QueryClientProvider client={queryClient}>
       <RuleModal
         plateforme={"parcoursup"}
@@ -68,7 +69,7 @@ test("renders the modal in creation mode for psup", async () => {
   const title = queryByText(/^Ajouter un diplôme, un titre ou des formations$/i);
   expect(title).toBeInTheDocument();
 
-  const deleteButton = queryByText(/^Supprimer$/i);
+  const deleteButton = queryByTestId("delete-button");
   expect(deleteButton).not.toBeInTheDocument();
 
   const anneeField = queryByText(/^Année d'entrée en apprentissage$/i);
@@ -81,7 +82,7 @@ test("renders the modal in creation mode for affelnet", async () => {
   const onDeleteRule = jest.fn();
   const onCreateRule = jest.fn();
 
-  const { queryByText } = render(
+  const { queryByText, queryByTestId } = render(
     <QueryClientProvider client={queryClient}>
       <RuleModal
         plateforme={"affelnet"}
@@ -98,7 +99,7 @@ test("renders the modal in creation mode for affelnet", async () => {
   const title = queryByText(/^Ajouter un diplôme, un titre ou des formations$/i);
   expect(title).toBeInTheDocument();
 
-  const deleteButton = queryByText(/^Supprimer$/i);
+  const deleteButton = queryByTestId("delete-button");
   expect(deleteButton).not.toBeInTheDocument();
 
   const anneeField = queryByText(/^Année d'entrée en apprentissage$/i);
@@ -124,7 +125,7 @@ test("renders the modal in update mode and can delete", async () => {
     niveau: "4",
     duree: "1",
   };
-  const { queryByText } = render(
+  const { queryByText, getByTestId } = render(
     <QueryClientProvider client={queryClient}>
       <RuleModal
         plateforme={"parcoursup"}
@@ -144,10 +145,11 @@ test("renders the modal in update mode and can delete", async () => {
   const titleUpdate = queryByText(/^mon diplome de test$/i);
   expect(titleUpdate).toBeInTheDocument();
 
-  const deleteButton = queryByText(/^Supprimer$/i);
+  const deleteButton = getByTestId("delete-button");
   expect(deleteButton).toBeInTheDocument();
 
-  act(() => {
+  await act(async () => {
+    // await userEvent.click(deleteButton);
     fireEvent(
       deleteButton,
       new MouseEvent("click", {

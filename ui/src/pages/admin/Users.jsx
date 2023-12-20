@@ -14,7 +14,7 @@ import {
   Container,
   FormControl,
   FormLabel,
-  Heading,
+  Text,
   HStack,
   Input,
   Stack,
@@ -384,15 +384,15 @@ export default () => {
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]} color="grey.800">
-        <Container maxW="xl">
+        <Container maxW="7xl">
           <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: title }]} />
         </Container>
       </Box>
       <Box w="100%" minH="100vh" px={[1, 1, 12, 24]}>
-        <Container maxW="xl">
-          <Heading as="h1" mb={8} mt={6}>
+        <Container maxW="7xl">
+          <Text as="h1" mb={8} mt={6}>
             {title}
-          </Heading>
+          </Text>
           <Stack spacing={2}>
             <Accordion bg="white" allowToggle>
               {roles && (

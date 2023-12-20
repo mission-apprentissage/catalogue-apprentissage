@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Center, Container, Heading } from "@chakra-ui/react";
+import { Box, Center, Container, Text } from "@chakra-ui/react";
 import Changelog from "../../common/components/Changelog/Changelog";
 import content from "../../CHANGELOG";
 import Layout from "../layout/Layout";
@@ -13,15 +13,15 @@ const Journal = () => {
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]} color="grey.800">
-        <Container maxW="xl">
+        <Container maxW="7xl">
           <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: title }]} />
         </Container>
       </Box>
       <Center flexDir="column" py={[1, 8]} px={[1, 1, 12, 24]}>
-        <Heading as="h1" color="grey.800" mb={[4, 8]} px={[5, 0]}>
+        <Text as="h1" color="grey.800" mb={[4, 8]} px={[5, 0]}>
           {title}
-        </Heading>
-        <Container maxW="md">
+        </Text>
+        <Container maxW="3xl">
           <Changelog content={content} />
         </Container>
       </Center>

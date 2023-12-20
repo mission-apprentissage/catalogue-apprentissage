@@ -5,7 +5,6 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Heading,
   HStack,
   Input,
   Link,
@@ -44,9 +43,9 @@ const LoginPage = () => {
   return (
     <Center height="100vh" verticalAlign="center">
       <Box width={["auto", "28rem"]}>
-        <Heading fontFamily="Marianne" fontWeight="700" marginBottom="2w">
+        <Text fontFamily="Marianne" fontWeight="700" marginBottom="2w">
           {title}
-        </Heading>
+        </Text>
         <Box>
           <Formik
             initialValues={{ username: "", password: "" }}

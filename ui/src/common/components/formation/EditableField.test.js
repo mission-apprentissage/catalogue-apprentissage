@@ -3,7 +3,7 @@ import { render } from "@testing-library/react";
 import { EditableField } from "./EditableField";
 import userEvent from "@testing-library/user-event";
 
-test("should render on editable field on read mode", () => {
+test("should render on editable field on read mode", async () => {
   const onEdit = jest.fn();
   const handleChange = jest.fn();
   const handleSubmit = jest.fn();
@@ -26,7 +26,8 @@ test("should render on editable field on read mode", () => {
   expect(label).toBeInTheDocument();
 
   const editBtn = queryByTestId("edit-btn");
-  userEvent.click(editBtn);
+
+  await userEvent.click(editBtn);
   expect(onEdit).toHaveBeenCalledWith("city");
 
   const cancelBtn = queryByText(/Annuler/i);
@@ -36,7 +37,7 @@ test("should render on editable field on read mode", () => {
   expect(saveBtn).not.toBeInTheDocument();
 });
 
-test("should render on editable field on edit mode", () => {
+test("should render on editable field on edit mode", async () => {
   const onEdit = jest.fn();
   const handleChange = jest.fn();
   const handleSubmit = jest.fn();
@@ -61,18 +62,18 @@ test("should render on editable field on edit mode", () => {
   const input = queryByTestId("input");
   expect(input).toBeInTheDocument();
 
-  userEvent.type(input, "Nice");
+  await userEvent.type(input, "Nice");
   expect(handleChange).toHaveBeenCalled();
 
   const cancelBtn = queryByText(/Annuler/i);
   expect(cancelBtn).toBeInTheDocument();
 
-  userEvent.click(cancelBtn);
+  await userEvent.click(cancelBtn);
   expect(onEdit).toHaveBeenCalledWith();
 
   const saveBtn = queryByText(/Valider/i);
   expect(saveBtn).toBeInTheDocument();
 
-  userEvent.click(saveBtn);
+  await userEvent.click(saveBtn);
   expect(handleSubmit).toHaveBeenCalled();
 });

@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { Badge, Text, Flex, Box, Heading, Link } from "@chakra-ui/react";
+import { Badge, Text, Flex, Box, Link } from "@chakra-ui/react";
 import { ArrowRightLine } from "../../../theme/components/icons";
 import { QualiteBadge } from "../QualiteBadge";
 
@@ -14,9 +14,9 @@ const CardListEtablissement = ({ data, withoutLink }) => {
         </Flex>
         <QualiteBadge value={data.certifie_qualite} mt={2} ml={0} />
         <Flex w={"100%"} justifyContent="space-between" mb={2}>
-          <Heading textStyle="h6" color="grey.800" mt={2} w={"100%"}>
+          <Text textStyle="h6" color="grey.800" mt={2} w={"100%"}>
             {data.entreprise_raison_sociale}
-          </Heading>
+          </Text>
           <Box></Box>
         </Flex>
         <Box>

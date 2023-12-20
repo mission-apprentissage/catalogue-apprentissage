@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Layout from "../layout/Layout";
-import { Box, Button, Container, Heading, Input, ListItem, Select, Text, UnorderedList } from "@chakra-ui/react";
+import { Box, Button, Container, Input, ListItem, Select, Text, UnorderedList } from "@chakra-ui/react";
 import { useDropzone } from "react-dropzone";
 import { _postFile } from "../../common/httpClient";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
@@ -110,15 +110,15 @@ export default () => {
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]} color="grey.800">
-        <Container maxW="xl">
+        <Container maxW="7xl">
           <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: title }]} />
         </Container>
       </Box>
       <Box w="100%" minH="100vh" px={[1, 1, 12, 24]}>
-        <Container maxW="xl">
-          <Heading as="h1" mb={8} mt={6}>
+        <Container maxW="7xl">
+          <Text as="h1" mb={8} mt={6}>
             {title}
-          </Heading>
+          </Text>
 
           <form onSubmit={onSubmit}>
             <Select
@@ -151,9 +151,9 @@ export default () => {
             </Box>
             {acceptedFiles.length > 0 && (
               <Box mb={8}>
-                <Heading as="h4" fontSize="delta">
+                <Text as="h4" fontSize="delta">
                   Fichier
-                </Heading>
+                </Text>
                 <UnorderedList>
                   {acceptedFiles.map((file) => (
                     <ListItem key={file.path}>

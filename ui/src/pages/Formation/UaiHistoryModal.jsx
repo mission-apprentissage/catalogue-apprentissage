@@ -1,7 +1,6 @@
 import React, { useRef } from "react";
 import {
   Button,
-  Heading,
   ListItem,
   Modal,
   ModalBody,
@@ -41,9 +40,9 @@ const UaiHistoryModal = ({ onClose, isOpen, formation }) => {
           </Text>
         </Button>
         <ModalHeader px={[4, 16]} pt={[3, 6]} pb={[3, 6]}>
-          <Heading as="h4" fontSize="1.6rem">
+          <Text as="h4" fontSize="1.6rem">
             Historique de modification de l'UAI du lieu de formation
-          </Heading>
+          </Text>
         </ModalHeader>
         <ModalBody mb={8}>
           <UnorderedList>

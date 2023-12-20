@@ -5,13 +5,13 @@ import {
   Center,
   Container,
   Flex,
-  Heading,
   Spinner,
   Tab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
+  Text,
   useDisclosure,
 } from "@chakra-ui/react";
 import Layout from "../layout/Layout";
@@ -36,11 +36,11 @@ export default (props) => {
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
-        <Container maxW="xl">
+        <Container maxW="7xl">
           <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: title }]} />
-          <Heading textStyle="h2" color="grey.800" mt={5}>
+          <Text textStyle="h2" color="grey.800" mt={5}>
             {title}
-          </Heading>
+          </Text>
           {!searchState.loaded && (
             <Center h="70vh">
               <Spinner />

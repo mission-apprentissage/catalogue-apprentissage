@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   Flex,
-  Heading,
   Link,
   ListItem,
   Modal,
@@ -40,7 +39,7 @@ const HowToFixModal = ({ isOpen, onClose }) => {
           </Text>
         </Button>
         <ModalHeader px={[4, 16]} pt={[3, 6]} pb={[3, 6]}>
-          <Heading as="h2" fontSize="2rem">
+          <Text as="h2" fontSize="2rem">
             <Flex>
               <Text as={"span"}>
                 <ArrowRightLine boxSize={26} />
@@ -49,13 +48,13 @@ const HowToFixModal = ({ isOpen, onClose }) => {
                 Demander des corrections sur les données sur votre organisme
               </Text>
             </Flex>
-          </Heading>
+          </Text>
         </ModalHeader>
         <ModalBody px={[4, 16]} pb={[4, 16]}>
           <Box border="1px solid" borderColor="bluefrance" p={8}>
-            <Heading as="h3" fontSize="1.5rem">
+            <Text as="h3" fontSize="1.5rem">
               Votre organisme fait partie des CFAs historiques et votre UAI a été modifié depuis le 01/01/2020 :
-            </Heading>
+            </Text>
             <Text as={"p"} mt={2}>
               Merci de signaler votre nouvel UAI à cette adresse :{" "}
               <Link href="mailto:catalogue@apprentissage.beta.gouv.fr" textDecoration="underline">
@@ -64,9 +63,9 @@ const HowToFixModal = ({ isOpen, onClose }) => {
             </Text>
           </Box>
           <Box border="1px solid" borderColor="bluefrance" p={8} mt={8}>
-            <Heading as="h3" fontSize="1.5rem">
+            <Text as="h3" fontSize="1.5rem">
               Votre organisme est déclaré en préfecture :
-            </Heading>
+            </Text>
             <Box mt={2}>
               Merci de réaliser la démarche suivante :
               <UnorderedList>

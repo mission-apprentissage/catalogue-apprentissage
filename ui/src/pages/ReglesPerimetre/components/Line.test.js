@@ -8,7 +8,7 @@ import { CONDITIONS } from "../../../constants/conditionsIntegration";
 import userEvent from "@testing-library/user-event";
 import { act } from "react-dom/test-utils";
 
-test("renders line & create rule", () => {
+test("renders line & create rule", async () => {
   jest.spyOn(api, "getCount").mockImplementation(() => 123);
 
   const onShowRule = jest.fn();
@@ -43,7 +43,7 @@ test("renders line & create rule", () => {
   expect(getCount).not.toHaveBeenCalled();
   expect(queryByText("123")).not.toBeInTheDocument();
 
-  userEvent.selectOptions(actionsSelect, [CONDITIONS.PEUT_INTEGRER]);
+  await userEvent.selectOptions(actionsSelect, [CONDITIONS.PEUT_INTEGRER]);
   expect(onCreateRule).toHaveBeenCalledWith({
     condition_integration: "peut intégrer",
     diplome: "BTS",
@@ -109,7 +109,7 @@ test("renders Line for academie & show rule", async () => {
   await waitFor(() => expect(queryByText("123")).toBeInTheDocument());
 
   const line = getByTestId("line");
-  userEvent.click(line);
+  await userEvent.click(line);
 
   expect(onShowRule).toHaveBeenCalledWith(rule);
 });
@@ -150,7 +150,7 @@ test("Action select - should delete rule", async () => {
   const actionsSelect = getByTestId("actions-select");
   expect(actionsSelect).toHaveAttribute("aria-disabled", "false");
 
-  userEvent.selectOptions(actionsSelect, [CONDITIONS.NE_DOIT_PAS_INTEGRER]);
+  await userEvent.selectOptions(actionsSelect, [CONDITIONS.NE_DOIT_PAS_INTEGRER]);
   expect(onDeleteRule).toHaveBeenCalledWith({
     _id: "345",
   });
@@ -174,32 +174,32 @@ test(`Action select - should update rule & set "non publiable en l'état"`, asyn
     nom_regle_complementaire: "BTS Agri",
   };
 
+  const { getByTestId } = render(
+    <Line
+      showIcon={false}
+      plateforme={"parcoursup"}
+      niveau={"5 (BTS, DEUST...)"}
+      label={"My test line"}
+      shouldFetchCount={true}
+      diplome={"BTS"}
+      onShowRule={onShowRule}
+      onCreateRule={onCreateRule}
+      onUpdateRule={onUpdateRule}
+      onDeleteRule={onDeleteRule}
+      rule={rule}
+    />
+  );
+
+  const actionsSelect = getByTestId("actions-select");
+  expect(actionsSelect).toHaveAttribute("aria-disabled", "false");
+
   await act(async () => {
-    const { getByTestId } = render(
-      <Line
-        showIcon={false}
-        plateforme={"parcoursup"}
-        niveau={"5 (BTS, DEUST...)"}
-        label={"My test line"}
-        shouldFetchCount={true}
-        diplome={"BTS"}
-        onShowRule={onShowRule}
-        onCreateRule={onCreateRule}
-        onUpdateRule={onUpdateRule}
-        onDeleteRule={onDeleteRule}
-        rule={rule}
-      />
-    );
-
-    const actionsSelect = getByTestId("actions-select");
-    expect(actionsSelect).toHaveAttribute("aria-disabled", "false");
-
-    userEvent.selectOptions(actionsSelect, [CONDITIONS.NE_DOIT_PAS_INTEGRER]);
-    expect(onUpdateRule).toHaveBeenCalledWith({
-      _id: "345",
-      condition_integration: "ne doit pas intégrer",
-      statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
-    });
+    await userEvent.selectOptions(actionsSelect, [CONDITIONS.NE_DOIT_PAS_INTEGRER]);
+  });
+  expect(onUpdateRule).toHaveBeenCalledWith({
+    _id: "345",
+    condition_integration: "ne doit pas intégrer",
+    statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
   });
 });
 
@@ -221,32 +221,32 @@ test("Action select - should update rule & set à publier", async () => {
     nom_regle_complementaire: "BTS Agri",
   };
 
+  const { getByTestId } = render(
+    <Line
+      showIcon={false}
+      plateforme={"parcoursup"}
+      niveau={"5 (BTS, DEUST...)"}
+      label={"My test line"}
+      shouldFetchCount={true}
+      diplome={"BTS"}
+      onShowRule={onShowRule}
+      onCreateRule={onCreateRule}
+      onUpdateRule={onUpdateRule}
+      onDeleteRule={onDeleteRule}
+      rule={rule}
+    />
+  );
+
+  const actionsSelect = getByTestId("actions-select");
+  expect(actionsSelect).toHaveAttribute("aria-disabled", "false");
+
   await act(async () => {
-    const { getByTestId } = render(
-      <Line
-        showIcon={false}
-        plateforme={"parcoursup"}
-        niveau={"5 (BTS, DEUST...)"}
-        label={"My test line"}
-        shouldFetchCount={true}
-        diplome={"BTS"}
-        onShowRule={onShowRule}
-        onCreateRule={onCreateRule}
-        onUpdateRule={onUpdateRule}
-        onDeleteRule={onDeleteRule}
-        rule={rule}
-      />
-    );
-
-    const actionsSelect = getByTestId("actions-select");
-    expect(actionsSelect).toHaveAttribute("aria-disabled", "false");
-
-    userEvent.selectOptions(actionsSelect, [CONDITIONS.PEUT_INTEGRER]);
-    expect(onUpdateRule).toHaveBeenCalledWith({
-      _id: "345",
-      condition_integration: "peut intégrer",
-      statut: PARCOURSUP_STATUS.A_PUBLIER,
-    });
+    await userEvent.selectOptions(actionsSelect, [CONDITIONS.PEUT_INTEGRER]);
+  });
+  expect(onUpdateRule).toHaveBeenCalledWith({
+    _id: "345",
+    condition_integration: "peut intégrer",
+    statut: PARCOURSUP_STATUS.A_PUBLIER,
   });
 });
 
@@ -268,31 +268,31 @@ test("Status select - should update status", async () => {
     nom_regle_complementaire: "BTS Agri",
   };
 
+  const { getByTestId } = render(
+    <Line
+      showIcon={false}
+      plateforme={"parcoursup"}
+      niveau={"5 (BTS, DEUST...)"}
+      label={"My test line"}
+      shouldFetchCount={true}
+      diplome={"BTS"}
+      onShowRule={onShowRule}
+      onCreateRule={onCreateRule}
+      onUpdateRule={onUpdateRule}
+      onDeleteRule={onDeleteRule}
+      rule={rule}
+    />
+  );
+
+  const statusSelect = getByTestId("status-select");
+  expect(statusSelect).toHaveAttribute("aria-disabled", "false");
+
   await act(async () => {
-    const { getByTestId } = render(
-      <Line
-        showIcon={false}
-        plateforme={"parcoursup"}
-        niveau={"5 (BTS, DEUST...)"}
-        label={"My test line"}
-        shouldFetchCount={true}
-        diplome={"BTS"}
-        onShowRule={onShowRule}
-        onCreateRule={onCreateRule}
-        onUpdateRule={onUpdateRule}
-        onDeleteRule={onDeleteRule}
-        rule={rule}
-      />
-    );
-
-    const statusSelect = getByTestId("status-select");
-    expect(statusSelect).toHaveAttribute("aria-disabled", "false");
-
-    userEvent.selectOptions(statusSelect, [PARCOURSUP_STATUS.A_PUBLIER]);
-    expect(onUpdateRule).toHaveBeenCalledWith({
-      _id: "345",
-      statut: PARCOURSUP_STATUS.A_PUBLIER,
-    });
+    await userEvent.selectOptions(statusSelect, [PARCOURSUP_STATUS.A_PUBLIER]);
+  });
+  expect(onUpdateRule).toHaveBeenCalledWith({
+    _id: "345",
+    statut: PARCOURSUP_STATUS.A_PUBLIER,
   });
 });
 
@@ -314,34 +314,35 @@ test("Status select - should update status for academie", async () => {
     nom_regle_complementaire: "BTS Agri",
   };
 
+  const { getByTestId } = render(
+    <Line
+      showIcon={false}
+      plateforme={"parcoursup"}
+      niveau={"5 (BTS, DEUST...)"}
+      label={"My test line"}
+      shouldFetchCount={true}
+      diplome={"BTS"}
+      onShowRule={onShowRule}
+      onCreateRule={onCreateRule}
+      onUpdateRule={onUpdateRule}
+      onDeleteRule={onDeleteRule}
+      rule={rule}
+      academie={"14"}
+    />
+  );
+
+  const statusSelect = getByTestId("status-select");
+  expect(statusSelect).toHaveAttribute("aria-disabled", "false");
+
   await act(async () => {
-    const { getByTestId } = render(
-      <Line
-        showIcon={false}
-        plateforme={"parcoursup"}
-        niveau={"5 (BTS, DEUST...)"}
-        label={"My test line"}
-        shouldFetchCount={true}
-        diplome={"BTS"}
-        onShowRule={onShowRule}
-        onCreateRule={onCreateRule}
-        onUpdateRule={onUpdateRule}
-        onDeleteRule={onDeleteRule}
-        rule={rule}
-        academie={"14"}
-      />
-    );
+    await userEvent.selectOptions(statusSelect, [PARCOURSUP_STATUS.A_PUBLIER]);
+  });
 
-    const statusSelect = getByTestId("status-select");
-    expect(statusSelect).toHaveAttribute("aria-disabled", "false");
-
-    userEvent.selectOptions(statusSelect, [PARCOURSUP_STATUS.A_PUBLIER]);
-    expect(onUpdateRule).toHaveBeenCalledWith({
-      _id: "345",
-      statut_academies: {
-        14: PARCOURSUP_STATUS.A_PUBLIER,
-      },
-    });
+  expect(onUpdateRule).toHaveBeenCalledWith({
+    _id: "345",
+    statut_academies: {
+      14: PARCOURSUP_STATUS.A_PUBLIER,
+    },
   });
 });
 
@@ -363,31 +364,32 @@ test("Status select - should remove status for academie", async () => {
     nom_regle_complementaire: "BTS Agri",
   };
 
+  const { getByTestId } = render(
+    <Line
+      showIcon={true}
+      plateforme={"parcoursup"}
+      niveau={"5 (BTS, DEUST...)"}
+      label={"My test line"}
+      shouldFetchCount={true}
+      diplome={"BTS"}
+      onShowRule={onShowRule}
+      onCreateRule={onCreateRule}
+      onUpdateRule={onUpdateRule}
+      onDeleteRule={onDeleteRule}
+      rule={rule}
+      academie={"14"}
+    />
+  );
+
+  const statusSelect = getByTestId("status-select");
+  expect(statusSelect).toHaveAttribute("aria-disabled", "false");
+
   await act(async () => {
-    const { getByTestId } = render(
-      <Line
-        showIcon={true}
-        plateforme={"parcoursup"}
-        niveau={"5 (BTS, DEUST...)"}
-        label={"My test line"}
-        shouldFetchCount={true}
-        diplome={"BTS"}
-        onShowRule={onShowRule}
-        onCreateRule={onCreateRule}
-        onUpdateRule={onUpdateRule}
-        onDeleteRule={onDeleteRule}
-        rule={rule}
-        academie={"14"}
-      />
-    );
+    await userEvent.selectOptions(statusSelect, [PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR]);
+  });
 
-    const statusSelect = getByTestId("status-select");
-    expect(statusSelect).toHaveAttribute("aria-disabled", "false");
-
-    userEvent.selectOptions(statusSelect, [PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR]);
-    expect(onUpdateRule).toHaveBeenCalledWith({
-      _id: "345",
-      statut_academies: {},
-    });
+  expect(onUpdateRule).toHaveBeenCalledWith({
+    _id: "345",
+    statut_academies: {},
   });
 });

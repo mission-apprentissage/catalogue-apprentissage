@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Heading, Link, ListItem, Text, UnorderedList } from "@chakra-ui/react";
+import { Box, Link, ListItem, Text, UnorderedList } from "@chakra-ui/react";
 import { ExternalLinkLine } from "../../../theme/components/icons";
 import { DangerBox } from "../DangerBox";
 import { InfoTooltip } from "../InfoTooltip";
@@ -83,9 +83,9 @@ export const DescriptionBlock = ({ formation }) => {
   return (
     <>
       <Box p={8}>
-        <Heading textStyle="h4" color="grey.800">
+        <Text textStyle="h4" color="grey.800">
           Description
-        </Heading>
+        </Text>
         {formation.onisep_url !== "" && formation.onisep_url !== null && (
           <Box mt={2} mb={4} ml={-3}>
             <Link href={formation.onisep_url} mt={3} variant="pill" textStyle="rf-text" isExternal>
@@ -142,7 +142,13 @@ export const DescriptionBlock = ({ formation }) => {
               <InfoTooltip description={helpText.formation.cfd} />
             </Text>
             {!isTitreRNCP && isCfdExpired && (
-              <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
+              <Text
+                variant={"unstyled"}
+                fontSize={"zeta"}
+                fontStyle={"italic"}
+                color={"grey.600"}
+                mb={formation.cfd === formation.cfd_entree ? 0 : 4}
+              >
                 {formation?.cfd_date_fermeture ? (
                   <>
                     Ce code formation diplôme{" "}
@@ -171,6 +177,17 @@ export const DescriptionBlock = ({ formation }) => {
                   V_formation_diplome
                 </Link>
                 ).
+              </Text>
+            )}
+            {formation.cfd_entree !== formation.cfd && (
+              <Text mb={!isTitreRNCP && isCfdExpired ? 0 : 4}>
+                CFD de la première année commune correspondant à ce BTS à options :{" "}
+                <Text as="span" variant="highlight">
+                  {formation.cfd_entree}{" "}
+                  {formation.cfd_entree_date_fermeture
+                    ? `(expire le ${new Date(formation.cfd_entree_date_fermeture).toLocaleDateString("fr-FR")})`
+                    : "(expiration : non renseigné)"}
+                </Text>
               </Text>
             )}
           </CfdContainer>
@@ -400,9 +417,9 @@ export const DescriptionBlock = ({ formation }) => {
         </Box>
       </Box>
       <Box p={8}>
-        <Heading textStyle="h4" colorc="grey.800" mb={4}>
+        <Text textStyle="h4" colorc="grey.800" mb={4}>
           Informations RNCP et ROME
-        </Heading>
+        </Text>
         {formation.rncp_code && (
           <RncpContainer>
             <Text mb={isTitreRNCP && isRncpExpired ? 0 : 4}>

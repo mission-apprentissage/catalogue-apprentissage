@@ -1,17 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import {
-  Box,
-  Container,
-  Heading,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  Grid,
-  GridItem,
-  Flex,
-} from "@chakra-ui/react";
+import { Box, Container, Text, Tab, TabList, TabPanel, TabPanels, Tabs, Grid, GridItem, Flex } from "@chakra-ui/react";
 import IframeResizer from "iframe-resizer-react";
 
 import Layout from "../layout/Layout";
@@ -182,13 +170,23 @@ export default () => {
     {
       title: "Statistiques",
       component: (
-        <IframeResizer
-          src="https://catalogue.apprentissage.education.gouv.fr/metabase/public/dashboard/50b6d168-d303-4f91-b898-945f6b9f11f4#bordered=false"
-          seamless
-          style={{ width: "100%", border: 0 }}
-          title={`Console de pilotage Affelnet - Statistiques`}
-          allowtransparency={"true"}
-        />
+        <>
+          <IframeResizer
+            src="https://catalogue.apprentissage.education.gouv.fr/metabase/public/dashboard/50b6d168-d303-4f91-b898-945f6b9f11f4#bordered=false"
+            seamless
+            style={{ width: "100%", border: 0 }}
+            title={`Console de pilotage Affelnet - Statistiques`}
+            allowtransparency={"true"}
+          />
+
+          <IframeResizer
+            src="https://catalogue.apprentissage.education.gouv.fr/metabase/public/dashboard/92f2107c-ffc7-4fd3-abbf-de6da483a3b3"
+            seamless
+            style={{ width: "100%", border: 0 }}
+            title={`Console de pilotage Affelnet - Comparaison entre campagnes`}
+            allowtransparency={"true"}
+          />
+        </>
       ),
     },
   ];
@@ -199,7 +197,7 @@ export default () => {
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
-        <Container maxW="xl">
+        <Container maxW="7xl">
           <Breadcrumb
             pages={[
               { title: "Accueil", to: "/" },
@@ -208,9 +206,9 @@ export default () => {
             ]}
           />
 
-          <Heading textStyle="h2" color="grey.800" mt={5}>
+          <Text textStyle="h2" color="grey.800" mt={5}>
             {title}
-          </Heading>
+          </Text>
 
           <Tabs variant={"search"} mt={5} isLazy>
             <TabList bg="white">

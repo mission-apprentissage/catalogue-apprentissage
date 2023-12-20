@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   Flex,
-  Heading,
   Link,
   ListItem,
   Modal,
@@ -39,7 +38,7 @@ const HowToAddModal = ({ isOpen, onClose }) => {
           </Text>
         </Button>
         <ModalHeader px={[4, 16]} pt={[3, 6]} pb={[3, 6]}>
-          <Heading as="h2" fontSize="2rem">
+          <Text as="h2" fontSize="2rem">
             <Flex>
               <Text as={"span"}>
                 <ArrowRightLine boxSize={26} />
@@ -48,14 +47,14 @@ const HowToAddModal = ({ isOpen, onClose }) => {
                 Demander l'ajout d'une formation
               </Text>
             </Flex>
-          </Heading>
+          </Text>
         </ModalHeader>
         <ModalBody px={[4, 16]} pb={[4, 16]}>
           <Box border="1px solid" borderColor="bluefrance" p={8}>
-            <Heading as="h3" fontSize="1.5rem">
+            <Text as="h3" fontSize="1.5rem">
               Vous êtes organisme de formation et vous n’avez pas encore déclaré votre formation auprès de votre
               Carif-Oref :
-            </Heading>
+            </Text>
             <Text as={"p"} mt={2}>
               <strong>Pour ajouter une offre de formation au catalogue</strong>, merci de la déclarer auprès du
               Carif-Oref de votre région en allant sur la page{" "}
@@ -72,9 +71,9 @@ const HowToAddModal = ({ isOpen, onClose }) => {
             </Text>
           </Box>
           <Box border="1px solid" borderColor="bluefrance" p={8} mt={8}>
-            <Heading as="h3" fontSize="1.5rem">
+            <Text as="h3" fontSize="1.5rem">
               Vous êtes organisme de formation et vous avez déjà déclaré votre formation auprès de votre Carif-Oref :
-            </Heading>
+            </Text>
             <Box mt={2}>
               Votre formation devrait figurer dans le catalogue. Si ce n’est pas le cas, merci de nous signaler votre
               situation par mail :{" "}

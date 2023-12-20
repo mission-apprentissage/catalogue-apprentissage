@@ -81,7 +81,7 @@ const NavLinks = ({ isOpen }) => {
 const NavBarContainer = ({ children, ...props }) => {
   return (
     <Box w="full" boxShadow="md">
-      <Container maxW="xl">
+      <Container maxW="7xl">
         <Flex as="nav" align="center" justify="space-between" wrap="wrap" w="100%" {...props}>
           {children}
         </Flex>

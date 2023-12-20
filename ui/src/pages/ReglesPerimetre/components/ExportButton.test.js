@@ -45,7 +45,7 @@ test("should call exportCSV on click", () => {
   expect(downloadCSV).toHaveBeenCalled();
 
   expect(downloadCSV.mock.calls[0][1]).toEqual(
-    "Niveau;Diplome (BCN);Nom du diplome ou titre;Condition d'integration;Statut;Derniere mise a jour;Dernier contributeur;Statuts spécifiques en académies\n" +
-      '3;BTS;;;à publier;;;="Paris:autre statut"'
+    "Niveau;Diplome (BCN);Nom du diplome ou titre;Condition d'integration;Statut;Derniere mise a jour;Dernier contributeur;Statuts spécifiques en académies;Règles complémentaires\n" +
+      '3;BTS;;;à publier;;;="Paris:autre statut";'
   );
 });

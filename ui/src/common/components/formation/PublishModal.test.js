@@ -32,6 +32,7 @@ test("should compute submit body when publish affelnet", () => {
     parcoursup_raison_depublication: "",
     num_academie: 10,
     uai_formation: "abcdefg0",
+    uai_formation_valide: true,
     etablissement_gestionnaire_uai: "test_uai_gestionnaire",
     etablissement_formateur_uai: "test_uai_formateur",
     cfd: "test_cfd",
@@ -66,6 +67,7 @@ test("should compute submit body when publish affelnet ", () => {
     parcoursup_raison_depublication: "",
     num_academie: 10,
     uai_formation: "abcdefg0",
+    uai_formation_valide: true,
     etablissement_gestionnaire_uai: "test_uai_gestionnaire",
     etablissement_formateur_uai: "test_uai_formateur",
     cfd: "test_cfd",
@@ -99,6 +101,7 @@ test("should update info when publish affelnet", () => {
     parcoursup_raison_depublication: "",
     num_academie: 10,
     uai_formation: "abcdefg0",
+    uai_formation_valide: true,
     etablissement_gestionnaire_uai: "test_uai_gestionnaire",
     etablissement_formateur_uai: "test_uai_formateur",
     cfd: "test_cfd",
@@ -129,6 +132,7 @@ test("should do nothing when publish affelnet on unknown status", () => {
     parcoursup_raison_depublication: "",
     num_academie: 10,
     uai_formation: "abcdefg0",
+    uai_formation_valide: true,
     etablissement_gestionnaire_uai: "test_uai_gestionnaire",
     etablissement_formateur_uai: "test_uai_formateur",
     cfd: "test_cfd",
@@ -157,6 +161,7 @@ test("should compute submit body when UNpublish affelnet", () => {
     parcoursup_raison_depublication: "",
     num_academie: 10,
     uai_formation: "abcdefg0",
+    uai_formation_valide: true,
     etablissement_gestionnaire_uai: "test_uai_gestionnaire",
     etablissement_formateur_uai: "test_uai_formateur",
     cfd: "test_cfd",
@@ -191,6 +196,7 @@ test("should do nothing when UNpublish affelnet for a status already not publish
     parcoursup_raison_depublication: "",
     num_academie: 10,
     uai_formation: "abcdefg0",
+    uai_formation_valide: true,
     etablissement_gestionnaire_uai: "test_uai_gestionnaire",
     etablissement_formateur_uai: "test_uai_formateur",
     cfd: "test_cfd",
@@ -218,6 +224,7 @@ test("should compute submit body when publish parcoursup", () => {
     parcoursup_raison_depublication: "",
     num_academie: 10,
     uai_formation: "abcdefg0",
+    uai_formation_valide: true,
     etablissement_gestionnaire_uai: "test_uai_gestionnaire",
     etablissement_formateur_uai: "test_uai_formateur",
     cfd: "test_cfd",
@@ -251,6 +258,7 @@ test("should compute submit body when publish parcoursup", () => {
     parcoursup_raison_depublication: "",
     num_academie: 10,
     uai_formation: "abcdefg0",
+    uai_formation_valide: true,
     etablissement_gestionnaire_uai: "test_uai_gestionnaire",
     etablissement_formateur_uai: "test_uai_formateur",
     cfd: "test_cfd",
@@ -284,6 +292,7 @@ test("should compute submit body when UNpublish parcoursup", () => {
     parcoursup_raison_depublication: "",
     num_academie: 10,
     uai_formation: "abcdefg0",
+    uai_formation_valide: true,
     etablissement_gestionnaire_uai: "test_uai_gestionnaire",
     etablissement_formateur_uai: "test_uai_formateur",
     cfd: "test_cfd",
@@ -317,6 +326,7 @@ test("should do nothing when publish parcoursup on unknown status", () => {
     parcoursup_raison_depublication: "",
     num_academie: 10,
     uai_formation: "abcdefg0",
+    uai_formation_valide: true,
     etablissement_gestionnaire_uai: "test_uai_gestionnaire",
     etablissement_formateur_uai: "test_uai_formateur",
     cfd: "test_cfd",
@@ -393,6 +403,7 @@ test("should render the publish modal", () => {
     parcoursup_raison_depublication: "",
     num_academie: 10,
     uai_formation: "abcdefg0",
+    uai_formation_valide: true,
     etablissement_gestionnaire_uai: "test_uai_gestionnaire",
     etablissement_formateur_uai: "test_uai_formateur",
     cfd: "test_cfd",
@@ -409,8 +420,9 @@ test("should render the publish modal", () => {
   const afForm = getByTestId("affelnet-form");
   expect(afForm).toHaveAttribute("aria-disabled", "false");
 
-  const afPublishFormLabel = queryByText("Informations sur l'offre de formation (facultatif) :");
-  expect(afPublishFormLabel).not.toBeVisible();
+  const afPublishForm = getByTestId("af-publish-form");
+  expect(afPublishForm).not.toBeVisible();
+  expect(afPublishForm).not.toBeVisible();
 });
 
 test("should toggle the affelnet forms", async () => {
@@ -426,6 +438,7 @@ test("should toggle the affelnet forms", async () => {
     parcoursup_raison_depublication: "",
     num_academie: 10,
     uai_formation: "abcdefg0",
+    uai_formation_valide: true,
     etablissement_gestionnaire_uai: "test_uai_gestionnaire",
     etablissement_formateur_uai: "test_uai_formateur",
     cfd: "test_cfd",
@@ -436,25 +449,26 @@ test("should toggle the affelnet forms", async () => {
     <PublishModal isOpen={true} onClose={onClose} onFormationUpdate={onFormationUpdate} formation={formation} />
   );
 
-  const afPublishFormLabel = queryByText("Informations sur l'offre de formation (facultatif) :");
-  expect(afPublishFormLabel).not.toBeVisible();
+  const afPublishForm = getByTestId("af-publish-form");
+  expect(afPublishForm).not.toBeVisible();
+  expect(afPublishForm).not.toBeVisible();
 
   const afUnPublishForm = getByTestId("af-unpublish-form");
   expect(afUnPublishForm).not.toBeVisible();
 
   const radioYes = getByTestId("af-radio-yes");
-  act(() => {
-    userEvent.click(radioYes);
+  await act(async () => {
+    await userEvent.click(radioYes);
   });
-  await waitFor(() => expect(afPublishFormLabel).toBeVisible(), { timeout: 10000 });
+  await waitFor(() => expect(afPublishForm).toBeVisible(), { timeout: 10000 });
   expect(afUnPublishForm).not.toBeVisible();
 
   const radioNo = getByTestId("af-radio-no");
-  act(() => {
-    userEvent.click(radioNo);
+  await act(async () => {
+    await userEvent.click(radioNo);
   });
   await waitFor(() => expect(afUnPublishForm).toBeVisible(), { timeout: 10000 });
-  expect(afPublishFormLabel).not.toBeVisible();
+  expect(afPublishForm).not.toBeVisible();
 });
 
 test("should toggle the parcoursup forms", async () => {
@@ -470,35 +484,45 @@ test("should toggle the parcoursup forms", async () => {
     parcoursup_raison_depublication: "",
     num_academie: 10,
     uai_formation: "abcdefg0",
+    uai_formation_valide: true,
     etablissement_gestionnaire_uai: "test_uai_gestionnaire",
     etablissement_formateur_uai: "test_uai_formateur",
     cfd: "test_cfd",
     intitule_long: "PATISSIER CAP",
   };
 
-  const { queryByText, getByTestId } = render(
+  const { getByTestId } = render(
     <PublishModal isOpen={true} onClose={onClose} onFormationUpdate={onFormationUpdate} formation={formation} />
   );
 
-  const afPublishFormLabel = queryByText("Informations sur l'offre de formation (facultatif) :");
-  expect(afPublishFormLabel).not.toBeVisible();
+  const afPublishForm = getByTestId("af-publish-form");
+  const afUnpublishForm = getByTestId("af-unpublish-form");
+  const psPublishForm = getByTestId("ps-publish-form");
+  const psUnpublishForm = getByTestId("ps-unpublish-form");
 
-  const psUnPublishForm = getByTestId("ps-unpublish-form");
-  expect(psUnPublishForm).not.toBeVisible();
+  expect(afPublishForm).not.toBeVisible();
+  expect(afUnpublishForm).not.toBeVisible();
+  expect(psPublishForm).not.toBeVisible();
+  expect(psUnpublishForm).not.toBeVisible();
 
   const radioYes = getByTestId("ps-radio-yes");
-  act(() => {
-    userEvent.click(radioYes);
+  await act(async () => {
+    await userEvent.click(radioYes);
   });
-  expect(afPublishFormLabel).not.toBeVisible();
-  expect(psUnPublishForm).not.toBeVisible();
+  expect(afPublishForm).not.toBeVisible();
+  expect(afUnpublishForm).not.toBeVisible();
+  expect(psPublishForm).toBeVisible();
+  expect(psUnpublishForm).not.toBeVisible();
 
   const radioNo = getByTestId("ps-radio-no");
-  act(() => {
-    userEvent.click(radioNo);
+
+  await act(async () => {
+    await userEvent.click(radioNo);
   });
-  await waitFor(() => expect(psUnPublishForm).toBeVisible(), { timeout: 10000 });
-  expect(afPublishFormLabel).not.toBeVisible();
+  expect(psUnpublishForm).toBeVisible();
+  expect(psPublishForm).not.toBeVisible();
+  expect(afPublishForm).not.toBeVisible();
+  expect(afUnpublishForm).not.toBeVisible();
 });
 
 test("should submit", async () => {
@@ -530,14 +554,14 @@ test("should submit", async () => {
   );
 
   const radioYes = getByTestId("ps-radio-yes");
-  act(() => {
-    userEvent.click(radioYes);
+  await act(async () => {
+    await userEvent.click(radioYes);
   });
 
   const submitBtn = queryByText("Enregistrer les modifications");
   expect(submitBtn).toBeInTheDocument();
-  act(() => {
-    userEvent.click(submitBtn);
+  await act(async () => {
+    await userEvent.click(submitBtn);
   });
 
   await waitFor(() => expect(onClose).toBeCalled());
@@ -561,6 +585,7 @@ test("should submit but no update", async () => {
     parcoursup_raison_depublication: "",
     num_academie: 10,
     uai_formation: "abcdefg0",
+    uai_formation_valide: true,
     etablissement_gestionnaire_uai: "test_uai_gestionnaire",
     etablissement_formateur_uai: "test_uai_formateur",
     cfd: "test_cfd",
@@ -573,8 +598,8 @@ test("should submit but no update", async () => {
 
   const submitBtn = queryByText("Enregistrer les modifications");
   expect(submitBtn).toBeInTheDocument();
-  act(() => {
-    userEvent.click(submitBtn);
+  await act(async () => {
+    await userEvent.click(submitBtn);
   });
 
   await waitFor(() => expect(onClose).toBeCalled());
@@ -594,6 +619,7 @@ test("should close", async () => {
     parcoursup_raison_depublication: "",
     num_academie: 10,
     uai_formation: "abcdefg0",
+    uai_formation_valide: true,
     etablissement_gestionnaire_uai: "test_uai_gestionnaire",
     etablissement_formateur_uai: "test_uai_formateur",
     cfd: "test_cfd",
@@ -606,8 +632,8 @@ test("should close", async () => {
 
   const submitBtn = queryByText("Annuler");
   expect(submitBtn).toBeInTheDocument();
-  act(() => {
-    userEvent.click(submitBtn);
+  await act(async () => {
+    await userEvent.click(submitBtn);
   });
   await waitFor(() => expect(onClose).toBeCalled());
 });
