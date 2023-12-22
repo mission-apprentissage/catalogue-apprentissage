@@ -13,7 +13,9 @@ export const RejectionBlock = ({ formation: baseFormation }) => {
   const [formation, setFormation] = useState(baseFormation);
 
   const canHandleBusinessError =
-    user && (isUserAdmin(user) || hasAllAcademiesRight(user) || hasAcademyRight(user, formation.num_academie));
+    user &&
+    (isUserAdmin(user) || hasAllAcademiesRight(user) || hasAcademyRight(user, formation.num_academie)) &&
+    hasOneOfRoles(user, ["admin", "moss", "instructeur"]);
 
   const handleBusinessError = useCallback(async () => {
     if (!canHandleBusinessError) {
@@ -63,9 +65,6 @@ export const RejectionBlock = ({ formation: baseFormation }) => {
     }
   }, [canHandleBusinessError, formation, toast]);
 
-  if (!hasOneOfRoles(user, ["admin", "moss", "instructeur"])) {
-    return null;
-  }
   if (!formation?.parcoursup_error) {
     return null;
   }

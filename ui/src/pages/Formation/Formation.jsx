@@ -691,7 +691,8 @@ export default () => {
                   </Alert>
                 )}
 
-                {[PARCOURSUP_STATUS.EN_ATTENTE, PARCOURSUP_STATUS.REJETE].includes(formation.parcoursup_statut) &&
+                {hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
+                  [PARCOURSUP_STATUS.EN_ATTENTE, PARCOURSUP_STATUS.REJETE].includes(formation.parcoursup_statut) &&
                   !!formation.parcoursup_error && <RejectionBlock formation={formation} />}
 
                 {hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
