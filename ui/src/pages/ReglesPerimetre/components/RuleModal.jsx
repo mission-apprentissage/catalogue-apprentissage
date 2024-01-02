@@ -98,8 +98,6 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
     num_academie,
   } = rule ?? {};
 
-  console.log("render", { rule });
-
   let isClosing = false;
   const isCreating = !rule;
   const initialRef = React.useRef();
@@ -320,7 +318,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
   });
 
   return (
-    <Modal isOpen={isOpen} onClose={close} size="6xl" initialFocusRef={initialRef}>
+    <Modal isOpen={isOpen} onClose={close} size="7xl" initialFocusRef={initialRef}>
       <ModalOverlay />
       <ModalContent bg="white" color="primaryText" borderRadius="none" ref={initialRef}>
         <Button
@@ -499,8 +497,8 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                         Affiner les critères{" "}
                         <ArrowDownLine boxSize={5} transform={isCriteriaOpen ? "rotate(180deg)" : "none"} />
                       </Button>
-                      <Collapse in={isCriteriaOpen} animateOpacity>
-                        <Box bg={"grey.100"} p={4} borderLeft={"4px solid"} borderColor={"bluefrance"} w={"full"}>
+                      <Collapse in={isCriteriaOpen} animateOpacity style={{ width: "100%" }}>
+                        <Box bg={"grey.100"} p={4} borderLeft={"4px solid"} borderColor={"bluefrance"} w={"100%"}>
                           <RuleBuilder
                             isDisabled={isDisabled}
                             regle_complementaire_query={values.query}

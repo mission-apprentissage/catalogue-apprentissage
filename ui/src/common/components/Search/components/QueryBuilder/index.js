@@ -28,6 +28,7 @@ const QueryBuilder = ({
     operator: operators[0].value,
     value: "",
     combinator: "AND",
+    comment: "",
     index: 0,
   };
 
@@ -85,6 +86,7 @@ const QueryBuilder = ({
           combinator={rule.combinator}
           field={rule.field}
           operator={rule.operator}
+          comment={rule.comment}
           value={rule.value}
           fields={fields}
           operators={operators}

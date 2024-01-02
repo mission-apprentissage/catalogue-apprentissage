@@ -44,6 +44,7 @@ export const RuleBuilder = ({ regle_complementaire_query, regle_complementaire, 
       value: "",
       combinator: "AND",
       index: 0,
+      comment: "",
     }),
     [fields]
   );
@@ -60,10 +61,10 @@ export const RuleBuilder = ({ regle_complementaire_query, regle_complementaire, 
     );
     const serializedQuery = serialize(query);
 
-    if (serializedQuery !== regle_complementaire) {
+    if (serializedQuery !== regle_complementaire || regle_complementaire_query !== JSON.stringify(rules)) {
       onQueryChange(serializedQuery, JSON.stringify(rules));
     }
-  }, [onQueryChange, rules, regle_complementaire]);
+  }, [onQueryChange, rules, regle_complementaire, regle_complementaire_query]);
 
   const onAdd = useCallback(
     () =>
@@ -94,6 +95,7 @@ export const RuleBuilder = ({ regle_complementaire_query, regle_complementaire, 
         ...r,
         key: prevRules[r.index].key,
       };
+
       return [...prevRules];
     });
   }, []);
@@ -108,6 +110,7 @@ export const RuleBuilder = ({ regle_complementaire_query, regle_complementaire, 
           field={rule.field}
           operator={rule.operator}
           value={rule.value}
+          comment={rule.comment ?? ""}
           fields={fields}
           operators={rulesOperators}
           combinators={combinators}

@@ -92,7 +92,7 @@ const RuleInput = ({ suggestionQuery, field, collection, value, setValue, noSugg
         renderSuggestion={(suggestion) => <div>{suggestion}</div>}
         renderInputComponent={(inputProps) => (
           <InputGroup flex={"1 1 auto"} w={"auto"}>
-            <Input m="5px" autoComplete="new-password" {...inputProps} />
+            <Input m="5px" autoComplete="noned" {...inputProps} />
             {inputProps.value && (
               <InputRightElement m={"5px"} children={<CloseCircleLine boxSize={4} onClick={() => setValue("")} />} />
             )}
@@ -112,7 +112,8 @@ const RuleInput = ({ suggestionQuery, field, collection, value, setValue, noSugg
         isDisabled={isDisabled}
         value={value}
         m="5px"
-        autoComplete="new-password"
+        autoComplete="none"
+        placeholder="Valeur"
         onChange={(e) => setValue(e.target.value)}
       />
       {value && <InputRightElement m={"5px"} children={<CloseCircleLine boxSize={4} onClick={() => setValue("")} />} />}
@@ -120,33 +121,45 @@ const RuleInput = ({ suggestionQuery, field, collection, value, setValue, noSugg
   );
 };
 
-export default function Rule({ fields, operators, combinators, collection, noSuggest, isDisabled, ...props }) {
+export default function Rule({
+  fields,
+  operators,
+  combinators,
+  collection,
+  noSuggest,
+  isDisabled,
+  onChange,
+  length,
+  index,
+  ...props
+}) {
   // const [{ url, headers }] = useSharedContext();
   const [combinator, setCombinator] = useState(props.combinator);
   const [field, setField] = useState(props.field);
   const [operator, setOperator] = useState(props.operator);
   const [value, setValue] = useState(props.value);
+  const [comment, setComment] = useState(props.comment);
   const timer = useRef(null);
+
+  console.log(comment);
 
   useEffect(() => {
     // debounce here to prevent lags
     clearTimeout(timer.current);
 
     timer.current = setTimeout(() => {
-      props.onChange({ field, operator, value, combinator, index: props.index });
+      onChange({ field, operator, value, combinator, comment, index: index });
     }, 500);
 
     return () => clearTimeout(timer.current);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [field, operator, value, combinator]);
+  }, [field, operator, value, combinator, comment, index, onChange]);
 
   const currentOperator = operators.find((o) => o.value === operator);
 
   return (
     <>
       <Flex mb={2}>
-        {!!props.index && (
+        {!!index && (
           <Combinator
             isDisabled={isDisabled}
             combinator={combinator}
@@ -199,9 +212,23 @@ export default function Rule({ fields, operators, combinators, collection, noSug
           />
         )}
 
-        {!!props.index && <DeleteButton deleteFn={() => props.onDelete(props.index)} isDisabled={isDisabled} />}
+        <InputGroup flex={"1 1 auto"} w={"auto"}>
+          <Input
+            isDisabled={isDisabled}
+            value={comment}
+            m="5px"
+            autoComplete="none"
+            placeholder="Commentaire"
+            onChange={(e) => setComment(e.target.value)}
+          />
+          {comment && (
+            <InputRightElement m={"5px"} children={<CloseCircleLine boxSize={4} onClick={() => setComment("")} />} />
+          )}
+        </InputGroup>
+
+        {!!index && <DeleteButton deleteFn={() => props.onDelete(index)} isDisabled={isDisabled} />}
       </Flex>
-      {props.index === props.length - 1 && <AddButton onAdd={props.onAdd} isDisabled={isDisabled} />}
+      {index === length - 1 && <AddButton onAdd={props.onAdd} isDisabled={isDisabled} />}
     </>
   );
 }
