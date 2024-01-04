@@ -102,8 +102,9 @@ export const Line = ({
           {showIcon && <ArrowRightDownLine boxSize={3} mr={2} />}
           <Text data-testid={"line-label"} isTruncated>
             {num_academie ? `${academieLabel} (${num_academie}) - ` : ""}
-            {label} {hasCriteria && <Badge ml={4}>Critères additionnels</Badge>}
+            {label}
           </Text>
+          {hasCriteria && <Badge ml={4}>Critères additionnels</Badge>}
         </Flex>
         <Flex flexBasis={"50%"} justifyContent={"flex-start"} alignItems="center">
           <Flex minW={12}>{lineCount}</Flex>

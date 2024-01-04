@@ -118,7 +118,7 @@ test("renders the modal in update mode and can delete", async () => {
     _id: "999",
     diplome: "BTS",
     regle_complementaire: "",
-    regle_complementaire_query: "",
+    regle_complementaire_query: "[]",
     nom_regle_complementaire: "mon diplome de test",
     statut: PARCOURSUP_STATUS.A_PUBLIER,
     condition_integration: "peut intégrer",
