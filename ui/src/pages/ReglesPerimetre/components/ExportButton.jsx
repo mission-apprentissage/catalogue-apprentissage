@@ -51,11 +51,12 @@ const exportRules = (plateforme, rules) => {
       label: "Règles complémentaires",
 
       formatter: (value) => {
-        const regles = JSON.parse(value).map(({ field, operator, value, combinator, index }) => ({
+        const regles = JSON.parse(value).map(({ field, operator, value, combinator, comment, index }) => ({
           field,
           operator,
           value,
           combinator,
+          comment,
           index,
         }));
 
