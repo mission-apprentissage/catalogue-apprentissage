@@ -53,6 +53,13 @@ export const RuleBuilder = ({ regle_complementaire_query, regle_complementaire, 
   const [rules, setRules] = useState(withUniqueKey(initialValue || [templateRule]));
 
   useEffect(() => {
+    console.log("useEffect", rules, regle_complementaire, regle_complementaire_query);
+    console.log(
+      JSON.stringify(rules),
+      regle_complementaire_query,
+      regle_complementaire_query !== JSON.stringify(rules)
+    );
+
     const query = computeQuery(
       rules.map((r) => ({
         ...r,
@@ -78,6 +85,7 @@ export const RuleBuilder = ({ regle_complementaire_query, regle_complementaire, 
       ]),
     [templateRule]
   );
+
   const onDelete = useCallback((index) => {
     setRules((prevRules) =>
       prevRules
@@ -89,6 +97,7 @@ export const RuleBuilder = ({ regle_complementaire_query, regle_complementaire, 
         }))
     );
   }, []);
+
   const onChange = useCallback((r) => {
     setRules((prevRules) => {
       prevRules[r.index] = {
@@ -111,6 +120,7 @@ export const RuleBuilder = ({ regle_complementaire_query, regle_complementaire, 
           operator={rule.operator}
           value={rule.value}
           comment={rule.comment ?? ""}
+          showComment={true}
           fields={fields}
           operators={rulesOperators}
           combinators={combinators}

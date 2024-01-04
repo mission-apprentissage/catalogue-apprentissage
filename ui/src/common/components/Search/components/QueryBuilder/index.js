@@ -86,6 +86,7 @@ const QueryBuilder = ({
           combinator={rule.combinator}
           field={rule.field}
           operator={rule.operator}
+          showComment={false}
           comment={rule.comment}
           value={rule.value}
           fields={fields}
@@ -105,7 +106,7 @@ const QueryBuilder = ({
   );
 };
 
-const SubComponent = ({ setQuery, fields, collection }) => {
+const SubComponent = ({ setQuery, fields, collection, showComments }) => {
   const [initialValue, setInitialValue] = useState(null);
   const [loading, setLoading] = useState(true);
 

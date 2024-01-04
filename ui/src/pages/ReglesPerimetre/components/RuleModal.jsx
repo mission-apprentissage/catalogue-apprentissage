@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -317,6 +317,14 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
     defaultIsOpen: regle_complementaire_query && !!JSON.parse(regle_complementaire_query).length,
   });
 
+  const onQueryChange = useCallback(
+    (regle, query) => {
+      setFieldValue("regle", regle);
+      setFieldValue("query", query);
+    },
+    [setFieldValue]
+  );
+
   return (
     <Modal isOpen={isOpen} onClose={close} size="7xl" initialFocusRef={initialRef}>
       <ModalOverlay />
@@ -503,10 +511,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                             isDisabled={isDisabled}
                             regle_complementaire_query={values.query}
                             regle_complementaire={values.regle}
-                            onQueryChange={(regle, query) => {
-                              setFieldValue("regle", regle);
-                              setFieldValue("query", query);
-                            }}
+                            onQueryChange={onQueryChange}
                           />
                         </Box>
                       </Collapse>

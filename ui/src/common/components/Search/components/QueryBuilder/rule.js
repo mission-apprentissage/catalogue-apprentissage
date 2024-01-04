@@ -131,6 +131,7 @@ export default function Rule({
   onChange,
   length,
   index,
+  showComment,
   ...props
 }) {
   // const [{ url, headers }] = useSharedContext();
@@ -140,8 +141,6 @@ export default function Rule({
   const [value, setValue] = useState(props.value);
   const [comment, setComment] = useState(props.comment);
   const timer = useRef(null);
-
-  console.log(comment);
 
   useEffect(() => {
     // debounce here to prevent lags
@@ -212,19 +211,21 @@ export default function Rule({
           />
         )}
 
-        <InputGroup flex={"1 1 auto"} w={"auto"}>
-          <Input
-            isDisabled={isDisabled}
-            value={comment}
-            m="5px"
-            autoComplete="none"
-            placeholder="Commentaire"
-            onChange={(e) => setComment(e.target.value)}
-          />
-          {comment && (
-            <InputRightElement m={"5px"} children={<CloseCircleLine boxSize={4} onClick={() => setComment("")} />} />
-          )}
-        </InputGroup>
+        {showComment && (
+          <InputGroup flex={"1 1 auto"} w={"auto"}>
+            <Input
+              isDisabled={isDisabled}
+              value={comment}
+              m="5px"
+              autoComplete="none"
+              placeholder="Commentaire"
+              onChange={(e) => setComment(e.target.value)}
+            />
+            {comment && (
+              <InputRightElement m={"5px"} children={<CloseCircleLine boxSize={4} onClick={() => setComment("")} />} />
+            )}
+          </InputGroup>
+        )}
 
         {!!index && <DeleteButton deleteFn={() => props.onDelete(index)} isDisabled={isDisabled} />}
       </Flex>
