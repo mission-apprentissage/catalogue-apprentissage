@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Badge, Box, Flex, Text } from "@chakra-ui/react";
 import { ArrowRightDownLine } from "../../../theme/components/icons";
 import { StatusSelect } from "./StatusSelect";
 import { ActionsSelect } from "./ActionsSelect";
@@ -32,6 +32,7 @@ export const Line = ({
     _id: idRule,
     nom_regle_complementaire,
     regle_complementaire,
+    regle_complementaire_query,
     condition_integration,
     statut_academies,
     num_academie,
@@ -53,6 +54,8 @@ export const Line = ({
   const academieLabel = Object.values(academies).find(({ num_academie: num }) => num === num_academie)?.nom_academie;
 
   const isAcademySpecific = (num_academie && String(num_academie) === academie) || !!statut_academies?.[academie];
+
+  const hasCriteria = !!JSON.parse(regle_complementaire_query ?? "[]").filter((query) => !!query.value.length).length;
 
   useEffect(() => {
     async function run() {
@@ -99,7 +102,7 @@ export const Line = ({
           {showIcon && <ArrowRightDownLine boxSize={3} mr={2} />}
           <Text data-testid={"line-label"} isTruncated>
             {num_academie ? `${academieLabel} (${num_academie}) - ` : ""}
-            {label}
+            {label} {hasCriteria && <Badge ml={4}>Critères additionnels</Badge>}
           </Text>
         </Flex>
         <Flex flexBasis={"50%"} justifyContent={"flex-start"} alignItems="center">

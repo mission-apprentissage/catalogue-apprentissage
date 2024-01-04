@@ -314,11 +314,11 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
   ]);
 
   const [isCriteriaOpen, setIsCriteriaOpen] = useState(
-    !!JSON.parse(values?.query ?? "[]").filter((query) => !!query.value).length
+    !!JSON.parse(values?.query ?? "[]").filter((query) => !!query.value.length).length
   );
 
   useEffect(() => {
-    if (!!JSON.parse(values?.query ?? "[]").filter((query) => !!query.value).length) {
+    if (!!JSON.parse(values?.query ?? "[]").filter((query) => !!query.value.length).length) {
       setIsCriteriaOpen(true);
     }
   }, [values?.query]);
