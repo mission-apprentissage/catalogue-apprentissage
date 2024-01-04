@@ -313,9 +313,15 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
     values.registrationYear,
   ]);
 
-  const { isOpen: isCriteriaOpen, onToggle: onCriteriaToggle } = useDisclosure({
-    defaultIsOpen: regle_complementaire_query && !!JSON.parse(regle_complementaire_query).length,
-  });
+  const [isCriteriaOpen, setIsCriteriaOpen] = useState(
+    !!JSON.parse(values?.query ?? "[]").filter((query) => !!query.value).length
+  );
+
+  useEffect(() => {
+    if (!!JSON.parse(values?.query ?? "[]").filter((query) => !!query.value).length) {
+      setIsCriteriaOpen(true);
+    }
+  }, [values?.query]);
 
   const onQueryChange = useCallback(
     (regle, query) => {
@@ -501,7 +507,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                     </FormControl>
 
                     <Flex flexDirection={"column"} mt={8} alignItems={"flex-start"}>
-                      <Button mb={1} onClick={onCriteriaToggle} variant={"unstyled"}>
+                      <Button mb={1} onClick={() => setIsCriteriaOpen(!isCriteriaOpen)} variant={"unstyled"}>
                         Affiner les critères{" "}
                         <ArrowDownLine boxSize={5} transform={isCriteriaOpen ? "rotate(180deg)" : "none"} />
                       </Button>

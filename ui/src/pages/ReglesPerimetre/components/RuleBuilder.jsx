@@ -53,13 +53,6 @@ export const RuleBuilder = ({ regle_complementaire_query, regle_complementaire, 
   const [rules, setRules] = useState(withUniqueKey(initialValue || [templateRule]));
 
   useEffect(() => {
-    console.log("useEffect", rules, regle_complementaire, regle_complementaire_query);
-    console.log(
-      JSON.stringify(rules),
-      regle_complementaire_query,
-      regle_complementaire_query !== JSON.stringify(rules)
-    );
-
     const query = computeQuery(
       rules.map((r) => ({
         ...r,
