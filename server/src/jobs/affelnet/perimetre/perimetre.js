@@ -19,13 +19,21 @@ const run = async () => {
         $or: [
           {
             "rncp_details.code_type_certif": {
-              $in: ["Titre", "TP"],
+              $in: ["Titre", "TP", null],
             },
-            "rncp_details.rncp_outdated": false,
+            rncp_code: { $exists: true },
+            "rncp_details.rncp_outdated": true,
           },
           {
             "rncp_details.code_type_certif": {
-              $nin: ["Titre", "TP"],
+              $in: ["Titre", "TP", null],
+            },
+            rncp_code: { $exists: false },
+            cfd_outdated: true,
+          },
+          {
+            "rncp_details.code_type_certif": {
+              $nin: ["Titre", "TP", null],
             },
             cfd_outdated: false,
           },

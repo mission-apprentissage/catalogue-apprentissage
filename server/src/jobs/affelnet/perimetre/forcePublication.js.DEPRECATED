@@ -25,13 +25,13 @@ const run = async ({ siret }) => {
           $or: [
             {
               "rncp_details.code_type_certif": {
-                $in: ["Titre", "TP"],
+                $in: ["Titre", "TP", null],
               },
               "rncp_details.rncp_outdated": true,
             },
             {
               "rncp_details.code_type_certif": {
-                $nin: ["Titre", "TP"],
+                $nin: ["Titre", "TP", null],
               },
               cfd_outdated: true,
             },

@@ -33,7 +33,7 @@ describe(__filename, () => {
         $or: [
           {
             "rncp_details.code_type_certif": {
-              $nin: ["Titre", "TP"],
+              $nin: ["Titre", "TP", null],
             },
             $or: [
               {
@@ -46,7 +46,7 @@ describe(__filename, () => {
           },
           {
             "rncp_details.code_type_certif": {
-              $in: ["Titre", "TP"],
+              $in: ["Titre", "TP", null],
             },
             $or: [
               {
@@ -70,7 +70,7 @@ describe(__filename, () => {
         $or: [
           {
             "rncp_details.code_type_certif": {
-              $nin: ["Titre", "TP"],
+              $nin: ["Titre", "TP", null],
             },
             $or: [
               {
@@ -83,7 +83,7 @@ describe(__filename, () => {
           },
           {
             "rncp_details.code_type_certif": {
-              $in: ["Titre", "TP"],
+              $in: ["Titre", "TP", null],
             },
             $or: [
               {
@@ -107,7 +107,7 @@ describe(__filename, () => {
         $or: [
           {
             "rncp_details.code_type_certif": {
-              $nin: ["Titre", "TP"],
+              $nin: ["Titre", "TP", null],
             },
             $or: [
               {
@@ -120,7 +120,7 @@ describe(__filename, () => {
           },
           {
             "rncp_details.code_type_certif": {
-              $in: ["Titre", "TP"],
+              $in: ["Titre", "TP", null],
             },
             $or: [
               {
@@ -196,13 +196,13 @@ describe(__filename, () => {
                 $or: [
                   {
                     "rncp_details.code_type_certif": {
-                      $in: ["Titre", "TP"],
+                      $in: ["Titre", "TP", null],
                     },
                     "rncp_details.rncp_outdated": { $ne: true },
                   },
                   {
                     "rncp_details.code_type_certif": {
-                      $nin: ["Titre", "TP"],
+                      $nin: ["Titre", "TP", null],
                     },
                     cfd_outdated: { $ne: true },
                   },
@@ -219,12 +219,12 @@ describe(__filename, () => {
                   {
                     "rncp_details.active_inactive": "ACTIVE",
                     "rncp_details.code_type_certif": {
-                      $in: ["Titre", "TP"],
+                      $in: ["Titre", "TP", null],
                     },
                   },
                   {
                     "rncp_details.code_type_certif": {
-                      $nin: ["Titre", "TP"],
+                      $nin: ["Titre", "TP", null],
                     },
                   },
                 ],
@@ -261,13 +261,13 @@ describe(__filename, () => {
                 $or: [
                   {
                     "rncp_details.code_type_certif": {
-                      $in: ["Titre", "TP"],
+                      $in: ["Titre", "TP", null],
                     },
                     "rncp_details.rncp_outdated": { $ne: true },
                   },
                   {
                     "rncp_details.code_type_certif": {
-                      $nin: ["Titre", "TP"],
+                      $nin: ["Titre", "TP", null],
                     },
                     cfd_outdated: { $ne: true },
                   },
@@ -284,12 +284,12 @@ describe(__filename, () => {
                   {
                     "rncp_details.active_inactive": "ACTIVE",
                     "rncp_details.code_type_certif": {
-                      $in: ["Titre", "TP"],
+                      $in: ["Titre", "TP", null],
                     },
                   },
                   {
                     "rncp_details.code_type_certif": {
-                      $nin: ["Titre", "TP"],
+                      $nin: ["Titre", "TP", null],
                     },
                   },
                 ],
