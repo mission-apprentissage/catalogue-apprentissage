@@ -21,7 +21,7 @@ const DureeAnnee = ({ value }) => {
 };
 
 export const DescriptionBlock = ({ formation }) => {
-  const isTitreRNCP = ["Titre", "TP"].includes(formation.rncp_details?.code_type_certif); // formation.etablissement_reference_habilite_rncp !== null;
+  const isTitreRNCP = ["Titre", "TP", null].includes(formation.rncp_details?.code_type_certif); // formation.etablissement_reference_habilite_rncp !== null;
 
   const showPartenaires =
     isTitreRNCP &&

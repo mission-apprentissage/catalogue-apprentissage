@@ -150,13 +150,21 @@ const commonRules = {
   $or: [
     {
       "rncp_details.code_type_certif": {
-        $in: ["Titre", "TP"],
+        $in: ["Titre", "TP", null],
       },
+      rncp_code: { $exists: true },
       "rncp_details.rncp_outdated": { $ne: true },
     },
     {
       "rncp_details.code_type_certif": {
-        $nin: ["Titre", "TP"],
+        $in: ["Titre", "TP", null],
+      },
+      rncp_code: { $exists: false },
+      cfd_outdated: { $ne: true },
+    },
+    {
+      "rncp_details.code_type_certif": {
+        $nin: ["Titre", "TP", null],
       },
       cfd_outdated: { $ne: true },
     },
@@ -226,8 +234,23 @@ const getExpireRule = (currentDate = new Date()) => {
     $or: [
       {
         "rncp_details.code_type_certif": {
-          $nin: ["Titre", "TP"],
+          $in: ["Titre", "TP", null],
         },
+        rncp_code: { $exists: true },
+        $or: [
+          {
+            "rncp_details.date_fin_validite_enregistrement": {
+              $gt: thresholdDate,
+            },
+          },
+          { "rncp_details.date_fin_validite_enregistrement": null },
+        ],
+      },
+      {
+        "rncp_details.code_type_certif": {
+          $in: ["Titre", "TP", null],
+        },
+        rncp_code: { $exists: false },
         $or: [
           {
             cfd_date_fermeture: {
@@ -239,15 +262,15 @@ const getExpireRule = (currentDate = new Date()) => {
       },
       {
         "rncp_details.code_type_certif": {
-          $in: ["Titre", "TP"],
+          $nin: ["Titre", "TP", null],
         },
         $or: [
           {
-            "rncp_details.date_fin_validite_enregistrement": {
+            cfd_date_fermeture: {
               $gt: thresholdDate,
             },
           },
-          { "rncp_details.date_fin_validite_enregistrement": null },
+          { cfd_date_fermeture: null },
         ],
       },
     ],
@@ -261,13 +284,13 @@ const titresRule = {
       $or: [
         {
           "rncp_details.code_type_certif": {
-            $in: ["Titre", "TP"],
+            $in: ["Titre", "TP", null],
           },
           "rncp_details.active_inactive": "ACTIVE",
         },
         {
           "rncp_details.code_type_certif": {
-            $nin: ["Titre", "TP"],
+            $nin: ["Titre", "TP", null],
           },
         },
       ],
