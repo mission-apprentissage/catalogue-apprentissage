@@ -22,14 +22,14 @@ const run = async () => {
               $in: ["Titre", "TP", null],
             },
             rncp_code: { $exists: true },
-            "rncp_details.rncp_outdated": true,
+            "rncp_details.rncp_outdated": false,
           },
           {
             "rncp_details.code_type_certif": {
               $in: ["Titre", "TP", null],
             },
             rncp_code: { $exists: false },
-            cfd_outdated: true,
+            cfd_outdated: false,
           },
           {
             "rncp_details.code_type_certif": {

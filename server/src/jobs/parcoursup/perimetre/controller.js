@@ -87,6 +87,12 @@ const run = async () => {
               rncp_code: { $exists: false },
               cfd_outdated: true,
             },
+            {
+              "rncp_details.code_type_certif": {
+                $nin: ["Titre", "TP", null],
+              },
+              cfd_outdated: true,
+            },
             // Date de début hors campagne en cours.
             { date_debut: { $not: { $gte: sessionStartDate, $lt: sessionEndDate } } },
           ],
