@@ -224,6 +224,12 @@ const formationSchema = {
     description: "Domaine et sous domaine ONISEP (séparateur ;)",
   },
 
+  CI_inscrit_rncp: {
+    type: String,
+    default: null,
+    description: "Certification (information issue de Certif Info)",
+  },
+
   rncp_code: {
     index: true,
     type: String,
@@ -250,6 +256,7 @@ const formationSchema = {
     default: null,
     description: "Détails RNCP (bloc de compétences etc..)",
   },
+
   rome_codes: {
     index: true,
     type: [String],

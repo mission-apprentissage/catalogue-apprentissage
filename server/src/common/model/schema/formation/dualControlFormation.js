@@ -187,6 +187,12 @@ const formationSchema = {
   },
 
   // RNCP
+  CI_inscrit_rncp: {
+    type: String,
+    default: null,
+    description: "Certification (information issue de Certif Info)",
+  },
+
   rncp_code: {
     index: true,
     type: String,

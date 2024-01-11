@@ -224,6 +224,20 @@ export const columnsDefinition = [
     exportable: true,
     formatter: (value) => value?.active_inactive,
   },
+
+  {
+    Header: "CI_inscrit_rncp",
+    accessor: "CI_inscrit_rncp",
+    width: 200,
+    exportable: true,
+  },
+  {
+    Header: "type_enregistrement",
+    accessor: "rncp_details",
+    width: 200,
+    exportable: true,
+    formatter: (value) => value?.type_enregistrement,
+  },
   {
     Header: "code_type_certif",
     accessor: "rncp_details",
