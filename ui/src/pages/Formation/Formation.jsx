@@ -532,7 +532,7 @@ export default () => {
     setFormation(response);
   }, [id, toast]);
 
-  const reinitStatutParcoursup = useCallback(
+  const reinitStatut = useCallback(
     async ({ comment }) => {
       try {
         const response = await _post(`${CATALOGUE_API}/entity/formations/${id}/reinit-statut`, {
@@ -830,11 +830,7 @@ export default () => {
       )}
 
       {hasAccessTo(user, "page_formation/reinit_parcoursup") && formation && (
-        <ReinitStatutModal
-          isOpen={isReinitModalOpen}
-          onClose={setIsReinitModalOpen}
-          reinitStatut={reinitStatutParcoursup}
-        />
+        <ReinitStatutModal isOpen={isReinitModalOpen} onClose={setIsReinitModalOpen} reinitStatut={reinitStatut} />
       )}
     </Layout>
   );

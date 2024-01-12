@@ -67,9 +67,14 @@ export const HistoryBlock = ({ formation, limit = 5 }) => {
     }));
 
   const reinit_statut_history = updates_history
-    .filter((value) => !!value.to?.reinitStatut)
+    .filter((value) => !!value.to?.parcoursup_statut_reinitialisation)
     ?.map((value) => ({
-      status: <>Réinitialisation forcée de la publication (motif: {value?.to?.reinitStatut?.comment})</>,
+      status: (
+        <>
+          Réinitialisation forcée de la publication (motif:{" "}
+          {value?.to?.parcoursup_statut_reinitialisation?.comment?.trim?.()})
+        </>
+      ),
       user: value.to.last_update_who,
       date: new Date(value.updated_at),
     }));
@@ -94,7 +99,7 @@ export const HistoryBlock = ({ formation, limit = 5 }) => {
     .filter(
       (value) =>
         !(
-          !!value.to?.reinitStatut ||
+          !!value.to?.parcoursup_statut_reinitialisation ||
           !!value.to?.rejection ||
           isUpdatedToStatus(value, "publié") ||
           isUpdatedToStatus(value, "en attente de publication") ||

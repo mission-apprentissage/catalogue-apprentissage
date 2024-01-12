@@ -442,6 +442,20 @@ export const columnsDefinition = [
     exportable: true,
     formatter: escapeDiacritics,
   },
+  {
+    Header: "Motif de la réinitialisation de statut Parcoursup",
+    accessor: "parcoursup_statut_reinitialisation",
+    width: 200,
+    exportable: true,
+    formatter: (value) => value?.comment,
+  },
+  {
+    Header: "Date de la réinitialisation de statut Parcoursup",
+    accessor: "parcoursup_statut_reinitialisation",
+    width: 200,
+    exportable: true,
+    formatter: (value) => (value?.date ? new Date(value?.date).toLocaleDateString("fr-FR") : ""),
+  },
 
   {
     Header: "Niveau de la formation",
