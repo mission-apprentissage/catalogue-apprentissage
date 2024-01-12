@@ -8,6 +8,7 @@ const { hasAccessTo, hasOneOfRoles } = require("../../common/utils/rolesUtils");
 const { isValideUAI } = require("@mission-apprentissage/tco-service-node");
 const { PARCOURSUP_STATUS } = require("../../constants/status");
 const { updateOneTagsHistory } = require("../../logic/updaters/tagsHistoryUpdater");
+const { rebuildEsIndex } = require("../../jobs/esIndex/esIndex");
 // const { AFFELNET_STATUS, PARCOURSUP_STATUS } = require("../../constants/status");
 
 module.exports = () => {
@@ -260,6 +261,8 @@ module.exports = () => {
     );
 
     await updateOneTagsHistory("parcoursup_statut", itemId);
+
+    await rebuildEsIndex("formation", true, { _id: itemId });
 
     const result = await Formation.findOne({ _id: itemId });
 
