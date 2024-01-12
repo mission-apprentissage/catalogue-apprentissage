@@ -2,7 +2,7 @@ const assert = require("assert");
 const { Formation } = require("../../../../src/common/model/index");
 const { connectToMongoForTests, cleanAll } = require("../../../../tests/utils/testUtils.js");
 const { asyncForEach } = require("../../../../src/common/utils/asyncUtils");
-const { updateTagsHistory } = require("../../../../src/logic/updaters/tagsHistoryUpdater.js");
+const { updateManyTagsHistory } = require("../../../../src/logic/updaters/tagsHistoryUpdater.js");
 const { PARCOURSUP_STATUS, AFFELNET_STATUS } = require("../../../../src/constants/status");
 
 const sampleData = [
@@ -65,7 +65,7 @@ const sampleData = [
 ];
 
 describe(__filename, () => {
-  describe("updateTagsHistory", () => {
+  describe("updateManyTagsHistory", () => {
     beforeEach(async () => {
       // Connection to test collection
       await connectToMongoForTests();
@@ -80,7 +80,7 @@ describe(__filename, () => {
     });
 
     it("should update history for affelnet", async () => {
-      await updateTagsHistory("affelnet_statut");
+      await updateManyTagsHistory("affelnet_statut");
 
       const formation1 = await Formation.findOne({ cfd: "1" });
       assert.strictEqual(formation1.affelnet_statut_history.length, 2);
@@ -115,7 +115,7 @@ describe(__filename, () => {
     });
 
     it("should update history for parcoursup", async () => {
-      await updateTagsHistory("parcoursup_statut");
+      await updateManyTagsHistory("parcoursup_statut");
 
       const formation1 = await Formation.findOne({ cfd: "1" });
       assert.strictEqual(formation1.parcoursup_statut_history.length, 1);
