@@ -447,7 +447,7 @@ export const columnsDefinition = [
     accessor: "parcoursup_statut_reinitialisation",
     width: 200,
     exportable: true,
-    formatter: (value) => value?.comment,
+    formatter: (value) => escapeDiacritics(value?.comment),
   },
   {
     Header: "Date de la réinitialisation de statut Parcoursup",
