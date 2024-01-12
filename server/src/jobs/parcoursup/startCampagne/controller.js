@@ -5,6 +5,7 @@ const { cursor } = require("../../../common/utils/cursor");
 
 const run = async () => {
   let updated = 0;
+  Formation.updateMany({}, { $set: { parcoursup_statut_reinitialisation: null } });
 
   await cursor(
     Formation.find({ parcoursup_statut: { $ne: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT } }),

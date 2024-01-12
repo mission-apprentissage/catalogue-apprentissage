@@ -2,7 +2,7 @@ const { Formation } = require("../../../common/model");
 const logger = require("../../../common/logger");
 const { getQueryFromRule } = require("../../../common/utils/rulesUtils");
 const { ReglePerimetre } = require("../../../common/model");
-const { updateTagsHistory } = require("../../../logic/updaters/tagsHistoryUpdater");
+const { updateManyTagsHistory } = require("../../../logic/updaters/tagsHistoryUpdater");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { AFFELNET_STATUS } = require("../../../constants/status");
 const { runScript } = require("../../scriptWrapper");
@@ -128,7 +128,7 @@ const run = async ({ siret }) => {
   });
 
   // Push entry in tags history
-  await updateTagsHistory("affelnet_statut");
+  await updateManyTagsHistory("affelnet_statut");
 
   // stats
   const totalPublished = await Formation.countDocuments({

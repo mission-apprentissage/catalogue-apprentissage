@@ -131,6 +131,11 @@
   text-decoration: none;
   margin: 0px 2px;
 }
+.search .search-pagination {
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
 .search .search-pagination a:hover {
   background: #f0f0f0;
   text-decoration: none;

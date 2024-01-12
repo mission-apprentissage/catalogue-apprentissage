@@ -8,6 +8,30 @@ const { rncpDetailsSchema } = require("./rncpDetails/rncpDetails");
 const { mefSchema } = require("./mef");
 const { PARCOURSUP_STATUS, AFFELNET_STATUS } = require("../../../../constants/status");
 
+const statutReinitialisationSchema = new mongoose.Schema(
+  {
+    user: {
+      type: String,
+      default: null,
+      description: "Utilisateur ayant effectué la réinitialisation",
+    },
+    date: {
+      type: Date,
+      default: null,
+      description: "Date à laquelle la réinitialisation a été effectuée",
+    },
+    comment: {
+      type: String,
+      default: null,
+      description: "Motif de la réinitialisation",
+    },
+  },
+  {
+    _id: false,
+    timestamps: false,
+  }
+);
+
 const updateHistorySchema = new mongoose.Schema(
   {
     from: {
@@ -560,6 +584,11 @@ const formationSchema = {
     type: [mefSchema],
     default: [],
     description: "Tableau de Code MEF 10 caractères et modalités (filtrés pour Parcoursup si applicable)",
+  },
+  parcoursup_statut_reinitialisation: {
+    type: statutReinitialisationSchema,
+    default: null,
+    description: "Statut parcoursup",
   },
 
   // AFFELNET

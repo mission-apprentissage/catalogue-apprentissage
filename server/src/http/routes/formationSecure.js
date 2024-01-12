@@ -4,8 +4,10 @@ const { Formation } = require("../../common/model");
 const logger = require("../../common/logger");
 const Boom = require("boom");
 const { sanitize, SAFE_UPDATE_OPERATORS } = require("../../common/utils/sanitizeUtils");
-const { hasOneOfRoles } = require("../../common/utils/rolesUtils");
+const { hasAccessTo, hasOneOfRoles } = require("../../common/utils/rolesUtils");
 const { isValideUAI } = require("@mission-apprentissage/tco-service-node");
+const { PARCOURSUP_STATUS } = require("../../constants/status");
+const { updateOneTagsHistory } = require("../../logic/updaters/tagsHistoryUpdater");
 // const { AFFELNET_STATUS, PARCOURSUP_STATUS } = require("../../constants/status");
 
 module.exports = () => {
@@ -87,6 +89,7 @@ module.exports = () => {
   const handleRejection = tryCatch(async ({ user, params }, res) => {
     const sanitizedParams = sanitize(params);
     const itemId = sanitizedParams.id;
+    const date = new Date();
 
     const formation = await Formation.findById(itemId);
     let hasRightToEdit = user.isAdmin;
@@ -110,7 +113,7 @@ module.exports = () => {
       {
         last_update_who: user.email,
         "rejection.handled_by": user.email,
-        "rejection.handled_date": new Date(),
+        "rejection.handled_date": date,
         $push: {
           updates_history: {
             from: { rejection: { handled_by: null, handled_date: null } },
@@ -118,10 +121,10 @@ module.exports = () => {
               last_update_who: user.email,
               rejection: {
                 handled_by: user.email,
-                handled_date: new Date(),
+                handled_date: date,
               },
             },
-            updated_at: new Date(),
+            updated_at: date,
           },
         },
       },
@@ -192,6 +195,77 @@ module.exports = () => {
     res.json(result);
   });
 
+  const parcoursup_statut_reinitialisation = tryCatch(async ({ user, params, body }, res) => {
+    const sanitizedParams = sanitize(params);
+    const sanitizedBody = sanitize(body);
+    const itemId = sanitizedParams.id;
+    const comment = sanitizedBody.comment;
+    const date = new Date();
+
+    const formation = await Formation.findById(itemId);
+    let hasRightToEdit = user.isAdmin;
+    if (!hasRightToEdit) {
+      hasRightToEdit = hasOneOfRoles(user, ["admin", "moss"]);
+    }
+    if (!hasRightToEdit) {
+      hasRightToEdit = hasAccessTo(user, "page_formation/reinit_parcoursup");
+    }
+    if (!hasRightToEdit) {
+      throw Boom.unauthorized();
+    }
+
+    logger.debug(
+      { type: "http" },
+      `Réinitialisation des informations de publication de la formation ${itemId} par ${user.email}`
+    );
+
+    const update = {
+      parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER,
+      parcoursup_id: null,
+      last_update_who: user.email,
+      parcoursup_statut_reinitialisation: {
+        user: user.email,
+        date,
+        comment,
+      },
+    };
+
+    await Formation.updateOne(
+      { _id: itemId },
+      {
+        ...update,
+        $push: {
+          updates_history: {
+            from: {
+              parcoursup_statut: formation?.parcoursup_statut,
+              parcoursup_id: formation?.parcoursup_id,
+              last_update_who: formation?.last_update_who,
+              parcoursup_statut_reinitialisation: {
+                user: formation?.parcoursup_statut_reinitialisation?.user,
+                date: formation?.parcoursup_statut_reinitialisation?.date,
+                comment: formation?.parcoursup_statut_reinitialisation?.comment,
+              },
+            },
+            to: {
+              ...update,
+            },
+            updated_at: date,
+          },
+        },
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    await updateOneTagsHistory("parcoursup_statut", itemId);
+
+    const result = await Formation.findOne({ _id: itemId });
+
+    res.json(result);
+  });
+
   /**
    * @swagger
    *
@@ -243,6 +317,8 @@ module.exports = () => {
 
   router.post("/formations/:id/handle-rejection", handleRejection);
   router.post("/formations/:id/unhandle-rejection", unhandleRejection);
+
+  router.post("/formations/:id/reinit-statut", parcoursup_statut_reinitialisation);
 
   return router;
 };

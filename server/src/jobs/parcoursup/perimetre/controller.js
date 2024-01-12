@@ -8,7 +8,7 @@ const {
   getSessionDateRules,
 } = require("../../../common/utils/rulesUtils");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
-const { updateTagsHistory } = require("../../../logic/updaters/tagsHistoryUpdater");
+const { updateManyTagsHistory } = require("../../../logic/updaters/tagsHistoryUpdater");
 
 const run = async () => {
   const sessionStartDate = getSessionStartDate();
@@ -328,7 +328,7 @@ const run = async () => {
 
   // 7. On met à jour l'historique des statuts.
   logger.debug({ type: "job" }, "Etape 7.");
-  await updateTagsHistory("parcoursup_statut");
+  await updateManyTagsHistory("parcoursup_statut");
 };
 
 module.exports = { run };

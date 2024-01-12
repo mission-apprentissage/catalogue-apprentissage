@@ -5,7 +5,7 @@ import { Logo } from "./Logo";
 
 const Footer = () => {
   return (
-    <Box borderTop="1px solid" borderColor="bluefrance" color="#1E1E1E" fontSize="zeta" w="full">
+    <Box borderTop="1px solid" borderColor="#CECECE" color="#1E1E1E" fontSize="zeta" w="full" mt={4}>
       <Container maxW="7xl">
         <Flex flexDirection={["column", "column", "row"]}>
           <Link as={NavLink} to="/" py={4} w={["100%", "100%", "50%"]}>

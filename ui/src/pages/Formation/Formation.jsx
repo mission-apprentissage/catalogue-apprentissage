@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import {
   Box,
   Button,
@@ -19,7 +19,7 @@ import { useFormik } from "formik";
 
 import Layout from "../layout/Layout";
 import helpText from "../../locales/helpText.json";
-import { ArrowDownLine, ExternalLinkLine, MapPin2Fill, Parametre } from "../../theme/components/icons";
+import { ArrowDownLine, Close, ExternalLinkLine, MapPin2Fill, Parametre } from "../../theme/components/icons";
 import { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL } from "../../constants/catalogueLabels";
 import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
 
@@ -42,6 +42,7 @@ import { RejectionBlock } from "../../common/components/formation/RejectionBlock
 import { DescriptionBlock } from "../../common/components/formation/DescriptionBlock";
 import { OrganismesBlock } from "../../common/components/formation/OrganismesBlock";
 import { UaiHistoryModal } from "./UaiHistoryModal";
+import { ReinitStatutModal } from "../../common/components/formation/ReinitStatutModal";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -378,6 +379,8 @@ export default () => {
   const [loading, setLoading] = useState(false);
 
   const [edition, setEdition] = useState(null);
+  const [isReinitModalOpen, setIsReinitModalOpen] = useState(false);
+  const openReinitModal = useCallback(() => setIsReinitModalOpen(true), []);
   const navigate = useNavigate();
   const { isOpen: isOpenPublishModal, onOpen: onOpenPublishModal, onClose: onClosePublishModal } = useDisclosure();
 
@@ -498,10 +501,10 @@ export default () => {
   const title = loading ? "" : `${formation?.intitule_long ?? "Formation inconnue"}`;
   setTitle(title);
 
-  const sendToParcoursup = async () => {
+  const sendToParcoursup = useCallback(async () => {
     try {
       const response = await _post(`${CATALOGUE_API}/parcoursup/send-ws`, {
-        id: formation._id,
+        id,
       });
       const message = response?.message;
 
@@ -527,7 +530,41 @@ export default () => {
 
     const response = await _get(`${CATALOGUE_API}/entity/formation/${id}?select={"__v":0}`);
     setFormation(response);
-  };
+  }, [id, toast]);
+
+  const reinitStatutParcoursup = useCallback(
+    async ({ comment }) => {
+      try {
+        const response = await _post(`${CATALOGUE_API}/entity/formations/${id}/reinit-statut`, {
+          comment,
+        });
+        const message = response?.message;
+
+        toast({
+          title: "Succès",
+          description: message,
+          status: "success",
+          duration: 10000,
+        });
+      } catch (e) {
+        console.error("Can't reinit status", e);
+
+        const response = await (e?.json ?? {});
+        const message = response?.message ?? e?.message;
+
+        toast({
+          title: "Erreur",
+          description: message,
+          status: "error",
+          duration: 10000,
+        });
+      }
+
+      const response = await _get(`${CATALOGUE_API}/entity/formation/${id}?select={"__v":0}`);
+      setFormation(response);
+    },
+    [id, toast]
+  );
 
   const parcoursup_date_depublication = formation?.updates_history
     .sort(sortDescending)
@@ -665,11 +702,17 @@ export default () => {
                       justifyContent={"space-between"}
                       flexDirection={["column", "column", "row"]}
                     >
-                      {(formation.parcoursup_statut === COMMON_STATUS.EN_ATTENTE ||
-                        formation.parcoursup_statut === PARCOURSUP_STATUS.FERME) &&
+                      {[PARCOURSUP_STATUS.FERME, COMMON_STATUS.EN_ATTENTE].includes(formation.parcoursup_statut) &&
                         hasAccessTo(user, "page_formation/envoi_parcoursup") && (
                           <Button textStyle="sm" variant="secondary" px={8} mt={4} onClick={sendToParcoursup}>
                             Forcer la publication Parcoursup
+                          </Button>
+                        )}
+
+                      {[PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut) &&
+                        hasAccessTo(user, "page_formation/reinit_parcoursup") && (
+                          <Button textStyle="sm" variant="secondary" px={8} mt={4} onClick={openReinitModal}>
+                            Réinitialiser la publication Parcoursup
                           </Button>
                         )}
                     </Flex>
@@ -783,6 +826,14 @@ export default () => {
           onFormationUpdate={(updatedFormation) => {
             setFormation(updatedFormation);
           }}
+        />
+      )}
+
+      {hasAccessTo(user, "page_formation/reinit_parcoursup") && formation && (
+        <ReinitStatutModal
+          isOpen={isReinitModalOpen}
+          onClose={setIsReinitModalOpen}
+          reinitStatut={reinitStatutParcoursup}
         />
       )}
     </Layout>

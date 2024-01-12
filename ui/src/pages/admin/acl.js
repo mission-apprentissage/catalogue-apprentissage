@@ -45,6 +45,10 @@ export default [
         feature: "Forcer la publication Parcoursup",
         ref: "page_formation/envoi_parcoursup",
       },
+      {
+        feature: "Réinitialiser le statut de publication Parcoursup",
+        ref: "page_formation/reinit_parcoursup",
+      },
     ],
   },
   {
