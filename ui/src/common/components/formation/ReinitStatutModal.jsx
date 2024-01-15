@@ -71,7 +71,7 @@ export const ReinitStatutModal = ({ isOpen, onClose, reinitStatut }) => {
             <Text mb={4}>Vous êtes sur le point de réinitialiser le statut de publication de la formation.</Text>
 
             <FormControl>
-              <FormLabel mb={3}>Motif de la réinitialisation : </FormLabel>
+              <FormLabel mb={3}>* Motif de la réinitialisation : </FormLabel>
               <Textarea onChange={(event) => setComment(event.target.value)} />
             </FormControl>
           </Box>
@@ -86,6 +86,7 @@ export const ReinitStatutModal = ({ isOpen, onClose, reinitStatut }) => {
                 type="submit"
                 variant="primary"
                 onClick={submit}
+                isDisabled={!(comment && comment.length > 0)}
                 isLoading={isSubmitting}
                 loadingText="Réinitialisation en cours"
               >
