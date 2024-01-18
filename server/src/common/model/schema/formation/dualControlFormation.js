@@ -46,6 +46,23 @@ const formationSchema = {
     description: "Date de fermeture du cfd",
   },
 
+  code_formacode: {
+    type: "array",
+    items: {
+      type: "string",
+    },
+    default: [],
+    description: "Code formacode",
+  },
+  libelle_formacode: {
+    type: "array",
+    items: {
+      type: "string",
+    },
+    default: [],
+    description: "Libelle formacode",
+  },
+
   // ADRESSE
   nom_academie: {
     type: String,
@@ -370,6 +387,30 @@ const formationSchema = {
     type: String,
     default: null,
     description: "Identifiant RCO",
+  },
+
+  objectif: {
+    type: String,
+    default: null,
+    description: "Objectif (LBA)",
+  },
+
+  contenu: {
+    type: String,
+    default: null,
+    description: "Identifiant (LBA)",
+  },
+
+  siret_actif: {
+    type: String,
+    default: null,
+    description: "Badge siret actif/inactif",
+  },
+
+  num_tel: {
+    type: String,
+    default: null,
+    description: "Numéros de téléphone",
   },
 
   // Etablissements

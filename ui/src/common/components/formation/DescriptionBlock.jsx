@@ -25,7 +25,7 @@ export const DescriptionBlock = ({ formation }) => {
 
   const showPartenaires =
     isTitreRNCP &&
-    !(formation.rncp_details.certificateurs ?? []).some(({ certificateur }) => HABILITE_LIST.includes(certificateur));
+    !(formation.rncp_details?.certificateurs ?? []).some(({ certificateur }) => HABILITE_LIST.includes(certificateur));
 
   const MefContainer =
     formation.duree_incoherente ||

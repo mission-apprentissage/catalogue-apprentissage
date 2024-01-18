@@ -27,6 +27,9 @@ module.exports = {
         "onisep_url",
         "rome_codes",
 
+        "objectif",
+        "contenu",
+
         "rncp_details.demande",
         "rncp_details.nsf_code",
         "rncp_details.nsf_libelle",
