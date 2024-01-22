@@ -181,11 +181,8 @@ test("should render the organismes block in one establishment mode", async () =>
 
   const { queryByText, getByText } = renderWithRouter(<OrganismesBlock formation={formation} />);
 
-  const title = queryByText("Organisme associé");
+  const title = queryByText("Organisme responsable et formateur");
   expect(title).toBeInTheDocument();
-
-  const formateurLabel = queryByText("Formateur");
-  expect(formateurLabel).not.toBeInTheDocument();
 
   await waitFor(() => getByText("2021"));
   const tag1 = queryByText("2021");
@@ -203,13 +200,10 @@ test("should render the organismes block in 2 establishments mode", async () => 
   const form = { ...formation, etablissement_gestionnaire_siret: "test", etablissement_gestionnaire_id: "test" };
   const { queryByText, getAllByText, getAllByTestId } = renderWithRouter(<OrganismesBlock formation={form} />);
 
-  const title = queryByText("Organismes associés");
-  expect(title).toBeInTheDocument();
-
-  const formateurLabel = queryByText("Formateur");
+  const formateurLabel = queryByText("Organisme formateur");
   expect(formateurLabel).toBeInTheDocument();
 
-  const gestionnaireLabel = queryByText("Gestionnaire");
+  const gestionnaireLabel = queryByText("Organisme responsable");
   expect(gestionnaireLabel).toBeInTheDocument();
 
   await waitFor(() => getAllByText("2023"));
