@@ -5,6 +5,7 @@ import { ArrowRightLine } from "../../../theme/components/icons";
 import { getOrganisme } from "../../api/organisme";
 import { QualiteBadge } from "../QualiteBadge";
 import { HabiliteBadge } from "../HabiliteBadge";
+import { ActifBadge } from "../ActifBadge";
 
 export const OrganismesBlock = ({ formation }) => {
   const oneEstablishment = formation.etablissement_gestionnaire_siret === formation.etablissement_formateur_siret;
@@ -30,14 +31,16 @@ export const OrganismesBlock = ({ formation }) => {
 
   return (
     <>
-      <Text textStyle="h4" color="grey.800" mb={4}>
-        {oneEstablishment ? "Organisme associé" : "Organismes associés"}
-      </Text>
+      {oneEstablishment && (
+        <Text textStyle="h4" color="grey.800" mt={8} mb={4}>
+          Organisme responsable et formateur
+        </Text>
+      )}
 
       {!oneEstablishment && (
         <>
-          <Text textStyle="rf-text" color="grey.700" fontWeight="700" mb={3}>
-            Gestionnaire
+          <Text textStyle="h4" color="grey.800" mt={8} mb={4}>
+            Organisme responsable
           </Text>
           <Link as={NavLink} to={`/etablissement/${formation.etablissement_gestionnaire_id}`} variant="card">
             <Flex display={["none", "flex"]} textStyle="xs" justifyContent="space-between">
@@ -78,8 +81,8 @@ export const OrganismesBlock = ({ formation }) => {
       )}
 
       {!oneEstablishment && formation.etablissement_formateur_id && (
-        <Text textStyle="rf-text" color="grey.700" fontWeight="700" my={5}>
-          Formateur
+        <Text textStyle="h4" color="grey.800" mt={8} mb={4}>
+          Organisme formateur
         </Text>
       )}
 
@@ -98,6 +101,7 @@ export const OrganismesBlock = ({ formation }) => {
               {!formation.catalogue_published && formation.etablissement_reference_habilite_rncp !== null && (
                 <HabiliteBadge value={formation.etablissement_formateur_habilite_rncp} m="0" mr={[0, 2]} />
               )}
+              <ActifBadge value={formation.siret_actif} m="0" mr={[0, 2]} />
             </Flex>
           </Box>
           <Text textStyle="h6" color="grey.800" my={1}>

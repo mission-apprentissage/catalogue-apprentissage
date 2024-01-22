@@ -12,17 +12,19 @@ import { ParcoursupMissingSession } from "./components/ParcoursupMissingSession"
 export const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
 export const allowedFilters = [
-  `QUERYBUILDER`,
-  `SEARCH`,
+  "QUERYBUILDER",
+  "SEARCH",
   "etablissement_formateur_siret",
+  "etablissement_formateur_actif",
   "etablissement_gestionnaire_siret",
+  "etablissement_gestionnaire_actif",
   "num_academie",
-  `niveau`,
+  "niveau",
   "etablissement_gestionnaire_siren",
-  `cfd`,
-  `cfd_entree`,
-  `num_departement`,
-  `nom_academie`,
+  "cfd",
+  "cfd_entree",
+  "num_departement",
+  "nom_academie",
   "etablissement_gestionnaire_num_academie",
   "uai_formation",
   "code_postal",
@@ -36,24 +38,25 @@ export const allowedFilters = [
   "rncp_eligible_apprentissage",
   "etablissement_reference_habilite_rncp",
   "rome_codes",
-  `rncp_code`,
-  `bcn_mefs_10`,
-  `parcoursup_perimetre`,
-  `parcoursup_statut`,
-  `parcoursup_previous_statut`,
-  `parcoursup_session`,
-  `parcoursup_previous_session`,
-  `affelnet_perimetre`,
-  `affelnet_statut`,
-  `affelnet_previous_statut`,
-  `affelnet_session`,
-  `affelnet_previous_session`,
+  "rncp_code",
+  "bcn_mefs_10",
+  "parcoursup_perimetre",
+  "parcoursup_statut",
+  "parcoursup_previous_statut",
+  "parcoursup_session",
+  "parcoursup_previous_session",
+  "affelnet_perimetre",
+  "affelnet_statut",
+  "affelnet_previous_statut",
+  "affelnet_session",
+  "affelnet_previous_session",
   "diplome",
   "tags",
   "annee",
   "qualite",
   "habilite",
   "duree",
+  "region",
   "date_debut_start",
   "date_debut_end",
   "parcoursup_published_date_start",
@@ -734,6 +737,25 @@ export const columnsDefinition = [
     exportable: true,
     formatter: (tags) => tags?.sort((a, b) => a - b),
   },
+
+  {
+    Header: "Etablissement gestionnaire actif",
+    accessor: "etablissement_gestionnaire_actif",
+    width: 200,
+    exportable: true,
+  },
+  {
+    Header: "Region",
+    accessor: "region",
+    width: 200,
+    exportable: true,
+  },
+  {
+    Header: "Siret Actif",
+    accessor: "siret_actif",
+    width: 200,
+    exportable: true,
+  },
 ];
 
 /**
@@ -760,11 +782,21 @@ export const queryBuilderField = [
   { text: "MEF 10", value: "bcn_mefs_10.mef10.keyword" },
   { text: "Groupe Spécialité", value: "rncp_details.nsf_code.keyword" },
   { text: "Certificateur", value: "rncp_details.certificateurs.certificateur.keyword" },
+  { text: "Statut du SIRET", value: "etablissement_gestionnaire_actif.keyword" },
+  { text: "Région", value: "region.keyword" },
   { text: "Identifiant Affelnet (code voeu)", value: "affelnet_id.keyword" },
   { text: "Identifiant Parcoursup (GTA)", value: "parcoursup_id.keyword" },
 ];
 
 export const quickFiltersDefinition = [
+  {
+    componentId: `region`,
+    dataField: "region.keyword",
+    title: "Région",
+    filterLabel: "Région",
+    selectAllLabel: "Toutes les régions",
+    sortBy: "asc",
+  },
   {
     componentId: `nom_academie`,
     type: "facet",
@@ -1190,7 +1222,7 @@ export const dataSearch = {
   ],
   placeholder:
     "Saisissez une raison sociale, un Siret, un intitulé de formation, un code RNCP ou CFD (code formation diplôme)",
-  fieldWeights: [4, 3, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1],
+  fieldWeights: [4, 3, 2, 2, 2, 2, 2, 1, 1, 1],
 };
 
 export default {

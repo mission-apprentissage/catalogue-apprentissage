@@ -514,6 +514,32 @@ const formationSchema = {
     description: "Partenaires",
   },
 
+  objectif: {
+    type: String,
+    default: null,
+    description: "Objectif de la formation",
+  },
+
+  contenu: {
+    type: String,
+    default: null,
+    description: "Identifiant de la formation",
+  },
+
+  siret_actif: {
+    type: String,
+    default: null,
+    description: "Badge siret actif/inactif",
+  },
+
+  num_tel: {
+    type: String,
+    default: null,
+    select: false,
+    noIndex: true,
+    description: "Numéros de téléphone",
+  },
+
   // Etablissements
   ...etablissementGestionnaireInfo,
   ...etablissementFormateurInfo,

@@ -124,6 +124,11 @@ const etablissementFormateurInfo = {
     default: null,
     description: "Adresse email de contact de l'établissement formateur",
   },
+  etablissement_formateur_actif: {
+    type: String,
+    default: null,
+    description: "SIRET actif ou inactif pour l'établissement formateur",
+  },
 };
 
 module.exports = etablissementFormateurInfo;

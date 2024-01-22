@@ -7,6 +7,9 @@ import { Box, Flex, Link, Text } from "@chakra-ui/react";
 import { ArrowRightLine, InfoCircle } from "../../../../../theme/components/icons";
 import { QualiteBadge } from "../../../QualiteBadge";
 import { HabiliteBadge } from "../../../HabiliteBadge";
+import { ActifBadge } from "../../../ActifBadge";
+import { DureeBadge } from "../../../DureeBadge";
+import { AnneeBadge } from "../../../AnneeBadge";
 import { AFFELNET_STATUS, PARCOURSUP_STATUS } from "../../../../../constants/status";
 
 export const CardListFormation = ({ data }) => {
@@ -67,6 +70,9 @@ export const CardListFormation = ({ data }) => {
                   {data.etablissement_reference_habilite_rncp !== null && (
                     <HabiliteBadge value={data.etablissement_reference_habilite_rncp} mt={2} mr={[0, 2]} />
                   )}
+                  <ActifBadge value={data.siret_actif} mt={2} mr={[0, 2]} />
+                  <DureeBadge value={data.duree} mt={2} mr={[0, 2]} />
+                  <AnneeBadge value={data.annee} mt={2} mr={[0, 2]} />
                 </>
               )}
             </Flex>
