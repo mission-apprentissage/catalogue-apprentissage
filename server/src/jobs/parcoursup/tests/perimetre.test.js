@@ -26,6 +26,14 @@ const formationCampagneOk = {
   ...formationReglementaireOk,
   periode,
   date_debut,
+  cfd_outdated: false,
+  cfd_date_fermeture: null,
+  rncp_code: null,
+  rncp_details: {
+    code_type_certif: "Test",
+    rncp_outdated: false,
+    date_fin_validite_enregistrement: null,
+  },
 };
 
 describe(`${__filename} - Test global (deprecated)`, () => {
