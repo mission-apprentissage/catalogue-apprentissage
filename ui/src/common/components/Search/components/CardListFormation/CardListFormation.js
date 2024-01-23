@@ -84,14 +84,6 @@ export const CardListFormation = ({ data }) => {
                 identifiant actions Carif-Oref: {data.ids_action.join(",")}
               </Text>
             )}
-            {user?.sub !== "anonymous" && data.annee === "X" && (
-              <Flex textStyle="xs" mt={4} alignItems="center">
-                <InfoCircle />
-                <Text as={"span"} ml={1}>
-                  Année d'entrée en apprentissage non collectée
-                </Text>
-              </Flex>
-            )}
           </Flex>
         </Box>
       </Box>

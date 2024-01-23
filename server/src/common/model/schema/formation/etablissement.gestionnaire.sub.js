@@ -126,7 +126,7 @@ const etablissementGestionnaireInfo = {
   etablissement_gestionnaire_actif: {
     type: String,
     default: null,
-    description: "SIRET actif ou inactif",
+    description: "SIRET actif ou inactif pour l'établissement gestionnaire",
   },
 };
 

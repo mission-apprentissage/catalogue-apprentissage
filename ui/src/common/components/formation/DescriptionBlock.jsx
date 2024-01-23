@@ -4,7 +4,6 @@ import { ExternalLinkLine } from "../../../theme/components/icons";
 import { DangerBox } from "../DangerBox";
 import { InfoTooltip } from "../InfoTooltip";
 import helpText from "../../../locales/helpText.json";
-// import { FormationPeriode } from "./FormationPeriode";
 import { FormationDate } from "./FormationDate";
 import { HabilitationPartenaire } from "./HabilitationPartenaire";
 import { HABILITE_LIST } from "../../../constants/certificateurs";
@@ -16,7 +15,7 @@ const DureeAnnee = ({ value }) => {
     return "N/A";
   }
 
-  const tmpValue = value === "X" ? "Information non collectée" : value;
+  const tmpValue = ["D", "X", "Y"].includes(value) ? "Information non collectée" : value;
   return tmpValue === "9" ? "Sans objet (code BCN: 9)" : tmpValue;
 };
 
@@ -34,7 +33,8 @@ export const DescriptionBlock = ({ formation }) => {
       ? (args) => <DangerBox data-testid={"mef-warning"} {...args} />
       : React.Fragment;
 
-  const DureeContainer = formation.duree_incoherente
+  const displayDureeWarning = formation.duree_incoherente || ["D"].includes(formation.duree);
+  const DureeContainer = displayDureeWarning
     ? (args) => <DangerBox data-testid={"duree-warning"} {...args} />
     : React.Fragment;
 
@@ -43,10 +43,14 @@ export const DescriptionBlock = ({ formation }) => {
       (mef10.startsWith("247") && mef10.endsWith("32")) || (mef10.startsWith("276") && mef10.endsWith("32"))
   ).length;
 
-  const AnneeContainer =
-    formation.annee_incoherente || (formation.affelnet_perimetre && isBacPro3AnsEn2Ans)
-      ? (args) => <DangerBox data-testid={"annee-warning"} {...args} />
-      : React.Fragment;
+  const displayAnneeWarning =
+    formation.annee_incoherente ||
+    ["X", "Y"].includes(formation.annee) ||
+    (formation.affelnet_perimetre && isBacPro3AnsEn2Ans);
+
+  const AnneeContainer = displayAnneeWarning
+    ? (args) => <DangerBox data-testid={"annee-warning"} {...args} />
+    : React.Fragment;
 
   const isCfdExpired =
     formation.cfd_outdated ||
@@ -317,7 +321,7 @@ export const DescriptionBlock = ({ formation }) => {
             <InfoTooltip ml="10px" description={helpText.formation.capacite} />
           </Text>
           <DureeContainer>
-            <Text mb={formation.duree_incoherente ? 0 : 4}>
+            <Text mb={displayDureeWarning ? 0 : 4}>
               Durée de la formation :{" "}
               <Text as="span" variant="highlight">
                 <DureeAnnee value={formation.duree} />
@@ -330,50 +334,30 @@ export const DescriptionBlock = ({ formation }) => {
             </Text>
           </DureeContainer>
 
-          {formation.annee === "X" && (
-            <Box
-              bg={"orangesoft.200"}
-              p={4}
-              mb={formation.annee_incoherente ? 0 : 4}
-              borderLeft={"4px solid"}
-              borderColor={"orangesoft.500"}
-              w={"full"}
-            >
-              <Text>
-                Année d'entrée en apprentissage :{" "}
-                <Text as="span" variant="highlight" bg={"transparent"}>
-                  <DureeAnnee value={formation.annee} />
-                </Text>{" "}
-                <InfoTooltip description={helpText.formation.annee} />
-              </Text>
-            </Box>
-          )}
-          {formation.annee !== "X" && (
-            <AnneeContainer>
-              <Text mb={formation.annee_incoherente ? 0 : 4}>
-                Année d'entrée en apprentissage :{" "}
-                <Text as="span" variant="highlight">
-                  <DureeAnnee value={formation.annee} />
-                </Text>{" "}
-                <InfoTooltip description={helpText.formation.annee} />
-              </Text>
-              <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
-                {formation.annee_incoherente &&
-                  "L'année de formation enregistrée auprès du Carif-Oref ne correspond pas à celle qui est déduite du code MEF correspondant à cette formation."}
+          <AnneeContainer>
+            <Text mb={displayAnneeWarning ? 0 : 4}>
+              Année d'entrée en apprentissage :{" "}
+              <Text as="span" variant="highlight">
+                <DureeAnnee value={formation.annee} />
+              </Text>{" "}
+              <InfoTooltip description={helpText.formation.annee} />
+            </Text>
+            <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
+              {formation.annee_incoherente &&
+                "L'année de formation enregistrée auprès du Carif-Oref ne correspond pas à celle qui est déduite du code MEF correspondant à cette formation."}
 
-                {formation.affelnet_perimetre && isBacPro3AnsEn2Ans && (
-                  <>
-                    <Text as="b">1ère PRO, BAC PRO en 3 ans</Text>
-                    <br />
-                    Ces formations doivent permettre aux élèves une entrée en seconde année de baccalauréat
-                    professionnel. Avant intégration dans Affelnet il convient de vérifier auprès des CFA les modalités
-                    d'accès à ces formations. Il convient notamment de vérifier si la formation est accessible à des
-                    élèves n'ayant pas suivi une première année de baccalauréat dans la spécialité.
-                  </>
-                )}
-              </Text>
-            </AnneeContainer>
-          )}
+              {formation.affelnet_perimetre && isBacPro3AnsEn2Ans && (
+                <>
+                  <Text as="b">1ère PRO, BAC PRO en 3 ans</Text>
+                  <br />
+                  Ces formations doivent permettre aux élèves une entrée en seconde année de baccalauréat professionnel.
+                  Avant intégration dans Affelnet il convient de vérifier auprès des CFA les modalités d'accès à ces
+                  formations. Il convient notamment de vérifier si la formation est accessible à des élèves n'ayant pas
+                  suivi une première année de baccalauréat dans la spécialité.
+                </>
+              )}
+            </Text>
+          </AnneeContainer>
           <Text mb={4}>
             Clé ministères éducatifs :{" "}
             <Text as="span" variant="highlight">
