@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import {
+  Badge,
   Box,
   Button,
   Center,
@@ -696,7 +697,38 @@ export default () => {
                             )}
                           </>
                         )}
+
+                      {[PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.EN_ATTENTE].includes(formation.parcoursup_statut) &&
+                        (formation.updates_history.filter(
+                          (history) =>
+                            history.to.parcoursup_statut === PARCOURSUP_STATUS.EN_ATTENTE &&
+                            new Date(history.updated_at).getTime() >= getCampagneStartDate().getTime() - 31536000000
+                        ).length >= 1 ? (
+                          <Badge variant={"default"} minHeight={"28px"}>
+                            Demande de publication manuelle
+                          </Badge>
+                        ) : (
+                          <Badge variant={"default"} minHeight={"28px"}>
+                            Demande de publication automatique
+                          </Badge>
+                        ))}
+
+                      {[AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.EN_ATTENTE].includes(formation.affelnet_statut) &&
+                        (formation.updates_history.filter(
+                          (history) =>
+                            history.to.affelnet_statut === AFFELNET_STATUS.EN_ATTENTE &&
+                            new Date(history.updated_at).getTime() >= getCampagneStartDate().getTime() - 31536000000
+                        ).length >= 1 ? (
+                          <Badge variant={"default"} minHeight={"28px"}>
+                            Demande de publication manuelle
+                          </Badge>
+                        ) : (
+                          <Badge variant={"default"} minHeight={"28px"}>
+                            Demande de publication automatique
+                          </Badge>
+                        ))}
                     </Box>
+
                     <Flex
                       alignItems="center"
                       justifyContent={"space-between"}
