@@ -96,7 +96,7 @@
     "omit-deep": "https://github.com/izigibran/omit-deep.git",
     "passport": "0.6.0",
     "passport-jwt": "4.0.1",
-    "prettier": "2.0.5",
+    "prettier": "3.2.4",
     "require-all": "3.0.0",
     "sanitize-filename": "1.6.3",
     "sha512crypt-node": "1.0.2",
