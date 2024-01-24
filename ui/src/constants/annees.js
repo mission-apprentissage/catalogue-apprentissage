@@ -17,5 +17,6 @@ export const annees = {
   16: "16ème",
   17: "17ème",
   18: "18ème",
-  X: "Non collectée",
+  X: "Non collectée (X)",
+  Y: "Non collectée (Y)",
 };

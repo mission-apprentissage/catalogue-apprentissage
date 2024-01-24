@@ -101,8 +101,8 @@ const Badge = {
     notOk: {
       ...commonStatusBadgeStyle,
       border: "1px solid ",
-      bg: "#EEEEEE",
-      borderColor: "#EEEEEE",
+      bg: "orangesoft.200",
+      borderColor: "orangesoft.200",
       color: "#161616",
     },
     default: {

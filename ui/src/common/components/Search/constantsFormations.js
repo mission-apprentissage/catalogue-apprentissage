@@ -18,6 +18,7 @@ export const allowedFilters = [
   "etablissement_formateur_actif",
   "etablissement_gestionnaire_siret",
   "etablissement_gestionnaire_actif",
+  "siret_actif",
   "num_academie",
   "niveau",
   "etablissement_gestionnaire_siren",
@@ -745,6 +746,12 @@ export const columnsDefinition = [
     exportable: true,
   },
   {
+    Header: "Etablissement formateur_actif",
+    accessor: "etablissement_formateur_actif",
+    width: 200,
+    exportable: true,
+  },
+  {
     Header: "Region",
     accessor: "region",
     width: 200,
@@ -782,7 +789,7 @@ export const queryBuilderField = [
   { text: "MEF 10", value: "bcn_mefs_10.mef10.keyword" },
   { text: "Groupe Spécialité", value: "rncp_details.nsf_code.keyword" },
   { text: "Certificateur", value: "rncp_details.certificateurs.certificateur.keyword" },
-  { text: "Statut du SIRET", value: "etablissement_gestionnaire_actif.keyword" },
+  { text: "Statut du SIRET", value: "siret_actif.keyword" },
   { text: "Région", value: "region.keyword" },
   { text: "Identifiant Affelnet (code voeu)", value: "affelnet_id.keyword" },
   { text: "Identifiant Parcoursup (GTA)", value: "parcoursup_id.keyword" },
@@ -1195,7 +1202,16 @@ export const quickFiltersDefinition = [
           return {};
         },
       },
-
+      {
+        componentId: `siret_actif`,
+        type: "facet",
+        dataField: "siret_actif.keyword",
+        title: "Statut du SIRET",
+        filterLabel: "Statut du SIRET",
+        displayInContext: [CONTEXT.CATALOGUE_NON_ELIGIBLE],
+        selectAllLabel: "Tous les statuts",
+        sortBy: "asc",
+      },
       {
         componentId: `last_statut_update_date`,
         type: "date-range",

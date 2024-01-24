@@ -21,7 +21,7 @@ export const ActifBadge = ({ value, ...props }) => {
       break;
 
     default:
-      break;
+      return;
   }
 
   return (

@@ -2,12 +2,12 @@ import React from "react";
 import { Badge, Flex, Text } from "@chakra-ui/react";
 
 export const AnneeBadge = ({ value, ...props }) => {
-  if (value !== "Y") {
+  if (!["X", "Y", null].includes(value)) {
     return null;
   }
 
   const text = "Année d'entrée non renseignée";
-  const variant = "default";
+  const variant = "notOk";
   const Icon = null;
 
   return (

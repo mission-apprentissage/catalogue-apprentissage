@@ -134,7 +134,7 @@ module.exports = async (components, verbose = true) => {
 
   const authLimiter = rateLimit({
     windowMs: 60 * 1000, // 1 minute
-    max: 10, // Limit each IP to 10 calls per minute
+    max: 20, // Limit each IP to 10 calls per minute
     message: "Too many calls from this IP, please try again after one minute",
   });
 
