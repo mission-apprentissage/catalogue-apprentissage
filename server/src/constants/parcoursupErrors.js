@@ -34,7 +34,8 @@ const parcoursupErrors = [
     action: `Vous devez vous assurer que la formation en attente de publication correspond à une formation existante dans Parcoursup.`,
   },
   {
-    regexp: /400 Erreur lors de la creation : Ce type de formation est marqué "Fermé" dans la BCN. Vous ne pouvez donc pas créer une formation de ce type./,
+    regexp:
+      /400 Erreur lors de la creation : Ce type de formation est marqué "Fermé" dans la BCN. Vous ne pouvez donc pas créer une formation de ce type./,
     description:
       "La formation est obsolète au niveau de la BCN. Vérifier que le code MEF utilisé dans le catalogue correspond au code MEF le plus récent pour cette formation.",
     action: `Vous pouvez faire un message dans la rubrique contact parcoursup en indiquant le ou les codes BCN trouvés.`,
@@ -50,7 +51,8 @@ const parcoursupErrors = [
     action: `Si cette formation est bien proposée par un IUT, vous devez corriger l'UAI du lieu de formation dans le catalogue puis relancer la publication depuis le catalogue. Si cette formation n'est pas proposée par un IUT, vous devez modifier le statut de la fiche en "non publié" pour que cette formation ne soit plus envoyée à Parcoursup.`,
   },
   {
-    regexp: /400 La filière n'a pas pu être retrouvée\. Le MEF : .*correspond à .* fillières\r\nLe CFD : .*correspond à .* fillières\r\nLe RNCP : .*/,
+    regexp:
+      /400 La filière n'a pas pu être retrouvée\. Le MEF : .*correspond à .* fillières\r\nLe CFD : .*correspond à .* fillières\r\nLe RNCP : .*/,
     description:
       "Aucune formation correspondant aux codes envoyés n'existe dans Parcoursup. En général il s'agit d'un CFD (code formation diplôme) ou d'un RNCP qui n'existe pas encore dans Parcoursup. .",
     action: `Vous devez faire un message dans la rubrique contact parcoursup en adressant le tableau excel contenant les indications nécessaires à la création  de la formation(intitulé, code CFD, RNCP...).`,

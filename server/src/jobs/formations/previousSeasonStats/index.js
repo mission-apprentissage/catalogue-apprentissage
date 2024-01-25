@@ -77,20 +77,22 @@ const comparePreviousSeasonFormations = async (plateforme) => {
     const academyName =
       academies[`${previousFormation.num_academie}`.padStart(2, "0")]?.nom_academie ?? previousFormation.num_academie;
 
-    const found = /** @type {Formation} */ (await Formation.findOne(
-      { cle_ministere_educatif: previousFormation.cle_ministere_educatif },
-      {
-        affelnet_statut: 1,
-        parcoursup_statut: 1,
-        etablissement_gestionnaire_certifie_qualite: 1,
-        date_debut: 1,
-        affelnet_perimetre: 1,
-        parcoursup_perimetre: 1,
-        niveau: 1,
-        diplome: 1,
-        num_academie: 1,
-      }
-    ).lean());
+    const found = /** @type {Formation} */ (
+      await Formation.findOne(
+        { cle_ministere_educatif: previousFormation.cle_ministere_educatif },
+        {
+          affelnet_statut: 1,
+          parcoursup_statut: 1,
+          etablissement_gestionnaire_certifie_qualite: 1,
+          date_debut: 1,
+          affelnet_perimetre: 1,
+          parcoursup_perimetre: 1,
+          niveau: 1,
+          diplome: 1,
+          num_academie: 1,
+        }
+      ).lean()
+    );
 
     const academyCause = academyCauses.get(academyName) ?? { ...initialValues };
 

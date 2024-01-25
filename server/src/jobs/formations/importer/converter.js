@@ -68,14 +68,8 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
     new Date(fields?.cfd_date_fermeture).getTime() !== new Date(oldFields?.cfd_date_fermeture).getTime() ||
     arrayDiff(fields?.date_debut, oldFields?.date_debut).length
   ) {
-    ({
-      bcn_mefs_10,
-      affelnet_mefs_10,
-      affelnet_infos_offre,
-      parcoursup_mefs_10,
-      duree_incoherente,
-      annee_incoherente,
-    } = await computeMefs(fields, oldFields));
+    ({ bcn_mefs_10, affelnet_mefs_10, affelnet_infos_offre, parcoursup_mefs_10, duree_incoherente, annee_incoherente } =
+      await computeMefs(fields, oldFields));
 
     // console.debug("Compute mefs", {
     //   cle_ministere_educatif: fields?.cle_ministere_educatif,

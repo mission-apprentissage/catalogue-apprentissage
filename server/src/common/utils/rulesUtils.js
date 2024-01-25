@@ -152,21 +152,21 @@ const commonRules = {
       "rncp_details.code_type_certif": {
         $in: ["Titre", "TP", null],
       },
-      rncp_code: { $exists: true },
-      "rncp_details.rncp_outdated": { $ne: true },
+      rncp_code: { $exists: true, $ne: null },
+      "rncp_details.rncp_outdated": false,
     },
     {
       "rncp_details.code_type_certif": {
         $in: ["Titre", "TP", null],
       },
-      rncp_code: { $exists: false },
-      cfd_outdated: { $ne: true },
+      rncp_code: { $eq: null },
+      cfd_outdated: false,
     },
     {
       "rncp_details.code_type_certif": {
         $nin: ["Titre", "TP", null],
       },
-      cfd_outdated: { $ne: true },
+      cfd_outdated: false,
     },
   ],
   published: true,
@@ -236,7 +236,7 @@ const getExpireRule = (currentDate = new Date()) => {
         "rncp_details.code_type_certif": {
           $in: ["Titre", "TP", null],
         },
-        rncp_code: { $exists: true },
+        rncp_code: { $exists: true, $ne: null },
         $or: [
           {
             "rncp_details.date_fin_validite_enregistrement": {
@@ -250,7 +250,7 @@ const getExpireRule = (currentDate = new Date()) => {
         "rncp_details.code_type_certif": {
           $in: ["Titre", "TP", null],
         },
-        rncp_code: { $exists: false },
+        rncp_code: { $eq: null },
         $or: [
           {
             cfd_date_fermeture: {
@@ -286,7 +286,14 @@ const titresRule = {
           "rncp_details.code_type_certif": {
             $in: ["Titre", "TP", null],
           },
+          rncp_code: { $exists: true, $ne: null },
           "rncp_details.active_inactive": "ACTIVE",
+        },
+        {
+          "rncp_details.code_type_certif": {
+            $in: ["Titre", "TP", null],
+          },
+          rncp_code: { $eq: null },
         },
         {
           "rncp_details.code_type_certif": {

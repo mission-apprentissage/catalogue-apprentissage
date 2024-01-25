@@ -29,14 +29,14 @@ const run = async () => {
             "rncp_details.code_type_certif": {
               $in: ["Titre", "TP", null],
             },
-            rncp_code: { $exists: true },
+            rncp_code: { $exists: true, $ne: null },
             "rncp_details.rncp_outdated": false,
           },
           {
             "rncp_details.code_type_certif": {
               $in: ["Titre", "TP", null],
             },
-            rncp_code: { $exists: false },
+            rncp_code: { $eq: null },
             cfd_outdated: false,
           },
           {
@@ -77,14 +77,14 @@ const run = async () => {
               "rncp_details.code_type_certif": {
                 $in: ["Titre", "TP", null],
               },
-              rncp_code: { $exists: true },
+              rncp_code: { $exists: true, $ne: null },
               "rncp_details.rncp_outdated": true,
             },
             {
               "rncp_details.code_type_certif": {
                 $in: ["Titre", "TP", null],
               },
-              rncp_code: { $exists: false },
+              rncp_code: { $eq: null },
               cfd_outdated: true,
             },
             {
