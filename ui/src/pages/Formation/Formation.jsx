@@ -756,10 +756,10 @@ export default () => {
                 )}
 
                 {((formation.parcoursup_perimetre &&
-                  formation.parcoursup_previous_session &&
+                  // formation.parcoursup_previous_session &&
                   !formation.parcoursup_session) ||
                   (formation.affelnet_perimetre &&
-                    formation.affelnet_previous_session &&
+                    // formation.affelnet_previous_session &&
                     !formation.affelnet_session)) && (
                   <Alert mt={4} type={"warning"}>
                     La formation pourrait être dans le périmètre{" "}
