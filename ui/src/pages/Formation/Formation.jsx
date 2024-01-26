@@ -660,6 +660,24 @@ export default () => {
                           <>
                             <StatusBadge source="Parcoursup" status={formation.parcoursup_statut} mr={[0, 3]} />
 
+                            {[PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.EN_ATTENTE].includes(
+                              formation.parcoursup_statut
+                            ) &&
+                              (formation.updates_history.filter(
+                                (history) =>
+                                  history.to.parcoursup_statut === PARCOURSUP_STATUS.EN_ATTENTE &&
+                                  new Date(history.updated_at).getTime() >=
+                                    getCampagneStartDate().getTime() - 31536000000
+                              ).length >= 1 ? (
+                                <Badge variant={"ok"} minHeight={"28px"} mr={[0, 3]}>
+                                  Publication manuelle
+                                </Badge>
+                              ) : (
+                                <Badge variant={"ok"} minHeight={"28px"} mr={[0, 3]}>
+                                  Publication automatique
+                                </Badge>
+                              ))}
+
                             <PreviousStatusBadge
                               source="Parcoursup"
                               status={formation.parcoursup_previous_statut}
@@ -673,6 +691,22 @@ export default () => {
                           formation.affelnet_statut !== AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT) && (
                           <>
                             <StatusBadge source="Affelnet" status={formation.affelnet_statut} mr={[0, 3]} />
+
+                            {[AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.EN_ATTENTE].includes(formation.affelnet_statut) &&
+                              (formation.updates_history.filter(
+                                (history) =>
+                                  history.to.affelnet_statut === AFFELNET_STATUS.EN_ATTENTE &&
+                                  new Date(history.updated_at).getTime() >=
+                                    getCampagneStartDate().getTime() - 31536000000
+                              ).length >= 1 ? (
+                                <Badge variant={"ok"} minHeight={"28px"} mr={[0, 3]}>
+                                  Publication manuelle
+                                </Badge>
+                              ) : (
+                                <Badge variant={"ok"} minHeight={"28px"} mr={[0, 3]}>
+                                  Publication automatique
+                                </Badge>
+                              ))}
 
                             <PreviousStatusBadge
                               source="Affelnet"
@@ -697,36 +731,6 @@ export default () => {
                             )}
                           </>
                         )}
-
-                      {[PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.EN_ATTENTE].includes(formation.parcoursup_statut) &&
-                        (formation.updates_history.filter(
-                          (history) =>
-                            history.to.parcoursup_statut === PARCOURSUP_STATUS.EN_ATTENTE &&
-                            new Date(history.updated_at).getTime() >= getCampagneStartDate().getTime() - 31536000000
-                        ).length >= 1 ? (
-                          <Badge variant={"default"} minHeight={"28px"}>
-                            Demande de publication manuelle
-                          </Badge>
-                        ) : (
-                          <Badge variant={"default"} minHeight={"28px"}>
-                            Demande de publication automatique
-                          </Badge>
-                        ))}
-
-                      {[AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.EN_ATTENTE].includes(formation.affelnet_statut) &&
-                        (formation.updates_history.filter(
-                          (history) =>
-                            history.to.affelnet_statut === AFFELNET_STATUS.EN_ATTENTE &&
-                            new Date(history.updated_at).getTime() >= getCampagneStartDate().getTime() - 31536000000
-                        ).length >= 1 ? (
-                          <Badge variant={"default"} minHeight={"28px"}>
-                            Demande de publication manuelle
-                          </Badge>
-                        ) : (
-                          <Badge variant={"default"} minHeight={"28px"}>
-                            Demande de publication automatique
-                          </Badge>
-                        ))}
                     </Box>
 
                     <Flex
