@@ -3,13 +3,15 @@ const { ReglePerimetre, Formation } = require("../../../common/model/index");
 const { connectToMongoForTests, cleanAll } = require("../../../../tests/utils/testUtils.js");
 const { run } = require("../perimetre/controller.js");
 const { AFFELNET_STATUS } = require("../../../constants/status");
-const { setupAfter, setupBefore, setupBeforeEach, setupAfterEach } = require("../../../../tests/helpers/setup");
+const { setupAfter, setupBefore, setupAfterEach, setupBeforeEach } = require("../../../../tests/helpers/setup");
 
 const currentDate = new Date();
+
 const periode = [
   new Date(`${currentDate.getFullYear()}-10-01T00:00:00.000Z`),
   new Date(`${currentDate.getFullYear() + 1}-10-01T00:00:00.000Z`),
 ];
+
 const date_debut = [
   new Date(`${currentDate.getFullYear()}-10-01T00:00:00.000Z`),
   new Date(`${currentDate.getFullYear() + 1}-10-01T00:00:00.000Z`),
@@ -26,8 +28,9 @@ const formationCampagneOk = {
   date_debut,
   cfd_outdated: false,
   cfd_date_fermeture: null,
-  rncp_code: null,
+  rncp_code: "RNCP1234",
   rncp_details: {
+    active_inactive: "ACTIVE",
     code_type_certif: "Test",
     rncp_outdated: false,
     date_fin_validite_enregistrement: null,
@@ -237,8 +240,10 @@ describe(`${__filename} - Gestion de la disparition du périmètre`, async () =>
       code_type_certif: "TH",
       rncp_outdated: false,
       active_inactive: "ACTIVE",
+      date_fin_validite_enregistrement: null,
     },
     cfd_outdated: false,
+    cfd_date_fermeture: null,
     annee: "1",
     niveau: "3 (CAP...)",
     diplome: "BREVET PROFESSIONNEL AGRICOLE DE NIVEAU V",
@@ -247,11 +252,11 @@ describe(`${__filename} - Gestion de la disparition du périmètre`, async () =>
   const perimeterWithdrawalMotives = {
     "catalogue_published: false": { catalogue_published: false },
     "published: false": { published: false },
-    "rncp_details: { code_type_certif: 'TP', rncp_outdated: true }": {
-      rncp_details: { code_type_certif: "TP", rncp_outdated: true },
+    "rncp_details: { active_inactive: 'ACTIVE', code_type_certif: 'TP', rncp_outdated: true }": {
+      rncp_details: { active_inactive: "ACTIVE", code_type_certif: "TP", rncp_outdated: true },
     },
-    "rncp_details: { code_type_certif: 'Titre', rncp_outdated: true }": {
-      rncp_details: { code_type_certif: "Titre", rncp_outdated: true },
+    "rncp_details: { active_inactive: 'ACTIVE', code_type_certif: 'Titre', rncp_outdated: true }": {
+      rncp_details: { active_inactive: "ACTIVE", code_type_certif: "Titre", rncp_outdated: true },
     },
     "rncp_details: {  code_type_certif: 'Other' }, cfd_outdated: true": {
       rncp_details: { code_type_certif: "Other" },

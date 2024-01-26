@@ -3,7 +3,7 @@ const { ReglePerimetre, Formation } = require("../../../common/model/index");
 const { connectToMongoForTests, cleanAll } = require("../../../../tests/utils/testUtils.js");
 const { run } = require("../perimetre/controller.js");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
-const { setupBefore, setupAfter, setupAfterEach, setupBeforeEach } = require("../../../../tests/helpers/setup");
+const { setupAfter, setupBefore, setupAfterEach, setupBeforeEach } = require("../../../../tests/helpers/setup");
 
 const currentDate = new Date();
 
@@ -28,8 +28,9 @@ const formationCampagneOk = {
   date_debut,
   cfd_outdated: false,
   cfd_date_fermeture: null,
-  rncp_code: null,
+  rncp_code: "RNCP1234",
   rncp_details: {
+    active_inactive: "ACTIVE",
     code_type_certif: "Test",
     rncp_outdated: false,
     date_fin_validite_enregistrement: null,
@@ -98,6 +99,7 @@ describe(`${__filename} - Test global (deprecated)`, () => {
     });
     await Formation.create({
       ...formationCampagneOk,
+
       niveau: "6 (Licence, BUT...)",
       diplome: "Licence Agri",
       parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
@@ -105,6 +107,7 @@ describe(`${__filename} - Test global (deprecated)`, () => {
     });
     await Formation.create({
       ...formationCampagneOk,
+
       niveau: "5 (BTS, DEUST...)",
       diplome: "BTS",
       parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
@@ -112,6 +115,7 @@ describe(`${__filename} - Test global (deprecated)`, () => {
     });
     await Formation.create({
       ...formationCampagneOk,
+
       niveau: "6 (Licence, BUT...)",
       diplome: "BUT",
       num_academie: "12",
@@ -120,6 +124,7 @@ describe(`${__filename} - Test global (deprecated)`, () => {
     });
     await Formation.create({
       ...formationCampagneOk,
+
       niveau: "6 (Licence, BUT...)",
       diplome: "BUT",
       num_academie: "14",
@@ -128,6 +133,7 @@ describe(`${__filename} - Test global (deprecated)`, () => {
     });
     await Formation.create({
       ...formationCampagneOk,
+
       niveau: "6 (Licence, BUT...)",
       diplome: "BUT",
       num_academie: "14",
@@ -137,6 +143,7 @@ describe(`${__filename} - Test global (deprecated)`, () => {
     });
     await Formation.create({
       ...formationCampagneOk,
+
       niveau: "7 (Master, titre ingénieur...)",
       diplome: "Master",
       parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
@@ -202,6 +209,7 @@ describe(`${__filename} - Gestion de la disparition du périmètre`, async () =>
       code_type_certif: "TH",
       rncp_outdated: false,
       active_inactive: "ACTIVE",
+      date_fin_validite_enregistrement: null,
     },
     cfd_outdated: false,
     annee: "1",
@@ -212,11 +220,11 @@ describe(`${__filename} - Gestion de la disparition du périmètre`, async () =>
   const perimeterWithdrawalMotives = {
     "catalogue_published: false": { catalogue_published: false },
     "published: false": { published: false },
-    "rncp_details: { code_type_certif: 'TP', rncp_outdated: true }": {
-      rncp_details: { code_type_certif: "TP", rncp_outdated: true },
+    "rncp_details: { active_inactive: 'ACTIVE', code_type_certif: 'TP', rncp_outdated: true }": {
+      rncp_details: { active_inactive: "ACTIVE", code_type_certif: "TP", rncp_outdated: true },
     },
-    "rncp_details: { code_type_certif: 'Titre', rncp_outdated: true }": {
-      rncp_details: { code_type_certif: "Titre", rncp_outdated: true },
+    "rncp_details: { active_inactive: 'ACTIVE', code_type_certif: 'Titre', rncp_outdated: true }": {
+      rncp_details: { active_inactive: "ACTIVE", code_type_certif: "Titre", rncp_outdated: true },
     },
     "rncp_details: {  code_type_certif: 'Other' }, cfd_outdated: true": {
       rncp_details: { code_type_certif: "Other" },
