@@ -18,8 +18,10 @@ export interface ConsoleStat {
   academie?: string | null;
   formations_publiees?: number;
   formations_integrables?: number;
+  formations_perimetre?: number;
   organismes_avec_formations_publiees?: number;
   organismes_avec_formations_integrables?: number;
+  organismes_avec_formations_perimetre?: number;
   details?: {
     [k: string]: unknown;
   };

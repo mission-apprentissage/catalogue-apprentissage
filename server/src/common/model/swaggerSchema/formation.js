@@ -539,6 +539,18 @@ module.exports = {
           required: [],
         },
       },
+      objectif: {
+        type: "string",
+        description: "Objectif de la formation",
+      },
+      contenu: {
+        type: "string",
+        description: "Identifiant de la formation",
+      },
+      siret_actif: {
+        type: "string",
+        description: "Badge siret actif/inactif",
+      },
       etablissement_gestionnaire_id: {
         type: "string",
         description: "Identifiant établissement gestionnaire",
@@ -636,6 +648,10 @@ module.exports = {
         type: "string",
         description: "Adresse email de contact de l'établissement gestionnaire",
       },
+      etablissement_gestionnaire_actif: {
+        type: "string",
+        description: "SIRET actif ou inactif pour l'établissement gestionnaire",
+      },
       etablissement_formateur_id: {
         type: "string",
         description: "Identifiant établissement formateur",
@@ -732,6 +748,10 @@ module.exports = {
       etablissement_formateur_courriel: {
         type: "string",
         description: "Adresse email de contact de l'établissement formateur",
+      },
+      etablissement_formateur_actif: {
+        type: "string",
+        description: "SIRET actif ou inactif pour l'établissement formateur",
       },
       etablissement_reference: {
         type: "string",
@@ -857,6 +877,29 @@ module.exports = {
           required: [],
         },
       },
+      parcoursup_statut_reinitialisation: {
+        type: "object",
+        description: "Statut parcoursup",
+        properties: {
+          user: {
+            type: "string",
+            description: "Utilisateur ayant effectué la réinitialisation",
+          },
+          date: {
+            type: "string",
+            description: "Date à laquelle la réinitialisation a été effectuée",
+            format: "date-time",
+          },
+          comment: {
+            type: "string",
+            description: "Motif de la réinitialisation",
+          },
+        },
+      },
+      parcoursup_publication_auto: {
+        type: "boolean",
+        description: "Parcoursup : publication auto",
+      },
       affelnet_perimetre: {
         type: "boolean",
         description: "Dans le périmètre Affelnet",
@@ -967,6 +1010,10 @@ module.exports = {
           },
           required: [],
         },
+      },
+      affelnet_publication_auto: {
+        type: "boolean",
+        description: "Affelnet : publication auto",
       },
       _id: {
         type: "string",

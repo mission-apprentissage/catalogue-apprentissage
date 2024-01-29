@@ -119,6 +119,23 @@ export type FranceCompetenceInfos = {
   fc_is_partenaire?: boolean;
   fc_has_partenaire?: boolean;
 } | null;
+/**
+ * Statut parcoursup
+ */
+export type ParcoursupStatutReinitialisation = {
+  /**
+   * Utilisateur ayant effectué la réinitialisation
+   */
+  user?: string | null;
+  /**
+   * Date à laquelle la réinitialisation a été effectuée
+   */
+  date?: Date;
+  /**
+   * Motif de la réinitialisation
+   */
+  comment?: string | null;
+} | null;
 
 export interface Formation {
   /**
@@ -409,6 +426,18 @@ export interface Formation {
    */
   partenaires?: unknown[];
   /**
+   * Objectif de la formation
+   */
+  objectif?: string | null;
+  /**
+   * Identifiant de la formation
+   */
+  contenu?: string | null;
+  /**
+   * Badge siret actif/inactif
+   */
+  siret_actif?: string | null;
+  /**
    * Identifiant établissement gestionnaire
    */
   etablissement_gestionnaire_id?: string | null;
@@ -504,6 +533,10 @@ export interface Formation {
    * Adresse email de contact de l'établissement gestionnaire
    */
   etablissement_gestionnaire_courriel?: string | null;
+  /**
+   * SIRET actif ou inactif pour l'établissement gestionnaire
+   */
+  etablissement_gestionnaire_actif?: string | null;
   /**
    * Identifiant établissement formateur
    */
@@ -601,6 +634,10 @@ export interface Formation {
    */
   etablissement_formateur_courriel?: string | null;
   /**
+   * SIRET actif ou inactif pour l'établissement formateur
+   */
+  etablissement_formateur_actif?: string | null;
+  /**
    * Etablissement reference est soit formateur soit le gestionnaire
    */
   etablissement_reference?: string | null;
@@ -688,6 +725,11 @@ export interface Formation {
    * Tableau de Code MEF 10 caractères et modalités (filtrés pour Parcoursup si applicable)
    */
   parcoursup_mefs_10?: ItemOfParcoursupMefs_10[];
+  parcoursup_statut_reinitialisation?: ParcoursupStatutReinitialisation;
+  /**
+   * Parcoursup : publication auto
+   */
+  parcoursup_publication_auto?: boolean | null;
   /**
    * Dans le périmètre Affelnet
    */
@@ -764,6 +806,10 @@ export interface Formation {
    * Tableau de Code MEF 10 caractères et modalités (filtrés pour Affelnet si applicable)
    */
   affelnet_mefs_10?: ItemOfAffelnetMefs_10[];
+  /**
+   * Affelnet : publication auto
+   */
+  affelnet_publication_auto?: boolean | null;
   _id?: Types.ObjectId;
   updated_at?: Date;
   created_at?: Date;

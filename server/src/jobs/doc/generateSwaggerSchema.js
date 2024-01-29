@@ -8,7 +8,7 @@ const { createModel } = require("../../common/model/createModel");
 const { cleanMongooseSchema } = require("./mongooseUtils");
 
 const generateSwaggerSchema = () => {
-  Array.from(schemas.keys()).forEach((schemaName) => {
+  Array.from(schemas.keys()).forEach(async (schemaName) => {
     if (["formation", "etablissement"].includes(schemaName)) {
       const [schemaDescriptor, schemaOptions] = schemas.get(schemaName);
       const baseFilename = schemaName;
@@ -19,7 +19,7 @@ const generateSwaggerSchema = () => {
       let sout = {};
       sout[baseFilename] = swaggerSchema;
       const edata = JSON.stringify(sout, null, 2);
-      const content = prettier.format(`module.exports = ${edata};`, { ...packageJson.prettier, parser: "babel" });
+      const content = await prettier.format(`module.exports = ${edata};`, { ...packageJson.prettier, parser: "babel" });
 
       fs.writeFileSync(path.resolve(__dirname, `../../common/model/swaggerSchema/${baseFilename}.js`), content);
     }

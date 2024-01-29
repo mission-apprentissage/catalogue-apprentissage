@@ -20,6 +20,10 @@ export interface User {
    */
   isAdmin?: boolean;
   /**
+   * Tag libre
+   */
+  tag?: string | null;
+  /**
    * Email
    */
   email?: string | null;

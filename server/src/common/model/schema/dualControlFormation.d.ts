@@ -119,6 +119,14 @@ export interface DualControlFormation {
    */
   cfd_date_fermeture?: Date;
   /**
+   * Code formacode
+   */
+  code_formacode?: unknown[];
+  /**
+   * Libelle formacode
+   */
+  libelle_formacode?: unknown[];
+  /**
    * Nom de l'académie
    */
   nom_academie?: string | null;
@@ -321,6 +329,22 @@ export interface DualControlFormation {
    */
   id_RCO?: string | null;
   /**
+   * Objectif (LBA)
+   */
+  objectif?: string | null;
+  /**
+   * Identifiant (LBA)
+   */
+  contenu?: string | null;
+  /**
+   * Badge siret actif/inactif
+   */
+  siret_actif?: string | null;
+  /**
+   * Numéros de téléphone
+   */
+  num_tel?: string | null;
+  /**
    * Numéro siret gestionnaire
    */
   etablissement_gestionnaire_siret?: string | null;
@@ -409,6 +433,10 @@ export interface DualControlFormation {
    */
   etablissement_gestionnaire_courriel?: string | null;
   /**
+   * SIRET actif ou inactif pour l'établissement gestionnaire
+   */
+  etablissement_gestionnaire_actif?: string | null;
+  /**
    * Numéro siret formateur
    */
   etablissement_formateur_siret?: string | null;
@@ -496,6 +524,10 @@ export interface DualControlFormation {
    * Adresse email de contact de l'établissement formateur
    */
   etablissement_formateur_courriel?: string | null;
+  /**
+   * SIRET actif ou inactif pour l'établissement formateur
+   */
+  etablissement_formateur_actif?: string | null;
   /**
    * Etablissement reference est soit formateur soit le gestionnaire
    */
