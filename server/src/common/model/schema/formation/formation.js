@@ -540,6 +540,12 @@ const formationSchema = {
     description: "Numéros de téléphone",
   },
 
+  nouvelle_fiche: {
+    type: Boolean,
+    default: false,
+    description: "Nouvelle fiche",
+  },
+
   // Etablissements
   ...etablissementGestionnaireInfo,
   ...etablissementFormateurInfo,
@@ -615,6 +621,11 @@ const formationSchema = {
     type: statutReinitialisationSchema,
     default: null,
     description: "Statut parcoursup",
+  },
+  parcoursup_publication_auto: {
+    type: Boolean || null,
+    default: null,
+    description: "Parcoursup : publication auto",
   },
 
   // AFFELNET
@@ -702,6 +713,12 @@ const formationSchema = {
     type: [mefSchema],
     default: [],
     description: "Tableau de Code MEF 10 caractères et modalités (filtrés pour Affelnet si applicable)",
+  },
+
+  affelnet_publication_auto: {
+    type: Boolean || null,
+    default: null,
+    description: "Affelnet : publication auto",
   },
 };
 

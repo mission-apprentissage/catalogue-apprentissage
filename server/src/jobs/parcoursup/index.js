@@ -2,7 +2,7 @@ const logger = require("../../common/logger");
 const { runScript } = require("../scriptWrapper");
 const { psImport } = require("./import");
 const { psPerimetre } = require("./perimetre");
-const parcoursupExport = require("./export");
+const { run: psExport } = require("./export");
 const { psConsoleStats } = require("./stats");
 
 /**
@@ -16,7 +16,7 @@ const parcoursupJobs = async () => {
     await psPerimetre();
 
     if (process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_EXPORT_ENABLED) {
-      await parcoursupExport.run();
+      await psExport();
     }
 
     await psConsoleStats();

@@ -12,6 +12,8 @@ const { distanceBetweenCoordinates } = require("../../../common/utils/distanceUt
 const logger = require("../../../common/logger");
 const { computeMefs } = require("../../../logic/finder/mefsFinder");
 const { getCfdEntree, getCfdEntreeDateFermeture } = require("../../../logic/finder/cfdEntreeFinder");
+const { PARCOURSUP_STATUS, AFFELNET_STATUS } = require("../../../constants/status");
+const { getCampagneStartDate } = require("../../../common/utils/rulesUtils");
 
 const updateRelationFields = async ({ filter = {} }) => {
   logger.info({ type: "job" }, " == Updating relations for formations == ");
@@ -291,6 +293,29 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
   const cfd_entree = getCfdEntree(fields.cfd);
   const cfd_entree_date_fermeture = await getCfdEntreeDateFermeture(fields.cfd);
 
+  const parcoursup_publication_auto = [PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.EN_ATTENTE].includes(
+    oldFields.parcoursup_statut
+  )
+    ? oldFields.updates_history?.filter(
+        (history) =>
+          history.to.parcoursup_statut === PARCOURSUP_STATUS.EN_ATTENTE &&
+          new Date(history.updated_at).getTime() >= getCampagneStartDate().getTime() - 365 * 24 * 60 * 60 * 1000
+      ).length === 0
+    : null;
+
+  const affelnet_publication_auto = [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.EN_ATTENTE].includes(
+    oldFields.affelnet_statut
+  )
+    ? oldFields.updates_history?.filter(
+        (history) =>
+          history.to.affelnet_statut === AFFELNET_STATUS.EN_ATTENTE &&
+          new Date(history.updated_at).getTime() >= getCampagneStartDate().getTime() - 365 * 24 * 60 * 60 * 1000
+      ).length === 0
+    : null;
+
+  const nouvelle_fiche =
+    new Date(oldFields.created_at).getTime() >= getCampagneStartDate().getTime() - 365 * 24 * 60 * 60 * 1000;
+
   return {
     ...fields,
 
@@ -313,6 +338,11 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
     // ...(await computeRelationFields(fields)),
 
     partenaires,
+
+    parcoursup_publication_auto,
+    affelnet_publication_auto,
+
+    nouvelle_fiche,
   };
 };
 

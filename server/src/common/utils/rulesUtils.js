@@ -336,6 +336,7 @@ module.exports = {
   titresRule,
   getPublishedRules,
   getExpirationDate,
+  getCampagneStartDate,
   getSessionStartDate,
   getSessionEndDate,
   isInSession,

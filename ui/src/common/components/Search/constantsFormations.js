@@ -46,11 +46,13 @@ export const allowedFilters = [
   "parcoursup_previous_statut",
   "parcoursup_session",
   "parcoursup_previous_session",
+  "parcoursup_publication_auto",
   "affelnet_perimetre",
   "affelnet_statut",
   "affelnet_previous_statut",
   "affelnet_session",
   "affelnet_previous_session",
+  "affelnet_publication_auto",
   "diplome",
   "tags",
   "annee",
@@ -66,6 +68,7 @@ export const allowedFilters = [
   "affelnet_published_date_end",
   "last_statut_update_date_start",
   "last_statut_update_date_end",
+  "nouvelle_fiche",
 ];
 
 const mefsFormatter = (mefs) => {
@@ -763,6 +766,14 @@ export const columnsDefinition = [
     width: 200,
     exportable: true,
   },
+
+  {
+    Header: "Nouvelle fiche",
+    accessor: "nouvelle_fiche",
+    width: 200,
+    exportable: true,
+    formatter: (value) => (value ? "Oui" : "Non"),
+  },
 ];
 
 /**
@@ -937,6 +948,40 @@ export const quickFiltersDefinition = [
         title: "Date de publication sur Parcoursup",
         filterLabel: "Publication Parcoursup",
       },
+
+      {
+        componentId: `parcoursup_publication_auto`,
+        type: "facet",
+        dataField: "parcoursup_publication_auto",
+        title: "Publication automatique Parcoursup",
+        filterLabel: "Publication automatique Parcoursup",
+        sortBy: "desc",
+        transformData: (data) => {
+          console.log(data);
+          return data.map((d) => ({
+            ...d,
+            key: {
+              1: "Oui",
+              0: "Non",
+              null: "Pas d'information",
+            }[d.key],
+          }));
+        },
+        customQuery: (values) => {
+          if (values.length && !values.includes("Tous")) {
+            return {
+              query: {
+                terms: {
+                  parcoursup_publication_auto: values.map(
+                    (value) => ({ Oui: true, Non: false, "Pas d'information": null }[value])
+                  ),
+                },
+              },
+            };
+          }
+          return {};
+        },
+      },
     ],
   },
 
@@ -1062,6 +1107,38 @@ export const quickFiltersDefinition = [
         dataField: "affelnet_published_date",
         title: "Date de publication sur Affelnet",
         filterLabel: "Publication Affelnet",
+      },
+
+      {
+        componentId: `affelnet_publication_auto`,
+        type: "facet",
+        dataField: "affelnet_publication_auto",
+        title: "Publication automatique Affelnet",
+        filterLabel: "Publication automatique Affelnet",
+        sortBy: "desc",
+        transformData: (data) =>
+          data.map((d) => ({
+            ...d,
+            key: {
+              1: "Oui",
+              0: "Non",
+              null: "Pas d'information",
+            }[d.key],
+          })),
+        customQuery: (values) => {
+          if (values.length && !values.includes("Tous")) {
+            return {
+              query: {
+                terms: {
+                  affelnet_publication_auto: values.map(
+                    (value) => ({ Oui: true, Non: false, "Pas d'information": null }[value])
+                  ),
+                },
+              },
+            };
+          }
+          return {};
+        },
       },
     ],
   },
@@ -1211,6 +1288,27 @@ export const quickFiltersDefinition = [
         displayInContext: [CONTEXT.CATALOGUE_NON_ELIGIBLE],
         selectAllLabel: "Tous les statuts",
         sortBy: "asc",
+      },
+      {
+        componentId: `nouvelle_fiche`,
+        type: "facet",
+        dataField: "nouvelle_fiche",
+        title: "Nouvelle fiche",
+        filterLabel: "Nouvelle fiche",
+        sortBy: "desc",
+        transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
+        customQuery: (values) => {
+          if (values.length === 1 && values[0] !== "Tous") {
+            return {
+              query: {
+                match: {
+                  nouvelle_fiche: values[0] === "Oui",
+                },
+              },
+            };
+          }
+          return {};
+        },
       },
       {
         componentId: `last_statut_update_date`,
