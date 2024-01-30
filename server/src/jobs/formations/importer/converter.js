@@ -294,27 +294,28 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
   const cfd_entree_date_fermeture = await getCfdEntreeDateFermeture(fields.cfd);
 
   const parcoursup_publication_auto = [PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.EN_ATTENTE].includes(
-    oldFields.parcoursup_statut
+    oldFields?.parcoursup_statut
   )
-    ? oldFields.updates_history?.filter(
+    ? oldFields?.updates_history?.filter(
         (history) =>
-          history.to.parcoursup_statut === PARCOURSUP_STATUS.EN_ATTENTE &&
+          history?.to?.parcoursup_statut === PARCOURSUP_STATUS.EN_ATTENTE &&
           new Date(history.updated_at).getTime() >= getCampagneStartDate().getTime() - 365 * 24 * 60 * 60 * 1000
       ).length === 0
     : null;
 
   const affelnet_publication_auto = [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.EN_ATTENTE].includes(
-    oldFields.affelnet_statut
+    oldFields?.affelnet_statut
   )
-    ? oldFields.updates_history?.filter(
+    ? oldFields?.updates_history?.filter(
         (history) =>
-          history.to.affelnet_statut === AFFELNET_STATUS.EN_ATTENTE &&
+          history?.to?.affelnet_statut === AFFELNET_STATUS.EN_ATTENTE &&
           new Date(history.updated_at).getTime() >= getCampagneStartDate().getTime() - 365 * 24 * 60 * 60 * 1000
       ).length === 0
     : null;
 
   const nouvelle_fiche =
-    new Date(oldFields.created_at).getTime() >= getCampagneStartDate().getTime() - 365 * 24 * 60 * 60 * 1000;
+    !oldFields ||
+    new Date(oldFields?.created_at).getTime() >= getCampagneStartDate().getTime() - 365 * 24 * 60 * 60 * 1000;
 
   return {
     ...fields,
