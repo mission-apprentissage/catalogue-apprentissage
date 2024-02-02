@@ -31,18 +31,26 @@ module.exports = async () => {
       }
       return null;
     },
-    getUser: async (username) => await User.findOne({ username }),
-    getUserByEmail: async (email) => await User.findOne({ email }),
+    getUser: async (username) => {
+      return await User.findOne({
+        username: new RegExp(`^${escapeRegExp(username.toLowerCase())}$`, "i"),
+      });
+    },
+    getUserByEmail: async (email) => {
+      return await User.findOne({
+        email: new RegExp(`^${escapeRegExp(email.toLowerCase())}$`, "i"),
+      });
+    },
     getUsers: async () => await User.find({}, { password: 0, _id: 0, __v: 0 }).sort({ email: 1 }).lean(),
     createUser: async (username, password, options = {}) => {
       const hash = options.hash || sha512Utils.hash(password);
       const permissions = options.permissions || {};
 
       const user = new User({
-        username,
+        username: username.toLowerCase().trim(),
         password: hash,
         isAdmin: !!permissions.isAdmin,
-        email: options.email || "",
+        email: options.email.toLowerCase().trim() || "",
         academie: options.academie || "0",
         roles: options.roles || ["user"],
         tag: options.tag,

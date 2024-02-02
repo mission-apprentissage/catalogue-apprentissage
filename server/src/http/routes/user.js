@@ -71,9 +71,13 @@ module.exports = ({ users, mailer, db: { db } }) => {
 
       const { username, password, options } = body;
 
-      const alreadyExists = await users.getUser(username);
+      let alreadyExists = await users.getUser(username);
       if (alreadyExists) {
-        throw Boom.conflict(`Unable to create, user ${username} already exists`);
+        throw Boom.conflict(`Impossible de créer, l'utilisateur ${username.toLowerCase()} existe déjà.`);
+      }
+      alreadyExists = await users.getUserByEmail(options.email);
+      if (alreadyExists) {
+        throw Boom.conflict(`Impossible de créer, l'email ${options.email.toLowerCase()} est déjà utilisé.`);
       }
 
       const user = await users.createUser(username, password, options);
@@ -100,9 +104,9 @@ module.exports = ({ users, mailer, db: { db } }) => {
 
       await users.updateUser(username, {
         isAdmin: body.options.permissions.isAdmin,
-        email: body.options.email,
+        email: body.options.email?.toLowerCase(),
         academie: body.options.academie,
-        username: body.username,
+        username: body.username?.toLowerCase(),
         tag: body.options.tag,
         roles: body.options.roles,
         acl: body.options.acl,
@@ -110,7 +114,7 @@ module.exports = ({ users, mailer, db: { db } }) => {
 
       await closeSessionsOfThisUser(db, username);
 
-      res.json({ message: `User ${username} updated !` });
+      res.json({ message: `Utilisateur ${username} mis à jour !` });
     })
   );
 
@@ -123,7 +127,7 @@ module.exports = ({ users, mailer, db: { db } }) => {
 
       await closeSessionsOfThisUser(db, username);
 
-      res.json({ message: `User ${username} deleted !` });
+      res.json({ message: `Utilisateur ${username} supprimé !` });
     })
   );
 
@@ -134,7 +138,7 @@ module.exports = ({ users, mailer, db: { db } }) => {
 
       await users.addTag(username, body.tag);
 
-      res.json({ message: `User ${username} updated !` });
+      res.json({ message: `Utilisateur ${username} mis à jour !` });
     })
   );
 
@@ -145,7 +149,7 @@ module.exports = ({ users, mailer, db: { db } }) => {
 
       await users.removeTag(username, body.tag);
 
-      res.json({ message: `User ${username} updated !` });
+      res.json({ message: `Utilisateur ${username} mis à jour !` });
     })
   );
 

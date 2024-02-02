@@ -139,7 +139,7 @@ const UserLine = ({ user, roles }) => {
   const onDeleteClicked = async (e) => {
     e.preventDefault();
     // eslint-disable-next-line no-restricted-globals
-    if (confirm("Delete user !?")) {
+    if (confirm("Supprimer l'utilisateur !?")) {
       await _delete(`/api/admin/user/${user.username}`);
       document.location.reload(true);
     }
