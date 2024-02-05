@@ -50,7 +50,7 @@ test("renders line & create rule", async () => {
     niveau: "5 (BTS, DEUST...)",
     plateforme: "parcoursup",
     regle_complementaire: "{}",
-    statut: PARCOURSUP_STATUS.A_PUBLIER,
+    statut: PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
   });
 });
 
@@ -246,7 +246,7 @@ test("Action select - should update rule & set à publier", async () => {
   expect(onUpdateRule).toHaveBeenCalledWith({
     _id: "345",
     condition_integration: "peut intégrer",
-    statut: PARCOURSUP_STATUS.A_PUBLIER,
+    statut: PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
   });
 });
 

@@ -17,10 +17,6 @@ const completeDateFermetureMefs = async (mefs) => {
 
       const dateParts = DATE_FERMETURE?.split("/");
 
-      console.log({
-        ...mef,
-        date_fermeture: DATE_FERMETURE ? new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]) : null,
-      });
       return {
         ...mef,
         date_fermeture: DATE_FERMETURE ? new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]) : null,

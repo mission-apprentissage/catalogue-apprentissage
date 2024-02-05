@@ -3,7 +3,7 @@ import { Select } from "@chakra-ui/react";
 import { CONDITIONS } from "../../../constants/conditionsIntegration";
 import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
 
-const STATUS_LIST = {
+export const STATUS_LIST = {
   [CONDITIONS.PEUT_INTEGRER]: {
     parcoursup: [
       PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,

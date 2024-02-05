@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Badge, Box, Flex, Text } from "@chakra-ui/react";
 import { ArrowRightDownLine } from "../../../theme/components/icons";
-import { StatusSelect } from "./StatusSelect";
+import { STATUS_LIST, StatusSelect } from "./StatusSelect";
 import { ActionsSelect } from "./ActionsSelect";
 import { CONDITIONS } from "../../../constants/conditionsIntegration";
-import { COMMON_STATUS } from "../../../constants/status";
 import { academies } from "../../../constants/academies";
 import { InfoTooltip } from "../../../common/components/InfoTooltip";
 import { isStatusChangeEnabled } from "../../../common/utils/rulesUtils";
@@ -49,6 +48,10 @@ export const Line = ({
     status,
     condition_integration,
   });
+
+  const getFirstAllowedStatut = (condition) => {
+    return STATUS_LIST[condition][plateforme][0];
+  };
 
   const currentStatus = statut_academies?.[academie] ?? status;
   const academieLabel = Object.values(academies).find(({ num_academie: num }) => num === num_academie)?.nom_academie;
@@ -122,7 +125,7 @@ export const Line = ({
                       await onUpdateRule({
                         _id: idRule,
                         condition_integration: e.target.value,
-                        statut: COMMON_STATUS.NON_PUBLIABLE_EN_LETAT,
+                        statut: getFirstAllowedStatut(e.target.value),
                       });
                     } else {
                       await onDeleteRule({ _id: idRule });
@@ -132,7 +135,7 @@ export const Line = ({
                       await onUpdateRule({
                         _id: idRule,
                         condition_integration: e.target.value,
-                        statut: COMMON_STATUS.A_PUBLIER,
+                        statut: getFirstAllowedStatut(e.target.value),
                       });
                     } else {
                       await onCreateRule({
@@ -140,7 +143,7 @@ export const Line = ({
                         niveau,
                         diplome,
                         condition_integration: e.target.value,
-                        statut: COMMON_STATUS.A_PUBLIER,
+                        statut: getFirstAllowedStatut(e.target.value),
                         regle_complementaire: "{}",
                       });
                     }
