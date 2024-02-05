@@ -47,10 +47,10 @@ module.exports = async () => {
       const permissions = options.permissions || {};
 
       const user = new User({
-        username: username.toLowerCase().trim(),
+        username: username?.toLowerCase().trim(),
         password: hash,
         isAdmin: !!permissions.isAdmin,
-        email: options.email.toLowerCase().trim() || "",
+        email: options.email?.toLowerCase().trim() || "",
         academie: options.academie || "0",
         roles: options.roles || ["user"],
         tag: options.tag,
@@ -61,7 +61,7 @@ module.exports = async () => {
       return user.toObject();
     },
     removeUser: async (username) => {
-      const user = await User.findOne({ username });
+      const user = await User.findOne({ username: username?.toLowerCase() });
       if (!user) {
         throw new Error(`Unable to find user ${username}`);
       }

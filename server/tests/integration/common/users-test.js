@@ -5,36 +5,36 @@ const { User } = require("../../../src/common/model");
 
 integrationTests(__filename, () => {
   it("Permet de créer un utilisateur", async () => {
-    const { createUser } = await users();
+    const { createUser, getUser } = await users();
 
     const created = await createUser("user", "password");
     assert.strictEqual(created.username, "user");
     assert.strictEqual(created.isAdmin, false);
     assert.strictEqual(created.password.startsWith("$6$rounds=1001"), true);
 
-    const found = await User.findOne({ username: "user" });
+    const found = await getUser("user");
     assert.strictEqual(found.username, "user");
     assert.strictEqual(found.isAdmin, false);
     assert.strictEqual(found.password.startsWith("$6$rounds=1001"), true);
   });
 
   it("Permet de créer un utilisateur avec les droits d'admin", async () => {
-    const { createUser } = await users();
+    const { createUser, getUser } = await users();
 
     const user = await createUser("userAdmin", "password", { permissions: { isAdmin: true } });
-    const found = await User.findOne({ username: "userAdmin" });
+    const found = await getUser("userAdmin");
 
     assert.strictEqual(user.isAdmin, true);
     assert.strictEqual(found.isAdmin, true);
   });
 
   it("Permet de supprimer un utilisateur", async () => {
-    const { createUser, removeUser } = await users();
+    const { createUser, removeUser, getUser } = await users();
 
     await createUser("userToDelete", "password", { permissions: { isAdmin: true } });
     await removeUser("userToDelete");
 
-    const found = await User.findOne({ username: "userToDelete" });
+    const found = await getUser("userToDelete");
     assert.strictEqual(found, null);
   });
 
