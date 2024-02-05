@@ -21,7 +21,6 @@ import {
   TabPanels,
   Tabs,
   Text,
-  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { ArrowDownLine, ArrowRightLine, Close } from "../../../theme/components/icons";

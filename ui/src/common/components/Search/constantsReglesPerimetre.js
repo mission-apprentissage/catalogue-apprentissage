@@ -4,6 +4,7 @@ const queryBuilderField = [
   { text: "MEF 10", value: "bcn_mefs_10.mef10" },
   { text: "Code RNCP", value: "rncp_code" },
   { text: "Groupe Spécialité", value: "rncp_details.nsf_code" },
+  { text: "CFD", value: "cfd" },
 ];
 
 export default {
