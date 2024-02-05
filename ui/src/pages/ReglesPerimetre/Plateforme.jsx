@@ -62,18 +62,17 @@ export default ({ plateforme }) => {
         const niveauxTree = niveauxData.map(({ niveau, diplomes }) => {
           return {
             niveau,
-            diplomes: diplomes
-              .map((diplome) => {
-                const filteredRegles = regles.filter(
-                  ({ niveau: niv, diplome: dip }) => niveau.value === niv && diplome.value === dip
-                );
-                reglesInTree = [...reglesInTree, ...filteredRegles.map(({ _id }) => _id)];
-                return {
-                  ...diplome,
-                  regles: filteredRegles,
-                };
-              })
-              .sort((diplomeA, diplomeB) => diplomeB.count - diplomeA.count),
+            diplomes: diplomes.map((diplome) => {
+              const filteredRegles = regles.filter(
+                ({ niveau: niv, diplome: dip }) => niveau.value === niv && diplome.value === dip
+              );
+              reglesInTree = [...reglesInTree, ...filteredRegles.map(({ _id }) => _id)];
+              return {
+                ...diplome,
+                regles: filteredRegles,
+              };
+            }),
+            // .sort((diplomeA, diplomeB) => diplomeB.count - diplomeA.count),
           };
         });
 
