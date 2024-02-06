@@ -210,7 +210,16 @@ export const columnsDefinition = [
     accessor: "etablissement_reference_habilite_rncp",
     width: 200,
     exportable: true,
-    formatter: (value) => (value ? "OUI" : "NON"),
+    formatter: (value) => {
+      switch (value) {
+        case true:
+          return "OUI";
+        case false:
+          return "NON";
+        default:
+          return "";
+      }
+    },
   },
   {
     Header: "Eligible apprentissage (RNCP)",
