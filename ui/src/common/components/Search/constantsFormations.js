@@ -892,7 +892,7 @@ export const quickFiltersDefinition = [
         componentId: `parcoursup_previous_statut`,
         type: "facet",
         dataField: "parcoursup_previous_statut.keyword",
-        title: "Statut sur la précédente campagne Parcoursup ",
+        title: "Statut sur la précédente campagne ",
         filterLabel: "Statut sur la précédente campagne Parcoursup ",
         selectAllLabel: "Tous",
         sortBy: "count",
@@ -904,7 +904,7 @@ export const quickFiltersDefinition = [
         componentId: `parcoursup_session`,
         type: "facet",
         dataField: "parcoursup_session",
-        title: "Session sur la campagne Parcoursup",
+        title: "Session sur la campagne",
         filterLabel: "Session sur la campagne Parcoursup",
         selectAllLabel: "Tous",
         sortBy: "desc",
@@ -930,7 +930,7 @@ export const quickFiltersDefinition = [
         componentId: `parcoursup_previous_session`,
         type: "facet",
         dataField: "parcoursup_previous_session",
-        title: "Session sur la précédente campagne Parcoursup",
+        title: "Session sur la précédente campagne",
         filterLabel: "Session sur la précédente campagne Parcoursup",
         selectAllLabel: "Tous",
         sortBy: "desc",
@@ -956,7 +956,7 @@ export const quickFiltersDefinition = [
         componentId: `parcoursup_published_date`,
         type: "date-range",
         dataField: "parcoursup_published_date",
-        title: "Date de publication sur Parcoursup",
+        title: "Date de publication",
         filterLabel: "Publication Parcoursup",
       },
 
@@ -964,7 +964,7 @@ export const quickFiltersDefinition = [
         componentId: `parcoursup_publication_auto`,
         type: "facet",
         dataField: "parcoursup_publication_auto",
-        title: "Publication automatique Parcoursup",
+        title: "Publication automatique",
         filterLabel: "Publication automatique Parcoursup",
         sortBy: "desc",
         transformData: (data) => {
@@ -1052,7 +1052,7 @@ export const quickFiltersDefinition = [
         componentId: `affelnet_previous_statut`,
         type: "facet",
         dataField: "affelnet_previous_statut.keyword",
-        title: "Statut sur la précédente campagne Affelnet",
+        title: "Statut sur la précédente campagne",
         filterLabel: "Statut sur la précédente campagne Affelnet",
         selectAllLabel: "Tous",
         sortBy: "count",
@@ -1064,7 +1064,7 @@ export const quickFiltersDefinition = [
         componentId: `affelnet_session`,
         type: "facet",
         dataField: "affelnet_session",
-        title: "Session sur la campagne Affelnet",
+        title: "Session sur la campagne",
         filterLabel: "Session sur la campagne Affelnet",
         selectAllLabel: "Tous",
         sortBy: "desc",
@@ -1090,7 +1090,7 @@ export const quickFiltersDefinition = [
         componentId: `affelnet_previous_session`,
         type: "facet",
         dataField: "affelnet_previous_session",
-        title: "Session sur la précédente campagne Affelnet",
+        title: "Session sur la précédente campagne",
         filterLabel: "Session sur la précédente campagne Affelnet",
         selectAllLabel: "Tous",
         sortBy: "desc",
@@ -1116,7 +1116,7 @@ export const quickFiltersDefinition = [
         componentId: `affelnet_published_date`,
         type: "date-range",
         dataField: "affelnet_published_date",
-        title: "Date de publication sur Affelnet",
+        title: "Date de publication",
         filterLabel: "Publication Affelnet",
       },
 
@@ -1124,7 +1124,7 @@ export const quickFiltersDefinition = [
         componentId: `affelnet_publication_auto`,
         type: "facet",
         dataField: "affelnet_publication_auto",
-        title: "Publication automatique Affelnet",
+        title: "Publication automatique",
         filterLabel: "Publication automatique Affelnet",
         sortBy: "desc",
         transformData: (data) =>
@@ -1142,6 +1142,38 @@ export const quickFiltersDefinition = [
               query: {
                 terms: {
                   affelnet_publication_auto: values.map(
+                    (value) => ({ Oui: true, Non: false, "Pas d'information": null }[value])
+                  ),
+                },
+              },
+            };
+          }
+          return {};
+        },
+      },
+
+      {
+        componentId: `affelnet_visible`,
+        type: "facet",
+        dataField: "affelnet_visible",
+        title: "Visible SLA",
+        filterLabel: "Visible SLA Affelnet",
+        sortBy: "desc",
+        transformData: (data) =>
+          data.map((d) => ({
+            ...d,
+            key: {
+              1: "Oui",
+              0: "Non",
+              null: "Pas d'information",
+            }[d.key],
+          })),
+        customQuery: (values) => {
+          if (values.length && !values.includes("Tous")) {
+            return {
+              query: {
+                terms: {
+                  affelnet_visible: values.map(
                     (value) => ({ Oui: true, Non: false, "Pas d'information": null }[value])
                   ),
                 },
