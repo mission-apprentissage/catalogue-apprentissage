@@ -75,6 +75,17 @@ const mefsFormatter = (mefs) => {
   return mefs?.map((mef) => `${mef.mef10}`).join(", ") ?? "";
 };
 
+const booleanFormatter = (value) => {
+  switch (value) {
+    case true:
+      return "OUI";
+    case false:
+      return "NON";
+    default:
+      return "";
+  }
+};
+
 const mefsExpirationFormatter = (mefs) => {
   return (
     mefs
@@ -172,14 +183,14 @@ export const columnsDefinition = [
     accessor: "etablissement_gestionnaire_certifie_qualite",
     width: 200,
     exportable: true,
-    formatter: (value) => (value ? "OUI" : "NON"),
+    formatter: booleanFormatter,
   },
   {
     Header: "Formateur certifié qualité ? ",
     accessor: "etablissement_formateur_certifie_qualite",
     width: 200,
     exportable: true,
-    formatter: (value) => (value ? "OUI" : "NON"),
+    formatter: booleanFormatter,
   },
   {
     Header: "Diplome",
@@ -210,16 +221,7 @@ export const columnsDefinition = [
     accessor: "etablissement_reference_habilite_rncp",
     width: 200,
     exportable: true,
-    formatter: (value) => {
-      switch (value) {
-        case true:
-          return "OUI";
-        case false:
-          return "NON";
-        default:
-          return "";
-      }
-    },
+    formatter: booleanFormatter,
   },
   {
     Header: "Eligible apprentissage (RNCP)",
@@ -337,7 +339,7 @@ export const columnsDefinition = [
     accessor: "affelnet_perimetre",
     width: 200,
     exportable: true,
-    formatter: (value) => (value ? "OUI" : "NON"),
+    formatter: booleanFormatter,
   },
   {
     Header: "Statut Affelnet",
@@ -358,14 +360,14 @@ export const columnsDefinition = [
     accessor: "affelnet_session",
     width: 200,
     exportable: true,
-    formatter: (value) => (value ? "OUI" : "NON"),
+    formatter: booleanFormatter,
   },
   {
     Header: "Session sur la précédente campagne Affelnet",
     accessor: "affelnet_previous_session",
     width: 200,
     exportable: true,
-    formatter: (value) => (value ? "OUI" : "NON"),
+    formatter: booleanFormatter,
   },
   {
     Header: "Information Affelnet",
@@ -407,7 +409,7 @@ export const columnsDefinition = [
     accessor: "parcoursup_perimetre",
     width: 200,
     exportable: true,
-    formatter: (value) => (value ? "OUI" : "NON"),
+    formatter: booleanFormatter,
   },
   {
     Header: "Statut Parcoursup",
@@ -428,14 +430,14 @@ export const columnsDefinition = [
     accessor: "parcoursup_session",
     width: 200,
     exportable: true,
-    formatter: (value) => (value ? "OUI" : "NON"),
+    formatter: booleanFormatter,
   },
   {
     Header: "Session sur la précédente campagne Parcoursup",
     accessor: "parcoursup_previous_session",
     width: 200,
     exportable: true,
-    formatter: (value) => (value ? "OUI" : "NON"),
+    formatter: booleanFormatter,
   },
   {
     Header: "Date du dernier envoi vers Parcoursup",

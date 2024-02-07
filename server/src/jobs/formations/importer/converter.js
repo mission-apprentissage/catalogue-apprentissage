@@ -72,48 +72,6 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
   ) {
     ({ bcn_mefs_10, affelnet_mefs_10, affelnet_infos_offre, parcoursup_mefs_10, duree_incoherente, annee_incoherente } =
       await computeMefs(fields, oldFields));
-
-    // console.debug("Compute mefs", {
-    //   cle_ministere_educatif: fields?.cle_ministere_educatif,
-
-    //   fields: {
-    //     bcn_mefs_10: fields?.bcn_mefs_10,
-    //     duree: fields?.duree,
-    //     annee: fields?.annee,
-    //     diplome: fields?.diplome,
-    //     num_academie: fields?.num_academie,
-    //     code_type_certif: fields?.rncp_details?.code_type_certif,
-    //     date_fin_validite_enregistrement: oldFields?.rncp_details?.date_fin_validite_enregistrement,
-    //     cfd_date_fermeture: fields?.cfd_date_fermeture,
-    //     date_debut: fields?.date_debut,
-    //   },
-    //   oldFields: {
-    //     bcn_mefs_10: oldFields?.bcn_mefs_10,
-    //     duree: oldFields?.duree,
-    //     annee: oldFields?.annee,
-    //     diplome: oldFields?.diplome,
-    //     num_academie: oldFields?.num_academie,
-    //     code_type_certif: oldFields?.rncp_details?.code_type_certif,
-    //     date_fin_validite_enregistrement: oldFields?.rncp_details?.date_fin_validite_enregistrement,
-    //     cfd_date_fermeture: oldFields?.cfd_date_fermeture,
-    //     date_debut: oldFields?.date_debut,
-
-    //     affelnet_mefs_10: oldFields?.affelnet_mefs_10,
-    //     affelnet_infos_offre: oldFields?.affelnet_infos_offre,
-    //     parcoursup_mefs_10: oldFields?.parcoursup_mefs_10,
-    //     duree_incoherente: oldFields?.duree_incoherente,
-    //     annee_incoherente: oldFields?.annee_incoherente,
-    //   },
-
-    //   computed: {
-    //     bcn_mefs_10,
-    //     affelnet_mefs_10,
-    //     affelnet_infos_offre,
-    //     parcoursup_mefs_10,
-    //     duree_incoherente,
-    //     annee_incoherente,
-    //   },
-    // });
   }
 
   // DISTANCE_LIEU_FORMATION_ETABLISSEMENT_FORMATEUR
@@ -171,22 +129,6 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
       console.error(e);
       lieu_formation_adresse_computed = undefined;
     }
-
-    // console.debug("Compute adresse", {
-    //   cle_ministere_educatif: fields?.cle_ministere_educatif,
-
-    //   fields: {
-    //     lieu_formation_geo_coordonnees: fields?.lieu_formation_geo_coordonnees,
-    //     lieu_formation_adresse_computed: fields?.lieu_formation_adresse_computed,
-    //   },
-    //   oldFields: {
-    //     lieu_formation_geo_coordonnees: oldFields?.lieu_formation_geo_coordonnees,
-    //     lieu_formation_adresse_computed: oldFields?.lieu_formation_adresse_computed,
-    //   },
-    //   computed: {
-    //     lieu_formation_adresse_computed,
-    //   },
-    // });
   }
 
   // GEOCOORDONNEES
@@ -216,28 +158,6 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
       console.error(e);
       lieu_formation_geo_coordonnees_computed = undefined;
     }
-
-    // console.debug("Compute geocoordonnees", {
-    //   cle_ministere_educatif: fields?.cle_ministere_educatif,
-
-    //   fields: {
-    //     lieu_formation_adresse: fields?.lieu_formation_adresse,
-    //     localite: fields?.localite,
-    //     code_postal: fields?.code_postal,
-    //     code_commune_insee: fields?.code_commune_insee,
-    //     lieu_formation_geo_coordonnees_computed: fields?.lieu_formation_geo_coordonnees_computed,
-    //   },
-    //   oldFields: {
-    //     lieu_formation_adresse: oldFields?.lieu_formation_adresse,
-    //     localite: oldFields?.localite,
-    //     code_postal: oldFields?.code_postal,
-    //     code_commune_insee: oldFields?.code_commune_insee,
-    //     lieu_formation_geo_coordonnees_computed: oldFields?.lieu_formation_geo_coordonnees_computed,
-    //   },
-    //   computed: {
-    //     lieu_formation_geo_coordonnees_computed,
-    //   },
-    // });
   }
 
   // DISTANCE
@@ -255,24 +175,6 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
     } else {
       distance = undefined;
     }
-
-    // console.debug("Compute distance", {
-    //   cle_ministere_educatif: fields?.cle_ministere_educatif,
-
-    //   fields: {
-    //     lieu_formation_geo_coordonnees: fields.lieu_formation_geo_coordonnees,
-    //     distance: fields.distance,
-    //     lieu_formation_geo_coordonnees_computed: lieu_formation_geo_coordonnees_computed,
-    //   },
-    //   oldFields: {
-    //     lieu_formation_geo_coordonnees: oldFields?.lieu_formation_geo_coordonnees,
-    //     distance: oldFields?.distance,
-    //     lieu_formation_geo_coordonnees_computed: oldFields?.lieu_formation_geo_coordonnees_computed,
-    //   },
-    //   computed: {
-    //     distance,
-    //   },
-    // });
   }
 
   let partenaires = [];
@@ -313,6 +215,27 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
       ).length === 0
     : null;
 
+  // Les MEF permettant une intégration SLA :
+  // [3 premiers caractères]..[2 derniers caractères]
+  // 247..31
+  // 276..31
+  // 241..21
+  // 242..31
+  // 271..21
+  const affelnet_visible =
+    [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.EN_ATTENTE].includes(oldFields?.affelnet_statut) &&
+    !!affelnet_mefs_10.filter((mef) => {
+      return (
+        (mef.mef10.startsWith("247") && mef.mef10.endsWith("31")) ||
+        (mef.mef10.startsWith("276") && mef.mef10.endsWith("31")) ||
+        (mef.mef10.startsWith("241") && mef.mef10.endsWith("21")) ||
+        (mef.mef10.startsWith("242") && mef.mef10.endsWith("31")) ||
+        (mef.mef10.startsWith("271") && mef.mef10.endsWith("21"))
+      );
+    }).length;
+
+  const parcoursup_visible = [PARCOURSUP_STATUS.PUBLIE].includes(oldFields?.parcoursup_statut);
+
   const nouvelle_fiche =
     !oldFields ||
     new Date(oldFields?.created_at).getTime() >= getCampagneStartDate().getTime() - 365 * 24 * 60 * 60 * 1000;
@@ -342,6 +265,8 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
 
     parcoursup_publication_auto,
     affelnet_publication_auto,
+    parcoursup_visible,
+    affelnet_visible,
 
     nouvelle_fiche,
   };

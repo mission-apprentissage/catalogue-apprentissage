@@ -3,34 +3,12 @@ const { isValideUAI } = require("@mission-apprentissage/tco-service-node");
 const etablissementFormateurInfo = require("./etablissement.formateur.sub");
 const etablissementGestionnaireInfo = require("./etablissement.gestionnaire.sub");
 const etablissementReferenceInfo = require("./etablissement.reference.sub");
+const { affelnetSchema } = require("./affelnet");
+const { parcoursupSchema } = require("./parcoursup");
 const { rncpFormat } = require("../../format");
 const { rncpDetailsSchema } = require("./rncpDetails/rncpDetails");
 const { mefSchema } = require("./mef");
-const { PARCOURSUP_STATUS, AFFELNET_STATUS } = require("../../../../constants/status");
-
-const statutReinitialisationSchema = new mongoose.Schema(
-  {
-    user: {
-      type: String,
-      default: null,
-      description: "Utilisateur ayant effectué la réinitialisation",
-    },
-    date: {
-      type: Date,
-      default: null,
-      description: "Date à laquelle la réinitialisation a été effectuée",
-    },
-    comment: {
-      type: String,
-      default: null,
-      description: "Motif de la réinitialisation",
-    },
-  },
-  {
-    _id: false,
-    timestamps: false,
-  }
-);
+const { statutReinitialisationSchema } = require("./statutReinitialisation");
 
 const updateHistorySchema = new mongoose.Schema(
   {
@@ -552,174 +530,10 @@ const formationSchema = {
   ...etablissementReferenceInfo,
 
   // PARCOURSUP
-
-  parcoursup_perimetre: {
-    type: Boolean,
-    default: false,
-    description: "Dans le périmètre parcoursup",
-  },
-  parcoursup_session: {
-    type: Boolean,
-    default: false,
-    description: "Possède une date de début durant la prochaine session Parcoursup",
-  },
-  parcoursup_previous_session: {
-    type: Boolean,
-    default: false,
-    description: "Possède une date de début durant la précédente session Parcoursup",
-  },
-  parcoursup_statut: {
-    type: String,
-    enum: Object.values(PARCOURSUP_STATUS),
-    default: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
-    description: "Statut parcoursup",
-  },
-  parcoursup_previous_statut: {
-    type: String,
-    enum: Object.values(PARCOURSUP_STATUS),
-    default: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
-    description: "Statut parcoursup à la fin de la précédente campagne",
-  },
-  parcoursup_statut_history: {
-    type: [Object],
-    default: [],
-    description: "Parcoursup : historique des statuts",
-    noIndex: true,
-  },
-  parcoursup_error: {
-    type: String,
-    default: null,
-    description: "Erreur lors de la création de la formation sur ParcourSup (via le WS)",
-  },
-  parcoursup_id: {
-    index: true,
-    type: String,
-    default: null,
-    description: "identifiant Parcoursup de la formation (g_ta_cod)",
-  },
-  parcoursup_published_date: {
-    type: Date,
-    default: null,
-    description: 'Date de publication (passage au statut "publié")',
-  },
-  parcoursup_export_date: {
-    type: Date,
-    default: null,
-    description: "Date de la dernière tentative d'export vers Parcoursup",
-  },
-  parcoursup_raison_depublication: {
-    type: String,
-    default: null,
-    description: "Parcoursup : raison de dépublication",
-  },
-  parcoursup_mefs_10: {
-    type: [mefSchema],
-    default: [],
-    description: "Tableau de Code MEF 10 caractères et modalités (filtrés pour Parcoursup si applicable)",
-  },
-  parcoursup_statut_reinitialisation: {
-    type: statutReinitialisationSchema,
-    default: null,
-    description: "Statut parcoursup",
-  },
-  parcoursup_publication_auto: {
-    type: Boolean || null,
-    default: null,
-    description: "Parcoursup : publication auto",
-  },
+  ...parcoursupSchema,
 
   // AFFELNET
-  affelnet_perimetre: {
-    type: Boolean,
-    default: false,
-    description: "Dans le périmètre Affelnet",
-  },
-  affelnet_session: {
-    type: Boolean,
-    default: false,
-    description: "Possède une date de début durant la prochaine session Affelnet",
-  },
-  affelnet_previous_session: {
-    type: Boolean,
-    default: false,
-    description: "Possède une date de début durant la précédente session Affelnet",
-  },
-  affelnet_statut: {
-    type: String,
-    enum: Object.values(AFFELNET_STATUS),
-    default: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
-    description: "Statut affelnet",
-  },
-  affelnet_previous_statut: {
-    type: String,
-    enum: Object.values(AFFELNET_STATUS),
-    default: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
-    description: "Statut affelnet à la fin de la précédente campagne",
-  },
-  affelnet_statut_history: {
-    type: [Object],
-    default: [],
-    description: "Affelnet : historique des statuts",
-    noIndex: true,
-  },
-  affelnet_id: {
-    index: true,
-    type: String,
-    default: null,
-    description: "identifiant Affelnet de la formation (code vœu)",
-  },
-  affelnet_published_date: {
-    type: Date,
-    default: null,
-    description: 'Date de publication (passage au statut "publié")',
-  },
-  affelnet_infos_offre: {
-    type: String,
-    default: null,
-    description: "Affelnet : Informations offre de formation",
-  },
-  affelnet_url_infos_offre: {
-    type: String,
-    default: null,
-    description: "Affelnet : Libellé ressource complémentaire",
-  },
-  affelnet_modalites_offre: {
-    type: String,
-    default: null,
-    description: "Affelnet : Modalités particulières",
-  },
-  affelnet_url_modalites_offre: {
-    type: String,
-    default: null,
-    description: "Affelnet : Lien vers la ressource",
-  },
-  affelnet_code_nature: {
-    type: String,
-    default: null,
-    description: "Affelnet : code nature de l'établissement de formation",
-  },
-  affelnet_secteur: {
-    type: String,
-    enum: ["PR", "PU", null],
-    default: null,
-    description: "Affelnet : type d'établissement (PR: Privé / PU: Public)",
-  },
-  affelnet_raison_depublication: {
-    type: String,
-    default: null,
-    description: "Affelnet : raison de dépublication",
-  },
-  affelnet_mefs_10: {
-    type: [mefSchema],
-    default: [],
-    description: "Tableau de Code MEF 10 caractères et modalités (filtrés pour Affelnet si applicable)",
-  },
-
-  affelnet_publication_auto: {
-    type: Boolean || null,
-    default: null,
-    description: "Affelnet : publication auto",
-  },
+  ...affelnetSchema,
 };
 
 module.exports = formationSchema;
