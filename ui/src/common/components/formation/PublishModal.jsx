@@ -4,7 +4,6 @@ import {
   Button,
   Flex,
   FormControl,
-  FormHelperText,
   FormErrorMessage,
   FormLabel,
   Modal,
@@ -250,10 +249,13 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
       affelnet_raison_depublication: isAffelnetUnpublishFormOpen
         ? Yup.string().nullable().required("Veuillez saisir la raison.")
         : Yup.string().nullable(),
-      uai_formation: Yup.string()
-        .min(8)
-        .max(8)
-        .required("L’UAI du lieu de formation doit obligatoirement être édité pour permettre la publication."),
+      uai_formation:
+        isParcoursupUnpublishFormOpen || isAffelnetUnpublishFormOpen
+          ? Yup.string().min(8).max(8).nullable()
+          : Yup.string()
+              .min(8)
+              .max(8)
+              .required("L’UAI du lieu de formation doit obligatoirement être édité pour permettre la publication."),
       parcoursup_raison_depublication: isParcoursupUnpublishFormOpen
         ? Yup.string().nullable().required("Veuillez saisir la raison.")
         : Yup.string().nullable(),
