@@ -90,6 +90,12 @@ const rncpDetailsSchema = new mongoose.Schema(
       default: false,
       description: "Code rncp périmé (date fin enregistrement avant le 31 aout de l'année courante)",
     },
+
+    type_enregistrement: {
+      type: String,
+      default: null,
+      description: "Type d'enregistrement (issue de FranceCompétences)",
+    },
   },
   { _id: false }
 );

@@ -8,7 +8,6 @@ const { parcoursupSchema } = require("./parcoursup");
 const { rncpFormat } = require("../../format");
 const { rncpDetailsSchema } = require("./rncpDetails/rncpDetails");
 const { mefSchema } = require("./mef");
-const { statutReinitialisationSchema } = require("./statutReinitialisation");
 
 const updateHistorySchema = new mongoose.Schema(
   {
@@ -522,6 +521,12 @@ const formationSchema = {
     type: Boolean,
     default: false,
     description: "Nouvelle fiche",
+  },
+
+  CI_inscrit_rncp: {
+    type: String,
+    default: null,
+    description: "Type d'enregistrement (issue de CertifInfo)",
   },
 
   // Etablissements

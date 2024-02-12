@@ -395,6 +395,12 @@ const formationSchema = {
     description: "Objectif (LBA)",
   },
 
+  CI_inscrit_rncp: {
+    type: String,
+    default: null,
+    description: "Type d'enregistrement (issue de CertifInfo)",
+  },
+
   contenu: {
     type: String,
     default: null,

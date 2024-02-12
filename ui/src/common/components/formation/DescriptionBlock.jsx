@@ -134,6 +134,24 @@ export const DescriptionBlock = ({ formation }) => {
             </Text>{" "}
             <InfoTooltip description={helpText.formation.niveau} />
           </Text>
+
+          <Text mb={4}>
+            Type de certification (donnée issue de Certif Info) :{" "}
+            <Text as="span" variant="highlight">
+              {formation.CI_inscrit_rncp}
+            </Text>{" "}
+          </Text>
+          <Text mb={4}>
+            Type de certification (donnée issue de France compétences) :{" "}
+            <Text as="span" variant="highlight">
+              {formation.rncp_details?.type_enregistrement}
+            </Text>{" "}
+          </Text>
+          <Text mb={4}>
+            La date de validité de la certification est contrôlée sur le{" "}
+            {formation.rncp_details?.type_enregistrement === "Enregistrement de droit" ? <>code RNCP</> : <>CFD</>}
+          </Text>
+
           <CfdContainer>
             <Text mb={!isTitreRNCP && isCfdExpired ? 0 : 4}>
               Code diplôme (Éducation Nationale) :{" "}
@@ -513,10 +531,10 @@ export const DescriptionBlock = ({ formation }) => {
                           Aucune habilitation sur la fiche pour ce SIRET.
                         </Text>
                         <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
-                          Le Siret du formateur ne figure pas dans le liste des partenaires habilités enregistrés auprès
-                          de France compétences. S’il s’agit d’une erreur, inviter le certificateur à faire modifier les
-                          enregistrements auprès de France compétences. La modification prendra effet sur le catalogue à
-                          J+1.
+                          Le Siret de l’organisme formateur ou responsable ne figure pas dans le liste des partenaires
+                          habilités enregistrés auprès de France compétences. S’il s’agit d’une erreur, inviter le
+                          certificateur à faire modifier les enregistrements auprès de France compétences. La
+                          modification prendra effet sur le catalogue à J+1.
                         </Text>
                       </Box>
                     )}

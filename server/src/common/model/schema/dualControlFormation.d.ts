@@ -82,6 +82,10 @@ export type RncpDetails = {
    * Code rncp périmé (date fin enregistrement avant le 31 aout de l'année courante)
    */
   rncp_outdated?: boolean;
+  /**
+   * Type d'enregistrement (issue de FranceCompétences)
+   */
+  type_enregistrement?: string | null;
 } | null;
 /**
  * Données pour étude France Compétence
@@ -332,6 +336,10 @@ export interface DualControlFormation {
    * Objectif (LBA)
    */
   objectif?: string | null;
+  /**
+   * Type d'enregistrement (issue de CertifInfo)
+   */
+  CI_inscrit_rncp?: string | null;
   /**
    * Identifiant (LBA)
    */

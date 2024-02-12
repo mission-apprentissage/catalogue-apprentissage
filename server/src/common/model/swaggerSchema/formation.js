@@ -261,6 +261,10 @@ module.exports = {
             type: "boolean",
             description: "Code rncp périmé (date fin enregistrement avant le 31 aout de l'année courante)",
           },
+          type_enregistrement: {
+            type: "string",
+            description: "Type d'enregistrement (issue de FranceCompétences)",
+          },
         },
       },
       rome_codes: {
@@ -550,6 +554,14 @@ module.exports = {
       siret_actif: {
         type: "string",
         description: "Badge siret actif/inactif",
+      },
+      nouvelle_fiche: {
+        type: "boolean",
+        description: "Nouvelle fiche",
+      },
+      CI_inscrit_rncp: {
+        type: "string",
+        description: "Type d'enregistrement (issue de CertifInfo)",
       },
       etablissement_gestionnaire_id: {
         type: "string",
@@ -900,6 +912,10 @@ module.exports = {
         type: "boolean",
         description: "Parcoursup : publication auto",
       },
+      parcoursup_visible: {
+        type: "boolean",
+        description: "Parcoursup : visible",
+      },
       affelnet_perimetre: {
         type: "boolean",
         description: "Dans le périmètre Affelnet",
@@ -1014,6 +1030,10 @@ module.exports = {
       affelnet_publication_auto: {
         type: "boolean",
         description: "Affelnet : publication auto",
+      },
+      affelnet_visible: {
+        type: "boolean",
+        description: "Affelnet : visible",
       },
       _id: {
         type: "string",

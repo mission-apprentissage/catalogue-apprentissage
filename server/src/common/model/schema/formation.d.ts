@@ -82,6 +82,10 @@ export type RncpDetails = {
    * Code rncp périmé (date fin enregistrement avant le 31 aout de l'année courante)
    */
   rncp_outdated?: boolean;
+  /**
+   * Type d'enregistrement (issue de FranceCompétences)
+   */
+  type_enregistrement?: string | null;
 } | null;
 /**
  * Cause du rejet de publication
@@ -438,6 +442,14 @@ export interface Formation {
    */
   siret_actif?: string | null;
   /**
+   * Nouvelle fiche
+   */
+  nouvelle_fiche?: boolean;
+  /**
+   * Type d'enregistrement (issue de CertifInfo)
+   */
+  CI_inscrit_rncp?: string | null;
+  /**
    * Identifiant établissement gestionnaire
    */
   etablissement_gestionnaire_id?: string | null;
@@ -731,6 +743,10 @@ export interface Formation {
    */
   parcoursup_publication_auto?: boolean | null;
   /**
+   * Parcoursup : visible
+   */
+  parcoursup_visible?: boolean;
+  /**
    * Dans le périmètre Affelnet
    */
   affelnet_perimetre?: boolean;
@@ -810,6 +826,10 @@ export interface Formation {
    * Affelnet : publication auto
    */
   affelnet_publication_auto?: boolean | null;
+  /**
+   * Affelnet : visible
+   */
+  affelnet_visible?: boolean;
   _id?: Types.ObjectId;
   updated_at?: Date;
   created_at?: Date;
