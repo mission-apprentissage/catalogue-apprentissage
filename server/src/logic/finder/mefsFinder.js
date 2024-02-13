@@ -4,6 +4,7 @@ const { asyncForEach } = require("../../common/utils/asyncUtils");
 const { findMefsForParcoursup } = require("../../common/utils/parcoursupUtils");
 const { getQueryFromRule } = require("../../common/utils/rulesUtils");
 const { AFFELNET_STATUS } = require("../../constants/status");
+const logger = require("../../common/logger");
 
 const getInfosOffreLabel = (formation, mef) => {
   return `${formation.libelle_court} en ${mef.modalite.duree} an${Number(mef.modalite.duree) > 1 ? "s" : ""}`;
@@ -13,14 +14,19 @@ const completeDateFermetureMefs = async (mefs) => {
   const Models = await getModels();
   return await Promise.all(
     mefs.map(async (mef) => {
-      const { DATE_FERMETURE } = await Models.BcnNMef.findOne({ MEF: mef.mef10 });
+      try {
+        const { DATE_FERMETURE } = await Models.BcnNMef.findOne({ MEF: mef.mef10 });
 
-      const dateParts = DATE_FERMETURE?.split("/");
+        const dateParts = DATE_FERMETURE?.split("/");
 
-      return {
-        ...mef,
-        date_fermeture: DATE_FERMETURE ? new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]) : null,
-      };
+        return {
+          ...mef,
+          date_fermeture: DATE_FERMETURE ? new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]) : null,
+        };
+      } catch (error) {
+        logger.error({ type: "logic" }, `${mef.mef10} not found in BcnNMef`);
+        return mef;
+      }
     })
   );
 };
@@ -38,6 +44,7 @@ const findMefsForAffelnet = async (rules) => {
 };
 
 const computeMefs = async (fields, oldFields) => {
+  logger.debug({ type: "logic" }, `computeMefs`);
   let bcn_mefs_10 = fields.bcn_mefs_10;
   let affelnet_mefs_10 = [];
   let affelnet_infos_offre = oldFields?.affelnet_infos_offre;
@@ -138,6 +145,18 @@ const computeMefs = async (fields, oldFields) => {
   bcn_mefs_10 = await completeDateFermetureMefs(bcn_mefs_10);
   affelnet_mefs_10 = await completeDateFermetureMefs(affelnet_mefs_10);
   parcoursup_mefs_10 = await completeDateFermetureMefs(parcoursup_mefs_10);
+
+  logger.debug(
+    { type: "logic" },
+    {
+      bcn_mefs_10,
+      affelnet_mefs_10,
+      affelnet_infos_offre,
+      parcoursup_mefs_10,
+      duree_incoherente,
+      annee_incoherente,
+    }
+  );
 
   return {
     bcn_mefs_10,

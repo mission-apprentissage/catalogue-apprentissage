@@ -13,7 +13,7 @@ const formationsJobs = async () => {
       logger.debug("Import RCO enabled, starting...");
       await importer({ forceRecompute: isSunday() });
     } else {
-      console.log("Import RCO disabled, skipping...");
+      logger.debug("Import RCO disabled, skipping...");
     }
 
     logger.info({ type: "job" }, "FORMATIONS JOBS : ✅");

@@ -1,3 +1,5 @@
+const logger = require("../logger");
+
 /**
  * Retourne le premier jour du dernier mois correspondant au paramètre.
  *
@@ -35,6 +37,8 @@ const isSunday = (date) => {
   if (!date) {
     date = new Date();
   }
+
+  logger.debug({ type: "utils" }, { isSunday: date.getDay() === 6 });
 
   return date.getDay() === 6;
 };

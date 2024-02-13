@@ -45,7 +45,7 @@ const computeRelationFields = async (fields) => {
 const recomputeFields = async (fields, oldFields, { forceRecompute = false } = { forceRecompute: false }) => {
   // MEFS & PLATEFORMES
 
-  let bcn_mefs_10 = fields?.bcn_mefs_10 ?? [],
+  let bcn_mefs_10 = oldFields?.bcn_mefs_10 ?? [],
     affelnet_mefs_10 = oldFields?.affelnet_mefs_10 ?? [],
     affelnet_infos_offre = oldFields?.affelnet_infos_offre,
     parcoursup_mefs_10 = oldFields?.parcoursup_mefs_10 ?? [],
@@ -384,7 +384,11 @@ const applyConversion = async (
 };
 
 const converter = async (
-  { forceRecompute = false, skip = 0, filter = {} } = { forceRecompute: false, skip: 0, filter: {} }
+  { forceRecompute = false, skip = 0, filter = {} } = {
+    forceRecompute: false,
+    skip: 0,
+    filter: {},
+  }
 ) => {
   let error = null;
   try {
