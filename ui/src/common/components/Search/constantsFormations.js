@@ -672,10 +672,24 @@ export const columnsDefinition = [
     exportable: true,
   },
   {
+    Header: "Parcoursup: Visible moteur de recherche",
+    accessor: "parcoursup_visible",
+    width: 200,
+    exportable: true,
+    formatter: booleanFormatter,
+  },
+  {
     Header: "affelnet_id (code vœu)",
     accessor: "affelnet_id",
     width: 200,
     exportable: true,
+  },
+  {
+    Header: "Affelnet: Visible SLA",
+    accessor: "affelnet_visible",
+    width: 200,
+    exportable: true,
+    formatter: booleanFormatter,
   },
   {
     Header: "Partenaires",
