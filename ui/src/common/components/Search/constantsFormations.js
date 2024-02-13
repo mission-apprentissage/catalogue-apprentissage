@@ -242,14 +242,46 @@ export const columnsDefinition = [
     accessor: "rncp_details",
     width: 200,
     exportable: true,
-    formatter: (value) => value?.active_inactive,
+    formatter: (value) => escapeDiacritics(value?.active_inactive),
   },
   {
     Header: "code_type_certif",
     accessor: "rncp_details",
     width: 200,
     exportable: true,
-    formatter: (value) => value?.code_type_certif,
+    formatter: (value) => escapeDiacritics(value?.code_type_certif),
+  },
+
+  {
+    Header: "Type d'enregistrement (issue de Certif Info)",
+    accessor: "CI_inscrit_rncp",
+    width: 200,
+    exportable: true,
+    formatter: escapeDiacritics,
+  },
+
+  {
+    Header: "Type d'enregistrement (issue de France Compétences)",
+    accessor: "rncp_details",
+    width: 200,
+    exportable: true,
+    formatter: (value) => value?.type_enregistrement,
+  },
+  {
+    Header: "Date d'expiration vérifiée par rapport au",
+    accessor: "rncp_details",
+    width: 200,
+    exportable: true,
+    formatter: (value) => {
+      switch (value) {
+        case "Enregistrement de droit":
+          return "CFD";
+        case "Enregistrement sur demande":
+          return "RNCP";
+        default:
+          return "";
+      }
+    },
   },
   {
     Header: "type_certif",
@@ -785,7 +817,7 @@ export const columnsDefinition = [
     accessor: "nouvelle_fiche",
     width: 200,
     exportable: true,
-    formatter: (value) => (value ? "Oui" : "Non"),
+    formatter: booleanFormatter,
   },
 ];
 

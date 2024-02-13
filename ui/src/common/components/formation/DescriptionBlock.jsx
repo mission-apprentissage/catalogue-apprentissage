@@ -149,7 +149,7 @@ export const DescriptionBlock = ({ formation }) => {
           </Text>
           <Text mb={4}>
             La date de validité de la certification est contrôlée sur le{" "}
-            {formation.rncp_details?.type_enregistrement === "Enregistrement de droit" ? <>code RNCP</> : <>CFD</>}
+            {formation.rncp_details?.type_enregistrement === "Enregistrement de droit" ? <>CFD</> : <>code RNCP</>}
           </Text>
 
           <CfdContainer>
