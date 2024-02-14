@@ -473,7 +473,7 @@ export default () => {
       try {
         setLoading(true);
         // FIXME select={"__v" :0} hack to get updates_history
-        const formation = await _get(`${CATALOGUE_API}/entity/formation/${id}?select={"__v":0}`);
+        const formation = await _get(`${CATALOGUE_API}/entity/formation/${encodeURIComponent(id)}?select={"__v":0}`);
 
         if (!mountedRef.current) return null;
         // don't display archived formations

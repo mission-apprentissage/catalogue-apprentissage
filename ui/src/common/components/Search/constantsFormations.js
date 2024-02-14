@@ -268,7 +268,7 @@ export const columnsDefinition = [
     formatter: (value) => value?.type_enregistrement,
   },
   {
-    Header: "Date d'expiration vérifiée par rapport au",
+    Header: "Date d’expiration vérifiée sur le code",
     accessor: "rncp_details",
     width: 200,
     exportable: true,

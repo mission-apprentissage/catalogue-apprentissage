@@ -251,12 +251,17 @@ module.exports = () => {
       const sanitizedParams = sanitize(req.params);
       const itemId = sanitizedParams.id;
       try {
-        const retrievedData = await Etablissement.findById(itemId);
-        if (retrievedData) {
-          res.json(retrievedData);
-        } else {
-          res.status(404).json({ message: `Etablissement ${itemId} doesn't exist` });
+        const retrievedDataBySIRET = await Etablissement.findOne({ siret: itemId }).lean();
+        if (retrievedDataBySIRET) {
+          return res.json(retrievedDataBySIRET);
         }
+
+        const retrievedDataById = await Etablissement.findById(itemId).lean();
+        if (retrievedDataById) {
+          return res.json(retrievedDataById);
+        }
+
+        res.status(404).json({ message: `Etablissement ${itemId} doesn't exist` });
       } catch (e) {
         res.status(404).json({ message: `Etablissement ${itemId} doesn't exist` });
       }
