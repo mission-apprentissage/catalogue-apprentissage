@@ -253,7 +253,7 @@ export const columnsDefinition = [
   },
 
   {
-    Header: "Type d'enregistrement (issue de Certif Info)",
+    Header: "Type d'enregistrement (issu de Certif Info)",
     accessor: "CI_inscrit_rncp",
     width: 200,
     exportable: true,
@@ -261,7 +261,7 @@ export const columnsDefinition = [
   },
 
   {
-    Header: "Type d'enregistrement (issue de France Compétences)",
+    Header: "Type d'enregistrement (issu de France Compétences)",
     accessor: "rncp_details",
     width: 200,
     exportable: true,
@@ -273,7 +273,7 @@ export const columnsDefinition = [
     width: 200,
     exportable: true,
     formatter: (value) => {
-      switch (value) {
+      switch (value?.type_enregistrement) {
         case "Enregistrement de droit":
           return "CFD";
         case "Enregistrement sur demande":
