@@ -180,6 +180,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
             description: `La règle "${name}" a été mise à jour`,
             status: "success",
             duration: 5000,
+            isClosable: true,
           });
         } else {
           if (!academie) {
@@ -223,6 +224,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
             description: `La règle "${name}" a été créée`,
             status: "success",
             duration: 5000,
+            isClosable: true,
           });
         }
 
@@ -599,6 +601,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                             description: `La règle "${nom_regle_complementaire}" a été supprimée`,
                             status: "success",
                             duration: 5000,
+                            isClosable: true,
                           });
                           close();
                         }
