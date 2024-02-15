@@ -154,7 +154,7 @@ export const DescriptionBlock = ({ formation }) => {
 
           <CfdContainer>
             <Text mb={!isTitreRNCP && isCfdExpired ? 0 : 4}>
-              Code diplôme (Éducation Nationale) :{" "}
+              Code formation diplôme (CFD) :{" "}
               <Text as="span" variant="highlight">
                 {formation.cfd}{" "}
                 {formation.cfd_date_fermeture
