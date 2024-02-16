@@ -540,6 +540,12 @@ const formationSchema = {
     description: "Remplace la clé ME",
   },
 
+  agriculture: {
+    type: Boolean,
+    default: null,
+    description: "La formation relève du ministère de l'agriculture",
+  },
+
   // Etablissements
   ...etablissementGestionnaireInfo,
   ...etablissementFormateurInfo,

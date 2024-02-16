@@ -71,6 +71,7 @@ export const allowedFilters = [
   "last_statut_update_date_start",
   "last_statut_update_date_end",
   "nouvelle_fiche",
+  "agriculture",
 ];
 
 const mefsFormatter = (mefs) => {
@@ -898,7 +899,36 @@ export const quickFiltersDefinition = [
     selectAllLabel: "Toutes les académies",
     sortBy: "asc",
   },
-
+  {
+    componentId: `agriculture`,
+    type: "facet",
+    dataField: "agriculture",
+    title: "Formations agricoles",
+    filterLabel: "Formations agricoles",
+    selectAllLabel: "Toutes les formations",
+    sortBy: "asc",
+    transformData: (data) =>
+      data.map((d) => ({
+        ...d,
+        key: {
+          1: "Oui",
+          0: "Non",
+          null: "Pas d'information",
+        }[d.key],
+      })),
+    customQuery: (values) => {
+      if (values.length && !values.includes("Tous")) {
+        return {
+          query: {
+            terms: {
+              agriculture: values.map((value) => ({ Oui: true, Non: false, "Pas d'information": null }[value])),
+            },
+          },
+        };
+      }
+      return {};
+    },
+  },
   { type: "divider" },
 
   {

@@ -44,7 +44,7 @@ const findMefsForAffelnet = async (rules) => {
 };
 
 const computeMefs = async (fields, oldFields) => {
-  logger.debug({ type: "logic" }, `computeMefs`);
+  // logger.debug({ type: "logic" }, `computeMefs`);
   let bcn_mefs_10 = fields.bcn_mefs_10;
   let affelnet_mefs_10 = [];
   let affelnet_infos_offre = oldFields?.affelnet_infos_offre;
@@ -146,17 +146,17 @@ const computeMefs = async (fields, oldFields) => {
   affelnet_mefs_10 = await completeDateFermetureMefs(affelnet_mefs_10);
   parcoursup_mefs_10 = await completeDateFermetureMefs(parcoursup_mefs_10);
 
-  logger.debug(
-    { type: "logic" },
-    {
-      bcn_mefs_10,
-      affelnet_mefs_10,
-      affelnet_infos_offre,
-      parcoursup_mefs_10,
-      duree_incoherente,
-      annee_incoherente,
-    }
-  );
+  // logger.debug(
+  //   { type: "logic" },
+  //   {
+  //     bcn_mefs_10,
+  //     affelnet_mefs_10,
+  //     affelnet_infos_offre,
+  //     parcoursup_mefs_10,
+  //     duree_incoherente,
+  //     annee_incoherente,
+  //   }
+  // );
 
   return {
     bcn_mefs_10,

@@ -223,7 +223,9 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
   // 242..31
   // 271..21
   const affelnet_visible =
-    [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.EN_ATTENTE].includes(oldFields?.affelnet_statut) &&
+    [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.EN_ATTENTE, AFFELNET_STATUS.A_PUBLIER].includes(
+      oldFields?.affelnet_statut
+    ) &&
     !!affelnet_mefs_10.filter((mef) => {
       return (
         (mef.mef10.startsWith("247") && mef.mef10.endsWith("31")) ||
@@ -239,6 +241,9 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
   const nouvelle_fiche =
     !oldFields ||
     new Date(oldFields?.created_at).getTime() >= getCampagneStartDate().getTime() - 365 * 24 * 60 * 60 * 1000;
+
+  // Les formations relevant du ministère de l'agriculture sont celles dont le code CFD comporte un 3 en 3ème position.
+  const agriculture = !!fields?.cfd?.match(/..3.*/);
 
   return {
     ...fields,
@@ -269,6 +274,8 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
     affelnet_visible,
 
     nouvelle_fiche,
+
+    agriculture,
   };
 };
 
