@@ -833,6 +833,21 @@ export const columnsDefinition = [
     exportable: true,
     formatter: booleanFormatter,
   },
+
+  {
+    Header: "Remplace la clé ME",
+    accessor: "cle_me_remplace",
+    width: 200,
+    exportable: true,
+    formatter: escapeDiacritics,
+  },
+  {
+    Header: "Est remplacée par la clé ME",
+    accessor: "cle_me_remplace_par",
+    width: 200,
+    exportable: true,
+    formatter: escapeDiacritics,
+  },
 ];
 
 /**
