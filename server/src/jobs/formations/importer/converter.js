@@ -243,7 +243,7 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
     new Date(oldFields?.created_at).getTime() >= getCampagneStartDate().getTime() - 365 * 24 * 60 * 60 * 1000;
 
   // Les formations relevant du ministère de l'agriculture sont celles dont le code CFD comporte un 3 en 3ème position.
-  const agriculture = !!fields?.cfd?.match(/..3.*/);
+  const agriculture = !!fields?.cfd?.match(/^..3.*/);
 
   return {
     ...fields,
