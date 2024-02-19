@@ -362,7 +362,7 @@ export const columnsDefinition = [
   },
 
   {
-    Header: "Distance entre lieu et formateur",
+    Header: "Lieu: Distance entre lieu et formateur",
     accessor: "distance_lieu_formation_etablissement_formateur",
     width: 200,
     exportable: true,
@@ -696,14 +696,14 @@ export const columnsDefinition = [
    * Périmètre Parcoursup
    */
   {
-    Header: "Parcoursup périmètre",
+    Header: "Parcoursup: périmètre",
     accessor: "parcoursup_perimetre",
     width: 200,
     exportable: true,
     formatter: booleanFormatter,
   },
   {
-    Header: "Parcoursup statut",
+    Header: "Parcoursup: statut",
     accessor: "parcoursup_statut",
     width: 200,
     exportable: true,
@@ -718,56 +718,56 @@ export const columnsDefinition = [
   //     formatter: booleanFormatter,
   //   },
   {
-    Header: "Parcoursup statut sur la précédente campagne",
+    Header: "Parcoursup: statut sur la précédente campagne",
     accessor: "parcoursup_previous_statut",
     width: 200,
     exportable: true,
     formatter: escapeDiacritics,
   },
   {
-    Header: "Parcoursup session sur la campagne actuelle",
+    Header: "Parcoursup: session sur la campagne actuelle",
     accessor: "parcoursup_session",
     width: 200,
     exportable: true,
     formatter: booleanFormatter,
   },
   {
-    Header: "Parcoursup session sur la précédente campagne",
+    Header: "Parcoursup: session sur la précédente campagne",
     accessor: "parcoursup_previous_session",
     width: 200,
     exportable: true,
     formatter: booleanFormatter,
   },
   {
-    Header: "Parcoursup date du dernier envoi",
+    Header: "Parcoursup: date du dernier envoi",
     accessor: "parcoursup_export_date",
     width: 200,
     exportable: true,
     formatter: (value) => (value ? new Date(value).toLocaleDateString("fr-FR") : ""),
   },
   {
-    Header: "Parcoursup motif de non publication",
+    Header: "Parcoursup: motif de non publication",
     accessor: "parcoursup_raison_depublication",
     width: 200,
     exportable: true,
     formatter: escapeDiacritics,
   },
   {
-    Header: "Parcoursup motif de rejet webservice",
+    Header: "Parcoursup: motif de rejet webservice",
     accessor: "parcoursup_error",
     width: 200,
     exportable: true,
     formatter: escapeDiacritics,
   },
   {
-    Header: "Parcoursup motif de réinitialisation Moss",
+    Header: "Parcoursup: motif de réinitialisation Moss",
     accessor: "parcoursup_statut_reinitialisation",
     width: 200,
     exportable: true,
     formatter: (value) => escapeDiacritics(value?.comment),
   },
   {
-    Header: "Parcoursup date de réinitialisation Moss",
+    Header: "Parcoursup: date de réinitialisation Moss",
     accessor: "parcoursup_statut_reinitialisation",
     width: 200,
     exportable: true,
@@ -779,7 +779,7 @@ export const columnsDefinition = [
    */
 
   {
-    Header: "Nouvelle fiche",
+    Header: "Offre: Nouvelle fiche",
     accessor: "nouvelle_fiche",
     width: 200,
     exportable: true,
@@ -787,7 +787,7 @@ export const columnsDefinition = [
   },
 
   {
-    Header: "Dates de formation",
+    Header: "Offre: Dates de formation",
     accessor: "date_debut",
     width: 200,
     exportable: true,
@@ -813,28 +813,28 @@ export const columnsDefinition = [
     },
   },
   {
-    Header: "Tags",
+    Header: "Offre: Tags",
     accessor: "tags",
     width: 200,
     exportable: true,
     formatter: (tags) => tags?.sort((a, b) => a - b),
   },
   {
-    Header: "Capacite",
+    Header: "Offre: Capacite",
     accessor: "capacite",
     width: 200,
     exportable: true,
   },
 
   {
-    Header: "Remplace la clé ME",
+    Header: "Offre: Remplace la clé ME",
     accessor: "cle_me_remplace",
     width: 200,
     exportable: true,
     formatter: escapeDiacritics,
   },
   {
-    Header: "Est remplacée par la clé ME",
+    Header: "Offre: Est remplacée par la clé ME",
     accessor: "cle_me_remplace_par",
     width: 200,
     exportable: true,
