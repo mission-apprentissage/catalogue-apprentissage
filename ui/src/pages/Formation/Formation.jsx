@@ -78,16 +78,22 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
   } = useDisclosure();
 
   const UaiFormationContainer =
+    // uai_formation non renseigné
     !formation.uai_formation ||
+    // uai_formation non valide
     !formation.uai_formation_valide ||
+    // tentative d'édition alors que la formation est déjà importée dans Affelnet
     (isEditingUai && formation?.affelnet_statut === AFFELNET_STATUS.PUBLIE) ||
-    (formation.uai_formation === formation.editedFields?.uai_formation &&
-      !formation.updates_history.filter(
-        (history) =>
-          history.to?.uai_formation === formation.uai_formation &&
-          new Date(history.updated_at).getTime() >= getCampagneStartDate().getTime() - 31536000000
-      ).length &&
-      ![PARCOURSUP_STATUS.EN_ATTENTE, PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut))
+    // uai_formation renseigné et égale à etablissement_formateur_uai alors code_commune différent (si pas de modification sur la campagne en cours)
+    (formation.code_commune_insee !== formation.etablissement_formateur_code_commune_insee &&
+      (!formation.uai_formation ||
+        (formation.etablissement_formateur_uai === formation.uai_formation &&
+          !formation.updates_history.filter(
+            (history) =>
+              history.to?.uai_formation === formation.uai_formation &&
+              new Date(history.updated_at).getTime() >= getCampagneStartDate().getTime() - 31536000000
+          ).length &&
+          ![PARCOURSUP_STATUS.EN_ATTENTE, PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut))))
       ? (args) => <DangerBox data-testid={"uai-warning"} {...args} />
       : (args) => <Box data-testid={"uai-ok"} {...args} />;
 
@@ -205,29 +211,29 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                   </>
                 )}
 
-                {!formation.uai_formation && (
+                {formation.code_commune_insee !== formation.etablissement_formateur_code_commune_insee && (
                   <>
-                    {formation.code_commune_insee !== formation.etablissement_formateur_code_commune_insee && (
+                    {!formation.uai_formation && (
                       <Text fontSize={"zeta"} color={"grey.600"} mt={2}>
                         - L’UAI du lieu de formation doit être renseigné en cohérence avec l’adresse du lieu de
                         formation.
                       </Text>
                     )}
+
+                    {formation.etablissement_formateur_uai === formation.uai_formation &&
+                      !formation.updates_history.filter(
+                        (history) =>
+                          history.to?.uai_formation === formation.uai_formation &&
+                          new Date(history.updated_at).getTime() >= getCampagneStartDate().getTime() - 31536000000
+                      ).length && (
+                        <Text fontSize={"zeta"} color={"grey.600"} mt={2}>
+                          - L’UAI renseigné est le même pour l’organisme formateur et le lieu de formation alors que les
+                          adresses sont différentes. Vérifiez l’adresse et l’UAI du lieu de formation et corrigez si
+                          nécessaire.
+                        </Text>
+                      )}
                   </>
                 )}
-
-                {formation.uai_formation === formation.editedFields?.uai_formation &&
-                  !formation.updates_history.filter(
-                    (history) =>
-                      history.to?.uai_formation === formation.uai_formation &&
-                      new Date(history.updated_at).getTime() >= getCampagneStartDate().getTime() - 31536000000
-                  ).length && (
-                    <Text fontSize={"zeta"} color={"grey.600"} mt={2}>
-                      - L’UAI renseigné est le même pour l’organisme formateur et le lieu de formation alors que les
-                      adresses sont différentes. Vérifiez l’adresse et l’UAI du lieu de formation et corrigez si
-                      nécessaire.
-                    </Text>
-                  )}
               </UaiFormationContainer>
 
               <AdresseContainer>
