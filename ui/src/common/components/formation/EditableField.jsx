@@ -19,19 +19,6 @@ export const EditableField = ({
   console.log(values);
   return (
     <Text {...props}>
-      {hasRightToEdit && edition !== fieldName && (
-        <Button
-          onClick={() => onEdit(fieldName)}
-          variant="unstyled"
-          aria-label={`Modifier le champ ${label}`}
-          p={0}
-          minW={0}
-          height="auto"
-          data-testid={"edit-btn"}
-        >
-          <Edit2Fill w="16px" h="16px" color="bluefrance" mr="5px" mb="7px" />
-        </Button>
-      )}{" "}
       {label} :{" "}
       {edition !== fieldName && (
         <>
@@ -59,6 +46,21 @@ export const EditableField = ({
           </Button>
         </>
       )}
+      {hasRightToEdit && edition !== fieldName && (
+        <Button
+          onClick={() => onEdit(fieldName)}
+          aria-label={`Modifier le champ ${label}`}
+          textStyle="sm"
+          variant="primary"
+          minW={null}
+          px={4}
+          mt={[8, 8, 2]}
+          data-testid={"edit-btn"}
+        >
+          <Edit2Fill color="white" mr="2" />
+          {formation[fieldName]?.length ? "Modifier le champ" : "Renseigner le champ"}
+        </Button>
+      )}{" "}
     </Text>
   );
 };
