@@ -305,7 +305,7 @@ export default () => {
   const [countFormations, setCountFormations] = useState(0);
   const navigate = useNavigate();
 
-  const mountedRef = useRef(true);
+  const mountedRef = useRef(id);
 
   useEffect(() => {
     (async () => {
@@ -314,7 +314,7 @@ export default () => {
         const etablissement = await _get(`${CATALOGUE_API}/entity/etablissement/${encodeURIComponent(id)}`, false);
         setEtablissement(etablissement);
 
-        if (!mountedRef.current) return null;
+        if (!mountedRef.current === id) return null;
 
         const query = {
           published: true,
@@ -326,12 +326,12 @@ export default () => {
 
         const count = await _get(`${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify(query)}`, false);
 
-        if (!mountedRef.current) return null;
+        if (!mountedRef.current === id) return null;
 
         setLoading(false);
         setCountFormations(count);
       } catch (e) {
-        if (!mountedRef.current) return null;
+        if (!mountedRef.current === id) return null;
         setLoading(false);
         setEtablissement(undefined);
         setCountFormations(0);

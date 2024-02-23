@@ -92,7 +92,7 @@ const RuleInput = ({ suggestionQuery, field, collection, value, setValue, noSugg
         renderSuggestion={(suggestion) => <div>{suggestion}</div>}
         renderInputComponent={(inputProps) => (
           <InputGroup flex={"1 1 auto"} w={"auto"}>
-            <Input m="5px" autoComplete="noned" {...inputProps} />
+            <Input m="5px" autoComplete="none" {...inputProps} />
             {inputProps.value && (
               <InputRightElement m={"5px"} children={<CloseCircleLine boxSize={4} onClick={() => setValue("")} />} />
             )}

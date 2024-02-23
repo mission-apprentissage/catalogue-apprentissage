@@ -77,7 +77,7 @@ const LoginPage = () => {
                               {...field}
                               id={field.name}
                               placeholder="Votre mot de passe..."
-                              autocomplete="current-password"
+                              autoComplete="current-password"
                             />
                             <FormErrorMessage>{meta.error}</FormErrorMessage>
                           </FormControl>

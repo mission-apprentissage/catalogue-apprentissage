@@ -452,7 +452,7 @@ export default () => {
     },
   });
 
-  const mountedRef = useRef(true);
+  const mountedRef = useRef(id);
 
   useEffect(() => {
     (async () => {
@@ -461,7 +461,7 @@ export default () => {
         // FIXME select={"__v" :0} hack to get updates_history
         const formation = await _get(`${CATALOGUE_API}/entity/formation/${encodeURIComponent(id)}?select={"__v":0}`);
 
-        if (!mountedRef.current) return null;
+        if (!mountedRef.current === id) return null;
         // don't display archived formations
         if (!formation.published) {
           throw new Error("Cette formation n'est pas publiée dans le catalogue");
@@ -471,7 +471,7 @@ export default () => {
         setFormation(formation);
         setFieldValue("uai_formation", formation.uai_formation ?? "");
       } catch (e) {
-        if (!mountedRef.current) return null;
+        if (!mountedRef.current === id) return null;
         setLoading(false);
       }
     })();
