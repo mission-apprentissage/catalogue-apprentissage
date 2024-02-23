@@ -242,7 +242,11 @@ const Etablissement = ({ etablissement, countFormations }) => {
                 </Text>
 
                 {etablissement.etablissement_siege_id && (
-                  <Link as={NavLink} to={`/etablissement/${etablissement.etablissement_siege_id}`} variant="card">
+                  <Link
+                    as={NavLink}
+                    to={`/etablissement/${encodeURIComponent(etablissement.etablissement_siege_siret)}`}
+                    variant="card"
+                  >
                     {etablissement.entreprise_raison_sociale && (
                       <Text mb={4}>
                         Raison sociale : <Text as="span"> {etablissement.entreprise_raison_sociale} </Text>{" "}

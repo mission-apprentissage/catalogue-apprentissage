@@ -16,12 +16,12 @@ export const OrganismesBlock = ({ formation }) => {
   useEffect(() => {
     async function run() {
       if (formation.etablissement_formateur_id) {
-        const formateur = await getOrganisme({ id: formation.etablissement_formateur_id });
+        const formateur = await getOrganisme(formation.etablissement_formateur_siret);
         setTagsFormateur(formateur?.tags ?? []);
       }
 
       if (!oneEstablishment) {
-        const gestionnaire = await getOrganisme({ id: formation.etablissement_gestionnaire_id });
+        const gestionnaire = await getOrganisme(formation.etablissement_gestionnaire_siret);
         setTagsGestionnaire(gestionnaire.tags ?? []);
       }
     }
@@ -42,7 +42,11 @@ export const OrganismesBlock = ({ formation }) => {
           <Text textStyle="h4" color="grey.800" mt={8} mb={4}>
             Organisme responsable
           </Text>
-          <Link as={NavLink} to={`/etablissement/${formation.etablissement_gestionnaire_siret}`} variant="card">
+          <Link
+            as={NavLink}
+            to={`/etablissement/${encodeURIComponent(formation.etablissement_gestionnaire_siret)}`}
+            variant="card"
+          >
             <Flex display={["none", "flex"]} textStyle="xs" justifyContent="space-between">
               <Text>Siret : {formation.etablissement_gestionnaire_siret}</Text>
               <Text>UAI : {formation.etablissement_gestionnaire_uai}</Text>
@@ -88,7 +92,11 @@ export const OrganismesBlock = ({ formation }) => {
       )}
 
       {formation.etablissement_formateur_id && (
-        <Link as={NavLink} to={`/etablissement/${formation.etablissement_formateur_siret}`} variant="card">
+        <Link
+          as={NavLink}
+          to={`/etablissement/${encodeURIComponent(formation.etablissement_formateur_siret)}`}
+          variant="card"
+        >
           <Flex display={["none", "flex"]} textStyle="xs" justifyContent="space-between">
             <Text>Siret : {formation.etablissement_formateur_siret}</Text>
             <Text>UAI: {formation.etablissement_formateur_uai}</Text>

@@ -89,6 +89,18 @@ const booleanFormatter = (value) => {
   }
 };
 
+const publicationFormatter = (value) => {
+  switch (value) {
+    case true:
+      return "automatique";
+    case false:
+      return "manuelle";
+    case null:
+    default:
+      return "";
+  }
+};
+
 const mefsExpirationFormatter = (mefs) => {
   return (
     mefs
@@ -614,6 +626,13 @@ export const columnsDefinition = [
    * Périmètre Affelnet
    */
   {
+    Header: "Affelnet: type de publication",
+    accessor: "affelnet_publication_auto",
+    width: 200,
+    exportable: true,
+    formatter: publicationFormatter,
+  },
+  {
     Header: "Affelnet: périmètre",
     accessor: "affelnet_perimetre",
     width: 200,
@@ -695,6 +714,13 @@ export const columnsDefinition = [
   /**
    * Périmètre Parcoursup
    */
+  {
+    Header: "Parcoursup: type de publication",
+    accessor: "parcoursup_publication_auto",
+    width: 200,
+    exportable: true,
+    formatter: publicationFormatter,
+  },
   {
     Header: "Parcoursup: périmètre",
     accessor: "parcoursup_perimetre",
