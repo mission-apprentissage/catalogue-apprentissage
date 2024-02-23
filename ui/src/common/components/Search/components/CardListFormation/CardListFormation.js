@@ -16,7 +16,13 @@ export const CardListFormation = ({ data }) => {
   const [user] = useAuth();
 
   return (
-    <Link as={NavLink} to={`/formation/${data._id}`} variant="card" mt={4} data-testid={"card_formation"}>
+    <Link
+      as={NavLink}
+      to={`/formation/${encodeURIComponent(data.cle_ministere_educatif)}`}
+      variant="card"
+      mt={4}
+      data-testid={"card_formation"}
+    >
       <Flex display={["none", "flex"]} textStyle="xs" justifyContent="space-between">
         <Text>{data.etablissement_gestionnaire_entreprise_raison_sociale}</Text>
         <Text>CFD : {data.cfd}</Text>

@@ -127,6 +127,7 @@ const UserLine = ({ user, roles }) => {
             description: message,
             status: "error",
             duration: 10000,
+            isClosable: true,
           });
         }
 

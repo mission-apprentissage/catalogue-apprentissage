@@ -29,6 +29,7 @@ export const RejectionBlock = ({ formation: baseFormation }) => {
         description: "La prise en charge du rejet de la formation vous est affectée.",
         status: "success",
         duration: 10000,
+        isClosable: true,
       });
     } catch (error) {
       toast({
@@ -37,6 +38,7 @@ export const RejectionBlock = ({ formation: baseFormation }) => {
           "Une erreur est survenue lors de la tentative de prise en charge du rejet. Veuillez réessayer ultérieurement.",
         status: "error",
         duration: 10000,
+        isClosable: true,
       });
     }
   }, [canHandleBusinessError, formation, toast]);
@@ -53,6 +55,7 @@ export const RejectionBlock = ({ formation: baseFormation }) => {
         description: "La prise en charge du rejet de la formation n'est plus affectée.",
         status: "success",
         duration: 10000,
+        isClosable: true,
       });
     } catch (error) {
       toast({
@@ -61,6 +64,7 @@ export const RejectionBlock = ({ formation: baseFormation }) => {
           "Une erreur est survenue lors de la tentative d'annulation de prise en charge du rejet. Veuillez réessayer ultérieurement.",
         status: "error",
         duration: 10000,
+        isClosable: true,
       });
     }
   }, [canHandleBusinessError, formation, toast]);

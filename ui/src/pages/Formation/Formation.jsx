@@ -397,7 +397,7 @@ export default () => {
   const { values, handleSubmit, handleChange, setFieldValue, isSubmitting } = useFormik({
     enableReinitialize: true,
     initialValues: {
-      uai_formation: "",
+      uai_formation: formation?.uai_formation,
       affelnet_statut: formation?.affelnet_statut,
     },
     onSubmit: ({ uai_formation, affelnet_statut }) => {
@@ -405,28 +405,7 @@ export default () => {
         const trimedUaiFormation = uai_formation?.trim();
 
         try {
-          if (trimedUaiFormation !== formation["uai_formation"]) {
-            // console.log({
-            //   uai_formation: trimedUaiFormation,
-            //   ...(affelnet_statut === AFFELNET_STATUS.PUBLIE ? { affelnet_statut: AFFELNET_STATUS.EN_ATTENTE } : {}),
-            //   last_update_who: user.email,
-            //   last_update_at: Date.now(),
-            //   editedFields: { ...formation?.editedFields, uai_formation: trimedUaiFormation },
-            //   $push: {
-            //     updates_history: buildUpdatesHistory(
-            //       formation,
-            //       {
-            //         uai_formation: trimedUaiFormation,
-            //         ...(affelnet_statut === AFFELNET_STATUS.PUBLIE
-            //           ? { affelnet_statut: AFFELNET_STATUS.EN_ATTENTE }
-            //           : {}),
-            //         last_update_who: user.email,
-            //       },
-            //       ["uai_formation", ...(affelnet_statut === AFFELNET_STATUS.PUBLIE ? ["affelnet_statut"] : [])]
-            //     ),
-            //   },
-            // });
-
+          if (trimedUaiFormation !== formation?.uai_formation) {
             const result = await _put(`${CATALOGUE_API}/entity/formations/${formation._id}`, {
               uai_formation: trimedUaiFormation,
               ...(affelnet_statut === AFFELNET_STATUS.PUBLIE ? { affelnet_statut: AFFELNET_STATUS.EN_ATTENTE } : {}),
@@ -463,6 +442,7 @@ export default () => {
             description: message,
             status: "error",
             duration: 20000,
+            isClosable: true,
           });
         } finally {
           setEdition(null);
@@ -479,7 +459,7 @@ export default () => {
       try {
         setLoading(true);
         // FIXME select={"__v" :0} hack to get updates_history
-        const formation = await _get(`${CATALOGUE_API}/entity/formation/${id}?select={"__v":0}`);
+        const formation = await _get(`${CATALOGUE_API}/entity/formation/${encodeURIComponent(id)}?select={"__v":0}`);
 
         if (!mountedRef.current) return null;
         // don't display archived formations
@@ -511,7 +491,7 @@ export default () => {
   const sendToParcoursup = useCallback(async () => {
     try {
       const response = await _post(`${CATALOGUE_API}/parcoursup/send-ws`, {
-        id,
+        id: formation?._id,
       });
       const message = response?.message;
 
@@ -520,6 +500,7 @@ export default () => {
         description: message,
         status: "success",
         duration: 10000,
+        isClosable: true,
       });
     } catch (e) {
       console.error("Can't send to ws", e);
@@ -532,17 +513,18 @@ export default () => {
         description: message,
         status: "error",
         duration: 10000,
+        isClosable: true,
       });
     }
 
-    const response = await _get(`${CATALOGUE_API}/entity/formation/${id}?select={"__v":0}`);
+    const response = await _get(`${CATALOGUE_API}/entity/formation/${formation?._id}?select={"__v":0}`);
     setFormation(response);
-  }, [id, toast]);
+  }, [formation, toast]);
 
   const reinitStatut = useCallback(
     async ({ comment }) => {
       try {
-        const response = await _post(`${CATALOGUE_API}/entity/formations/${id}/reinit-statut`, {
+        const response = await _post(`${CATALOGUE_API}/entity/formations/${formation?._id}/reinit-statut`, {
           comment,
         });
         const message = response?.message;
@@ -552,6 +534,7 @@ export default () => {
           description: message,
           status: "success",
           duration: 10000,
+          isClosable: true,
         });
       } catch (e) {
         console.error("Can't reinit status", e);
@@ -564,13 +547,14 @@ export default () => {
           description: message,
           status: "error",
           duration: 10000,
+          isClosable: true,
         });
       }
 
-      const response = await _get(`${CATALOGUE_API}/entity/formation/${id}?select={"__v":0}`);
+      const response = await _get(`${CATALOGUE_API}/entity/formation/${formation?._id}?select={"__v":0}`);
       setFormation(response);
     },
-    [id, toast]
+    [formation, toast]
   );
 
   const parcoursup_date_depublication = formation?.updates_history

@@ -307,14 +307,17 @@ export default () => {
     (async () => {
       try {
         setLoading(true);
-        const eta = await _get(`${CATALOGUE_API}/entity/etablissement/${id}`, false);
-        setEtablissement(eta);
+        const etablissement = await _get(`${CATALOGUE_API}/entity/etablissement/${encodeURIComponent(id)}`, false);
+        setEtablissement(etablissement);
 
         if (!mountedRef.current) return null;
 
         const query = {
           published: true,
-          $or: [{ etablissement_formateur_siret: eta.siret }, { etablissement_gestionnaire_siret: eta.siret }],
+          $or: [
+            { etablissement_formateur_siret: etablissement.siret },
+            { etablissement_gestionnaire_siret: etablissement.siret },
+          ],
         };
 
         const count = await _get(`${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify(query)}`, false);

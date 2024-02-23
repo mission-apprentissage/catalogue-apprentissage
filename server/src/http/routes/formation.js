@@ -208,7 +208,7 @@ module.exports = () => {
     const qs = sanitize(req.query);
     const sanitizedParams = sanitize(req.params);
 
-    const itemId = sanitizedParams.id;
+    const itemId = decodeURIComponent(sanitizedParams.id);
     const select =
       qs && qs.select
         ? JSON.parse(qs.select)
@@ -218,10 +218,15 @@ module.exports = () => {
             updates_history: 0,
             __v: 0,
           };
-    const retrievedData = await Formation.findById(itemId, select).lean();
-    if (retrievedData) {
-      return res.json(retrievedData);
+    const retrievedDataByCleME = await Formation.findOne({ cle_ministere_educatif: itemId }, select).lean();
+    if (retrievedDataByCleME) {
+      return res.json(retrievedDataByCleME);
     }
+    const retrievedDataById = await Formation.findById(itemId, select).lean();
+    if (retrievedDataById) {
+      return res.json(retrievedDataById);
+    }
+
     return res.status(404).send({ message: `Item ${itemId} doesn't exist` });
   });
 
