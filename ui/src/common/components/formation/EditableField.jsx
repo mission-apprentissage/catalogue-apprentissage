@@ -14,6 +14,8 @@ export const EditableField = ({
   handleChange,
   fieldName,
   label,
+  emptyText = "Renseigner le champ",
+  notEmptyText = "Modifier le champ",
   ...props
 }) => {
   console.log(values);
@@ -47,19 +49,22 @@ export const EditableField = ({
         </>
       )}
       {hasRightToEdit && edition !== fieldName && (
-        <Button
-          onClick={() => onEdit(fieldName)}
-          aria-label={`Modifier le champ ${label}`}
-          textStyle="sm"
-          variant="primary"
-          minW={null}
-          px={4}
-          mt={[8, 8, 2]}
-          data-testid={"edit-btn"}
-        >
-          <Edit2Fill color="white" mr="2" />
-          {formation[fieldName]?.length ? "Modifier le champ" : "Renseigner le champ"}
-        </Button>
+        <>
+          <br />
+          <Button
+            onClick={() => onEdit(fieldName)}
+            aria-label={`Modifier le champ ${label}`}
+            textStyle="sm"
+            variant="primary"
+            minW={null}
+            px={4}
+            mt={[8, 8, 2]}
+            data-testid={"edit-btn"}
+          >
+            <Edit2Fill color="white" mr="2" />
+            {formation[fieldName]?.length ? notEmptyText ?? "Modifier le champ" : emptyText ?? "Renseigner le champ"}
+          </Button>
+        </>
       )}{" "}
     </Text>
   );

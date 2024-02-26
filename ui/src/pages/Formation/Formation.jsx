@@ -154,6 +154,8 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                   handleSubmit={handleSubmitOverride}
                   handleChange={handleChange}
                   hasRightToEdit={hasRightToEdit && ![PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut)}
+                  emptyText={"Renseigner l'UAI"}
+                  notEmptyText={"Modifier l'UAI"}
                   mb={2}
                 />
 
