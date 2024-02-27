@@ -94,7 +94,7 @@ const affelnetSchema = {
     default: null,
     description: "Affelnet : publication auto",
   },
-  affelnet_visible: {
+  affelnet_perimetre_prise_rdv: {
     type: Boolean,
     default: false,
     description: "Affelnet : visible",

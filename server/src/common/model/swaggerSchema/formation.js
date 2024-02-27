@@ -912,7 +912,7 @@ module.exports = {
         type: "boolean",
         description: "Parcoursup : publication auto",
       },
-      parcoursup_visible: {
+      parcoursup_perimetre_prise_rdv: {
         type: "boolean",
         description: "Parcoursup : visible",
       },
@@ -1031,7 +1031,7 @@ module.exports = {
         type: "boolean",
         description: "Affelnet : publication auto",
       },
-      affelnet_visible: {
+      affelnet_perimetre_prise_rdv: {
         type: "boolean",
         description: "Affelnet : visible",
       },

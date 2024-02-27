@@ -745,7 +745,7 @@ export interface Formation {
   /**
    * Parcoursup : visible
    */
-  parcoursup_visible?: boolean;
+  parcoursup_perimetre_prise_rdv?: boolean;
   /**
    * Dans le périmètre Affelnet
    */
@@ -829,7 +829,7 @@ export interface Formation {
   /**
    * Affelnet : visible
    */
-  affelnet_visible?: boolean;
+  affelnet_perimetre_prise_rdv?: boolean;
   _id?: Types.ObjectId;
   updated_at?: Date;
   created_at?: Date;

@@ -47,14 +47,14 @@ export const allowedFilters = [
   "parcoursup_session",
   "parcoursup_previous_session",
   "parcoursup_publication_auto",
-  "parcoursup_visible",
+  "parcoursup_perimetre_prise_rdv",
   "affelnet_perimetre",
   "affelnet_statut",
   "affelnet_previous_statut",
   "affelnet_session",
   "affelnet_previous_session",
   "affelnet_publication_auto",
-  "affelnet_visible",
+  "affelnet_perimetre_prise_rdv",
   "diplome",
   "tags",
   "annee",
@@ -654,8 +654,8 @@ export const columnsDefinition = [
     formatter: escapeDiacritics,
   },
   {
-    Header: "Affelnet: Visible SLA",
-    accessor: "affelnet_visible",
+    Header: "Affelnet: Périmètre prise de rendez-vous LBA",
+    accessor: "affelnet_perimetre_prise_rdv",
     width: 200,
     exportable: true,
     formatter: booleanFormatter,
@@ -736,13 +736,13 @@ export const columnsDefinition = [
     formatter: escapeDiacritics,
   },
 
-  // {
-  //     Header: "Parcoursup: Visible moteur de recherche",
-  //     accessor: "parcoursup_visible",
-  //     width: 200,
-  //     exportable: true,
-  //     formatter: booleanFormatter,
-  //   },
+  {
+    Header: "Parcoursup: Périmètre prise de rendez-vous LBA",
+    accessor: "parcoursup_perimetre_prise_rdv",
+    width: 200,
+    exportable: true,
+    formatter: booleanFormatter,
+  },
   {
     Header: "Parcoursup: statut sur la précédente campagne",
     accessor: "parcoursup_previous_statut",
@@ -1265,37 +1265,37 @@ export const quickFiltersDefinition = [
         },
       },
 
-      {
-        componentId: `affelnet_visible`,
-        type: "facet",
-        dataField: "affelnet_visible",
-        title: "Visible SLA",
-        filterLabel: "Visible SLA Affelnet",
-        sortBy: "desc",
-        transformData: (data) =>
-          data.map((d) => ({
-            ...d,
-            key: {
-              1: "Oui",
-              0: "Non",
-              null: "Pas d'information",
-            }[d.key],
-          })),
-        customQuery: (values) => {
-          if (values.length && !values.includes("Tous")) {
-            return {
-              query: {
-                terms: {
-                  affelnet_visible: values.map(
-                    (value) => ({ Oui: true, Non: false, "Pas d'information": null }[value])
-                  ),
-                },
-              },
-            };
-          }
-          return {};
-        },
-      },
+      //     {
+      //       componentId: `affelnet_perimetre_prise_rdv`,
+      //       type: "facet",
+      //       dataField: "affelnet_perimetre_prise_rdv",
+      //       title: "Visible SLA",
+      //       filterLabel: "Visible SLA Affelnet",
+      //       sortBy: "desc",
+      //       transformData: (data) =>
+      //         data.map((d) => ({
+      //           ...d,
+      //           key: {
+      //             1: "Oui",
+      //             0: "Non",
+      //             null: "Pas d'information",
+      //           }[d.key],
+      //         })),
+      //       customQuery: (values) => {
+      //         if (values.length && !values.includes("Tous")) {
+      //           return {
+      //             query: {
+      //               terms: {
+      //                 affelnet_perimetre_prise_rdv: values.map(
+      //                   (value) => ({ Oui: true, Non: false, "Pas d'information": null }[value])
+      //                 ),
+      //               },
+      //             },
+      //           };
+      //         }
+      //         return {};
+      //       },
+      //     },
     ],
   },
 

@@ -32,6 +32,7 @@ const etablissement = require("./routes/etablissement");
 const etablissementSecure = require("./routes/etablissementSecure");
 const upload = require("./routes/upload");
 const alert = require("./routes/alert");
+const perimetrePriseRdv = require("./routes/perimetrePriseRdv");
 const reglePerimetre = require("./routes/reglePerimetre");
 const reglePerimetreSecure = require("./routes/reglePerimetreSecure");
 const swaggerSchema = require("../common/model/swaggerSchema");
@@ -182,6 +183,13 @@ module.exports = async (components, verbose = true) => {
     ["/entity", apiLimiter, anyAuthMiddleware, etablissementSecure(components)],
     ["/upload", apiLimiter, permissionsMiddleware({ isAdmin: true }, ["page_upload"]), upload()],
     ["/entity", apiLimiter, anyAuthMiddleware, reglePerimetreSecure()],
+
+    [
+      "/perimetre-prise-rdv.json",
+      apiLimiter,
+      permissionsMiddleware({ isAdmin: true }, ["page_other/perimetre_prise_rdv"]),
+      perimetrePriseRdv(),
+    ],
   ];
 
   prefixes.map((prefix) => {

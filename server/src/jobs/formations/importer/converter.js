@@ -222,7 +222,7 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
   // 241..21
   // 242..31
   // 271..21
-  const affelnet_visible =
+  const affelnet_perimetre_prise_rdv =
     [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.EN_ATTENTE, AFFELNET_STATUS.A_PUBLIER].includes(
       oldFields?.affelnet_statut
     ) &&
@@ -236,7 +236,7 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
       );
     }).length;
 
-  const parcoursup_visible = [PARCOURSUP_STATUS.PUBLIE].includes(oldFields?.parcoursup_statut);
+  const parcoursup_perimetre_prise_rdv = [PARCOURSUP_STATUS.PUBLIE].includes(oldFields?.parcoursup_statut);
 
   const nouvelle_fiche =
     !oldFields ||
@@ -270,8 +270,8 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
 
     parcoursup_publication_auto,
     affelnet_publication_auto,
-    parcoursup_visible,
-    affelnet_visible,
+    parcoursup_perimetre_prise_rdv,
+    affelnet_perimetre_prise_rdv,
 
     nouvelle_fiche,
 

@@ -117,4 +117,14 @@ export default [
       },
     ],
   },
+  {
+    feature: "Autres droits",
+    ref: "page_other",
+    subFeatures: [
+      {
+        feature: "Prise de rendez-vous LBA",
+        ref: "page_other/perimetre_prise_rdv",
+      },
+    ],
+  },
 ];

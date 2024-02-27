@@ -78,7 +78,7 @@ const parcoursupSchema = {
     default: null,
     description: "Parcoursup : publication auto",
   },
-  parcoursup_visible: {
+  parcoursup_perimetre_prise_rdv: {
     type: Boolean,
     default: false,
     description: "Parcoursup : visible",

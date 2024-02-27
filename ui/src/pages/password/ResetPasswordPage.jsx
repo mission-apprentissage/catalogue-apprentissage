@@ -73,7 +73,7 @@ const ResetPasswordPage = () => {
                           {...field}
                           id={field.name}
                           placeholder="Votre nouveau mot de passe..."
-                          autocomplete="new-password"
+                          autoComplete="new-password"
                         />
                         <FormErrorMessage>{meta.error}</FormErrorMessage>
                       </FormControl>
