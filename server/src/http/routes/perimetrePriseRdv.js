@@ -13,7 +13,13 @@ module.exports = () => {
       const stream = compose(
         Formation.find(
           { $or: [{ affelnet_perimetre_prise_rdv: true }, { parcoursup_perimetre_prise_rdv: true }] },
-          { _id: 0, cle_ministere_educatif: 1, affelnet_perimetre_prise_rdv: 1, parcoursup_perimetre_prise_rdv: 1 }
+          {
+            _id: 0,
+            cle_ministere_educatif: 1,
+            affelnet_perimetre_prise_rdv: 1,
+            parcoursup_perimetre_prise_rdv: 1,
+            parcoursup_id: 1,
+          }
         )
           .limit(0)
           .cursor(),
