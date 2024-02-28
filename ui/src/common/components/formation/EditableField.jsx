@@ -48,7 +48,7 @@ export const EditableField = memo(
               onChange={handleChange}
               defaultValue={values[fieldName]}
             />
-            <Button mt={2} mr={2} variant="secondary" onClick={onEdit}>
+            <Button mt={2} mr={2} variant="secondary" onClick={() => onEdit()}>
               Annuler
             </Button>
             <Button mt={2} variant="primary" onClick={handleSubmit}>
