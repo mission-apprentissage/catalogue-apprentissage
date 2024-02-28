@@ -14,9 +14,9 @@ export const PublishModalButton = ({ formation, setFormation }) => {
       <Button
         textStyle="sm"
         variant="primary"
-        minW={null}
         px={8}
-        mt={[8, 8, 0]}
+        mt={4}
+        minW={"auto"}
         onClick={() => {
           onOpenPublishModal();
         }}
@@ -27,7 +27,7 @@ export const PublishModalButton = ({ formation, setFormation }) => {
             : "Gérer les publications"
         }
       >
-        <Parametre mr={2} />
+        <Parametre color="white" mr="2" />
         Gérer les publications
       </Button>
 
