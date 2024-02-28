@@ -10,8 +10,8 @@ import {
   Text,
   UnorderedList,
 } from "@chakra-ui/react";
-import { Close } from "../../theme/components/icons";
-import { sortDescending } from "../../common/utils/historyUtils";
+import { Close } from "../../../theme/components/icons";
+import { sortDescending } from "../../utils/historyUtils";
 
 const UaiHistoryModal = ({ onClose, isOpen, formation }) => {
   const initialRef = useRef();

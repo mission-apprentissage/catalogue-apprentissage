@@ -5,7 +5,6 @@ import {
   Flex,
   FormControl,
   FormLabel,
-  InputGroup,
   Modal,
   ModalBody,
   ModalContent,
@@ -14,10 +13,16 @@ import {
   ModalOverlay,
   Text,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import { ArrowRightLine, Close } from "../../../theme/components/icons";
+import { _get, _post } from "../../httpClient";
 
-export const ReinitStatutModal = ({ isOpen, onClose, reinitStatut }) => {
+const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
+
+export const ReinitStatutModal = ({ isOpen, onClose, formation, setFormation }) => {
+  const toast = useToast();
+
   const initialRef = useRef();
   const [comment, setComment] = useState("");
   const [isSubmitting, setIsSubmiting] = useState("");
@@ -27,9 +32,46 @@ export const ReinitStatutModal = ({ isOpen, onClose, reinitStatut }) => {
     onClose();
   }, [onClose]);
 
+  const reinitStatut = useCallback(
+    async ({ comment }) => {
+      try {
+        const response = await _post(`${CATALOGUE_API}/entity/formations/${formation?._id}/reinit-statut`, {
+          comment,
+        });
+        const message = response?.message;
+
+        toast({
+          title: "Succès",
+          description: message,
+          status: "success",
+          duration: 10000,
+          isClosable: true,
+        });
+      } catch (e) {
+        console.error("Can't reinit status", e);
+
+        const response = await (e?.json ?? {});
+        const message = response?.message ?? e?.message;
+
+        toast({
+          title: "Erreur",
+          description: message,
+          status: "error",
+          duration: 10000,
+          isClosable: true,
+        });
+      }
+
+      const response = await _get(`${CATALOGUE_API}/entity/formation/${formation?._id}?select={"__v":0}`);
+      setFormation(response);
+    },
+    [formation, setFormation, toast]
+  );
+
   const submit = useCallback(async () => {
     setIsSubmiting(true);
     await reinitStatut({ comment });
+
     setIsSubmiting(false);
     setComment("");
     onClose();

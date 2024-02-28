@@ -20,7 +20,7 @@ import { useFormik } from "formik";
 
 import Layout from "../layout/Layout";
 import helpText from "../../locales/helpText.json";
-import { ArrowDownLine, ExternalLinkLine, MapPin2Fill, Parametre } from "../../theme/components/icons";
+import { ArrowDownLine, ExternalLinkLine, MapPin2Fill } from "../../theme/components/icons";
 import { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL } from "../../constants/catalogueLabels";
 import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
 
@@ -33,7 +33,6 @@ import { setTitle } from "../../common/utils/pageUtils";
 import { getOpenStreetMapUrl } from "../../common/utils/mapUtils";
 import { DangerBox } from "../../common/components/DangerBox";
 import { PreviousStatusBadge, StatusBadge } from "../../common/components/StatusBadge";
-import { PublishModal } from "../../common/components/formation/PublishModal";
 import { InfoTooltip } from "../../common/components/InfoTooltip";
 import { Alert } from "../../common/components/Alert";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
@@ -42,8 +41,9 @@ import { HistoryBlock } from "../../common/components/formation/HistoryBlock";
 import { RejectionBlock } from "../../common/components/formation/RejectionBlock";
 import { DescriptionBlock } from "../../common/components/formation/DescriptionBlock";
 import { OrganismesBlock } from "../../common/components/formation/OrganismesBlock";
-import { UaiHistoryModal } from "./UaiHistoryModal";
-import { ReinitStatutModal } from "../../common/components/formation/ReinitStatutModal";
+import { PublishModalButton } from "../../common/components/formation/PublishModalButton";
+import { UaiHistoryModalButton } from "../../common/components/formation/UaiHistoryModalButton";
+import { ReinitStatutModalButton } from "../../common/components/formation/ReinitStatutModalButton";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -56,6 +56,15 @@ const getLBAUrl = ({ cle_ministere_educatif = "" }) => {
 };
 
 const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, values, hasRightToEdit }) => {
+  console.log("Formation.jsx -> Formation", {
+    formation,
+    edition,
+    onEdit,
+    handleChange,
+    handleSubmit,
+    values,
+    hasRightToEdit,
+  });
   // Distance tolérer entre l'adresse et les coordonnées transmise par RCO
   const seuilDistance = 100;
   const [isEditingUai, setIsEditingUai] = useState(false);
@@ -70,12 +79,6 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
   const { isOpen: isComputedGeoCoordOpen, onToggle: onComputedGeoCoordToggle } = useDisclosure(
     formation.distance > seuilDistance
   );
-
-  const {
-    isOpen: isUaiHistoryModalOpen,
-    onClose: onUaiHistoryModalClose,
-    onOpen: onUaiHistoryModalOpen,
-  } = useDisclosure();
 
   const UaiFormationContainer =
     // uai_formation non renseigné
@@ -103,11 +106,13 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
   //   : React.Fragment;
 
   const onEditOverride = async (...args) => {
+    console.log("onEditOverride");
     setIsEditingUai(!isEditingUai);
     await onEdit(...args);
   };
 
   const handleSubmitOverride = async (...args) => {
+    console.log("handleSubmitOverride");
     setIsEditingUai(false);
     await handleSubmit(...args);
   };
@@ -160,14 +165,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                 />
 
                 <Text mb={2}>
-                  <Link
-                    fontSize={"zeta"}
-                    color={"grey.600"}
-                    textDecoration={"underline"}
-                    onClick={onUaiHistoryModalOpen}
-                  >
-                    Voir l'historique
-                  </Link>
+                  <UaiHistoryModalButton formation={formation} />
                 </Text>
 
                 {isEditingUai && formation.affelnet_statut === AFFELNET_STATUS.PUBLIE && (
@@ -375,23 +373,19 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
           )}
         </GridItem>
       </Grid>
-
-      <UaiHistoryModal isOpen={isUaiHistoryModalOpen} onClose={onUaiHistoryModalClose} formation={formation} />
     </Box>
   );
 };
 
 export default () => {
+  console.log("Formation.jsx -> default");
   const { id } = useParams();
   const toast = useToast();
   const [formation, setFormation] = useState();
   const [loading, setLoading] = useState(false);
 
   const [edition, setEdition] = useState(null);
-  const [isReinitModalOpen, setIsReinitModalOpen] = useState(false);
-  const openReinitModal = useCallback(() => setIsReinitModalOpen(true), []);
   const navigate = useNavigate();
-  const { isOpen: isOpenPublishModal, onOpen: onOpenPublishModal, onClose: onClosePublishModal } = useDisclosure();
 
   const [user] = useAuth();
   const hasRightToEdit = hasRightToEditFormation(formation, user);
@@ -459,11 +453,12 @@ export default () => {
   useEffect(() => {
     (async () => {
       try {
+        if (mountedRef.current !== id) return null;
+
         setLoading(true);
         // FIXME select={"__v" :0} hack to get updates_history
         const formation = await _get(`${CATALOGUE_API}/entity/formation/${encodeURIComponent(id)}?select={"__v":0}`);
 
-        if (!mountedRef.current === id) return null;
         // don't display archived formations
         if (!formation.published) {
           throw new Error("Cette formation n'est pas publiée dans le catalogue");
@@ -473,13 +468,13 @@ export default () => {
         setFormation(formation);
         setFieldValue("uai_formation", formation.uai_formation ?? "");
       } catch (e) {
-        if (!mountedRef.current === id) return null;
+        if (mountedRef.current !== id) return null;
         setLoading(false);
       }
     })();
 
     return () => {
-      mountedRef.current = false;
+      mountedRef.current = null;
     };
   }, [id, setFieldValue]);
 
@@ -522,42 +517,6 @@ export default () => {
     const response = await _get(`${CATALOGUE_API}/entity/formation/${formation?._id}?select={"__v":0}`);
     setFormation(response);
   }, [formation, toast]);
-
-  const reinitStatut = useCallback(
-    async ({ comment }) => {
-      try {
-        const response = await _post(`${CATALOGUE_API}/entity/formations/${formation?._id}/reinit-statut`, {
-          comment,
-        });
-        const message = response?.message;
-
-        toast({
-          title: "Succès",
-          description: message,
-          status: "success",
-          duration: 10000,
-          isClosable: true,
-        });
-      } catch (e) {
-        console.error("Can't reinit status", e);
-
-        const response = await (e?.json ?? {});
-        const message = response?.message ?? e?.message;
-
-        toast({
-          title: "Erreur",
-          description: message,
-          status: "error",
-          duration: 10000,
-          isClosable: true,
-        });
-      }
-
-      const response = await _get(`${CATALOGUE_API}/entity/formation/${formation?._id}?select={"__v":0}`);
-      setFormation(response);
-    },
-    [formation, toast]
-  );
 
   const parcoursup_date_depublication = formation?.updates_history
     .sort(sortDescending)
@@ -620,27 +579,7 @@ export default () => {
                     ) ||
                       ![AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT].includes(formation.affelnet_statut)) &&
                     hasAccessTo(user, "page_formation/gestion_publication") && (
-                      <Button
-                        textStyle="sm"
-                        variant="primary"
-                        minW={null}
-                        px={8}
-                        mt={[8, 8, 0]}
-                        onClick={() => {
-                          onOpenPublishModal();
-                        }}
-                        disabled={
-                          !formation.uai_formation || !formation.uai_formation.length || !formation.uai_formation_valide
-                        }
-                        title={
-                          !formation.uai_formation || !formation.uai_formation.length || !formation.uai_formation_valide
-                            ? "Vous devez éditer l'UAI du lieu de la formation avant de pouvoir accéder à la gestion des publications"
-                            : "Gérer les publications"
-                        }
-                      >
-                        <Parametre mr={2} />
-                        Gérer les publications
-                      </Button>
+                      <PublishModalButton formation={formation} setFormation={setFormation} user={user} />
                     )}
                 </Flex>
                 {formation.catalogue_published && (
@@ -739,9 +678,7 @@ export default () => {
 
                       {[PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut) &&
                         hasAccessTo(user, "page_formation/reinit_parcoursup") && (
-                          <Button textStyle="sm" variant="secondary" px={8} mt={4} onClick={openReinitModal}>
-                            Réinitialiser la publication Parcoursup
-                          </Button>
+                          <ReinitStatutModalButton formation={formation} setFormation={setFormation} />
                         )}
                     </Flex>
                   </Flex>
@@ -846,20 +783,6 @@ export default () => {
           )}
         </Container>
       </Box>
-      {hasAccessTo(user, "page_formation/gestion_publication") && formation && (
-        <PublishModal
-          isOpen={isOpenPublishModal}
-          onClose={onClosePublishModal}
-          formation={formation}
-          onFormationUpdate={(updatedFormation) => {
-            setFormation(updatedFormation);
-          }}
-        />
-      )}
-
-      {hasAccessTo(user, "page_formation/reinit_parcoursup") && formation && (
-        <ReinitStatutModal isOpen={isReinitModalOpen} onClose={setIsReinitModalOpen} reinitStatut={reinitStatut} />
-      )}
     </Layout>
   );
 };
