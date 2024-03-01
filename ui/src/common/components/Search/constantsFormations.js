@@ -8,6 +8,7 @@ import { annees } from "../../../constants/annees";
 import { sortDescending } from "../../utils/historyUtils";
 import { AffelnetMissingSession } from "./components/AffelnetMissingSession";
 import { ParcoursupMissingSession } from "./components/ParcoursupMissingSession";
+import { AFFELNET_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
 
 export const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -633,6 +634,19 @@ export const columnsDefinition = [
     formatter: publicationFormatter,
   },
   {
+    Header: " Affelnet: dernière action par",
+    accessor: "updates_history",
+    width: 200,
+    exportable: true,
+    formatter: (values) =>
+      values
+        ?.filter(
+          (history) => !![AFFELNET_STATUS.NON_PUBLIE, AFFELNET_STATUS.EN_ATTENTE].includes(history?.to?.affelnet_statut)
+        )
+        ?.sort(sortDescending)?.[0]?.to?.last_update_who ?? "",
+  },
+
+  {
     Header: "Affelnet: périmètre",
     accessor: "affelnet_perimetre",
     width: 200,
@@ -720,6 +734,19 @@ export const columnsDefinition = [
     width: 200,
     exportable: true,
     formatter: publicationFormatter,
+  },
+  {
+    Header: " Parcoursup: dernière action par",
+    accessor: "updates_history",
+    width: 200,
+    exportable: true,
+    formatter: (values) =>
+      values
+        ?.filter(
+          (history) =>
+            !![PARCOURSUP_STATUS.NON_PUBLIE, PARCOURSUP_STATUS.EN_ATTENTE].includes(history?.to?.parcoursup_statut)
+        )
+        ?.sort(sortDescending)?.[0]?.to?.last_update_who ?? "",
   },
   {
     Header: "Parcoursup: périmètre",
