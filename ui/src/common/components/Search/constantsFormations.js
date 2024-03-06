@@ -886,14 +886,14 @@ export const columnsDefinition = [
     accessor: "cle_me_remplace",
     width: 200,
     exportable: true,
-    formatter: escapeDiacritics,
+    formatter: (value) => (value instanceof Array && value?.join(", ")) ?? "",
   },
   {
     Header: "Offre: Est remplacée par la clé ME",
     accessor: "cle_me_remplace_par",
     width: 200,
     exportable: true,
-    formatter: escapeDiacritics,
+    formatter: (value) => (value instanceof Array && value?.join(", ")) ?? "",
   },
 ];
 
