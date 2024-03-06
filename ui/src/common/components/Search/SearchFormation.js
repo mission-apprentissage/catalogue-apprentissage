@@ -4,7 +4,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Box, Container, Flex, FormLabel, Switch, Text } from "@chakra-ui/react";
 
 import useAuth from "../../hooks/useAuth";
-import { hasAccessTo, hasOneOfRoles } from "../../utils/rolesUtils";
+import { hasAccessTo, hasOneOfRoles, isUserAdmin } from "../../utils/rolesUtils";
 import { CardListFormation, ExportButton, HardFilters, QueryBuilder } from "./components";
 import {
   allowedFilters,
@@ -159,6 +159,7 @@ export default React.memo(({ searchState, context, extraButtons = null }) => {
                             filters={allowedFilters}
                             columns={columnsDefinition
                               .filter((def) => def.exportable)
+                              .filter((def) => !def.admin || isUserAdmin(auth))
                               .map((def) => ({
                                 header: def.Header,
                                 fieldName: def.accessor,

@@ -638,6 +638,7 @@ export const columnsDefinition = [
     accessor: "updates_history",
     width: 200,
     exportable: true,
+    admin: true,
     formatter: (values) =>
       values
         ?.filter(
@@ -740,6 +741,7 @@ export const columnsDefinition = [
     accessor: "updates_history",
     width: 200,
     exportable: true,
+    admin: true,
     formatter: (values) =>
       values
         ?.filter(
