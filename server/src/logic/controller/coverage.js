@@ -220,6 +220,7 @@ async function getAffelnetCoverage({ code_postal: cp, code_mef, uai }) {
     "bcn_mefs_10.mef10": code_mef?.substring(0, 10),
     published: true,
     niveau: { $in: ["3 (CAP...)", "4 (BAC...)"] },
+    affelnet_id: null,
   });
 
   const m2 = m1.filter(({ num_departement }) => deptArr.includes(num_departement));

@@ -17,6 +17,7 @@ const formationCoverage = async ({ eraseInfo } = {}) => {
         $or: [{ code_mef: { $nin: [null, "AFFECTATION"] } }, { cle_ministere_educatif: { $ne: null } }],
         uai: { $ne: null },
       },
+      sort: { cle_ministere_educatif: -1 },
       limit: 100,
     },
     async (formation) => {
