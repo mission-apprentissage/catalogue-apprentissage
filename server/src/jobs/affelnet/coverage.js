@@ -1,5 +1,4 @@
 const { getAffelnetCoverage, getMatch } = require("../../logic/controller/coverage");
-const { paginator } = require("../../common/utils/paginator");
 const { AffelnetFormation, Formation } = require("../../common/model");
 const { runScript } = require("../scriptWrapper");
 const logger = require("../../common/logger");
@@ -8,18 +7,14 @@ const { AFFELNET_STATUS } = require("../../constants/status");
 const { findNewFormations, findMultisiteFormationsFromL01 } = require("../../logic/finder/migrationFinder");
 const { formation: formatFormation } = require("../../logic/controller/formater");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
+const { cursor } = require("../../common/utils/cursor");
 
 const formationCoverage = async ({ eraseInfo } = {}) => {
-  await paginator(
-    AffelnetFormation,
-    {
-      filter: {
-        $or: [{ code_mef: { $nin: [null, "AFFECTATION"] } }, { cle_ministere_educatif: { $ne: null } }],
-        uai: { $ne: null },
-      },
-      sort: { cle_ministere_educatif: -1 },
-      limit: 100,
-    },
+  await cursor(
+    AffelnetFormation.find({
+      $or: [{ code_mef: { $nin: [null, "AFFECTATION"] } }, { cle_ministere_educatif: { $ne: null } }],
+      uai: { $ne: null },
+    }).sort({ cle_ministere_educatif: -1 }),
     async (formation) => {
       logger.debug({ type: "job" }, formation.cle_ministere_educatif);
 

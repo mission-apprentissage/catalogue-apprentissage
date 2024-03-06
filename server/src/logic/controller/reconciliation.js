@@ -14,7 +14,7 @@ async function reconciliationAffelnet(
 ) {
   // pass through some data for Affelnet
   const formation = await Formation.findOne(
-    { cle_ministere_educatif },
+    { cle_ministere_educatif, affelnet_id: null },
     {
       affelnet_infos_offre: 1,
       bcn_mefs_10: 1,
