@@ -245,16 +245,16 @@ async function getAffelnetCoverage({ code_postal: cp, code_mef, uai }) {
   );
 
   // m3bis is alternative filtering than m3 (not based on m2 but m1)
-  const m3bis = m1.filter(({ uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai }) => {
-    return [uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai].includes(uai);
+  const m3bis = m1.filter(({ uai_formation }) => {
+    return [uai_formation].includes(uai);
   });
 
-  const m4 = m2.filter(({ uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai }) => {
-    return [uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai].includes(uai);
+  const m4 = m2.filter(({ uai_formation }) => {
+    return [uai_formation].includes(uai);
   });
 
-  const m5 = m3.filter(({ uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai }) => {
-    return [uai_formation, etablissement_gestionnaire_uai, etablissement_formateur_uai].includes(uai);
+  const m5 = m3.filter(({ uai_formation }) => {
+    return [uai_formation].includes(uai);
   });
 
   if (m5.length > 0) {

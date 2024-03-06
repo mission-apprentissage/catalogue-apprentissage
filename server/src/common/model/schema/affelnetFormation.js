@@ -17,6 +17,19 @@ const affelnetFormationSchema = {
     default: null,
     description: "uai de l'établissement de formation",
   },
+  uai_responsable: {
+    index: true,
+    type: String,
+    default: null,
+    description: "uai de l'établissement responsable",
+  },
+  uai_formateur: {
+    index: true,
+    type: String,
+    default: null,
+    description: "uai de l'établissement formateur",
+  },
+
   libelle_type_etablissement: {
     type: String,
     default: null,

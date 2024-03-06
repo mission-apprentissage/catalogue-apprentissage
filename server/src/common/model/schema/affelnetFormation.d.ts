@@ -20,6 +20,14 @@ export interface AffelnetFormation {
    */
   uai?: string | null;
   /**
+   * uai de l'établissement responsable
+   */
+  uai_responsable?: string | null;
+  /**
+   * uai de l'établissement formateur
+   */
+  uai_formateur?: string | null;
+  /**
    * libellé du type de l'établissement (centre de formation d'apprentis, lycée, etc..) de formation
    */
   libelle_type_etablissement?: string | null;

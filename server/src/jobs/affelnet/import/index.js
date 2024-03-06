@@ -21,6 +21,8 @@ const afImportFormations = async () => {
         const code_mef = item["CODE_MEF"]?.trim();
         const code_postal = item["CP"]?.trim();
         const uai = item["UAI"]?.trim();
+        const uai_formateur = item["UAI_FORMATEUR"]?.trim();
+        const uai_responsable = item["UAI_RESPONSABLE"]?.trim();
         const code_voie = item["CODE_VOIE"]?.trim();
         const code_specialite = item["CODE_SPECIALITE"]?.trim();
         const cle_ministere_educatif = item["CLE_MINISTERE_EDUCATIF"]?.trim();
@@ -32,6 +34,8 @@ const afImportFormations = async () => {
         await AffelnetFormation.create({
           cle_ministere_educatif,
           uai,
+          uai_formateur,
+          uai_responsable,
           libelle_type_etablissement: item["LIBELLE_TYPE_ETABLISSEMENT"]?.trim(),
           libelle_etablissement: item["LIBELLE_ETABLISSEMENT"]?.trim(),
           adresse: item["ADRESSE"]?.trim(),
