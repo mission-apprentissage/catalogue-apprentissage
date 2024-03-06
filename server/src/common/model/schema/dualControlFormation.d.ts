@@ -353,6 +353,14 @@ export interface DualControlFormation {
    */
   num_tel?: string | null;
   /**
+   * Est remplacée par la clé ME
+   */
+  cle_me_remplace_par?: string | null;
+  /**
+   * Remplace la clé ME
+   */
+  cle_me_remplace?: string | null;
+  /**
    * Numéro siret gestionnaire
    */
   etablissement_gestionnaire_siret?: string | null;

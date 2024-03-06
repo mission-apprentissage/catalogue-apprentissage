@@ -530,12 +530,12 @@ const formationSchema = {
   },
 
   cle_me_remplace_par: {
-    type: String,
+    type: [String],
     default: null,
     description: "Est remplacée par la clé ME",
   },
   cle_me_remplace: {
-    type: String,
+    type: [String],
     default: null,
     description: "Remplace la clé ME",
   },

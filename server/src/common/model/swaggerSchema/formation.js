@@ -563,6 +563,18 @@ module.exports = {
         type: "string",
         description: "Type d'enregistrement (issue de CertifInfo)",
       },
+      cle_me_remplace_par: {
+        type: "string",
+        description: "Est remplacée par la clé ME",
+      },
+      cle_me_remplace: {
+        type: "string",
+        description: "Remplace la clé ME",
+      },
+      agriculture: {
+        type: "boolean",
+        description: "La formation relève du ministère de l'agriculture",
+      },
       etablissement_gestionnaire_id: {
         type: "string",
         description: "Identifiant établissement gestionnaire",

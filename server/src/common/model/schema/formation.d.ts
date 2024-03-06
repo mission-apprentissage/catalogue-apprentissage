@@ -450,6 +450,18 @@ export interface Formation {
    */
   CI_inscrit_rncp?: string | null;
   /**
+   * Est remplacée par la clé ME
+   */
+  cle_me_remplace_par?: string | null;
+  /**
+   * Remplace la clé ME
+   */
+  cle_me_remplace?: string | null;
+  /**
+   * La formation relève du ministère de l'agriculture
+   */
+  agriculture?: boolean | null;
+  /**
    * Identifiant établissement gestionnaire
    */
   etablissement_gestionnaire_id?: string | null;
