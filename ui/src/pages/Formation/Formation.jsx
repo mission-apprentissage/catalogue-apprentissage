@@ -741,7 +741,7 @@ export default () => {
                 {isBrevetNiv5 && (
                   <Alert mt={4} type={"warning"}>
                     Pour des raisons techniques, cette formation ne peut pas intégrer le périmètre Affelnet pour la
-                    campagne 2023. Elle doit être créée manuellement dans Affelnet.
+                    campagne 2024. Elle doit être créée manuellement dans Affelnet.
                   </Alert>
                 )}
               </Box>
