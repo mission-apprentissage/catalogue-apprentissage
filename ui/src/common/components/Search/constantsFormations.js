@@ -574,6 +574,7 @@ export const columnsDefinition = [
     accessor: "catalogue_published",
     width: 200,
     exportable: true,
+    formatter: booleanFormatter,
   },
   {
     Header: "Paramètre réglementaire: certifié qualité ?",
