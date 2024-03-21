@@ -31,7 +31,7 @@ describe(__filename, () => {
       niveau: "3 (CAP...)",
       num_departement: "93",
       code_postal: "93100",
-      etablissement_gestionnaire_uai: "uai_4",
+      uai_formation: "0682021C",
       affelnet_perimetre: true,
     });
 
@@ -107,7 +107,7 @@ describe(__filename, () => {
 
     await AffelnetFormation.create({
       cle_ministere_educatif: "cle_4444",
-      uai: "uai_4",
+      uai: "0682021C",
       code_mef: "4444444444",
       code_postal: "93100",
     });
@@ -135,7 +135,7 @@ describe(__filename, () => {
 
     await AffelnetFormation.create({
       cle_ministere_educatif: "cle_4444",
-      uai: "uai_4",
+      uai: "0682021C",
       code_mef: "4444444444",
       code_postal: "93700",
     });
@@ -191,7 +191,7 @@ describe(__filename, () => {
 
     await AffelnetFormation.create({
       cle_ministere_educatif: "cle_4444",
-      uai: "uai_4",
+      uai: "0682021C",
       code_mef: "4444444444",
       code_postal: "75008",
     });
