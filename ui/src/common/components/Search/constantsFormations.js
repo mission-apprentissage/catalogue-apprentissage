@@ -15,6 +15,7 @@ export const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 export const allowedFilters = [
   "QUERYBUILDER",
   "SEARCH",
+  "cle_ministere_educatif",
   "etablissement_formateur_siret",
   "etablissement_formateur_actif",
   "etablissement_gestionnaire_siret",
@@ -903,6 +904,7 @@ export const columnsDefinition = [
  */
 export const queryBuilderField = [
   { text: "Raison sociale", value: "etablissement_gestionnaire_entreprise_raison_sociale.keyword" },
+  { text: "Clé ministères éducatifs", value: "cle_ministere_educatif.keyword" },
   { text: "Siret formateur", value: "etablissement_formateur_siret.keyword" },
   { text: "Siret gestionnaire", value: "etablissement_gestionnaire_siret.keyword" },
   { text: "UAI du lieu de formation", value: "uai_formation.keyword" },

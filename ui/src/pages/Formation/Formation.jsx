@@ -55,6 +55,113 @@ const getLBAUrl = ({ cle_ministere_educatif = "" }) => {
   )}`;
 };
 
+const VersionBlock = ({ formation }) => {
+  const cle_me_remplace_par = formation?.cle_me_remplace_par;
+  const cle_me_remplace = formation?.cle_me_remplace;
+
+  if (!cle_me_remplace_par?.length && !cle_me_remplace?.length) {
+    return null;
+  }
+
+  return (
+    <>
+      {!!cle_me_remplace_par?.length && (
+        <Alert mt={4} type={"warning"}>
+          {(() => {
+            switch (true) {
+              case cle_me_remplace_par.length === 1:
+                return (
+                  <>
+                    <Text>Cette offre a été remplacée par une plus récente.</Text>
+
+                    <Link
+                      textDecoration={"underline"}
+                      target="_blank"
+                      href={`/formation/${encodeURIComponent(cle_me_remplace_par[0])}`}
+                    >
+                      Voir la nouvelle version de cette offre
+                    </Link>
+                  </>
+                );
+              case cle_me_remplace_par.length > 1:
+                const link = `/recherche/formations?qb=${encodeURIComponent(
+                  JSON.stringify(
+                    cle_me_remplace_par.map((value, index) => ({
+                      field: "cle_ministere_educatif.keyword",
+                      operator: "===",
+                      value,
+                      combinator: "OR",
+                      index,
+                    }))
+                  )
+                )}&defaultMode="advanced"`;
+
+                return (
+                  <>
+                    <Text>Cette offre a été remplacée par plusieurs autres offres.</Text>
+                    <Link textDecoration={"underline"} target="_blank" href={link}>
+                      Voir la liste de toutes les nouvelles versions de cette fiche
+                    </Link>
+                  </>
+                );
+              default: {
+                return <></>;
+              }
+            }
+          })()}
+        </Alert>
+      )}
+
+      {!!cle_me_remplace?.length && (
+        <Alert mt={4} variant="info">
+          {(() => {
+            switch (true) {
+              case cle_me_remplace.length === 1:
+                return (
+                  <>
+                    <Text>Cette offre remplace une offre plus ancienne.</Text>
+                    <Link
+                      textDecoration={"underline"}
+                      target="_blank"
+                      href={`/formation/${encodeURIComponent(cle_me_remplace[0])}`}
+                    >
+                      Voir la précédente version de cette offre
+                    </Link>
+                  </>
+                );
+
+              case cle_me_remplace.length > 1:
+                const link = `/recherche/formations?qb=${encodeURIComponent(
+                  JSON.stringify(
+                    cle_me_remplace.map((value, index) => ({
+                      field: "cle_ministere_educatif.keyword",
+                      operator: "===",
+                      value,
+                      combinator: "OR",
+                      index,
+                    }))
+                  )
+                )}&defaultMode="advanced"`;
+
+                return (
+                  <>
+                    <Text>Cette offre remplace par plusieurs autres offres.</Text>
+                    <Link textDecoration={"underline"} target="_blank" href={link}>
+                      Voir la liste de toutes les versions précédentes de cette fiche{" "}
+                    </Link>
+                  </>
+                );
+              default: {
+                return <></>;
+              }
+            }
+          })()}
+        </Alert>
+      )}
+    </>
+  );
+};
+
 const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, values, hasRightToEdit }) => {
   console.log("Formation.jsx -> Formation", {
     formation,
@@ -683,6 +790,7 @@ export default () => {
                     </Flex>
                   </Flex>
                 )}
+                <VersionBlock formation={formation} />
 
                 {((formation.parcoursup_perimetre &&
                   // formation.parcoursup_previous_session &&
@@ -697,11 +805,9 @@ export default () => {
                     du Carif-Oref.
                   </Alert>
                 )}
-
                 {hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
                   [PARCOURSUP_STATUS.EN_ATTENTE, PARCOURSUP_STATUS.REJETE].includes(formation.parcoursup_statut) &&
                   !!formation.parcoursup_error && <RejectionBlock formation={formation} />}
-
                 {hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
                   formation.parcoursup_raison_depublication && (
                     <Alert mt={4} type={"warning"}>
@@ -737,7 +843,6 @@ export default () => {
                     publier (soumis à validation)".
                   </Alert>
                 )} */}
-
                 {isBrevetNiv5 && (
                   <Alert mt={4} type={"warning"}>
                     Pour des raisons techniques, cette formation ne peut pas intégrer le périmètre Affelnet pour la
