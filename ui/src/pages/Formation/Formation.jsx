@@ -71,17 +71,15 @@ const VersionBlock = ({ formation }) => {
             switch (true) {
               case cle_me_remplace_par.length === 1:
                 return (
-                  <>
-                    <Text>Cette offre a été remplacée par une plus récente.</Text>
-
+                  <Flex>
+                    <Text mr={2}>Cette offre a été remplacée par une plus récente.</Text>{" "}
                     <Link
                       textDecoration={"underline"}
-                      target="_blank"
                       href={`/formation/${encodeURIComponent(cle_me_remplace_par[0])}`}
                     >
                       Voir la nouvelle version de cette offre
                     </Link>
-                  </>
+                  </Flex>
                 );
               case cle_me_remplace_par.length > 1:
                 const link = `/recherche/formations?qb=${encodeURIComponent(
@@ -97,12 +95,12 @@ const VersionBlock = ({ formation }) => {
                 )}&defaultMode="advanced"`;
 
                 return (
-                  <>
-                    <Text>Cette offre a été remplacée par plusieurs autres offres.</Text>
-                    <Link textDecoration={"underline"} target="_blank" href={link}>
+                  <Flex>
+                    <Text mr={2}>Cette offre a été remplacée par plusieurs autres offres.</Text>{" "}
+                    <Link textDecoration={"underline"} href={link}>
                       Voir la liste de toutes les nouvelles versions de cette fiche
                     </Link>
-                  </>
+                  </Flex>
                 );
               default: {
                 return <></>;
@@ -113,21 +111,17 @@ const VersionBlock = ({ formation }) => {
       )}
 
       {!!cle_me_remplace?.length && (
-        <Alert mt={4} variant="info">
+        <Alert mt={4} type="infoLignt">
           {(() => {
             switch (true) {
               case cle_me_remplace.length === 1:
                 return (
-                  <>
-                    <Text>Cette offre remplace une offre plus ancienne.</Text>
-                    <Link
-                      textDecoration={"underline"}
-                      target="_blank"
-                      href={`/formation/${encodeURIComponent(cle_me_remplace[0])}`}
-                    >
+                  <Flex>
+                    <Text mr={2}>Cette offre remplace une offre plus ancienne.</Text>{" "}
+                    <Link textDecoration={"underline"} href={`/formation/${encodeURIComponent(cle_me_remplace[0])}`}>
                       Voir la précédente version de cette offre
                     </Link>
-                  </>
+                  </Flex>
                 );
 
               case cle_me_remplace.length > 1:
@@ -144,12 +138,12 @@ const VersionBlock = ({ formation }) => {
                 )}&defaultMode="advanced"`;
 
                 return (
-                  <>
-                    <Text>Cette offre remplace par plusieurs autres offres.</Text>
-                    <Link textDecoration={"underline"} target="_blank" href={link}>
+                  <Flex>
+                    <Text mr={2}>Cette offre remplace par plusieurs autres offres.</Text>
+                    <Link textDecoration={"underline"} href={link}>
                       Voir la liste de toutes les versions précédentes de cette fiche{" "}
                     </Link>
-                  </>
+                  </Flex>
                 );
               default: {
                 return <></>;
@@ -797,14 +791,15 @@ export default () => {
                   !formation.parcoursup_session) ||
                   (formation.affelnet_perimetre &&
                     // formation.affelnet_previous_session &&
-                    !formation.affelnet_session)) && (
-                  <Alert mt={4} type={"warning"}>
-                    La formation pourrait être dans le périmètre{" "}
-                    {formation.parcoursup_perimetre ? "Parcoursup" : "Affelnet"}, mais ne possède pas de date de début
-                    sur la session à venir. S'il s'agit d'un problème de collecte, veuillez faire le signalement auprès
-                    du Carif-Oref.
-                  </Alert>
-                )}
+                    !formation.affelnet_session)) &&
+                  !formation.cle_me_remplace_par?.length && (
+                    <Alert mt={4} type={"warning"}>
+                      La formation pourrait être dans le périmètre{" "}
+                      {formation.parcoursup_perimetre ? "Parcoursup" : "Affelnet"}, mais ne possède pas de date de début
+                      sur la session à venir. S'il s'agit d'un problème de collecte, veuillez faire le signalement
+                      auprès du Carif-Oref.
+                    </Alert>
+                  )}
                 {hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
                   [PARCOURSUP_STATUS.EN_ATTENTE, PARCOURSUP_STATUS.REJETE].includes(formation.parcoursup_statut) &&
                   !!formation.parcoursup_error && <RejectionBlock formation={formation} />}

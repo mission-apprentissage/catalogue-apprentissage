@@ -21,6 +21,10 @@ const styles = {
     color: colors.info,
     Icon: InfoFill,
   },
+  infoLignt: {
+    color: colors.bluesoft[400],
+    Icon: InfoFill,
+  },
 };
 
 export const Alert = ({ type = "info", children, ...props }) => {

@@ -74,6 +74,7 @@ export const allowedFilters = [
   "last_statut_update_date_end",
   "nouvelle_fiche",
   "agriculture",
+  "cle_me_link",
 ];
 
 const mefsFormatter = (mefs) => {
@@ -1504,6 +1505,16 @@ export const quickFiltersDefinition = [
         dataField: "last_statut_update_date",
         title: "Dernière mise à jour du statut",
         filterLabel: "Statut modifié",
+      },
+
+      {
+        componentId: `cle_me_link`,
+        type: "facet",
+        dataField: "cle_me_link.keyword",
+        title: "Liens entre fiches",
+        filterLabel: "Liens entre fiches",
+        selectAllLabel: "Tous les liens",
+        sortBy: "asc",
       },
     ],
   },

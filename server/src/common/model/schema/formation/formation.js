@@ -540,6 +540,12 @@ const formationSchema = {
     description: "Remplace la clé ME",
   },
 
+  cle_me_link: {
+    type: String,
+    default: null,
+    description: "Liens entre fiches", // Successeur ; Prédécesseur ; Aucun
+  },
+
   agriculture: {
     type: Boolean,
     default: null,
