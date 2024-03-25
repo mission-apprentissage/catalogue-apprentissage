@@ -17,9 +17,11 @@ export interface ConsoleStat {
   date: Date;
   academie?: string | null;
   formations_publiees?: number;
+  formations_publiees_sans_session?: number;
   formations_integrables?: number;
   formations_perimetre?: number;
   organismes_avec_formations_publiees?: number;
+  organismes_avec_formations_publiees_sans_session?: number;
   organismes_avec_formations_integrables?: number;
   organismes_avec_formations_perimetre?: number;
   details?: {

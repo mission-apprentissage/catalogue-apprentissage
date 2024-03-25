@@ -15,6 +15,12 @@ const computeStats = async (academie = null) => {
     affelnet_statut: AFFELNET_STATUS.PUBLIE,
     ...scopeFilter,
   };
+  const filterPublieSansSession = {
+    ...globalFilter,
+    affelnet_statut: AFFELNET_STATUS.PUBLIE,
+    affelnet_session: false,
+    ...scopeFilter,
+  };
   const filterIntegrable = {
     ...globalFilter,
     affelnet_statut: { $ne: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT },
@@ -28,6 +34,8 @@ const computeStats = async (academie = null) => {
 
   const formations_publiees = await Formation.countDocuments(filterPublie);
   // console.log(`${scopeLog} Formations publiées : ${formations_publiees}`);
+  const formations_publiees_sans_session = await Formation.countDocuments(filterPublieSansSession);
+  // console.log(`${scopeLog} Formations publiées ayant perdu sa session: ${filterPublieSansSession}`);
   const formations_integrables = await Formation.countDocuments(filterIntegrable);
   // console.log(`${scopeLog} Formations intégrables : ${formations_integrables}`);
   const formations_perimetre = await Formation.countDocuments(filterPerimetre);
@@ -50,6 +58,24 @@ const computeStats = async (academie = null) => {
   ].length;
 
   // console.log(`${scopeLog} Organismes avec formations publiées : ${organismes_avec_formations_publiees}`);
+
+  const organismes_gestionnaires_avec_formations_publiees_sans_session = await Formation.distinct(
+    "etablissement_gestionnaire_id",
+    filterPublieSansSession
+  );
+  const organismes_formateurs_avec_formations_publiees_sans_session = await Formation.distinct(
+    "etablissement_formateur_id",
+    filterPublieSansSession
+  );
+
+  const organismes_avec_formations_publiees_sans_session = [
+    ...new Set([
+      ...organismes_gestionnaires_avec_formations_publiees_sans_session,
+      ...organismes_formateurs_avec_formations_publiees_sans_session,
+    ]),
+  ].length;
+
+  // console.log(`${scopeLog} Organismes avec formations publiées ayant perdu sa session : ${organismes_avec_formations_publiees_sans_session}`);
 
   const organismes_gestionnaires_avec_formations_integrables = await Formation.distinct(
     "etablissement_gestionnaire_id",
@@ -100,9 +126,11 @@ const computeStats = async (academie = null) => {
   return {
     academie,
     formations_publiees,
+    formations_publiees_sans_session,
     formations_integrables,
     formations_perimetre,
     organismes_avec_formations_publiees,
+    organismes_avec_formations_publiees_sans_session,
     organismes_avec_formations_integrables,
     organismes_avec_formations_perimetre,
     details,

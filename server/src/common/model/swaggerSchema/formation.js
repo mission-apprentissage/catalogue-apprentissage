@@ -564,12 +564,18 @@ module.exports = {
         description: "Type d'enregistrement (issue de CertifInfo)",
       },
       cle_me_remplace_par: {
-        type: "string",
+        type: "array",
         description: "Est remplacée par la clé ME",
+        items: {
+          type: "string",
+        },
       },
       cle_me_remplace: {
-        type: "string",
+        type: "array",
         description: "Remplace la clé ME",
+        items: {
+          type: "string",
+        },
       },
       agriculture: {
         type: "boolean",

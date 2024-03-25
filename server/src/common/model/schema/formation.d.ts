@@ -452,11 +452,11 @@ export interface Formation {
   /**
    * Est remplacée par la clé ME
    */
-  cle_me_remplace_par?: string | null;
+  cle_me_remplace_par?: string[] | null;
   /**
    * Remplace la clé ME
    */
-  cle_me_remplace?: string | null;
+  cle_me_remplace?: string[] | null;
   /**
    * La formation relève du ministère de l'agriculture
    */

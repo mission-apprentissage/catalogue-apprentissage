@@ -57,6 +57,10 @@ const consoleStatSchema = {
     type: Number,
     default: 0,
   },
+  formations_publiees_sans_session: {
+    type: Number,
+    default: 0,
+  },
   formations_integrables: {
     type: Number,
     default: 0,
@@ -66,6 +70,10 @@ const consoleStatSchema = {
     default: 0,
   },
   organismes_avec_formations_publiees: {
+    type: Number,
+    default: 0,
+  },
+  organismes_avec_formations_publiees_sans_session: {
     type: Number,
     default: 0,
   },
