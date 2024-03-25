@@ -90,6 +90,7 @@ const comparePreviousSeasonFormations = async (plateforme) => {
           niveau: 1,
           diplome: 1,
           num_academie: 1,
+          published: 1,
         }
       ).lean()
     );
@@ -103,7 +104,7 @@ const comparePreviousSeasonFormations = async (plateforme) => {
     }
 
     // Si la formation n'existe plus (on ne la retrouve pas) : on incrémente le compteur "closed" par académie.
-    if (!found) {
+    if (!found || !found.published) {
       academyCause.closed = academyCause.closed + 1;
       academyCauses.set(academyName, academyCause);
       continue;
