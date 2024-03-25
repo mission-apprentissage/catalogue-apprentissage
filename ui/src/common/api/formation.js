@@ -18,6 +18,14 @@ export const updateFormation = async ({ formation, body, user }) => {
         Object.keys(body),
         date
       ),
+      ...(body.affelnet_statut
+        ? {
+            affelnet_statut_history: {
+              affelnet_statut: body.affelnet_statut,
+              date: new Date(date.getTime() + 1000),
+            },
+          }
+        : {}),
       ...(body.parcoursup_statut
         ? {
             parcoursup_statut_history: {
