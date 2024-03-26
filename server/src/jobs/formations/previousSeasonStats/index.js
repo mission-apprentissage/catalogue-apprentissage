@@ -98,7 +98,7 @@ const comparePreviousSeasonFormations = async (plateforme) => {
     const academyCause = academyCauses.get(academyName) ?? { ...initialValues };
 
     // Si la formation existe toujours et est dans le périmètre : ok on continue.
-    if (found && isInScope(found, plateforme)) {
+    if (found && found.published && isInScope(found, plateforme) && isInSession(found)) {
       academyCauses.set(academyName, academyCause);
       continue;
     }
@@ -110,16 +110,16 @@ const comparePreviousSeasonFormations = async (plateforme) => {
       continue;
     }
 
-    // Si la formation existe mais n'est plus qualiopi : on incrémente "qualiopi_lost".
-    if (!found.etablissement_gestionnaire_certifie_qualite) {
-      academyCause.qualiopi_lost = academyCause.qualiopi_lost + 1;
+    // Si la formation existe, mais la période n'est pas à jour : on incrémente "not_updated".
+    if (found && found.published && isInScope(found, plateforme) && !isInSession(found)) {
+      academyCause.not_updated = academyCause.not_updated + 1;
       academyCauses.set(academyName, academyCause);
       continue;
     }
 
-    // Si la formation existe, mais la période n'est pas à jour : on incrémente "not_updated".
-    if (!isInSession(found)) {
-      academyCause.not_updated = academyCause.not_updated + 1;
+    // Si la formation existe mais n'est plus qualiopi : on incrémente "qualiopi_lost".
+    if (found && found.published && !found.etablissement_gestionnaire_certifie_qualite) {
+      academyCause.qualiopi_lost = academyCause.qualiopi_lost + 1;
       academyCauses.set(academyName, academyCause);
       continue;
     }
