@@ -61,6 +61,14 @@ const consoleStatSchema = {
     type: Number,
     default: 0,
   },
+  formations_publiees_sans_session_avec_remplacement: {
+    type: Number,
+    default: 0,
+  },
+  formations_publiees_sans_session_sans_remplacement: {
+    type: Number,
+    default: 0,
+  },
   formations_integrables: {
     type: Number,
     default: 0,

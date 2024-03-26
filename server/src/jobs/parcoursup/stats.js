@@ -16,10 +16,17 @@ const computeStats = async (academie = null) => {
     ...scopeFilter,
   };
   const filterPublieSansSession = {
-    ...globalFilter,
-    parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
+    ...filterPublie,
     parcoursup_session: false,
-    ...scopeFilter,
+  };
+
+  const filterPublieSansSessionAvecRemplacement = {
+    ...filterPublieSansSession,
+    "cle_me_remplace_par.0": { $exists: true },
+  };
+  const filterPublieSansSessionSansRemplacement = {
+    ...filterPublieSansSession,
+    "cle_me_remplace_par.0": { $exists: false },
   };
   const filterIntegrable = {
     ...globalFilter,
@@ -36,6 +43,14 @@ const computeStats = async (academie = null) => {
   // console.log(`${scopeLog} Formations publiées : ${formations_publiees}`);
   const formations_publiees_sans_session = await Formation.countDocuments(filterPublieSansSession);
   // console.log(`${scopeLog} Formations publiées ayant perdu sa session: ${filterPublieSansSession}`);
+  const formations_publiees_sans_session_avec_remplacement = await Formation.countDocuments(
+    filterPublieSansSessionAvecRemplacement
+  );
+  // console.log(`${scopeLog} Formations publiées ayant perdu sa session avec remplacement: ${filterPublieSansSessionAvecRemplacement}`);
+  const formations_publiees_sans_session_sans_remplacement = await Formation.countDocuments(
+    filterPublieSansSessionSansRemplacement
+  );
+  // console.log(`${scopeLog} Formations publiées ayant perdu sa session sans remplacement: ${filterPublieSansSessionSansRemplacement}`);
   const formations_integrables = await Formation.countDocuments(filterIntegrable);
   // console.log(`${scopeLog} Formations intégrables : ${formations_integrables}`);
   const formations_perimetre = await Formation.countDocuments(filterPerimetre);
@@ -127,6 +142,8 @@ const computeStats = async (academie = null) => {
     academie,
     formations_publiees,
     formations_publiees_sans_session,
+    formations_publiees_sans_session_avec_remplacement,
+    formations_publiees_sans_session_sans_remplacement,
     formations_integrables,
     formations_perimetre,
     organismes_avec_formations_publiees,

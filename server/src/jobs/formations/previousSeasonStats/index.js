@@ -37,7 +37,10 @@ const storePreviousSeasonFormations = async () => {
   const query = {
     published: true,
     catalogue_published: true,
-    $or: [{ affelnet_perimetre: true }, { parcoursup_perimetre: true }],
+    $or: [
+      { affelnet_perimetre: true, affelnet_session: true },
+      { parcoursup_perimetre: true, parcoursup_session: true },
+    ],
   };
 
   const select = {
@@ -45,8 +48,10 @@ const storePreviousSeasonFormations = async () => {
     num_academie: 1,
     affelnet_statut: 1,
     affelnet_perimetre: 1,
+    affelnet_session: 1,
     parcoursup_statut: 1,
     parcoursup_perimetre: 1,
+    parcoursup_session: 1,
   };
 
   /**
@@ -87,6 +92,8 @@ const comparePreviousSeasonFormations = async (plateforme) => {
           date_debut: 1,
           affelnet_perimetre: 1,
           parcoursup_perimetre: 1,
+          affelnet_session: 1,
+          parcoursup_session: 1,
           niveau: 1,
           diplome: 1,
           num_academie: 1,
@@ -97,15 +104,15 @@ const comparePreviousSeasonFormations = async (plateforme) => {
 
     const academyCause = academyCauses.get(academyName) ?? { ...initialValues };
 
-    // Si la formation existe toujours et est dans le périmètre : ok on continue.
-    if (found && found.published && isInScope(found, plateforme) && isInSession(found)) {
+    // Si la formation n'existe plus (on ne la retrouve pas) : on incrémente le compteur "closed" par académie.
+    if (!found || !found.published) {
+      academyCause.closed = academyCause.closed + 1;
       academyCauses.set(academyName, academyCause);
       continue;
     }
 
-    // Si la formation n'existe plus (on ne la retrouve pas) : on incrémente le compteur "closed" par académie.
-    if (!found || !found.published) {
-      academyCause.closed = academyCause.closed + 1;
+    // Si la formation existe toujours et est dans le périmètre : ok on continue.
+    if (found && found.published && isInScope(found, plateforme) && isInSession(found)) {
       academyCauses.set(academyName, academyCause);
       continue;
     }
