@@ -47,14 +47,6 @@ import { ReinitStatutModalButton } from "../../common/components/formation/Reini
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
-const endpointLBA = process.env.REACT_APP_ENDPOINT_LBA || "https://labonnealternance.apprentissage.beta.gouv.fr";
-
-const getLBAUrl = ({ cle_ministere_educatif = "" }) => {
-  return `${endpointLBA}/recherche-apprentissage?&display=list&page=fiche&type=training&itemId=${encodeURIComponent(
-    cle_ministere_educatif
-  )}`;
-};
-
 const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, values, hasRightToEdit }) => {
   console.log("Formation.jsx -> Formation", {
     formation,
@@ -117,14 +109,6 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
     await handleSubmit(...args);
   };
 
-  const now = new Date();
-  // si date du jour < septembre : les formations ayant des tag sur année -1, année en cours et année + 1 seront affichées sur LBA
-  // si date du jour >= septembre : année en cours et année + 1, année +2 seront affichées sur LBA
-  const tagsForLBA =
-    now.getMonth() >= 8
-      ? [now.getFullYear(), now.getFullYear() + 1, now.getFullYear() + 2]
-      : [now.getFullYear() - 1, now.getFullYear(), now.getFullYear() + 1];
-
   return (
     <Box borderRadius={4}>
       <Grid templateColumns="repeat(12, 1fr)">
@@ -139,13 +123,6 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
               <MapPin2Fill w="12px" h="15px" mr="5px" mb="5px" />
               Lieu de la formation
             </Text>
-            <Box mt={2} mb={4} ml={[-2, -2, -3]}>
-              {formation.catalogue_published && formation.tags.some((tag) => tagsForLBA.includes(+tag)) && (
-                <Link href={getLBAUrl(formation)} textStyle="rf-text" variant="pill" isExternal>
-                  voir sur labonnealternance <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
-                </Link>
-              )}
-            </Box>
 
             <Box>
               <UaiFormationContainer mb={4}>

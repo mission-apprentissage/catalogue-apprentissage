@@ -11,6 +11,7 @@ import { ParcoursupMissingSession } from "./components/ParcoursupMissingSession"
 import { AFFELNET_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
 
 export const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
+const endpointPublic = process.env.REACT_APP_ENDPOINT_PUBLIC || "https://catalogue-apprentissage.intercariforef.org";
 
 export const allowedFilters = [
   "QUERYBUILDER",
@@ -133,6 +134,14 @@ export const columnsDefinition = [
     width: 200,
     exportable: true,
     formatter: (value) => `${process.env.REACT_APP_BASE_URL}/formation/${value}`,
+  },
+
+  {
+    Header: "Lien catalogue public (Carif-Oref)",
+    accessor: "cle_ministere_educatif",
+    width: 200,
+    exportable: true,
+    formatter: (value) => `${endpointPublic}/formation/${encodeURIComponent(value)}`,
   },
 
   {

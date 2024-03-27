@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Container, Flex, Link, List, ListItem, Text } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
 import { Logo } from "./Logo";
+import { ExternalLinkLine } from "../../../theme/components/icons";
 
 const Footer = () => {
   return (
@@ -28,22 +29,26 @@ const Footer = () => {
             <List textStyle="sm" fontWeight="700" flexDirection={"row"} flexWrap={"wrap"} mb={[3, 3, 0]} display="flex">
               <ListItem>
                 <Link href="https://www.legifrance.gouv.fr/" mr={4} isExternal>
-                  legifrance.gouv.fr
+                  legifrance.gouv.fr&nbsp;
+                  <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
                 </Link>
               </ListItem>
               <ListItem>
                 <Link href="https://www.gouvernement.fr/" mr={4} isExternal>
-                  gouvernement.fr
+                  gouvernement.fr&nbsp;
+                  <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
                 </Link>
               </ListItem>
               <ListItem>
                 <Link href="https://www.service-public.fr/" mr={4} isExternal>
-                  service-public.fr
+                  service-public.fr&nbsp;
+                  <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
                 </Link>
               </ListItem>
               <ListItem>
                 <Link href="https://www.data.gouv.fr/fr/" isExternal>
-                  data.gouv.fr
+                  data.gouv.fr&nbsp;
+                  <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
                 </Link>
               </ListItem>
             </List>
