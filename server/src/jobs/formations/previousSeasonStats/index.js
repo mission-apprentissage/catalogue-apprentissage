@@ -3,7 +3,7 @@ const logger = require("../../../common/logger");
 const { runScript } = require("../../scriptWrapper");
 const { PreviousSeasonFormation, Formation, PreviousSeasonFormationStat } = require("../../../common/model");
 const { isSameDate } = require("../../../common/utils/dateUtils");
-const { isInSession } = require("../../../common/utils/rulesUtils");
+const { isInSession, getSessionEndDate, getCampagneStartDate } = require("../../../common/utils/rulesUtils");
 const { academies } = require("../../../constants/academies");
 
 /** @typedef {import("../../../common/model/schema/formation").Formation} Formation */
@@ -191,12 +191,19 @@ const comparePreviousSeasonFormations = async (plateforme) => {
   console.log({ result });
 };
 
+const defaultStorageDate = getCampagneStartDate(new Date());
+
 /**
  * @param {object} options
  * @param {number} [options.month=6] default is 6 (July). Starts from 0 for January
  * @param {number} [options.date=31] default is 31
  */
-const collectPreviousSeasonStats = async ({ month = 6, date = 31 } = { month: 6, date: 31 }) => {
+const collectPreviousSeasonStats = async (
+  { month = defaultStorageDate.getMonth(), date = defaultStorageDate.getDate() } = {
+    month: defaultStorageDate.getMonth(),
+    date: defaultStorageDate.getDate(),
+  }
+) => {
   try {
     logger.info({ type: "job" }, `previous season stats jobs`);
 
