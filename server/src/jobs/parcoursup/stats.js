@@ -28,6 +28,20 @@ const computeStats = async (academie = null) => {
     ...filterPublieSansSession,
     "cle_me_remplace_par.0": { $exists: false },
   };
+  const filterPubliePerteQualiopi = {
+    ...filterPublie,
+    etablissement_gestionnaire_certifie_qualite: false,
+  };
+
+  const filterPublieSiretInactif = {
+    ...filterPublie,
+    siret_actif: "inactif",
+  };
+  const filterPubliePerteRncp = {
+    ...filterPublie,
+    etablissement_reference_habilite_rncp: false,
+  };
+
   const filterIntegrable = {
     ...globalFilter,
     parcoursup_statut: { $ne: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT },
@@ -41,18 +55,32 @@ const computeStats = async (academie = null) => {
 
   const formations_publiees = await Formation.countDocuments(filterPublie);
   // console.log(`${scopeLog} Formations publiées : ${formations_publiees}`);
+
   const formations_publiees_sans_session = await Formation.countDocuments(filterPublieSansSession);
   // console.log(`${scopeLog} Formations publiées ayant perdu sa session: ${filterPublieSansSession}`);
+
   const formations_publiees_sans_session_avec_remplacement = await Formation.countDocuments(
     filterPublieSansSessionAvecRemplacement
   );
   // console.log(`${scopeLog} Formations publiées ayant perdu sa session avec remplacement: ${filterPublieSansSessionAvecRemplacement}`);
+
   const formations_publiees_sans_session_sans_remplacement = await Formation.countDocuments(
     filterPublieSansSessionSansRemplacement
   );
   // console.log(`${scopeLog} Formations publiées ayant perdu sa session sans remplacement: ${filterPublieSansSessionSansRemplacement}`);
+
+  const formations_publiees_perte_qualiopi = await Formation.countDocuments(filterPubliePerteQualiopi);
+  // console.log(`${scopeLog} Formations publiées ayant perdu qualiopi: ${filterPubliePerteQualiopi}`);
+
+  const formations_publiees_siret_inactif = await Formation.countDocuments(filterPublieSiretInactif);
+  // console.log(`${scopeLog} Formations publiées dont le siret est devenu inactif: ${filterPublieSiretInactif}`);
+
+  const formations_publiees_perte_rncp = await Formation.countDocuments(filterPubliePerteRncp);
+  // console.log(`${scopeLog} Formations publiées ayant subi une perte d'habilitation rncp: ${filterPubliePerteRncp}`);
+
   const formations_integrables = await Formation.countDocuments(filterIntegrable);
   // console.log(`${scopeLog} Formations intégrables : ${formations_integrables}`);
+
   const formations_perimetre = await Formation.countDocuments(filterPerimetre);
   // console.log(`${scopeLog} Formations dans le périmètre : ${formations_integrables}`);
 
@@ -144,6 +172,9 @@ const computeStats = async (academie = null) => {
     formations_publiees_sans_session,
     formations_publiees_sans_session_avec_remplacement,
     formations_publiees_sans_session_sans_remplacement,
+    formations_publiees_perte_qualiopi,
+    formations_publiees_perte_rncp,
+    formations_publiees_siret_inactif,
     formations_integrables,
     formations_perimetre,
     organismes_avec_formations_publiees,

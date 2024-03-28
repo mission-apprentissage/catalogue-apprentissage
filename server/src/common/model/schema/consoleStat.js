@@ -69,6 +69,19 @@ const consoleStatSchema = {
     type: Number,
     default: 0,
   },
+
+  formations_publiees_perte_qualiopi: {
+    type: Number,
+    default: 0,
+  },
+  formations_publiees_perte_rncp: {
+    type: Number,
+    default: 0,
+  },
+  formations_publiees_siret_inactif: {
+    type: Number,
+    default: 0,
+  },
   formations_integrables: {
     type: Number,
     default: 0,
