@@ -20,7 +20,7 @@ import { useFormik } from "formik";
 
 import Layout from "../layout/Layout";
 import helpText from "../../locales/helpText.json";
-import { ArrowDownLine, ExternalLinkLine, MapPin2Fill } from "../../theme/components/icons";
+import { ArrowDownLine, MapPin2Fill } from "../../theme/components/icons";
 import { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL } from "../../constants/catalogueLabels";
 import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
 

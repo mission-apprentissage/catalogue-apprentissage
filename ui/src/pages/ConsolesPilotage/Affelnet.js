@@ -180,6 +180,14 @@ export default () => {
           />
 
           <IframeResizer
+            src="https://catalogue.apprentissage.education.gouv.fr/metabase/public/dashboard/c1bed66b-c5e3-42d1-a99d-0919dc77c774#bordered=false"
+            seamless
+            style={{ width: "100%", border: 0 }}
+            title={`Console de pilotage Parcoursup - Situations à surveiller`}
+            allowtransparency={"true"}
+          />
+
+          <IframeResizer
             src="https://catalogue.apprentissage.education.gouv.fr/metabase/public/dashboard/92f2107c-ffc7-4fd3-abbf-de6da483a3b3"
             seamless
             style={{ width: "100%", border: 0 }}
