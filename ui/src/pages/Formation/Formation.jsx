@@ -670,8 +670,8 @@ export default () => {
                   <Alert mt={4} type={"warning"}>
                     La formation pourrait être dans le périmètre{" "}
                     {formation.parcoursup_perimetre ? "Parcoursup" : "Affelnet"}, mais ne possède pas de date de début
-                    sur la session à venir. S'il s'agit d'un problème de collecte, veuillez faire le signalement auprès
-                    du Carif-Oref.
+                    correspondant à la prochaine rentrée. S'il s'agit d'un problème de collecte, veuillez faire le
+                    signalement auprès du Carif-Oref.
                   </Alert>
                 )}
 
