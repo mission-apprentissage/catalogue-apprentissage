@@ -18,6 +18,11 @@ export interface ConsoleStat {
   academie?: string | null;
   formations_publiees?: number;
   formations_publiees_sans_session?: number;
+  formations_publiees_sans_session_avec_remplacement?: number;
+  formations_publiees_sans_session_sans_remplacement?: number;
+  formations_publiees_perte_qualiopi?: number;
+  formations_publiees_perte_rncp?: number;
+  formations_publiees_siret_inactif?: number;
   formations_integrables?: number;
   formations_perimetre?: number;
   organismes_avec_formations_publiees?: number;

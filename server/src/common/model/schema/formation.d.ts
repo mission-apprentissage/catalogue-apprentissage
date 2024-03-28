@@ -458,6 +458,10 @@ export interface Formation {
    */
   cle_me_remplace?: string[] | null;
   /**
+   * Liens entre fiches
+   */
+  cle_me_link?: string | null;
+  /**
    * La formation relève du ministère de l'agriculture
    */
   agriculture?: boolean | null;

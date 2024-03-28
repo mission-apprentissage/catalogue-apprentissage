@@ -245,6 +245,23 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
   // Les formations relevant du ministère de l'agriculture sont celles dont le code CFD comporte un 3 en 3ème position.
   const agriculture = !!fields?.cfd?.match(/^..3.*/);
 
+  let cle_me_link;
+
+  switch (true) {
+    case fields?.cle_me_remplace?.length > 0 && fields?.cle_me_remplace_par?.length > 0:
+      cle_me_link = "Successeur et prédécesseur";
+      break;
+    case fields?.cle_me_remplace_par?.length > 0:
+      cle_me_link = "Prédécesseur";
+      break;
+    case fields?.cle_me_remplace?.length > 0:
+      cle_me_link = "Successeur";
+      break;
+    default:
+      cle_me_link = "Aucun";
+      break;
+  }
+
   return {
     ...fields,
 
@@ -276,6 +293,8 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
     nouvelle_fiche,
 
     agriculture,
+
+    cle_me_link,
   };
 };
 

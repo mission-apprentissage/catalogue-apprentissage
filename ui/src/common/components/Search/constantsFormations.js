@@ -16,6 +16,7 @@ const endpointPublic = process.env.REACT_APP_ENDPOINT_PUBLIC || "https://catalog
 export const allowedFilters = [
   "QUERYBUILDER",
   "SEARCH",
+  "cle_ministere_educatif",
   "etablissement_formateur_siret",
   "etablissement_formateur_actif",
   "etablissement_gestionnaire_siret",
@@ -74,6 +75,7 @@ export const allowedFilters = [
   "last_statut_update_date_end",
   "nouvelle_fiche",
   "agriculture",
+  "cle_me_link",
 ];
 
 const mefsFormatter = (mefs) => {
@@ -912,6 +914,7 @@ export const columnsDefinition = [
  */
 export const queryBuilderField = [
   { text: "Raison sociale", value: "etablissement_gestionnaire_entreprise_raison_sociale.keyword" },
+  { text: "Clé ministères éducatifs", value: "cle_ministere_educatif.keyword" },
   { text: "Siret formateur", value: "etablissement_formateur_siret.keyword" },
   { text: "Siret gestionnaire", value: "etablissement_gestionnaire_siret.keyword" },
   { text: "UAI du lieu de formation", value: "uai_formation.keyword" },
@@ -1511,6 +1514,16 @@ export const quickFiltersDefinition = [
         dataField: "last_statut_update_date",
         title: "Dernière mise à jour du statut",
         filterLabel: "Statut modifié",
+      },
+
+      {
+        componentId: `cle_me_link`,
+        type: "facet",
+        dataField: "cle_me_link.keyword",
+        title: "Liens entre fiches",
+        filterLabel: "Liens entre fiches",
+        selectAllLabel: "Tous les liens",
+        sortBy: "asc",
       },
     ],
   },

@@ -577,6 +577,10 @@ module.exports = {
           type: "string",
         },
       },
+      cle_me_link: {
+        type: "string",
+        description: "Liens entre fiches",
+      },
       agriculture: {
         type: "boolean",
         description: "La formation relève du ministère de l'agriculture",

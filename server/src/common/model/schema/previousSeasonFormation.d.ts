@@ -20,10 +20,6 @@ export interface PreviousSeasonFormation {
    */
   parcoursup_perimetre?: boolean;
   /**
-   * A eu une session parcoursup
-   */
-  parcoursup_session?: boolean;
-  /**
    * Statut parcoursup
    */
   parcoursup_statut?:
@@ -41,10 +37,6 @@ export interface PreviousSeasonFormation {
    * Dans le périmètre affelnet
    */
   affelnet_perimetre?: boolean;
-  /**
-   * A eu une session affelnet
-   */
-  affelnet_session?: boolean;
   /**
    * Statut affelnet
    */
