@@ -1,5 +1,17 @@
 import React, { useCallback } from "react";
-import { Box, Link, ListItem, Text, UnorderedList, IconButton, useToast, LinkBox, List } from "@chakra-ui/react";
+import {
+  Box,
+  Link,
+  ListItem,
+  Text,
+  UnorderedList,
+  IconButton,
+  useToast,
+  LinkBox,
+  List,
+  Divider,
+  Button,
+} from "@chakra-ui/react";
 import { ExternalLinkLine } from "../../../theme/components/icons";
 import { DangerBox } from "../DangerBox";
 import { InfoTooltip } from "../InfoTooltip";
@@ -11,14 +23,14 @@ import { EllipsisText } from "../EllipsisText";
 import { getSessionStartDate, getExpirationDate, isInSession } from "../../utils/rulesUtils";
 import { ClipboardLine } from "../../../theme/components/icons";
 
-const endpointLBA = process.env.REACT_APP_ENDPOINT_LBA || "https://labonnealternance.apprentissage.beta.gouv.fr";
+// const endpointLBA = process.env.REACT_APP_ENDPOINT_LBA || "https://labonnealternance.apprentissage.beta.gouv.fr";
 const endpointPublic = process.env.REACT_APP_ENDPOINT_PUBLIC || "https://catalogue-apprentissage.intercariforef.org";
 
-const getLBAUrl = ({ cle_ministere_educatif = "" }) => {
-  return `${endpointLBA}/recherche-apprentissage?&display=list&page=fiche&type=training&itemId=${encodeURIComponent(
-    cle_ministere_educatif
-  )}`;
-};
+// const getLBAUrl = ({ cle_ministere_educatif = "" }) => {
+//   return `${endpointLBA}/recherche-apprentissage?&display=list&page=fiche&type=training&itemId=${encodeURIComponent(
+//     cle_ministere_educatif
+//   )}`;
+// };
 
 const getPublicUrl = ({ cle_ministere_educatif = "" }) => {
   return `${endpointPublic}/formation/${encodeURIComponent(cle_ministere_educatif)}`;
@@ -128,33 +140,47 @@ export const DescriptionBlock = ({ formation }) => {
           Description
         </Text>
 
-        <Box mt={2} mb={4} ml={-3}>
+        <Box mt={4} mb={4} ml={-3}>
           <List textStyle="md" fontWeight="700" flexDirection={"row"} flexWrap={"wrap"} mb={[3, 3, 0]} display="flex">
             {formation.onisep_url !== "" && formation.onisep_url !== null && (
-              <ListItem ml={4}>
-                <Link href={formation.onisep_url} variant="outlined" isExternal style={{ whiteSpace: "no-wrap" }}>
-                  Onisep&nbsp;
-                  <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
-                </Link>
-              </ListItem>
+              <>
+                <ListItem ml={4}>
+                  <Link href={formation.onisep_url} variant="outlined" isExternal style={{ whiteSpace: "no-wrap" }}>
+                    Onisep&nbsp;
+                    <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
+                  </Link>
+                </ListItem>
+
+                <ListItem ml={4}>
+                  <Divider border="2px" orientation="vertical" />
+                </ListItem>
+              </>
             )}
-            {formation.catalogue_published && formation.tags.some((tag) => tagsForLBA.includes(+tag)) && (
+            {/* {formation.catalogue_published && formation.tags.some((tag) => tagsForLBA.includes(+tag)) && (
               <ListItem ml={4}>
                 <Link href={getLBAUrl(formation)} variant="outlined" isExternal style={{ whiteSpace: "no-wrap" }}>
                   labonnealternance&nbsp;
                   <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
                 </Link>
               </ListItem>
-            )}
+            )} */}
 
             <ListItem ml={4}>
               <Link href={getPublicUrl(formation)} variant="outlined" isExternal style={{ whiteSpace: "no-wrap" }}>
                 catalogue public&nbsp;
                 <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
               </Link>
-              <Box display="inline" cursor="pointer" ml={2} onClick={copyPublicLink} aria-label="Search database">
-                <ClipboardLine />
-              </Box>
+              <Button
+                variant="pill"
+                display="inline-flex"
+                cursor="pointer"
+                ml={2}
+                onClick={copyPublicLink}
+                aria-label="Search database"
+              >
+                Copier le lien
+                {/* <ClipboardLine w={"0.75rem"} h={"0.75rem"} ml={2} /> */}
+              </Button>
             </ListItem>
           </List>
         </Box>
