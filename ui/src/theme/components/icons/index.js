@@ -6,6 +6,8 @@ export * from "./ArrowDropRightLine";
 export * from "./ArrowRightDownLine";
 export * from "./ArrowRightLine";
 export * from "./CheckLine";
+export * from "./ClipboardFill";
+export * from "./ClipboardLine";
 export * from "./Close";
 export * from "./CloseCircleLine";
 export * from "./Cloud";

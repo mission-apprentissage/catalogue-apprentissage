@@ -1,5 +1,5 @@
-import React from "react";
-import { Box, Link, ListItem, Text, UnorderedList } from "@chakra-ui/react";
+import React, { useCallback } from "react";
+import { Box, Link, ListItem, Text, UnorderedList, IconButton, useToast, LinkBox, List } from "@chakra-ui/react";
 import { ExternalLinkLine } from "../../../theme/components/icons";
 import { DangerBox } from "../DangerBox";
 import { InfoTooltip } from "../InfoTooltip";
@@ -9,6 +9,7 @@ import { HabilitationPartenaire } from "./HabilitationPartenaire";
 import { HABILITE_LIST } from "../../../constants/certificateurs";
 import { EllipsisText } from "../EllipsisText";
 import { getSessionStartDate, getExpirationDate, isInSession } from "../../utils/rulesUtils";
+import { ClipboardLine } from "../../../theme/components/icons";
 
 const endpointLBA = process.env.REACT_APP_ENDPOINT_LBA || "https://labonnealternance.apprentissage.beta.gouv.fr";
 const endpointPublic = process.env.REACT_APP_ENDPOINT_PUBLIC || "https://catalogue-apprentissage.intercariforef.org";
@@ -33,6 +34,7 @@ const DureeAnnee = ({ value }) => {
 };
 
 export const DescriptionBlock = ({ formation }) => {
+  const toast = useToast();
   const isTitreRNCP = ["Titre", "TP", null].includes(formation.rncp_details?.code_type_certif); // formation.etablissement_reference_habilite_rncp !== null;
 
   const showPartenaires =
@@ -105,6 +107,20 @@ export const DescriptionBlock = ({ formation }) => {
       ? [now.getFullYear(), now.getFullYear() + 1, now.getFullYear() + 2]
       : [now.getFullYear() - 1, now.getFullYear(), now.getFullYear() + 1];
 
+  const copyPublicLink = useCallback(
+    (event) => {
+      event.preventDefault();
+      navigator.clipboard.writeText(getPublicUrl(formation));
+      toast({
+        title: "Lien copié",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
+    },
+    [formation, toast]
+  );
+
   return (
     <>
       <Box p={8}>
@@ -113,43 +129,34 @@ export const DescriptionBlock = ({ formation }) => {
         </Text>
 
         <Box mt={2} mb={4} ml={-3}>
-          {formation.onisep_url !== "" && formation.onisep_url !== null && (
-            <Link
-              href={formation.onisep_url}
-              mt={3}
-              variant="pill"
-              textStyle="rf-text"
-              isExternal
-              style={{ whiteSpace: "no-wrap", display: "inline-block" }}
-            >
-              voir la fiche descriptive Onisep&nbsp;
-              <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
-            </Link>
-          )}
+          <List textStyle="md" fontWeight="700" flexDirection={"row"} flexWrap={"wrap"} mb={[3, 3, 0]} display="flex">
+            {formation.onisep_url !== "" && formation.onisep_url !== null && (
+              <ListItem ml={4}>
+                <Link href={formation.onisep_url} variant="outlined" isExternal style={{ whiteSpace: "no-wrap" }}>
+                  Onisep&nbsp;
+                  <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
+                </Link>
+              </ListItem>
+            )}
+            {formation.catalogue_published && formation.tags.some((tag) => tagsForLBA.includes(+tag)) && (
+              <ListItem ml={4}>
+                <Link href={getLBAUrl(formation)} variant="outlined" isExternal style={{ whiteSpace: "no-wrap" }}>
+                  labonnealternance&nbsp;
+                  <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
+                </Link>
+              </ListItem>
+            )}
 
-          {formation.catalogue_published && formation.tags.some((tag) => tagsForLBA.includes(+tag)) && (
-            <Link
-              href={getLBAUrl(formation)}
-              textStyle="rf-text"
-              variant="pill"
-              isExternal
-              style={{ whiteSpace: "no-wrap", display: "inline-block" }}
-            >
-              voir sur labonnealternance&nbsp;
-              <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
-            </Link>
-          )}
-
-          <Link
-            href={getPublicUrl(formation)}
-            textStyle="rf-text"
-            variant="pill"
-            isExternal
-            style={{ whiteSpace: "no-wrap", display: "inline-block" }}
-          >
-            voir sur le catalogue public&nbsp;
-            <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
-          </Link>
+            <ListItem ml={4}>
+              <Link href={getPublicUrl(formation)} variant="outlined" isExternal style={{ whiteSpace: "no-wrap" }}>
+                catalogue public&nbsp;
+                <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
+              </Link>
+              <Box display="inline" cursor="pointer" ml={2} onClick={copyPublicLink} aria-label="Search database">
+                <ClipboardLine />
+              </Box>
+            </ListItem>
+          </List>
         </Box>
 
         <Box>
