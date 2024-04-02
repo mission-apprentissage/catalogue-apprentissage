@@ -17,6 +17,7 @@ const computeStats = async (academie = null) => {
   };
   const filterPublieSansSession = {
     ...filterPublie,
+    catalogue_published: true,
     affelnet_session: false,
   };
 
