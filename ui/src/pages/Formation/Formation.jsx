@@ -761,7 +761,7 @@ export default () => {
                     </Flex>
                   </Flex>
                 )}
-                {/* <VersionBlock formation={formation} /> */}
+                <VersionBlock formation={formation} />
 
                 {((formation.parcoursup_perimetre &&
                   // formation.parcoursup_previous_session &&
