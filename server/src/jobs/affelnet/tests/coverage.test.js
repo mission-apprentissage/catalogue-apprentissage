@@ -161,35 +161,7 @@ describe(__filename, () => {
     assert.strictEqual(affelnetFormation.matching_mna_formation[0].cle_ministere_educatif, "cle_2");
   });
 
-  it("should apply published status when find one match force 3", async () => {
-    await AffelnetFormation.deleteOne({ cle_ministere_educatif: "cle_4444" });
-
-    await AffelnetFormation.create({
-      cle_ministere_educatif: "cle_4444",
-      uai: "uai_nope",
-      code_mef: "4444444444",
-      code_postal: "93100",
-    });
-
-    await afCoverage({});
-
-    const totalPublished = await Formation.countDocuments({
-      affelnet_statut: AFFELNET_STATUS.PUBLIE,
-    });
-    assert.strictEqual(totalPublished, 1);
-
-    const found = await Formation.findOne({
-      affelnet_statut: AFFELNET_STATUS.PUBLIE,
-    });
-    assert.strictEqual(found.cle_ministere_educatif, "cle_2");
-
-    const affelnetFormation = await AffelnetFormation.findOne({ cle_ministere_educatif: "cle_4444" });
-    assert.strictEqual(affelnetFormation.matching_type, "3");
-    assert.strictEqual(affelnetFormation.matching_mna_formation.length, 1);
-    assert.strictEqual(affelnetFormation.matching_mna_formation[0].cle_ministere_educatif, "cle_2");
-  });
-
-  it("should apply published status when find one match force 3bis", async () => {
+  it("should apply published status when find one match force 4bis", async () => {
     await AffelnetFormation.deleteOne({ cle_ministere_educatif: "cle_4444" });
 
     await AffelnetFormation.create({
@@ -210,6 +182,29 @@ describe(__filename, () => {
       affelnet_statut: AFFELNET_STATUS.PUBLIE,
     });
     assert.strictEqual(found.cle_ministere_educatif, "cle_2");
+
+    const affelnetFormation = await AffelnetFormation.findOne({ cle_ministere_educatif: "cle_4444" });
+    assert.strictEqual(affelnetFormation.matching_type, "4");
+    assert.strictEqual(affelnetFormation.matching_mna_formation.length, 1);
+    assert.strictEqual(affelnetFormation.matching_mna_formation[0].cle_ministere_educatif, "cle_2");
+  });
+
+  it("should not apply published status when find one match force 3", async () => {
+    await AffelnetFormation.deleteOne({ cle_ministere_educatif: "cle_4444" });
+
+    await AffelnetFormation.create({
+      cle_ministere_educatif: "cle_4444",
+      uai: "uai_nope",
+      code_mef: "4444444444",
+      code_postal: "93100",
+    });
+
+    await afCoverage({});
+
+    const totalPublished = await Formation.countDocuments({
+      affelnet_statut: AFFELNET_STATUS.PUBLIE,
+    });
+    assert.strictEqual(totalPublished, 0);
 
     const affelnetFormation = await AffelnetFormation.findOne({ cle_ministere_educatif: "cle_4444" });
     assert.strictEqual(affelnetFormation.matching_type, "3");

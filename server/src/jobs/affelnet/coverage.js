@@ -73,7 +73,7 @@ const formationCoverage = async ({ eraseInfo } = {}) => {
       formation.matching_mna_formation = match.matching;
       await formation.save();
 
-      if (formation.matching_mna_formation?.length === 1 && Number(formation.matching_type) >= 3) {
+      if (formation.matching_mna_formation?.length === 1 && Number(formation.matching_type) >= 4) {
         await reconciliationAffelnet(formation, formation.matching_mna_formation[0], eraseInfo);
       }
     }
