@@ -226,28 +226,27 @@ async function getAffelnetCoverage({ code_postal: cp, code_mef, uai }) {
 
   const m2 = m1.filter(({ num_departement }) => deptArr.includes(num_departement));
 
-  const m3 = m2.filter(
-    ({
-      etablissement_formateur_code_postal,
-      etablissement_gestionnaire_code_postal,
-      etablissement_formateur_code_commune_insee,
-      etablissement_gestionnaire_code_commune_insee,
-      code_commune_insee,
-      code_postal,
-    }) => {
-      return [
-        etablissement_formateur_code_postal,
-        etablissement_gestionnaire_code_postal,
-        etablissement_formateur_code_commune_insee,
-        etablissement_gestionnaire_code_commune_insee,
-        code_commune_insee,
-        code_postal,
-      ].includes(cp);
-    }
-  );
+  // const m3 = m2.filter(
+  //   ({
+  //     etablissement_formateur_code_postal,
+  //     etablissement_gestionnaire_code_postal,
+  //     etablissement_formateur_code_commune_insee,
+  //     etablissement_gestionnaire_code_commune_insee,
+  //     code_commune_insee,
+  //     code_postal,
+  //   }) => {
+  //     return [
+  //       etablissement_formateur_code_postal,
+  //       etablissement_gestionnaire_code_postal,
+  //       etablissement_formateur_code_commune_insee,
+  //       etablissement_gestionnaire_code_commune_insee,
+  //       code_commune_insee,
+  //       code_postal,
+  //     ].includes(cp);
+  //   }
+  // );
 
-  // m3bis is alternative filtering than m3 (not based on m2 but m1)
-  const m3bis = m1.filter(({ uai_formation }) => {
+  const m3 = m1.filter(({ uai_formation }) => {
     return [uai_formation].includes(uai);
   });
 
@@ -280,12 +279,12 @@ async function getAffelnetCoverage({ code_postal: cp, code_mef, uai }) {
     };
   }
 
-  if (m3bis.length > 0) {
-    return {
-      strength: "3",
-      matching: m3bis,
-    };
-  }
+  // if (m3bis.length > 0) {
+  //   return {
+  //     strength: "3",
+  //     matching: m3bis,
+  //   };
+  // }
 
   if (m2.length > 0) {
     return {
