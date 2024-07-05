@@ -60,7 +60,7 @@
       "non publié": "offres de formation qui ont été non-publiées par un instructeur en académie",
       "à publier (soumis à validation)": "offres ou organismes de formation qui remplissent les conditions pour intégrer le service Affelnet. Une décision du recteur statue sur l’intégration potentielle de ces offres dans le service Affelnet",
       "à publier": "offres ou organismes de formation qui remplissent les conditions pour intégrer le service Affelnet. L’offre de formation peut faire l’objet d’une publication par un instructeur en académie",
-      "en attente de publication": "offres de formation qui seront intégrées automatiquement dans le service Affelnet via le module d’import"
+      "en attente de publication": "Ces offres seront transmises à Affelnet après intégration des offres catalogue depuis Affelnet-lycée. Après transfert, le statut passera au statut “Publié” suite à rafraîchissement hebdomadaire sur la période mars / avril."
     },
     "parcoursup_session_manquante": "Cette liste vous est proposée à titre indicatif. Les formations non renouvelées peuvent être liées à des formations qui ne sont effectivement plus proposées pour 2024, mais également à un retard d’enregistrement au Carif-Oref par les OFA ou à des mises en attente par les Carif-Oref. Elles peuvent également être consécutives à des changements de paramètre (modification de Siret, modification de code RNCP, MEF ou CFD) ayant entraîné une modification de clé ministère éducatif.",
     "parcoursup_statut": {
@@ -73,7 +73,7 @@
       "à publier (vérifier accès direct postbac)": "offres et organismes de formation qui remplissent les conditions pour intégrer le service Parcoursup. L’accessibilité de l’offre de formation aux bacheliers doit être vérifiée par un instructeur en académie",
       "à publier (soumis à validation Recteur)": "offres et organismes de formation qui remplissent les conditions pour intégrer la plateforme Parcoursup. Une commission rectorale statue sur l’intégration potentielle de ces offres dans la plateforme Parcoursup",
       "à publier": "offres et organismes de formation qui remplissent les conditions pour intégrer la plateforme Parcoursup. L’offre de formation peut faire l’objet d’une publication par un instructeur en académie",
-      "en attente de publication": "offres de formation qui pourraient être intégrées automatiquement dans la plateforme Parcoursup via le module d’import",
+      "en attente de publication": "Ces offres seront transmises automatiquement à Parcoursup pour paramétrage. Ce transfert est quotidien et automatique, à partir de mi-décembre 2024 et jusqu’à mi-septembre 2025. Après transfert, le statut passera automatiquement à “Publié“.",
       "fermé": "Cette formation a été supprimée dans Parcoursup, mais elle figure encore dans les enregistrements Carif-Oref. Le Carif-Oref est informé de cette suppression pour rectification. Après mise à jour au niveau du Carif-Oref, la formation disparaîtra du catalogue."
     },
     "periode": {

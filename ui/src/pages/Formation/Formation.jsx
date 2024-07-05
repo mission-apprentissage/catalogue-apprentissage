@@ -476,21 +476,21 @@ export default () => {
     },
     onSubmit: ({ uai_formation, affelnet_statut }) => {
       return new Promise(async (resolve) => {
-        const trimedUaiFormation = uai_formation?.trim();
+        const fixedUaiFormation = uai_formation?.trim()?.toUpperCase();
 
         try {
-          if (trimedUaiFormation !== formation?.uai_formation) {
+          if (fixedUaiFormation !== formation?.uai_formation) {
             const result = await _put(`${CATALOGUE_API}/entity/formations/${formation._id}`, {
-              uai_formation: trimedUaiFormation,
+              uai_formation: fixedUaiFormation,
               ...(affelnet_statut === AFFELNET_STATUS.PUBLIE ? { affelnet_statut: AFFELNET_STATUS.EN_ATTENTE } : {}),
               last_update_who: user.email,
               last_update_at: Date.now(),
-              editedFields: { ...formation?.editedFields, uai_formation: trimedUaiFormation },
+              editedFields: { ...formation?.editedFields, uai_formation: fixedUaiFormation },
               $push: {
                 updates_history: buildUpdatesHistory(
                   formation,
                   {
-                    uai_formation: trimedUaiFormation,
+                    uai_formation: fixedUaiFormation,
                     ...(affelnet_statut === AFFELNET_STATUS.PUBLIE
                       ? { affelnet_statut: AFFELNET_STATUS.EN_ATTENTE }
                       : {}),
