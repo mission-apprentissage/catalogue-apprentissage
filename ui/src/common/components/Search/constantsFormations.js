@@ -76,6 +76,10 @@ export const allowedFilters = [
   "nouvelle_fiche",
   "agriculture",
   "cle_me_link",
+  "id_formation",
+  "id_action",
+  "ids_action",
+  "id_certifinfo",
 ];
 
 const mefsFormatter = (mefs) => {
@@ -1533,8 +1537,9 @@ export const quickFiltersDefinition = [
 
 export const dataSearch = {
   dataField: [
-    "etablissement_gestionnaire_entreprise_raison_sociale",
     "intitule_long",
+    "etablissement_gestionnaire_entreprise_raison_sociale",
+    "etablissement_gestionnaire_enseigne",
     "cfd",
     "rncp_code",
     "uai_formation",
@@ -1542,11 +1547,15 @@ export const dataSearch = {
     "etablissement_formateur_uai",
     "etablissement_gestionnaire_siret",
     "etablissement_formateur_siret",
+    "id_formation",
+    "id_action",
+    "ids_action",
+    "id_certifinfo",
     "cle_ministere_educatif",
   ],
   placeholder:
     "Saisissez une raison sociale, un Siret, un intitulé de formation, un code RNCP ou CFD (code formation diplôme)",
-  fieldWeights: [4, 3, 2, 2, 2, 2, 2, 1, 1, 1],
+  fieldWeights: [5, 4, 3, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1],
 };
 
 export default {
