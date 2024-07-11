@@ -136,10 +136,10 @@ export const columnsDefinition = [
   },
   {
     Header: "Fiche catalogue",
-    accessor: "_id",
+    accessor: "cle_ministere_educatif",
     width: 200,
     exportable: true,
-    formatter: (value) => `${process.env.REACT_APP_BASE_URL}/formation/${value}`,
+    formatter: (value) => `${process.env.REACT_APP_BASE_URL}/formation/${encodeURIComponent(value)}`,
   },
 
   {
