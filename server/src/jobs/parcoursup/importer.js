@@ -3,7 +3,7 @@ const logger = require("../../common/logger");
 const { runScript } = require("../scriptWrapper");
 const { ParcoursupFormation } = require("../../common/model/index");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
-const { downloadAndSaveFileFromS3 } = require("../../common/utils/awsUtils");
+// const { downloadAndSaveFileFromS3 } = require("../../common/utils/awsUtils");
 const { getJsonFromXlsxFile } = require("../../common/utils/fileUtils");
 
 const mapping = (formation) => {
@@ -85,6 +85,11 @@ const run = async () => {
         stat.inserted += 1;
       }
     });
+
+    // stat.deleted = (
+    //   await ParcoursupFormation.deleteMany({ id_parcoursup: { $nin: data.map((d) => d.CODEFORMATIONINSCRIPTION) } })
+    // ).deletedCount;
+
     console.log({ stat });
   } catch (error) {
     logger.error({ type: "job" }, error);

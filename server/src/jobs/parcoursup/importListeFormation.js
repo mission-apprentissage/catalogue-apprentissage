@@ -86,7 +86,7 @@ async function importListeFormation(csv) {
           const res = await ParcoursupFormationCheck.create(data);
 
           stats.created++;
-          console.info(`Ligne ${res._id} créée`);
+          console.info(`Ligne ${res.codeformationinscription} créée`);
         } catch (e) {
           stats.failed++;
           logger.error({ type: "job" }, `Impossible de traiter la ligne : \n${data}`, e);
