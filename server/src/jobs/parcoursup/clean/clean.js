@@ -71,14 +71,12 @@ const run = async () => {
             },
           };
 
-          if (
-            (await Formation.countDocuments(level2)) === 1 &&
-            (await Formation.findOne(level2)).cle_ministere_educatif === parcoursupFormation.id_rco
-          ) {
-            logger.info(
-              `Match unique de niveau 2 : ${parcoursupFormation.codeformationinscription} > ${parcoursupFormation.id_rco}`
-            );
-            map.set(parcoursupFormation.codeformationinscription, [parcoursupFormation.id_rco]);
+          if ((await Formation.countDocuments(level2)) === 1) {
+            const cle_me = (await Formation.findOne(level2)).cle_ministere_educatif;
+
+            logger.info(`Match unique de niveau 2 : ${parcoursupFormation.codeformationinscription} > ${cle_me}`);
+
+            map.set(parcoursupFormation.codeformationinscription, [cle_me]);
             return;
           }
 
@@ -87,14 +85,12 @@ const run = async () => {
             annee: "1",
           };
 
-          if (
-            (await Formation.countDocuments(level3)) === 1 &&
-            (await Formation.findOne(level3)).cle_ministere_educatif === parcoursupFormation.id_rco
-          ) {
-            logger.info(
-              `Match unique de niveau 3 : ${parcoursupFormation.codeformationinscription} > ${parcoursupFormation.id_rco}`
-            );
-            map.set(parcoursupFormation.codeformationinscription, [parcoursupFormation.id_rco]);
+          if ((await Formation.countDocuments(level3)) === 1) {
+            const cle_me = (await Formation.findOne(level3)).cle_ministere_educatif;
+
+            logger.info(`Match unique de niveau 3 : ${parcoursupFormation.codeformationinscription} > ${cle_me}`);
+
+            map.set(parcoursupFormation.codeformationinscription, [cle_me]);
             return;
           }
 
@@ -103,14 +99,12 @@ const run = async () => {
             published: true,
           };
 
-          if (
-            (await Formation.countDocuments(level4)) === 1 &&
-            (await Formation.findOne(level4)).cle_ministere_educatif === parcoursupFormation.id_rco
-          ) {
-            logger.info(
-              `Match unique de niveau 4 : ${parcoursupFormation.codeformationinscription} > ${parcoursupFormation.id_rco}`
-            );
-            map.set(parcoursupFormation.codeformationinscription, [parcoursupFormation.id_rco]);
+          if ((await Formation.countDocuments(level4)) === 1) {
+            const cle_me = (await Formation.findOne(level4)).cle_ministere_educatif;
+
+            logger.info(`Match unique de niveau 4 : ${parcoursupFormation.codeformationinscription} > ${cle_me}`);
+
+            map.set(parcoursupFormation.codeformationinscription, [cle_me]);
             return;
           }
 
@@ -192,34 +186,34 @@ const run = async () => {
       `${await Formation.countDocuments({ parcoursup_id: { $ne: null }, cle_ministere_educatif: { $nin: [...map.values()].flatMap((value) => value) } })} formations possédant un parcoursup_id devant être supprimé`
     );
 
-    const deleted = await Formation.updateMany(
-      {
-        parcoursup_id: {
-          $ne: null,
-        },
-        cle_ministere_educatif: { $nin: [...map.values()].flatMap((value) => value) },
-      },
-      {
-        $set: {
-          parcoursup_id: null,
-        },
-      }
-    );
+    // const deleted = await Formation.updateMany(
+    //   {
+    //     parcoursup_id: {
+    //       $ne: null,
+    //     },
+    //     cle_ministere_educatif: { $nin: [...map.values()].flatMap((value) => value) },
+    //   },
+    //   {
+    //     $set: {
+    //       parcoursup_id: null,
+    //     },
+    //   }
+    // );
 
-    const updated = await Promise.all(
-      [...map.entries()].map(([key, value]) =>
-        Formation.updateMany(
-          {
-            cle_ministere_educatif: { $in: value },
-          },
-          {
-            $set: {
-              parcoursup_id: key,
-            },
-          }
-        )
-      )
-    );
+    // const updated = await Promise.all(
+    //   [...map.entries()].map(([key, value]) =>
+    //     Formation.updateMany(
+    //       {
+    //         cle_ministere_educatif: { $in: value },
+    //       },
+    //       {
+    //         $set: {
+    //           parcoursup_id: key,
+    //         },
+    //       }
+    //     )
+    //   )
+    // );
 
     console.log({ deleted, updated });
   } catch (error) {
