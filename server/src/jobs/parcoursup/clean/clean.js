@@ -186,34 +186,34 @@ const run = async () => {
       `${await Formation.countDocuments({ parcoursup_id: { $ne: null }, cle_ministere_educatif: { $nin: [...map.values()].flatMap((value) => value) } })} formations possédant un parcoursup_id devant être supprimé`
     );
 
-    // const deleted = await Formation.updateMany(
-    //   {
-    //     parcoursup_id: {
-    //       $ne: null,
-    //     },
-    //     cle_ministere_educatif: { $nin: [...map.values()].flatMap((value) => value) },
-    //   },
-    //   {
-    //     $set: {
-    //       parcoursup_id: null,
-    //     },
-    //   }
-    // );
+    const deleted = await Formation.updateMany(
+      {
+        parcoursup_id: {
+          $ne: null,
+        },
+        cle_ministere_educatif: { $nin: [...map.values()].flatMap((value) => value) },
+      },
+      {
+        $set: {
+          parcoursup_id: null,
+        },
+      }
+    );
 
-    // const updated = await Promise.all(
-    //   [...map.entries()].map(([key, value]) =>
-    //     Formation.updateMany(
-    //       {
-    //         cle_ministere_educatif: { $in: value },
-    //       },
-    //       {
-    //         $set: {
-    //           parcoursup_id: key,
-    //         },
-    //       }
-    //     )
-    //   )
-    // );
+    const updated = await Promise.all(
+      [...map.entries()].map(([key, value]) =>
+        Formation.updateMany(
+          {
+            cle_ministere_educatif: { $in: value },
+          },
+          {
+            $set: {
+              parcoursup_id: key,
+            },
+          }
+        )
+      )
+    );
 
     console.log({ deleted, updated });
   } catch (error) {
