@@ -2,7 +2,7 @@ const express = require("express");
 const Joi = require("joi");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const Boom = require("boom");
-const { ReglePerimetre } = require("../../common/model");
+const { ReglePerimetre } = require("../../common/models");
 const { diffFormation, buildUpdatesHistory } = require("../../logic/common/utils/diffUtils");
 const { sanitize } = require("../../common/utils/sanitizeUtils");
 

@@ -1,7 +1,7 @@
 const express = require("express");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const Joi = require("joi");
-const { Role } = require("../../common/model");
+const { Role } = require("../../common/models");
 const { sanitize } = require("../../common/utils/sanitizeUtils");
 
 const roleSchema = Joi.object({

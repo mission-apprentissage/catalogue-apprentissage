@@ -1,17 +1,18 @@
 const logger = require("../../../common/logger");
-const { Formation } = require("../../../common/model");
+const { Formation } = require("../../../common/models");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
 
 const run = async () => {
+  const filterReglement = { catalogue_published: true, published: true };
+
   const total = await Formation.countDocuments({});
-  const totalReglement = await Formation.countDocuments({ catalogue_published: true, published: true });
+  const totalReglement = await Formation.countDocuments(filterReglement);
 
   const totalNotRelevant = await Formation.countDocuments({
     parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
   });
   const totalReglementNotRelevant = await Formation.countDocuments({
-    catalogue_published: true,
-    published: true,
+    ...filterReglement,
     parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
   });
 
@@ -19,8 +20,7 @@ const run = async () => {
     parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
   });
   const totalReglementToValidateHabilitation = await Formation.countDocuments({
-    catalogue_published: true,
-    published: true,
+    ...filterReglement,
     parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
   });
 
@@ -28,8 +28,7 @@ const run = async () => {
     parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
   });
   const totalReglementToValidate = await Formation.countDocuments({
-    catalogue_published: true,
-    published: true,
+    ...filterReglement,
     parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
   });
 
@@ -37,8 +36,7 @@ const run = async () => {
     parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
   });
   const totalReglementToValidateRecteur = await Formation.countDocuments({
-    catalogue_published: true,
-    published: true,
+    ...filterReglement,
     parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
   });
 
@@ -46,8 +44,7 @@ const run = async () => {
     parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER,
   });
   const totalReglementToCheck = await Formation.countDocuments({
-    catalogue_published: true,
-    published: true,
+    ...filterReglement,
     parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER,
   });
 
@@ -55,8 +52,7 @@ const run = async () => {
     parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
   });
   const totalReglementPending = await Formation.countDocuments({
-    catalogue_published: true,
-    published: true,
+    ...filterReglement,
     parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
   });
 
@@ -64,8 +60,7 @@ const run = async () => {
     parcoursup_statut: PARCOURSUP_STATUS.REJETE,
   });
   const totalReglementRejected = await Formation.countDocuments({
-    catalogue_published: true,
-    published: true,
+    ...filterReglement,
     parcoursup_statut: PARCOURSUP_STATUS.REJETE,
   });
 
@@ -73,8 +68,7 @@ const run = async () => {
     parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
   });
   const totalReglementPublished = await Formation.countDocuments({
-    catalogue_published: true,
-    published: true,
+    ...filterReglement,
     parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
   });
 
@@ -82,8 +76,7 @@ const run = async () => {
     parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIE,
   });
   const totalReglementNotPublished = await Formation.countDocuments({
-    catalogue_published: true,
-    published: true,
+    ...filterReglement,
     parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIE,
   });
 
@@ -91,21 +84,19 @@ const run = async () => {
     parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
   });
   const totalReglementClosed = await Formation.countDocuments({
-    catalogue_published: true,
-    published: true,
+    ...filterReglement,
     parcoursup_statut: PARCOURSUP_STATUS.FERME,
   });
 
   const totalPérimètre = await Formation.countDocuments({ parcoursup_perimetre: true });
   const totalReglementPérimètre = await Formation.countDocuments({
-    catalogue_published: true,
-    published: true,
+    ...filterReglement,
     parcoursup_perimetre: true,
   });
+
   const totalHorsPérimètre = await Formation.countDocuments({ parcoursup_perimetre: false });
   const totalReglementHorsPérimètre = await Formation.countDocuments({
-    catalogue_published: true,
-    published: true,
+    ...filterReglement,
     parcoursup_perimetre: false,
   });
 

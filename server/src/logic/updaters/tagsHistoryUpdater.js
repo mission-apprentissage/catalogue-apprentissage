@@ -1,4 +1,4 @@
-const { Formation } = require("../../common/model/index");
+const { Formation } = require("../../common/models/index");
 
 // keep 365 days in history (more or less a full year)
 const KEEP_HISTORY_DAYS_LIMIT = 365;

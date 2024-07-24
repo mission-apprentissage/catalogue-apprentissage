@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { Formation } = require("../../../common/model/index");
+const { Formation } = require("../../../common/models");
 const { connectToMongoForTests, cleanAll } = require("../../../../tests/utils/testUtils.js");
 const { afReinitStatus } = require("../reinitStatus");
 const { run, allHistoryIsEnAttenteAfterDate, lastHistoryIsEnAttenteBeforeDate } = require("../reinitStatus/controller");

@@ -2,7 +2,7 @@ const logger = require("../../../common/logger");
 const { runScript } = require("../../scriptWrapper");
 const { downloader } = require("./downloader");
 const { converter } = require("./converter");
-const { DualControlEtablissement } = require("../../../common/model/index");
+const { DualControlEtablissement } = require("../../../common/models/index");
 
 const importer = async (options) => {
   try {

@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { Formation } = require("../../../../src/common/model/index");
+const { Formation } = require("../../../../src/common/models");
 const { connectToMongoForTests, cleanAll } = require("../../../../tests/utils/testUtils.js");
 const { asyncForEach } = require("../../../../src/common/utils/asyncUtils");
 const { updateManyTagsHistory } = require("../../../../src/logic/updaters/tagsHistoryUpdater.js");

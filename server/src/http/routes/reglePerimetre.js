@@ -3,7 +3,7 @@ const Boom = require("boom");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { getQueryFromRule, titresRule, getPublishedRules } = require("../../common/utils/rulesUtils");
 const { getNiveauxDiplomesTree } = require("@mission-apprentissage/tco-service-node");
-const { ReglePerimetre, Formation } = require("../../common/model");
+const { ReglePerimetre, Formation } = require("../../common/models");
 const { sanitize } = require("../../common/utils/sanitizeUtils");
 
 module.exports = () => {
@@ -24,6 +24,7 @@ module.exports = () => {
       const diplomesCounts = await Formation.aggregate([
         {
           $match: {
+            published: true,
             ...getPublishedRules(plateforme),
             ...titresRule,
           },

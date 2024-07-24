@@ -10,7 +10,7 @@ const { afImportFormations } = require("../../jobs/affelnet/import");
 const { afCoverage } = require("../../jobs/affelnet/coverage");
 const { rebuildEsIndex } = require("../../jobs/esIndex/esIndex");
 const { hasAccessTo } = require("../../common/utils/rolesUtils");
-const { Formation } = require("../../common/model");
+const { Formation } = require("../../common/models");
 
 const DOCUMENTS = new Map([
   [

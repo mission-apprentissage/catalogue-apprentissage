@@ -1,7 +1,7 @@
 const assert = require("assert");
 const integrationTests = require("../../utils/integrationTests");
 const users = require("../../../src/common/components/users");
-const { User } = require("../../../src/common/model");
+const { User } = require("../../../src/common/models");
 
 integrationTests(__filename, () => {
   it("Permet de créer un utilisateur", async () => {

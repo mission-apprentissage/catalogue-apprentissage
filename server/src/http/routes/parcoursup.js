@@ -1,4 +1,4 @@
-const { Formation } = require("../../common/model");
+const { Formation } = require("../../common/models");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const express = require("express");
 const Boom = require("boom");

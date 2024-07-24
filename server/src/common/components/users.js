@@ -1,4 +1,4 @@
-const { User, Role } = require("../model/index");
+const { User, Role } = require("../models/index");
 const sha512Utils = require("../utils/sha512Utils");
 const { pick, uniq, escapeRegExp } = require("lodash");
 

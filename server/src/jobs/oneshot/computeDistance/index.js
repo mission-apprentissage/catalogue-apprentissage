@@ -1,6 +1,6 @@
 const { getCoordinatesFromAddressData } = require("@mission-apprentissage/tco-service-node");
 const { distanceBetweenCoordinates } = require("../../../common/utils/distanceUtils");
-const { Formation } = require("../../../common/model");
+const { Formation } = require("../../../common/models");
 const { runScript } = require("../../scriptWrapper");
 
 const parseErrors = (messages) => {

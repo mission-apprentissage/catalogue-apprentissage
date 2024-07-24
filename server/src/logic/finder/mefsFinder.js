@@ -1,5 +1,5 @@
 const { getModels } = require("@mission-apprentissage/tco-service-node");
-const { ReglePerimetre, SandboxFormation } = require("../../common/model");
+const { ReglePerimetre, SandboxFormation } = require("../../common/models");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 const { findMefsForParcoursup } = require("../../common/utils/parcoursupUtils");
 const { getQueryFromRule } = require("../../common/utils/rulesUtils");
@@ -111,12 +111,14 @@ const computeMefs = async (fields, oldFields) => {
     // Add current cle_ministere_educatif to ensure no concurrent access in db
     let filtered_affelnet_mefs_10 = await findMefsForAffelnet({
       cle_ministere_educatif: rest.cle_ministere_educatif,
+      published: true,
       $or: aPublierRules.map(getQueryFromRule),
     });
 
     if (!filtered_affelnet_mefs_10) {
       filtered_affelnet_mefs_10 = await findMefsForAffelnet({
         cle_ministere_educatif: rest.cle_ministere_educatif,
+        published: true,
         $or: aPublierSoumisAValidationRules.map(getQueryFromRule),
       });
     }

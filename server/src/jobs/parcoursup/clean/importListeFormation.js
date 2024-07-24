@@ -1,11 +1,11 @@
 const { oleoduc, writeData, transformData, compose } = require("oleoduc");
 const { createReadStream } = require("fs");
 
-const { runScript } = require("../scriptWrapper");
-const { omitEmpty } = require("../../common/utils/objectUtils");
-const logger = require("../../common/logger");
-const { ParcoursupFormationCheck } = require("../../common/model");
-const { parseCsv } = require("../../common/utils/csvUtils");
+const { runScript } = require("../../scriptWrapper");
+const { omitEmpty } = require("../../../common/utils/objectUtils");
+const logger = require("../../../common/logger");
+const { ParcoursupFormationCheck } = require("../../../common/models");
+const { parseCsv } = require("../../../common/utils/csvUtils");
 
 const transformStream = (data) => {
   return {

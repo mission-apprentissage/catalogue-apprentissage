@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { AffelnetFormation, Formation } = require("../../../common/model/index");
+const { AffelnetFormation, Formation } = require("../../../common/models");
 const { connectToMongoForTests, cleanAll } = require("../../../../tests/utils/testUtils.js");
 const { afCoverage } = require("../coverage");
 const { AFFELNET_STATUS } = require("../../../constants/status");

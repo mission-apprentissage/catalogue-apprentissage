@@ -1,7 +1,7 @@
 // @ts-check
 const { DateTime } = require("luxon");
 
-/** @typedef {import("../../../common/model/schema/formation").Formation} Formation */
+/** @typedef {import("../../../common/models/schema/formation").Formation} Formation */
 
 /**
  *  @type {{ [key in keyof Formation]: "boolean"|"date"|"periode"|"niveau"|"nullable"|"nullable-boolean"|"number"|"array"|"rncp_details" }}

@@ -1,4 +1,4 @@
-const { Formation, ParcoursupFormation } = require("../../common/model");
+const { Formation, ParcoursupFormation } = require("../../common/models");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 
 /**

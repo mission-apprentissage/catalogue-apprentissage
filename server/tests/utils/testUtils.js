@@ -17,7 +17,7 @@ const connectToMongoForTests = async () => {
 module.exports = {
   connectToMongoForTests,
   cleanAll: () => {
-    const models = require("../../src/common/model");
+    const models = require("../../src/common/models");
     return Promise.all([emptyDir(testDataDir), ...Object.values(models).map((m) => m.deleteMany())]);
   },
 };

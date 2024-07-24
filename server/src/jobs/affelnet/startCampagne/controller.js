@@ -1,4 +1,4 @@
-const { Formation, AffelnetFormation } = require("../../../common/model");
+const { Formation, AffelnetFormation } = require("../../../common/models");
 const logger = require("../../../common/logger");
 const { AFFELNET_STATUS } = require("../../../constants/status");
 const { cursor } = require("../../../common/utils/cursor");

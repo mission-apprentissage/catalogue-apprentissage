@@ -6,7 +6,7 @@ const { streamArray } = require("stream-json/streamers/StreamArray");
 const { pick } = require("stream-json/filters/Pick");
 const StreamZip = require("node-stream-zip");
 const { oleoduc, transformData, writeData } = require("oleoduc");
-const { DualControlEtablissement } = require("../../../common/model/index");
+const { DualControlEtablissement } = require("../../../common/models/index");
 const logger = require("../../../common/logger");
 
 const RCO_ZIP_URL = "https://mnadownloader.intercariforef.org/etablissements.php";

@@ -6,7 +6,7 @@ const { parser: streamParser } = require("stream-json");
 const { streamArray } = require("stream-json/streamers/StreamArray");
 const StreamZip = require("node-stream-zip");
 const { oleoduc, writeData, transformData } = require("oleoduc");
-const { DualControlFormation } = require("../../../common/model/index");
+const { DualControlFormation } = require("../../../common/models/index");
 const logger = require("../../../common/logger");
 
 const RCO_ZIP_URL = "https://mnadownloader.intercariforef.org/";

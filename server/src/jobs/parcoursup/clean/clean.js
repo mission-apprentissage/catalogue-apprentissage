@@ -1,16 +1,29 @@
-const { Formation, ParcoursupFormationCheck } = require("../../../common/model");
+const { Formation, ParcoursupFormationCheck } = require("../../../common/models");
 const logger = require("../../../common/logger");
 const { runScript } = require("../../scriptWrapper");
-const { transformData, compose, writeData, oleoduc, filterData } = require("oleoduc");
+const { writeData, oleoduc } = require("oleoduc");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
-const { cle_me_remplace_par } = require("../../../common/model/schema/formation/formation");
-const { cle_ministere_educatif } = require("../../../common/model/schema/affelnetFormation");
 
 /**
- * Récupère les ParcoursupFormation en base, et en partant du
+ *
+ * @param {Object} args
+ * @param {boolean} args.proceed
+ * @returns
  */
-const run = async () => {
+const run = async ({ proceed }) => {
   const map = new Map();
+
+  logger.info({ type: "job" }, `${await ParcoursupFormationCheck.countDocuments()} formations dans la base Parcoursup`);
+
+  logger.info(
+    { type: "job" },
+    `${await ParcoursupFormationCheck.countDocuments({ id_rco: { $ne: null } })} possédant une clé ME`
+  );
+
+  logger.info(
+    { type: "job" },
+    `${await Formation.countDocuments({ parcoursup_id: { $ne: null } })} formations dans la base catalogue possédant un parcoursup_id`
+  );
 
   try {
     await oleoduc(
@@ -19,6 +32,7 @@ const run = async () => {
         async (parcoursupFormation) => {
           if (!parcoursupFormation.id_rco) {
             logger.warn(
+              { type: "job" },
               `Pas de clé ME pour la formation ${parcoursupFormation.codeformationinscription} dans la base Parcoursup`
             );
 
@@ -37,6 +51,7 @@ const run = async () => {
             (await Formation.findOne(level1)).cle_ministere_educatif === parcoursupFormation.id_rco
           ) {
             logger.info(
+              { type: "job" },
               `Match unique de niveau 1 : ${parcoursupFormation.codeformationinscription} > ${parcoursupFormation.id_rco}`
             );
             map.set(parcoursupFormation.codeformationinscription, [parcoursupFormation.id_rco]);
@@ -74,7 +89,10 @@ const run = async () => {
           if ((await Formation.countDocuments(level2)) === 1) {
             const cle_me = (await Formation.findOne(level2)).cle_ministere_educatif;
 
-            logger.info(`Match unique de niveau 2 : ${parcoursupFormation.codeformationinscription} > ${cle_me}`);
+            logger.info(
+              { type: "job" },
+              `Match unique de niveau 2 : ${parcoursupFormation.codeformationinscription} > ${cle_me}`
+            );
 
             map.set(parcoursupFormation.codeformationinscription, [cle_me]);
             return;
@@ -88,7 +106,10 @@ const run = async () => {
           if ((await Formation.countDocuments(level3)) === 1) {
             const cle_me = (await Formation.findOne(level3)).cle_ministere_educatif;
 
-            logger.info(`Match unique de niveau 3 : ${parcoursupFormation.codeformationinscription} > ${cle_me}`);
+            logger.info(
+              { type: "job" },
+              `Match unique de niveau 3 : ${parcoursupFormation.codeformationinscription} > ${cle_me}`
+            );
 
             map.set(parcoursupFormation.codeformationinscription, [cle_me]);
             return;
@@ -102,7 +123,10 @@ const run = async () => {
           if ((await Formation.countDocuments(level4)) === 1) {
             const cle_me = (await Formation.findOne(level4)).cle_ministere_educatif;
 
-            logger.info(`Match unique de niveau 4 : ${parcoursupFormation.codeformationinscription} > ${cle_me}`);
+            logger.info(
+              { type: "job" },
+              `Match unique de niveau 4 : ${parcoursupFormation.codeformationinscription} > ${cle_me}`
+            );
 
             map.set(parcoursupFormation.codeformationinscription, [cle_me]);
             return;
@@ -140,6 +164,7 @@ const run = async () => {
             const cles = (await Formation.find(level5)).map((formation) => formation.cle_ministere_educatif);
 
             logger.info(
+              { type: "job" },
               `Match multiple de niveau 5 : ${parcoursupFormation.codeformationinscription} > ${cles.join(", ")}`
             );
             map.set(parcoursupFormation.codeformationinscription, cles);
@@ -147,7 +172,8 @@ const run = async () => {
           }
 
           logger.error(
-            `Pas de match : ${parcoursupFormation.id_rco} > ${parcoursupFormation.codeformationinscription}`
+            { type: "job" },
+            `Pas de match : ${parcoursupFormation.codeformationinscription} > ${parcoursupFormation.id_rco} `
           );
 
           try {
@@ -161,61 +187,81 @@ const run = async () => {
       )
     );
 
-    // console.log(map);
-    logger.info([...map].length);
-    // logger.info(Array.from(map.keys()));
+    logger.info({ type: "job" }, `${[...map.keys()].length} parcoursup_id uniques`);
+    logger.info({ type: "job" }, `${[...map.values()].flatMap((value) => value).length} clé ME`);
 
     logger.info(
+      { type: "job" },
       `${await Formation.countDocuments({ parcoursup_id: { $ne: null } })} formations possédant un parcoursup_id`
     );
 
     logger.info(
+      { type: "job" },
       `${await Formation.countDocuments({ parcoursup_id: { $ne: null, $nin: [...map.keys()] } })} formations possédant un parcoursup_id non retenu`
     );
 
     logger.info(
+      { type: "job" },
       `${await Formation.countDocuments({
         parcoursup_id: {
           $ne: null,
         },
         $or: [...map.entries()].map(([key, value]) => ({ parcoursup_id: key, cle_ministere_educatif: { $in: value } })),
-      })} formations possédant un parcoursup_id retenu sur la bonne clé ministère éducative`
+      })} formations possédant déjà le parcoursup_id retenu`
     );
 
     logger.info(
+      { type: "job" },
+      `${await Formation.countDocuments({
+        $or: [...map.entries()].map(([key, value]) => ({
+          parcoursup_id: { $ne: key },
+          cle_ministere_educatif: { $in: value },
+        })),
+      })} formations ne possédant pas le parcoursup_id retenu et devant être ajouté ou mis à jour`
+    );
+
+    logger.info(
+      { type: "job" },
       `${await Formation.countDocuments({ parcoursup_id: { $ne: null }, cle_ministere_educatif: { $nin: [...map.values()].flatMap((value) => value) } })} formations possédant un parcoursup_id devant être supprimé`
     );
 
-    const deleted = await Formation.updateMany(
-      {
-        parcoursup_id: {
-          $ne: null,
-        },
-        cle_ministere_educatif: { $nin: [...map.values()].flatMap((value) => value) },
-      },
-      {
-        $set: {
-          parcoursup_id: null,
-        },
-      }
-    );
-
-    const updated = await Promise.all(
-      [...map.entries()].map(([key, value]) =>
-        Formation.updateMany(
+    switch (proceed) {
+      case true:
+        logger.info({ type: "job" }, "Proceeding to clean...");
+        await Formation.updateMany(
           {
-            cle_ministere_educatif: { $in: value },
+            parcoursup_id: {
+              $ne: null,
+            },
+            cle_ministere_educatif: { $nin: [...map.values()].flatMap((value) => value) },
           },
           {
             $set: {
-              parcoursup_id: key,
+              parcoursup_id: null,
             },
           }
-        )
-      )
-    );
+        );
 
-    console.log({ deleted, updated });
+        await Promise.all(
+          [...map.entries()].map(([key, value]) =>
+            Formation.updateMany(
+              {
+                cle_ministere_educatif: { $in: value },
+              },
+              {
+                $set: {
+                  parcoursup_id: key,
+                },
+              }
+            )
+          )
+        );
+
+        break;
+      default:
+        logger.info({ type: "job" }, "To proceed, pass --proceed as argument");
+        return;
+    }
   } catch (error) {
     logger.error({ type: "job" }, error);
   }
@@ -224,8 +270,10 @@ const run = async () => {
 if (process.env.standalone) {
   runScript(async () => {
     logger.info({ type: "job" }, " -- Start formation parcoursup_id clean -- ");
+    const args = process.argv.slice(2);
+    const proceed = !!args.find((arg) => arg.startsWith("--proceed"));
 
-    await run();
+    await run({ proceed });
 
     logger.info({ type: "job" }, " -- End formation parcoursup_id clean -- ");
   });

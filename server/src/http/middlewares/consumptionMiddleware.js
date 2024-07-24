@@ -1,5 +1,5 @@
 const logger = require("../../common/logger");
-const { Consumption } = require("../../common/model");
+const { Consumption } = require("../../common/models");
 
 module.exports = async (req) => {
   try {

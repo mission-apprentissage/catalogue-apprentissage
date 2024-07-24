@@ -1,6 +1,6 @@
 const assert = require("assert");
 const httpTests = require("../../utils/httpTests");
-const { User } = require("../../../src/common/model");
+const { User } = require("../../../src/common/models");
 const { hash } = require("../../../src/common/utils/sha512Utils");
 
 httpTests(__filename, ({ startServer }) => {

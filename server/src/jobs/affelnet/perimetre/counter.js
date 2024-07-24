@@ -1,17 +1,18 @@
 const logger = require("../../../common/logger");
-const { Formation } = require("../../../common/model");
+const { Formation } = require("../../../common/models");
 const { AFFELNET_STATUS } = require("../../../constants/status");
 
 const run = async () => {
+  const filterReglement = { catalogue_published: true, published: true };
+
   const total = await Formation.countDocuments({});
-  const totalReglement = await Formation.countDocuments({ catalogue_published: true, published: true });
+  const totalReglement = await Formation.countDocuments(filterReglement);
 
   const totalNotRelevant = await Formation.countDocuments({
     affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
   });
   const totalReglementNotRelevant = await Formation.countDocuments({
-    catalogue_published: true,
-    published: true,
+    ...filterReglement,
     affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
   });
 
@@ -19,8 +20,7 @@ const run = async () => {
     affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
   });
   const totalReglementToValidate = await Formation.countDocuments({
-    catalogue_published: true,
-    published: true,
+    ...filterReglement,
     affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
   });
 
@@ -28,8 +28,7 @@ const run = async () => {
     affelnet_statut: AFFELNET_STATUS.A_PUBLIER,
   });
   const totalReglementToCheck = await Formation.countDocuments({
-    catalogue_published: true,
-    published: true,
+    ...filterReglement,
     affelnet_statut: AFFELNET_STATUS.A_PUBLIER,
   });
 
@@ -37,8 +36,7 @@ const run = async () => {
     affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
   });
   const totalReglementPending = await Formation.countDocuments({
-    catalogue_published: true,
-    published: true,
+    ...filterReglement,
     affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
   });
 
@@ -46,8 +44,7 @@ const run = async () => {
     affelnet_statut: AFFELNET_STATUS.PUBLIE,
   });
   const totalReglementPsPublished = await Formation.countDocuments({
-    catalogue_published: true,
-    published: true,
+    ...filterReglement,
     affelnet_statut: AFFELNET_STATUS.PUBLIE,
   });
 
@@ -55,21 +52,19 @@ const run = async () => {
     affelnet_statut: AFFELNET_STATUS.NON_PUBLIE,
   });
   const totalReglementPsNotPublished = await Formation.countDocuments({
-    catalogue_published: true,
-    published: true,
+    ...filterReglement,
     affelnet_statut: AFFELNET_STATUS.NON_PUBLIE,
   });
 
   const totalPérimètre = await Formation.countDocuments({ affelnet_perimetre: true });
   const totalReglementPérimètre = await Formation.countDocuments({
-    catalogue_published: true,
-    published: true,
+    ...filterReglement,
     affelnet_perimetre: true,
   });
+
   const totalHorsPérimètre = await Formation.countDocuments({ affelnet_perimetre: false });
   const totalReglementHorsPérimètre = await Formation.countDocuments({
-    catalogue_published: true,
-    published: true,
+    ...filterReglement,
     affelnet_perimetre: false,
   });
 

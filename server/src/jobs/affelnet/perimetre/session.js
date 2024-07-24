@@ -1,4 +1,4 @@
-const { Formation } = require("../../../common/model");
+const { Formation } = require("../../../common/models");
 const { getSessionDateRules } = require("../../../common/utils/rulesUtils");
 const { cursor } = require("../../../common/utils/cursor");
 const logger = require("../../../common/logger");

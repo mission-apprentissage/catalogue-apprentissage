@@ -1,5 +1,5 @@
 const { isValideUAI } = require("@mission-apprentissage/tco-service-node");
-const { Formation } = require("../../../common/model");
+const { Formation } = require("../../../common/models");
 const { runScript } = require("../../scriptWrapper");
 
 /**

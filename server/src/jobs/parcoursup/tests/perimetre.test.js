@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { ReglePerimetre, Formation } = require("../../../common/model/index");
+const { ReglePerimetre, Formation } = require("../../../common/models");
 const { connectToMongoForTests, cleanAll } = require("../../../../tests/utils/testUtils.js");
 const { run } = require("../perimetre/controller.js");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");

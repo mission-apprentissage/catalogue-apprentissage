@@ -1,7 +1,7 @@
 const logger = require("../../../common/logger");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { getJsonFromXlsxFile } = require("../../../common/utils/fileUtils");
-const { AffelnetFormation } = require("../../../common/model");
+const { AffelnetFormation } = require("../../../common/models");
 
 const FILE_PATH = "/data/uploads/affelnet-import.xlsx";
 

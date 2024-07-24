@@ -1,6 +1,6 @@
-const { Formation } = require("../../../common/model");
+const { Formation } = require("../../../common/models");
 const { getQueryFromRule } = require("../../../common/utils/rulesUtils");
-const { ReglePerimetre } = require("../../../common/model");
+const { ReglePerimetre } = require("../../../common/models");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { AFFELNET_STATUS } = require("../../../constants/status");
 const { cursor } = require("../../../common/utils/cursor");
@@ -9,9 +9,9 @@ const logger = require("../../../common/logger");
 const run = async () => {
   const filterReglement = {
     $and: [
-      {
-        published: true,
-      },
+      // {
+      //   published: true,
+      // },
       {
         $or: [{ catalogue_published: true }, { force_published: true }],
       },

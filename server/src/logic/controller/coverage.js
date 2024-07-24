@@ -1,5 +1,5 @@
 const { formation: formatFormation, etablissement: formatEtablissement } = require("./formater");
-const { Formation, Etablissement } = require("../../common/model");
+const { Formation, Etablissement } = require("../../common/models");
 const mongoose = require("mongoose");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 

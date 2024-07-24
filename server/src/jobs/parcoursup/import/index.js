@@ -1,5 +1,5 @@
 const logger = require("../../../common/logger");
-const { Formation } = require("../../../common/model");
+const { Formation } = require("../../../common/models");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
 const { buildUpdatesHistory } = require("../../../logic/common/utils/diffUtils");
 const { runScript } = require("../../scriptWrapper");

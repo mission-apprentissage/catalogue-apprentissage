@@ -1,7 +1,7 @@
 const express = require("express");
 const { compose, transformIntoJSON } = require("oleoduc");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
-const { Formation } = require("../../common/model");
+const { Formation } = require("../../common/models");
 const { sendJsonStream } = require("../../common/utils/httpUtils");
 
 module.exports = () => {

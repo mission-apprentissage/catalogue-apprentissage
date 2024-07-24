@@ -2,7 +2,7 @@ const { runScript } = require("../scriptWrapper");
 
 const report = require("../../logic/reporter/report");
 const config = require("config");
-const { ParcoursupFormation } = require("../../common/model");
+const { ParcoursupFormation } = require("../../common/models");
 const { storeByChunks } = require("../../common/utils/reportUtils");
 
 const createRejectedReport = async (summary, rejetes) => {

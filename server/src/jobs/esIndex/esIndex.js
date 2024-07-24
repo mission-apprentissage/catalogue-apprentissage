@@ -1,5 +1,5 @@
 const { rebuildIndex, deleteIndex } = require("../../common/utils/esUtils");
-const { Formation, Etablissement } = require("../../common/model/index");
+const { Formation, Etablissement } = require("../../common/models/index");
 
 const rebuildEsIndex = async (index, skipFound = false, filter = {}) => {
   switch (index) {

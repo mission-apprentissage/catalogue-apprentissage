@@ -1,6 +1,6 @@
 const express = require("express");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
-const { Statistique } = require("../../common/model");
+const { Statistique } = require("../../common/models");
 const { sanitize } = require("../../common/utils/sanitizeUtils");
 
 module.exports = () => {

@@ -1,4 +1,4 @@
-const { Formation } = require("../../../common/model");
+const { Formation } = require("../../../common/models");
 const logger = require("../../../common/logger");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
 const { cursor } = require("../../../common/utils/cursor");

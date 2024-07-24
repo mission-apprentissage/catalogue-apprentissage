@@ -1,13 +1,13 @@
 // @ts-check
 const logger = require("../../../common/logger");
 const { runScript } = require("../../scriptWrapper");
-const { PreviousSeasonFormation, Formation, PreviousSeasonFormationStat } = require("../../../common/model");
+const { PreviousSeasonFormation, Formation, PreviousSeasonFormationStat } = require("../../../common/models");
 const { isSameDate } = require("../../../common/utils/dateUtils");
 const { isInSession, getSessionEndDate, getCampagneStartDate } = require("../../../common/utils/rulesUtils");
 const { academies } = require("../../../constants/academies");
 
-/** @typedef {import("../../../common/model/schema/formation").Formation} Formation */
-/** @typedef {import("../../../common/model/schema/previousSeasonFormation").PreviousSeasonFormation} PreviousSeasonFormation */
+/** @typedef {import("../../../common/models/schema/formation").Formation} Formation */
+/** @typedef {import("../../../common/models/schema/previousSeasonFormation").PreviousSeasonFormation} PreviousSeasonFormation */
 
 /**
  * @param {Formation} formation

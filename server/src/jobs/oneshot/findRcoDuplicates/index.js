@@ -1,6 +1,6 @@
 const logger = require("../../../common/logger");
 const { runScript } = require("../../scriptWrapper");
-const { Formation } = require("../../../common/model");
+const { Formation } = require("../../../common/models");
 const config = require("config");
 const path = require("path");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");

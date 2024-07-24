@@ -1,7 +1,7 @@
 const assert = require("assert");
 // const collectPreviousSeasonStats = require("../index");
 const { connectToMongoForTests, cleanAll } = require("../../../../../tests/utils/testUtils");
-const { PreviousSeasonFormation, Formation, PreviousSeasonFormationStat } = require("../../../../common/model");
+const { PreviousSeasonFormation, Formation, PreviousSeasonFormationStat } = require("../../../../common/models");
 
 describe(__filename, () => {
   before(async () => {

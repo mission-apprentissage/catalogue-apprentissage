@@ -1,6 +1,6 @@
 const express = require("express");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
-const { Formation } = require("../../common/model");
+const { Formation } = require("../../common/models");
 const logger = require("../../common/logger");
 const Boom = require("boom");
 const { sanitize, SAFE_UPDATE_OPERATORS } = require("../../common/utils/sanitizeUtils");

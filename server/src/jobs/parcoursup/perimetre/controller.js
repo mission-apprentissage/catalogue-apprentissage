@@ -1,5 +1,5 @@
 const logger = require("../../../common/logger");
-const { Formation, ReglePerimetre } = require("../../../common/model");
+const { Formation, ReglePerimetre } = require("../../../common/models");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const {
   getQueryFromRule,
@@ -140,6 +140,7 @@ const run = async () => {
         ...filterReglement,
         ...filterSessionDate,
         ...filterHP,
+
         $or: aPublierHabilitationRules.map(getQueryFromRule),
       },
       [
@@ -172,6 +173,7 @@ const run = async () => {
         ...filterReglement,
         ...filterSessionDate,
         ...filterHP,
+
         $or: aPublierVerifierAccesDirectPostBacRules.map(getQueryFromRule),
       },
       [

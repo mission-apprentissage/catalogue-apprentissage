@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { Formation, User } = require("../../../common/model");
+const { Formation, User } = require("../../../common/models");
 const { connectToMongoForTests, cleanAll } = require("../../../../tests/utils/testUtils.js");
 const { createCursor } = require("../export/index.js");
 const sinon = require("sinon");

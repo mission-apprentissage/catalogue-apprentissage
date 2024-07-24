@@ -35,7 +35,7 @@ const alert = require("./routes/alert");
 const perimetrePriseRdv = require("./routes/perimetrePriseRdv");
 const reglePerimetre = require("./routes/reglePerimetre");
 const reglePerimetreSecure = require("./routes/reglePerimetreSecure");
-const swaggerSchema = require("../common/model/swaggerSchema");
+const swaggerSchema = require("../common/models/swaggerSchema");
 const rateLimit = require("express-rate-limit");
 
 require("../common/passport-config");

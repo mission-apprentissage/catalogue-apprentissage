@@ -4,7 +4,7 @@ const { oleoduc, transformIntoJSON, transformIntoCSV } = require("oleoduc");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { sendJsonStream, sendCsvStream } = require("../../common/utils/httpUtils");
 const { paginate } = require("../../common/utils/mongooseUtils");
-const { Etablissement } = require("../../common/model");
+const { Etablissement } = require("../../common/models");
 const { sanitize, SAFE_FIND_OPERATORS } = require("../../common/utils/sanitizeUtils");
 
 /**

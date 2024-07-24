@@ -6,7 +6,7 @@ const {
 } = require("@mission-apprentissage/tco-service-node");
 const { diff: objectDiff } = require("deep-object-diff");
 const { diff: arrayDiff } = require("deep-object-diff");
-const { Formation, DualControlFormation, Etablissement } = require("../../../common/model/index");
+const { Formation, DualControlFormation, Etablissement } = require("../../../common/models/index");
 const { cursor } = require("../../../common/utils/cursor");
 const { distanceBetweenCoordinates } = require("../../../common/utils/distanceUtils");
 const logger = require("../../../common/logger");
@@ -310,19 +310,21 @@ const removeFields = (entity, fields) => {
 };
 
 const unpublishOthers = async ({ filter = {} } = { filter: {} }) => {
-  const result = await Formation.updateMany(
-    {
-      $and: [
-        { cle_ministere_educatif: { $nin: await DualControlFormation.distinct("cle_ministere_educatif") } },
-        { ...filter },
-      ],
-    },
-    {
-      $set: { published: false },
+  let removed = 0;
+
+  const cles = await DualControlFormation.distinct("cle_ministere_educatif");
+
+  await cursor(
+    Formation.find({
+      $and: [{ cle_ministere_educatif: { $nin: cles } }, { ...filter }],
+    }).select({ cle_ministere_educatif: 1 }),
+    async ({ cle_ministere_educatif }) => {
+      await Formation.updateOne({ cle_ministere_educatif }, { published: false });
+      removed++;
     }
   );
 
-  return { removed: result.nModified };
+  return { removed };
 };
 
 const applyConversion = async (

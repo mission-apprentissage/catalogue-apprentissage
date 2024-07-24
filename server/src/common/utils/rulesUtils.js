@@ -1,6 +1,6 @@
 // @ts-check
 
-/** @typedef {import("../model/schema/formation").Formation} Formation */
+/** @typedef {import("../models/schema/formation").Formation} Formation */
 /** @typedef {("affelnet"|"parcoursup")} Plateforme */
 /** @typedef {("3 (CAP...)"|"4 (BAC...)"|"5 (BTS, DEUST...)"|"6 (Licence, BUT...)"|"7 (Master, titre ingénieur...)")} Niveau */
 
@@ -169,7 +169,7 @@ const commonRules = {
       cfd_outdated: false,
     },
   ],
-  published: true,
+  // published: true,
   // etablissement_gestionnaire_catalogue_published: true, // ensure gestionnaire is Qualiopi certified
   // periode: { $gte: getPeriodeStartDate() },
 };

@@ -1,5 +1,5 @@
 const express = require("express");
-const { Alert } = require("../../common/model/index");
+const { Alert } = require("../../common/models/index");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const { sanitize } = require("../../common/utils/sanitizeUtils");
 

@@ -1,5 +1,5 @@
 const { chunk } = require("lodash");
-const { Report } = require("../model/index");
+const { Report } = require("../models/index");
 const { asyncForEach } = require("./asyncUtils");
 
 /**

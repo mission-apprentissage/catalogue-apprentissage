@@ -1,10 +1,10 @@
 const fs = require("fs");
 const path = require("path");
-const schemas = require("../../common/model/schema");
+const schemas = require("../../common/models/schema");
 const prettier = require("prettier");
 const packageJson = require("../../../package.json");
 const m2s = require("mongoose-to-swagger");
-const { createModel } = require("../../common/model/createModel");
+const { createModel } = require("../../common/models/createModel");
 const { cleanMongooseSchema } = require("./mongooseUtils");
 
 const generateSwaggerSchema = () => {
@@ -21,7 +21,7 @@ const generateSwaggerSchema = () => {
       const edata = JSON.stringify(sout, null, 2);
       const content = await prettier.format(`module.exports = ${edata};`, { ...packageJson.prettier, parser: "babel" });
 
-      fs.writeFileSync(path.resolve(__dirname, `../../common/model/swaggerSchema/${baseFilename}.js`), content);
+      fs.writeFileSync(path.resolve(__dirname, `../../common/models/swaggerSchema/${baseFilename}.js`), content);
     }
   });
 };

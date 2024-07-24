@@ -1,4 +1,4 @@
-const { Formation } = require("../../../common/model");
+const { Formation } = require("../../../common/models");
 const logger = require("../../../common/logger");
 const { cursor } = require("../../../common/utils/cursor");
 const { isValideUAI } = require("@mission-apprentissage/tco-service-node");

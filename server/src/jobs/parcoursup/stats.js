@@ -1,7 +1,7 @@
 const { runScript } = require("../scriptWrapper");
 
 const { PARCOURSUP_STATUS } = require("../../constants/status");
-const { ConsoleStat, Formation } = require("../../common/model");
+const { ConsoleStat, Formation } = require("../../common/models");
 const { academies } = require("../../constants/academies");
 const logger = require("../../common/logger");
 

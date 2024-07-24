@@ -1,6 +1,6 @@
 const express = require("express");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
-const { Report } = require("../../common/model");
+const { Report } = require("../../common/models");
 const { oleoduc, transformIntoJSON } = require("oleoduc");
 const { sendJsonStream } = require("../../common/utils/httpUtils");
 const { sanitize } = require("../../common/utils/sanitizeUtils");

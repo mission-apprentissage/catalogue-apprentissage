@@ -1,5 +1,5 @@
 const config = require("config");
-const { Etablissement, Formation, DualControlEtablissement } = require("../../../common/model/index");
+const { Etablissement, Formation, DualControlEtablissement } = require("../../../common/models/index");
 const { diff } = require("deep-object-diff");
 const { isValideUAI } = require("@mission-apprentissage/tco-service-node");
 const { cursor } = require("../../../common/utils/cursor");

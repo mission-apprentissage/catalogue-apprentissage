@@ -1,6 +1,6 @@
 const { runScript } = require("../../scriptWrapper");
 const logger = require("../../../common/logger");
-const { Formation, User } = require("../../../common/model");
+const { Formation, User } = require("../../../common/models");
 const parcoursupApi = require("../parcoursupApi");
 const { findLast } = require("lodash");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
@@ -11,7 +11,7 @@ const {
 } = require("../../../common/utils/parcoursupUtils");
 // const { getExpirationDate } = require("../../../common/utils/rulesUtils");
 
-/** @typedef {import("../../../common/model/schema/formation").Formation} Formation */
+/** @typedef {import("../../../common/models/schema/formation").Formation} Formation */
 
 const limit = Number(process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_LIMIT || 50);
 

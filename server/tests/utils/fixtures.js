@@ -1,6 +1,6 @@
 const faker = require("faker");
 const { merge } = require("lodash");
-const { Etablissement } = require("../../src/common/model");
+const { Etablissement } = require("../../src/common/models");
 
 module.exports = {
   models: {

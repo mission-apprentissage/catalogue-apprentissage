@@ -1,4 +1,4 @@
-const schemas = require("../model/schema");
+const schemas = require("./schema");
 const { createModel } = require("./createModel");
 
 module.exports = {
@@ -25,6 +25,7 @@ module.exports = {
         "france_competence_infos",
         "onisep_lien_site_onisepfr",
         "onisep_url",
+        "num_tel",
         "rome_codes",
 
         "objectif",
@@ -37,6 +38,10 @@ module.exports = {
         "rncp_details.blocs_competences",
         "rncp_details.voix_acces",
         "rncp_details.partenaires",
+
+        "etablissement_siege_id",
+        "etablissement_gestionnaire_id",
+        "etablissement_formateur_id",
 
         // Champs rncp_details conservés
         // "rncp_details.niveau_europe",

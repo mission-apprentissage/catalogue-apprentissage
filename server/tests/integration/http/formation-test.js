@@ -1,6 +1,6 @@
 const assert = require("assert");
 const httpTests = require("../../utils/httpTests");
-const { Formation, User } = require("../../../src/common/model");
+const { Formation, User } = require("../../../src/common/models");
 
 httpTests(__filename, ({ startServer }) => {
   before(async () => {

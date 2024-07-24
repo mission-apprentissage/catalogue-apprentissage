@@ -1,5 +1,5 @@
 const logger = require("../../../common/logger");
-const { Formation, ReglePerimetre } = require("../../../common/model");
+const { Formation, ReglePerimetre } = require("../../../common/models");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const {
   getQueryFromRule,

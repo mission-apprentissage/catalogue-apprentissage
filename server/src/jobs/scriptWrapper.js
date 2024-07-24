@@ -4,7 +4,7 @@ const createComponents = require("../common/components/components");
 const logger = require("../common/logger");
 const config = require("config");
 const { access, mkdir } = require("fs").promises;
-const { Alert } = require("../common/model/index");
+const { Alert } = require("../common/models/index");
 
 process.on("unhandledRejection", (e) => console.log(e));
 process.on("uncaughtException", (e) => console.log(e));

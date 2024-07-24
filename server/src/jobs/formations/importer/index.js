@@ -2,7 +2,7 @@ const logger = require("../../../common/logger");
 const { runScript } = require("../../scriptWrapper");
 const { downloader } = require("./downloader");
 const { converter } = require("./converter");
-const { DualControlFormation } = require("../../../common/model/index");
+const { DualControlFormation } = require("../../../common/models/index");
 const { updateRelationFields: updateEtablissementRelationFields } = require("../../etablissements/importer/converter");
 const { updateRelationFields: updateFormationRelationFields } = require("./converter");
 

@@ -1,5 +1,5 @@
 const { getAffelnetCoverage, getMatch } = require("../../logic/controller/coverage");
-const { AffelnetFormation, Formation } = require("../../common/model");
+const { AffelnetFormation, Formation } = require("../../common/models");
 const { runScript } = require("../scriptWrapper");
 const logger = require("../../common/logger");
 const { reconciliationAffelnet } = require("../../logic/controller/reconciliation");

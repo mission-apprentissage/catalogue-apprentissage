@@ -1,4 +1,4 @@
-/** @typedef {import("../model/schema/formation").Formation} Formation */
+/** @typedef {import("../models/schema/formation").Formation} Formation */
 
 const { parcoursupErrors } = require("../../constants/parcoursupErrors");
 const csvToJson = require("convert-csv-to-json");
