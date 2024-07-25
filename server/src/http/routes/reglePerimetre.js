@@ -120,9 +120,10 @@ module.exports = () => {
         throw Boom.badRequest();
       }
 
-      const result = await Formation.countDocuments(
-        getQueryFromRule({ plateforme, niveau, diplome, regle_complementaire, num_academie, duree, annee })
-      );
+      const result = await Formation.countDocuments({
+        published: true,
+        ...getQueryFromRule({ plateforme, niveau, diplome, regle_complementaire, num_academie, duree, annee }),
+      });
       return res.json(result);
     })
   );
@@ -154,6 +155,7 @@ module.exports = () => {
       }
 
       const result = await Formation.countDocuments({
+        published: true,
         ...(num_academie && num_academie !== "null" ? { num_academie } : {}),
         $or: rules.map(getQueryFromRule),
       });

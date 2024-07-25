@@ -19,7 +19,7 @@ const getEsBase = (context) => {
 };
 
 const esQueryParser = async () => {
-  let s = new URLSearchParams(window.location.search);
+  let s = new URLSearchParams(/*window.location.search*/);
   s = s.get("qb");
   if (!s) return Promise.resolve(null);
 
@@ -39,7 +39,7 @@ const getEsCount = async (queries) => {
 
 const getCountEntities = async (base) => {
   if (base === ETABLISSEMENTS_ES_INDEX) {
-    const params = new window.URLSearchParams({
+    const params = new URLSearchParams({
       query: JSON.stringify({ published: true }),
     });
     const countEtablissement = await _get(`${CATALOGUE_API}/entity/etablissements/count?${params}`, false);
