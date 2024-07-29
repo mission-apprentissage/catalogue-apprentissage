@@ -43,7 +43,7 @@ const run = async ({ proceed }) => {
             parcoursup_perimetre: true,
             parcoursup_id: parcoursupFormation.codeformationinscription,
             parcoursup_statut: { $ne: PARCOURSUP_STATUS.FERME },
-            cle_me_remplace_par: null,
+            "cle_me_remplace_par.0": { $exists: false },
           };
 
           if (
