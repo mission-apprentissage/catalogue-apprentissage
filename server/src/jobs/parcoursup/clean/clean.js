@@ -58,8 +58,7 @@ const run = async ({ proceed }) => {
             return;
           }
 
-          const level2 = {
-            ...level1,
+          const notBtsAOptionsFilter = {
             cfd: {
               $nin: [
                 "32033422",
@@ -84,6 +83,11 @@ const run = async ({ proceed }) => {
                 "32033611",
               ],
             },
+          };
+
+          const level2 = {
+            ...level1,
+            ...notBtsAOptionsFilter,
           };
 
           if ((await Formation.countDocuments(level2)) === 1) {
@@ -133,7 +137,23 @@ const run = async ({ proceed }) => {
           }
 
           const level5 = {
-            ...level1,
+            ...level4,
+            parcoursup_session: true,
+          };
+
+          if ((await Formation.countDocuments(level5)) === 1) {
+            const cle_me = (await Formation.findOne(level5)).cle_ministere_educatif;
+
+            logger.info(
+              { type: "job" },
+              `Match unique de niveau 5 : ${parcoursupFormation.codeformationinscription} > ${cle_me}`
+            );
+
+            map.set(parcoursupFormation.codeformationinscription, [cle_me]);
+            return;
+          }
+
+          const btsAOptionFilter = {
             cfd: {
               $in: [
                 "32033422",
@@ -160,12 +180,17 @@ const run = async ({ proceed }) => {
             },
           };
 
-          if (await Formation.countDocuments(level5)) {
-            const cles = (await Formation.find(level5)).map((formation) => formation.cle_ministere_educatif);
+          const level6 = {
+            ...level1,
+            ...btsAOptionFilter,
+          };
+
+          if (await Formation.countDocuments(level6)) {
+            const cles = (await Formation.find(level6)).map((formation) => formation.cle_ministere_educatif);
 
             logger.info(
               { type: "job" },
-              `Match multiple de niveau 5 : ${parcoursupFormation.codeformationinscription} > ${cles.join(", ")}`
+              `Match multiple de niveau 6 : ${parcoursupFormation.codeformationinscription} > ${cles.join(", ")}`
             );
             map.set(parcoursupFormation.codeformationinscription, cles);
             return;
@@ -175,13 +200,6 @@ const run = async ({ proceed }) => {
             { type: "job" },
             `Pas de match : ${parcoursupFormation.codeformationinscription} > ${parcoursupFormation.id_rco} `
           );
-
-          try {
-            // console.log({ id_rco, codeformationinscription });
-            // await Formation.updateMany({ cle_ministere_educatif: { $in: cles_ministere_educatif } }, { parcoursup_id });
-          } catch (err) {
-            console.error(err);
-          }
         },
         { parallel: 10 }
       )
@@ -243,17 +261,18 @@ const run = async ({ proceed }) => {
         );
 
         await Promise.all(
-          [...map.entries()].map(([key, value]) =>
-            Formation.updateMany(
-              {
-                cle_ministere_educatif: { $in: value },
-              },
-              {
-                $set: {
-                  parcoursup_id: key,
+          [...map.entries()].map(
+            async ([key, value]) =>
+              await Formation.updateMany(
+                {
+                  cle_ministere_educatif: { $in: value },
                 },
-              }
-            )
+                {
+                  $set: {
+                    parcoursup_id: key,
+                  },
+                }
+              )
           )
         );
 

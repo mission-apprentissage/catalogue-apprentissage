@@ -10,7 +10,7 @@ const rehashPassword = (user, password) => {
 module.exports = async () => {
   return {
     authenticate: async (username, password) => {
-      console.log({ username, password, regexp: new RegExp(`/^${escapeRegExp(username.toLowerCase())}$/i`) });
+      // console.log({ username, password, regexp: new RegExp(`/^${escapeRegExp(username.toLowerCase())}$/i`) });
 
       const user = await User.findOne({
         $or: [
