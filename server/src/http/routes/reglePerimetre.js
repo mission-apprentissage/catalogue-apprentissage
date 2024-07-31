@@ -122,7 +122,7 @@ module.exports = () => {
 
       const result = await Formation.countDocuments({
         published: true,
-        ...getQueryFromRule({ plateforme, niveau, diplome, regle_complementaire, num_academie, duree, annee }),
+        ...getQueryFromRule({ plateforme, niveau, diplome, regle_complementaire, num_academie, duree, annee }, true),
       });
       return res.json(result);
     })

@@ -11,10 +11,8 @@ const run = async () => {
     $and: [
       // {
       //   published: true,
+      //   $or: [{ catalogue_published: true }, { force_published: true }],
       // },
-      {
-        $or: [{ catalogue_published: true }, { force_published: true }],
-      },
       {
         $or: [
           {
@@ -56,7 +54,7 @@ const run = async () => {
       await Formation.find({
         ...filterReglement,
 
-        $or: aPublierSoumisAValidationRules.map(getQueryFromRule),
+        $or: aPublierSoumisAValidationRules.map((rule) => getQueryFromRule(rule, false)),
       }).select({ cle_ministere_educatif: 1 })
     ).forEach(({ cle_ministere_educatif }) => formationsInPerimetre.add(cle_ministere_educatif));
   }
@@ -72,7 +70,7 @@ const run = async () => {
       await Formation.find({
         ...filterReglement,
 
-        $or: aPublierRules.map(getQueryFromRule),
+        $or: aPublierRules.map((rule) => getQueryFromRule(rule, false)),
       }).select({ cle_ministere_educatif: 1 })
     ).forEach(({ cle_ministere_educatif }) => formationsInPerimetre.add(cle_ministere_educatif));
   }
@@ -89,7 +87,7 @@ const run = async () => {
           ...filterReglement,
 
           num_academie,
-          ...getQueryFromRule(rule),
+          ...getQueryFromRule(rule, false),
         }).select({ cle_ministere_educatif: 1 })
       ).forEach(({ cle_ministere_educatif }) =>
         status === AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT

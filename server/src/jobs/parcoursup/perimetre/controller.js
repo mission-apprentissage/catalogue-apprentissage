@@ -19,8 +19,6 @@ const run = async () => {
     $and: [
       {
         published: true,
-      },
-      {
         $or: [{ catalogue_published: true }, { force_published: true }],
       },
       {
@@ -141,7 +139,7 @@ const run = async () => {
         ...filterSessionDate,
         ...filterHP,
 
-        $or: aPublierHabilitationRules.map(getQueryFromRule),
+        $or: aPublierHabilitationRules.map((rule) => getQueryFromRule(rule, true)),
       },
       [
         {
@@ -174,7 +172,7 @@ const run = async () => {
         ...filterSessionDate,
         ...filterHP,
 
-        $or: aPublierVerifierAccesDirectPostBacRules.map(getQueryFromRule),
+        $or: aPublierVerifierAccesDirectPostBacRules.map((rule) => getQueryFromRule(rule, true)),
       },
       [
         {
@@ -207,7 +205,7 @@ const run = async () => {
         ...filterSessionDate,
         ...filterHP,
 
-        $or: aPublierValidationRecteurRules.map(getQueryFromRule),
+        $or: aPublierValidationRecteurRules.map((rule) => getQueryFromRule(rule, true)),
       },
       [
         {
@@ -252,7 +250,7 @@ const run = async () => {
         ...filterSessionDate,
         ...filter,
 
-        $or: aPublierRules.map(getQueryFromRule),
+        $or: aPublierRules.map((rule) => getQueryFromRule(rule, true)),
       },
       [
         {
@@ -300,7 +298,7 @@ const run = async () => {
           },
 
           num_academie,
-          ...getQueryFromRule(rule),
+          ...getQueryFromRule(rule, true),
         },
         [
           {

@@ -11,10 +11,8 @@ const run = async () => {
     $and: [
       // {
       //   published: true,
+      //   $or: [{ catalogue_published: true }, { force_published: true }],
       // },
-      {
-        $or: [{ catalogue_published: true }, { force_published: true }],
-      },
       {
         $or: [
           {
@@ -56,7 +54,7 @@ const run = async () => {
       await Formation.find({
         ...filterReglement,
 
-        $or: aPublierHabilitationRules.map(getQueryFromRule),
+        $or: aPublierHabilitationRules.map((rule) => getQueryFromRule(rule, false)),
       }).select({ cle_ministere_educatif: 1 })
     ).forEach(({ cle_ministere_educatif }) => formationsInPerimetre.add(cle_ministere_educatif));
 
@@ -71,7 +69,7 @@ const run = async () => {
       await Formation.find({
         ...filterReglement,
 
-        $or: aPublierVerifierAccesDirectPostBacRules.map(getQueryFromRule),
+        $or: aPublierVerifierAccesDirectPostBacRules.map((rule) => getQueryFromRule(rule, false)),
       }).select({ cle_ministere_educatif: 1 })
     ).forEach(({ cle_ministere_educatif }) => formationsInPerimetre.add(cle_ministere_educatif));
 
@@ -86,7 +84,7 @@ const run = async () => {
       await Formation.find({
         ...filterReglement,
         // ...filterSessionDate,
-        $or: aPublierValidationRecteurRules.map(getQueryFromRule),
+        $or: aPublierValidationRecteurRules.map((rule) => getQueryFromRule(rule, false)),
       }).select({ cle_ministere_educatif: 1 })
     ).forEach(({ cle_ministere_educatif }) => formationsInPerimetre.add(cle_ministere_educatif));
 
@@ -100,7 +98,7 @@ const run = async () => {
     (
       await Formation.find({
         ...filterReglement,
-        $or: aPublierRules.map(getQueryFromRule),
+        $or: aPublierRules.map((rule) => getQueryFromRule(rule, false)),
       }).select({ cle_ministere_educatif: 1 })
     ).forEach(({ cle_ministere_educatif }) => formationsInPerimetre.add(cle_ministere_educatif));
 
@@ -118,7 +116,7 @@ const run = async () => {
         await Formation.find({
           ...filterReglement,
           num_academie,
-          ...getQueryFromRule(rule),
+          ...getQueryFromRule(rule, false),
         }).select({ cle_ministere_educatif: 1 })
       ).forEach(({ cle_ministere_educatif }) =>
         status === PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT

@@ -19,8 +19,6 @@ const run = async () => {
     $and: [
       {
         published: true,
-      },
-      {
         $or: [{ catalogue_published: true }, { force_published: true }],
       },
       {
@@ -133,7 +131,7 @@ const run = async () => {
         ...filterReglement,
         ...filterSessionDate,
         ...filterHP,
-        $or: aPublierSoumisAValidationRules.map(getQueryFromRule),
+        $or: aPublierSoumisAValidationRules.map((rule) => getQueryFromRule(rule, true)),
       },
       [
         {
@@ -173,7 +171,7 @@ const run = async () => {
         ...filterReglement,
         ...filterSessionDate,
         ...filter,
-        $or: aPublierRules.map(getQueryFromRule),
+        $or: aPublierRules.map((rule) => getQueryFromRule(rule, true)),
       },
       [
         {
@@ -217,7 +215,7 @@ const run = async () => {
           },
 
           num_academie,
-          ...getQueryFromRule(rule),
+          ...getQueryFromRule(rule, true),
         },
         [
           {
