@@ -8,7 +8,6 @@ const run = async () => {
 
   await cursor(
     Formation.find({
-      cle_ministere_educatif: "114654P01218925840790001678071394700015-14118#L01",
       published: true,
       affelnet_perimetre: true,
       cle_me_remplace: { $ne: null },
