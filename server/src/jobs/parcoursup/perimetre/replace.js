@@ -4,8 +4,6 @@ const { cursor } = require("../../../common/utils/cursor");
 const logger = require("../../../common/logger");
 
 const run = async () => {
-  logger.debug({ type: "job" }, "- Traitement des remplacements");
-
   await cursor(
     Formation.find({
       published: true,
@@ -15,7 +13,6 @@ const run = async () => {
       cle_me_remplace_traitee: { $ne: true },
     }),
     async (formation) => {
-      console.log(" ");
       logger.debug(
         { type: "job" },
         `La formation ${formation.cle_ministere_educatif} a des prédécesseurs et n'a pas été traitée, application des règles de remplacement`
@@ -41,10 +38,12 @@ const run = async () => {
             ...(isOnePredecesseurPublie && formation.parcoursup_statut !== PARCOURSUP_STATUS.PUBLIE
               ? { parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE }
               : {}),
-            ...(!!previousEditedUaiFormation && !formation.editedFields.uai_formation
+            ...(!!previousEditedUaiFormation && !formation.editedFields?.uai_formation
               ? {
                   uai_formation: previousEditedUaiFormation,
-                  "editedFields.uai_formation": previousEditedUaiFormation,
+                  editedFields: {
+                    uai_formation: previousEditedUaiFormation,
+                  },
                 }
               : {}),
             cle_me_remplace_traitee: true,
@@ -53,13 +52,13 @@ const run = async () => {
             updates_history: {
               from: {
                 cle_me_remplace_traitee: false,
-                ...(previousEditedUaiFormation && !formation.editedFields.uai_formation
+                ...(previousEditedUaiFormation && !formation.editedFields?.uai_formation
                   ? { uai_formation: formation.uai_formation }
                   : {}),
               },
               to: {
                 cle_me_remplace_traitee: true,
-                ...(previousEditedUaiFormation && !formation.editedFields.uai_formation
+                ...(previousEditedUaiFormation && !formation.editedFields?.uai_formation
                   ? {
                       uai_formation: previousEditedUaiFormation,
                       last_update_who: previousEditedUaiFormationAuthor,
