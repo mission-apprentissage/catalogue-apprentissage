@@ -534,10 +534,20 @@ const formationSchema = {
     default: null,
     description: "Est remplacée par la clé ME",
   },
+  cle_me_remplace_par_traitee: {
+    type: Boolean,
+    default: false,
+    description: "L'information de remplacement a été traitée",
+  },
   cle_me_remplace: {
     type: [String],
     default: null,
     description: "Remplace la clé ME",
+  },
+  cle_me_remplace_traitee: {
+    type: Boolean,
+    default: false,
+    description: "L'information de remplacement a été traitée",
   },
 
   cle_me_link: {
