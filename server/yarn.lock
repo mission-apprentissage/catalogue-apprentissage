@@ -2311,12 +2311,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"config@npm:3.3.10":
-  version: 3.3.10
-  resolution: "config@npm:3.3.10"
+"config@npm:3.3.12":
+  version: 3.3.12
+  resolution: "config@npm:3.3.12"
   dependencies:
     json5: ^2.2.3
-  checksum: c0b472fb9366418687c8ddfa167152dfbfd77bba698cc5d5f1eac3867282302c3d63aa299f403dbe75efc0c5ccd9c82526d73c69b85874d87457564d53ffe37c
+  checksum: db1b7718ffb0a8dc99cac003f31f6af99562362b8b25f2c72104465983d471e683ea25866308886723179248113a584e6ec3f67811e25e3c2b070bee592dd94d
   languageName: node
   linkType: hard
 
@@ -6781,7 +6781,7 @@ __metadata:
     cli-progress: 3.8.2
     command-line-args: 5.2.0
     compression: 1.7.4
-    config: 3.3.10
+    config: 3.3.12
     connect-mongo: 4.6.0
     convert-csv-to-json: 1.3.3
     cors: 2.8.5
