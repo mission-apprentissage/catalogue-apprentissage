@@ -60,7 +60,7 @@
     "cli-progress": "3.8.2",
     "command-line-args": "5.2.0",
     "compression": "1.7.4",
-    "config": "3.3.10",
+    "config": "3.3.12",
     "connect-mongo": "4.6.0",
     "convert-csv-to-json": "2.49.0",
     "cors": "2.8.5",
