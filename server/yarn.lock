@@ -6829,7 +6829,7 @@ __metadata:
     passport-jwt: 4.0.1
     prettier: 3.2.4
     require-all: 3.0.0
-    rewiremock: 3.14.4
+    rewiremock: 3.14.5
     sanitize-filename: 1.6.3
     sha512crypt-node: 1.0.2
     sinon: 11.1.2
@@ -8774,9 +8774,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rewiremock@npm:3.14.4":
-  version: 3.14.4
-  resolution: "rewiremock@npm:3.14.4"
+"rewiremock@npm:3.14.5":
+  version: 3.14.5
+  resolution: "rewiremock@npm:3.14.5"
   dependencies:
     babel-runtime: ^6.26.0
     compare-module-exports: ^2.1.0
@@ -8786,7 +8786,7 @@ __metadata:
     path-parse: ^1.0.5
     wipe-node-cache: ^2.1.2
     wipe-webpack-cache: ^2.1.0
-  checksum: 052dbd27d7a48c35ef93e7db3e02c4bab8e81913e483ba5fa5bc5c768814f56cb26633353856b138adee60020803200902098ce5269f7d1a17446c33d3bf10a6
+  checksum: be1fb6df47babf59da1ba1dadc63cb0021bc36ffd75d0c21a8aff9ad6016b35c73f6773f435754b353d3ddf9b3c6ef42ff86254c996c496360233d6d51eadb6f
   languageName: node
   linkType: hard
 
