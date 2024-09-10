@@ -78,6 +78,7 @@ const run = async () => {
           $set: {
             affelnet_statut: AFFELNET_STATUS.NON_PUBLIE,
             cle_me_remplace_par_traitee: true,
+            affelnet_raison_depublication: "Non publication automatique (offre remplacée par une plus récente)",
           },
           $push: {
             updates_history: {
@@ -87,6 +88,7 @@ const run = async () => {
               to: {
                 cle_me_remplace_par_traitee: true,
                 last_update_automatic: true,
+                affelnet_raison_depublication: "Non publication automatique (offre remplacée par une plus récente)",
               },
               updated_at: new Date(),
             },

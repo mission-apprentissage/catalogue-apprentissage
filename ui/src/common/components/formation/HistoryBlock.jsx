@@ -51,18 +51,15 @@ export const HistoryBlock = ({ formation, limit = 5 }) => {
     .filter((value) => !!value.to?.cle_me_remplace_traitee)
     .map((value) => ({
       status: <>Action automatique - Fiche remplaçant une offre plus ancienne</>,
-
-      user: value.to.last_update_who,
-
       date: new Date(value.updated_at),
+      // user: value.to.last_update_who,
     }));
   const cle_me_remplace_par_history = updates_history
     .filter((value) => !!value.to?.cle_me_remplace_par_traitee)
     .map((value) => ({
       status: <>Action automatique - Fiche remplacée par une plus récente</>,
-
       date: new Date(value.updated_at),
-      user: value.to.last_update_who,
+      // user: value.to.last_update_who,
     }));
 
   const publication_history = updates_history
