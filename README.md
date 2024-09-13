@@ -11,8 +11,8 @@ Ce Projet est basé sur le template de la mission apprentissage: https://github.
 
 Les pré-requis sont les mêmes :
 
-- NodeJs 16
-- Yarn 2+
+- NodeJs 18
+- Yarn 3+
 - Docker & Docker-compose
 
 ## Présentation
@@ -36,7 +36,7 @@ Plus d'information : https://mission-apprentissage.gitbook.io/catalogue/
 
 Cloner le projet puis :
 
-```bash
+```bash {"id":"01J7NR1Z31X1SZ0KMG9E30KMTF"}
 cd server
 yarn docker:start
 ```
@@ -47,14 +47,14 @@ L'application est ensuite disponible à l'url : http://localhost/
 
 Côté serveur (Mocha):
 
-```bash
+```bash {"id":"01J7NR1Z31X1SZ0KMG9HX6P8MM"}
 cd server
 yarn test
 ```
 
 Côté front (Jest / React Testing library):
 
-```bash
+```bash {"id":"01J7NR1Z31X1SZ0KMG9NG4E5H2"}
 cd ui
 yarn test
 ```

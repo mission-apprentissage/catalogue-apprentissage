@@ -118,7 +118,7 @@
     "nodemon": "2.0.15",
     "nyc": "15.1.0",
     "rewiremock": "3.14.5",
-    "sinon": "11.1.2"
+    "sinon": "^19"
   },
   "resolutions": {
     "omit-deep": "https://github.com/izigibran/omit-deep.git"
@@ -127,10 +127,6 @@
     "@mission-apprentissage/tco-service-node": {
       "mongoose": "$mongoose"
     }
-  },
-  "engines": {
-    "node": ">=16.19.0",
-    "yarn": ">=3.2.0"
   },
   "prettier": {
     "printWidth": 120,
@@ -142,6 +138,10 @@
       "eslint --cache --fix",
       "prettier --write"
     ]
+  },
+  "engines": {
+    "node": ">=18",
+    "yarn": ">=3.3.1"
   },
   "packageManager": "yarn@3.3.1"
 }
