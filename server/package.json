@@ -123,6 +123,11 @@
   "resolutions": {
     "omit-deep": "https://github.com/izigibran/omit-deep.git"
   },
+  "overrides": {
+    "@mission-apprentissage/tco-service-node": {
+      "mongoose": "$mongoose"
+    }
+  },
   "engines": {
     "node": ">=16.19.0",
     "yarn": ">=3.2.0"
