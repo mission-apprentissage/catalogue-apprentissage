@@ -17,7 +17,7 @@
     "framer-motion": "10.16.16",
     "generate-password-browser": "1.1.0",
     "iframe-resizer-react": "1.1.0",
-    "jsonwebtoken": "9.0.0",
+    "jsonwebtoken": "9.0.2",
     "local-web-server": "5.2.0",
     "lodash.compact": "3.0.1",
     "lodash.intersection": "4.4.0",
