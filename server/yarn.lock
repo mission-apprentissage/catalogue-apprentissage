@@ -2349,15 +2349,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"connect-mongo@npm:4.6.0":
-  version: 4.6.0
-  resolution: "connect-mongo@npm:4.6.0"
+"connect-mongo@npm:5.1.0":
+  version: 5.1.0
+  resolution: "connect-mongo@npm:5.1.0"
   dependencies:
     debug: ^4.3.1
     kruptein: ^3.0.0
   peerDependencies:
-    mongodb: ^4.1.0
-  checksum: be95b40bf52b8702b07ffde25d6ea5bc72cdb6a77ca82574e73f2519fa3c704681ba3ae631094d5786b480f897eec6318ee1154243c269376816b009530da871
+    express-session: ^1.17.1
+    mongodb: ">= 5.1.0 < 7"
+  checksum: fb62bf4aedee85331dd3ce83302e8a0680b5a2cd4aa2d2aa8655e3fbf81d2b4cd16e316e92e639cfeb7f6df2b14b7a98ea1984b94fa3bf500711b737146c745b
   languageName: node
   linkType: hard
 
@@ -6856,7 +6857,7 @@ __metadata:
     command-line-args: 5.2.0
     compression: 1.7.4
     config: 3.3.12
-    connect-mongo: 4.6.0
+    connect-mongo: 5.1.0
     convert-csv-to-json: 2.49.0
     cors: 2.8.5
     csv-parse: 5.5.6
