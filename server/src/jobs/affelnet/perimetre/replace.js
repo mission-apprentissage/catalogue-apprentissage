@@ -78,6 +78,7 @@ const run = async () => {
             affelnet_statut: AFFELNET_STATUS.NON_PUBLIE,
             cle_me_remplace_par_traitee: true,
             affelnet_raison_depublication: "Non publication automatique (offre remplacée par une plus récente)",
+            affelnet_id: null,
           },
           $push: {
             updates_history: {

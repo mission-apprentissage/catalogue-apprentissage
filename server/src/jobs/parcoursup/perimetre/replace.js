@@ -78,6 +78,7 @@ const run = async () => {
             parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIE,
             parcoursup_raison_depublication: "Non publication automatique (offre remplacée par une plus récente)",
             cle_me_remplace_par_traitee: true,
+            parcoursup_id: null,
           },
           $push: {
             updates_history: {
