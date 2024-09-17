@@ -10,6 +10,7 @@ const run = async () => {
       parcoursup_perimetre: true,
       cle_me_remplace: { $ne: null },
       "cle_me_remplace.0": { $exists: true },
+      "cle_me_remplace.1": { $exists: false },
       cle_me_remplace_traitee: { $ne: true },
     }),
     async (formation) => {
