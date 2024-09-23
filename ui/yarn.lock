@@ -15420,7 +15420,7 @@ __metadata:
     react-scripts: 5.0.1
     react-syntax-highlighter: 15.5.0
     react-table: 7.7.0
-    react-virtualized-auto-sizer: 1.0.7
+    react-virtualized-auto-sizer: 1.0.24
     react-window: 1.8.6
     typescript: 5.6.2
     yup: 0.32.11
@@ -18044,13 +18044,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-virtualized-auto-sizer@npm:1.0.7":
-  version: 1.0.7
-  resolution: "react-virtualized-auto-sizer@npm:1.0.7"
+"react-virtualized-auto-sizer@npm:1.0.24":
+  version: 1.0.24
+  resolution: "react-virtualized-auto-sizer@npm:1.0.24"
   peerDependencies:
-    react: ^15.3.0 || ^16.0.0-alpha || ^17.0.0 || ^18.0.0-rc
-    react-dom: ^15.3.0 || ^16.0.0-alpha || ^17.0.0 || ^18.0.0-rc
-  checksum: 7f2f013c422771828c6613c7890f792aa90a033ea2b41c489c67ca2c6793eefa94d25232c1050fdf69cdd626fad9e3821c5003d45fa6fc831184cd09232023c2
+    react: ^15.3.0 || ^16.0.0-alpha || ^17.0.0 || ^18.0.0
+    react-dom: ^15.3.0 || ^16.0.0-alpha || ^17.0.0 || ^18.0.0
+  checksum: e7d98563735dabbd1c58727c9d3e9f08f6a60a9964d25507cf4ef08f8964b6e421491c892ee0a99e47630118fdca42f1c60cef15ebda3659face58025dba3e98
   languageName: node
   linkType: hard
 
