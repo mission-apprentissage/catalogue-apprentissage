@@ -3711,12 +3711,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"express-rate-limit@npm:6.7.0":
-  version: 6.7.0
-  resolution: "express-rate-limit@npm:6.7.0"
+"express-rate-limit@npm:7.4.0":
+  version: 7.4.0
+  resolution: "express-rate-limit@npm:7.4.0"
   peerDependencies:
-    express: ^4 || ^5
-  checksum: 7bd3f298b202cdb11c3d7c2dcff9be12c6885be5e64fb112f6c79103ba93a8e5d899ce15a5a3ce48f82190ab3515bed403e067dc3e42fc2832558cbe2620f955
+    express: 4 || 5 || ^5.0.0-beta.1
+  checksum: 81ddba751b401ff7f04207155dd0559938b5614754f73950d86acc1463dd7ea6a458a5ba941bcf108e8913b786bca6cde94c19ba504cf61f864edf92cc1bdbae
   languageName: node
   linkType: hard
 
@@ -6974,7 +6974,7 @@ __metadata:
     eslint-plugin-prettier: 3.4.1
     express: 4.20.0
     express-mongo-sanitize: 2.2.0
-    express-rate-limit: 6.7.0
+    express-rate-limit: 7.4.0
     express-session: 1.18.0
     faker: 5.5.3
     fs: 0.0.1-security
