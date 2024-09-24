@@ -104,7 +104,7 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
     oldFields?.editedFields?.uai_formation ??
     fields?.uai_formation ??
     (fields?.code_commune_insee === fields?.etablissement_formateur_code_commune_insee
-      ? fields?.etablissement_formateur_uai ?? oldFields?.uai_formation ?? oldFields?.etablissement_formateur_uai
+      ? (fields?.etablissement_formateur_uai ?? oldFields?.uai_formation ?? oldFields?.etablissement_formateur_uai)
       : undefined);
   const uai_formation_valide = !!uai_formation && (await isValideUAI(uai_formation));
 

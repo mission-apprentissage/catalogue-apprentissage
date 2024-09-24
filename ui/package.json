@@ -47,7 +47,7 @@
     "test:coverage": "craco test --watchAll=false --coverage",
     "eject": "craco eject",
     "sitemap": "babel-node src/scripts/sitemap-generator.js",
-    "lint": "prettier --write **/*.js **/*.jsx",
+    "lint": "prettier --write '**/*.js' '**/*.jsx'",
     "prepare": "cd .. && husky install ui/.husky"
   },
   "eslintConfig": {

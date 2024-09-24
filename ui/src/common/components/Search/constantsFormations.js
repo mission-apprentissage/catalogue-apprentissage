@@ -989,7 +989,7 @@ export const quickFiltersDefinition = [
         return {
           query: {
             terms: {
-              agriculture: values.map((value) => ({ Oui: true, Non: false, "Pas d'information": null }[value])),
+              agriculture: values.map((value) => ({ Oui: true, Non: false, "Pas d'information": null })[value]),
             },
           },
         };
@@ -1144,7 +1144,7 @@ export const quickFiltersDefinition = [
               query: {
                 terms: {
                   parcoursup_publication_auto: values.map(
-                    (value) => ({ Oui: true, Non: false, "Pas d'information": null }[value])
+                    (value) => ({ Oui: true, Non: false, "Pas d'information": null })[value]
                   ),
                 },
               },
@@ -1302,7 +1302,7 @@ export const quickFiltersDefinition = [
               query: {
                 terms: {
                   affelnet_publication_auto: values.map(
-                    (value) => ({ Oui: true, Non: false, "Pas d'information": null }[value])
+                    (value) => ({ Oui: true, Non: false, "Pas d'information": null })[value]
                   ),
                 },
               },
@@ -1334,7 +1334,7 @@ export const quickFiltersDefinition = [
       //             query: {
       //               terms: {
       //                 affelnet_perimetre_prise_rdv: values.map(
-      //                   (value) => ({ Oui: true, Non: false, "Pas d'information": null }[value])
+      //                   (value) => ({ Oui: true, Non: false, "Pas d'information": null })[value]
       //                 ),
       //               },
       //             },

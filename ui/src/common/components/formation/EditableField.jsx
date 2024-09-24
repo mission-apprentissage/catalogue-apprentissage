@@ -62,8 +62,8 @@ export const EditableField = memo(
                 >
                   <Edit2Fill color="white" mr="2" />
                   {formation[fieldName]?.length
-                    ? notEmptyText ?? "Modifier le champ"
-                    : emptyText ?? "Renseigner le champ"}
+                    ? (notEmptyText ?? "Modifier le champ")
+                    : (emptyText ?? "Renseigner le champ")}
                 </Button>
               </>
             )}
