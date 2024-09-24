@@ -1,4 +1,4 @@
-import { fireEvent, waitFor } from "@testing-library/react";
+import { waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { rest } from "msw";
@@ -96,12 +96,4 @@ test("opens rule modal to add a diploma", async () => {
 
   diplomaLabel = queryByText(/^Nom du diplôme ou titre$/i);
   expect(diplomaLabel).toBeInTheDocument();
-
-  const closeButton = getByText(/^fermer$/i);
-  expect(closeButton).toBeInTheDocument();
-
-  await userEvent.click(closeButton);
-
-  diplomaLabel = queryByText(/^Nom du diplôme ou titre$/i);
-  expect(diplomaLabel).not.toBeVisible();
 });

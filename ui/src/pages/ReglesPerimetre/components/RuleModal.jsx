@@ -337,6 +337,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
       <ModalOverlay />
       <ModalContent bg="white" color="primaryText" borderRadius="none" ref={initialRef}>
         <Button
+          data-testid="close-button"
           display={"flex"}
           alignSelf={"flex-end"}
           color="bluefrance"

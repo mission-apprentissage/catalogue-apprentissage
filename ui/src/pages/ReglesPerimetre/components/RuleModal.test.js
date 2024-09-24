@@ -151,3 +151,50 @@ test("renders the modal in update mode and can delete", async () => {
   expect(window.confirm).toBeCalled();
   expect(onDeleteRule).toBeCalledWith({ _id: "999" });
 });
+
+test("renders the modal and can close", async () => {
+  window.confirm = jest.fn(() => true); // always click 'yes'
+
+  const onClose = jest.fn();
+  const onUpdateRule = jest.fn();
+  const onDeleteRule = jest.fn();
+  const onCreateRule = jest.fn();
+
+  const rule = {
+    _id: "999",
+    diplome: "BTS",
+    regle_complementaire: "",
+    regle_complementaire_query: "[]",
+    nom_regle_complementaire: "mon diplome de test",
+    statut: PARCOURSUP_STATUS.A_PUBLIER,
+    condition_integration: "peut intégrer",
+    niveau: "4",
+    duree: "1",
+  };
+  const { queryByText, getByTestId } = renderWithRouter(
+    <QueryClientProvider client={queryClient}>
+      <RuleModal
+        plateforme={"parcoursup"}
+        isOpen={true}
+        onClose={onClose}
+        onUpdateRule={onUpdateRule}
+        onDeleteRule={onDeleteRule}
+        onCreateRule={onCreateRule}
+        rule={rule}
+      />
+    </QueryClientProvider>
+  );
+
+  const titleCreation = queryByText(/^Ajouter un diplôme, un titre ou des formations$/i);
+  expect(titleCreation).not.toBeInTheDocument();
+
+  const titleUpdate = queryByText(/^mon diplome de test$/i);
+  expect(titleUpdate).toBeInTheDocument();
+
+  const closeButton = getByTestId("close-button");
+  expect(closeButton).toBeInTheDocument();
+
+  await userEvent.click(closeButton);
+
+  expect(onClose).toBeCalled();
+});
