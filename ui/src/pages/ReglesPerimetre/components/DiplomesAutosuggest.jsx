@@ -61,8 +61,8 @@ export const DiplomesAutosuggest = ({ plateforme, onSuggestionSelected }) => {
       renderSuggestion={renderSuggestion}
       inputProps={inputProps}
       onSuggestionSelected={onSelect}
-      renderInputComponent={(inputProps) => (
-        <InputGroup flex={"1 1 auto"} w={"auto"}>
+      renderInputComponent={({ key, ...inputProps }) => (
+        <InputGroup key={key} flex={"1 1 auto"} w={"auto"}>
           <Input m="5px" autoComplete="none" {...inputProps} />
           {inputProps.value && (
             <InputRightElement

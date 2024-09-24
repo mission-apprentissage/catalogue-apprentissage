@@ -100,13 +100,7 @@ test("opens rule modal to add a diploma", async () => {
   const closeButton = getByText(/^fermer$/i);
   expect(closeButton).toBeInTheDocument();
 
-  await fireEvent(
-    closeButton,
-    new MouseEvent("click", {
-      bubbles: true,
-      cancelable: true,
-    })
-  );
+  await userEvent.click(closeButton);
 
   diplomaLabel = queryByText(/^Nom du diplôme ou titre$/i);
   expect(diplomaLabel).not.toBeVisible();

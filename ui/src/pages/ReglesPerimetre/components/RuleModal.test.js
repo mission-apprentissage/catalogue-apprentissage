@@ -1,10 +1,9 @@
 import { rest } from "msw";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { render } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { getDiplomesAllowedForSubRulesUrl, RuleModal } from "./RuleModal";
 import { PARCOURSUP_STATUS } from "../../../constants/status";
-import { setupMswServer } from "../../../common/utils/testUtils";
+import { setupMswServer, renderWithRouter } from "../../../common/utils/testUtils";
 
 const server = setupMswServer(
   rest.get(/\/api\/v1\/entity\/perimetre\/niveau/, (req, res, ctx) => {
@@ -27,9 +26,9 @@ const queryClient = new QueryClient({
   },
 });
 
-// beforeAll(() => server.listen());
-// afterEach(() => server.resetHandlers());
-// afterAll(() => server.close());
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
 
 test("should compute an url filtering with status 'à publier soumis à validation du recteur' for parcoursup", () => {
   const result = getDiplomesAllowedForSubRulesUrl("parcoursup");
@@ -51,7 +50,7 @@ test("renders the modal in creation mode for psup", async () => {
   const onDeleteRule = jest.fn();
   const onCreateRule = jest.fn();
 
-  const { queryByText, queryByTestId } = render(
+  const { queryByText, queryByTestId } = renderWithRouter(
     <QueryClientProvider client={queryClient}>
       <RuleModal
         plateforme={"parcoursup"}
@@ -81,7 +80,7 @@ test("renders the modal in creation mode for affelnet", async () => {
   const onDeleteRule = jest.fn();
   const onCreateRule = jest.fn();
 
-  const { queryByText, queryByTestId } = render(
+  const { queryByText, queryByTestId } = renderWithRouter(
     <QueryClientProvider client={queryClient}>
       <RuleModal
         plateforme={"affelnet"}
@@ -124,7 +123,7 @@ test("renders the modal in update mode and can delete", async () => {
     niveau: "4",
     duree: "1",
   };
-  const { queryByText, getByTestId } = render(
+  const { queryByText, getByTestId } = renderWithRouter(
     <QueryClientProvider client={queryClient}>
       <RuleModal
         plateforme={"parcoursup"}

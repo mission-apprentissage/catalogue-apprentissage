@@ -1,4 +1,3 @@
-import React, { useCallback, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -23,22 +22,23 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
-import { ArrowDownLine, ArrowRightLine, Close } from "../../../theme/components/icons";
 import { useFormik } from "formik";
-import { StatusSelect } from "./StatusSelect";
-import { RuleBuilder } from "./RuleBuilder";
-import { ActionsSelect } from "./ActionsSelect";
-import { CONDITIONS } from "../../../constants/conditionsIntegration";
-import { COMMON_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
+import React, { useCallback, useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { _get } from "../../../common/httpClient";
+import { NavLink } from "react-router-dom";
 import * as Yup from "yup";
+import { getCount, useNiveaux } from "../../../common/api/perimetre";
+import { _get } from "../../../common/httpClient";
+import { getSessionEndDate, getSessionStartDate, isStatusChangeEnabled } from "../../../common/utils/rulesUtils";
 import { academies } from "../../../constants/academies";
 import { annees } from "../../../constants/annees";
-import { getSessionEndDate, getSessionStartDate, isStatusChangeEnabled } from "../../../common/utils/rulesUtils";
+import { CONDITIONS } from "../../../constants/conditionsIntegration";
+import { COMMON_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
+import { ArrowDownLine, ArrowRightLine, Close } from "../../../theme/components/icons";
+import { ActionsSelect } from "./ActionsSelect";
+import { RuleBuilder } from "./RuleBuilder";
 import { RuleUpdatesHistory } from "./RuleUpdatesHistory";
-import { NavLink } from "react-router-dom";
-import { getCount, useNiveaux } from "../../../common/api/perimetre";
+import { StatusSelect } from "./StatusSelect";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
