@@ -1,10 +1,8 @@
-import React from "react";
 import { render, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { getPublishRadioValue, getSubmitBody, PublishModal, updateFormationWithCallback } from "./PublishModal";
 import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
 import * as api from "../../api/formation";
-import userEvent from "@testing-library/user-event";
-import { act } from "react-dom/test-utils";
 
 jest.setTimeout(20000);
 
@@ -410,7 +408,7 @@ test("should render the publish modal", () => {
     intitule_long: "PATISSIER CAP",
   };
 
-  const { getByTestId, queryByText } = render(
+  const { getByTestId } = render(
     <PublishModal isOpen={true} onClose={onClose} onFormationUpdate={onFormationUpdate} formation={formation} />
   );
 
@@ -445,7 +443,7 @@ test("should toggle the affelnet forms", async () => {
     intitule_long: "PATISSIER CAP",
   };
 
-  const { queryByText, getByTestId } = render(
+  const { getByTestId } = render(
     <PublishModal isOpen={true} onClose={onClose} onFormationUpdate={onFormationUpdate} formation={formation} />
   );
 
@@ -457,16 +455,16 @@ test("should toggle the affelnet forms", async () => {
   expect(afUnPublishForm).not.toBeVisible();
 
   const radioYes = getByTestId("af-radio-yes");
-  await act(async () => {
-    await userEvent.click(radioYes);
-  });
+
+  await userEvent.click(radioYes);
+
   await waitFor(() => expect(afPublishForm).toBeVisible(), { timeout: 10000 });
   expect(afUnPublishForm).not.toBeVisible();
 
   const radioNo = getByTestId("af-radio-no");
-  await act(async () => {
-    await userEvent.click(radioNo);
-  });
+
+  await userEvent.click(radioNo);
+
   await waitFor(() => expect(afUnPublishForm).toBeVisible(), { timeout: 10000 });
   expect(afPublishForm).not.toBeVisible();
 });
@@ -506,9 +504,9 @@ test("should toggle the parcoursup forms", async () => {
   expect(psUnpublishForm).not.toBeVisible();
 
   const radioYes = getByTestId("ps-radio-yes");
-  await act(async () => {
-    await userEvent.click(radioYes);
-  });
+
+  await userEvent.click(radioYes);
+
   expect(afPublishForm).not.toBeVisible();
   expect(afUnpublishForm).not.toBeVisible();
   expect(psPublishForm).toBeVisible();
@@ -516,9 +514,8 @@ test("should toggle the parcoursup forms", async () => {
 
   const radioNo = getByTestId("ps-radio-no");
 
-  await act(async () => {
-    await userEvent.click(radioNo);
-  });
+  await userEvent.click(radioNo);
+
   expect(psUnpublishForm).toBeVisible();
   expect(psPublishForm).not.toBeVisible();
   expect(afPublishForm).not.toBeVisible();
@@ -554,15 +551,13 @@ test("should submit", async () => {
   );
 
   const radioYes = getByTestId("ps-radio-yes");
-  await act(async () => {
-    await userEvent.click(radioYes);
-  });
+
+  await userEvent.click(radioYes);
 
   const submitBtn = queryByText("Enregistrer les modifications");
   expect(submitBtn).toBeInTheDocument();
-  await act(async () => {
-    await userEvent.click(submitBtn);
-  });
+
+  await userEvent.click(submitBtn);
 
   await waitFor(() => expect(onClose).toBeCalled());
   expect(onFormationUpdate).toHaveBeenCalled();
@@ -598,9 +593,8 @@ test("should submit but no update", async () => {
 
   const submitBtn = queryByText("Enregistrer les modifications");
   expect(submitBtn).toBeInTheDocument();
-  await act(async () => {
-    await userEvent.click(submitBtn);
-  });
+
+  await userEvent.click(submitBtn);
 
   await waitFor(() => expect(onClose).toBeCalled());
   expect(onFormationUpdate).not.toHaveBeenCalled();
@@ -632,8 +626,8 @@ test("should close", async () => {
 
   const submitBtn = queryByText("Annuler");
   expect(submitBtn).toBeInTheDocument();
-  await act(async () => {
-    await userEvent.click(submitBtn);
-  });
+
+  await userEvent.click(submitBtn);
+
   await waitFor(() => expect(onClose).toBeCalled());
 });

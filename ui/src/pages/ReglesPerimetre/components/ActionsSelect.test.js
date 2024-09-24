@@ -1,12 +1,11 @@
-import React from "react";
 import { render } from "@testing-library/react";
-import { ActionsSelect } from "./ActionsSelect";
 import userEvent from "@testing-library/user-event";
+import { ActionsSelect } from "./ActionsSelect";
 
 test("renders all conditions", () => {
   const onChange = jest.fn();
 
-  const { getByText, getByTestId } = render(<ActionsSelect onChange={onChange} />);
+  const { getByText } = render(<ActionsSelect onChange={onChange} />);
 
   let option = getByText(/^doit intégrer$/i);
   expect(option).toBeInTheDocument();
@@ -24,5 +23,6 @@ test("calls onChange", async () => {
   const { getByTestId } = render(<ActionsSelect onChange={onChange} />);
 
   await userEvent.selectOptions(getByTestId("actions-select"), ["peut intégrer"]);
+
   expect(onChange).toHaveBeenCalled();
 });

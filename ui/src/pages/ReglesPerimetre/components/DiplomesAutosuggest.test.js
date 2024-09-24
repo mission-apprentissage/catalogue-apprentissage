@@ -1,8 +1,7 @@
-import React from "react";
 import { render, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { DiplomesAutosuggest } from "./DiplomesAutosuggest";
 import * as api from "../../../common/api/perimetre";
-import userEvent from "@testing-library/user-event";
 
 test("display bts diploma", async () => {
   jest.spyOn(api, "useNiveaux").mockImplementation(() => ({
@@ -27,6 +26,7 @@ test("display bts diploma", async () => {
   const input = getByPlaceholderText(/^Recherchez un diplôme$/i);
 
   await userEvent.type(input, "b");
+
   expect(input.value).toEqual("b");
 
   await waitFor(() => getByText("bts"));
@@ -38,12 +38,14 @@ test("display bts diploma", async () => {
   expect(capOption).not.toBeInTheDocument();
 
   await userEvent.click(btsOption);
+
   expect(onSuggestionSelected).toHaveBeenCalledWith({ suggestion: { count: 8, niveau: "1", value: "bts" } });
 
   const clearBtn = getByTestId("clear-btn");
   expect(clearBtn).toBeInTheDocument();
 
   await userEvent.click(clearBtn);
+
   expect(btsOption).not.toBeInTheDocument();
   expect(input.value).toEqual("");
 });

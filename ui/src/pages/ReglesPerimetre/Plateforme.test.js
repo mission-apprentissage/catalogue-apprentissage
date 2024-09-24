@@ -1,10 +1,9 @@
-import React from "react";
-import Plateforme from "./Plateforme";
-import { renderWithRouter, setupMswServer } from "../../common/utils/testUtils";
-
-import { rest } from "msw";
+import { fireEvent, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { act, fireEvent, waitFor } from "@testing-library/react";
+import { rest } from "msw";
+import { renderWithRouter, setupMswServer } from "../../common/utils/testUtils";
+import Plateforme from "./Plateforme";
 
 jest.setTimeout(20000);
 
@@ -50,11 +49,12 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 test("renders basic tree", async () => {
-  const { getAllByText, getByText, getAllByTestId } = renderWithRouter(
+  const { getAllByText, getByText } = renderWithRouter(
     <QueryClientProvider client={queryClient}>
       <Plateforme plateforme={"parcoursup"} />
     </QueryClientProvider>
   );
+
   const match = getAllByText(/^Règles d'intégration des formations à la plateforme parcoursup$/i);
   expect(match).toHaveLength(2);
 
@@ -92,15 +92,7 @@ test("opens rule modal to add a diploma", async () => {
   let diplomaLabel = queryByText(/^Nom du diplôme ou titre$/i);
   expect(diplomaLabel).not.toBeInTheDocument();
 
-  act(() => {
-    fireEvent(
-      modalButton,
-      new MouseEvent("click", {
-        bubbles: true,
-        cancelable: true,
-      })
-    );
-  });
+  await userEvent.click(modalButton);
 
   diplomaLabel = queryByText(/^Nom du diplôme ou titre$/i);
   expect(diplomaLabel).toBeInTheDocument();
@@ -108,15 +100,13 @@ test("opens rule modal to add a diploma", async () => {
   const closeButton = getByText(/^fermer$/i);
   expect(closeButton).toBeInTheDocument();
 
-  act(() => {
-    fireEvent(
-      closeButton,
-      new MouseEvent("click", {
-        bubbles: true,
-        cancelable: true,
-      })
-    );
-  });
+  await fireEvent(
+    closeButton,
+    new MouseEvent("click", {
+      bubbles: true,
+      cancelable: true,
+    })
+  );
 
   diplomaLabel = queryByText(/^Nom du diplôme ou titre$/i);
   expect(diplomaLabel).not.toBeVisible();

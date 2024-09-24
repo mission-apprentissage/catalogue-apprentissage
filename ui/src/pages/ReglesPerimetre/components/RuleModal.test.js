@@ -1,11 +1,10 @@
-import React from "react";
 import { rest } from "msw";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { render } from "@testing-library/react";
+import { userEvent } from "@testing-library/user-event";
 import { getDiplomesAllowedForSubRulesUrl, RuleModal } from "./RuleModal";
-import { fireEvent, render, act } from "@testing-library/react";
 import { PARCOURSUP_STATUS } from "../../../constants/status";
 import { setupMswServer } from "../../../common/utils/testUtils";
-import { userEvent } from "@testing-library/user-event";
 
 const server = setupMswServer(
   rest.get(/\/api\/v1\/entity\/perimetre\/niveau/, (req, res, ctx) => {
@@ -28,9 +27,9 @@ const queryClient = new QueryClient({
   },
 });
 
-beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+// beforeAll(() => server.listen());
+// afterEach(() => server.resetHandlers());
+// afterAll(() => server.close());
 
 test("should compute an url filtering with status 'à publier soumis à validation du recteur' for parcoursup", () => {
   const result = getDiplomesAllowedForSubRulesUrl("parcoursup");
@@ -148,16 +147,7 @@ test("renders the modal in update mode and can delete", async () => {
   const deleteButton = getByTestId("delete-button");
   expect(deleteButton).toBeInTheDocument();
 
-  await act(async () => {
-    // await userEvent.click(deleteButton);
-    fireEvent(
-      deleteButton,
-      new MouseEvent("click", {
-        bubbles: true,
-        cancelable: true,
-      })
-    );
-  });
+  await userEvent.click(deleteButton);
 
   expect(window.confirm).toBeCalled();
   expect(onDeleteRule).toBeCalledWith({ _id: "999" });

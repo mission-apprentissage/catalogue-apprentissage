@@ -22,7 +22,7 @@ const esQuery = (queries) => {
   })
     .then((r) => r.json())
     .catch((e) => {
-      console.log(e);
+      console.error(e);
     });
 };
 

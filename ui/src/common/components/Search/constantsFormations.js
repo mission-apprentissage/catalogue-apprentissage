@@ -1129,7 +1129,6 @@ export const quickFiltersDefinition = [
         filterLabel: "Publication automatique Parcoursup",
         sortBy: "desc",
         transformData: (data) => {
-          console.log(data);
           return data.map((d) => ({
             ...d,
             key: {

@@ -6,7 +6,7 @@ const rebuildIndex = async (index, schema, { filter, skipFound } = { skipFound: 
   logger.info({ type: "utils" }, `-- REBULDING ${index} INDEX ⏳`);
   let client = getElasticInstance();
 
-  const { body: hasIndex } = await client.indices.exists({ index });
+  const hasIndex = await client.indices.exists({ index });
   if (hasIndex && !skipFound) {
     logger.debug({ type: "utils" }, `Removing '${index}' index...`);
     await client.indices.delete({ index });
@@ -26,7 +26,7 @@ const deleteIndex = async (index) => {
 
   let client = getElasticInstance();
 
-  const { body: hasIndex } = await client.indices.exists({ index });
+  const hasIndex = await client.indices.exists({ index });
   if (hasIndex) {
     logger.debug({ type: "utils" }, `Removing '${index}' index...`);
     await client.indices.delete({ index });

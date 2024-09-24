@@ -10,6 +10,10 @@
 /* eslint-disable no-param-reassign */
 "use strict";
 
+/**
+ * @typedef {import("@elastic/elasticsearch").Client} Client
+ */
+
 const serialize = require("./serialize");
 const { oleoduc, writeData } = require("oleoduc");
 // https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/bulk_examples.html
@@ -106,6 +110,12 @@ function getMapping(schema, requireAsciiFolding = false) {
 
 let isHooksPaused = false;
 
+/**
+ *
+ * @param {*} schema
+ * @param {Object} options
+ * @param {Client} options.esClient
+ */
 function Mongoosastic(schema, options) {
   const { esClient } = options;
 
@@ -141,7 +151,7 @@ function Mongoosastic(schema, options) {
           }
         : {};
 
-      if (!exists.body) {
+      if (!exists) {
         await esClient.indices.create({ index: indexName, ...includeTypeNameParameters, ...asciiFoldingParameters });
       }
       const completeMapping = {};

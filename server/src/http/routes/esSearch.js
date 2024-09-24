@@ -15,7 +15,7 @@ module.exports = () => {
       logger.debug({ type: "http" }, `Es search ${index}`);
       const result = await esClient.search({ index, ...req.query, body: req.body });
 
-      return res.json(result.body);
+      return res.json(result);
     })
   );
 
@@ -23,6 +23,7 @@ module.exports = () => {
     "/:index/_count",
     tryCatch(async (req, res) => {
       const { index } = req.params;
+      logger.debug({ type: "http" }, `Es count ${index}`);
 
       const result = await esClient.count({
         index,
@@ -30,7 +31,9 @@ module.exports = () => {
         body: req.body,
       });
 
-      return res.json(result.body);
+      logger.debug({ type: "http" }, `Es count ${index} results ${JSON.stringify(result)}`);
+
+      return res.json(result);
     })
   );
 
@@ -41,7 +44,7 @@ module.exports = () => {
       logger.debug({ type: "http" }, `Es Multi search ${index}`);
       const result = await esClient.msearch({ index, ...req.query, body: req.body, rest_total_hits_as_int: true });
 
-      return res.json(result.body);
+      return res.json(result);
     })
   );
 
@@ -63,7 +66,7 @@ module.exports = () => {
           scrollId,
           scroll: "1m",
         });
-        return res.json(response.body);
+        return res.json(response);
       }
 
       if (!req.body || req.body === "") {
@@ -77,7 +80,7 @@ module.exports = () => {
         body: req.body,
       });
 
-      return res.json(result.body);
+      return res.json(result);
     })
   );
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import Autosuggest from "react-autosuggest";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/react";
 import { useNiveaux } from "../../../common/api/perimetre";
@@ -28,9 +28,13 @@ export const DiplomesAutosuggest = ({ plateforme, onSuggestionSelected }) => {
 
   const renderSuggestion = (suggestion) => <div>{suggestion.value}</div>;
 
-  const onSuggestionsFetchRequested = ({ value }) => setSuggestions(getSuggestions(value));
+  const onSuggestionsFetchRequested = ({ value }) => {
+    setSuggestions(getSuggestions(value));
+  };
 
-  const onSuggestionsClearRequested = () => setSuggestions([]);
+  const onSuggestionsClearRequested = () => {
+    setSuggestions([]);
+  };
 
   const inputProps = {
     placeholder: "Recherchez un diplôme",
@@ -44,6 +48,10 @@ export const DiplomesAutosuggest = ({ plateforme, onSuggestionSelected }) => {
     onSuggestionSelected({ suggestion });
   };
 
+  const cancel = useCallback(() => {
+    setChosenValue("");
+  }, []);
+
   return (
     <Autosuggest
       suggestions={suggestions}
@@ -55,11 +63,11 @@ export const DiplomesAutosuggest = ({ plateforme, onSuggestionSelected }) => {
       onSuggestionSelected={onSelect}
       renderInputComponent={(inputProps) => (
         <InputGroup flex={"1 1 auto"} w={"auto"}>
-          <Input m="5px" autoComplete="new-password" {...inputProps} />
+          <Input m="5px" autoComplete="none" {...inputProps} />
           {inputProps.value && (
             <InputRightElement
               m={"5px"}
-              children={<CloseCircleLine data-testid={"clear-btn"} boxSize={4} onClick={() => setChosenValue("")} />}
+              children={<CloseCircleLine data-testid={"clear-btn"} boxSize={4} onClick={cancel} />}
             />
           )}
         </InputGroup>

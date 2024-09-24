@@ -75,7 +75,6 @@ function simpleOrNestedQuery(key, value, cb) {
 
 function query(key, value, cb, shouldOrMust = "should") {
   if (Array.isArray(key)) {
-    console.log({ bool: { [shouldOrMust]: key.map((k) => simpleOrNestedQuery(k, value)) } });
     return { bool: { [shouldOrMust]: key.map((k) => simpleOrNestedQuery(k, value)) } };
   }
 

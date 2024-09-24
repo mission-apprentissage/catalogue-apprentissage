@@ -19,21 +19,6 @@ export const EditableField = memo(
     notEmptyText = "Modifier le champ",
     ...props
   }) => {
-    console.log("EditableField.jsx -> EditableField", {
-      formation,
-      hasRightToEdit,
-      edition,
-      onEdit,
-      handleSubmit,
-      values,
-      handleChange,
-      fieldName,
-      label,
-      emptyText,
-      notEmptyText,
-      ...props,
-    });
-
     return (
       <Text {...props}>
         {label} :{" "}
@@ -88,7 +73,6 @@ export const EditableField = memo(
     );
   },
   (prevProps, nextProps) => {
-    console.log(prevProps, nextProps);
     return prevProps?.edition === nextProps?.edition;
   }
 );

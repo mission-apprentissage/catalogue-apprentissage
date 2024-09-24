@@ -97,7 +97,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
     num_academie,
   } = rule ?? {};
 
-  let isClosing = false;
+  const [isClosing, setIsClosing] = useState(false);
   const isCreating = !rule;
   const initialRef = React.useRef();
   const toast = useToast();
@@ -235,11 +235,11 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
     },
   });
 
-  const close = () => {
-    isClosing = true;
+  const close = useCallback(() => {
+    setIsClosing(true);
     // resetForm();
     onClose();
-  };
+  }, [setIsClosing, onClose]);
 
   // create link with diplome / regle_complementaire
   const linkQuery = [

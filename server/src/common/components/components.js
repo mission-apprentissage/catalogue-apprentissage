@@ -12,7 +12,7 @@ module.exports = async (options = {}) => {
   try {
     await initTcoModel(mongoose, {});
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 
   return {

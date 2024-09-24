@@ -1,12 +1,10 @@
-import React from "react";
 import { render, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { Line } from "./Line";
 import { getCount } from "../../../common/api/perimetre";
 import * as api from "../../../common/api/perimetre";
 import { PARCOURSUP_STATUS } from "../../../constants/status";
 import { CONDITIONS } from "../../../constants/conditionsIntegration";
-import userEvent from "@testing-library/user-event";
-import { act } from "react-dom/test-utils";
 
 test("renders line & create rule", async () => {
   jest.spyOn(api, "getCount").mockImplementation(() => 123);
@@ -44,6 +42,7 @@ test("renders line & create rule", async () => {
   expect(queryByText("123")).not.toBeInTheDocument();
 
   await userEvent.selectOptions(actionsSelect, [CONDITIONS.PEUT_INTEGRER]);
+
   expect(onCreateRule).toHaveBeenCalledWith({
     condition_integration: "peut intégrer",
     diplome: "BTS",
@@ -109,6 +108,7 @@ test("renders Line for academie & show rule", async () => {
   await waitFor(() => expect(queryByText("123")).toBeInTheDocument());
 
   const line = getByTestId("line");
+
   await userEvent.click(line);
 
   expect(onShowRule).toHaveBeenCalledWith(rule);
@@ -151,6 +151,7 @@ test("Action select - should delete rule", async () => {
   expect(actionsSelect).toHaveAttribute("aria-disabled", "false");
 
   await userEvent.selectOptions(actionsSelect, [CONDITIONS.NE_DOIT_PAS_INTEGRER]);
+
   expect(onDeleteRule).toHaveBeenCalledWith({
     _id: "345",
   });
@@ -193,9 +194,8 @@ test(`Action select - should update rule & set "non publiable en l'état"`, asyn
   const actionsSelect = getByTestId("actions-select");
   expect(actionsSelect).toHaveAttribute("aria-disabled", "false");
 
-  await act(async () => {
-    await userEvent.selectOptions(actionsSelect, [CONDITIONS.NE_DOIT_PAS_INTEGRER]);
-  });
+  await userEvent.selectOptions(actionsSelect, [CONDITIONS.NE_DOIT_PAS_INTEGRER]);
+
   expect(onUpdateRule).toHaveBeenCalledWith({
     _id: "345",
     condition_integration: "ne doit pas intégrer",
@@ -240,9 +240,8 @@ test("Action select - should update rule & set à publier", async () => {
   const actionsSelect = getByTestId("actions-select");
   expect(actionsSelect).toHaveAttribute("aria-disabled", "false");
 
-  await act(async () => {
-    await userEvent.selectOptions(actionsSelect, [CONDITIONS.PEUT_INTEGRER]);
-  });
+  await userEvent.selectOptions(actionsSelect, [CONDITIONS.PEUT_INTEGRER]);
+
   expect(onUpdateRule).toHaveBeenCalledWith({
     _id: "345",
     condition_integration: "peut intégrer",
@@ -287,9 +286,8 @@ test("Status select - should update status", async () => {
   const statusSelect = getByTestId("status-select");
   expect(statusSelect).toHaveAttribute("aria-disabled", "false");
 
-  await act(async () => {
-    await userEvent.selectOptions(statusSelect, [PARCOURSUP_STATUS.A_PUBLIER]);
-  });
+  await userEvent.selectOptions(statusSelect, [PARCOURSUP_STATUS.A_PUBLIER]);
+
   expect(onUpdateRule).toHaveBeenCalledWith({
     _id: "345",
     statut: PARCOURSUP_STATUS.A_PUBLIER,
@@ -334,9 +332,7 @@ test("Status select - should update status for academie", async () => {
   const statusSelect = getByTestId("status-select");
   expect(statusSelect).toHaveAttribute("aria-disabled", "false");
 
-  await act(async () => {
-    await userEvent.selectOptions(statusSelect, [PARCOURSUP_STATUS.A_PUBLIER]);
-  });
+  await userEvent.selectOptions(statusSelect, [PARCOURSUP_STATUS.A_PUBLIER]);
 
   expect(onUpdateRule).toHaveBeenCalledWith({
     _id: "345",
@@ -384,9 +380,7 @@ test("Status select - should remove status for academie", async () => {
   const statusSelect = getByTestId("status-select");
   expect(statusSelect).toHaveAttribute("aria-disabled", "false");
 
-  await act(async () => {
-    await userEvent.selectOptions(statusSelect, [PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR]);
-  });
+  await userEvent.selectOptions(statusSelect, [PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR]);
 
   expect(onUpdateRule).toHaveBeenCalledWith({
     _id: "345",

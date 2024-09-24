@@ -58,14 +58,6 @@ const run = async () => {
         );
         updated++;
       }
-
-      // console.log({
-      //   _id,
-      //   parcoursup_id,
-      //   parcoursup_statut,
-      //   date_debut,
-      //   next_parcoursup_statut,
-      // });
     }
   );
 

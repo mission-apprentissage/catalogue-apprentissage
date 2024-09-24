@@ -12,6 +12,10 @@ const server = setupMswServer(
     return res(ctx.json([]));
   }),
 
+  rest.get(/\/api\/entity\/formations\/count/, (req, res, ctx) => {
+    return res(ctx.json([]));
+  }),
+
   rest.post(/\/api\/es\/search\/formation\/_count/, (req, res, ctx) => {
     return res(ctx.json([]));
   }),

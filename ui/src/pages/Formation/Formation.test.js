@@ -1,8 +1,7 @@
-import React from "react";
 import { renderWithRouter, grantAnonymousAccess, setupMswServer } from "../../common/utils/testUtils";
+import { waitFor } from "@testing-library/react";
 import { rest } from "msw";
 import Formation from "./Formation";
-import { waitFor } from "@testing-library/react";
 import { AFFELNET_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
 
 jest.setTimeout(20000);

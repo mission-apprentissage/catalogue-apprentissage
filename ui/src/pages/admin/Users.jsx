@@ -118,7 +118,7 @@ const UserLine = ({ user, roles }) => {
             document.location.reload(true);
           }
         } catch (e) {
-          console.log(e);
+          console.error(e);
           const response = await (e?.json ?? {});
           const message = response?.message ?? e?.message;
 
@@ -147,8 +147,6 @@ const UserLine = ({ user, roles }) => {
   };
 
   const handleAcademieChange = (academie) => {
-    console.log({ accessAcademieList: values.accessAcademieList, academie });
-
     let newAcademieList = [];
     if (academie !== "-1") {
       if (values.accessAcademieList.includes(academie)) {

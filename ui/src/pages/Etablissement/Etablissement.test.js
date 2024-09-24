@@ -1,10 +1,7 @@
-import React from "react";
 import { renderWithRouter, grantAnonymousAccess, setupMswServer } from "../../common/utils/testUtils";
 import { rest } from "msw";
 import Etablissement from "./Etablissement";
 import { waitFor } from "@testing-library/react";
-import * as api from "../../common/api/organisme";
-import userEvent from "@testing-library/user-event";
 
 jest.setTimeout(20000);
 

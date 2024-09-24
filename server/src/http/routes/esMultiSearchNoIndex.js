@@ -14,7 +14,7 @@ module.exports = () => {
       logger.debug({ type: "http" }, `Es Multi search no index ${req.body}`);
       const result = await esClient.msearch({ body: [req.body] });
 
-      return res.json(result.body);
+      return res.json(result);
     })
   );
 

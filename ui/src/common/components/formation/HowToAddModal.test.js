@@ -1,4 +1,3 @@
-import React from "react";
 import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { HowToAddModal } from "./HowToAddModal";
@@ -12,6 +11,8 @@ test("should render the informative modal", async () => {
 
   const closeBtn = queryByText(/fermer/i);
   expect(closeBtn).toBeInTheDocument();
+
   await userEvent.click(closeBtn);
+
   expect(onClose).toHaveBeenCalled();
 });

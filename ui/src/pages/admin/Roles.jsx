@@ -49,7 +49,7 @@ const RoleLine = ({ role }) => {
             document.location.reload(true);
           }
         } catch (e) {
-          console.log(e);
+          console.error(e);
         }
 
         setSubmitting(false);

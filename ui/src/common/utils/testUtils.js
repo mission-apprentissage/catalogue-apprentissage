@@ -1,4 +1,3 @@
-import React from "react";
 import { Routes, MemoryRouter, Route } from "react-router-dom";
 import { render } from "@testing-library/react";
 import { setupServer } from "msw/node";

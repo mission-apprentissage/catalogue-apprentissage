@@ -78,7 +78,7 @@ const Alert = () => {
           }
           window.location.reload();
         } catch (e) {
-          console.log(e);
+          console.error(e);
         }
 
         setSubmitting(false);
@@ -111,7 +111,7 @@ const Alert = () => {
           }
           window.location.reload();
         } catch (e) {
-          console.log(e);
+          console.error(e);
         }
 
         setSubmitting(false);

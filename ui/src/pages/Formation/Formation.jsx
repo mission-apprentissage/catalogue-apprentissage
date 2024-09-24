@@ -149,15 +149,6 @@ const VersionBlock = ({ formation }) => {
 };
 
 const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, values, hasRightToEdit }) => {
-  console.log("Formation.jsx -> Formation", {
-    formation,
-    edition,
-    onEdit,
-    handleChange,
-    handleSubmit,
-    values,
-    hasRightToEdit,
-  });
   // Distance tolérer entre l'adresse et les coordonnées transmise par RCO
   const seuilDistance = 100;
   const [isEditingUai, setIsEditingUai] = useState(false);
@@ -199,13 +190,11 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
   //   : React.Fragment;
 
   const onEditOverride = async (...args) => {
-    console.log("onEditOverride");
     setIsEditingUai(!isEditingUai);
     await onEdit(...args);
   };
 
   const handleSubmitOverride = async (...args) => {
-    console.log("handleSubmitOverride");
     setIsEditingUai(false);
     await handleSubmit(...args);
   };
@@ -456,7 +445,6 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
 };
 
 export default () => {
-  console.log("Formation.jsx -> default");
   const { id } = useParams();
   const toast = useToast();
   const [formation, setFormation] = useState();
