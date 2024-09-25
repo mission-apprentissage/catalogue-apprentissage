@@ -2,7 +2,7 @@ const config = require("config");
 const util = require("util");
 const bunyan = require("bunyan");
 const PrettyStream = require("bunyan-prettystream");
-const BunyanSlack = require("bunyan-slack");
+const BunyanSlack = require("bunyan-slack").default;
 const BunyanMongodbStream = require("bunyan-mongodb-stream");
 const { Log } = require("./models/index");
 
@@ -39,7 +39,7 @@ const createStreams = () => {
   const slackStream = () => {
     const stream = new BunyanSlack(
       {
-        webhook_url: config.slackWebhookUrl,
+        webhookUrl: config.slackWebhookUrl,
         iconUrl: "https://catalogue.apprentissage.education.gouv.fr/favicon.ico",
         customFormatter: (record, levelName) => {
           let type = record.type;
