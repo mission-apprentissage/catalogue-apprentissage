@@ -1539,6 +1539,8 @@ export const dataSearch = {
     "intitule_long",
     "etablissement_gestionnaire_entreprise_raison_sociale",
     "etablissement_gestionnaire_enseigne",
+    "etablissement_formateur_entreprise_raison_sociale",
+    "etablissement_formateur_enseigne",
     "cfd",
     "rncp_code",
     "uai_formation",
@@ -1554,7 +1556,7 @@ export const dataSearch = {
   ],
   placeholder:
     "Saisissez une raison sociale, un Siret, un intitulé de formation, un code RNCP ou CFD (code formation diplôme)",
-  fieldWeights: [5, 4, 3, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1],
+  fieldWeights: [5, 4, 4, 3, 3, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1],
 };
 
 export default {
