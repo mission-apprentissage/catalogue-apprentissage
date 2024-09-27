@@ -4,7 +4,7 @@ const { cursor } = require("../../../common/utils/cursor");
 const logger = require("../../../common/logger");
 
 const run = async () => {
-  const filterSessionDate = getSessionDateRules();
+  const filterSessionDate = await getSessionDateRules();
 
   const filterPerimetre = {
     affelnet_perimetre: true,

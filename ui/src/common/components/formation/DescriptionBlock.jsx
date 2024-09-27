@@ -1,17 +1,5 @@
-import React, { useCallback } from "react";
-import {
-  Box,
-  Link,
-  ListItem,
-  Text,
-  UnorderedList,
-  IconButton,
-  useToast,
-  LinkBox,
-  List,
-  Divider,
-  Button,
-} from "@chakra-ui/react";
+import React, { useCallback, useContext } from "react";
+import { Box, Link, ListItem, Text, UnorderedList, useToast, List, Divider, Button } from "@chakra-ui/react";
 import { ExternalLinkLine } from "../../../theme/components/icons";
 import { DangerBox } from "../DangerBox";
 import { InfoTooltip } from "../InfoTooltip";
@@ -20,8 +8,8 @@ import { FormationDate } from "./FormationDate";
 import { HabilitationPartenaire } from "./HabilitationPartenaire";
 import { HABILITE_LIST } from "../../../constants/certificateurs";
 import { EllipsisText } from "../EllipsisText";
-import { getSessionStartDate, getExpirationDate, isInSession } from "../../utils/rulesUtils";
-import { ClipboardLine } from "../../../theme/components/icons";
+import { getExpirationDate, isInSession } from "../../utils/rulesUtils";
+import { DateContext } from "../../../DateContext";
 
 // const endpointLBA = process.env.REACT_APP_ENDPOINT_LBA || "https://labonnealternance.apprentissage.beta.gouv.fr";
 const endpointPublic = process.env.REACT_APP_ENDPOINT_PUBLIC || "https://catalogue-apprentissage.intercariforef.org";
@@ -46,6 +34,8 @@ const DureeAnnee = ({ value }) => {
 };
 
 export const DescriptionBlock = ({ formation }) => {
+  const { campagneStartDate, sessionStartDate, sessionEndDate } = useContext(DateContext);
+
   const toast = useToast();
   const isTitreRNCP = ["Titre", "TP", null].includes(formation.rncp_details?.code_type_certif); // formation.etablissement_reference_habilite_rncp !== null;
 
@@ -103,11 +93,18 @@ export const DescriptionBlock = ({ formation }) => {
     siretCertificateurs.includes(formation.etablissement_gestionnaire_siret)
   );
 
-  const DateSessionContainer = !isInSession(formation)
+  console.log({
+    date_debut: formation.date_debut,
+    sessionStartDate,
+    sessionEndDate,
+    isInSession: isInSession(formation, sessionStartDate, sessionEndDate),
+  });
+
+  const DateSessionContainer = !isInSession(formation, sessionStartDate, sessionEndDate)
     ? (args) => <DangerBox data-testid={"session-warning"} {...args} />
     : React.Fragment;
 
-  const campagneStartYear = getSessionStartDate().getFullYear();
+  const campagneStartYear = campagneStartDate?.getFullYear();
 
   const rncpCode = formation?.rncp_code?.split("RNCP")[1];
 
@@ -410,7 +407,7 @@ export const DescriptionBlock = ({ formation }) => {
               Dates de formation : <FormationDate formation={formation} />{" "}
               <InfoTooltip description={helpText.formation.dates} />
             </Text>
-            {!isInSession(formation) && (
+            {!isInSession(formation, sessionStartDate, sessionEndDate) && (
               <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
                 Les dates de session ne correspondent pas aux règles de périmètre pour la prochaine campagne Affelnet ou
                 Parcoursup. Si le CFA a prévu de proposer une session en {campagneStartYear}, il doit faire

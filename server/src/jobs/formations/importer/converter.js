@@ -195,13 +195,15 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
   const cfd_entree = getCfdEntree(fields.cfd);
   const cfd_entree_date_fermeture = await getCfdEntreeDateFermeture(fields.cfd);
 
+  const campagneStartDate = await getCampagneStartDate();
+
   const parcoursup_publication_auto = [PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.EN_ATTENTE].includes(
     oldFields?.parcoursup_statut
   )
     ? oldFields?.updates_history?.filter(
         (history) =>
           history?.to?.parcoursup_statut === PARCOURSUP_STATUS.EN_ATTENTE &&
-          new Date(history.updated_at).getTime() >= getCampagneStartDate().getTime() - 365 * 24 * 60 * 60 * 1000
+          new Date(history.updated_at).getTime() >= campagneStartDate.getTime() - 365 * 24 * 60 * 60 * 1000
       ).length === 0
     : null;
 
@@ -211,7 +213,7 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
     ? oldFields?.updates_history?.filter(
         (history) =>
           history?.to?.affelnet_statut === AFFELNET_STATUS.EN_ATTENTE &&
-          new Date(history.updated_at).getTime() >= getCampagneStartDate().getTime() - 365 * 24 * 60 * 60 * 1000
+          new Date(history.updated_at).getTime() >= campagneStartDate.getTime() - 365 * 24 * 60 * 60 * 1000
       ).length === 0
     : null;
 
@@ -239,8 +241,7 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
   const parcoursup_perimetre_prise_rdv = [PARCOURSUP_STATUS.PUBLIE].includes(oldFields?.parcoursup_statut);
 
   const nouvelle_fiche =
-    !oldFields ||
-    new Date(oldFields?.created_at).getTime() >= getCampagneStartDate().getTime() - 365 * 24 * 60 * 60 * 1000;
+    !oldFields || new Date(oldFields?.created_at).getTime() >= campagneStartDate.getTime() - 365 * 24 * 60 * 60 * 1000;
 
   // Les formations relevant du ministère de l'agriculture sont celles dont le code CFD comporte un 3 en 3ème position.
   const agriculture = !!fields?.cfd?.match(/^..3.*/);

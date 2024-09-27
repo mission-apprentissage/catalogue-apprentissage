@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Badge, Text, Flex } from "@chakra-ui/react";
 import {
   Cloud,
@@ -11,7 +11,7 @@ import {
   Reject,
 } from "../../theme/components/icons";
 import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
-import { getCampagneStartDate } from "../utils/rulesUtils";
+import { DateContext } from "../../DateContext";
 
 const Icon = ({ variant }) => {
   switch (variant) {
@@ -77,8 +77,10 @@ export const StatusBadge = ({ source, status, text, ...badgeProps }) => {
 export const PreviousStatusBadge = ({ source, status, created_at, text, ...badgeProps }) => {
   const defaultVariant = "ok";
 
+  const { campagneStartDate } = useContext(DateContext);
+
   const variant = defaultVariant;
-  if (created_at && new Date(created_at).getTime() > getCampagneStartDate().getTime() - 365 * 24 * 60 * 60 * 1000) {
+  if (created_at && new Date(created_at).getTime() > campagneStartDate.getTime() - 365 * 24 * 60 * 60 * 1000) {
     return (
       <Badge variant={"conforme"} {...badgeProps} minHeight={"28px"}>
         <Text as={"span"} whiteSpace={"break-spaces"}>

@@ -2,8 +2,7 @@
 const logger = require("../../../common/logger");
 const { runScript } = require("../../scriptWrapper");
 const { PreviousSeasonFormation, Formation, PreviousSeasonFormationStat } = require("../../../common/models");
-const { isSameDate } = require("../../../common/utils/dateUtils");
-const { isInSession, getSessionEndDate, getCampagneStartDate } = require("../../../common/utils/rulesUtils");
+const { isInSession } = require("../../../common/utils/rulesUtils");
 const { academies } = require("../../../constants/academies");
 
 /** @typedef {import("../../../common/models/schema/formation").Formation} Formation */
@@ -112,13 +111,13 @@ const comparePreviousSeasonFormations = async (plateforme) => {
     }
 
     // Si la formation existe toujours et est dans le périmètre : ok on continue.
-    if (found && found.published && isInScope(found, plateforme) && isInSession(found)) {
+    if (found && found.published && isInScope(found, plateforme) && (await isInSession(found))) {
       academyCauses.set(academyName, academyCause);
       continue;
     }
 
     // Si la formation existe, mais la période n'est pas à jour : on incrémente "not_updated".
-    if (found && found.published && isInScope(found, plateforme) && !isInSession(found)) {
+    if (found && found.published && isInScope(found, plateforme) && !(await isInSession(found))) {
       academyCause.not_updated = academyCause.not_updated + 1;
       academyCauses.set(academyName, academyCause);
       continue;
@@ -191,37 +190,30 @@ const comparePreviousSeasonFormations = async (plateforme) => {
   console.log({ result });
 };
 
-const defaultStorageDate = getCampagneStartDate(new Date());
-
 /**
  * @param {object} options
- * @param {number} [options.month=6] default is 6 (July). Starts from 0 for January
- * @param {number} [options.date=31] default is 31
+ * @param {boolean} [options.store=false] default is 6 (July). Starts from 0 for January
+ * @param {boolean} [options.compare=true] default is 31
  */
 const collectPreviousSeasonStats = async (
-  { month = defaultStorageDate.getMonth(), date = defaultStorageDate.getDate() } = {
-    month: defaultStorageDate.getMonth(),
-    date: defaultStorageDate.getDate(),
+  { store = false, compare = true } = {
+    store: false,
+    compare: true,
   }
 ) => {
   try {
     logger.info({ type: "job" }, `previous season stats jobs`);
 
-    const storageDate = new Date();
-    storageDate.setMonth(month, date);
-    logger.info(
-      { type: "job" },
-      `Storage date is : ${storageDate.toLocaleString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}`
-    );
-
-    if (isSameDate(new Date(), storageDate)) {
-      logger.info({ type: "job" }, `Storage date is today, let's store !`);
+    if (store) {
+      logger.info({ type: "job" }, `Storing previous season formations!`);
       await storePreviousSeasonFormations();
-      return;
     }
 
-    await comparePreviousSeasonFormations("affelnet");
-    await comparePreviousSeasonFormations("parcoursup");
+    if (compare) {
+      logger.info({ type: "job" }, `Comparing previous season formations!`);
+      await comparePreviousSeasonFormations("affelnet");
+      await comparePreviousSeasonFormations("parcoursup");
+    }
 
     logger.info({ type: "job" }, `End previous season stats jobs`);
   } catch (error) {
@@ -242,14 +234,9 @@ if (process.env.standalone) {
    */
   runScript(async () => {
     const args = process.argv.slice(2);
-    const date = args.find((arg) => arg.startsWith("--date"))?.split("=")?.[1];
+    const store = !!args.find((arg) => arg.startsWith("--store"));
+    const compare = !!args.find((arg) => arg.startsWith("--compare"));
 
-    let options;
-    if (date) {
-      const [dateStr, monthStr] = date.split("/");
-      options = { month: Number(monthStr) - 1, date: Number(dateStr) };
-    }
-
-    await collectPreviousSeasonStats(options);
+    await collectPreviousSeasonStats({ store, compare });
   });
 }

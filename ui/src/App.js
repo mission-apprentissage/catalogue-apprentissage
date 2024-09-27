@@ -5,6 +5,7 @@ import ScrollToTop from "./common/components/ScrollToTop";
 import useAuth from "./common/hooks/useAuth";
 import { _get, _post } from "./common/httpClient";
 import { hasAccessTo } from "./common/utils/rolesUtils";
+import { DateContext } from "./DateContext";
 
 // Route-based code splitting @see https://reactjs.org/docs/code-splitting.html#route-based-code-splitting
 const HomePage = lazy(() => import("./pages/HomePage"));
@@ -65,10 +66,27 @@ const Root = () => {
   const [auth, setAuth] = useAuth();
   const [isLoading, setIsLoading] = useState(true);
 
+  const [dates, setDates] = useState({ campagneStartDate: null, sessionStartDate: null, sessionEndDate: null });
+
   useEffect(() => {
     async function getUser() {
       try {
         let user = await _get("/api/auth/current-session");
+        let dates = await _get("/api/constants/dates");
+
+        if (dates) {
+          setDates({
+            campagneStartDate: new Date(dates.campagneStartDate),
+            sessionStartDate: new Date(dates.sessionStartDate),
+            sessionEndDate: new Date(dates.sessionEndDate),
+          });
+
+          console.log({
+            campagneStartDate: new Date(dates.campagneStartDate),
+            sessionStartDate: new Date(dates.sessionStartDate),
+            sessionEndDate: new Date(dates.sessionEndDate),
+          });
+        }
 
         if (user) {
           setAuth(user);
@@ -86,276 +104,278 @@ const Root = () => {
   }
 
   return (
-    <Suspense fallback={<div></div>}>
-      <ResetPasswordWrapper>
-        <ScrollToTop />
-        <Routes>
-          {/* Authentification */}
-          <Route path="/login" element={<LoginPage />} />
+    <DateContext.Provider value={dates}>
+      <Suspense fallback={<div></div>}>
+        <ResetPasswordWrapper>
+          <ScrollToTop />
+          <Routes>
+            {/* Authentification */}
+            <Route path="/login" element={<LoginPage />} />
 
-          <Route path="/reset-password" element={<ResetPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
 
-          <Route path="/forgotten-password" element={<ForgottenPasswordPage />} />
+            <Route path="/forgotten-password" element={<ForgottenPasswordPage />} />
 
-          {/* Administration */}
-          {auth && hasAccessTo(auth, "page_gestion_utilisateurs") ? (
+            {/* Administration */}
+            {auth && hasAccessTo(auth, "page_gestion_utilisateurs") ? (
+              <Route
+                path="/admin/users"
+                element={
+                  <RequireAuth>
+                    <Users />
+                  </RequireAuth>
+                }
+              ></Route>
+            ) : (
+              <React.Fragment />
+            )}
+
+            {auth && hasAccessTo(auth, "page_gestion_roles") ? (
+              <Route
+                path="/admin/roles"
+                element={
+                  <RequireAuth>
+                    <Roles />
+                  </RequireAuth>
+                }
+              />
+            ) : (
+              <React.Fragment />
+            )}
+
+            {auth && hasAccessTo(auth, "page_message_maintenance") ? (
+              <Route
+                path="/admin/alert"
+                element={
+                  <RequireAuth>
+                    <Alert />
+                  </RequireAuth>
+                }
+              />
+            ) : (
+              <React.Fragment />
+            )}
+
+            {auth && hasAccessTo(auth, "page_upload") ? (
+              <Route
+                path="/admin/upload"
+                element={
+                  <RequireAuth>
+                    <UploadFiles />
+                  </RequireAuth>
+                }
+              />
+            ) : (
+              <React.Fragment />
+            )}
+
+            {/* Formations */}
             <Route
-              path="/admin/users"
+              path="/"
               element={
                 <RequireAuth>
-                  <Users />
-                </RequireAuth>
-              }
-            ></Route>
-          ) : (
-            <React.Fragment />
-          )}
-
-          {auth && hasAccessTo(auth, "page_gestion_roles") ? (
-            <Route
-              path="/admin/roles"
-              element={
-                <RequireAuth>
-                  <Roles />
-                </RequireAuth>
-              }
-            />
-          ) : (
-            <React.Fragment />
-          )}
-
-          {auth && hasAccessTo(auth, "page_message_maintenance") ? (
-            <Route
-              path="/admin/alert"
-              element={
-                <RequireAuth>
-                  <Alert />
-                </RequireAuth>
-              }
-            />
-          ) : (
-            <React.Fragment />
-          )}
-
-          {auth && hasAccessTo(auth, "page_upload") ? (
-            <Route
-              path="/admin/upload"
-              element={
-                <RequireAuth>
-                  <UploadFiles />
-                </RequireAuth>
-              }
-            />
-          ) : (
-            <React.Fragment />
-          )}
-
-          {/* Formations */}
-          <Route
-            path="/"
-            element={
-              <RequireAuth>
-                <HomePage />
-              </RequireAuth>
-            }
-          />
-
-          <Route
-            path="/recherche/formations"
-            element={
-              <RequireAuth>
-                <Catalogue />
-              </RequireAuth>
-            }
-          />
-
-          <Route
-            path={`/formation/:id`}
-            element={
-              <RequireAuth>
-                <Formation />
-              </RequireAuth>
-            }
-          />
-
-          {/* Organismes */}
-          <Route
-            path="/recherche/etablissements"
-            element={
-              <RequireAuth>
-                <Organismes />
-              </RequireAuth>
-            }
-          />
-
-          <Route
-            path={`/etablissement/:id`}
-            element={
-              <RequireAuth>
-                <Etablissement />
-              </RequireAuth>
-            }
-          />
-
-          {/* Consoles de pilotage */}
-          {auth &&
-          (hasAccessTo(auth, "page_console") ||
-            hasAccessTo(auth, "page_console/parcoursup") ||
-            hasAccessTo(auth, "page_console/affelnet")) ? (
-            <Route
-              path="/consoles-pilotage"
-              element={
-                <RequireAuth>
-                  <ConsolesPilotage />
+                  <HomePage />
                 </RequireAuth>
               }
             />
-          ) : (
-            <React.Fragment />
-          )}
 
-          {auth && hasAccessTo(auth, "page_console/parcoursup") ? (
             <Route
-              path="/consoles-pilotage/parcoursup"
+              path="/recherche/formations"
               element={
                 <RequireAuth>
-                  <ConsolesPilotageParcoursup />
+                  <Catalogue />
                 </RequireAuth>
               }
             />
-          ) : (
-            <React.Fragment />
-          )}
 
-          {auth && hasAccessTo(auth, "page_console/affelnet") ? (
             <Route
-              path="/consoles-pilotage/affelnet"
+              path={`/formation/:id`}
               element={
                 <RequireAuth>
-                  <ConsolesPilotageAffelnet />
+                  <Formation />
                 </RequireAuth>
               }
             />
-          ) : (
-            <React.Fragment />
-          )}
 
-          {/* Règles de périmètre */}
-          {auth &&
-          (hasAccessTo(auth, "page_perimetre") ||
-            hasAccessTo(auth, "page_perimetre/parcoursup") ||
-            hasAccessTo(auth, "page_perimetre/affelnet")) ? (
+            {/* Organismes */}
             <Route
-              path="/regles-perimetre"
+              path="/recherche/etablissements"
               element={
                 <RequireAuth>
-                  <ReglesPerimetre />
+                  <Organismes />
                 </RequireAuth>
               }
             />
-          ) : (
-            <React.Fragment />
-          )}
 
-          {auth && hasAccessTo(auth, "page_perimetre/parcoursup") ? (
             <Route
-              path="/regles-perimetre/parcoursup"
+              path={`/etablissement/:id`}
               element={
                 <RequireAuth>
-                  <ReglesPerimetrePlateforme plateforme="parcoursup" />
+                  <Etablissement />
                 </RequireAuth>
               }
             />
-          ) : (
-            <React.Fragment />
-          )}
 
-          {auth && hasAccessTo(auth, "page_perimetre/affelnet") ? (
+            {/* Consoles de pilotage */}
+            {auth &&
+            (hasAccessTo(auth, "page_console") ||
+              hasAccessTo(auth, "page_console/parcoursup") ||
+              hasAccessTo(auth, "page_console/affelnet")) ? (
+              <Route
+                path="/consoles-pilotage"
+                element={
+                  <RequireAuth>
+                    <ConsolesPilotage />
+                  </RequireAuth>
+                }
+              />
+            ) : (
+              <React.Fragment />
+            )}
+
+            {auth && hasAccessTo(auth, "page_console/parcoursup") ? (
+              <Route
+                path="/consoles-pilotage/parcoursup"
+                element={
+                  <RequireAuth>
+                    <ConsolesPilotageParcoursup />
+                  </RequireAuth>
+                }
+              />
+            ) : (
+              <React.Fragment />
+            )}
+
+            {auth && hasAccessTo(auth, "page_console/affelnet") ? (
+              <Route
+                path="/consoles-pilotage/affelnet"
+                element={
+                  <RequireAuth>
+                    <ConsolesPilotageAffelnet />
+                  </RequireAuth>
+                }
+              />
+            ) : (
+              <React.Fragment />
+            )}
+
+            {/* Règles de périmètre */}
+            {auth &&
+            (hasAccessTo(auth, "page_perimetre") ||
+              hasAccessTo(auth, "page_perimetre/parcoursup") ||
+              hasAccessTo(auth, "page_perimetre/affelnet")) ? (
+              <Route
+                path="/regles-perimetre"
+                element={
+                  <RequireAuth>
+                    <ReglesPerimetre />
+                  </RequireAuth>
+                }
+              />
+            ) : (
+              <React.Fragment />
+            )}
+
+            {auth && hasAccessTo(auth, "page_perimetre/parcoursup") ? (
+              <Route
+                path="/regles-perimetre/parcoursup"
+                element={
+                  <RequireAuth>
+                    <ReglesPerimetrePlateforme plateforme="parcoursup" />
+                  </RequireAuth>
+                }
+              />
+            ) : (
+              <React.Fragment />
+            )}
+
+            {auth && hasAccessTo(auth, "page_perimetre/affelnet") ? (
+              <Route
+                path="/regles-perimetre/affelnet"
+                element={
+                  <RequireAuth>
+                    <ReglesPerimetrePlateforme plateforme="affelnet" />
+                  </RequireAuth>
+                }
+              />
+            ) : (
+              <React.Fragment />
+            )}
+
+            {/* Statistiques */}
+            {/* <Route  path="/stats"><DashboardPage /></Route> */}
+
+            {/* Autres pages */}
             <Route
-              path="/regles-perimetre/affelnet"
+              path="/guide-reglementaire"
               element={
                 <RequireAuth>
-                  <ReglesPerimetrePlateforme plateforme="affelnet" />
+                  <Catalogue guide />
                 </RequireAuth>
               }
             />
-          ) : (
-            <React.Fragment />
-          )}
+            <Route
+              path="/changelog"
+              element={
+                <RequireAuth>
+                  <Journal />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/contact"
+              element={
+                <RequireAuth>
+                  <Contact />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/cookies"
+              element={
+                <RequireAuth>
+                  <Cookies />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/donnees-personnelles"
+              element={
+                <RequireAuth>
+                  <DonneesPersonnelles />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/mentions-legales"
+              element={
+                <RequireAuth>
+                  <MentionsLegales />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/accessibilite"
+              element={
+                <RequireAuth>
+                  <Accessibilite />
+                </RequireAuth>
+              }
+            />
 
-          {/* Statistiques */}
-          {/* <Route  path="/stats"><DashboardPage /></Route> */}
-
-          {/* Autres pages */}
-          <Route
-            path="/guide-reglementaire"
-            element={
-              <RequireAuth>
-                <Catalogue guide />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/changelog"
-            element={
-              <RequireAuth>
-                <Journal />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/contact"
-            element={
-              <RequireAuth>
-                <Contact />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/cookies"
-            element={
-              <RequireAuth>
-                <Cookies />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/donnees-personnelles"
-            element={
-              <RequireAuth>
-                <DonneesPersonnelles />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/mentions-legales"
-            element={
-              <RequireAuth>
-                <MentionsLegales />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/accessibilite"
-            element={
-              <RequireAuth>
-                <Accessibilite />
-              </RequireAuth>
-            }
-          />
-
-          {/* Erreur */}
-          <Route
-            path="/*"
-            element={
-              <RequireAuth>
-                <NotFoundPage />
-              </RequireAuth>
-            }
-          />
-        </Routes>
-      </ResetPasswordWrapper>
-    </Suspense>
+            {/* Erreur */}
+            <Route
+              path="/*"
+              element={
+                <RequireAuth>
+                  <NotFoundPage />
+                </RequireAuth>
+              }
+            />
+          </Routes>
+        </ResetPasswordWrapper>
+      </Suspense>
+    </DateContext.Provider>
   );
 };
 

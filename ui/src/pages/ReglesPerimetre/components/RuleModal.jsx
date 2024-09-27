@@ -23,13 +23,13 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { NavLink } from "react-router-dom";
 import * as Yup from "yup";
 import { getCount, useNiveaux } from "../../../common/api/perimetre";
 import { _get } from "../../../common/httpClient";
-import { getSessionEndDate, getSessionStartDate, isStatusChangeEnabled } from "../../../common/utils/rulesUtils";
+import { isStatusChangeEnabled } from "../../../common/utils/rulesUtils";
 import { academies } from "../../../constants/academies";
 import { annees } from "../../../constants/annees";
 import { CONDITIONS } from "../../../constants/conditionsIntegration";
@@ -39,6 +39,7 @@ import { ActionsSelect } from "./ActionsSelect";
 import { RuleBuilder } from "./RuleBuilder";
 import { RuleUpdatesHistory } from "./RuleUpdatesHistory";
 import { StatusSelect } from "./StatusSelect";
+import { DateContext } from "../../../DateContext";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -81,6 +82,8 @@ export const getDiplomesAllowedForSubRulesUrl = (plateforme) => {
 };
 
 const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreateRule, plateforme, academie }) => {
+  const { sessionStartDate, sessionEndDate } = useContext(DateContext);
+
   const {
     _id: idRule,
     diplome,
@@ -276,9 +279,9 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
     )}"%5D`;
   }
 
-  linkFormations += `&date_debut_start=%22${getSessionStartDate().toLocaleDateString(
+  linkFormations += `&date_debut_start=%22${sessionStartDate?.toLocaleDateString(
     "en-CA"
-  )}%22&date_debut_end=%22${getSessionEndDate().toLocaleDateString("en-CA")}%22`;
+  )}%22&date_debut_end=%22${sessionEndDate?.toLocaleDateString("en-CA")}%22`;
 
   const [count, setCount] = useState(0);
 

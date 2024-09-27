@@ -9,6 +9,7 @@ const { affelnetJobs } = require("./affelnet");
 const { etablissementsJobs } = require("./etablissements");
 const { formationsJobs } = require("./formations");
 const { collectPreviousSeasonStats } = require("./formations/previousSeasonStats");
+const { Store } = require("express-session");
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -37,7 +38,7 @@ runScript(async ({ db }) => {
     // Parcoursup & Affelnet
     await parcoursupJobs(); // ~ 10 minutes  // maj des rapprochements & étiquettes périmètre & calcul stats
     await affelnetJobs(); // ~ 15 minutes  // maj des rapprochements & étiquettes périmètre & calcul stats
-    await collectPreviousSeasonStats();
+    await collectPreviousSeasonStats({ store: false, compare: true }); // ~ 5 minutes // maj des stats de la saison précédente
     await sleep(10000);
 
     // Elastic

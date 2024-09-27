@@ -82,4 +82,5 @@ module.exports = {
   ConsoleStat: createModel("consolestat", schemas.get("consoleStat")),
   PreviousSeasonFormation: createModel("previousSeasonFormation", schemas.get("previousSeasonFormation")),
   PreviousSeasonFormationStat: createModel("previousSeasonFormationStat", schemas.get("previousSeasonFormationStat")),
+  CampagneStart: createModel("campagneStart", schemas.get("campagneStart")),
 };

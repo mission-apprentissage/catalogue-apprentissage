@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef, useCallback, useContext } from "react";
 import {
   Badge,
   Box,
@@ -28,7 +28,7 @@ import { _get, _post, _put } from "../../common/httpClient";
 import useAuth from "../../common/hooks/useAuth";
 import { hasAccessTo, hasRightToEditFormation } from "../../common/utils/rolesUtils";
 import { buildUpdatesHistory, sortDescending } from "../../common/utils/historyUtils";
-import { getCampagneStartDate, isInSession } from "../../common/utils/rulesUtils";
+import { isInSession } from "../../common/utils/rulesUtils";
 import { setTitle } from "../../common/utils/pageUtils";
 import { getOpenStreetMapUrl } from "../../common/utils/mapUtils";
 import { DangerBox } from "../../common/components/DangerBox";
@@ -44,6 +44,7 @@ import { OrganismesBlock } from "../../common/components/formation/OrganismesBlo
 import { PublishModalButton } from "../../common/components/formation/PublishModalButton";
 import { UaiHistoryModalButton } from "../../common/components/formation/UaiHistoryModalButton";
 import { ReinitStatutModalButton } from "../../common/components/formation/ReinitStatutModalButton";
+import { DateContext } from "../../DateContext";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -153,6 +154,8 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
   const seuilDistance = 100;
   const [isEditingUai, setIsEditingUai] = useState(false);
 
+  const { campagneStartDate } = useContext(DateContext);
+
   const uai_updated_history = formation.updates_history
     .filter((value) => typeof value.to?.uai_formation !== "undefined")
     ?.sort(sortDescending);
@@ -178,7 +181,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
           !formation.updates_history.filter(
             (history) =>
               history.to?.uai_formation === formation.uai_formation &&
-              new Date(history.updated_at).getTime() >= getCampagneStartDate().getTime() - 31536000000
+              new Date(history.updated_at).getTime() >= campagneStartDate?.getTime() - 31536000000
           ).length &&
           ![PARCOURSUP_STATUS.EN_ATTENTE, PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut))))
       ? (args) => <DangerBox data-testid={"uai-warning"} {...args} />
@@ -294,7 +297,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                       !formation.updates_history.filter(
                         (history) =>
                           history.to?.uai_formation === formation.uai_formation &&
-                          new Date(history.updated_at).getTime() >= getCampagneStartDate().getTime() - 31536000000
+                          new Date(history.updated_at).getTime() >= campagneStartDate?.getTime() - 31536000000
                       ).length && (
                         <Text fontSize={"zeta"} color={"grey.600"} mt={2}>
                           - L’UAI renseigné est le même pour l’organisme formateur et le lieu de formation alors que les
@@ -459,6 +462,8 @@ export default () => {
   const [user] = useAuth();
   const hasRightToEdit = hasRightToEditFormation(formation, user);
 
+  const { campagneStartDate, sessionStartDate, sessionEndDate } = useContext(DateContext);
+
   const { values, handleSubmit, handleChange, setFieldValue, isSubmitting } = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -597,9 +602,11 @@ export default () => {
   // const isBacPro32 =
   //   !!formation?.bcn_mefs_10?.filter(
   //     ({ mef10 }) => (`${mef10}`.startsWith("247") || `${mef10}`?.startsWith("276")) && `${mef10}`?.endsWith("32")
-  //   ).length && isInSession(formation);
+  //   ).length && isInSession(formation, sessionStartDate, sessionEndDate);
 
-  const isBrevetNiv5 = formation?.diplome === "BREVET PROFESSIONNEL AGRICOLE DE NIVEAU V" && isInSession(formation);
+  const isBrevetNiv5 =
+    formation?.diplome === "BREVET PROFESSIONNEL AGRICOLE DE NIVEAU V" &&
+    isInSession(formation, sessionStartDate, sessionEndDate);
 
   return (
     <Layout>
@@ -666,8 +673,7 @@ export default () => {
                               (formation.updates_history.filter(
                                 (history) =>
                                   history.to.parcoursup_statut === PARCOURSUP_STATUS.EN_ATTENTE &&
-                                  new Date(history.updated_at).getTime() >=
-                                    getCampagneStartDate().getTime() - 31536000000
+                                  new Date(history.updated_at).getTime() >= campagneStartDate?.getTime() - 31536000000
                               ).length >= 1 ? (
                                 <Badge variant={"ok"} minHeight={"28px"} mr={[0, 3]}>
                                   Publication manuelle
@@ -696,8 +702,7 @@ export default () => {
                               (formation.updates_history.filter(
                                 (history) =>
                                   history.to.affelnet_statut === AFFELNET_STATUS.EN_ATTENTE &&
-                                  new Date(history.updated_at).getTime() >=
-                                    getCampagneStartDate().getTime() - 31536000000
+                                  new Date(history.updated_at).getTime() >= campagneStartDate?.getTime() - 31536000000
                               ).length >= 1 ? (
                                 <Badge variant={"ok"} minHeight={"28px"} mr={[0, 3]}>
                                   Publication manuelle

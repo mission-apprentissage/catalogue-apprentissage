@@ -25,6 +25,7 @@ const user = require("./routes/user");
 const role = require("./routes/role");
 const password = require("./routes/password");
 const stats = require("./routes/stats");
+const dates = require("./routes/dates");
 const esSearch = require("./routes/esSearch");
 const esMultiSearchNoIndex = require("./routes/esMultiSearchNoIndex");
 const parcoursup = require("./routes/parcoursup");
@@ -183,6 +184,8 @@ module.exports = async (components, verbose = true) => {
     ["/entity", apiLimiter, anyAuthMiddleware, etablissementSecure(components)],
     ["/upload", apiLimiter, permissionsMiddleware({ isAdmin: true }, ["page_upload"]), upload()],
     ["/entity", apiLimiter, anyAuthMiddleware, reglePerimetreSecure()],
+
+    ["/constants", apiLimiter, anyAuthMiddleware, dates()],
 
     [
       "/perimetre-prise-rdv.json",

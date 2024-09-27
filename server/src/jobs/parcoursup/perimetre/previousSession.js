@@ -4,7 +4,7 @@ const { cursor } = require("../../../common/utils/cursor");
 const logger = require("../../../common/logger");
 
 const run = async () => {
-  const filterSessionDate = getPreviousSessionDateRules();
+  const filterSessionDate = await getPreviousSessionDateRules();
 
   const filterPerimetre = {
     parcoursup_perimetre: true,

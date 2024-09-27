@@ -1,5 +1,6 @@
 const affelnetFormationSchema = require("./affelnetFormation");
 const alertSchema = require("./alert");
+const campagneStartSchema = require("./campagneStart");
 const consoleStatSchema = require("./consoleStat");
 const consumptionSchema = require("./consumption");
 const dualControlEtablissementSchema = require("./dualControlEtablissement");
@@ -22,6 +23,7 @@ const schemasMap = new Map(
   Object.entries({
     affelnetFormation: [affelnetFormationSchema, { timestamps }],
     alert: [alertSchema, { timestamps }],
+    campagneStart: [campagneStartSchema, { timestamps }],
     consoleStat: [consoleStatSchema, {}],
     consumption: [consumptionSchema, {}],
     dualControlEtablissement: [dualControlEtablissementSchema, {}],

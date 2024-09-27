@@ -18,6 +18,7 @@
     "docker:down": "docker compose down",
     "docker:clean": "docker compose kill && docker system prune --force --volumes",
     "jobs": "node src/jobs/index.js",
+    "startCampagne": "node src/jobs/startCampagne.js",
     "psup:prepare": "standalone=true node src/jobs/parcoursup/prepare.js",
     "psup:import": "standalone=true node src/jobs/parcoursup/importer.js",
     "psup:report": "standalone=true node src/jobs/parcoursup/reportRejected.js",

@@ -11,9 +11,9 @@ const { PARCOURSUP_STATUS } = require("../../../constants/status");
 const { updateManyTagsHistory } = require("../../../logic/updaters/tagsHistoryUpdater");
 
 const run = async () => {
-  const sessionStartDate = getSessionStartDate();
-  const sessionEndDate = getSessionEndDate();
-  const filterSessionDate = getSessionDateRules();
+  const sessionStartDate = await getSessionStartDate();
+  const sessionEndDate = await getSessionEndDate();
+  const filterSessionDate = await getSessionDateRules();
 
   const filterReglement = {
     $and: [
