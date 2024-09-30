@@ -7,9 +7,10 @@ const { psStartCampagne } = require("./parcoursup/startCampagne");
 const { afStartCampagne } = require("./affelnet/startCampagne");
 const { psPerimetre } = require("./parcoursup/perimetre");
 const { afPerimetre } = require("./affelnet/perimetre");
-const { psStats } = require("./parcoursup/stats");
-const { afStats } = require("./affelnet/stats");
+const { psConsoleStats } = require("./parcoursup/stats");
+const { afConsoleStats } = require("./affelnet/stats");
 const { getCampagneStartDate } = require("../common/utils/rulesUtils");
+const { collectPreviousSeasonStats } = require("./formations/previousSeasonStats");
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -27,11 +28,11 @@ runScript(async ({}) => {
 
     await psStartCampagne();
     await psPerimetre();
-    await psStats();
+    await psConsoleStats();
 
     await afStartCampagne();
     await afPerimetre();
-    await afStats();
+    await afConsoleStats();
 
     await collectPreviousSeasonStats({ store: false, compare: true });
 
