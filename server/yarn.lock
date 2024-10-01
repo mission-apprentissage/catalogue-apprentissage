@@ -7117,7 +7117,7 @@ __metadata:
     mongoose-to-swagger: 1.5.1
     multer: 1.4.2
     node-stream-zip: 1.15.0
-    nodemailer: ^6.9.1
+    nodemailer: ^6.9.15
     nodemailer-html-to-text: ^3.1.0
     nodemon: 2.0.15
     nyc: 17.1.0
@@ -7661,10 +7661,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nodemailer@npm:^6.9.1":
-  version: 6.9.1
-  resolution: "nodemailer@npm:6.9.1"
-  checksum: b1b9670afc170b4454665abae3fc9acd7e781adb9f579d1c2cd991bf75c647ebe345593f8a057e48d7bf9e4c9a9218869f87db8fb7171c614f557000ab654572
+"nodemailer@npm:^6.9.15":
+  version: 6.9.15
+  resolution: "nodemailer@npm:6.9.15"
+  checksum: 2d975f5c60f84acde52d79d43287c70197fe94bde4a731682f306e9636a148c49de29a5dd92ce7dc5aac068a148cd91da3401ede80f8f52b9f2bc00439f36ced
   languageName: node
   linkType: hard
 
