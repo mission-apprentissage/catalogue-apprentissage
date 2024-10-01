@@ -1,5 +1,6 @@
 /**
- * See https://test2.parcoursup.fr/ApiFormation/public/swagger-ui/index.html?configUrl=/ApiFormation/public/api-docs/swagger-config#/acces-formations-controller-rest/majFormation
+ * See
+ * https://ws.parcoursup.fr/ApiFormation/public/swagger-ui/index.html#/
  */
 
 const axios = require("axios");

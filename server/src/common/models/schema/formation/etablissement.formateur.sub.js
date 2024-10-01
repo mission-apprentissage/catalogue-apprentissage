@@ -71,6 +71,11 @@ const etablissementFormateurInfo = {
     default: null,
     description: "Raison sociale établissement formateur",
   },
+  etablissement_formateur_raison_sociale_enseigne: {
+    type: String,
+    default: null,
+    description: "Raison sociale et enseigne de l'établissement formateur",
+  },
   geo_coordonnees_etablissement_formateur: {
     type: String,
     implicit_type: "geo_point",

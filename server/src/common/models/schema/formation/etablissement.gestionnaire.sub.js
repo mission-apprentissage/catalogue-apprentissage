@@ -71,6 +71,11 @@ const etablissementGestionnaireInfo = {
     default: null,
     description: "Raison sociale établissement gestionnaire",
   },
+  etablissement_gestionnaire_raison_sociale_enseigne: {
+    type: String,
+    default: null,
+    description: "Raison sociale et enseigne de l'établissement formateur",
+  },
   geo_coordonnees_etablissement_gestionnaire: {
     type: String,
     implicit_type: "geo_point",

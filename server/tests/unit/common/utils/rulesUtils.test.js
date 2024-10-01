@@ -220,7 +220,7 @@ describe(__filename, () => {
     it("should get a date of the next year + 1 if now is after the end of the session", () => {
       const expected = new Date(`2024-07-31T23:59:59.999Z`);
 
-      let result = getSessionEndDate(new Date(`2022-10-01T00:00:00.000Z`));
+      let result = getSessionEndDate(new Date(`2022-10-16T00:00:00.000Z`));
       assert.deepStrictEqual(result, expected);
 
       result = getSessionEndDate(new Date(`2022-11-01T00:00:00.000Z`));

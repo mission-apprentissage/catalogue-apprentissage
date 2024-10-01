@@ -67,26 +67,26 @@ export default React.memo(({ searchState, context, extraButtons = null }) => {
         <HardFilters allowedFilters={allowedFilters} context={context} isBaseFormations={true} />
         <Box className="search" maxW="full">
           <Container maxW="7xl" p={0}>
-            {mode === "simple" && (
-              <Box className={`search-container search-container-${mode}`}>
-                <DataSearch
-                  componentId={`SEARCH`}
-                  placeholder={dataSearch.placeholder}
-                  fieldWeights={dataSearch.fieldWeights}
-                  dataField={dataSearch.dataField}
-                  autosuggest={true}
-                  queryFormat="and"
-                  size={20}
-                  showFilter={false}
-                  URLParams={true}
-                  react={{ and: allowedFilters.filter((e) => e !== `SEARCH`) }}
-                  showClear={true}
-                  clearIcon={<CloseCircleLine boxSize={4} />}
-                  icon={<SearchLine color={"bluefrance"} boxSize={5} />}
-                  debounce={500}
-                />
-              </Box>
-            )}
+            {/* {mode === "simple" && ( */}
+            <Box className={`search-container search-container-${mode}`}>
+              <DataSearch
+                componentId={`SEARCH`}
+                placeholder={dataSearch.placeholder}
+                fieldWeights={dataSearch.fieldWeights}
+                dataField={dataSearch.dataField}
+                autosuggest={true}
+                queryFormat="and"
+                size={20}
+                showFilter={false}
+                URLParams={true}
+                react={{ and: allowedFilters.filter((e) => e !== `SEARCH`) }}
+                showClear={true}
+                clearIcon={<CloseCircleLine boxSize={4} />}
+                icon={<SearchLine color={"bluefrance"} boxSize={5} />}
+                debounce={500}
+              />
+            </Box>
+            {/* )} */}
             <Box
               my={4}
               css={{

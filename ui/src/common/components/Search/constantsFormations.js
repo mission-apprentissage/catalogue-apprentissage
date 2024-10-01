@@ -917,33 +917,28 @@ export const columnsDefinition = [
  * Champs de la recherche avancée
  */
 export const queryBuilderField = [
-  { text: "Raison sociale", value: "etablissement_gestionnaire_entreprise_raison_sociale.keyword" },
-  { text: "Clé ministères éducatifs", value: "cle_ministere_educatif.keyword" },
-  { text: "Siret formateur", value: "etablissement_formateur_siret.keyword" },
-  { text: "UAI formateur", value: "etablissement_formateur_uai.keyword" },
-  { text: "Siret gestionnaire", value: "etablissement_gestionnaire_siret.keyword" },
-  { text: "UAI gestionnaire", value: "etablissement_gestionnaire_uai.keyword" },
+  {
+    text: "Raison sociale de l'organisme responsable",
+    value: "etablissement_gestionnaire_raison_sociale_enseigne.keyword",
+  },
+  {
+    text: "Raison sociale de l'organisme formateur",
+    value: "etablissement_formateur_raison_sociale_enseigne.keyword",
+  },
+  { text: "Siret de l'organisme responsable", value: "etablissement_gestionnaire_siret.keyword" },
+  { text: "Siret de l'organisme formateur", value: "etablissement_formateur_siret.keyword" },
+  { text: "UAI de l'organisme responsable", value: "etablissement_gestionnaire_uai.keyword" },
+  { text: "UAI de l'organisme formateur", value: "etablissement_formateur_uai.keyword" },
   { text: "UAI du lieu de formation", value: "uai_formation.keyword" },
-  { text: "Diplôme", value: "diplome.keyword" },
-  { text: "Intitulé", value: "intitule_court.keyword" },
-  { text: "Code RNCP", value: "rncp_code.keyword" },
-  { text: "Code diplôme", value: "cfd.keyword" },
-  { text: "Code diplôme (année d'entrée)", value: "cfd_entree.keyword" },
   { text: "Commune du lieu de formation", value: "localite.keyword" },
-  { text: "Identifiant Formation CO", value: "id_formation.keyword" },
-  { text: "Identifiants Action CO", value: "ids_action.keyword" },
-  { text: "Identifiant Certif Info", value: "id_certifinfo.keyword" },
-  { text: "Nda gestionnaire", value: "etablissement_gestionnaire_nda.keyword" },
-  { text: "Nda formateur", value: "etablissement_formateur_nda.keyword" },
-  { text: "Libelle court", value: "libelle_court.keyword" },
-  { text: "Niveau formation diplome", value: "niveau_formation_diplome.keyword" },
-  { text: "MEF 10", value: "bcn_mefs_10.mef10.keyword" },
-  { text: "Groupe Spécialité", value: "rncp_details.nsf_code.keyword" },
-  { text: "Certificateur", value: "rncp_details.certificateurs.certificateur.keyword" },
-  { text: "Statut du SIRET", value: "siret_actif.keyword" },
-  { text: "Région", value: "region.keyword" },
-  { text: "Identifiant Affelnet (code voeu)", value: "affelnet_id.keyword" },
-  { text: "Identifiant Parcoursup (GTA)", value: "parcoursup_id.keyword" },
+  { text: "Région du lieu de formation", value: "region.keyword" },
+  { text: "Type de diplôme", value: "diplome.keyword" },
+  { text: "Intitulé de la formation", value: "intitule_long.keyword" },
+  { text: "Niveau visé de la formation", value: "niveau_formation_diplome.keyword" },
+  { text: "Code RNCP", value: "rncp_code.keyword" },
+  { text: "Code formation diplôme BCN (CFD)", value: "cfd.keyword" },
+  { text: "Code Certif Info", value: "id_certifinfo.keyword" },
+  { text: "Code MEF 10 caractères", value: "bcn_mefs_10.mef10.keyword" },
 ];
 
 /**
@@ -1537,10 +1532,8 @@ export const quickFiltersDefinition = [
 export const dataSearch = {
   dataField: [
     "intitule_long",
-    "etablissement_gestionnaire_entreprise_raison_sociale",
-    "etablissement_gestionnaire_enseigne",
-    "etablissement_formateur_entreprise_raison_sociale",
-    "etablissement_formateur_enseigne",
+    "etablissement_gestionnaire_raison_sociale_enseigne",
+    "etablissement_formateur_raison_sociale_enseigne",
     "cfd",
     "rncp_code",
     "uai_formation",
@@ -1556,7 +1549,7 @@ export const dataSearch = {
   ],
   placeholder:
     "Saisissez une raison sociale, un Siret, un intitulé de formation, un code RNCP ou CFD (code formation diplôme)",
-  fieldWeights: [5, 4, 4, 3, 3, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1],
+  fieldWeights: [5, 4, 4, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1],
 };
 
 export default {
