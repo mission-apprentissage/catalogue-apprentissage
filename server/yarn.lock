@@ -7122,7 +7122,7 @@ __metadata:
     nodemon: 2.0.15
     nyc: 17.1.0
     objects-to-csv: 1.3.6
-    oleoduc: 0.7.0
+    oleoduc: 0.8.0
     omit-deep: "https://github.com/izigibran/omit-deep.git"
     passport: 0.7.0
     passport-jwt: 4.0.1
@@ -7863,13 +7863,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"oleoduc@npm:0.7.0":
-  version: 0.7.0
-  resolution: "oleoduc@npm:0.7.0"
+"oleoduc@npm:0.8.0":
+  version: 0.8.0
+  resolution: "oleoduc@npm:0.8.0"
   dependencies:
     cyclist: 1.0.1
     parallel-transform: 1.2.0
-  checksum: 4e873c6202628b3651974d492de2dd596de0b4687c74ff3dc80f0fc03eb9ec9e6fb306959ba53c29d9ee27fa0ab2ef17286983e7106ccef0e95893be1506d323
+  checksum: 98e315f3eb01c0db46a047f1721932e3a2e5dcee70ac70c7f4c66611a8a1881cc4113de03cacd0d6eeb3f2ee039ee5c64c6c7710630597dcd8f2c6e93d0001ed
   languageName: node
   linkType: hard
 
