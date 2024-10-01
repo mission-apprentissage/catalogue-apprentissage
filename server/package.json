@@ -80,7 +80,7 @@
     "jsonwebtoken": "9.0.2",
     "lodash": "4.17.21",
     "luxon": "3.5.0",
-    "migrate-mongo": "8.2.3",
+    "migrate-mongo": "11.0.0",
     "mjml": "4.12.0",
     "mongoose": "5.13.20",
     "mongoose-diff-history": "2.1.0",
