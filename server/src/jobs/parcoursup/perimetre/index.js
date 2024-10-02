@@ -1,5 +1,6 @@
 const logger = require("../../../common/logger");
 const controller = require("./controller");
+const replace = require("./replace");
 const counter = require("./counter");
 const perimetre = require("./perimetre");
 const session = require("./session");
@@ -13,6 +14,9 @@ const psPerimetre = async () => {
 
     logger.info({ type: "job" }, "∙ Compteurs avant :");
     await counter.run();
+
+    logger.info({ type: "job" }, "∙ Traitement des 'annule et remplace':");
+    await replace.run();
 
     logger.info({ type: "job" }, "∙ Application des règles de périmètre :");
     await controller.run();

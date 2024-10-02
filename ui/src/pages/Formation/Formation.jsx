@@ -250,6 +250,9 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                         {" "}
                         le {new Date(uai_updated_history[0]?.updated_at).toLocaleDateString("fr-FR")} par{" "}
                         {uai_updated_history[0]?.to.last_update_who}
+                        {uai_updated_history[0]?.to.last_update_automatic
+                          ? " (action effectuée sur la précédente version de la fiche, reprise ici automatiquement)"
+                          : ""}
                       </>
                     )}
                     .

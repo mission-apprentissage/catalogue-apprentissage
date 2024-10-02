@@ -47,6 +47,21 @@ export const HistoryBlock = ({ formation, limit = 5 }) => {
 
   const updates_history = formation.updates_history ?? [];
 
+  const cle_me_remplace_history = updates_history
+    .filter((value) => !!value.to?.cle_me_remplace_traitee)
+    .map((value) => ({
+      status: <>Action automatique - Fiche remplaçant une offre plus ancienne</>,
+      date: new Date(value.updated_at),
+      // user: value.to.last_update_who,
+    }));
+  const cle_me_remplace_par_history = updates_history
+    .filter((value) => !!value.to?.cle_me_remplace_par_traitee)
+    .map((value) => ({
+      status: <>Action automatique - Fiche remplacée par une plus récente</>,
+      date: new Date(value.updated_at),
+      // user: value.to.last_update_who,
+    }));
+
   const publication_history = updates_history
     .filter(
       (value) =>
@@ -101,6 +116,8 @@ export const HistoryBlock = ({ formation, limit = 5 }) => {
         !(
           !!value.to?.parcoursup_statut_reinitialisation ||
           !!value.to?.rejection ||
+          !!value.to?.cle_me_remplace_traitee ||
+          !!value.to?.cle_me_remplace_par_traitee ||
           isUpdatedToStatus(value, "publié") ||
           isUpdatedToStatus(value, "en attente de publication") ||
           isUpdatedToStatus(value, "non publié")
@@ -134,6 +151,8 @@ export const HistoryBlock = ({ formation, limit = 5 }) => {
     ...(hasAccessTo(user, "page_formation/voir_status_publication_ps")
       ? [...parcoursup_history, ...reinit_statut_history, ...handle_rejection_history, ...unhandle_rejection_history]
       : []),
+    ...cle_me_remplace_history,
+    ...cle_me_remplace_par_history,
   ].sort((a, b) => b.date - a.date);
 
   return (

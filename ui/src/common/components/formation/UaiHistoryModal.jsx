@@ -89,6 +89,9 @@ const UaiHistoryModal = ({ onClose, isOpen, formation }) => {
                 <Text as="span" variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
                   le {new Date(history.updated_at).toLocaleDateString()} à{" "}
                   {new Date(history.updated_at).toLocaleTimeString()} par {history.to?.last_update_who}
+                  {history.to?.last_update_automatic
+                    ? " (action effectuée sur la précédente version de la fiche, reprise ici automatiquement)"
+                    : ""}
                 </Text>
               </ListItem>
             ))}
