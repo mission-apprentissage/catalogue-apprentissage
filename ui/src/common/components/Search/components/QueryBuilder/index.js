@@ -47,11 +47,10 @@ const QueryBuilder = ({
     s.set("qb", str);
 
     navigate(`?${s}`);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-
     setFilteredCombinators(
       rules[2] ? combinators.filter((combinator) => combinator.value === rules[1].combinator) : combinators
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rules, rules.length]);
 
   const onAdd = useCallback(() => {
@@ -127,23 +126,21 @@ const SubComponent = ({ setQuery, fields, collection, showComments }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (loading) return <div />;
+  if (loading) return;
 
   return (
-    <div>
-      <QueryBuilder
-        collection={collection}
-        initialValue={initialValue}
-        fields={fields}
-        onQuery={(queries) => {
-          if (!queries.must.length && !queries.must_not.length && !queries.should.length) {
-            return setQuery({ query: { match_all: {} }, value: "" });
-          }
+    <QueryBuilder
+      collection={collection}
+      initialValue={initialValue}
+      fields={fields}
+      onQuery={(queries) => {
+        if (!queries.must.length && !queries.must_not.length && !queries.should.length) {
+          return setQuery({ query: { match_all: {} }, value: "" });
+        }
 
-          setQuery({ query: { bool: queries }, value: "" });
-        }}
-      />
-    </div>
+        setQuery({ query: { bool: queries }, value: "" });
+      }}
+    />
   );
 };
 

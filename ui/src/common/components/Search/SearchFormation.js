@@ -65,49 +65,49 @@ export default React.memo(({ searchState, context, extraButtons = null }) => {
         }}
       >
         <HardFilters allowedFilters={allowedFilters} context={context} isBaseFormations={true} />
+
         <Box className="search" maxW="full">
           <Container maxW="7xl" p={0}>
-            {/* {mode === "simple" && ( */}
-            <Box className={`search-container search-container-${mode}`}>
-              <DataSearch
-                componentId={`SEARCH`}
-                placeholder={dataSearch.placeholder}
-                fieldWeights={dataSearch.fieldWeights}
-                dataField={dataSearch.dataField}
-                autosuggest={true}
-                queryFormat="and"
-                size={20}
-                showFilter={false}
-                URLParams={true}
-                react={{ and: allowedFilters.filter((e) => e !== `SEARCH`) }}
-                showClear={true}
-                clearIcon={<CloseCircleLine boxSize={4} />}
-                icon={<SearchLine color={"bluefrance"} boxSize={5} />}
-                debounce={500}
-              />
-            </Box>
-            {/* )} */}
-            <Box
-              my={4}
-              css={{
-                "*, *:after, *:before": { boxSizing: "content-box !important" },
-              }}
-            >
-              <Switch onChange={handleSearchSwitchChange} isChecked={mode !== "simple"} id={`search-mode`} />
-              <FormLabel display="inline" htmlFor={`search-mode`} textStyle="sm" px={2}>
-                Recherche avancée
-              </FormLabel>
-            </Box>
-            {mode !== "simple" && (
-              <Box mb={4}>
-                <QueryBuilder
-                  collection={base}
-                  react={{ and: allowedFilters.filter((e) => e !== "QUERYBUILDER") }}
-                  fields={queryBuilderField}
+            <Box className={`search-container search-container-${mode}`} px={[0, 0, 4]}>
+              <Text fontWeight="700" color="grey.800" mt={4} mb={4} textStyle="rf-text">
+                RECHERCHE LIBRE
+              </Text>
+              <Box px={2}>
+                <DataSearch
+                  componentId={`SEARCH`}
+                  placeholder={dataSearch.placeholder}
+                  fieldWeights={dataSearch.fieldWeights}
+                  dataField={dataSearch.dataField}
+                  autosuggest={true}
+                  queryFormat="and"
+                  size={20}
+                  showFilter={false}
+                  URLParams={true}
+                  react={{ and: allowedFilters.filter((e) => e !== `SEARCH`) }}
+                  showClear={true}
+                  clearIcon={<CloseCircleLine boxSize={4} />}
+                  icon={<SearchLine color={"bluefrance"} boxSize={5} />}
+                  debounce={500}
                 />
               </Box>
-            )}
-            <Box borderTop="1px solid #E7E7E7" w="full" />
+            </Box>
+
+            <Box borderTop="1px solid #E7E7E7" w="full" mt={4} mb={4} />
+
+            <Box px={[0, 0, 4]}>
+              <Text fontWeight="700" color="grey.800" mt={4} mb={4} textStyle="rf-text">
+                RECHERCHE MULTI-CRITÈRES
+              </Text>
+
+              <QueryBuilder
+                collection={base}
+                react={{ and: allowedFilters.filter((e) => e !== "QUERYBUILDER") }}
+                fields={queryBuilderField}
+              />
+            </Box>
+
+            <Box borderTop="1px solid #E7E7E7" w="full" mt={4} mb={4} />
+
             <Flex className="search-row" flexDirection={["column", "column", "row"]}>
               <Box className="search-sidebar" px={[0, 0, 4]}>
                 <Text fontWeight="700" color="grey.800" mt={4} mb={4} textStyle="rf-text">

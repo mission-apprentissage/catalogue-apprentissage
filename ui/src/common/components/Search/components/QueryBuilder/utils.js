@@ -83,23 +83,6 @@ function query(key, value, cb, shouldOrMust = "should") {
 
 export const operators = [
   {
-    value: "==",
-    text: "égal à",
-    useInput: true,
-    query: (key, value) => value && query(key, value, (k, v) => ({ regexp: { [k]: notStrict(v) } })),
-    suggestionQuery: (key, value) => suggestionQuery(key, `${notStrict(value)}.*`),
-    mongoQuery: (key, value) => value && { [key]: { $regex: new RegExp(`${notStrict(value)}`) } },
-  },
-  {
-    value: "!=",
-    text: "différent de",
-    useInput: true,
-    query: (key, value) =>
-      value && query(key, value, (k, v) => ({ bool: { must_not: { regexp: { [k]: notStrict(v) } } } })),
-    suggestionQuery: (key, value) => suggestionQuery(key, `${notStrict(value)}.*`),
-    mongoQuery: (key, value) => value && { [key]: { $not: { $regex: new RegExp(`${notStrict(value)}`) } } },
-  },
-  {
     value: "*",
     text: "contient",
     useInput: true,
@@ -120,6 +103,24 @@ export const operators = [
     mongoQuery: (key, value) => value && { [key]: { $not: { $regex: new RegExp(`.*${notStrict(value)}.*`) } } },
   },
   {
+    value: "==",
+    text: "égal à",
+    useInput: true,
+    query: (key, value) => value && query(key, value, (k, v) => ({ regexp: { [k]: notStrict(v) } })),
+    suggestionQuery: (key, value) => suggestionQuery(key, `${notStrict(value)}.*`),
+    mongoQuery: (key, value) => value && { [key]: { $regex: new RegExp(`${notStrict(value)}`) } },
+  },
+  {
+    value: "!=",
+    text: "différent de",
+    useInput: true,
+    query: (key, value) =>
+      value && query(key, value, (k, v) => ({ bool: { must_not: { regexp: { [k]: notStrict(v) } } } })),
+    suggestionQuery: (key, value) => suggestionQuery(key, `${notStrict(value)}.*`),
+    mongoQuery: (key, value) => value && { [key]: { $not: { $regex: new RegExp(`${notStrict(value)}`) } } },
+  },
+
+  {
     value: "^",
     text: "commence par",
     useInput: true,
@@ -134,22 +135,6 @@ export const operators = [
     query: (key, value) => value && query(key, value, (k, v) => ({ regexp: { [k]: `.*${notStrict(v)}` } })),
     suggestionQuery: (key, value) => suggestionQuery(key, `.*${notStrict(value)}`),
     mongoQuery: (key, value) => value && { [key]: { $regex: new RegExp(`${notStrict(value)}$`) } },
-  },
-  {
-    value: "===",
-    text: "égal à (recherche stricte)",
-    useInput: true,
-    query: (key, value) => value && query(key, value, (k, v) => ({ term: { [k]: v } })),
-    suggestionQuery: (key, value) => suggestionQuery(key, `${escapeRegex(value)}.*`),
-    mongoQuery: (key, value) => value && { [key]: value },
-  },
-  {
-    value: "!==",
-    text: "différent de (recherche stricte)",
-    useInput: true,
-    query: (key, value) => value && query(key, value, (k, v) => ({ bool: { must_not: { term: { [k]: v } } } })),
-    suggestionQuery: (key, value) => suggestionQuery(key, `${escapeRegex(value)}.*`),
-    mongoQuery: (key, value) => value && { [key]: { $ne: value } },
   },
   {
     value: "===*",
@@ -168,6 +153,23 @@ export const operators = [
     suggestionQuery: (key, value) => suggestionQuery(key, `.*${escapeRegex(value)}.*`),
     mongoQuery: (key, value) => value && { [key]: { $not: { $regex: new RegExp(`.*${escapeRegex(value)}.*`) } } },
   },
+  {
+    value: "===",
+    text: "égal à (recherche stricte)",
+    useInput: true,
+    query: (key, value) => value && query(key, value, (k, v) => ({ term: { [k]: v } })),
+    suggestionQuery: (key, value) => suggestionQuery(key, `${escapeRegex(value)}.*`),
+    mongoQuery: (key, value) => value && { [key]: value },
+  },
+  {
+    value: "!==",
+    text: "différent de (recherche stricte)",
+    useInput: true,
+    query: (key, value) => value && query(key, value, (k, v) => ({ bool: { must_not: { term: { [k]: v } } } })),
+    suggestionQuery: (key, value) => suggestionQuery(key, `${escapeRegex(value)}.*`),
+    mongoQuery: (key, value) => value && { [key]: { $ne: value } },
+  },
+
   {
     value: "===^",
     text: "commence par (recherche stricte)",
