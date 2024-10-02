@@ -918,27 +918,27 @@ export const columnsDefinition = [
  */
 export const queryBuilderField = [
   {
-    text: "Raison sociale de l'organisme responsable",
+    text: "Organisme - Raison sociale du responsable",
     value: "etablissement_gestionnaire_raison_sociale_enseigne.keyword",
   },
   {
-    text: "Raison sociale de l'organisme formateur",
+    text: "Organisme - Raison sociale du formateur",
     value: "etablissement_formateur_raison_sociale_enseigne.keyword",
   },
-  { text: "Siret de l'organisme responsable", value: "etablissement_gestionnaire_siret.keyword" },
-  { text: "Siret de l'organisme formateur", value: "etablissement_formateur_siret.keyword" },
-  { text: "UAI de l'organisme responsable", value: "etablissement_gestionnaire_uai.keyword" },
-  { text: "UAI de l'organisme formateur", value: "etablissement_formateur_uai.keyword" },
-  { text: "UAI du lieu de formation", value: "uai_formation.keyword" },
-  { text: "Commune du lieu de formation", value: "localite.keyword" },
-  { text: "Région du lieu de formation", value: "region.keyword" },
-  { text: "Type de diplôme", value: "diplome.keyword" },
-  { text: "Intitulé de la formation", value: "intitule_long.keyword" },
-  { text: "Niveau visé de la formation", value: "niveau_formation_diplome.keyword" },
-  { text: "Code RNCP", value: "rncp_code.keyword" },
-  { text: "Code formation diplôme BCN (CFD)", value: "cfd.keyword" },
-  { text: "Code Certif Info", value: "id_certifinfo.keyword" },
-  { text: "Code MEF 10 caractères", value: "bcn_mefs_10.mef10.keyword" },
+  { text: "Organisme - Siret du responsable", value: "etablissement_gestionnaire_siret.keyword" },
+  { text: "Organisme - Siret du formateur", value: "etablissement_formateur_siret.keyword" },
+  { text: "Organisme - UAI du responsable", value: "etablissement_gestionnaire_uai.keyword" },
+  { text: "Organisme - UAI du formateur", value: "etablissement_formateur_uai.keyword" },
+  { text: "Organisme - UAI du lieu de formation", value: "uai_formation.keyword" },
+  { text: "Organisme - Commune du lieu de formation", value: "localite.keyword" },
+  { text: "Organisme - Région du lieu de formation", value: "region.keyword" },
+  { text: "Formation - Intitulé de la formation", value: "intitule_long.keyword" },
+  { text: "Formation - Niveau visé de la formation", value: "niveau_formation_diplome.keyword" },
+  { text: "Formation - Code RNCP", value: "rncp_code.keyword" },
+  { text: "Formation - Code formation diplôme (CFD)", value: "cfd.keyword" },
+  { text: "Formation - Code MEF 10 caractères", value: "bcn_mefs_10.mef10.keyword" },
+  { text: "Formation - Code Certif Info", value: "id_certifinfo.keyword" },
+  { text: "Formation - Type de diplôme", value: "diplome.keyword" },
 ];
 
 /**
