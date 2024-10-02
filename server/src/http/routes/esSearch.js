@@ -56,14 +56,14 @@ module.exports = () => {
 
       let qs = req.query;
 
-      let scrollId = null;
+      let scroll_id = null;
       if (qs && qs.scroll_id) {
-        scrollId = qs.scroll_id;
+        scroll_id = qs.scroll_id;
       }
 
-      if (scrollId) {
+      if (scroll_id) {
         const response = await esClient.scroll({
-          scrollId,
+          scroll_id,
           scroll: "1m",
         });
         return res.json(response);
