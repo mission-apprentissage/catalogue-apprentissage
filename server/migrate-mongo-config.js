@@ -1,5 +1,6 @@
 const path = require("path");
 const appConfig = require("config");
+const common = require("mocha/lib/interfaces/common");
 
 const config = {
   mongodb: {
@@ -25,6 +26,8 @@ const config = {
   // Enable the algorithm to create a checksum of the file contents and use that in the comparison to determin
   // if the file should be run.  Requires that scripts are coded to be run multiple times.
   useFileHash: false,
+
+  moduleSystem: "commonjs",
 };
 
 // Return the config as a promise
