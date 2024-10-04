@@ -35,12 +35,10 @@ const deserialize = (str) => {
 /**
  * Retourne la dernière date de début de campagne trouvée en base
  *
- * @param {Date} [currentDate]
  * @returns {Promise<Date>}
  */
-const getCampagneStartDate = async (currentDate = new Date()) => {
+const getCampagneStartDate = async () => {
   const campagneStart = await CampagneStart.findOne({}, null, { sort: { created_at: -1 } });
-  // const campagneStart = new Date(`${currentDate.getFullYear()}-10-15T00:00:00.000Z`);
 
   return campagneStart?.created_at;
 };
@@ -51,20 +49,20 @@ const getCampagneStartDate = async (currentDate = new Date()) => {
  * eg: si on est en janvier 2022 --> [01 août 2022] - 31 juillet 2023, si on est en octobre 2022 --> [01 août 2023] - 31 juillet 2024, etc.
  * Si ce n'est pas le cas la formation sera "non publiable en l'état".
  *
- * @param {Date} [currentDate]
  * @returns {Promise<Date>}
  */
-const getSessionStartDate = async (currentDate = new Date()) => {
-  // let durationShift = 0;
-  // const now = currentDate;
-  const campagneStart = await getCampagneStartDate(currentDate);
+const getSessionStartDate = async () => {
+  const campagneStart = await getCampagneStartDate();
 
-  // if (now.getTime() >= campagneStart.getTime()) {
-  //   durationShift = 1;
-  // }
-
-  // const startDate = new Date(`${currentDate.getFullYear() + durationShift}-08-01T00:00:00.000Z`);
   const startDate = new Date(`${campagneStart.getFullYear() + 1}-08-01T00:00:00.000Z`);
+
+  return startDate;
+};
+
+const getPreviousSessionStartDate = async () => {
+  const campagneStart = await getCampagneStartDate();
+
+  const startDate = new Date(`${campagneStart.getFullYear()}-08-01T00:00:00.000Z`);
 
   return startDate;
 };
@@ -75,21 +73,20 @@ const getSessionStartDate = async (currentDate = new Date()) => {
  * eg: si on est en janvier 2022 --> 01 août 2022 - [juillet 2023], si on est en octobre 2022 --> 01 août 2023 - [31 juillet 2024], etc.
  * Si ce n'est pas le cas la formation sera "non publiable en l'état".
  *
- * @param {Date} [currentDate]
  * @returns {Promise<Date>}
  */
-const getSessionEndDate = async (currentDate = new Date()) => {
-  // let durationShift = 0;
-  // const now = currentDate;
-  const campagneStart = await getCampagneStartDate(currentDate);
-
-  // if (now.getTime() >= campagneStart.getTime()) {
-  //   durationShift = 1;
-  // }
-
-  // const endDate = new Date(`${currentDate.getFullYear() + 1 + durationShift}-07-31T23:59:59.999Z`);
+const getSessionEndDate = async () => {
+  const campagneStart = await getCampagneStartDate();
 
   const endDate = new Date(`${campagneStart.getFullYear() + 2}-07-31T23:59:59.999Z`);
+
+  return endDate;
+};
+
+const getPreviousSessionEndDate = async () => {
+  const campagneStart = await getCampagneStartDate();
+
+  const endDate = new Date(`${campagneStart.getFullYear() + 1}-07-31T23:59:59.999Z`);
 
   return endDate;
 };
@@ -119,11 +116,8 @@ const isInSession = async ({ date_debut } = { date_debut: [] }) => {
  * @returns {Promise<boolean>}
  */
 const isInPreviousSession = async ({ date_debut } = { date_debut: [] }) => {
-  const startDate = await getSessionStartDate();
-  const endDate = await getSessionEndDate();
-
-  startDate.setFullYear(startDate.getFullYear() - 1);
-  endDate.setFullYear(endDate.getFullYear() - 1);
+  const startDate = await getPreviousSessionStartDate();
+  const endDate = await getPreviousSessionEndDate();
 
   const datesInCampagne = date_debut?.filter(
     (date) => new Date(date).getTime() >= startDate.getTime() && new Date(date).getTime() <= endDate.getTime()
@@ -137,23 +131,19 @@ const isInPreviousSession = async ({ date_debut } = { date_debut: [] }) => {
  * Obtient la règle permettant de vérifier si la formation possède au moins une date de début sur la session en cours
  *
  */
-const getSessionDateRules = async (currentDate = new Date()) => ({
-  date_debut: { $gte: await getSessionStartDate(currentDate), $lt: await getSessionEndDate(currentDate) },
+const getSessionDateRules = async () => ({
+  date_debut: { $gte: await getSessionStartDate(), $lt: await getSessionEndDate() },
 });
 
 /**
  * Obtient la règle permettant de vérifier si la formation possède au moins une date de début sur la session précédente
  *
  */
-const getPreviousSessionDateRules = async (currentDate = new Date()) => {
-  const date = currentDate;
-
-  date.setFullYear(date.getFullYear() - 1);
-
+const getPreviousSessionDateRules = async () => {
   return {
     date_debut: {
-      $gte: await getSessionStartDate(date),
-      $lt: await getSessionEndDate(date),
+      $gte: await getPreviousSessionStartDate(),
+      $lt: await getPreviousSessionEndDate(),
     },
   };
 };
