@@ -104,7 +104,7 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
     oldFields?.editedFields?.uai_formation ??
     fields?.uai_formation ??
     (fields?.code_commune_insee === fields?.etablissement_formateur_code_commune_insee
-      ? fields?.etablissement_formateur_uai ?? oldFields?.uai_formation ?? oldFields?.etablissement_formateur_uai
+      ? (fields?.etablissement_formateur_uai ?? oldFields?.uai_formation ?? oldFields?.etablissement_formateur_uai)
       : undefined);
   const uai_formation_valide = !!uai_formation && (await isValideUAI(uai_formation));
 
@@ -263,7 +263,6 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
       break;
   }
 
-  fields.etablissement_formateur;
   const etablissement_gestionnaire_raison_sociale_enseigne = `${fields.etablissement_gestionnaire_entreprise_raison_sociale}${fields.etablissement_gestionnaire_enseigne ? ` (${fields.etablissement_gestionnaire_enseigne})` : ""}`;
   const etablissement_formateur_raison_sociale_enseigne = `${fields.etablissement_formateur_entreprise_raison_sociale}${fields.etablissement_formateur_enseigne ? ` (${fields.etablissement_formateur_enseigne})` : ""}`;
 

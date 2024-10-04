@@ -192,7 +192,7 @@ export const columnsDefinition = [
  * Champs de la recherche avancée
  */
 export const queryBuilderField = [
-  { text: "Raison sociale", value: "entreprise_raison_sociale.keyword" },
+  { text: "Raison sociale", value: "raison_sociale_enseigne.keyword" },
   { text: "Siret", value: "siret.keyword" },
   { text: "Certifié Qualité", value: "certifie_qualite.keyword" },
   { text: "Uai", value: "uai.keyword" },
@@ -254,7 +254,7 @@ export const quickFiltersDefinition = [
 ];
 
 export const dataSearch = {
-  dataField: ["entreprise_raison_sociale", "uai", "siret"],
+  dataField: ["raison_sociale_enseigne", "uai", "siret"],
   placeholder: "Saisissez une raison sociale, un UAI, ou un numéro de Siret",
   fieldWeights: [3, 2, 1],
 };

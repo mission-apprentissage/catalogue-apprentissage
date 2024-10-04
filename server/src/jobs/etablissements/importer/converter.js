@@ -38,9 +38,12 @@ const computeRelationFields = async (fields) => {
 const recomputeFields = async (fields) => {
   const uai_valide = !fields.uai || (await isValideUAI(fields.uai));
 
+  const raison_sociale_enseigne = `${fields.entreprise_raison_sociale}${fields.enseigne ? ` (${fields.enseigne})` : ""}`;
+
   return {
     uai_valide,
 
+    raison_sociale_enseigne,
     // ...(await computeRelationFields(fields)),
 
     ...fields,

@@ -67,6 +67,11 @@ const etablissementSchema = {
     default: null,
     description: "Enseigne",
   },
+  raison_sociale_enseigne: {
+    type: String,
+    default: null,
+    description: "Raison social et enseigne (pour recherche)",
+  },
   onisep_nom: {
     type: String,
     default: null,
