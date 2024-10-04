@@ -930,15 +930,14 @@ export const queryBuilderField = [
   { text: "Organisme - UAI du responsable", value: "etablissement_gestionnaire_uai.keyword" },
   { text: "Organisme - UAI du formateur", value: "etablissement_formateur_uai.keyword" },
   { text: "Organisme - UAI du lieu de formation", value: "uai_formation.keyword" },
-  { text: "Organisme - Commune du lieu de formation", value: "localite.keyword" },
-  { text: "Organisme - Région du lieu de formation", value: "region.keyword" },
+  { text: "Localisation - Région du lieu de formation", value: "region.keyword" },
+  { text: "Localisation - Département du lieu de formation", value: "nom_departement.keyword" },
+  { text: "Localisation - Commune du lieu de formation", value: "localite.keyword" },
   { text: "Formation - Intitulé de la formation", value: "intitule_long.keyword" },
-  { text: "Formation - Niveau visé de la formation", value: "niveau_formation_diplome.keyword" },
   { text: "Formation - Code RNCP", value: "rncp_code.keyword" },
   { text: "Formation - Code formation diplôme (CFD)", value: "cfd.keyword" },
   { text: "Formation - Code MEF 10 caractères", value: "bcn_mefs_10.mef10.keyword" },
   { text: "Formation - Code Certif Info", value: "id_certifinfo.keyword" },
-  { text: "Formation - Type de diplôme", value: "diplome.keyword" },
 ];
 
 /**
