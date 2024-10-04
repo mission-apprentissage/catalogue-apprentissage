@@ -32,6 +32,7 @@ const Combinator = ({ combinator, setCombinator, combinators, isDisabled }) => {
       isDisabled={isDisabled}
       maxWidth={90}
       m={"5px"}
+      maxW={"7%"}
       value={combinator}
       onChange={(e) => setCombinator(e.target.value)}
     >
@@ -187,6 +188,7 @@ export default function Rule({
           isDisabled={isDisabled}
           width={"auto"}
           margin={"5px"}
+          maxW={"15%"}
           value={operator}
           onChange={(e) => setOperator(e.target.value)}
         >

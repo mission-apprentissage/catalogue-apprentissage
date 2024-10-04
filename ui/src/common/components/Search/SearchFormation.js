@@ -68,11 +68,11 @@ export default React.memo(({ searchState, context, extraButtons = null }) => {
 
         <Box className="search" maxW="full">
           <Container maxW="7xl" p={0}>
-            <Box className={`search-container search-container-${mode}`} px={[0, 0, 4]}>
-              <Text fontWeight="700" color="grey.800" mt={4} mb={4} textStyle="rf-text">
+            <Box className={`search-container search-container-${mode}`} px={[0, 0, 4]} display={"flex"}>
+              <Text fontWeight="700" color="grey.800" mt={4} mb={4} textStyle="rf-text" w="15%">
                 RECHERCHE LIBRE
               </Text>
-              <Box px={2}>
+              <Box px={4} w="85%" marginTop={2}>
                 <DataSearch
                   componentId={`SEARCH`}
                   placeholder={dataSearch.placeholder}
@@ -94,16 +94,18 @@ export default React.memo(({ searchState, context, extraButtons = null }) => {
 
             <Box borderTop="1px solid #E7E7E7" w="full" mt={4} mb={4} />
 
-            <Box px={[0, 0, 4]}>
-              <Text fontWeight="700" color="grey.800" mt={4} mb={4} textStyle="rf-text">
+            <Box px={[0, 0, 4]} display={"flex"}>
+              <Text fontWeight="700" color="grey.800" mt={4} mb={4} textStyle="rf-text" w="15%">
                 RECHERCHE MULTI-CRITÈRES
               </Text>
 
-              <QueryBuilder
-                collection={base}
-                react={{ and: allowedFilters.filter((e) => e !== "QUERYBUILDER") }}
-                fields={queryBuilderField}
-              />
+              <Box px={2} w="85%">
+                <QueryBuilder
+                  collection={base}
+                  react={{ and: allowedFilters.filter((e) => e !== "QUERYBUILDER") }}
+                  fields={queryBuilderField}
+                />
+              </Box>
             </Box>
 
             <Box borderTop="1px solid #E7E7E7" w="full" mt={4} mb={4} />
