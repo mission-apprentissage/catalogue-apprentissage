@@ -3883,7 +3883,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/register@npm:7.24.6, @babel/register@npm:^7.24.6":
+"@babel/register@npm:7.25.7":
+  version: 7.25.7
+  resolution: "@babel/register@npm:7.25.7"
+  dependencies:
+    clone-deep: ^4.0.1
+    find-cache-dir: ^2.0.0
+    make-dir: ^2.1.0
+    pirates: ^4.0.6
+    source-map-support: ^0.5.16
+  peerDependencies:
+    "@babel/core": ^7.0.0-0
+  checksum: 54b9cd7b43745725a590c5bf585e69ea64cf6ba937d6de72518a9642c7c8f7db9bdbae89d956f2a28ac808fb8a33ac57a56d0ed32078f8a99216f01beb3b3bb0
+  languageName: node
+  linkType: hard
+
+"@babel/register@npm:^7.24.6":
   version: 7.24.6
   resolution: "@babel/register@npm:7.24.6"
   dependencies:
@@ -16261,7 +16276,7 @@ __metadata:
     "@babel/node": 7.25.0
     "@babel/preset-env": 7.25.4
     "@babel/preset-react": 7.24.7
-    "@babel/register": 7.24.6
+    "@babel/register": 7.25.7
     "@chakra-ui/icons": 2.1.1
     "@chakra-ui/react": 2.8.2
     "@craco/craco": ^7.0.0
