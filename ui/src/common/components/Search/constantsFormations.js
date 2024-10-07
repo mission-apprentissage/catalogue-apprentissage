@@ -933,6 +933,7 @@ export const queryBuilderField = [
   { text: "Localisation - Région du lieu de formation", value: "region.keyword" },
   { text: "Localisation - Département du lieu de formation", value: "nom_departement.keyword" },
   { text: "Localisation - Commune du lieu de formation", value: "localite.keyword" },
+  { text: "Formation - Type de la formation", value: "diplome.keyword" },
   { text: "Formation - Intitulé de la formation", value: "intitule_long.keyword" },
   { text: "Formation - Code RNCP", value: "rncp_code.keyword" },
   { text: "Formation - Code formation diplôme (CFD)", value: "cfd.keyword" },

@@ -108,6 +108,7 @@ export const useNiveaux = ({ plateforme }) => {
 export const getCount = async ({ plateforme, niveau, diplome, regle_complementaire, academie, duree, annee }) => {
   const countUrl = `${CATALOGUE_API}/v1/entity/perimetre/regle/count`;
   const params = new URLSearchParams({
+    published: true,
     plateforme,
     niveau,
     diplome,
