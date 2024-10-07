@@ -7195,7 +7195,7 @@ __metadata:
     sinon: ^19
     stream-json: 1.7.4
     swagger-jsdoc: 6.2.8
-    swagger-ui-express: 4.3.0
+    swagger-ui-express: 5.0.1
     xlsx: 0.18.5
   languageName: unknown
   linkType: soft
@@ -10070,6 +10070,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"swagger-ui-dist@npm:>=5.0.0":
+  version: 5.17.14
+  resolution: "swagger-ui-dist@npm:5.17.14"
+  checksum: e10f8068e370fb17cf6882c8d8b925044862ea74b67296c6d97eef42a904eed3e9ed21867cc0458cbf0de7bd2a49e79282a1a3b7e6a1ccdbba1b650d86b528bb
+  languageName: node
+  linkType: hard
+
 "swagger-ui-express@npm:4.3.0":
   version: 4.3.0
   resolution: "swagger-ui-express@npm:4.3.0"
@@ -10078,6 +10085,17 @@ __metadata:
   peerDependencies:
     express: ">=4.0.0"
   checksum: 8d2e1e5389efff59f19fbea9156e8db676a77aa80812872899f46a6e97e697b4e0ea0baccc5ec0f266371a6e604c2289fc84f2edc623a37f51f2393553796a8b
+  languageName: node
+  linkType: hard
+
+"swagger-ui-express@npm:5.0.1":
+  version: 5.0.1
+  resolution: "swagger-ui-express@npm:5.0.1"
+  dependencies:
+    swagger-ui-dist: ">=5.0.0"
+  peerDependencies:
+    express: ">=4.0.0 || >=5.0.0-beta"
+  checksum: 792510643eb82541fab5d26cc60f24f44c2a53232e62103ada04689fca36e6b09a5301ba005c5a3dcd62c7b7c3dcc43649f29ed68dc17de35a958fd9cacb30b0
   languageName: node
   linkType: hard
 
