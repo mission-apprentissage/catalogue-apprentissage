@@ -940,7 +940,7 @@ export const queryBuilderField = [
   { text: "Formation - Code MEF 10 caractères", value: "bcn_mefs_10.mef10.keyword" },
   { text: "Formation - Code Certif Info", value: "id_certifinfo.keyword" },
   { text: "Formation - Niveau formation diplôme (ex : '320' pour BTS)", value: "niveau_formation_diplome.keyword" },
-  { text: "Formation - Libellé court. (ex : 'BTS')", value: "niveau_formation_diplome.keyword" },
+  { text: "Formation - Libellé court (ex : 'BTS')", value: "libelle_court.keyword" },
 ];
 
 /**
