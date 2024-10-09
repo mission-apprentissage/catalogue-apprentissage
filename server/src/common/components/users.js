@@ -61,7 +61,7 @@ module.exports = async () => {
       return user.toObject();
     },
     removeUser: async (username) => {
-      const user = await User.findOne({ username: username?.toLowerCase() });
+      const user = await User.findOne({ username: username });
       if (!user) {
         throw new Error(`Unable to find user ${username}`);
       }
