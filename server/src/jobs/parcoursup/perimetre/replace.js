@@ -72,7 +72,14 @@ const run = async () => {
       );
 
       await Formation.updateMany(
-        { cle_ministere_educatif: { $in: formation.cle_me_remplace }, cle_me_remplace_par_traitee: { $ne: true } },
+        {
+          parcoursup_perimetre: true,
+          cle_ministere_educatif: { $in: formation.cle_me_remplace },
+          $or: [
+            { cle_me_remplace_par_traitee: { $ne: true } },
+            { parcoursup_statut: { $ne: PARCOURSUP_STATUS.NON_PUBLIE } },
+          ],
+        },
         {
           $set: {
             parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIE,
@@ -98,5 +105,60 @@ const run = async () => {
     }
   );
 };
+
+/**
+ * Requête pour forcer les non publications après réinitialisation de campagne si jamais celles-ci n'étaient pas persistées malgré le traitement des 'annule et remplace'
+ *
+db.getCollection("formations").aggregate([
+    {
+        $match: {
+            published: true,
+            parcoursup_perimetre: true,
+            cle_me_remplace: { $ne: null },
+            "cle_me_remplace.0": { $exists: true },
+            "cle_me_remplace.1": { $exists: false },
+            cle_me_remplace_traitee: { $eq: true },
+        }
+    },
+    {
+        $lookup: {
+            from: "formations",
+            localField: "cle_me_remplace",
+            foreignField: "cle_ministere_educatif",
+            as: "formations_remplacees"
+        }
+    },
+    {
+        $unwind: "$formations_remplacees"
+    },
+    {
+        $replaceRoot: {
+            newRoot: "$formations_remplacees"
+        }
+    },
+    {
+        $match: { parcoursup_perimetre: true }
+    },
+    {
+        $project: {
+            _id: 1,
+            cle_ministere_educatif: 1,
+            cle_me_remplace_par: 1,
+            cle_me_remplace_par_traitee: 1,
+            parcoursup_statut: 1
+        }
+    },
+    {
+        $merge : {
+            into: "formations",
+            on: "_id",
+            whenMatched: [
+                { $set: { parcoursup_statut: "non publié" } }
+            ],
+            whenNotMatched: "discard"
+        }
+    }
+])
+ */
 
 module.exports = { run };

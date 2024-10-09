@@ -16,6 +16,7 @@ const run = async () => {
       parcoursup_statut_history,
       parcoursup_session,
       parcoursup_perimetre,
+      cle_me_remplace_par_traitee,
     }) => {
       let next_parcoursup_statut;
 
@@ -38,7 +39,7 @@ const run = async () => {
           }
         );
         updated++;
-      } else {
+      } else if (!(parcoursup_statut === PARCOURSUP_STATUS.NON_PUBLIE && !!cle_me_remplace_par_traitee)) {
         next_parcoursup_statut = PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT;
         await Formation.updateOne(
           { _id: _id },
