@@ -1,14 +1,17 @@
-import React, { useEffect, useRef, useState } from "react";
-import { NavLink, useSearchParams } from "react-router-dom";
 import { Box, Flex, Link } from "@chakra-ui/react";
-import helpText from "../../../../locales/helpText.json";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { NavLink, useSearchParams } from "react-router-dom";
 import { AFFELNET_STATUS } from "../../../../constants/status";
+import { DateContext } from "../../../../DateContext";
+import helpText from "../../../../locales/helpText.json";
 import { _get } from "../../../httpClient";
 import { InfoTooltip } from "../../InfoTooltip";
 import { CATALOGUE_API } from "../constantsFormations";
 
 export const AffelnetMissingSession = () => {
   const [count, setCount] = useState(0);
+  const { sessionStartDate, sessionEndDate } = useContext(DateContext);
+
   const [countPublishedLastSession, setCountPublishedLastSession] = useState(0);
   const mountedRef = useRef(undefined);
   const [searchParams] = useSearchParams();
@@ -64,8 +67,8 @@ export const AffelnetMissingSession = () => {
     <Flex style={{ background: "#E2E8F0" }} padding={4}>
       <Box>
         <Box mb={2}>
-          {Math.round((count * 100) / countPublishedLastSession)}% des formations publiées en 2023 n’ont pas été
-          renouvelées pour 2024.
+          {Math.round((count * 100) / countPublishedLastSession)}% des formations publiées en{" "}
+          {sessionStartDate?.getFullYear() - 1} n’ont pas été renouvelées pour {sessionEndDate?.getFullYear() - 1}.
         </Box>
 
         <Link as={NavLink} variant="unstyled" fontStyle={"italic"} textDecoration={"underline"} to={link}>
