@@ -93,6 +93,7 @@ const Facet = ({
           innerClass={{
             title: "search-title",
             input: "search-input",
+            list: "search-list",
             checkbox: "search-checkbox",
             label: "search-label",
           }}

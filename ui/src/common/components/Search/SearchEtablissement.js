@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { DataSearch, ReactiveBase, ReactiveList, SelectedFilters } from "@appbaseio/reactivesearch";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { Box, Container, Flex, FormLabel, Switch, Text } from "@chakra-ui/react";
+import { Box, Container, Flex, Text } from "@chakra-ui/react";
 
 import useAuth from "../../hooks/useAuth";
 import { hasAccessTo } from "../../utils/rolesUtils";
@@ -20,26 +19,9 @@ import { Pagination } from "./components/Pagination";
 import "./search.css";
 
 export default React.memo(({ searchState, context, extraButtons = null }) => {
-  const [searchParams] = useSearchParams();
-
-  const [mode, setMode] = useState(searchParams.get("defaultMode") ?? "simple");
   const { base, countEtablissement, endpoint } = searchState;
 
   const [auth] = useAuth();
-  const navigate = useNavigate();
-
-  const handleSearchSwitchChange = () => {
-    setMode((prevValue) => {
-      const newValue = prevValue === "simple" ? "advanced" : "simple";
-
-      const s = new URLSearchParams(window.location.search);
-
-      s.set("defaultMode", newValue);
-      navigate(`?${s}`);
-
-      return newValue;
-    });
-  };
 
   return (
     <Box className="search-page">
@@ -55,7 +37,7 @@ export default React.memo(({ searchState, context, extraButtons = null }) => {
         <HardFilters allowedFilters={allowedFilters} context={context} />
         <Box className="search" maxW="full">
           <Container maxW="7xl" p={0}>
-            <Box className={`search-container search-container-${mode}`} px={[0, 0, 4]} display={"flex"}>
+            <Box className={`search-container`} px={[0, 0, 4]} display={"flex"}>
               <Text fontWeight="700" color="grey.800" mt={4} mb={4} textStyle="rf-text" w="15%">
                 RECHERCHE LIBRE
               </Text>
@@ -79,7 +61,7 @@ export default React.memo(({ searchState, context, extraButtons = null }) => {
               </Box>
             </Box>
 
-            <Box borderTop="1px solid #E7E7E7" w="full" mt={4} mb={4} />
+            {/* <Box borderTop="1px solid #E7E7E7" w="full" my={4} /> */}
 
             <Box px={[0, 0, 4]} display={"flex"}>
               <Text fontWeight="700" color="grey.800" mt={4} mb={4} textStyle="rf-text" w="15%">
@@ -95,7 +77,7 @@ export default React.memo(({ searchState, context, extraButtons = null }) => {
               </Box>
             </Box>
 
-            <Box borderTop="1px solid #E7E7E7" w="full" mt={4} mb={4} />
+            <Box borderTop="1px solid #E7E7E7" w="full" my={4} />
 
             <Flex className="search-row" flexDirection={["column", "column", "row"]}>
               <Box className="search-sidebar" px={[0, 0, 4]}>

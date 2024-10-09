@@ -4,6 +4,10 @@
   background: #f0f0f0;
 }
 
+.facet-filters .search-list {
+  max-height: 300px;
+}
+
 .facet-filters .search-input:focus {
   background-color: #f0f0f0;
 }

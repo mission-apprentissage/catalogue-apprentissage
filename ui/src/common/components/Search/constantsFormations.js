@@ -58,6 +58,8 @@ export const allowedFilters = [
   "last_statut_update_date_end",
   "last_statut_update_date_start",
   "niveau",
+  "niveau_formation_diplome",
+  "libelle_court",
   "nom_academie",
   "nouvelle_fiche",
   "num_academie",
@@ -1367,6 +1369,7 @@ export const quickFiltersDefinition = [
         filterLabel: "Département",
         selectAllLabel: "Tous",
         sortBy: "asc",
+        size: Object.values(departements).length,
         transformData: (data) => data.map((d) => ({ ...d, key: `${d.key} - ${departements[d.key]}` })),
         customQuery: (values) => ({
           query: values?.length && {

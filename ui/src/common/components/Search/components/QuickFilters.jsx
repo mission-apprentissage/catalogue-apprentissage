@@ -215,7 +215,7 @@ export const QuickFilters = ({ filters }) => {
           case "divider": {
             return (
               <React.Fragment key={index}>
-                <Divider my={8} />
+                <Divider my={6} />
               </React.Fragment>
             );
           }
