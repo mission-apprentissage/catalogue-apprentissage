@@ -1348,9 +1348,68 @@ export const quickFiltersDefinition = [
   { type: "divider" },
 
   {
+    componentId: `qualite`,
+    type: "facet",
+    dataField: "etablissement_gestionnaire_certifie_qualite",
+    title: "Certifié Qualité",
+    filterLabel: "Certifié Qualité",
+    sortBy: "desc",
+    helpTextSection: helpText.search.qualite,
+    showSearch: false,
+    displayInContext: [CONTEXT.CATALOGUE_NON_ELIGIBLE],
+    transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
+    customQuery: (values) => {
+      if (values.length === 1 && values[0] !== "Tous") {
+        return {
+          query: {
+            match: {
+              etablissement_gestionnaire_certifie_qualite: values[0] === "Oui",
+            },
+          },
+        };
+      }
+      return {};
+    },
+  },
+  {
+    componentId: `habilite`,
+    type: "facet",
+    dataField: "etablissement_reference_habilite_rncp",
+    title: "Habilité RNCP",
+    filterLabel: "Habilité RNCP",
+    sortBy: "desc",
+    showSearch: false,
+    displayInContext: [CONTEXT.CATALOGUE_NON_ELIGIBLE],
+    transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
+    customQuery: (values) => {
+      if (values.length === 1 && values[0] !== "Tous") {
+        return {
+          query: {
+            match: {
+              etablissement_reference_habilite_rncp: values[0] === "Oui",
+            },
+          },
+        };
+      }
+      return {};
+    },
+  },
+  {
+    componentId: `siret_actif`,
+    type: "facet",
+    dataField: "siret_actif.keyword",
+    title: "Statut du SIRET",
+    filterLabel: "Statut du SIRET",
+    displayInContext: [CONTEXT.CATALOGUE_NON_ELIGIBLE],
+    selectAllLabel: "Tous les statuts",
+    sortBy: "asc",
+  },
+
+  {
     type: "advanced",
     openText: "Masquer les filtres avancés (niveau, durée, dates...)",
     closeText: "Filtres avancés (niveau, durée, dates...)",
+    acl: "page_catalogue/voir_filtres_avances_generaux",
     filters: [
       {
         componentId: `date_debut`,
@@ -1361,26 +1420,26 @@ export const quickFiltersDefinition = [
         helpTextSection: helpText.search.periode.title,
       },
 
-      {
-        componentId: `num_departement`,
-        type: "facet",
-        dataField: "num_departement.keyword",
-        title: "Département",
-        filterLabel: "Département",
-        selectAllLabel: "Tous",
-        sortBy: "asc",
-        size: Object.values(departements).length,
-        transformData: (data) => data.map((d) => ({ ...d, key: `${d.key} - ${departements[d.key]}` })),
-        customQuery: (values) => ({
-          query: values?.length && {
-            terms: {
-              "num_departement.keyword": values?.map((value) =>
-                typeof value === "string" ? value?.split(" - ")[0] : value
-              ),
-            },
-          },
-        }),
-      },
+      // {
+      //   componentId: `num_departement`,
+      //   type: "facet",
+      //   dataField: "num_departement.keyword",
+      //   title: "Département",
+      //   filterLabel: "Département",
+      //   selectAllLabel: "Tous",
+      //   sortBy: "asc",
+      //   size: Object.values(departements).length,
+      //   transformData: (data) => data.map((d) => ({ ...d, key: `${d.key} - ${departements[d.key]}` })),
+      //   customQuery: (values) => ({
+      //     query: values?.length && {
+      //       terms: {
+      //         "num_departement.keyword": values?.map((value) =>
+      //           typeof value === "string" ? value?.split(" - ")[0] : value
+      //         ),
+      //       },
+      //     },
+      //   }),
+      // },
       {
         componentId: `niveau`,
         type: "facet",
@@ -1435,63 +1494,7 @@ export const quickFiltersDefinition = [
           },
         }),
       },
-      {
-        componentId: `qualite`,
-        type: "facet",
-        dataField: "etablissement_gestionnaire_certifie_qualite",
-        title: "Certifié Qualité",
-        filterLabel: "Certifié Qualité",
-        sortBy: "desc",
-        helpTextSection: helpText.search.qualite,
-        showSearch: false,
-        displayInContext: [CONTEXT.CATALOGUE_NON_ELIGIBLE],
-        transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
-        customQuery: (values) => {
-          if (values.length === 1 && values[0] !== "Tous") {
-            return {
-              query: {
-                match: {
-                  etablissement_gestionnaire_certifie_qualite: values[0] === "Oui",
-                },
-              },
-            };
-          }
-          return {};
-        },
-      },
-      {
-        componentId: `habilite`,
-        type: "facet",
-        dataField: "etablissement_reference_habilite_rncp",
-        title: "Habilité RNCP",
-        filterLabel: "Habilité RNCP",
-        sortBy: "desc",
-        showSearch: false,
-        displayInContext: [CONTEXT.CATALOGUE_NON_ELIGIBLE],
-        transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
-        customQuery: (values) => {
-          if (values.length === 1 && values[0] !== "Tous") {
-            return {
-              query: {
-                match: {
-                  etablissement_reference_habilite_rncp: values[0] === "Oui",
-                },
-              },
-            };
-          }
-          return {};
-        },
-      },
-      {
-        componentId: `siret_actif`,
-        type: "facet",
-        dataField: "siret_actif.keyword",
-        title: "Statut du SIRET",
-        filterLabel: "Statut du SIRET",
-        displayInContext: [CONTEXT.CATALOGUE_NON_ELIGIBLE],
-        selectAllLabel: "Tous les statuts",
-        sortBy: "asc",
-      },
+
       {
         componentId: `nouvelle_fiche`,
         type: "facet",

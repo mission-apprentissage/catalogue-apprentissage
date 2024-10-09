@@ -19,6 +19,10 @@ export default [
         feature: "Voir les filtres avancés Affelnet",
         ref: "page_catalogue/voir_filtres_avances_aff",
       },
+      {
+        feature: "Voir les filtres avancés généraux",
+        ref: "page_catalogue/voir_filtres_avances_generaux",
+      },
     ],
   },
   {
