@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Badge, Box, Flex, Text } from "@chakra-ui/react";
 import { ArrowRightDownLine } from "../../../theme/components/icons";
-import { STATUS_LIST, StatusSelect } from "./StatusSelect";
-import { ActionsSelect } from "./ActionsSelect";
 import { CONDITIONS } from "../../../constants/conditionsIntegration";
 import { academies } from "../../../constants/academies";
 import { InfoTooltip } from "../../../common/components/InfoTooltip";
 import { isStatusChangeEnabled } from "../../../common/utils/rulesUtils";
 import { getCount } from "../../../common/api/perimetre";
+import { ActionsSelect } from "./ActionsSelect";
+import { STATUS_LIST, StatusSelect } from "./StatusSelect";
 
 export const Line = ({
   showIcon,

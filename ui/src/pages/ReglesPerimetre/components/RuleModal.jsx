@@ -34,12 +34,12 @@ import { academies } from "../../../constants/academies";
 import { annees } from "../../../constants/annees";
 import { CONDITIONS } from "../../../constants/conditionsIntegration";
 import { COMMON_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
+import { DateContext } from "../../../DateContext";
 import { ArrowDownLine, ArrowRightLine, Close } from "../../../theme/components/icons";
 import { ActionsSelect } from "./ActionsSelect";
 import { RuleBuilder } from "./RuleBuilder";
 import { RuleUpdatesHistory } from "./RuleUpdatesHistory";
 import { StatusSelect } from "./StatusSelect";
-import { DateContext } from "../../../DateContext";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -100,7 +100,6 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
     num_academie,
   } = rule ?? {};
 
-  const [isClosing, setIsClosing] = useState(false);
   const isCreating = !rule;
   const initialRef = React.useRef();
   const toast = useToast();
@@ -239,10 +238,10 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
   });
 
   const close = useCallback(() => {
-    setIsClosing(true);
+    // setIsClosing(true);
     // resetForm();
     onClose();
-  }, [setIsClosing, onClose]);
+  }, [onClose]);
 
   // create link with diplome / regle_complementaire
   const linkQuery = [
@@ -299,23 +298,8 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
       setCount(result);
     };
 
-    if (!isClosing) {
-      if (values.niveau && values.diplome) {
-        run();
-      } else {
-        setCount(0);
-      }
-    }
-  }, [
-    plateforme,
-    values.niveau,
-    values.diplome,
-    values.regle,
-    academie,
-    isClosing,
-    values.duration,
-    values.registrationYear,
-  ]);
+    run();
+  }, [plateforme, values.niveau, values.diplome, values.regle, academie, values.duration, values.registrationYear]);
 
   const [isCriteriaOpen, setIsCriteriaOpen] = useState(
     !!JSON.parse(values?.query ?? "[]").filter((query) => !!query.value.length).length
