@@ -12,6 +12,14 @@ export default [
         ref: "page_catalogue/voir_status_publication_aff",
       },
       {
+        feature: "Voir les filtres Parcoursup",
+        ref: "page_catalogue/voir_filtres_ps",
+      },
+      {
+        feature: "Voir les filtres Affelnet",
+        ref: "page_catalogue/voir_filtres_aff",
+      },
+      {
         feature: "Voir les filtres avancés Parcoursup",
         ref: "page_catalogue/voir_filtres_avances_ps",
       },

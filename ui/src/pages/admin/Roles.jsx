@@ -19,6 +19,8 @@ import {
   Input,
   Stack,
   Flex,
+  Wrap,
+  WrapItem,
 } from "@chakra-ui/react";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
@@ -98,10 +100,10 @@ const RoleLine = ({ role }) => {
                         {item.feature}
                       </Checkbox>
                     </Box>
-                    <Flex ml={5} pr={14}>
+                    <Wrap ml={5} pr={14} spacing={"4%"}>
                       {item.subFeatures?.map((subitem, j) => {
                         return (
-                          <HStack spacing={5} ml={5} key={`${i}_${j}`}>
+                          <WrapItem key={`${i}_${j}`} w={"22%"} my={2}>
                             <Checkbox
                               name="newAcl"
                               onChange={handleChange}
@@ -111,10 +113,10 @@ const RoleLine = ({ role }) => {
                             >
                               {subitem.feature}
                             </Checkbox>
-                          </HStack>
+                          </WrapItem>
                         );
                       })}
-                    </Flex>
+                    </Wrap>
                   </Flex>
                 );
               })}
