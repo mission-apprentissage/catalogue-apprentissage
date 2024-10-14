@@ -73,7 +73,7 @@ export default () => {
     suffixCatalogue = `?parcoursup_perimetre=%5B"Oui"%5D`;
   }
   if (hasAccessTo(auth, "page_catalogue/voir_filtres_aff") && !hasAccessTo(auth, "page_catalogue/voir_filtres_ps")) {
-    suffixCatalogue = `?parcoursup_perimetre=%5B"Oui"%5D`;
+    suffixCatalogue = `?affelnet_perimetre=%5B"Oui"%5D`;
   }
 
   return (
