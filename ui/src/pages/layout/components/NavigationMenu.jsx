@@ -57,10 +57,10 @@ const NavLinks = ({ isOpen }) => {
   const [auth] = useAuth();
 
   let suffixCatalogue = "";
-  if (hasAccessTo(auth, "page_catalogue/voir_filtres_ps") && !hasAccessTo(auth, "page_catalogue/voir_filtres_af")) {
+  if (hasAccessTo(auth, "page_catalogue/voir_filtres_ps") && !hasAccessTo(auth, "page_catalogue/voir_filtres_aff")) {
     suffixCatalogue = `?parcoursup_perimetre=%5B"Oui"%5D`;
   }
-  if (hasAccessTo(auth, "page_catalogue/voir_filtres_af") && !hasAccessTo(auth, "page_catalogue/voir_filtres_ps")) {
+  if (hasAccessTo(auth, "page_catalogue/voir_filtres_aff") && !hasAccessTo(auth, "page_catalogue/voir_filtres_ps")) {
     suffixCatalogue = `?parcoursup_perimetre=%5B"Oui"%5D`;
   }
 
