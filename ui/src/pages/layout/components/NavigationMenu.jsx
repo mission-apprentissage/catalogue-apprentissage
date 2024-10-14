@@ -54,7 +54,16 @@ const NavItem = ({ children, to = "/", exact, ...rest }) => {
 };
 
 const NavLinks = ({ isOpen }) => {
-  let [auth] = useAuth();
+  const [auth] = useAuth();
+
+  let suffixCatalogue = "";
+  if (hasAccessTo(auth, "page_catalogue/voir_filtres_ps") && !hasAccessTo(auth, "page_catalogue/voir_filtres_af")) {
+    suffixCatalogue = `?parcoursup_perimetre=%5B"Oui"%5D`;
+  }
+  if (hasAccessTo(auth, "page_catalogue/voir_filtres_af") && !hasAccessTo(auth, "page_catalogue/voir_filtres_ps")) {
+    suffixCatalogue = `?parcoursup_perimetre=%5B"Oui"%5D`;
+  }
+
   return (
     <Box display={{ base: isOpen ? "block" : "none", md: "block" }} flexBasis={{ base: "100%", md: "auto" }}>
       <Flex
@@ -69,7 +78,7 @@ const NavLinks = ({ isOpen }) => {
           Accueil
         </NavItem>
         {hasAccessTo(auth, "page_perimetre") && <NavItem to="/regles-perimetre">Règles de périmètre</NavItem>}
-        <NavItem to="/recherche/formations">Catalogue</NavItem>
+        <NavItem to={`/recherche/formations${suffixCatalogue}`}>Catalogue</NavItem>
         <NavItem to="/recherche/etablissements">Organismes</NavItem>
         {hasAccessTo(auth, "page_console") && <NavItem to="/consoles-pilotage">Consoles de pilotage</NavItem>}
         <NavItem to="/changelog">Journal</NavItem>

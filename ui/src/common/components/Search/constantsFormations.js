@@ -935,12 +935,12 @@ export const queryBuilderField = [
   { text: "Localisation - Région du lieu de formation", value: "region.keyword" },
   { text: "Localisation - Département du lieu de formation", value: "nom_departement.keyword" },
   { text: "Localisation - Commune du lieu de formation", value: "localite.keyword" },
-  { text: "Formation - Type de la formation", value: "diplome.keyword" },
   { text: "Formation - Intitulé de la formation", value: "intitule_long.keyword" },
   { text: "Formation - Code RNCP", value: "rncp_code.keyword" },
   { text: "Formation - Code formation diplôme (CFD)", value: "cfd.keyword" },
   { text: "Formation - Code MEF 10 caractères", value: "bcn_mefs_10.mef10.keyword" },
   { text: "Formation - Code Certif Info", value: "id_certifinfo.keyword" },
+  { text: "Formation - Type de la formation (ex: Bac professionnel)", value: "diplome.keyword" },
   { text: "Formation - Niveau formation diplôme (ex : '320' pour BTS)", value: "niveau_formation_diplome.keyword" },
   { text: "Formation - Libellé court (ex : 'BTS')", value: "libelle_court.keyword" },
 ];
@@ -996,7 +996,8 @@ export const quickFiltersDefinition = [
       return {};
     },
   },
-  { type: "divider" },
+
+  { type: "divider", acl: "page_catalogue/voir_status_publication_ps" },
 
   {
     componentId: `parcoursup_perimetre`,
@@ -1006,7 +1007,7 @@ export const quickFiltersDefinition = [
     filterLabel: "Dans le périmètre Parcoursup",
     selectAllLabel: "Tous",
     sortBy: "desc",
-    // displayInContext: [CONTEXT.CATALOGUE_GENERAL],
+    acl: "page_catalogue/voir_status_publication_ps",
     helpTextSection: helpText.search.parcoursup_perimetre,
     transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
     customQuery: (values) => {
@@ -1036,6 +1037,18 @@ export const quickFiltersDefinition = [
   },
 
   {
+    componentId: `parcoursup_previous_statut`,
+    type: "facet",
+    dataField: "parcoursup_previous_statut.keyword",
+    title: "Statut sur la précédente campagne ",
+    filterLabel: "Statut sur la précédente campagne Parcoursup ",
+    selectAllLabel: "Tous",
+    sortBy: "count",
+    acl: "page_catalogue/voir_status_publication_ps",
+    helpTextSection: helpText.search.parcoursup_previous_statut,
+  },
+
+  {
     componentId: `parcoursup_session_manquante`,
     type: "component",
     component: <ParcoursupMissingSession />,
@@ -1048,18 +1061,6 @@ export const quickFiltersDefinition = [
     closeText: "Voir plus de filtres Parcoursup",
     acl: "page_catalogue/voir_filtres_avances_ps",
     filters: [
-      {
-        componentId: `parcoursup_previous_statut`,
-        type: "facet",
-        dataField: "parcoursup_previous_statut.keyword",
-        title: "Statut sur la précédente campagne ",
-        filterLabel: "Statut sur la précédente campagne Parcoursup ",
-        selectAllLabel: "Tous",
-        sortBy: "count",
-        acl: "page_catalogue/voir_status_publication_ps",
-        helpTextSection: helpText.search.parcoursup_previous_statut,
-      },
-
       {
         componentId: `parcoursup_session`,
         type: "facet",
@@ -1155,7 +1156,7 @@ export const quickFiltersDefinition = [
     ],
   },
 
-  { type: "divider" },
+  { type: "divider", acl: "page_catalogue/voir_status_publication_aff" },
 
   {
     componentId: `affelnet_perimetre`,
@@ -1165,7 +1166,7 @@ export const quickFiltersDefinition = [
     filterLabel: "Dans le périmètre Affelnet",
     selectAllLabel: "Tous",
     sortBy: "desc",
-    // displayInContext: [CONTEXT.CATALOGUE_GENERAL],
+    acl: "page_catalogue/voir_status_publication_aff",
     helpTextSection: helpText.search.affelnet_perimetre,
     transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
     customQuery: (values) => {
@@ -1195,6 +1196,18 @@ export const quickFiltersDefinition = [
   },
 
   {
+    componentId: `affelnet_previous_statut`,
+    type: "facet",
+    dataField: "affelnet_previous_statut.keyword",
+    title: "Statut sur la précédente campagne",
+    filterLabel: "Statut sur la précédente campagne Affelnet",
+    selectAllLabel: "Tous",
+    sortBy: "count",
+    acl: "page_catalogue/voir_status_publication_aff",
+    helpTextSection: helpText.search.affelnet_previous_statut,
+  },
+
+  {
     componentId: `affelnet_session_manquante`,
     type: "component",
     component: <AffelnetMissingSession />,
@@ -1207,18 +1220,6 @@ export const quickFiltersDefinition = [
     closeText: "Voir plus de filtres Affelnet",
     acl: "page_catalogue/voir_filtres_avances_aff",
     filters: [
-      {
-        componentId: `affelnet_previous_statut`,
-        type: "facet",
-        dataField: "affelnet_previous_statut.keyword",
-        title: "Statut sur la précédente campagne",
-        filterLabel: "Statut sur la précédente campagne Affelnet",
-        selectAllLabel: "Tous",
-        sortBy: "count",
-        acl: "page_catalogue/voir_status_publication_aff",
-        helpTextSection: helpText.search.affelnet_previous_statut,
-      },
-
       {
         componentId: `affelnet_session`,
         type: "facet",

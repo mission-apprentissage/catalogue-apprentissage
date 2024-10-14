@@ -75,29 +75,36 @@ const Header = () => {
                   </Flex>
                 </MenuButton>
                 <MenuList>
-                  <MenuGroup title="Administration">
-                    {hasAccessTo(auth, "page_gestion_utilisateurs") && (
-                      <MenuItem as={NavLink} to="/admin/users" icon={<AccountFill boxSize={4} />}>
-                        Gestion des utilisateurs
-                      </MenuItem>
-                    )}
-                    {hasAccessTo(auth, "page_gestion_roles") && (
-                      <MenuItem as={NavLink} to="/admin/roles" icon={<AccountFill boxSize={4} />}>
-                        Gestion des rôles
-                      </MenuItem>
-                    )}
-                    {hasAccessTo(auth, "page_upload") && (
-                      <MenuItem as={NavLink} to="/admin/upload" icon={<DownloadLine boxSize={4} />}>
-                        Upload de fichiers
-                      </MenuItem>
-                    )}
-                    {hasAccessTo(auth, "page_message_maintenance") && (
-                      <MenuItem as={NavLink} to="/admin/alert" icon={<InfoCircle boxSize={4} />}>
-                        Message de maintenance
-                      </MenuItem>
-                    )}
-                  </MenuGroup>
-                  <MenuDivider />
+                  {(hasAccessTo(auth, "page_gestion_utilisateurs") ||
+                    hasAccessTo(auth, "page_gestion_roles") ||
+                    hasAccessTo(auth, "page_upload") ||
+                    hasAccessTo(auth, "page_message_maintenance")) && (
+                    <>
+                      <MenuGroup title="Administration">
+                        {hasAccessTo(auth, "page_gestion_utilisateurs") && (
+                          <MenuItem as={NavLink} to="/admin/users" icon={<AccountFill boxSize={4} />}>
+                            Gestion des utilisateurs
+                          </MenuItem>
+                        )}
+                        {hasAccessTo(auth, "page_gestion_roles") && (
+                          <MenuItem as={NavLink} to="/admin/roles" icon={<AccountFill boxSize={4} />}>
+                            Gestion des rôles
+                          </MenuItem>
+                        )}
+                        {hasAccessTo(auth, "page_upload") && (
+                          <MenuItem as={NavLink} to="/admin/upload" icon={<DownloadLine boxSize={4} />}>
+                            Upload de fichiers
+                          </MenuItem>
+                        )}
+                        {hasAccessTo(auth, "page_message_maintenance") && (
+                          <MenuItem as={NavLink} to="/admin/alert" icon={<InfoCircle boxSize={4} />}>
+                            Message de maintenance
+                          </MenuItem>
+                        )}
+                      </MenuGroup>
+                      <MenuDivider />
+                    </>
+                  )}
                   <MenuItem onClick={logout}>Déconnexion</MenuItem>
                 </MenuList>
               </Menu>

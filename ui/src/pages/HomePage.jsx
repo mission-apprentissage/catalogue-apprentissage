@@ -25,10 +25,13 @@ import { _get } from "../common/httpClient";
 import { ArrowRightLine, ExternalLinkLine } from "../theme/components/icons";
 import { Breadcrumb } from "../common/components/Breadcrumb";
 import { setTitle } from "../common/utils/pageUtils";
+import useAuth from "../common/hooks/useAuth";
+import { hasAccessTo } from "../common/utils/rolesUtils";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
 export default () => {
+  const [auth] = useAuth();
   const [loading, setLoading] = useState(true);
   const [countEstablishments, setCountEstablishments] = useState(0);
   const [countFormations, setCountFormations] = useState(0);
@@ -64,6 +67,14 @@ export default () => {
 
   const title = "Accueil";
   setTitle(title);
+
+  let suffixCatalogue = "";
+  if (hasAccessTo(auth, "page_catalogue/voir_filtres_ps") && !hasAccessTo(auth, "page_catalogue/voir_filtres_af")) {
+    suffixCatalogue = `?parcoursup_perimetre=%5B"Oui"%5D`;
+  }
+  if (hasAccessTo(auth, "page_catalogue/voir_filtres_af") && !hasAccessTo(auth, "page_catalogue/voir_filtres_ps")) {
+    suffixCatalogue = `?parcoursup_perimetre=%5B"Oui"%5D`;
+  }
 
   return (
     <Layout>
@@ -129,7 +140,12 @@ export default () => {
                 {loading && <Text>chargement...</Text>}
                 {!loading && (
                   <Flex flexDirection={["column", "column", "column", "row"]}>
-                    <Link as={NavLink} to={"/recherche/formations"} variant="card" w={["100%", "100%", "75%", "40%"]}>
+                    <Link
+                      as={NavLink}
+                      to={`/recherche/formations${suffixCatalogue}`}
+                      variant="card"
+                      w={["100%", "100%", "75%", "40%"]}
+                    >
                       <Text fontWeight="700" textStyle="h6">
                         {countFormations.toLocaleString("fr-FR")} formations
                       </Text>

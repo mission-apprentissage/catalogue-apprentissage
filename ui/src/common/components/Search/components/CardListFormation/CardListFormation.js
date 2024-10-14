@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { hasAccessTo } from "../../../../utils/rolesUtils";
 import useAuth from "../../../../hooks/useAuth";
-import { StatusBadge } from "../../../StatusBadge";
+import { PreviousStatusBadge, StatusBadge } from "../../../StatusBadge";
 import { Box, Flex, Link, Text } from "@chakra-ui/react";
 import { ArrowRightLine, InfoCircle } from "../../../../../theme/components/icons";
 import { QualiteBadge } from "../../../QualiteBadge";
@@ -65,6 +65,36 @@ export const CardListFormation = ({ data }) => {
 
                         {hasAccessTo(user, "page_formation/voir_status_publication_ps") && (
                           <StatusBadge mr={[0, 3]} text={"Parcoursup - hors périmètre"} />
+                        )}
+                      </>
+                    )}
+
+                  {hasAccessTo(user, "page_catalogue/voir_status_publication_ps") &&
+                    (data.parcoursup_perimetre ||
+                      data.parcoursup_previous_statut !== PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT) && (
+                      <>
+                        <PreviousStatusBadge source="Parcoursup" status={data.parcoursup_previous_statut} mr={[0, 3]} />
+                      </>
+                    )}
+                  {hasAccessTo(user, "page_catalogue/voir_status_publication_aff") &&
+                    (data.affelnet_perimetre ||
+                      data.affelnet_previous_statut !== AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT) && (
+                      <>
+                        <PreviousStatusBadge source="Affelnet" status={data.affelnet_previous_statut} mr={[0, 3]} />
+                      </>
+                    )}
+
+                  {!data.affelnet_perimetre &&
+                    !data.parcoursup_perimetre &&
+                    data.affelnet_previous_statut === AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT &&
+                    data.parcoursup_previous_statut === PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT && (
+                      <>
+                        {hasAccessTo(user, "page_formation/voir_status_publication_aff") && (
+                          <PreviousStatusBadge mr={[0, 3]} text={"Affelnet N-1 - hors périmètre"} />
+                        )}
+
+                        {hasAccessTo(user, "page_formation/voir_status_publication_ps") && (
+                          <PreviousStatusBadge mr={[0, 3]} text={"Parcoursup N-1 - hors périmètre"} />
                         )}
                       </>
                     )}
