@@ -27,3 +27,8 @@ export const hasAcademyRight = (auth, num_academie) => {
   const listAcademies = auth?.academie?.split(",")?.map((academieStr) => Number(academieStr));
   return hasAllAcademiesRight(auth) || listAcademies?.includes(Number(num_academie));
 };
+
+export const hasOnlyOneAcademyRight = (auth) => {
+  const listAcademies = auth?.academie?.split(",")?.map((academieStr) => Number(academieStr));
+  return !hasAllAcademiesRight(auth) && listAcademies?.length === 1;
+};

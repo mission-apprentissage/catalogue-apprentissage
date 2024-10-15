@@ -26,7 +26,8 @@ import { ArrowRightLine, ExternalLinkLine } from "../theme/components/icons";
 import { Breadcrumb } from "../common/components/Breadcrumb";
 import { setTitle } from "../common/utils/pageUtils";
 import useAuth from "../common/hooks/useAuth";
-import { hasAccessTo } from "../common/utils/rolesUtils";
+import { hasAccessTo, hasOnlyOneAcademyRight } from "../common/utils/rolesUtils";
+import { academies } from "../constants/academies";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -68,12 +69,18 @@ export default () => {
   const title = "Accueil";
   setTitle(title);
 
-  let suffixCatalogue = "";
+  let suffixCatalogue = "?";
   if (hasAccessTo(auth, "page_catalogue/voir_filtres_ps") && !hasAccessTo(auth, "page_catalogue/voir_filtres_aff")) {
-    suffixCatalogue = `?parcoursup_perimetre=%5B"Oui"%5D`;
+    suffixCatalogue += `parcoursup_perimetre=%5B"Oui"%5D`;
+  } else if (
+    hasAccessTo(auth, "page_catalogue/voir_filtres_aff") &&
+    !hasAccessTo(auth, "page_catalogue/voir_filtres_ps")
+  ) {
+    suffixCatalogue += `affelnet_perimetre=%5B"Oui"%5D`;
   }
-  if (hasAccessTo(auth, "page_catalogue/voir_filtres_aff") && !hasAccessTo(auth, "page_catalogue/voir_filtres_ps")) {
-    suffixCatalogue = `?affelnet_perimetre=%5B"Oui"%5D`;
+
+  if (hasOnlyOneAcademyRight(auth)) {
+    suffixCatalogue += `&nom_academie=%5B"${academies[auth.academie]?.nom_academie}"%5D`;
   }
 
   return (

@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { Box, Container, Flex, Link, Text } from "@chakra-ui/react";
 import useAuth from "../../../common/hooks/useAuth";
-import { hasAccessTo } from "../../../common/utils/rolesUtils";
+import { hasAccessTo, hasOnlyOneAcademyRight } from "../../../common/utils/rolesUtils";
 import { MenuFill, Close } from "../../../theme/components/icons";
+import { academies } from "../../../constants/academies";
 
 const NavigationMenu = (props) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -56,12 +57,18 @@ const NavItem = ({ children, to = "/", exact, ...rest }) => {
 const NavLinks = ({ isOpen }) => {
   const [auth] = useAuth();
 
-  let suffixCatalogue = "";
+  let suffixCatalogue = "?";
   if (hasAccessTo(auth, "page_catalogue/voir_filtres_ps") && !hasAccessTo(auth, "page_catalogue/voir_filtres_aff")) {
-    suffixCatalogue = `?parcoursup_perimetre=%5B"Oui"%5D`;
+    suffixCatalogue += `parcoursup_perimetre=%5B"Oui"%5D`;
+  } else if (
+    hasAccessTo(auth, "page_catalogue/voir_filtres_aff") &&
+    !hasAccessTo(auth, "page_catalogue/voir_filtres_ps")
+  ) {
+    suffixCatalogue += `affelnet_perimetre=%5B"Oui"%5D`;
   }
-  if (hasAccessTo(auth, "page_catalogue/voir_filtres_aff") && !hasAccessTo(auth, "page_catalogue/voir_filtres_ps")) {
-    suffixCatalogue = `?affelnet_perimetre=%5B"Oui"%5D`;
+
+  if (hasOnlyOneAcademyRight(auth)) {
+    suffixCatalogue += `&nom_academie=%5B"${academies[auth.academie]?.nom_academie}"%5D`;
   }
 
   return (
