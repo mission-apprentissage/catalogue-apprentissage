@@ -650,6 +650,7 @@ export default () => {
                   </Box>
                   {hasRightToEdit &&
                     formation.catalogue_published &&
+                    (formation.parcoursup_session || formation.affelnet_session) &&
                     (![PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT].includes(
                       formation.parcoursup_statut
                     ) ||
