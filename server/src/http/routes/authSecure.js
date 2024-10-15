@@ -54,7 +54,6 @@ module.exports = ({ users }) => {
    *                  message:
    *                    type: string
    *                    example: "Utilisateur non trouvé"
-   *
    */
   router.post(
     "/login",
@@ -65,7 +64,7 @@ module.exports = ({ users }) => {
       if (!user)
         return res.status(401).json({
           message: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(username.trim().toLowerCase())
-            ? "Email ou mot de passe incorrect, veuillez vérifier votre saisie.. Vous pouvez essayer en saisissant l'email de la région académique (par ex. thomas.dupont@region-academique-hauts-de-france.fr). Sinon, contactez l'équipe technique catalogue catalogue@apprentissage.beta.gouv.fr"
+            ? "Email ou mot de passe incorrect, veuillez vérifier votre saisie. Vous pouvez essayer en saisissant l’email de la région académique (par ex. thomas.dupont@region-academique-hauts-de-france.fr). Si nécessaire signalez un mot de passe oublié. En cas de difficulté, vous contactez l’équipe support par courriel : catalogue@apprentissage@beta.gouv.fr"
             : "Identifiant inconnu ou mot de passe incorrect, veuillez vérifier votre saisie. Vous pouvez utiliser votre adresse courriel en tant qu’identifiant. Si nécessaire signalez un mot de passe oublié. En cas de difficulté, vous contactez l’équipe support par courriel : catalogue@apprentissage@beta.gouv.fr",
         });
 
