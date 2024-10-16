@@ -729,11 +729,11 @@ export default () => {
                         formation.parcoursup_statut === PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT && (
                           <>
                             {hasAccessTo(user, "page_formation/voir_status_publication_aff") && (
-                              <StatusBadge mr={[0, 3]} text={"Affelnet - hors périmètre"} />
+                              <StatusBadge mr={[0, 3]} source="Affelnet" status="hors périmètre" />
                             )}
 
                             {hasAccessTo(user, "page_formation/voir_status_publication_ps") && (
-                              <StatusBadge mr={[0, 3]} text={"Parcoursup - hors périmètre"} />
+                              <StatusBadge mr={[0, 3]} source="Parcoursup" status="hors périmètre" />
                             )}
                           </>
                         )}

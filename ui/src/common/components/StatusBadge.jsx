@@ -95,7 +95,7 @@ export const PreviousStatusBadge = ({ source, status, created_at, text, ...badge
       <Flex alignItems="center" mx={2}>
         {/* <Icon variant={variant} /> */}
         <Text as={"span"} whiteSpace={"break-spaces"}>
-          {text ? `${text} N-1` : source ? `${source} N-1 - ${status}` : `${status}`}
+          {text ? `${text}` : source ? `${source} N-1 - ${status}` : `N-1 - ${status}`}
         </Text>
       </Flex>
     </Badge>
