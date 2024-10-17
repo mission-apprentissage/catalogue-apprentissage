@@ -997,7 +997,7 @@ export const quickFiltersDefinition = [
     },
   },
 
-  { type: "divider", acl: "page_catalogue/voir_status_publication_ps" },
+  { type: "divider", acl: "page_catalogue/voir_filtres_ps" },
 
   {
     componentId: `parcoursup_perimetre`,
@@ -1007,7 +1007,7 @@ export const quickFiltersDefinition = [
     filterLabel: "Dans le périmètre Parcoursup",
     selectAllLabel: "Tous",
     sortBy: "desc",
-    acl: "page_catalogue/voir_status_publication_ps",
+    acl: "page_catalogue/voir_filtres_ps",
     helpTextSection: helpText.search.parcoursup_perimetre,
     transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
     customQuery: (values) => {
@@ -1032,7 +1032,7 @@ export const quickFiltersDefinition = [
     filterLabel: "Statut Parcoursup",
     selectAllLabel: "Tous",
     sortBy: "desc",
-    acl: "page_catalogue/voir_status_publication_ps",
+    acl: "page_catalogue/voir_filtres_ps",
     helpTextSection: helpText.search.parcoursup_statut,
   },
 
@@ -1044,7 +1044,7 @@ export const quickFiltersDefinition = [
     filterLabel: "Statut sur la précédente campagne Parcoursup ",
     selectAllLabel: "Tous",
     sortBy: "count",
-    acl: "page_catalogue/voir_status_publication_ps",
+    acl: "page_catalogue/voir_filtres_ps",
     helpTextSection: helpText.search.parcoursup_previous_statut,
   },
 
@@ -1166,7 +1166,7 @@ export const quickFiltersDefinition = [
     filterLabel: "Dans le périmètre Affelnet",
     selectAllLabel: "Tous",
     sortBy: "desc",
-    acl: "page_catalogue/voir_status_publication_aff",
+    acl: "page_catalogue/voir_filtres_aff",
     helpTextSection: helpText.search.affelnet_perimetre,
     transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
     customQuery: (values) => {
@@ -1191,7 +1191,7 @@ export const quickFiltersDefinition = [
     filterLabel: "Statut Affelnet",
     selectAllLabel: "Tous",
     sortBy: "desc",
-    acl: "page_catalogue/voir_status_publication_aff",
+    acl: "page_catalogue/voir_filtres_aff",
     helpTextSection: helpText.search.affelnet_statut,
   },
 
@@ -1203,7 +1203,7 @@ export const quickFiltersDefinition = [
     filterLabel: "Statut sur la précédente campagne Affelnet",
     selectAllLabel: "Tous",
     sortBy: "count",
-    acl: "page_catalogue/voir_status_publication_aff",
+    acl: "page_catalogue/voir_filtres_aff",
     helpTextSection: helpText.search.affelnet_previous_statut,
   },
 
@@ -1556,8 +1556,7 @@ export const dataSearch = {
     "id_certifinfo",
     "cle_ministere_educatif",
   ],
-  placeholder:
-    "Saisissez une raison sociale, un Siret, un intitulé de formation, un code RNCP ou CFD (code formation diplôme)",
+  placeholder: "Saisissez votre recherche",
   fieldWeights: [5, 4, 4, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1],
 };
 
