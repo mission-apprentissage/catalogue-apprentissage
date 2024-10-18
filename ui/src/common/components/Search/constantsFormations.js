@@ -966,36 +966,6 @@ export const quickFiltersDefinition = [
     selectAllLabel: "Toutes les académies",
     sortBy: "asc",
   },
-  {
-    componentId: `agriculture`,
-    type: "facet",
-    dataField: "agriculture",
-    title: "Formations agricoles",
-    filterLabel: "Formations agricoles",
-    selectAllLabel: "Toutes les formations",
-    sortBy: "asc",
-    transformData: (data) =>
-      data.map((d) => ({
-        ...d,
-        key: {
-          1: "Oui",
-          0: "Non",
-          null: "Pas d'information",
-        }[d.key],
-      })),
-    customQuery: (values) => {
-      if (values.length && !values.includes("Tous")) {
-        return {
-          query: {
-            terms: {
-              agriculture: values.map((value) => ({ Oui: true, Non: false, "Pas d'information": null })[value]),
-            },
-          },
-        };
-      }
-      return {};
-    },
-  },
 
   { type: "divider", acl: "page_catalogue/voir_filtres_ps" },
 
@@ -1407,6 +1377,55 @@ export const quickFiltersDefinition = [
   },
 
   {
+    componentId: `agriculture`,
+    type: "facet",
+    dataField: "agriculture",
+    title: "Formations agricoles",
+    filterLabel: "Formations agricoles",
+    selectAllLabel: "Toutes les formations",
+    sortBy: "asc",
+    transformData: (data) =>
+      data.map((d) => ({
+        ...d,
+        key: {
+          1: "Oui",
+          0: "Non",
+          null: "Pas d'information",
+        }[d.key],
+      })),
+    customQuery: (values) => {
+      if (values.length && !values.includes("Tous")) {
+        return {
+          query: {
+            terms: {
+              agriculture: values.map((value) => ({ Oui: true, Non: false, "Pas d'information": null })[value]),
+            },
+          },
+        };
+      }
+      return {};
+    },
+  },
+
+  {
+    componentId: `niveau`,
+    type: "facet",
+    dataField: "niveau.keyword",
+    title: "Niveau visé",
+    filterLabel: "Niveau visé",
+    selectAllLabel: "Tous les niveaux",
+    sortBy: "asc",
+  },
+
+  {
+    componentId: `last_statut_update_date`,
+    type: "date-range",
+    dataField: "last_statut_update_date",
+    title: "Dernière mise à jour du statut",
+    filterLabel: "Statut modifié",
+  },
+
+  {
     type: "advanced",
     openText: "Masquer les filtres avancés (niveau, durée, dates...)",
     closeText: "Filtres avancés (niveau, durée, dates...)",
@@ -1441,15 +1460,7 @@ export const quickFiltersDefinition = [
       //     },
       //   }),
       // },
-      {
-        componentId: `niveau`,
-        type: "facet",
-        dataField: "niveau.keyword",
-        title: "Niveau visé",
-        filterLabel: "Niveau visé",
-        selectAllLabel: "Tous les niveaux",
-        sortBy: "asc",
-      },
+
       {
         componentId: `tags`,
         type: "facet",
@@ -1516,13 +1527,6 @@ export const quickFiltersDefinition = [
           }
           return {};
         },
-      },
-      {
-        componentId: `last_statut_update_date`,
-        type: "date-range",
-        dataField: "last_statut_update_date",
-        title: "Dernière mise à jour du statut",
-        filterLabel: "Statut modifié",
       },
 
       {
