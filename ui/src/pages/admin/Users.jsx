@@ -32,7 +32,7 @@ import { useQuery } from "react-query";
 import { academies } from "../../constants/academies";
 import { PasswordInput } from "../../common/components/PasswordInput";
 
-const ACADEMIES = Object.keys(academies).sort((a, b) => Number(a) - Number(b));
+const ACADEMIES = new Map(Object.entries(academies));
 
 const buildRolesAcl = (newRoles, roles) => {
   let acl = [];
@@ -243,10 +243,6 @@ const UserLine = ({ user, roles }) => {
       <FormControl py={2}>
         <FormLabel>Rôles</FormLabel>
         <HStack wrap="wrap" spacing={"4%"}>
-          {/* <Checkbox name="roles" onChange={handleRoleChange} value={"user"} isDisabled isChecked>
-            user
-          </Checkbox> */}
-
           {roles.map((role, i) => {
             return (
               <Checkbox
@@ -334,20 +330,22 @@ const UserLine = ({ user, roles }) => {
             Toutes
           </Checkbox>
 
-          {ACADEMIES.map((num, i) => {
-            return (
-              <Checkbox
-                key={i}
-                name="accessAcademieList"
-                onChange={(event) => handleAcademieChange(event.target.value)}
-                value={num}
-                isChecked={values.accessAcademieList.includes(num)}
-                mb={3}
-              >
-                {academies[num].nom_academie} ({num})
-              </Checkbox>
-            );
-          })}
+          {[...ACADEMIES.entries()]
+            .sort(([, aValue], [, bValue]) => aValue.nom_academie.localeCompare(bValue.nom_academie))
+            .map(([key]) => {
+              return (
+                <Checkbox
+                  key={key}
+                  name="accessAcademieList"
+                  onChange={(event) => handleAcademieChange(event.target.value)}
+                  value={key}
+                  isChecked={values.accessAcademieList.includes(key)}
+                  mb={3}
+                >
+                  {academies[key].nom_academie} ({key})
+                </Checkbox>
+              );
+            })}
         </HStack>
       </FormControl>
 
