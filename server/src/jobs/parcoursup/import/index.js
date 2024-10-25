@@ -1,5 +1,6 @@
 const logger = require("../../../common/logger");
 const { Formation } = require("../../../common/models");
+const { cle_ministere_educatif } = require("../../../common/models/schema/affelnetFormation");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
 const { buildUpdatesHistory } = require("../../../logic/common/utils/diffUtils");
 const { runScript } = require("../../scriptWrapper");
@@ -22,13 +23,11 @@ const psImport = async () => {
     const results = await getFormations();
 
     console.log(
-      results
-        .filter(({ status }) => status === STATUS.NEW_LINK)
-        .map(({ g_ta_cod: parcoursup_id, status, rco: cle_ministere_educatif }) => ({
-          parcoursup_id,
-          status,
-          cle_ministere_educatif,
-        }))
+      results.map(({ g_ta_cod: parcoursup_id, status, rco: cle_ministere_educatif }) => ({
+        parcoursup_id,
+        status,
+        cle_ministere_educatif,
+      }))
     );
 
     const statusesCount = results.reduce(function (prev, cur) {
@@ -38,14 +37,53 @@ const psImport = async () => {
 
     let closed = 0,
       linked = 0,
+      published = 0,
       canceled = 0;
 
     console.log(statusesCount);
+
+    const publishedCleME = [];
 
     for (const { g_ta_cod: parcoursup_id, status, rco: cle_ministere_educatif } of results) {
       const date = new Date();
 
       switch (status) {
+        case STATUS.PUBLISHED: {
+          const publishedFormation = await Formation.findOne({
+            cle_ministere_educatif,
+          });
+          const update = { parcoursup_published: true, last_update_at: date, last_update_who: "Parcoursup" };
+
+          if (!publishedFormation) {
+            console.warn(`published not found : ${cle_ministere_educatif}`);
+          } else {
+            console.log(`published : ${publishedFormation?.cle_ministere_educatif}`);
+          }
+
+          publishedFormation && !publishedFormation.parcoursup_published &&
+            (published += (
+              await Formation.updateOne(
+                {
+                  cle_ministere_educatif: publishedFormation.cle_ministere_educatif,
+                  parcoursup_published: { $ne: true },
+                },
+                {
+                  ...update,
+                  $push: {
+                    updates_history: buildUpdatesHistory(publishedFormation, update, [
+                      "last_update_at",
+                      "last_update_who",
+                      "parcoursup_published",
+                    ]),
+                  },
+                }
+              )
+            ).nModified);
+
+          publishedFormation && publishedCleME.push(publishedFormation.cle_ministere_educatif);
+          break;
+        }
+
         case STATUS.CANCELED_PUBLICATION: {
           const canceledFormations = await Formation.find({
             $or: [{ cle_ministere_educatif }, { parcoursup_id }],
@@ -167,7 +205,10 @@ const psImport = async () => {
       }
     }
 
-    logger.debug({ closed, linked, canceled });
+    logger.debug({ closed, linked, canceled, published });
+
+    await Formation.updateMany({ cle_ministere_educatif: { $nin: publishedCleME } }, { parcoursup_published: false });
+
 
     logger.info({ type: "job" }, " -- PARCOURSUP | IMPORT : ✅  -- ");
   } catch (error) {

@@ -53,6 +53,11 @@ const parcoursupSchema = {
     default: null,
     description: 'Date de publication (passage au statut "publié")',
   },
+  parcoursup_published: {
+    type: Boolean,
+    default: null,
+    description: "Publié sur le moteur de recherche Parcoursup",
+  },
   parcoursup_export_date: {
     type: Date,
     default: null,

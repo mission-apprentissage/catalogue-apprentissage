@@ -20,7 +20,7 @@ import { useFormik } from "formik";
 
 import Layout from "../layout/Layout";
 import helpText from "../../locales/helpText.json";
-import { ArrowDownLine, MapPin2Fill } from "../../theme/components/icons";
+import { ArrowDownLine, ExternalLinkLine, MapPin2Fill } from "../../theme/components/icons";
 import { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL } from "../../constants/catalogueLabels";
 import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
 
@@ -787,6 +787,25 @@ export default () => {
                       : <b>{formation.parcoursup_raison_depublication}</b>
                     </Alert>
                   )}
+
+                {hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
+                  formation.parcoursup_published &&
+                  formation.parcoursup_id && (
+                    <Alert mt={4} type={"info"}>
+                      Cette offre est visible sur le{" "}
+                      <Link
+                        target="_blank"
+                        href={`https://dossierappel.parcoursup.fr/Candidats/public/fiches/afficherFicheFormation?g_ta_cod=${formation.parcoursup_id}`}
+                        variant="outlined"
+                        isExternal
+                      >
+                        moteur de recherche Parcoursup&nbsp;
+                        <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
+                      </Link>
+                      .
+                    </Alert>
+                  )}
+
                 {hasAccessTo(user, "page_formation/voir_status_publication_af") &&
                   formation.affelnet_raison_depublication && (
                     <Alert mt={4} type={"warning"}>
