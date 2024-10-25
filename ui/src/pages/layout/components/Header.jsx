@@ -66,7 +66,7 @@ const Header = () => {
                     <AccountFill color={"bluefrance"} mt="0.3rem" boxSize={4} />
                     <Box display={["none", "none", "block"]} ml={2}>
                       <Text color="bluefrance" textStyle="sm">
-                        {auth.sub}{" "}
+                        {auth.email}{" "}
                         <Text color="grey.600" as="span">
                           ({isUserAdmin(auth) ? "admin" : "Utilisateur"})
                         </Text>

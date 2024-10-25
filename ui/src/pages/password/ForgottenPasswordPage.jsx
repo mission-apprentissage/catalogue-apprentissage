@@ -34,7 +34,7 @@ const ForgottenPasswordPage = () => {
             username: "",
           }}
           validationSchema={Yup.object().shape({
-            username: Yup.string().required("Veuillez saisir un identifiant"),
+            username: Yup.string().required("Veuillez saisir une adresse courriel."),
           })}
           onSubmit={resetPassword}
         >
@@ -45,8 +45,8 @@ const ForgottenPasswordPage = () => {
                   {({ field, meta }) => {
                     return (
                       <FormControl isRequired isInvalid={meta.error && meta.touched} marginBottom="2w">
-                        <FormLabel>Identifiant</FormLabel>
-                        <Input {...field} id={field.name} placeholder="Votre identifiant..." />
+                        <FormLabel>Identifiant (adresse courriel)</FormLabel>
+                        <Input {...field} id={field.name} placeholder="Votre adresse courriel..." />
                         <FormErrorMessage>{meta.error}</FormErrorMessage>
                       </FormControl>
                     );

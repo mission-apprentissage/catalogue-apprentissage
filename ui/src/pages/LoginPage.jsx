@@ -63,7 +63,7 @@ const LoginPage = () => {
                       {({ field, meta }) => (
                         <FormControl isRequired isInvalid={meta.error && meta.touched} marginBottom="2w">
                           <FormLabel>Identifiant (adresse courriel)</FormLabel>
-                          <Input {...field} id={field.name} placeholder="Votre identifiant..." />
+                          <Input {...field} id={field.name} placeholder="Votre adresse courriel..." />
                           <FormErrorMessage>{meta.error}</FormErrorMessage>
                         </FormControl>
                       )}

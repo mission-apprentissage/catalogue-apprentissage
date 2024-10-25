@@ -410,10 +410,10 @@ export default () => {
 
               {roles &&
                 users
-                  ?.sort((a, b) => a.username.localeCompare(b.username))
+                  ?.sort((a, b) => a.email.localeCompare(b.email))
                   ?.map((user) => {
                     return (
-                      <AccordionItem key={user.username}>
+                      <AccordionItem key={user.email}>
                         {({ isExpanded }) => (
                           <>
                             <AccordionButton
@@ -422,7 +422,7 @@ export default () => {
                               borderColor={"bluefrance"}
                             >
                               <Box flex="1" textAlign="left" fontSize="gamma">
-                                {user.username}{" "}
+                                {user.email}{" "}
                                 {user.tag && (
                                   <Tag borderRadius="full" variant="subtle" colorScheme="orange">
                                     {user.tag}
