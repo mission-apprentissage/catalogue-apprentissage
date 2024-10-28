@@ -11,6 +11,7 @@ const STATUS = {
   CANCELED_PUBLICATION: "Publication annulée suite à suppression de la formation dans Parcoursup",
   NEW_LINK: "Clé ME ajoutée manuellement dans Parcoursup",
   CLOSED: "Formation déclarée fermée dans Parcoursup",
+  PUBLISHED: "Publié sur le MDR"
 };
 
 /**
