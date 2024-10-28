@@ -28,17 +28,22 @@ const updateRelationFields = async ({ filter = {} }) => {
 const computeRelationFields = async (fields) => {
   const etablissementGestionnaire = await Etablissement.findOne({ siret: fields.etablissement_gestionnaire_siret });
   const etablissementFormateur = await Etablissement.findOne({ siret: fields.etablissement_formateur_siret });
+  const etablissementLieu = await Etablissement.findOne({ siret: fields.lieu_formation_siret });
 
   const etablissement_gestionnaire_id = etablissementGestionnaire?.id;
   const etablissement_formateur_id = etablissementFormateur?.id;
+  const lieu_formation_id = etablissementLieu?.id;
   const etablissement_gestionnaire_published = etablissementGestionnaire?.published;
   const etablissement_formateur_published = etablissementFormateur?.published;
+  const lieu_formation_published = etablissementLieu?.published;
 
   return {
     etablissement_gestionnaire_id,
     etablissement_formateur_id,
+    lieu_formation_id,
     etablissement_gestionnaire_published,
     etablissement_formateur_published,
+    lieu_formation_published,
   };
 };
 
@@ -66,7 +71,7 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
     fields?.num_academie !== oldFields?.num_academie ||
     fields?.rncp_details?.code_type_certif !== oldFields?.rncp_details?.code_type_certif ||
     new Date(fields?.rncp_details?.date_fin_validite_enregistrement).getTime() !==
-      new Date(oldFields?.rncp_details?.date_fin_validite_enregistrement).getTime() ||
+    new Date(oldFields?.rncp_details?.date_fin_validite_enregistrement).getTime() ||
     new Date(fields?.cfd_date_fermeture).getTime() !== new Date(oldFields?.cfd_date_fermeture).getTime() ||
     arrayDiff(fields?.date_debut, oldFields?.date_debut).length
   ) {
@@ -201,20 +206,20 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
     oldFields?.parcoursup_statut
   )
     ? oldFields?.updates_history?.filter(
-        (history) =>
-          history?.to?.parcoursup_statut === PARCOURSUP_STATUS.EN_ATTENTE &&
-          new Date(history.updated_at).getTime() >= campagneStartDate.getTime() - 365 * 24 * 60 * 60 * 1000
-      ).length === 0
+      (history) =>
+        history?.to?.parcoursup_statut === PARCOURSUP_STATUS.EN_ATTENTE &&
+        new Date(history.updated_at).getTime() >= campagneStartDate.getTime() - 365 * 24 * 60 * 60 * 1000
+    ).length === 0
     : null;
 
   const affelnet_publication_auto = [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.EN_ATTENTE].includes(
     oldFields?.affelnet_statut
   )
     ? oldFields?.updates_history?.filter(
-        (history) =>
-          history?.to?.affelnet_statut === AFFELNET_STATUS.EN_ATTENTE &&
-          new Date(history.updated_at).getTime() >= campagneStartDate.getTime() - 365 * 24 * 60 * 60 * 1000
-      ).length === 0
+      (history) =>
+        history?.to?.affelnet_statut === AFFELNET_STATUS.EN_ATTENTE &&
+        new Date(history.updated_at).getTime() >= campagneStartDate.getTime() - 365 * 24 * 60 * 60 * 1000
+    ).length === 0
     : null;
 
   // Les MEF permettant une intégration SLA :
@@ -339,12 +344,12 @@ const applyConversion = async (
 ) => {
   let dcFilter = Object.entries(filter).length
     ? {
-        cle_ministere_educatif: {
-          $in: (await Formation.find(filter).select({ cle_ministere_educatif: 1 })).map(
-            (formation) => formation.cle_ministere_educatif
-          ),
-        },
-      }
+      cle_ministere_educatif: {
+        $in: (await Formation.find(filter).select({ cle_ministere_educatif: 1 })).map(
+          (formation) => formation.cle_ministere_educatif
+        ),
+      },
+    }
     : {};
 
   if (Object.entries(dcFilter).length) {

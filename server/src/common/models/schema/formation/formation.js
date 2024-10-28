@@ -144,6 +144,16 @@ const formationSchema = {
     default: null,
     description: "Localité",
   },
+  uai_formationcert: {
+    index: true,
+    type: String,
+    default: null,
+    description: "UAI du lieu de la formation",
+    // validate: {
+    //   validator: async (value) => !value || (await isValideUAI(value)),
+    //   message: (props) => `${props.value} n'est pas un code UAI valide.`,
+    // },
+  },
   uai_formation: {
     index: true,
     type: String,
@@ -367,6 +377,16 @@ const formationSchema = {
     default: null,
     description: "Siret du lieu de formation",
   },
+  lieu_formation_id: {
+    type: String,
+    default: null,
+    description: "Identifiant lieu de formation",
+  },
+  lieu_formation_published: {
+    type: Boolean,
+    default: false,
+    description: "Lieu de formation est publié",
+  },
   id_rco_formation: {
     index: true,
     type: String,
@@ -396,6 +416,11 @@ const formationSchema = {
     type: String,
     default: null,
     description: "Identifiant certifInfo (unicité de la certification)",
+  },
+  intitule_certifinfo: {
+    type: String,
+    default: null,
+    description: "Libellé certifInfo",
   },
   tags: {
     type: [String],

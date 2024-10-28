@@ -10,6 +10,8 @@ import { HABILITE_LIST } from "../../../constants/certificateurs";
 import { EllipsisText } from "../EllipsisText";
 import { getExpirationDate, isInSession } from "../../utils/rulesUtils";
 import { DateContext } from "../../../DateContext";
+import { hasAccessTo } from "../../utils/rolesUtils";
+import useAuth from "../../hooks/useAuth";
 
 // const endpointLBA = process.env.REACT_APP_ENDPOINT_LBA || "https://labonnealternance.apprentissage.beta.gouv.fr";
 const endpointPublic = process.env.REACT_APP_ENDPOINT_PUBLIC || "https://catalogue-apprentissage.intercariforef.org";
@@ -35,6 +37,7 @@ const DureeAnnee = ({ value }) => {
 
 export const DescriptionBlock = ({ formation }) => {
   const { campagneStartDate, sessionStartDate, sessionEndDate } = useContext(DateContext);
+  const user = useAuth();
 
   const toast = useToast();
   const isTitreRNCP = ["Titre", "TP", null].includes(formation.rncp_details?.code_type_certif); // formation.etablissement_reference_habilite_rncp !== null;
@@ -179,6 +182,23 @@ export const DescriptionBlock = ({ formation }) => {
                 {/* <ClipboardLine w={"0.75rem"} h={"0.75rem"} ml={2} /> */}
               </Button>
             </ListItem>
+
+            {hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
+              formation.parcoursup_published &&
+              formation.parcoursup_id && (
+                <ListItem ml={4}>
+                  <Link
+                    target="_blank"
+                    href={`https://dossierappel.parcoursup.fr/Candidats/public/fiches/afficherFicheFormation?g_ta_cod=${formation.parcoursup_id}`}
+                    variant="outlined"
+                    isExternal
+                  >
+                    Site Public Parcoursup&nbsp;
+                    <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
+                  </Link>
+                  .
+                </ListItem>
+              )}
           </List>
         </Box>
 
@@ -463,7 +483,13 @@ export const DescriptionBlock = ({ formation }) => {
           <Text mb={4}>
             Clé ministères éducatifs :{" "}
             <Text as="span" variant="highlight">
-              {formation.cle_ministere_educatif ?? "N/A"}
+              {formation.cle_ministere_educatif ?? "N/A"}{" "}
+              {formation.cle_me_remplace?.length && (
+                <>
+                  (version{formation.cle_me_remplace?.length > 1 && "s"} remplacée
+                  {formation.cle_me_remplace?.length > 1 && "s"} : {formation.cle_me_remplace?.join(", ")})
+                </>
+              )}
             </Text>
           </Text>
           {formation.parcoursup_id && (
@@ -502,6 +528,7 @@ export const DescriptionBlock = ({ formation }) => {
           </Text>
         </Box>
       </Box>
+
       <Box p={8}>
         <Text textStyle="h4" colorc="grey.800" mb={4}>
           Informations RNCP et ROME

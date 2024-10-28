@@ -20,7 +20,7 @@ import { useFormik } from "formik";
 
 import Layout from "../layout/Layout";
 import helpText from "../../locales/helpText.json";
-import { ArrowDownLine, ExternalLinkLine, MapPin2Fill } from "../../theme/components/icons";
+import { ArrowDownLine, MapPin2Fill } from "../../theme/components/icons";
 import { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL } from "../../constants/catalogueLabels";
 import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
 
@@ -47,107 +47,6 @@ import { ReinitStatutModalButton } from "../../common/components/formation/Reini
 import { DateContext } from "../../DateContext";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
-
-const VersionBlock = ({ formation }) => {
-  const cle_me_remplace_par = formation?.cle_me_remplace_par;
-  const cle_me_remplace = formation?.cle_me_remplace;
-
-  if (!cle_me_remplace_par?.length && !cle_me_remplace?.length) {
-    return null;
-  }
-
-  return (
-    <>
-      {!!cle_me_remplace_par?.length && (
-        <Alert mt={4} type={"warning"}>
-          {(() => {
-            switch (true) {
-              case cle_me_remplace_par.length === 1:
-                return (
-                  <Flex>
-                    <Text mr={2}>Cette offre a été remplacée par une plus récente.</Text>{" "}
-                    <Link
-                      textDecoration={"underline"}
-                      href={`/formation/${encodeURIComponent(cle_me_remplace_par[0])}`}
-                    >
-                      Voir la nouvelle version de cette offre
-                    </Link>
-                  </Flex>
-                );
-              case cle_me_remplace_par.length > 1:
-                const link = `/recherche/formations?qb=${encodeURIComponent(
-                  JSON.stringify(
-                    cle_me_remplace_par.map((value, index) => ({
-                      field: "cle_ministere_educatif.keyword",
-                      operator: "===",
-                      value,
-                      combinator: "OR",
-                      index,
-                    }))
-                  )
-                )}&defaultMode="advanced"`;
-
-                return (
-                  <Flex>
-                    <Text mr={2}>Cette offre a été remplacée par plusieurs autres offres.</Text>{" "}
-                    <Link textDecoration={"underline"} href={link}>
-                      Voir la liste de toutes les nouvelles versions de cette fiche
-                    </Link>
-                  </Flex>
-                );
-              default: {
-                return <></>;
-              }
-            }
-          })()}
-        </Alert>
-      )}
-
-      {!!cle_me_remplace?.length && (
-        <Alert mt={4} type="infoLignt">
-          {(() => {
-            switch (true) {
-              case cle_me_remplace.length === 1:
-                return (
-                  <Flex>
-                    <Text mr={2}>Cette offre remplace une offre plus ancienne.</Text>{" "}
-                    <Link textDecoration={"underline"} href={`/formation/${encodeURIComponent(cle_me_remplace[0])}`}>
-                      Voir la précédente version de cette offre
-                    </Link>
-                  </Flex>
-                );
-
-              case cle_me_remplace.length > 1:
-                const link = `/recherche/formations?qb=${encodeURIComponent(
-                  JSON.stringify(
-                    cle_me_remplace.map((value, index) => ({
-                      field: "cle_ministere_educatif.keyword",
-                      operator: "===",
-                      value,
-                      combinator: "OR",
-                      index,
-                    }))
-                  )
-                )}&defaultMode="advanced"`;
-
-                return (
-                  <Flex>
-                    <Text mr={2}>Cette offre remplace par plusieurs autres offres.</Text>
-                    <Link textDecoration={"underline"} href={link}>
-                      Voir la liste de toutes les versions précédentes de cette fiche{" "}
-                    </Link>
-                  </Flex>
-                );
-              default: {
-                return <></>;
-              }
-            }
-          })()}
-        </Alert>
-      )}
-    </>
-  );
-};
 
 const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, values, hasRightToEdit }) => {
   // Distance tolérer entre l'adresse et les coordonnées transmise par RCO
@@ -212,13 +111,13 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
         </GridItem>
         <GridItem colSpan={[12, 12, 5]} py={8} px={[4, 4, 8]}>
           <Box mb={16}>
-            <Text textStyle="h4" color="grey.800">
+            <Text textStyle="h4" color="grey.800" mb={4}>
               <MapPin2Fill w="12px" h="15px" mr="5px" mb="5px" />
               Lieu de la formation
             </Text>
 
             <Box>
-              <UaiFormationContainer mb={4}>
+              <UaiFormationContainer my={4}>
                 <EditableField
                   fieldName={"uai_formation"}
                   label={"UAI du lieu de formation"}
@@ -310,6 +209,13 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
               </UaiFormationContainer>
 
               <AdresseContainer>
+                <Text mb={4}>
+                  Siret :{" "}
+                  <Text as="span" variant="highlight">
+                    {formation.lieu_formation_siret ?? "N/A"}
+                  </Text>{" "}
+                  {/* <InfoTooltip description={helpText.formation.lieu_formation_siret} /> */}
+                </Text>
                 <Text mb={4}>
                   Adresse :{" "}
                   <Text as="span" variant="highlight">
@@ -433,6 +339,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
               </Text>
             </Box>
           </Box>
+
           <Box mb={16}>
             <OrganismesBlock formation={formation} />
           </Box>
@@ -668,6 +575,16 @@ export default () => {
                           <>
                             <StatusBadge source="Parcoursup" status={formation.parcoursup_statut} mr={[0, 3]} />
 
+                            {formation.parcoursup_published && formation.parcoursup_id ? (
+                              <Badge variant={"ok"} minHeight={"28px"} mr={[0, 3]}>
+                                Parcoursup – Visible sur le site public (paramétré)
+                              </Badge>
+                            ) : (
+                              <Badge variant={"error"} minHeight={"28px"} mr={[0, 3]}>
+                                Parcoursup – Non visible sur le site public (non paramétré)
+                              </Badge>
+                            )}
+
                             {[PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.EN_ATTENTE].includes(
                               formation.parcoursup_statut
                             ) &&
@@ -758,7 +675,6 @@ export default () => {
                     </Flex>
                   </Flex>
                 )}
-                <VersionBlock formation={formation} />
 
                 {((formation.parcoursup_perimetre &&
                   // formation.parcoursup_previous_session &&
@@ -785,24 +701,6 @@ export default () => {
                         <> ({new Date(parcoursup_date_depublication).toLocaleDateString("fr-FR")})</>
                       )}{" "}
                       : <b>{formation.parcoursup_raison_depublication}</b>
-                    </Alert>
-                  )}
-
-                {hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
-                  formation.parcoursup_published &&
-                  formation.parcoursup_id && (
-                    <Alert mt={4} type={"info"}>
-                      Cette offre est visible sur le{" "}
-                      <Link
-                        target="_blank"
-                        href={`https://dossierappel.parcoursup.fr/Candidats/public/fiches/afficherFicheFormation?g_ta_cod=${formation.parcoursup_id}`}
-                        variant="outlined"
-                        isExternal
-                      >
-                        moteur de recherche Parcoursup&nbsp;
-                        <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
-                      </Link>
-                      .
                     </Alert>
                   )}
 

@@ -3,7 +3,7 @@ import React from "react";
 import { escapeDiacritics } from "../../utils/downloadUtils";
 import helpText from "../../../locales/helpText.json";
 import { CONTEXT } from "../../../constants/context";
-import { departements } from "../../../constants/departements";
+// import { departements } from "../../../constants/departements";
 import { annees } from "../../../constants/annees";
 import { sortDescending } from "../../utils/historyUtils";
 import { AffelnetMissingSession } from "./components/AffelnetMissingSession";
@@ -317,6 +317,12 @@ export const columnsDefinition = [
   {
     Header: "Lieu: région",
     accessor: "region",
+    width: 200,
+    exportable: true,
+  },
+  {
+    Header: "Lieu: Siret",
+    accessor: "lieu_formation_siret",
     width: 200,
     exportable: true,
   },
@@ -929,6 +935,7 @@ export const queryBuilderField = [
   },
   { text: "Organisme - Siret du responsable", value: "etablissement_gestionnaire_siret.keyword" },
   { text: "Organisme - Siret du formateur", value: "etablissement_formateur_siret.keyword" },
+  { text: "Organisme - Siret du lieu de formation", value: "lieu_formation_siret.keyword" },
   { text: "Organisme - UAI du responsable", value: "etablissement_gestionnaire_uai.keyword" },
   { text: "Organisme - UAI du formateur", value: "etablissement_formateur_uai.keyword" },
   { text: "Organisme - UAI du lieu de formation", value: "uai_formation.keyword" },
@@ -1549,6 +1556,7 @@ export const dataSearch = {
     "etablissement_formateur_raison_sociale_enseigne",
     "cfd",
     "rncp_code",
+    "lieu_formation_siret",
     "uai_formation",
     "etablissement_gestionnaire_uai",
     "etablissement_formateur_uai",

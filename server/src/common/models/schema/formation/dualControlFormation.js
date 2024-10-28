@@ -244,6 +244,17 @@ const formationSchema = {
     description: "Est publiée, la formation est éligible pour le catalogue",
   },
 
+  uai_formationcert: {
+    index: true,
+    type: String,
+    default: null,
+    description: "UAI du lieu de la formation",
+    // validate: {
+    //   validator: async (value) => !value || (await isValideUAI(value)),
+    //   message: (props) => `${props.value} n'est pas un code UAI valide.`,
+    // },
+  },
+
   lieu_formation_geo_coordonnees: {
     type: String,
     implicit_type: "geo_point",
