@@ -37,7 +37,7 @@ const DureeAnnee = ({ value }) => {
 
 export const DescriptionBlock = ({ formation }) => {
   const { campagneStartDate, sessionStartDate, sessionEndDate } = useContext(DateContext);
-  const user = useAuth();
+  const [user] = useAuth();
 
   const toast = useToast();
   const isTitreRNCP = ["Titre", "TP", null].includes(formation.rncp_details?.code_type_certif); // formation.etablissement_reference_habilite_rncp !== null;
@@ -142,63 +142,67 @@ export const DescriptionBlock = ({ formation }) => {
 
         <Box mt={4} mb={4} ml={-3}>
           <List textStyle="md" fontWeight="700" flexDirection={"row"} flexWrap={"wrap"} mb={[3, 3, 0]} display="flex">
-            {formation.onisep_url !== "" && formation.onisep_url !== null && (
-              <>
-                <ListItem ml={4}>
-                  <Link href={formation.onisep_url} variant="outlined" isExternal style={{ whiteSpace: "no-wrap" }}>
-                    Onisep&nbsp;
-                    <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
-                  </Link>
-                </ListItem>
+            {[
+              ...(formation.onisep_url !== "" && formation.onisep_url !== null
+                ? [
+                    <ListItem>
+                      <Link href={formation.onisep_url} variant="outlined" isExternal style={{ whiteSpace: "no-wrap" }}>
+                        Onisep&nbsp;
+                        <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
+                      </Link>
+                    </ListItem>,
+                  ]
+                : []),
 
-                <ListItem ml={4}>
-                  <Divider border="2px" orientation="vertical" />
-                </ListItem>
-              </>
-            )}
-            {/* {formation.catalogue_published && formation.tags.some((tag) => tagsForLBA.includes(+tag)) && (
-              <ListItem ml={4}>
-                <Link href={getLBAUrl(formation)} variant="outlined" isExternal style={{ whiteSpace: "no-wrap" }}>
-                  labonnealternance&nbsp;
+              <ListItem ml={2}>
+                <Link href={getPublicUrl(formation)} variant="outlined" isExternal style={{ whiteSpace: "no-wrap" }}>
+                  catalogue public&nbsp;
                   <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
                 </Link>
-              </ListItem>
-            )} */}
+                <Button
+                  variant="pill"
+                  display="inline-flex"
+                  cursor="pointer"
+                  ml={2}
+                  onClick={copyPublicLink}
+                  aria-label="Search database"
+                >
+                  Copier le lien
+                  {/* <ClipboardLine w={"0.75rem"} h={"0.75rem"} ml={2} /> */}
+                </Button>
+              </ListItem>,
 
-            <ListItem ml={4}>
-              <Link href={getPublicUrl(formation)} variant="outlined" isExternal style={{ whiteSpace: "no-wrap" }}>
-                catalogue public&nbsp;
-                <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
-              </Link>
-              <Button
-                variant="pill"
-                display="inline-flex"
-                cursor="pointer"
-                ml={2}
-                onClick={copyPublicLink}
-                aria-label="Search database"
-              >
-                Copier le lien
-                {/* <ClipboardLine w={"0.75rem"} h={"0.75rem"} ml={2} /> */}
-              </Button>
-            </ListItem>
-
-            {hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
+              ...(hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
               formation.parcoursup_published &&
-              formation.parcoursup_id && (
-                <ListItem ml={4}>
-                  <Link
-                    target="_blank"
-                    href={`https://dossierappel.parcoursup.fr/Candidats/public/fiches/afficherFicheFormation?g_ta_cod=${formation.parcoursup_id}`}
-                    variant="outlined"
-                    isExternal
-                  >
-                    Site Public Parcoursup&nbsp;
-                    <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
-                  </Link>
-                  .
-                </ListItem>
-              )}
+              formation.parcoursup_id
+                ? [
+                    <ListItem ml={2}>
+                      <Link
+                        target="_blank"
+                        href={`https://dossierappel.parcoursup.fr/Candidats/public/fiches/afficherFicheFormation?g_ta_cod=${formation.parcoursup_id}`}
+                        variant="outlined"
+                        isExternal
+                      >
+                        Site Public Parcoursup&nbsp;
+                        <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
+                      </Link>
+                      .
+                    </ListItem>,
+                  ]
+                : []),
+            ]
+              .map((item) => <ListItem ml={2}>{item}</ListItem>)
+              .reduce(
+                (acc, val) =>
+                  acc.concat(
+                    <ListItem ml={4}>
+                      <Divider border="2px" orientation="vertical" />
+                    </ListItem>,
+                    val
+                  ),
+                []
+              )
+              .slice(1)}
           </List>
         </Box>
 
