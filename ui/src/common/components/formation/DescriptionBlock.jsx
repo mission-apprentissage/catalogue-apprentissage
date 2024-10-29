@@ -10,7 +10,7 @@ import { HABILITE_LIST } from "../../../constants/certificateurs";
 import { EllipsisText } from "../EllipsisText";
 import { getExpirationDate, isInSession } from "../../utils/rulesUtils";
 import { DateContext } from "../../../DateContext";
-import { hasAccessTo } from "../../utils/rolesUtils";
+import { hasAccessTo, isUserAdmin } from "../../utils/rolesUtils";
 import useAuth from "../../hooks/useAuth";
 
 // const endpointLBA = process.env.REACT_APP_ENDPOINT_LBA || "https://labonnealternance.apprentissage.beta.gouv.fr";
@@ -487,7 +487,7 @@ export const DescriptionBlock = ({ formation }) => {
             Clé ministères éducatifs :{" "}
             <Text as="span" variant="highlight">
               {formation.cle_ministere_educatif ?? "N/A"}{" "}
-              {formation.cle_me_remplace?.length && (
+              {isUserAdmin(user) && formation.cle_me_remplace?.length && (
                 <>
                   (version{formation.cle_me_remplace?.length > 1 && "s"} remplacée
                   {formation.cle_me_remplace?.length > 1 && "s"} : {formation.cle_me_remplace?.join(", ")})
