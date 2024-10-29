@@ -186,7 +186,6 @@ export const DescriptionBlock = ({ formation }) => {
                         Site Public Parcoursup&nbsp;
                         <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
                       </Link>
-                      .
                     </ListItem>,
                   ]
                 : []),
