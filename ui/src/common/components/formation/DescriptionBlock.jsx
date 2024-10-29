@@ -133,6 +133,7 @@ export const DescriptionBlock = ({ formation }) => {
     [formation, toast]
   );
 
+  const previousCertifInfoCodes = formation?.cle_me_remplace?.map((cle) => +cle.slice(0, 6));
   return (
     <>
       <Box p={8}>
@@ -526,7 +527,42 @@ export const DescriptionBlock = ({ formation }) => {
           <Text mb={4}>
             Code Certif Info :{" "}
             <Text as="span" variant="highlight">
-              {formation.id_certifinfo ?? "N/A"}
+              {formation.id_certifinfo ? (
+                <Link
+                  href={`https://www.intercariforef.org/formations/certification-${formation.id_certifinfo}.html`}
+                  isExternal
+                >
+                  {formation.id_certifinfo}&nbsp;
+                  <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
+                </Link>
+              ) : (
+                "N/A"
+              )}
+
+              {previousCertifInfoCodes?.filter((code) => code !== formation.id_certifinfo).length > 0 && (
+                <>
+                  {" "}
+                  (version
+                  {previousCertifInfoCodes?.filter((code) => code !== formation.id_certifinfo)?.length > 1 && "s"}{" "}
+                  remplacé
+                  {previousCertifInfoCodes?.filter((code) => code !== formation.id_certifinfo)?.length > 1 &&
+                    "s"} :{" "}
+                  {previousCertifInfoCodes
+                    ?.filter((code) => code !== formation.id_certifinfo)
+                    ?.map((code, index) => (
+                      <>
+                        <Link href={`https://www.intercariforef.org/formations/certification-${code}.html`} isExternal>
+                          {code}&nbsp;
+                          <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
+                        </Link>
+                        {index !==
+                          previousCertifInfoCodes?.filter((code) => code !== formation.id_certifinfo)?.length - 1 &&
+                          ", "}
+                      </>
+                    ))}
+                  )
+                </>
+              )}
             </Text>
           </Text>
         </Box>
