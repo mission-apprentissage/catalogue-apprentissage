@@ -69,6 +69,7 @@ export const allowedFilters = [
   "parcoursup_previous_session",
   "parcoursup_previous_statut",
   "parcoursup_publication_auto",
+  "parcoursup_published",
   "parcoursup_published_date_end",
   "parcoursup_published_date_start",
   "parcoursup_session",
@@ -1104,6 +1105,39 @@ export const quickFiltersDefinition = [
         dataField: "parcoursup_publication_auto",
         title: "Publication automatique",
         filterLabel: "Publication automatique Parcoursup",
+        sortBy: "desc",
+        transformData: (data) => {
+          return data.map((d) => ({
+            ...d,
+            key: {
+              1: "Oui",
+              0: "Non",
+              null: "Pas d'information",
+            }[d.key],
+          }));
+        },
+        customQuery: (values) => {
+          if (values.length && !values.includes("Tous")) {
+            return {
+              query: {
+                terms: {
+                  parcoursup_publication_auto: values.map(
+                    (value) => ({ Oui: true, Non: false, "Pas d'information": null })[value]
+                  ),
+                },
+              },
+            };
+          }
+          return {};
+        },
+      },
+
+      {
+        componentId: `parcoursup_published`,
+        type: "facet",
+        dataField: "parcoursup_published",
+        title: "Visible moteur de recherche",
+        filterLabel: "Visible moteur de recherche Parcoursup",
         sortBy: "desc",
         transformData: (data) => {
           return data.map((d) => ({
