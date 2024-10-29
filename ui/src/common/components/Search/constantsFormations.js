@@ -1154,7 +1154,7 @@ export const quickFiltersDefinition = [
             return {
               query: {
                 terms: {
-                  parcoursup_publication_auto: values.map(
+                  parcoursup_published: values.map(
                     (value) => ({ Oui: true, Non: false, "Pas d'information": null })[value]
                   ),
                 },
