@@ -575,14 +575,18 @@ export default () => {
                           <>
                             <StatusBadge source="Parcoursup" status={formation.parcoursup_statut} mr={[0, 3]} />
 
-                            {formation.parcoursup_published && formation.parcoursup_id ? (
-                              <Badge variant={"published"} minHeight={"28px"} mr={[0, 3]}>
-                                Parcoursup – Visible sur le site public (paramétré)
-                              </Badge>
-                            ) : (
-                              <Badge variant={"error"} minHeight={"28px"} mr={[0, 3]}>
-                                Parcoursup – Non visible sur le site public (non paramétré)
-                              </Badge>
+                            {[PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut) && (
+                              <>
+                                {formation.parcoursup_published && formation.parcoursup_id ? (
+                                  <Badge variant={"published"} minHeight={"28px"} mr={[0, 3]}>
+                                    Parcoursup – Visible sur le site public (paramétré)
+                                  </Badge>
+                                ) : (
+                                  <Badge variant={"error"} minHeight={"28px"} mr={[0, 3]}>
+                                    Parcoursup – Non visible sur le site public (non paramétré)
+                                  </Badge>
+                                )}
+                              </>
                             )}
 
                             {[PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.EN_ATTENTE].includes(
