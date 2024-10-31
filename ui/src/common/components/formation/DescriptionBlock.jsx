@@ -166,7 +166,7 @@ export const DescriptionBlock = ({ formation }) => {
                 isExternal
                 style={{ whiteSpace: "no-wrap" }}
               >
-                catalogue public&nbsp;
+                Catalogue public&nbsp;
                 <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
                 <Button
                   variant="pill"
@@ -192,7 +192,7 @@ export const DescriptionBlock = ({ formation }) => {
                       fontSize="zeta"
                       isExternal
                     >
-                      Site Public Parcoursup&nbsp;
+                      Site public Parcoursup&nbsp;
                       <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
                     </Link>,
                   ]
