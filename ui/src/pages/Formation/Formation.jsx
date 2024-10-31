@@ -568,22 +568,22 @@ export default () => {
                 </Flex>
                 {formation.catalogue_published && (
                   <Flex justifyContent={"space-between"} flexDirection={["column", "column", "row"]}>
-                    <Box mt={5}>
+                    <Flex my={[4, 4, "auto"]} gap={2} wrap={"wrap"}>
                       {hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
                         (formation.parcoursup_perimetre ||
                           formation.parcoursup_statut !== PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT) && (
                           <>
-                            <StatusBadge source="Parcoursup" status={formation.parcoursup_statut} mr={[0, 3]} />
+                            <StatusBadge source="Parcoursup" status={formation.parcoursup_statut} />
 
                             {[PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut) && (
                               <>
                                 {formation.parcoursup_published && formation.parcoursup_id ? (
-                                  <Badge variant={"published"} minHeight={"28px"} mr={[0, 3]}>
-                                    Parcoursup – Visible sur le site public (paramétré)
+                                  <Badge variant={"published"} minHeight={"28px"}>
+                                    Parcoursup – Visible au public
                                   </Badge>
                                 ) : (
-                                  <Badge variant={"error"} minHeight={"28px"} mr={[0, 3]}>
-                                    Parcoursup – Non visible sur le site public (non paramétré)
+                                  <Badge variant={"error"} minHeight={"28px"}>
+                                    Parcoursup – Non visible au public (non paramétré)
                                   </Badge>
                                 )}
                               </>
@@ -597,11 +597,11 @@ export default () => {
                                   history.to.parcoursup_statut === PARCOURSUP_STATUS.EN_ATTENTE &&
                                   new Date(history.updated_at).getTime() >= campagneStartDate?.getTime() - 31536000000
                               ).length >= 1 ? (
-                                <Badge variant={"ok"} minHeight={"28px"} mr={[0, 3]}>
+                                <Badge variant={"ok"} minHeight={"28px"}>
                                   Publication manuelle
                                 </Badge>
                               ) : (
-                                <Badge variant={"ok"} minHeight={"28px"} mr={[0, 3]}>
+                                <Badge variant={"ok"} minHeight={"28px"}>
                                   Publication automatique
                                 </Badge>
                               ))}
@@ -610,7 +610,6 @@ export default () => {
                               source="Parcoursup"
                               status={formation.parcoursup_previous_statut}
                               created_at={formation.created_at}
-                              mr={[0, 3]}
                             />
                           </>
                         )}
@@ -618,7 +617,7 @@ export default () => {
                         (formation.affelnet_perimetre ||
                           formation.affelnet_statut !== AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT) && (
                           <>
-                            <StatusBadge source="Affelnet" status={formation.affelnet_statut} mr={[0, 3]} />
+                            <StatusBadge source="Affelnet" status={formation.affelnet_statut} />
 
                             {[AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.EN_ATTENTE].includes(formation.affelnet_statut) &&
                               (formation.updates_history.filter(
@@ -626,11 +625,11 @@ export default () => {
                                   history.to.affelnet_statut === AFFELNET_STATUS.EN_ATTENTE &&
                                   new Date(history.updated_at).getTime() >= campagneStartDate?.getTime() - 31536000000
                               ).length >= 1 ? (
-                                <Badge variant={"ok"} minHeight={"28px"} mr={[0, 3]}>
+                                <Badge variant={"ok"} minHeight={"28px"}>
                                   Publication manuelle
                                 </Badge>
                               ) : (
-                                <Badge variant={"ok"} minHeight={"28px"} mr={[0, 3]}>
+                                <Badge variant={"ok"} minHeight={"28px"}>
                                   Publication automatique
                                 </Badge>
                               ))}
@@ -639,7 +638,6 @@ export default () => {
                               source="Affelnet"
                               status={formation.affelnet_previous_statut}
                               created_at={formation.created_at}
-                              mr={[0, 3]}
                             />
                           </>
                         )}
@@ -650,15 +648,15 @@ export default () => {
                         formation.parcoursup_statut === PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT && (
                           <>
                             {hasAccessTo(user, "page_formation/voir_status_publication_aff") && (
-                              <StatusBadge mr={[0, 3]} source="Affelnet" status="hors périmètre" />
+                              <StatusBadge source="Affelnet" status="hors périmètre" />
                             )}
 
                             {hasAccessTo(user, "page_formation/voir_status_publication_ps") && (
-                              <StatusBadge mr={[0, 3]} source="Parcoursup" status="hors périmètre" />
+                              <StatusBadge source="Parcoursup" status="hors périmètre" />
                             )}
                           </>
                         )}
-                    </Box>
+                    </Flex>
 
                     <Flex
                       alignItems="center"
@@ -667,7 +665,7 @@ export default () => {
                     >
                       {[PARCOURSUP_STATUS.FERME, COMMON_STATUS.EN_ATTENTE].includes(formation.parcoursup_statut) &&
                         hasAccessTo(user, "page_formation/envoi_parcoursup") && (
-                          <Button textStyle="sm" variant="secondary" px={8} mt={4} onClick={sendToParcoursup}>
+                          <Button textStyle="sm" variant="secondary" px={8} my={"auto"} onClick={sendToParcoursup}>
                             Forcer la publication Parcoursup
                           </Button>
                         )}

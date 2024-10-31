@@ -21,7 +21,8 @@ const Footer = () => {
                 textDecoration={"underline"}
                 isExternal
               >
-                Mission interministérielle pour l'apprentissage
+                Mission interministérielle pour l'apprentissage&nbsp;
+                <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
               </Link>{" "}
               développe plusieurs services destinés à faciliter les entrées en apprentissage.
             </Text>

@@ -142,24 +142,32 @@ export const DescriptionBlock = ({ formation }) => {
         </Text>
 
         <Box mt={4} mb={4} ml={-3}>
-          <List textStyle="md" fontWeight="700" flexDirection={"row"} flexWrap={"wrap"} mb={[3, 3, 0]} display="flex">
+          <List flexDirection={"row"} flexWrap={"wrap"} mb={[3, 3, 0]} display="flex">
             {[
               ...(formation.onisep_url !== "" && formation.onisep_url !== null
                 ? [
-                    <ListItem>
-                      <Link href={formation.onisep_url} variant="outlined" isExternal style={{ whiteSpace: "no-wrap" }}>
-                        Onisep&nbsp;
-                        <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
-                      </Link>
-                    </ListItem>,
+                    <Link
+                      href={formation.onisep_url}
+                      textDecoration={"underline"}
+                      fontSize="zeta"
+                      isExternal
+                      style={{ whiteSpace: "no-wrap" }}
+                    >
+                      Onisep&nbsp;
+                      <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
+                    </Link>,
                   ]
                 : []),
 
-              <ListItem ml={2}>
-                <Link href={getPublicUrl(formation)} variant="outlined" isExternal style={{ whiteSpace: "no-wrap" }}>
-                  catalogue public&nbsp;
-                  <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
-                </Link>
+              <Link
+                href={getPublicUrl(formation)}
+                textDecoration={"underline"}
+                fontSize="zeta"
+                isExternal
+                style={{ whiteSpace: "no-wrap" }}
+              >
+                catalogue public&nbsp;
+                <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
                 <Button
                   variant="pill"
                   display="inline-flex"
@@ -168,35 +176,34 @@ export const DescriptionBlock = ({ formation }) => {
                   onClick={copyPublicLink}
                   aria-label="Search database"
                 >
-                  Copier le lien
+                  Copier
                   {/* <ClipboardLine w={"0.75rem"} h={"0.75rem"} ml={2} /> */}
                 </Button>
-              </ListItem>,
+              </Link>,
 
               ...(hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
               formation.parcoursup_published &&
               formation.parcoursup_id
                 ? [
-                    <ListItem ml={2}>
-                      <Link
-                        target="_blank"
-                        href={`https://dossierappel.parcoursup.fr/Candidats/public/fiches/afficherFicheFormation?g_ta_cod=${formation.parcoursup_id}`}
-                        variant="outlined"
-                        isExternal
-                      >
-                        Site Public Parcoursup&nbsp;
-                        <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
-                      </Link>
-                    </ListItem>,
+                    <Link
+                      target="_blank"
+                      href={`https://dossierappel.parcoursup.fr/Candidats/public/fiches/afficherFicheFormation?g_ta_cod=${formation.parcoursup_id}`}
+                      textDecoration={"underline"}
+                      fontSize="zeta"
+                      isExternal
+                    >
+                      Site Public Parcoursup&nbsp;
+                      <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
+                    </Link>,
                   ]
                 : []),
             ]
-              .map((item) => <ListItem ml={2}>{item}</ListItem>)
+              .map((item) => <ListItem mx={4}>{item}</ListItem>)
               .reduce(
                 (acc, val) =>
                   acc.concat(
-                    <ListItem ml={4}>
-                      <Divider border="2px" orientation="vertical" />
+                    <ListItem>
+                      <Divider orientation="vertical" borderColor={"gray"} />
                     </ListItem>,
                     val
                   ),
