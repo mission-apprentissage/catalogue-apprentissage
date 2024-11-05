@@ -420,29 +420,37 @@ export default () => {
                               _expanded={{ bg: "grey.200" }}
                               border={"1px solid"}
                               borderColor={"bluefrance"}
+                              height="auto"
                             >
-                              <Box flex="1" textAlign="left" fontSize="gamma">
+                              <Box flex="1" textAlign="left" fontSize={"delta"}>
                                 {user.email}{" "}
                                 {user.tag && (
-                                  <Tag borderRadius="full" variant="subtle" colorScheme="orange">
+                                  <Tag borderRadius="full" variant="subtle" colorScheme="orange" ml="2">
                                     {user.tag}
                                   </Tag>
                                 )}
                                 {user.isAdmin && (
-                                  <Tag borderRadius="full" variant="subtle" colorScheme="red">
+                                  <Tag borderRadius="full" variant="subtle" colorScheme="red" ml="2">
                                     admin
                                   </Tag>
                                 )}
                                 {user.roles.map((role, index) => (
-                                  <Tag key={index} borderRadius="full" variant="subtle" colorScheme="green">
+                                  <Tag key={index} borderRadius="full" variant="subtle" colorScheme="green" ml="2">
                                     {role}
                                   </Tag>
                                 ))}
                                 {!!user.acl?.length && (
-                                  <Tag borderRadius="full" variant="subtle" colorScheme="blue">
+                                  <Tag borderRadius="full" variant="subtle" colorScheme="blue" ml="2">
                                     Critères additionnels
                                   </Tag>
                                 )}
+                                <Text fontSize={"zeta"} color="lightgray">
+                                  {user.created_at && <>créé le {new Date(user.created_at).toLocaleDateString()}</>}
+                                  {user.created_at && user.last_connection && ", "}
+                                  {user.last_connection && (
+                                    <>dernière connexion le {new Date(user.last_connection).toLocaleDateString()}</>
+                                  )}
+                                </Text>
                               </Box>
                               <AccordionIcon />
                             </AccordionButton>
