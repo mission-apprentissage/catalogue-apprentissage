@@ -31,10 +31,10 @@ integrationTests(__filename, () => {
   it("Permet de supprimer un utilisateur", async () => {
     const { createUser, removeUser, getUser } = await users();
 
-    await createUser("userToDelete", "password", { permissions: { isAdmin: true } });
-    await removeUser("userToDelete");
+    await createUser("user_to_delete", "password", { permissions: { isAdmin: true } });
+    await removeUser("user_to_delete");
 
-    const found = await getUser("userToDelete");
+    const found = await getUser("user_to_delete");
     assert.strictEqual(found, null);
   });
 
