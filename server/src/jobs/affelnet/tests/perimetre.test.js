@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { ReglePerimetre, Formation } = require("../../../common/models");
+const { ReglePerimetre, Formation, CampagneStart } = require("../../../common/models");
 const { connectToMongoForTests, cleanAll } = require("../../../../tests/utils/testUtils.js");
 const { run } = require("../perimetre/controller.js");
 const { AFFELNET_STATUS } = require("../../../constants/status");
@@ -40,6 +40,8 @@ const formationCampagneOk = {
 describe(`${__filename} - Test global (deprecated)`, () => {
   before(async () => {
     setupBefore();
+
+    await CampagneStart.create({ created_at: new Date("2024-09-10T00:00:00.000Z") });
 
     // Connection to test collection
     await connectToMongoForTests();
@@ -268,6 +270,7 @@ describe(`${__filename} - Gestion de la disparition du périmètre`, async () =>
     await Object.entries(perimeterWithdrawalMotives).map(async ([keyMotif, valueMotif]) => {
       describe(`handle motif (${keyMotif})`, async () => {
         beforeEach(async () => {
+          await CampagneStart.create({ created_at: new Date("2024-09-10T00:00:00.000Z") });
           setupBeforeEach();
           await ReglePerimetre.create({
             plateforme: "affelnet",
@@ -279,6 +282,7 @@ describe(`${__filename} - Gestion de la disparition du périmètre`, async () =>
           });
         });
         afterEach(async () => {
+          await CampagneStart.deleteMany();
           setupAfterEach();
           await cleanAll();
         });

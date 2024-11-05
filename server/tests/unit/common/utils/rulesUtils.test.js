@@ -8,6 +8,7 @@ const {
   getSessionStartDate,
   getSessionEndDate,
 } = require("../../../../src/common/utils/rulesUtils");
+const { CampagneStart } = require("../../../../src/common/models");
 
 describe(__filename, () => {
   describe("getExpirationDate", () => {
@@ -185,45 +186,29 @@ describe(__filename, () => {
   });
 
   describe("getSessionStartDate", () => {
-    it("should get a date of the same year if now is before the start of the session", () => {
-      const expected = new Date(`2022-08-01T00:00:00.000Z`);
+    it("Renvoie le 1er aout après la date de création de la campagne à venir", async () => {
+      const expected = new Date(`2024-08-01T00:00:00.000Z`);
 
-      let result = getSessionStartDate(new Date(`2022-03-01T00:00:00.000Z`));
+      await CampagneStart.create({ created_at: new Date(`2023-09-11T00:00:00.000Z`) });
+
+      let result = await getSessionStartDate();
       assert.deepStrictEqual(result, expected);
 
-      result = getSessionStartDate(new Date(`2022-07-11T00:00:00.000Z`));
-      assert.deepStrictEqual(result, expected);
-    });
-
-    it("should get a date of the next year if now is after the start of the session", () => {
-      const expected = new Date(`2023-08-01T00:00:00.000Z`);
-
-      let result = getSessionStartDate(new Date(`2022-11-01T00:00:00.000Z`));
-      assert.deepStrictEqual(result, expected);
-
-      result = getSessionStartDate(new Date(`2022-12-01T00:00:00.000Z`));
+      result = await getSessionStartDate();
       assert.deepStrictEqual(result, expected);
     });
   });
 
   describe("getSessionEndDate", () => {
-    it("should get a date of the next year if now is before the end of the session", () => {
-      const expected = new Date(`2023-07-31T23:59:59.999Z`);
+    it("renvoie le 31 juiller de l'année après la date de création de la campagne à venir", async () => {
+      const expected = new Date(`2025-07-31T23:59:59.999Z`);
 
-      let result = getSessionEndDate(new Date(`2022-03-01T00:00:00.000Z`));
+      await CampagneStart.create({ created_at: new Date(`2023-09-11T00:00:00.000Z`) });
+
+      let result = await getSessionEndDate();
       assert.deepStrictEqual(result, expected);
 
-      result = getSessionEndDate(new Date(`2022-06-11T00:00:00.000Z`));
-      assert.deepStrictEqual(result, expected);
-    });
-
-    it("should get a date of the next year + 1 if now is after the end of the session", () => {
-      const expected = new Date(`2024-07-31T23:59:59.999Z`);
-
-      let result = getSessionEndDate(new Date(`2022-10-16T00:00:00.000Z`));
-      assert.deepStrictEqual(result, expected);
-
-      result = getSessionEndDate(new Date(`2022-11-01T00:00:00.000Z`));
+      result = await getSessionEndDate();
       assert.deepStrictEqual(result, expected);
     });
   });
