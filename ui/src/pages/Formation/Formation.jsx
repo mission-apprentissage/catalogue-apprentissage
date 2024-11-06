@@ -26,7 +26,7 @@ import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../constan
 
 import { _get, _post, _put } from "../../common/httpClient";
 import useAuth from "../../common/hooks/useAuth";
-import { hasAccessTo, hasRightToEditFormation } from "../../common/utils/rolesUtils";
+import { hasAccessTo, hasRightToEditFormation, isUserAdmin } from "../../common/utils/rolesUtils";
 import { buildUpdatesHistory, sortDescending } from "../../common/utils/historyUtils";
 import { isInSession } from "../../common/utils/rulesUtils";
 import { setTitle } from "../../common/utils/pageUtils";
@@ -49,6 +49,8 @@ import { DateContext } from "../../DateContext";
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
 const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, values, hasRightToEdit }) => {
+  const [auth] = useAuth();
+
   // Distance tolérer entre l'adresse et les coordonnées transmise par RCO
   const seuilDistance = 100;
   const [isEditingUai, setIsEditingUai] = useState(false);
@@ -237,14 +239,14 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                   </Text>{" "}
                   <InfoTooltip description={helpText.formation.localite} />
                 </Text>
-                <Text mb={formation?.lieu_formation_geo_coordonnees_computed ? 0 : 4}>
+                <Text mb={isUserAdmin(auth) && formation?.lieu_formation_geo_coordonnees_computed ? 0 : 4}>
                   Département :{" "}
                   <Text as="span" variant="highlight">
                     {formation.nom_departement} ({formation.num_departement})
                   </Text>{" "}
                   <InfoTooltip description={helpText.formation.nom_departement} />
                 </Text>
-                {formation?.lieu_formation_geo_coordonnees_computed && (
+                {isUserAdmin(auth) && formation?.lieu_formation_geo_coordonnees_computed && (
                   <Box mb={4}>
                     <Button
                       onClick={onComputedGeoCoordToggle}
@@ -279,14 +281,14 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                   </Box>
                 )}
 
-                <Text mb={formation?.lieu_formation_adresse_computed ? 0 : 4}>
+                <Text mb={isUserAdmin(auth) && formation?.lieu_formation_adresse_computed ? 0 : 4}>
                   Géolocalisation :{" "}
                   <Text as="span" variant="highlight">
                     {formation.lieu_formation_geo_coordonnees}
                   </Text>{" "}
                   <InfoTooltip description={helpText.formation.lieu_formation_geo_coordonnees} />
                 </Text>
-                {formation?.lieu_formation_adresse_computed && (
+                {isUserAdmin(auth) && formation?.lieu_formation_adresse_computed && (
                   <Box mb={4}>
                     <Button
                       onClick={onComputedAdressToggle}
