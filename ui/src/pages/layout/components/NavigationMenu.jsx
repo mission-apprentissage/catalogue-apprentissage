@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { Box, Container, Flex, Link, Text } from "@chakra-ui/react";
 import useAuth from "../../../common/hooks/useAuth";
-import { hasAccessTo, hasOnlyOneAcademyRight } from "../../../common/utils/rolesUtils";
+import { hasAccessTo, hasOnlyOneAcademyRight, isUserAdmin } from "../../../common/utils/rolesUtils";
 import { MenuFill, Close } from "../../../theme/components/icons";
 import { academies } from "../../../constants/academies";
 
@@ -81,14 +81,24 @@ const NavLinks = ({ isOpen }) => {
         px={2}
         textStyle="sm"
       >
-        <NavItem to="/" exact>
+        {/* <NavItem to="/" exact>
           Accueil
-        </NavItem>
-        {hasAccessTo(auth, "page_perimetre") && <NavItem to="/regles-perimetre">Règles de périmètre</NavItem>}
+        </NavItem> */}
         <NavItem to={`/recherche/formations${suffixCatalogue}`}>Catalogue</NavItem>
         <NavItem to="/recherche/etablissements">Organismes</NavItem>
-        {hasAccessTo(auth, "page_console") && <NavItem to="/consoles-pilotage">Consoles de pilotage</NavItem>}
-        <NavItem to="/changelog">Journal</NavItem>
+        {hasAccessTo(auth, "page_console/affelnet") && (
+          <NavItem to="/consoles-pilotage/affelnet">Consoles de pilotage Affelnet</NavItem>
+        )}
+        {hasAccessTo(auth, "page_console/parcoursup") && (
+          <NavItem to="/consoles-pilotage/parcoursup">Consoles de pilotage Parcoursup</NavItem>
+        )}
+        {hasAccessTo(auth, "page_perimetre/affelnet") && (
+          <NavItem to="/regles-perimetre/affelnet">Règles de périmètre Affelnet</NavItem>
+        )}
+        {hasAccessTo(auth, "page_perimetre/parcoursup") && (
+          <NavItem to="/regles-perimetre/parcoursup">Règles de périmètre Parcoursup</NavItem>
+        )}
+        {isUserAdmin(auth) && <NavItem to="/changelog">Journal</NavItem>}
       </Flex>
     </Box>
   );
