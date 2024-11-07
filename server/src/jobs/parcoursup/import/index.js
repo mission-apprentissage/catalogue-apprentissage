@@ -1,6 +1,5 @@
 const logger = require("../../../common/logger");
 const { Formation } = require("../../../common/models");
-const { cle_ministere_educatif } = require("../../../common/models/schema/affelnetFormation");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
 const { buildUpdatesHistory } = require("../../../logic/common/utils/diffUtils");
 const { runScript } = require("../../scriptWrapper");
@@ -11,7 +10,7 @@ const STATUS = {
   CANCELED_PUBLICATION: "Publication annulée suite à suppression de la formation dans Parcoursup",
   NEW_LINK: "Clé ME ajoutée manuellement dans Parcoursup",
   CLOSED: "Formation déclarée fermée dans Parcoursup",
-  PUBLISHED: "Publié sur le MDR"
+  PUBLISHED: "Publié sur le MDR",
 };
 
 /**
@@ -61,7 +60,8 @@ const psImport = async () => {
             console.log(`published : ${publishedFormation?.cle_ministere_educatif}`);
           }
 
-          publishedFormation && !publishedFormation.parcoursup_published &&
+          publishedFormation &&
+            !publishedFormation.parcoursup_published &&
             (published += (
               await Formation.updateOne(
                 {
@@ -209,7 +209,6 @@ const psImport = async () => {
     logger.debug({ closed, linked, canceled, published });
 
     await Formation.updateMany({ cle_ministere_educatif: { $nin: publishedCleME } }, { parcoursup_published: false });
-
 
     logger.info({ type: "job" }, " -- PARCOURSUP | IMPORT : ✅  -- ");
   } catch (error) {
