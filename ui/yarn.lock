@@ -44,7 +44,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appbaseio/analytics@npm:^1.1.1":
+"@appbaseio/analytics@npm:^1.2.0-alpha.1":
   version: 1.2.0
   resolution: "@appbaseio/analytics@npm:1.2.0"
   dependencies:
@@ -53,29 +53,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@appbaseio/reactivecore@npm:9.15.1":
-  version: 9.15.1
-  resolution: "@appbaseio/reactivecore@npm:9.15.1"
+"@appbaseio/reactivecore@npm:10.2.1":
+  version: 10.2.1
+  resolution: "@appbaseio/reactivecore@npm:10.2.1"
   dependencies:
     cross-fetch: ^3.0.4
     dayjs: ^1.11.7
     prop-types: ^15.6.0
     redux: ^4.0.0
     redux-thunk: ^2.3.0
-  checksum: 646178374adc8d9ac64df2cbccce30603fd1b22643c928f68721dc22d369e70c960b27b11647c8df8cfc4c499774f74874d39f8973e2f4aacce4413cfbc8b295
+  checksum: 41bdb19bc85b7d53926ba6b03ca42fa08d31390566f343d7d87800e35b8d7df58f68358c455d3167d778461abdb831e076d204c5b162c63f4b06d33c0a8fe550
   languageName: node
   linkType: hard
 
-"@appbaseio/reactivesearch@npm:3.45.0":
-  version: 3.45.0
-  resolution: "@appbaseio/reactivesearch@npm:3.45.0"
+"@appbaseio/reactivesearch@npm:4.2.2":
+  version: 4.2.2
+  resolution: "@appbaseio/reactivesearch@npm:4.2.2"
   dependencies:
-    "@appbaseio/analytics": ^1.1.1
-    "@appbaseio/reactivecore": 9.15.1
+    "@appbaseio/analytics": ^1.2.0-alpha.1
+    "@appbaseio/reactivecore": 10.2.1
     "@appbaseio/rheostat": ^1.0.0-alpha.15
     "@emotion/core": ^10.0.28
     "@emotion/styled": ^10.0.27
-    appbase-js: ^5.3.4
+    appbase-js: ^5.3.3
     cross-env: ^5.2.0
     dayjs: ^1.11.7
     downshift: ^1.31.2
@@ -88,12 +88,13 @@ __metadata:
     prop-types: ^15.6.0
     react-day-picker: ^7.0.5
     react-redux: ^6.0.1
+    remarkable: ^2.0.1
     url-search-params-polyfill: ^7.0.0
     xss: ^1.0.11
   peerDependencies:
     react: ">=15"
     react-dom: ">=15"
-  checksum: 5e6448ba2f24b36b8e712d0d7b7d6d69fb1c1c3ee165a1267ffb65e8677a595c34f711505275702ad772d1e58804329c2681488ae9677e30b68a87fb604b6e3d
+  checksum: 0c1e43ec004f4fc95cab4b26e445027c1ac3590b52282c3edc6a6bd4601aa21b1ad5bc21403a26925f7c408f4cac223ebfab1ff64b7503752e1e76b55185444d
   languageName: node
   linkType: hard
 
@@ -7956,7 +7957,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"appbase-js@npm:^5.3.4":
+"appbase-js@npm:^5.3.3":
   version: 5.3.4
   resolution: "appbase-js@npm:5.3.4"
   dependencies:
@@ -7981,7 +7982,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"argparse@npm:^1.0.7":
+"argparse@npm:^1.0.10, argparse@npm:^1.0.7":
   version: 1.0.10
   resolution: "argparse@npm:1.0.10"
   dependencies:
@@ -8301,6 +8302,15 @@ __metadata:
   version: 2.2.2
   resolution: "attr-accept@npm:2.2.2"
   checksum: 496f7249354ab53e522510c1dc8f67a1887382187adde4dc205507d2f014836a247073b05e9d9ea51e2e9c7f71b0d2aa21730af80efa9af2d68303e5f0565c4d
+  languageName: node
+  linkType: hard
+
+"autolinker@npm:^3.11.0":
+  version: 3.16.2
+  resolution: "autolinker@npm:3.16.2"
+  dependencies:
+    tslib: ^2.3.0
+  checksum: 1d5d20ef23586629ec3c341052e6bb6250399cf5e66db21540c17b2f5b1137066435fb274a2115b57464d05e75b85afad61ef7cdf6ea693ef2920a3748b7249d
   languageName: node
   linkType: hard
 
@@ -16292,7 +16302,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "mna-catalogue-apprentissage-ui@workspace:."
   dependencies:
-    "@appbaseio/reactivesearch": 3.45.0
+    "@appbaseio/reactivesearch": 4.2.2
     "@babel/node": 7.25.0
     "@babel/preset-env": 7.25.4
     "@babel/preset-react": 7.24.7
@@ -19403,6 +19413,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"remarkable@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "remarkable@npm:2.0.1"
+  dependencies:
+    argparse: ^1.0.10
+    autolinker: ^3.11.0
+  bin:
+    remarkable: bin/remarkable.js
+  checksum: aee83ece531a7196f92e668aa76450f17bc1af77ce2939153f57b289b54f3aa3a72f355f4d57680336ab8205d53dca7ae06e6e743355ad2d4868cc7c85eafe89
+  languageName: node
+  linkType: hard
+
 "remove-accents@npm:0.4.2":
   version: 0.4.2
   resolution: "remove-accents@npm:0.4.2"
@@ -21452,6 +21474,13 @@ __metadata:
   version: 2.3.1
   resolution: "tslib@npm:2.3.1"
   checksum: de17a98d4614481f7fcb5cd53ffc1aaf8654313be0291e1bfaee4b4bb31a20494b7d218ff2e15017883e8ea9626599b3b0e0229c18383ba9dce89da2adf15cb9
+  languageName: node
+  linkType: hard
+
+"tslib@npm:^2.3.0":
+  version: 2.8.1
+  resolution: "tslib@npm:2.8.1"
+  checksum: e4aba30e632b8c8902b47587fd13345e2827fa639e7c3121074d5ee0880723282411a8838f830b55100cbe4517672f84a2472667d355b81e8af165a55dc6203a
   languageName: node
   linkType: hard
 
