@@ -87,16 +87,16 @@ const NavLinks = ({ isOpen }) => {
         <NavItem to={`/recherche/formations${suffixCatalogue}`}>Catalogue</NavItem>
         <NavItem to="/recherche/etablissements">Organismes</NavItem>
         {hasAccessTo(auth, "page_console/affelnet") && (
-          <NavItem to="/consoles-pilotage/affelnet">Consoles de pilotage Affelnet</NavItem>
+          <NavItem to="/consoles-pilotage/affelnet">Console Affelnet</NavItem>
         )}
         {hasAccessTo(auth, "page_console/parcoursup") && (
-          <NavItem to="/consoles-pilotage/parcoursup">Consoles de pilotage Parcoursup</NavItem>
+          <NavItem to="/consoles-pilotage/parcoursup">Console Parcoursup</NavItem>
         )}
         {hasAccessTo(auth, "page_perimetre/affelnet") && (
-          <NavItem to="/regles-perimetre/affelnet">Règles de périmètre Affelnet</NavItem>
+          <NavItem to="/regles-perimetre/affelnet">Périmètre Affelnet</NavItem>
         )}
         {hasAccessTo(auth, "page_perimetre/parcoursup") && (
-          <NavItem to="/regles-perimetre/parcoursup">Règles de périmètre Parcoursup</NavItem>
+          <NavItem to="/regles-perimetre/parcoursup">Périmètre Parcoursup</NavItem>
         )}
         {isUserAdmin(auth) && <NavItem to="/changelog">Journal</NavItem>}
       </Flex>
