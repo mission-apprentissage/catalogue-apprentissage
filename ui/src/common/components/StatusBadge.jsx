@@ -80,7 +80,7 @@ export const PreviousStatusBadge = ({ source, status, created_at, text, ...badge
   const { campagneStartDate } = useContext(DateContext);
 
   const variant = defaultVariant;
-  if (created_at && new Date(created_at).getTime() > campagneStartDate?.getTime() - 365 * 24 * 60 * 60 * 1000) {
+  if (created_at && new Date(created_at).getTime() > campagneStartDate?.getTime()) {
     return (
       <Badge variant={"conforme"} {...badgeProps} minHeight={"28px"}>
         <Text as={"span"} whiteSpace={"break-spaces"}>
