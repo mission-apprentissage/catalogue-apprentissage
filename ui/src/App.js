@@ -169,16 +169,17 @@ const Root = () => {
               <React.Fragment />
             )}
 
-            {/* Formations */}
             <Route
               path="/"
               element={
                 <RequireAuth>
-                  <HomePage />
+                  <Navigate to={"/recherche/formations"} />
+                  {/* <HomePage /> */}
                 </RequireAuth>
               }
             />
 
+            {/* Formations */}
             <Route
               path="/recherche/formations"
               element={

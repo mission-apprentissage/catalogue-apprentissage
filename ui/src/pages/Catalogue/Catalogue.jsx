@@ -65,7 +65,7 @@ export default (props) => {
                         : searchState.countCatalogueNonEligible.filtered.toLocaleString("fr-FR")}
                       )
                     </Tab>
-                    <Tab>Guide réglementaire</Tab>
+                    {/* <Tab>Guide réglementaire</Tab> */}
                   </Flex>
                   <Button
                     variant="pill"
@@ -84,9 +84,9 @@ export default (props) => {
                   <TabPanel>
                     <SearchFormation {...props} searchState={searchState} context={CONTEXT.CATALOGUE_NON_ELIGIBLE} />
                   </TabPanel>
-                  <TabPanel>
+                  {/* <TabPanel>
                     <HowToReglement />
-                  </TabPanel>
+                  </TabPanel> */}
                 </TabPanels>
               </Tabs>
 
