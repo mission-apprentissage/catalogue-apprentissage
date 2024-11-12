@@ -32,16 +32,16 @@ export default (props) => {
             <Tabs variant="search" mt={5} isLazy>
               <TabList bg="white">
                 <Tab>Liste</Tab>
-                <Tab>Guide réglementaire</Tab>
+                {/* <Tab>Guide réglementaire</Tab> */}
               </TabList>
               <TabPanels>
                 <TabPanel>
                   <SearchEtablissement {...props} searchState={searchState} context={CONTEXT.ORGANISMES} />
                 </TabPanel>
 
-                <TabPanel>
+                {/* <TabPanel>
                   <HowToReglement />
-                </TabPanel>
+                </TabPanel> */}
               </TabPanels>
             </Tabs>
           )}

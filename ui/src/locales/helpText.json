@@ -30,7 +30,8 @@
     "lieu_formation_geo_coordonnees_computed": "Les coordonnées sont calculées à partir de l'adresse transmise. Rapprochez vous de votre Carif-Oref afin qu'elles permettent aux jeunes d'identifier où se situe le lieu de formation.",
     "parcoursup_published_date": "Date à laquelle la formation est passée à l'état \"Parcoursup - publié\" dans le catalogue (envoi automatique ou rapprochement des bases Parcoursup et Carif-Oref).",
     "affelnet_published_date": "Date à laquelle la formation est passée à l'état \"Affelnet - publié\" dans le catalogue (rapprochement des bases Affelnet et Carif-Oref).",
-    "affelnet_publish_fields": "Cette information a été saisie lors de la publication depuis le catalogue et est reprise en l'état sur le service en ligne Affelnet."
+    "affelnet_publish_fields": "Cette information a été saisie lors de la publication depuis le catalogue et est reprise en l'état sur le service en ligne Affelnet.",
+    "CI_inscrit_rncp": "Donnée issue de France compétences via Certif Info"
   },
   "etablissement": {
     "not_found": "Nous n'avons pas trouvé l'établissement dans le catalogue.",

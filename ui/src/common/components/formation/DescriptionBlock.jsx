@@ -459,12 +459,12 @@ export const DescriptionBlock = ({ formation }) => {
   const previousCertifInfoCodes = formation?.cle_me_remplace?.map((cle) => +cle.slice(0, 6));
   return (
     <>
-      <Box p={8}>
-        <Text textStyle="h4" color="grey.800">
-          Description
+      <Box m={8}>
+        <Text textStyle="h4" color="grey.800" mb={4}>
+          Description de la certification
         </Text>
 
-        <Box mt={4} mb={4} ml={-3}>
+        <Box mb={4} ml={-3}>
           <List flexDirection={"row"} flexWrap={"wrap"} mb={[3, 3, 0]} display="flex">
             {[
               ...(formation.onisep_url !== "" && formation.onisep_url !== null
@@ -475,6 +475,7 @@ export const DescriptionBlock = ({ formation }) => {
                       fontSize="zeta"
                       isExternal
                       style={{ whiteSpace: "no-wrap" }}
+                      rel="noreferrer noopener"
                     >
                       Onisep&nbsp;
                       <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
@@ -482,40 +483,32 @@ export const DescriptionBlock = ({ formation }) => {
                   ]
                 : []),
 
-              <Link
-                href={getPublicUrl(formation)}
-                textDecoration={"underline"}
-                fontSize="zeta"
-                isExternal
-                style={{ whiteSpace: "no-wrap" }}
-              >
-                Catalogue public&nbsp;
-                <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
-                <Button
-                  variant="pill"
-                  display="inline-flex"
-                  cursor="pointer"
-                  ml={2}
-                  onClick={copyPublicLink}
-                  aria-label="Search database"
-                >
-                  Copier
-                  {/* <ClipboardLine w={"0.75rem"} h={"0.75rem"} ml={2} /> */}
-                </Button>
-              </Link>,
-
-              ...(hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
-              formation.parcoursup_published &&
-              formation.parcoursup_id
+              ...(formation.id_certifinfo
                 ? [
                     <Link
-                      target="_blank"
-                      href={`https://dossierappel.parcoursup.fr/Candidats/public/fiches/afficherFicheFormation?g_ta_cod=${formation.parcoursup_id}`}
+                      href={`https://www.intercariforef.org/formations/certification-${formation.id_certifinfo}.html`}
                       textDecoration={"underline"}
                       fontSize="zeta"
                       isExternal
+                      style={{ whiteSpace: "no-wrap" }}
+                      rel="noreferrer noopener"
                     >
-                      Site public Parcoursup&nbsp;
+                      Certif Info&nbsp;
+                      <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
+                    </Link>,
+                  ]
+                : []),
+              ...(formation.rncp_code
+                ? [
+                    <Link
+                      href={`https://www.francecompetences.fr/recherche/rncp/${rncpCode}`}
+                      textDecoration={"underline"}
+                      fontSize="zeta"
+                      isExternal
+                      style={{ whiteSpace: "no-wrap" }}
+                      rel="noreferrer noopener"
+                    >
+                      Fiche RNCP&nbsp;
                       <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
                     </Link>,
                   ]
@@ -543,6 +536,14 @@ export const DescriptionBlock = ({ formation }) => {
               {formation.intitule_court}
             </Text>{" "}
             <InfoTooltip description={helpText.formation.intitule_court} />
+          </Text>
+
+          <Text mb={4}>
+            Intitulé RNCP :{" "}
+            <Text as="span" variant="highlight">
+              {formation.rncp_intitule}
+            </Text>{" "}
+            <InfoTooltip description={helpText.formation.rncp_intitule} />
           </Text>
 
           <Text mb={4} mt={4}>
@@ -574,21 +575,70 @@ export const DescriptionBlock = ({ formation }) => {
           </Text>
 
           <Text mb={4}>
-            Type de certification (donnée issue de Certif Info) :{" "}
+            Type de certification :{" "}
             <Text as="span" variant="highlight">
               {formation.CI_inscrit_rncp}
             </Text>{" "}
+            <InfoTooltip description={helpText.formation.CI_inscrit_rncp} />
           </Text>
-          <Text mb={4}>
+          {/* <Text mb={4}>
             Type de certification (donnée issue de France compétences) :{" "}
             <Text as="span" variant="highlight">
               {formation.rncp_details?.type_enregistrement}
             </Text>{" "}
-          </Text>
+          </Text> */}
           <Text mb={4}>
             La date de validité de la certification est contrôlée sur le{" "}
             {formation.rncp_details?.type_enregistrement === "Enregistrement de droit" ? <>CFD</> : <>code RNCP</>}
           </Text>
+
+          {formation.rncp_code && (
+            <RncpContainer>
+              <Text mb={isTitreRNCP && isRncpExpired ? 0 : 4}>
+                Code RNCP :{" "}
+                <Text as="span" variant="highlight">
+                  {formation.rncp_code}{" "}
+                  {formation?.rncp_details?.date_fin_validite_enregistrement
+                    ? `(expire le ${new Date(
+                        formation?.rncp_details?.date_fin_validite_enregistrement
+                      ).toLocaleDateString("fr-FR")})`
+                    : "(expiration : non renseigné)"}
+                </Text>{" "}
+                <InfoTooltip description={helpText.formation.rncp_code} />
+              </Text>
+              {isTitreRNCP && isRncpExpired && (
+                <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
+                  {formation?.rncp_details?.date_fin_validite_enregistrement ? (
+                    <>
+                      Ce RNCP{" "}
+                      {new Date().getTime() >
+                      new Date(formation?.rncp_details?.date_fin_validite_enregistrement).getTime()
+                        ? "est expiré depuis le"
+                        : "expire le "}{" "}
+                      {new Date(formation?.rncp_details?.date_fin_validite_enregistrement).toLocaleDateString("fr-FR")}
+                    </>
+                  ) : (
+                    <>Ce RNCP est expiré</>
+                  )}{" "}
+                  (source{" "}
+                  <Link
+                    href={`https://www.francecompetences.fr/recherche/rncp/${rncpCode}`}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    https://www.francecompetences.fr/recherche/rncp/{rncpCode}
+                  </Link>
+                  ).
+                </Text>
+              )}
+              {isRncpTemporarilyDisabled && (
+                <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
+                  Ce code RNCP ne permet temporairement pas la publication de l'offre de formation vers Parcoursup dans
+                  l’attente d’informations sur l’évolution de la certification.
+                </Text>
+              )}
+            </RncpContainer>
+          )}
 
           <CfdContainer>
             <Text mb={!isTitreRNCP && isCfdExpired ? 0 : 4}>
@@ -756,104 +806,7 @@ export const DescriptionBlock = ({ formation }) => {
               </Text>
             </Text>
           )}
-          <DateSessionContainer>
-            <Text mb={4}>
-              Dates de formation : <FormationDate formation={formation} />{" "}
-              <InfoTooltip description={helpText.formation.dates} />
-            </Text>
-            {!isInSession(formation, sessionStartDate, sessionEndDate) && (
-              <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
-                Les dates de session ne correspondent pas aux règles de périmètre pour la prochaine campagne Affelnet ou
-                Parcoursup. Si le CFA a prévu de proposer une session en {campagneStartYear}, il doit faire
-                l’enregistrement auprès du Carif-Oref.{" "}
-              </Text>
-            )}
-          </DateSessionContainer>
-          <Text mb={4}>
-            Capacite d'accueil :{" "}
-            <Text as="span" variant="highlight">
-              {formation.capacite ?? "N/A"}
-            </Text>{" "}
-            <InfoTooltip ml="10px" description={helpText.formation.capacite} />
-          </Text>
-          <DureeContainer>
-            <Text mb={displayDureeWarning ? 0 : 4}>
-              Durée de la formation :{" "}
-              <Text as="span" variant="highlight">
-                <DureeAnnee value={formation.duree} />
-              </Text>{" "}
-              <InfoTooltip description={helpText.formation.duree} />
-            </Text>
-            <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
-              {formation.duree_incoherente &&
-                "La durée de formation enregistrée auprès du Carif-Oref ne correspond pas à celle qui est déduite du code MEF correspondant à cette formation."}
-            </Text>
-          </DureeContainer>
 
-          <AnneeContainer>
-            <Text mb={displayAnneeWarning ? 0 : 4}>
-              Année d'entrée en apprentissage :{" "}
-              <Text as="span" variant="highlight">
-                <DureeAnnee value={formation.annee} />
-              </Text>{" "}
-              <InfoTooltip description={helpText.formation.annee} />
-            </Text>
-            <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
-              {formation.annee_incoherente &&
-                "L'année de formation enregistrée auprès du Carif-Oref ne correspond pas à celle qui est déduite du code MEF correspondant à cette formation."}
-
-              {formation.affelnet_perimetre && isBacPro3AnsEn2Ans && (
-                <>
-                  <Text as="b">1ère PRO, BAC PRO en 3 ans</Text>
-                  <br />
-                  Ces formations doivent permettre aux élèves une entrée en seconde année de baccalauréat professionnel.
-                  Avant intégration dans Affelnet il convient de vérifier auprès des CFA les modalités d'accès à ces
-                  formations. Il convient notamment de vérifier si la formation est accessible à des élèves n'ayant pas
-                  suivi une première année de baccalauréat dans la spécialité.
-                </>
-              )}
-            </Text>
-          </AnneeContainer>
-          <Text mb={4}>
-            Clé ministères éducatifs :{" "}
-            <Text as="span" variant="highlight">
-              {formation.cle_ministere_educatif ?? "N/A"}{" "}
-              {isUserAdmin(user) && formation.cle_me_remplace?.length && (
-                <>
-                  (version{formation.cle_me_remplace?.length > 1 && "s"} remplacée
-                  {formation.cle_me_remplace?.length > 1 && "s"} : {formation.cle_me_remplace?.join(", ")})
-                </>
-              )}
-            </Text>
-          </Text>
-          {formation.parcoursup_id && (
-            <Text mb={4}>
-              Code Parcoursup :{" "}
-              <Text as="span" variant="highlight">
-                {formation.parcoursup_id}
-              </Text>
-            </Text>
-          )}
-          {formation.affelnet_id && (
-            <Text mb={4}>
-              Code Affelnet :{" "}
-              <Text as="span" variant="highlight">
-                {formation.affelnet_id}
-              </Text>
-            </Text>
-          )}
-          <Text mb={4}>
-            Identifiant formation Carif Oref :{" "}
-            <Text as="span" variant="highlight">
-              {formation.id_formation ?? "N/A"}
-            </Text>
-          </Text>
-          <Text mb={4}>
-            Identifiant actions Carif Oref :{" "}
-            <Text as="span" variant="highlight">
-              {formation.ids_action?.join(",") ?? "N/A"}
-            </Text>
-          </Text>
           <Text mb={4}>
             Code Certif Info :{" "}
             <Text as="span" variant="highlight">
@@ -895,143 +848,240 @@ export const DescriptionBlock = ({ formation }) => {
               )}
             </Text>
           </Text>
+
+          {formation.rncp_details && (
+            <>
+              <Text mb={4}>
+                Certificateurs RNCP :{" "}
+                <Text as="span" variant="highlight">
+                  {formation.rncp_details.certificateurs
+                    ?.filter(({ certificateur }) => certificateur)
+                    ?.map(({ certificateur }) => certificateur)
+                    .join(", ")}
+                </Text>{" "}
+                <InfoTooltip description={helpText.formation.certificateurs} />
+              </Text>
+              <Text mb={4}>
+                SIRET Certificateurs :{" "}
+                <Text as="span" variant="highlight">
+                  {formation.rncp_details.certificateurs
+                    ?.filter(({ siret_certificateur }) => siret_certificateur)
+                    ?.map(({ siret_certificateur }) => siret_certificateur)
+                    .join(", ")}
+                </Text>{" "}
+                <InfoTooltip description={helpText.formation.siret_certificateurs} />
+              </Text>
+              {showPartenaires && (
+                <Text as="div" mb={4}>
+                  Partenaires : <br />
+                  {formation.partenaires?.length > 0 ? (
+                    <UnorderedList>
+                      {formation.partenaires?.map(({ Nom_Partenaire, Siret_Partenaire, Habilitation_Partenaire }) => (
+                        <ListItem key={Siret_Partenaire}>
+                          <Text variant="highlight">
+                            <strong>
+                              {Nom_Partenaire} (siret : {Siret_Partenaire ?? "n/a"}) :
+                            </strong>{" "}
+                            <HabilitationPartenaire habilitation={Habilitation_Partenaire} />
+                          </Text>
+                        </ListItem>
+                      ))}
+                    </UnorderedList>
+                  ) : (
+                    <>
+                      {formation.etablissement_reference_habilite_rncp === false && noHabilitation && (
+                        <Box
+                          bg={"orangesoft.200"}
+                          p={4}
+                          mb={4}
+                          mt={4}
+                          borderLeft={"4px solid"}
+                          borderColor={"orangesoft.500"}
+                          w={"full"}
+                        >
+                          <Text variant="highlight" mb={2}>
+                            Aucune habilitation sur la fiche pour ce SIRET.
+                          </Text>
+                          <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
+                            Le Siret de l’organisme formateur ou responsable ne figure pas dans le liste des partenaires
+                            habilités enregistrés auprès de France compétences. S’il s’agit d’une erreur, inviter le
+                            certificateur à faire modifier les enregistrements auprès de France compétences. La
+                            modification prendra effet sur le catalogue à J+1.
+                          </Text>
+                        </Box>
+                      )}
+                      SIRET formateur : {formation.etablissement_formateur_siret}, SIRET gestionnaire :{" "}
+                      {formation.etablissement_gestionnaire_siret}.
+                    </>
+                  )}
+                </Text>
+              )}
+            </>
+          )}
         </Box>
       </Box>
 
-      <Box p={8}>
-        <Text textStyle="h4" colorc="grey.800" mb={4}>
-          Informations RNCP et ROME
+      <Box m={8} mt={12}>
+        <Text textStyle="h4" color="grey.800" mb={4}>
+          Informations sur l'offre
         </Text>
-        {formation.rncp_code && (
-          <RncpContainer>
-            <Text mb={isTitreRNCP && isRncpExpired ? 0 : 4}>
-              Code RNCP :{" "}
-              <Text as="span" variant="highlight">
-                {formation.rncp_code}{" "}
-                {formation?.rncp_details?.date_fin_validite_enregistrement
-                  ? `(expire le ${new Date(
-                      formation?.rncp_details?.date_fin_validite_enregistrement
-                    ).toLocaleDateString("fr-FR")})`
-                  : "(expiration : non renseigné)"}
-              </Text>{" "}
-              <InfoTooltip description={helpText.formation.rncp_code} />
-            </Text>
-            {isTitreRNCP && isRncpExpired && (
-              <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
-                {formation?.rncp_details?.date_fin_validite_enregistrement ? (
-                  <>
-                    Ce RNCP{" "}
-                    {new Date().getTime() >
-                    new Date(formation?.rncp_details?.date_fin_validite_enregistrement).getTime()
-                      ? "est expiré depuis le"
-                      : "expire le "}{" "}
-                    {new Date(formation?.rncp_details?.date_fin_validite_enregistrement).toLocaleDateString("fr-FR")}
-                  </>
-                ) : (
-                  <>Ce RNCP est expiré</>
-                )}{" "}
-                (source{" "}
-                <Link
-                  href={`https://www.francecompetences.fr/recherche/rncp/${rncpCode}`}
-                  target="_blank"
-                  rel="noreferrer noopener"
+
+        <Box mb={4} ml={-3}>
+          <List flexDirection={"row"} flexWrap={"wrap"} mb={[3, 3, 0]} display="flex">
+            {[
+              <Link
+                href={getPublicUrl(formation)}
+                textDecoration={"underline"}
+                fontSize="zeta"
+                isExternal
+                style={{ whiteSpace: "no-wrap" }}
+              >
+                Catalogue public&nbsp;
+                <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
+                <Button
+                  variant="pill"
+                  display="inline-flex"
+                  cursor="pointer"
+                  ml={2}
+                  onClick={copyPublicLink}
+                  aria-label="Search database"
                 >
-                  https://www.francecompetences.fr/recherche/rncp/{rncpCode}
-                </Link>
-                ).
-              </Text>
+                  Copier
+                  {/* <ClipboardLine w={"0.75rem"} h={"0.75rem"} ml={2} /> */}
+                </Button>
+              </Link>,
+
+              ...(hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
+              formation.parcoursup_published &&
+              formation.parcoursup_id
+                ? [
+                    <Link
+                      target="_blank"
+                      href={`https://dossierappel.parcoursup.fr/Candidats/public/fiches/afficherFicheFormation?g_ta_cod=${formation.parcoursup_id}`}
+                      textDecoration={"underline"}
+                      fontSize="zeta"
+                      isExternal
+                    >
+                      Site public Parcoursup&nbsp;
+                      <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} />
+                    </Link>,
+                  ]
+                : []),
+            ]
+              .map((item) => <ListItem mx={4}>{item}</ListItem>)
+              .reduce(
+                (acc, val) =>
+                  acc.concat(
+                    <ListItem>
+                      <Divider orientation="vertical" borderColor={"gray"} />
+                    </ListItem>,
+                    val
+                  ),
+                []
+              )
+              .slice(1)}
+          </List>
+        </Box>
+
+        <DateSessionContainer>
+          <Text mb={4}>
+            Dates de formation : <FormationDate formation={formation} />{" "}
+            <InfoTooltip description={helpText.formation.dates} />
+          </Text>
+          {!isInSession(formation, sessionStartDate, sessionEndDate) && (
+            <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
+              Les dates de session ne correspondent pas aux règles de périmètre pour la prochaine campagne Affelnet ou
+              Parcoursup. Si le CFA a prévu de proposer une session en {campagneStartYear}, il doit faire
+              l’enregistrement auprès du Carif-Oref.{" "}
+            </Text>
+          )}
+        </DateSessionContainer>
+        <Text mb={4}>
+          Identifiant actions Carif Oref :{" "}
+          <Text as="span" variant="highlight">
+            {formation.ids_action?.join(",") ?? "N/A"}
+          </Text>
+        </Text>
+
+        {/* <Text mb={4}>
+            Capacite d'accueil :{" "}
+            <Text as="span" variant="highlight">
+              {formation.capacite ?? "N/A"}
+            </Text>{" "}
+            <InfoTooltip ml="10px" description={helpText.formation.capacite} />
+          </Text> */}
+        <DureeContainer>
+          <Text mb={displayDureeWarning ? 0 : 4}>
+            Durée de la formation :{" "}
+            <Text as="span" variant="highlight">
+              <DureeAnnee value={formation.duree} />
+            </Text>{" "}
+            <InfoTooltip description={helpText.formation.duree} />
+          </Text>
+          <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
+            {formation.duree_incoherente &&
+              "La durée de formation enregistrée auprès du Carif-Oref ne correspond pas à celle qui est déduite du code MEF correspondant à cette formation."}
+          </Text>
+        </DureeContainer>
+
+        <AnneeContainer>
+          <Text mb={displayAnneeWarning ? 0 : 4}>
+            Année d'entrée en apprentissage :{" "}
+            <Text as="span" variant="highlight">
+              <DureeAnnee value={formation.annee} />
+            </Text>{" "}
+            <InfoTooltip description={helpText.formation.annee} />
+          </Text>
+          <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
+            {formation.annee_incoherente &&
+              "L'année de formation enregistrée auprès du Carif-Oref ne correspond pas à celle qui est déduite du code MEF correspondant à cette formation."}
+
+            {formation.affelnet_perimetre && isBacPro3AnsEn2Ans && (
+              <>
+                <Text as="b">1ère PRO, BAC PRO en 3 ans</Text>
+                <br />
+                Ces formations doivent permettre aux élèves une entrée en seconde année de baccalauréat professionnel.
+                Avant intégration dans Affelnet il convient de vérifier auprès des CFA les modalités d'accès à ces
+                formations. Il convient notamment de vérifier si la formation est accessible à des élèves n'ayant pas
+                suivi une première année de baccalauréat dans la spécialité.
+              </>
             )}
-            {isRncpTemporarilyDisabled && (
-              <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
-                Ce code RNCP ne permet temporairement pas la publication de l'offre de formation vers Parcoursup dans
-                l’attente d’informations sur l’évolution de la certification.
-              </Text>
+          </Text>
+        </AnneeContainer>
+        <Text mb={4}>
+          Clé ministères éducatifs :{" "}
+          <Text as="span" variant="highlight">
+            {formation.cle_ministere_educatif ?? "N/A"}{" "}
+            {isUserAdmin(user) && formation.cle_me_remplace?.length && (
+              <>
+                (version{formation.cle_me_remplace?.length > 1 && "s"} remplacée
+                {formation.cle_me_remplace?.length > 1 && "s"} : {formation.cle_me_remplace?.join(", ")})
+              </>
             )}
-          </RncpContainer>
+          </Text>
+        </Text>
+        {formation.parcoursup_id && (
+          <Text mb={4}>
+            Code Parcoursup :{" "}
+            <Text as="span" variant="highlight">
+              {formation.parcoursup_id}
+            </Text>
+          </Text>
+        )}
+        {formation.affelnet_id && (
+          <Text mb={4}>
+            Code Affelnet :{" "}
+            <Text as="span" variant="highlight">
+              {formation.affelnet_id}
+            </Text>
+          </Text>
         )}
         <Text mb={4}>
-          Intitulé RNCP :{" "}
+          Identifiant formation Carif Oref :{" "}
           <Text as="span" variant="highlight">
-            {formation.rncp_intitule}
-          </Text>{" "}
-          <InfoTooltip description={helpText.formation.rncp_intitule} />
+            {formation.id_formation ?? "N/A"}
+          </Text>
         </Text>
-        <Text mb={4}>
-          Codes ROME :{" "}
-          <Text as="span" variant="highlight">
-            {formation.rome_codes.join(", ")}
-          </Text>{" "}
-          <InfoTooltip description={helpText.formation.rome_codes} />
-        </Text>
-        {formation.rncp_details && (
-          <>
-            <Text mb={4}>
-              Certificateurs :{" "}
-              <Text as="span" variant="highlight">
-                {formation.rncp_details.certificateurs
-                  ?.filter(({ certificateur }) => certificateur)
-                  ?.map(({ certificateur }) => certificateur)
-                  .join(", ")}
-              </Text>{" "}
-              <InfoTooltip description={helpText.formation.certificateurs} />
-            </Text>
-            <Text mb={4}>
-              SIRET Certificateurs :{" "}
-              <Text as="span" variant="highlight">
-                {formation.rncp_details.certificateurs
-                  ?.filter(({ siret_certificateur }) => siret_certificateur)
-                  ?.map(({ siret_certificateur }) => siret_certificateur)
-                  .join(", ")}
-              </Text>{" "}
-              <InfoTooltip description={helpText.formation.siret_certificateurs} />
-            </Text>
-            {showPartenaires && (
-              <Text as="div" mb={4}>
-                Partenaires : <br />
-                {formation.partenaires?.length > 0 ? (
-                  <UnorderedList>
-                    {formation.partenaires?.map(({ Nom_Partenaire, Siret_Partenaire, Habilitation_Partenaire }) => (
-                      <ListItem key={Siret_Partenaire}>
-                        <Text variant="highlight">
-                          <strong>
-                            {Nom_Partenaire} (siret : {Siret_Partenaire ?? "n/a"}) :
-                          </strong>{" "}
-                          <HabilitationPartenaire habilitation={Habilitation_Partenaire} />
-                        </Text>
-                      </ListItem>
-                    ))}
-                  </UnorderedList>
-                ) : (
-                  <>
-                    {formation.etablissement_reference_habilite_rncp === false && noHabilitation && (
-                      <Box
-                        bg={"orangesoft.200"}
-                        p={4}
-                        mb={4}
-                        mt={4}
-                        borderLeft={"4px solid"}
-                        borderColor={"orangesoft.500"}
-                        w={"full"}
-                      >
-                        <Text variant="highlight" mb={2}>
-                          Aucune habilitation sur la fiche pour ce SIRET.
-                        </Text>
-                        <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
-                          Le Siret de l’organisme formateur ou responsable ne figure pas dans le liste des partenaires
-                          habilités enregistrés auprès de France compétences. S’il s’agit d’une erreur, inviter le
-                          certificateur à faire modifier les enregistrements auprès de France compétences. La
-                          modification prendra effet sur le catalogue à J+1.
-                        </Text>
-                      </Box>
-                    )}
-                    SIRET formateur : {formation.etablissement_formateur_siret}, SIRET gestionnaire :{" "}
-                    {formation.etablissement_gestionnaire_siret}.
-                  </>
-                )}
-              </Text>
-            )}
-          </>
-        )}
       </Box>
     </>
   );

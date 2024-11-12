@@ -61,8 +61,19 @@ export const OrganismesBlock = ({ formation }) => {
               </Flex>
             </Box>
             <Box textStyle="h6" color="grey.800" my={1}>
-              {formation.etablissement_gestionnaire_entreprise_raison_sociale}
+              {formation.etablissement_gestionnaire_entreprise_raison_sociale}{" "}
+              {!!formation.etablissement_gestionnaire_enseigne?.length &&
+                formation.etablissement_gestionnaire_enseigne !==
+                  formation.etablissement_gestionnaire_entreprise_raison_sociale && (
+                  <>({formation.etablissement_gestionnaire_enseigne})</>
+                )}
             </Box>
+            <Box textStyle="sm" my={1}>
+              {formation.etablissement_gestionnaire_adresse} {formation.etablissement_gestionnaire_code_postal}{" "}
+              {formation.etablissement_gestionnaire_localite} (code commune:{" "}
+              {formation.etablissement_gestionnaire_code_commune_insee})
+            </Box>
+
             <Box my={1}>
               <Text textStyle="sm">Académie : {formation.etablissement_gestionnaire_nom_academie}</Text>
               <Box>
@@ -114,8 +125,20 @@ export const OrganismesBlock = ({ formation }) => {
             </Flex>
           </Box>
           <Text textStyle="h6" color="grey.800" my={1}>
-            {formation.etablissement_formateur_entreprise_raison_sociale}
+            {formation.etablissement_formateur_entreprise_raison_sociale}{" "}
+            {!!formation.etablissement_formateur_enseigne?.length &&
+              formation.etablissement_formateur_enseigne !==
+                formation.etablissement_formateur_entreprise_raison_sociale && (
+                <>({formation.etablissement_formateur_enseigne})</>
+              )}
           </Text>
+
+          <Box textStyle="sm" my={1}>
+            {formation.etablissement_formateur_adresse} {formation.etablissement_formateur_code_postal}{" "}
+            {formation.etablissement_formateur_localite} (code commune:{" "}
+            {formation.etablissement_formateur_code_commune_insee})
+          </Box>
+
           <Box>
             <Text textStyle="sm">Académie : {formation.etablissement_formateur_nom_academie}</Text>
             <Box>
