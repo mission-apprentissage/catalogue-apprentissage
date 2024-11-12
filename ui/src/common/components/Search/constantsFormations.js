@@ -946,6 +946,7 @@ export const queryBuilderField = [
   { text: "Formation - Intitulé de la formation", value: "intitule_long.keyword" },
   { text: "Formation - Code RNCP", value: "rncp_code.keyword" },
   { text: "Formation - Code formation diplôme (CFD)", value: "cfd.keyword" },
+  { text: "Formation - CFD de la première année", value: "cfd_entree.keyword" },
   { text: "Formation - Code MEF 10 caractères", value: "bcn_mefs_10.mef10.keyword" },
   { text: "Formation - Code Certif Info", value: "id_certifinfo.keyword" },
   { text: "Formation - Type de la formation (ex: Bac professionnel)", value: "diplome.keyword" },
@@ -1589,6 +1590,7 @@ export const dataSearch = {
     "etablissement_gestionnaire_raison_sociale_enseigne",
     "etablissement_formateur_raison_sociale_enseigne",
     "cfd",
+    ",cfd_entree",
     "rncp_code",
     "lieu_formation_siret",
     "uai_formation",
@@ -1603,7 +1605,7 @@ export const dataSearch = {
     "cle_ministere_educatif",
   ],
   placeholder: "Saisissez votre recherche",
-  fieldWeights: [5, 4, 4, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1],
+  fieldWeights: [5, 4, 4, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1],
 };
 
 export default {
