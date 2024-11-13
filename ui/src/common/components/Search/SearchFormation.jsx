@@ -117,6 +117,48 @@ export default React.memo(({ searchState, context, extraButtons = null }) => {
                     URLParams={true}
                     showResultStats={true}
                     sortBy="asc"
+                    sortOptions={[
+                      {
+                        label: "Pertinence",
+                        dataField: "_score",
+                        sortBy: "desc",
+                      },
+                      {
+                        label: "Académie",
+                        dataField: "nom_academie.keyword",
+                        sortBy: "asc",
+                      },
+                      {
+                        label: "Formation: libellé long",
+                        dataField: "intitule_long.keyword",
+                        sortBy: "asc",
+                      },
+                      {
+                        label: "Formation: CFD",
+                        dataField: "cfd.keyword",
+                        sortBy: "asc",
+                      },
+                      {
+                        label: "UAI responsable",
+                        dataField: "etablissement_gestionnaire_uai.keyword",
+                        sortBy: "asc",
+                      },
+                      {
+                        label: "UAI formateur",
+                        dataField: "etablissement_formateur_uai.keyword",
+                        sortBy: "asc",
+                      },
+                      {
+                        label: "UAI lieu de formation",
+                        dataField: "uai_formation.keyword",
+                        sortBy: "asc",
+                      },
+                      {
+                        label: "Lieu : code Insee",
+                        dataField: "code_commune_insee.keyword",
+                        sortBy: "asc",
+                      },
+                    ]}
                     defaultQuery={() => {
                       return {
                         _source: columnsDefinition.map(({ accessor }) => accessor),
