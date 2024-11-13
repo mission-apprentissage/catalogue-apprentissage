@@ -1028,6 +1028,39 @@ export const quickFiltersDefinition = [
   },
 
   {
+    componentId: `parcoursup_publication_auto`,
+    type: "facet",
+    dataField: "parcoursup_publication_auto",
+    title: "Publication automatique",
+    filterLabel: "Publication automatique Parcoursup",
+    sortBy: "desc",
+    transformData: (data) => {
+      return data.map((d) => ({
+        ...d,
+        key: {
+          1: "Oui",
+          0: "Non",
+          null: "Pas d'information",
+        }[d.key],
+      }));
+    },
+    customQuery: (values) => {
+      if (values.length && !values.includes("Tous")) {
+        return {
+          query: {
+            terms: {
+              parcoursup_publication_auto: values.map(
+                (value) => ({ Oui: true, Non: false, "Pas d'information": null })[value]
+              ),
+            },
+          },
+        };
+      }
+      return {};
+    },
+  },
+
+  {
     componentId: `parcoursup_session_manquante`,
     type: "component",
     component: <ParcoursupMissingSession />,
@@ -1098,39 +1131,6 @@ export const quickFiltersDefinition = [
         dataField: "parcoursup_published_date",
         title: "Date de publication",
         filterLabel: "Publication Parcoursup",
-      },
-
-      {
-        componentId: `parcoursup_publication_auto`,
-        type: "facet",
-        dataField: "parcoursup_publication_auto",
-        title: "Publication automatique",
-        filterLabel: "Publication automatique Parcoursup",
-        sortBy: "desc",
-        transformData: (data) => {
-          return data.map((d) => ({
-            ...d,
-            key: {
-              1: "Oui",
-              0: "Non",
-              null: "Pas d'information",
-            }[d.key],
-          }));
-        },
-        customQuery: (values) => {
-          if (values.length && !values.includes("Tous")) {
-            return {
-              query: {
-                terms: {
-                  parcoursup_publication_auto: values.map(
-                    (value) => ({ Oui: true, Non: false, "Pas d'information": null })[value]
-                  ),
-                },
-              },
-            };
-          }
-          return {};
-        },
       },
 
       {
@@ -1220,6 +1220,38 @@ export const quickFiltersDefinition = [
   },
 
   {
+    componentId: `affelnet_publication_auto`,
+    type: "facet",
+    dataField: "affelnet_publication_auto",
+    title: "Publication automatique",
+    filterLabel: "Publication automatique Affelnet",
+    sortBy: "desc",
+    transformData: (data) =>
+      data.map((d) => ({
+        ...d,
+        key: {
+          1: "Oui",
+          0: "Non",
+          null: "Pas d'information",
+        }[d.key],
+      })),
+    customQuery: (values) => {
+      if (values.length && !values.includes("Tous")) {
+        return {
+          query: {
+            terms: {
+              affelnet_publication_auto: values.map(
+                (value) => ({ Oui: true, Non: false, "Pas d'information": null })[value]
+              ),
+            },
+          },
+        };
+      }
+      return {};
+    },
+  },
+
+  {
     componentId: `affelnet_session_manquante`,
     type: "component",
     component: <AffelnetMissingSession />,
@@ -1290,38 +1322,6 @@ export const quickFiltersDefinition = [
         dataField: "affelnet_published_date",
         title: "Date de publication",
         filterLabel: "Publication Affelnet",
-      },
-
-      {
-        componentId: `affelnet_publication_auto`,
-        type: "facet",
-        dataField: "affelnet_publication_auto",
-        title: "Publication automatique",
-        filterLabel: "Publication automatique Affelnet",
-        sortBy: "desc",
-        transformData: (data) =>
-          data.map((d) => ({
-            ...d,
-            key: {
-              1: "Oui",
-              0: "Non",
-              null: "Pas d'information",
-            }[d.key],
-          })),
-        customQuery: (values) => {
-          if (values.length && !values.includes("Tous")) {
-            return {
-              query: {
-                terms: {
-                  affelnet_publication_auto: values.map(
-                    (value) => ({ Oui: true, Non: false, "Pas d'information": null })[value]
-                  ),
-                },
-              },
-            };
-          }
-          return {};
-        },
       },
 
       //     {

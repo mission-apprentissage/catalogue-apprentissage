@@ -530,21 +530,13 @@ export const DescriptionBlock = ({ formation }) => {
         </Box>
 
         <Box>
-          <Text mb={4} mt={4}>
+          {/* <Text mb={4} mt={4}>
             Intitulé court de la formation :{" "}
             <Text as="span" variant="highlight">
               {formation.intitule_court}
             </Text>{" "}
             <InfoTooltip description={helpText.formation.intitule_court} />
-          </Text>
-
-          <Text mb={4}>
-            Intitulé RNCP :{" "}
-            <Text as="span" variant="highlight">
-              {formation.rncp_intitule}
-            </Text>{" "}
-            <InfoTooltip description={helpText.formation.rncp_intitule} />
-          </Text>
+          </Text> */}
 
           <Text mb={4} mt={4}>
             Libellé Carif-Oref :{" "}
@@ -591,54 +583,6 @@ export const DescriptionBlock = ({ formation }) => {
             La date de validité de la certification est contrôlée sur le{" "}
             {formation.rncp_details?.type_enregistrement === "Enregistrement de droit" ? <>CFD</> : <>code RNCP</>}
           </Text>
-
-          {formation.rncp_code && (
-            <RncpContainer>
-              <Text mb={isTitreRNCP && isRncpExpired ? 0 : 4}>
-                Code RNCP :{" "}
-                <Text as="span" variant="highlight">
-                  {formation.rncp_code}{" "}
-                  {formation?.rncp_details?.date_fin_validite_enregistrement
-                    ? `(expire le ${new Date(
-                        formation?.rncp_details?.date_fin_validite_enregistrement
-                      ).toLocaleDateString("fr-FR")})`
-                    : "(expiration : non renseigné)"}
-                </Text>{" "}
-                <InfoTooltip description={helpText.formation.rncp_code} />
-              </Text>
-              {isTitreRNCP && isRncpExpired && (
-                <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
-                  {formation?.rncp_details?.date_fin_validite_enregistrement ? (
-                    <>
-                      Ce RNCP{" "}
-                      {new Date().getTime() >
-                      new Date(formation?.rncp_details?.date_fin_validite_enregistrement).getTime()
-                        ? "est expiré depuis le"
-                        : "expire le "}{" "}
-                      {new Date(formation?.rncp_details?.date_fin_validite_enregistrement).toLocaleDateString("fr-FR")}
-                    </>
-                  ) : (
-                    <>Ce RNCP est expiré</>
-                  )}{" "}
-                  (source{" "}
-                  <Link
-                    href={`https://www.francecompetences.fr/recherche/rncp/${rncpCode}`}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    https://www.francecompetences.fr/recherche/rncp/{rncpCode}
-                  </Link>
-                  ).
-                </Text>
-              )}
-              {isRncpTemporarilyDisabled && (
-                <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
-                  Ce code RNCP ne permet temporairement pas la publication de l'offre de formation vers Parcoursup dans
-                  l’attente d’informations sur l’évolution de la certification.
-                </Text>
-              )}
-            </RncpContainer>
-          )}
 
           <CfdContainer>
             <Text mb={!isTitreRNCP && isCfdExpired ? 0 : 4}>
@@ -849,6 +793,62 @@ export const DescriptionBlock = ({ formation }) => {
             </Text>
           </Text>
 
+          {formation.rncp_code && (
+            <RncpContainer>
+              <Text mb={isTitreRNCP && isRncpExpired ? 0 : 4}>
+                Code RNCP :{" "}
+                <Text as="span" variant="highlight">
+                  {formation.rncp_code}{" "}
+                  {formation?.rncp_details?.date_fin_validite_enregistrement
+                    ? `(expire le ${new Date(
+                        formation?.rncp_details?.date_fin_validite_enregistrement
+                      ).toLocaleDateString("fr-FR")})`
+                    : "(expiration : non renseigné)"}
+                </Text>{" "}
+                <InfoTooltip description={helpText.formation.rncp_code} />
+              </Text>
+              {isTitreRNCP && isRncpExpired && (
+                <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
+                  {formation?.rncp_details?.date_fin_validite_enregistrement ? (
+                    <>
+                      Ce RNCP{" "}
+                      {new Date().getTime() >
+                      new Date(formation?.rncp_details?.date_fin_validite_enregistrement).getTime()
+                        ? "est expiré depuis le"
+                        : "expire le "}{" "}
+                      {new Date(formation?.rncp_details?.date_fin_validite_enregistrement).toLocaleDateString("fr-FR")}
+                    </>
+                  ) : (
+                    <>Ce RNCP est expiré</>
+                  )}{" "}
+                  (source{" "}
+                  <Link
+                    href={`https://www.francecompetences.fr/recherche/rncp/${rncpCode}`}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    https://www.francecompetences.fr/recherche/rncp/{rncpCode}
+                  </Link>
+                  ).
+                </Text>
+              )}
+              {isRncpTemporarilyDisabled && (
+                <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
+                  Ce code RNCP ne permet temporairement pas la publication de l'offre de formation vers Parcoursup dans
+                  l’attente d’informations sur l’évolution de la certification.
+                </Text>
+              )}
+            </RncpContainer>
+          )}
+
+          <Text mb={4}>
+            Intitulé RNCP :{" "}
+            <Text as="span" variant="highlight">
+              {formation.rncp_intitule}
+            </Text>{" "}
+            <InfoTooltip description={helpText.formation.rncp_intitule} />
+          </Text>
+
           {formation.rncp_details && (
             <>
               <Text mb={4}>
@@ -996,12 +996,6 @@ export const DescriptionBlock = ({ formation }) => {
             </Text>
           )}
         </DateSessionContainer>
-        <Text mb={4}>
-          Identifiant actions Carif Oref :{" "}
-          <Text as="span" variant="highlight">
-            {formation.ids_action?.join(",") ?? "N/A"}
-          </Text>
-        </Text>
 
         {/* <Text mb={4}>
             Capacite d'accueil :{" "}
@@ -1076,6 +1070,14 @@ export const DescriptionBlock = ({ formation }) => {
             </Text>
           </Text>
         )}
+
+        <Text mb={4}>
+          Identifiant actions Carif Oref :{" "}
+          <Text as="span" variant="highlight">
+            {formation.ids_action?.join(",") ?? "N/A"}
+          </Text>
+        </Text>
+
         <Text mb={4}>
           Identifiant formation Carif Oref :{" "}
           <Text as="span" variant="highlight">
