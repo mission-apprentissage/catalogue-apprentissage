@@ -177,7 +177,7 @@ const run = async () => {
   let cursor = createCursor(query);
   for await (const formation of cursor) {
     await createFormation(formation);
-    await sleep(1000);
+    // await sleep(1000);
   }
   logger.info({ type: "job" }, " -- PARCOURSUP | EXPORT : ✅  -- ");
 };
