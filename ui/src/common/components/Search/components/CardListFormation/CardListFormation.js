@@ -4,7 +4,7 @@ import { hasAccessTo } from "../../../../utils/rolesUtils";
 import useAuth from "../../../../hooks/useAuth";
 import { PreviousStatusBadge, StatusBadge } from "../../../StatusBadge";
 import { Box, Flex, Link, Text } from "@chakra-ui/react";
-import { ArrowRightLine, InfoCircle } from "../../../../../theme/components/icons";
+import { ArrowRightLine } from "../../../../../theme/components/icons";
 import { QualiteBadge } from "../../../QualiteBadge";
 import { HabiliteBadge } from "../../../HabiliteBadge";
 import { ActifBadge } from "../../../ActifBadge";
@@ -15,6 +15,8 @@ import { AFFELNET_STATUS, PARCOURSUP_STATUS } from "../../../../../constants/sta
 export const CardListFormation = ({ data }) => {
   const [user] = useAuth();
 
+  console.log(data);
+
   return (
     <Link
       as={NavLink}
@@ -23,34 +25,64 @@ export const CardListFormation = ({ data }) => {
       mt={4}
       data-testid={"card_formation"}
     >
-      <Flex display={["none", "flex"]} textStyle="xs" justifyContent="space-between">
-        <Text>{data.etablissement_gestionnaire_entreprise_raison_sociale}</Text>
-        <Text>CFD : {data.cfd}</Text>
-      </Flex>
+      {data.etablissement_gestionnaire_id === data.etablissement_formateur_id ? (
+        <>
+          <Flex display={["none", "flex"]} textStyle="xs" justifyContent="space-between">
+            <Text>
+              Responsable/Formateur: {data.etablissement_gestionnaire_entreprise_raison_sociale}{" "}
+              {data.etablissement_gestionnaire_enseigne && <>({data.etablissement_gestionnaire_enseigne})</>}
+            </Text>
+          </Flex>
+        </>
+      ) : (
+        <>
+          <Flex display={["none", "flex"]} textStyle="xs">
+            <Text>
+              Responsable: {data.etablissement_gestionnaire_entreprise_raison_sociale}{" "}
+              {data.etablissement_gestionnaire_enseigne && <>({data.etablissement_gestionnaire_enseigne})</>} /{" "}
+              Formateur: {data.etablissement_formateur_entreprise_raison_sociale}{" "}
+              {data.etablissement_formateur_enseigne && <>({data.etablissement_formateur_enseigne})</>}
+            </Text>
+          </Flex>
+        </>
+      )}
+
       <Text textStyle="h6" color="grey.800" mt={2}>
         {data.intitule_long}
       </Text>
       <Box>
-        <Text textStyle="sm">
-          {data.lieu_formation_adresse}, {data.code_postal} {data.localite}
+        <Text textStyle="sm" mt={2}>
+          Lieu: {data.lieu_formation_adresse}, {data.code_postal} {data.localite} (UAI:{" "}
+          {data.uai_formation ?? "inconnu"}) - Académie: {data.nom_academie}
         </Text>
-        <Text textStyle="sm">Académie : {data.nom_academie}</Text>
-        <Box>
+        <Box mt={2}>
           <Flex justifyContent="space-between">
-            <Flex mt={1} flexWrap={"wrap"}>
+            <Flex mt={1} gap={2} wrap={"wrap"}>
               {data.catalogue_published && (
                 <>
-                  {hasAccessTo(user, "page_catalogue/voir_status_publication_ps") &&
+                  {hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
                     (data.parcoursup_perimetre ||
                       data.parcoursup_statut !== PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT) && (
                       <>
-                        <StatusBadge source="Parcoursup" status={data.parcoursup_statut} mr={[0, 3]} />
+                        <StatusBadge source="Parcoursup" status={data.parcoursup_statut} />
+
+                        <PreviousStatusBadge
+                          source="Parcoursup"
+                          status={data.parcoursup_previous_statut}
+                          created_at={data.created_at}
+                        />
                       </>
                     )}
-                  {hasAccessTo(user, "page_catalogue/voir_status_publication_aff") &&
+                  {hasAccessTo(user, "page_formation/voir_status_publication_aff") &&
                     (data.affelnet_perimetre || data.affelnet_statut !== AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT) && (
                       <>
-                        <StatusBadge source="Affelnet" status={data.affelnet_statut} mr={[0, 3]} />
+                        <StatusBadge source="Affelnet" status={data.affelnet_statut} />
+
+                        <PreviousStatusBadge
+                          source="Affelnet"
+                          status={data.affelnet_previous_statut}
+                          created_at={data.created_at}
+                        />
                       </>
                     )}
 
@@ -59,41 +91,12 @@ export const CardListFormation = ({ data }) => {
                     data.affelnet_statut === AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT &&
                     data.parcoursup_statut === PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT && (
                       <>
-                        {hasAccessTo(user, "page_formation/voir_status_publication_ps") && (
-                          <StatusBadge mr={[0, 3]} source="Parcoursup" status="hors périmètre" />
-                        )}
-
                         {hasAccessTo(user, "page_formation/voir_status_publication_aff") && (
-                          <StatusBadge mr={[0, 3]} source="Affelnet" status="hors périmètre" />
+                          <StatusBadge source="Affelnet" status="hors périmètre" />
                         )}
-                      </>
-                    )}
 
-                  {hasAccessTo(user, "page_catalogue/voir_status_publication_ps") &&
-                    (data.parcoursup_perimetre ||
-                      data.parcoursup_previous_statut !== PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT) && (
-                      <>
-                        <PreviousStatusBadge source="Parcoursup" status={data.parcoursup_previous_statut} mr={[0, 3]} />
-                      </>
-                    )}
-                  {hasAccessTo(user, "page_catalogue/voir_status_publication_aff") &&
-                    (data.affelnet_perimetre ||
-                      data.affelnet_previous_statut !== AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT) && (
-                      <>
-                        <PreviousStatusBadge source="Affelnet" status={data.affelnet_previous_statut} mr={[0, 3]} />
-                      </>
-                    )}
-
-                  {!data.affelnet_perimetre &&
-                    !data.parcoursup_perimetre &&
-                    data.affelnet_previous_statut === AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT &&
-                    data.parcoursup_previous_statut === PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT && (
-                      <>
                         {hasAccessTo(user, "page_formation/voir_status_publication_ps") && (
-                          <PreviousStatusBadge mr={[0, 3]} source="Parcoursup" status="hors périmètre" />
-                        )}
-                        {hasAccessTo(user, "page_formation/voir_status_publication_aff") && (
-                          <PreviousStatusBadge mr={[0, 3]} source="Affelnet" status="hors périmètre" />
+                          <StatusBadge source="Parcoursup" status="hors périmètre" />
                         )}
                       </>
                     )}
@@ -111,15 +114,24 @@ export const CardListFormation = ({ data }) => {
                 </>
               )}
             </Flex>
+          </Flex>
+          <Flex mt={4} justifyContent="space-between">
+            <Text textStyle="xs">
+              CFD: {data.cfd ?? "N/A"} - MEF:{" "}
+              {!!data.bcn_mefs_10.length ? data.bcn_mefs_10?.map((mef) => mef.mef10)?.join(", ") : "N/A"} -{" "}
+              {data.rncp_code ?? "N/A"}
+            </Text>
+
             <ArrowRightLine alignSelf="center" color="bluefrance" boxSize={4} />
           </Flex>
-          <Flex justifyContent="space-between">
+
+          {/* <Flex justifyContent="space-between">
             {data.ids_action?.length > 0 && (
               <Text textStyle="xs" mt={4}>
                 identifiant actions Carif-Oref: {data.ids_action.join(",")}
               </Text>
             )}
-          </Flex>
+          </Flex> */}
         </Box>
       </Box>
     </Link>
