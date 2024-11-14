@@ -268,8 +268,8 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
       break;
   }
 
-  const etablissement_gestionnaire_raison_sociale_enseigne = `${fields.etablissement_gestionnaire_entreprise_raison_sociale}${fields.etablissement_gestionnaire_enseigne ? ` (${fields.etablissement_gestionnaire_enseigne})` : ""}`;
-  const etablissement_formateur_raison_sociale_enseigne = `${fields.etablissement_formateur_entreprise_raison_sociale}${fields.etablissement_formateur_enseigne ? ` (${fields.etablissement_formateur_enseigne})` : ""}`;
+  const etablissement_gestionnaire_raison_sociale_enseigne = `${fields.etablissement_gestionnaire_entreprise_raison_sociale}${fields.etablissement_gestionnaire_enseigne && fields.etablissement_gestionnaire_enseigne !== fields.etablissement_gestionnaire_entreprise_raison_sociale ? ` (${fields.etablissement_gestionnaire_enseigne})` : ""}`;
+  const etablissement_formateur_raison_sociale_enseigne = `${fields.etablissement_formateur_entreprise_raison_sociale}${fields.etablissement_formateur_enseigne && fields.etablissement_formateur_enseigne !== fields.etablissement_formateur_entreprise_raison_sociale ? ` (${fields.etablissement_formateur_enseigne})` : ""}`;
 
   return {
     ...fields,

@@ -28,20 +28,15 @@ export const CardListFormation = ({ data }) => {
       {data.etablissement_gestionnaire_id === data.etablissement_formateur_id ? (
         <>
           <Flex display={["none", "flex"]} textStyle="xs" justifyContent="space-between">
-            <Text>
-              Responsable/Formateur: {data.etablissement_gestionnaire_entreprise_raison_sociale}{" "}
-              {data.etablissement_gestionnaire_enseigne && <>({data.etablissement_gestionnaire_enseigne})</>}
-            </Text>
+            <Text>Responsable/Formateur: {data.etablissement_gestionnaire_raison_sociale_enseigne}</Text>
           </Flex>
         </>
       ) : (
         <>
           <Flex display={["none", "flex"]} textStyle="xs">
             <Text>
-              Responsable: {data.etablissement_gestionnaire_entreprise_raison_sociale}{" "}
-              {data.etablissement_gestionnaire_enseigne && <>({data.etablissement_gestionnaire_enseigne})</>} /{" "}
-              Formateur: {data.etablissement_formateur_entreprise_raison_sociale}{" "}
-              {data.etablissement_formateur_enseigne && <>({data.etablissement_formateur_enseigne})</>}
+              Responsable: {data.etablissement_gestionnaire_raison_sociale_enseigne} / Formateur:{" "}
+              {data.etablissement_formateurraison_sociale_enseigne}
             </Text>
           </Flex>
         </>
