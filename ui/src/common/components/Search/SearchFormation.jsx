@@ -112,11 +112,53 @@ export default React.memo(({ searchState, context, extraButtons = null }) => {
                     dataField="_id"
                     loader="Chargement des résultats.."
                     size={8}
-                    innerClass={{ pagination: "search-pagination" }}
+                    innerClass={{ pagination: "search-pagination", sortOptions: "search-sort-options" }}
                     pagination={true}
                     URLParams={true}
                     showResultStats={true}
                     sortBy="asc"
+                    sortOptions={[
+                      {
+                        label: "Tri par défaut",
+                        dataField: "_score",
+                        sortBy: "desc",
+                      },
+                      {
+                        label: "Académie",
+                        dataField: "nom_academie.keyword",
+                        sortBy: "asc",
+                      },
+                      {
+                        label: "Formation - libellé long",
+                        dataField: "intitule_long.keyword",
+                        sortBy: "asc",
+                      },
+                      {
+                        label: "Formation - CFD",
+                        dataField: "cfd.keyword",
+                        sortBy: "asc",
+                      },
+                      {
+                        label: "Organisme - UAI du responsable",
+                        dataField: "etablissement_gestionnaire_uai.keyword",
+                        sortBy: "asc",
+                      },
+                      {
+                        label: "Organisme - UAI du formateur",
+                        dataField: "etablissement_formateur_uai.keyword",
+                        sortBy: "asc",
+                      },
+                      {
+                        label: "Organisme - UAI du lieu de formation",
+                        dataField: "uai_formation.keyword",
+                        sortBy: "asc",
+                      },
+                      {
+                        label: "Lieu - code Insee",
+                        dataField: "code_commune_insee.keyword",
+                        sortBy: "asc",
+                      },
+                    ]}
                     defaultQuery={() => {
                       return {
                         _source: columnsDefinition.map(({ accessor }) => accessor),

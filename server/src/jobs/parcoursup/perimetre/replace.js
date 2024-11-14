@@ -36,7 +36,13 @@ const run = async () => {
         { cle_ministere_educatif: formation.cle_ministere_educatif },
         {
           $set: {
-            ...(isOnePredecesseurPublie ? { parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE } : {}),
+            ...(isOnePredecesseurPublie
+              ? {
+                  parcoursup_statut: !!process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_EXPORT_ENABLED
+                    ? PARCOURSUP_STATUS.EN_ATTENTE
+                    : PARCOURSUP_STATUS.PUBLIE,
+                }
+              : {}),
             ...(!!previousEditedUaiFormation && !formation.editedFields?.uai_formation
               ? {
                   uai_formation: previousEditedUaiFormation,
