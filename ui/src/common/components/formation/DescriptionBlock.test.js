@@ -168,8 +168,8 @@ test("renders the description block of the training", async () => {
     <DescriptionBlock formation={{ ...formation, etablissement_reference_habilite_rncp: null }} />
   );
 
-  const title = queryByText("Description");
-  expect(title).toBeInTheDocument();
+  expect(queryByText("Description de la certification")).toBeInTheDocument();
+  expect(queryByText("Informations sur l'offre")).toBeInTheDocument();
 
   const intitule_court = queryByText("TECH.CHAUDRONNERIE INDUSTRIELLE");
   expect(intitule_court).toBeInTheDocument();

@@ -597,7 +597,7 @@ export default () => {
                               (formation.updates_history.filter(
                                 (history) =>
                                   history.to.parcoursup_statut === PARCOURSUP_STATUS.EN_ATTENTE &&
-                                  new Date(history.updated_at).getTime() >= campagneStartDate?.getTime() - 31536000000
+                                  new Date(history.updated_at).getTime() >= campagneStartDate?.getTime()
                               ).length >= 1 ? (
                                 <Badge variant={"ok"} minHeight={"28px"}>
                                   Publication manuelle
