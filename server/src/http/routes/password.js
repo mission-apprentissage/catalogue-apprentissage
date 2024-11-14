@@ -49,7 +49,7 @@ module.exports = ({ users, mailer }) => {
       }).validateAsync(req.body, { abortEarly: false });
 
       // try also by email since users tends to do that
-      const user = (await users.getUser(username)) ?? (await users.getUserByEmail(username));
+      const user = (await users.getUser(username.trim())) ?? (await users.getUserByEmail(username.trim()));
       if (!user) {
         throw Boom.badRequest();
       }
