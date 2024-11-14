@@ -94,8 +94,6 @@
 }
 .search-page .summary-stats {
   font-size: 1em;
-  display: flex;
-  flex-grow: 1;
 }
 .search-page .summary-stats .summary-text {
   flex: 1;
@@ -158,8 +156,9 @@
   color: #6a6a6a;
 }
 
-.search-page .search-sidebar .chakra-collapse[style*="height: auto"] { overflow: initial !important }
-
+.search-page .search-sidebar .chakra-collapse[style*="height: auto"] {
+  overflow: initial !important;
+}
 
 @media screen and (max-width: 767px) {
   .search .filter_mobile_menu {
@@ -193,6 +192,4 @@
     flex: 0 0 100%;
     max-width: 100%;
   }
-
-
 }
