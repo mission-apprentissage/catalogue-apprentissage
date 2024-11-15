@@ -36,7 +36,7 @@ export const CardListFormation = ({ data }) => {
           <Flex display={["none", "flex"]} textStyle="xs">
             <Text>
               Responsable: {data.etablissement_gestionnaire_raison_sociale_enseigne} / Formateur:{" "}
-              {data.etablissement_formateurraison_sociale_enseigne}
+              {data.etablissement_formateur_raison_sociale_enseigne}
             </Text>
           </Flex>
         </>
