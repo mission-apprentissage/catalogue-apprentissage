@@ -191,7 +191,7 @@ export const InstructionManual = ({ plateforme }) => {
               rehypePlugins={[
                 rehypeRaw,
                 rehypeSlug,
-                rehypeToc,
+                [rehypeToc, { headings: ["h2", "h3"], maxDepth: 2 }],
                 [rehypeExternalLinks, { target: "_blank", rel: ["nofollow"] }],
                 [
                   rehypeAutolinkHeadings,
