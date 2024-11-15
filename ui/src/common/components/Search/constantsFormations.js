@@ -1033,6 +1033,7 @@ export const quickFiltersDefinition = [
     dataField: "parcoursup_publication_auto",
     title: "Publication automatique",
     filterLabel: "Publication automatique Parcoursup",
+    acl: "page_catalogue/voir_filtres_ps",
     sortBy: "desc",
     transformData: (data) => {
       return data.map((d) => ({
@@ -1225,6 +1226,7 @@ export const quickFiltersDefinition = [
     dataField: "affelnet_publication_auto",
     title: "Publication automatique",
     filterLabel: "Publication automatique Affelnet",
+    acl: "page_catalogue/voir_filtres_aff",
     sortBy: "desc",
     transformData: (data) =>
       data.map((d) => ({
