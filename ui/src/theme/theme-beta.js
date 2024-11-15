@@ -161,9 +161,19 @@ const fontSizes = {
 };
 
 const textStyles = {
+  h1: {
+    fontSize: ["2rem", "2.25rem"],
+    lineHeight: ["2.5rem", "2.75rem"],
+    fontWeight: "700",
+  },
   h2: {
     fontSize: ["1.75rem", "2rem"],
     lineHeight: ["2.25rem", "2.5rem"],
+    fontWeight: "700",
+  },
+  h3: {
+    fontSize: ["1.5rem", "1.75rem"],
+    lineHeight: ["2rem", "2.25rem"],
     fontWeight: "700",
   },
   h4: {

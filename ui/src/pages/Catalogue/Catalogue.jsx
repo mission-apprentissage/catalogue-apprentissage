@@ -17,7 +17,6 @@ import {
 import Layout from "../layout/Layout";
 import { ArrowRightLine } from "../../theme/components/icons";
 import { useSearch } from "../../common/hooks/useSearch";
-import { HowToReglement } from "../../common/components/HowToReglement/HowToReglement";
 import { HowToAddModal } from "../../common/components/formation/HowToAddModal";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
@@ -65,7 +64,6 @@ export default (props) => {
                         : searchState.countCatalogueNonEligible.filtered.toLocaleString("fr-FR")}
                       )
                     </Tab>
-                    {/* <Tab>Guide réglementaire</Tab> */}
                   </Flex>
                   <Button
                     variant="pill"
@@ -84,9 +82,6 @@ export default (props) => {
                   <TabPanel>
                     <SearchFormation {...props} searchState={searchState} context={CONTEXT.CATALOGUE_NON_ELIGIBLE} />
                   </TabPanel>
-                  {/* <TabPanel>
-                    <HowToReglement />
-                  </TabPanel> */}
                 </TabPanels>
               </Tabs>
 
