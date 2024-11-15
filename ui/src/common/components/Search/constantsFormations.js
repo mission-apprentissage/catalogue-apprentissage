@@ -1169,7 +1169,7 @@ export const quickFiltersDefinition = [
     ],
   },
 
-  { type: "divider", acl: "page_catalogue/voir_status_publication_aff" },
+  { type: "divider", acl: "page_catalogue/voir_filtres_aff" },
 
   {
     componentId: `affelnet_perimetre`,
