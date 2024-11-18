@@ -1605,9 +1605,11 @@ export const dataSearch = {
     "ids_action",
     "id_certifinfo",
     "cle_ministere_educatif",
+    "parcoursup_id",
+    "affelnet_id",
   ],
   placeholder: "Saisissez votre recherche",
-  fieldWeights: [5, 4, 4, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1],
+  fieldWeights: [5, 4, 4, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
 };
 
 export default {
