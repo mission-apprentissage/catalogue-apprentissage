@@ -4,8 +4,9 @@ import { Route, Routes, useNavigate, Navigate, RouterProvider, createBrowserRout
 import ScrollToTop from "./common/components/ScrollToTop";
 import useAuth from "./common/hooks/useAuth";
 import { _get, _post } from "./common/httpClient";
-import { hasAccessTo } from "./common/utils/rolesUtils";
+import { hasAccessTo, hasOnlyOneAcademyRight } from "./common/utils/rolesUtils";
 import { DateContext } from "./DateContext";
+import { academies } from "./constants/academies";
 
 // Route-based code splitting @see https://reactjs.org/docs/code-splitting.html#route-based-code-splitting
 const HomePage = lazy(() => import("./pages/HomePage"));
@@ -99,6 +100,20 @@ const Root = () => {
     getUser();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  let suffixCatalogue = "?";
+  if (hasAccessTo(auth, "page_catalogue/voir_filtres_ps") && !hasAccessTo(auth, "page_catalogue/voir_filtres_aff")) {
+    suffixCatalogue += `parcoursup_perimetre=%5B"Oui"%5D`;
+  } else if (
+    hasAccessTo(auth, "page_catalogue/voir_filtres_aff") &&
+    !hasAccessTo(auth, "page_catalogue/voir_filtres_ps")
+  ) {
+    suffixCatalogue += `affelnet_perimetre=%5B"Oui"%5D`;
+  }
+
+  if (hasOnlyOneAcademyRight(auth)) {
+    suffixCatalogue += `&nom_academie=%5B"${academies[auth.academie]?.nom_academie}"%5D`;
+  }
+
   if (isLoading) {
     return <div />;
   }
@@ -173,7 +188,7 @@ const Root = () => {
               path="/"
               element={
                 <RequireAuth>
-                  <Navigate to={"/recherche/formations"} />
+                  <Navigate to={`/recherche/formations${suffixCatalogue}`} />
                   {/* <HomePage /> */}
                 </RequireAuth>
               }
