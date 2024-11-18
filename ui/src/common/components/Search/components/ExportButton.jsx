@@ -27,7 +27,7 @@ const serializeObject = (columns, obj) => {
     } else {
       value = `${value}`.trim().replace(/"/g, "'").replace(/;/g, ",").replace(/\n/g, "").replace(/\r/g, "");
     }
-    res.push(value !== "" ? `="${value}"` : "");
+    res.push(value !== "" ? `"${value}"` : "");
   });
   return res.join(CSV_SEPARATOR);
 };
