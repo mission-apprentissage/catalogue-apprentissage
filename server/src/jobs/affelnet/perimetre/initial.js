@@ -8,7 +8,6 @@ const {
   getSessionDateRules,
 } = require("../../../common/utils/rulesUtils");
 const { AFFELNET_STATUS } = require("../../../constants/status");
-const { updateManyTagsHistory } = require("../../../logic/updaters/tagsHistoryUpdater");
 
 const run = async () => {
   const sessionStartDate = await getSessionStartDate();
@@ -60,63 +59,57 @@ const run = async () => {
   logger.debug({ type: "job" }, "Etape 1.");
   await Formation.updateMany(
     {
+      affelnet_statut_initial: { $ne: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT },
       $or: [
+        // Plus dans le flux
+        { published: false },
+        // Plus dans le catalogue général
+        { catalogue_published: false, forced_published: { $ne: true } },
+        // Diplôme périmé
         {
-          affelnet_statut: { $nin: [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.NON_PUBLIE] },
-          $or: [
-            // Plus dans le flux
-            { published: false },
-            // Plus dans le catalogue général
-            { catalogue_published: false, forced_published: { $ne: true } },
-            // Diplôme périmé
-            {
-              "rncp_details.code_type_certif": {
-                $in: ["Titre", "TP", null],
-              },
-              rncp_code: { $exists: true, $ne: null },
-              "rncp_details.rncp_outdated": true,
-            },
-            {
-              "rncp_details.code_type_certif": {
-                $in: ["Titre", "TP", null],
-              },
-              rncp_code: { $eq: null },
-              cfd_outdated: true,
-            },
-            {
-              "rncp_details.code_type_certif": {
-                $nin: ["Titre", "TP", null],
-              },
-              cfd_outdated: true,
-            },
-            // Date de début hors campagne en cours.
-            { date_debut: { $not: { $gte: sessionStartDate, $lt: sessionEndDate } } },
-          ],
+          "rncp_details.code_type_certif": {
+            $in: ["Titre", "TP", null],
+          },
+          rncp_code: { $exists: true, $ne: null },
+          "rncp_details.rncp_outdated": true,
         },
-        // Reset du statut si l'on supprime affelnet_id
-        { affelnet_statut: AFFELNET_STATUS.PUBLIE, affelnet_id: null },
+        {
+          "rncp_details.code_type_certif": {
+            $in: ["Titre", "TP", null],
+          },
+          rncp_code: { $eq: null },
+          cfd_outdated: true,
+        },
+        {
+          "rncp_details.code_type_certif": {
+            $nin: ["Titre", "TP", null],
+          },
+          cfd_outdated: true,
+        },
+        // Date de début hors campagne en cours.
+        { date_debut: { $not: { $gte: sessionStartDate, $lt: sessionEndDate } } },
         // Initialisation du statut si non existant
-        { affelnet_statut: null },
+        { affelnet_statut_initial: null },
       ],
     },
 
-    { $set: { affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT } }
+    { $set: { affelnet_statut_initial: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT } }
   );
 
-  /** 2. On réinitialise les formations "à publier ..." à "non publiable en l'état" pour permettre le recalcule du périmètre */
+  // set "à publier (soumis à validation)" for trainings matching affelnet eligibility rules
+  // reset "à publier" & "à publier (soumis à validation)"
   logger.debug({ type: "job" }, "Etape 2.");
   await Formation.updateMany(
     {
-      affelnet_statut: { $in: [AFFELNET_STATUS.A_PUBLIER_VALIDATION, AFFELNET_STATUS.A_PUBLIER] },
+      affelnet_statut_initial: { $in: [AFFELNET_STATUS.A_PUBLIER_VALIDATION, AFFELNET_STATUS.A_PUBLIER] },
     },
-    { $set: { affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT } }
+    { $set: { affelnet_statut_initial: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT } }
   );
-
   /** 3. On applique les règles de périmètres pour statut "à publier avec action attendue" uniquement sur les formations "non publiable en l'état" pour ne pas écraser les actions menées par les utilisateurs */
   logger.debug({ type: "job" }, "Etape 3.");
 
   const filterNonPubliable = {
-    affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
+    affelnet_statut_initial: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
   };
 
   const aPublierSoumisAValidationRules = await ReglePerimetre.find({
@@ -131,23 +124,12 @@ const run = async () => {
         ...filterReglement,
         ...filterSessionDate,
         ...filterNonPubliable,
-
         $or: aPublierSoumisAValidationRules.map((rule) => getQueryFromRule(rule, true)),
       },
       [
         {
           $set: {
-            last_update_at: Date.now(),
-            affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
-            // affelnet_statut: {
-            //   $cond: {
-            //     if: {
-            //       $eq: ["$affelnet_id", null],
-            //     },
-            //     then: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
-            //     else: AFFELNET_STATUS.EN_ATTENTE,
-            //   },
-            // },
+            affelnet_statut_initial: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
           },
         },
       ]
@@ -158,7 +140,7 @@ const run = async () => {
   logger.debug({ type: "job" }, "Etape 4.");
 
   const filter = {
-    affelnet_statut: { $in: [AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT, AFFELNET_STATUS.A_PUBLIER_VALIDATION] },
+    affelnet_statut_initial: { $in: [AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT, AFFELNET_STATUS.A_PUBLIER_VALIDATION] },
   };
 
   const aPublierRules = await ReglePerimetre.find({
@@ -173,22 +155,12 @@ const run = async () => {
         ...filterReglement,
         ...filterSessionDate,
         ...filter,
-
         $or: aPublierRules.map((rule) => getQueryFromRule(rule, true)),
       },
       [
         {
           $set: {
-            last_update_at: Date.now(),
-            affelnet_statut: {
-              $cond: {
-                if: {
-                  $eq: ["$affelnet_id", null],
-                },
-                then: AFFELNET_STATUS.A_PUBLIER,
-                else: AFFELNET_STATUS.EN_ATTENTE,
-              },
-            },
+            affelnet_statut_initial: AFFELNET_STATUS.A_PUBLIER,
           },
         },
       ]
@@ -209,63 +181,19 @@ const run = async () => {
   //         ...filterReglement,
   //         ...filterSessionDate,
 
-  //         affelnet_statut: {
-  //           $in: [
-  //             AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
-  //             AFFELNET_STATUS.A_PUBLIER_VALIDATION,
-  //             AFFELNET_STATUS.A_PUBLIER,
-  //           ],
-  //         },
-
   //         num_academie,
   //         ...getQueryFromRule(rule, true),
   //       },
   //       [
   //         {
   //           $set: {
-  //             last_update_at: Date.now(),
-  //             affelnet_statut: {
-  //               $cond: {
-  //                 if: {
-  //                   $eq: ["$affelnet_id", null],
-  //                 },
-  //                 then: status,
-  //                 else:
-  //                   status === AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT
-  //                     ? AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT
-  //                     : AFFELNET_STATUS.EN_ATTENTE,
-  //               },
-  //             },
+  //             affelnet_statut_initial: status,
   //           },
   //         },
   //       ]
   //     );
   //   });
   // });
-
-  /** 6. Vérification de la date de publication */
-  logger.debug({ type: "job" }, "Etape 6.");
-  /** 6a. On s'assure que les dates de publication sont définies pour les formations publiées */
-  await Formation.updateMany(
-    {
-      affelnet_published_date: null,
-      affelnet_statut: AFFELNET_STATUS.PUBLIE,
-    },
-    { $set: { affelnet_published_date: new Date() } }
-  );
-
-  /** 6b. On s'assure que les dates de publication ne sont pas définies pour les formations non publiées */
-  await Formation.updateMany(
-    {
-      affelnet_published_date: { $ne: null },
-      affelnet_statut: { $ne: AFFELNET_STATUS.PUBLIE },
-    },
-    { $set: { affelnet_published_date: null } }
-  );
-
-  /** 7. On met à jour l'historique des statuts. */
-  logger.debug({ type: "job" }, "Etape 7.");
-  await updateManyTagsHistory("affelnet_statut");
 };
 
 module.exports = { run };

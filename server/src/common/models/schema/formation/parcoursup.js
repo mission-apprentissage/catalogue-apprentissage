@@ -25,6 +25,12 @@ const parcoursupSchema = {
     default: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
     description: "Statut parcoursup",
   },
+  parcoursup_statut_initial: {
+    type: String,
+    enum: Object.values(PARCOURSUP_STATUS),
+    default: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
+    description: "Statut initial parcoursup",
+  },
   parcoursup_previous_statut: {
     type: String,
     enum: Object.values(PARCOURSUP_STATUS),

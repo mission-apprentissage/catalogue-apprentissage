@@ -3,121 +3,244 @@ const { Formation } = require("../../../common/models");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
 
 const run = async () => {
-  const filterReglement = { catalogue_published: true, published: true };
+  const filterGeneral = { catalogue_published: true, published: true };
+  const filterNonReglementaire = { catalogue_published: false, published: true };
 
   const total = await Formation.countDocuments({});
-  const totalReglement = await Formation.countDocuments(filterReglement);
+  const totalGeneral = await Formation.countDocuments(filterGeneral);
+  const totalNonReglementaire = await Formation.countDocuments(filterNonReglementaire);
 
   const totalNotRelevant = await Formation.countDocuments({
     parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
   });
-  const totalReglementNotRelevant = await Formation.countDocuments({
-    ...filterReglement,
+  const totalGeneralNotRelevant = await Formation.countDocuments({
+    ...filterGeneral,
+    parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
+  });
+  const totalNonReglementaireNotRelevant = await Formation.countDocuments({
+    ...totalNonReglementaire,
     parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
   });
 
   const totalToValidateHabilitation = await Formation.countDocuments({
     parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
   });
-  const totalReglementToValidateHabilitation = await Formation.countDocuments({
-    ...filterReglement,
+  const totalGeneralToValidateHabilitation = await Formation.countDocuments({
+    ...filterGeneral,
+    parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
+  });
+  const totalNonReglementaireToValidateHabilitation = await Formation.countDocuments({
+    ...filterNonReglementaire,
     parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
   });
 
   const totalToValidate = await Formation.countDocuments({
     parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
   });
-  const totalReglementToValidate = await Formation.countDocuments({
-    ...filterReglement,
+  const totalGeneralToValidate = await Formation.countDocuments({
+    ...filterGeneral,
+    parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
+  });
+  const totalNonReglementaireToValidate = await Formation.countDocuments({
+    ...filterNonReglementaire,
     parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
   });
 
   const totalToValidateRecteur = await Formation.countDocuments({
     parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
   });
-  const totalReglementToValidateRecteur = await Formation.countDocuments({
-    ...filterReglement,
+  const totalGeneralToValidateRecteur = await Formation.countDocuments({
+    ...filterGeneral,
+    parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+  });
+  const totalNonReglementaireToValidateRecteur = await Formation.countDocuments({
+    ...filterNonReglementaire,
     parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
   });
 
   const totalToCheck = await Formation.countDocuments({
     parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER,
   });
-  const totalReglementToCheck = await Formation.countDocuments({
-    ...filterReglement,
+  const totalGeneralToCheck = await Formation.countDocuments({
+    ...filterGeneral,
+    parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER,
+  });
+  const totalNonReglementaireToCheck = await Formation.countDocuments({
+    ...filterNonReglementaire,
     parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER,
   });
 
   const totalPending = await Formation.countDocuments({
     parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
   });
-  const totalReglementPending = await Formation.countDocuments({
-    ...filterReglement,
+  const totalGeneralPending = await Formation.countDocuments({
+    ...filterGeneral,
+    parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
+  });
+  const totalNonReglementairePending = await Formation.countDocuments({
+    ...filterNonReglementaire,
     parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
   });
 
   const totalRejected = await Formation.countDocuments({
     parcoursup_statut: PARCOURSUP_STATUS.REJETE,
   });
-  const totalReglementRejected = await Formation.countDocuments({
-    ...filterReglement,
+  const totalGeneralRejected = await Formation.countDocuments({
+    ...filterGeneral,
+    parcoursup_statut: PARCOURSUP_STATUS.REJETE,
+  });
+  const totalNonReglementaireRejected = await Formation.countDocuments({
+    ...filterNonReglementaire,
     parcoursup_statut: PARCOURSUP_STATUS.REJETE,
   });
 
   const totalPublished = await Formation.countDocuments({
     parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
   });
-  const totalReglementPublished = await Formation.countDocuments({
-    ...filterReglement,
+  const totalGeneralPublished = await Formation.countDocuments({
+    ...filterGeneral,
+    parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
+  });
+  const totalNonReglementairePublished = await Formation.countDocuments({
+    ...filterNonReglementaire,
     parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
   });
 
   const totalNotPublished = await Formation.countDocuments({
     parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIE,
   });
-  const totalReglementNotPublished = await Formation.countDocuments({
-    ...filterReglement,
+  const totalGeneralNotPublished = await Formation.countDocuments({
+    ...filterGeneral,
+    parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIE,
+  });
+  const totalNonReglementaireNotPublished = await Formation.countDocuments({
+    ...filterNonReglementaire,
     parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIE,
   });
 
   const totalClosed = await Formation.countDocuments({
     parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
   });
-  const totalReglementClosed = await Formation.countDocuments({
-    ...filterReglement,
+  const totalGeneralClosed = await Formation.countDocuments({
+    ...filterGeneral,
+    parcoursup_statut: PARCOURSUP_STATUS.FERME,
+  });
+  const totalNonReglementaireClosed = await Formation.countDocuments({
+    ...filterNonReglementaire,
     parcoursup_statut: PARCOURSUP_STATUS.FERME,
   });
 
   const totalPérimètre = await Formation.countDocuments({ parcoursup_perimetre: true });
-  const totalReglementPérimètre = await Formation.countDocuments({
-    ...filterReglement,
+  const totalGeneralPérimètre = await Formation.countDocuments({
+    ...filterGeneral,
+    parcoursup_perimetre: true,
+  });
+  const totalNonReglementairePérimètre = await Formation.countDocuments({
+    ...filterNonReglementaire,
     parcoursup_perimetre: true,
   });
 
   const totalHorsPérimètre = await Formation.countDocuments({ parcoursup_perimetre: false });
-  const totalReglementHorsPérimètre = await Formation.countDocuments({
-    ...filterReglement,
+  const totalGeneralHorsPérimètre = await Formation.countDocuments({
+    ...filterGeneral,
+    parcoursup_perimetre: false,
+  });
+  const totalNonReglementaireHorsPérimètre = await Formation.countDocuments({
+    ...filterNonReglementaire,
     parcoursup_perimetre: false,
   });
 
+  const results = {
+    total: {
+      "catalogue général": totalGeneral,
+      "catalogue non règlementaire": totalNonReglementaire,
+      "total (y compris archives)": total,
+    },
+
+    "statut 'non publiable en l'état'": {
+      "catalogue général": totalGeneralNotRelevant,
+      "catalogue non règlementaire": totalNonReglementaireNotRelevant,
+      "total (y compris archives)": totalNotRelevant,
+    },
+    "statut 'à publier (sous condition habilitation)' ": {
+      "catalogue général": totalGeneralToValidateHabilitation,
+      "catalogue non règlementaire": totalNonReglementaireToValidateHabilitation,
+      "total (y compris archives)": totalToValidateHabilitation,
+    },
+    "statut 'à publier (vérifier accès direct postbac)' ": {
+      "catalogue général": totalGeneralToValidate,
+      "catalogue non règlementaire": totalNonReglementaireToValidate,
+      "total (y compris archives)": totalToValidate,
+    },
+    "statut 'à publier (soumis à validation Recteur)' ": {
+      "catalogue général": totalGeneralToValidateRecteur,
+      "catalogue non règlementaire": totalNonReglementaireToValidateRecteur,
+      "total (y compris archives)": totalToValidateRecteur,
+    },
+    "statut 'à publier' ": {
+      "catalogue général": totalGeneralToCheck,
+      "catalogue non règlementaire": totalNonReglementaireToCheck,
+      "total (y compris archives)": totalToCheck,
+    },
+    "statut 'en attente de publication' ": {
+      "catalogue général": totalGeneralPending,
+      "catalogue non règlementaire": totalNonReglementairePending,
+      "total (y compris archives)": totalPending,
+    },
+    "statut 'publié' ": {
+      "catalogue général": totalGeneralPublished,
+      "catalogue non règlementaire": totalNonReglementairePublished,
+      "total (y compris archives)": totalPublished,
+    },
+    "statut 'rejeté' ": {
+      "catalogue général": totalGeneralRejected,
+      "catalogue non règlementaire": totalNonReglementaireRejected,
+      "total (y compris archives)": totalRejected,
+    },
+    "statut 'NON publié' ": {
+      "catalogue général": totalGeneralNotPublished,
+      "catalogue non règlementaire": totalNonReglementaireNotPublished,
+      "total (y compris archives)": totalNotPublished,
+    },
+    "statut 'fermé' ": {
+      "catalogue général": totalGeneralClosed,
+      "catalogue non règlementaire": totalNonReglementaireClosed,
+      "total (y compris archives)": totalClosed,
+    },
+
+    "dans le périmètre": {
+      "catalogue général": totalGeneralPérimètre,
+      "catalogue non règlementaire": totalNonReglementairePérimètre,
+      "total (y compris archives)": totalPérimètre,
+    },
+    "hors périmètre": {
+      "catalogue général": totalGeneralHorsPérimètre,
+      "catalogue non règlementaire": totalNonReglementaireHorsPérimètre,
+      "total (y compris archives)": totalHorsPérimètre,
+    },
+  };
+
+  console.table(results);
+
   logger.info(
     { type: "job" },
-    `Compteurs des formations dans le catalogue (règlementaire / total):
-      - total : ${totalReglement} / ${total}
+    results
+    //   `Compteurs des formations dans le catalogue (catalogue général / catalogue non règlementaire / total (y compris archives)):
+    //     - total : ${totalGeneral} / ${totalNonReglementaire} / ${total}
 
-      - statut "non publiable en l'état" : ${totalReglementNotRelevant} / ${totalNotRelevant}
-      - statut "à publier (sous condition habilitation)" : ${totalReglementToValidateHabilitation} / ${totalToValidateHabilitation}
-      - statut "à publier (vérifier accès direct postbac)" : ${totalReglementToValidate} / ${totalToValidate}
-      - statut "à publier (soumis à validation Recteur)" : ${totalReglementToValidateRecteur} / ${totalToValidateRecteur}
-      - statut "à publier" : ${totalReglementToCheck} / ${totalToCheck}
-      - statut "en attente de publication" : ${totalReglementPending} / ${totalPending}
-      - statut "publié" sur ParcourSup : ${totalReglementPublished} / ${totalPublished}
-      - statut "rejeté" par ParcourSup : ${totalReglementRejected} / ${totalRejected}
-      - statut "NON publié" sur ParcourSup : ${totalReglementNotPublished} / ${totalNotPublished}
-      - statut "fermé" sur ParcourSup : ${totalReglementClosed} / ${totalClosed}
+    //     - statut "non publiable en l'état" : ${totalGeneralNotRelevant} / ${totalNonReglementaireNotRelevant} / ${totalNotRelevant}
+    //     - statut "à publier (sous condition habilitation)" : ${totalGeneralToValidateHabilitation} / ${totalNonReglementaireToValidateHabilitation} / ${totalToValidateHabilitation}
+    //     - statut "à publier (vérifier accès direct postbac)" : ${totalGeneralToValidate} / ${totalNonReglementaireToValidate} / ${totalToValidate}
+    //     - statut "à publier (soumis à validation Recteur)" : ${totalGeneralToValidateRecteur} / ${totalNonReglementaireToValidateRecteur} / ${totalToValidateRecteur}
+    //     - statut "à publier" : ${totalGeneralToCheck} / ${totalNonReglementaireToCheck} / ${totalToCheck}
+    //     - statut "en attente de publication" : ${totalGeneralPending} / ${totalNonReglementairePending} / ${totalPending}
+    //     - statut "publié" : ${totalGeneralPublished} / ${totalNonReglementairePublished} / ${totalPublished}
+    //     - statut "rejeté" : ${totalGeneralRejected} / ${totalNonReglementaireRejected} / ${totalRejected}
+    //     - statut "NON publié" : ${totalGeneralNotPublished} / ${totalNonReglementaireNotPublished} / ${totalNotPublished}
+    //     - statut "fermé" : ${totalGeneralClosed} / ${totalNonReglementaireClosed} / ${totalClosed}
 
-      - dans le périmètre: ${totalReglementPérimètre} / ${totalPérimètre}
-      - hors périmètre : ${totalReglementHorsPérimètre} / ${totalHorsPérimètre}`
+    //     - dans le périmètre : ${totalGeneralPérimètre} / ${totalNonReglementairePérimètre} / ${totalPérimètre}
+    //     - hors périmètre : ${totalGeneralHorsPérimètre} / ${totalNonReglementaireHorsPérimètre} / ${totalHorsPérimètre}`
   );
 };
 module.exports = { run };

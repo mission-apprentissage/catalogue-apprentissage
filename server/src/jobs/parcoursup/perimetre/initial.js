@@ -9,7 +9,6 @@ const {
   getSessionDateRules,
 } = require("../../../common/utils/rulesUtils");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
-const { updateManyTagsHistory } = require("../../../logic/updaters/tagsHistoryUpdater");
 
 const excludedRNCPs = [
   "RNCP36730",
@@ -441,91 +440,19 @@ const run = async () => {
     ],
   };
 
-  const campagneCount = await Formation.countDocuments(filterSessionDate);
-
-  logger.debug({ type: "job" }, `${campagneCount} formations possèdent des dates de début pour la campagne en cours.`);
-
-  /** 0. On initialise parcoursup_id à null si l'information n'existe pas sur la formation */
-  logger.debug({ type: "job" }, "Etape 0.");
-  await Formation.updateMany({ parcoursup_id: { $exists: false } }, { $set: { parcoursup_id: null } });
-
-  /** 1. Application de la réglementation : réinitialisation des étiquettes pour les formations qui sortent du périmètre quelque soit le statut (sauf publié pour le moment) */
+  /** 1. On réinitialise les formations "à publier ..." à "non publiable en l'état" pour permettre le recalcule du statut initial */
   logger.debug({ type: "job" }, "Etape 1.");
   await Formation.updateMany(
     {
-      $or: [
-        {
-          parcoursup_statut: {
-            $nin: [PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.FERME, PARCOURSUP_STATUS.NON_PUBLIE],
-          },
-          $or: [
-            // Plus dans le flux
-            { published: false },
-            // Plus dans le catalogue général
-            { catalogue_published: false, forced_published: { $ne: true } },
-            // Diplôme périmé
-            {
-              "rncp_details.code_type_certif": {
-                $in: ["Titre", "TP", null],
-              },
-              rncp_code: {
-                $exists: true,
-                $ne: null,
-              },
-              "rncp_details.rncp_outdated": true,
-            },
-            {
-              "rncp_details.code_type_certif": {
-                $in: ["Titre", "TP", null],
-              },
-              rncp_code: { $eq: null },
-              cfd_outdated: true,
-            },
-            {
-              "rncp_details.code_type_certif": {
-                $nin: ["Titre", "TP", null],
-              },
-              cfd_outdated: true,
-            },
-            // Date de début hors campagne en cours.
-            { date_debut: { $not: { $gte: sessionStartDate, $lt: sessionEndDate } } },
-            // Sur des codes RNCPs temporairement non autorisés
-            {
-              rncp_code: {
-                $in: excludedRNCPs,
-              },
-            },
-          ],
-        },
-        // Reset du statut si l'on supprime parcoursup_id
-        { parcoursup_statut: PARCOURSUP_STATUS.PUBLIE, parcoursup_id: null },
-        // Initialisation du statut si non existant
-        { parcoursup_statut: null },
-      ],
+      parcoursup_statut_initial: { $ne: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT },
     },
-    { $set: { parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT } }
+    { $set: { parcoursup_statut_initial: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT } }
   );
 
-  /** 2. On réinitialise les formations "à publier ..." à "non publiable en l'état" pour permettre le recalcule du périmètre */
+  /** 2. On applique les règles de périmètres pour statut "à publier avec action attendue" uniquement sur les formations "non publiable en l'état" */
   logger.debug({ type: "job" }, "Etape 2.");
-  await Formation.updateMany(
-    {
-      parcoursup_statut: {
-        $in: [
-          PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
-          PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
-          PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
-          PARCOURSUP_STATUS.A_PUBLIER,
-        ],
-      },
-    },
-    { $set: { parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT } }
-  );
-
-  /** 3. On applique les règles de périmètres pour statut "à publier avec action attendue" uniquement sur les formations "non publiable en l'état" pour ne pas écraser les actions menées par les utilisateurs */
-  logger.debug({ type: "job" }, "Etape 3.");
   const filterNonPubliable = {
-    parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
+    parcoursup_statut_initial: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
   };
 
   const aPublierSousConditions = await ReglePerimetre.find({
@@ -553,18 +480,17 @@ const run = async () => {
         [
           {
             $set: {
-              last_update_at: Date.now(),
-              parcoursup_statut: rule.statut,
+              parcoursup_statut_initial: rule.statut,
             },
           },
         ]
       );
     }));
 
-  /** 4. Enfin on applique les règles appliquant le statut "à publier" sur toutes les formations (y compris celles qui correspondent aux règles précédentes) */
-  logger.debug({ type: "job" }, "Etape 4.");
+  /** 3. Enfin on applique les règles appliquant le statut "à publier" sur toutes les formations (y compris celles qui correspondent aux règles précédentes) */
+  logger.debug({ type: "job" }, "Etape 3.");
   const filter = {
-    parcoursup_statut: {
+    parcoursup_statut_initial: {
       $in: [
         PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
         PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
@@ -592,97 +518,11 @@ const run = async () => {
       [
         {
           $set: {
-            last_update_at: Date.now(),
-            parcoursup_statut: {
-              $cond: {
-                if: {
-                  $eq: ["$parcoursup_id", null],
-                },
-                then: PARCOURSUP_STATUS.A_PUBLIER,
-                else: PARCOURSUP_STATUS.EN_ATTENTE,
-              },
-            },
+            parcoursup_statut_initial: PARCOURSUP_STATUS.A_PUBLIER,
           },
         },
       ]
     ));
-
-  /** 5. On applique les règles des académies */
-  // logger.debug({ type: "job" }, "Etape 5.");
-  // const academieRules = [
-  //   ...aPublierHabilitationRules,
-  //   ...aPublierVerifierAccesDirectPostBacRules,
-  //   ...aPublierValidationRecteurRules,
-  //   ...aPublierRules,
-  // ].filter(({ statut_academies }) => statut_academies && Object.keys(statut_academies).length > 0);
-
-  // await asyncForEach(academieRules, async (rule) => {
-  //   await asyncForEach(Object.entries(rule.statut_academies), async ([num_academie, status]) => {
-  //     logger.debug({ type: "job" }, status);
-  //     await Formation.updateMany(
-  //       {
-  //         ...filterReglement,
-  //         ...filterSessionDate,
-
-  //         parcoursup_statut: {
-  //           $in: [
-  //             PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
-  //             PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
-  //             PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
-  //             PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
-  //             PARCOURSUP_STATUS.A_PUBLIER,
-  //           ],
-  //         },
-
-  //         num_academie,
-  //         ...getQueryFromRule(rule, true),
-  //       },
-  //       [
-  //         {
-  //           $set: {
-  //             last_update_at: Date.now(),
-  //             parcoursup_statut: {
-  //               $cond: {
-  //                 if: {
-  //                   $eq: ["$parcoursup_id", null],
-  //                 },
-  //                 then: status,
-  //                 else:
-  //                   status === PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT
-  //                     ? PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT
-  //                     : PARCOURSUP_STATUS.EN_ATTENTE,
-  //               },
-  //             },
-  //           },
-  //         },
-  //       ]
-  //     );
-  //   });
-  // });
-
-  /** 6. Vérification de la date de publication */
-  logger.debug({ type: "job" }, "Etape 6.");
-  /** 6a. On s'assure que les dates de publication soient définies pour les formations publiées */
-  await Formation.updateMany(
-    {
-      parcoursup_published_date: null,
-      parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
-    },
-    { $set: { parcoursup_published_date: new Date() } }
-  );
-
-  /** 6b. On s'assure que les dates de publication ne soient pas définies pour les formations non publiées */
-  await Formation.updateMany(
-    {
-      parcoursup_published_date: { $ne: null },
-      parcoursup_statut: { $ne: PARCOURSUP_STATUS.PUBLIE },
-    },
-    { $set: { parcoursup_published_date: null } }
-  );
-
-  /** 7. On met à jour l'historique des statuts. */
-  logger.debug({ type: "job" }, "Etape 7.");
-  await updateManyTagsHistory("parcoursup_statut");
 };
 
 module.exports = { run };

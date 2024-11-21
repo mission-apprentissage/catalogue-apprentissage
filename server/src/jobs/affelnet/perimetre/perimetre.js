@@ -41,7 +41,7 @@ const run = async () => {
   };
 
   const formationsInPerimetre = new Set();
-  const formationsNotInPerimetre = new Set();
+  // const formationsNotInPerimetre = new Set();
 
   const aPublierSoumisAValidationRules = await ReglePerimetre.find({
     plateforme: "affelnet",
@@ -75,27 +75,27 @@ const run = async () => {
     ).forEach(({ cle_ministere_educatif }) => formationsInPerimetre.add(cle_ministere_educatif));
   }
 
-  // apply academy rules
-  const academieRules = [...aPublierSoumisAValidationRules, ...aPublierRules].filter(
-    ({ statut_academies }) => statut_academies && Object.keys(statut_academies).length > 0
-  );
+  // // apply academy rules
+  // const academieRules = [...aPublierSoumisAValidationRules, ...aPublierRules].filter(
+  //   ({ statut_academies }) => statut_academies && Object.keys(statut_academies).length > 0
+  // );
 
-  await asyncForEach(academieRules, async (rule) => {
-    await asyncForEach(Object.entries(rule.statut_academies), async ([num_academie, status]) => {
-      (
-        await Formation.find({
-          ...filterReglement,
+  // await asyncForEach(academieRules, async (rule) => {
+  //   await asyncForEach(Object.entries(rule.statut_academies), async ([num_academie, status]) => {
+  //     (
+  //       await Formation.find({
+  //         ...filterReglement,
 
-          num_academie,
-          ...getQueryFromRule(rule, false),
-        }).select({ cle_ministere_educatif: 1 })
-      ).forEach(({ cle_ministere_educatif }) =>
-        status === AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT
-          ? formationsNotInPerimetre.add(cle_ministere_educatif)
-          : formationsInPerimetre.add(cle_ministere_educatif)
-      );
-    });
-  });
+  //         num_academie,
+  //         ...getQueryFromRule(rule, false),
+  //       }).select({ cle_ministere_educatif: 1 })
+  //     ).forEach(({ cle_ministere_educatif }) =>
+  //       status === AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT
+  //         ? formationsNotInPerimetre.add(cle_ministere_educatif)
+  //         : formationsInPerimetre.add(cle_ministere_educatif)
+  //     );
+  //   });
+  // });
 
   logger.debug("- Intégration du périmètre");
   await cursor(

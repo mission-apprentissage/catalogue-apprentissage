@@ -1,5 +1,6 @@
 const logger = require("../../../common/logger");
 const controller = require("./controller");
+const initial = require("./initial");
 const perimetre = require("./perimetre");
 const replace = require("./replace");
 const session = require("./session");
@@ -18,7 +19,10 @@ const afPerimetre = async () => {
     logger.info({ type: "job" }, "∙ Traitement des 'annule et remplace':");
     await replace.run();
 
-    logger.info({ type: "job" }, "∙ Application des règles de périmètre :");
+    logger.info({ type: "job" }, "∙ Application des règles de périmètre pour déterminer le statut initial :");
+    await initial.run();
+
+    logger.info({ type: "job" }, "∙ Application des règles de périmètre en tenant compte des actions :");
     await controller.run();
 
     logger.info({ type: "job" }, "∙ Vérification du périmètre :");
