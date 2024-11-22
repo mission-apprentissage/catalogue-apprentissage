@@ -687,6 +687,13 @@ export const columnsDefinition = [
     formatter: escapeDiacritics,
   },
   {
+    Header: "Affelnet: statut initial",
+    accessor: "affelnet_statut_initial",
+    width: 200,
+    exportable: true,
+    formatter: escapeDiacritics,
+  },
+  {
     Header: "Affelnet: statut sur la précédente campagne",
     accessor: "affelnet_previous_statut",
     width: 200,
@@ -785,6 +792,13 @@ export const columnsDefinition = [
   {
     Header: "Parcoursup: statut",
     accessor: "parcoursup_statut",
+    width: 200,
+    exportable: true,
+    formatter: escapeDiacritics,
+  },
+  {
+    Header: "Parcoursup: statut initial",
+    accessor: "parcoursup_statut_initial",
     width: 200,
     exportable: true,
     formatter: escapeDiacritics,
@@ -1166,6 +1180,17 @@ export const quickFiltersDefinition = [
           return {};
         },
       },
+
+      {
+        componentId: `parcoursup_statut_initial`,
+        type: "facet",
+        dataField: "parcoursup_statut_initial.keyword",
+        title: "Statut initial",
+        filterLabel: "Statut initial Parcoursup",
+        selectAllLabel: "Tous",
+        sortBy: "count",
+        acl: "page_catalogue/voir_filtres_avances_ps",
+      },
     ],
   },
 
@@ -1357,6 +1382,17 @@ export const quickFiltersDefinition = [
       //         return {};
       //       },
       //     },
+
+      {
+        componentId: `affelnet_statut_initial`,
+        type: "facet",
+        dataField: "affelnet_statut_initial.keyword",
+        title: "Statut initial",
+        filterLabel: "Statut initial Affelnet",
+        selectAllLabel: "Tous",
+        sortBy: "count",
+        acl: "page_catalogue/voir_filtres_avances_aff",
+      },
     ],
   },
 
