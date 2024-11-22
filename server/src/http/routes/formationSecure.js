@@ -221,7 +221,7 @@ module.exports = () => {
     );
 
     const update = {
-      parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER,
+      parcoursup_statut: formation?.parcoursup_statut_initial,
       parcoursup_id: null,
       last_update_who: user.email,
       parcoursup_statut_reinitialisation: {
