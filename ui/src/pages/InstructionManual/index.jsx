@@ -123,9 +123,6 @@ const MarkdownTheme = {
       </ListItem>
     );
   },
-  img: (props) => {
-    return <img {...props} />;
-  },
 };
 
 export const InstructionManual = ({ plateforme }) => {
@@ -179,19 +176,11 @@ export const InstructionManual = ({ plateforme }) => {
             <ReactMarkdown
               components={ChakraUIRenderer(MarkdownTheme)}
               children={markdown}
-              urlTransform={(url) => url}
-              remarkPlugins={[
-                [remarkGfm],
-                [remarkTextId],
-                [remarkToc],
-                [remarkNormalizeTexts],
-
-                // [remarkImages],
-              ]}
+              remarkPlugins={[[remarkGfm], [remarkTextId], [remarkToc], [remarkNormalizeTexts], [remarkImages]]}
               rehypePlugins={[
                 rehypeRaw,
                 rehypeSlug,
-                [rehypeToc, { headings: ["h2", "h3"], maxDepth: 2 }],
+                [rehypeToc, { headings: ["h2", "h3"], maxDepth: 1 }],
                 [rehypeExternalLinks, { target: "_blank", rel: ["nofollow"] }],
                 [
                   rehypeAutolinkHeadings,
