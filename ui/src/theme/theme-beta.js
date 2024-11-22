@@ -1,3 +1,5 @@
+import { textDecoration } from "@chakra-ui/react";
+
 const rootFontSizePx = 16;
 
 const colors = {
@@ -189,7 +191,13 @@ const textStyles = {
   h6: {
     fontSize: ["1.125rem", "1.25rem"],
     lineHeight: ["1.5rem", "1.75rem"],
-    fontWeight: "700",
+    fontWeight: "600",
+  },
+  h7: {
+    fontSize: ["1rem", "1.125rem"],
+    lineHeight: ["1.25rem", "1.5rem"],
+    fontWeight: "500",
+    textDecoration: "underline",
   },
   "rf-text": {
     fontSize: ["1rem"],

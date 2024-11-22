@@ -55,14 +55,15 @@ const MarkdownTheme = {
       </Text>
     );
   },
-  // h5: (props) => {
-  //   const { children, ...rest } = props;
-  //   return (
-  //     <Text {...rest} as="h6" variant="h6" textStyle="h6" mt={4} mb={4}>
-  //       {children}
-  //     </Text>
-  //   );
-  // },
+
+  h5: (props) => {
+    const { children, ...rest } = props;
+    return (
+      <Text {...rest} as="h7" variant="h7" textStyle="h7" mt={4} mb={4} ml={12}>
+        {children}
+      </Text>
+    );
+  },
   // h6: (props) => {
   //   const { children } = props;
   //   return (
