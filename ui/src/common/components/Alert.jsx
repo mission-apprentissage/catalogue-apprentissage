@@ -35,7 +35,9 @@ export const Alert = ({ type = "info", children, ...props }) => {
       <Box style={{ backgroundColor: style.color, color: "white" }}>
         <style.Icon w="24px" h="24px" mx={2} my={4} />
       </Box>
-      <Box p={4}>{children}</Box>
+      <Box p={4} w="100%">
+        {children}
+      </Box>
     </Flex>
   );
 };
