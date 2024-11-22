@@ -25,6 +25,12 @@ const affelnetSchema = {
     default: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
     description: "Statut affelnet",
   },
+  affelnet_statut_initial: {
+    type: String,
+    enum: Object.values(AFFELNET_STATUS),
+    default: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
+    description: "Statut initial affelnet",
+  },
   affelnet_previous_statut: {
     type: String,
     enum: Object.values(AFFELNET_STATUS),
