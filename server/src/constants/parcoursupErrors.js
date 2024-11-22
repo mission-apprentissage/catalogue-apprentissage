@@ -71,8 +71,8 @@ const parcoursupErrors = [
 
   {
     regexp: /Impossible de retrouver un utilisateur valide pour .+/,
-    description: "Vous devez faire le point avec l'établissement, afin de confirmer l'UAI lieu de formation.",
-    action: ``,
+    description: "L'UAI renseigné en tant que lieu de formation est fermé dans la BCE.",
+    action: `Vous devez faire le point avec l'établissement, afin de confirmer l'UAI lieu de formation.`,
   },
 
   {
