@@ -1,11 +1,6 @@
 import React, { useCallback } from "react";
-// import { useSearchParams } from "react-router-dom";
 import { MultiList } from "@appbaseio/reactivesearch";
 import { Flex, Text } from "@chakra-ui/react";
-import useAuth from "../../../../hooks/useAuth";
-import { hasOneOfRoles } from "../../../../utils/rolesUtils";
-import compact from "lodash.compact";
-import { academies } from "../../../../../constants/academies";
 import { InfoTooltip } from "../../../InfoTooltip";
 import { QuickFilterItem } from "../QuickFilters";
 
@@ -27,30 +22,7 @@ const Facet = ({
   react,
   showSearch = true,
 }) => {
-  let [auth] = useAuth();
   let defaultValue = null;
-  // const [searchParams, setSearchParams] = useSearchParams();
-
-  if (hasOneOfRoles(auth, ["instructeur"])) {
-    if (componentId.startsWith("nom_academie")) {
-      const userAcademies = auth?.academie?.split(",") || [];
-      defaultValue = compact(
-        userAcademies.map((ua) => {
-          return academies[ua]?.nom_academie;
-        })
-      );
-    }
-  }
-
-  // const onValueChange = useCallback(
-  //   (value) => {
-  //     setSearchParams((prevSearchParams) => {
-  //       prevSearchParams.set(componentId, JSON.stringify(value));
-  //       return prevSearchParams;
-  //     });
-  //   },
-  //   [componentId, setSearchParams]
-  // );
 
   const renderItem = useCallback(
     (label, count) => (

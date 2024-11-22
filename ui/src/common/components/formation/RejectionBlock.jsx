@@ -15,7 +15,7 @@ export const RejectionBlock = ({ formation: baseFormation }) => {
   const canHandleBusinessError =
     user &&
     (isUserAdmin(user) || hasAllAcademiesRight(user) || hasAcademyRight(user, formation.num_academie)) &&
-    hasOneOfRoles(user, ["admin", "moss", "instructeur"]);
+    hasOneOfRoles(user, ["admin", "moss", "instructeur-parcoursup"]);
 
   const handleBusinessError = useCallback(async () => {
     if (!canHandleBusinessError) {

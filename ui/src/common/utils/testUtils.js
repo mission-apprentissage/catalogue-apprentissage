@@ -22,16 +22,28 @@ export const grantAnonymousAccess = ({ acl, academie }) => {
     .mockImplementation(() => [{ username: "anonymous", roles: ["public"], acl, academie }, () => {}]);
 };
 
-// export const grantLecteurAccess = ({ acl, academie }) => {
+// export const grantLecteurAffelnetAccess = ({ acl, academie }) => {
 //   jest
 //     .spyOn(useAuth, "default")
-//     .mockImplementation(() => [{ username: "lecteur", roles: ["lecteur"], acl, academie }, () => {}]);
+//     .mockImplementation(() => [{ username: "lecteur", roles: ["lecteur-affelnet"], acl, academie }, () => {}]);
 // };
 
-// export const grantInstructeurAccess = ({ acl, academie }) => {
+// export const grantLecteurParcoursupAccess = ({ acl, academie }) => {
 //   jest
 //     .spyOn(useAuth, "default")
-//     .mockImplementation(() => [{ username: "instructeur", roles: ["instructeur"], acl, academie }, () => {}]);
+//     .mockImplementation(() => [{ username: "lecteur", roles: ["lecteur-parcoursup"], acl, academie }, () => {}]);
+// };
+
+// export const grantInstructeurAffelnetAccess = ({ acl, academie }) => {
+//   jest
+//     .spyOn(useAuth, "default")
+//     .mockImplementation(() => [{ username: "instructeur", roles: ["instructeur-affelnet"], acl, academie }, () => {}]);
+// };
+
+// export const grantInstructeurParcoursupAccess = ({ acl, academie }) => {
+//   jest
+//     .spyOn(useAuth, "default")
+//     .mockImplementation(() => [{ username: "instructeur", roles: ["instructeur-parcoursup"], acl, academie }, () => {}]);
 // };
 
 // export const grantAdminAccess = ({ acl, academie }) => {
