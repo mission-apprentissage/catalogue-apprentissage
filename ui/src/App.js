@@ -33,6 +33,7 @@ const ReglesPerimetrePlateforme = lazy(() => import("./pages/ReglesPerimetre/Pla
 const ConsolesPilotage = lazy(() => import("./pages/ConsolesPilotage"));
 const ConsolesPilotageAffelnet = lazy(() => import("./pages/ConsolesPilotage/Affelnet"));
 const ConsolesPilotageParcoursup = lazy(() => import("./pages/ConsolesPilotage/Parcoursup"));
+const InstructionManual = lazy(() => import("./pages/InstructionManual"));
 
 function RequireAuth({ children }) {
   let [auth] = useAuth();
@@ -317,6 +318,24 @@ const Root = () => {
             ) : (
               <React.Fragment />
             )}
+
+            <Route
+              path="/mode-emploi/affelnet"
+              element={
+                <RequireAuth>
+                  <InstructionManual plateforme="affelnet" />
+                </RequireAuth>
+              }
+            />
+
+            <Route
+              path="/mode-emploi/parcoursup"
+              element={
+                <RequireAuth>
+                  <InstructionManual plateforme="parcoursup" />
+                </RequireAuth>
+              }
+            />
 
             {/* Statistiques */}
             {/* <Route  path="/stats"><DashboardPage /></Route> */}

@@ -98,6 +98,10 @@ const NavLinks = ({ isOpen }) => {
         {hasAccessTo(auth, "page_perimetre/parcoursup") && (
           <NavItem to="/regles-perimetre/parcoursup">Périmètre Parcoursup</NavItem>
         )}
+        {isUserAdmin(auth) && <NavItem to="/mode-emploi/parcoursup">Mode d'emploi Parcoursup</NavItem>}
+
+        {/* <NavItem to="/mode-emploi/affelnet">MMode d'emploi Affelnet</NavItem> */}
+
         {isUserAdmin(auth) && <NavItem to="/changelog">Journal</NavItem>}
       </Flex>
     </Box>
