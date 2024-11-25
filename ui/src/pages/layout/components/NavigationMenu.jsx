@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { Box, Container, Flex, Link, Text } from "@chakra-ui/react";
 import useAuth from "../../../common/hooks/useAuth";
-import { hasAccessTo, hasOnlyOneAcademyRight, isUserAdmin } from "../../../common/utils/rolesUtils";
+import { hasAccessTo, hasOneOfRoles, hasOnlyOneAcademyRight, isUserAdmin } from "../../../common/utils/rolesUtils";
 import { MenuFill, Close } from "../../../theme/components/icons";
 import { academies } from "../../../constants/academies";
 
@@ -86,21 +86,27 @@ const NavLinks = ({ isOpen }) => {
         </NavItem> */}
         <NavItem to={`/recherche/formations${suffixCatalogue}`}>Catalogue</NavItem>
         <NavItem to="/recherche/etablissements">Organismes</NavItem>
+
         {hasAccessTo(auth, "page_console/affelnet") && (
           <NavItem to="/consoles-pilotage/affelnet">Console Affelnet</NavItem>
         )}
         {hasAccessTo(auth, "page_console/parcoursup") && (
           <NavItem to="/consoles-pilotage/parcoursup">Console Parcoursup</NavItem>
         )}
+
         {hasAccessTo(auth, "page_perimetre/affelnet") && (
           <NavItem to="/regles-perimetre/affelnet">Périmètre Affelnet</NavItem>
         )}
         {hasAccessTo(auth, "page_perimetre/parcoursup") && (
           <NavItem to="/regles-perimetre/parcoursup">Périmètre Parcoursup</NavItem>
         )}
-        {isUserAdmin(auth) && <NavItem to="/mode-emploi/parcoursup">Mode d'emploi Parcoursup</NavItem>}
 
-        {/* <NavItem to="/mode-emploi/affelnet">MMode d'emploi Affelnet</NavItem> */}
+        {hasAccessTo(auth, "page_mode_emploi/parcoursup") && (
+          <NavItem to="/mode-emploi/parcoursup">Mode d'emploi Parcoursup</NavItem>
+        )}
+        {/* {hasAccessTo(auth, "page_mode_emploi/affelnet") && (
+          <NavItem to="/mode-emploi/affelnet">Mode d'emploi Affelnet</NavItem>
+        )} */}
 
         {isUserAdmin(auth) && <NavItem to="/changelog">Journal</NavItem>}
       </Flex>

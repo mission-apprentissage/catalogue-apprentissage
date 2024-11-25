@@ -71,6 +71,18 @@ export default [
     feature: "Voir la page détails d'un organisme",
     ref: "page_organisme",
   },
+
+  {
+    feature: "Mode d'emploi",
+    ref: "page_mode_emploi",
+    subFeatures: [
+      {
+        feature: "Parcoursup",
+        ref: "page_mode_emploi/parcoursup",
+      },
+    ],
+  },
+
   {
     feature: "Gestion des utilisateurs",
     ref: "page_gestion_utilisateurs",
