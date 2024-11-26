@@ -15,8 +15,6 @@ import { AFFELNET_STATUS, PARCOURSUP_STATUS } from "../../../../../constants/sta
 export const CardListFormation = ({ data }) => {
   const [user] = useAuth();
 
-  console.log(data);
-
   return (
     <Link
       as={NavLink}

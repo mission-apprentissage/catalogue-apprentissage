@@ -46,7 +46,7 @@ const Etablissement = ({ etablissement, countFormations }) => {
       index: 1,
     },
   ];
-  const linkFormations = `/recherche/formations?qb=${encodeURIComponent(JSON.stringify(query))}&defaultMode="advanced"`;
+  const linkFormations = `/recherche/formations?qb=${encodeURIComponent(JSON.stringify(query))}`;
 
   let creationDate = "";
   try {

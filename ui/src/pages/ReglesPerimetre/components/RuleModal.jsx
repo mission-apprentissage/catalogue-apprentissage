@@ -259,9 +259,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
       []),
   ];
 
-  let linkFormations = `/recherche/formations?qb=${encodeURIComponent(
-    JSON.stringify(linkQuery)
-  )}&defaultMode="advanced"`;
+  let linkFormations = `/recherche/formations?qb=${encodeURIComponent(JSON.stringify(linkQuery))}`;
 
   if (values.niveau) {
     linkFormations += `&niveau=%5B"${values.niveau.replace(" ", "+")}"%5D`;

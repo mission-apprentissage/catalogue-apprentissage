@@ -106,6 +106,7 @@ export default React.memo(({ searchState, context, extraButtons = null }) => {
                 </Box>
                 <Box className={`result-view`}>
                   <ReactiveList
+                    data-testid="search-results"
                     scrollOnChange={false}
                     componentId="result"
                     title="Results"

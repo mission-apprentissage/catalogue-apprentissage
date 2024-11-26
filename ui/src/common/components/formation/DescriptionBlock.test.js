@@ -70,6 +70,7 @@ const formation = {
   nom: null,
   intitule_long: "TECHNICIEN EN CHAUDRONNERIE INDUSTRIELLE (BAC PRO)",
   intitule_court: "TECH.CHAUDRONNERIE INDUSTRIELLE",
+  intitule_rco: "TECH.CHAUDRONNERIE INDUSTRIELLE",
   diplome: "BAC PROFESSIONNEL",
   niveau: "4 (BAC...)",
   onisep_url: "http://www.onisep.fr/http/redirection/formation/identifiant/4671",
@@ -171,11 +172,11 @@ test("renders the description block of the training", async () => {
   expect(queryByText("Description de la certification")).toBeInTheDocument();
   expect(queryByText("Informations sur l'offre")).toBeInTheDocument();
 
-  const intitule_court = queryByText("TECH.CHAUDRONNERIE INDUSTRIELLE");
-  expect(intitule_court).toBeInTheDocument();
+  const intitule_rco = queryByText(formation.intitule_rco);
+  expect(intitule_rco).toBeInTheDocument();
 
-  const diplome = queryByText("40025411", { exact: false });
-  expect(diplome).toBeInTheDocument();
+  const cfd = queryByText(formation.cfd, { exact: false });
+  expect(cfd).toBeInTheDocument();
 
   const partenaires = queryByText(/^Partenaires/i);
   expect(partenaires).not.toBeInTheDocument();

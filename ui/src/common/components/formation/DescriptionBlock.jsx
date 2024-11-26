@@ -484,12 +484,12 @@ export const DescriptionBlock = ({ formation }) => {
     siretCertificateurs.includes(formation.etablissement_gestionnaire_siret)
   );
 
-  console.log({
-    date_debut: formation.date_debut,
-    sessionStartDate,
-    sessionEndDate,
-    isInSession: isInSession(formation, sessionStartDate, sessionEndDate),
-  });
+  // console.log({
+  //   date_debut: formation.date_debut,
+  //   sessionStartDate,
+  //   sessionEndDate,
+  //   isInSession: isInSession(formation, sessionStartDate, sessionEndDate),
+  // });
 
   const DateSessionContainer = !isInSession(formation, sessionStartDate, sessionEndDate)
     ? (args) => <DangerBox data-testid={"session-warning"} {...args} />
@@ -530,7 +530,7 @@ export const DescriptionBlock = ({ formation }) => {
         </Text>
 
         <Box mb={4} ml={-3}>
-          <List flexDirection={"row"} flexWrap={"wrap"} mb={[3, 3, 0]} display="flex">
+          <List flexDirection={"row"} flexWrap={"wrap"} ml={2} mb={[3, 3, 0]} display="flex">
             {[
               ...(formation.onisep_url !== "" && formation.onisep_url !== null
                 ? [
@@ -579,17 +579,12 @@ export const DescriptionBlock = ({ formation }) => {
                   ]
                 : []),
             ]
-              .map((item) => <ListItem mx={4}>{item}</ListItem>)
-              .reduce(
-                (acc, val) =>
-                  acc.concat(
-                    <ListItem>
-                      <Divider orientation="vertical" borderColor={"gray"} />
-                    </ListItem>,
-                    val
-                  ),
-                []
-              )
+              .reduce((acc, val) => acc.concat(<Divider orientation="vertical" borderColor={"gray"} />, val), [])
+              .map((item, index) => (
+                <ListItem key={index} mx={2}>
+                  {item}
+                </ListItem>
+              ))
               .slice(1)}
           </List>
         </Box>
@@ -992,7 +987,7 @@ export const DescriptionBlock = ({ formation }) => {
         </Text>
 
         <Box mb={4} ml={-3}>
-          <List flexDirection={"row"} flexWrap={"wrap"} mb={[3, 3, 0]} display="flex">
+          <List flexDirection={"row"} flexWrap={"wrap"} ml={2} mb={[3, 3, 0]} display="flex">
             {[
               <Link
                 href={getPublicUrl(formation)}
@@ -1033,17 +1028,12 @@ export const DescriptionBlock = ({ formation }) => {
                   ]
                 : []),
             ]
-              .map((item) => <ListItem mx={4}>{item}</ListItem>)
-              .reduce(
-                (acc, val) =>
-                  acc.concat(
-                    <ListItem>
-                      <Divider orientation="vertical" borderColor={"gray"} />
-                    </ListItem>,
-                    val
-                  ),
-                []
-              )
+              .reduce((acc, val) => acc.concat(<Divider orientation="vertical" borderColor={"gray"} />, val), [])
+              .map((item, index) => (
+                <ListItem key={index} mx={2}>
+                  {item}
+                </ListItem>
+              ))
               .slice(1)}
           </List>
         </Box>

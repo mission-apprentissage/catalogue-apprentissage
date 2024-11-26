@@ -82,12 +82,6 @@ const Root = () => {
             sessionStartDate: new Date(dates.sessionStartDate),
             sessionEndDate: new Date(dates.sessionEndDate),
           });
-
-          console.log({
-            campagneStartDate: new Date(dates.campagneStartDate),
-            sessionStartDate: new Date(dates.sessionStartDate),
-            sessionEndDate: new Date(dates.sessionEndDate),
-          });
         }
 
         if (user) {

@@ -33,7 +33,7 @@ export default (props) => {
   setTitle(title);
 
   return (
-    <Layout>
+    <Layout data-testid="page-catalogue">
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
         <Container maxW="7xl">
           <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: title }]} />
@@ -50,14 +50,14 @@ export default (props) => {
               <Tabs variant="search" mt={5} isLazy defaultIndex={props.guide ? 2 : 0}>
                 <TabList bg="white" justifyContent="space-between">
                   <Flex>
-                    <Tab>
+                    <Tab data-testid="tab-general">
                       {CATALOGUE_GENERAL_LABEL} (
                       {searchState.countCatalogueGeneral.filtered === null
                         ? searchState.countCatalogueGeneral.total.toLocaleString("fr-FR")
                         : searchState.countCatalogueGeneral.filtered.toLocaleString("fr-FR")}
                       )
                     </Tab>
-                    <Tab>
+                    <Tab data-testid="tab-non-eligible">
                       {CATALOGUE_NON_ELIGIBLE_LABEL} (
                       {searchState.countCatalogueNonEligible.filtered === null
                         ? searchState.countCatalogueNonEligible.total.toLocaleString("fr-FR")
