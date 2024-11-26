@@ -153,7 +153,7 @@ const run = async ({ siret }) => {
   const totalPending = await Formation.countDocuments({
     ...defaultQuery,
     published: true,
-    affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+    affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
   });
   const totalAfPublished = await Formation.countDocuments({
     ...defaultQuery,
@@ -171,12 +171,12 @@ const run = async ({ siret }) => {
       `Total formations non publiable en l'état : ${totalNotRelevant}/${totalPublished}\n` +
       `Total formations à publier (soumis à validation) : ${totalToValidate}/${totalPublished}\n` +
       `Total formations à publier : ${totalToCheck}/${totalPublished}\n` +
-      `Total formations en attente de publication : ${totalPending}/${totalPublished}\n` +
+      `Total formations prêt pour intégration : ${totalPending}/${totalPublished}\n` +
       `Total formations publiées sur Affelnet : ${totalAfPublished}/${totalPublished}\n` +
       `Total formations NON publiées sur Affelnet : ${totalAfNotPublished}/${totalPublished}`
   );
 
-  logger.info(`Mise en attente de publication des formations éligibles.`);
+  logger.info(`Mise prêt pour intégration des formations éligibles.`);
 
   await Formation.updateMany(
     {
@@ -184,16 +184,16 @@ const run = async ({ siret }) => {
       published: true,
       affelnet_statut: { $nin: [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.NON_PUBLIE, AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT] },
     },
-    [{ $set: { affelnet_statut: AFFELNET_STATUS.EN_ATTENTE, forced_published: true } }]
+    [{ $set: { affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION, forced_published: true } }]
   );
 
   const newTotalPending = await Formation.countDocuments({
     ...defaultQuery,
     published: true,
-    affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+    affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
   });
 
-  logger.info(`${newTotalPending} formations passées en attente de publication`);
+  logger.info(`${newTotalPending} formations passées prêt pour intégration`);
 };
 
 const afForcePublication = async ({ siret }) => {

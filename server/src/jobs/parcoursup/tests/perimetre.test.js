@@ -148,11 +148,10 @@ describe(`${__filename} - Test global (deprecated)`, () => {
 
       niveau: "7 (Master, titre ingénieur...)",
       diplome: "Master",
-      parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
+      parcoursup_statut: PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
       annee: "1",
     });
   });
-
 
   after(async () => {
     setupAfter();
@@ -185,13 +184,13 @@ describe(`${__filename} - Test global (deprecated)`, () => {
     const totalToValidateRecteur = await Formation.countDocuments({
       parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
     });
-    assert.strictEqual(totalToValidateRecteur, 1);
+    assert.strictEqual(totalToValidateRecteur, 2);
 
     const totalToCheck = await Formation.countDocuments({ parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER });
-    assert.strictEqual(totalToCheck, 2);
+    assert.strictEqual(totalToCheck, 1);
 
     const totalPending = await Formation.countDocuments({
-      parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
+      parcoursup_statut: PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
     });
     assert.strictEqual(totalPending, 1);
 
@@ -202,6 +201,150 @@ describe(`${__filename} - Test global (deprecated)`, () => {
       parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIE,
     });
     assert.strictEqual(totalPsNotPublished, 0);
+  });
+});
+
+describe(`${__filename} - Gestion des status`, async () => {
+  beforeEach(async () => {
+    setupBeforeEach();
+    await ReglePerimetre.deleteMany();
+
+    await CampagneStart.create({ created_at: new Date("2024-09-10T00:00:00.000Z") });
+  });
+  afterEach(async () => {
+    setupAfterEach();
+    await cleanAll();
+  });
+
+  const formationOk = {
+    ...formationCampagneOk,
+    rncp_details: {
+      code_type_certif: "TH",
+      rncp_outdated: false,
+      active_inactive: "ACTIVE",
+      date_fin_validite_enregistrement: null,
+    },
+    cfd_outdated: false,
+    annee: "1",
+    niveau: "6 (Licence, BUT...)",
+    diplome: "BUT",
+  };
+
+  describe(`handle formations that have never been published`, async () => {
+    [
+      PARCOURSUP_STATUS.A_PUBLIER,
+      PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
+      PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+      PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
+    ].map(async (status) => {
+      it(`should apply statut '${status}'`, async () => {
+        await ReglePerimetre.create({
+          plateforme: "parcoursup",
+          niveau: "6 (Licence, BUT...)",
+          diplome: "BUT",
+          statut: status,
+          condition_integration: "peut intégrer",
+        });
+
+        await Formation.create({ ...formationOk, parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT });
+
+        await run();
+
+        const totalHorsPérimètre = await Formation.countDocuments({
+          parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
+        });
+        assert.strictEqual(totalHorsPérimètre, 0);
+
+        const totalOtherStatus = await Formation.countDocuments({
+          parcoursup_statut: status,
+        });
+        assert.strictEqual(totalOtherStatus, 1);
+      });
+
+      it(`should keep statut '${status}'`, async () => {
+        await ReglePerimetre.create({
+          plateforme: "parcoursup",
+          niveau: "6 (Licence, BUT...)",
+          diplome: "BUT",
+          statut: status,
+          condition_integration: "peut intégrer",
+        });
+
+        await Formation.create({ ...formationOk, parcoursup_statut: status });
+
+        await run();
+
+        const totalHorsPérimètre = await Formation.countDocuments({
+          parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
+        });
+        assert.strictEqual(totalHorsPérimètre, 0);
+
+        const totalOtherStatus = await Formation.countDocuments({
+          parcoursup_statut: status,
+        });
+        assert.strictEqual(totalOtherStatus, 1);
+      });
+    });
+  });
+
+  describe(`handle formations that have been published N-1 and don't need validation`, async () => {
+    [PARCOURSUP_STATUS.A_PUBLIER].map(async (status) => {
+      it(`should tag as 'prêt pour intégration' if formation is '${status}' and has previously been published`, async () => {
+        await ReglePerimetre.create({
+          plateforme: "parcoursup",
+          niveau: "6 (Licence, BUT...)",
+          diplome: "BUT",
+          statut: status,
+          condition_integration: "peut intégrer",
+        });
+
+        await Formation.create({ ...formationOk, parcoursup_id: "56789", parcoursup_statut: status });
+
+        await run();
+
+        const totalHorsPérimètre = await Formation.countDocuments({
+          parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
+        });
+        assert.strictEqual(totalHorsPérimètre, 0);
+
+        const totalOtherStatus = await Formation.countDocuments({
+          parcoursup_statut: PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
+        });
+        assert.strictEqual(totalOtherStatus, 1);
+      });
+    });
+  });
+
+  describe(`handle formations that have been published N-1 but need validation`, async () => {
+    [
+      PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
+      PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+      PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
+    ].map(async (status) => {
+      it(`should not tag as 'prêt pour intégration' if formation is '${status}' and has not previously been published`, async () => {
+        await ReglePerimetre.create({
+          plateforme: "parcoursup",
+          niveau: "6 (Licence, BUT...)",
+          diplome: "BUT",
+          statut: status,
+          condition_integration: "peut intégrer",
+        });
+
+        await Formation.create({ ...formationOk, parcoursup_id: "56789", parcoursup_statut: status });
+
+        await run();
+
+        const totalHorsPérimètre = await Formation.countDocuments({
+          parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
+        });
+        assert.strictEqual(totalHorsPérimètre, 0);
+
+        const totalOtherStatus = await Formation.countDocuments({
+          parcoursup_statut: status,
+        });
+        assert.strictEqual(totalOtherStatus, 1);
+      });
+    });
   });
 });
 
@@ -222,7 +365,7 @@ describe(`${__filename} - Gestion de la disparition du périmètre`, async () =>
 
   const perimeterWithdrawalMotives = {
     "catalogue_published: false": { catalogue_published: false },
-    "published: false": { published: false },
+    "published: false": { published: false }, // Les formations archivées ne voient plus leur statut réinitialisé
     "rncp_details: { active_inactive: 'ACTIVE', code_type_certif: 'TP', rncp_outdated: true }": {
       rncp_details: { active_inactive: "ACTIVE", code_type_certif: "TP", rncp_outdated: true },
     },
@@ -235,105 +378,106 @@ describe(`${__filename} - Gestion de la disparition du périmètre`, async () =>
     },
   };
 
-  (async () => {
-    await Object.entries(perimeterWithdrawalMotives).map(async ([keyMotif, valueMotif]) => {
-      describe(`handle motif (${keyMotif})`, async () => {
-        beforeEach(async () => {
-          setupBeforeEach();
-          await CampagneStart.create({ created_at: new Date("2024-09-10T00:00:00.000Z") });
-          await ReglePerimetre.create({
-            plateforme: "parcoursup",
-            niveau: "6 (Licence, BUT...)",
-            diplome: "BUT",
-            statut: PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
-            condition_integration: "peut intégrer",
-            statut_academies: { 14: PARCOURSUP_STATUS.A_PUBLIER },
-          });
+  Object.entries(perimeterWithdrawalMotives).map(([keyMotif, valueMotif]) => {
+    describe(`handle motif (${keyMotif})`, async () => {
+      beforeEach(async () => {
+        setupBeforeEach();
+        await CampagneStart.create({ created_at: new Date("2024-09-10T00:00:00.000Z") });
+        await ReglePerimetre.create({
+          plateforme: "parcoursup",
+          niveau: "6 (Licence, BUT...)",
+          diplome: "BUT",
+          statut: PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+          condition_integration: "peut intégrer",
+          // statut_academies: { 14: PARCOURSUP_STATUS.A_PUBLIER },
         });
-        afterEach(async () => {
-          setupAfterEach();
-          await CampagneStart.deleteMany();
-          await cleanAll();
-        });
-
-        it(`should have status different from "non publiable en l'état" if no motif for disparition`, async () => {
-          await Formation.create(formationOk);
-
-          await run();
-
-          const totalPublished = await Formation.countDocuments({
-            parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
-          });
-          assert.strictEqual(totalPublished, 1);
-          const totalOtherStatus = await Formation.countDocuments({
-            parcoursup_statut: { $nin: [PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR] },
-          });
-          assert.strictEqual(totalOtherStatus, 0);
-        });
-
-        it("should keep status 'publié' if not in perimeter anymore, but already published with a parcoursup_id", async () => {
-          await Formation.create({
-            ...formationOk,
-            ...valueMotif,
-            parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
-            parcoursup_id: "test",
-          });
-
-          await run();
-
-          const totalPublished = await Formation.countDocuments({
-            parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
-          });
-          assert.strictEqual(totalPublished, 1);
-          const totalOtherStatus = await Formation.countDocuments({
-            parcoursup_statut: { $nin: [PARCOURSUP_STATUS.PUBLIE] },
-          });
-          assert.strictEqual(totalOtherStatus, 0);
-        });
-
-        it("should not keep status 'publié' if not in perimeter anymore, but already published without a parcoursup_id", async () => {
-          await Formation.create({
-            ...formationOk,
-            ...valueMotif,
-            parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
-            parcoursup_id: null,
-          });
-
-          await run();
-
-          const totalPublished = await Formation.countDocuments({
-            parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
-          });
-          assert.strictEqual(totalPublished, 0);
-          const totalOtherStatus = await Formation.countDocuments({
-            parcoursup_statut: { $nin: [PARCOURSUP_STATUS.PUBLIE] },
-          });
-          assert.strictEqual(totalOtherStatus, 1);
-        });
-
-        await Object.values(PARCOURSUP_STATUS)
-          .filter(
-            (status) =>
-              ![PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.FERME, PARCOURSUP_STATUS.NON_PUBLIE].includes(status)
-          )
-          .map(async (status) => {
-            await it(`should apply status "non publiable en l'état" if not in perimeter anymore, and if status was '${status}'`, async () => {
-              await Formation.create({ ...formationOk, ...valueMotif, parcoursup_statut: status });
-
-              await run();
-
-              const totalHorsPérimètre = await Formation.countDocuments({
-                parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
-              });
-              assert.strictEqual(totalHorsPérimètre, 1);
-
-              const totalOtherStatus = await Formation.countDocuments({
-                parcoursup_statut: { $nin: [PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT] },
-              });
-              assert.strictEqual(totalOtherStatus, 0);
-            });
-          });
       });
+      afterEach(async () => {
+        setupAfterEach();
+        await cleanAll();
+      });
+
+      it(`should have status different from "non publiable en l'état" if no motif for disparition`, async () => {
+        await Formation.create(formationOk);
+
+        await run();
+
+        const totalPublished = await Formation.countDocuments({
+          parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+        });
+        assert.strictEqual(totalPublished, 1);
+        const totalOtherStatus = await Formation.countDocuments({
+          parcoursup_statut: { $nin: [PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR] },
+        });
+        assert.strictEqual(totalOtherStatus, 0);
+      });
+
+      it("should keep status 'publié' if not in perimeter anymore, but already published with a parcoursup_id", async () => {
+        await Formation.create({
+          ...formationOk,
+          ...valueMotif,
+          parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
+          parcoursup_id: "test",
+        });
+
+        await run();
+
+        const totalPublished = await Formation.countDocuments({
+          parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
+        });
+        assert.strictEqual(totalPublished, 1);
+        const totalOtherStatus = await Formation.countDocuments({
+          parcoursup_statut: { $nin: [PARCOURSUP_STATUS.PUBLIE] },
+        });
+        assert.strictEqual(totalOtherStatus, 0);
+      });
+
+      it("should not keep status 'publié' if not in perimeter anymore, but already published without a parcoursup_id", async () => {
+        await Formation.create({
+          ...formationOk,
+          ...valueMotif,
+          parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
+          parcoursup_id: null,
+        });
+
+        await run();
+
+        const totalPublished = await Formation.countDocuments({
+          parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
+        });
+        assert.strictEqual(totalPublished, 0);
+        const totalOtherStatus = await Formation.countDocuments({
+          parcoursup_statut: { $nin: [PARCOURSUP_STATUS.PUBLIE] },
+        });
+        assert.strictEqual(totalOtherStatus, 1);
+      });
+
+      Object.values(PARCOURSUP_STATUS)
+        .filter(
+          (status) =>
+            ![PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.FERME, PARCOURSUP_STATUS.NON_PUBLIE].includes(status)
+        )
+        .map((status) => {
+          it(`should apply status "non publiable en l'état" if not in perimeter anymore, and if status was '${status}' (reason: ${JSON.stringify(valueMotif)})`, async () => {
+            await Formation.create({ ...formationOk, ...valueMotif, parcoursup_statut: status });
+
+            // if (keyMotif === "published: false") console.error("before", await Formation.find({}).lean());
+
+            await run();
+
+            // if (keyMotif === "published: false") console.error("after", await Formation.find({}).lean());
+
+            const totalHorsPérimètre = await Formation.countDocuments({
+              parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
+            });
+            assert.strictEqual(totalHorsPérimètre, 1);
+
+            const totalOtherStatus = await Formation.countDocuments({
+              parcoursup_statut: { $nin: [PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT] },
+            });
+            assert.strictEqual(totalOtherStatus, 0);
+          });
+        });
     });
-  })();
+  });
 });

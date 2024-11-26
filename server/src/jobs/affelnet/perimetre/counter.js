@@ -47,15 +47,15 @@ const run = async () => {
   });
 
   const totalPending = await Formation.countDocuments({
-    affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+    affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
   });
   const totalGeneralPending = await Formation.countDocuments({
     ...filterGeneral,
-    affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+    affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
   });
   const totalNonReglementairePending = await Formation.countDocuments({
     ...filterNonReglementaire,
-    affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+    affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
   });
 
   const totalPublished = await Formation.countDocuments({
@@ -124,7 +124,7 @@ const run = async () => {
       "catalogue non règlementaire": totalNonReglementaireToCheck,
       "total (y compris archives)": totalToCheck,
     },
-    "statut 'en attente de publication' ": {
+    "statut 'prêt pour intégration' ": {
       "catalogue général": totalGeneralPending,
       "catalogue non règlementaire": totalNonReglementairePending,
       "total (y compris archives)": totalPending,
@@ -163,7 +163,7 @@ const run = async () => {
     //     - statut "non publiable en l'état" : ${totalGeneralNotRelevant} / ${totalNonReglementaireNotRelevant} / ${totalNotRelevant}
     //     - statut "à publier (soumis à validation)" : ${totalGeneralToValidate} / ${totalNonReglementaireToValidate} / ${totalToValidate}
     //     - statut "à publier" : ${totalGeneralToCheck} / ${totalNonReglementaireToCheck} / ${totalToCheck}
-    //     - statut "en attente de publication" : ${totalGeneralPending} / ${totalNonReglementairePending} / ${totalPending}
+    //     - statut "prêt pour intégration" : ${totalGeneralPending} / ${totalNonReglementairePending} / ${totalPending}
     //     - statut "publié" : ${totalGeneralPublished} / ${totalNonReglementairePublished} / ${totalPublished}
     //     - statut "NON publié" : ${totalGeneralNotPublished} / ${totalNonReglementaireNotPublished} / ${totalNotPublished}
 

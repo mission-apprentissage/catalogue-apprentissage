@@ -44,7 +44,7 @@ describe(__filename, () => {
       cfd_entree: "1212",
       uai_formation: "0881529J",
       parcoursup_mefs_10: [],
-      parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
+      parcoursup_statut: PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
       parcoursup_error: null,
       parcoursup_statut_history: [],
       cle_ministere_educatif: "12345-cle2",
@@ -58,7 +58,7 @@ describe(__filename, () => {
       cfd_entree: "1212",
       uai_formation: undefined,
       parcoursup_mefs_10: [],
-      parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
+      parcoursup_statut: PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
       parcoursup_error: null,
       parcoursup_statut_history: [],
       cle_ministere_educatif: "12345-cle3",
@@ -72,7 +72,7 @@ describe(__filename, () => {
       cfd_entree: "1212",
       uai_formation: "0561732D",
       parcoursup_mefs_10: [{ mef10: "mef-41" }, { mef10: "mef-42" }, { mef10: "mef-43" }],
-      parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
+      parcoursup_statut: PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
       parcoursup_error: null,
       parcoursup_statut_history: [],
       cle_ministere_educatif: "12345-cle4",
@@ -86,7 +86,7 @@ describe(__filename, () => {
       cfd_entree: "1212",
       uai_formation: "0280706R",
       parcoursup_mefs_10: [{ mef10: "mef-5" }],
-      parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
+      parcoursup_statut: PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
       parcoursup_error: null,
       parcoursup_statut_history: [],
       cle_ministere_educatif: "12345-cle5",
@@ -100,7 +100,7 @@ describe(__filename, () => {
       cfd_entree: "1212",
       uai_formation: "0692514H",
       parcoursup_mefs_10: [{ mef10: "mef-6" }],
-      parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
+      parcoursup_statut: PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
       parcoursup_error: "error ws",
       parcoursup_statut_history: [],
       cle_ministere_educatif: "12345-cle6",
@@ -115,7 +115,7 @@ describe(__filename, () => {
       cfd_entree: "1212",
       uai_formation: "0783706E",
       parcoursup_mefs_10: [{ mef10: "mef-7" }],
-      parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
+      parcoursup_statut: PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
       parcoursup_error: "error ws",
       parcoursup_statut_history: [],
       cle_ministere_educatif: "12345-cle7",
@@ -130,7 +130,7 @@ describe(__filename, () => {
       cfd_entree: "1212",
       uai_formation: "0631904C",
       parcoursup_mefs_10: [{ mef10: "mef-8" }],
-      parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
+      parcoursup_statut: PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
       parcoursup_error: null,
       parcoursup_statut_history: [],
       cle_ministere_educatif: "12345-cle8",
@@ -207,7 +207,7 @@ describe(__filename, () => {
       cfd_entree: "1212",
       uai_formation: "0320663X",
       parcoursup_mefs_10: [{ mef10: "mef-9" }],
-      parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
+      parcoursup_statut: PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
       parcoursup_error: null,
       parcoursup_statut_history: [],
       cle_ministere_educatif: "12345-cle9",
@@ -232,7 +232,7 @@ describe(__filename, () => {
       cfd_entree: "1212",
       uai_formation: "0755331M",
       parcoursup_mefs_10: [{ mef10: "mef-10" }],
-      parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
+      parcoursup_statut: PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
       parcoursup_error: null,
       parcoursup_statut_history: [],
       cle_ministere_educatif: "12345-cle10",
@@ -242,7 +242,7 @@ describe(__filename, () => {
 
     await createFormation(f);
 
-    assert.strictEqual(f.parcoursup_statut, PARCOURSUP_STATUS.EN_ATTENTE);
+    assert.strictEqual(f.parcoursup_statut, PARCOURSUP_STATUS.PRET_POUR_INTEGRATION);
     assert.strictEqual(f.parcoursup_error, "400 erreur de création");
   });
 
@@ -257,14 +257,14 @@ describe(__filename, () => {
       cfd_entree: "123134",
       uai_formation: "0330176M",
       parcoursup_mefs_10: [{ mef10: "mef-11" }],
-      parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
+      parcoursup_statut: PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
       parcoursup_error: null,
       parcoursup_id: "1234567",
       parcoursup_statut_history: [],
       updates_history: [
         {
           from: { parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER },
-          to: { parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE, last_update_who: "test@beta.gouv.fr" },
+          to: { parcoursup_statut: PARCOURSUP_STATUS.PRET_POUR_INTEGRATION, last_update_who: "test@beta.gouv.fr" },
         },
         { from: {}, to: {} },
       ],
@@ -294,13 +294,13 @@ describe(__filename, () => {
       cfd_entree: "123134",
       uai_formation: "0541370W",
       parcoursup_mefs_10: [{ mef10: "mef-12-1" }, { mef10: "mef-12-2" }],
-      parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
+      parcoursup_statut: PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
       parcoursup_error: null,
       parcoursup_statut_history: [],
       updates_history: [
         {
           from: { parcoursup_statut: PARCOURSUP_STATUS.A_PUBLIER },
-          to: { parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE, last_update_who: "test@beta.gouv.fr" },
+          to: { parcoursup_statut: PARCOURSUP_STATUS.PRET_POUR_INTEGRATION, last_update_who: "test@beta.gouv.fr" },
         },
         { from: {}, to: {} },
       ],

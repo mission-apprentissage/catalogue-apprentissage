@@ -122,7 +122,7 @@ const psImport = async () => {
           });
           const update = {
             parcoursup_id,
-            parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
+            parcoursup_statut: PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
             last_update_at: date,
             last_update_who: "Parcoursup",
             rejection: {

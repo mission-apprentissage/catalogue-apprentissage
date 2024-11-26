@@ -3,7 +3,7 @@ const logger = require("../../../common/logger");
 const { AFFELNET_STATUS } = require("../../../constants/status");
 
 /**
- * Si l'historique contient des affelnet_statut différents de "en attente de publication" après la date, cela signifie que la formation n'est pas "en attente de publication" depuis la date spécifiée
+ * Si l'historique contient des affelnet_statut différents de "prêt pour intégration" après la date, cela signifie que la formation n'est pas "prêt pour intégration" depuis la date spécifiée
  *
  * @param {*} formation
  * @param {Date} date
@@ -12,11 +12,13 @@ const { AFFELNET_STATUS } = require("../../../constants/status");
 const allHistoryIsEnAttenteAfterDate = (formation, date) => {
   return formation.updates_history
     ?.filter((history) => new Date(history.updated_at) >= new Date(date))
-    ?.every((history) => !history.to?.affelnet_statut || history.to?.affelnet_statut === AFFELNET_STATUS.EN_ATTENTE);
+    ?.every(
+      (history) => !history.to?.affelnet_statut || history.to?.affelnet_statut === AFFELNET_STATUS.PRET_POUR_INTEGRATION
+    );
 };
 
 /**
- * Si l'historique contenant une modification de affelnet_statut juste avant la date est différente de "en attente de publication", cela signifie qu'il y a eu un changement de status après la date spécifiée
+ * Si l'historique contenant une modification de affelnet_statut juste avant la date est différente de "prêt pour intégration", cela signifie qu'il y a eu un changement de status après la date spécifiée
  *
  * @param {*} formation
  * @param {Date} date
@@ -26,23 +28,23 @@ const lastHistoryIsEnAttenteBeforeDate = (formation, date) =>
   formation.updates_history
     ?.filter((history) => !!history.to.affelnet_statut)
     ?.filter((history) => new Date(history.updated_at) < new Date(date))
-    ?.reverse()[0]?.to.affelnet_statut === AFFELNET_STATUS.EN_ATTENTE;
+    ?.reverse()[0]?.to.affelnet_statut === AFFELNET_STATUS.PRET_POUR_INTEGRATION;
 
 /**
  *
- * @param {Date} date La date à partir de laquelle les formations ayant été passées au statut Affelnet "en attente de publication" vont repassé à "non publiable en l'état".
+ * @param {Date} date La date à partir de laquelle les formations ayant été passées au statut Affelnet "prêt pour intégration" vont repassé à "non publiable en l'état".
  */
 const run = async (date) => {
   let count = 0;
 
   const query = {
     published: true,
-    affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+    affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
   };
 
   const totalBefore = await Formation.countDocuments(query);
 
-  console.info(`> ${totalBefore} formations '${AFFELNET_STATUS.EN_ATTENTE}' sur Affelnet`);
+  console.info(`> ${totalBefore} formations '${AFFELNET_STATUS.PRET_POUR_INTEGRATION}' sur Affelnet`);
 
   const cursor = await Formation.find(query).cursor();
 

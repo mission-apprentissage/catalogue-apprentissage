@@ -18,10 +18,10 @@ La liste des statuts possibles est la suivante :
 - **"publié"** : la formation est déjà publiée sur Affelnet
 - **"non publié"** : la formation a été manuellement sortie du périmètre Affelnet, via une action instructeur dans le module de publication
 - **"à publier \(soumis à validation\)"** : la formation est éligible à Affelnet mais doit être validée en académie avant
-- **"à publier"** : la formation est éligible à Affelnet, un instructeur doit utiliser le module de publication pour la faire passer à "en attente de publication"
-- **"en attente de publication"** : la formation est éligible et un instructeur l'a publiée depuis le module de publication
+- **"à publier"** : la formation est éligible à Affelnet, un instructeur doit utiliser le module de publication pour la faire passer à "prêt pour intégration"
+- **"prêt pour intégration"** : la formation est éligible et un instructeur l'a publiée depuis le module de publication
 
-Après action utilisateur on ne change plus le statut de la formation, donc le statut **"non publié"** ne bouge pas, et le statut **"en attente de publication"** peut passer à "publié" uniquement.
+Après action utilisateur on ne change plus le statut de la formation, donc le statut **"non publié"** ne bouge pas, et le statut **"prêt pour intégration"** peut passer à "publié" uniquement.
 
 En revanche pour les statuts "non publiable en l'état", "à publier \(soumis à validation\)" et "à publier" on recalcule chaque soir. À noter que ces statuts on la priorité suivante : `"à publier" > "à publier (soumis à validation)" > "non publiable en l'état"`.
 
@@ -33,12 +33,12 @@ Pour chaque règle on contrôle également la date de fermeture du cfd, on exclu
 
 ## Import Automatique
 
-Les formations sont ensuite importées automatiquement par Affelnet, via l'API du catalogue. Les formations importées automatiquement par Affelnet sont celles qui ont les statuts **"publié"** et **"en attente de publication"**.
+Les formations sont ensuite importées automatiquement par Affelnet, via l'API du catalogue. Les formations importées automatiquement par Affelnet sont celles qui ont les statuts **"publié"** et **"prêt pour intégration"**.
 
 Affelnet étant un logiciel installé séparément par académie, voici un exemple de requête pour l'académie de Toulouse :
 
 ```text
-https://catalogue.apprentissage.education.gouv.fr/api/entity/formations?query={"affelnet_statut":{"$in":["publié","en attente de publication"]},"num_academie" :16}
+https://catalogue.apprentissage.education.gouv.fr/api/entity/formations?query={"affelnet_statut":{"$in":["publié","prêt pour intégration"]},"num_academie" :16}
 ```
 
 ## Déduction du mef Affelnet & modalités

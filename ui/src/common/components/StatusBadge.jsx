@@ -53,7 +53,7 @@ export const StatusBadge = ({ source, status, text, ...badgeProps }) => {
     [PARCOURSUP_STATUS.REJETE]: "error",
     [PARCOURSUP_STATUS.FERME]: "error",
     [COMMON_STATUS.A_PUBLIER]: "toBePublished",
-    [COMMON_STATUS.EN_ATTENTE]: "pending",
+    [COMMON_STATUS.PRET_POUR_INTEGRATION]: "pending",
     Rejeté: "reject",
     Inconnu: "unknown",
     nonConforme: "nonConforme",

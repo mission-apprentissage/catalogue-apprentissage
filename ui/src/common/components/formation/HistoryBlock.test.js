@@ -6,7 +6,7 @@ import { HistoryBlock } from "./HistoryBlock";
 import { COMMON_STATUS } from "../../../constants/status";
 
 const formation = {
-  parcoursup_statut: "en attente de publication",
+  parcoursup_statut: "prêt pour intégration",
   parcoursup_statut_history: [
     {
       parcoursup_statut: "à publier",
@@ -67,23 +67,23 @@ const formation = {
       date: "2022-01-23T05:30:23.779Z",
     },
     {
-      parcoursup_statut: "en attente de publication",
+      parcoursup_statut: "prêt pour intégration",
       date: "2022-01-24T05:17:57.784Z",
     },
     {
-      parcoursup_statut: "en attente de publication",
+      parcoursup_statut: "prêt pour intégration",
       date: "2022-01-25T05:19:17.064Z",
     },
     {
-      parcoursup_statut: "en attente de publication",
+      parcoursup_statut: "prêt pour intégration",
       date: "2022-01-28T05:24:27.713Z",
     },
     {
-      parcoursup_statut: "en attente de publication",
+      parcoursup_statut: "prêt pour intégration",
       date: "2022-03-05T05:45:32.823Z",
     },
     {
-      parcoursup_statut: "en attente de publication",
+      parcoursup_statut: "prêt pour intégration",
       date: "2022-03-06T06:02:25.304Z",
     },
   ],
@@ -191,7 +191,7 @@ const formation = {
         parcoursup_raison_depublication: "Session 2021 uniquement",
       },
       to: {
-        parcoursup_statut: "en attente de publication",
+        parcoursup_statut: "prêt pour intégration",
         rejection: null,
         last_statut_update_date: "2022-04-19T08:09:20.346Z",
         parcoursup_raison_depublication: null,

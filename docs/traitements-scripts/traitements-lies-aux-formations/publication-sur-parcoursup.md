@@ -20,10 +20,10 @@ La liste des statuts possibles est la suivante :
 - **"à publier (sous condition habilitation)":** la formation est éligible à Parcoursup mais un contrôle concernant l'habilitation de l'organisme formateur doit être effectué
 - **"à publier (vérifier accès direct postbac)":** la formation est éligible à Parcoursup mais un contrôle concernant l'accès postbac doit être effectué
 - **"à publier (soumis à validation Recteur)":** la formation est éligible à Parcoursup mais doit être validée en académie avant
-- **"à publier"** : la formation est éligible à Parcoursup, un instructeur doit utiliser le module de publication pour la faire passer à "en attente de publication"
-- **"en attente de publication"** : la formation est éligible et un instructeur l'a publiée depuis le module de publication
+- **"à publier"** : la formation est éligible à Parcoursup, un instructeur doit utiliser le module de publication pour la faire passer à "prêt pour intégration"
+- **"prêt pour intégration"** : la formation est éligible et un instructeur l'a publiée depuis le module de publication
 
-Après action utilisateur on ne change plus le statut de la formation, donc le statut **"non publié"** ne bouge pas, et le statut **"en attente de publication"** peut passer à "publié" uniquement.
+Après action utilisateur on ne change plus le statut de la formation, donc le statut **"non publié"** ne bouge pas, et le statut **"prêt pour intégration"** peut passer à "publié" uniquement.
 
 En revanche pour les statuts "non publiable en l'état", "à publier (...)" et "à publier" on recalcule chaque soir. À noter que ces statuts on la priorité suivante : `"à publier" > "à publier (soumis à validation Recteur)" > "à publier (vérifier accès direct postbac)" > "à publier (sous condition habilitation)" > "non publiable en l'état"`
 
@@ -37,7 +37,7 @@ Les règles d'intégration pour Parcoursup sont paramétrées depuis le module d
 L'import automatique n'est pas activé sur Parcoursup pour le moment
 {% endhint %}
 
-Les formations seront à terme créées automatiquement sur Parcoursup, via un Web Service. Les formations postées sur sur WS sont celles qui ont les statuts **"en attente de publication"**.
+Les formations seront à terme créées automatiquement sur Parcoursup, via un Web Service. Les formations postées sur sur WS sont celles qui ont les statuts **"prêt pour intégration"**.
 
 ## Historique des statuts
 

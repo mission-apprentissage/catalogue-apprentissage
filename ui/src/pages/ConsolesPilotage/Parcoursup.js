@@ -68,7 +68,7 @@ const Indicators = () => {
             ...defaultQuery,
             ...(currentAcademie ? { num_academie: currentAcademie } : {}),
             parcoursup_statut: {
-              $in: [PARCOURSUP_STATUS.EN_ATTENTE, PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.NON_PUBLIE],
+              $in: [PARCOURSUP_STATUS.PRET_POUR_INTEGRATION, PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.NON_PUBLIE],
             },
           })}`,
           false
@@ -91,7 +91,7 @@ const Indicators = () => {
           `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
             ...defaultQuery,
             ...(currentAcademie ? { num_academie: currentAcademie } : {}),
-            parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
+            parcoursup_statut: PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
           })}`,
           false
         );
@@ -174,7 +174,7 @@ const Indicators = () => {
           <br />
           <br />
           <br />
-          <b>{formationEnAttenteDePublication}</b> en attente de publication
+          <b>{formationEnAttenteDePublication}</b> prêt pour intégration
           <br />
           <b>{formationPubliees}</b> publiées
           <br />
@@ -182,7 +182,11 @@ const Indicators = () => {
         </>
       ),
       linkTo: `/recherche/formations?parcoursup_statut=${encodeURIComponent(
-        JSON.stringify([PARCOURSUP_STATUS.EN_ATTENTE, PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.NON_PUBLIE])
+        JSON.stringify([
+          PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
+          PARCOURSUP_STATUS.PUBLIE,
+          PARCOURSUP_STATUS.NON_PUBLIE,
+        ])
       )}`,
     },
   ];

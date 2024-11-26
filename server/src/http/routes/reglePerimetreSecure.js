@@ -26,7 +26,7 @@ const statutSchema = Joi.string().valid(
   "à publier (soumis à validation Recteur)",
   "à publier (soumis à validation)",
   "à publier",
-  "en attente de publication"
+  "prêt pour intégration"
 );
 
 const conditionSchema = Joi.string().valid("doit intégrer", "peut intégrer", "ne doit pas intégrer");

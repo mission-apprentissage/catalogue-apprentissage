@@ -46,7 +46,7 @@ describe(__filename, () => {
         date: "2022-03-10T06:19:09.312Z",
       },
     ],
-    affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+    affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
     affelnet_statut_history: [
       {
         affelnet_statut: AFFELNET_STATUS.A_PUBLIER,
@@ -69,27 +69,27 @@ describe(__filename, () => {
         date: "2022-03-04T06:07:51.906Z",
       },
       {
-        affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+        affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
         date: "2022-03-05T06:12:57.161Z",
       },
       {
-        affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+        affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
         date: "2022-03-07T06:18:25.262Z",
       },
       {
-        affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+        affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
         date: "2022-03-08T07:39:33.311Z",
       },
       {
-        affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+        affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
         date: "2022-03-08T13:38:42.377Z",
       },
       {
-        affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+        affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
         date: "2022-03-09T05:37:42.527Z",
       },
       {
-        affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+        affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
         date: "2022-03-10T06:41:44.897Z",
       },
     ],
@@ -102,7 +102,7 @@ describe(__filename, () => {
           affelnet_raison_depublication: null,
         },
         to: {
-          affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+          affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
           affelnet_infos_offre: "CAP en 2 ans",
           affelnet_raison_depublication: null,
           last_update_who: "saio-affectation@ac-lyon.fr",

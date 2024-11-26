@@ -424,7 +424,7 @@ const changelog = {
       fixes: [],
       features: [],
       improvements: [
-        'Utilisateurs connectés - Réinitialisation des étiquettes "en attente de publication" à la clôture Affelnet en septembre de chaque année.',
+        'Utilisateurs connectés - Réinitialisation des étiquettes "prêt pour intégration" à la clôture Affelnet en septembre de chaque année.',
       ],
     },
     {
@@ -646,7 +646,7 @@ const changelog = {
       about: `<h4>À propos de cette version</h4>
       Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: [],
-      features: ["Bouton d’envoi manuel des formations “en attente de publication” vers Parcoursup"],
+      features: ["Bouton d’envoi manuel des formations “prêt pour intégration” vers Parcoursup"],
       improvements: [],
     },
     {
@@ -727,7 +727,7 @@ const changelog = {
       Cette version porte des améliorations et quelques correctifs qui sont détaillés ci après.`,
       fixes: [],
       features: [],
-      improvements: ["Envoi des formations “en attente de publication” au web service Parcoursup"],
+      improvements: ["Envoi des formations “prêt pour intégration” au web service Parcoursup"],
     },
     {
       version: "5.4.1",
@@ -1100,7 +1100,7 @@ const changelog = {
       improvements: [
         <span>
           Script de réconciliation Affelnet mis en production avec les données transmises par la DNE au 11/05/2021.
-          Total de 5008 formations publiées, et de 1 040 formations en attente de publication (certainement dû à un UAI
+          Total de 5008 formations publiées, et de 1 040 formations prêt pour intégration (certainement dû à un UAI
           manquant - à transmettre à la mission :{" "}
           <Link href="mailto:catalogue@apprentissage.beta.gouv.fr" textDecoration={"underline"}>
             catalogue@apprentissage.beta.gouv.fr

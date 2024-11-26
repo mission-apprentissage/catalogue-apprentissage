@@ -3,6 +3,7 @@ import { Box, Button, Text, Collapse, useDisclosure } from "@chakra-ui/react";
 import { ArrowDownLine } from "../../../theme/components/icons/";
 import useAuth from "../../hooks/useAuth";
 import { hasAccessTo } from "../../utils/rolesUtils";
+import { InfoTooltip } from "../InfoTooltip";
 
 /**
  * Retire les valeurs successives identiques dans un tableau
@@ -63,20 +64,23 @@ export const HistoryBlock = ({ formation, limit = 5 }) => {
     }));
 
   const publication_history = updates_history
-    .filter(
-      (value) =>
-        isUpdatedToStatus(value, "publié") ||
-        isUpdatedToStatus(value, "en attente de publication") ||
-        isUpdatedToStatus(value, "non publié")
-    )
+    .filter((value) => isUpdatedToStatus(value, "publié") || isUpdatedToStatus(value, "prêt pour intégration"))
     ?.map((value) => ({
       status: (
         <>
           {isUpdatedToStatus(value, "publié") && "Publication forcée ou rapprochée"}
-          {isUpdatedToStatus(value, "en attente de publication") && "Publication demandée"}
-          {isUpdatedToStatus(value, "non publié") && "Publication retirée"}
+          {isUpdatedToStatus(value, "prêt pour intégration") && "Publication demandée"}
         </>
       ),
+      user: value.to.last_update_who,
+      date: new Date(value.updated_at),
+    }));
+
+  const non_publication_history = updates_history
+    .filter((value) => isUpdatedToStatus(value, "non publié"))
+    ?.map((value) => ({
+      status: <>{isUpdatedToStatus(value, "non publié") && "Publication retirée"}</>,
+      info: value.to.parcoursup_raison_depublication ?? value.to.affelnet_raison_depublication,
       user: value.to.last_update_who,
       date: new Date(value.updated_at),
     }));
@@ -119,7 +123,7 @@ export const HistoryBlock = ({ formation, limit = 5 }) => {
           !!value.to?.cle_me_remplace_traitee ||
           !!value.to?.cle_me_remplace_par_traitee ||
           isUpdatedToStatus(value, "publié") ||
-          isUpdatedToStatus(value, "en attente de publication") ||
+          isUpdatedToStatus(value, "prêt pour intégration") ||
           isUpdatedToStatus(value, "non publié")
         )
     )
@@ -145,7 +149,9 @@ export const HistoryBlock = ({ formation, limit = 5 }) => {
   }));
 
   const history = [
-    ...(hasAccessTo(user, "page_formation/gestion_publication") ? publication_history : []),
+    ...(hasAccessTo(user, "page_formation/gestion_publication")
+      ? [...publication_history, ...non_publication_history]
+      : []),
     ...(hasAccessTo(user, "page_formation/modifier_informations") ? other_history : []),
     ...(hasAccessTo(user, "page_formation/voir_status_publication_aff") ? affelnet_history : []),
     ...(hasAccessTo(user, "page_formation/voir_status_publication_ps")
@@ -170,7 +176,13 @@ export const HistoryBlock = ({ formation, limit = 5 }) => {
             {history.slice(0, limit)?.map((value, index) => {
               return (
                 <li key={index} style={{ marginBottom: "8px" }}>
-                  {value.status}
+                  {value.status}{" "}
+                  {value.info && (
+                    <>
+                      {" "}
+                      <InfoTooltip description={value.info} />
+                    </>
+                  )}
                   <Text display={"inline"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
                     {value.user && ` par ${value.user}`} le <span>{value.date.toLocaleDateString("fr-FR")}</span>
                   </Text>
@@ -191,6 +203,12 @@ export const HistoryBlock = ({ formation, limit = 5 }) => {
                     return (
                       <li key={index} style={{ marginBottom: "8px" }}>
                         {value.status}
+                        {value.info && (
+                          <>
+                            {" "}
+                            <InfoTooltip description={value.info} />
+                          </>
+                        )}
                         <Text display={"inline"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
                           {value.user && ` par ${value.user}`} le <span>{value.date.toLocaleDateString("fr-FR")}</span>
                         </Text>

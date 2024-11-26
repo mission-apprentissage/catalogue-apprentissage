@@ -68,7 +68,7 @@ const Indicators = () => {
           `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
             ...defaultQuery,
             ...(currentAcademie ? { num_academie: currentAcademie } : {}),
-            affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+            affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
           })}`,
           false
         );
@@ -119,9 +119,9 @@ const Indicators = () => {
     {
       color: "yellow.100",
       title: <>{formationEnAttenteDePublication}</>,
-      body: <>Formations en attente de publication</>,
+      body: <>Formations prêt pour intégration</>,
       linkTo: `/recherche/formations?affelnet_statut=${encodeURIComponent(
-        JSON.stringify([AFFELNET_STATUS.EN_ATTENTE])
+        JSON.stringify([AFFELNET_STATUS.PRET_POUR_INTEGRATION])
       )}`,
     },
 

@@ -29,8 +29,8 @@ module.exports = () => {
         throw Boom.notFound();
       }
 
-      if (!formation.parcoursup_statut === PARCOURSUP_STATUS.EN_ATTENTE) {
-        throw Boom.forbidden('La formation n\'est pas "en attente de publication"');
+      if (!formation.parcoursup_statut === PARCOURSUP_STATUS.PRET_POUR_INTEGRATION) {
+        throw Boom.forbidden('La formation n\'est pas "prêt pour intégration"');
       }
 
       const formationUpdated = await createFormation(formation, user.email);

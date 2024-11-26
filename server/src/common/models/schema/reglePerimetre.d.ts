@@ -27,7 +27,7 @@ export interface ReglePerimetre {
     | "publié"
     | "non publié"
     | "à publier"
-    | "en attente de publication"
+    | "prêt pour intégration"
     | "à publier (vérifier accès direct postbac)"
     | "à publier (soumis à validation Recteur)"
     | "à publier (sous condition habilitation)"

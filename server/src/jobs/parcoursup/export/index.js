@@ -17,7 +17,7 @@ const limit = Number(process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_LIMIT || 50)
 const filter = {
   catalogue_published: true,
   published: true,
-  parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
+  parcoursup_statut: PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
   uai_formation: { $ne: null },
 };
 
@@ -44,7 +44,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const findPublishUser = async (updates_history) => {
   const modification = findLast(updates_history, ({ to }) => {
-    return to?.parcoursup_statut === PARCOURSUP_STATUS.EN_ATTENTE;
+    return to?.parcoursup_statut === PARCOURSUP_STATUS.PRET_POUR_INTEGRATION;
   });
 
   if (modification?.to?.last_update_who) {
@@ -165,7 +165,7 @@ const createFormation = async (formation, email = null) => {
 };
 
 /**
- * Export quotidien des formations "en attente de publication"
+ * Export quotidien des formations "prêt pour intégration"
  * pour création sur Parcoursup via le Web Service dédié
  */
 const run = async () => {

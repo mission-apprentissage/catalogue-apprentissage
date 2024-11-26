@@ -39,7 +39,7 @@ const run = async () => {
             ...(isOnePredecesseurPublie
               ? {
                   parcoursup_statut: !!process.env.CATALOGUE_APPRENTISSAGE_PARCOURSUP_EXPORT_ENABLED
-                    ? PARCOURSUP_STATUS.EN_ATTENTE
+                    ? PARCOURSUP_STATUS.PRET_POUR_INTEGRATION
                     : PARCOURSUP_STATUS.PUBLIE,
                 }
               : {}),

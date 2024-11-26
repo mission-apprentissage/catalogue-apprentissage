@@ -84,7 +84,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
               history.to?.uai_formation === formation.uai_formation &&
               new Date(history.updated_at).getTime() >= campagneStartDate?.getTime() - 31536000000
           ).length &&
-          ![PARCOURSUP_STATUS.EN_ATTENTE, PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut))))
+          ![PARCOURSUP_STATUS.PRET_POUR_INTEGRATION, PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut))))
       ? (args) => <DangerBox data-testid={"uai-warning"} {...args} />
       : (args) => <Box data-testid={"uai-ok"} {...args} />;
 
@@ -387,7 +387,9 @@ export default () => {
           if (fixedUaiFormation !== formation?.uai_formation) {
             const result = await _put(`${CATALOGUE_API}/entity/formations/${formation._id}`, {
               uai_formation: fixedUaiFormation,
-              ...(affelnet_statut === AFFELNET_STATUS.PUBLIE ? { affelnet_statut: AFFELNET_STATUS.EN_ATTENTE } : {}),
+              ...(affelnet_statut === AFFELNET_STATUS.PUBLIE
+                ? { affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION }
+                : {}),
               last_update_who: user.email,
               last_update_at: Date.now(),
               editedFields: { ...formation?.editedFields, uai_formation: fixedUaiFormation },
@@ -397,7 +399,7 @@ export default () => {
                   {
                     uai_formation: fixedUaiFormation,
                     ...(affelnet_statut === AFFELNET_STATUS.PUBLIE
-                      ? { affelnet_statut: AFFELNET_STATUS.EN_ATTENTE }
+                      ? { affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION }
                       : {}),
                     last_update_who: user.email,
                   },
@@ -591,12 +593,12 @@ export default () => {
                               </>
                             )}
 
-                            {[PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.EN_ATTENTE].includes(
+                            {[PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.PRET_POUR_INTEGRATION].includes(
                               formation.parcoursup_statut
                             ) &&
                               (formation.updates_history.filter(
                                 (history) =>
-                                  history.to.parcoursup_statut === PARCOURSUP_STATUS.EN_ATTENTE &&
+                                  history.to.parcoursup_statut === PARCOURSUP_STATUS.PRET_POUR_INTEGRATION &&
                                   new Date(history.updated_at).getTime() >= campagneStartDate?.getTime()
                               ).length >= 1 ? (
                                 <Badge variant={"ok"} minHeight={"28px"}>
@@ -621,10 +623,12 @@ export default () => {
                           <>
                             <StatusBadge source="Affelnet" status={formation.affelnet_statut} />
 
-                            {[AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.EN_ATTENTE].includes(formation.affelnet_statut) &&
+                            {[AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.PRET_POUR_INTEGRATION].includes(
+                              formation.affelnet_statut
+                            ) &&
                               (formation.updates_history.filter(
                                 (history) =>
-                                  history.to.affelnet_statut === AFFELNET_STATUS.EN_ATTENTE &&
+                                  history.to.affelnet_statut === AFFELNET_STATUS.PRET_POUR_INTEGRATION &&
                                   new Date(history.updated_at).getTime() >= campagneStartDate?.getTime() - 31536000000
                               ).length >= 1 ? (
                                 <Badge variant={"ok"} minHeight={"28px"}>
@@ -665,7 +669,9 @@ export default () => {
                       justifyContent={"space-between"}
                       flexDirection={["column", "column", "row"]}
                     >
-                      {[PARCOURSUP_STATUS.FERME, COMMON_STATUS.EN_ATTENTE].includes(formation.parcoursup_statut) &&
+                      {[PARCOURSUP_STATUS.FERME, COMMON_STATUS.PRET_POUR_INTEGRATION].includes(
+                        formation.parcoursup_statut
+                      ) &&
                         hasAccessTo(user, "page_formation/envoi_parcoursup") && (
                           <Button textStyle="sm" variant="secondary" px={8} my={"auto"} onClick={sendToParcoursup}>
                             Forcer la publication Parcoursup
@@ -695,7 +701,9 @@ export default () => {
                     </Alert>
                   )}
                 {hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
-                  [PARCOURSUP_STATUS.EN_ATTENTE, PARCOURSUP_STATUS.REJETE].includes(formation.parcoursup_statut) &&
+                  [PARCOURSUP_STATUS.PRET_POUR_INTEGRATION, PARCOURSUP_STATUS.REJETE].includes(
+                    formation.parcoursup_statut
+                  ) &&
                   !!formation.parcoursup_error && <RejectionBlock formation={formation} />}
                 {hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
                   formation.parcoursup_raison_depublication && (

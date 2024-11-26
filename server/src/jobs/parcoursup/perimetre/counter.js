@@ -71,15 +71,15 @@ const run = async () => {
   });
 
   const totalPending = await Formation.countDocuments({
-    parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
+    parcoursup_statut: PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
   });
   const totalGeneralPending = await Formation.countDocuments({
     ...filterGeneral,
-    parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
+    parcoursup_statut: PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
   });
   const totalNonReglementairePending = await Formation.countDocuments({
     ...filterNonReglementaire,
-    parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
+    parcoursup_statut: PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
   });
 
   const totalRejected = await Formation.countDocuments({
@@ -182,7 +182,7 @@ const run = async () => {
       "catalogue non règlementaire": totalNonReglementaireToCheck,
       "total (y compris archives)": totalToCheck,
     },
-    "statut 'en attente de publication' ": {
+    "statut 'prêt pour intégration' ": {
       "catalogue général": totalGeneralPending,
       "catalogue non règlementaire": totalNonReglementairePending,
       "total (y compris archives)": totalPending,
@@ -233,7 +233,7 @@ const run = async () => {
     //     - statut "à publier (vérifier accès direct postbac)" : ${totalGeneralToValidate} / ${totalNonReglementaireToValidate} / ${totalToValidate}
     //     - statut "à publier (soumis à validation Recteur)" : ${totalGeneralToValidateRecteur} / ${totalNonReglementaireToValidateRecteur} / ${totalToValidateRecteur}
     //     - statut "à publier" : ${totalGeneralToCheck} / ${totalNonReglementaireToCheck} / ${totalToCheck}
-    //     - statut "en attente de publication" : ${totalGeneralPending} / ${totalNonReglementairePending} / ${totalPending}
+    //     - statut "prêt pour intégration" : ${totalGeneralPending} / ${totalNonReglementairePending} / ${totalPending}
     //     - statut "publié" : ${totalGeneralPublished} / ${totalNonReglementairePublished} / ${totalPublished}
     //     - statut "rejeté" : ${totalGeneralRejected} / ${totalNonReglementaireRejected} / ${totalRejected}
     //     - statut "NON publié" : ${totalGeneralNotPublished} / ${totalNonReglementaireNotPublished} / ${totalNotPublished}

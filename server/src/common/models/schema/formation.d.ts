@@ -705,7 +705,7 @@ export interface Formation {
     | "publié"
     | "non publié"
     | "à publier"
-    | "en attente de publication"
+    | "prêt pour intégration"
     | "à publier (vérifier accès direct postbac)"
     | "à publier (soumis à validation Recteur)"
     | "à publier (sous condition habilitation)"
@@ -719,7 +719,7 @@ export interface Formation {
     | "publié"
     | "non publié"
     | "à publier"
-    | "en attente de publication"
+    | "prêt pour intégration"
     | "à publier (vérifier accès direct postbac)"
     | "à publier (soumis à validation Recteur)"
     | "à publier (sous condition habilitation)"
@@ -782,7 +782,7 @@ export interface Formation {
     | "publié"
     | "non publié"
     | "à publier"
-    | "en attente de publication"
+    | "prêt pour intégration"
     | "à publier (soumis à validation)";
   /**
    * Statut affelnet à la fin de la précédente campagne
@@ -792,7 +792,7 @@ export interface Formation {
     | "publié"
     | "non publié"
     | "à publier"
-    | "en attente de publication"
+    | "prêt pour intégration"
     | "à publier (soumis à validation)";
   /**
    * Affelnet : historique des statuts

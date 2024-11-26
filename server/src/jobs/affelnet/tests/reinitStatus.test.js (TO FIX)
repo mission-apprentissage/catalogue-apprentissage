@@ -11,7 +11,7 @@ describe(__filename, () => {
   const date = new Date("2022-09-01");
   const query = {
     published: true,
-    affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+    affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
   };
 
   beforeEach(async () => {
@@ -23,25 +23,25 @@ describe(__filename, () => {
     // lastHistoryIsEnAttenteBeforeDate YES
     await Formation.create({
       published: true,
-      affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+      affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
       cle_ministere_educatif: "cle_1",
       intitule_court: "formation 1",
       updates_history: [
         {
           to: {
-            affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+            affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
           },
           updated_at: new Date("2022-08-15"),
         },
         {
           to: {
-            affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+            affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
           },
           updated_at: new Date("2022-09-15"),
         },
         {
           to: {
-            affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+            affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
           },
           updated_at: new Date("2022-10-15"),
         },
@@ -52,13 +52,13 @@ describe(__filename, () => {
     // lastHistoryIsEnAttenteBeforeDate YES
     await Formation.create({
       published: true,
-      affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+      affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
       cle_ministere_educatif: "cle_2",
       intitule_court: "formation 2",
       updates_history: [
         {
           to: {
-            affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+            affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
           },
           updated_at: new Date("2022-08-15"),
         },
@@ -70,7 +70,7 @@ describe(__filename, () => {
         },
         {
           to: {
-            affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+            affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
           },
           updated_at: new Date("2022-10-15"),
         },
@@ -81,7 +81,7 @@ describe(__filename, () => {
     // lastHistoryIsEnAttenteBeforeDate NO
     await Formation.create({
       published: true,
-      affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+      affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
       cle_ministere_educatif: "cle_3",
       intitule_court: "formation 3",
       updates_history: [
@@ -99,7 +99,7 @@ describe(__filename, () => {
         },
         {
           to: {
-            affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+            affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
           },
           updated_at: new Date("2022-10-15"),
         },
@@ -116,13 +116,13 @@ describe(__filename, () => {
       updates_history: [
         {
           to: {
-            affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+            affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
           },
           updated_at: new Date("2022-08-15"),
         },
         {
           to: {
-            affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+            affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
           },
           updated_at: new Date("2022-09-15"),
         },
@@ -139,7 +139,7 @@ describe(__filename, () => {
     // lastHistoryIsEnAttenteBeforeDate NO
     await Formation.create({
       published: false,
-      affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+      affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
       cle_ministere_educatif: "cle_5",
       intitule_court: "formation 5",
       updates_history: [],

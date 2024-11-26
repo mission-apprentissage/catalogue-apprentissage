@@ -134,14 +134,14 @@ describe(`${__filename} - Test global (deprecated)`, () => {
       diplome: "BAC PRO",
       num_academie: "14",
       affelnet_statut: AFFELNET_STATUS.PUBLIE,
-      affelnet_id: "PARIS / abcdef",
+      affelnet_id: "PARIS/abcdef",
     });
     await Formation.create({
       ...formationCampagneOk,
 
       niveau: "4 (BAC...)",
       diplome: "BAC PRO",
-      affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+      affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
     });
   });
 
@@ -159,7 +159,6 @@ describe(`${__filename} - Test global (deprecated)`, () => {
   });
 
   // TODO : Redévelopper en faisant intégrant qu'une seule formation pour chaque test afin de vérifier une seule règle.
-
   it("should apply affelnet status", async () => {
     await run();
 
@@ -171,13 +170,13 @@ describe(`${__filename} - Test global (deprecated)`, () => {
     const totalToValidate = await Formation.countDocuments({
       affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
     });
-    assert.strictEqual(totalToValidate, 1);
+    assert.strictEqual(totalToValidate, 2);
 
     const totalToCheck = await Formation.countDocuments({ affelnet_statut: AFFELNET_STATUS.A_PUBLIER });
-    assert.strictEqual(totalToCheck, 2);
+    assert.strictEqual(totalToCheck, 1);
 
     const totalPending = await Formation.countDocuments({
-      affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+      affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
     });
     assert.strictEqual(totalPending, 1);
 
@@ -235,6 +234,141 @@ describe(`${__filename} - Test global (deprecated)`, () => {
   });
 });
 
+describe(`${__filename} - Gestion des status`, async () => {
+  beforeEach(async () => {
+    setupBeforeEach();
+    await ReglePerimetre.deleteMany();
+
+    await CampagneStart.create({ created_at: new Date("2024-09-10T00:00:00.000Z") });
+  });
+  afterEach(async () => {
+    setupAfterEach();
+    await cleanAll();
+  });
+
+  const formationOk = {
+    ...formationCampagneOk,
+    rncp_details: {
+      code_type_certif: "TH",
+      rncp_outdated: false,
+      active_inactive: "ACTIVE",
+      date_fin_validite_enregistrement: null,
+    },
+    cfd_outdated: false,
+    annee: "1",
+    niveau: "3 (CAP...)",
+    diplome: "BREVET PROFESSIONNEL AGRICOLE DE NIVEAU V",
+  };
+
+  describe(`handle formations that have never been published`, async () => {
+    [AFFELNET_STATUS.A_PUBLIER, AFFELNET_STATUS.A_PUBLIER_VALIDATION].map(async (status) => {
+      it(`should apply statut '${status}'`, async () => {
+        await ReglePerimetre.create({
+          plateforme: "affelnet",
+          niveau: "3 (CAP...)",
+          diplome: "BREVET PROFESSIONNEL AGRICOLE DE NIVEAU V",
+          statut: status,
+          condition_integration: "peut intégrer",
+        });
+
+        await Formation.create({ ...formationOk, affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT });
+
+        await run();
+
+        const totalHorsPérimètre = await Formation.countDocuments({
+          affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
+        });
+        assert.strictEqual(totalHorsPérimètre, 0);
+
+        const totalOtherStatus = await Formation.countDocuments({
+          affelnet_statut: status,
+        });
+        assert.strictEqual(totalOtherStatus, 1);
+      });
+
+      it(`should keep statut '${status}'`, async () => {
+        await ReglePerimetre.create({
+          plateforme: "affelnet",
+          niveau: "3 (CAP...)",
+          diplome: "BREVET PROFESSIONNEL AGRICOLE DE NIVEAU V",
+          statut: status,
+          condition_integration: "peut intégrer",
+        });
+
+        await Formation.create({ ...formationOk, affelnet_statut: status });
+
+        await run();
+
+        const totalHorsPérimètre = await Formation.countDocuments({
+          affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
+        });
+        assert.strictEqual(totalHorsPérimètre, 0);
+
+        const totalOtherStatus = await Formation.countDocuments({
+          affelnet_statut: status,
+        });
+        assert.strictEqual(totalOtherStatus, 1);
+      });
+    });
+  });
+
+  describe(`handle formations that have been published N-1 and don't need validation`, async () => {
+    [AFFELNET_STATUS.A_PUBLIER].map(async (status) => {
+      it(`should tag as 'prêt pour intégration' if formation is '${status}' and has previously been published`, async () => {
+        await ReglePerimetre.create({
+          plateforme: "affelnet",
+          niveau: "3 (CAP...)",
+          diplome: "BREVET PROFESSIONNEL AGRICOLE DE NIVEAU V",
+          statut: status,
+          condition_integration: "peut intégrer",
+        });
+
+        await Formation.create({ ...formationOk, affelnet_id: "PARIS/abcdef", affelnet_statut: status });
+
+        await run();
+
+        const totalHorsPérimètre = await Formation.countDocuments({
+          affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
+        });
+        assert.strictEqual(totalHorsPérimètre, 0);
+
+        const totalOtherStatus = await Formation.countDocuments({
+          affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
+        });
+        assert.strictEqual(totalOtherStatus, 1);
+      });
+    });
+  });
+
+  describe(`handle formations that have been published N-1 but need validation`, async () => {
+    [AFFELNET_STATUS.A_PUBLIER_VALIDATION].map(async (status) => {
+      it(`should not tag as 'prêt pour intégration' if formation is '${status}' and has not previously been published`, async () => {
+        await ReglePerimetre.create({
+          plateforme: "affelnet",
+          niveau: "3 (CAP...)",
+          diplome: "BREVET PROFESSIONNEL AGRICOLE DE NIVEAU V",
+          statut: status,
+          condition_integration: "peut intégrer",
+        });
+
+        await Formation.create({ ...formationOk, affelnet_id: "PARIS/abcdef", affelnet_statut: status });
+
+        await run();
+
+        const totalHorsPérimètre = await Formation.countDocuments({
+          affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
+        });
+        assert.strictEqual(totalHorsPérimètre, 0);
+
+        const totalOtherStatus = await Formation.countDocuments({
+          affelnet_statut: status,
+        });
+        assert.strictEqual(totalOtherStatus, 1);
+      });
+    });
+  });
+});
+
 describe(`${__filename} - Gestion de la disparition du périmètre`, async () => {
   const formationOk = {
     ...formationCampagneOk,
@@ -253,7 +387,7 @@ describe(`${__filename} - Gestion de la disparition du périmètre`, async () =>
 
   const perimeterWithdrawalMotives = {
     "catalogue_published: false": { catalogue_published: false },
-    "published: false": { published: false },
+    "published: false": { published: false }, // Les formations archivées ne voient plus leur statut réinitialisé
     "rncp_details: { active_inactive: 'ACTIVE', code_type_certif: 'TP', rncp_outdated: true }": {
       rncp_details: { active_inactive: "ACTIVE", code_type_certif: "TP", rncp_outdated: true },
     },
@@ -266,102 +400,99 @@ describe(`${__filename} - Gestion de la disparition du périmètre`, async () =>
     },
   };
 
-  (async () => {
-    await Object.entries(perimeterWithdrawalMotives).map(async ([keyMotif, valueMotif]) => {
-      describe(`handle motif (${keyMotif})`, async () => {
-        beforeEach(async () => {
-          await CampagneStart.create({ created_at: new Date("2024-09-10T00:00:00.000Z") });
-          setupBeforeEach();
-          await ReglePerimetre.create({
-            plateforme: "affelnet",
-            niveau: "3 (CAP...)",
-            diplome: "BREVET PROFESSIONNEL AGRICOLE DE NIVEAU V",
-            statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
-            condition_integration: "peut intégrer",
-            statut_academies: { 14: AFFELNET_STATUS.A_PUBLIER },
-          });
+  Object.entries(perimeterWithdrawalMotives).map(([keyMotif, valueMotif]) => {
+    describe(`handle motif (${keyMotif})`, async () => {
+      beforeEach(async () => {
+        await CampagneStart.create({ created_at: new Date("2024-09-10T00:00:00.000Z") });
+        setupBeforeEach();
+        await ReglePerimetre.create({
+          plateforme: "affelnet",
+          niveau: "3 (CAP...)",
+          diplome: "BREVET PROFESSIONNEL AGRICOLE DE NIVEAU V",
+          statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
+          condition_integration: "peut intégrer",
+          // statut_academies: { 14: AFFELNET_STATUS.A_PUBLIER },
         });
-        afterEach(async () => {
-          await CampagneStart.deleteMany();
-          setupAfterEach();
-          await cleanAll();
-        });
-
-        it(`should have status different from "non publiable en l'état" if no motif for disparition`, async () => {
-          await Formation.create(formationOk);
-
-          await run();
-
-          const totalPublished = await Formation.countDocuments({
-            affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
-          });
-          assert.strictEqual(totalPublished, 1);
-          const totalOtherStatus = await Formation.countDocuments({
-            affelnet_statut: { $nin: [AFFELNET_STATUS.A_PUBLIER_VALIDATION] },
-          });
-          assert.strictEqual(totalOtherStatus, 0);
-        });
-
-        it("should keep status 'publié' if not in perimeter anymore, but already published with a affelnet_id", async () => {
-          await Formation.create({
-            ...formationOk,
-            ...valueMotif,
-            affelnet_statut: AFFELNET_STATUS.PUBLIE,
-            affelnet_id: "test",
-          });
-
-          await run();
-
-          const totalPublished = await Formation.countDocuments({
-            affelnet_statut: AFFELNET_STATUS.PUBLIE,
-          });
-          assert.strictEqual(totalPublished, 1);
-          const totalOtherStatus = await Formation.countDocuments({
-            affelnet_statut: { $nin: [AFFELNET_STATUS.PUBLIE] },
-          });
-          assert.strictEqual(totalOtherStatus, 0);
-        });
-
-        it("should not keep status 'publié' if not in perimeter anymore, but already published without a affelnet_id", async () => {
-          await Formation.create({
-            ...formationOk,
-            ...valueMotif,
-            affelnet_statut: AFFELNET_STATUS.PUBLIE,
-            affelnet_id: null,
-          });
-
-          await run();
-
-          const totalPublished = await Formation.countDocuments({
-            affelnet_statut: AFFELNET_STATUS.PUBLIE,
-          });
-          assert.strictEqual(totalPublished, 0);
-          const totalOtherStatus = await Formation.countDocuments({
-            affelnet_statut: { $nin: [AFFELNET_STATUS.PUBLIE] },
-          });
-          assert.strictEqual(totalOtherStatus, 1);
-        });
-
-        await Object.values(AFFELNET_STATUS)
-          .filter((status) => ![AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.NON_PUBLIE].includes(status))
-          .map(async (status) => {
-            await it(`should apply status "non publiable en l'état" if not in perimeter anymore, and if status was '${status}'`, async () => {
-              await Formation.create({ ...formationOk, ...valueMotif, affelnet_statut: status });
-
-              await run();
-
-              const totalHorsPérimètre = await Formation.countDocuments({
-                affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
-              });
-              assert.strictEqual(totalHorsPérimètre, 1);
-
-              const totalOtherStatus = await Formation.countDocuments({
-                affelnet_statut: { $nin: [AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT] },
-              });
-              assert.strictEqual(totalOtherStatus, 0);
-            });
-          });
       });
+      afterEach(async () => {
+        setupAfterEach();
+        await cleanAll();
+      });
+
+      it(`should have status different from "non publiable en l'état" if no motif for disparition`, async () => {
+        await Formation.create(formationOk);
+
+        await run();
+
+        const totalPublished = await Formation.countDocuments({
+          affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
+        });
+        assert.strictEqual(totalPublished, 1);
+        const totalOtherStatus = await Formation.countDocuments({
+          affelnet_statut: { $nin: [AFFELNET_STATUS.A_PUBLIER_VALIDATION] },
+        });
+        assert.strictEqual(totalOtherStatus, 0);
+      });
+
+      it("should keep status 'publié' if not in perimeter anymore, but already published with a affelnet_id", async () => {
+        await Formation.create({
+          ...formationOk,
+          ...valueMotif,
+          affelnet_statut: AFFELNET_STATUS.PUBLIE,
+          affelnet_id: "PARIS/abcdef",
+        });
+
+        await run();
+
+        const totalPublished = await Formation.countDocuments({
+          affelnet_statut: AFFELNET_STATUS.PUBLIE,
+        });
+        assert.strictEqual(totalPublished, 1);
+        const totalOtherStatus = await Formation.countDocuments({
+          affelnet_statut: { $nin: [AFFELNET_STATUS.PUBLIE] },
+        });
+        assert.strictEqual(totalOtherStatus, 0);
+      });
+
+      it("should not keep status 'publié' if not in perimeter anymore, but already published without a affelnet_id", async () => {
+        await Formation.create({
+          ...formationOk,
+          ...valueMotif,
+          affelnet_statut: AFFELNET_STATUS.PUBLIE,
+          affelnet_id: null,
+        });
+
+        await run();
+
+        const totalPublished = await Formation.countDocuments({
+          affelnet_statut: AFFELNET_STATUS.PUBLIE,
+        });
+        assert.strictEqual(totalPublished, 0);
+        const totalOtherStatus = await Formation.countDocuments({
+          affelnet_statut: { $nin: [AFFELNET_STATUS.PUBLIE] },
+        });
+        assert.strictEqual(totalOtherStatus, 1);
+      });
+
+      Object.values(AFFELNET_STATUS)
+        .filter((status) => ![AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.NON_PUBLIE].includes(status))
+        .map((status) => {
+          it(`should apply status "non publiable en l'état" if not in perimeter anymore, and if status was '${status}'`, async () => {
+            await Formation.create({ ...formationOk, ...valueMotif, affelnet_statut: status });
+
+            await run();
+
+            const totalHorsPérimètre = await Formation.countDocuments({
+              affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
+            });
+            assert.strictEqual(totalHorsPérimètre, 1);
+
+            const totalOtherStatus = await Formation.countDocuments({
+              affelnet_statut: { $nin: [AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT] },
+            });
+            assert.strictEqual(totalOtherStatus, 0);
+          });
+        });
     });
-  })();
+  });
 });

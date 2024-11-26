@@ -3,7 +3,7 @@ export const COMMON_STATUS = {
   PUBLIE: "publié",
   NON_PUBLIE: "non publié",
   A_PUBLIER: "à publier",
-  EN_ATTENTE: "en attente de publication",
+  PRET_POUR_INTEGRATION: "prêt pour intégration",
 };
 
 export const PARCOURSUP_STATUS = {

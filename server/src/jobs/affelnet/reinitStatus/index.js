@@ -20,7 +20,7 @@ const afReinitStatus = async (config) => {
       date = new Date(config.date);
       logger.info(
         { type: "job" },
-        `La date ${date} a été passée en argument, les formations dont le statut est 'en attente de publication' depuis cette date vont voir celui-ci réinitialiser.`
+        `La date ${date} a été passée en argument, les formations dont le statut est 'prêt pour intégration' depuis cette date vont voir celui-ci réinitialiser.`
       );
     } else {
       date = getLastMonth("09");
@@ -28,13 +28,13 @@ const afReinitStatus = async (config) => {
       if (!config?.force && !isSameDate(new Date(), date)) {
         logger.info(
           { type: "job" },
-          "Aucune date n'a été passée en argument, les formations dont le statut est 'en attente de publication' ne peuvent être réinitialisées automatiquement que le 1er septembre. Passer l'argument --force pour forcer la réinitialisation."
+          "Aucune date n'a été passée en argument, les formations dont le statut est 'prêt pour intégration' ne peuvent être réinitialisées automatiquement que le 1er septembre. Passer l'argument --force pour forcer la réinitialisation."
         );
         return;
       } else {
         logger.info(
           { type: "job" },
-          "Aucune date n'a été passée en argument. Etant le 1er septembre, les formations étant 'en attente de publication' sur Affelnet vont être réinitialisées."
+          "Aucune date n'a été passée en argument. Etant le 1er septembre, les formations étant 'prêt pour intégration' sur Affelnet vont être réinitialisées."
         );
       }
     }

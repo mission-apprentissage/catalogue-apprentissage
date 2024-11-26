@@ -202,22 +202,22 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
 
   const campagneStartDate = await getCampagneStartDate();
 
-  const parcoursup_publication_auto = [PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.EN_ATTENTE].includes(
+  const parcoursup_publication_auto = [PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.PRET_POUR_INTEGRATION].includes(
     oldFields?.parcoursup_statut
   )
     ? oldFields?.updates_history?.filter(
         (history) =>
-          history?.to?.parcoursup_statut === PARCOURSUP_STATUS.EN_ATTENTE &&
+          history?.to?.parcoursup_statut === PARCOURSUP_STATUS.PRET_POUR_INTEGRATION &&
           new Date(history.updated_at).getTime() >= campagneStartDate.getTime()
       ).length === 0
     : null;
 
-  const affelnet_publication_auto = [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.EN_ATTENTE].includes(
+  const affelnet_publication_auto = [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.PRET_POUR_INTEGRATION].includes(
     oldFields?.affelnet_statut
   )
     ? oldFields?.updates_history?.filter(
         (history) =>
-          history?.to?.affelnet_statut === AFFELNET_STATUS.EN_ATTENTE &&
+          history?.to?.affelnet_statut === AFFELNET_STATUS.PRET_POUR_INTEGRATION &&
           new Date(history.updated_at).getTime() >= campagneStartDate.getTime()
       ).length === 0
     : null;
@@ -230,7 +230,7 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
   // 242..31
   // 271..21
   const affelnet_perimetre_prise_rdv =
-    [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.EN_ATTENTE, AFFELNET_STATUS.A_PUBLIER].includes(
+    [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.PRET_POUR_INTEGRATION, AFFELNET_STATUS.A_PUBLIER].includes(
       oldFields?.affelnet_statut
     ) &&
     !!affelnet_mefs_10.filter((mef) => {

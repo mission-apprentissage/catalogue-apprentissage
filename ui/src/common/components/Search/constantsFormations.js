@@ -667,7 +667,8 @@ export const columnsDefinition = [
     formatter: (values) =>
       values
         ?.filter(
-          (history) => !![AFFELNET_STATUS.NON_PUBLIE, AFFELNET_STATUS.EN_ATTENTE].includes(history?.to?.affelnet_statut)
+          (history) =>
+            !![AFFELNET_STATUS.NON_PUBLIE, AFFELNET_STATUS.PRET_POUR_INTEGRATION].includes(history?.to?.affelnet_statut)
         )
         ?.sort(sortDescending)?.[0]?.to?.last_update_who ?? "",
   },
@@ -778,7 +779,9 @@ export const columnsDefinition = [
       values
         ?.filter(
           (history) =>
-            !![PARCOURSUP_STATUS.NON_PUBLIE, PARCOURSUP_STATUS.EN_ATTENTE].includes(history?.to?.parcoursup_statut)
+            !![PARCOURSUP_STATUS.NON_PUBLIE, PARCOURSUP_STATUS.PRET_POUR_INTEGRATION].includes(
+              history?.to?.parcoursup_statut
+            )
         )
         ?.sort(sortDescending)?.[0]?.to?.last_update_who ?? "",
   },

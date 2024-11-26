@@ -16,9 +16,9 @@ const run = async () => {
   const filterSessionDate = await getSessionDateRules();
 
   const filterReglement = {
+    published: true,
     $and: [
       {
-        published: true,
         $or: [{ catalogue_published: true }, { force_published: true }],
       },
       {
@@ -119,40 +119,69 @@ const run = async () => {
     affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
   };
 
-  const aPublierSoumisAValidationRules = await ReglePerimetre.find({
+  // const aPublierSoumisAValidationRules = await ReglePerimetre.find({
+  //   plateforme: "affelnet",
+  //   statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
+  //   is_deleted: { $ne: true },
+  // }).lean();
+
+  // if (aPublierSoumisAValidationRules.length > 0) {
+  //   await Formation.updateMany(
+  //     {
+  //       ...filterReglement,
+  //       ...filterSessionDate,
+  //       ...filterNonPubliable,
+
+  //       $or: aPublierSoumisAValidationRules.map((rule) => getQueryFromRule(rule, true)),
+  //     },
+  //     [
+  //       {
+  //         $set: {
+  //           last_update_at: Date.now(),
+  //           affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
+  //           // affelnet_statut: {
+  //           //   $cond: {
+  //           //     if: {
+  //           //       $eq: ["$affelnet_id", null],
+  //           //     },
+  //           //     then: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
+  //           //     else: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
+  //           //   },
+  //           // },
+  //         },
+  //       },
+  //     ]
+  //   );
+  // }
+
+  const aPublierSousConditions = await ReglePerimetre.find({
     plateforme: "affelnet",
-    statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
+    statut: {
+      $in: [AFFELNET_STATUS.A_PUBLIER_VALIDATION],
+    },
     is_deleted: { $ne: true },
   }).lean();
 
-  if (aPublierSoumisAValidationRules.length > 0) {
-    await Formation.updateMany(
-      {
-        ...filterReglement,
-        ...filterSessionDate,
-        ...filterNonPubliable,
-
-        $or: aPublierSoumisAValidationRules.map((rule) => getQueryFromRule(rule, true)),
-      },
-      [
+  aPublierSousConditions.length > 0 &&
+    (await asyncForEach(aPublierSousConditions, async (rule) => {
+      await Formation.updateMany(
         {
-          $set: {
-            last_update_at: Date.now(),
-            affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
-            // affelnet_statut: {
-            //   $cond: {
-            //     if: {
-            //       $eq: ["$affelnet_id", null],
-            //     },
-            //     then: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
-            //     else: AFFELNET_STATUS.EN_ATTENTE,
-            //   },
-            // },
-          },
+          ...filterReglement,
+          ...filterSessionDate,
+          ...filterNonPubliable,
+
+          ...getQueryFromRule(rule, true),
         },
-      ]
-    );
-  }
+        [
+          {
+            $set: {
+              last_update_at: Date.now(),
+              affelnet_statut: rule.statut,
+            },
+          },
+        ]
+      );
+    }));
 
   /** 4. On applique les règles de périmètre pour statut "à publier" pour les formations répondant aux règles de publication sur Parcoursup. */
   logger.debug({ type: "job" }, "Etape 4.");
@@ -186,7 +215,7 @@ const run = async () => {
                   $eq: ["$affelnet_id", null],
                 },
                 then: AFFELNET_STATUS.A_PUBLIER,
-                else: AFFELNET_STATUS.EN_ATTENTE,
+                else: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
               },
             },
           },
@@ -233,7 +262,7 @@ const run = async () => {
   //                 else:
   //                   status === AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT
   //                     ? AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT
-  //                     : AFFELNET_STATUS.EN_ATTENTE,
+  //                     : AFFELNET_STATUS.PRET_POUR_INTEGRATION,
   //               },
   //             },
   //           },

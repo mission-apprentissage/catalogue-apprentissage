@@ -27,7 +27,7 @@ import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../../cons
 import { updateFormation } from "../../api/formation";
 
 const getPublishRadioValue = (status) => {
-  if ([COMMON_STATUS.PUBLIE, COMMON_STATUS.EN_ATTENTE].includes(status)) {
+  if ([COMMON_STATUS.PUBLIE, COMMON_STATUS.PRET_POUR_INTEGRATION].includes(status)) {
     return "true";
   }
   if ([COMMON_STATUS.NON_PUBLIE].includes(status)) {
@@ -113,10 +113,10 @@ const getSubmitBody = ({
         AFFELNET_STATUS.NON_PUBLIE,
         AFFELNET_STATUS.A_PUBLIER_VALIDATION,
         AFFELNET_STATUS.A_PUBLIER,
-        AFFELNET_STATUS.EN_ATTENTE,
+        AFFELNET_STATUS.PRET_POUR_INTEGRATION,
       ].includes(formation?.affelnet_statut)
     ) {
-      body.affelnet_statut = AFFELNET_STATUS.EN_ATTENTE;
+      body.affelnet_statut = AFFELNET_STATUS.PRET_POUR_INTEGRATION;
       body.last_statut_update_date = date;
       body.affelnet_infos_offre = affelnet_infos_offre;
       body.affelnet_url_infos_offre = affelnet_url_infos_offre;
@@ -132,7 +132,7 @@ const getSubmitBody = ({
   } else if (affelnet === "false") {
     if (
       [
-        AFFELNET_STATUS.EN_ATTENTE,
+        AFFELNET_STATUS.PRET_POUR_INTEGRATION,
         AFFELNET_STATUS.A_PUBLIER_VALIDATION,
         AFFELNET_STATUS.A_PUBLIER,
         AFFELNET_STATUS.PUBLIE,
@@ -157,7 +157,7 @@ const getSubmitBody = ({
         PARCOURSUP_STATUS.FERME,
       ].includes(formation?.parcoursup_statut)
     ) {
-      body.parcoursup_statut = PARCOURSUP_STATUS.EN_ATTENTE;
+      body.parcoursup_statut = PARCOURSUP_STATUS.PRET_POUR_INTEGRATION;
       body.parcoursup_error = null;
       body.rejection = null;
       body.last_statut_update_date = date;
@@ -166,7 +166,7 @@ const getSubmitBody = ({
   } else if (parcoursup === "false") {
     if (
       [
-        PARCOURSUP_STATUS.EN_ATTENTE,
+        PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
         PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
         PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
         PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
@@ -197,11 +197,11 @@ const updateFormationWithCallback = async ({ body, formation, user, onFormationU
 const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
   const [user] = useAuth();
   const [isAffelnetFormOpen, setAffelnetFormOpen] = useState(
-    [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.EN_ATTENTE].includes(formation?.affelnet_statut)
+    [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.PRET_POUR_INTEGRATION].includes(formation?.affelnet_statut)
   );
 
   const [isParcoursupFormOpen, setParcoursupFormOpen] = useState(
-    [PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.EN_ATTENTE].includes(formation?.parcoursup_statut)
+    [PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.PRET_POUR_INTEGRATION].includes(formation?.parcoursup_statut)
   );
 
   const [isAffelnetUnpublishFormOpen, setAffelnetUnpublishFormOpen] = useState(

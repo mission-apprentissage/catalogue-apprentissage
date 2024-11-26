@@ -5,7 +5,7 @@ const { cursor } = require("../../../common/utils/cursor");
 
 /**
  * Permet de réinitialiser les statuts de publication Affelnet en début de campagne.
- * Ici seul les formations non "en attente de publication" sont passées à "non publiable en l'état", les
+ * Ici seul les formations non "prêt pour intégration" sont passées à "non publiable en l'état", les
  * autres statuts sont gérés par le processus classique du script d'application des règles
  * de périmètre.
  */
@@ -23,7 +23,7 @@ const run = async () => {
       let update;
 
       if (
-        ![AFFELNET_STATUS.EN_ATTENTE].includes(affelnet_statut) &&
+        ![AFFELNET_STATUS.PRET_POUR_INTEGRATION].includes(affelnet_statut) &&
         !(affelnet_statut === AFFELNET_STATUS.NON_PUBLIE && !!cle_me_remplace_par_traitee)
       ) {
         next_affelnet_statut = AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT;

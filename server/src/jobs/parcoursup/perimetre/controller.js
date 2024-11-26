@@ -403,10 +403,10 @@ const run = async () => {
   const filterSessionDate = await getSessionDateRules();
 
   const filterReglement = {
+    published: true,
+    $or: [{ catalogue_published: true }, { force_published: true }],
     $and: [
       {
-        published: true,
-        $or: [{ catalogue_published: true }, { force_published: true }],
         rncp_code: {
           $nin: excludedRNCPs,
         },
@@ -449,7 +449,7 @@ const run = async () => {
   logger.debug({ type: "job" }, "Etape 0.");
   await Formation.updateMany({ parcoursup_id: { $exists: false } }, { $set: { parcoursup_id: null } });
 
-  /** 1. Application de la réglementation : réinitialisation des étiquettes pour les formations qui sortent du périmètre quelque soit le statut (sauf publié pour le moment) */
+  /** 1. Application de la réglementation : réinitialisation des étiquettes pour les formations qui sortent du périmètre quelque soit le statut (sauf publié, fermé, non publié) */
   logger.debug({ type: "job" }, "Etape 1.");
   await Formation.updateMany(
     {
@@ -599,7 +599,7 @@ const run = async () => {
                   $eq: ["$parcoursup_id", null],
                 },
                 then: PARCOURSUP_STATUS.A_PUBLIER,
-                else: PARCOURSUP_STATUS.EN_ATTENTE,
+                else: PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
               },
             },
           },
@@ -609,12 +609,9 @@ const run = async () => {
 
   /** 5. On applique les règles des académies */
   // logger.debug({ type: "job" }, "Etape 5.");
-  // const academieRules = [
-  //   ...aPublierHabilitationRules,
-  //   ...aPublierVerifierAccesDirectPostBacRules,
-  //   ...aPublierValidationRecteurRules,
-  //   ...aPublierRules,
-  // ].filter(({ statut_academies }) => statut_academies && Object.keys(statut_academies).length > 0);
+  // const academieRules = [...aPublierSousConditions, ...aPublierRules].filter(
+  //   ({ statut_academies }) => statut_academies && Object.keys(statut_academies).length > 0
+  // );
 
   // await asyncForEach(academieRules, async (rule) => {
   //   await asyncForEach(Object.entries(rule.statut_academies), async ([num_academie, status]) => {
@@ -650,7 +647,9 @@ const run = async () => {
   //                 else:
   //                   status === PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT
   //                     ? PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT
-  //                     : PARCOURSUP_STATUS.EN_ATTENTE,
+  //                     : status === PARCOURSUP_STATUS.A_PUBLIER
+  //                       ? PARCOURSUP_STATUS.PRET_POUR_INTEGRATION
+  //                       : status,
   //               },
   //             },
   //           },

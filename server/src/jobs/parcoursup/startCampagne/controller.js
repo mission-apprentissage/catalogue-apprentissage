@@ -22,7 +22,7 @@ const run = async () => {
 
       if (parcoursup_id && parcoursup_statut === PARCOURSUP_STATUS.PUBLIE && parcoursup_perimetre) {
         next_parcoursup_statut = parcoursup_session
-          ? PARCOURSUP_STATUS.EN_ATTENTE
+          ? PARCOURSUP_STATUS.PRET_POUR_INTEGRATION
           : PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT;
         await Formation.updateOne(
           { _id: _id },

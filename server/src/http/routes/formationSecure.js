@@ -303,10 +303,10 @@ module.exports = () => {
    *                 type: string
    *               affelnet_statut:
    *                 type: string
-   *                 enum: ["non publiable en l'état", "publié", "non publié", "à publier (soumis à validation)", "à publier", "en attente de publication"]
+   *                 enum: ["non publiable en l'état", "publié", "non publié", "à publier (soumis à validation)", "à publier", "prêt pour intégration"]
    *               parcoursup_statut:
    *                 type: string
-   *                 enum: ["non publiable en l'état", "publié", "non publié", "à publier (sous condition habilitation)", "à publier (vérifier accès direct postbac)", "à publier (soumis à validation Recteur)", "à publier", "en attente de publication"]
+   *                 enum: ["non publiable en l'état", "publié", "non publié", "à publier (sous condition habilitation)", "à publier (vérifier accès direct postbac)", "à publier (soumis à validation Recteur)", "à publier", "prêt pour intégration"]
    *     responses:
    *       200:
    *         description: OK, retourne la formation mise à jour

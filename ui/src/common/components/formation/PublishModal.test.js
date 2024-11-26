@@ -13,7 +13,7 @@ test("should return undefined when status is not known or à publier", () => {
 
 test("should return true when status is publie or en attente", () => {
   expect(getPublishRadioValue(COMMON_STATUS.PUBLIE)).toEqual("true");
-  expect(getPublishRadioValue(COMMON_STATUS.EN_ATTENTE)).toEqual("true");
+  expect(getPublishRadioValue(COMMON_STATUS.PRET_POUR_INTEGRATION)).toEqual("true");
 });
 
 test("should return false when status is non publie", () => {
@@ -49,7 +49,7 @@ test("should compute submit body when publish affelnet", () => {
     body: {
       affelnet_infos_offre: "test info",
       affelnet_raison_depublication: null,
-      affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+      affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
       last_statut_update_date: new Date("2021-10-14"),
     },
   });
@@ -83,7 +83,7 @@ test("should compute submit body when publish affelnet ", () => {
     body: {
       affelnet_infos_offre: "test info",
       affelnet_raison_depublication: null,
-      affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+      affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
       last_statut_update_date: new Date("2021-10-14"),
     },
   });
@@ -239,7 +239,7 @@ test("should compute submit body when publish parcoursup", () => {
     body: {
       parcoursup_raison_depublication: null,
       parcoursup_error: null,
-      parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
+      parcoursup_statut: PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
       last_statut_update_date: new Date("2021-10-14"),
       rejection: null,
     },
@@ -273,7 +273,7 @@ test("should compute submit body when publish parcoursup", () => {
     body: {
       parcoursup_raison_depublication: null,
       parcoursup_error: null,
-      parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
+      parcoursup_statut: PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
       rejection: null,
       last_statut_update_date: new Date("2021-10-14"),
     },

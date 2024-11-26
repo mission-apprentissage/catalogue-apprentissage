@@ -31,7 +31,7 @@ const parcoursupErrors = [
   {
     regexp: /La filière n'a pas pu être retrouvée. Le CFD : .+ correspond à n fillières\r\nLe RNCP : .* /,
     description: "La formation que vous souhaitez mettre à jour ne correspond pas à celle qui existe dans Parcoursup.",
-    action: `Vous devez vous assurer que la formation en attente de publication correspond à une formation existante dans Parcoursup.`,
+    action: `Vous devez vous assurer que la formation prêt pour intégration correspond à une formation existante dans Parcoursup.`,
   },
   {
     regexp:
