@@ -119,9 +119,31 @@ module.exports = {
       { affelnet_statut: "en attente de publication" },
       { $set: { affelnet_statut: "prêt pour intégration" } }
     );
+
+    const consoleStats = db.collection("consolestats");
+
+    await consoleStats.updateMany({ plateforme: "parcoursup" }, [
+      { $set: { "details.prêt pour intégration": "$details.en attente de publication" } },
+    ]);
+    await consoleStats.updateMany({ plateforme: "parcoursup" }, [{ $unset: "details.en attente de publication" }]);
+    await consoleStats.updateMany({ plateforme: "affelnet" }, [
+      { $set: { "details.prêt pour intégration": "$details.en attente de publication" } },
+    ]);
+    await consoleStats.updateMany({ plateforme: "affelnet" }, [{ $unset: "details.en attente de publication" }]);
   },
 
-  async down() {
-    return Promise.resolve("ok");
+  async down(db) {
+    //....
+
+    const consoleStats = db.collection("consolestats");
+
+    await consoleStats.updateMany({ plateforme: "parcoursup" }, [
+      { $set: { "details.en attente de publication": "$details.prêt pour intégration" } },
+    ]);
+    await consoleStats.updateMany({ plateforme: "parcoursup" }, [{ $unset: "details.prêt pour intégration" }]);
+    await consoleStats.updateMany({ plateforme: "affelnet" }, [
+      { $set: { "details.en attente de publication": "$details.prêt pour intégration" } },
+    ]);
+    await consoleStats.updateMany({ plateforme: "affelnet" }, [{ $unset: "details.prêt pour intégration" }]);
   },
 };
