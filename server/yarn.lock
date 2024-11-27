@@ -718,6 +718,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@scarf/scarf@npm:=1.4.0":
+  version: 1.4.0
+  resolution: "@scarf/scarf@npm:1.4.0"
+  checksum: def62aa403f7e63165ccb219efd2c420fc0b7357b0ba43397f635e4aa813ace1cdf3855a93fc559b4619bcc0469ae4767b8cb72af30ea5c0522bf4a2ecb18198
+  languageName: node
+  linkType: hard
+
 "@sideway/address@npm:^4.1.5":
   version: 4.1.5
   resolution: "@sideway/address@npm:4.1.5"
@@ -7215,7 +7222,7 @@ __metadata:
     sinon: ^19
     stream-json: 1.7.4
     swagger-jsdoc: 6.2.8
-    swagger-ui-express: 4.3.0
+    swagger-ui-express: 5.0.1
     xlsx: 0.18.5
   languageName: unknown
   linkType: soft
@@ -10001,6 +10008,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"swagger-ui-dist@npm:>=5.0.0":
+  version: 5.18.2
+  resolution: "swagger-ui-dist@npm:5.18.2"
+  dependencies:
+    "@scarf/scarf": =1.4.0
+  checksum: 4e8f3e4669276f421f91ce6214f9df09a5b0f9aa1b636e9044076af4f3a02b093d1eb43ed1b3962aba08be803692e71dfc1ce0c28c2057b9eb0c35b166d7ef42
+  languageName: node
+  linkType: hard
+
 "swagger-ui-express@npm:4.3.0":
   version: 4.3.0
   resolution: "swagger-ui-express@npm:4.3.0"
@@ -10009,6 +10025,17 @@ __metadata:
   peerDependencies:
     express: ">=4.0.0"
   checksum: 8d2e1e5389efff59f19fbea9156e8db676a77aa80812872899f46a6e97e697b4e0ea0baccc5ec0f266371a6e604c2289fc84f2edc623a37f51f2393553796a8b
+  languageName: node
+  linkType: hard
+
+"swagger-ui-express@npm:5.0.1":
+  version: 5.0.1
+  resolution: "swagger-ui-express@npm:5.0.1"
+  dependencies:
+    swagger-ui-dist: ">=5.0.0"
+  peerDependencies:
+    express: ">=4.0.0 || >=5.0.0-beta"
+  checksum: 792510643eb82541fab5d26cc60f24f44c2a53232e62103ada04689fca36e6b09a5301ba005c5a3dcd62c7b7c3dcc43649f29ed68dc17de35a958fd9cacb30b0
   languageName: node
   linkType: hard
 
