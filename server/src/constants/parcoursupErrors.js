@@ -105,7 +105,7 @@ const parcoursupErrors = [
     action: `Vous devez vérifier voir modifier le rôle de l’établissement (profil établissement d’accueil) dans Parcoursup puis demander à nouveau la publication une fois la modification effectuée.`,
   },
   {
-    regexp: /Impossible de creer, etablissement gestionnaire non unique ou inexistant pour 0241153Y+/,
+    regexp: /Impossible de créer, établissement gestionnaire non unique ou inexistant pour +/,
     description:
       "Le rôle défini dans Parcoursup pour cet établissement ne permet pas une publication de l’offre vers Parcoursup.",
     action: `Vous devez vérifier voir modifier le rôle de l’établissement (profil établissement d’accueil) dans Parcoursup puis demander à nouveau la publication une fois la modification effectuée.`,
