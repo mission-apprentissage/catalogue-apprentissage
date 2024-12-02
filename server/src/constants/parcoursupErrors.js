@@ -102,13 +102,13 @@ const parcoursupErrors = [
       /Erreur lors de la creation : Il n’est pas possible de créer une formation sur un établissement d’inscription qui n’a pas de rôle d’inscription.+/,
     description:
       "Le rôle défini dans Parcoursup pour cet établissement ne permet pas une publication de l’offre vers Parcoursup.",
-    action: `Vous devez vérifier voir modifier le rôle de l’établissement (profil établissement d’accueil) dans Parcoursup puis demander à nouveau la publication une fois la modification effectuée.`,
+    action: `Vous devez vérifier voire modifier le rôle de l’établissement (profil établissement d’accueil) dans Parcoursup puis demander à nouveau la publication une fois la modification effectuée.`,
   },
   {
     regexp: /Impossible de créer, établissement gestionnaire non unique ou inexistant pour +/,
     description:
       "Le rôle défini dans Parcoursup pour cet établissement ne permet pas une publication de l’offre vers Parcoursup.",
-    action: `Vous devez vérifier voir modifier le rôle de l’établissement (profil établissement d’accueil) dans Parcoursup puis demander à nouveau la publication une fois la modification effectuée.`,
+    action: `Vous devez vérifier voire modifier le rôle de l’établissement (profil établissement d’accueil) dans Parcoursup puis demander à nouveau la publication une fois la modification effectuée.`,
   },
 ];
 
