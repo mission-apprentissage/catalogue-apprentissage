@@ -24,8 +24,9 @@ function timeout(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function getMapping(schema, requireAsciiFolding = false) {
+function getMapping(schema, inPrefix = "", requireAsciiFolding = false) {
   const properties = {};
+  const prefix = inPrefix !== "" ? `${inPrefix}.` : inPrefix;
 
   // paramètre optionnel indiquant que la recherche sur le champ est insensible à la casse et aux accents
   const asciiFoldingParameters = requireAsciiFolding
@@ -85,6 +86,11 @@ function getMapping(schema, requireAsciiFolding = false) {
               properties[key] = { type: "date" };
               break;
             case schema.paths[key].caster.instance === "Embedded":
+              properties[key] = {
+                type: "object",
+                fields: getMapping(schema.paths[key].schema, prefix + key, requireAsciiFolding),
+              };
+              break;
             case schema.paths[key].caster.instance === "Mixed":
             case schema.paths[key].caster.$isArraySubdocument:
               properties[key] = { type: "nested" };
@@ -95,8 +101,16 @@ function getMapping(schema, requireAsciiFolding = false) {
           }
           break;
         case "Embedded":
+          // console.error(schema.paths[key], schema.paths[key].schema);
+          properties[key] = {
+            type: "object",
+            fields: getMapping(schema.paths[key].schema, prefix + key, requireAsciiFolding),
+          };
+          break;
         case "Mixed":
-          properties[key] = { type: "nested" };
+          properties[key] = {
+            type: "nested",
+          };
           break;
         default:
           console.warn("Not handling mongoose type : ", mongooseType, "for ", key);
@@ -119,7 +133,9 @@ let isHooksPaused = false;
 function Mongoosastic(schema, options) {
   const { esClient } = options;
 
-  const mapping = getMapping(schema);
+  const mapping = getMapping(schema, "");
+
+  console.error("Mapping", mapping);
   const indexName = options.index;
   const typeName = "_doc";
 
@@ -155,7 +171,7 @@ function Mongoosastic(schema, options) {
         await esClient.indices.create({ index: indexName, ...includeTypeNameParameters, ...asciiFoldingParameters });
       }
       const completeMapping = {};
-      completeMapping[typeName] = getMapping(schema, requireAsciiFolding);
+      completeMapping[typeName] = getMapping(schema, "", requireAsciiFolding);
 
       await esClient.indices.putMapping({
         index: indexName,

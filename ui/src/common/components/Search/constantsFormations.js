@@ -85,6 +85,8 @@ export const allowedFilters = [
   "siret_actif",
   "tags",
   "uai_formation",
+  "rejection",
+  // "rejection.description",
 ];
 
 const mefsFormatter = (mefs) => {
@@ -859,6 +861,13 @@ export const columnsDefinition = [
     formatter: escapeDiacritics,
   },
   {
+    Header: "Parcoursup: libellé de rejet webservice",
+    accessor: "rejection.description",
+    width: 200,
+    exportable: true,
+    formatter: escapeDiacritics,
+  },
+  {
     Header: "Parcoursup: motif de réinitialisation Moss",
     accessor: "parcoursup_statut_reinitialisation",
     width: 200,
@@ -1192,6 +1201,17 @@ export const quickFiltersDefinition = [
         dataField: "parcoursup_statut_initial.keyword",
         title: "Statut initial",
         filterLabel: "Statut initial Parcoursup",
+        selectAllLabel: "Tous",
+        sortBy: "count",
+        acl: "page_catalogue/voir_filtres_avances_ps",
+      },
+
+      {
+        componentId: `parcoursup_rejection`,
+        type: "facet",
+        dataField: "rejection.description.keyword",
+        title: "Libellé de rejet Parcoursup",
+        filterLabel: "Libellé de rejet Parcoursup",
         selectAllLabel: "Tous",
         sortBy: "count",
         acl: "page_catalogue/voir_filtres_avances_ps",
