@@ -510,15 +510,6 @@ export default () => {
     .sort(sortDescending)
     .filter((h) => h.to?.affelnet_raison_depublication)[0]?.updated_at;
 
-  // const isBacPro32 =
-  //   !!formation?.bcn_mefs_10?.filter(
-  //     ({ mef10 }) => (`${mef10}`.startsWith("247") || `${mef10}`?.startsWith("276")) && `${mef10}`?.endsWith("32")
-  //   ).length && isInSession(formation, sessionStartDate, sessionEndDate);
-
-  const isBrevetNiv5 =
-    formation?.diplome === "BREVET PROFESSIONNEL AGRICOLE DE NIVEAU V" &&
-    isInSession(formation, sessionStartDate, sessionEndDate);
-
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
@@ -726,27 +717,6 @@ export default () => {
                       : <b>{formation.affelnet_raison_depublication}</b>
                     </Alert>
                   )}
-                {/*
-                {isBacPro32 && (
-                  <Alert mt={4} type={"warning"}>
-                    Cette formation est potentiellement dans le périmètre Affelnet (voir détail dans l'encadré sur
-                    l'année d'entrée en apprentissage), mais pour des raisons techniques, elle ne pourra pas être
-                    importée dans Affelnet.
-                    <br />
-                    Vous pouvez, pour des raisons de lisibilité, procéder à la demande de publication (dans quel cas la
-                    formation restera en statut "En attente de publication", même après vos imports Affelnet) ou à la
-                    non publication.
-                    <br />
-                    Vous pouvez également si vous le souhaitez ignorer cette formation et la laisser en statut "à
-                    publier (soumis à validation)".
-                  </Alert>
-                )} */}
-                {isBrevetNiv5 && (
-                  <Alert mt={4} type={"warning"}>
-                    Pour des raisons techniques, cette formation ne peut pas intégrer le périmètre Affelnet pour la
-                    campagne 2024. Elle doit être créée manuellement dans Affelnet.
-                  </Alert>
-                )}
               </Box>
               <Formation
                 formation={formation}
