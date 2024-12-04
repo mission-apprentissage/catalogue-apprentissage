@@ -86,7 +86,7 @@ export const allowedFilters = [
   "tags",
   "uai_formation",
   "rejection",
-  // "rejection.description",
+  "rejection.description",
 ];
 
 const mefsFormatter = (mefs) => {
@@ -1207,7 +1207,7 @@ export const quickFiltersDefinition = [
       },
 
       {
-        componentId: `parcoursup_rejection`,
+        componentId: `rejection`,
         type: "facet",
         dataField: "rejection.description.keyword",
         title: "Libellé de rejet Parcoursup",
