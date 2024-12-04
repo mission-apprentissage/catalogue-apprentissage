@@ -131,6 +131,14 @@ export const HistoryBlock = ({ formation, limit = 5 }) => {
       status: <>Modification apportée</>,
       user: value.to.last_update_who,
       date: new Date(value.updated_at),
+      info: (
+        <Box>
+          Avant: {JSON.stringify(value.from, null, 2)}
+          <br />
+          <br />
+          Après: {JSON.stringify(value.to, null, 2)}
+        </Box>
+      ),
     }));
 
   const affelnet_history = reduceSameValues(
@@ -193,10 +201,6 @@ export const HistoryBlock = ({ formation, limit = 5 }) => {
 
           {history.length > limit && (
             <>
-              <Button onClick={onToggle} variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
-                {isOpen ? "Voir moins" : "Voir plus"}{" "}
-                <ArrowDownLine boxSize={5} transform={isOpen ? "rotate(180deg)" : "none"} />
-              </Button>
               <Collapse in={isOpen} animateOpacity unmountOnExit={true} style={{ overflow: "unset" }}>
                 <ul>
                   {history.slice(limit)?.map((value, index) => {
@@ -217,6 +221,17 @@ export const HistoryBlock = ({ formation, limit = 5 }) => {
                   })}
                 </ul>
               </Collapse>
+              <Button
+                onClick={onToggle}
+                variant={"unstyled"}
+                fontSize={"zeta"}
+                fontStyle={"italic"}
+                color={"grey.600"}
+                display={"inline-flex"}
+              >
+                <ArrowDownLine boxSize={5} mr={2} transform={isOpen ? "rotate(180deg)" : "none"} />
+                {isOpen ? "Voir moins" : "Voir plus"}{" "}
+              </Button>
             </>
           )}
         </Box>
