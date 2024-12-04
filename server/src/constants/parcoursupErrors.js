@@ -87,7 +87,7 @@ const parcoursupErrors = [
     action: `Vous devez vous assurer du lieu de formation et si nécessaire mettre à jour l'UAI.`,
   },
   {
-    regexp: /Mise à jour impossible : Code Établissement inconnu ou non renseigné.+/,
+    regexp: /Mise à jour impossible : Code Établissement inconnu ou non renseigné./,
     description:
       "L'UAI renseigné en tant que lieu de formation est fermé dans la BCE, ou n'a pas encore crée dans Parcoursup.",
     action: `Vous devez faire le point avec l'établissement, afin de confirmer l'UAI lieu de formation. Si l'établissement n'existe pas encore dans Parcoursup, vous devez procéder à sa création dans Parcoursup.`,
@@ -99,7 +99,7 @@ const parcoursupErrors = [
   },
   {
     regexp:
-      /Erreur lors de la creation : Il n’est pas possible de créer une formation sur un établissement d’inscription qui n’a pas de rôle d’inscription.+/,
+      /Erreur lors de la creation : Il n'est pas possible de créer une formation sur un établissement d'inscription qui n'a pas de rôle d'inscription./,
     description:
       "Le rôle défini dans Parcoursup pour cet établissement ne permet pas une publication de l’offre vers Parcoursup.",
     action: `Vous devez vérifier voire modifier le rôle de l’établissement (profil établissement d’accueil) dans Parcoursup puis demander à nouveau la publication une fois la modification effectuée.`,
