@@ -14,7 +14,7 @@ export const InfoTooltip = ({ description, ...rest }) => {
   return (
     <Tooltip
       label={
-        <Text p={3} fontSize={"epsilon"}>
+        <Text p={3} fontSize={"zeta"}>
           {description}
         </Text>
       }

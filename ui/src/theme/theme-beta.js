@@ -1,5 +1,3 @@
-import { textDecoration } from "@chakra-ui/react";
-
 const rootFontSizePx = 16;
 
 const colors = {
