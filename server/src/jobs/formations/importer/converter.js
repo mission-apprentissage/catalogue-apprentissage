@@ -28,7 +28,7 @@ const updateRelationFields = async ({ filter = {} }) => {
 const computeRelationFields = async (fields) => {
   const etablissementGestionnaire = await Etablissement.findOne({ siret: fields.etablissement_gestionnaire_siret });
   const etablissementFormateur = await Etablissement.findOne({ siret: fields.etablissement_formateur_siret });
-  const etablissementLieu = await Etablissement.findOne({ siret: fields.lieu_formation_siret });
+  const etablissementLieu = await Etablissement.findOne({ siret: fields.etablissement_lieu_formation_siret });
 
   const etablissement_gestionnaire_id = etablissementGestionnaire?.id;
   const etablissement_formateur_id = etablissementFormateur?.id;

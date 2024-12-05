@@ -82,12 +82,12 @@ const parcoursupSchema = {
   parcoursup_statut_reinitialisation: {
     type: statutReinitialisationSchema,
     default: null,
-    description: "Statut parcoursup",
+    description: "Parcoursup: Statut de réinitialisation forcée",
   },
   parcoursup_publication_auto: {
     type: Boolean || null,
     default: null,
-    description: "Parcoursup : publication auto",
+    description: "Parcoursup: publication auto",
   },
   parcoursup_perimetre_prise_rdv: {
     type: Boolean,

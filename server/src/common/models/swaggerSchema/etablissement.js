@@ -57,6 +57,10 @@ module.exports = {
         type: "string",
         description: "Enseigne",
       },
+      raison_sociale_enseigne: {
+        type: "string",
+        description: "Raison social et enseigne (pour recherche)",
+      },
       onisep_nom: {
         type: "string",
         description: "Nom de l'etablissement Onisep",

@@ -248,6 +248,18 @@ export interface DualControlFormation {
    */
   published?: boolean;
   /**
+   * Siret du lieu de formation
+   */
+  etablissement_lieu_formation_siret?: string | null;
+  /**
+   * UAI du lieu de formation (transmis par RCO)
+   */
+  etablissement_lieu_formation_uai?: string | null;
+  /**
+   * Siret du lieu de formation actif / inactif
+   */
+  etablissement_lieu_siret_actif?: string | null;
+  /**
    * Latitude et longitude du lieu de formation
    */
   lieu_formation_geo_coordonnees?: string;
@@ -263,10 +275,6 @@ export interface DualControlFormation {
    * Adresse du lieu de formation déduit de la géolocalisation du flux RCO
    */
   lieu_formation_adresse_computed?: string | null;
-  /**
-   * Siret du lieu de formation
-   */
-  lieu_formation_siret?: string | null;
   /**
    * **[DEPRECATED]** Id de formation RCO (id_formation + id_action + id_certifinfo)
    */
@@ -409,6 +417,10 @@ export interface DualControlFormation {
    */
   etablissement_gestionnaire_entreprise_raison_sociale?: string | null;
   /**
+   * Raison sociale et enseigne de l'établissement formateur
+   */
+  etablissement_gestionnaire_raison_sociale_enseigne?: string | null;
+  /**
    * Latitude et longitude de l'établissement gestionnaire
    */
   geo_coordonnees_etablissement_gestionnaire?: string;
@@ -500,6 +512,10 @@ export interface DualControlFormation {
    * Raison sociale établissement formateur
    */
   etablissement_formateur_entreprise_raison_sociale?: string | null;
+  /**
+   * Raison sociale et enseigne de l'établissement formateur
+   */
+  etablissement_formateur_raison_sociale_enseigne?: string | null;
   /**
    * Latitude et longitude de l'établissement formateur
    */

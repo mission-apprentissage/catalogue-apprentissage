@@ -62,6 +62,10 @@ export interface Etablissement {
    */
   enseigne?: string | null;
   /**
+   * Raison social et enseigne (pour recherche)
+   */
+  raison_sociale_enseigne?: string | null;
+  /**
    * Nom de l'etablissement Onisep
    */
   onisep_nom?: string | null;

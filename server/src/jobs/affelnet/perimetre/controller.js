@@ -119,41 +119,6 @@ const run = async () => {
     affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
   };
 
-  // const aPublierSoumisAValidationRules = await ReglePerimetre.find({
-  //   plateforme: "affelnet",
-  //   statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
-  //   is_deleted: { $ne: true },
-  // }).lean();
-
-  // if (aPublierSoumisAValidationRules.length > 0) {
-  //   await Formation.updateMany(
-  //     {
-  //       ...filterReglement,
-  //       ...filterSessionDate,
-  //       ...filterNonPubliable,
-
-  //       $or: aPublierSoumisAValidationRules.map((rule) => getQueryFromRule(rule, true)),
-  //     },
-  //     [
-  //       {
-  //         $set: {
-  //           last_update_at: Date.now(),
-  //           affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
-  //           // affelnet_statut: {
-  //           //   $cond: {
-  //           //     if: {
-  //           //       $eq: ["$affelnet_id", null],
-  //           //     },
-  //           //     then: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
-  //           //     else: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
-  //           //   },
-  //           // },
-  //         },
-  //       },
-  //     ]
-  //   );
-  // }
-
   const aPublierSousConditions = await ReglePerimetre.find({
     plateforme: "affelnet",
     statut: {
@@ -183,7 +148,7 @@ const run = async () => {
       );
     }));
 
-  /** 4. On applique les règles de périmètre pour statut "à publier" pour les formations répondant aux règles de publication sur Parcoursup. */
+  /** 4. On applique les règles de périmètre pour statut "à publier" pour les formations répondant aux règles de publication sur Affelnet. */
   logger.debug({ type: "job" }, "Etape 4.");
 
   const filter = {
@@ -274,7 +239,7 @@ const run = async () => {
 
   /** 6. Vérification de la date de publication */
   logger.debug({ type: "job" }, "Etape 6.");
-  /** 6a. On s'assure que les dates de publication sont définies pour les formations publiées */
+  /** 6a. On s'assure que les dates de publication soient définies pour les formations publiées */
   await Formation.updateMany(
     {
       affelnet_published_date: null,
@@ -283,7 +248,7 @@ const run = async () => {
     { $set: { affelnet_published_date: new Date() } }
   );
 
-  /** 6b. On s'assure que les dates de publication ne sont pas définies pour les formations non publiées */
+  /** 6b. On s'assure que les dates de publication ne soient pas définies pour les formations non publiées */
   await Formation.updateMany(
     {
       affelnet_published_date: { $ne: null },

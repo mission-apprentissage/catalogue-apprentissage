@@ -1,7 +1,7 @@
 const { Formation } = require("../../../common/models");
 const { getQueryFromRule } = require("../../../common/utils/rulesUtils");
 const { ReglePerimetre } = require("../../../common/models");
-const { asyncForEach } = require("../../../common/utils/asyncUtils");
+// const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
 const { cursor } = require("../../../common/utils/cursor");
 const logger = require("../../../common/logger");

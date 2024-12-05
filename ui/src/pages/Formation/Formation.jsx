@@ -214,9 +214,9 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                 <Text mb={4}>
                   Siret :{" "}
                   <Text as="span" variant="highlight">
-                    {formation.lieu_formation_siret ?? "N/A"}
+                    {formation.etablissement_lieu_formation_siret ?? "N/A"}
                   </Text>{" "}
-                  {/* <InfoTooltip description={helpText.formation.lieu_formation_siret} /> */}
+                  {/* <InfoTooltip description={helpText.formation.etablissement_lieu_formation_siret} /> */}
                 </Text>
                 <Text mb={4}>
                   Adresse :{" "}

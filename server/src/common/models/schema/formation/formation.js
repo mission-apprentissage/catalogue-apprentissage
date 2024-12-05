@@ -372,11 +372,7 @@ const formationSchema = {
     default: null,
     description: "Adresse du lieu de formation déduit de la géolocalisation du flux RCO",
   },
-  lieu_formation_siret: {
-    type: String,
-    default: null,
-    description: "Siret du lieu de formation",
-  },
+
   lieu_formation_id: {
     type: String,
     default: null,
@@ -387,6 +383,22 @@ const formationSchema = {
     default: false,
     description: "Lieu de formation est publié",
   },
+  etablissement_lieu_formation_siret: {
+    type: String,
+    default: null,
+    description: "Siret du lieu de formation",
+  },
+  etablissement_lieu_formation_uai: {
+    type: String,
+    default: null,
+    description: "UAI du lieu de formation (transmis par RCO)",
+  },
+  etablissement_lieu_siret_actif: {
+    type: String,
+    default: null,
+    description: "Siret du lieu de formation actif / inactif",
+  },
+
   id_rco_formation: {
     index: true,
     type: String,

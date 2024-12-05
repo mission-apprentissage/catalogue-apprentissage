@@ -124,7 +124,7 @@ export type FranceCompetenceInfos = {
   fc_has_partenaire?: boolean;
 } | null;
 /**
- * Statut parcoursup
+ * Parcoursup: Statut de réinitialisation forcée
  */
 export type ParcoursupStatutReinitialisation = {
   /**
@@ -204,6 +204,10 @@ export interface Formation {
    * Localité
    */
   localite?: string | null;
+  /**
+   * UAI du lieu de la formation
+   */
+  uai_formationcert?: string | null;
   /**
    * UAI du lieu de la formation
    */
@@ -347,9 +351,25 @@ export interface Formation {
    */
   lieu_formation_adresse_computed?: string | null;
   /**
+   * Identifiant lieu de formation
+   */
+  lieu_formation_id?: string | null;
+  /**
+   * Lieu de formation est publié
+   */
+  lieu_formation_published?: boolean;
+  /**
    * Siret du lieu de formation
    */
-  lieu_formation_siret?: string | null;
+  etablissement_lieu_formation_siret?: string | null;
+  /**
+   * UAI du lieu de formation (transmis par RCO)
+   */
+  etablissement_lieu_formation_uai?: string | null;
+  /**
+   * Siret du lieu de formation actif / inactif
+   */
+  etablissement_lieu_siret_actif?: string | null;
   /**
    * **[DEPRECATED]** Id de formation RCO (id_formation + id_action + id_certifinfo)
    */
@@ -370,6 +390,10 @@ export interface Formation {
    * Identifiant certifInfo (unicité de la certification)
    */
   id_certifinfo?: string | null;
+  /**
+   * Libellé certifInfo
+   */
+  intitule_certifinfo?: string | null;
   /**
    * Tableau de tags (2020, 2021, etc.)
    */
@@ -454,9 +478,17 @@ export interface Formation {
    */
   cle_me_remplace_par?: string[] | null;
   /**
+   * L'information de remplacement a été traitée
+   */
+  cle_me_remplace_par_traitee?: boolean;
+  /**
    * Remplace la clé ME
    */
   cle_me_remplace?: string[] | null;
+  /**
+   * L'information de remplacement a été traitée
+   */
+  cle_me_remplace_traitee?: boolean;
   /**
    * Liens entre fiches
    */
@@ -521,6 +553,10 @@ export interface Formation {
    * Raison sociale établissement gestionnaire
    */
   etablissement_gestionnaire_entreprise_raison_sociale?: string | null;
+  /**
+   * Raison sociale et enseigne de l'établissement formateur
+   */
+  etablissement_gestionnaire_raison_sociale_enseigne?: string | null;
   /**
    * Latitude et longitude de l'établissement gestionnaire
    */
@@ -622,6 +658,10 @@ export interface Formation {
    */
   etablissement_formateur_entreprise_raison_sociale?: string | null;
   /**
+   * Raison sociale et enseigne de l'établissement formateur
+   */
+  etablissement_formateur_raison_sociale_enseigne?: string | null;
+  /**
    * Latitude et longitude de l'établissement formateur
    */
   geo_coordonnees_etablissement_formateur?: string;
@@ -712,6 +752,20 @@ export interface Formation {
     | "rejet de publication"
     | "fermé";
   /**
+   * Statut initial parcoursup
+   */
+  parcoursup_statut_initial?:
+    | "non publiable en l'état"
+    | "publié"
+    | "non publié"
+    | "à publier"
+    | "prêt pour intégration"
+    | "à publier (vérifier accès direct postbac)"
+    | "à publier (soumis à validation Recteur)"
+    | "à publier (sous condition habilitation)"
+    | "rejet de publication"
+    | "fermé";
+  /**
    * Statut parcoursup à la fin de la précédente campagne
    */
   parcoursup_previous_statut?:
@@ -742,6 +796,10 @@ export interface Formation {
    */
   parcoursup_published_date?: Date;
   /**
+   * Publié sur le moteur de recherche Parcoursup
+   */
+  parcoursup_published?: boolean | null;
+  /**
    * Date de la dernière tentative d'export vers Parcoursup
    */
   parcoursup_export_date?: Date;
@@ -755,7 +813,7 @@ export interface Formation {
   parcoursup_mefs_10?: ItemOfParcoursupMefs_10[];
   parcoursup_statut_reinitialisation?: ParcoursupStatutReinitialisation;
   /**
-   * Parcoursup : publication auto
+   * Parcoursup: publication auto
    */
   parcoursup_publication_auto?: boolean | null;
   /**
@@ -778,6 +836,16 @@ export interface Formation {
    * Statut affelnet
    */
   affelnet_statut?:
+    | "non publiable en l'état"
+    | "publié"
+    | "non publié"
+    | "à publier"
+    | "prêt pour intégration"
+    | "à publier (soumis à validation)";
+  /**
+   * Statut initial affelnet
+   */
+  affelnet_statut_initial?:
     | "non publiable en l'état"
     | "publié"
     | "non publié"

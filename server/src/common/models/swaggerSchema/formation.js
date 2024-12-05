@@ -65,6 +65,10 @@ module.exports = {
         type: "string",
         description: "Localité",
       },
+      uai_formationcert: {
+        type: "string",
+        description: "UAI du lieu de la formation",
+      },
       uai_formation: {
         type: "string",
         description: "UAI du lieu de la formation",
@@ -392,9 +396,25 @@ module.exports = {
         type: "string",
         description: "Adresse du lieu de formation déduit de la géolocalisation du flux RCO",
       },
-      lieu_formation_siret: {
+      lieu_formation_id: {
+        type: "string",
+        description: "Identifiant lieu de formation",
+      },
+      lieu_formation_published: {
+        type: "boolean",
+        description: "Lieu de formation est publié",
+      },
+      etablissement_lieu_formation_siret: {
         type: "string",
         description: "Siret du lieu de formation",
+      },
+      etablissement_lieu_formation_uai: {
+        type: "string",
+        description: "UAI du lieu de formation (transmis par RCO)",
+      },
+      etablissement_lieu_siret_actif: {
+        type: "string",
+        description: "Siret du lieu de formation actif / inactif",
       },
       id_rco_formation: {
         type: "string",
@@ -418,6 +438,10 @@ module.exports = {
       id_certifinfo: {
         type: "string",
         description: "Identifiant certifInfo (unicité de la certification)",
+      },
+      intitule_certifinfo: {
+        type: "string",
+        description: "Libellé certifInfo",
       },
       tags: {
         type: "array",
@@ -570,12 +594,20 @@ module.exports = {
           type: "string",
         },
       },
+      cle_me_remplace_par_traitee: {
+        type: "boolean",
+        description: "L'information de remplacement a été traitée",
+      },
       cle_me_remplace: {
         type: "array",
         description: "Remplace la clé ME",
         items: {
           type: "string",
         },
+      },
+      cle_me_remplace_traitee: {
+        type: "boolean",
+        description: "L'information de remplacement a été traitée",
       },
       cle_me_link: {
         type: "string",
@@ -640,6 +672,10 @@ module.exports = {
       etablissement_gestionnaire_entreprise_raison_sociale: {
         type: "string",
         description: "Raison sociale établissement gestionnaire",
+      },
+      etablissement_gestionnaire_raison_sociale_enseigne: {
+        type: "string",
+        description: "Raison sociale et enseigne de l'établissement formateur",
       },
       geo_coordonnees_etablissement_gestionnaire: {
         type: "string",
@@ -742,6 +778,10 @@ module.exports = {
         type: "string",
         description: "Raison sociale établissement formateur",
       },
+      etablissement_formateur_raison_sociale_enseigne: {
+        type: "string",
+        description: "Raison sociale et enseigne de l'établissement formateur",
+      },
       geo_coordonnees_etablissement_formateur: {
         type: "string",
         description: "Latitude et longitude de l'établissement formateur",
@@ -836,6 +876,22 @@ module.exports = {
         ],
         description: "Statut parcoursup",
       },
+      parcoursup_statut_initial: {
+        type: "string",
+        enum: [
+          "non publiable en l'état",
+          "publié",
+          "non publié",
+          "à publier",
+          "prêt pour intégration",
+          "à publier (vérifier accès direct postbac)",
+          "à publier (soumis à validation Recteur)",
+          "à publier (sous condition habilitation)",
+          "rejet de publication",
+          "fermé",
+        ],
+        description: "Statut initial parcoursup",
+      },
       parcoursup_previous_statut: {
         type: "string",
         enum: [
@@ -873,6 +929,10 @@ module.exports = {
         type: "string",
         description: 'Date de publication (passage au statut "publié")',
         format: "date-time",
+      },
+      parcoursup_published: {
+        type: "boolean",
+        description: "Publié sur le moteur de recherche Parcoursup",
       },
       parcoursup_export_date: {
         type: "string",
@@ -913,7 +973,7 @@ module.exports = {
       },
       parcoursup_statut_reinitialisation: {
         type: "object",
-        description: "Statut parcoursup",
+        description: "Parcoursup: Statut de réinitialisation forcée",
         properties: {
           user: {
             type: "string",
@@ -932,7 +992,7 @@ module.exports = {
       },
       parcoursup_publication_auto: {
         type: "boolean",
-        description: "Parcoursup : publication auto",
+        description: "Parcoursup: publication auto",
       },
       parcoursup_perimetre_prise_rdv: {
         type: "boolean",
@@ -961,6 +1021,18 @@ module.exports = {
           "à publier (soumis à validation)",
         ],
         description: "Statut affelnet",
+      },
+      affelnet_statut_initial: {
+        type: "string",
+        enum: [
+          "non publiable en l'état",
+          "publié",
+          "non publié",
+          "à publier",
+          "prêt pour intégration",
+          "à publier (soumis à validation)",
+        ],
+        description: "Statut initial affelnet",
       },
       affelnet_previous_statut: {
         type: "string",

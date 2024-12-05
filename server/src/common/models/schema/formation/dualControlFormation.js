@@ -244,15 +244,20 @@ const formationSchema = {
     description: "Est publiée, la formation est éligible pour le catalogue",
   },
 
-  uai_formationcert: {
-    index: true,
+  etablissement_lieu_formation_siret: {
     type: String,
     default: null,
-    description: "UAI du lieu de la formation",
-    // validate: {
-    //   validator: async (value) => !value || (await isValideUAI(value)),
-    //   message: (props) => `${props.value} n'est pas un code UAI valide.`,
-    // },
+    description: "Siret du lieu de formation",
+  },
+  etablissement_lieu_formation_uai: {
+    type: String,
+    default: null,
+    description: "UAI du lieu de formation (transmis par RCO)",
+  },
+  etablissement_lieu_siret_actif: {
+    type: String,
+    default: null,
+    description: "Siret du lieu de formation actif / inactif",
   },
 
   lieu_formation_geo_coordonnees: {
@@ -282,11 +287,6 @@ const formationSchema = {
     description: "Adresse du lieu de formation déduit de la géolocalisation du flux RCO",
   },
 
-  lieu_formation_siret: {
-    type: String,
-    default: null,
-    description: "Siret du lieu de formation",
-  },
   id_rco_formation: {
     index: true,
     type: String,

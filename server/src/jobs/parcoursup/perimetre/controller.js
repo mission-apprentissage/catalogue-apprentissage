@@ -1,6 +1,5 @@
 const logger = require("../../../common/logger");
 const { Formation, ReglePerimetre } = require("../../../common/models");
-const { rncp_code } = require("../../../common/models/schema/formation/formation");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const {
   getQueryFromRule,
@@ -468,10 +467,7 @@ const run = async () => {
               "rncp_details.code_type_certif": {
                 $in: ["Titre", "TP", null],
               },
-              rncp_code: {
-                $exists: true,
-                $ne: null,
-              },
+              rncp_code: { $exists: true, $ne: null },
               "rncp_details.rncp_outdated": true,
             },
             {
@@ -561,7 +557,7 @@ const run = async () => {
       );
     }));
 
-  /** 4. Enfin on applique les règles appliquant le statut "à publier" sur toutes les formations (y compris celles qui correspondent aux règles précédentes) */
+  /** 4. On applique les règles de périmètre pour statut "à publier" pour les formations répondant aux règles de publication sur Parcoursup. */
   logger.debug({ type: "job" }, "Etape 4.");
   const filter = {
     parcoursup_statut: {
