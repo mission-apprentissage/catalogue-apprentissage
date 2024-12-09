@@ -6,6 +6,7 @@ const { Formation, CampagneStart } = require("../../common/models");
 const { sendJsonStream, sendCsvStream } = require("../../common/utils/httpUtils");
 const { sanitize, SAFE_FIND_OPERATORS } = require("../../common/utils/sanitizeUtils");
 const { paginate } = require("../../common/utils/mongooseUtils");
+const { AFFELNET_STATUS, COMMON_STATUS } = require("../../constants/status");
 
 /**
  * Sample entity route module for GET
@@ -23,10 +24,11 @@ module.exports = () => {
 
     // FIXME: ugly patch because request from Affelnet is not JSON valid
     const strQuery = qs?.query ?? "";
-    const cleanedQuery = strQuery.replace(
-      /"num_academie" :(0.)/,
-      (found, capture) => `"num_academie":"${Number(capture)}"`
-    );
+    const cleanedQuery = strQuery
+      // fix bad json from affelnet
+      .replace(/"num_academie" :(0.)/, (found, capture) => `"num_academie":"${Number(capture)}"`)
+      // fix deprecated status
+      .replace("en attente de publication", COMMON_STATUS.PRET_POUR_INTEGRATION);
     // end FIXME
 
     let query = cleanedQuery ? JSON.parse(cleanedQuery) : {};
@@ -152,7 +154,17 @@ module.exports = () => {
 
   const countFormations = tryCatch(async (req, res) => {
     const qs = req.query;
-    let query = qs && qs.query ? JSON.parse(qs.query) : {};
+
+    // FIXME: ugly patch because request from Affelnet is not JSON valid
+    const strQuery = qs?.query ?? "";
+    const cleanedQuery = strQuery
+      // fix bad json from affelnet
+      .replace(/"num_academie" :(0.)/, (found, capture) => `"num_academie":"${Number(capture)}"`)
+      // fix deprecated status
+      .replace("en attente de publication", COMMON_STATUS.PRET_POUR_INTEGRATION);
+    // end FIXME
+
+    let query = cleanedQuery ? JSON.parse(cleanedQuery) : {};
     query = sanitize(query, SAFE_FIND_OPERATORS);
 
     const { id_parcoursup, ...filter } = query;
@@ -353,12 +365,7 @@ module.exports = () => {
    *                        type: number
    */
   router.get("/formations", getFormations);
-  /** @deprecated */
-  router.get("/formations2021", getFormations);
-
   router.post("/formations", postFormations);
-  /** @deprecated */
-  router.post("/formations2021", postFormations);
 
   /**
    * @swagger
@@ -391,15 +398,11 @@ module.exports = () => {
    *         description: KO
    */
   router.get("/formations/count", countFormations);
-  /** @deprecated */
-  router.get("/formations2021/count", countFormations);
 
   /**
    * Get one converted RCO formation by query /formation GET
    */
   router.get("/formation", getFormation);
-  /** @deprecated */
-  router.get("/formation2021", getFormation);
 
   /**
    * @swagger
@@ -427,16 +430,70 @@ module.exports = () => {
    *         description: KO
    */
   router.get("/formation/:id", getFormationById);
-  /** @deprecated */
-  router.get("/formation2021/:id", getFormationById);
 
   /**
    * Stream formations as json array
    */
   router.get("/formations.json", streamFormationsJSON);
-  /** @deprecated */
-  router.get("/formations2021.json", streamFormationsJSON);
 
+  /**
+   * @swagger
+   *
+   * /entity/formations.csv:
+   *   get:
+   *     summary: Permet de récupérer un stream des formations au format CSV
+   *     tags:
+   *       - Formations
+   *     description: >
+   *       Permet, à l'aide de critères, de rechercher dans les formations en apprentissage<br/><br/>
+   *       Le champ Query est une query Mongo stringify<br/><br/>
+   *       **Pour definir vos critères de recherche veuillez regarder le schéma formation (en bas de cette page)**<br/><br/>
+   *       champ **select**: Selection du ou des champs retournés, nom_du_champ: 1 pour l'inclure dans le retour
+   *     parameters:
+   *       - in: query
+   *         name: payload
+   *         required: true
+   *         schema:
+   *           type: object
+   *           required:
+   *             - query
+   *           properties:
+   *             query:
+   *               type: string
+   *               example: '"{\"cfd\": \"40022106\"}"'
+   *             sort:
+   *               type: number
+   *               example: 1
+   *             limit:
+   *               type: number
+   *               example: 10
+   *             skip:
+   *               type: number
+   *               example: 20
+   *             select:
+   *               type: string
+   *               example: '"{\"cfd\": 1, \"intitule_long\": 1}"'
+   *         examples:
+   *           cfd:
+   *             value: { query: "{\"cfd\": \"40022106\"}", select: "{\"cle_ministere_educatif\": 1}", skip: 0, limit: 10 }
+   *             summary: Recherche par CFD
+   *           siretM:
+   *             value: { query: "{\"$or\":[{\"etablissement_formateur_siret\":\"79128914300020\"},{\"etablissement_gestionnaire_siret\":\"13001727000310\"}]}" }
+   *             summary: Recherche par siret multiple
+   *           siretS:
+   *             value: { query: "{\"etablissement_gestionnaire_siret\": \"13001727000310\"}" }
+   *             summary: Recherche par siret simple
+   *           siretSelect:
+   *             value: { query: "{\"etablissement_gestionnaire_siret\": \"13001727000310\"}", select: "{\"cfd\": 1, \"intitule_long\": 1}" }
+   *             summary: Recherche avec selection des champs retournés
+   *     responses:
+   *       200:
+   *         description: OK
+   *         content:
+   *            text/csv:
+   *              schema:
+   *                type: string
+   */
   router.get("/formations.csv", streamFormationsCSV);
 
   return router;
