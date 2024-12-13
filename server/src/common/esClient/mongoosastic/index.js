@@ -92,9 +92,15 @@ function getMapping(schema, inPrefix = "", requireAsciiFolding = false) {
               };
               break;
             case schema.paths[key].caster.instance === "Mixed":
-            case schema.paths[key].caster.$isArraySubdocument:
               properties[key] = { type: "nested" };
               break;
+            case schema.paths[key].caster.$isArraySubdocument:
+              properties[key] = {
+                type: "nested",
+                ...getMapping(schema.paths[key].schema, prefix + key, requireAsciiFolding),
+              };
+              break;
+
             default:
               console.warn("Not handling array of mongoose type for ", key);
               break;
@@ -103,14 +109,15 @@ function getMapping(schema, inPrefix = "", requireAsciiFolding = false) {
         case "Embedded":
           // console.error(schema.paths[key], schema.paths[key].schema);
           properties[key] = {
-            type: "object",
-            fields: getMapping(schema.paths[key].schema, prefix + key, requireAsciiFolding),
+            type: "nested",
+            ...getMapping(schema.paths[key].schema, prefix + key, requireAsciiFolding),
           };
           break;
         case "Mixed":
           properties[key] = {
             type: "nested",
           };
+
           break;
         default:
           console.warn("Not handling mongoose type : ", mongooseType, "for ", key);
@@ -118,6 +125,8 @@ function getMapping(schema, inPrefix = "", requireAsciiFolding = false) {
       }
     }
   }
+
+  console.log(JSON.stringify(properties));
 
   return { properties };
 }
