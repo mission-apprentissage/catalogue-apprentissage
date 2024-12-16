@@ -1219,7 +1219,7 @@ export const quickFiltersDefinition = [
       },
 
       {
-        componentId: `rejection`,
+        componentId: `rejection.description`,
         type: "facet",
         dataField: "rejection.description.keyword",
         title: "Libellé de rejet Parcoursup",

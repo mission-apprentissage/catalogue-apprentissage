@@ -87,8 +87,7 @@ function getMapping(schema, inPrefix = "", requireAsciiFolding = false) {
               break;
             case schema.paths[key].caster.instance === "Embedded":
               properties[key] = {
-                type: "object",
-                fields: getMapping(schema.paths[key].schema, prefix + key, requireAsciiFolding),
+                ...getMapping(schema.paths[key].schema, prefix + key, requireAsciiFolding),
               };
               break;
             case schema.paths[key].caster.instance === "Mixed":
@@ -109,7 +108,6 @@ function getMapping(schema, inPrefix = "", requireAsciiFolding = false) {
         case "Embedded":
           // console.error(schema.paths[key], schema.paths[key].schema);
           properties[key] = {
-            type: "nested",
             ...getMapping(schema.paths[key].schema, prefix + key, requireAsciiFolding),
           };
           break;
