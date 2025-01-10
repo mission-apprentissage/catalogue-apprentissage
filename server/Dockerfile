@@ -1,13 +1,14 @@
 # BASE IMAGE
-FROM node:18-alpine as base
+FROM node:20-alpine as base
 
 WORKDIR /app
 
 RUN corepack enable &&\
   corepack prepare yarn@stable --activate && \
-  yarn set version 3.3.1  && \
+  yarn set version 4.5.0  && \
   yarn config set nodeLinker node-modules && \
-  yarn config set defaultSemverRangePrefix ''
+  yarn config set defaultSemverRangePrefix '' && \
+  yarn config set --home enableTelemetry 0
 
 # BUILDER
 FROM base as builder

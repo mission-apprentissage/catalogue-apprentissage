@@ -1,7 +1,15 @@
-FROM node:18-alpine
+FROM node:20-alpine
 
 WORKDIR /app
-
 VOLUME /data
-EXPOSE 5000
+
+RUN corepack enable &&\
+  corepack prepare yarn@stable --activate && \
+  yarn set version 4.5.0 && \
+  yarn config set nodeLinker node-modules && \
+  yarn config set defaultSemverRangePrefix '' && \
+  yarn config set --home enableTelemetry 0
+
 CMD yarn install --immutable && yarn debug
+
+EXPOSE 5000
