@@ -1,5 +1,5 @@
 # BASE IMAGE
-FROM node:20-alpine as base
+FROM node:20-alpine AS base
 
 WORKDIR /app
 
@@ -8,10 +8,11 @@ RUN corepack enable &&\
   yarn set version 4.5.0  && \
   yarn config set nodeLinker node-modules && \
   yarn config set defaultSemverRangePrefix '' && \
-  yarn config set --home enableTelemetry 0
+  yarn config set --home enableTelemetry 0 && \
+  yarn config set compressionLevel mixed
 
 # BUILDER
-FROM base as builder
+FROM base AS builder
 ARG NPM_TOKEN
 RUN if [ "$NPM_TOKEN" != "local" ] ; then \
   yarn config set npmScopes.mission-apprentissage.npmRegistryServer https://npm.pkg.github.com && \
@@ -26,7 +27,7 @@ COPY package.json yarn.lock  ./
 RUN yarn install --immutable
 
 # RUNNER
-FROM base as runner
+FROM base AS runner
 COPY ./  ./
 COPY --from=builder /app/node_modules ./node_modules
 

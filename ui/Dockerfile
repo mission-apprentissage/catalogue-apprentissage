@@ -1,5 +1,5 @@
 ## BASE IMAGE
-FROM node:20-alpine as base
+FROM node:20-alpine AS base
 
 ARG REACT_APP_ENV
 ARG REACT_APP_BASE_URL
@@ -19,22 +19,23 @@ RUN corepack enable &&\
   yarn set version 4.5.0 && \
   yarn config set nodeLinker node-modules && \
   yarn config set defaultSemverRangePrefix '' && \
-  yarn config set --home enableTelemetry 0
+  yarn config set --home enableTelemetry 0 && \
+  yarn config set compressionLevel mixed
 
 COPY package.json yarn.lock*  ./
 
 ## DEPS
-FROM base as deps
+FROM base AS deps
 RUN yarn install --immutable
 
 ## BUILD
-FROM base as builder
+FROM base AS builder
 COPY --from=deps /app/node_modules/  ./node_modules/
 COPY .  ./
 RUN yarn build
 
 ## RUN
-FROM base as runner
+FROM base AS runner
 COPY --from=deps /app/node_modules/  ./node_modules/
 COPY --from=builder /app/build  ./build/
 EXPOSE 3000
