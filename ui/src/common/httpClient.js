@@ -1,4 +1,3 @@
-import { getAuth } from "./auth";
 import { emitter } from "./emitter";
 
 class AuthError extends Error {
@@ -36,70 +35,59 @@ const handleResponse = async (path, response) => {
 };
 
 // eslint-disable-next-line no-unused-vars
-const getHeaders = (authorization = true, contentType = "application/json") => {
-  // let auth = getAuth();
+const getHeaders = ({ contentType = "application/json" }) => {
   let result = {
     Accept: "application/json",
-    // ...(auth.sub !== "anonymous" ? { Authorization: `Bearer ${auth.token}` } : {}),
     ...(contentType ? { "Content-Type": contentType } : {}),
   };
-  // if (!authorization) {
-  //   delete result.Authorization;
-  // }
+
   return result;
 };
 
-export const _get = (path, auth = true) => {
+export const _get = (path, options) => {
   return fetch(`${path}`, {
     method: "GET",
-    headers: getHeaders(auth),
+    headers: getHeaders({}),
+    ...options,
   }).then((res) => handleResponse(path, res));
 };
 
-export const _post = (path, body, auth = true) => {
+export const _post = (path, body, options) => {
   return fetch(`${path}`, {
     method: "POST",
-    headers: getHeaders(auth),
+    headers: getHeaders({}),
     body: JSON.stringify(body),
+    ...options,
   }).then((res) => handleResponse(path, res));
 };
 
-export const _postFile = (path, data, auth = true) => {
+export const _postFile = (path, data) => {
   return fetch(`${path}`, {
     method: "POST",
-    headers: getHeaders(auth, null),
+    headers: getHeaders({ contentType: null }),
     body: data,
   }).then((res) => handleResponse(path, res));
 };
 
-export const _put = (path, body = {}, auth = true) => {
+export const _put = (path, body = {}) => {
   return fetch(`${path}`, {
     method: "PUT",
-    headers: getHeaders(auth),
+    headers: getHeaders({}),
     body: JSON.stringify(body),
   }).then((res) => handleResponse(path, res));
 };
 
-export const _patch = (path, body = {}, auth = true) => {
+export const _patch = (path, body = {}) => {
   return fetch(`${path}`, {
     method: "PATCH",
-    headers: getHeaders(auth),
+    headers: getHeaders({}),
     body: JSON.stringify(body),
   }).then((res) => handleResponse(path, res));
 };
 
-export const _delete = (path, auth = true) => {
+export const _delete = (path) => {
   return fetch(`${path}`, {
     method: "DELETE",
-    headers: getHeaders(auth),
+    headers: getHeaders({}),
   }).then((res) => handleResponse(path, res));
-};
-
-export const buildLink = (path) => {
-  let auth = getAuth();
-  if (auth.sub !== "anonymous") {
-    //TODO better handle params
-    return `${path}?token=${auth.token}`;
-  }
-  return path;
 };

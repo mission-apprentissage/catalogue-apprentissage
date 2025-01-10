@@ -33,29 +33,21 @@ const serializeObject = (columns, obj) => {
 };
 
 const search = (index, query) => {
-  return _post(
-    `${CATALOGUE_API}/es/search/${index}/_search?scroll=5m`,
-    {
-      size: 1000,
-      query: query.query,
-    },
-    false
-  );
+  return _post(`${CATALOGUE_API}/es/search/${index}/_search?scroll=5m`, {
+    size: 1000,
+    query: query.query,
+  });
 };
 
 const scroll = (index, scrollId) => {
-  return _post(
-    `${CATALOGUE_API}/es/search/${index}/scroll?scroll=5m&scroll_id=${scrollId}`,
-    {
-      scroll: true,
+  return _post(`${CATALOGUE_API}/es/search/${index}/scroll?scroll=5m&scroll_id=${scrollId}`, {
+    scroll: true,
+    scroll_id: scrollId,
+    activeQuery: {
+      scroll: "1m",
       scroll_id: scrollId,
-      activeQuery: {
-        scroll: "1m",
-        scroll_id: scrollId,
-      },
     },
-    false
-  );
+  });
 };
 
 const getDataAsCSV = async (searchUrl, query, columns, setProgress) => {

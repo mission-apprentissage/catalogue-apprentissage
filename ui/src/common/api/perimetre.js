@@ -66,7 +66,7 @@ export const deleteRule = async ({ _id }) => {
   return await _delete(`${CATALOGUE_API}/entity/perimetre/regle/${_id}`);
 };
 
-export const getIntegrationCount = async ({ plateforme, niveau, academie }) => {
+export const getIntegrationCount = async ({ plateforme, niveau, academie }, options) => {
   try {
     const countUrl = `${CATALOGUE_API}/v1/entity/perimetre/regles/integration/count`;
     const params = new URLSearchParams({
@@ -74,7 +74,7 @@ export const getIntegrationCount = async ({ plateforme, niveau, academie }) => {
       num_academie: academie,
       ...(niveau ? { niveau } : {}),
     });
-    return await _get(`${countUrl}?${params}`, false);
+    return await _get(`${countUrl}?${params}`, options);
   } catch (e) {
     console.error(e);
     return { nbRules: 0, nbFormations: 0 };
@@ -82,24 +82,28 @@ export const getIntegrationCount = async ({ plateforme, niveau, academie }) => {
 };
 
 export const useIntegrationCount = ({ plateforme, academie }) => {
-  return useQuery(["integration", plateforme, academie], () => getIntegrationCount({ plateforme, academie }), {
-    refetchOnWindowFocus: false,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-  });
+  return useQuery(
+    ["integration", plateforme, academie],
+    ({ signal }) => getIntegrationCount({ plateforme, academie }, { signal }),
+    {
+      refetchOnWindowFocus: false,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+    }
+  );
 };
 
-export const getRules = async ({ plateforme }) => {
+export const getRules = async ({ plateforme }, options) => {
   const reglesUrl = `${CATALOGUE_API}/v1/entity/perimetre/regles`;
-  return await _get(`${reglesUrl}?plateforme=${plateforme}`, false);
+  return await _get(`${reglesUrl}?plateforme=${plateforme}`, options);
 };
 
-export const getNiveaux = async ({ plateforme }) => {
+export const getNiveaux = async ({ plateforme }, options) => {
   const niveauxURL = `${CATALOGUE_API}/v1/entity/perimetre/niveau?plateforme=${plateforme}`;
-  return await _get(niveauxURL, false);
+  return await _get(niveauxURL, options);
 };
 
 export const useNiveaux = ({ plateforme }) => {
-  return useQuery(`niveaux-${plateforme}`, () => getNiveaux({ plateforme }), {
+  return useQuery(`niveaux-${plateforme}`, ({ signal }) => getNiveaux({ plateforme }, { signal }), {
     refetchOnWindowFocus: false,
     staleTime: 60 * 60 * 1000, // 1 hour
   });
@@ -117,5 +121,5 @@ export const getCount = async ({ plateforme, niveau, diplome, regle_complementai
     ...(duree && { duree }),
     ...(annee && { annee }),
   });
-  return await _get(`${countUrl}?${params}`, false);
+  return await _get(`${countUrl}?${params}`);
 };

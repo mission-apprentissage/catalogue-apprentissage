@@ -231,7 +231,7 @@ export const operators = [
           must_not: { term: { [k]: "" } },
         },
       })),
-    mongoQuery: (key, value) => value && { [key]: { $exists: true } },
+    mongoQuery: (key) => ({ [key]: { $exists: true } }),
   },
   {
     value: "!∃",
@@ -240,22 +240,23 @@ export const operators = [
     query: (key) =>
       query(key, null, (k) => ({
         bool: {
-          // Should be ...
-          should: [
-            // ... empty string ...
-            { term: { [k]: "" } },
-            // ... or not exists.
-            { bool: { must_not: { exists: { field: k } } } },
-          ],
+          must_not: {
+            bool: {
+              // Must exists ...
+              must: { exists: { field: k } },
+              // ... and must be not empty.
+              must_not: { term: { [k]: "" } },
+            },
+          },
         },
       })),
-    mongoQuery: (key, value) => value && { [key]: { $exists: false } },
+    mongoQuery: (key) => ({ [key]: { $exists: false } }),
   },
   {
     value: "*.",
     text: "regexp",
     useInput: true,
-    query: (key, value) => value && query(key, value, (k, v) => ({ regexp: { [k]: `${v}` } })),
+    query: (key, value) => query(key, value, (k, v) => ({ regexp: { [k]: `${v}` } })),
     mongoQuery: (key, value) => value && { [key]: { $regex: new RegExp(value) } },
   },
 ];

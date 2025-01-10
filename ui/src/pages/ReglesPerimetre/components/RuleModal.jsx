@@ -117,7 +117,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
   const { data: niveauxData } = useNiveaux({ plateforme });
 
   const reglesUrl = getDiplomesAllowedForSubRulesUrl(plateforme);
-  const { data: diplomesRegles } = useQuery("diplomesRegles", () => _get(reglesUrl, false), {
+  const { data: diplomesRegles } = useQuery("diplomesRegles", () => _get(reglesUrl), {
     refetchOnWindowFocus: false,
   });
 

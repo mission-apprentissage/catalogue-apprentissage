@@ -308,10 +308,13 @@ export default () => {
   const mountedRef = useRef(id);
 
   useEffect(() => {
+    const abortController = new AbortController();
     (async () => {
       try {
         setLoading(true);
-        const etablissement = await _get(`${CATALOGUE_API}/entity/etablissement/${encodeURIComponent(id)}`, false);
+        const etablissement = await _get(`${CATALOGUE_API}/entity/etablissement/${encodeURIComponent(id)}`, {
+          signal: abortController.signal,
+        });
         setEtablissement(etablissement);
 
         if (!mountedRef.current === id) return null;
@@ -324,7 +327,9 @@ export default () => {
           ],
         };
 
-        const count = await _get(`${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify(query)}`, false);
+        const count = await _get(`${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify(query)}`, {
+          signal: abortController.signal,
+        });
 
         if (!mountedRef.current === id) return null;
 
@@ -339,6 +344,7 @@ export default () => {
     })();
     return () => {
       mountedRef.current = false;
+      abortController.abort();
     };
   }, [id]);
 

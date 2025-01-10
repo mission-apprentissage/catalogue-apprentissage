@@ -31,7 +31,7 @@ const Indicators = () => {
 
   useEffect(() => {
     const defaultQuery = { published: true };
-    let isCancelled = false;
+    const abortController = new AbortController();
 
     (async () => {
       try {
@@ -40,10 +40,10 @@ const Indicators = () => {
             ...defaultQuery,
             ...(currentAcademie ? { num_academie: currentAcademie } : {}),
           })}`,
-          false
+          { signal: abortController.signal }
         );
 
-        if (!isCancelled) setFormationCount(formationCount);
+        if (!abortController.signal.aborted) setFormationCount(formationCount);
 
         const formationAValiderCount = await _get(
           `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
@@ -58,10 +58,10 @@ const Indicators = () => {
               ],
             },
           })}`,
-          false
+          { signal: abortController.signal }
         );
 
-        if (!isCancelled) setFormationAValider(formationAValiderCount);
+        if (!abortController.signal.aborted) setFormationAValider(formationAValiderCount);
 
         const formationTraitees = await _get(
           `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
@@ -71,10 +71,10 @@ const Indicators = () => {
               $in: [PARCOURSUP_STATUS.PRET_POUR_INTEGRATION, PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.NON_PUBLIE],
             },
           })}`,
-          false
+          { signal: abortController.signal }
         );
 
-        if (!isCancelled) setFormationTraitees(formationTraitees);
+        if (!abortController.signal.aborted) setFormationTraitees(formationTraitees);
 
         const formationRejetees = await _get(
           `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
@@ -82,10 +82,10 @@ const Indicators = () => {
             ...(currentAcademie ? { num_academie: currentAcademie } : {}),
             parcoursup_statut: PARCOURSUP_STATUS.REJETE,
           })}`,
-          false
+          { signal: abortController.signal }
         );
 
-        if (!isCancelled) setFormationRejetees(formationRejetees);
+        if (!abortController.signal.aborted) setFormationRejetees(formationRejetees);
 
         const formationEnAttenteDePublication = await _get(
           `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
@@ -93,10 +93,10 @@ const Indicators = () => {
             ...(currentAcademie ? { num_academie: currentAcademie } : {}),
             parcoursup_statut: PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
           })}`,
-          false
+          { signal: abortController.signal }
         );
 
-        if (!isCancelled) setFormationEnAttenteDePublication(formationEnAttenteDePublication);
+        if (!abortController.signal.aborted) setFormationEnAttenteDePublication(formationEnAttenteDePublication);
 
         const formationPubliees = await _get(
           `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
@@ -104,10 +104,10 @@ const Indicators = () => {
             ...(currentAcademie ? { num_academie: currentAcademie } : {}),
             parcoursup_statut: PARCOURSUP_STATUS.PUBLIE,
           })}`,
-          false
+          { signal: abortController.signal }
         );
 
-        if (!isCancelled) setFormationPubliees(formationPubliees);
+        if (!abortController.signal.aborted) setFormationPubliees(formationPubliees);
 
         const formationNonPubliees = await _get(
           `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
@@ -115,26 +115,26 @@ const Indicators = () => {
             ...(currentAcademie ? { num_academie: currentAcademie } : {}),
             parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIE,
           })}`,
-          false
+          { signal: abortController.signal }
         );
 
-        if (!isCancelled) setFormationNonPubliees(formationNonPubliees);
+        if (!abortController.signal.aborted) setFormationNonPubliees(formationNonPubliees);
       } catch (e) {
-        console.error(e);
-        if (!isCancelled) {
-          setFormationCount(0);
-          setFormationAValider(0);
-          setFormationTraitees(0);
-          setFormationRejetees(0);
-          setFormationEnAttenteDePublication(0);
-          setFormationPubliees(0);
-          setFormationNonPubliees(0);
+        if (!abortController.signal.aborted) {
+          console.error(e);
         }
+        setFormationCount(0);
+        setFormationAValider(0);
+        setFormationTraitees(0);
+        setFormationRejetees(0);
+        setFormationEnAttenteDePublication(0);
+        setFormationPubliees(0);
+        setFormationNonPubliees(0);
       }
     })();
 
     return () => {
-      isCancelled = true;
+      abortController.abort();
     };
   }, [user, currentAcademie, onAcademieChange]);
 

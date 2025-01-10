@@ -29,7 +29,7 @@ const Indicators = () => {
 
   useEffect(() => {
     const defaultQuery = { published: true };
-    let isCancelled = false;
+    const abortController = new AbortController();
 
     (async () => {
       try {
@@ -38,20 +38,22 @@ const Indicators = () => {
             ...defaultQuery,
             ...(currentAcademie ? { num_academie: currentAcademie } : {}),
           })}`,
-          false
+          { signal: abortController.signal }
         );
 
-        if (!isCancelled) setFormationCount(formationCount);
+        if (!abortController.signal.aborted) setFormationCount(formationCount);
+
         const formationPubliees = await _get(
           `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
             ...defaultQuery,
             ...(currentAcademie ? { num_academie: currentAcademie } : {}),
             affelnet_statut: AFFELNET_STATUS.PUBLIE,
           })}`,
-          false
+          { signal: abortController.signal }
         );
 
-        if (!isCancelled) setFormationPubliees(formationPubliees);
+        if (!abortController.signal.aborted) setFormationPubliees(formationPubliees);
+
         const formationAValider = await _get(
           `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
             ...defaultQuery,
@@ -60,45 +62,47 @@ const Indicators = () => {
               $in: [AFFELNET_STATUS.A_PUBLIER_VALIDATION, AFFELNET_STATUS.A_PUBLIER],
             },
           })}`,
-          false
+          { signal: abortController.signal }
         );
 
-        if (!isCancelled) setFormationAValider(formationAValider);
+        if (!abortController.signal.aborted) setFormationAValider(formationAValider);
+
         const formationEnAttenteDePublication = await _get(
           `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
             ...defaultQuery,
             ...(currentAcademie ? { num_academie: currentAcademie } : {}),
             affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
           })}`,
-          false
+          { signal: abortController.signal }
         );
 
-        if (!isCancelled) setFormationEnAttenteDePublication(formationEnAttenteDePublication);
+        if (!abortController.signal.aborted) setFormationEnAttenteDePublication(formationEnAttenteDePublication);
+
         const formationNonPubliees = await _get(
           `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
             ...defaultQuery,
             ...(currentAcademie ? { num_academie: currentAcademie } : {}),
             affelnet_statut: AFFELNET_STATUS.NON_PUBLIE,
           })}`,
-          false
+          { signal: abortController.signal }
         );
 
-        if (!isCancelled) setFormationNonPubliees(formationNonPubliees);
+        if (!abortController.signal.aborted) setFormationNonPubliees(formationNonPubliees);
       } catch (e) {
-        console.error(e);
-
-        if (!isCancelled) {
-          setFormationCount(0);
-          setFormationPubliees(0);
-          setFormationAValider(0);
-          setFormationEnAttenteDePublication(0);
-          setFormationNonPubliees(0);
+        if (!abortController.signal.aborted) {
+          console.error(e);
         }
+
+        setFormationCount(0);
+        setFormationPubliees(0);
+        setFormationAValider(0);
+        setFormationEnAttenteDePublication(0);
+        setFormationNonPubliees(0);
       }
     })();
 
     return () => {
-      isCancelled = true;
+      abortController.abort();
     };
   }, [user, currentAcademie]);
 

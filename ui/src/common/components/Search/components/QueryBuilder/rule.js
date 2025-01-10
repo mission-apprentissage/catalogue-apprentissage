@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Autosuggest from "react-autosuggest";
 import { Input, Button, Select, Flex, InputGroup, InputRightElement } from "@chakra-ui/react";
 import { Trash, CloseCircleLine } from "../../../../../theme/components/icons";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
-const esQuery = (queries) => {
+const esQuery = (queries, options) => {
   let query = "";
   for (let i = 0; i < queries.length; i++) {
     query += `${JSON.stringify(queries[i])}\n`;
@@ -19,10 +19,17 @@ const esQuery = (queries) => {
     referrer: "no-referrer",
     headers: { "Content-Type": "application/x-ndjson" },
     body: query,
+    ...options,
   })
-    .then((r) => r.json())
+    .then((r) => {
+      if (!options.signal?.aborted) {
+        return r.json();
+      }
+    })
     .catch((e) => {
-      console.error(e);
+      if (!options.signal?.aborted) {
+        console.error(e);
+      }
     });
 };
 
@@ -71,24 +78,44 @@ const AddButton = ({ onAdd, isDisabled }) => (
 const RuleInput = ({ suggestionQuery, field, collection, value, setValue, noSuggest, isDisabled }) => {
   const [suggestions, setSuggestions] = useState([]);
 
+  const onSuggestionClear = useCallback(() => {
+    setSuggestions([]);
+  }, []);
+
+  const onSuggestionFetch = useCallback(
+    async ({ value }) => {
+      const abortController = new AbortController();
+      const run = async () => {
+        let query;
+        if (suggestionQuery) {
+          query = suggestionQuery(field, value);
+        } else {
+          const terms = { field, include: `.*${value}.*`, order: { _count: "desc" }, size: 10 };
+          query = { query: { match_all: {} }, aggs: { [field]: { terms } }, size: 0 };
+        }
+        // arr.push({ query: { bool: { must: [{ range: { created_at: { gte: start_at.toISOString() } } }] } }, size: 0 });
+        const suggestions = await esQuery([{ index: collection, type: "_doc" }, query], {
+          signal: abortController.signal,
+        });
+        setSuggestions(suggestions?.responses?.[0]?.aggregations?.[field]?.buckets?.map((e) => e.key) ?? []);
+      };
+
+      await run();
+      return () => {
+        abortController.abort();
+        onSuggestionClear();
+      };
+    },
+    [collection, field, suggestionQuery, onSuggestionClear]
+  );
+
   // Autocomplete zone.
   if (!noSuggest && !Array.isArray(field)) {
     return (
       <Autosuggest
         suggestions={suggestions}
-        onSuggestionsFetchRequested={async ({ value }) => {
-          let query;
-          if (suggestionQuery) {
-            query = suggestionQuery(field, value);
-          } else {
-            const terms = { field, include: `.*${value}.*`, order: { _count: "desc" }, size: 10 };
-            query = { query: { match_all: {} }, aggs: { [field]: { terms } }, size: 0 };
-          }
-          // arr.push({ query: { bool: { must: [{ range: { created_at: { gte: start_at.toISOString() } } }] } }, size: 0 });
-          const suggestions = await esQuery([{ index: collection, type: "_doc" }, query]);
-          setSuggestions(suggestions?.responses?.[0]?.aggregations?.[field]?.buckets?.map((e) => e.key) ?? []);
-        }}
-        onSuggestionsClearRequested={() => setSuggestions([])}
+        onSuggestionsFetchRequested={onSuggestionFetch}
+        onSuggestionsClearRequested={onSuggestionClear}
         getSuggestionValue={(suggestion) => suggestion}
         renderSuggestion={(suggestion) => <div>{suggestion}</div>}
         renderInputComponent={({ key, ...inputProps }) => (

@@ -25,6 +25,8 @@ export const ParcoursupMissingSession = () => {
   }`;
 
   useEffect(() => {
+    const abortController = new AbortController();
+
     async function run() {
       try {
         const count = await _get(
@@ -35,7 +37,7 @@ export const ParcoursupMissingSession = () => {
             parcoursup_previous_session: true,
             parcoursup_previous_statut: PARCOURSUP_STATUS.PUBLIE,
           })}`,
-          false
+          { signal: abortController.signal }
         );
 
         const countPublishedLastSession = await _get(
@@ -43,13 +45,15 @@ export const ParcoursupMissingSession = () => {
             ...(nom_academie?.length ? { nom_academie: { $in: nom_academie } } : {}),
             parcoursup_previous_statut: PARCOURSUP_STATUS.PUBLIE,
           })}`,
-          false
+          { signal: abortController.signal }
         );
 
         setCount(count);
         setCountPublishedLastSession(countPublishedLastSession);
       } catch (e) {
-        console.error(e);
+        if (!abortController.signal.aborted) {
+          console.error(e);
+        }
       }
     }
 
@@ -60,6 +64,7 @@ export const ParcoursupMissingSession = () => {
 
     return () => {
       mountedRef.current = undefined;
+      abortController.abort();
     };
   }, [nom_academie]);
 

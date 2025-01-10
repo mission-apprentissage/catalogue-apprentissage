@@ -25,6 +25,8 @@ export const AffelnetMissingSession = () => {
   }`;
 
   useEffect(() => {
+    const abortController = new AbortController();
+
     async function run() {
       try {
         const count = await _get(
@@ -35,7 +37,7 @@ export const AffelnetMissingSession = () => {
             affelnet_previous_session: true,
             affelnet_previous_statut: AFFELNET_STATUS.PUBLIE,
           })}`,
-          false
+          { signal: abortController.signal }
         );
 
         const countPublishedLastSession = await _get(
@@ -43,13 +45,15 @@ export const AffelnetMissingSession = () => {
             ...(nom_academie?.length ? { nom_academie: { $in: nom_academie } } : {}),
             affelnet_previous_statut: AFFELNET_STATUS.PUBLIE,
           })}`,
-          false
+          { signal: abortController.signal }
         );
 
         setCount(count);
         setCountPublishedLastSession(countPublishedLastSession);
       } catch (e) {
-        console.error(e);
+        if (!abortController.signal.aborted) {
+          console.error(e);
+        }
       }
     }
 
@@ -60,6 +64,7 @@ export const AffelnetMissingSession = () => {
 
     return () => {
       mountedRef.current = undefined;
+      abortController.abort();
     };
   }, [searchParams, nom_academie]);
 

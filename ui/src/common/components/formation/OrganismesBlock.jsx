@@ -14,19 +14,28 @@ export const OrganismesBlock = ({ formation }) => {
   const [tagsGestionnaire, setTagsGestionnaire] = useState([]);
 
   useEffect(() => {
+    const abortController = new AbortController();
     async function run() {
       if (formation.etablissement_formateur_id) {
-        const formateur = await getOrganisme(formation.etablissement_formateur_siret);
+        const formateur = await getOrganisme(formation.etablissement_formateur_siret, {
+          signal: abortController.signal,
+        });
         setTagsFormateur(formateur?.tags ?? []);
       }
 
       if (!oneEstablishment) {
-        const gestionnaire = await getOrganisme(formation.etablissement_gestionnaire_siret);
+        const gestionnaire = await getOrganisme(formation.etablissement_gestionnaire_siret, {
+          signal: abortController.signal,
+        });
         setTagsGestionnaire(gestionnaire.tags ?? []);
       }
     }
 
     run();
+
+    return () => {
+      abortController.abort();
+    };
   }, [oneEstablishment, formation, setTagsFormateur, setTagsGestionnaire]);
 
   return (

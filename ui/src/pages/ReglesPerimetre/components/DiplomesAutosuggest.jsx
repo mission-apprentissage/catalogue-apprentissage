@@ -7,7 +7,7 @@ import { CloseCircleLine } from "../../../theme/components/icons";
 export const DiplomesAutosuggest = ({ plateforme, onSuggestionSelected }) => {
   const { data: niveauxData } = useNiveaux({ plateforme });
 
-  const diplomes = niveauxData.reduce(
+  const diplomes = niveauxData?.reduce(
     (acc, { niveau, diplomes }) => [...acc, ...diplomes.map((diplome) => ({ ...diplome, niveau: niveau.value }))],
     []
   );
@@ -15,26 +15,32 @@ export const DiplomesAutosuggest = ({ plateforme, onSuggestionSelected }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [chosenValue, setChosenValue] = useState("");
 
-  const getSuggestions = (value) => {
-    const inputValue = value.trim().toLowerCase();
-    const inputLength = inputValue.length;
+  const getSuggestions = useCallback(
+    (value) => {
+      const inputValue = value.trim().toLowerCase();
+      const inputLength = inputValue.length;
 
-    return inputLength === 0
-      ? []
-      : diplomes.filter((diplome) => diplome.value.toLowerCase().slice(0, inputLength) === inputValue);
-  };
+      return inputLength === 0
+        ? []
+        : diplomes.filter((diplome) => diplome.value.toLowerCase().slice(0, inputLength) === inputValue);
+    },
+    [diplomes]
+  );
 
   const getSuggestionValue = (suggestion) => suggestion.value;
 
   const renderSuggestion = (suggestion) => <div>{suggestion.value}</div>;
 
-  const onSuggestionsFetchRequested = ({ value }) => {
-    setSuggestions(getSuggestions(value));
-  };
+  const onSuggestionsFetchRequested = useCallback(
+    ({ value }) => {
+      setSuggestions(getSuggestions(value));
+    },
+    [getSuggestions]
+  );
 
-  const onSuggestionsClearRequested = () => {
+  const onSuggestionsClearRequested = useCallback(() => {
     setSuggestions([]);
-  };
+  }, []);
 
   const inputProps = {
     placeholder: "Recherchez un diplôme",

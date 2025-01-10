@@ -436,13 +436,16 @@ export default () => {
   const mountedRef = useRef(id);
 
   useEffect(() => {
+    const abortController = new AbortController();
     (async () => {
       try {
         if (mountedRef.current !== id) return null;
 
         setLoading(true);
         // FIXME select={"__v" :0} hack to get updates_history
-        const formation = await _get(`${CATALOGUE_API}/entity/formation/${encodeURIComponent(id)}?select={"__v":0}`);
+        const formation = await _get(`${CATALOGUE_API}/entity/formation/${encodeURIComponent(id)}?select={"__v":0}`, {
+          signal: abortController.signal,
+        });
 
         // don't display archived formations
         if (!formation.published) {
@@ -460,6 +463,7 @@ export default () => {
 
     return () => {
       mountedRef.current = null;
+      abortController.abort();
     };
   }, [id, setFieldValue]);
 

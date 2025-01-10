@@ -30,19 +30,19 @@ const esQueryParser = async () => {
   );
 };
 
-const getEsCount = async (queries) => {
+const getEsCount = async (queries, options) => {
   const countEsQuery = {
     query: { bool: { ...queries, ...(queries?.should?.length > 0 ? { minimum_should_match: 1 } : {}) } },
   };
-  return await _post("/api/es/search/formation/_count", countEsQuery);
+  return await _post("/api/es/search/formation/_count", countEsQuery, options);
 };
 
-const getCountEntities = async (base) => {
+const getCountEntities = async (base, options) => {
   if (base === ETABLISSEMENTS_ES_INDEX) {
     const params = new URLSearchParams({
       query: JSON.stringify({ published: true }),
     });
-    const countEtablissement = await _get(`${CATALOGUE_API}/entity/etablissements/count?${params}`, false);
+    const countEtablissement = await _get(`${CATALOGUE_API}/entity/etablissements/count?${params}`, options);
     return {
       countEtablissement,
       countCatalogueGeneral: null,
@@ -74,7 +74,7 @@ const getCountEntities = async (base) => {
     esQueryParameterCatalogueGeneral.must.push({
       match: { catalogue_published: true },
     });
-    const { count: countEsCatalogueGeneral } = await getEsCount(esQueryParameterCatalogueGeneral);
+    const { count: countEsCatalogueGeneral } = await getEsCount(esQueryParameterCatalogueGeneral, options);
     countCatalogueGeneral.filtered = countEsCatalogueGeneral;
 
     const esQueryParameterCatalogueNonEligible = {
@@ -84,18 +84,24 @@ const getCountEntities = async (base) => {
     esQueryParameterCatalogueNonEligible.must.push({
       match: { catalogue_published: false },
     });
-    const { count: countEsCatalogueNonEligible } = await getEsCount(esQueryParameterCatalogueNonEligible);
+    const { count: countEsCatalogueNonEligible } = await getEsCount(esQueryParameterCatalogueNonEligible, options);
     countCatalogueNonEligible.filtered = countEsCatalogueNonEligible;
   }
 
-  const { count: countTotalCatalogueGeneral } = await getEsCount({
-    must: [{ match: { catalogue_published: true } }, { match: { published: true } }],
-  });
+  const { count: countTotalCatalogueGeneral } = await getEsCount(
+    {
+      must: [{ match: { catalogue_published: true } }, { match: { published: true } }],
+    },
+    options
+  );
   countCatalogueGeneral.total = countTotalCatalogueGeneral;
 
-  const { count: countTotalCatalogueNonEligible } = await getEsCount({
-    must: [{ match: { catalogue_published: false } }, { match: { published: true } }],
-  });
+  const { count: countTotalCatalogueNonEligible } = await getEsCount(
+    {
+      must: [{ match: { catalogue_published: false } }, { match: { published: true } }],
+    },
+    options
+  );
   countCatalogueNonEligible.total = countTotalCatalogueNonEligible;
 
   return {
@@ -126,7 +132,7 @@ export function useSearch(context) {
   useEffect(() => {
     const abortController = new AbortController();
 
-    getCountEntities(base)
+    getCountEntities(base, { signal: abortController.signal })
       .then((resultCount) => {
         if (!abortController.signal.aborted) {
           setSearchState({

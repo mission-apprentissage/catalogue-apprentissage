@@ -46,8 +46,8 @@ export default () => {
           query: JSON.stringify({ published: true }),
         });
 
-        const countEtablissement = await _get(`${CATALOGUE_API}/entity/etablissements/count?${params}`, false);
-        const count = await _get(`${CATALOGUE_API}/entity/formations/count?${params}`, false);
+        const countEtablissement = await _get(`${CATALOGUE_API}/entity/etablissements/count?${params}`);
+        const count = await _get(`${CATALOGUE_API}/entity/formations/count?${params}`);
 
         if (mounted) {
           setCountEstablishments(countEtablissement);

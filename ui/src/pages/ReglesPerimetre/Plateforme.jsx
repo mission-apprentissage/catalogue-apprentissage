@@ -54,9 +54,10 @@ export default ({ plateforme }) => {
   const { data: niveauxData } = useNiveaux({ plateforme });
 
   useEffect(() => {
+    const abortController = new AbortController();
     async function run() {
       try {
-        const regles = await getRules({ plateforme });
+        const regles = await getRules({ plateforme }, { signal: abortController.signal });
         let reglesInTree = [];
 
         const niveauxTree = niveauxData.map(({ niveau, diplomes }) => {
@@ -93,6 +94,13 @@ export default ({ plateforme }) => {
     if (niveauxData) {
       run();
     }
+
+    return () => {
+      abortController.abort();
+      setTotalCount(0);
+      setNiveaux([]);
+      setRules([]);
+    };
   }, [plateforme, niveauxData]);
 
   const onShowRule = useCallback((rule) => {
