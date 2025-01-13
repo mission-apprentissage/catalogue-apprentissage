@@ -21,7 +21,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'yarn'
           cache-dependency-path: '**/yarn.lock'
 
@@ -30,13 +30,16 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          yarn set version 3.3.1
+          yarn set version 4.5.0
           yarn config set nodeLinker node-modules
           yarn config set defaultSemverRangePrefix ""
+          yarn config set compressionLevel mixed
+          yarn config set --home enableTelemetry 0
           yarn config set npmScopes.mission-apprentissage.npmRegistryServer "https://npm.pkg.github.com"
           yarn config set npmScopes.mission-apprentissage.npmPublishRegistry "https://npm.pkg.github.com"
           yarn config set npmScopes.mission-apprentissage.npmAlwaysAuth true
           yarn config set npmScopes.mission-apprentissage.npmAuthToken $NPM_TOKEN
+
 
       # Install dependencies
       - name: Run Yarn Install
