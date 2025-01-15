@@ -53,8 +53,7 @@ const parcoursupErrors = [
   {
     regexp:
       /La filière n'a pas pu être retrouvée\. Le MEF : .*correspond à .* fillières\r\nLe CFD : .*correspond à .* fillières\r\nLe RNCP : .*/,
-    description:
-      "Aucune formation correspondant aux codes envoyés n'existe dans Parcoursup. En général il s'agit d'un CFD (code formation diplôme) ou d'un RNCP qui n'existe pas encore dans Parcoursup. .",
+    description: "La spécialité n'existe pas dans la base de donnée Parcoursup.",
     action: `Vous devez faire un message dans la rubrique contact parcoursup en adressant le tableau excel contenant les indications nécessaires à la création  de la formation(intitulé, code CFD, RNCP...).`,
   },
   {
@@ -71,8 +70,8 @@ const parcoursupErrors = [
 
   {
     regexp: /Impossible de retrouver un utilisateur valide pour .+/,
-    description: "L'UAI renseigné en tant que lieu de formation est fermé dans la BCE.",
-    action: `Vous devez faire le point avec l'établissement, afin de confirmer l'UAI lieu de formation.`,
+    description: "Aucun utilisateur n'a activé son compte sur Parcoursup",
+    action: `Vous devez contacter l'administrateur Parcoursup de cet établissement pour faire le point et relancer la publication une fois qu'au moins 1 utilisateur aura activé son compte sur le site de gestion.`,
   },
 
   {
@@ -84,7 +83,7 @@ const parcoursupErrors = [
     regexp: /Mise à jour Impossible : Cette formation n'est plus sur l'UAI .+, mais sur l'UAI .+/,
     description:
       "La mise à jour de la formation est actuellement impossible car cette formation est rattachée dans Parcoursup à un autre UAI.",
-    action: `Vous devez vous assurer du lieu de formation et si nécessaire mettre à jour l'UAI.`,
+    action: `Vous souhaitez déverser une formation dont le code Parcoursup est rattaché à un autre. Nous vous invitons à vérifier que l'UAI que vous avez mentionné est correct et à prendre l'attache de la Moss via la messagerie contacts.`,
   },
   {
     regexp: /Mise à jour impossible : Code Établissement inconnu ou non renseigné./,
@@ -101,14 +100,14 @@ const parcoursupErrors = [
     regexp:
       /Erreur lors de la creation : Il n'est pas possible de créer une formation sur un établissement d'inscription qui n'a pas de rôle d'inscription./,
     description:
-      "Le rôle défini dans Parcoursup pour cet établissement ne permet pas une publication de l’offre vers Parcoursup.",
-    action: `Vous devez vérifier voire modifier le rôle de l’établissement (profil établissement d’accueil) dans Parcoursup puis demander à nouveau la publication une fois la modification effectuée.`,
+      "Le rôle défini dans Parcoursup pour cet établissement ne permet pas une publication de l'offre vers Parcoursup.",
+    action: `Vous devez vérifier voire modifier le rôle de l'établissement (profil établissement d'accueil) dans Parcoursup puis demander à nouveau la publication une fois la modification effectuée.`,
   },
   {
     regexp: /Impossible de créer, établissement gestionnaire non unique ou inexistant pour +/,
     description:
-      "Le rôle défini dans Parcoursup pour cet établissement ne permet pas une publication de l’offre vers Parcoursup.",
-    action: `Vous devez vérifier voire modifier le rôle de l’établissement (profil établissement d’accueil) dans Parcoursup puis demander à nouveau la publication une fois la modification effectuée.`,
+      "Le rôle défini dans Parcoursup pour cet établissement ne permet pas une publication de l'offre vers Parcoursup.",
+    action: `Vous devez vérifier voire modifier le rôle de l'établissement (profil établissement d'accueil) dans Parcoursup puis demander à nouveau la publication une fois la modification effectuée.`,
   },
 ];
 
