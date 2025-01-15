@@ -7,6 +7,7 @@ import {
   Box,
   Button,
   Center,
+  Checkbox,
   Container,
   Flex,
   FormLabel,
@@ -44,6 +45,7 @@ export default ({ plateforme }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [currentRule, setCurrentRule] = useState(null);
   const [currentAcademie, setCurrentAcademie] = useState(null);
+  const [seeAllRules, setSeeAllRules] = useState(true);
   const [niveauxCount, setNiveauxCount] = useState({});
   const [selectedNiveauIndex, setSelectedNiveauIndex] = useState(null);
   const [selectedDiplome, setSelectedDiplome] = useState(null);
@@ -91,6 +93,7 @@ export default ({ plateforme }) => {
         console.error(e);
       }
     }
+
     if (niveauxData) {
       run();
     }
@@ -218,35 +221,57 @@ export default ({ plateforme }) => {
 
   useEffect(() => {
     let mounted = true;
+    const abortController = new AbortController();
 
     async function run() {
-      const counts = {};
-      await Promise.all(
-        niveaux.map(async ({ niveau }) => {
-          counts[niveau.value] = await getIntegrationCount({
-            plateforme,
-            niveau: niveau.value,
-            academie: currentAcademie,
-          });
-        })
-      );
-      if (mounted) {
-        setNiveauxCount(counts);
+      try {
+        setNiveauxCount({});
+        const counts = {};
+        await Promise.all(
+          niveaux.map(async ({ niveau }) => {
+            counts[niveau.value] = await getIntegrationCount(
+              {
+                plateforme,
+                niveau: niveau.value,
+                academie: currentAcademie,
+              },
+              { signal: abortController.signal }
+            );
+          })
+        );
+        if (mounted) {
+          setNiveauxCount(counts);
+        }
+      } catch (e) {
+        if (!abortController.signal.aborted) {
+          throw e;
+        }
       }
     }
 
     if (plateforme) {
       run();
-    } else {
-      setNiveauxCount({});
     }
+
     return () => {
       // cleanup hook
       mounted = false;
+      setNiveauxCount({});
+      abortController.abort();
     };
   }, [currentAcademie, niveaux, plateforme]);
 
-  const onAcademieChange = useCallback((academie) => setCurrentAcademie(academie), []);
+  const onAcademieChange = useCallback(
+    (academie) => {
+      setSeeAllRules(!(academie || academie !== currentAcademie));
+      setCurrentAcademie(academie);
+    },
+    [currentAcademie]
+  );
+
+  const onSeeAllRuleeChange = useCallback((e) => {
+    setSeeAllRules(!!e.target.checked);
+  }, []);
 
   return (
     <Layout>
@@ -296,15 +321,18 @@ export default ({ plateforme }) => {
                       user={user}
                     />
                   </Flex>
-                  <Button
-                    variant="primary"
-                    onClick={() => {
-                      setCurrentRule(null);
-                      onOpen();
-                    }}
-                  >
-                    Ajouter un diplôme, un titre ou des formations
-                  </Button>
+
+                  {user.isAdmin && !currentAcademie && (
+                    <Button
+                      variant="primary"
+                      onClick={() => {
+                        setCurrentRule(null);
+                        onOpen();
+                      }}
+                    >
+                      Ajouter un diplôme, un titre ou des formations
+                    </Button>
+                  )}
                 </Flex>
                 <CountText
                   py={4}
@@ -329,6 +357,14 @@ export default ({ plateforme }) => {
                   </Flex>
                 )}
                 <Box minH="70vh">
+                  <Flex alignItems={"center"}>
+                    {currentAcademie && (
+                      <Checkbox isChecked={seeAllRules} w={"auto"} onChange={onSeeAllRuleeChange}>
+                        Voir toutes les règles
+                      </Checkbox>
+                    )}
+                  </Flex>
+                  <br />
                   <Accordion bg="#FFFFFF" mb={24} index={selectedNiveauIndex} allowToggle>
                     {niveaux.map(({ niveau, diplomes }, index) => {
                       return (
@@ -355,9 +391,9 @@ export default ({ plateforme }) => {
                                     </Text>
                                   </Flex>
                                   <Text textStyle={"rf-text"} textAlign={"end"}>
-                                    {niveauxCount[niveau.value]?.nbRules ?? 0} diplômes et titres doivent ou peuvent
+                                    {niveauxCount[niveau.value]?.nbRules ?? "-"} diplômes et titres doivent ou peuvent
                                     intégrer la plateforme ce qui représente{" "}
-                                    {niveauxCount[niveau.value]?.nbFormations ?? 0} formations
+                                    {niveauxCount[niveau.value]?.nbFormations ?? "-"} formations
                                   </Text>
                                 </Flex>
                               </AccordionButton>
@@ -376,6 +412,7 @@ export default ({ plateforme }) => {
                                     onDeleteRule={onDeleteRule}
                                     isExpanded={isExpanded}
                                     academie={currentAcademie}
+                                    seeAllRules={seeAllRules}
                                     isSelected={selectedDiplome === diplome.value}
                                   />
                                 ))}
@@ -390,6 +427,7 @@ export default ({ plateforme }) => {
               </>
             )}
           </Box>
+
           <RuleModal
             isOpen={isOpen}
             onClose={() => {

@@ -54,7 +54,9 @@ export const Line = ({
   };
 
   const currentStatus = statut_academies?.[academie] ?? status;
-  const academieLabel = Object.values(academies).find(({ num_academie: num }) => num === num_academie)?.nom_academie;
+  const academieLabel = Object.values(academies).find(
+    ({ num_academie: num }) => Number(num) === Number(academie ?? num_academie)
+  )?.nom_academie;
 
   const isAcademySpecific = (num_academie && String(num_academie) === academie) || !!statut_academies?.[academie];
 
@@ -92,6 +94,11 @@ export const Line = ({
       data-testid="line"
       borderBottom={"1px solid"}
       borderColor={"grey.300"}
+      backgroundColor={
+        academie && condition_integration === CONDITIONS.PEUT_INTEGRER && !statut_academies?.[academie]
+          ? "red.200"
+          : "none"
+      }
       _hover={{
         bg: nom_regle_complementaire ? "grey.200" : "none",
         cursor: nom_regle_complementaire ? "pointer" : "auto",
@@ -104,7 +111,7 @@ export const Line = ({
         <Flex grow={1} alignItems="center" pl={showIcon ? 2 : 0} pr={2} maxWidth={"50%"} isTruncated>
           {showIcon && <ArrowRightDownLine boxSize={3} mr={2} />}
           <Text data-testid={"line-label"} isTruncated>
-            {num_academie ? `${academieLabel} (${num_academie}) - ` : ""}
+            {num_academie ? `${academieLabel} (${String(num_academie)?.padStart(2, "0")}) - ` : ""}
             {label}
           </Text>
           {hasCriteria && <Badge ml={4}>Critères additionnels</Badge>}
@@ -119,6 +126,7 @@ export const Line = ({
                 disabled={!isConditionChangeEnabled}
                 value={condition_integration ?? CONDITIONS.NE_DOIT_PAS_INTEGRER}
                 onChange={async (e) => {
+                  console.log("onChange action");
                   const action = e.target.value;
                   if (action === CONDITIONS.NE_DOIT_PAS_INTEGRER) {
                     if (nom_regle_complementaire) {
@@ -157,9 +165,11 @@ export const Line = ({
                 aria-disabled={isStatusChangeDisabled}
                 isDisabled={isStatusChangeDisabled}
                 plateforme={plateforme}
+                academie={academie}
                 currentStatus={currentStatus}
                 condition={condition_integration ?? CONDITIONS.NE_DOIT_PAS_INTEGRER}
                 onChange={async (e) => {
+                  console.log("onChange status");
                   if (!academie) {
                     // update the status for the rule
                     await onUpdateRule({ _id: idRule, statut: e.target.value });
@@ -185,7 +195,7 @@ export const Line = ({
               {isAcademySpecific && (
                 <Box px={4}>
                   <InfoTooltip
-                    description={"sur ce diplôme et titre la règle d'intégration est spécifique à cette académie"}
+                    description={`sur ce diplôme et titre la règle d'intégration est spécifique à l'académie ${academieLabel} (${String(academie ?? num_academie)?.padStart(2, "0")})`}
                   />
                 </Box>
               )}

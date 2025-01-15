@@ -23,14 +23,34 @@ export const STATUS_LIST = {
   },
 };
 
-export const StatusSelect = ({ plateforme, currentStatus, condition, onChange, size = "sm", isDisabled, ...rest }) => {
-  const statusList = STATUS_LIST[condition]?.[plateforme];
+export const StatusSelect = ({
+  plateforme,
+  academie,
+  currentStatus,
+  condition,
+  onChange,
+  size = "sm",
+  isDisabled,
+  ...rest
+}) => {
+  const academieStatusList = [COMMON_STATUS.A_PUBLIER, COMMON_STATUS.NON_PUBLIABLE_EN_LETAT];
+
+  const statusList = [
+    ...new Set(
+      academie ? [...STATUS_LIST[condition]?.[plateforme], ...academieStatusList] : STATUS_LIST[condition]?.[plateforme]
+    ),
+  ];
+
   return (
     <Select
       {...rest}
       isDisabled={isDisabled || (statusList?.length <= 1 && !rest.placeholder)}
       bg={
-        currentStatus && currentStatus !== COMMON_STATUS.NON_PUBLIABLE_EN_LETAT ? "orangemedium.200" : "greendark.200"
+        currentStatus && currentStatus === COMMON_STATUS.A_PUBLIER
+          ? "greenmedium.300"
+          : currentStatus && currentStatus !== COMMON_STATUS.NON_PUBLIABLE_EN_LETAT
+            ? "orangemedium.300"
+            : "greendark.300"
       }
       size={size}
       onClick={(e) => {
@@ -41,7 +61,7 @@ export const StatusSelect = ({ plateforme, currentStatus, condition, onChange, s
       iconColor={rest.disabled ? "gray.400" : "gray.800"}
     >
       {statusList?.map((status) => (
-        <option value={status} key={status}>
+        <option value={status} disabled={academie ? !academieStatusList.includes(status) : false} key={status}>
           {status}
         </option>
       ))}

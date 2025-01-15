@@ -1,0 +1,27 @@
+const logger = require("../../../common/logger");
+const { Formation } = require("../../../common/models");
+
+const run = async () => {
+  const filterGeneral = { catalogue_published: true, published: true };
+
+  const differences = await Formation.find(
+    {
+      ...filterGeneral,
+      $expr: {
+        $ne: ["$affelnet_statut", "$affelnet_last_statut"],
+      },
+    },
+    {
+      _id: 0,
+      cle_ministere_educatif: 1,
+      affelnet_statut: 1,
+      affelnet_last_statut: 1,
+      affelnet_id: 1,
+    }
+  ).lean();
+
+  console.table(differences);
+
+  logger.info({ type: "job" }, differences);
+};
+module.exports = { run };

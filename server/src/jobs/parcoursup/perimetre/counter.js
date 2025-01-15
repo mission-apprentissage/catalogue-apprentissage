@@ -222,25 +222,6 @@ const run = async () => {
 
   console.table(results);
 
-  logger.info(
-    { type: "job" },
-    results
-    //   `Compteurs des formations dans le catalogue (catalogue général / catalogue non règlementaire / total (y compris archives)):
-    //     - total : ${totalGeneral} / ${totalNonReglementaire} / ${total}
-
-    //     - statut "non publiable en l'état" : ${totalGeneralNotRelevant} / ${totalNonReglementaireNotRelevant} / ${totalNotRelevant}
-    //     - statut "à publier (sous condition habilitation)" : ${totalGeneralToValidateHabilitation} / ${totalNonReglementaireToValidateHabilitation} / ${totalToValidateHabilitation}
-    //     - statut "à publier (vérifier accès direct postbac)" : ${totalGeneralToValidate} / ${totalNonReglementaireToValidate} / ${totalToValidate}
-    //     - statut "à publier (soumis à validation Recteur)" : ${totalGeneralToValidateRecteur} / ${totalNonReglementaireToValidateRecteur} / ${totalToValidateRecteur}
-    //     - statut "à publier" : ${totalGeneralToCheck} / ${totalNonReglementaireToCheck} / ${totalToCheck}
-    //     - statut "prêt pour intégration" : ${totalGeneralPending} / ${totalNonReglementairePending} / ${totalPending}
-    //     - statut "publié" : ${totalGeneralPublished} / ${totalNonReglementairePublished} / ${totalPublished}
-    //     - statut "rejeté" : ${totalGeneralRejected} / ${totalNonReglementaireRejected} / ${totalRejected}
-    //     - statut "NON publié" : ${totalGeneralNotPublished} / ${totalNonReglementaireNotPublished} / ${totalNotPublished}
-    //     - statut "fermé" : ${totalGeneralClosed} / ${totalNonReglementaireClosed} / ${totalClosed}
-
-    //     - dans le périmètre : ${totalGeneralPérimètre} / ${totalNonReglementairePérimètre} / ${totalPérimètre}
-    //     - hors périmètre : ${totalGeneralHorsPérimètre} / ${totalNonReglementaireHorsPérimètre} / ${totalHorsPérimètre}`
-  );
+  logger.info({ type: "job" }, results);
 };
 module.exports = { run };

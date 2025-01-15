@@ -37,6 +37,12 @@ const parcoursupSchema = {
     default: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
     description: "Statut parcoursup à la fin de la précédente campagne",
   },
+  parcoursup_last_statut: {
+    type: String,
+    enum: Object.values(PARCOURSUP_STATUS),
+    default: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
+    description: "Statut parcoursup avant éxécution des règles de périmètre",
+  },
   parcoursup_statut_history: {
     type: [Object],
     default: [],

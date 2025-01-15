@@ -41,61 +41,45 @@ const run = async () => {
   };
 
   const formationsInPerimetre = new Set();
-  // const formationsNotInPerimetre = new Set();
 
-  const aPublierSoumisAValidationRules = await ReglePerimetre.find({
+  // apply national rules
+  const rules = await ReglePerimetre.find({
     plateforme: "affelnet",
-    statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
+    statut: {
+      $in: [AFFELNET_STATUS.A_PUBLIER_VALIDATION, AFFELNET_STATUS.A_PUBLIER],
+    },
     is_deleted: { $ne: true },
   }).lean();
 
-  if (aPublierSoumisAValidationRules.length > 0) {
+  rules.length > 0 &&
     (
       await Formation.find({
         ...filterReglement,
 
-        $or: aPublierSoumisAValidationRules.map((rule) => getQueryFromRule(rule, false)),
+        $or: rules.map((rule) => getQueryFromRule(rule, false)),
       }).select({ cle_ministere_educatif: 1 })
     ).forEach(({ cle_ministere_educatif }) => formationsInPerimetre.add(cle_ministere_educatif));
-  }
 
-  const aPublierRules = await ReglePerimetre.find({
-    plateforme: "affelnet",
-    statut: AFFELNET_STATUS.A_PUBLIER,
-    is_deleted: { $ne: true },
-  }).lean();
+  // apply academy rules
+  const academieRules = rules.filter(
+    ({ statut_academies }) => statut_academies && Object.keys(statut_academies).length > 0
+  );
 
-  if (aPublierRules.length > 0) {
-    (
-      await Formation.find({
-        ...filterReglement,
-
-        $or: aPublierRules.map((rule) => getQueryFromRule(rule, false)),
-      }).select({ cle_ministere_educatif: 1 })
-    ).forEach(({ cle_ministere_educatif }) => formationsInPerimetre.add(cle_ministere_educatif));
-  }
-
-  // // apply academy rules
-  // const academieRules = [...aPublierSoumisAValidationRules, ...aPublierRules].filter(
-  //   ({ statut_academies }) => statut_academies && Object.keys(statut_academies).length > 0
-  // );
-
-  // await asyncForEach(academieRules, async (rule) => {
-  //   await asyncForEach(Object.entries(rule.statut_academies), async ([num_academie, status]) => {
-  //     (
-  //       await Formation.find({
-  //         ...filterReglement,
-
-  //         num_academie,
-  //         ...getQueryFromRule(rule, false),
-  //       }).select({ cle_ministere_educatif: 1 })
-  //     ).forEach(({ cle_ministere_educatif }) =>
-  //       status === AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT
-  //         ? formationsNotInPerimetre.add(cle_ministere_educatif)
-  //         : formationsInPerimetre.add(cle_ministere_educatif)
-  //     );
-  //   });
-  // });
+  await asyncForEach(academieRules, async (rule) => {
+    await asyncForEach(Object.entries(rule.statut_academies), async ([num_academie, status]) => {
+      (
+        await Formation.find({
+          ...filterReglement,
+          num_academie,
+          ...getQueryFromRule(rule, false),
+        }).select({ cle_ministere_educatif: 1 })
+      ).forEach(({ cle_ministere_educatif }) =>
+        status === AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT
+          ? formationsInPerimetre.delete(cle_ministere_educatif)
+          : formationsInPerimetre.add(cle_ministere_educatif)
+      );
+    });
+  });
 
   logger.debug("- Intégration du périmètre");
   await cursor(

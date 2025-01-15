@@ -76,7 +76,7 @@ module.exports = () => {
 
         let callback;
 
-        console.log({ filename, user: req.user });
+        // console.log({ filename, user: req.user });
 
         switch (filename) {
           case DOCUMENTS.get("affelnet-formations").filename:

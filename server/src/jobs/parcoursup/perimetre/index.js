@@ -6,6 +6,7 @@ const counter = require("./counter");
 const perimetre = require("./perimetre");
 const session = require("./session");
 const previousSession = require("./previousSession");
+const differences = require("./differences");
 
 const { runScript } = require("../../scriptWrapper");
 
@@ -34,6 +35,9 @@ const psPerimetre = async () => {
 
     logger.info({ type: "job" }, "∙ Compteurs après :");
     await counter.run();
+
+    logger.info({ type: "job" }, "∙ Differences :");
+    await differences.run();
 
     logger.info({ type: "job" }, " -- PARCOURSUP | PERIMETRE : ✅ -- ");
   } catch (error) {

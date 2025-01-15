@@ -1,11 +1,12 @@
 const logger = require("../../../common/logger");
 const controller = require("./controller");
 const initial = require("./initial");
-const perimetre = require("./perimetre");
 const replace = require("./replace");
+const counter = require("./counter");
+const perimetre = require("./perimetre");
 const session = require("./session");
 const previousSession = require("./previousSession");
-const counter = require("./counter");
+const differences = require("./differences");
 
 const { runScript } = require("../../scriptWrapper");
 
@@ -34,6 +35,9 @@ const afPerimetre = async () => {
 
     logger.info({ type: "job" }, "∙ Compteurs après :");
     await counter.run();
+
+    logger.info({ type: "job" }, "∙ Differences :");
+    await differences.run();
 
     logger.info({ type: "job" }, " -- AFFELNET | PERIMETRE : ✅ -- ");
   } catch (error) {

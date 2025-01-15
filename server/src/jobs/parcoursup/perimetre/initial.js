@@ -397,8 +397,6 @@ const excludedRNCPs = [
 ];
 
 const run = async () => {
-  const sessionStartDate = await getSessionStartDate();
-  const sessionEndDate = await getSessionEndDate();
   const filterSessionDate = await getSessionDateRules();
 
   const filterReglement = {
@@ -451,9 +449,6 @@ const run = async () => {
 
   /** 2. On applique les règles de périmètres pour statut "à publier avec action attendue" uniquement sur les formations "non publiable en l'état" */
   logger.debug({ type: "job" }, "Etape 2.");
-  const filterNonPubliable = {
-    parcoursup_statut_initial: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
-  };
 
   const aPublierSousConditions = await ReglePerimetre.find({
     plateforme: "parcoursup",
@@ -467,13 +462,25 @@ const run = async () => {
     is_deleted: { $ne: true },
   }).lean();
 
+  const filterAPublierSousConditions = {
+    parcoursup_statut_initial: {
+      $in: [
+        PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
+        PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
+        PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
+        PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+        PARCOURSUP_STATUS.A_PUBLIER,
+      ],
+    },
+  };
+
   aPublierSousConditions.length > 0 &&
     (await asyncForEach(aPublierSousConditions, async (rule) => {
       await Formation.updateMany(
         {
           ...filterReglement,
           ...filterSessionDate,
-          ...filterNonPubliable,
+          ...filterAPublierSousConditions,
 
           ...getQueryFromRule(rule, true),
         },
@@ -489,16 +496,6 @@ const run = async () => {
 
   /** 3. Enfin on applique les règles appliquant le statut "à publier" sur toutes les formations (y compris celles qui correspondent aux règles précédentes) */
   logger.debug({ type: "job" }, "Etape 3.");
-  const filter = {
-    parcoursup_statut_initial: {
-      $in: [
-        PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
-        PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
-        PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
-        PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
-      ],
-    },
-  };
 
   const aPublierRules = await ReglePerimetre.find({
     plateforme: "parcoursup",
@@ -506,12 +503,24 @@ const run = async () => {
     is_deleted: { $ne: true },
   }).lean();
 
+  const filterAPublier = {
+    parcoursup_statut_initial: {
+      $in: [
+        PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
+        PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
+        PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
+        PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+        PARCOURSUP_STATUS.A_PUBLIER,
+      ],
+    },
+  };
+
   aPublierRules.length > 0 &&
     (await Formation.updateMany(
       {
         ...filterReglement,
         ...filterSessionDate,
-        ...filter,
+        ...filterAPublier,
 
         $or: aPublierRules.map((rule) => getQueryFromRule(rule, true)),
       },
@@ -523,6 +532,47 @@ const run = async () => {
         },
       ]
     ));
+
+  /** 4. On applique les règles des académies */
+  logger.debug({ type: "job" }, "Etape 4.");
+
+  const academieRules = [...aPublierSousConditions, ...aPublierRules].filter(
+    ({ statut_academies }) => statut_academies && Object.keys(statut_academies).length > 0
+  );
+
+  const filterAcademie = {
+    parcoursup_statut: {
+      $in: [
+        PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
+        PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
+        PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
+        PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+        PARCOURSUP_STATUS.A_PUBLIER,
+      ],
+    },
+  };
+
+  await asyncForEach(academieRules, async (rule) => {
+    await asyncForEach(Object.entries(rule.statut_academies), async ([num_academie, status]) => {
+      await Formation.updateMany(
+        {
+          ...filterReglement,
+          ...filterSessionDate,
+          ...filterAcademie,
+
+          num_academie,
+          ...getQueryFromRule(rule, true),
+        },
+        [
+          {
+            $set: {
+              parcoursup_statut_initial: status,
+            },
+          },
+        ]
+      );
+    });
+  });
 };
 
 module.exports = { run };

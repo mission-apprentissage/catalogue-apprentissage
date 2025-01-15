@@ -154,21 +154,6 @@ const run = async () => {
 
   console.table(results);
 
-  logger.info(
-    { type: "job" },
-    results
-    //   `Compteurs des formations dans le catalogue (catalogue général / catalogue non règlementaire / total (y compris archives)):
-    //     - total : ${totalGeneral} / ${totalNonReglementaire} / ${total}
-
-    //     - statut "non publiable en l'état" : ${totalGeneralNotRelevant} / ${totalNonReglementaireNotRelevant} / ${totalNotRelevant}
-    //     - statut "à publier (soumis à validation)" : ${totalGeneralToValidate} / ${totalNonReglementaireToValidate} / ${totalToValidate}
-    //     - statut "à publier" : ${totalGeneralToCheck} / ${totalNonReglementaireToCheck} / ${totalToCheck}
-    //     - statut "prêt pour intégration" : ${totalGeneralPending} / ${totalNonReglementairePending} / ${totalPending}
-    //     - statut "publié" : ${totalGeneralPublished} / ${totalNonReglementairePublished} / ${totalPublished}
-    //     - statut "NON publié" : ${totalGeneralNotPublished} / ${totalNonReglementaireNotPublished} / ${totalNotPublished}
-
-    //     - dans le périmètre : ${totalGeneralPérimètre} / ${totalNonReglementairePérimètre} / ${totalPérimètre}
-    //     - hors périmètre : ${totalGeneralHorsPérimètre} / ${totalNonReglementaireHorsPérimètre} / ${totalHorsPérimètre}`
-  );
+  logger.info({ type: "job" }, results);
 };
 module.exports = { run };

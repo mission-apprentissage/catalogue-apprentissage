@@ -53,7 +53,7 @@ const exit = async (rawError) => {
     await closeMongoConnection();
   } catch (closeError) {
     error = closeError;
-    console.log(error);
+    console.error(error);
   }
 
   process.exitCode = error ? 1 : 0;

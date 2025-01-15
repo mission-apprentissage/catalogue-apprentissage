@@ -37,6 +37,12 @@ const affelnetSchema = {
     default: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
     description: "Statut affelnet à la fin de la précédente campagne",
   },
+  affelnet_last_statut: {
+    type: String,
+    enum: Object.values(AFFELNET_STATUS),
+    default: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
+    description: "Statut affelnet avant éxécution des règles de périmètre",
+  },
   affelnet_statut_history: {
     type: [Object],
     default: [],

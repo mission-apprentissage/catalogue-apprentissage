@@ -449,7 +449,7 @@ const run = async () => {
   await Formation.updateMany({ parcoursup_id: { $exists: false } }, { $set: { parcoursup_id: null } });
 
   /** 1. Application de la réglementation : réinitialisation des étiquettes pour les formations qui sortent du périmètre quelque soit le statut (sauf publié, fermé, non publié) */
-  logger.debug({ type: "job" }, "Etape 1.");
+  logger.debug({ type: "job" }, "Etape 1. Vérification des aspects réglementaires");
   await Formation.updateMany(
     {
       $or: [
@@ -503,7 +503,10 @@ const run = async () => {
   );
 
   /** 2. On réinitialise les formations "à publier ..." à "non publiable en l'état" pour permettre le recalcule du périmètre */
-  logger.debug({ type: "job" }, "Etape 2.");
+  logger.debug({ type: "job" }, "Etape 2. Sauvegarde statut précédent et réinitialisation");
+
+  await Formation.updateMany({}, [{ $set: { parcoursup_last_statut: "$parcoursup_statut" } }]);
+
   await Formation.updateMany(
     {
       parcoursup_statut: {
@@ -512,6 +515,7 @@ const run = async () => {
           PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
           PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
           PARCOURSUP_STATUS.A_PUBLIER,
+          PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
         ],
       },
     },
@@ -519,10 +523,7 @@ const run = async () => {
   );
 
   /** 3. On applique les règles de périmètres pour statut "à publier avec action attendue" uniquement sur les formations "non publiable en l'état" pour ne pas écraser les actions menées par les utilisateurs */
-  logger.debug({ type: "job" }, "Etape 3.");
-  const filterNonPubliable = {
-    parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
-  };
+  logger.debug({ type: "job" }, "Etape 3. Application des règles avec action attendue");
 
   const aPublierSousConditions = await ReglePerimetre.find({
     plateforme: "parcoursup",
@@ -536,13 +537,26 @@ const run = async () => {
     is_deleted: { $ne: true },
   }).lean();
 
+  const filterAPublierSousConditions = {
+    parcoursup_statut: {
+      $in: [
+        PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
+        PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
+        PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
+        PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+        PARCOURSUP_STATUS.A_PUBLIER,
+        PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
+      ],
+    },
+  };
+
   aPublierSousConditions.length > 0 &&
     (await asyncForEach(aPublierSousConditions, async (rule) => {
       await Formation.updateMany(
         {
           ...filterReglement,
           ...filterSessionDate,
-          ...filterNonPubliable,
+          ...filterAPublierSousConditions,
 
           ...getQueryFromRule(rule, true),
         },
@@ -550,7 +564,22 @@ const run = async () => {
           {
             $set: {
               last_update_at: Date.now(),
-              parcoursup_statut: rule.statut,
+              parcoursup_statut: {
+                $cond: {
+                  if: {
+                    $and: [
+                      // {
+                      //   $eq: ["$parcoursup_id", null],
+                      // },
+                      {
+                        $ne: ["$parcoursup_last_statut", PARCOURSUP_STATUS.PRET_POUR_INTEGRATION],
+                      },
+                    ],
+                  },
+                  then: rule.statut,
+                  else: PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
+                },
+              },
             },
           },
         ]
@@ -558,7 +587,13 @@ const run = async () => {
     }));
 
   /** 4. On applique les règles de périmètre pour statut "à publier" pour les formations répondant aux règles de publication sur Parcoursup. */
-  logger.debug({ type: "job" }, "Etape 4.");
+  logger.debug({ type: "job" }, "Etape 4. Application des règles sans action attendue");
+  const aPublierRules = await ReglePerimetre.find({
+    plateforme: "parcoursup",
+    statut: PARCOURSUP_STATUS.A_PUBLIER,
+    is_deleted: { $ne: true },
+  }).lean();
+
   const filter = {
     parcoursup_statut: {
       $in: [
@@ -566,15 +601,11 @@ const run = async () => {
         PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
         PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
         PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+        PARCOURSUP_STATUS.A_PUBLIER,
+        PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
       ],
     },
   };
-
-  const aPublierRules = await ReglePerimetre.find({
-    plateforme: "parcoursup",
-    statut: PARCOURSUP_STATUS.A_PUBLIER,
-    is_deleted: { $ne: true },
-  }).lean();
 
   aPublierRules.length > 0 &&
     (await Formation.updateMany(
@@ -592,7 +623,14 @@ const run = async () => {
             parcoursup_statut: {
               $cond: {
                 if: {
-                  $eq: ["$parcoursup_id", null],
+                  $and: [
+                    {
+                      $eq: ["$parcoursup_id", null],
+                    },
+                    {
+                      $ne: ["$parcoursup_last_statut", PARCOURSUP_STATUS.PRET_POUR_INTEGRATION],
+                    },
+                  ],
                 },
                 then: PARCOURSUP_STATUS.A_PUBLIER,
                 else: PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
@@ -604,10 +642,23 @@ const run = async () => {
     ));
 
   /** 5. On applique les règles des académies */
-  // logger.debug({ type: "job" }, "Etape 5.");
+  // logger.debug({ type: "job" }, "Etape 5. Application des règles académiques");
   // const academieRules = [...aPublierSousConditions, ...aPublierRules].filter(
   //   ({ statut_academies }) => statut_academies && Object.keys(statut_academies).length > 0
   // );
+
+  // const filterAcademie = {
+  //   parcoursup_statut: {
+  //     $in: [
+  //       PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
+  //       PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
+  //       PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
+  //       PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+  //       PARCOURSUP_STATUS.A_PUBLIER,
+  //       PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
+  //     ],
+  //   },
+  // };
 
   // await asyncForEach(academieRules, async (rule) => {
   //   await asyncForEach(Object.entries(rule.statut_academies), async ([num_academie, status]) => {
@@ -616,16 +667,7 @@ const run = async () => {
   //       {
   //         ...filterReglement,
   //         ...filterSessionDate,
-
-  //         parcoursup_statut: {
-  //           $in: [
-  //             PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
-  //             PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
-  //             PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
-  //             PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
-  //             PARCOURSUP_STATUS.A_PUBLIER,
-  //           ],
-  //         },
+  //         ...filterAcademie,
 
   //         num_academie,
   //         ...getQueryFromRule(rule, true),
@@ -637,7 +679,14 @@ const run = async () => {
   //             parcoursup_statut: {
   //               $cond: {
   //                 if: {
-  //                   $eq: ["$parcoursup_id", null],
+  //                   $or: [
+  //                     {
+  //                       $eq: ["$parcoursup_id", null],
+  //                     },
+  //                     {
+  //                       $ne: ["$parcoursup_last_statut", PARCOURSUP_STATUS.PRET_POUR_INTEGRATION],
+  //                     },
+  //                   ],
   //                 },
   //                 then: status,
   //                 else:
@@ -656,7 +705,7 @@ const run = async () => {
   // });
 
   /** 6. Vérification de la date de publication */
-  logger.debug({ type: "job" }, "Etape 6.");
+  logger.debug({ type: "job" }, "Etape 6. Vérification de la date de publication");
   /** 6a. On s'assure que les dates de publication soient définies pour les formations publiées */
   await Formation.updateMany(
     {
@@ -676,7 +725,7 @@ const run = async () => {
   );
 
   /** 7. On met à jour l'historique des statuts. */
-  logger.debug({ type: "job" }, "Etape 7.");
+  logger.debug({ type: "job" }, "Etape 7. Mise à jour de l'historique");
   await updateManyTagsHistory("parcoursup_statut");
 };
 

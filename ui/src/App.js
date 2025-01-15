@@ -273,8 +273,10 @@ const Root = () => {
             {/* Règles de périmètre */}
             {auth &&
             (hasAccessTo(auth, "page_perimetre") ||
+              hasAccessTo(auth, "page_perimetre/affelnet") ||
               hasAccessTo(auth, "page_perimetre/parcoursup") ||
-              hasAccessTo(auth, "page_perimetre/affelnet")) ? (
+              hasAccessTo(auth, "page_perimetre/affelnet_academie") ||
+              hasAccessTo(auth, "page_perimetre/parcoursup_academie")) ? (
               <Route
                 path="/regles-perimetre"
                 element={
@@ -287,7 +289,9 @@ const Root = () => {
               <React.Fragment />
             )}
 
-            {auth && hasAccessTo(auth, "page_perimetre/parcoursup") ? (
+            {auth &&
+            (hasAccessTo(auth, "page_perimetre/parcoursup") ||
+              hasAccessTo(auth, "page_perimetre/parcoursup_academie")) ? (
               <Route
                 path="/regles-perimetre/parcoursup"
                 element={
@@ -300,7 +304,8 @@ const Root = () => {
               <React.Fragment />
             )}
 
-            {auth && hasAccessTo(auth, "page_perimetre/affelnet") ? (
+            {auth &&
+            (hasAccessTo(auth, "page_perimetre/affelnet") || hasAccessTo(auth, "page_perimetre/affelnet_academie")) ? (
               <Route
                 path="/regles-perimetre/affelnet"
                 element={

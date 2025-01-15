@@ -82,6 +82,9 @@ function getMapping(schema, inPrefix = "", requireAsciiFolding = false) {
                 ...asciiFoldingParameters,
               };
               break;
+            case schema.paths[key].caster.instance === "Boolean":
+              properties[key] = { type: "boolean" };
+              break;
             case schema.paths[key].caster.instance === "Date":
               properties[key] = { type: "date" };
               break;
@@ -124,7 +127,7 @@ function getMapping(schema, inPrefix = "", requireAsciiFolding = false) {
     }
   }
 
-  console.log(JSON.stringify(properties));
+  // console.log(JSON.stringify(properties));
 
   return { properties };
 }
@@ -142,7 +145,6 @@ function Mongoosastic(schema, options) {
 
   const mapping = getMapping(schema, "");
 
-  console.error("Mapping", mapping);
   const indexName = options.index;
   const typeName = "_doc";
 

@@ -94,10 +94,11 @@ const NavLinks = ({ isOpen }) => {
           <NavItem to="/consoles-pilotage/parcoursup">Console Parcoursup</NavItem>
         )}
 
-        {hasAccessTo(auth, "page_perimetre/affelnet") && (
+        {(hasAccessTo(auth, "page_perimetre/affelnet") || hasAccessTo(auth, "page_perimetre/affelnet_academie")) && (
           <NavItem to="/regles-perimetre/affelnet">Périmètre Affelnet</NavItem>
         )}
-        {hasAccessTo(auth, "page_perimetre/parcoursup") && (
+        {(hasAccessTo(auth, "page_perimetre/parcoursup") ||
+          hasAccessTo(auth, "page_perimetre/parcoursup_academie")) && (
           <NavItem to="/regles-perimetre/parcoursup">Périmètre Parcoursup</NavItem>
         )}
 
