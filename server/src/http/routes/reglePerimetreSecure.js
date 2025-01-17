@@ -83,8 +83,10 @@ const hasAcademyRights = (user, { num_academie, statut_academies }, payload) => 
     const oldAcademies = Object.keys(payload?.statut_academies || {});
 
     const diffAcademies = newAcademies
-      .filter((x) => !oldAcademies.includes(x))
-      .concat(oldAcademies.filter((x) => !newAcademies.includes(x)));
+      .filter((x) => !oldAcademies.includes(x) || statut_academies[x] !== payload.statut_academies[x])
+      .concat(
+        oldAcademies.filter((x) => !newAcademies.includes(x) || statut_academies[x] !== payload.statut_academies[x])
+      );
 
     if (diffAcademies.length > 0) {
       return (
