@@ -40,7 +40,7 @@ import { ActionsSelect } from "./ActionsSelect";
 import { RuleBuilder } from "./RuleBuilder";
 import { RuleUpdatesHistory } from "./RuleUpdatesHistory";
 import { StatusSelect } from "./StatusSelect";
-import { sortAscending, sortDescending } from "../../../common/utils/historyUtils";
+import { sortDescending } from "../../../common/utils/historyUtils";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -168,14 +168,6 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
 
             await onUpdateRule({
               _id: idRule,
-              // niveau,
-              // diplome,
-              // nom_regle_complementaire: name,
-              // statut: status
-              // regle_complementaire: regle,
-              // regle_complementaire_query: query,
-              // duree: duration || null,
-              // annee: registrationYear || null,
               statut_academies: statusAcademies,
             });
           }

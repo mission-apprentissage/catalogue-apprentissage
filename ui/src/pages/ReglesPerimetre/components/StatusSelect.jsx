@@ -33,7 +33,10 @@ export const StatusSelect = ({
   isDisabled,
   ...rest
 }) => {
-  const academieStatusList = [COMMON_STATUS.A_PUBLIER, COMMON_STATUS.NON_PUBLIABLE_EN_LETAT];
+  const academieStatusList =
+    plateforme === "affelnet"
+      ? [COMMON_STATUS.A_PUBLIER, AFFELNET_STATUS.A_PUBLIER_VALIDATION, COMMON_STATUS.NON_PUBLIABLE_EN_LETAT]
+      : [];
 
   const statusList = [
     ...new Set(

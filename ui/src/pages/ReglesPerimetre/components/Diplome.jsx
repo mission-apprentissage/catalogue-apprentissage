@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Line } from "./Line";
 import { Box } from "@chakra-ui/react";
 import { AFFELNET_STATUS } from "../../../constants/status";
@@ -14,10 +14,11 @@ export const Diplome = ({
   onDeleteRule,
   isExpanded,
   academie,
-  seeAllRules,
   isSelected,
 }) => {
   const ref = useRef(null);
+  const [background, setBackground] = useState(bg);
+  const [transitionDuration, setTransitionDuration] = useState("0s");
 
   useEffect(() => {
     if (isSelected) {
@@ -32,11 +33,22 @@ export const Diplome = ({
   const [diplomeRule] = regles.filter(({ nom_regle_complementaire }) => nom_regle_complementaire === null);
   const otherRules = regles
     .filter(({ nom_regle_complementaire }) => nom_regle_complementaire !== null)
-    .filter((rule) => !!seeAllRules || academieStatuts.includes(rule.statut));
+    .filter((rule) => !academie || academieStatuts.includes(rule.statut));
+
+  useEffect(() => {
+    if (isSelected) {
+      setBackground("yellow.100");
+      setTransitionDuration("0s");
+      setTimeout(() => {
+        setBackground(bg);
+        setTransitionDuration("2s");
+      }, 2000);
+    }
+  }, [isSelected, bg]);
 
   return (
-    <Box bg={bg} ref={ref}>
-      {(!!seeAllRules || academieStatuts.includes(diplomeRule?.statut) || otherRules?.length > 0) && (
+    <Box bg={background} transitionDuration={transitionDuration} ref={ref}>
+      {(!academie || academieStatuts.includes(diplomeRule?.statut) || otherRules?.length > 0) && (
         <Line
           plateforme={plateforme}
           niveau={niveau}

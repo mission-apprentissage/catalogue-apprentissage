@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Badge, Box, Flex, Text } from "@chakra-ui/react";
+import React, { useContext, useEffect, useState } from "react";
+import { Box, Flex, Link, Text } from "@chakra-ui/react";
 import { ArrowRightDownLine } from "../../../theme/components/icons";
 import { CONDITIONS } from "../../../constants/conditionsIntegration";
 import { academies } from "../../../constants/academies";
@@ -8,6 +8,8 @@ import { isStatusChangeEnabled } from "../../../common/utils/rulesUtils";
 import { getCount } from "../../../common/api/perimetre";
 import { ActionsSelect } from "./ActionsSelect";
 import { STATUS_LIST, StatusSelect } from "./StatusSelect";
+import { annees } from "../../../constants/annees";
+import { DateContext } from "../../../DateContext";
 
 export const Line = ({
   showIcon,
@@ -25,6 +27,8 @@ export const Line = ({
   academie,
 }) => {
   const [lineCount, setLineCount] = useState(count);
+  const [lineLink, setLineLink] = useState(null);
+  const { sessionStartDate, sessionEndDate } = useContext(DateContext);
 
   const {
     statut: status,
@@ -39,7 +43,7 @@ export const Line = ({
     annee,
   } = rule;
 
-  const isConditionChangeEnabled = !academie;
+  const isConditionChangeDisabled = !!academie;
 
   const isStatusChangeDisabled = !isStatusChangeEnabled({
     plateforme,
@@ -60,7 +64,7 @@ export const Line = ({
 
   const isAcademySpecific = (num_academie && String(num_academie) === academie) || !!statut_academies?.[academie];
 
-  const hasCriteria = !!JSON.parse(regle_complementaire_query ?? "[]").filter((query) => !!query.value.length).length;
+  // const hasCriteria = !!JSON.parse(regle_complementaire_query ?? "[]").filter((query) => !!query.value.length).length;
 
   useEffect(() => {
     async function run() {
@@ -76,17 +80,60 @@ export const Line = ({
     } else {
       setLineCount(count ?? 0);
     }
+
+    const linkQuery = [
+      {
+        field: "diplome.keyword",
+        operator: "===",
+        value: diplome,
+        combinator: "AND",
+        index: 0,
+      },
+      ...((regle_complementaire_query &&
+        JSON.parse(regle_complementaire_query)
+          ?.filter((q) => q.value)
+          .map((q) => ({ ...q, field: q.field + ".keyword", index: q.index + 1 }))) ??
+        []),
+    ];
+
+    let linkFormations = `/recherche/formations?qb=${encodeURIComponent(JSON.stringify(linkQuery))}`;
+
+    if (academie ?? num_academie) {
+      linkFormations += `&nom_academie=%5B"${academies[(academie ?? num_academie)?.padStart(2, "0")].nom_academie}"%5D`;
+    }
+
+    if (niveau) {
+      linkFormations += `&niveau=%5B"${niveau.replace(" ", "+")}"%5D`;
+    }
+
+    if (annee) {
+      linkFormations += `&annee=%5B"${annees[annee].replace(" ", "+")}"%5D`;
+    }
+
+    if (duree) {
+      linkFormations += `&duree=%5B"${(duree <= 1 ? `${duree} an` : `${duree} ans`).replace(" ", "+")}"%5D`;
+    }
+
+    linkFormations += `&date_debut_start=%22${sessionStartDate?.toLocaleDateString(
+      "en-CA"
+    )}%22&date_debut_end=%22${sessionEndDate?.toLocaleDateString("en-CA")}%22`;
+
+    setLineLink(linkFormations);
   }, [
     plateforme,
     count,
     diplome,
     niveau,
     regle_complementaire,
+    regle_complementaire_query,
     nom_regle_complementaire,
     shouldFetchCount,
     academie,
     duree,
     annee,
+    num_academie,
+    sessionStartDate,
+    sessionEndDate,
   ]);
 
   return (
@@ -94,17 +141,17 @@ export const Line = ({
       data-testid="line"
       borderBottom={"1px solid"}
       borderColor={"grey.300"}
-      backgroundColor={
-        academie && condition_integration === CONDITIONS.PEUT_INTEGRER && !statut_academies?.[academie]
-          ? "red.200"
-          : "none"
-      }
+      // backgroundColor={
+      //   academie && condition_integration === CONDITIONS.PEUT_INTEGRER && !statut_academies?.[academie]
+      //     ? "red.200"
+      //     : "none"
+      // }
       _hover={{
         bg: nom_regle_complementaire ? "grey.200" : "none",
         cursor: nom_regle_complementaire ? "pointer" : "auto",
       }}
       onClick={() => {
-        nom_regle_complementaire && onShowRule(rule);
+        !academie && nom_regle_complementaire && onShowRule(rule);
       }}
     >
       <Flex px={8} py={3} alignItems="center" w={"full"}>
@@ -114,93 +161,103 @@ export const Line = ({
             {num_academie ? `${academieLabel} (${String(num_academie)?.padStart(2, "0")}) - ` : ""}
             {label}
           </Text>
-          {hasCriteria && <Badge ml={4}>Critères additionnels</Badge>}
+          {/* {hasCriteria && <Badge ml={4}>Critères additionnels</Badge>} */}
         </Flex>
         <Flex flexBasis={"50%"} justifyContent={"flex-start"} alignItems="center">
-          <Flex minW={12}>{lineCount}</Flex>
-          <Flex justifyContent={"space-between"}>
-            <Flex px={2}>
-              <ActionsSelect
-                data-testid={"actions-select"}
-                aria-disabled={!isConditionChangeEnabled}
-                disabled={!isConditionChangeEnabled}
-                value={condition_integration ?? CONDITIONS.NE_DOIT_PAS_INTEGRER}
-                onChange={async (e) => {
-                  console.log("onChange action");
-                  const action = e.target.value;
-                  if (action === CONDITIONS.NE_DOIT_PAS_INTEGRER) {
-                    if (nom_regle_complementaire) {
-                      await onUpdateRule({
-                        _id: idRule,
-                        condition_integration: e.target.value,
-                        statut: getFirstAllowedStatut(e.target.value),
-                      });
-                    } else {
-                      await onDeleteRule({ _id: idRule });
-                    }
-                  } else {
-                    if (idRule) {
-                      await onUpdateRule({
-                        _id: idRule,
-                        condition_integration: e.target.value,
-                        statut: getFirstAllowedStatut(e.target.value),
-                      });
-                    } else {
-                      await onCreateRule({
-                        plateforme,
-                        niveau,
-                        diplome,
-                        condition_integration: e.target.value,
-                        statut: getFirstAllowedStatut(e.target.value),
-                        regle_complementaire: "{}",
-                      });
-                    }
-                  }
-                }}
-              />
-            </Flex>
-            <Flex alignItems="center">
-              <StatusSelect
-                data-testid="status-select"
-                aria-disabled={isStatusChangeDisabled}
-                isDisabled={isStatusChangeDisabled}
-                plateforme={plateforme}
-                academie={academie}
-                currentStatus={currentStatus}
-                condition={condition_integration ?? CONDITIONS.NE_DOIT_PAS_INTEGRER}
-                onChange={async (e) => {
-                  console.log("onChange status");
-                  if (!academie) {
-                    // update the status for the rule
-                    await onUpdateRule({ _id: idRule, statut: e.target.value });
-                  } else {
-                    // update the status only for the selected academy
-                    const statusAcademies = {
-                      ...statut_academies,
-                      [academie]: e.target.value,
-                    };
+          {(!isConditionChangeDisabled || !isStatusChangeDisabled) && (
+            <>
+              <Flex minW={12} mr={8}>
+                <Link onClick={(e) => e.stopPropagation()} href={lineLink}>
+                  {lineCount}
+                </Link>{" "}
+              </Flex>
+              <Flex justifyContent={"space-between"}>
+                {!academie && (
+                  <Flex mr={8}>
+                    <ActionsSelect
+                      data-testid={"actions-select"}
+                      aria-disabled={isConditionChangeDisabled}
+                      disabled={isConditionChangeDisabled}
+                      value={condition_integration ?? CONDITIONS.NE_DOIT_PAS_INTEGRER}
+                      onChange={async (e) => {
+                        console.log("onChange action");
+                        const action = e.target.value;
+                        if (action === CONDITIONS.NE_DOIT_PAS_INTEGRER) {
+                          if (nom_regle_complementaire) {
+                            await onUpdateRule({
+                              _id: idRule,
+                              condition_integration: e.target.value,
+                              statut: getFirstAllowedStatut(e.target.value),
+                            });
+                          } else {
+                            await onDeleteRule({ _id: idRule });
+                          }
+                        } else {
+                          if (idRule) {
+                            await onUpdateRule({
+                              _id: idRule,
+                              condition_integration: e.target.value,
+                              statut: getFirstAllowedStatut(e.target.value),
+                            });
+                          } else {
+                            await onCreateRule({
+                              plateforme,
+                              niveau,
+                              diplome,
+                              condition_integration: e.target.value,
+                              statut: getFirstAllowedStatut(e.target.value),
+                              regle_complementaire: "{}",
+                            });
+                          }
+                        }
+                      }}
+                    />
+                  </Flex>
+                )}
+                <Flex alignItems="center" mr={8}>
+                  <StatusSelect
+                    data-testid="status-select"
+                    aria-disabled={isStatusChangeDisabled}
+                    isDisabled={isStatusChangeDisabled}
+                    plateforme={plateforme}
+                    academie={academie}
+                    currentStatus={currentStatus}
+                    condition={condition_integration ?? CONDITIONS.NE_DOIT_PAS_INTEGRER}
+                    onChange={async (e) => {
+                      console.log("onChange status");
+                      if (!academie) {
+                        // update the status for the rule
+                        await onUpdateRule({ _id: idRule, statut: e.target.value });
+                      } else {
+                        // update the status only for the selected academy
+                        const statusAcademies = {
+                          ...statut_academies,
+                          [academie]: e.target.value,
+                        };
 
-                    // if the status equals the national one just remove the academy specificity
-                    if (status === e.target.value) {
-                      delete statusAcademies[academie];
-                    }
+                        // if the status equals the national one just remove the academy specificity
+                        if (status === e.target.value) {
+                          delete statusAcademies[academie];
+                        }
 
-                    await onUpdateRule({
-                      _id: idRule,
-                      statut_academies: statusAcademies,
-                    });
-                  }
-                }}
-              />
-              {isAcademySpecific && (
-                <Box px={4}>
-                  <InfoTooltip
-                    description={`sur ce diplôme et titre la règle d'intégration est spécifique à l'académie ${academieLabel} (${String(academie ?? num_academie)?.padStart(2, "0")})`}
+                        await onUpdateRule({
+                          _id: idRule,
+                          statut_academies: statusAcademies,
+                        });
+                      }
+                    }}
                   />
-                </Box>
-              )}
-            </Flex>
-          </Flex>
+                  {isAcademySpecific && (
+                    <Box px={4}>
+                      <InfoTooltip
+                        description={`sur ce diplôme et titre la règle d'intégration est spécifique à l'académie ${academieLabel} (${String(academie ?? num_academie)?.padStart(2, "0")})`}
+                      />
+                    </Box>
+                  )}
+                </Flex>
+              </Flex>
+            </>
+          )}
         </Flex>
       </Flex>
     </Box>

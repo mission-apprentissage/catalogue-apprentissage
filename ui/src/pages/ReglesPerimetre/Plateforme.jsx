@@ -7,7 +7,6 @@ import {
   Box,
   Button,
   Center,
-  Checkbox,
   Container,
   Flex,
   FormLabel,
@@ -18,14 +17,12 @@ import {
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import Layout from "../layout/Layout";
 import { setTitle } from "../../common/utils/pageUtils";
-import { FolderLine, FolderOpenLine } from "../../theme/components/icons";
 import { RuleModal } from "./components/RuleModal";
 import { Diplome } from "./components/Diplome";
 import { Headline } from "./components/Headline";
 import useAuth from "../../common/hooks/useAuth";
 import { hasAllAcademiesRight, isUserAdmin } from "../../common/utils/rolesUtils";
 import { ExportButton } from "./components/ExportButton";
-import { CountText } from "./components/CountText";
 import {
   createRule,
   deleteRule,
@@ -36,22 +33,27 @@ import {
 } from "../../common/api/perimetre";
 import { AcademiesSelect } from "./components/AcademiesSelect";
 import { DiplomesAutosuggest } from "./components/DiplomesAutosuggest";
+import { academies } from "../../constants/academies";
+import { CONDITIONS } from "../../constants/conditionsIntegration";
 
 export default ({ plateforme }) => {
   const [user] = useAuth();
   const [niveaux, setNiveaux] = useState([]);
   const [rules, setRules] = useState([]);
-  const [totalCount, setTotalCount] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [currentRule, setCurrentRule] = useState(null);
   const [currentAcademie, setCurrentAcademie] = useState(null);
-  const [seeAllRules, setSeeAllRules] = useState(true);
   const [niveauxCount, setNiveauxCount] = useState({});
-  const [selectedNiveauIndex, setSelectedNiveauIndex] = useState(null);
   const [selectedDiplome, setSelectedDiplome] = useState(null);
 
-  const title = `Règles d'intégration des formations à la plateforme ${plateforme}`;
+  const title = currentAcademie
+    ? `Règles d’intégration des formations à la plateforme ${plateforme} – Académie de ${academies[String(currentAcademie)?.padStart(2, "0")]?.nom_academie}`
+    : `Règles d'intégration des formations à la plateforme ${plateforme}`;
   setTitle(title);
+
+  const subtitle = currentAcademie
+    ? "Certains types de diplôme sont définis au national comme pouvant être publiés sur Affelnet-lycée, selon les pratiques de l’académie. Cette page vous permet de confirmer ou non l’inclusion dans le périmètre pour votre académie. En l’absence de confirmation, aucune de ces offres ne sont publiables, et elles sont maintenues dans le statut “À publier sous conditions”."
+    : `Déterminer les conditions d'intégrations des formations en apprentissage du Catalogue (Carif-Oref) sur la plateforme ${plateforme}`;
 
   const { data: niveauxData } = useNiveaux({ plateforme });
 
@@ -75,12 +77,8 @@ export default ({ plateforme }) => {
                 regles: filteredRegles,
               };
             }),
-            // .sort((diplomeA, diplomeB) => diplomeB.count - diplomeA.count),
           };
         });
-
-        const total = niveauxData.reduce((acc, { niveau }) => acc + niveau.count, 0);
-        setTotalCount(total);
 
         const obsoleteRegles = regles.filter(({ _id }) => !reglesInTree.includes(_id));
         if (obsoleteRegles.length > 0) {
@@ -100,7 +98,6 @@ export default ({ plateforme }) => {
 
     return () => {
       abortController.abort();
-      setTotalCount(0);
       setNiveaux([]);
       setRules([]);
     };
@@ -261,16 +258,8 @@ export default ({ plateforme }) => {
     };
   }, [currentAcademie, niveaux, plateforme]);
 
-  const onAcademieChange = useCallback(
-    (academie) => {
-      setSeeAllRules(!(academie || academie !== currentAcademie));
-      setCurrentAcademie(academie);
-    },
-    [currentAcademie]
-  );
-
-  const onSeeAllRuleeChange = useCallback((e) => {
-    setSeeAllRules(!!e.target.checked);
+  const onAcademieChange = useCallback((academie) => {
+    setCurrentAcademie(academie);
   }, []);
 
   return (
@@ -288,12 +277,13 @@ export default ({ plateforme }) => {
             {title}
           </Text>
           <Text fontWeight={700} pb={4}>
-            Déterminer les conditions d'intégrations des formations en apprentissage du Catalogue (Carif-Oref) sur la
-            plateforme {plateforme}
+            {subtitle}
           </Text>
           <Box mt={4}>
             {niveaux.length === 0 && (
-              <Center h="70vh">
+              <Center h="70vh" display="flex" flexDirection="column">
+                <Text>Le chargement de cette page peut durer 30 secondes environ. Veuillez patienter…</Text>
+                <br />
                 <Spinner />
               </Center>
             )}
@@ -334,94 +324,76 @@ export default ({ plateforme }) => {
                     </Button>
                   )}
                 </Flex>
-                <CountText
-                  py={4}
-                  totalFormationsCount={totalCount}
-                  niveaux={niveaux}
-                  plateforme={plateforme}
-                  academie={currentAcademie}
-                />
-                <Box py={4}>
-                  <DiplomesAutosuggest
-                    plateforme={plateforme}
-                    onSuggestionSelected={({ suggestion }) => {
-                      const index = niveaux.findIndex(({ niveau }) => niveau.value === suggestion.niveau);
-                      setSelectedNiveauIndex(index);
-                      setTimeout(() => setSelectedDiplome(suggestion.value), 800);
-                    }}
-                  />
-                </Box>
-                {user && (isUserAdmin(user) || hasAllAcademiesRight(user)) && (
+
+                {!currentAcademie && (
+                  <Box py={4}>
+                    <DiplomesAutosuggest
+                      plateforme={plateforme}
+                      onSuggestionSelected={({ suggestion }) => {
+                        setTimeout(() => setSelectedDiplome(suggestion.value), 400);
+                      }}
+                    />
+                  </Box>
+                )}
+                {!currentAcademie && user && (isUserAdmin(user) || hasAllAcademiesRight(user)) && (
                   <Flex justifyContent={"flex-end"}>
                     <ExportButton plateforme={plateforme} rules={rules} />
                   </Flex>
                 )}
                 <Box minH="70vh">
-                  <Flex alignItems={"center"}>
-                    {currentAcademie && (
-                      <Checkbox isChecked={seeAllRules} w={"auto"} onChange={onSeeAllRuleeChange}>
-                        Voir toutes les règles
-                      </Checkbox>
-                    )}
-                  </Flex>
-                  <br />
-                  <Accordion bg="#FFFFFF" mb={24} index={selectedNiveauIndex} allowToggle>
-                    {niveaux.map(({ niveau, diplomes }, index) => {
-                      return (
-                        <AccordionItem border="none" key={niveau.value} mt={6}>
-                          {({ isExpanded }) => (
-                            <>
-                              <AccordionButton
-                                borderBottom={"1px solid"}
-                                borderColor={"grey.300"}
-                                px={0}
-                                onClick={() =>
-                                  setSelectedNiveauIndex((prevIndex) => (prevIndex !== index ? index : null))
-                                }
-                              >
-                                <Flex alignItems="center" w={"full"} justifyContent={"space-between"}>
-                                  <Flex alignItems="center">
-                                    {isExpanded ? (
-                                      <FolderOpenLine color="bluefrance" mr={4} boxSize={5} />
-                                    ) : (
-                                      <FolderLine color="bluefrance" mr={4} boxSize={5} />
-                                    )}
-                                    <Text textStyle={"h4"} textAlign={"start"}>
-                                      Niveau {niveau.value}
+                  <Accordion bg="#FFFFFF" mb={24} index={niveaux.map((value, index) => index)} multiple>
+                    {niveaux
+                      .filter(({ diplomes }) =>
+                        currentAcademie
+                          ? !!diplomes.find(
+                              ({ regles }) =>
+                                !!regles.find((regle) => regle.condition_integration === CONDITIONS.PEUT_INTEGRER)
+                            )
+                          : true
+                      )
+                      .map(({ niveau, diplomes }) => {
+                        return (
+                          <AccordionItem border="none" key={niveau.value} mt={6}>
+                            {({ isExpanded }) => (
+                              <>
+                                <AccordionButton borderBottom={"1px solid"} borderColor={"grey.300"} px={0}>
+                                  <Flex alignItems="center" w={"full"} justifyContent={"space-between"}>
+                                    <Flex alignItems="center">
+                                      <Text textStyle={"h4"} textAlign={"start"}>
+                                        Niveau {niveau.value}
+                                      </Text>
+                                    </Flex>
+                                    <Text textStyle={"rf-text"} textAlign={"end"}>
+                                      {niveauxCount[niveau.value]?.nbRules ?? "-"} diplômes et titres doivent ou peuvent
+                                      intégrer la plateforme ce qui représente{" "}
+                                      {niveauxCount[niveau.value]?.nbFormations ?? "-"} formations
                                     </Text>
                                   </Flex>
-                                  <Text textStyle={"rf-text"} textAlign={"end"}>
-                                    {niveauxCount[niveau.value]?.nbRules ?? "-"} diplômes et titres doivent ou peuvent
-                                    intégrer la plateforme ce qui représente{" "}
-                                    {niveauxCount[niveau.value]?.nbFormations ?? "-"} formations
-                                  </Text>
-                                </Flex>
-                              </AccordionButton>
-                              <AccordionPanel p={0} bg="#FFFFFF" mb={16}>
-                                <Headline plateforme={plateforme} />
-                                {diplomes.map((diplome, index) => (
-                                  <Diplome
-                                    bg={index % 2 === 0 ? "#fff" : "grey.100"}
-                                    key={`${niveau.value}-${diplome.value}`}
-                                    plateforme={plateforme}
-                                    niveau={niveau.value}
-                                    diplome={diplome}
-                                    onShowRule={onShowRule}
-                                    onCreateRule={onCreateRule}
-                                    onUpdateRule={onUpdateRule}
-                                    onDeleteRule={onDeleteRule}
-                                    isExpanded={isExpanded}
-                                    academie={currentAcademie}
-                                    seeAllRules={seeAllRules}
-                                    isSelected={selectedDiplome === diplome.value}
-                                  />
-                                ))}
-                              </AccordionPanel>
-                            </>
-                          )}
-                        </AccordionItem>
-                      );
-                    })}
+                                </AccordionButton>
+                                <AccordionPanel p={0} bg="#FFFFFF" mb={16}>
+                                  <Headline plateforme={plateforme} academie={currentAcademie} />
+                                  {diplomes.map((diplome, index) => (
+                                    <Diplome
+                                      bg={index % 2 === 0 ? "#fff" : "grey.100"}
+                                      key={`${niveau.value}-${diplome.value}`}
+                                      plateforme={plateforme}
+                                      niveau={niveau.value}
+                                      diplome={diplome}
+                                      onShowRule={onShowRule}
+                                      onCreateRule={onCreateRule}
+                                      onUpdateRule={onUpdateRule}
+                                      onDeleteRule={onDeleteRule}
+                                      isExpanded={isExpanded}
+                                      academie={currentAcademie}
+                                      isSelected={selectedDiplome === diplome.value}
+                                    />
+                                  ))}
+                                </AccordionPanel>
+                              </>
+                            )}
+                          </AccordionItem>
+                        );
+                      })}
                   </Accordion>
                 </Box>
               </>
