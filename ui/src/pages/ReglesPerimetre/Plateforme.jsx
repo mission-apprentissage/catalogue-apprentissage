@@ -363,11 +363,13 @@ export default ({ plateforme }) => {
                                         Niveau {niveau.value}
                                       </Text>
                                     </Flex>
-                                    <Text textStyle={"rf-text"} textAlign={"end"}>
-                                      {niveauxCount[niveau.value]?.nbRules ?? "-"} diplômes et titres doivent ou peuvent
-                                      intégrer la plateforme ce qui représente{" "}
-                                      {niveauxCount[niveau.value]?.nbFormations ?? "-"} formations
-                                    </Text>
+                                    {!currentAcademie && (
+                                      <Text textStyle={"rf-text"} textAlign={"end"}>
+                                        {niveauxCount[niveau.value]?.nbRules ?? "-"} diplômes et titres doivent ou
+                                        peuvent intégrer la plateforme ce qui représente{" "}
+                                        {niveauxCount[niveau.value]?.nbFormations ?? "-"} formations
+                                      </Text>
+                                    )}
                                   </Flex>
                                 </AccordionButton>
                                 <AccordionPanel p={0} bg="#FFFFFF" mb={16}>
