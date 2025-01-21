@@ -167,7 +167,7 @@ export const Line = ({
           {(!isConditionChangeDisabled || !isStatusChangeDisabled) && (
             <>
               <Flex minW={12} mr={8}>
-                <Link onClick={(e) => e.stopPropagation()} href={lineLink}>
+                <Link onClick={(e) => e.stopPropagation()} href={lineLink} textDecoration={"underline"}>
                   {lineCount}
                 </Link>{" "}
               </Flex>
