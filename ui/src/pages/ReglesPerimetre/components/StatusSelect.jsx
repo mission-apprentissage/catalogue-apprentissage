@@ -23,6 +23,13 @@ export const STATUS_LIST = {
   },
 };
 
+const getDisplayedStatus = ({ plateforme, status }) => {
+  if (status === COMMON_STATUS.NON_PUBLIABLE_EN_LETAT) {
+    return `hors périmètre ${plateforme}`;
+  }
+  return status;
+};
+
 export const StatusSelect = ({
   plateforme,
   academie,
@@ -65,7 +72,7 @@ export const StatusSelect = ({
     >
       {statusList?.map((status) => (
         <option value={status} disabled={academie ? !academieStatusList.includes(status) : false} key={status}>
-          {status}
+          {getDisplayedStatus({ plateforme, status })}
         </option>
       ))}
     </Select>

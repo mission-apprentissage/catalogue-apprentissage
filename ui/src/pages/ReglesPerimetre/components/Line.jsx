@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Box, Flex, Link, Text } from "@chakra-ui/react";
+import { Box, Flex, Link, ListItem, Text, UnorderedList } from "@chakra-ui/react";
 import { ArrowRightDownLine } from "../../../theme/components/icons";
 import { CONDITIONS } from "../../../constants/conditionsIntegration";
 import { academies } from "../../../constants/academies";
@@ -10,6 +10,7 @@ import { ActionsSelect } from "./ActionsSelect";
 import { STATUS_LIST, StatusSelect } from "./StatusSelect";
 import { annees } from "../../../constants/annees";
 import { DateContext } from "../../../DateContext";
+import { sortDescending } from "../../../common/utils/historyUtils";
 
 export const Line = ({
   showIcon,
@@ -62,7 +63,7 @@ export const Line = ({
     ({ num_academie: num }) => Number(num) === Number(academie ?? num_academie)
   )?.nom_academie;
 
-  const isAcademySpecific = (num_academie && String(num_academie) === academie) || !!statut_academies?.[academie];
+  // const isAcademySpecific = (num_academie && String(num_academie) === academie) || !!statut_academies?.[academie];
 
   // const hasCriteria = !!JSON.parse(regle_complementaire_query ?? "[]").filter((query) => !!query.value.length).length;
 
@@ -135,6 +136,21 @@ export const Line = ({
     sessionStartDate,
     sessionEndDate,
   ]);
+
+  const updates_history = rule?.updates_history ?? [];
+
+  const statusAcademieUpdatesHistory = updates_history
+    .filter(
+      (update) =>
+        (update.from.statut_academies || update.to.statut_academies) &&
+        (Object.keys(update.from.statut_academies ?? {}).includes(academie) ||
+          Object.keys(update.to.statut_academies ?? {}).includes(academie))
+    )
+    ?.sort(sortDescending);
+
+  statusAcademieUpdatesHistory?.length && console.log({ statusAcademieUpdatesHistory });
+
+  const lastStatutAcademiesUpdate = statusAcademieUpdatesHistory?.[0];
 
   return (
     <Box
@@ -247,10 +263,29 @@ export const Line = ({
                       }
                     }}
                   />
-                  {isAcademySpecific && (
+                  {!!statusAcademieUpdatesHistory?.length && (
                     <Box px={4}>
                       <InfoTooltip
-                        description={`sur ce diplôme et titre la règle d'intégration est spécifique à l'académie ${academieLabel} (${String(academie ?? num_academie)?.padStart(2, "0")})`}
+                        description={
+                          <UnorderedList ml={4}>
+                            {statusAcademieUpdatesHistory.map((history, index) => (
+                              <ListItem key={index}>
+                                <Text as={"b"}>
+                                  {history?.from?.statut_academies?.[academie] ?? "À définir pour cette académie"}
+                                </Text>
+                                {" ➔ "}
+                                <Text as={"b"}>
+                                  {history?.to?.statut_academies?.[academie] ?? "À définir pour cette académie"}
+                                </Text>
+                                <br />
+                                <Text variant={"slight"} as={"span"}>
+                                  Modifié {history?.to?.last_update_who && <>par {history?.to?.last_update_who}, </>}le{" "}
+                                  {new Date(history?.updated_at)?.toLocaleDateString("fr-FR")}
+                                </Text>
+                              </ListItem>
+                            ))}
+                          </UnorderedList>
+                        }
                       />
                     </Box>
                   )}

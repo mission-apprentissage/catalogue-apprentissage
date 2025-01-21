@@ -29,9 +29,9 @@ const diffReglePerimetre = (previousReglePerimetreP, nextReglePerimetreP) => {
   }, {});
 
   return {
-    updates: diff,
-    keys: Object.keys(diff),
-    length: Object.keys(diff).length,
+    updates: { ...diff, last_update_who: nextReglePerimetreP.last_update_who },
+    keys: Object.keys({ ...diff, last_update_who: nextReglePerimetreP.last_update_who }),
+    length: Object.keys({ ...diff, last_update_who: nextReglePerimetreP.last_update_who }).length,
   };
 };
 
