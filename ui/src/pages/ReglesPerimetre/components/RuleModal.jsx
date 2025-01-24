@@ -257,7 +257,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
   let linkFormations = `/recherche/formations?qb=${encodeURIComponent(JSON.stringify(linkQuery))}`;
 
   if (academie ?? num_academie) {
-    linkFormations += `&nom_academie=%5B"${academies[(academie ?? num_academie)?.padStart(2, "0")].nom_academie}"%5D`;
+    linkFormations += `&nom_academie=%5B"${academies[String(academie ?? num_academie)?.padStart(2, "0")].nom_academie}"%5D`;
   }
 
   if (values.niveau) {
@@ -567,7 +567,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                         {academie && (
                           <Text mt={4}>
                             Le statut sera appliquée pour les formations de l'académie {academieLabel} (
-                            {academie.padStart(2, "0")})
+                            {String(academie).padStart(2, "0")})
                           </Text>
                         )}
                       </Flex>

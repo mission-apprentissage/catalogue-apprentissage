@@ -100,7 +100,7 @@ export const Line = ({
     let linkFormations = `/recherche/formations?qb=${encodeURIComponent(JSON.stringify(linkQuery))}`;
 
     if (academie ?? num_academie) {
-      linkFormations += `&nom_academie=%5B"${academies[(academie ?? num_academie)?.padStart(2, "0")].nom_academie}"%5D`;
+      linkFormations += `&nom_academie=%5B"${academies[String(academie ?? num_academie)?.padStart(2, "0")].nom_academie}"%5D`;
     }
 
     if (niveau) {
@@ -142,9 +142,9 @@ export const Line = ({
   const statusAcademieUpdatesHistory = updates_history
     .filter(
       (update) =>
-        (update.from.statut_academies || update.to.statut_academies) &&
-        (Object.keys(update.from.statut_academies ?? {}).includes(academie) ||
-          Object.keys(update.to.statut_academies ?? {}).includes(academie))
+        (update.from?.statut_academies || update.to?.statut_academies) &&
+        (Object.keys(update.from?.statut_academies ?? {}).includes(academie) ||
+          Object.keys(update.to?.statut_academies ?? {}).includes(academie))
     )
     ?.sort(sortDescending);
 
