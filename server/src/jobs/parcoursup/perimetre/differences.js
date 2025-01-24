@@ -11,11 +11,18 @@ const run = async () => {
         $ne: ["$parcoursup_statut", "$parcoursup_last_statut"],
       },
     },
-    { _id: 0, cle_ministere_educatif: 1, parcoursup_statut: 1, parcoursup_last_statut: 1, parcoursup_id: 1 }
+    {
+      _id: 0,
+      cle_ministere_educatif: 1,
+      parcoursup_statut: 1,
+      parcoursup_last_statut: 1,
+      parcoursup_perimetre: 1,
+      parcoursup_id: 1,
+    }
   ).lean();
 
-  console.table(differences);
-
   logger.info({ type: "job" }, differences);
+
+  console.table(differences);
 };
 module.exports = { run };

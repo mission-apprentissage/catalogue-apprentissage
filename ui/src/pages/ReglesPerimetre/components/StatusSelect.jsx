@@ -11,7 +11,7 @@ export const STATUS_LIST = {
       PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
       PARCOURSUP_STATUS.A_PUBLIER,
     ],
-    affelnet: [AFFELNET_STATUS.A_PUBLIER_VALIDATION],
+    affelnet: [AFFELNET_STATUS.A_DEFINIR, AFFELNET_STATUS.A_PUBLIER_VALIDATION],
   },
   [CONDITIONS.DOIT_INTEGRER]: {
     parcoursup: [PARCOURSUP_STATUS.A_PUBLIER],
@@ -51,17 +51,36 @@ export const StatusSelect = ({
     ),
   ];
 
+  let background = "greendark.300";
+
+  console.log(currentStatus);
+
+  switch (currentStatus) {
+    case AFFELNET_STATUS.A_DEFINIR:
+      background = "#D5DBEF";
+      break;
+    // case COMMON_STATUS.A_PUBLIER:
+    //   background = "greenmedium.300";
+    //   break;
+    case COMMON_STATUS.NON_PUBLIABLE_EN_LETAT:
+      background = "greendark.300";
+      break;
+    case COMMON_STATUS.A_PUBLIER:
+    case AFFELNET_STATUS.A_PUBLIER_VALIDATION:
+    case PARCOURSUP_STATUS.A_PUBLIER_HABILITATION:
+    case PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC:
+    case PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR:
+      background = "orangemedium.300";
+      break;
+    default:
+      break;
+  }
+
   return (
     <Select
       {...rest}
       isDisabled={isDisabled || (statusList?.length <= 1 && !rest.placeholder)}
-      bg={
-        currentStatus && currentStatus === COMMON_STATUS.A_PUBLIER
-          ? "greenmedium.300"
-          : currentStatus && currentStatus !== COMMON_STATUS.NON_PUBLIABLE_EN_LETAT
-            ? "orangemedium.300"
-            : "greendark.300"
-      }
+      bg={background}
       size={size}
       onClick={(e) => {
         e.stopPropagation();

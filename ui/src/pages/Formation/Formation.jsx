@@ -28,7 +28,6 @@ import { _get, _post, _put } from "../../common/httpClient";
 import useAuth from "../../common/hooks/useAuth";
 import { hasAccessTo, hasRightToEditFormation, isUserAdmin } from "../../common/utils/rolesUtils";
 import { buildUpdatesHistory, sortDescending } from "../../common/utils/historyUtils";
-import { isInSession } from "../../common/utils/rulesUtils";
 import { setTitle } from "../../common/utils/pageUtils";
 import { getOpenStreetMapUrl } from "../../common/utils/mapUtils";
 import { DangerBox } from "../../common/components/DangerBox";
@@ -371,7 +370,7 @@ export default () => {
   const [user] = useAuth();
   const hasRightToEdit = hasRightToEditFormation(formation, user);
 
-  const { campagneStartDate, sessionStartDate, sessionEndDate } = useContext(DateContext);
+  const { campagneStartDate } = useContext(DateContext);
 
   const { values, handleSubmit, handleChange, setFieldValue, isSubmitting } = useFormik({
     enableReinitialize: true,
@@ -556,11 +555,11 @@ export default () => {
                   </Box>
                   {hasRightToEdit &&
                     formation.catalogue_published &&
-                    (formation.parcoursup_session || formation.affelnet_session) &&
-                    (![PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT].includes(
-                      formation.parcoursup_statut
-                    ) ||
-                      ![AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT].includes(formation.affelnet_statut)) &&
+                    ((formation.parcoursup_session &&
+                      ![PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT].includes(
+                        formation.parcoursup_statut
+                      )) ||
+                      formation.affelnet_session) /*&& ![AFFELNET_STATUS.A_DEFINIR].includes(formation.affelnet_statut)*/ &&
                     hasAccessTo(user, "page_formation/gestion_publication") && (
                       <PublishModalButton formation={formation} setFormation={setFormation} user={user} />
                     )}

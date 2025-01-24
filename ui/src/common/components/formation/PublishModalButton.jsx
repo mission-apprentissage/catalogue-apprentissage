@@ -14,19 +14,33 @@ export const PublishModalButton = ({ formation, setFormation }) => {
   let disabled = false;
 
   switch (true) {
-    case formation.affelnet_statut === AFFELNET_STATUS.A_PUBLIER_VALIDATION &&
+    case formation.affelnet_statut === AFFELNET_STATUS.A_DEFINIR &&
       hasAccessTo(user, "page_perimetre/affelnet") &&
       hasAcademyRight(user, formation.num_academie):
       title = "La publication Affelnet nécessite un réglage des règles de périmètre.";
       disabled = true;
       break;
-    case formation.affelnet_statut === AFFELNET_STATUS.A_PUBLIER_VALIDATION &&
+    case formation.affelnet_statut === AFFELNET_STATUS.A_DEFINIR &&
       !hasAccessTo(user, "page_perimetre/affelnet") &&
       hasAcademyRight(user, formation.num_academie):
       title =
         "La publication Affelnet nécessite un réglage des règles de périmètre par le chef de service ou un délégué";
       disabled = true;
       break;
+
+    // case formation.parcoursup_statut === PARCOURSUP_STATUS.A_DEFINIR &&
+    //   hasAccessTo(user, "page_perimetre/parcoursup") &&
+    //   hasAcademyRight(user, formation.num_academie):
+    //   title = "La publication Parcoursup nécessite un réglage des règles de périmètre.";
+    //   disabled = true;
+    //   break;
+    // case formation.parcoursup_statut === PARCOURSUP_STATUS.A_DEFINIR &&
+    //   !hasAccessTo(user, "page_perimetre/parcoursup") &&
+    //   hasAcademyRight(user, formation.num_academie):
+    //   title =
+    //     "La publication Parcoursup nécessite un réglage des règles de périmètre par le chef de service ou un délégué";
+    //   disabled = true;
+    //   break;
 
     case !formation.uai_formation || !formation.uai_formation.length || !formation.uai_formation_valide:
       title = "Vous devez éditer l'UAI du lieu de la formation avant de pouvoir accéder à la gestion des publications";

@@ -148,10 +148,6 @@ export const Line = ({
     )
     ?.sort(sortDescending);
 
-  statusAcademieUpdatesHistory?.length && console.log({ statusAcademieUpdatesHistory });
-
-  const lastStatutAcademiesUpdate = statusAcademieUpdatesHistory?.[0];
-
   return (
     <Box
       data-testid="line"

@@ -42,40 +42,50 @@ const run = async () => {
 
   const formationsInPerimetre = new Set();
 
+  const statutsPublicationInterdite = [];
+  const statutsPublicationManuelle = [
+    PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
+    PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
+    PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+  ];
+  const statusPublicationAutomatique = [PARCOURSUP_STATUS.A_PUBLIER];
+
   // apply national rules
-  const rules = await ReglePerimetre.find({
+  const reglesNationales = await ReglePerimetre.find({
     plateforme: "parcoursup",
     statut: {
-      $in: [
-        PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
-        PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
-        PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
-        PARCOURSUP_STATUS.A_PUBLIER,
-      ],
+      $in: [...statutsPublicationManuelle, ...statusPublicationAutomatique],
     },
     is_deleted: { $ne: true },
   }).lean();
 
-  rules.length > 0 &&
+  reglesNationales.length > 0 &&
     (
       await Formation.find({
         ...filterReglement,
 
-        $or: rules.map((rule) => getQueryFromRule(rule, false)),
+        $or: reglesNationales.map((rule) => getQueryFromRule(rule, false)),
       }).select({ cle_ministere_educatif: 1 })
     ).forEach(({ cle_ministere_educatif }) => formationsInPerimetre.add(cle_ministere_educatif));
 
   // apply academy rules
-  const academieRules = rules.filter(
-    ({ statut_academies }) => statut_academies && Object.keys(statut_academies).length > 0
-  );
+  const reglesAcademique = await ReglePerimetre.find({
+    plateforme: "parcoursup",
+    statut: {
+      $in: [...statutsPublicationInterdite, ...statutsPublicationManuelle, ...statusPublicationAutomatique],
+    },
+    is_deleted: { $ne: true },
+    "statut_academies.0": { $exists: true },
+  }).lean();
 
-  await asyncForEach(academieRules, async (rule) => {
+  await asyncForEach(reglesAcademique, async (rule) => {
     await asyncForEach(Object.entries(rule.statut_academies), async ([num_academie, status]) => {
       (
         await Formation.find({
           ...filterReglement,
+
           num_academie,
+
           ...getQueryFromRule(rule, false),
         }).select({ cle_ministere_educatif: 1 })
       ).forEach(({ cle_ministere_educatif }) =>

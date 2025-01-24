@@ -5,6 +5,7 @@ const Boom = require("boom");
 const { ReglePerimetre } = require("../../common/models");
 const { diffReglePerimetre, buildUpdatesHistory } = require("../../logic/common/utils/diffUtils");
 const { sanitize } = require("../../common/utils/sanitizeUtils");
+const { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } = require("../../constants/status");
 
 /**
  * Schema for validation
@@ -18,15 +19,15 @@ const niveauSchema = Joi.string().valid(
   "7 (Master, titre ingénieur...)"
 );
 const statutSchema = Joi.string().valid(
-  "non publiable en l'état",
-  "publié",
-  "non publié",
-  "à publier (sous condition habilitation)",
-  "à publier (vérifier accès direct postbac)",
-  "à publier (soumis à validation Recteur)",
-  "à publier (soumis à validation)",
-  "à publier",
-  "prêt pour intégration"
+  COMMON_STATUS.NON_PUBLIABLE_EN_LETAT,
+  COMMON_STATUS.PUBLIE,
+  COMMON_STATUS.NON_PUBLIE,
+  PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
+  PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
+  PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+  AFFELNET_STATUS.A_PUBLIER_VALIDATION,
+  AFFELNET_STATUS.A_DEFINIR,
+  COMMON_STATUS.A_PUBLIER
 );
 
 const conditionSchema = Joi.string().valid("doit intégrer", "peut intégrer", "ne doit pas intégrer");

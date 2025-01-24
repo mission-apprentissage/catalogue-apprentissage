@@ -17,10 +17,8 @@ const run = async () => {
 
   const filterReglement = {
     published: true,
+    $or: [{ catalogue_published: true }, { force_published: true }],
     $and: [
-      {
-        $or: [{ catalogue_published: true }, { force_published: true }],
-      },
       {
         $or: [
           {
@@ -56,7 +54,7 @@ const run = async () => {
   logger.debug({ type: "job" }, "Etape 0.");
   await Formation.updateMany({ affelnet_id: { $exists: false } }, { $set: { affelnet_id: null } });
 
-  /** 1. Application de la réglementation : réinitialisation des étiquettes pour les formations qui sortent du périmètre quelque soit le statut (sauf publié pour le moment) */
+  /** 1. Application de la réglementation : réinitialisation des étiquettes pour les formations qui sortent du périmètre quelque soit le statut (sauf publié et non publié pour le moment) */
   logger.debug({ type: "job" }, "Etape 1. Vérification des aspects réglementaires");
   await Formation.updateMany(
     {
@@ -103,49 +101,86 @@ const run = async () => {
     { $set: { affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT } }
   );
 
-  /** 2. On réinitialise les formations "à publier ..." à "non publiable en l'état" pour permettre le recalcule du périmètre */
-  logger.debug({ type: "job" }, "Etape 2. Sauvegarde statut précédent et réinitialisation");
+  /** 2. On sauvegarde le précédent statut */
+  logger.debug({ type: "job" }, "Etape 2. Sauvegarde statut précédent");
 
   await Formation.updateMany({}, [{ $set: { affelnet_last_statut: "$affelnet_statut" } }]);
 
-  await Formation.updateMany(
-    {
-      affelnet_statut: {
-        $in: [AFFELNET_STATUS.A_PUBLIER_VALIDATION, AFFELNET_STATUS.A_PUBLIER, AFFELNET_STATUS.PRET_POUR_INTEGRATION],
-      },
-    },
-    { $set: { affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT } }
-  );
+  /** 3. On réinitialise les statuts des formations our permettre le recalcule du périmètre */
+  logger.debug({ type: "job" }, "Etape 3. Réinitialisation des statuts");
 
-  /** 3. On applique les règles de périmètres pour statut "à publier avec action attendue" uniquement sur les formations "non publiable en l'état" pour ne pas écraser les actions menées par les utilisateurs */
-  logger.debug({ type: "job" }, "Etape 3. Application des règles avec action attendue");
-
-  const aPublierSousConditions = await ReglePerimetre.find({
-    plateforme: "affelnet",
-    statut: {
-      $in: [AFFELNET_STATUS.A_PUBLIER_VALIDATION],
-    },
-    is_deleted: { $ne: true },
-  }).lean();
-
-  const filterAPublierSousConditions = {
+  const filterStatus = {
     affelnet_statut: {
       $in: [
         AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
-        AFFELNET_STATUS.A_PUBLIER,
+        AFFELNET_STATUS.A_DEFINIR,
         AFFELNET_STATUS.A_PUBLIER_VALIDATION,
+        AFFELNET_STATUS.A_PUBLIER,
         AFFELNET_STATUS.PRET_POUR_INTEGRATION,
       ],
     },
   };
 
-  aPublierSousConditions.length > 0 &&
-    (await asyncForEach(aPublierSousConditions, async (rule) => {
+  await Formation.updateMany(
+    {
+      ...filterStatus,
+    },
+    { $set: { affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT } }
+  );
+
+  /** 4. On applique les règles de périmètres. */
+  logger.debug({ type: "job" }, "Etape 4. Application des règles");
+
+  // Les règles pour lesquelles on ne procède pas à des publications
+  const statutsPublicationInterdite = [AFFELNET_STATUS.A_DEFINIR];
+
+  const reglesPublicationInterdite = await ReglePerimetre.find({
+    plateforme: "affelnet",
+    statut: {
+      $in: statutsPublicationInterdite,
+    },
+    is_deleted: { $ne: true },
+  }).lean();
+
+  reglesPublicationInterdite.length > 0 &&
+    (await asyncForEach(reglesPublicationInterdite, async (rule) => {
       await Formation.updateMany(
         {
           ...filterReglement,
           ...filterSessionDate,
-          ...filterAPublierSousConditions,
+          ...filterStatus,
+
+          ...getQueryFromRule(rule, true),
+        },
+        [
+          {
+            $set: {
+              last_update_at: Date.now(),
+              affelnet_statut: rule.statut,
+            },
+          },
+        ]
+      );
+    }));
+
+  // Les règles pour lesquelles on ne procède pas à des publications automatiques, mais qui peuvent être publiées par les instructeurs
+  const statutsPublicationManuelle = [AFFELNET_STATUS.A_PUBLIER_VALIDATION];
+
+  const reglesPublicationManuelle = await ReglePerimetre.find({
+    plateforme: "affelnet",
+    statut: {
+      $in: statutsPublicationManuelle,
+    },
+    is_deleted: { $ne: true },
+  }).lean();
+
+  reglesPublicationManuelle.length > 0 &&
+    (await asyncForEach(reglesPublicationManuelle, async (rule) => {
+      await Formation.updateMany(
+        {
+          ...filterReglement,
+          ...filterSessionDate,
+          ...filterStatus,
 
           ...getQueryFromRule(rule, true),
         },
@@ -156,17 +191,14 @@ const run = async () => {
               affelnet_statut: {
                 $cond: {
                   if: {
-                    $and: [
-                      // {
-                      //   $eq: ["$affelnet_id", null],
-                      // },
+                    $or: [
                       {
-                        $ne: ["$affelnet_last_statut", AFFELNET_STATUS.PRET_POUR_INTEGRATION],
+                        $eq: ["$affelnet_last_statut", AFFELNET_STATUS.PRET_POUR_INTEGRATION],
                       },
                     ],
                   },
-                  then: rule.statut,
-                  else: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
+                  then: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
+                  else: rule.statut,
                 },
               },
             },
@@ -175,80 +207,59 @@ const run = async () => {
       );
     }));
 
-  /** 4. On applique les règles de périmètre pour statut "à publier" pour les formations répondant aux règles de publication sur Affelnet. */
-  logger.debug({ type: "job" }, "Etape 4. Application des règles sans action attendue");
+  // Les règles pour lesquelles on procède à des publications automatiques et qui peuvent être publiées par les instructeurs
+  const statusPublicationAutomatique = [AFFELNET_STATUS.A_PUBLIER];
 
-  const aPublierRules = await ReglePerimetre.find({
+  const reglesPublicationAutomatique = await ReglePerimetre.find({
     plateforme: "affelnet",
     statut: {
-      $in: [AFFELNET_STATUS.A_PUBLIER, AFFELNET_STATUS.PRET_POUR_INTEGRATION],
+      $in: statusPublicationAutomatique,
     },
     is_deleted: { $ne: true },
   }).lean();
 
-  const filterAPublier = {
-    affelnet_statut: {
-      $in: [
-        AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
-        AFFELNET_STATUS.A_PUBLIER,
-        AFFELNET_STATUS.A_PUBLIER_VALIDATION,
-        AFFELNET_STATUS.PRET_POUR_INTEGRATION,
-      ],
-    },
-  };
-
-  if (aPublierRules.length > 0) {
-    await Formation.updateMany(
-      {
-        ...filterReglement,
-        ...filterSessionDate,
-        ...filterAPublier,
-
-        $or: aPublierRules.map((rule) => getQueryFromRule(rule, true)),
-      },
-      [
+  reglesPublicationAutomatique.length > 0 &&
+    (await asyncForEach(reglesPublicationAutomatique, async (rule) => {
+      await Formation.updateMany(
         {
-          $set: {
-            last_update_at: Date.now(),
-            affelnet_statut: {
-              $cond: {
-                if: {
-                  $and: [
-                    {
-                      $eq: ["$affelnet_id", null],
-                    },
-                    {
-                      $ne: ["$affelnet_last_statut", AFFELNET_STATUS.PRET_POUR_INTEGRATION],
-                    },
-                  ],
+          ...filterReglement,
+          ...filterSessionDate,
+          ...filterStatus,
+
+          $or: reglesPublicationAutomatique.map((rule) => getQueryFromRule(rule, true)),
+        },
+        [
+          {
+            $set: {
+              last_update_at: Date.now(),
+              affelnet_statut: {
+                $cond: {
+                  if: {
+                    $or: [
+                      {
+                        $ne: ["$affelnet_id", null],
+                      },
+                      {
+                        $eq: ["$affelnet_last_statut", AFFELNET_STATUS.PRET_POUR_INTEGRATION],
+                      },
+                    ],
+                  },
+                  then: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
+                  else: rule.statut,
                 },
-                then: AFFELNET_STATUS.A_PUBLIER,
-                else: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
               },
             },
           },
-        },
-      ]
-    );
-  }
+        ]
+      );
+    }));
 
-  /** 5. On applique les règles des académies */
-  logger.debug({ type: "job" }, "Etape 5. Application des règles académiques");
-
-  const academieRules = [...aPublierSousConditions].filter(
-    ({ statut_academies }) => statut_academies && Object.keys(statut_academies).length > 0
-  );
-
-  const filterAcademie = {
-    affelnet_statut: {
-      $in: [
-        AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
-        AFFELNET_STATUS.A_PUBLIER_VALIDATION,
-        AFFELNET_STATUS.A_PUBLIER,
-        AFFELNET_STATUS.PRET_POUR_INTEGRATION,
-      ],
-    },
-  };
+  // Les règles des académies
+  const academieRules = [
+    ...reglesPublicationInterdite,
+    ...reglesPublicationManuelle,
+    ...reglesPublicationAutomatique,
+  ].filter(({ statut_academies }) => statut_academies && Object.keys(statut_academies).length > 0);
 
   await asyncForEach(academieRules, async (rule) => {
     await asyncForEach(Object.entries(rule.statut_academies), async ([num_academie, status]) => {
@@ -256,7 +267,7 @@ const run = async () => {
         {
           ...filterReglement,
           ...filterSessionDate,
-          ...filterAcademie,
+          ...filterStatus,
 
           num_academie,
           ...getQueryFromRule(rule, true),
@@ -268,20 +279,17 @@ const run = async () => {
               affelnet_statut: {
                 $cond: {
                   if: {
-                    $and: [
+                    $or: [
                       {
-                        $eq: ["$affelnet_id", null],
+                        $ne: ["$affelnet_id", null],
                       },
                       {
-                        $ne: ["$affelnet_last_statut", AFFELNET_STATUS.PRET_POUR_INTEGRATION],
+                        $eq: ["$affelnet_last_statut", AFFELNET_STATUS.PRET_POUR_INTEGRATION],
                       },
                     ],
                   },
-                  then: status,
-                  else:
-                    status === AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT
-                      ? AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT
-                      : AFFELNET_STATUS.PRET_POUR_INTEGRATION,
+                  then: statusPublicationAutomatique.includes(status) ? AFFELNET_STATUS.PRET_POUR_INTEGRATION : status,
+                  else: status,
                 },
               },
             },
@@ -291,9 +299,9 @@ const run = async () => {
     });
   });
 
-  /** 6. Vérification de la date de publication */
-  logger.debug({ type: "job" }, "Etape 6. Vérification de la date de publication");
-  /** 6a. On s'assure que les dates de publication soient définies pour les formations publiées */
+  /** 5. Vérification de la date de publication */
+  logger.debug({ type: "job" }, "Etape 5. Vérification de la date de publication");
+  /** 5a. On s'assure que les dates de publication soient définies pour les formations publiées */
   await Formation.updateMany(
     {
       affelnet_published_date: null,
@@ -302,7 +310,7 @@ const run = async () => {
     { $set: { affelnet_published_date: new Date() } }
   );
 
-  /** 6b. On s'assure que les dates de publication ne soient pas définies pour les formations non publiées */
+  /** 5b. On s'assure que les dates de publication ne soient pas définies pour les formations non publiées */
   await Formation.updateMany(
     {
       affelnet_published_date: { $ne: null },
@@ -311,8 +319,8 @@ const run = async () => {
     { $set: { affelnet_published_date: null } }
   );
 
-  /** 7. On met à jour l'historique des statuts. */
-  logger.debug({ type: "job" }, "Etape 7. Mise à jour de l'historique");
+  /** 6. On met à jour l'historique des statuts. */
+  logger.debug({ type: "job" }, "Etape 6. Mise à jour de l'historique");
   await updateManyTagsHistory("affelnet_statut");
 };
 

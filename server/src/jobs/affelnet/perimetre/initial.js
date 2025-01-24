@@ -1,12 +1,7 @@
 const logger = require("../../../common/logger");
 const { Formation, ReglePerimetre } = require("../../../common/models");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
-const {
-  getQueryFromRule,
-  getSessionStartDate,
-  getSessionEndDate,
-  getSessionDateRules,
-} = require("../../../common/utils/rulesUtils");
+const { getQueryFromRule, getSessionDateRules } = require("../../../common/utils/rulesUtils");
 const { AFFELNET_STATUS } = require("../../../constants/status");
 
 const run = async () => {
@@ -55,85 +50,120 @@ const run = async () => {
     { $set: { affelnet_statut_initial: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT } }
   );
 
-  /** 2. On applique les règles de périmètres pour statut "à publier avec action attendue" uniquement sur les formations "non publiable en l'état" */
+  /** 2. On applique les règles de périmètres */
   logger.debug({ type: "job" }, "Etape 2.");
 
-  const aPublierSoumisAValidationRules = await ReglePerimetre.find({
-    plateforme: "affelnet",
-    statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
-    is_deleted: { $ne: true },
-  }).lean();
-
-  const filterAPublierSoumisAValidation = {
-    affelnet_statut_initial: {
-      $in: [AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT, AFFELNET_STATUS.A_PUBLIER_VALIDATION, AFFELNET_STATUS.A_PUBLIER],
-    },
-  };
-
-  if (aPublierSoumisAValidationRules.length > 0) {
-    await Formation.updateMany(
-      {
-        ...filterReglement,
-        ...filterSessionDate,
-        ...filterAPublierSoumisAValidation,
-
-        $or: aPublierSoumisAValidationRules.map((rule) => getQueryFromRule(rule, true)),
-      },
-      [
-        {
-          $set: {
-            affelnet_statut_initial: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
-          },
-        },
-      ]
-    );
-  }
-
-  /** 3. On applique les règles de périmètre pour statut "à publier" pour les formations répondant aux règles de publication sur Parcoursup. */
-  logger.debug({ type: "job" }, "Etape 3.");
-
-  const aPublierRules = await ReglePerimetre.find({
-    plateforme: "affelnet",
-    statut: AFFELNET_STATUS.A_PUBLIER,
-    is_deleted: { $ne: true },
-  }).lean();
-
-  const filterAPublier = {
-    affelnet_statut_initial: {
-      $in: [AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT, AFFELNET_STATUS.A_PUBLIER_VALIDATION, AFFELNET_STATUS.A_PUBLIER],
-    },
-  };
-
-  if (aPublierRules.length > 0) {
-    await Formation.updateMany(
-      {
-        ...filterReglement,
-        ...filterSessionDate,
-        ...filterAPublier,
-        $or: aPublierRules.map((rule) => getQueryFromRule(rule, true)),
-      },
-      [
-        {
-          $set: {
-            affelnet_statut_initial: AFFELNET_STATUS.A_PUBLIER,
-          },
-        },
-      ]
-    );
-  }
-
-  /** 4. On applique les règles des académies */
-  logger.debug({ type: "job" }, "Etape 4.");
-
-  const academieRules = [...aPublierSoumisAValidationRules, ...aPublierRules].filter(
-    ({ statut_academies }) => statut_academies && Object.keys(statut_academies).length > 0
-  );
-
-  const filterAcademie = {
+  const filterStatus = {
     affelnet_statut: {
-      $in: [AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT, AFFELNET_STATUS.A_PUBLIER_VALIDATION, AFFELNET_STATUS.A_PUBLIER],
+      $in: [
+        AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
+        AFFELNET_STATUS.A_DEFINIR,
+        AFFELNET_STATUS.A_PUBLIER_VALIDATION,
+        AFFELNET_STATUS.A_PUBLIER,
+        AFFELNET_STATUS.PRET_POUR_INTEGRATION,
+      ],
     },
   };
+
+  // Les règles pour lesquelles on ne procède pas à des publications
+  const statutsPublicationInterdite = [AFFELNET_STATUS.A_DEFINIR];
+
+  const reglesPublicationInterdite = await ReglePerimetre.find({
+    plateforme: "affelnet",
+    statut: {
+      $in: statutsPublicationInterdite,
+    },
+    is_deleted: { $ne: true },
+  }).lean();
+
+  reglesPublicationInterdite.length > 0 &&
+    (await asyncForEach(reglesPublicationInterdite, async (rule) => {
+      await Formation.updateMany(
+        {
+          ...filterReglement,
+          ...filterSessionDate,
+          ...filterStatus,
+
+          ...getQueryFromRule(rule, true),
+        },
+        [
+          {
+            $set: {
+              affelnet_statut_initial: rule.statut,
+            },
+          },
+        ]
+      );
+    }));
+
+  // Les règles pour lesquelles on ne procède pas à des publications automatiques, mais qui peuvent être publiées par les instructeurs
+  const statutsPublicationManuelle = [AFFELNET_STATUS.A_PUBLIER_VALIDATION];
+
+  const reglesPublicationManuelle = await ReglePerimetre.find({
+    plateforme: "affelnet",
+    statut: {
+      $in: statutsPublicationManuelle,
+    },
+    is_deleted: { $ne: true },
+  }).lean();
+
+  reglesPublicationManuelle.length > 0 &&
+    (await asyncForEach(reglesPublicationManuelle, async (rule) => {
+      await Formation.updateMany(
+        {
+          ...filterReglement,
+          ...filterSessionDate,
+          ...filterStatus,
+
+          ...getQueryFromRule(rule, true),
+        },
+        [
+          {
+            $set: {
+              affelnet_statut_initial: rule.statut,
+            },
+          },
+        ]
+      );
+    }));
+
+  // Les règles pour lesquelles on procède à des publications automatiques et qui peuvent être publiées par les instructeurs
+  const statusPublicationAutomatique = [AFFELNET_STATUS.A_PUBLIER];
+
+  const reglesPublicationAutomatique = await ReglePerimetre.find({
+    plateforme: "affelnet",
+    statut: {
+      $in: statusPublicationAutomatique,
+    },
+    is_deleted: { $ne: true },
+  }).lean();
+
+  reglesPublicationAutomatique.length > 0 &&
+    (await asyncForEach(reglesPublicationAutomatique, async (rule) => {
+      await Formation.updateMany(
+        {
+          ...filterReglement,
+          ...filterSessionDate,
+          ...filterStatus,
+
+          $or: reglesPublicationAutomatique.map((rule) => getQueryFromRule(rule, true)),
+        },
+        [
+          {
+            $set: {
+              affelnet_statut_initial: rule.statut,
+            },
+          },
+        ]
+      );
+    }));
+
+  // Les règles des académies
+  const academieRules = [
+    ...reglesPublicationInterdite,
+    ...reglesPublicationManuelle,
+    ...reglesPublicationAutomatique,
+  ].filter(({ statut_academies }) => statut_academies && Object.keys(statut_academies).length > 0);
 
   await asyncForEach(academieRules, async (rule) => {
     await asyncForEach(Object.entries(rule.statut_academies), async ([num_academie, status]) => {
@@ -141,7 +171,7 @@ const run = async () => {
         {
           ...filterReglement,
           ...filterSessionDate,
-          ...filterAcademie,
+          ...filterStatus,
 
           num_academie,
           ...getQueryFromRule(rule, true),

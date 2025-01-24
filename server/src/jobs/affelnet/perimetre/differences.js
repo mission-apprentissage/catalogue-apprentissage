@@ -16,12 +16,13 @@ const run = async () => {
       cle_ministere_educatif: 1,
       affelnet_statut: 1,
       affelnet_last_statut: 1,
+      affelnet_perimetre: 1,
       affelnet_id: 1,
     }
   ).lean();
 
-  console.table(differences);
-
   logger.info({ type: "job" }, differences);
+
+  console.table(differences);
 };
 module.exports = { run };

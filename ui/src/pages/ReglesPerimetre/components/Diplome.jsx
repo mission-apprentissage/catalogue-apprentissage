@@ -27,7 +27,7 @@ export const Diplome = ({
   }, [isSelected]);
 
   const { value, count, regles } = diplome;
-  const academieStatuts = [AFFELNET_STATUS.A_PUBLIER_VALIDATION];
+  const academieStatuts = [AFFELNET_STATUS.A_DEFINIR];
 
   // check if it has one rule at diplome level
   const [diplomeRule] = regles.filter(({ nom_regle_complementaire }) => nom_regle_complementaire === null);
