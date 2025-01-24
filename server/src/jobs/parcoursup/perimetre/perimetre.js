@@ -72,7 +72,11 @@ const run = async () => {
   const reglesAcademique = await ReglePerimetre.find({
     plateforme: "parcoursup",
     statut: {
-      $in: [...statutsPublicationInterdite, ...statutsPublicationManuelle, ...statusPublicationAutomatique],
+      $in: [
+        ...statutsPublicationInterdite,
+        //...statutsPublicationManuelle,
+        //...statusPublicationAutomatique
+      ],
     },
     is_deleted: { $ne: true },
     "statut_academies.0": { $exists: true },

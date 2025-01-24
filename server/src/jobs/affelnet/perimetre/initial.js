@@ -146,7 +146,7 @@ const run = async () => {
           ...filterSessionDate,
           ...filterStatus,
 
-          $or: reglesPublicationAutomatique.map((rule) => getQueryFromRule(rule, true)),
+          ...getQueryFromRule(rule, true),
         },
         [
           {
@@ -161,8 +161,8 @@ const run = async () => {
   // Les règles des académies
   const academieRules = [
     ...reglesPublicationInterdite,
-    ...reglesPublicationManuelle,
-    ...reglesPublicationAutomatique,
+    // ...reglesPublicationManuelle,
+    // ...reglesPublicationAutomatique,
   ].filter(({ statut_academies }) => statut_academies && Object.keys(statut_academies).length > 0);
 
   await asyncForEach(academieRules, async (rule) => {

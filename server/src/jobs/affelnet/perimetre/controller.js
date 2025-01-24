@@ -144,6 +144,7 @@ const run = async () => {
 
   reglesPublicationInterdite.length > 0 &&
     (await asyncForEach(reglesPublicationInterdite, async (rule) => {
+      console.log(`[national] ${rule.diplome} ${rule.nom_regle_complementaire} => ${rule.statut}`);
       await Formation.updateMany(
         {
           ...filterReglement,
@@ -176,6 +177,7 @@ const run = async () => {
 
   reglesPublicationManuelle.length > 0 &&
     (await asyncForEach(reglesPublicationManuelle, async (rule) => {
+      console.log(`[national] ${rule.diplome} ${rule.nom_regle_complementaire} => ${rule.statut}`);
       await Formation.updateMany(
         {
           ...filterReglement,
@@ -220,13 +222,14 @@ const run = async () => {
 
   reglesPublicationAutomatique.length > 0 &&
     (await asyncForEach(reglesPublicationAutomatique, async (rule) => {
+      console.log(`[national] ${rule.diplome} ${rule.nom_regle_complementaire} => ${rule.statut}`);
       await Formation.updateMany(
         {
           ...filterReglement,
           ...filterSessionDate,
           ...filterStatus,
 
-          $or: reglesPublicationAutomatique.map((rule) => getQueryFromRule(rule, true)),
+          ...getQueryFromRule(rule, true),
         },
         [
           {
@@ -257,12 +260,13 @@ const run = async () => {
   // Les règles des académies
   const academieRules = [
     ...reglesPublicationInterdite,
-    ...reglesPublicationManuelle,
-    ...reglesPublicationAutomatique,
+    // ...reglesPublicationManuelle,
+    // ...reglesPublicationAutomatique,
   ].filter(({ statut_academies }) => statut_academies && Object.keys(statut_academies).length > 0);
 
   await asyncForEach(academieRules, async (rule) => {
     await asyncForEach(Object.entries(rule.statut_academies), async ([num_academie, status]) => {
+      console.log(`[${num_academie}] ${rule.diplome} ${rule.nom_regle_complementaire} => ${status}`);
       await Formation.updateMany(
         {
           ...filterReglement,
@@ -270,6 +274,7 @@ const run = async () => {
           ...filterStatus,
 
           num_academie,
+
           ...getQueryFromRule(rule, true),
         },
         [

@@ -550,6 +550,7 @@ const run = async () => {
 
   reglesPublicationManuelle.length > 0 &&
     (await asyncForEach(reglesPublicationManuelle, async (rule) => {
+      console.log(`[national] ${rule.diplome} ${rule.nom_regle_complementaire} => ${rule.statut}`);
       await Formation.updateMany(
         {
           ...filterReglement,
@@ -591,13 +592,14 @@ const run = async () => {
 
   reglesPublicationAutomatique.length > 0 &&
     (await asyncForEach(reglesPublicationAutomatique, async (rule) => {
+      console.log(`[national] ${rule.diplome} ${rule.nom_regle_complementaire} => ${rule.statut}`);
       await Formation.updateMany(
         {
           ...filterReglement,
           ...filterSessionDate,
           ...filterStatus,
 
-          $or: reglesPublicationAutomatique.map((rule) => getQueryFromRule(rule, true)),
+          ...getQueryFromRule(rule, true),
         },
         [
           {
