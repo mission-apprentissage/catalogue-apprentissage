@@ -43,15 +43,15 @@ const computeStats = async (academie = null) => {
     etablissement_reference_habilite_rncp: false,
   };
 
-  const filterIntegrable = {
-    ...globalFilter,
-    affelnet_statut: { $ne: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT },
-    ...scopeFilter,
-  };
   const filterPerimetre = {
     ...globalFilter,
     affelnet_perimetre: true,
     ...scopeFilter,
+  };
+
+  const filterIntegrable = {
+    ...filterPerimetre,
+    affelnet_session: true,
   };
 
   const formations_publiees = await Formation.countDocuments(filterPublie);

@@ -43,15 +43,15 @@ const computeStats = async (academie = null) => {
     etablissement_reference_habilite_rncp: false,
   };
 
-  const filterIntegrable = {
-    ...globalFilter,
-    parcoursup_statut: { $ne: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT },
-    ...scopeFilter,
-  };
   const filterPerimetre = {
     ...globalFilter,
     parcoursup_perimetre: true,
     ...scopeFilter,
+  };
+
+  const filterIntegrable = {
+    ...filterPerimetre,
+    parcoursup_session: true,
   };
 
   const formations_publiees = await Formation.countDocuments(filterPublie);
