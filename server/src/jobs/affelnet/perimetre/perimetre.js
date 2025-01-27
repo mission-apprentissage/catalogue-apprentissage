@@ -75,10 +75,11 @@ const run = async () => {
       ],
     },
     is_deleted: { $ne: true },
-    "statut_academies.0": { $exists: true },
+    statut_academies: { $exists: true },
   }).lean();
 
   await asyncForEach(reglesAcademique, async (rule) => {
+    // console.log(rule);
     await asyncForEach(Object.entries(rule.statut_academies), async ([num_academie, status]) => {
       (
         await Formation.find({
@@ -88,13 +89,16 @@ const run = async () => {
 
           ...getQueryFromRule(rule, false),
         }).select({ cle_ministere_educatif: 1 })
-      ).forEach(({ cle_ministere_educatif }) =>
-        status === AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT
+      ).forEach(({ cle_ministere_educatif }) => {
+        console.log({ cle_ministere_educatif, status });
+        return status === AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT
           ? formationsInPerimetre.delete(cle_ministere_educatif)
-          : formationsInPerimetre.add(cle_ministere_educatif)
-      );
+          : formationsInPerimetre.add(cle_ministere_educatif);
+      });
     });
   });
+
+  // console.table([...formationsInPerimetre]);
 
   logger.debug({ type: "job" }, "- Intégration du périmètre");
   await cursor(

@@ -79,7 +79,7 @@ const run = async () => {
       ],
     },
     is_deleted: { $ne: true },
-    "statut_academies.0": { $exists: true },
+    statut_academies: { $exists: true },
   }).lean();
 
   await asyncForEach(reglesAcademique, async (rule) => {
