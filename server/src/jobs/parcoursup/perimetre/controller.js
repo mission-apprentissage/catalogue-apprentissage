@@ -531,7 +531,37 @@ const run = async () => {
   logger.debug({ type: "job" }, "Etape 4. Application des règles");
 
   // Les règles pour lesquelles on ne procède pas à des publications
-  // TODO...
+  // const statutsPublicationInterdite = [PARCOURSUP_STATUS.A_DEFINIR];
+
+  // const reglesPublicationInterdite = await ReglePerimetre.find({
+  //   plateforme: "parcoursup",
+  //   statut: {
+  //     $in: statutsPublicationInterdite,
+  //   },
+  //   is_deleted: { $ne: true },
+  // }).lean();
+
+  // reglesPublicationInterdite.length > 0 &&
+  //   (await asyncForEach(reglesPublicationInterdite, async (rule) => {
+  //     console.log(`[national] ${rule.diplome} ${rule.nom_regle_complementaire} => ${rule.statut}`);
+  //     await Formation.updateMany(
+  //       {
+  //         ...filterReglement,
+  //         ...filterSessionDate,
+  //         ...filterStatus,
+
+  //         ...getQueryFromRule(rule, true),
+  //       },
+  //       [
+  //         {
+  //           $set: {
+  //             last_update_at: Date.now(),
+  //             parcoursup_statut: rule.statut,
+  //           },
+  //         },
+  //       ]
+  //     );
+  //   }));
 
   // Les règles pour lesquelles on ne procède pas à des publications automatiques, mais qui peuvent être publiées par les instructeurs
   const statutsPublicationManuelle = [
@@ -564,16 +594,19 @@ const run = async () => {
             $set: {
               last_update_at: Date.now(),
               parcoursup_statut: {
-                $cond: {
-                  if: {
-                    $or: [
-                      {
-                        $eq: ["$parcoursup_last_statut", PARCOURSUP_STATUS.PRET_POUR_INTEGRATION],
+                $switch: {
+                  branches: [
+                    {
+                      case: {
+                        $in: [
+                          "$parcoursup_last_statut",
+                          [PARCOURSUP_STATUS.PRET_POUR_INTEGRATION, PARCOURSUP_STATUS.PUBLIE],
+                        ],
                       },
-                    ],
-                  },
-                  then: PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
-                  else: rule.statut,
+                      then: "$parcoursup_last_statut",
+                    },
+                  ],
+                  default: rule.statut,
                 },
               },
             },
@@ -605,20 +638,28 @@ const run = async () => {
           {
             $set: {
               last_update_at: Date.now(),
-              parcoursup_statut: {
-                $cond: {
-                  if: {
-                    $or: [
-                      {
+              parcousup_statut: {
+                $switch: {
+                  branches: [
+                    {
+                      case: {
+                        $in: [
+                          "$parcoursup_last_statut",
+                          [PARCOURSUP_STATUS.PRET_POUR_INTEGRATION, PARCOURSUP_STATUS.PUBLIE],
+                        ],
+                      },
+                      then: "$parcoursup_last_statut",
+                    },
+                    {
+                      case: {
                         $ne: ["$parcoursup_id", null],
                       },
-                      {
-                        $eq: ["$parcoursup_last_statut", PARCOURSUP_STATUS.PRET_POUR_INTEGRATION],
-                      },
-                    ],
-                  },
-                  then: PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
-                  else: rule.statut,
+                      then: statusPublicationAutomatique.includes(rule.statut)
+                        ? PARCOURSUP_STATUS.PRET_POUR_INTEGRATION
+                        : rule.statut,
+                    },
+                  ],
+                  default: rule.statut,
                 },
               },
             },

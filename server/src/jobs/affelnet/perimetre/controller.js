@@ -97,7 +97,6 @@ const run = async () => {
         { affelnet_statut: null },
       ],
     },
-
     { $set: { affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT } }
   );
 
@@ -191,16 +190,16 @@ const run = async () => {
             $set: {
               last_update_at: Date.now(),
               affelnet_statut: {
-                $cond: {
-                  if: {
-                    $or: [
-                      {
-                        $eq: ["$affelnet_last_statut", AFFELNET_STATUS.PRET_POUR_INTEGRATION],
+                $switch: {
+                  branches: [
+                    {
+                      case: {
+                        $in: ["$affelnet_last_statut", [AFFELNET_STATUS.PRET_POUR_INTEGRATION, AFFELNET_STATUS.PUBLIE]],
                       },
-                    ],
-                  },
-                  then: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
-                  else: rule.statut,
+                      then: "$affelnet_last_statut",
+                    },
+                  ],
+                  default: rule.statut,
                 },
               },
             },
@@ -236,19 +235,24 @@ const run = async () => {
             $set: {
               last_update_at: Date.now(),
               affelnet_statut: {
-                $cond: {
-                  if: {
-                    $or: [
-                      {
+                $switch: {
+                  branches: [
+                    {
+                      case: {
+                        $in: ["$affelnet_last_statut", [AFFELNET_STATUS.PRET_POUR_INTEGRATION, AFFELNET_STATUS.PUBLIE]],
+                      },
+                      then: "$affelnet_last_statut",
+                    },
+                    {
+                      case: {
                         $ne: ["$affelnet_id", null],
                       },
-                      {
-                        $eq: ["$affelnet_last_statut", AFFELNET_STATUS.PRET_POUR_INTEGRATION],
-                      },
-                    ],
-                  },
-                  then: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
-                  else: rule.statut,
+                      then: statusPublicationAutomatique.includes(rule.statut)
+                        ? AFFELNET_STATUS.PRET_POUR_INTEGRATION
+                        : rule.statut,
+                    },
+                  ],
+                  default: rule.statut,
                 },
               },
             },
@@ -282,19 +286,30 @@ const run = async () => {
             $set: {
               last_update_at: Date.now(),
               affelnet_statut: {
-                $cond: {
-                  if: {
-                    $or: [
-                      {
+                $switch: {
+                  branches: [
+                    {
+                      case: {
+                        $in: [status, [AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT]],
+                      },
+                      then: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
+                    },
+                    {
+                      case: {
+                        $in: ["$affelnet_last_statut", [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.PRET_POUR_INTEGRATION]],
+                      },
+                      then: "$affelnet_last_statut",
+                    },
+                    {
+                      case: {
                         $ne: ["$affelnet_id", null],
                       },
-                      {
-                        $eq: ["$affelnet_last_statut", AFFELNET_STATUS.PRET_POUR_INTEGRATION],
-                      },
-                    ],
-                  },
-                  then: statusPublicationAutomatique.includes(status) ? AFFELNET_STATUS.PRET_POUR_INTEGRATION : status,
-                  else: status,
+                      then: statusPublicationAutomatique.includes(status)
+                        ? AFFELNET_STATUS.PRET_POUR_INTEGRATION
+                        : status,
+                    },
+                  ],
+                  default: status,
                 },
               },
             },
