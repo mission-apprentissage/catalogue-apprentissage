@@ -35,6 +35,7 @@ import { AcademiesSelect } from "./components/AcademiesSelect";
 import { DiplomesAutosuggest } from "./components/DiplomesAutosuggest";
 import { academies } from "../../constants/academies";
 import { CONDITIONS } from "../../constants/conditionsIntegration";
+import { AFFELNET_STATUS } from "../../constants/status";
 
 export default ({ plateforme }) => {
   const [user] = useAuth();
@@ -67,7 +68,7 @@ export default ({ plateforme }) => {
   setTitle(title);
 
   const subtitle = currentAcademie
-    ? "Certains types de diplôme sont définis au national comme pouvant être publiés sur Affelnet-lycée, selon les pratiques de l’académie. Cette page vous permet de confirmer ou non l’inclusion dans le périmètre pour votre académie. En l’absence de confirmation, aucune de ces offres ne sont publiables, et elles sont maintenues dans le statut “À publier sous conditions”."
+    ? "Certains types de diplôme sont définis au national comme pouvant être publiés sur Affelnet-lycée, selon les pratiques de l’académie. Cette page vous permet de confirmer ou non l’inclusion dans le périmètre pour votre académie. En l’absence de confirmation, aucune de ces offres ne sont publiables, et elles sont maintenues dans le statut “À définir”."
     : `Déterminer les conditions d'intégrations des formations en apprentissage du Catalogue (Carif-Oref) sur la plateforme ${plateforme}`;
 
   const { data: niveauxData } = useNiveaux({ plateforme });
@@ -362,7 +363,7 @@ export default ({ plateforme }) => {
                         currentAcademie
                           ? !!diplomes.find(
                               ({ regles }) =>
-                                !!regles.find((regle) => regle.condition_integration === CONDITIONS.PEUT_INTEGRER)
+                                !!regles.find((regle) => [AFFELNET_STATUS.A_DEFINIR].includes(regle.statut))
                             )
                           : true
                       )
