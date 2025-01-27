@@ -46,9 +46,24 @@ export default ({ plateforme }) => {
   const [niveauxCount, setNiveauxCount] = useState({});
   const [selectedDiplome, setSelectedDiplome] = useState(null);
 
-  const title = currentAcademie
-    ? `Règles d’intégration des formations à la plateforme ${plateforme} – Académie de ${academies[String(currentAcademie)?.padStart(2, "0")]?.nom_academie}`
-    : `Règles d'intégration des formations à la plateforme ${plateforme}`;
+  let title;
+
+  switch (plateforme) {
+    case "affelnet":
+      title = currentAcademie
+        ? `Règles d’intégration des formations en apprentissage dans Affelnet-lycée – Académie de ${academies[String(currentAcademie)?.padStart(2, "0")]?.nom_academie}`
+        : `Règles d’intégration des formations en apprentissage dans Affelnet-lycée`;
+      break;
+    case "parcoursup":
+      title = currentAcademie
+        ? `Règles d’intégration des formations à la plateforme Parcoursup – Académie de ${academies[String(currentAcademie)?.padStart(2, "0")]?.nom_academie}`
+        : `Règles d'intégration des formations à la plateforme Parcoursup`;
+      break;
+    default:
+      title = "Règles d’intégration des formations";
+      break;
+  }
+
   setTitle(title);
 
   const subtitle = currentAcademie
