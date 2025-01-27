@@ -1,7 +1,12 @@
 const express = require("express");
 const Boom = require("boom");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
-const { getQueryFromRule, titresRule, getPublishedRules } = require("../../common/utils/rulesUtils");
+const {
+  getQueryFromRule,
+  titresRule,
+  getPublishedRules,
+  getSessionDateRules,
+} = require("../../common/utils/rulesUtils");
 const { getNiveauxDiplomesTree } = require("@mission-apprentissage/tco-service-node");
 const { ReglePerimetre, Formation } = require("../../common/models");
 const { sanitize } = require("../../common/utils/sanitizeUtils");
@@ -27,6 +32,7 @@ module.exports = () => {
             published: true,
             ...getPublishedRules(plateforme),
             ...titresRule,
+            ...(await getSessionDateRules()),
           },
         },
         {
@@ -123,6 +129,7 @@ module.exports = () => {
       const result = await Formation.countDocuments({
         published: true,
         ...getQueryFromRule({ plateforme, niveau, diplome, regle_complementaire, num_academie, duree, annee }, true),
+        ...(await getSessionDateRules()),
       });
       return res.json(result);
     })
@@ -158,6 +165,7 @@ module.exports = () => {
         published: true,
         ...(num_academie && num_academie !== "null" ? { num_academie } : {}),
         $or: rules.map(getQueryFromRule),
+        ...(await getSessionDateRules()),
       });
 
       return res.json({ nbRules: rules.length, nbFormations: result });
