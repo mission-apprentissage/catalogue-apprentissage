@@ -1,5 +1,6 @@
 const logger = require("../../../common/logger");
 const { Formation } = require("../../../common/models");
+const config = require("config");
 
 const run = async () => {
   const filterGeneral = { catalogue_published: true, published: true };
@@ -21,8 +22,8 @@ const run = async () => {
     }
   ).lean();
 
-  logger.info({ type: "job" }, differences);
+  config.env !== "dev" && logger.info({ type: "job" }, differences);
 
-  console.table(differences);
+  config.env === "dev" && console.table(differences);
 };
 module.exports = { run };

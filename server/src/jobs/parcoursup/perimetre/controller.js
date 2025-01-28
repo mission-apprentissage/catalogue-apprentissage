@@ -531,37 +531,47 @@ const run = async () => {
   logger.debug({ type: "job" }, "Etape 4. Application des règles");
 
   // Les règles pour lesquelles on ne procède pas à des publications
-  // const statutsPublicationInterdite = [PARCOURSUP_STATUS.A_DEFINIR];
+  const statutsPublicationInterdite = [];
 
-  // const reglesPublicationInterdite = await ReglePerimetre.find({
-  //   plateforme: "parcoursup",
-  //   statut: {
-  //     $in: statutsPublicationInterdite,
-  //   },
-  //   is_deleted: { $ne: true },
-  // }).lean();
+  const reglesPublicationInterdite = await ReglePerimetre.find({
+    plateforme: "parcoursup",
+    statut: {
+      $in: statutsPublicationInterdite,
+    },
+    is_deleted: { $ne: true },
+  }).lean();
 
-  // reglesPublicationInterdite.length > 0 &&
-  //   (await asyncForEach(reglesPublicationInterdite, async (rule) => {
-  //     console.log(`[national] ${rule.diplome} ${rule.nom_regle_complementaire} => ${rule.statut}`);
-  //     await Formation.updateMany(
-  //       {
-  //         ...filterReglement,
-  //         ...filterSessionDate,
-  //         ...filterStatus,
+  reglesPublicationInterdite.length > 0 &&
+    (await asyncForEach(reglesPublicationInterdite, async (rule) => {
+      console.log(
+        `[national] ${rule.diplome} ${rule.nom_regle_complementaire} => ${rule.statut} [${await Formation.countDocuments(
+          {
+            ...filterReglement,
+            ...filterSessionDate,
+            ...filterStatus,
 
-  //         ...getQueryFromRule(rule, true),
-  //       },
-  //       [
-  //         {
-  //           $set: {
-  //             last_update_at: Date.now(),
-  //             parcoursup_statut: rule.statut,
-  //           },
-  //         },
-  //       ]
-  //     );
-  //   }));
+            ...getQueryFromRule(rule, true),
+          }
+        )} formations concernées]`
+      );
+      await Formation.updateMany(
+        {
+          ...filterReglement,
+          ...filterSessionDate,
+          ...filterStatus,
+
+          ...getQueryFromRule(rule, true),
+        },
+        [
+          {
+            $set: {
+              last_update_at: Date.now(),
+              parcoursup_statut: rule.statut,
+            },
+          },
+        ]
+      );
+    }));
 
   // Les règles pour lesquelles on ne procède pas à des publications automatiques, mais qui peuvent être publiées par les instructeurs
   const statutsPublicationManuelle = [
@@ -580,7 +590,17 @@ const run = async () => {
 
   reglesPublicationManuelle.length > 0 &&
     (await asyncForEach(reglesPublicationManuelle, async (rule) => {
-      console.log(`[national] ${rule.diplome} ${rule.nom_regle_complementaire} => ${rule.statut}`);
+      console.log(
+        `[national] ${rule.diplome} ${rule.nom_regle_complementaire} => ${rule.statut} [${await Formation.countDocuments(
+          {
+            ...filterReglement,
+            ...filterSessionDate,
+            ...filterStatus,
+
+            ...getQueryFromRule(rule, true),
+          }
+        )} formations concernées]`
+      );
       await Formation.updateMany(
         {
           ...filterReglement,
@@ -625,7 +645,18 @@ const run = async () => {
 
   reglesPublicationAutomatique.length > 0 &&
     (await asyncForEach(reglesPublicationAutomatique, async (rule) => {
-      console.log(`[national] ${rule.diplome} ${rule.nom_regle_complementaire} => ${rule.statut}`);
+      console.log(
+        `[national] ${rule.diplome} ${rule.nom_regle_complementaire} => ${rule.statut} [${await Formation.countDocuments(
+          {
+            ...filterReglement,
+            ...filterSessionDate,
+            ...filterStatus,
+
+            ...getQueryFromRule(rule, true),
+          }
+        )} formations concernées]`
+      );
+
       await Formation.updateMany(
         {
           ...filterReglement,
@@ -638,7 +669,7 @@ const run = async () => {
           {
             $set: {
               last_update_at: Date.now(),
-              parcousup_statut: {
+              parcoursup_statut: {
                 $switch: {
                   branches: [
                     {
@@ -669,7 +700,78 @@ const run = async () => {
     }));
 
   // Les règles des académies
-  // TODO..
+  const academieRules = [
+    ...reglesPublicationInterdite,
+    // ...reglesPublicationManuelle,
+    // ...reglesPublicationAutomatique,
+  ].filter(({ statut_academies }) => statut_academies && Object.keys(statut_academies).length > 0);
+
+  await asyncForEach(academieRules, async (rule) => {
+    await asyncForEach(Object.entries(rule.statut_academies), async ([num_academie, status]) => {
+      console.log(
+        `[${num_academie}] ${rule.diplome} ${rule.nom_regle_complementaire} => ${status} [${await Formation.countDocuments(
+          {
+            ...filterReglement,
+            ...filterSessionDate,
+            ...filterStatus,
+
+            num_academie,
+
+            ...getQueryFromRule(rule, true),
+          }
+        )} formations concernées]`
+      );
+
+      await Formation.updateMany(
+        {
+          ...filterReglement,
+          ...filterSessionDate,
+          ...filterStatus,
+
+          num_academie,
+
+          ...getQueryFromRule(rule, true),
+        },
+        [
+          {
+            $set: {
+              last_update_at: Date.now(),
+              parcoursup_statut: {
+                $switch: {
+                  branches: [
+                    {
+                      case: {
+                        $in: [status, [PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT]],
+                      },
+                      then: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
+                    },
+                    {
+                      case: {
+                        $in: [
+                          "$parcoursup_last_statut",
+                          [PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.PRET_POUR_INTEGRATION],
+                        ],
+                      },
+                      then: "$parcoursup_last_statut",
+                    },
+                    {
+                      case: {
+                        $ne: ["$parcoursup_id", null],
+                      },
+                      then: statusPublicationAutomatique.includes(status)
+                        ? PARCOURSUP_STATUS.PRET_POUR_INTEGRATION
+                        : status,
+                    },
+                  ],
+                  default: status,
+                },
+              },
+            },
+          },
+        ]
+      );
+    });
+  });
 
   /** 5. Vérification de la date de publication */
   logger.debug({ type: "job" }, "Etape 5. Vérification de la date de publication");

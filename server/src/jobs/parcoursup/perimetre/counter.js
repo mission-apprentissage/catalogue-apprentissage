@@ -1,6 +1,7 @@
 const logger = require("../../../common/logger");
 const { Formation } = require("../../../common/models");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
+const config = require("config");
 
 const run = async () => {
   const filterGeneral = { catalogue_published: true, published: true };
@@ -94,8 +95,8 @@ const run = async () => {
     },
   };
 
-  logger.info({ type: "job" }, results);
+  config.env !== "dev" && logger.info({ type: "job" }, results);
 
-  console.table(results);
+  config.env === "dev" && console.table(results);
 };
 module.exports = { run };
