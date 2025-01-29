@@ -11,7 +11,7 @@ export const STATUS_LIST = {
       PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
       PARCOURSUP_STATUS.A_PUBLIER,
     ],
-    affelnet: [AFFELNET_STATUS.A_DEFINIR, AFFELNET_STATUS.A_PUBLIER_VALIDATION],
+    affelnet: [AFFELNET_STATUS.A_DEFINIR],
   },
   [CONDITIONS.DOIT_INTEGRER]: {
     parcoursup: [PARCOURSUP_STATUS.A_PUBLIER],
@@ -59,9 +59,6 @@ export const StatusSelect = ({
     case AFFELNET_STATUS.A_DEFINIR:
       background = "#D5DBEF";
       break;
-    // case COMMON_STATUS.A_PUBLIER:
-    //   background = "greenmedium.300";
-    //   break;
     case COMMON_STATUS.NON_PUBLIABLE_EN_LETAT:
       background = "greendark.300";
       break;

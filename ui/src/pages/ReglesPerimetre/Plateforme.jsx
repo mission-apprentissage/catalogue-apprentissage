@@ -34,7 +34,6 @@ import {
 import { AcademiesSelect } from "./components/AcademiesSelect";
 import { DiplomesAutosuggest } from "./components/DiplomesAutosuggest";
 import { academies } from "../../constants/academies";
-import { CONDITIONS } from "../../constants/conditionsIntegration";
 import { AFFELNET_STATUS } from "../../constants/status";
 
 export default ({ plateforme }) => {
