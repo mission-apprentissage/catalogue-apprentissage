@@ -26,9 +26,11 @@ import { ExportButton } from "./components/ExportButton";
 import {
   createRule,
   deleteRule,
+  deleteStatutAcademieRule,
   getIntegrationCount,
   getRules,
   updateRule,
+  updateStatutAcademieRule,
   useNiveaux,
 } from "../../common/api/perimetre";
 import { AcademiesSelect } from "./components/AcademiesSelect";
@@ -157,6 +159,106 @@ export default ({ plateforme }) => {
 
   const onUpdateRule = useCallback(async (ruleData) => {
     const updatedRule = await updateRule(ruleData);
+    const { niveau: ruleNiveau, diplome: ruleDiplome } = updatedRule;
+
+    setNiveaux((currentTree) => {
+      return currentTree.map(({ niveau, diplomes }) => {
+        if (niveau.value !== ruleNiveau) {
+          return {
+            niveau,
+            diplomes: diplomes.map((diplome) => {
+              return {
+                ...diplome,
+                regles: diplome.regles.filter(({ _id }) => _id !== updatedRule._id),
+              };
+            }),
+          };
+        }
+
+        return {
+          niveau,
+          diplomes: diplomes.map((diplome) => {
+            if (diplome.value !== ruleDiplome) {
+              return {
+                ...diplome,
+                regles: diplome.regles.filter(({ _id }) => _id !== updatedRule._id),
+              };
+            }
+
+            const regles = diplome.regles.map((regle) => {
+              if (regle._id !== updatedRule._id) {
+                return regle;
+              }
+              return updatedRule;
+            });
+
+            if (regles.every(({ _id }) => _id !== updatedRule._id)) {
+              regles.push(updatedRule);
+            }
+
+            return {
+              ...diplome,
+              regles,
+            };
+          }),
+        };
+      });
+    });
+    return updatedRule;
+  }, []);
+
+  const onUpdateStatutAcademieRule = useCallback(async (ruleData) => {
+    const updatedRule = await updateStatutAcademieRule(ruleData);
+    const { niveau: ruleNiveau, diplome: ruleDiplome } = updatedRule;
+
+    setNiveaux((currentTree) => {
+      return currentTree.map(({ niveau, diplomes }) => {
+        if (niveau.value !== ruleNiveau) {
+          return {
+            niveau,
+            diplomes: diplomes.map((diplome) => {
+              return {
+                ...diplome,
+                regles: diplome.regles.filter(({ _id }) => _id !== updatedRule._id),
+              };
+            }),
+          };
+        }
+
+        return {
+          niveau,
+          diplomes: diplomes.map((diplome) => {
+            if (diplome.value !== ruleDiplome) {
+              return {
+                ...diplome,
+                regles: diplome.regles.filter(({ _id }) => _id !== updatedRule._id),
+              };
+            }
+
+            const regles = diplome.regles.map((regle) => {
+              if (regle._id !== updatedRule._id) {
+                return regle;
+              }
+              return updatedRule;
+            });
+
+            if (regles.every(({ _id }) => _id !== updatedRule._id)) {
+              regles.push(updatedRule);
+            }
+
+            return {
+              ...diplome,
+              regles,
+            };
+          }),
+        };
+      });
+    });
+    return updatedRule;
+  }, []);
+
+  const onDeleteStatutAcademieRule = useCallback(async (ruleData) => {
+    const updatedRule = await deleteStatutAcademieRule(ruleData);
     const { niveau: ruleNiveau, diplome: ruleDiplome } = updatedRule;
 
     setNiveaux((currentTree) => {
@@ -400,6 +502,8 @@ export default ({ plateforme }) => {
                                       onCreateRule={onCreateRule}
                                       onUpdateRule={onUpdateRule}
                                       onDeleteRule={onDeleteRule}
+                                      onUpdateStatutAcademieRule={onUpdateStatutAcademieRule}
+                                      onDeleteStatutAcademieRule={onDeleteStatutAcademieRule}
                                       isExpanded={isExpanded}
                                       academie={currentAcademie}
                                       isSelected={selectedDiplome === diplome.value}

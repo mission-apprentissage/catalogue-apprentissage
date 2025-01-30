@@ -12,6 +12,8 @@ export const Diplome = ({
   onCreateRule,
   onUpdateRule,
   onDeleteRule,
+  onUpdateStatutAcademieRule,
+  onDeleteStatutAcademieRule,
   isExpanded,
   academie,
   isSelected,
@@ -59,6 +61,8 @@ export const Diplome = ({
           onCreateRule={onCreateRule}
           onUpdateRule={onUpdateRule}
           onDeleteRule={onDeleteRule}
+          onUpdateStatutAcademieRule={onUpdateStatutAcademieRule}
+          onDeleteStatutAcademieRule={onDeleteStatutAcademieRule}
           count={count}
           academie={academie}
           shouldFetchCount={isExpanded}
@@ -77,6 +81,8 @@ export const Diplome = ({
             onCreateRule={onCreateRule}
             onUpdateRule={onUpdateRule}
             onDeleteRule={onDeleteRule}
+            onUpdateStatutAcademieRule={onUpdateStatutAcademieRule}
+            onDeleteStatutAcademieRule={onDeleteStatutAcademieRule}
             shouldFetchCount={isExpanded}
             showIcon={true}
             academie={academie}

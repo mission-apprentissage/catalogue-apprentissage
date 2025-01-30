@@ -42,7 +42,12 @@ export const StatusSelect = ({
 }) => {
   const academieStatusList =
     plateforme === "affelnet"
-      ? [COMMON_STATUS.A_PUBLIER, AFFELNET_STATUS.A_PUBLIER_VALIDATION, COMMON_STATUS.NON_PUBLIABLE_EN_LETAT]
+      ? [
+          AFFELNET_STATUS.A_DEFINIR,
+          COMMON_STATUS.A_PUBLIER,
+          AFFELNET_STATUS.A_PUBLIER_VALIDATION,
+          COMMON_STATUS.NON_PUBLIABLE_EN_LETAT,
+        ]
       : [];
 
   const statusList = [

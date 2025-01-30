@@ -24,6 +24,8 @@ export const Line = ({
   onCreateRule,
   onUpdateRule,
   onDeleteRule,
+  onUpdateStatutAcademieRule,
+  onDeleteStatutAcademieRule,
   rule = {},
   academie,
 }) => {
@@ -241,21 +243,14 @@ export const Line = ({
                         // update the status for the rule
                         await onUpdateRule({ _id: idRule, statut: e.target.value });
                       } else {
-                        // update the status only for the selected academy
-                        const statusAcademies = {
-                          ...statut_academies,
-                          [academie]: e.target.value,
-                        };
-
-                        // if the status equals the national one just remove the academy specificity
-                        if (status === e.target.value) {
-                          delete statusAcademies[academie];
-                        }
-
-                        await onUpdateRule({
-                          _id: idRule,
-                          statut_academies: statusAcademies,
-                        });
+                        // if the status equals the national one, we just remove the academy specificity, if different, we update the status for the academy
+                        status === e.target.value
+                          ? await onDeleteStatutAcademieRule({ _id: idRule, num_academie: academie })
+                          : await onUpdateStatutAcademieRule({
+                              _id: idRule,
+                              num_academie: academie,
+                              statut: e.target.value,
+                            });
                       }
                     }}
                   />
