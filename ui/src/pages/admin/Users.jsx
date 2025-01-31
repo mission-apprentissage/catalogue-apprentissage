@@ -29,10 +29,10 @@ import { setTitle } from "../../common/utils/pageUtils";
 import ACL from "./acl";
 import generator from "generate-password-browser";
 import { useQuery } from "react-query";
-import { academies } from "../../constants/academies";
+import { ACADEMIES } from "../../constants/academies";
 import { PasswordInput } from "../../common/components/PasswordInput";
 
-const ACADEMIES = new Map(Object.entries(academies));
+const academies = new Map(Object.entries(ACADEMIES));
 
 const buildRolesAcl = (newRoles, roles) => {
   let acl = [];
@@ -330,7 +330,7 @@ const UserLine = ({ user, roles }) => {
             Toutes
           </Checkbox>
 
-          {[...ACADEMIES.entries()]
+          {[...academies.entries()]
             .sort(([, aValue], [, bValue]) => aValue.nom_academie.localeCompare(bValue.nom_academie))
             .map(([key]) => {
               return (

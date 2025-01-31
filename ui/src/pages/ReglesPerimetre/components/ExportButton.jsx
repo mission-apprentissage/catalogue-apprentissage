@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@chakra-ui/react";
 import { DownloadLine } from "../../../theme/components/icons";
 import { createCSV, downloadCSV } from "../../../common/utils/downloadUtils";
-import { academies } from "../../../constants/academies";
+import { ACADEMIES } from "../../../constants/academies";
 
 const exportRules = (plateforme, rules) => {
   const headers = [
@@ -39,7 +39,7 @@ const exportRules = (plateforme, rules) => {
       label: "Statuts spécifiques en académies",
       formatter: (value) => {
         const statuses = Object.entries(value).reduce((acc, [key, statut]) => {
-          const nom_academie = academies[key.padStart(2, "0")].nom_academie;
+          const nom_academie = ACADEMIES[key.padStart(2, "0")].nom_academie;
           return [...acc, `${nom_academie}:${statut}`];
         }, []);
 

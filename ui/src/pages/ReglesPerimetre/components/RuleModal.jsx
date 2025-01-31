@@ -30,8 +30,8 @@ import * as Yup from "yup";
 import { getCount, useNiveaux } from "../../../common/api/perimetre";
 import { _get } from "../../../common/httpClient";
 import { isStatusChangeEnabled } from "../../../common/utils/rulesUtils";
-import { academies } from "../../../constants/academies";
-import { annees } from "../../../constants/annees";
+import { ACADEMIES } from "../../../constants/academies";
+import { ANNEES } from "../../../constants/annees";
 import { CONDITIONS } from "../../../constants/conditionsIntegration";
 import { COMMON_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
 import { DateContext } from "../../../DateContext";
@@ -41,6 +41,7 @@ import { RuleBuilder } from "./RuleBuilder";
 import { RuleUpdatesHistory } from "./RuleUpdatesHistory";
 import { StatusSelect } from "./StatusSelect";
 import { sortDescending } from "../../../common/utils/historyUtils";
+import { PLATEFORME } from "../../../constants/plateforme";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -72,7 +73,7 @@ export const getDiplomesAllowedForSubRulesUrl = (plateforme) => {
     nom_regle_complementaire: null,
   };
 
-  if (plateforme === "parcoursup") {
+  if (plateforme === PLATEFORME.PARCOURSUP) {
     filters.statut = PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR;
   } else {
     filters.condition_integration = CONDITIONS.PEUT_INTEGRER;
@@ -113,7 +114,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
 
   const isConditionChangeEnabled = !academie;
   const initialCondition = academie && isCreating ? CONDITIONS.PEUT_INTEGRER : condition_integration;
-  const academieLabel = Object.values(academies).find(
+  const academieLabel = Object.values(ACADEMIES).find(
     ({ num_academie: num }) => Number(num) === Number(academie ?? num_academie)
   )?.nom_academie;
 
@@ -257,7 +258,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
   let linkFormations = `/recherche/formations?qb=${encodeURIComponent(JSON.stringify(linkQuery))}`;
 
   if (academie ?? num_academie) {
-    linkFormations += `&nom_academie=%5B"${academies[String(academie ?? num_academie)?.padStart(2, "0")].nom_academie}"%5D`;
+    linkFormations += `&nom_academie=%5B"${ACADEMIES[String(academie ?? num_academie)?.padStart(2, "0")].nom_academie}"%5D`;
   }
 
   if (values.niveau) {
@@ -265,7 +266,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
   }
 
   if (values.registrationYear) {
-    linkFormations += `&annee=%5B"${annees[values.registrationYear].replace(" ", "+")}"%5D`;
+    linkFormations += `&annee=%5B"${ANNEES[values.registrationYear].replace(" ", "+")}"%5D`;
   }
 
   if (values.duration) {

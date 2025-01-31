@@ -4,6 +4,7 @@ import { renderHook, waitFor } from "@testing-library/react";
 import { rest } from "msw";
 import { useNiveaux } from "./perimetre";
 import { setupMswServer } from "../utils/testUtils";
+import { PLATEFORME } from "../../constants/plateforme";
 
 const server = setupMswServer(
   rest.get(/\/api\/v1\/entity\/perimetre\/niveau.*/, (req, res, ctx) => {
@@ -37,7 +38,7 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 test("test custom hook", async () => {
-  const { result } = renderHook(() => useNiveaux({ plateforme: "parcoursup" }), { wrapper });
+  const { result } = renderHook(() => useNiveaux({ plateforme: PLATEFORME.PARCOURSUP }), { wrapper });
 
   await waitFor(() => expect(result.current.isSuccess).toBe(true));
 

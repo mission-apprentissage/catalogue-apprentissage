@@ -20,7 +20,7 @@ import { _post } from "../common/httpClient";
 import { setTitle } from "../common/utils/pageUtils";
 import { PasswordInput } from "../common/components/PasswordInput";
 import { hasAccessTo, hasOnlyOneAcademyRight } from "../common/utils/rolesUtils";
-import { academies } from "../constants/academies";
+import { ACADEMIES } from "../constants/academies";
 
 const LoginPage = () => {
   const [, setAuth] = useAuth();
@@ -45,7 +45,7 @@ const LoginPage = () => {
       }
 
       if (hasOnlyOneAcademyRight(auth)) {
-        suffixCatalogue += `&nom_academie=%5B"${academies[auth.academie]?.nom_academie}"%5D`;
+        suffixCatalogue += `&nom_academie=%5B"${ACADEMIES[auth.academie]?.nom_academie}"%5D`;
       }
 
       navigate(`/recherche/formations${suffixCatalogue}`);

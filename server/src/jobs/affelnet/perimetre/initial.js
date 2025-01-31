@@ -54,15 +54,15 @@ const run = async () => {
   logger.debug({ type: "job" }, "Etape 2.");
 
   const filterStatus = {
-    affelnet_statut: {
-      $in: [
-        AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
-        AFFELNET_STATUS.A_DEFINIR,
-        AFFELNET_STATUS.A_PUBLIER_VALIDATION,
-        AFFELNET_STATUS.A_PUBLIER,
-        AFFELNET_STATUS.PRET_POUR_INTEGRATION,
-      ],
-    },
+    // affelnet_statut: {
+    //   $in: [
+    //     AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
+    //     AFFELNET_STATUS.A_DEFINIR,
+    //     AFFELNET_STATUS.A_PUBLIER_VALIDATION,
+    //     AFFELNET_STATUS.A_PUBLIER,
+    //     AFFELNET_STATUS.PRET_POUR_INTEGRATION,
+    //   ],
+    // },
   };
 
   // Les règles pour lesquelles on ne procède pas à des publications

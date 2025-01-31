@@ -5,6 +5,7 @@ import { getCount } from "../../../common/api/perimetre";
 import * as api from "../../../common/api/perimetre";
 import { PARCOURSUP_STATUS } from "../../../constants/status";
 import { CONDITIONS } from "../../../constants/conditionsIntegration";
+import { PLATEFORME } from "../../../constants/plateforme";
 
 test("renders line & create rule", async () => {
   jest.spyOn(api, "getCount").mockImplementation(() => 123);
@@ -17,7 +18,7 @@ test("renders line & create rule", async () => {
   const { queryByText, getByTestId } = render(
     <Line
       showIcon={false}
-      plateforme={"parcoursup"}
+      plateforme={PLATEFORME.PARCOURSUP}
       niveau={"5 (BTS, DEUST...)"}
       label={"My test line"}
       shouldFetchCount={true}
@@ -47,7 +48,7 @@ test("renders line & create rule", async () => {
     condition_integration: "peut intégrer",
     diplome: "BTS",
     niveau: "5 (BTS, DEUST...)",
-    plateforme: "parcoursup",
+    plateforme: PLATEFORME.PARCOURSUP,
     regle_complementaire: "{}",
     statut: PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
   });
@@ -74,7 +75,7 @@ test("renders Line for academie & show rule", async () => {
   const { queryByText, getByTestId } = render(
     <Line
       showIcon={false}
-      plateforme={"parcoursup"}
+      plateforme={PLATEFORME.PARCOURSUP}
       niveau={"5 (BTS, DEUST...)"}
       label={"My test line"}
       shouldFetchCount={true}
@@ -102,7 +103,7 @@ test("renders Line for academie & show rule", async () => {
     diplome: "BTS",
     niveau: "5 (BTS, DEUST...)",
     regle_complementaire: "{}",
-    plateforme: "parcoursup",
+    plateforme: PLATEFORME.PARCOURSUP,
   });
 
   await waitFor(() => expect(queryByText("123")).toBeInTheDocument());
@@ -134,7 +135,7 @@ test("Action select - should delete rule", async () => {
   const { getByTestId } = render(
     <Line
       showIcon={false}
-      plateforme={"parcoursup"}
+      plateforme={PLATEFORME.PARCOURSUP}
       niveau={"5 (BTS, DEUST...)"}
       label={"My test line"}
       shouldFetchCount={true}
@@ -178,7 +179,7 @@ test(`Action select - should update rule & set "non publiable en l'état"`, asyn
   const { getByTestId } = render(
     <Line
       showIcon={false}
-      plateforme={"parcoursup"}
+      plateforme={PLATEFORME.PARCOURSUP}
       niveau={"5 (BTS, DEUST...)"}
       label={"My test line"}
       shouldFetchCount={true}
@@ -224,7 +225,7 @@ test("Action select - should update rule & set à publier", async () => {
   const { getByTestId } = render(
     <Line
       showIcon={false}
-      plateforme={"parcoursup"}
+      plateforme={PLATEFORME.PARCOURSUP}
       niveau={"5 (BTS, DEUST...)"}
       label={"My test line"}
       shouldFetchCount={true}
@@ -270,7 +271,7 @@ test("Status select - should update status", async () => {
   const { getByTestId } = render(
     <Line
       showIcon={false}
-      plateforme={"parcoursup"}
+      plateforme={PLATEFORME.PARCOURSUP}
       niveau={"5 (BTS, DEUST...)"}
       label={"My test line"}
       shouldFetchCount={true}
@@ -315,7 +316,7 @@ test("Status select - should update status for academie", async () => {
   const { getByTestId } = render(
     <Line
       showIcon={false}
-      plateforme={"parcoursup"}
+      plateforme={PLATEFORME.PARCOURSUP}
       niveau={"5 (BTS, DEUST...)"}
       label={"My test line"}
       shouldFetchCount={true}
@@ -363,7 +364,7 @@ test("Status select - should remove status for academie", async () => {
   const { getByTestId } = render(
     <Line
       showIcon={true}
-      plateforme={"parcoursup"}
+      plateforme={PLATEFORME.PARCOURSUP}
       niveau={"5 (BTS, DEUST...)"}
       label={"My test line"}
       shouldFetchCount={true}

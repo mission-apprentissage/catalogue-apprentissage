@@ -1,4 +1,4 @@
-export const academies = {
+export const ACADEMIES = {
   "01": { nom_academie: "Paris", num_academie: 1 },
   "02": { nom_academie: "Aix-Marseille", num_academie: 2 },
   "03": { nom_academie: "Besançon", num_academie: 3 },

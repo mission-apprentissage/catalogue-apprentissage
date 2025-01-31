@@ -1,16 +1,33 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Box, Flex, Link, ListItem, Text, UnorderedList } from "@chakra-ui/react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  Box,
+  Button,
+  Flex,
+  Link,
+  ListItem,
+  Text,
+  UnorderedList,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { ArrowRightDownLine } from "../../../theme/components/icons";
 import { CONDITIONS } from "../../../constants/conditionsIntegration";
-import { academies } from "../../../constants/academies";
+import { ACADEMIES } from "../../../constants/academies";
 import { InfoTooltip } from "../../../common/components/InfoTooltip";
 import { isStatusChangeEnabled } from "../../../common/utils/rulesUtils";
 import { getCount } from "../../../common/api/perimetre";
 import { ActionsSelect } from "./ActionsSelect";
 import { STATUS_LIST, StatusSelect } from "./StatusSelect";
-import { annees } from "../../../constants/annees";
+import { ANNEES } from "../../../constants/annees";
 import { DateContext } from "../../../DateContext";
 import { sortDescending } from "../../../common/utils/historyUtils";
+import { PLATEFORME } from "../../../constants/plateforme";
+import { AFFELNET_STATUS } from "../../../constants/status";
 
 export const Line = ({
   showIcon,
@@ -31,7 +48,10 @@ export const Line = ({
 }) => {
   const [lineCount, setLineCount] = useState(count);
   const [lineLink, setLineLink] = useState(null);
+  const [nextStatus, setNextStatus] = useState(null);
   const { sessionStartDate, sessionEndDate } = useContext(DateContext);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = React.useRef();
 
   const {
     statut: status,
@@ -61,7 +81,7 @@ export const Line = ({
   };
 
   const currentStatus = statut_academies?.[academie] ?? status;
-  const academieLabel = Object.values(academies).find(
+  const academieLabel = Object.values(ACADEMIES).find(
     ({ num_academie: num }) => Number(num) === Number(academie ?? num_academie)
   )?.nom_academie;
 
@@ -102,7 +122,7 @@ export const Line = ({
     let linkFormations = `/recherche/formations?qb=${encodeURIComponent(JSON.stringify(linkQuery))}`;
 
     if (academie ?? num_academie) {
-      linkFormations += `&nom_academie=%5B"${academies[String(academie ?? num_academie)?.padStart(2, "0")].nom_academie}"%5D`;
+      linkFormations += `&nom_academie=%5B"${ACADEMIES[String(academie ?? num_academie)?.padStart(2, "0")].nom_academie}"%5D`;
     }
 
     if (niveau) {
@@ -110,7 +130,7 @@ export const Line = ({
     }
 
     if (annee) {
-      linkFormations += `&annee=%5B"${annees[annee].replace(" ", "+")}"%5D`;
+      linkFormations += `&annee=%5B"${ANNEES[annee].replace(" ", "+")}"%5D`;
     }
 
     if (duree) {
@@ -149,6 +169,52 @@ export const Line = ({
           Object.keys(update.to?.statut_academies ?? {}).includes(academie))
     )
     ?.sort(sortDescending);
+
+  const handleStatutAcademieRule = useCallback(
+    async (nextStatus) => {
+      status === nextStatus
+        ? await onDeleteStatutAcademieRule({ _id: idRule, num_academie: academie })
+        : await onUpdateStatutAcademieRule({
+            _id: idRule,
+            num_academie: academie,
+            statut: nextStatus,
+          });
+
+      onClose();
+    },
+    [status, onDeleteStatutAcademieRule, idRule, academie, onUpdateStatutAcademieRule, onClose]
+  );
+
+  const onStatusSelectChange = useCallback(
+    async (e) => {
+      const nextStatus = e.target.value;
+      console.log(`onChange ${status} -> ${nextStatus}`);
+
+      if (!academie) {
+        // update the status for the rule
+        await onUpdateRule({ _id: idRule, statut: nextStatus });
+      } else {
+        switch (true) {
+          case plateforme === PLATEFORME.AFFELNET &&
+            [AFFELNET_STATUS.A_DEFINIR, AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT].includes(nextStatus) &&
+            [AFFELNET_STATUS.A_PUBLIER, AFFELNET_STATUS.A_PUBLIER_VALIDATION].includes(currentStatus):
+            setNextStatus(nextStatus);
+            onOpen();
+
+            break;
+          case PLATEFORME.PARCOURSUP:
+            // TODO
+            break;
+          default:
+            console.log({ nextStatus, status });
+            // if the status equals the national one, we just remove the academy specificity, if different, we update the status for the academy
+            handleStatutAcademieRule(nextStatus);
+            break;
+        }
+      }
+    },
+    [academie, currentStatus, idRule, onOpen, onUpdateRule, plateforme, status, handleStatutAcademieRule, setNextStatus]
+  );
 
   return (
     <Box
@@ -237,22 +303,7 @@ export const Line = ({
                     academie={academie}
                     currentStatus={currentStatus}
                     condition={condition_integration ?? CONDITIONS.NE_DOIT_PAS_INTEGRER}
-                    onChange={async (e) => {
-                      console.log("onChange status");
-                      if (!academie) {
-                        // update the status for the rule
-                        await onUpdateRule({ _id: idRule, statut: e.target.value });
-                      } else {
-                        // if the status equals the national one, we just remove the academy specificity, if different, we update the status for the academy
-                        status === e.target.value
-                          ? await onDeleteStatutAcademieRule({ _id: idRule, num_academie: academie })
-                          : await onUpdateStatutAcademieRule({
-                              _id: idRule,
-                              num_academie: academie,
-                              statut: e.target.value,
-                            });
-                      }
-                    }}
+                    onChange={onStatusSelectChange}
                   />
                   {!!statusAcademieUpdatesHistory?.length && (
                     <Box px={4}>
@@ -286,6 +337,30 @@ export const Line = ({
           )}
         </Flex>
       </Flex>
+
+      <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose} isCentered>
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Modification de la règle de périmètre
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Si des offres associées à ce type de formation ont déjà été intégrées à Affelnet-lycée, pour que les
+              suppressions puissent être prises en compte, un nouvel import Affelnet-lycée sera nécessaire.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                Annuler
+              </Button>
+              <Button colorScheme="red" onClick={() => handleStatutAcademieRule(nextStatus)} ml={3}>
+                J’ai compris
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </Box>
   );
 };

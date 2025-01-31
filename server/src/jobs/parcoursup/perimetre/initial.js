@@ -442,16 +442,16 @@ const run = async () => {
   logger.debug({ type: "job" }, "Etape 2.");
 
   const filterStatus = {
-    parcoursup_statut_initial: {
-      $in: [
-        PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
-        PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
-        PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
-        PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
-        PARCOURSUP_STATUS.A_PUBLIER,
-        PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
-      ],
-    },
+    // parcoursup_statut_initial: {
+    //   $in: [
+    //     PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
+    //     PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
+    //     PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
+    //     PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+    //     PARCOURSUP_STATUS.A_PUBLIER,
+    //     PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
+    //   ],
+    // },
   };
 
   // Les règles pour lesquelles on ne procède pas à des publications

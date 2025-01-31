@@ -4,6 +4,7 @@ import { userEvent } from "@testing-library/user-event";
 import { getDiplomesAllowedForSubRulesUrl, RuleModal } from "./RuleModal";
 import { PARCOURSUP_STATUS } from "../../../constants/status";
 import { setupMswServer, renderWithRouter } from "../../../common/utils/testUtils";
+import { PLATEFORME } from "../../../constants/plateforme";
 
 const server = setupMswServer(
   rest.get(/\/api\/v1\/entity\/perimetre\/niveau/, (req, res, ctx) => {
@@ -31,7 +32,7 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 test("should compute an url filtering with status 'à publier soumis à validation du recteur' for parcoursup", () => {
-  const result = getDiplomesAllowedForSubRulesUrl("parcoursup");
+  const result = getDiplomesAllowedForSubRulesUrl(PLATEFORME.PARCOURSUP);
   expect(result).toEqual(
     `${process.env.REACT_APP_BASE_URL}/api/v1/entity/perimetre/regles?plateforme=parcoursup&nom_regle_complementaire=null&statut=%C3%A0+publier+%28soumis+%C3%A0+validation+Recteur%29`
   );
@@ -53,7 +54,7 @@ test("renders the modal in creation mode for psup", async () => {
   const { queryByText, queryByTestId } = renderWithRouter(
     <QueryClientProvider client={queryClient}>
       <RuleModal
-        plateforme={"parcoursup"}
+        plateforme={PLATEFORME.PARCOURSUP}
         isOpen={true}
         onClose={onClose}
         onUpdateRule={onUpdateRule}
@@ -83,7 +84,7 @@ test("renders the modal in creation mode for affelnet", async () => {
   const { queryByText, queryByTestId } = renderWithRouter(
     <QueryClientProvider client={queryClient}>
       <RuleModal
-        plateforme={"affelnet"}
+        plateforme={PLATEFORME.AFFELNET}
         isOpen={true}
         onClose={onClose}
         onUpdateRule={onUpdateRule}
@@ -126,7 +127,7 @@ test("renders the modal in update mode and can delete", async () => {
   const { queryByText, getByTestId } = renderWithRouter(
     <QueryClientProvider client={queryClient}>
       <RuleModal
-        plateforme={"parcoursup"}
+        plateforme={PLATEFORME.PARCOURSUP}
         isOpen={true}
         onClose={onClose}
         onUpdateRule={onUpdateRule}
@@ -174,7 +175,7 @@ test("renders the modal and can close", async () => {
   const { queryByText, getByTestId } = renderWithRouter(
     <QueryClientProvider client={queryClient}>
       <RuleModal
-        plateforme={"parcoursup"}
+        plateforme={PLATEFORME.PARCOURSUP}
         isOpen={true}
         onClose={onClose}
         onUpdateRule={onUpdateRule}

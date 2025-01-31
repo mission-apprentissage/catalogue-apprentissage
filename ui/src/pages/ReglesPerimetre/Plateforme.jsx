@@ -13,6 +13,7 @@ import {
   Spinner,
   Text,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import Layout from "../layout/Layout";
@@ -35,8 +36,10 @@ import {
 } from "../../common/api/perimetre";
 import { AcademiesSelect } from "./components/AcademiesSelect";
 import { DiplomesAutosuggest } from "./components/DiplomesAutosuggest";
-import { academies } from "../../constants/academies";
+import { PLATEFORME } from "../../constants/plateforme";
+import { ACADEMIES } from "../../constants/academies";
 import { AFFELNET_STATUS } from "../../constants/status";
+import { Alert } from "../../common/components/Alert";
 
 export default ({ plateforme }) => {
   const [user] = useAuth();
@@ -47,18 +50,19 @@ export default ({ plateforme }) => {
   const [currentAcademie, setCurrentAcademie] = useState(null);
   const [niveauxCount, setNiveauxCount] = useState({});
   const [selectedDiplome, setSelectedDiplome] = useState(null);
+  const toast = useToast();
 
   let title;
 
   switch (plateforme) {
-    case "affelnet":
+    case PLATEFORME.AFFELNET:
       title = currentAcademie
-        ? `Règles d’intégration des formations en apprentissage dans Affelnet-lycée – Académie de ${academies[String(currentAcademie)?.padStart(2, "0")]?.nom_academie}`
+        ? `Règles d’intégration des formations en apprentissage dans Affelnet-lycée – Académie de ${ACADEMIES[String(currentAcademie)?.padStart(2, "0")]?.nom_academie}`
         : `Règles d’intégration des formations en apprentissage dans Affelnet-lycée`;
       break;
-    case "parcoursup":
+    case PLATEFORME.PARCOURSUP:
       title = currentAcademie
-        ? `Règles d’intégration des formations à la plateforme Parcoursup – Académie de ${academies[String(currentAcademie)?.padStart(2, "0")]?.nom_academie}`
+        ? `Règles d’intégration des formations à la plateforme Parcoursup – Académie de ${ACADEMIES[String(currentAcademie)?.padStart(2, "0")]?.nom_academie}`
         : `Règles d'intégration des formations à la plateforme Parcoursup`;
       break;
     default:
@@ -211,6 +215,14 @@ export default ({ plateforme }) => {
     const updatedRule = await updateStatutAcademieRule(ruleData);
     const { niveau: ruleNiveau, diplome: ruleDiplome } = updatedRule;
 
+    toast({
+      title: "Modification acceptée",
+      description: "La modification a été prise en compte et sera visible sur les offres catalogue demain.",
+      status: "success",
+      duration: 10000,
+      isClosable: true,
+    });
+
     setNiveaux((currentTree) => {
       return currentTree.map(({ niveau, diplomes }) => {
         if (niveau.value !== ruleNiveau) {
@@ -260,6 +272,14 @@ export default ({ plateforme }) => {
   const onDeleteStatutAcademieRule = useCallback(async (ruleData) => {
     const updatedRule = await deleteStatutAcademieRule(ruleData);
     const { niveau: ruleNiveau, diplome: ruleDiplome } = updatedRule;
+
+    toast({
+      title: "Modification acceptée",
+      description: "La modification a été prise en compte et sera visible sur les offres catalogue demain.",
+      status: "success",
+      duration: 10000,
+      isClosable: true,
+    });
 
     setNiveaux((currentTree) => {
       return currentTree.map(({ niveau, diplomes }) => {
@@ -441,6 +461,14 @@ export default ({ plateforme }) => {
                     </Button>
                   )}
                 </Flex>
+                {!!currentAcademie && (
+                  <Alert type={"warning"}>
+                    Les réglages effectués sur cette page seront répercutés le lendemain sur les offres. Si une règle ”
+                    À publier” est appliquée sur un type de formation, les offres correspondantes seront publiables le
+                    lendemain. Si une règle “Hors périmètre Affelnet” est appliquée, les offres disparaîtront du
+                    périmètre le lendemain.
+                  </Alert>
+                )}
 
                 {!currentAcademie && (
                   <Box py={4}>

@@ -2,6 +2,7 @@ import React from "react";
 import { Select } from "@chakra-ui/react";
 import { CONDITIONS } from "../../../constants/conditionsIntegration";
 import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
+import { PLATEFORME } from "../../../constants/plateforme";
 
 export const STATUS_LIST = {
   [CONDITIONS.PEUT_INTEGRER]: {
@@ -41,7 +42,7 @@ export const StatusSelect = ({
   ...rest
 }) => {
   const academieStatusList =
-    plateforme === "affelnet"
+    plateforme === PLATEFORME.AFFELNET
       ? [
           AFFELNET_STATUS.A_DEFINIR,
           COMMON_STATUS.A_PUBLIER,

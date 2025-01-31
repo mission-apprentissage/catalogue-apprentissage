@@ -3,6 +3,7 @@ import { render, fireEvent } from "@testing-library/react";
 import { downloadCSV } from "../../../common/utils/downloadUtils";
 import { ExportButton } from "./ExportButton";
 import { PARCOURSUP_STATUS } from "../../../constants/status";
+import { PLATEFORME } from "../../../constants/plateforme";
 
 jest.mock("../../../common/utils/downloadUtils", () => {
   const originalModule = jest.requireActual("../../../common/utils/downloadUtils");
@@ -14,7 +15,7 @@ jest.mock("../../../common/utils/downloadUtils", () => {
 });
 
 test("renders button", () => {
-  const { getByText } = render(<ExportButton plateforme={"parcoursup"} rules={[]} />);
+  const { getByText } = render(<ExportButton plateforme={PLATEFORME.PARCOURSUP} rules={[]} />);
 
   const button = getByText(/^Exporter$/i);
   expect(button).toBeInTheDocument();
@@ -31,7 +32,7 @@ test("should call exportCSV on click", () => {
       },
     },
   ];
-  const { getByText } = render(<ExportButton plateforme={"parcoursup"} rules={rules} />);
+  const { getByText } = render(<ExportButton plateforme={PLATEFORME.PARCOURSUP} rules={rules} />);
   const button = getByText(/^Exporter$/i);
 
   fireEvent(

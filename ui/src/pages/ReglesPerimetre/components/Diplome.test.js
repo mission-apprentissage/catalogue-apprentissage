@@ -3,6 +3,7 @@ import { render, waitFor } from "@testing-library/react";
 import { Diplome } from "./Diplome";
 import * as api from "../../../common/api/perimetre";
 import { getCount } from "../../../common/api/perimetre";
+import { PLATEFORME } from "../../../constants/plateforme";
 
 test("renders Diplome & sub rules", async () => {
   const scrollIntoView = jest.fn();
@@ -23,7 +24,7 @@ test("renders Diplome & sub rules", async () => {
 
   const { queryByText, getAllByTestId } = render(
     <Diplome
-      plateforme={"parcoursup"}
+      plateforme={PLATEFORME.PARCOURSUP}
       niveau={"5 (BTS, DEUST...)"}
       diplome={diplome}
       onShowRule={onShowRule}

@@ -31,6 +31,11 @@ const affelnetSchema = {
     default: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
     description: "Statut initial affelnet",
   },
+  affelnet_statut_a_definir: {
+    type: Boolean,
+    default: false,
+    description: "Est-ce que la formation appartient au périmètre grâce à une règle académique ?",
+  },
   affelnet_previous_statut: {
     type: String,
     enum: Object.values(AFFELNET_STATUS),
