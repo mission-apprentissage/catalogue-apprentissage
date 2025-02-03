@@ -389,9 +389,10 @@ export default () => {
       </Box>
       <Box w="100%" minH="100vh" px={[1, 1, 12, 24]}>
         <Container maxW="7xl">
-          <Text as="h1" mb={8} mt={6}>
+          <Text textStyle="h2" color="grey.800" mt={5} mb={5}>
             {title}
           </Text>
+
           <Stack spacing={2}>
             <Accordion bg="white" allowToggle>
               {roles && (
