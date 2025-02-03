@@ -116,6 +116,7 @@ const run = async () => {
         AFFELNET_STATUS.A_PUBLIER_VALIDATION,
         AFFELNET_STATUS.A_PUBLIER,
         AFFELNET_STATUS.PRET_POUR_INTEGRATION,
+        AFFELNET_STATUS.PUBLIE,
       ],
     },
   };
