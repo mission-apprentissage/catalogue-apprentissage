@@ -1,10 +1,11 @@
 import { isStatusChangeEnabled } from "./rulesUtils";
 import { AFFELNET_STATUS, PARCOURSUP_STATUS } from "../../constants/status";
 import { CONDITIONS } from "../../constants/conditionsIntegration";
+import { PLATEFORME } from "../../constants/plateforme";
 
 test("status change should be enabled on national for parcoursup", () => {
   const result = isStatusChangeEnabled({
-    plateforme: "parcoursup",
+    plateforme: PLATEFORME.PARCOURSUP,
     academie: null,
     num_academie: null,
     status: PARCOURSUP_STATUS.A_PUBLIER,
@@ -16,7 +17,7 @@ test("status change should be enabled on national for parcoursup", () => {
 
 test("status change should be enabled on academy for parcoursup 'à publier soumis à validation du recteur'", () => {
   const result = isStatusChangeEnabled({
-    plateforme: "parcoursup",
+    plateforme: PLATEFORME.PARCOURSUP,
     academie: "1",
     num_academie: null,
     status: PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
@@ -28,7 +29,7 @@ test("status change should be enabled on academy for parcoursup 'à publier soum
 
 test("status change should be enabled on academy for parcoursup 'à publier soumis à validation du recteur' for an academic rule", () => {
   const result = isStatusChangeEnabled({
-    plateforme: "parcoursup",
+    plateforme: PLATEFORME.PARCOURSUP,
     academie: "1",
     num_academie: 1,
     status: PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
@@ -40,7 +41,7 @@ test("status change should be enabled on academy for parcoursup 'à publier soum
 
 test("status change should not be enabled on academy for parcoursup 'à publier soumis à validation du recteur' for an academic rule on different academy", () => {
   const result = isStatusChangeEnabled({
-    plateforme: "parcoursup",
+    plateforme: PLATEFORME.PARCOURSUP,
     academie: "1",
     num_academie: 2,
     status: PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
@@ -52,7 +53,7 @@ test("status change should not be enabled on academy for parcoursup 'à publier 
 
 test("status change should not be enabled on academy for parcoursup other status", () => {
   let result = isStatusChangeEnabled({
-    plateforme: "parcoursup",
+    plateforme: PLATEFORME.PARCOURSUP,
     academie: "1",
     num_academie: null,
     status: PARCOURSUP_STATUS.A_PUBLIER,
@@ -62,7 +63,7 @@ test("status change should not be enabled on academy for parcoursup other status
   expect(result).toBeFalsy();
 
   result = isStatusChangeEnabled({
-    plateforme: "parcoursup",
+    plateforme: PLATEFORME.PARCOURSUP,
     academie: "1",
     num_academie: null,
     status: PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
@@ -74,7 +75,7 @@ test("status change should not be enabled on academy for parcoursup other status
 
 test("status change should be enabled on national for affelnet", () => {
   const result = isStatusChangeEnabled({
-    plateforme: "affelnet",
+    plateforme: PLATEFORME.AFFELNET,
     academie: null,
     num_academie: null,
     status: AFFELNET_STATUS.A_PUBLIER,
@@ -86,7 +87,7 @@ test("status change should be enabled on national for affelnet", () => {
 
 test("status change should be enabled on academy for affelnet 'peut intégrer'", () => {
   const result = isStatusChangeEnabled({
-    plateforme: "affelnet",
+    plateforme: PLATEFORME.AFFELNET,
     academie: "1",
     num_academie: null,
     status: AFFELNET_STATUS.A_PUBLIER,
@@ -98,7 +99,7 @@ test("status change should be enabled on academy for affelnet 'peut intégrer'",
 
 test("status change should be enabled on academy for affelnet 'peut intégrer' for an academic rule on same academy", () => {
   const result = isStatusChangeEnabled({
-    plateforme: "affelnet",
+    plateforme: PLATEFORME.AFFELNET,
     academie: "1",
     num_academie: 1,
     status: AFFELNET_STATUS.A_PUBLIER,
@@ -110,7 +111,7 @@ test("status change should be enabled on academy for affelnet 'peut intégrer' f
 
 test("status change should not be enabled on academy for affelnet 'peut intégrer' for an academic rule on different academy", () => {
   const result = isStatusChangeEnabled({
-    plateforme: "affelnet",
+    plateforme: PLATEFORME.AFFELNET,
     academie: "1",
     num_academie: 2,
     status: AFFELNET_STATUS.A_PUBLIER,
@@ -122,7 +123,7 @@ test("status change should not be enabled on academy for affelnet 'peut intégre
 
 test("status change should be not enabled on academy for affelnet consition other than 'peut intégrer'", () => {
   let result = isStatusChangeEnabled({
-    plateforme: "affelnet",
+    plateforme: PLATEFORME.AFFELNET,
     academie: "1",
     num_academie: null,
     status: AFFELNET_STATUS.A_PUBLIER,
@@ -132,7 +133,7 @@ test("status change should be not enabled on academy for affelnet consition othe
   expect(result).toBeFalsy();
 
   result = isStatusChangeEnabled({
-    plateforme: "affelnet",
+    plateforme: PLATEFORME.AFFELNET,
     academie: "1",
     num_academie: null,
     status: AFFELNET_STATUS.A_PUBLIER_VALIDATION,

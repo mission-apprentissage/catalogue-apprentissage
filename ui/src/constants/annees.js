@@ -1,4 +1,4 @@
-export const annees = {
+export const ANNEES = {
   1: "1ère",
   2: "2ème",
   3: "3ème",

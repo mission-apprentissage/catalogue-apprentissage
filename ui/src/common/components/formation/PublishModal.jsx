@@ -89,6 +89,7 @@ const getPublishRadioValue = (status) => {
  * https://test.test.net/test
  *
  */
+/* cspell:disable-next-line */
 const urlRegex =
   /(https?:\/\/)((.+\.ac-(paris|aix-marseille|besancon|bordeaux|caen|clermont-ferrand|dijon|grenoble|lille|lyon|montpellier|nancy-metz|poitiers|rennes|strasbourg|toulouse|nantes|orleans-tours|reims|amiens|rouen|limoges|nice|creteil|versailles|corse|reunion|martinique|guadeloupe|guyane|noumea|mayotte|normandie|polynesie|spm)\.(fr|net|eu|nc|pf|pm|wf))|(.+\.ent\.((paris|aix-marseille|besancon|bordeaux|caen|clermont-ferrand|dijon|grenoble|lille|lyon|montpellier|nancy-metz|poitiers|rennes|strasbourg|toulouse|nantes|orleans-tours|reims|amiens|rouen|limoges|nice|creteil|versailles|corse|reunion|martinique|guadeloupe|guyane|noumea|mayotte|normandie|polynesie|spm)|(auvergne-rhone-alpes|auvergnerhonealpes|bourgogne-franche-compte|bretagne|centre-val-de-loire|corse|grand-est|guadeloupe|guyane|hauts-de-france|ile-de-france|reunion|martinique|mayotte|normandie|nouvelle-aquitaine|occitanie|pays-de-la-loire|provence-alpes-cote-azur))\.(fr|net|eu|nc|pf|pm|wf))|(.+\.region-academique-(auvergne-rhone-alpes|auvergnerhonealpes|bourgogne-franche-compte|bretagne|centre-val-de-loire|corse|grand-est|guadeloupe|guyane|hauts-de-france|ile-de-france|reunion|martinique|mayotte|normandie|nouvelle-aquitaine|occitanie|pays-de-la-loire|provence-alpes-cote-azur)\.fr)|(.+\.monbureaunumerique\.fr)|(.+\.monavenirdanslenucleaire\.fr)|(.+\.index-education\.(com|net))|((www\.)?onisep\.fr)|((www\.)?enedis\.fr)).*/;
 

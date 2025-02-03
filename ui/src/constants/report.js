@@ -1,4 +1,4 @@
-const REPORT_TYPE = {
+export const REPORT_TYPE = {
   RCO_IMPORT: "rcoImport",
   RCO_CONVERSION: "rcoConversion",
   TRAININGS_UPDATE: "trainingsUpdate",
@@ -6,6 +6,4 @@ const REPORT_TYPE = {
   METIER_GRAND_AGE: "grandAge",
 };
 
-const reportTypes = Object.values(REPORT_TYPE);
-
-export { REPORT_TYPE, reportTypes };
+export const reportTypes = Object.values(REPORT_TYPE);

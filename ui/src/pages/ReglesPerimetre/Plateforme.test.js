@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { rest } from "msw";
 import { renderWithRouter, setupMswServer } from "../../common/utils/testUtils";
 import Plateforme from "./Plateforme";
+import { PLATEFORME } from "../../constants/plateforme";
 
 jest.setTimeout(20000);
 
@@ -51,7 +52,7 @@ afterAll(() => server.close());
 test("renders basic tree", async () => {
   const { getAllByText, getByText } = renderWithRouter(
     <QueryClientProvider client={queryClient}>
-      <Plateforme plateforme={"parcoursup"} />
+      <Plateforme plateforme={PLATEFORME.PARCOURSUP} />
     </QueryClientProvider>
   );
 
@@ -80,7 +81,7 @@ test("renders basic tree", async () => {
 test("opens rule modal to add a diploma", async () => {
   const { getByText, queryByText } = renderWithRouter(
     <QueryClientProvider client={queryClient}>
-      <Plateforme plateforme={"parcoursup"} />
+      <Plateforme plateforme={PLATEFORME.PARCOURSUP} />
     </QueryClientProvider>
   );
 

@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Line } from "./Line";
 import { Box } from "@chakra-ui/react";
+import { AFFELNET_STATUS } from "../../../constants/status";
 
 export const Diplome = ({
   bg,
@@ -11,11 +12,15 @@ export const Diplome = ({
   onCreateRule,
   onUpdateRule,
   onDeleteRule,
+  onUpdateStatutAcademieRule,
+  onDeleteStatutAcademieRule,
   isExpanded,
   academie,
   isSelected,
 }) => {
   const ref = useRef(null);
+  const [background, setBackground] = useState(bg);
+  const [transitionDuration, setTransitionDuration] = useState("0s");
 
   useEffect(() => {
     if (isSelected) {
@@ -24,27 +29,45 @@ export const Diplome = ({
   }, [isSelected]);
 
   const { value, count, regles } = diplome;
+  const academieStatuts = [AFFELNET_STATUS.A_DEFINIR];
 
   // check if it has one rule at diplome level
   const [diplomeRule] = regles.filter(({ nom_regle_complementaire }) => nom_regle_complementaire === null);
-  const otherRules = regles.filter(({ nom_regle_complementaire }) => nom_regle_complementaire !== null);
+  const otherRules = regles
+    .filter(({ nom_regle_complementaire }) => nom_regle_complementaire !== null)
+    .filter((rule) => !academie || academieStatuts.includes(rule.statut));
+
+  useEffect(() => {
+    if (isSelected) {
+      setBackground("yellow.100");
+      setTransitionDuration("0s");
+      setTimeout(() => {
+        setBackground(bg);
+        setTransitionDuration("2s");
+      }, 2000);
+    }
+  }, [isSelected, bg]);
 
   return (
-    <Box bg={bg} ref={ref}>
-      <Line
-        plateforme={plateforme}
-        niveau={niveau}
-        diplome={value}
-        label={value}
-        rule={diplomeRule}
-        onShowRule={onShowRule}
-        onCreateRule={onCreateRule}
-        onUpdateRule={onUpdateRule}
-        onDeleteRule={onDeleteRule}
-        count={count}
-        academie={academie}
-        shouldFetchCount={isExpanded}
-      />
+    <Box bg={background} transitionDuration={transitionDuration} ref={ref}>
+      {(!academie || academieStatuts.includes(diplomeRule?.statut) || otherRules?.length > 0) && (
+        <Line
+          plateforme={plateforme}
+          niveau={niveau}
+          diplome={value}
+          label={value}
+          rule={diplomeRule}
+          onShowRule={onShowRule}
+          onCreateRule={onCreateRule}
+          onUpdateRule={onUpdateRule}
+          onDeleteRule={onDeleteRule}
+          onUpdateStatutAcademieRule={onUpdateStatutAcademieRule}
+          onDeleteStatutAcademieRule={onDeleteStatutAcademieRule}
+          count={count}
+          academie={academie}
+          shouldFetchCount={isExpanded}
+        />
+      )}
       {otherRules?.length > 0 &&
         otherRules.map((rule) => (
           <Line
@@ -58,6 +81,8 @@ export const Diplome = ({
             onCreateRule={onCreateRule}
             onUpdateRule={onUpdateRule}
             onDeleteRule={onDeleteRule}
+            onUpdateStatutAcademieRule={onUpdateStatutAcademieRule}
+            onDeleteStatutAcademieRule={onDeleteStatutAcademieRule}
             shouldFetchCount={isExpanded}
             showIcon={true}
             academie={academie}

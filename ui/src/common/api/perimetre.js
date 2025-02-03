@@ -1,4 +1,4 @@
-import { _delete, _get, _post, _put } from "../httpClient";
+import { _delete, _get, _post, _put, _patch } from "../httpClient";
 import { useQuery } from "react-query";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
@@ -59,6 +59,18 @@ export const updateRule = async ({
     duree,
     annee,
     statut_academies,
+  });
+};
+
+export const updateStatutAcademieRule = async ({ _id, num_academie, statut }) => {
+  return await _patch(`${CATALOGUE_API}/entity/perimetre/regle/${_id}/${num_academie}`, {
+    statut,
+  });
+};
+
+export const deleteStatutAcademieRule = async ({ _id, num_academie, statut }) => {
+  return await _delete(`${CATALOGUE_API}/entity/perimetre/regle/${_id}/${num_academie}`, {
+    statut,
   });
 };
 

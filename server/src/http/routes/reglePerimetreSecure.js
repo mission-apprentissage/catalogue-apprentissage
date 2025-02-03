@@ -3,8 +3,9 @@ const Joi = require("joi");
 const tryCatch = require("../middlewares/tryCatchMiddleware");
 const Boom = require("boom");
 const { ReglePerimetre } = require("../../common/models");
-const { diffFormation, buildUpdatesHistory } = require("../../logic/common/utils/diffUtils");
+const { diffReglePerimetre, buildUpdatesHistory } = require("../../logic/common/utils/diffUtils");
 const { sanitize } = require("../../common/utils/sanitizeUtils");
+const { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } = require("../../constants/status");
 
 /**
  * Schema for validation
@@ -18,15 +19,15 @@ const niveauSchema = Joi.string().valid(
   "7 (Master, titre ingénieur...)"
 );
 const statutSchema = Joi.string().valid(
-  "non publiable en l'état",
-  "publié",
-  "non publié",
-  "à publier (sous condition habilitation)",
-  "à publier (vérifier accès direct postbac)",
-  "à publier (soumis à validation Recteur)",
-  "à publier (soumis à validation)",
-  "à publier",
-  "prêt pour intégration"
+  COMMON_STATUS.NON_PUBLIABLE_EN_LETAT,
+  COMMON_STATUS.PUBLIE,
+  COMMON_STATUS.NON_PUBLIE,
+  PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
+  PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
+  PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+  AFFELNET_STATUS.A_PUBLIER_VALIDATION,
+  AFFELNET_STATUS.A_DEFINIR,
+  COMMON_STATUS.A_PUBLIER
 );
 
 const conditionSchema = Joi.string().valid("doit intégrer", "peut intégrer", "ne doit pas intégrer");
@@ -60,6 +61,10 @@ const updateSchema = Joi.object({
   statut_academies: Joi.object().allow(null),
 }).unknown();
 
+const updateStatutAcademiesSchema = Joi.object({
+  statut: statutSchema,
+}).unknown();
+
 /**
  * Ensure user can edit perimeter rules
  */
@@ -71,13 +76,29 @@ const hasPerimeterRights = (user = {}, plateforme) => {
   );
 };
 
-const hasAcademyRights = (user, { num_academie }, payload) => {
+/**
+ * Ensure user can edit academy rules
+ */
+const hasAcademyRights = (user, { num_academie, statut_academies }, payload) => {
   const userAcademies = user.academie.split(",");
   const hasAllAcademies = user.isAdmin || userAcademies.includes("-1");
 
-  if (!num_academie) {
-    const isEditingStatusOnly = payload && Object.keys(payload).length === 1 && !!payload.statut_academies;
-    return hasAllAcademies || isEditingStatusOnly;
+  if (payload?.statut_academies) {
+    const newAcademies = Object.keys(statut_academies || {});
+    const oldAcademies = Object.keys(payload?.statut_academies || {});
+
+    const diffAcademies = newAcademies
+      .filter((x) => !oldAcademies.includes(x) || statut_academies[x] !== payload.statut_academies[x])
+      .concat(
+        oldAcademies.filter((x) => !newAcademies.includes(x) || statut_academies[x] !== payload.statut_academies[x])
+      );
+
+    if (diffAcademies.length > 0) {
+      return (
+        hasAllAcademies ||
+        diffAcademies.every((diffAcademy) => userAcademies.includes(`${diffAcademy}`.padStart(2, "0")))
+      );
+    }
   }
 
   return hasAllAcademies || userAcademies.includes(`${num_academie}`.padStart(2, "0"));
@@ -156,18 +177,13 @@ module.exports = () => {
         throw Boom.badRequest();
       }
 
-      const { plateforme } = payload;
+      const rule = await ReglePerimetre.findById(id, { updates_history: 0 }).lean();
 
-      if (plateforme && !hasPerimeterRights(user, plateforme)) {
-        throw Boom.unauthorized();
-      }
-
-      const rule = await ReglePerimetre.findById(id).lean();
       if (!rule) {
         throw Boom.notFound();
       }
 
-      if (!hasPerimeterRights(user, rule.plateforme) || !hasAcademyRights(user, rule, payload)) {
+      if (!(hasPerimeterRights(user, rule.plateforme) && hasAcademyRights(user, rule, payload))) {
         throw Boom.unauthorized();
       }
 
@@ -179,9 +195,115 @@ module.exports = () => {
       };
 
       // add entry in updates history
-      const { updates, keys } = diffFormation(rule, updatedRule);
+      const { updates, keys } = diffReglePerimetre(rule, updatedRule);
       if (updates) {
-        updatedRule.updates_history = buildUpdatesHistory(rule, updates, keys);
+        updatedRule.$push = {
+          updates_history: buildUpdatesHistory(rule, updates, keys),
+        };
+      }
+
+      const updated = await ReglePerimetre.findByIdAndUpdate(id, updatedRule, { new: true });
+      return res.json(updated);
+    })
+  );
+
+  router.patch(
+    "/perimetre/regle/:id/:num_academie",
+    tryCatch(async (req, res) => {
+      const payload = sanitize(req.body);
+      const sanitizedParams = sanitize(req.params);
+
+      let user = {};
+      if (req.user) {
+        user = req.session?.passport?.user;
+      }
+
+      await updateStatutAcademiesSchema.validateAsync(payload, { abortEarly: false });
+      const { id, num_academie } = sanitizedParams;
+      if (!id || !num_academie) {
+        throw Boom.badRequest();
+      }
+
+      const rule = await ReglePerimetre.findById(id, { updates_history: 0 }).lean();
+
+      if (!rule) {
+        throw Boom.notFound();
+      }
+
+      if (
+        !(
+          hasPerimeterRights(user, rule.plateforme) &&
+          (user.isAdmin || user.academie.split(",").includes(num_academie))
+        )
+      ) {
+        throw Boom.unauthorized();
+      }
+
+      const updatedRule = {
+        ...rule,
+        statut_academies: { ...rule.statut_academies, [num_academie]: payload.statut },
+        last_update_who: user.email,
+        last_update_at: Date.now(),
+      };
+
+      // add entry in updates history
+      const { updates, keys } = diffReglePerimetre(rule, updatedRule);
+      if (updates) {
+        updatedRule.$push = {
+          updates_history: buildUpdatesHistory(rule, updates, keys),
+        };
+      }
+
+      const updated = await ReglePerimetre.findByIdAndUpdate(id, updatedRule, { new: true });
+      return res.json(updated);
+    })
+  );
+
+  router.delete(
+    "/perimetre/regle/:id/:num_academie",
+    tryCatch(async (req, res) => {
+      const sanitizedParams = sanitize(req.params);
+
+      let user = {};
+      if (req.user) {
+        user = req.session?.passport?.user;
+      }
+
+      const { id, num_academie } = sanitizedParams;
+      if (!id || !num_academie) {
+        throw Boom.badRequest();
+      }
+
+      const rule = await ReglePerimetre.findById(id, { updates_history: 0 }).lean();
+
+      if (!rule) {
+        throw Boom.notFound();
+      }
+
+      if (
+        !(
+          hasPerimeterRights(user, rule.plateforme) &&
+          (user.isAdmin || user.academie.split(",").includes(num_academie))
+        )
+      ) {
+        throw Boom.unauthorized();
+      }
+
+      const { [num_academie]: previousAcademieStatut, ...statutAcademies } = rule.statut_academies;
+
+      const updatedRule = {
+        ...rule,
+        statut_academies: statutAcademies,
+        last_update_who: user.email,
+        last_update_at: Date.now(),
+      };
+
+      // add entry in updates history
+      const { updates, keys } = diffReglePerimetre(rule, updatedRule);
+      if (updates) {
+        updatedRule.$push = {
+          updates_history: buildUpdatesHistory(rule, updates, keys),
+        };
       }
 
       const updated = await ReglePerimetre.findByIdAndUpdate(id, updatedRule, { new: true });
@@ -204,7 +326,7 @@ module.exports = () => {
         throw Boom.badRequest();
       }
 
-      const rule = await ReglePerimetre.findById(id).lean();
+      const rule = await ReglePerimetre.findById(id, { updates_history: 0 }).lean();
       if (!rule) {
         throw Boom.notFound();
       }
@@ -221,9 +343,11 @@ module.exports = () => {
       };
 
       // add entry in updates history
-      const { updates, keys } = diffFormation(rule, updatedRule);
+      const { updates, keys } = diffReglePerimetre(rule, updatedRule);
       if (updates) {
-        updatedRule.updates_history = buildUpdatesHistory(rule, updates, keys);
+        updatedRule.$push = {
+          updates_history: buildUpdatesHistory(rule, updates, keys),
+        };
       }
 
       const deleted = await ReglePerimetre.findByIdAndUpdate(id, updatedRule, { new: true });

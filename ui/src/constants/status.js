@@ -17,5 +17,6 @@ export const PARCOURSUP_STATUS = {
 
 export const AFFELNET_STATUS = {
   ...COMMON_STATUS,
+  A_DEFINIR: "à définir",
   A_PUBLIER_VALIDATION: "à publier (soumis à validation)",
 };

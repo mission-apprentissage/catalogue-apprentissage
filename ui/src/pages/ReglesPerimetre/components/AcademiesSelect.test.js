@@ -1,6 +1,7 @@
 import React from "react";
 import { fireEvent, queryByText, render } from "@testing-library/react";
 import { AcademiesSelect } from "./AcademiesSelect";
+import { PLATEFORME } from "../../../constants/plateforme";
 
 test("renders all academies for admins", () => {
   const onChange = jest.fn();
@@ -10,7 +11,7 @@ test("renders all academies for admins", () => {
   };
 
   const { getByText, container } = render(
-    <AcademiesSelect plateforme={"parcoursup"} user={user} onChange={onChange} />
+    <AcademiesSelect plateforme={PLATEFORME.PARCOURSUP} user={user} onChange={onChange} />
   );
 
   const nationalOption = getByText(/^au National$/i);
@@ -27,7 +28,7 @@ test("renders no academies without user", () => {
   const user = null;
 
   const { queryByText, container } = render(
-    <AcademiesSelect plateforme={"parcoursup"} user={user} onChange={onChange} />
+    <AcademiesSelect plateforme={PLATEFORME.PARCOURSUP} user={user} onChange={onChange} />
   );
 
   const nationalOption = queryByText(/^au National$/i);
@@ -47,7 +48,7 @@ test("renders only some academies if not admin", () => {
   };
 
   const { queryByText, container } = render(
-    <AcademiesSelect plateforme={"parcoursup"} user={user} onChange={onChange} />
+    <AcademiesSelect plateforme={PLATEFORME.PARCOURSUP} user={user} onChange={onChange} />
   );
 
   const nationalOption = queryByText(/^au National$/i);
@@ -73,7 +74,7 @@ test("on change should be called with academie number", () => {
   };
 
   const { getByText, getByTestId } = render(
-    <AcademiesSelect plateforme={"parcoursup"} user={user} onChange={onChange} />
+    <AcademiesSelect plateforme={PLATEFORME.PARCOURSUP} user={user} onChange={onChange} />
   );
 
   const niceOption = getByText(/^de Nice \(23\)$/i);

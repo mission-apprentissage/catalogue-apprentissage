@@ -1,4 +1,4 @@
-export const departements = {
+export const DEPARTEMENTS = {
   "01": "Ain",
   "02": "Aisne",
   "03": "Allier",

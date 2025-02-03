@@ -1,4 +1,39 @@
-const { diff } = require("deep-object-diff");
+const { diff: deepObjectDiff } = require("deep-object-diff");
+
+const diffReglePerimetre = (previousReglePerimetreP, nextReglePerimetreP) => {
+  const {
+    _id: _id1,
+    __v: __v1,
+    updates_history: updates_history1,
+    created_at: created_at1,
+    updated_at: updated_at1,
+    last_update_at: last_update_at1,
+    ...previousReglePerimetre
+  } = previousReglePerimetreP;
+  const {
+    _id: _id2,
+    __v: __v2,
+    updates_history: updates_history2,
+    created_at: created_at2,
+    updated_at: updated_at2,
+    last_update_at: last_update_at2,
+    ...nextReglePerimetre
+  } = nextReglePerimetreP;
+
+  const diff = Object.keys(nextReglePerimetre).reduce((diff, key) => {
+    if (previousReglePerimetre[key] === nextReglePerimetre[key]) return diff;
+    return {
+      ...diff,
+      [key]: nextReglePerimetre[key],
+    };
+  }, {});
+
+  return {
+    updates: { ...diff, last_update_who: nextReglePerimetreP.last_update_who },
+    keys: Object.keys({ ...diff, last_update_who: nextReglePerimetreP.last_update_who }),
+    length: Object.keys({ ...diff, last_update_who: nextReglePerimetreP.last_update_who }).length,
+  };
+};
 
 const diffFormation = (previousFormationP, nextFormationP) => {
   const {
@@ -22,7 +57,7 @@ const diffFormation = (previousFormationP, nextFormationP) => {
     ...nextFormation
   } = nextFormationP;
 
-  const compare = diff(previousFormation, nextFormation);
+  const compare = deepObjectDiff(previousFormation, nextFormation);
   const keys = Object.keys(compare);
 
   return { updates: keys.length ? compare : null, keys, length: keys.length };
@@ -39,4 +74,4 @@ const buildUpdatesHistory = (origin, updates, keys, date = new Date()) => {
   return [{ from, to: { ...updates }, updated_at: date }];
 };
 
-module.exports = { diffFormation, buildUpdatesHistory };
+module.exports = { diffReglePerimetre, diffFormation, buildUpdatesHistory };

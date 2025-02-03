@@ -6,7 +6,7 @@ export const ActionsSelect = ({ value = CONDITIONS.NE_DOIT_PAS_INTEGRER, onChang
   return (
     <Select
       {...rest}
-      bg={[CONDITIONS.PEUT_INTEGRER, CONDITIONS.DOIT_INTEGRER].includes(value) ? "greenmedium.200" : "greendark.200"}
+      bg={[CONDITIONS.PEUT_INTEGRER, CONDITIONS.DOIT_INTEGRER].includes(value) ? "greenmedium.300" : "greendark.300"}
       size={size}
       onClick={(e) => {
         e.stopPropagation();

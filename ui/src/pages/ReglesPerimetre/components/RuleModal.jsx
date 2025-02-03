@@ -30,8 +30,8 @@ import * as Yup from "yup";
 import { getCount, useNiveaux } from "../../../common/api/perimetre";
 import { _get } from "../../../common/httpClient";
 import { isStatusChangeEnabled } from "../../../common/utils/rulesUtils";
-import { academies } from "../../../constants/academies";
-import { annees } from "../../../constants/annees";
+import { ACADEMIES } from "../../../constants/academies";
+import { ANNEES } from "../../../constants/annees";
 import { CONDITIONS } from "../../../constants/conditionsIntegration";
 import { COMMON_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
 import { DateContext } from "../../../DateContext";
@@ -40,6 +40,8 @@ import { ActionsSelect } from "./ActionsSelect";
 import { RuleBuilder } from "./RuleBuilder";
 import { RuleUpdatesHistory } from "./RuleUpdatesHistory";
 import { StatusSelect } from "./StatusSelect";
+import { sortDescending } from "../../../common/utils/historyUtils";
+import { PLATEFORME } from "../../../constants/plateforme";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -71,7 +73,7 @@ export const getDiplomesAllowedForSubRulesUrl = (plateforme) => {
     nom_regle_complementaire: null,
   };
 
-  if (plateforme === "parcoursup") {
+  if (plateforme === PLATEFORME.PARCOURSUP) {
     filters.statut = PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR;
   } else {
     filters.condition_integration = CONDITIONS.PEUT_INTEGRER;
@@ -112,7 +114,9 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
 
   const isConditionChangeEnabled = !academie;
   const initialCondition = academie && isCreating ? CONDITIONS.PEUT_INTEGRER : condition_integration;
-  const academieLabel = Object.values(academies).find(({ num_academie: num }) => num === num_academie)?.nom_academie;
+  const academieLabel = Object.values(ACADEMIES).find(
+    ({ num_academie: num }) => Number(num) === Number(academie ?? num_academie)
+  )?.nom_academie;
 
   const { data: niveauxData } = useNiveaux({ plateforme });
 
@@ -165,14 +169,6 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
 
             await onUpdateRule({
               _id: idRule,
-              niveau,
-              diplome,
-              nom_regle_complementaire: name,
-              statut: status,
-              regle_complementaire: regle,
-              regle_complementaire_query: query,
-              duree: duration || null,
-              annee: registrationYear || null,
               statut_academies: statusAcademies,
             });
           }
@@ -261,12 +257,16 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
 
   let linkFormations = `/recherche/formations?qb=${encodeURIComponent(JSON.stringify(linkQuery))}`;
 
+  if (academie ?? num_academie) {
+    linkFormations += `&nom_academie=%5B"${ACADEMIES[String(academie ?? num_academie)?.padStart(2, "0")].nom_academie}"%5D`;
+  }
+
   if (values.niveau) {
     linkFormations += `&niveau=%5B"${values.niveau.replace(" ", "+")}"%5D`;
   }
 
   if (values.registrationYear) {
-    linkFormations += `&annee=%5B"${annees[values.registrationYear].replace(" ", "+")}"%5D`;
+    linkFormations += `&annee=%5B"${ANNEES[values.registrationYear].replace(" ", "+")}"%5D`;
   }
 
   if (values.duration) {
@@ -275,6 +275,8 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
       "+"
     )}"%5D`;
   }
+
+  // linkFormations += `&${plateforme}_session=%5BOui%5D`;
 
   linkFormations += `&date_debut_start=%22${sessionStartDate?.toLocaleDateString(
     "en-CA"
@@ -351,7 +353,9 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                 ) : (
                   <>
                     <Text as={"span"} ml={4}>
-                      {num_academie ? `${academieLabel} (${num_academie}) - ` : ""}
+                      {(academie ?? num_academie)
+                        ? `${academieLabel} (${String(academie ?? num_academie)?.padStart(2, "0")}) - `
+                        : ""}
                       {values.name}
                     </Text>
                     <Text ml={4} mt={2} as={"span"} fontSize="1rem" fontWeight={400}>
@@ -417,7 +421,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                           >
                             {niveauxData
                               .find(({ niveau: { value } }) => value === values.niveau)
-                              ?.diplomes.filter(({ value }) => {
+                              ?.diplomes?.filter(({ value }) => {
                                 if (!academie) {
                                   return true;
                                 }
@@ -554,6 +558,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                           id={"status"}
                           name="status"
                           plateforme={plateforme}
+                          academie={academie}
                           currentStatus={values.status}
                           condition={values.condition}
                           onChange={handleChange}
@@ -562,6 +567,12 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                           placeholder={"Sélectionnez une règle de publication"}
                         />
                         <FormErrorMessage>{errors.status}</FormErrorMessage>
+                        {academie && (
+                          <Text mt={4}>
+                            Le statut sera appliquée pour les formations de l'académie {academieLabel} (
+                            {String(academie).padStart(2, "0")})
+                          </Text>
+                        )}
                       </Flex>
                     </FormControl>
                   </Flex>
@@ -617,7 +628,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
                 {!updates_history?.length && (
                   <Text>Aucune modification depuis la création de cet ensemble de conditions.</Text>
                 )}
-                {updates_history?.map(({ from, to, updated_at }) => {
+                {updates_history?.sort(sortDescending)?.map(({ from, to, updated_at }) => {
                   return (
                     <Box key={updated_at} py={4} borderBottom={"1px solid"} borderColor={"grey.300"}>
                       <Text fontWeight={700} mb={2}>

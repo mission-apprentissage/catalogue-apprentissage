@@ -1,9 +1,9 @@
 import React, { memo, useEffect, useState } from "react";
 import { Select } from "@chakra-ui/react";
-import { academies } from "../../../constants/academies";
+import { ACADEMIES } from "../../../constants/academies";
 import { hasAcademyRight, hasAllAcademiesRight, isUserAdmin } from "../../../common/utils/rolesUtils";
 
-const sortedAcademies = Object.values(academies).sort(({ nom_academie: nomA }, { nom_academie: nomB }) =>
+const sortedAcademies = Object.values(ACADEMIES).sort(({ nom_academie: nomA }, { nom_academie: nomB }) =>
   nomA.localeCompare(nomB, "fr")
 );
 

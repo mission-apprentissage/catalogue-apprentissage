@@ -1,13 +1,7 @@
 const logger = require("../../../common/logger");
 const { Formation, ReglePerimetre } = require("../../../common/models");
-const { rncp_code } = require("../../../common/models/schema/formation/formation");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
-const {
-  getQueryFromRule,
-  getSessionStartDate,
-  getSessionEndDate,
-  getSessionDateRules,
-} = require("../../../common/utils/rulesUtils");
+const { getQueryFromRule, getSessionDateRules } = require("../../../common/utils/rulesUtils");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
 
 const excludedRNCPs = [
@@ -397,8 +391,6 @@ const excludedRNCPs = [
 ];
 
 const run = async () => {
-  const sessionStartDate = await getSessionStartDate();
-  const sessionEndDate = await getSessionEndDate();
   const filterSessionDate = await getSessionDateRules();
 
   const filterReglement = {
@@ -416,10 +408,7 @@ const run = async () => {
             "rncp_details.code_type_certif": {
               $in: ["Titre", "TP", null],
             },
-            rncp_code: {
-              $exists: true,
-              $ne: null,
-            },
+            rncp_code: { $exists: true, $ne: null },
             "rncp_details.rncp_outdated": false,
           },
           {
@@ -449,31 +438,40 @@ const run = async () => {
     { $set: { parcoursup_statut_initial: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT } }
   );
 
-  /** 2. On applique les règles de périmètres pour statut "à publier avec action attendue" uniquement sur les formations "non publiable en l'état" */
+  /** 2. On applique les règles de périmètres */
   logger.debug({ type: "job" }, "Etape 2.");
-  const filterNonPubliable = {
-    parcoursup_statut_initial: PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
+
+  const filterStatus = {
+    // parcoursup_statut_initial: {
+    //   $in: [
+    //     PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
+    //     PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
+    //     PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
+    //     PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+    //     PARCOURSUP_STATUS.A_PUBLIER,
+    //     PARCOURSUP_STATUS.PRET_POUR_INTEGRATION,
+    //   ],
+    // },
   };
 
-  const aPublierSousConditions = await ReglePerimetre.find({
+  // Les règles pour lesquelles on ne procède pas à des publications
+  const statutsPublicationInterdite = [];
+
+  const reglesPublicationInterdite = await ReglePerimetre.find({
     plateforme: "parcoursup",
     statut: {
-      $in: [
-        PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
-        PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
-        PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
-      ],
+      $in: statutsPublicationInterdite,
     },
     is_deleted: { $ne: true },
   }).lean();
 
-  aPublierSousConditions.length > 0 &&
-    (await asyncForEach(aPublierSousConditions, async (rule) => {
+  reglesPublicationInterdite.length > 0 &&
+    (await asyncForEach(reglesPublicationInterdite, async (rule) => {
       await Formation.updateMany(
         {
           ...filterReglement,
           ...filterSessionDate,
-          ...filterNonPubliable,
+          ...filterStatus,
 
           ...getQueryFromRule(rule, true),
         },
@@ -487,42 +485,100 @@ const run = async () => {
       );
     }));
 
-  /** 3. Enfin on applique les règles appliquant le statut "à publier" sur toutes les formations (y compris celles qui correspondent aux règles précédentes) */
-  logger.debug({ type: "job" }, "Etape 3.");
-  const filter = {
-    parcoursup_statut_initial: {
-      $in: [
-        PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT,
-        PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
-        PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
-        PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
-      ],
-    },
-  };
+  // Les règles pour lesquelles on ne procède pas à des publications automatiques, mais qui peuvent être publiées par les instructeurs
+  const statutsPublicationManuelle = [
+    PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
+    PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
+    PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+  ];
 
-  const aPublierRules = await ReglePerimetre.find({
+  const reglesPublicationManuelle = await ReglePerimetre.find({
     plateforme: "parcoursup",
-    statut: PARCOURSUP_STATUS.A_PUBLIER,
+    statut: {
+      $in: statutsPublicationManuelle,
+    },
     is_deleted: { $ne: true },
   }).lean();
 
-  aPublierRules.length > 0 &&
-    (await Formation.updateMany(
-      {
-        ...filterReglement,
-        ...filterSessionDate,
-        ...filter,
-
-        $or: aPublierRules.map((rule) => getQueryFromRule(rule, true)),
-      },
-      [
+  reglesPublicationManuelle.length > 0 &&
+    (await asyncForEach(reglesPublicationManuelle, async (rule) => {
+      await Formation.updateMany(
         {
-          $set: {
-            parcoursup_statut_initial: PARCOURSUP_STATUS.A_PUBLIER,
-          },
+          ...filterReglement,
+          ...filterSessionDate,
+          ...filterStatus,
+
+          ...getQueryFromRule(rule, true),
         },
-      ]
-    ));
+        [
+          {
+            $set: {
+              parcoursup_statut_initial: rule.statut,
+            },
+          },
+        ]
+      );
+    }));
+
+  // Les règles pour lesquelles on procède à des publications automatiques et qui peuvent être publiées par les instructeurs  const statusPublicationAutomatique = [AFFELNET_STATUS.A_PUBLIER];
+  const statusPublicationAutomatique = [PARCOURSUP_STATUS.A_PUBLIER];
+
+  const reglesPublicationAutomatique = await ReglePerimetre.find({
+    plateforme: "parcoursup",
+    statut: {
+      $in: statusPublicationAutomatique,
+    },
+    is_deleted: { $ne: true },
+  }).lean();
+
+  reglesPublicationAutomatique.length > 0 &&
+    (await asyncForEach(reglesPublicationAutomatique, async (rule) => {
+      await Formation.updateMany(
+        {
+          ...filterReglement,
+          ...filterSessionDate,
+          ...filterStatus,
+
+          ...getQueryFromRule(rule, true),
+        },
+        [
+          {
+            $set: {
+              parcoursup_statut_initial: rule.statut,
+            },
+          },
+        ]
+      );
+    }));
+
+  // Les règles des académies
+  const academieRules = [
+    ...reglesPublicationInterdite,
+    // ...reglesPublicationManuelle,
+    // ...reglesPublicationAutomatique,
+  ].filter(({ statut_academies }) => statut_academies && Object.keys(statut_academies).length > 0);
+
+  await asyncForEach(academieRules, async (rule) => {
+    await asyncForEach(Object.entries(rule.statut_academies), async ([num_academie, status]) => {
+      await Formation.updateMany(
+        {
+          ...filterReglement,
+          ...filterSessionDate,
+          ...filterStatus,
+
+          num_academie,
+          ...getQueryFromRule(rule, true),
+        },
+        [
+          {
+            $set: {
+              parcoursup_statut_initial: status,
+            },
+          },
+        ]
+      );
+    });
+  });
 };
 
 module.exports = { run };

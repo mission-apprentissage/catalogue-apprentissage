@@ -4,7 +4,7 @@ import { escapeDiacritics } from "../../utils/downloadUtils";
 import helpText from "../../../locales/helpText.json";
 import { CONTEXT } from "../../../constants/context";
 // import { departements } from "../../../constants/departements";
-import { annees } from "../../../constants/annees";
+import { ANNEES } from "../../../constants/annees";
 import { sortDescending } from "../../utils/historyUtils";
 import { AffelnetMissingSession } from "./components/AffelnetMissingSession";
 import { ParcoursupMissingSession } from "./components/ParcoursupMissingSession";
@@ -26,6 +26,7 @@ export const allowedFilters = [
   "affelnet_session",
   "affelnet_statut",
   "affelnet_statut_initial",
+  "affelnet_statut_a_definir",
   "agriculture",
   "annee",
   "bcn_mefs_10",
@@ -711,6 +712,13 @@ export const columnsDefinition = [
     formatter: escapeDiacritics,
   },
   {
+    Header: "Affelnet: règle académique",
+    accessor: "affelnet_statut_a_definir",
+    width: 200,
+    exportable: true,
+    formatter: booleanFormatter,
+  },
+  {
     Header: "Affelnet: statut sur la précédente campagne",
     accessor: "affelnet_previous_statut",
     width: 200,
@@ -1329,6 +1337,32 @@ export const quickFiltersDefinition = [
     acl: "page_catalogue/voir_filtres_avances_aff",
     filters: [
       {
+        componentId: `affelnet_statut_a_definir`,
+        type: "facet",
+        dataField: "affelnet_statut_a_definir",
+        title: "Règle académique Affelnet",
+        filterLabel: "Règle académique Affelnet",
+        selectAllLabel: "Tous",
+        sortBy: "desc",
+        acl: "page_catalogue/voir_filtres_aff",
+        displayInContext: [CONTEXT.CATALOGUE_GENERAL],
+        helpTextSection: helpText.search.affelnet_statut_a_definir,
+        transformData: (data) => data.map((d) => ({ ...d, key: d.key ? "Oui" : "Non" })),
+        customQuery: (values) => {
+          if (values.length === 1 && values[0] !== "Tous") {
+            return {
+              query: {
+                match: {
+                  affelnet_statut_a_definir: values[0] === "Oui",
+                },
+              },
+            };
+          }
+          return {};
+        },
+      },
+
+      {
         componentId: `affelnet_session`,
         type: "facet",
         dataField: "affelnet_session",
@@ -1543,20 +1577,20 @@ export const quickFiltersDefinition = [
   },
 
   {
+    componentId: `date_debut`,
+    type: "date-range",
+    dataField: "date_debut",
+    title: "Date de début de formation",
+    filterLabel: "Début de formation",
+    helpTextSection: helpText.search.periode.title,
+  },
+
+  {
     type: "advanced",
     openText: "Masquer les filtres avancés (niveau, durée, dates...)",
     closeText: "Filtres avancés (niveau, durée, dates...)",
     acl: "page_catalogue/voir_filtres_avances_generaux",
     filters: [
-      {
-        componentId: `date_debut`,
-        type: "date-range",
-        dataField: "date_debut",
-        title: "Date de début de formation",
-        filterLabel: "Début de formation",
-        helpTextSection: helpText.search.periode.title,
-      },
-
       // {
       //   componentId: `num_departement`,
       //   type: "facet",
@@ -1596,11 +1630,11 @@ export const quickFiltersDefinition = [
         selectAllLabel: "Toutes",
         sortBy: "asc",
         isAuth: true, // hide for anonymous
-        transformData: (data) => data.map((d) => ({ ...d, key: annees[d.key] })),
+        transformData: (data) => data.map((d) => ({ ...d, key: ANNEES[d.key] })),
         customQuery: (values) => ({
           query: values?.length && {
             terms: {
-              "annee.keyword": values?.map((value) => Object.keys(annees).find((annee) => annees[annee] === value)),
+              "annee.keyword": values?.map((value) => Object.keys(ANNEES).find((annee) => ANNEES[annee] === value)),
             },
           },
         }),
@@ -1665,7 +1699,7 @@ export const dataSearch = {
     "etablissement_gestionnaire_raison_sociale_enseigne",
     "etablissement_formateur_raison_sociale_enseigne",
     "cfd",
-    ",cfd_entree",
+    "cfd_entree",
     "rncp_code",
     "etablissement_lieu_formation_siret",
     "uai_formation",

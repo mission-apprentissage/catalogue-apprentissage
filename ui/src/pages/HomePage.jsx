@@ -27,7 +27,7 @@ import { Breadcrumb } from "../common/components/Breadcrumb";
 import { setTitle } from "../common/utils/pageUtils";
 import useAuth from "../common/hooks/useAuth";
 import { hasAccessTo, hasOnlyOneAcademyRight } from "../common/utils/rolesUtils";
-import { academies } from "../constants/academies";
+import { ACADEMIES } from "../constants/academies";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -80,7 +80,7 @@ export default () => {
   }
 
   if (hasOnlyOneAcademyRight(auth)) {
-    suffixCatalogue += `&nom_academie=%5B"${academies[auth.academie]?.nom_academie}"%5D`;
+    suffixCatalogue += `&nom_academie=%5B"${ACADEMIES[auth.academie]?.nom_academie}"%5D`;
   }
 
   return (

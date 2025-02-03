@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { Box, Container, Flex, Link, Text } from "@chakra-ui/react";
 import useAuth from "../../../common/hooks/useAuth";
-import { hasAccessTo, hasOneOfRoles, hasOnlyOneAcademyRight, isUserAdmin } from "../../../common/utils/rolesUtils";
+import { hasAccessTo, hasOnlyOneAcademyRight, isUserAdmin } from "../../../common/utils/rolesUtils";
 import { MenuFill, Close } from "../../../theme/components/icons";
-import { academies } from "../../../constants/academies";
+import { ACADEMIES } from "../../../constants/academies";
 
 const NavigationMenu = (props) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -68,7 +68,7 @@ const NavLinks = ({ isOpen }) => {
   }
 
   if (hasOnlyOneAcademyRight(auth)) {
-    suffixCatalogue += `&nom_academie=%5B"${academies[auth.academie]?.nom_academie}"%5D`;
+    suffixCatalogue += `&nom_academie=%5B"${ACADEMIES[auth.academie]?.nom_academie}"%5D`;
   }
 
   return (
@@ -94,10 +94,11 @@ const NavLinks = ({ isOpen }) => {
           <NavItem to="/consoles-pilotage/parcoursup">Console Parcoursup</NavItem>
         )}
 
-        {hasAccessTo(auth, "page_perimetre/affelnet") && (
+        {(hasAccessTo(auth, "page_perimetre/affelnet") || hasAccessTo(auth, "page_perimetre/affelnet_academie")) && (
           <NavItem to="/regles-perimetre/affelnet">Périmètre Affelnet</NavItem>
         )}
-        {hasAccessTo(auth, "page_perimetre/parcoursup") && (
+        {(hasAccessTo(auth, "page_perimetre/parcoursup") ||
+          hasAccessTo(auth, "page_perimetre/parcoursup_academie")) && (
           <NavItem to="/regles-perimetre/parcoursup">Périmètre Parcoursup</NavItem>
         )}
 

@@ -1,11 +1,13 @@
 const logger = require("../../../common/logger");
 const controller = require("./controller");
 const initial = require("./initial");
-const perimetre = require("./perimetre");
 const replace = require("./replace");
+const counter = require("./counter");
+const perimetre = require("./perimetre");
 const session = require("./session");
 const previousSession = require("./previousSession");
-const counter = require("./counter");
+const differences = require("./differences");
+const academie = require("./academie");
 
 const { runScript } = require("../../scriptWrapper");
 
@@ -18,6 +20,12 @@ const afPerimetre = async () => {
 
     logger.info({ type: "job" }, "∙ Traitement des 'annule et remplace':");
     await replace.run();
+
+    logger.info(
+      { type: "job" },
+      "∙ Application des règles de périmètre pour déterminer si le statut est à définir par l'académie :"
+    );
+    await academie.run();
 
     logger.info({ type: "job" }, "∙ Application des règles de périmètre pour déterminer le statut initial :");
     await initial.run();
@@ -34,6 +42,9 @@ const afPerimetre = async () => {
 
     logger.info({ type: "job" }, "∙ Compteurs après :");
     await counter.run();
+
+    logger.info({ type: "job" }, "∙ Differences :");
+    await differences.run();
 
     logger.info({ type: "job" }, " -- AFFELNET | PERIMETRE : ✅ -- ");
   } catch (error) {

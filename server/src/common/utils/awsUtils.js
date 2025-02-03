@@ -20,7 +20,7 @@ module.exports.getFileFromS3 = getFileFromS3;
 const downloadAndSaveFileFromS3 = (from, to) => {
   logger.debug({ type: "utils" }, `Downloading and save file from S3 Bucket...`);
 
-  console.log({ accessKeyId: config.aws.accessKeyId, secretAccessKey: config.aws.secretAccessKey });
+  // console.log({ accessKeyId: config.aws.accessKeyId, secretAccessKey: config.aws.secretAccessKey });
   return new Promise((re, rj) => {
     getFileFromS3(from)
       .pipe(fs.createWriteStream(to))

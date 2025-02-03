@@ -6,10 +6,11 @@ import useAuth from "./common/hooks/useAuth";
 import { _get, _post } from "./common/httpClient";
 import { hasAccessTo, hasOnlyOneAcademyRight } from "./common/utils/rolesUtils";
 import { DateContext } from "./DateContext";
-import { academies } from "./constants/academies";
+import { ACADEMIES } from "./constants/academies";
+import { PLATEFORME } from "./constants/plateforme";
 
 // Route-based code splitting @see https://reactjs.org/docs/code-splitting.html#route-based-code-splitting
-const HomePage = lazy(() => import("./pages/HomePage"));
+// const HomePage = lazy(() => import("./pages/HomePage"));
 const LoginPage = lazy(() => import("./pages/LoginPage"));
 const ResetPasswordPage = lazy(() => import("./pages/password/ResetPasswordPage"));
 const ForgottenPasswordPage = lazy(() => import("./pages/password/ForgottenPasswordPage"));
@@ -106,7 +107,7 @@ const Root = () => {
   }
 
   if (hasOnlyOneAcademyRight(auth)) {
-    suffixCatalogue += `&nom_academie=%5B"${academies[auth.academie]?.nom_academie}"%5D`;
+    suffixCatalogue += `&nom_academie=%5B"${ACADEMIES[auth.academie]?.nom_academie}"%5D`;
   }
 
   if (isLoading) {
@@ -273,8 +274,10 @@ const Root = () => {
             {/* Règles de périmètre */}
             {auth &&
             (hasAccessTo(auth, "page_perimetre") ||
+              hasAccessTo(auth, "page_perimetre/affelnet") ||
               hasAccessTo(auth, "page_perimetre/parcoursup") ||
-              hasAccessTo(auth, "page_perimetre/affelnet")) ? (
+              hasAccessTo(auth, "page_perimetre/affelnet_academie") ||
+              hasAccessTo(auth, "page_perimetre/parcoursup_academie")) ? (
               <Route
                 path="/regles-perimetre"
                 element={
@@ -287,12 +290,14 @@ const Root = () => {
               <React.Fragment />
             )}
 
-            {auth && hasAccessTo(auth, "page_perimetre/parcoursup") ? (
+            {auth &&
+            (hasAccessTo(auth, "page_perimetre/parcoursup") ||
+              hasAccessTo(auth, "page_perimetre/parcoursup_academie")) ? (
               <Route
                 path="/regles-perimetre/parcoursup"
                 element={
                   <RequireAuth>
-                    <ReglesPerimetrePlateforme plateforme="parcoursup" />
+                    <ReglesPerimetrePlateforme plateforme={PLATEFORME.PARCOURSUP} />
                   </RequireAuth>
                 }
               />
@@ -300,12 +305,13 @@ const Root = () => {
               <React.Fragment />
             )}
 
-            {auth && hasAccessTo(auth, "page_perimetre/affelnet") ? (
+            {auth &&
+            (hasAccessTo(auth, "page_perimetre/affelnet") || hasAccessTo(auth, "page_perimetre/affelnet_academie")) ? (
               <Route
                 path="/regles-perimetre/affelnet"
                 element={
                   <RequireAuth>
-                    <ReglesPerimetrePlateforme plateforme="affelnet" />
+                    <ReglesPerimetrePlateforme plateforme={PLATEFORME.AFFELNET} />
                   </RequireAuth>
                 }
               />
@@ -317,7 +323,7 @@ const Root = () => {
               path="/mode-emploi/affelnet"
               element={
                 <RequireAuth>
-                  <InstructionManual plateforme="affelnet" />
+                  <InstructionManual plateforme={PLATEFORME.AFFELNET} />
                 </RequireAuth>
               }
             />
@@ -326,7 +332,7 @@ const Root = () => {
               path="/mode-emploi/parcoursup"
               element={
                 <RequireAuth>
-                  <InstructionManual plateforme="parcoursup" />
+                  <InstructionManual plateforme={PLATEFORME.PARCOURSUP} />
                 </RequireAuth>
               }
             />

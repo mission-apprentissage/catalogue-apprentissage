@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Flex, Text } from "@chakra-ui/react";
 
-export const Headline = () => {
+export const Headline = ({ academie }) => {
   return (
     <Box>
       <Box bg="galt">
@@ -12,9 +12,15 @@ export const Headline = () => {
             </Text>
           </Flex>
           <Flex alignItems="center">
-            <Flex>formations</Flex>
-            <Flex px={8}>condition d’intégration</Flex>
-            <Flex>règles de publication</Flex>
+            <Flex mr={8}>formations</Flex>
+            {!academie && (
+              <Flex mr={8} pl={4}>
+                condition d’intégration
+              </Flex>
+            )}
+            <Flex mr={8} pl={4}>
+              règles de publication
+            </Flex>
           </Flex>
         </Flex>
       </Box>

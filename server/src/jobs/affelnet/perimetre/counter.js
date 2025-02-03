@@ -1,6 +1,7 @@
 const logger = require("../../../common/logger");
 const { Formation } = require("../../../common/models");
 const { AFFELNET_STATUS } = require("../../../constants/status");
+const config = require("config");
 
 const run = async () => {
   const filterGeneral = { catalogue_published: true, published: true };
@@ -10,77 +11,26 @@ const run = async () => {
   const totalGeneral = await Formation.countDocuments(filterGeneral);
   const totalNonReglementaire = await Formation.countDocuments(filterNonReglementaire);
 
-  const totalNotRelevant = await Formation.countDocuments({
-    affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
-  });
-  const totalGeneralNotRelevant = await Formation.countDocuments({
-    ...filterGeneral,
-    affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
-  });
-  const totalNonReglementaireNotRelevant = await Formation.countDocuments({
-    ...filterNonReglementaire,
-    affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
-  });
-
-  const totalToValidate = await Formation.countDocuments({
-    affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
-  });
-  const totalGeneralToValidate = await Formation.countDocuments({
-    ...filterGeneral,
-    affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
-  });
-  const totalNonReglementaireToValidate = await Formation.countDocuments({
-    ...filterNonReglementaire,
-    affelnet_statut: AFFELNET_STATUS.A_PUBLIER_VALIDATION,
-  });
-
-  const totalToCheck = await Formation.countDocuments({
-    affelnet_statut: AFFELNET_STATUS.A_PUBLIER,
-  });
-  const totalGeneralToCheck = await Formation.countDocuments({
-    ...filterGeneral,
-    affelnet_statut: AFFELNET_STATUS.A_PUBLIER,
-  });
-  const totalNonReglementaireToCheck = await Formation.countDocuments({
-    ...filterNonReglementaire,
-    affelnet_statut: AFFELNET_STATUS.A_PUBLIER,
-  });
-
-  const totalPending = await Formation.countDocuments({
-    affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
-  });
-  const totalGeneralPending = await Formation.countDocuments({
-    ...filterGeneral,
-    affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
-  });
-  const totalNonReglementairePending = await Formation.countDocuments({
-    ...filterNonReglementaire,
-    affelnet_statut: AFFELNET_STATUS.PRET_POUR_INTEGRATION,
-  });
-
-  const totalPublished = await Formation.countDocuments({
-    affelnet_statut: AFFELNET_STATUS.PUBLIE,
-  });
-  const totalGeneralPublished = await Formation.countDocuments({
-    ...filterGeneral,
-    affelnet_statut: AFFELNET_STATUS.PUBLIE,
-  });
-  const totalNonReglementairePublished = await Formation.countDocuments({
-    ...filterNonReglementaire,
-    affelnet_statut: AFFELNET_STATUS.PUBLIE,
-  });
-
-  const totalNotPublished = await Formation.countDocuments({
-    affelnet_statut: AFFELNET_STATUS.NON_PUBLIE,
-  });
-  const totalGeneralNotPublished = await Formation.countDocuments({
-    ...filterGeneral,
-    affelnet_statut: AFFELNET_STATUS.NON_PUBLIE,
-  });
-  const totalNonReglementaireNotPublished = await Formation.countDocuments({
-    ...filterNonReglementaire,
-    affelnet_statut: AFFELNET_STATUS.NON_PUBLIE,
-  });
+  const totalByStatus = Object.assign(
+    {},
+    ...(await Promise.all(
+      Object.values(AFFELNET_STATUS).map(async (status) => ({
+        [`statut "${status}"`]: {
+          "catalogue général": await Formation.countDocuments({
+            affelnet_statut: status,
+            ...filterGeneral,
+          }),
+          "catalogue non règlementaire": await Formation.countDocuments({
+            affelnet_statut: status,
+            ...filterNonReglementaire,
+          }),
+          "total (y compris archives)": await Formation.countDocuments({
+            affelnet_statut: status,
+          }),
+        },
+      }))
+    ))
+  );
 
   const totalPérimètre = await Formation.countDocuments({ affelnet_perimetre: true });
   const totalGeneralPérimètre = await Formation.countDocuments({
@@ -90,6 +40,21 @@ const run = async () => {
   const totalNonReglementairePérimètre = await Formation.countDocuments({
     ...filterNonReglementaire,
     affelnet_perimetre: true,
+  });
+
+  const totalPérimètreAvecSession = await Formation.countDocuments({
+    affelnet_perimetre: true,
+    affelnet_session: true,
+  });
+  const totalGeneralPérimètreAvecSession = await Formation.countDocuments({
+    ...filterGeneral,
+    affelnet_perimetre: true,
+    affelnet_session: true,
+  });
+  const totalNonReglementairePérimètreAvecSession = await Formation.countDocuments({
+    ...filterNonReglementaire,
+    affelnet_perimetre: true,
+    affelnet_session: true,
   });
 
   const totalHorsPérimètre = await Formation.countDocuments({ affelnet_perimetre: false });
@@ -109,42 +74,20 @@ const run = async () => {
       "total (y compris archives)": total,
     },
 
-    "statut 'non publiable en l'état'": {
-      "catalogue général": totalGeneralNotRelevant,
-      "catalogue non règlementaire": totalNonReglementaireNotRelevant,
-      "total (y compris archives)": totalNotRelevant,
-    },
-    "statut 'à publier (soumis à validation)' ": {
-      "catalogue général": totalGeneralToValidate,
-      "catalogue non règlementaire": totalNonReglementaireToValidate,
-      "total (y compris archives)": totalToValidate,
-    },
-    "statut 'à publier' ": {
-      "catalogue général": totalGeneralToCheck,
-      "catalogue non règlementaire": totalNonReglementaireToCheck,
-      "total (y compris archives)": totalToCheck,
-    },
-    "statut 'prêt pour intégration' ": {
-      "catalogue général": totalGeneralPending,
-      "catalogue non règlementaire": totalNonReglementairePending,
-      "total (y compris archives)": totalPending,
-    },
-    "statut 'publié' ": {
-      "catalogue général": totalGeneralPublished,
-      "catalogue non règlementaire": totalNonReglementairePublished,
-      "total (y compris archives)": totalPublished,
-    },
-    "statut 'NON publié' ": {
-      "catalogue général": totalGeneralNotPublished,
-      "catalogue non règlementaire": totalNonReglementaireNotPublished,
-      "total (y compris archives)": totalNotPublished,
-    },
+    ...totalByStatus,
 
     "dans le périmètre": {
       "catalogue général": totalGeneralPérimètre,
       "catalogue non règlementaire": totalNonReglementairePérimètre,
       "total (y compris archives)": totalPérimètre,
     },
+
+    "dans le périmètre avec session ": {
+      "catalogue général": totalGeneralPérimètreAvecSession,
+      "catalogue non règlementaire": totalNonReglementairePérimètreAvecSession,
+      "total (y compris archives)": totalPérimètreAvecSession,
+    },
+
     "hors périmètre": {
       "catalogue général": totalGeneralHorsPérimètre,
       "catalogue non règlementaire": totalNonReglementaireHorsPérimètre,
@@ -152,23 +95,8 @@ const run = async () => {
     },
   };
 
-  console.table(results);
+  config.env !== "dev" && logger.info({ type: "job" }, results);
 
-  logger.info(
-    { type: "job" },
-    results
-    //   `Compteurs des formations dans le catalogue (catalogue général / catalogue non règlementaire / total (y compris archives)):
-    //     - total : ${totalGeneral} / ${totalNonReglementaire} / ${total}
-
-    //     - statut "non publiable en l'état" : ${totalGeneralNotRelevant} / ${totalNonReglementaireNotRelevant} / ${totalNotRelevant}
-    //     - statut "à publier (soumis à validation)" : ${totalGeneralToValidate} / ${totalNonReglementaireToValidate} / ${totalToValidate}
-    //     - statut "à publier" : ${totalGeneralToCheck} / ${totalNonReglementaireToCheck} / ${totalToCheck}
-    //     - statut "prêt pour intégration" : ${totalGeneralPending} / ${totalNonReglementairePending} / ${totalPending}
-    //     - statut "publié" : ${totalGeneralPublished} / ${totalNonReglementairePublished} / ${totalPublished}
-    //     - statut "NON publié" : ${totalGeneralNotPublished} / ${totalNonReglementaireNotPublished} / ${totalNotPublished}
-
-    //     - dans le périmètre : ${totalGeneralPérimètre} / ${totalNonReglementairePérimètre} / ${totalPérimètre}
-    //     - hors périmètre : ${totalGeneralHorsPérimètre} / ${totalNonReglementaireHorsPérimètre} / ${totalHorsPérimètre}`
-  );
+  config.env === "dev" && console.table(results);
 };
 module.exports = { run };

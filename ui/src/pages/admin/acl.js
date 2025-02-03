@@ -135,10 +135,18 @@ export default [
         feature: "Affelnet",
         ref: "page_perimetre/affelnet",
       },
+      // {
+      //   feature: "Gestion des règles de périmètre académique Affelnet",
+      //   ref: "page_perimetre/affelnet_academie",
+      // },
       {
         feature: "Parcoursup",
         ref: "page_perimetre/parcoursup",
       },
+      // {
+      //   feature: "Gestion des règles de périmètre académique Parcoursup",
+      //   ref: "page_perimetre/parcoursup_academie",
+      // },
     ],
   },
   {

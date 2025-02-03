@@ -28,7 +28,7 @@ const createXlsxFromJson = (data, filePath, tabName = "tab") => {
 
   XLSX.writeFileAsync(filePath, workbook, { compression: true }, (e) => {
     if (e) {
-      console.log(e);
+      // console.log(e);
       throw new Error("La génération du fichier excel à échoué : ", e);
     }
   });
