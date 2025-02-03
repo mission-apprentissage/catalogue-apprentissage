@@ -1577,20 +1577,20 @@ export const quickFiltersDefinition = [
   },
 
   {
+    componentId: `date_debut`,
+    type: "date-range",
+    dataField: "date_debut",
+    title: "Date de début de formation",
+    filterLabel: "Début de formation",
+    helpTextSection: helpText.search.periode.title,
+  },
+
+  {
     type: "advanced",
     openText: "Masquer les filtres avancés (niveau, durée, dates...)",
     closeText: "Filtres avancés (niveau, durée, dates...)",
     acl: "page_catalogue/voir_filtres_avances_generaux",
     filters: [
-      {
-        componentId: `date_debut`,
-        type: "date-range",
-        dataField: "date_debut",
-        title: "Date de début de formation",
-        filterLabel: "Début de formation",
-        helpTextSection: helpText.search.periode.title,
-      },
-
       // {
       //   componentId: `num_departement`,
       //   type: "facet",

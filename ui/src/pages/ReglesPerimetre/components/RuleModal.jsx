@@ -276,6 +276,8 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
     )}"%5D`;
   }
 
+  // linkFormations += `&${plateforme}_session=%5BOui%5D`;
+
   linkFormations += `&date_debut_start=%22${sessionStartDate?.toLocaleDateString(
     "en-CA"
   )}%22&date_debut_end=%22${sessionEndDate?.toLocaleDateString("en-CA")}%22`;
