@@ -1699,7 +1699,7 @@ export const dataSearch = {
     "etablissement_gestionnaire_raison_sociale_enseigne",
     "etablissement_formateur_raison_sociale_enseigne",
     "cfd",
-    ",cfd_entree",
+    "cfd_entree",
     "rncp_code",
     "etablissement_lieu_formation_siret",
     "uai_formation",
