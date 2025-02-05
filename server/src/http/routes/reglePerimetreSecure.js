@@ -6,6 +6,8 @@ const { ReglePerimetre } = require("../../common/models");
 const { diffReglePerimetre, buildUpdatesHistory } = require("../../logic/common/utils/diffUtils");
 const { sanitize } = require("../../common/utils/sanitizeUtils");
 const { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } = require("../../constants/status");
+const logger = require("../../common/logger");
+const { hasAccessTo, hasAcademyRight } = require("../../common/utils/rolesUtils");
 
 /**
  * Schema for validation
@@ -68,18 +70,18 @@ const updateStatutAcademiesSchema = Joi.object({
 /**
  * Ensure user can edit perimeter rules
  */
-const hasPerimeterRights = (user = {}, plateforme) => {
+const hasPerimeterPlateformeRight = (user = {}, plateforme) => {
   return (
     user.isAdmin ||
-    (plateforme === "affelnet" && user.acl?.includes("page_perimetre/affelnet")) ||
-    (plateforme === "parcoursup" && user.acl?.includes("page_perimetre/parcoursup"))
+    (plateforme === "affelnet" && hasAccessTo(user, "page_perimetre/affelnet")) ||
+    (plateforme === "parcoursup" && hasAccessTo(user, "page_perimetre/parcoursup"))
   );
 };
 
 /**
  * Ensure user can edit academy rules
  */
-const hasAcademyRights = (user, { num_academie, statut_academies }, payload) => {
+const hasStatutAcademieRight = (user, { num_academie, statut_academies }, payload) => {
   const userAcademies = user.academie.split(",");
   const hasAllAcademies = user.isAdmin || userAcademies.includes("-1");
 
@@ -115,8 +117,10 @@ module.exports = () => {
 
       let user = {};
       if (req.user) {
-        user = req.session?.passport?.user;
+        user = req.session.passport.user;
       }
+
+      logger.info({ type: "http" }, "Create perimeter rule", { user, payload });
 
       await createSchema.validateAsync(payload, { abortEarly: false });
 
@@ -135,7 +139,7 @@ module.exports = () => {
         num_academie,
       } = payload;
 
-      if (!hasPerimeterRights(user, plateforme)) {
+      if (!hasPerimeterPlateformeRight(user, plateforme)) {
         throw Boom.unauthorized();
       }
 
@@ -168,14 +172,17 @@ module.exports = () => {
 
       let user = {};
       if (req.user) {
-        user = req.session?.passport?.user;
+        user = req.session.passport.user;
       }
 
-      await updateSchema.validateAsync(payload, { abortEarly: false });
       const id = sanitizedParams.id;
       if (!id) {
         throw Boom.badRequest();
       }
+
+      logger.info({ type: "http" }, "Update perimeter rule", { user, id, payload });
+
+      await updateSchema.validateAsync(payload, { abortEarly: false });
 
       const rule = await ReglePerimetre.findById(id, { updates_history: 0 }).lean();
 
@@ -183,7 +190,7 @@ module.exports = () => {
         throw Boom.notFound();
       }
 
-      if (!(hasPerimeterRights(user, rule.plateforme) && hasAcademyRights(user, rule, payload))) {
+      if (!(hasPerimeterPlateformeRight(user, rule.plateforme) && hasStatutAcademieRight(user, rule, payload))) {
         throw Boom.unauthorized();
       }
 
@@ -215,14 +222,17 @@ module.exports = () => {
 
       let user = {};
       if (req.user) {
-        user = req.session?.passport?.user;
+        user = req.session.passport.user;
       }
 
-      await updateStatutAcademiesSchema.validateAsync(payload, { abortEarly: false });
       const { id, num_academie } = sanitizedParams;
       if (!id || !num_academie) {
         throw Boom.badRequest();
       }
+
+      logger.info({ type: "http" }, "Update perimeter rule for academie", { user, id, num_academie, payload });
+
+      await updateStatutAcademiesSchema.validateAsync(payload, { abortEarly: false });
 
       const rule = await ReglePerimetre.findById(id, { updates_history: 0 }).lean();
 
@@ -231,10 +241,7 @@ module.exports = () => {
       }
 
       if (
-        !(
-          hasPerimeterRights(user, rule.plateforme) &&
-          (user.isAdmin || user.academie.split(",").includes(num_academie))
-        )
+        !(hasPerimeterPlateformeRight(user, rule.plateforme) && (user.isAdmin || hasAcademyRight(user, num_academie)))
       ) {
         throw Boom.unauthorized();
       }
@@ -266,13 +273,15 @@ module.exports = () => {
 
       let user = {};
       if (req.user) {
-        user = req.session?.passport?.user;
+        user = req.session.passport.user;
       }
 
       const { id, num_academie } = sanitizedParams;
       if (!id || !num_academie) {
         throw Boom.badRequest();
       }
+
+      logger.info({ type: "http" }, "Delete perimeter rule for academie", { user, id, num_academie });
 
       const rule = await ReglePerimetre.findById(id, { updates_history: 0 }).lean();
 
@@ -281,10 +290,7 @@ module.exports = () => {
       }
 
       if (
-        !(
-          hasPerimeterRights(user, rule.plateforme) &&
-          (user.isAdmin || user.academie.split(",").includes(num_academie))
-        )
+        !(hasPerimeterPlateformeRight(user, rule.plateforme) && (user.isAdmin || hasAcademyRight(user, num_academie)))
       ) {
         throw Boom.unauthorized();
       }
@@ -318,7 +324,7 @@ module.exports = () => {
 
       let user = {};
       if (req.user) {
-        user = req.session?.passport?.user;
+        user = req.session.passport.user;
       }
 
       const id = sanitizedParams.id;
@@ -326,12 +332,14 @@ module.exports = () => {
         throw Boom.badRequest();
       }
 
+      logger.info({ type: "http" }, "Delete perimeter rule", { user, id });
+
       const rule = await ReglePerimetre.findById(id, { updates_history: 0 }).lean();
       if (!rule) {
         throw Boom.notFound();
       }
 
-      if (!hasPerimeterRights(user, rule.plateforme) || !hasAcademyRights(user, rule)) {
+      if (!hasPerimeterPlateformeRight(user, rule.plateforme) || !hasStatutAcademieRight(user, rule)) {
         throw Boom.unauthorized();
       }
 
