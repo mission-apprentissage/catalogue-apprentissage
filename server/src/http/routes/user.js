@@ -108,6 +108,7 @@ module.exports = ({ users, mailer, db: { db } }) => {
         academie: body.options.academie,
         username: body.username?.toLowerCase(),
         tag: body.options.tag,
+        fonction: body.options.fonction,
         roles: body.options.roles,
         acl: body.options.acl,
       });

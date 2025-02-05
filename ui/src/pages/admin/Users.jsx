@@ -75,10 +75,22 @@ const UserLine = ({ user, roles }) => {
       newUsername: user?.username || "",
       newEmail: user?.email || "",
       newTag: user?.tag || "",
+      newFonction: user?.fonction || "",
       newTmpPassword,
     },
     onSubmit: (
-      { apiKey, accessAllCheckbox, accessAcademieList, newUsername, newEmail, newTmpPassword, newTag, roles, acl },
+      {
+        apiKey,
+        accessAllCheckbox,
+        accessAcademieList,
+        newUsername,
+        newEmail,
+        newTmpPassword,
+        newTag,
+        newFonction,
+        roles,
+        acl,
+      },
       { setSubmitting }
     ) => {
       return new Promise(async (resolve) => {
@@ -92,6 +104,7 @@ const UserLine = ({ user, roles }) => {
                 academie: accessAcademie,
                 email: newEmail,
                 tag: newTag,
+                fonction: newFonction,
                 roles,
                 acl,
                 permissions: {
@@ -109,6 +122,7 @@ const UserLine = ({ user, roles }) => {
                 academie: accessAcademie,
                 email: newEmail,
                 tag: newTag,
+                fonction: newFonction,
                 roles,
                 acl,
                 permissions: {
@@ -223,7 +237,12 @@ const UserLine = ({ user, roles }) => {
 
       <FormControl py={2}>
         <FormLabel>Tag</FormLabel>
-        <Input type="tag" id="newTag" name="newTag" value={values.newTag} onChange={handleChange} />
+        <Input type="text" id="newTag" name="newTag" value={values.newTag} onChange={handleChange} />
+      </FormControl>
+
+      <FormControl py={2}>
+        <FormLabel>Fonction</FormLabel>
+        <Input type="text" id="newFonction" name="newFonction" value={values.newFonction} onChange={handleChange} />
       </FormControl>
 
       <FormControl py={2} mt={3}>
@@ -446,6 +465,7 @@ export default () => {
                                   </Tag>
                                 )}
                                 <Text fontSize={"zeta"} color="lightgray">
+                                  {user.fonction && <>{user.fonction}, </>}
                                   {user.created_at && <>créé le {new Date(user.created_at).toLocaleDateString()}</>}
                                   {user.created_at && user.last_connection && ", "}
                                   {user.last_connection && (

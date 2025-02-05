@@ -18,7 +18,12 @@ const usersSchema = {
   tag: {
     type: String,
     default: null,
-    description: "Tag libre",
+    description: "Champ libre: Tag",
+  },
+  fonction: {
+    type: String,
+    default: null,
+    description: "Champ libre: Fonction",
   },
   // tags: {
   //   type: [String],
