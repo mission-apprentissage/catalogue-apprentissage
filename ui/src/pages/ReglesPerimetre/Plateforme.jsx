@@ -72,9 +72,16 @@ export default ({ plateforme }) => {
 
   setTitle(title);
 
-  const subtitle = currentAcademie
-    ? "Certains types de diplôme sont définis au national comme pouvant être publiés sur Affelnet-lycée, selon les pratiques de l’académie. Cette page vous permet de confirmer ou non l’inclusion dans le périmètre pour votre académie. En l’absence de confirmation, aucune de ces offres ne sont publiables, et elles sont maintenues dans le statut “À définir”."
-    : `Déterminer les conditions d'intégrations des formations en apprentissage du Catalogue (Carif-Oref) sur la plateforme ${plateforme}`;
+  const subtitle = currentAcademie ? (
+    <>
+      Certains types de formations sont définis au national comme <u>pouvant</u> être publiés sur Affelnet-lycée, selon
+      les pratiques de l’académie. Ces formations sont listées sur cette page, pour vous permettre de confirmer ou non
+      l’inclusion dans le périmètre pour votre académie. En l’absence de confirmation, aucune de ces offres ne sont
+      publiables, et elles sont maintenues dans le statut “À définir”.
+    </>
+  ) : (
+    `Déterminer les conditions d'intégrations des formations en apprentissage du Catalogue (Carif-Oref) sur la plateforme ${plateforme}`
+  );
 
   const { data: niveauxData } = useNiveaux({ plateforme });
 
