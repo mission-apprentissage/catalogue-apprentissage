@@ -85,6 +85,11 @@ const parcoursupSchema = {
     default: [],
     description: "Tableau de Code MEF 10 caractères et modalités (filtrés pour Parcoursup si applicable)",
   },
+  parcoursup_mefs_10_agregat: {
+    type: [String],
+    default: [],
+    description: "Tableau de Code MEF 10 caractères (filtrés pour Parcoursup si applicable) (agrégat pour recherche)",
+  },
   parcoursup_statut_reinitialisation: {
     type: statutReinitialisationSchema,
     default: null,

@@ -454,6 +454,11 @@ const formationSchema = {
     default: [],
     description: "BCN : Codes MEF 10 caractères",
   },
+  bcn_mefs_10_agregat: {
+    type: [String],
+    default: [],
+    description: "BCN : Codes MEF 10 caractères (agrégat pour recherche)",
+  },
   editedFields: {
     type: Object,
     default: null,

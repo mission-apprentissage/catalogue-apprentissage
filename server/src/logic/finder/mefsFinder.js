@@ -109,13 +109,18 @@ const computeMefs = async (fields, oldFields) => {
     // apply perimetre filters against the tmp collection
     // check "à publier" first to have less mefs
     // Add current cle_ministere_educatif to ensure no concurrent access in db
-    let filtered_affelnet_mefs_10 = await findMefsForAffelnet({
-      cle_ministere_educatif: rest.cle_ministere_educatif,
-      published: true,
-      $or: aPublierRules.map(getQueryFromRule),
-    });
 
-    if (!filtered_affelnet_mefs_10) {
+    let filtered_affelnet_mefs_10 = [];
+
+    if (aPublierRules.length) {
+      filtered_affelnet_mefs_10 = await findMefsForAffelnet({
+        cle_ministere_educatif: rest.cle_ministere_educatif,
+        published: true,
+        $or: aPublierRules.map(getQueryFromRule),
+      });
+    }
+
+    if (!filtered_affelnet_mefs_10 && aPublierSoumisAValidationRules.length) {
       filtered_affelnet_mefs_10 = await findMefsForAffelnet({
         cle_ministere_educatif: rest.cle_ministere_educatif,
         published: true,
@@ -145,16 +150,23 @@ const computeMefs = async (fields, oldFields) => {
   }
 
   bcn_mefs_10 = await completeDateFermetureMefs(bcn_mefs_10);
-  affelnet_mefs_10 = await completeDateFermetureMefs(affelnet_mefs_10);
   parcoursup_mefs_10 = await completeDateFermetureMefs(parcoursup_mefs_10);
+  affelnet_mefs_10 = await completeDateFermetureMefs(affelnet_mefs_10);
+
+  bcn_mefs_10_agregat = bcn_mefs_10.map(({ mef10 }) => mef10);
+  parcoursup_mefs_10_agregat = parcoursup_mefs_10.map(({ mef10 }) => mef10);
+  affelnet_mefs_10_agregat = affelnet_mefs_10.map(({ mef10 }) => mef10);
 
   // logger.debug(
   //   { type: "logic" },
   //   {
   //     bcn_mefs_10,
-  //     affelnet_mefs_10,
-  //     affelnet_infos_offre,
+  //     bcn_mefs_10_agregat,
   //     parcoursup_mefs_10,
+  //     parcoursup_mefs_10_agregat,
+  //     affelnet_mefs_10,
+  //     affelnet_mefs_10_agregat,
+  //     affelnet_infos_offre,
   //     duree_incoherente,
   //     annee_incoherente,
   //   }
@@ -162,9 +174,12 @@ const computeMefs = async (fields, oldFields) => {
 
   return {
     bcn_mefs_10,
-    affelnet_mefs_10,
-    affelnet_infos_offre,
+    bcn_mefs_10_agregat,
     parcoursup_mefs_10,
+    parcoursup_mefs_10_agregat,
+    affelnet_mefs_10,
+    affelnet_mefs_10_agregat,
+    affelnet_infos_offre,
     duree_incoherente,
     annee_incoherente,
   };

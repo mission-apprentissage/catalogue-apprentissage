@@ -43,6 +43,10 @@ module.exports = {
         "etablissement_gestionnaire_id",
         "etablissement_formateur_id",
 
+        "bcn_mefs_10_agregat",
+        "parcoursup_mefs_10_agregat",
+        "affelnet_mefs_10_agregat",
+
         // Champs rncp_details conservés
         // "rncp_details.niveau_europe",
         // "rncp_details.nouvelle_fiche",

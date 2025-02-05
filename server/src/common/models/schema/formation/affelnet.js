@@ -106,6 +106,11 @@ const affelnetSchema = {
     default: [],
     description: "Tableau de Code MEF 10 caractères et modalités (filtrés pour Affelnet si applicable)",
   },
+  affelnet_mefs_10_agregat: {
+    type: [String],
+    default: [],
+    description: "Tableau de Code MEF 10 caractères (filtrés pour Affelnet si applicable) (agrégat pour recherche)",
+  },
   affelnet_publication_auto: {
     type: Boolean || null,
     default: null,

@@ -51,9 +51,12 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
   // MEFS & PLATEFORMES
 
   let bcn_mefs_10 = oldFields?.bcn_mefs_10 ?? [],
-    affelnet_mefs_10 = oldFields?.affelnet_mefs_10 ?? [],
-    affelnet_infos_offre = oldFields?.affelnet_infos_offre,
+    bcn_mefs_10_agregat = oldFields?.bcn_mefs_10_agregat ?? [],
     parcoursup_mefs_10 = oldFields?.parcoursup_mefs_10 ?? [],
+    parcoursup_mefs_10_agregat = oldFields?.parcoursup_mefs_10_agregat ?? [],
+    affelnet_mefs_10 = oldFields?.affelnet_mefs_10 ?? [],
+    affelnet_mefs_10_agregat = oldFields?.affelnet_mefs_10_agregat ?? [],
+    affelnet_infos_offre = oldFields?.affelnet_infos_offre,
     duree_incoherente = oldFields?.duree_incoherente,
     annee_incoherente = oldFields?.annee_incoherente;
 
@@ -75,8 +78,17 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
     new Date(fields?.cfd_date_fermeture).getTime() !== new Date(oldFields?.cfd_date_fermeture).getTime() ||
     arrayDiff(fields?.date_debut, oldFields?.date_debut).length
   ) {
-    ({ bcn_mefs_10, affelnet_mefs_10, affelnet_infos_offre, parcoursup_mefs_10, duree_incoherente, annee_incoherente } =
-      await computeMefs(fields, oldFields));
+    ({
+      bcn_mefs_10,
+      bcn_mefs_10_agregat,
+      parcoursup_mefs_10,
+      parcoursup_mefs_10_agregat,
+      affelnet_mefs_10,
+      affelnet_mefs_10_agregat,
+      affelnet_infos_offre,
+      duree_incoherente,
+      annee_incoherente,
+    } = await computeMefs(fields, oldFields));
   }
 
   // DISTANCE_LIEU_FORMATION_ETABLISSEMENT_FORMATEUR
@@ -275,9 +287,12 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
     ...fields,
 
     bcn_mefs_10,
-    affelnet_mefs_10,
-    affelnet_infos_offre,
+    bcn_mefs_10_agregat,
     parcoursup_mefs_10,
+    parcoursup_mefs_10_agregat,
+    affelnet_mefs_10,
+    affelnet_mefs_10_agregat,
+    affelnet_infos_offre,
     duree_incoherente,
     annee_incoherente,
     distance_lieu_formation_etablissement_formateur,
@@ -384,6 +399,15 @@ const applyConversion = async (
           "lieu_formation_adresse_computed",
           "lieu_formation_geo_coordonnees_computed",
         ];
+
+        // console.log(
+        //   { cle_ministere_educatif },
+        //   {
+        //     $set: {
+        //       ...(await recomputeFields(removeFields({ ...dcFormation }, notToCompare), formation, { forceRecompute })),
+        //     },
+        //   }
+        // );
 
         const result = await Formation.updateOne(
           { cle_ministere_educatif },

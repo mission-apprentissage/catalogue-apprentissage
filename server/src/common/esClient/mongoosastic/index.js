@@ -95,6 +95,7 @@ function getMapping(schema, inPrefix = "", requireAsciiFolding = false) {
               break;
             case schema.paths[key].caster.instance === "Mixed":
               properties[key] = { type: "nested" };
+              console.warn("Mixed mongoose type for ", key);
               break;
             case schema.paths[key].caster.$isArraySubdocument:
               properties[key] = {
@@ -115,6 +116,7 @@ function getMapping(schema, inPrefix = "", requireAsciiFolding = false) {
           };
           break;
         case "Mixed":
+          console.warn("Mixed mongoose type for ", key);
           properties[key] = {
             type: "nested",
           };
@@ -124,6 +126,8 @@ function getMapping(schema, inPrefix = "", requireAsciiFolding = false) {
           console.warn("Not handling mongoose type : ", mongooseType, "for ", key);
           break;
       }
+
+      // console.log(key, JSON.stringify(properties[key]));
     }
   }
 
