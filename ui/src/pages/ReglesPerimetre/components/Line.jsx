@@ -161,12 +161,14 @@ export const Line = ({
 
   const updates_history = rule?.updates_history ?? [];
 
-  const statusAcademieUpdatesHistory = updates_history
+  const academyUpdatesHistory = updates_history
     .filter(
       (update) =>
         (update.from?.statut_academies || update.to?.statut_academies) &&
-        (Object.keys(update.from?.statut_academies ?? {}).includes(academie) ||
-          Object.keys(update.to?.statut_academies ?? {}).includes(academie))
+        (Object.keys(update.from?.statut_academies ?? {}).includes(academie ?? num_academie) ||
+          Object.keys(update.to?.statut_academies ?? {}).includes(academie ?? num_academie)) &&
+        update.from?.statut_academies?.[academie ?? num_academie] !==
+          update.to?.statut_academies?.[academie ?? num_academie]
     )
     ?.sort(sortDescending);
 
@@ -305,12 +307,12 @@ export const Line = ({
                     condition={condition_integration ?? CONDITIONS.NE_DOIT_PAS_INTEGRER}
                     onChange={onStatusSelectChange}
                   />
-                  {!!statusAcademieUpdatesHistory?.length && (
+                  {!!academyUpdatesHistory?.length && (
                     <Box px={4}>
                       <InfoTooltip
                         description={
                           <UnorderedList ml={4}>
-                            {statusAcademieUpdatesHistory.map((history, index) => (
+                            {academyUpdatesHistory.map((history, index) => (
                               <ListItem key={index}>
                                 <Text as={"b"}>
                                   {history?.from?.statut_academies?.[academie] ?? "À définir pour cette académie"}

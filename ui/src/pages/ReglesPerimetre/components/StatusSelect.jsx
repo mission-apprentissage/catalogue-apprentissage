@@ -59,8 +59,6 @@ export const StatusSelect = ({
 
   let background = "greendark.300";
 
-  console.log(currentStatus);
-
   switch (currentStatus) {
     case AFFELNET_STATUS.A_DEFINIR:
       background = "#D5DBEF";
