@@ -50,86 +50,87 @@ function getMapping(schema, inPrefix = "", requireAsciiFolding = false) {
       continue;
     }
 
-    if (/geo_/.test(key)) {
-      // properties[key] = { type: "geo_point" };
-      // isMappingNeedingGeoPoint = true;
-    } else {
-      switch (mongooseType) {
-        case "ObjectID":
-        case "String": {
-          properties[key] = {
-            type: "text",
-            fields: { keyword: { type: "keyword", ignore_above: 256 } },
-            ...asciiFoldingParameters,
-          };
-          break;
-        }
-        case "Date":
-          properties[key] = { type: "date" };
-          break;
-        case "Number":
-          properties[key] = { type: "long" };
-          break;
-        case "Boolean":
-          properties[key] = { type: "boolean" };
-          break;
-        case "Array":
-          switch (true) {
-            case schema.paths[key].caster.instance === "String":
-              properties[key] = {
-                type: "text",
-                fields: { keyword: { type: "keyword", ignore_above: 256 } },
-                ...asciiFoldingParameters,
-              };
-              break;
-            case schema.paths[key].caster.instance === "Boolean":
-              properties[key] = { type: "boolean" };
-              break;
-            case schema.paths[key].caster.instance === "Date":
-              properties[key] = { type: "date" };
-              break;
-            case schema.paths[key].caster.instance === "Embedded":
-              properties[key] = {
-                ...getMapping(schema.paths[key].schema, prefix + key, requireAsciiFolding),
-              };
-              break;
-            case schema.paths[key].caster.instance === "Mixed":
-              properties[key] = { type: "nested" };
-              console.warn("Mixed mongoose type for ", key);
-              break;
-            case schema.paths[key].caster.$isArraySubdocument:
-              properties[key] = {
-                type: "nested",
-                ...getMapping(schema.paths[key].schema, prefix + key, requireAsciiFolding),
-              };
-              break;
-
-            default:
-              console.warn("Not handling array of mongoose type for ", key);
-              break;
-          }
-          break;
-        case "Embedded":
-          // console.error(schema.paths[key], schema.paths[key].schema);
-          properties[key] = {
-            ...getMapping(schema.paths[key].schema, prefix + key, requireAsciiFolding),
-          };
-          break;
-        case "Mixed":
-          console.warn("Mixed mongoose type for ", key);
-          properties[key] = {
-            type: "nested",
-          };
-
-          break;
-        default:
-          console.warn("Not handling mongoose type : ", mongooseType, "for ", key);
-          break;
+    // if (/geo_/.test(key)) {
+    //   // properties[key] = { type: "geo_point" };
+    //   // isMappingNeedingGeoPoint = true;
+    //   properties[key] = { type: "text" };
+    // } else {
+    switch (mongooseType) {
+      case "ObjectID":
+      case "String": {
+        properties[key] = {
+          type: "text",
+          fields: { keyword: { type: "keyword", ignore_above: 256 } },
+          ...asciiFoldingParameters,
+        };
+        break;
       }
+      case "Date":
+        properties[key] = { type: "date" };
+        break;
+      case "Number":
+        properties[key] = { type: "long" };
+        break;
+      case "Boolean":
+        properties[key] = { type: "boolean" };
+        break;
+      case "Array":
+        switch (true) {
+          case schema.paths[key].caster.instance === "String":
+            properties[key] = {
+              type: "text",
+              fields: { keyword: { type: "keyword", ignore_above: 256 } },
+              ...asciiFoldingParameters,
+            };
+            break;
+          case schema.paths[key].caster.instance === "Boolean":
+            properties[key] = { type: "boolean" };
+            break;
+          case schema.paths[key].caster.instance === "Date":
+            properties[key] = { type: "date" };
+            break;
+          case schema.paths[key].caster.instance === "Embedded":
+            properties[key] = {
+              ...getMapping(schema.paths[key].schema, prefix + key, requireAsciiFolding),
+            };
+            break;
+          case schema.paths[key].caster.instance === "Mixed":
+            properties[key] = { type: "nested" };
+            console.warn("Mixed mongoose type for ", key);
+            break;
+          case schema.paths[key].caster.$isArraySubdocument:
+            properties[key] = {
+              type: "nested",
+              ...getMapping(schema.paths[key].schema, prefix + key, requireAsciiFolding),
+            };
+            break;
 
-      // console.log(key, JSON.stringify(properties[key]));
+          default:
+            console.warn("Not handling array of mongoose type for ", key);
+            break;
+        }
+        break;
+      case "Embedded":
+        // console.error(schema.paths[key], schema.paths[key].schema);
+        properties[key] = {
+          ...getMapping(schema.paths[key].schema, prefix + key, requireAsciiFolding),
+        };
+        break;
+      case "Mixed":
+        console.warn("Mixed mongoose type for ", key);
+        properties[key] = {
+          type: "nested",
+        };
+
+        break;
+      default:
+        console.warn("Not handling mongoose type : ", mongooseType, "for ", key);
+        break;
     }
+
+    // console.log(key, JSON.stringify(properties[key]));
   }
+  // }
 
   // console.log(JSON.stringify(properties));
 
@@ -159,8 +160,8 @@ function Mongoosastic(schema, options) {
     try {
       const exists = await esClient.indices.exists({ index: indexName });
 
-      let includeTypeNameParameters =
-        isMappingNeedingGeoPoint || requireAsciiFolding ? { include_type_name: true } : {};
+      let includeTypeNameParameters = { include_type_name: true };
+      // isMappingNeedingGeoPoint || requireAsciiFolding ? { include_type_name: true } : {};
 
       let asciiFoldingParameters = requireAsciiFolding
         ? {
