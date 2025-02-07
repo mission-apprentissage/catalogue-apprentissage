@@ -51,8 +51,8 @@ function getMapping(schema, inPrefix = "", requireAsciiFolding = false) {
     }
 
     if (/geo_/.test(key)) {
-      properties[key] = { type: "geo_point" };
-      isMappingNeedingGeoPoint = true;
+      // properties[key] = { type: "geo_point" };
+      // isMappingNeedingGeoPoint = true;
     } else {
       switch (mongooseType) {
         case "ObjectID":
