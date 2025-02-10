@@ -51,6 +51,7 @@ export default ({ plateforme }) => {
   const [niveauxCount, setNiveauxCount] = useState({});
   const [selectedDiplome, setSelectedDiplome] = useState(null);
   const toast = useToast();
+  const [index, setIndex] = useState(0);
 
   let title;
 
@@ -218,121 +219,127 @@ export default ({ plateforme }) => {
     return updatedRule;
   }, []);
 
-  const onUpdateStatutAcademieRule = useCallback(async (ruleData) => {
-    const updatedRule = await updateStatutAcademieRule(ruleData);
-    const { niveau: ruleNiveau, diplome: ruleDiplome } = updatedRule;
+  const onUpdateStatutAcademieRule = useCallback(
+    async (ruleData) => {
+      const updatedRule = await updateStatutAcademieRule(ruleData);
+      const { niveau: ruleNiveau, diplome: ruleDiplome } = updatedRule;
 
-    toast({
-      title: "Modification acceptée",
-      description: "La modification a été prise en compte et sera visible sur les offres catalogue demain.",
-      status: "success",
-      duration: 10000,
-      isClosable: true,
-    });
+      toast({
+        title: "Modification acceptée",
+        description: "La modification a été prise en compte et sera visible sur les offres catalogue demain.",
+        status: "success",
+        duration: 10000,
+        isClosable: true,
+      });
 
-    setNiveaux((currentTree) => {
-      return currentTree.map(({ niveau, diplomes }) => {
-        if (niveau.value !== ruleNiveau) {
+      setNiveaux((currentTree) => {
+        return currentTree.map(({ niveau, diplomes }) => {
+          if (niveau.value !== ruleNiveau) {
+            return {
+              niveau,
+              diplomes: diplomes.map((diplome) => {
+                return {
+                  ...diplome,
+                  regles: diplome.regles.filter(({ _id }) => _id !== updatedRule._id),
+                };
+              }),
+            };
+          }
+
           return {
             niveau,
             diplomes: diplomes.map((diplome) => {
+              if (diplome.value !== ruleDiplome) {
+                return {
+                  ...diplome,
+                  regles: diplome.regles.filter(({ _id }) => _id !== updatedRule._id),
+                };
+              }
+
+              const regles = diplome.regles.map((regle) => {
+                if (regle._id !== updatedRule._id) {
+                  return regle;
+                }
+                return updatedRule;
+              });
+
+              if (regles.every(({ _id }) => _id !== updatedRule._id)) {
+                regles.push(updatedRule);
+              }
+
               return {
                 ...diplome,
-                regles: diplome.regles.filter(({ _id }) => _id !== updatedRule._id),
+                regles,
               };
             }),
           };
-        }
-
-        return {
-          niveau,
-          diplomes: diplomes.map((diplome) => {
-            if (diplome.value !== ruleDiplome) {
-              return {
-                ...diplome,
-                regles: diplome.regles.filter(({ _id }) => _id !== updatedRule._id),
-              };
-            }
-
-            const regles = diplome.regles.map((regle) => {
-              if (regle._id !== updatedRule._id) {
-                return regle;
-              }
-              return updatedRule;
-            });
-
-            if (regles.every(({ _id }) => _id !== updatedRule._id)) {
-              regles.push(updatedRule);
-            }
-
-            return {
-              ...diplome,
-              regles,
-            };
-          }),
-        };
+        });
       });
-    });
-    return updatedRule;
-  }, []);
+      return updatedRule;
+    },
+    [toast]
+  );
 
-  const onDeleteStatutAcademieRule = useCallback(async (ruleData) => {
-    const updatedRule = await deleteStatutAcademieRule(ruleData);
-    const { niveau: ruleNiveau, diplome: ruleDiplome } = updatedRule;
+  const onDeleteStatutAcademieRule = useCallback(
+    async (ruleData) => {
+      const updatedRule = await deleteStatutAcademieRule(ruleData);
+      const { niveau: ruleNiveau, diplome: ruleDiplome } = updatedRule;
 
-    toast({
-      title: "Modification acceptée",
-      description: "La modification a été prise en compte et sera visible sur les offres catalogue demain.",
-      status: "success",
-      duration: 10000,
-      isClosable: true,
-    });
+      toast({
+        title: "Modification acceptée",
+        description: "La modification a été prise en compte et sera visible sur les offres catalogue demain.",
+        status: "success",
+        duration: 10000,
+        isClosable: true,
+      });
 
-    setNiveaux((currentTree) => {
-      return currentTree.map(({ niveau, diplomes }) => {
-        if (niveau.value !== ruleNiveau) {
+      setNiveaux((currentTree) => {
+        return currentTree.map(({ niveau, diplomes }) => {
+          if (niveau.value !== ruleNiveau) {
+            return {
+              niveau,
+              diplomes: diplomes.map((diplome) => {
+                return {
+                  ...diplome,
+                  regles: diplome.regles.filter(({ _id }) => _id !== updatedRule._id),
+                };
+              }),
+            };
+          }
+
           return {
             niveau,
             diplomes: diplomes.map((diplome) => {
+              if (diplome.value !== ruleDiplome) {
+                return {
+                  ...diplome,
+                  regles: diplome.regles.filter(({ _id }) => _id !== updatedRule._id),
+                };
+              }
+
+              const regles = diplome.regles.map((regle) => {
+                if (regle._id !== updatedRule._id) {
+                  return regle;
+                }
+                return updatedRule;
+              });
+
+              if (regles.every(({ _id }) => _id !== updatedRule._id)) {
+                regles.push(updatedRule);
+              }
+
               return {
                 ...diplome,
-                regles: diplome.regles.filter(({ _id }) => _id !== updatedRule._id),
+                regles,
               };
             }),
           };
-        }
-
-        return {
-          niveau,
-          diplomes: diplomes.map((diplome) => {
-            if (diplome.value !== ruleDiplome) {
-              return {
-                ...diplome,
-                regles: diplome.regles.filter(({ _id }) => _id !== updatedRule._id),
-              };
-            }
-
-            const regles = diplome.regles.map((regle) => {
-              if (regle._id !== updatedRule._id) {
-                return regle;
-              }
-              return updatedRule;
-            });
-
-            if (regles.every(({ _id }) => _id !== updatedRule._id)) {
-              regles.push(updatedRule);
-            }
-
-            return {
-              ...diplome,
-              regles,
-            };
-          }),
-        };
+        });
       });
-    });
-    return updatedRule;
-  }, []);
+      return updatedRule;
+    },
+    [toast]
+  );
 
   const onDeleteRule = useCallback(async (ruleData) => {
     const deletedRule = await deleteRule(ruleData);
@@ -405,6 +412,14 @@ export default ({ plateforme }) => {
   const onAcademieChange = useCallback((academie) => {
     setCurrentAcademie(academie);
   }, []);
+
+  useEffect(() => {
+    if (currentAcademie) {
+      setIndex(niveaux.map((value, index) => index));
+    } else {
+      setIndex(0);
+    }
+  }, [currentAcademie, niveaux]);
 
   return (
     <Layout>
@@ -493,7 +508,13 @@ export default ({ plateforme }) => {
                   </Flex>
                 )}
                 <Box minH="70vh">
-                  <Accordion bg="#FFFFFF" mb={24} index={niveaux.map((value, index) => index)} multiple>
+                  <Accordion
+                    bg="#FFFFFF"
+                    mb={24}
+                    index={index}
+                    // index={niveaux.map((value, index) => index)}
+                    allowMultiple={!!currentAcademie}
+                  >
                     {niveaux
                       .filter(({ diplomes }) =>
                         currentAcademie
@@ -503,12 +524,17 @@ export default ({ plateforme }) => {
                             )
                           : true
                       )
-                      .map(({ niveau, diplomes }) => {
+                      .map(({ niveau, diplomes }, index) => {
                         return (
                           <AccordionItem border="none" key={niveau.value} mt={6}>
                             {({ isExpanded }) => (
                               <>
-                                <AccordionButton borderBottom={"1px solid"} borderColor={"grey.300"} px={0}>
+                                <AccordionButton
+                                  borderBottom={"1px solid"}
+                                  borderColor={"grey.300"}
+                                  px={0}
+                                  onClick={() => setIndex(index)}
+                                >
                                   <Flex alignItems="center" w={"full"} justifyContent={"space-between"}>
                                     <Flex alignItems="center">
                                       <Text textStyle={"h4"} textAlign={"start"}>
@@ -526,9 +552,9 @@ export default ({ plateforme }) => {
                                 </AccordionButton>
                                 <AccordionPanel p={0} bg="#FFFFFF" mb={16}>
                                   <Headline plateforme={plateforme} academie={currentAcademie} />
-                                  {diplomes.map((diplome, index) => (
+                                  {diplomes.map((diplome) => (
                                     <Diplome
-                                      bg={index % 2 === 0 ? "#fff" : "grey.100"}
+                                      // bg={index % 2 === 0 ? "#fff" : "grey.100"}
                                       key={`${niveau.value}-${diplome.value}`}
                                       plateforme={plateforme}
                                       niveau={niveau.value}
