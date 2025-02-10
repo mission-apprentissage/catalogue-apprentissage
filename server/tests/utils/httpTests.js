@@ -17,7 +17,7 @@ const startServer = async () => {
 
       // Authentication
       const response = await httpClient.post(
-        "/api/v1/auth/login",
+        "/api/auth/login",
         {
           username: username,
           password: password,

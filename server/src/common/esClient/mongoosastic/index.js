@@ -116,7 +116,7 @@ function getMapping(schema, inPrefix = "", requireAsciiFolding = false) {
           };
           break;
         case "Mixed":
-          console.warn("Mixed mongoose type for ", key);
+          // console.warn("Mixed mongoose type for ", key);
           properties[key] = {
             type: "nested",
           };
