@@ -5,7 +5,13 @@ const rebuildEsIndex = async (index, skipFound = false, filter = {}) => {
   switch (index) {
     case "formation":
     case "formations":
-      await rebuildIndex("formation", Formation, { skipFound, filter: { published: true, ...filter } });
+      await rebuildIndex("formation", Formation, {
+        skipFound,
+        filter: {
+          published: true,
+          ...filter,
+        },
+      });
       break;
 
     case "etablissement":

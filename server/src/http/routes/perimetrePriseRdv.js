@@ -12,7 +12,6 @@ module.exports = () => {
     tryCatch(async (req, res) => {
       const stream = compose(
         Formation.find(
-
           { published: true, $or: [{ affelnet_perimetre_prise_rdv: true }, { parcoursup_perimetre_prise_rdv: true }] },
           {
             _id: 0,

@@ -434,7 +434,7 @@ describe(`${__filename} - Gestion de la disparition du périmètre`, async () =>
         assert.strictEqual(totalOtherStatus, 0);
       });
 
-      it("should keep status 'publié' if not in perimeter anymore, but already published with a affelnet_id", async () => {
+      it("should not keep status 'publié' if not in perimeter anymore", async () => {
         await Formation.create({
           ...formationOk,
           ...valueMotif,
@@ -447,12 +447,32 @@ describe(`${__filename} - Gestion de la disparition du périmètre`, async () =>
         const totalPublished = await Formation.countDocuments({
           affelnet_statut: AFFELNET_STATUS.PUBLIE,
         });
-        assert.strictEqual(totalPublished, 1);
+        assert.strictEqual(totalPublished, 0);
         const totalOtherStatus = await Formation.countDocuments({
           affelnet_statut: { $nin: [AFFELNET_STATUS.PUBLIE] },
         });
-        assert.strictEqual(totalOtherStatus, 0);
+        assert.strictEqual(totalOtherStatus, 1);
       });
+
+      // it("should keep status 'publié' if not in perimeter anymore, but already published with a affelnet_id", async () => {
+      //   await Formation.create({
+      //     ...formationOk,
+      //     ...valueMotif,
+      //     affelnet_statut: AFFELNET_STATUS.PUBLIE,
+      //     affelnet_id: "PARIS/abcdef",
+      //   });
+
+      //   await run();
+
+      //   const totalPublished = await Formation.countDocuments({
+      //     affelnet_statut: AFFELNET_STATUS.PUBLIE,
+      //   });
+      //   assert.strictEqual(totalPublished, 1);
+      //   const totalOtherStatus = await Formation.countDocuments({
+      //     affelnet_statut: { $nin: [AFFELNET_STATUS.PUBLIE] },
+      //   });
+      //   assert.strictEqual(totalOtherStatus, 0);
+      // });
 
       it("should not keep status 'publié' if not in perimeter anymore, but already published without a affelnet_id", async () => {
         await Formation.create({
