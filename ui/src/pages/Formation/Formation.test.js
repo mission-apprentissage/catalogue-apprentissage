@@ -270,7 +270,7 @@ const server = setupMswServer(
   rest.get(/\/api\/entity\/formation\/2/, (req, res, ctx) => {
     return res(ctx.json({ ...formation, uai_formation_valide: false, distance: 150 }));
   }),
-  rest.get(/\/api\/v1\/entity\/alert/, (req, res, ctx) => {
+  rest.get(/\/api\/entity\/alert/, (req, res, ctx) => {
     return res(ctx.json([]));
   })
 );
@@ -279,7 +279,7 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-test("renders a training page", async () => {
+it("renders a training page", async () => {
   const { queryByText, getByText } = renderWithRouter(<Formation />, {
     route: "/formation/1",
     path: "/formation/:id",
@@ -291,7 +291,7 @@ test("renders a training page", async () => {
   expect(title).toBeInTheDocument();
 });
 
-test("don't display an error when uai is valid", async () => {
+it("don't display an error when uai is valid", async () => {
   grantAnonymousAccess({ acl: ["page_formation"] });
 
   const { queryByText, getByTestId } = renderWithRouter(<Formation />, {
@@ -308,7 +308,7 @@ test("don't display an error when uai is valid", async () => {
   expect(ok).toBeInTheDocument();
 });
 
-test("display an error when uai is invalid", async () => {
+it("display an error when uai is invalid", async () => {
   grantAnonymousAccess({ acl: ["page_formation"] });
 
   const { queryByText, getByTestId } = renderWithRouter(<Formation />, {
@@ -325,7 +325,7 @@ test("display an error when uai is invalid", async () => {
   expect(warning).toBeInTheDocument();
 });
 
-// test("don't display an error when adress is same as coordinates", async () => {
+// it("don't display an error when adress is same as coordinates", async () => {
 //   grantAnonymousAccess({ acl: ["page_formation"] });
 
 //   const { getByText, queryByTestId } = renderWithRouter(<Formation match={{ params: { id: 1 } }} />);
@@ -336,7 +336,7 @@ test("display an error when uai is invalid", async () => {
 //   expect(warning).not.toBeInTheDocument();
 // });
 
-// test("display an error when adress is not same as coordinates", async () => {
+// it("display an error when adress is not same as coordinates", async () => {
 //   grantAnonymousAccess({ acl: ["page_formation"] });
 
 //   const { getByText, queryByTestId } = renderWithRouter(<Formation match={{ params: { id: 2 } }} />);

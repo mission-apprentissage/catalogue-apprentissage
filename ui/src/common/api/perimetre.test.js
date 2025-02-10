@@ -7,7 +7,7 @@ import { setupMswServer } from "../utils/testUtils";
 import { PLATEFORME } from "../../constants/plateforme";
 
 const server = setupMswServer(
-  rest.get(/\/api\/v1\/entity\/perimetre\/niveau.*/, (req, res, ctx) => {
+  rest.get(/\/api\/entity\/perimetre\/niveau.*/, (req, res, ctx) => {
     return res(
       ctx.json([
         {
@@ -37,7 +37,7 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-test("test custom hook", async () => {
+it("test custom hook", async () => {
   const { result } = renderHook(() => useNiveaux({ plateforme: PLATEFORME.PARCOURSUP }), { wrapper });
 
   await waitFor(() => expect(result.current.isSuccess).toBe(true));

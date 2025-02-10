@@ -31,7 +31,7 @@ const Alert = () => {
 
   const getMessagesManuels = useCallback(async () => {
     try {
-      const data = await _get("/api/v1/entity/alert");
+      const data = await _get("/api/entity/alert");
       // const hasMessages = data.reduce((acc, item) => acc || item.enabled, false);
       // if (hasMessages) {
       setMessagesManuels(data.filter((message) => message.type === "manuel"));
@@ -72,7 +72,7 @@ const Alert = () => {
             name: user.email,
             enabled: true,
           };
-          const messagePosted = await _post("/api/v1/entity/alert", message);
+          const messagePosted = await _post("/api/entity/alert", message);
           if (messagePosted) {
             alert("Le message a bien été envoyé.");
           }
@@ -105,7 +105,7 @@ const Alert = () => {
             name: "auto",
             enabled: false,
           };
-          const messagePosted = await _put(`/api/v1/entity/alert/${messageAutomatique._id}`, message);
+          const messagePosted = await _put(`/api/entity/alert/${messageAutomatique._id}`, message);
           if (messagePosted) {
             alert("Le message a bien été mise à jour.");
           }
@@ -123,7 +123,7 @@ const Alert = () => {
   useEffect(() => {
     const run = async () => {
       try {
-        const data = await _get("/api/v1/entity/alert");
+        const data = await _get("/api/entity/alert");
         if (data.length === 0) {
           const message = {
             type: "automatique",
@@ -131,7 +131,7 @@ const Alert = () => {
             name: "auto",
             enabled: false,
           };
-          await _post("/api/v1/entity/alert", message);
+          await _post("/api/entity/alert", message);
           window.location.reload();
         } else {
           const [a] = data.filter((d) => d.type === "automatique");
@@ -151,7 +151,7 @@ const Alert = () => {
 
   const toggleMessage = async (message) => {
     try {
-      await _patch(`/api/v1/entity/alert/${message._id}`, {
+      await _patch(`/api/entity/alert/${message._id}`, {
         enabled: !message.enabled,
       });
       window.location.reload();
@@ -162,7 +162,7 @@ const Alert = () => {
 
   const deleteMessage = async (message) => {
     try {
-      const messageDeleted = await _delete(`/api/v1/entity/alert/${message._id}`);
+      const messageDeleted = await _delete(`/api/entity/alert/${message._id}`);
       if (messageDeleted) {
         alert("Le message a bien été supprimé.");
       }

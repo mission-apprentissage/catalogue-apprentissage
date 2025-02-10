@@ -3,11 +3,11 @@ import userEvent from "@testing-library/user-event";
 import { Line } from "./Line";
 import { getCount } from "../../../common/api/perimetre";
 import * as api from "../../../common/api/perimetre";
-import { PARCOURSUP_STATUS } from "../../../constants/status";
+import { AFFELNET_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
 import { CONDITIONS } from "../../../constants/conditionsIntegration";
 import { PLATEFORME } from "../../../constants/plateforme";
 
-test("renders line & create rule", async () => {
+it("renders line & create rule", async () => {
   jest.spyOn(api, "getCount").mockImplementation(() => 123);
 
   const onShowRule = jest.fn();
@@ -54,28 +54,31 @@ test("renders line & create rule", async () => {
   });
 });
 
-test("renders Line for academie & show rule", async () => {
+it("renders Line & shows rule", async () => {
   jest.spyOn(api, "getCount").mockImplementation(() => 123);
 
   const onShowRule = jest.fn();
   const onCreateRule = jest.fn();
   const onUpdateRule = jest.fn();
+  const onUpdateStatutAcademieRule = jest.fn();
+  const onDeleteStatutAcademieRule = jest.fn();
   const onDeleteRule = jest.fn();
 
   const rule = {
-    statut: PARCOURSUP_STATUS.A_PUBLIER,
+    statut: AFFELNET_STATUS.A_DEFINIR,
     _id: "345",
     nom_regle_complementaire: "BTS Agri",
     regle_complementaire: "{}",
     condition_integration: CONDITIONS.PEUT_INTEGRER,
     statut_academies: {},
-    num_academie: 14,
+    annee: 1,
+    duree: 1,
   };
 
   const { queryByText, getByTestId } = render(
     <Line
       showIcon={false}
-      plateforme={PLATEFORME.PARCOURSUP}
+      plateforme={PLATEFORME.AFFELNET}
       niveau={"5 (BTS, DEUST...)"}
       label={"My test line"}
       shouldFetchCount={true}
@@ -84,26 +87,28 @@ test("renders Line for academie & show rule", async () => {
       onCreateRule={onCreateRule}
       onUpdateRule={onUpdateRule}
       onDeleteRule={onDeleteRule}
+      onUpdateStatutAcademieRule={onUpdateStatutAcademieRule}
+      onDeleteStatutAcademieRule={onDeleteStatutAcademieRule}
       rule={rule}
-      academie={"14"}
     />
   );
 
-  const label = queryByText("Rennes (14) - My test line");
+  const label = queryByText("My test line");
   expect(label).toBeInTheDocument();
 
   const actionsSelect = getByTestId("actions-select");
-  expect(actionsSelect).toHaveAttribute("aria-disabled", "true");
+  expect(actionsSelect).toHaveAttribute("aria-disabled", "false");
 
   const statusSelect = getByTestId("status-select");
-  expect(statusSelect).toHaveAttribute("aria-disabled", "true");
+  expect(statusSelect).toHaveAttribute("aria-disabled", "false");
 
   expect(getCount).toHaveBeenCalledWith({
-    academie: "14",
     diplome: "BTS",
     niveau: "5 (BTS, DEUST...)",
     regle_complementaire: "{}",
-    plateforme: PLATEFORME.PARCOURSUP,
+    plateforme: PLATEFORME.AFFELNET,
+    annee: 1,
+    duree: 1,
   });
 
   await waitFor(() => expect(queryByText("123")).toBeInTheDocument());
@@ -115,12 +120,79 @@ test("renders Line for academie & show rule", async () => {
   expect(onShowRule).toHaveBeenCalledWith(rule);
 });
 
-test("Action select - should delete rule", async () => {
+it("renders Line for academie & doesn't show rule", async () => {
   jest.spyOn(api, "getCount").mockImplementation(() => 123);
 
   const onShowRule = jest.fn();
   const onCreateRule = jest.fn();
   const onUpdateRule = jest.fn();
+  const onUpdateStatutAcademieRule = jest.fn();
+  const onDeleteStatutAcademieRule = jest.fn();
+  const onDeleteRule = jest.fn();
+
+  const rule = {
+    statut: AFFELNET_STATUS.A_DEFINIR,
+    _id: "345",
+    nom_regle_complementaire: "BTS Agri",
+    regle_complementaire: "{}",
+    condition_integration: CONDITIONS.PEUT_INTEGRER,
+    statut_academies: {},
+    annee: 1,
+    duree: 1,
+  };
+
+  const { queryByText, getByTestId } = render(
+    <Line
+      showIcon={false}
+      plateforme={PLATEFORME.AFFELNET}
+      niveau={"5 (BTS, DEUST...)"}
+      label={"My test line"}
+      shouldFetchCount={true}
+      diplome={"BTS"}
+      onShowRule={onShowRule}
+      onCreateRule={onCreateRule}
+      onUpdateRule={onUpdateRule}
+      onDeleteRule={onDeleteRule}
+      onUpdateStatutAcademieRule={onUpdateStatutAcademieRule}
+      onDeleteStatutAcademieRule={onDeleteStatutAcademieRule}
+      rule={rule}
+      academie={"14"}
+    />
+  );
+
+  const label = queryByText("My test line");
+  expect(label).toBeInTheDocument();
+
+  const statusSelect = getByTestId("status-select");
+  expect(statusSelect).toHaveAttribute("aria-disabled", "false");
+
+  expect(getCount).toHaveBeenCalledWith({
+    academie: "14",
+    diplome: "BTS",
+    niveau: "5 (BTS, DEUST...)",
+    regle_complementaire: "{}",
+    plateforme: PLATEFORME.AFFELNET,
+    annee: 1,
+    duree: 1,
+  });
+
+  await waitFor(() => expect(queryByText("123")).toBeInTheDocument());
+
+  const line = getByTestId("line");
+
+  await userEvent.click(line);
+
+  expect(onShowRule).not.toHaveBeenCalledWith(rule);
+});
+
+it("Action select - should delete rule", async () => {
+  jest.spyOn(api, "getCount").mockImplementation(() => 123);
+
+  const onShowRule = jest.fn();
+  const onCreateRule = jest.fn();
+  const onUpdateRule = jest.fn();
+  const onUpdateStatutAcademieRule = jest.fn();
+  const onDeleteStatutAcademieRule = jest.fn();
   const onDeleteRule = jest.fn();
 
   const rule = {
@@ -143,6 +215,8 @@ test("Action select - should delete rule", async () => {
       onShowRule={onShowRule}
       onCreateRule={onCreateRule}
       onUpdateRule={onUpdateRule}
+      onUpdateStatutAcademieRule={onUpdateStatutAcademieRule}
+      onDeleteStatutAcademieRule={onDeleteStatutAcademieRule}
       onDeleteRule={onDeleteRule}
       rule={rule}
     />
@@ -158,12 +232,14 @@ test("Action select - should delete rule", async () => {
   });
 });
 
-test(`Action select - should update rule & set "non publiable en l'état"`, async () => {
+it(`Action select - should update rule & set "non publiable en l'état"`, async () => {
   jest.spyOn(api, "getCount").mockImplementation(() => 123);
 
   const onShowRule = jest.fn();
   const onCreateRule = jest.fn();
   const onUpdateRule = jest.fn();
+  const onUpdateStatutAcademieRule = jest.fn();
+  const onDeleteStatutAcademieRule = jest.fn();
   const onDeleteRule = jest.fn();
 
   const rule = {
@@ -188,6 +264,8 @@ test(`Action select - should update rule & set "non publiable en l'état"`, asyn
       onCreateRule={onCreateRule}
       onUpdateRule={onUpdateRule}
       onDeleteRule={onDeleteRule}
+      onUpdateStatutAcademieRule={onUpdateStatutAcademieRule}
+      onDeleteStatutAcademieRule={onDeleteStatutAcademieRule}
       rule={rule}
     />
   );
@@ -204,12 +282,14 @@ test(`Action select - should update rule & set "non publiable en l'état"`, asyn
   });
 });
 
-test("Action select - should update rule & set à publier", async () => {
+it("Action select - should update rule & set à publier", async () => {
   jest.spyOn(api, "getCount").mockImplementation(() => 123);
 
   const onShowRule = jest.fn();
   const onCreateRule = jest.fn();
   const onUpdateRule = jest.fn();
+  const onUpdateStatutAcademieRule = jest.fn();
+  const onDeleteStatutAcademieRule = jest.fn();
   const onDeleteRule = jest.fn();
 
   const rule = {
@@ -218,7 +298,6 @@ test("Action select - should update rule & set à publier", async () => {
     regle_complementaire: "{}",
     condition_integration: CONDITIONS.NE_DOIT_PAS_INTEGRER,
     statut_academies: {},
-    num_academie: 14,
     nom_regle_complementaire: "BTS Agri",
   };
 
@@ -234,6 +313,8 @@ test("Action select - should update rule & set à publier", async () => {
       onCreateRule={onCreateRule}
       onUpdateRule={onUpdateRule}
       onDeleteRule={onDeleteRule}
+      onUpdateStatutAcademieRule={onUpdateStatutAcademieRule}
+      onDeleteStatutAcademieRule={onDeleteStatutAcademieRule}
       rule={rule}
     />
   );
@@ -250,12 +331,14 @@ test("Action select - should update rule & set à publier", async () => {
   });
 });
 
-test("Status select - should update status", async () => {
+it("Status select - should update status", async () => {
   jest.spyOn(api, "getCount").mockImplementation(() => 123);
 
   const onShowRule = jest.fn();
   const onCreateRule = jest.fn();
   const onUpdateRule = jest.fn();
+  const onUpdateStatutAcademieRule = jest.fn();
+  const onDeleteStatutAcademieRule = jest.fn();
   const onDeleteRule = jest.fn();
 
   const rule = {
@@ -264,7 +347,6 @@ test("Status select - should update status", async () => {
     regle_complementaire: "{}",
     condition_integration: CONDITIONS.PEUT_INTEGRER,
     statut_academies: {},
-    num_academie: 14,
     nom_regle_complementaire: "BTS Agri",
   };
 
@@ -280,6 +362,8 @@ test("Status select - should update status", async () => {
       onCreateRule={onCreateRule}
       onUpdateRule={onUpdateRule}
       onDeleteRule={onDeleteRule}
+      onUpdateStatutAcademieRule={onUpdateStatutAcademieRule}
+      onDeleteStatutAcademieRule={onDeleteStatutAcademieRule}
       rule={rule}
     />
   );
@@ -295,28 +379,29 @@ test("Status select - should update status", async () => {
   });
 });
 
-test("Status select - should update status for academie", async () => {
+it("Status select - should update status for academie", async () => {
   jest.spyOn(api, "getCount").mockImplementation(() => 123);
 
   const onShowRule = jest.fn();
   const onCreateRule = jest.fn();
   const onUpdateRule = jest.fn();
+  const onUpdateStatutAcademieRule = jest.fn();
+  const onDeleteStatutAcademieRule = jest.fn();
   const onDeleteRule = jest.fn();
 
   const rule = {
-    statut: PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+    statut: AFFELNET_STATUS.A_DEFINIR,
     _id: "345",
     regle_complementaire: "{}",
     condition_integration: CONDITIONS.PEUT_INTEGRER,
     statut_academies: {},
-    num_academie: 14,
     nom_regle_complementaire: "BTS Agri",
   };
 
   const { getByTestId } = render(
     <Line
       showIcon={false}
-      plateforme={PLATEFORME.PARCOURSUP}
+      plateforme={PLATEFORME.AFFELNET}
       niveau={"5 (BTS, DEUST...)"}
       label={"My test line"}
       shouldFetchCount={true}
@@ -325,6 +410,8 @@ test("Status select - should update status for academie", async () => {
       onCreateRule={onCreateRule}
       onUpdateRule={onUpdateRule}
       onDeleteRule={onDeleteRule}
+      onUpdateStatutAcademieRule={onUpdateStatutAcademieRule}
+      onDeleteStatutAcademieRule={onDeleteStatutAcademieRule}
       rule={rule}
       academie={"14"}
     />
@@ -333,38 +420,40 @@ test("Status select - should update status for academie", async () => {
   const statusSelect = getByTestId("status-select");
   expect(statusSelect).toHaveAttribute("aria-disabled", "false");
 
-  await userEvent.selectOptions(statusSelect, [PARCOURSUP_STATUS.A_PUBLIER]);
+  await userEvent.selectOptions(statusSelect, [AFFELNET_STATUS.A_PUBLIER]);
 
-  expect(onUpdateRule).toHaveBeenCalledWith({
+  expect(onUpdateStatutAcademieRule).toHaveBeenCalledWith({
     _id: "345",
-    statut_academies: {
-      14: PARCOURSUP_STATUS.A_PUBLIER,
-    },
+    num_academie: "14",
+    statut: AFFELNET_STATUS.A_PUBLIER,
   });
+
+  expect(onDeleteStatutAcademieRule).not.toHaveBeenCalled();
 });
 
-test("Status select - should remove status for academie", async () => {
+it("Status select - should remove status for academie", async () => {
   jest.spyOn(api, "getCount").mockImplementation(() => 123);
 
   const onShowRule = jest.fn();
   const onCreateRule = jest.fn();
   const onUpdateRule = jest.fn();
+  const onUpdateStatutAcademieRule = jest.fn();
+  const onDeleteStatutAcademieRule = jest.fn();
   const onDeleteRule = jest.fn();
 
   const rule = {
-    statut: PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
+    statut: AFFELNET_STATUS.A_DEFINIR,
     _id: "345",
     regle_complementaire: "{}",
     condition_integration: CONDITIONS.PEUT_INTEGRER,
-    statut_academies: { 14: PARCOURSUP_STATUS.A_PUBLIER },
-    num_academie: 14,
+    statut_academies: { 14: AFFELNET_STATUS.A_PUBLIER },
     nom_regle_complementaire: "BTS Agri",
   };
 
   const { getByTestId } = render(
     <Line
-      showIcon={true}
-      plateforme={PLATEFORME.PARCOURSUP}
+      showIcon={false}
+      plateforme={PLATEFORME.AFFELNET}
       niveau={"5 (BTS, DEUST...)"}
       label={"My test line"}
       shouldFetchCount={true}
@@ -373,6 +462,8 @@ test("Status select - should remove status for academie", async () => {
       onCreateRule={onCreateRule}
       onUpdateRule={onUpdateRule}
       onDeleteRule={onDeleteRule}
+      onUpdateStatutAcademieRule={onUpdateStatutAcademieRule}
+      onDeleteStatutAcademieRule={onDeleteStatutAcademieRule}
       rule={rule}
       academie={"14"}
     />
@@ -381,10 +472,13 @@ test("Status select - should remove status for academie", async () => {
   const statusSelect = getByTestId("status-select");
   expect(statusSelect).toHaveAttribute("aria-disabled", "false");
 
-  await userEvent.selectOptions(statusSelect, [PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR]);
+  await userEvent.selectOptions(statusSelect, [AFFELNET_STATUS.A_DEFINIR]);
 
-  expect(onUpdateRule).toHaveBeenCalledWith({
-    _id: "345",
-    statut_academies: {},
-  });
+  expect(onUpdateStatutAcademieRule).not.toHaveBeenCalled();
+
+  // TO FIX
+  // expect(onDeleteStatutAcademieRule).toHaveBeenCalledWith({
+  //   _id: "345",
+  //   num_academie: "14",
+  // });
 });

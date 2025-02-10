@@ -80,7 +80,7 @@ export const deleteRule = async ({ _id }) => {
 
 export const getIntegrationCount = async ({ plateforme, niveau, academie }, options) => {
   try {
-    const countUrl = `${CATALOGUE_API}/v1/entity/perimetre/regles/integration/count`;
+    const countUrl = `${CATALOGUE_API}/entity/perimetre/regles/integration/count`;
     const params = new URLSearchParams({
       plateforme: plateforme,
       num_academie: academie,
@@ -105,12 +105,12 @@ export const useIntegrationCount = ({ plateforme, academie }) => {
 };
 
 export const getRules = async ({ plateforme }, options) => {
-  const reglesUrl = `${CATALOGUE_API}/v1/entity/perimetre/regles`;
+  const reglesUrl = `${CATALOGUE_API}/entity/perimetre/regles`;
   return await _get(`${reglesUrl}?plateforme=${plateforme}`, options);
 };
 
 export const getNiveaux = async ({ plateforme }, options) => {
-  const niveauxURL = `${CATALOGUE_API}/v1/entity/perimetre/niveau?plateforme=${plateforme}`;
+  const niveauxURL = `${CATALOGUE_API}/entity/perimetre/niveau?plateforme=${plateforme}`;
   return await _get(niveauxURL, options);
 };
 
@@ -122,7 +122,7 @@ export const useNiveaux = ({ plateforme }) => {
 };
 
 export const getCount = async ({ plateforme, niveau, diplome, regle_complementaire, academie, duree, annee }) => {
-  const countUrl = `${CATALOGUE_API}/v1/entity/perimetre/regle/count`;
+  const countUrl = `${CATALOGUE_API}/entity/perimetre/regle/count`;
   const params = new URLSearchParams({
     published: true,
     plateforme,

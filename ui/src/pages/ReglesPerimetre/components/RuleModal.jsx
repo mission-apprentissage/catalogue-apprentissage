@@ -80,7 +80,7 @@ export const getDiplomesAllowedForSubRulesUrl = (plateforme) => {
   }
 
   const params = new URLSearchParams(filters);
-  return `${CATALOGUE_API}/v1/entity/perimetre/regles?${params}`;
+  return `${CATALOGUE_API}/entity/perimetre/regles?${params}`;
 };
 
 const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreateRule, plateforme, academie }) => {
@@ -258,7 +258,7 @@ const RuleModal = ({ isOpen, onClose, rule, onUpdateRule, onDeleteRule, onCreate
   let linkFormations = `/recherche/formations?qb=${encodeURIComponent(JSON.stringify(linkQuery))}`;
 
   if (academie ?? num_academie) {
-    linkFormations += `&nom_academie=%5B"${ACADEMIES[String(academie ?? num_academie)?.padStart(2, "0")].nom_academie}"%5D`;
+    linkFormations += `&nom_academie=%5B"${ACADEMIES[String(academie ?? num_academie)?.padStart(2, "0")]?.nom_academie}"%5D`;
   }
 
   if (values.niveau) {

@@ -3,7 +3,7 @@ import { fireEvent, queryByText, render } from "@testing-library/react";
 import { AcademiesSelect } from "./AcademiesSelect";
 import { PLATEFORME } from "../../../constants/plateforme";
 
-test("renders all academies for admins", () => {
+it("renders all academies for admins", () => {
   const onChange = jest.fn();
   const user = {
     permissions: { isAdmin: true },
@@ -23,7 +23,7 @@ test("renders all academies for admins", () => {
   expect(container.querySelectorAll("option")).toHaveLength(31);
 });
 
-test("renders no academies without user", () => {
+it("renders no academies without user", () => {
   const onChange = jest.fn();
   const user = null;
 
@@ -40,7 +40,7 @@ test("renders no academies without user", () => {
   expect(container.querySelectorAll("option")).toHaveLength(0);
 });
 
-test("renders only some academies if not admin", () => {
+it("renders only some academies if not admin", () => {
   const onChange = jest.fn();
   const user = {
     permissions: { isAdmin: false },
@@ -66,7 +66,7 @@ test("renders only some academies if not admin", () => {
   expect(container.querySelectorAll("option")).toHaveLength(2);
 });
 
-test("on change should be called with academie number", () => {
+it("on change should be called with academie number", () => {
   const onChange = jest.fn();
   const user = {
     permissions: { isAdmin: true },

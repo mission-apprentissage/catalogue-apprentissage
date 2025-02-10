@@ -6,21 +6,21 @@ import * as api from "../../api/formation";
 
 jest.setTimeout(20000);
 
-test("should return undefined when status is not known or à publier", () => {
+it("should return undefined when status is not known or à publier", () => {
   expect(getPublishRadioValue(COMMON_STATUS.A_PUBLIER)).toEqual(undefined);
   expect(getPublishRadioValue("some_status")).toEqual(undefined);
 });
 
-test("should return true when status is publie or en attente", () => {
+it("should return true when status is publie or en attente", () => {
   expect(getPublishRadioValue(COMMON_STATUS.PUBLIE)).toEqual("true");
   expect(getPublishRadioValue(COMMON_STATUS.PRET_POUR_INTEGRATION)).toEqual("true");
 });
 
-test("should return false when status is non publie", () => {
+it("should return false when status is non publie", () => {
   expect(getPublishRadioValue(COMMON_STATUS.NON_PUBLIE)).toEqual("false");
 });
 
-test("should compute submit body when publish affelnet", () => {
+it("should compute submit body when publish affelnet", () => {
   const formation = {
     _id: "id",
     affelnet_statut: AFFELNET_STATUS.A_PUBLIER,
@@ -55,7 +55,7 @@ test("should compute submit body when publish affelnet", () => {
   });
 });
 
-test("should compute submit body when publish affelnet ", () => {
+it("should compute submit body when publish affelnet ", () => {
   const formation = {
     _id: "id",
     affelnet_statut: AFFELNET_STATUS.NON_PUBLIE,
@@ -89,7 +89,7 @@ test("should compute submit body when publish affelnet ", () => {
   });
 });
 
-test("should update info when publish affelnet", () => {
+it("should update info when publish affelnet", () => {
   const formation = {
     _id: "id",
     affelnet_statut: AFFELNET_STATUS.PUBLIE,
@@ -120,7 +120,7 @@ test("should update info when publish affelnet", () => {
   });
 });
 
-test("should do nothing when publish affelnet on unknown status", () => {
+it("should do nothing when publish affelnet on unknown status", () => {
   const formation = {
     _id: "id",
     affelnet_statut: "unknown",
@@ -149,7 +149,7 @@ test("should do nothing when publish affelnet on unknown status", () => {
   });
 });
 
-test("should compute submit body when UNpublish affelnet", () => {
+it("should compute submit body when UNpublish affelnet", () => {
   const formation = {
     _id: "id",
     affelnet_statut: AFFELNET_STATUS.PUBLIE,
@@ -184,7 +184,7 @@ test("should compute submit body when UNpublish affelnet", () => {
   });
 });
 
-test("should do nothing when UNpublish affelnet for a status already not published", () => {
+it("should do nothing when UNpublish affelnet for a status already not published", () => {
   const formation = {
     _id: "id",
     affelnet_statut: AFFELNET_STATUS.NON_PUBLIE,
@@ -212,7 +212,7 @@ test("should do nothing when UNpublish affelnet for a status already not publish
   });
 });
 
-test("should compute submit body when publish parcoursup", () => {
+it("should compute submit body when publish parcoursup", () => {
   const formation = {
     _id: "id",
     affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
@@ -246,7 +246,7 @@ test("should compute submit body when publish parcoursup", () => {
   });
 });
 
-test("should compute submit body when publish parcoursup", () => {
+it("should compute submit body when publish parcoursup", () => {
   const formation = {
     _id: "id",
     affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
@@ -280,7 +280,7 @@ test("should compute submit body when publish parcoursup", () => {
   });
 });
 
-test("should compute submit body when UNpublish parcoursup", () => {
+it("should compute submit body when UNpublish parcoursup", () => {
   const formation = {
     _id: "id",
     affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
@@ -314,7 +314,7 @@ test("should compute submit body when UNpublish parcoursup", () => {
   });
 });
 
-test("should do nothing when publish parcoursup on unknown status", () => {
+it("should do nothing when publish parcoursup on unknown status", () => {
   const formation = {
     _id: "id",
     affelnet_statut: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT,
@@ -341,7 +341,7 @@ test("should do nothing when publish parcoursup on unknown status", () => {
   });
 });
 
-test("should update formation", async () => {
+it("should update formation", async () => {
   const updateFormation = jest.fn();
 
   jest.spyOn(api, "updateFormation").mockImplementation(updateFormation);
@@ -371,7 +371,7 @@ test("should update formation", async () => {
   expect(onFormationUpdate).toHaveBeenCalled();
 });
 
-test("should update formation", async () => {
+it("should update formation", async () => {
   const updateFormation = jest.fn();
 
   jest.spyOn(api, "updateFormation").mockImplementation(updateFormation);
@@ -388,7 +388,7 @@ test("should update formation", async () => {
   expect(onFormationUpdate).toHaveBeenCalled();
 });
 
-test("should render the publish modal", () => {
+it("should render the publish modal", () => {
   const onClose = jest.fn();
   const onFormationUpdate = jest.fn();
 
@@ -423,7 +423,7 @@ test("should render the publish modal", () => {
   expect(afPublishForm).not.toBeVisible();
 });
 
-test("should toggle the affelnet forms", async () => {
+it("should toggle the affelnet forms", async () => {
   const onClose = jest.fn();
   const onFormationUpdate = jest.fn();
 
@@ -469,7 +469,7 @@ test("should toggle the affelnet forms", async () => {
   expect(afPublishForm).not.toBeVisible();
 });
 
-test("should toggle the parcoursup forms", async () => {
+it("should toggle the parcoursup forms", async () => {
   const onClose = jest.fn();
   const onFormationUpdate = jest.fn();
 
@@ -522,7 +522,7 @@ test("should toggle the parcoursup forms", async () => {
   expect(afUnpublishForm).not.toBeVisible();
 });
 
-test("should submit", async () => {
+it("should submit", async () => {
   const updateFormation = jest.fn();
 
   jest.spyOn(api, "updateFormation").mockImplementation(updateFormation);
@@ -563,7 +563,7 @@ test("should submit", async () => {
   expect(onFormationUpdate).toHaveBeenCalled();
 });
 
-test("should submit but no update", async () => {
+it("should submit but no update", async () => {
   const updateFormation = jest.fn();
 
   jest.spyOn(api, "updateFormation").mockImplementation(updateFormation);
@@ -600,7 +600,7 @@ test("should submit but no update", async () => {
   expect(onFormationUpdate).not.toHaveBeenCalled();
 });
 
-test("should close", async () => {
+it("should close", async () => {
   const onClose = jest.fn();
   const onFormationUpdate = jest.fn();
 

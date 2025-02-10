@@ -14,14 +14,14 @@ jest.mock("../../../common/utils/downloadUtils", () => {
   };
 });
 
-test("renders button", () => {
+it("renders button", () => {
   const { getByText } = render(<ExportButton plateforme={PLATEFORME.PARCOURSUP} rules={[]} />);
 
   const button = getByText(/^Exporter$/i);
   expect(button).toBeInTheDocument();
 });
 
-test("should call exportCSV on click", () => {
+it("should call exportCSV on click", () => {
   const rules = [
     {
       niveau: "3",

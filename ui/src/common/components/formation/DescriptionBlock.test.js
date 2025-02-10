@@ -164,7 +164,7 @@ const formation = {
   partenaires: null,
 };
 
-test("renders the description block of the training", async () => {
+it("renders the description block of the training", async () => {
   const { queryByText } = render(
     <DescriptionBlock formation={{ ...formation, etablissement_reference_habilite_rncp: null }} />
   );
@@ -185,7 +185,7 @@ test("renders the description block of the training", async () => {
   expect(warn).not.toBeInTheDocument();
 });
 
-test("show partenaires for titre or tp", async () => {
+it("show partenaires for titre or tp", async () => {
   const tpFormation = {
     ...formation,
     etablissement_reference_habilite_rncp: true,
@@ -206,7 +206,7 @@ test("show partenaires for titre or tp", async () => {
   expect(partenaires).toBeInTheDocument();
 });
 
-test("dont show partenaires if certificateur is ministere EN for titre or tp", async () => {
+it("dont show partenaires if certificateur is ministere EN for titre or tp", async () => {
   const tpFormation = {
     ...formation,
     rncp_details: {
@@ -226,7 +226,7 @@ test("dont show partenaires if certificateur is ministere EN for titre or tp", a
   expect(partenaires).not.toBeInTheDocument();
 });
 
-test("show partenaires", async () => {
+it("show partenaires", async () => {
   const partenairesData = [
     {
       Siret_Partenaire: "34958609900021",
@@ -253,7 +253,7 @@ test("show partenaires", async () => {
   expect(partenaire).toBeInTheDocument();
 });
 
-test("display a warning for cfd outdated", async () => {
+it("display a warning for cfd outdated", async () => {
   const testFormation = {
     ...formation,
     etablissement_reference_habilite_rncp: null,
@@ -265,7 +265,7 @@ test("display a warning for cfd outdated", async () => {
   expect(warn).toBeInTheDocument();
 });
 
-test("display a warning for missing session", async () => {
+it("display a warning for missing session", async () => {
   const testFormation = {
     ...formation,
     periode: ["2023-09"],

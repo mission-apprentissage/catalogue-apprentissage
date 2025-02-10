@@ -31,7 +31,7 @@ const alerts = [
 ];
 
 const server = setupMswServer(
-  rest.get(/\/api\/v1\/entity\/alert/, (req, res, ctx) => {
+  rest.get(/\/api\/entity\/alert/, (req, res, ctx) => {
     return res(ctx.json(alerts));
   })
 );
@@ -40,7 +40,7 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-test("renders alerts", async () => {
+it("renders alerts", async () => {
   const { getByTestId, queryByTestId } = render(<AlertMessage />);
 
   await waitFor(() => getByTestId("container"));

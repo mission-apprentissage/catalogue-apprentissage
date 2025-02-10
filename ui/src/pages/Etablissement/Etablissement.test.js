@@ -176,7 +176,7 @@ const server = setupMswServer(
   rest.get(/\/api\/entity\/formations\/count/, (req, res, ctx) => {
     return res(ctx.json(etablissement.formations_ids?.length ?? 0));
   }),
-  rest.get(/\/api\/v1\/entity\/alert/, (req, res, ctx) => {
+  rest.get(/\/api\/entity\/alert/, (req, res, ctx) => {
     return res(ctx.json([]));
   })
 );
@@ -185,7 +185,7 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-test("renders a training page", async () => {
+it("renders a training page", async () => {
   const { queryAllByText, getByText, getAllByText } = renderWithRouter(<Etablissement />, {
     route: "/etablissements/1",
     path: "/etablissements/:id",
@@ -198,7 +198,7 @@ test("renders a training page", async () => {
   expect(title.length).toBeGreaterThan(0);
 });
 
-test("display an error when uai is invalid", async () => {
+it("display an error when uai is invalid", async () => {
   grantAnonymousAccess({ acl: ["page_organisme"] });
 
   const { getByText, queryByText, queryByTestId } = renderWithRouter(<Etablissement />, {
@@ -216,7 +216,7 @@ test("display an error when uai is invalid", async () => {
   expect(warning).toBeInTheDocument();
 });
 
-test("don't display an error when uai is valid", async () => {
+it("don't display an error when uai is valid", async () => {
   grantAnonymousAccess({ acl: ["page_organisme"] });
 
   const { getByText, queryByText, queryByTestId } = renderWithRouter(<Etablissement />, {

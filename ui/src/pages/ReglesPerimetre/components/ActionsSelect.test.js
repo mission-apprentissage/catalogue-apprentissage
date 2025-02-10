@@ -2,7 +2,7 @@ import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ActionsSelect } from "./ActionsSelect";
 
-test("renders all conditions", () => {
+it("renders all conditions", () => {
   const onChange = jest.fn();
 
   const { getByText } = render(<ActionsSelect onChange={onChange} />);
@@ -17,7 +17,7 @@ test("renders all conditions", () => {
   expect(option).toBeInTheDocument();
 });
 
-test("calls onChange", async () => {
+it("calls onChange", async () => {
   const onChange = jest.fn();
 
   const { getByTestId } = render(<ActionsSelect onChange={onChange} />);

@@ -9,7 +9,7 @@ import { waitFor } from "@testing-library/dom";
 import { CATALOGUE_GENERAL_LABEL, CATALOGUE_NON_ELIGIBLE_LABEL } from "../../constants/catalogueLabels";
 
 const server = setupMswServer(
-  rest.get(/\/api\/v1\/entity\/alert/, (req, res, ctx) => {
+  rest.get(/\/api\/entity\/alert/, (req, res, ctx) => {
     return res(ctx.json([]));
   }),
 
@@ -680,7 +680,7 @@ afterAll(() => server.close());
 
 jest.setTimeout(50000);
 
-test("renders basic tree", async () => {
+it("renders basic tree", async () => {
   jest.spyOn(search, "useSearch").mockImplementation(() => ({
     loaded: true,
     countCatalogueGeneral: {

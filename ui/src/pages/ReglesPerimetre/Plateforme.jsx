@@ -28,7 +28,7 @@ import {
   createRule,
   deleteRule,
   deleteStatutAcademieRule,
-  getIntegrationCount,
+  // getIntegrationCount,
   getRules,
   updateRule,
   updateStatutAcademieRule,
@@ -48,10 +48,10 @@ export default ({ plateforme }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [currentRule, setCurrentRule] = useState(null);
   const [currentAcademie, setCurrentAcademie] = useState(null);
-  const [niveauxCount, setNiveauxCount] = useState({});
+  // const [niveauxCount, setNiveauxCount] = useState({});
   const [selectedDiplome, setSelectedDiplome] = useState(null);
   const toast = useToast();
-  const [index, setIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(-1);
 
   let title;
 
@@ -367,47 +367,47 @@ export default ({ plateforme }) => {
     });
   }, []);
 
-  useEffect(() => {
-    let mounted = true;
-    const abortController = new AbortController();
+  // useEffect(() => {
+  //   let mounted = true;
+  //   const abortController = new AbortController();
 
-    async function run() {
-      try {
-        setNiveauxCount({});
-        const counts = {};
-        await Promise.all(
-          niveaux.map(async ({ niveau }) => {
-            counts[niveau.value] = await getIntegrationCount(
-              {
-                plateforme,
-                niveau: niveau.value,
-                academie: currentAcademie,
-              },
-              { signal: abortController.signal }
-            );
-          })
-        );
-        if (mounted) {
-          setNiveauxCount(counts);
-        }
-      } catch (e) {
-        if (!abortController.signal.aborted) {
-          throw e;
-        }
-      }
-    }
+  //   async function run() {
+  //     try {
+  //       setNiveauxCount({});
+  //       const counts = {};
+  //       await Promise.all(
+  //         niveaux.map(async ({ niveau }) => {
+  //           counts[niveau.value] = await getIntegrationCount(
+  //             {
+  //               plateforme,
+  //               niveau: niveau.value,
+  //               academie: currentAcademie,
+  //             },
+  //             { signal: abortController.signal }
+  //           );
+  //         })
+  //       );
+  //       if (mounted) {
+  //         setNiveauxCount(counts);
+  //       }
+  //     } catch (e) {
+  //       if (!abortController.signal.aborted) {
+  //         throw e;
+  //       }
+  //     }
+  //   }
 
-    if (plateforme) {
-      run();
-    }
+  //   if (plateforme) {
+  //     run();
+  //   }
 
-    return () => {
-      // cleanup hook
-      mounted = false;
-      setNiveauxCount({});
-      abortController.abort();
-    };
-  }, [currentAcademie, niveaux, plateforme]);
+  //   return () => {
+  //     // cleanup hook
+  //     mounted = false;
+  //     setNiveauxCount({});
+  //     abortController.abort();
+  //   };
+  // }, [currentAcademie, niveaux, plateforme]);
 
   const onAcademieChange = useCallback((academie) => {
     setCurrentAcademie(academie);
@@ -415,9 +415,9 @@ export default ({ plateforme }) => {
 
   useEffect(() => {
     if (currentAcademie) {
-      setIndex(niveaux.map((value, index) => index));
+      setCurrentIndex(niveaux.map((value, index) => index));
     } else {
-      setIndex(0);
+      setCurrentIndex(-1);
     }
   }, [currentAcademie, niveaux]);
 
@@ -511,9 +511,10 @@ export default ({ plateforme }) => {
                   <Accordion
                     bg="#FFFFFF"
                     mb={24}
-                    index={index}
+                    index={currentIndex}
                     // index={niveaux.map((value, index) => index)}
                     allowMultiple={!!currentAcademie}
+                    allowToggle
                   >
                     {niveaux
                       .filter(({ diplomes }) =>
@@ -533,7 +534,9 @@ export default ({ plateforme }) => {
                                   borderBottom={"1px solid"}
                                   borderColor={"grey.300"}
                                   px={0}
-                                  onClick={() => setIndex(index)}
+                                  onClick={() =>
+                                    index === currentIndex ? setCurrentIndex(-1) : setCurrentIndex(index)
+                                  }
                                 >
                                   <Flex alignItems="center" w={"full"} justifyContent={"space-between"}>
                                     <Flex alignItems="center">
@@ -541,13 +544,13 @@ export default ({ plateforme }) => {
                                         Niveau {niveau.value}
                                       </Text>
                                     </Flex>
-                                    {!currentAcademie && (
+                                    {/* {!currentAcademie && (
                                       <Text textStyle={"rf-text"} textAlign={"end"}>
                                         {niveauxCount[niveau.value]?.nbRules ?? "-"} diplômes et titres doivent ou
                                         peuvent intégrer la plateforme ce qui représente{" "}
                                         {niveauxCount[niveau.value]?.nbFormations ?? "-"} formations
                                       </Text>
-                                    )}
+                                    )} */}
                                   </Flex>
                                 </AccordionButton>
                                 <AccordionPanel p={0} bg="#FFFFFF" mb={16}>

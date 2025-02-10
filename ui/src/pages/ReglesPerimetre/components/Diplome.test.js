@@ -5,7 +5,7 @@ import * as api from "../../../common/api/perimetre";
 import { getCount } from "../../../common/api/perimetre";
 import { PLATEFORME } from "../../../constants/plateforme";
 
-test("renders Diplome & sub rules", async () => {
+it("renders Diplome & sub rules", async () => {
   const scrollIntoView = jest.fn();
   window.HTMLElement.prototype.scrollIntoView = scrollIntoView;
 

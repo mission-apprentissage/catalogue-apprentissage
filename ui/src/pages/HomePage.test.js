@@ -11,7 +11,7 @@ const server = setupMswServer(
   rest.get(/\/api\/entity\/formations\/count/, (req, res, ctx) => {
     return res(ctx.json(8900));
   }),
-  rest.get(/\/api\/v1\/entity\/alert/, (req, res, ctx) => {
+  rest.get(/\/api\/entity\/alert/, (req, res, ctx) => {
     return res(ctx.json([]));
   })
 );
@@ -20,13 +20,13 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-test("renders title", () => {
+it("renders title", () => {
   const { getByText } = renderWithRouter(<HomePage />);
   const title = getByText(/^Catalogue des offres de formations en apprentissage$/i);
   expect(title).toBeInTheDocument();
 });
 
-test("should fetch formations & etablissements counts", async () => {
+it("should fetch formations & etablissements counts", async () => {
   const { getByText } = renderWithRouter(<HomePage />);
 
   await waitForElementToBeRemoved(() => getByText(/chargement/i));

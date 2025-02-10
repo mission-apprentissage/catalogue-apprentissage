@@ -12,7 +12,7 @@ const server = setupMswServer(
     return res(ctx.json(1000));
   }),
 
-  rest.get(/\/api\/v1\/entity\/alert/, (req, res, ctx) => {
+  rest.get(/\/api\/entity\/alert/, (req, res, ctx) => {
     return res(ctx.json([]));
   })
 );
@@ -21,7 +21,7 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-test("renders all actions for admin", async () => {
+it("renders all actions for admin", async () => {
   setAuthState({ permissions: { isAdmin: true } });
 
   const { getByText, getByTestId } = renderWithRouter(<ReglesPerimetre />);
@@ -35,7 +35,7 @@ test("renders all actions for admin", async () => {
   expect(perimetreAfLink).toBeInTheDocument();
 });
 
-test("renders ps actions for acl ps", async () => {
+it("renders ps actions for acl ps", async () => {
   setAuthState({ permissions: { isAdmin: false }, acl: ["page_perimetre/parcoursup"] });
 
   const { queryByText, getByTestId } = renderWithRouter(<ReglesPerimetre />);
@@ -49,7 +49,7 @@ test("renders ps actions for acl ps", async () => {
   expect(perimetreAfLink).not.toBeInTheDocument();
 });
 
-test("renders af actions for acl af", async () => {
+it("renders af actions for acl af", async () => {
   setAuthState({ permissions: { isAdmin: false }, acl: ["page_perimetre/affelnet"] });
 
   const { queryByText, getByTestId } = renderWithRouter(<ReglesPerimetre />);

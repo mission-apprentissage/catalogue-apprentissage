@@ -46,14 +46,14 @@ export const grantAnonymousAccess = ({ acl, academie }) => {
 //     .mockImplementation(() => [{ username: "instructeur", roles: ["instructeur-parcoursup"], acl, academie }, () => {}]);
 // };
 
-// export const grantAdminAccess = ({ acl, academie }) => {
-//   jest
-//     .spyOn(useAuth, "default")
-//     .mockImplementation(() => [
-//       { username: "admin", roles: ["admin"], acl, academie, permissions: { isAdmin: true } },
-//       () => {},
-//     ]);
-// };
+export const grantAdminAccess = ({ acl, academie }) => {
+  jest
+    .spyOn(useAuth, "default")
+    .mockImplementation(() => [
+      { username: "admin", roles: ["admin"], acl, academie, permissions: { isAdmin: true } },
+      () => {},
+    ]);
+};
 
 export const setupMswServer = (...args) => {
   return setupServer(
@@ -65,6 +65,21 @@ export const setupMswServer = (...args) => {
 
     rest.post(/\/*/, (req, res, ctx) => {
       console.warn("POST Unhandled request : " + req.url.pathname);
+      return res(ctx.json({}));
+    }),
+
+    rest.patch(/\/*/, (req, res, ctx) => {
+      console.warn("PATCH Unhandled request : " + req.url.pathname);
+      return res(ctx.json({}));
+    }),
+
+    rest.put(/\/*/, (req, res, ctx) => {
+      console.warn("PUT Unhandled request : " + req.url.pathname);
+      return res(ctx.json({}));
+    }),
+
+    rest.delete(/\/*/, (req, res, ctx) => {
+      console.warn("DELETE Unhandled request : " + req.url.pathname);
       return res(ctx.json({}));
     })
   );

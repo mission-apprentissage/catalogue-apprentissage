@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { DiplomesAutosuggest } from "./DiplomesAutosuggest";
 import * as api from "../../../common/api/perimetre";
 
-test("display bts diploma", async () => {
+it("display bts diploma", async () => {
   jest.spyOn(api, "useNiveaux").mockImplementation(() => ({
     data: [
       {

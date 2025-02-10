@@ -3,7 +3,7 @@ import { RuleUpdatesHistory } from "./RuleUpdatesHistory";
 import { render } from "@testing-library/react";
 import { PARCOURSUP_STATUS } from "../../../constants/status";
 
-test("should display the object value in a human friendly way", async () => {
+it("should display the object value in a human friendly way", async () => {
   const ruleHistory = {
     regle_complementaire_query: "La query",
     regle_complementaire: "regle complementaire",

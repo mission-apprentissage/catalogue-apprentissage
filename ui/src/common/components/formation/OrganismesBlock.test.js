@@ -174,7 +174,7 @@ const formation = {
   lieu_formation_adresse_computed: "57 Rue de la Paix, 57450 Henriville",
 };
 
-test("should render the organismes block in one establishment mode", async () => {
+it("should render the organismes block in one establishment mode", async () => {
   jest.spyOn(api, "getOrganisme").mockImplementation(() => ({
     tags: ["2021", "my_test_tag"],
   }));
@@ -192,7 +192,7 @@ test("should render the organismes block in one establishment mode", async () =>
   expect(tag2).toBeInTheDocument();
 });
 
-test("should render the organismes block in 2 establishments mode", async () => {
+it("should render the organismes block in 2 establishments mode", async () => {
   jest.spyOn(api, "getOrganisme").mockImplementation(() => ({
     tags: ["2023", "2021", "2022"],
   }));

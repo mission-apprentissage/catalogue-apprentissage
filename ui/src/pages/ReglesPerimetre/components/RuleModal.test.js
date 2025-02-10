@@ -7,13 +7,13 @@ import { setupMswServer, renderWithRouter } from "../../../common/utils/testUtil
 import { PLATEFORME } from "../../../constants/plateforme";
 
 const server = setupMswServer(
-  rest.get(/\/api\/v1\/entity\/perimetre\/niveau/, (req, res, ctx) => {
+  rest.get(/\/api\/entity\/perimetre\/niveau/, (req, res, ctx) => {
     return res(ctx.json([{ niveau: { value: "1", count: 10 }, diplomes: [{ value: "bts" }] }]));
   }),
-  rest.get(/\/api\/v1\/entity\/perimetre\/regles/, (req, res, ctx) => {
+  rest.get(/\/api\/entity\/perimetre\/regles/, (req, res, ctx) => {
     return res(ctx.json([]));
   }),
-  rest.get(/\/api\/v1\/entity\/perimetre\/regle\/count/, (req, res, ctx) => {
+  rest.get(/\/api\/entity\/perimetre\/regle\/count/, (req, res, ctx) => {
     return res(ctx.json(39));
   })
 );
@@ -31,21 +31,21 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-test("should compute an url filtering with status 'à publier soumis à validation du recteur' for parcoursup", () => {
+it("should compute an url filtering with status 'à publier soumis à validation du recteur' for parcoursup", () => {
   const result = getDiplomesAllowedForSubRulesUrl(PLATEFORME.PARCOURSUP);
   expect(result).toEqual(
-    `${process.env.REACT_APP_BASE_URL}/api/v1/entity/perimetre/regles?plateforme=parcoursup&nom_regle_complementaire=null&statut=%C3%A0+publier+%28soumis+%C3%A0+validation+Recteur%29`
+    `${process.env.REACT_APP_BASE_URL}/api/entity/perimetre/regles?plateforme=parcoursup&nom_regle_complementaire=null&statut=%C3%A0+publier+%28soumis+%C3%A0+validation+Recteur%29`
   );
 });
 
-test("should compute an url filtering with condition 'peut intégrer' for affelnet", () => {
+it("should compute an url filtering with condition 'peut intégrer' for affelnet", () => {
   const result = getDiplomesAllowedForSubRulesUrl("affelnet");
   expect(result).toEqual(
-    `${process.env.REACT_APP_BASE_URL}/api/v1/entity/perimetre/regles?plateforme=affelnet&nom_regle_complementaire=null&condition_integration=peut+int%C3%A9grer`
+    `${process.env.REACT_APP_BASE_URL}/api/entity/perimetre/regles?plateforme=affelnet&nom_regle_complementaire=null&condition_integration=peut+int%C3%A9grer`
   );
 });
 
-test("renders the modal in creation mode for psup", async () => {
+it("renders the modal in creation mode for psup", async () => {
   const onClose = jest.fn();
   const onUpdateRule = jest.fn();
   const onDeleteRule = jest.fn();
@@ -75,7 +75,7 @@ test("renders the modal in creation mode for psup", async () => {
   expect(anneeField).toBeInTheDocument();
 });
 
-test("renders the modal in creation mode for affelnet", async () => {
+it("renders the modal in creation mode for affelnet", async () => {
   const onClose = jest.fn();
   const onUpdateRule = jest.fn();
   const onDeleteRule = jest.fn();
@@ -105,7 +105,7 @@ test("renders the modal in creation mode for affelnet", async () => {
   expect(anneeField).toBeInTheDocument();
 });
 
-test("renders the modal in update mode and can delete", async () => {
+it("renders the modal in update mode and can delete", async () => {
   window.confirm = jest.fn(() => true); // always click 'yes'
 
   const onClose = jest.fn();
@@ -153,7 +153,7 @@ test("renders the modal in update mode and can delete", async () => {
   expect(onDeleteRule).toBeCalledWith({ _id: "999" });
 });
 
-test("renders the modal and can close", async () => {
+it("renders the modal and can close", async () => {
   window.confirm = jest.fn(() => true); // always click 'yes'
 
   const onClose = jest.fn();

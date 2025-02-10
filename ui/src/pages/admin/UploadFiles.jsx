@@ -88,7 +88,7 @@ export default () => {
       const renamedAcceptedFiles = acceptedFiles.map((file) => new File([file], filename, { type: file.type }));
       const data = new FormData();
       data.append("file", renamedAcceptedFiles[0]);
-      await _postFile(`${CATALOGUE_API}/v1/upload`, data);
+      await _postFile(`${CATALOGUE_API}//upload`, data);
       setUploadSuccess(`Merci, le fichier a bien été déposé sur le serveur :)`);
     } catch (e) {
       const messages = await e?.json;

@@ -25,7 +25,7 @@ const descNumber = [{ updated_at: number2 }, { updated_at: number1 }];
 
 const descString = [{ updated_at: string2 }, { updated_at: string1 }];
 
-test("sortAscending works as espected", () => {
+it("sortAscending works as espected", () => {
   expect(sortAscending(ascDate[0], ascDate[1]) > 0).toBeFalsy();
   expect(sortAscending(ascDate[1], ascDate[0]) > 0).toBeTruthy();
   expect(sortAscending(ascNumber[0], ascNumber[1]) > 0).toBeFalsy();
@@ -49,7 +49,7 @@ test("sortAscending works as espected", () => {
   expect(sortAscending(descString[1], descNumber[0]) < 0).toBeTruthy();
 });
 
-test("sortDescending works as espected", () => {
+it("sortDescending works as espected", () => {
   expect(sortDescending(ascDate[0], ascDate[1]) < 0).toBeFalsy();
   expect(sortDescending(ascDate[1], ascDate[0]) < 0).toBeTruthy();
   expect(sortDescending(ascNumber[0], ascNumber[1]) < 0).toBeFalsy();
@@ -73,7 +73,7 @@ test("sortDescending works as espected", () => {
   expect(sortDescending(descString[1], descNumber[0]) > 0).toBeTruthy();
 });
 
-test("buildUpdatesHistory works as espected", () => {
+it("buildUpdatesHistory works as espected", () => {
   const previousUpdateHistory = [{ updated_at: date1 }, { updated_at: date2 }];
 
   const original = {

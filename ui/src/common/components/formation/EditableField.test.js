@@ -2,7 +2,7 @@ import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { EditableField } from "./EditableField";
 
-test("should render on editable field on read mode", async () => {
+it("should render on editable field on read mode", async () => {
   const onEdit = jest.fn();
   const handleChange = jest.fn();
   const handleSubmit = jest.fn();
@@ -37,7 +37,7 @@ test("should render on editable field on read mode", async () => {
   expect(saveBtn).not.toBeInTheDocument();
 });
 
-test("should render on editable field on edit mode", async () => {
+it("should render on editable field on edit mode", async () => {
   const onEdit = jest.fn();
   const handleChange = jest.fn();
   const handleSubmit = jest.fn();

@@ -218,7 +218,7 @@ const formation = {
   ],
 };
 
-test("renders a statut history block component", async () => {
+it("renders a statut history block component", async () => {
   grantAnonymousAccess({ acl: ["page_formation/voir_status_publication_aff"] });
 
   const { queryByText, getByText } = render(<HistoryBlock formation={formation} />);
@@ -229,7 +229,7 @@ test("renders a statut history block component", async () => {
   expect(title).toBeInTheDocument();
 });
 
-test("display affelnet statut history", async () => {
+it("display affelnet statut history", async () => {
   grantAnonymousAccess({ acl: ["page_formation/voir_status_publication_aff"] });
 
   const { getByText, queryByText } = render(<HistoryBlock formation={formation} />);
@@ -243,7 +243,7 @@ test("display affelnet statut history", async () => {
   expect(queryByText(new Date("2022-03-05T05:52:22.501Z").toLocaleDateString("fr-FR"))).not.toBeInTheDocument();
 });
 
-test("display parcoursup statut history", async () => {
+it("display parcoursup statut history", async () => {
   grantAnonymousAccess({ acl: ["page_formation/voir_status_publication_ps"] });
 
   const { getByText, queryByText } = render(<HistoryBlock formation={formation} limit={100} />);
@@ -258,7 +258,7 @@ test("display parcoursup statut history", async () => {
   expect(queryByText(new Date("2022-03-05T05:52:22.501Z").toLocaleDateString("fr-FR"))).not.toBeInTheDocument();
 });
 
-test("display update history", async () => {
+it("display update history", async () => {
   grantAnonymousAccess({ acl: ["page_formation/gestion_publication", "page_formation/modifier_informations"] });
 
   const { getByText, queryByText } = render(<HistoryBlock formation={formation} limit={100} />);
