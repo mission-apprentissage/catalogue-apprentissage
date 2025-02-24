@@ -824,6 +824,15 @@ export const columnsDefinition = [
     exportable: true,
     formatter: escapeDiacritics,
   },
+
+  {
+    Header: "Parcoursup: visible moteur de recherche",
+    accessor: "parcoursup_published",
+    width: 200,
+    exportable: true,
+    formatter: booleanFormatter,
+  },
+
   {
     Header: "Parcoursup: statut initial",
     accessor: "parcoursup_statut_initial",
