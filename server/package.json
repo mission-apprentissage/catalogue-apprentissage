@@ -83,7 +83,7 @@
     "luxon": "3.5.0",
     "migrate-mongo": "11.0.0",
     "mjml": "4.15.3",
-    "mongoose": "5.13.20",
+    "mongoose": "8.11.0",
     "mongoose-diff-history": "2.1.0",
     "mongoose-paginate": "5.0.3",
     "mongoose-schema-jsonschema": "2.1.1",
