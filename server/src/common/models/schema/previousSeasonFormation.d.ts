@@ -46,6 +46,7 @@ export interface PreviousSeasonFormation {
     | "non publié"
     | "à publier"
     | "prêt pour intégration"
+    | "à définir"
     | "à publier (soumis à validation)";
   _id?: Types.ObjectId;
 }

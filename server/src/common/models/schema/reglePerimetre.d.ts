@@ -31,6 +31,7 @@ export interface ReglePerimetre {
     | "à publier (vérifier accès direct postbac)"
     | "à publier (soumis à validation Recteur)"
     | "à publier (sous condition habilitation)"
+    | "à définir"
     | "à publier (soumis à validation)";
   /**
    * Académie pour laquelle la règle a été créé si il y en a une
