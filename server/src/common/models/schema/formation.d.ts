@@ -147,6 +147,14 @@ export interface Formation {
    */
   cle_ministere_educatif?: string | null;
   /**
+   * Clé ME de la variante à distance de la présente formation (même clé mais finissant en #LAD)
+   */
+  variante_a_distance?: string | null;
+  /**
+   * Clés ME des variantes en présentiel de la présente formation (même clé mais finissant en #L01 / #L02...)
+   */
+  variantes_en_presentiel?: ItemOfVariantesEnPresentiel[] | null;
+  /**
    * Code formation diplôme (education nationale)
    */
   cfd?: string | null;
@@ -410,6 +418,10 @@ export interface Formation {
    * BCN : Codes MEF 10 caractères
    */
   bcn_mefs_10?: ItemOfBcnMefs_10[];
+  /**
+   * BCN : Codes MEF 10 caractères (agrégat pour recherche)
+   */
+  bcn_mefs_10_agregat?: string[];
   /**
    * Champs édités par un utilisateur
    */
@@ -780,6 +792,20 @@ export interface Formation {
     | "rejet de publication"
     | "fermé";
   /**
+   * Statut parcoursup avant éxécution des règles de périmètre
+   */
+  parcoursup_last_statut?:
+    | "non publiable en l'état"
+    | "publié"
+    | "non publié"
+    | "à publier"
+    | "prêt pour intégration"
+    | "à publier (vérifier accès direct postbac)"
+    | "à publier (soumis à validation Recteur)"
+    | "à publier (sous condition habilitation)"
+    | "rejet de publication"
+    | "fermé";
+  /**
    * Parcoursup : historique des statuts
    */
   parcoursup_statut_history?: unknown[];
@@ -811,6 +837,10 @@ export interface Formation {
    * Tableau de Code MEF 10 caractères et modalités (filtrés pour Parcoursup si applicable)
    */
   parcoursup_mefs_10?: ItemOfParcoursupMefs_10[];
+  /**
+   * Tableau de Code MEF 10 caractères (filtrés pour Parcoursup si applicable) (agrégat pour recherche)
+   */
+  parcoursup_mefs_10_agregat?: string[];
   parcoursup_statut_reinitialisation?: ParcoursupStatutReinitialisation;
   /**
    * Parcoursup: publication auto
@@ -841,6 +871,7 @@ export interface Formation {
     | "non publié"
     | "à publier"
     | "prêt pour intégration"
+    | "à définir"
     | "à publier (soumis à validation)";
   /**
    * Statut initial affelnet
@@ -851,7 +882,12 @@ export interface Formation {
     | "non publié"
     | "à publier"
     | "prêt pour intégration"
+    | "à définir"
     | "à publier (soumis à validation)";
+  /**
+   * Est-ce que la formation appartient au périmètre grâce à une règle académique ?
+   */
+  affelnet_statut_a_definir?: boolean;
   /**
    * Statut affelnet à la fin de la précédente campagne
    */
@@ -861,6 +897,18 @@ export interface Formation {
     | "non publié"
     | "à publier"
     | "prêt pour intégration"
+    | "à définir"
+    | "à publier (soumis à validation)";
+  /**
+   * Statut affelnet avant éxécution des règles de périmètre
+   */
+  affelnet_last_statut?:
+    | "non publiable en l'état"
+    | "publié"
+    | "non publié"
+    | "à publier"
+    | "prêt pour intégration"
+    | "à définir"
     | "à publier (soumis à validation)";
   /**
    * Affelnet : historique des statuts
@@ -907,6 +955,10 @@ export interface Formation {
    */
   affelnet_mefs_10?: ItemOfAffelnetMefs_10[];
   /**
+   * Tableau de Code MEF 10 caractères (filtrés pour Affelnet si applicable) (agrégat pour recherche)
+   */
+  affelnet_mefs_10_agregat?: string[];
+  /**
    * Affelnet : publication auto
    */
   affelnet_publication_auto?: boolean | null;
@@ -917,6 +969,17 @@ export interface Formation {
   _id?: Types.ObjectId;
   updated_at?: Date;
   created_at?: Date;
+}
+export interface ItemOfVariantesEnPresentiel {
+  /**
+   * Clé ME de la variante
+   */
+  cle?: string | null;
+  /**
+   * Commune de la variante
+   */
+  localite?: string | null;
+  _id?: Types.ObjectId;
 }
 export interface ItemOfCertificateurs {
   certificateur?: string;

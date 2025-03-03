@@ -69,6 +69,30 @@ const formationSchema = {
     default: null,
     description: "Clé unique de la formation (pour envoi aux ministères éducatifs)",
   },
+  variante_a_distance: {
+    type: String,
+    default: null,
+    description: "Clé ME de la variante à distance de la présente formation (même clé mais finissant en #LAD)",
+  },
+  variantes_en_presentiel: {
+    type: [
+      {
+        cle: {
+          type: String,
+          default: null,
+          description: "Clé ME de la variante",
+        },
+        localite: {
+          type: String,
+          default: null,
+          description: "Commune de la variante",
+        },
+      },
+    ],
+    default: null,
+    description:
+      "Clés ME des variantes en présentiel de la présente formation (même clé mais finissant en #L01 / #L02...)",
+  },
   cfd: {
     index: true,
     type: String,

@@ -10,8 +10,10 @@ import {
   Grid,
   GridItem,
   Link,
+  ListItem,
   Spinner,
   Text,
+  UnorderedList,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -113,8 +115,12 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
         <GridItem colSpan={[12, 12, 5]} py={8} px={[4, 4, 8]}>
           <Box mb={16}>
             <Text textStyle="h4" color="grey.800" mb={4}>
-              <MapPin2Fill w="12px" h="15px" mr="5px" mb="5px" />
-              Lieu de la formation
+              <MapPin2Fill w="14px" h="16px" mr="8px" />
+              {formation.cle_ministere_educatif.includes("#LAD") ? (
+                <>Formation 100% à distance</>
+              ) : (
+                <>Lieu de la formation</>
+              )}
             </Text>
 
             <Box>
@@ -208,128 +214,131 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                   </>
                 )}
               </UaiFormationContainer>
+              {!formation.cle_ministere_educatif.includes("#LAD") && (
+                <>
+                  <AdresseContainer>
+                    <Text mb={4}>
+                      Siret :{" "}
+                      <Text as="span" variant="highlight">
+                        {formation.etablissement_lieu_formation_siret ?? "N/A"}
+                      </Text>{" "}
+                      {/* <InfoTooltip description={helpText.formation.etablissement_lieu_formation_siret} /> */}
+                    </Text>
+                    <Text mb={4}>
+                      Adresse :{" "}
+                      <Text as="span" variant="highlight">
+                        {formation.lieu_formation_adresse}
+                      </Text>{" "}
+                      <InfoTooltip description={helpText.formation.lieu_formation_adresse} />
+                    </Text>
+                    <Text mb={4}>
+                      Code postal :{" "}
+                      <Text as="span" variant="highlight">
+                        {formation.code_postal}
+                      </Text>{" "}
+                      <InfoTooltip description={helpText.formation.code_postal} />
+                    </Text>
+                    <Text mb={4}>
+                      Commune :{" "}
+                      <Text as="span" variant="highlight">
+                        {formation.localite}
+                      </Text>{" "}
+                      <InfoTooltip description={helpText.formation.localite} />
+                    </Text>
+                    <Text mb={isUserAdmin(auth) && formation?.lieu_formation_geo_coordonnees_computed ? 0 : 4}>
+                      Département :{" "}
+                      <Text as="span" variant="highlight">
+                        {formation.nom_departement} ({formation.num_departement})
+                      </Text>{" "}
+                      <InfoTooltip description={helpText.formation.nom_departement} />
+                    </Text>
+                    {isUserAdmin(auth) && formation?.lieu_formation_geo_coordonnees_computed && (
+                      <Box mb={4}>
+                        <Button
+                          onClick={onComputedGeoCoordToggle}
+                          variant={"unstyled"}
+                          fontSize={"zeta"}
+                          fontStyle={"italic"}
+                          color={"grey.600"}
+                        >
+                          Géolocalisation calculée depuis l'adresse{" "}
+                          <ArrowDownLine boxSize={5} transform={isComputedGeoCoordOpen ? "rotate(180deg)" : "none"} />
+                        </Button>
+                        <Collapse in={isComputedGeoCoordOpen} animateOpacity unmountOnExit={true}>
+                          <Text>
+                            <Text fontSize={"zeta"} color={"grey.600"} as="span">
+                              {getOpenStreetMapUrl(formation.lieu_formation_geo_coordonnees_computed) ? (
+                                <Link
+                                  href={getOpenStreetMapUrl(formation.lieu_formation_geo_coordonnees_computed)}
+                                  textStyle="rf-text"
+                                  variant="pill"
+                                  title="Voir sur GeoPortail"
+                                  isExternal
+                                >
+                                  {formation.lieu_formation_geo_coordonnees_computed}
+                                </Link>
+                              ) : (
+                                <>{formation.lieu_formation_geo_coordonnees_computed}</>
+                              )}
+                            </Text>{" "}
+                            <InfoTooltip description={helpText.formation.lieu_formation_geo_coordonnees_computed} />
+                          </Text>
+                        </Collapse>
+                      </Box>
+                    )}
 
-              <AdresseContainer>
-                <Text mb={4}>
-                  Siret :{" "}
-                  <Text as="span" variant="highlight">
-                    {formation.etablissement_lieu_formation_siret ?? "N/A"}
-                  </Text>{" "}
-                  {/* <InfoTooltip description={helpText.formation.etablissement_lieu_formation_siret} /> */}
-                </Text>
-                <Text mb={4}>
-                  Adresse :{" "}
-                  <Text as="span" variant="highlight">
-                    {formation.lieu_formation_adresse}
-                  </Text>{" "}
-                  <InfoTooltip description={helpText.formation.lieu_formation_adresse} />
-                </Text>
-                <Text mb={4}>
-                  Code postal :{" "}
-                  <Text as="span" variant="highlight">
-                    {formation.code_postal}
-                  </Text>{" "}
-                  <InfoTooltip description={helpText.formation.code_postal} />
-                </Text>
-                <Text mb={4}>
-                  Commune :{" "}
-                  <Text as="span" variant="highlight">
-                    {formation.localite}
-                  </Text>{" "}
-                  <InfoTooltip description={helpText.formation.localite} />
-                </Text>
-                <Text mb={isUserAdmin(auth) && formation?.lieu_formation_geo_coordonnees_computed ? 0 : 4}>
-                  Département :{" "}
-                  <Text as="span" variant="highlight">
-                    {formation.nom_departement} ({formation.num_departement})
-                  </Text>{" "}
-                  <InfoTooltip description={helpText.formation.nom_departement} />
-                </Text>
-                {isUserAdmin(auth) && formation?.lieu_formation_geo_coordonnees_computed && (
-                  <Box mb={4}>
-                    <Button
-                      onClick={onComputedGeoCoordToggle}
-                      variant={"unstyled"}
-                      fontSize={"zeta"}
-                      fontStyle={"italic"}
-                      color={"grey.600"}
-                    >
-                      Géolocalisation calculée depuis l'adresse{" "}
-                      <ArrowDownLine boxSize={5} transform={isComputedGeoCoordOpen ? "rotate(180deg)" : "none"} />
-                    </Button>
-                    <Collapse in={isComputedGeoCoordOpen} animateOpacity unmountOnExit={true}>
-                      <Text>
-                        <Text fontSize={"zeta"} color={"grey.600"} as="span">
-                          {getOpenStreetMapUrl(formation.lieu_formation_geo_coordonnees_computed) ? (
-                            <Link
-                              href={getOpenStreetMapUrl(formation.lieu_formation_geo_coordonnees_computed)}
-                              textStyle="rf-text"
-                              variant="pill"
-                              title="Voir sur GeoPortail"
-                              isExternal
-                            >
-                              {formation.lieu_formation_geo_coordonnees_computed}
-                            </Link>
-                          ) : (
-                            <>{formation.lieu_formation_geo_coordonnees_computed}</>
-                          )}
-                        </Text>{" "}
-                        <InfoTooltip description={helpText.formation.lieu_formation_geo_coordonnees_computed} />
-                      </Text>
-                    </Collapse>
-                  </Box>
-                )}
+                    <Text mb={isUserAdmin(auth) && formation?.lieu_formation_adresse_computed ? 0 : 4}>
+                      Géolocalisation :{" "}
+                      <Text as="span" variant="highlight">
+                        {formation.lieu_formation_geo_coordonnees}
+                      </Text>{" "}
+                      <InfoTooltip description={helpText.formation.lieu_formation_geo_coordonnees} />
+                    </Text>
+                    {isUserAdmin(auth) && formation?.lieu_formation_adresse_computed && (
+                      <Box mb={4}>
+                        <Button
+                          onClick={onComputedAdressToggle}
+                          variant={"unstyled"}
+                          fontSize={"zeta"}
+                          fontStyle={"italic"}
+                          color={"grey.600"}
+                        >
+                          Adresse calculée depuis la géolocalisation{" "}
+                          <ArrowDownLine boxSize={5} transform={isComputedAdressOpen ? "rotate(180deg)" : "none"} />
+                        </Button>
+                        <Collapse in={isComputedAdressOpen} animateOpacity unmountOnExit={true}>
+                          <Text>
+                            <Text fontSize={"zeta"} color={"grey.600"} as="span">
+                              {getOpenStreetMapUrl(formation.lieu_formation_geo_coordonnees) ? (
+                                <Link
+                                  href={getOpenStreetMapUrl(formation.lieu_formation_geo_coordonnees)}
+                                  textStyle="rf-text"
+                                  variant="pill"
+                                  title="Voir sur GeoPortail"
+                                  isExternal
+                                >
+                                  {formation.lieu_formation_adresse_computed}
+                                </Link>
+                              ) : (
+                                <>{formation.lieu_formation_adresse_computed}</>
+                              )}
+                            </Text>{" "}
+                            <InfoTooltip description={helpText.formation.lieu_formation_adresse_computed} />
+                          </Text>
+                        </Collapse>
+                      </Box>
+                    )}
+                  </AdresseContainer>
 
-                <Text mb={isUserAdmin(auth) && formation?.lieu_formation_adresse_computed ? 0 : 4}>
-                  Géolocalisation :{" "}
-                  <Text as="span" variant="highlight">
-                    {formation.lieu_formation_geo_coordonnees}
-                  </Text>{" "}
-                  <InfoTooltip description={helpText.formation.lieu_formation_geo_coordonnees} />
-                </Text>
-                {isUserAdmin(auth) && formation?.lieu_formation_adresse_computed && (
-                  <Box mb={4}>
-                    <Button
-                      onClick={onComputedAdressToggle}
-                      variant={"unstyled"}
-                      fontSize={"zeta"}
-                      fontStyle={"italic"}
-                      color={"grey.600"}
-                    >
-                      Adresse calculée depuis la géolocalisation{" "}
-                      <ArrowDownLine boxSize={5} transform={isComputedAdressOpen ? "rotate(180deg)" : "none"} />
-                    </Button>
-                    <Collapse in={isComputedAdressOpen} animateOpacity unmountOnExit={true}>
-                      <Text>
-                        <Text fontSize={"zeta"} color={"grey.600"} as="span">
-                          {getOpenStreetMapUrl(formation.lieu_formation_geo_coordonnees) ? (
-                            <Link
-                              href={getOpenStreetMapUrl(formation.lieu_formation_geo_coordonnees)}
-                              textStyle="rf-text"
-                              variant="pill"
-                              title="Voir sur GeoPortail"
-                              isExternal
-                            >
-                              {formation.lieu_formation_adresse_computed}
-                            </Link>
-                          ) : (
-                            <>{formation.lieu_formation_adresse_computed}</>
-                          )}
-                        </Text>{" "}
-                        <InfoTooltip description={helpText.formation.lieu_formation_adresse_computed} />
-                      </Text>
-                    </Collapse>
-                  </Box>
-                )}
-              </AdresseContainer>
-
-              <Text mb={4}>
-                Code commune (Insee) :{" "}
-                <Text as="span" variant="highlight">
-                  {formation.code_commune_insee}
-                </Text>{" "}
-                <InfoTooltip description={helpText.formation.code_commune_insee} />
-              </Text>
+                  <Text mb={4}>
+                    Code commune (Insee) :{" "}
+                    <Text as="span" variant="highlight">
+                      {formation.code_commune_insee}
+                    </Text>{" "}
+                    <InfoTooltip description={helpText.formation.code_commune_insee} />
+                  </Text>
+                </>
+              )}
 
               <Text mb={4}>
                 Académie de rattachement :{" "}
@@ -694,6 +703,47 @@ export default () => {
                       signalement auprès du Carif-Oref.
                     </Alert>
                   )}
+
+                {formation.variante_a_distance && (
+                  <Alert mt={4} type={"info"}>
+                    La formation est également proposée dans une{" "}
+                    <Link
+                      textDecoration={"underline"}
+                      href={`/formation/${encodeURIComponent(formation.variante_a_distance)}`}
+                    >
+                      version 100% à distance
+                    </Link>
+                    .
+                  </Alert>
+                )}
+
+                {!!formation.variantes_en_presentiel?.length && (
+                  <Alert mt={4} type={"info"}>
+                    Cette offre 100% à distance est également proposée{" "}
+                    {formation.variantes_en_presentiel?.length === 1 ? (
+                      <Link
+                        textDecoration={"underline"}
+                        href={`/formation/${encodeURIComponent(formation.variantes_en_presentiel[0]?.cle)}`}
+                      >
+                        en présentiel.
+                      </Link>
+                    ) : (
+                      <>
+                        en présentiel dans les villes suivantes:
+                        <UnorderedList>
+                          {formation.variantes_en_presentiel?.map(({ cle, localite }) => (
+                            <ListItem>
+                              <Link textDecoration={"underline"} href={`/formation/${encodeURIComponent(cle)}`}>
+                                {localite}
+                              </Link>
+                            </ListItem>
+                          ))}
+                        </UnorderedList>
+                      </>
+                    )}
+                  </Alert>
+                )}
+
                 {hasAccessTo(user, "page_formation/voir_status_publication_ps") &&
                   [PARCOURSUP_STATUS.PRET_POUR_INTEGRATION, PARCOURSUP_STATUS.REJETE].includes(
                     formation.parcoursup_statut

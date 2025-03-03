@@ -18,7 +18,7 @@ const { getCampagneStartDate } = require("../../../common/utils/rulesUtils");
 const updateRelationFields = async ({ filter = {} }) => {
   logger.info({ type: "job" }, " == Updating relations for formations == ");
 
-  await cursor(Formation.find(filter).sort(), async (formation) => {
+  await cursor(Formation.find(filter), async (formation) => {
     await Formation.updateOne({ _id: formation._id }, { $set: { ...(await computeRelationFields(formation)) } });
   });
 
@@ -37,6 +37,27 @@ const computeRelationFields = async (fields) => {
   const etablissement_formateur_published = etablissementFormateur?.published;
   const lieu_formation_published = etablissementLieu?.published;
 
+  const variante_a_distance = !fields.cle_ministere_educatif.includes("-99999#LAD")
+    ? (
+        await Formation.findOne({
+          published: true,
+          cle_ministere_educatif: fields.cle_ministere_educatif.split("-")[0] + "-99999#LAD",
+        }).lean()
+      )?.cle_ministere_educatif
+    : null;
+
+  const variantes_en_presentiel = fields.cle_ministere_educatif.includes("-99999#LAD")
+    ? (
+        await Formation.find({
+          published: true,
+          $and: [
+            { cle_ministere_educatif: { $regex: fields.cle_ministere_educatif.split("-")[0] } },
+            { cle_ministere_educatif: { $ne: fields.cle_ministere_educatif } },
+          ],
+        }).lean()
+      ).map((formation) => ({ cle: formation.cle_ministere_educatif, localite: formation.localite }))
+    : [];
+
   return {
     etablissement_gestionnaire_id,
     etablissement_formateur_id,
@@ -44,6 +65,8 @@ const computeRelationFields = async (fields) => {
     etablissement_gestionnaire_published,
     etablissement_formateur_published,
     lieu_formation_published,
+    variante_a_distance,
+    variantes_en_presentiel,
   };
 };
 

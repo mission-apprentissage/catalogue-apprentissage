@@ -6,6 +6,29 @@ module.exports = {
         type: "string",
         description: "Clé unique de la formation (pour envoi aux ministères éducatifs)",
       },
+      variante_a_distance: {
+        type: "string",
+        description: "Clé ME de la variante à distance de la présente formation (même clé mais finissant en #LAD)",
+      },
+      variantes_en_presentiel: {
+        type: "array",
+        description:
+          "Clés ME des variantes en présentiel de la présente formation (même clé mais finissant en #L01 / #L02...)",
+        items: {
+          type: "object",
+          properties: {
+            cle: {
+              type: "string",
+              description: "Clé ME de la variante",
+            },
+            localite: {
+              type: "string",
+              description: "Commune de la variante",
+            },
+          },
+          required: [],
+        },
+      },
       cfd: {
         type: "string",
         description: "Code formation diplôme (education nationale)",
@@ -486,6 +509,13 @@ module.exports = {
           required: [],
         },
       },
+      bcn_mefs_10_agregat: {
+        type: "array",
+        description: "BCN : Codes MEF 10 caractères (agrégat pour recherche)",
+        items: {
+          type: "string",
+        },
+      },
       editedFields: {
         type: "object",
         description: "Champs édités par un utilisateur",
@@ -908,6 +938,22 @@ module.exports = {
         ],
         description: "Statut parcoursup à la fin de la précédente campagne",
       },
+      parcoursup_last_statut: {
+        type: "string",
+        enum: [
+          "non publiable en l'état",
+          "publié",
+          "non publié",
+          "à publier",
+          "prêt pour intégration",
+          "à publier (vérifier accès direct postbac)",
+          "à publier (soumis à validation Recteur)",
+          "à publier (sous condition habilitation)",
+          "rejet de publication",
+          "fermé",
+        ],
+        description: "Statut parcoursup avant éxécution des règles de périmètre",
+      },
       parcoursup_statut_history: {
         type: "array",
         description: "Parcoursup : historique des statuts",
@@ -971,6 +1017,14 @@ module.exports = {
           required: [],
         },
       },
+      parcoursup_mefs_10_agregat: {
+        type: "array",
+        description:
+          "Tableau de Code MEF 10 caractères (filtrés pour Parcoursup si applicable) (agrégat pour recherche)",
+        items: {
+          type: "string",
+        },
+      },
       parcoursup_statut_reinitialisation: {
         type: "object",
         description: "Parcoursup: Statut de réinitialisation forcée",
@@ -1018,6 +1072,7 @@ module.exports = {
           "non publié",
           "à publier",
           "prêt pour intégration",
+          "à définir",
           "à publier (soumis à validation)",
         ],
         description: "Statut affelnet",
@@ -1030,9 +1085,14 @@ module.exports = {
           "non publié",
           "à publier",
           "prêt pour intégration",
+          "à définir",
           "à publier (soumis à validation)",
         ],
         description: "Statut initial affelnet",
+      },
+      affelnet_statut_a_definir: {
+        type: "boolean",
+        description: "Est-ce que la formation appartient au périmètre grâce à une règle académique ?",
       },
       affelnet_previous_statut: {
         type: "string",
@@ -1042,9 +1102,23 @@ module.exports = {
           "non publié",
           "à publier",
           "prêt pour intégration",
+          "à définir",
           "à publier (soumis à validation)",
         ],
         description: "Statut affelnet à la fin de la précédente campagne",
+      },
+      affelnet_last_statut: {
+        type: "string",
+        enum: [
+          "non publiable en l'état",
+          "publié",
+          "non publié",
+          "à publier",
+          "prêt pour intégration",
+          "à définir",
+          "à publier (soumis à validation)",
+        ],
+        description: "Statut affelnet avant éxécution des règles de périmètre",
       },
       affelnet_statut_history: {
         type: "array",
@@ -1119,6 +1193,13 @@ module.exports = {
             },
           },
           required: [],
+        },
+      },
+      affelnet_mefs_10_agregat: {
+        type: "array",
+        description: "Tableau de Code MEF 10 caractères (filtrés pour Affelnet si applicable) (agrégat pour recherche)",
+        items: {
+          type: "string",
         },
       },
       affelnet_publication_auto: {
