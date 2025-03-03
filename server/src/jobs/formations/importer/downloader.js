@@ -49,19 +49,17 @@ const extractFromZip = async () => {
 
     const stream = await zip.stream(entry.name);
 
-    const debug = false;
+    const debug = true;
 
     await oleoduc(
       stream,
       streamParser(),
       streamArray(),
       transformData(({ value: line }) => line),
-      debug
-        ? writeData((json) => {
-            console.log(json.cle_ministere_educatif);
-            return json;
-          })
-        : writeData(async (json) => await DualControlFormation.create(json))
+      writeData(async (json) => {
+        debug && console.log(json.cle_ministere_educatif);
+        await DualControlFormation.create(json);
+      })
     );
   } else {
     logger.error({ type: "job" }, "One and only one file required inside zip");
@@ -72,10 +70,10 @@ const extractFromZip = async () => {
   await zip.close();
 };
 
-const downloader = async () => {
+const downloader = async ({ useExistingArchive }) => {
   let error = null;
   try {
-    await downloadZip();
+    !useExistingArchive && (await downloadZip());
     await DualControlFormation.deleteMany({});
     await extractFromZip();
   } catch (e) {

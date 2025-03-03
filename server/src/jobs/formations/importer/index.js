@@ -7,8 +7,9 @@ const { updateRelationFields: updateEtablissementRelationFields } = require("../
 const { updateRelationFields: updateFormationRelationFields } = require("./converter");
 
 const importer = async (
-  { noDownload = false, forceRecompute = false, skip = 0, filter = {} } = {
+  { noDownload = false, useExistingArchive = false, forceRecompute = false, skip = 0, filter = {} } = {
     noDownload: false,
+    useExistingArchive: false,
     forceRecompute: false,
     skip: 0,
     filter: {},
@@ -22,7 +23,7 @@ const importer = async (
 
     if (!noDownload) {
       logger.info({ type: "job" }, " -- Downloading formations -- ");
-      downloadError = await downloader();
+      downloadError = await downloader({ useExistingArchive });
 
       if (downloadError) {
         throw new Error(downloadError);
@@ -35,10 +36,10 @@ const importer = async (
 
     // STEP 2 : Convert formations
     logger.info({ type: "job" }, " -- Converting formations -- ");
-    await converter({ forceRecompute, skip, filter });
+    // await converter({ forceRecompute, skip, filter });
 
     // STEP 3 : Rebuild relations between etablissements and formations
-    await updateEtablissementRelationFields();
+    // await updateEtablissementRelationFields();
     await updateFormationRelationFields({ filter });
 
     logger.info({ type: "job" }, " -- FORMATIONS IMPORTER : ✅ -- ");
@@ -54,6 +55,7 @@ if (process.env.standalone) {
   runScript(async () => {
     const args = process.argv.slice(2);
     const noDownload = args.includes("--noDownload");
+    const useExistingArchive = args.includes("--useExistingArchive");
     const forceRecompute = args.includes("--forceRecompute");
 
     const skip = +(args.find((arg) => arg.startsWith("--skip"))?.split("=")?.[1] ?? 0);
@@ -61,6 +63,7 @@ if (process.env.standalone) {
 
     await importer({
       noDownload,
+      useExistingArchive,
       forceRecompute,
       skip,
       filter,
