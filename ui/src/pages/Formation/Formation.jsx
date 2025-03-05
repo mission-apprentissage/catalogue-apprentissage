@@ -489,7 +489,7 @@ export default () => {
 
   const title = loading
     ? ""
-    : `${formation?.intitule_long ?? "Formation inconnue"} ${formation?.cle_ministere_educatif.includes("#LAD") ? " (100% à distance)" : ""}`;
+    : `${formation?.intitule_long ?? "Formation inconnue"} ${formation?.cle_ministere_educatif.includes("#LAD") ? " – 100% à distance" : ""}`;
   setTitle(title);
 
   const sendToParcoursup = useCallback(async () => {

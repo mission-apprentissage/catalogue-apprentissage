@@ -16,11 +16,11 @@ const run = async () => {
   const filterSessionDate = await getSessionDateRules();
 
   const filterReglement = {
+    // Les formations à distance ne sont pas dans le périmètre
+    cle_ministere_educatif: { $not: /#LAD$/ },
     published: true,
     $or: [{ catalogue_published: true }, { force_published: true }],
     $and: [
-      // Les formations à distance ne sont pas dans le périmètre
-      { cle_ministere_educatif: { $not: /#LAD$/ } },
       {
         $or: [
           {

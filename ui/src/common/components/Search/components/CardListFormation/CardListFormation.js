@@ -41,7 +41,7 @@ export const CardListFormation = ({ data }) => {
       )}
 
       <Text textStyle="h6" color="grey.800" mt={2}>
-        {data.intitule_long} {data.cle_ministere_educatif.includes("#LAD") && " (100% à distance)"}
+        {data.intitule_long} {data.cle_ministere_educatif.includes("#LAD") && " – 100% à distance"}
       </Text>
       <Box>
         <Text textStyle="sm" mt={2}>
