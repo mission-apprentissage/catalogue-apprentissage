@@ -19,6 +19,8 @@ const run = async () => {
     published: true,
     $or: [{ catalogue_published: true }, { force_published: true }],
     $and: [
+      // Les formations à distance ne sont pas dans le périmètre
+      { cle_ministere_educatif: { $not: /#LAD$/ } },
       {
         $or: [
           {
@@ -62,6 +64,7 @@ const run = async () => {
         {
           affelnet_statut: { $nin: [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.NON_PUBLIE] },
           $or: [
+            { cle_ministere_educatif: /#LAD$/ },
             // Plus dans le flux
             { published: false },
             // Plus dans le catalogue général

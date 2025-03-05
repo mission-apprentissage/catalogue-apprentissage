@@ -46,6 +46,7 @@ import { PublishModalButton } from "../../common/components/formation/PublishMod
 import { UaiHistoryModalButton } from "../../common/components/formation/UaiHistoryModalButton";
 import { ReinitStatutModalButton } from "../../common/components/formation/ReinitStatutModalButton";
 import { DateContext } from "../../DateContext";
+import { WarningBox } from "../../common/components/WarningBox";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -94,6 +95,11 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
   //   ? (args) => <WarningBox data-testid={"adress-warning"} {...args} />
   //   : React.Fragment;
 
+  const LieuContainer =
+    formation?.cle_ministere_educatif.includes("#LAD") && formation?.affelnet_perimetre
+      ? (args) => <DangerBox data-testid={"lieu-warning"} {...args} />
+      : React.Fragment;
+
   const onEditOverride = async (...args) => {
     setIsEditingUai(!isEditingUai);
     await onEdit(...args);
@@ -114,14 +120,16 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
         </GridItem>
         <GridItem colSpan={[12, 12, 5]} py={8} px={[4, 4, 8]}>
           <Box mb={16}>
-            <Text textStyle="h4" color="grey.800" mb={4}>
-              <MapPin2Fill w="14px" h="16px" mr="8px" />
-              {formation.cle_ministere_educatif.includes("#LAD") ? (
-                <>Formation 100% à distance</>
-              ) : (
-                <>Lieu de la formation</>
-              )}
-            </Text>
+            <LieuContainer>
+              <Text textStyle="h4" color="grey.800" mb={4}>
+                <MapPin2Fill w="14px" h="16px" mr="8px" />
+                {formation.cle_ministere_educatif.includes("#LAD") ? (
+                  <>Formation 100% à distance</>
+                ) : (
+                  <>Lieu de la formation</>
+                )}
+              </Text>
+            </LieuContainer>
 
             <Box>
               <UaiFormationContainer my={4}>
@@ -479,7 +487,9 @@ export default () => {
     setEdition(fieldName);
   };
 
-  const title = loading ? "" : `${formation?.intitule_long ?? "Formation inconnue"}`;
+  const title = loading
+    ? ""
+    : `${formation?.intitule_long ?? "Formation inconnue"} ${formation?.cle_ministere_educatif.includes("#LAD") ? " (100% à distance)" : ""}`;
   setTitle(title);
 
   const sendToParcoursup = useCallback(async () => {
