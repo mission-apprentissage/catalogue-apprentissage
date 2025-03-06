@@ -47,7 +47,7 @@ services:
       - NODE_ICU_DATA=node_modules/full-icu
 
   mongodb:
-    image: mongo:5.0.2-focal
+    image: mongo:6.0.20
     container_name: catalogue_apprentissage_mongodb
     tty: true
     restart: unless-stopped
@@ -55,7 +55,7 @@ services:
       - catalogue_apprentissage_network
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:${DOCKER_ES_VERSION:-7.17.5}
+    image: docker.elastic.co/elasticsearch/elasticsearch:${DOCKER_ES_VERSION:-7.17.27}
     container_name: catalogue_apprentissage_elasticsearch
     tty: true
     environment:
@@ -69,7 +69,7 @@ services:
       - catalogue_apprentissage_network
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:${DOCKER_ES_VERSION:-7.17.5}
+    image: docker.elastic.co/kibana/kibana:${DOCKER_ES_VERSION:-7.17.27}
     container_name: catalogue_apprentissage_kibana
     tty: true
     depends_on:
