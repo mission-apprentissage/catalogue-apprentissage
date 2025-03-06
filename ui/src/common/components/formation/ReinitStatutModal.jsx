@@ -35,7 +35,7 @@ export const ReinitStatutModal = ({ isOpen, onClose, formation, setFormation }) 
   const reinitStatut = useCallback(
     async ({ comment }) => {
       try {
-        const response = await _post(`${CATALOGUE_API}/entity/formations/${formation?._id}/reinit-statut`, {
+        const response = await _post(`${CATALOGUE_API}/entity/formations/${formation?._id}/reinit-parcoursup-statut`, {
           comment,
         });
         const message = response?.message;

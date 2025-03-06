@@ -46,7 +46,6 @@ import { PublishModalButton } from "../../common/components/formation/PublishMod
 import { UaiHistoryModalButton } from "../../common/components/formation/UaiHistoryModalButton";
 import { ReinitStatutModalButton } from "../../common/components/formation/ReinitStatutModalButton";
 import { DateContext } from "../../DateContext";
-import { WarningBox } from "../../common/components/WarningBox";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
@@ -691,7 +690,7 @@ export default () => {
                           </Button>
                         )}
 
-                      {[PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut) &&
+                      {[PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.REJETE].includes(formation.parcoursup_statut) &&
                         hasAccessTo(user, "page_formation/reinit_parcoursup") && (
                           <ReinitStatutModalButton formation={formation} setFormation={setFormation} />
                         )}

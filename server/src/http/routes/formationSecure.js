@@ -217,7 +217,7 @@ module.exports = () => {
 
     logger.debug(
       { type: "http" },
-      `Réinitialisation des informations de publication de la formation ${itemId} par ${user.email}`
+      `Réinitialisation des informations de publication PARCOURSUP de la formation ${itemId} par ${user.email}`
     );
 
     const update = {
@@ -321,7 +321,7 @@ module.exports = () => {
   router.post("/formations/:id/handle-rejection", handleRejection);
   router.post("/formations/:id/unhandle-rejection", unhandleRejection);
 
-  router.post("/formations/:id/reinit-statut", parcoursup_statut_reinitialisation);
+  router.post("/formations/:id/reinit-parcoursup-statut", parcoursup_statut_reinitialisation);
 
   return router;
 };
