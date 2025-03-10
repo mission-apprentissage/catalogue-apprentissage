@@ -5,7 +5,7 @@
   "author": "MNA",
   "license": "MIT",
   "dependencies": {
-    "@appbaseio/reactivesearch": "3.45.0",
+    "@appbaseio/reactivesearch": "4.3.0",
     "@chakra-ui/icons": "2.1.1",
     "@chakra-ui/react": "2.8.2",
     "@craco/craco": "^7.0.0",
