@@ -26,7 +26,7 @@ const run = async () => {
           },
           $push: {
             parcoursup_statut_history: {
-              statut: PARCOURSUP_STATUS.NON_PUBLIE,
+              parcoursup_statut: PARCOURSUP_STATUS.NON_PUBLIE,
               date: new Date(),
             },
           },
