@@ -131,98 +131,100 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
             </LieuContainer>
 
             <Box>
-              <UaiFormationContainer my={4}>
-                <EditableField
-                  fieldName={"uai_formation"}
-                  label={"UAI du lieu de formation"}
-                  formation={formation}
-                  edition={edition}
-                  onEdit={onEditOverride}
-                  values={values}
-                  handleSubmit={handleSubmitOverride}
-                  handleChange={handleChange}
-                  hasRightToEdit={hasRightToEdit && ![PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut)}
-                  emptyText={"Renseigner l'UAI"}
-                  notEmptyText={"Modifier l'UAI"}
-                  mb={2}
-                />
-
-                <Text mb={2}>
-                  <UaiHistoryModalButton formation={formation} />
-                </Text>
-
-                {isEditingUai && formation.affelnet_statut === AFFELNET_STATUS.PUBLIE && (
-                  <Text fontSize={"zeta"} color={"grey.600"} mb={2}>
-                    - Si l’UAI lieu est modifiée, la formation devra à nouveau être importée dans Affelnet. Son état
-                    basculera de “Publié” à “En attente de publication”, jusqu'à ce que vous procédiez à l’import depuis
-                    Affelnet.
-                  </Text>
-                )}
-                {typeof formation.editedFields?.uai_formation !== "undefined" && (
-                  <Text fontSize={"zeta"} color={"grey.600"}>
-                    - UAI lieu édité
-                    {uai_updated_history[0] && (
-                      <>
-                        {" "}
-                        le {new Date(uai_updated_history[0]?.updated_at).toLocaleDateString("fr-FR")} par{" "}
-                        {uai_updated_history[0]?.to.last_update_who}
-                        {uai_updated_history[0]?.to.last_update_automatic
-                          ? " (action effectuée sur la précédente version de la fiche, reprise ici automatiquement)"
-                          : ""}
-                      </>
-                    )}
-                    .
-                  </Text>
-                )}
-
-                {formation.uai_formation && (
-                  <>
-                    {formation.uai_formation === formation.etablissement_formateur_uai &&
-                      !formation.editedFields?.uai_formation && (
-                        <Text fontSize={"zeta"} color={"grey.600"} mt={2}>
-                          - Cet UAI a été repris automatiquement de l’UAI formateur.
-                        </Text>
-                      )}
-
-                    {[PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut) && (
-                      <Text fontSize={"zeta"} color={"grey.600"} mt={2}>
-                        - L’UAI n’est plus modifiable car la formation est déjà publiée sur Parcoursup. Si l’UAI doit
-                        être modifiée, faire un message au SCN via la messagerie Parcoursup pour signaler que vous
-                        n’avez pas envoyé la formation sur le bon UAI. Suite à intervention du SCN, la formation sera
-                        réinitialisée sur le catalogue, pour vous permettre de modifier l'UAI lieu et de redemander la
-                        publication. Si l'adresse postale du lieu doit être modifiée, demander au CFA d'en faire le
-                        signalement au Carif-Oref pour modification à la source.
-                      </Text>
-                    )}
-                  </>
-                )}
-
-                {formation.code_commune_insee !== formation.etablissement_formateur_code_commune_insee && (
-                  <>
-                    {!formation.uai_formation && (
-                      <Text fontSize={"zeta"} color={"grey.600"} mt={2}>
-                        - L’UAI du lieu de formation doit être renseigné en cohérence avec l’adresse du lieu de
-                        formation.
-                      </Text>
-                    )}
-
-                    {formation.etablissement_formateur_uai === formation.uai_formation &&
-                      !formation.updates_history.filter(
-                        (history) =>
-                          history.to?.uai_formation === formation.uai_formation &&
-                          new Date(history.updated_at).getTime() >= campagneStartDate?.getTime() - 31536000000
-                      ).length && (
-                        <Text fontSize={"zeta"} color={"grey.600"} mt={2}>
-                          - L’UAI renseigné est le même pour l’organisme formateur et le lieu de formation alors que les
-                          adresses sont différentes. Vérifiez l’adresse et l’UAI du lieu de formation et corrigez si
-                          nécessaire.
-                        </Text>
-                      )}
-                  </>
-                )}
-              </UaiFormationContainer>
               {!formation.cle_ministere_educatif.includes("#LAD") && (
                 <>
+                  <UaiFormationContainer my={4}>
+                    <EditableField
+                      fieldName={"uai_formation"}
+                      label={"UAI du lieu de formation"}
+                      formation={formation}
+                      edition={edition}
+                      onEdit={onEditOverride}
+                      values={values}
+                      handleSubmit={handleSubmitOverride}
+                      handleChange={handleChange}
+                      hasRightToEdit={
+                        hasRightToEdit && ![PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut)
+                      }
+                      emptyText={"Renseigner l'UAI"}
+                      notEmptyText={"Modifier l'UAI"}
+                      mb={2}
+                    />
+
+                    <Text mb={2}>
+                      <UaiHistoryModalButton formation={formation} />
+                    </Text>
+
+                    {isEditingUai && formation.affelnet_statut === AFFELNET_STATUS.PUBLIE && (
+                      <Text fontSize={"zeta"} color={"grey.600"} mb={2}>
+                        - Si l’UAI lieu est modifiée, la formation devra à nouveau être importée dans Affelnet. Son état
+                        basculera de “Publié” à “En attente de publication”, jusqu'à ce que vous procédiez à l’import
+                        depuis Affelnet.
+                      </Text>
+                    )}
+                    {typeof formation.editedFields?.uai_formation !== "undefined" && (
+                      <Text fontSize={"zeta"} color={"grey.600"}>
+                        - UAI lieu édité
+                        {uai_updated_history[0] && (
+                          <>
+                            {" "}
+                            le {new Date(uai_updated_history[0]?.updated_at).toLocaleDateString("fr-FR")} par{" "}
+                            {uai_updated_history[0]?.to.last_update_who}
+                            {uai_updated_history[0]?.to.last_update_automatic
+                              ? " (action effectuée sur la précédente version de la fiche, reprise ici automatiquement)"
+                              : ""}
+                          </>
+                        )}
+                        .
+                      </Text>
+                    )}
+
+                    {formation.uai_formation && (
+                      <>
+                        {formation.uai_formation === formation.etablissement_formateur_uai &&
+                          !formation.editedFields?.uai_formation && (
+                            <Text fontSize={"zeta"} color={"grey.600"} mt={2}>
+                              - Cet UAI a été repris automatiquement de l’UAI formateur.
+                            </Text>
+                          )}
+
+                        {[PARCOURSUP_STATUS.PUBLIE].includes(formation.parcoursup_statut) && (
+                          <Text fontSize={"zeta"} color={"grey.600"} mt={2}>
+                            - L’UAI n’est plus modifiable car la formation est déjà publiée sur Parcoursup. Si l’UAI
+                            doit être modifiée, faire un message au SCN via la messagerie Parcoursup pour signaler que
+                            vous n’avez pas envoyé la formation sur le bon UAI. Suite à intervention du SCN, la
+                            formation sera réinitialisée sur le catalogue, pour vous permettre de modifier l'UAI lieu et
+                            de redemander la publication. Si l'adresse postale du lieu doit être modifiée, demander au
+                            CFA d'en faire le signalement au Carif-Oref pour modification à la source.
+                          </Text>
+                        )}
+                      </>
+                    )}
+
+                    {formation.code_commune_insee !== formation.etablissement_formateur_code_commune_insee && (
+                      <>
+                        {!formation.uai_formation && (
+                          <Text fontSize={"zeta"} color={"grey.600"} mt={2}>
+                            - L’UAI du lieu de formation doit être renseigné en cohérence avec l’adresse du lieu de
+                            formation.
+                          </Text>
+                        )}
+
+                        {formation.etablissement_formateur_uai === formation.uai_formation &&
+                          !formation.updates_history.filter(
+                            (history) =>
+                              history.to?.uai_formation === formation.uai_formation &&
+                              new Date(history.updated_at).getTime() >= campagneStartDate?.getTime() - 31536000000
+                          ).length && (
+                            <Text fontSize={"zeta"} color={"grey.600"} mt={2}>
+                              - L’UAI renseigné est le même pour l’organisme formateur et le lieu de formation alors que
+                              les adresses sont différentes. Vérifiez l’adresse et l’UAI du lieu de formation et
+                              corrigez si nécessaire.
+                            </Text>
+                          )}
+                      </>
+                    )}
+                  </UaiFormationContainer>
                   <AdresseContainer>
                     <Text mb={4}>
                       Siret :{" "}

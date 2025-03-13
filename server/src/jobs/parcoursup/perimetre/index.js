@@ -2,6 +2,7 @@ const logger = require("../../../common/logger");
 const controller = require("./controller");
 const initial = require("./initial");
 const replace = require("./replace");
+const aDistance = require("./aDistance");
 const counter = require("./counter");
 const perimetre = require("./perimetre");
 const session = require("./session");
@@ -32,6 +33,9 @@ const psPerimetre = async () => {
     logger.info({ type: "job" }, "∙ Vérification des dates de session :");
     await session.run();
     await previousSession.run();
+
+    logger.info({ type: "job" }, "∙ Dépublication forcée des formations 100% à distance:");
+    await aDistance.run();
 
     logger.info({ type: "job" }, "∙ Compteurs après :");
     await counter.run();
