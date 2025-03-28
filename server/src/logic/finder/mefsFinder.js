@@ -32,7 +32,10 @@ const completeDateFermetureMefs = async (mefs) => {
 };
 
 const findMefsForAffelnet = async (rules) => {
+  const formations = await SandboxFormation.find({}, { bcn_mefs_10: 1 }).lean();
   const results = await SandboxFormation.find({ ...rules }, { bcn_mefs_10: 1 }).lean();
+
+  // console.log({ formations, results });
 
   if (results && results.length > 0) {
     return results.reduce((acc, { bcn_mefs_10 }) => {
@@ -44,7 +47,7 @@ const findMefsForAffelnet = async (rules) => {
 };
 
 const computeMefs = async (fields, oldFields) => {
-  // logger.debug({ type: "logic" }, `computeMefs`);
+  logger.debug({ type: "logic" }, `computeMefs`);
   let bcn_mefs_10 = fields.bcn_mefs_10;
   let affelnet_mefs_10 = [];
   let affelnet_infos_offre = oldFields?.affelnet_infos_offre;
@@ -97,6 +100,26 @@ const computeMefs = async (fields, oldFields) => {
       is_deleted: { $ne: true },
     }).lean();
 
+    const aDefinirRules = (
+      await ReglePerimetre.find({
+        plateforme: "affelnet",
+        statut: AFFELNET_STATUS.A_DEFINIR,
+        is_deleted: { $ne: true },
+      }).lean()
+    ).flatMap((rule) =>
+      Object.entries(rule.statut_academies ?? {})
+        .filter(([num_academie, statut]) =>
+          [AFFELNET_STATUS.A_PUBLIER, AFFELNET_STATUS.A_PUBLIER_VALIDATION].includes(statut)
+        )
+        .map(([num_academie, statut]) => ({
+          ...rule,
+          num_academie,
+          statut,
+        }))
+    );
+
+    // console.log({ aDefinirRules });
+
     // Split formation into N formation with 1 mef each
     // & insert theses into a tmp collection
     await asyncForEach(bcn_mefs_10, async (mefObj) => {
@@ -125,6 +148,14 @@ const computeMefs = async (fields, oldFields) => {
         cle_ministere_educatif: rest.cle_ministere_educatif,
         published: true,
         $or: aPublierSoumisAValidationRules.map(getQueryFromRule),
+      });
+    }
+
+    if (!filtered_affelnet_mefs_10 && aDefinirRules.length) {
+      filtered_affelnet_mefs_10 = await findMefsForAffelnet({
+        cle_ministere_educatif: rest.cle_ministere_educatif,
+        published: true,
+        $or: aDefinirRules.map(getQueryFromRule),
       });
     }
 

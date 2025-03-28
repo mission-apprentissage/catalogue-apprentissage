@@ -6,7 +6,7 @@ const { Formation, CampagneStart } = require("../../common/models");
 const { sendJsonStream, sendCsvStream } = require("../../common/utils/httpUtils");
 const { sanitize, SAFE_FIND_OPERATORS } = require("../../common/utils/sanitizeUtils");
 const { paginate } = require("../../common/utils/mongooseUtils");
-const { AFFELNET_STATUS, COMMON_STATUS } = require("../../constants/status");
+const { COMMON_STATUS } = require("../../constants/status");
 
 /**
  * Sample entity route module for GET
@@ -317,6 +317,7 @@ module.exports = () => {
    *               example: 1
    *             limit:
    *               type: number
+   *               maximum: 1000
    *               example: 10
    *             select:
    *               type: string

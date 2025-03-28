@@ -43,7 +43,7 @@ require("../common/passport-config");
 
 const options = {
   definition: {
-    openapi: "3.0.0",
+    openapi: "3.1.1",
     info: {
       title: "Catalogue apprentissage",
       version: "1.0.0",
