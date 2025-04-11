@@ -18,6 +18,9 @@ const psPerimetre = async () => {
     logger.info({ type: "job" }, "∙ Compteurs avant :");
     await counter.run();
 
+    logger.info({ type: "job" }, "∙ Vérification du périmètre :");
+    await perimetre.run();
+
     logger.info({ type: "job" }, "∙ Traitement des 'annule et remplace':");
     await replace.run();
 
@@ -26,9 +29,6 @@ const psPerimetre = async () => {
 
     logger.info({ type: "job" }, "∙ Application des règles de périmètre en tenant compte des actions :");
     await controller.run();
-
-    logger.info({ type: "job" }, "∙ Vérification du périmètre :");
-    await perimetre.run();
 
     logger.info({ type: "job" }, "∙ Vérification des dates de session :");
     await session.run();

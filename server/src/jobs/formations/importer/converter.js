@@ -364,7 +364,9 @@ const removeFields = (entity, fields) => {
 const unpublishOthers = async ({ filter = {} } = { filter: {} }) => {
   let removed = 0;
 
-  const cles = await DualControlFormation.distinct("cle_ministere_educatif");
+  const cles = (await DualControlFormation.find({ published: true }).select({ cle_ministere_educatif: 1 })).map(
+    (dcFormation) => dcFormation.cle_ministere_educatif
+  );
 
   await cursor(
     Formation.find({
@@ -389,8 +391,11 @@ const applyConversion = async (
             (formation) => formation.cle_ministere_educatif
           ),
         },
+        published: true,
       }
-    : {};
+    : {
+        published: true,
+      };
 
   if (Object.entries(dcFilter).length) {
     console.log(`Applying conversion for ${dcFilter.cle_ministere_educatif.$in.length} formations`);
