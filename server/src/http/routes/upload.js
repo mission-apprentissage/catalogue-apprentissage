@@ -11,6 +11,8 @@ const { afCoverage } = require("../../jobs/affelnet/coverage");
 const { rebuildEsIndex } = require("../../jobs/esIndex/esIndex");
 const { hasAccessTo } = require("../../common/utils/rolesUtils");
 const { Formation } = require("../../common/models");
+const { afConsoleStats } = require("../../jobs/affelnet/stats");
+const { enableAlertMessage, disableAlertMessage } = require("../../jobs/scriptWrapper");
 
 const DOCUMENTS = new Map([
   [
@@ -80,72 +82,79 @@ module.exports = () => {
 
         switch (filename) {
           case DOCUMENTS.get("affelnet-formations").filename:
-            if (hasAccessTo(req.user, DOCUMENTS.get("affelnet-formations").acl)) {
-              callback = async () => {
-                await afImportFormations();
-                Formation.pauseAllMongoosaticHooks();
-                await afCoverage();
-                Formation.startAllMongoosaticHooks();
-                await rebuildEsIndex("formation");
-              };
-            } else {
+            if (!hasAccessTo(req.user, DOCUMENTS.get("affelnet-formations").acl)) {
               return res.status(403).json({
                 error: `Vous ne disposez pas des droits nécessaires pour déposer ce fichier`,
               });
             }
+
+            callback = async () => {
+              await afImportFormations();
+              Formation.pauseAllMongoosaticHooks();
+              await afCoverage();
+              Formation.startAllMongoosaticHooks();
+              await enableAlertMessage();
+              await rebuildEsIndex("formation");
+              await disableAlertMessage();
+              await afConsoleStats();
+            };
             break;
+
           case DOCUMENTS.get("kit-apprentissage").filename: {
-            if (hasAccessTo(req.user, DOCUMENTS.get("kit-apprentissage").acl)) {
-              try {
-                const tmpFile = csvToJson.getJsonFromCsv(src);
-                if (!hasCSVHeaders(tmpFile, "Code_RNCP", "Code_Diplome")) {
-                  return res.status(400).json({
-                    error: `Le contenu du fichier est invalide, il doit contenir les colonnes suivantes : "Code_RNCP;Code_Diplome" (et cette première ligne d'en-tête)`,
-                  });
-                }
-              } catch (error) {
-                logger.error(
-                  {
-                    type: "http",
-                  },
-                  error
-                );
+            if (!hasAccessTo(req.user, DOCUMENTS.get("kit-apprentissage").acl)) {
+              return res.status(403).json({
+                error: `Vous ne disposez pas des droits nécessaires pour déposer ce fichier`,
+              });
+            }
+
+            try {
+              const tmpFile = csvToJson.getJsonFromCsv(src);
+              if (!hasCSVHeaders(tmpFile, "Code_RNCP", "Code_Diplome")) {
                 return res.status(400).json({
-                  error: `Le contenu du fichier est invalide, il doit être au format CSV (;) et contenir les colonnes suivantes : "Code_RNCP;Code_Diplome" (et cette première ligne d'en-tête)`,
+                  error: `Le contenu du fichier est invalide, il doit contenir les colonnes suivantes : "Code_RNCP;Code_Diplome" (et cette première ligne d'en-tête)`,
                 });
               }
-            } else {
-              return res.status(403).json({
-                error: `Vous ne disposez pas des droits nécessaires pour déposer ce fichier`,
+            } catch (error) {
+              logger.error(
+                {
+                  type: "http",
+                },
+                error
+              );
+              return res.status(400).json({
+                error: `Le contenu du fichier est invalide, il doit être au format CSV (;) et contenir les colonnes suivantes : "Code_RNCP;Code_Diplome" (et cette première ligne d'en-tête)`,
               });
             }
+
             break;
           }
+
           case DOCUMENTS.get("parcoursup-mefs").filename: {
-            if (hasAccessTo(req.user, DOCUMENTS.get("parcoursup-mefs").acl)) {
-              try {
-                const tmpFile = csvToJson.getJsonFromCsv(src);
-                if (!hasCSVHeaders(tmpFile, "MEF")) {
-                  return res.status(400).json({
-                    error: `Le contenu du fichier est invalide, il doit contenir la colonne suivante : "MEF" (et cette première ligne d'en-tête)`,
-                  });
-                }
-              } catch (error) {
-                logger.error(
-                  {
-                    type: "http",
-                  },
-                  error
-                );
-                return res.status(400).json({
-                  error: `Le contenu du fichier est invalide, il doit être au format CSV (;) et contenir la colonne suivante : "MEF" (et cette première ligne d'en-tête)`,
-                });
-              }
-            } else {
+            if (!hasAccessTo(req.user, DOCUMENTS.get("parcoursup-mefs").acl)) {
               return res.status(403).json({
                 error: `Vous ne disposez pas des droits nécessaires pour déposer ce fichier`,
               });
             }
+
+            try {
+              const tmpFile = csvToJson.getJsonFromCsv(src);
+              if (!hasCSVHeaders(tmpFile, "MEF")) {
+                return res.status(400).json({
+                  error: `Le contenu du fichier est invalide, il doit contenir la colonne suivante : "MEF" (et cette première ligne d'en-tête)`,
+                });
+              }
+            } catch (error) {
+              logger.error(
+                {
+                  type: "http",
+                },
+                error
+              );
+              return res.status(400).json({
+                error: `Le contenu du fichier est invalide, il doit être au format CSV (;) et contenir la colonne suivante : "MEF" (et cette première ligne d'en-tête)`,
+              });
+            }
+
             break;
           }
           default:
