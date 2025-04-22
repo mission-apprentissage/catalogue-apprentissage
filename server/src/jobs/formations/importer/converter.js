@@ -397,8 +397,8 @@ const applyConversion = async (
         published: true,
       };
 
-  if (Object.entries(dcFilter).length) {
-    console.log(`Applying conversion for ${dcFilter.cle_ministere_educatif.$in.length} formations`);
+  if (Object.entries(dcFilter.cle_ministere_educatif ?? {}).length) {
+    console.log(`Applying conversion for ${dcFilter.cle_ministere_educatif?.$in.length} formations`);
   }
 
   let added = 0,
