@@ -51,7 +51,7 @@
     "@mechanicalhuman/bunyan-pretty": "3.1.0",
     "@mission-apprentissage/tco-service-node": "2.44.0",
     "aws-sdk": "2.1109.0",
-    "axios": "1.7.4",
+    "axios": "1.9.0",
     "body-parser": "1.20.3",
     "boom": "7.3.0",
     "bunyan": "1.8.15",
