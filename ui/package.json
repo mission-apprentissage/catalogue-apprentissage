@@ -11,6 +11,7 @@
     "@craco/craco": "^7.0.0",
     "@emotion/react": "11.13.3",
     "@emotion/styled": "11.14.0",
+    "@preact/signals-react": "3.3.0",
     "chakra-ui-markdown-renderer": "4.1.0",
     "formik": "2.4.6",
     "framer-motion": "11.5.4",
