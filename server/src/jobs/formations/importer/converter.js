@@ -73,7 +73,7 @@ const computeRelationFields = async (fields) => {
 const recomputeFields = async (fields, oldFields, { forceRecompute = false } = { forceRecompute: false }) => {
   // MEFS & PLATEFORMES
 
-  console.error("recomputeFields", { fields, oldFields });
+  // console.error("recomputeFields", { fields, oldFields });
 
   let bcn_mefs_10 = oldFields?.bcn_mefs_10 ?? [],
     bcn_mefs_10_agregat = oldFields?.bcn_mefs_10_agregat ?? [],

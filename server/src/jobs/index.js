@@ -1,5 +1,5 @@
 const path = require("path");
-const { tcoJobs } = require("@mission-apprentissage/tco-service-node");
+const { tcoJobs, downloadBcnTables, importBcnTables, bcnImporter } = require("@mission-apprentissage/tco-service-node");
 const { runScript, enableAlertMessage, disableAlertMessage } = require("./scriptWrapper");
 const logger = require("../common/logger");
 const { Formation, Etablissement } = require("../common/models");
@@ -9,20 +9,16 @@ const { affelnetJobs } = require("./affelnet");
 const { etablissementsJobs } = require("./etablissements");
 const { formationsJobs } = require("./formations");
 const { collectPreviousSeasonStats } = require("./formations/previousSeasonStats");
-const { Store } = require("express-session");
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-const KIT_LOCAL_PATH = "/data/uploads/CodeDiplome_RNCP_latest_kit.csv";
-const CONVENTION_FILES_DIR = path.join(__dirname, "conventionFilesImporter/assets");
 
 runScript(async ({ db }) => {
   try {
     logger.info({ type: "job" }, `ALL JOBS ⏳`);
 
     // TCO jobs
-    await tcoJobs(db, CONVENTION_FILES_DIR, KIT_LOCAL_PATH); // ~ 10 minutes // Import des tables de correspondance
-    await sleep(30000);
+    await bcnImporter();
+    await sleep(10000);
 
     Etablissement.pauseAllMongoosaticHooks();
 
