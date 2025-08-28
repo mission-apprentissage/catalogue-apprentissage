@@ -1,5 +1,5 @@
 const axios = require("axios");
-const logger = require("../../common/logger");
+const logger = require("../logger");
 
 const isApiEntrepriseUp = async () => {
   try {

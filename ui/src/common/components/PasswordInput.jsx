@@ -10,7 +10,12 @@ export const PasswordInput = (props) => {
     <InputGroup size="md">
       <Input pr="4.5rem" placeholder="Enter password" {...props} type={show ? "text" : "password"} />
       <InputRightElement width="4.5rem">
-        <Button h="1.75rem" size="sm" onClick={handleClick}>
+        <Button
+          h="1.75rem"
+          size="sm"
+          onClick={handleClick}
+          title={show ? "Masquer le mot de passe" : "Voir le mot de passe"}
+        >
           {show ? <EyeOffFill /> : <EyeFill />}
         </Button>
       </InputRightElement>
