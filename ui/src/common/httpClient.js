@@ -18,7 +18,7 @@ class HTTPError extends Error {
   }
 }
 
-const handleResponse = async (path, response) => {
+const defaultHandleResponse = async (path, response) => {
   let statusCode = response.status;
   const json = await response.json();
   if (statusCode >= 400 && statusCode < 600) {
@@ -44,50 +44,54 @@ const getHeaders = ({ contentType = "application/json" }) => {
   return result;
 };
 
-export const _get = (path, options) => {
+export const _get = (path, { handleResponse, ...options } = {}) => {
   return fetch(`${path}`, {
     method: "GET",
     headers: getHeaders({}),
     ...options,
-  }).then((res) => handleResponse(path, res));
+  }).then((res) => (handleResponse ? handleResponse(path, res) : defaultHandleResponse(path, res)));
 };
 
-export const _post = (path, body, options) => {
+export const _post = (path, body, { handleResponse, ...options } = {}) => {
   return fetch(`${path}`, {
     method: "POST",
     headers: getHeaders({}),
     body: JSON.stringify(body),
     ...options,
-  }).then((res) => handleResponse(path, res));
+  }).then((res) => (handleResponse ? handleResponse(path, res) : defaultHandleResponse(path, res)));
 };
 
-export const _postFile = (path, data) => {
+export const _postFile = (path, data, { handleResponse, ...options } = {}) => {
   return fetch(`${path}`, {
     method: "POST",
     headers: getHeaders({ contentType: null }),
     body: data,
-  }).then((res) => handleResponse(path, res));
+    ...options,
+  }).then((res) => (handleResponse ? handleResponse(path, res) : defaultHandleResponse(path, res)));
 };
 
-export const _put = (path, body = {}) => {
+export const _put = (path, body = {}, { handleResponse, ...options } = {}) => {
   return fetch(`${path}`, {
     method: "PUT",
     headers: getHeaders({}),
     body: JSON.stringify(body),
-  }).then((res) => handleResponse(path, res));
+    ...options,
+  }).then((res) => (handleResponse ? handleResponse(path, res) : defaultHandleResponse(path, res)));
 };
 
-export const _patch = (path, body = {}) => {
+export const _patch = (path, body = {}, { handleResponse, ...options } = {}) => {
   return fetch(`${path}`, {
     method: "PATCH",
     headers: getHeaders({}),
     body: JSON.stringify(body),
-  }).then((res) => handleResponse(path, res));
+    ...options,
+  }).then((res) => (handleResponse ? handleResponse(path, res) : defaultHandleResponse(path, res)));
 };
 
-export const _delete = (path) => {
+export const _delete = (path, { handleResponse, ...options } = {}) => {
   return fetch(`${path}`, {
     method: "DELETE",
     headers: getHeaders({}),
-  }).then((res) => handleResponse(path, res));
+    ...options,
+  }).then((res) => (handleResponse ? handleResponse(path, res) : defaultHandleResponse(path, res)));
 };

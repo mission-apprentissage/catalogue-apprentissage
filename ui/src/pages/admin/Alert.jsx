@@ -1,51 +1,52 @@
 import React, { useState, useEffect } from "react";
 import {
   Box,
-  Center,
   Button,
   FormControl,
   FormLabel,
   Container,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
   Text,
   Textarea,
   VStack,
+  useToast,
+  IconButton,
+  Switch,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import { _post, _get, _patch, _put, _delete } from "../../common/httpClient";
 import Layout from "../layout/Layout";
-import { NavLink } from "react-router-dom";
-import { ArrowDropRightLine } from "../../theme/components/icons";
 import useAuth from "../../common/hooks/useAuth";
 import { useRef } from "react";
 import { useCallback } from "react";
+import { setAlerts } from "../../common/store/alertStore";
+import { CheckIcon, CloseIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { Breadcrumb } from "../../common/components/Breadcrumb";
 
 const Alert = () => {
   const [messageAutomatique, setMessageAutomatique] = useState([]);
   const [messagesManuels, setMessagesManuels] = useState([]);
-
+  const toast = useToast();
   const [user] = useAuth();
   const mountedRef = useRef(false);
 
-  const getMessagesManuels = useCallback(async () => {
+  const getMessages = useCallback(async () => {
     try {
       const data = await _get("/api/entity/alert");
-      // const hasMessages = data.reduce((acc, item) => acc || item.enabled, false);
-      // if (hasMessages) {
+
       setMessagesManuels(data.filter((message) => message.type === "manuel"));
-      // }
+      setMessageAutomatique(data.filter((message) => message.type === "automatique")[0]);
+
+      setAlerts(data?.filter((item) => item.enabled) ?? []);
     } catch (e) {
       console.error(e);
     }
-  }, [setMessagesManuels]);
+  }, []);
 
   useEffect(() => {
     const run = async () => {
       if (!mountedRef.current) {
         mountedRef.current = true;
-        await getMessagesManuels();
+        await getMessages();
       }
     };
     run();
@@ -53,7 +54,7 @@ const Alert = () => {
     return () => {
       mountedRef.current = false;
     };
-  }, [getMessagesManuels]);
+  }, [getMessages]);
 
   const {
     values: valuesM,
@@ -74,9 +75,11 @@ const Alert = () => {
           };
           const messagePosted = await _post("/api/entity/alert", message);
           if (messagePosted) {
-            alert("Le message a bien été envoyé.");
+            toast({ description: "Le message a été créé." });
+            await getMessages();
+          } else {
+            toast({ description: "Une erreur est survenue lors de la création du message.", status: "error" });
           }
-          window.location.reload();
         } catch (e) {
           console.error(e);
         }
@@ -91,10 +94,10 @@ const Alert = () => {
     values: valuesA,
     handleSubmit: handleSubmitA,
     handleChange: handleChangeA,
-    setFieldValue,
   } = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      msg: "",
+      msg: messageAutomatique.msg,
     },
     onSubmit: ({ msg }, { setSubmitting }) => {
       return new Promise(async (resolve) => {
@@ -107,9 +110,11 @@ const Alert = () => {
           };
           const messagePosted = await _put(`/api/entity/alert/${messageAutomatique._id}`, message);
           if (messagePosted) {
-            alert("Le message a bien été mise à jour.");
+            toast({ description: "Le message a été mise à jour." });
+            await getMessages();
+          } else {
+            toast({ description: "Une erreur est survenue lors de la mise à jour du message.", status: "error" });
           }
-          window.location.reload();
         } catch (e) {
           console.error(e);
         }
@@ -120,157 +125,239 @@ const Alert = () => {
     },
   });
 
-  useEffect(() => {
-    const run = async () => {
+  // useEffect(() => {
+  //   const run = async () => {
+  //     try {
+  //       const data = await _get("/api/entity/alert");
+  //       if (data.length === 0) {
+  //         const message = {
+  //           type: "automatique",
+  //           msg: "Une mise à jour des données du catalogue est en cours, le service sera à nouveau opérationnel d'ici le XX/XX/21 à XXh.",
+  //           name: "auto",
+  //           enabled: false,
+  //         };
+  //         await _post("/api/entity/alert", message);
+  //         window.location.reload();
+  //       } else {
+  //         const [a] = data.filter((d) => d.type === "automatique");
+  //         setMessageAutomatique(a);
+  //         setFieldValue(
+  //           "msg",
+  //           a.msg ||
+  //             "Une mise à jour des données du catalogue est en cours, le service sera à nouveau opérationnel d'ici le XX/XX/21 à XXh."
+  //         );
+  //       }
+  //     } catch (e) {
+  //       console.error(e);
+  //     }
+  //   };
+  //   run();
+  // }, [setFieldValue]);
+
+  const toggleMessage = useCallback(
+    async (message) => {
       try {
-        const data = await _get("/api/entity/alert");
-        if (data.length === 0) {
-          const message = {
-            type: "automatique",
-            msg: "Une mise à jour des données du catalogue est en cours, le service sera à nouveau opérationnel d'ici le XX/XX/21 à XXh.",
-            name: "auto",
-            enabled: false,
-          };
-          await _post("/api/entity/alert", message);
-          window.location.reload();
+        const messageUpdated = await _patch(`/api/entity/alert/${message._id}`, {
+          enabled: !message.enabled,
+        });
+
+        if (messageUpdated) {
+          toast({ description: `Le message a été ${!message.enabled ? "activé" : "désactivé"}.` });
+          await getMessages();
         } else {
-          const [a] = data.filter((d) => d.type === "automatique");
-          setMessageAutomatique(a);
-          setFieldValue(
-            "msg",
-            a.msg ||
-              "Une mise à jour des données du catalogue est en cours, le service sera à nouveau opérationnel d'ici le XX/XX/21 à XXh."
-          );
+          toast({ description: "Une erreur est survenue lors de la mise à jour du message.", status: "error" });
         }
       } catch (e) {
         console.error(e);
       }
-    };
-    run();
-  }, [setFieldValue]);
+    },
+    [getMessages, toast]
+  );
 
-  const toggleMessage = async (message) => {
-    try {
-      await _patch(`/api/entity/alert/${message._id}`, {
-        enabled: !message.enabled,
-      });
-      window.location.reload();
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  const toggleMessageEditing = useCallback(
+    (message) => {
+      setMessagesManuels([
+        ...messagesManuels.map((m) =>
+          m._id === message._id ? { ...m, editing: !message.editing, msg: message.initialValue } : m
+        ),
+      ]);
+    },
+    [messagesManuels]
+  );
 
-  const deleteMessage = async (message) => {
-    try {
-      const messageDeleted = await _delete(`/api/entity/alert/${message._id}`);
-      if (messageDeleted) {
-        alert("Le message a bien été supprimé.");
+  const updateMessage = useCallback(
+    (message, value) => {
+      setMessagesManuels([...messagesManuels.map((m) => (m._id === message._id ? { ...m, msg: value } : m))]);
+    },
+    [messagesManuels]
+  );
+
+  const editMessage = useCallback(
+    async (message, description) => {
+      try {
+        const messageUpdated = await _patch(`/api/entity/alert/${message._id}`, {
+          msg: description,
+        });
+
+        if (messageUpdated) {
+          toast({ description: "Le message a été modifié." });
+        }
+
+        await getMessages();
+      } catch (e) {
+        console.error(e);
       }
-      window.location.reload();
-    } catch (e) {
-      console.error(e);
-    }
-  };
+    },
+    [getMessages, toast]
+  );
+
+  const deleteMessage = useCallback(
+    async (message) => {
+      try {
+        const messageDeleted = await _delete(`/api/entity/alert/${message._id}`);
+
+        if (messageDeleted) {
+          toast({ description: "Le message a été supprimé." });
+          await getMessages();
+        } else {
+          toast({ description: "Une erreur est survenue lors de la suppression du message.", status: "error" });
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [getMessages, toast]
+  );
+
+  const title = "Messages de maintenance";
 
   return (
-    <Layout>
-      <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
+    <Layout data-testid="page-alert">
+      <Box pt={[4, 8]} px={[1, 1, 12, 24]}>
         <Container maxW="7xl">
-          <Breadcrumb separator={<ArrowDropRightLine color="grey.600" />} textStyle="xs">
-            <BreadcrumbItem>
-              <BreadcrumbLink as={NavLink} to="/" color="grey.600" textDecoration="underline">
-                Accueil
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink>Message de maintenance</BreadcrumbLink>
-            </BreadcrumbItem>
-          </Breadcrumb>
-        </Container>
-        <Container maxW="7xl">
-          <Center verticalAlign="center">
-            <Box mt={10} width={["auto", "50rem"]}>
-              <Text textStyle="h2" marginBottom="2w">
-                Message de maintenance
-              </Text>
+          <Breadcrumb pages={[{ title: "Accueil", to: "/" }, { title: title }]} />
+          <Text textStyle="h2" color="grey.800" mt={5}>
+            {title}
+          </Text>
+
+          <Box mt={10}>
+            <Text textStyle="h4" marginBottom="2w">
+              Messages manuels
+            </Text>
+
+            <FormControl as="fieldset" mt={5}>
+              {/* <FormLabel as="legend">Ajouter un message manuel: </FormLabel> */}
+              <Textarea
+                name="msg"
+                value={valuesM.msg}
+                onChange={handleChangeM}
+                placeholder="Saisissez un message manuel"
+                rows={3}
+                required
+              />
+              <Box mt="1rem" textAlign="right">
+                <Button textStyle="sm" variant="primary" disabled={!valuesM.msg?.length} onClick={handleSubmitM}>
+                  Enregistrer et activer
+                </Button>
+              </Box>
+            </FormControl>
+
+            <FormControl as="fieldset" mt={5}>
+              <FormLabel as="legend">Liste des messages manuels: </FormLabel>
               <Box>
-                <Text textStyle="h4" marginBottom="2w">
-                  Message manuel
-                </Text>
+                <VStack wrap="none">
+                  {messagesManuels.map((message) => {
+                    return (
+                      <Box w="100%" display={"inline-flex"} key={message._id}>
+                        <Box
+                          w="10%"
+                          alignSelf="right"
+                          alignItems="right"
+                          display={"inline-flex"}
+                          marginLeft="4"
+                          marginRight="4"
+                        >
+                          <Switch
+                            size="md"
+                            m="auto"
+                            isChecked={message.enabled}
+                            onChange={() => toggleMessage(message)}
+                            aria-label={message.enabled ? "Désactiver" : "Activer"}
+                          />
+                        </Box>
 
-                <FormControl as="fieldset">
-                  <FormLabel as="legend">Liste des messages manuels: </FormLabel>
-                  <Box>
-                    <VStack wrap="none">
-                      {messagesManuels.map((message) => {
-                        return (
-                          <Box w="100%" display={"inline-flex"}>
-                            <Box w="80%">
-                              <Textarea disabled>{message.msg}</Textarea>
-                            </Box>
-                            <Box w="20%" alignSelf="right" alignItems="right">
-                              <Button textStyle="sm" variant="outlined" onClick={() => toggleMessage(message)}>
-                                {message.enabled ? "Désactiver" : "Activer"}
-                              </Button>
-                              <Button textStyle="sm" variant="danger" onClick={() => deleteMessage(message)}>
-                                Supprimer
-                              </Button>
-                            </Box>
-                          </Box>
-                        );
-                      })}
-                    </VStack>
-                  </Box>
-                </FormControl>
-
-                <FormControl as="fieldset" mt={5}>
-                  <FormLabel as="legend">Ajouter un message manuel: </FormLabel>
-                  <Textarea
-                    name="msg"
-                    value={valuesM.msg}
-                    onChange={handleChangeM}
-                    placeholder="Saisissez un message manuel"
-                    rows={3}
-                    required
-                  />
-                  <Box mt="1rem" textAlign="right">
-                    <Button textStyle="sm" variant="primary" disabled={!valuesM.msg?.length} onClick={handleSubmitM}>
-                      Enregistrer et activer
-                    </Button>
-                  </Box>
-                </FormControl>
+                        <Box w="80%">
+                          <Textarea
+                            disabled={!message.editing}
+                            onChange={(e) => updateMessage(message, e.target.value)}
+                            value={message.msg}
+                          />
+                        </Box>
+                        <Box
+                          w="10%"
+                          alignSelf="right"
+                          alignItems="right"
+                          display={"inline-flex"}
+                          marginLeft="4"
+                          marginRight="4"
+                        >
+                          <IconButton
+                            variant="ghost"
+                            colorScheme="blue"
+                            aria-label="Editer"
+                            fontSize="20px"
+                            m="auto"
+                            icon={message.editing ? <CheckIcon /> : <EditIcon />}
+                            onClick={() =>
+                              message.editing ? editMessage(message, message.msg) : toggleMessageEditing(message)
+                            }
+                          />
+                          <IconButton
+                            variant="ghost"
+                            colorScheme="red"
+                            aria-label="Supprimer"
+                            fontSize="20px"
+                            m="auto"
+                            icon={message.editing ? <CloseIcon /> : <DeleteIcon />}
+                            onClick={() => (message.editing ? toggleMessageEditing(message) : deleteMessage(message))}
+                          />
+                        </Box>
+                      </Box>
+                    );
+                  })}
+                </VStack>
               </Box>
+            </FormControl>
+          </Box>
 
-              <Box mt={10}>
-                <Text textStyle="h4" marginBottom="2w">
-                  Message automatique
-                </Text>
+          <Box mt={10}>
+            <Text textStyle="h4" marginBottom="2w">
+              Message automatique
+            </Text>
 
-                <FormControl as="fieldset" mt={5}>
-                  <FormLabel as="legend">Modifier le message automatique : </FormLabel>
-                  <Textarea
-                    name="msg"
-                    value={valuesA.msg}
-                    onChange={handleChangeA}
-                    placeholder="Saisissez le message automatique"
-                    rows={3}
-                    required
-                  />
-                  <Box mt="1rem" textAlign="right">
-                    <Button
-                      textStyle="sm"
-                      variant="primary"
-                      disabled={valuesA.msg === messageAutomatique.msg}
-                      onClick={handleSubmitA}
-                      mb={8}
-                    >
-                      Mettre à jour le message automatique
-                    </Button>
-                  </Box>
-                </FormControl>
+            <FormControl as="fieldset" mt={5}>
+              {/* <FormLabel as="legend">Modifier le message automatique : </FormLabel> */}
+              <Textarea
+                name="msg"
+                value={valuesA.msg}
+                onChange={handleChangeA}
+                placeholder="Saisissez le message automatique"
+                rows={3}
+                required
+              />
+              <Box mt="1rem" textAlign="right">
+                <Button
+                  textStyle="sm"
+                  variant="primary"
+                  disabled={valuesA.msg === messageAutomatique.msg}
+                  onClick={handleSubmitA}
+                  mb={8}
+                >
+                  Mettre à jour le message automatique
+                </Button>
               </Box>
-            </Box>
-          </Center>
+            </FormControl>
+          </Box>
         </Container>
       </Box>
     </Layout>

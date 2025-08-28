@@ -1,32 +1,52 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useCallback, useRef } from "react";
 import { Box, Alert, AlertIcon, AlertDescription, Text, Flex } from "@chakra-ui/react";
 import { _get } from "../../../common/httpClient";
+import { alerts, setAlerts } from "../../../common/store/alertStore";
 
 export const AlertMessage = () => {
-  const [messages, setMessages] = useState([]);
+  const mounted = useRef(false);
 
-  useEffect(() => {
-    let mounted = true;
-    const run = async () => {
-      try {
-        const data = await _get("/api/entity/alert");
-        const hasMessages = data.reduce((acc, item) => acc || item.enabled, false);
-        if (hasMessages && mounted) {
-          setMessages(data);
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    };
-    run();
+  const getMessages = useCallback(async () => {
+    try {
+      const data = await _get("/api/entity/alert", {
+        handleResponse: (path, res) => {
+          let statusCode = res.status;
 
-    return () => {
-      // cleanup hook
-      mounted = false;
-    };
+          if (statusCode >= 200 && statusCode < 300) {
+            return res.json();
+          } else {
+            throw new Error(`Error ${statusCode}`);
+          }
+        },
+      });
+      setAlerts(data?.filter((item) => item.enabled) ?? []);
+    } catch (e) {
+      console.error(e);
+    }
   }, []);
 
-  if (messages.length === 0) return null;
+  useEffect(() => {
+    let interval;
+
+    const run = async () => {
+      mounted.current = true;
+      await getMessages();
+      interval = setInterval(async () => {
+        await getMessages();
+      }, 60000);
+    };
+
+    if (!mounted.current) {
+      run();
+    }
+
+    return () => {
+      mounted.current = false;
+      interval && clearInterval(interval);
+    };
+  }, [getMessages]);
+
+  if (alerts.value?.length === 0) return null;
 
   return (
     <Box m={0} fontSize={["omega", "omega", "epsilon"]} data-testid="container">
@@ -37,7 +57,7 @@ export const AlertMessage = () => {
           </Flex>
         </Flex>
         <AlertDescription m={0} pl={2}>
-          {messages.map(
+          {alerts.value?.map(
             (element) =>
               element.enabled && (
                 <Text data-testid={element._id} key={element._id}>
