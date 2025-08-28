@@ -20,7 +20,7 @@ RUN if [ "$NPM_TOKEN" != "local" ] ; then \
   yarn config set npmScopes.mission-apprentissage.npmAlwaysAuth true && \
   yarn config set npmScopes.mission-apprentissage.npmAuthToken $NPM_TOKEN; \
   else \
-  echo "No NPM_TOKEN prodived, exiting." && exit 1; \
+  echo "No NPM_TOKEN provided, exiting." && exit 1; \
   fi
 
 COPY package.json yarn.lock  ./

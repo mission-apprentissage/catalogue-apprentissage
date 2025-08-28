@@ -111,13 +111,13 @@ export const DescriptionBlock = ({ formation }) => {
 
   const rncpCode = formation?.rncp_code?.split("RNCP")[1];
 
-  const now = new Date();
+  // const now = new Date();
   // si date du jour < septembre : les formations ayant des tag sur année -1, année en cours et année + 1 seront affichées sur LBA
   // si date du jour >= septembre : année en cours et année + 1, année +2 seront affichées sur LBA
-  const tagsForLBA =
-    now.getMonth() >= 8
-      ? [now.getFullYear(), now.getFullYear() + 1, now.getFullYear() + 2]
-      : [now.getFullYear() - 1, now.getFullYear(), now.getFullYear() + 1];
+  // const tagsForLBA =
+  //   now.getMonth() >= 8
+  //     ? [now.getFullYear(), now.getFullYear() + 1, now.getFullYear() + 2]
+  //     : [now.getFullYear() - 1, now.getFullYear(), now.getFullYear() + 1];
 
   const copyPublicLink = useCallback(
     (event) => {

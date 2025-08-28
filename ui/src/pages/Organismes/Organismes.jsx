@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Center, Container, Text, Spinner, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import Layout from "../layout/Layout";
 import { useSearch } from "../../common/hooks/useSearch";
-import { HowToReglement } from "../../common/components/HowToReglement/HowToReglement";
+// import { HowToReglement } from "../../common/components/HowToReglement/HowToReglement";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
 
