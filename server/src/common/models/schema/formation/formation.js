@@ -545,6 +545,24 @@ const formationSchema = {
     description: "Session en entrée / sortie permanente",
   },
 
+  capacite_minimal: {
+    type: [String],
+    default: [],
+    description: "",
+  },
+
+  capacite_simultanee: {
+    type: [String],
+    default: [],
+    description: "",
+  },
+
+  capacite_cumulee: {
+    type: [String],
+    default: [],
+    description: "",
+  },
+
   id_RCO: {
     type: String,
     default: null,
