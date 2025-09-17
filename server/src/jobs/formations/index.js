@@ -1,7 +1,6 @@
 const logger = require("../../common/logger");
 const { isSunday } = require("../../common/utils/dateUtils");
 const { runScript } = require("../scriptWrapper");
-
 const { importer } = require("./importer");
 
 const formationsJobs = async () => {

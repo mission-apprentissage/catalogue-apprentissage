@@ -1,5 +1,3 @@
-import React from "react";
-
 import { escapeDiacritics } from "../../utils/downloadUtils";
 import helpText from "../../../locales/helpText.json";
 import { CONTEXT } from "../../../constants/context";
@@ -957,9 +955,30 @@ export const columnsDefinition = [
     exportable: true,
     formatter: (tags) => tags?.sort((a, b) => a - b),
   },
+  // {
+  //   Header: "Offre: Capacite",
+  //   accessor: "capacite",
+  //   width: 200,
+  //   exportable: true,
+  // },
+
   {
-    Header: "Offre: Capacite",
-    accessor: "capacite",
+    Header: "Offre: effectif minimal",
+    accessor: "effectif_minimal",
+    width: 200,
+    exportable: true,
+  },
+
+  {
+    Header: "Offre: Capacité simultanée",
+    accessor: "capacite_simultanee",
+    width: 200,
+    exportable: true,
+  },
+
+  {
+    Header: "Offre: capacité cumulée",
+    accessor: "capacite_cumulee",
     width: 200,
     exportable: true,
   },

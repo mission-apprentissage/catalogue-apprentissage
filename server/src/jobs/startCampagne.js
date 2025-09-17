@@ -1,4 +1,3 @@
-const path = require("path");
 const { runScript, enableAlertMessage, disableAlertMessage } = require("./scriptWrapper");
 const logger = require("../common/logger");
 const { Formation, CampagneStart } = require("../common/models");
@@ -11,8 +10,6 @@ const { psConsoleStats } = require("./parcoursup/stats");
 const { afConsoleStats } = require("./affelnet/stats");
 const { getCampagneStartDate } = require("../common/utils/rulesUtils");
 const { collectPreviousSeasonStats } = require("./formations/previousSeasonStats");
-
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 runScript(async ({}) => {
   try {

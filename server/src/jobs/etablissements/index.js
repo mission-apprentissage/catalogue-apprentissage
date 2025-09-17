@@ -8,10 +8,10 @@ const etablissementsJobs = async () => {
 
     // Import RCO
     if (process.env.CATALOGUE_APPRENTISSAGE_RCO_IMPORT_ENABLED) {
-      console.log("Import RCO enabled, starting...");
+      logger.debug("Import RCO enabled, starting...");
       await importer();
     } else {
-      console.log("Import RCO disabled, skipping...");
+      logger.debug("Import RCO disabled, skipping...");
     }
     logger.info({ type: "job" }, `ETABLISSEMENTS JOBS ✅`);
   } catch (error) {

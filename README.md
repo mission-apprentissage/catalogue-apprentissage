@@ -11,7 +11,7 @@ Ce Projet est basé sur le template de la mission apprentissage: https://github.
 
 Les pré-requis sont les mêmes :
 
-- NodeJs 18
+- NodeJs 20
 - Yarn 3+
 - Docker & Docker-compose
 
