@@ -935,17 +935,35 @@ export const columnsDefinition = [
           modalites_entrees_sorties: formation.modalites_entrees_sorties
             ? formation.modalites_entrees_sorties[index]
             : null,
+          effectif_minimal: formation.effectif_minimal ? formation.effectif_minimal[index] : null,
+          capacite_simultanee: formation.capacite_simultanee ? formation.capacite_simultanee[index] : null,
+          capacite_cumulee: formation.capacite_cumulee ? formation.capacite_cumulee[index] : null,
         }))
         .sort((a, b) => new Date(a.date_debut) - new Date(b.date_debut));
 
       return dates
         ?.map(
-          ({ date_debut, date_fin, modalites_entrees_sorties }) =>
+          ({
+            date_debut,
+            date_fin,
+            modalites_entrees_sorties,
+            effectif_minimal,
+            capacite_simultanee,
+            capacite_cumulee,
+          }) =>
             `Du ${new Date(date_debut).toLocaleDateString("fr-FR")} au ${new Date(date_fin).toLocaleDateString(
               "fr-FR"
-            )}${modalites_entrees_sorties ? " en entrée-sortie permanente." : "."}`
+            )}${modalites_entrees_sorties ? " en entrée-sortie permanente." : "."}${
+              (effectif_minimal || capacite_simultanee || capacite_cumulee) &&
+              " " +
+                [
+                  `Effectif minimal : ${effectif_minimal ?? "non précisé"}.`,
+                  `Capacité simultanée : ${capacite_simultanee ?? "non précisée"}.`,
+                  `Capacité cumulée : ${capacite_cumulee ?? "non précisée"}.`,
+                ].join(" ")
+            }`
         )
-        ?.join(" ");
+        ?.join(" | ");
     },
   },
   {
@@ -961,27 +979,6 @@ export const columnsDefinition = [
   //   width: 200,
   //   exportable: true,
   // },
-
-  {
-    Header: "Offre: effectif minimal",
-    accessor: "effectif_minimal",
-    width: 200,
-    exportable: true,
-  },
-
-  {
-    Header: "Offre: Capacité simultanée",
-    accessor: "capacite_simultanee",
-    width: 200,
-    exportable: true,
-  },
-
-  {
-    Header: "Offre: capacité cumulée",
-    accessor: "capacite_cumulee",
-    width: 200,
-    exportable: true,
-  },
 
   {
     Header: "Offre: Remplace la clé ME",
