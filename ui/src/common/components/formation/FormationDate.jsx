@@ -1,5 +1,4 @@
-import React, { Fragment } from "react";
-import { Text } from "@chakra-ui/react";
+import { Box, ListItem, UnorderedList } from "@chakra-ui/react";
 
 export const FormationDate = ({ formation }) => {
   const dates = formation.date_debut
@@ -16,29 +15,37 @@ export const FormationDate = ({ formation }) => {
     .sort((a, b) => new Date(a.date_debut) - new Date(b.date_debut));
 
   return (
-    <Text variant="highlight" as="span">
-      {dates?.map(
-        (
-          { date_debut, date_fin, modalites_entrees_sorties, effectif_minimal, capacite_simultanee, capacite_cumulee },
-          index
-        ) => (
-          <Fragment key={index}>
-            Du {new Date(date_debut).toLocaleDateString("fr-FR")} au {new Date(date_fin).toLocaleDateString("fr-FR")}.{" "}
-            {modalites_entrees_sorties && "Entrée-sortie permanente."}
-            {(effectif_minimal || capacite_simultanee || capacite_cumulee) && (
-              <>
-                {" "}
-                {[
-                  `Effectif minimal : ${effectif_minimal ?? "non précisé"}.`,
-                  `Capacité simultanée : ${capacite_simultanee ?? "non précisée"}.`,
-                  `Capacité cumulée : ${capacite_cumulee ?? "non précisée"}.`,
-                ].join(" ")}
-              </>
-            )}
-            <br />
-          </Fragment>
-        )
-      )}
-    </Text>
+    <Box style={{ background: "#f9f8f6" }}>
+      <UnorderedList style={{ px: 2, py: 0.5, fontWeight: 700 }}>
+        {dates?.map(
+          (
+            {
+              date_debut,
+              date_fin,
+              modalites_entrees_sorties,
+              effectif_minimal,
+              capacite_simultanee,
+              capacite_cumulee,
+            },
+            index
+          ) => (
+            <ListItem key={index}>
+              Du {new Date(date_debut).toLocaleDateString("fr-FR")} au {new Date(date_fin).toLocaleDateString("fr-FR")}.{" "}
+              {modalites_entrees_sorties && "Entrée-sortie permanente."}{" "}
+              {
+                <>
+                  {[
+                    `Effectif minimal : ${effectif_minimal ?? "non précisé"}.`,
+                    `Capacité simultanée : ${capacite_simultanee ?? "non précisée"}.`,
+                    `Capacité cumulée : ${capacite_cumulee ?? "non précisée"}.`,
+                  ].join(" ")}
+                </>
+              }
+              <br />
+            </ListItem>
+          )
+        )}
+      </UnorderedList>
+    </Box>
   );
 };
