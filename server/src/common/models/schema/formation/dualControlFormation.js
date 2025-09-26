@@ -182,16 +182,16 @@ const formationSchema = {
     default: null,
     description: "Intitulé éditorial l'ONISEP",
   },
-  onisep_libelle_poursuite: {
-    type: String,
-    default: null,
-    description: "Libellé poursuite étude l'ONISEP (séparateur ;)",
-  },
-  onisep_lien_site_onisepfr: {
-    type: String,
-    default: null,
-    description: "Lien vers site de l'ONISEP api",
-  },
+  // onisep_libelle_poursuite: {
+  //   type: String,
+  //   default: null,
+  //   description: "Libellé poursuite étude l'ONISEP (séparateur ;)",
+  // },
+  // onisep_lien_site_onisepfr: {
+  //   type: String,
+  //   default: null,
+  //   description: "Lien vers site de l'ONISEP api",
+  // },
   onisep_discipline: {
     type: String,
     default: null,
@@ -353,21 +353,21 @@ const formationSchema = {
     description: "Renseigné si la formation peut être suivie entièrement à distance",
   },
 
-  france_competence_infos: {
-    type: new mongoose.Schema(
-      {
-        fc_is_catalog_general: Boolean,
-        fc_is_habilite_rncp: Boolean,
-        fc_is_certificateur: Boolean,
-        fc_is_certificateur_siren: Boolean,
-        fc_is_partenaire: Boolean,
-        fc_has_partenaire: Boolean,
-      },
-      { _id: false }
-    ),
-    default: null,
-    description: "Données pour étude France Compétence",
-  },
+  // france_competence_infos: {
+  //   type: new mongoose.Schema(
+  //     {
+  //       fc_is_catalog_general: Boolean,
+  //       fc_is_habilite_rncp: Boolean,
+  //       fc_is_certificateur: Boolean,
+  //       fc_is_certificateur_siren: Boolean,
+  //       fc_is_partenaire: Boolean,
+  //       fc_has_partenaire: Boolean,
+  //     },
+  //     { _id: false }
+  //   ),
+  //   default: null,
+  //   description: "Données pour étude France Compétence",
+  // },
 
   catalogue_published: {
     index: true,
@@ -418,11 +418,11 @@ const formationSchema = {
     description: "Identifiant RCO",
   },
 
-  objectif: {
-    type: String,
-    default: null,
-    description: "Objectif (LBA)",
-  },
+  // objectif: {
+  //   type: String,
+  //   default: null,
+  //   description: "Objectif (LBA)",
+  // },
 
   CI_inscrit_rncp: {
     type: String,
@@ -430,11 +430,11 @@ const formationSchema = {
     description: "Type d'enregistrement (issue de CertifInfo)",
   },
 
-  contenu: {
-    type: String,
-    default: null,
-    description: "Identifiant (LBA)",
-  },
+  // contenu: {
+  //   type: String,
+  //   default: null,
+  //   description: "Identifiant (LBA)",
+  // },
 
   siret_actif: {
     type: String,
@@ -442,11 +442,11 @@ const formationSchema = {
     description: "Badge siret actif/inactif",
   },
 
-  num_tel: {
-    type: String,
-    default: null,
-    description: "Numéros de téléphone",
-  },
+  // num_tel: {
+  //   type: String,
+  //   default: null,
+  //   description: "Numéros de téléphone",
+  // },
 
   cle_me_remplace_par: {
     type: [String],

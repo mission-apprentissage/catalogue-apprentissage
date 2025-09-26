@@ -15,7 +15,6 @@
     "annee": "La donnée “Année” provient des bases “Carif-Oref”. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
     "rncp_code": "La donnée “Code RNCP” provient de France compétences. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
     "rncp_intitule": "La donnée “Intitulé RCNP” provient de France compétences. Si cette information est erronée, merci de le signaler au Carif-Oref de votre région.",
-    "rome_codes": "La donnée “Codes ROME” est déduite du Code RNCP.",
     "certificateurs": "La donnée “Certificateurs” provient de France compétences. Si cette information est erronée, merci de leur signaler.",
     "siret_certificateurs": "La donnée “SIRET Certificateurs” provient de France compétences. Si cette information est erronée, merci de leur signaler.",
     "uai_formation": "La donnée “UAI Lieu de formation” correspond à l’UAI de l’organisme formateur ou est renseigné par un instructeur en académie si le lieu de formation est différent de celui du formateur.",

@@ -43,10 +43,6 @@ export type RncpDetails = {
    */
   nouvelle_fiche?: string[] | null;
   /**
-   * Demande en cours de d'habilitation
-   */
-  demande?: number;
-  /**
    * Certificateurs
    */
   certificateurs?: ItemOfCertificateurs[];
@@ -55,25 +51,9 @@ export type RncpDetails = {
    */
   nsf_code?: string | null;
   /**
-   * Libellé NSF
-   */
-  nsf_libelle?: string | null;
-  /**
    * Romes
    */
   romes?: ItemOfRomes[];
-  /**
-   * Blocs de compétences
-   */
-  blocs_competences?: {
-    [k: string]: unknown;
-  }[];
-  /**
-   * Voix d'accès
-   */
-  voix_acces?: {
-    [k: string]: unknown;
-  }[];
   /**
    * Partenaires
    */
@@ -111,17 +91,6 @@ export type Rejection = {
    * Date à laquelle le rejet de publication a été pris en charge
    */
   handled_date?: Date;
-} | null;
-/**
- * Données pour étude France Compétence
- */
-export type FranceCompetenceInfos = {
-  fc_is_catalog_general?: boolean;
-  fc_is_habilite_rncp?: boolean;
-  fc_is_certificateur?: boolean;
-  fc_is_certificateur_siren?: boolean;
-  fc_is_partenaire?: boolean;
-  fc_has_partenaire?: boolean;
 } | null;
 /**
  * Parcoursup: Statut de réinitialisation forcée
@@ -256,22 +225,6 @@ export interface Formation {
    * Intitulé éditorial l'ONISEP
    */
   onisep_intitule?: string | null;
-  /**
-   * Libellé poursuite étude l'ONISEP (séparateur ;)
-   */
-  onisep_libelle_poursuite?: string | null;
-  /**
-   * Lien vers site de l'ONISEP api
-   */
-  onisep_lien_site_onisepfr?: string | null;
-  /**
-   * Disciplines ONISEP (séparateur ;)
-   */
-  onisep_discipline?: string | null;
-  /**
-   * Domaine et sous domaine ONISEP (séparateur ;)
-   */
-  onisep_domaine_sousdomaine?: string | null;
   /**
    * Code RNCP
    */
@@ -440,7 +393,6 @@ export interface Formation {
    * Renseigné si la formation peut être suivie entièrement à distance
    */
   entierement_a_distance?: boolean;
-  france_competence_infos?: FranceCompetenceInfos;
   /**
    * Formation éligible au catalogue générale
    */
@@ -457,6 +409,9 @@ export interface Formation {
    * Session en entrée / sortie permanente
    */
   modalites_entrees_sorties?: boolean[];
+  effectif_minimal?: string[];
+  capacite_simultanee?: string[];
+  capacite_cumulee?: string[];
   /**
    * Identifiant RCO
    */
@@ -465,14 +420,6 @@ export interface Formation {
    * Partenaires
    */
   partenaires?: unknown[];
-  /**
-   * Objectif de la formation
-   */
-  objectif?: string | null;
-  /**
-   * Identifiant de la formation
-   */
-  contenu?: string | null;
   /**
    * Badge siret actif/inactif
    */

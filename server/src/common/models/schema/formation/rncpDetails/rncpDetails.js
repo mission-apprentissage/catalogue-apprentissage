@@ -45,11 +45,11 @@ const rncpDetailsSchema = new mongoose.Schema(
       default: null,
       description: "Code rncp de la nouvelle fiche",
     },
-    demande: {
-      type: Number,
-      default: 0,
-      description: "Demande en cours de d'habilitation",
-    },
+    // demande: {
+    //   type: Number,
+    //   default: 0,
+    //   description: "Demande en cours de d'habilitation",
+    // },
     certificateurs: {
       type: [certificateurSchema],
       default: [],
@@ -60,26 +60,26 @@ const rncpDetailsSchema = new mongoose.Schema(
       default: null,
       description: "Code NSF",
     },
-    nsf_libelle: {
-      type: String,
-      default: null,
-      description: "Libellé NSF",
-    },
+    // nsf_libelle: {
+    //   type: String,
+    //   default: null,
+    //   description: "Libellé NSF",
+    // },
     romes: {
       type: [romeSchema],
       default: [],
       description: "Romes",
     },
-    blocs_competences: {
-      type: [Object],
-      default: [],
-      description: "Blocs de compétences",
-    },
-    voix_acces: {
-      type: [Object],
-      default: [],
-      description: "Voix d'accès",
-    },
+    // blocs_competences: {
+    //   type: [Object],
+    //   default: [],
+    //   description: "Blocs de compétences",
+    // },
+    // voix_acces: {
+    //   type: [Object],
+    //   default: [],
+    //   description: "Voix d'accès",
+    // },
     partenaires: {
       type: [partenaireSchema],
       default: [],

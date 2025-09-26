@@ -132,22 +132,6 @@ module.exports = {
         type: "string",
         description: "Intitulé éditorial l'ONISEP",
       },
-      onisep_libelle_poursuite: {
-        type: "string",
-        description: "Libellé poursuite étude l'ONISEP (séparateur ;)",
-      },
-      onisep_lien_site_onisepfr: {
-        type: "string",
-        description: "Lien vers site de l'ONISEP api",
-      },
-      onisep_discipline: {
-        type: "string",
-        description: "Disciplines ONISEP (séparateur ;)",
-      },
-      onisep_domaine_sousdomaine: {
-        type: "string",
-        description: "Domaine et sous domaine ONISEP (séparateur ;)",
-      },
       rncp_code: {
         type: "string",
         description: "Code RNCP",
@@ -203,10 +187,6 @@ module.exports = {
               type: "string",
             },
           },
-          demande: {
-            type: "number",
-            description: "Demande en cours de d'habilitation",
-          },
           certificateurs: {
             type: "array",
             description: "Certificateurs",
@@ -227,10 +207,6 @@ module.exports = {
             type: "string",
             description: "Code NSF",
           },
-          nsf_libelle: {
-            type: "string",
-            description: "Libellé NSF",
-          },
           romes: {
             type: "array",
             description: "Romes",
@@ -244,24 +220,6 @@ module.exports = {
                   type: "string",
                 },
               },
-              required: [],
-            },
-          },
-          blocs_competences: {
-            type: "array",
-            description: "Blocs de compétences",
-            items: {
-              type: "object",
-              properties: {},
-              required: [],
-            },
-          },
-          voix_acces: {
-            type: "array",
-            description: "Voix d'accès",
-            items: {
-              type: "object",
-              properties: {},
               required: [],
             },
           },
@@ -533,30 +491,6 @@ module.exports = {
         type: "boolean",
         description: "Renseigné si la formation peut être suivie entièrement à distance",
       },
-      france_competence_infos: {
-        type: "object",
-        description: "Données pour étude France Compétence",
-        properties: {
-          fc_is_catalog_general: {
-            type: "boolean",
-          },
-          fc_is_habilite_rncp: {
-            type: "boolean",
-          },
-          fc_is_certificateur: {
-            type: "boolean",
-          },
-          fc_is_certificateur_siren: {
-            type: "boolean",
-          },
-          fc_is_partenaire: {
-            type: "boolean",
-          },
-          fc_has_partenaire: {
-            type: "boolean",
-          },
-        },
-      },
       catalogue_published: {
         type: "boolean",
         description: "Formation éligible au catalogue générale",
@@ -584,6 +518,27 @@ module.exports = {
           type: "boolean",
         },
       },
+      effectif_minimal: {
+        type: "array",
+        description: "",
+        items: {
+          type: "string",
+        },
+      },
+      capacite_simultanee: {
+        type: "array",
+        description: "",
+        items: {
+          type: "string",
+        },
+      },
+      capacite_cumulee: {
+        type: "array",
+        description: "",
+        items: {
+          type: "string",
+        },
+      },
       id_RCO: {
         type: "string",
         description: "Identifiant RCO",
@@ -596,14 +551,6 @@ module.exports = {
           properties: {},
           required: [],
         },
-      },
-      objectif: {
-        type: "string",
-        description: "Objectif de la formation",
-      },
-      contenu: {
-        type: "string",
-        description: "Identifiant de la formation",
       },
       siret_actif: {
         type: "string",

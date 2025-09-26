@@ -77,9 +77,6 @@ const formation = {
   niveau: "4 (BAC...)",
   onisep_url: "http://www.onisep.fr/http/redirection/formation/identifiant/4671",
   onisep_intitule: "bac pro Technicien en chaudronnerie industrielle",
-  onisep_libelle_poursuite:
-    "BTS Conception et industrialisation en construction navale ; BTS Conception et réalisation en chaudronnerie industrielle ; BTS Architectures en métal : conception et réalisation ; BP Menuisier aluminium-verre ; MC Technicien(ne) en soudage ; MC Technicien(ne) en chaudronnerie aéronautique et spatiale ; MC Technicien(ne) en tuyauterie ; BTS Conception et réalisation de carrosseries",
-  onisep_lien_site_onisepfr: "http://www.onisep.fr/http/redirection/formation/slug/FOR.582",
   onisep_discipline: "construction métallique ; chaudronnerie ; métallurgie ; soudage",
   onisep_domaine_sousdomaine:
     "matières premières, fabrication, industries/métallurgie sidérurgie ; mécanique/travail des métaux",
@@ -95,7 +92,6 @@ const formation = {
     type_certif: "Baccalauréat professionnel",
     ancienne_fiche: ["RNCP7140"],
     nouvelle_fiche: null,
-    demande: 0,
     certificateurs: [
       {
         certificateur: "Ministère de l'Education nationale et de la jeunesse",
@@ -107,7 +103,6 @@ const formation = {
       },
     ],
     nsf_code: "254",
-    nsf_libelle: "Structures métalliques (y.c. soudure, carrosserie, coque bateau, cellule avion)",
     partenaires: null,
     romes: [
       { rome: "H2902", libelle: "Chaudronnerie - tôlerie" },
@@ -115,95 +110,7 @@ const formation = {
       { rome: "H2914", libelle: "Réalisation et montage en tuyauterie" },
       { rome: "H2913", libelle: "Soudage manuel" },
     ],
-    blocs_competences: [
-      {
-        numero_bloc: "RNCP29885BC05",
-        intitule: "U34 : Prévention-Santé-Environnement",
-        liste_competences:
-          "<p>Conduire une démarche d'analyse de situations en appliquant la démarche de résolution de problème.<br />Analyser une situation professionnelle en appliquant différentes démarches : analyse par le risque, par le travail, par l'accident.<br />Mobiliser des connaissances scientifiques, juridiques et économiques.<br />Proposer et justifier les mesures de prévention adaptées.<br />Proposer des actions permettant d’intervenir efficacement face à une situation d'urgence.</p>",
-        modalites_evaluation: null,
-      },
-      {
-        numero_bloc: "RNCP29885BC06",
-        intitule: "U11 : Mathématiques",
-        liste_competences:
-          "<p>Rechercher, extraire et organiser l’information. <br />Proposer, choisir, exécuter une méthode de résolution.<br />Expérimenter, simuler.<br />Critiquer un résultat, argumenter.<br />Rendre compte d’une démarche, d’un résultat, à l’oral ou à l’écrit.</p>",
-        modalites_evaluation: null,
-      },
-      {
-        numero_bloc: "RNCP29885BC07",
-        intitule: "U12 : Sciences physiques et chimiques",
-        liste_competences:
-          "<p>Rechercher, extraire et organiser l’information. <br />Proposer, choisir, exécuter une méthode de résolution ou un protocole opératoire en respectant les règles de sécurité.<br />Expérimenter, simuler.<br />Critiquer un résultat, argumenter.<br />Rendre compte d’une démarche, d’un résultat, à l’oral ou à l’écrit.</p>",
-        modalites_evaluation: null,
-      },
-      {
-        numero_bloc: "RNCP29885BC08",
-        intitule: "U4 : Langue vivante",
-        liste_competences:
-          "<p>Compétences de niveau B1+ du CECRL<br />- S’exprimer oralement en continu ;<br />- Interagir en langue étrangère ;<br />- Comprendre un document écrit rédigé en langue étrangère.</p>",
-        modalites_evaluation: null,
-      },
-      {
-        numero_bloc: "RNCP29885BC09",
-        intitule: "U51 : Français",
-        liste_competences:
-          "<p>Entrer dans l’échange oral : écouter, réagir, s’exprimer.<br />Entrer dans l’échange écrit : lire, analyser, écrire.<br />Devenir un lecteur compétent et critique.<br />Confronter des savoirs et des valeurs pour construire son identité culturelle.</p>",
-        modalites_evaluation: null,
-      },
-      {
-        numero_bloc: "RNCP29885BC10",
-        intitule: "U52 : Histoire-Géographie-Enseignement moral et civique",
-        liste_competences:
-          "<p>Appréhender la diversité des sociétés et la richesse des cultures.<br />Comprendre les enjeux liés au développement durable.<br />Identifier les enjeux et contraintes de la mondialisation.<br />Identifier les droits et devoirs civils, politiques, économiques et sociaux.</p>",
-        modalites_evaluation: null,
-      },
-      {
-        numero_bloc: "RNCP29885BC11",
-        intitule: "U6 : Arts appliqués et cultures artistiques",
-        liste_competences:
-          "<p>Identifier les caractéristiques essentielles d’œuvres, de produits, d’espaces urbains ou de messages visuels.<br />Situer une œuvre ou une production dans son contexte de création.<br />Maîtriser les bases de la pratique des outils graphiques, traditionnels et informatiques.<br /><br /></p>",
-        modalites_evaluation: null,
-      },
-      {
-        numero_bloc: "RNCP29885BC12",
-        intitule: "U7 : Éducation physique et sportive",
-        liste_competences:
-          "<p>Compétences de niveau 4 du référentiel de compétences attendues<br />- Réaliser une performance motrice maximale ;<br />- Se déplacer en s’adaptant à des environnements variés et incertains ;<br />- Réaliser une prestation corporelle à visée artistique ou acrobatique ;<br />- Conduire et maîtriser un affrontement individuel ou collectif ;<br />- Respecter les règles de vie collective et assumer les différents rôles liés à l’activité.</p>",
-        modalites_evaluation: null,
-      },
-      {
-        numero_bloc: "RNCP29885BC01",
-        intitule: "U2 : Analyse et exploitation de données techniques",
-        liste_competences:
-          "<p>Rechercher une information dans une documentation technique, en local ou à distance.<br />Interpréter et vérifier les données de définition de tout ou partie d’un ensemble chaudronné.<br />Préparer la fabrication de tout ou partie d’un ensemble chaudronné.</p>",
-        modalites_evaluation: null,
-      },
-      {
-        numero_bloc: "RNCP29885BC02",
-        intitule: "U31 : Fabrication d'un ensemble chaudronné",
-        liste_competences:
-          "<p>Formuler et transmettre des informations, communiquer sous forme écrite et orale.<br />Configurer et régler les postes de travail.<br />Réaliser un ou plusieurs éléments de tout ou partie d’un ensemble chaudronné.<br />Émettre des propositions d’amélioration d’un poste de fabrication.<br />Assembler les éléments de tout ou partie d’un ensemble chaudronné.<br />Contrôler la réalisation.</p>",
-        modalites_evaluation: null,
-      },
-      {
-        numero_bloc: "RNCP29885BC03",
-        intitule: "U32 : Réhabilitation sur chantier d'un ensemble chaudronné",
-        liste_competences:
-          "<p>S’impliquer dans un groupe.<br />Exploiter un planning de fabrication.<br />Réhabiliter tout ou partie d’un ensemble chaudronné sur chantier.<br />Respecter les procédures relatives à la sécurité et au respect de l’environnement.</p>",
-        modalites_evaluation: null,
-      },
-      {
-        numero_bloc: "RNCP29885BC04",
-        intitule: "U33 : Économie-Gestion",
-        liste_competences:
-          "<p>Identifier les caractéristiques de l’environnement et du secteur de son activité professionnelle.<br />Découvrir et maitriser les bases de la gestion et de la communication professionnelle.</p>",
-        modalites_evaluation: null,
-      },
-    ],
-    voix_acces: null,
   },
-  rome_codes: ["H2902", "I1606", "H2914", "H2913"],
   periode: [
     "2021-09",
     "2021-10",

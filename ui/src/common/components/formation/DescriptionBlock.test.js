@@ -75,9 +75,6 @@ const formation = {
   niveau: "4 (BAC...)",
   onisep_url: "http://www.onisep.fr/http/redirection/formation/identifiant/4671",
   onisep_intitule: "bac pro Technicien en chaudronnerie industrielle",
-  onisep_libelle_poursuite:
-    "BTS Conception et industrialisation en construction navale ; BTS Conception et réalisation en chaudronnerie industrielle ; BTS Architectures en métal : conception et réalisation ; BP Menuisier aluminium-verre ; MC Technicien(ne) en soudage ; MC Technicien(ne) en chaudronnerie aéronautique et spatiale ; MC Technicien(ne) en tuyauterie ; BTS Conception et réalisation de carrosseries",
-  onisep_lien_site_onisepfr: "http://www.onisep.fr/http/redirection/formation/slug/FOR.582",
   onisep_discipline: "construction métallique ; chaudronnerie ; métallurgie ; soudage",
   onisep_domaine_sousdomaine:
     "matières premières, fabrication, industries/métallurgie sidérurgie ; mécanique/travail des métaux",
@@ -93,9 +90,7 @@ const formation = {
     type_certif: "Baccalauréat professionnel",
     ancienne_fiche: ["RNCP7140"],
     nouvelle_fiche: null,
-    demande: 0,
     nsf_code: "254",
-    nsf_libelle: "Structures métalliques (y.c. soudure, carrosserie, coque bateau, cellule avion)",
     partenaires: null,
     romes: [
       { rome: "H2902", libelle: "Chaudronnerie - tôlerie" },
@@ -103,18 +98,7 @@ const formation = {
       { rome: "H2914", libelle: "Réalisation et montage en tuyauterie" },
       { rome: "H2913", libelle: "Soudage manuel" },
     ],
-    blocs_competences: [
-      {
-        numero_bloc: "RNCP29885BC05",
-        intitule: "U34 : Prévention-Santé-Environnement",
-        liste_competences:
-          "<p>Conduire une démarche d'analyse de situations en appliquant la démarche de résolution de problème.<br />Analyser une situation professionnelle en appliquant différentes démarches : analyse par le risque, par le travail, par l'accident.<br />Mobiliser des connaissances scientifiques, juridiques et économiques.<br />Proposer et justifier les mesures de prévention adaptées.<br />Proposer des actions permettant d’intervenir efficacement face à une situation d'urgence.</p>",
-        modalites_evaluation: null,
-      },
-    ],
-    voix_acces: null,
   },
-  rome_codes: ["H2902", "I1606", "H2914", "H2913"],
   periode: ["2023-09", "2024-09"],
   date_debut: ["2023-09-18T00:00:00.000Z", "2024-09-09T00:00:00.000Z"],
   date_fin: ["2024-09-13T00:00:00.000Z", "2025-09-05T00:00:00.000Z"],

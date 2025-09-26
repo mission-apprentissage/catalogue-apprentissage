@@ -51,7 +51,7 @@ Swagger: [https://tables-correspondances.apprentissage.beta.gouv.fr/api/v1/docs/
 
 {% swagger baseUrl="https://tables-correspondances.apprentissage.beta.gouv.fr/api" path="/v1/cfd" method="post" summary="Récupérer les informations liées à un CFD " %}
 {% swagger-description %}
-Cette API vous permet de récupérer les informations relatives à un CFD. 
+Cette API vous permet de récupérer les informations relatives à un CFD.
 
 \
 

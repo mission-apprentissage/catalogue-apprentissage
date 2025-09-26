@@ -238,26 +238,26 @@ const formationSchema = {
     description: "Intitulé éditorial l'ONISEP",
   },
 
-  onisep_libelle_poursuite: {
-    type: String,
-    default: null,
-    description: "Libellé poursuite étude l'ONISEP (séparateur ;)",
-  },
-  onisep_lien_site_onisepfr: {
-    type: String,
-    default: null,
-    description: "Lien vers site de l'ONISEP api",
-  },
-  onisep_discipline: {
-    type: String,
-    default: null,
-    description: "Disciplines ONISEP (séparateur ;)",
-  },
-  onisep_domaine_sousdomaine: {
-    type: String,
-    default: null,
-    description: "Domaine et sous domaine ONISEP (séparateur ;)",
-  },
+  // onisep_libelle_poursuite: {
+  //   type: String,
+  //   default: null,
+  //   description: "Libellé poursuite étude l'ONISEP (séparateur ;)",
+  // },
+  // onisep_lien_site_onisepfr: {
+  //   type: String,
+  //   default: null,
+  //   description: "Lien vers site de l'ONISEP api",
+  // },
+  // onisep_discipline: {
+  //   type: String,
+  //   default: null,
+  //   description: "Disciplines ONISEP (séparateur ;)",
+  // },
+  // onisep_domaine_sousdomaine: {
+  //   type: String,
+  //   default: null,
+  //   description: "Domaine et sous domaine ONISEP (séparateur ;)",
+  // },
 
   rncp_code: {
     index: true,
@@ -504,21 +504,21 @@ const formationSchema = {
     description: "Renseigné si la formation peut être suivie entièrement à distance",
   },
 
-  france_competence_infos: {
-    type: new mongoose.Schema(
-      {
-        fc_is_catalog_general: Boolean,
-        fc_is_habilite_rncp: Boolean,
-        fc_is_certificateur: Boolean,
-        fc_is_certificateur_siren: Boolean,
-        fc_is_partenaire: Boolean,
-        fc_has_partenaire: Boolean,
-      },
-      { _id: false }
-    ),
-    default: null,
-    description: "Données pour étude France Compétence",
-  },
+  // france_competence_infos: {
+  //   type: new mongoose.Schema(
+  //     {
+  //       fc_is_catalog_general: Boolean,
+  //       fc_is_habilite_rncp: Boolean,
+  //       fc_is_certificateur: Boolean,
+  //       fc_is_certificateur_siren: Boolean,
+  //       fc_is_partenaire: Boolean,
+  //       fc_has_partenaire: Boolean,
+  //     },
+  //     { _id: false }
+  //   ),
+  //   default: null,
+  //   description: "Données pour étude France Compétence",
+  // },
 
   catalogue_published: {
     index: true,
@@ -575,17 +575,17 @@ const formationSchema = {
     description: "Partenaires",
   },
 
-  objectif: {
-    type: String,
-    default: null,
-    description: "Objectif de la formation",
-  },
+  // objectif: {
+  //   type: String,
+  //   default: null,
+  //   description: "Objectif de la formation",
+  // },
 
-  contenu: {
-    type: String,
-    default: null,
-    description: "Identifiant de la formation",
-  },
+  // contenu: {
+  //   type: String,
+  //   default: null,
+  //   description: "Identifiant de la formation",
+  // },
 
   siret_actif: {
     type: String,
@@ -593,13 +593,13 @@ const formationSchema = {
     description: "Badge siret actif/inactif",
   },
 
-  num_tel: {
-    type: String,
-    default: null,
-    select: false,
-    noIndex: true,
-    description: "Numéros de téléphone",
-  },
+  // num_tel: {
+  //   type: String,
+  //   default: null,
+  //   select: false,
+  //   noIndex: true,
+  //   description: "Numéros de téléphone",
+  // },
 
   nouvelle_fiche: {
     type: Boolean,
