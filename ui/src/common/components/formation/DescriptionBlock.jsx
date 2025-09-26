@@ -203,19 +203,17 @@ export const DescriptionBlock = ({ formation }) => {
 
         <Box>
           {/* <Text mb={4} mt={4}>
-            Intitulé court de la formation :{" "}
+            Intitulé court de la formation <InfoTooltip description={helpText.formation.intitule_court} /> :{" "}
             <Text as="span" variant="highlight">
               {formation.intitule_court}
             </Text>{" "}
-            <InfoTooltip description={helpText.formation.intitule_court} />
           </Text> */}
 
           <Text mb={4} mt={4}>
-            Libellé Carif-Oref :{" "}
+            Libellé Carif-Oref <InfoTooltip description={helpText.formation.intitule_rco} /> :{" "}
             <Text as="span" variant="highlight">
               {formation.intitule_rco}
             </Text>{" "}
-            <InfoTooltip description={helpText.formation.intitule_rco} />
           </Text>
           <Text mb={4} mt={4}>
             Intitulé Onisep :{" "}
@@ -224,26 +222,23 @@ export const DescriptionBlock = ({ formation }) => {
             </Text>
           </Text>
           <Text mb={4}>
-            Diplôme ou titre visé :{" "}
+            Diplôme ou titre visé <InfoTooltip description={helpText.formation.diplome} /> :{" "}
             <Text as="span" variant="highlight">
               {formation.diplome}
             </Text>{" "}
-            <InfoTooltip description={helpText.formation.diplome} />
           </Text>
           <Text mb={4}>
-            Niveau de la formation :{" "}
+            Niveau de la formation <InfoTooltip description={helpText.formation.niveau} /> :{" "}
             <Text as="span" variant="highlight">
               {formation.niveau}
             </Text>{" "}
-            <InfoTooltip description={helpText.formation.niveau} />
           </Text>
 
           <Text mb={4}>
-            Type de certification :{" "}
+            Type de certification <InfoTooltip description={helpText.formation.CI_inscrit_rncp} /> :{" "}
             <Text as="span" variant="highlight">
               {formation.CI_inscrit_rncp}
             </Text>{" "}
-            <InfoTooltip description={helpText.formation.CI_inscrit_rncp} />
           </Text>
           {/* <Text mb={4}>
             Type de certification (donnée issue de France compétences) :{" "}
@@ -258,14 +253,13 @@ export const DescriptionBlock = ({ formation }) => {
 
           <CfdContainer>
             <Text mb={!isTitreRNCP && isCfdExpired ? 0 : 4}>
-              Code formation diplôme (CFD) :{" "}
+              Code formation diplôme (CFD) <InfoTooltip description={helpText.formation.cfd} /> :{" "}
               <Text as="span" variant="highlight">
                 {formation.cfd}{" "}
                 {formation.cfd_date_fermeture
                   ? `(expire le ${new Date(formation.cfd_date_fermeture).toLocaleDateString("fr-FR")})`
                   : "(expiration : non renseigné)"}
               </Text>{" "}
-              <InfoTooltip description={helpText.formation.cfd} />
             </Text>
             {!isTitreRNCP && isCfdExpired && (
               <Text
@@ -327,7 +321,7 @@ export const DescriptionBlock = ({ formation }) => {
                   : 4
               }
             >
-              Codes MEF 10 caractères :{" "}
+              Codes MEF 10 caractères <InfoTooltip description={helpText.formation.mef} /> :{" "}
               <Text as="span" variant="highlight">
                 {formation?.bcn_mefs_10
                   ?.map(
@@ -340,7 +334,6 @@ export const DescriptionBlock = ({ formation }) => {
                   )
                   .join(", ")}
               </Text>{" "}
-              <InfoTooltip description={helpText.formation.mef} />
             </Text>
             <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
               {(formation.duree_incoherente || formation.annee_incoherente) &&
@@ -368,39 +361,39 @@ export const DescriptionBlock = ({ formation }) => {
               </Text>
 
               <Text mb={4}>
-                Informations offre de formation <i>Affelnet</i> :{" "}
+                Informations offre de formation <i>Affelnet</i>{" "}
+                <InfoTooltip description={helpText.formation.affelnet_publish_fields} />:{" "}
                 <EllipsisText as="span" variant="highlight">
                   {formation?.affelnet_infos_offre}
                 </EllipsisText>{" "}
-                <InfoTooltip description={helpText.formation.affelnet_publish_fields} />
               </Text>
 
               <Text mb={4}>
-                Informations offre de formation <i>Affelnet</i> (lien) :{" "}
+                Informations offre de formation <i>Affelnet</i> (lien){" "}
+                <InfoTooltip description={helpText.formation.affelnet_publish_fields} /> :{" "}
                 <Text as="span" variant="highlight">
                   <Link rel="noreferrer noopener" target="_blank" href={formation?.affelnet_url_infos_offre}>
                     {formation?.affelnet_url_infos_offre}
                   </Link>
                 </Text>{" "}
-                <InfoTooltip description={helpText.formation.affelnet_publish_fields} />
               </Text>
 
               <Text mb={4}>
-                Modalités particulières <i>Affelnet</i> :{" "}
+                Modalités particulières <i>Affelnet</i>{" "}
+                <InfoTooltip description={helpText.formation.affelnet_publish_fields} /> :{" "}
                 <EllipsisText as="span" variant="highlight">
                   {formation?.affelnet_modalites_offre}
                 </EllipsisText>{" "}
-                <InfoTooltip description={helpText.formation.affelnet_publish_fields} />
               </Text>
 
               <Text mb={4}>
-                Modalités particulières <i>Affelnet</i> (lien) :{" "}
+                Modalités particulières <i>Affelnet</i> (lien){" "}
+                <InfoTooltip description={helpText.formation.affelnet_publish_fields} /> :{" "}
                 <Text as="span" variant="highlight">
                   <Link rel="noreferrer noopener" target="_blank" href={formation?.affelnet_url_modalites_offre}>
                     {formation?.affelnet_url_modalites_offre}
                   </Link>
                 </Text>{" "}
-                <InfoTooltip description={helpText.formation.affelnet_publish_fields} />
               </Text>
             </>
           )}
@@ -468,7 +461,7 @@ export const DescriptionBlock = ({ formation }) => {
           {formation.rncp_code && (
             <RncpContainer>
               <Text mb={isTitreRNCP && isRncpExpired ? 0 : 4}>
-                Code RNCP :{" "}
+                Code RNCP <InfoTooltip description={helpText.formation.rncp_code} /> :{" "}
                 <Text as="span" variant="highlight">
                   {formation.rncp_code}{" "}
                   {formation?.rncp_details?.date_fin_validite_enregistrement
@@ -477,7 +470,6 @@ export const DescriptionBlock = ({ formation }) => {
                       ).toLocaleDateString("fr-FR")})`
                     : "(expiration : non renseigné)"}
                 </Text>{" "}
-                <InfoTooltip description={helpText.formation.rncp_code} />
               </Text>
               {isTitreRNCP && isRncpExpired && (
                 <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
@@ -508,34 +500,31 @@ export const DescriptionBlock = ({ formation }) => {
           )}
 
           <Text mb={4}>
-            Intitulé RNCP :{" "}
+            Intitulé RNCP <InfoTooltip description={helpText.formation.rncp_intitule} /> :{" "}
             <Text as="span" variant="highlight">
               {formation.rncp_intitule}
             </Text>{" "}
-            <InfoTooltip description={helpText.formation.rncp_intitule} />
           </Text>
 
           {formation.rncp_details && (
             <>
               <Text mb={4}>
-                Certificateurs RNCP :{" "}
+                Certificateurs RNCP <InfoTooltip description={helpText.formation.certificateurs} /> :{" "}
                 <Text as="span" variant="highlight">
                   {formation.rncp_details.certificateurs
                     ?.filter(({ certificateur }) => certificateur)
                     ?.map(({ certificateur }) => certificateur)
                     .join(", ")}
                 </Text>{" "}
-                <InfoTooltip description={helpText.formation.certificateurs} />
               </Text>
               <Text mb={4}>
-                SIRET Certificateurs :{" "}
+                SIRET Certificateurs <InfoTooltip description={helpText.formation.siret_certificateurs} /> :{" "}
                 <Text as="span" variant="highlight">
                   {formation.rncp_details.certificateurs
                     ?.filter(({ siret_certificateur }) => siret_certificateur)
                     ?.map(({ siret_certificateur }) => siret_certificateur)
                     .join(", ")}
                 </Text>{" "}
-                <InfoTooltip description={helpText.formation.siret_certificateurs} />
               </Text>
               {showPartenaires && (
                 <Text as="div" mb={4}>
@@ -646,8 +635,8 @@ export const DescriptionBlock = ({ formation }) => {
 
         <DateSessionContainer>
           <Text mb={4}>
-            Dates de formation : <FormationDate formation={formation} />{" "}
-            <InfoTooltip description={helpText.formation.dates} />
+            Dates de formation <InfoTooltip description={helpText.formation.dates} /> :
+            <FormationDate formation={formation} />{" "}
           </Text>
           {!isInSession(formation, sessionStartDate, sessionEndDate) && (
             <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
@@ -659,19 +648,17 @@ export const DescriptionBlock = ({ formation }) => {
         </DateSessionContainer>
 
         {/* <Text mb={4}>
-            Capacite d'accueil :{" "}
+            Capacite d'accueil <InfoTooltip ml="10px" description={helpText.formation.capacite} /> :{" "}
             <Text as="span" variant="highlight">
               {formation.capacite ?? "N/A"}
             </Text>{" "}
-            <InfoTooltip ml="10px" description={helpText.formation.capacite} />
           </Text> */}
         <DureeContainer>
           <Text mb={displayDureeWarning ? 0 : 4}>
-            Durée de la formation :{" "}
+            Durée de la formation <InfoTooltip description={helpText.formation.duree} /> :{" "}
             <Text as="span" variant="highlight">
               <DureeAnnee value={formation.duree} />
             </Text>{" "}
-            <InfoTooltip description={helpText.formation.duree} />
           </Text>
           <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
             {formation.duree_incoherente &&
@@ -681,11 +668,10 @@ export const DescriptionBlock = ({ formation }) => {
 
         <AnneeContainer>
           <Text mb={displayAnneeWarning ? 0 : 4}>
-            Année d'entrée en apprentissage :{" "}
+            Année d'entrée en apprentissage <InfoTooltip description={helpText.formation.annee} /> :{" "}
             <Text as="span" variant="highlight">
               <DureeAnnee value={formation.annee} />
             </Text>{" "}
-            <InfoTooltip description={helpText.formation.annee} />
           </Text>
           <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
             {formation.annee_incoherente &&

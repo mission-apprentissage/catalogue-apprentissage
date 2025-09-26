@@ -93,90 +93,79 @@ const Etablissement = ({ etablissement, countFormations }) => {
             )}
             <Box textStyle="rf-text">
               <Text mb={4} mt={4}>
-                Enseigne :{" "}
+                Enseigne <InfoTooltip description={helpText.etablissement.enseigne} /> :{" "}
                 <Text as="span" variant="highlight">
                   {" "}
                   {etablissement.enseigne ?? "N/A"}{" "}
                 </Text>{" "}
-                <InfoTooltip description={helpText.etablissement.enseigne} />
               </Text>
               <Text mb={4}>
-                Siret :{" "}
+                Siret <InfoTooltip description={helpText.etablissement.siret} /> :{" "}
                 <Text as="span" variant="highlight">
                   {" "}
                   {etablissement.siret}{" "}
                 </Text>{" "}
-                <InfoTooltip description={helpText.etablissement.siret} />
               </Text>
               <Text mb={4}>
-                Siren :{" "}
+                Siren <InfoTooltip description={helpText.etablissement.siren} /> :{" "}
                 <Text as="span" variant="highlight">
                   {" "}
                   {etablissement.siren}{" "}
                 </Text>{" "}
-                <InfoTooltip description={helpText.etablissement.siren} />
               </Text>
               <Text mb={4}>
-                Code NAF :{" "}
+                Code NAF <InfoTooltip description={helpText.etablissement.naf_code} /> :{" "}
                 <Text as="span" variant="highlight">
                   {" "}
                   {etablissement.naf_code}{" "}
                 </Text>{" "}
-                <InfoTooltip description={helpText.etablissement.naf_code} />
               </Text>
               <Text mb={4}>
-                Libellé NAF :{" "}
+                Libellé NAF <InfoTooltip description={helpText.etablissement.naf_libelle} /> :{" "}
                 <Text as="span" variant="highlight">
                   {" "}
                   {etablissement.naf_libelle}{" "}
                 </Text>{" "}
-                <InfoTooltip description={helpText.etablissement.naf_libelle} />
               </Text>
               <Text mb={4}>
-                Date de création :{" "}
+                Date de création <InfoTooltip description={helpText.etablissement.date_creation} /> :{" "}
                 <Text as="span" variant="highlight">
                   {" "}
                   {creationDate}{" "}
                 </Text>{" "}
-                <InfoTooltip description={helpText.etablissement.date_creation} />
               </Text>
               <Text mb={4}>
-                Adresse :{" "}
+                Adresse <InfoTooltip description={helpText.etablissement.adresse} /> :{" "}
                 <Text as="span" variant="highlight">
                   {etablissement.numero_voie} {etablissement.type_voie} {etablissement.nom_voie}
                 </Text>{" "}
-                <InfoTooltip description={helpText.etablissement.adresse} />
               </Text>
               <Text mb={4}>
-                Complément d'adresse :{" "}
+                Complément d'adresse <InfoTooltip description={helpText.etablissement.complement_adresse} /> :{" "}
                 <Text as="span" variant="highlight">
                   {etablissement.complement_adresse ?? "N/A"}
                 </Text>{" "}
-                <InfoTooltip description={helpText.etablissement.complement_adresse} />
               </Text>
               <Text mb={4}>
-                Code postal :{" "}
+                Code postal <InfoTooltip description={helpText.etablissement.code_postal} /> :{" "}
                 <Text as="span" variant="highlight">
                   {" "}
                   {etablissement.code_postal}{" "}
                 </Text>{" "}
-                <InfoTooltip description={helpText.etablissement.code_postal} />
               </Text>
               <Text mb={4}>
-                Commune :{" "}
+                Commune <InfoTooltip description={helpText.etablissement.localite} /> :{" "}
                 <Text as="span" variant="highlight">
                   {" "}
                   {etablissement.localite}{" "}
                 </Text>{" "}
-                <InfoTooltip description={helpText.etablissement.localite} />
               </Text>
               <Text mb={4}>
-                Code commune INSEE :{" "}
+                Code commune INSEE <InfoTooltip description={helpText.etablissement.code_insee_localite} /> :{" "}
                 <Text as="span" variant="highlight">
                   {" "}
                   {etablissement.code_insee_localite}{" "}
                 </Text>{" "}
-                <InfoTooltip description={helpText.etablissement.code_insee_localite} />
               </Text>
               <Text mb={4}>
                 Département :{" "}
@@ -208,30 +197,27 @@ const Etablissement = ({ etablissement, countFormations }) => {
             <Box textStyle="rf-text">
               <UaiContainer>
                 <Text mb={etablissement?.uai_valide ? 4 : 0}>
-                  UAI rattaché au SIRET :{" "}
+                  UAI rattaché au SIRET <InfoTooltip description={helpText.etablissement.uai} /> :{" "}
                   <Text as="span" variant="highlight">
                     {etablissement.uai}
                   </Text>{" "}
-                  <InfoTooltip description={helpText.etablissement.uai} />
                 </Text>
               </UaiContainer>
 
               <Text mb={4}>
-                Académie :{" "}
+                Académie <InfoTooltip description={helpText.etablissement.academie} /> :{" "}
                 <Text as="span" variant="highlight">
                   {etablissement.nom_academie} ({etablissement.num_academie})
                 </Text>{" "}
-                <InfoTooltip description={helpText.etablissement.academie} />
               </Text>
 
               <Text mb={4}>
-                Certification qualité :{" "}
+                Certification qualité <InfoTooltip description={helpText.etablissement.qualite} /> :{" "}
                 <Text as="span" variant="highlight">
                   {" "}
                   {etablissement.info_qualiopi_info === "OUI" && "qualiopi OUI"}
                   {etablissement.info_qualiopi_info === "NON" && "qualiopi NON"}
                 </Text>
-                <InfoTooltip description={helpText.etablissement.qualite} />
               </Text>
             </Box>
 

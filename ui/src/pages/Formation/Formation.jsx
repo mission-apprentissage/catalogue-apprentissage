@@ -227,39 +227,34 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                   </UaiFormationContainer>
                   <AdresseContainer>
                     <Text mb={4}>
-                      Siret :{" "}
+                      Siret {/* <InfoTooltip description={helpText.formation.etablissement_lieu_formation_siret} /> */}:{" "}
                       <Text as="span" variant="highlight">
                         {formation.etablissement_lieu_formation_siret ?? "N/A"}
-                      </Text>{" "}
-                      {/* <InfoTooltip description={helpText.formation.etablissement_lieu_formation_siret} /> */}
+                      </Text>
                     </Text>
                     <Text mb={4}>
-                      Adresse :{" "}
+                      Adresse <InfoTooltip description={helpText.formation.lieu_formation_adresse} /> :{" "}
                       <Text as="span" variant="highlight">
                         {formation.lieu_formation_adresse}
-                      </Text>{" "}
-                      <InfoTooltip description={helpText.formation.lieu_formation_adresse} />
+                      </Text>
                     </Text>
                     <Text mb={4}>
-                      Code postal :{" "}
+                      Code postal <InfoTooltip description={helpText.formation.code_postal} /> :{" "}
                       <Text as="span" variant="highlight">
                         {formation.code_postal}
-                      </Text>{" "}
-                      <InfoTooltip description={helpText.formation.code_postal} />
+                      </Text>
                     </Text>
                     <Text mb={4}>
-                      Commune :{" "}
+                      Commune <InfoTooltip description={helpText.formation.localite} /> :{" "}
                       <Text as="span" variant="highlight">
                         {formation.localite}
-                      </Text>{" "}
-                      <InfoTooltip description={helpText.formation.localite} />
+                      </Text>
                     </Text>
                     <Text mb={isUserAdmin(auth) && formation?.lieu_formation_geo_coordonnees_computed ? 0 : 4}>
-                      Département :{" "}
+                      Département <InfoTooltip description={helpText.formation.nom_departement} /> :{" "}
                       <Text as="span" variant="highlight">
                         {formation.nom_departement} ({formation.num_departement})
-                      </Text>{" "}
-                      <InfoTooltip description={helpText.formation.nom_departement} />
+                      </Text>
                     </Text>
                     {isUserAdmin(auth) && formation?.lieu_formation_geo_coordonnees_computed && (
                       <Box mb={4}>
@@ -271,6 +266,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                           color={"grey.600"}
                         >
                           Géolocalisation calculée depuis l'adresse{" "}
+                          <InfoTooltip description={helpText.formation.lieu_formation_geo_coordonnees_computed} />{" "}
                           <ArrowDownLine boxSize={5} transform={isComputedGeoCoordOpen ? "rotate(180deg)" : "none"} />
                         </Button>
                         <Collapse in={isComputedGeoCoordOpen} animateOpacity unmountOnExit={true}>
@@ -289,19 +285,17 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                               ) : (
                                 <>{formation.lieu_formation_geo_coordonnees_computed}</>
                               )}
-                            </Text>{" "}
-                            <InfoTooltip description={helpText.formation.lieu_formation_geo_coordonnees_computed} />
+                            </Text>
                           </Text>
                         </Collapse>
                       </Box>
                     )}
 
                     <Text mb={isUserAdmin(auth) && formation?.lieu_formation_adresse_computed ? 0 : 4}>
-                      Géolocalisation :{" "}
+                      Géolocalisation <InfoTooltip description={helpText.formation.lieu_formation_geo_coordonnees} /> :{" "}
                       <Text as="span" variant="highlight">
                         {formation.lieu_formation_geo_coordonnees}
-                      </Text>{" "}
-                      <InfoTooltip description={helpText.formation.lieu_formation_geo_coordonnees} />
+                      </Text>
                     </Text>
                     {isUserAdmin(auth) && formation?.lieu_formation_adresse_computed && (
                       <Box mb={4}>
@@ -313,6 +307,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                           color={"grey.600"}
                         >
                           Adresse calculée depuis la géolocalisation{" "}
+                          <InfoTooltip description={helpText.formation.lieu_formation_adresse_computed} />{" "}
                           <ArrowDownLine boxSize={5} transform={isComputedAdressOpen ? "rotate(180deg)" : "none"} />
                         </Button>
                         <Collapse in={isComputedAdressOpen} animateOpacity unmountOnExit={true}>
@@ -331,8 +326,7 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                               ) : (
                                 <>{formation.lieu_formation_adresse_computed}</>
                               )}
-                            </Text>{" "}
-                            <InfoTooltip description={helpText.formation.lieu_formation_adresse_computed} />
+                            </Text>
                           </Text>
                         </Collapse>
                       </Box>
@@ -340,21 +334,19 @@ const Formation = ({ formation, edition, onEdit, handleChange, handleSubmit, val
                   </AdresseContainer>
 
                   <Text mb={4}>
-                    Code commune (Insee) :{" "}
+                    Code commune (Insee) <InfoTooltip description={helpText.formation.code_commune_insee} /> :{" "}
                     <Text as="span" variant="highlight">
                       {formation.code_commune_insee}
-                    </Text>{" "}
-                    <InfoTooltip description={helpText.formation.code_commune_insee} />
+                    </Text>
                   </Text>
                 </>
               )}
 
               <Text mb={4}>
-                Académie de rattachement :{" "}
+                Académie de rattachement <InfoTooltip description={helpText.formation.academie} /> :{" "}
                 <Text as="span" variant="highlight">
                   {formation.nom_academie} ({formation.num_academie})
-                </Text>{" "}
-                <InfoTooltip description={helpText.formation.academie} />
+                </Text>
               </Text>
             </Box>
           </Box>
