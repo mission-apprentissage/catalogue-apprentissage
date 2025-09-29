@@ -394,7 +394,7 @@ const formationSchema = {
     description: "Session en entrée / sortie permanente",
   },
 
-  capacite_minimal: {
+  effectif_minimal: {
     type: [String],
     default: [],
     description: "",
