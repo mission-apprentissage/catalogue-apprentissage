@@ -192,7 +192,7 @@ export default () => {
           />
 
           <IframeResizer
-            src="https://catalogue.apprentissage.education.gouv.fr/metabase/public/dashboard/92f2107c-ffc7-4fd3-abbf-de6da483a3b3"
+            src="https://catalogue.apprentissage.education.gouv.fr/metabase/public/dashboard/92f2107c-ffc7-4fd3-abbf-de6da483a3b3#bordered=false"
             seamless
             style={{ width: "100%", border: 0 }}
             title={`Console de pilotage Affelnet - Comparaison entre campagnes`}
