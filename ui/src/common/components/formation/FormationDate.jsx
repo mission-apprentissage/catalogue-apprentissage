@@ -31,16 +31,18 @@ export const FormationDate = ({ formation }) => {
           ) => (
             <ListItem key={index}>
               Du {new Date(date_debut).toLocaleDateString("fr-FR")} au {new Date(date_fin).toLocaleDateString("fr-FR")}.{" "}
-              {modalites_entrees_sorties && "Entrée-sortie permanente."}{" "}
-              {
-                <>
-                  {[
-                    `Effectif minimal : ${effectif_minimal ?? "non précisé"}.`,
-                    `Capacité simultanée : ${capacite_simultanee ?? "non précisée"}.`,
-                    `Capacité cumulée : ${capacite_cumulee ?? "non précisée"}.`,
-                  ].join(" ")}
-                </>
-              }
+              <Box as="span" fontWeight="normal">
+                {modalites_entrees_sorties && "Entrée-sortie permanente."}{" "}
+                {
+                  <>
+                    {[
+                      `Effectif minimal : ${effectif_minimal ?? "non précisé"}.`,
+                      `Capacité simultanée : ${capacite_simultanee ?? "non précisée"}.`,
+                      `Capacité cumulée : ${capacite_cumulee ?? "non précisée"}.`,
+                    ].join(" ")}
+                  </>
+                }
+              </Box>
               <br />
             </ListItem>
           )

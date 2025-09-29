@@ -952,9 +952,7 @@ export const columnsDefinition = [
           }) =>
             `Du ${new Date(date_debut).toLocaleDateString("fr-FR")} au ${new Date(date_fin).toLocaleDateString(
               "fr-FR"
-            )}${modalites_entrees_sorties ? " en entrée-sortie permanente." : "."}${
-              (effectif_minimal || capacite_simultanee || capacite_cumulee) && " "
-            }${[
+            )}${modalites_entrees_sorties ? " en entrée-sortie permanente. " : ". "}${[
               `Effectif minimal : ${effectif_minimal ?? "non précisé"}.`,
               `Capacité simultanée : ${capacite_simultanee ?? "non précisée"}.`,
               `Capacité cumulée : ${capacite_cumulee ?? "non précisée"}.`,
