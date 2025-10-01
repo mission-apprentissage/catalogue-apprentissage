@@ -15,6 +15,10 @@ const consoleStatSchema = {
     type: String,
     default: null,
   },
+  region: {
+    type: String,
+    default: null,
+  },
   formations_publiees: {
     type: Number,
     default: 0,

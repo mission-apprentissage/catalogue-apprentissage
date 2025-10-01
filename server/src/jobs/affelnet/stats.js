@@ -3,12 +3,22 @@ const { runScript } = require("../scriptWrapper");
 const { AFFELNET_STATUS } = require("../../constants/status");
 const { ConsoleStat, Formation } = require("../../common/models");
 const { academies } = require("../../constants/academies");
+const { regions } = require("../../constants/regions");
 const logger = require("../../common/logger");
 
 const computeStats = async (academie = null) => {
   const globalFilter = { published: true };
   const scopeFilter = academie ? { nom_academie: academie } : {};
   // const scopeLog = academie ? `[${academie}]` : `[global]`;
+
+  const region = Object.values(regions)
+    .map((region) => ({
+      ...region,
+      academies: region.academies.map((academy) => academies[academy].nom_academie),
+    }))
+    .find(({ academies }) => academies.includes(academie))?.nom_region;
+
+  // console.log([academie, region]);
 
   const filterPublie = {
     ...globalFilter,
@@ -169,6 +179,7 @@ const computeStats = async (academie = null) => {
 
   return {
     academie,
+    region,
     formations_publiees,
     formations_publiees_sans_session,
     formations_publiees_sans_session_avec_remplacement,
