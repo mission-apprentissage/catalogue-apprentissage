@@ -107,7 +107,7 @@ export const DescriptionBlock = ({ formation }) => {
     ? (args) => <DangerBox data-testid={"session-warning"} {...args} />
     : React.Fragment;
 
-  const campagneStartYear = campagneStartDate?.getFullYear();
+  const sessionStartYear = sessionStartDate?.getFullYear();
 
   const rncpCode = formation?.rncp_code?.split("RNCP")[1];
 
@@ -641,7 +641,7 @@ export const DescriptionBlock = ({ formation }) => {
           {!isInSession(formation, sessionStartDate, sessionEndDate) && (
             <Text variant={"unstyled"} fontSize={"zeta"} fontStyle={"italic"} color={"grey.600"}>
               Les dates de session ne correspondent pas aux règles de périmètre pour la prochaine campagne Affelnet ou
-              Parcoursup. Si le CFA a prévu de proposer une session en {campagneStartYear}, il doit faire
+              Parcoursup. Si le CFA a prévu de proposer une session en {sessionStartYear}, il doit faire
               l’enregistrement auprès du Carif-Oref.{" "}
             </Text>
           )}
