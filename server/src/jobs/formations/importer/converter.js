@@ -266,9 +266,25 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
   // 241..21
   // 242..31
   // 271..21
+  // const affelnet_perimetre_prise_rdv =
+  //   [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.PRET_POUR_INTEGRATION, AFFELNET_STATUS.A_PUBLIER].includes(
+  //     oldFields?.affelnet_statut
+  //   ) &&
+  //   !!affelnet_mefs_10.filter((mef) => {
+  //     return (
+  //       (mef.mef10.startsWith("247") && mef.mef10.endsWith("31")) ||
+  //       (mef.mef10.startsWith("276") && mef.mef10.endsWith("31")) ||
+  //       (mef.mef10.startsWith("241") && mef.mef10.endsWith("21")) ||
+  //       (mef.mef10.startsWith("242") && mef.mef10.endsWith("31")) ||
+  //       (mef.mef10.startsWith("271") && mef.mef10.endsWith("21"))
+  //     );
+  //   }).length;
+
+  // const parcoursup_perimetre_prise_rdv = [PARCOURSUP_STATUS.PUBLIE].includes(oldFields?.parcoursup_statut);
+
   const affelnet_perimetre_prise_rdv =
     [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.PRET_POUR_INTEGRATION, AFFELNET_STATUS.A_PUBLIER].includes(
-      oldFields?.affelnet_statut
+      oldFields?.affelnet_previous_statut
     ) &&
     !!affelnet_mefs_10.filter((mef) => {
       return (
@@ -280,7 +296,7 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
       );
     }).length;
 
-  const parcoursup_perimetre_prise_rdv = [PARCOURSUP_STATUS.PUBLIE].includes(oldFields?.parcoursup_statut);
+  const parcoursup_perimetre_prise_rdv = [PARCOURSUP_STATUS.PUBLIE].includes(oldFields?.parcoursup_previous_statut);
 
   const nouvelle_fiche =
     !oldFields || new Date(oldFields?.created_at).getTime() >= campagneStartDate.getTime() - 365 * 24 * 60 * 60 * 1000;
