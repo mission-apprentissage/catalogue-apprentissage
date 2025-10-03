@@ -176,27 +176,11 @@ export default () => {
       component: (
         <>
           <IframeResizer
-            src="https://catalogue.apprentissage.education.gouv.fr/metabase/public/dashboard/50b6d168-d303-4f91-b898-945f6b9f11f4#bordered=false"
+            src="https://catalogue.apprentissage.education.gouv.fr/metabase/public/dashboard/50b6d168-d303-4f91-b898-945f6b9f11f4#bordered=false&titled=false"
             seamless
             style={{ width: "100%", border: 0 }}
-            title={`Console de pilotage Affelnet - Statistiques`}
             allowtransparency={"true"}
-          />
-
-          <IframeResizer
-            src="https://catalogue.apprentissage.education.gouv.fr/metabase/public/dashboard/c1bed66b-c5e3-42d1-a99d-0919dc77c774#bordered=false"
-            seamless
-            style={{ width: "100%", border: 0 }}
-            title={`Console de pilotage Parcoursup - Situations à surveiller`}
-            allowtransparency={"true"}
-          />
-
-          <IframeResizer
-            src="https://catalogue.apprentissage.education.gouv.fr/metabase/public/dashboard/92f2107c-ffc7-4fd3-abbf-de6da483a3b3#bordered=false"
-            seamless
-            style={{ width: "100%", border: 0 }}
-            title={`Console de pilotage Affelnet - Comparaison entre campagnes`}
-            allowtransparency={"true"}
+            autoResize
           />
         </>
       ),

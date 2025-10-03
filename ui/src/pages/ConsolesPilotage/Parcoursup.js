@@ -222,27 +222,11 @@ export default () => {
       component: (
         <>
           <IframeResizer
-            src="https://catalogue.apprentissage.education.gouv.fr/metabase/public/dashboard/4e36e6e9-df1d-4444-bb76-cce85e662f47#bordered=false"
-            seamless
+            src="https://catalogue.apprentissage.education.gouv.fr/metabase/public/dashboard/4e36e6e9-df1d-4444-bb76-cce85e662f47#bordered=false&titled=false"
             style={{ width: "100%", border: 0 }}
-            title={`Console de pilotage Parcoursup - Statistiques`}
-            allowtransparency={"true"}
-          />
-
-          <IframeResizer
-            src="https://catalogue.apprentissage.education.gouv.fr/metabase/public/dashboard/f09529b7-4522-4263-8c8a-fa2c50f73073#bordered=false"
             seamless
-            style={{ width: "100%", border: 0 }}
-            title={`Console de pilotage Parcoursup - Situations à surveiller`}
-            allowtransparency={"true"}
-          />
-
-          <IframeResizer
-            src="https://catalogue.apprentissage.education.gouv.fr/metabase/public/dashboard/2e46824f-18e9-42e3-a906-153f5d152d6e#bordered=false"
-            seamless
-            style={{ width: "100%", border: 0 }}
-            title={`Console de pilotage Parcoursup - Comparaison entre campagnes`}
-            allowtransparency={"true"}
+            allowTransparency
+            autoResize
           />
         </>
       ),
