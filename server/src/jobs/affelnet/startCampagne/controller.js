@@ -17,15 +17,15 @@ const run = async () => {
 
   // Mise à jour des formations
   await cursor(
-    Formation.find({ affelnet_statut: { $ne: AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT } }),
-    async ({ _id, affelnet_statut, cle_me_remplace_par_traitee }) => {
+    Formation.find({
+      affelnet_statut: { $nin: [AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT, AFFELNET_STATUS.NON_PUBLIE] },
+      cle_me_remplace_par_traitee: { $ne: true },
+    }),
+    async ({ _id, affelnet_statut }) => {
       let next_affelnet_statut;
       let update;
 
-      if (
-        ![AFFELNET_STATUS.PRET_POUR_INTEGRATION].includes(affelnet_statut) &&
-        !(affelnet_statut === AFFELNET_STATUS.NON_PUBLIE && !!cle_me_remplace_par_traitee)
-      ) {
+      if (![AFFELNET_STATUS.PRET_POUR_INTEGRATION].includes(affelnet_statut)) {
         next_affelnet_statut = AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT;
 
         update = {
