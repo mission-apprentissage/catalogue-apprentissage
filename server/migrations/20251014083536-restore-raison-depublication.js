@@ -23,7 +23,7 @@ module.exports = {
             published: true,
             // parcoursup_statut: { $nin: ["non publié"] },
             parcoursup_previous_statut: "non publié",
-            parcoursup_raison_depublication: null,
+            // parcoursup_raison_depublication: null,
             updates_history: {
               $elemMatch: {
                 // "to.parcoursup_statut": "non publié",
@@ -100,7 +100,7 @@ module.exports = {
             published: true,
             // affelnet_statut: { $nin: ["non publié"] },
             affelnet_previous_statut: "non publié",
-            affelnet_raison_depublication: null,
+            // affelnet_raison_depublication: null,
             updates_history: {
               $elemMatch: {
                 // "to.affelnet_statut": "non publié",
