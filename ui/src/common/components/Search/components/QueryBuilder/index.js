@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { ReactiveComponent } from "@appbaseio/reactivesearch";
 
@@ -105,7 +105,7 @@ const QueryBuilder = ({
   );
 };
 
-const SubComponent = ({ setQuery, fields, collection, showComments }) => {
+const SubComponent = ({ setQuery, fields, collection /*, showComments*/ }) => {
   const [initialValue, setInitialValue] = useState(null);
   const [loading, setLoading] = useState(true);
 

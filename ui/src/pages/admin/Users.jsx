@@ -80,7 +80,7 @@ const UserLine = ({ user, roles }) => {
     },
     onSubmit: (
       {
-        apiKey,
+        // apiKey,
         accessAllCheckbox,
         accessAcademieList,
         newUsername,

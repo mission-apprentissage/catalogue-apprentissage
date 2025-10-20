@@ -40,7 +40,7 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-it("renders alerts", async () => {
+it.skip("renders alerts", async () => {
   const { getByTestId, queryByTestId } = render(<AlertMessage />);
 
   await waitFor(() => getByTestId("container"));

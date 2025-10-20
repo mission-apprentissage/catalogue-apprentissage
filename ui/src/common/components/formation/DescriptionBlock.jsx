@@ -36,7 +36,7 @@ const DureeAnnee = ({ value }) => {
 };
 
 export const DescriptionBlock = ({ formation }) => {
-  const { campagneStartDate, sessionStartDate, sessionEndDate } = useContext(DateContext);
+  const { /*campagneStartDate,*/ sessionStartDate, sessionEndDate } = useContext(DateContext);
   const [user] = useAuth();
 
   const toast = useToast();

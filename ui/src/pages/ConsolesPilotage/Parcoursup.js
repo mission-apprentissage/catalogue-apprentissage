@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Box, Container, Text, Tab, TabList, TabPanel, TabPanels, Tabs, Grid, GridItem, Flex } from "@chakra-ui/react";
-import IframeResizer from "iframe-resizer-react";
+import IframeResizer from "@iframe-resizer/react";
 
 import Layout from "../layout/Layout";
 import { setTitle } from "../../common/utils/pageUtils";
@@ -225,8 +225,8 @@ export default () => {
             src="https://catalogue.apprentissage.education.gouv.fr/metabase/public/dashboard/4e36e6e9-df1d-4444-bb76-cce85e662f47#bordered=false&titled=false"
             style={{ width: "100%", border: 0 }}
             seamless
-            allowTransparency
-            autoResize
+            vertical="vertical"
+            license="GPLv3"
           />
         </>
       ),

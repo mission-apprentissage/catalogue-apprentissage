@@ -46,6 +46,8 @@ export const AlertMessage = () => {
     };
   }, [getMessages]);
 
+  // console.log(alerts.value);
+
   if (alerts.value?.length === 0) return null;
 
   return (
