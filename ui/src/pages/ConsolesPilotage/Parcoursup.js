@@ -22,6 +22,7 @@ const Indicators = () => {
   const [formationEnAttenteDePublication, setFormationEnAttenteDePublication] = useState(undefined);
   const [formationPubliees, setFormationPubliees] = useState(undefined);
   const [formationNonPubliees, setFormationNonPubliees] = useState(undefined);
+  const [formationEnAttente, setFormationEnAttente] = useState(undefined);
   const [currentAcademie, setCurrentAcademie] = useState(undefined);
 
   const onAcademieChange = useCallback(
@@ -119,6 +120,17 @@ const Indicators = () => {
         );
 
         if (!abortController.signal.aborted) setFormationNonPubliees(formationNonPubliees);
+
+        const formationEnAttente = await _get(
+          `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
+            ...defaultQuery,
+            ...(currentAcademie ? { num_academie: currentAcademie } : {}),
+            parcoursup_statut: PARCOURSUP_STATUS.EN_ATTENTE,
+          })}`,
+          { signal: abortController.signal }
+        );
+
+        if (!abortController.signal.aborted) setFormationEnAttente(formationEnAttente);
       } catch (e) {
         if (!abortController.signal.aborted) {
           console.error(e);
@@ -130,6 +142,7 @@ const Indicators = () => {
         setFormationEnAttenteDePublication(0);
         setFormationPubliees(0);
         setFormationNonPubliees(0);
+        setFormationEnAttente(0);
       }
     })();
 
@@ -187,6 +200,14 @@ const Indicators = () => {
           PARCOURSUP_STATUS.PUBLIE,
           PARCOURSUP_STATUS.NON_PUBLIE,
         ])
+      )}`,
+    },
+    {
+      color: "grey.100",
+      title: <>{formationEnAttente}</>,
+      body: <>Formations en attente de mise à jour</>,
+      linkTo: `/recherche/formations?parcoursup_statut=${encodeURIComponent(
+        JSON.stringify([PARCOURSUP_STATUS.EN_ATTENTE])
       )}`,
     },
   ];

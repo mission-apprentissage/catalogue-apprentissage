@@ -38,7 +38,9 @@ const run = async () => {
     {
       $or: [
         {
-          affelnet_statut: { $nin: [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.NON_PUBLIE] },
+          affelnet_statut: {
+            $nin: [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.NON_PUBLIE, AFFELNET_STATUS.EN_ATTENTE],
+          },
           $or: [
             { cle_ministere_educatif: /#LAD$/ },
             // Plus dans le flux

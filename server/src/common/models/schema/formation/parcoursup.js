@@ -80,6 +80,11 @@ const parcoursupSchema = {
     default: null,
     description: "Parcoursup : raison de dépublication",
   },
+  parcoursup_raison_depublication_precision: {
+    type: String,
+    default: null,
+    description: "Parcoursup : raison de dépublication (précision)",
+  },
   parcoursup_mefs_10: {
     type: [mefSchema],
     default: [],

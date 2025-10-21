@@ -20,6 +20,7 @@ const Indicators = () => {
   const [formationAValider, setFormationAValider] = useState(undefined);
   const [formationEnAttenteDePublication, setFormationEnAttenteDePublication] = useState(undefined);
   const [formationNonPubliees, setFormationNonPubliees] = useState(undefined);
+  const [formationEnAttente, setFormationEnAttente] = useState(undefined);
   const [currentAcademie, setCurrentAcademie] = useState(undefined);
 
   const onAcademieChange = useCallback(
@@ -88,6 +89,17 @@ const Indicators = () => {
         );
 
         if (!abortController.signal.aborted) setFormationNonPubliees(formationNonPubliees);
+
+        const formationEnAttente = await _get(
+          `${CATALOGUE_API}/entity/formations/count?query=${JSON.stringify({
+            ...defaultQuery,
+            ...(currentAcademie ? { num_academie: currentAcademie } : {}),
+            affelnet_statut: AFFELNET_STATUS.EN_ATTENTE,
+          })}`,
+          { signal: abortController.signal }
+        );
+
+        if (!abortController.signal.aborted) setFormationEnAttente(formationEnAttente);
       } catch (e) {
         if (!abortController.signal.aborted) {
           console.error(e);
@@ -98,6 +110,7 @@ const Indicators = () => {
         setFormationAValider(0);
         setFormationEnAttenteDePublication(0);
         setFormationNonPubliees(0);
+        setFormationEnAttente(0);
       }
     })();
 
@@ -120,6 +133,7 @@ const Indicators = () => {
         JSON.stringify([AFFELNET_STATUS.A_PUBLIER, AFFELNET_STATUS.A_PUBLIER_VALIDATION])
       )}`,
     },
+
     {
       color: "yellow.100",
       title: <>{formationEnAttenteDePublication}</>,
@@ -142,6 +156,15 @@ const Indicators = () => {
       title: <>{formationPubliees}</>,
       body: <>Formations publiées</>,
       linkTo: `/recherche/formations?affelnet_statut=${encodeURIComponent(JSON.stringify([AFFELNET_STATUS.PUBLIE]))}`,
+    },
+
+    {
+      color: "grey.100",
+      title: <>{formationEnAttente}</>,
+      body: <>Formations en attente de mise à jour</>,
+      linkTo: `/recherche/formations?affelnet_statut=${encodeURIComponent(
+        JSON.stringify([AFFELNET_STATUS.EN_ATTENTE])
+      )}`,
     },
   ];
 

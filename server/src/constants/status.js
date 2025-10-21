@@ -4,6 +4,7 @@ const COMMON_STATUS = {
   NON_PUBLIE: "non publié",
   A_PUBLIER: "à publier",
   PRET_POUR_INTEGRATION: "prêt pour intégration",
+  EN_ATTENTE: "en attente de mise à jour",
 };
 
 const PARCOURSUP_STATUS = {
