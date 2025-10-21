@@ -10,7 +10,9 @@ const run = async () => {
 
   await cursor(
     Formation.find({
-      parcoursup_statut: { $nin: [PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT, PARCOURSUP_STATUS.NON_PUBLIE] },
+      parcoursup_statut: {
+        $nin: [PARCOURSUP_STATUS.NON_PUBLIABLE_EN_LETAT, PARCOURSUP_STATUS.NON_PUBLIE, PARCOURSUP_STATUS.EN_ATTENTE],
+      },
       cle_me_remplace_par_traitee: { $ne: true },
     }),
     async ({ _id, parcoursup_id, parcoursup_statut, parcoursup_statut_history, parcoursup_perimetre, date_debut }) => {

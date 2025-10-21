@@ -46,6 +46,7 @@ export const StatusBadge = ({ source, status, text, ...badgeProps }) => {
     [COMMON_STATUS.NON_PUBLIABLE_EN_LETAT]: "notRelevant",
     [COMMON_STATUS.PUBLIE]: "published",
     [COMMON_STATUS.NON_PUBLIE]: "notPublished",
+    [COMMON_STATUS.EN_ATTENTE]: "nonConforme",
     [AFFELNET_STATUS.A_DEFINIR]: "unknown",
     [AFFELNET_STATUS.A_PUBLIER_VALIDATION]: "toBePublished",
     [AFFELNET_STATUS.A_PUBLIER_VALIDATION]: "toBePublished",

@@ -760,6 +760,9 @@ export default () => {
                         <> ({new Date(parcoursup_date_depublication).toLocaleDateString("fr-FR")})</>
                       )}{" "}
                       : <b>{formation.parcoursup_raison_depublication}</b>
+                      {formation.parcoursup_raison_depublication_precision
+                        ? ` (${formation.parcoursup_raison_depublication_precision})`
+                        : ""}
                     </Alert>
                   )}
 
@@ -771,6 +774,9 @@ export default () => {
                         <> ({new Date(affelnet_date_depublication).toLocaleDateString("fr-FR")})</>
                       )}{" "}
                       : <b>{formation.affelnet_raison_depublication}</b>
+                      {formation.affelnet_raison_depublication_precision
+                        ? ` (${formation.affelnet_raison_depublication_precision})`
+                        : ""}
                     </Alert>
                   )}
               </Box>

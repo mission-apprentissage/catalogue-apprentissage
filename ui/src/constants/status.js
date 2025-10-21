@@ -2,6 +2,7 @@ export const COMMON_STATUS = {
   NON_PUBLIABLE_EN_LETAT: "non publiable en l'état",
   PUBLIE: "publié",
   NON_PUBLIE: "non publié",
+  EN_ATTENTE: "en attente de mise à jour",
   A_PUBLIER: "à publier",
   PRET_POUR_INTEGRATION: "prêt pour intégration",
 };

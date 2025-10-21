@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Box,
   Button,
@@ -17,6 +17,7 @@ import {
   Stack,
   Text,
   Textarea,
+  Select,
 } from "@chakra-ui/react";
 import { StatusBadge } from "../StatusBadge";
 import { useFormik } from "formik";
@@ -26,11 +27,471 @@ import { ArrowRightLine, Close } from "../../../theme/components/icons";
 import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
 import { updateFormation } from "../../api/formation";
 
+const depublicationOptions = [
+  {
+    label: "Organisme de formation, lieu",
+    type: "category",
+    parcoursup: true,
+    affelnet: true,
+    precision: {
+      type: "list",
+      options: [
+        {
+          label: "L'adresse du lieu de réalisation est incorrecte",
+          parcoursup: true,
+          affelnet: true,
+          precision: {
+            type: "select",
+            obligatoire: true,
+            label: "Veuillez préciser",
+            options: [
+              {
+                label: "La ville du lieu de réalisation est incorrecte",
+                statut: COMMON_STATUS.NON_PUBLIE,
+                parcoursup: true,
+                affelnet: true,
+                precision: {
+                  label: "Veuillez indiquer l'adresse attendue",
+                  obligatoire: true,
+                  type: "text",
+                },
+              },
+              {
+                label: "La ville du lieu de réalisation est correcte mais l’adresse a changé",
+                statut: COMMON_STATUS.EN_ATTENTE,
+                parcoursup: true,
+                affelnet: true,
+                precision: {
+                  label: "Veuillez indiquer l'adresse attendue",
+                  obligatoire: true,
+                  type: "text",
+                },
+              },
+            ],
+          },
+        },
+
+        {
+          label: "L'organisme responsable ou formateur a changé",
+          statut: COMMON_STATUS.NON_PUBLIE,
+          parcoursup: true,
+          affelnet: true,
+          precision: {
+            label:
+              "Veuillez préciser l'organisme formateur et/ou responsable attendu, en indiquant si possible son Siret et UAI",
+            type: "text",
+            obligatoire: true,
+          },
+        },
+
+        {
+          label: "L'organisme est injoignable",
+          statut: COMMON_STATUS.NON_PUBLIE,
+          parcoursup: true,
+          affelnet: true,
+        },
+        {
+          label: "Problème d'UAI",
+          parcoursup: true,
+          affelnet: true,
+          precision: {
+            label: "Veuillez préciser",
+            type: "select",
+            obligatoire: true,
+            options: [
+              {
+                label: "Lieu non immatriculable",
+                statut: COMMON_STATUS.NON_PUBLIE,
+                parcoursup: true,
+                affelnet: true,
+              },
+              {
+                label: "Absence d'UAI sur le formateur et/ou le responsable",
+                statut: COMMON_STATUS.NON_PUBLIE,
+                parcoursup: true,
+                affelnet: true,
+              },
+              {
+                label: "UAI erroné ou fermé",
+                statut: COMMON_STATUS.NON_PUBLIE,
+                parcoursup: true,
+                affelnet: true,
+                precision: {
+                  label: "Veuillez indiquer l'adresse attendue",
+                  obligatoire: true,
+                  type: "text",
+                },
+              },
+            ],
+          },
+        },
+      ],
+    },
+  },
+  {
+    label: "Formation",
+    type: "category",
+    parcoursup: true,
+    affelnet: true,
+    precision: {
+      type: "list",
+      options: [
+        {
+          label: "L'offre a été annulée",
+          statut: COMMON_STATUS.NON_PUBLIE,
+          parcoursup: true,
+          affelnet: true,
+        },
+
+        {
+          label: "L’organisme n’a pas demandé le référencement de cette offre sur Parcoursup",
+          statut: COMMON_STATUS.EN_ATTENTE,
+          parcoursup: true,
+          affelnet: false,
+        },
+
+        {
+          label: "L'organisme ne souhaite pas que cette offre soit affichée",
+          statut: COMMON_STATUS.NON_PUBLIE,
+          parcoursup: true,
+          affelnet: true,
+        },
+
+        {
+          label: "L'offre est en double",
+          statut: COMMON_STATUS.NON_PUBLIE,
+          parcoursup: true,
+          affelnet: true,
+          precision: {
+            label: "Veuillez renseigner si possible la clé ministères éducatifs ou l'URL de l'autre offre",
+            obligatoire: false,
+            type: "text",
+          },
+        },
+
+        {
+          label: "Les dates de formation ne correspondent pas à la durée déclarée [x années]",
+          statut: COMMON_STATUS.EN_ATTENTE,
+          parcoursup: true,
+          affelnet: true,
+        },
+
+        {
+          label:
+            "La durée déclarée [x années] et/ou l'année d'entrée en apprentissage est incorrecte, la formation n’est en réalité pas accessible aux élèves de 3e.",
+          statut: COMMON_STATUS.NON_PUBLIE,
+          parcoursup: true,
+          affelnet: true,
+          precision: {
+            label: "Veuillez préciser le paramètre incorrect (année d’entrée et/ou durée)",
+            type: "text",
+            obligatoire: true,
+          },
+        },
+
+        {
+          label: "[Affelnet seulement] Dispositif spécifique, non accessible aux élèves de 3e",
+          statut: COMMON_STATUS.NON_PUBLIE,
+          parcoursup: false,
+          affelnet: true,
+          precision: {
+            label: "Veuillez préciser le dispositif",
+            type: "text",
+            obligatoire: true,
+          },
+        },
+
+        {
+          label: "Public mixte (scolaires/apprentis)",
+          statut: COMMON_STATUS.NON_PUBLIE,
+          parcoursup: true,
+          affelnet: true,
+        },
+      ],
+    },
+  },
+  {
+    label: "Autre",
+    type: "category",
+    parcoursup: true,
+    affelnet: true,
+    precision: {
+      type: "list",
+      options: [
+        {
+          label: "Non paramétré dans Parcoursup",
+          statut: COMMON_STATUS.EN_ATTENTE,
+          parcoursup: true,
+          affelnet: false,
+        },
+
+        {
+          label: "Autorisation externe en attente (Drafpica, Draaf, Moss, …)",
+          statut: COMMON_STATUS.EN_ATTENTE,
+          parcoursup: true,
+          affelnet: false,
+          precision: {
+            label: "Veuillez préciser l’autorisation attendue",
+            type: "text",
+          },
+        },
+
+        {
+          label: "Non autorisé (Drafpica, Draaf, Moss, SAIO)",
+          statut: COMMON_STATUS.NON_PUBLIE,
+          parcoursup: true,
+          affelnet: false,
+          precision: {
+            label: "Veuillez préciser le décideur et le label",
+            type: "text",
+          },
+        },
+
+        {
+          label: "Motif introuvable ?",
+          type: "category",
+          statut: COMMON_STATUS.NON_PUBLIE,
+          parcoursup: true,
+          affelnet: true,
+          precision: {
+            label: "Veuillez le préciser ici",
+            obligatoire: true,
+            type: "text",
+          },
+        },
+      ],
+    },
+  },
+];
+
+const findMotif = (source, label, nodes = depublicationOptions) => {
+  for (const node of nodes) {
+    if (node.label === label && node[source]) {
+      return node;
+    }
+    if (node.precision) {
+      const found = findMotif(
+        source,
+        label,
+        node.precision.type === "list" || node.precision.type === "select" ? node.precision.options : [node.precision]
+      );
+      if (found) {
+        return found;
+      }
+    }
+  }
+  return null;
+};
+
+const findPrecision = (source, label, nodes = depublicationOptions) => {
+  for (const node of nodes) {
+    if (node.precision) {
+      if (node.precision.type === "list" || node.precision.type === "select") {
+        for (const option of node.precision.options) {
+          if (option.label === label && option[source]) {
+            return option;
+          }
+          const found = findPrecision(source, label, option ? [option] : []);
+          if (found) {
+            return found;
+          }
+        }
+      }
+    }
+  }
+
+  return null;
+};
+
+const DepublicationMotifSelect = ({ name, values, source, setFieldValue }) => {
+  const [selectedMotif, setSelectedMotif] = useState(null);
+  const [selectedMotifLabel, setSelectedMotifLabel] = useState(null);
+  const [selectedPrecision, setSelectedPrecision] = useState(null);
+  const [selectedPrecisionLabel, setSelectedPrecisionLabel] = useState(null);
+
+  const [selectedStatut, setSelectedStatut] = useState(null);
+
+  const handleMotifChange = useCallback(
+    (value) => {
+      // console.log("handleMotifChange", value);
+
+      const motif = findMotif(source, value);
+      // console.log("found motif", motif);
+
+      setSelectedMotif(motif);
+      setSelectedPrecision(null);
+
+      setSelectedMotifLabel(motif?.label);
+      setSelectedPrecisionLabel(null);
+
+      setSelectedStatut(motif?.statut);
+
+      setFieldValue(name, motif?.label);
+      setFieldValue(name + "_precision", null);
+      setFieldValue(name + "_statut", motif?.statut ?? null);
+    },
+    [source, name, setFieldValue]
+  );
+
+  const handlePrecisionChange = useCallback(
+    (value) => {
+      // console.log("handlePrecisionChange", value);
+
+      setSelectedPrecisionLabel(value);
+      setFieldValue(name + "_precision", value);
+
+      const precision = findPrecision(source, value);
+      // console.log("found precision", precision);
+
+      if (precision) {
+        setSelectedPrecision(precision);
+        setSelectedStatut(precision?.statut ?? selectedMotif?.statut ?? null);
+        setFieldValue(name + "_statut", precision?.statut ?? selectedMotif?.statut ?? null);
+      }
+    },
+    [source, selectedMotif, setFieldValue, name]
+  );
+
+  useEffect(() => {
+    console.log(values[`${name}`]);
+    console.log(values[`${name}_precision`]);
+    console.log(values[`${name}_statut`]);
+
+    const motif = findMotif(source, values[`${name}`]);
+    const precision = findPrecision(source, values[`${name}_precision`]);
+
+    setSelectedMotifLabel(values[`${name}`]);
+    setSelectedPrecisionLabel(values[`${name}_precision`]);
+
+    motif && setSelectedMotif(motif);
+    precision && setSelectedPrecision(precision);
+
+    console.log({ motif, precision });
+
+    // if (motif || precision) {
+    setSelectedStatut(values[`${name}_statut`]);
+    // setFieldValue(name + "_statut", precision?.statut ?? motif?.statut ?? null);
+    // }
+  }, [name, selectedMotif?.statut, setFieldValue, source, values]);
+
+  return (
+    <Box>
+      {depublicationOptions.map((node) => (
+        <Item
+          key={node.label}
+          node={node}
+          source={source}
+          selectedMotif={selectedMotif}
+          selectedPrecision={selectedPrecision}
+          handleMotifChange={handleMotifChange}
+          handlePrecisionChange={handlePrecisionChange}
+        />
+      ))}
+      <br />
+      <br />
+      <Text>Label : {selectedMotifLabel ? selectedMotifLabel : "N/A"}</Text>
+      <Text>Précision : {selectedPrecisionLabel ? selectedPrecisionLabel : "N/A"}</Text>
+      <Text>Statut : {selectedStatut ? selectedStatut : "N/A"}</Text>
+    </Box>
+  );
+};
+
+const Item = ({ node, source, selectedMotif, selectedPrecision, handleMotifChange, handlePrecisionChange }) => {
+  if (!node) return null;
+
+  return (
+    <>
+      {(() => {
+        switch (node?.type) {
+          case "category":
+            return (
+              <Text fontWeight="bold" mt={4} mb={2}>
+                {node.label}
+              </Text>
+            );
+
+          case "list":
+            return (
+              <RadioGroup value={selectedMotif?.label}>
+                <Stack spacing={3}>
+                  {node?.options
+                    ?.filter((option) => option[source])
+                    .map((option, index) => (
+                      <React.Fragment key={index}>
+                        <Radio
+                          key={option.label}
+                          value={option.label}
+                          // checked={selectedMotif?.label === option.label}
+                          onChange={() => handleMotifChange(option.label)}
+                        >
+                          {option.label}
+                        </Radio>
+
+                        {selectedMotif?.label === option.label && option.precision && (
+                          <Item
+                            node={option.precision}
+                            source={source}
+                            selectedMotif={selectedMotif}
+                            selectedPrecision={selectedPrecision}
+                            handleMotifChange={handleMotifChange}
+                            handlePrecisionChange={handlePrecisionChange}
+                          />
+                        )}
+                      </React.Fragment>
+                    ))}
+                </Stack>
+              </RadioGroup>
+            );
+
+          case "select":
+            return (
+              <Select
+                defaultValue={selectedPrecision?.label ?? "DEFAULT"}
+                onChange={(e) => handlePrecisionChange(e.target.value)}
+              >
+                <option value={"DEFAULT"} disabled>
+                  {node.label} {node.obligatoire ? "*" : ""}
+                </option>
+                {node.options.map((value) => (
+                  <option key={value.label} value={value.label}>
+                    {value.label}
+                  </option>
+                ))}
+              </Select>
+            );
+
+          case "text":
+            return (
+              <Input
+                placeholder={`${node.label} ${node.obligatoire ? "*" : ""}`}
+                onChange={(e) => handlePrecisionChange(e.target.value)}
+              />
+            );
+
+          default:
+            return null;
+        }
+      }).call(this)}
+
+      {node.precision && (
+        <Item
+          node={node.precision}
+          source={source}
+          selectedMotif={selectedMotif}
+          selectedPrecision={selectedPrecision}
+          handleMotifChange={handleMotifChange}
+          handlePrecisionChange={handlePrecisionChange}
+        />
+      )}
+    </>
+  );
+};
+
 const getPublishRadioValue = (status) => {
   if ([COMMON_STATUS.PUBLIE, COMMON_STATUS.PRET_POUR_INTEGRATION].includes(status)) {
     return "true";
   }
-  if ([COMMON_STATUS.NON_PUBLIE].includes(status)) {
+  if ([COMMON_STATUS.NON_PUBLIE, COMMON_STATUS.EN_ATTENTE].includes(status)) {
     return "false";
   }
 
@@ -101,8 +562,12 @@ const getSubmitBody = ({
   affelnet_modalites_offre,
   affelnet_url_modalites_offre,
   affelnet_raison_depublication,
+  affelnet_raison_depublication_precision,
+  affelnet_raison_depublication_statut,
   parcoursup,
   parcoursup_raison_depublication,
+  parcoursup_raison_depublication_precision,
+  parcoursup_raison_depublication_statut,
   date = new Date(),
 }) => {
   const body = {};
@@ -112,6 +577,7 @@ const getSubmitBody = ({
     if (
       [
         AFFELNET_STATUS.NON_PUBLIE,
+        AFFELNET_STATUS.EN_ATTENTE,
         AFFELNET_STATUS.A_PUBLIER_VALIDATION,
         AFFELNET_STATUS.A_PUBLIER,
         AFFELNET_STATUS.PRET_POUR_INTEGRATION,
@@ -137,10 +603,13 @@ const getSubmitBody = ({
         AFFELNET_STATUS.A_PUBLIER_VALIDATION,
         AFFELNET_STATUS.A_PUBLIER,
         AFFELNET_STATUS.PUBLIE,
+        AFFELNET_STATUS.NON_PUBLIE,
+        AFFELNET_STATUS.EN_ATTENTE,
       ].includes(formation?.affelnet_statut)
     ) {
       body.affelnet_raison_depublication = affelnet_raison_depublication;
-      body.affelnet_statut = AFFELNET_STATUS.NON_PUBLIE;
+      body.affelnet_raison_depublication_precision = affelnet_raison_depublication_precision;
+      body.affelnet_statut = affelnet_raison_depublication_statut;
       body.last_statut_update_date = date;
       body.affelnet_published_date = null;
     }
@@ -150,6 +619,7 @@ const getSubmitBody = ({
     if (
       [
         PARCOURSUP_STATUS.NON_PUBLIE,
+        PARCOURSUP_STATUS.EN_ATTENTE,
         PARCOURSUP_STATUS.A_PUBLIER_HABILITATION,
         PARCOURSUP_STATUS.A_PUBLIER_VERIFIER_POSTBAC,
         PARCOURSUP_STATUS.A_PUBLIER_VALIDATION_RECTEUR,
@@ -175,10 +645,13 @@ const getSubmitBody = ({
         PARCOURSUP_STATUS.PUBLIE,
         PARCOURSUP_STATUS.REJETE,
         PARCOURSUP_STATUS.FERME,
+        PARCOURSUP_STATUS.NON_PUBLIE,
+        PARCOURSUP_STATUS.EN_ATTENTE,
       ].includes(formation?.parcoursup_statut)
     ) {
       body.parcoursup_raison_depublication = parcoursup_raison_depublication;
-      body.parcoursup_statut = PARCOURSUP_STATUS.NON_PUBLIE;
+      body.parcoursup_raison_depublication_precision = parcoursup_raison_depublication_precision;
+      body.parcoursup_statut = parcoursup_raison_depublication_statut;
       body.last_statut_update_date = date;
       body.parcoursup_published_date = null;
     }
@@ -197,19 +670,22 @@ const updateFormationWithCallback = async ({ body, formation, user, onFormationU
 
 const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
   const [user] = useAuth();
+
+  const affelnetPerimetre = formation?.affelnet_perimetre || false;
+  const parcoursupPerimetre = formation?.parcoursup_perimetre || false;
+
   const [isAffelnetFormOpen, setAffelnetFormOpen] = useState(
     [AFFELNET_STATUS.PUBLIE, AFFELNET_STATUS.PRET_POUR_INTEGRATION].includes(formation?.affelnet_statut)
   );
-
   const [isParcoursupFormOpen, setParcoursupFormOpen] = useState(
     [PARCOURSUP_STATUS.PUBLIE, PARCOURSUP_STATUS.PRET_POUR_INTEGRATION].includes(formation?.parcoursup_statut)
   );
 
   const [isAffelnetUnpublishFormOpen, setAffelnetUnpublishFormOpen] = useState(
-    [AFFELNET_STATUS.NON_PUBLIE].includes(formation?.affelnet_statut)
+    [COMMON_STATUS.NON_PUBLIE, COMMON_STATUS.EN_ATTENTE].includes(formation?.affelnet_statut)
   );
   const [isParcoursupUnpublishFormOpen, setParcoursupUnpublishFormOpen] = useState(
-    [PARCOURSUP_STATUS.NON_PUBLIE].includes(formation?.parcoursup_statut)
+    [COMMON_STATUS.NON_PUBLIE, COMMON_STATUS.EN_ATTENTE].includes(formation?.parcoursup_statut)
   );
 
   const { values, handleChange, handleSubmit, isSubmitting, setFieldValue, errors } = useFormik({
@@ -221,8 +697,12 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
       affelnet_modalites_offre: formation?.affelnet_modalites_offre ?? "",
       affelnet_url_modalites_offre: formation?.affelnet_url_modalites_offre ?? "",
       affelnet_raison_depublication: formation?.affelnet_raison_depublication ?? "",
+      affelnet_raison_depublication_precision: formation?.affelnet_raison_depublication_precision ?? "",
+      affelnet_raison_depublication_statut: formation?.affelnet_statut,
       parcoursup: getPublishRadioValue(formation?.parcoursup_statut),
       parcoursup_raison_depublication: formation?.parcoursup_raison_depublication ?? "",
+      parcoursup_raison_depublication_precision: formation?.parcoursup_raison_depublication_precision ?? "",
+      parcoursup_raison_depublication_statut: formation?.parcoursup_statut,
       uai_formation: formation?.uai_formation ?? "",
     },
     validationSchema: Yup.object().shape({
@@ -262,6 +742,23 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
       affelnet_raison_depublication: isAffelnetUnpublishFormOpen
         ? Yup.string().nullable().required("Veuillez saisir la raison.")
         : Yup.string().nullable(),
+      affelnet_raison_depublication_precision: Yup.string().nullable(),
+      affelnet_statut_depublication_statut: isAffelnetUnpublishFormOpen
+        ? Yup.string().oneOf([COMMON_STATUS.EN_ATTENTE, COMMON_STATUS.NON_PUBLIE], "Le statut cible n'est pas valide.")
+        : // .nullable()
+          // .required("Le statut cible est requis.")
+          Yup.string().nullable(),
+
+      parcoursup_raison_depublication: isParcoursupUnpublishFormOpen
+        ? Yup.string().nullable().required("Veuillez saisir la raison.")
+        : Yup.string().nullable(),
+      parcoursup_raison_depublication_precision: Yup.string().nullable(),
+      parcoursup_statut_depublication_statut: isParcoursupUnpublishFormOpen
+        ? Yup.string().oneOf([COMMON_STATUS.EN_ATTENTE, COMMON_STATUS.NON_PUBLIE], "Le statut cible n'est pas valide.")
+        : // .nullable()
+          // .required("Le statut cible est requis.")
+          Yup.string().nullable(),
+
       uai_formation:
         isParcoursupUnpublishFormOpen || isAffelnetUnpublishFormOpen
           ? Yup.string().min(8).max(8).nullable()
@@ -269,9 +766,6 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
               .min(8)
               .max(8)
               .required("L’UAI du lieu de formation doit obligatoirement être édité pour permettre la publication."),
-      parcoursup_raison_depublication: isParcoursupUnpublishFormOpen
-        ? Yup.string().nullable().required("Veuillez saisir la raison.")
-        : Yup.string().nullable(),
     }),
     onSubmit: ({
       affelnet,
@@ -281,8 +775,14 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
       affelnet_modalites_offre,
       affelnet_url_modalites_offre,
       affelnet_raison_depublication,
+      affelnet_raison_depublication_precision,
+      affelnet_raison_depublication_statut,
       parcoursup_raison_depublication,
+      parcoursup_raison_depublication_precision,
+      parcoursup_raison_depublication_statut,
     }) => {
+      console.log("onSubmit");
+
       return new Promise(async (resolve) => {
         const result = getSubmitBody({
           formation,
@@ -292,8 +792,13 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
           affelnet_modalites_offre,
           affelnet_url_modalites_offre,
           affelnet_raison_depublication,
+          affelnet_raison_depublication_precision,
+          affelnet_raison_depublication_statut,
+
           parcoursup,
           parcoursup_raison_depublication,
+          parcoursup_raison_depublication_precision,
+          parcoursup_raison_depublication_statut,
         });
 
         if (Object.keys(result.body).length > 0) {
@@ -310,8 +815,19 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
           setFieldValue("affelnet_url_infos_offre", updatedFormation?.affelnet_url_infos_offre);
           setFieldValue("affelnet_modalites_offre", updatedFormation?.affelnet_modalites_offre);
           setFieldValue("affelnet_url_modalites_offre", updatedFormation?.affelnet_url_modalites_offre);
+          setFieldValue("affelnet_statut", updatedFormation?.affelnet_statut);
           setFieldValue("affelnet_raison_depublication", updatedFormation?.affelnet_raison_depublication);
+          setFieldValue(
+            "affelnet_raison_depublication_precision",
+            updatedFormation?.affelnet_raison_depublication_precision
+          );
+
+          setFieldValue("parcoursup_statut", updatedFormation?.parcoursup_statut);
           setFieldValue("parcoursup_raison_depublication", updatedFormation?.parcoursup_raison_depublication);
+          setFieldValue(
+            "parcoursup_raison_depublication_precision",
+            updatedFormation?.parcoursup_raison_depublication_precision
+          );
         }
 
         onClose();
@@ -324,6 +840,8 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
   const isAffelnetPublishDisabled = [AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT].includes(formation?.affelnet_statut);
 
   const initialRef = React.useRef();
+
+  console.log(values);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="6xl" initialFocusRef={initialRef}>
@@ -358,317 +876,364 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
         </ModalHeader>
         <ModalBody p={0}>
           <Flex px={[4, 12]} pb={[4, 12]} flexDirection={{ base: "column", md: "row" }} justifyContent="space-between">
-            <Box
-              border="1px solid"
-              borderColor="bluefrance"
-              p={8}
-              flexBasis={{ base: "100%", md: "48%" }}
-              mb={{ base: 2, md: 0 }}
-            >
-              <Text as="h3" textStyle="h3" fontSize="1.5rem" mb={3}>
-                {formation.intitule_long}
-              </Text>
-              <Flex flexDirection="column">
-                <Box mb={3}>
-                  <StatusBadge source="Affelnet" status={formation?.affelnet_statut} />
-                </Box>
-                <FormControl
-                  display="flex"
-                  flexDirection="column"
-                  w="auto"
-                  isDisabled={isAffelnetPublishDisabled}
-                  data-testid={"affelnet-form"}
-                  aria-disabled={isAffelnetPublishDisabled}
-                >
-                  <FormLabel htmlFor="affelnet" mb={3} fontSize="epsilon" fontWeight={400}>
-                    Demander la publication Affelnet:
-                  </FormLabel>
-                  <RadioGroup defaultValue={values.affelnet} id="affelnet" name="affelnet">
-                    <Stack spacing={2} direction="column">
-                      <Radio
-                        mb={0}
-                        size="lg"
-                        value="true"
-                        isDisabled={isAffelnetPublishDisabled}
-                        onChange={(evt) => {
-                          setAffelnetFormOpen(true);
-                          setAffelnetUnpublishFormOpen(false);
-                          handleChange(evt);
-                        }}
-                        data-testid={"af-radio-yes"}
-                      >
-                        <Text as={"span"} fontSize="zeta">
-                          Oui
-                        </Text>
-                      </Radio>
-                      <Radio
-                        mb={0}
-                        size="lg"
-                        value="false"
-                        isDisabled={isAffelnetPublishDisabled}
-                        onChange={(evt) => {
-                          setAffelnetFormOpen(false);
-                          setAffelnetUnpublishFormOpen(true);
-                          handleChange(evt);
-                        }}
-                        data-testid={"af-radio-no"}
-                      >
-                        <Text as={"span"} fontSize="zeta">
-                          Non
-                        </Text>
-                      </Radio>
-                    </Stack>
-                  </RadioGroup>
-                </FormControl>
-
-                <Box data-testid={"af-publish-form"} style={{ display: isAffelnetFormOpen ? "block" : "none" }}>
-                  <br />
-                  <Text as="h5" textStyle="h5" fontSize="1.5rem" mb={3}>
-                    Informations sur l'offre de formation (facultatif) :
-                  </Text>
-                  <Text>
-                    Ces informations seront intégrées dans Affelnet pour être visibles sur le service en ligne
-                    Affectation.
-                  </Text>
-
-                  <FormControl isInvalid={errors.affelnet_infos_offre}>
-                    <FormLabel htmlFor="affelnet_infos_offre" mb={3} fontSize="epsilon"></FormLabel>
-
-                    <Textarea
-                      name="affelnet_infos_offre"
-                      value={values.affelnet_infos_offre}
-                      onChange={handleChange}
-                      placeholder="Exemple :
-                      BAC PRO en 3 ans"
-                      rows={5}
-                    />
-                    <FormErrorMessage>{errors.affelnet_infos_offre}</FormErrorMessage>
-                  </FormControl>
-                  <br />
-                  <FormControl isInvalid={errors.affelnet_url_infos_offre}>
-                    <FormLabel htmlFor="affelnet_url_infos_offre" mb={3} fontSize="epsilon">
-                      Information offre de formation (lien) (facultatif) :
-                    </FormLabel>
-
-                    <Textarea
-                      name="affelnet_url_infos_offre"
-                      value={values.affelnet_url_infos_offre}
-                      onChange={handleChange}
-                      placeholder="Exemple :
-                      http://saio.ac-lyon.fr/spip/IMG/pdf/document_3eme_vers_apprentissage.pdf"
-                      rows={2}
-                    />
-                    <FormErrorMessage>{errors.affelnet_url_infos_offre}</FormErrorMessage>
-                  </FormControl>
-                  <br />
-                  <br />
-
-                  <Text as="h5" textStyle="h5" fontSize="1.5rem" mb={3}>
-                    Modalités particulières (facultatif) :
-                  </Text>
-                  <Text>
-                    Ces informations seront intégrées dans Affelnet pour être visibles sur le service en ligne
-                    Affectation.
-                  </Text>
-
-                  <FormControl isInvalid={errors.affelnet_modalites_offre}>
-                    <FormLabel htmlFor="affelnet_modalites_offre" mb={3} fontSize="epsilon"></FormLabel>
-                    <Textarea
-                      name="affelnet_modalites_offre"
-                      value={values.affelnet_modalites_offre}
-                      onChange={handleChange}
-                      placeholder="Exemple :
-                      L'inscription dans une formation en apprentissage est soumise à la signature d'un contrat d'apprentissage avec un employeur.
-                      La saisie d'un vœu sous statut d'apprenti ne génère aucune affectation ; il est saisi à titre d'information et de recensement. Il permet aux partenaires de l'apprentissage (CFA, Chambres consulaires, Développeurs de l'apprentissage, Région, CIO, Missions locales, Services rectoraux, DRAAF, DIRRECTE) de disposer de vos coordonnées afin de pouvoir vous accompagner dans vos démarches et recherche d'entreprise."
-                      rows={5}
-                    />
-                    <FormErrorMessage>{errors.affelnet_modalites_offre}</FormErrorMessage>
-                  </FormControl>
-                  <br />
-                  <FormControl isInvalid={errors.affelnet_url_modalites_offre}>
-                    <FormLabel htmlFor="affelnet_url_modalites_offre" mb={3} fontSize="epsilon">
-                      Modalités particulières (lien) (facultatif) :
-                    </FormLabel>
-
-                    <Textarea
-                      name="affelnet_url_modalites_offre"
-                      value={values.affelnet_url_modalites_offre}
-                      onChange={handleChange}
-                      placeholder="Exemple :
-                        http://saio.ac-lyon.fr/spip/IMG/pdf/document_3eme_vers_apprentissage.pdf"
-                      rows={2}
-                    />
-                    <FormErrorMessage>{errors.affelnet_url_modalites_offre}</FormErrorMessage>
-                  </FormControl>
-                </Box>
-
-                <Box style={{ display: isAffelnetFormOpen ? "block" : "none" }}>
+            {affelnetPerimetre && (
+              <Box
+                border="1px solid"
+                borderColor="bluefrance"
+                p={8}
+                flexBasis={{ base: "100%", md: "100%" }}
+                mb={{ base: 2, md: 0 }}
+              >
+                <Text as="h3" textStyle="h3" fontSize="1.5rem" mb={3}>
+                  {formation.intitule_long}
+                </Text>
+                <Flex flexDirection="column">
+                  <Box mb={3}>
+                    <StatusBadge source="Affelnet" status={formation?.affelnet_statut} />
+                  </Box>
                   <FormControl
-                    isRequired
-                    isInvalid={errors.uai_formation}
                     display="flex"
                     flexDirection="column"
                     w="auto"
-                    mt={3}
+                    isDisabled={isAffelnetPublishDisabled}
+                    data-testid={"affelnet-form"}
+                    aria-disabled={isAffelnetPublishDisabled}
                   >
-                    {/* <br />
-                    {(!formation?.uai_formation ||
-                      formation?.uai_formation === "" ||
-                      !formation?.uai_formation_valide) && (
-                      <DangerBox mb={1}>
-                        L’UAI du lieu de formation doit obligatoirement être édité pour permettre l’envoi à Parcoursup
-                      </DangerBox>
-                    )} */}
-
-                    <Input type="hidden" name="uai_formation" value={values.uai_formation} />
-                    <FormErrorMessage>{errors.uai_formation}</FormErrorMessage>
-                  </FormControl>
-                </Box>
-
-                <Box
-                  data-testid={"af-unpublish-form"}
-                  style={{ display: isAffelnetUnpublishFormOpen ? "block" : "none" }}
-                >
-                  <FormControl
-                    isRequired
-                    isInvalid={errors.affelnet_raison_depublication}
-                    flexDirection="column"
-                    w="auto"
-                    mt={6}
-                  >
-                    <FormLabel htmlFor="affelnet_raison_depublication" mb={3} fontSize="epsilon" fontWeight={400}>
-                      Raison de non publication:
+                    <FormLabel htmlFor="affelnet" mb={3} fontSize="epsilon" fontWeight={400}>
+                      Demander la publication Affelnet:
                     </FormLabel>
-
-                    <Textarea
-                      name="affelnet_raison_depublication"
-                      value={values.affelnet_raison_depublication}
-                      onChange={handleChange}
-                      placeholder="Précisez ici la raison pour laquelle vous ne souhaitez pas publier la formation sur Affelnet"
-                      rows={2}
-                    />
-                    <FormErrorMessage>{errors.affelnet_raison_depublication}</FormErrorMessage>
+                    <RadioGroup defaultValue={values.affelnet} id="affelnet" name="affelnet">
+                      <Stack spacing={2} direction="column">
+                        <Radio
+                          mb={0}
+                          size="lg"
+                          value="true"
+                          isDisabled={isAffelnetPublishDisabled}
+                          onChange={(evt) => {
+                            setAffelnetFormOpen(true);
+                            setAffelnetUnpublishFormOpen(false);
+                            handleChange(evt);
+                          }}
+                          data-testid={"af-radio-yes"}
+                        >
+                          <Text as={"span"} fontSize="zeta">
+                            Oui
+                          </Text>
+                        </Radio>
+                        <Radio
+                          mb={0}
+                          size="lg"
+                          value="false"
+                          isDisabled={isAffelnetPublishDisabled}
+                          onChange={(evt) => {
+                            setAffelnetFormOpen(false);
+                            setAffelnetUnpublishFormOpen(true);
+                            handleChange(evt);
+                          }}
+                          data-testid={"af-radio-no"}
+                        >
+                          <Text as={"span"} fontSize="zeta">
+                            Non
+                          </Text>
+                        </Radio>
+                      </Stack>
+                    </RadioGroup>
                   </FormControl>
-                </Box>
-              </Flex>
-            </Box>
 
-            <Box
-              border="1px solid"
-              borderColor="bluefrance"
-              p={8}
-              flexBasis={{ base: "100%", md: "48%" }}
-              mt={{ base: 2, md: 0 }}
-            >
-              <Text as="h3" textStyle="h3" fontSize="1.5rem" mb={3}>
-                {formation.intitule_long}
-              </Text>
-              <Flex flexDirection="column">
-                <Box mb={3}>
-                  <StatusBadge source="Parcoursup" status={formation?.parcoursup_statut} />
-                </Box>
-                <FormControl
-                  display="flex"
-                  flexDirection="column"
-                  w="auto"
-                  isDisabled={isParcoursupPublishDisabled}
-                  data-testid={"parcoursup-form"}
-                  aria-disabled={isParcoursupPublishDisabled}
-                >
-                  <FormLabel htmlFor="parcoursup" mb={3} fontSize="epsilon" fontWeight={400}>
-                    Demander la publication Parcoursup:
-                  </FormLabel>
-                  <RadioGroup defaultValue={values.parcoursup} id="parcoursup" name="parcoursup">
-                    <Stack spacing={2} direction="column">
-                      <Radio
-                        mb={0}
-                        size="lg"
-                        value="true"
-                        isDisabled={isParcoursupPublishDisabled}
-                        onChange={(evt) => {
-                          setParcoursupFormOpen(true);
-                          setParcoursupUnpublishFormOpen(false);
-                          handleChange(evt);
-                        }}
-                        data-testid={"ps-radio-yes"}
-                      >
-                        <Text as={"span"} fontSize="zeta">
-                          Oui
-                        </Text>
-                      </Radio>
-                      <Radio
-                        mb={0}
-                        size="lg"
-                        value="false"
-                        isDisabled={isParcoursupPublishDisabled}
-                        onChange={(evt) => {
-                          setParcoursupFormOpen(false);
-                          setParcoursupUnpublishFormOpen(true);
-                          handleChange(evt);
-                        }}
-                        data-testid={"ps-radio-no"}
-                      >
-                        <Text as={"span"} fontSize="zeta">
-                          Non
-                        </Text>
-                      </Radio>
-                    </Stack>
-                  </RadioGroup>
-                </FormControl>
+                  <Box data-testid={"af-publish-form"} style={{ display: isAffelnetFormOpen ? "block" : "none" }}>
+                    <br />
+                    <Text as="h5" textStyle="h5" fontSize="1.5rem" mb={3}>
+                      Informations sur l'offre de formation (facultatif) :
+                    </Text>
+                    <Text>
+                      Ces informations seront intégrées dans Affelnet pour être visibles sur le service en ligne
+                      Affectation.
+                    </Text>
 
-                <Box data-testid={"ps-publish-form"} style={{ display: isParcoursupFormOpen ? "block" : "none" }}>
-                  <FormControl
-                    isRequired
-                    isInvalid={errors.uai_formation}
-                    display="flex"
-                    flexDirection="column"
-                    w="auto"
-                    mt={3}
-                  >
-                    {/* <br />
-                    {(!formation?.uai_formation ||
-                      formation?.uai_formation === "" ||
-                      !formation?.uai_formation_valide) && (
-                      <DangerBox mb={1}>
-                        L’UAI du lieu de formation doit obligatoirement être édité pour permettre l’envoi à Parcoursup
-                      </DangerBox>
-                    )} */}
+                    <FormControl isInvalid={errors.affelnet_infos_offre}>
+                      <FormLabel htmlFor="affelnet_infos_offre" mb={3} fontSize="epsilon"></FormLabel>
 
-                    <Input type="hidden" name="uai_formation" value={values.uai_formation} />
-                    <FormErrorMessage>{errors.uai_formation}</FormErrorMessage>
-                  </FormControl>
-                </Box>
-
-                <Box
-                  data-testid={"ps-unpublish-form"}
-                  style={{ display: isParcoursupUnpublishFormOpen ? "block" : "none" }}
-                >
-                  <FormControl
-                    isRequired
-                    isInvalid={errors.parcoursup_raison_depublication}
-                    display="flex"
-                    flexDirection="column"
-                    w="auto"
-                    mt={3}
-                  >
-                    <FormLabel htmlFor="parcoursup_raison_depublication" mb={3} fontSize="epsilon" fontWeight={400}>
-                      Raison de non publication:
-                    </FormLabel>
-                    <Flex flexDirection="column" w="100%">
                       <Textarea
-                        data-testid="ps-depublication"
-                        name="parcoursup_raison_depublication"
-                        value={values.parcoursup_raison_depublication}
+                        name="affelnet_infos_offre"
+                        value={values.affelnet_infos_offre}
                         onChange={handleChange}
-                        placeholder="Précisez ici la raison pour laquelle vous ne souhaitez pas publier la formation sur Parcoursup"
+                        placeholder="Exemple :
+                      BAC PRO en 3 ans"
+                        rows={5}
+                      />
+                      <FormErrorMessage>{errors.affelnet_infos_offre}</FormErrorMessage>
+                    </FormControl>
+                    <br />
+                    <FormControl isInvalid={errors.affelnet_url_infos_offre}>
+                      <FormLabel htmlFor="affelnet_url_infos_offre" mb={3} fontSize="epsilon">
+                        Information offre de formation (lien) (facultatif) :
+                      </FormLabel>
+
+                      <Textarea
+                        name="affelnet_url_infos_offre"
+                        value={values.affelnet_url_infos_offre}
+                        onChange={handleChange}
+                        placeholder="Exemple :
+                      http://saio.ac-lyon.fr/spip/IMG/pdf/document_3eme_vers_apprentissage.pdf"
                         rows={2}
                       />
-                      <FormErrorMessage>{errors.parcoursup_raison_depublication}</FormErrorMessage>
-                    </Flex>
+                      <FormErrorMessage>{errors.affelnet_url_infos_offre}</FormErrorMessage>
+                    </FormControl>
+                    <br />
+                    <br />
+
+                    <Text as="h5" textStyle="h5" fontSize="1.5rem" mb={3}>
+                      Modalités particulières (facultatif) :
+                    </Text>
+                    <Text>
+                      Ces informations seront intégrées dans Affelnet pour être visibles sur le service en ligne
+                      Affectation.
+                    </Text>
+
+                    <FormControl isInvalid={errors.affelnet_modalites_offre}>
+                      <FormLabel htmlFor="affelnet_modalites_offre" mb={3} fontSize="epsilon"></FormLabel>
+                      <Textarea
+                        name="affelnet_modalites_offre"
+                        value={values.affelnet_modalites_offre}
+                        onChange={handleChange}
+                        placeholder="Exemple :
+                      L'inscription dans une formation en apprentissage est soumise à la signature d'un contrat d'apprentissage avec un employeur.
+                      La saisie d'un vœu sous statut d'apprenti ne génère aucune affectation ; il est saisi à titre d'information et de recensement. Il permet aux partenaires de l'apprentissage (CFA, Chambres consulaires, Développeurs de l'apprentissage, Région, CIO, Missions locales, Services rectoraux, DRAAF, DIRRECTE) de disposer de vos coordonnées afin de pouvoir vous accompagner dans vos démarches et recherche d'entreprise."
+                        rows={5}
+                      />
+                      <FormErrorMessage>{errors.affelnet_modalites_offre}</FormErrorMessage>
+                    </FormControl>
+                    <br />
+                    <FormControl isInvalid={errors.affelnet_url_modalites_offre}>
+                      <FormLabel htmlFor="affelnet_url_modalites_offre" mb={3} fontSize="epsilon">
+                        Modalités particulières (lien) (facultatif) :
+                      </FormLabel>
+
+                      <Textarea
+                        name="affelnet_url_modalites_offre"
+                        value={values.affelnet_url_modalites_offre}
+                        onChange={handleChange}
+                        placeholder="Exemple :
+                        http://saio.ac-lyon.fr/spip/IMG/pdf/document_3eme_vers_apprentissage.pdf"
+                        rows={2}
+                      />
+                      <FormErrorMessage>{errors.affelnet_url_modalites_offre}</FormErrorMessage>
+                    </FormControl>
+                  </Box>
+
+                  <Box style={{ display: isAffelnetFormOpen ? "block" : "none" }}>
+                    <FormControl
+                      isRequired
+                      isInvalid={errors.uai_formation}
+                      display="flex"
+                      flexDirection="column"
+                      w="auto"
+                      mt={3}
+                    >
+                      {/* <br />
+                    {(!formation?.uai_formation ||
+                      formation?.uai_formation === "" ||
+                      !formation?.uai_formation_valide) && (
+                      <DangerBox mb={1}>
+                        L’UAI du lieu de formation doit obligatoirement être édité pour permettre l’envoi à Parcoursup
+                      </DangerBox>
+                    )} */}
+
+                      <Input type="hidden" name="uai_formation" value={values.uai_formation} />
+                      <FormErrorMessage>{errors.uai_formation}</FormErrorMessage>
+                    </FormControl>
+                  </Box>
+
+                  <Box
+                    data-testid={"af-unpublish-form"}
+                    style={{ display: isAffelnetUnpublishFormOpen ? "block" : "none" }}
+                    mt={6}
+                  >
+                    <FormControl
+                      isRequired
+                      isInvalid={
+                        errors.affelnet_raison_depublication ||
+                        errors.affelnet_statut_depublication_precision ||
+                        errors.affelnet_statut_depublication_statut
+                      }
+                      flexDirection="column"
+                      w="auto"
+                      mt={6}
+                    >
+                      <FormLabel
+                        htmlFor="affelnet_raison_depublication"
+                        mb={3} /* fontSize="epsilon" fontWeight={400}*/
+                      >
+                        Raison de non publication:
+                      </FormLabel>
+
+                      {/* <Textarea
+                        name="affelnet_raison_depublication"
+                        value={values.affelnet_raison_depublication}
+                        onChange={handleChange}
+                        placeholder="Précisez ici la raison pour laquelle vous ne souhaitez pas publier la formation sur Affelnet"
+                        rows={2}
+                      /> */}
+
+                      <Box mx={8}>
+                        <DepublicationMotifSelect
+                          name="affelnet_raison_depublication"
+                          values={values}
+                          setFieldValue={setFieldValue}
+                          onChange={handleChange}
+                          source="affelnet"
+                        />
+
+                        <FormErrorMessage>{errors.affelnet_raison_depublication}</FormErrorMessage>
+                        <FormErrorMessage>{errors.affelnet_statut_depublication_precision}</FormErrorMessage>
+                        <FormErrorMessage>{errors.affelnet_statut_depublication_statut}</FormErrorMessage>
+                      </Box>
+                    </FormControl>
+                  </Box>
+                </Flex>
+              </Box>
+            )}
+            {parcoursupPerimetre && (
+              <Box
+                border="1px solid"
+                borderColor="bluefrance"
+                p={8}
+                flexBasis={{ base: "100%", md: "100%" }}
+                mt={{ base: 2, md: 0 }}
+              >
+                <Text as="h3" textStyle="h3" fontSize="1.5rem" mb={3}>
+                  {formation.intitule_long}
+                </Text>
+                <Flex flexDirection="column">
+                  <Box mb={3}>
+                    <StatusBadge source="Parcoursup" status={formation?.parcoursup_statut} />
+                  </Box>
+                  <FormControl
+                    display="flex"
+                    flexDirection="column"
+                    w="auto"
+                    isDisabled={isParcoursupPublishDisabled}
+                    data-testid={"parcoursup-form"}
+                    aria-disabled={isParcoursupPublishDisabled}
+                  >
+                    <FormLabel htmlFor="parcoursup" mb={3} fontSize="epsilon" fontWeight={400}>
+                      Demander la publication Parcoursup:
+                    </FormLabel>
+
+                    <RadioGroup defaultValue={values.parcoursup} id="parcoursup" name="parcoursup" mx={8}>
+                      <Stack spacing={2} direction="column">
+                        <Radio
+                          mb={0}
+                          size="lg"
+                          value="true"
+                          isDisabled={isParcoursupPublishDisabled}
+                          onChange={(evt) => {
+                            setParcoursupFormOpen(true);
+                            setParcoursupUnpublishFormOpen(false);
+                            handleChange(evt);
+                          }}
+                          data-testid={"ps-radio-yes"}
+                        >
+                          <Text as={"span"} fontSize="zeta">
+                            Oui
+                          </Text>
+                        </Radio>
+                        <Radio
+                          mb={0}
+                          size="lg"
+                          value="false"
+                          isDisabled={isParcoursupPublishDisabled}
+                          onChange={(evt) => {
+                            setParcoursupFormOpen(false);
+                            setParcoursupUnpublishFormOpen(true);
+                            handleChange(evt);
+                          }}
+                          data-testid={"ps-radio-no"}
+                        >
+                          <Text as={"span"} fontSize="zeta">
+                            Non
+                          </Text>
+                        </Radio>
+                      </Stack>
+                    </RadioGroup>
                   </FormControl>
-                </Box>
-              </Flex>
-            </Box>
+
+                  <Box data-testid={"ps-publish-form"} style={{ display: isParcoursupFormOpen ? "block" : "none" }}>
+                    <FormControl
+                      isRequired
+                      isInvalid={errors.uai_formation}
+                      display="flex"
+                      flexDirection="column"
+                      w="auto"
+                      mt={3}
+                    >
+                      {/* <br />
+                    {(!formation?.uai_formation ||
+                      formation?.uai_formation === "" ||
+                      !formation?.uai_formation_valide) && (
+                      <DangerBox mb={1}>
+                        L’UAI du lieu de formation doit obligatoirement être édité pour permettre l’envoi à Parcoursup
+                      </DangerBox>
+                    )} */}
+
+                      <Input type="hidden" name="uai_formation" value={values.uai_formation} />
+                      <FormErrorMessage>{errors.uai_formation}</FormErrorMessage>
+                    </FormControl>
+                  </Box>
+
+                  <Box
+                    data-testid={"ps-unpublish-form"}
+                    style={{ display: isParcoursupUnpublishFormOpen ? "block" : "none" }}
+                    mt={6}
+                  >
+                    <FormControl
+                      isRequired
+                      isInvalid={
+                        errors.parcoursup_raison_depublication ||
+                        errors.parcoursup_statut_depublication_precision ||
+                        errors.parcoursup_statut_depublication_statut
+                      }
+                      display="flex"
+                      flexDirection="column"
+                      w="auto"
+                      mt={6}
+                    >
+                      <FormLabel
+                        htmlFor="parcoursup_raison_depublication"
+                        mb={3} /*fontSize="epsilon" fontWeight={400}*/
+                      >
+                        Raison de non publication:
+                      </FormLabel>
+                      <Flex flexDirection="column" w="100%">
+                        {/* <Textarea
+                          data-testid="ps-depublication"
+                          name="parcoursup_raison_depublication"
+                          value={values.parcoursup_raison_depublication}
+                          onChange={handleChange}
+                          placeholder="Précisez ici la raison pour laquelle vous ne souhaitez pas publier la formation sur Parcoursup"
+                          rows={2}
+                        /> */}
+
+                        <Box mx={8}>
+                          <DepublicationMotifSelect
+                            name="parcoursup_raison_depublication"
+                            values={values}
+                            setFieldValue={setFieldValue}
+                            onChange={handleChange}
+                            source="parcoursup"
+                          />
+                          <FormErrorMessage>{errors.parcoursup_raison_depublication}</FormErrorMessage>
+                          <FormErrorMessage>{errors.parcoursup_statut_depublication_precision}</FormErrorMessage>
+                          <FormErrorMessage>{errors.parcoursup_statut_depublication_statut}</FormErrorMessage>
+                        </Box>
+                      </Flex>
+                    </FormControl>
+
+                    {values.parcoursup_statut_depublication}
+                  </Box>
+                </Flex>
+              </Box>
+            )}
           </Flex>
           <Box>
             <Flex flexDirection={["column", "row"]} p={[3, 8]} justifyContent="flex-end">
