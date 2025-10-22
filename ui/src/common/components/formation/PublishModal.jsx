@@ -41,7 +41,7 @@ const depublicationOptions = [
           parcoursup: true,
           affelnet: true,
           precision: {
-            type: "select",
+            type: "list",
             obligatoire: true,
             label: "Veuillez préciser",
             options: [
@@ -96,7 +96,7 @@ const depublicationOptions = [
           affelnet: true,
           precision: {
             label: "Veuillez préciser",
-            type: "select",
+            type: "list",
             obligatoire: true,
             options: [
               {
@@ -170,7 +170,7 @@ const depublicationOptions = [
         },
 
         {
-          label: "Les dates de formation ne correspondent pas à la durée déclarée [x années]",
+          label: "Les dates de formation ne correspondent pas à la durée déclarée",
           statut: COMMON_STATUS.EN_ATTENTE,
           parcoursup: true,
           affelnet: true,
@@ -178,7 +178,7 @@ const depublicationOptions = [
 
         {
           label:
-            "La durée déclarée [x années] et/ou l'année d'entrée en apprentissage est incorrecte, la formation n’est en réalité pas accessible aux élèves de 3e.",
+            "La durée déclarée et/ou l'année d'entrée en apprentissage est incorrecte, la formation n’est en réalité pas accessible aux élèves de 3e.",
           statut: COMMON_STATUS.NON_PUBLIE,
           parcoursup: true,
           affelnet: true,
@@ -190,7 +190,7 @@ const depublicationOptions = [
         },
 
         {
-          label: "[Affelnet seulement] Dispositif spécifique, non accessible aux élèves de 3e",
+          label: "Dispositif spécifique, non accessible aux élèves de 3e",
           statut: COMMON_STATUS.NON_PUBLIE,
           parcoursup: false,
           affelnet: true,
@@ -242,7 +242,7 @@ const depublicationOptions = [
           parcoursup: true,
           affelnet: false,
           precision: {
-            label: "Veuillez préciser le décideur et le label",
+            label: "Veuillez préciser le décideur et le motif",
             type: "text",
           },
         },
@@ -273,7 +273,7 @@ const findMotif = (source, label, nodes = depublicationOptions) => {
       const found = findMotif(
         source,
         label,
-        node.precision.type === "list" || node.precision.type === "select" ? node.precision.options : [node.precision]
+        ["list" /*, "select"*/].includes(node.precision.type) ? node.precision.options : [node.precision]
       );
       if (found) {
         return found;
@@ -286,7 +286,7 @@ const findMotif = (source, label, nodes = depublicationOptions) => {
 const findPrecision = (source, label, nodes = depublicationOptions) => {
   for (const node of nodes) {
     if (node.precision) {
-      if (node.precision.type === "list" || node.precision.type === "select") {
+      if (["list" /*, "select"*/].includes(node.precision.type)) {
         for (const option of node.precision.options) {
           if (option.label === label && option[source]) {
             return option;
@@ -319,15 +319,14 @@ const DepublicationMotifSelect = ({ name, values, source, setFieldValue }) => {
       // console.log("found motif", motif);
 
       setSelectedMotif(motif);
-      setSelectedPrecision(null);
-
       setSelectedMotifLabel(motif?.label);
+      setFieldValue(name, motif?.label);
+
+      setSelectedPrecision(null);
       setSelectedPrecisionLabel(null);
+      setFieldValue(name + "_precision", null);
 
       setSelectedStatut(motif?.statut);
-
-      setFieldValue(name, motif?.label);
-      setFieldValue(name + "_precision", null);
       setFieldValue(name + "_statut", motif?.statut ?? null);
     },
     [source, name, setFieldValue]
@@ -353,9 +352,9 @@ const DepublicationMotifSelect = ({ name, values, source, setFieldValue }) => {
   );
 
   useEffect(() => {
-    console.log(values[`${name}`]);
-    console.log(values[`${name}_precision`]);
-    console.log(values[`${name}_statut`]);
+    // console.log(values[`${name}`]);
+    // console.log(values[`${name}_precision`]);
+    // console.log(values[`${name}_statut`]);
 
     const motif = findMotif(source, values[`${name}`]);
     const precision = findPrecision(source, values[`${name}_precision`]);
@@ -366,12 +365,9 @@ const DepublicationMotifSelect = ({ name, values, source, setFieldValue }) => {
     motif && setSelectedMotif(motif);
     precision && setSelectedPrecision(precision);
 
-    console.log({ motif, precision });
+    // console.log({ motif, precision });
 
-    // if (motif || precision) {
     setSelectedStatut(values[`${name}_statut`]);
-    // setFieldValue(name + "_statut", precision?.statut ?? motif?.statut ?? null);
-    // }
   }, [name, selectedMotif?.statut, setFieldValue, source, values]);
 
   return (
@@ -421,44 +417,77 @@ const Item = ({ node, source, selectedMotif, selectedPrecision, handleMotifChang
                         <Radio
                           key={option.label}
                           value={option.label}
-                          // checked={selectedMotif?.label === option.label}
+                          checked={
+                            selectedMotif?.label === option.label ||
+                            option.precision?.options?.find((o) => o.label === selectedMotif?.label)
+                          }
                           onChange={() => handleMotifChange(option.label)}
                         >
                           {option.label}
                         </Radio>
 
-                        {selectedMotif?.label === option.label && option.precision && (
-                          <Item
-                            node={option.precision}
-                            source={source}
-                            selectedMotif={selectedMotif}
-                            selectedPrecision={selectedPrecision}
-                            handleMotifChange={handleMotifChange}
-                            handlePrecisionChange={handlePrecisionChange}
-                          />
-                        )}
+                        {option.precision &&
+                          (selectedMotif?.label === option.label ||
+                            (["list"].includes(option.precision?.type) &&
+                              option.precision?.options?.find((o) => o.label === selectedMotif?.label))) && (
+                            <>
+                              <Box ml={6}>
+                                <>
+                                  {["list"].includes(option.precision?.type) && option.precision?.label && (
+                                    <Text mb={2}>
+                                      {option.precision?.label}
+                                      <Text as="span" color="red">
+                                        {option.precision.obligatoire ? " *" : ""}
+                                      </Text>
+                                    </Text>
+                                  )}
+                                  <Item
+                                    node={option.precision}
+                                    source={source}
+                                    selectedMotif={selectedMotif}
+                                    selectedPrecision={selectedPrecision}
+                                    handleMotifChange={handleMotifChange}
+                                    handlePrecisionChange={handlePrecisionChange}
+                                  />
+                                </>
+                              </Box>
+                            </>
+                          )}
                       </React.Fragment>
                     ))}
                 </Stack>
               </RadioGroup>
             );
 
-          case "select":
-            return (
-              <Select
-                defaultValue={selectedPrecision?.label ?? "DEFAULT"}
-                onChange={(e) => handlePrecisionChange(e.target.value)}
-              >
-                <option value={"DEFAULT"} disabled>
-                  {node.label} {node.obligatoire ? "*" : ""}
-                </option>
-                {node.options.map((value) => (
-                  <option key={value.label} value={value.label}>
-                    {value.label}
-                  </option>
-                ))}
-              </Select>
-            );
+          // case "select":
+          //   return (
+          //     <>
+          //       <Select
+          //         defaultValue={selectedPrecision?.label ?? "DEFAULT"}
+          //         onChange={(e) => handlePrecisionChange(e.target.value)}
+          //       >
+          //         <option value={"DEFAULT"} disabled>
+          //           {node.label} {node.obligatoire ? "*" : ""}
+          //         </option>
+          //         {node.options.map((value) => (
+          //           <option key={value.label} value={value.label}>
+          //             {value.label}
+          //           </option>
+          //         ))}
+          //       </Select>
+
+          //       {selectedPrecision?.label === node?.label && node.precision && (
+          //         <Item
+          //           node={node.precision}
+          //           source={source}
+          //           selectedMotif={selectedMotif}
+          //           selectedPrecision={selectedPrecision}
+          //           handleMotifChange={handleMotifChange}
+          //           handlePrecisionChange={handlePrecisionChange}
+          //         />
+          //       )}
+          //     </>
+          //   );
 
           case "text":
             return (
