@@ -14,6 +14,11 @@ const mefSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    mef_outdated: {
+      type: Boolean,
+      default: false,
+      description: "MEF périmé (fermeture avant le 31 août de l'année courante)",
+    },
   },
   { _id: false }
 );

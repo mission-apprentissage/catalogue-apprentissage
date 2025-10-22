@@ -127,6 +127,11 @@ const mefsExpirationFormatter = (mefs) => {
   );
 };
 
+const mefsOutdatedFormatter = (mefs) => {
+  console.log(mefs);
+  return mefs?.map((mef) => booleanFormatter(mef.mef_outdated)).join(", ") ?? "";
+};
+
 /**
  * Colonnes inclues dans l'export CSV
  */
@@ -190,12 +195,12 @@ export const columnsDefinition = [
   /**
    * Organismes / localisation
    */
-  {
-    Header: "Responsable: n° académie",
-    accessor: "etablissement_gestionnaire_num_academie",
-    width: 200,
-    exportable: true,
-  },
+  // {
+  //   Header: "Responsable: n° académie",
+  //   accessor: "etablissement_gestionnaire_num_academie",
+  //   width: 200,
+  //   exportable: true,
+  // },
   {
     Header: "Responsable: académie",
     accessor: "etablissement_gestionnaire_nom_academie",
@@ -235,12 +240,12 @@ export const columnsDefinition = [
     exportable: true,
   },
 
-  {
-    Header: "Formateur: n° académie",
-    accessor: "etablissement_formateur_num_academie",
-    width: 200,
-    exportable: true,
-  },
+  // {
+  //   Header: "Formateur: n° académie",
+  //   accessor: "etablissement_formateur_num_academie",
+  //   width: 200,
+  //   exportable: true,
+  // },
   {
     Header: "Formateur: académie",
     accessor: "etablissement_formateur_nom_academie",
@@ -305,12 +310,12 @@ export const columnsDefinition = [
     exportable: true,
   },
 
-  {
-    Header: "Lieu: n° académie",
-    accessor: "num_academie",
-    width: 200,
-    exportable: true,
-  },
+  // {
+  //   Header: "Lieu: n° académie",
+  //   accessor: "num_academie",
+  //   width: 200,
+  //   exportable: true,
+  // },
   {
     Header: "Lieu: académie",
     accessor: "nom_academie",
@@ -413,12 +418,12 @@ export const columnsDefinition = [
     exportable: true,
   },
 
-  {
-    Header: "Lieu: Distance entre lieu et formateur",
-    accessor: "distance_lieu_formation_etablissement_formateur",
-    width: 200,
-    exportable: true,
-  },
+  // {
+  //   Header: "Lieu: Distance entre lieu et formateur",
+  //   accessor: "distance_lieu_formation_etablissement_formateur",
+  //   width: 200,
+  //   exportable: true,
+  // },
 
   /**
    * Formation
@@ -494,6 +499,7 @@ export const columnsDefinition = [
       }
     },
   },
+
   {
     Header: "Formation: code RNCP",
     accessor: "rncp_code",
@@ -510,6 +516,13 @@ export const columnsDefinition = [
         ? new Date(value.date_fin_validite_enregistrement).toLocaleDateString("fr-FR")
         : "",
   },
+  {
+    Header: "Formation: expiration RNCP sur la campagne",
+    accessor: "rncp_details",
+    width: 200,
+    exportable: true,
+    formatter: (value) => booleanFormatter(value.rncp_outdated),
+  },
 
   {
     Header: "Formation: code CFD",
@@ -524,6 +537,14 @@ export const columnsDefinition = [
     exportable: true,
     formatter: (value) => (value ? new Date(value).toLocaleDateString("fr-FR") : ""),
   },
+  {
+    Header: "Formation: expiration CFD sur la campagne",
+    accessor: "cfd_outdated",
+    width: 200,
+    exportable: true,
+    formatter: booleanFormatter,
+  },
+
   {
     Header: "Formation: code CFD de l'année d'entrée",
     accessor: "cfd_entree",
@@ -551,6 +572,15 @@ export const columnsDefinition = [
     exportable: true,
     formatter: mefsExpirationFormatter,
   },
+
+  {
+    Header: "Formation: expiration MEF sur la campagne",
+    accessor: "bcn_mefs_10",
+    width: 200,
+    exportable: true,
+    formatter: mefsOutdatedFormatter,
+  },
+
   {
     Header: "Formation: MEF dans le périmètre Affelnet",
     accessor: "affelnet_mefs_10",
@@ -566,6 +596,14 @@ export const columnsDefinition = [
     formatter: mefsExpirationFormatter,
   },
   {
+    Header: "Formation: expiration MEF dans le périmètre Affelnet sur la campagne",
+    accessor: "affelnet_mefs_10",
+    width: 200,
+    exportable: true,
+    formatter: mefsOutdatedFormatter,
+  },
+
+  {
     Header: "Formation: MEF dans le périmètre Parcoursup",
     accessor: "parcoursup_mefs_10",
     width: 200,
@@ -579,6 +617,14 @@ export const columnsDefinition = [
     exportable: true,
     formatter: mefsExpirationFormatter,
   },
+  {
+    Header: "Formation: expiration MEF dans le périmètre Parcoursup sur la campagne",
+    accessor: "parcoursup_mefs_10",
+    width: 200,
+    exportable: true,
+    formatter: mefsOutdatedFormatter,
+  },
+
   {
     Header: "Formation: niveau BCN",
     accessor: "niveau",

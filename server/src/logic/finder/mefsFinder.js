@@ -2,7 +2,7 @@ const { getModels } = require("@mission-apprentissage/tco-service-node");
 const { ReglePerimetre, SandboxFormation } = require("../../common/models");
 const { asyncForEach } = require("../../common/utils/asyncUtils");
 const { findMefsForParcoursup } = require("../../common/utils/parcoursupUtils");
-const { getQueryFromRule } = require("../../common/utils/rulesUtils");
+const { getQueryFromRule, getSessionEndDate } = require("../../common/utils/rulesUtils");
 const { AFFELNET_STATUS } = require("../../constants/status");
 const logger = require("../../common/logger");
 
@@ -16,12 +16,24 @@ const completeDateFermetureMefs = async (mefs) => {
     mefs.map(async (mef) => {
       try {
         const { DATE_FERMETURE } = await Models.BcnNMef.findOne({ MEF: mef.mef10 });
+        const sessionEndDate = await getSessionEndDate();
 
         const dateParts = DATE_FERMETURE?.split("/");
 
+        const date_fermeture = DATE_FERMETURE ? new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]) : null;
+        const mef_outdated = date_fermeture ? date_fermeture.getTime() <= sessionEndDate.getTime() : false;
+
+        // if (date_fermeture) {
+        //   console.log({
+        //     date_fermeture,
+        //     sessionEndDate,
+        //     mef_outdated,
+        //   });
+        // }
         return {
           ...mef,
-          date_fermeture: DATE_FERMETURE ? new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]) : null,
+          date_fermeture,
+          mef_outdated,
         };
       } catch (error) {
         logger.error({ type: "logic" }, `${mef.mef10} not found in BcnNMef`);

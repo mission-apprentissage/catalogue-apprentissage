@@ -86,11 +86,12 @@ const recomputeFields = async (fields, oldFields, { forceRecompute = false } = {
     annee_incoherente = oldFields?.annee_incoherente;
 
   if (
+    true ||
     forceRecompute ||
     Object.entries(
       objectDiff(
-        fields?.bcn_mefs_10.map(({ date_fermeture, ...mef }) => mef),
-        oldFields?.bcn_mefs_10.map(({ date_fermeture, ...mef }) => mef)
+        fields?.bcn_mefs_10.map(({ mef_outdated, date_fermeture, ...mef }) => mef),
+        oldFields?.bcn_mefs_10.map(({ mef_outdated, date_fermeture, ...mef }) => mef)
       ) ?? {}
     ).length ||
     fields?.duree !== oldFields?.duree ||
