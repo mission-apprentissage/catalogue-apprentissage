@@ -30,7 +30,10 @@ const importer = async (
       }
     }
 
-    if (!(await DualControlFormation.countDocuments())) {
+    if (
+      !(await DualControlFormation.countDocuments()) ||
+      !(await DualControlFormation.countDocuments({ published: true, catalogue_published: true }))
+    ) {
       throw new Error("Aucune formation à convertir.");
     }
 
