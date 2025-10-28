@@ -6,6 +6,7 @@ const {
   getSessionStartDate,
   getSessionEndDate,
   getSessionDateRules,
+  notOutdatedRule,
 } = require("../../../common/utils/rulesUtils");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
 const { updateManyTagsHistory } = require("../../../logic/updaters/tagsHistoryUpdater");
@@ -410,30 +411,7 @@ const run = async () => {
           $nin: excludedRNCPs,
         },
       },
-      {
-        $or: [
-          {
-            "rncp_details.code_type_certif": {
-              $in: ["Titre", "TP", null],
-            },
-            rncp_code: { $exists: true, $ne: null },
-            "rncp_details.rncp_outdated": false,
-          },
-          {
-            "rncp_details.code_type_certif": {
-              $in: ["Titre", "TP", null],
-            },
-            rncp_code: { $eq: null },
-            cfd_outdated: false,
-          },
-          {
-            "rncp_details.code_type_certif": {
-              $nin: ["Titre", "TP", null],
-            },
-            cfd_outdated: false,
-          },
-        ],
-      },
+      notOutdatedRule,
     ],
   };
 
@@ -461,25 +439,24 @@ const run = async () => {
             { catalogue_published: false, forced_published: { $ne: true } },
             // Diplôme périmé
             {
-              "rncp_details.code_type_certif": {
-                $in: ["Titre", "TP", null],
+              CI_inscrit_rncp: "3 - Inscrit de droit",
+              cfd_outdated: true,
+            },
+            {
+              CI_inscrit_rncp: {
+                $ne: "3 - Inscrit de droit",
               },
               rncp_code: { $exists: true, $ne: null },
               "rncp_details.rncp_outdated": true,
             },
             {
-              "rncp_details.code_type_certif": {
-                $in: ["Titre", "TP", null],
+              CI_inscrit_rncp: {
+                $ne: "3 - Inscrit de droit",
               },
               rncp_code: { $eq: null },
               cfd_outdated: true,
             },
-            {
-              "rncp_details.code_type_certif": {
-                $nin: ["Titre", "TP", null],
-              },
-              cfd_outdated: true,
-            },
+
             // Date de début hors campagne en cours.
             { date_debut: { $not: { $gte: sessionStartDate, $lt: sessionEndDate } } },
             // Sur des codes RNCPs temporairement non autorisés

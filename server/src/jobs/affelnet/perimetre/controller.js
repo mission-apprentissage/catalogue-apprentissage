@@ -6,6 +6,7 @@ const {
   getSessionStartDate,
   getSessionEndDate,
   getSessionDateRules,
+  notOutdatedRule,
 } = require("../../../common/utils/rulesUtils");
 const { AFFELNET_STATUS } = require("../../../constants/status");
 const { updateManyTagsHistory } = require("../../../logic/updaters/tagsHistoryUpdater");
@@ -20,32 +21,7 @@ const run = async () => {
     cle_ministere_educatif: { $not: /#LAD$/ },
     published: true,
     $or: [{ catalogue_published: true }, { force_published: true }],
-    $and: [
-      {
-        $or: [
-          {
-            "rncp_details.code_type_certif": {
-              $in: ["Titre", "TP", null],
-            },
-            rncp_code: { $exists: true, $ne: null },
-            "rncp_details.rncp_outdated": false,
-          },
-          {
-            "rncp_details.code_type_certif": {
-              $in: ["Titre", "TP", null],
-            },
-            rncp_code: { $eq: null },
-            cfd_outdated: false,
-          },
-          {
-            "rncp_details.code_type_certif": {
-              $nin: ["Titre", "TP", null],
-            },
-            cfd_outdated: false,
-          },
-        ],
-      },
-    ],
+    $and: [notOutdatedRule],
   };
 
   const campagneCount = await Formation.countDocuments(filterSessionDate);
@@ -71,22 +47,22 @@ const run = async () => {
             { catalogue_published: false, forced_published: { $ne: true } },
             // Diplôme périmé
             {
-              "rncp_details.code_type_certif": {
-                $in: ["Titre", "TP", null],
+              CI_inscrit_rncp: {
+                $ne: "3 - Inscrit de droit",
               },
               rncp_code: { $exists: true, $ne: null },
               "rncp_details.rncp_outdated": true,
             },
             {
-              "rncp_details.code_type_certif": {
-                $in: ["Titre", "TP", null],
+              CI_inscrit_rncp: {
+                $ne: "3 - Inscrit de droit",
               },
               rncp_code: { $eq: null },
               cfd_outdated: true,
             },
             {
-              "rncp_details.code_type_certif": {
-                $nin: ["Titre", "TP", null],
+              CI_inscrit_rncp: {
+                $eq: "3 - Inscrit de droit",
               },
               cfd_outdated: true,
             },

@@ -1,5 +1,5 @@
 const { Formation } = require("../../../common/models");
-const { getQueryFromRule } = require("../../../common/utils/rulesUtils");
+const { getQueryFromRule, notOutdatedRule } = require("../../../common/utils/rulesUtils");
 const { ReglePerimetre } = require("../../../common/models");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
@@ -13,30 +13,7 @@ const run = async () => {
       //   published: true,
       //   $or: [{ catalogue_published: true }, { force_published: true }],
       // },
-      {
-        $or: [
-          {
-            "rncp_details.code_type_certif": {
-              $in: ["Titre", "TP", null],
-            },
-            rncp_code: { $exists: true, $ne: null },
-            "rncp_details.rncp_outdated": false,
-          },
-          {
-            "rncp_details.code_type_certif": {
-              $in: ["Titre", "TP", null],
-            },
-            rncp_code: { $eq: null },
-            cfd_outdated: false,
-          },
-          {
-            "rncp_details.code_type_certif": {
-              $nin: ["Titre", "TP", null],
-            },
-            cfd_outdated: false,
-          },
-        ],
-      },
+      notOutdatedRule,
     ],
   };
 

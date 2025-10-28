@@ -1,7 +1,7 @@
 const logger = require("../../../common/logger");
 const { Formation, ReglePerimetre } = require("../../../common/models");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
-const { getQueryFromRule, getSessionDateRules } = require("../../../common/utils/rulesUtils");
+const { getQueryFromRule, getSessionDateRules, notOutdatedRule } = require("../../../common/utils/rulesUtils");
 const { PARCOURSUP_STATUS } = require("../../../constants/status");
 
 const excludedRNCPs = [
@@ -402,30 +402,7 @@ const run = async () => {
           $nin: excludedRNCPs,
         },
       },
-      {
-        $or: [
-          {
-            "rncp_details.code_type_certif": {
-              $in: ["Titre", "TP", null],
-            },
-            rncp_code: { $exists: true, $ne: null },
-            "rncp_details.rncp_outdated": false,
-          },
-          {
-            "rncp_details.code_type_certif": {
-              $in: ["Titre", "TP", null],
-            },
-            rncp_code: { $eq: null },
-            cfd_outdated: false,
-          },
-          {
-            "rncp_details.code_type_certif": {
-              $nin: ["Titre", "TP", null],
-            },
-            cfd_outdated: false,
-          },
-        ],
-      },
+      notOutdatedRule,
     ],
   };
 
