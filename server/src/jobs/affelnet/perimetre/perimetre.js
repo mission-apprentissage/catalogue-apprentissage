@@ -1,5 +1,5 @@
 const { Formation } = require("../../../common/models");
-const { getQueryFromRule } = require("../../../common/utils/rulesUtils");
+const { getQueryFromRule, notOutdatedRule } = require("../../../common/utils/rulesUtils");
 const { ReglePerimetre } = require("../../../common/models");
 const { asyncForEach } = require("../../../common/utils/asyncUtils");
 const { AFFELNET_STATUS } = require("../../../constants/status");
@@ -13,30 +13,7 @@ const run = async () => {
       //   published: true,
       //   $or: [{ catalogue_published: true }, { force_published: true }],
       // },
-      {
-        $or: [
-          {
-            "rncp_details.code_type_certif": {
-              $in: ["Titre", "TP", null],
-            },
-            rncp_code: { $exists: true, $ne: null },
-            "rncp_details.rncp_outdated": false,
-          },
-          {
-            "rncp_details.code_type_certif": {
-              $in: ["Titre", "TP", null],
-            },
-            rncp_code: { $eq: null },
-            cfd_outdated: false,
-          },
-          {
-            "rncp_details.code_type_certif": {
-              $nin: ["Titre", "TP", null],
-            },
-            cfd_outdated: false,
-          },
-        ],
-      },
+      notOutdatedRule,
     ],
   };
 
@@ -90,7 +67,7 @@ const run = async () => {
           ...getQueryFromRule(rule, false),
         }).select({ cle_ministere_educatif: 1 })
       ).forEach(({ cle_ministere_educatif }) => {
-        console.log({ cle_ministere_educatif, status });
+        // console.log({ cle_ministere_educatif, status });
         return status === AFFELNET_STATUS.NON_PUBLIABLE_EN_LETAT
           ? formationsInPerimetre.delete(cle_ministere_educatif)
           : formationsInPerimetre.add(cle_ministere_educatif);

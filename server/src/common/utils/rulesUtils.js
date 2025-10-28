@@ -148,29 +148,58 @@ const getPreviousSessionDateRules = async () => {
   };
 };
 
-const commonRules = {
+const outdatedRule = {
   $or: [
     {
-      "rncp_details.code_type_certif": {
-        $in: ["Titre", "TP", null],
+      CI_inscrit_rncp: {
+        $eq: "3 - Inscrit de droit",
+      },
+      cfd_outdated: true,
+    },
+    {
+      CI_inscrit_rncp: {
+        $ne: "3 - Inscrit de droit",
+      },
+      rncp_code: { $exists: true, $ne: null },
+      "rncp_details.rncp_outdated": true,
+    },
+    {
+      CI_inscrit_rncp: {
+        $ne: "3 - Inscrit de droit",
+      },
+      rncp_code: { $eq: null },
+      cfd_outdated: true,
+    },
+  ],
+};
+
+const notOutdatedRule = {
+  $or: [
+    {
+      CI_inscrit_rncp: {
+        $eq: "3 - Inscrit de droit",
+      },
+      cfd_outdated: false,
+    },
+    {
+      CI_inscrit_rncp: {
+        $ne: "3 - Inscrit de droit",
       },
       rncp_code: { $exists: true, $ne: null },
       "rncp_details.rncp_outdated": false,
     },
     {
-      "rncp_details.code_type_certif": {
-        $in: ["Titre", "TP", null],
+      CI_inscrit_rncp: {
+        $ne: "3 - Inscrit de droit",
       },
       rncp_code: { $eq: null },
       cfd_outdated: false,
     },
-    {
-      "rncp_details.code_type_certif": {
-        $nin: ["Titre", "TP", null],
-      },
-      cfd_outdated: false,
-    },
   ],
+};
+
+const commonRule = {
+  ...notOutdatedRule,
   // published: true,
   // etablissement_gestionnaire_catalogue_published: true, // ensure gestionnaire is Qualiopi certified
   // periode: { $gte: getPeriodeStartDate() },
@@ -179,7 +208,7 @@ const commonRules = {
 const toBePublishedRulesParcousup = {
   $and: [
     {
-      ...commonRules,
+      ...commonRule,
       annee: { $in: ["1", "9", "X"] },
     },
   ],
@@ -188,7 +217,7 @@ const toBePublishedRulesParcousup = {
 const toBePublishedRulesAffelnet = {
   $and: [
     {
-      ...commonRules,
+      ...commonRule,
       annee: { $ne: "X" },
     },
   ],
@@ -235,8 +264,21 @@ const getExpireRule = (currentDate = new Date()) => {
   return {
     $or: [
       {
-        "rncp_details.code_type_certif": {
-          $in: ["Titre", "TP", null],
+        CI_inscrit_rncp: {
+          $eq: "3 - Inscrit de droit",
+        },
+        $or: [
+          {
+            cfd_date_fermeture: {
+              $gt: thresholdDate,
+            },
+          },
+          { cfd_date_fermeture: null },
+        ],
+      },
+      {
+        CI_inscrit_rncp: {
+          $ne: "3 - Inscrit de droit",
         },
         rncp_code: { $exists: true, $ne: null },
         $or: [
@@ -249,23 +291,10 @@ const getExpireRule = (currentDate = new Date()) => {
         ],
       },
       {
-        "rncp_details.code_type_certif": {
-          $in: ["Titre", "TP", null],
+        CI_inscrit_rncp: {
+          $ne: "3 - Inscrit de droit",
         },
         rncp_code: { $eq: null },
-        $or: [
-          {
-            cfd_date_fermeture: {
-              $gt: thresholdDate,
-            },
-          },
-          { cfd_date_fermeture: null },
-        ],
-      },
-      {
-        "rncp_details.code_type_certif": {
-          $nin: ["Titre", "TP", null],
-        },
         $or: [
           {
             cfd_date_fermeture: {
@@ -285,22 +314,22 @@ const titresRule = {
     {
       $or: [
         {
-          "rncp_details.code_type_certif": {
-            $in: ["Titre", "TP", null],
+          CI_inscrit_rncp: {
+            $eq: "3 - Inscrit de droit",
+          },
+        },
+        {
+          CI_inscrit_rncp: {
+            $ne: "3 - Inscrit de droit",
           },
           rncp_code: { $exists: true, $ne: null },
           "rncp_details.active_inactive": "ACTIVE",
         },
         {
-          "rncp_details.code_type_certif": {
-            $in: ["Titre", "TP", null],
+          CI_inscrit_rncp: {
+            $ne: "3 - Inscrit de droit",
           },
           rncp_code: { $eq: null },
-        },
-        {
-          "rncp_details.code_type_certif": {
-            $nin: ["Titre", "TP", null],
-          },
         },
       ],
     },
@@ -331,6 +360,8 @@ const getQueryFromRule = (
 };
 
 module.exports = {
+  outdatedRule,
+  notOutdatedRule,
   serialize,
   deserialize,
   getQueryFromRule,

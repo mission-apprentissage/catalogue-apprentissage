@@ -33,8 +33,21 @@ describe(__filename, () => {
       const expected = {
         $or: [
           {
-            "rncp_details.code_type_certif": {
-              $in: ["Titre", "TP", null],
+            CI_inscrit_rncp: {
+              $eq: "3 - Inscrit de droit",
+            },
+            $or: [
+              {
+                cfd_date_fermeture: {
+                  $gt: thresholdDate,
+                },
+              },
+              { cfd_date_fermeture: null },
+            ],
+          },
+          {
+            CI_inscrit_rncp: {
+              $ne: "3 - Inscrit de droit",
             },
             rncp_code: { $exists: true, $ne: null },
             $or: [
@@ -47,23 +60,10 @@ describe(__filename, () => {
             ],
           },
           {
-            "rncp_details.code_type_certif": {
-              $in: ["Titre", "TP", null],
+            CI_inscrit_rncp: {
+              $ne: "3 - Inscrit de droit",
             },
             rncp_code: { $eq: null },
-            $or: [
-              {
-                cfd_date_fermeture: {
-                  $gt: thresholdDate,
-                },
-              },
-              { cfd_date_fermeture: null },
-            ],
-          },
-          {
-            "rncp_details.code_type_certif": {
-              $nin: ["Titre", "TP", null],
-            },
             $or: [
               {
                 cfd_date_fermeture: {
@@ -85,8 +85,21 @@ describe(__filename, () => {
       const expected = {
         $or: [
           {
-            "rncp_details.code_type_certif": {
-              $in: ["Titre", "TP", null],
+            CI_inscrit_rncp: {
+              $eq: "3 - Inscrit de droit",
+            },
+            $or: [
+              {
+                cfd_date_fermeture: {
+                  $gt: thresholdDate,
+                },
+              },
+              { cfd_date_fermeture: null },
+            ],
+          },
+          {
+            CI_inscrit_rncp: {
+              $ne: "3 - Inscrit de droit",
             },
             rncp_code: { $exists: true, $ne: null },
             $or: [
@@ -99,23 +112,10 @@ describe(__filename, () => {
             ],
           },
           {
-            "rncp_details.code_type_certif": {
-              $in: ["Titre", "TP", null],
+            CI_inscrit_rncp: {
+              $ne: "3 - Inscrit de droit",
             },
             rncp_code: { $eq: null },
-            $or: [
-              {
-                cfd_date_fermeture: {
-                  $gt: thresholdDate,
-                },
-              },
-              { cfd_date_fermeture: null },
-            ],
-          },
-          {
-            "rncp_details.code_type_certif": {
-              $nin: ["Titre", "TP", null],
-            },
             $or: [
               {
                 cfd_date_fermeture: {
@@ -137,8 +137,21 @@ describe(__filename, () => {
       const expected = {
         $or: [
           {
-            "rncp_details.code_type_certif": {
-              $in: ["Titre", "TP", null],
+            CI_inscrit_rncp: {
+              $eq: "3 - Inscrit de droit",
+            },
+            $or: [
+              {
+                cfd_date_fermeture: {
+                  $gt: thresholdDate,
+                },
+              },
+              { cfd_date_fermeture: null },
+            ],
+          },
+          {
+            CI_inscrit_rncp: {
+              $ne: "3 - Inscrit de droit",
             },
             rncp_code: { $exists: true, $ne: null },
             $or: [
@@ -151,23 +164,10 @@ describe(__filename, () => {
             ],
           },
           {
-            "rncp_details.code_type_certif": {
-              $in: ["Titre", "TP", null],
+            CI_inscrit_rncp: {
+              $ne: "3 - Inscrit de droit",
             },
             rncp_code: { $eq: null },
-            $or: [
-              {
-                cfd_date_fermeture: {
-                  $gt: thresholdDate,
-                },
-              },
-              { cfd_date_fermeture: null },
-            ],
-          },
-          {
-            "rncp_details.code_type_certif": {
-              $nin: ["Titre", "TP", null],
-            },
             $or: [
               {
                 cfd_date_fermeture: {
@@ -225,8 +225,14 @@ describe(__filename, () => {
                 },
                 $or: [
                   {
-                    "rncp_details.code_type_certif": {
-                      $in: ["Titre", "TP", null],
+                    CI_inscrit_rncp: {
+                      $eq: "3 - Inscrit de droit",
+                    },
+                    cfd_outdated: false,
+                  },
+                  {
+                    CI_inscrit_rncp: {
+                      $ne: "3 - Inscrit de droit",
                     },
 
                     rncp_code: {
@@ -236,17 +242,11 @@ describe(__filename, () => {
                     "rncp_details.rncp_outdated": false,
                   },
                   {
-                    "rncp_details.code_type_certif": {
-                      $in: ["Titre", "TP", null],
+                    CI_inscrit_rncp: {
+                      $ne: "3 - Inscrit de droit",
                     },
                     rncp_code: {
                       $eq: null,
-                    },
-                    cfd_outdated: false,
-                  },
-                  {
-                    "rncp_details.code_type_certif": {
-                      $nin: ["Titre", "TP", null],
                     },
                     cfd_outdated: false,
                   },
@@ -261,8 +261,13 @@ describe(__filename, () => {
               {
                 $or: [
                   {
-                    "rncp_details.code_type_certif": {
-                      $in: ["Titre", "TP", null],
+                    CI_inscrit_rncp: {
+                      $eq: "3 - Inscrit de droit",
+                    },
+                  },
+                  {
+                    CI_inscrit_rncp: {
+                      $ne: "3 - Inscrit de droit",
                     },
                     rncp_code: {
                       $exists: true,
@@ -271,16 +276,11 @@ describe(__filename, () => {
                     "rncp_details.active_inactive": "ACTIVE",
                   },
                   {
-                    "rncp_details.code_type_certif": {
-                      $in: ["Titre", "TP", null],
+                    CI_inscrit_rncp: {
+                      $ne: "3 - Inscrit de droit",
                     },
                     rncp_code: {
                       $eq: null,
-                    },
-                  },
-                  {
-                    "rncp_details.code_type_certif": {
-                      $nin: ["Titre", "TP", null],
                     },
                   },
                 ],
@@ -316,8 +316,14 @@ describe(__filename, () => {
                 },
                 $or: [
                   {
-                    "rncp_details.code_type_certif": {
-                      $in: ["Titre", "TP", null],
+                    CI_inscrit_rncp: {
+                      $eq: "3 - Inscrit de droit",
+                    },
+                    cfd_outdated: false,
+                  },
+                  {
+                    CI_inscrit_rncp: {
+                      $ne: "3 - Inscrit de droit",
                     },
                     rncp_code: {
                       $exists: true,
@@ -326,17 +332,11 @@ describe(__filename, () => {
                     "rncp_details.rncp_outdated": false,
                   },
                   {
-                    "rncp_details.code_type_certif": {
-                      $in: ["Titre", "TP", null],
+                    CI_inscrit_rncp: {
+                      $ne: "3 - Inscrit de droit",
                     },
                     rncp_code: {
                       $eq: null,
-                    },
-                    cfd_outdated: false,
-                  },
-                  {
-                    "rncp_details.code_type_certif": {
-                      $nin: ["Titre", "TP", null],
                     },
                     cfd_outdated: false,
                   },
@@ -351,8 +351,13 @@ describe(__filename, () => {
               {
                 $or: [
                   {
-                    "rncp_details.code_type_certif": {
-                      $in: ["Titre", "TP", null],
+                    CI_inscrit_rncp: {
+                      $eq: "3 - Inscrit de droit",
+                    },
+                  },
+                  {
+                    CI_inscrit_rncp: {
+                      $ne: "3 - Inscrit de droit",
                     },
                     rncp_code: {
                       $exists: true,
@@ -361,16 +366,11 @@ describe(__filename, () => {
                     "rncp_details.active_inactive": "ACTIVE",
                   },
                   {
-                    "rncp_details.code_type_certif": {
-                      $in: ["Titre", "TP", null],
+                    CI_inscrit_rncp: {
+                      $ne: "3 - Inscrit de droit",
                     },
                     rncp_code: {
                       $eq: null,
-                    },
-                  },
-                  {
-                    "rncp_details.code_type_certif": {
-                      $nin: ["Titre", "TP", null],
                     },
                   },
                 ],
