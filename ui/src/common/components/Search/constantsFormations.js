@@ -99,7 +99,7 @@ const booleanFormatter = (value) => {
     case false:
       return "NON";
     default:
-      return "";
+      return "N/A";
   }
 };
 
@@ -483,19 +483,22 @@ export const columnsDefinition = [
     exportable: true,
     formatter: (value) => escapeDiacritics(value?.type_enregistrement),
   },
+
   {
     Header: "Formation: contrôle d'expiration sur le code",
-    accessor: "rncp_details",
+    accessor: "CI_inscrit_rncp",
     width: 200,
     exportable: true,
-    formatter: (value) => {
-      switch (value?.type_enregistrement) {
-        case "Enregistrement de droit":
+    formatter: (value, formation) => {
+      switch (true) {
+        case value === "3 - Inscrit de droit":
           return "CFD";
-        case "Enregistrement sur demande":
+        case value !== "3 - Inscrit de droit" && !!formation.rncp_code:
           return "RNCP";
+        case value !== "3 - Inscrit de droit" && !formation.rncp_code:
+          return "CFD";
         default:
-          return "";
+          return "N/A";
       }
     },
   },
