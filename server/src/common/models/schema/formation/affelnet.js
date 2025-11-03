@@ -106,6 +106,11 @@ const affelnetSchema = {
     default: null,
     description: "Affelnet : raison de dépublication (précision)",
   },
+  affelnet_raison_depublication_tag: {
+    type: String,
+    default: null,
+    description: "Affelnet : raison de dépublication (catégorie)",
+  },
 
   affelnet_mefs_10: {
     type: [mefSchema],

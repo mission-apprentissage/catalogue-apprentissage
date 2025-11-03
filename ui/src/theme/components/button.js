@@ -11,6 +11,13 @@ const Button = {
     unstyled: {
       ...commonButtonStyle,
     },
+    primary: {
+      ...commonButtonStyle,
+      bg: "bluefrance",
+      color: "white",
+      _hover: { bg: "#0000dd" },
+      _disabled: { color: "#666", bg: "#2A2A2A" },
+    },
     secondary: {
       ...commonButtonStyle,
       bg: "white",
@@ -18,13 +25,9 @@ const Button = {
       border: "1px solid",
       borderColor: "bluefrance",
       _hover: { bg: "#efefef" },
+      _disabled: { color: "#666", borderColor: "#2A2A2A" },
     },
-    primary: {
-      ...commonButtonStyle,
-      bg: "bluefrance",
-      color: "white",
-      _hover: { bg: "#0000dd", _disabled: { bg: "bluefrance" } },
-    },
+
     pill: {
       ...commonButtonStyle,
       borderRadius: 24,

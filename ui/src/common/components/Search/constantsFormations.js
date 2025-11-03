@@ -21,6 +21,7 @@ export const allowedFilters = [
   "affelnet_publication_auto",
   "affelnet_published_date_end",
   "affelnet_published_date_start",
+  "affelnet_raison_depublication_tag",
   "affelnet_session",
   "affelnet_statut",
   "affelnet_statut_initial",
@@ -73,6 +74,7 @@ export const allowedFilters = [
   "parcoursup_published",
   "parcoursup_published_date_end",
   "parcoursup_published_date_start",
+  "parcoursup_raison_depublication_tag",
   "parcoursup_session",
   "parcoursup_statut",
   "parcoursup_statut_initial",
@@ -831,6 +833,22 @@ export const columnsDefinition = [
     formatter: escapeDiacritics,
   },
 
+  {
+    Header: "Affelnet: motif de non publication",
+    accessor: "affelnet_raison_depublication_precision (précision)",
+    width: 200,
+    exportable: true,
+    formatter: escapeDiacritics,
+  },
+
+  {
+    Header: "Affelnet: motif de non publication (catégorie)",
+    accessor: "affelnet_raison_depublication_tag",
+    width: 200,
+    exportable: true,
+    formatter: escapeDiacritics,
+  },
+
   /**
    * Périmètre Parcoursup
    */
@@ -930,6 +948,22 @@ export const columnsDefinition = [
     exportable: true,
     formatter: escapeDiacritics,
   },
+
+  {
+    Header: "Parcoursup: motif de non publication (précision)",
+    accessor: "parcoursup_raison_depublication_precision",
+    width: 200,
+    exportable: true,
+    formatter: escapeDiacritics,
+  },
+  {
+    Header: "Parcoursup: motif de non publication (catégorie)",
+    accessor: "parcoursup_raison_depublication_tag",
+    width: 200,
+    exportable: true,
+    formatter: escapeDiacritics,
+  },
+
   {
     Header: "Parcoursup: motif de rejet webservice",
     accessor: "parcoursup_error",
@@ -1308,6 +1342,17 @@ export const quickFiltersDefinition = [
         sortBy: "count",
         acl: "page_catalogue/voir_filtres_avances_ps",
       },
+
+      {
+        componentId: `parcoursup_raison_depublication_tag`,
+        type: "facet",
+        dataField: "parcoursup_raison_depublication_tag.keyword",
+        title: "Raison de dépublication",
+        filterLabel: "Raison de dépublication Parcoursup",
+        selectAllLabel: "Tous",
+        sortBy: "count",
+        acl: "page_catalogue/voir_filtres_avances_ps",
+      },
     ],
   },
 
@@ -1532,6 +1577,16 @@ export const quickFiltersDefinition = [
         dataField: "affelnet_statut_initial.keyword",
         title: "Statut initial",
         filterLabel: "Statut initial Affelnet",
+        selectAllLabel: "Tous",
+        sortBy: "count",
+        acl: "page_catalogue/voir_filtres_avances_aff",
+      },
+      {
+        componentId: `affelnet_raison_depublication_tag`,
+        type: "facet",
+        dataField: "affelnet_raison_depublication_tag.keyword",
+        title: "Raison de dépublication",
+        filterLabel: "Raison de dépublication Affelnet",
         selectAllLabel: "Tous",
         sortBy: "count",
         acl: "page_catalogue/voir_filtres_avances_aff",
