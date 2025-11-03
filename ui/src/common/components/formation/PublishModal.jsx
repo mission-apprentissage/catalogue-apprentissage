@@ -17,15 +17,22 @@ import {
   Stack,
   Text,
   Textarea,
-  Select,
 } from "@chakra-ui/react";
 import { StatusBadge } from "../StatusBadge";
-import { useFormik } from "formik";
+import { Form, useFormik } from "formik";
 import useAuth from "../../hooks/useAuth";
 import * as Yup from "yup";
 import { ArrowRightLine, Close } from "../../../theme/components/icons";
 import { AFFELNET_STATUS, COMMON_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
 import { updateFormation } from "../../api/formation";
+
+export const DEPUBLICATION_TAGS = {
+  "N/A": "N/A",
+  RCO: "RCO",
+  SSA: "SSA",
+  DNE: "DNE",
+  "SAIO/SRFD": "SAIO/SRFD",
+};
 
 const depublicationOptions = [
   {
@@ -50,6 +57,7 @@ const depublicationOptions = [
                 statut: COMMON_STATUS.NON_PUBLIE,
                 parcoursup: true,
                 affelnet: true,
+                tag: DEPUBLICATION_TAGS.RCO,
                 precision: {
                   label: "Veuillez indiquer l'adresse attendue",
                   obligatoire: true,
@@ -61,6 +69,7 @@ const depublicationOptions = [
                 statut: COMMON_STATUS.EN_ATTENTE,
                 parcoursup: true,
                 affelnet: true,
+                tag: DEPUBLICATION_TAGS.RCO,
                 precision: {
                   label: "Veuillez indiquer l'adresse attendue",
                   obligatoire: true,
@@ -76,6 +85,7 @@ const depublicationOptions = [
           statut: COMMON_STATUS.NON_PUBLIE,
           parcoursup: true,
           affelnet: true,
+          tag: DEPUBLICATION_TAGS.RCO,
           precision: {
             label:
               "Veuillez préciser l'organisme formateur et/ou responsable attendu, en indiquant si possible son Siret et UAI",
@@ -89,6 +99,7 @@ const depublicationOptions = [
           statut: COMMON_STATUS.NON_PUBLIE,
           parcoursup: true,
           affelnet: true,
+          tag: DEPUBLICATION_TAGS.RCO,
         },
         {
           label: "Problème d'UAI",
@@ -101,21 +112,24 @@ const depublicationOptions = [
             options: [
               {
                 label: "Lieu non immatriculable",
-                statut: COMMON_STATUS.NON_PUBLIE,
+                statut: COMMON_STATUS.EN_ATTENTE,
                 parcoursup: true,
                 affelnet: true,
+                tag: DEPUBLICATION_TAGS.SSA,
               },
               {
                 label: "Absence d'UAI sur le formateur et/ou le responsable",
-                statut: COMMON_STATUS.NON_PUBLIE,
+                statut: COMMON_STATUS.EN_ATTENTE,
                 parcoursup: true,
                 affelnet: true,
+                tag: DEPUBLICATION_TAGS.SSA,
               },
               {
                 label: "UAI erroné ou fermé",
-                statut: COMMON_STATUS.NON_PUBLIE,
+                statut: COMMON_STATUS.EN_ATTENTE,
                 parcoursup: true,
                 affelnet: true,
+                tag: DEPUBLICATION_TAGS.SSA,
                 precision: {
                   label: "Veuillez indiquer l'adresse attendue",
                   obligatoire: true,
@@ -141,6 +155,7 @@ const depublicationOptions = [
           statut: COMMON_STATUS.NON_PUBLIE,
           parcoursup: true,
           affelnet: true,
+          tag: DEPUBLICATION_TAGS.RCO,
         },
 
         {
@@ -148,6 +163,7 @@ const depublicationOptions = [
           statut: COMMON_STATUS.EN_ATTENTE,
           parcoursup: true,
           affelnet: false,
+          tag: DEPUBLICATION_TAGS["N/A"],
         },
 
         {
@@ -155,6 +171,7 @@ const depublicationOptions = [
           statut: COMMON_STATUS.NON_PUBLIE,
           parcoursup: true,
           affelnet: true,
+          tag: DEPUBLICATION_TAGS["N/A"],
         },
 
         {
@@ -162,6 +179,7 @@ const depublicationOptions = [
           statut: COMMON_STATUS.NON_PUBLIE,
           parcoursup: true,
           affelnet: true,
+          tag: DEPUBLICATION_TAGS.RCO,
           precision: {
             label: "Veuillez renseigner si possible la clé ministères éducatifs ou l'URL de l'autre offre",
             obligatoire: false,
@@ -174,6 +192,7 @@ const depublicationOptions = [
           statut: COMMON_STATUS.EN_ATTENTE,
           parcoursup: true,
           affelnet: true,
+          tag: DEPUBLICATION_TAGS.RCO,
         },
 
         {
@@ -182,6 +201,7 @@ const depublicationOptions = [
           statut: COMMON_STATUS.NON_PUBLIE,
           parcoursup: true,
           affelnet: true,
+          tag: DEPUBLICATION_TAGS.RCO,
           precision: {
             label: "Veuillez préciser le paramètre incorrect (année d’entrée et/ou durée)",
             type: "text",
@@ -194,6 +214,7 @@ const depublicationOptions = [
           statut: COMMON_STATUS.NON_PUBLIE,
           parcoursup: false,
           affelnet: true,
+          tag: DEPUBLICATION_TAGS.DNE,
           precision: {
             label: "Veuillez préciser le dispositif",
             type: "text",
@@ -206,6 +227,7 @@ const depublicationOptions = [
           statut: COMMON_STATUS.NON_PUBLIE,
           parcoursup: true,
           affelnet: true,
+          tag: DEPUBLICATION_TAGS["N/A"],
         },
       ],
     },
@@ -223,6 +245,7 @@ const depublicationOptions = [
           statut: COMMON_STATUS.EN_ATTENTE,
           parcoursup: true,
           affelnet: false,
+          tag: DEPUBLICATION_TAGS["N/A"],
         },
 
         {
@@ -230,6 +253,8 @@ const depublicationOptions = [
           statut: COMMON_STATUS.EN_ATTENTE,
           parcoursup: true,
           affelnet: false,
+          tag: DEPUBLICATION_TAGS["SAIO/SRFD"],
+
           precision: {
             label: "Veuillez préciser l’autorisation attendue",
             type: "text",
@@ -241,6 +266,7 @@ const depublicationOptions = [
           statut: COMMON_STATUS.NON_PUBLIE,
           parcoursup: true,
           affelnet: false,
+          tag: DEPUBLICATION_TAGS["N/A"],
           precision: {
             label: "Veuillez préciser le décideur et le motif",
             type: "text",
@@ -250,9 +276,10 @@ const depublicationOptions = [
         {
           label: "Motif introuvable ?",
           type: "category",
-          statut: COMMON_STATUS.NON_PUBLIE,
+          statut: COMMON_STATUS.EN_ATTENTE,
           parcoursup: true,
           affelnet: true,
+          tag: DEPUBLICATION_TAGS["N/A"],
           precision: {
             label: "Veuillez le préciser ici",
             obligatoire: true,
@@ -303,12 +330,12 @@ const findPrecision = (source, label, nodes = depublicationOptions) => {
   return null;
 };
 
-const DepublicationMotifSelect = ({ name, values, source, setFieldValue }) => {
+const DepublicationMotifSelect = ({ name, values, source, setValues, validateForm }) => {
   const [selectedMotif, setSelectedMotif] = useState(null);
   const [selectedMotifLabel, setSelectedMotifLabel] = useState(null);
   const [selectedPrecision, setSelectedPrecision] = useState(null);
   const [selectedPrecisionLabel, setSelectedPrecisionLabel] = useState(null);
-
+  const [selectedTag, setSelectedTag] = useState(null);
   const [selectedStatut, setSelectedStatut] = useState(null);
 
   const handleMotifChange = useCallback(
@@ -320,24 +347,28 @@ const DepublicationMotifSelect = ({ name, values, source, setFieldValue }) => {
 
       setSelectedMotif(motif);
       setSelectedMotifLabel(motif?.label);
-      setFieldValue(name, motif?.label);
-
+      setSelectedTag(motif?.tag);
       setSelectedPrecision(null);
       setSelectedPrecisionLabel(null);
-      setFieldValue(name + "_precision", null);
-
       setSelectedStatut(motif?.statut);
-      setFieldValue(name + "_statut", motif?.statut ?? null);
+
+      setValues(
+        {
+          ...values,
+          [`${name}`]: motif?.label,
+          [`${name}_tag`]: motif?.tag ?? null,
+          [`${name}_precision`]: null,
+          [`${name}_statut`]: motif?.statut ?? null,
+        },
+        { shouldValidate: true }
+      );
     },
-    [source, name, setFieldValue]
+    [source, setValues, values, name]
   );
 
   const handlePrecisionChange = useCallback(
     (value) => {
-      // console.log("handlePrecisionChange", value);
-
       setSelectedPrecisionLabel(value);
-      setFieldValue(name + "_precision", value);
 
       const precision = findPrecision(source, value);
       // console.log("found precision", precision);
@@ -345,19 +376,48 @@ const DepublicationMotifSelect = ({ name, values, source, setFieldValue }) => {
       if (precision) {
         setSelectedPrecision(precision);
         setSelectedStatut(precision?.statut ?? selectedMotif?.statut ?? null);
-        setFieldValue(name + "_statut", precision?.statut ?? selectedMotif?.statut ?? null);
+        setSelectedTag(precision?.tag ?? selectedMotif?.tag ?? null);
+
+        setValues(
+          {
+            ...values,
+            [`${name}`]: selectedMotif?.label,
+            [`${name}_tag`]: precision?.tag ?? selectedMotif?.tag ?? null,
+            [`${name}_precision`]: value,
+            [`${name}_statut`]: precision?.statut ?? selectedMotif?.statut ?? null,
+          },
+          { shouldValidate: true }
+        );
+      } else {
+        setValues(
+          {
+            ...values,
+            [`${name}`]: selectedMotif?.label,
+            [`${name}_tag`]: selectedMotif?.tag ?? null,
+            [`${name}_precision`]: value,
+            [`${name}_statut`]: selectedMotif?.statut ?? null,
+          },
+          { shouldValidate: true }
+        );
       }
+
+      validateForm();
     },
-    [source, selectedMotif, setFieldValue, name]
+    [source, validateForm, selectedMotif?.statut, selectedMotif?.tag, selectedMotif?.label, setValues, values, name]
   );
 
   useEffect(() => {
-    // console.log(values[`${name}`]);
-    // console.log(values[`${name}_precision`]);
-    // console.log(values[`${name}_statut`]);
+    console.log(values[`${name}`]);
+    console.log(values[`${name}_tag`]);
+    console.log(values[`${name}_precision`]);
+    console.log(values[`${name}_statut`]);
 
     const motif = findMotif(source, values[`${name}`]);
     const precision = findPrecision(source, values[`${name}_precision`]);
+    const tag = precision?.tag ?? motif?.tag ?? null;
+    const statut = precision?.statut ?? motif?.statut ?? null;
+
+    console.log({ motif, precision, tag, statut });
 
     setSelectedMotifLabel(values[`${name}`]);
     setSelectedPrecisionLabel(values[`${name}_precision`]);
@@ -365,10 +425,9 @@ const DepublicationMotifSelect = ({ name, values, source, setFieldValue }) => {
     motif && setSelectedMotif(motif);
     precision && setSelectedPrecision(precision);
 
-    // console.log({ motif, precision });
-
     setSelectedStatut(values[`${name}_statut`]);
-  }, [name, selectedMotif?.statut, setFieldValue, source, values]);
+    setSelectedTag(values[`${name}_tag`]);
+  }, [name, selectedMotif?.statut, source, values]);
 
   return (
     <Box>
@@ -383,11 +442,23 @@ const DepublicationMotifSelect = ({ name, values, source, setFieldValue }) => {
           handlePrecisionChange={handlePrecisionChange}
         />
       ))}
+      {/* <br />
+      <br />
+      <Text> VALUES : </Text>
+      <Text>Label : {values[`${name}`]}</Text>
+      <Text>Tag : {values[`${name}_tag`]}</Text>
+      <Text>Précision : {values[`${name}_precision`]}</Text>
+      <Text>Statut : {values[`${name}_statut`]}</Text>
+
       <br />
       <br />
-      <Text>Label : {selectedMotifLabel ? selectedMotifLabel : "N/A"}</Text>
-      <Text>Précision : {selectedPrecisionLabel ? selectedPrecisionLabel : "N/A"}</Text>
-      <Text>Statut : {selectedStatut ? selectedStatut : "N/A"}</Text>
+
+      <Text> SELECTED : </Text>
+
+      <Text>Label : {selectedMotifLabel ? selectedMotifLabel : ""}</Text>
+      <Text>Tag : {selectedTag ? selectedTag : ""}</Text>
+      <Text>Précision : {selectedPrecisionLabel ? selectedPrecisionLabel : ""}</Text>
+      <Text>Statut : {selectedStatut ? selectedStatut : ""}</Text> */}
     </Box>
   );
 };
@@ -591,10 +662,12 @@ const getSubmitBody = ({
   affelnet_modalites_offre,
   affelnet_url_modalites_offre,
   affelnet_raison_depublication,
+  affelnet_raison_depublication_tag,
   affelnet_raison_depublication_precision,
   affelnet_raison_depublication_statut,
   parcoursup,
   parcoursup_raison_depublication,
+  parcoursup_raison_depublication_tag,
   parcoursup_raison_depublication_precision,
   parcoursup_raison_depublication_statut,
   date = new Date(),
@@ -638,6 +711,7 @@ const getSubmitBody = ({
     ) {
       body.affelnet_raison_depublication = affelnet_raison_depublication;
       body.affelnet_raison_depublication_precision = affelnet_raison_depublication_precision;
+      body.affelnet_raison_depublication_tag = affelnet_raison_depublication_tag;
       body.affelnet_statut = affelnet_raison_depublication_statut;
       body.last_statut_update_date = date;
       body.affelnet_published_date = null;
@@ -680,6 +754,7 @@ const getSubmitBody = ({
     ) {
       body.parcoursup_raison_depublication = parcoursup_raison_depublication;
       body.parcoursup_raison_depublication_precision = parcoursup_raison_depublication_precision;
+      body.parcoursup_raison_depublication_tag = parcoursup_raison_depublication_tag;
       body.parcoursup_statut = parcoursup_raison_depublication_statut;
       body.last_statut_update_date = date;
       body.parcoursup_published_date = null;
@@ -717,8 +792,20 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
     [COMMON_STATUS.NON_PUBLIE, COMMON_STATUS.EN_ATTENTE].includes(formation?.parcoursup_statut)
   );
 
-  const { values, handleChange, handleSubmit, isSubmitting, setFieldValue, errors } = useFormik({
-    enableReinitialize: true,
+  const {
+    values,
+    setValues,
+    setFieldValue,
+    handleChange,
+    handleSubmit,
+    isSubmitting,
+    errors,
+    touched,
+    validateForm,
+    validateField,
+    isInvalid,
+  } = useFormik({
+    // enableReinitialize: true,
     initialValues: {
       affelnet: getPublishRadioValue(formation?.affelnet_statut),
       affelnet_infos_offre: formation?.affelnet_infos_offre ?? "",
@@ -727,13 +814,16 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
       affelnet_url_modalites_offre: formation?.affelnet_url_modalites_offre ?? "",
       affelnet_raison_depublication: formation?.affelnet_raison_depublication ?? "",
       affelnet_raison_depublication_precision: formation?.affelnet_raison_depublication_precision ?? "",
+      affelnet_raison_depublication_tag: formation?.affelnet_raison_depublication_tag ?? "",
       affelnet_raison_depublication_statut: formation?.affelnet_statut,
       parcoursup: getPublishRadioValue(formation?.parcoursup_statut),
       parcoursup_raison_depublication: formation?.parcoursup_raison_depublication ?? "",
       parcoursup_raison_depublication_precision: formation?.parcoursup_raison_depublication_precision ?? "",
+      parcoursup_raison_depublication_tag: formation?.parcoursup_raison_depublication_tag ?? "",
       parcoursup_raison_depublication_statut: formation?.parcoursup_statut,
       uai_formation: formation?.uai_formation ?? "",
     },
+    validateOnChange: true,
     validationSchema: Yup.object().shape({
       affelnet_infos_offre: isAffelnetFormOpen
         ? Yup.string().nullable().max(1000, "Le champ ne doit pas dépasser 1000 caractères.")
@@ -772,21 +862,35 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
         ? Yup.string().nullable().required("Veuillez saisir la raison.")
         : Yup.string().nullable(),
       affelnet_raison_depublication_precision: Yup.string().nullable(),
-      affelnet_statut_depublication_statut: isAffelnetUnpublishFormOpen
-        ? Yup.string().oneOf([COMMON_STATUS.EN_ATTENTE, COMMON_STATUS.NON_PUBLIE], "Le statut cible n'est pas valide.")
-        : // .nullable()
-          // .required("Le statut cible est requis.")
-          Yup.string().nullable(),
+      affelnet_raison_depublication_tag: isAffelnetUnpublishFormOpen
+        ? Yup.string()
+            .nullable()
+            .oneOf(Object.values(DEPUBLICATION_TAGS), "La catégorie cible n'est pas valide.")
+            .required("La catégorie cible est requise.")
+        : Yup.string().nullable(),
+      affelnet_raison_depublication_statut: isAffelnetUnpublishFormOpen
+        ? Yup.string()
+            .nullable()
+            .oneOf([COMMON_STATUS.EN_ATTENTE, COMMON_STATUS.NON_PUBLIE], "Le statut cible n'est pas valide.")
+            .required("Le statut cible est requis.")
+        : Yup.string().nullable(),
 
       parcoursup_raison_depublication: isParcoursupUnpublishFormOpen
         ? Yup.string().nullable().required("Veuillez saisir la raison.")
         : Yup.string().nullable(),
       parcoursup_raison_depublication_precision: Yup.string().nullable(),
-      parcoursup_statut_depublication_statut: isParcoursupUnpublishFormOpen
-        ? Yup.string().oneOf([COMMON_STATUS.EN_ATTENTE, COMMON_STATUS.NON_PUBLIE], "Le statut cible n'est pas valide.")
-        : // .nullable()
-          // .required("Le statut cible est requis.")
-          Yup.string().nullable(),
+      parcoursup_raison_depublication_tag: isParcoursupUnpublishFormOpen
+        ? Yup.string()
+            .nullable()
+            .oneOf(Object.values(DEPUBLICATION_TAGS), "La catégorie cible n'est pas valide.")
+            .required("La catégorie cible est requise.")
+        : Yup.string().nullable(),
+      parcoursup_raison_depublication_statut: isParcoursupUnpublishFormOpen
+        ? Yup.string()
+            .nullable()
+            .oneOf([COMMON_STATUS.EN_ATTENTE, COMMON_STATUS.NON_PUBLIE], "Le statut cible n'est pas valide.")
+            .required("Le statut cible est requis.")
+        : Yup.string().nullable(),
 
       uai_formation:
         isParcoursupUnpublishFormOpen || isAffelnetUnpublishFormOpen
@@ -805,9 +909,11 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
       affelnet_url_modalites_offre,
       affelnet_raison_depublication,
       affelnet_raison_depublication_precision,
+      affelnet_raison_depublication_tag,
       affelnet_raison_depublication_statut,
       parcoursup_raison_depublication,
       parcoursup_raison_depublication_precision,
+      parcoursup_raison_depublication_tag,
       parcoursup_raison_depublication_statut,
     }) => {
       console.log("onSubmit");
@@ -822,11 +928,13 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
           affelnet_url_modalites_offre,
           affelnet_raison_depublication,
           affelnet_raison_depublication_precision,
+          affelnet_raison_depublication_tag,
           affelnet_raison_depublication_statut,
 
           parcoursup,
           parcoursup_raison_depublication,
           parcoursup_raison_depublication_precision,
+          parcoursup_raison_depublication_tag,
           parcoursup_raison_depublication_statut,
         });
 
@@ -850,6 +958,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
             "affelnet_raison_depublication_precision",
             updatedFormation?.affelnet_raison_depublication_precision
           );
+          setFieldValue("affelnet_raison_depublication_tag", updatedFormation?.affelnet_raison_depublication_tag);
 
           setFieldValue("parcoursup_statut", updatedFormation?.parcoursup_statut);
           setFieldValue("parcoursup_raison_depublication", updatedFormation?.parcoursup_raison_depublication);
@@ -857,6 +966,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
             "parcoursup_raison_depublication_precision",
             updatedFormation?.parcoursup_raison_depublication_precision
           );
+          setFieldValue("parcoursup_raison_depublication_tag", updatedFormation?.parcoursup_raison_depublication_tag);
         }
 
         onClose();
@@ -870,7 +980,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
 
   const initialRef = React.useRef();
 
-  console.log(values);
+  console.log({ values, errors });
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="6xl" initialFocusRef={initialRef}>
@@ -904,6 +1014,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
           </Text>
         </ModalHeader>
         <ModalBody p={0}>
+          {/* <Form> */}
           <Flex px={[4, 12]} pb={[4, 12]} flexDirection={{ base: "column", md: "row" }} justifyContent="space-between">
             {affelnetPerimetre && (
               <Box
@@ -920,6 +1031,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                   <Box mb={3}>
                     <StatusBadge source="Affelnet" status={formation?.affelnet_statut} />
                   </Box>
+
                   <FormControl
                     display="flex"
                     flexDirection="column"
@@ -1081,9 +1193,11 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                     <FormControl
                       isRequired
                       isInvalid={
-                        errors.affelnet_raison_depublication ||
-                        errors.affelnet_statut_depublication_precision ||
-                        errors.affelnet_statut_depublication_statut
+                        (errors.affelnet_raison_depublication && touched.affelnet_raison_depublication) ||
+                        (errors.affelnet_raison_depublication_precision &&
+                          touched.affelnet_raison_depublication_precision) ||
+                        (errors.affelnet_raison_depublication_tag && touched.affelnet_raison_depublication_tag) ||
+                        (errors.affelnet_raison_depublication_statut && touched.affelnet_raison_depublication_statut)
                       }
                       flexDirection="column"
                       w="auto"
@@ -1096,26 +1210,23 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                         Raison de non publication:
                       </FormLabel>
 
-                      {/* <Textarea
-                        name="affelnet_raison_depublication"
-                        value={values.affelnet_raison_depublication}
-                        onChange={handleChange}
-                        placeholder="Précisez ici la raison pour laquelle vous ne souhaitez pas publier la formation sur Affelnet"
-                        rows={2}
-                      /> */}
-
                       <Box mx={8}>
                         <DepublicationMotifSelect
                           name="affelnet_raison_depublication"
                           values={values}
                           setFieldValue={setFieldValue}
+                          setValues={setValues}
+                          validateField={validateField}
+                          validateForm={validateForm}
                           onChange={handleChange}
+                          errors={errors}
                           source="affelnet"
                         />
 
                         <FormErrorMessage>{errors.affelnet_raison_depublication}</FormErrorMessage>
-                        <FormErrorMessage>{errors.affelnet_statut_depublication_precision}</FormErrorMessage>
-                        <FormErrorMessage>{errors.affelnet_statut_depublication_statut}</FormErrorMessage>
+                        <FormErrorMessage>{errors.affelnet_raison_depublication_precision}</FormErrorMessage>
+                        <FormErrorMessage>{errors.affelnet_raison_depublication_tag}</FormErrorMessage>
+                        <FormErrorMessage>{errors.affelnet_raison_depublication_statut}</FormErrorMessage>
                       </Box>
                     </FormControl>
                   </Box>
@@ -1218,9 +1329,12 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                     <FormControl
                       isRequired
                       isInvalid={
-                        errors.parcoursup_raison_depublication ||
-                        errors.parcoursup_statut_depublication_precision ||
-                        errors.parcoursup_statut_depublication_statut
+                        (errors.parcoursup_raison_depublication && touched.parcoursup_raison_depublication) ||
+                        (errors.parcoursup_raison_depublication_precision &&
+                          touched.parcoursup_raison_depublication_precision) ||
+                        (errors.parcoursup_raison_depublication_tag && touched.parcoursup_raison_depublication_tag) ||
+                        (errors.parcoursup_raison_depublication_statut &&
+                          touched.parcoursup_raison_depublication_statut)
                       }
                       display="flex"
                       flexDirection="column"
@@ -1234,31 +1348,25 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
                         Raison de non publication:
                       </FormLabel>
                       <Flex flexDirection="column" w="100%">
-                        {/* <Textarea
-                          data-testid="ps-depublication"
-                          name="parcoursup_raison_depublication"
-                          value={values.parcoursup_raison_depublication}
-                          onChange={handleChange}
-                          placeholder="Précisez ici la raison pour laquelle vous ne souhaitez pas publier la formation sur Parcoursup"
-                          rows={2}
-                        /> */}
-
                         <Box mx={8}>
                           <DepublicationMotifSelect
                             name="parcoursup_raison_depublication"
                             values={values}
                             setFieldValue={setFieldValue}
+                            setValues={setValues}
+                            validateField={validateField}
+                            validateForm={validateForm}
                             onChange={handleChange}
+                            errors={errors}
                             source="parcoursup"
                           />
                           <FormErrorMessage>{errors.parcoursup_raison_depublication}</FormErrorMessage>
-                          <FormErrorMessage>{errors.parcoursup_statut_depublication_precision}</FormErrorMessage>
-                          <FormErrorMessage>{errors.parcoursup_statut_depublication_statut}</FormErrorMessage>
+                          <FormErrorMessage>{errors.parcoursup_raison_depublication_precision}</FormErrorMessage>
+                          <FormErrorMessage>{errors.parcoursup_raison_depublication_tag}</FormErrorMessage>
+                          <FormErrorMessage>{errors.parcoursup_raison_depublication_statut}</FormErrorMessage>
                         </Box>
                       </Flex>
                     </FormControl>
-
-                    {values.parcoursup_statut_depublication}
                   </Box>
                 </Flex>
               </Box>
@@ -1282,6 +1390,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
               <Button
                 type="submit"
                 variant="primary"
+                disabled={isInvalid}
                 onClick={(evt) => {
                   if (values.parcoursup === "true" && formation.annee === "X") {
                     const isUserSure = window.confirm(
@@ -1303,6 +1412,7 @@ const PublishModal = ({ isOpen, onClose, formation, onFormationUpdate }) => {
               </Button>
             </Flex>
           </Box>
+          {/* </Form> */}
         </ModalBody>
       </ModalContent>
     </Modal>
