@@ -8,6 +8,7 @@ const usersSchema = {
   password: {
     type: String,
     default: null,
+    noIndex: true,
     description: "Le mot de passe hashé",
   },
   isAdmin: {
@@ -63,6 +64,7 @@ const usersSchema = {
   connection_history: {
     type: [Date],
     default: null,
+    noIndex: true,
     description: "Historique des dates de connexion",
   },
 };

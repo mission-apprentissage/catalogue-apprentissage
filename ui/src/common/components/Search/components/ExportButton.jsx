@@ -11,7 +11,7 @@ const serializeObject = (columns, obj) => {
   const res = [];
 
   columns.forEach((c) => {
-    let value = c.fieldName.split(".").reduce((acc, curr) => acc?.[curr], obj);
+    let value = c.fieldName?.split(".").reduce((acc, curr) => acc?.[curr], obj);
     if (typeof c.formatter === "function") {
       value = c.formatter(value, obj);
     } else if (!value) {
@@ -72,7 +72,7 @@ const getDataAsCSV = async (searchUrl, query, columns, setProgress) => {
   return `${headers}${lines}`;
 };
 
-const ExportButton = ({ index, filters, columns, context }) => {
+export const ExportButton = ({ index, filters, columns, context }) => {
   const [requestExport, setRequestExport] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -99,7 +99,7 @@ const ExportButton = ({ index, filters, columns, context }) => {
 
   return (
     <ReactiveComponent
-      componentId={`${index}-${context}-export`}
+      componentId={`${index}${context ? context + "-" : ""}-export`}
       react={{ and: filters }}
       onQueryChange={(_prevQuery, nextQuery) => setQuery(nextQuery)}
       defaultQuery={() => {
@@ -137,5 +137,3 @@ const ExportButton = ({ index, filters, columns, context }) => {
     />
   );
 };
-
-export default ExportButton;

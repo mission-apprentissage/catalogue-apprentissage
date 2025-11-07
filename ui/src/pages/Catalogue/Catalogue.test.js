@@ -2,7 +2,7 @@ import React from "react";
 import Catalogue from "./Catalogue";
 import { renderWithRouter, setupMswServer } from "../../common/utils/testUtils";
 import { rest } from "msw";
-import * as search from "../../common/hooks/useSearch";
+import * as search from "../../common/hooks/useFormationSearch";
 import * as useAuth from "../../common/hooks/useAuth";
 import { COMMON_STATUS } from "../../constants/status";
 import { waitFor } from "@testing-library/dom";
@@ -649,7 +649,7 @@ afterAll(() => server.close());
 jest.setTimeout(50000);
 
 it("renders basic tree", async () => {
-  jest.spyOn(search, "useSearch").mockImplementation(() => ({
+  jest.spyOn(search, "useFormationSearch").mockImplementation(() => ({
     loaded: true,
     countCatalogueGeneral: {
       total: 45854,

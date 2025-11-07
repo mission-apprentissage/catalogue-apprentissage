@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   Accordion,
   AccordionButton,
@@ -8,13 +9,13 @@ import {
   Divider,
   Flex,
 } from "@chakra-ui/react";
+import { DatePicker } from "@appbaseio/reactivesearch";
+
 import { AddFill, SubtractLine } from "../../../../theme/components/icons";
-import Facet from "./Facet";
-import { allowedFilters } from "../constantsFormations";
 import useAuth from "../../../hooks/useAuth";
 import { InfoTooltip } from "../../InfoTooltip";
-import { DatePicker } from "@appbaseio/reactivesearch";
-import React, { useState } from "react";
+import { allowedFilters } from "../constantsFormations";
+import { Facet } from "./Facet";
 
 export const QuickFilterItem = ({ head, body }) => {
   let defaultIndex = [];
@@ -59,11 +60,7 @@ const FacetFilter = ({ filter }) => {
       size={filter.size}
       defaultQuery={() => {
         return {
-          query: {
-            match: {
-              published: true,
-            },
-          },
+          query: {},
         };
       }}
       URLParams={true}
@@ -173,7 +170,7 @@ const AdvancedFilter = ({ filter }) => {
       </Button>
 
       <Box mt={2} display={isOpen ? "block" : "none"}>
-        <QuickFilters filters={filter.filters} />{" "}
+        <QuickFilters filters={filter.filters} />
       </Box>
     </Box>
   );

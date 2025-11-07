@@ -1,8 +1,8 @@
-import Facet from "./Facet";
-import HardFilters from "./HardFilters";
+import { Facet } from "./Facet";
+import { ExportButton } from "./ExportButton";
+import { QuickFilters } from "./QuickFilters";
 import QueryBuilder from "./QueryBuilder";
-import ExportButton from "./ExportButton";
 
-export { Facet, HardFilters, QueryBuilder, ExportButton };
+export { Facet, QueryBuilder, ExportButton, QuickFilters };
 export * from "../../CardListEtablissement";
-export * from "./CardListFormation";
+export * from "../../CardListFormation";

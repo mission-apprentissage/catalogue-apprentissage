@@ -4,6 +4,8 @@ const Joi = require("joi");
 const config = require("config");
 const path = require("path");
 const Boom = require("boom");
+const { User } = require("../../common/models");
+const { sanitize, SAFE_FIND_OPERATORS } = require("../../common/utils/sanitizeUtils");
 
 const userSchema = Joi.object({
   username: Joi.string().required(),
@@ -61,6 +63,24 @@ module.exports = ({ users, mailer, db: { db } }) => {
     tryCatch(async (req, res) => {
       const usersList = await users.getUsers();
       return res.json(usersList);
+    })
+  );
+  /**
+   * Get count users/count GET
+   */
+  router.get(
+    "/users/count",
+    tryCatch(async (req, res) => {
+      const qs = req.query;
+      let query = qs && qs.query ? JSON.parse(qs.query) : {};
+      query = sanitize(query, SAFE_FIND_OPERATORS);
+
+      const retrievedData = await User.countDocuments(query);
+      if (retrievedData) {
+        res.json(retrievedData);
+      } else {
+        res.json({ message: `Item doesn't exist` });
+      }
     })
   );
 

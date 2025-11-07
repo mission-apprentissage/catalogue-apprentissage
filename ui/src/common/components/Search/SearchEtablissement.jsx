@@ -4,7 +4,7 @@ import { Box, Container, Flex, Text } from "@chakra-ui/react";
 
 import useAuth from "../../hooks/useAuth";
 import { hasAccessTo } from "../../utils/rolesUtils";
-import { CardListEtablissement, ExportButton, Facet, HardFilters, QueryBuilder } from "./components";
+import { CardListEtablissement, ExportButton, Facet, QueryBuilder } from "./components";
 import {
   allowedFilters,
   quickFiltersDefinition,
@@ -15,10 +15,11 @@ import {
 import { CloseCircleLine } from "../../../theme/components/icons";
 import { SearchLine } from "../../../theme/components/icons/SearchLine";
 import { Pagination } from "./components/Pagination";
+import { HardFiltersEtablissement } from "./HardFiltersEtablissement";
 
 import "./search.css";
 
-export default React.memo(({ searchState, context, extraButtons = null }) => {
+export default React.memo(({ searchState, extraButtons = null }) => {
   const { base, countEtablissement, endpoint } = searchState;
 
   const [auth] = useAuth();
@@ -34,7 +35,7 @@ export default React.memo(({ searchState, context, extraButtons = null }) => {
           },
         }}
       >
-        <HardFilters allowedFilters={allowedFilters} context={context} />
+        <HardFiltersEtablissement allowedFilters={allowedFilters} />
         <Box className="search" maxW="full">
           <Container maxW="7xl" p={0}>
             <Box className={`search-container`} px={[0, 0, 4]} display={"flex"}>
@@ -87,9 +88,7 @@ export default React.memo(({ searchState, context, extraButtons = null }) => {
                 {quickFiltersDefinition
                   .filter(
                     ({ acl, displayInContext, isAuth }) =>
-                      (!displayInContext || displayInContext.includes(context)) &&
-                      (!acl || hasAccessTo(auth, acl)) &&
-                      (!isAuth || (isAuth && auth?.sub !== "anonymous"))
+                      (!acl || hasAccessTo(auth, acl)) && (!isAuth || (isAuth && auth?.sub !== "anonymous"))
                   )
                   .map((fd, i) => {
                     return (
@@ -164,7 +163,6 @@ export default React.memo(({ searchState, context, extraButtons = null }) => {
                                 fieldName: def.accessor,
                                 formatter: def.formatter,
                               }))}
-                            context={context}
                           />
 
                           {extraButtons}

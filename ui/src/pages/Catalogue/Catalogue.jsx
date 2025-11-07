@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import Layout from "../layout/Layout";
 import { ArrowRightLine } from "../../theme/components/icons";
-import { useSearch } from "../../common/hooks/useSearch";
+import { useFormationSearch } from "../../common/hooks/useFormationSearch";
 import { HowToAddModal } from "../../common/components/formation/HowToAddModal";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
@@ -26,7 +26,7 @@ import { CONTEXT } from "../../constants/context";
 import SearchFormation from "../../common/components/Search/SearchFormation";
 
 export default (props) => {
-  const searchState = useSearch("catalogue");
+  const searchState = useFormationSearch();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const title = "Catalogue";

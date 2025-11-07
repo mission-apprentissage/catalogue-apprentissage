@@ -23,6 +23,13 @@ import {
   Tag,
   WrapItem,
   Wrap,
+  Center,
+  Spinner,
+  TabPanels,
+  Tab,
+  TabList,
+  Tabs,
+  TabPanel,
 } from "@chakra-ui/react";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
@@ -31,6 +38,8 @@ import generator from "generate-password-browser";
 import { useQuery } from "react-query";
 import { ACADEMIES } from "../../constants/academies";
 import { PasswordInput } from "../../common/components/PasswordInput";
+import { useUserSearch } from "../../common/hooks/useUserSearch";
+import SearchUser from "../../common/components/Search/SearchUser";
 
 const academies = new Map(Object.entries(ACADEMIES));
 
@@ -47,7 +56,66 @@ const buildRolesAcl = (newRoles, roles) => {
   return acl;
 };
 
-const UserLine = ({ user, roles }) => {
+export const CardListUser = ({ user, roles }) => {
+  if (!user) {
+    return;
+  }
+  return (
+    <Accordion bg="white" allowToggle>
+      <AccordionItem key={user.email}>
+        {({ isExpanded }) => (
+          <>
+            <AccordionButton
+              _expanded={{ bg: "grey.200" }}
+              border={"1px solid"}
+              borderColor={"bluefrance"}
+              height="auto"
+            >
+              <Box flex="1" textAlign="left" fontSize={"delta"}>
+                {user.email}{" "}
+                {user.tag && (
+                  <Tag borderRadius="full" variant="subtle" colorScheme="orange" ml="2">
+                    {user.tag}
+                  </Tag>
+                )}
+                {user.isAdmin && (
+                  <Tag borderRadius="full" variant="subtle" colorScheme="red" ml="2">
+                    admin
+                  </Tag>
+                )}
+                {user.roles?.map((role, index) => (
+                  <Tag key={index} borderRadius="full" variant="subtle" colorScheme="green" ml="2">
+                    {role}
+                  </Tag>
+                ))}
+                {!!user.acl?.length && (
+                  <Tag borderRadius="full" variant="subtle" colorScheme="blue" ml="2">
+                    Critères additionnels
+                  </Tag>
+                )}
+                <Text fontSize={"zeta"} color="lightgray">
+                  {user.fonction && <>{user.fonction}, </>}
+                  {user.created_at && <>créé le {new Date(user.created_at).toLocaleDateString()}</>}
+                  {user.created_at && user.last_connection && ", "}
+                  {user.last_connection && (
+                    <>dernière connexion le {new Date(user.last_connection).toLocaleDateString()}</>
+                  )}
+                </Text>
+              </Box>
+              <AccordionIcon />
+            </AccordionButton>
+            <AccordionPanel pb={4} border={"1px solid"} borderTop={0} borderColor={"bluefrance"}>
+              {isExpanded && <UserLine user={user} roles={roles} />}
+            </AccordionPanel>
+          </>
+        )}
+      </AccordionItem>
+    </Accordion>
+  );
+};
+
+export const UserLine = ({ user, roles }) => {
+  console.log(user);
   const toast = useToast();
   const [rolesAcl, setRolesAcl] = useState(buildRolesAcl(user?.roles || [], roles));
 
@@ -387,14 +455,16 @@ const UserLine = ({ user, roles }) => {
   );
 };
 
-export default () => {
+export default (props) => {
   const { data: roles } = useQuery("roles", () => _get(`/api/admin/roles/`), {
     refetchOnWindowFocus: false,
   });
 
-  const { data: users } = useQuery("users", () => _get(`/api/admin/users/`), {
-    refetchOnWindowFocus: false,
-  });
+  // const { data: users } = useQuery("users", () => _get(`/api/admin/users/`), {
+  //   refetchOnWindowFocus: false,
+  // });
+
+  const searchState = useUserSearch();
 
   const title = "Gestion des utilisateurs";
   setTitle(title);
@@ -412,6 +482,28 @@ export default () => {
             {title}
           </Text>
 
+          {!searchState.loaded && (
+            <Center h="70vh">
+              <Spinner />
+            </Center>
+          )}
+          {searchState.loaded && (
+            <Tabs variant="search" mt={5} isLazy>
+              <TabList bg="white">
+                <Tab>Liste</Tab>
+                <Tab>Créer un utilisateur</Tab>
+              </TabList>
+              <TabPanels>
+                <TabPanel>
+                  <SearchUser {...props} searchState={searchState} roles={roles} />
+                </TabPanel>
+                <TabPanel>
+                  <UserLine user={null} roles={roles} />
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
+          )}
+          {/*
           <Stack spacing={2}>
             <Accordion bg="white" allowToggle>
               {roles && (
@@ -484,7 +576,7 @@ export default () => {
                     );
                   })}
             </Accordion>
-          </Stack>
+          </Stack> */}
         </Container>
       </Box>
     </Layout>

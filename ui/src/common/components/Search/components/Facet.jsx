@@ -1,12 +1,12 @@
 import React, { useCallback } from "react";
 import { MultiList } from "@appbaseio/reactivesearch";
 import { Flex, Text } from "@chakra-ui/react";
-import { InfoTooltip } from "../../../InfoTooltip";
-import { QuickFilterItem } from "../QuickFilters";
+import { InfoTooltip } from "../../InfoTooltip";
+import { QuickFilterItem } from "./QuickFilters";
 
 import "./facet.css";
 
-const Facet = ({
+export const Facet = ({
   componentId,
   dataField,
   filterLabel,
@@ -85,5 +85,3 @@ const Facet = ({
     />
   );
 };
-
-export default Facet;

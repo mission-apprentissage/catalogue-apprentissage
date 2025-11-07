@@ -2,11 +2,15 @@ const schemas = require("./schema");
 const { createModel } = require("./createModel");
 
 module.exports = {
-  User: createModel("user", schemas.get("user")),
+  User: createModel("user", schemas.get("user"), {
+    elastic: {
+      index: "users",
+    },
+  }),
   Role: createModel("role", schemas.get("role")),
   Formation: createModel("formation", schemas.get("formation"), {
     elastic: {
-      index: "formation",
+      index: "formations",
       filter: (doc) => {
         return !doc.published;
       },

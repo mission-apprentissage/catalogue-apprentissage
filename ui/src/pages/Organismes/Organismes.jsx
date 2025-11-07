@@ -1,16 +1,15 @@
 import React from "react";
 import { Box, Center, Container, Text, Spinner, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import Layout from "../layout/Layout";
-import { useSearch } from "../../common/hooks/useSearch";
+import { useEtablissementSearch } from "../../common/hooks/useEtablissementSearch";
 // import { HowToReglement } from "../../common/components/HowToReglement/HowToReglement";
 import { Breadcrumb } from "../../common/components/Breadcrumb";
 import { setTitle } from "../../common/utils/pageUtils";
 
-import { CONTEXT } from "../../constants/context";
 import SearchEtablissement from "../../common/components/Search/SearchEtablissement";
 
 export default (props) => {
-  const searchState = useSearch("organismes");
+  const searchState = useEtablissementSearch();
   const title = "Organismes";
   setTitle(title);
 
@@ -36,7 +35,7 @@ export default (props) => {
               </TabList>
               <TabPanels>
                 <TabPanel>
-                  <SearchEtablissement {...props} searchState={searchState} context={CONTEXT.ORGANISMES} />
+                  <SearchEtablissement {...props} searchState={searchState} />
                 </TabPanel>
 
                 {/* <TabPanel>

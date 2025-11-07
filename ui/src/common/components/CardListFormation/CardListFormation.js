@@ -1,16 +1,16 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { hasAccessTo } from "../../../../utils/rolesUtils";
-import useAuth from "../../../../hooks/useAuth";
-import { PreviousStatusBadge, StatusBadge } from "../../../StatusBadge";
+import { hasAccessTo } from "../../utils/rolesUtils";
+import useAuth from "../../hooks/useAuth";
+import { PreviousStatusBadge, StatusBadge } from "../StatusBadge";
 import { Box, Flex, Link, Text } from "@chakra-ui/react";
-import { ArrowRightLine } from "../../../../../theme/components/icons";
-import { QualiteBadge } from "../../../QualiteBadge";
-import { HabiliteBadge } from "../../../HabiliteBadge";
-import { ActifBadge } from "../../../ActifBadge";
-import { DureeBadge } from "../../../DureeBadge";
-import { AnneeBadge } from "../../../AnneeBadge";
-import { AFFELNET_STATUS, PARCOURSUP_STATUS } from "../../../../../constants/status";
+import { ArrowRightLine } from "../../../theme/components/icons";
+import { QualiteBadge } from "../QualiteBadge";
+import { HabiliteBadge } from "../HabiliteBadge";
+import { ActifBadge } from "../ActifBadge";
+import { DureeBadge } from "../DureeBadge";
+import { AnneeBadge } from "../AnneeBadge";
+import { AFFELNET_STATUS, PARCOURSUP_STATUS } from "../../../constants/status";
 
 export const CardListFormation = ({ data }) => {
   const [user] = useAuth();

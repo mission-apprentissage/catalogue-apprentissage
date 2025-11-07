@@ -1,20 +1,15 @@
 import { useState, useEffect } from "react";
 import { _get, _post } from "../httpClient";
 import { mergedQueries, withUniqueKey, operators } from "../components/Search/components/QueryBuilder/utils";
-import { ETABLISSEMENTS_ES_INDEX, FORMATIONS_ES_INDEX } from "../../constants/es";
-import { CONTEXT } from "../../constants/context";
+import { FORMATIONS_ES_INDEX } from "../../constants/es";
 
 const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 
 /**
  *
- * @param {string} context
- * @returns {ETABLISSEMENTS_ES_INDEX|FORMATIONS_ES_INDEX}
+ * @returns {FORMATIONS_ES_INDEX}
  */
-const getEsBase = (context) => {
-  if (context === CONTEXT.ORGANISMES) {
-    return ETABLISSEMENTS_ES_INDEX;
-  }
+const getEsBase = () => {
   return FORMATIONS_ES_INDEX;
 };
 
@@ -34,22 +29,10 @@ const getEsCount = async (queries, options) => {
   const countEsQuery = {
     query: { bool: { ...queries, ...(queries?.should?.length > 0 ? { minimum_should_match: 1 } : {}) } },
   };
-  return await _post("/api/es/search/formation/_count", countEsQuery, options);
+  return await _post("/api/es/search/formations/_count", countEsQuery, options);
 };
 
-const getCountEntities = async (base, options) => {
-  if (base === ETABLISSEMENTS_ES_INDEX) {
-    const params = new URLSearchParams({
-      query: JSON.stringify({ published: true }),
-    });
-    const countEtablissement = await _get(`${CATALOGUE_API}/entity/etablissements/count?${params}`, options);
-    return {
-      countEtablissement,
-      countCatalogueGeneral: null,
-      countCatalogueNonEligible: null,
-    };
-  }
-
+const getCountEntities = async (options) => {
   const countCatalogueGeneral = {
     total: 0,
     filtered: null,
@@ -113,11 +96,10 @@ const getCountEntities = async (base, options) => {
 
 /**
  *
- * @param {string} context
  * @returns
  */
-export function useSearch(context) {
-  const base = getEsBase(context);
+export function useFormationSearch() {
+  const base = getEsBase();
 
   const endpoint = CATALOGUE_API;
   const [searchState, setSearchState] = useState({

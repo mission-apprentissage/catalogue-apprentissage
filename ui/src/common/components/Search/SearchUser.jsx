@@ -4,31 +4,28 @@ import { Box, Container, Flex, Text } from "@chakra-ui/react";
 
 import useAuth from "../../hooks/useAuth";
 import { hasAccessTo, hasOneOfRoles, isUserAdmin } from "../../utils/rolesUtils";
-import { CardListFormation, ExportButton, QueryBuilder, QuickFilters } from "./components";
+import { ExportButton, QueryBuilder, QuickFilters } from "./components";
 import {
   allowedFilters,
   quickFiltersDefinition,
   queryBuilderField,
   dataSearch,
   columnsDefinition,
-} from "./constantsFormations";
+} from "./constantsUsers";
 import { CloseCircleLine } from "../../../theme/components/icons";
 import { SearchLine } from "../../../theme/components/icons/SearchLine";
+import { CardListUser } from "../../../pages/admin/Users";
 import { Pagination } from "./components/Pagination";
-import { CONTEXT } from "../../../constants/context";
 
 import "./search.css";
-import HardFiltersFormation from "./HardFiltersFormation";
 
-export default React.memo(({ searchState, context, extraButtons = null }) => {
-  const isCatalogueGeneral = context === CONTEXT.CATALOGUE_GENERAL;
-  const { base, countCatalogueGeneral, countCatalogueNonEligible, endpoint } = searchState;
+export default React.memo(({ searchState, extraButtons = null, roles }) => {
+  const { base, countUsers, endpoint } = searchState;
 
   const [auth] = useAuth();
 
   const filters = quickFiltersDefinition.filter(
-    ({ acl, roles, displayInContext, isAuth }) =>
-      (!displayInContext || displayInContext.includes(context)) &&
+    ({ acl, roles, isAuth }) =>
       (!acl || hasAccessTo(auth, acl)) &&
       (!roles || hasOneOfRoles(auth, roles)) &&
       (!isAuth || (isAuth && auth?.sub !== "anonymous"))
@@ -45,8 +42,6 @@ export default React.memo(({ searchState, context, extraButtons = null }) => {
           },
         }}
       >
-        <HardFiltersFormation allowedFilters={allowedFilters} context={context} />
-
         <Box className="search" maxW="full">
           <Container maxW="7xl" p={0}>
             <Box className={`search-container`} px={[0, 0, 4]} display={"flex"}>
@@ -97,7 +92,7 @@ export default React.memo(({ searchState, context, extraButtons = null }) => {
                   FILTRER PAR
                 </Text>
 
-                <QuickFilters filters={filters} context={context} />
+                <QuickFilters filters={filters} />
               </Box>
 
               <Box className="search-results" px={[0, 0, 4]}>
@@ -120,43 +115,13 @@ export default React.memo(({ searchState, context, extraButtons = null }) => {
                     sortBy="asc"
                     sortOptions={[
                       {
-                        label: "Tri par défaut",
-                        dataField: "_score",
-                        sortBy: "desc",
-                      },
-                      {
-                        label: "Académie",
-                        dataField: "nom_academie.keyword",
+                        label: "Adresse courriel",
+                        dataField: "email.keyword",
                         sortBy: "asc",
                       },
                       {
-                        label: "Formation - libellé long",
-                        dataField: "intitule_long.keyword",
-                        sortBy: "asc",
-                      },
-                      {
-                        label: "Formation - CFD",
-                        dataField: "cfd.keyword",
-                        sortBy: "asc",
-                      },
-                      {
-                        label: "Organisme - UAI du responsable",
-                        dataField: "etablissement_gestionnaire_uai.keyword",
-                        sortBy: "asc",
-                      },
-                      {
-                        label: "Organisme - UAI du formateur",
-                        dataField: "etablissement_formateur_uai.keyword",
-                        sortBy: "asc",
-                      },
-                      {
-                        label: "Organisme - UAI du lieu de formation",
-                        dataField: "uai_formation.keyword",
-                        sortBy: "asc",
-                      },
-                      {
-                        label: "Lieu - code Insee",
-                        dataField: "code_commune_insee.keyword",
+                        label: "Nom d'utilisateur",
+                        dataField: "username.keyword",
                         sortBy: "asc",
                       },
                     ]}
@@ -165,19 +130,14 @@ export default React.memo(({ searchState, context, extraButtons = null }) => {
                         _source: columnsDefinition.map(({ accessor }) => accessor),
                       };
                     }}
-                    renderItem={(data) => <CardListFormation data={data} key={data._id} />}
+                    renderItem={(data) => <CardListUser user={data} key={data._id} roles={roles} />}
                     renderResultStats={(stats) => {
                       return (
                         <div className="summary-stats">
                           <span className="summary-text">
-                            {isCatalogueGeneral &&
-                              `${stats.numberOfResults.toLocaleString(
-                                "fr-FR"
-                              )} formations sur ${countCatalogueGeneral.total.toLocaleString("fr-FR")}`}
-                            {!isCatalogueGeneral &&
-                              `${stats.numberOfResults.toLocaleString(
-                                "fr-FR"
-                              )} formations sur ${countCatalogueNonEligible.total.toLocaleString("fr-FR")}`}
+                            {`${stats.numberOfResults.toLocaleString(
+                              "fr-FR"
+                            )} utilisateurs sur ${countUsers.toLocaleString("fr-FR")}`}
                           </span>
 
                           <ExportButton
@@ -191,7 +151,6 @@ export default React.memo(({ searchState, context, extraButtons = null }) => {
                                 fieldName: def.accessor,
                                 formatter: def.formatter,
                               }))}
-                            context={context}
                           />
 
                           {extraButtons}

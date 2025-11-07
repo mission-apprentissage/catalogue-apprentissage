@@ -145,6 +145,7 @@ export const columnsDefinition = [
     width: 200,
     exportable: true,
   },
+
   {
     Header: "Fiche catalogue",
     accessor: "cle_ministere_educatif",
@@ -1075,6 +1076,7 @@ export const queryBuilderField = [
 export const quickFiltersDefinition = [
   {
     componentId: `region`,
+    type: "facet",
     dataField: "region.keyword",
     title: "Région",
     filterLabel: "Région",
