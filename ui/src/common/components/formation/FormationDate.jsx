@@ -23,9 +23,9 @@ export const FormationDate = ({ formation }) => {
               date_debut,
               date_fin,
               modalites_entrees_sorties,
-              effectif_minimal,
-              capacite_simultanee,
-              capacite_cumulee,
+              // effectif_minimal,
+              // capacite_simultanee,
+              // capacite_cumulee,
             },
             index
           ) => (
@@ -33,7 +33,7 @@ export const FormationDate = ({ formation }) => {
               Du {new Date(date_debut).toLocaleDateString("fr-FR")} au {new Date(date_fin).toLocaleDateString("fr-FR")}.{" "}
               <Box as="span" fontWeight="normal">
                 {modalites_entrees_sorties && "Entrée-sortie permanente."}{" "}
-                {
+                {/* {
                   <>
                     {[
                       `Effectif minimal : ${effectif_minimal ?? "non précisé"}.`,
@@ -41,7 +41,7 @@ export const FormationDate = ({ formation }) => {
                       `Capacité cumulée : ${capacite_cumulee ?? "non précisée"}.`,
                     ].join(" ")}
                   </>
-                }
+                } */}
               </Box>
               <br />
             </ListItem>
