@@ -1,7 +1,7 @@
 import { escapeDiacritics } from "../../utils/downloadUtils";
-import helpText from "../../../locales/helpText.json";
 import { ACADEMIES } from "../../../constants/academies";
 import { REGIONS } from "../../../constants/regions";
+import { hasAccessTo } from "../../utils/rolesUtils";
 
 export const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 export const allowedFilters = [
@@ -37,6 +37,22 @@ const booleanFormatter = (value) => {
     default:
       return "";
   }
+};
+
+const structureUser = (user, roles) => {
+  const rolesAcl = roles
+    .filter((role) => user.roles.find((r) => role.name === r))
+    .reduce((acc, { acl }) => [...acc, ...acl], []);
+
+  // console.log({
+  //   roles,
+  //   user,
+  //   userAcl: user.acl,
+  //   userRoles: user.roles,
+  //   allAcl: [...new Set([...user.acl, rolesAcl])],
+  // });
+
+  return { ...user, acl: [...new Set([...user.acl, ...rolesAcl])] };
 };
 
 /**
@@ -85,13 +101,6 @@ export const columnsDefinition = [
   },
 
   {
-    Header: "Droits de publication ou en lecture seule",
-    accessor: "tag",
-    width: 200,
-    exportable: true,
-  },
-
-  {
     Header: "Tag",
     accessor: "tag",
     width: 200,
@@ -117,6 +126,58 @@ export const columnsDefinition = [
     exportable: true,
     formatter: arrayFormatter,
   },
+
+  {
+    Header: "Droits de publication ou en lecture seule",
+    accessor: "acl",
+    width: 200,
+    exportable: true,
+    formatter: (acl, user, roles) =>
+      hasAccessTo(structureUser(user, roles), "page_formation/gestion_publication") ? "publication" : "lecture seule",
+  },
+
+  {
+    Header: "Accès aux offres du périmètre Affelnet",
+    accessor: "acl",
+    width: 200,
+    exportable: true,
+    formatter: (acl, user, roles) =>
+      booleanFormatter(
+        hasAccessTo(structureUser(user, roles), "page_formation/voir_status_publication_aff") ||
+          hasAccessTo(structureUser(user, roles), "page_catalogue/voir_status_publication_aff")
+      ),
+  },
+
+  {
+    Header: "Droit d'accès aux règles académiques d'inclusion des offres dans le périmètre Affelnet",
+    accessor: "acl",
+    width: 200,
+    exportable: true,
+    formatter: (acl, user, roles) =>
+      booleanFormatter(hasAccessTo(structureUser(user, roles), "page_perimetre/affelnet")),
+  },
+
+  {
+    Header: "Accès aux offres du périmètre Parcoursup",
+    accessor: "acl",
+    width: 200,
+    exportable: true,
+    formatter: (acl, user, roles) =>
+      booleanFormatter(
+        hasAccessTo(structureUser(user, roles), "page_formation/voir_status_publication_ps") ||
+          hasAccessTo(structureUser(user, roles), "page_catalogue/voir_status_publication_ps")
+      ),
+  },
+
+  {
+    Header: "Droit d'accès aux règles académiques d'inclusion des offres dans le périmètre Parcoursup",
+    accessor: "acl",
+    width: 200,
+    exportable: true,
+    formatter: (acl, user, roles) =>
+      booleanFormatter(hasAccessTo(structureUser(user, roles), "page_perimetre/parcoursup")),
+  },
+
   {
     Header: "Date de création",
     accessor: "created_at",
@@ -134,7 +195,7 @@ export const columnsDefinition = [
   },
 
   {
-    Header: "Date de dernière modidication",
+    Header: "Date de dernière modification",
     accessor: "updated_at",
     width: 200,
     exportable: true,

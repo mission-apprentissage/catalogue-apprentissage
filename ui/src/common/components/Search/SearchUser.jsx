@@ -31,6 +31,8 @@ export default React.memo(({ searchState, extraButtons = null, roles }) => {
       (!isAuth || (isAuth && auth?.sub !== "anonymous"))
   );
 
+  console.log(roles);
+
   return (
     <Box className="search-page">
       <ReactiveBase
@@ -149,7 +151,9 @@ export default React.memo(({ searchState, extraButtons = null, roles }) => {
                               .map((def) => ({
                                 header: def.Header,
                                 fieldName: def.accessor,
-                                formatter: def.formatter,
+                                formatter: (value, user) => {
+                                  return def.formatter?.(value, user, roles) ?? value ?? "";
+                                },
                               }))}
                           />
 
