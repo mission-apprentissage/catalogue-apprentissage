@@ -95,7 +95,12 @@ export const CardListUser = ({ user, roles }) => {
                 )}
                 <Text fontSize={"zeta"} color="lightgray">
                   {user.fonction && <>{user.fonction}, </>}
-                  {user.created_at && <>créé le {new Date(user.created_at).toLocaleDateString()}</>}
+                  {user.created_at && (
+                    <>
+                      créé le {new Date(user.created_at).toLocaleDateString()}
+                      {user.created_by && <> par {user.created_by}</>}
+                    </>
+                  )}
                   {user.created_at && user.last_connection && ", "}
                   {user.last_connection && (
                     <>dernière connexion le {new Date(user.last_connection).toLocaleDateString()}</>

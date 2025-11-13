@@ -86,10 +86,10 @@ module.exports = ({ users, mailer, db: { db } }) => {
 
   router.post(
     "/user",
-    tryCatch(async ({ body }, res) => {
-      await userSchema.validateAsync(body, { abortEarly: false });
+    tryCatch(async (req, res) => {
+      await userSchema.validateAsync(req.body, { abortEarly: false });
 
-      const { username, password, options } = body;
+      const { username, password, options } = req.body;
 
       let alreadyExists = await users.getUser(username);
       if (alreadyExists) {
@@ -100,7 +100,7 @@ module.exports = ({ users, mailer, db: { db } }) => {
         throw Boom.conflict(`Impossible de créer, l'email ${options.email.toLowerCase()} est déjà utilisé.`);
       }
 
-      const user = await users.createUser(username, password, options);
+      const user = await users.createUser(username, password, { ...options, created_by: req.user.email });
 
       await mailer.sendEmail(
         user.email,
@@ -119,18 +119,19 @@ module.exports = ({ users, mailer, db: { db } }) => {
 
   router.put(
     "/user/:username",
-    tryCatch(async ({ body, params }, res) => {
-      const username = params.username;
+    tryCatch(async (req, res) => {
+      const username = req.params.username;
 
       await users.updateUser(username, {
-        isAdmin: body.options.permissions.isAdmin,
-        email: body.options.email?.toLowerCase(),
-        academie: body.options.academie,
-        username: body.username?.toLowerCase(),
-        tag: body.options.tag,
-        fonction: body.options.fonction,
-        roles: body.options.roles,
-        acl: body.options.acl,
+        isAdmin: req.body.options.permissions.isAdmin,
+        email: req.body.options.email?.toLowerCase(),
+        academie: req.body.options.academie,
+        username: req.body.username?.toLowerCase(),
+        tag: req.body.options.tag,
+        fonction: req.body.options.fonction,
+        roles: req.body.options.roles,
+        acl: req.body.options.acl,
+        updated_by: req.user.email,
       });
 
       await closeSessionsOfThisUser(db, username);
@@ -154,10 +155,10 @@ module.exports = ({ users, mailer, db: { db } }) => {
 
   router.post(
     "/user/:username/tags",
-    tryCatch(async ({ body, params }, res) => {
-      const username = params.username;
+    tryCatch(async (req, res) => {
+      const username = req.params.username;
 
-      await users.addTag(username, body.tag);
+      await users.addTag(username, req.body.tag);
 
       res.json({ message: `Utilisateur ${username} mis à jour !` });
     })
@@ -165,10 +166,10 @@ module.exports = ({ users, mailer, db: { db } }) => {
 
   router.delete(
     "/user/:username/tags",
-    tryCatch(async ({ body, params }, res) => {
-      const username = params.username;
+    tryCatch(async (req, res) => {
+      const username = req.params.username;
 
-      await users.removeTag(username, body.tag);
+      await users.removeTag(username, req.body.tag);
 
       res.json({ message: `Utilisateur ${username} mis à jour !` });
     })

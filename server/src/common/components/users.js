@@ -50,11 +50,12 @@ module.exports = async () => {
         username: username?.toLowerCase().trim(),
         password: hash,
         isAdmin: !!permissions.isAdmin,
-        email: options.email?.toLowerCase().trim() || "",
-        academie: options.academie || "0",
-        roles: options.roles || ["user"],
+        email: options.email?.toLowerCase().trim() ?? "",
+        academie: options.academie ?? "0",
+        roles: options.roles ?? ["user"],
         tag: options.tag,
-        acl: options.acl || [],
+        acl: options.acl ?? [],
+        created_by: options.created_by ?? null,
       });
 
       await user.save();

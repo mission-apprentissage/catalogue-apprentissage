@@ -67,5 +67,17 @@ const usersSchema = {
     noIndex: true,
     description: "Historique des dates de connexion",
   },
+
+  created_by: {
+    type: String,
+    default: null,
+    description: "Utilisateur ayant créé celui-ci",
+  },
+
+  updated_by: {
+    type: String,
+    default: null,
+    description: "Utilisateur ayant modifié celui-ci",
+  },
 };
 module.exports = usersSchema;

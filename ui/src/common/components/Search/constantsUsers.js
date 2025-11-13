@@ -1,6 +1,7 @@
 import { escapeDiacritics } from "../../utils/downloadUtils";
 import helpText from "../../../locales/helpText.json";
 import { ACADEMIES } from "../../../constants/academies";
+import { REGIONS } from "../../../constants/regions";
 
 export const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 export const allowedFilters = [
@@ -58,6 +59,39 @@ export const columnsDefinition = [
     exportable: true,
   },
   {
+    Header: "Académie",
+    accessor: "academie",
+    width: 200,
+    exportable: true,
+    formatter: (values) =>
+      values
+        .split(",")
+        .filter((value) => +value !== -1)
+        .map((value) => ACADEMIES[value]?.nom_academie ?? value),
+  },
+  {
+    Header: "Région académique",
+    accessor: "academie",
+    width: 200,
+    exportable: true,
+    formatter: (values) => [
+      ...new Set(
+        values
+          .split(",")
+          .filter((value) => +value !== -1)
+          .map((value) => Object.values(REGIONS).find((region) => region.academies?.includes(value))?.nom_region)
+      ),
+    ],
+  },
+
+  {
+    Header: "Droits de publication ou en lecture seule",
+    accessor: "tag",
+    width: 200,
+    exportable: true,
+  },
+
+  {
     Header: "Tag",
     accessor: "tag",
     width: 200,
@@ -90,6 +124,31 @@ export const columnsDefinition = [
     exportable: true,
     formatter: dateFormatter,
   },
+
+  {
+    Header: "Créer par",
+    accessor: "created_by",
+    width: 200,
+    exportable: true,
+    formatter: escapeDiacritics,
+  },
+
+  {
+    Header: "Date de dernière modidication",
+    accessor: "updated_at",
+    width: 200,
+    exportable: true,
+    formatter: dateFormatter,
+  },
+
+  {
+    Header: "Modifier par",
+    accessor: "updated_by",
+    width: 200,
+    exportable: true,
+    formatter: escapeDiacritics,
+  },
+
   {
     Header: "Date de la dernière connexion",
     accessor: "last_connection",
