@@ -40,7 +40,7 @@ export const DescriptionBlock = ({ formation }) => {
   const [user] = useAuth();
 
   const toast = useToast();
-  const isTitreRNCP = ["Titre", "TP", null].includes(formation.rncp_details?.code_type_certif); // formation.etablissement_reference_habilite_rncp !== null;
+  const isTitreRNCP = formation.CI_inscrit_rncp !== "3 - Inscrit de droit";
 
   const showPartenaires =
     isTitreRNCP &&
