@@ -47,7 +47,7 @@ export const QuickFilterItem = ({ head, body }) => {
   );
 };
 
-const FacetFilter = ({ filter }) => {
+const FacetFilter = ({ filter, injectedProps = {} }) => {
   return (
     <Facet
       componentId={filter.componentId}
@@ -66,8 +66,8 @@ const FacetFilter = ({ filter }) => {
       URLParams={true}
       react={{ and: allowedFilters.filter((e) => e !== filter.componentId) }}
       helpTextSection={filter.helpTextSection}
-      transformData={filter.transformData}
-      customQuery={filter.customQuery}
+      transformData={filter.transformData ? (...args) => filter.transformData?.(...args, injectedProps) : undefined}
+      customQuery={filter.customQuery ? (...args) => filter.customQuery?.(...args, injectedProps) : undefined}
       showSearch={filter.showSearch}
     />
   );
@@ -149,7 +149,7 @@ const DateRangeFilter = ({ filter }) => {
   );
 };
 
-const AdvancedFilter = ({ filter }) => {
+const AdvancedFilter = ({ filter, injectedProps = {} }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   if (!filter.filters?.length) {
@@ -170,13 +170,13 @@ const AdvancedFilter = ({ filter }) => {
       </Button>
 
       <Box mt={2} display={isOpen ? "block" : "none"}>
-        <QuickFilters filters={filter.filters} />
+        <QuickFilters filters={filter.filters} injectedProps={injectedProps} />
       </Box>
     </Box>
   );
 };
 
-export const QuickFilters = ({ filters }) => {
+export const QuickFilters = ({ filters, injectedProps = {} }) => {
   return (
     <>
       {filters.map((filter, index) => {
@@ -184,7 +184,7 @@ export const QuickFilters = ({ filters }) => {
           case "facet": {
             return (
               <React.Fragment key={index}>
-                <FacetFilter filter={filter} />
+                <FacetFilter filter={filter} injectedProps={injectedProps} />
               </React.Fragment>
             );
           }
@@ -192,7 +192,7 @@ export const QuickFilters = ({ filters }) => {
           case "date-range": {
             return (
               <React.Fragment key={index}>
-                <DateRangeFilter filter={filter} />
+                <DateRangeFilter filter={filter} injectedProps={injectedProps} />
               </React.Fragment>
             );
           }
@@ -200,7 +200,7 @@ export const QuickFilters = ({ filters }) => {
           case "advanced": {
             return (
               <React.Fragment key={index}>
-                <AdvancedFilter filter={filter} />
+                <AdvancedFilter filter={filter} injectedProps={injectedProps} />
               </React.Fragment>
             );
           }

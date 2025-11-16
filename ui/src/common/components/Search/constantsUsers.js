@@ -1,7 +1,7 @@
 import { escapeDiacritics } from "../../utils/downloadUtils";
 import { ACADEMIES } from "../../../constants/academies";
 import { REGIONS } from "../../../constants/regions";
-import { hasAccessTo } from "../../utils/rolesUtils";
+import { hasAccessTo, hasOneOfRoles } from "../../utils/rolesUtils";
 
 export const CATALOGUE_API = `${process.env.REACT_APP_BASE_URL}/api`;
 export const allowedFilters = [
@@ -10,17 +10,24 @@ export const allowedFilters = [
   "username",
   "email",
   "roles",
+  "acl",
+  "acl-publication-ou-lecture-seule",
+  "acl-affelnet",
+  "acl-perimetre-affelnet",
+  "acl-parcoursup",
+  "acl-perimetre-parcoursup",
   "tag",
   "fonction",
   "isAdmin",
   "academie",
+  "region",
   "created_at",
-  "last_connection",
+  "created_by",
+  "updated_at",
+  "updated_by",
+  "last_connection_start",
+  "last_connection_end",
 ];
-
-const mefsFormatter = (mefs) => {
-  return mefs?.map((mef) => `${mef.mef10}`).join(", ") ?? "";
-};
 
 const arrayFormatter = (values) => {
   return values?.join(", ") ?? "";
@@ -132,7 +139,7 @@ export const columnsDefinition = [
     accessor: "acl",
     width: 200,
     exportable: true,
-    formatter: (acl, user, roles) =>
+    formatter: (acl, user, { roles }) =>
       hasAccessTo(structureUser(user, roles), "page_formation/gestion_publication") ? "publication" : "lecture seule",
   },
 
@@ -141,11 +148,8 @@ export const columnsDefinition = [
     accessor: "acl",
     width: 200,
     exportable: true,
-    formatter: (acl, user, roles) =>
-      booleanFormatter(
-        hasAccessTo(structureUser(user, roles), "page_formation/voir_status_publication_aff") ||
-          hasAccessTo(structureUser(user, roles), "page_catalogue/voir_status_publication_aff")
-      ),
+    formatter: (acl, user, { roles }) =>
+      booleanFormatter(hasOneOfRoles(structureUser(user, roles), ["instructeur-affelnet", "lecteur-affelnet"])),
   },
 
   {
@@ -153,7 +157,7 @@ export const columnsDefinition = [
     accessor: "acl",
     width: 200,
     exportable: true,
-    formatter: (acl, user, roles) =>
+    formatter: (acl, user, { roles }) =>
       booleanFormatter(hasAccessTo(structureUser(user, roles), "page_perimetre/affelnet")),
   },
 
@@ -162,11 +166,8 @@ export const columnsDefinition = [
     accessor: "acl",
     width: 200,
     exportable: true,
-    formatter: (acl, user, roles) =>
-      booleanFormatter(
-        hasAccessTo(structureUser(user, roles), "page_formation/voir_status_publication_ps") ||
-          hasAccessTo(structureUser(user, roles), "page_catalogue/voir_status_publication_ps")
-      ),
+    formatter: (acl, user, { roles }) =>
+      booleanFormatter(hasOneOfRoles(structureUser(user, roles), ["instructeur-parcoursup", "lecteur-parcoursup"])),
   },
 
   {
@@ -174,7 +175,7 @@ export const columnsDefinition = [
     accessor: "acl",
     width: 200,
     exportable: true,
-    formatter: (acl, user, roles) =>
+    formatter: (acl, user, { roles }) =>
       booleanFormatter(hasAccessTo(structureUser(user, roles), "page_perimetre/parcoursup")),
   },
 
@@ -269,6 +270,78 @@ export const quickFiltersDefinition = [
     },
   },
 
+  { type: "divider" },
+
+  {
+    componentId: `region`,
+    type: "facet",
+    dataField: "academie.keyword",
+    title: "Région",
+    filterLabel: "Région",
+    selectAllLabel: "Toutes les régions",
+    sortBy: "asc",
+
+    transformData: (data) => {
+      return Object.entries({ ...{ "-1": { nom_region: "N/A", num_region: -1, academies: ["-1"] } }, ...REGIONS })
+        .sort(([aKey, aValue], [bKey, bValue]) => aValue.num_region - bValue.num_region)
+        .map(([regionKey, regionValue]) => ({
+          key: regionValue.nom_region,
+          doc_count: data
+            .filter(
+              ({ key, doc_count }) => !!regionValue.academies.some((academie) => key.split(",")?.includes(academie))
+            )
+            .reduce((acc, { key, doc_count }) => acc + doc_count, 0),
+        }))
+        .filter(({ key, doc_count }) => !!doc_count);
+    },
+
+    customQuery: (values) => {
+      console.log("region", {
+        query:
+          values?.length && !values?.find((value) => value === "Toutes les régions")
+            ? {
+                bool: {
+                  minimum_should_match: 1,
+                  should: values
+                    .flatMap((value) =>
+                      Object.entries({ "-1": { nom_region: "N/A", num_region: -1, academies: ["-1"] }, ...REGIONS })
+                        .filter(([k, v]) => v.nom_region === value)
+                        ?.flatMap(([k, v]) => v.academies)
+                    )
+                    .map((value) => ({
+                      wildcard: {
+                        "academie.keyword": "*" + value + "*",
+                      },
+                    })),
+                },
+              }
+            : {},
+      });
+
+      return {
+        query:
+          values?.length && !values?.find((value) => value === "Toutes les régions")
+            ? {
+                bool: {
+                  minimum_should_match: 1,
+                  should: values
+                    .flatMap((value) =>
+                      Object.entries({ "-1": { nom_region: "N/A", num_region: -1, academies: ["-1"] }, ...REGIONS })
+                        .filter(([k, v]) => v.nom_region === value)
+                        ?.flatMap(([k, v]) => v.academies)
+                    )
+                    .map((value) => ({
+                      wildcard: {
+                        "academie.keyword": "*" + value + "*",
+                      },
+                    })),
+                },
+              }
+            : {},
+      };
+    },
+  },
+
   {
     componentId: `academie`,
     type: "facet",
@@ -277,32 +350,40 @@ export const quickFiltersDefinition = [
     filterLabel: "Académie",
     selectAllLabel: "Toutes les académies",
     sortBy: "asc",
+
     transformData: (data) => {
-      const academies = new Map();
-
-      data.forEach((d) => {
-        d.key?.split(",").forEach((value) => {
-          const academie = academies.get(value);
-          academies.set(value, {
-            key: ACADEMIES[value]?.nom_academie ?? "N/A",
-            doc_count: (academie?.doc_count ?? 0) + d.doc_count,
-          });
-        });
-      });
-
-      return [...academies.values()];
+      return Object.entries({
+        ...{ "-1": { nom_academie: "N/A", num_academie: -1 } },
+        ...ACADEMIES,
+      })
+        .sort(([aKey, aValue], [bKey, bValue]) => aValue.num_academie - bValue.num_academie)
+        .map(([academieKey, academieValue]) => ({
+          key: academieValue.nom_academie,
+          doc_count: data
+            .filter(({ key, doc_count }) => !!key.split(",")?.includes(academieKey))
+            .reduce((acc, { key, doc_count }) => acc + doc_count, 0),
+        }))
+        .filter(({ key, doc_count }) => !!doc_count);
     },
+
     customQuery: (values) => {
       return {
         query:
           values?.length && !values?.find((value) => value === "Toutes les académies")
             ? {
-                terms: {
-                  "academie.keyword": values.flatMap((value) =>
-                    Object.entries({ ...ACADEMIES, "N/A": { nom_academie: "N/A", num_academie: -1 } })
-                      .filter(([k, v]) => v.nom_academie === value)
-                      ?.map(([k, v]) => (k === "N/A" ? "-1" : k))
-                  ),
+                bool: {
+                  minimum_should_match: 1,
+                  should: values
+                    .flatMap((value) =>
+                      Object.entries({ "-1": { nom_academie: "N/A", num_academie: -1 }, ...ACADEMIES })
+                        .filter(([k, v]) => v.nom_academie === value)
+                        ?.map(([k, v]) => k)
+                    )
+                    .map((value) => ({
+                      wildcard: {
+                        "academie.keyword": "*" + value + "*",
+                      },
+                    })),
                 },
               }
             : {},
@@ -310,7 +391,7 @@ export const quickFiltersDefinition = [
     },
   },
 
-  // { type: "divider" },
+  { type: "divider" },
 
   {
     componentId: `roles`,
@@ -320,7 +401,6 @@ export const quickFiltersDefinition = [
     filterLabel: "Rôle",
     selectAllLabel: "Tous les rôles",
     sortBy: "asc",
-    // formatter: arrayFormatter,
   },
 
   {
@@ -341,6 +421,505 @@ export const quickFiltersDefinition = [
     filterLabel: "Fonction",
     selectAllLabel: "Toutes les fonctions",
     sortBy: "asc",
+  },
+
+  { type: "divider" },
+
+  {
+    componentId: "acl-publication-ou-lecture-seule",
+    type: "facet",
+    dataField: "acl.keyword",
+    title: "Droit de publication ou lecture seule",
+    filterLabel: "Droit de publication ou lecture seule",
+    selectAllLabel: "Toutes les valeurs",
+    sortBy: "asc",
+
+    transformData: () => {
+      return [
+        { key: "Publication", doc_count: null },
+        { key: "Lecture seule", doc_count: null },
+      ];
+    },
+
+    customQuery: (values, filterDefinition, injectedProps) => {
+      const { roles } = injectedProps;
+
+      const authorizedRoles = new Set(
+        roles?.filter((role) => role.acl.includes("page_formation/gestion_publication")).map((role) => role.name)
+      );
+
+      if (values.length === 0 || values.length === 2) {
+        return {
+          query: {},
+        };
+      }
+
+      switch (values[0]) {
+        case "Publication":
+          return {
+            query: {
+              bool: {
+                minimum_should_match: 1,
+                should: [
+                  {
+                    match: {
+                      isAdmin: true,
+                    },
+                  },
+                  {
+                    match: {
+                      "acl.keyword": "page_formation/gestion_publication",
+                    },
+                  },
+                  ...[...authorizedRoles].map((role) => ({
+                    match: {
+                      "roles.keyword": role,
+                    },
+                  })),
+                ],
+              },
+            },
+          };
+        case "Lecture seule":
+          return {
+            query: {
+              bool: {
+                must_not: {
+                  bool: {
+                    minimum_should_match: 1,
+                    should: [
+                      {
+                        match: {
+                          isAdmin: true,
+                        },
+                      },
+                      {
+                        match: {
+                          "acl.keyword": "page_formation/gestion_publication",
+                        },
+                      },
+                      ...[...authorizedRoles].map((role) => ({
+                        match: {
+                          "roles.keyword": role,
+                        },
+                      })),
+                    ],
+                  },
+                },
+              },
+            },
+          };
+        default:
+          return {
+            query: {},
+          };
+      }
+    },
+  },
+
+  { type: "divider" },
+
+  {
+    componentId: "acl-affelnet",
+    type: "facet",
+    dataField: "acl.keyword",
+    title: "Accès aux offres du périmètre Affelnet",
+    filterLabel: "Accès aux offres du périmètre Affelnet",
+    selectAllLabel: "Toutes les valeurs",
+    sortBy: "asc",
+
+    transformData: () => {
+      return [
+        { key: "Oui", doc_count: null },
+        { key: "Non", doc_count: null },
+      ];
+    },
+
+    customQuery: (values) => {
+      if (values.length === 0 || values.length === 2) {
+        return {
+          query: {},
+        };
+      }
+
+      // const { roles } = injectedProps;
+
+      // const authorizedAcls = ["page_catalogue/voir_filtres_aff"];
+
+      // const authorizedRoles = new Set(
+      //   roles?.filter((role) => authorizedAcls.some((acl) => role.acl.includes(acl))).map((role) => role.name)
+      // );
+
+      // console.log({ roles, authorizedAcls, authorizedRoles });
+
+      const authorizedRoles = ["instructeur-affelnet", "lecteur-affelnet"];
+
+      switch (values[0]) {
+        case "Oui":
+          return {
+            query: {
+              bool: {
+                minimum_should_match: 1,
+                should: [
+                  {
+                    match: {
+                      isAdmin: true,
+                    },
+                  },
+                  // ...authorizedAcls.map((acl) => ({
+                  //   match: {
+                  //     "acl.keyword": acl,
+                  //   },
+                  // })),
+                  ...[...authorizedRoles].map((role) => ({
+                    match: {
+                      "roles.keyword": role,
+                    },
+                  })),
+                ],
+              },
+            },
+          };
+        case "Non":
+          return {
+            query: {
+              bool: {
+                must_not: {
+                  bool: {
+                    minimum_should_match: 1,
+                    should: [
+                      {
+                        match: {
+                          isAdmin: true,
+                        },
+                      },
+                      // ...authorizedAcls.map((acl) => ({
+                      //   match: {
+                      //     "acl.keyword": acl,
+                      //   },
+                      // })),
+                      ...[...authorizedRoles].map((role) => ({
+                        match: {
+                          "roles.keyword": role,
+                        },
+                      })),
+                    ],
+                  },
+                },
+              },
+            },
+          };
+        default:
+          return {
+            query: {},
+          };
+      }
+    },
+  },
+
+  {
+    componentId: "acl-perimetre-affelnet",
+    type: "facet",
+    dataField: "acl.keyword",
+    title: "Droit d'accès aux règles académique d'inclusion des offres dans le périmètre Affelnet",
+    filterLabel: "Droit d'accès aux règles académique d'inclusion des offres dans le périmètre Affelnet",
+    selectAllLabel: "Toutes les valeurs",
+    sortBy: "asc",
+
+    transformData: () => {
+      return [
+        { key: "Oui", doc_count: null },
+        { key: "Non", doc_count: null },
+      ];
+    },
+
+    customQuery: (values, filterDefinition, injectedProps) => {
+      if (values.length === 0 || values.length === 2) {
+        return {
+          query: {},
+        };
+      }
+
+      const { roles } = injectedProps;
+
+      const authorizedAcls = ["page_perimetre/affelnet"];
+
+      const authorizedRoles = new Set(
+        roles?.filter((role) => authorizedAcls.some((acl) => role.acl.includes(acl))).map((role) => role.name)
+      );
+
+      // console.log({ roles, authorizedAcls, authorizedRoles });
+
+      switch (values[0]) {
+        case "Oui":
+          return {
+            query: {
+              bool: {
+                minimum_should_match: 1,
+                should: [
+                  {
+                    match: {
+                      isAdmin: true,
+                    },
+                  },
+                  ...authorizedAcls.map((acl) => ({
+                    match: {
+                      "acl.keyword": acl,
+                    },
+                  })),
+                  ...[...authorizedRoles].map((role) => ({
+                    match: {
+                      "roles.keyword": role,
+                    },
+                  })),
+                ],
+              },
+            },
+          };
+        case "Non":
+          return {
+            query: {
+              bool: {
+                must_not: {
+                  bool: {
+                    minimum_should_match: 1,
+                    should: [
+                      {
+                        match: {
+                          isAdmin: true,
+                        },
+                      },
+                      ...authorizedAcls.map((acl) => ({
+                        match: {
+                          "acl.keyword": acl,
+                        },
+                      })),
+                      ...[...authorizedRoles].map((role) => ({
+                        match: {
+                          "roles.keyword": role,
+                        },
+                      })),
+                    ],
+                  },
+                },
+              },
+            },
+          };
+        default:
+          return {
+            query: {},
+          };
+      }
+    },
+  },
+
+  { type: "divider" },
+
+  {
+    componentId: "acl-parcoursup",
+    type: "facet",
+    dataField: "roles.keyword",
+    title: "Accès aux offres du périmètre Parcoursup",
+    filterLabel: "Accès aux offres du périmètre Parcoursup",
+    selectAllLabel: "Toutes les valeurs",
+    sortBy: "asc",
+
+    transformData: () => {
+      const authorizedRoles = ["instructeur-parcoursup", "lecteur-parcoursup"];
+
+      return [
+        { key: "Oui", doc_count: null },
+        { key: "Non", doc_count: null },
+      ];
+    },
+
+    customQuery: (values) => {
+      if (values.length === 0 || values.length === 2) {
+        return {
+          query: {},
+        };
+      }
+
+      // const { roles } = injectedProps;
+
+      // const authorizedAcls = ["page_catalogue/voir_filtres_ps"];
+
+      // const authorizedRoles = new Set(
+      //   roles?.filter((role) => authorizedAcls.some((acl) => role.acl.includes(acl))).map((role) => role.name)
+      // );
+
+      // console.log({ roles, authorizedAcls, authorizedRoles });
+
+      const authorizedRoles = ["instructeur-parcoursup", "lecteur-parcoursup"];
+
+      switch (values[0]) {
+        case "Oui":
+          return {
+            query: {
+              bool: {
+                minimum_should_match: 1,
+                should: [
+                  {
+                    match: {
+                      isAdmin: true,
+                    },
+                  },
+                  // ...authorizedAcls.map((acl) => ({
+                  //   match: {
+                  //     "acl.keyword": acl,
+                  //   },
+                  // })),
+                  ...[...authorizedRoles].map((role) => ({
+                    match: {
+                      "roles.keyword": role,
+                    },
+                  })),
+                ],
+              },
+            },
+          };
+        case "Non":
+          return {
+            query: {
+              bool: {
+                must_not: {
+                  bool: {
+                    minimum_should_match: 1,
+                    should: [
+                      {
+                        match: {
+                          isAdmin: true,
+                        },
+                      },
+
+                      // ...authorizedAcls.map((acl) => ({
+                      //   match: {
+                      //     "acl.keyword": acl,
+                      //   },
+                      // })),
+                      ...[...authorizedRoles].map((role) => ({
+                        match: {
+                          "roles.keyword": role,
+                        },
+                      })),
+                    ],
+                  },
+                },
+              },
+            },
+          };
+        default:
+          return {
+            query: {},
+          };
+      }
+    },
+  },
+
+  {
+    componentId: "acl-perimetre-parcoursup",
+    type: "facet",
+    dataField: "acl.keyword",
+    title: "Droit d'accès aux règles académique d'inclusion des offres dans le périmètre Parcoursup",
+    filterLabel: "Droit d'accès aux règles académique d'inclusion des offres dans le périmètre Parcoursup",
+    selectAllLabel: "Toutes les valeurs",
+    sortBy: "asc",
+
+    transformData: () => {
+      return [
+        { key: "Oui", doc_count: null },
+        { key: "Non", doc_count: null },
+      ];
+    },
+
+    customQuery: (values, filterDefinition, injectedProps) => {
+      if (values.length === 0 || values.length === 2) {
+        return {
+          query: {},
+        };
+      }
+
+      const { roles } = injectedProps;
+
+      const authorizedAcls = ["page_perimetre/parcoursup"];
+
+      const authorizedRoles = new Set(
+        roles?.filter((role) => authorizedAcls.some((acl) => role.acl.includes(acl))).map((role) => role.name)
+      );
+
+      // console.log({ roles, authorizedAcls, authorizedRoles });
+
+      switch (values[0]) {
+        case "Oui":
+          return {
+            query: {
+              bool: {
+                minimum_should_match: 1,
+                should: [
+                  {
+                    match: {
+                      isAdmin: true,
+                    },
+                  },
+                  ...authorizedAcls.map((acl) => ({
+                    match: {
+                      "acl.keyword": acl,
+                    },
+                  })),
+                  ...[...authorizedRoles].map((role) => ({
+                    match: {
+                      "roles.keyword": role,
+                    },
+                  })),
+                ],
+              },
+            },
+          };
+        case "Non":
+          return {
+            query: {
+              bool: {
+                must_not: {
+                  bool: {
+                    minimum_should_match: 1,
+                    should: [
+                      {
+                        match: {
+                          isAdmin: true,
+                        },
+                      },
+                      ...authorizedAcls.map((acl) => ({
+                        match: {
+                          "acl.keyword": acl,
+                        },
+                      })),
+                      ...[...authorizedRoles].map((role) => ({
+                        match: {
+                          "roles.keyword": role,
+                        },
+                      })),
+                    ],
+                  },
+                },
+              },
+            },
+          };
+        default:
+          return {
+            query: {},
+          };
+      }
+    },
+  },
+
+  { type: "divider" },
+
+  {
+    componentId: `last_connection`,
+    type: "date-range",
+    dataField: "last_connection",
+    title: "Date de dernière connexion",
+    filterLabel: "Date de dernière connexion",
   },
 ];
 

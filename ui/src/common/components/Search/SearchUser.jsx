@@ -31,7 +31,7 @@ export default React.memo(({ searchState, extraButtons = null, roles }) => {
       (!isAuth || (isAuth && auth?.sub !== "anonymous"))
   );
 
-  console.log(roles);
+  // console.log(roles);
 
   return (
     <Box className="search-page">
@@ -94,7 +94,7 @@ export default React.memo(({ searchState, extraButtons = null, roles }) => {
                   FILTRER PAR
                 </Text>
 
-                <QuickFilters filters={filters} />
+                <QuickFilters filters={filters} injectedProps={{ roles }} />
               </Box>
 
               <Box className="search-results" px={[0, 0, 4]}>
@@ -151,8 +151,8 @@ export default React.memo(({ searchState, extraButtons = null, roles }) => {
                               .map((def) => ({
                                 header: def.Header,
                                 fieldName: def.accessor,
-                                formatter: (value, user) => {
-                                  return def.formatter?.(value, user, roles) ?? value ?? "";
+                                formatter: (value, ...args) => {
+                                  return def.formatter?.(value, ...args, { roles }) ?? value ?? "";
                                 },
                               }))}
                           />
