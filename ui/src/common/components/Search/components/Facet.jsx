@@ -78,7 +78,7 @@ export const Facet = ({
           transformData={transformData}
           customQuery={customQuery}
           sortBy={sortBy}
-          renderItem={helpTextSection ? renderItem : null}
+          renderItem={renderItem}
           // onValueChange={onValueChange}
         />
       }
