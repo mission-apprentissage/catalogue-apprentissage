@@ -72,6 +72,7 @@ export default React.memo(({ searchState, extraButtons = null, roles }) => {
 
             {/* <Box borderTop="1px solid #E7E7E7" w="full" my={4} /> */}
 
+            {/*
             <Box px={[0, 0, 4]} display={"flex"}>
               <Text fontWeight="700" color="grey.800" mt={4} mb={4} textStyle="rf-text" w="15%">
                 RECHERCHE MULTI-CRITÈRES
@@ -84,7 +85,7 @@ export default React.memo(({ searchState, extraButtons = null, roles }) => {
                   fields={queryBuilderField}
                 />
               </Box>
-            </Box>
+            </Box> */}
 
             <Box borderTop="1px solid #E7E7E7" w="full" my={4} />
 
@@ -109,7 +110,7 @@ export default React.memo(({ searchState, extraButtons = null, roles }) => {
                     title="Results"
                     dataField="_id"
                     loader="Chargement des résultats.."
-                    size={8}
+                    size={1000}
                     innerClass={{ pagination: "search-pagination", sortOptions: "search-sort-options" }}
                     pagination={true}
                     URLParams={true}
@@ -117,15 +118,20 @@ export default React.memo(({ searchState, extraButtons = null, roles }) => {
                     sortBy="asc"
                     sortOptions={[
                       {
-                        label: "Adresse courriel",
+                        label: "Adresse courriel (asc)",
                         dataField: "email.keyword",
                         sortBy: "asc",
                       },
                       {
-                        label: "Nom d'utilisateur",
-                        dataField: "username.keyword",
-                        sortBy: "asc",
+                        label: "Adresse courriel (desc)",
+                        dataField: "email.keyword",
+                        sortBy: "desc",
                       },
+                      // {
+                      //   label: "Nom d'utilisateur",
+                      //   dataField: "username.keyword",
+                      //   sortBy: "asc",
+                      // },
                     ]}
                     defaultQuery={() => {
                       return {

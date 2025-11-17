@@ -170,14 +170,14 @@ export const columnsDefinition = [
       booleanFormatter(hasOneOfRoles(structureUser(user, roles), ["instructeur-parcoursup", "lecteur-parcoursup"])),
   },
 
-  {
-    Header: "Droit d'accès aux règles académiques d'inclusion des offres dans le périmètre Parcoursup",
-    accessor: "acl",
-    width: 200,
-    exportable: true,
-    formatter: (acl, user, { roles }) =>
-      booleanFormatter(hasAccessTo(structureUser(user, roles), "page_perimetre/parcoursup")),
-  },
+  // {
+  //   Header: "Droit d'accès aux règles académiques d'inclusion des offres dans le périmètre Parcoursup",
+  //   accessor: "acl",
+  //   width: 200,
+  //   exportable: true,
+  //   formatter: (acl, user, { roles }) =>
+  //     booleanFormatter(hasAccessTo(structureUser(user, roles), "page_perimetre/parcoursup")),
+  // },
 
   {
     Header: "Date de création",
@@ -188,7 +188,7 @@ export const columnsDefinition = [
   },
 
   {
-    Header: "Créer par",
+    Header: "Créé par",
     accessor: "created_by",
     width: 200,
     exportable: true,
@@ -204,7 +204,7 @@ export const columnsDefinition = [
   },
 
   {
-    Header: "Modifier par",
+    Header: "Modifié par",
     accessor: "updated_by",
     width: 200,
     exportable: true,
@@ -296,28 +296,6 @@ export const quickFiltersDefinition = [
     },
 
     customQuery: (values) => {
-      console.log("region", {
-        query:
-          values?.length && !values?.find((value) => value === "Toutes les régions")
-            ? {
-                bool: {
-                  minimum_should_match: 1,
-                  should: values
-                    .flatMap((value) =>
-                      Object.entries({ "-1": { nom_region: "N/A", num_region: -1, academies: ["-1"] }, ...REGIONS })
-                        .filter(([k, v]) => v.nom_region === value)
-                        ?.flatMap(([k, v]) => v.academies)
-                    )
-                    .map((value) => ({
-                      wildcard: {
-                        "academie.keyword": "*" + value + "*",
-                      },
-                    })),
-                },
-              }
-            : {},
-      });
-
       return {
         query:
           values?.length && !values?.find((value) => value === "Toutes les régions")
@@ -421,6 +399,40 @@ export const quickFiltersDefinition = [
     filterLabel: "Fonction",
     selectAllLabel: "Toutes les fonctions",
     sortBy: "asc",
+    transformData: (data) => {
+      return [{ key: "Non renseignée", doc_count: null }, ...data];
+    },
+    customQuery: (values) => {
+      if (values.length > 0 && !values.find((value) => value === "Toutes les fonctions")) {
+        return {
+          query: {
+            bool: {
+              should: [
+                ...values.map((value) => ({
+                  match: {
+                    "fonction.keyword": value === "Non renseignée" ? "" : value,
+                  },
+                })),
+                ...(values.find((v) => v === "Non renseignée")
+                  ? [
+                      {
+                        bool: {
+                          must_not: {
+                            exists: {
+                              field: "fonction",
+                            },
+                          },
+                        },
+                      },
+                    ]
+                  : []),
+              ],
+              minimum_should_match: 1,
+            },
+          },
+        };
+      }
+    },
   },
 
   { type: "divider" },
@@ -816,101 +828,101 @@ export const quickFiltersDefinition = [
     },
   },
 
-  {
-    componentId: "acl-perimetre-parcoursup",
-    type: "facet",
-    dataField: "acl.keyword",
-    title: "Droit d'accès aux règles académique d'inclusion des offres dans le périmètre Parcoursup",
-    filterLabel: "Droit d'accès aux règles académique d'inclusion des offres dans le périmètre Parcoursup",
-    selectAllLabel: "Toutes les valeurs",
-    sortBy: "asc",
+  // {
+  //   componentId: "acl-perimetre-parcoursup",
+  //   type: "facet",
+  //   dataField: "acl.keyword",
+  //   title: "Droit d'accès aux règles académique d'inclusion des offres dans le périmètre Parcoursup",
+  //   filterLabel: "Droit d'accès aux règles académique d'inclusion des offres dans le périmètre Parcoursup",
+  //   selectAllLabel: "Toutes les valeurs",
+  //   sortBy: "asc",
 
-    transformData: () => {
-      return [
-        { key: "Oui", doc_count: null },
-        { key: "Non", doc_count: null },
-      ];
-    },
+  //   transformData: () => {
+  //     return [
+  //       { key: "Oui", doc_count: null },
+  //       { key: "Non", doc_count: null },
+  //     ];
+  //   },
 
-    customQuery: (values, filterDefinition, injectedProps) => {
-      if (values.length === 0 || values.length === 2) {
-        return {
-          query: {},
-        };
-      }
+  //   customQuery: (values, filterDefinition, injectedProps) => {
+  //     if (values.length === 0 || values.length === 2) {
+  //       return {
+  //         query: {},
+  //       };
+  //     }
 
-      const { roles } = injectedProps;
+  //     const { roles } = injectedProps;
 
-      const authorizedAcls = ["page_perimetre/parcoursup"];
+  //     const authorizedAcls = ["page_perimetre/parcoursup"];
 
-      const authorizedRoles = new Set(
-        roles?.filter((role) => authorizedAcls.some((acl) => role.acl.includes(acl))).map((role) => role.name)
-      );
+  //     const authorizedRoles = new Set(
+  //       roles?.filter((role) => authorizedAcls.some((acl) => role.acl.includes(acl))).map((role) => role.name)
+  //     );
 
-      // console.log({ roles, authorizedAcls, authorizedRoles });
+  //     // console.log({ roles, authorizedAcls, authorizedRoles });
 
-      switch (values[0]) {
-        case "Oui":
-          return {
-            query: {
-              bool: {
-                minimum_should_match: 1,
-                should: [
-                  {
-                    match: {
-                      isAdmin: true,
-                    },
-                  },
-                  ...authorizedAcls.map((acl) => ({
-                    match: {
-                      "acl.keyword": acl,
-                    },
-                  })),
-                  ...[...authorizedRoles].map((role) => ({
-                    match: {
-                      "roles.keyword": role,
-                    },
-                  })),
-                ],
-              },
-            },
-          };
-        case "Non":
-          return {
-            query: {
-              bool: {
-                must_not: {
-                  bool: {
-                    minimum_should_match: 1,
-                    should: [
-                      {
-                        match: {
-                          isAdmin: true,
-                        },
-                      },
-                      ...authorizedAcls.map((acl) => ({
-                        match: {
-                          "acl.keyword": acl,
-                        },
-                      })),
-                      ...[...authorizedRoles].map((role) => ({
-                        match: {
-                          "roles.keyword": role,
-                        },
-                      })),
-                    ],
-                  },
-                },
-              },
-            },
-          };
-        default:
-          return {
-            query: {},
-          };
-      }
-    },
-  },
+  //     switch (values[0]) {
+  //       case "Oui":
+  //         return {
+  //           query: {
+  //             bool: {
+  //               minimum_should_match: 1,
+  //               should: [
+  //                 {
+  //                   match: {
+  //                     isAdmin: true,
+  //                   },
+  //                 },
+  //                 ...authorizedAcls.map((acl) => ({
+  //                   match: {
+  //                     "acl.keyword": acl,
+  //                   },
+  //                 })),
+  //                 ...[...authorizedRoles].map((role) => ({
+  //                   match: {
+  //                     "roles.keyword": role,
+  //                   },
+  //                 })),
+  //               ],
+  //             },
+  //           },
+  //         };
+  //       case "Non":
+  //         return {
+  //           query: {
+  //             bool: {
+  //               must_not: {
+  //                 bool: {
+  //                   minimum_should_match: 1,
+  //                   should: [
+  //                     {
+  //                       match: {
+  //                         isAdmin: true,
+  //                       },
+  //                     },
+  //                     ...authorizedAcls.map((acl) => ({
+  //                       match: {
+  //                         "acl.keyword": acl,
+  //                       },
+  //                     })),
+  //                     ...[...authorizedRoles].map((role) => ({
+  //                       match: {
+  //                         "roles.keyword": role,
+  //                       },
+  //                     })),
+  //                   ],
+  //                 },
+  //               },
+  //             },
+  //           },
+  //         };
+  //       default:
+  //         return {
+  //           query: {},
+  //         };
+  //     }
+  //   },
+  // },
 
   { type: "divider" },
 
