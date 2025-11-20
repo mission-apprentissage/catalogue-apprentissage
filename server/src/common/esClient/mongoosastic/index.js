@@ -307,6 +307,7 @@ function Mongoosastic(schema, options) {
   function setUpMiddlewareHooks(inSchema) {
     inSchema.post("remove", postRemove);
     inSchema.post("findOneAndRemove", postRemove);
+    inSchema.post("deleteOne", postRemove);
 
     inSchema.post("save", postSave);
     inSchema.post("findOneAndUpdate", postSave);

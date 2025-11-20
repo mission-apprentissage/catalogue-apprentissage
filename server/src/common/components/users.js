@@ -62,12 +62,12 @@ module.exports = async () => {
       return user.toObject();
     },
     removeUser: async (username) => {
-      const user = await User.findOne({ username: username });
+      const user = await User.findOne({ $or: [{ username: username }, { email: username }] });
       if (!user) {
         throw new Error(`Unable to find user ${username}`);
       }
 
-      return await user.deleteOne({ username });
+      return await User.deleteOne({ _id: user._id });
     },
     updateUser: async (username, data) => {
       let user = await User.findOne({ username });
