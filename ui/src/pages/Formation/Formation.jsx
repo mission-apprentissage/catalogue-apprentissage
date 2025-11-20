@@ -525,6 +525,7 @@ export default () => {
     .sort(sortDescending)
     .filter((h) => h.to?.affelnet_raison_depublication)[0]?.updated_at;
 
+  console.log({ formation });
   return (
     <Layout>
       <Box w="100%" pt={[4, 8]} px={[1, 1, 12, 24]}>
